@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamriel Daedric Worship — 4E 201 Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #07060a;
+    --bg2:       #0d0b12;
+    --bg3:       #12101a;
+    --border:    #221a2e;
+    --border2:   #2e2240;
+    --text:      #c8bcd8;
+    --text-dim:  #6a5878;
+    --text-faint:#2e2240;
+    --gold:      #a870c8;
+    --gold-dim:  #6a3a88;
+
+    /* Per-prince color overridden inline via --prince-color */
+    --prince-color: #a870c8;
+    --prince-bg:    #0d0a14;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 15% 0%, #1a0830 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 100%, #0a0818 0%, transparent 50%);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(180deg, #12091e 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border2);
+    padding: 1.8rem 2rem 1.4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '⬡';
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 8rem;
+    color: #1a0830;
+    pointer-events: none;
+    line-height: 1;
+  }
+  .header-inner { max-width: 1500px; margin: 0 auto; position: relative; }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-weight: 700;
+    color: #e8c8f8;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .header-sub {
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    margin-top: 0.3rem;
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+  }
+  .header-note {
+    margin-top: 0.6rem;
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 0.88rem;
+    max-width: 800px;
+  }
+  .header-warning {
+    margin-top: 0.7rem;
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #c84a4a;
+    border: 1px solid #c84a4a40;
+    padding: 0.2rem 0.7rem;
+    border-radius: 2px;
+  }
+
+  /* ── PRINCE TABS ── */
+  .tabs-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+  .tabs-inner { max-width: 1500px; margin: 0 auto; display: flex; gap: 0; }
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.75rem 1rem 0.6rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.67rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    transition: all 0.15s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .tab .tab-icon { font-size: 0.8rem; }
+  .tab:hover { color: var(--text); }
+  .tab.active { border-bottom-color: var(--prince-color); color: var(--prince-color); }
+
+  /* ── LAYOUT ── */
+  .main { max-width: 1500px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  /* ── PRINCE PANEL ── */
+  .prince-panel { display: none; }
+  .prince-panel.active { display: block; }
+
+  /* ── PRINCE HEADER ── */
+  .prince-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .prince-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--prince-color);
+    letter-spacing: 0.1em;
+  }
+  .prince-tagline {
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 0.92rem;
+  }
+  .prince-realm-pill {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+    border: 1px solid;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .prince-divines-stance {
+    width: 100%;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    font-style: italic;
+    padding: 0.4rem 0.8rem;
+    border-left: 2px solid;
+    margin-top: 0.3rem;
+    background: var(--bg2);
+  }
+
+  /* ── GRID ── */
+  .section-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .section-grid.wide {
+    grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--prince-color);
+    border-radius: 2px;
+    padding: 1rem 1.1rem;
+  }
+  .card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--prince-color);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .card-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .card p { font-size: 0.88rem; color: var(--text); margin-bottom: 0.45rem; }
+  .card p:last-child { margin-bottom: 0; }
+  .card ul { list-style: none; padding: 0; }
+  .card ul li {
+    font-size: 0.87rem;
+    color: var(--text);
+    padding: 0.22rem 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .card ul li:last-child { border-bottom: none; }
+  .card ul li .bullet { color: var(--prince-color); flex-shrink: 0; margin-top: 0.1rem; font-size: 0.7rem; }
+
+  /* ── TIMELINE ── */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item {
+    display: flex;
+    gap: 0.8rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-time {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--prince-color);
+    text-transform: uppercase;
+    min-width: 70px;
+    padding-top: 0.15rem;
+    flex-shrink: 0;
+  }
+  .tl-text { font-size: 0.87rem; color: var(--text); }
+
+  /* ── COMPARISON CARDS ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1rem 1.1rem;
+  }
+  .compare-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border2);
+  }
+  .open-practice .compare-label  { color: #6a9ab8; }
+  .hidden-practice .compare-label { color: var(--prince-color); }
+  .compare-card ul { list-style: none; padding: 0; }
+  .compare-card ul li {
+    font-size: 0.86rem;
+    padding: 0.2rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .compare-card ul li:last-child { border-bottom: none; }
+
+  /* ── CLASS TABLE ── */
+  .class-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  .class-table th {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border2);
+    text-align: left;
+    background: var(--bg);
+  }
+  .class-table td {
+    padding: 0.38rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .class-table tr:last-child td { border-bottom: none; }
+  .class-table td:first-child {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--prince-color);
+    white-space: nowrap;
+    min-width: 120px;
+  }
+
+  /* ── PRESSURE TAGS ── */
+  .pressure-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .pressure-item {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    padding: 0.5rem 0.7rem;
+    background: var(--bg3);
+    border-left: 2px solid;
+    border-radius: 1px;
+    font-size: 0.86rem;
+  }
+  .pressure-item .pi-icon { font-size: 1rem; flex-shrink: 0; }
+  .pressure-item .pi-text { color: var(--text); }
+  .pressure-item .pi-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* ── ARTIFACT BLOCK ── */
+  .artifact-block {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-top: 2px solid var(--prince-color);
+    border-radius: 2px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1rem;
+    font-size: 0.87rem;
+  }
+  .artifact-block .artifact-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--prince-color);
+    margin-bottom: 0.35rem;
+  }
+  .artifact-block p { color: var(--text-dim); margin-bottom: 0; }
+  .artifact-block strong { color: var(--text); font-style: normal; }
+
+  /* ── DIVIDERS ── */
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin: 1.4rem 0 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-label::before, .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .footnote {
+    margin-top: 2rem;
+    padding: 0.8rem 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>⬡ Tamriel Daedric Worship — 4E 201 Reference</h1>
+    <div class="header-sub">Clandestine Devotion · Forbidden Shrines · Transgressive Practice</div>
+    <div class="header-note">
+      Concrete day-to-day Daedric worship behaviour — how mortal devotees actually practice in 4E 201,
+      where they meet, what they risk, what the Prince asks of them. Organised by Prince, noting open vs. hidden practice,
+      devotee demographics, Skyrim-specific context, and available artifacts.
+    </div>
+    <div class="header-warning">⚠ Illegal under Imperial Law · Persecuted by the Vigilants of Stendarr</div>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <div class="tabs-inner" id="tabsInner"></div>
+</div>
+
+<div class="main" id="mainContent"></div>
+
+<script>
+const princes = [
+  {
+    id: 'nocturnal',
+    name: 'Nocturnal',
+    icon: '🌑',
+    color: '#7a6aaa',
+    bg: '#0a0814',
+    tagline: 'She does not demand worship — she permits proximity to the dark',
+    realm: 'Evergloam · The Crow',
+    divinestance: 'Not persecuted by Vigilants — Nocturnal\'s worship is so embedded in the Thieves Guild that it has effectively achieved semi-legitimate status throughout Tamriel\'s criminal underworld. The Divines have no specific position on her; she is simply present, like shadows.',
+    legalstatus: 'Tolerated',
+    daily: [
+      { time: 'Dusk', text: 'The transition from day to night is the primary devotional moment. A pickpocket pausing in a doorway as the light fades — that pause IS the prayer. No words, no shrine necessary. The acknowledgment of the dark as it arrives.' },
+      { time: 'Night', text: 'Active practice happens at night. Work done in darkness is devotionally charged — theft, scouting, travel by moonless road. The quality of the work matters; sloppy night-work is poor worship.' },
+      { time: 'Before a Job', text: 'A brief request — framed as a professional courtesy rather than supplication. "Let the shadows cover me." Nocturnal does not promise; she provides, or she doesn\'t. The relationship is one of proximity, not petition.' },
+      { time: 'After a Job', text: 'Leaving a portion of a successful take at a shrine, if one is available. Not as payment — the understanding is that Nocturnal takes her due regardless. The offering is acknowledgment, not transaction.' },
+      { time: 'Dawn', text: 'Dawn is the domain of others. A devoted Nocturnal worshipper is usually asleep at dawn, which is itself a devotional choice — the sun is Akatosh\'s province, not hers. Sleeping through the dawn is a small act of alignment.' },
+    ],
+    shrines: [
+      'Riften — Thieves Guild cistern contains the most regularly maintained Nocturnal shrine in Skyrim. Active daily use by Guild members',
+      'The Ragged Flagon functions as temple-adjacent space — the bar is secular, the cistern beyond is semi-sacred',
+      'Roadside wayshrine outside Riften, accessible to non-Guild devotees who know where to look',
+      'Any sufficiently dark enclosed space that a devotee designates — Nocturnal does not require formal altars',
+      'The Shade of the Revenant (Nightingale Hall, Irkngthand environs) — accessible only to Nightingale agents',
+    ],
+    thresholds: [
+      { event: 'Joining the Thieves Guild', detail: 'No formal religious ceremony — but the first successful job completed as a Guild member is implicitly an offering. The Guild is a devotional organization whether individual members frame it that way or not.' },
+      { event: 'Becoming a Nightingale', detail: 'A direct soul-binding covenant with Nocturnal. The Nightingale pact is one of the most explicit mortal-Daedric contracts in Tamriel — eternal service in the Evergloam in exchange for Nocturnal\'s power in life. This is the threshold ritual of her devotion.' },
+      { event: 'Breaking an Oath', detail: 'Nocturnal does not punish overtly — she withdraws. A thief who breaks faith finds luck gradually turning. Doors that opened easily begin to stick. Shadows that hid them begin to thin. This is experienced as misfortune, rarely identified as divine judgment.' },
+      { event: 'Death (Nightingale only)', detail: 'Nightingales serve in the Evergloam after death, guarding the Sepulcher. This is not described as paradise — it is a continuation of service. For Nightingales who accepted the pact knowingly, it is an honored fate. For those who didn\'t fully understand what they swore, it is a trap.' },
+    ],
+    open: [
+      'More openly acknowledged than most Daedric Princes — the Thieves Guild infrastructure provides plausible cover',
+      'Riften\'s thieves operate in partial daylight (metaphorically) — Maven Black-Briar\'s political protection means Guild activities are semi-tolerated',
+      'In cities with strong underworld presence, Nocturnal\'s name is spoken without fear — not as religion, but as professional acknowledgment ("Nocturnal\'s shadow keep you")',
+      'Traveling merchants sometimes acknowledge her at dusk as protection against road theft — a superstitious practice that has drifted very far from formal worship but preserves the association',
+    ],
+    hidden: [
+      'The Nightingale covenant is entirely secret — even most Guild members are unaware of its theological depth',
+      'Nightingale Hall is a hidden facility most Guild members will never see',
+      'The full Nocturnal liturgy (the Oath of the Gray Fox, the lore of the Skeleton Key) is restricted to senior Guild initiates',
+      'In holds where the Thieves Guild has no presence, any Nocturnal observance must be entirely private',
+    ],
+    classes: [
+      { cls: 'Thieves Guild Member', practice: 'Daily semi-conscious acknowledgment. Night work as devotion. Shrine offerings after successful jobs. Nocturnal is more patron than goddess in their framing — but the distinction blurs.' },
+      { cls: 'Nightingale Agent', practice: 'Active covenant relationship. Nocturnal\'s power is directly accessible through the pact. The most religiously intense Nocturnal practitioners in Tamriel.' },
+      { cls: 'Independent Thief', practice: 'Acknowledges Nocturnal out of professional superstition rather than faith. May leave offerings without knowing or caring why. The practice precedes the belief.' },
+      { cls: 'Khajiit Devotee', practice: 'Theologically deeper than most — in Khajiit cosmology Nocturnal is the shadow left when Lorkhaj\'s heart was cut out. A Khajiit thieves\' devotion to Nocturnal has genuine metaphysical weight beyond the professional.' },
+      { cls: 'Shadow Mage', practice: 'Academic and devotional simultaneously. Illusion magic practitioners sometimes orient toward Nocturnal as patron of the dark arts — distinct from Mephala\'s web, more ambient and less targeted.' },
+    ],
+    pressures: [
+      { icon: '🔑', label: 'The Skeleton Key', color: '#7a6aaa', text: 'The theft of the Skeleton Key and its return is the central theological event in Nocturnal\'s Skyrim narrative. Every Nightingale is aware of the Key\'s significance — it locks the Twilight Sepulcher, and its absence weakens Nocturnal\'s power in Mundus. The Dragonborn\'s role here makes this a live theological event in 4E 201.' },
+      { icon: '🦅', label: 'Maven\'s Protection', color: '#c8a84a', text: 'Maven Black-Briar\'s political control of Riften provides structural cover for Guild-and-Nocturnal activity. Her appointment as Jarl (in Imperial victory scenario) or continued political dominance (Stormcloak scenario) affects how openly Nocturnal practice can occur in the Rift.' },
+      { icon: '🌑', label: 'The Khajiit Dimension', color: '#d4a840', text: 'Khajiit caravans excluded from Skyrim\'s cities carry a deeper Nocturnal theology than most Nordic or Imperial thieves understand. The caravan camps are nodes of Nocturnal awareness that the Guild doesn\'t know about and wouldn\'t fully recognise as related to their own practice.' },
+    ],
+    artifact: { name: 'The Skeleton Key', desc: '<strong>Infinite lockpick — never breaks.</strong> Currently stolen from the Twilight Sepulcher by Mercer Frey (events of 4E 201). Its absence weakens the boundaries between shadow and light. In lore terms, the Key does not merely open locks — it opens <em>any</em> barrier, metaphysical or physical.' },
+  },
+  {
+    id: 'azura',
+    name: 'Azura',
+    icon: '🌅',
+    color: '#c870c8',
+    bg: '#140a14',
+    tagline: 'She warned when no one listened — her devotees remember, and that is the practice',
+    realm: 'Moonshadow',
+    divinestance: 'Tolerated by most cultures — Dunmer Azura worship is culturally ancient and not suppressed by the Empire or Stormcloaks. Vigilants are aware but rarely act; Azura\'s portfolio (prophecy, dawn and dusk) is not obviously threatening to civic order.',
+    legalstatus: 'Tolerated',
+    daily: [
+      { time: 'Dawn', text: 'Dawn and dusk are Azura\'s hours. A devotee faces east at sunrise — not necessarily for long, not necessarily with words. The acknowledgment that the light comes from somewhere, and she is part of that boundary, is sufficient.' },
+      { time: 'Dusk', text: 'The more emotionally weighted moment for most Azura worshippers. Dusk is her characteristic hour — the transition between day and night, the moment of her name. Offerings are typically left at dusk rather than dawn.' },
+      { time: 'Before Important Decisions', text: 'Azura is a fate deity. Before a significant choice — a journey, a confrontation, a major transaction — a request for clarity or foresight is standard. Not a demand; more a gesture of alignment with the forces that already know what will happen.' },
+      { time: 'During Prophetic Dreams', text: 'Azura communicates through dreams and visions. A devotee who wakes with a vivid dream treats it with seriousness — writes it down, describes it to a fellow worshipper, or brings it to the nearest shrine. The dream may be nothing; it may be everything.' },
+      { time: 'At Twilight in Nature', text: 'The sky at dusk — the rose and violet colors — is considered Azura\'s visible presence. An Azura worshipper standing at twilight on a hilltop, watching the sky change, is engaged in a direct act of worship requiring nothing else.' },
+    ],
+    shrines: [
+      'Azura\'s Star Shrine, northeast of Winterhold — the largest accessible Azura site in Skyrim. Actively visited by Dunmer refugees and general devotees',
+      'Private household shrines among Dunmer communities — often integrated into the ancestor-worship ash-shrine setup, since Azura is a Good Daedra in Dunmeri tradition',
+      'The Atronach Stone (associated with magical self-sufficiency) carries Azura-adjacent significance for some practitioners',
+      'Natural hilltops with unobstructed eastern and western horizons are informal sacred sites — no structure needed',
+      'Khajiit caravan camps maintain small Azurah shrines — the Khajiit regard to Azurah runs deeper than the generic Azura cult',
+    ],
+    thresholds: [
+      { event: 'The Star Quest', detail: 'Azura\'s Star (the reusable soul gem) is the central artifact of her worship. Recovering it from Malyn Varen\'s corruption is the most significant devotional act available to her worshippers in Skyrim in 4E 201. Completing the quest is both a theological statement and a service to the goddess.' },
+      { event: 'A Prophetic Dream', detail: 'When Azura sends a dream of sufficient vividness, a devotee is expected to act on it — even if the action required is only "wait and watch." Ignoring an Azura-dream is the most common form of religious negligence among her worshippers.' },
+      { event: 'Dawn Pilgrimage', detail: 'Traveling to a significant eastern promontory or high place specifically to watch sunrise is an Azura pilgrimage practice. The Star Shrine is the primary site; natural high places work. Done alone, in silence.' },
+      { event: 'Dunmeri Covenant Renewal', detail: 'In Dunmeri tradition, Azura\'s warning before the Tribunal\'s betrayal is remembered formally on certain calendar dates — a practice maintained by older Dunmer who carry the full theological history. This anniversary is observed privately since Morrowind\'s collapse.' },
+    ],
+    open: [
+      'More openly practiced than most Daedric cults — Azura\'s cult has legitimate temple infrastructure in some regions and Dunmeri cultural acceptance',
+      'The Star Shrine near Winterhold is publicly visible and accessible — not hidden',
+      'Dunmer in Windhelm\'s Grey Quarter openly acknowledge Azura as a Good Daedra without stigma from other Dunmer',
+      'Some Imperial scholars acknowledge Azura academically; the college at Winterhold contains records of her prophecies without treating them as forbidden',
+    ],
+    hidden: [
+      'Khajiit Azurah theology is deeper and more cosmologically complete than the generic cult — this is maintained within caravan communities and not shared with outsiders',
+      'The Nightingale-Azura relationship (shadow vs. dawn, both dusk-adjacent) is a theological connection almost no one has mapped',
+      'The full Dunmeri liturgical calendar for Azura observance is maintained by only a handful of elderly refugees in 4E 201',
+    ],
+    classes: [
+      { cls: 'Dunmer Devotee', practice: 'Most theologically complete practice. Azura is Good Daedra, warned the Chimer, and was right about everything. Daily dawn-dusk acknowledgment, prophetic dream journaling, formal Star shrine pilgrimage.' },
+      { cls: 'Khajiit Devotee', practice: 'Azurah shaped the Khajiit people from Wandering Ehlnofey and gave them their moon-forms. This is a creation-deity relationship, not merely a prophetic one — worship has existential weight.' },
+      { cls: 'Mage (Winterhold)', practice: 'Intellectually engaged. Azura\'s prophecies are academically interesting. The Star\'s soul-trapping mechanics are magically significant. Devotion may be more philosophical than felt.' },
+      { cls: 'Seer / Prophet', practice: 'Deeply aligned. Dream-keeping, dawn-watching, recording visions. The most devotionally intense practice among non-Dunmer worshippers — Azura\'s prophetic portfolio actively rewards attentive practitioners.' },
+      { cls: 'Twilight Worshipper (casual)', practice: 'Aesthetic devotion — the beauty of dusk, the sense of something meaningful at the day\'s boundary. Not theologically sophisticated but genuine. Azura accepts this; she is patient with incomplete faith.' },
+    ],
+    pressures: [
+      { icon: '⭐', label: 'Azura\'s Star', color: '#c870c8', text: 'The Star has been corrupted by Malyn Varen and is currently being misused as a Black Soul Gem. For devoted Azura worshippers in Skyrim in 4E 201, this is a live theological emergency — their goddess\'s primary artifact has been blasphemed and is being used for soul entrapment.' },
+      { icon: '🌋', label: 'Dunmeri Diaspora', color: '#c4785a', text: 'The refugee Dunmer community carries the memory of Azura\'s warning — that the Tribunal\'s power was stolen and their punishment (dark skin, red eyes) was Azura\'s justice. For diaspora Dunmer, maintaining Azura worship is maintaining the true version of their theological history.' },
+      { icon: '🌙', label: 'Khajiit Resonance', color: '#d4a840', text: 'Khajiit caravans in Skyrim maintain Azurah devotion without access to the Star Shrine. Their tradition holds more of the cosmological content than even most Dunmer understand. Cross-cultural Azura practice in Skyrim is more active than it appears.' },
+    ],
+    artifact: { name: 'Azura\'s Star', desc: '<strong>Reusable soul gem — the Black Star variant holds black souls (sentient beings).</strong> The Star is Azura\'s primary artifact. In its uncorrupted form it is a soul gem that never shatters. Malyn Varen\'s corruption turns it into a prison — theologically the worst possible misuse of an artifact connected to a fate deity.' },
+  },
+  {
+    id: 'meridia',
+    name: 'Meridia',
+    icon: '☀',
+    color: '#e8c840',
+    bg: '#141000',
+    tagline: 'The only Daedric Prince whose worship is openly righteous — and she knows it',
+    realm: 'The Coloured Rooms',
+    divinestance: 'Unique among Daedric Princes — Meridia\'s cult is not persecuted by the Empire or the Vigilants of Stendarr. Her absolute opposition to undeath makes her theology compatible with Nine Divines civic order. Many priests of Arkay quietly maintain Meridia respect. The Vigilants consider her an acceptable Daedric force, grudgingly.',
+    legalstatus: 'Openly practiced',
+    daily: [
+      { time: 'Dawn', text: 'Facing the sunrise — not Akatosh\'s acknowledgment, but Meridia\'s claim on light itself. Devotees believe she is the light that moves through the world, not merely a goddess who likes it. The sunrise is her actual presence.' },
+      { time: 'Morning', text: 'Any act that drives back decay, corruption, or undeath is devotional. A farmer clearing rot from a field; a healer cleaning a wound; a soldier burning a draugr. These are all Meridia-worship whether the practitioner knows it or not.' },
+      { time: 'Entering Darkness', text: 'A brief invocation — "Meridia\'s light endure" or similar — before entering dungeons, caves, or any dark enclosed space. Standard practice for adventurers with Meridia orientation. Less fearful than it sounds; it is more an announcement of intent.' },
+      { time: 'At a Beacon Site', text: 'The Beacon calls actively. A Meridia devotee who hears the call — which may manifest as light sensitivity, an urge toward a specific hilltop, unexplained vitality — is experiencing direct divine contact. This is rare; it is also unmistakeable when it happens.' },
+      { time: 'Evening', text: 'Lighting candles against the dark is a Meridia devotional act. An altar with living fire (not magical, not undying — mortal fire that requires tending) is more theologically correct than a magical light source.' },
+    ],
+    shrines: [
+      'Meridia\'s Beacon and Statue, Mount Kilkreath west of Solitude — the primary sacred site in Skyrim, actively calling to her devotees in 4E 201',
+      'The Statue of Meridia is one of the most visually prominent Daedric shrines in Skyrim — not hidden at all',
+      'Kilkreath Temple (the dungeon beneath) becomes the site of the Dawnbreaker quest — a pilgrimage location',
+      'Any fire-lit shrine will do for daily practice — Meridia does not require specific structures, only living light',
+      'Naturally lit clearings, mountain-top sites with full sky exposure, and any place where light defeats obvious shadow',
+    ],
+    thresholds: [
+      { event: 'Receiving the Beacon', detail: 'Being chosen to carry Meridia\'s Beacon is the most significant divine calling in her worship. The Beacon selects; the devotee responds. Refusing the call is possible but understood as a spiritual failure. The Dragonborn\'s recovery of Dawnbreaker is the central Meridia event of 4E 201.' },
+      { event: 'Cleansing an Undead Site', detail: 'Entering a draugr barrow, a vampire lair, or a necromancer tower and destroying what is there is a formal devotional act for Meridia\'s worshippers. Not merely adventuring — purposeful cleansing. Burning the bodies afterward is correct practice.' },
+      { event: 'Opposing a Necromancer', detail: 'Reporting a necromancer to authorities, destroying their work, or confronting them directly — all theologically required. Tolerating necromancy in one\'s vicinity without action is passive apostasy for a Meridia devotee.' },
+      { event: 'Light Vigil', detail: 'Spending a night tending a fire or candles until dawn — sometimes practiced on significant dates, or after encounters with undead that felt overwhelming. The maintained fire is Meridia\'s presence through the dark hours.' },
+    ],
+    open: [
+      'Meridia\'s shrine is one of the least hidden in Skyrim — the Statue is visible from significant distance west of Solitude',
+      'Her cult is not illegal. Priests of Arkay sometimes acknowledge her. Some Vigilants of Stendarr carry Meridia\'s teachings alongside their Stendarr devotion',
+      'The anti-undead mandate gives Meridia worshippers a socially useful function — communities near draugr-heavy locations often appreciate a Meridia devotee in their midst',
+      'Imperial law has no prohibition on Meridia worship; the Empire regards her as a useful Daedric force if somewhat unruly',
+    ],
+    hidden: [
+      'The full theological depth of Meridia\'s cosmological claim (she is infinite energy; she has a unique Aurbis-origin distinct from the typical Daedric Princes) is known only to her more serious devotees',
+      'The Colored Rooms afterlife theology — that her most devoted servants join her in Mundus-adjacent existence — is not public knowledge',
+      'Her expulsion from the Aurbis by Magnus (for consorting with substances related to Lorkhan) gives her a more complicated origin story than her presentable anti-undeath surface suggests',
+    ],
+    classes: [
+      { cls: 'Vigilant of Stendarr (sympathetic)', practice: 'The most theologically proximate mortal organisation to Meridia\'s mandate. Some Vigilants explicitly acknowledge Meridia alongside Stendarr. Anti-undead work is active worship for both.' },
+      { cls: 'Adventurer / Dungeon Delver', practice: 'Clearing draugr barrows is functionally Meridia-worship whether framed that way or not. Devotees make the framing explicit: every cleared ruin is an offering.' },
+      { cls: 'Healer / Restoration Mage', practice: 'Restoration magic and Meridia\'s portfolio (life energy, opposing corruption) overlap significantly. Healers who work against disease and undead have natural theological alignment.' },
+      { cls: 'Anti-Necromancer Mage', practice: 'The most intense Meridia practitioners among the magical community. Hunting necromancers is sacred duty and professional mission simultaneously.' },
+      { cls: 'Village Caretaker', practice: 'Mundane Meridia practice — maintaining fire, clearing rot, opposing disease. Not religiously sophisticated, but the practice is sound. Meridia does not require her worshippers to understand her cosmology.' },
+    ],
+    pressures: [
+      { icon: '⚔', label: 'Dawnbreaker', color: '#e8c840', text: 'Meridia\'s artifact Dawnbreaker is currently locked in Kilkreath Temple, recoverable in 4E 201. The Beacon\'s activation is a divine intervention in Skyrim\'s mortal affairs — Meridia is actively attempting to put her artifact in worthy hands during the game\'s timeline. This is a live theophany.' },
+      { icon: '💀', label: 'Malkoran', color: '#9b6bb5', text: 'A Stormcloak battle-mage has defiled Kilkreath Temple, raising war dead as undead and corrupting a Meridia sacred site. For Meridia devotees, this is an ongoing desecration requiring action — not a past event, but a present theological emergency.' },
+      { icon: '☀', label: 'The Acceptable Daedra Problem', color: '#c8a84a', text: 'Meridia\'s unusual status as the "acceptable" Daedric Prince creates theological complications for serious devotees. The Empire\'s tolerance stems from pragmatism, not genuine understanding. Meridia\'s actual origin and demands are as extreme as any Prince\'s — the anti-undead presentation is one face of a much stranger entity.' },
+    ],
+    artifact: { name: 'Dawnbreaker', desc: '<strong>Fire damage sword that explodes undead on kill — creates a fire nova that turns nearby undead against each other.</strong> The quintessential Meridia artifact. Its theological function is destruction of undeath — the explosion mechanic is not a game convenience but a mechanical expression of her mandate. Recovering it from Kilkreath is one of the most overtly divine quests in Skyrim.' },
+  },
+  {
+    id: 'sheogorath',
+    name: 'Sheogorath',
+    icon: '🎭',
+    color: '#c8784a',
+    bg: '#140a04',
+    tagline: 'His worship is indistinguishable from his effect — chaos is not the path, chaos is the destination',
+    realm: 'The Shivering Isles · The Asylums',
+    divinestance: 'Vigilants of Stendarr treat Sheogorath worshippers as unstable and dangerous rather than theologically threatening. The Empire has no consistent policy — some Sheogorath manifestations have been tolerated (jesters, prophets, madmen who are useful), others have been executed. He is not systematically persecuted; he is unpredictably treated.',
+    legalstatus: 'Unpredictable',
+    daily: [
+      { time: 'Whenever', text: 'Sheogorath has no devotional timetable. One of his core demands is the abandonment of routine. A devotee who notices they are following a pattern is expected to break it — not dramatically, not always, but sometimes randomly and without explanation.' },
+      { time: 'Morning (perhaps)', text: 'Beginning the day with an act that doesn\'t make practical sense. Talking to an object. Eating supper food at breakfast. Walking somewhere with no destination. These are small acts of alignment with the principle that purpose is the enemy of truth.' },
+      { time: 'Social Encounters', text: 'Introducing genuine unpredictability into interactions. Not cruelty — Sheogorath is not Molag Bal. Unpredictability, non-sequitur, unexpected generosity, inexplicable refusal. The goal is destabilising certainty, not causing harm.' },
+      { time: 'At a Shrine', text: 'Sheogorath\'s shrine receives unusual offerings — cheese is traditional (and he is serious about this), but so are objects that have personal significance for no reason the devotee can explain. The act of identifying the inexplicably meaningful and offering it is itself devotional.' },
+      { time: 'During "Clear" Moments', text: 'Paradoxically, Sheogorath devotees describe moments of crystalline clarity between the chaos — a sensation of seeing things as they actually are because the usual filters of reason have been briefly removed. These moments are the reward. They cannot be induced; they arrive when they choose.' },
+    ],
+    shrines: [
+      'Solitude — The Pelagius Wing of the Blue Palace contains the most accessible Sheogorath contact point in Skyrim. Locked, but the staff are aware.',
+      'The Pelagius Hip Bone, when used in the Wing, draws his direct presence — one of the few guaranteed Daedric contacts in the game',
+      'Roadside shrines outside Solitude (accessible with no NPC guidance)',
+      'Any sufficiently irrational or abandoned space — Sheogorath\'s informal shrines are maintained in strange locations that make no sense to choose',
+      'The Shivering Isles: the entirety of the realm is his sacred space, though access requires an Oblivion Gate equivalent',
+    ],
+    thresholds: [
+      { event: 'First Encounter with Madness', detail: 'The moment when the logic of the world fails a person completely — when the expected doesn\'t happen, when certainty collapses — is experienced by Sheogorath devotees as an initiatory contact. Not mental illness (necessarily), but the sudden apprehension that reason is a house of cards.' },
+      { event: 'The Pelagius Encounter', detail: 'Entering the Pelagius Wing and making contact is a threshold. What Sheogorath asks in the Skyrim quest — navigating Pelagius\'s mind to cure (or not cure) his madness — is itself a theological experience about the nature of mental order and disorder.' },
+      { event: 'The Wabbajack', detail: 'Possessing the Wabbajack (his artifact) is not mere ownership — it is an ongoing relationship with the principle of transformation-without-reason. Using it is a devotional act each time.' },
+      { event: 'Voluntary Disorder', detail: 'Actively choosing the less logical option when both options are available — refusing a reward, giving something away to a stranger, sleeping in an uncomfortable place when comfort is available. These micro-rituals accumulate.' },
+    ],
+    open: [
+      'Jesters, court fools, and some bards maintain a surface Sheogorath relationship that is publicly acceptable as performative rather than devotional',
+      'The Sheogorath cult is one of the few where its practitioners are often dismissed as genuinely mad rather than theologically dangerous — this provides cover',
+      'In Solitude, the Blue Palace connection to Pelagius Septim\'s madness gives Sheogorath a historical presence that is embarrassing but not illegal',
+      'His name is invoked in oaths and curses throughout Tamriel with no devotional intent — cultural saturation protects serious worshippers from identification',
+    ],
+    hidden: [
+      'The actual Sheogorath of the Skyrim era is the Hero of Kvatch from the Oblivion Crisis who took the mantle of madness. This is known to almost no mortals.',
+      'The theological implications of a mortal becoming a Daedric Prince — replacing the original — are profound and largely unexplored by mortal scholarship',
+      'The full Shivering Isles theology (the Greymarch, the Resonator of Judgement, the meaning of the two poles of Mania and Dementia) is known only to those who have physically visited the realm',
+    ],
+    classes: [
+      { cls: 'Jester / Court Fool', practice: 'The most publicly acceptable Sheogorath practice. Professional unpredictability as cover for genuine devotion. Falk Firebeard\'s court jester Cicero exists in this zone — though Cicero has other affiliations.' },
+      { cls: 'Madman / Prophetic Figure', practice: 'The involuntary Sheogorath devotee. Whether the madness is granted or merely acknowledged, these individuals are treated as his by other devotees. Their utterances are taken seriously.' },
+      { cls: 'Scholar of the Mind', practice: 'Some academics study Sheogorath theologically — the philosophy of madness, the ethics of unreason, the Jyggalag relationship. This is academic devotion, cooler than felt.' },
+      { cls: 'Wabbajack Holder', practice: 'The artifact creates an active ongoing relationship. Each use is a dice roll with the divine. Practitioners develop a philosophy about when and why to use it that reveals their genuine theology.' },
+      { cls: 'Chaos-Aligned Mage', practice: 'Destruction magic oriented toward randomness and transformation rather than tactical application. Sheogorath\'s portfolio overlaps here with a certain approach to fire-and-forget casting.' },
+    ],
+    pressures: [
+      { icon: '🎭', label: 'The Mantling Question', color: '#c8784a', text: 'Sheogorath is the Hero of Kvatch. A mortal became a Daedric Prince. This theological fact has not been processed by any culture because almost no one knows it. The few who do (Daedric scholars, certain Khajiit lore-keepers) find it profoundly disturbing — it means the barrier between mortal and divine is permeable in a way that threatens every established cosmology.' },
+      { icon: '🧠', label: 'Pelagius\'s Madness', color: '#9b6bb5', text: 'Pelagius Septim III\'s well-documented madness — and its aftermath in the Blue Palace — makes Sheogorath an uncomfortable political presence in Solitude. The Wing is locked. The story is embarrassing. The theological implications (that a sitting Emperor was under Daedric influence) are never discussed publicly.' },
+      { icon: '❄', label: 'The Jyggalag Shadow', color: '#6baec4', text: 'Sheogorath is the imprisoned form of Jyggalag, Prince of Order — the mightiest Daedric Prince who was cursed to become the opposite of what he was. This gives Sheogorath\'s madness a tragic quality that his devotees who understand it experience as poignant rather than merely absurd.' },
+    ],
+    artifact: { name: 'The Wabbajack', desc: '<strong>Transforms targets into random creatures, objects, or effects — completely unpredictable.</strong> The theological perfect weapon: it enacts Sheogorath\'s core principle with every firing. Not a weapon with a function but a weapon whose function is the absence of function. The most honest artifact in Tamriel.' },
+  },
+  {
+    id: 'hircine',
+    name: 'Hircine',
+    icon: '🐺',
+    color: '#8a9a3a',
+    bg: '#090d00',
+    tagline: 'He does not grant power freely — he gives prey and lets you discover what you are',
+    realm: 'The Hunting Grounds',
+    divinestance: 'Vigilants of Stendarr treat Hircine worship as deeply dangerous — lycanthropy is a direct Daedric gift and the Hunting Grounds claim souls eternally. The Empire treats werewolves as a public health concern rather than a theological one, but Hircine worshippers caught practicing are prosecuted. Systematic persecution is high but enforcement is difficult — active hunters are hard to catch.',
+    legalstatus: 'Persecuted',
+    daily: [
+      { time: 'Dawn', text: 'Scouting. Any Hircine devotee — transformed or not — begins the day by reading the environment for information about prey. What has moved through, where, how recently. This is simultaneously practical and devotional.' },
+      { time: 'The Hunt', text: 'Hircine worship has no temples and no stationary practice. The hunt IS the worship. Following prey, the build of tension during tracking, the moment of the kill — these are the liturgy. Time spent not hunting is time between services.' },
+      { time: 'The Kill', text: 'The kill is the devotional apex. Handled with respect — not cruelty, not waste. Hircine does not want suffering for its own sake; he wants the honest transaction of predator and prey. Eating what you kill is correct practice.' },
+      { time: 'The Transformation (werewolves)', text: 'The first transformation is an initiatory event. Every subsequent transformation is a renewal of covenant. A werewolf who refuses to transform for extended periods is, in theological terms, starving their relationship with the Prince.' },
+      { time: 'Night', text: 'Werewolves hunt at night as a practical matter; Hircine devotees without lycanthropy often conduct night hunts by preference as an alignment choice. The Hunting Grounds are a twilight realm — hunting at night is symbolically correct.' },
+    ],
+    shrines: [
+      'Hircine\'s shrine east of Falkreath — remote, near thick forest, no infrastructure beyond the altar itself',
+      'The Bloated Man\'s Grotto becomes a Hircine sacred site during the Sinding quest — one of the most theologically charged Daedric locations in Skyrim',
+      'The Companions\' undercroft in Whiterun has significance — werewolf blessing administered there, though the Circle no longer treats it as explicitly Hircine-worship',
+      'The Hunting Grounds itself — accessible only to werewolves at death, or in exceptional circumstances',
+      'Any successful hunting ground: a particular forest glade, a valley where deer consistently pass. Hircine shrines are geographic, not architectural',
+    ],
+    thresholds: [
+      { event: 'First Transformation', detail: 'The first werewolf transformation is theologically equivalent to a baptism and a death simultaneously. The person who existed before it does not entirely survive. What emerges has access to something they didn\'t before — and has made a soul-commitment they may not have understood when accepting the bite.' },
+      { event: 'The Totemic Kill', detail: 'Hircine periodically demands a specific hunt — a prey creature of significance, a challenge beyond ordinary hunting. This is how he communicates with werewolves. Refusing the totemic hunt has consequences; accepting it may also have consequences. The Prince offers no safe options.' },
+      { event: 'The Aspect Hunt', detail: 'In the Sinding quest, Hircine\'s aspect manifests physically to participate in or adjudicate a hunt. This direct divine contact is rare and unsettling. Participants who survive it are changed — not just by what happened, but by having stood in the presence of a Daedric Prince in full manifestation.' },
+      { event: 'Curing the Lycanthropy', detail: 'Obtaining a cure (available through the Companions) is theologically a rejection of Hircine\'s gift. The Prince does not prevent it — he is a sportsman, not a jailer. But cured werewolves do not go to the Hunting Grounds, and something is lost, permanently, from the relationship.' },
+    ],
+    open: [
+      'Hunters throughout Skyrim acknowledge Hircine at the shrine without deep commitment — leaving a trophy, a claw, a pelt. Superstition shading into practice',
+      'The Companions\' werewolf secret is an open secret in Whiterun — locals suspect, no one names it. The Companions\' civic function provides cover',
+      'Some Forsworn shamans in the Reach maintain Hircine relationships as part of a broader engagement with the old powers — less scrutinised than urban Daedra worship',
+    ],
+    hidden: [
+      'The Companions\' Circle are active werewolves in the most densely populated hold in Skyrim. The concealment required is extraordinary and maintained through social authority',
+      'Werewolf-Hircine theology is almost entirely oral — there is no written liturgy that could be discovered in a search',
+      'The Hunting Grounds theology (that all Hircine\'s werewolves are claimed there in death) is known only to the werewolves themselves, not to ordinary Hircine devotees',
+    ],
+    classes: [
+      { cls: 'Companions Circle Member', practice: 'Active werewolves managing concealment within a respected civic institution. The transformation is a secret act of devotion performed in the undercroft. The hunt that follows is conducted far from Whiterun, in the wilderness.' },
+      { cls: 'Hunter (non-lycanthrope)', practice: 'Left-shrine offerings, moon-watching during hunting seasons, respecting the prey. More superstitious than devotional for most; genuinely theological for a few who understand the liturgical dimension of predator-prey dynamics.' },
+      { cls: 'Werewolf (independent)', practice: 'Outside organised groups, an independent werewolf maintains Hircine practice alone. The most isolated and theologically self-directed practice — no community, no liturgy, no guidance except what the transformation itself teaches.' },
+      { cls: 'Forsworn Shaman', practice: 'Combines Hircine with older Reach supernatural powers. Hircine is one of several entities these shamans maintain relationships with — the most animalistic and directly physical of their divine contacts.' },
+      { cls: 'Sinding (in-quest context)', practice: 'An involuntary devotee — Hircine\'s ring is stuck to him, forcing partial transformations. His inability to complete the hunt properly represents a broken covenant that Hircine wants resolved, one way or another.' },
+    ],
+    pressures: [
+      { icon: '🐺', label: 'The Companions\' Secret', color: '#8a9a3a', text: 'The Circle of the Companions are werewolves in Skyrim\'s most respected warrior organization. This creates an extraordinary theological situation — Hircine worship is embedded in an institution that fights draugr, helps farmers, and accepts Imperial contracts. The tension between the civic and the devotional is maximum here.' },
+      { icon: '💀', label: 'The Hunting Grounds Trap', color: '#c84a4a', text: 'Werewolves\' souls go to the Hunting Grounds at death, bypassing Sovngarde. For Nord werewolves — who believe Sovngarde is their rightful afterlife — this is a profound theological sacrifice. The Companions quest arc (curing the lycanthropy) is partly about reclaiming that stolen afterlife.' },
+      { icon: '🦌', label: 'Sinding\'s Hunt', color: '#8a9a3a', text: 'Hircine\'s Bloated Man\'s Grotto quest involves a man with a stuck ring who killed a child by accident during an uncontrolled transformation. The Prince\'s response is to make it a proper hunt. The devotee\'s choice — which way to resolve Hircine\'s test — is the most theologically loaded decision in the Hircine quest line.' },
+    ],
+    artifact: { name: 'Savior\'s Hide / Ring of Hircine', desc: '<strong>Savior\'s Hide: armor with significant magic resistance. Ring of Hircine: grants extra werewolf transformations per day.</strong> The two artifact options reflect two theological stances — the Hide rewards the hunter who bested Hircine\'s chosen prey; the Ring sustains the lycanthrope\'s covenant. Both are expressions of the same relationship, differently oriented.' },
+  },
+  {
+    id: 'hermaeus_mora',
+    name: 'Hermaeus Mora',
+    icon: '📖',
+    color: '#3a9a7a',
+    bg: '#000e0a',
+    tagline: 'He does not tempt with power — he offers the knowing, and the knowing itself corrupts',
+    realm: 'Apocrypha',
+    divinestance: 'Vigilants of Stendarr treat Hermaeus Mora worship as dangerous and forbidden. The College of Winterhold maintains a complicated stance: his knowledge is academically valuable but his cult is not sanctioned. Thalmor tolerate scholarly engagement with his archives while suppressing active worship. The Empire has no specific policy; Hermaeus Mora worshippers rarely self-identify to authorities.',
+    legalstatus: 'Forbidden / Tolerated academically',
+    daily: [
+      { time: 'Before Study', text: 'Reading — any reading, of any text — is a devotional act for Hermaeus Mora\'s followers. The act of seeking knowledge aligns the practitioner with his portfolio regardless of what is being read. A scholar who doesn\'t acknowledge this is an unconscious Hermaeus Mora devotee.' },
+      { time: 'When Something Is Unknown', text: 'Encountering a gap in one\'s knowledge is the primary devotional trigger. The correct response is to feel the pull — the need to find out — and to follow it. Deliberate ignorance is apostasy.' },
+      { time: 'Dream Contact', text: 'Hermaeus Mora approaches scholars in dreams more often than any other Daedric Prince. A recurring dream about a library, a black sea, or a door with no key is likely his attention. The correct response is to write it down and look for what he\'s pointing toward.' },
+      { time: 'Reading Forbidden Texts', text: 'Accessing books that should not be accessed — restricted tomes, locked collections, other people\'s correspondence, encrypted notes. Not necessarily illegal in the criminal sense, but always transgressive. This is the most active daily devotion.' },
+      { time: 'Recording', text: 'Hermaeus Mora collects knowledge; his devotees contribute to that collection. Writing down what one knows — keeping journals, annotating texts, recording observations — is a form of sacrifice to him. He is receiving a copy.' },
+    ],
+    shrines: [
+      'Hermaeus Mora\'s shrine north of Septimus Signus\'s Outpost — remote, near the northern coast, surrounded by ice',
+      'Septimus Signus\'s Outpost itself is an informal sacred site — a scholar pushed to the edge of sanity by divine knowledge',
+      'The Throat of the World has Hermaeus Mora resonance for mages who understand his connection to the Dragon Language — each Word of Power is a piece of his archive',
+      'Apocrypha itself — accessible through Black Books (Dragonborn DLC), the most direct contact point with his realm',
+      'Any sufficiently comprehensive personal library — a scholar\'s collection large enough becomes, in small ways, a reflection of Apocrypha',
+    ],
+    thresholds: [
+      { event: 'Reading a Black Book', detail: 'The Black Books are direct Apocrypha portals. Reading one transports the reader to Hermaeus Mora\'s realm. This is simultaneously an extreme act of worship and an extreme act of danger — many who read Black Books do not return, or return changed beyond recognition.' },
+      { event: 'Receiving a "Gift"', detail: 'When Hermaeus Mora offers information — the answer to a question that has obsessed a practitioner — the exchange requires giving something in return. What he wants is not always obvious, and the cost is often something the devotee didn\'t know they valued until it was taken.' },
+      { event: 'Septimus Signus\'s Arc', detail: 'Septimus\'s fate — driven mad by proximity to Hermaeus Mora\'s attention, then consumed when his usefulness ended — is the devotional cautionary tale that every serious Hermaeus Mora worshipper in Skyrim knows. The Prince uses tools. Tools that serve their purpose are expended.' },
+      { event: 'Discovering a Forbidden Archive', detail: 'Finding a collection of texts that no one was supposed to find — in a barrow, a sealed room, a locked chest — is experienced as Hermaeus Mora\'s guidance. He arranges for his devotees to find what they need. The devotional response is to read everything.' },
+    ],
+    open: [
+      'The College of Winterhold contains multiple scholars who maintain Hermaeus Mora intellectual relationships that don\'t rise to formal worship — the distinction matters legally and socially',
+      'Nord hedge-wisdom about "the Old Man of the Sea" (Herma-Mora) treats him as a boogeyman rather than a deity — providing cultural cover for actual worshippers',
+      'Traveling scholars and lorekeepers often acknowledge him academically without identifying as devotees',
+    ],
+    hidden: [
+      'Active Hermaeus Mora worship is largely indistinguishable from scholarship — the best camouflage of any Daedric cult',
+      'The Black Book network is entirely covert — texts that look like ordinary books until read',
+      'The few who know the true depth of Hermaeus Mora\'s theological claims (that he knows everything that will ever be known, that all knowledge eventually flows to Apocrypha) tend to keep that understanding private',
+    ],
+    classes: [
+      { cls: 'College of Winterhold Scholar', practice: 'The most common Hermaeus Mora-adjacent profile in Skyrim. Intellectual engagement, personal library, research into forbidden areas. Formal worship is rare; the intellectual alignment is pervasive.' },
+      { cls: 'Septimus Signus', practice: 'The extreme devotional endpoint — a genius scholar who accepted too much of Hermaeus Mora\'s attention and was remade by it. His work on the Dwemer Lexicon is genuine scholarship performed in a state of religious obsession.' },
+      { cls: 'Skaal Lore Keeper', practice: 'The Skaal of Solstheim maintain oral traditions about the Black Books that are explicitly warnings. Paradoxically, this awareness of his danger makes them theologically proximate to him — they are among the most knowledgeable people about his power.' },
+      { cls: 'Court Wizard', practice: 'Access to restricted court archives, correspondence, and strategic information creates inadvertent Hermaeus Mora alignment. Court wizards who develop a compulsion to know everything their patron knows may be more devoted than they realize.' },
+      { cls: 'Necromancer (intellectual variant)', practice: 'Necromancy\'s intersection with forbidden knowledge makes many necromancers practical Hermaeus Mora devotees — they want to know what the dead know. The Prince is pleased by this approach regardless of whether they acknowledge him.' },
+    ],
+    pressures: [
+      { icon: '📖', label: 'The Black Books', color: '#3a9a7a', text: 'Multiple Black Books exist in Skyrim (primarily Solstheim in the Dragonborn DLC). Each one is a direct portal and a direct devotional act. Miraak\'s story — becoming Hermaeus Mora\'s champion and then being discarded for a more useful champion — is the theological warning built into the Dragonborn DLC. The Prince expends his servants.' },
+      { icon: '🧊', label: 'Septimus\'s Fate', color: '#6baec4', text: 'Septimus Signus is Skyrim\'s most visible Hermaeus Mora devotee and he is visibly broken by the relationship. His outpost near the ice shelf is a place of theological warning — every scholar who finds it sees what excessive proximity to Hermaeus Mora produces.' },
+      { icon: '🐉', label: 'The Dragon Language', color: '#c8a84a', text: 'Each Thu\'um Word of Power is a piece of Hermaeus Mora\'s archive made vocal. The Greybeards use Words without acknowledging his claim on them. The theological implication — that the Dragonborn\'s power is partly Hermaeus Mora\'s domain — is unexplored and probably deliberate on the Prince\'s part.' },
+    ],
+    artifact: { name: 'Oghma Infinium', desc: '<strong>A tome that, when read, grants massive skill bonuses across a chosen stat group — then vanishes.</strong> The Oghma Infinium is the perfect Hermaeus Mora artifact: knowledge that destroys itself once given, transferring its content entirely to the reader. The exchange is absolute. Once read, the book is gone and the reader is permanently altered. There is no taking it back.' },
+  },
+  {
+    id: 'molag_bal',
+    name: 'Molag Bal',
+    icon: '🩸',
+    color: '#c84a3a',
+    bg: '#140000',
+    tagline: 'He does not offer a relationship — he takes one, and the devotee learns to call it faith',
+    realm: 'Coldharbour',
+    divinestance: 'Vigilants of Stendarr consider Molag Bal worship the most dangerous of all Daedric cults. His direct connection to vampirism, soul entrapment, and domination makes every active devotee a public safety threat in their view. Imperial law forbids it. Stormcloaks forbid it. Every culture persecutes it. The cult survives entirely through secrecy and the protective power of vampiric communities.',
+    legalstatus: 'Absolutely forbidden',
+    daily: [
+      { time: 'Before Any Interaction', text: 'Molag Bal worship is not about prayer — it is about the practice of dominance. A devotee who approaches every social interaction as a potential act of assertion, manipulation, or control is practicing. The theology is not separate from the behavior; the behavior IS the theology.' },
+      { time: 'When Opportunity Arises', text: 'Any situation where another person\'s will can be bent, broken, or bypassed is devotionally significant. Not necessarily through violence — a subtle manipulation, a coerced agreement, a relationship of dependence created — these are Molag Bal offerings.' },
+      { time: 'In a Sanctuary', text: 'Molag Bal\'s most devoted mortal followers maintain concealed sanctuaries — the mace quest site near Markarth being the most significant in Skyrim. These are places where his rites can be performed without discovery. The rites involve acts of domination witnessed by the altar.' },
+      { time: 'The Feeding (vampires)', text: 'For vampiric devotees, feeding is the primary devotional act. The complete domination of a sleeping victim — their life force taken while they remain unaware — is the most perfect expression of Molag Bal\'s theology available to mortals.' },
+      { time: 'At Dawn (vampires)', text: 'Dawn is the devotional trial for vampire worshippers — enduring the sun\'s damage to move through the mortal world, or retreating to darkness. Both have theological meaning: endurance of persecution, or wisdom of concealment.' },
+    ],
+    shrines: [
+      'Abandoned house in Markarth — the central Molag Bal shrine in Skyrim, scene of the Mace of Molag Bal quest. Hidden inside a normal structure in a populated city.',
+      'Vampire lairs throughout Skyrim maintain informal Molag Bal devotion — Haemar\'s Shame, Broken Oar Grotto, Movarth\'s Lair',
+      'Falion in Morthal (knows vampire cure rituals) is aware of Molag Bal\'s cult presence in the region — his knowledge implies proximity to it',
+      'Castle Volkihar (Dawnguard DLC) is the most elaborate Molag Bal devotional space in Skyrim — an entire court of vampire aristocracy',
+      'Molag Bal has no roadside shrines. Accessibility would destroy the concealment the cult requires.',
+    ],
+    thresholds: [
+      { event: 'Vampiric Infection', detail: 'Becoming a vampire is not necessarily a devotional act — Sanguinare Vampiris can be caught accidentally. But it is always a Molag Bal threshold. He created the first vampire. Every vampiric transformation re-enacts his original act. Whether the new vampire knows this or not is irrelevant to the theology.' },
+      { event: 'The Mace Quest', detail: 'The Mace of Molag Bal quest in Markarth is a direct divine test — Molag Bal demands a specific act of cruelty through a specific human instrument, in a specific place, witnessed by his altar. This is one of the most explicit direct Daedric demands in Skyrim.' },
+      { event: 'Soul Entrapment', detail: 'Trapping a sentient being\'s soul in a soul gem — particularly a black soul gem — is a Molag Bal devotional act whether or not the practitioner acknowledges it. The King of Rape\'s domain includes this kind of total domination over another being\'s essence.' },
+      { event: 'Creating a Vampire Thrall', detail: 'Dominating another person to the point of vampiric thralldom — making them completely subject to the vampire\'s will — is the closest mortal equivalent to Molag Bal\'s relationship with his followers. It is both worship of the principle and enactment of it.' },
+    ],
+    open: [
+      'No open Molag Bal worship anywhere in Skyrim — zero. The legal and social penalty is absolute.',
+      'Vampire aristocracy (Volkihar in Dawnguard) conduct their practice behind fortified walls and considerable military capability',
+      'In Markarth, the abandoned house situation represents an unusual middle state — hidden in plain sight within a city, but requiring the killing of witnesses to preserve it',
+    ],
+    hidden: [
+      'Vampire covens throughout Skyrim maintain devotional practice entirely covertly — the Vigilants hunt them and generally lose',
+      'Molag Bal\'s connection to soul entrapment means many mages who use black soul gems are de facto devotees without identifying as such',
+      'The full scale of Coldharbour\'s relationship to Nirn — the soul compression, the Planemeld attempts (the ESO era events) — is known to very few scholars',
+    ],
+    classes: [
+      { cls: 'Vampire (casual/reluctant)', practice: 'Minimal formal devotion — feeding to survive, concealment to continue. The theology of domination may not be consciously engaged. Molag Bal\'s claim on them exists regardless.' },
+      { cls: 'Vampire (devoted)', practice: 'Full theological engagement. The feeding is devotional. The enthralling is devotional. The creation of dependence relationships with mortals is intentional worship. Castle Volkihar\'s court represents the apex of this practice.' },
+      { cls: 'Necromancer (soul-trapping)', practice: 'Often unconscious devotion. The practice of trapping black souls in gems aligns with Molag Bal\'s domain so precisely that the Prince is implicated in every such act. Necromancers who know this and proceed anyway are the most knowing of his inadvertent devotees.' },
+      { cls: 'Vigilant of Stendarr', practice: 'The inverse. Vigilants are defined partly by opposition to Molag Bal\'s cult. Understanding Molag Bal\'s theology is professionally required for Vigilants — they may be the mortals who best understand what he demands and what he offers.' },
+      { cls: 'Mortar-Type Cultist (Markarth)', practice: 'The specific cult in Markarth\'s abandoned house represents a dedicated mortal devotee who is not a vampire. The complete portrait of what non-vampiric Molag Bal worship looks like in 4E 201 — and it is grim.' },
+    ],
+    pressures: [
+      { icon: '🩸', label: 'Dawnguard Context', color: '#c84a3a', text: 'The Dawnguard DLC positions Molag Bal\'s vampiric cult at maximum activity in Skyrim. Castle Volkihar\'s court is an active Molag Bal devotional community pursuing an apocalyptic goal (the Tyranny of the Sun). This is not a remnant cult maintaining old practices — it is an expansionist theology.' },
+      { icon: '👁', label: 'Vigilant Persecution', color: '#c87a3a', text: 'The Vigilants of Stendarr exist in 4E 201 primarily to combat Molag Bal\'s cult, among other Daedric threats. The Hall of the Vigilant near Dawnstar is their Skyrim headquarters. Their presence represents systematic, organized theological opposition — the most coordinated anti-Daedric force in the province.' },
+      { icon: '💀', label: 'Coldharbour\'s Claim', color: '#9b6bb5', text: 'Molag Bal seeks to pull Nirn into Coldharbour — the Planemeld. Mortal Molag Bal worshippers are, in theological terms, aiding the eventual destruction of the world they live in. Most don\'t understand this. Those who do understand it have made a choice about what they value.' },
+    ],
+    artifact: { name: 'Mace of Molag Bal', desc: '<strong>Drains magicka and stamina, fills soul gem if target dies within 3 seconds — specifically fills black soul gems.</strong> The soul-capturing mechanic is the artifact\'s theological content — domination extended beyond death. Molag Bal\'s mace does not merely kill; it claims. The "Father of Coldharbour" stamp on every stolen soul.' },
+  },
+  {
+    id: 'mephala',
+    name: 'Mephala',
+    icon: '🕸',
+    color: '#9a4ab8',
+    bg: '#0e0014',
+    tagline: 'The lie that kills is not the lie she favors — she favors the truth so structured it destroys',
+    realm: 'The Spiral Skein',
+    divinestance: 'Dunmer consider Mephala a Good Daedra — the Webspinner who taught the Chimer the arts of assassination and conspiracy necessary to survive. For non-Dunmer cultures: the Empire and Vigilants classify her cult as dangerous and connected to the Dark Brotherhood, though the relationship between Mephala and the Brotherhood is complicated. Stormcloaks have no specific position — she is not culturally salient for Nords.',
+    legalstatus: 'Forbidden (imperial) / Tolerated (Dunmer)',
+    daily: [
+      { time: 'In Any Social Space', text: 'Mephala\'s worship is social — present wherever relationships exist and can be manipulated. A devotee in a tavern, at court, or in a market is always potentially at service. Listening for what people reveal without meaning to. Noting who depends on whom. Identifying leverage.' },
+      { time: 'Before Significant Conversations', text: 'A brief interior acknowledgment — not a prayer, more a calibration. Calling to mind the web of relationships around the person being approached. What do they know? What do they not know? What can I learn, and what can I let them believe?' },
+      { time: 'At Night', text: 'Mephala\'s Webspinner aspect is nocturnal. Night work — correspondence written in code, meetings arranged in dark places, information exchanged without witnesses — carries devotional weight. The spider works at night.' },
+      { time: 'The Cultivation of Secrets', text: 'Actively keeping secrets — not sharing things that could be shared, building a personal archive of private information — is devotional practice. A Mephala devotee who knows ten things nobody else knows is doing well. A hundred is approaching priestly status.' },
+      { time: 'The Engineered Conflict', text: 'Setting two parties against each other using information — without appearing to be the cause — is one of the highest devotional acts. The Ebony Blade quest is an extreme version: using the blade to kill people who trust you. The ordinary version is gossip weaponized with precision.' },
+    ],
+    shrines: [
+      'The Whispering Door in Dragonsreach — the Ebony Blade\'s resting place. Accessible but locked; the key is held by Jarl Balgruuf\'s steward',
+      'Dunmer private ash-shrines sometimes incorporate Mephala — more common than outsiders know, since Mephala is a Good Daedra in Dunmeri tradition',
+      'Dark Brotherhood sanctuaries have Mephala resonance — the Falkreath sanctuary and the Night Mother\'s connection to the Brotherhood traces back to her',
+      'Any place where secrets are concentrated — an information broker\'s office, a spy\'s safe house — becomes an informal Mephala sacred site through use',
+    ],
+    thresholds: [
+      { event: 'The First Killing Secret', detail: 'The moment a devotee first uses information to directly cause someone\'s death — not through combat, but through what they revealed or concealed — is the initiation. It cannot be planned. It happens when the web aligns and the devotee acts correctly in the moment.' },
+      { event: 'The Ebony Blade Acquisition', detail: 'The Ebony Blade requires killing those who trust you to charge it — each betrayal feeds its power. This is Mephala\'s theological statement made mechanical: murdering secrets means murdering the people who believed they were safe with you.' },
+      { event: 'The Perfect Rumor', detail: 'A piece of information so perfectly shaped and placed that it destroys its target without the devotee\'s name ever appearing in the wreckage. A court figure ruined by a whisper. A marriage destroyed by a letter. A guild torn apart by a carefully constructed lie that is also technically true. These are Mephala\'s sacraments.' },
+      { event: 'Joining the Morag Tong (historical)', detail: 'Historically, the Morag Tong was Mephala\'s organization — sanctioned assassination in Morrowind. In 4E 201, the Morag Tong barely functions outside Morrowind. Former members or those who follow its traditions are some of the most formally committed Mephala practitioners remaining.' },
+    ],
+    open: [
+      'Dunmer in Skyrim can acknowledge Mephala as a Good Daedra without legal consequence — this is a cultural protection',
+      'The Ebony Blade\'s presence in Whiterun is known to Jarl Balgruuf but not suppressed — he is uncomfortable with it, not actively hunting its devotees',
+      'Information brokers, spies, and those whose professions require secret-keeping often have a Mephala orientation they would never name as such',
+    ],
+    hidden: [
+      'The Dark Brotherhood\'s theological connection to Mephala (through the Night Mother) is known within the Brotherhood but not widely understood outside it',
+      'The full Spiral Skein theology — the realm where Mephala arranges mortal relationships into a literal web for her entertainment — is kept within serious devotee circles',
+      'The Morag Tong connection is historical but its practitioners do not advertise it, especially outside Morrowind',
+    ],
+    classes: [
+      { cls: 'Dark Brotherhood Member', practice: 'Theologically adjacent — killing contracted murders with discretion, keeping the Brotherhood\'s existence secret. The practice aligns with Mephala whether or not members acknowledge her specifically.' },
+      { cls: 'Dunmer Devotee', practice: 'Most formally correct practice — Mephala as Good Daedra, teacher of necessary darkness. Daily social practice of information-gathering and strategic revelation. The Morag Tong tradition carried in memory.' },
+      { cls: 'Court Spy / Informant', practice: 'Professional alignment with devotional practice. Information brokerage as worship. May not name Mephala but operates entirely within her portfolio.' },
+      { cls: 'Thalmor Interrogator', practice: 'Extreme irony — Thalmor intelligence work (manipulation, secret extraction, leveraged information) maps perfectly onto Mephala\'s portfolio, while Altmer theology would reject the association entirely. The Prince presumably finds this amusing.' },
+      { cls: 'Ebony Blade Wielder', practice: 'The most direct active devotional practice available in Skyrim — killing those who trust you to feed a Mephala artifact. Morally absolute; theologically precise.' },
+    ],
+    pressures: [
+      { icon: '🗡', label: 'Dark Brotherhood Decline', color: '#9a4ab8', text: 'The Dark Brotherhood in 4E 201 is a shadow of its former self — recent assassinations gone wrong, sanctuaries destroyed, membership depleted. The Brotherhood\'s decline is a Mephala theological event: the web has been cut in several places. Whether she is orchestrating a recovery or simply observing is unknown.' },
+      { icon: '🌋', label: 'Dunmeri Diaspora', color: '#c4785a', text: 'The refugee Dunmer carry Mephala\'s theological legitimacy into Skyrim, where she is otherwise a forbidden Daedric Prince. The cultural protection that Dunmeri Good Daedra tradition provides extends Mephala\'s practical tolerance in ways that anger neither the Empire nor the Stormcloaks.' },
+      { icon: '🕸', label: 'The Ebony Blade\'s Hunger', color: '#9a4ab8', text: 'The Ebony Blade in Dragonsreach is partially uncharged — it has not fed recently. This is a theological open question: who placed it there, and what web was being built around it? The blade in a Jarl\'s palace, accessible to a Dragonborn, is a placement that suggests deliberate intent.' },
+    ],
+    artifact: { name: 'Ebony Blade', desc: '<strong>Absorbs health. Grows more powerful each time it kills someone who trusts the wielder.</strong> The most theologically explicit artifact in Skyrim: it requires betrayal to function at full power. The weapon cannot be optimised by skill — only by the cultivation of trust, and its deliberate destruction. Mephala\'s design philosophy made material.' },
+  },
+  {
+    id: 'boethiah',
+    name: 'Boethiah',
+    icon: '🗡',
+    color: '#7a5ab8',
+    bg: '#0a0814',
+    tagline: 'Strength proved without an audience is not proved — she demands the demonstration',
+    realm: 'Attribution\'s Share',
+    divinestance: 'Persecuted by Vigilants of Stendarr and Imperial law. Dunmer consider Boethiah a Good Daedra — she liberated the Chimer from Auri-El\'s authority by swallowing Trinimac. Her cult in Skyrim is forced underground for non-Dunmer practitioners, but Dunmeri devotees have the same cultural protection they enjoy with Azura and Mephala.',
+    legalstatus: 'Forbidden (imperial) / Tolerated (Dunmer)',
+    daily: [
+      { time: 'In Combat', text: 'Boethiah\'s worship is proved in combat. Each fight is an opportunity to demonstrate that one deserves to continue existing — and that one\'s enemies do not. This is not cruelty; it is theological precision about who the stronger is.' },
+      { time: 'Before a Challenge', text: 'A Boethiah devotee does not pray to be kept safe. They acknowledge the coming test, affirm they will meet it honestly, and accept the outcome as theologically correct. Surviving is confirmation. Dying is losing the argument.' },
+      { time: 'At a Feast of Rivals', text: 'The most significant Boethiah ritual involves luring rivals to a gathering, gaining their trust, and killing them — specifically with a sacrificial pillar involved. This is not standard daily practice, but it represents the devotional apex: the conspiracy that tests strength through maximum treachery.' },
+      { time: 'Political Maneuvering', text: 'Boethiah\'s portfolio is politics and plots as much as combat. Court intrigue, factional maneuvering, the engineering of your superior\'s downfall — these are all devotional acts when conducted with genuine intention to unseat the strong and prove yourself stronger.' },
+      { time: 'After Victory', text: 'No prolonged celebration — Boethiah devotees move on. The victory proved the point; dwelling on it implies insecurity. The theological posture after winning is forward-facing: who is next?' },
+    ],
+    shrines: [
+      'Sacellum of Boethiah, northeastern Skyrim near Windhelm — remote, maintained by active cultists, the site of the in-game quest',
+      'The pillar at the Sacellum is the primary ritual implement — it requires a sacrificed willing follower to activate communication with Boethiah',
+      'Dunmer private shrines — Boethiah as Good Daedra, the liberator, the one who proved that the strong have the right to overturn the established order',
+      'Morag Tong historical sites in Morrowind maintain Boethiah associations alongside Mephala — the two Good Daedra of darkness share devotional infrastructure',
+    ],
+    thresholds: [
+      { event: 'The Sacellum Quest', detail: 'Boethiah demands a living sacrifice — a follower willing to approach the pillar, at which point the devotee kills them. This is theologically precise: it requires cultivating enough of a follower\'s trust to lead them to their death, then demonstrating the will to use that trust as a weapon. Mephala and Boethiah\'s domains overlap here.' },
+      { event: 'Defeating Boethiah\'s Champion', detail: 'After the sacrifice, Boethiah herself possesses the corpse and issues a direct challenge: defeat her current champion. This is the divine test made literal. Surviving it establishes theological standing.' },
+      { event: 'The Assumption of Power', detail: 'A Boethiah devotee who successfully overthrows a superior — takes their position, their followers, their resources — and does so through genuine strength rather than luck has performed one of the most significant devotional acts possible. Boethiah approves of successful revolution.' },
+      { event: 'Teaching Conspiracy', detail: 'In Dunmeri tradition, Boethiah taught the Chimer the arts of conspiracy and insurgency specifically to enable them to turn away from Auri-El. Remembering this — keeping the theological story of why conspiracy is sometimes liberation — is a Dunmeri Boethiah observance.' },
+    ],
+    open: [
+      'Dunmer cultural acceptance provides the same protection as for Azura and Mephala — Boethiah as liberator is a legitimate Dunmeri theological position',
+      'The Sacellum is remote enough that its active cult has operated without Vigilant interference for some time in 4E 201',
+      'Mercenary and warrior culture in Skyrim has a surface Boethiah orientation — "prove yourself" ethics without the explicit theology',
+    ],
+    hidden: [
+      'The sacrificial pillar ritual at the Sacellum is not advertised — the cult reveals it to recruits only after establishing commitment',
+      'The full story of Boethiah swallowing Trinimac and creating Malacath is not widely known outside Dunmeri and scholarly communities',
+      'Boethiah\'s Khajiit form Boethra — the rebel against cosmic oppression — represents a distinct theological tradition that the Skyrim cult is unaware of',
+    ],
+    classes: [
+      { cls: 'Dunmeri Devotee', practice: 'Fullest theological context. Boethiah as the liberator who made the Chimer possible. Daily practice of proving strength in social and physical domains. The conspiracy arts maintained as heritage.' },
+      { cls: 'Sacellum Cultist', practice: 'Active devotion at the Skyrim shrine. The cult maintains itself through regular violence — cult members fight each other to maintain fitness, and the sacrifice ritual is the highest service they can offer.' },
+      { cls: 'Assassin / Revolutionary', practice: 'Boethiah\'s portfolio of plots and rebellion resonates with anyone who is overthrowing established power. The Dark Brotherhood shares some theological overlap; so does any organized resistance movement.' },
+      { cls: 'Political Schemer (secular)', practice: 'Unconscious devotee. Court politics conducted with genuine intent to unseat and replace superiors maps exactly onto Boethiah\'s domain. The Jarl\'s court, the East Empire Company, the Thieves Guild leadership — ambition here is Boethiah-aligned.' },
+      { cls: 'Khajiit Devotee (Boethra)', practice: 'A distinct tradition emphasising cosmic rebellion — Boethra fought against the oppressive powers of the Aurbis. Khajiit devotees in this tradition have a more philosophical and less blood-focused practice than the Sacellum cult.' },
+    ],
+    pressures: [
+      { icon: '🗡', label: 'The Sacellum\'s Stasis', color: '#7a5ab8', text: 'The Skyrim Boethiah cult at the Sacellum is stuck. They have been waiting for a worthy champion to arise among them for some time. The tension is theological — Boethiah requires demonstration of strength, but the current cultists have demonstrated only that they can maintain a shrine. The Dragonborn\'s arrival is a divine resolution to this stasis.' },
+      { icon: '🌋', label: 'Dunmeri Legitimacy', color: '#c4785a', text: 'Dunmeri theological legitimacy for Boethiah provides a cultural umbrella that her non-Dunmer Skyrim cultists benefit from tangentially. A Dunmer at the Sacellum is practicing an ancient tradition; a Nord at the Sacellum is a criminal. The same shrine, different legal status.' },
+      { icon: '⚔', label: 'Civil War Resonance', color: '#6baec4', text: 'Boethiah\'s theology of legitimate revolt maps onto the Civil War in ways both factions would find uncomfortable. The Stormcloaks\' revolt against Imperial authority is structurally Boethiah-aligned. Ulfric would be horrified by the association; the Prince presumably is not.' },
+    ],
+    artifact: { name: 'Ebony Mail', desc: '<strong>Muffle + poison aura that damages nearby enemies when sneaking.</strong> Theologically, the armor expresses Boethiah\'s combination of overt power and concealed approach. The poison aura is not announced; it simply operates. The muffle is concealment for the strong. Not stealth for cowardice — stealth as tactical superiority.' },
+  },
+  {
+    id: 'malacath',
+    name: 'Malacath',
+    icon: '⚒',
+    color: '#8aaa3a',
+    bg: '#080d00',
+    tagline: 'His theology is the simplest in Tamriel — endure, prove, demand nothing you cannot take',
+    realm: 'The Ashpit',
+    divinestance: 'Vigilants of Stendarr do not actively persecute Malacath worship — it is tribal and contained within Orcish communities that the Vigilants have little desire to enter. Imperial law has no specific prohibition. The Empire granted Orsinium provincial status, which gives Malacath worship a quasi-legitimate civic standing. In practice, city-dwelling Orcs who openly acknowledge Malacath attract suspicion but rarely prosecution.',
+    legalstatus: 'Tolerated (strongholds) / Suspicious (cities)',
+    daily: [
+      { time: 'Dawn — At the Forge', text: 'The forge fires are lit before any other act. Beginning the day\'s smithing work IS the morning devotion. Malacath is honored through labor that produces strength, not through prayer that requests it. The quality of what you make is the prayer.' },
+      { time: 'Morning — Labor Assignment', text: 'Stronghold Orcs divide labor by Malacath\'s code: strength is rewarded, weakness is pushed to improve. Assigning tasks is a religious act — the chief\'s allocation of work reflects divine hierarchy made practical.' },
+      { time: 'Midday — Communal Meal', text: 'No Orc eats while another starves. This is Malacath\'s code made concrete and daily. Sharing food is a theological obligation, not social custom. The meal is silent by preference — words are for decisions, not eating.' },
+      { time: 'Evening — The Court of the Chief', text: 'The chief holds court. Challenges to authority may be raised, grievances heard, disputes adjudicated. This is the most politically and religiously charged moment of the day. Malacath is the implicit judge of every decision made here.' },
+      { time: 'Night — Assessment', text: 'Ore quality checked. Tools inspected. The day\'s work assessed against the day\'s potential. Substandard work is a religious failure, not merely a professional one. Malacath\'s pride demands excellence; accepting mediocrity is theological negligence.' },
+    ],
+    shrines: [
+      'Each stronghold has a Malacath shrine — the most consistently maintained sacred space in Orcish culture. Maintained personally by the chief.',
+      'Largashbur in the Rift — one of Skyrim\'s active strongholds, currently under a Malacath-placed curse (4E 201). Site of the Cursed Tribe quest.',
+      'Fallowstone Cave and Giant\'s Grove — the site of Shagrol\'s Warhammer, Malacath\'s relic. The quest requires retrieving it from a giant.',
+      'Volendrung (wherever it appears) is itself a Malacath shrine in motion — the artifact\'s presence sanctifies its immediate location.',
+      'Orsinium (Wrothgar) contains the most complete Malacath temple infrastructure in existence — the homeland shrine network.',
+    ],
+    thresholds: [
+      { event: 'First Forge Work (Coming of Age)', detail: 'The first time a young Orc works the forge independently is more significant than any ceremony. Achievement IS the rite of passage. No witnesses required — Malacath sees the quality of the work.' },
+      { event: 'The Cursed Tribe Quest', detail: 'Malacath\'s active intervention at Largashbur — placing a curse on a stronghold whose chief is too weak — and the subsequent demand to retrieve Shagrol\'s Warhammer from Giant\'s Grove, is the most direct Malacath theophany in Skyrim in 4E 201. He speaks directly, judges directly, and executes his judgment through the Dragonborn when Yamarz fails the test.' },
+      { event: 'Challenge to Chief', detail: 'Formalised mortal combat to the death. If the challenger wins, Malacath deemed them worthy. This is succession politics and religious sacrament simultaneously. The blood shed feeds the stronghold\'s Malacath shrine. Yamarz\'s inability to meet this standard in the quest is precisely why Malacath\'s curse falls on Largashbur.' },
+      { event: 'Receiving Volendrung', detail: 'Malacath gives Volendrung to the Dragonborn after the quest rather than to any Orc — a pointed theological commentary on Yamarz\'s cowardice and the stronghold\'s current weakness. The artifact goes to whoever proved strongest in the moment, regardless of blood.' },
+      { event: 'Blood Oath', detail: 'Orcish blood oaths — sworn before Malacath\'s altar with specific witnesses — are among the most binding covenant forms in Tamriel. Breaking one is not merely dishonorable; it invites Malacath\'s direct intervention. The Prince does not ignore violated oaths within his own community.' },
+    ],
+    open: [
+      'Stronghold worship is entirely open within Orcish communities — no concealment attempted or required',
+      'Blood-Kin system publicly acknowledges Malacath\'s authority over who may enter strongholds — outsiders who gain Blood-Kin status are implicitly acknowledged before the Prince',
+      'City Orcs acknowledge Malacath openly to other Orcs. In mixed company they are typically more circumspect but not secretive.',
+      'Imperial provincial status for Orsinium gives Malacath worship an official-adjacent legitimacy that other Daedric cults lack entirely',
+    ],
+    hidden: [
+      'The full theological depth of Malacath\'s origin — that he is the devoured-and-excreted remnant of the Aldmeri warrior-god Trinimac — is maintained by Orcish lore-keepers but not shared with outsiders',
+      'The Trinimac faction (Altmer who never accepted the transformation, maintaining that Trinimac still exists and can be restored) runs counter to Orcish Malacath theology. This schism is known to scholars but not publicized.',
+      'The Ashpit\'s theology — what it actually means to go there, what existence there involves — is almost entirely undocumented in mortal scholarship',
+    ],
+    classes: [
+      { cls: 'Stronghold Smith', practice: 'The forge is the temple. Every object produced is a devotional act. Excellence in craft is religious excellence. The best Orcish smiths in Skyrim — producing the finest heavy armor in Tamriel — perform constant worship through their output.' },
+      { cls: 'Stronghold Chief', practice: 'Simultaneously political leader and religious authority. No separation between ruling and priesthood. Conducting ceremonies, maintaining the shrine, judging challenges, administering the blood oath — all one role. Yamarz\'s failure at Largashbur is a failure in all these dimensions simultaneously.' },
+      { cls: 'City-Dwelling Orc', practice: 'Maintains Malacath privately. May attend Nordic Divine temples for social integration without theological conflict — Malacath and the Nine Divines occupy different domains, and Orcs are pragmatic. Deep awareness of living between two worlds.' },
+      { cls: 'Imperial Legion Orc', practice: 'Most complicated position. Legion religious expectations (Divines) conflict with Malacath practice. Most manage by keeping Malacath faith deeply private. The Legion oath sworn before the Divines is understood as a professional contract, not a religious one.' },
+      { cls: 'Orcish Warrior (non-Legion)', practice: 'Malacath\'s code governs daily conduct entirely. Combat is the primary religious expression alongside craft. Honor, oath-keeping, and accepting consequences are the theology made physical. Dying in battle with a weapon in hand is specifically honored.' },
+    ],
+    pressures: [
+      { icon: '⚒', label: 'Largashbur\'s Active Curse', color: '#8aaa3a', text: 'One of Skyrim\'s active strongholds is under a Malacath-placed punishment in 4E 201 — giants attack repeatedly, Chief Yamarz is demonstrably weak, and the community is in genuine crisis. This is not abstract theology. Malacath is actively judging his own people in real time, and they know it.' },
+      { icon: '👑', label: 'The Dignity Theology', color: '#c47a5a', text: 'Orcish theology is built on the premise that being spurned, excluded, and considered lesser is not divine disfavor but proximity to a god who was himself destroyed and remade by the powerful. This is arguably the most psychologically sophisticated theology in Tamriel — surviving humiliation not as defeat but as the exact credential Malacath demands.' },
+      { icon: '⚔', label: 'Orsinium\'s History as Theology', color: '#8aaa3a', text: 'Orsinium has been destroyed and rebuilt multiple times. Each destruction validates Malacath\'s theology of spurned endurance; each rebuilding validates the survival ethic. The Orc homeland IS Malacath\'s mythology made geopolitical. The current Wrothgar rebuild is the latest chapter in a theological narrative that has been running for millennia.' },
+    ],
+    artifact: { name: 'Volendrung', desc: '<strong>Two-handed warhammer — absorbs 50 Stamina per hit.</strong> Originally a Dwemer weapon of Clan Rourken, claimed by Malacath after the clan\'s dispersal. The theological significance: Volendrung was a weapon of a people who refused to stay where they were told — the Rourken refused to join the other Dwemer in Morrowind and threw their hammer across Tamriel, settling where it landed. Malacath\'s claim on it is the claim of the outcast on the object that proved defiance. The stamina drain is appropriate: Malacath does not tire.' },
+  },
+  {
+    id: 'mehrunes_dagon',
+    name: 'Mehrunes Dagon',
+    icon: '🔥',
+    color: '#c83a3a',
+    bg: '#140000',
+    tagline: 'He does not want your worship — he wants your participation in the end of what is',
+    realm: 'The Deadlands',
+    divinestance: 'Most aggressively persecuted Daedric cult in all of Tamriel. The Mythic Dawn\'s attempt to trigger the Oblivion Crisis (4E 433 — less than 200 years before Skyrim) is living memory for elves and institutional memory for humans. Every government in Tamriel suppresses Mehrunes Dagon worship on sight. Vigilants of Stendarr prioritize it. Imperial law prescribes death. The Stormcloaks have no specific law but would apply the same result informally.',
+    legalstatus: 'Capital offense',
+    daily: [
+      { time: 'In Secret', text: 'Post-Crisis Mehrunes Dagon worship is conducted entirely in concealed cells. No public acknowledgment, no visible iconography, no shrine that can be found. The cult exists in small groups who know each other personally and trust no one outside the cell.' },
+      { time: 'Ideological Maintenance', text: 'The primary daily devotional act for Mehrunes Dagon\'s followers is maintaining the conviction that the existing world should end — that Mundus is a prison, Nirn a failed project, and that destruction is liberation. This requires active internal practice because the evidence of daily comfortable life works against it.' },
+      { time: 'During Violence', text: 'Acts of destruction — arson, assassination, the dismantling of institutions — are explicitly devotional when performed in Mehrunes Dagon\'s name. The quality of the destruction matters; surgical targeted chaos is more valued than indiscriminate mayhem.' },
+      { time: 'Studying the Razor\'s Lore', text: 'Silus Vesuius in Dawnstar has assembled Mythic Dawn artifacts into a small museum — a remarkable piece of devotional scholarship operating in plain sight. His obsession is the most visible post-Crisis Mehrunes Dagon devotion in Skyrim, framed as history rather than worship.' },
+      { time: 'Solstices and Cataclysms', text: 'Mehrunes Dagon\'s cult marks significant destructive events — battles, famines, the dragon attacks of 4E 201 — as devotional calendar events. Each catastrophe is evidence. The return of Alduin is interpreted by informed cultists as confirmation that the end approaches.' },
+    ],
+    shrines: [
+      'Shrine of Mehrunes Dagon, south of Morthal — remote, on a mountain, accessible to anyone but far from any settlement. Site of the Pieces of the Past quest.',
+      'Silus Vesuius\'s Museum of the Mythic Dawn in Dawnstar — a legally operating museum that is functionally a devotional archive. The most brazen open Mehrunes Dagon presence in Skyrim.',
+      'The Deadlands themselves are accessible only in exceptional circumstances — no mortal Mehrunes Dagon devotee in 4E 201 has access.',
+      'Underground cells maintain portable shrines — small, easily concealed, destroyed before capture if possible.',
+    ],
+    thresholds: [
+      { event: 'The Pieces of the Past Quest', detail: 'Mehrunes Dagon uses Silus Vesuius to reassemble the shattered Mehrunes\' Razor — each piece recovered is an act of devotion for Silus regardless of who does the recovering. The Prince\'s final demand (kill Silus to receive the Razor) is the ultimate post-Crisis theological test: is the devotee genuinely committed to destruction, including of their own instrument?' },
+      { event: 'Joining a Cell', detail: 'Post-Crisis Mythic Dawn cells are tiny, paranoid, and operate on need-to-know principles. Joining one requires demonstrated ideological commitment before any theological content is shared. The initiation is the sustained willingness to exist under the threat of execution — that patience is itself devotional.' },
+      { event: 'A Successful Act of Destruction', detail: 'Completing a significant destructive act — an assassination, a fire, a political collapse catalyzed — and surviving without identification is the primary threshold achievement. It proves both theological commitment and operational competence.' },
+      { event: 'The Oblivion Crisis as Living Memory', detail: 'For Mythic Dawn survivors and their descendants, the Crisis itself is the founding devotional event — the moment when the gates opened and Mehrunes Dagon actually walked on Nirn. Narrating it, transmitting it, keeping its memory accurate is a priestly function in post-Crisis cells.' },
+    ],
+    open: [
+      'Silus Vesuius\'s museum is the only publicly visible Mehrunes Dagon acknowledgment in Skyrim — framed as historical scholarship, not worship',
+      'The shrine south of Morthal is physically accessible but rarely visited by non-devotees',
+      'Some destruction-oriented Destruction mages have a casual Mehrunes Dagon affinity that doesn\'t rise to formal cult membership but is present',
+    ],
+    hidden: [
+      'Post-Crisis cells are the most operationally secure of any Daedric cult — 200 years of persecution have produced extremely tight compartmentalization',
+      'The full Mythic Dawn theology (that Mundus is a prison built by Akatosh to trap the et\'Ada, that destroying it is liberation) is the most complete anti-creation theodicy in Tamriel and is kept entirely within initiated circles',
+      'Mehrunes\' Razor\'s current status — reassembled and in the Dragonborn\'s hands, or destroyed — is a live theological fact that post-Crisis cells are intensely interested in',
+    ],
+    classes: [
+      { cls: 'Mythic Dawn Remnant', practice: 'Elderly survivors or second-generation members carrying the full ideological inheritance. Priestly function — transmitting theology accurately and maintaining cell structure. The most committed and most dangerous practitioners.' },
+      { cls: 'Silus Vesuius', practice: 'A fascinating edge case — an obsessive Mythic Dawn scholar who claims historical interest but whose museum is functionally devotional. Whether he is a genuine devotee or a deeply committed academic is theologically ambiguous. Mehrunes Dagon doesn\'t distinguish.' },
+      { cls: 'Destruction Mage (aligned)', practice: 'Casual ideological alignment — finds the destruction-as-liberation theology intellectually compelling without full cult commitment. Useful to cells as unaffiliated sympathizers.' },
+      { cls: 'Revolutionary / Nihilist', practice: 'Political radicals whose anti-institutional convictions drift toward Mehrunes Dagon\'s theological framework. Often recruited by cells rather than self-identifying.' },
+      { cls: 'Active Cell Member', practice: 'Full theological and operational commitment. The daily practice is concealment, ideological maintenance, and waiting for the correct moment to act. The most dangerous single class of Daedric devotee in Skyrim.' },
+    ],
+    pressures: [
+      { icon: '🔥', label: 'Post-Crisis Persecution', color: '#c83a3a', text: 'The Oblivion Crisis (4E 433) was less than 200 years ago and destroyed the Septim bloodline, destabilized the Empire, and killed large numbers across all of Tamriel. Every government has institutional memory of what Mehrunes Dagon worship produces at scale. The persecution is the most systematic of any Daedric cult — and it is entirely justified by recent history.' },
+      { icon: '🗡', label: 'The Razor\'s Reassembly', color: '#9b6bb5', text: 'Mehrunes\' Razor was shattered after the Crisis. Silus Vesuius has spent years gathering its pieces, and the Pieces of the Past quest completes the reassembly in 4E 201. This is a live theological event for any post-Crisis devotee who learns of it — the Prince\'s signature artifact has returned to the world.' },
+      { icon: '🐉', label: 'Alduin\'s Return as Confirmation', color: '#c8a84a', text: 'The return of Alduin and the dragon attacks on Skyrim are interpreted by Mehrunes Dagon cultists as confirmation of their end-times theology. The world IS ending — the World-Eater walks again. From a Mehrunes Dagon devotee\'s perspective, 4E 201 is the most theologically validated year in living memory.' },
+    ],
+    artifact: { name: 'Mehrunes\' Razor', desc: '<strong>Dagger with 1.98% chance to instantly kill any target regardless of health.</strong> The instant-kill mechanic is the theological statement: the Razor does not care about the target\'s power, defenses, or narrative importance. It ends things. That is its purpose and its theology — the possibility of absolute termination, applied randomly, to anything. The Prince of Destruction made into a small knife.' },
+  },
+  {
+    id: 'peryite',
+    name: 'Peryite',
+    icon: '☣',
+    color: '#6aaa4a',
+    bg: '#050e00',
+    tagline: 'He does not grant power — he distributes burden, and the devout carry it willingly',
+    realm: 'The Pits',
+    divinestance: 'Vigilants of Stendarr treat Peryite worship as dangerous due to the plague and disease dimension, but prosecute it less aggressively than Molag Bal or Mehrunes Dagon. Imperial law technically forbids all Daedric worship but Peryite\'s cult is small, geographically remote in Skyrim, and not perceived as a systemic threat. The cult\'s natural order dimension — that disease is part of the proper functioning of the world — gives it a strange theological defensibility.',
+    legalstatus: 'Forbidden / Low enforcement priority',
+    daily: [
+      { time: 'The Morning Inventory', text: 'A Peryite devotee begins each day with a physical self-assessment — not for wellness, but for correct function. What ails them, what works well, what has declined. This is not hypochondria; it is an attentiveness to the body as a system whose proper functioning is a theological concern.' },
+      { time: 'At the Shrine', text: 'Peryite\'s Skyrim shrine is atmospherically extreme — worshippers are found catatonic, souls sent to the Pits. The active devotional presence at the shrine is among the most visually strange of any Daedric site. Visitors encounter a scene that does not invite casual approach.' },
+      { time: 'Handling Disease', text: 'Peryite\'s followers have a different relationship to disease than the general population — it is not feared but respected. When sick, a devout Peryite worshipper does not immediately seek a cure; they acknowledge the disease as a function of natural order and assess whether it is doing what it should.' },
+      { time: 'Organizational Compliance', text: 'The most unusual daily practice: Peryite is the Taskmaster, the prince of lowest Daedra, the keeper of natural order. His followers maintain personal orderliness — tasks completed, records kept, obligations met — as a form of alignment with his organizational portfolio.' },
+      { time: 'Alchemical Work', text: 'Many Peryite devotees are alchemists, specifically in the disease and poison domains. Cultivating disease agents, refining poisons, understanding the mechanisms of illness — this is devotional work. Orchendor in the Bthardamz dungeon represents the extreme endpoint of this practice.' },
+    ],
+    shrines: [
+      'Peryite\'s Shrine, northwest of Markarth — a remote mountainside site where worshippers have been sent to the Pits in a waking catatonic state. The most visually dramatic Daedric shrine encounter in Skyrim.',
+      'Bthardamz — a Dwemer ruin northwest of Markarth, taken over by Peryite\'s cult under Orchendor. A functioning cult headquarters disguised as a ruin.',
+      'Apocryphal alchemical workshops maintained by solitary practitioners in wilderness areas — recognizable to the knowing by their disease-reagent focus.',
+    ],
+    thresholds: [
+      { event: 'The Afflicted Quest', detail: 'Peryite\'s Skyrim quest requires finding Orchendor in Bthardamz — a devotee who has become so suffused with Peryite\'s essence that he has ceased to function as Peryite\'s agent and become a problem. The Prince wants him dead. This is a recurring Peryite dynamic: his tools become overly aligned with him and require replacement.' },
+      { event: 'Being Sent to the Pits', detail: 'Peryite\'s most extreme devotional act — consenting to have your soul sent to the Pits, leaving your body catatonic at the shrine. The worshippers found around his shrine have undergone this voluntarily. What they experience in the Pits and why they consent is known only to them and the Prince.' },
+      { event: 'Contracting a Disease Willingly', detail: 'Advanced Peryite devotees sometimes deliberately contract diseases as a form of alignment — allowing the Prince\'s domain to move through them. The disease may be managed but is not immediately cured. This is the devotional inverse of Stendarr\'s healing mandate.' },
+      { event: 'The Alchemical Threshold', detail: 'Creating a substance capable of causing significant plague — and choosing how to use it — is the primary Peryite threshold for alchemical devotees. What is done with the capability matters theologically: indiscriminate plague is not Peryite\'s preference. Controlled, purposeful disease is.' },
+    ],
+    open: [
+      'No open Peryite worship in Skyrim — the shrine is known but the active cult is concealed inside Bthardamz',
+      'Alchemists who specialize in disease and poison operate openly as professionals — the Peryite dimension of their practice is invisible to observers',
+      'The catatonic worshippers at the shrine are visible evidence of an active cult, but their state prevents them from identifying themselves or their theology',
+    ],
+    hidden: [
+      'The Bthardamz operation is the best-concealed Daedric cult infrastructure in Skyrim — a functioning compound inside a ruin that casual explorers avoid',
+      'Peryite\'s natural order theology — that disease and decay are necessary functions of a properly maintained world — is more philosophically coherent than most Daedric cults and is kept within initiated circles where it is presented systematically',
+      'The relationship between Peryite\'s organizational role (administering the lowest Daedra) and his mortal cult\'s organizational compliance practice is known only to the most theologically informed devotees',
+    ],
+    classes: [
+      { cls: 'Orchendor (in-quest)', practice: 'The most fully realized Peryite devotee in Skyrim — a Mer so suffused with the Prince\'s essence that he teleports, is immune to spells, and has essentially become a vessel. The devotional endpoint that Peryite himself considers a failure of correct function.' },
+      { cls: 'Afflicted Cultist', practice: 'Members of the Bthardamz cult who can project vomit as a Destruction-adjacent attack. The disease-embodiment practice taken to a combat-functional extreme. Devotional and tactical simultaneously.' },
+      { cls: 'Alchemist (disease-focused)', practice: 'The most socially invisible Peryite devotee. Their professional work is their devotion. May have no cult affiliation but maintain a genuine theological relationship with Peryite through the practice of understanding disease.' },
+      { cls: 'Natural Order Philosopher', practice: 'Intellectually oriented — Peryite\'s portfolio of maintaining the proper functioning of the world, including its decay and disease cycles, is philosophically interesting. These practitioners are theorists more than practitioners.' },
+      { cls: 'Shrine Devotee (catatonic)', practice: 'The most extreme and least useful form of devotion from outside the theology. From within it: the ultimate submission to the Prince\'s will, consenting to removal from the mortal world entirely.' },
+    ],
+    pressures: [
+      { icon: '☣', label: 'Bthardamz as Living Headquarters', color: '#6aaa4a', text: 'Unlike most Daedric cults in Skyrim which exist as scattered individuals, Peryite\'s cult has a functioning compound — Bthardamz — with an organized population of Afflicted. This makes it the most structurally complete Daedric cult in the province, and the most operationally dangerous if it ever moves beyond its current defensive posture.' },
+      { icon: '🌿', label: 'Natural Order vs. Healing', color: '#c8a84a', text: 'Peryite\'s theology stands in direct opposition to Stendarr and Arkay\'s healing and proper-death portfolio. The argument that disease is a correct function of the world — that healing everything is theological error — is the most coherent anti-Divine argument available, and some alchemists find it genuinely compelling.' },
+      { icon: '🐍', label: 'The Weakest Prince Problem', color: '#6aaa4a', text: 'Peryite is acknowledged in all Daedric taxonomies as among the least powerful of the Princes. His devotees must actively maintain theological commitment to a figure who is openly ranked below his peers. The theology resolves this by framing his administrative role as essential rather than prestigious — someone must maintain the Pits, and he does.' },
+    ],
+    artifact: { name: 'Spellbreaker', desc: '<strong>Unique shield — when blocking, casts a ward that absorbs 50 points of spell damage.</strong> The theological content of this artifact is unusual for Peryite: it is a protective item, not an offensive or plague-related one. The ward mechanic — creating a barrier against magical harm — aligns with the natural order portfolio: proper defenses against improper forces. Spellbreaker is Peryite\'s statement that protection against chaos is also his domain, not just disease.' },
+  },
+  {
+    id: 'vaermina',
+    name: 'Vaermina',
+    icon: '😴',
+    color: '#7a50b8',
+    bg: '#0a0614',
+    tagline: 'She does not need your waking hours — she takes what she wants while you sleep',
+    realm: 'Quagmire',
+    divinestance: 'Vigilants of Stendarr consider Vaermina worship moderately dangerous — her cult does not produce vampires or plagues, but the dream-theft and memory-extraction capabilities of the Skull of Corruption represent a genuine intelligence and psychological threat. Imperial law forbids it. The cult is difficult to detect because its most distinctive activities occur during sleep — a Vaermina devotee looks like a sleeping person.',
+    legalstatus: 'Forbidden / Difficult to detect',
+    daily: [
+      { time: 'At Sleep', text: 'Sleep is the primary devotional space. A Vaermina devotee does not merely sleep — they prepare for it, attend to it, record it. The dream is the service; the waking hours are preparation and analysis.' },
+      { time: 'Upon Waking', text: 'Immediate dream recording — before speaking, before eating, before any waking-world contact. The dream must be written or spoken into preservation before the waking mind overwrites it. Dream journals are the primary devotional text of Vaermina\'s cult.' },
+      { time: 'Dream Analysis', text: 'Interpreting recorded dreams for theological content — what did Vaermina show, what was she taking, what was she leaving behind? The cult has developed a sophisticated interpretive framework for dream content that functions as a theological hermeneutic.' },
+      { time: 'Near Sleeping People', text: 'Vaermina\'s Skull of Corruption absorbs dreams from sleeping targets. For devotees without the Skull, proximity to sleeping people — watching them, listening to them, attempting to enter their dreams through trained practice — is a devotional act. The Nightcaller Temple situation in Dawnstar (dreamwalking via a miasma affecting the whole town) is a large-scale version of this practice.' },
+      { time: 'At Dusk', text: 'The transition toward night and sleep is Vaermina\'s approach. A brief acknowledgment — she is coming. The psychological preparation for surrender to unconsciousness is itself a devotional act.' },
+    ],
+    shrines: [
+      'Nightcaller Temple, Dawnstar — site of the Waking Nightmare quest. A Vaermina temple that has been inadvertently afflicting the entire town of Dawnstar with shared nightmares through an aerosol Miasma.',
+      'The Skull of Corruption within the Temple — the primary sacred object, which absorbs dreams from sleeping people within range.',
+      'Private home dream-shrines — small altars with dream-recording materials, personal journals, sleep-associated offerings (poppy, nightshade, moon sugar in some traditions).',
+      'Quagmire itself is inaccessible to mortals under normal circumstances — a realm of constantly shifting nightmare reality.',
+    ],
+    thresholds: [
+      { event: 'The Waking Nightmare Quest', detail: 'Dawnstar has been afflicted by Vaermina\'s Miasma — the entire population shares nightmares from a leaking vial in Nightcaller Temple. Erandur, a Priest of Mara attempting to undo his own past, serves as the moral axis. The theological choice — kill Erandur per Vaermina\'s instruction or allow him to destroy the Skull — is one of the most explicitly value-laden Daedric quest resolutions in Skyrim.' },
+      { event: 'First Dream Theft', detail: 'The first time a Vaermina devotee deliberately enters another person\'s dream space — whether through the Skull, through trained practice, or through alchemical means — is an initiation. What is taken from that dream, and what the target loses upon waking, defines the devotee\'s relationship with the Prince.' },
+      { event: 'Memory Loss in Another', detail: 'Vaermina extracts memories from sleeping mortals. When a devotee facilitates this — either through the Skull or through directing Vaermina\'s attention — and witnesses the target waking with genuine cognitive gaps, the theological experience is reported as profound. The Prince is visibly present in the damage.' },
+      { event: 'Recording a True Dream', detail: 'A dream that proves predictive — that describes something that then happens in the waking world — is a confirmed Vaermina communication. For most devotees, this happens rarely. When it happens, the dream journal entry is treated as a sacred text and shared within the cult as evidence.' },
+    ],
+    open: [
+      'Dream interpretation is a widespread cultural practice across all of Tamriel — Vaermina devotees can operate as dream-readers with complete surface legitimacy',
+      'The Nightcaller Temple situation is publicly known as a problem (Dawnstar\'s nightmares are an open secret) but its Vaermina-origin is known only to Erandur and very few others',
+      'Some alchemists who work with sleep-inducing and dream-affecting substances have Vaermina orientation that is invisible in their professional practice',
+    ],
+    hidden: [
+      'The Skull of Corruption\'s memory-theft capability — that it does not merely cause nightmares but actually extracts and stores memories, depleting the target — is known only within the cult',
+      'Quagmire\'s nature (a realm of constantly shifting nightmare, where reality changes every few moments, providing no foothold) is known only to Daedric scholars and Vaermina\'s initiated',
+      'The Miasma — an aerosol form of dream-infection — is a cult-developed technique with no public documentation',
+    ],
+    classes: [
+      { cls: 'Dream-Reader / Interpreter', practice: 'Most socially functional Vaermina devotee. Operates openly as a dream interpreter while maintaining covert dream-theft and recording practices. The professional frame provides complete cover.' },
+      { cls: 'Erandur (post-quest)', practice: 'A former Vaermina priest who converted to Mara. His practice represents the inverse — someone who understands Vaermina\'s methods from inside and now uses that knowledge against the cult. The most knowledgeable anti-Vaermina figure in Skyrim.' },
+      { cls: 'Skull of Corruption Holder', practice: 'The active artifact creates an ongoing relationship — sleeping near the Skull accelerates dream-collection. Using it on others is a direct devotional act. Holders have more direct Prince-contact than any other Vaermina devotee except initiated priests.' },
+      { cls: 'Alchemist (sleep and dream focus)', practice: 'Cultivating sleeping draughts, nightmare-inducing substances, and dream-clarity potions. The alchemical practice aligns with Vaermina\'s domain and is entirely invisible professionally.' },
+      { cls: 'Nightcaller Temple Priest (historical)', practice: 'The full institutional practice — maintaining the Temple, the Skull, and the Miasma system. The Vaermina priesthood represented here in 4E 201 only through Erandur\'s past and the Temple\'s dormant state.' },
+    ],
+    pressures: [
+      { icon: '😴', label: 'Dawnstar\'s Nightmare Crisis', color: '#7a50b8', text: 'In 4E 201, the entire town of Dawnstar is afflicted with shared nightmares from the leaking Miasma. This is not a subtle cult operation — it is a public divine phenomenon that the population experiences nightly. The theological source is unknown to the victims. For any Vaermina devotee in the region, it is an unmistakable sign of the Prince\'s active presence.' },
+      { icon: '🗡', label: 'Erandur\'s Redemption Arc', color: '#c8a84a', text: 'A former Vaermina priest actively working against her cult is the theological challenge embedded in the Waking Nightmare quest. Erandur\'s conversion to Mara — and his willingness to destroy the Skull — represents a genuine defection from within the cult\'s own infrastructure. Vaermina\'s instruction to kill him is a direct divine response to this apostasy.' },
+      { icon: '🌑', label: 'Invisibility of Practice', color: '#7a50b8', text: 'Vaermina\'s cult is uniquely difficult to persecute because its primary devotional acts occur during sleep and in dream space. A devotee can practice their entire theology without producing any physical evidence. This makes them the hardest Daedric cultists for Vigilants to identify — and the most psychologically unsettling to those who understand what they do.' },
+    ],
+    artifact: { name: 'Skull of Corruption', desc: '<strong>Staff that steals dreams from sleeping targets — absorbs dream residue to deal 20 extra damage. Base damage 30 points, increased by stored dreams.</strong> Theologically, the Skull is a repository of stolen experiences. Each dream absorbed is a memory or experience taken from a living person while they are most vulnerable. The staff\'s increasing damage represents the accumulation of this stolen inner life. It is Vaermina\'s entire theology compressed into one held object.' },
+  },
+  {
+    id: 'namira',
+    name: 'Namira',
+    icon: '🕷',
+    color: '#5a7a3a',
+    bg: '#040a00',
+    tagline: 'She asks only that you look at what you were taught to turn away from — and keep looking',
+    realm: 'The Scuttling Void',
+    divinestance: 'Vigilants of Stendarr treat Namira worship as extremely dangerous — her cult\'s cannibalism dimension makes it a public safety and public health threat beyond mere theological transgression. Imperial law forbids it, with severe penalties. The Stormcloaks would apply the same result. What makes Namira uniquely threatening is that her devotees blend into normal society better than most — a cannibal in the Shrine of Arkay or the Hall of the Dead is hard to identify.',
+    legalstatus: 'Absolutely forbidden',
+    daily: [
+      { time: 'In Any Neglected Space', text: 'Namira\'s presence is felt in neglected, dark, forgotten places. A devotee who walks a rarely-used corridor, enters a cellar that hasn\'t been opened in years, or sits in an alley that nobody passes — is in her space. Seeking these spaces out deliberately is a devotional act.' },
+      { time: 'Among Repulsive Things', text: 'Deliberate attentiveness to things that others find disgusting — vermin, rot, decay, the smell of old death — is devotional practice. Not acting on it necessarily; noticing it without flinching. The practice removes the revulsion response that keeps most people from Namira\'s domain.' },
+      { time: 'At the Hall of the Dead', text: 'Markarth\'s Hall of the Dead is the site of the Taste of Death quest — a Namira priest has infiltrated it. The Hall of the Dead as a devotional location for Namira worship represents the darkest possible convergence: Arkay\'s house of correct death, used by a cult that violates correct death through consumption of the dead.' },
+      { time: 'The Feast', text: 'The Ring of Namira grants a health regeneration buff for eating corpses. For active devotees, the ritual feast — consuming human flesh in a concealed sacred space — is the primary devotional act. The Reachcliff Cave banquet during the quest is the most complete Skyrim depiction of what this looks like in practice.' },
+      { time: 'In Darkness', text: 'Namira\'s presence is most accessible in genuine darkness — not the ritual darkness of Nocturnal\'s shadows, but the undifferentiated dark of forgotten places. Sitting in absolute darkness for extended periods is a meditation practice for serious devotees.' },
+    ],
+    shrines: [
+      'Shrine of Namira east of Riften — remote wilderness, no infrastructure',
+      'Reachcliff Cave west of Markarth — site of the Taste of Death quest\'s feast. A functioning Namira cult banquet hall, accessible after quest initiation.',
+      'Understone Keep\'s Hall of the Dead in Markarth — infiltrated by Brother Verulus and then by the in-quest cult. Arkay\'s sacred space desecrated as Namira shrine.',
+      'Forgotten cellars, sealed rooms, and abandoned structures throughout Skyrim function as informal sacred sites — the criterion is neglect, not consecration.',
+    ],
+    thresholds: [
+      { event: 'The Taste of Death Quest', detail: 'The most morally explicit Daedric quest in Skyrim. The player is led to a cannibal feast and must choose to participate — eating human flesh — to receive the Ring of Namira. The feast participants are a cross-section of Markarth\'s upper class, which is its own theological statement: Namira\'s devotees are not social outcasts but pillars of the community who practice in concealment.' },
+      { event: 'First Consumption', detail: 'Eating human flesh for the first time is the initiation. The devotional framework holds that this act permanently aligns the practitioner with Namira\'s domain — the revulsion response is gone, the barrier crossed. What happens to the devout afterward is described as a new clarity about what people are at their most fundamental level.' },
+      { event: 'The Hidden Feast', detail: 'Maintaining the practice in concealment — coordinating with other devotees, securing a body, conducting the feast without discovery — is the primary ongoing devotional challenge. The feast\'s social dimension (attending with fellow cultists, the communal aspect) is as important as the consumption itself.' },
+      { event: 'Verulus\'s Role', detail: 'Brother Verulus — the Hall of the Dead priest in Markarth — is lured to the feast and prepared as the main course. His position as an Arkay priest makes his consumption a pointed theological statement about Namira\'s relationship to correct death rites: she consumes those who administer them.' },
+    ],
+    open: [
+      'No open Namira worship anywhere — the cult\'s central practice is the most legally and socially catastrophic of any Daedric cult',
+      'The Ring of Namira\'s health regeneration benefit is not visually identifiable — a devotee wearing it looks like a person wearing a ring',
+      'Some Reachcliff foragers and wilderness practitioners maintain Namira-adjacent practices around animal consumption that shade toward devotion without being formally cult-affiliated',
+    ],
+    hidden: [
+      'The Markarth cult\'s membership — drawn from the city\'s upper class — is the most socially protected Daedric cult in Skyrim. Eola\'s cell includes Jarl-adjacent figures.',
+      'The theological claim that Namira is among the most ancient forces in existence — the great darkness that preceded the Aurbis — is maintained within initiated circles and gives the cult a cosmological significance that far exceeds its public image',
+      'Khajiit theology on Namiira (the Great Darkness that Azurah drove back when shaping the Khajiit) gives the cult a distinctly different and arguably deeper theological foundation that its Skyrim members are entirely unaware of',
+    ],
+    classes: [
+      { cls: 'Eola (quest leader)', practice: 'Most complete Skyrim Namira devotee available. Full theological understanding, operational cell leadership, knowledge of the feast ritual. Represents the initiated priesthood.' },
+      { cls: 'Upper-Class Markarth Cultist', practice: 'The sociologically fascinating case — wealthy, respected individuals maintaining a secret devotional practice that would destroy them if discovered. The concealment is maintained by mutual assured destruction within the cell.' },
+      { cls: 'Ring of Namira Holder', practice: 'Ongoing devotional relationship through the artifact. The health regeneration on corpse consumption creates a practical incentive structure that reinforces the theology — benefit and devotion aligned.' },
+      { cls: 'Wilderness Practitioner', practice: 'More isolated, less doctrinally complete than the Markarth cell. Practices alone or in very small groups. The decay-attentiveness and darkness practices without necessarily the full consumption ritual.' },
+      { cls: 'Forgotten Places Seeker', practice: 'The most innocent-appearing Namira orientation — a person drawn to abandoned and neglected spaces. This may develop into deeper devotion through exposure, or remain at the level of an unexplained preference.' },
+    ],
+    pressures: [
+      { icon: '🕷', label: 'The Upper-Class Cell', color: '#5a7a3a', text: 'The Markarth cannibal cult draws from Markarth\'s respectable population. This is Namira\'s specific theological point: the devout are not what they look like. The people attending the Jarl\'s court and the people attending Eola\'s feast may be the same people. This makes the cult maximally threatening to social order.' },
+      { icon: '💀', label: 'Hall of the Dead Desecration', color: '#7a5050', text: 'The Markarth Hall of the Dead infiltration is a deliberate theological offense against Arkay — Namira\'s cult operating inside the sacred space of the Prince of proper death cycles. The cult chose this location specifically. It is not coincidence.' },
+      { icon: '🌑', label: 'The Cosmological Depth', color: '#5a7a3a', text: 'Namira is one of the most ancient forces in Daedric theology — possibly predating the current configuration of the Aurbis. Her claim to represent the primal darkness is taken seriously in Khajiit and Aldmeri cosmological scholarship even while her cult\'s practice is dismissed as mere depravity. The depth beneath the surface is almost entirely hidden from her Skyrim devotees themselves.' },
+    ],
+    artifact: { name: 'Ring of Namira', desc: '<strong>Increases Stamina by 50, allows feeding on corpses for health regeneration (+50 health, +50% regen for 5 minutes).</strong> The artifact makes the cult\'s central practice mechanically beneficial — the consumption is not purely ideological but produces a measurable physical result. Namira\'s design: the revulsion is correct, but so is the benefit. The practitioner must decide which matters more.' },
+  },
+  {
+    id: 'sanguine',
+    name: 'Sanguine',
+    icon: '🍷',
+    color: '#c84a8a',
+    bg: '#140008',
+    tagline: 'His theology is the one you accept by accident — and never fully repudiate',
+    realm: 'The Myriad Realms of Revelry',
+    divinestance: 'Vigilants of Stendarr consider Sanguine worship a low-priority threat — debauchery is less immediately dangerous than plague or vampirism. Imperial law technically forbids it, but enforcement is essentially zero. The Stormcloaks have more pressing concerns. Sanguine\'s cult survives partly because its theology is so aligned with normal human behavior that distinguishing devotee from enthusiast is nearly impossible.',
+    legalstatus: 'Technically forbidden / Never enforced',
+    daily: [
+      { time: 'Whenever Pleasurable', text: 'Sanguine\'s devotion has no specific schedule — the theology is present whenever pleasure is sought and taken. A devotee who is genuinely enjoying themselves — in any domain — is in theological alignment. The practice is the participation.' },
+      { time: 'At the Inn', text: 'The tavern is Sanguine\'s temple. Not metaphorically — the actual space of communal drinking, the performance of stories and songs, the loosening of the social constraints that govern the day\'s official behavior, is his devotional environment. Bards who serve Sanguine\'s ends often don\'t know it.' },
+      { time: 'Before a Night of Excess', text: 'Some more formal devotees acknowledge Sanguine before a dedicated evening — a brief toast, a named invocation ("to Sanguine\'s health"), before proceeding. The invocation is technically identifiable as Daedric worship by Imperial law and is never taken seriously as such by anyone present.' },
+      { time: 'A Night to Remember', text: 'The Sanguine quest is structurally a theological initiation — an evening of extreme excess and memory loss that results in the devotee\'s Tamriel-wide embarrassment. This is not Sanguine\'s punishment; it is his gift. The night is the thing, not the morning after.' },
+      { time: 'The Morning After', text: 'The theological position on hangovers and consequences: these are the cost of the gift, not evidence that the gift was wrong. A devout Sanguine practitioner does not regret the excess, even when the consequences are severe. Regret is the apostasy.' },
+    ],
+    shrines: [
+      'The Vilemyr Inn, Ivarstead — starting point of the A Night to Remember quest. Sanguine appears as Sam Guevenne, a stranger buying drinks. The most casual Daedric divine encounter in Skyrim.',
+      'The Misty Grove — Sanguine\'s pocket realm, accessible at the end of the quest. A clearing of eternal revelry where his most devoted enjoy his direct hospitality.',
+      'Any sufficiently lively inn or tavern operates as an informal Sanguine sacred space — the Bannered Mare in Whiterun, the Sleeping Giant in Riverwood, the Bee and Barb in Riften.',
+      'Sanguine does not maintain formal shrine infrastructure — his approach is infiltration of existing social spaces, not construction of dedicated religious ones.',
+    ],
+    thresholds: [
+      { event: 'A Night to Remember', detail: 'The quest is the initiation. Sanguine appears as Sam Guevenne, proposes a drinking contest, and the Dragonborn wakes up in a temple of Dibella having apparently caused significant chaos across Skyrim. Recovering the trail reveals the scope of the evening. Sanguine gives the Rose at the end in the Misty Grove. The theological point is that you had more fun than you remember, and the world didn\'t end.' },
+      { event: 'The Moment of Genuine Abandon', detail: 'Every Sanguine devotee has one moment they identify as their real initiation — the first time they genuinely stopped calculating consequences and simply participated in pleasure for its own sake. This is not recklessness; it is the specific theological state that Sanguine\'s domain describes. It happens differently for every person.' },
+      { event: 'The Morning-After Test', detail: 'The first time a devotee wakes up to consequences that would normally produce deep regret — and feels, instead, that it was worth it — is the theological confirmation. Sanguine\'s promise is not that there are no consequences; it is that the pleasures are worth them. Believing that, in the face of the consequences, is the act of faith.' },
+    ],
+    open: [
+      'The most publicly present Daedric cult in all of Tamriel — Sanguine\'s influence is in every inn, every feast, every communal celebration',
+      'His name is invoked in toasts and oaths without any devotional intent across all cultures — "to Sanguine\'s health" is a stock phrase',
+      'The A Night to Remember quest is a public event — the Dragonborn\'s chaos trail crosses multiple holds. Sanguine\'s direct involvement is known to the Prince, the Dragonborn, and no one else.',
+    ],
+    hidden: [
+      'The Misty Grove — his pocket realm — is unknown to almost everyone. Those who have visited do not tend to advertise it',
+      'The theological depth of Sanguine\'s domain (that pleasure and moral permission are genuinely connected, that the prohibition of pleasure is itself a theological stance against him) is rarely articulated explicitly',
+      'The Khajiit theology around Sangiin — the god of death and secret murder, a darker interpretation of the same Prince — is entirely unknown to Sanguine\'s Skyrim devotees',
+    ],
+    classes: [
+      { cls: 'The Sam Guevenne Encounter (quest)', practice: 'Direct divine contact in disguise — Sanguine operating as a mortal stranger in an inn, initiating the encounter personally. One of two Daedric Princes who personally contact the Dragonborn without being summoned (with Sheogorath).' },
+      { cls: 'Innkeeper / Bard', practice: 'Functionally priestly — maintaining the space where Sanguine\'s domain operates. Bards who perform well, innkeepers who create genuine community warmth, are serving Sanguine\'s ends whether they acknowledge it or not.' },
+      { cls: 'Formal Devotee', practice: 'The minority who explicitly acknowledge Sanguine and make their participation in pleasure a conscious devotional act. Theologically more sophisticated than the casual reveler; not necessarily more capable of enjoyment.' },
+      { cls: 'Khajiit Sangiin Devotee', practice: 'An entirely different practice to the Skyrim Sanguine cult — darker, more ritualized, involving the secret murder dimension that the Khajiit tradition emphasizes. These practitioners would not recognize each other as worshipping the same Prince without significant theological discussion.' },
+      { cls: 'The Unconscious Devotee', practice: 'The majority of Sanguine\'s actual constituency — people who participate in pleasure, excess, and revelry without theological framing. Sanguine does not require acknowledgment. He requires participation. Most of Tamriel qualifies.' },
+    ],
+    pressures: [
+      { icon: '🍷', label: 'The Universal Cult Problem', color: '#c84a8a', text: 'Sanguine\'s cult is everywhere and nowhere — his theology is enacted every evening in every inn in Tamriel by people who have never heard his name used devotionally. This makes him simultaneously the most successful and least formally organized Daedric cult. The Vigilants cannot persecute having a good time.' },
+      { icon: '🎭', label: 'The Sheogorath Adjacency', color: '#c8784a', text: 'Sanguine and Sheogorath are the two Daedric Princes who pursue direct personal contact with mortals in casual disguise (Sam Guevenne, various Sheogorath manifestations). This parallel is noted in Daedric scholarship and suggests something about Princes who find formal worship less interesting than actual participation.' },
+      { icon: '⚔', label: 'The Khajiit Divergence', color: '#d4a840', text: 'Khajiit Sangiin theology — death and secret murder — is so far from the Skyrim Sanguine debauchery tradition that the two groups are practically different cults. The question of which aspect is more fundamental to the Prince\'s actual nature is unresolved in Daedric scholarship.' },
+    ],
+    artifact: { name: 'Sanguine Rose', desc: '<strong>Conjures a random Daedra (leveled) to fight for the player for 60 seconds.</strong> The artifact\'s randomness is the theological content — Sanguine does not give you what you asked for, he gives you a surprise. The summoned Daedra is not predictable. Like a good evening, the Rose delivers results you didn\'t plan for. The lack of control is the point.' },
+  },
+  {
+    id: 'clavicus_vile',
+    name: 'Clavicus Vile',
+    icon: '🐕',
+    color: '#c8b040',
+    bg: '#140e00',
+    tagline: 'He gives you exactly what you asked for — and the disaster is always grammatically correct',
+    realm: 'The Fields of Regret',
+    divinestance: 'Vigilants of Stendarr consider Clavicus Vile moderately dangerous — his wish-granting operations can produce vampires (he created Umbasil), cursed artifacts, and devastated communities. But the cult does not produce organized violence or plague, making it lower priority than Molag Bal or Mehrunes Dagon. Imperial law forbids it. Stormcloaks have no specific position. The most common Clavicus Vile encounter is accidental — someone made a deal without knowing who they were dealing with.',
+    legalstatus: 'Forbidden / Inconsistently enforced',
+    daily: [
+      { time: 'When Making Requests', text: 'Clavicus Vile\'s devotional relationship is conducted through requests and deals. Any time a devotee formulates a request — to the Prince or to anyone — the Clavicus Vile practice is to formulate it with extreme precision, having considered all the ways it could be fulfilled against one\'s actual intent.' },
+      { time: 'Examining Contracts', text: 'Scrutinizing agreements, contracts, and promises for loopholes — both to find them and to close them — is a devotional activity. The Prince\'s domain is the deal that technically fulfills the letter while destroying the spirit. A devotee who contracts well honors him; a devotee who contracts poorly teaches the lesson.' },
+      { time: 'With Barbas', text: 'Clavicus Vile\'s companion Barbas — a dog who is literally a portion of Vile\'s own power — is a unique devotional interface. Barbas\'s presence is available to mortals who encounter him near Falkreath. The theological significance of Vile having externalized his better instincts into a dog is not lost on serious devotees.' },
+      { time: 'Social Manipulation', text: 'Clavicus Vile\'s portfolio of trickery operates in social space — making deals, extracting commitments, creating situations where others fulfill the letter of what they agreed while not getting what they wanted. A devotee who operates this way is worshipping through practice.' },
+      { time: 'At the Shrine', text: 'Clavicus Vile\'s shrine near Falkreath is approached through his encounter with a runaway guard and a dog. The theological structure of the approach — being manipulated into approaching the Prince rather than choosing to — is itself a Clavicus Vile devotional experience.' },
+    ],
+    shrines: [
+      'Shrine of Clavicus Vile, Haemar\'s Shame (a vampire lair south of Helgen) — the quest\'s main shrine location, guarded by vampires who made deals with Vile',
+      'The dog Barbas encountered near Falkreath — a walking Clavicus Vile shrine. Following him initiates the quest and is itself an act of approaching the Prince.',
+      'Fields of Regret are inaccessible to mortals without exceptional circumstances',
+      'No permanent public shrine infrastructure — Clavicus Vile prefers his devotees find him through deals rather than intention',
+    ],
+    thresholds: [
+      { event: 'A Daedra\'s Best Friend Quest', detail: 'The Clavicus Vile quest in Skyrim involves Barbas — the Prince\'s better half, his power externalized into a dog — and a guard who made a deal for power and received a cursed axe (the Rueful Axe). The theological structure is a demonstration: the Prince shows you his deal-gone-wrong before asking you to make one. Then he asks you to kill Barbas. The theological test is whether you understand what reuniting them actually means.' },
+      { event: 'The First Real Deal', detail: 'The most significant Clavicus Vile threshold is making a deal with full understanding of who you are dealing with. Most of his deals are made by people who do not know they are dealing with him. A devotee who makes a deal knowingly, precisely, and comes out ahead has demonstrated something the Prince respects.' },
+      { event: 'Haemar\'s Shame Vampires', detail: 'The vampire cult at Haemar\'s Shame are people who made deals with Clavicus Vile — presumably for power, or immortality — and received vampirism. Their continued occupation of the Prince\'s shrine is an ongoing devotional relationship characterized by regret. The shrine\'s location inside a place called "Haemar\'s Shame" is not accidental.' },
+      { event: 'Acquiring the Masque or the Axe', detail: 'The two artifact options represent two different theological stances. The Masque (requires returning Barbas) demonstrates understanding that Vile is more dangerous reunited with his power. The Rueful Axe (requires killing Barbas) demonstrates the willingness to destroy the Prince\'s better half for personal gain. Both are transactions; neither is a clean win.' },
+    ],
+    open: [
+      'Barbas wanders near Falkreath openly — the most publicly accessible Daedric Prince point-of-contact in Skyrim. He looks like a dog.',
+      'Clavicus Vile\'s deals can look like ordinary contracts, agreements, or lucky coincidences — making his cult\'s activity the most publicly invisible of any Daedric Prince',
+      'Some merchants and traders have Clavicus Vile orientations that manifest as exceptional deal-making practices — neither they nor their customers would identify this as Daedric worship',
+    ],
+    hidden: [
+      'The Barbas theological dimension — that Clavicus Vile literally externalized a portion of his own power into a dog because that power moderated his worst impulses — is known only to Daedric scholars',
+      'The Fields of Regret\'s nature — a realm full of mortals who regret their deals with Vile — is known only to initiated devotees and Daedric scholars',
+      'The degree to which Clavicus Vile is diminished without Barbas (which is why he wants him back) is not public knowledge, and understanding it changes the entire meaning of the quest\'s choice',
+    ],
+    classes: [
+      { cls: 'Contract Lawyer / Merchant Schemer', practice: 'The most socially functional Clavicus Vile devotee. Professional excellence in the precise construction of agreements. Worship through practice in every negotiation.' },
+      { cls: 'Haemar\'s Shame Vampire', practice: 'The cautionary devotee — someone who made a deal and received the letter, not the spirit. Continues to occupy Vile\'s shrine despite (or because of) the outcome. The theological relationship is ongoing regret, which is not the same as repudiation.' },
+      { cls: 'Barbas Follower', practice: 'The quest-phase devotee — following Barbas is the most direct Clavicus Vile devotional experience available in Skyrim. The dog is the Prince, partially. Treating him well during the quest has implicit theological weight.' },
+      { cls: 'Wish-Maker (historical)', practice: 'Those who have approached Clavicus Vile for a wish and survived with their intent reasonably intact are the rarest of his devotees. Most are in the Fields of Regret. The survivors are, by definition, his most successful worshippers.' },
+      { cls: 'Political Schemer', practice: 'Court intriguers whose specialty is contractual manipulation and deal-crafting over direct action. Clavicus Vile\'s portfolio is more useful in political environments than in combat ones. The court wizard who arranges outcomes through cleverly constructed agreements honors the Prince without acknowledging him.' },
+    ],
+    pressures: [
+      { icon: '🐕', label: 'Barbas as Theological Problem', color: '#c8b040', text: 'The fact that Clavicus Vile split his power into a dog — reportedly because the portion of his nature that moderated his cruelty was inconvenient — is a profound theological statement about the Prince\'s internal character. Reuniting them makes him more powerful and less restrained. The quest asks the Dragonborn to weigh this. Most people just get the Masque.' },
+      { icon: '💀', label: 'Haemar\'s Shame Legacy', color: '#c84a4a', text: 'The vampire cult at Haemar\'s Shame represents Clavicus Vile\'s standard operating result at scale — a group of people who made deals for power and received the wrong kind. Their continued devotion despite this outcome is theologically interesting. Vile does not owe them anything. The deal was fulfilled.' },
+      { icon: '⚖', label: 'The Deal vs. The Wish', color: '#c8b040', text: 'Most Daedric Princes demand acts of devotion. Clavicus Vile demands transactions — he provides something in exchange for something. This transactional theology is distinct from all other Princes and makes his cult simultaneously the most accessible (everyone makes deals) and the most dangerous (deals with Vile have a notable failure rate for the mortal party).' },
+    ],
+    artifact: { name: 'Masque of Clavicus Vile / Rueful Axe', desc: '<strong>Masque: improves prices, speech, and magicka regen. Rueful Axe: two-handed axe that drains stamina (does NOT count for Oblivion Walker achievement).</strong> The Masque — acquired by returning Barbas — is a social artifact, perfectly aligned with Vile\'s portfolio of deals and persuasion. The Rueful Axe — acquired by killing Barbas — is what you get when you destroy the Prince\'s better nature for a weapon. Notably, Bethesda decided the Axe doesn\'t count as the real artifact. Clavicus Vile\'s authentic artifact is the social one, not the violent one.' },
+  },
+];
+
+// ── RENDER ──────────────────────────────────────────────────────────────────
+const tabsEl   = document.getElementById('tabsInner');
+const mainEl   = document.getElementById('mainContent');
+
+princes.forEach((p, i) => {
+  // Tab
+  const tab = document.createElement('div');
+  tab.className = 'tab' + (i === 0 ? ' active' : '');
+  tab.style.setProperty('--prince-color', p.color);
+  tab.innerHTML = `<span class="tab-icon">${p.icon}</span>${p.name}`;
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.prince-panel').forEach(pp => pp.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + p.id).classList.add('active');
+  });
+  tabsEl.appendChild(tab);
+
+  // Panel
+  const panel = document.createElement('div');
+  panel.id = 'panel-' + p.id;
+  panel.className = 'prince-panel' + (i === 0 ? ' active' : '');
+  panel.style.setProperty('--prince-color', p.color);
+  panel.style.setProperty('--prince-bg', p.bg);
+
+  const legalColor = p.legalstatus === 'Openly practiced' ? '#8a9a3a'
+    : p.legalstatus === 'Tolerated' ? '#c8a84a'
+    : p.legalstatus === 'Unpredictable' ? '#c8784a'
+    : p.legalstatus === 'Forbidden / Tolerated academically' ? '#9a7a3a'
+    : p.legalstatus === 'Forbidden (imperial) / Tolerated (Dunmer)' ? '#9a7a3a'
+    : '#c84a4a';
+
+  panel.innerHTML = `
+    <div class="prince-header">
+      <span class="prince-name">${p.icon} ${p.name}</span>
+      <span class="prince-tagline">${p.tagline}</span>
+      <span class="prince-realm-pill" style="color:${p.color};border-color:${p.color}40">${p.realm}</span>
+      <div class="prince-divines-stance" style="border-color:${p.color}60">
+        <strong style="color:${legalColor}">Legal Status: ${p.legalstatus}</strong> — ${p.divinestance}
+      </div>
+    </div>
+
+    <div class="section-label">Daily Rhythm — Devotional Practice</div>
+    <div class="section-grid wide">
+      <div class="card">
+        <div class="card-title">Daily Practice Timeline</div>
+        <div class="timeline">
+          ${p.daily.map(d => `<div class="tl-item"><span class="tl-time">${d.time}</span><span class="tl-text">${d.text}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sacred Spaces & Shrine Access</div>
+        <ul>
+          ${p.shrines.map(s => `<li><span class="bullet">◆</span><span>${s}</span></li>`).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Threshold Rituals</div>
+    <div class="section-grid">
+      ${p.thresholds.map(t => `
+        <div class="card">
+          <div class="card-title">${t.event}</div>
+          <p>${t.detail}</p>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="section-label">Open vs. Concealed Practice — 4E 201</div>
+    <div class="compare-grid">
+      <div class="compare-card open-practice">
+        <div class="compare-label">◈ Open / Plausibly Deniable Practice</div>
+        <ul>
+          ${p.open.map(s => `<li>◆ ${s}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="compare-card hidden-practice">
+        <div class="compare-label" style="color:${p.color}">⬡ Hidden / Initiates-Only Knowledge</div>
+        <ul>
+          ${p.hidden.map(s => `<li>◆ ${s}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Variation by Class & Devotee Type</div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="class-table">
+        <thead>
+          <tr>
+            <th>Devotee Type</th>
+            <th>Practice Pattern</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${p.classes.map(c => `<tr><td>${c.cls}</td><td>${c.practice}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">The Daedric Artifact — 4E 201</div>
+    <div class="artifact-block">
+      <div class="artifact-name">⚔ ${p.artifact.name}</div>
+      <p>${p.artifact.desc}</p>
+    </div>
+
+    <div class="section-label">Era-Specific Pressures — 4E 201</div>
+    <div class="pressure-list">
+      ${p.pressures.map(pr => `
+        <div class="pressure-item" style="border-color:${pr.color}">
+          <span class="pi-icon">${pr.icon}</span>
+          <div class="pi-text"><span class="pi-label" style="color:${pr.color}">${pr.label}</span>${pr.text}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  mainEl.appendChild(panel);
+});
+
+mainEl.insertAdjacentHTML('beforeend', `
+  <div class="footnote">
+    <strong>Mod Dev Reference Notes:</strong>
+    All entries reflect 4E 201 — active Civil War, post-Concordat Thalmor presence, and the return of dragons.
+    All 15 Daedric Princes with Skyrim quests are documented here. Nocturnal is covered via the Thieves Guild questline entry.
+    Jyggalag has no 4E 201 presence and is omitted; addressed in the Sheogorath entry.
+    Legal status is approximate — enforcement varies enormously by hold, Jarl, and proximity to Vigilants.
+    Dunmer Good Daedra (Azura, Boethiah, Mephala) have cultural protection that dramatically changes
+    their practical status in any hold with a significant Dunmer population.
+    Daedric worship in the mod should be tracked separately from Nine Divines devotion —
+    they are not competing on the same axis but on perpendicular ones.
+  </div>
+`);
+</script>
+</body>
+</html>

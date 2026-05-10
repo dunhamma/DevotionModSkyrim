@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamriel Daily Worship — 4E 201 Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #090805;
+    --bg2:       #0e0c08;
+    --bg3:       #13110b;
+    --border:    #2e2510;
+    --border2:   #3e3318;
+    --text:      #cfc09a;
+    --text-dim:  #7a6844;
+    --text-faint:#3a2f18;
+    --gold:      #c8a84a;
+    --gold-dim:  #7a6430;
+
+    --nord:      #6baec4;
+    --nord-bg:   #060e12;
+    --imp:       #c8a84a;
+    --imp-bg:    #120f04;
+    --dunmer:    #c4785a;
+    --dunmer-bg: #130806;
+    --altmer:    #7ec8a4;
+    --altmer-bg: #061310;
+    --khajiit:   #d4a840;
+    --khajiit-bg:#120e00;
+    --bosmer:    #80c440;
+    --bosmer-bg: #071200;
+    --redguard:  #c4582a;
+    --redguard-bg:#130600;
+    --orc:       #8aaa3a;
+    --orc-bg:    #080d00;
+    --argonian:  #38b880;
+    --argonian-bg:#001209;
+    --breton:    #8a9ec4;
+    --breton-bg: #0a0d14;
+
+    /* Atmoran / Old Ways accent for Nord pantheon comparison */
+    --oldnord:   #b8d4dc;
+    --oldnord-bg:#080e10;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(180deg, #141008 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border2);
+    padding: 1.8rem 2rem 1.4rem;
+  }
+  .header-inner { max-width: 1500px; margin: 0 auto; }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-weight: 700;
+    color: #e8d598;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .header-sub {
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    margin-top: 0.3rem;
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+  }
+  .header-note {
+    margin-top: 0.6rem;
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 0.88rem;
+    max-width: 800px;
+  }
+
+  /* ── RACE TABS ── */
+  .tabs-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+  .tabs-inner { max-width: 1500px; margin: 0 auto; display: flex; gap: 0; }
+  .tab {
+    display: inline-block;
+    padding: 0.75rem 1.1rem 0.6rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    transition: all 0.15s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { border-bottom-color: var(--race-color); color: var(--race-color); }
+
+  /* ── LAYOUT ── */
+  .main { max-width: 1500px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  /* ── RACE PANEL ── */
+  .race-panel { display: none; }
+  .race-panel.active { display: block; }
+
+  .race-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .race-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--race-color);
+    letter-spacing: 0.1em;
+  }
+  .race-tagline {
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 0.92rem;
+  }
+  .race-context-pill {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+    border: 1px solid;
+    margin-left: auto;
+  }
+
+  /* ── GRID ── */
+  .section-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .section-grid.wide {
+    grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--race-color);
+    border-radius: 2px;
+    padding: 1rem 1.1rem;
+  }
+  .card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--race-color);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .card-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .card p { font-size: 0.88rem; color: var(--text); margin-bottom: 0.45rem; }
+  .card p:last-child { margin-bottom: 0; }
+  .card ul { list-style: none; padding: 0; }
+  .card ul li {
+    font-size: 0.87rem;
+    color: var(--text);
+    padding: 0.22rem 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .card ul li:last-child { border-bottom: none; }
+  .card ul li .bullet { color: var(--race-color); flex-shrink: 0; margin-top: 0.1rem; font-size: 0.7rem; }
+
+  /* ── TIMELINE ── */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item {
+    display: flex;
+    gap: 0.8rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-time {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--race-color);
+    text-transform: uppercase;
+    min-width: 70px;
+    padding-top: 0.15rem;
+    flex-shrink: 0;
+  }
+  .tl-text { font-size: 0.87rem; color: var(--text); }
+
+  /* ── COMPARISON CARDS ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+
+  .compare-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1rem 1.1rem;
+  }
+  .compare-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border2);
+  }
+  .in-skyrim .compare-label { color: var(--nord); }
+  .in-homeland .compare-label { color: var(--race-color); }
+  .compare-card ul { list-style: none; padding: 0; }
+  .compare-card ul li {
+    font-size: 0.86rem;
+    padding: 0.2rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .compare-card ul li:last-child { border-bottom: none; }
+
+  /* ── CLASS TABLE ── */
+  .class-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  .class-table th {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border2);
+    text-align: left;
+    background: var(--bg);
+  }
+  .class-table td {
+    padding: 0.38rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .class-table tr:last-child td { border-bottom: none; }
+  .class-table td:first-child {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--race-color);
+    white-space: nowrap;
+    min-width: 120px;
+  }
+
+  /* ── ERA BANNER ── */
+  .era-banner {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-top: 2px solid var(--race-color);
+    border-radius: 2px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1rem;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--text-dim);
+  }
+  .era-banner strong { color: var(--text); font-style: normal; }
+
+  /* ── PRESSURE TAGS ── */
+  .pressure-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .pressure-item {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    padding: 0.5rem 0.7rem;
+    background: var(--bg3);
+    border-left: 2px solid;
+    border-radius: 1px;
+    font-size: 0.86rem;
+  }
+  .pressure-item .pi-icon { font-size: 1rem; flex-shrink: 0; }
+  .pressure-item .pi-text { color: var(--text); }
+  .pressure-item .pi-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* ── DIVIDERS ── */
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin: 1.4rem 0 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-label::before, .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── PANTHEON COMPARE (Nord-specific) ── */
+  .pantheon-intro {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--race-color);
+    border-radius: 2px;
+    padding: 0.95rem 1.15rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.72;
+  }
+  .pantheon-intro strong { color: var(--race-color); font-weight: 600; }
+  .pantheon-grid { display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 1rem; }
+  .pantheon-pair {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.85rem 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem 1.4rem;
+  }
+  .pantheon-pair > .pantheon-diff { grid-column: 1 / -1; }
+  @media (max-width: 700px) { .pantheon-pair { grid-template-columns: 1fr; } }
+  .pantheon-old, .pantheon-new {
+    border-left: 2px solid;
+    padding-left: 0.75rem;
+  }
+  .pantheon-old { border-color: var(--oldnord); }
+  .pantheon-new { border-color: var(--imp); }
+  .pantheon-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .pantheon-old .pantheon-name { color: var(--oldnord); }
+  .pantheon-new .pantheon-name { color: var(--imp); }
+  .pantheon-name small {
+    display: block;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.07em;
+    color: var(--text-faint);
+    text-transform: none;
+    margin-top: 0.15rem;
+    font-style: italic;
+  }
+  .pantheon-role { font-size: 0.85rem; color: var(--text); line-height: 1.55; }
+  .pantheon-diff {
+    font-size: 0.85rem;
+    color: var(--text);
+    font-style: italic;
+    border-top: 1px dotted var(--border);
+    padding-top: 0.55rem;
+    margin-top: 0.15rem;
+    line-height: 1.6;
+  }
+  .pantheon-diff::before {
+    content: 'Difference · ';
+    font-style: normal;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--race-color);
+  }
+
+  .footnote {
+    margin-top: 2rem;
+    padding: 0.8rem 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>⚔ Tamriel Daily Worship — 4E 201 Reference</h1>
+    <div class="header-sub">Religious Practice in Everyday Life · Era of Skyrim's Civil War</div>
+    <div class="header-note">
+      Concrete day-to-day religious behaviour for each race, cross-referenced by location (in Skyrim vs. homeland),
+      profession, and the specific political and theological pressures of the Fourth Era. Click a race tab to navigate.
+    </div>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <div class="tabs-inner" id="tabsInner"></div>
+</div>
+
+<div class="main" id="mainContent"></div>
+
+<script>
+const races = [
+  {
+    id: 'nord',
+    name: 'Nord',
+    color: '#6baec4',
+    bg: '#060e12',
+    tagline: 'Religion as heroic performance — every deed is a theological statement',
+    skyrimContext: 'Native population · Civil War axis · Thalmor occupation',
+    daily: [
+      { time: 'Dawn', text: 'Glance at the sky before stepping outside — a quiet acknowledgment of Kyne. Farmers read the weather as a divine message. No formal prayer, just attentiveness.' },
+      { time: 'Morning', text: 'Warriors begin training. The Companions of Whiterun perform their exercises with Shor implicitly in mind — strength is the prayer. Oath-swearing before a day\'s work is common among tradespeople.' },
+      { time: 'Midday', text: 'Passing a roadside shrine, a traveller drops a coin or leaves game. Guardian Stones along roads are actively "chosen" before a journey — a Nord picks a stone and sleeps near it the night before a long trip.' },
+      { time: 'Evening', text: 'The mead-hall replaces the temple for most Nords. Toasting the honored dead is standard and semi-sacred. A skald recounting great deeds is performing a religious function — oral transmission IS worship.' },
+      { time: 'Night', text: 'In holds with a Hall of the Dead, family members visit on death-anniversaries of kin. Arkay\'s priest tends the bodies. Most Nords sleep with a small iron amulet of the relevant Divine.' },
+    ],
+    shrines: [
+      'Every hold has a temple: Whiterun (Kynareth), Riften (Mara), Solitude (all Nine Divines), Windhelm (Talos — hidden, raided by Thalmor)',
+      'Guardian Stones along major roads — actively used before journeys, not merely decorative',
+      'Halls of the Dead in every hold — Arkay\'s priests prepare bodies, maintain records',
+      'Private Talos shrines hidden in homes, attics, and forest groves — illegal but widespread',
+      'Natural high places (mountain peaks, cliff edges) are informal Kyne shrines — no structure needed',
+    ],
+    thresholds: [
+      { event: 'Birth', detail: 'Child named before witnesses with invocation of Mara for the mother\'s survival. No formal priest required — the household elder performs the rite.' },
+      { event: 'Coming of Age', detail: 'No single ceremony — demonstrated achievement is the rite of passage. A first successful hunt, a first kill in battle, or a first successful trade depending on profession.' },
+      { event: 'Marriage', detail: 'Temple of Mara ceremony (Riften is the primary site). Amulet of Mara worn during courtship signals availability — one of the most universally observed customs across classes.' },
+      { event: 'Pre-Combat', detail: 'Brief invocation — "Talos guide my arm," "Shor witness me." Nords believe dying with a weapon in hand matters for Sovngarde entry. Sheathing your sword before death is shameful.' },
+      { event: 'Death', detail: 'Arkay\'s priest prepares the body. Proper burial with grave goods is critical — cremation is acceptable for warriors. Being interred in a Nordic barrow is the ideal. Dying far from home without rites is a spiritual anxiety.' },
+      { event: 'Oath-swearing', detail: 'Done before explicit divine witnesses named aloud. Breaking an oath is not merely dishonest — it is sacrilege. The Companions\' oath to the Circle is quasi-religious.' },
+    ],
+    skyrim: [
+      'Civil War creates a visible split: Stormcloaks worship Talos openly and defiantly in Eastmarch and the Pale. Imperials and their allies observe the Thalmor ban publicly — many pray privately.',
+      'Thalmor Justiciars actively patrol roads and enter homes. Talos worship is dangerous. The hiding of shrines has made the faith more emotionally intense, not less — suppression has created fervor.',
+      'The return of dragons (mid-4E 201) is interpreted in every tavern through a religious lens. Many Nords believe Alduin\'s prophesied return validates their entire cosmological worldview.',
+      'Helgen\'s destruction reshapes religious discourse in every hold — a settlement destroyed by a god-dragon is a theological event requiring interpretation.',
+      'The Greybeards\' summons of the Dragonborn is heard by every Nord in Skyrim simultaneously — a mass religious experience with no equivalent in living memory.',
+      'The empty Talos shrine in Solitude\'s Temple of the Divines is the most politically charged religious object in Skyrim — a daily visible reminder of the Concordat\'s cost.',
+    ],
+    homeland: [
+      'Skyrim IS the Nordic homeland — but hold-by-hold variation is significant.',
+      'Eastmarch (Windhelm): Most militantly Talos-worshipping. Ulfric\'s court frames the Civil War as a religious war first, political war second.',
+      'Haafingar (Solitude): Imperial control means the most formal, institutionalised Nine Divines worship. Temple is well-funded and staffed.',
+      'Falkreath: Heavily Arkay-influenced due to the massive Hold cemetery — death is the dominant religious theme.',
+      'Winterhold: Collapse of the city has damaged religious infrastructure. The College\'s presence creates tension between magical-academic and traditional Nordic religious identity.',
+      'The Reach: Forsworn Briarheart shamanism (Hircine and old Reach deity practices) competes with Nordic Divines worship — a genuinely separate religious culture within Skyrim\'s borders.',
+    ],
+    classes: [
+      { cls: 'Farmer / Laborer', practice: 'Kynareth for weather and harvest. Arkay when livestock die. Mara prayed to for family health. A small shrine in the barn is typical. Zenithar acknowledged before market days.' },
+      { cls: 'Warrior / Companion', practice: 'Shor and Talos central. Combat training is devotional. The Companions\' code of honor is functionally a religious ethics. Pre-battle invocations are universal.' },
+      { cls: 'Merchant / Innkeeper', practice: 'Zenithar prominently — small shrine near the till or behind the bar. Mara for customer relationships. More likely to observe the Thalmor ban publicly for business reasons.' },
+      { cls: 'Jarl / Thane', practice: 'Public religious observance is political performance. Must be seen at temple. Private Talos worship is nearly universal among Stormcloak-leaning Jarls regardless of public position.' },
+      { cls: 'Skald / Bard', practice: 'Functionally semi-priestly. Maintaining oral religious tradition (the Edda, the sagas of heroes) is a sacred obligation. Direct communication with Kynareth and the cultural memory of the gods.' },
+      { cls: 'Mage', practice: 'Julianos primarily. The College of Winterhold is religiously ambiguous — many mages are effectively secular, but Julianos observance is common among serious scholars.' },
+    ],
+    pressures: [
+      { icon: '⚔', label: 'Civil War', color: '#c84a4a', text: 'The conflict is framed by Stormcloaks as a religious war. Fighting for Talos = fighting for Nord identity. For Imperial-aligned Nords, suppressing their own ancestral faith creates genuine moral strain.' },
+      { icon: '👁', label: 'Thalmor Suppression', color: '#7ec8a4', text: '25+ years of Talos ban (since 4E 175) has paradoxically intensified worship. The Thalmor hunt worshippers, confiscate shrines, and imprison believers — creating a persecuted-faith dynamic that reinforces identity.' },
+      { icon: '🐉', label: 'Dragon Returns', color: '#c8a84a', text: 'Living gods are walking the earth again. Every dragon attack is a theological event. The Dragonborn\'s emergence reshapes the religious significance of the Dovah within a year of the main quest.' },
+      { icon: '📜', label: 'Theological Identity', color: '#6baec4', text: 'For many Nords, Talos worship and Nord identity are indistinguishable. The Concordat ban is experienced as an attack on what it means to be Nord — a complete collapse of the line between religion and ethnicity.' },
+    ],
+    pantheon: {
+      intro: `Skyrim's Nords stand on two religious bedrocks at once. The <strong>Imperial Nine Divines</strong> — codified by the Alessian compromise in the late First Era and capped by Tiber Septim's apotheosis — are the public, civic, calendrical religion. Beneath the Nine lies the <strong>Old Ways</strong>: the Atmoran inheritance carried by skalds, kept alive openly by the Skaal of Solstheim, and surviving as rural practice in the Reach periphery and the deep Pale. Most Nords blend the two, often without naming the seam. Strict Old-Ways adherents read the Nine as a smoothed-over translation of older truths; strict Imperial-cult Nords treat the Old Ways as folk superstition the Empire civilised. Both walk the roads of Skyrim in 4E 201, and the choice of which to follow shapes daily devotion in concrete ways. <em>Magnus, the architect-god who fled Mundus through the sun, sits outside both ledgers — present in skald-lore, scholar-rites, and the occasional astronomer's tower, but not on the daily roster.</em>`,
+      pairs: [
+        {
+          old: 'Shor',
+          oldRole: 'King of the gods. Slain by elven gods, his severed heart cast down to Mundus. His mead-hall is Sovngarde — every Nord warrior\'s aspiration.',
+          imp: '— (omitted from the Nine)',
+          impRole: 'The Imperial cult treats Lorkhan only as the spirit slain to allow Mundus, not as a god to be worshipped.',
+          diff: 'The deepest break between the pantheons. To pray the Nine strictly is to accept a religion in which the Nord god-king is unmentionable. Old-Ways readings often slot Talos into the warrior-king vacancy as a Shor-incarnation; Imperial readings have no such recovery.'
+        },
+        {
+          old: 'Alduin',
+          oldRole: 'World-Eater. Firstborn of time. Destined to consume creation when his hour comes — already returning in 4E 201.',
+          imp: 'Akatosh',
+          impRole: 'Dragon of Time. Chief Divine. The benevolent first being who anchors the Imperial calendar.',
+          diff: 'Same dragon, opposite valences. Imperial-aligned Nords pray to Akatosh as time-keeper. Old-Ways Nords distinguish Alduin (the destroyer) from Akatosh (the time-aspect that opposes him). The Greybeards\' position — that Alduin must be slain rather than reasoned with — is an Old-Ways position, not an Imperial one.'
+        },
+        {
+          old: 'Kyne',
+          oldRole: 'Widow of Shor. Storm-mother. Giver of the Thu\'um to mortals. The kiss at the end of life that draws Nord souls to Sovngarde.',
+          imp: 'Kynareth',
+          impRole: 'Goddess of the heavens, the winds, and the unseen elemental spirits.',
+          diff: 'The Empire smoothed off Kyne\'s martial edge. Old-Ways Kyne is a war-spear and a battle-mother; Imperial Kynareth is pastoral. Whiterun\'s Temple of Kynareth nominally serves both — but the priests there know which name they mean when they pray under their breath before a thunderstorm.'
+        },
+        {
+          old: 'Tsun',
+          oldRole: 'Shield-thane of Shor. God of trial against adversity. Gatekeeper of Sovngarde at the Whalebone Bridge — every honoured warrior is tested by him at the threshold.',
+          imp: '— (no Imperial counterpart)',
+          impRole: 'The Nine have no god of trial-by-combat. The role does not exist in the Imperial frame.',
+          diff: 'A live theological loss for Imperial-aligned Nordic warriors. To take the Nine\'s creed strictly is to die without anyone to test you at the threshold. Most Imperial-aligned Nord warriors quietly retain Tsun anyway — the conviction that someone is waiting at the bridge survives the Concordat in private.'
+        },
+        {
+          old: 'Stuhn',
+          oldRole: 'Shield-thane of Shor. God of ransom and fair-fighting — the honourable enemy who spares the worthy and parleys with prisoners.',
+          imp: 'Stendarr',
+          impRole: 'God of mercy, charity, and well-earned justice. Patron of magistrates and the Vigilants.',
+          diff: 'Stuhn fights you fairly; Stendarr forgives you. The shift mirrors the Empire\'s pacification of older Atmoran martial codes. The Vigilants of Stendarr in 4E 201 retain a militancy — Daedra-hunting, monster-purging — that is closer to Stuhn than to the soft Imperial ideal of mercy.'
+        },
+        {
+          old: 'Mara',
+          oldRole: 'Shor\'s handmaid (or wife, in some sagas). Agricultural mother. Hearth, harvest, and the survival of the home.',
+          imp: 'Mara',
+          impRole: 'Goddess of love, compassion, and family.',
+          diff: 'The most continuous god across the two pantheons. Riften\'s Temple of Mara is one of the few institutions Old-Ways and Imperial-aligned Nords agree on. Differences are tonal: Old-Ways Mara is Shor\'s woman first and a mother of the people second; Imperial Mara is everyone\'s, reachable equally by Cyrodiilic clerks and Reach farmers.'
+        },
+        {
+          old: 'Dibella',
+          oldRole: 'Old-Reach and Atmoran cults retain prophetic and sensual aspects — sybilline more than aesthetic. The chosen Sybil receives oracular speech.',
+          imp: 'Dibella',
+          impRole: 'Goddess of beauty, art, and love\'s aesthetic dimension.',
+          diff: 'Continuous in name, drifted in practice. Markarth\'s Sybil tradition is older than the Cyrodiilic temple model — a fragment of the pre-Imperial cult preserved in stone. Most Nords don\'t notice the difference; the Markarth priestesses do.'
+        },
+        {
+          old: 'Jhunal',
+          oldRole: 'Atmoran rune-father. God of language, hermetic order, mathematics, and the carving of holy script into stone.',
+          imp: 'Julianos',
+          impRole: 'God of wisdom, logic, and literature.',
+          diff: 'The least-mourned displacement. The Nords moved away from Jhunal centuries before Tiber Septim — by the late First Era he was already marginal. Imperial Julianos absorbed the role smoothly. Most Nords today don\'t know Jhunal\'s name; College of Winterhold scholars know it as a footnote in Mundus-cosmography texts.'
+        },
+        {
+          old: 'Orkey',
+          oldRole: 'Foreign god of mortality. Atmoran lore says he cursed Nords with short lives until Shor (or Alduin, depending on the telling) broke the curse. An enemy-god, propitiated rather than loved.',
+          imp: 'Arkay',
+          impRole: 'Steward of the cycle of life and death. Benevolent record-keeper of the dead.',
+          diff: 'The Imperial version is gentler and more institutional. Old-Ways Nords still feel Orkey at funerals — an enemy who must be appeased, not a friend who guides. Falkreath\'s Hall of the Dead is technically Arkay\'s; older Falkreath Nords treat the rites as half Orkey-warding, even when the priest in front of them does not.'
+        },
+        {
+          old: 'Talos / Ysmir',
+          oldRole: 'Storm of the North. The recurring Shezarrine — a Shor-incarnation that returns when the Nords need him. Old-Ways tradition reads Talos in line with Wulfharth and Pelinal: a god-shape that wears mortal flesh.',
+          imp: 'Talos',
+          impRole: 'Ninth Divine. Tiber Septim deified by his own mantle. The deified emperor-hero who unified Tamriel.',
+          diff: 'Modern, added to both pantheons but for different reasons. Old-Ways sees Talos as Shor-returning, a continuity stretching back to before recorded saga. Imperial sees him as a deified mortal, the Empire\'s own apotheosis. The Concordat ban wounds both readings, but differently: Old Ways loses a god-incarnation, Imperial loses a deified emperor — and the same hidden shrine consoles both.'
+        },
+      ]
+    },
+  },
+  {
+    id: 'imperial',
+    name: 'Imperial',
+    color: '#c8a84a',
+    bg: '#120f04',
+    tagline: 'Religion as civic infrastructure — moderate, inclusive, and institutionalised',
+    skyrimContext: 'Occupying military force · Temple administrators · Talos ban enforcers',
+    daily: [
+      { time: 'Dawn', text: 'Brief acknowledgment at a portable shrine if available. Legion camps maintain a small collective shrine — a soldier touches it as they leave for duty, the way one might touch a doorframe.' },
+      { time: 'Morning', text: 'Merchants open their stalls with a coin to Zenithar — a practical rather than devotional gesture. The Legion performs morning muster, which has a quasi-religious quality through oath reaffirmation.' },
+      { time: 'Midday', text: 'Priests of the Divines are available at hold temples throughout the day. Healers affiliated with Mara\'s temple provide medical services — religion and civic function fully merged.' },
+      { time: 'Evening', text: 'Grace before the evening meal in observant households — brief, formulaic, not emotionally intense. A soldier might add a private word to Talos under his breath after the formal grace, then feel complicated about it.' },
+      { time: 'Night', text: 'Amulet of a relevant Divine worn to sleep — Mara for family-minded people, Julianos for scholars, Zenithar for merchants. No private prayer rituals required; the Divines do not demand constant attention.' },
+    ],
+    shrines: [
+      'Temple of the Divines in Solitude — most important Imperial religious site in Skyrim, maintained at Imperial expense',
+      'Hold temples staffed by Imperial-trained or Imperial-affiliated priests',
+      'Legion camp portable shrines — practical field religion for stationed soldiers',
+      'The Talos alcove in Solitude\'s Temple is conspicuously empty — a visible scar of the Concordat',
+      'Private household shrines are small and often generic — a single Divine matching one\'s profession rather than a full pantheon',
+    ],
+    thresholds: [
+      { event: 'Birth', detail: 'Naming ceremony with invocations of Mara and Arkay — the two Divines bracketing the life cycle. A priest is preferred but not required. Documentation recorded by the Temple.' },
+      { event: 'Marriage', detail: 'Temple ceremony, more elaborate than Nordic practice. Mara\'s blessing is sought formally. Contracts signed before Divine witnesses — religion and law fully merged.' },
+      { event: 'Legion Oath', detail: 'The oath of service to the Emperor is explicitly sworn before the Divines. Breaking it is simultaneously treason and sacrilege. This oath has more daily religious weight for a soldier than any temple visit.' },
+      { event: 'Death', detail: 'Full Arkay rites. Burial documentation is a religious requirement — Arkay\'s priests keep the records of the dead. Military deaths receive Legion burial rites, increasingly strained in the Civil War.' },
+      { event: 'Major Commerce', detail: 'Significant contracts sealed with a Zenithar invocation. A merchant guild\'s founding is a genuine religious ceremony.' },
+    ],
+    skyrim: [
+      'Imperial soldiers stationed in Skyrim are far from home and their civic religious infrastructure. Camp shrines substitute inadequately for full temple practice.',
+      'The Talos ban creates acute moral strain among Imperial soldiers — many privately honour Talos as the deified Tiber Septim, their own emperor-god. They enforce a ban on their own ancestral faith.',
+      'The empty Talos shrine in Solitude is something every Imperial who enters the Temple confronts. Priests quietly disagree about whether to restore it.',
+      'Fighting Stormcloaks who frame the war as a religious cause forces Imperial soldiers to either accept a secular framing of the war or develop a counter-theology — neither is satisfying.',
+      'Thalmor liaison officers at Imperial Legion camps create friction — Imperials resent Thalmor religious authority on their own military turf.',
+      'The Civil War\'s losses are processed through Arkay\'s rites, but the scale of death is straining that infrastructure. Mass graves with inadequate rites are a religious failure many soldiers are quietly aware of.',
+    ],
+    homeland: [
+      'Cyrodiil: Full civic temple infrastructure, seasonal religious festivals are major public events, not optional personal observances.',
+      'The Chapel of Zenithar in Leyawiin and the Temple of the One in Imperial City are politically significant civic institutions with real influence.',
+      'Imperial City has dedicated religious quarters — the religion is genuinely woven into civic architecture.',
+      'The lack of a functioning Talos shrine in the Imperial City (removed under the Concordat) is a civic wound for those who notice it, but urban Imperials are better at compartmentalising.',
+      'Priests of the Divines hold genuine civic functions — dispute arbitration, medical care, record-keeping. Religion is inseparable from civil administration.',
+    ],
+    classes: [
+      { cls: 'Legion Soldier', practice: 'Camp shrine observance, oath-swearing is the most religiously charged act of their life. Private Talos prayers conducted covertly. Arkay invoked after battles when cataloguing the dead.' },
+      { cls: 'Merchant / Trader', practice: 'Zenithar prominently. Coin at the shrine before major deals is nearly universal. More likely to observe formal religious calendar than other classes.' },
+      { cls: 'Priest / Healer', practice: 'Full professional religious identity. Mara\'s and Arkay\'s priests in Skyrim are performing a genuine civic function — they are the most important non-military Imperials in the province.' },
+      { cls: 'Noble / Governor', practice: 'Public religious observance is political theater. The Jarl\'s temple attendance in Solitude is a civic event. Private beliefs may differ significantly from public performance.' },
+      { cls: 'Battlemage', practice: 'Julianos alongside martial Divines. Less emotionally intense than Nordic martial piety — more intellectual, more oriented toward correct ritual than heartfelt devotion.' },
+      { cls: 'Innkeeper / Tavern Owner', practice: 'Mara for community, Zenithar for business. The inn functions as a secular social space — less religiously charged than the Nordic mead-hall — but shrine maintenance is standard.' },
+    ],
+    pressures: [
+      { icon: '📜', label: 'The Concordat', color: '#c8a84a', text: 'Enforcing a theological ban that many Imperial soldiers privately reject creates a quiet crisis of conscience. The Empire made a political deal that cost a religious price — and some Imperials know it.' },
+      { icon: '⚔', label: 'Civil War Legitimacy', color: '#c84a4a', text: 'Imperial religious authority in Skyrim rests partly on maintaining the temple infrastructure. The Civil War damages that infrastructure — hold temples in contested areas are understaffed or abandoned.' },
+      { icon: '👁', label: 'Thalmor Friction', color: '#7ec8a4', text: 'Thalmor agents operate in Skyrim with Imperial permission but are not Imperial. Many Imperial soldiers and priests experience the Thalmor as an occupying religious authority, not an ally.' },
+      { icon: '🐉', label: 'Theological Vacuum', color: '#6baec4', text: 'The return of dragons — and the emergence of the Dragonborn — is a Nordic theological event. Imperials have no equivalent framework. This creates a religious gap between Imperial civil religion and the dramatic cosmological drama unfolding around them.' },
+    ],
+  },
+  {
+    id: 'breton',
+    name: 'Breton',
+    color: '#8a9ec4',
+    bg: '#0a0d14',
+    tagline: 'Religion as syncretic inheritance — knight, druid, and witch under one Divine roof',
+    skyrimContext: 'Court mages · Mercenaries · Merchants · The Volkihar shadow',
+    daily: [
+      { time: 'Dawn', text: 'A brief Magnus acknowledgment at sunrise — the sun is the aperture through which the architect-god fled Mundus. For the magically inclined, this is the day\'s first arcane gesture; for everyone else, it is a quiet courtesy to a distant ancestor.' },
+      { time: 'Morning', text: 'Knights and chivalric-order members recite a morning oath to their patron Divine — most often Stendarr, Akatosh, or Mara. Court mages begin study, which is itself devotional toward Julianos and Magnus simultaneously. Townfolk perform an Imperial-style brief grace.' },
+      { time: 'Midday', text: 'Bretons in High Rock cities transact under Zenithar\'s blessing in temples that often outshine Cyrodiil\'s. Bretons in Skyrim improvise: a coin to a Nordic Zenithar shrine works perfectly well, theologically. The Breton religious posture is pragmatic syncretism — what works, works.' },
+      { time: 'Evening', text: 'In observant rural Breton households, evening features a hearth-blessing — older than the Divines, traceable to Druidic inheritance. The hearth is Y\'ffre\'s small fire, kept lit through the night. Town households simply say the Imperial evening grace.' },
+      { time: 'Night', text: 'Witchcraft-tradition Bretons may light a candle and consult coven knowledge privately. Knightly and townfolk Bretons say the Imperial evening prayer. The split between public Imperial faith and private older traditions is most visible at this hour — a Breton\'s real religion is often what they do alone after dark.' },
+    ],
+    shrines: [
+      'High Rock cities house full Imperial Divines temples — Wayrest, Daggerfall, Camlorn, Northpoint — typically more elaborate than Cyrodiilic counterparts, reflecting Breton wealth and architectural pride',
+      'Druidic stone circles of the Systres archipelago and inland High Rock — the Stonelore, Eldertide, and Firesong Druid Circles — preserve pre-Imperial Y\'ffre-derived practice. Few Bretons in Skyrim have direct access; some carry blessed pebbles as proxies',
+      'Witch-mother covens operate in the rural moors and hills of High Rock. The Glenmoril Witches in Falkreath Hold are Reachfolk-Breton hybrid — the closest active witch-coven to most Skyrim Bretons',
+      'Magnus shrines are rare and informal — astronomers\' towers, mages\' studies, and certain reading-rooms function semi-religiously. The College of Winterhold has no formal Magnus altar but several private ones in scholars\' quarters',
+      'In Skyrim: Bretons access the Imperial Divines temples freely. Court mages often keep a small private Magnus or Julianos shrine in their chambers — Falion\'s house in Morthal is a documented example',
+    ],
+    thresholds: [
+      { event: 'Birth', detail: 'Imperial-style naming with Divine invocation, but observant rural Bretons also seek a midwife-witch\'s blessing — the older charm to ensure the child has magical aptitude. The double-rite (priest and witch) is common in High Rock; in Skyrim it depends on what a family can find or hide.' },
+      { event: 'Coming of Age', detail: 'Magical aptitude assessment — analogous to Altmer practice but less politicised and less hierarchical. A young Breton with talent is typically apprenticed: to a court mage, to a Mages Guild branch (in earlier eras), or, traditionally, to a hedge-witch or druid in rural areas.' },
+      { event: 'Marriage', detail: 'Imperial Mara-temple ceremony in towns. In rural High Rock, hand-fasting under stones or before old hearth-spirits remains practiced — a blended ceremony where the priest and the older traditions both bless. A Breton wedding in Riften is purely Imperial; a Breton wedding in a Wrothgar village is half something else.' },
+      { event: 'Knighthood / Chivalric Vow', detail: 'For knights of the various Breton orders (Knights of the Lily, Knights of the Flame, Order of the Hour\'s Breton chapters), the dubbing is sworn before chosen Divines — commonly Stendarr, Akatosh, and the personal patron. The vow has theological weight an Imperial Legion oath does not, because the knight\'s entire moral identity hangs on it.' },
+      { event: 'Death', detail: 'Arkay\'s rites in Imperial-aligned families. Druidic-leaning Bretons may also conduct an outdoor return-to-stone observance — leaving a token at a stone circle or beneath an old tree. Witchcraft-tradition Bretons have private rites the Imperial cult does not see and the family does not discuss.' },
+      { event: 'Coven Initiation (rare, hidden)', detail: 'For Bretons in the witch-mother lineages: a private rite under matriline witnesses, frequently in the presence of a Daedric pact. Hircine, Namira, and Hermaeus Mora are the most common patrons. Almost never spoken of outside the coven itself.' },
+    ],
+    skyrim: [
+      'Bretons in Skyrim tend to be magical or commercial professionals. Court mages — Falion (Morthal), Nelacar (Winterhold), Madena (Markarth\'s Understone Keep), Wuunferth (Windhelm), Sybille Stentor (Solitude) — are an effectively Breton-dominated profession in Skyrim, even where individual practitioners are not strictly of Breton descent.',
+      'The College of Winterhold has a strong Breton presence but is secular-academic in tone — Magnus and Julianos are treated as abstractions there, not as living patrons. A devout Breton at the College must keep their faith in the margins.',
+      'The Volkihar vampire clan, descended from Breton vampires originally, occupies Castle Volkihar off Solitude\'s coast. Their existence is unknown to most Skyrim Bretons but the clan\'s Breton origin means a particular religious shadow looms in Breton lore — vampirism is, for Bretons, a known historical hazard rather than a new threat.',
+      'Bretons navigate the Civil War with diplomatic distance — High Rock is Imperial-aligned but not heavily invested. Most Breton merchants and mages prefer business-as-usual, observe the Talos ban without fervor, and stay out of Stormcloak politics on principle.',
+      'The Glenmoril Witches in Falkreath Hold are within Skyrim\'s borders — Reachfolk-Breton hybrid hag-coven. For a Breton with Reach-side ancestry, this is one of the few accessible spaces of pre-Imperial Breton witch-craft, though most Bretons prefer not to acknowledge the connection openly.',
+      'Erandur (Dunmer priest of Mara, Morthal) and other non-Breton priests occasionally serve mixed Breton congregations — the syncretic nature of Breton faith makes them comfortable with cross-racial clergy in a way Nords rarely are.',
+    ],
+    homeland: [
+      'High Rock: politically fragmented into many small kingdoms (Wayrest, Daggerfall, Camlorn, Northpoint, Shornhelm, Evermor, Farrun, Jehanna). Each city-state has slightly different religious emphasis — Daggerfall famously retains older Druidic-inflected practice; Wayrest is heavily Imperialised civic religion; the hill country of central High Rock keeps witch-mother traditions.',
+      'The Druidic Circles (Stonelore, Eldertide, Firesong) — historically active, fragmented, and contested. Some druids see the Imperial Divines as a misunderstanding of older truths; some are openly hostile. Most coexist quietly with Imperial cult priests in mixed villages.',
+      'Witch-covens are widespread in rural High Rock. Many small villages have a "wise-woman" or "hedge-witch" consulted alongside (or instead of) the Imperial priest. This is unofficial but pervasive — and quietly tolerated by High Rock\'s aristocratic class because most noble houses had a coven member two generations back.',
+      'Knightly orders (Knights of the Lily in Wayrest, Knights of the Flame in Anticlere, others) are simultaneously martial brotherhoods and chivalric-religious orders. The knights\' code is religious in a way Imperial Legion oaths never quite are — closer to a sacred vow than a contract of service.',
+      'Magnus is more revered in High Rock than anywhere else in Tamriel. The magical-bloodline tradition treats Magnus\'s escape from Mundus as the source of Breton aptitude. "We are Magnus\'s distant heirs" is a cultural commonplace among the magically gifted, repeated half-jokingly and half-seriously.',
+    ],
+    classes: [
+      { cls: 'Court Mage', practice: 'Magnus and Julianos central, often privately. Public observance of the Imperial Nine is performed for political reasons. The deepest devotion is to magical practice itself, treated as theological work — every mastered spell is a small recovery of the architect-god\'s gift.' },
+      { cls: 'Knight / Sellsword', practice: 'Stendarr, Akatosh, and Mara prominent. Chivalric orders maintain genuine religious-martial codes. A Breton knight\'s oath has theological weight a mercenary\'s does not — and a Breton sellsword without an order tends to feel the lack.' },
+      { cls: 'Merchant', practice: 'Zenithar prominently — practical Imperial-style observance. May privately maintain a household witch-charm for luck or a Magnus-coin in the till. Pragmatic syncretism without anxiety.' },
+      { cls: 'Witch / Coven Initiate', practice: 'The pre-Imperial substrate. Daedric pacts (often Hircine, Namira, Hermaeus Mora), matriline magic, hedge-craft. Almost invisible in Skyrim except in Falkreath\'s Glenmoril remnants. The most theologically distinct Breton class — and the most likely to be hunted by Vigilants of Stendarr.' },
+      { cls: 'Druid', practice: 'Y\'ffre\'s older Breton inheritance. Stone circles, animal-shape rites, the Green\'s High Rock variant. Most Bretons in Skyrim have at most family-memory of druidic practice — active druids are rare outside the Systres and certain inland retreats. A Breton druid in Skyrim is an exceptional figure.' },
+      { cls: 'Volkihar Vampire', practice: 'A theological category of one. Descended from Bretons, indebted to Molag Bal, exiled from Mara and Arkay. The Imperial cult cannot reach them; the witch-mother covens half-claim them as kindred. See companion file (Cursed Worship) for the full theology.' },
+    ],
+    pressures: [
+      { icon: '✦', label: 'Magic as Inheritance', color: '#8a9ec4', text: 'Bretons treat their magical aptitude as theological evidence — Magnus\'s lineage runs through their blood. Living among Nords (who often distrust magic) and Altmer (who claim superior aptitude through purer descent) creates a constant low-grade religious negotiation about whose magic-theology is correct.' },
+      { icon: '🌿', label: 'Druid / Imperial Tension', color: '#80c440', text: 'Breton religion is genuinely two-layered. The Druidic substrate and the Imperial overlay coexist by mutual ignoring rather than reconciliation. A Breton from a strongly Druidic family living an Imperial civic life carries the tension daily — every temple visit is a small translation.' },
+      { icon: '🜏', label: 'Witch-Coven Shadow', color: '#9b6bb5', text: 'Breton matriline witch-craft is not openly discussed but everyone in High Rock knows it exists. In Skyrim, encountering Glenmoril or hagraven culture forces a Breton to confront a piece of their own heritage they may have been raised to deny. The Vigilants of Stendarr increasingly treat this heritage as monstrous.' },
+      { icon: '🩸', label: 'The Volkihar Question', color: '#7a6bc4', text: 'Castle Volkihar exists. The Vampire Lords of that clan are Breton-descended. Most Skyrim Bretons either don\'t know or don\'t speak of it — but the existence of the clan is a shadow on Breton religious self-understanding. We invented this thing, in a sense, and now it lives off Solitude\'s coast and feeds on Skyrim.' },
+    ],
+  },
+  {
+    id: 'dunmer',
+    name: 'Dunmer',
+    color: '#c4785a',
+    bg: '#130806',
+    tagline: 'Religion as ancestor-mediated society — the dead are present, not past',
+    skyrimContext: 'Refugees in Windhelm\'s Grey Quarter · Post-Red Mountain diaspora · Tribunal-less',
+    daily: [
+      { time: 'Dawn', text: 'Touching or bowing to the household ash-statue shrine before the day begins — a physical acknowledgment of the ancestral dead. Not a prayer exactly, more like checking in with elders who happen to be dead.' },
+      { time: 'Morning', text: 'The morning\'s first substantial act (eating, beginning work) is preceded by a brief ash-prayer naming the specific ancestors being addressed. Not generic "the gods" but named individuals.' },
+      { time: 'Midday', text: 'Passing a House shrine or ancestral tomb marker on the road prompts a pause and acknowledgment. Dunmer in Windhelm navigate a city with no Dunmer sacred spaces — this absence is felt daily.' },
+      { time: 'Evening', text: 'The day\'s events are recounted to the ancestors at the household shrine — a kind of report to the dead. Significant decisions are held until this daily consultation, even if the ancestors\' response is interpreted intuitively.' },
+      { time: 'Night', text: 'Death is not feared in the way other cultures fear it — the Dunmer have a framework for it. Sleep is approached with equanimity. A small offering (food, drink, ash) is left at the shrine overnight.' },
+    ],
+    shrines: [
+      'Household ash-statue shrines — the primary sacred space for any Dunmer, more important than any temple',
+      'Ancestral tombs — the holiest sites in Dunmer religion. Being buried with one\'s ancestors is a fundamental religious requirement',
+      'In Windhelm: No formal Dunmer sacred spaces. The Assemblage functions as an informal community space but has no religious infrastructure',
+      'Azura\'s shrine (outside Winterhold) is one of the few publicly accessible Dunmer-tradition sacred sites in Skyrim',
+      'The Dunmeri tendency to maintain portable ash-shrines when travelling means religious practice follows them wherever they go',
+    ],
+    thresholds: [
+      { event: 'Birth', detail: 'Child introduced to ancestor spirits through ash-prayer — the newborn is formally presented to the dead as a new member of the family line. The ancestors\' acknowledgment is felt, not heard.' },
+      { event: 'Naming', detail: 'Names often carry House and ancestral significance. Being named after a notable ancestor creates an ongoing spiritual obligation to honor that ancestor\'s deeds.' },
+      { event: 'Marriage', detail: 'House-witnessed and ancestor-witnessed. The ritual introduces the new spouse to the family\'s ancestral line. Mixed-House marriages require navigating competing ancestral obligations — a genuine theological complexity.' },
+      { event: 'Death', detail: 'The body must be returned to the ancestral tomb if at all possible. Dying in Skyrim far from ancestral tombs is a spiritual anxiety for every Dunmer refugee. Many maintain the ash-prayer practice of treating death as a transition, not an ending.' },
+      { event: 'Joining a House', detail: 'The ash-prayer welcoming a new House member is one of the most significant rituals — it formally incorporates the person into the ancestral network.' },
+    ],
+    skyrim: [
+      'Grey Quarter residents live in poverty and face systematic Nordic discrimination — Ulfric refuses them rights within Windhelm. Religious practice is entirely private and household-based.',
+      'The absence of ancestral tombs in Skyrim creates a genuine spiritual wound. Dunmer who die in Windhelm are buried by Arkay\'s priests in the Hall of the Dead — a fundamentally wrong death, theologically speaking.',
+      'Azura\'s cult is active and visible. The quest for Azura\'s Star reflects a living Dunmer religious tradition maintaining itself in exile.',
+      'Community solidarity in the Grey Quarter partially substitutes for the lost ancestral network — living Dunmer become each other\'s extended family when the dead are unreachable.',
+      'Some Dunmer have begun incorporating Skyrim\'s Nordic religious elements out of practical necessity — using Arkay\'s hall, visiting Kynareth\'s temple — while maintaining private Dunmer practice. A double-religious life.',
+    ],
+    homeland: [
+      'Morrowind (post-Red Mountain 4E 5): Catastrophically damaged. Many ancestral tombs destroyed, inaccessible, or occupied by ash spawn and undead.',
+      'The Tribunal is gone — Vivec disappeared, Sotha Sil murdered, Almalexia dead. The theological vacuum left by losing living gods is profound.',
+      'Religious practice has reverted toward the old Daedric roots: Azura, Boethiah, and Mephala. The Good Daedra tradition is re-emerging as the dominant public faith.',
+      'House Redoran, now dominant, is attempting to rebuild religious infrastructure — ancestral tombs are being restored, ash-rites re-established.',
+      'House Telvanni maintains its own esoteric magical-religious practices, somewhat removed from mainstream Dunmer faith.',
+    ],
+    classes: [
+      { cls: 'Grey Quarter Laborer', practice: 'Minimal formal practice due to poverty and lack of infrastructure. The household shrine is the center of everything. Community gatherings in the Assemblage have quasi-religious character.' },
+      { cls: 'Dunmer Merchant', practice: 'More assimilated publicly — may attend Imperial temples or observe Divines for business purposes. Maintains strict private Dunmer ash-prayer practice. A double-religious life is common.' },
+      { cls: 'Mage (Winterhold)', practice: 'Academic approach to Daedric traditions — Hermaeus Mora, Azura, and the metaphysics of ancestor-magic. Less emotionally devout, more philosophically engaged.' },
+      { cls: 'Those with full ash-shrines', practice: 'The most complete practice. Daily ash-prayer, ancestral consultation for major decisions, elaborate observance of the dead\'s feast days.' },
+      { cls: 'Dark Elf refugee elder', practice: 'Carries the full weight of what was lost. These individuals are functionally priests of a broken tradition — they remember the full Tribunal-era practices and maintain them as best they can.' },
+    ],
+    pressures: [
+      { icon: '🌋', label: 'Red Mountain', color: '#c4785a', text: 'The eruption of Red Mountain (4E 5) destroyed much of the religious infrastructure of Morrowind. Living as a refugee means practicing religion in poverty, without temples, without ancestral tombs, and without the institutional support structures that made Dunmeri religion function.' },
+      { icon: '👁', label: 'Tribunal\'s Fall', color: '#9b6bb5', text: 'Losing the living gods — Vivec, Sotha Sil, Almalexia — left a theological vacuum that had not been fully filled by 4E 201. The Good Daedra tradition is re-emerging but has not yet rebuilt the institutional weight the Tribunal once had.' },
+      { icon: '⚔', label: 'Nordic Discrimination', color: '#6baec4', text: 'In Windhelm specifically, Ulfric Stormcloak\'s discrimination policy means Dunmer are politically powerless. Their religion is invisible to their hosts — and this invisibility is both a protection and a wound.' },
+      { icon: '💀', label: 'Distance from the Dead', color: '#c47a5a', text: 'The central anxiety of Dunmer in Skyrim: dying far from ancestral tombs. The ancestors cannot be properly consulted. Souls of the dead may not find their way home. This theological anxiety shapes every major life decision.' },
+    ],
+  },
+  {
+    id: 'altmer',
+    name: 'Altmer',
+    color: '#7ec8a4',
+    bg: '#061310',
+    tagline: 'Religion as civilisational project — self-cultivation IS worship',
+    skyrimContext: 'Almost exclusively Thalmor agents & Embassy staff · Rare civilians',
+    daily: [
+      { time: 'Dawn', text: 'Facing east at sunrise for a private Auri-El acknowledgment — this is one of the few devotional acts that Altmer practice privately even within the Thalmor\'s highly politicised religious environment.' },
+      { time: 'Morning', text: 'Magical study and study of elven history are explicitly devotional activities. Reading genealogical records is a quasi-religious act. In the Embassy, the day begins with a formal briefing that has ritualistic elements.' },
+      { time: 'Midday', text: 'Food culture carries ritual purity dimensions — certain preparations are "correct" in ways that invoke ancestral practice. An Altmer eating Nordic food at a Nordic table is making a small religious compromise they are aware of.' },
+      { time: 'Evening', text: 'Reflection on the day\'s advancement — what was learned, what was refined, what brought the self closer to divine capacity. In the Thalmor context, what progress was made in the religious enforcement mission.' },
+      { time: 'Night', text: 'In Summerset: elaborate evening ritual practice. In Skyrim\'s Thalmor Embassy: modified, constrained, but maintained. The maintenance of Altmer practice in hostile Nordic territory is itself a devotional act of cultural preservation.' },
+    ],
+    shrines: [
+      'Thalmor Embassy in the Reach — the only properly maintained Aldmeri religious space in Skyrim. Access is heavily restricted.',
+      'In Summerset: Grand temples to Auri-El with full priestly hierarchy, genealogical archives integrated into temple function',
+      'Altmer visiting Skyrim have no public sacred spaces. The Nordic shrine network is religiously incompatible — Auri-El cannot be adequately worshipped at Kynareth\'s temple.',
+      'The Embassy maintains internal shrines visible only to Thalmor personnel',
+    ],
+    thresholds: [
+      { event: 'Birth', detail: 'Genealogical documentation is a religious act — blood purity recorded and verified. The child\'s bloodline is entered into ancestral records with the same gravity that Nordic cultures perform burial rites.' },
+      { event: 'Coming of Age', detail: 'Magical aptitude assessment is a religious passage — it determines the individual\'s capacity to advance toward the divine. High aptitude is literally more divine; low aptitude is a spiritual as well as social diminishment.' },
+      { event: 'Marriage', detail: 'Bloodline compatibility is religiously significant. A "bad" marriage (one that introduces impurity into the bloodline) is a theological error, not merely a social one.' },
+      { event: 'Scholarly Achievement', detail: 'Publishing significant magical research, achieving a new degree of arcane mastery, discovering lost Aldmeri lore — these are genuine religious achievements in Altmeri theology, not merely academic ones.' },
+      { event: 'Death', detail: 'Return to the divine is the aspiration. Proper elven burial ensures the mer\'s contribution to elvenkind\'s long project of recovering lost divinity. Dying without documented achievements is a kind of spiritual failure.' },
+    ],
+    skyrim: [
+      'The Thalmor are in Skyrim primarily to enforce the White-Gold Concordat, especially the Talos ban. This religious enforcement mission IS their daily religious practice.',
+      'Hunting Talos worshippers is framed as sacred duty — removing heresy that pollutes the divine order. Thalmor Justiciars approach their work with the conviction of inquisitors.',
+      'The Embassy compound is the most politically significant religious site in Skyrim. It functions as embassy, prison (for Talos believers), and temple simultaneously.',
+      'Altmer civilians are extremely rare in Skyrim. Those present (traveling scholars, rare merchants) exist in a strange position — they benefit from Thalmor political protection but may not share Thalmor religious militancy.',
+      'The Thalmor\'s confidence in 4E 201 is near its peak. The Great War victory and the Concordat feel like divine confirmation of Altmeri superiority to true believers.',
+    ],
+    homeland: [
+      'Summerset Isles (Alinor): Fully integrated theocratic-aristocratic religious culture. Daily life governed by ritual purity concerns — what one eats, wears, studies, and says all carry religious weight.',
+      'The Thalmor rose to power partly by positioning themselves as the most theologically orthodox faction. Their political authority is inseparable from their claim to religious correctness.',
+      'Magical academies are semi-religious institutions — the pursuit of magical mastery and the pursuit of divine recovery are the same project.',
+      'Seasonal festivals mark important Aldmeri calendar events and are major civic-religious celebrations, not optional.',
+      'Genealogical archives in temples are some of the most carefully maintained records in Tamriel — blood memory as sacred text.',
+    ],
+    classes: [
+      { cls: 'Thalmor Justiciar', practice: 'Religious law enforcement as vocation. The Talos hunt is simultaneously their job, their patriotic duty, and their devotional practice. True believers experience deep satisfaction in the work.' },
+      { cls: 'Thalmor Mage', practice: 'Magical practice as theological advancement — mastering Alteration, Illusion, or Destruction is recovering capacity that Lorkhan stole. Research is prayer.' },
+      { cls: 'Embassy Staff', practice: 'Maintaining Altmeri cultural practice in hostile Nordic territory is itself a religious statement. Every meal prepared correctly, every ritual maintained, is defiance of assimilation.' },
+      { cls: 'Rare Civilian Altmer', practice: 'Deeply complicated. May downplay religious identity publicly while maintaining private practice. Navigates between Thalmor expectations and personal belief, which may be more moderate.' },
+      { cls: 'Altmer Scholar', practice: 'The most academic approach — deeply engaged with Aldmeri cosmological texts, less interested in enforcement. May privately doubt Thalmor political tactics while sharing their theological premises.' },
+    ],
+    pressures: [
+      { icon: '⚔', label: 'Post-War Confidence', color: '#7ec8a4', text: 'The Great War victory (4E 175) and the Concordat\'s removal of Talos feel like cosmological confirmation to true Thalmor believers. This is a moment of genuine religious triumphalism.' },
+      { icon: '👁', label: 'Enforcement as Faith', color: '#c84a4a', text: 'The conflation of political enforcement and religious duty creates a feedback loop — success in hunting Talos worshippers reinforces theological conviction. Failure (letting worshippers escape) is a religious failure, not just a professional one.' },
+      { icon: '📜', label: 'Internal Doubt', color: '#c8a84a', text: 'Not all Altmer share the Thalmor\'s militancy. Some are more moderate, more philosophically than politically motivated. In Skyrim in 4E 201, expressing that doubt is dangerous — the Embassy is not a safe space for heterodoxy.' },
+      { icon: '🐉', label: 'The Dragon Problem', color: '#6baec4', text: 'The return of Alduin and the emergence of the Dragonborn are Nordic theological events that the Thalmor have no framework for. The Thalmor\'s private anxiety about the Dragonborn (see their files on the subject) reflects a cosmological gap in their certainty.' },
+    ],
+  },
+  {
+    id: 'khajiit',
+    name: 'Khajiit',
+    color: '#d4a840',
+    bg: '#120e00',
+    tagline: 'Religion as cosmological identity — the moons determine what you are',
+    skyrimContext: 'Trade caravans only · Excluded from cities · No temples available',
+    daily: [
+      { time: 'Dawn', text: 'Moon-watching is the most critical daily practice. Before doing anything else, a Khajiit checks Masser and Secunda\'s positions and phases. This is not superstition — it is consulting the divine structure that governs all of life.' },
+      { time: 'Morning', text: 'The moons\' current positions influence decisions: whether to travel, trade aggressively or cautiously, perform magic, or rest. A Khajiit caravan leader reads the moons the way an Imperial general reads a map.' },
+      { time: 'Midday', text: 'Communal caravan meal has semi-sacred character. The caravan is a travelling religious community — eating together, sharing resources, maintaining the lunar calendar collectively.' },
+      { time: 'Evening', text: 'Moon-watching again at dusk. The caravan\'s leader or most religiously senior member updates the lunar calendar. Group prayers facing the moons — brief, communal, deeply felt.' },
+      { time: 'Night', text: 'The clearest view of the moons is at night. Devout Khajiit spend some part of each night in lunar contemplation. The dead are delivered to Khenarthi during this time — the wind-goddess is most present at night.' },
+    ],
+    shrines: [
+      'Roadside caravan shrines to Azurah and Khenarthi — portable, maintained at each campsite',
+      'The caravan itself is the temple community. No permanent sacred spaces available in Skyrim.',
+      'Cannot access Nordic hold temples — social barriers and outright refusal of entry to cities make Imperial shrines inaccessible',
+      'Natural high places and open ground beneath clear skies are the most sacred spaces — the moons must be visible',
+      'Moon sugar (in Elsweyr) has ritual dimensions in religious contexts, distinct from its recreational/addictive use in Skyrim',
+    ],
+    thresholds: [
+      { event: 'Birth', detail: 'The moon phase at the exact moment of birth determines sub-species. A pregnant Khajiit in Skyrim tracks the moons obsessively — this is not anxiety, it is religious anticipation of the child\'s cosmic position.' },
+      { event: 'Naming', detail: 'Khajiit names reflect birth circumstances (J\'zargo, M\'aiq, Ri\'saad — prefixes indicate social role and birth order). Naming is a lunar-calendar event, not merely a parental choice.' },
+      { event: 'Death', detail: 'Khenarthi is invoked to guide the soul. Body preparation follows specific rites. The death exhalation is Khenarthi\'s act — the same goddess who gave the first breath reclaims the last.' },
+      { event: 'Trading Oath', detail: 'A Khajiit merchant\'s sworn word is backed by the lunar lattice — breaking it has cosmological as well as social consequences. Khajiit in Skyrim are considered untrustworthy by Nords, but within caravan communities, trading oaths are sacred.' },
+      { event: 'New Caravan Member', detail: 'Being welcomed into a caravan is a moon-watched ritual — the new member is introduced under Jode and Jone\'s observation, witnessed by the caravan\'s senior members in their religious capacity.' },
+    ],
+    skyrim: [
+      'Excluded from every city in Skyrim. Belethor, Arcadia, the Companions — none will trade inside with Khajiit. This forces all religious practice to be self-contained within caravan camps.',
+      'The caravan becomes not just an economic unit but a complete religious community. Ri\'saad and Ahkari lead caravans that are simultaneously trade operations and travelling temples.',
+      'The Void Nights (4E 98-100, when both moons disappeared) are within living memory of older caravan Khajiit — a theological trauma that has made current moon-watching practice more intense and more fervent.',
+      'Thalmor presence in Skyrim is noted — Khajiit caravans are watched with suspicion. The Aldmeri Dominion controls Elsweyr politically, which means the Thalmor have leverage over Khajiit religion even far from home.',
+      'Nocturnal veneration is common among Khajiit who overlap with the Thieves Guild — a cross-cultural religious affinity that Nordic thieves share.',
+    ],
+    homeland: [
+      'Elsweyr: Full Two-Moons temple infrastructure. The Mane (spiritual leader) is the highest religious authority, chosen by lunar circumstances at birth.',
+      'Moon sugar in religious ritual contexts is a genuine devotional practice — its role as a simple recreational drug in Skyrim is a profound degradation of something sacred.',
+      'The Riddle\'Thar revelation (revealed to Mane Rid-Thar-ri\'Datta by Azurah) governs all of Khajiit social organization. It is simultaneously religious law, social code, and cosmic calendar.',
+      'Clan and city religious life in Elsweyr is highly organised around lunar cycles — festivals, market days, and political decisions all follow the Lunar Lattice.',
+      'Aldmeri Dominion control of Elsweyr creates religious tension: Thalmor political authority over a culture whose religion they neither share nor fully understand.',
+    ],
+    classes: [
+      { cls: 'Caravan Merchant (Skyrim)', practice: 'Maintains core moon-watching and Azurah/Khenarthi devotion. The lunar calendar is updated daily. Pre-trade moon consultation is universal.' },
+      { cls: 'Caravan Guard', practice: 'Khenarthi invoked before dangerous stretches of road. Combat is framed through the Lunar Lattice — one\'s birth phase influences fighting style and approach.' },
+      { cls: 'Caravan Leader (Sugar Mama/Papa)', practice: 'Quasi-priestly role. Maintaining the lunar calendar, conducting moon-watching ceremonies, interpreting lunar omens for caravan decisions — this is religious leadership.' },
+      { cls: 'Thieves Guild Member', practice: 'Nocturnal veneration prominent. In Khajiit theology, Nocturnal is the shadow left when Lorkhaj\'s corrupted heart was removed — a figure of particular Khajiit significance.' },
+      { cls: 'Khajiit in Elsweyr', practice: 'Full Two-Moons temple observance. Moon sugar used in appropriate ritual contexts. Riddle\'Thar governs all major life decisions. The Mane\'s pronouncements carry divine weight.' },
+    ],
+    pressures: [
+      { icon: '🌑', label: 'Void Nights\' Scar', color: '#d4a840', text: 'The disappearance of both moons for nearly two years (4E 98-100) within living memory of older Khajiit created a theological crisis with no precedent. No Khajiit born during that period had a proper lunar identity. This trauma has made current practice more fervent.' },
+      { icon: '🏙', label: 'City Exclusion', color: '#c84a4a', text: 'Being barred from Skyrim\'s cities means no access to any formal religious infrastructure. The caravan community must substitute entirely for temple, community, and priest. This creates intense internal cohesion but real religious isolation.' },
+      { icon: '👁', label: 'Dominion Pressure', color: '#7ec8a4', text: 'Aldmeri Dominion control of Elsweyr means Thalmor agents have some authority over Khajiit religious expression even in Skyrim. Moon sugar — with its ritual significance — is aggressively controlled, further degrading Khajiit religious practice.' },
+      { icon: '🌙', label: 'Identity Stakes', color: '#d4a840', text: 'For Khajiit, the religion IS the identity in a more literal sense than for any other race. The Lunar Lattice determines what kind of being you are. Disrupting Khajiit religion is disrupting Khajiit existence at a biological level.' },
+    ],
+  },
+  {
+    id: 'bosmer',
+    name: 'Bosmer',
+    color: '#80c440',
+    bg: '#071200',
+    tagline: 'Religion as ecological contract — every meal is a theological statement',
+    skyrimContext: 'Rare travelers · Thieves Guild members in Riften · Merchants',
+    daily: [
+      { time: 'Dawn', text: 'Entering any forested area — even the forests of the Rift or Falkreath — is acknowledged as Y\'ffre\'s space. A brief nod, a word, a moment of attentiveness. The forest is not backdrop; it is a divine presence.' },
+      { time: 'Morning', text: 'The most religiously charged daily moment: the first meal. A strict Green Pact observer refuses all plant matter — no bread, no vegetables, no grain. In a Nordic inn, this means eating only the meat, leaving everything else, and explaining why.' },
+      { time: 'Midday', text: 'A Bosmer hunter at work is performing worship. The hunting ritual involves acknowledgment before and after kills — the animal\'s death is a sacred exchange, not a mere extraction.' },
+      { time: 'Evening', text: 'The evening meal repeats the morning\'s dietary calculus. In Valenwood, this is automatic — the culture provides. In Skyrim, it requires active negotiation at every meal, in every tavern, every day.' },
+      { time: 'Night', text: 'Storytelling has quasi-religious weight — Y\'ffre is the eternal storyteller who fixed the nature of living things. Bosmer who maintain oral traditions are performing devotional acts.' },
+    ],
+    shrines: [
+      'In Valenwood: Living Graht-oak cities are themselves religious expressions — trees shaped through consent rather than cutting. The Green is omnipresent.',
+      'In Skyrim: No Bosmeri sacred spaces. Natural groves, old trees, any wild forested area serves as informal shrine.',
+      'Some Bosmer in Riften access Mara\'s or Kynareth\'s temples — Kynareth is closest to Y\'ffre\'s domain and is a practical substitute.',
+      'The Wild Ritual sites — locations where fallen enemies are consumed — are conducted covertly in Skyrim, away from Nordic observation.',
+    ],
+    thresholds: [
+      { event: 'Birth', detail: 'Child acknowledged to Y\'ffre and the Green. The storytelling tradition means the child\'s birth is added to the family\'s oral history immediately — they exist once they are named in the story.' },
+      { event: 'First Hunt', detail: 'The most significant coming-of-age ritual. Conducted with full pre-hunt acknowledgment to Y\'ffre and post-kill gratitude. The first animal killed by a Bosmer youth is a sacred contract.' },
+      { event: 'Death (The Wild Ritual)', detail: 'The body of a fallen enemy (or honored dead in some practices) is consumed by the community. In Skyrim, this is performed covertly and quickly — Nordic reaction would be extreme. For the Bosmer, it is the completion of a sacred ecological cycle.' },
+      { event: 'Pact Violation', detail: 'Cutting down a tree, eating plant matter — if a Bosmer violates the Green Pact, acknowledgment and rectification are required. In Valenwood, this has social enforcement. In Skyrim, it is self-enforced — which tests the depth of individual faith.' },
+    ],
+    skyrim: [
+      'Green Pact dietary observance creates immediate daily friction — refusing bread and vegetables at a Nordic feast is conspicuous and requires constant explanation. Some Bosmer in Skyrim relax observance quietly; others maintain it rigidly.',
+      'The Wild Ritual for fallen enemies is completely covert. Nordic culture finds the practice horrifying. Bosmer who practise it do so in private, which creates a genuine hidden religious practice invisible to their hosts.',
+      'Bosmer in Riften\'s Thieves Guild environment (Vipir the Fleet, Niruin) are among the most religiously relaxed — the Guild\'s multi-racial environment normalises variance, and Nocturnal veneration provides a cross-cultural religious outlet.',
+      'The forests of Falkreath Hold are the closest thing in Skyrim to a proper Bosmer sacred space — many Bosmer instinctively drift toward this region.',
+      'A Bosmer far from Valenwood who maintains the Pact strictly is making a daily personal religious commitment with no institutional support — this is one of the most demanding private faith practices in Tamriel.',
+    ],
+    homeland: [
+      'Valenwood: The Green Pact is enforced with real social consequences. The prohibition on harming plant life shapes every aspect of material culture.',
+      'Graht-oak cities (Falinesti, Elden Root) are living religious expressions — cities of shaped and willing trees. Building and maintaining them is an act of devotion.',
+      'Y\'ffre\'s presence is tangible in Valenwood in a way it is not in Skyrim — the Green itself responds to the Bosmer.',
+      'Aldmeri Dominion control of Valenwood creates friction: Thalmor political authority over a culture whose central religious practice (the Green Pact) has no Aldmeri equivalent.',
+      'Hunting culture and warrior tradition are simultaneously practical and devotional in Valenwood in a way the outside world rarely understands.',
+    ],
+    classes: [
+      { cls: 'Hunter / Ranger', practice: 'Most orthodox Green Pact observer. Full pre-hunt and post-kill ritual. Deep Y\'ffre relationship. The forest is simultaneously workplace and temple.' },
+      { cls: 'Thieves Guild (Riften)', practice: 'Most relaxed about Pact observance. Nocturnal veneration provides a satisfying religious outlet. May eat bread and not lose sleep over it. Core identity as Bosmer remains.' },
+      { cls: 'Merchant', practice: 'Pragmatic accommodation — they trade plant goods without eating them. May mentally separate trade religion (Zenithar for commerce) from heritage religion (Y\'ffre for identity).' },
+      { cls: 'Archer / Mercenary', practice: 'Maintains Pact diet as identity marker even if other observances have relaxed. Bow is a quasi-sacred instrument — the best Bosmer archers treat their craft devotionally.' },
+      { cls: 'Scholar / Lorekeeper', practice: 'Oral tradition maintenance as religious practice. The story of the Bosmer, the Green Pact\'s origin, Y\'ffre\'s gift — keeping these stories alive and accurate is a sacred obligation.' },
+    ],
+    pressures: [
+      { icon: '🌿', label: 'Pact Away from Home', color: '#80c440', text: 'The Green Pact was made in Valenwood — its divine enforcement is weakest when a Bosmer is far from home. This creates a fascinating test: is Pact observance externally enforced religion, or genuine interior faith? Bosmer in Skyrim find out.' },
+      { icon: '🥩', label: 'Daily Social Friction', color: '#c8a84a', text: 'Refusing plant food at every communal meal creates constant social negotiation. For Bosmer in Nordic holds, this is either a daily minor religious martyrdom or a daily reminder of who they are — depending on how they carry it.' },
+      { icon: '👁', label: 'Thalmor-Dominion Tension', color: '#7ec8a4', text: 'The Aldmeri Dominion controls Valenwood but does not share the Green Pact tradition. Thalmor religious authority extends to Valenwood even though the Pact is distinctly Bosmeri. This creates tensions about whose religion governs Valenwood.' },
+      { icon: '🗡', label: 'Wild Ritual Secrecy', color: '#c44a4a', text: 'In Skyrim, the Wild Ritual (consumption of the dead) must be practiced in complete secrecy or not at all. This forces some of the most sacred Bosmeri practice underground in a way that Dunmer ash-prayer or Khajiit moon-watching does not face.' },
+    ],
+  },
+  {
+    id: 'redguard',
+    name: 'Redguard',
+    color: '#c4582a',
+    bg: '#130600',
+    tagline: 'Religion as survival narrative — to endure and fight is to practice faith',
+    skyrimContext: 'Merchants & warriors · Alik\'r in exile · Post-Hammerfell victory confidence',
+    daily: [
+      { time: 'Dawn', text: 'Morning sword practice begins at first light. For those in the Leki\'s Blade tradition, these forms are not exercises — they are prayers in motion. The sword is a religious instrument; the practice is devotion.' },
+      { time: 'Morning', text: 'Before a significant transaction, a Redguard merchant acknowledges Tu\'whacca for surviving the night and Tall Papa for the day\'s opportunities. Brief, practical, confident — not supplicatory.' },
+      { time: 'Midday', text: 'No specific meal-time religious observance. Food is sustenance, not ritual. The act of eating well and surviving is itself a theological statement about Satakal\'s failure to consume you.' },
+      { time: 'Evening', text: 'Evening sword cleaning and maintenance is semi-devotional. A Redguard warrior tends their blade with the same attention a priest tends a shrine. Onsi\'s gift requires respect.' },
+      { time: 'Night', text: 'Tu\'whacca is briefly acknowledged before sleep — gratitude for surviving to rest, and a placed request for continued survival. The Far Shores are real; getting there requires Tu\'whacca\'s goodwill.' },
+    ],
+    shrines: [
+      'In Skyrim: No Redguard temples. Private camp or household shrines with Yokudan iconography.',
+      'Alik\'r warriors maintain portable shrines in their camps — Tu\'whacca and Tall Papa specifically.',
+      'Hammerfell: Crowns maintain full Tu\'whacca temple infrastructure in major cities. Forebears have more syncretised Imperial-influenced practice.',
+      'The sword itself functions as a sacred object for warrior-class Redguards — kept, named, and treated with religious reverence.',
+      'Some Redguard merchants in Skyrim access the Temple of Zenithar (parallels Zeht closely enough for practical use)',
+    ],
+    thresholds: [
+      { event: 'Sword Blessing', detail: 'Before significant combat, the blade is blessed invoking Leki and Onsi. This is one of the most universally observed Redguard rituals — even heavily assimilated Redguards often maintain it privately.' },
+      { event: 'Birth', detail: 'Child blessed and named with appeal to Tall Papa for guidance. The question asked is practical: will this child have the endurance to survive Satakal\'s world?' },
+      { event: 'Death — The Far Shores', detail: 'Tu\'whacca must be properly acknowledged or the soul may not find the Far Shores. A Redguard dying in Skyrim far from any priest who knows the proper rites is a genuine theological emergency for the community. The loss of proper death rites is one of the deepest anxieties of Redguard diaspora.' },
+      { event: 'Combat Challenge', detail: 'Before a formal duel or significant fight, the combatants invoke HoonDing — the Make-Way God. Whether HoonDing will manifest is up to cosmic circumstances; asking for manifestation is the Redguard equivalent of prayer before a decisive battle.' },
+    ],
+    skyrim: [
+      'Hammerfell fought the Aldmeri Dominion after the Empire abandoned them in the Concordat (4E 175), then won independence (Treaty of Stros M\'kai, 4E 180). This is a live theological fact: Tall Papa\'s trick of living worked. They survived when the Empire said they couldn\'t.',
+      'Alik\'r warriors in Skyrim (like Kematu\'s group) maintain private martial-religious practice. They are confident, not supplicatory — their recent history validates their theology.',
+      'Deep suspicion of Thalmor. Unlike most cultures in Skyrim, Redguards have no reason to fear or defer to the Aldmeri Dominion. They beat them militarily. This makes Redguard religious self-assurance in Skyrim distinctive.',
+      'The question of the HoonDing\'s manifestation in the recent war is a live theological discussion among Redguards in Skyrim. Did the Make-Way God incarnate during the war with the Dominion? Most believe yes.',
+      'Redguard merchants in Skyrim navigate the Civil War with pragmatic distance — neither Stormcloaks nor Imperials have done right by Hammerfell.',
+    ],
+    homeland: [
+      'Hammerfell: Crown/Forebear political split directly reflects religious split. Crowns maintain strict Yokudan pantheon (Tu\'whacca temples, Sword-Singer traditions). Forebears have more Imperial-influenced syncretised practice.',
+      'The recent victory over the Dominion has created a moment of genuine religious confidence — the Yokudan approach to survival has been validated against the most powerful military force in Tamriel.',
+      'Sword-Singer traditions are celebrated and maintained. Leki\'s teachings are a living practice, not a historical curiosity.',
+      'Tu\'whacca temples are the most important civic-religious institutions in Crown Hammerfell cities — the afterlife is a serious and immediate concern.',
+    ],
+    classes: [
+      { cls: 'Alik\'r Warrior', practice: 'Full martial-religious practice. Morning sword forms as devotional practice. Leki and Onsi central. Blade maintenance as religious act. Pre-combat sword blessing universal.' },
+      { cls: 'Merchant / Trader', practice: 'Zeht acknowledged for commerce (through the Zenithar parallel in Skyrim). Tu\'whacca before travel. The merchant\'s survival and success is a theological validation of endurance.' },
+      { cls: 'Crown Noble', practice: 'Strict Yokudan practice maintained. Tu\'whacca temple observance. Full ancestral name-invocation practices. Deeply conscious of the religious distinction from Forebear-influenced Redguards.' },
+      { cls: 'Forebear-influenced Redguard', practice: 'More comfortable with Imperial Divine temples. May use Zenithar and Arkay without theological friction. Privately maintains core Redguard practices (sword blessing, Tu\'whacca before sleep).' },
+      { cls: 'Sword-Singer', practice: 'The most completely integrated religious-martial identity. The blade techniques are prayers. The forms are theology in motion. This is religion without separation from physical practice.' },
+    ],
+    pressures: [
+      { icon: '⚔', label: 'Victory Theology', color: '#c4582a', text: 'Having defeated the Aldmeri Dominion after the Empire\'s abandonment is an extraordinary religious event. The HoonDing manifested; Tall Papa\'s trick worked; Tu\'whacca guided fallen heroes to the Far Shores. Redguard theology is confirmed by recent history in a way almost no other culture can claim in 4E 201.' },
+      { icon: '📜', label: 'Imperial Abandonment', color: '#c8a84a', text: 'The Empire\'s Concordat abandoned Hammerfell to the Dominion in 4E 175. This is experienced by Crowns especially as religious betrayal — the Imperial Divines and the Imperial state failed them. The victory over the Dominion validates the Yokudan tradition over the Imperial one.' },
+      { icon: '🗡', label: 'Crown vs. Forebear', color: '#c4582a', text: 'The internal Crown/Forebear political split reflects genuinely different religious practices. In Skyrim, Redguards are rarely numerous enough for this split to be visible — but it shapes individual religious identity in ways outsiders miss.' },
+      { icon: '💀', label: 'Far Shores Anxiety', color: '#8a5a3a', text: 'Dying far from Hammerfell without proper Tu\'whacca rites is a genuine religious anxiety. Alik\'r warriors in Skyrim carry this risk consciously. It motivates the maintenance of portable shrines and the mutual obligation to perform proper death rites for fallen comrades.' },
+    ],
+  },
+  {
+    id: 'orc',
+    name: 'Orc',
+    color: '#8aaa3a',
+    bg: '#080d00',
+    tagline: 'Religion as dignity under exclusion — the spurned god of the spurned people',
+    skyrimContext: 'Strongholds throughout Skyrim · Some city-dwelling smiths and warriors',
+    daily: [
+      { time: 'Dawn', text: 'The forge fires are lit at dawn in every stronghold. Beginning the day\'s smithing work IS the morning devotion. Malacath is honored through labor that produces strength, not through prayer that requests it.' },
+      { time: 'Morning', text: 'Stronghold Orcs divide labor by Malacath\'s code — strength is rewarded, weakness is not coddled. Assigning tasks reflects the religious hierarchy: the strongest lead, the capable contribute, the weak are pushed to improve.' },
+      { time: 'Midday', text: 'Communal meal — no Orc eats while another starves. This is Malacath\'s code made concrete. Sharing food is an ethical-religious obligation, not merely a social custom.' },
+      { time: 'Evening', text: 'The Chief holds court — challenges to authority may be raised. This is simultaneously the most political and most religious moment of the Orc day. Malacath is the implicit judge.' },
+      { time: 'Night', text: 'Ore-quality checking and tool maintenance — the day\'s work is assessed. Substandard work is a religious failure, not just a professional one. Malacath\'s pride demands excellence.' },
+    ],
+    shrines: [
+      'Each stronghold has a Malacath shrine — the most consistently and lovingly maintained sacred space in Orcish culture',
+      'The forge itself is quasi-sacred. The best smithing in Skyrim (and arguably in Tamriel) is produced in stronghold forges as acts of devotion',
+      'Volendrung (Malacath\'s artifact) is known to exist somewhere in Tamriel — its location is a live religious question for devout Orcs',
+      'City Orcs have access to Divine temples but rarely use them by choice',
+      'Largashbur in Skyrim is under a Malacath curse during the game\'s events — a live theological crisis that the stronghold community is actively interpreting and addressing',
+    ],
+    thresholds: [
+      { event: 'Birth', detail: 'Child presented to Malacath. Survival to adulthood has religious weight — the world is hard, and an Orc who survives has already demonstrated something. Weakness in infancy is a theological as well as practical problem.' },
+      { event: 'First Forge Work', detail: 'The first time a young Orc works the forge independently is a more significant coming-of-age moment than any ceremony. Achievement is the rite.' },
+      { event: 'Challenge to Chief', detail: 'Formalised combat to the death — if the challenger wins, Malacath deemed them worthy. This is simultaneously succession politics and religious sacrament. The blood shed feeds the stronghold\'s Malacath shrine.' },
+      { event: 'Marriage', detail: 'Chief\'s permission and Malacath\'s witness. Women in strongholds (the chief\'s wives) are simultaneously political assets and religiously significant community members — their craft and household work is as devotional as the forge.' },
+      { event: 'Death', detail: 'Warrior death is most honoured. Dying with a weapon in hand, having fought to the last, is the Orcish ideal parallel to the Nordic. A death in bed from illness is not a disgrace exactly, but it lacks the religious dimension of a warrior\'s death.' },
+    ],
+    skyrim: [
+      'Skyrim has several active strongholds (Mor Khazgur, Largashbur, Dushnikh Yal, Narzulbur) — these are complete Orcish religious communities largely independent of Nordic society.',
+      'Blood-Kin system: outsiders who prove themselves are welcomed. This is a religious category as much as a social one — Malacath approves of demonstrated worth over bloodline.',
+      'Largashbur\'s curse (giants attacking repeatedly, Yamarz the chief demonstrably failing) is a live theological crisis — Malacath is actively punishing perceived weakness. The community is in the middle of a religious emergency during the game.',
+      'City Orcs (like Adrianne Avenicci\'s husband Ulfberth in Whiterun, various smith-Orcs) live more secular daily lives but maintain private Malacath acknowledgment. They navigate between two worlds.',
+      'Orc Legion soldiers exist — but are relatively rare in Skyrim. Those who serve the Legion must balance its religious expectations (Divines) with private Malacath faith.',
+    ],
+    homeland: [
+      'Orsinium (currently in the Wrothgar mountains, most recent rebuild): Full Malacath temple infrastructure. The history of repeated destruction and rebuilding of Orsinium is itself a religious narrative — each destruction validates Malacath\'s theology of spurned endurance, each rebuilding validates survival.',
+      'Orsinium\'s repeated destruction (by Bretons, by Redguards, by the events around the Warp in the West) maps directly onto Malacath\'s mythology. The Orc homeland IS Malacath\'s mythology made geopolitical.',
+      'In Orsinium, Malacath is worshipped openly and publicly with full institutional support — the only such environment available to Orcs.',
+    ],
+    classes: [
+      { cls: 'Stronghold Smith', practice: 'The forge is the temple. Every object produced is a devotional act. Excellence in craft is religious excellence. The best Orcish smiths in Skyrim (producing Orcish armor and weapons) are performing constant worship.' },
+      { cls: 'Stronghold Chief', practice: 'Simultaneously political leader and religious authority. No separation between ruling and priesthood. Performing the religious ceremonies, maintaining the shrine, judging challenges — all one role.' },
+      { cls: 'City-Dwelling Orc', practice: 'Maintains Malacath privately. May attend Nordic divine temples for social integration. Deep awareness of being between two worlds — Malacath is home, but home requires the stronghold.' },
+      { cls: 'Imperial Legion Orc', practice: 'The most religiously complicated position. Legion religious expectations (Divines) directly conflict with Malacath practice. Most manage by keeping Malacath faith deeply private and minimal.' },
+      { cls: 'Orcish Warrior (non-Legion)', practice: 'Malacath\'s code governs daily conduct. Combat is the primary religious expression. Honor, oath-keeping, and accepting consequences are the theology made practical.' },
+    ],
+    pressures: [
+      { icon: '⚔', label: 'Largashbur\'s Crisis', color: '#8aaa3a', text: 'One of Skyrim\'s strongholds is under a Malacath curse in 4E 201 — the god is actively punishing his own people for perceived weakness. This is a live theological emergency, not an abstract theological question. Malacath\'s demands are immediate and real.' },
+      { icon: '👑', label: 'Dignity Theology', color: '#c47a5a', text: 'Orcish theology is built on the premise that being spurned, excluded, and considered lesser is not evidence of divine disfavour but of proximity to a god who was himself destroyed and remade by the powerful. This is one of the most psychologically sophisticated theological positions in Tamriel.' },
+      { icon: '🏛', label: 'Imperial Citizenship', color: '#c8a84a', text: 'Orcs are technically Imperial citizens in 4E 201 (Orsinium was made an Imperial province) but are not fully accepted socially. Navigating Imperial civic life while maintaining Malacath practice creates a genuine dual-identity tension, especially for city-dwelling Orcs.' },
+      { icon: '⚒', label: 'Labor as Worship', color: '#8aaa3a', text: 'The complete integration of craft and faith means that Orcish economic productivity (the finest weapons and armor in Tamriel by many accounts) is simultaneously a religious practice. Malacath\'s expectation of excellence through labor is unique among Tamrielic theologies.' },
+    ],
+  },
+  {
+    id: 'argonian',
+    name: 'Argonian',
+    color: '#38b880',
+    bg: '#001209',
+    tagline: 'Religion as dissolution of self — the Hist is not external; it is partially you',
+    skyrimContext: 'Windhelm docks (Assemblage) · Dark Brotherhood members · Racial discrimination',
+    daily: [
+      { time: 'Dawn', text: 'There are no Hist trees in Skyrim. The spiritual connection that Argonians maintain is through memory, physical sensation (Hist sap absorbed in Black Marsh remains partially present in older Argonians), and daily meditative practice that reaches toward a presence that is distant but not entirely absent.' },
+      { time: 'Morning', text: 'Older Argonians who drank Hist sap deeply maintain that connection through a form of meditation — a deliberate quieting that allows the background spiritual presence to be felt. Younger Argonians born in Skyrim may have a much weaker or entirely absent connection.' },
+      { time: 'Midday', text: 'Community gathering at the Assemblage has quasi-religious character — Argonian identity is partly constituted by collective presence, which partially substitutes for the Hist\'s collective function. Simply being together is a religious act.' },
+      { time: 'Evening', text: 'Sithis acknowledgment — not worship exactly, but recognition. Sithis is the void that underlies all change, and death is a return rather than an ending. An Argonian facing the evening acknowledges that impermanence is the divine structure.' },
+      { time: 'Night', text: 'Dreams are taken seriously — in Black Marsh, the Hist communicates through dreams. Argonians in Skyrim sometimes experience these as background spiritual noise. A dream that seems significant is discussed with community elders.' },
+    ],
+    shrines: [
+      'In Black Marsh: The Hist trees themselves are the shrines. Each tree is a node of the collective divine network. Approaching a Hist tree is direct divine contact.',
+      'In Skyrim (Windhelm): No sacred spaces. The Assemblage functions as communal-religious space by default.',
+      'Some Argonians access Arkay\'s Hall of the Dead for practical death rites — the cycle-of-life framework is the closest Nordic equivalent to Hist-soul return.',
+      'Dark Brotherhood members worship Sithis actively — the Night Mother\'s shrine in Falkreath provides one of the few Argonian-accessible sacred spaces in Skyrim.',
+      'Natural waterways and marshes (the swamps of Morthal, the lake near Riften) are informal sacred spaces — Argonians feel more spiritually connected near water.',
+    ],
+    thresholds: [
+      { event: 'Birth in Skyrim', detail: 'Without Hist trees, an Argonian born in Skyrim cannot receive proper Hist-sap birth rites. This is a profound theological anxiety — the child\'s soul is not properly shaped by the Hist, not properly introduced to the collective. Many Argonian parents in Skyrim send pregnant women home to Black Marsh if at all possible.' },
+      { event: 'Naming', detail: 'Argonian names are given by the Hist — the tree-divine names each child by communal network decision. In Skyrim, without Hist access, names are chosen by parents or community elders attempting to discern what the Hist would have chosen. This uncertainty is spiritually uncomfortable.' },
+      { event: 'Death — The Return', detail: 'Argonian souls return to the Hist at death. Dying in Skyrim far from any Hist tree creates genuine spiritual anxiety: will the soul find its way home? Some believe Hist trees can call souls across great distances; others fear the distance is too great. Proper death rites conducted by Argonian elders are critical.' },
+      { event: 'The Hist\'s Call', detail: 'During the Oblivion Crisis (4E 0), all Argonians in Tamriel were called home by the Hist simultaneously. The Argonians in Windhelm in 4E 201 are therefore a self-selected population — those who chose not to return, or who couldn\'t. This marks them theologically.' },
+    ],
+    skyrim: [
+      'Windhelm\'s Argonian Assemblage: Argonians working the docks in poverty, facing systematic discrimination under Ulfric Stormcloak\'s governance. They are barred from living in the city proper.',
+      'The combination of distance from the Hist, poverty, discrimination, and isolation creates a community under extraordinary spiritual pressure. Community solidarity has become the primary religious practice by necessity.',
+      'The Dark Brotherhood provides a religious outlet that does not require the Hist — Sithis worship is available and, for some Argonians, is more intensely practiced in Skyrim than it would be in Black Marsh, where the Hist\'s presence provides an alternative.',
+      'Argonians who remember the Hist\'s call during the Oblivion Crisis are deeply conscious of having been called and having stayed. Some are at peace with this decision; others experience it as a continuing spiritual question.',
+      'Morthal\'s surrounding swamps provide the closest environment in Skyrim to Black Marsh. Argonians sometimes travel there for spiritual reasons, though this is rarely acknowledged explicitly to outsiders.',
+    ],
+    homeland: [
+      'Black Marsh: Fully integrated Hist-network society. Major decisions are made by collective Hist consultation. The trees actively participate in community life.',
+      'Argonians who drink deeply of Hist sap may transform physically, becoming more "Hist-like" — scales changing, personality shifting, connection intensifying. This transformation is a religious aspiration for the devout.',
+      'The sacred Black Marsh marshes are not hospitable to outsiders — the Hist actively protects Argonian territory. The landscape itself is a religious defense system.',
+      'Following the Oblivion Crisis, Argonians invaded and destroyed much of southern Morrowind. This military action is understood in Black Marsh as a Hist-commanded act — the trees called Argonians home and then sent them to war.',
+    ],
+    classes: [
+      { cls: 'Dock Worker (Windhelm)', practice: 'Minimal formal practice. Community solidarity at the Assemblage substitutes for Hist connection. Maintaining Argonian language and oral tradition is de facto religious practice — it preserves identity against assimilation.' },
+      { cls: 'Dark Brotherhood Member', practice: 'Sithis worship is active and sophisticated. The void-theology of Sithis aligns with Argonian cosmological intuition. This is the most available non-Hist religious practice in Skyrim.' },
+      { cls: 'Argonian Elder (Hist-memory)', practice: 'Carries the weight of genuine Hist connection in living memory. Functions as de facto religious leader for the Windhelm community. Daily meditative practice maintaining the diminishing connection.' },
+      { cls: 'Argonian Mage', practice: 'May approach the Hist as philosophical principle — the non-dual collective consciousness mapped onto magical theory. Hist-connection as magical attunement rather than devotional practice.' },
+      { cls: 'Argonian Warrior', practice: 'Sithis acknowledged before combat — the void accepts all things, including enemies killed in battle. Less ritually elaborate than Nordic or Redguard martial religion, but present.' },
+    ],
+    pressures: [
+      { icon: '🌿', label: 'Hist Absence', color: '#38b880', text: 'The central spiritual reality for Argonians in Skyrim is absence. The Hist is not present. The connection that constitutes Argonian identity at the most fundamental level is distant, weakening, or gone. Everything else in their religious life is an adaptation to this absence.' },
+      { icon: '💀', label: 'The Oblivion Call', color: '#9b6bb5', text: 'Every Argonian in Skyrim in 4E 201 is someone who did not return home when the Hist called during the Oblivion Crisis. This self-selection creates a specific theological identity — people who have proven they can exist apart from the Hist, for better or worse.' },
+      { icon: '⚔', label: 'Windhelm\'s Discrimination', color: '#c84a4a', text: 'Ulfric\'s policy bars Argonians from the city proper, forces them to live at the docks in cold unsuitable conditions, and denies them civic participation. This is simultaneously political oppression and religious suppression — their community space (the Assemblage) is marginalised.' },
+      { icon: '🌀', label: 'Identity Without Hist', color: '#38b880', text: 'Who is an Argonian without the Hist? This is the deepest religious question facing the Windhelm community. The Hist names them, shapes them, and reclaims them. Without it, they must construct identity through community practice, oral tradition, and the memory of connection. It is possible. But it is harder.' },
+    ],
+  },
+];
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+const tabsEl = document.getElementById('tabsInner');
+const mainEl = document.getElementById('mainContent');
+
+races.forEach((r, i) => {
+  // Tab
+  const tab = document.createElement('div');
+  tab.className = 'tab' + (i === 0 ? ' active' : '');
+  tab.textContent = r.name;
+  tab.style.setProperty('--race-color', r.color);
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.race-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + r.id).classList.add('active');
+  });
+  tabsEl.appendChild(tab);
+
+  // Panel
+  const panel = document.createElement('div');
+  panel.id = 'panel-' + r.id;
+  panel.className = 'race-panel' + (i === 0 ? ' active' : '');
+  panel.style.setProperty('--race-color', r.color);
+  panel.style.setProperty('--race-bg', r.bg);
+
+  panel.innerHTML = `
+    <div class="race-header">
+      <span class="race-name">${r.name}</span>
+      <span class="race-tagline">${r.tagline}</span>
+      <span class="race-context-pill" style="color:${r.color};border-color:${r.color}40">${r.skyrimContext}</span>
+    </div>
+
+    <div class="section-label">Daily Rhythm — Morning to Night</div>
+    <div class="section-grid wide">
+      <div class="card">
+        <div class="card-title">Daily Practice Timeline</div>
+        <div class="timeline">
+          ${r.daily.map(d => `<div class="tl-item"><span class="tl-time">${d.time}</span><span class="tl-text">${d.text}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sacred Spaces & Shrine Access</div>
+        <ul>
+          ${r.shrines.map(s => `<li><span class="bullet">◆</span><span>${s}</span></li>`).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Threshold Rituals</div>
+    <div class="section-grid">
+      ${r.thresholds.map(t => `
+        <div class="card">
+          <div class="card-title">${t.event}</div>
+          <p>${t.detail}</p>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="section-label">Location Comparison</div>
+    <div class="compare-grid">
+      <div class="compare-card in-skyrim">
+        <div class="compare-label">⚔ In Skyrim — 4E 201 Specific</div>
+        <ul>
+          ${r.skyrim.map(s => `<li>◆ ${s}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="compare-card in-homeland">
+        <div class="compare-label" style="color:${r.color}">◈ In Homeland / Elsewhere</div>
+        <ul>
+          ${r.homeland.map(s => `<li>◆ ${s}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+
+    ${r.pantheon ? `
+      <div class="section-label">Pantheon — Old Ways vs. Imperial Nine</div>
+      <div class="pantheon-intro">${r.pantheon.intro}</div>
+      <div class="pantheon-grid">
+        ${r.pantheon.pairs.map(p => `
+          <div class="pantheon-pair">
+            <div class="pantheon-old">
+              <div class="pantheon-name">${p.old}<small>Old Ways · Atmoran</small></div>
+              <div class="pantheon-role">${p.oldRole}</div>
+            </div>
+            <div class="pantheon-new">
+              <div class="pantheon-name">${p.imp}<small>Imperial Nine</small></div>
+              <div class="pantheon-role">${p.impRole}</div>
+            </div>
+            <div class="pantheon-diff">${p.diff}</div>
+          </div>
+        `).join('')}
+      </div>
+    ` : ''}
+
+    <div class="section-label">Variation by Class & Profession</div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="class-table">
+        <thead>
+          <tr>
+            <th>Class / Role</th>
+            <th>Religious Practice</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${r.classes.map(c => `<tr><td>${c.cls}</td><td>${c.practice}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">Era-Specific Pressures — 4E 201</div>
+    <div class="pressure-list">
+      ${r.pressures.map(p => `
+        <div class="pressure-item" style="border-color:${p.color}">
+          <span class="pi-icon">${p.icon}</span>
+          <div class="pi-text"><span class="pi-label" style="color:${p.color}">${p.label}</span>${p.text}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  mainEl.appendChild(panel);
+});
+
+mainEl.insertAdjacentHTML('beforeend', `
+  <div class="footnote">
+    <strong>Mod Dev Reference Notes:</strong>
+    All entries reflect 4E 201 — the year of Helgen\'s destruction, the Civil War\'s active phase, and the return of dragons.
+    "In Skyrim" entries account for the White-Gold Concordat (4E 175), Hammerfell\'s independence (4E 180),
+    the Red Mountain eruption\'s refugee wave (4E 5), and the Void Nights\' theological aftermath (4E 98-100).
+    The Civil War creates different religious contexts in Stormcloak-held vs Imperial-held territories for every race.
+    The Nord entry includes a side-by-side Old Ways vs. Imperial Nine pantheon comparison; both pantheons walk Skyrim simultaneously in 4E 201.
+    Vampirism and lycanthropy reactions are deferred to the companion file <em>tamriel-cursed-worship-4e201.html</em>.
+    Daedric worship patterns not covered here are largely cross-cultural — see the main Daedric Pantheon Reference.
+  </div>
+`);
+</script>
+</body>
+</html>
