@@ -1,6 +1,6 @@
 # PDV Architecture v2 - Migration Target
 
-Last revised: 2026-05-13 (v1.8 - race architecture reference synced; implementation unchanged)
+Last revised: 2026-05-13 (v1.9 - Phase 4 matrix artifacts added; implementation unchanged)
 Status: Phase 2 complete - Kyne proof slice verified in game; Phase 3 scripts compiled, CK wiring pending
 
 ---
@@ -27,6 +27,9 @@ Status: Phase 2 complete - Kyne proof slice verified in game; Phase 3 scripts co
 >
 > **Race architecture update (2026-05-13):**
 > The detailed per-race theology interrogation, curse interpretations, quest/faction weighting, and pre-matrix reward/system contract are now locked in `references/PDV_RaceArchitecture_DesignReference.md`, with supporting reference wording synced in the `references/tamriel-*.html` lore files. Until Sections 10-12 of this document are fully consolidated, treat the race architecture reference as the current source of truth for race-specific architecture wherever the two disagree.
+>
+> **Phase 4 matrix update (2026-05-13):**
+> The first implementation-facing matrix set now exists under `references/phase4/`: scaffold, race signal matrix, stance matrix, Daedric race-by-Prince matrix, and cross-validation note. Treat those files as the current working source for signal-family granularity, stance seeding, and Daedric race-response crosswalks until Sections 10-12 are fully rewritten to absorb them.
 
 ### Current state (v1)
 
@@ -673,6 +676,28 @@ Build cost grows with deity count, but each deity is independent of every other 
 ---
 
 ## 13. Revisions
+
+### v1.9 - 2026-05-13 - Phase 4 matrix artifacts added
+
+No implementation or phase checkbox changed in this revision. The purpose of
+this pass was to turn the locked race-architecture work into an
+implementation-facing Phase 4 design set without pretending the Phase 4 scripts
+or CK records already exist.
+
+Added the following working artifacts under `references/phase4/`:
+
+- `PDV_Phase4_MatrixScaffold.md`
+- `PDV_RaceSignalMatrix.csv`
+- `PDV_StanceMatrix.csv`
+- `PDV_DaedricRacePrinceMatrix.csv`
+- `PDV_MatrixCrossValidation.md`
+
+These files capture the first-release signal families, the per-race stance
+seeding assumptions, the Prince-first Daedric race-response crosswalk, and the
+intentional places where the stance taxonomy and Daedric response taxonomy
+differ without actually conflicting. They should be treated as the current
+implementation-facing Phase 4 reference until this document's older Sections
+10-12 are fully consolidated and rewritten against the locked race file.
 
 ### v1.8 - 2026-05-13 - Race architecture reference synced
 

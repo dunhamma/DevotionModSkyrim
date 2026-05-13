@@ -59,6 +59,8 @@ First slice is player-direct kills only. Follower kills, traps, and summons are 
 
 Tier boon spells (Seeker / Devoted / Champion) are authored in CK and wired as properties on each deity. `OnTierChange()` grants and revokes them automatically at dawn.
 
+Design artifacts for this phase now exist under `references/phase4/` in the docs workspace and are mirrored under `D:\Wabbajack\modlists\Anvil\mods\Devotion\Design\Phase4\`. They define the first-pass race signal matrix, stance matrix, Daedric race-by-Prince matrix, and the validation rules that keep those three aligned.
+
 ---
 
 ## Phase 5 — MCM
