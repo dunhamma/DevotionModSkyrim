@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamriel Cursed Worship — Vampirism & Lycanthropy · 4E 201</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #090604;
+    --bg2:       #0e0a06;
+    --bg3:       #14100a;
+    --border:    #2e2210;
+    --border2:   #3e2f18;
+    --text:      #cfc09a;
+    --text-dim:  #7a6844;
+    --text-faint:#3a2f18;
+    --gold:      #c8a84a;
+    --gold-dim:  #7a6430;
+
+    /* Curse colors */
+    --vamp:      #b03a5e;
+    --vamp-dim:  #6a2238;
+    --vamp-bg:   #14060a;
+    --were:      #7a9a3a;
+    --were-dim:  #4a5e22;
+    --were-bg:   #0a0e04;
+
+    /* Race accents (matching daily-worship file) */
+    --nord:      #6baec4;
+    --imp:       #c8a84a;
+    --breton:    #8a9ec4;
+    --dunmer:    #c4785a;
+    --altmer:    #7ec8a4;
+    --khajiit:   #d4a840;
+    --bosmer:    #80c440;
+    --redguard:  #c4582a;
+    --orc:       #8aaa3a;
+    --argonian:  #38b880;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(180deg, #1a0a0e 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border2);
+    padding: 1.8rem 2rem 1.4rem;
+  }
+  .header-inner { max-width: 1500px; margin: 0 auto; }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-weight: 700;
+    color: #e8d598;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .header-sub {
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    margin-top: 0.3rem;
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+  }
+  .header-note {
+    margin-top: 0.6rem;
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 0.88rem;
+    max-width: 880px;
+  }
+
+  /* ── TABS ── */
+  .tabs-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+  .tabs-inner { max-width: 1500px; margin: 0 auto; display: flex; gap: 0; }
+  .tab {
+    display: inline-block;
+    padding: 0.75rem 1.1rem 0.6rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    transition: all 0.15s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { border-bottom-color: var(--race-color); color: var(--race-color); }
+
+  /* ── LAYOUT ── */
+  .main { max-width: 1500px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  /* ── PANEL ── */
+  .race-panel { display: none; }
+  .race-panel.active { display: block; }
+
+  .race-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .race-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--race-color);
+    letter-spacing: 0.1em;
+  }
+  .race-tagline {
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 0.92rem;
+  }
+
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin: 1.4rem 0 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-label::before, .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── CURSE BLOCKS ── */
+  .curse-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 980px) { .curse-grid { grid-template-columns: 1fr; } }
+
+  .curse-block {
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1rem 1.1rem;
+    background: var(--bg2);
+  }
+  .curse-block.vamp { border-left: 3px solid var(--vamp); background: linear-gradient(180deg, var(--vamp-bg) 0%, var(--bg2) 60%); }
+  .curse-block.were { border-left: 3px solid var(--were); background: linear-gradient(180deg, var(--were-bg) 0%, var(--bg2) 60%); }
+  .curse-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .curse-block.vamp .curse-title { color: var(--vamp); }
+  .curse-block.were .curse-title { color: var(--were); }
+  .curse-patron {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 0.7rem;
+  }
+  .curse-tagline {
+    font-style: italic;
+    color: var(--text);
+    font-size: 0.88rem;
+    padding: 0.6rem 0.7rem;
+    margin-bottom: 0.7rem;
+    background: var(--bg3);
+    border-left: 2px solid var(--border2);
+  }
+  .curse-block.vamp .curse-tagline { border-left-color: var(--vamp-dim); }
+  .curse-block.were .curse-tagline { border-left-color: var(--were-dim); }
+
+  .curse-row {
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 0.7rem;
+    align-items: start;
+  }
+  .curse-row:last-child { border-bottom: none; }
+  .curse-row .curse-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding-top: 0.2rem;
+  }
+  .curse-row .curse-text {
+    font-size: 0.86rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ── INTRO ── */
+  .frame-intro {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 1rem;
+    font-size: 0.92rem;
+    line-height: 1.75;
+  }
+  .frame-intro h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+  .frame-intro p { margin-bottom: 0.7rem; }
+  .frame-intro p:last-child { margin-bottom: 0; }
+  .frame-intro strong { color: var(--text); }
+  .frame-intro em { color: var(--text-dim); }
+
+  .frame-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 900px) { .frame-grid { grid-template-columns: 1fr; } }
+  .frame-card {
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1rem 1.1rem;
+    background: var(--bg2);
+  }
+  .frame-card.vamp { border-left: 3px solid var(--vamp); background: linear-gradient(180deg, var(--vamp-bg) 0%, var(--bg2) 70%); }
+  .frame-card.were { border-left: 3px solid var(--were); background: linear-gradient(180deg, var(--were-bg) 0%, var(--bg2) 70%); }
+  .frame-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .frame-card.vamp h4 { color: var(--vamp); }
+  .frame-card.were h4 { color: var(--were); }
+  .frame-card p { font-size: 0.86rem; color: var(--text); margin-bottom: 0.5rem; line-height: 1.65; }
+  .frame-card p:last-child { margin-bottom: 0; }
+  .frame-card ul { list-style: none; padding: 0; margin: 0.4rem 0 0; }
+  .frame-card ul li {
+    font-size: 0.84rem;
+    padding: 0.2rem 0;
+    color: var(--text);
+  }
+  .frame-card ul li::before { content: '◆ '; color: inherit; opacity: 0.7; }
+
+  .footnote {
+    margin-top: 2rem;
+    padding: 0.8rem 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 0.8rem;
+  }
+
+  .crossref {
+    background: var(--bg3);
+    border: 1px dashed var(--border2);
+    padding: 0.7rem 0.9rem;
+    margin-top: 0.8rem;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  .crossref strong { color: var(--text); font-style: normal; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>🩸 Tamriel Cursed Worship — Vampirism & Lycanthropy · 4E 201</h1>
+    <div class="header-sub">Companion to Tamriel Daily Worship · How the Curses Re-write Religious Life</div>
+    <div class="header-note">
+      Per-race overlay for the two transformative curses available in Skyrim. For each playable race: how vampirism (Molag Bal's lineage,
+      from Lamae Bal onward) and lycanthropy (Hircine's gift) intersect with their pantheon, what blessings are lost, what new theological
+      position is occupied, and how the gods, ancestors, or spirits react. Reads alongside the daily-worship reference, not in place of it.
+    </div>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <div class="tabs-inner" id="tabsInner"></div>
+</div>
+
+<div class="main" id="mainContent"></div>
+
+<script>
+// ── FRAMEWORK INTRO PANEL ─────────────────────────────────────────────────────
+const framework = {
+  id: 'framework',
+  name: 'Framework',
+  color: '#c8a84a',
+  bg: '#100c04',
+  isFramework: true,
+};
+
+// ── RACE DATA ─────────────────────────────────────────────────────────────────
+const races = [
+  {
+    id: 'nord',
+    name: 'Nord',
+    color: '#6baec4',
+    bg: '#060e12',
+    tagline: 'The cursed Nord stands twice-exiled — from Sovngarde and from the Nine',
+    vamp: {
+      tagline: 'Lamae Bal was a Nordic priestess of Arkay. The first vampire is one of yours, and the wound is already in the songs.',
+      reaction: 'Both pantheons reject the vampire absolutely. Old-Ways: Tsun closes the bridge to Sovngarde — the trial cannot be passed by something that has stopped its own heart. Imperial Nord: Arkay\'s rites refuse you, and refusal of Arkay\'s rites is the end of the cycle. The vampire is, theologically, a Nord turned inside out.',
+      lost: 'Sovngarde · Arkay\'s burial rites · Mara\'s blessing on the household · the right to be buried in a Nordic barrow · access to any Skyrim hold temple without burning · the hidden Talos shrines (vampires cannot draw on Shor\'s warmth)',
+      gained: 'Molag Bal\'s patronage in his Coldharbour aspect — endurance without destination. Some Nord vampires fall back to Namira (consumption-worship) or Vaermina (dream-feeding). The Volkihar clan in Castle Volkihar offers an institutional alternative: Bal\'s court reframed as a vampire aristocracy.',
+      daily: 'Hide the bite-mark. Feed at night, often on travelers between holds. Avoid open hearths and sunlit doorways (a Nordic home is full of both). The vampire who once swore Companion-style oaths now cannot mean them — Shor does not witness the dead.',
+      tension: 'Lamae Bal\'s story is sung in Skyrim — every Nord vampire knows the founding myth ends with their kind, and every Nord they meet half-knows it too. The deepest cultural memory the Nords carry is anti-vampire, and the vampire knows this in their own marrow.',
+    },
+    were: {
+      tagline: 'The Companions made werewolfism a Nordic institution — but Hircine\'s Hunting Grounds are not Sovngarde.',
+      reaction: 'Old-Ways: ambivalent. Hircine is not Shor; the Hunting Grounds are not Sovngarde. Some Nord werewolves accept the Hunt as a worthy afterlife. Others — like Kodlak Whitemane — fight to break the curse before death so they can pass into Shor\'s hall. Imperial Nord: the Nine have no framework for it. Hircine is Daedra; the curse is corruption.',
+      lost: 'Sovngarde, by default. Arkay\'s standard rites still apply (the body still dies normally) but the soul is claimed elsewhere. Mara may still bless a werewolf\'s family — Hircine has no quarrel with Mara — but the werewolf themselves is outside her domain.',
+      gained: 'Hircine\'s Hunting Grounds — an eternal hunt-afterlife, viable but not Sovngarde. Companion-tradition werewolves gain a brotherhood that functions as substitute pantheon: the Circle is its own theological community. Aela the Huntress treats this as a positive identity; Kodlak treats it as a tragedy.',
+      daily: 'Beast-blood swore on, beast-blood managed. Companions training is overt; transformation is held back for sanctioned hunts and combat. Most werewolf Nords keep small private offerings to Hircine alongside the household Nordic shrine — uneasy coexistence rather than substitution.',
+      tension: 'Kodlak\'s arc captures the Nord werewolf\'s central problem: which afterlife do you actually want? The Companions\' lineage was honourable warrior-society long before the witches\' bargain. The curse was added — and can, with effort and a Glenmoril head, be removed. This makes the Nord werewolf the most reversible curse-state in the file.',
+    },
+  },
+  {
+    id: 'imperial',
+    name: 'Imperial',
+    color: '#c8a84a',
+    bg: '#120f04',
+    tagline: 'Cursed Imperials lose the civic-religious framework that defines Imperial life',
+    vamp: {
+      tagline: 'Cyrodiilic vampire bloodlines are documented — and documented vampires are hunted by Arkay\'s priests as a civic duty.',
+      reaction: 'The Imperial Divines reject vampirism universally. Arkay\'s priesthood maintains the Order of the Crypt — vampire-hunting is a civic-religious profession, not a fringe activity. The Cyrodiilic vampire bloodlines (Lord Lovidicus, the Order of the Virtuous Blood targets, and the Cheydinhal cell historically) exist in shadow; they are tolerated only insofar as they evade Arkay\'s officers.',
+      lost: 'Every aspect of Imperial civic religion. The Legion oath is broken (vampires cannot swear before Akatosh and survive the swearing intact). Arkay\'s burial documentation can no longer record you. Mara\'s temple weddings are inaccessible. The vampire Imperial is, in essence, no longer civically Imperial — they have lost the religious infrastructure that makes Imperial identity legible.',
+      gained: 'Molag Bal\'s court structure suits Imperials in a perverse way — Coldharbour mimics Cyrodiil\'s legal-administrative aesthetic. The Cyrodiilic cult of vampires (where it survives) is hierarchical, ranked, and almost civic in its internal organisation. An Imperial vampire fits a Bal-court better than any other race fits theirs.',
+      daily: 'Discretion above all. The Imperial vampire often maintains a cover identity — merchant, scholar, minor noble — and uses Imperial bureaucratic forms to manage their feeding. Account-books, contracts of service, hired thralls. The least theatrical vampires in Tamriel.',
+      tension: 'For an Imperial, religion was always civic infrastructure. Vampirism removes you from the civic frame entirely. Some Imperial vampires experience this as liberation; most experience it as civic homelessness — the very thing that gave their faith meaning (institutional life) is now closed to them.',
+    },
+    were: {
+      tagline: 'No Imperial framework for werewolfism exists. The Legion treats it as a medical-magical emergency.',
+      reaction: 'The Imperial Divines are silent on lycanthropy in the way they are silent on most Daedric matters — Hircine is not their god, the curse is not their problem to interpret. Stendarr\'s Vigilants, when they encounter a werewolf, treat them as monsters to be put down. Arkay\'s priests do not refuse a werewolf\'s burial; they simply note the cause of death.',
+      lost: 'Legion service is incompatible with uncontrolled transformation; a discovered werewolf soldier is discharged at best, executed at worst. Mara\'s domestic blessings remain technically available but the family suffers the same social isolation as the werewolf.',
+      gained: 'Hircine\'s Hunting Grounds, like for Nords. Imperial werewolves rarely have community — there is no Companions equivalent in Cyrodiil — so they become solitary, often working as mercenaries or trappers in remote provinces.',
+      daily: 'The Imperial werewolf is the loneliest curse-state. No institution receives them; no theology contextualises them. They live as exiles in their own province, and travel to Skyrim or Hammerfell where solitary life is more workable.',
+      tension: 'Imperial religion is comprehensive about civic life and silent about wilderness. The werewolf belongs entirely to the wilderness. The lack of Imperial vocabulary for the curse means the Imperial werewolf often constructs their own theology piecemeal — borrowed from the cultures they pass through.',
+    },
+  },
+  {
+    id: 'breton',
+    name: 'Breton',
+    color: '#8a9ec4',
+    bg: '#0a0d14',
+    tagline: 'Cursed Bretons inherit the curse — Volkihar and Glenmoril are family, not strangers',
+    vamp: {
+      tagline: 'The Volkihar are Breton-descended. For Bretons, vampirism is a family hazard — known, named, and historically integrated into the witch-mother substrate.',
+      reaction: 'Imperial-aligned Bretons (the urban majority) treat vampirism with the same horror as Imperials do — Mara and Arkay are lost, the chivalric orders unsworn. Witch-mother covens are different: some lineages have absorbed vampires for generations, treating them as senior matriline members. Druidic Circles reject vampirism uniformly — vampires violate Y\'ffre\'s fixed-nature gift more than any other curse.',
+      lost: 'The Imperial Nine. Knightly orders cannot retain a vampire knight (the dubbing oath is sworn before Stendarr and Akatosh). The Druidic Circles excommunicate. Magnus, oddly, is the least disturbed — Magnus is already gone from Mundus, and a vampire\'s alienation from the world is, in a perverse reading, a closer Magnus-imitation than mortal life is.',
+      gained: 'The Volkihar court is Breton-descended and structured like a small Breton kingdom — feudal, aesthetic, deeply concerned with bloodlines. Some Breton vampires explicitly embrace this as religious: the Magnus-line reading reframes vampirism as eternal life in a world Magnus fled. The witch-mother lineages offer parallel acceptance.',
+      daily: 'Court-mage Bretons make natural vampires — their daily life is already nocturnal, scholarly, and shadowed. Falion of Morthal is famously a vampire-hunter; the inverse position (a court-mage who hides vampirism) is well-attested in historical Breton literature.',
+      tension: 'The Breton vampire is the least exiled of all race-curse combinations because the Breton religious frame already contains witch-mother covens, druid heretics, and chivalric knights without forcing reconciliation. A vampire fits into the existing fragmentation. The price is that the same fragmentation prevents any single tradition from offering full embrace — only partial homes in pieces.',
+    },
+    were: {
+      tagline: 'The Glenmoril Witches are Breton-Reach hybrid — they are the source of the Companions\' curse. Bretons gave Skyrim its werewolves.',
+      reaction: 'Imperial-aligned Bretons: same as Imperial reaction — silent, uncomfortable. Witch-mother covens: lycanthropy has been part of the witch-coven tradition for generations; Glenmoril is the visible example. Druidic Circles: split. Some druids see Hircine\'s gift as a corruption of Y\'ffre\'s natural shape; some see it as a deepening of beast-kinship the Pact already implies.',
+      lost: 'Imperial-style chivalric oaths. Knightly orders excommunicate werewolf members. Mara\'s domestic blessings strained but retainable.',
+      gained: 'Witch-coven membership, often. The Glenmoril Witches in Falkreath are within reach of any Breton werewolf in Skyrim and constitute a religious community. Hircine\'s Hunting Grounds afterlife is accepted by witch-tradition Bretons without theological friction — they were halfway to Daedric pacts already.',
+      daily: 'A Breton werewolf with witch-coven ties has a daily religious life that an Imperial werewolf simply lacks: a coven to consult, lunar observances, Hircine offerings. Without that connection, the Breton werewolf falls back to the Imperial position — solitary, framework-less.',
+      tension: 'The Breton werewolf has more available paths than any other race-curse combination. The question is which lineage — coven, druidic, or solitary — claims them. In Skyrim, geography matters: a Breton werewolf in Falkreath is functionally home; one in Solitude is functionally Imperial-isolated. For Druidic-tradition Bretons specifically, the curse triggers a genuine theological fork: the Druidic Circle is split on whether Hircine\'s shape deepens or corrupts Y\'ffre\'s natural inheritance, and a werewolf Breton must navigate that split — either declaring that the beast serves the Green (and being accepted back into the Circle at full standing, with Hircine\'s separate claim set aside) or declaring for Hircine (and accepting Druidic excommunication in exchange for full Hunting Grounds standing). Unlike vampirism, which all Circles reject absolutely, lycanthropy forces a choice rather than an exile.',
+    },
+  },
+  {
+    id: 'dunmer',
+    name: 'Dunmer',
+    color: '#c4785a',
+    bg: '#130806',
+    tagline: 'Cursed Dunmer have stopped the cycle — and the ancestors notice immediately',
+    vamp: {
+      tagline: 'Three Dunmer vampire bloodlines (Aundae, Quarra, Berne) date back to Vvardenfell. The Daedric framework is familiar; the ancestor-rejection is absolute.',
+      reaction: 'The Daedric Princes are not strangers to Dunmer theology — Boethiah, Mephala, and Azura are openly worshipped (the Reclamations, post-Tribunal). Molag Bal is recognised as a hostile Daedra but not unfamiliar. The deeper rupture is ancestral: a vampire has stopped the cycle of life and death, which means they have stopped being available to the ash-prayer network. Ancestors do not respond to the ash-prayer of the undead. The vampire is not damned by the gods — they are unlistened-to by their own dead.',
+      lost: 'Ash-prayer functionality. Ancestral consultation no longer works — the vampire\'s dead family will not speak to them. Burial in the ancestral tomb is theologically pointless (the soul will not return to the cycle from there). Mara, Arkay, and the Imperial Nine are also lost, but these were never primary for Dunmer.',
+      gained: 'A clearer relationship to Molag Bal as a Daedric Prince — Bal\'s court is comprehensible to the Dunmer mind in a way it isn\'t to Nords. Some Dunmer vampires find a new patronage with Boethiah (deception and survival) or Mephala (hidden communities). The Reclamations\' priests treat Dunmer vampires as broken but not unforgivable.',
+      daily: 'In Windhelm\'s Grey Quarter, a Dunmer vampire would be doubly hidden — already marginalised, now unspeakably so. The ash-shrine in their household goes silent; they may continue to maintain it, knowing the ancestors do not answer, as a private grief. Some convert their household shrine into a Boethiah or Mephala altar.',
+      tension: 'For a Nord, vampirism breaks the relationship to Sovngarde. For a Dunmer, vampirism breaks the relationship to family. The ash-prayer practice is the most intimate religious act in Dunmer life, and the vampire performs it into silence forever. This is a sharper grief than the Nord\'s loss of an afterlife — the Nord\'s lost gods were public; the Dunmer\'s lost ancestors were household. Crucially: even if cured, the silence leaves a permanent mark. Dunmer who are cured of vampirism can restore ash-prayer functionality, but the ancestors remember the period of silence. The theological relationship is recoverable but scarred — the cure does not erase what the ancestors witnessed.',
+    },
+    were: {
+      tagline: 'Werewolfism is a foreign corruption from outside Dunmer cosmology — Hircine has no claim recognised by ash-prayer tradition.',
+      reaction: 'The Reclamations have no framework for Hircine specifically — he is not Boethiah, not Mephala, not Azura. The ancestors do not know what to do with a werewolf descendant. Most ash-prayer households would treat a werewolf member as ritually unclean and ask them to leave the shrine until cured. House Telvanni is more tolerant — the Telvanni magisters have private interest in unusual transformations.',
+      lost: 'Ash-prayer participation. Ancestral tomb burial. Most household and House obligations.',
+      gained: 'Hircine\'s Hunting Grounds afterlife — but with no cultural-religious community to interpret it. The Dunmer werewolf is theologically more isolated than a Dunmer vampire because vampires at least have a Daedric Prince the Reclamations recognise.',
+      daily: 'Rare. Most Dunmer werewolves end up in Skyrim or the Reach, where the curse is more workable than in Morrowind. They rarely maintain ash-prayer practice; the disconnection is too sharp. Some find a strange peace in Solstheim (Skaal werewolves exist) where Atmoran-influenced traditions are more accommodating.',
+      tension: 'The Dunmer werewolf is the rarest race-curse combination by lore — and the most theologically homeless. Vampirism slots into the existing Daedric framework; lycanthropy doesn\'t. A Dunmer who becomes a werewolf has effectively converted out of their own religion involuntarily.',
+    },
+  },
+  {
+    id: 'altmer',
+    name: 'Altmer',
+    color: '#7ec8a4',
+    bg: '#061310',
+    tagline: 'Cursed Altmer are theological abominations — the civilizational project repudiates them',
+    vamp: {
+      tagline: 'Auri-El IS the sun, in part. The vampire who shrinks from sunlight is, in pure Altmer reading, shrinking from the Aldmeri god of return.',
+      reaction: 'The Altmer civilizational project is about recovering divinity — purity, cultivation, the long ascent toward the divine state. Vampirism is the precise inverse: a deepening into Mundus rather than an escape from it, a parasitic eternity rather than a divine return. The Thalmor would euthanize a known Altmer vampire as a religious-political duty. Pure-blood Altmer vampire bloodlines (the Daughter of Coldharbour\'s rare Altmer line) exist in deep secrecy. Reaction varies by faction: Orthodox Thalmor treat it as a state emergency requiring immediate euthanasia; The Divine Body tradition mourns quietly and severs contact; Psijic tradition is the most philosophically tolerant — they will not help, but they will not hunt.',
+      lost: 'Auri-El absolutely. The morning sun-acknowledgment is impossible. Genealogical records would be amended to expunge the vampire from the bloodline. Magical study continues — vampires retain magical aptitude — but the religious framing of magic as divine recovery is gone. Magic becomes mere power. There is no cure-and-restore path for Altmer vampirism the way there is for Dunmer or Breton — unlike those races, Altmer theology has no mechanism for reintegration after vampiric contamination.',
+      gained: 'A perverse inversion of Altmer theology: vampires are above mortal limits, which the Altmer want to be. A small heretical tradition constructs private theology around this — vampirism is the wrong path, but it is at least a path away from mortal limits, which is more than the mortal Altmer can claim. This reading offers a shallow, unstable devotional continuation: the vampire Altmer can maintain a Tier 1 (Observant) devotional relationship through self-justification and Molag Bal as a hostile patron — but no deeper. Few are genuinely convinced; most simply hide.',
+      daily: 'An Altmer vampire in Skyrim is essentially impossible to maintain in the open. The Embassy would never tolerate one. They survive only by deep concealment, often disguised as Bretons or as half-elves of indeterminate descent. Their isolation is profound — they cannot return to Summerset, cannot serve the Thalmor, cannot openly admit what they are.',
+      tension: 'For Altmer, religion is identity is biology is civilization. Vampirism breaks all four at once. There is no recoverable Altmer position for a vampire of their race — only the thin heretical reading that reframes eternal unlife as proximity to what they were always trying to become. The deepest grief is that the Altmer vampire still wants what other Altmer want — divinity, recovery, return — and now cannot have it through any legitimate path.',
+    },
+    were: {
+      tagline: 'The Altmer civilizational project is anti-beast-state. A werewolf Altmer is an Aldmeri religious horror — almost unheard of.',
+      reaction: 'Hircine\'s curse is read as the absolute opposite of Altmer cultivation: a regression into animality, a surrender of the long ascent. The Thalmor consider Altmer werewolves theologically impossible — and when one occurs, they treat it as a state emergency. Almost all Altmer werewolves die within months of transformation, hunted by their own kin. This holds regardless of faction — even The Divine Body and Psijic traditions, which are more moderate than the Thalmor, have no theological position that accommodates beast-state as compatible with the Apotheosis project.',
+      lost: 'Everything Altmer religion offered. Auri-El, genealogy, magical aptitude\'s religious framing, civilizational identity. Unlike vampirism — which at least allows a heretical reading — werewolfism has no self-justification available. Beast-state is the floor of what Altmer theology was trying to climb out of.',
+      gained: 'Hircine\'s Hunting Grounds, theoretically. Few Altmer werewolves live long enough to develop a theology of their condition. Devotion does not merely reduce — it halts entirely. There is no path forward, heretical or otherwise.',
+      daily: 'The closest thing to "no daily life is possible." An Altmer werewolf in Skyrim would flee the Thalmor and live as a hunted exile. The very rare cases that survive often migrate to Valenwood (where Bosmer beast-shape practices give them ideological cover) or to Solstheim.',
+      tension: 'Of all race-curse combinations, Altmer + werewolf is the most theologically annihilating — confirmed as such by every Altmer theological tradition regardless of faction. The vampire could construct a private heretical theology; the werewolf cannot. Beast-state is not a wrong path toward Apotheosis — it is the negation of the very premise that Apotheosis is possible.',
+    },
+  },
+  {
+    id: 'khajiit',
+    name: 'Khajiit',
+    color: '#d4a840',
+    bg: '#120e00',
+    tagline: 'Cursed Khajiit have a non-lunar shape — and the moons are how they exist',
+    vamp: {
+      tagline: 'Khajiit vampire bloodlines exist in Tenmar Forest. Vampirism interferes with moon-magic — a Khajiit vampire is partially de-Khajiit\'d.',
+      reaction: 'In Khajiit theology, identity is lunar. Masser and Secunda determine what kind of being you are. A vampire\'s avoidance of sunlight and its altered metabolism interferes with the lunar-determination process — a vampire Khajiit\'s sub-species ("furstock") may shift, slip, or become unstable. Khenarthi cannot guide the soul of a vampire to its proper rest. Azurah, however, has a more complicated relationship: she is the goddess who first taught Khajiit the shape-secret, and some traditions hold that she may shield a vampire Khajiit from the worst lunar disruptions.',
+      lost: 'Khenarthi\'s soul-guidance. Stable lunar identity. Moon sugar\'s religious dimension (vampires cannot consume it ritually). The Mane\'s blessing — the Mane\'s authority is lunar-derived and cannot encompass a vampire.',
+      gained: 'Azurah\'s qualified protection (in some readings). Nocturnal\'s shadow-affinity becomes more available — Lorkhaj\'s removed heart left Nocturnal as a shadow-figure and her veneration is well-attested among Khajiit thieves; vampires extend this. Some Khajiit vampires drift into the Thieves Guild orbit naturally.',
+      daily: 'In Skyrim, a vampire Khajiit must hide it from the caravan. The caravan is the only Khajiit community available, and the caravan is fundamentally lunar — they would not knowingly tolerate a member who interferes with the moon-watching practice. Most vampire Khajiit leave the caravans and live as solitary travellers.',
+      tension: 'The Khajiit\'s religion is biological — lunar phase determines body. Vampirism\'s biological alterations therefore have religious consequences not metaphorically but literally. A Khajiit vampire may not actually know what species of cat they are anymore. This is the most physically disruptive race-curse combination in the file.',
+    },
+    were: {
+      tagline: 'The Khajiit body-shape is moon-given. Adding Hircine\'s shape is a moon-disruption — most theology rejects.',
+      reaction: 'Werewolfism conflicts with lunar identity in a different way than vampirism. The werewolf shape is given by Hircine, not by Masser and Secunda. A Khajiit werewolf has, in addition to their birth-shape, an off-moon shape — and Khajiit theology has no slot for such a thing. Most caravans would expel a werewolf member; the lunar lattice has been violated. The Mane would have no blessing for them.',
+      lost: 'Lunar-pure identity. Caravan membership. Moon-watching sincerity (the werewolf cannot sincerely interpret the moons that are not the source of their full shape).',
+      gained: 'Hircine\'s Hunting Grounds afterlife, theoretically. In Elsweyr there are isolated traditions of "moon-touched" Khajiit who have made private accommodations with Hircine — these are minority traditions and not visible in Skyrim.',
+      daily: 'A Khajiit werewolf in Skyrim is, by default, expelled from caravan life. They tend to drift into mercenary work or join non-Khajiit groups (the Companions would, in theory, accept a Khajiit werewolf, though no canonical example exists). Solitary, again — Skyrim\'s curse-state default.',
+      tension: 'Khajiit + werewolf is one of the rarer documented combinations. The biological-religious overlap that makes Khajiit vampirism dramatic also makes Khajiit lycanthropy strange but slightly less catastrophic — werewolfism adds a shape rather than disrupting the existing one. The off-moon shape is theologically homeless but biologically tolerable.',
+    },
+  },
+  {
+    id: 'bosmer',
+    name: 'Bosmer',
+    color: '#80c440',
+    bg: '#071200',
+    tagline: 'Cursed Bosmer wrestle with Y\'ffre — the Pact-god of fixed nature has opinions',
+    vamp: {
+      tagline: 'Vampirism violates Y\'ffre\'s fixed-nature gift more than any other curse. A vampire Bosmer is a category-error in Bosmer theology.',
+      reaction: 'Y\'ffre fixed the natures of living things — the Pact is grounded in this. A vampire is neither living nor dead, neither animal nor mer; the very ontology Y\'ffre established is violated. Strict Pact-observers reject vampire Bosmer absolutely. The Wood Orc and Bosmer cultures of Valenwood would expel a vampire on sight. The Green itself, in Valenwood, is said to be hostile to undead presence.',
+      lost: 'Y\'ffre\'s entire framework. Pact-observance becomes meaningless — the vampire cannot observe a Pact whose fundamental premise (fixed-nature) they have already violated. The Wild Hunt is unavailable. Storytelling tradition rejects them as story-spoilers.',
+      gained: 'Few patrons step in. Some Bosmer vampires drift toward Hircine (an unexpected refuge — Hircine\'s shape-changes are at least within nature\'s domain) or Namira (the consumption-goddess has some thematic overlap with the Wild Ritual). The Pact-violator finds slimmer theology than most.',
+      daily: 'A Bosmer vampire cannot maintain the Green Pact diet — they need blood. This single fact makes them theologically irrecoverable in Bosmer terms. In Skyrim, vampire Bosmer often drift into Thieves Guild orbit (Riften has Bosmer Guild members already), where vampirism is one of many secrets the Guild keeps.',
+      tension: 'The Bosmer vampire is more theologically broken than the Nord or Dunmer vampire because Bosmer religion is built on natural-category fidelity. The vampire isn\'t just losing access to gods — they are violating the metaphysical structure those gods established. Y\'ffre\'s silence is not just refusal; it is the absence of any framework to describe what the vampire has become.',
+    },
+    were: {
+      tagline: 'Hircine respects Bosmer particularly. The Wild Hunt and lycanthropy are cousin-practices — but Y\'ffre is jealous.',
+      reaction: 'Bosmer have an unusual relationship with shape-change: the Wild Hunt (the desperate tribal transformation, Y\'ffre-mediated, used in catastrophic emergency) is part of their religious inheritance. Werewolfism, by contrast, is Hircine-mediated and individual. The Bosmer werewolf occupies a strange middle position — beast-state is familiar, but the wrong god has given it. Hircine welcomes Bosmer specifically — the Hunting Grounds receive them with honour. Strict Pact-observers and Old-Contract Y\'ffre devotees treat werewolfism as a serious violation or theft from the Green; more moderate, outlaw, or diaspora Bosmer traditions are more likely to treat it as a contested strain rather than an immediate total break.',
+      lost: 'Strict Pact observance becomes complicated — the werewolf has a non-Y\'ffre shape. The Wild Hunt may still be theoretically available (in extremis) but the werewolf\'s loyalty is, by default, divided. Storytelling tradition is preserved.',
+      gained: 'Hircine\'s explicit welcome — Bosmer are among Hircine\'s favoured peoples. Werewolf Bosmer have access to the Hunting Grounds with high standing. Some Bosmer werewolves consciously embrace Hircine over Y\'ffre; others maintain dual practice with awkwardness.',
+      daily: 'A Bosmer werewolf in Skyrim has more theological options than most curse-states, but those options are not equally available to every Bosmer path. Orthodox Pact life becomes hardest to sustain; moderate, outlaw, or diaspora Bosmer may try to carry the strain without surrendering themselves wholly to Hircine. Falkreath\'s forests are an attractive base either way.',
+      tension: 'The Bosmer werewolf is choosing — actively or passively — between two gods who both have claims on their shape, but Bosmer communities do not answer that claim the same way. Y\'ffre fixed the original nature; Hircine added a new one. That makes the curse not just a beast-problem, but a route-splitting theological problem inside Bosmer life itself.',
+    },
+  },
+  {
+    id: 'redguard',
+    name: 'Redguard',
+    color: '#c4582a',
+    bg: '#130600',
+    tagline: 'Cursed Redguards endure forever toward a destination they can no longer reach',
+    vamp: {
+      tagline: 'Tu\'whacca cannot guide vampire souls to the Far Shores. Tall Papa\'s children are mortal by design — the vampire is endurance without destination.',
+      reaction: 'Yokudan theology centres on survival, endurance, and the journey to the Far Shores after death. Vampirism creates a theological paradox: the vampire has, in one sense, achieved the survival every Redguard prays for — but in another, they have made their survival pointless by removing the destination Tu\'whacca\'s rites lead to. The Yokudan deities have no positive framework for vampires. The Crown tradition rejects them; Forebear practice (more Imperial-influenced) treats them with the same horror Imperials do.',
+      lost: 'Tu\'whacca\'s soul-guidance. The Far Shores. Tall Papa\'s recognition (Tall Papa\'s "trick" of mortality is what made the Yokudan way work; vampirism cheats the trick and breaks the prize). The sword-blessing rite, central to martial Redguard practice, is no longer effective — the blade tended by undead hands does not carry the proper Onsi-warmth.',
+      gained: 'Almost nothing. Redguard vampires have no Yokudan patron to fall back on. Some find Molag Bal acceptable as a hostile-but-recognisable Daedra; most do not. The Alik\'r Sword-Singer who becomes a vampire is the most tragically disconnected curse-state in the file — their entire identity was martial-religious, and the religion no longer functions.',
+      daily: 'Redguard vampires in Skyrim are rare and almost always solitary. They tend to abandon Redguard religious practice entirely rather than maintain rites that no longer function. Some drift into Hammerfell\'s desert as solitary endurance-figures; some take up the very vampire-hunting work that Crown society would expect of them, in a kind of repentance loop.',
+      tension: 'Redguards built their religion around a question — how do you survive Satakal\'s endless devouring? — and the vampire has answered it in the wrong way. They have stepped outside the cycle Satakal devours, but in doing so they have stepped outside the survival-narrative that gave Redguard life its meaning. They are now alive in a way Tu\'whacca cannot interpret.',
+    },
+    were: {
+      tagline: 'No Yokudan framework for lycanthropy exists. Hircine has no claim recognised by Redguard theology — but he claims them anyway.',
+      reaction: 'The Yokudan pantheon has nothing to say about Hircine specifically. Werewolfism among Redguards is so rare that the religious tradition has no developed response. Crown clergy would treat a werewolf Redguard as a foreign-corrupted soul; Forebear practice would mirror Imperial silence. The HoonDing has no opinion (the Make-Way God is concerned with passage, not transformation).',
+      lost: 'Sword-Singer practice is still possible (the sword is still cared for) but the martial-religious unity is strained — combat with beast-rage is not Leki\'s teaching. Tu\'whacca\'s rites still apply to the body; Hircine claims the soul.',
+      gained: 'Hircine\'s Hunting Grounds, theoretically — but with no cultural community to interpret the gift. Redguard werewolves are theologically homeless in the same way Imperial werewolves are.',
+      daily: 'Almost no daily life as a Redguard werewolf is documented. The combination is rare enough that the few examples drift into mercenary work, often in northern provinces where the curse is more workable than in Hammerfell. Maintaining the Alik\'r identity becomes nearly impossible.',
+      tension: 'Redguard religion is the most explicitly survival-oriented in Tamriel. Werewolfism offers a kind of survival — animal vitality, regeneration, beast-strength — but at the cost of the destination. Like the vampire, the werewolf Redguard endures without purpose. Unlike the vampire, they at least have an afterlife, just the wrong one.',
+    },
+  },
+  {
+    id: 'orc',
+    name: 'Orc',
+    color: '#8aaa3a',
+    bg: '#080d00',
+    tagline: 'Malacath despises weakness — and weakness is the question the curses pose',
+    vamp: {
+      tagline: 'Blood-dependence reads as weakness in Malacath\'s code. Few Orc vampires exist; those that do are radically separated from stronghold life.',
+      reaction: 'Malacath\'s theology is built on dignity through endurance — the spurned god who survives. Vampirism\'s reliance on others\' blood is, in Malacath\'s terms, a form of dependency, and dependency is weakness. A vampire Orc is a contradiction the stronghold cannot accommodate. Stronghold society would expel — by exile or by combat — a known vampire member. Some city-Orcs have hidden vampirism more successfully, but the cultural rejection is deep.',
+      lost: 'Stronghold belonging. Malacath\'s shrine. The right to challenge a chief (the chief\'s authority is Malacath-witnessed, and Malacath does not witness the undead). Forge-work as devotion is technically still possible — vampires can smith — but the spiritual dimension is hollow without Malacath\'s implicit presence.',
+      gained: 'Almost nothing within Orcish theology. Some Orc vampires turn to Boethiah (deception and cunning, valued by Orcs in some traditions) or to Molag Bal directly. The few documented Orc vampires tend to live as mercenaries far from any stronghold.',
+      daily: 'A vampire Orc in Skyrim cannot enter a stronghold without immediate violence. They have no community. Their daily life is solitary survival, often in ruins and abandoned forts. Some take up smith-work in city-Orc spaces (Whiterun\'s smithy, etc.) where their vampirism can stay hidden longer.',
+      tension: 'Orc religion offers a rare and beautiful thing — a theology that values the spurned, the cast-out, the weak-treated. But the weak-treated must endure with dignity, not by parasitism. Vampirism reverses Malacath\'s gift. The Orc vampire has become the very weakness their religion was constructed to refuse.',
+    },
+    were: {
+      tagline: 'Strength-through-beast-shape is theologically defensible to Malacath. Werewolf Orcs may be tolerated; werebear Orcs in Solstheim have lore-precedent.',
+      reaction: 'Malacath has no quarrel with Hircine specifically. Beast-strength, in Malacath\'s code, is strength — and what matters is the strength shown, not the source. Some strongholds in Skyrim and Solstheim have tolerated werewolf or werebear members as honoured beast-warriors. Other strongholds reject the curse as foreign Daedric corruption (Hircine is not Malacath, and the Hunting Grounds are not the Orcish afterlife). The variation is genuine — there is no single Orcish position.',
+      lost: 'Stronghold acceptance is conditional. A werewolf Orc must demonstrate that the curse has not weakened them — typically through performed strength: combat victories, exceptional smithing, or demonstrated control. Malacath\'s shrine is still accessible; Hircine\'s additional claim does not, in Malacath\'s code, cancel Malacath\'s claim.',
+      gained: 'Hircine\'s Hunting Grounds afterlife as an alternative to Malacath\'s. Some Orc werewolves explicitly choose Hircine — the Hunt suits them better than the spurned-god\'s afterlife. Others reject Hircine and trust Malacath to claim them despite the curse.',
+      daily: 'Werewolf Orcs are more functional than vampire Orcs. A stronghold that has decided to tolerate beast-warriors integrates them into combat and forge roles, with private rites for the curse aspect. Solstheim\'s mixed Skaal-Orc traditions are particularly accommodating.',
+      tension: 'The Orc werewolf must perform strength constantly — the curse is acceptable only as long as it adds to dignity rather than subtracts. The moment a werewolf Orc loses control of the beast-shape inappropriately, Malacath\'s code becomes the immediate question. This makes the Orc werewolf the most discipline-demanding curse-state.',
+    },
+  },
+  {
+    id: 'argonian',
+    name: 'Argonian',
+    color: '#38b880',
+    bg: '#001209',
+    tagline: 'Cursed Argonians have a problem the Hist may or may not solve',
+    vamp: {
+      tagline: 'The Hist may intervene. Vampirism interacts strangely with Hist connection — and the Hist has been known to refuse the curse.',
+      reaction: 'The Hist is communal-divine in a way no other Tamrielic religious system is — it is partially you. There is documented evidence (in Black Marsh tradition and outside lore) that the Hist can prevent or modify Argonian vampirism: an Argonian who returns to Black Marsh after being turned may be unmade by the Hist sap, or the Hist may simply refuse to acknowledge the vampire as Argonian anymore. In Skyrim, far from any Hist, the curse takes hold without Hist mediation. Sithis has no quarrel with vampires (the void accepts all things). Arkay rejects.',
+      lost: 'Hist connection in its proper form. The Argonian vampire often experiences the Hist\'s background presence as silenced or corrupted — what was a low constant murmur becomes static or absence. Hist-naming is meaningless (the tree-divine no longer recognises the name). Soul-return at death is uncertain — the Hist may not call this soul home.',
+      gained: 'Sithis becomes more accessible — many Argonian vampires drift into Dark Brotherhood orbit, where vampirism is a known and tolerated condition. Sithis-theology actually accommodates vampires more naturally than most religious systems do; the void is indifferent to the form of the things it accepts. Molag Bal\'s court is recognisable but not preferred.',
+      daily: 'In Windhelm\'s Assemblage, an Argonian vampire is one of the most isolated beings in Skyrim — already marginalised, already disconnected from the Hist, now further separated from the community-substitute the Assemblage provides. Many leave for the Brotherhood (Falkreath\'s sanctuary historically) where the curse is religiously interpretable.',
+      tension: 'For an Argonian, the central religious question of life in Skyrim is already absence — the Hist is not there, or is faint. Vampirism makes this absence permanent and turns it into rejection. The Hist has not just been distant; it has refused. This is, theologically, the deepest grief available to an Argonian — and one the daily-worship file already gestures at as the hardest position to occupy.',
+    },
+    were: {
+      tagline: 'Argonian shape is Hist-given. Hircine\'s shape is added on top — the Hist has been known to absorb or unmake it.',
+      reaction: 'Lycanthropy among Argonians is rare but better-attested than vampirism. The Hist\'s response is more permissive: beast-shape is, in Hist cosmology, not a fundamental violation the way undead-stoppage is. An Argonian werewolf in Black Marsh may have the curse ritually managed by Hist-sap practice — some traditions hold that the Hist can teach Argonians to control or even commute the curse. In Skyrim, far from Hist trees, the curse manifests normally.',
+      lost: 'Hist-shape integrity (the Hist-given Argonian form is now one shape among two). Some Hist-mediated rites are strained. Sithis-acknowledgment is unaffected. The Assemblage community has no specific reaction — Argonian community is more tolerant of unusual conditions than most.',
+      gained: 'Hircine\'s Hunting Grounds afterlife — but with Hist-call complications. Some Argonian werewolves report that the Hist still calls them home at death even though Hircine has a claim. The two divine claims may compete. Lore is unsettled.',
+      daily: 'A werewolf Argonian in Skyrim has a more workable daily life than a vampire Argonian. Beast-shape is integrable into Argonian self-understanding (Hist-shape is already biological-religious; adding a beast-shape is less catastrophic than adding undeath). Many drift toward solitary work or join the Companions.',
+      tension: 'The Argonian werewolf is one of the more tractable race-curse combinations because Argonian theology is less form-bound than most. Sithis tolerates; the Hist may even help. The daily reality is harder than for Bosmer or Orc werewolves — there is no Argonian community-religious interpretation of the curse — but the theological position is not a ruin in the way vampire Argonians experience.',
+    },
+  },
+];
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+const tabsEl = document.getElementById('tabsInner');
+const mainEl = document.getElementById('mainContent');
+
+// Framework tab
+const fwTab = document.createElement('div');
+fwTab.className = 'tab active';
+fwTab.textContent = framework.name;
+fwTab.style.setProperty('--race-color', framework.color);
+fwTab.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.race-panel').forEach(p => p.classList.remove('active'));
+  fwTab.classList.add('active');
+  document.getElementById('panel-framework').classList.add('active');
+});
+tabsEl.appendChild(fwTab);
+
+// Framework panel
+const fwPanel = document.createElement('div');
+fwPanel.id = 'panel-framework';
+fwPanel.className = 'race-panel active';
+fwPanel.style.setProperty('--race-color', framework.color);
+fwPanel.innerHTML = `
+  <div class="race-header">
+    <span class="race-name">Framework</span>
+    <span class="race-tagline">Two Daedric curses, two divine reactions, ten races trying to make sense of it</span>
+  </div>
+
+  <div class="frame-intro">
+    <h3>The Two Curses</h3>
+    <p>
+      Vampirism and lycanthropy are the two transformative curses with major Skyrim representation.
+      Both are <strong>Daedric in origin</strong> — bestowed by Princes who do not appear in any
+      Tamrielic mortal pantheon. Both produce permanent ontological change (the cursed individual
+      is no longer simply mortal). Both create immediate conflicts with the gods listed in the
+      <em>Tamriel Daily Worship</em> file — but the conflicts differ in shape, and the religious
+      paths available afterward differ by race in ways that this companion file documents.
+    </p>
+    <p>
+      The curses are <strong>not symmetrical</strong>. Vampirism is a contagion-condition with
+      origins in a specific mythic event. Lycanthropy is a gift-condition tied to a specific
+      Daedric Prince's domain. Vampirism severs you from cycle-of-life religion (Arkay, Tu'whacca,
+      ash-prayer, the Hist). Lycanthropy redirects your afterlife (most cultures: from native
+      hall to Hircine's Hunting Grounds). The two curses have different daily textures and
+      different theological recoveries.
+    </p>
+  </div>
+
+  <div class="frame-grid">
+    <div class="frame-card vamp">
+      <h4>🩸 Vampirism — Molag Bal's Lineage</h4>
+      <p>
+        <strong>Origin myth:</strong> Lamae Beolfag, a Nordic priestess of Arkay, was abducted and
+        raped by Molag Bal. She rose as the first vampire — the Blood Matron, the Daughter of
+        Coldharbour. Every "noble" vampire bloodline traces (mythically, if not always literally)
+        through Lamae Bal's progeny.
+      </p>
+      <p>
+        <strong>Cosmological position:</strong> The vampire has stopped the cycle of life and
+        death. Arkay's domain is broken; Tu'whacca cannot guide the soul; the Hist cannot reclaim
+        it; Sovngarde's gates are closed (the dead in Sovngarde are warriors who died with weapons,
+        not creatures who refused to die). The vampire is, in most religious systems, an
+        ontological category-error.
+      </p>
+      <p><strong>Universal losses (cross-cultural):</strong></p>
+      <ul>
+        <li>Sun-touched temples and shrines (most Imperial Divines temples are theoretically open during day, practically dangerous)</li>
+        <li>Burial-cycle religion (Arkay, Tu'whacca, ash-prayer return, Hist soul-call)</li>
+        <li>Marriage rites in Mara's temple (the priestess senses)</li>
+        <li>Most Aedric blessings — the Aedra are alive-side</li>
+      </ul>
+      <p><strong>Universal gains:</strong></p>
+      <ul>
+        <li>Molag Bal's patronage (often unwanted but available)</li>
+        <li>Vampire society — clan structures (Volkihar, Cyrodiilic cult, Vvardenfell clans)</li>
+        <li>Access to night-Daedra worship (Nocturnal, Vaermina, Namira) without the previous theological friction</li>
+      </ul>
+    </div>
+
+    <div class="frame-card were">
+      <h4>🐺 Lycanthropy — Hircine's Gift</h4>
+      <p>
+        <strong>Origin:</strong> Lycanthropy is bestowed by Hircine, Daedric Prince of the Hunt.
+        Werewolfism is the most common form; werebears, werecrocodiles, and other beast-shapes
+        exist in regional traditions. The Skyrim curse comes through the Glenmoril Witches'
+        ritual; the Companions famously bear it.
+      </p>
+      <p>
+        <strong>Cosmological position:</strong> The lycanthrope's afterlife is, by default,
+        Hircine's Hunting Grounds — an eternal hunt across spectral wilderness. This overrides
+        the native pantheon's claim on the soul. A Nord werewolf does not, by default, enter
+        Sovngarde. A Redguard werewolf does not, by default, reach the Far Shores. The body
+        still dies and can be properly buried; the soul goes elsewhere.
+      </p>
+      <p><strong>Universal losses (cross-cultural):</strong></p>
+      <ul>
+        <li>Native afterlife claim (overridden by Hircine)</li>
+        <li>Aedric oaths sworn after transformation are theologically strained</li>
+        <li>Most institutional religious life — temples and orders rarely accept werewolf members openly</li>
+      </ul>
+      <p><strong>Universal gains:</strong></p>
+      <ul>
+        <li>Hircine's Hunting Grounds afterlife (described as honourable, even ecstatic, by werewolves who have visited via dream)</li>
+        <li>Beast-strength, regeneration, sensory acuity</li>
+        <li>Brotherhood with other werewolves — the Companions in Skyrim are the visible example</li>
+        <li>Lycanthropy is, uniquely among curses, <strong>reversible</strong> (the Glenmoril Witches' heads contain the cure-ritual ingredient — Kodlak Whitemane's quest demonstrates this)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="frame-intro" style="border-left-color: var(--vamp);">
+    <h3 style="color: var(--vamp);">How to Read the Per-Race Sections</h3>
+    <p>
+      Each race tab contains two parallel blocks: <strong>Vampirism</strong> (red, Molag Bal-aligned)
+      and <strong>Lycanthropy</strong> (green, Hircine-aligned). Each block lays out: divine reaction,
+      what is lost, what is gained, daily practice, and the central theological tension specific to
+      that race-curse combination.
+    </p>
+    <p>
+      Cross-references to the <em>Tamriel Daily Worship</em> file are implicit — a cursed character's
+      starting position is the daily-worship entry for their race. The cursed-worship entry shows
+      what changes from that baseline and how. <em>Both files together</em> describe the full
+      religious life of a cursed character.
+    </p>
+    <p>
+      Note: The Nord entry does not split Old Ways / Imperial Nine reactions separately for every
+      curse-aspect — both pantheons largely agree on the curses (vampirism and lycanthropy are
+      rejected in similar ways by both), with differences noted where they matter (Sovngarde
+      access being the sharpest example).
+    </p>
+  </div>
+`;
+mainEl.appendChild(fwPanel);
+
+// Race tabs and panels
+races.forEach((r) => {
+  const tab = document.createElement('div');
+  tab.className = 'tab';
+  tab.textContent = r.name;
+  tab.style.setProperty('--race-color', r.color);
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.race-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + r.id).classList.add('active');
+  });
+  tabsEl.appendChild(tab);
+
+  const panel = document.createElement('div');
+  panel.id = 'panel-' + r.id;
+  panel.className = 'race-panel';
+  panel.style.setProperty('--race-color', r.color);
+  panel.style.setProperty('--race-bg', r.bg);
+
+  const renderCurse = (curse, kind, title, patron) => `
+    <div class="curse-block ${kind}">
+      <div class="curse-title">${title}</div>
+      <div class="curse-patron">Patron · ${patron}</div>
+      <div class="curse-tagline">${curse.tagline}</div>
+      <div class="curse-row"><span class="curse-label">Divine Reaction</span><span class="curse-text">${curse.reaction}</span></div>
+      <div class="curse-row"><span class="curse-label">What Is Lost</span><span class="curse-text">${curse.lost}</span></div>
+      <div class="curse-row"><span class="curse-label">What Is Gained</span><span class="curse-text">${curse.gained}</span></div>
+      <div class="curse-row"><span class="curse-label">Daily Reality</span><span class="curse-text">${curse.daily}</span></div>
+      <div class="curse-row"><span class="curse-label">Central Tension</span><span class="curse-text">${curse.tension}</span></div>
+    </div>
+  `;
+
+  panel.innerHTML = `
+    <div class="race-header">
+      <span class="race-name">${r.name}</span>
+      <span class="race-tagline">${r.tagline}</span>
+    </div>
+
+    <div class="section-label">Curse Overlays</div>
+    <div class="curse-grid">
+      ${renderCurse(r.vamp, 'vamp', '🩸 Vampirism', 'Molag Bal · Daughter of Coldharbour lineage')}
+      ${renderCurse(r.were, 'were', '🐺 Lycanthropy', 'Hircine · Lord of the Hunt')}
+    </div>
+
+    <div class="crossref">
+      <strong>Cross-reference:</strong> See <em>Tamriel Daily Worship — ${r.name}</em> for the
+      uncursed religious baseline. The cursed entries above describe what changes from that
+      baseline, not the baseline itself.
+    </div>
+  `;
+
+  mainEl.appendChild(panel);
+});
+
+mainEl.insertAdjacentHTML('beforeend', `
+  <div class="footnote">
+    <strong>Mod Dev Reference Notes:</strong>
+    Both curses are reversible in Skyrim — vampirism via the Falion ritual at Morthal; lycanthropy
+    via the Glenmoril Witches' heads at the Underforge. The reversibility is itself theologically
+    interesting: a temporary curse-state allows narrative arcs of damnation, exile, struggle, and
+    return. Companions like Aela the Huntress refuse the cure (Hunting Grounds is their preferred
+    afterlife); Kodlak Whitemane requires it (Sovngarde is his). The choice between Hunt and native
+    afterlife is one of the most underused dramatic levers in Skyrim's religious system. For a mod
+    aiming at lore-grounded religion, this companion file maps the per-race shape of that choice.
+  </div>
+`);
+</script>
+</body>
+</html>
