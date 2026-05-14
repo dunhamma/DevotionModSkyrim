@@ -503,16 +503,25 @@ class Verifier {
   }
 
   checkSeq() {
-    if (exists(XEDIT_SEQ)) {
+    const hasXeditSeq = exists(XEDIT_SEQ);
+    const hasDevotionSeq = exists(DEVOTION_SEQ);
+
+    if (hasXeditSeq) {
       this.pass("SEQ file", "xEdit output SEQ exists.", XEDIT_SEQ);
       if (exists(PDV_ESP) && mtimeMs(XEDIT_SEQ) < mtimeMs(PDV_ESP)) {
         this.warn("SEQ freshness", "xEdit output SEQ is older than the ESP.", XEDIT_SEQ);
       }
+    } else if (hasDevotionSeq) {
+      this.info(
+        "SEQ file",
+        "xEdit output SEQ is absent, but the generated SEQ already exists in Devotion.",
+        XEDIT_SEQ,
+      );
     } else {
       this.warn("SEQ file", "xEdit output SEQ is missing.", XEDIT_SEQ);
     }
 
-    if (exists(DEVOTION_SEQ)) {
+    if (hasDevotionSeq) {
       this.pass("SEQ file", "Devotion mod SEQ exists.", DEVOTION_SEQ);
       if (exists(PDV_ESP) && mtimeMs(DEVOTION_SEQ) < mtimeMs(PDV_ESP)) {
         this.warn("SEQ freshness", "Devotion mod SEQ is older than the ESP.", DEVOTION_SEQ);

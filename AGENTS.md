@@ -23,6 +23,7 @@ The mod is designed for roleplayers who want mechanically meaningful, lore-accur
 | `PDV_Phase2_Summary.md` | **NEW** — Phase 2 architecture summary, design decisions, testing checklist | Understanding Phase 2 completeness and next steps |
 | `PDV_Phase3_CK_Steps.md` | **NEW** — Detailed CK walkthrough for Phase 3 ActionRouter and Kill Actor Story Manager wiring | Completing Phase 3 CK wiring and in-game tests |
 | `PDV_SkyrimConsoleReference.md` | UESP-sourced console command reference (source of truth) | Any in-game testing or debugging |
+| `references/PDV_Anvil_MO2_MCP_Intake.md` | Codex-facing intake of the Anvil MO2 MCP plugin, tool surface, optional binaries, and local setup status | Using or troubleshooting `mo2_*` tools from Codex |
 | `references/PAPYRUS_KNOWLEDGE_INTAKE.md` | Papyrus API/reference strategy, source-layer cautions, and BellCube/SKSE intake notes | Any Papyrus scripting, API lookup, or tooling/ref-generation planning |
 | `references/PDV_RaceArchitecture_DesignReference.md` | Living race architecture reference for theology, curse handling, reward contract, and quest weighting | Resolving per-race design, locking theology decisions, planning future signal matrices |
 | `references/phase4/PDV_Phase4_MatrixScaffold.md` | Working conventions and normalization rules for the Phase 4 matrix pass | Understanding matrix scope, crosswalk rules, and output structure |
@@ -35,7 +36,7 @@ The mod is designed for roleplayers who want mechanically meaningful, lore-accur
 | `pdv-doc-sync.skill`, `pdv-papyrus-ck.skill` | Packaged local skill artifacts | Installing/sharing the project skills |
 | `references/skyrim-deity-reference.jsx` | Cross-cultural deity equivalency table (all 9 races × all pantheons) | Writing race-specific dialogue, checking deity names, avoiding lore errors |
 | `references/tamriel-daily-worship-4e201.html` | Race-by-race daily practice, threshold rituals, class variation, era pressures | Designing trigger conditions, writing flavour text, balancing per-race logic |
-| `archive/HOUSECARL_*.md` | Inherited source material (frozen) | When PDV_STANDARDS doesn't cover a question and you want the fuller treatment |
+| `archive/HOUSECARL_*.md`, `archive/Skyrim_Modding_Lessons*.md` | Frozen source material | When PDV_STANDARDS doesn't cover a question and you want the fuller treatment |
 
 ### Mod implementation folder
 
@@ -66,8 +67,8 @@ Quest scripts (current):
 - `PDV__ManagerQuest.psc` — Phase 2 functional alignment complete and verified in game: per-deity StorageUtil API, patron mirror refresh, FormList-backed `ProcessDawn`, debug global property wiring, and poll-based debug harness.
 - `PDV_DeityBase.psc` — **NEW (Phase 2)** Base class contract for all deity scripts. Properties for identity, tier thresholds, origin multipliers, boon spells. Virtual functions: `ScoreAction()`, `OnTierChange()`, `OnPatronStart()`, `OnPatronEnd()`.
 - `PDV_Deity_Kyne.psc` — **NEW (Phase 2)** First concrete deity implementation. Kyne-specific rubric: -3 for slaughtering beasts, +0.5 for humanoid combat, +0.25 for shouting, +0.5 for sleeping outdoors.
-- `PDV_ActionRouter.psc` — **NEW (Phase 3)** Persistent service quest that fans validated player kill actions to all deities via `ScoreAction()`; compiles cleanly, CK quest/property wiring pending.
-- `PDV__SM_KillActor.psc` — **NEW (Phase 3)** Non-Start-Game-Enabled Story Manager receiver quest for `OnStoryKillActor`; compiles cleanly, CK quest/Story Manager wiring pending.
+- `PDV_ActionRouter.psc` — **NEW (Phase 3)** Persistent service quest that fans validated player kill actions to all deities via `ScoreAction()`; compiles cleanly, CK quest/property wiring complete, hostile bandit/wolf runtime paths verified.
+- `PDV__SM_KillActor.psc` — **NEW (Phase 3)** Non-Start-Game-Enabled Story Manager receiver quest for `OnStoryKillActor`; compiles cleanly, CK quest/Story Manager wiring complete, receiver path verified by hostile kill events.
 
 (`PDV_MasterQuest.psc` and its `.pex` have been deleted. ESP record removed via xEdit. Done.)
 
@@ -75,7 +76,7 @@ Quest scripts (current):
 
 Run the local compiler and verifier from this docs workspace:
 
-```powershell
+```text
 node .\tools\pdv_compile.mjs
 node .\tools\pdv_compile.mjs --script PDV_ActionRouter
 node .\tools\pdv_compile.mjs --all
@@ -84,7 +85,7 @@ node .\tools\pdv_compile.mjs --list
 
 `pdv_compile.mjs` compiles active PDV scripts whose `.pex` output is missing or older than source. `--script` targets one or more scripts, and `--all` rebuilds the active script set. It spawns `PapyrusCompiler.exe` directly with canonical CLI args (`<script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>`), not `ScriptCompile.bat`, PowerShell, or the CK menu. Papyrus warnings are treated as failures by default. After a successful compile, the compiler runs `pdv_verify.mjs` unless `--skip-verify` is supplied.
 
-```powershell
+```text
 node .\tools\pdv_verify.mjs
 node .\tools\pdv_verify.mjs --json
 node .\tools\pdv_verify.mjs --strict-phase3
@@ -111,6 +112,11 @@ Working rules drawn from that intake:
 - **Compile-verified beats plausible.** Prefer fixes confirmed by actual compile output over stylistically plausible Papyrus guesses.
 - **Be honest about coverage limits.** `.pex`-only mods are out of scope unless source exists; BellCube/papyrus-index is curated and useful, but not exhaustive.
 - **Use Skyrim-valid test paths.** For in-game testing, rely on commands documented in `PDV_SkyrimConsoleReference.md` and CK-backed harnesses such as quest stages or properties, not Fallout-only shortcuts.
+- **Respect Papyrus parser limits.** Use only valid string escapes (`\\`, `\"`), keep `{...}` docstrings directly after declarations, and do not assume helpers such as `StringUtil.Replace` exist.
+- **Respect Papyrus language limits.** No ternary operator, no string interpolation, no string `+=`, no `Math.max`/`Math.min`, no variable-sized arrays, arrays cap at 128, and chained casts should be split into explicit intermediate variables.
+- **Avoid save-baked false positives.** When script behavior looks impossible after an edit, retest from a new game or main-menu `coc qasmoke` path before changing architecture.
+- **Keep player-facing text ASCII.** Dialogue, notifications, MCM strings, books, and message boxes should use straight quotes, `...`, `--`, and `-` rather than curly quotes, em dashes, ellipses, or bullets.
+- **Keep persistence backends isolated.** Before adding a reader, grep for writers and match their backend. StorageUtil remains PDV's default; do not mix StorageUtil, JFormDB, JDB/JArray, and live actor state under the same key.
 
 ---
 
@@ -260,13 +266,15 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
       - PDV_Phase2_CK_Steps.md (complete walkthrough) ✓
       - VERIFIED IN GAME: patron activation, mirror globals, dawn clamp, and tier threshold transition
 [x] PDV local toolchain — `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs` built and documented
-[~] Phase 3 — scripts compiled; CK wiring/runtime verification pending:
+[x] Phase 3 — ActionRouter kill-event slice complete; CK wiring and runtime verification passed
       - PDV_ActionRouter.psc + .pex ✓
       - PDV__SM_KillActor.psc + .pex ✓
-      - PDV_Phase3_CK_Steps.md ✓
-      - CK WORK REMAINING: create/wire ActionRouter quest, create/wire receiver quest,
-        add receiver to Kill Actor Story Manager node with Shares Event checked
-      - TEST REMAINING: bandit/wolf/neutral/rapid-kill runtime verification
+      - PDV_ActionRouter quest + properties ✓
+      - PDV__SM_KillActor quest + PDV_Router property ✓
+      - Kill Actor Story Manager receiver node + Shares Event ✓
+      - SEQ generated under Devotion\Seq ✓
+      - VERIFIED IN GAME: Kyne activation, hostile bandit +0.5 scratch, hostile wolf -3 scratch,
+        neutral-kill rejection, rapid dual-kill accumulation, and manual dawn consolidation/clamping
 [ ] Phase 4 — PDV_Origin, stance taxonomy, rivalry ledger, tier boon grants
 [ ] Phase 5 — MCM
 [ ] Phase 6 — Talos (second deity; proof of scalability)
@@ -292,15 +300,18 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 - **Phase 2 script delivery (2026-05-10):** PDV_DeityBase.psc, PDV_Deity_Kyne.psc, and updated PDV__ManagerQuest.psc created and ready to compile. Detailed walkthrough: PDV_Phase2_CK_Steps.md. Summary: PDV_Phase2_Summary.md. All three scripts follow project conventions (PDV_ prefix, internal __ convention, full documentation headers, lore alignment via deity properties).
 - **Phase 2 functional alignment (2026-05-11):** `PDV__ManagerQuest` now uses per-deity StorageUtil keys (`PDV.Piety`, `PDV.PietyToday`, `PDV.Tier`, `PDV.LastTierChange`) as the runtime source of truth. `AwardPiety` writes daily scratch only, `ProcessDawn` consolidates scratch into persistent piety, tier recompute now reads each deity's own thresholds, patron switching preserves inactive deity ledgers, and the debug global is wired by property rather than hardcoded FormID lookup.
 - **Phase 3 preflight (2026-05-11):** `PDV_ActionRouter` should be a persistent service quest, not the quest directly started by Story Manager. Kill Actor capture should use a small non-Start-Game-Enabled receiver quest (`PDV__SM_KillActor`) with `OnStoryKillActor(...)`; the receiver calls the router and then stops/resets. PDV Story Manager nodes must use `Shares Event`. The first slice is player-only kill capture; follower attribution, traps, non-hostile kills, and wider creature taxonomy are deferred until the event path is proven.
-- **Phase 3 script implementation (2026-05-11):** `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` were added and compiled cleanly. Router validates direct player kills, requires hostility evidence, classifies `ActorTypeNPC` as humanoid and `ActorTypeAnimal` as beast, then writes deity deltas through `PDV__ManagerQuest.AwardPiety()` only. CK quest creation, property wiring, Story Manager node setup, and in-game event verification remain.
+- **Phase 3 script implementation (2026-05-11, completed 2026-05-14):** `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` were added and compiled cleanly. Router validates direct player kills, requires hostility evidence, classifies `ActorTypeNPC` as humanoid and `ActorTypeAnimal` as beast, then writes deity deltas through `PDV__ManagerQuest.AwardPiety()` only. CK quest creation, property wiring, Story Manager node setup with `Shares Event`, and SEQ generation are complete. Runtime verification now covers the hostile bandit route (`event 2`, Kyne `+0.5`), hostile wolf route (`event 1`, Kyne `-3.0`), neutral-kill rejection, rapid dual-kill accumulation, and dawn consolidation/clamping through the intended scratch-to-persistent path.
 - **Local Codex skills (2026-05-11):** Updated/rebuilt `pdv-doc-sync` to use `AGENTS.md` rather than `CLAUDE.md` as canonical, and added `pdv-papyrus-ck` for PDV Papyrus/CKPE compile, property wiring, Story Manager, and console-test guardrails. Both are packaged as `.skill` files and installed under `C:\Users\Admin\.codex\skills`.
 - **PDV local toolchain (2026-05-12):** Added `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs`. The compiler directly spawns the real .NET CLI `PapyrusCompiler.exe` with short canonical flags (`-f`, `-i`, `-o`), compiles stale/all/targeted active PDV scripts into `Devotion\Scripts`, treats warnings as failures, and runs the verifier after successful compiles. It does not use `ScriptCompile.bat`, PowerShell, or the CK compile menu. The verifier uses the Anvil MO2 MCP Mutagen bridge plus filesystem/profile checks to catch CK wiring drift, stale scripts, SEQ issues, CK output shadow files, and Phase 3 Story Manager readiness. Default verifier mode treats pending Phase 3 records as TODO; `--strict-phase3` promotes those TODOs to failures.
 - **Race architecture interrogation pass (2026-05-13):** The remaining race architecture work was locked in `references/PDV_RaceArchitecture_DesignReference.md`. Imperial, Khajiit, Bosmer, Redguard, Orc, and Argonian now have explicit current-era theological models, curse behavior, and practical Skyrim-facing interpretations. Quest and faction choices were also elevated to first-class devotion signals across the locked races, with ambient behavior acting as slower background drift rather than the only source of meaning.
 - **Pre-matrix reward and system contract (2026-05-13):** `references/PDV_RaceArchitecture_DesignReference.md` now defines the requirements for the race signal matrix: modest cumulative passive baseline blessings, passive contextual favors, religious privileges, no activatable power kit, optional MCM, SKSE/PapyrusUtil core dependency posture, standalone core design, no new quest content for first release, signal cost classes, cadence, anti-farm rules, survival overlap, and later Requiem/survival compatibility tracking.
 - **Daedric worship architecture baseline (2026-05-13):** Section 11 of `references/PDV_RaceArchitecture_DesignReference.md` is now locked as a Prince-first architecture. Daedric paths reuse the Tier 0-3 spine with Daedric labels, require commitment signals before real progression, use `boon / price / stigma` contracts, stay mostly event-driven, and let race modify stigma, entry threshold, interpretation, and faith friction. Native-integrated exceptions are Azura/Azurah, Boethiah/Boethra, Mephala/Mafala, and Malacath/Mauloch; Bosmer Herma-Mora is explicitly not treated as Hermaeus Mora in the Daedric layer.
 - **Phase 4 matrix pass (2026-05-13):** Added `references/phase4/PDV_Phase4_MatrixScaffold.md`, `PDV_RaceSignalMatrix.csv`, `PDV_StanceMatrix.csv`, `PDV_DaedricRacePrinceMatrix.csv`, and `PDV_MatrixCrossValidation.md` as the first implementation-facing design set for Phase 4. The pass stays first-release scoped, preserves locked race-specific architecture instead of flattening to one patron model, and records intentional stance-vs-Daedric taxonomy differences rather than forcing false consistency. Mirrored copies were also published to `D:\Wabbajack\modlists\Anvil\mods\Devotion\Design\Phase4\`.
+- **Anvil MO2 MCP Codex intake (2026-05-14):** Interrogated `D:\Wabbajack\modlists\Anvil\plugins\Anvilmo2_mcp` for Codex use and documented the usable tool surface in `references/PDV_Anvil_MO2_MCP_Intake.md`. Codex config already points to `http://127.0.0.1:27015/mcp`; the server must still be started from MO2 before `mo2_*` tools appear. The plugin was adjusted to label the server generically, check Codex config on server start, use `Devotion` as the MCP output mod default, and point `tool_paths.json` at Anvil's real Papyrus compiler/source paths. `BSArch.exe` is now installed for BSA/BA2 archive tools; `nif-tool.exe` remains the only confirmed missing optional binary.
+- **Skyrim modding lessons intake (2026-05-14):** Archived external practical lessons at `archive/Skyrim_Modding_Lessons_2026-05-14.md` and folded the actionable rules into PDV standards, Papyrus guidance, setup notes, and the local Papyrus/CK skill. Load-bearing additions: strict player-facing ASCII, Papyrus string/docstring/parser limits, no assumed `StringUtil.Replace`, save-baked new-game retesting, grep-before-delete hygiene, and dialogue/faction gate discipline for later race modules.
+- **Expanded Skyrim lessons intake (2026-05-14):** Archived the fuller follow-up at `archive/Skyrim_Modding_Lessons_Full_2026-05-14.md` and folded additional rules into the working docs/skill: Papyrus array/operator limits, chained cast avoidance, CK condition-name differences, location/hold detection cautions, one-backend-per-key storage discipline, JContainers FormID storage, dialogue line length, SEQ regeneration after dialogue edits, MCM OID storage, CSF filename caveat, and trace/debug cleanup conventions.
 - **Session learnings (2026-05-11):** Practical CK/MO2 workflow is now better understood and should be treated as the project default until disproven:
-  - **CK executable path:** The Anvil MO2 instance launches CKPE through `D:\Wabbajack\modlists\Anvil\Stock Game\ckpe_loader.exe` (set in `ModOrganizer.ini`). Do not assume plain Steam CK.
+  - **CK launch path:** Open `D:\Wabbajack\modlists\Anvil\Anvil.exe`, select `Creation Kit` in the MO2 executable dropdown, then press `Run`. MO2 then launches CKPE through `D:\Wabbajack\modlists\Anvil\Stock Game\ckpe_loader.exe` (set in `ModOrganizer.ini`). Do not launch `ckpe_loader.exe` directly for PDV CK work, because CK needs MO2's virtual filesystem and output routing.
   - **CK ini path:** The active CK config for this setup is `D:\Wabbajack\modlists\Anvil\Stock Game\CreationKit.ini` (with `CreationKitCustom.ini` as an optional overlay in the same folder), not the usual Documents path.
   - **SSE source layout:** For this setup, vanilla source scripts and `TESV_Papyrus_Flags.flg` live under `D:\Wabbajack\modlists\Anvil\Stock Game\Data\Source\Scripts`. Do not assume LE-style or other folder variants.
   - **New scripts may need manual compile before CK sees them:** CKPE could see `PDV__ManagerQuest` but not fresh scripts like `PDV_DeityBase` / `PDV_Deity_Kyne` until `.pex` files existed. If CK offers only `Add New Script`, first verify whether the corresponding `.pex` has been compiled into `Devotion\Scripts\`.
@@ -310,17 +321,29 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
     3. `D:\Wabbajack\modlists\Anvil\mods\PapyrusUtil AE - Scripting Utility Functions\Scripts\Source`
     4. `D:\Wabbajack\modlists\Anvil\mods\SKSE Script Sources - Compile Only\scripts\source`
   - **Papyrus API gotchas confirmed by compile:** `Actor.GetName()` was not valid in the attempted context; `continue` is not a Papyrus keyword; variables/properties cannot shadow known type names such as `ActorBase` or `Message`; `SendModEvent` should not be assumed available/necessary without verification.
+  - **Papyrus parser/string gotchas:** Valid string literal escapes are limited to `\\` and `\"`; `\n`, `\r`, and `\t` are not safe in `.psc` strings. `{...}` docstrings belong only directly after declarations and should not contain literal `{`; use `;` comments inside control flow.
+  - **Papyrus language/naming/helper gotchas:** Short locals can collide with known script/type names, including `key`, `form`, `actor`, and `cell`; locals also cannot shadow script properties. `StringUtil.Replace`, `Math.max`, `Math.min`, ternary expressions, string interpolation, and string `+=` are unavailable. Arrays cannot be variable-sized and cap at 128; treat function-local arrays with suspicion if compile behavior looks stale.
+  - **Papyrus cast and API-source gotchas:** Split chained casts into intermediate variables. Before using a new function from JContainers, PO3, UIExtensions, StorageUtil, PapyrusUtil, or any plugin API, open the shipped `.psc` and verify the exact signature.
   - **CK property friction:** Manual property filling is painful. Prefer `Auto-Fill` wherever property names match record EditorIDs, and reduce CK-only scalar properties in future script design where safe.
   - **FormList editing in CKPE:** `PDV_FLST_AllDeities` accepted drag-and-drop of the `PDV_Deity_Kyne` quest record from the Object Window. The `Edit` button was not the add-entry path in this setup.
   - **SEQ guidance:** Adding a new `Start Game Enabled` quest still means generating a SEQ file. Use xEdit for SEQ generation even if CKPE handled the quest and FormList edits successfully.
-  - **Skyrim console source of truth:** Use `PDV_SkyrimConsoleReference.md` / UESP Skyrim console docs. Do not use Fallout-style shortcuts like `cqf`; Skyrim testing should use commands like `SetPQV`, `SQV`, `StopQuest`, `StartQuest`, and globals inspection instead.
+  - **Dialogue SEQ guidance:** Adding or changing dialogue also requires regenerating SEQ before testing, or dialogue may not fire until save/reload noise masks the issue.
+  - **Skyrim console source of truth:** Use `PDV_SkyrimConsoleReference.md` / UESP Skyrim console docs. Do not use Fallout-style arbitrary `cqf` snippets; Skyrim testing should use commands like `SetPQV`, `SQV`, `StopQuest`, `StartQuest`, named-function `cqf` only if deliberately exposed, and globals inspection instead.
+  - **Console function call caveat:** If a future harness uses `cqf`, it can only call named quest script functions; it cannot evaluate arbitrary Papyrus snippets. PDV's current validated path remains the `SetPQV` poll harness.
   - **CK output target:** The CK output target was changed to the `Devotion` mod. This is the correct setup for this project. Avoid outputting to a separate scratch mod while actively editing PDV scripts.
   - **Shadow-source risk:** `Anvil - Creation Kit Output` previously shadowed `PDV__ManagerQuest.psc` with a stale duplicate. If CK seems to ignore recent script edits, check for duplicate `PDV_*` sources in other enabled mods first.
   - **Cleanup performed:** Stale `QF_PDV__ManagerQuest_*` fragment artifacts were removed from `Anvil - Creation Kit Output`. Keeping CK output pointed at `Devotion` remains the correct setup.
   - **Phase 2 test harness direction:** The validated harness is poll-based inside `PDV__ManagerQuest` itself, using `DebugCommand`, `DebugIndex`, and `DebugValue` plus `OnUpdate()` every 1 second. The earlier stage-fragment plan was abandoned because CKPE fragment binding was unreliable in this setup.
   - **Phase 3 Story Manager direction:** Use quest script Story Manager events (`OnStoryKillActor`) through a small receiver quest rather than stage fragments or trying to "subscribe" the persistent router directly. Keep `Shares Event` checked so PDV does not consume events needed by other mods.
   - **Phase 3 Papyrus safety:** Guard all `ObjectReference` -> `Actor` casts before calling actor functions. `IsHostileToActor(None)` is documented as crash-risk, so never call it without a verified player/victim actor. Prefer CK-wired `Keyword` properties such as `ActorTypeNPC` / `ActorTypeAnimal` over SKSE `HasKeywordString()` for classification.
+  - **CK condition naming:** CK condition functions are not always named like Papyrus methods. For example, Papyrus `IsDead()` maps to CK condition `GetDead`; verify the condition editor side separately.
+  - **Location/hold detection:** Do not assume `Cell.GetCurrentLocation()`, vanilla SSE `Location.IsContainedIn()`, or broad `Location.HasCommonParent()` solve hold detection. Prefer walking `Location.GetParent()` from an event-provided/current location against CK-bound hold `Location` properties.
   - **Console timing rule:** `SetPQV` commands only take effect after closing the console and letting the game run briefly. Enter one `DebugCommand` at a time, close the console, wait 2-3 seconds, then inspect results.
+  - **Save-bake testing rule:** After changing Papyrus scripts, impossible behavior should be retested from a new game or main-menu `coc qasmoke` path before assuming the source logic is wrong.
+  - **Player-facing string rule:** Anything the player sees must be ASCII-only. Avoid curly quotes, em/en dashes, ellipses, bullets, and other multibyte punctuation in dialogue, MCM, notifications, books, and message boxes.
+  - **Dialogue/faction rule:** For later dialogue-heavy race content, use separate eligible/current states or a single faction with meaningful ranks, gate every relevant topic explicitly, keep related `Link To` chains in the same branch, avoid Force-Activate for normal Hello topics, and keep dialogue lines under 80 characters.
+  - **Storage backend rule:** StorageUtil remains the default for PDV state. If JContainers is introduced later, keep StorageUtil, JFormDB, JDB/JArray, and live actor values distinct per key; store FormIDs rather than Actor/Form references in long-lived JArray/JDB collections.
+  - **MCM/CSF caveats:** Future SkyUI MCM option builders must store returned OIDs for event handling. If PDV ever uses Custom Skills Framework, the ESP filename in the CSF JSON must exactly match the plugin filename or lookups can silently fail.
   - **Overwrite hygiene:** Runtime `.log` files and empty screenshot folders in `D:\Wabbajack\modlists\Anvil\overwrite` were confirmed safe to delete and should not be moved into `Devotion`.
 
 ## Session Notes
@@ -330,16 +353,23 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 - `PDV_DeityBase.psc`, `PDV_Deity_Kyne.psc`, and `PDV__ManagerQuest.psc` all reached a compile-ready state for SSE after fixing invalid Papyrus assumptions and adding the missing SKSE import source.
 - `PDV__ManagerQuest.psc` now contains the validated Phase 2 debug harness intended for in-game verification via poll-based `SetPQV` commands.
 - In-game testing confirmed correct behavior for activation, mirror globals, dawn clamp, and tier threshold transition.
-- `PDV_Phase2_CK_Steps.md` and `PDV_Phase2_Summary.md` were updated to match the poll-based harness and to stop referencing invalid `cqf` or unreliable fragment-driven testing flows.
+- `PDV_Phase2_CK_Steps.md` and `PDV_Phase2_Summary.md` were updated to match the poll-based harness and to stop relying on arbitrary `cqf` snippets or unreliable fragment-driven testing flows.
 - `references/PAPYRUS_KNOWLEDGE_INTAKE.md` is now explicitly part of project context and should inform future Papyrus scripting decisions.
 
 ### 2026-05-12 verifier tool
 
 - Added `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs` as the first PDV-specific local toolchain.
 - `node .\tools\pdv_compile.mjs --all` rebuilt `PDV__ManagerQuest`, `PDV_DeityBase`, `PDV_Deity_Kyne`, `PDV_ActionRouter`, and `PDV__SM_KillActor` with `0 error(s), 0 warning(s)`, then ran the verifier successfully.
-- Current normal verifier run reports no hard failures, with Phase 3 quest/Story Manager CK wiring still surfaced as TODO.
-- Current strict Phase 3 run fails on the expected missing `PDV_ActionRouter`, `PDV__SM_KillActor`, and Story Manager records until CK wiring is complete.
-- The verifier also currently warns about two unnamed Global records, stale manager QF fragment VMAD metadata, and SEQ freshness/location drift.
+- Current strict Phase 3 verifier run reports no hard failures or TODOs after CK wiring and SEQ generation.
+- The verifier still warns about two unnamed Global records, stale manager QF fragment VMAD metadata, the missing old QF fragment file, and the now-empty xEdit SEQ output location after moving the generated SEQ into `Devotion\Seq`.
+
+### 2026-05-14 Phase 3 CK wiring and runtime verification complete
+
+- Created and wired `PDV_ActionRouter` as a Start Game Enabled persistent service quest with manager, FormList, debug global, player, and ActorType keyword properties assigned.
+- Created and wired `PDV__SM_KillActor` as a non-Start-Game-Enabled Story Manager receiver quest with `PDV_Router` pointing to `PDV_ActionRouter`.
+- Added the receiver under Story Manager Kill Actor with `Shares Event` checked, saved `PlayerDevotion_Framework.esp`, generated SEQ, and moved `PlayerDevotion_Framework.seq` into `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\`.
+- Enabled Papyrus logging in the `Devotion Dev` profile INIs, then verified runtime logs for Kyne patron activation, hostile bandit scoring (`event 2`, `+0.5` scratch), hostile wolf scoring (`event 1`, `-3.0` scratch), neutral-kill rejection, rapid dual-kill accumulation, and dawn consolidation/clamping.
+- `node .\tools\pdv_verify.mjs --strict-phase3` now reports `FAIL=0, WARN=0, TODO=0` after xEdit cleanup (orphan globals removed, stale Manager QF metadata removed, SEQ refreshed).
 
 ### 2026-05-13 race architecture wrap-up
 

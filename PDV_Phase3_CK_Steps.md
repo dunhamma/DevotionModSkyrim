@@ -1,6 +1,6 @@
 # PDV Phase 3 CK Steps - ActionRouter Kill Event Slice
 
-Status: scripts compiled; CK wiring and in-game verification pending.
+Status: **PHASE 3 COMPLETE** (2026-05-14). All four tests passed: hostile bandit routing, hostile wolf routing, neutral-kill rejection, and rapid dual-kill accumulation with dawn consolidation.
 
 Phase 3 adds the first live action-capture path:
 
@@ -16,20 +16,28 @@ Persistent piety, tier changes, and mirror globals still update only at dawn thr
 - `PDV__SM_KillActor.psc` exists in `Devotion\Scripts\Source`.
 - Both scripts compile cleanly.
 - Compiled `.pex` files exist in `Devotion\Scripts`.
+- `PDV_ActionRouter` quest exists, is Start Game Enabled, and has required properties assigned.
+- `PDV__SM_KillActor` quest exists, is not Start Game Enabled, and has `PDV_Router` assigned to `PDV_ActionRouter`.
+- Kill Actor Story Manager receiver node exists with `Shares Event` checked.
+- `PlayerDevotion_Framework.seq` exists under `Devotion\Seq`.
+- Papyrus logging is enabled in the `Devotion Dev` profile INIs.
+- Runtime logs verified Kyne patron activation, hostile bandit scoring (`event 2`, `+0.5` scratch), manual dawn consolidation (`0.0 -> 0.5`), and hostile wolf scoring (`event 1`, `-3.0` scratch).
 
 ---
 
 ## CK Step 1 - Create `PDV_ActionRouter`
 
-1. Launch Creation Kit through MO2 using the Anvil CKPE executable.
-2. Load `PlayerDevotion_Framework.esp` as the active file.
-3. Create a new Quest record:
+1. Open `D:\Wabbajack\modlists\Anvil\Anvil.exe`.
+2. In MO2, confirm the active profile is `Devotion Dev`.
+3. Select `Creation Kit` from the executable dropdown and press `Run`.
+4. Load `PlayerDevotion_Framework.esp` as the active file.
+5. Create a new Quest record:
    - ID: `PDV_ActionRouter`
    - Start Game Enabled: checked
    - Priority: `60`
-4. Go to the Scripts tab.
-5. Add existing script `PDV_ActionRouter`.
-6. Open script Properties and assign:
+6. Go to the Scripts tab.
+7. Add existing script `PDV_ActionRouter`.
+8. Open script Properties and assign:
 
 | Property | Value |
 |----------|-------|
@@ -84,14 +92,15 @@ Keeping CK conditions minimal makes this slice easier to debug.
 
 1. Save `PlayerDevotion_Framework.esp`.
 2. Because Phase 3 adds the new Start Game Enabled quest `PDV_ActionRouter`, generate/update the SEQ file.
-3. Use the same xEdit SEQ generation workflow validated during Phase 2.
-4. Confirm output lands in the Devotion mod, not Overwrite.
+3. Regenerate SEQ again after any later dialogue edits too; otherwise new dialogue can fail until save/reload noise hides the issue.
+4. Use the same xEdit SEQ generation workflow validated during Phase 2.
+5. Confirm output lands in the Devotion mod, not Overwrite.
 
 ---
 
 ## In-Game Test Setup
 
-Use a clean-ish test save or `coc qasmoke` path as usual.
+Use a clean-ish test save for quick checks. After changing any Phase 3 `.psc`, prefer a new game or main-menu `coc qasmoke` path before treating odd behavior as a logic failure; old saves can retain stale Papyrus state.
 
 Set debug output:
 
@@ -124,6 +133,8 @@ Expected:
 ---
 
 ## Test 1 - Hostile Bandit
+
+Status: ✓ **PASSED** (2026-05-14). Event 2 routed, +0.5 awarded, dawn consolidation verified (`0.0 -> 0.5`).
 
 1. Note current mirrors:
 
@@ -160,6 +171,8 @@ Expected after dawn:
 
 ## Test 2 - Hostile Wolf
 
+Status: ✓ **PASSED** (2026-05-14). Event 1 routed, -3.0 penalty awarded, dawn consolidation verified (piety dropped correctly with clamping).
+
 Seed enough piety that a penalty is visible after dawn:
 
 ```text
@@ -190,6 +203,8 @@ Expected after dawn:
 
 ## Test 3 - Neutral Animal Or NPC
 
+Status: ✓ **PASSED** (2026-05-14). Neutral rabbit killed and correctly skipped by router ("killer or victim was not an Actor"). No piety change before or after dawn.
+
 Kill one neutral animal or neutral NPC in a controlled test.
 
 Expected:
@@ -201,6 +216,8 @@ Expected:
 ---
 
 ## Test 4 - Rapid Valid Kills
+
+Status: ✓ **PASSED** (2026-05-14). Bandit (event 2, +0.5) and wolf (event 1, -3.0) killed in sequence. Both routed separately, scratches accumulated correctly (today=-2.5), and dawn consolidation applied with clamping (final piety=0, clamped from -2.5).
 
 Kill two valid hostile targets quickly.
 

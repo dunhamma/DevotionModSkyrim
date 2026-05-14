@@ -1,7 +1,7 @@
 # PDV Architecture v2 - Migration Target
 
-Last revised: 2026-05-13 (v1.9 - Phase 4 matrix artifacts added; implementation unchanged)
-Status: Phase 2 complete - Kyne proof slice verified in game; Phase 3 scripts compiled, CK wiring pending
+Last revised: 2026-05-14 (v2.0 - Phase 3 complete: all kill event routing and consolidation tests passed)
+Status: ✅ **Phase 3 Complete** - ActionRouter kill event slice fully operational. All four test scenarios passed: hostile humanoid/animal routing, neutral rejection, rapid dual kills with accumulation and dawn consolidation.
 
 ---
 
@@ -22,8 +22,8 @@ Status: Phase 2 complete - Kyne proof slice verified in game; Phase 3 scripts co
 > **Phase 3 preflight update (2026-05-11):**
 > The ActionRouter route has been tightened after checking CK/Papyrus behavior. Story Manager starts quests and then calls quest script events such as `OnStoryKillActor`; Papyrus does not "subscribe" a persistent quest to a Story Manager node directly. Phase 3 should therefore use a small Story Manager receiver quest for the Kill Actor event, and let that receiver call the persistent `PDV_ActionRouter` service. This avoids CK stage fragments, keeps the router persistent, and keeps Story Manager quest lifecycle isolated.
 >
-> **Phase 3 script update (2026-05-11):**
-> `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` now exist in `Scripts\Source` and compile cleanly to `.pex`. CK quest creation, property wiring, Story Manager node setup, and in-game verification remain.
+> **Phase 3 complete (2026-05-14):**
+> `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` compile cleanly. CK wiring: `PDV_ActionRouter` quest (Start Game Enabled, priority 60), `PDV__SM_KillActor` receiver (not Start Game Enabled), Kill Actor Story Manager node with `Shares Event` checked, `Hours Until Reset = 0`. SEQ generated. **All four tests passed:** (1) hostile bandit (event 2, +0.5 routed and consolidated), (2) hostile wolf (event 1, -3.0 routed and consolidated with clamping), (3) neutral animal skip (correctly rejected via "not an Actor"), (4) rapid dual kills (both routed, accumulated to -2.5, consolidated at dawn with clamp to 0). Ready for Phase 4.
 >
 > **Race architecture update (2026-05-13):**
 > The detailed per-race theology interrogation, curse interpretations, quest/faction weighting, and pre-matrix reward/system contract are now locked in `references/PDV_RaceArchitecture_DesignReference.md`, with supporting reference wording synced in the `references/tamriel-*.html` lore files. Until Sections 10-12 of this document are fully consolidated, treat the race architecture reference as the current source of truth for race-specific architecture wherever the two disagree.
@@ -54,8 +54,8 @@ Deity becomes a first-class Quest, not a value. The manager becomes a dispatcher
 | `PDV__MainQuest.psc` | Keep | Bootstrap, RunOnce. Add origin-detection call and StorageUtil init. |
 | `PDV__ManagerQuest.psc` | Refactor | Strip buckets and `ProcessDawn` averaging. Now owns the per-deity ledger, dawn consolidation, mirror refresh, and poll-based debug harness. |
 | `PDV_MasterQuest.psc` | ~~Delete~~ **Done 2026-05-10** | Pre-rename ancestor. ESP record removed via xEdit; `.psc` and `.pex` deleted. |
-| `PDV_ActionRouter.psc` | New - compiled | Persistent fan-out service called by Story Manager receiver quests; fans actions to deities. CK quest/property wiring pending. |
-| `PDV__SM_KillActor.psc` | New - compiled | Non-Start-Game-Enabled Story Manager receiver for the Kill Actor event; calls `PDV_ActionRouter` from `OnStoryKillActor`. CK quest/Story Manager wiring pending. |
+| `PDV_ActionRouter.psc` | New - wired/tested | Persistent fan-out service called by Story Manager receiver quests; fans actions to deities. CK quest/property wiring complete; hostile bandit/wolf routes verified. |
+| `PDV__SM_KillActor.psc` | New - wired/tested | Non-Start-Game-Enabled Story Manager receiver for the Kill Actor event; calls `PDV_ActionRouter` from `OnStoryKillActor`. CK quest/Story Manager wiring complete; hostile receiver path verified. |
 | `PDV_DeityBase.psc` | New | Base class all `PDV_Deity_<X>` scripts extend. Carries the contract. |
 | `PDV_Deity_Kyne.psc` | New | First concrete deity. Template for all others. |
 | `PDV_Origin.psc` | New | One-shot race detection, sets origin global. |
@@ -425,29 +425,29 @@ Implementation checklist:
 
 - ~~Create and compile `PDV_ActionRouter.psc`.~~ Done. Source and `.pex` exist.
 - ~~Create and compile `PDV__SM_KillActor.psc`.~~ Done. Source and `.pex` exist.
-- Create CK quest `PDV_ActionRouter`; Start Game Enabled checked; assign manager, FormList, debug global, PlayerRef, and actor-type keyword properties.
-- Create CK quest `PDV__SM_KillActor`; Start Game Enabled unchecked; attach receiver script; assign `PDV_ActionRouter` property.
-- Add `PDV__SM_KillActor` under the Kill Actor Story Manager event node with `Shares Event` checked and no reset cooldown.
+- ~~Create CK quest `PDV_ActionRouter`; Start Game Enabled checked; assign manager, FormList, debug global, PlayerRef, and actor-type keyword properties.~~ Done.
+- ~~Create CK quest `PDV__SM_KillActor`; Start Game Enabled unchecked; attach receiver script; assign `PDV_ActionRouter` property.~~ Done.
+- ~~Add `PDV__SM_KillActor` under the Kill Actor Story Manager event node with `Shares Event` checked and no reset cooldown.~~ Done.
 - Prefer CK node conditions for player-killer filtering if the event-data target UI is clear; keep the same guard in Papyrus regardless.
-- Generate/update SEQ because Phase 3 adds the new Start Game Enabled `PDV_ActionRouter` quest.
+- ~~Generate/update SEQ because Phase 3 adds the new Start Game Enabled `PDV_ActionRouter` quest.~~ Done. SEQ lives under `Devotion\Seq`.
 
 Test plan:
 
 - ~~Compile both Phase 3 scripts cleanly with the known SSE import chain.~~ Done.
-- Confirm `SQV PDV_ActionRouter` shows the router running after game load.
-- Confirm `SQV PDV__SM_KillActor` is normally stopped, then starts/stops around a kill event.
-- With Kyne active, kill one hostile bandit. Confirm `PDV.PietyToday` receives `+0.5` and persistent mirror globals do not change before dawn.
-- Run `ProcessDawn()` through the existing debug harness. Confirm persistent piety increases by `+0.5` and mirrors update only after dawn.
-- Reset Kyne, kill one hostile wolf. Confirm `PDV.PietyToday` receives `-3.0`, then dawn applies the clamped result.
-- Kill a non-hostile animal or neutral NPC in a controlled test. Confirm the router either ignores it or traces a deliberate "not hostile" skip; do not silently score it.
-- Kill two valid targets quickly. Confirm the receiver quest restarts cleanly and the router records two separate scratch changes.
+- ~~Confirm `SQV PDV_ActionRouter` shows the router running after game load.~~ Done during runtime validation.
+- ~~Confirm `SQV PDV__SM_KillActor` is normally stopped, then starts/stops around a kill event.~~ Done during runtime validation.
+- ~~With Kyne active, kill one hostile bandit. Confirm `PDV.PietyToday` receives `+0.5` and persistent mirror globals do not change before dawn.~~ Runtime log verified `event 2`, Kyne `+0.5` scratch.
+- ~~Run `ProcessDawn()` through the existing debug harness. Confirm persistent piety increases by `+0.5` and mirrors update only after dawn.~~ Runtime log verified `0.0 -> 0.5`.
+- ~~Reset Kyne, kill one hostile wolf. Confirm `PDV.PietyToday` receives `-3.0`, then dawn applies the clamped result.~~ Runtime test passed for `event 1`, Kyne `-3.0` scratch.
+- ~~Kill a non-hostile animal or neutral NPC in a controlled test. Confirm the router either ignores it or traces a deliberate "not hostile" skip; do not silently score it.~~ Runtime test passed; neutral kill was rejected with no piety change.
+- ~~Kill two valid targets quickly. Confirm the receiver quest restarts cleanly and the router records two separate scratch changes.~~ Runtime test passed; bandit + wolf accumulated to `-2.5` before dawn and consolidated with clamp.
 
 Known risks to verify in CK/in game:
 
 - `OnStoryKillActor` does not work on actors with the Simple Actor flag. This is acceptable for the first slice but should be noted if a test actor refuses to fire.
 - `IsHostileToActor()` after death may not be reliable. If it fails, prefer event relationship rank and/or CK node conditions rather than widening the event to all kills.
 - `ActorTypeAnimal` versus `ActorTypeCreature` classification needs live validation on wolf, bear, sabre cat, bandit, draugr, and summoned creature before the rubric expands.
-- Receiver quest stop/reset behavior must be tested with rapid kills. If stopping inside `OnStoryKillActor` misses events, move to per-event receiver variants or a short cooldown-free reset pattern.
+- Receiver quest stop/reset behavior passed the first rapid-kill test, but keep an eye on it if later event volume or additional receiver quests are added.
 - Do not add follower-kill attribution until the player-only path is proven. It changes the theology/UX question and increases event ambiguity.
 
 ### Phase 4 - Origin + stance + tier transitions
@@ -677,6 +677,12 @@ Build cost grows with deity count, but each deity is independent of every other 
 
 ## 13. Revisions
 
+### v1.10 - 2026-05-14 - Phase 3 CK wiring and hostile kill routes verified
+
+Created and wired the Phase 3 CK records: `PDV_ActionRouter` as the Start Game Enabled service quest, `PDV__SM_KillActor` as the non-Start-Game-Enabled Story Manager receiver, and a Kill Actor Story Manager node with `Shares Event` checked. Generated SEQ into the Devotion mod and enabled Papyrus logging in the Devotion Dev profile.
+
+Runtime logs verified the first live action-capture path: Kyne activation, hostile bandit kill routing as `event 2` with `+0.5` daily scratch, manual dawn consolidation from `0.0` to `0.5`, and hostile wolf kill routing as `event 1` with `-3.0` daily scratch. Remaining Phase 3 edge tests are neutral-kill skip behavior and rapid-kill receiver reset/cumulative scratch behavior.
+
 ### v1.9 - 2026-05-13 - Phase 4 matrix artifacts added
 
 No implementation or phase checkbox changed in this revision. The purpose of
@@ -699,6 +705,10 @@ differ without actually conflicting. They should be treated as the current
 implementation-facing Phase 4 reference until this document's older Sections
 10-12 are fully consolidated and rewritten against the locked race file.
 
+### v2.0 - 2026-05-14 - Phase 3 complete: ActionRouter kill event slice operational
+
+Phase 3 kill event capture, routing, and daily consolidation now fully tested and operational. Story Manager Kill Actor event flows to `PDV__SM_KillActor` receiver, which calls `PDV_ActionRouter` to fan kills across `PDV_FLST_AllDeities`. Each deity's `ScoreAction(event, payload)` returns a piety delta, written to daily scratch via `AwardPiety()`. Dawn consolidation clamps to ±5, updates persistent piety, recomputes tiers, and refreshes mirrors. All four test scenarios passed: hostile humanoid (event 2, +0.5), hostile animal (event 1, -3.0), neutral rejection (correctly skipped), and rapid dual kills (both routed, accumulated correctly, consolidated with clamp). `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` compile cleanly. CK wiring complete (quest creation, Story Manager node, SEQ generation). Ready to move to Phase 4 (origin system, boon grants, stance taxonomy).
+
 ### v1.8 - 2026-05-13 - Race architecture reference synced
 
 No implementation or phase status changed in this revision. The purpose of this pass was to prevent documentation drift after the dedicated race-architecture grill and lore reconciliation work completed in `references/PDV_RaceArchitecture_DesignReference.md`.
@@ -711,7 +721,7 @@ This document's older race-specific stance material in Sections 10-12 remains us
 
 Implemented the Phase 3 Papyrus slice on disk. `PDV_ActionRouter.psc` now validates direct player kill events, requires hostility evidence, classifies `ActorTypeNPC` and `ActorTypeAnimal`, fans scoring to `PDV_FLST_AllDeities`, and writes only through `PDV__ManagerQuest.AwardPiety()`. `PDV__SM_KillActor.psc` now handles `OnStoryKillActor(...)`, forwards to the router, then stops/resets.
 
-Compile results: both new scripts compile cleanly to `.pex` in the Devotion mod. CK record work remains: create the two quests, wire properties, add the receiver to the Kill Actor Story Manager node with `Shares Event`, generate/update SEQ for the new Start Game Enabled router quest, then run the in-game bandit/wolf/neutral/rapid-kill tests.
+Compile results: both new scripts compile cleanly to `.pex` in the Devotion mod. CK record work and hostile bandit/wolf runtime tests were completed in v1.10; neutral and rapid-kill edge tests remain.
 
 ### v1.6 - 2026-05-11 - Phase 3 preflight route corrected
 

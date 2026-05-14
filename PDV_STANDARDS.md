@@ -37,6 +37,8 @@ ARCHIVE = frozen historical record. Currently:
 - `archive/HOUSECARL_DOC_HYGIENE.md`
 - `archive/HOUSECARL_MCP_AUTHORING.md`
 - `archive/HOUSECARL_SKILL_AUTHORING.md`
+- `archive/Skyrim_Modding_Lessons_2026-05-14.md` - frozen external practical Skyrim/Papyrus lessons intake
+- `archive/Skyrim_Modding_Lessons_Full_2026-05-14.md` - expanded frozen external practical Skyrim/Papyrus lessons intake
 
 **Immutability:** Files in `archive/` are not edited after first commit. If a fact in an archive doc is wrong, the correction goes in the relevant LIVING doc — not back into the archive. The archive is a timestamped record; editing it retroactively makes the historical record unreliable.
 
@@ -120,7 +122,8 @@ Anything the player will read at any point is a description-engineering surface.
 3. **Concrete over abstract.** "Frost resistance +25% in Eastmarch" beats "Improved cold tolerance in your homeland."
 4. **Cap at ~200 chars for tooltips, ~500 for MCM descriptions.** Forces precision; respects screen space.
 5. **No version markers, no phase tags, no `[DEPRECATED]` left behind.** (See § 2.2, § 2.5.)
-6. **No emojis or decorative Unicode.** Tokens cost nothing to the engine but degrade tone.
+6. **ASCII-only player-facing text.** Skyrim can mangle multibyte characters in UI/dialogue/message pipelines. Use straight quotes, `...`, `--`, `-`, and `*`; avoid curly quotes, em/en dashes, ellipses, bullets, and emojis.
+7. **Dialogue line discipline.** Keep spoken dialogue lines under 80 characters where possible, and prefer Skyrim-style full forms over modern contractions.
 
 ### 3.3 Worked examples
 
@@ -151,6 +154,7 @@ Same rules apply, scaled down:
 - Always prefixed `[PDV]` (already in setup doc).
 - State the event + key value(s). Past tense, concrete.
 - One line per trace.
+- Temporary debugging traces use `DBG` in the trace text and a nearby `; DEBUG - remove before release` source comment so they can be found and stripped together.
 
 **Conforms:** `Debug.Trace("[PDV] ProcessDawn: DevotionLevel " + before + "->" + after + ", dailyShift " + shift)`
 
@@ -187,6 +191,16 @@ CK shows what you intend; xEdit shows what's actually on disk. They diverge surp
 
 `PDV_Development` profile is for iteration — extra mods, debug spell, full traces. `PDV_Testing` is the clean profile that mirrors what a player would have. **Final verification happens on `PDV_Testing`.** A change that passes only on Development is not yet shipped.
 
+### 4.5 Respect save-baked script state
+
+When Papyrus behavior looks impossible after a script change, retest from a new game or a main-menu `coc qasmoke` path before rewriting logic. Old saves can retain stale script instances and properties, so a loaded save may be testing yesterday's state against today's source.
+
+### 4.6 Tooling reality check
+
+If `node` is not on PATH in a PowerShell session, run PDV tools via the Codex-bundled Node runtime:
+
+`C:\Users\Admin\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe`
+
 ---
 
 ## 5. Decision Logging
@@ -221,7 +235,11 @@ If files in MO2-managed mod folders change via Bash, an external editor, or any 
 
 Treat Papyrus warnings as errors during dev. A `.psc` that compiles with warnings ships warnings. Many warnings are real (unused property, mismatched cast, suspicious comparison) — fix them at authoring time.
 
-### 6.5 Strip debug before release
+### 6.5 Search before removal
+
+Before removing a Papyrus function, property, magic string, or shared block, recursively search the whole active source tree for every symbol it defines or relies on. Papyrus compile failures from half-removed shared flags often surface far from the actual deletion.
+
+### 6.6 Strip debug before release
 
 Trace messages and the debug spell are dev tools. Either remove them or gate them behind a `bDebugMode` global in MCM before any public release. A player's `Papyrus.0.log` filling with `[PDV]` traces is a defect, not a feature.
 
@@ -296,12 +314,14 @@ First line of the return must be `Running on: <model name>`. If it doesn't match
 
 ## 8. Source Material
 
-The four files under `archive/` are the inherited HOUSECARL_*.md standards from a prior project (an MCP server for Bethesda mod analysis). They are the source material this standard distills from. They contain more detail than PDV needs day-to-day, but if a question arises that this file doesn't cover, they're the next layer to consult — particularly:
+The files under `archive/` are frozen source material. The inherited HOUSECARL_*.md standards came from a prior project (an MCP server for Bethesda mod analysis), while later dated intake notes preserve external lessons after their actionable rules are folded into living docs. If a question arises that this file doesn't cover, they're the next layer to consult — particularly:
 
 - `archive/HOUSECARL_DOC_HYGIENE.md` — the full anti-pattern catalog (AP-1 through AP-7) and rationale for each rule in § 1–§ 2 above.
 - `archive/HOUSECARL_AGENT_PROTOCOL.md` — the full conductor/executor pattern, PROGRESS.md format, and self-verification protocol if multi-agent work ever scales up.
 - `archive/HOUSECARL_SKILL_AUTHORING.md` — source material for PDV's local Codex skills. Current skill sources live under `skills/`; keep them concise and specific to repeated PDV workflow pain.
 - `archive/HOUSECARL_MCP_AUTHORING.md` — applies only if PDV ever grows a tooling MCP component. Currently out of scope.
+- `archive/Skyrim_Modding_Lessons_2026-05-14.md` — external practical Skyrim/Papyrus lesson intake. Its actionable rules are folded into this standards doc, `AGENTS.md`, `PDV_MOD_SETUP.md`, `references/PAPYRUS_KNOWLEDGE_INTAKE.md`, and the PDV Papyrus/CK skill.
+- `archive/Skyrim_Modding_Lessons_Full_2026-05-14.md` — expanded external lesson intake covering compile workflow, arrays, dialogue, storage backends, JContainers, debug traces, MCM OIDs, CSF, and runtime identity patterns.
 
 **Don't copy text from the archive into LIVING docs verbatim.** If a rule from the archive should apply to PDV, restate it scoped to PDV and cite the archive as source. Verbatim copies create the parallel-doc-drift problem § 2.1 exists to prevent.
 

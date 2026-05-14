@@ -7,6 +7,27 @@
 
 ---
 
+## PDV Practical Parser Notes
+
+These project-local rules come from the 2026-05-14 external Skyrim modding lessons intake and should be treated as authoring guardrails alongside API-source verification:
+
+- Papyrus string literal escapes are very limited. Use only `\\` and `\"`; do not write `\n`, `\r`, or `\t` into `.psc` strings.
+- Papyrus docstring blocks (`{...}`) belong immediately after `ScriptName`, `Property`, `Function`, or `Event` declarations only. Do not place them inside control flow, and do not paste JSON-like examples with literal `{` inside docstrings.
+- `StringUtil` has no built-in `Replace`. Avoid string substitution in hot paths; if needed, implement and compile-test a manual scan/rebuild helper.
+- Papyrus lacks several familiar conveniences: no ternary operator, no string interpolation, no string `+=`, no `Math.max`/`Math.min`, no variable-sized arrays, and arrays cap at 128 elements. Treat local arrays inside functions as suspect if compile output or behavior looks stale.
+- Split chained casts into separate variables; chained forms such as `(value as int as float)` are not safe Papyrus.
+- Avoid short local/property names that collide with script or type names. Known pain includes `key`, `form`, `actor`, `cell`, `ActorBase`, and `Message`; prefer explicit names such as `targetActor` or `targetForm`.
+- Local variables cannot safely shadow script properties. If a property such as `PlayerRef` exists, use it directly or choose a distinct local name.
+- `Utility.Wait()` inside paused UI/input paths resumes only when the game unpauses, which can release queued duplicate handlers in a burst.
+- Topic Info fragments compile in a narrow CK-bound scope. Prefer quest properties the CK can auto-bind, and avoid assuming a fragment can directly see manager script variables.
+- CK condition function names are not always Papyrus method names. Example: Papyrus `IsDead()` corresponds to CK condition `GetDead`; verify both sides before writing CK instructions.
+- For hold/location work, avoid unverified convenience methods. `Cell.GetCurrentLocation()` and vanilla SSE `Location.IsContainedIn()` are not safe assumptions, and `Location.HasCommonParent()` is too broad for hold detection. Prefer walking parent locations against CK-bound hold `Location` properties.
+- `cqf`/CallQuestFunction only calls named quest script functions. PDV's validated debug path remains the `SetPQV` poll harness unless a new named-function dispatcher is deliberately added.
+- Retest script behavior from a new game or main-menu `coc qasmoke` path when save-baked state may be masking the current source.
+- Pick one persistence backend per key. Do not read a key through JFormDB if writers use StorageUtil, or vice versa. For long-lived JArray/JDB collections, store integer FormIDs and resolve with `Game.GetForm()` instead of storing Actor/Form objects directly.
+
+---
+
 ## 1. Why this exists
 
 Q12 pulled SKSE source READ into v1.0 as a free byproduct of file-level VFS (Q7). Once Claude can read user-modlist `.psc` files, every script Claude reads will be calling Papyrus functions defined in some combination of:

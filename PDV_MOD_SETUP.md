@@ -14,6 +14,7 @@
 | `PDV_MOD_SETUP.md` | This file — dev environment and architecture reference |
 | `tools/pdv_compile.mjs` | PapyrusCompiler wrapper for stale/all/targeted PDV script compiles |
 | `tools/pdv_verify.mjs` | Read-only verifier for Anvil/MO2/ESP/script wiring drift |
+| `references/PDV_Anvil_MO2_MCP_Intake.md` | Codex-facing intake for the Anvil MO2 MCP plugin and optional tool status |
 
 ---
 
@@ -136,7 +137,7 @@ No other arguments needed for standard development.
 
 PDV now has a local compiler wrapper for terminal/Codex work: `tools\pdv_compile.mjs`. It spawns the real Anvil SSE `.NET` CLI `PapyrusCompiler.exe` directly with canonical args:
 
-```powershell
+```text
 PapyrusCompiler.exe <script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>
 ```
 
@@ -185,18 +186,19 @@ D:\Wabbajack\modlists\Anvil\mods\Devotion\
 
 ### Compile workflow
 
-1. Launch CK through MO2 (required - CK needs MO2's virtual filesystem to see mod files)
+1. Launch `D:\Wabbajack\modlists\Anvil\Anvil.exe`, select `Creation Kit` in MO2, and press `Run` (required - CK needs MO2's virtual filesystem and output routing)
 2. Edit source scripts under `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source`
 3. Run `node .\tools\pdv_compile.mjs` from `C:\Users\Admin\Documents\Devotion Mod Project`
 4. Use `node .\tools\pdv_compile.mjs --script <ScriptName>` for targeted compiles, or `node .\tools\pdv_compile.mjs --all` for a full active-script rebuild
 5. Wire properties/records in CK when needed, then save the ESP
 6. Run `node .\tools\pdv_verify.mjs` after CK/ESP/SEQ/MO2 profile changes
+7. Regenerate SEQ after adding or changing dialogue before in-game testing
 
 ### PDV local toolchain workflow
 
 Run from `C:\Users\Admin\Documents\Devotion Mod Project`:
 
-```powershell
+```text
 node .\tools\pdv_compile.mjs
 node .\tools\pdv_compile.mjs --script PDV_ActionRouter
 node .\tools\pdv_compile.mjs --all
@@ -210,6 +212,10 @@ The compiler spawns `PapyrusCompiler.exe` directly with the project import chain
 
 The verifier is read-only. It checks expected Anvil paths, reads `PlayerDevotion_Framework.esp` through the Anvil MO2 MCP Mutagen bridge, validates baseline Phase 2 records and VMAD properties, checks script source/pex freshness, reports SEQ drift, confirms the active MO2 profile/load order, and looks for CK output shadow files. By default, unfinished Phase 3 CK wiring is reported as TODO; use `--strict-phase3` when Phase 3 should be treated as required.
 
+### Anvil MO2 MCP status
+
+Codex is configured for the Anvil MO2 MCP server at `http://127.0.0.1:27015/mcp` in `C:\Users\Admin\.codex\config.toml`. Start it from Anvil/MO2 with the `Start/Stop MCP Server` tool entry. Current local intake and optional binary status live in `references/PDV_Anvil_MO2_MCP_Intake.md`.
+
 Toolchain usage rules:
 - After any `.psc` edit, run `node .\tools\pdv_compile.mjs` or a targeted `--script` compile.
 - After CK/ESP changes, property wiring, FormList edits, SEQ generation, or MO2 profile edits, run `node .\tools\pdv_verify.mjs`.
@@ -218,6 +224,19 @@ Toolchain usage rules:
 ### VS Code Papyrus extension role
 
 Editor-only: syntax highlighting, hover info, intellisense, debug attach. Not the build path.
+
+### Papyrus authoring gotchas
+
+Keep these in mind before blaming CKPE or MO2 for compile weirdness:
+
+- Papyrus string literals only reliably escape `\\` and `\"`. Do not put `\n`, `\r`, or `\t` in `.psc` strings.
+- `{...}` docstrings belong immediately after `ScriptName`, `Property`, `Function`, or `Event` declarations. Use `;` comments inside control flow, and avoid JSON-like literal `{` examples in docstrings.
+- `StringUtil.Replace` does not exist. Avoid string substitution in runtime paths unless a manual helper has been compile-tested.
+- Papyrus has no ternary operator, string interpolation, string `+=`, `Math.max`, or `Math.min`. Arrays cannot be sized by variables and cap at 128 elements.
+- Split chained casts into named intermediate variables. Do not rely on `(value as int as float)` style expressions.
+- Do not use short names that may collide with type/script names (`key`, `form`, `actor`, `cell`, `ActorBase`, `Message`) or local names that shadow script properties. Prefer explicit local names such as `targetActor`.
+- If a script edit behaves impossibly on an existing save, retest from a new game or main-menu `coc qasmoke` path before redesigning the logic.
+- If `SKI_ConfigBase.pex` ever appears in `Devotion\Scripts` after a compile, delete it and fix the compile target list. PDV's wrapper should compile PDV scripts only; this file appearing would indicate accidental SkyUI source compilation.
 
 ---
 
@@ -364,7 +383,7 @@ tai
 tcl
 ```
 
-> **Note:** `cgf` only works on Papyrus functions marked `global`. Instance functions on quest scripts (like `AwardPiety`) cannot be called from console directly. Use `set <global> to <value>` to force test states via the mirror globals.
+> **Note:** `cgf` only works on Papyrus functions marked `global`. `cqf` only calls named functions that exist on the quest script; it does not evaluate arbitrary Papyrus snippets. Instance functions on quest scripts (like `AwardPiety`) cannot be called from console directly unless a deliberate named debug dispatcher is added. PDV's current validated debug path remains the `SetPQV` poll harness and globals inspection.
 
 ---
 
@@ -434,7 +453,30 @@ Rules:
 
 Current script status:
 - `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` compile cleanly.
-- CK quest creation, property assignment, Kill Actor node wiring, SEQ generation, and in-game verification remain.
+- CK quest creation, property assignment, Kill Actor node wiring, and SEQ generation are complete.
+- Runtime verification passed for hostile bandit scoring (`event 2`, Kyne `+0.5` scratch), hostile wolf scoring (`event 1`, Kyne `-3.0` scratch), neutral-kill rejection, rapid dual-kill accumulation, and manual dawn consolidation/clamping.
+
+---
+
+## Future Dialogue, MCM, and Storage Notes
+
+Dialogue:
+- Dialogue topics live inside Quest forms, not as top-level Object Window records.
+- CK condition names are not always Papyrus method names. Example: Papyrus `IsDead()` maps to CK condition `GetDead`.
+- Keep related `Link To` chains in the same branch when possible; cross-branch links can fail if the target branch conditions do not pass independently.
+- Hello topics auto-fire by proximity. Do not use Force-Activate for normal Hello greetings.
+- Keep dialogue lines under 80 characters where possible, and regenerate SEQ after dialogue edits.
+
+Storage:
+- Pick one backend per key. Do not write with StorageUtil and read with JFormDB or JDB/JArray.
+- StorageUtil remains the PDV default for per-deity and per-form state.
+- If JContainers is introduced later, store integer FormIDs in long-lived JArray/JDB collections and resolve with `Game.GetForm(formId)` when a live Form/Actor is needed.
+- For JDB, use plain keys with `setObj` and dot-prefixed paths with `solveObj`; do not create nested dot paths through `setObj`.
+
+MCM and skill systems:
+- SkyUI MCM option builders return OIDs. Store each OID from `AddSliderOption`, `AddMenuOption`, `AddToggleOption`, etc., or event handlers cannot reliably identify which option fired.
+- Keep MCM minimal: enable/disable, hotkeys, verbosity/difficulty, and a small number of genuinely player-facing toggles.
+- If PDV later uses Custom Skills Framework, the ESP filename in the CSF JSON must match the plugin filename exactly. Mismatch can make skill/perk lookups fail silently.
 
 ---
 
@@ -453,8 +495,8 @@ Follow this sequence. Do not skip ahead.
       PDV__ManagerQuest refactored with AwardPiety/GetPiety/RecomputeTier/RefreshPatronMirrors
 [x] Phase 2 — PDV_DeityBase + PDV_Deity_Kyne; PDV_FLST_AllDeities; ProcessDawn loop;
       CK compile/wiring/runtime verification complete
-[~] Phase 3 — PDV_ActionRouter + PDV__SM_KillActor scripts compiled;
-      CK wiring and in-game Story Manager verification pending
+[x] Phase 3 — PDV_ActionRouter + PDV__SM_KillActor complete;
+      CK wiring, Story Manager routing, SEQ, and runtime verification all passed
 [ ] Phase 4 — PDV_Origin, stance taxonomy, rivalry ledger, tier boon grants
 [ ] Phase 5 — MCM
 [ ] Phase 6 — Talos (second deity; proof of scalability)
@@ -485,6 +527,12 @@ Check whether the change is in `PDV.PietyToday` or persistent `PDV.Piety`. Runti
 
 **Story Manager hook firing more than once:**  
 For repeatable live events such as kills, duplicates are not handled with one-shot globals. Confirm the receiver quest stops/resets after dispatch, then test rapid kills to verify exactly one routed action per valid kill.
+
+**Parser errors that point at the wrong line:**
+Check for invalid string escapes (`\n`, `\r`, `\t`), misplaced `{...}` docstrings, literal `{` inside docstrings, or locals/properties shadowing a script/type name. Papyrus often reports the cascade rather than the original trigger.
+
+**Script behavior differs between saves:**
+Retest from a new game or main-menu `coc qasmoke` path. Skyrim save files can retain old script instances and property state after source changes.
 
 ---
 
@@ -537,6 +585,12 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-05-11 — Phase 3 scripts compiled:** `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` were added to `Scripts\Source` and compile to `.pex` in `Devotion\Scripts`. The first compile caught Papyrus name-shadowing issues (`ActorBase`, `Message`), which were fixed before final compile.
 
+**2026-05-14 - Phase 3 complete:** `PDV_ActionRouter` and `PDV__SM_KillActor` quest records are created and wired in `PlayerDevotion_Framework.esp`; the Kill Actor Story Manager receiver node exists with `Shares Event`; `PlayerDevotion_Framework.seq` is generated under `Devotion\Seq`; Papyrus logging is enabled in the `Devotion Dev` profile. Runtime verification passed for Kyne activation, hostile bandit scoring (`event 2`, `+0.5` scratch), hostile wolf scoring (`event 1`, `-3.0` scratch), neutral-kill rejection, rapid dual-kill accumulation, and dawn consolidation/clamping.
+
 **2026-05-11 — Local Codex skills:** `pdv-doc-sync` and `pdv-papyrus-ck` skill sources live under `skills\` in this docs project, are packaged as `.skill` files, and are installed under `C:\Users\Admin\.codex\skills`.
 
 **2026-05-12 — PDV local toolchain:** `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs` are the local health/build loop for the Anvil/Devotion setup. The compiler directly spawns the verified `PapyrusCompiler.exe` CLI with short `-f`, `-i`, and `-o` args, compiles active PDV scripts into `Devotion\Scripts`, treats warnings as failures, and runs the verifier after successful compiles. Normal verifier mode should remain useful during active implementation; strict Phase 3 mode intentionally fails until `PDV_ActionRouter`, `PDV__SM_KillActor`, and the Kill Actor Story Manager node exist in the ESP.
+
+**2026-05-14 - Anvil MO2 MCP Codex intake:** `references/PDV_Anvil_MO2_MCP_Intake.md` documents the local `Anvilmo2_mcp` plugin, the `mo2_*` tool surface, current Codex config, and optional tool status. Codex points at `http://127.0.0.1:27015/mcp`; the server must be started from MO2 before tools appear. The plugin is configured for Anvil's Papyrus compiler/source paths and uses `Devotion` as the MCP output mod default. `BSArch.exe` is installed for BSA/BA2 archive tools; `nif-tool.exe` remains the only confirmed missing optional binary.
+
+**2026-05-14 - Skyrim modding lessons intake:** Archived external practical lessons at `archive/Skyrim_Modding_Lessons_2026-05-14.md` and folded durable rules into the living docs and Papyrus/CK skill: player-facing ASCII, Papyrus string/docstring/parser limits, save-baked new-game retesting, grep-before-delete hygiene, `cqf` named-function limits, and future dialogue/faction gate discipline.

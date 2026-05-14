@@ -174,13 +174,19 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 [x] Phase 0 complete — PDV_MasterQuest deleted, rename to PDV__ManagerQuest clean
 [x] Phase 1 complete — StorageUtil data model, mirror globals declared and verified,
       PDV__ManagerQuest refactored (AwardPiety/GetPiety/RecomputeTier/RefreshPatronMirrors)
-[~] Phase 2 — Scripts complete (PDV_DeityBase, PDV_Deity_Kyne, ProcessDawn), CK wiring awaited
-      - PDV_DeityBase.psc (base class contract) ✓
-      - PDV_Deity_Kyne.psc (first concrete, rubric implemented) ✓
-      - PDV__ManagerQuest.psc (FormList integration, dawn loop) ✓
-      - PDV_Phase2_CK_Steps.md (complete walkthrough) ✓
-      - CK WORK REMAINING: compile scripts, create Kyne quest, set properties, wire FormList
-[ ] Phase 3 — PDV_ActionRouter + first Story Manager kill node
+[x] Phase 2 complete — Kyne proof slice verified in-game; deity-as-quest model validated
+      - PDV_DeityBase.psc ✓
+      - PDV_Deity_Kyne.psc ✓
+      - PDV__ManagerQuest.psc with ProcessDawn and FormList ✓
+      - CK wiring, FormList, dawn consolidation, tier crossing ✓
+[x] Phase 3 complete (2026-05-14) — ActionRouter kill event slice; all tests passed
+      - PDV_ActionRouter.psc ✓
+      - PDV__SM_KillActor.psc ✓
+      - Story Manager Kill Actor wiring ✓
+      - Test 1: Hostile bandit routing (+0.5) ✓
+      - Test 2: Hostile animal routing (-3.0) ✓
+      - Test 3: Neutral kill rejection ✓
+      - Test 4: Rapid dual kills + consolidation ✓
 [ ] Phase 4 — PDV_Origin, stance taxonomy, rivalry ledger, tier boon grants
 [ ] Phase 5 — MCM
 [ ] Phase 6 — Talos (second deity; proof of scalability)
@@ -204,3 +210,4 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 - **Phase 1 complete (2026-05-10):** Mirror globals declared in CK, verified in-game with `GetGlobalValue`. `PDV__ManagerQuest` refactored with `AwardPiety`/`GetPiety`/`RecomputeTier`/`RefreshPatronMirrors` API. Console command source of truth: `PDV_SkyrimConsoleReference.md` (UESP-sourced). Confirmed commands: `GetGlobalValue <var>` (read), `set <var> to <value>` (write).
 - **Deity-as-Quest model (2026-05-10):** Each deity is a standalone persistent quest form extending PDV_DeityBase, not hardcoded rules in the manager. Allows N deities to be added via FormList membership alone; no manager changes required. Scaling proof arrives in Phase 6 when Talos is duplicated. Scripts: PDV_DeityBase (contract), PDV_Deity_Kyne (first implementation), PDV__ManagerQuest (ProcessDawn loop), all complete and ready for CK wiring.
 - **Phase 2 script delivery (2026-05-10):** PDV_DeityBase.psc, PDV_Deity_Kyne.psc, and updated PDV__ManagerQuest.psc created and ready to compile. Detailed walkthrough: PDV_Phase2_CK_Steps.md. Summary: PDV_Phase2_Summary.md. All three scripts follow project conventions (PDV_ prefix, internal __ convention, full documentation headers, lore alignment via deity properties).
+- **Phase 3 complete (2026-05-14):** ActionRouter kill event slice verified end-to-end. Story Manager Kill Actor event → `PDV__SM_KillActor` receiver → `PDV_ActionRouter` dispatcher → deity `ScoreAction()` → `AwardPiety()` → daily scratch. All four test scenarios passed: hostile humanoid (+0.5), hostile animal (-3.0), neutral rejection, and rapid dual kills with correct accumulation and clamping at dawn consolidation. Ready to scale to Phase 4 (origin system, boon grants).
