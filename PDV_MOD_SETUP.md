@@ -291,8 +291,11 @@ All records use the prefix `PDV_`. Internal/machinery records add a double-under
 ```
 # Quest records
 PDV__MainQuest                internal: RunOnce bootstrap
+PDV_Origin                    internal: one-shot Phase 4 origin detector / seed helper
 PDV__ManagerQuest             internal: runtime ledger, mirrors, dawn consolidation
 PDV_Deity_[Name]              concrete deity quest
+PDV_Deity_Talos               hostile-path proof deity for Altmer/Talos defection slice
+PDV_Deity_AuriEl              minimal Altmer foundation deity / Talos rival target
 PDV_ActionRouter              persistent Phase 3 event fan-out service
 PDV__SM_KillActor             internal Phase 3 Story Manager receiver
 PDV_Race[Name]Quest           per-race tracking (in race ESP)
@@ -302,6 +305,7 @@ PDV_GLO_ActivePiety           active patron piety mirror
 PDV_GLO_ActiveTier            active patron tier mirror
 PDV_GLO_ActiveDeityIndex      active patron stable int, -1 = none
 PDV_GLO_OriginRace            Phase 4 race index
+PDV_GLO_PatronDeity           active patron cached identifier, 0 = none
 PDV_GLO_DebugLevel            trace verbosity
 PDV_GLO__Config_[Setting]     reserved MCM config prefix
 
@@ -431,6 +435,17 @@ Mirrors are write-only caches refreshed by `PDV__ManagerQuest.RefreshPatronMirro
 | `PDV_GLO_PatronDeity` | FormID of active patron. 0 = none |
 | `PDV_GLO_DebugLevel` | 0–3 trace verbosity, MCM-toggleable |
 
+Phase 4 implementation note:
+
+- `PDV_GLO_OriginRace` should default to `-1` in CK so `PDV_Origin.InitializeOrigin()` can detect "not initialized yet" safely.
+- `PDV_GLO_PatronDeity` is now written by `PDV__ManagerQuest.SetActiveDeity()`. It is a cache/helper global, not the canonical source of truth for patron state.
+
+Coupled Talos + Auri-El follow-on note:
+
+- `PDV_Origin` now uses a small script-constant seed table for `PDV_Kyne`, `PDV_Talos`, and `PDV_AuriEl`.
+- `PDV__ManagerQuest.AwardCuratedSignal()` is the intended reusable path for named shrine/quest/faction/devotional signals that do not belong in the broad event router.
+- Talos hostility should be verified against a real `PDV_Deity_AuriEl` ledger target, not a placeholder.
+
 ---
 
 ## Story Manager Hook Reference
@@ -497,7 +512,7 @@ Follow this sequence. Do not skip ahead.
       CK compile/wiring/runtime verification complete
 [x] Phase 3 — PDV_ActionRouter + PDV__SM_KillActor complete;
       CK wiring, Story Manager routing, SEQ, and runtime verification all passed
-[ ] Phase 4 — PDV_Origin, stance taxonomy, rivalry ledger, tier boon grants
+[~] Phase 4 — scripts/tooling landed; ESP/CK wiring and in-game proof still pending
 [ ] Phase 5 — MCM
 [ ] Phase 6 — Talos (second deity; proof of scalability)
 [ ] Debug spell created and tested
@@ -594,3 +609,9 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 **2026-05-14 - Anvil MO2 MCP Codex intake:** `references/PDV_Anvil_MO2_MCP_Intake.md` documents the local `Anvilmo2_mcp` plugin, the `mo2_*` tool surface, current Codex config, and optional tool status. Codex points at `http://127.0.0.1:27015/mcp`; the server must be started from MO2 before tools appear. The plugin is configured for Anvil's Papyrus compiler/source paths and uses `Devotion` as the MCP output mod default. `BSArch.exe` is installed for BSA/BA2 archive tools; `nif-tool.exe` remains the only confirmed missing optional binary.
 
 **2026-05-14 - Skyrim modding lessons intake:** Archived external practical lessons at `archive/Skyrim_Modding_Lessons_2026-05-14.md` and folded durable rules into the living docs and Papyrus/CK skill: player-facing ASCII, Papyrus string/docstring/parser limits, save-baked new-game retesting, grep-before-delete hygiene, `cqf` named-function limits, and future dialogue/faction gate discipline.
+
+**2026-05-15 - Phase 4 CK status:** The live ESP now contains most of the Phase 4 proof-slice surface: `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, Kyne stance wiring, and Kyne boon assignments. The remaining true Phase 4 blocker is `PDV__ManagerQuest.PDV_GLO_PatronDeity`, which was left unwired because CK repeatedly hung when opening the manager quest record. Current verifier failures beyond that property are Phase 6 follow-on expectations, not additional Kyne/bootstrap misses.
+
+**2026-05-15 - SkyUI CK header shim:** Repeated CK fatal errors traced back to a broken SkyUI source-store chain (`SKI_QuestBase` -> `SKI_ConfigBase` -> `SKI_ConfigManager`). For the `Devotion Dev` profile, a dedicated shim mod was added at `D:\Wabbajack\modlists\Anvil\mods\PDV - SkyUI CK Headers\` exposing `SKI_QuestBase.psc`, `SKI_ConfigBase.psc`, and `SKI_ConfigManager.psc` under `Source\Scripts\`. This is a CK-environment repair for source lookup only, not a runtime SkyUI upgrade. The profile modlist was backed up before enabling the shim.
+
+**2026-05-15 - Session closeout state:** `PDV_Phase5_CK_Steps.md` now exists as the manual walkthrough for the first MCM slice. `pdv_verify.mjs` still warns about an unnamed `MGEF` record (`PlayerDevotion_Framework.esp:03235B`, likely orphan residue) and an out-of-date `Devotion\Seq\PlayerDevotion_Framework.seq`. Recommended next-session order is: fresh MO2/CK restart, attempt `PDV__ManagerQuest` first, assign `PDV_GLO_PatronDeity`, refresh SEQ, rerun verifier, then decide whether to keep Phase 4 isolated or continue Phase 6 CK wiring.

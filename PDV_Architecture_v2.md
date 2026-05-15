@@ -1,7 +1,7 @@
 # PDV Architecture v2 - Migration Target
 
-Last revised: 2026-05-14 (v2.0 - Phase 3 complete: all kill event routing and consolidation tests passed)
-Status: ✅ **Phase 3 Complete** - ActionRouter kill event slice fully operational. All four test scenarios passed: hostile humanoid/animal routing, neutral rejection, rapid dual kills with accumulation and dawn consolidation.
+Last revised: 2026-05-14 (v2.2 - coupled Talos + Auri-El scripts/tooling landed; CK proof slices pending)
+Status: 🚧 **Phase 4/6 Partial** - Origin/bootstrap, stance, rivalry plumbing, Kyne proof logic, and the coupled Talos + Auri-El hostile-path scripts now compile cleanly on disk. Live CK/ESP wiring remains pending.
 
 ---
 
@@ -30,6 +30,15 @@ Status: ✅ **Phase 3 Complete** - ActionRouter kill event slice fully operation
 >
 > **Phase 4 matrix update (2026-05-13):**
 > The first implementation-facing matrix set now exists under `references/phase4/`: scaffold, race signal matrix, stance matrix, Daedric race-by-Prince matrix, and cross-validation note. Treat those files as the current working source for signal-family granularity, stance seeding, and Daedric race-response crosswalks until Sections 10-12 are fully rewritten to absorb them.
+>
+> **Phase 4 script/tooling update (2026-05-14):**
+> `PDV__MainQuest.psc`, `PDV_Origin.psc`, `PDV__ManagerQuest.psc`, `PDV_DeityBase.psc`, and `PDV_Deity_Kyne.psc` now compile cleanly with the Phase 4 framework changes in place. The compiler/verifier were updated to include the bootstrap/origin scripts and to fail or warn on the still-missing ESP surface: `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, Kyne stance values, and Kyne boon assignments. Treat the current phase state as **scripts/tooling complete, CK/ESP proof slice pending**.
+>
+> **Coupled Talos + Auri-El update (2026-05-14):**
+> `PDV_Deity_Talos.psc` and `PDV_Deity_AuriEl.psc` now compile cleanly as the first hostile-path follow-on slice. `PDV_Origin.psc` was generalized from a Kyne-only helper into a small multi-deity seed table, and `PDV__ManagerQuest.psc` now exposes `AwardCuratedSignal()` / `AwardCuratedSignalByIndex()` for curated devotional state signals. Rivalry now keys off the written stance-adjusted gain. The verifier was extended to require Talos/Auri-El records, FormList membership, stance rows, Talos rivalry wiring, and deity boon assignments once the CK layer is built.
+>
+> **Hybrid boon policy update (2026-05-14):**
+> The race-level boon policy is now locked in `references/PDV_RaceArchitecture_DesignReference.md` as an asymmetric hybrid model. Every race gets one foreground devotional layer, but only structurally layered religions keep a true persistent substrate. `Nord`, `Imperial`, `Breton`, and `Bosmer` should usually rely on privileges, contextual favors, and state tracks rather than a second passive boon layer. `Altmer`, `Redguard`, and `Orc` keep only light persistent layers. `Dunmer`, `Khajiit`, and `Argonian` keep the strongest substrates. Balance rule: most races should never feel like they have more than two meaningful always-on boon families at once.
 
 ### Current state (v1)
 
@@ -51,14 +60,16 @@ Deity becomes a first-class Quest, not a value. The manager becomes a dispatcher
 
 | File | Status | Notes |
 |------|--------|-------|
-| `PDV__MainQuest.psc` | Keep | Bootstrap, RunOnce. Add origin-detection call and StorageUtil init. |
-| `PDV__ManagerQuest.psc` | Refactor | Strip buckets and `ProcessDawn` averaging. Now owns the per-deity ledger, dawn consolidation, mirror refresh, and poll-based debug harness. |
+| `PDV__MainQuest.psc` | Keep - Phase 4 script complete | Bootstrap, RunOnce. `OnInit()` now calls `PDV_Origin.InitializeOrigin()`. |
+| `PDV__ManagerQuest.psc` | Refactor - Phase 4 script complete | Owns the per-deity ledger, dawn consolidation, mirror refresh, stance-aware scratch writes, rivalry plumbing, and poll-based debug harness. |
 | `PDV_MasterQuest.psc` | ~~Delete~~ **Done 2026-05-10** | Pre-rename ancestor. ESP record removed via xEdit; `.psc` and `.pex` deleted. |
 | `PDV_ActionRouter.psc` | New - wired/tested | Persistent fan-out service called by Story Manager receiver quests; fans actions to deities. CK quest/property wiring complete; hostile bandit/wolf routes verified. |
 | `PDV__SM_KillActor.psc` | New - wired/tested | Non-Start-Game-Enabled Story Manager receiver for the Kill Actor event; calls `PDV_ActionRouter` from `OnStoryKillActor`. CK quest/Story Manager wiring complete; hostile receiver path verified. |
-| `PDV_DeityBase.psc` | New | Base class all `PDV_Deity_<X>` scripts extend. Carries the contract. |
-| `PDV_Deity_Kyne.psc` | New | First concrete deity. Template for all others. |
-| `PDV_Origin.psc` | New | One-shot race detection, sets origin global. |
+| `PDV_DeityBase.psc` | New - Phase 4 refactor complete | Base class all `PDV_Deity_<X>` scripts extend. Now carries race-keyed stance data, rivalry metadata, and patron-only cumulative boon sync. |
+| `PDV_Deity_Kyne.psc` | New - Phase 4 proof slice script complete | First concrete deity. Template for all others; expects Nord-native / everyone-else-foreign stance wiring plus boon records in CK. |
+| `PDV_Deity_Talos.psc` | New - coupled slice script complete | First hostile-path proof deity. Uses curated Talos-facing defiance signals and one-way Altmer rivalry to Auri-El. |
+| `PDV_Deity_AuriEl.psc` | New - coupled slice script complete | Minimum viable Altmer foundation deity and real Talos rivalry target. |
+| `PDV_Origin.psc` | New - script complete | One-shot race detection, sets origin global, seeds Kyne proof slice. |
 | `PDV_MCM.psc` | New | SkyUI MCM, iterates `PDV_FLST_AllDeities`. |
 | `PDV_PlayerEvents.psc` | New (deferred) | Player-alias script for the ~20% of events Story Manager can't reach. Build only when needed. |
 
@@ -73,7 +84,7 @@ PDV__MainQuest          (bootstrap, runs once at game start)
 
 PDV__ManagerQuest       (Start-Game-Enabled, persistent)
   +- owns: PDV_FLST_AllDeities (FormList)
-  +- owns: PDV_GLO_OriginGroup, PDV_GLO_PatronDeity (the player's chosen patron)
+  +- owns: PDV_GLO_OriginRace, PDV_GLO_PatronDeity (the player's chosen patron)
   +- exposes: AwardPiety, RecomputeTier, GetTier, GetPiety, etc.
   +- optional dawn tick (decay only - keep scaffolding, drop averaging)
 
@@ -96,7 +107,8 @@ PDV_MCM                 (SkyUI menu)
   +- generates panels by iterating PDV_FLST_AllDeities
 
 PDV_Origin              (utility quest, fired by MainQuest)
-  +- reads player race -> sets PDV_GLO_OriginGroup once
+  +- reads player race -> sets PDV_GLO_OriginRace once
+  +- seeds Kyne proof-slice starting piety
 ```
 
 The two persistent quests (`ManagerQuest`, `ActionRouter`) plus N persistent `PDV_Deity_<X>` quests stay running for the life of the save. The bootstrap (`MainQuest`) and origin (`PDV_Origin`) are RunOnce.
@@ -467,10 +479,10 @@ Known risks to verify in CK/in game:
 
 ### Phase 6 - Second deity (Talos)
 
-- Duplicate `PDV_Deity_Kyne.psc` as `PDV_Deity_Talos.psc`. Rewrite rubric.
-- Add to FormList.
-- Add Talos's Story Manager triggers as needed (most reuse Kyne's).
-- This is the proof that the architecture pays back its complexity. Adding deity #2 should be ~hours, not days.
+- Coupled slice: `PDV_Deity_Talos.psc` plus `PDV_Deity_AuriEl.psc`.
+- Talos proves hostile-path rivalry against a real Auri-El ledger target.
+- Keep first-pass Talos signals curated and CK/state driven rather than broad event-router expansion.
+- This is the proof that the architecture pays back its complexity under ideological conflict, not just deity duplication.
 
 ### Phase 7+ - Remaining deities, ritual quests, tier-3 questlines
 
@@ -482,8 +494,8 @@ Out of scope for this migration document.
 
 Things this plan doesn't pin down - flag for future revisit:
 
-- **Boon revocation on patron-change.** Does swapping patron immediately strip prior boons, or grace-period? UX call.
-- **Boon-grant policy.** Permissive (every tier = 1 deity grants its boons, stacking) vs. patron-exclusive (only patron's boons activate, but switching patrons re-activates pre-built relationships) vs. rivalry-aware hybrid. Affects how powerful long-running characters become. Recommend patron-exclusive for the brief's "harder to earn powers" feel; revisit before Phase 4.
+- **Boon revocation on patron-change.** Resolved for the Phase 4 proof slice: swapping patron immediately strips the old patron's live boon spells. Stored piety/tier remain.
+- **Boon-grant policy.** Resolved for the Phase 4 proof slice: deity boon spells are patron-only, but cumulative by tier for the active patron. Later race substrate implementation should follow the locked asymmetric hybrid boon policy in `references/PDV_RaceArchitecture_DesignReference.md`.
 - **Decay model.** Linear daily decay if untouched? Decay only past Devoted? Decay disabled at Champion? All viable; defer until Phase 1 is in saves and the feel is testable.
 - **Storage migration.** When v1 saves are loaded into v2 mod, what happens to the old `PDV_GLO_DevotionLevel`? Probably ignored - Kyne piety reseeds from origin. Document this as a save-game gotcha.
 - **Failure mode if PapyrusUtil missing.** Hard fail with notification, or fall back to N globals? Recommend hard fail - PapyrusUtil is universal in modded Skyrim.
@@ -788,3 +800,11 @@ Cost: ~30 lines of refresh glue on the manager. Three additional global records 
 ### v1.0 - 2026-05-09 - Initial draft
 
 Created from the v1 codebase review. Established Deity-as-Quest abstraction, ActionRouter pattern, StorageUtil per-deity store, six-phase migration plan.
+
+### v2.3 - 2026-05-15 - Phase 4 CK pass status and CK stability note
+
+This revision records the live CK status after the first substantial Phase 4 ESP wiring pass. The framework side of the proof slice is now mostly present in `PlayerDevotion_Framework.esp`: `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, Kyne's stance row, and Kyne's three boon assignments are all verifier-visible in the live plugin. The remaining true Phase 4 hard fail is the missing `PDV_GLO_PatronDeity` property assignment on `PDV__ManagerQuest`.
+
+The other current verifier failures are not additional Phase 4 design misses; they are Phase 6 spillover because the script/tooling surface already treats `PDV_Deity_Talos`, `PDV_Deity_AuriEl`, and the related `PDV_Origin` properties as expected follow-on records. Current warnings are an older-than-ESP `PlayerDevotion_Framework.seq` and one unnamed `MGEF` record in the ESP that appears to be orphan residue rather than an intended boon record.
+
+Implementation note: Creation Kit stability, not architecture ambiguity, is now the main blocker. CK repeatedly hung while opening `PDV__ManagerQuest`. Separately, repeated fatal errors revealed a broken SkyUI source-store chain, so a dedicated shim mod was introduced for the `Devotion Dev` profile to expose `SKI_QuestBase.psc`, `SKI_ConfigBase.psc`, and `SKI_ConfigManager.psc` under `Source\Scripts\` for CK lookup. This repair is part of the documented dev environment, not a change to PDV runtime architecture.

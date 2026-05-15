@@ -8,6 +8,22 @@ The mod is designed for roleplayers who want mechanically meaningful, lore-accur
 
 ---
 
+## Agent skills
+
+### Issue tracker
+
+Issues for this repo live in GitHub Issues for `dunhamma/DevotionModSkyrim`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+This repo uses the default Matt Pocock engineering-skill triage labels. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+This repo should be treated as a single-context project; skills should read the repo-level context and architecture docs relevant to the task. See `docs/agents/domain.md`.
+
+---
+
 ## Project File Map
 
 | File | Role | Use When |
@@ -22,6 +38,8 @@ The mod is designed for roleplayers who want mechanically meaningful, lore-accur
 | `PDV_Phase2_CK_Steps.md` | **NEW** — Detailed CK walkthrough for Phase 2 deity quest creation and FormList wiring | Completing Phase 2 CK work |
 | `PDV_Phase2_Summary.md` | **NEW** — Phase 2 architecture summary, design decisions, testing checklist | Understanding Phase 2 completeness and next steps |
 | `PDV_Phase3_CK_Steps.md` | **NEW** — Detailed CK walkthrough for Phase 3 ActionRouter and Kill Actor Story Manager wiring | Completing Phase 3 CK wiring and in-game tests |
+| `PDV_Phase4_CK_Steps.md` | **NEW** — Detailed CK walkthrough for Phase 4 origin globals, bootstrap, stance data, and Kyne boon wiring | Completing Phase 4 CK work |
+| `PDV_Phase6_Talos_AuriEl_CK_Steps.md` | **NEW** — Detailed CK walkthrough for the coupled Talos + Auri-El hostile-path proof slice | Completing Talos/Auri-El CK work |
 | `PDV_SkyrimConsoleReference.md` | UESP-sourced console command reference (source of truth) | Any in-game testing or debugging |
 | `references/PDV_Anvil_MO2_MCP_Intake.md` | Codex-facing intake of the Anvil MO2 MCP plugin, tool surface, optional binaries, and local setup status | Using or troubleshooting `mo2_*` tools from Codex |
 | `references/PAPYRUS_KNOWLEDGE_INTAKE.md` | Papyrus API/reference strategy, source-layer cautions, and BellCube/SKSE intake notes | Any Papyrus scripting, API lookup, or tooling/ref-generation planning |
@@ -48,25 +66,35 @@ Script folder layout (CK toolchain):
 ```
 Devotion\
   Scripts\
+    PDV__MainQuest.pex
+    PDV_Origin.pex
     PDV__ManagerQuest.pex     ← compiled output
     PDV_ActionRouter.pex
     PDV__SM_KillActor.pex
     PDV_DeityBase.pex
     PDV_Deity_Kyne.pex
+    PDV_Deity_Talos.pex
+    PDV_Deity_AuriEl.pex
     Source\
       PDV__ManagerQuest.psc   ← source (edit here, compile via CK)
+      PDV_Origin.psc
       PDV_ActionRouter.psc
       PDV__SM_KillActor.psc
       PDV_DeityBase.psc
       PDV_Deity_Kyne.psc
+      PDV_Deity_Talos.psc
+      PDV_Deity_AuriEl.psc
       PDV__MainQuest.psc
 ```
 
 Quest scripts (current):
-- `PDV__MainQuest.psc` — RunOnce bootstrap stub.
-- `PDV__ManagerQuest.psc` — Phase 2 functional alignment complete and verified in game: per-deity StorageUtil API, patron mirror refresh, FormList-backed `ProcessDawn`, debug global property wiring, and poll-based debug harness.
-- `PDV_DeityBase.psc` — **NEW (Phase 2)** Base class contract for all deity scripts. Properties for identity, tier thresholds, origin multipliers, boon spells. Virtual functions: `ScoreAction()`, `OnTierChange()`, `OnPatronStart()`, `OnPatronEnd()`.
-- `PDV_Deity_Kyne.psc` — **NEW (Phase 2)** First concrete deity implementation. Kyne-specific rubric: -3 for slaughtering beasts, +0.5 for humanoid combat, +0.25 for shouting, +0.5 for sleeping outdoors.
+- `PDV__MainQuest.psc` — RunOnce bootstrap quest. **Phase 4 script complete on disk:** calls `PDV_Origin.InitializeOrigin()` from `OnInit()` once CK record/property wiring exists.
+- `PDV_Origin.psc` — **NEW (Phase 4)** One-shot origin helper. Detects player race, writes `PDV_GLO_OriginRace`, and seeds the Kyne proof slice.
+- `PDV__ManagerQuest.psc` — **Phase 4 script complete on disk:** stance-aware `AwardPiety()`, non-recursive rivalry plumbing, patron-only boon handling, FormList-backed `ProcessDawn`, and poll-based debug harness. CK property `PDV_GLO_PatronDeity` still needs wiring.
+- `PDV_DeityBase.psc` — **Phase 4 refactor complete on disk:** race-keyed stance properties, rivalry metadata, and cumulative patron-only boon sync. Replaces the Phase 2 origin-multiplier floats.
+- `PDV_Deity_Kyne.psc` — **Phase 4 proof slice on disk:** same Kyne rubric as before, now expected to use the simple Nord-native / everyone-else-foreign stance row plus CK-authored boon spells.
+- `PDV_Deity_Talos.psc` — **NEW (coupled follow-on slice)** First hostile-path proof deity. Curated Talos-facing defiance signals only; Altmer hostility should rival Auri-El one-way.
+- `PDV_Deity_AuriEl.psc` — **NEW (coupled follow-on slice)** Minimum viable Altmer foundation deity and real rivalry target for Talos. Seeded for Altmer, but still follows patron-only boon rules.
 - `PDV_ActionRouter.psc` — **NEW (Phase 3)** Persistent service quest that fans validated player kill actions to all deities via `ScoreAction()`; compiles cleanly, CK quest/property wiring complete, hostile bandit/wolf runtime paths verified.
 - `PDV__SM_KillActor.psc` — **NEW (Phase 3)** Non-Start-Game-Enabled Story Manager receiver quest for `OnStoryKillActor`; compiles cleanly, CK quest/Story Manager wiring complete, receiver path verified by hostile kill events.
 
@@ -83,7 +111,7 @@ node .\tools\pdv_compile.mjs --all
 node .\tools\pdv_compile.mjs --list
 ```
 
-`pdv_compile.mjs` compiles active PDV scripts whose `.pex` output is missing or older than source. `--script` targets one or more scripts, and `--all` rebuilds the active script set. It spawns `PapyrusCompiler.exe` directly with canonical CLI args (`<script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>`), not `ScriptCompile.bat`, PowerShell, or the CK menu. Papyrus warnings are treated as failures by default. After a successful compile, the compiler runs `pdv_verify.mjs` unless `--skip-verify` is supplied.
+`pdv_compile.mjs` compiles active PDV scripts whose `.pex` output is missing or older than source. The active set now includes `PDV__MainQuest`, `PDV_Origin`, `PDV_Deity_Talos`, and `PDV_Deity_AuriEl` for the current coupled proof slice. `--script` targets one or more scripts, and `--all` rebuilds the active script set. It spawns `PapyrusCompiler.exe` directly with canonical CLI args (`<script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>`), not `ScriptCompile.bat`, PowerShell, or the CK menu. Papyrus warnings are treated as failures by default. After a successful compile, the compiler runs `pdv_verify.mjs` unless `--skip-verify` is supplied.
 
 ```text
 node .\tools\pdv_verify.mjs
@@ -91,7 +119,7 @@ node .\tools\pdv_verify.mjs --json
 node .\tools\pdv_verify.mjs --strict-phase3
 ```
 
-The verifier checks the Anvil/Devotion paths, reads `PlayerDevotion_Framework.esp` through the Anvil MO2 MCP Mutagen bridge, validates baseline Phase 2 records/properties, reports Phase 3 CK wiring as TODO by default, checks script source/pex freshness, detects CK output shadow files, checks SEQ state, and confirms the active MO2 profile/load order. It is diagnostic only and must not write to the ESP or MO2 profile files.
+The verifier checks the Anvil/Devotion paths, reads `PlayerDevotion_Framework.esp` through the Anvil MO2 MCP Mutagen bridge, validates the current Phase 4 baseline records/properties plus the Talos/Auri-El follow-on records, checks Phase 3 receiver/router wiring, checks script source/pex freshness, detects CK output shadow files, checks SEQ state, and confirms the active MO2 profile/load order. It now explicitly fails or warns when the live ESP is missing `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, `PDV_Deity_Talos`, `PDV_Deity_AuriEl`, expected stance rows, Talos rivalry wiring, or deity boon assignments. It is diagnostic only and must not write to the ESP or MO2 profile files.
 
 Toolchain usage rules:
 - After editing any PDV `.psc`, run `node .\tools\pdv_compile.mjs` or `node .\tools\pdv_compile.mjs --script <ScriptName>`.
@@ -275,9 +303,25 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
       - SEQ generated under Devotion\Seq ✓
       - VERIFIED IN GAME: Kyne activation, hostile bandit +0.5 scratch, hostile wolf -3 scratch,
         neutral-kill rejection, rapid dual-kill accumulation, and manual dawn consolidation/clamping
-[ ] Phase 4 — PDV_Origin, stance taxonomy, rivalry ledger, tier boon grants
+[~] Phase 4 — framework scripts/tooling landed; CK/ESP wiring and in-game proof slice still pending
+      - `PDV__MainQuest.psc` + `.pex` bootstrap implementation ✓
+      - `PDV_Origin.psc` + `.pex` origin detection / Kyne seed helper ✓
+      - `PDV__ManagerQuest.psc` stance-aware scratch + rivalry plumbing ✓
+      - `PDV_DeityBase.psc` race-keyed stance + patron-only cumulative boon sync ✓
+      - `PDV_Deity_Kyne.psc` proof-slice script update ✓
+      - `PDV_Phase4_CK_Steps.md` manual CK walkthrough ✓
+      - `tools/pdv_compile.mjs` / `tools/pdv_verify.mjs` Phase 4 coverage ✓
+      - REMAINING: create `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`,
+        Kyne stance property wiring, and Kyne boon records in the ESP
 [ ] Phase 5 — MCM
-[ ] Phase 6 — Talos (second deity; proof of scalability)
+[~] Phase 6 — coupled Talos + Auri-El hostile-path proof slice landed in script/tooling; CK wiring pending
+      - `PDV_Deity_Talos.psc` + `.pex` ✓
+      - `PDV_Deity_AuriEl.psc` + `.pex` ✓
+      - `PDV_Origin.psc` generalized to small multi-deity seed table ✓
+      - `PDV__ManagerQuest.AwardCuratedSignal*()` helper path ✓
+      - verifier coverage for Talos/Auri-El + rivalry expectations ✓
+      - REMAINING: real quest records, FormList entries, stance property wiring, Talos rival list,
+        and Talos/Auri-El boon records in the ESP
 [ ] Debug spell working
 [ ] Nord module complete
 ```
@@ -305,8 +349,11 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 - **PDV local toolchain (2026-05-12):** Added `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs`. The compiler directly spawns the real .NET CLI `PapyrusCompiler.exe` with short canonical flags (`-f`, `-i`, `-o`), compiles stale/all/targeted active PDV scripts into `Devotion\Scripts`, treats warnings as failures, and runs the verifier after successful compiles. It does not use `ScriptCompile.bat`, PowerShell, or the CK compile menu. The verifier uses the Anvil MO2 MCP Mutagen bridge plus filesystem/profile checks to catch CK wiring drift, stale scripts, SEQ issues, CK output shadow files, and Phase 3 Story Manager readiness. Default verifier mode treats pending Phase 3 records as TODO; `--strict-phase3` promotes those TODOs to failures.
 - **Race architecture interrogation pass (2026-05-13):** The remaining race architecture work was locked in `references/PDV_RaceArchitecture_DesignReference.md`. Imperial, Khajiit, Bosmer, Redguard, Orc, and Argonian now have explicit current-era theological models, curse behavior, and practical Skyrim-facing interpretations. Quest and faction choices were also elevated to first-class devotion signals across the locked races, with ambient behavior acting as slower background drift rather than the only source of meaning.
 - **Pre-matrix reward and system contract (2026-05-13):** `references/PDV_RaceArchitecture_DesignReference.md` now defines the requirements for the race signal matrix: modest cumulative passive baseline blessings, passive contextual favors, religious privileges, no activatable power kit, optional MCM, SKSE/PapyrusUtil core dependency posture, standalone core design, no new quest content for first release, signal cost classes, cadence, anti-farm rules, survival overlap, and later Requiem/survival compatibility tracking.
+- **Hybrid boon policy matrix (2026-05-14):** Locked an asymmetric hybrid boon model in `references/PDV_RaceArchitecture_DesignReference.md`. Every race gets one foreground devotional layer, but only structurally layered religions keep a true persistent substrate. `Nord`, `Imperial`, `Breton`, and `Bosmer` should express most identity through privileges, contextual favors, and state tracks rather than a second passive boon layer. `Altmer`, `Redguard`, and `Orc` keep only light persistent layers. `Dunmer`, `Khajiit`, and `Argonian` keep the strongest substrates. Global rule: most races should never feel like they have more than two meaningful always-on boon families at once.
 - **Daedric worship architecture baseline (2026-05-13):** Section 11 of `references/PDV_RaceArchitecture_DesignReference.md` is now locked as a Prince-first architecture. Daedric paths reuse the Tier 0-3 spine with Daedric labels, require commitment signals before real progression, use `boon / price / stigma` contracts, stay mostly event-driven, and let race modify stigma, entry threshold, interpretation, and faith friction. Native-integrated exceptions are Azura/Azurah, Boethiah/Boethra, Mephala/Mafala, and Malacath/Mauloch; Bosmer Herma-Mora is explicitly not treated as Hermaeus Mora in the Daedric layer.
 - **Phase 4 matrix pass (2026-05-13):** Added `references/phase4/PDV_Phase4_MatrixScaffold.md`, `PDV_RaceSignalMatrix.csv`, `PDV_StanceMatrix.csv`, `PDV_DaedricRacePrinceMatrix.csv`, and `PDV_MatrixCrossValidation.md` as the first implementation-facing design set for Phase 4. The pass stays first-release scoped, preserves locked race-specific architecture instead of flattening to one patron model, and records intentional stance-vs-Daedric taxonomy differences rather than forcing false consistency. Mirrored copies were also published to `D:\Wabbajack\modlists\Anvil\mods\Devotion\Design\Phase4\`.
+- **Phase 4 script/tooling implementation (2026-05-14):** Added `PDV_Origin.psc`, turned `PDV__MainQuest.psc` into a real bootstrap hook, refactored `PDV_DeityBase.psc` from origin multipliers to race-keyed stance properties plus rivalry metadata, and updated `PDV__ManagerQuest.psc` so positive piety writes apply stance multipliers and hostile worship can trigger non-recursive rivalry penalties. Boon behavior is now locked for this phase as **active-patron-only but cumulative by tier**. `tools/pdv_compile.mjs` now treats `PDV__MainQuest` and `PDV_Origin` as active scripts, and `tools/pdv_verify.mjs` now explicitly checks the missing Phase 4 ESP surface (`PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, Kyne stance row, Kyne boon assignments). All scripts compiled cleanly on 2026-05-14; live verifier failures now point only at still-manual CK/ESP work.
+- **Coupled Talos + Auri-El script/tooling implementation (2026-05-14):** Added `PDV_Deity_Talos.psc` and `PDV_Deity_AuriEl.psc` as the first coupled hostile-path proof slice. `PDV_Origin.psc` now seeds a small generic script-constant table for Kyne, Talos, and Auri-El. `PDV__ManagerQuest.psc` now exposes `AwardCuratedSignal()` / `AwardCuratedSignalByIndex()` for curated CK-driven devotional signals, and rivalry now fires from the **written** stance-adjusted gain rather than the raw incoming delta. The first intended Talos proof is Altmer hostility against a real Auri-El ledger target, with Talos rivalry one-way to Auri-El in this pass. `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs` now treat Talos/Auri-El as required active slice scripts and records.
 - **Anvil MO2 MCP Codex intake (2026-05-14):** Interrogated `D:\Wabbajack\modlists\Anvil\plugins\Anvilmo2_mcp` for Codex use and documented the usable tool surface in `references/PDV_Anvil_MO2_MCP_Intake.md`. Codex config already points to `http://127.0.0.1:27015/mcp`; the server must still be started from MO2 before `mo2_*` tools appear. The plugin was adjusted to label the server generically, check Codex config on server start, use `Devotion` as the MCP output mod default, and point `tool_paths.json` at Anvil's real Papyrus compiler/source paths. `BSArch.exe` is now installed for BSA/BA2 archive tools; `nif-tool.exe` remains the only confirmed missing optional binary.
 - **Skyrim modding lessons intake (2026-05-14):** Archived external practical lessons at `archive/Skyrim_Modding_Lessons_2026-05-14.md` and folded the actionable rules into PDV standards, Papyrus guidance, setup notes, and the local Papyrus/CK skill. Load-bearing additions: strict player-facing ASCII, Papyrus string/docstring/parser limits, no assumed `StringUtil.Replace`, save-baked new-game retesting, grep-before-delete hygiene, and dialogue/faction gate discipline for later race modules.
 - **Expanded Skyrim lessons intake (2026-05-14):** Archived the fuller follow-up at `archive/Skyrim_Modding_Lessons_Full_2026-05-14.md` and folded additional rules into the working docs/skill: Papyrus array/operator limits, chained cast avoidance, CK condition-name differences, location/hold detection cautions, one-backend-per-key storage discipline, JContainers FormID storage, dialogue line length, SEQ regeneration after dialogue edits, MCM OID storage, CSF filename caveat, and trace/debug cleanup conventions.
@@ -385,3 +432,13 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 - Resolved the main taxonomy drifts uncovered during validation: Khajiit `Hermorah` and `Nocturnal` were kept as non-native pressure lanes in the stance model, and Orc `Azura/Azurah` was tightened to a taboo outsider reading in the Daedric matrix.
 - Mirrored the finished Phase 4 design outputs into `D:\Wabbajack\modlists\Anvil\mods\Devotion\Design\Phase4\` for live mod-folder reference.
 - No CK wiring, ESP data entry, compile outputs, or runtime verification changed in this pass; this was design-structure work only.
+
+### 2026-05-15 Phase 4 CK pass and CK stability findings
+
+- Phase 4 CK wiring is now mostly present in the live ESP. Verifier-confirmed records and wiring include `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, Kyne's Phase 4 stance row, and Kyne's boon assignments.
+- The remaining true Phase 4 hard fail is still `PDV__ManagerQuest -> PDV_GLO_PatronDeity`. Creation Kit repeatedly hung when opening `PDV__ManagerQuest`, so that property was not safely finished in this session.
+- Current verifier failures beyond that manager property are Phase 6 spillover from the already-landed script/tooling surface: `PDV_Deity_Talos` missing, `PDV_Deity_AuriEl` missing, `PDV_Origin.PDV_Talos` missing, and `PDV_Origin.PDV_AuriEl` missing.
+- Current verifier warnings are an unnamed `MGEF` record (`PlayerDevotion_Framework.esp:03235B`, likely orphan residue from an accidental stub) and an out-of-date `Devotion\Seq\PlayerDevotion_Framework.seq`.
+- A dedicated Phase 5 manual walkthrough now exists at `PDV_Phase5_CK_Steps.md` for the first MCM slice. Phase 5 CK work itself has not started.
+- CK source-store instability was investigated after repeated fatal errors. The missing SkyUI header chain was partially repaired by adding `SKI_QuestBase.psc` and creating a dedicated shim mod at `D:\Wabbajack\modlists\Anvil\mods\PDV - SkyUI CK Headers\` exposing `SKI_QuestBase.psc`, `SKI_ConfigBase.psc`, and `SKI_ConfigManager.psc` under `Source\Scripts\`. The `Devotion Dev` profile modlist was backed up before enabling the shim.
+- Practical next-session order is: restart MO2/CK fresh, try `PDV__ManagerQuest` first, assign `PDV_GLO_PatronDeity`, refresh SEQ, rerun `node .\tools\pdv_verify.mjs`, then decide whether to keep Phase 4 isolated or continue into Talos/Auri-El CK wiring.
