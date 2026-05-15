@@ -3,6 +3,8 @@
 Status: Manual CK/ESP walkthrough for the coupled Talos + Auri-El slice  
 Last revised: 2026-05-14
 
+Authoring note (2026-05-15): `tools/pdv_author.mjs` can now generate a reversible overlay patch for the supported existing-record wiring in this slice once the Talos/Auri-El quest records exist. This doc remains the manual **in-place framework ESP** path for new records, VMAD array properties such as `RivalDeities`, and final direct-ESP authoring.
+
 ## Purpose
 
 This walkthrough closes the CK/ESP side of the coupled hostile-path proof now
@@ -17,8 +19,9 @@ landed in script and tooling:
 - `tools/pdv_verify.mjs` now checks for Talos/Auri-El records, FormList
   membership, stance rows, boon assignments, and Talos rivalry wiring
 
-The scripts compile cleanly, but the live ESP still needs the actual records,
-properties, and spell assignments.
+The scripts compile cleanly, but the live ESP still needs the actual Talos and
+Auri-El records, their origin/FormList wiring, and final spell/rivalry
+assignments.
 
 ## 1. Create deity quest records
 
