@@ -1,6 +1,6 @@
 # PDV Phase 5 CK Steps
 
-Status: Manual CK/ESP walkthrough for the first MCM slice; framework wiring completed 2026-05-16  
+Status: Manual CK/ESP walkthrough for the first MCM slice; framework wiring and in-game proof completed 2026-05-16  
 Last revised: 2026-05-16
 
 ## Purpose
@@ -12,7 +12,8 @@ Current project state: `PDV_MCM` now exists in `PlayerDevotion_Framework.esp`,
 has the `PDV_MCM` script attached, and has the required properties assigned
 directly in the framework ESP after the overlay merge-back. Keep this page as
 the rebuild/smoke-test checklist rather than evidence that an overlay remains
-part of the steady-state workflow.
+part of the steady-state workflow. The live smoke test now passes with ReShade
+temporarily disabled in the Anvil Stock Game.
 
 Phase 5 stays intentionally narrow:
 
@@ -28,6 +29,11 @@ The first MCM slice should expose two pages only:
 
 - `Status` - read-only per-deity piety, tier, and active patron state
 - `Debug` - development-only override and inspection actions
+
+Authoring rule for this walkthrough:
+
+- steps stay in the same order you should perform them in CK
+- long property lists are written alphabetically to match the CK property pane
 
 ## Preconditions
 
@@ -77,13 +83,15 @@ Open the `PDV_MCM` quest and assign its script properties.
 
 ### Required existing properties
 
-- `PDV_Manager` -> `PDV__ManagerQuest`
+These are listed alphabetically to match the CK script-property list:
+
 - `PDV_FLST_AllDeities` -> `PDV_FLST_AllDeities`
+- `PDV_GLO_ActiveDeityIndex` -> `PDV_GLO_ActiveDeityIndex`
 - `PDV_GLO_ActivePiety` -> `PDV_GLO_ActivePiety`
 - `PDV_GLO_ActiveTier` -> `PDV_GLO_ActiveTier`
-- `PDV_GLO_ActiveDeityIndex` -> `PDV_GLO_ActiveDeityIndex`
-- `PDV_GLO_PatronDeity` -> `PDV_GLO_PatronDeity`
 - `PDV_GLO_DebugLevel` -> `PDV_GLO_DebugLevel`
+- `PDV_GLO_PatronDeity` -> `PDV_GLO_PatronDeity`
+- `PDV_Manager` -> `PDV__ManagerQuest`
 
 ## 3. Manager-side dependency checklist
 
@@ -105,7 +113,7 @@ The manager-side Phase 5 API should support:
 Do not rely on placeholder menu actions. Every button, slider, menu, or toggle
 in the MCM should have a real script target before in-game testing starts.
 
-## 5. Expected page behavior
+## 4. Expected page behavior
 
 Use this as the CK-side intent check while reviewing the script and its
 properties.
@@ -126,7 +134,7 @@ properties.
 
 Keep all player-facing MCM text ASCII-only.
 
-## 6. Save, compile, and verify
+## 5. Save, compile, and verify
 
 After CK wiring:
 
@@ -148,7 +156,7 @@ Expected verification outcomes once Phase 5 script/tooling support exists:
 If verifier coverage for `PDV_MCM` does not exist yet, add it before treating
 the Phase 5 CK pass as complete.
 
-## 7. In-game validation
+## 6. In-game validation
 
 Use a clean start path where possible.
 
@@ -171,8 +179,15 @@ Minimum checks:
    - no stale UI state or cross-deity bleed occurs
 5. Save, reload, and confirm patron/debug state persists where the underlying
    runtime state already persists.
+6. If the game CTDs before or while opening MCM, check the newest
+   `crash-*.log` under `C:\Users\Admin\Documents\My Games\Skyrim Special Edition\SKSE\`.
+   If the stack repeatedly implicates `ReShade64.dll` with `WS2_32.dll` and
+   `webio.dll`, treat that as an environment issue first, not a PDV MCM logic
+   failure. The confirmed smoke-test workaround was to temporarily rename
+   `D:\Wabbajack\modlists\Anvil\Stock Game\ReShade64.dll` out of the way, then
+   retest with the same MO2 profile.
 
-## 8. Exit criteria
+## 7. Exit criteria
 
 Phase 5 CK wiring is not complete until all of the following are true:
 

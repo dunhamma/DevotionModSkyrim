@@ -5,11 +5,19 @@ String Property ModName Auto
 
 Int Property OPTION_FLAG_NONE = 0 AutoReadOnly
 Int Property OPTION_FLAG_DISABLED = 1 AutoReadOnly
+Int Property LEFT_TO_RIGHT = 1 AutoReadOnly
+Int Property TOP_TO_BOTTOM = 2 AutoReadOnly
 
 Function SetInfoText(String a_text)
 EndFunction
 
 Function ForcePageReset()
+EndFunction
+
+Function SetCursorFillMode(Int a_fillMode)
+EndFunction
+
+Function SetCursorPosition(Int a_position)
 EndFunction
 
 Function OnGameReload()

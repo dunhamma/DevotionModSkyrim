@@ -52,7 +52,22 @@ Before creating any new top-level `.md`:
 2. If a new file is genuinely needed, classify it: LIVING goes at root; ARCHIVE goes under `archive/` with a dated/contextual filename (e.g. `archive/race-design-nord-2026-05-09.md`).
 3. Update the table in § 1.1 if it's LIVING.
 
-**No "see X.md" index docs.** A doc whose only purpose is to point at another doc is a staleness amplifier — when the target moves, the index lies. `AGENTS.md` is the natural navigation aggregation point.
+**No "see X.md" index docs.** A doc whose only purpose is to point at another doc is a staleness amplifier - when the target moves, the index lies. `AGENTS.md` is the natural navigation aggregation point.
+
+### 1.4 CK walkthrough authoring
+
+When writing manual CK steps, optimize for how the user actually moves through
+the editor rather than for abstract grouping.
+
+1. Order steps in the same sequence someone should click through in CK.
+2. Keep one menu/dialog together before jumping to another menu/dialog.
+3. Inside long property or field lists, sort entries alphabetically unless the
+   UI itself is meaningfully ordered another way.
+4. If a list is intentionally not alphabetical, say why so the reader knows it
+   is deliberate rather than drift.
+
+The goal is lower CK friction. A technically correct walkthrough that forces the
+reader to hunt around an unsorted property list is still a bad walkthrough.
 
 ---
 

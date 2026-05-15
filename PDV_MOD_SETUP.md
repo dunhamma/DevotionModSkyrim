@@ -220,7 +220,7 @@ The verifier is read-only. It checks expected Anvil paths, reads `PlayerDevotion
 
 ### Anvil MO2 MCP status
 
-Codex is configured for the Anvil MO2 MCP server at `http://127.0.0.1:27015/mcp` in `C:\Users\Admin\.codex\config.toml`. Start it from Anvil/MO2 with the `Start/Stop MCP Server` tool entry. Current local intake and optional binary status live in `references/PDV_Anvil_MO2_MCP_Intake.md`.
+Codex is configured for the Anvil MO2 MCP server at `http://127.0.0.1:27016/mcp` in `C:\Users\Admin\.codex\config.toml`. Start it from Anvil/MO2 with the `Start/Stop MCP Server` tool entry. Current local intake and optional binary status live in `references/PDV_Anvil_MO2_MCP_Intake.md`.
 
 Toolchain usage rules:
 - After any `.psc` edit, run `node .\tools\pdv_compile.mjs` or a targeted `--script` compile.
@@ -522,7 +522,7 @@ Follow this sequence. Do not skip ahead.
 [x] Phase 3 — PDV_ActionRouter + PDV__SM_KillActor complete;
       CK wiring, Story Manager routing, SEQ, and runtime verification all passed
 [~] Phase 4 — scripts/tooling and framework ESP wiring landed; in-game proof still pending
-[~] Phase 5 — MCM dev slice script/tooling/framework wiring landed; in-game SkyUI proof pending
+[x] Phase 5 — MCM dev slice script/tooling/framework wiring landed; in-game SkyUI proof passed
 [~] Phase 6 — Talos + Auri-El hostile-path proof slice framework-wired; in-game proof pending
 [ ] Debug spell created and tested
 [ ] Nord module complete
@@ -557,6 +557,9 @@ Check for invalid string escapes (`\n`, `\r`, `\t`), misplaced `{...}` docstring
 
 **Script behavior differs between saves:**
 Retest from a new game or main-menu `coc qasmoke` path. Skyrim save files can retain old script instances and property state after source changes.
+
+**Game CTDs while opening SkyUI MCM during PDV smoke tests:**
+Check the newest crash log under `C:\Users\Admin\Documents\My Games\Skyrim Special Edition\SKSE\`. If the stack repeats `ReShade64.dll` with `WS2_32.dll` and `webio.dll`, treat it as a native environment issue first rather than a PDV MCM logic failure. The confirmed PDV smoke-test workaround was to temporarily rename `D:\Wabbajack\modlists\Anvil\Stock Game\ReShade64.dll` out of the Stock Game root, retest, then restore it later for dedicated ReShade investigation.
 
 ---
 
@@ -619,7 +622,7 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-05-16 - Temporary overlays merged back and retired:** `PDV_ManagerPatronWirePatch.esp` and `PDV_MCMWirePatch.esp` were temporary rescue artifacts for CK instability. Their VMAD deltas have been merged directly into `PlayerDevotion_Framework.esp`: `PDV__ManagerQuest` now owns `PDV_GLO_PatronDeity`, and `PDV_MCM` is script-attached with required properties on the framework record. Both overlays are unticked in the `Devotion Dev` profile and must not be treated as runtime requirements.
 
-**2026-05-14 - Anvil MO2 MCP Codex intake:** `references/PDV_Anvil_MO2_MCP_Intake.md` documents the local `Anvilmo2_mcp` plugin, the `mo2_*` tool surface, current Codex config, and optional tool status. Codex points at `http://127.0.0.1:27015/mcp`; the server must be started from MO2 before tools appear. The plugin is configured for Anvil's Papyrus compiler/source paths and uses `Devotion` as the MCP output mod default. `BSArch.exe` is installed for BSA/BA2 archive tools; `nif-tool.exe` remains the only confirmed missing optional binary.
+**2026-05-14 - Anvil MO2 MCP Codex intake, updated 2026-05-16:** `references/PDV_Anvil_MO2_MCP_Intake.md` documents the local `Anvilmo2_mcp` plugin, the `mo2_*` tool surface, current Codex config, and optional tool status. Codex points at `http://127.0.0.1:27016/mcp`; the server must be started from MO2 before tools appear. The plugin is configured for Anvil's Papyrus compiler/source paths and uses `Devotion` as the MCP output mod default. `BSArch.exe` is installed for BSA/BA2 archive tools; `nif-tool.exe` remains the only confirmed missing optional binary.
 
 **2026-05-14 - Skyrim modding lessons intake:** Archived external practical lessons at `archive/Skyrim_Modding_Lessons_2026-05-14.md` and folded durable rules into the living docs and Papyrus/CK skill: player-facing ASCII, Papyrus string/docstring/parser limits, save-baked new-game retesting, grep-before-delete hygiene, `cqf` named-function limits, and future dialogue/faction gate discipline.
 
@@ -627,4 +630,6 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-05-15 - SkyUI CK header shim:** Repeated CK fatal errors traced back to a broken SkyUI source-store chain (`SKI_QuestBase` -> `SKI_ConfigBase` -> `SKI_ConfigManager`). For the `Devotion Dev` profile, a dedicated shim mod was added at `D:\Wabbajack\modlists\Anvil\mods\PDV - SkyUI CK Headers\` exposing `SKI_QuestBase.psc`, `SKI_ConfigBase.psc`, and `SKI_ConfigManager.psc` under `Source\Scripts\`. This is a CK-environment repair for source lookup only, not a runtime SkyUI upgrade. The profile modlist was backed up before enabling the shim.
 
-**2026-05-16 - Session closeout state:** `PDV_Phase5_CK_Steps.md` remains the manual walkthrough for the first MCM slice, but the framework ESP now owns the actual MCM wiring. `pdv_verify.mjs` is clean at `FAIL=0, WARN=0, TODO=0`. Recommended next order is: smoke-open `PDV__ManagerQuest` and `PDV_MCM` in CK, then run the Kyne/Talos/Auri-El in-game proof paths.
+**2026-05-16 - Phase 5 in-game proof and ReShade caveat:** With `ReShade64.dll` temporarily renamed out of `D:\Wabbajack\modlists\Anvil\Stock Game\`, `PlayerDevotion` registered in SkyUI and the first MCM slice passed its live smoke test: `Status` and `Debug` both loaded, the Kyne/Talos/Auri-El roster rendered, and debug patron override worked. Two separate CTDs before that were traced to native crash stacks dominated by `ReShade64.dll`, `WS2_32.dll`, and `webio.dll`, with no matching PDV MCM fault in Papyrus. Treat ReShade as a separate environment investigation, not a blocker on PDV Phase 5 completion.
+
+**2026-05-16 - CK walkthrough usability rule:** Manual CK walkthroughs should follow the same order a user performs them in the editor, and long property/field lists should be written alphabetically unless the UI itself makes a different order more useful. This rule was added after the Phase 5/6 CK pass to reduce avoidable hunt-and-peck friction in script property menus.

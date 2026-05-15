@@ -1,7 +1,7 @@
 # PDV Architecture v2 - Migration Target
 
-Last revised: 2026-05-16 (v2.5 - origin race normalization and verifier-clean wrap-up)
-Status: **Phase 4/5/6 Integration Partial** - Origin/bootstrap, stance, MCM dev slice, and the coupled Talos + Auri-El hostile-path records are framework-owned and verifier-clean. Remaining work is CK smoke-open plus in-game proof.
+Last revised: 2026-05-16 (v2.6 - Phase 5 in-game proof and ReShade caveat)
+Status: **Phase 4/6 Integration Partial** - Origin/bootstrap, stance, the MCM dev slice, and the coupled Talos + Auri-El hostile-path records are framework-owned and verifier-clean. Phase 5's first slice is now proven in game; remaining work is Phase 4 proof coverage, Phase 6 hostile-path proof, and separate ReShade environment follow-up.
 
 ---
 
@@ -479,7 +479,9 @@ Known risks to verify in CK/in game:
 ### Phase 5 - MCM
 
 - Implement `PDV_MCM` per scope above. Script/tooling/framework attachment are present.
-- Test: status page reads StorageUtil correctly; debug patron override persists across save/load through manager state.
+- Current proof status: `PlayerDevotion` registers in SkyUI and the `Status` + `Debug` pages work on the live Kyne/Talos/Auri-El roster.
+- Environment caveat: the successful smoke path currently requires `ReShade64.dll` disabled in the Anvil Stock Game while the native conflict is investigated separately.
+- Remaining confidence pass: confirm persistence after save/load if needed, but the first development-facing slice itself is functionally proven.
 
 ### Phase 6 - Second deity (Talos)
 
@@ -827,3 +829,9 @@ The same integration pass brought the Talos/Auri-El proof slice into the framewo
 ### v2.5 - 2026-05-16 - Origin race normalization and verifier-clean wrap-up
 
 `PDV_Origin` now normalizes vanilla `*RaceVampire` records to the player's permanent cultural origin and defers initialization when only a temporary beast-form race is visible. The discarded exploratory `PDV_OriginRaceNormalizationPatch.esp` was removed from the Devotion mod and no longer appears in the Anvil MO2 MCP plugin view. Final wrap-up verifier run: `FAIL=0, WARN=0, TODO=0`.
+
+### v2.6 - 2026-05-16 - Phase 5 in-game proof and ReShade environment split
+
+The first MCM slice is now proven in game on the live three-deity roster. `PlayerDevotion` registers in SkyUI, the `Status` page iterates Kyne/Talos/Auri-El correctly after the cursor-fill layout fix, and the `Debug` page can swap the active patron to Auri-El through the manager helper path.
+
+That smoke test also split PDV logic from an external native crash source. Repeated CTDs while opening MCM were traced to stacks dominated by `ReShade64.dll`, `WS2_32.dll`, and `webio.dll`, while Papyrus showed no matching PDV MCM fault. For now, treat ReShade as a separate environment investigation and keep it out of the architecture success criteria for Phase 5.

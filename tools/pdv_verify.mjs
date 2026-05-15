@@ -44,6 +44,8 @@ const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "PlayerDevotion_Framework.se
 const MANAGER_PATRON_WIRE_PATCH = "PDV_ManagerPatronWirePatch.esp";
 const MCM_WIRE_PATCH = "PDV_MCMWirePatch.esp";
 const RETIRED_OVERLAY_PATCHES = [MANAGER_PATRON_WIRE_PATCH, MCM_WIRE_PATCH];
+const MO2_MCP_HOST = "127.0.0.1";
+const MO2_MCP_PORT = 27016;
 
 const BASELINE_RECORDS = {
   PDV_GLO_OriginRace: "GLOB",
@@ -909,11 +911,12 @@ class Verifier {
   }
 
   async checkMcpServer() {
-    const accepting = await canConnect("127.0.0.1", 27015, 500);
+    const endpoint = `${MO2_MCP_HOST}:${MO2_MCP_PORT}`;
+    const accepting = await canConnect(MO2_MCP_HOST, MO2_MCP_PORT, 500);
     if (accepting) {
-      this.info("MO2 MCP server", "Server is accepting connections on 127.0.0.1:27015.");
+      this.info("MO2 MCP server", `Server is accepting connections on ${endpoint}.`);
     } else {
-      this.info("MO2 MCP server", "Server is not currently accepting connections on 127.0.0.1:27015.");
+      this.info("MO2 MCP server", `Server is not currently accepting connections on ${endpoint}.`);
     }
   }
 

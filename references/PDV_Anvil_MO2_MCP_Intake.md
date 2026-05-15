@@ -1,20 +1,21 @@
 # PDV Anvil MO2 MCP Intake
 
-**Date:** 2026-05-14
+**Date:** 2026-05-14, updated 2026-05-16
 **Scope:** Local intake of `D:\Wabbajack\modlists\Anvil\plugins\Anvilmo2_mcp` for Codex-driven PDV work.
 
 ## Current Integration State
 
-- Codex is configured for the MO2 MCP server in `C:\Users\Admin\.codex\config.toml`:
+- Codex is configured for Anvil's dedicated MO2 MCP server in `C:\Users\Admin\.codex\config.toml`:
   - `[mcp_servers.mo2]`
-  - `url = "http://127.0.0.1:27015/mcp"`
-- The MCP server was not running during intake; direct HTTP probe to `http://127.0.0.1:27015/mcp` failed to connect.
+  - `url = "http://127.0.0.1:27016/mcp"`
+- The MCP server was confirmed live on `http://127.0.0.1:27016/mcp` after the port split; `mo2_ping` reported base path `D:/Wabbajack/modlists/Anvil` and profile `Devotion Dev`.
 - Start the server from Anvil/MO2, not by launching Python or CK directly:
   - Open `D:\Wabbajack\modlists\Anvil\Anvil.exe`
   - Use MO2 Tools menu entry `Start/Stop MCP Server`
   - Restart Codex if `mo2_*` tools are not visible after first server start
 - The plugin folder is named `Anvilmo2_mcp`, not the upstream default `mo2_mcp`.
 - The plugin now checks Codex config on server start in addition to its legacy Claude config.
+- An abandoned `D:\Wabbajack\modlists\Anvil\plugins\mo2_mcp` cache-only folder was removed on 2026-05-16 to avoid confusing it with the live plugin.
 
 ## Tool Surface
 
