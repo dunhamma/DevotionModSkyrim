@@ -11,6 +11,8 @@
 - Mid-game race changes via showracemenu are unsupported
 - No cross-race state migration needed
 - Allows complete isolation of race modules
+- Vanilla vampire races are normalized to the underlying birth race for origin detection
+- Temporary beast-form races defer one-shot origin detection rather than becoming a new origin
 
 ### 1.2 Curse States Modify Weights, Not Buckets
 - Werewolf/Vampire changes HOW the same devotion is interpreted

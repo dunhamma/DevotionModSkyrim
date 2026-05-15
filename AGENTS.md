@@ -33,6 +33,7 @@ This repo should be treated as a single-context project; skills should read the 
 | `PDV_MOD_SETUP.md` | Dev environment, architecture, build order, variable reference | Setting up tooling, debugging, tracking decisions |
 | `tools/pdv_compile.mjs` | Node wrapper for the verified PapyrusCompiler import chain | Compiling stale/all/targeted PDV `.psc` files into the Devotion MO2 mod |
 | `tools/pdv_verify.mjs` | Read-only Node/Mutagen verifier for PDV's Anvil MO2 setup | Checking CK wiring, script freshness, SEQ state, MO2 profile state, and Phase 3 readiness |
+| `tools/skyui_compile_shim/*.psc` | Minimal compile-only SkyUI base-class shims used by `pdv_compile.mjs` | Compiling `PDV_MCM.psc` without inheriting noisy third-party MCM source overrides |
 | `tools/pdv_author.mjs` | Safe overlay-patch authoring helper built on the local Mutagen bridge | Inspecting existing-record wiring, planning reversible ESP overlay patches, and scripting supported VMAD/FormList edits without mutating the framework ESP in place |
 | `PDV_Architecture_v2.md` | Full v2 architecture spec — data model, quest topology, phase plan, stance matrix | Phase planning, writing new scripts, understanding the deity/origin system |
 | `PDV_Phase1_ManualSteps.md` | CK step-by-step for Phase 1 globals and script wiring | Returning to CK work after a break |
@@ -85,17 +86,19 @@ Devotion\
       PDV_Deity_Kyne.psc
       PDV_Deity_Talos.psc
       PDV_Deity_AuriEl.psc
+      PDV_MCM.psc
       PDV__MainQuest.psc
 ```
 
 Quest scripts (current):
 - `PDV__MainQuest.psc` — RunOnce bootstrap quest. **Phase 4 script complete on disk:** calls `PDV_Origin.InitializeOrigin()` from `OnInit()` once CK record/property wiring exists.
-- `PDV_Origin.psc` — **NEW (Phase 4)** One-shot origin helper. Detects player race, writes `PDV_GLO_OriginRace`, and seeds the Kyne proof slice.
-- `PDV__ManagerQuest.psc` — **Phase 4 script complete on disk:** stance-aware `AwardPiety()`, non-recursive rivalry plumbing, patron-only boon handling, FormList-backed `ProcessDawn`, and poll-based debug harness. CK property `PDV_GLO_PatronDeity` still needs wiring.
+- `PDV_Origin.psc` — **NEW (Phase 4)** One-shot origin helper. Detects and normalizes player origin race, treats vanilla vampire races as their birth race, defers while only a temporary beast-form race is visible, writes `PDV_GLO_OriginRace`, and seeds the current proof-slice deity ledgers.
+- `PDV__ManagerQuest.psc` — **Phase 4 script complete and framework-wired:** stance-aware `AwardPiety()`, non-recursive rivalry plumbing, patron-only boon handling, FormList-backed `ProcessDawn`, poll-based debug harness, and `PDV_GLO_PatronDeity` wired directly on the framework ESP after the xEdit merge-back.
 - `PDV_DeityBase.psc` — **Phase 4 refactor complete on disk:** race-keyed stance properties, rivalry metadata, and cumulative patron-only boon sync. Replaces the Phase 2 origin-multiplier floats.
 - `PDV_Deity_Kyne.psc` — **Phase 4 proof slice on disk:** same Kyne rubric as before, now expected to use the simple Nord-native / everyone-else-foreign stance row plus CK-authored boon spells.
 - `PDV_Deity_Talos.psc` — **NEW (coupled follow-on slice)** First hostile-path proof deity. Curated Talos-facing defiance signals only; Altmer hostility should rival Auri-El one-way.
 - `PDV_Deity_AuriEl.psc` — **NEW (coupled follow-on slice)** Minimum viable Altmer foundation deity and real rivalry target for Talos. Seeded for Altmer, but still follows patron-only boon rules.
+- `PDV_MCM.psc` — **NEW (Phase 5 dev slice)** SkyUI `Status` + `Debug` surface only. Roster-driven, OID-backed, framework-attached, and explicitly not the final player-facing patron/tuning UX.
 - `PDV_ActionRouter.psc` — **NEW (Phase 3)** Persistent service quest that fans validated player kill actions to all deities via `ScoreAction()`; compiles cleanly, CK quest/property wiring complete, hostile bandit/wolf runtime paths verified.
 - `PDV__SM_KillActor.psc` — **NEW (Phase 3)** Non-Start-Game-Enabled Story Manager receiver quest for `OnStoryKillActor`; compiles cleanly, CK quest/Story Manager wiring complete, receiver path verified by hostile kill events.
 
@@ -125,7 +128,7 @@ node .\tools\pdv_author.mjs apply phase4 --output PDV_Author_phase4.esp
 
 The verifier checks the Anvil/Devotion paths, reads `PlayerDevotion_Framework.esp` through the Anvil MO2 MCP Mutagen bridge, validates the current Phase 4 baseline records/properties plus the Talos/Auri-El follow-on records, checks Phase 3 receiver/router wiring, checks script source/pex freshness, detects CK output shadow files, checks SEQ state, and confirms the active MO2 profile/load order. It now explicitly fails or warns when the live ESP is missing `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, `PDV_Deity_Talos`, `PDV_Deity_AuriEl`, expected stance rows, Talos rivalry wiring, or deity boon assignments. It is diagnostic only and must not write to the ESP or MO2 profile files.
 
-`pdv_author.mjs` is the safe authoring companion to that loop. It inspects the live framework ESP through the same Mutagen bridge, then emits a **new overlay patch plugin** into the `Devotion` mod when asked to apply changes. Current supported writes are existing-record scalar/object VMAD properties and FormList membership. It does **not** mint new records, edit VMAD array properties such as `RivalDeities`, or overwrite `PlayerDevotion_Framework.esp` in place.
+`pdv_author.mjs` is the safe authoring companion to that loop. It inspects the live framework ESP through the same Mutagen bridge, then emits a **new overlay patch plugin** into the `Devotion` mod when asked to apply changes. Current supported writes are existing-record scalar/object VMAD properties and FormList membership. It does **not** mint new records, edit VMAD array properties such as `RivalDeities`, or overwrite `PlayerDevotion_Framework.esp` in place. Generated patches must keep `Skyrim.esm` as the first master when using extended FormID ranges; do not manually insert masters into an existing patch without remapping FormIDs.
 
 Toolchain usage rules:
 - After editing any PDV `.psc`, run `node .\tools\pdv_compile.mjs` or `node .\tools\pdv_compile.mjs --script <ScriptName>`.
@@ -309,7 +312,7 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
       - SEQ generated under Devotion\Seq ✓
       - VERIFIED IN GAME: Kyne activation, hostile bandit +0.5 scratch, hostile wolf -3 scratch,
         neutral-kill rejection, rapid dual-kill accumulation, and manual dawn consolidation/clamping
-[~] Phase 4 — framework scripts/tooling landed; live ESP is mostly wired, but manager patron-global wiring and proof validation still pending
+[~] Phase 4 — framework scripts/tooling and live ESP wiring landed; in-game proof validation still pending
       - `PDV__MainQuest.psc` + `.pex` bootstrap implementation ✓
       - `PDV_Origin.psc` + `.pex` origin detection / Kyne seed helper ✓
       - `PDV__ManagerQuest.psc` stance-aware scratch + rivalry plumbing ✓
@@ -319,18 +322,24 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
       - `tools/pdv_compile.mjs` / `tools/pdv_verify.mjs` Phase 4 coverage ✓
       - `tools/pdv_author.mjs` reversible overlay-patch authoring for supported existing-record wiring ✓
       - VERIFIED IN ESP: `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`,
-        Kyne stance row, and Kyne boon assignments
-      - REMAINING: wire `PDV__ManagerQuest.PDV_GLO_PatronDeity`, refresh SEQ, rerun verifier,
-        then complete in-game proof tests
-[ ] Phase 5 — MCM
-[~] Phase 6 — coupled Talos + Auri-El hostile-path proof slice landed in script/tooling; CK wiring pending
+        Kyne stance row, Kyne boon assignments, and framework-owned `PDV__ManagerQuest.PDV_GLO_PatronDeity`
+      - REMAINING: complete in-game proof tests against the live framework wiring
+[~] Phase 5 — MCM dev slice landed in script/tooling/docs and framework ESP wiring
+      - `PDV_MCM.psc` Status + Debug-only menu ✓
+      - manager MCM-safe roster/debug helpers ✓
+      - `tools/pdv_compile.mjs` SkyUI import chain + SKI output guard ✓
+      - `tools/pdv_verify.mjs` `PDV_MCM` coverage + SKI output hygiene ✓
+      - `PDV_Phase5_CK_Steps.md` narrowed to Status + Debug ✓
+      - VERIFIED IN ESP: `PDV_MCM` quest exists, script is attached, and required properties are wired directly on `PlayerDevotion_Framework.esp`
+      - REMAINING: validate in-game against the live Kyne/Talos/Auri-El roster
+[~] Phase 6 — coupled Talos + Auri-El hostile-path proof slice landed in script/tooling and most CK wiring
       - `PDV_Deity_Talos.psc` + `.pex` ✓
       - `PDV_Deity_AuriEl.psc` + `.pex` ✓
       - `PDV_Origin.psc` generalized to small multi-deity seed table ✓
       - `PDV__ManagerQuest.AwardCuratedSignal*()` helper path ✓
       - verifier coverage for Talos/Auri-El + rivalry expectations ✓
-      - REMAINING: real quest records, FormList entries, stance property wiring, Talos rival list,
-        and Talos/Auri-El boon records in the ESP
+      - VERIFIED IN ESP: Talos/Auri-El quest records, FormList entries, origin properties, stance rows, and boon assignments
+      - REMAINING: complete in-game hostile-path proof
 [ ] Debug spell working
 [ ] Nord module complete
 ```
@@ -356,7 +365,8 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 - **Phase 3 script implementation (2026-05-11, completed 2026-05-14):** `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` were added and compiled cleanly. Router validates direct player kills, requires hostility evidence, classifies `ActorTypeNPC` as humanoid and `ActorTypeAnimal` as beast, then writes deity deltas through `PDV__ManagerQuest.AwardPiety()` only. CK quest creation, property wiring, Story Manager node setup with `Shares Event`, and SEQ generation are complete. Runtime verification now covers the hostile bandit route (`event 2`, Kyne `+0.5`), hostile wolf route (`event 1`, Kyne `-3.0`), neutral-kill rejection, rapid dual-kill accumulation, and dawn consolidation/clamping through the intended scratch-to-persistent path.
 - **Local Codex skills (2026-05-11):** Updated/rebuilt `pdv-doc-sync` to use `AGENTS.md` rather than `CLAUDE.md` as canonical, and added `pdv-papyrus-ck` for PDV Papyrus/CKPE compile, property wiring, Story Manager, and console-test guardrails. Both are packaged as `.skill` files and installed under `C:\Users\Admin\.codex\skills`.
 - **PDV local toolchain (2026-05-12):** Added `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs`. The compiler directly spawns the real .NET CLI `PapyrusCompiler.exe` with short canonical flags (`-f`, `-i`, `-o`), compiles stale/all/targeted active PDV scripts into `Devotion\Scripts`, treats warnings as failures, and runs the verifier after successful compiles. It does not use `ScriptCompile.bat`, PowerShell, or the CK compile menu. The verifier uses the Anvil MO2 MCP Mutagen bridge plus filesystem/profile checks to catch CK wiring drift, stale scripts, SEQ issues, CK output shadow files, and Phase 3 Story Manager readiness. Default verifier mode treats pending Phase 3 records as TODO; `--strict-phase3` promotes those TODOs to failures.
-- **PDV overlay authoring tool (2026-05-15):** Added `tools/pdv_author.mjs` as the safe automation path for CK-adjacent ESP wiring. It reads `PlayerDevotion_Framework.esp` through the same local Mutagen bridge as the verifier, then writes **reversible overlay patch plugins** into the `Devotion` mod rather than mutating the framework ESP in place. v1 scope is intentionally narrow: existing-record scalar/object VMAD properties and FormList membership only. New records, VMAD array properties such as `RivalDeities`, and Story Manager tree authoring remain manual CK/xEdit work.
+- **PDV overlay authoring tool (2026-05-15, revised 2026-05-16):** Added `tools/pdv_author.mjs` as the safe automation path for CK-adjacent ESP wiring. It reads `PlayerDevotion_Framework.esp` through the same local Mutagen bridge as the verifier, then writes **reversible overlay patch plugins** into the `Devotion` mod rather than mutating the framework ESP in place. v1 scope is intentionally narrow: existing-record scalar/object VMAD properties and FormList membership only. New records, VMAD array properties such as `RivalDeities`, and Story Manager tree authoring remain manual CK/xEdit work. After the merge-back investigation, the tool now warns if a generated patch's first master is not `Skyrim.esm`; do not manually insert `Skyrim.esm` into an existing patch without remapping FormIDs.
+- **Temporary overlay workaround retired (2026-05-16):** `PDV_ManagerPatronWirePatch.esp` and `PDV_MCMWirePatch.esp` were temporary rescue artifacts for CK instability. Their VMAD deltas have been merged into `PlayerDevotion_Framework.esp`: the manager now owns `PDV_GLO_PatronDeity` directly, and `PDV_MCM` is script-attached with required properties directly on the framework record. Both overlays are unticked in the `Devotion Dev` profile and must not be treated as steady-state runtime requirements.
 - **Race architecture interrogation pass (2026-05-13):** The remaining race architecture work was locked in `references/PDV_RaceArchitecture_DesignReference.md`. Imperial, Khajiit, Bosmer, Redguard, Orc, and Argonian now have explicit current-era theological models, curse behavior, and practical Skyrim-facing interpretations. Quest and faction choices were also elevated to first-class devotion signals across the locked races, with ambient behavior acting as slower background drift rather than the only source of meaning.
 - **Pre-matrix reward and system contract (2026-05-13):** `references/PDV_RaceArchitecture_DesignReference.md` now defines the requirements for the race signal matrix: modest cumulative passive baseline blessings, passive contextual favors, religious privileges, no activatable power kit, optional MCM, SKSE/PapyrusUtil core dependency posture, standalone core design, no new quest content for first release, signal cost classes, cadence, anti-farm rules, survival overlap, and later Requiem/survival compatibility tracking.
 - **Hybrid boon policy matrix (2026-05-14):** Locked an asymmetric hybrid boon model in `references/PDV_RaceArchitecture_DesignReference.md`. Every race gets one foreground devotional layer, but only structurally layered religions keep a true persistent substrate. `Nord`, `Imperial`, `Breton`, and `Bosmer` should express most identity through privileges, contextual favors, and state tracks rather than a second passive boon layer. `Altmer`, `Redguard`, and `Orc` keep only light persistent layers. `Dunmer`, `Khajiit`, and `Argonian` keep the strongest substrates. Global rule: most races should never feel like they have more than two meaningful always-on boon families at once.
@@ -418,7 +428,7 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 - Added `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs` as the first PDV-specific local toolchain.
 - `node .\tools\pdv_compile.mjs --all` rebuilt `PDV__ManagerQuest`, `PDV_DeityBase`, `PDV_Deity_Kyne`, `PDV_ActionRouter`, and `PDV__SM_KillActor` with `0 error(s), 0 warning(s)`, then ran the verifier successfully.
 - Current strict Phase 3 verifier run reports no hard failures or TODOs after CK wiring and SEQ generation.
-- The verifier still warns about two unnamed Global records, stale manager QF fragment VMAD metadata, the missing old QF fragment file, and the now-empty xEdit SEQ output location after moving the generated SEQ into `Devotion\Seq`.
+- At this point in the Phase 3 tool build, the verifier warned about two unnamed Global records, stale manager QF fragment VMAD metadata, the missing old QF fragment file, and the now-empty xEdit SEQ output location after moving the generated SEQ into `Devotion\Seq`; the 2026-05-14 cleanup below supersedes this.
 
 ### 2026-05-14 Phase 3 CK wiring and runtime verification complete
 
@@ -443,12 +453,19 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 - Mirrored the finished Phase 4 design outputs into `D:\Wabbajack\modlists\Anvil\mods\Devotion\Design\Phase4\` for live mod-folder reference.
 - No CK wiring, ESP data entry, compile outputs, or runtime verification changed in this pass; this was design-structure work only.
 
-### 2026-05-15 Phase 4 CK pass and CK stability findings
+### 2026-05-15/16 Phase 4-6 CK pass, MCM wiring, and overlay retirement
 
-- Phase 4 CK wiring is now mostly present in the live ESP. Verifier-confirmed records and wiring include `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, Kyne's Phase 4 stance row, and Kyne's boon assignments.
-- The remaining true Phase 4 hard fail is still `PDV__ManagerQuest -> PDV_GLO_PatronDeity`. Creation Kit repeatedly hung when opening `PDV__ManagerQuest`, so that property was not safely finished in this session.
-- Current verifier failures beyond that manager property are Phase 6 spillover from the already-landed script/tooling surface: `PDV_Deity_Talos` missing, `PDV_Deity_AuriEl` missing, `PDV_Origin.PDV_Talos` missing, and `PDV_Origin.PDV_AuriEl` missing.
-- Current verifier warnings are an unnamed `MGEF` record (`PlayerDevotion_Framework.esp:03235B`, likely orphan residue from an accidental stub) and an out-of-date `Devotion\Seq\PlayerDevotion_Framework.seq`.
-- A dedicated Phase 5 manual walkthrough now exists at `PDV_Phase5_CK_Steps.md` for the first MCM slice. Phase 5 CK work itself has not started.
+- Phase 4 CK wiring is now present in the live framework ESP. Verifier-confirmed records and wiring include `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, Kyne's Phase 4 stance row, Kyne's boon assignments, and `PDV__ManagerQuest.PDV_GLO_PatronDeity`.
+- Phase 5's first dev-facing MCM slice is framework-owned: `PDV_MCM` exists, has the `PDV_MCM` script attached, and has all required manager/FormList/global properties wired directly on `PlayerDevotion_Framework.esp`.
+- Phase 6's coupled Talos + Auri-El records are mostly framework-owned: Talos/Auri-El quests exist, `PDV_FLST_AllDeities` includes Kyne/Talos/Auri-El, `PDV_Origin` points at Talos and Auri-El, stance rows and boon spell properties are assigned, and the verifier now reaches `FAIL=0`.
+- `PDV_ManagerPatronWirePatch.esp` and `PDV_MCMWirePatch.esp` were merged back through xEdit and are now unticked in the `Devotion Dev` profile. Keep the files on disk for one validation cycle only; do not leave them active "just in case."
+- Current verifier state is clean: `FAIL=0, WARN=0, TODO=0` as of 2026-05-16 08:01 AEST. Remaining verifier output is informational only.
 - CK source-store instability was investigated after repeated fatal errors. The missing SkyUI header chain was partially repaired by adding `SKI_QuestBase.psc` and creating a dedicated shim mod at `D:\Wabbajack\modlists\Anvil\mods\PDV - SkyUI CK Headers\` exposing `SKI_QuestBase.psc`, `SKI_ConfigBase.psc`, and `SKI_ConfigManager.psc` under `Source\Scripts\`. The `Devotion Dev` profile modlist was backed up before enabling the shim.
-- Practical next-session order is: restart MO2/CK fresh, try `PDV__ManagerQuest` first, assign `PDV_GLO_PatronDeity`, refresh SEQ, rerun `node .\tools\pdv_verify.mjs`, then decide whether to keep Phase 4 isolated or continue into Talos/Auri-El CK wiring.
+- Practical next-session order is: smoke-open `PDV__ManagerQuest` and `PDV_MCM` in CK, then run the Kyne/Talos/Auri-El in-game proof paths.
+
+### 2026-05-16 Origin race normalization
+
+- `PDV_Origin.psc` now separates permanent cultural origin from current body race at bootstrap. Vanilla `*RaceVampire` records normalize back to their base race index, `WerewolfBeastRace` / Dawnguard Vampire Lord race defer initialization instead of writing the Imperial fallback, and unsupported non-temporary custom races still fall back to Imperial with a trace.
+- The fix compiled cleanly with `node .\tools\pdv_compile.mjs --script PDV_Origin`; the post-compile verifier returned `FAIL=0, WARN=0, TODO=0`.
+- A discarded exploratory overlay, `PDV_OriginRaceNormalizationPatch.esp`, was deleted from the Devotion mod and no longer appears in the Anvil MO2 MCP plugin view.
+- Architecture note: curse states remain runtime interpretation overlays. They do not mutate `PDV_GLO_OriginRace`; future vampire/werewolf scoring should live behind a dedicated curse-state module or manager helper.

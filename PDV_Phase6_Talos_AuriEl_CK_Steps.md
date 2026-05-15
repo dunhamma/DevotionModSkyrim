@@ -1,9 +1,9 @@
 # PDV Phase 6 Talos + Auri-El CK Steps
 
-Status: Manual CK/ESP walkthrough for the coupled Talos + Auri-El slice  
-Last revised: 2026-05-14
+Status: Framework ESP wiring is verifier-clean; keep as CK/xEdit reference and in-game proof checklist  
+Last revised: 2026-05-16
 
-Authoring note (2026-05-15): `tools/pdv_author.mjs` can now generate a reversible overlay patch for the supported existing-record wiring in this slice once the Talos/Auri-El quest records exist. This doc remains the manual **in-place framework ESP** path for new records, VMAD array properties such as `RivalDeities`, and final direct-ESP authoring.
+Authoring note (2026-05-15, revised 2026-05-16): `tools/pdv_author.mjs` can generate a reversible overlay patch for supported existing-record wiring in this slice once the Talos/Auri-El quest records exist, but the steady-state project target is still direct framework ownership. The temporary manager/MCM overlays have been merged back and retired. This doc remains the manual **in-place framework ESP** path for new records, VMAD array properties such as `RivalDeities`, and final direct-ESP authoring.
 
 ## Purpose
 
@@ -19,9 +19,9 @@ landed in script and tooling:
 - `tools/pdv_verify.mjs` now checks for Talos/Auri-El records, FormList
   membership, stance rows, boon assignments, and Talos rivalry wiring
 
-The scripts compile cleanly, but the live ESP still needs the actual Talos and
-Auri-El records, their origin/FormList wiring, and final spell/rivalry
-assignments.
+The scripts compile cleanly, and the live framework ESP now contains the Talos
+and Auri-El records, origin/FormList wiring, stance rows, boon assignments, and
+Talos rivalry wiring. The remaining work is in-game hostile-path proof.
 
 ## 1. Create deity quest records
 

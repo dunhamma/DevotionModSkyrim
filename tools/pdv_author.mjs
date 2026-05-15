@@ -633,8 +633,9 @@ function runApplyPhase(phaseName, options) {
   }
 
   const response = invokePatchWrite(patchRequest);
+  const hygiene = checkPatchMasterHygiene(patchRequest.output_path);
   if (options.json) {
-    console.log(JSON.stringify(response, null, 2));
+    console.log(JSON.stringify({ ...response, hygiene }, null, 2));
     return;
   }
 
@@ -660,6 +661,8 @@ function runApplyPhase(phaseName, options) {
     lines.push("");
     lines.push(`error=${response.error}`);
   }
+
+  appendPatchMasterHygieneLines(lines, hygiene);
 
   lines.push("");
   lines.push("Next step:");
@@ -698,7 +701,8 @@ function runApplyOneOffSetProperty(options) {
   }
 
   const response = invokePatchWrite(patchRequest);
-  console.log(options.json ? JSON.stringify(response, null, 2) : summarizeOneOffWrite(response, patchRequest));
+  const hygiene = checkPatchMasterHygiene(patchRequest.output_path);
+  console.log(options.json ? JSON.stringify({ ...response, hygiene }, null, 2) : summarizeOneOffWrite(response, patchRequest, hygiene));
 }
 
 function runApplyOneOffFormList(options) {
@@ -723,16 +727,65 @@ function runApplyOneOffFormList(options) {
   }
 
   const response = invokePatchWrite(patchRequest);
-  console.log(options.json ? JSON.stringify(response, null, 2) : summarizeOneOffWrite(response, patchRequest));
+  const hygiene = checkPatchMasterHygiene(patchRequest.output_path);
+  console.log(options.json ? JSON.stringify({ ...response, hygiene }, null, 2) : summarizeOneOffWrite(response, patchRequest, hygiene));
 }
 
-function summarizeOneOffWrite(response, patchRequest) {
-  return [
+function summarizeOneOffWrite(response, patchRequest, hygiene = null) {
+  const lines = [
     `output=${path.basename(patchRequest.output_path)}`,
     `success=${Boolean(response.success)}`,
     `records_written=${response.records_written ?? 0}`,
     response.error ? `error=${response.error}` : null,
-  ].filter(Boolean).join("\n");
+  ].filter(Boolean);
+  appendPatchMasterHygieneLines(lines, hygiene);
+  return lines.join("\n");
+}
+
+function checkPatchMasterHygiene(outputPath) {
+  if (!exists(outputPath)) {
+    return {
+      ok: false,
+      warning: "Patch output was not found, so master-order hygiene could not be checked.",
+      masters: [],
+    };
+  }
+
+  let inventory;
+  try {
+    inventory = loadPluginInventory(outputPath);
+  } catch (error) {
+    return {
+      ok: false,
+      warning: `Patch master-order hygiene check failed: ${error.message}`,
+      masters: [],
+    };
+  }
+
+  const masters = inventory.plugin.masters || [];
+  const firstMaster = masters[0] || "";
+  const ok = firstMaster.toLowerCase() === "skyrim.esm";
+  return {
+    ok,
+    masters,
+    warning: ok
+      ? null
+      : "xEdit may warn: modules with extended FormID range should have Skyrim.esm as their first master.",
+  };
+}
+
+function appendPatchMasterHygieneLines(lines, hygiene) {
+  if (!hygiene || hygiene.ok) {
+    return;
+  }
+
+  lines.push("");
+  lines.push("Patch hygiene warning:");
+  lines.push(`- ${hygiene.warning}`);
+  if (hygiene.masters.length) {
+    lines.push(`- Current masters: ${hygiene.masters.join(", ")}`);
+  }
+  lines.push("- Do not manually insert Skyrim.esm into the header without remapping FormIDs.");
 }
 
 function requireOption(value, label) {

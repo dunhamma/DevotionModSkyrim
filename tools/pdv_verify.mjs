@@ -30,6 +30,8 @@ const MUTAGEN_BRIDGE = path.join(
 );
 const MO2_INI = path.join(ANVIL_ROOT, "ModOrganizer.ini");
 const DEV_PROFILE = path.join(ANVIL_ROOT, "profiles", "Devotion Dev");
+const DEV_PROFILE_PLUGINS = path.join(DEV_PROFILE, "plugins.txt");
+const DEV_PROFILE_LOADORDER = path.join(DEV_PROFILE, "loadorder.txt");
 const CK_OUTPUT = path.join(ANVIL_ROOT, "mods", "Anvil - Creation Kit Output");
 const XEDIT_SEQ = path.join(
   ANVIL_ROOT,
@@ -39,6 +41,9 @@ const XEDIT_SEQ = path.join(
   "PlayerDevotion_Framework.seq",
 );
 const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "PlayerDevotion_Framework.seq");
+const MANAGER_PATRON_WIRE_PATCH = "PDV_ManagerPatronWirePatch.esp";
+const MCM_WIRE_PATCH = "PDV_MCMWirePatch.esp";
+const RETIRED_OVERLAY_PATCHES = [MANAGER_PATRON_WIRE_PATCH, MCM_WIRE_PATCH];
 
 const BASELINE_RECORDS = {
   PDV_GLO_OriginRace: "GLOB",
@@ -54,6 +59,7 @@ const BASELINE_RECORDS = {
   PDV_Deity_Talos: "QUST",
   PDV_Deity_AuriEl: "QUST",
   PDV_FLST_AllDeities: "FLST",
+  PDV_MCM: "QUST",
 };
 
 const PHASE3_RECORDS = {
@@ -71,6 +77,7 @@ const COMPILED_SCRIPTS = {
   PDV_Deity_AuriEl: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
+  PDV_MCM: "required",
 };
 
 const MANAGER_PROPERTIES = {
@@ -170,6 +177,16 @@ const RECEIVER_PROPERTIES = {
   PDV_Router: "PDV_ActionRouter",
 };
 
+const MCM_PROPERTIES = {
+  PDV_Manager: "PDV__ManagerQuest",
+  PDV_FLST_AllDeities: "PDV_FLST_AllDeities",
+  PDV_GLO_ActivePiety: "PDV_GLO_ActivePiety",
+  PDV_GLO_ActiveTier: "PDV_GLO_ActiveTier",
+  PDV_GLO_ActiveDeityIndex: "PDV_GLO_ActiveDeityIndex",
+  PDV_GLO_PatronDeity: "PDV_GLO_PatronDeity",
+  PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
+};
+
 class Verifier {
   constructor({ strictPhase3 = false } = {}) {
     this.strictPhase3 = strictPhase3;
@@ -221,6 +238,7 @@ class Verifier {
       this.checkTalosRecord();
       this.checkAuriElRecord();
       this.checkFormListRecord();
+      this.checkMcmRecord();
       this.checkPhase3Records();
     }
     this.checkScripts();
@@ -341,6 +359,10 @@ class Verifier {
       response = this.bridge(
         {
           command: "read_records",
+          // VMAD array properties such as Quest[] RivalDeities sit just past
+          // the bridge default depth and otherwise truncate to max-depth
+          // sentinels, creating false wiring warnings.
+          max_depth: 10,
           records: wantedFormids.map((formid) => ({
             plugin_path: toPosix(PDV_ESP),
             formid,
@@ -574,11 +596,15 @@ class Verifier {
   checkRivalList(checkName, props, expectedEdids) {
     const rivalProp = props.get("RivalDeities");
     if (!rivalProp) {
-      this.fail(checkName, "RivalDeities is missing.", PDV_ESP);
+      if (!expectedEdids.length) {
+        this.pass(checkName, "RivalDeities is absent, which is acceptable for an empty first-pass rivalry list.", PDV_ESP);
+      } else {
+        this.fail(checkName, "RivalDeities is missing.", PDV_ESP);
+      }
       return;
     }
 
-    const rivals = Array.isArray(rivalProp.Objects) ? rivalProp.Objects : [];
+    const rivals = extractFormidsFromArrayProperty(rivalProp);
     const actualEdids = rivals.map((formid) => formidToEdid(formid, this.recordsByEdid)).filter(Boolean);
 
     if (actualEdids.length !== expectedEdids.length || !expectedEdids.every((edid) => actualEdids.includes(edid))) {
@@ -589,11 +615,15 @@ class Verifier {
 
     const multProp = props.get("RivalMultipliers");
     if (!multProp) {
-      this.fail(checkName, "RivalMultipliers is missing.", PDV_ESP);
+      if (!expectedEdids.length) {
+        this.pass(checkName, "RivalMultipliers is absent, which is acceptable for an empty first-pass rivalry list.", PDV_ESP);
+      } else {
+        this.fail(checkName, "RivalMultipliers is missing.", PDV_ESP);
+      }
       return;
     }
 
-    const multipliers = Array.isArray(multProp.Datas) ? multProp.Datas : [];
+    const multipliers = extractNumericArrayProperty(multProp);
     if (multipliers.length !== expectedEdids.length) {
       this.warn(checkName, `RivalMultipliers count is ${multipliers.length}, expected ${expectedEdids.length}.`, PDV_ESP);
     } else {
@@ -642,6 +672,22 @@ class Verifier {
     }
   }
 
+  checkMcmRecord() {
+    const detail = this.recordDetails.get("PDV_MCM");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV_MCM");
+    if (!script) {
+      this.fail("PDV_MCM script", "PDV_MCM is not attached.", PDV_ESP);
+      return;
+    }
+
+    this.pass("PDV_MCM script", "PDV_MCM is attached.", PDV_ESP);
+    this.checkObjectProperties("PDV_MCM property", propertyMap(script), MCM_PROPERTIES);
+  }
+
   checkOptionalQuestScript(questEdid, scriptName, expectedProperties) {
     const detail = this.recordDetails.get(questEdid);
     if (!detail) {
@@ -658,7 +704,7 @@ class Verifier {
     this.checkObjectProperties(`${questEdid} property`, propertyMap(script), expectedProperties);
   }
 
-  checkObjectProperties(checkName, props, expectedProperties) {
+  checkObjectProperties(checkName, props, expectedProperties, options = {}) {
     for (const [propName, expectedEdid] of Object.entries(expectedProperties)) {
       const prop = props.get(propName);
       if (!prop) {
@@ -743,6 +789,13 @@ class Verifier {
       }
     }
 
+    const straySkyuiOutputs = findStraySkyuiOutputs();
+    if (straySkyuiOutputs.length) {
+      this.fail("SkyUI output hygiene", `Unexpected SkyUI outputs found in Devotion\\Scripts: ${straySkyuiOutputs.join(", ")}.`, DEVOTION_PEX);
+    } else {
+      this.pass("SkyUI output hygiene", "No stray SKI_*.pex files found in Devotion\\Scripts.", DEVOTION_PEX);
+    }
+
   }
 
   checkSeq() {
@@ -779,8 +832,8 @@ class Verifier {
   }
 
   checkProfile() {
-    const pluginsTxt = path.join(DEV_PROFILE, "plugins.txt");
-    const loadorderTxt = path.join(DEV_PROFILE, "loadorder.txt");
+    const pluginsTxt = DEV_PROFILE_PLUGINS;
+    const loadorderTxt = DEV_PROFILE_LOADORDER;
 
     if (!exists(pluginsTxt)) {
       this.warn("MO2 profile", "plugins.txt missing.", pluginsTxt);
@@ -795,6 +848,19 @@ class Verifier {
       this.warn("MO2 profile", `PlayerDevotion_Framework.esp is present but not active: ${activeLine}`, pluginsTxt);
     } else {
       this.fail("MO2 profile", "PlayerDevotion_Framework.esp is missing from plugins.txt.", pluginsTxt);
+    }
+
+    for (const patchName of RETIRED_OVERLAY_PATCHES) {
+      const patchLine = pluginsLines.find((line) => line.replace(/^\*/, "").toLowerCase() === patchName.toLowerCase());
+      if (patchLine === `*${patchName}`) {
+        this.warn(
+          "Retired overlay patch",
+          `${patchName} is still active. Its VMAD data has been merged back into PlayerDevotion_Framework.esp, so leave it unticked.`,
+          pluginsTxt,
+        );
+      } else if (patchLine) {
+        this.pass("Retired overlay patch", `${patchName} is present but inactive.`, pluginsTxt);
+      }
     }
 
     if (exists(loadorderTxt)) {
@@ -899,6 +965,46 @@ function formidToEdid(formid, recordsByEdid) {
   return null;
 }
 
+function extractFormidsFromArrayProperty(prop) {
+  const raw = Array.isArray(prop.Objects)
+    ? prop.Objects
+    : Array.isArray(prop.Data)
+      ? prop.Data
+      : [];
+
+  return raw
+    .map((entry) => {
+      if (typeof entry === "string") {
+        return entry;
+      }
+      if (entry && typeof entry === "object" && typeof entry.Object === "string") {
+        return entry.Object;
+      }
+      return null;
+    })
+    .filter(Boolean);
+}
+
+function extractNumericArrayProperty(prop) {
+  const raw = Array.isArray(prop.Datas)
+    ? prop.Datas
+    : Array.isArray(prop.Data)
+      ? prop.Data
+      : [];
+
+  return raw
+    .map((entry) => {
+      if (typeof entry === "number") {
+        return entry;
+      }
+      if (entry && typeof entry === "object" && typeof entry.Data === "number") {
+        return entry.Data;
+      }
+      return null;
+    })
+    .filter((value) => typeof value === "number");
+}
+
 function valuesEqual(actual, expected) {
   if (typeof actual === "number" && typeof expected === "number") {
     return Math.abs(actual - expected) < 0.0001;
@@ -912,6 +1018,16 @@ function exists(filePath) {
 
 function mtimeMs(filePath) {
   return fs.statSync(filePath).mtimeMs;
+}
+
+function findStraySkyuiOutputs() {
+  if (!exists(DEVOTION_PEX)) {
+    return [];
+  }
+
+  return fs.readdirSync(DEVOTION_PEX)
+    .filter((name) => /^SKI_.*\.pex$/i.test(name))
+    .sort();
 }
 
 function readLines(filePath) {

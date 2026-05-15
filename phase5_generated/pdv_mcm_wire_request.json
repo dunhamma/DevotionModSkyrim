@@ -1,0 +1,1811 @@
+{
+  "output_path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/PDV_Author_one_off_set_property_20260515_205246.esp",
+  "esl_flag": false,
+  "author": "PDV Author",
+  "records": [
+    {
+      "op": "override",
+      "formid": "PlayerDevotion_Framework.esp:03AFBE",
+      "source_plugin": "PlayerDevotion_Framework.esp",
+      "attach_scripts": [
+        {
+          "name": "PDV_MCM",
+          "properties": [
+            {
+              "name": "PDV_Manager",
+              "type": "Object",
+              "value": "PlayerDevotion_Framework.esp:00C325"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "load_order": {
+    "game_release": "SkyrimSE",
+    "listings": [
+      {
+        "mod_key": "skyrim.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/Stock Game/Data/Skyrim.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "update.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/Stock Game/Data/Update.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "dawnguard.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Cleaned Base Game Masters/Dawnguard.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "hearthfires.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Cleaned Base Game Masters/HearthFires.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "dragonborn.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Cleaned Base Game Masters/Dragonborn.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "ccbgssse001-fish.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Creation Club - Fishing/ccbgssse001-fish.esm",
+        "enabled": false
+      },
+      {
+        "mod_key": "ccqdrsse001-survivalmode.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Creation Club - Survival Mode/ccqdrsse001-survivalmode.esl",
+        "enabled": false
+      },
+      {
+        "mod_key": "ccbgssse037-curios.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Creation Club - Rare Curios/ccbgssse037-curios.esl",
+        "enabled": false
+      },
+      {
+        "mod_key": "ccbgssse025-advdsgs.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Creation Club - Saints & Seducers/ccbgssse025-advdsgs.esm",
+        "enabled": false
+      },
+      {
+        "mod_key": "_resourcepack.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Resource Pack/_ResourcePack.esl",
+        "enabled": false
+      },
+      {
+        "mod_key": "unofficial skyrim special edition patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Unofficial Skyrim Special Edition Patch/unofficial skyrim special edition patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "disable ussep book.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Disable USSEP Book/Disable USSEP Book.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "navigator-navfixes.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Navigator - Navmesh Fixes/Navigator-NavFixes.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "unofficial skyrim modders patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Unofficial Skyrim Modder's Patch/Unofficial Skyrim Modders Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "creation club - rcpa fix.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/CC - Rare Curios - Poison Apple Texture Fix/Creation Club - RCPA fix.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "skyrim road reconstruction project.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim Road Reconstruction Project/Skyrim Road Reconstruction Project.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "landscape and water fixes.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim Landscape and Water Fixes/Landscape and Water Fixes.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dwemergatesnorelock.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Dwemer Gates Don't Reset/DwemerGatesNoRelock.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "simplevampfixessse.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/SUEMR SSE v3.0 - Simple Vampire Fixes/SimpleVampFixesSSE.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "smoothcam.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/SmoothCam/SmoothCam.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "ahzmorehud.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/moreHUD AE/AHZmoreHUD.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "ahzmorehudinventory.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/moreHUD Inventory Edition/AHZmoreHUDInventory.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "truehud.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/TrueHUD - HUD Additions/TrueHUD.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "lightened skyrim - merged.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lightened Skyrim/Lightened Skyrim - merged.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "betterdynamicash-disablerefs.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Better Dynamic Ash SE/BetterDynamicAsh-DisableRefs.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "better dynamic snow se - disablerefs.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Better Dynamic Snow SE/Better Dynamic Snow SE - DisableRefs.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "natural waterfalls.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Natural Waterfalls/Natural Waterfalls.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "natural waterfalls - blackreach.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Natural Waterfalls/Natural Waterfalls - Blackreach.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "natural waterfalls - dawnguard.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Natural Waterfalls/Natural Waterfalls - Dawnguard.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "natural waterfalls - dragonborn.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Natural Waterfalls/Natural Waterfalls - Dragonborn.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "praedys_soulcairn.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Praedy's Soul Cairn/Praedys_Soulcairn.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux orbis - master plugin.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Orbis/Lux Orbis - Master plugin.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "man_daedricshrines - azura statue replacer by xtudo - 3x its size version.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Daedric Shrines - Azura - Vanilla Replacer/man_DaedricShrines - Azura Statue Replacer by Xtudo - 3x its size version.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "partitioned snow meshes.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Icy Mesh Remaster/Partitioned snow Meshes.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "water for enb.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Water for ENB/Water for ENB.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - master plugin.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux/Lux - Master plugin.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "icyfixes.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Icy Mesh Remaster/IcyFixes.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "iceshaderdisabled.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Icy Mesh Remaster/IceShaderDisabled.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "fyx - windhelm graveyard.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/FYX - Windhelm Graveyard/FYX - Windhelm Graveyard.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "icelodfull.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Icy Mesh Remaster/IceLODFull.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "high poly head.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/High Poly Head/High Poly Head.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "imrpatchforvanillaandbds.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Icy Mesh Remaster/IMRPatchForVanillaAndBDS.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "expressive facegen morphs.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Expressive Facegen Morphs SE/Expressive Facegen Morphs.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - resources.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Via/Lux - Resources.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux via.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Via/Lux Via.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "animated ice bergs.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Animated Icebergs/Animated Ice Bergs.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "animated ice floes.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Animated Ice Floes/Animated Ice Floes.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "animated ice bergs - large ice bergs.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Animated Icebergs/Animated Ice Bergs - Large Ice Bergs.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "projectedglaciersnow.esl",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Icy Mesh Remaster/ProjectedGlacierSnow.esl",
+        "enabled": true
+      },
+      {
+        "mod_key": "simplechildren.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Simple Children/SimpleChildren.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dyndolod.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - DynDOLOD Output/DynDOLOD.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "solitudelodarch.esm",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Solitude Rock Arch LOD Fix (By force)/SolitudeLODArch.esm",
+        "enabled": true
+      },
+      {
+        "mod_key": "revert runandwalkpaces.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/USMP - Revert Run & Walk Paces/Revert Runandwalkpaces.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "debugmenu.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Debug Menu - In-Game Navmesh Viewer and More/DebugMenu.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "usmp - psijic hood fix for beast races.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/USMP - Psijic Hood Fix for Beast Races/USMP - Psijic Hood Fix for Beast Races.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "survivalmodeimproved.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Survival Mode Improved - SKSE/SurvivalModeImproved.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "emish - dragon crash land markers fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/EMISH - Dragon Crash Land Markers Fix/EMISH - Dragon Crash Land Markers Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "landscape and water fixes - patch - navigator esl.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim Landscape and Water Fixes/Landscape and Water Fixes - Patch - Navigator ESL.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "landscape and water fixes - patch - srrp.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim Landscape and Water Fixes/Landscape and Water Fixes - Patch - SRRP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anthordragonfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Mount Anthor Dragon Fix/AnthorDragonFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "mannequinmanagement.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Mannequin Management/MannequinManagement.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dragon dies on touchdown - fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Dragon Dies on Touchdown Fix/Dragon dies on Touchdown - fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_dragon dies on touchdown - fix - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Dragon dies on Touchdown - fix - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dwemer gates don't reset - navigator patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Dwemer Gates Don't Reset - Patches/Dwemer Gates Don't Reset - Navigator Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "shalidor's maze fixes.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Labyrinthian Shalidor's Maze Fixes/shalidor's maze fixes.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "labyrinthianpuzzlesoundfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Shalidor's Maze Sound Fix/LabyrinthianPuzzleSoundFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dunpoisoldiersraidonstarttweak.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/dunPOISoldiersRaidOnStart Script Tweak/dunPOISoldiersRaidOnStartTweak.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "proving honor companions quest progression fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Proving Honor Companions Quest Progression Fix/Proving Honor Companions Quest Progression Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "stalhrimsourcefix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Source of Stalhrim Quest Fix/StalhrimSourceFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "hearthfires houses building fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Hearthfires Houses Building Fix/Hearthfires Houses Building Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "stamina of steeds.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Stamina of Steeds/Stamina of Steeds.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "chillwinddephts.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Chillwind Depths CTD Fix/ChillwindDephts.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "seranaeyefix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Universal Cured Serana Eye Fix/SeranaEyeFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "ballistacrashfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Dwemer Ballista Crash fix/ballistacrashfix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "rock traps trigger fixes.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Rock Traps Trigger Fixes/Rock Traps Trigger Fixes.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "zerobountyhostilityfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Zero Bounty Hostility Fix/zeroBountyHostilityFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "bleedoutfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/NPC Stuck in Bleedout Fix/bleedoutFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "stuck on screen fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Stuck on Screen Load Door Prompt Fix/stuck on screen fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "guild master's armor first person texture fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Guild Master's Armor First Person Texture Fix/Guild Master's Armor First Person Texture Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "onlyonce.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Civil War Intro Scenes Run Only Once/OnlyOnce.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "durak teleport fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Durak Teleport Fix/Durak Teleport Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "unaggressive dragon priests fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Unaggressive Dragon Priests Fix/Unaggressive Dragon Priests Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "adoptionandmovingfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Adoption Spouse and Moving Fixes/AdoptionAndMovingFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_adoptionandmovingfix - ussep patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_AdoptionAndMovingFix - USSEP Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "fixlod.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/LOD Unloading Bug Fix/fixLOD.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "skuldafnrailingnavmeshed.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Safety of Skuldafn - Railing and Small Fixes/SkuldafnRailingNavmeshed.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "animals swim.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Animals Swim (Sort of)/Animals Swim.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "simplicity of seeding.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Simplicity of Seeding - Better Hearthfires and Farming CC Planter Scripts/Simplicity of Seeding.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "arcaneblacksmithhoodfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Arcane Blacksmith's Apron - Hood Fixes/ArcaneBlacksmithHoodFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "enchantablespecialitemfix_ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Enchantable Special Item Fix/EnchantableSpecialItemFix_USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "hidequestitems.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Hide Quest Items in Container Menu/hideQuestItems.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "nilheim.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Nilheim BQ Fix/Nilheim.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "quest journal limit bug fixer.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Quest Journal Limit Bug Fixer - Recover Disappeared Quests/Quest Journal Limit Bug Fixer.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dlc2marchofthedeadfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/DLC2 March of the Dead Fix/DLC2MarchoftheDeadFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "missingmercerworkaround.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Irkngthand's Possible Bugs Fix/MissingMercerWorkaround.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "stealthkilldetectionfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Stealth Detection Fixes/StealthKillDetectionFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "eve - bleeding damage fixes.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Bleeding Damage Fixes/eve - bleeding damage fixes.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "beardmaskfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Beard Mask Fix - Beards Use Slot 44 SKSE Plugin/BeardMaskFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "seranahoodfixwithanim.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Serana's Hood Fix with Animation/SeranaHoodFixWithAnim.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "quick start - se.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Optional Quick Start - SE/Quick Start - SE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_quick start - se - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Quick Start - SE - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "skyui_se.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/SkyUI/SkyUI_SE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "mcmhelper.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/MCM Helper/MCMHelper.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "uiextensions.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/UIExtensions/UIExtensions.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "soul-cairn objects secured.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Security Overhaul SKSE - Soul-Cairn Objects Secured/Soul-Cairn Objects Secured.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "betterthirdpersonselection.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Better Third Person Selection - BTPS/BetterThirdPersonSelection.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "photomode.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Photo Mode/PhotoMode.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "racemenu.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/RaceMenu/RaceMenu.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "quicklootie.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/QuickLoot IE - A QuickLoot EE Fork/QuickLootIE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "loadscreencompendium.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lore-Friendly Load Screen Compendium/LoadScreenCompendium.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_loadscreencompendium - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_LoadScreenCompendium - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "improvedloadingscreencolors.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Improved Loading Screen Colors/ImprovedLoadingScreenColors.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "audio overhaul skyrim.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Audio Overhaul for Skyrim SE/Audio Overhaul Skyrim.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_audio overhaul skyrim - usmp.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Audio Overhaul Skyrim - USMP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "barefoot footstep extended.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Barefoot Footstep Extended/Barefoot Footstep Extended.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "eve - footstep sounds restored.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Footstep Sounds Restored - Cut Content Restoration/EVE - Footstep Sounds Restored.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "werewolf footstep fx.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Werewolf Footstep FX Improved/Werewolf Footstep FX.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "blackreacheerieambience.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Blackreach Eerie Ambience/BlackreachEerieAmbience.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_blackreacheerieambience - audio overhaul skryim.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_BlackreachEerieAmbience - Audio Overhaul Skryim.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "whispering tomes of apocrypha.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Whispering Tomes of Apocrypha/Whispering Tomes of Apocrypha.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "revenant spirits of the soul cairn.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Revenant Spirits of the Soul Cairn/Revenant Spirits of the Soul Cairn.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "volkiharsoundscapeoverhaul.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Volkihar Soundscape Overhaul/VolkiharSoundscapeOverhaul.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "solstheim exterior soundscapes.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Solstheim Exterior Soundscapes/Solstheim Exterior Soundscapes.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "solstheim exterior soundscapes - all maker stones.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Solstheim Exterior Soundscapes/Solstheim Exterior Soundscapes - All Maker Stones.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "whalesoffthecoast.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Whales Off The Coast/WhalesOffTheCoast.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "murderofsongbirds.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Murder of Songbirds/MurderOfSongbirds.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "distantdragonroars.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Distant Dragon Roars/DistantDragonRoars.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "nordic winds.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Nordic Winds/Nordic Winds.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "murmurs and mead.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Murmurs and Mead/Murmurs and Mead.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "the standing sound stones.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/The Standing Sound Stones/The Standing Sound Stones.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "distant rolling thunder.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Distant Rolling Thunder/Distant Rolling Thunder.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "whispers of the daedric princes.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Whispers of the Daedric Princes/Whispers of the Daedric Princes.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "voiced word walls.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Dragon-Voiced Word Walls/Voiced Word Walls.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dwemerpistonfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Avanchnzel Dwemer Piston Sound Hotfix/DwemerPistonFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "saints and seducers - less obnoxious elytra footsteps.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/CC Saints and Seducers - Less Obnoxious Elytra Footsteps/Saints and Seducers - Less Obnoxious Elytra Footsteps.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "xpmse.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/XP32 Maximum Skeleton Special Extended - XPMSSE/XPMSE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "truedirectionalmovement.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/True Directional Movement - Modernized Third Person Gameplay/TrueDirectionalMovement.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "tdm target lock fix - bristleback.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/True Directional Movement Lock-on Fixes/TDM Target Lock Fix - Bristleback.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "eve - ghostly instruments fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Bards Ghostly Instruments Fix/EVE - Ghostly Instruments Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "particle patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Particle Patch/Particle Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "smim-se-merged-all.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Static Mesh Improvement Mod - SMIM/SMIM-SE-Merged-All.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "sb_traps.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/SB - Pressure Plate Trap Blending/SB_Traps.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "sb_windhelmentrance.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/SB - Fixed Windhelm Entrance/SB_WindhelmEntrance.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "hpp - my fixes by xtudo - chopping blocks.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/High Poly Project - Xtudo's Chopping Blocks and Firewood Fix/HPP - My fixes by Xtudo - Chopping Blocks.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "wiz_foscsf.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Snowy Surfaces Sound Collision and Aesthetics/WIZ_FoscsF.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "solitude braziers.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Sconces of Solitude - Unique Solitude Braziers/Solitude Braziers.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "solitude empty landscape fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Solitude Empty Landscape Fix/Solitude Empty Landscape Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "markarth exterior 01 - river water fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Markarth Exterior 01 - River Water Fix/Markarth Exterior 01 - River Water Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "gqj_dg_vampireamuletfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Gemling Queen Jewelry SE/GQJ_DG_vampireamuletfix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "soul cairn landscape fixes.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Soul Cairn Landscape Fixes/Soul Cairn Landscape Fixes.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "embers xd.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Embers XD/Embers XD.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "embers xd - patch - survival mode improved.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Embers XD/Embers XD - Patch - Survival Mode Improved.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "embers xd - fire magick add-on.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Embers XD/Embers XD - Fire Magick Add-On.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "embers xd - reduced actor flames.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Embers XD/Embers XD - Reduced Actor Flames.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "deadlyspellimpacts.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Deadly Spell Impacts/DeadlySpellImpacts.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "psi.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Parallax Spell Impacts/PSI.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "psi aos patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Parallax Spell Impacts - AOS Patch/PSI AOS Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "deadlyspellimpacts - two fire.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Deadly Spell Impacts/DeadlySpellImpacts - Two Fire.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "fleshfx.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/FleshFX/FleshFX.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dd - enhanced blood main lite.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Enhanced Blood Textures (LITE VERSION)/dD - Enhanced Blood Main LITE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "aos_ebt lite patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Audio Overhaul for Skyrim SE/AOS_EBT LITE Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "moonsandstars.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Moons and Stars - Sky Overhaul SKSE/MoonsAndStars.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "nat-enb.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/NAT.ENB III - Weather Plugin/NAT-ENB.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "nat-enb summer patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/NAT-ENB III - Summer Patch/NAT-ENB SUMMER patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "nat-cs.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/NAT.CS III/NAT-CS.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_nat-enb - soul cairn fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_NAT-ENB - Soul Cairn Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "moonglowsize.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Praedy's Sky AIO/MoonGlowSize.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "redmountainplumese.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Red Mountain Plume Visible from Skyrim/RedMountainPlumeSE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "better dynamic snow se.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Better Dynamic Snow SE/Better Dynamic Snow SE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "better dynamic ash.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Better Dynamic Ash SE/Better Dynamic Ash.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "stretched snow begone.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Stretched Snow Begone - Definitive Edition/Stretched Snow Begone.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "stretched snow begone small update.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Stretched Snow Begone - Definitive Edition/Stretched Snow Begone Small Update.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "blendedroads.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Blended Roads/BlendedRoads.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "blendedroadsfixes.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Misc. Blended Road Fixes/BlendedRoadsFixes.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "stones of solitude.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Stones of Solitude - Better Blended Rock Piles/Stones of Solitude.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "hd stone quarry and clay deposits se.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/HD Stone Quarry and Clay Deposit SE/HD Stone Quarry and Clay Deposits SE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "simple snow improvements - skyrim.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Simple Snow Improvements - Skyrim Fixes (BOS)/Simple Snow Improvements - Skyrim.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "simple snow improvements - snow forts.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Simple Snow Improvements - Snow Forts (BOS)/Simple Snow Improvements - Snow Forts.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "simple snow improvements - giant obelisk.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Simple Snow Improvements - Giant Obelisk Fixes (BOS)/Simple Snow Improvements - Giant Obelisk.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "simple snow improvements - solstheim ruins.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Simple Snow Improvements - Solstheim Ruins (BOS)/Simple Snow Improvements - Solstheim Ruins.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "icy winterhold spire.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Icy Winterhold Spire - Revised Edition/Icy Winterhold Spire.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "enhanced landscapes - dead marsh.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Enhanced Landscapes - Dead Marsh Standalone/Enhanced Landscapes - Dead Marsh.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_el dead marsh - slawf patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_EL Dead Marsh - SLaWF Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_el dead marsh - ussep patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_EL Dead Marsh - USSEP Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "nature of the wild lands.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Nature of the Wild Lands/Nature of the Wild Lands.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "notwl - autumn rift.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Nature of the Wild Lands/NotWL - Autumn Rift.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "notwl - autumn tundra.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Nature of the Wild Lands/NotWL - Autumn Tundra.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_notwl tree replacer only - clipping fixes.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_NotWL Tree Replacer Only - Clipping Fixes.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "s3dtrees nextgenerationforests.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim 3D Trees and Plants/S3DTrees NextGenerationForests.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_s3d trees and plants - ussep patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_S3D Trees and Plants - USSEP Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "aspens ablaze.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Aspens Ablaze/Aspens Ablaze.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_aspens ablaze - emish patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Aspens Ablaze - EMISH Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "sleeping tree path patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Fancy Sleeping Tree Replacer/Sleeping Tree Path Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_removed ugly flora.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Removed Ugly Flora.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "freak's floral solstheim.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Freak's Floral Solstheim - A Cathedral Grass Overhaul/Freak's Floral Solstheim.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "freak's floral fields.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Freak's Floral Fields - A Cathedral Grass Overhaul/Freak's Floral Fields.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "freak's floral fields- all dead tundra.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Freak's Floral Fields - A Cathedral Grass Overhaul/Freak's Floral Fields- All Dead Tundra.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "freak's floral fields- mixed reach.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Freak's Floral Fields - A Cathedral Grass Overhaul/Freak's Floral Fields- Mixed Reach.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "freak's floral fields- marsh ultra.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Freak's Floral Fields - A Cathedral Grass Overhaul/Freak's Floral Fields- Marsh Ultra.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "freak's floral fields- volcanic wasteland.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Freak's Floral Fields - A Cathedral Grass Overhaul/Freak's Floral Fields- Volcanic Wasteland.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "freak's floral fields -short pine.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Freak's Floral Fields - A Cathedral Grass Overhaul/Freak's Floral Fields -Short Pine.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_freak's flora fields - short pine edit.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Freak's Flora Fields - Short Pine Edit.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "grass bounds - freak's floral fields.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/No Grass In Objects - Freak's Floral Fields - Patch/Grass Bounds - Freak's Floral Fields.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "landscape fixes for grass mods.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Landscape Fixes For Grass Mods/Landscape Fixes For Grass Mods.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "landscape and water fixes - patch - lffgm.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim Landscape and Water Fixes/Landscape and Water Fixes - Patch - LFfGM.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "ivy replacer bos.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/High Quality Ivy/Ivy Replacer BOS.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "flower mod.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Reimagined Mountain Flowers/flower mod.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "blendedshrooms.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Better Blended Mushrooms/blendedshrooms.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_praedy's soul cairn - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Praedy's Soul Cairn - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "praedy's ancientfalmerthrone.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Praedy's Chantry of Auriel - SE/Praedy's AncientFalmerThrone.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dwemer water wheels.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Dwemer Water Wheels/Dwemer Water Wheels.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "faultier's pbr dlc01 architecture.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Faultier's PBR DLC01 architecture/Faultier's PBR DLC01 architecture.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "faultier's pbr dlc02 architecture.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Faultier's PBR DLC02 architecture/Faultier's PBR DLC02 architecture.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dovahnique's diverse dark elf lanterns - bos.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Dovahnique's Diverse Dark Elf Lanterns/Dovahnique's Diverse Dark Elf Lanterns - BOS.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "skyrim remastered - ice caves fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim Remastered - Caves/Skyrim Remastered - Ice Caves Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "skyrim remastered - high hrothgar.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim Remastered - High Hrothgar/Skyrim Remastered - High Hrothgar.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "skykings unique signs.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyking Unique Signs/Skykings Unique Signs.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_skyking's unique signs - ussep patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_SkyKing's Unique Signs - USSEP Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "thalmorrefrs.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Thalmor Embassy - LOD Fix Addon/ThalmorRefrs.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "3d shack kit walls - base object swapper.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/FYX - 3D Shack Kit Walls - BOS/3D Shack Kit Walls - Base Object Swapper.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "abandonedshackinteriorfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/FYX - 3D Shack Kit Walls - aljo's Abandoned Shack Interior Fix/AbandonedShackInteriorFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "man_marastatue.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Statue of Mara/man_maraStatue.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "man_dibella.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Statue of Dibella/man_dibella.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "man_kynarethstatue.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Statue of Kynareth/man_kynarethStatue.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "man_nocturnalshrine.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Daedric Shrines - Nocturnal/man_nocturnalShrine.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "man_malacathshrine.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Daedric Shrines - Malacath/man_malacathShrine.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "man_mehrunesdagonshrine.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Daedric Shrines - Mehrunes Dagon/man_MehrunesDagonShrine.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "man_meridiashrine.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Daedric Shrines - Meridia/man_MeridiaShrine.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "praedysazurasrealm.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Praedy's Azura's Star and Realm/PraedysAzurasRealm.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_praedy's azura's realm - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Praedy's Azura's Realm - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "rudys nordic ruin - snow fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Rudy's HQ Snowy Nordic Ruins Fixes/Rudys Nordic Ruin - Snow Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "js dwarven oil se.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/JS Dwarven Oil SE/JS Dwarven Oil SE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "book covers skyrim updated.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Book Covers Skyrim Updated/Book Covers Skyrim Updated.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "js knapsacks se.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/JS Knapsacks SE/JS Knapsacks SE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "rudy nordic pottery sse.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Rudy HQ - Miscellaneous SE/Rudy Nordic Pottery SSE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "praedy's soulgems.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Praedy's Soul Gems/Praedy's SoulGems.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "praedy's soulessencegem.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Praedy's Soul Gems/Praedy's SoulEssenceGem.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "praedysskulls.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Unique Skulls HD - SE/PraedysSkulls.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_praedy's skulls - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Praedy's Skulls - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_praedy's skulls - usmp.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Praedy's Skulls - USMP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "praedyselderscrollsoulcairnfix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Praedy and Willow's Elder Scroll and Elder Council Amulet Replacers/PraedysElderScrollSoulCairnFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "js vanilla circlets se.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/JS Vanilla Circlets SE/JS Vanilla Circlets SE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_js vanilla circlets - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_JS Vanilla Circlets - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "js unique utopia se - rings - johnskyrim.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/JS Unique Utopia SE - Rings/JS Unique Utopia SE - Rings - Johnskyrim.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_js unique utopia rings - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_JS Unique Utopia Rings - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "heartbeat.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Beating Daedra Sound Mod (Plus Animated Heart Mesh - Particle Light - CS ENB)/Heartbeat.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "praedy's stavesaio.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Praedy's Staves AIO - SE/Praedy's StavesAIO.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "praedystaves - ussep patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Praedy's Staves AIO Patch Hub/Praedystaves - USSEP patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "hdt-smp vanilla.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/HDT-SMP Vanilla Armors/HDT-SMP Vanilla.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "commonclothing-jarlsleeves.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Common Clothing Retexture SE/CommonClothing-JarlSleeves.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "forswornretexture unique armor of the old gods.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Forsworn Armors and Weapons Retexture SE/ForswornRetexture Unique Armor of the Old Gods.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_xavbio's armor of the old gods - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Xavbio's Armor of the Old Gods - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "imperial armors and weapons retexture se - penitus pants.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Imperial Armors and Weapons Retexture SE/Imperial Armors and Weapons Retexture SE - Penitus Pants.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "js unique utopia se - daggers - johnskyrim.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/JS Unique Utopia SE - Daggers/JS Unique Utopia SE - Daggers - Johnskyrim.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_js unique utopia daggers - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_JS Unique Utopia Daggers - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "zz_horseoverhaul.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/zzjay's Horse Overhaul/zz_HorseOverhaul.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_zzjay's horse overhaul - ussep.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_zzjay's Horse Overhaul - USSEP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "uniquedragonpriests_xb.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Dragon Priests Retexture SE/UniqueDragonPriests_XB.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "sbbe.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/SpiRally's Beautiful Butterflies Enhanced/sbbe.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "skyrim snow dogs.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim Snow Dogs (Husky)/Skyrim Snow Dogs.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "armoredsnowdogs.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim Snow Dogs (Husky)/ArmoredSnowDogs.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "vigilancereborn.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Vigilance Reborn SE/VigilanceReborn.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "meekoreborn.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Meeko Reborn SE/MeekoReborn.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "uniquebarbas.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Unique Barbas Retexture/UniqueBarbas.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "luminousatronachs.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Luminous Atronachs/LuminousAtronachs.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "praedysskeletons.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skeleton Replacer HD/PraedysSkeletons.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "refinedwerebearsfemalefix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Refined Werebear Replacer SSE/RefinedWerebearsFemaleFix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "female woodelf fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Female Bosmer Normal Map Fix/Female Woodelf Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "vanillaargoniansredux.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Flawn's Vanilla Argonians Redux/VanillaArgoniansRedux.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "betterargonianhorns.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Better Argonian Horns/BetterArgonianHorns.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "eyes nouveaux.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Eyes Nouveaux/Eyes Nouveaux.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "eyes nouveaux - daedra and devotees.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Eyes Nouveaux - Daedra and Devotees/Eyes Nouveaux - Daedra and Devotees.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "eyes nouveaux - vanilla character presets.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Eyes Nouveaux - Vanilla Character Presets Patched/Eyes Nouveaux - Vanilla Character Presets.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "faithful faces.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Faithful Faces - NPC Overhaul with SMP Hair Physics/Faithful Faces.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "faithful faces0.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Faithful Faces - NPC Overhaul with SMP Hair Physics/Faithful Faces0.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "faithful faces - creation club.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Faithful Faces - Creation Club NPC Overhaul/Faithful Faces - Creation Club.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "baobhansith_serana.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Baobhan Sith - Serana Refined/BaobhanSith_Serana.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "facegenforkids.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Simple Children/FacegenForKids.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "simple children - ussep aventus aretino patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Simple Children - USSEP Aventus Aretino Patch/Simple Children - USSEP Aventus Aretino Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_simple children - usmp.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Simple Children - USMP.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "morewoodenbridges.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/More Wooden Bridges/MoreWoodenBridges.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "northern marsh bridges se.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Northern Marsh Bridges/Northern Marsh Bridges SE.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "landscape and water fixes - patch - northern marsh bridges.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Skyrim Landscape and Water Fixes/Landscape and Water Fixes - Patch - Northern Marsh Bridges.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "unique goldenglow estate crossing.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Unique Goldenglow Estate Crossing/Unique Goldenglow Estate Crossing.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "ivy - riverwood smelter addon.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Ivy - Riverwood Smelter Addon/Ivy - Riverwood Smelter Addon.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "ivy - riverwood smelter addon - ussep patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Ivy - Riverwood Smelter Addon/Ivy - Riverwood Smelter Addon - USSEP Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "ivy - whiterun - well overhaul.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Ivy - Whiterun Well Overhaul/Ivy - Whiterun - Well Overhaul.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "ivy - whiterun overhaul - no easteregg.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Ivy - Whiterun Well Overhaul/Ivy - Whiterun Overhaul - No Easteregg.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "ivy - whiterun - well overhaul - normal lantern.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Ivy - Whiterun Well Overhaul/Ivy - Whiterun - Well Overhaul - Normal Lantern.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's cities - aio.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Cities - AIO/Spaghetti's Cities - AIO.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "ivy - whiterun - well overhaul - spaghetti's cities patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Ivy - Whiterun Well Overhaul/Ivy - Whiterun - Well Overhaul - Spaghetti's Cities Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's cities - aio - navcuts.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Mods - NavCut Addon/Spaghetti's Cities - AIO - NavCuts.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's cities - clutter addons.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Cities - Clutter Addons/Spaghetti's Cities - Clutter Addons.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's towns - aio.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Towns - AIO/Spaghetti's Towns - AIO.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's towns - aio - navcuts.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Mods - NavCut Addon/Spaghetti's Towns - AIO - NavCuts.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's palaces - aio.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Palaces - AIO/Spaghetti's Palaces - AIO.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's palaces - aio - navcuts.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Mods - NavCut Addon/Spaghetti's Palaces - AIO - NavCuts.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's orc strongholds - aio.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Orc Strongholds - AIO/Spaghetti's Orc Strongholds - AIO.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's orc strongholds - aio - navcuts.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Mods - NavCut Addon/Spaghetti's Orc Strongholds - AIO - NavCuts.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's faction halls - aio.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Faction Halls - AIO/Spaghetti's Faction Halls - AIO.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's faction halls - aio - navcuts.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Mods - NavCut Addon/Spaghetti's Faction Halls - AIO - NavCuts.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's solstheim - aio.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Solstheim - AIO/Spaghetti's Solstheim - AIO.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "spaghetti's solstheim - aio - navcuts.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Spaghetti's Mods - NavCut Addon/Spaghetti's Solstheim - AIO - NavCuts.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "vanilla plus city entrances.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Vanilla Plus City Entrances/Vanilla Plus City Entrances.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "bingus really hates insects.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - Dummy Plugins/bingus really hates insects.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "bingus hates spiders.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - Dummy Plugins/bingus hates spiders.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux via - plugin.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Via/Lux Via - plugin.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux orbis.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Orbis/Lux Orbis.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux/Lux.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux via - blended roads bridges texture sets.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Via/Lux Via - Blended Roads Bridges Texture sets.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux via - more lantern posts.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Via/Lux Via - More Lantern Posts.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux via - more wooden bridges patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux via - Patch Hub/Lux Via - More Wooden Bridges patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_lux via - hpp firewood snow.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Lux Via - HPP Firewood Snow.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_windhelm bridge interior snow fix.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Windhelm Bridge Interior Snow Fix.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "ivy - whiterun - well overhaul - normal lantern - lux orbis patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Ivy - Whiterun Well Overhaul/Ivy - Whiterun - Well Overhaul - Normal Lantern - Lux Orbis Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "ivy - riverwood smelter addon - lux orbis patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Ivy - Riverwood Smelter Addon/Ivy - Riverwood Smelter Addon - Lux Orbis Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux orbis - cc fish patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Orbis - Patch Hub/Lux Orbis - CC Fish patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux orbis - saints and seducers patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Orbis - Patch Hub/Lux Orbis - Saints and Seducers patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux orbis - ussep patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Orbis/Lux Orbis - USSEP patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux orbis - usmp patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Orbis/Lux Orbis - USMP Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux orbis - embers xd patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Orbis/Lux Orbis - Embers XD patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux orbis - mandragora's meridia shrine patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Orbis - Patch Hub/Lux Orbis - Mandragora's Meridia Shrine patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux orbis - northern marsh bridges patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Orbis - Patch Hub/Lux Orbis - Northern Marsh Bridges patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_lux orbis - sb windhelm entrance.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Lux Orbis - SB Windhelm Entrance.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux orbis - riften sconce patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux Orbis/Lux Orbis - Riften Sconce Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "water for enb (shades of skyrim).esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Water for ENB/Water for ENB (Shades of Skyrim).esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "water for enb - patch - blue volcanic water.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Water for ENB/Water for ENB - Patch - Blue Volcanic Water.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "water for enb - patch - blue rift water.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Water for ENB/Water for ENB - Patch - Blue Rift Water.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "water for enb - patch - landscape fixes for grass mods.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Water for ENB/Water for ENB - Patch - Landscape Fixes for Grass Mods.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "natural waterfalls - slawf patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Natural Waterfalls/Natural Waterfalls - SLaWF Patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "natural waterfalls - water for enb patch (shades of skyrim).esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Natural Waterfalls/Natural Waterfalls - Water for ENB Patch (Shades of Skyrim).esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - cc fish patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux - Patch Hub/Lux - CC Fish patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - saints and seducers patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux - Patch Hub/Lux - Saints and Seducers patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - ussep patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux/Lux - USSEP patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - embers xd patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux - Patch Hub/Lux - Embers XD patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - nat enb.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux - Patch Hub/Lux - NAT ENB.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - slawf patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux/Lux - SLaWF patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - water for enb patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux - Patch Hub/Lux - Water for ENB patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_lux - volkihar soundscape overhaul - w4enb.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Lux - Volkihar Soundscape Overhaul - W4ENB.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - water for enb (shades of skyrim) patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux - Patch Hub/Lux - Water for ENB (Shades of skyrim) patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - no grass in caves patch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux/Lux - No grass in caves patch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_lux - w4enb - no grass in caves.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - xEdit Output/ANV_Lux - W4ENB - No Grass in Caves.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - brighter interior nights.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux/Lux - Brighter interior nights.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "lux - even brighter templates.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Lux/Lux - Even Brighter Templates.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "actually brighter lux templates.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - Dummy Plugins/Actually Brighter Lux Templates.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "parallaxgen.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - ParallaxGen Output/ParallaxGen.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "pg_1.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - ParallaxGen Output/PG_1.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_synhphracemenupatcher.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - Synthesis Output/ANV_SynHPHRaceMenuPatcher.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_synnpcpatcher.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - Synthesis Output/ANV_SynNPCPatcher.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_synw4enbpatcher.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - Synthesis Output/ANV_SynW4ENBPatcher.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "anv_synworldpatcher.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - Synthesis Output/ANV_SynWorldPatcher.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "dyndolod.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - DynDOLOD Output/DynDOLOD.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "occlusion.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Anvil - DynDOLOD Output/Occlusion.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "playerdevotion_framework.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/PlayerDevotion_Framework.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "pdv_managerpatronwirepatch.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/PDV_ManagerPatronWirePatch.esp",
+        "enabled": true
+      },
+      {
+        "mod_key": "mcmrecorder.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/MCM Recorder/McmRecorder.esp",
+        "enabled": false
+      }
+    ],
+    "data_folder": "D:/Wabbajack/modlists/Anvil/Stock Game/Data",
+    "ccc_path": "D:/Wabbajack/modlists/Anvil/Stock Game/Skyrim.ccc"
+  }
+}

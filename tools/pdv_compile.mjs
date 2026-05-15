@@ -20,6 +20,7 @@ const STOCK_GAME = path.join(ANVIL_ROOT, "Stock Game");
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
 const DEVOTION_SOURCE = path.join(DEVOTION_MOD, "Scripts", "Source");
 const DEVOTION_PEX = path.join(DEVOTION_MOD, "Scripts");
+const SKYUI_HEADERS_SOURCE = path.join(PROJECT_ROOT, "tools", "skyui_compile_shim");
 const COMPILER_EXE = path.join(STOCK_GAME, "Papyrus Compiler", "PapyrusCompiler.exe");
 const ASSEMBLER_EXE = path.join(STOCK_GAME, "Papyrus Compiler", "PapyrusAssembler.exe");
 const FLAGS_FILE = path.join(STOCK_GAME, "Data", "Source", "Scripts", "TESV_Papyrus_Flags.flg");
@@ -27,9 +28,10 @@ const VERIFIER = path.join(PROJECT_ROOT, "tools", "pdv_verify.mjs");
 
 const IMPORT_ROOTS = [
   DEVOTION_SOURCE,
-  path.join(STOCK_GAME, "Data", "Source", "Scripts"),
-  path.join(ANVIL_ROOT, "mods", "PapyrusUtil AE - Scripting Utility Functions", "Scripts", "Source"),
   path.join(ANVIL_ROOT, "mods", "SKSE Script Sources - Compile Only", "scripts", "source"),
+  path.join(ANVIL_ROOT, "mods", "PapyrusUtil AE - Scripting Utility Functions", "Scripts", "Source"),
+  path.join(STOCK_GAME, "Data", "Source", "Scripts"),
+  SKYUI_HEADERS_SOURCE,
 ];
 
 const ACTIVE_SCRIPTS = [
@@ -42,6 +44,7 @@ const ACTIVE_SCRIPTS = [
   "PDV_Deity_AuriEl",
   "PDV_ActionRouter",
   "PDV__SM_KillActor",
+  "PDV_MCM",
 ];
 
 const OPTIONAL_SCRIPTS = [];
@@ -234,9 +237,10 @@ function compileScript(scriptName, args, startedAt) {
   const warnings = hasCompilerProblems(combined, "warning");
   const errors = hasCompilerProblems(combined, "error");
   const pexFresh = exists(output) && mtimeMs(output) >= mtimeMs(source);
+  const straySkyuiOutputs = findStraySkyuiOutputs();
   const processOk = !result.error && result.status === 0;
   const warningsOk = args.allowWarnings || !warnings;
-  const ok = processOk && !errors && warningsOk && pexFresh;
+  const ok = processOk && !errors && warningsOk && pexFresh && straySkyuiOutputs.length === 0;
 
   return {
     script: scriptName,
@@ -249,6 +253,7 @@ function compileScript(scriptName, args, startedAt) {
     warnings,
     errors,
     pexFresh,
+    straySkyuiOutputs,
     outputUpdatedDuringRun: exists(output) && mtimeMs(output) >= startedAt - 1_000,
     ok,
     stdout: stdout.trim(),
@@ -383,6 +388,9 @@ function printResults(results, verifyResult, args) {
     if (!result.pexFresh) {
       console.log(`  output is missing or stale: ${result.output}`);
     }
+    if (result.straySkyuiOutputs.length) {
+      console.log(`  stray SkyUI outputs: ${result.straySkyuiOutputs.join(", ")}`);
+    }
     const output = [result.stdout, result.stderr].filter(Boolean).join("\n");
     if (output) {
       console.log(indent(output, "  "));
@@ -442,6 +450,16 @@ function mtimeMs(filePath) {
 
 function formatCommand(command, args) {
   return [command, ...args].map(quoteArg).join(" ");
+}
+
+function findStraySkyuiOutputs() {
+  if (!exists(DEVOTION_PEX)) {
+    return [];
+  }
+
+  return fs.readdirSync(DEVOTION_PEX)
+    .filter((name) => /^SKI_.*\.pex$/i.test(name))
+    .sort();
 }
 
 function hasCompilerProblems(output, kind) {

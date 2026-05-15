@@ -438,13 +438,14 @@ Mirrors are write-only caches refreshed by `PDV__ManagerQuest.RefreshPatronMirro
 
 | EditorID | Purpose |
 |----------|---------|
-| `PDV_GLO_OriginRace` | Race index 0–9, set once at game start |
+| `PDV_GLO_OriginRace` | Permanent cultural origin race index 0–9, set once at game start |
 | `PDV_GLO_PatronDeity` | FormID of active patron. 0 = none |
 | `PDV_GLO_DebugLevel` | 0–3 trace verbosity, MCM-toggleable |
 
 Phase 4 implementation note:
 
 - `PDV_GLO_OriginRace` should default to `-1` in CK so `PDV_Origin.InitializeOrigin()` can detect "not initialized yet" safely.
+- `PDV_Origin` normalizes vanilla vampire race records back to the corresponding base race before writing `PDV_GLO_OriginRace`. If the current race is only a temporary beast form (`WerewolfBeastRace` or Dawnguard Vampire Lord), initialization defers instead of writing a fallback.
 - `PDV_GLO_PatronDeity` is now written by `PDV__ManagerQuest.SetActiveDeity()`. It is a cache/helper global, not the canonical source of truth for patron state.
 
 Coupled Talos + Auri-El follow-on note:
@@ -520,9 +521,9 @@ Follow this sequence. Do not skip ahead.
       CK compile/wiring/runtime verification complete
 [x] Phase 3 — PDV_ActionRouter + PDV__SM_KillActor complete;
       CK wiring, Story Manager routing, SEQ, and runtime verification all passed
-[~] Phase 4 — scripts/tooling landed; ESP/CK wiring and in-game proof still pending
-[ ] Phase 5 — MCM
-[ ] Phase 6 — Talos (second deity; proof of scalability)
+[~] Phase 4 — scripts/tooling and framework ESP wiring landed; in-game proof still pending
+[~] Phase 5 — MCM dev slice script/tooling/framework wiring landed; in-game SkyUI proof pending
+[~] Phase 6 — Talos + Auri-El hostile-path proof slice framework-wired; in-game proof pending
 [ ] Debug spell created and tested
 [ ] Nord module complete
 ```
@@ -614,16 +615,16 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-05-12 — PDV local toolchain:** `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs` are the local health/build loop for the Anvil/Devotion setup. The compiler directly spawns the verified `PapyrusCompiler.exe` CLI with short `-f`, `-i`, and `-o` args, compiles active PDV scripts into `Devotion\Scripts`, treats warnings as failures, and runs the verifier after successful compiles. Normal verifier mode should remain useful during active implementation; strict Phase 3 mode intentionally fails until `PDV_ActionRouter`, `PDV__SM_KillActor`, and the Kill Actor Story Manager node exist in the ESP.
 
-**2026-05-15 — PDV overlay authoring tool:** `tools/pdv_author.mjs` is the safe automation path for CK-adjacent ESP wiring on existing PDV records. It reads `PlayerDevotion_Framework.esp` through the same local Mutagen bridge as the verifier, then writes **reversible overlay patch plugins** into the `Devotion` mod rather than mutating the framework ESP in place. v1 scope is intentionally narrow: existing-record scalar/object VMAD properties and FormList membership only. New records, VMAD array properties such as `RivalDeities`, and Story Manager tree authoring remain manual CK/xEdit work.
+**2026-05-15 — PDV overlay authoring tool, revised 2026-05-16:** `tools/pdv_author.mjs` is the safe automation path for CK-adjacent ESP wiring on existing PDV records. It reads `PlayerDevotion_Framework.esp` through the same local Mutagen bridge as the verifier, then writes **reversible overlay patch plugins** into the `Devotion` mod rather than mutating the framework ESP in place. v1 scope is intentionally narrow: existing-record scalar/object VMAD properties and FormList membership only. New records, VMAD array properties such as `RivalDeities`, and Story Manager tree authoring remain manual CK/xEdit work. Generated patches must keep `Skyrim.esm` as the first master when using extended FormID ranges; do not manually insert masters into an existing patch without remapping FormIDs.
 
-**2026-05-15 - Temporary manager overlay workaround:** Because `PDV__ManagerQuest` repeatedly froze CK when opened, a reversible overlay patch `PDV_ManagerPatronWirePatch.esp` was generated and enabled in the `Devotion Dev` profile to supply `PDV__ManagerQuest.PDV_GLO_PatronDeity` at runtime. Treat this as a temporary bridge only. When the manager property is successfully merged back into `PlayerDevotion_Framework.esp`, disable/remove the overlay patch and return the verifier expectation to the framework ESP alone.
+**2026-05-16 - Temporary overlays merged back and retired:** `PDV_ManagerPatronWirePatch.esp` and `PDV_MCMWirePatch.esp` were temporary rescue artifacts for CK instability. Their VMAD deltas have been merged directly into `PlayerDevotion_Framework.esp`: `PDV__ManagerQuest` now owns `PDV_GLO_PatronDeity`, and `PDV_MCM` is script-attached with required properties on the framework record. Both overlays are unticked in the `Devotion Dev` profile and must not be treated as runtime requirements.
 
 **2026-05-14 - Anvil MO2 MCP Codex intake:** `references/PDV_Anvil_MO2_MCP_Intake.md` documents the local `Anvilmo2_mcp` plugin, the `mo2_*` tool surface, current Codex config, and optional tool status. Codex points at `http://127.0.0.1:27015/mcp`; the server must be started from MO2 before tools appear. The plugin is configured for Anvil's Papyrus compiler/source paths and uses `Devotion` as the MCP output mod default. `BSArch.exe` is installed for BSA/BA2 archive tools; `nif-tool.exe` remains the only confirmed missing optional binary.
 
 **2026-05-14 - Skyrim modding lessons intake:** Archived external practical lessons at `archive/Skyrim_Modding_Lessons_2026-05-14.md` and folded durable rules into the living docs and Papyrus/CK skill: player-facing ASCII, Papyrus string/docstring/parser limits, save-baked new-game retesting, grep-before-delete hygiene, `cqf` named-function limits, and future dialogue/faction gate discipline.
 
-**2026-05-15 - Phase 4 CK status:** The live ESP now contains most of the Phase 4 proof-slice surface: `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, Kyne stance wiring, and Kyne boon assignments. The remaining true Phase 4 blocker is `PDV__ManagerQuest.PDV_GLO_PatronDeity`, which was left unwired because CK repeatedly hung when opening the manager quest record. Current verifier failures beyond that property are Phase 6 follow-on expectations, not additional Kyne/bootstrap misses.
+**2026-05-16 - Phase 4/5/6 framework status:** The live ESP now contains the Phase 4 proof-slice surface, framework-owned manager patron wiring, the Phase 5 `PDV_MCM` quest/script/properties, and the coupled Talos + Auri-El record set with FormList membership, origin references, stance rows, rivalry wiring, and boon assignments. The verifier currently reports `FAIL=0, WARN=0, TODO=0`; remaining verifier output is informational only.
 
 **2026-05-15 - SkyUI CK header shim:** Repeated CK fatal errors traced back to a broken SkyUI source-store chain (`SKI_QuestBase` -> `SKI_ConfigBase` -> `SKI_ConfigManager`). For the `Devotion Dev` profile, a dedicated shim mod was added at `D:\Wabbajack\modlists\Anvil\mods\PDV - SkyUI CK Headers\` exposing `SKI_QuestBase.psc`, `SKI_ConfigBase.psc`, and `SKI_ConfigManager.psc` under `Source\Scripts\`. This is a CK-environment repair for source lookup only, not a runtime SkyUI upgrade. The profile modlist was backed up before enabling the shim.
 
-**2026-05-15 - Session closeout state:** `PDV_Phase5_CK_Steps.md` now exists as the manual walkthrough for the first MCM slice. `pdv_verify.mjs` still warns about an unnamed `MGEF` record (`PlayerDevotion_Framework.esp:03235B`, likely orphan residue) and an out-of-date `Devotion\Seq\PlayerDevotion_Framework.seq`. Recommended next-session order is: fresh MO2/CK restart, attempt `PDV__ManagerQuest` first, assign `PDV_GLO_PatronDeity`, refresh SEQ, rerun verifier, then decide whether to keep Phase 4 isolated or continue Phase 6 CK wiring.
+**2026-05-16 - Session closeout state:** `PDV_Phase5_CK_Steps.md` remains the manual walkthrough for the first MCM slice, but the framework ESP now owns the actual MCM wiring. `pdv_verify.mjs` is clean at `FAIL=0, WARN=0, TODO=0`. Recommended next order is: smoke-open `PDV__ManagerQuest` and `PDV_MCM` in CK, then run the Kyne/Talos/Auri-El in-game proof paths.
