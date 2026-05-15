@@ -498,6 +498,7 @@ Storage:
 MCM and skill systems:
 - SkyUI MCM option builders return OIDs. Store each OID from `AddSliderOption`, `AddMenuOption`, `AddToggleOption`, etc., or event handlers cannot reliably identify which option fired.
 - Keep MCM minimal: enable/disable, hotkeys, verbosity/difficulty, and a small number of genuinely player-facing toggles.
+- The first PDV MCM slice is a development surface only: `Status` + `Debug`, no tuning globals, and no player-facing patron-selection contract.
 - If PDV later uses Custom Skills Framework, the ESP filename in the CSF JSON must match the plugin filename exactly. Mismatch can make skill/perk lookups fail silently.
 
 ---
@@ -614,6 +615,8 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 **2026-05-12 — PDV local toolchain:** `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs` are the local health/build loop for the Anvil/Devotion setup. The compiler directly spawns the verified `PapyrusCompiler.exe` CLI with short `-f`, `-i`, and `-o` args, compiles active PDV scripts into `Devotion\Scripts`, treats warnings as failures, and runs the verifier after successful compiles. Normal verifier mode should remain useful during active implementation; strict Phase 3 mode intentionally fails until `PDV_ActionRouter`, `PDV__SM_KillActor`, and the Kill Actor Story Manager node exist in the ESP.
 
 **2026-05-15 — PDV overlay authoring tool:** `tools/pdv_author.mjs` is the safe automation path for CK-adjacent ESP wiring on existing PDV records. It reads `PlayerDevotion_Framework.esp` through the same local Mutagen bridge as the verifier, then writes **reversible overlay patch plugins** into the `Devotion` mod rather than mutating the framework ESP in place. v1 scope is intentionally narrow: existing-record scalar/object VMAD properties and FormList membership only. New records, VMAD array properties such as `RivalDeities`, and Story Manager tree authoring remain manual CK/xEdit work.
+
+**2026-05-15 - Temporary manager overlay workaround:** Because `PDV__ManagerQuest` repeatedly froze CK when opened, a reversible overlay patch `PDV_ManagerPatronWirePatch.esp` was generated and enabled in the `Devotion Dev` profile to supply `PDV__ManagerQuest.PDV_GLO_PatronDeity` at runtime. Treat this as a temporary bridge only. When the manager property is successfully merged back into `PlayerDevotion_Framework.esp`, disable/remove the overlay patch and return the verifier expectation to the framework ESP alone.
 
 **2026-05-14 - Anvil MO2 MCP Codex intake:** `references/PDV_Anvil_MO2_MCP_Intake.md` documents the local `Anvilmo2_mcp` plugin, the `mo2_*` tool surface, current Codex config, and optional tool status. Codex points at `http://127.0.0.1:27015/mcp`; the server must be started from MO2 before tools appear. The plugin is configured for Anvil's Papyrus compiler/source paths and uses `Devotion` as the MCP output mod default. `BSArch.exe` is installed for BSA/BA2 archive tools; `nif-tool.exe` remains the only confirmed missing optional binary.
 

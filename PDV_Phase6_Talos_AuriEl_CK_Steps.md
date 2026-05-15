@@ -86,6 +86,10 @@ Set:
 
 First pass is one-way only:
 
+- `RivalDeities` is a `Quest[]` property. In CK, add one array slot and pick
+  `PDV_Deity_AuriEl` from the quest list. If CK only shows generic persistence
+  forms instead of quests, the base script is still on the old `Form[]` type
+  and needs the updated compile before this step will work.
 - `RivalDeities` -> contains only `PDV_Deity_AuriEl`
 - `RivalMultipliers` -> one matching multiplier entry
 
@@ -130,6 +134,8 @@ Set:
 
 Leave first-pass rivalry empty:
 
+- `RivalDeities` should still exist as a `Quest[]` property even though it stays
+  empty for this slice.
 - `RivalDeities` -> empty
 - `RivalMultipliers` -> empty
 
