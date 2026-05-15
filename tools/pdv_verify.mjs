@@ -41,12 +41,18 @@ const XEDIT_SEQ = path.join(
 const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "PlayerDevotion_Framework.seq");
 
 const BASELINE_RECORDS = {
+  PDV_GLO_OriginRace: "GLOB",
+  PDV_GLO_PatronDeity: "GLOB",
   PDV_GLO_ActivePiety: "GLOB",
   PDV_GLO_ActiveTier: "GLOB",
   PDV_GLO_ActiveDeityIndex: "GLOB",
   PDV_GLO_DebugLevel: "GLOB",
+  PDV__MainQuest: "QUST",
+  PDV_Origin: "QUST",
   PDV__ManagerQuest: "QUST",
   PDV_Deity_Kyne: "QUST",
+  PDV_Deity_Talos: "QUST",
+  PDV_Deity_AuriEl: "QUST",
   PDV_FLST_AllDeities: "FLST",
 };
 
@@ -56,9 +62,13 @@ const PHASE3_RECORDS = {
 };
 
 const COMPILED_SCRIPTS = {
+  PDV__MainQuest: "required",
+  PDV_Origin: "required",
   PDV__ManagerQuest: "required",
   PDV_DeityBase: "required",
   PDV_Deity_Kyne: "required",
+  PDV_Deity_Talos: "required",
+  PDV_Deity_AuriEl: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
 };
@@ -67,8 +77,34 @@ const MANAGER_PROPERTIES = {
   PDV_GLO_ActivePiety: "PDV_GLO_ActivePiety",
   PDV_GLO_ActiveTier: "PDV_GLO_ActiveTier",
   PDV_GLO_ActiveDeityIndex: "PDV_GLO_ActiveDeityIndex",
+  PDV_GLO_PatronDeity: "PDV_GLO_PatronDeity",
   PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
   PDV_FLST_AllDeities: "PDV_FLST_AllDeities",
+};
+
+const MAINQUEST_PROPERTIES = {
+  PDV_OriginQuest: "PDV_Origin",
+  PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
+};
+
+const ORIGIN_PROPERTIES = {
+  PDV_GLO_OriginRace: "PDV_GLO_OriginRace",
+  PDV_Manager: "PDV__ManagerQuest",
+  PDV_Kyne: "PDV_Deity_Kyne",
+  PDV_Talos: "PDV_Deity_Talos",
+  PDV_AuriEl: "PDV_Deity_AuriEl",
+  PlayerRef: null,
+  NordRace: null,
+  ImperialRace: null,
+  BretonRace: null,
+  HighElfRace: null,
+  WoodElfRace: null,
+  DarkElfRace: null,
+  KhajiitRace: null,
+  ArgonianRace: null,
+  OrcRace: null,
+  RedguardRace: null,
+  PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
 };
 
 const KYNE_EXPECTED_DATA = {
@@ -78,6 +114,16 @@ const KYNE_EXPECTED_DATA = {
   ThresholdSeeker: 10,
   ThresholdDevoted: 50,
   ThresholdChampion: 150,
+  Stance_Nord: 0,
+  Stance_Imperial: 1,
+  Stance_Breton: 1,
+  Stance_Altmer: 1,
+  Stance_Bosmer: 1,
+  Stance_Dunmer: 1,
+  Stance_Khajiit: 1,
+  Stance_Argonian: 1,
+  Stance_Orc: 1,
+  Stance_Redguard: 1,
 };
 
 const ROUTER_PROPERTIES = {
@@ -88,6 +134,36 @@ const ROUTER_PROPERTIES = {
   ActorTypeNPC: null,
   ActorTypeAnimal: null,
   ActorTypeCreature: null,
+};
+
+const TALOS_EXPECTED_DATA = {
+  DeityName: "Talos",
+  DeityIndex: 1,
+  Stance_Nord: 0,
+  Stance_Imperial: 1,
+  Stance_Breton: 0,
+  Stance_Altmer: 3,
+  Stance_Bosmer: 1,
+  Stance_Dunmer: 1,
+  Stance_Khajiit: 1,
+  Stance_Argonian: 1,
+  Stance_Orc: 1,
+  Stance_Redguard: 1,
+};
+
+const AURIEL_EXPECTED_DATA = {
+  DeityName: "Auri-El",
+  DeityIndex: 2,
+  Stance_Nord: 1,
+  Stance_Imperial: 1,
+  Stance_Breton: 1,
+  Stance_Altmer: 0,
+  Stance_Bosmer: 0,
+  Stance_Dunmer: 1,
+  Stance_Khajiit: 1,
+  Stance_Argonian: 1,
+  Stance_Orc: 3,
+  Stance_Redguard: 1,
 };
 
 const RECEIVER_PROPERTIES = {
@@ -138,8 +214,12 @@ class Verifier {
       this.loadRecordInventory();
       this.loadRecordDetails();
       this.checkRecordInventory();
+      this.checkMainQuestRecord();
+      this.checkOriginRecord();
       this.checkManagerRecord();
       this.checkKyneRecord();
+      this.checkTalosRecord();
+      this.checkAuriElRecord();
       this.checkFormListRecord();
       this.checkPhase3Records();
     }
@@ -352,6 +432,40 @@ class Verifier {
     }
   }
 
+  checkMainQuestRecord() {
+    const detail = this.recordDetails.get("PDV__MainQuest");
+    if (!detail) {
+      return;
+    }
+
+    const fields = detail.fields || {};
+    const script = findScript(fields, "PDV__MainQuest");
+    if (!script) {
+      this.fail("MainQuest script", "PDV__MainQuest script is not attached.", PDV_ESP);
+      return;
+    }
+
+    this.pass("MainQuest script", "PDV__MainQuest script is attached.", PDV_ESP);
+    this.checkObjectProperties("MainQuest property", propertyMap(script), MAINQUEST_PROPERTIES);
+  }
+
+  checkOriginRecord() {
+    const detail = this.recordDetails.get("PDV_Origin");
+    if (!detail) {
+      return;
+    }
+
+    const fields = detail.fields || {};
+    const script = findScript(fields, "PDV_Origin");
+    if (!script) {
+      this.fail("Origin script", "PDV_Origin script is not attached.", PDV_ESP);
+      return;
+    }
+
+    this.pass("Origin script", "PDV_Origin script is attached.", PDV_ESP);
+    this.checkObjectProperties("Origin property", propertyMap(script), ORIGIN_PROPERTIES);
+  }
+
   checkKyneRecord() {
     const detail = this.recordDetails.get("PDV_Deity_Kyne");
     if (!detail) {
@@ -382,20 +496,129 @@ class Verifier {
     } else {
       this.warn("Kyne property", "PDV_GLO_DebugLevel is missing or points elsewhere.", PDV_ESP);
     }
+
+    const originProp = props.get("PDV_GLO_OriginRace");
+    if (originProp && objectEdid(originProp, this.recordsByEdid) === "PDV_GLO_OriginRace") {
+      this.pass("Kyne property", "PDV_GLO_OriginRace points at PDV_GLO_OriginRace.", PDV_ESP);
+    } else {
+      this.warn("Kyne property", "PDV_GLO_OriginRace is missing or points elsewhere.", PDV_ESP);
+    }
+
+    this.checkAssignedObjectProperty("Kyne boon", props, "Boon_Seeker");
+    this.checkAssignedObjectProperty("Kyne boon", props, "Boon_Devoted");
+    this.checkAssignedObjectProperty("Kyne boon", props, "Boon_Champion");
+  }
+
+  checkTalosRecord() {
+    this.checkDeityRecord("PDV_Deity_Talos", "PDV_Deity_Talos", TALOS_EXPECTED_DATA, {
+      requireBoons: true,
+      requireOriginGlobal: true,
+      requireDebugGlobal: true,
+      rivalEdids: ["PDV_Deity_AuriEl"],
+    });
+  }
+
+  checkAuriElRecord() {
+    this.checkDeityRecord("PDV_Deity_AuriEl", "PDV_Deity_AuriEl", AURIEL_EXPECTED_DATA, {
+      requireBoons: true,
+      requireOriginGlobal: true,
+      requireDebugGlobal: true,
+      rivalEdids: [],
+    });
+  }
+
+  checkDeityRecord(recordEdid, scriptName, expectedData, options = {}) {
+    const detail = this.recordDetails.get(recordEdid);
+    if (!detail) {
+      return;
+    }
+
+    const fields = detail.fields || {};
+    const script = findScript(fields, scriptName);
+    if (!script) {
+      this.fail(`${recordEdid} script`, `${scriptName} is not attached.`, PDV_ESP);
+      return;
+    }
+
+    this.pass(`${recordEdid} script`, `${scriptName} is attached.`, PDV_ESP);
+    const props = propertyMap(script);
+
+    for (const [propName, expected] of Object.entries(expectedData)) {
+      const actual = propValue(props.get(propName));
+      if (valuesEqual(actual, expected)) {
+        this.pass(`${recordEdid} property`, `${propName} = ${expected}.`, PDV_ESP);
+      } else {
+        this.warn(`${recordEdid} property`, `${propName} is ${JSON.stringify(actual)}, expected ${JSON.stringify(expected)}.`, PDV_ESP);
+      }
+    }
+
+    if (options.requireDebugGlobal) {
+      this.checkLinkedObjectProperty(`${recordEdid} property`, props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel");
+    }
+
+    if (options.requireOriginGlobal) {
+      this.checkLinkedObjectProperty(`${recordEdid} property`, props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace");
+    }
+
+    if (options.requireBoons) {
+      this.checkAssignedObjectProperty(`${recordEdid} boon`, props, "Boon_Seeker");
+      this.checkAssignedObjectProperty(`${recordEdid} boon`, props, "Boon_Devoted");
+      this.checkAssignedObjectProperty(`${recordEdid} boon`, props, "Boon_Champion");
+    }
+
+    if (Object.hasOwn(options, "rivalEdids")) {
+      this.checkRivalList(`${recordEdid} rivals`, props, options.rivalEdids);
+    }
+  }
+
+  checkRivalList(checkName, props, expectedEdids) {
+    const rivalProp = props.get("RivalDeities");
+    if (!rivalProp) {
+      this.fail(checkName, "RivalDeities is missing.", PDV_ESP);
+      return;
+    }
+
+    const rivals = Array.isArray(rivalProp.Objects) ? rivalProp.Objects : [];
+    const actualEdids = rivals.map((formid) => formidToEdid(formid, this.recordsByEdid)).filter(Boolean);
+
+    if (actualEdids.length !== expectedEdids.length || !expectedEdids.every((edid) => actualEdids.includes(edid))) {
+      this.warn(checkName, `RivalDeities are [${actualEdids.join(", ")}], expected [${expectedEdids.join(", ")}].`, PDV_ESP);
+    } else {
+      this.pass(checkName, `RivalDeities match [${expectedEdids.join(", ")}].`, PDV_ESP);
+    }
+
+    const multProp = props.get("RivalMultipliers");
+    if (!multProp) {
+      this.fail(checkName, "RivalMultipliers is missing.", PDV_ESP);
+      return;
+    }
+
+    const multipliers = Array.isArray(multProp.Datas) ? multProp.Datas : [];
+    if (multipliers.length !== expectedEdids.length) {
+      this.warn(checkName, `RivalMultipliers count is ${multipliers.length}, expected ${expectedEdids.length}.`, PDV_ESP);
+    } else {
+      this.pass(checkName, `RivalMultipliers count matches ${expectedEdids.length}.`, PDV_ESP);
+    }
   }
 
   checkFormListRecord() {
     const detail = this.recordDetails.get("PDV_FLST_AllDeities");
-    const kyne = this.recordsByEdid.get("PDV_Deity_Kyne");
-    if (!detail || !kyne) {
+    if (!detail) {
       return;
     }
 
     const items = detail.fields?.Items || [];
-    if (items.includes(kyne.formid)) {
-      this.pass("Deity FormList", "PDV_FLST_AllDeities contains PDV_Deity_Kyne.", PDV_ESP);
-    } else {
-      this.fail("Deity FormList", `PDV_FLST_AllDeities does not contain PDV_Deity_Kyne (${kyne.formid}).`, PDV_ESP);
+    for (const deityEdid of ["PDV_Deity_Kyne", "PDV_Deity_Talos", "PDV_Deity_AuriEl"]) {
+      const deity = this.recordsByEdid.get(deityEdid);
+      if (!deity) {
+        continue;
+      }
+
+      if (items.includes(deity.formid)) {
+        this.pass("Deity FormList", `PDV_FLST_AllDeities contains ${deityEdid}.`, PDV_ESP);
+      } else {
+        this.fail("Deity FormList", `PDV_FLST_AllDeities does not contain ${deityEdid} (${deity.formid}).`, PDV_ESP);
+      }
     }
   }
 
@@ -461,6 +684,35 @@ class Verifier {
     }
   }
 
+  checkAssignedObjectProperty(checkName, props, propName) {
+    const prop = props.get(propName);
+    if (!prop) {
+      this.fail(checkName, `${propName} is missing.`, PDV_ESP);
+      return;
+    }
+
+    if (prop.Object) {
+      this.pass(checkName, `${propName} is assigned.`, PDV_ESP);
+    } else {
+      this.warn(checkName, `${propName} is unassigned.`, PDV_ESP);
+    }
+  }
+
+  checkLinkedObjectProperty(checkName, props, propName, expectedEdid) {
+    const prop = props.get(propName);
+    if (!prop) {
+      this.fail(checkName, `${propName} is missing.`, PDV_ESP);
+      return;
+    }
+
+    const actualEdid = objectEdid(prop, this.recordsByEdid);
+    if (actualEdid === expectedEdid) {
+      this.pass(checkName, `${propName} points at ${expectedEdid}.`, PDV_ESP);
+    } else {
+      this.warn(checkName, `${propName} is missing or points elsewhere.`, PDV_ESP);
+    }
+  }
+
   checkScripts() {
     for (const [scriptName, requirement] of Object.entries(COMPILED_SCRIPTS)) {
       const source = path.join(DEVOTION_SOURCE, `${scriptName}.psc`);
@@ -491,15 +743,6 @@ class Verifier {
       }
     }
 
-    const mainSource = path.join(DEVOTION_SOURCE, "PDV__MainQuest.psc");
-    const mainPex = path.join(DEVOTION_PEX, "PDV__MainQuest.pex");
-    if (exists(mainSource) && !exists(mainPex)) {
-      this.info(
-        "MainQuest stub",
-        "PDV__MainQuest.psc exists but no compiled .pex is present. This is informational unless the quest is reintroduced.",
-        mainSource,
-      );
-    }
   }
 
   checkSeq() {
@@ -644,6 +887,10 @@ function objectEdid(prop, recordsByEdid) {
   if (!formid) {
     return null;
   }
+  return formidToEdid(formid, recordsByEdid);
+}
+
+function formidToEdid(formid, recordsByEdid) {
   for (const [edid, record] of recordsByEdid.entries()) {
     if (record.formid === formid) {
       return edid;

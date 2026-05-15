@@ -477,6 +477,69 @@ Every signal row should define:
 - Switching and persistence behavior should be inherited from each race's locked architecture rather than replaced by a new global conversion formula
 - The matrix must preserve race-specific architecture instead of flattening every race into the same patron model
 
+### 9.3.1 Hybrid Boon Policy (LOCKED)
+
+PDV uses an asymmetric hybrid boon model.
+
+Core rule:
+
+- Every race gets one foreground devotional layer: active patron, active path, or active mode
+- Only races whose theology is structurally layered get a true persistent substrate layer
+- Most race uniqueness should live in privileges, contextual favors, and state tracks rather than stacked permanent buffs
+
+Implementation-facing categories:
+
+| Category | Purpose | Default posture |
+|---|---|---|
+| `Substrate` | Low-power persistent race identity layer | Use only where theology clearly requires it |
+| `Foreground boon` | Main active patron/path/mode blessing set | Primary source of steady always-on power |
+| `Contextual favor` | Conditional passive help during matching moments | Main source of flavorful situational identity |
+| `Religious privilege` | Access, recognition, shrine use, cleansing, re-entry, threshold interactions | Preferred for race-specific uniqueness |
+| `State track` | Non-buff identity logic such as reputation, orthodoxy, integrity, or life-mode standing | Preferred for social/political/theological pressure |
+
+Balance rules:
+
+- Most races should never feel like they have more than two meaningful always-on boon families at once
+- True substrate layers should mostly express utility, survivability, restoration, environmental fit, or identity maintenance
+- Foreground boons remain the main source of steady power
+- Privileges and contextual favors should carry more of the race-specific feel than passive numbers do
+- Use family caps so multiple small layers do not stack into one dominant statistical package
+
+Race application matrix:
+
+| Race | Hybrid structure | Persistent substrate posture | Main identity emphasis |
+|---|---|---|---|
+| `Nord` | No true substrate | None | Broad-to-primary worship plus privileges, quest weighting, and cultural interpretation |
+| `Imperial` | No true substrate | None | Foreground Divine lane plus ConcordatStanding, public/private Talos logic, and civic privileges |
+| `Breton` | No true substrate | None | Chosen lane plus WitchcraftExposure, KnightlyVowIntegrity, and Druidic standing |
+| `Bosmer` | No true substrate | None | Chosen path is the hybrid system; do not add a race-wide Y'ffre substrate boon |
+| `Altmer` | Light substrate | Light persistent orthodoxy frame | ThalmorAlignment, Lorkhan-adjacency penalties, scholarship privileges, apostasy handling |
+| `Redguard` | Light substrate | Soft always-on ancestor reverence | Sect-shaped foreground worship, funerary privileges, anti-undead/death-order interpretation |
+| `Orc` | Light substrate | Persistent life-mode standing | One Malacath-centered foreground with mode-specific ceiling and expression |
+| `Dunmer` | Strong substrate | Full layered ancestor base | Ancestor layer remains always on; Good Daedra acknowledgment remains standard; one focused Good Daedra foregrounds Tier 3 |
+| `Khajiit` | Strong substrate | Full lunar substrate | Lunar substrate always active; one deity becomes the strongest foreground emphasis |
+| `Argonian` | Strong substrate | Hist-first exile substrate | Hist remains primary; community supports; Sithis rises only under strong repeated signals |
+
+User-experience targets:
+
+- `Nord` should feel like "my deeds reveal which god notices me," not "I spawned with a second passive package"
+- `Imperial` should feel politically and socially split, with theology shaped by compliance or conscience
+- `Breton` should feel reputation-sensitive and double-lived, with more identity in risk and status than passive power
+- `Altmer` should feel judged by coherence, rupture, and orthodoxy more than by raw devotion volume
+- `Dunmer` should feel cumulative and internally coherent, never like competing mutually exclusive gods
+- `Khajiit` should feel cosmologically held even before focused commitment
+- `Bosmer` should feel path-divergent rather than race-package-plus-patron
+- `Redguard` should feel sect-shaped and duty-shaped, with ancestry always present but not dominant in every moment
+- `Orc` should feel like the question is how Malacath's code is carried in this life-mode, not which god is selected
+- `Argonian` should feel like exile, distance, and reconstruction of self, with the Hist still mattering even when hard to reach
+
+First-release implementation posture:
+
+- `Nord`, `Imperial`, `Breton`, and `Bosmer` should usually have one true boon lane plus strong privileges, contextual favors, and state tracks
+- `Altmer`, `Redguard`, and `Orc` may keep a light persistent layer, but that layer should stay below the foreground boon in raw power
+- `Dunmer`, `Khajiit`, and `Argonian` may keep stronger persistent substrates, but those substrates should still lean toward context, identity, and maintenance rather than broad throughput
+- If later balancing forces simplification, reduce substrate strength before removing privileges or contextual race identity
+
 ### 9.4 Pre-Matrix Deliverable
 
 Before implementation work expands, create a race signal matrix with these columns:

@@ -3,6 +3,8 @@
 Status: Manual CK/ESP walkthrough for the Phase 4 Kyne proof slice  
 Last revised: 2026-05-14
 
+Authoring note (2026-05-15): `tools/pdv_author.mjs` can now generate a reversible overlay patch for the supported existing-record wiring in this slice. This doc remains the manual **in-place framework ESP** path when you want the changes authored directly into `PlayerDevotion_Framework.esp`.
+
 ## Purpose
 
 This walkthrough finishes the ESP-side work for the Phase 4 framework already
@@ -17,16 +19,18 @@ landed in script and tooling:
 - `tools/pdv_verify.mjs` now fails or warns on missing Phase 4 records and
   Kyne proof-slice wiring
 
-At the time of writing, the scripts compile cleanly, but the verifier still
-fails because the live ESP does not yet contain:
+As of the 2026-05-15 verifier pass, the live ESP already contains the Phase 4
+proof-slice records and most Kyne/bootstrap wiring:
 
 - `PDV_GLO_OriginRace`
 - `PDV_GLO_PatronDeity`
-- `PDV__MainQuest` quest record
-- `PDV_Origin` quest record
-- Kyne stance properties and boon assignments on the actual quest record
+- `PDV__MainQuest`
+- `PDV_Origin`
+- Kyne stance properties and boon assignments
 
-Use this doc to close that gap.
+The remaining true Phase 4 verifier failure is `PDV__ManagerQuest.PDV_GLO_PatronDeity`.
+Keep using this doc if you want to redo or merge the work manually in CK; use
+`tools/pdv_author.mjs` if a reversible overlay patch is sufficient.
 
 ## Preconditions
 

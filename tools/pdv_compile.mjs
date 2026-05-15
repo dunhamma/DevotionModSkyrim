@@ -33,14 +33,18 @@ const IMPORT_ROOTS = [
 ];
 
 const ACTIVE_SCRIPTS = [
+  "PDV__MainQuest",
+  "PDV_Origin",
   "PDV__ManagerQuest",
   "PDV_DeityBase",
   "PDV_Deity_Kyne",
+  "PDV_Deity_Talos",
+  "PDV_Deity_AuriEl",
   "PDV_ActionRouter",
   "PDV__SM_KillActor",
 ];
 
-const OPTIONAL_SCRIPTS = ["PDV__MainQuest"];
+const OPTIONAL_SCRIPTS = [];
 
 function main() {
   const args = parseArgs(process.argv.slice(2));
@@ -93,7 +97,6 @@ function parseArgs(argv) {
     all: false,
     allowWarnings: false,
     dryRun: false,
-    includeMainQuest: false,
     json: false,
     list: false,
     scripts: [],
@@ -109,8 +112,6 @@ function parseArgs(argv) {
       args.allowWarnings = true;
     } else if (arg === "--dry-run") {
       args.dryRun = true;
-    } else if (arg === "--include-mainquest") {
-      args.includeMainQuest = true;
     } else if (arg === "--json") {
       args.json = true;
     } else if (arg === "--list") {
@@ -151,7 +152,6 @@ function usage(error = null, exitCode = 2) {
     "Options:",
     "  --all                 Compile all active PDV scripts.",
     "  --script NAME         Compile one script; repeat for multiple scripts.",
-    "  --include-mainquest   Include PDV__MainQuest in default/--all target sets.",
     "  --dry-run             Print compiler commands without running them.",
     "  --list                Show known scripts and stale/fresh status.",
     "  --json                Print machine-readable output.",
@@ -192,7 +192,7 @@ function checkEnvironment() {
 }
 
 function selectTargets(args) {
-  const known = args.includeMainQuest ? [...ACTIVE_SCRIPTS, ...OPTIONAL_SCRIPTS] : ACTIVE_SCRIPTS;
+  const known = [...ACTIVE_SCRIPTS, ...OPTIONAL_SCRIPTS];
 
   if (args.scripts.length) {
     const scripts = [...new Set(args.scripts.map(normalizeScriptName))];
@@ -289,7 +289,7 @@ function compilerArguments(scriptName) {
 }
 
 function printScriptList(args) {
-  const scripts = args.includeMainQuest ? [...ACTIVE_SCRIPTS, ...OPTIONAL_SCRIPTS] : ACTIVE_SCRIPTS;
+  const scripts = [...ACTIVE_SCRIPTS, ...OPTIONAL_SCRIPTS];
   const rows = scripts.map((scriptName) => scriptStatus(scriptName));
 
   if (args.json) {
