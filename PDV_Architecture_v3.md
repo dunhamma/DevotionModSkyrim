@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-16 (v3.2 - Section 24 decision cleanup)
-Status: **Planning.** v2 (Phases 0-6) is closed. v3 is the architecture target for everything past the coupled Talos/Auri-El hostile-path proof slice.
+Last revised: 2026-05-16 (v3.7 - Race-sheet architecture sync)
+Status: **V3 Preflight complete.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are now complete.
 
 ---
 
@@ -42,6 +42,24 @@ These are non-negotiable. Every v3 subsystem must respect them.
 9. **Race architecture preservation.** The locked race architectures in `references/PDV_RaceArchitecture_DesignReference.md` are authoritative. v3 subsystems must not flatten races into a uniform patron model.
 10. **The hybrid boon policy is asymmetric.** Not every race gets a persistent substrate; structurally layered religions (Dunmer, Khajiit, Argonian) do, others lean on privileges and contextual favors. Most races should never feel like they have more than two meaningful always-on boon families at once.
 
+### 2.1 Tier vocabulary boundary
+
+The implementation keeps the v2 `PDV.Tier` spine at `0-3`. The public race
+sheets use five player-facing devotional bands for tone and readability, but
+those bands do not create extra tier storage:
+
+| Public band | Internal meaning |
+|---|---|
+| Distant | Below active tier; presentation band only |
+| Wavering | Below active tier; presentation band only |
+| Observant | `PDV.Tier == 1` |
+| Faithful | `PDV.Tier == 2` |
+| Devoted | `PDV.Tier == 3` |
+
+Do not add new tier globals, StorageUtil keys, or CK condition tiers to match
+the race-sheet numbering. If player-facing labels are revised later, update the
+UI/string layer and keep the storage contract stable.
+
 ---
 
 ## 3. Outstanding from Phases 4-6
@@ -56,19 +74,19 @@ These items were live or deferred when v2 was closed. v3 inherits them.
 
 - **Decay model.** Not implemented. Linear daily decay if no recent `PietyToday` activity is the leading candidate. v3 owns this - see Section 14.
 - **Storage migration.** v1 saves loading into v2/v3 mods: `PDV_GLO_DevotionLevel` is dead, Kyne piety reseeds from origin. Treat as a save-game gotcha rather than a migration path. v3 should document this in the mod page changelog when 1.0 ships.
-- **PapyrusUtil missing-failure behavior.** Recommended hard-fail with notification. v3 should add a missing-PapyrusUtil guard to `PDV__MainQuest.OnInit()`.
-- **Custom-race fallback.** `PDV_Origin` currently defaults unknown races to `RACE_IMPERIAL` with a debug trace. v3 should expose this as an MCM-visible diagnostic and a soft-compat hook for custom race mods that want to register their religious identity.
+- **PapyrusUtil missing-failure behavior.** Locked: add a visible hard-fail guard to `PDV__MainQuest.OnInit()` before any partial state writes. Missing PapyrusUtil should show a player-visible message, trace the dependency failure, and abort PDV bootstrap.
+- **Custom-race fallback.** Locked: `PDV_Origin` may keep defaulting unknown races to `RACE_IMPERIAL`, but v3 must surface this as both a one-time first-load notice and an MCM/status diagnostic. A later custom-race soft-compat hook remains post-1.0 unless a concrete patch target appears sooner.
 - **Curse-state module.** Werewolf and Vampire interpretation layers are designed (see race architecture reference) but not built. v3 owns this - see Section 12.
 
 ### 3.3 Contested lore items (must be decided before content lock)
 
 Carried forward from v2 § 10. Each affects stance and rivalry data, not architecture shape:
 
-- **Trinimac as worshipable.** Likely: include as a parallel Orsimer devotion option with `HOSTILE` stance for Altmer (betrayal narrative). ESO-low-canon flagged.
+- **Trinimac as worshipable.** Locked: include as an Altmer-native specialist worship target for martial virtue, civilisational defence, and Thalmor Orthodox play. For Orcs, Trinimac remains `TABOO` fringe pressure only, not a normal Orc core path or fourth Orc lane. Scaffold in Structural Skeleton, but make content-ready only when the Thalmor Orthodox Altmer lane is being built.
 - **Talos-Altmer.** Locked: `HOSTILE`. Theological enemy, not just culturally foreign.
 - **Hircine for Bosmer.** Locked: `NATIVE`, with the lore disagreement noted in the deity description. Reading is Y'ffre-adjacent Wild Hunt veneration.
-- **Malacath classification.** Daedric Prince per Imperial taxonomy, ancestor-god per Orsimer reading. Architecturally a labeling decision; affects which rivalries fire.
-- **Lorkhan-family equivalence.** Current matrix-pass resolution: do not collapse `Shor`, `Sep`, `Lorkhaj`, `Lorkhan` into one row. Keep culturally specific entries, note family resemblance in description text.
+- **Malacath classification.** Locked: dual-coded. Malacath is a Daedric Prince for non-Orsimer taxonomy and an Orsimer ancestor/core god as Mauloch/Malacath for Orc handling. Stigma and rivalry logic branch by race rather than forcing one universal label.
+- **Lorkhan-family equivalence.** Locked: do not collapse `Shor`, `Sep`, `Lorkhaj`, and `Lorkhan` into one row. Keep culturally specific records where theology and rivalry differ, and note family resemblance in description text.
 
 ### 3.4 Environment / tooling (not architecture)
 
@@ -86,7 +104,7 @@ The v3 architecture adds the following subsystems on top of the v2 core. Each ge
 | 5 | Signal expansion | `PDV_ActionRouter`, Story Manager receivers, curated-signal helpers |
 | 6 | Reputation track | New `PDV_ReputationTrack` reusable script |
 | 7 | State track | New `PDV_StateTrack` lightweight per-race quest helpers |
-| 8 | Race substrate layer | New origin-gated quest pattern, parallel to deity quests |
+| 8 | Race substrate layer + sacred place + moon cycle | New origin-gated quest pattern, parallel to deity quests; shared PDV_SacredPlace; Khajiit moon-cycle overlay |
 | 9 | Privilege subsystem | CK Conditions on the existing mirror globals + new state-track globals |
 | 10 | Contextual favor subsystem | Magic effects with stacked conditional triggers, family-capped |
 | 11 | Daedric path architecture | New `PDV_DaedricPath_<X>` quest pattern with boon/price/stigma |
@@ -156,15 +174,64 @@ Caps and cooldowns are deity-side, not router-side, so different deities can rat
 
 ### 5.4 Outstanding signal-architecture decisions
 
-- **Follower kill attribution.** Currently rejected. v3 should decide whether to add a softer signal class for follower-or-summon kills with the same enum but a 0.25x multiplier, or leave them out.
-- **Trap and environmental kills.** Same shape; current `OnStoryKillActor` event behavior may not surface these reliably. Defer until follower kills are decided.
-- **Crime events.** Story Manager has crime nodes (`OnStoryCrimeGold`, `OnStoryArrest`). These are first-class signals for Imperial Concordat Standing and Argonian community standing; v3 should wire `PDV__SM_Crime*` receivers.
+- **Follower kill attribution.** Locked for Preflight: EventBus payloads should carry attribution type for direct player, follower, summon/charmed, trap, and environmental kills, but only direct-player kills score until a later signal phase gives indirect kills explicit devotional meaning.
+- **Trap and environmental kills.** Same payload family as follower/summon attribution. Do not score them in Preflight; test real Story Manager behavior before any reduced-attribution scoring lands.
+- **Crime events.** Story Manager has crime nodes (`OnStoryCrimeGold`, `OnStoryArrest`). These are first-class signals for Imperial Concordat Standing and Argonian community standing, but should land with Phase 8's reputation track so the events immediately adjust a real track instead of routing as empty signal scaffolding.
+
+### 5.5 Race-specific signal mechanics (LOCKED)
+
+These race-specific signal rules were locked during the grilling review and affect how signals are processed per-race:
+
+**Bosmer Green Pact failure (LOCKED):**
+- PDV owns its Green Pact tagging layer for The Old Contract path; it may mirror ideas from Requiem/Races Redone, but it is not a dependency on their tags.
+- Single violations do not lock out daily compliance reward — the buff is withheld for that instance only (90-minute cooldown per anti-farm standard)
+- Sustained intentional violation (5 breaks within a 2-day window) triggers a piety penalty
+- Implementation: counter on `PDV.Pact.ViolationStreak` with timestamp windowing in dawn pass
+
+**Altmer crisis-of-faith (LOCKED):**
+- Tier 3 Lorkhan-adjacent mortal-validation events (marriage, homestead, adoption, similar normal-life commitments) are lightly weighted reactions, not harsh collapses.
+- Major lore-challenging story points fire crisis events instead of simple piety adjustments
+- Crisis creates a temporary "questioning" state that suppresses normal gain/loss until resolved through continued consistent behavior
+- Duration and resolution are content-authored per crisis trigger (not a fixed timer)
+
+**Dunmer Tribunal shrine random-thought (LOCKED):**
+- Praying at a Tribunal shrine (Almalexia/Vivec/Sotha Sil) produces a random selection from a curated buff/debuff pool
+- Each shrine has its own pool themed to its Good Daedra aspect
+- Some results are positive, some negative — reflects the Three's unpredictable legacy
+- Signal source: curated CK activator script on the Tribunal shrine objects
+
+**Nord broad-worship combo (LOCKED):**
+- At Faithful (Tier 2), multiple active deity relationships produce combined contextual favors
+- Favors are watered-down versions of individual deity rewards, combined for breadth-specific feel
+- Combo recipes are content-authored; architecture provides the multi-deity piety-read mechanism
+
+**Orc community investment (LOCKED):**
+- NPC disposition tracking is the preferred approach for community progression
+- For 1.0: faction-favor proxy system (faction rank represents community standing)
+- Progression arc: stranger → acquaintance → friend → community member
+- Drives devotion bonus from the Orc's self-made community location
+
+**Imperial Concordat walk-back (LOCKED):**
+- Amplified reverse weight at extreme positions: reversing from entrenched requires proportionally more counter-behavior
+- Narrative gate: full reset from extreme to center requires a story-caliber event (not gradual drift alone)
+- Prevents casual flip-flopping while allowing genuine character development arcs
+
+**Redguard HoonDing accessibility (LOCKED):**
+- HoonDing devotion achievable via special beast kills + major quest completions ("big wins")
+- Sufficient signal sources exist in vanilla Skyrim (dragons, named creatures, quest climaxes)
+- Threshold is high but attainable for active adventurers; no custom content required
 
 ---
 
 ## 6. Reputation track subsystem (Phase 8)
 
-Two locked race-architecture pieces - Imperial `ConcordatStanding` and Breton `WitchcraftExposure` - share an identical shape: a -100..+100 (or 0..100) integer with named thresholds that lock-in until sustained behavior reverses them. v3 abstracts this into one reusable component.
+Several locked race-architecture pieces use the same basic shape: a continuous
+integer track with named threshold bands, sustained-behavior lock-in, and
+optional state-specific gain modifiers. v3 abstracts those into one reusable
+component instead of bespoke race scripts. The first-release family includes
+Imperial `ConcordatStanding`, Altmer `ThalmorAlignment`, Breton
+`WitchcraftExposure`, Breton `KnightlyVowIntegrity`, and Breton
+`DruidicStanding`.
 
 ### 6.1 Pattern
 
@@ -178,12 +245,14 @@ Int      Property MinValue = -100 AutoReadOnly
 Int      Property MaxValue = 100 AutoReadOnly
 
 ; -- Threshold table (parallel arrays, set in CK) --
-Int[]    Property ThresholdValues Auto           ; e.g. [-51, -11, 11, 51]
+Int[]    Property ThresholdValues Auto           ; e.g. Concordat [-76, -51, 51, 76]
 String[] Property ThresholdLabels Auto           ; e.g. ["OpenDefiant", "PrivateDefiant", "Uncommitted", "PublicCompliant", "ConcordatEnforcer"]
 
 ; -- Lock-in (per § 10.2 of race ref) --
 Bool     Property LockInOnCross = True Auto      ; threshold must be crossed by sustained behavior
 Int      Property LockInGraceDays = 3 Auto       ; days at the destination before the new state sticks
+Bool     Property NarrativeGateRequiredForExtremeReset = False Auto
+Int[]    Property ExtremeStateIndexes Auto
 ```
 
 ### 6.2 API surface
@@ -197,7 +266,24 @@ Function Adjust(Int adjustment, String reason)       ; writes through, traces
 Function ForceSet(Int newValue, String reason)       ; admin/debug only
 ```
 
-Both `ConcordatStanding` and `WitchcraftExposure` instantiate this quest with different threshold tables and labels. The track stores its current value in a dedicated `PDV_GLO_<TrackName>` global so vanilla CK Conditions can read it natively. Lock-in state is in StorageUtil under `PDV.Track.<TrackName>.LastCross` and `PDV.Track.<TrackName>.LockInUntil`.
+Each track stores its current value in a dedicated `PDV_GLO_<TrackName>` global
+so vanilla CK Conditions can read it natively. Lock-in state is in StorageUtil
+under `PDV.Track.<TrackName>.LastCross` and
+`PDV.Track.<TrackName>.LockInUntil`. If
+`NarrativeGateRequiredForExtremeReset` is enabled, sustained counter-behavior
+can move the value toward center, but a curated story-caliber signal must clear
+`PDV.Track.<TrackName>.ExtremeResetGate` before the resolved state fully leaves
+an extreme band.
+
+### 6.2a First-release track instances
+
+| Track | Range / bands | Owner | Notes |
+|---|---|---|---|
+| `PDV_RepTrack_ConcordatStanding` | `-100..-76` OpenDefiant, `-75..-51` PrivateDefiant, `-50..50` Uncommitted, `51..75` PublicCompliant, `76..100` ConcordatEnforcer | Imperial | Wide Uncommitted band prevents incidental play from forcing a Talos position; extreme walk-back requires amplified reverse weight plus narrative gate |
+| `PDV_RepTrack_WitchcraftExposure` | `0..25` Hidden, `26..50` Suspected, `51..75` Known, `76..100` Notorious | Breton Hidden Art | Tracks visibility of occult practice, not moral guilt; high exposure can accelerate Daedric rewards while increasing social cost |
+| `PDV_RepTrack_ThalmorAlignment` | Heterodox, OrthodoxModerate, ThalmorDevout | Altmer | Modifies orthodoxy, Trinimac access, Lorkhan-reaction weight, and crisis-of-faith framing |
+| `PDV_RepTrack_KnightlyVowIntegrity` | `0..100`, starts high | Breton Knight's Road | Degrades through dishonor; low integrity suppresses knightly Divine gains until restored through mercy/justice signals |
+| `PDV_RepTrack_DruidicStanding` | `0..100` plus curse-state gates | Breton Green Way | Handles Y'ffre standing; pairs with a state-track fork for vampire excommunication and the werewolf Druidic Trial |
 
 ### 6.3 Where adjustments come from
 
@@ -232,8 +318,8 @@ EndFunction
 
 ### 6.5 Naming
 
-- `PDV_RepTrack_<Name>` for the quest record. `PDV_RepTrack_Concordat`, `PDV_RepTrack_WitchcraftExposure`.
-- `PDV_GLO_<TrackName>` for the backing global. `PDV_GLO_ConcordatStanding`, `PDV_GLO_WitchcraftExposure`.
+- `PDV_RepTrack_<Name>` for the quest record. Examples: `PDV_RepTrack_ConcordatStanding`, `PDV_RepTrack_WitchcraftExposure`, `PDV_RepTrack_ThalmorAlignment`.
+- `PDV_GLO_<TrackName>` for the backing global. Examples: `PDV_GLO_ConcordatStanding`, `PDV_GLO_WitchcraftExposure`, `PDV_GLO_ThalmorAlignment`.
 - `PDV_GLO__<TrackName>_LockInUntil` for the internal lock-in cache global (write-only mirror; canonical state in StorageUtil).
 
 ---
@@ -305,9 +391,11 @@ The patron-commitment mechanism (Section 12) reads `IsEligibleForPlayer()` befor
 | `PDV_State_OrcLifeMode` | Stronghold, City, Exile | Orc | Default Stronghold; transition via threshold events |
 | `PDV_State_ImperialWorship` | Broad, Primary | Imperial | Promoted by Concordat-rep + piety-threshold |
 | `PDV_State_NordWorship` | OldWays, NineDivines, Broad, Primary | Nord | Setup choice + commitment event |
-| `PDV_State_BretonTradition` | Divine, Druidic, Witchcraft, Mixed | Breton | Soft preferences set during play |
+| `PDV_State_BretonTradition` | KnightsRoad, HiddenArt, GreenWay | Breton | Primary identity chosen at setup; tracks can pull against each other |
+| `PDV_State_BretonDruidicFork` | Stable, Contested, GreenAccepted, HircineClaimed, Excommunicated, Penitent, Restored | Breton Green Way | Curse-state fork/readout paired with `PDV_RepTrack_DruidicStanding` |
 | `PDV_State_RedguardSect` | Crown, Forebear, AshAbah | Redguard | Faction-driven |
 | `PDV_State_DunmerPath` | Ancestor, GoodDaedra, TribunalRemnant | Dunmer | Default Ancestor; promoted by sustained worship |
+| `PDV_State_AltmerCrisis` | Stable, Questioning, ResolvedOrthodox, ResolvedHeterodox | Altmer | Temporary crisis-of-faith state for major lore-challenging story points |
 
 ### 7.5 Naming
 
@@ -359,13 +447,26 @@ EndFunction
 
 ### 8.2 Substrates needed for first release
 
+Strong persistent substrates are locked to three races for 1.0: Dunmer
+ancestor practice, Khajiit lunar life, and Argonian Hist relation. These are
+the only substrate quests expected to carry always-active race identity at
+meaningful strength.
+
 | Substrate | Origin | What it tracks | Aggregate metric |
 |---|---|---|---|
-| `PDV_Substrate_KhajiitLunar` | Khajiit | Lunar phase observance + furstock identity | Moon-observance count, modulated by furstock |
-| `PDV_Substrate_DunmerAncestor` | Dunmer | Ash-shrine maintenance, ancestor invocation | Ancestor-event count, decays with neglect |
-| `PDV_Substrate_ArgonianHist` | Argonian | Distance-from-Black-Marsh + community contact | Hist-connection metric, biased to "diminishing distance from Hist" semantics |
+| `PDV_Substrate_KhajiitLunar` | Khajiit | Lunar phase observance + moon cycle compliance + road-home cycling | Moon-observance count, modulated by cycle phase and road-home return frequency |
+| `PDV_Substrate_DunmerAncestor` | Dunmer | Portable shrine prayer, ancestor invocation, home-site bonus | Ancestor-event count, decays with neglect; bonus at player-owned property |
+| `PDV_Substrate_ArgonianHist` | Argonian | Distance-from-Black-Marsh + community contact + Hist sap meditation | Hist-connection metric, biased to "diminishing distance from Hist" semantics |
 
-For 1.0, strong persistent substrates are limited to Khajiit, Dunmer, and Argonian. Altmer orthodoxy, Redguard ancestor reverence, and Orc life-mode standing express identity through privileges, contextual favors, and state tracks first; promote one to a full substrate quest only if playtest feedback proves the lighter pattern insufficient.
+Altmer orthodoxy, Redguard ancestor reverence, and Orc life-mode standing
+express identity through privileges, contextual favors, sacred-place modifiers,
+and state tracks first; promote one to a full substrate quest only if playtest
+feedback proves the lighter pattern insufficient. In particular, Orc
+City/Legion community location tracking uses `PDV_SacredPlace`, but it is not a
+strong persistent substrate and should not compete with Malacath's foreground
+mode as the main Orc boon lane.
+
+**Substrate promotion policy (LOCKED):** Non-substrate races (Nord, Imperial, Breton, Redguard, Altmer, Orc) can be promoted to full substrate if playtest proves lighter mechanics insufficient. Architecture supports promotion without refactoring. Candidates: Nord (pantheon-level broad worship may need always-on tracking), Breton (tension system may already provide equivalent depth).
 
 ### 8.3 Storage
 
@@ -382,6 +483,84 @@ No mirror globals for substrate. CK Conditions that need substrate state read fr
 ### 8.4 Interaction with patron boons
 
 Substrate boons and patron boons coexist. Family caps (Section 10.3) prevent stacking abuse. For balance, treat substrate boons as the "always quiet" layer and patron boons as the "louder" foreground layer.
+
+### 8.5 Sacred Place shared system (LOCKED)
+
+Multiple races need location-based devotional tracking. Rather than bespoke per-race implementations, v3 provides a shared `PDV_SacredPlace` script that races hook into with their own parameters.
+
+```papyrus
+Scriptname PDV_SacredPlace extends Quest
+
+; -- Identity (set in CK per instance) --
+String   Property PlaceName Auto                 ; "ArgonianBedOfChoice"
+Int      Property MaxLocations = 1 Auto          ; Argonian: 1, Khajiit: 3, Orc: 1
+Int      Property RequiredOriginRace Auto        ; RACE_ARGONIAN etc.
+
+; -- Tracking --
+ObjectReference[] Property DesignatedLocations Auto  ; player-designated places
+Float[]  Property LastVisitTime Auto             ; game time of last visit per location
+Int[]    Property InvestmentLevel Auto           ; 0=empty, 1=established, 2=thriving (Orc only)
+
+; -- Tuning --
+Float    Property VisitFrequencyDays = 7.0 Auto  ; how often visits are expected
+Float    Property DecayRatePerMiss = 5.0 Auto    ; devotion penalty per missed cycle
+Float    Property RewardModifier = 1.0 Auto      ; bonus to substrate/devotion on visit
+
+; -- API --
+Function DesignateLocation(ObjectReference loc)
+Function RecordVisit(ObjectReference loc)
+Function ProcessDecay()                          ; called from dawn pass
+Float Function GetPlaceBonus()                   ; read by substrate scoring
+```
+
+**Per-race usage:**
+
+| Race | Locations | Visit Model | Progression | Custom Behavior |
+|---|---|---|---|---|
+| Argonian | 1 | Sleep N nights/month at designated bed | Static | Community decay on absence |
+| Khajiit | 2-3 | Cycle between road homes | Static | Circuit completion bonus |
+| Orc (City/Legion) | 1 | Visit invested location | Dynamic (empty→established→thriving) | Investment builds over time |
+
+**Design rules:**
+- All towns work equally once designated (no mechanical bonus for specific locations)
+- Location-specific flavor text is allowed (Windhelm for Argonian, stronghold approaches for Orc)
+- Designation piggybacks off existing game concepts (bed ownership for Argonian, sleep location for Khajiit, return frequency for Orc)
+- The shared system handles tracking; race-specific substrate scripts read `GetPlaceBonus()` and integrate into their own scoring
+- Orc usage feeds a contextual mode modifier only. Do not promote it into a strong substrate without a later playtest decision.
+
+### 8.5a Argonian ritual/custom-content obligations (LOCKED)
+
+The Argonian Hist substrate needs at least one player-triggered reconnection
+tool because vanilla Skyrim has no real Hist infrastructure. v3 treats the Hist
+sap meditation item/power as 1.0 custom content, not a post-launch luxury.
+
+Argonian death-rites also need Arkay-priest reaction content for the racial
+theology layer to answer back through the world. Without those reactions,
+Argonian death practice risks becoming hidden counter math rather than visible
+roleplay.
+
+### 8.6 Moon cycle substrate extensions (Khajiit-specific) (LOCKED)
+
+The Khajiit substrate includes a moon-cycle overlay tied to Skyrim's actual Masser/Secunda phase data (with abstract 28-day fallback if real moon data proves unreliable).
+
+```papyrus
+; PDV_Substrate_KhajiitLunar additions
+Int      Property CurrentMoonPhase Auto          ; derived from game day
+Float[]  Property PhaseRewardWeights Auto        ; which reward type is strongest per phase
+
+Function RecomputeMoonPhase()
+    ; Read Masser/Secunda from GameHour/GameDay
+    ; Map to internal phase enum
+    ; Update PhaseRewardWeights
+EndFunction
+```
+
+**Phase behavior:**
+- Each phase favors different Khajiit activities (road-travel, community, reflection, focused deity work)
+- Current-phase activity grants a small phase-favored bonus, but compliance across the full cycle determines overall substrate strength
+- Store both dimensions: `PDV.Substrate.KhajiitLunar.PhaseBonus` for the current phase and `PDV.Substrate.KhajiitLunar.CycleCompliance` for 28-day continuity
+- Special states emerge when moons overlap or oppose (heightened awareness or tension)
+- Current phase visible via power menu with flavor text on shift
 
 ---
 
@@ -561,11 +740,22 @@ The offer is an in-world threshold event, not an MCM toggle. Per the locked Nord
 
 If multiple deities qualify simultaneously, queue offers in DeityIndex order. Only one offer fires per dawn cycle. Player resolves before the next dawn surfaces another candidate.
 
+### 12.4a Khajiit emergent patron exception (LOCKED)
+
+Khajiit are the **only race** that bypasses the standard `ProcessCommitmentOffers()` mechanism entirely. Per confirmed lore (UESP, Imperial Library), Khajiit gravitate toward specific deities through life-role without formal declarations.
+
+Instead of firing an offer, the Khajiit substrate runs a silent weight-shift evaluation at dawn that:
+- Reads behavioral signal patterns across recent days
+- Shifts deity emphasis weight without player notification
+- Allows the player to notice via shifted blessings rather than an explicit offer
+
+No popup, no shrine event, no "Azurah notices you" moment. The emergent patron is recognized by the system when one deity's domain has clearly become the player's life. The moons already knew.
+
 ### 12.5 "Broad worship" as a first-class state
 
 Per the locked Nord/Imperial/Breton designs, broad worship is a real state, not just "no patron set." v3 introduces:
 
-- `PDV_GLO_PatronDeity = -1` sentinel meaning "broad worship explicitly chosen."
+- `PDV_GLO_PatronState` stores the explicit patron state: unset, broad worship, or active patron. `PDV_GLO_PatronDeity` remains an active-target cache only when the state is active; do not overload it with broad-worship sentinels.
 - Broad worship is selected via the same setup choice that sets a state track (Section 7.4).
 - Under broad worship, scoring is dampened and capped at Tier 2 for 1.0 unless later race content proves a narrower exception is needed.
 - Commitment offers still fire from under broad worship; accepting transitions out of broad.
@@ -645,7 +835,18 @@ The race architecture reference flags restoration paths as content-author concer
 - **Rededication rituals** that can write `PDV.Piety` directly via curated signals.
 - **Tier downgrade on transition** so the player has measurable lost ground to recover.
 
-### 13.5 Curse decisions
+### 13.5 Altmer vampire micro-path (LOCKED)
+
+Altmer vampires gain access to an "Exiled Altmer" redirected micro-path rather than being left in a mechanically dead state. This is NOT a full worship lane; it is a survival-identity path:
+
+- Capped at Tier 1 (no deep devotion available in vampire state)
+- Represents self-reconstruction and refusal to collapse
+- Rewards maintaining identity despite exile from Aedric devotion
+- Enhancement-level custom content (not essential for 1.0 core function)
+
+Implementation: a special-case branch in the Altmer curse-transition handler that enables a lightweight "Exiled Altmer" boon path when `OriginRace == RACE_ALTMER && CurseState == CURSE_VAMPIRE`. This path uses the substrate pattern (Section 8) but with a hard Tier 1 cap.
+
+### 13.6 Curse decisions
 
 - **Source of Werewolf detection.** Companions-quest-specific keyword? Race check? v3 should test on a vanilla Companions run first.
 - **Hybrid Necromancer / Daedric overlap.** Curse state modifies multipliers, eligibility pressure, and interpretation. It does not auto-open Daedric paths; Hircine, Molag Bal, or other curse-adjacent paths still require commitment signals before real progression.
@@ -929,12 +1130,12 @@ excellent reusable example per subsystem, then clone.
 | Phase | Subsystem | Dependencies | Acceptance |
 |---|---|---|---|
 | **V3 Preflight** | Architecture hardening | Proven v2 Phase 4/5/6 baseline | WorshipTarget base, service split, patron state, EventBus/EventTypes, dawn order, gain pipeline, schema hooks, and verifier hard-fails are compile/verifier/smoke clean |
-| **V3 Structural Skeleton** | Full 1.0 structural scaffold | V3 Preflight | Dev-only scaffold targets/tracks/substrates are inert, hidden from player surfaces, and verifier-visible |
-| **V3 Pattern Proving** | One excellent reusable pattern per subsystem | Structural Skeleton | One EventBus signal family, rep track, state track, substrate, contextual favor family, Daedric price/stigma path, commitment offer, and neglect/decay path are proven |
-| **7** | Signal expansion (sleep, shrine, shout, social, crime) | V3 Preflight + EventBus pattern | New events routed; per-target rubric updates; signal policy anti-farm caps functional |
-| **8** | Reputation track + first instance (Concordat Standing) | Phase 7 | Track adjusts via dialogue/SM fragments; stance-mult composes with track-mult; verifier covers |
-| **9** | State track + first instance (Bosmer Path or Imperial Worship) | Phase 8 | State persists, eligibility filtering works in commitment offers |
-| **10** | Race substrate (Khajiit lunar OR Argonian Hist as first pilot) | Phase 9 | Substrate boons granted by origin only; substrate metric tracked; separate from patron piety |
+| **V3 Structural Skeleton** | Full 1.0 structural scaffold | V3 Preflight | Dev-only scaffold targets, locked race tracks, and strong substrates are inert, hidden from player surfaces, and verifier-visible |
+| **V3 Pattern Proving** | One excellent reusable pattern per subsystem | Structural Skeleton | Imperial Concordat, Bosmer Path, Dunmer Ancestor, Khajiit emergent/moon-cycle exception, contextual favor family, Daedric price/stigma path, commitment offer, and neglect/decay path are proven |
+| **7** | Signal expansion (sleep, shrine, shout, social) | V3 Preflight + EventBus pattern | New events routed; per-target rubric updates; signal policy anti-farm caps functional |
+| **8** | Reputation track + first instance (Concordat Standing) | Phase 7 | Imperial Concordat bands, wide Uncommitted state, and edge walk-back gate work; stance-mult composes with track-mult; verifier covers |
+| **9** | State track + first instance (Bosmer Path) | Phase 8 | Bosmer path persists, eligibility filtering works in commitment offers, and Old Contract Green Pact tags are independent of external mods |
+| **10** | Race substrate (Dunmer Ancestor first pilot) | Phase 9 | Portable-shrine prayer and home bonus grant origin-only substrate progress; substrate metric stays separate from patron piety |
 | **11** | Privilege subsystem first wave (shrine + dialogue privileges for Kyne/Mara) | Phase 8/9 | CK conditions read mirror globals + track globals; dialogue topics gate cleanly |
 | **12** | Contextual favor subsystem (Kyne foreground favor set) | Phase 11 | 3-5 conditional magic effects per patron; family caps prevent stacking |
 | **13** | Daedric path architecture + first Prince (Boethiah pilot) | Phase 11 | Boon/price/stigma triple works; commitment gating works; stigma readout via global |
@@ -967,7 +1168,19 @@ For content-rich 1.0:
 - Sacrosanct compat patch ships alongside.
 - No regression of any v2 invariant.
 
-### 21.2 Explicit non-goals for 1.0
+### 21.2 Custom content priority classification (LOCKED)
+
+Essential custom content (required for the racial theology layer to be playable):
+- **Argonian:** Hist sap meditation, death-rites support, Arkay-priest reactions, community NPC reactions
+- **Dunmer:** Ancestor ceremonies, portable shrine item/animation, ash-shrine interaction
+- **Khajiit:** Moon observance flavor, road-home/circuit acknowledgment, emergent patron blessings
+- **Orc:** Community investment system (NPC disposition reactions, faction-favor proxy)
+- **Bosmer:** PDV-owned Green Pact tag layer, pact-compliance/violation feedback
+
+Enhancement custom content (improves experience, not required for core function):
+- **Altmer:** Post-vampire Exiled Altmer path flavor
+
+### 21.3 Explicit non-goals for 1.0
 
 - No original multi-stage questlines. Per the race-architecture pre-matrix requirements, the first release uses existing gameplay loops and CK-gated interactions, not bespoke quest arcs. Light authored moments such as commitment offers, shrine/ritual interactions, dialogue recognition, and notifications are in scope.
 - No hard Survival/Requiem dependency.
@@ -1010,89 +1223,12 @@ These are intentionally not solved in v3.
 
 Mobile-friendly worklist of every architectural decision still open in v3.
 Each entry is sized for phone scrolling. Decision IDs (`D-NN`) are stable:
-reference them in chat as "decide D-07 as (b)" or "defer D-17."
+reference them in chat as "decide D-10 as (b)" or "defer D-17."
 
 Numbering gaps are intentional. When a decision lands, remove it from this
 open tracker and resolve it by rewriting the relevant v3 section, adding an
 entry to `AGENTS.md` Decisions Log, or moving the item to Section 23 if it is
 deferred past 1.0.
-
-### Before Structural Skeleton
-
-#### D-01  Trinimac as worshipable  (§3.3)
-
-- **Question:** Should Trinimac be a worshipable deity in PDV?
-- **Options:**
-  - (a) Include as parallel Orsimer devotion with Altmer `HOSTILE`.
-  - (b) Exclude entirely.
-  - (c) Include only as a Tier-3 unlock for Orcs who break with Malacath orthodoxy.
-- **Recommendation:** (a). Most lore-faithful and exercises the stance/rivalry system honestly.
-- **Note:** Mainline TES treats Trinimac as dead/consumed; ESO is heavily revivalist. ESO-low-canon flagged.
-
-#### D-02  Malacath classification  (§3.3)
-
-- **Question:** Treat Malacath as a Daedric Prince or as an Orsimer ancestor-god?
-- **Options:**
-  - (a) Daedric Prince per Imperial taxonomy. Rivalries with Aedric pantheons fire normally.
-  - (b) Orsimer ancestor-god (Mauloch). Rivalries with Aedric pantheons damped.
-  - (c) Dual-coded: Daedric for non-Orsimer races, ancestor-god for Orsimer.
-- **Recommendation:** (c). The stance matrix already supports per-race interpretation; the contract grammar (§11) can branch on race.
-
-#### D-03  Lorkhan-family equivalence  (§3.3)
-
-- **Question:** Treat Shor / Sep / Lorkhaj / Lorkhan as the same entity with race-coded stance, or as separate deities?
-- **Options:**
-  - (a) Separate records per culture (current matrix-pass resolution).
-  - (b) One Lorkhan record with race-coded stance valence.
-- **Recommendation:** (a). Stance text and rivalry behavior differs sharply; collapsing pre-commits the implementation. Note family resemblance in description fields.
-
-### Before V3 Preflight implementation
-
-#### D-04  PapyrusUtil missing-failure guard  (§3.2)
-
-- **Question:** Add a hard-fail check to `PDV__MainQuest.OnInit()` if PapyrusUtil isn't present?
-- **Options:**
-  - (a) Hard fail with `MessageBox` and abort bootstrap.
-  - (b) Soft fail with `Notification` and continue with degraded state.
-  - (c) No guard; rely on user-visible script errors.
-- **Recommendation:** (a). PapyrusUtil is universal in modded Skyrim; missing it should be loud, not silent.
-
-#### D-05  Custom-race fallback diagnostic  (§3.2)
-
-- **Question:** How should the `RACE_IMPERIAL` fallback for unknown races be surfaced to the player?
-- **Options:**
-  - (a) MCM-visible diagnostic + first-load `Notification`.
-  - (b) MCM-visible diagnostic only.
-  - (c) Silent (debug-trace only, current behavior).
-- **Recommendation:** (a). Players running custom-race mods deserve to know how PDV is reading them.
-
-### Before Phase 7 signal expansion
-
-#### D-06  Follower kill attribution  (§5.4)
-
-- **Question:** Should follower / summon / charmed-creature kills route piety to the player's deities?
-- **Options:**
-  - (a) No (current behavior).
-  - (b) Yes at full multiplier.
-  - (c) Yes at a reduced multiplier (e.g. 0.25x).
-- **Recommendation:** (c). Reads as "you commanded the kill" without making companion comps trivial farms.
-- **Impact:** `PDV_ActionRouter` filter relaxation; new `EVT_*` flag or scoring multiplier.
-
-#### D-07  Trap and environmental kills  (§5.4)
-
-- **Question:** Should trap / fall / explosive kills route as player kills?
-- **Options:**
-  - (a) No.
-  - (b) Yes if player initiated.
-- **Recommendation:** Defer until D-06 is decided; the same multiplier logic should apply.
-
-#### D-08  Crime events wiring  (§5.4)
-
-- **Question:** Wire Story Manager crime nodes (`OnStoryCrimeGold`, `OnStoryArrest`) as PDV signals?
-- **Options:**
-  - (a) Wire in Phase 7 (first-class for Imperial Concordat + Argonian community).
-  - (b) Defer to Phase 8 with reputation track.
-- **Recommendation:** (a). Crime is a foundational signal class; better to land it with the other expansion work.
 
 ### Before Pattern Proving / privilege pilot
 
@@ -1231,14 +1367,22 @@ Purpose: harden the architecture before scaling.
 
 Must complete:
 
-- `PDV_WorshipTargetBase` shared concept for Aedric/cultural deities and Daedric paths.
-- Manager split into internal services with an outward facade for existing callers.
-- `PDV_GLO_PatronState` for unset, broad worship, and active patron state.
-- `PDV_EventBus` plus a central `PDV_EventTypes` owner for event IDs.
-- Dawn pass order: consolidate scratch, apply decay, recompute tiers, apply spell/neglect layers, process commitment offers, notify.
-- Gain pipeline that composes stance, reputation, curse, Daedric stigma, and future modifiers in one place.
-- Minimal schema/version hooks that record the current script schema and trace mismatches.
+- `PDV_WorshipTargetBase` shared concept for Aedric/cultural deities and Daedric paths, with optional no-op capability hooks rather than mandatory uniform behavior.
+- Manager split into internal services with a staged clean API behind an outward facade for existing callers.
+- `PDV_GLO_PatronState` for unset, broad worship, and active patron state, with `PDV_GLO_PatronDeity` kept as the active-target cache only.
+- `PDV_EventBus` plus a central `PDV_EventTypes` quest/script owner for event IDs. The existing direct-player kill route is the first EventBus canary and must preserve v2 scoring behavior.
+- Dawn pass order as named pipeline slots: consolidate scratch, apply decay, recompute tiers, apply spell/neglect layers, process commitment offers, notify. Preflight may leave future subsystem slots no-op.
+- Gain pipeline that composes stance, reputation, curse, Daedric stigma, and future modifiers in one place. Preflight moves existing stance math into this pipeline and leaves future modifiers no-op.
+- Minimal schema/version hooks that record the current framework schema version and trace mismatches. Do not add a full save-migration registry in Preflight.
 - Verifier hard-fail rules for core invariants.
+
+Current implementation note (2026-05-16): Preflight gate is closed.
+`PDV_EventTypes`, `PDV_EventBus`, and `PDV_GLO_PatronState` are framework-owned
+records in `PlayerDevotion_Framework.esp`; manager/router/eventbus wiring is
+live; strict preflight verifier runs clean (`FAIL=0`); and the clean-start smoke
+pass validated MCM load, origin seed, patron-state transitions, dawn
+consolidation, direct-hostile vs non-hostile canary behavior, Talos/Auri-El
+rivalry through dawn, and save/load sanity.
 
 Exit gate:
 
@@ -1255,9 +1399,11 @@ Must complete:
 
 - Full 1.0 worship-target scaffold, dev-only by default.
 - Strong substrate scaffolds for Khajiit, Dunmer, and Argonian.
-- Reputation-track and state-track scaffolds.
+- Reputation-track and state-track scaffolds for all locked first-release race tracks: ConcordatStanding, ThalmorAlignment, WitchcraftExposure, KnightlyVowIntegrity, DruidicStanding, BosmerPath, OrcLifeMode, NordWorship, BretonTradition, RedguardSect, DunmerPath, and AltmerCrisis.
+- Sacred-place scaffolds for Argonian bed-of-choice, Khajiit road homes, and Orc City/Legion community location, with Orc marked as a contextual mode modifier rather than a strong substrate.
 - Matrix-driven CK authoring support where feasible, especially stance rows, FormList membership, rivalry wiring, and verifier expectations.
-- Verifier states for structural-ready, content-ready, and player-visible records.
+- Canonical visibility state on worship targets (`DevOnly`, `ContentReady`, `PlayerVisible`) plus FormList indexes for authoring/dev inspection. The visibility state is the source of truth; FormLists are operational indexes.
+- Verifier states for structural-ready, content-ready, and player-visible records, including hard-fails for visibility/FormList contradictions.
 
 Exit gate:
 
@@ -1273,9 +1419,10 @@ the roster.
 Must complete:
 
 - One expanded EventBus signal family.
-- One reputation track.
-- One state track.
-- One strong substrate.
+- Imperial Concordat as the first reputation track, including wide Uncommitted band and edge walk-back gate.
+- Bosmer Path as the first state track, including Old Contract Green Pact tag handling.
+- Dunmer Ancestor as the first strong substrate, including portable shrine prayer and player-owned-home bonus.
+- Khajiit emergent patron/moon-cycle as the first special-case race exception, including road-home circuit and separate phase bonus/cycle compliance.
 - One contextual favor family.
 - One Daedric price/stigma path.
 - One commitment offer flow.
@@ -1313,6 +1460,7 @@ Ready when:
 
 - Every race has at least one credible, race-aware foreground path.
 - Strong substrates feel distinct for Khajiit, Dunmer, and Argonian.
+- Named race obligations are testable in normal play: Imperial Concordat neutrality/edge walk-back, Breton three-track tension, Bosmer Green Pact failure handling, Nord broad-worship combo feel, Khajiit no-offer emergent emphasis, Orc community mode support, Redguard HoonDing big-win accessibility, Altmer light Lorkhan reactions/crisis states, Dunmer portable shrine practice, and Argonian Hist/community maintenance.
 - Commitment, neglect, decay, curse-state, and UI are live.
 - Enough dialogue, shrine, notification, and recognition texture exists to judge religious feel.
 - Dev-only scaffolds remain hidden from player-facing surfaces.
@@ -1343,6 +1491,63 @@ with this document, update the brief to match v3.
 ---
 
 ## 26. Revisions
+
+### v3.7 - 2026-05-16 - Race-sheet architecture sync
+
+Synced the new race sheets and locked Section 12 race decisions back into the
+forward architecture. The public five-band race-sheet vocabulary is now mapped
+onto the internal `PDV.Tier` 0-3 storage spine without adding extra tier state.
+Reputation and state planning now names the first-release race tracks, including
+the widened Imperial Concordat bands, Altmer `ThalmorAlignment`, Breton
+`WitchcraftExposure`, `KnightlyVowIntegrity`, and `DruidicStanding`.
+
+Clarified that strong persistent substrates are limited to Dunmer ancestor
+practice, Khajiit lunar life, and Argonian Hist relation; Orc community location
+uses `PDV_SacredPlace` as a contextual mode modifier, not a strong substrate.
+Roadmap gates now call out the required pattern pilots: Imperial Concordat,
+Bosmer Path, Dunmer Ancestor, and the Khajiit emergent patron/moon-cycle
+exception.
+
+### v3.6 - 2026-05-16 - V3 Preflight gate closed
+
+Closed the V3 Preflight exit gate. Framework-owned `PDV_GLO_PatronState`,
+`PDV_EventTypes`, and `PDV_EventBus` records are now present and wired in
+`PlayerDevotion_Framework.esp`; `PDV_ActionRouter` points at the framework-owned
+EventBus/EventTypes services; strict preflight verification is clean; and the
+clean-start in-game smoke pass is complete (A-F gate checks passed, including
+the direct-vs-non-hostile canary and Talos/Auri-El rivalry validation).
+
+### v3.4 - 2026-05-16 - V3 Preflight script/tooling kickoff
+
+Started Preflight implementation without broad content expansion. Added
+compile-clean `PDV_EventTypes` and `PDV_EventBus`, kept the existing
+direct-player hostile kill route as the canary, and made follower/environment
+attribution payload-only. The manager now has explicit patron-state helpers,
+named dawn pipeline slots, and gain-pipeline no-op extension points for
+reputation, curse, Daedric stigma, and future modifiers. Bootstrap now
+hard-fails visibly when PapyrusUtil is unavailable, unsupported custom-race
+fallback is surfaced through first-load notice plus MCM/status diagnostics, and
+the verifier/compiler know about the Preflight surface. Remaining work is
+record/property wiring plus clean-start smoke.
+
+### v3.3 - 2026-05-16 - V3 kickoff decisions
+
+Resolved D-01 through D-08 and tightened the Preflight/Skeleton contracts.
+Trinimac is an Altmer-native specialist worship target tied to martial virtue,
+civilisational defence, and Thalmor Orthodox play. It should be scaffolded in
+the Structural Skeleton, but should become content-ready only when that Altmer
+lane is being built. For Orcs, Trinimac stays `TABOO` fringe pressure only, not
+a normal Orc core path or fourth Orc lane. Malacath is dual-coded by race, and
+Shor/Sep/Lorkhaj/Lorkhan remain separate cultural records.
+
+Preflight now uses staged service APIs behind the manager facade, a central
+EventBus/EventTypes owner with the existing kill route as canary, explicit
+patron state instead of overloaded `PDV_GLO_PatronDeity` sentinels, named
+dawn/gain pipeline slots, and minimal schema-version tracing without a save
+migration registry. Indirect kill attribution is payload-only until a later
+signal phase assigns devotional meaning. Crime events move to Phase 8 with the
+first reputation track. Structural Skeleton visibility uses a canonical target
+visibility enum plus FormList indexes, with verifier hard-fails for leaks.
 
 ### v3.2 - 2026-05-16 - Section 24 decision cleanup
 

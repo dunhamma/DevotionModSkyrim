@@ -45,6 +45,7 @@ const MANAGER_PATRON_WIRE_PATCH = "PDV_ManagerPatronWirePatch.esp";
 const MCM_WIRE_PATCH = "PDV_MCMWirePatch.esp";
 const RETIRED_OVERLAY_PATCHES = [MANAGER_PATRON_WIRE_PATCH, MCM_WIRE_PATCH];
 const CANONICAL_PROPERTY_WIRING_PATCH = "PDV_PropertyWiringOverlay.esp";
+const PREFLIGHT_ROUTER_OVERLAY_PATCH = "PDV_PreflightRouterServicesOverlay.esp";
 const ONE_OFF_AUTHOR_PATCH_PREFIX = "PDV_Author_one_off_";
 const MO2_MCP_HOST = "127.0.0.1";
 const MO2_MCP_PORT = 27016;
@@ -71,6 +72,12 @@ const PHASE3_RECORDS = {
   PDV__SM_KillActor: "QUST",
 };
 
+const PREFLIGHT_RECORDS = {
+  PDV_GLO_PatronState: "GLOB",
+  PDV_EventTypes: "QUST",
+  PDV_EventBus: "QUST",
+};
+
 const COMPILED_SCRIPTS = {
   PDV__MainQuest: "required",
   PDV_Origin: "required",
@@ -79,6 +86,8 @@ const COMPILED_SCRIPTS = {
   PDV_Deity_Kyne: "required",
   PDV_Deity_Talos: "required",
   PDV_Deity_AuriEl: "required",
+  PDV_EventTypes: "required",
+  PDV_EventBus: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
   PDV_MCM: "required",
@@ -91,6 +100,10 @@ const MANAGER_PROPERTIES = {
   PDV_GLO_PatronDeity: "PDV_GLO_PatronDeity",
   PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
   PDV_FLST_AllDeities: "PDV_FLST_AllDeities",
+};
+
+const MANAGER_PREFLIGHT_PROPERTIES = {
+  PDV_GLO_PatronState: "PDV_GLO_PatronState",
 };
 
 const MAINQUEST_PROPERTIES = {
@@ -147,6 +160,30 @@ const ROUTER_PROPERTIES = {
   ActorTypeCreature: null,
 };
 
+const ROUTER_PREFLIGHT_PROPERTIES = {
+  PDV_EventBusService: "PDV_EventBus",
+  PDV_EventTypesService: "PDV_EventTypes",
+};
+
+const ROUTER_PREFLIGHT_OVERLAY_PROPERTIES = {
+  PDV_EventBusService: "PDV_ActionRouter",
+  PDV_EventTypesService: "PDV_ActionRouter",
+};
+
+const EVENTBUS_OVERLAY_PROPERTIES = {
+  PDV_Manager: "PDV__ManagerQuest",
+  PDV_EventTypesService: "PDV_ActionRouter",
+  PDV_FLST_AllDeities: "PDV_FLST_AllDeities",
+  PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
+};
+
+const EVENTBUS_RECORD_PROPERTIES = {
+  PDV_Manager: "PDV__ManagerQuest",
+  PDV_EventTypesService: "PDV_EventTypes",
+  PDV_FLST_AllDeities: "PDV_FLST_AllDeities",
+  PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
+};
+
 const TALOS_EXPECTED_DATA = {
   DeityName: "Talos",
   DeityIndex: 1,
@@ -192,8 +229,9 @@ const MCM_PROPERTIES = {
 };
 
 class Verifier {
-  constructor({ strictPhase3 = false } = {}) {
+  constructor({ strictPhase3 = false, strictPreflight = false } = {}) {
     this.strictPhase3 = strictPhase3;
+    this.strictPreflight = strictPreflight;
     this.findings = [];
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
@@ -229,6 +267,14 @@ class Verifier {
     this.add("FAIL", check, detail, filePath);
   }
 
+  preflightGap(check, detail, filePath = null) {
+    if (this.strictPreflight) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   async run() {
     this.checkPaths();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
@@ -244,6 +290,7 @@ class Verifier {
       this.checkFormListRecord();
       this.checkMcmRecord();
       this.checkPhase3Records();
+      this.checkPreflightOverlayPatch();
     }
     this.checkScripts();
     this.checkSeq();
@@ -388,6 +435,61 @@ class Verifier {
     this.pass("ESP detail read", `Read details for ${this.recordDetails.size} records.`, PDV_ESP);
   }
 
+  scanPlugin(pluginPath) {
+    const response = this.bridge(
+      {
+        command: "scan",
+        plugins: [toPosix(pluginPath)],
+      },
+      60_000,
+    );
+
+    const plugin = response.plugins?.[0];
+    if (!plugin) {
+      throw new Error(`Mutagen scan returned no plugin payload for ${pluginPath}.`);
+    }
+
+    const recordsByEdid = new Map();
+    const recordsByFormid = new Map();
+    for (const record of plugin.records || []) {
+      if (record.formid) {
+        recordsByFormid.set(record.formid, record);
+      }
+      if (record.edid) {
+        recordsByEdid.set(record.edid, record);
+      }
+    }
+
+    return {
+      plugin,
+      recordsByEdid,
+      recordsByFormid,
+    };
+  }
+
+  readPluginRecordDetail(pluginPath, formid) {
+    const response = this.bridge(
+      {
+        command: "read_records",
+        max_depth: 10,
+        records: [
+          {
+            plugin_path: toPosix(pluginPath),
+            formid,
+          },
+        ],
+      },
+      60_000,
+    );
+
+    const detail = response.records?.find((record) => record.success && record.formid === formid);
+    if (!detail) {
+      throw new Error(`Mutagen detail read returned no record payload for ${formid}.`);
+    }
+
+    return detail;
+  }
+
   checkRecordInventory() {
     for (const [edid, expectedType] of Object.entries(BASELINE_RECORDS)) {
       const record = this.recordsByEdid.get(edid);
@@ -414,6 +516,19 @@ class Verifier {
         this.pass("Phase 3 record", `${edid} exists as ${expectedType}.`, PDV_ESP);
       }
     }
+
+    for (const [edid, expectedType] of Object.entries(PREFLIGHT_RECORDS)) {
+      const record = this.recordsByEdid.get(edid);
+      if (!record) {
+        this.preflightGap("V3 Preflight record", `${expectedType} record ${edid} is not in the framework ESP yet; CK/xEdit wiring remains pending.`, PDV_ESP);
+        continue;
+      }
+      if (record.type !== expectedType) {
+        this.fail("V3 Preflight record", `${edid} has type ${record.type}, expected ${expectedType}.`, PDV_ESP);
+      } else {
+        this.pass("V3 Preflight record", `${edid} exists as ${expectedType}.`, PDV_ESP);
+      }
+    }
   }
 
   checkManagerRecord() {
@@ -430,7 +545,14 @@ class Verifier {
     }
 
     this.pass("Manager script", "PDV__ManagerQuest script is attached.", PDV_ESP);
-    this.checkObjectProperties("Manager property", propertyMap(script), MANAGER_PROPERTIES);
+    const props = propertyMap(script);
+    this.checkObjectProperties("Manager property", props, MANAGER_PROPERTIES);
+
+    if (this.recordsByEdid.has("PDV_GLO_PatronState")) {
+      this.checkObjectProperties("Manager preflight property", props, MANAGER_PREFLIGHT_PROPERTIES);
+    } else {
+      this.preflightGap("Manager preflight property", "PDV_GLO_PatronState is script-ready but CK/global wiring is pending.", PDV_ESP);
+    }
 
     const vmad = fields.VirtualMachineAdapter || {};
     const fragments = vmad.Fragments || [];
@@ -659,6 +781,25 @@ class Verifier {
   checkPhase3Records() {
     this.checkOptionalQuestScript("PDV_ActionRouter", "PDV_ActionRouter", ROUTER_PROPERTIES);
     this.checkOptionalQuestScript("PDV__SM_KillActor", "PDV__SM_KillActor", RECEIVER_PROPERTIES);
+    const hasEventBusRecord = this.recordsByEdid.has("PDV_EventBus");
+    const hasEventTypesRecord = this.recordsByEdid.has("PDV_EventTypes");
+
+    if (hasEventBusRecord) {
+      this.checkOptionalQuestScript("PDV_EventBus", "PDV_EventBus", EVENTBUS_RECORD_PROPERTIES);
+    }
+    if (hasEventTypesRecord) {
+      this.checkOptionalQuestScript("PDV_EventTypes", "PDV_EventTypes", {});
+    }
+
+    const routerDetail = this.recordDetails.get("PDV_ActionRouter");
+    const routerScript = routerDetail ? findScript(routerDetail.fields || {}, "PDV_ActionRouter") : null;
+    if (routerScript && hasEventBusRecord && hasEventTypesRecord) {
+      this.checkObjectProperties("PDV_ActionRouter preflight property", propertyMap(routerScript), ROUTER_PREFLIGHT_PROPERTIES);
+    } else if (routerScript) {
+      this.checkPreflightQuestScript("PDV_ActionRouter", "PDV_EventBus", EVENTBUS_OVERLAY_PROPERTIES);
+      this.checkPreflightQuestScript("PDV_ActionRouter", "PDV_EventTypes", {});
+      this.info("PDV_ActionRouter preflight property", "EventBus/EventTypes properties are script-ready; CK co-attachment or quest wiring is pending.", PDV_ESP);
+    }
 
     const smRecords = [...this.recordsByFormid.values()].filter((record) => String(record.type || "").toUpperCase().startsWith("SM"));
     if (smRecords.length) {
@@ -673,6 +814,113 @@ class Verifier {
         "No SM* records found in the ESP. Kill Actor node wiring still needs CK/xEdit verification.",
         PDV_ESP,
       );
+    }
+  }
+
+  checkPreflightOverlayPatch() {
+    const overlayPath = path.join(DEVOTION_MOD, PREFLIGHT_ROUTER_OVERLAY_PATCH);
+    const hasEventBusRecord = this.recordsByEdid.has("PDV_EventBus");
+    const hasEventTypesRecord = this.recordsByEdid.has("PDV_EventTypes");
+    const requireOverlayCanary = !hasEventBusRecord || !hasEventTypesRecord;
+    if (!exists(overlayPath)) {
+      if (requireOverlayCanary) {
+        this.preflightGap(
+          "V3 Preflight overlay",
+          `${PREFLIGHT_ROUTER_OVERLAY_PATCH} has not been generated yet.`,
+          overlayPath,
+        );
+      } else {
+        this.info(
+          "V3 Preflight overlay",
+          `${PREFLIGHT_ROUTER_OVERLAY_PATCH} is not required because framework-owned EventBus/EventTypes records exist.`,
+          overlayPath,
+        );
+      }
+      return;
+    }
+
+    this.pass(
+      "V3 Preflight overlay",
+      `${PREFLIGHT_ROUTER_OVERLAY_PATCH} exists in the Devotion mod.`,
+      overlayPath,
+    );
+
+    let overlayInventory;
+    try {
+      overlayInventory = this.scanPlugin(overlayPath);
+    } catch (error) {
+      this.fail("V3 Preflight overlay", `Overlay scan failed: ${error.message}`, overlayPath);
+      return;
+    }
+
+    const overlayRecord = overlayInventory.recordsByEdid.get("PDV_ActionRouter");
+    if (!overlayRecord) {
+      this.fail(
+        "V3 Preflight overlay",
+        `${PREFLIGHT_ROUTER_OVERLAY_PATCH} does not override PDV_ActionRouter.`,
+        overlayPath,
+      );
+      return;
+    }
+
+    let overlayDetail;
+    try {
+      overlayDetail = this.readPluginRecordDetail(overlayPath, overlayRecord.formid);
+    } catch (error) {
+      this.fail("V3 Preflight overlay", `Overlay detail read failed: ${error.message}`, overlayPath);
+      return;
+    }
+
+    const combinedRecordsByEdid = new Map(this.recordsByEdid);
+    for (const [edid, record] of overlayInventory.recordsByEdid.entries()) {
+      combinedRecordsByEdid.set(edid, record);
+    }
+
+    const fields = overlayDetail.fields || {};
+    const routerScript = findScript(fields, "PDV_ActionRouter");
+    if (!routerScript) {
+      this.fail(
+        "V3 overlay router script",
+        "PDV_ActionRouter script is missing from the overlay override.",
+        overlayPath,
+      );
+      return;
+    }
+
+    this.pass("V3 overlay router script", "PDV_ActionRouter script is present in the overlay.", overlayPath);
+    this.checkObjectProperties(
+      "V3 overlay router property",
+      propertyMap(routerScript),
+      ROUTER_PREFLIGHT_OVERLAY_PROPERTIES,
+      { filePath: overlayPath, recordsByEdid: combinedRecordsByEdid },
+    );
+
+    const eventBusScript = findScript(fields, "PDV_EventBus");
+    if (!eventBusScript) {
+      this.fail(
+        "V3 overlay EventBus script",
+        "PDV_EventBus is not attached to the overlay override.",
+        overlayPath,
+      );
+    } else {
+      this.pass("V3 overlay EventBus script", "PDV_EventBus is attached in the overlay.", overlayPath);
+      this.checkObjectProperties(
+        "V3 overlay EventBus property",
+        propertyMap(eventBusScript),
+        EVENTBUS_OVERLAY_PROPERTIES,
+        { filePath: overlayPath, recordsByEdid: combinedRecordsByEdid },
+      );
+    }
+
+    const eventTypesScript = findScript(fields, "PDV_EventTypes");
+    if (!eventTypesScript) {
+      this.fail(
+        "V3 overlay EventTypes script",
+        "PDV_EventTypes is not attached to the overlay override.",
+        overlayPath,
+      );
+    } else {
+      this.pass("V3 overlay EventTypes script", "PDV_EventTypes is attached in the overlay.", overlayPath);
     }
   }
 
@@ -708,28 +956,50 @@ class Verifier {
     this.checkObjectProperties(`${questEdid} property`, propertyMap(script), expectedProperties);
   }
 
+  checkPreflightQuestScript(questEdid, scriptName, expectedProperties) {
+    const detail = this.recordDetails.get(questEdid);
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, scriptName);
+    if (!script) {
+      this.info(`${scriptName} script`, `${scriptName} is not attached yet; V3 Preflight CK wiring remains pending.`, PDV_ESP);
+      return;
+    }
+
+    this.pass(`${scriptName} script`, `${scriptName} is attached.`, PDV_ESP);
+    this.checkObjectProperties(`${scriptName} property`, propertyMap(script), expectedProperties);
+  }
+
   checkObjectProperties(checkName, props, expectedProperties, options = {}) {
+    const recordsByEdid = options.recordsByEdid || this.recordsByEdid;
+    const filePath = options.filePath || PDV_ESP;
     for (const [propName, expectedEdid] of Object.entries(expectedProperties)) {
       const prop = props.get(propName);
       if (!prop) {
-        this.fail(checkName, `${propName} is missing.`, PDV_ESP);
+        this.fail(checkName, `${propName} is missing.`, filePath);
         continue;
       }
 
       if (expectedEdid === null) {
         if (prop.Object || prop.Alias !== -1 || Object.hasOwn(prop, "Data")) {
-          this.pass(checkName, `${propName} is assigned.`, PDV_ESP);
+          this.pass(checkName, `${propName} is assigned.`, filePath);
         } else {
-          this.fail(checkName, `${propName} appears unassigned.`, PDV_ESP);
+          this.fail(checkName, `${propName} appears unassigned.`, filePath);
         }
         continue;
       }
 
-      const actualEdid = objectEdid(prop, this.recordsByEdid);
+      const actualEdid = objectEdid(prop, recordsByEdid);
       if (actualEdid === expectedEdid) {
-        this.pass(checkName, `${propName} points at ${expectedEdid}.`, PDV_ESP);
+        this.pass(checkName, `${propName} points at ${expectedEdid}.`, filePath);
       } else {
-        this.fail(checkName, `${propName} points at ${actualEdid || prop.Object || "unassigned"}, expected ${expectedEdid}.`, PDV_ESP);
+        this.fail(
+          checkName,
+          `${propName} points at ${actualEdid || prop.Object || "unassigned"}, expected ${expectedEdid}.`,
+          filePath,
+        );
       }
     }
   }
@@ -800,6 +1070,47 @@ class Verifier {
       this.pass("SkyUI output hygiene", "No stray SKI_*.pex files found in Devotion\\Scripts.", DEVOTION_PEX);
     }
 
+    this.checkPreflightSourceContracts();
+  }
+
+  checkPreflightSourceContracts() {
+    this.checkSourceContains("V3 Preflight source", "PDV__ManagerQuest", [
+      "Function RunGainPipeline",
+      "Function RunDawnConsolidateScratch",
+      "Function RunDawnApplyDecayNoop",
+      "Function SetBroadWorship",
+      "Function GetPatronStateLabel",
+    ]);
+    this.checkSourceContains("V3 Preflight source", "PDV_ActionRouter", [
+      "Function RouteActionWithAttribution",
+      "Function RouteNonScoringKillPayload",
+      "PDV_EventBus Property PDV_EventBusService",
+    ]);
+    this.checkSourceContains("V3 Preflight source", "PDV__MainQuest", [
+      "Function CheckPapyrusUtilDependency",
+      "PapyrusUtil.GetVersion",
+    ]);
+    this.checkSourceContains("V3 Preflight source", "PDV_Origin", [
+      "Function RecordCustomRaceFallback",
+      "PDV.CustomRaceFallback",
+    ]);
+  }
+
+  checkSourceContains(checkName, scriptName, snippets) {
+    const source = path.join(DEVOTION_SOURCE, `${scriptName}.psc`);
+    if (!exists(source)) {
+      this.fail(checkName, `${scriptName}.psc is missing.`, source);
+      return;
+    }
+
+    const text = fs.readFileSync(source, "utf8");
+    for (const snippet of snippets) {
+      if (text.includes(snippet)) {
+        this.pass(checkName, `${scriptName}.psc contains ${snippet}.`, source);
+      } else {
+        this.fail(checkName, `${scriptName}.psc is missing ${snippet}.`, source);
+      }
+    }
   }
 
   checkSeq() {
@@ -892,6 +1203,46 @@ class Verifier {
       this.info("Property wiring overlay", `${CANONICAL_PROPERTY_WIRING_PATCH} is present but inactive.`, pluginsTxt);
     }
 
+    const preflightOverlayPath = path.join(DEVOTION_MOD, PREFLIGHT_ROUTER_OVERLAY_PATCH);
+    const canAssessPreflightRecords = this.recordsByEdid.size > 0;
+    const hasEventBusRecord = this.recordsByEdid.has("PDV_EventBus");
+    const hasEventTypesRecord = this.recordsByEdid.has("PDV_EventTypes");
+    const requireOverlayCanary = canAssessPreflightRecords && (!hasEventBusRecord || !hasEventTypesRecord);
+    const preflightOverlayLine = pluginsLines.find((line) => line.replace(/^\*/, "").toLowerCase() === PREFLIGHT_ROUTER_OVERLAY_PATCH.toLowerCase());
+    if (preflightOverlayLine === `*${PREFLIGHT_ROUTER_OVERLAY_PATCH}`) {
+      this.pass("Preflight router overlay", `${PREFLIGHT_ROUTER_OVERLAY_PATCH} is active in Devotion Dev.`, pluginsTxt);
+    } else if (preflightOverlayLine) {
+      if (requireOverlayCanary) {
+        this.preflightGap(
+          "Preflight router overlay",
+          `${PREFLIGHT_ROUTER_OVERLAY_PATCH} is present but inactive while framework-owned EventBus/EventTypes records are still missing.`,
+          pluginsTxt,
+        );
+      } else {
+        this.info("Preflight router overlay", `${PREFLIGHT_ROUTER_OVERLAY_PATCH} is present but inactive.`, pluginsTxt);
+      }
+    } else if (exists(preflightOverlayPath)) {
+      if (requireOverlayCanary) {
+        this.preflightGap(
+          "Preflight router overlay",
+          `${PREFLIGHT_ROUTER_OVERLAY_PATCH} exists on disk but is not listed in plugins.txt yet.`,
+          pluginsTxt,
+        );
+      } else {
+        this.info(
+          "Preflight router overlay",
+          `${PREFLIGHT_ROUTER_OVERLAY_PATCH} exists on disk but is not listed in plugins.txt yet.`,
+          pluginsTxt,
+        );
+      }
+    } else if (requireOverlayCanary) {
+      this.preflightGap(
+        "Preflight router overlay",
+        `${PREFLIGHT_ROUTER_OVERLAY_PATCH} is missing from disk and plugins.txt while framework-owned EventBus/EventTypes records are still missing.`,
+        pluginsTxt,
+      );
+    }
+
     if (exists(loadorderTxt)) {
       const loadorder = readLines(loadorderTxt).filter((line) => line.trim() && !line.startsWith("#"));
       if (loadorder.at(-1)?.toLowerCase() === "playerdevotion_framework.esp") {
@@ -958,7 +1309,18 @@ class Verifier {
 
 function findScript(fields, name) {
   const vmad = fields.VirtualMachineAdapter || {};
-  return (vmad.Scripts || []).find((script) => script.Name === name) || null;
+  const matches = (vmad.Scripts || []).filter((script) => script.Name === name);
+  if (!matches.length) {
+    return null;
+  }
+  if (matches.length === 1) {
+    return matches[0];
+  }
+
+  return {
+    ...matches.at(-1),
+    Properties: matches.flatMap((script) => script.Properties || []),
+  };
 }
 
 function propertyMap(script) {
@@ -1121,6 +1483,7 @@ function parseArgs(argv) {
   const args = {
     json: false,
     strictPhase3: false,
+    strictPreflight: false,
   };
 
   for (const arg of argv) {
@@ -1128,8 +1491,10 @@ function parseArgs(argv) {
       args.json = true;
     } else if (arg === "--strict-phase3") {
       args.strictPhase3 = true;
+    } else if (arg === "--strict-preflight") {
+      args.strictPreflight = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -1141,7 +1506,7 @@ function parseArgs(argv) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-const verifier = new Verifier({ strictPhase3: args.strictPhase3 });
+const verifier = new Verifier({ strictPhase3: args.strictPhase3, strictPreflight: args.strictPreflight });
 const findings = await verifier.run();
 const counts = verifier.counts();
 

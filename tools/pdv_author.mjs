@@ -8,6 +8,7 @@
  *
  * Current scope:
  * - inspect built-in Phase 4 / Phase 6 manifests and tracked JSON manifests
+ * - attach additional scripts to existing records
  * - wire scalar and object VMAD properties on existing records
  * - add existing records to existing FormLists
  *
@@ -45,6 +46,7 @@ const SUPPORTED_PROPERTY_TYPES = new Set([...OBJECT_VALUE_TYPES, ...SCALAR_VALUE
 const BRIDGE_MAX_BUFFER = 64 * 1024 * 1024;
 const MANIFEST_INDEX = {
   "mcm-property-wiring": path.join(PROJECT_ROOT, "references", "authoring", "PDV_MCMPropertyWiring.manifest.json"),
+  "preflight-router-services": path.join(PROJECT_ROOT, "references", "authoring", "PDV_PreflightRouterServices.manifest.json"),
 };
 
 const KNOWN_EDITORID_FORMIDS = {
@@ -978,6 +980,24 @@ function buildManifestReport(manifest, context) {
 }
 
 function evaluateOperation(operation, context) {
+  if (operation.kind === "attachScript") {
+    const record = context.pdvInventory.recordsByEdid.get(operation.record);
+    if (!record) {
+      return {
+        ...operation,
+        status: "BLOCKED",
+        detail: `Record ${operation.record} is not present in PlayerDevotion_Framework.esp.`,
+      };
+    }
+
+    const scriptState = describeScriptAttachment(record.edid, operation.script, context.pdvDetails);
+    return {
+      ...operation,
+      status: "READY",
+      detail: scriptState,
+    };
+  }
+
   if (operation.kind === "setProperty") {
     const record = context.pdvInventory.recordsByEdid.get(operation.record);
     if (!record) {
@@ -1110,9 +1130,7 @@ function buildPatchRequestFromOperations(operations, context, options, label, re
   const blocked = evaluated.filter((item) => item.status !== "READY");
   if (requireReady && blocked.length) {
     const details = blocked.map((item) => {
-      const target = item.kind === "setProperty"
-        ? `${item.record}.${item.script}.${item.property}`
-        : `${item.record} += ${item.entry}`;
+      const target = describeOperationTarget(item);
       return `- ${target}: ${item.detail}`;
     });
     throw new Error(`Cannot build patch request because some operations are blocked:\n${details.join("\n")}`);
@@ -1120,7 +1138,9 @@ function buildPatchRequestFromOperations(operations, context, options, label, re
 
   const recordSpecs = new Map();
   for (const operation of evaluated.filter((item) => item.status === "READY")) {
-    if (operation.kind === "setProperty") {
+    if (operation.kind === "attachScript") {
+      addAttachScriptToRecordSpecs(operation, context, recordSpecs);
+    } else if (operation.kind === "setProperty") {
       addSetPropertyToRecordSpecs(operation, context, recordSpecs);
     } else if (operation.kind === "addFormListEntry") {
       addFormListEntryToRecordSpecs(operation, context, recordSpecs);
@@ -1138,8 +1158,21 @@ function buildPatchRequestFromOperations(operations, context, options, label, re
   };
 }
 
-function addSetPropertyToRecordSpecs(operation, context, recordSpecs) {
-  const record = context.pdvInventory.recordsByEdid.get(operation.record);
+function describeOperationTarget(operation) {
+  if (operation.kind === "attachScript") {
+    return `${operation.record}.${operation.script}`;
+  }
+  if (operation.kind === "setProperty") {
+    return `${operation.record}.${operation.script}.${operation.property}`;
+  }
+  if (operation.kind === "addFormListEntry") {
+    return `${operation.record} += ${operation.entry}`;
+  }
+  return `${operation.kind} ${operation.record || ""}`.trim();
+}
+
+function getOrCreateRecordSpec(recordEdid, context, recordSpecs) {
+  const record = context.pdvInventory.recordsByEdid.get(recordEdid);
   const key = record.formid;
   let spec = recordSpecs.get(key);
   if (!spec) {
@@ -1151,18 +1184,33 @@ function addSetPropertyToRecordSpecs(operation, context, recordSpecs) {
     };
     recordSpecs.set(key, spec);
   }
+  return spec;
+}
 
+function getOrCreateAttachedScript(spec, scriptName) {
   if (!spec.attach_scripts) {
     spec.attach_scripts = [];
   }
 
-  let script = spec.attach_scripts.find((entry) => entry.name === operation.script);
+  let script = spec.attach_scripts.find((entry) => entry.name === scriptName);
   if (!script) {
-    script = {
-      name: operation.script,
-      properties: [],
-    };
+    script = { name: scriptName };
     spec.attach_scripts.push(script);
+  }
+
+  return script;
+}
+
+function addAttachScriptToRecordSpecs(operation, context, recordSpecs) {
+  const spec = getOrCreateRecordSpec(operation.record, context, recordSpecs);
+  getOrCreateAttachedScript(spec, operation.script);
+}
+
+function addSetPropertyToRecordSpecs(operation, context, recordSpecs) {
+  const spec = getOrCreateRecordSpec(operation.record, context, recordSpecs);
+  const script = getOrCreateAttachedScript(spec, operation.script);
+  if (!script.properties) {
+    script.properties = [];
   }
 
   script.properties.push({
@@ -1173,18 +1221,7 @@ function addSetPropertyToRecordSpecs(operation, context, recordSpecs) {
 }
 
 function addFormListEntryToRecordSpecs(operation, context, recordSpecs) {
-  const record = context.pdvInventory.recordsByEdid.get(operation.record);
-  const key = record.formid;
-  let spec = recordSpecs.get(key);
-  if (!spec) {
-    spec = {
-      op: "override",
-      formid: record.formid,
-      source_plugin: "PlayerDevotion_Framework.esp",
-      source_path: toPosix(PDV_ESP),
-    };
-    recordSpecs.set(key, spec);
-  }
+  const spec = getOrCreateRecordSpec(operation.record, context, recordSpecs);
 
   if (!spec.add_form_list_entries) {
     spec.add_form_list_entries = [];
