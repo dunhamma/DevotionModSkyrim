@@ -16,6 +16,8 @@ What makes Nordic worship distinctive is that it's *earned* rather than declared
 
 **Broad worship** is the starting state. You honor your whole pantheon through varied living. This can take you up to **Faithful** — a solid, recognized relationship with the divine. Most Nords live here.
 
+At Faithful, broad worship has its own reward style. It combines watered-down signs from the gods you keep close — a little of Kyne's weather-favor, a little of Shor's battle-presence, a little of Mara's hearth-safety — rather than pretending breadth is just failed depth. The specific combinations are content-authored, but the playstyle is real: breadth gets blended contextual favors; depth gets stronger patron identity.
+
 **Focused worship** unlocks when a single god *notices you*. If your actions consistently align with one deity's domain — sustained combat excellence for Shor, outdoor living for Kyne, defiance of the Thalmor for Talos — that god will eventually make an offer. Accept, and you can reach **Devoted**. Decline, and you continue in broad worship with no penalty.
 
 This isn't a menu. It's emergent from how you play.
@@ -83,4 +85,4 @@ Consequences of straying: loss of standing with your patron, increased difficult
 
 Playing a Nord in Devotion feels like *being noticed*. You don't manage a prayer schedule or click shrines on cooldown — you live, and the gods respond. Fight with honor and Shor turns his eye your way. Sleep under Kyne's sky and she breathes closer. Defy the Thalmor and Talos marks you.
 
-The tension is that broad worship is comfortable but shallow. To reach the deepest tier, you must let one god claim you — and that means your playstyle narrows. A Nord who does everything is beloved by all gods equally, which is to say: not deeply by any one. The question is whether you're content with Faithful, or hungry for Devoted.
+The tension is that broad worship is comfortable and culturally rich, but it will not reach the deepest tier. A Nord who does everything can become a living overlap of their pantheon, receiving blended signs from many gods. To become Devoted, though, you must let one god claim you — and that means your playstyle narrows. The question is whether you're content with Faithful breadth, or hungry for Devoted depth.

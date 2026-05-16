@@ -26,6 +26,8 @@ In Skyrim, there are no Hist trees. The connection that defines Saxhleel identit
 
 **The hierarchy matters.** These aren't three equal devotion pools. The Hist is constitutive. Community buffers its absence. Sithis rises only when the other two weaken. A healthy Argonian is Hist-connected with strong community. A grieving one finds Sithis growing louder.
 
+**Bed-of-choice:** Argonians designate one bed or home location as "the family I chose." Sleeping there regularly maintains community identity and slows exile decay. Any town can work once chosen. Windhelm gets extra flavor because the Assemblage matters, but it is not the only valid mechanical home.
+
 ## The Hist Relation
 
 The always-primary layer. Harder to build than community. Decays without maintenance.
@@ -34,6 +36,7 @@ The always-primary layer. Harder to build than community. Decays without mainten
 - Water, swamp, and wetland proximity — being near the element that connects all Hist
 - Rest and reflection in solitude — meditative stillness, not distraction
 - Waterway and riverside moments — the world's echo of Black Marsh
+- Hist sap meditation — a custom item/power used for deliberate reconnection when vanilla Skyrim has no real Hist infrastructure
 
 **What doesn't help:**
 - Generic combat victories
@@ -43,7 +46,7 @@ The always-primary layer. Harder to build than community. Decays without mainten
 
 **The decay:** Without maintenance, Hist relation decays slowly but constantly. This is intentional — it reflects the real experience of exile. You can't just *not lose it*. You have to actively maintain it. The Hist is far away. Remembering takes work.
 
-**Design honesty:** The mod doesn't pretend Skyrim has rich Hist infrastructure. The maintenance signals are environmental and reflective — honest about what Skyrim can detect. If vanilla hooks prove too thin, the system is built to accept custom ritual hooks later.
+**Design honesty:** The mod doesn't pretend Skyrim has rich Hist infrastructure. The maintenance signals are environmental and reflective — honest about what Skyrim can detect. Custom Hist sap meditation is expected because the layer needs at least one active ritual tool to feel playable.
 
 ## Collective / Community Identity
 
@@ -61,6 +64,8 @@ The main exile survival structure. Stronger vanilla-facing hooks than the Hist l
 - Cannot *replace* the Hist, but can make its absence survivable
 
 **Windhelm weight:** The Assemblage and Windhelm's Argonian quarter carry the heaviest community weight in the game. This is the most concentrated Argonian community in Skyrim. Supporting it matters more than scattered help elsewhere.
+
+Arkay priest reactions are also considered essential custom content for the full Argonian release. Argonian death rites and Hist-soul beliefs need the world to answer back; otherwise the theology stays trapped in internal counters.
 
 ## Sithis Acknowledgment
 

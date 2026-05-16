@@ -22,7 +22,9 @@ Every race has a different relationship with the divine. A Nord earns the attent
 | 2 | **Wavering** | Drift. The connection is loosening. |
 | 1 | **Distant** | Silence. The divine is far away. |
 
-**Broad vs. Focused worship:** Races with pantheons (multiple gods) can worship broadly — honoring many gods at once. This is culturally normal but caps your potential at Faithful. To reach Devoted, you must commit to a primary deity. This isn't an MCM toggle — it's a theological act, triggered when your actions reveal which god has truly noticed you.
+**Broad vs. Focused worship:** Races with pantheons (multiple gods) can worship broadly — honoring many gods at once. This is culturally normal but caps your potential at Faithful. Broad worship is not empty or failed worship; for some races, especially Nords, it creates its own blended favors. To reach Devoted, you must commit to a primary deity. This isn't an MCM toggle — it's a theological act, usually triggered when your actions reveal which god has truly noticed you.
+
+**Patron commitment usually comes from the god.** For most races, a deity reaches out once your behavior has crossed a meaningful threshold. You can accept, delay, or refuse. Khajiit are the exception: they never get a formal offer, because their strongest deity emphasis emerges silently from how they live under the moons.
 
 **The gods notice repetition.** Doing the same thing over and over doesn't impress the divine. Devotion rewards meaningful, varied action — not grinding.
 
@@ -32,6 +34,8 @@ Every race has a different relationship with the divine. A Nord earns the attent
 - **Religious privileges** — Access, recognition, special interactions, shrine options
 - **Neglect effects** — What you lose when you drift away
 - **Restoration paths** — How you recover from major spiritual rupture
+
+Some races also have a persistent cultural substrate underneath deity devotion: Khajiit moon-cycle observance and road homes, Argonian Hist/community maintenance, Dunmer portable ancestor practice, and Orc community-building all reward continuity rather than single dramatic acts.
 
 ---
 
@@ -70,6 +74,7 @@ Becoming a vampire or werewolf is never neutral. Every race treats these curses 
 - Some races lose their divine connection entirely (Altmer werewolf, Redguard vampire)
 - Some find damaged but functional alternatives (Dunmer vampire can still reach the Good Daedra)
 - Some have unique theological forks (Breton werewolf triggers a genuine religious choice)
+- Some rebuild through cultural maintenance rather than a god offer (Argonian bed-of-choice, Khajiit road homes, Orc self-made community)
 - No race treats either curse as a free positive — it always costs something
 
 ---

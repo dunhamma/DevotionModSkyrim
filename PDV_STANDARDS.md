@@ -25,6 +25,7 @@ The repo runs a two-class document system: **LIVING** docs that always reflect c
 | `references/PAPYRUS_KNOWLEDGE_INTAKE.md` | Papyrus/API/source-layer guidance | Papyrus reference strategy changes or new verified API-source learnings |
 | `references/PDV_RaceArchitecture_DesignReference.md` | Race architecture reference and pre-matrix design requirements | Race theology decisions, curse behavior, quest weighting, reward contract, or signal-matrix requirements change |
 | `references/phase4/*.md`, `references/phase4/*.csv` | Phase 4 matrix scaffold, signal matrixes, and cross-validation notes | Matrix scope changes, stance/Daedric crosswalk changes, or implementation-facing Phase 4 design decisions land |
+| `race-sheets/*.md` | Race-by-race player-facing design sheets and overview | Race architecture, gameplay expression, curse behavior, reward contract, or custom-content priority changes |
 | `references/skyrim-deity-reference.jsx` | Cross-cultural deity table | Lore correction surfaces; new pantheon mapping needed |
 | `references/tamriel-daily-worship-4e201.html` | Race-by-race daily practice source | Should not change — third-party source design doc |
 | `skills/*/SKILL.md` | Local Codex workflow skills for repeated PDV tasks | Repeated workflow pain changes, project paths change, or skill instructions drift |

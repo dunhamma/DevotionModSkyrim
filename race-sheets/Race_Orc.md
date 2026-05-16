@@ -24,6 +24,8 @@ Aedric worship alongside Malacath is theologically incoherent. There is no Orc p
 
 **Mode hierarchy:** Stronghold is the full-expression baseline. City and Legion/Exile are partial or compromised expressions of the same code. Their compensation is broader survivability and flexibility — not equal devotional depth.
 
+Stronghold rewards are mostly stable and permanent: you live inside the code's full infrastructure. City and Legion/Exile rewards are more dynamic and situational. They can be sharper in the right moment, but they depend on context because those Orcs are carrying the code without the stronghold around them.
+
 ## The Three Modes
 
 ### Stronghold Orc — Full Code
@@ -38,7 +40,7 @@ Aedric worship alongside Malacath is theologically incoherent. There is no Orc p
 *Malacath still sees you. But the stronghold doesn't.*
 
 - **What you do:** Maintain quality labor and dignity in mixed society. Keep Orc identity without full stronghold structure. Navigate non-Orc institutions with self-respect intact.
-- **What you get:** Favors of compromise dignity — recognition that private fidelity matters even without full communal practice.
+- **What you get:** Situational favors of compromise dignity — recognition that private fidelity matters even without full communal practice.
 - **The feel:** An Orc who carries the code quietly. Not betrayal — *adaptation*. But the ceiling is lower because the infrastructure isn't there.
 - **Note:** City Orc is the default bridge state for any Orc not recognized by a stronghold. It's where you land when you haven't earned stronghold standing.
 
@@ -46,8 +48,14 @@ Aedric worship alongside Malacath is theologically incoherent. There is no Orc p
 *The contract still matters. The oath still binds. Even when the people you serve would spit on your shrine.*
 
 - **What you do:** Complete service contracts and Legion milestones under unequal conditions. Maintain honor despite humiliation. Prove martial competence under foreign discipline.
-- **What you get:** Blessings of endurance and persistence — Malacath rewards carrying the code where no one else will help you.
+- **What you get:** Situational blessings of endurance and persistence — Malacath rewards carrying the code where no one else will help you, especially when the burden is visible.
 - **The feel:** An Orc whose devotion is *survival with dignity* when everything around them says they're disposable. The burden is high. The ceiling is not.
+
+## Self-Made Community
+
+City and Legion/Exile Orcs can build a community around themselves. This is not a replacement stronghold; it is a hard-won place where the code has witnesses. Visiting an invested location gives a devotion boost as it develops from empty, to established, to thriving.
+
+The preferred implementation reads NPC disposition around the chosen community. If that proves too heavy for first release, faction-favor proxies carry the same shape: stranger, acquaintance, friend, community member.
 
 ## Spiritual Authority
 

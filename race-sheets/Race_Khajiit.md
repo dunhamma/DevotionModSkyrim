@@ -115,11 +115,11 @@ Both curses are less devastating for Khajiit than for many other races — ident
 The substrate reward isn't static — it *cycles with the moons*. Masser and Secunda move through their phases, and each phase shifts what type of reward is strongest for the Khajiit:
 
 - Different phases favor different aspects of Khajiit life (road-travel, community, reflection, focused deity work)
-- Your overall substrate strength is determined by *consistent compliance across the full cycle* — not just spiking during one favorable phase
+- Each phase can grant its own temporary emphasis, but your overall substrate strength is determined by *consistent compliance across the full cycle* — not just spiking during one favorable phase
 - When the moons overlap or oppose each other, special spiritual states emerge — moments of heightened awareness or tension that a Khajiit would feel in their bones
 - The current phase is always visible to the player via the power menu, with flavor text when the cycle shifts
 
-The cycle gives Khajiit devotion a rhythm that no other race has. Other races accumulate steadily. Khajiit *breathe* — the moons inhale and exhale, and living in sync with that rhythm is what the substrate rewards.
+The cycle gives Khajiit devotion a rhythm that no other race has. Other races accumulate steadily. Khajiit *breathe* — the moons inhale and exhale, and living in sync with that rhythm is what the substrate rewards. A Khajiit can enjoy a phase-favored bonus without being deeply aligned overall, but the strongest lunar life requires both: honoring the current phase and staying faithful across the whole cycle.
 
 ## Road Homes
 

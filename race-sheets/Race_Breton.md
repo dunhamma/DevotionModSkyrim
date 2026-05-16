@@ -22,7 +22,7 @@ This isn't hypocrisy. It's *syncretism* — the genuine Breton belief that divin
 
 **Broad worship** within your tradition can reach **Faithful**. Within each tradition, you may later commit to a specific deity as a focused flavor layer — adding depth to your tradition rather than replacing it. This focused commitment unlocks **Devoted**.
 
-**The three traditions can pull against each other.** A knight tempted by witchcraft feels their vow integrity strain. A druid exposed as a witch loses standing. The tension between traditions is part of the Breton experience — maintaining balance is harder than it looks.
+**The three traditions can pull against each other.** A knight tempted by witchcraft feels their vow integrity strain. A druid exposed as a witch loses standing. The drag is asymmetric: Hidden Art behavior damages the Knight's Road sharply, while Green Way and Knight's Road tension is milder and easier to narrate as honorable difference. The tension between traditions is part of the Breton experience — maintaining balance is harder than it looks.
 
 ## The Three Traditions
 

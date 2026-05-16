@@ -31,7 +31,7 @@ In 4E 201, this project is politically weaponized by the Thalmor. But the theolo
 
 ## Unique Mechanics
 
-### Thalm-r Alignment Track
+### Thalmor Alignment Track
 
 Your position on the orthodoxy spectrum. This isn't just political — it shapes how your devotion *works*.
 
@@ -74,7 +74,11 @@ This is the most distinctive mechanic in the mod. Lorkhan — the Corpse-God —
 
 **Faction modifier:** Thalmor Orthodox feels these penalties 50% harder. Psijic Tradition feels them 25% less. The Divine Body takes them at standard weight.
 
-**Design intent:** A player who engages normally with Skyrim's content *will* accumulate minor Tier 3 penalties. This is intentional. The entire mortal world is Lorkhan's creation. For an Altmer, simply *being in Mundus* is already a theological compromise. The penalties reflect the constant low-grade dissonance of Altmer existence.
+**Design intent:** A player who engages normally with Skyrim's content *will* accumulate minor Tier 3 reactions. This is intentional, but it is lightly weighted. Marriage, homesteads, adoption, and similar mortal-continuity acts should create evocative dissonance, not devastating devotion collapse. The entire mortal world is Lorkhan's creation. For an Altmer, simply *being in Mundus* is already a theological compromise.
+
+### Crisis of Faith
+
+Some story moments are too large to be treated as ordinary penalties. Discovering Thalmor hypocrisy, encountering evidence that destabilizes the Talos question, or being forced to confront the meaning of Dragonborn identity can trigger a crisis-of-faith state. This is a temporary condition of doubt, vulnerability, or questioning that resolves through sustained behavior afterward. The point is narrative pressure, not punishment for playing the main quest.
 
 ## Paths of Devotion
 
@@ -106,7 +110,7 @@ This is the most distinctive mechanic in the mod. Lorkhan — the Corpse-God —
 - **What you do:** Read forbidden texts. Pursue independent scholarship. Engage with heterodox ideas privately.
 - **What you get:** Favors tied to knowledge, genealogical insight, and death-record wisdom.
 - **The feel:** An Altmer whose faith is in the *record* — who believes truth lives in what's written, not what's enforced.
-- **Note:** Lowers Thalm-r Alignment. A quiet path of private doubt.
+- **Note:** Lowers Thalmor Alignment. A quiet path of private doubt.
 
 ## The Daedric Question
 
@@ -126,9 +130,9 @@ Any Daedric quest acceptance creates a sharp negative orthodoxy signal that outw
 **Vampire:**
 Auri-El is absolutely closed — avoiding the sun means shrinking from the god of return. Genealogical records expunge you. Magic continues but loses religious framing — it becomes mere power.
 
-A tiny heretical self-justification path exists: "vampirism is at least a path away from mortal limits." This allows devotion to accumulate at 25% rate with a hard ceiling at Observant (Tier 3). No institutional support. Molag Bal accessible as hostile patron.
+A tiny **Exiled Altmer** micro-path exists: a redirected self-reconstruction arc rather than true restored devotion. The vampire Altmer refuses simple collapse and tries to rebuild meaning in exile from their own theology. This can reach only the lowest recognition band and never becomes a deep worship lane. No institutional support. Molag Bal remains accessible only as a hostile patron pressure.
 
-**No restoration path.** Unlike Dunmer or Breton, there is no cure-and-restore arc. The lore is explicit: there is no recoverable Altmer position for a vampire.
+**No clean restoration path while cursed.** Unlike Dunmer or Breton, there is no accepted Altmer position for a vampire. Cure may allow rebuilding, but the vampire state itself is exile, not a hidden alternate orthodoxy.
 
 **Werewolf:**
 The most theologically annihilating combination in all of Tamriel. Beast-state is the *precise inverse* of the Apotheosis project — regression into animality. No heretical theology is even possible. Devotion halts entirely. Not even the tiny vampire cap.

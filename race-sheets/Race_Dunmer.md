@@ -22,6 +22,8 @@ In 4E 201, a Dunmer in Skyrim carries this entire structure in exile. There are 
 
 **Broad worship** (Layers 1-2 without primary commitment) can reach **Faithful**. **Devoted** requires focusing on one of the three Good Daedra.
 
+**Portable shrine practice:** Dunmer carry their ancestor infrastructure with them. Prayer is centered on a permanent portable shrine item with a triggered ceremony, so exile does not require pretending Skyrim has ancestral tombs everywhere. Praying in a player-owned home gives a bonus because the house becomes your local ancestor-space; no specific home is privileged over another.
+
 ## Paths of Devotion
 
 ### The Ancestor Layer — Always Active
@@ -92,7 +94,9 @@ This naturally reflects diaspora reality. The ceiling isn't a punishment — it'
 
 ## Tribunal Memory
 
-All Dunmer carry a quiet awareness of the Tribunal's fall — Vivec, Sotha Sil, Almalexia. This appears as occasional acknowledgment text during devotional acts. No mechanical weight, no separate path. Just... memory. The Tribunal is a dying tradition in 4E 201, and the mod treats it that way.
+All Dunmer carry a quiet awareness of the Tribunal's fall — Vivec, Sotha Sil, Almalexia. This is not a full path, but it can matter during shrine prayer. A Tribunal shrine may answer with a small random buff or debuff based on where the character's thoughts wandered. The pool is curated and thematic, reflecting the Three's unstable legacy rather than a controllable blessing machine.
+
+The Tribunal is a dying tradition in 4E 201, and the mod treats it that way: meaningful, remembered, sometimes spiritually volatile, never replacing the Good Daedra and ancestor structure.
 
 ## Playing This Race — What to Expect
 

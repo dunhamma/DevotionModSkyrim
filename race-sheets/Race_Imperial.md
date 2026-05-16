@@ -34,6 +34,10 @@ This is the defining mechanic of the Imperial race. A hidden reputation that shi
 
 The Concordat Standing shifts through quest choices — Civil War decisions, encounters with Thalmor, what you do when you find a hidden shrine. Single actions move it in small increments. Crossing between states requires sustained behavior, not a single dramatic act.
 
+The middle is intentionally wide. Most normal play sits in **Uncommitted**, where the system watches but does not force a stance from one incidental choice. You only become publicly compliant or meaningfully defiant through a sustained pattern.
+
+Walking back from an extreme is possible, but harder at the edges. An Open Defiant or Concordat Enforcer Imperial needs consistent counter-behavior and, eventually, a story-caliber act to return fully to the center. The system supports real repentance or compromise without letting the character flip identities casually.
+
 ## Paths of Devotion
 
 ### Talos — The Forbidden God

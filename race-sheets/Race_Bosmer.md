@@ -24,7 +24,9 @@ The Green Pact is the defining theological fact of Bosmer life: Y'ffre gave them
 - **What you do:** Hunt with respect. Protect forests from desecration. Maintain ecological balance. Honor carcass-respect practices. Anti-desecration quest choices.
 - **What you get:** The highest devotion ceiling of any Bosmer path. Powerful blessings tied to the primal covenant between Y'ffre and the Bosmer people.
 - **The feel:** A Bosmer who carries the full weight of the Green Pact in exile. Harder. Narrower. But deeper than any other Bosmer will ever reach.
-- **The catch:** This is the only path with hard compliance mechanics. The Pact has terms, and breaking them matters. You earn more, but you carry more burden. Uses unique custom tracking rather than the standard system.
+- **The catch:** This is the only path with hard compliance mechanics. The Pact has terms, and breaking them matters. You earn more, but you carry more burden. Uses PDV's own Green Pact tagging layer rather than depending on another mod's food or ecology tags.
+
+Single accidental Pact failures do not lock you out. A violation day withholds the daily compliance reward, and repeatable compliance has the normal anti-farm cooldown. The real penalty lands when the player intentionally breaks Pact rules repeatedly — five violations inside a two-day window marks sustained disregard rather than a mistake.
 
 ### The Living Story — Moderate Y'ffre
 *The forest speaks. You listen. But you live in the world as it is.*

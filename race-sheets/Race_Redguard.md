@@ -82,7 +82,7 @@ All three remain inside the same Yokudan religious universe. They differ by emph
 - **What you do:** Overcome impossible situations. Complete breakthrough quests where everything was stacked against you. Make the way where there was none.
 - **What you get:** Rare, powerful favors — strongest in moments of genuine breakthrough.
 - **The feel:** A Redguard who invokes the path-maker only at the threshold of the impossible.
-- **Note:** Intentionally narrow and dramatic. HoonDing doesn't notice ordinary victories. This should feel *rare*.
+- **Note:** Intentionally narrow and dramatic, but attainable for active adventurers. Dragon fights, named creature victories, major quest climaxes, and other "big win" moments can all count when they truly read as clearing an impossible obstacle. HoonDing doesn't notice ordinary victories.
 
 ### Satakal — The Worldskin
 *The great cycle. Creation and destruction as a single breath.*
