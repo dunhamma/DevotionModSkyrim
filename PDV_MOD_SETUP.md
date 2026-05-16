@@ -166,18 +166,30 @@ Creation Kit's built-in Papyrus compiler (Ctrl+F7 in the CK script editor) remai
 ```
 D:\Wabbajack\modlists\Anvil\mods\Devotion\
   Scripts\
+    PDV__MainQuest.pex
+    PDV_Origin.pex
     PDV__ManagerQuest.pex
     PDV_ActionRouter.pex
     PDV__SM_KillActor.pex
     PDV_DeityBase.pex
     PDV_Deity_Kyne.pex
+    PDV_Deity_Talos.pex
+    PDV_Deity_AuriEl.pex
+    PDV_EventTypes.pex
+    PDV_EventBus.pex
     Source\
       PDV__MainQuest.psc
+      PDV_Origin.psc
       PDV__ManagerQuest.psc
       PDV_ActionRouter.psc
       PDV__SM_KillActor.psc
       PDV_DeityBase.psc
       PDV_Deity_Kyne.psc
+      PDV_Deity_Talos.psc
+      PDV_Deity_AuriEl.psc
+      PDV_EventTypes.psc
+      PDV_EventBus.psc
+      PDV_MCM.psc
   PlayerDevotion_Framework.esp
   compile.ps1                 (legacy, ignore)
   skyrimse.ppj                (legacy, ignore)
@@ -215,9 +227,9 @@ node .\tools\pdv_author.mjs plan mcm-property-wiring
 node .\tools\pdv_author.mjs apply mcm-property-wiring
 ```
 
-The compiler spawns `PapyrusCompiler.exe` directly with the project import chain, compiles active scripts whose `.pex` output is missing or older than source, treats Papyrus warnings as failures, and runs the verifier after successful compiles unless `--skip-verify` is used. The emitted compiler command uses the short canonical flags: `-f=<flags>`, `-i=<source-dirs>`, and `-o=<output-dir>`.
+The compiler spawns `PapyrusCompiler.exe` directly with the project import chain, compiles active scripts whose `.pex` output is missing or older than source, treats Papyrus warnings as failures, and runs the verifier after successful compiles unless `--skip-verify` is used. The active set now includes the proven v2 scripts plus the V3 Preflight script slice (`PDV_EventTypes` and `PDV_EventBus`). The emitted compiler command uses the short canonical flags: `-f=<flags>`, `-i=<source-dirs>`, and `-o=<output-dir>`.
 
-The verifier is read-only. It checks expected Anvil paths, reads `PlayerDevotion_Framework.esp` through the Anvil MO2 MCP Mutagen bridge, validates baseline Phase 2 records and VMAD properties, checks script source/pex freshness, reports SEQ drift, confirms the active MO2 profile/load order, and looks for CK output shadow files. By default, unfinished Phase 3 CK wiring is reported as TODO; use `--strict-phase3` when Phase 3 should be treated as required.
+The verifier is read-only. It checks expected Anvil paths, reads `PlayerDevotion_Framework.esp` through the Anvil MO2 MCP Mutagen bridge, validates baseline framework records and VMAD properties, checks script source/pex freshness, reports SEQ drift, confirms the active MO2 profile/load order, and looks for CK output shadow files. V3 Preflight source/pex readiness is covered; the new CK/xEdit records (`PDV_GLO_PatronState`, `PDV_EventTypes`, `PDV_EventBus`) currently report as INFO until introduced.
 
 `tools\pdv_author.mjs` is the safe authoring companion to that loop. It inspects the live framework ESP through the same local Mutagen bridge, then emits a **new overlay patch plugin** into the `Devotion` mod when asked to apply changes. Current supported writes are existing-record scalar/object VMAD properties and FormList membership. It does **not** create new records, edit VMAD array properties such as `RivalDeities`, or overwrite `PlayerDevotion_Framework.esp` in place.
 
@@ -542,6 +554,7 @@ Follow this sequence. Do not skip ahead.
 [x] Phase 4 â€” scripts/tooling, framework ESP wiring, and full in-game proof passed
 [x] Phase 5 â€” MCM dev slice script/tooling/framework wiring landed; in-game SkyUI proof passed
 [x] Phase 6 â€” Talos + Auri-El hostile-path proof slice framework-wired and full in-game proof passed
+[~] V3 Preflight - script/tooling slice compile/verifier clean; CK/xEdit wiring and in-game smoke pending
 [ ] Debug spell created and tested
 [ ] Nord module complete
 ```
@@ -657,6 +670,8 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 **2026-05-16 - v3 roadmap and beta gates:** `PDV_Architecture_v3.md` now owns the forward roadmap after the proven Phase 4/5/6 baseline. The roadmap separates structural completeness from content completeness, requires V3 Preflight before Phase 7 signal expansion, adds a Structural Skeleton pass for dev-only 1.0 scaffolding, and defines Technical Beta, Content-Feel Beta, and content-rich 1.0 launch readiness. `PDV_BetaTesterBrief.md` is external tester communication only and must defer to v3 for architecture truth.
 
 **2026-05-16 - v3 Section 24 cleanup:** `PDV_Architecture_v3.md` now removes already-settled decisions from the open tracker instead of leaving them as recommended-but-open items. Resolved IDs are D-09, D-11, D-15, D-16, D-18, D-24, D-25, D-26, D-27, D-28, D-29, and D-32. The operational defaults are structural completeness first, monolithic 1.0, strong substrates only for Khajiit/Dunmer/Argonian, shrine overlays, Tier 2 broad worship, three-option commitment offers, curse-state pressure without automatic Daedric unlocks, thematic UI by default, in-world patron switching, concrete pattern cloning, FormList-driven MCM ordering, Phase 12 stack-depth benchmarking, and documented Wintersun coexistence.
+
+**2026-05-16 - V3 Preflight script/tooling slice:** Added compile-clean `PDV_EventTypes` and `PDV_EventBus`, routed the kill-event canary through attribution-aware payload hooks while preserving direct-player v2 scoring, split manager dawn/gain logic into named Preflight extension slots, added patron-state and custom-race fallback diagnostics, and expanded compiler/verifier coverage. CK/xEdit record creation and in-game smoke remain pending before V3 Preflight is complete.
 
 **2026-05-16 - Completed phase docs archived:** Finished Phase 2/3 walkthroughs, older planning/delivery notes, and the now-complete Phase 4/5/6 CK walkthroughs were moved to `archive/completed-phase-docs-2026-05-16/` so the root folder stays focused on living architecture/setup/standards docs.
 

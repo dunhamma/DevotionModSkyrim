@@ -78,6 +78,8 @@ Devotion\
     PDV_Deity_Kyne.pex
     PDV_Deity_Talos.pex
     PDV_Deity_AuriEl.pex
+    PDV_EventTypes.pex
+    PDV_EventBus.pex
     Source\
       PDV__ManagerQuest.psc   ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Ãƒâ€šÃ‚Â source (edit here, compile via CK)
       PDV_Origin.psc
@@ -87,6 +89,8 @@ Devotion\
       PDV_Deity_Kyne.psc
       PDV_Deity_Talos.psc
       PDV_Deity_AuriEl.psc
+      PDV_EventTypes.psc
+      PDV_EventBus.psc
       PDV_MCM.psc
       PDV__MainQuest.psc
 ```
@@ -99,6 +103,8 @@ Quest scripts (current):
 - `PDV_Deity_Kyne.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â **Phase 4 proof slice on disk:** same Kyne rubric as before, now expected to use the simple Nord-native / everyone-else-foreign stance row plus CK-authored boon spells.
 - `PDV_Deity_Talos.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â **NEW (coupled follow-on slice)** First hostile-path proof deity. Curated Talos-facing defiance signals only; Altmer hostility should rival Auri-El one-way.
 - `PDV_Deity_AuriEl.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â **NEW (coupled follow-on slice)** Minimum viable Altmer foundation deity and real rivalry target for Talos. Seeded for Altmer, but still follows patron-only boon rules.
+- `PDV_EventTypes.psc` - **NEW (V3 Preflight script slice)** Central event and attribution constant owner. Compiles cleanly; framework quest/CK attachment is pending.
+- `PDV_EventBus.psc` - **NEW (V3 Preflight script slice)** Dispatch service for validated event payloads. Direct-player kill scoring remains behavior-compatible with v2; non-direct attribution is carried but non-scoring until later phases. Compiles cleanly; framework quest/CK attachment is pending.
 - `PDV_MCM.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â **NEW (Phase 5 dev slice)** SkyUI `Status` + `Debug` surface only. Roster-driven, OID-backed, framework-attached, and explicitly not the final player-facing patron/tuning UX.
 - `PDV_ActionRouter.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â **NEW (Phase 3)** Persistent service quest that fans validated player kill actions to all deities via `ScoreAction()`; compiles cleanly, CK quest/property wiring complete, hostile bandit/wolf runtime paths verified.
 - `PDV__SM_KillActor.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â **NEW (Phase 3)** Non-Start-Game-Enabled Story Manager receiver quest for `OnStoryKillActor`; compiles cleanly, CK quest/Story Manager wiring complete, receiver path verified by hostile kill events.
@@ -116,7 +122,7 @@ node .\tools\pdv_compile.mjs --all
 node .\tools\pdv_compile.mjs --list
 ```
 
-`pdv_compile.mjs` compiles active PDV scripts whose `.pex` output is missing or older than source. The active set now includes `PDV__MainQuest`, `PDV_Origin`, `PDV_Deity_Talos`, and `PDV_Deity_AuriEl` for the current coupled proof slice. `--script` targets one or more scripts, and `--all` rebuilds the active script set. It spawns `PapyrusCompiler.exe` directly with canonical CLI args (`<script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>`), not `ScriptCompile.bat`, PowerShell, or the CK menu. Papyrus warnings are treated as failures by default. After a successful compile, the compiler runs `pdv_verify.mjs` unless `--skip-verify` is supplied.
+`pdv_compile.mjs` compiles active PDV scripts whose `.pex` output is missing or older than source. The active set now includes the proven v2 scripts plus the V3 Preflight script slice (`PDV_EventTypes` and `PDV_EventBus`). `--script` targets one or more scripts, and `--all` rebuilds the active script set. It spawns `PapyrusCompiler.exe` directly with canonical CLI args (`<script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>`), not `ScriptCompile.bat`, PowerShell, or the CK menu. Papyrus warnings are treated as failures by default. After a successful compile, the compiler runs `pdv_verify.mjs` unless `--skip-verify` is supplied.
 
 ```text
 node .\tools\pdv_verify.mjs
@@ -127,7 +133,7 @@ node .\tools\pdv_author.mjs plan phase4
 node .\tools\pdv_author.mjs apply phase4 --output PDV_Author_phase4.esp
 ```
 
-The verifier checks the Anvil/Devotion paths, reads `PlayerDevotion_Framework.esp` through the Anvil MO2 MCP Mutagen bridge, validates the current Phase 4 baseline records/properties plus the Talos/Auri-El follow-on records, checks Phase 3 receiver/router wiring, checks script source/pex freshness, detects CK output shadow files, checks SEQ state, and confirms the active MO2 profile/load order. It now explicitly fails or warns when the live ESP is missing `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, `PDV_Deity_Talos`, `PDV_Deity_AuriEl`, expected stance rows, Talos rivalry wiring, or deity boon assignments. It is diagnostic only and must not write to the ESP or MO2 profile files.
+The verifier checks the Anvil/Devotion paths, reads `PlayerDevotion_Framework.esp` through the Anvil MO2 MCP Mutagen bridge, validates the current Phase 4 baseline records/properties plus the Talos/Auri-El follow-on records, checks Phase 3 receiver/router wiring, checks script source/pex freshness, detects CK output shadow files, checks SEQ state, and confirms the active MO2 profile/load order. It now explicitly fails or warns when the live ESP is missing `PDV_GLO_OriginRace`, `PDV_GLO_PatronDeity`, `PDV__MainQuest`, `PDV_Origin`, `PDV_Deity_Talos`, `PDV_Deity_AuriEl`, expected stance rows, Talos rivalry wiring, or deity boon assignments. V3 Preflight source/pex readiness is verifier-covered; the new CK/xEdit records (`PDV_GLO_PatronState`, `PDV_EventTypes`, `PDV_EventBus`) report as INFO until introduced. It is diagnostic only and must not write to the ESP or MO2 profile files.
 
 `pdv_author.mjs` is the safe authoring companion to that loop. It inspects the live framework ESP through the same Mutagen bridge, then emits a **new overlay patch plugin** into the `Devotion` mod when asked to apply changes. Current supported writes are existing-record scalar/object VMAD properties and FormList membership. It does **not** mint new records, edit VMAD array properties such as `RivalDeities`, or overwrite `PlayerDevotion_Framework.esp` in place. Generated patches must keep `Skyrim.esm` as the first master when using extended FormID ranges; do not manually insert masters into an existing patch without remapping FormIDs.
 
@@ -251,6 +257,9 @@ PDV__SM_KillActor               ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
 PDV_DeityBase                   ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Ãƒâ€šÃ‚Â base class all PDV_Deity_<X> scripts extend (Phase 2)
 PDV_Deity_[Name]                ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Ãƒâ€šÃ‚Â concrete deity quest (Phase 2+)
 PDV_FLST_AllDeities             ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Ãƒâ€šÃ‚Â FormList, iteration source for ProcessDawn and MCM
+PDV_GLO_PatronState             - Global, V3 Preflight patron state: 0=unset, 1=broad worship, 2=active patron
+PDV_EventTypes                  - V3 Preflight central event/attribution constant owner
+PDV_EventBus                    - V3 Preflight dispatch service between receivers and deity scoring
 PDV_Blessing_[Race]_Low/Mid/High
 PDV_Neglect_[Race]
 PDV_SMF_[EventName]             ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Ãƒâ€šÃ‚Â Story Manager flag globals
@@ -351,6 +360,18 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
       - VERIFIED IN ESP: Talos/Auri-El quest records, FormList entries, origin properties, stance rows, and boon assignments
       - historical CK walkthrough archived under `archive/completed-phase-docs-2026-05-16/PDV_Phase6_Talos_AuriEl_CK_Steps.md`
       - VERIFIED IN GAME: Altmer bootstrap, Auri-El seed, Talos hostile-path rise, rivalry-driven Auri-El decay, patron-only boon removal, and save/load sanity
+[~] V3 Preflight - script/tooling slice landed and compile/verifier clean; CK/xEdit wiring and in-game smoke pending
+      - `PDV_EventTypes.psc` + `.pex` central event/attribution constants
+      - `PDV_EventBus.psc` + `.pex` dispatch service for validated event payloads
+      - `PDV_ActionRouter.psc` carries direct-player/follower/environment attribution payloads; only direct-player kills score
+      - `PDV__ManagerQuest.psc` has explicit patron-state API, named dawn pipeline slots, and gain pipeline no-op extension points
+      - `PDV__MainQuest.psc` hard-fails visibly if PapyrusUtil is unavailable
+      - `PDV_Origin.psc` records unsupported custom-race fallback and surfaces a first-load notification
+      - `PDV_MCM.psc` Status page shows patron state and custom-race fallback diagnostic
+      - `tools/pdv_compile.mjs` active set includes `PDV_EventTypes` and `PDV_EventBus`
+      - `tools/pdv_verify.mjs` checks Preflight source/pex readiness and reports pending CK records as INFO
+      - VERIFIED BY TOOLING: `node .\tools\pdv_compile.mjs --all` rebuilt all active scripts with 0 errors/0 warnings and verifier returned `FAIL=0, WARN=0, TODO=0`
+      - PENDING CK/XEDIT: create/wire `PDV_GLO_PatronState`; attach or create framework records for `PDV_EventTypes` and `PDV_EventBus`; wire `PDV_ActionRouter` EventBus/EventTypes properties if using separate quests
 [ ] Debug spell working
 [ ] Nord module complete
 ```
@@ -385,6 +406,7 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 - **v3 roadmap and beta gates (2026-05-16):** `PDV_Architecture_v3.md` is now the forward architecture and roadmap source for post-v2 work. It separates structural completeness from content completeness, adds V3 Preflight and Structural Skeleton gates, and defines Technical Beta, Content-Feel Beta, and content-rich 1.0 launch readiness. `PDV_BetaTesterBrief.md` is external tester communication only and must defer to v3 for architecture truth.
 - **v3 Section 24 cleanup (2026-05-16):** Resolved the tracker items already answered by the roadmap and acceleration tradeoffs: D-09, D-11, D-15, D-16, D-18, D-24, D-25, D-26, D-27, D-28, D-29, and D-32. The locked posture is structural completeness first, monolithic 1.0, strong substrates only for Khajiit/Dunmer/Argonian, shrine overlays, Tier 2 broad worship, three-option commitment offers, curse-state pressure without auto-unlocking Daedric paths, thematic UI by default, in-world patron switching, concrete pattern cloning, FormList-driven MCM order, Phase 12 stack-depth benchmarking, and documented Wintersun coexistence.
 - **V3 kickoff decisions (2026-05-16):** Resolved v3 D-01 through D-08. Trinimac is Altmer-native but specialist: a martial virtue / civilisational defence / Thalmor Orthodox worship target, scaffolded in Structural Skeleton but made content-ready only when that Altmer lane is built. Orcs remain Malacath-only in normal architecture; their variation is `Stronghold`, `City`, and `Legion / service / exile` life-mode, not deity choice. Malacath is dual-coded by race; Shor/Sep/Lorkhaj/Lorkhan remain separate cultural records; missing PapyrusUtil hard-fails visibly; custom-race Imperial fallback gets a first-load notice plus MCM/status diagnostic; indirect kill attribution is payload-only until a later signal phase; crime events move to Phase 8 with the first reputation track.
+- **V3 Preflight script/tooling slice (2026-05-16):** Added compile-clean `PDV_EventTypes` and `PDV_EventBus`, refactored manager dawn/gain flow into named Preflight extension slots, introduced StorageUtil-backed patron-state API with optional `PDV_GLO_PatronState` mirror, added PapyrusUtil bootstrap hard-fail, custom-race fallback diagnostic, MCM status readouts, and verifier/compiler coverage. CK/xEdit record creation and in-game smoke remain pending before V3 Preflight can be marked complete.
 - **Schema-first authoring remains research only (2026-05-16):** The long-term idea of text-first ESP authoring via a Mutagen-backed build step is worth preserving, but it is not part of PDV's active workflow yet. Until a real build tool exists and is proven against the live framework, do not treat any YAML/TOML schema draft as authoritative project state. Current source of truth remains the living docs, PDV `.psc` source, `PlayerDevotion_Framework.esp`, `tools/pdv_compile.mjs`, `tools/pdv_verify.mjs`, and supported `tools/pdv_author.mjs` manifests/overlays. Any future schema-first pass must be introduced by updating these living docs first, not by adding a parallel speculative source tree.
 - **Race architecture interrogation pass (2026-05-13):** The remaining race architecture work was locked in `references/PDV_RaceArchitecture_DesignReference.md`. Imperial, Khajiit, Bosmer, Redguard, Orc, and Argonian now have explicit current-era theological models, curse behavior, and practical Skyrim-facing interpretations. Quest and faction choices were also elevated to first-class devotion signals across the locked races, with ambient behavior acting as slower background drift rather than the only source of meaning.
 - **Pre-matrix reward and system contract (2026-05-13):** `references/PDV_RaceArchitecture_DesignReference.md` now defines the requirements for the race signal matrix: modest cumulative passive baseline blessings, passive contextual favors, religious privileges, no activatable power kit, optional MCM, SKSE/PapyrusUtil core dependency posture, standalone core design, no new quest content for first release, signal cost classes, cadence, anti-farm rules, survival overlap, and later Requiem/survival compatibility tracking.
@@ -434,6 +456,13 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
   - **CK walkthrough authoring rule:** Write manual CK steps in the same order a human should perform them in the editor. When a menu contains a long field or property list, write that list alphabetically unless the UI's own order makes another sequence clearer.
 
 ## Session Notes
+
+### 2026-05-16 V3 Preflight script/tooling kickoff
+
+- Added `PDV_EventTypes.psc` and `PDV_EventBus.psc` to the live Devotion script source and active compile set.
+- Refactored the canary kill route so direct-player hostile beast/humanoid scoring remains v2-compatible while follower/environment payloads are carried but non-scoring.
+- Added manager-side patron-state helpers, named dawn/gain extension slots, PapyrusUtil bootstrap hard-fail, custom-race fallback diagnostic, and MCM status readouts.
+- `node .\tools\pdv_compile.mjs --all` rebuilt all active scripts cleanly with `0 error(s), 0 warning(s)` and the verifier returned `FAIL=0, WARN=0, TODO=0`; remaining Preflight work is CK/xEdit record wiring plus in-game smoke.
 
 ### 2026-05-11 implementation and workflow summary
 

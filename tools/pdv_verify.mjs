@@ -71,6 +71,12 @@ const PHASE3_RECORDS = {
   PDV__SM_KillActor: "QUST",
 };
 
+const PREFLIGHT_RECORDS = {
+  PDV_GLO_PatronState: "GLOB",
+  PDV_EventTypes: "QUST",
+  PDV_EventBus: "QUST",
+};
+
 const COMPILED_SCRIPTS = {
   PDV__MainQuest: "required",
   PDV_Origin: "required",
@@ -79,6 +85,8 @@ const COMPILED_SCRIPTS = {
   PDV_Deity_Kyne: "required",
   PDV_Deity_Talos: "required",
   PDV_Deity_AuriEl: "required",
+  PDV_EventTypes: "required",
+  PDV_EventBus: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
   PDV_MCM: "required",
@@ -91,6 +99,10 @@ const MANAGER_PROPERTIES = {
   PDV_GLO_PatronDeity: "PDV_GLO_PatronDeity",
   PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
   PDV_FLST_AllDeities: "PDV_FLST_AllDeities",
+};
+
+const MANAGER_PREFLIGHT_PROPERTIES = {
+  PDV_GLO_PatronState: "PDV_GLO_PatronState",
 };
 
 const MAINQUEST_PROPERTIES = {
@@ -145,6 +157,11 @@ const ROUTER_PROPERTIES = {
   ActorTypeNPC: null,
   ActorTypeAnimal: null,
   ActorTypeCreature: null,
+};
+
+const ROUTER_PREFLIGHT_PROPERTIES = {
+  PDV_EventBusService: "PDV_EventBus",
+  PDV_EventTypesService: "PDV_EventTypes",
 };
 
 const TALOS_EXPECTED_DATA = {
@@ -414,6 +431,19 @@ class Verifier {
         this.pass("Phase 3 record", `${edid} exists as ${expectedType}.`, PDV_ESP);
       }
     }
+
+    for (const [edid, expectedType] of Object.entries(PREFLIGHT_RECORDS)) {
+      const record = this.recordsByEdid.get(edid);
+      if (!record) {
+        this.info("V3 Preflight record", `${expectedType} record ${edid} is not in the framework ESP yet; CK/xEdit wiring remains pending.`, PDV_ESP);
+        continue;
+      }
+      if (record.type !== expectedType) {
+        this.fail("V3 Preflight record", `${edid} has type ${record.type}, expected ${expectedType}.`, PDV_ESP);
+      } else {
+        this.pass("V3 Preflight record", `${edid} exists as ${expectedType}.`, PDV_ESP);
+      }
+    }
   }
 
   checkManagerRecord() {
@@ -430,7 +460,14 @@ class Verifier {
     }
 
     this.pass("Manager script", "PDV__ManagerQuest script is attached.", PDV_ESP);
-    this.checkObjectProperties("Manager property", propertyMap(script), MANAGER_PROPERTIES);
+    const props = propertyMap(script);
+    this.checkObjectProperties("Manager property", props, MANAGER_PROPERTIES);
+
+    if (this.recordsByEdid.has("PDV_GLO_PatronState")) {
+      this.checkObjectProperties("Manager preflight property", props, MANAGER_PREFLIGHT_PROPERTIES);
+    } else {
+      this.info("Manager preflight property", "PDV_GLO_PatronState is script-ready but CK/global wiring is pending.", PDV_ESP);
+    }
 
     const vmad = fields.VirtualMachineAdapter || {};
     const fragments = vmad.Fragments || [];
@@ -659,6 +696,20 @@ class Verifier {
   checkPhase3Records() {
     this.checkOptionalQuestScript("PDV_ActionRouter", "PDV_ActionRouter", ROUTER_PROPERTIES);
     this.checkOptionalQuestScript("PDV__SM_KillActor", "PDV__SM_KillActor", RECEIVER_PROPERTIES);
+    this.checkPreflightQuestScript("PDV_ActionRouter", "PDV_EventBus", {
+      PDV_Manager: "PDV__ManagerQuest",
+      PDV_FLST_AllDeities: "PDV_FLST_AllDeities",
+      PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
+    });
+    this.checkPreflightQuestScript("PDV_ActionRouter", "PDV_EventTypes", {});
+
+    const routerDetail = this.recordDetails.get("PDV_ActionRouter");
+    const routerScript = routerDetail ? findScript(routerDetail.fields || {}, "PDV_ActionRouter") : null;
+    if (routerScript && this.recordsByEdid.has("PDV_EventBus") && this.recordsByEdid.has("PDV_EventTypes")) {
+      this.checkObjectProperties("PDV_ActionRouter preflight property", propertyMap(routerScript), ROUTER_PREFLIGHT_PROPERTIES);
+    } else if (routerScript) {
+      this.info("PDV_ActionRouter preflight property", "EventBus/EventTypes properties are script-ready; CK co-attachment or quest wiring is pending.", PDV_ESP);
+    }
 
     const smRecords = [...this.recordsByFormid.values()].filter((record) => String(record.type || "").toUpperCase().startsWith("SM"));
     if (smRecords.length) {
@@ -706,6 +757,22 @@ class Verifier {
 
     this.pass(`${questEdid} script`, `${scriptName} is attached.`, PDV_ESP);
     this.checkObjectProperties(`${questEdid} property`, propertyMap(script), expectedProperties);
+  }
+
+  checkPreflightQuestScript(questEdid, scriptName, expectedProperties) {
+    const detail = this.recordDetails.get(questEdid);
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, scriptName);
+    if (!script) {
+      this.info(`${scriptName} script`, `${scriptName} is not attached yet; V3 Preflight CK wiring remains pending.`, PDV_ESP);
+      return;
+    }
+
+    this.pass(`${scriptName} script`, `${scriptName} is attached.`, PDV_ESP);
+    this.checkObjectProperties(`${scriptName} property`, propertyMap(script), expectedProperties);
   }
 
   checkObjectProperties(checkName, props, expectedProperties, options = {}) {
@@ -800,6 +867,47 @@ class Verifier {
       this.pass("SkyUI output hygiene", "No stray SKI_*.pex files found in Devotion\\Scripts.", DEVOTION_PEX);
     }
 
+    this.checkPreflightSourceContracts();
+  }
+
+  checkPreflightSourceContracts() {
+    this.checkSourceContains("V3 Preflight source", "PDV__ManagerQuest", [
+      "Function RunGainPipeline",
+      "Function RunDawnConsolidateScratch",
+      "Function RunDawnApplyDecayNoop",
+      "Function SetBroadWorship",
+      "Function GetPatronStateLabel",
+    ]);
+    this.checkSourceContains("V3 Preflight source", "PDV_ActionRouter", [
+      "Function RouteActionWithAttribution",
+      "Function RouteNonScoringKillPayload",
+      "PDV_EventBus Property PDV_EventBusService",
+    ]);
+    this.checkSourceContains("V3 Preflight source", "PDV__MainQuest", [
+      "Function CheckPapyrusUtilDependency",
+      "PapyrusUtil.GetVersion",
+    ]);
+    this.checkSourceContains("V3 Preflight source", "PDV_Origin", [
+      "Function RecordCustomRaceFallback",
+      "PDV.CustomRaceFallback",
+    ]);
+  }
+
+  checkSourceContains(checkName, scriptName, snippets) {
+    const source = path.join(DEVOTION_SOURCE, `${scriptName}.psc`);
+    if (!exists(source)) {
+      this.fail(checkName, `${scriptName}.psc is missing.`, source);
+      return;
+    }
+
+    const text = fs.readFileSync(source, "utf8");
+    for (const snippet of snippets) {
+      if (text.includes(snippet)) {
+        this.pass(checkName, `${scriptName}.psc contains ${snippet}.`, source);
+      } else {
+        this.fail(checkName, `${scriptName}.psc is missing ${snippet}.`, source);
+      }
+    }
   }
 
   checkSeq() {

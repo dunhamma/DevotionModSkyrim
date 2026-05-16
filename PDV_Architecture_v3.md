@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-16 (v3.3 - V3 kickoff decisions)
-Status: **Planning.** v2 (Phases 0-6) is closed. v3 is the architecture target for everything past the coupled Talos/Auri-El hostile-path proof slice.
+Last revised: 2026-05-16 (v3.4 - V3 Preflight script/tooling kickoff)
+Status: **V3 Preflight in progress.** v2 (Phases 0-6) is closed. The first Preflight script/tooling slice is compile/verifier clean; CK/xEdit wiring and clean-start smoke remain pending.
 
 ---
 
@@ -1163,6 +1163,12 @@ Must complete:
 - Minimal schema/version hooks that record the current framework schema version and trace mismatches. Do not add a full save-migration registry in Preflight.
 - Verifier hard-fail rules for core invariants.
 
+Current implementation note (2026-05-16): the script/tooling slice is landed.
+`PDV_EventTypes` and `PDV_EventBus` compile cleanly, the direct-player kill
+canary remains v2-compatible, patron-state and custom-race diagnostics are
+scripted, and compiler/verifier coverage exists. CK/xEdit record creation and
+in-game smoke are still required before the Preflight gate can close.
+
 Exit gate:
 
 - Active scripts compile cleanly.
@@ -1267,6 +1273,19 @@ with this document, update the brief to match v3.
 ---
 
 ## 26. Revisions
+
+### v3.4 - 2026-05-16 - V3 Preflight script/tooling kickoff
+
+Started Preflight implementation without broad content expansion. Added
+compile-clean `PDV_EventTypes` and `PDV_EventBus`, kept the existing
+direct-player hostile kill route as the canary, and made follower/environment
+attribution payload-only. The manager now has explicit patron-state helpers,
+named dawn pipeline slots, and gain-pipeline no-op extension points for
+reputation, curse, Daedric stigma, and future modifiers. Bootstrap now
+hard-fails visibly when PapyrusUtil is unavailable, unsupported custom-race
+fallback is surfaced through first-load notice plus MCM/status diagnostics, and
+the verifier/compiler know about the Preflight surface. Remaining work is
+record/property wiring plus clean-start smoke.
 
 ### v3.3 - 2026-05-16 - V3 kickoff decisions
 

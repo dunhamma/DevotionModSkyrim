@@ -42,6 +42,8 @@ const ACTIVE_SCRIPTS = [
   "PDV_Deity_Kyne",
   "PDV_Deity_Talos",
   "PDV_Deity_AuriEl",
+  "PDV_EventTypes",
+  "PDV_EventBus",
   "PDV_ActionRouter",
   "PDV__SM_KillActor",
   "PDV_MCM",
