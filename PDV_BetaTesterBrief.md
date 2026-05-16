@@ -61,6 +61,11 @@ The content-feel beta is ready when:
 
 - Every race has at least one credible, race-aware foreground path.
 - Khajiit, Dunmer, and Argonian substrate layers feel distinct.
+- The named race mechanics are visible enough to judge: Imperial Concordat
+  neutrality/walk-back, Breton tradition tension, Bosmer Green Pact failure,
+  Nord broad-worship combos, Khajiit emergent emphasis, Orc community support,
+  Redguard HoonDing big wins, Altmer crisis pressure, Dunmer portable shrine
+  practice, and Argonian Hist/community maintenance.
 - Commitment, neglect, decay, curse-state, and UI are live.
 - Enough dialogue, shrine, notification, and recognition texture exists to
   judge the religious feel.
@@ -79,6 +84,7 @@ What to report:
 
 - Moments where devotion changes but the reason is unclear.
 - Races whose worship feels generic or flattened.
+- Race-specific mechanics that technically fire but do not feel meaningful.
 - Patron commitments that feel too easy, too sudden, or too hidden.
 - Neglect, decay, or curse behavior that feels punitive without meaning.
 - Dialogue, shrine, or notification text that breaks tone.
