@@ -223,6 +223,19 @@ The verifier is read-only. It checks expected Anvil paths, reads `PlayerDevotion
 
 Tracked JSON manifests live under `references\authoring\` and can be addressed by manifest id or file path. `mcm-property-wiring` is the canonical batch target for the current `PDV_MCM` properties and defaults to `PDV_PropertyWiringOverlay.esp`, replacing repeated `PDV_Author_one_off_*` property patches when CK property editing is unstable. Use `plan` first to inspect the batch, then `apply` to regenerate the single overlay; after enabling it in the Devotion Dev profile, run `node .\tools\pdv_verify.mjs`.
 
+### Future authoring direction (non-authoritative)
+
+PDV may eventually grow into a schema-first record-authoring workflow where a text source compiles into `PlayerDevotion_Framework.esp` via Mutagen. That idea is promising for AI-assisted authoring, diffable record changes, and build reproducibility, but it is still research only in this repo.
+
+Until a real build tool exists and is documented here, do **not** treat any speculative YAML/TOML draft as the source of truth for PDV records. The active workflow remains:
+
+- Papyrus source in `Devotion\Scripts\Source`
+- live ESP state in `PlayerDevotion_Framework.esp`
+- verification through `tools\pdv_verify.mjs`
+- supported scripted ESP wiring through `tools\pdv_author.mjs` overlays and tracked manifests under `references\authoring\`
+
+If a future schema-first tool lands, update `AGENTS.md`, this setup doc, and the verifier/authoring workflow together before adding any new source-format files.
+
 ### Anvil MO2 MCP status
 
 Codex is configured for the Anvil MO2 MCP server at `http://127.0.0.1:27016/mcp` in `C:\Users\Admin\.codex\config.toml`. Start it from Anvil/MO2 with the `Start/Stop MCP Server` tool entry. Current local intake and optional binary status live in `references/PDV_Anvil_MO2_MCP_Intake.md`.
@@ -648,4 +661,6 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 **2026-05-16 - Completed phase docs archived:** Finished Phase 2/3 walkthroughs, older planning/delivery notes, and the now-complete Phase 4/5/6 CK walkthroughs were moved to `archive/completed-phase-docs-2026-05-16/` so the root folder stays focused on living architecture/setup/standards docs.
 
 **2026-05-16 - Recovery artifacts archived:** One-off repair/generation files from the overlay merge-back and MCP bridge investigation were moved to `archive/pdv-recovery-tools-2026-05-16/`. They are historical/emergency-only. The active PDV workflow remains `tools/pdv_compile.mjs`, `tools/pdv_verify.mjs`, `tools/pdv_author.mjs`, and the living CK step docs at repo root.
+
+**2026-05-16 - Schema-first authoring posture:** Text-first ESP authoring via a future Mutagen-backed build tool is worth keeping as a design direction, but it is not part of the live PDV workflow yet. Until such a tool exists and is verified against the framework, speculative schema drafts are not authoritative project state. The active source-of-truth set remains the living docs, PDV `.psc` files, `PlayerDevotion_Framework.esp`, verifier expectations, and tracked `pdv_author` manifests/overlays.
 
