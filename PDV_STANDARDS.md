@@ -17,7 +17,7 @@ The repo runs a two-class document system: **LIVING** docs that always reflect c
 | `AGENTS.md` | Project context, file map, current build status, decisions log | Architecture changes, build status advances, decision lands |
 | `PDV_MOD_SETUP.md` | Dev environment, tooling, variable reference, build order | Tool version changes, new variable added, build step changes |
 | `PDV_Architecture_v2.md` | Architecture spec, data model, quest topology, phase plan, revision log | Architecture changes, phase status changes, major design decisions |
-| `PDV_Phase*_*.md` | Phase-specific CK/test walkthroughs and summaries | Phase implementation, CK wiring, or testing workflow changes |
+| `archive/completed-phase-docs-*/README.md` | Archive index for completed phase walkthroughs and summaries | The archive set changes or a completed phase moves out of the root workflow |
 | `PDV_SkyrimConsoleReference.md` | Skyrim console command reference for testing | Console command source correction or new verified test command |
 | `PDV_STANDARDS.md` (this file) | Operating rules | A rule changes; an anti-pattern is observed; a new rule is needed |
 | `references/PAPYRUS_KNOWLEDGE_INTAKE.md` | Papyrus/API/source-layer guidance | Papyrus reference strategy changes or new verified API-source learnings |
@@ -68,6 +68,22 @@ the editor rather than for abstract grouping.
 
 The goal is lower CK friction. A technically correct walkthrough that forces the
 reader to hunt around an unsorted property list is still a bad walkthrough.
+
+### 1.5 Smoke test definition
+
+When a phase asks for a "smoke test," treat that as the full closeout test
+needed to mark the phase done unless the request explicitly says otherwise.
+
+That means a smoke test should include the phase's real acceptance path:
+
+1. startup/bootstrap sanity where relevant
+2. the core functional proof, not just one happy-click check
+3. boon/effect grant and removal behavior where applicable
+4. any rivalry/hostility or cross-ledger behavior the phase introduced
+5. save/load sanity on the proven final state
+
+If a debug or console route has not already been proven in this setup, prefer
+the surfaced in-mod debug path over inventing a new console flow mid-test.
 
 ---
 
@@ -343,3 +359,4 @@ The files under `archive/` are frozen source material. The inherited HOUSECARL_*
 ---
 
 *End of PDV_STANDARDS.*
+

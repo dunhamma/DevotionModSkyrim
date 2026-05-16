@@ -1,7 +1,7 @@
 # PDV Architecture v2 - Migration Target
 
-Last revised: 2026-05-16 (v2.6 - Phase 5 in-game proof and ReShade caveat)
-Status: **Phase 4/6 Integration Partial** - Origin/bootstrap, stance, the MCM dev slice, and the coupled Talos + Auri-El hostile-path records are framework-owned and verifier-clean. Phase 5's first slice is now proven in game; remaining work is Phase 4 proof coverage, Phase 6 hostile-path proof, and separate ReShade environment follow-up.
+Last revised: 2026-05-16 (v2.7 - Phase 4 and 6 closeout proof)
+Status: **Phase 4/5/6 proven** - Origin/bootstrap, stance, the MCM dev slice, and the coupled Talos + Auri-El hostile-path slice are now framework-owned, verifier-clean, and proven in game. Remaining follow-up is separate ReShade environment investigation plus later architecture phases.
 
 ---
 
@@ -481,7 +481,7 @@ Known risks to verify in CK/in game:
 - Implement `PDV_MCM` per scope above. Script/tooling/framework attachment are present.
 - Current proof status: `PlayerDevotion` registers in SkyUI and the `Status` + `Debug` pages work on the live Kyne/Talos/Auri-El roster.
 - Environment caveat: the successful smoke path currently requires `ReShade64.dll` disabled in the Anvil Stock Game while the native conflict is investigated separately.
-- Remaining confidence pass: confirm persistence after save/load if needed, but the first development-facing slice itself is functionally proven.
+- Persistence confidence is now covered through the broader Phase 4/6 closeout passes; the first development-facing slice is functionally proven.
 
 ### Phase 6 - Second deity (Talos)
 
@@ -489,7 +489,7 @@ Known risks to verify in CK/in game:
 - Talos proves hostile-path rivalry against a real Auri-El ledger target.
 - Keep first-pass Talos signals curated and CK/state driven rather than broad event-router expansion.
 - This is the proof that the architecture pays back its complexity under ideological conflict, not just deity duplication.
-- Current framework status: quest records, FormList membership, origin references, stance rows, rivalry arrays/multipliers, and boon assignments are present; in-game hostile-path proof remains.
+- Current proof status: Altmer bootstrap seeds Auri-El correctly, Talos starts unseeded, curated Talos defiance signals can be applied through the debug surface, rivalry drains Auri-El while Talos rises across dawn consolidation, Talos reaches Seeker at the expected threshold, patron-only boon removal still works on swap, and the proven Talos state survives save/load.
 
 ### Phase 7+ - Remaining deities, ritual quests, tier-3 questlines
 
@@ -730,7 +730,7 @@ implementation-facing Phase 4 reference until this document's older Sections
 
 ### v2.0 - 2026-05-14 - Phase 3 complete: ActionRouter kill event slice operational
 
-Phase 3 kill event capture, routing, and daily consolidation now fully tested and operational. Story Manager Kill Actor event flows to `PDV__SM_KillActor` receiver, which calls `PDV_ActionRouter` to fan kills across `PDV_FLST_AllDeities`. Each deity's `ScoreAction(event, payload)` returns a piety delta, written to daily scratch via `AwardPiety()`. Dawn consolidation clamps to ±5, updates persistent piety, recomputes tiers, and refreshes mirrors. All four test scenarios passed: hostile humanoid (event 2, +0.5), hostile animal (event 1, -3.0), neutral rejection (correctly skipped), and rapid dual kills (both routed, accumulated correctly, consolidated with clamp). `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` compile cleanly. CK wiring complete (quest creation, Story Manager node, SEQ generation). Ready to move to Phase 4 (origin system, boon grants, stance taxonomy).
+Phase 3 kill event capture, routing, and daily consolidation now fully tested and operational. Story Manager Kill Actor event flows to `PDV__SM_KillActor` receiver, which calls `PDV_ActionRouter` to fan kills across `PDV_FLST_AllDeities`. Each deity's `ScoreAction(event, payload)` returns a piety delta, written to daily scratch via `AwardPiety()`. Dawn consolidation clamps to Ãƒâ€šÃ‚Â±5, updates persistent piety, recomputes tiers, and refreshes mirrors. All four test scenarios passed: hostile humanoid (event 2, +0.5), hostile animal (event 1, -3.0), neutral rejection (correctly skipped), and rapid dual kills (both routed, accumulated correctly, consolidated with clamp). `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` compile cleanly. CK wiring complete (quest creation, Story Manager node, SEQ generation). Ready to move to Phase 4 (origin system, boon grants, stance taxonomy).
 
 ### v1.8 - 2026-05-13 - Race architecture reference synced
 
@@ -776,7 +776,7 @@ Implementation note: the original stage-fragment harness path was abandoned in t
 
 Phase 1 confirmed complete: mirror globals (`PDV_GLO_ActivePiety`, `PDV_GLO_ActiveTier`, `PDV_GLO_ActiveDeityIndex`) declared in CK and verified in-game via `GetGlobalValue`. `PDV__ManagerQuest` fully refactored - buckets removed, `AwardPiety`/`GetPiety`/`RecomputeTier`/`RefreshPatronMirrors` API live.
 
-Phase 2 scripts delivered: `PDV_DeityBase.psc` (base class contract), `PDV_Deity_Kyne.psc` (first concrete deity, Kyne rubric implemented), `PDV__ManagerQuest.psc` updated with `PDV_FLST_AllDeities` FormList property and `ProcessDawn` loop scaffold. CK wiring (compile, quest form creation, FormList wiring) is the remaining Phase 2 work. Walkthrough in `PDV_Phase2_CK_Steps.md`.
+Phase 2 scripts delivered: `PDV_DeityBase.psc` (base class contract), `PDV_Deity_Kyne.psc` (first concrete deity, Kyne rubric implemented), `PDV__ManagerQuest.psc` updated with `PDV_FLST_AllDeities` FormList property and `ProcessDawn` loop scaffold. CK wiring (compile, quest form creation, FormList wiring) is the remaining Phase 2 work. Historical walkthrough in `archive/completed-phase-docs-2026-05-16/PDV_Phase2_CK_Steps.md`.
 
 Data model fix: corrected `PDV.Piety` range from `0-100` (stale from v1.0 draft) to `0-200`. Scripts, `AGENTS.md`, and this document now agree. The old `0-100` range in Section 4 was a leftover from the pre-Phase-1 draft and was never reflected in the implemented scripts.
 
@@ -835,3 +835,10 @@ The same integration pass brought the Talos/Auri-El proof slice into the framewo
 The first MCM slice is now proven in game on the live three-deity roster. `PlayerDevotion` registers in SkyUI, the `Status` page iterates Kyne/Talos/Auri-El correctly after the cursor-fill layout fix, and the `Debug` page can swap the active patron to Auri-El through the manager helper path.
 
 That smoke test also split PDV logic from an external native crash source. Repeated CTDs while opening MCM were traced to stacks dominated by `ReShade64.dll`, `WS2_32.dll`, and `webio.dll`, while Papyrus showed no matching PDV MCM fault. For now, treat ReShade as a separate environment investigation and keep it out of the architecture success criteria for Phase 5.
+
+### v2.7 - 2026-05-16 - Phase 4 and Phase 6 closeout proof
+
+Phase 4 and the coupled Talos/Auri-El Phase 6 slice are now proven in game end to end. The closeout passes covered clean-start origin bootstrap, seeded ledger expectations, patron-only boon grant/removal, rivalry-driven hostile-path transfer across dawn consolidation, and save/load sanity on the proven final state.
+
+The same test pass exposed one real workflow gap: curated hostile-path signals were not reachable through the previously proven MCM/console debug surface. Rather than rely on an unproven `cqf` path, the manager and MCM were extended with a surfaced curated-signal debug helper so future hostile-path smoke tests can use the same sanctioned tooling path as the rest of PDV.
+
