@@ -1,5 +1,6 @@
 # PlayerDevotion (PDV) — Race Architecture Design Reference
 **Started:** May 12, 2026  
+**Last updated:** May 16, 2026 (Section 12 added — grilling session design decisions)  
 **Status:** Living reference — race architecture and pre-matrix requirements locked as confirmed
 
 ---
@@ -187,12 +188,12 @@ Broad worship is the cultural norm. Players can worship all gods (diluted) or ch
 
 | Race | Worship Type | Custom Buckets? | Setup Choice Type | Grill Status |
 |------|-------------|-----------------|-------------------|--------------|
-| Nord | Poly | No | Broad vs Primary (Old Ways / Nine Divines) | QUEUED |
+| Nord | Poly | No | Broad vs Primary (Old Ways / Nine Divines) | LOCKED |
 | Imperial | Poly | No | Broad vs Primary (profession-based) | LOCKED |
-| Breton | Poly | No | Broad vs Primary (tradition-based) | QUEUED |
+| Breton | Three-Track Poly | No | Tradition-first (Knight / Hidden Art / Green Way) | LOCKED |
 | Dunmer | Semi-Mono | No | Default vs alternative path | QUEUED |
-| Altmer | Poly | Maybe | Study definition open | QUEUED |
-| Khajiit | Layered Lunar | No | Broad lunar vs focused deity emphasis | LOCKED |
+| Altmer | Poly | Maybe | Study definition open | LOCKED |
+| Khajiit | Layered Lunar (Emergent Patron) | No | No setup — emergent alignment via behavior | LOCKED |
 | Bosmer | Multi-Path | YES (Old Contract custom path) | Explicit 4-path choice at setup | LOCKED |
 | Redguard | Sect-Layered Poly | No | Crown vs Forebear vs Ash'abah | LOCKED |
 | Orc | Single-Core Social Modes | No | Malacath across Stronghold / City / Exile | LOCKED |
@@ -656,11 +657,13 @@ Positive = Compliance (enforcing ban, reporting worshippers)
 
 | State | Range | Talos Devotion Effect | Thalmor Effect |
 |-------|-------|-----------------------|----------------|
-| Open Defiant | −100 to −51 | Shift × 1.5, starts at 60 | Thalmor actively hunt player |
-| Private Defiant | −50 to −11 | Shift × 1.25, starts at 55 | Thalmor suspicious, occasional checks |
-| Uncommitted | −10 to +10 | Shift × 1.0, starts at 50 | Thalmor ignore player |
-| Public Compliant | +11 to +50 | Shift × 0.75, starts at 45 | Thalmor friendly |
-| Concordat Enforcer | +51 to +100 | Shift × 0.5, starts at 35 | Thalmor allied |
+| Open Defiant | −100 to −76 | Shift × 1.5, starts at 60 | Thalmor actively hunt player |
+| Private Defiant | −75 to −51 | Shift × 1.25, starts at 55 | Thalmor suspicious, occasional checks |
+| Uncommitted | −50 to +50 | Shift × 1.0, starts at 50 | Thalmor ignore player |
+| Public Compliant | +51 to +75 | Shift × 0.75, starts at 45 | Thalmor friendly |
+| Concordat Enforcer | +76 to +100 | Shift × 0.5, starts at 35 | Thalmor allied |
+
+**Uncommitted band width (LOCKED):** The Uncommitted band is deliberately wide (±50) to avoid rubberbanding players into forced engagement. It still forces eventual engagement through sustained behavior, but doesn't punish normal gameplay choices with immediate state shifts. Players must truly commit to defiance or compliance to leave the Uncommitted zone.
 
 **State change rules:**
 - Single acts move the track by small increments (±5 to ±15)
@@ -769,20 +772,28 @@ Rationale:
 
 **Setup Flow:**
 ```
-No single baseline — Breton worship is explicitly syncretic (UESP confirmed)
-Player mirrors Nord structure: worship broadly or dedicate to a primary god
-Broad worship cap: Tier 2 (Faithful) — syncretic blending is culturally normal
-Tier 3 only through primary god commitment
+Step 1: Choose primary tradition (spine of devotional life)
+→ [The Knight's Road]  Civic honor, protective justice, selfless service
+→ [The Hidden Art]     Occult practice, Daedric dealings, double lives
+→ [The Green Way]      Druidic covenant, standing stones, nature rites
+
+Step 2: Worship broadly within tradition until focused deity emphasis emerges
+→ Broad worship cap: Tier 2 (Faithful)
+→ Tier 3 (Devoted) only through focused deity commitment within tradition
+
+Traditions can pull against each other — cross-tradition acts create tension
 ```
 
-**Full Pantheon (12 primary god choices — most of any race):**
+**Three-Track Restructure (LOCKED):**
+The Breton identity is defined by *which tradition you walk*, not which god you pick from a list. God choice is a secondary flavor layer within each track — adding depth to your tradition rather than replacing it. The three tracks can pull against each other, creating the signature Breton tension between respectability, power, and nature.
 
-| Tradition | Gods Available |
-|-----------|---------------|
-| Imperial Divines | Akatosh, Mara, Kynareth, Zenithar, Arkay, Stendarr, Julianos, Dibella |
-| Elven Heritage | Magnus, Phynaster (mage-focused, emphasising elven blood) |
-| Druidic | Y'ffre |
-| Witchcraft | Hircine, Namira, Hermaeus Mora (via Daedric system — Option C) |
+**Focused deity options within each tradition:**
+
+| Tradition | Available Focused Deities |
+|-----------|--------------------------|
+| The Knight's Road | Stendarr, Akatosh, Mara, Arkay, Julianos, Zenithar, Kynareth, Dibella |
+| The Hidden Art | Hircine, Hermaeus Mora, Namira, Nocturnal (via Daedric system) |
+| The Green Way | Y'ffre (primary), Magnus, Phynaster |
 
 **UESP Confirmed:** Magnus is listed under "Additional Deities with Significant Breton Cults" — legitimate pantheon inclusion. Phynaster available for players emphasising elven heritage.
 
@@ -2385,3 +2396,126 @@ Required fields:
 | `Residue` | Limited remaining stigma, floor shift, memory flag, or temptation pressure |
 
 This section is locked as the architectural baseline. The detailed race-by-Prince signal matrix remains future work.
+
+---
+
+## SECTION 12: Race Architecture Design Decisions (2026-05-16 Grilling Session) — ALL LOCKED
+
+These decisions emerged from a comprehensive grilling session reviewing all 10 race sheets. They extend or override prior locked decisions where specified.
+
+### 12.1 Nord — Broad Worship Reward Vocabulary (LOCKED)
+
+Broad worship (multiple deities at Faithful) must have its own distinct reward vocabulary. The Tier 2 cap reflects a necessary gate, but players maintaining multiple deity relationships should receive combo effects or overlapping contextual favors that make breadth genuinely distinct from depth — not just "depth but capped."
+
+Design intent: A Nord who worships their whole pantheon broadly gets something *specifically unique to breadth*, not merely diminished versions of what a focused worshipper gets.
+
+### 12.2 Breton — Three-Track Primary Identity (LOCKED)
+
+Breton architecture restructured from a 12-god flat pantheon to three-track primary identity:
+
+| Track | Character | Unique Mechanic |
+|-------|-----------|-----------------|
+| The Knight's Road | Civic honor, protective justice, selfless service | KnightlyVowIntegrity |
+| The Hidden Art | Occult practice, Daedric dealings, double lives | WitchcraftExposure |
+| The Green Way | Druidic covenant, standing stones, nature rites | Druidic Standing |
+
+God choice is a **secondary flavor layer** within each track, not the primary identity. The three tracks can pull against each other, creating tension. A knight tempted by witchcraft feels their vow integrity strain. A druid exposed as a witch loses standing.
+
+This supersedes the prior "12 primary god choices" setup in Section 10.3's flow definition.
+
+### 12.3 Khajiit — Emergent Patron Mechanic (LOCKED — LORE CONFIRMED)
+
+**Lore basis:** UESP and Imperial Library confirm that Khajiit gravitate toward specific deities through life-role (magicians toward Azurah, travelers toward Khenarthi, tricksters toward Rajhin) without formal temple declarations.
+
+**Implementation:** No formal commitment moment. The system silently detects behavioral alignment and shifts weight toward whichever deity the player's actions align with. The player never "picks" — they realize they've been walking that path.
+
+This is the **only race** that bypasses the standard `ProcessCommitmentOffers()` mechanism. Instead, a silent weight-shift function in the Khajiit substrate evaluates behavioral patterns at dawn and adjusts deity emphasis without notification. The player may notice stronger blessings appearing in a particular domain before they consciously realize alignment has shifted.
+
+### 12.4 Khajiit — Moon Cycle Reward Phasing (LOCKED)
+
+The Khajiit substrate reward cycles with the moons. Tied to Skyrim's actual Masser/Secunda moon data where possible (abstract 28-day cycle as fallback).
+
+Rules:
+- Different phases favor different aspects of Khajiit life (road-travel, community, reflection, focused deity work)
+- Overall substrate strength is determined by *consistent compliance across the full cycle* — not spiking during one favorable phase
+- When the moons overlap or oppose each other, special spiritual states emerge
+- Current phase is always visible to the player via power menu, with flavor text on cycle shifts
+
+### 12.5 Khajiit — Road Homes (LOCKED)
+
+Khajiit designate 2-3 rest points (not one sacred place) as spiritual anchors along their road. This mirrors caravan-route thinking.
+
+Rules:
+- Cycling between road homes is itself devotional
+- A Khajiit who never returns is adrift; one who cycles reliably walks the moons' path
+- Uses the shared PDV_SacredPlace system with race-specific multi-location parameters
+
+### 12.6 Argonian — Bed-of-Choice Community Designation (LOCKED)
+
+Argonians designate a "bed of choice" location as "the family I chose." This piggybacks off thane-regard mechanics.
+
+Rules:
+- Player picks a location (any town works equally once designated)
+- Must sleep there a designated number of nights per week/month to avoid community decay
+- Windhelm gets extra flavor text, not mechanical bonus
+- Uses the shared PDV_SacredPlace system with Argonian-specific single-location parameters
+
+**Hist Sap Meditation Item (LOCKED):**
+- Inventory item that grants a player-triggered lesser power for Hist reconnection
+- Custom content — likely needed for the Hist layer to be enjoyable given Skyrim's thin vanilla Hist hooks
+
+### 12.7 Orc — Dynamic Rewards for City/Legion Modes (LOCKED)
+
+City/Legion modes get **dynamic/situational rewards** (temporary, contextual, occasionally stronger) vs Stronghold's **static/permanent blessings**. The lower ceiling reflects fewer *opportunities* to reach it, not inherently weaker faith.
+
+**Self-Made Community Mechanic (LOCKED):**
+A City or Legion/Exile Orc who builds their own community in a location gets a devotion boost when visiting. This is a progression arc that Stronghold Orcs don't need (they already have communal infrastructure).
+
+Uses the shared PDV_SacredPlace system with Orc-specific progression parameters (empty → established → thriving).
+
+### 12.8 Bosmer — Own Green Pact Tagging System (LOCKED)
+
+The Old Contract path uses its own tagging system for Green Pact detection, mirroring the approach Requiem/Races Redone use. This is NOT a dependency on those mods — PDV implements its own tag layer that functions independently.
+
+### 12.9 Altmer — Tier 3 Lorkhan Penalty Weighting (LOCKED)
+
+Tier 3 mortal-validation penalties (marriage, homestead, adoption, etc.) are **lightly weighted**. Not meant to punish normal play — meant to trigger evocative reactions and reflect internal pressure.
+
+Design intent: The penalty triggers events and flavor, not harsh mechanical punishment. A player who marries or builds a home gets a spiritual *reaction* — internal Altmer dissonance manifesting as flavor/notification — not a devastating devotion collapse.
+
+This clarifies the "values deferred to implementation review" note in Section 10.5.
+
+### 12.10 Shared Sacred Place System (LOCKED)
+
+A shared `PDV_SacredPlace` script architecture serves multiple races.
+
+**Shared contract:**
+
+| Property | Purpose |
+|----------|---------|
+| Designated location(s) | Where the sacred place is |
+| Visit frequency | How often the player must visit |
+| Regard/investment value | How "established" the place is |
+| Decay rate | What happens without visits |
+| Reward modifier | Devotion boost from visiting |
+
+**Race-specific parameters:**
+
+| Race | Locations | Progression | Custom Loop |
+|------|-----------|-------------|-------------|
+| Argonian | 1 | Static (bed-of-choice) | Community decay timer |
+| Khajiit | 2-3 | Static (road circuit) | Circuit cycling tracker |
+| Orc (City/Legion) | 1 | Dynamic (empty → established → thriving) | Investment progression |
+
+Race-specific hooks feed into the shared system. Custom loops per race feed back results via the shared contract.
+
+### 12.11 Imperial — Concordat Uncommitted Band (LOCKED)
+
+The Uncommitted band is widened to ±50 (from ±10). The outer states are compressed:
+- Open Defiant: −100 to −76
+- Private Defiant: −75 to −51
+- Uncommitted: −50 to +50
+- Public Compliant: +51 to +75
+- Concordat Enforcer: +76 to +100
+
+Design intent: Avoid rubberbanding players into forced engagement. Still forces eventual engagement through sustained behavior but doesn't punish normal gameplay choices with immediate state shifts. Players must accumulate significant defiance or compliance to leave the wide Uncommitted zone.

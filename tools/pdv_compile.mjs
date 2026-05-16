@@ -107,6 +107,7 @@ function parseArgs(argv) {
     scripts: [],
     skipVerify: false,
     strictPhase3: false,
+    strictPreflight: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -134,6 +135,8 @@ function parseArgs(argv) {
       args.skipVerify = true;
     } else if (arg === "--strict-phase3") {
       args.strictPhase3 = true;
+    } else if (arg === "--strict-preflight") {
+      args.strictPreflight = true;
     } else if (arg === "-h" || arg === "--help") {
       usage(null, 0);
     } else {
@@ -162,6 +165,7 @@ function usage(error = null, exitCode = 2) {
     "  --json                Print machine-readable output.",
     "  --skip-verify         Do not run tools/pdv_verify.mjs after successful compile.",
     "  --strict-phase3       Pass --strict-phase3 to the verifier.",
+    "  --strict-preflight    Pass --strict-preflight to the verifier.",
     "  --allow-warnings      Do not convert Papyrus warnings into failures.",
   ].join("\n");
 
@@ -267,6 +271,9 @@ function runVerifier(args) {
   const verifierArgs = [VERIFIER];
   if (args.strictPhase3) {
     verifierArgs.push("--strict-phase3");
+  }
+  if (args.strictPreflight) {
+    verifierArgs.push("--strict-preflight");
   }
 
   const result = spawnSync(process.execPath, verifierArgs, {

@@ -1,0 +1,67 @@
+{
+  "id": "preflight-router-services",
+  "title": "PDV V3 Preflight router service overlay",
+  "defaultOutput": "PDV_PreflightRouterServicesOverlay.esp",
+  "notes": [
+    "This manifest keeps the first EventBus/EventTypes canary reversible by co-attaching the service scripts to PDV_ActionRouter instead of minting new quest records.",
+    "PDV_GLO_PatronState is now framework-owned in PlayerDevotion_Framework.esp; this overlay remains as a historical reversible canary."
+  ],
+  "operations": [
+    {
+      "kind": "attachScript",
+      "record": "PDV_ActionRouter",
+      "script": "PDV_EventTypes",
+      "note": "Central event/attribution constants live on the router quest for the first Preflight canary."
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_ActionRouter",
+      "script": "PDV_ActionRouter",
+      "property": "PDV_EventBusService",
+      "valueType": "Object",
+      "value": "PDV_ActionRouter",
+      "note": "Point the router at the co-attached EventBus service on the same quest record."
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_ActionRouter",
+      "script": "PDV_ActionRouter",
+      "property": "PDV_EventTypesService",
+      "valueType": "Object",
+      "value": "PDV_ActionRouter",
+      "note": "Point the router at the co-attached EventTypes service on the same quest record."
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_ActionRouter",
+      "script": "PDV_EventBus",
+      "property": "PDV_Manager",
+      "valueType": "Object",
+      "value": "PDV__ManagerQuest"
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_ActionRouter",
+      "script": "PDV_EventBus",
+      "property": "PDV_EventTypesService",
+      "valueType": "Object",
+      "value": "PDV_ActionRouter"
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_ActionRouter",
+      "script": "PDV_EventBus",
+      "property": "PDV_FLST_AllDeities",
+      "valueType": "Object",
+      "value": "PDV_FLST_AllDeities"
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_ActionRouter",
+      "script": "PDV_EventBus",
+      "property": "PDV_GLO_DebugLevel",
+      "valueType": "Object",
+      "value": "PDV_GLO_DebugLevel"
+    }
+  ]
+}

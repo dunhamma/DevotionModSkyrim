@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-16 (v3.4 - V3 Preflight script/tooling kickoff)
-Status: **V3 Preflight in progress.** v2 (Phases 0-6) is closed. The first Preflight script/tooling slice is compile/verifier clean; CK/xEdit wiring and clean-start smoke remain pending.
+Last revised: 2026-05-16 (v3.6 - V3 Preflight gate closed)
+Status: **V3 Preflight complete.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are now complete.
 
 ---
 
@@ -86,7 +86,7 @@ The v3 architecture adds the following subsystems on top of the v2 core. Each ge
 | 5 | Signal expansion | `PDV_ActionRouter`, Story Manager receivers, curated-signal helpers |
 | 6 | Reputation track | New `PDV_ReputationTrack` reusable script |
 | 7 | State track | New `PDV_StateTrack` lightweight per-race quest helpers |
-| 8 | Race substrate layer | New origin-gated quest pattern, parallel to deity quests |
+| 8 | Race substrate layer + sacred place + moon cycle | New origin-gated quest pattern, parallel to deity quests; shared PDV_SacredPlace; Khajiit moon-cycle overlay |
 | 9 | Privilege subsystem | CK Conditions on the existing mirror globals + new state-track globals |
 | 10 | Contextual favor subsystem | Magic effects with stacked conditional triggers, family-capped |
 | 11 | Daedric path architecture | New `PDV_DaedricPath_<X>` quest pattern with boon/price/stigma |
@@ -305,7 +305,7 @@ The patron-commitment mechanism (Section 12) reads `IsEligibleForPlayer()` befor
 | `PDV_State_OrcLifeMode` | Stronghold, City, Exile | Orc | Default Stronghold; transition via threshold events |
 | `PDV_State_ImperialWorship` | Broad, Primary | Imperial | Promoted by Concordat-rep + piety-threshold |
 | `PDV_State_NordWorship` | OldWays, NineDivines, Broad, Primary | Nord | Setup choice + commitment event |
-| `PDV_State_BretonTradition` | Divine, Druidic, Witchcraft, Mixed | Breton | Soft preferences set during play |
+| `PDV_State_BretonTradition` | KnightsRoad, HiddenArt, GreenWay | Breton | Primary identity chosen at setup; tracks can pull against each other |
 | `PDV_State_RedguardSect` | Crown, Forebear, AshAbah | Redguard | Faction-driven |
 | `PDV_State_DunmerPath` | Ancestor, GoodDaedra, TribunalRemnant | Dunmer | Default Ancestor; promoted by sustained worship |
 
@@ -361,7 +361,7 @@ EndFunction
 
 | Substrate | Origin | What it tracks | Aggregate metric |
 |---|---|---|---|
-| `PDV_Substrate_KhajiitLunar` | Khajiit | Lunar phase observance + furstock identity | Moon-observance count, modulated by furstock |
+| `PDV_Substrate_KhajiitLunar` | Khajiit | Lunar phase observance + moon cycle compliance + road-home cycling | Moon-observance count, modulated by cycle phase and road-home return frequency |
 | `PDV_Substrate_DunmerAncestor` | Dunmer | Ash-shrine maintenance, ancestor invocation | Ancestor-event count, decays with neglect |
 | `PDV_Substrate_ArgonianHist` | Argonian | Distance-from-Black-Marsh + community contact | Hist-connection metric, biased to "diminishing distance from Hist" semantics |
 
@@ -382,6 +382,71 @@ No mirror globals for substrate. CK Conditions that need substrate state read fr
 ### 8.4 Interaction with patron boons
 
 Substrate boons and patron boons coexist. Family caps (Section 10.3) prevent stacking abuse. For balance, treat substrate boons as the "always quiet" layer and patron boons as the "louder" foreground layer.
+
+### 8.5 Sacred Place shared system (LOCKED)
+
+Multiple races need location-based devotional tracking. Rather than bespoke per-race implementations, v3 provides a shared `PDV_SacredPlace` script that races hook into with their own parameters.
+
+```papyrus
+Scriptname PDV_SacredPlace extends Quest
+
+; -- Identity (set in CK per instance) --
+String   Property PlaceName Auto                 ; "ArgonianBedOfChoice"
+Int      Property MaxLocations = 1 Auto          ; Argonian: 1, Khajiit: 3, Orc: 1
+Int      Property RequiredOriginRace Auto        ; RACE_ARGONIAN etc.
+
+; -- Tracking --
+ObjectReference[] Property DesignatedLocations Auto  ; player-designated places
+Float[]  Property LastVisitTime Auto             ; game time of last visit per location
+Int[]    Property InvestmentLevel Auto           ; 0=empty, 1=established, 2=thriving (Orc only)
+
+; -- Tuning --
+Float    Property VisitFrequencyDays = 7.0 Auto  ; how often visits are expected
+Float    Property DecayRatePerMiss = 5.0 Auto    ; devotion penalty per missed cycle
+Float    Property RewardModifier = 1.0 Auto      ; bonus to substrate/devotion on visit
+
+; -- API --
+Function DesignateLocation(ObjectReference loc)
+Function RecordVisit(ObjectReference loc)
+Function ProcessDecay()                          ; called from dawn pass
+Float Function GetPlaceBonus()                   ; read by substrate scoring
+```
+
+**Per-race usage:**
+
+| Race | Locations | Visit Model | Progression | Custom Behavior |
+|---|---|---|---|---|
+| Argonian | 1 | Sleep N nights/month at designated bed | Static | Community decay on absence |
+| Khajiit | 2-3 | Cycle between road homes | Static | Circuit completion bonus |
+| Orc (City/Legion) | 1 | Visit invested location | Dynamic (empty→established→thriving) | Investment builds over time |
+
+**Design rules:**
+- All towns work equally once designated (no mechanical bonus for specific locations)
+- Location-specific flavor text is allowed (Windhelm for Argonian, stronghold approaches for Orc)
+- Designation piggybacks off existing game concepts (bed ownership for Argonian, sleep location for Khajiit, return frequency for Orc)
+- The shared system handles tracking; race-specific substrate scripts read `GetPlaceBonus()` and integrate into their own scoring
+
+### 8.6 Moon cycle substrate extensions (Khajiit-specific) (LOCKED)
+
+The Khajiit substrate includes a moon-cycle overlay tied to Skyrim's actual Masser/Secunda phase data (with abstract 28-day fallback if real moon data proves unreliable).
+
+```papyrus
+; PDV_Substrate_KhajiitLunar additions
+Int      Property CurrentMoonPhase Auto          ; derived from game day
+Float[]  Property PhaseRewardWeights Auto        ; which reward type is strongest per phase
+
+Function RecomputeMoonPhase()
+    ; Read Masser/Secunda from GameHour/GameDay
+    ; Map to internal phase enum
+    ; Update PhaseRewardWeights
+EndFunction
+```
+
+**Phase behavior:**
+- Each phase favors different Khajiit activities (road-travel, community, reflection, focused deity work)
+- Compliance across the *full cycle* determines overall substrate strength
+- Special states emerge when moons overlap or oppose (heightened awareness or tension)
+- Current phase visible via power menu with flavor text on shift
 
 ---
 
@@ -560,6 +625,17 @@ The offer is an in-world threshold event, not an MCM toggle. Per the locked Nord
 ### 12.4 Multi-offer ordering
 
 If multiple deities qualify simultaneously, queue offers in DeityIndex order. Only one offer fires per dawn cycle. Player resolves before the next dawn surfaces another candidate.
+
+### 12.4a Khajiit emergent patron exception (LOCKED)
+
+Khajiit are the **only race** that bypasses the standard `ProcessCommitmentOffers()` mechanism entirely. Per confirmed lore (UESP, Imperial Library), Khajiit gravitate toward specific deities through life-role without formal declarations.
+
+Instead of firing an offer, the Khajiit substrate runs a silent weight-shift evaluation at dawn that:
+- Reads behavioral signal patterns across recent days
+- Shifts deity emphasis weight without player notification
+- Allows the player to notice via shifted blessings rather than an explicit offer
+
+No popup, no shrine event, no "Azurah notices you" moment. The emergent patron is recognized by the system when one deity's domain has clearly become the player's life. The moons already knew.
 
 ### 12.5 "Broad worship" as a first-class state
 
@@ -1163,11 +1239,13 @@ Must complete:
 - Minimal schema/version hooks that record the current framework schema version and trace mismatches. Do not add a full save-migration registry in Preflight.
 - Verifier hard-fail rules for core invariants.
 
-Current implementation note (2026-05-16): the script/tooling slice is landed.
-`PDV_EventTypes` and `PDV_EventBus` compile cleanly, the direct-player kill
-canary remains v2-compatible, patron-state and custom-race diagnostics are
-scripted, and compiler/verifier coverage exists. CK/xEdit record creation and
-in-game smoke are still required before the Preflight gate can close.
+Current implementation note (2026-05-16): Preflight gate is closed.
+`PDV_EventTypes`, `PDV_EventBus`, and `PDV_GLO_PatronState` are framework-owned
+records in `PlayerDevotion_Framework.esp`; manager/router/eventbus wiring is
+live; strict preflight verifier runs clean (`FAIL=0`); and the clean-start smoke
+pass validated MCM load, origin seed, patron-state transitions, dawn
+consolidation, direct-hostile vs non-hostile canary behavior, Talos/Auri-El
+rivalry through dawn, and save/load sanity.
 
 Exit gate:
 
@@ -1273,6 +1351,15 @@ with this document, update the brief to match v3.
 ---
 
 ## 26. Revisions
+
+### v3.6 - 2026-05-16 - V3 Preflight gate closed
+
+Closed the V3 Preflight exit gate. Framework-owned `PDV_GLO_PatronState`,
+`PDV_EventTypes`, and `PDV_EventBus` records are now present and wired in
+`PlayerDevotion_Framework.esp`; `PDV_ActionRouter` points at the framework-owned
+EventBus/EventTypes services; strict preflight verification is clean; and the
+clean-start in-game smoke pass is complete (A-F gate checks passed, including
+the direct-vs-non-hostile canary and Talos/Auri-El rivalry validation).
 
 ### v3.4 - 2026-05-16 - V3 Preflight script/tooling kickoff
 
