@@ -44,6 +44,8 @@ const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "PlayerDevotion_Framework.se
 const MANAGER_PATRON_WIRE_PATCH = "PDV_ManagerPatronWirePatch.esp";
 const MCM_WIRE_PATCH = "PDV_MCMWirePatch.esp";
 const RETIRED_OVERLAY_PATCHES = [MANAGER_PATRON_WIRE_PATCH, MCM_WIRE_PATCH];
+const CANONICAL_PROPERTY_WIRING_PATCH = "PDV_PropertyWiringOverlay.esp";
+const ONE_OFF_AUTHOR_PATCH_PREFIX = "PDV_Author_one_off_";
 const MO2_MCP_HOST = "127.0.0.1";
 const MO2_MCP_PORT = 27016;
 
@@ -863,6 +865,31 @@ class Verifier {
       } else if (patchLine) {
         this.pass("Retired overlay patch", `${patchName} is present but inactive.`, pluginsTxt);
       }
+    }
+
+    const oneOffPatchLines = pluginsLines.filter((line) => {
+      const normalized = line.replace(/^\*/, "");
+      return normalized.toLowerCase().startsWith(ONE_OFF_AUTHOR_PATCH_PREFIX.toLowerCase())
+        && normalized.toLowerCase().endsWith(".esp");
+    });
+    for (const patchLine of oneOffPatchLines) {
+      const patchName = patchLine.replace(/^\*/, "");
+      if (patchLine.startsWith("*")) {
+        this.warn(
+          "One-off author patch",
+          `${patchName} is active. Prefer the manifest-driven ${CANONICAL_PROPERTY_WIRING_PATCH} batch overlay so Devotion Dev does not accumulate per-property VMAD patches.`,
+          pluginsTxt,
+        );
+      } else {
+        this.info("One-off author patch", `${patchName} is present but inactive.`, pluginsTxt);
+      }
+    }
+
+    const propertyWiringLine = pluginsLines.find((line) => line.replace(/^\*/, "").toLowerCase() === CANONICAL_PROPERTY_WIRING_PATCH.toLowerCase());
+    if (propertyWiringLine === `*${CANONICAL_PROPERTY_WIRING_PATCH}`) {
+      this.pass("Property wiring overlay", `${CANONICAL_PROPERTY_WIRING_PATCH} is active as the canonical batch overlay.`, pluginsTxt);
+    } else if (propertyWiringLine) {
+      this.info("Property wiring overlay", `${CANONICAL_PROPERTY_WIRING_PATCH} is present but inactive.`, pluginsTxt);
     }
 
     if (exists(loadorderTxt)) {

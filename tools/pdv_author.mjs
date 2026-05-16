@@ -7,7 +7,7 @@
  * when asked to apply, emits a new patch plugin into the Devotion mod folder.
  *
  * Current scope:
- * - inspect built-in Phase 4 / Phase 6 manifests
+ * - inspect built-in Phase 4 / Phase 6 manifests and tracked JSON manifests
  * - wire scalar and object VMAD properties on existing records
  * - add existing records to existing FormLists
  *
@@ -43,6 +43,9 @@ const OBJECT_VALUE_TYPES = new Set(["Object", "Alias"]);
 const SCALAR_VALUE_TYPES = new Set(["Int", "Float", "Bool", "String"]);
 const SUPPORTED_PROPERTY_TYPES = new Set([...OBJECT_VALUE_TYPES, ...SCALAR_VALUE_TYPES]);
 const BRIDGE_MAX_BUFFER = 64 * 1024 * 1024;
+const MANIFEST_INDEX = {
+  "mcm-property-wiring": path.join(PROJECT_ROOT, "references", "authoring", "PDV_MCMPropertyWiring.manifest.json"),
+};
 
 const KNOWN_EDITORID_FORMIDS = {
   ArgonianRace: "Skyrim.esm:013740",
@@ -396,8 +399,8 @@ function main() {
   }
 
   try {
-    if (command === "list-phases") {
-      listPhases();
+    if (command === "list-phases" || command === "list-manifests") {
+      listManifests();
       return;
     }
 
@@ -446,16 +449,18 @@ function usage(error = null, exitCode = 2) {
     "Usage: node tools/pdv_author.mjs <command> [options]",
     "",
     "Commands:",
-    "  list-phases",
-    "  status <phase>",
-    "  plan <phase> [--json] [--write-request <path>]",
-    "  apply <phase> [--output <filename>] [--esl] [--author <name>] [--write-request <path>]",
+    "  list-manifests",
+    "  list-phases                                      legacy alias for list-manifests",
+    "  status <manifest|path> [--manifest <path>]",
+    "  plan <manifest|path> [--json] [--write-request <path>] [--manifest <path>]",
+    "  apply <manifest|path> [--output <filename>] [--esl] [--author <name>] [--write-request <path>] [--manifest <path>]",
     "  set-property --record <EDID> --script <Name> --property <Name> --type <Object|Int|Float|Bool|String> --value <Value> [--output <filename>] [--esl] [--author <name>] [--write-request <path>]",
     "  add-formlist-entry --record <EDID> --entry <EDID> [--output <filename>] [--esl] [--author <name>] [--write-request <path>]",
     "",
     "Notes:",
     "  - v1 writes overlay patch plugins into the Devotion mod folder.",
     "  - v1 does not create new records or edit VMAD array properties.",
+    "  - Tracked JSON manifests live under references/authoring/ and may define a defaultOutput filename.",
     "  - Use 'plan' or 'status' before 'apply' if you want a no-write inspection pass.",
   ].join("\n");
 
@@ -467,11 +472,15 @@ function usage(error = null, exitCode = 2) {
   process.exit(exitCode);
 }
 
-function listPhases() {
-  const rows = Object.entries(PHASE_MANIFESTS).map(([phaseName, manifest]) => {
-    return `${phaseName.padEnd(8)} ${manifest.title}`;
+function listManifests() {
+  const builtIns = Object.entries(PHASE_MANIFESTS).map(([phaseName, manifest]) => {
+    return `${phaseName.padEnd(22)} ${manifest.title} (built-in)`;
   });
-  console.log(rows.join("\n"));
+  const tracked = Object.entries(MANIFEST_INDEX).map(([manifestName, manifestPath]) => {
+    const title = exists(manifestPath) ? readManifestFile(manifestPath).title : "missing manifest file";
+    return `${manifestName.padEnd(22)} ${title} (${path.relative(PROJECT_ROOT, manifestPath)})`;
+  });
+  console.log([...builtIns, ...tracked].join("\n"));
 }
 
 function parseCommonOptions(argv) {
@@ -487,6 +496,7 @@ function parseCommonOptions(argv) {
     type: null,
     value: null,
     entry: null,
+    manifestPath: null,
     writeRequest: null,
   };
 
@@ -529,6 +539,10 @@ function parseCommonOptions(argv) {
       options.entry = requireNext(argv, ++index, "--entry");
     } else if (arg.startsWith("--entry=")) {
       options.entry = arg.slice("--entry=".length);
+    } else if (arg === "--manifest") {
+      options.manifestPath = requireNext(argv, ++index, "--manifest");
+    } else if (arg.startsWith("--manifest=")) {
+      options.manifestPath = arg.slice("--manifest=".length);
     } else if (arg === "--write-request") {
       options.writeRequest = requireNext(argv, ++index, "--write-request");
     } else if (arg.startsWith("--write-request=")) {
@@ -552,17 +566,19 @@ function requireNext(argv, index, flag) {
 }
 
 function runStatus(phaseName, options) {
-  const manifest = getManifest(phaseName);
+  const spec = getManifestSpec(phaseName, options);
+  const manifest = spec.manifest;
   const context = loadPdvContext(manifest);
   const report = buildManifestReport(manifest, context);
 
   if (options.json) {
-    console.log(JSON.stringify(report, null, 2));
+    console.log(JSON.stringify({ manifest: specSummary(spec), report }, null, 2));
     return;
   }
 
   const lines = [
-    `${phaseName}: ${manifest.title}`,
+    `${spec.id}: ${manifest.title}`,
+    `source=${spec.source}`,
     `ready=${report.summary.ready} blocked=${report.summary.blocked} unsupported=${report.summary.unsupported}`,
   ];
 
@@ -570,6 +586,14 @@ function runStatus(phaseName, options) {
     lines.push("");
     lines.push("Unsupported in v1:");
     for (const item of manifest.unsupported) {
+      lines.push(`- ${item}`);
+    }
+  }
+
+  if (manifest.notes.length) {
+    lines.push("");
+    lines.push("Notes:");
+    for (const item of manifest.notes) {
       lines.push(`- ${item}`);
     }
   }
@@ -590,27 +614,36 @@ function runStatus(phaseName, options) {
 }
 
 function runPlan(phaseName, options) {
-  const manifest = getManifest(phaseName);
+  const spec = getManifestSpec(phaseName, options);
+  const manifest = spec.manifest;
   const context = loadPdvContext(manifest);
   const report = buildManifestReport(manifest, context);
-  const patchRequest = buildPatchRequestForManifest(phaseName, manifest, context, options, false);
+  const patchRequest = buildPatchRequestForManifest(spec, manifest, context, options, false);
 
   if (options.writeRequest) {
     writeJsonArtifact(options.writeRequest, patchRequest);
   }
 
   if (options.json) {
-    console.log(JSON.stringify({ report, patchRequest }, null, 2));
+    console.log(JSON.stringify({ manifest: specSummary(spec), report, patchRequest }, null, 2));
     return;
   }
 
   const lines = [
-    `${phaseName}: ${manifest.title}`,
+    `${spec.id}: ${manifest.title}`,
+    `source=${spec.source}`,
     `output=${path.basename(patchRequest.output_path)}`,
     `records=${patchRequest.records.length}`,
-    "",
-    "Planned operations:",
   ];
+  if (manifest.notes.length) {
+    lines.push("");
+    lines.push("Notes:");
+    for (const item of manifest.notes) {
+      lines.push(`- ${item}`);
+    }
+  }
+  lines.push("");
+  lines.push("Planned operations:");
   for (const item of report.operations) {
     const target = item.kind === "setProperty"
       ? `${item.record}.${item.script}.${item.property}`
@@ -624,9 +657,10 @@ function runPlan(phaseName, options) {
 }
 
 function runApplyPhase(phaseName, options) {
-  const manifest = getManifest(phaseName);
+  const spec = getManifestSpec(phaseName, options);
+  const manifest = spec.manifest;
   const context = loadPdvContext(manifest);
-  const patchRequest = buildPatchRequestForManifest(phaseName, manifest, context, options, true);
+  const patchRequest = buildPatchRequestForManifest(spec, manifest, context, options, true);
 
   if (options.writeRequest) {
     writeJsonArtifact(options.writeRequest, patchRequest);
@@ -640,7 +674,8 @@ function runApplyPhase(phaseName, options) {
   }
 
   const lines = [
-    `${phaseName}: ${manifest.title}`,
+    `${spec.id}: ${manifest.title}`,
+    `source=${spec.source}`,
     `output=${path.basename(patchRequest.output_path)}`,
     `success=${Boolean(response.success)}`,
     `records_written=${response.records_written ?? 0}`,
@@ -666,9 +701,13 @@ function runApplyPhase(phaseName, options) {
 
   lines.push("");
   lines.push("Next step:");
-  lines.push("- Press F5 in MO2 if the new plugin file does not appear immediately.");
-  lines.push("- Enable the generated patch plugin in MO2's right pane when you want it in the load order.");
-  lines.push("- Run `node .\\tools\\pdv_verify.mjs` after enabling the patch.");
+  if (response.success) {
+    lines.push("- Press F5 in MO2 if the new plugin file does not appear immediately.");
+    lines.push("- Enable the generated patch plugin in MO2's right pane when you want it in the load order.");
+    lines.push("- Run `node .\\tools\\pdv_verify.mjs` after enabling the patch.");
+  } else {
+    lines.push("- Fix the bridge error above, then rerun this apply command.");
+  }
   console.log(lines.join("\n"));
 }
 
@@ -763,6 +802,19 @@ function checkPatchMasterHygiene(outputPath) {
   }
 
   const masters = inventory.plugin.masters || [];
+  const pluginName = path.basename(outputPath).toLowerCase();
+  const hasSelfOwnedRecords = (inventory.plugin.records || []).some((record) => {
+    const formid = String(record.formid || "").toLowerCase();
+    return formid.startsWith(`${pluginName}:`);
+  });
+  if (!hasSelfOwnedRecords) {
+    return {
+      ok: true,
+      masters,
+      warning: null,
+    };
+  }
+
   const firstMaster = masters[0] || "";
   const ok = firstMaster.toLowerCase() === "skyrim.esm";
   return {
@@ -794,15 +846,91 @@ function requireOption(value, label) {
   }
 }
 
-function getManifest(phaseName) {
-  if (!phaseName) {
-    usage("Phase name is required.");
+function getManifestSpec(manifestName, options = {}) {
+  if (options.manifestPath && manifestName) {
+    usage("Use either a positional manifest name/path or --manifest, not both.");
   }
-  const manifest = PHASE_MANIFESTS[phaseName];
-  if (!manifest) {
-    usage(`Unknown phase manifest: ${phaseName}`);
+
+  const requested = options.manifestPath || manifestName;
+  if (!requested) {
+    usage("Manifest name or path is required.");
   }
-  return manifest;
+
+  if (!options.manifestPath && PHASE_MANIFESTS[requested]) {
+    return {
+      id: requested,
+      label: safeLabel(requested),
+      source: "built-in",
+      manifest: normalizeManifest(PHASE_MANIFESTS[requested], requested),
+    };
+  }
+
+  const indexedPath = !options.manifestPath ? MANIFEST_INDEX[requested] : null;
+  const manifestPath = indexedPath || resolveManifestPath(requested);
+  if (!manifestPath || !exists(manifestPath)) {
+    usage(`Unknown manifest: ${requested}`);
+  }
+
+  const manifest = normalizeManifest(readManifestFile(manifestPath), path.basename(manifestPath));
+  const id = manifest.id || path.basename(manifestPath).replace(/\.manifest\.json$/i, "").replace(/\.json$/i, "");
+  return {
+    id,
+    label: safeLabel(id),
+    source: path.relative(PROJECT_ROOT, manifestPath),
+    manifest,
+  };
+}
+
+function resolveManifestPath(candidate) {
+  const resolved = path.isAbsolute(candidate)
+    ? candidate
+    : path.resolve(PROJECT_ROOT, candidate);
+  if (exists(resolved)) {
+    return resolved;
+  }
+
+  const authoringPath = path.join(PROJECT_ROOT, "references", "authoring", candidate);
+  if (exists(authoringPath)) {
+    return authoringPath;
+  }
+
+  return null;
+}
+
+function readManifestFile(manifestPath) {
+  let parsed;
+  try {
+    parsed = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  } catch (error) {
+    throw new Error(`Could not read manifest ${manifestPath}: ${error.message}`);
+  }
+  return parsed;
+}
+
+function normalizeManifest(manifest, fallbackId) {
+  if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) {
+    throw new Error(`Manifest ${fallbackId} must be a JSON object.`);
+  }
+  if (!Array.isArray(manifest.operations)) {
+    throw new Error(`Manifest ${manifest.id || fallbackId} must define an operations array.`);
+  }
+  return {
+    id: manifest.id || fallbackId,
+    title: manifest.title || manifest.id || fallbackId,
+    defaultOutput: manifest.defaultOutput || null,
+    unsupported: Array.isArray(manifest.unsupported) ? manifest.unsupported : [],
+    notes: Array.isArray(manifest.notes) ? manifest.notes : [],
+    operations: manifest.operations,
+  };
+}
+
+function specSummary(spec) {
+  return {
+    id: spec.id,
+    source: spec.source,
+    title: spec.manifest.title,
+    defaultOutput: spec.manifest.defaultOutput,
+  };
 }
 
 function loadPdvContext(manifest) {
@@ -845,6 +973,7 @@ function buildManifestReport(manifest, context) {
     summary,
     operations,
     unsupported: manifest.unsupported,
+    notes: manifest.notes,
   };
 }
 
@@ -962,12 +1091,16 @@ function resolveExternalReferences(operations, pdvRecordsByEdid) {
   return found;
 }
 
-function buildPatchRequestForManifest(phaseName, manifest, context, options, requireReady) {
+function buildPatchRequestForManifest(spec, manifest, context, options, requireReady) {
+  const effectiveOptions = {
+    ...options,
+    output: options.output || manifest.defaultOutput || null,
+  };
   return buildPatchRequestFromOperations(
     manifest.operations,
     context,
-    options,
-    phaseName,
+    effectiveOptions,
+    spec.label,
     requireReady,
   );
 }
@@ -1014,6 +1147,7 @@ function addSetPropertyToRecordSpecs(operation, context, recordSpecs) {
       op: "override",
       formid: record.formid,
       source_plugin: "PlayerDevotion_Framework.esp",
+      source_path: toPosix(PDV_ESP),
     };
     recordSpecs.set(key, spec);
   }
@@ -1047,6 +1181,7 @@ function addFormListEntryToRecordSpecs(operation, context, recordSpecs) {
       op: "override",
       formid: record.formid,
       source_plugin: "PlayerDevotion_Framework.esp",
+      source_path: toPosix(PDV_ESP),
     };
     recordSpecs.set(key, spec);
   }
@@ -1152,6 +1287,14 @@ function buildOutputPath(label, requestedOutput) {
     throw new Error(`Output filename must end in .esp, got: ${filename}`);
   }
   return path.join(DEVOTION_MOD, filename);
+}
+
+function safeLabel(value) {
+  const label = String(value || "manifest")
+    .trim()
+    .replace(/[^a-z0-9_-]+/gi, "_")
+    .replace(/^_+|_+$/g, "");
+  return label || "manifest";
 }
 
 function timestamp() {

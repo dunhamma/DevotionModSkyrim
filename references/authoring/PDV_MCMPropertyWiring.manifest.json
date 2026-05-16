@@ -1,0 +1,69 @@
+{
+  "id": "mcm-property-wiring",
+  "title": "PDV_MCM property wiring overlay",
+  "defaultOutput": "PDV_PropertyWiringOverlay.esp",
+  "notes": [
+    "This manifest wires existing VMAD properties only. It does not create the PDV_MCM quest or attach missing scripts in CK.",
+    "Use this overlay as the single batch replacement for one-off MCM property patches when CK property editing is unstable."
+  ],
+  "operations": [
+    {
+      "kind": "setProperty",
+      "record": "PDV_MCM",
+      "script": "PDV_MCM",
+      "property": "PDV_Manager",
+      "valueType": "Object",
+      "value": "PDV__ManagerQuest",
+      "note": "Manager API for roster/debug helpers."
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_MCM",
+      "script": "PDV_MCM",
+      "property": "PDV_FLST_AllDeities",
+      "valueType": "Object",
+      "value": "PDV_FLST_AllDeities",
+      "note": "Roster source for Status and Debug pages."
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_MCM",
+      "script": "PDV_MCM",
+      "property": "PDV_GLO_ActivePiety",
+      "valueType": "Object",
+      "value": "PDV_GLO_ActivePiety"
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_MCM",
+      "script": "PDV_MCM",
+      "property": "PDV_GLO_ActiveTier",
+      "valueType": "Object",
+      "value": "PDV_GLO_ActiveTier"
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_MCM",
+      "script": "PDV_MCM",
+      "property": "PDV_GLO_ActiveDeityIndex",
+      "valueType": "Object",
+      "value": "PDV_GLO_ActiveDeityIndex"
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_MCM",
+      "script": "PDV_MCM",
+      "property": "PDV_GLO_PatronDeity",
+      "valueType": "Object",
+      "value": "PDV_GLO_PatronDeity"
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_MCM",
+      "script": "PDV_MCM",
+      "property": "PDV_GLO_DebugLevel",
+      "valueType": "Object",
+      "value": "PDV_GLO_DebugLevel"
+    }
+  ]
+}

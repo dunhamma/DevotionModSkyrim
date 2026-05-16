@@ -207,9 +207,12 @@ node .\tools\pdv_compile.mjs --list
 node .\tools\pdv_verify.mjs
 node .\tools\pdv_verify.mjs --json
 node .\tools\pdv_verify.mjs --strict-phase3
+node .\tools\pdv_author.mjs list-manifests
 node .\tools\pdv_author.mjs status phase4
 node .\tools\pdv_author.mjs plan phase4
 node .\tools\pdv_author.mjs apply phase4 --output PDV_Author_phase4.esp
+node .\tools\pdv_author.mjs plan mcm-property-wiring
+node .\tools\pdv_author.mjs apply mcm-property-wiring
 ```
 
 The compiler spawns `PapyrusCompiler.exe` directly with the project import chain, compiles active scripts whose `.pex` output is missing or older than source, treats Papyrus warnings as failures, and runs the verifier after successful compiles unless `--skip-verify` is used. The emitted compiler command uses the short canonical flags: `-f=<flags>`, `-i=<source-dirs>`, and `-o=<output-dir>`.
@@ -217,6 +220,8 @@ The compiler spawns `PapyrusCompiler.exe` directly with the project import chain
 The verifier is read-only. It checks expected Anvil paths, reads `PlayerDevotion_Framework.esp` through the Anvil MO2 MCP Mutagen bridge, validates baseline Phase 2 records and VMAD properties, checks script source/pex freshness, reports SEQ drift, confirms the active MO2 profile/load order, and looks for CK output shadow files. By default, unfinished Phase 3 CK wiring is reported as TODO; use `--strict-phase3` when Phase 3 should be treated as required.
 
 `tools\pdv_author.mjs` is the safe authoring companion to that loop. It inspects the live framework ESP through the same local Mutagen bridge, then emits a **new overlay patch plugin** into the `Devotion` mod when asked to apply changes. Current supported writes are existing-record scalar/object VMAD properties and FormList membership. It does **not** create new records, edit VMAD array properties such as `RivalDeities`, or overwrite `PlayerDevotion_Framework.esp` in place.
+
+Tracked JSON manifests live under `references\authoring\` and can be addressed by manifest id or file path. `mcm-property-wiring` is the canonical batch target for the current `PDV_MCM` properties and defaults to `PDV_PropertyWiringOverlay.esp`, replacing repeated `PDV_Author_one_off_*` property patches when CK property editing is unstable. Use `plan` first to inspect the batch, then `apply` to regenerate the single overlay; after enabling it in the Devotion Dev profile, run `node .\tools\pdv_verify.mjs`.
 
 ### Anvil MO2 MCP status
 
@@ -622,6 +627,8 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-05-16 - Temporary overlays merged back and retired:** `PDV_ManagerPatronWirePatch.esp` and `PDV_MCMWirePatch.esp` were temporary rescue artifacts for CK instability. Their VMAD deltas have been merged directly into `PlayerDevotion_Framework.esp`: `PDV__ManagerQuest` now owns `PDV_GLO_PatronDeity`, and `PDV_MCM` is script-attached with required properties on the framework record. Both overlays are unticked in the `Devotion Dev` profile and must not be treated as runtime requirements.
 
+**2026-05-16 - Manifest-driven property wiring overlays:** `tools/pdv_author.mjs` now supports tracked JSON manifests under `references\authoring\`. The first target, `mcm-property-wiring`, batches the current `PDV_MCM` property contract into one canonical `PDV_PropertyWiringOverlay.esp` overlay so the Devotion Dev profile does not accumulate per-property `PDV_Author_one_off_*` patches during CK instability.
+
 **2026-05-14 - Anvil MO2 MCP Codex intake, updated 2026-05-16:** `references/PDV_Anvil_MO2_MCP_Intake.md` documents the local `Anvilmo2_mcp` plugin, the `mo2_*` tool surface, current Codex config, and optional tool status. Codex points at `http://127.0.0.1:27016/mcp`; the server must be started from MO2 before tools appear. The plugin is configured for Anvil's Papyrus compiler/source paths and uses `Devotion` as the MCP output mod default. `BSArch.exe` is installed for BSA/BA2 archive tools; `nif-tool.exe` remains the only confirmed missing optional binary.
 
 **2026-05-14 - Skyrim modding lessons intake:** Archived external practical lessons at `archive/Skyrim_Modding_Lessons_2026-05-14.md` and folded durable rules into the living docs and Papyrus/CK skill: player-facing ASCII, Papyrus string/docstring/parser limits, save-baked new-game retesting, grep-before-delete hygiene, `cqf` named-function limits, and future dialogue/faction gate discipline.
@@ -635,6 +642,8 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 **2026-05-16 - Phase 4 and Phase 6 full closeout proof:** Phase 4 and Phase 6 are now proven in game end to end, not just verifier-clean. The closeout pass covered clean-start origin bootstrap, seeded ledger expectations, patron-only boon grant/removal, rivalry-driven Talos hostile-path transfer against Auri-El across dawn consolidation, and save/load sanity on the proven final state. The Phase 6 pass also exposed a real workflow gap: curated Talos/Auri-El signal testing was not reachable through the previously proven debug surface, so `PDV__ManagerQuest` and `PDV_MCM` were extended with a surfaced curated-signal debug helper rather than relying on an unproven console `cqf` path.
 
 **2026-05-16 - v3 roadmap and beta gates:** `PDV_Architecture_v3.md` now owns the forward roadmap after the proven Phase 4/5/6 baseline. The roadmap separates structural completeness from content completeness, requires V3 Preflight before Phase 7 signal expansion, adds a Structural Skeleton pass for dev-only 1.0 scaffolding, and defines Technical Beta, Content-Feel Beta, and content-rich 1.0 launch readiness. `PDV_BetaTesterBrief.md` is external tester communication only and must defer to v3 for architecture truth.
+
+**2026-05-16 - v3 Section 24 cleanup:** `PDV_Architecture_v3.md` now removes already-settled decisions from the open tracker instead of leaving them as recommended-but-open items. Resolved IDs are D-09, D-11, D-15, D-16, D-18, D-24, D-25, D-26, D-27, D-28, D-29, and D-32. The operational defaults are structural completeness first, monolithic 1.0, strong substrates only for Khajiit/Dunmer/Argonian, shrine overlays, Tier 2 broad worship, three-option commitment offers, curse-state pressure without automatic Daedric unlocks, thematic UI by default, in-world patron switching, concrete pattern cloning, FormList-driven MCM ordering, Phase 12 stack-depth benchmarking, and documented Wintersun coexistence.
 
 **2026-05-16 - Completed phase docs archived:** Finished Phase 2/3 walkthroughs, older planning/delivery notes, and the now-complete Phase 4/5/6 CK walkthroughs were moved to `archive/completed-phase-docs-2026-05-16/` so the root folder stays focused on living architecture/setup/standards docs.
 
