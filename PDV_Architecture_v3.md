@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-16 (v3.1 - roadmap, beta, and launch gates)
+Last revised: 2026-05-16 (v3.2 - Section 24 decision cleanup)
 Status: **Planning.** v2 (Phases 0-6) is closed. v3 is the architecture target for everything past the coupled Talos/Auri-El hostile-path proof slice.
 
 ---
@@ -365,7 +365,7 @@ EndFunction
 | `PDV_Substrate_DunmerAncestor` | Dunmer | Ash-shrine maintenance, ancestor invocation | Ancestor-event count, decays with neglect |
 | `PDV_Substrate_ArgonianHist` | Argonian | Distance-from-Black-Marsh + community contact | Hist-connection metric, biased to "diminishing distance from Hist" semantics |
 
-Lighter substrates (Altmer orthodoxy, Redguard ancestor reverence, Orc life-mode standing) can use the same quest pattern with weaker effect magnitudes, or they can be expressed entirely through privileges + contextual favors. v3 recommends starting with privileges-only for the light substrates and promoting to a full substrate quest only if playtest feedback demands it.
+For 1.0, strong persistent substrates are limited to Khajiit, Dunmer, and Argonian. Altmer orthodoxy, Redguard ancestor reverence, and Orc life-mode standing express identity through privileges, contextual favors, and state tracks first; promote one to a full substrate quest only if playtest feedback proves the lighter pattern insufficient.
 
 ### 8.3 Storage
 
@@ -412,10 +412,10 @@ The three v2 mirror globals (`PDV_GLO_ActivePiety`, `PDV_GLO_ActiveTier`, `PDV_G
 
 Where a privilege genuinely needs a value not surfaced by the mirrors (e.g. "highest piety this character has ever reached on Kynareth"), use a dedicated additional global behind the same write-only-cache discipline. Add the global only when the condition is needed by content; don't speculatively pre-mirror.
 
-### 9.4 Outstanding privilege decisions
+### 9.4 Privilege pilot and shrine discipline
 
 - **Greybeards-Kynareth recognition.** A Nord with high Kynareth tier could get a unique greeting from Arngeir. This requires editing a vanilla dialogue topic with a `Shares Dialogue` discipline. v3 should pilot this with the Kyne content as a "does the privilege pattern hold up?" test.
-- **Shrine activator overrides.** Editing vanilla shrine activator scripts is invasive. v3 should prefer adding new activator references via a Story Manager or alias overlay rather than overriding vanilla records.
+- **Shrine activator overlays.** PDV does not replace vanilla shrine activator scripts for 1.0. Shrine extensions use overlay receiver quests, aliases, or new nearby activator references so shrine-modifying mods remain easier to coexist with.
 
 ---
 
@@ -567,13 +567,13 @@ Per the locked Nord/Imperial/Breton designs, broad worship is a real state, not 
 
 - `PDV_GLO_PatronDeity = -1` sentinel meaning "broad worship explicitly chosen."
 - Broad worship is selected via the same setup choice that sets a state track (Section 7.4).
-- Under broad worship, scoring is dampened (cap at Tier 2 per the Nord file, Tier 1 per the original race-arch open question).
+- Under broad worship, scoring is dampened and capped at Tier 2 for 1.0 unless later race content proves a narrower exception is needed.
 - Commitment offers still fire from under broad worship; accepting transitions out of broad.
 
-### 12.6 Outstanding commitment decisions
+### 12.6 Commitment offer defaults
 
-- **Broad-worship Tier cap.** Race-arch reference flags this as open: Tier 1 or Tier 2? v3 should default to Tier 2 per the locked Nord/Imperial decisions and revisit for non-Nord/Imperial races as content lands.
-- **Refuse-vs-decline-vs-defer.** Three-option model (Accept / Not Yet / Refuse) per above. Should there be a hard "Renounce" path too? Defer to content-author phase.
+- **Broad-worship Tier cap.** Broad worship defaults to Tier 2 for 1.0. Per-race exceptions are content-author decisions only if playtest feedback shows the default breaks a specific culture.
+- **Offer choices.** Commitment offers use `Accept / Not Yet / Refuse` for 1.0. A stronger `Renounce` path is deferred past 1.0 unless content later needs a distinct rupture mechanic.
 
 ---
 
@@ -645,10 +645,10 @@ The race architecture reference flags restoration paths as content-author concer
 - **Rededication rituals** that can write `PDV.Piety` directly via curated signals.
 - **Tier downgrade on transition** so the player has measurable lost ground to recover.
 
-### 13.5 Outstanding curse decisions
+### 13.5 Curse decisions
 
 - **Source of Werewolf detection.** Companions-quest-specific keyword? Race check? v3 should test on a vanilla Companions run first.
-- **Hybrid Necromancer / Daedric overlap.** The race ref hints at Molag Bal pressure for vampires; v3 should not force-add Daedric paths under curse but should make them available if commitment signals fire.
+- **Hybrid Necromancer / Daedric overlap.** Curse state modifies multipliers, eligibility pressure, and interpretation. It does not auto-open Daedric paths; Hircine, Molag Bal, or other curse-adjacent paths still require commitment signals before real progression.
 
 ---
 
@@ -770,10 +770,10 @@ Two-tab structure:
 
 Most race-coded UI lives in NPC reactions (Section 9). v3 should target ~30-50 race-coded dialogue topics for 1.0, focused on patron NPCs (priests, faction leaders, named characters with clear theological alignment).
 
-### 16.4 Outstanding UI decisions
+### 16.4 UI defaults
 
-- **Numeric vs thematic display default.** Race ref says thematic-by-default. v3 should ship thematic-default with an MCM "show numbers" override for power users.
-- **Patron-switch UX.** Switching from one patron to another mid-game is conceptually a major theological act. v3 should require a multi-stage confirmation (or threshold event), not a one-click MCM swap. The dev-MCM debug swap remains for testing only.
+- **Thematic by default.** Player-facing status uses thematic language first, with numeric values behind a debug/advanced MCM preference for power users.
+- **In-world patron switching.** Switching from one patron to another mid-game is a theological act. The player path is an in-world threshold commitment offer from the new patron; MCM patron swap remains dev-only for testing.
 
 ---
 
@@ -783,7 +783,7 @@ By 1.0 there will be 25-35 deities, 10 race substrates (some empty), 2 reputatio
 
 ### 17.1 Add-a-deity workflow
 
-1. Duplicate the most-similar concrete deity script (Kyne for Aedric-ambient, Talos for Aedric-hostile, Boethiah-template-TBD for Daedric).
+1. Duplicate the most-similar proven concrete deity script (Kyne for Aedric-ambient, Talos for Aedric-hostile, first proven Prince script for Daedric).
 2. Edit name, domain, stance row, rivalry list (if any), and `ScoreAction()` rubric.
 3. Compile via `node tools\pdv_compile.mjs --script PDV_Deity_<X>`.
 4. In CK: create the quest record, Start-Game-Enabled, attach script, fill properties (boon spells, gain modifier track if any, eligibility state track if any).
@@ -792,7 +792,7 @@ By 1.0 there will be 25-35 deities, 10 race substrates (some empty), 2 reputatio
 7. Update verifier expected-records.
 8. In-game smoke test on a clean save.
 
-This is mostly the same pipeline as Phase 6's Talos/Auri-El work. The big lever for reducing per-deity friction is template scripts plus `pdv_author.mjs` overlay-patch generation; v3 expands `pdv_author.mjs` to support:
+This is mostly the same pipeline as Phase 6's Talos/Auri-El work. The big lever for reducing per-deity friction is matrix-driven `pdv_author.mjs` overlay-patch generation and one excellent proven pattern per subsystem; v3 expands `pdv_author.mjs` to support:
 
 - Stance row authoring (already partially supported).
 - Rivalry array authoring (currently manual CK).
@@ -822,16 +822,16 @@ The verifier needs to scale. v3 expectations:
 - Per-track: record exists, backing global exists, threshold-array / state-array lengths match labels.
 - Cross-record: rivalry FormIDs all resolve to records in `PDV_FLST_AllDeities`; eligibility-state-track FormIDs resolve to existing state tracks.
 
-### 17.5 Outstanding pipeline decisions
+### 17.5 Pipeline defaults
 
-- **Templating vs. duplication.** Currently we duplicate scripts. v3 could introduce a `PDV_Deity_Template.psc` "abstract template" that adds nothing beyond `PDV_DeityBase` but documents the expected override pattern. Defer until the pipeline gets painful.
-- **Auto-generated MCM display order.** Currently `DeityIndex` is a manual int. v3 should consider FormList-position-derived ordering with optional override.
+- **Templating vs. duplication.** Do not add an abstract `PDV_Deity_Template.psc` for 1.0. Build one excellent concrete pattern per subsystem, then clone the closest concrete script; revisit only if script-side deity creation routinely takes more than 30 minutes before CK work.
+- **MCM display order.** Use `PDV_FLST_AllDeities` order as the default display order, with an optional manual override property for special cases such as "Akatosh first."
 
 ---
 
 ## 18. ESP module structure (decision)
 
-The v2 design and the `AGENTS.md` ESP Structure section both diagram a future per-race ESP split (`PDV_Nord.esp`, `PDV_Imperial.esp`, etc.). v3 recommends **keeping the framework ESP monolithic through 1.0**.
+The v2 design and the `AGENTS.md` ESP Structure section both diagram a future per-race ESP split (`PDV_Nord.esp`, `PDV_Imperial.esp`, etc.). v3 keeps the framework ESP monolithic through 1.0 and revisits a split only if a Section 18.2 trigger hits.
 
 ### 18.1 Rationale
 
@@ -873,9 +873,9 @@ At 25-35 deities, the v2 architecture's hot paths scale linearly with deity coun
 - **Decay batching.** Apply decay only when `Utility.GetCurrentGameTime() - lastDecayPass > 1.0`, not every dawn-tick check.
 - **Lazy contextual-favor recompute.** Don't re-apply contextual-favor abilities on every tier change; only on patron-switch and tier-crossing.
 
-### 19.3 Outstanding performance decisions
+### 19.3 Performance instrumentation
 
-- **Papyrus stack depth.** Iterating 35 deities and calling `ScoreAction()` on each is well within Papyrus limits but should be measured. v3 verifier should add an optional stack-trace mode for `ProcessDawn()` benchmarks.
+- **Papyrus stack depth.** Iterating 35 deities and calling `ScoreAction()` on each is well within Papyrus limits but should be measured. Add optional `ProcessDawn()` stack-depth benchmarking around Phase 12, after contextual favors create the first realistic per-deity workload.
 - **StorageUtil read costs.** Reading `PDV.Piety` for 35 deities at dawn is 35 floats. Trivial. Reading per-event-type daily caps in the same loop adds N x M reads. Still fine, but worth measuring before adding more StorageUtil keys per deity.
 
 ---
@@ -910,10 +910,10 @@ Per the race-architecture pre-matrix requirements, every signal row has a surviv
 - Treat Survival Mode as the default reference; signals that overlap survival (sleep outdoor, exposure) should be detectable but not duplicated.
 - Provide a soft-compat patch for Frostfall and similar mods if it turns out vanilla Survival Mode coverage is too thin.
 
-### 20.4 Outstanding compatibility decisions
+### 20.4 Compatibility decisions
 
 - **Compat patch authoring tool.** Should `pdv_author.mjs` learn to author compat-patch ESPs? Probably yes, but only after the v3 core subsystems are stable.
-- **Wintersun coexistence cycle.** If a player runs both, what happens? Likely just parallel piety tracks with thematic confusion. v3 should document this rather than fight it.
+- **Wintersun coexistence.** PDV documents Wintersun as parallel-but-divergent coexistence for 1.0. Do not detect Wintersun, suppress features, or build active integration unless a later compatibility phase proves a concrete need.
 
 ---
 
@@ -1008,11 +1008,16 @@ These are intentionally not solved in v3.
 
 ## 24. Open Decisions Tracker
 
-Mobile-friendly worklist of every open architectural decision in v3. Each entry is a self-contained block sized for phone scrolling. Decision IDs (`D-NN`) are stable; reference them in chat as "decide D-07 as (b)" or "defer D-15."
+Mobile-friendly worklist of every architectural decision still open in v3.
+Each entry is sized for phone scrolling. Decision IDs (`D-NN`) are stable:
+reference them in chat as "decide D-07 as (b)" or "defer D-17."
 
-When a decision lands it should be resolved by one of: rewriting the relevant v3 section to reflect the new specification, adding an entry to `AGENTS.md` § Decisions Log with rationale, or moving the item to Section 23 (deferred past 1.0).
+Numbering gaps are intentional. When a decision lands, remove it from this
+open tracker and resolve it by rewriting the relevant v3 section, adding an
+entry to `AGENTS.md` Decisions Log, or moving the item to Section 23 if it is
+deferred past 1.0.
 
-### Inherited from Phases 4-6
+### Before Structural Skeleton
 
 #### D-01  Trinimac as worshipable  (§3.3)
 
@@ -1041,6 +1046,8 @@ When a decision lands it should be resolved by one of: rewriting the relevant v3
   - (b) One Lorkhan record with race-coded stance valence.
 - **Recommendation:** (a). Stance text and rivalry behavior differs sharply; collapsing pre-commits the implementation. Note family resemblance in description fields.
 
+### Before V3 Preflight implementation
+
 #### D-04  PapyrusUtil missing-failure guard  (§3.2)
 
 - **Question:** Add a hard-fail check to `PDV__MainQuest.OnInit()` if PapyrusUtil isn't present?
@@ -1059,7 +1066,7 @@ When a decision lands it should be resolved by one of: rewriting the relevant v3
   - (c) Silent (debug-trace only, current behavior).
 - **Recommendation:** (a). Players running custom-race mods deserve to know how PDV is reading them.
 
-### Signal expansion
+### Before Phase 7 signal expansion
 
 #### D-06  Follower kill attribution  (§5.4)
 
@@ -1087,17 +1094,7 @@ When a decision lands it should be resolved by one of: rewriting the relevant v3
   - (b) Defer to Phase 8 with reputation track.
 - **Recommendation:** (a). Crime is a foundational signal class; better to land it with the other expansion work.
 
-### Race substrate
-
-#### D-09  Lighter substrates (Altmer / Redguard / Orc)  (§8.2)
-
-- **Question:** Should Altmer, Redguard, and Orc get a full substrate quest, or express identity entirely through privileges + favors?
-- **Options:**
-  - (a) Privileges + favors only at first; promote to substrate quest if playtest demands.
-  - (b) Build the lighter substrate quests upfront with weaker effect magnitudes.
-- **Recommendation:** (a). Avoids building three substrate quests that may turn out to be unnecessary.
-
-### Privilege subsystem
+### Before Pattern Proving / privilege pilot
 
 #### D-10  Greybeards-Kynareth privilege pilot  (§9.4)
 
@@ -1107,15 +1104,7 @@ When a decision lands it should be resolved by one of: rewriting the relevant v3
   - (b) No, only add new topics; never edit vanilla.
 - **Recommendation:** (a). One pilot proves whether the pattern holds before scaling.
 
-#### D-11  Shrine activator override strategy  (§9.4)
-
-- **Question:** When PDV needs to gate or extend shrine behavior, edit vanilla activators or overlay via new references?
-- **Options:**
-  - (a) Always overlay (Story Manager / alias / new activator references near vanilla shrines).
-  - (b) Edit vanilla activators where unavoidable, accept compat cost.
-- **Recommendation:** (a). Overlay-only keeps compatibility surface clean; defers fights with shrine-modifying mods.
-
-### Daedric path
+### Before Daedric path implementation
 
 #### D-12  Daedric in shared FormList  (§11.6)
 
@@ -1143,26 +1132,7 @@ When a decision lands it should be resolved by one of: rewriting the relevant v3
   - (c) No, treat as stigma-only.
 - **Recommendation:** (b). Real consequence without making Daedric play exhaustingly self-cancelling.
 
-### Patron commitment
-
-#### D-15  Broad-worship Tier cap  (§12.6)
-
-- **Question:** What's the maximum tier a broad-worship character can reach without committing to a patron?
-- **Options:**
-  - (a) Tier 1 (Seeker only).
-  - (b) Tier 2 (Faithful, per locked Nord/Imperial decisions).
-  - (c) Tier-cap is per-race (Imperial T2, others T1).
-- **Recommendation:** (b). Default Tier 2 across the board; revisit per-race during content phases if needed.
-
-#### D-16  Refuse-vs-decline-vs-renounce  (§12.6)
-
-- **Question:** Three-option (Accept / Not Yet / Refuse) or four-option (Accept / Not Yet / Refuse / Renounce) commitment offer model?
-- **Options:**
-  - (a) Three options. Refuse covers permanent rejection.
-  - (b) Four options. Renounce is a stronger, content-author-driven path.
-- **Recommendation:** (a) for v1.0. Add Renounce post-1.0 if content needs it.
-
-### Curse-state
+### Before neglect/decay implementation
 
 #### D-17  Werewolf detection source  (§13.5)
 
@@ -1172,16 +1142,6 @@ When a decision lands it should be resolved by one of: rewriting the relevant v3
   - (b) Active race check (`WerewolfBeastRace`).
   - (c) Both, OR-combined.
 - **Recommendation:** (c). Race check catches transformed state; faction check catches "afflicted but not currently transformed."
-
-#### D-18  Hybrid Necromancer/Daedric under curse  (§13.5)
-
-- **Question:** When the player is cursed (Werewolf/Vampire), should Daedric paths automatically open or still require commitment signals?
-- **Options:**
-  - (a) Auto-open relevant paths (Hircine for Werewolf, Molag Bal for Vampire).
-  - (b) Still require commitment signals; curse only modifies multipliers.
-- **Recommendation:** (b). Keeps the curse module a multiplier overlay, not a content unlock.
-
-### Neglect
 
 #### D-19  Stacked neglect cap  (§14.4)
 
@@ -1200,8 +1160,6 @@ When a decision lands it should be resolved by one of: rewriting the relevant v3
   - (b) Apply normally.
   - (c) Apply only to deities the player explicitly disqualified (e.g. via curse).
 - **Recommendation:** (a). Broad worship is conceptually "acknowledged by all, dedicated to none" - neglect doesn't apply.
-
-### Decay
 
 #### D-21  Decay rate default  (§15.3)
 
@@ -1230,65 +1188,7 @@ When a decision lands it should be resolved by one of: rewriting the relevant v3
   - (c) No decay under broad worship.
 - **Recommendation:** (a). Broad worship should accrue slower and decay slower - the relationship is shallower in both directions.
 
-### Player UI
-
-#### D-24  Numeric vs thematic display default  (§16.4)
-
-- **Question:** Default presentation of piety/tier in player MCM?
-- **Options:**
-  - (a) Thematic ("Kyne marks you as Devoted"); numeric override behind MCM toggle.
-  - (b) Numeric ("Piety: 53 / Tier 2"); thematic override behind toggle.
-  - (c) Both side-by-side.
-- **Recommendation:** (a). Matches the description-discipline rules in `PDV_STANDARDS.md` § 3.
-
-#### D-25  Patron-switch player UX  (§16.4)
-
-- **Question:** How does a player change patron mid-game outside the dev MCM?
-- **Options:**
-  - (a) Multi-stage MCM confirmation (e.g. type the deity name + reread the consequences).
-  - (b) In-world threshold event only (commitment offer from new patron; cannot swap directly).
-  - (c) Both available.
-- **Recommendation:** (b). Theological commitment is an in-world act, not a settings toggle. MCM dev swap remains for testing only.
-
-### Content authoring
-
-#### D-26  Templating vs duplication  (§17.5)
-
-- **Question:** Introduce an explicit `PDV_Deity_Template.psc` abstract template, or continue duplicating concrete deity scripts?
-- **Options:**
-  - (a) Continue duplication for now; revisit if it hurts.
-  - (b) Add template script in Phase 19.
-- **Recommendation:** (a). Templates add layers; duplication is fine at 25-35 deities. Trigger for revisit: when adding a deity routinely takes >30 min just on the script side.
-
-#### D-27  Auto-generated MCM display order  (§17.5)
-
-- **Question:** Source of deity display order in MCM?
-- **Options:**
-  - (a) Manual `DeityIndex` int (current behavior).
-  - (b) FormList position with manual override property.
-  - (c) Alphabetical with manual override.
-- **Recommendation:** (b). FormList position is the natural source; override property covers "Akatosh always first" cases.
-
-### ESP structure
-
-#### D-28  Confirm framework-monolithic through 1.0  (§18)
-
-- **Question:** Lock the "all PDV content in one framework ESP through 1.0" recommendation, or plan the per-race split now?
-- **Options:**
-  - (a) Lock monolithic. Revisit only if a Section 18.2 trigger hits.
-  - (b) Plan the split now and execute in Phase 21.
-- **Recommendation:** (a). The cross-deity referential cost of the split outweighs current load-order benefits.
-
-### Performance
-
-#### D-29  Papyrus stack-depth measurement scope  (§19.3)
-
-- **Question:** When does the verifier add `ProcessDawn()` stack-depth benchmarking?
-- **Options:**
-  - (a) Phase 12 (after contextual favors land - first realistic per-deity workload).
-  - (b) Phase 21 (1.0 polish).
-  - (c) Skip; rely on observed in-game behavior.
-- **Recommendation:** (a). Earlier measurement catches scaling problems before content scales.
+### Before authoring/perf tooling expansion
 
 #### D-30  StorageUtil read budget  (§19.3)
 
@@ -1299,8 +1199,6 @@ When a decision lands it should be resolved by one of: rewriting the relevant v3
   - (c) No.
 - **Recommendation:** (a). Visibility is cheap; capping prematurely is constraining.
 
-### Mod compatibility
-
 #### D-31  pdv_author.mjs compat-patch scope  (§20.4)
 
 - **Question:** Should `pdv_author.mjs` learn to author compat-patch ESPs (Requiem, Sacrosanct, etc.)?
@@ -1309,15 +1207,6 @@ When a decision lands it should be resolved by one of: rewriting the relevant v3
   - (b) Yes, immediately.
   - (c) No, keep compat patches manual.
 - **Recommendation:** (a). The tool's scope should follow proven need; compat patches are first manual, then templated when patterns emerge.
-
-#### D-32  Wintersun coexistence documentation  (§20.4)
-
-- **Question:** How does PDV handle players running Wintersun simultaneously?
-- **Options:**
-  - (a) Document parallel-but-divergent coexistence on the mod page; no special handling.
-  - (b) Detect Wintersun at load and warn / suppress overlapping features.
-  - (c) Active conflict patch (mutual exclusion or full integration).
-- **Recommendation:** (a). The mods model devotion differently; users who run both want both. Let them.
 
 ---
 
@@ -1454,6 +1343,18 @@ with this document, update the brief to match v3.
 ---
 
 ## 26. Revisions
+
+### v3.2 - 2026-05-16 - Section 24 decision cleanup
+
+Resolved the decisions already answered by the v3 roadmap and acceleration
+tradeoffs, then removed them from the open tracker. The locked defaults are:
+strong substrates only for Khajiit, Dunmer, and Argonian; shrine overlays rather
+than vanilla activator replacement; Tier 2 broad-worship cap; three-option
+commitment offers; curse states as multiplier/pressure overlays rather than
+Daedric unlocks; thematic UI by default; in-world patron switching; concrete
+script cloning over an abstract template; FormList-driven MCM ordering;
+monolithic framework ESP through 1.0; Phase 12 stack-depth benchmarking; and
+documented Wintersun coexistence.
 
 ### v3.1 - 2026-05-16 - Roadmap, beta, and launch gates
 
