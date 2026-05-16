@@ -1,6 +1,6 @@
 # PlayerDevotion (PDV) — Race Architecture Design Reference
 **Started:** May 12, 2026  
-**Last updated:** May 16, 2026 (Section 12 added — grilling session design decisions)  
+**Last updated:** May 16, 2026 (Section 12 expanded — grilling rounds 2-3 decisions added)  
 **Status:** Living reference — race architecture and pre-matrix requirements locked as confirmed
 
 ---
@@ -2519,3 +2519,79 @@ The Uncommitted band is widened to ±50 (from ±10). The outer states are compre
 - Concordat Enforcer: +76 to +100
 
 Design intent: Avoid rubberbanding players into forced engagement. Still forces eventual engagement through sustained behavior but doesn't punish normal gameplay choices with immediate state shifts. Players must accumulate significant defiance or compliance to leave the wide Uncommitted zone.
+
+### 12.12 Dunmer — Portable Shrine Prayer (LOCKED)
+
+Dunmer use an inventory-based portable shrine with a triggered animation for prayer/ancestor ceremony. The shrine is permanent inventory and can be used anywhere. Player-owned property provides a bonus modifier to prayer rewards (not a requirement). This avoids requiring the player to find specific locations and reflects the Dunmer tradition of personal ancestor worship.
+
+### 12.13 Nord — Broad Worship Combo at Tier 2 (LOCKED)
+
+Nord broad worship at Faithful (Tier 2) combines watered-down blessings from the player's multiple active deity relationships. This creates a genuinely distinct playstyle from depth — breadth isn't "depth but capped," it produces combo effects or overlapping contextual favors. Specific combo recipes are content-authored during the signal/reward pass.
+
+### 12.14 Altmer — Crisis of Faith Events (LOCKED)
+
+Major story points that challenge Altmer theological worldview (e.g., discovering Thalmor hypocrisy, Talos mantling evidence) create genuine crisis-of-faith events rather than simple piety adjustment. These trigger temporary states (doubt, questioning, vulnerability) that the player must resolve through continued behavior in one direction or another. Not harsh punishment — evocative narrative pressure.
+
+### 12.15 Bosmer — Pact Failure Mechanic (LOCKED)
+
+No lockout on single Green Pact violations. Instead: if the player intentionally breaks their pact rule 5 times within a 2-day window, piety is lowered as a penalty. This prevents accidental single violations from being punishing while still making sustained disregard meaningful. The daily compliance buff is withheld on violation days (90-minute internal cooldown per the standard anti-farm) but no longer-term lockout.
+
+### 12.16 Argonian — Arkay Priest Reactions (LOCKED — Custom Content Essential)
+
+For Argonian death-rites and Hist-connection to feel meaningful, custom content is needed for Arkay priest NPCs to react to Argonian burial/death practices. Without this, the racial theology layer cannot express itself through the existing game world. Flagged as essential custom content for 1.0.
+
+### 12.17 Patron Commitment — General Model (LOCKED)
+
+For all non-Khajiit races, the patron commitment model is: "if you've done enough, a god notices you and reaches out." The deity initiates once piety crosses the offer threshold. This is presented as the god acknowledging the player's consistent behavior — not the player choosing from a menu. The player then accepts, delays, or refuses. Khajiit bypass this entirely per §12.4a (emergent patron, no notification).
+
+### 12.18 Orc — Community Standing Mechanic (LOCKED)
+
+Preferred implementation: NPC disposition tracking for the self-made community system. For 1.0, use a faction-favor proxy system if full disposition tracking proves too complex. The progression (stranger → acquaintance → friend → community member) drives the devotion bonus from the Orc's invested location. Recommended approach is faction-favor proxy for initial implementation.
+
+### 12.19 Redguard — HoonDing Accessibility (LOCKED)
+
+HoonDing devotion (the spirit of "Make Way") is achievable through special beast kills and other "big win" quests that represent clearing impossible obstacles. Between Skyrim's dragon fights, named creatures, and major quest climaxes, sufficient signal sources exist without needing custom content. The threshold should be high but attainable for active adventurers.
+
+### 12.20 Dunmer — Tribunal Random Thought (LOCKED)
+
+When praying at a Tribunal shrine, the player receives a random buff OR debuff based on "where their thoughts wandered." This reflects the complex, unpredictable nature of the Three's legacy — even devoted Tribunal worshippers can't control which aspect of the Three answers. Mechanically: small random selection from a curated pool each prayer, some positive, some negative, all thematic to the specific shrine's Good Daedra aspect.
+
+### 12.21 Altmer — Exiled Altmer Vampire Path (LOCKED)
+
+Altmer vampires gain access to an "Exiled Altmer" micro-path: a redirected self-reconstruction arc rather than simply losing all divine connection. Capped at Tier 1 (no deep devotion available in this state). Represents the Altmer's characteristic refusal to simply collapse — they rebuild meaning even in exile. Not a full worship lane; a survival-identity path that prevents the vampire state from being mechanically dead for Altmer players.
+
+### 12.22 Breton — Three-Track Triangle Drag (LOCKED)
+
+The three Breton traditions (Knight's Road, Hidden Art, Green Way) form an asymmetric drag triangle. Actions aligned with one tradition can create tension or damage standing in another. The drag is not symmetric — some cross-pollinations are more damaging than others (e.g., Hidden Art strongly undermines Knight's Road vow integrity; Green Way and Knight's Road have milder tension). Exact drag weights are content-authored during implementation.
+
+### 12.23 Imperial — Concordat Walk-Back Mechanics (LOCKED)
+
+Walking back from extreme Concordat positions uses amplified reverse weight at the edges: the further entrenched you are, the harder (more consistent counter-behavior required) to reverse. Combined with a narrative gate: reaching the center from an extreme requires a story-caliber event (not just gradual drift) to fully reset. This prevents casual flip-flopping while preserving the possibility of genuine character development arcs.
+
+### 12.24 Custom Content Priority Classification (LOCKED)
+
+Essential custom content (required for the racial theology layer to be playable):
+- Argonian: Hist connection, death rites, community
+- Dunmer: Ancestor ceremonies, portable shrine, ash-shrine interaction
+- Khajiit: Moon observance flavor, road-life acknowledgment
+- Orc: Community investment system (NPC reactions)
+- Bosmer: Green Pact detection reactions
+
+Enhancement custom content (improves experience, not required for core function):
+- Altmer: Post-vampire Exiled Altmer path flavor
+
+### 12.25 Non-Substrate Races — Substrate Promotion Policy (LOCKED)
+
+Races without a formal substrate (Nord, Imperial, Breton, Redguard, Altmer, Orc) can have substrates pulled forward if playtest feedback proves the lighter mechanics (privileges, contextual favors, state tracks) are insufficient. Specific candidates:
+- Nord: Pantheon-level broad worship could become a substrate if combo mechanics need always-on tracking
+- Breton: Three-track tension system may provide equivalent depth without needing a formal substrate layer
+
+Decision to promote is deferred to playtesting. Architecture supports promotion without refactoring.
+
+### 12.26 Dunmer — Home Bonus Location (LOCKED)
+
+Dunmer prayer bonus applies at player-owned property (any owned home). Shared sacred-place system can be used if it provides a better implementation path, but the core design is simpler: own a home → prayer there gets a bonus. No specific location is privileged over another — any player-owned property works equally.
+
+### 12.27 Khajiit — Moon Cycle Hybrid Model (LOCKED)
+
+The moon cycle uses a hybrid reward model: per-phase bonus (current phase favors specific activities) PLUS full-cycle compliance (consistent engagement across all phases determines overall substrate strength). Neither alone is sufficient — a player who only engages during favorable phases gets the per-phase bonus but weak overall substrate, while consistent engagement across the full 28-day cycle builds the strongest substrate score.

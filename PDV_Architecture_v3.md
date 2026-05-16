@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-16 (v3.6 - V3 Preflight gate closed)
+Last revised: 2026-05-16 (v3.7 - Grilling rounds 2-3 race signal mechanics synced)
 Status: **V3 Preflight complete.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are now complete.
 
 ---
@@ -159,6 +159,47 @@ Caps and cooldowns are deity-side, not router-side, so different deities can rat
 - **Follower kill attribution.** Locked for Preflight: EventBus payloads should carry attribution type for direct player, follower, summon/charmed, trap, and environmental kills, but only direct-player kills score until a later signal phase gives indirect kills explicit devotional meaning.
 - **Trap and environmental kills.** Same payload family as follower/summon attribution. Do not score them in Preflight; test real Story Manager behavior before any reduced-attribution scoring lands.
 - **Crime events.** Story Manager has crime nodes (`OnStoryCrimeGold`, `OnStoryArrest`). These are first-class signals for Imperial Concordat Standing and Argonian community standing, but should land with Phase 8's reputation track so the events immediately adjust a real track instead of routing as empty signal scaffolding.
+
+### 5.5 Race-specific signal mechanics (LOCKED)
+
+These race-specific signal rules were locked during the grilling review and affect how signals are processed per-race:
+
+**Bosmer Green Pact failure (LOCKED):**
+- Single violations do not lock out daily compliance reward — the buff is withheld for that instance only (90-minute cooldown per anti-farm standard)
+- Sustained intentional violation (5 breaks within a 2-day window) triggers a piety penalty
+- Implementation: counter on `PDV.Pact.ViolationStreak` with timestamp windowing in dawn pass
+
+**Altmer crisis-of-faith (LOCKED):**
+- Major lore-challenging story points fire crisis events instead of simple piety adjustments
+- Crisis creates a temporary "questioning" state that suppresses normal gain/loss until resolved through continued consistent behavior
+- Duration and resolution are content-authored per crisis trigger (not a fixed timer)
+
+**Dunmer Tribunal shrine random-thought (LOCKED):**
+- Praying at a Tribunal shrine (Almalexia/Vivec/Sotha Sil) produces a random selection from a curated buff/debuff pool
+- Each shrine has its own pool themed to its Good Daedra aspect
+- Some results are positive, some negative — reflects the Three's unpredictable legacy
+- Signal source: curated CK activator script on the Tribunal shrine objects
+
+**Nord broad-worship combo (LOCKED):**
+- At Faithful (Tier 2), multiple active deity relationships produce combined contextual favors
+- Favors are watered-down versions of individual deity rewards, combined for breadth-specific feel
+- Combo recipes are content-authored; architecture provides the multi-deity piety-read mechanism
+
+**Orc community investment (LOCKED):**
+- NPC disposition tracking is the preferred approach for community progression
+- For 1.0: faction-favor proxy system (faction rank represents community standing)
+- Progression arc: stranger → acquaintance → friend → community member
+- Drives devotion bonus from the Orc's self-made community location
+
+**Imperial Concordat walk-back (LOCKED):**
+- Amplified reverse weight at extreme positions: reversing from entrenched requires proportionally more counter-behavior
+- Narrative gate: full reset from extreme to center requires a story-caliber event (not gradual drift alone)
+- Prevents casual flip-flopping while allowing genuine character development arcs
+
+**Redguard HoonDing accessibility (LOCKED):**
+- HoonDing devotion achievable via special beast kills + major quest completions ("big wins")
+- Sufficient signal sources exist in vanilla Skyrim (dragons, named creatures, quest climaxes)
+- Threshold is high but attainable for active adventurers; no custom content required
 
 ---
 
@@ -362,10 +403,12 @@ EndFunction
 | Substrate | Origin | What it tracks | Aggregate metric |
 |---|---|---|---|
 | `PDV_Substrate_KhajiitLunar` | Khajiit | Lunar phase observance + moon cycle compliance + road-home cycling | Moon-observance count, modulated by cycle phase and road-home return frequency |
-| `PDV_Substrate_DunmerAncestor` | Dunmer | Ash-shrine maintenance, ancestor invocation | Ancestor-event count, decays with neglect |
+| `PDV_Substrate_DunmerAncestor` | Dunmer | Portable shrine prayer, ancestor invocation, home-site bonus | Ancestor-event count, decays with neglect; bonus at player-owned property |
 | `PDV_Substrate_ArgonianHist` | Argonian | Distance-from-Black-Marsh + community contact | Hist-connection metric, biased to "diminishing distance from Hist" semantics |
 
 For 1.0, strong persistent substrates are limited to Khajiit, Dunmer, and Argonian. Altmer orthodoxy, Redguard ancestor reverence, and Orc life-mode standing express identity through privileges, contextual favors, and state tracks first; promote one to a full substrate quest only if playtest feedback proves the lighter pattern insufficient.
+
+**Substrate promotion policy (LOCKED):** Non-substrate races (Nord, Imperial, Breton, Redguard, Altmer, Orc) can be promoted to full substrate if playtest proves lighter mechanics insufficient. Architecture supports promotion without refactoring. Candidates: Nord (pantheon-level broad worship may need always-on tracking), Breton (tension system may already provide equivalent depth).
 
 ### 8.3 Storage
 
@@ -721,7 +764,18 @@ The race architecture reference flags restoration paths as content-author concer
 - **Rededication rituals** that can write `PDV.Piety` directly via curated signals.
 - **Tier downgrade on transition** so the player has measurable lost ground to recover.
 
-### 13.5 Curse decisions
+### 13.5 Altmer vampire micro-path (LOCKED)
+
+Altmer vampires gain access to an "Exiled Altmer" redirected micro-path rather than being left in a mechanically dead state. This is NOT a full worship lane; it is a survival-identity path:
+
+- Capped at Tier 1 (no deep devotion available in vampire state)
+- Represents self-reconstruction and refusal to collapse
+- Rewards maintaining identity despite exile from Aedric devotion
+- Enhancement-level custom content (not essential for 1.0 core function)
+
+Implementation: a special-case branch in the Altmer curse-transition handler that enables a lightweight "Exiled Altmer" boon path when `OriginRace == RACE_ALTMER && CurseState == CURSE_VAMPIRE`. This path uses the substrate pattern (Section 8) but with a hard Tier 1 cap.
+
+### 13.6 Curse decisions
 
 - **Source of Werewolf detection.** Companions-quest-specific keyword? Race check? v3 should test on a vanilla Companions run first.
 - **Hybrid Necromancer / Daedric overlap.** Curse state modifies multipliers, eligibility pressure, and interpretation. It does not auto-open Daedric paths; Hircine, Molag Bal, or other curse-adjacent paths still require commitment signals before real progression.
@@ -1043,7 +1097,19 @@ For content-rich 1.0:
 - Sacrosanct compat patch ships alongside.
 - No regression of any v2 invariant.
 
-### 21.2 Explicit non-goals for 1.0
+### 21.2 Custom content priority classification (LOCKED)
+
+Essential custom content (required for the racial theology layer to be playable):
+- **Argonian:** Hist connection, death rites, community NPC reactions
+- **Dunmer:** Ancestor ceremonies, portable shrine item/animation, ash-shrine interaction
+- **Khajiit:** Moon observance flavor, road-life acknowledgment, emergent patron blessings
+- **Orc:** Community investment system (NPC disposition reactions, faction-favor proxy)
+- **Bosmer:** Green Pact detection reactions, pact-compliance/violation feedback
+
+Enhancement custom content (improves experience, not required for core function):
+- **Altmer:** Post-vampire Exiled Altmer path flavor
+
+### 21.3 Explicit non-goals for 1.0
 
 - No original multi-stage questlines. Per the race-architecture pre-matrix requirements, the first release uses existing gameplay loops and CK-gated interactions, not bespoke quest arcs. Light authored moments such as commitment offers, shrine/ritual interactions, dialogue recognition, and notifications are in scope.
 - No hard Survival/Requiem dependency.
