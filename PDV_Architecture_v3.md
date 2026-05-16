@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-16 (v3.2 - Section 24 decision cleanup)
+Last revised: 2026-05-16 (v3.3 - V3 kickoff decisions)
 Status: **Planning.** v2 (Phases 0-6) is closed. v3 is the architecture target for everything past the coupled Talos/Auri-El hostile-path proof slice.
 
 ---
@@ -56,19 +56,19 @@ These items were live or deferred when v2 was closed. v3 inherits them.
 
 - **Decay model.** Not implemented. Linear daily decay if no recent `PietyToday` activity is the leading candidate. v3 owns this - see Section 14.
 - **Storage migration.** v1 saves loading into v2/v3 mods: `PDV_GLO_DevotionLevel` is dead, Kyne piety reseeds from origin. Treat as a save-game gotcha rather than a migration path. v3 should document this in the mod page changelog when 1.0 ships.
-- **PapyrusUtil missing-failure behavior.** Recommended hard-fail with notification. v3 should add a missing-PapyrusUtil guard to `PDV__MainQuest.OnInit()`.
-- **Custom-race fallback.** `PDV_Origin` currently defaults unknown races to `RACE_IMPERIAL` with a debug trace. v3 should expose this as an MCM-visible diagnostic and a soft-compat hook for custom race mods that want to register their religious identity.
+- **PapyrusUtil missing-failure behavior.** Locked: add a visible hard-fail guard to `PDV__MainQuest.OnInit()` before any partial state writes. Missing PapyrusUtil should show a player-visible message, trace the dependency failure, and abort PDV bootstrap.
+- **Custom-race fallback.** Locked: `PDV_Origin` may keep defaulting unknown races to `RACE_IMPERIAL`, but v3 must surface this as both a one-time first-load notice and an MCM/status diagnostic. A later custom-race soft-compat hook remains post-1.0 unless a concrete patch target appears sooner.
 - **Curse-state module.** Werewolf and Vampire interpretation layers are designed (see race architecture reference) but not built. v3 owns this - see Section 12.
 
 ### 3.3 Contested lore items (must be decided before content lock)
 
 Carried forward from v2 § 10. Each affects stance and rivalry data, not architecture shape:
 
-- **Trinimac as worshipable.** Likely: include as a parallel Orsimer devotion option with `HOSTILE` stance for Altmer (betrayal narrative). ESO-low-canon flagged.
+- **Trinimac as worshipable.** Locked: include as an Altmer-native specialist worship target for martial virtue, civilisational defence, and Thalmor Orthodox play. For Orcs, Trinimac remains `TABOO` fringe pressure only, not a normal Orc core path or fourth Orc lane. Scaffold in Structural Skeleton, but make content-ready only when the Thalmor Orthodox Altmer lane is being built.
 - **Talos-Altmer.** Locked: `HOSTILE`. Theological enemy, not just culturally foreign.
 - **Hircine for Bosmer.** Locked: `NATIVE`, with the lore disagreement noted in the deity description. Reading is Y'ffre-adjacent Wild Hunt veneration.
-- **Malacath classification.** Daedric Prince per Imperial taxonomy, ancestor-god per Orsimer reading. Architecturally a labeling decision; affects which rivalries fire.
-- **Lorkhan-family equivalence.** Current matrix-pass resolution: do not collapse `Shor`, `Sep`, `Lorkhaj`, `Lorkhan` into one row. Keep culturally specific entries, note family resemblance in description text.
+- **Malacath classification.** Locked: dual-coded. Malacath is a Daedric Prince for non-Orsimer taxonomy and an Orsimer ancestor/core god as Mauloch/Malacath for Orc handling. Stigma and rivalry logic branch by race rather than forcing one universal label.
+- **Lorkhan-family equivalence.** Locked: do not collapse `Shor`, `Sep`, `Lorkhaj`, and `Lorkhan` into one row. Keep culturally specific records where theology and rivalry differ, and note family resemblance in description text.
 
 ### 3.4 Environment / tooling (not architecture)
 
@@ -156,9 +156,9 @@ Caps and cooldowns are deity-side, not router-side, so different deities can rat
 
 ### 5.4 Outstanding signal-architecture decisions
 
-- **Follower kill attribution.** Currently rejected. v3 should decide whether to add a softer signal class for follower-or-summon kills with the same enum but a 0.25x multiplier, or leave them out.
-- **Trap and environmental kills.** Same shape; current `OnStoryKillActor` event behavior may not surface these reliably. Defer until follower kills are decided.
-- **Crime events.** Story Manager has crime nodes (`OnStoryCrimeGold`, `OnStoryArrest`). These are first-class signals for Imperial Concordat Standing and Argonian community standing; v3 should wire `PDV__SM_Crime*` receivers.
+- **Follower kill attribution.** Locked for Preflight: EventBus payloads should carry attribution type for direct player, follower, summon/charmed, trap, and environmental kills, but only direct-player kills score until a later signal phase gives indirect kills explicit devotional meaning.
+- **Trap and environmental kills.** Same payload family as follower/summon attribution. Do not score them in Preflight; test real Story Manager behavior before any reduced-attribution scoring lands.
+- **Crime events.** Story Manager has crime nodes (`OnStoryCrimeGold`, `OnStoryArrest`). These are first-class signals for Imperial Concordat Standing and Argonian community standing, but should land with Phase 8's reputation track so the events immediately adjust a real track instead of routing as empty signal scaffolding.
 
 ---
 
@@ -565,7 +565,7 @@ If multiple deities qualify simultaneously, queue offers in DeityIndex order. On
 
 Per the locked Nord/Imperial/Breton designs, broad worship is a real state, not just "no patron set." v3 introduces:
 
-- `PDV_GLO_PatronDeity = -1` sentinel meaning "broad worship explicitly chosen."
+- `PDV_GLO_PatronState` stores the explicit patron state: unset, broad worship, or active patron. `PDV_GLO_PatronDeity` remains an active-target cache only when the state is active; do not overload it with broad-worship sentinels.
 - Broad worship is selected via the same setup choice that sets a state track (Section 7.4).
 - Under broad worship, scoring is dampened and capped at Tier 2 for 1.0 unless later race content proves a narrower exception is needed.
 - Commitment offers still fire from under broad worship; accepting transitions out of broad.
@@ -931,7 +931,7 @@ excellent reusable example per subsystem, then clone.
 | **V3 Preflight** | Architecture hardening | Proven v2 Phase 4/5/6 baseline | WorshipTarget base, service split, patron state, EventBus/EventTypes, dawn order, gain pipeline, schema hooks, and verifier hard-fails are compile/verifier/smoke clean |
 | **V3 Structural Skeleton** | Full 1.0 structural scaffold | V3 Preflight | Dev-only scaffold targets/tracks/substrates are inert, hidden from player surfaces, and verifier-visible |
 | **V3 Pattern Proving** | One excellent reusable pattern per subsystem | Structural Skeleton | One EventBus signal family, rep track, state track, substrate, contextual favor family, Daedric price/stigma path, commitment offer, and neglect/decay path are proven |
-| **7** | Signal expansion (sleep, shrine, shout, social, crime) | V3 Preflight + EventBus pattern | New events routed; per-target rubric updates; signal policy anti-farm caps functional |
+| **7** | Signal expansion (sleep, shrine, shout, social) | V3 Preflight + EventBus pattern | New events routed; per-target rubric updates; signal policy anti-farm caps functional |
 | **8** | Reputation track + first instance (Concordat Standing) | Phase 7 | Track adjusts via dialogue/SM fragments; stance-mult composes with track-mult; verifier covers |
 | **9** | State track + first instance (Bosmer Path or Imperial Worship) | Phase 8 | State persists, eligibility filtering works in commitment offers |
 | **10** | Race substrate (Khajiit lunar OR Argonian Hist as first pilot) | Phase 9 | Substrate boons granted by origin only; substrate metric tracked; separate from patron piety |
@@ -1010,89 +1010,12 @@ These are intentionally not solved in v3.
 
 Mobile-friendly worklist of every architectural decision still open in v3.
 Each entry is sized for phone scrolling. Decision IDs (`D-NN`) are stable:
-reference them in chat as "decide D-07 as (b)" or "defer D-17."
+reference them in chat as "decide D-10 as (b)" or "defer D-17."
 
 Numbering gaps are intentional. When a decision lands, remove it from this
 open tracker and resolve it by rewriting the relevant v3 section, adding an
 entry to `AGENTS.md` Decisions Log, or moving the item to Section 23 if it is
 deferred past 1.0.
-
-### Before Structural Skeleton
-
-#### D-01  Trinimac as worshipable  (§3.3)
-
-- **Question:** Should Trinimac be a worshipable deity in PDV?
-- **Options:**
-  - (a) Include as parallel Orsimer devotion with Altmer `HOSTILE`.
-  - (b) Exclude entirely.
-  - (c) Include only as a Tier-3 unlock for Orcs who break with Malacath orthodoxy.
-- **Recommendation:** (a). Most lore-faithful and exercises the stance/rivalry system honestly.
-- **Note:** Mainline TES treats Trinimac as dead/consumed; ESO is heavily revivalist. ESO-low-canon flagged.
-
-#### D-02  Malacath classification  (§3.3)
-
-- **Question:** Treat Malacath as a Daedric Prince or as an Orsimer ancestor-god?
-- **Options:**
-  - (a) Daedric Prince per Imperial taxonomy. Rivalries with Aedric pantheons fire normally.
-  - (b) Orsimer ancestor-god (Mauloch). Rivalries with Aedric pantheons damped.
-  - (c) Dual-coded: Daedric for non-Orsimer races, ancestor-god for Orsimer.
-- **Recommendation:** (c). The stance matrix already supports per-race interpretation; the contract grammar (§11) can branch on race.
-
-#### D-03  Lorkhan-family equivalence  (§3.3)
-
-- **Question:** Treat Shor / Sep / Lorkhaj / Lorkhan as the same entity with race-coded stance, or as separate deities?
-- **Options:**
-  - (a) Separate records per culture (current matrix-pass resolution).
-  - (b) One Lorkhan record with race-coded stance valence.
-- **Recommendation:** (a). Stance text and rivalry behavior differs sharply; collapsing pre-commits the implementation. Note family resemblance in description fields.
-
-### Before V3 Preflight implementation
-
-#### D-04  PapyrusUtil missing-failure guard  (§3.2)
-
-- **Question:** Add a hard-fail check to `PDV__MainQuest.OnInit()` if PapyrusUtil isn't present?
-- **Options:**
-  - (a) Hard fail with `MessageBox` and abort bootstrap.
-  - (b) Soft fail with `Notification` and continue with degraded state.
-  - (c) No guard; rely on user-visible script errors.
-- **Recommendation:** (a). PapyrusUtil is universal in modded Skyrim; missing it should be loud, not silent.
-
-#### D-05  Custom-race fallback diagnostic  (§3.2)
-
-- **Question:** How should the `RACE_IMPERIAL` fallback for unknown races be surfaced to the player?
-- **Options:**
-  - (a) MCM-visible diagnostic + first-load `Notification`.
-  - (b) MCM-visible diagnostic only.
-  - (c) Silent (debug-trace only, current behavior).
-- **Recommendation:** (a). Players running custom-race mods deserve to know how PDV is reading them.
-
-### Before Phase 7 signal expansion
-
-#### D-06  Follower kill attribution  (§5.4)
-
-- **Question:** Should follower / summon / charmed-creature kills route piety to the player's deities?
-- **Options:**
-  - (a) No (current behavior).
-  - (b) Yes at full multiplier.
-  - (c) Yes at a reduced multiplier (e.g. 0.25x).
-- **Recommendation:** (c). Reads as "you commanded the kill" without making companion comps trivial farms.
-- **Impact:** `PDV_ActionRouter` filter relaxation; new `EVT_*` flag or scoring multiplier.
-
-#### D-07  Trap and environmental kills  (§5.4)
-
-- **Question:** Should trap / fall / explosive kills route as player kills?
-- **Options:**
-  - (a) No.
-  - (b) Yes if player initiated.
-- **Recommendation:** Defer until D-06 is decided; the same multiplier logic should apply.
-
-#### D-08  Crime events wiring  (§5.4)
-
-- **Question:** Wire Story Manager crime nodes (`OnStoryCrimeGold`, `OnStoryArrest`) as PDV signals?
-- **Options:**
-  - (a) Wire in Phase 7 (first-class for Imperial Concordat + Argonian community).
-  - (b) Defer to Phase 8 with reputation track.
-- **Recommendation:** (a). Crime is a foundational signal class; better to land it with the other expansion work.
 
 ### Before Pattern Proving / privilege pilot
 
@@ -1231,13 +1154,13 @@ Purpose: harden the architecture before scaling.
 
 Must complete:
 
-- `PDV_WorshipTargetBase` shared concept for Aedric/cultural deities and Daedric paths.
-- Manager split into internal services with an outward facade for existing callers.
-- `PDV_GLO_PatronState` for unset, broad worship, and active patron state.
-- `PDV_EventBus` plus a central `PDV_EventTypes` owner for event IDs.
-- Dawn pass order: consolidate scratch, apply decay, recompute tiers, apply spell/neglect layers, process commitment offers, notify.
-- Gain pipeline that composes stance, reputation, curse, Daedric stigma, and future modifiers in one place.
-- Minimal schema/version hooks that record the current script schema and trace mismatches.
+- `PDV_WorshipTargetBase` shared concept for Aedric/cultural deities and Daedric paths, with optional no-op capability hooks rather than mandatory uniform behavior.
+- Manager split into internal services with a staged clean API behind an outward facade for existing callers.
+- `PDV_GLO_PatronState` for unset, broad worship, and active patron state, with `PDV_GLO_PatronDeity` kept as the active-target cache only.
+- `PDV_EventBus` plus a central `PDV_EventTypes` quest/script owner for event IDs. The existing direct-player kill route is the first EventBus canary and must preserve v2 scoring behavior.
+- Dawn pass order as named pipeline slots: consolidate scratch, apply decay, recompute tiers, apply spell/neglect layers, process commitment offers, notify. Preflight may leave future subsystem slots no-op.
+- Gain pipeline that composes stance, reputation, curse, Daedric stigma, and future modifiers in one place. Preflight moves existing stance math into this pipeline and leaves future modifiers no-op.
+- Minimal schema/version hooks that record the current framework schema version and trace mismatches. Do not add a full save-migration registry in Preflight.
 - Verifier hard-fail rules for core invariants.
 
 Exit gate:
@@ -1257,7 +1180,8 @@ Must complete:
 - Strong substrate scaffolds for Khajiit, Dunmer, and Argonian.
 - Reputation-track and state-track scaffolds.
 - Matrix-driven CK authoring support where feasible, especially stance rows, FormList membership, rivalry wiring, and verifier expectations.
-- Verifier states for structural-ready, content-ready, and player-visible records.
+- Canonical visibility state on worship targets (`DevOnly`, `ContentReady`, `PlayerVisible`) plus FormList indexes for authoring/dev inspection. The visibility state is the source of truth; FormLists are operational indexes.
+- Verifier states for structural-ready, content-ready, and player-visible records, including hard-fails for visibility/FormList contradictions.
 
 Exit gate:
 
@@ -1343,6 +1267,25 @@ with this document, update the brief to match v3.
 ---
 
 ## 26. Revisions
+
+### v3.3 - 2026-05-16 - V3 kickoff decisions
+
+Resolved D-01 through D-08 and tightened the Preflight/Skeleton contracts.
+Trinimac is an Altmer-native specialist worship target tied to martial virtue,
+civilisational defence, and Thalmor Orthodox play. It should be scaffolded in
+the Structural Skeleton, but should become content-ready only when that Altmer
+lane is being built. For Orcs, Trinimac stays `TABOO` fringe pressure only, not
+a normal Orc core path or fourth Orc lane. Malacath is dual-coded by race, and
+Shor/Sep/Lorkhaj/Lorkhan remain separate cultural records.
+
+Preflight now uses staged service APIs behind the manager facade, a central
+EventBus/EventTypes owner with the existing kill route as canary, explicit
+patron state instead of overloaded `PDV_GLO_PatronDeity` sentinels, named
+dawn/gain pipeline slots, and minimal schema-version tracing without a save
+migration registry. Indirect kill attribution is payload-only until a later
+signal phase assigns devotional meaning. Crime events move to Phase 8 with the
+first reputation track. Structural Skeleton visibility uses a canonical target
+visibility enum plus FormList indexes, with verifier hard-fails for leaks.
 
 ### v3.2 - 2026-05-16 - Section 24 decision cleanup
 

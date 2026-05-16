@@ -1192,6 +1192,12 @@ High (70–100) = Thalmor Devout: enforcement as worship
   Trinimac devotion AVAILABLE as primary
 ```
 
+**Trinimac content priority (LOCKED):**
+- `Trinimac` is Altmer-native but specialist, not a universal first-wave Altmer path
+- Scaffold in the v3 Structural Skeleton for matrix and verifier completeness
+- Make content-ready when the `Thalmor Orthodox` / martial-defense Altmer lane is built
+- Do not give every Altmer pantheon member equal-depth launch implementation by default
+
 **Actions affecting ThalmørAlignment:**
 
 | Action | Points |
@@ -1863,6 +1869,11 @@ Rationale:
 - Orc progression begins in broad `Malacath` devotion only
 - There is no separate focused-primary deity layer
 - Deepening comes through mode-specific Malacath excellence
+
+**Content priority (LOCKED):**
+- `Malacath` is not delayed as the Orc core religion
+- Deeper Orc content should wait for the Orc life-mode state track so Stronghold, City, and Legion / service / exile expression can be built cleanly
+- Do not add Trinimac or another side-god path as an early substitute for Orc depth
 
 **Mode-specific deepening (LOCKED):**
 
