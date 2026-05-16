@@ -36,6 +36,8 @@ This repo should be treated as a single-context project; skills should read the 
 | `tools/skyui_compile_shim/*.psc` | Minimal compile-only SkyUI base-class shims used by `pdv_compile.mjs` | Compiling `PDV_MCM.psc` without inheriting noisy third-party MCM source overrides |
 | `tools/pdv_author.mjs` | Safe overlay-patch authoring helper built on the local Mutagen bridge | Inspecting existing-record wiring, planning reversible ESP overlay patches, and scripting supported VMAD/FormList edits without mutating the framework ESP in place |
 | `PDV_Architecture_v2.md` | Full v2 architecture spec ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â data model, quest topology, phase plan, stance matrix | Phase planning, writing new scripts, understanding the deity/origin system |
+| `PDV_Architecture_v3.md` | Forward architecture and roadmap for everything after the proven Phase 4/5/6 baseline | Planning v3 preflight, structural skeleton, beta gates, launch readiness, and post-v2 subsystem work |
+| `PDV_BetaTesterBrief.md` | External-facing beta tester brief; not architecture authority | Preparing trusted testers, explaining beta expectations, and framing launch readiness in player-facing terms |
 | `PDV_Phase1_ManualSteps.md` | CK step-by-step for Phase 1 globals and script wiring | Returning to CK work after a break |
 | `archive/completed-phase-docs-2026-05-16/README.md` | Index for completed phase walkthroughs and historical planning docs | Finding archived Phase 2/3/4/5/6 CK guides and earlier planning notes |
 | `PDV_SkyrimConsoleReference.md` | UESP-sourced console command reference (source of truth) | Any in-game testing or debugging |
@@ -195,7 +197,16 @@ Per-deity piety lives in **StorageUtil** (PapyrusUtil SE), keyed by deity FormID
 
 Mirrors are refreshed by `PDV__ManagerQuest.RefreshPatronMirrors()` on patron switch and after any persistent piety/tier mutation to the active patron. They mirror `PDV.Piety`, not `PDV.PietyToday`, and are never the source of truth ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â StorageUtil is.
 
-**Tier thresholds (current defaults, tunable per-deity in Phase 2+):**
+### v3 Architecture (forward plan)
+
+`PDV_Architecture_v3.md` is the forward source for post-v2 work. It separates
+structural completeness from content completeness, adds the v3 preflight and
+structural skeleton gates, and defines Technical Beta, Content-Feel Beta, and
+content-rich 1.0 launch readiness. `PDV_BetaTesterBrief.md` is tester-facing
+communication only; it must defer to v3 when architecture or roadmap details
+conflict.
+
+### v2 Tier thresholds (current defaults, tunable per-deity in Phase 2+)
 
 | Tier | Label | Piety threshold |
 |------|-------|----------------|
@@ -370,6 +381,7 @@ Pull from `skyrim-gods-reference.jsx` and `tamriel-daily-worship-4e201.html` bef
 - **Recovery artifacts archived (2026-05-16):** The one-off bridge experiments, merge-back helper, framework-master repair script, and generated Phase 5 working files were moved to `archive/pdv-recovery-tools-2026-05-16/`. They are historical/emergency-only and should not be treated as canonical source or normal tooling.
 - **Completed phase docs archived (2026-05-16):** Finished Phase 2/3/4/5/6 walkthroughs and older planning/delivery notes now live under `archive/completed-phase-docs-2026-05-16/` to keep the project root focused on living architecture/setup/standards docs.
 - **Phase 4 and Phase 6 full closeout proof (2026-05-16):** The smoke-test standard is now "full phase closeout unless explicitly narrowed." Phase 4 passed bootstrap/origin, Kyne seed, patron-only boon grant/removal, and save/load sanity. Phase 6 passed Altmer bootstrap, Auri-El seed, Talos hostile-path rise, rivalry-driven Auri-El decay across dawn consolidation, Talos boon grant, patron-only removal on swap, and save/load sanity. The test pass also drove a small debug-surface expansion: curated signal testing now has a surfaced manager/MCM helper instead of relying on an unproven console `cqf` path.
+- **v3 roadmap and beta gates (2026-05-16):** `PDV_Architecture_v3.md` is now the forward architecture and roadmap source for post-v2 work. It separates structural completeness from content completeness, adds V3 Preflight and Structural Skeleton gates, and defines Technical Beta, Content-Feel Beta, and content-rich 1.0 launch readiness. `PDV_BetaTesterBrief.md` is external tester communication only and must defer to v3 for architecture truth.
 - **Race architecture interrogation pass (2026-05-13):** The remaining race architecture work was locked in `references/PDV_RaceArchitecture_DesignReference.md`. Imperial, Khajiit, Bosmer, Redguard, Orc, and Argonian now have explicit current-era theological models, curse behavior, and practical Skyrim-facing interpretations. Quest and faction choices were also elevated to first-class devotion signals across the locked races, with ambient behavior acting as slower background drift rather than the only source of meaning.
 - **Pre-matrix reward and system contract (2026-05-13):** `references/PDV_RaceArchitecture_DesignReference.md` now defines the requirements for the race signal matrix: modest cumulative passive baseline blessings, passive contextual favors, religious privileges, no activatable power kit, optional MCM, SKSE/PapyrusUtil core dependency posture, standalone core design, no new quest content for first release, signal cost classes, cadence, anti-farm rules, survival overlap, and later Requiem/survival compatibility tracking.
 - **Hybrid boon policy matrix (2026-05-14):** Locked an asymmetric hybrid boon model in `references/PDV_RaceArchitecture_DesignReference.md`. Every race gets one foreground devotional layer, but only structurally layered religions keep a true persistent substrate. `Nord`, `Imperial`, `Breton`, and `Bosmer` should express most identity through privileges, contextual favors, and state tracks rather than a second passive boon layer. `Altmer`, `Redguard`, and `Orc` keep only light persistent layers. `Dunmer`, `Khajiit`, and `Argonian` keep the strongest substrates. Global rule: most races should never feel like they have more than two meaningful always-on boon families at once.

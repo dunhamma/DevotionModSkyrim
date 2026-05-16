@@ -1,61 +1,65 @@
-# CLAUDE.md — PlayerDevotion (PDV) Mod Project
+# CLAUDE.md - PlayerDevotion (PDV) Mod Project
 
-## How Claude Works in This Repo
+## How Claude Works In This Repo
 
-**Codex is the primary coding agent.** `AGENTS.md` is the canonical living context doc — it owns build status, decisions log, and the authoritative project file map. Claude defers to it.
+Codex is the primary coding agent. `AGENTS.md` is the canonical living context
+doc for current build status, architecture decisions, project file map, and
+decision history. Claude defers to it.
 
-### Rules for Claude sessions
+### Rules For Claude Sessions
 
-1. **Read `AGENTS.md` at the start of every session** for current build status, architecture decisions, and the canonical file map. Do not rely on this file alone.
-2. **Never overwrite or update `AGENTS.md`** — that file belongs to Codex's workflow. Post-session doc sync goes there only when the user explicitly asks.
-3. **Never edit toolchain scripts** (`tools/pdv_compile.mjs`, `tools/pdv_verify.mjs`) without being asked. Codex owns those.
-4. **Never touch skill files** (`pdv-doc-sync.skill`, `pdv-papyrus-ck.skill`, `skills/`) without being asked.
-5. **Prefer scoped changes.** Edit only the files directly relevant to the task. Avoid touching unrelated docs or restructuring anything.
-6. **Papyrus rules:** Before writing or modifying any `.psc` file, read the Papyrus guidance section in `AGENTS.md` and `references/PAPYRUS_KNOWLEDGE_INTAKE.md`. Do not invent APIs; compile-verified beats plausible.
+1. Read `AGENTS.md` at the start of every session for current project state.
+2. Do not rely on this file for build status; it is only a Claude entrypoint.
+3. Do not overwrite or update `AGENTS.md` unless the user explicitly asks.
+4. Do not edit toolchain scripts (`tools/pdv_compile.mjs`,
+   `tools/pdv_verify.mjs`, `tools/pdv_author.mjs`) unless asked.
+5. Do not touch skill files (`pdv-doc-sync.skill`, `pdv-papyrus-ck.skill`,
+   `skills/`) unless asked.
+6. Before writing or modifying `.psc` files, read the Papyrus guidance in
+   `AGENTS.md` and `references/PAPYRUS_KNOWLEDGE_INTAKE.md`.
+7. Prefer scoped changes. Avoid unrelated doc rewrites or broad cleanup.
 
 ---
 
-## Where to Find What
+## Where To Find What
 
 | Need | Go to |
 |------|-------|
-| Current build status, open phases | `AGENTS.md` § "Current Build Status" |
-| Architecture, ESP structure, data model | `AGENTS.md` § "Architecture Summary", `PDV_Architecture_v2.md` |
-| Operating rules, doc hygiene, safety rules | `PDV_STANDARDS.md` (read §1 + §4 when in doubt) |
-| Dev environment, build order, naming conventions | `PDV_MOD_SETUP.md` |
-| Papyrus API rules, compiler chain | `AGENTS.md` § "Papyrus Guidance", `references/PAPYRUS_KNOWLEDGE_INTAKE.md` |
+| Current build status, file map, decisions | `AGENTS.md` |
+| Operating rules and doc hygiene | `PDV_STANDARDS.md` |
+| Dev environment, tooling, naming conventions | `PDV_MOD_SETUP.md` |
+| Proven v2 architecture baseline | `PDV_Architecture_v2.md` |
+| Forward v3 roadmap and architecture | `PDV_Architecture_v3.md` |
+| External beta tester expectations | `PDV_BetaTesterBrief.md` |
+| Papyrus API/source guidance | `references/PAPYRUS_KNOWLEDGE_INTAKE.md` |
+| Race theology and reward contract | `references/PDV_RaceArchitecture_DesignReference.md` |
+| Phase 4 matrices | `references/phase4/` |
 | In-game console commands | `PDV_SkyrimConsoleReference.md` |
-| Deity/lore reference | `references/skyrim-deity-reference.jsx`, `references/tamriel-daily-worship-4e201.html` |
-| Phase 4 design matrices | `references/phase4/` |
-| Frozen source material | `archive/HOUSECARL_*.md`, `archive/Skyrim_Modding_Lessons*.md` |
+| Archived phase walkthroughs | `archive/completed-phase-docs-2026-05-16/README.md` |
 
 ---
 
-## Project Summary
+## Project Snapshot
 
-A Skyrim Special Edition mod called **PlayerDevotion** that tracks per-deity piety based on the player's race-authentic religious behaviour. Daily actions feed a `PDV.Piety` value per deity (StorageUtil-backed), which gates tiered blessings and neglect effects.
+PlayerDevotion is a Skyrim Special Edition mod that tracks religious devotion
+through the player's race, actions, patron commitments, and religious context.
+Per-deity piety lives in StorageUtil; mirror globals exist only for CK
+Condition reads.
 
-**Phases completed through `AGENTS.md`** — check that file for current status. As of the last Claude.md update: Phases 1–3 complete (StorageUtil model, mirror globals, Kyne proof slice, ActionRouter kill event slice). Phase 4 (origin system, stance taxonomy, boon grants) is next.
+As of the current canonical docs, the v2 Phase 4/5/6 baseline is proven in
+game. `PDV_Architecture_v3.md` owns the forward plan: V3 Preflight, Structural
+Skeleton, Pattern Proving, Technical Beta, Content-Feel Beta, and content-rich
+1.0 launch readiness.
 
-**Key constraint:** StorageUtil (PapyrusUtil SE) is the source of truth for all per-deity values. Mirror GlobalVariables (`PDV_GLO_ActivePiety`, `PDV_GLO_ActiveTier`, `PDV_GLO_ActiveDeityIndex`) are write-only caches for vanilla CK Conditions. Never write directly to mirror globals; always go through `AwardPiety`/`RecomputeTier`.
-
----
-
-## Naming Conventions (summary)
-
-- `PDV_` prefix on all records
-- `PDV__X` (double underscore) for internal/machinery records
-- `PDV_GLO_` for mirror GlobalVariables; `PDV_GLO__X` for internal/system globals
-- `PDV_Deity_[Name]` for concrete deity quests; `PDV_DeityBase` for the base class
-
-Full taxonomy in `PDV_MOD_SETUP.md` § EditorID Prefix Convention.
+Do not copy status details from this file into work. Read `AGENTS.md` and the
+relevant architecture doc instead.
 
 ---
 
-## Coexistence with Codex
+## Coexistence With Codex
 
-Claude and Codex can both work on this repo. The division of labour is up to the user, but the ground rules are:
-
-- `AGENTS.md` → Codex's file. Claude reads it, does not write to it unless asked.
-- `CLAUDE.md` → Claude's entry point. Can be updated by Claude when the user asks.
-- Everything else → shared; coordinate via git branches and the decisions log in `AGENTS.md`.
+- `AGENTS.md` is Codex's canonical project context.
+- `CLAUDE.md` is Claude's entrypoint and should stay small.
+- Shared docs and scripts can be edited when the user asks, but changes should
+  be reflected in the canonical docs when they alter architecture, status, or
+  workflow.

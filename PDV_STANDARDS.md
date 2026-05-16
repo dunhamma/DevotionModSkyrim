@@ -17,6 +17,8 @@ The repo runs a two-class document system: **LIVING** docs that always reflect c
 | `AGENTS.md` | Project context, file map, current build status, decisions log | Architecture changes, build status advances, decision lands |
 | `PDV_MOD_SETUP.md` | Dev environment, tooling, variable reference, build order | Tool version changes, new variable added, build step changes |
 | `PDV_Architecture_v2.md` | Architecture spec, data model, quest topology, phase plan, revision log | Architecture changes, phase status changes, major design decisions |
+| `PDV_Architecture_v3.md` | Forward architecture, v3 subsystem plan, roadmap to beta and launch | v3 architecture changes, roadmap gates change, beta/launch readiness definitions change |
+| `PDV_BetaTesterBrief.md` | External-facing beta tester communication; not architecture authority | Tester expectations, beta instructions, or launch communication changes |
 | `archive/completed-phase-docs-*/README.md` | Archive index for completed phase walkthroughs and summaries | The archive set changes or a completed phase moves out of the root workflow |
 | `PDV_SkyrimConsoleReference.md` | Skyrim console command reference for testing | Console command source correction or new verified test command |
 | `PDV_STANDARDS.md` (this file) | Operating rules | A rule changes; an anti-pattern is observed; a new rule is needed |
