@@ -48,7 +48,7 @@ Not every race worships the same way. The mod recognizes three fundamental struc
 |------|----------|--------|
 | Nord | Old Ways + Nine Divines | Your deeds reveal which god notices you |
 | Imperial | Nine Divines | Civic faith shaped by politics and conscience |
-| Breton | Divines + Druidic + Witchcraft | Pragmatic syncretism with hidden depths |
+| Breton | Three-Track (Knight / Druid / Witch) | Tradition defines identity; gods flavor it |
 | Dunmer | Good Daedra + Ancestors | Cumulative layers, never competing gods |
 | Altmer | Aldmeri Pantheon | Self-cultivation judged by coherence and orthodoxy |
 | Redguard | Yokudan Pantheon | Sect-shaped, duty-driven, ancestors always present |

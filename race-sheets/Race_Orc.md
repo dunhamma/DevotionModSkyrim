@@ -77,7 +77,7 @@ Mode changes are socially and religiously consequential — not casual swaps:
 For Orcs, most Daedric worship is **foreign** — not hostile in the way Altmer feel it, but simply *irrelevant*. The code is Malacath. Other powers don't have a framework inside Orc theology.
 
 - **Malacath** — Native. The entire Orc religious system.
-- **Boethiah** ��� Hostile. Deepest rival. The betrayer of Trinimac (Malacath's original form). Load-bearing hostility.
+- **Boethiah** — Hostile. Deepest rival. The betrayer of Trinimac (Malacath's original form). Load-bearing hostility.
 - **Auri-El** — Hostile. Trinimac's betrayal narrative.
 - **Hircine** — Taboo, but *conditionally defensible* through proven strength and control (see Curse States).
 - **Molag Bal** — Taboo. Dependency contradicts the code.
