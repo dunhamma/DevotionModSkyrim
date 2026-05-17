@@ -26,7 +26,13 @@ The Green Pact is the defining theological fact of Bosmer life: Y'ffre gave them
 - **The feel:** A Bosmer who carries the full weight of the Green Pact in exile. Harder. Narrower. But deeper than any other Bosmer will ever reach.
 - **The catch:** This is the only path with hard compliance mechanics. The Pact has terms, and breaking them matters. You earn more, but you carry more burden. Uses PDV's own Green Pact tagging layer rather than depending on another mod's food or ecology tags.
 
-Single accidental Pact failures do not lock you out. A violation day withholds the daily compliance reward, and repeatable compliance has the normal anti-farm cooldown. The real penalty lands when the player intentionally breaks Pact rules repeatedly — five violations inside a two-day window marks sustained disregard rather than a mistake.
+**Path commitment is binary.** Taking the Pact (`PactBound = true`) makes Y'ffre your exclusive deity; other Bosmer-recognized gods freeze at their current devotion and remain inert until you leave. There is no "partial Pact" — you are bound or you are not.
+
+**Compliance bands while bound.** GreenPactCompliance is a 0–100 meter, act-driven, no passive decay. It scales Y'ffre devotion gains by band: Apostate (0–19) locks gains out entirely, Lapsed (20–49) at 50%, Observant (50–79) at 100%, Strict (80–100) at 120%. Single accidental violations do not lock you out — they cost compliance, not membership.
+
+**Forced reckoning.** When compliance stays in Apostate for three consecutive in-game days, the mod surfaces a one-shot prompt: re-commit (compliance snaps to 30) or renounce. No silent auto-renunciation — the decision is always yours.
+
+**One cycle, then the door closes.** You may leave the Pact and return exactly once. The second renunciation — voluntary or forced — is terminal: Y'ffre's ledger freezes permanently, and the Pact toggle disables. The other Bosmer gods remain open; only the Pact itself closes. See `references/PDV_BosmerPactModel_Planning.md` for the full transition spec.
 
 ### The Living Story — Moderate Y'ffre
 *The forest speaks. You listen. But you live in the world as it is.*
@@ -67,7 +73,7 @@ These are strongest on The Living Story path but present across all four.
 Bosmer have their own native trickster-survival theology through Baan Dar, which means they don't *need* most Daedric princes to fill that role. The distinction matters:
 
 - **Baan Dar** — Native. The Bosmer trickster-survival path is a legitimate religious lane, not a crime spree.
-- **Hircine** — Legible but not orthodox. The Wild Hunt makes beast-shape *intelligible* to Bosmer theology without making it welcome. An external pressure, not a core path.
+- **Hircine** — Legible but not orthodox. Beast-shape is intelligible to Bosmer theology as external pressure without being welcomed. Note: the Wild Hunt is canonical horror, not a player-facing devotional track — it is the lore reason the Pact exists, never a state the mod invites you into.
 - **Nocturnal** — Foreign. The Thieves Guild's Nightingale oath is a *Skyrim criminal* overlap, not Bosmer theology. Baan Dar is the native alternative.
 - **Hermaeus Mora** — Foreign. Bosmer Herma-Mora is kept explicitly separate from the general knowledge-corruption reading.
 - **Azura, Mephala** — Foreign but intelligible. Not core Bosmer, but not alien either.
@@ -88,10 +94,10 @@ Vampirism is a harder theological break than werewolfism for Bosmer. All four pa
 Switching between Bosmer paths is possible but not casual:
 
 - **The Living Story** is the easiest bridge path — it accepts transfers most readily.
-- **The Old Contract** is the hardest to leave and the hardest to re-enter. Once you break the Pact, returning to full compliance is the most demanding transition in the Bosmer system.
+- **The Old Contract** is the hardest to leave and the hardest to re-enter. The Pact is governed by an explicit one-cycle rule: you may leave and return exactly once, and the second renunciation closes Y'ffre permanently. See the Old Contract section above and `references/PDV_BosmerPactModel_Planning.md` for full mechanics.
 - **The Exchange** and **The Bandit Road** sit between those poles.
 
-Switching requires meaningful threshold events and carries real spiritual cost. No MCM toggle will do it.
+Switching into or out of the Living Story, Exchange, or Bandit Road requires meaningful threshold events and carries real spiritual cost. Entering or leaving the Old Contract is gated by a qualifying in-world act plus an MCM confirmation — the toggle exists, but the friction is structural rather than purely UI.
 
 ## Playing This Race — What to Expect
 

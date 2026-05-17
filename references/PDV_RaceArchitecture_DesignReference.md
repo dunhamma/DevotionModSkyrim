@@ -233,6 +233,14 @@ Broad worship is the cultural norm. Players can worship all gods (diluted) or ch
   - `The Old Contract` is the hardest to re-enter cleanly
   - `The Exchange` and `The Bandit Road` sit between those poles
 
+**Old Contract = binary `PactBound` state (LOCKED 2026-05-17):**
+- `The Old Contract` is governed by a binary `PactBound` flag, not a soft scale. While bound, Y'ffre is the exclusive deity and all other Bosmer-recognized deity ledgers freeze (preserved, inert).
+- `GreenPactCompliance` is a 0–100 act-driven meter (no passive decay) that scales Y'ffre gains by band: Apostate (0–19) locked, Lapsed (20–49) 50%, Observant (50–79) 100%, Strict (80–100) 120%.
+- Forced reckoning: sustained Apostate dwell (3 in-game days) fires a one-shot re-commit-or-renounce prompt. No silent auto-renunciation.
+- Lifetime cap: `LapsedFromPact` counter permits exactly one re-entry. Second renunciation is terminal — Y'ffre ledger freezes permanently, MCM Pact toggle disables. Other Bosmer deities remain available.
+- **No Wild Hunt player-facing track.** Wild Hunt is lore context only; never a state the mod surfaces to the player.
+- Full transition spec, MCM surface, and storage layout: `references/PDV_BosmerPactModel_Planning.md`.
+
 ### 4.3 Argonian (LOCKED)
 
 **Confirmed:** Custom bucket structure required. Generic three-bucket system insufficient.
@@ -1534,13 +1542,34 @@ Rationale:
 - `Nocturnal` is a Skyrim criminal overlap, not a Bosmer theological backbone
 - `Hircine` matters, but as hunt / shape / curse pressure rather than a normal core lane
 
-**The Old Contract (LOCKED):**
+**The Old Contract (LOCKED, amended 2026-05-17):**
 ```
 Only Bosmer path with hard or semi-hard Green Pact compliance mechanics
 Uses custom Bosmer-specific buckets or rule checks
 Represents strict orthodoxy and the heaviest devotional burden
 Has the highest ceiling of all Bosmer paths as payoff
+
+State model:
+  PactBound          : binary flag — Y'ffre exclusive while true
+  GreenPactCompliance: 0–100 meter, act-driven, no passive decay
+  LapsedFromPact     : int counter, caps re-entry at one cycle
+
+Bands (Y'ffre gain multiplier while PactBound):
+  Apostate  0–19    locked (0%)
+  Lapsed    20–49   50%
+  Observant 50–79   100%
+  Strict    80–100  120%
+
+Transitions:
+  Entry      : setup choice OR MCM toggle + qualifying in-world act
+  Voluntary  : MCM Renounce, single confirmation
+  Forced     : 3 in-game days in Apostate → re-commit-or-renounce prompt
+  Re-entry   : permitted exactly once; GPC initializes at 20
+  Terminal   : 2nd renunciation freezes Y'ffre permanently; toggle disables
+
+Wild Hunt: lore context only. NOT a player-facing track or state.
 ```
+Full spec: `references/PDV_BosmerPactModel_Planning.md`.
 
 **The Living Story (LOCKED):**
 ```

@@ -1,12 +1,12 @@
 # Bosmer Pact Model — Planning Patch
 
-> **Status:** Planning. Not yet ratified into `Race_Bosmer.md` or
-> `references/PDV_RaceArchitecture_DesignReference.md`. This doc records the
-> locked decisions from the 2026-05-17 lore review session for the Y'ffre /
-> Green Pact subsystem. It supersedes the *Old Contract* portion of
-> `race-sheets/Race_Bosmer.md` and removes any Wild Hunt player-track from the
-> Bosmer model. Other Bosmer paths (Living Story, Exchange, Bandit Road) are
-> unchanged by this patch.
+> **Status:** Ratified 2026-05-17. The summaries in `race-sheets/Race_Bosmer.md`
+> (Old Contract section, Path Switching section, Hircine entry) and
+> `references/PDV_RaceArchitecture_DesignReference.md` (sections 4.2 and 10.7)
+> reference this doc as the authoritative spec. This file remains the source
+> of truth for state model, bands, transitions, and the lifetime cycle cap.
+> Wild Hunt is removed from the Bosmer player-facing model. Other Bosmer paths
+> (Living Story, Exchange, Bandit Road) are unchanged by this patch.
 
 ---
 
