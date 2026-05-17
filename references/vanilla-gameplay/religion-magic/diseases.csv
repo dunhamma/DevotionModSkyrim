@@ -1,0 +1,10 @@
+disease_or_state,vanilla_behavior,pdv_use,caution,source_id,validation
+Regular diseases,"Contracted from sources such as creatures/traps; cured by cure disease routes","Neglect pressure, Arkay/Stendarr/restoration privilege, Peryite contrast","Do not make disease penalties stack invisibly with PDV neglect.",uesp_skyrim_disease,source-backed
+Ataxia,"Disease affecting lockpicking/pickpocketing","Nocturnal/theft-path or frailty example","Use as reference, not necessarily as PDV effect.",uesp_skyrim_disease,source-backed
+Bone Break Fever,"Disease affecting stamina","Travel/labor neglect reference","Punishing stamina can feel bad if too frequent.",uesp_skyrim_disease,source-backed
+Brain Rot,"Disease affecting magicka","Mage neglect/reference effect","Could be harsh for mage builds.",uesp_skyrim_disease,source-backed
+Rattles,"Disease affecting stamina regeneration","Fatigue/neglect reference","Regen changes need visible explanation.",uesp_skyrim_disease,source-backed
+Rockjoint,"Disease affecting weapon effectiveness","Martial neglect reference","Can be very build-specific.",uesp_skyrim_disease,source-backed
+Sanguinare Vampiris,"Disease path toward vampirism before rooted state","Curse-state transition and cure urgency","Vampirism state is not just disease after progression.",uesp_skyrim_disease,source-backed
+Werewolf disease immunity,"Werewolf state gives strong disease resistance/immunity behavior","Curse-state overlay and disease-neglect exception","Trap/script bugs and unofficial patch behavior can matter.",uesp_skyrim_disease,source-backed
+Vampire disease immunity,"Vampire state gives disease immunity behavior","Curse-state overlay and shrine/cure interpretation","Disease mechanics should not be used as sole neglect layer.",uesp_skyrim_disease,source-backed

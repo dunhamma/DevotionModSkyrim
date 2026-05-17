@@ -1,0 +1,5 @@
+concept,vanilla_behavior,pdv_use,caution,source_id,validation
+Encounter zone,"Defines level constraints and scaling context for areas","Difficulty/context weighting for pilgrimage, dungeon, and combat signals","Not a moral signal; use only as context.",uesp_skyrim_radiant,source-backed
+Minimum level,"Some areas have minimum levels above player level","Warn against over-rewarding early dangerous completions without testing","Can make radiant targets unexpectedly hard.",uesp_skyrim_radiant,source-backed
+Respawn,"Dungeons can reset enemies/loot after time","Repeatable signal anti-farm design","Cleared tag can remain after respawn.",uesp_skyrim_radiant,source-backed
+Cleared status,"Most clearable dungeons mark cleared when boss defeated","Potential one-time protection/purification signal","Some locations clear by quest or secondary marker behavior.",uesp_skyrim_radiant,source-backed

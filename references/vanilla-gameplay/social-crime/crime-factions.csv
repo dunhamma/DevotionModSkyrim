@@ -1,0 +1,10 @@
+crime_surface,vanilla_behavior,pdv_use,caution,source_id,validation
+Witnessed crime,"Bounty is applied when crime is witnessed or reported","Civic order and public reputation signals","Hidden sin should not equal reported bounty.",uesp_skyrim_crime,source-backed
+Hold-scoped bounty,"Crime gold is tracked by crime faction/hold","Imperial civic track, local community standing","Do not use one global crime value as universal morality.",uesp_skyrim_crime,source-backed
+Theft,"Owned item theft marks items stolen and can add bounty if detected","Nocturnal/Zenithar/civic tension","Picking up owned items is not same as burglary or poverty roleplay.",uesp_skyrim_crime,source-backed
+Assault,"Violent crime before murder","Stendarr/Talos/Malacath/Boethiah context depending on target and faction","Self-defense and combat faction matter.",uesp_skyrim_crime,source-backed
+Murder,"Major violent crime and moral/theological signal","Arkay/Stendarr/civic penalties; Daedric or assassin paths","Quest-protected targets and war contexts need exceptions.",uesp_skyrim_crime,source-backed
+Trespass,"Illegal presence in owned/restricted space","Nocturnal/Mephala/civic pressure","Trespass can be accidental; avoid harsh scoring.",uesp_skyrim_crime,source-backed
+Pickpocket,"Theft attempt/success involving NPC inventory","Nocturnal, Mephala, civic penalty","Use success and detection context if possible.",uesp_skyrim_crime,source-backed
+Jail/arrest,"Legal consequence after crime interaction","Repentance, submission, civic consequence","Do not double-punish crime plus jail unless designed.",uesp_skyrim_crime,source-backed
+Commanded follower crime,"Follower actions commanded by player can produce bounty","Attribution model for indirect acts","Needs runtime validation before scoring.",uesp_skyrim_crime,source-backed

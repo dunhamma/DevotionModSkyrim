@@ -1,0 +1,31 @@
+function_name,family,pdv_use,caution,source_id,validation
+GetGlobalValue,global,"Read active patron mirrors, patron state, origin, debug flags, and future state-track globals","Use globals as CK-readable mirrors only.",ck_condition_functions,source-backed
+GetActorValue,actor_value,"Gate effects by Health/Magicka/Stamina, skills, resistances, or AI values","Actor values can include modifiers; know current vs base semantics.",ck_condition_functions,source-backed
+GetActorValuePercent,actor_value,"Contextual favors when low health/magicka/stamina","Avoid effects that create noisy on/off flicker.",ck_condition_functions,source-backed
+GetBaseActorValue,actor_value,"Compare underlying actor value when modifiers should not count","Use sparingly; player-facing state usually sees modified values.",ck_condition_functions,source-backed
+GetInFaction,faction,"Gate guild, civil war, Thalmor, Vigilant, Blood-Kin, or hold privileges","Faction records and ranks need local extraction.",ck_condition_functions,source-backed
+GetFactionRank,faction,"Ranked faction progression and community standing","Rank semantics vary by faction.",ck_condition_functions,source-backed
+SameFaction,faction,"NPC relation and dialogue gates","Can be broad; prefer specific factions for PDV logic.",ck_condition_functions,source-backed
+GetIsRace,race,"Race/origin conditions where current race is sufficient","PDV origin should use stored birth origin, not current race, for theology.",ck_condition_functions,source-backed
+SameRaceAsPC,race,"NPC dialogue flavor and race resonance","Current race can be vampire/beast-form distorted.",ck_condition_functions,source-backed
+HasKeyword,keyword,"Actor, magic, object, or location semantic gates","Keywords do nothing alone; behavior depends on consuming system.",ck_condition_functions,source-backed
+WornHasKeyword,keyword,"Amulet, armor, clothing, or taboo-equipment gates","Keyword coverage across modded gear needs compatibility consideration.",ck_condition_functions,source-backed
+LocationHasKeyword,location,"Temple, hold, dungeon, wilderness, home, city, sacred-place filters","Location keyword coverage should be extracted locally.",ck_condition_functions,source-backed
+LocAliasHasKeyword,location,"Quest alias location gates for receiver quests","Alias fill and quest priority matter.",ck_condition_functions,source-backed
+GetInCurrentLoc,location,"Check current location membership","Validate exact condition availability in CK before build.",ck_condition_functions,needs-local-extraction
+HasMagicEffect,magic,"Detect active blessing, disease, neglect, curse, or status effect","Spell absorption/dispels and hidden effects can complicate assumptions.",ck_condition_functions,source-backed
+HasSpell,magic,"Check abilities, powers, diseases, or granted spells","Use for coarse spell ownership, not magnitude/tier by itself.",ck_condition_functions,source-backed
+GetStage,quest,"Gate quest milestone signals or dialogue","Quest stage meaning is per quest and must be curated.",ck_condition_functions,source-backed
+GetStageDone,quest,"One-shot quest completion or milestone checks","Use to prevent repeated signal awards.",ck_condition_functions,source-backed
+GetQuestCompleted,quest,"Major questline completion rewards or penalties","Some quests are radiant/repeatable; verify before using.",ck_condition_functions,source-backed
+GetCrimeGold,crime,"Hold-level civic standing and Imperial/justice pressure","Bounty is reported crime, not hidden sin.",ck_condition_functions,source-backed
+GetCrimeGoldViolent,crime,"Violent-crime pressure and murder/assault response","Requires crime faction context.",ck_condition_functions,source-backed
+GetCrimeGoldNonviolent,crime,"Theft/trespass/nonviolent civic pressure","Can reflect gameplay style rather than theology by itself.",ck_condition_functions,source-backed
+GetCurrentTime,time,"Dawn, night, moon, prayer windows, shrine rituals","Prefer central dawn processing for persistent state.",ck_condition_functions,source-backed
+GetDayOfWeek,time,"Calendar-themed rituals or weekly caps","Use only if player-facing reason is clear.",ck_condition_functions,source-backed
+IsSneaking,state,"Nocturnal/Mephala stealth context and debug display","Sneaking is state, not success.",ck_condition_functions,source-backed
+IsInCombat,state,"Combat-only favors and anti-exploit gates","Use with hostile/target checks.",ck_condition_functions,source-backed
+IsHostileToActor,state,"Hostility validation for kill/combat signals","Runtime validation should remain in router/EventBus for scoring.",ck_condition_functions,source-backed
+IsKiller,event,"Story Manager kill-event discrimination","Payload behavior needs runtime proof per receiver.",ck_condition_functions,source-backed
+IsCommandedActor,event,"Follower-commanded crime/kill attribution","Do not score indirect attribution until explicitly designed.",ck_condition_functions,source-backed
+GetEventData,event,"Story Manager event payload conditions","Payload names and types must be verified for each SM event.",ck_condition_functions,source-backed

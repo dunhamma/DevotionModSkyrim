@@ -25,6 +25,7 @@ The repo runs a two-class document system: **LIVING** docs that always reflect c
 | `references/PAPYRUS_KNOWLEDGE_INTAKE.md` | Papyrus/API/source-layer guidance | Papyrus reference strategy changes or new verified API-source learnings |
 | `references/PDV_RaceArchitecture_DesignReference.md` | Race architecture reference and pre-matrix design requirements | Race theology decisions, curse behavior, quest weighting, reward contract, or signal-matrix requirements change |
 | `references/phase4/*.md`, `references/phase4/*.csv` | Phase 4 matrix scaffold, signal matrixes, and cross-validation notes | Matrix scope changes, stance/Daedric crosswalk changes, or implementation-facing Phase 4 design decisions land |
+| `references/vanilla-gameplay/*` | Vanilla Skyrim gameplay mechanics, CK data surfaces, and immersive UX reference backbone | Gameplay source correction, new signal hook source, CK table expansion, UX research update, or PDV gameplay-design implication changes |
 | `race-sheets/*.md` | Race-by-race player-facing design sheets and overview | Race architecture, gameplay expression, curse behavior, reward contract, or custom-content priority changes |
 | `references/skyrim-deity-reference.jsx` | Cross-cultural deity table | Lore correction surfaces; new pantheon mapping needed |
 | `references/tamriel-daily-worship-4e201.html` | Race-by-race daily practice source | Should not change — third-party source design doc |
@@ -87,6 +88,43 @@ That means a smoke test should include the phase's real acceptance path:
 
 If a debug or console route has not already been proven in this setup, prefer
 the surfaced in-mod debug path over inventing a new console flow mid-test.
+
+### 1.6 Locked design ratification loop
+
+When a lore review, planning pass, or implementation review locks a design
+decision, ratify it across the living docs in the same session. Do not leave a
+new rule stranded in chat, a branch-only patch, or one planning note when
+other living docs will still be read as authoritative.
+
+Minimum ratification pass:
+
+1. Update the narrowest authoritative design source first.
+2. Update every dependent living doc that restates the rule in player-facing or
+   implementation-facing terms.
+3. Add or update the `AGENTS.md` decision entry with the rationale and the
+   prior rule it supersedes, if any.
+4. If the decision changes tooling or workflow, mirror it into
+   `PDV_MOD_SETUP.md` in the same session.
+
+For race-design work this usually means: the locked planning/design reference,
+the affected `race-sheets/*.md` file, any overview sheet that summarizes the
+race, and `AGENTS.md`.
+
+### 1.7 Post-merge consistency sweep
+
+After any broad sync or merge that touches multiple race sheets, architecture
+docs, or workflow docs, do a short consistency sweep before calling it done.
+Big merges are where tiny drift hides.
+
+Minimum sweep:
+
+1. Check that overview labels still match the detailed race sheets.
+2. Check that any renamed or superseded rule was updated in every living doc
+   that still states it.
+3. Check for encoding or ASCII drift in user-visible docs and examples.
+
+The goal is not a second full review. It is a cheap pass that catches the
+small follow-up fixes that otherwise appear one commit later.
 
 ---
 
@@ -234,6 +272,37 @@ When Papyrus behavior looks impossible after a script change, retest from a new 
 If `node` is not on PATH in a PowerShell session, run PDV tools via the Codex-bundled Node runtime:
 
 `C:\Users\Admin\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe`
+
+### 4.7 Verifier-first regression loop
+
+When a CK, xEdit, MO2, or manual wiring change can regress silently, prefer
+adding or tightening verifier coverage before trusting memory or a one-off
+smoke pass.
+
+Use this order:
+
+1. Change the script or record.
+2. Ask whether the verifier should now assert that state explicitly.
+3. Add or tighten the verifier check when the failure would otherwise be easy
+   to miss.
+4. Run the relevant strict gate before calling the work closed.
+
+If a regression is only detectable by remembering "what looked right last
+time," the workflow is still too fragile.
+
+### 4.8 Papyrus compile triage order
+
+When a `.psc` compile fails, classify the problem before editing behavior.
+Work in this order:
+
+1. import chain / missing source roots
+2. API provenance or wrong function signature
+3. Papyrus parser or language-limit violation
+4. actual logic bug
+
+This project has repeatedly hit compile failures that looked like logic problems
+but were really missing imports, invented helpers, or Papyrus syntax limits.
+Treat "the logic is wrong" as the fourth guess, not the first.
 
 ---
 

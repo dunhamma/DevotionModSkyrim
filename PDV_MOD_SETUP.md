@@ -270,6 +270,24 @@ Toolchain usage rules:
 - Before declaring V3 Preflight complete, run `node .\tools\pdv_verify.mjs --strict-preflight` (or compile with `node .\tools\pdv_compile.mjs --strict-preflight`) and resolve all FAILs.
 - Before declaring any V3 Structural Skeleton scaffold wave complete, run `node .\tools\pdv_verify.mjs --strict-skeleton` (or compile with `node .\tools\pdv_compile.mjs --strict-skeleton`) and resolve all FAILs.
 
+### Default closeout loop
+
+Use this as the default order after substantive PDV work:
+
+1. Compile changed Papyrus with `tools\pdv_compile.mjs` if any `.psc` changed.
+2. If the work touched CK/ESP/MO2 state, run `tools\pdv_verify.mjs` and use
+   the relevant strict gate before calling the change done.
+3. If the work was supported existing-record wiring, prefer a tracked
+   `pdv_author` manifest plus `plan -> apply -> verify` over repeated one-off
+   CK edits.
+4. If a design review locked a new rule, ratify it across the living docs in
+   the same session so `AGENTS.md`, setup notes, and race/design docs do not
+   drift.
+
+This order reflects the recent project pattern: the expensive mistakes are not
+usually raw code edits, but stale record wiring, one-off overlay drift, and
+design decisions that were only updated in one place.
+
 ### VS Code Papyrus extension role
 
 Editor-only: syntax highlighting, hover info, intellisense, debug attach. Not the build path.
@@ -278,12 +296,17 @@ Editor-only: syntax highlighting, hover info, intellisense, debug attach. Not th
 
 Keep these in mind before blaming CKPE or MO2 for compile weirdness:
 
+- On compile failure, classify the problem in this order: import chain,
+  API/source provenance, Papyrus parser/language limit, then logic bug.
 - Papyrus string literals only reliably escape `\\` and `\"`. Do not put `\n`, `\r`, or `\t` in `.psc` strings.
 - `{...}` docstrings belong immediately after `ScriptName`, `Property`, `Function`, or `Event` declarations. Use `;` comments inside control flow, and avoid JSON-like literal `{` examples in docstrings.
 - `StringUtil.Replace` does not exist. Avoid string substitution in runtime paths unless a manual helper has been compile-tested.
 - Papyrus has no ternary operator, string interpolation, string `+=`, `Math.max`, or `Math.min`. Arrays cannot be sized by variables and cap at 128 elements.
 - Split chained casts into named intermediate variables. Do not rely on `(value as int as float)` style expressions.
 - Do not use short names that may collide with type/script names (`key`, `form`, `actor`, `cell`, `ActorBase`, `Message`) or local names that shadow script properties. Prefer explicit local names such as `targetActor`.
+- Before using a new vanilla, SKSE, or plugin-provided Papyrus function, open
+  the shipped `.psc` source or other verified project source and confirm the
+  exact signature first.
 - If a script edit behaves impossibly on an existing save, retest from a new game or main-menu `coc qasmoke` path before redesigning the logic.
 - If `SKI_ConfigBase.pex` ever appears in `Devotion\Scripts` after a compile, delete it and fix the compile target list. PDV's wrapper should compile PDV scripts only; this file appearing would indicate accidental SkyUI source compilation.
 

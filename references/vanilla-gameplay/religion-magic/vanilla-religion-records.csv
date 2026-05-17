@@ -1,0 +1,6 @@
+record_family,examples,pdv_use,next_validation,source_id,status
+Divine shrine activators,"Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Talos, Zenithar","Vanilla shrine interaction and blessing baseline","Extract activator, spell, MGEF, keyword, and location records from local masters.",uesp_skyrim_blessings,planned
+Temple locations,"Solitude Temple of the Divines, Temple of Kynareth, Temple of Mara, Hall of the Dead locations","Sacred-place and priest/community signals","Extract LCTN/LocType and placed activator data.",uesp_skyrim_blessings,planned
+Amulets of the Divines,"Divine amulet records","Devotional equipment and offering logic","Extract keywords/enchantments from local data.",uesp_skyrim_blessings,planned
+Standing Stones,"Guardian and constellation stones","Compare one-active-effect pattern and specialization choices","Extract STONE/ability records if needed.",uesp_skyrim_standing_stone,watch
+Daedric artifacts,"Prince quest rewards","Daedric path milestones and stigma","Curate per quest and artifact; do not infer from artifact ownership alone.",uesp_skyrim_quests,planned

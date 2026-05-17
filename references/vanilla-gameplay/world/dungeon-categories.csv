@@ -1,0 +1,8 @@
+dungeon_category,pdv_use,caution,source_id,validation
+Clearable dungeon,"Protection, pilgrimage, hostile-area cleansing, Delver-style milestones","Cleared tag can remain after respawn and not all markers count equally.",uesp_skyrim_radiant,source-backed
+Bandit lair,"Civic protection, Talos/Arkay/Stendarr/Kyne hostile humanoid context","Bandit category does not make every kill religiously meaningful.",uesp_skyrim_radiant,needs-local-extraction
+Nordic ruin,"Undead, ancestors, Kyne/Arkay/Draugr context","Draugr are not generic enemies for every theology.",uesp_skyrim_radiant,needs-local-extraction
+Vampire lair,"Stendarr/Arkay/Dawnguard/vampire curse context","Player vampire state changes meaning.",uesp_skyrim_radiant,needs-local-extraction
+Falmer hive,"Underground danger, mercy/violence ambiguity, Dwemer ruin context","Lore/moral framing is complex; do not flatten.",uesp_skyrim_radiant,needs-local-extraction
+Animal den,"Hunt, protection, Hircine/Y'ffre/Kyne context","Animal kills need target hostility and purpose context.",uesp_skyrim_radiant,needs-local-extraction
+Warlock/necromancer lair,"Julianos, Arkay, Stendarr, magical taboo context","Classify by faction/keywords, not location name alone.",uesp_skyrim_radiant,needs-local-extraction

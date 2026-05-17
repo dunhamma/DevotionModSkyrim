@@ -1,0 +1,6 @@
+keyword,pdv_use,caution,source_id,validation
+ActorTypeDaedra,"Daedric enemy, banish compatibility, Stendarr/Daedra-path scoring","Daedra taxonomy and cultural worship meaning are separate.",ck_keyword,source-backed
+ActorTypeUndead,"Arkay/Stendarr/necromancy and Turn Undead compatibility","Undead hostility and moral meaning depend on context.",ck_magic_effect,source-backed
+ActorTypeAnimal,"Hunting, Bosmer/Y'ffre/Hircine/Kyne signals","Animal kills can be survival, cruelty, hunt, or pest control depending context.",ck_keyword,needs-local-extraction
+ActorTypeNPC,"Humanoid social/crime/combat discrimination","NPC includes many morally different targets.",ck_keyword,needs-local-extraction
+ActorTypeCreature,"Creature combat and wilderness signals","Broad; use specific factions/keywords where possible.",ck_keyword,needs-local-extraction

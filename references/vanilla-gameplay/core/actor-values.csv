@@ -1,0 +1,28 @@
+actor_value,category,pdv_use,caution,source_id,validation
+Health,attribute,"Blessings, neglect, endurance-themed boons","Fortify Health affects max/current handling through magic effects; test stacking.",ck_actor_value,source-backed
+Magicka,attribute,"Mage/theology boons, Altmer/Auri-El/Syrabane-style rewards","Avoid making broad magic paths universally optimal.",ck_actor_value,source-backed
+Stamina,attribute,"Travel, hunt, craft-labor, Redguard/Orc/Bosmer rewards","Stamina also drives carry weight through level choices, not direct formula here.",ck_actor_value,source-backed
+HealRate,regen,"Neglect or restorative blessings","Regen modifiers can be hard to feel if too small.",uesp_actor_values,source-backed
+MagickaRate,regen,"Mage devotion rewards and neglect","Stacking with enchantments can become large.",uesp_actor_values,source-backed
+StaminaRate,regen,"Hunter, labor, travel, and martial devotion rewards","Avoid punishing basic movement too aggressively.",uesp_actor_values,source-backed
+CarryWeight,derived,"Zenithar, Malacath, pilgrimage, offering and travel rewards","Carry weight rewards are useful but can trivialize survival/logistics.",uesp_actor_values,source-backed
+SpeedMult,derived,"Rare movement favors for travel, hunt, sacred-place effects","Speed changes can feel modded or destabilize animation/combat feel.",uesp_actor_values,source-backed
+ResistFire,resistance,"Dunmer, flame, Daedric or ash-themed blessings","Element resistances should respect vanilla caps and stacking expectations.",uesp_actor_values,source-backed
+ResistFrost,resistance,"Nord, Kyne, survival/cold-region blessings","Frost resistance is very visible in Survival-style setups.",uesp_actor_values,source-backed
+ResistShock,resistance,"Storm, Kyne, Magnus/Syrabane-style magic defense","Keep magnitude modest.",uesp_actor_values,source-backed
+MagicResist,resistance,"Auri-El, Phynaster, Stendarr, anti-Daedric defense","Magic resistance has cap interactions; avoid near-immunity.",uesp_actor_values,source-backed
+PoisonResist,resistance,"Argonian, Peryite, disease/poison content","Can be too niche unless paired with relevant content.",uesp_actor_values,source-backed
+DiseaseResist,resistance,"Arkay, Stendarr, shrine/cure privilege, curse-state contrast","Werewolf/vampire immunity complicates disease-based design.",uesp_skyrim_disease,source-backed
+OneHanded,skill,"Martial deity rewards or conditions","Skill AV changes may alter power and leveling expectations; prefer effects/perks where possible.",uesp_actor_values,source-backed
+TwoHanded,skill,"Talos, Malacath, HoonDing-style martial paths","Avoid raw skill-level edits for devotion.",uesp_actor_values,source-backed
+Marksman,skill,"Kyne/Kynareth, Y'ffre, Hircine, Bosmer hunt rewards","Archery has mixed internal grouping history; verify conditions before relying on category.",uesp_skyrim_skills,source-backed
+Block,skill,"Stendarr, warrior-priest, shield blessings","Block stacks strongly with armor; small bonuses can matter.",uesp_actor_values,source-backed
+Smithing,skill,"Malacath, Zenithar, craft-labor signals","Crafting is farmable; use milestones and caps.",uesp_skyrim_skills,source-backed
+Alchemy,skill,"Peryite, Namira, Bosmer plant-taboo checks, potion signals","Alchemy loops are highly farmable.",uesp_skyrim_skills,source-backed
+Enchanting,skill,"Julianos, Syrabane, Magnus, Altmer magical study","Enchanting power scaling is already strong.",uesp_skyrim_skills,source-backed
+Speechcraft,skill,"Dibella, Zenithar, Imperial civic/social paths","Speech overlaps barter and persuasion; avoid flattening all speech into piety.",uesp_actor_values,source-backed
+Sneak,skill,"Nocturnal, Mephala, stealth-ritual paths","Undetected success matters more than raw Sneak skill.",uesp_skyrim_skills,source-backed
+Aggression,ai_data,"Potential NPC/follower/guardian behavior tuning","Do not alter vanilla NPC AI broadly without strong reason.",ck_actor_value,source-backed
+Confidence,ai_data,"Summoned guardian or follower behavior","Can cause fleeing/foolhardy behavior shifts.",ck_actor_value,source-backed
+Morality,ai_data,"Follower crime compliance and social theology context","Useful as a read/reference concept more than a PDV write target.",ck_actor_value,source-backed
+Assistance,ai_data,"Community/faction support concepts","Use faction/rank/relationship first.",ck_actor_value,source-backed
