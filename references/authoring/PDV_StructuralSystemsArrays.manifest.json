@@ -1,0 +1,32 @@
+{
+  "id": "structural-systems-arrays",
+  "title": "PDV V3 structural systems array wiring plan",
+  "defaultOutput": "PDV_StructuralSystemsArraysOverlay.esp",
+  "notes": [
+    "This manifest is primarily for planning/reporting. pdv_author recognizes VMAD array property intent here, but mutagen-bridge does not currently expose array writes through attach_scripts.",
+    "Use apply output from this manifest as a guided TODO list for manual CK/xEdit array wiring, then use pdv_verify readback to confirm.",
+    "Pattern Proving gate-close now requires the ConcordatStanding arrays, BosmerPath labels, and Hircine race arrays below."
+  ],
+  "operations": [
+    { "kind": "setProperty", "record": "PDV_RepTrack_ConcordatStanding", "script": "PDV_ReputationTrack", "property": "ThresholdValues", "valueType": "IntArray", "value": [-76, -51, 50, 75] },
+    { "kind": "setProperty", "record": "PDV_RepTrack_ConcordatStanding", "script": "PDV_ReputationTrack", "property": "ThresholdLabels", "valueType": "StringArray", "value": ["OpenDefiant", "PrivateDefiant", "Uncommitted", "PublicCompliant", "ConcordatEnforcer"] },
+
+    { "kind": "setProperty", "record": "PDV_RepTrack_WitchcraftExposure", "script": "PDV_ReputationTrack", "property": "ThresholdValues", "valueType": "IntArray", "value": [25, 50, 75] },
+    { "kind": "setProperty", "record": "PDV_RepTrack_WitchcraftExposure", "script": "PDV_ReputationTrack", "property": "ThresholdLabels", "valueType": "StringArray", "value": ["Hidden", "Suspected", "Known", "Notorious"] },
+
+    { "kind": "setProperty", "record": "PDV_RepTrack_ThalmorAlignment", "script": "PDV_ReputationTrack", "property": "ThresholdValues", "valueType": "IntArray", "value": [30, 69] },
+    { "kind": "setProperty", "record": "PDV_RepTrack_ThalmorAlignment", "script": "PDV_ReputationTrack", "property": "ThresholdLabels", "valueType": "StringArray", "value": ["Heterodox", "OrthodoxModerate", "ThalmorDevout"] },
+
+    { "kind": "setProperty", "record": "PDV_StateTrack_BosmerPath", "script": "PDV_StateTrack", "property": "StateLabels", "valueType": "StringArray", "value": ["OldContract", "LivingStory", "Exchange", "BanditRoad"] },
+    { "kind": "setProperty", "record": "PDV_StateTrack_OrcLifeMode", "script": "PDV_StateTrack", "property": "StateLabels", "valueType": "StringArray", "value": ["Stronghold", "City", "Exile"] },
+    { "kind": "setProperty", "record": "PDV_StateTrack_NordWorship", "script": "PDV_StateTrack", "property": "StateLabels", "valueType": "StringArray", "value": ["OldWays", "NineDivines", "Broad", "Primary"] },
+    { "kind": "setProperty", "record": "PDV_StateTrack_BretonTradition", "script": "PDV_StateTrack", "property": "StateLabels", "valueType": "StringArray", "value": ["KnightsRoad", "HiddenArt", "GreenWay"] },
+    { "kind": "setProperty", "record": "PDV_StateTrack_RedguardSect", "script": "PDV_StateTrack", "property": "StateLabels", "valueType": "StringArray", "value": ["Crown", "Forebear", "AshAbah"] },
+    { "kind": "setProperty", "record": "PDV_StateTrack_DunmerPath", "script": "PDV_StateTrack", "property": "StateLabels", "valueType": "StringArray", "value": ["Ancestor", "GoodDaedra", "TribunalRemnant"] },
+    { "kind": "setProperty", "record": "PDV_StateTrack_AltmerCrisis", "script": "PDV_StateTrack", "property": "StateLabels", "valueType": "StringArray", "value": ["Stable", "Questioning", "ResolvedOrthodox", "ResolvedHeterodox"] },
+
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase", "property": "StateByRace", "valueType": "IntArray", "value": [6, 6, 1, 5, 1, 2, 6, 6, 6, 6] },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase", "property": "StigmaModByRace", "valueType": "FloatArray", "value": [1.5, 1.5, 1.0, 1.25, 1.0, 1.1, 1.5, 1.5, 1.5, 1.5] },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase", "property": "ExitDifficultyByRace", "valueType": "IntArray", "value": [3, 3, 2, 3, 2, 2, 3, 3, 3, 3] }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "id": "structural-systems-scaffold",
+  "title": "PDV V3 broad structural systems scaffold overlay",
+  "defaultOutput": "PDV_StructuralSystemsScaffoldOverlay.esp",
+  "notes": [
+    "Create the substrate, sacred place, Daedric, curse, and FormList records in CK/xEdit first. This manifest only wires existing records.",
+    "This pass is dev-only and inert. Do not add PDV_DaedricPath_Hircine to PDV_FLST_AllDeities in this slice.",
+    "Scalar/object VMAD properties and FormList membership are overlay-authored here; VMAD arrays remain manual or reporting-only."
+  ],
+  "operations": [
+    { "kind": "attachScript", "record": "PDV_Substrate_KhajiitLunar", "script": "PDV_SubstrateBase" },
+    { "kind": "setProperty", "record": "PDV_Substrate_KhajiitLunar", "script": "PDV_SubstrateBase", "property": "SubstrateName", "valueType": "String", "value": "KhajiitLunar" },
+    { "kind": "setProperty", "record": "PDV_Substrate_KhajiitLunar", "script": "PDV_SubstrateBase", "property": "RequiredOriginRace", "valueType": "Int", "value": 6 },
+    { "kind": "setProperty", "record": "PDV_Substrate_KhajiitLunar", "script": "PDV_SubstrateBase", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV_Substrate_KhajiitLunar", "script": "PDV_SubstrateBase", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_Substrate_DunmerAncestor", "script": "PDV_SubstrateBase" },
+    { "kind": "setProperty", "record": "PDV_Substrate_DunmerAncestor", "script": "PDV_SubstrateBase", "property": "SubstrateName", "valueType": "String", "value": "DunmerAncestor" },
+    { "kind": "setProperty", "record": "PDV_Substrate_DunmerAncestor", "script": "PDV_SubstrateBase", "property": "RequiredOriginRace", "valueType": "Int", "value": 5 },
+    { "kind": "setProperty", "record": "PDV_Substrate_DunmerAncestor", "script": "PDV_SubstrateBase", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV_Substrate_DunmerAncestor", "script": "PDV_SubstrateBase", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_Substrate_ArgonianHist", "script": "PDV_SubstrateBase" },
+    { "kind": "setProperty", "record": "PDV_Substrate_ArgonianHist", "script": "PDV_SubstrateBase", "property": "SubstrateName", "valueType": "String", "value": "ArgonianHist" },
+    { "kind": "setProperty", "record": "PDV_Substrate_ArgonianHist", "script": "PDV_SubstrateBase", "property": "RequiredOriginRace", "valueType": "Int", "value": 7 },
+    { "kind": "setProperty", "record": "PDV_Substrate_ArgonianHist", "script": "PDV_SubstrateBase", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV_Substrate_ArgonianHist", "script": "PDV_SubstrateBase", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_SacredPlace_ArgonianBedOfChoice", "script": "PDV_SacredPlace" },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_ArgonianBedOfChoice", "script": "PDV_SacredPlace", "property": "PlaceName", "valueType": "String", "value": "ArgonianBedOfChoice" },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_ArgonianBedOfChoice", "script": "PDV_SacredPlace", "property": "MaxLocations", "valueType": "Int", "value": 1 },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_ArgonianBedOfChoice", "script": "PDV_SacredPlace", "property": "RequiredOriginRace", "valueType": "Int", "value": 7 },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_ArgonianBedOfChoice", "script": "PDV_SacredPlace", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_ArgonianBedOfChoice", "script": "PDV_SacredPlace", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_SacredPlace_KhajiitRoadHomes", "script": "PDV_SacredPlace" },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_KhajiitRoadHomes", "script": "PDV_SacredPlace", "property": "PlaceName", "valueType": "String", "value": "KhajiitRoadHomes" },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_KhajiitRoadHomes", "script": "PDV_SacredPlace", "property": "MaxLocations", "valueType": "Int", "value": 3 },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_KhajiitRoadHomes", "script": "PDV_SacredPlace", "property": "RequiredOriginRace", "valueType": "Int", "value": 6 },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_KhajiitRoadHomes", "script": "PDV_SacredPlace", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_KhajiitRoadHomes", "script": "PDV_SacredPlace", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_SacredPlace_OrcCommunity", "script": "PDV_SacredPlace" },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_OrcCommunity", "script": "PDV_SacredPlace", "property": "PlaceName", "valueType": "String", "value": "OrcCommunity" },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_OrcCommunity", "script": "PDV_SacredPlace", "property": "MaxLocations", "valueType": "Int", "value": 1 },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_OrcCommunity", "script": "PDV_SacredPlace", "property": "RequiredOriginRace", "valueType": "Int", "value": 8 },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_OrcCommunity", "script": "PDV_SacredPlace", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV_SacredPlace_OrcCommunity", "script": "PDV_SacredPlace", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase", "property": "DeityName", "valueType": "String", "value": "Hircine" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase", "property": "DeityDomain", "valueType": "String", "value": "Hunt, Lycanthropy, Predation" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase", "property": "DeityIndex", "valueType": "Int", "value": 100 },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase", "property": "StigmaGlobal", "valueType": "Object", "value": "PDV_GLO_HircineStigma" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPathBase", "property": "CommitmentSignalsRequired", "valueType": "Int", "value": 3 },
+
+    { "kind": "attachScript", "record": "PDV_CurseState", "script": "PDV_CurseState" },
+    { "kind": "setProperty", "record": "PDV_CurseState", "script": "PDV_CurseState", "property": "PDV_GLO_CurseState", "valueType": "Object", "value": "PDV_GLO_CurseState" },
+    { "kind": "setProperty", "record": "PDV_CurseState", "script": "PDV_CurseState", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "addFormListEntry", "record": "PDV_FLST_Substrates_All", "entry": "PDV_Substrate_KhajiitLunar" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_Substrates_All", "entry": "PDV_Substrate_DunmerAncestor" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_Substrates_All", "entry": "PDV_Substrate_ArgonianHist" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_Substrates_DevOnly", "entry": "PDV_Substrate_KhajiitLunar" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_Substrates_DevOnly", "entry": "PDV_Substrate_DunmerAncestor" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_Substrates_DevOnly", "entry": "PDV_Substrate_ArgonianHist" },
+
+    { "kind": "addFormListEntry", "record": "PDV_FLST_SacredPlaces_All", "entry": "PDV_SacredPlace_ArgonianBedOfChoice" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_SacredPlaces_All", "entry": "PDV_SacredPlace_KhajiitRoadHomes" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_SacredPlaces_All", "entry": "PDV_SacredPlace_OrcCommunity" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_SacredPlaces_DevOnly", "entry": "PDV_SacredPlace_ArgonianBedOfChoice" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_SacredPlaces_DevOnly", "entry": "PDV_SacredPlace_KhajiitRoadHomes" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_SacredPlaces_DevOnly", "entry": "PDV_SacredPlace_OrcCommunity" },
+
+    { "kind": "addFormListEntry", "record": "PDV_FLST_DaedricPaths_All", "entry": "PDV_DaedricPath_Hircine" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_DaedricPaths_DevOnly", "entry": "PDV_DaedricPath_Hircine" },
+
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_RepTracks_All", "valueType": "Object", "value": "PDV_FLST_RepTracks_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_StateTracks_All", "valueType": "Object", "value": "PDV_FLST_StateTracks_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_Substrates_All", "valueType": "Object", "value": "PDV_FLST_Substrates_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_SacredPlaces_All", "valueType": "Object", "value": "PDV_FLST_SacredPlaces_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_DaedricPaths_All", "valueType": "Object", "value": "PDV_FLST_DaedricPaths_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_CurseStateService", "valueType": "Object", "value": "PDV_CurseState" }
+  ]
+}

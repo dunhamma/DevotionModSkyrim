@@ -1,0 +1,43 @@
+{
+  "id": "vmad-consolidation",
+  "title": "PDV canonical VMAD consolidation overlay",
+  "defaultOutput": "PDV_VmadConsolidationOverlay.esp",
+  "notes": [
+    "This manifest re-emits the full canonical property set for PDV_MCM and PDV__ManagerQuest on single script attachments.",
+    "Use it when CK/xEdit merge-back work has split one script's properties across duplicate same-name VMAD entries on the framework record.",
+    "The goal is runtime-safe consolidation in an override plugin without mutating PlayerDevotion_Framework.esp in place."
+  ],
+  "operations": [
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_Manager", "valueType": "Object", "value": "PDV__ManagerQuest" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_AllDeities", "valueType": "Object", "value": "PDV_FLST_AllDeities" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_GLO_ActivePiety", "valueType": "Object", "value": "PDV_GLO_ActivePiety" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_GLO_ActiveTier", "valueType": "Object", "value": "PDV_GLO_ActiveTier" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_GLO_ActiveDeityIndex", "valueType": "Object", "value": "PDV_GLO_ActiveDeityIndex" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_GLO_PatronDeity", "valueType": "Object", "value": "PDV_GLO_PatronDeity" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_RepTracks_All", "valueType": "Object", "value": "PDV_FLST_RepTracks_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_StateTracks_All", "valueType": "Object", "value": "PDV_FLST_StateTracks_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_Substrates_All", "valueType": "Object", "value": "PDV_FLST_Substrates_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_SacredPlaces_All", "valueType": "Object", "value": "PDV_FLST_SacredPlaces_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_DaedricPaths_All", "valueType": "Object", "value": "PDV_FLST_DaedricPaths_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_CurseStateService", "valueType": "Object", "value": "PDV_CurseState" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_EventBusService", "valueType": "Object", "value": "PDV_EventBus" },
+
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_GLO_ActivePiety", "valueType": "Object", "value": "PDV_GLO_ActivePiety" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_GLO_ActiveTier", "valueType": "Object", "value": "PDV_GLO_ActiveTier" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_GLO_ActiveDeityIndex", "valueType": "Object", "value": "PDV_GLO_ActiveDeityIndex" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_GLO_PatronDeity", "valueType": "Object", "value": "PDV_GLO_PatronDeity" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_GLO_PatronState", "valueType": "Object", "value": "PDV_GLO_PatronState" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_FLST_AllDeities", "valueType": "Object", "value": "PDV_FLST_AllDeities" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_Kyne", "valueType": "Object", "value": "PDV_Deity_Kyne" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_Talos", "valueType": "Object", "value": "PDV_Deity_Talos" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_ConcordatStandingTrack", "valueType": "Object", "value": "PDV_RepTrack_ConcordatStanding" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_BosmerPathTrack", "valueType": "Object", "value": "PDV_StateTrack_BosmerPath" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_DunmerAncestorSubstrate", "valueType": "Object", "value": "PDV_Substrate_DunmerAncestor" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_KhajiitLunarSubstrate", "valueType": "Object", "value": "PDV_Substrate_KhajiitLunar" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_HircinePath", "valueType": "Object", "value": "PDV_DaedricPath_Hircine" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_CurseStateService", "valueType": "Object", "value": "PDV_CurseState" }
+  ]
+}

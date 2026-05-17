@@ -1,0 +1,101 @@
+{
+  "id": "skeleton-track-scaffold",
+  "title": "PDV V3 Structural Skeleton track scaffold overlay",
+  "defaultOutput": "PDV_SkeletonTrackScaffoldOverlay.esp",
+  "notes": [
+    "Create the track quest/global/FormList records in CK/xEdit first. This manifest only wires existing records.",
+    "This overlay keeps script/property/list wiring repeatable while Structural Skeleton remains dev-only."
+  ],
+  "operations": [
+    { "kind": "attachScript", "record": "PDV_RepTrack_ConcordatStanding", "script": "PDV_ReputationTrack" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_ConcordatStanding", "script": "PDV_ReputationTrack", "property": "TrackName", "valueType": "String", "value": "ConcordatStanding" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_ConcordatStanding", "script": "PDV_ReputationTrack", "property": "StorageBacking", "valueType": "Object", "value": "PDV_GLO_ConcordatStanding" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_ConcordatStanding", "script": "PDV_ReputationTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_RepTrack_ThalmorAlignment", "script": "PDV_ReputationTrack" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_ThalmorAlignment", "script": "PDV_ReputationTrack", "property": "TrackName", "valueType": "String", "value": "ThalmorAlignment" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_ThalmorAlignment", "script": "PDV_ReputationTrack", "property": "StorageBacking", "valueType": "Object", "value": "PDV_GLO_ThalmorAlignment" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_ThalmorAlignment", "script": "PDV_ReputationTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_RepTrack_WitchcraftExposure", "script": "PDV_ReputationTrack" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_WitchcraftExposure", "script": "PDV_ReputationTrack", "property": "TrackName", "valueType": "String", "value": "WitchcraftExposure" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_WitchcraftExposure", "script": "PDV_ReputationTrack", "property": "StorageBacking", "valueType": "Object", "value": "PDV_GLO_WitchcraftExposure" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_WitchcraftExposure", "script": "PDV_ReputationTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_RepTrack_KnightlyVowIntegrity", "script": "PDV_ReputationTrack" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_KnightlyVowIntegrity", "script": "PDV_ReputationTrack", "property": "TrackName", "valueType": "String", "value": "KnightlyVowIntegrity" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_KnightlyVowIntegrity", "script": "PDV_ReputationTrack", "property": "StorageBacking", "valueType": "Object", "value": "PDV_GLO_KnightlyVowIntegrity" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_KnightlyVowIntegrity", "script": "PDV_ReputationTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_RepTrack_DruidicStanding", "script": "PDV_ReputationTrack" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_DruidicStanding", "script": "PDV_ReputationTrack", "property": "TrackName", "valueType": "String", "value": "DruidicStanding" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_DruidicStanding", "script": "PDV_ReputationTrack", "property": "StorageBacking", "valueType": "Object", "value": "PDV_GLO_DruidicStanding" },
+    { "kind": "setProperty", "record": "PDV_RepTrack_DruidicStanding", "script": "PDV_ReputationTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_StateTrack_BosmerPath", "script": "PDV_StateTrack" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_BosmerPath", "script": "PDV_StateTrack", "property": "TrackName", "valueType": "String", "value": "BosmerPath" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_BosmerPath", "script": "PDV_StateTrack", "property": "StateGlobal", "valueType": "Object", "value": "PDV_GLO_BosmerPath" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_BosmerPath", "script": "PDV_StateTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_StateTrack_OrcLifeMode", "script": "PDV_StateTrack" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_OrcLifeMode", "script": "PDV_StateTrack", "property": "TrackName", "valueType": "String", "value": "OrcLifeMode" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_OrcLifeMode", "script": "PDV_StateTrack", "property": "StateGlobal", "valueType": "Object", "value": "PDV_GLO_OrcLifeMode" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_OrcLifeMode", "script": "PDV_StateTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_StateTrack_NordWorship", "script": "PDV_StateTrack" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_NordWorship", "script": "PDV_StateTrack", "property": "TrackName", "valueType": "String", "value": "NordWorship" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_NordWorship", "script": "PDV_StateTrack", "property": "StateGlobal", "valueType": "Object", "value": "PDV_GLO_NordWorship" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_NordWorship", "script": "PDV_StateTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_StateTrack_BretonTradition", "script": "PDV_StateTrack" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_BretonTradition", "script": "PDV_StateTrack", "property": "TrackName", "valueType": "String", "value": "BretonTradition" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_BretonTradition", "script": "PDV_StateTrack", "property": "StateGlobal", "valueType": "Object", "value": "PDV_GLO_BretonTradition" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_BretonTradition", "script": "PDV_StateTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_StateTrack_RedguardSect", "script": "PDV_StateTrack" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_RedguardSect", "script": "PDV_StateTrack", "property": "TrackName", "valueType": "String", "value": "RedguardSect" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_RedguardSect", "script": "PDV_StateTrack", "property": "StateGlobal", "valueType": "Object", "value": "PDV_GLO_RedguardSect" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_RedguardSect", "script": "PDV_StateTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_StateTrack_DunmerPath", "script": "PDV_StateTrack" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_DunmerPath", "script": "PDV_StateTrack", "property": "TrackName", "valueType": "String", "value": "DunmerPath" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_DunmerPath", "script": "PDV_StateTrack", "property": "StateGlobal", "valueType": "Object", "value": "PDV_GLO_DunmerPath" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_DunmerPath", "script": "PDV_StateTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_StateTrack_AltmerCrisis", "script": "PDV_StateTrack" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_AltmerCrisis", "script": "PDV_StateTrack", "property": "TrackName", "valueType": "String", "value": "AltmerCrisis" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_AltmerCrisis", "script": "PDV_StateTrack", "property": "StateGlobal", "valueType": "Object", "value": "PDV_GLO_AltmerCrisis" },
+    { "kind": "setProperty", "record": "PDV_StateTrack_AltmerCrisis", "script": "PDV_StateTrack", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "addFormListEntry", "record": "PDV_FLST_RepTracks_All", "entry": "PDV_RepTrack_ConcordatStanding" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_RepTracks_All", "entry": "PDV_RepTrack_ThalmorAlignment" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_RepTracks_All", "entry": "PDV_RepTrack_WitchcraftExposure" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_RepTracks_All", "entry": "PDV_RepTrack_KnightlyVowIntegrity" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_RepTracks_All", "entry": "PDV_RepTrack_DruidicStanding" },
+
+    { "kind": "addFormListEntry", "record": "PDV_FLST_RepTracks_DevOnly", "entry": "PDV_RepTrack_ConcordatStanding" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_RepTracks_DevOnly", "entry": "PDV_RepTrack_ThalmorAlignment" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_RepTracks_DevOnly", "entry": "PDV_RepTrack_WitchcraftExposure" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_RepTracks_DevOnly", "entry": "PDV_RepTrack_KnightlyVowIntegrity" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_RepTracks_DevOnly", "entry": "PDV_RepTrack_DruidicStanding" },
+
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_All", "entry": "PDV_StateTrack_BosmerPath" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_All", "entry": "PDV_StateTrack_OrcLifeMode" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_All", "entry": "PDV_StateTrack_NordWorship" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_All", "entry": "PDV_StateTrack_BretonTradition" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_All", "entry": "PDV_StateTrack_RedguardSect" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_All", "entry": "PDV_StateTrack_DunmerPath" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_All", "entry": "PDV_StateTrack_AltmerCrisis" },
+
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_DevOnly", "entry": "PDV_StateTrack_BosmerPath" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_DevOnly", "entry": "PDV_StateTrack_OrcLifeMode" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_DevOnly", "entry": "PDV_StateTrack_NordWorship" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_DevOnly", "entry": "PDV_StateTrack_BretonTradition" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_DevOnly", "entry": "PDV_StateTrack_RedguardSect" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_DevOnly", "entry": "PDV_StateTrack_DunmerPath" },
+    { "kind": "addFormListEntry", "record": "PDV_FLST_StateTracks_DevOnly", "entry": "PDV_StateTrack_AltmerCrisis" },
+
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_RepTracks_All", "valueType": "Object", "value": "PDV_FLST_RepTracks_All" },
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_FLST_StateTracks_All", "valueType": "Object", "value": "PDV_FLST_StateTracks_All" }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "pattern-proving-core",
+  "title": "PDV V3 pattern proving core overlay",
+  "defaultOutput": "PDV_PatternProvingCoreOverlay.esp",
+  "notes": [
+    "This manifest wires existing proving records and debug services only. It does not create new records.",
+    "Apply this after the structural scaffold has been merged back into PlayerDevotion_Framework.esp.",
+    "Manual arrays for ConcordatStanding, BosmerPath, and Hircine remain a strict-pattern-proving gate-close requirement."
+  ],
+  "operations": [
+    { "kind": "attachScript", "record": "PDV_Substrate_DunmerAncestor", "script": "PDV_Substrate_DunmerAncestor" },
+    { "kind": "setProperty", "record": "PDV_Substrate_DunmerAncestor", "script": "PDV_Substrate_DunmerAncestor", "property": "SubstrateName", "valueType": "String", "value": "DunmerAncestor" },
+    { "kind": "setProperty", "record": "PDV_Substrate_DunmerAncestor", "script": "PDV_Substrate_DunmerAncestor", "property": "RequiredOriginRace", "valueType": "Int", "value": 5 },
+    { "kind": "setProperty", "record": "PDV_Substrate_DunmerAncestor", "script": "PDV_Substrate_DunmerAncestor", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV_Substrate_DunmerAncestor", "script": "PDV_Substrate_DunmerAncestor", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_Substrate_KhajiitLunar", "script": "PDV_Substrate_KhajiitLunar" },
+    { "kind": "setProperty", "record": "PDV_Substrate_KhajiitLunar", "script": "PDV_Substrate_KhajiitLunar", "property": "SubstrateName", "valueType": "String", "value": "KhajiitLunar" },
+    { "kind": "setProperty", "record": "PDV_Substrate_KhajiitLunar", "script": "PDV_Substrate_KhajiitLunar", "property": "RequiredOriginRace", "valueType": "Int", "value": 6 },
+    { "kind": "setProperty", "record": "PDV_Substrate_KhajiitLunar", "script": "PDV_Substrate_KhajiitLunar", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV_Substrate_KhajiitLunar", "script": "PDV_Substrate_KhajiitLunar", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+
+    { "kind": "attachScript", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPath_Hircine" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPath_Hircine", "property": "DeityName", "valueType": "String", "value": "Hircine" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPath_Hircine", "property": "DeityDomain", "valueType": "String", "value": "Hunt, Lycanthropy, Predation" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPath_Hircine", "property": "DeityIndex", "valueType": "Int", "value": 100 },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPath_Hircine", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPath_Hircine", "property": "PDV_GLO_DebugLevel", "valueType": "Object", "value": "PDV_GLO_DebugLevel" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPath_Hircine", "property": "StigmaGlobal", "valueType": "Object", "value": "PDV_GLO_HircineStigma" },
+    { "kind": "setProperty", "record": "PDV_DaedricPath_Hircine", "script": "PDV_DaedricPath_Hircine", "property": "CommitmentSignalsRequired", "valueType": "Int", "value": 3 },
+
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_GLO_OriginRace", "valueType": "Object", "value": "PDV_GLO_OriginRace" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_Kyne", "valueType": "Object", "value": "PDV_Deity_Kyne" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_Talos", "valueType": "Object", "value": "PDV_Deity_Talos" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_ConcordatStandingTrack", "valueType": "Object", "value": "PDV_RepTrack_ConcordatStanding" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_BosmerPathTrack", "valueType": "Object", "value": "PDV_StateTrack_BosmerPath" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_DunmerAncestorSubstrate", "valueType": "Object", "value": "PDV_Substrate_DunmerAncestor" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_KhajiitLunarSubstrate", "valueType": "Object", "value": "PDV_Substrate_KhajiitLunar" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_HircinePath", "valueType": "Object", "value": "PDV_DaedricPath_Hircine" },
+    { "kind": "setProperty", "record": "PDV__ManagerQuest", "script": "PDV__ManagerQuest", "property": "PDV_CurseStateService", "valueType": "Object", "value": "PDV_CurseState" },
+
+    { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_EventBusService", "valueType": "Object", "value": "PDV_EventBus" }
+  ]
+}

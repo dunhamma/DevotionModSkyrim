@@ -1,7 +1,16 @@
 # PlayerDevotion (PDV) — Race Architecture Design Reference
-**Started:** May 12, 2026  
-**Last updated:** May 16, 2026 (Section 12 expanded — grilling rounds 2-3 decisions added)  
+**Started:** May 12, 2026
+**Last updated:** May 16, 2026 (v3 vocabulary cleanup and implementation-plan sync)
 **Status:** Living reference — race architecture and pre-matrix requirements locked as confirmed
+
+**Current implementation boundary:** Early sections of this reference were
+originally written against the removed v1 bucket model. The active
+implementation is the v2/v3 model: per-deity StorageUtil piety, daily scratch
+in `PDV.PietyToday`, the `PDV.Tier` 0-3 spine, explicit patron state,
+reputation/state tracks, and origin-gated substrates where needed. Treat any
+remaining `Combat/Social/Lifestyle` wording in older per-race notes as
+domain-signal shorthand, not as a request to restore bucket records or
+`PDV_GLO_DevotionLevel`.
 
 ---
 
@@ -15,12 +24,12 @@
 - Vanilla vampire races are normalized to the underlying birth race for origin detection
 - Temporary beast-form races defer one-shot origin detection rather than becoming a new origin
 
-### 1.2 Curse States Modify Weights, Not Buckets
+### 1.2 Curse States Modify Scoring Weights, Not Signal Ownership
 - Werewolf/Vampire changes HOW the same devotion is interpreted
-- Single DevotionLevel persists across curse states
-- Curse states never change which bucket an event affects — only magnitude
-- Single quest per race with three weight profiles (base, werewolf, vampire)
-- Flags: `bIsWerewolf`, `bIsVampire` on the race quest
+- Per-deity piety persists across curse states
+- Curse states never move an event into a different theology; they change magnitude, eligibility, and interpretation
+- v3 owns this through `PDV_CurseState` plus race/deity modifier tables
+- Detection should be centralized so deity scripts read one current curse state
 
 ### 1.3 Event Granularity is Simple (for now)
 - Events are simple integers: `EVENT_COMBAT_WIN`, `EVENT_SHRINE_VISIT`, etc.
@@ -28,97 +37,82 @@
 - Safe to add granularity later per-event without refactoring the system
 - Old saves with generic events still parse when granular events are added later
 
-### 1.4 Bucket System is Shared Names, Race-Specific Meaning
-- All races use: `CombatBucket`, `SocialBucket`, `LifestyleBucket` (−10 to +10)
-- Interpreter functions give each bucket race-specific theological meaning
-- Exception: Argonian (deferred custom buckets) and Bosmer Orthodox (custom EcologicalBucket + HuntingBucket)
-- Comments in interpreter functions must document WHY each event maps to each bucket
+### 1.4 Domain Signal Axes Are Shared, Race Meaning Is Specific
+- The old `CombatBucket`, `SocialBucket`, and `LifestyleBucket` records are removed
+- Design may still group signals as combat, social, lifestyle, devotional, craft, faction/quest, curse, or Daedric for readability
+- Each race/deity/path interprets those signal families differently
+- Bosmer Old Contract and Argonian Hist/community/Sithis still need custom interpretation, but not custom bucket records
+- Comments in scoring functions must document WHY each signal matters theologically
 
 ---
 
-## SECTION 2: System Architecture (LOCKED)
+## SECTION 2: System Architecture (LOCKED BASELINE, v3-ALIGNED)
 
 ### 2.1 Module Structure
 
-```
-PDV_Framework.esp (minimal dispatcher)
-└── PDV_MasterQuest
-    ├── OnPlayerLoadGame() → detect player.GetRace()
-    ├── Enable correct race quest via alias
-    └── Never runs again (race is permanent)
-
-PDV_[Race].esp × 10 (one per race, completely isolated)
-└── PDV_[Race]Quest
-    ├── CombatBucket (−10 to +10)
-    ├── SocialBucket (−10 to +10)
-    ├── LifestyleBucket (−10 to +10)
-    ├── DevotionLevel (0–100)
-    ├── bIsWerewolf = false
-    ├── bIsVampire = false
-    ├── EventLog[] (int array, max 50 entries, clears daily)
-    ├── OnInit() → RegisterForAllEvents()
-    ├── OnWerewolfStart/Cured(), OnVampireStart/Cured() → set flags
-    ├── Event handlers → log to EventLog throughout day
-    └── ProcessDawn()
-        ├── Iterate EventLog
-        ├── Route to curse-state interpreter
-        ├── Sum bucket shifts → clamp to (−5, +5)
-        ├── Apply delta to DevotionLevel
-        ├── Determine blessing/neglect tier
-        └── Clear EventLog
+```text
+PlayerDevotion_Framework.esp
+├── PDV__MainQuest
+│   └── RunOnce bootstrap, calls PDV_Origin.InitializeOrigin()
+├── PDV_Origin
+│   └── Detects birth race, normalizes vanilla vampire races, defers beast forms
+├── PDV__ManagerQuest
+│   ├── Owns StorageUtil piety/tier helpers and patron state
+│   ├── Consolidates PDV.PietyToday at dawn
+│   ├── Runs named v3 dawn slots for decay, spell/neglect, offers, and notification
+│   └── Refreshes active-patron mirror globals for CK conditions
+├── PDV_EventTypes / PDV_EventBus
+│   └── Central event IDs, attribution, and validated signal fan-out
+├── PDV_Deity_<Name> quests
+│   └── Persistent worship targets with race stance, scoring, rivalry, and boons
+├── v3 track quests
+│   ├── PDV_RepTrack_<Name> for continuous social/theological pressure
+│   └── PDV_State_<Name> for categorical path/mode/tradition state
+└── v3 substrate quests
+    └── Origin-gated identity layers for Dunmer, Khajiit, and Argonian
 ```
 
 ### 2.2 Event System: Hybrid (Events + Daily Audit)
 
 **Throughout the day:**
-- Major state changes fire events and log to `EventLog[]`
-- Simple event type integers (max ~20 types to start, expandable)
-- Each race module defines which events it cares about
+- Story Manager receivers, player alias events, and curated CK fragments emit simple event IDs
+- `PDV_EventBus` validates attribution and fans scoreable events to worship targets
+- Runtime events write only `PDV.PietyToday` or track/substrate scratch state
 
 **At dawn (ProcessDawn):**
-- Iterate log, call curse-state interpreter, sum shifts
-- Clamp total to (−5, +5) daily devotion delta
-- Apply to DevotionLevel, determine tier, clear log
+- Consolidate daily scratch to persistent piety, clamped to plus/minus 5 per deity
+- Apply v3 slots in order: decay, spell/neglect sync, commitment offers, notification
+- Recompute `PDV.Tier`, refresh active-patron mirrors, and clear scratch state
 
-### 2.3 Processing: Separate Interpreter Per Curse State
+### 2.3 Processing: Central Gain Pipeline With Optional Modifiers
 
 ```papyrus
-Function ProcessDayEvents()
-  int curseState = 0
-  if bIsWerewolf
-    curseState = 1
-  elseif bIsVampire
-    curseState = 2
-  endif
-  
-  int i = 0
-  while i < EventLog.length
-    int eventType = EventLog[i]
-    if curseState == 0
-      ApplyBaseInterpretation(eventType)
-    elseif curseState == 1
-      ApplyWerewolfInterpretation(eventType)
-    elseif curseState == 2
-      ApplyVampireInterpretation(eventType)
-    endif
-    i += 1
-  endwhile
+Float Function GetEffectiveGainMultiplier(PDV_DeityBase deity)
+    Float stanceMult = deity.GetGainMultiplier(deity.GetStanceForPlayer())
+    Float trackMult = GetReputationModifierOrDefault(deity)
+    Float curseMult = GetCurseModifierOrDefault(deity)
+    Float stigmaMult = GetDaedricStigmaModifierOrDefault(deity)
+    return stanceMult * trackMult * curseMult * stigmaMult
 EndFunction
 ```
 
-Each race has three functions: `ApplyBaseInterpretation()`, `ApplyWerewolfInterpretation()`, `ApplyVampireInterpretation()`.
+The v3 Preflight manager already has no-op slots for these modifiers. Later
+phases replace no-ops with concrete track, curse, and Daedric path readers
+without changing event receivers or deity scoring signatures.
 
-### 2.4 Devotion Level
+### 2.4 Public Bands vs Internal Tier Spine
 
-| Range | Descriptor | Tier |
-|-------|-----------|------|
-| 85–100 | Devoted | 3 |
-| 65–84 | Faithful | 2 |
-| 45–64 | Observant | 1 |
-| 25–44 | Wavering | — |
-| 0–24 | Distant | — |
+| Public band | Internal meaning |
+|-------|-----------|
+| Devoted | `PDV.Tier == 3` |
+| Faithful | `PDV.Tier == 2` |
+| Observant | `PDV.Tier == 1` |
+| Wavering | Presentation band below active tier |
+| Distant | Presentation band below active tier |
 
-Daily shift formula: `clamp((CombatShift + SocialShift + LifestyleShift) / 3, -5, +5)`
+The race sheets use five player-facing bands, but the implementation keeps the
+v2 `PDV.Tier` 0-3 storage spine. Do not add new tier globals or resurrect
+`PDV_GLO_DevotionLevel` to represent the two below-tier bands.
 
 ---
 
@@ -158,46 +152,46 @@ Broad worship is the cultural norm. Players can worship all gods (diluted) or ch
 ### 3.2 Dilution System for Poly Races (LOCKED)
 
 **Broad worship (no primary god chosen):**
-- All three buckets receive shifts from all events
-- Maximum daily shift capped at +2 (vs +5 for focused)
-- Blessing cap: Tier 1 only (Observant — never Faithful or Devoted)
+- Signals can contribute to multiple deity relationships, but gains are dampened
+- Maximum devotion cap defaults to Tier 2 / Faithful for 1.0
+- Broad worship has its own reward vocabulary, especially Nord combo/contextual favors
 - Represents: "acknowledged by the gods, beloved by none specifically"
 
 **Primary god chosen:**
-- Primary bucket weighted ×2
-- Other buckets weighted ×0.5
+- The foreground patron receives normal scoring and full boon eligibility
+- Background deity relationships may continue accumulating piety, subject to race/state filters
 - Maximum daily shift = +5 (full ceiling)
 - All three blessing tiers available (up to Devoted)
 - Represents: "this god knows your name"
 
 **Switching from broad to primary:**
-- Accumulated DevotionLevel carries over at 70%
+- The accepted deity carries forward 70% of current piety into foreground commitment handling
 - Weights immediately shift to primary-focused
-- Switching requires a **threshold event** (specific shrine visit or related quest) — NOT MCM toggle
+- Switching requires a threshold offer/event; it is not a normal player MCM toggle
 - Rationale: committing to a primary deity is a theological act, not a preference setting
 
-**OPEN — to resolve during per-race grilling:**
-- Q1: Should broad worshippers cap at Tier 1 (Observant) or Tier 2 (Faithful)?
-- Q2: What specific threshold events unlock primary god selection for each race?
+**Resolved by Section 12 and v3:** broad worship defaults to Tier 2 for 1.0;
+non-Khajiit races use commitment offers; Khajiit uses silent emergent patron
+weighting instead of formal offers.
 
 ---
 
-## SECTION 4: Race-Specific Architecture (IN PROGRESS)
+## SECTION 4: Race-Specific Architecture (LOCKED SUMMARY)
 
 ### 4.1 Race Status Overview
 
-| Race | Worship Type | Custom Buckets? | Setup Choice Type | Grill Status |
-|------|-------------|-----------------|-------------------|--------------|
-| Nord | Poly | No | Broad vs Primary (Old Ways / Nine Divines) | LOCKED |
-| Imperial | Poly | No | Broad vs Primary (profession-based) | LOCKED |
-| Breton | Three-Track Poly | No | Tradition-first (Knight / Hidden Art / Green Way) | LOCKED |
-| Dunmer | Semi-Mono | No | Default vs alternative path | QUEUED |
-| Altmer | Poly | Maybe | Study definition open | LOCKED |
-| Khajiit | Layered Lunar (Emergent Patron) | No | No setup — emergent alignment via behavior | LOCKED |
-| Bosmer | Multi-Path | YES (Old Contract custom path) | Explicit 4-path choice at setup | LOCKED |
-| Redguard | Sect-Layered Poly | No | Crown vs Forebear vs Ash'abah | LOCKED |
-| Orc | Single-Core Social Modes | No | Malacath across Stronghold / City / Exile | LOCKED |
-| Argonian | Layered Custom | YES | Hist / Collective / Sithis exile architecture | LOCKED |
+| Race | Worship Type | Special v3 Architecture | Setup / Commitment Shape | Status |
+|------|-------------|-------------------------|--------------------------|--------|
+| Nord | Poly | Broad-worship combos; possible substrate promotion after playtest | Broad vs Primary, Old Ways / Nine Divines | LOCKED |
+| Imperial | Poly | `ConcordatStanding` reputation track | Broad vs Primary with public/private Talos pressure | LOCKED |
+| Breton | Three-Track Poly | `WitchcraftExposure`, `KnightlyVowIntegrity`, `DruidicStanding` | Tradition-first: Knight / Hidden Art / Green Way | LOCKED |
+| Dunmer | Layered | Strong ancestor substrate plus Good Daedra foreground | No setup choice; portable shrine and home bonus | LOCKED |
+| Altmer | Poly | `ThalmorAlignment`, Lorkhan reactions, crisis state | Faction/theological identity and threshold offers | LOCKED |
+| Khajiit | Layered Lunar | Strong lunar substrate, moon cycle, road homes, emergent patron | No formal setup; behavior shifts emphasis silently | LOCKED |
+| Bosmer | Multi-Path | `BosmerPath` state track and PDV-owned Green Pact tagging | Explicit 4-path choice at setup | LOCKED |
+| Redguard | Sect-Layered Poly | Sect state; light ancestor reverence | Crown vs Forebear vs Ash'abah | LOCKED |
+| Orc | Single-Core Social Modes | `OrcLifeMode` state and `PDV_SacredPlace` contextual modifier | Malacath across Stronghold / City / Exile | LOCKED |
+| Argonian | Layered Custom | Strong Hist substrate, community, Sithis pressure | Hist / Collective / Sithis exile architecture | LOCKED |
 
 ### 4.2 Bosmer (LOCKED)
 
@@ -205,12 +199,12 @@ Broad worship is the cultural norm. Players can worship all gods (diluted) or ch
 
 **Four devotional paths identified from lore:**
 
-| Path | Deity | Lore Source | Bucket Focus |
+| Path | Deity | Lore Source | Signal / Track Focus |
 |------|-------|-------------|-------------|
-| The Old Contract | Y'ffre Orthodox | Hunter/Ranger class, Green Pact | EcologicalBucket (custom) + HuntingBucket (custom) |
-| The Living Story | Y'ffre Moderate | Scholar/Archer class, oral tradition | SocialBucket + LifestyleBucket |
-| The Exchange | Z'en | Justice, balance, owed repayment | SocialBucket + CombatBucket |
-| The Bandit Road | Baan Dar | Exile survival, trickster road-life | LifestyleBucket + CombatBucket |
+| The Old Contract | Y'ffre Orthodox | Hunter/Ranger class, Green Pact | PDV-owned Green Pact tags + hunting conduct |
+| The Living Story | Y'ffre Moderate | Scholar/Archer class, oral tradition | Story, memory, community, daily conduct |
+| The Exchange | Z'en | Justice, balance, owed repayment | Justice, mercy, debt, proportional retaliation |
+| The Bandit Road | Baan Dar | Exile survival, trickster road-life | Survival, stealth, trickster aid, road life |
 
 **Secondary Bosmer religious layer (LOCKED):**
 - `Arkay`
@@ -243,7 +237,7 @@ Broad worship is the cultural norm. Players can worship all gods (diluted) or ch
 
 ### 4.3 Argonian (LOCKED)
 
-**Confirmed:** Custom bucket structure required. Generic three-bucket system insufficient.
+**Confirmed:** Custom interpretation required. Generic shared domain axes are insufficient.
 
 **Theological foundation (UESP verified):**
 - Argonians do not worship Aedra or Daedra — no "religion" as known elsewhere in Tamriel
@@ -257,7 +251,7 @@ Broad worship is the cultural norm. Players can worship all gods (diluted) or ch
 - `Sithis acknowledgment` is the third layer
 
 Rationale:
-- These are not three equal gods or three equal buckets
+- These are not three equal gods or three equal scoring tracks
 - The Hist remains constitutive even in absence
 - Community acts as the main exile survival structure
 - Sithis is culturally real and more foregrounded in Skyrim exile, but not equal to the Hist
@@ -289,7 +283,7 @@ Rationale:
 
 ### Key Findings:
 - No semantic granularity required at event level — confirmed across all races
-- Curse states change theological weight, not bucket assignment — confirmed
+- Curse states change theological weight, not signal ownership — confirmed
 - Argonians are categorically different: no Aedra, no Daedra, closed cosmological system
 - Bosmer Green Pact is a covenant, not a practice — compliance vs non-compliance is binary
 - Khajiit Lunar Lattice is identity-constitutive, not merely devotional practice
@@ -332,21 +326,17 @@ Rationale:
 
 ---
 
-## SECTION 8: Implementation Checklist (Post-Grilling)
+## SECTION 8: Implementation Carry-Forward (v3)
 
-- [ ] Lock all per-race bucket structures and primary god options
-- [ ] Define full event type enum (global + race-specific)
-- [ ] Implement PDV_Framework.esp dispatcher
-- [ ] Build PDV_Nord.esp as reference implementation
-- [ ] Implement dilution system (broad vs primary, 70% carry-over)
-- [ ] Implement threshold event detection for primary god selection
-- [ ] Map race-specific quest-choice signal tables and connect them to devotion weighting
-- [ ] Implement ProcessDawn() with curse-state routing
-- [ ] Implement blessing/neglect tier effects (3 tiers × 10 races)
-- [ ] Build MCM: DevotionLevel display, current path, current tier
-- [ ] Test curse state transitions
-- [ ] Balance all weights per race per curse state
-- [ ] Stress test in heavy mod list
+The old post-grilling checklist is superseded by `PDV_Architecture_v3.md`.
+Carry these race-reference requirements forward into those phases:
+
+- Structural Skeleton: scaffold first-release reputation tracks, state tracks, strong substrates, and sacred-place helpers while keeping unfinished content dev-only.
+- Pattern Proving: prove Imperial Concordat, Bosmer Path, Dunmer Ancestor, Khajiit moon/emergent patron, one contextual favor family, one Daedric price/stigma path, one commitment offer, and one neglect/decay path.
+- Signal expansion: map race-specific quest/faction choices as curated signals; ambient behavior remains slower background drift.
+- Curse-state overlay: centralize Werewolf/Vampire state and compose modifiers with stance, reputation, and Daedric pressure.
+- UI: surface public bands, current path/mode, patron state, and custom-race fallback without exposing old bucket language.
+- Verification: add coverage for track globals, state labels, substrate origin gates, sacred-place records, visibility state, and hidden dev-only scaffolds.
 
 ---
 
@@ -584,40 +574,40 @@ Step 2: Worship broadly until a god's offer fires
 **Broad → Primary Transition System (LOCKED):**
 - No questline dependency
 - No shrine location requirement
-- Bucket accumulation triggers the offer organically
+- Sustained domain-aligned piety triggers the offer organically
 - Player's actual playstyle determines which god notices them first
 - Multiple offers possible if player excels across domains
-- Player can decline ("Not yet") — bucket resets slightly, broad worship continues
-- 70% DevotionLevel carry-over on commitment
+- Player can decline ("Not yet") — offer cooldown applies, broad worship continues
+- 70% piety carry-over on commitment
 
 **Threshold Trigger Rules (LOCKED):**
-- Single bucket threshold for most gods
-- Combined bucket threshold only for multi-domain gods (Mara, Talos)
-- Threshold = sustained high bucket (e.g. ≥ +7 for 3 consecutive days) — exact values TBD during balancing
+- Single domain-threshold pattern for most gods
+- Combined domain threshold only for multi-domain gods (Mara, Talos)
+- Threshold = sustained high piety/signals in that domain — exact values TBD during balancing
 
-**God → Bucket Trigger Mapping:**
+**God → Domain Signal Mapping:**
 
-| God | Pantheon | Trigger Bucket | Notes |
+| God | Pantheon | Primary Signal Domain | Notes |
 |-----|----------|---------------|-------|
-| Shor | Old Ways | CombatBucket ≥ threshold | Warrior-king, Sovngarde aspiration |
-| Kyne | Old Ways | CombatBucket + LifestyleBucket | Storm-mother spans martial and natural |
-| Tsun | Old Ways | CombatBucket ≥ threshold | Trial against adversity, honourable combat |
-| Stuhn | Old Ways | CombatBucket + SocialBucket | Fair-fighting and ransom — combat with honour |
-| Mara (Old Ways) | Old Ways | SocialBucket + LifestyleBucket | Hearth, harvest, survival of home |
-| Talos/Ysmir | Old Ways | CombatBucket + Thalmor encounter | Shor-incarnation — combat + defiance |
-| Akatosh | Nine Divines | LifestyleBucket ≥ threshold | Time, order, long devotion streaks |
-| Talos | Nine Divines | CombatBucket + Thalmor encounter | Deified emperor — same trigger, different framing |
-| Kynareth | Nine Divines | LifestyleBucket ≥ threshold | Nature, winds, travel |
-| Mara (Imperial) | Nine Divines | SocialBucket + LifestyleBucket | Love, compassion — same trigger as Old Ways Mara |
-| Zenithar | Nine Divines | SocialBucket ≥ threshold | Commerce, honest work |
-| Arkay | Nine Divines | LifestyleBucket ≥ threshold | Death rites, burial, life cycle |
-| Stendarr | Nine Divines | CombatBucket + SocialBucket | Mercy in combat — fighting with restraint |
-| Julianos | Nine Divines | LifestyleBucket ≥ threshold | Wisdom, study, College-adjacent |
-| Dibella | Nine Divines | SocialBucket ≥ threshold | Beauty, art, bardic acts |
+| Shor | Old Ways | Combat / heroic trial | Warrior-king, Sovngarde aspiration |
+| Kyne | Old Ways | Combat + outdoor life | Storm-mother spans martial and natural |
+| Tsun | Old Ways | Combat / honorable trial | Trial against adversity, honourable combat |
+| Stuhn | Old Ways | Combat + mercy/order | Fair-fighting and ransom — combat with honour |
+| Mara (Old Ways) | Old Ways | Hearth + community | Hearth, harvest, survival of home |
+| Talos/Ysmir | Old Ways | Combat + Thalmor defiance | Shor-incarnation — combat + defiance |
+| Akatosh | Nine Divines | Time/order persistence | Time, order, long devotion streaks |
+| Talos | Nine Divines | Combat + Thalmor defiance | Deified emperor — same trigger, different framing |
+| Kynareth | Nine Divines | Nature, winds, travel | Nature, winds, travel |
+| Mara (Imperial) | Nine Divines | Love + household/community | Love, compassion — same trigger as Old Ways Mara |
+| Zenithar | Nine Divines | Commerce and honest work | Commerce, honest work |
+| Arkay | Nine Divines | Death rites and life cycle | Death rites, burial, life cycle |
+| Stendarr | Nine Divines | Mercy + restraint in combat | Mercy in combat — fighting with restraint |
+| Julianos | Nine Divines | Wisdom/study | Wisdom, study, College-adjacent |
+| Dibella | Nine Divines | Beauty/art/social grace | Beauty, art, bardic acts |
 
 **Quest-choice integration (LOCKED):**
 - Nordic gods do not require questline completion to become available
-- However, quest choices that clearly expose Nordic theological identity should outweigh passive bucket drift when present
+- However, quest choices that clearly expose Nordic theological identity should outweigh passive ambient drift when present
 
 **Heavy Nordic quest signals (LOCKED):**
 - `Civil War allegiance`, `Talos-ban defiance`, and `Thalmor resistance` strongly weight `Talos/Ysmir`, `Shor`, and broader Nord identity
@@ -632,12 +622,12 @@ Step 2: Worship broadly until a god's offer fires
 - Jhunal — Forgotten by 4E 201 Nords, absorbed into Julianos
 
 **Open for balancing (not architectural):**
-- Exact bucket threshold values (e.g. ≥ +7 vs ≥ +8)
+- Exact offer-threshold values
 - Number of consecutive days required
-- How much bucket resets on "Not yet" decline
+- Offer cooldown / piety handling on "Not yet" decline
 
 **Curse state weight notes (to detail during implementation):**
-- Werewolf Nord: Hircine pulls against Shor/Sovngarde — CombatBucket weights shift toward hunt
+- Werewolf Nord: Hircine pulls against Shor/Sovngarde — combat signals shift toward hunt interpretation
 - Vampire Nord: Severs afterlife claim — Shor/Sovngarde path weight reduced, Molag Bal pressure added
 
 ### 10.2 Imperial (LOCKED)
@@ -648,7 +638,7 @@ No baseline choice needed (one pantheon — Nine Divines)
 Broad worship begins automatically
 Cap: Tier 2 (Faithful) — civic observance is culturally normal
 Tier 3 only through primary god commitment
-Same bucket threshold trigger system as Nord
+Same piety-threshold offer system as Nord
 ```
 
 **Unique Mechanic: Concordat Standing Track (LOCKED)**
@@ -696,8 +686,8 @@ Positive = Compliance (enforcing ban, reporting worshippers)
 
 **Other Divine gods (non-Talos):**
 - All Nine Divines available as primary god choices
-- Same single/combined bucket threshold trigger system as Nord
-- God → bucket trigger mapping: identical to Nine Divines column from Nord table
+- Same single/combined piety-threshold offer system as Nord
+- God/domain mapping follows the Nine Divines column from the Nord table
 
 **Talos commitment gate (LOCKED):**
 - Full Talos primary commitment is available only in `Uncommitted`, `Private Defiant`, and `Open Defiant`
@@ -716,7 +706,7 @@ if ConcordatStanding > 50
 
 ; Open Defiant state (Standing < −50)
 ;   Defiance aligns with Stendarr's mercy, Arkay unaffected
-elif ConcordatStanding < -50
+elseIf ConcordatStanding < -50
     StendarrDailyShift *= 1.15 ; active resistance = merciful act
     ; Arkay unaffected — death rites are separate from politics
 endif
@@ -768,7 +758,7 @@ Rationale:
 ```
 Nine Divines devotion remains active at reduced effectiveness
   No native Imperial Hircine path opens
-  SocialBucket and other civic-facing devotion weights reduce
+  Civic-facing devotion weights reduce
   The player becomes theologically homeless rather than newly integrated
 ```
 
@@ -824,19 +814,19 @@ WitchcraftExposure (0–100, starts at 0)
 if WitchcraftExposure < 25
     DailyShift *= 1.0   ; hidden practice — full accumulation
 
-elseif WitchcraftExposure < 50
+elseIf WitchcraftExposure < 50
     DailyShift *= 0.9   ; suspected — mild social friction
-    SocialBucket -= 1
 
-elseif WitchcraftExposure < 75
+elseIf WitchcraftExposure < 75
     DailyShift *= 0.75  ; known — active pressure disrupts practice
-    SocialBucket -= 2
 
 else
     DailyShift *= 1.25  ; notorious — Daedric prince rewards full commitment
-    SocialBucket -= 4   ; complete social rupture
 endif
 ```
+
+Social rupture is surfaced through dialogue/privilege/state effects, not a
+removed social bucket.
 
 **What raises exposure:**
 - Completing Daedric quests publicly (+15)
@@ -871,7 +861,7 @@ if KnightlyVowIntegrity < 50
     StendarrDailyShift *= 0.5
     AkatoshDailyShift *= 0.75
 
-elif KnightlyVowIntegrity < 25
+elseIf KnightlyVowIntegrity < 25
     StendarrDailyShift *= 0.25
     AkatoshDailyShift *= 0.5
 ```
@@ -900,7 +890,7 @@ PENITENT: triggered if cured of vampirism
   
 RESTORED: after sustained Pact-aligned behaviour post-ritual
   Y'ffre devotion resumes fully
-  Permanent −10 DevotionLevel scar from excommunication period
+  Permanent piety/tier scar from excommunication period
 ```
 
 **Werewolf interaction (LOCKED — unique fork mechanic):**
@@ -941,24 +931,14 @@ Rationale: The lore explicitly says Druidic Circles are split on werewolfism. Th
 Breton curse states are uniquely path-dependent — same curse lands completely differently per tradition:
 
 ```papyrus
-Function ApplyWerewolfInterpretation(int eventType)
-  if bTradition == TRADITION_WITCHCRAFT
-    ; Glenmoril is family — Hircine already in frame
-    ; Most natural werewolf path in all of Tamriel
-    LifestyleBucket += 3  ; coven connection, Hircine welcomed
-    SocialBucket += 2     ; Glenmoril community available
-
-  elseif bTradition == TRADITION_DRUIDIC
-    ; Theological split — beast-kinship familiar but wrong god gave it
-    ; Resolved by Druidic Trial choice (see above)
-    LifestyleBucket += 1  ; beast-shape is familiar
-    SocialBucket -= 1     ; Y'ffre priesthood disapproves pending Trial
-
-  elseif bTradition == TRADITION_IMPERIAL
-    ; No framework — silent, uncomfortable
-    LifestyleBucket -= 1  ; no religious home
-    SocialBucket -= 2     ; knightly orders incompatible
-  endif
+Function ApplyWerewolfTransition()
+    if CurrentTradition == TRADITION_WITCHCRAFT
+        SetCurseInterpretation(CURSE_WEREWOLF, "GlenmorilAccepted")
+    elseIf CurrentTradition == TRADITION_DRUIDIC
+        SetCurseInterpretation(CURSE_WEREWOLF, "DruidicTrial")
+    elseIf CurrentTradition == TRADITION_KNIGHT
+        SetCurseInterpretation(CURSE_WEREWOLF, "SpirituallyHomeless")
+    endIf
 EndFunction
 ```
 
@@ -967,7 +947,7 @@ EndFunction
 | | Imperial Divines | Druidic (Y'ffre) | Witchcraft |
 |--|-----------------|-----------------|------------|
 | Vampire | Horror, Nine Divines lost, knightly oaths broken | Absolute excommunication (worst), ritual re-entry possible | Partial home in Volkihar court, witch-mother acceptance |
-| Werewolf | Silent, no framework, SocialBucket penalty | CONTESTED — Druidic Trial fires, player chooses fork | Natural fit — Glenmoril is family, Hircine already in frame |
+| Werewolf | Silent, no framework, social/knightly cost | CONTESTED — Druidic Trial fires, player chooses fork | Natural fit — Glenmoril is family, Hircine already in frame |
 
 ---
 
@@ -1013,7 +993,7 @@ EndFunction
 No setup choice needed — Dunmer worship is layered, not path-based
 Layer 1 (ancestor ash-prayer) is ALWAYS active — cannot be opted out
 Layer 2 (Good Daedra acknowledgment) is the natural deepening — active by default
-Layer 3 (primary Good Daedra focus) unlocked by bucket threshold — player choice
+Layer 3 (primary Good Daedra focus) unlocked by sustained piety/signal threshold — player choice
 Broad worship cap: Tier 2 (Faithful) — Dunmer broad practice is already devout
 Tier 3 only through primary Good Daedra commitment
 ```
@@ -1038,7 +1018,7 @@ Layer 2 — STANDARD FOR DEVOUT (Good Daedra acknowledgment)
 
 Layer 3 — OPTIONAL DEPTH (primary Good Daedra focus)
   Player commits to ONE of the three Good Daedra
-  Triggered by bucket threshold (same system as Nord/Breton)
+  Triggered by sustained piety/signal threshold (same offer family as Nord/Breton)
   Ancestor practice (Layer 1) remains at FULL weight always
   Choosing Azura never reduces ash-prayer — only adds weight on top
 ```
@@ -1047,24 +1027,24 @@ Layer 3 — OPTIONAL DEPTH (primary Good Daedra focus)
 
 **Primary God Options (Layer 3):**
 
-| God | Bucket Affected | Threshold Trigger | Devotional Acts |
+| God | Primary Signal Domain | Threshold Trigger | Devotional Acts |
 |-----|----------------|------------------|-----------------|
-| Azura | LifestyleBucket × 2 | LifestyleBucket sustained | Dawn/dusk observance, prophetic dreams, Azura's Star quest |
-| Boethiah | CombatBucket × 2 | CombatBucket sustained | Strength proved, rivalry overcome, conspiracy acts |
-| Mephala | SocialBucket × 2 | SocialBucket sustained | Secrets maintained, hidden communities, information acts |
+| Azura | Dawn/dusk, prophecy, thresholds | Sustained Azura-coded piety | Dawn/dusk observance, prophetic dreams, Azura's Star quest |
+| Boethiah | Strength, rivalry, overthrow | Sustained Boethiah-coded piety | Strength proved, rivalry overcome, conspiracy acts |
+| Mephala | Secrets, hidden community, information | Sustained Mephala-coded piety | Secrets maintained, hidden communities, information acts |
 
 Other two Good Daedra remain active at × 0.75 after Layer 3 commitment.
 
-**Bucket Meanings (Dunmer-specific interpretation):**
+**Signal Meanings (Dunmer-specific interpretation):**
 
 ```
-CombatBucket = acts witnessed by ancestors (honour/shame framework)
+Combat signals = acts witnessed by ancestors (honour/shame framework)
   Boethiah adds: strength proved beyond mere survival
   
-SocialBucket = community solidarity, ancestor consultation, oral history
+Social signals = community solidarity, ancestor consultation, oral history
   Mephala adds: hidden communities, webs of trust/knowledge
   
-LifestyleBucket = shrine maintenance, offerings, daily ash-prayer practice
+Lifestyle/devotional signals = shrine maintenance, offerings, daily ash-prayer practice
   Azura adds: dawn/dusk observance, prophetic attentiveness
 ```
 
@@ -1108,7 +1088,7 @@ Layer 2 Good Daedra path weight INCREASES:
 
 On CURE:
   Ash-prayer functionality RESTORES
-  Permanent −10 DevotionLevel scar (ancestors remember the silence)
+  Permanent piety/tier scar (ancestors remember the silence)
   Layer 1 resumes at full weight
   Layer 2 resumes at full weight
   Rationale: ancestors are present and they noticed. The silence was real.
@@ -1146,7 +1126,7 @@ Step 1: Choose faction alignment
 Step 2: Worship broadly or commit to primary god
 → Broad worship cap: Tier 2 (Faithful)
 → Tier 3 only through primary god commitment
-→ Bucket threshold trigger system (same as all poly races)
+→ Piety-threshold offer system (same as all poly races)
 → Faction shapes accessibility of gods, not availability
 ```
 
@@ -1163,7 +1143,7 @@ Layer 2 (STANDARD FOR DEVOUT): Full pantheon acknowledgment
 
 Layer 3 (OPTIONAL DEPTH): Primary secondary god
   Player commits to one deity beyond Auri-El
-  Triggered by bucket threshold
+  Triggered by sustained piety/signal threshold
   Auri-El (Layer 1) remains at full weight always
 ```
 
@@ -1171,17 +1151,17 @@ Layer 3 (OPTIONAL DEPTH): Primary secondary god
 UESP confirmed: Auri-El, Trinimac, Magnus, Syrabane, Y'ffre, Xarxes, Mara, Stendarr, Phynaster
 (10th listed is Lorkhan — excluded as active penalty, not worshippable)
 
-| God | Domain | Bucket Trigger | Faction Affinity |
+| God | Domain | Primary Signal Domain | Faction Affinity |
 |-----|--------|---------------|-----------------|
 | Auri-El | Time, return, supreme ancestor — Layer 1 always | Layer 1 always | All |
-| Magnus | Magic source, escape from Mundus | LifestyleBucket | Psijic primary |
-| Trinimac | Martial virtue, civilisational defence | CombatBucket | Thalmor primary |
-| Xarxes | Ancestry, secret knowledge, death records | SocialBucket + LifestyleBucket | Psijic / Divine Body |
-| Y'ffre | Nature laws, Earthbones | LifestyleBucket | Divine Body / Moderate |
-| Mara | Fertility, family, wife of Auri-El | SocialBucket | All |
-| Stendarr | Compassion, righteous rule | SocialBucket + CombatBucket | Divine Body |
-| Syrabane | Magical protection, apprentices | LifestyleBucket | Psijic / Divine Body |
-| Phynaster | Longevity, elven heritage | LifestyleBucket | All (cult) |
+| Magnus | Magic source, escape from Mundus | Magic/study/self-cultivation | Psijic primary |
+| Trinimac | Martial virtue, civilisational defence | Martial virtue/enforcement | Thalmor primary |
+| Xarxes | Ancestry, secret knowledge, death records | Ancestry + recordkeeping | Psijic / Divine Body |
+| Y'ffre | Nature laws, Earthbones | Nature law / Earthbones | Divine Body / Moderate |
+| Mara | Fertility, family, wife of Auri-El | Family / continuity pressure | All |
+| Stendarr | Compassion, righteous rule | Compassion + righteous force | Divine Body |
+| Syrabane | Magical protection, apprentices | Magical protection/study | Psijic / Divine Body |
+| Phynaster | Longevity, elven heritage | Longevity / elven heritage | All (cult) |
 
 ---
 
@@ -1196,18 +1176,18 @@ The Divine Body starts: 50
 Psijic Tradition starts: 25
 
 Low (0–30) = Heterodox: scholarly independence, private doubt, Psijic-leaning
-  LifestyleBucket shift × 1.5 (self-cultivation prioritised)
-  CombatBucket shift × 0.75 (enforcement feels wrong)
+  Self-cultivation signals × 1.5
+  Enforcement/martial signals × 0.75
   Magnus/Syrabane devotion paths MORE accessible
   Daedra worship RISKS exposure (breaks oldest Altmer religious law)
 
 Mid (31–69) = Orthodox Moderate: standard practice
-  All buckets at × 1.0
+  All normal signal domains at × 1.0
   Full pantheon equally accessible
 
 High (70–100) = Thalmor Devout: enforcement as worship
-  CombatBucket shift × 1.5 (hunting heresy IS worship)
-  LifestyleBucket shift × 0.75 (less personal cultivation time)
+  Enforcement/martial signals × 1.5
+  Private self-cultivation signals × 0.75
   Trinimac devotion AVAILABLE as primary
 ```
 
@@ -1241,9 +1221,9 @@ The track handles drift toward or away from orthodoxy.
 UESP/Imperial Library confirmed: Lorkhan is the Corpse-God, the most unholy power
 in Altmer theology. He permanently broke Altmer connection to the spirit plane.
 Any act validating, strengthening, or celebrating the mortal world he created
-triggers a direct DevotionLevel hit — bypassing buckets entirely.
+triggers a direct piety/tier reaction — bypassing ordinary domain scoring entirely.
 
-**Why it bypasses buckets:** Not "you did something your god disapproves of" —
+**Why it bypasses ordinary scoring:** Not "you did something your god disapproves of" —
 it's "you touched the thing that broke us." Theologically categorical.
 
 **Lorkhan's names across cultures (all trigger same penalty):**
@@ -1303,7 +1283,7 @@ introspection, meditation, mastery of self through Mysticism.
 ```
 EVENT_MYSTICISM_PRACTICE
   Fires when: player uses Alteration, Illusion, or reads certain obscure tomes
-  Psijic-aligned players: generates LifestyleBucket shift (magical discipline = devotion)
+  Psijic-aligned players: generates self-cultivation / magical-discipline piety
   Other factions: no shift (same action, different theological weight)
   Rationale: the Elder Way treated magical practice as meditative, not combative
 ```
@@ -1333,7 +1313,7 @@ Tiny heretical path available (Tier 1 cap only):
   "Vampirism is at least a path away from mortal limits"
   Self-justification theology, no institutional support
   Molag Bal accessible as hostile patron
-  DevotionLevel accumulates at 25% rate
+  Piety accumulates at 25% rate
   Hard ceiling: Tier 1 (Observant) — cannot progress further
 
 No restoration path — the file says "there is no recoverable Altmer position
@@ -1545,7 +1525,7 @@ Rationale:
 **The Old Contract (LOCKED, amended 2026-05-17):**
 ```
 Only Bosmer path with hard or semi-hard Green Pact compliance mechanics
-Uses custom Bosmer-specific buckets or rule checks
+Uses PDV-owned Green Pact tags and path-specific rule checks
 Represents strict orthodoxy and the heaviest devotional burden
 Has the highest ceiling of all Bosmer paths as payoff
 
@@ -1573,7 +1553,7 @@ Full spec: `references/PDV_BosmerPactModel_Planning.md`.
 
 **The Living Story (LOCKED):**
 ```
-Uses the shared three-bucket architecture
+Uses the shared event/curated-signal architecture
 Adds a light Bosmer-only ForestAttunement overlay
 Restricted to high-confidence detectable triggers only
 ```
@@ -1584,9 +1564,9 @@ Restricted to high-confidence detectable triggers only
 - Represents Bosmer diaspora spirituality outside full Pact enforcement
 
 **The Living Story event structure (LOCKED):**
-- `LifestyleBucket`: Y'ffre + Arkay
-- `SocialBucket`: Mara + Xarxes + Stendarr
-- `CombatBucket`: Y'ffre hunting conduct + Stendarr restraint
+- Lifestyle/devotional signals: Y'ffre + Arkay
+- Social/community signals: Mara + Xarxes + Stendarr
+- Combat/restraint signals: Y'ffre hunting conduct + Stendarr restraint
 - `ForestAttunement`: built only from reliable Skyrim-observable proxies
 
 **The Living Story trigger rule (LOCKED):**
@@ -1604,9 +1584,9 @@ Never becomes a generic merchant-profit path
 ```
 
 **The Exchange architecture (LOCKED):**
-- Shared bucket architecture
-- `SocialBucket` + `CombatBucket` do most of the justice / reckoning work
-- `LifestyleBucket` carries the softer toil / trade / balance-of-living layer
+- Shared event/curated-signal architecture
+- Social/community and combat/reckoning signals do most of the justice work
+- Lifestyle/craft/trade signals carry the softer toil and balance-of-living layer
 
 **The Bandit Road / Baan Dar (LOCKED):**
 ```

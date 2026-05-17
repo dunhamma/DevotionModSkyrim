@@ -42,11 +42,17 @@ const MUTAGEN_BRIDGE = path.join(
 
 const OBJECT_VALUE_TYPES = new Set(["Object", "Alias"]);
 const SCALAR_VALUE_TYPES = new Set(["Int", "Float", "Bool", "String"]);
-const SUPPORTED_PROPERTY_TYPES = new Set([...OBJECT_VALUE_TYPES, ...SCALAR_VALUE_TYPES]);
+const ARRAY_VALUE_TYPES = new Set(["IntArray", "FloatArray", "StringArray", "ObjectArray"]);
+const SUPPORTED_PROPERTY_TYPES = new Set([...OBJECT_VALUE_TYPES, ...SCALAR_VALUE_TYPES, ...ARRAY_VALUE_TYPES]);
 const BRIDGE_MAX_BUFFER = 64 * 1024 * 1024;
 const MANIFEST_INDEX = {
   "mcm-property-wiring": path.join(PROJECT_ROOT, "references", "authoring", "PDV_MCMPropertyWiring.manifest.json"),
   "preflight-router-services": path.join(PROJECT_ROOT, "references", "authoring", "PDV_PreflightRouterServices.manifest.json"),
+  "skeleton-track-scaffold": path.join(PROJECT_ROOT, "references", "authoring", "PDV_SkeletonTrackScaffold.manifest.json"),
+  "structural-systems-scaffold": path.join(PROJECT_ROOT, "references", "authoring", "PDV_StructuralSystemsScaffold.manifest.json"),
+  "structural-systems-arrays": path.join(PROJECT_ROOT, "references", "authoring", "PDV_StructuralSystemsArrays.manifest.json"),
+  "pattern-proving-core": path.join(PROJECT_ROOT, "references", "authoring", "PDV_PatternProvingCore.manifest.json"),
+  "vmad-consolidation": path.join(PROJECT_ROOT, "references", "authoring", "PDV_VmadConsolidation.manifest.json"),
 };
 
 const KNOWN_EDITORID_FORMIDS = {
@@ -1008,6 +1014,23 @@ function evaluateOperation(operation, context) {
       };
     }
 
+    if (ARRAY_VALUE_TYPES.has(operation.valueType)) {
+      const arrayCheck = validateArrayPropertyOperation(operation, context);
+      if (!arrayCheck.ok) {
+        return {
+          ...operation,
+          status: "BLOCKED",
+          detail: arrayCheck.reason,
+        };
+      }
+
+      return {
+        ...operation,
+        status: "BLOCKED",
+        detail: "VMAD array properties are recognized for planning/reporting, but mutagen-bridge does not currently expose array writes through attach_scripts. Wire this array manually in CK/xEdit and use verifier readback to confirm it.",
+      };
+    }
+
     if (OBJECT_VALUE_TYPES.has(operation.valueType)) {
       const resolved = resolveReferenceValue(operation.value, context);
       if (!resolved.ok) {
@@ -1081,6 +1104,10 @@ function resolveExternalReferences(operations, pdvRecordsByEdid) {
     const candidates = [];
     if (operation.kind === "setProperty" && OBJECT_VALUE_TYPES.has(operation.valueType)) {
       candidates.push(operation.value);
+    } else if (operation.kind === "setProperty" && operation.valueType === "ObjectArray" && Array.isArray(operation.value)) {
+      for (const entry of operation.value) {
+        candidates.push(entry);
+      }
     } else if (operation.kind === "addFormListEntry") {
       candidates.push(operation.entry);
     }
@@ -1265,6 +1292,10 @@ function convertPropertyValue(operation, context) {
     return String(operation.value);
   }
 
+  if (ARRAY_VALUE_TYPES.has(valueType)) {
+    throw new Error(`VMAD array property writes are not implemented for ${valueType}.`);
+  }
+
   throw new Error(`Unsupported property type: ${valueType}`);
 }
 
@@ -1288,6 +1319,53 @@ function parseBoolean(value) {
     return false;
   }
   throw new Error(`Expected a Bool value, got ${value}.`);
+}
+
+function validateArrayPropertyOperation(operation, context) {
+  if (!Array.isArray(operation.value)) {
+    return {
+      ok: false,
+      reason: `${operation.record}.${operation.script}.${operation.property} uses ${operation.valueType} but the manifest value is not an array.`,
+    };
+  }
+
+  if (operation.valueType === "ObjectArray") {
+    for (const entry of operation.value) {
+      const resolved = resolveReferenceValue(entry, context);
+      if (!resolved.ok) {
+        return {
+          ok: false,
+          reason: resolved.reason,
+        };
+      }
+    }
+    return { ok: true };
+  }
+
+  for (const entry of operation.value) {
+    if (operation.valueType === "IntArray" && !Number.isInteger(entry)) {
+      return {
+        ok: false,
+        reason: `${operation.record}.${operation.script}.${operation.property} expects every IntArray entry to be an integer.`,
+      };
+    }
+
+    if (operation.valueType === "FloatArray" && !Number.isFinite(Number(entry))) {
+      return {
+        ok: false,
+        reason: `${operation.record}.${operation.script}.${operation.property} expects every FloatArray entry to be numeric.`,
+      };
+    }
+
+    if (operation.valueType === "StringArray" && typeof entry !== "string") {
+      return {
+        ok: false,
+        reason: `${operation.record}.${operation.script}.${operation.property} expects every StringArray entry to be a string.`,
+      };
+    }
+  }
+
+  return { ok: true };
 }
 
 function resolveReferenceValue(candidate, context) {

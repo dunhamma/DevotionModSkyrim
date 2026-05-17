@@ -78,6 +78,122 @@ const PREFLIGHT_RECORDS = {
   PDV_EventBus: "QUST",
 };
 
+const SKELETON_REPUTATION_TRACKS = [
+  "ConcordatStanding",
+  "ThalmorAlignment",
+  "WitchcraftExposure",
+  "KnightlyVowIntegrity",
+  "DruidicStanding",
+];
+
+const SKELETON_STATE_TRACKS = [
+  "BosmerPath",
+  "OrcLifeMode",
+  "NordWorship",
+  "BretonTradition",
+  "RedguardSect",
+  "DunmerPath",
+  "AltmerCrisis",
+];
+
+const SKELETON_FORMLISTS = {
+  PDV_FLST_RepTracks_All: "FLST",
+  PDV_FLST_RepTracks_DevOnly: "FLST",
+  PDV_FLST_StateTracks_All: "FLST",
+  PDV_FLST_StateTracks_DevOnly: "FLST",
+  PDV_FLST_Substrates_All: "FLST",
+  PDV_FLST_Substrates_DevOnly: "FLST",
+  PDV_FLST_SacredPlaces_All: "FLST",
+  PDV_FLST_SacredPlaces_DevOnly: "FLST",
+  PDV_FLST_DaedricPaths_All: "FLST",
+  PDV_FLST_DaedricPaths_DevOnly: "FLST",
+};
+
+const SKELETON_TRACK_DEFINITIONS = [
+  ...SKELETON_REPUTATION_TRACKS.map((name) => ({
+    name,
+    type: "rep",
+    questEdid: `PDV_RepTrack_${name}`,
+    scriptName: "PDV_ReputationTrack",
+    globalEdid: `PDV_GLO_${name}`,
+    globalPropertyName: "StorageBacking",
+  })),
+  ...SKELETON_STATE_TRACKS.map((name) => ({
+    name,
+    type: "state",
+    questEdid: `PDV_StateTrack_${name}`,
+    scriptName: "PDV_StateTrack",
+    globalEdid: `PDV_GLO_${name}`,
+    globalPropertyName: "StateGlobal",
+  })),
+];
+
+const SKELETON_SUBSTRATE_DEFINITIONS = [
+  {
+    questEdid: "PDV_Substrate_KhajiitLunar",
+    scriptName: "PDV_SubstrateBase",
+    substrateName: "KhajiitLunar",
+    requiredOriginRace: 6,
+  },
+  {
+    questEdid: "PDV_Substrate_DunmerAncestor",
+    scriptName: "PDV_SubstrateBase",
+    substrateName: "DunmerAncestor",
+    requiredOriginRace: 5,
+  },
+  {
+    questEdid: "PDV_Substrate_ArgonianHist",
+    scriptName: "PDV_SubstrateBase",
+    substrateName: "ArgonianHist",
+    requiredOriginRace: 7,
+  },
+];
+
+const SKELETON_SACRED_PLACE_DEFINITIONS = [
+  {
+    questEdid: "PDV_SacredPlace_ArgonianBedOfChoice",
+    scriptName: "PDV_SacredPlace",
+    placeName: "ArgonianBedOfChoice",
+    requiredOriginRace: 7,
+    maxLocations: 1,
+  },
+  {
+    questEdid: "PDV_SacredPlace_KhajiitRoadHomes",
+    scriptName: "PDV_SacredPlace",
+    placeName: "KhajiitRoadHomes",
+    requiredOriginRace: 6,
+    maxLocations: 3,
+  },
+  {
+    questEdid: "PDV_SacredPlace_OrcCommunity",
+    scriptName: "PDV_SacredPlace",
+    placeName: "OrcCommunity",
+    requiredOriginRace: 8,
+    maxLocations: 1,
+  },
+];
+
+const SKELETON_DAEDRIC_PATH_DEFINITIONS = [
+  {
+    questEdid: "PDV_DaedricPath_Hircine",
+    scriptName: "PDV_DaedricPathBase",
+    deityName: "Hircine",
+    deityDomain: "Hunt, Lycanthropy, Predation",
+    deityIndex: 100,
+    stigmaGlobalEdid: "PDV_GLO_HircineStigma",
+    commitmentSignalsRequired: 3,
+  },
+];
+
+const SKELETON_SERVICE_DEFINITIONS = [
+  {
+    questEdid: "PDV_CurseState",
+    scriptName: "PDV_CurseState",
+    globalPropertyName: "PDV_GLO_CurseState",
+    globalEdid: "PDV_GLO_CurseState",
+  },
+];
+
 const COMPILED_SCRIPTS = {
   PDV__MainQuest: "required",
   PDV_Origin: "required",
@@ -88,6 +204,15 @@ const COMPILED_SCRIPTS = {
   PDV_Deity_AuriEl: "required",
   PDV_EventTypes: "required",
   PDV_EventBus: "required",
+  PDV_ReputationTrack: "required",
+  PDV_StateTrack: "required",
+  PDV_SubstrateBase: "required",
+  PDV_SacredPlace: "required",
+  PDV_DaedricPathBase: "required",
+  PDV_CurseState: "required",
+  PDV_Substrate_DunmerAncestor: "required",
+  PDV_Substrate_KhajiitLunar: "required",
+  PDV_DaedricPath_Hircine: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
   PDV_MCM: "required",
@@ -228,10 +353,44 @@ const MCM_PROPERTIES = {
   PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
 };
 
+const MCM_SKELETON_PROPERTIES = {
+  PDV_FLST_RepTracks_All: "PDV_FLST_RepTracks_All",
+  PDV_FLST_StateTracks_All: "PDV_FLST_StateTracks_All",
+  PDV_FLST_Substrates_All: "PDV_FLST_Substrates_All",
+  PDV_FLST_SacredPlaces_All: "PDV_FLST_SacredPlaces_All",
+  PDV_FLST_DaedricPaths_All: "PDV_FLST_DaedricPaths_All",
+  PDV_CurseStateService: "PDV_CurseState",
+};
+
+const MANAGER_PATTERN_PROPERTIES = {
+  PDV_GLO_OriginRace: "PDV_GLO_OriginRace",
+  PDV_Kyne: "PDV_Deity_Kyne",
+  PDV_Talos: "PDV_Deity_Talos",
+  PDV_ConcordatStandingTrack: "PDV_RepTrack_ConcordatStanding",
+  PDV_BosmerPathTrack: "PDV_StateTrack_BosmerPath",
+  PDV_DunmerAncestorSubstrate: "PDV_Substrate_DunmerAncestor",
+  PDV_KhajiitLunarSubstrate: "PDV_Substrate_KhajiitLunar",
+  PDV_HircinePath: "PDV_DaedricPath_Hircine",
+  PDV_CurseStateService: "PDV_CurseState",
+};
+
+const MCM_PATTERN_PROPERTIES = {
+  PDV_EventBusService: "PDV_EventBus",
+};
+
+const PATTERN_PROVING_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_PatternProvingCore.manifest.json",
+);
+
 class Verifier {
-  constructor({ strictPhase3 = false, strictPreflight = false } = {}) {
+  constructor({ strictPhase3 = false, strictPreflight = false, strictSkeleton = false, strictPatternProving = false } = {}) {
     this.strictPhase3 = strictPhase3;
     this.strictPreflight = strictPreflight;
+    this.strictSkeleton = strictSkeleton;
+    this.strictPatternProving = strictPatternProving;
     this.findings = [];
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
@@ -275,6 +434,22 @@ class Verifier {
     }
   }
 
+  skeletonGap(check, detail, filePath = null) {
+    if (this.strictSkeleton) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  patternGap(check, detail, filePath = null) {
+    if (this.strictPatternProving) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   async run() {
     this.checkPaths();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
@@ -290,6 +465,8 @@ class Verifier {
       this.checkFormListRecord();
       this.checkMcmRecord();
       this.checkPhase3Records();
+      this.checkSkeletonScaffold();
+      this.checkPatternProving();
       this.checkPreflightOverlayPatch();
     }
     this.checkScripts();
@@ -531,6 +708,600 @@ class Verifier {
     }
   }
 
+  checkSkeletonScaffold() {
+    this.checkSkeletonRecordInventory();
+    this.checkSkeletonTrackWiring();
+    this.checkSkeletonSystemWiring();
+    this.checkSkeletonFormListMembership();
+    this.checkSkeletonArrayReadback();
+  }
+
+  checkSkeletonRecordInventory() {
+    for (const definition of SKELETON_TRACK_DEFINITIONS) {
+      const questRecord = this.recordsByEdid.get(definition.questEdid);
+      if (!questRecord) {
+        this.skeletonGap("V3 Skeleton track record", `Missing QUST record ${definition.questEdid}.`, PDV_ESP);
+      } else if (questRecord.type !== "QUST") {
+        this.fail("V3 Skeleton track record", `${definition.questEdid} has type ${questRecord.type}, expected QUST.`, PDV_ESP);
+      } else {
+        this.pass("V3 Skeleton track record", `${definition.questEdid} exists as QUST.`, PDV_ESP);
+      }
+
+      const globalRecord = this.recordsByEdid.get(definition.globalEdid);
+      if (!globalRecord) {
+        this.skeletonGap("V3 Skeleton track global", `Missing GLOB record ${definition.globalEdid}.`, PDV_ESP);
+      } else if (globalRecord.type !== "GLOB") {
+        this.fail("V3 Skeleton track global", `${definition.globalEdid} has type ${globalRecord.type}, expected GLOB.`, PDV_ESP);
+      } else {
+        this.pass("V3 Skeleton track global", `${definition.globalEdid} exists as GLOB.`, PDV_ESP);
+      }
+    }
+
+    for (const [edid, expectedType] of Object.entries(SKELETON_FORMLISTS)) {
+      const record = this.recordsByEdid.get(edid);
+      if (!record) {
+        this.skeletonGap("V3 Skeleton FormList", `Missing ${expectedType} record ${edid}.`, PDV_ESP);
+      } else if (record.type !== expectedType) {
+        this.fail("V3 Skeleton FormList", `${edid} has type ${record.type}, expected ${expectedType}.`, PDV_ESP);
+      } else {
+        this.pass("V3 Skeleton FormList", `${edid} exists as ${expectedType}.`, PDV_ESP);
+      }
+    }
+
+    for (const definition of SKELETON_SUBSTRATE_DEFINITIONS) {
+      this.checkSkeletonQuestRecord(definition.questEdid, "V3 Skeleton substrate record");
+    }
+
+    for (const definition of SKELETON_SACRED_PLACE_DEFINITIONS) {
+      this.checkSkeletonQuestRecord(definition.questEdid, "V3 Skeleton sacred place record");
+    }
+
+    for (const definition of SKELETON_DAEDRIC_PATH_DEFINITIONS) {
+      this.checkSkeletonQuestRecord(definition.questEdid, "V3 Skeleton Daedric path record");
+      this.checkSkeletonGlobalRecord(definition.stigmaGlobalEdid, "V3 Skeleton Daedric stigma global");
+    }
+
+    for (const definition of SKELETON_SERVICE_DEFINITIONS) {
+      this.checkSkeletonQuestRecord(definition.questEdid, "V3 Skeleton service record");
+      this.checkSkeletonGlobalRecord(definition.globalEdid, "V3 Skeleton service global");
+    }
+  }
+
+  checkSkeletonTrackWiring() {
+    for (const definition of SKELETON_TRACK_DEFINITIONS) {
+      const detail = this.recordDetails.get(definition.questEdid);
+      if (!detail) {
+        continue;
+      }
+
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.skeletonGap(
+          "V3 Skeleton track script",
+          `${definition.scriptName} is not attached on ${definition.questEdid}.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      this.pass("V3 Skeleton track script", `${definition.questEdid} has ${definition.scriptName} attached.`, PDV_ESP);
+      const props = propertyMap(script);
+
+      const globalProp = props.get(definition.globalPropertyName);
+      if (!globalProp) {
+        this.skeletonGap(
+          "V3 Skeleton track property",
+          `${definition.questEdid}.${definition.globalPropertyName} is missing.`,
+          PDV_ESP,
+        );
+      } else {
+        const actualEdid = objectEdid(globalProp, this.recordsByEdid);
+        if (actualEdid === definition.globalEdid) {
+          this.pass(
+            "V3 Skeleton track property",
+            `${definition.questEdid}.${definition.globalPropertyName} points at ${definition.globalEdid}.`,
+            PDV_ESP,
+          );
+        } else {
+          this.skeletonGap(
+            "V3 Skeleton track property",
+            `${definition.questEdid}.${definition.globalPropertyName} points at ${actualEdid || globalProp.Object || "unassigned"}, expected ${definition.globalEdid}.`,
+            PDV_ESP,
+          );
+        }
+      }
+
+      const debugProp = props.get("PDV_GLO_DebugLevel");
+      if (!debugProp) {
+        this.skeletonGap("V3 Skeleton track property", `${definition.questEdid}.PDV_GLO_DebugLevel is missing.`, PDV_ESP);
+      } else {
+        const actualDebugEdid = objectEdid(debugProp, this.recordsByEdid);
+        if (actualDebugEdid === "PDV_GLO_DebugLevel") {
+          this.pass(
+            "V3 Skeleton track property",
+            `${definition.questEdid}.PDV_GLO_DebugLevel points at PDV_GLO_DebugLevel.`,
+            PDV_ESP,
+          );
+        } else {
+          this.skeletonGap(
+            "V3 Skeleton track property",
+            `${definition.questEdid}.PDV_GLO_DebugLevel points at ${actualDebugEdid || debugProp.Object || "unassigned"}, expected PDV_GLO_DebugLevel.`,
+            PDV_ESP,
+          );
+        }
+      }
+    }
+  }
+
+  checkSkeletonSystemWiring() {
+    for (const definition of SKELETON_SUBSTRATE_DEFINITIONS) {
+      const detail = this.recordDetails.get(definition.questEdid);
+      if (!detail) {
+        continue;
+      }
+
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.skeletonGap("V3 Skeleton substrate script", `${definition.scriptName} is not attached on ${definition.questEdid}.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("V3 Skeleton substrate script", `${definition.questEdid} has ${definition.scriptName} attached.`, PDV_ESP);
+      const props = propertyMap(script);
+      this.checkScalarProperty("V3 Skeleton substrate property", props, "SubstrateName", definition.substrateName, this.skeletonGap.bind(this));
+      this.checkScalarProperty("V3 Skeleton substrate property", props, "RequiredOriginRace", definition.requiredOriginRace, this.skeletonGap.bind(this));
+      this.checkObjectPropertyTarget("V3 Skeleton substrate property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.skeletonGap.bind(this));
+      this.checkObjectPropertyTarget("V3 Skeleton substrate property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.skeletonGap.bind(this));
+    }
+
+    for (const definition of SKELETON_SACRED_PLACE_DEFINITIONS) {
+      const detail = this.recordDetails.get(definition.questEdid);
+      if (!detail) {
+        continue;
+      }
+
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.skeletonGap("V3 Skeleton sacred place script", `${definition.scriptName} is not attached on ${definition.questEdid}.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("V3 Skeleton sacred place script", `${definition.questEdid} has ${definition.scriptName} attached.`, PDV_ESP);
+      const props = propertyMap(script);
+      this.checkScalarProperty("V3 Skeleton sacred place property", props, "PlaceName", definition.placeName, this.skeletonGap.bind(this));
+      this.checkScalarProperty("V3 Skeleton sacred place property", props, "MaxLocations", definition.maxLocations, this.skeletonGap.bind(this));
+      this.checkScalarProperty("V3 Skeleton sacred place property", props, "RequiredOriginRace", definition.requiredOriginRace, this.skeletonGap.bind(this));
+      this.checkObjectPropertyTarget("V3 Skeleton sacred place property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.skeletonGap.bind(this));
+      this.checkObjectPropertyTarget("V3 Skeleton sacred place property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.skeletonGap.bind(this));
+    }
+
+    for (const definition of SKELETON_DAEDRIC_PATH_DEFINITIONS) {
+      const detail = this.recordDetails.get(definition.questEdid);
+      if (!detail) {
+        continue;
+      }
+
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.skeletonGap("V3 Skeleton Daedric path script", `${definition.scriptName} is not attached on ${definition.questEdid}.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("V3 Skeleton Daedric path script", `${definition.questEdid} has ${definition.scriptName} attached.`, PDV_ESP);
+      const props = propertyMap(script);
+      this.checkScalarProperty("V3 Skeleton Daedric path property", props, "DeityName", definition.deityName, this.skeletonGap.bind(this));
+      this.checkScalarProperty("V3 Skeleton Daedric path property", props, "DeityDomain", definition.deityDomain, this.skeletonGap.bind(this));
+      this.checkScalarProperty("V3 Skeleton Daedric path property", props, "DeityIndex", definition.deityIndex, this.skeletonGap.bind(this));
+      this.checkScalarProperty("V3 Skeleton Daedric path property", props, "CommitmentSignalsRequired", definition.commitmentSignalsRequired, this.skeletonGap.bind(this));
+      this.checkObjectPropertyTarget("V3 Skeleton Daedric path property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.skeletonGap.bind(this));
+      this.checkObjectPropertyTarget("V3 Skeleton Daedric path property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.skeletonGap.bind(this));
+      this.checkObjectPropertyTarget("V3 Skeleton Daedric path property", props, "StigmaGlobal", definition.stigmaGlobalEdid, this.skeletonGap.bind(this));
+    }
+
+    for (const definition of SKELETON_SERVICE_DEFINITIONS) {
+      const detail = this.recordDetails.get(definition.questEdid);
+      if (!detail) {
+        continue;
+      }
+
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.skeletonGap("V3 Skeleton service script", `${definition.scriptName} is not attached on ${definition.questEdid}.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("V3 Skeleton service script", `${definition.questEdid} has ${definition.scriptName} attached.`, PDV_ESP);
+      const props = propertyMap(script);
+      this.checkObjectPropertyTarget("V3 Skeleton service property", props, definition.globalPropertyName, definition.globalEdid, this.skeletonGap.bind(this));
+      this.checkObjectPropertyTarget("V3 Skeleton service property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.skeletonGap.bind(this));
+    }
+  }
+
+  checkSkeletonFormListMembership() {
+    const repTrackEdids = SKELETON_TRACK_DEFINITIONS.filter((entry) => entry.type === "rep").map((entry) => entry.questEdid);
+    const stateTrackEdids = SKELETON_TRACK_DEFINITIONS.filter((entry) => entry.type === "state").map((entry) => entry.questEdid);
+    const substrateEdids = SKELETON_SUBSTRATE_DEFINITIONS.map((entry) => entry.questEdid);
+    const sacredPlaceEdids = SKELETON_SACRED_PLACE_DEFINITIONS.map((entry) => entry.questEdid);
+    const daedricPathEdids = SKELETON_DAEDRIC_PATH_DEFINITIONS.map((entry) => entry.questEdid);
+
+    this.checkRequiredFormListMembers("PDV_FLST_RepTracks_All", repTrackEdids);
+    this.checkRequiredFormListMembers("PDV_FLST_RepTracks_DevOnly", repTrackEdids);
+    this.checkRequiredFormListMembers("PDV_FLST_StateTracks_All", stateTrackEdids);
+    this.checkRequiredFormListMembers("PDV_FLST_StateTracks_DevOnly", stateTrackEdids);
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_All", substrateEdids);
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_DevOnly", substrateEdids);
+    this.checkRequiredFormListMembers("PDV_FLST_SacredPlaces_All", sacredPlaceEdids);
+    this.checkRequiredFormListMembers("PDV_FLST_SacredPlaces_DevOnly", sacredPlaceEdids);
+    this.checkRequiredFormListMembers("PDV_FLST_DaedricPaths_All", daedricPathEdids);
+    this.checkRequiredFormListMembers("PDV_FLST_DaedricPaths_DevOnly", daedricPathEdids);
+    this.checkForbiddenFormListMembers("PDV_FLST_AllDeities", daedricPathEdids);
+  }
+
+  checkSkeletonArrayReadback() {
+    for (const definition of SKELETON_TRACK_DEFINITIONS.filter((entry) => entry.type === "rep")) {
+      const detail = this.recordDetails.get(definition.questEdid);
+      if (!detail) {
+        continue;
+      }
+
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        continue;
+      }
+
+      const props = propertyMap(script);
+      const thresholdValues = extractNumericArrayProperty(props.get("ThresholdValues"));
+      const thresholdLabels = extractStringArrayProperty(props.get("ThresholdLabels"));
+
+      if (!thresholdValues.length && !thresholdLabels.length) {
+        this.info("V3 Skeleton array readback", `${definition.questEdid} threshold arrays are still manual/deferred.`, PDV_ESP);
+        continue;
+      }
+
+      if (thresholdLabels.length === thresholdValues.length + 1) {
+        this.pass("V3 Skeleton array readback", `${definition.questEdid} threshold labels count matches threshold values + 1.`, PDV_ESP);
+      } else {
+        this.skeletonGap("V3 Skeleton array readback", `${definition.questEdid} threshold label/value counts are ${thresholdLabels.length}/${thresholdValues.length}; expected labels = values + 1.`, PDV_ESP);
+      }
+    }
+
+    for (const definition of SKELETON_TRACK_DEFINITIONS.filter((entry) => entry.type === "state")) {
+      const detail = this.recordDetails.get(definition.questEdid);
+      if (!detail) {
+        continue;
+      }
+
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        continue;
+      }
+
+      const props = propertyMap(script);
+      const labels = extractStringArrayProperty(props.get("StateLabels"));
+      if (!labels.length) {
+        this.info("V3 Skeleton array readback", `${definition.questEdid} state labels are still manual/deferred.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("V3 Skeleton array readback", `${definition.questEdid} exposes ${labels.length} state labels.`, PDV_ESP);
+    }
+
+    for (const definition of SKELETON_DAEDRIC_PATH_DEFINITIONS) {
+      const detail = this.recordDetails.get(definition.questEdid);
+      if (!detail) {
+        continue;
+      }
+
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        continue;
+      }
+
+      const props = propertyMap(script);
+      this.checkOptionalArrayLength("V3 Skeleton array readback", definition.questEdid, "StateByRace", extractNumericArrayProperty(props.get("StateByRace")), 10);
+      this.checkOptionalArrayLength("V3 Skeleton array readback", definition.questEdid, "StigmaModByRace", extractNumericArrayProperty(props.get("StigmaModByRace")), 10);
+      this.checkOptionalArrayLength("V3 Skeleton array readback", definition.questEdid, "ExitDifficultyByRace", extractNumericArrayProperty(props.get("ExitDifficultyByRace")), 10);
+    }
+
+    for (const definition of SKELETON_SACRED_PLACE_DEFINITIONS) {
+      const detail = this.recordDetails.get(definition.questEdid);
+      if (!detail) {
+        continue;
+      }
+
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        continue;
+      }
+
+      const props = propertyMap(script);
+      this.checkOptionalMinArrayLength("V3 Skeleton array readback", definition.questEdid, "DesignatedLocations", extractFormidsFromArrayProperty(props.get("DesignatedLocations")), definition.maxLocations);
+      this.checkOptionalMinArrayLength("V3 Skeleton array readback", definition.questEdid, "LastVisitTime", extractNumericArrayProperty(props.get("LastVisitTime")), definition.maxLocations);
+      this.checkOptionalMinArrayLength("V3 Skeleton array readback", definition.questEdid, "InvestmentLevel", extractNumericArrayProperty(props.get("InvestmentLevel")), definition.maxLocations);
+    }
+  }
+
+  checkPatternProving() {
+    this.checkPatternProvingManifest();
+    this.checkPatternManagerRecord();
+    this.checkPatternMcmRecord();
+    this.checkPatternPilotScripts();
+    this.checkPatternArrayReadback();
+  }
+
+  checkPatternProvingManifest() {
+    if (exists(PATTERN_PROVING_MANIFEST)) {
+      this.pass("V3 Pattern Proving manifest", "Pattern proving manifest exists.", PATTERN_PROVING_MANIFEST);
+    } else {
+      this.patternGap("V3 Pattern Proving manifest", "Pattern proving manifest is missing.", PATTERN_PROVING_MANIFEST);
+    }
+  }
+
+  checkPatternManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    for (const [propName, expectedEdid] of Object.entries(MANAGER_PATTERN_PROPERTIES)) {
+      this.checkObjectPropertyTarget("V3 Pattern Proving manager property", props, propName, expectedEdid, this.patternGap.bind(this));
+    }
+  }
+
+  checkPatternMcmRecord() {
+    const detail = this.recordDetails.get("PDV_MCM");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV_MCM");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    for (const [propName, expectedEdid] of Object.entries(MCM_PATTERN_PROPERTIES)) {
+      this.checkObjectPropertyTarget("V3 Pattern Proving MCM property", props, propName, expectedEdid, this.patternGap.bind(this));
+    }
+  }
+
+  checkPatternPilotScripts() {
+    this.checkPatternPilotScript("PDV_Substrate_DunmerAncestor", "PDV_Substrate_DunmerAncestor");
+    this.checkPatternPilotScript("PDV_Substrate_KhajiitLunar", "PDV_Substrate_KhajiitLunar");
+    this.checkPatternPilotScript("PDV_DaedricPath_Hircine", "PDV_DaedricPath_Hircine");
+  }
+
+  checkPatternPilotScript(questEdid, scriptName) {
+    const detail = this.recordDetails.get(questEdid);
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, scriptName);
+    if (!script) {
+      this.patternGap("V3 Pattern Proving pilot script", `${scriptName} is not attached to ${questEdid}.`, PDV_ESP);
+      return;
+    }
+
+    this.pass("V3 Pattern Proving pilot script", `${scriptName} is attached to ${questEdid}.`, PDV_ESP);
+  }
+
+  checkPatternArrayReadback() {
+    const concordat = this.recordDetails.get("PDV_RepTrack_ConcordatStanding");
+    if (concordat) {
+      const script = findScript(concordat.fields || {}, "PDV_ReputationTrack");
+      if (script) {
+        const props = propertyMap(script);
+        this.checkRequiredArrayLength(
+          "V3 Pattern Proving array readback",
+          "PDV_RepTrack_ConcordatStanding",
+          "ThresholdValues",
+          extractNumericArrayProperty(props.get("ThresholdValues")),
+          4,
+        );
+        this.checkRequiredArrayLength(
+          "V3 Pattern Proving array readback",
+          "PDV_RepTrack_ConcordatStanding",
+          "ThresholdLabels",
+          extractStringArrayProperty(props.get("ThresholdLabels")),
+          5,
+        );
+      }
+    }
+
+    const bosmer = this.recordDetails.get("PDV_StateTrack_BosmerPath");
+    if (bosmer) {
+      const script = findScript(bosmer.fields || {}, "PDV_StateTrack");
+      if (script) {
+        const props = propertyMap(script);
+        this.checkRequiredArrayLength(
+          "V3 Pattern Proving array readback",
+          "PDV_StateTrack_BosmerPath",
+          "StateLabels",
+          extractStringArrayProperty(props.get("StateLabels")),
+          4,
+        );
+      }
+    }
+
+    const hircine = this.recordDetails.get("PDV_DaedricPath_Hircine");
+    if (hircine) {
+      const script = findFirstScript(hircine.fields || {}, ["PDV_DaedricPath_Hircine", "PDV_DaedricPathBase"]);
+      if (script) {
+        const props = propertyMap(script);
+        this.checkRequiredArrayLength(
+          "V3 Pattern Proving array readback",
+          "PDV_DaedricPath_Hircine",
+          "StateByRace",
+          extractNumericArrayProperty(props.get("StateByRace")),
+          10,
+        );
+        this.checkRequiredArrayLength(
+          "V3 Pattern Proving array readback",
+          "PDV_DaedricPath_Hircine",
+          "StigmaModByRace",
+          extractNumericArrayProperty(props.get("StigmaModByRace")),
+          10,
+        );
+        this.checkRequiredArrayLength(
+          "V3 Pattern Proving array readback",
+          "PDV_DaedricPath_Hircine",
+          "ExitDifficultyByRace",
+          extractNumericArrayProperty(props.get("ExitDifficultyByRace")),
+          10,
+        );
+      }
+    }
+  }
+
+  checkRequiredFormListMembers(formListEdid, requiredEdids) {
+    const detail = this.recordDetails.get(formListEdid);
+    if (!detail) {
+      return;
+    }
+
+    const items = detail.fields?.Items || [];
+    for (const requiredEdid of requiredEdids) {
+      const record = this.recordsByEdid.get(requiredEdid);
+      if (!record) {
+        this.skeletonGap(
+          "V3 Skeleton FormList membership",
+          `${formListEdid} cannot be validated for ${requiredEdid} because the record does not exist yet.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      if (items.includes(record.formid)) {
+        this.pass("V3 Skeleton FormList membership", `${formListEdid} contains ${requiredEdid}.`, PDV_ESP);
+      } else {
+        this.skeletonGap(
+          "V3 Skeleton FormList membership",
+          `${formListEdid} does not contain ${requiredEdid} (${record.formid}).`,
+          PDV_ESP,
+        );
+      }
+    }
+  }
+
+  checkForbiddenFormListMembers(formListEdid, forbiddenEdids) {
+    const detail = this.recordDetails.get(formListEdid);
+    if (!detail) {
+      return;
+    }
+
+    const items = detail.fields?.Items || [];
+    for (const forbiddenEdid of forbiddenEdids) {
+      const record = this.recordsByEdid.get(forbiddenEdid);
+      if (!record) {
+        continue;
+      }
+
+      if (items.includes(record.formid)) {
+        this.skeletonGap("V3 Skeleton FormList contradiction", `${formListEdid} should not contain ${forbiddenEdid} (${record.formid}).`, PDV_ESP);
+      } else {
+        this.pass("V3 Skeleton FormList contradiction", `${formListEdid} does not contain ${forbiddenEdid}.`, PDV_ESP);
+      }
+    }
+  }
+
+  checkSkeletonQuestRecord(edid, checkName) {
+    const record = this.recordsByEdid.get(edid);
+    if (!record) {
+      this.skeletonGap(checkName, `Missing QUST record ${edid}.`, PDV_ESP);
+    } else if (record.type !== "QUST") {
+      this.fail(checkName, `${edid} has type ${record.type}, expected QUST.`, PDV_ESP);
+    } else {
+      this.pass(checkName, `${edid} exists as QUST.`, PDV_ESP);
+    }
+  }
+
+  checkSkeletonGlobalRecord(edid, checkName) {
+    const record = this.recordsByEdid.get(edid);
+    if (!record) {
+      this.skeletonGap(checkName, `Missing GLOB record ${edid}.`, PDV_ESP);
+    } else if (record.type !== "GLOB") {
+      this.fail(checkName, `${edid} has type ${record.type}, expected GLOB.`, PDV_ESP);
+    } else {
+      this.pass(checkName, `${edid} exists as GLOB.`, PDV_ESP);
+    }
+  }
+
+  checkScalarProperty(checkName, props, propName, expectedValue, gapFn) {
+    const prop = props.get(propName);
+    if (!prop) {
+      gapFn(checkName, `${propName} is missing.`, PDV_ESP);
+      return;
+    }
+
+    const actualValue = propValue(prop);
+    if (valuesEqual(actualValue, expectedValue)) {
+      this.pass(checkName, `${propName} = ${JSON.stringify(expectedValue)}.`, PDV_ESP);
+    } else {
+      gapFn(checkName, `${propName} is ${JSON.stringify(actualValue)}, expected ${JSON.stringify(expectedValue)}.`, PDV_ESP);
+    }
+  }
+
+  checkObjectPropertyTarget(checkName, props, propName, expectedEdid, gapFn) {
+    const prop = props.get(propName);
+    if (!prop) {
+      gapFn(checkName, `${propName} is missing.`, PDV_ESP);
+      return;
+    }
+
+    const actualEdid = objectEdid(prop, this.recordsByEdid);
+    if (actualEdid === expectedEdid) {
+      this.pass(checkName, `${propName} points at ${expectedEdid}.`, PDV_ESP);
+    } else {
+      gapFn(checkName, `${propName} points at ${actualEdid || prop.Object || "unassigned"}, expected ${expectedEdid}.`, PDV_ESP);
+    }
+  }
+
+  checkOptionalArrayLength(checkName, recordEdid, propName, values, expectedLength) {
+    if (!values.length) {
+      this.info(checkName, `${recordEdid}.${propName} is still manual/deferred.`, PDV_ESP);
+      return;
+    }
+
+    if (values.length === expectedLength) {
+      this.pass(checkName, `${recordEdid}.${propName} length is ${expectedLength}.`, PDV_ESP);
+    } else {
+      this.skeletonGap(checkName, `${recordEdid}.${propName} length is ${values.length}, expected ${expectedLength}.`, PDV_ESP);
+    }
+  }
+
+  checkOptionalMinArrayLength(checkName, recordEdid, propName, values, minLength) {
+    if (!values.length) {
+      this.info(checkName, `${recordEdid}.${propName} is still manual/deferred.`, PDV_ESP);
+      return;
+    }
+
+    if (values.length >= minLength) {
+      this.pass(checkName, `${recordEdid}.${propName} length ${values.length} satisfies minimum ${minLength}.`, PDV_ESP);
+    } else {
+      this.skeletonGap(checkName, `${recordEdid}.${propName} length is ${values.length}, expected at least ${minLength}.`, PDV_ESP);
+    }
+  }
+
+  checkRequiredArrayLength(checkName, recordEdid, propName, values, expectedLength) {
+    if (!values.length) {
+      this.patternGap(checkName, `${recordEdid}.${propName} is missing; expected length ${expectedLength}.`, PDV_ESP);
+      return;
+    }
+
+    if (values.length === expectedLength) {
+      this.pass(checkName, `${recordEdid}.${propName} length is ${expectedLength}.`, PDV_ESP);
+    } else {
+      this.patternGap(checkName, `${recordEdid}.${propName} length is ${values.length}, expected ${expectedLength}.`, PDV_ESP);
+    }
+  }
+
   checkManagerRecord() {
     const detail = this.recordDetails.get("PDV__ManagerQuest");
     if (!detail) {
@@ -538,6 +1309,7 @@ class Verifier {
     }
 
     const fields = detail.fields || {};
+    this.checkDuplicateScriptAttachments("PDV__ManagerQuest", fields, "PDV__ManagerQuest", "Manager script attachments");
     const script = findScript(fields, "PDV__ManagerQuest");
     if (!script) {
       this.fail("Manager script", "PDV__ManagerQuest script is not attached.", PDV_ESP);
@@ -930,14 +1702,20 @@ class Verifier {
       return;
     }
 
-    const script = findScript(detail.fields || {}, "PDV_MCM");
+    const fields = detail.fields || {};
+    this.checkDuplicateScriptAttachments("PDV_MCM", fields, "PDV_MCM", "PDV_MCM script attachments");
+    const script = findScript(fields, "PDV_MCM");
     if (!script) {
       this.fail("PDV_MCM script", "PDV_MCM is not attached.", PDV_ESP);
       return;
     }
 
     this.pass("PDV_MCM script", "PDV_MCM is attached.", PDV_ESP);
-    this.checkObjectProperties("PDV_MCM property", propertyMap(script), MCM_PROPERTIES);
+    const props = propertyMap(script);
+    this.checkObjectProperties("PDV_MCM property", props, MCM_PROPERTIES);
+    for (const [propName, expectedEdid] of Object.entries(MCM_SKELETON_PROPERTIES)) {
+      this.checkObjectPropertyTarget("V3 Skeleton MCM property", props, propName, expectedEdid, this.skeletonGap.bind(this));
+    }
   }
 
   checkOptionalQuestScript(questEdid, scriptName, expectedProperties) {
@@ -970,6 +1748,28 @@ class Verifier {
 
     this.pass(`${scriptName} script`, `${scriptName} is attached.`, PDV_ESP);
     this.checkObjectProperties(`${scriptName} property`, propertyMap(script), expectedProperties);
+  }
+
+  checkDuplicateScriptAttachments(recordEdid, fields, scriptName, checkName) {
+    const scripts = findScripts(fields, scriptName);
+    if (scripts.length <= 1) {
+      this.pass(checkName, `${recordEdid} has a single ${scriptName} VMAD entry.`, PDV_ESP);
+      return;
+    }
+
+    const propertySets = scripts.map((script, index) => {
+      const names = (script.Properties || [])
+        .map((prop) => prop.Name)
+        .filter(Boolean)
+        .sort();
+      return `#${index}=[${names.join(", ")}]`;
+    });
+
+    this.warn(
+      checkName,
+      `${recordEdid} has ${scripts.length} duplicate ${scriptName} VMAD entries split across ${propertySets.join("; ")}. Prefer one canonical script attachment per record.`,
+      PDV_ESP,
+    );
   }
 
   checkObjectProperties(checkName, props, expectedProperties, options = {}) {
@@ -1093,6 +1893,28 @@ class Verifier {
     this.checkSourceContains("V3 Preflight source", "PDV_Origin", [
       "Function RecordCustomRaceFallback",
       "PDV.CustomRaceFallback",
+    ]);
+    this.checkSourceContains("V3 Pattern Proving source", "PDV__ManagerQuest", [
+      "Function ApplyConcordatPressure",
+      "Function RunDawnApplyDecay()",
+      "Function EvaluateKyneCommitmentOffer()",
+      "Function DebugGetPatternProvingSummary()",
+    ]);
+    this.checkSourceContains("V3 Pattern Proving source", "PDV_MCM", [
+      "Show pattern summary",
+      "Concordat defiance",
+      "Evaluate commitment",
+      "Hircine hunt rite",
+    ]);
+    this.checkSourceContains("V3 Pattern Proving source", "PDV_EventBus", [
+      "Function RouteConcordatPressure",
+    ]);
+    this.checkSourceContains("V3 Pattern Proving source", "PDV_EventTypes", [
+      "EVT_CONCORDAT_COMPLIANCE",
+      "EVT_CONCORDAT_DEFIANCE",
+    ]);
+    this.checkSourceContains("V3 Pattern Proving source", "PDV_DaedricPathBase", [
+      "DAEDRIC_STATE_FOREIGN",
     ]);
   }
 
@@ -1307,9 +2129,13 @@ class Verifier {
   }
 }
 
-function findScript(fields, name) {
+function findScripts(fields, name) {
   const vmad = fields.VirtualMachineAdapter || {};
-  const matches = (vmad.Scripts || []).filter((script) => script.Name === name);
+  return (vmad.Scripts || []).filter((script) => script.Name === name);
+}
+
+function findScript(fields, name) {
+  const matches = findScripts(fields, name);
   if (!matches.length) {
     return null;
   }
@@ -1358,6 +2184,10 @@ function formidToEdid(formid, recordsByEdid) {
 }
 
 function extractFormidsFromArrayProperty(prop) {
+  if (!prop) {
+    return [];
+  }
+
   const raw = Array.isArray(prop.Objects)
     ? prop.Objects
     : Array.isArray(prop.Data)
@@ -1378,6 +2208,10 @@ function extractFormidsFromArrayProperty(prop) {
 }
 
 function extractNumericArrayProperty(prop) {
+  if (!prop) {
+    return [];
+  }
+
   const raw = Array.isArray(prop.Datas)
     ? prop.Datas
     : Array.isArray(prop.Data)
@@ -1395,6 +2229,40 @@ function extractNumericArrayProperty(prop) {
       return null;
     })
     .filter((value) => typeof value === "number");
+}
+
+function extractStringArrayProperty(prop) {
+  if (!prop) {
+    return [];
+  }
+
+  const raw = Array.isArray(prop.Strings)
+    ? prop.Strings
+    : Array.isArray(prop.Data)
+      ? prop.Data
+      : [];
+
+  return raw
+    .map((entry) => {
+      if (typeof entry === "string") {
+        return entry;
+      }
+      if (entry && typeof entry === "object" && typeof entry.Data === "string") {
+        return entry.Data;
+      }
+      return null;
+    })
+    .filter((value) => typeof value === "string");
+}
+
+function findFirstScript(fields, scriptNames) {
+  for (const scriptName of scriptNames) {
+    const script = findScript(fields, scriptName);
+    if (script) {
+      return script;
+    }
+  }
+  return null;
 }
 
 function valuesEqual(actual, expected) {
@@ -1484,6 +2352,8 @@ function parseArgs(argv) {
     json: false,
     strictPhase3: false,
     strictPreflight: false,
+    strictSkeleton: false,
+    strictPatternProving: false,
   };
 
   for (const arg of argv) {
@@ -1493,8 +2363,12 @@ function parseArgs(argv) {
       args.strictPhase3 = true;
     } else if (arg === "--strict-preflight") {
       args.strictPreflight = true;
+    } else if (arg === "--strict-skeleton") {
+      args.strictSkeleton = true;
+    } else if (arg === "--strict-pattern-proving") {
+      args.strictPatternProving = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -1506,7 +2380,12 @@ function parseArgs(argv) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-const verifier = new Verifier({ strictPhase3: args.strictPhase3, strictPreflight: args.strictPreflight });
+const verifier = new Verifier({
+  strictPhase3: args.strictPhase3,
+  strictPreflight: args.strictPreflight,
+  strictSkeleton: args.strictSkeleton,
+  strictPatternProving: args.strictPatternProving,
+});
 const findings = await verifier.run();
 const counts = verifier.counts();
 

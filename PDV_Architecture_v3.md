@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-16 (v3.7 - Race-sheet architecture sync)
-Status: **V3 Preflight complete.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are now complete.
+Last revised: 2026-05-17 (v3.9 - Broad structural scaffold gate closed)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked.
 
 ---
 
@@ -72,11 +72,11 @@ These items were live or deferred when v2 was closed. v3 inherits them.
 
 ### 3.2 Architecturally deferred
 
-- **Decay model.** Not implemented. Linear daily decay if no recent `PietyToday` activity is the leading candidate. v3 owns this - see Section 14.
+- **Decay model.** Not implemented. Linear daily decay if no recent `PietyToday` activity is the leading candidate. v3 owns this - see Section 15.
 - **Storage migration.** v1 saves loading into v2/v3 mods: `PDV_GLO_DevotionLevel` is dead, Kyne piety reseeds from origin. Treat as a save-game gotcha rather than a migration path. v3 should document this in the mod page changelog when 1.0 ships.
 - **PapyrusUtil missing-failure behavior.** Locked: add a visible hard-fail guard to `PDV__MainQuest.OnInit()` before any partial state writes. Missing PapyrusUtil should show a player-visible message, trace the dependency failure, and abort PDV bootstrap.
 - **Custom-race fallback.** Locked: `PDV_Origin` may keep defaulting unknown races to `RACE_IMPERIAL`, but v3 must surface this as both a one-time first-load notice and an MCM/status diagnostic. A later custom-race soft-compat hook remains post-1.0 unless a concrete patch target appears sooner.
-- **Curse-state module.** Werewolf and Vampire interpretation layers are designed (see race architecture reference) but not built. v3 owns this - see Section 12.
+- **Curse-state module.** Werewolf and Vampire interpretation layers are designed (see race architecture reference) but not built. v3 owns this - see Section 13.
 
 ### 3.3 Contested lore items (must be decided before content lock)
 
@@ -221,6 +221,15 @@ These race-specific signal rules were locked during the grilling review and affe
 - Sufficient signal sources exist in vanilla Skyrim (dragons, named creatures, quest climaxes)
 - Threshold is high but attainable for active adventurers; no custom content required
 
+### 5.6 Signal-axis vocabulary
+
+The old `CombatBucket`, `SocialBucket`, and `LifestyleBucket` records are gone.
+Race sheets may still describe behavior in combat/social/lifestyle terms, but
+those are design axes only. Implementation uses event IDs, curated signal IDs,
+per-deity `ScoreAction()` / `ScoreCuratedSignal()`, and optional track or
+substrate modifiers. Do not add bucket globals, bucket StorageUtil keys, or a
+generic race bucket quest to satisfy older reference wording.
+
 ---
 
 ## 6. Reputation track subsystem (Phase 8)
@@ -346,7 +355,7 @@ String[] Property StateLabels Auto               ; ["OldContract", "LivingStory"
 Bool     Property AllowsTransition = True Auto   ; some tracks lock once set
 ```
 
-API mirrors the reputation track: `GetState()`, `GetStateLabel()`, `SetState(Int, String reason)`, `ResetForDebug()`.
+API mirrors the reputation track: `GetCurrentState()`, `GetStateLabel()`, `SetState(Int, String reason)`, `ResetForDebug()`.
 
 ### 7.2 Where state tracks come from
 
@@ -369,7 +378,7 @@ Bool Function IsEligibleForPlayer()
     if EligibleStateTrack == None
         return True   ; no gating
     endif
-    Int currentState = EligibleStateTrack.GetState()
+    Int currentState = EligibleStateTrack.GetCurrentState()
     Int i = 0
     while i < EligibleStateValues.Length
         if EligibleStateValues[i] == currentState
@@ -696,7 +705,7 @@ Native-integrated exceptions (Azura/Azurah for Khajiit, Boethra for Dunmer, Mafa
 
 ## 12. Patron commitment mechanism (Phase 14)
 
-The race-architecture reference describes patron commitment in v1 bucket-threshold terms ("sustained CombatBucket >= +7 for 3 consecutive days triggers Shor's offer"). The bucket system was removed in v2. v3 reimplements commitment using per-deity piety thresholds and a per-race candidate filter.
+Earlier race-architecture drafts described patron commitment in v1 bucket-threshold terms. The bucket system was removed in v2. v3 implements commitment using per-deity piety thresholds, per-race candidate filters, and state-track eligibility.
 
 ### 12.1 Commitment trigger
 
@@ -913,12 +922,13 @@ Function ApplyDecay()
     Float currentPiety = StorageUtil.GetFloatValue(self, "PDV.Piety")
     Float decayRate = GetDecayRatePerDay()       ; e.g. -0.5
     Float floor = GetDecayFloor()                ; tier-locked floor
-    Float newPiety = Math.Max(currentPiety + decayRate, floor)
+    Float newPiety = currentPiety + decayRate
+    if newPiety < floor
+        newPiety = floor
+    endif
     StorageUtil.SetFloatValue(self, "PDV.Piety", newPiety)
 EndFunction
 ```
-
-(Note: Papyrus lacks `Math.Max` per project Papyrus guidance. Implementation will use an explicit conditional.)
 
 ### 15.2 Decay floors
 
@@ -926,7 +936,7 @@ Per the locked design, Champion tier should not decay below Devoted threshold; t
 
 ```papyrus
 Float Function GetDecayFloor()
-    Int tier = StorageUtil.GetIntValue(self, "PDV.Tier")
+    Int tier = StorageUtil.GetFloatValue(self, "PDV.Tier") as Int
     if tier >= 3
         return ThresholdDevoted    ; Champion floor at Devoted threshold
     elseif tier >= 2
@@ -980,7 +990,32 @@ Most race-coded UI lives in NPC reactions (Section 9). v3 should target ~30-50 r
 
 ## 17. Content authoring pipeline (Phase 19)
 
-By 1.0 there will be 25-35 deities, 10 race substrates (some empty), 2 reputation tracks, 6-8 state tracks, ~100-150 contextual favor effects, and many dialogue topics. The pipeline matters.
+By 1.0 there will be 25-35 deities, three strong substrate quests, several
+light sacred-place/state helpers, five first-release reputation tracks, roughly
+8-10 state tracks, ~100-150 contextual favor effects, and many dialogue topics.
+The pipeline matters.
+
+### 17.0 Structural scaffold code order
+
+The first Structural Skeleton code-deepening pass added compile-clean base
+scripts before any large CK content authoring. These scripts are inert until CK
+records attach them, but they make verifier and authoring work concrete:
+
+1. `PDV_ReputationTrack.psc`: backing global, threshold labels, lock-in state, `Adjust()` / `ForceSet()` API.
+2. `PDV_StateTrack.psc`: backing global, state labels, transition policy, `SetState()` / `ResetForDebug()` API.
+3. `PDV_SubstrateBase.psc`: origin gate, aggregate metric keys, tier recompute, substrate boon sync.
+4. `PDV_SacredPlace.psc`: designated locations, visit timestamps, decay, reward modifier, race-specific parameter slots.
+5. `PDV_DaedricPathBase.psc`: boon/price/stigma contract, race response arrays, commitment-signal gate.
+6. `PDV_CurseState.psc`: central Werewolf/Vampire state, transition notification hook, modifier lookup.
+
+Current state: source and `.pex` exist and compile with 0 errors / 0 warnings.
+The locked 12-track scaffold is now merged into the framework ESP, strict
+skeleton verification is green for that slice, and `PDV_MCM` has a dev-only
+structural map / smoke harness. Broader substrate, sacred-place, Daedric, and
+curse records are now also merged into the framework ESP, with strict
+verification green for the broad scaffold wave and in-game `Show structural
+map` / `Run scaffold smoke` passes confirming the scaffolds remain inert.
+Pattern Proving still decides the first real content behavior per subsystem.
 
 ### 17.1 Add-a-deity workflow
 
@@ -1186,6 +1221,18 @@ Enhancement custom content (improves experience, not required for core function)
 - No hard Survival/Requiem dependency.
 - No DLL plugins authored by PDV.
 - No replacement of vanilla shrine activator scripts. (Use overlay receiver quests instead.)
+
+### 21.4 Implementation-plan review after race-sheet cleanup
+
+The race-sheet cleanup does not change the phase order. It does tighten the
+acceptance criteria for the next implementation plans:
+
+- Structural Skeleton now starts from the compile-clean base scaffold scripts named in Section 17.0; next it must add verifier visibility for dev-only records.
+- Phase 7 signal expansion must use event/curated-signal vocabulary, not bucket terminology.
+- Phase 8-10 Pattern Proving remains the right first content wave, but the pilots are now fixed: Imperial Concordat, Bosmer Path, Dunmer Ancestor, and Khajiit emergent patron/moon cycle.
+- Orc City/Legion community remains a sacred-place contextual modifier, not a strong substrate.
+- Broad worship remains a first-class patron state with Tier 2 cap for 1.0; Khajiit remains the only no-offer exception.
+- No v2 implementation needs to be reopened solely because of the race sheets.
 
 ---
 
@@ -1402,14 +1449,22 @@ Must complete:
 - Reputation-track and state-track scaffolds for all locked first-release race tracks: ConcordatStanding, ThalmorAlignment, WitchcraftExposure, KnightlyVowIntegrity, DruidicStanding, BosmerPath, OrcLifeMode, NordWorship, BretonTradition, RedguardSect, DunmerPath, and AltmerCrisis.
 - Sacred-place scaffolds for Argonian bed-of-choice, Khajiit road homes, and Orc City/Legion community location, with Orc marked as a contextual mode modifier rather than a strong substrate.
 - Matrix-driven CK authoring support where feasible, especially stance rows, FormList membership, rivalry wiring, and verifier expectations.
-- Canonical visibility state on worship targets (`DevOnly`, `ContentReady`, `PlayerVisible`) plus FormList indexes for authoring/dev inspection. The visibility state is the source of truth; FormLists are operational indexes.
-- Verifier states for structural-ready, content-ready, and player-visible records, including hard-fails for visibility/FormList contradictions.
+- Dev-only FormList indexes for authoring/dev inspection across tracks, substrates, sacred places, and Daedric pilots. Canonical per-record visibility properties are deferred; FormLists are the live operational visibility surface in this wave.
+- Verifier states for structural-ready records, including hard-fails for required-script/property/FormList contradictions and for accidental Hircine membership in `PDV_FLST_AllDeities`.
 
 Exit gate:
 
 - Scaffolded targets are inert and hidden from player UI, commitment offers, shrine/dialogue surfaces, and normal gameplay.
-- Dev UI and verifier can inspect scaffolded targets.
+- Dev UI and verifier can inspect scaffolded targets, including a debug-only structural map/API smoke path in `PDV_MCM`.
 - No scaffold target can affect gameplay accidentally.
+
+Current implementation note (2026-05-17): Structural Skeleton is now closed.
+The framework ESP contains the track, substrate, sacred-place, Hircine, and
+curse scaffolds plus their dev FormList indexes and `PDV_MCM` scaffold
+properties. `node .\tools\pdv_verify.mjs --strict-skeleton` and
+`node .\tools\pdv_verify.mjs --strict-preflight --strict-skeleton` both return
+`FAIL=0, WARN=0, TODO=0, PASS=401, INFO=30`. The remaining array work is
+deliberately informational/manual-deferred and does not block the gate.
 
 ### 25.4 Pattern Proving
 
@@ -1491,6 +1546,28 @@ with this document, update the brief to match v3.
 ---
 
 ## 26. Revisions
+
+### v3.9 - 2026-05-17 - Broad structural scaffold gate closed
+
+Closed the broad Structural Skeleton gate. The framework ESP now owns the
+dev-only scaffold records for substrates, sacred places, the Hircine pilot, and
+curse state, plus their FormList indexes and `PDV_MCM` scaffold properties.
+The verifier's strict skeleton contract now passes cleanly together with strict
+preflight (`FAIL=0, WARN=0, TODO=0, PASS=401, INFO=30`), and in-game Debug-page
+smokes confirmed both the structural map view and the scaffold API smoke path
+without touching patron mirrors, dawn behavior, or EventBus routing.
+
+### v3.8 - 2026-05-16 - Doc cleanup and scaffold-code contract
+
+Cleaned the v3-facing vocabulary after the race-sheet sync: older bucket terms
+are now explicitly design-axis shorthand, not implementation state. Corrected
+stale section references, made the decay pseudocode Papyrus-valid, and added
+compile-clean Structural Skeleton base scripts for the next architecture layer.
+
+Reviewed the implementation plan after cleanup. Phase order stays intact:
+Structural Skeleton remains next, Pattern Proving still carries the first real
+content behavior, and the race sheets tighten acceptance criteria rather than
+forcing a new roadmap.
 
 ### v3.7 - 2026-05-16 - Race-sheet architecture sync
 

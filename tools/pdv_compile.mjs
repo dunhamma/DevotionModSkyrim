@@ -47,9 +47,19 @@ const ACTIVE_SCRIPTS = [
   "PDV_ActionRouter",
   "PDV__SM_KillActor",
   "PDV_MCM",
+  "PDV_Substrate_DunmerAncestor",
+  "PDV_Substrate_KhajiitLunar",
+  "PDV_DaedricPath_Hircine",
 ];
 
-const OPTIONAL_SCRIPTS = [];
+const OPTIONAL_SCRIPTS = [
+  "PDV_ReputationTrack",
+  "PDV_StateTrack",
+  "PDV_SubstrateBase",
+  "PDV_SacredPlace",
+  "PDV_DaedricPathBase",
+  "PDV_CurseState",
+];
 
 function main() {
   const args = parseArgs(process.argv.slice(2));
@@ -108,6 +118,8 @@ function parseArgs(argv) {
     skipVerify: false,
     strictPhase3: false,
     strictPreflight: false,
+    strictSkeleton: false,
+    strictPatternProving: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -137,6 +149,10 @@ function parseArgs(argv) {
       args.strictPhase3 = true;
     } else if (arg === "--strict-preflight") {
       args.strictPreflight = true;
+    } else if (arg === "--strict-skeleton") {
+      args.strictSkeleton = true;
+    } else if (arg === "--strict-pattern-proving") {
+      args.strictPatternProving = true;
     } else if (arg === "-h" || arg === "--help") {
       usage(null, 0);
     } else {
@@ -166,6 +182,8 @@ function usage(error = null, exitCode = 2) {
     "  --skip-verify         Do not run tools/pdv_verify.mjs after successful compile.",
     "  --strict-phase3       Pass --strict-phase3 to the verifier.",
     "  --strict-preflight    Pass --strict-preflight to the verifier.",
+    "  --strict-skeleton     Pass --strict-skeleton to the verifier.",
+    "  --strict-pattern-proving Pass --strict-pattern-proving to the verifier.",
     "  --allow-warnings      Do not convert Papyrus warnings into failures.",
   ].join("\n");
 
@@ -274,6 +292,12 @@ function runVerifier(args) {
   }
   if (args.strictPreflight) {
     verifierArgs.push("--strict-preflight");
+  }
+  if (args.strictSkeleton) {
+    verifierArgs.push("--strict-skeleton");
+  }
+  if (args.strictPatternProving) {
+    verifierArgs.push("--strict-pattern-proving");
   }
 
   const result = spawnSync(process.execPath, verifierArgs, {
