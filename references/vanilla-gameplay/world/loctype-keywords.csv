@@ -1,0 +1,9 @@
+location_type_family,pdv_use,example_context,caution,source_id,validation
+Temple,"Shrine, prayer, sacred-place, priest access","Temple of Divines, Temple of Kynareth, Temple of Mara","Extract exact LocType keywords locally before CK conditions.",ck_keyword,needs-local-extraction
+City,"Civic order, public worship, Talos ban pressure, crime visibility","Whiterun, Solitude, Windhelm","City boundaries can differ from player intuition.",ck_keyword,needs-local-extraction
+Town/Settlement,"Community devotion, Orc community, Khajiit exclusion, local favor","Riverwood, strongholds, smaller settlements","Some settlements use parent locations or sparse keywords.",ck_keyword,needs-local-extraction
+Inn,"Sleep/rest/social/travel signals","Night stays, pilgrim pauses, local rumors","Do not punish players for not sleeping unless a clear design requires it.",ck_keyword,needs-local-extraction
+Dungeon,"Clearing, undead/Daedra/bandit context, dangerous pilgrimage","Clearable dungeons, caves, ruins","Dungeon category and occupant type need separate classification.",uesp_skyrim_radiant,source-backed
+Wilderness,"Kyne/Kynareth, hunt, travel, exile, survival","Outdoor spaces between holds","Worldspace and weather/location boundaries can be fuzzy.",ck_keyword,needs-local-extraction
+Home/Habitation,"Family, adoption, domestic ritual, community belonging","Player homes, owned cells","Ownership and safe-storage behavior need local/context review.",ck_keyword,needs-local-extraction
+Hold,"Local civic standing, bounty, thane status, regional shrine flavor","Whiterun Hold, Eastmarch, The Reach","Civil War can alter leadership and quest state.",uesp_skyrim_quest_timing,source-backed

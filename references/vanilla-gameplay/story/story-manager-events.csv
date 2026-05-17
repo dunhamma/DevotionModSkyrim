@@ -1,0 +1,19 @@
+event_name,pdv_priority,candidate_signal,capture_pattern,compatibility_note,source_id,status
+Kill Actor,live,"Hostile beast/humanoid kills, murder/innocent checks, undead/Daedra/bandit categories","Non-start-game-enabled receiver quest calls PDV router/EventBus","Shares Event required; already proven for PDV Phase 3.",ck_sm_event_node,active
+Assault Actor,high,"Nonlethal violence, persecution, first-strike aggression, bounty-adjacent events","Thin receiver with attribution payload","Do not double-score with Kill Actor without cooldown.",ck_sm_event_node,planned
+Crime Gold Event,high,"Reported crime, hold civic standing, Imperial/justice pressure","Receiver adjusts reputation/state track, not deity piety directly","Bounty is witnessed/reported behavior only.",ck_sm_event_node,planned
+Arrest Event,medium,"Submission to law, civic punishment, prison path","Receiver updates state/reputation","Use sparingly; arrest can be player inconvenience already.",ck_sm_event_node,planned
+Jail Event,medium,"Served sentence, repentance, civic consequence","Receiver updates state/reputation","Avoid punishing twice for same crime.",ck_sm_event_node,planned
+Pay Fine Event,medium,"Restitution, civic compliance, wealth sacrifice","Receiver updates civic/religion tracks","Could be farmed by petty crime unless capped.",ck_sm_event_node,planned
+Cast Magic Event,medium,"School-specific devotion signals, taboo magic, restoration, conjuration, necromancy","Receiver classifies spell/keyword and routes curated events","Raw casts are farmable; use cooldowns and meaningful thresholds.",ck_sm_event_node,planned
+Craft Item,medium,"Smithing/labor, alchemy, enchanting, Bosmer plant taboo, offering creation","Receiver classifies workbench/item keyword/value","Craft loops are farmable; use daily caps and value/quality thresholds.",ck_sm_event_node,planned
+Increase Skill,medium,"Milestone learning, magical study, martial discipline","Receiver handles threshold crossings only","Do not award raw skill XP or every level.",ck_sm_event_node,planned
+Lock Pick,medium,"Nocturnal, theft, trespass, dungeon utility","Receiver checks ownership/crime/context","Lockpicking is common and farmable.",ck_sm_event_node,planned
+PickPocket Event,medium,"Nocturnal/Mephala success, civic penalty, theft discipline","Receiver validates success, target, detection if possible","Needs runtime proof of payload semantics.",ck_sm_event_node,planned
+Change Location Event,high,"Pilgrimage, sacred places, wilderness sleep/travel, temple entry, city/hold transitions","Receiver checks LocType/hold/worldspace and cooldowns","Location spam is possible; cap by place and day.",ck_sm_event_node,planned
+Player Add Item,medium,"Offerings, relic acquisition, Daedric artifacts, sacred texts","Receiver validates item/FormList","Avoid scoring generic loot.",ck_sm_event_node,planned
+Player Activate Actor,low,"Priest/NPC interaction hooks, mercy/persecution choices","Usually better as curated dialogue/quest signal","Do not use for generic NPC clicks.",ck_sm_event_node,watch
+Player Cured,medium,"Disease cure, vampirism/curse resolution, purification","Receiver updates cure/curse state","Verify exact event coverage for regular disease vs vampirism.",ck_sm_event_node,planned
+Script Event,high,"Curated quest, dialogue, shrine, ritual, and faction-stage signals","CK fragment or script sends explicit event","Best for authored moral/theological events.",ck_sm_event_node,planned
+New Voice Power,medium,"Shout learning, Talos/Kyne/Nord voice path","Receiver classifies shout/power","Learning a word is not same as using a shout.",ck_sm_event_node,planned
+Change Relationship Rank,medium,"Community standing, marriage, followers, charity, intimidation outcomes","Receiver or curated dialogue signal","Use cautiously; relationship rank can change from many sources.",ck_sm_event_node,planned

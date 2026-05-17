@@ -1,0 +1,12 @@
+archetype_or_pattern,pdv_use,safe_for,implementation_caution,source_id,validation
+Value Modifier,"Basic stat/skill/resistance blessing or neglect","Simple passive boons and penalties","Check stacking behavior and whether current/max values are affected.",ck_magic_effect,source-backed
+Peak Value Modifier,"Caps/peak handling where vanilla expects it","Some fortify-style mechanics","Only use when the archetype behavior is intended; test stacking.",ck_magic_effect,source-backed
+Script,"Custom effect behavior that CK archetypes cannot express","Rare, explicit mechanics with clear lifecycle","Scripted effects increase save/compat risk if overused.",ck_magic_effect,source-backed
+Cure Disease,"Shrine/purification/cure privilege","Explicit cure moments","Can erase vanilla diseases; avoid if PDV neglect should persist.",ck_magic_effect,source-backed
+Dispel,"Remove effects or purge hostile magic","Purification, Stendarr, anti-Daedric effects","Can interact broadly; use narrow conditions.",ck_magic_effect,source-backed
+Turn Undead,"Arkay/Stendarr undead interactions","Undead-facing boons or powers","Archetype requires undead compatibility; verify ActorTypeUndead behavior.",ck_magic_effect,source-backed
+Banish,"Daedra/summon interactions","Stendarr, anti-Daedric, conjuration taboo","Banish works on summoned actors and relevant keywords; verify target set.",ck_magic_effect,source-backed
+Detect Life,"Sacred perception, hunt, mercy, tracking flavor","Contextual favor or power","Can affect stealth/gameplay strongly.",ck_magic_effect,source-backed
+Ability spell,"Persistent boon delivery","Most PDV tier blessings","Use conditions/globals to gate effect rather than adding/removing constantly.",ck_magic_effect,source-backed
+Disease spell,"Neglect-like persistent penalty","Thematic debuffs only when cure/recovery is explicit","Avoid confusing with vanilla cure disease unless deliberate.",ck_magic_effect,source-backed
+Power,"Once-per-day or activated devotional expression","Tier 3 special moments, prayer powers","Power spam and hotkey friction should be considered.",uesp_skyrim_races,source-backed

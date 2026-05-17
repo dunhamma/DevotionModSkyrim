@@ -1,0 +1,7 @@
+keyword_family,example_keywords,pdv_use,caution,source_id,validation
+Actor type,"ActorTypeDaedra; ActorTypeUndead","Daedric/undead signal classification, banish/turn-undead compatibility, Arkay/Stendarr logic","Actor types are not moral categories by themselves.",ck_keyword,source-backed
+Vendor item,"VendorItem*","Offering, barter, donation, Zenithar economy logic","Vendor keywords control merchant behavior but may be broad.",ck_keyword,source-backed
+Magic effect,"MagicAlchBeneficial; MagicAlchDetrimental; school/effect keywords","Potion/poison and magic-school detection","Verify exact keyword coverage from local data before implementation.",ck_magic_effect,needs-local-extraction
+Location type,"LocTypeTemple; LocTypeInn; LocTypeDungeon; LocTypeCity; LocTypeHabitation","Sacred-place, sleep, pilgrimage, wilderness, community, and dungeon signals","LocType coverage can be inconsistent; build fallback lists only after extraction.",ck_keyword,needs-local-extraction
+Weapon/apparel,"ArmorMaterial*; WeapType*; Clothing*","Equipment taboo, amulet devotion, craft/labor rewards","Modded gear compatibility needs keyword fallback policy.",ck_condition_functions,needs-local-extraction
+Quest/faction marker,"Faction-specific or quest-specific keywords","Curated signal routing where vanilla data already tags semantics","Avoid inventing broad meaning from a narrow implementation marker.",ck_keyword,needs-local-extraction

@@ -1,0 +1,13 @@
+deity_or_path,vanilla_reference,pdv_relevance,caution,source_id,status
+Akatosh,"Blessing of Akatosh","Time, endurance, dragon/main-quest adjacent divine baseline","Avoid main-quest pressure for non-Dragonborn starts.",uesp_skyrim_blessings,reference
+Arkay,"Blessing of Arkay; disease/undead/death context","Death, burial, anti-necromancy, cure/health logic","Do not make all undead kills identical.",uesp_skyrim_blessings,reference
+Dibella,"Blessing of Dibella","Speech, beauty, art, social and persuasion paths","Speech/economy overlap needs balance.",uesp_skyrim_blessings,reference
+Julianos,"Blessing of Julianos","Magicka, learning, scholarship, magic study","Raw skill/cast loops are farmable.",uesp_skyrim_blessings,reference
+Kynareth/Kyne,"Blessing of Kynareth","Stamina, nature, travel; PDV Kyne is Nord-specific in proof slice","Keep Kyne/Kynareth cultural distinction where theology differs.",uesp_skyrim_blessings,active
+Mara,"Blessing of Mara","Restoration, family, mercy, marriage/adoption hooks","Marriage/adoption should be meaningful and non-spammy.",uesp_skyrim_blessings,reference
+Stendarr,"Blessing of Stendarr","Block, mercy, justice, anti-Daedra/undead","Justice punishment needs recovery paths.",uesp_skyrim_blessings,reference
+Talos,"Blessing of Talos","Shouts, Talos ban, Nord identity, Imperial/Altmer conflict","Politically loaded; Altmer hostility is locked in PDV.",uesp_skyrim_blessings,active
+Zenithar,"Blessing of Zenithar","Barter, craft, labor, offerings","Economy signals are farmable; use thresholds.",uesp_skyrim_blessings,reference
+Auri-El,"Auriel shrine blessing","Altmer foundation deity and Talos rivalry target","Dawnguard records and spelling need local verification.",uesp_skyrim_blessings,active
+Nocturnal,"Nocturnal shrine blessing; Thieves Guild access","Stealth, secrecy, theft, shadow paths","Undetected success matters more than raw crime.",uesp_skyrim_blessings,reference
+Daedric Princes,"Daedric quests/artifacts","Daedric path architecture, stigma, bargains, rivalries","Curate per Prince and quest; do not infer from artifact ownership alone.",uesp_skyrim_quests,planned

@@ -1,0 +1,14 @@
+blessing,deity_or_source,vanilla_behavior,pdv_design_use,caution,source_id,validation
+Shrine blessings,general,"Short-term shrine blessings are received by activating shrines; only one shrine blessing can normally be active at a time","Baseline for PDV shrine layering and cure privilege","Do not accidentally overwrite vanilla blessings unless deliberately replacing shrine behavior.",uesp_skyrim_blessings,source-backed
+Cure Disease,general shrines,"Shrines commonly cure disease when blessing is applied","Arkay/Stendarr/restoration and neglect recovery design","Disease cure can trivialize disease-based neglect unless PDV separates systems.",uesp_skyrim_blessings,source-backed
+Blessing of Akatosh,Akatosh,"Vanilla divine shrine blessing","Compare magnitude/duration against PDV Akatosh-style boons","Exact effect values should be rechecked before implementation.",uesp_skyrim_blessings,source-backed
+Blessing of Arkay,Arkay,"Vanilla divine shrine blessing","Health/death/ancestor/restoration design baseline","Avoid overlapping disease and death mechanics too heavily.",uesp_skyrim_blessings,source-backed
+Blessing of Dibella,Dibella,"Vanilla divine shrine blessing","Speech/social beauty/art baseline","Speech bonuses are immediately useful but can affect economy.",uesp_skyrim_blessings,source-backed
+Blessing of Julianos,Julianos,"Vanilla divine shrine blessing","Magicka/learning/magic baseline","Avoid stacking into mage supremacy.",uesp_skyrim_blessings,source-backed
+Blessing of Kynareth,Kynareth,"Vanilla divine shrine blessing","Stamina/travel/nature baseline for Kyne/Kynareth split","PDV Kyne theology is culturally specific; do not flatten to generic nature.",uesp_skyrim_blessings,source-backed
+Blessing of Mara,Mara,"Vanilla divine shrine blessing","Restoration/family/mercy/social care baseline","Marriage/adoption signals should be curated, not automatic spam.",uesp_skyrim_blessings,source-backed
+Blessing of Stendarr,Stendarr,"Vanilla divine shrine blessing","Block/mercy/anti-undead/justice baseline","Justice can become punitive; keep recovery paths.",uesp_skyrim_blessings,source-backed
+Blessing of Talos,Talos,"Vanilla divine shrine blessing","Shout/Talos-ban/Nord identity baseline","Talos blessing has political meaning in 4E 201.",uesp_skyrim_blessings,source-backed
+Blessing of Zenithar,Zenithar,"Vanilla divine shrine blessing","Barter/labor/craft baseline","Economy effects can be farmed or overpowered.",uesp_skyrim_blessings,source-backed
+Blessing of Nocturnal,Nocturnal,"Nonstandard shrine blessing associated with Thieves Guild access","Stealth/crime-path comparison","Access is questline-located; do not treat as public temple pattern.",uesp_skyrim_blessings,source-backed
+Blessing of Auriel,Auriel,"Dawnguard-added divine shrine blessing","Auri-El/Altmer proof-slice comparison","Dawnguard dependency and theology spelling require care.",uesp_skyrim_blessings,source-backed

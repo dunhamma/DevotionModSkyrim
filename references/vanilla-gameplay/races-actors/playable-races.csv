@@ -1,0 +1,11 @@
+race,pdv_origin_index,vanilla_race_property,vanilla_form_id,vanilla_racial_shape,pdv_relevance,source_id,validation
+Nord,0,NordRace,0x00088794,"Frost resistance, battle cry, starting skill bonuses","Native Kyne/Talos proof slice and Nord identity tension",uesp_skyrim_races,local-data-backed
+Imperial,1,ImperialRace,0x00088844,"Imperial Luck, Voice of the Emperor, starting skill bonuses","Concordat/civic order and private faith tension",uesp_skyrim_races,local-data-backed
+Breton,2,BretonRace,0x0008883C,"Magic resistance, Dragonskin, starting skill bonuses","Syncretic faith, oath/courtly/social pressure",uesp_skyrim_races,local-data-backed
+Altmer,3,HighElfRace,0x00088840,"Highborn, extra magicka, starting skill bonuses","Auri-El proof slice, Thalmor orthodoxy, Talos hostility",uesp_skyrim_races,local-data-backed
+Bosmer,4,WoodElfRace,0x00088884,"Resist disease/poison, Command Animal, starting skill bonuses","Green Pact, hunt, Y'ffre, Nocturnal/Hircine tensions",uesp_skyrim_races,local-data-backed
+Dunmer,5,DarkElfRace,0x0008883D,"Fire resistance, Ancestor's Wrath, starting skill bonuses","Ancestor memory, Good Daedra, Tribunal legacy",uesp_skyrim_races,local-data-backed
+Khajiit,6,KhajiitRace,0x00088845,"Claws, Night Eye, starting skill bonuses","Lunar lattice, caravan/exclusion, Azurah/Khenarthi/Lorkhaj",uesp_skyrim_races,local-data-backed
+Argonian,7,ArgonianRace,0x0008883A,"Waterbreathing, disease resistance, Histskin, starting skill bonuses","Hist absence, Sithis, community survival",uesp_skyrim_races,local-data-backed
+Orc,8,OrcRace,0x000A82B9,"Berserker Rage, starting skill bonuses","Malacath, labor-as-worship, stronghold/community",uesp_skyrim_races,local-data-backed
+Redguard,9,RedguardRace,0x00088846,"Poison resistance, Adrenaline Rush, starting skill bonuses","Yokudan survival theology, HoonDing, martial devotion",uesp_skyrim_races,local-data-backed

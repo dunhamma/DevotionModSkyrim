@@ -1,0 +1,9 @@
+quest_class,examples,pdv_weight,pdv_use,caution,source_id,validation
+Main Quest,"MQ101 through main Dragonborn path",high,"Dragonborn identity, Talos/Kyne/Akatosh-adjacent milestones","Not every player wants main-quest pressure early.",uesp_skyrim_quest_timing,source-backed
+Civil War,"Stormcloak/Imperial allegiance and battles",high,"Nord Talos ban, Imperial Concordat, Redguard/Altmer political pressure","Civil War can replace Jarls and affect other quests.",uesp_skyrim_quest_timing,source-backed
+Faction Questline,"Companions, College, Thieves Guild, Dark Brotherhood, Bards",high,"Guild identity, skill/tradition paths, reputation tracks","Joining most factions is not mutually exclusive in vanilla.",uesp_skyrim_factions,source-backed
+Daedric Quest,"Prince artifact quests and moral choices",high,"Daedric path architecture, stigma, rivalry, taboo scoring","Quest stage choices need curated per-quest review.",uesp_skyrim_quests,needs-local-extraction
+Hold/Thane Quest,"Jarl favor, thane status, property",medium,"Community belonging, civic virtue, local shrine/community privileges","Hold politics can change through Civil War.",uesp_skyrim_factions,source-backed
+Radiant Bounty,"Kill bandit leader, animal extermination, fetch/recovery variants",low-medium,"Weak contextual signals for service, hunting, protection, labor","Targets can be random and repeatable.",uesp_skyrim_radiant,source-backed
+Miscellaneous Quest,"Small local errands and favor quests",medium,"Community service, charity, local theology, social trust","Needs curated whitelist; generic misc completion is too broad.",uesp_skyrim_quests,needs-local-extraction
+DLC Questline,"Dawnguard, Dragonborn, Hearthfire-adjacent systems",high,"Vampire/werewolf, Solstheim Dunmer, Miraak/Hermaeus Mora, home/adoption tracks","DLC install and quest timing matter.",uesp_skyrim_quests,needs-local-extraction

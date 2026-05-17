@@ -1,0 +1,16 @@
+signature,record_type,pdv_use,priority,status
+QUST,Quest,"Service quests, deity quests, Story Manager receivers, setup and commitment flows",high,active
+FACT,Faction,"Guild allegiance, crime/civic pressure, NPC combat relation, ownership",high,first-pass
+KYWD,Keyword,"Semantic tagging for actors, locations, magic, vendors, offerings",high,first-pass
+MGEF,Magic Effect,"Blessing and neglect mechanics, active-effect UI, scripted effects",high,first-pass
+SPEL,Spell,"Abilities, powers, blessings, diseases, status spells",high,first-pass
+RACE,Race,"Origin detection and race-specific design",high,active
+AVIF,Actor Value,"Boon and neglect stat targets",high,first-pass
+LCTN,Location,"Sacred places, holds, temples, wilderness, dungeons",medium,planned
+WRLD,Worldspace,"Skyrim/Solstheim/new-lands scope",medium,planned
+ECZN,Encounter Zone,"Difficulty and dungeon context",medium,planned
+GLOB,Global,"CK condition mirror values and debug settings",high,active
+FLST,FormList,"Rosters and curated sets",high,active
+DIAL,Dialogue Topic,"Commitment and shrine UX",medium,planned
+INFO,Dialogue Response,"Conditioned dialogue choices and fragments",medium,planned
+SMEN,Story Manager Event Node,"Event capture for gameplay signals",high,active

@@ -1,0 +1,8 @@
+faction_class,examples,pdv_use,caution,source_id,validation
+Joinable guild,"Companions; College of Winterhold; Thieves Guild; Dark Brotherhood; Bards College","Identity, skill culture, moral/theological pressure, major quest milestones","Guild membership is often additive; do not assume exclusivity.",uesp_skyrim_factions,source-backed
+Civil War,"Imperial Legion; Stormcloaks","Talos ban, Imperial civic theology, Nord identity, Altmer/Thalmor tension","Civil War can alter Jarls and quest availability.",uesp_skyrim_quest_timing,source-backed
+Crime faction,"Hold-specific crime factions","Bounty, arrest, jail, civic reputation, Imperial justice pressure","Crime is hold-scoped and witness/report dependent.",uesp_skyrim_crime,source-backed
+Hostile actor faction,"Bandits; warlocks; vampires; undead; creatures","Combat signal classification","Local data extraction needed for exact faction IDs and relationships.",uesp_skyrim_factions,needs-local-extraction
+Religious faction,"Vigilants of Stendarr; temple-linked groups; cult groups","Stendarr/Arkay/Daedric conflict, shrine/cleric access","Faction semantics must be curated; names alone are not enough.",uesp_skyrim_factions,needs-local-extraction
+Community faction,"Orc stronghold Blood-Kin, town/hold service, thane state","Race-specific community investment and belonging","Some community states are quest/rank based rather than one faction.",uesp_skyrim_factions,needs-local-extraction
+Thalmor/Justiciar,"Thalmor-related factions and NPCs","Altmer orthodoxy, Talos repression, Imperial compliance pressure","Requires careful local faction and quest review.",uesp_skyrim_factions,needs-local-extraction

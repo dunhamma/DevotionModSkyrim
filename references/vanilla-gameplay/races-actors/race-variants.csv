@@ -1,0 +1,5 @@
+variant_type,records_or_examples,pdv_rule,caution,source_id,validation
+Vanilla playable race,"Ten playable race records in `playable-races.csv`","Use stored origin index for theology","Current race checks are not enough after curse/transformation.",uesp_skyrim_races,local-data-backed
+Vanilla vampire race,"Birth race should normalize to underlying playable race","PDV_Origin currently uses actor base/current race fallback and should keep vampire normalization policy","Exact vampire race records need expansion from local data.",uesp_skyrim_disease,needs-local-extraction
+Temporary beast-form race,"Werewolf BeastRace 0x000CDD84; Vampire Lord 0x0000283A Dawnguard.esm","Defer one-shot origin detection while temporary form is visible","Do not write origin from transformation race.",uesp_skyrim_disease,local-data-backed
+Custom race,"Unknown race defaults to Imperial in current PDV policy","Surface diagnostic and keep custom-race soft-compat future hook","Default must be player-visible so it is not silent misclassification.",ck_actor_value,local-data-backed
