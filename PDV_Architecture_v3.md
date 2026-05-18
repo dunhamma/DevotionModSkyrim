@@ -80,11 +80,11 @@ These items were live or deferred when v2 was closed. v3 inherits them.
 
 ### 3.3 Contested lore items (must be decided before content lock)
 
-Carried forward from v2 § 10. Each affects stance and rivalry data, not architecture shape:
+Carried forward from v2 Section 10. Each affects stance and rivalry data, not architecture shape:
 
 - **Trinimac as worshipable.** Locked: include as an Altmer-native specialist worship target for martial virtue, civilisational defence, and Thalmor Orthodox play. For Orcs, Trinimac remains `TABOO` fringe pressure only, not a normal Orc core path or fourth Orc lane. Scaffold in Structural Skeleton, but make content-ready only when the Thalmor Orthodox Altmer lane is being built.
 - **Talos-Altmer.** Locked: `HOSTILE`. Theological enemy, not just culturally foreign.
-- **Hircine for Bosmer.** Locked: `NATIVE`, with the lore disagreement noted in the deity description. Reading is Y'ffre-adjacent Wild Hunt veneration.
+- **Hircine for Bosmer.** Locked: `NATIVE`, with the lore disagreement noted in the deity description. Reading is Y'ffre-adjacent hunt / forest veneration.
 - **Malacath classification.** Locked: dual-coded. Malacath is a Daedric Prince for non-Orsimer taxonomy and an Orsimer ancestor/core god as Mauloch/Malacath for Orc handling. Stigma and rivalry logic branch by race rather than forcing one universal label.
 - **Lorkhan-family equivalence.** Locked: do not collapse `Shor`, `Sep`, `Lorkhaj`, and `Lorkhan` into one row. Keep culturally specific records where theology and rivalry differ, and note family resemblance in description text.
 
@@ -124,6 +124,11 @@ The v3 architecture adds the following subsystems on top of the v2 core. Each ge
 
 Currently the only live signal source is hostile kill events. The locked race architecture needs roughly the following signal families: shrine visits, sleep (location-typed), shouts, dialogue/quest resolutions, faction joins, marriage, donations, theft, mercy/persecution choices, and craft/labor events.
 
+Gameplay posture locked by the 2026-05-18 gameplay reference pass: PDV
+should stay quiet, event-led, lore-reactive, recoverable, and vanilla-plus.
+Religion should answer Skyrim play the player already cares about, not become
+a second chore meter or a stream of routine notifications.
+
 ### 5.1 Three signal-source patterns
 
 Every v3 signal flows through one of three patterns and writes only through `PDV__ManagerQuest.AwardPiety()` or `AwardCuratedSignal()`:
@@ -135,6 +140,10 @@ Every v3 signal flows through one of three patterns and writes only through `PDV
 | Curated CK signal | The event is a quest-stage outcome, dialogue choice, faction-join, or other CK-author-driven moment | Direct `AwardCuratedSignal()` from a CK fragment or dialogue script fragment | A-B |
 
 `PDV_ActionRouter` continues to fan to all deities. New event types extend the `EVT_*` integer enum on the router. The router itself stays slim; per-deity scoring lives in each `ScoreAction()`.
+
+Avoid polling-first capture patterns except for dev-only harnesses. If vanilla
+or CK already exposes the event, use the event surface rather than a repeated
+scan.
 
 ### 5.2 Event type enum growth
 
@@ -154,7 +163,7 @@ Reserved ranges for v3 (final integers locked when each phase ships):
 20-29   Social                  (marriage, charity, theft, mercy, persecution)
 30-39   Devotional surfaces     (shrine use, ritual, prayer, donation)
 40-49   Magic/voice             (shouts, school-of-magic use)
-50-59   Craft/labor             (smithing, alchemy, enchanting where lore-relevant)
+50-59   Craft/labor             (curated milestones only where lore-relevant)
 60-69   Faction/quest           (faction join, allegiance, quest-stage outcomes)
 70-79   Curse                   (lycanthrope/vampire state transitions)
 80-89   Daedric                 (Prince-quest milestones, oath/break events)
@@ -169,8 +178,13 @@ Every repeatable signal must carry an anti-farm rule (per the race-architecture 
 - **Per-event daily cap** in `ScoreAction()`. Read `StorageUtil.GetIntValue(deity, "PDV.Daily.<EventType>")`, gate further awards, reset at dawn.
 - **Diminishing returns** for cheap repeatable signals (shrine use, sleep). Each fire scales the next by 0.7x within the day.
 - **Cooldown windows** via `StorageUtil.SetFloatValue(deity, "PDV.LastFire.<EventType>", Utility.GetCurrentGameTime())` for context-sensitive signals (mercy/persecution, theft) where bursting would be exploitative.
+- **Rejected source shapes** for 1.0: raw skill XP scoring, raw crafting counts, generic radiant repetition as primary proof, and notification-first reward loops.
 
 Caps and cooldowns are deity-side, not router-side, so different deities can rate-limit the same event family differently.
+Craft/labor signals are only in scope as curated milestone or context signals
+(e.g. a named rite, a quest-authored proof of discipline, a high-friction
+crafting moment). Do not score "made N daggers" or "gained X Smithing XP"
+directly.
 
 ### 5.4 Outstanding signal-architecture decisions
 
@@ -182,11 +196,15 @@ Caps and cooldowns are deity-side, not router-side, so different deities can rat
 
 These race-specific signal rules were locked during the grilling review and affect how signals are processed per-race:
 
-**Bosmer Green Pact failure (LOCKED):**
+**Bosmer Green Pact lifecycle (LOCKED):**
 - PDV owns its Green Pact tagging layer for The Old Contract path; it may mirror ideas from Requiem/Races Redone, but it is not a dependency on their tags.
-- Single violations do not lock out daily compliance reward — the buff is withheld for that instance only (90-minute cooldown per anti-farm standard)
-- Sustained intentional violation (5 breaks within a 2-day window) triggers a piety penalty
-- Implementation: counter on `PDV.Pact.ViolationStreak` with timestamp windowing in dawn pass
+- Single violations do not lock out daily compliance reward -- the buff is withheld for that instance only (90-minute cooldown per anti-farm standard)
+- The Old Contract is a binary `PactBound` commitment, not a soft ambient deity lane.
+- While `PactBound`, Y'ffre is exclusive: non-Y'ffre Bosmer-recognized ledgers persist but freeze.
+- `GreenPactCompliance` is a 0-100 act-driven meter with no passive decay: Apostate `0-19` locks gains, Lapsed `20-49` grants 50%, Observant `50-79` grants 100%, Strict `80-100` grants 120%.
+- Sustained Apostate dwell for 3 in-game days fires a forced reckoning: re-commit and snap to 30, or renounce. No silent auto-renunciation.
+- Re-entry is allowed once. A second renunciation permanently freezes the Y'ffre path.
+- Wild Hunt remains lore context only, not a player-facing Bosmer track or state.
 
 **Altmer crisis-of-faith (LOCKED):**
 - Tier 3 Lorkhan-adjacent mortal-validation events (marriage, homestead, adoption, similar normal-life commitments) are lightly weighted reactions, not harsh collapses.
@@ -197,7 +215,7 @@ These race-specific signal rules were locked during the grilling review and affe
 **Dunmer Tribunal shrine random-thought (LOCKED):**
 - Praying at a Tribunal shrine (Almalexia/Vivec/Sotha Sil) produces a random selection from a curated buff/debuff pool
 - Each shrine has its own pool themed to its Good Daedra aspect
-- Some results are positive, some negative — reflects the Three's unpredictable legacy
+- Some results are positive, some negative -- reflects the Three's unpredictable legacy
 - Signal source: curated CK activator script on the Tribunal shrine objects
 
 **Nord broad-worship combo (LOCKED):**
@@ -208,7 +226,7 @@ These race-specific signal rules were locked during the grilling review and affe
 **Orc community investment (LOCKED):**
 - NPC disposition tracking is the preferred approach for community progression
 - For 1.0: faction-favor proxy system (faction rank represents community standing)
-- Progression arc: stranger → acquaintance → friend → community member
+- Progression arc: stranger -> acquaintance -> friend -> community member
 - Drives devotion bonus from the Orc's self-made community location
 
 **Imperial Concordat walk-back (LOCKED):**
@@ -257,7 +275,7 @@ Int      Property MaxValue = 100 AutoReadOnly
 Int[]    Property ThresholdValues Auto           ; e.g. Concordat [-76, -51, 51, 76]
 String[] Property ThresholdLabels Auto           ; e.g. ["OpenDefiant", "PrivateDefiant", "Uncommitted", "PublicCompliant", "ConcordatEnforcer"]
 
-; -- Lock-in (per § 10.2 of race ref) --
+; -- Lock-in (per Section 10.2 of race ref) --
 Bool     Property LockInOnCross = True Auto      ; threshold must be crossed by sustained behavior
 Int      Property LockInGraceDays = 3 Auto       ; days at the destination before the new state sticks
 Bool     Property NarrativeGateRequiredForExtremeReset = False Auto
@@ -304,7 +322,7 @@ Reputation tracks **do not** modify piety directly. They modify *stance multipli
 
 ### 6.4 Track-modified stance multipliers
 
-The race architecture's Concordat table shifts Talos-devotion gain by state (×1.5 for Open Defiant, ×0.5 for Concordat Enforcer). This composes with the v2 stance multiplier.
+The race architecture's Concordat table shifts Talos-devotion gain by state (x1.5 for Open Defiant, x0.5 for Concordat Enforcer). This composes with the v2 stance multiplier.
 
 v3 extends `PDV_DeityBase` with an optional track-multiplier hook:
 
@@ -340,7 +358,7 @@ Reputation tracks are continuous integers with thresholds. State tracks are cate
 State tracks differ from reputation tracks in that they:
 
 - Have no continuous backing value, just a current category integer.
-- Often persist for the life of the character (Bosmer path), or until a major life event (Orc Stronghold → City → Exile).
+- Often persist for the life of the character (Bosmer path), or until a major life event (Orc Stronghold -> City -> Exile).
 - Are usually set by a one-time threshold event, not by accumulating points.
 
 ### 7.1 Pattern
@@ -366,6 +384,12 @@ API mirrors the reputation track: `GetCurrentState()`, `GetStateLabel()`, `SetSt
 ### 7.3 How state tracks feed scoring
 
 State tracks unlock or restrict eligible deities (Bosmer `OldContract` makes `Y'ffre` strongly NATIVE-foreground; `BanditRoad` makes `Baan Dar` the foreground deity; the other three Bosmer paths each foreground a different deity).
+
+For Bosmer, `PDV_State_BosmerPath` selects the path, but `OldContract` also
+needs its own bound/unbound lifecycle and discipline state. `PactBound`,
+`LapsedFromPact`, and `GreenPactCompliance` remain separate from the path
+track so Y'ffre exclusivity, forced reckoning, and terminal renunciation are
+not collapsed into a single enum.
 
 v3 adds an optional `EligibleStateTrack` + `EligibleStateValues` filter on `PDV_DeityBase`:
 
@@ -396,7 +420,7 @@ The patron-commitment mechanism (Section 12) reads `IsEligibleForPlayer()` befor
 
 | Track | States | Owner race | Notes |
 |---|---|---|---|
-| `PDV_State_BosmerPath` | OldContract, LivingStory, Exchange, BanditRoad | Bosmer | Set at character setup or first-run quest |
+| `PDV_State_BosmerPath` | OldContract, LivingStory, Exchange, BanditRoad | Bosmer | Set at character setup or first-run quest; `OldContract` additionally reads `PactBound`, `LapsedFromPact`, and `GreenPactCompliance` |
 | `PDV_State_OrcLifeMode` | Stronghold, City, Exile | Orc | Default Stronghold; transition via threshold events |
 | `PDV_State_ImperialWorship` | Broad, Primary | Imperial | Promoted by Concordat-rep + piety-threshold |
 | `PDV_State_NordWorship` | OldWays, NineDivines, Broad, Primary | Nord | Setup choice + commitment event |
@@ -528,7 +552,7 @@ Float Function GetPlaceBonus()                   ; read by substrate scoring
 |---|---|---|---|---|
 | Argonian | 1 | Sleep N nights/month at designated bed | Static | Community decay on absence |
 | Khajiit | 2-3 | Cycle between road homes | Static | Circuit completion bonus |
-| Orc (City/Legion) | 1 | Visit invested location | Dynamic (empty→established→thriving) | Investment builds over time |
+| Orc (City/Legion) | 1 | Visit invested location | Dynamic (empty -> established -> thriving) | Investment builds over time |
 
 **Design rules:**
 - All towns work equally once designated (no mechanical bonus for specific locations)
@@ -668,7 +692,7 @@ Int      Property CommitmentSignalsRequired = 3 Auto    ; how many distinct Prin
 ### 11.2 Boon/price/stigma resolution
 
 - **Boon.** Same as Aedric: `Boon_Seeker`, `Boon_Devoted`, `Boon_Champion` spells granted by tier.
-- **Price.** A parallel spell that applies a thematic drawback when the boon is active. Examples: Hircine boon (Wild Hunt favor) + price (NPC hostility from civilized factions); Boethiah boon (deception strength) + price (oath-bond difficulty with companions).
+- **Price.** A parallel spell that applies a thematic drawback when the boon is active. Examples: Hircine boon (hunt favor) + price (NPC hostility from civilized factions); Boethiah boon (deception strength) + price (oath-bond difficulty with companions).
 - **Stigma.** A cumulative social-readability metric. Each Daedric devotional act adds stigma; high stigma manifests as NPC reactions, dialogue gates, faction wariness. Stigma decays slowly with abstention.
 
 ### 11.3 Commitment gating
@@ -693,11 +717,13 @@ Native-integrated exceptions (Azura/Azurah for Khajiit, Boethra for Dunmer, Mafa
 
 - `PDV_DaedricPath_<Prince>` for the quest. `PDV_DaedricPath_Boethiah`, `PDV_DaedricPath_Hircine`.
 - `PDV_DaedricPathBase` for the base class.
-- `PDV_FLST_AllDaedricPaths` parallel to `PDV_FLST_AllDeities`. Some deities (Malacath, Azura/Azurah) appear in both lists with race-specific routing - decide at content-author time.
+- `PDV_FLST_AllDaedricPaths` is the current scaffold/verifier/MCM roster for Daedric pilots. `PDV_FLST_AllDeities` remains the live Aedric/cultural roster today.
+- Current separate rosters are implementation truth, not final architecture truth. The long-term operational roster may still converge behind a shared fan-out shape once the first non-pilot Daedric expansion proves the better locality/performance tradeoff.
+- Preserve a future roster module as the seam. Routing, dawn, UI, and verifier callers should eventually ask that module which worship targets matter instead of baking FormList splits into each caller.
 
 ### 11.6 Outstanding Daedric decisions
 
-- **Should Daedric paths share `PDV_FLST_AllDeities`?** Mixing them simplifies the action router (one fan-out path) but complicates MCM (Daedric paths display differently). Recommendation: mix in the FormList, branch in MCM display logic.
+- **Daedric roster shape.** Current scaffolds keep `PDV_FLST_AllDaedricPaths` separate for verifier and MCM clarity. The longer-term target may still converge on a shared operational roster if that gives better locality in routing and dawn logic. Keep this open until the first real multi-Prince pass; whichever way it lands, future callers should go through a roster module rather than reading FormLists directly.
 - **Stigma decay model.** Linear with abstention? Triggered by specific cleansing rites? Defer to content-author phase.
 - **Cross-Prince hostility.** Some Princes are canonically hostile (Boethiah vs. Malacath, Meridia vs. all undead-friendly Princes). Should this fire the rivalry ledger? Recommendation: yes, but with smaller multipliers than Aedric-Daedric rivalries (0.3 typical vs. 1.0 for Talos/Auri-El).
 
@@ -782,6 +808,10 @@ Werewolf and Vampire transitions shift theological weights per race. The race ar
 
 ### 13.1 Pattern
 
+`PDV_CurseState` is the single curse-detection seam. Future vanilla and compat
+support should arrive as detection adapters behind this module rather than
+spreading werewolf/vampire checks across deity scripts, the manager, or MCM.
+
 ```papyrus
 Scriptname PDV_CurseState extends Quest
 
@@ -864,65 +894,75 @@ Implementation: a special-case branch in the Altmer curse-transition handler tha
 
 ## 14. Neglect subsystem (Phase 16)
 
-Neglect per the race architecture reference is mostly **loss of access**, not large debuffs. Tier downgrade is the main "you lost it" feedback; secondary thematic effects are small.
+Neglect per the race architecture reference is mostly **loss of access**, not
+large debuffs. Tier downgrade is the main "you lost it" feedback; secondary
+thematic effects are small. The design target is legible and recoverable
+friction, not death-by-a-thousand-cuts punishment.
 
 ### 14.1 What neglect looks like
 
-- **Tier downgrade.** Piety drops below a threshold → tier decreases → boons revoke and contextual-favor ability spell is removed → privileges (which were CK-condition-gated on tier) silently stop working.
+- **Tier downgrade.** Piety drops below a threshold -> tier decreases -> boons revoke and contextual-favor ability spell is removed -> privileges (which were CK-condition-gated on tier) silently stop working.
 - **Optional small thematic effect.** Per the race reference: "The Hist's silence weighs on you, far from Black Marsh. Health regeneration slowed." A single small magic effect, tier-locked, applied only when neglect is "active" (a specific neglected state, not just low piety).
 
 ### 14.2 Where neglect lives
 
-Neglect is not a separate quest; it is a property of each deity:
+Neglect eligibility lives on deity records, but activation is dawn-owned by
+`PDV__ManagerQuest`, not by each deity acting independently. Each deity may
+define a `NeglectEffect` and `NeglectActivePietyMax`, then the manager selects
+the lowest-piety eligible deities at dawn, caps the active set at 3, and
+suppresses all per-deity neglect during broad worship.
 
 ```papyrus
-; PDV_DeityBase additions
-Spell Property NeglectEffect Auto                ; nullable; small thematic effect
-Float Property NeglectActivePietyMax = 10.0 Auto ; below this, neglect effect is granted
-
-Function ApplyNeglectIfWarranted()
-    Float piety = StorageUtil.GetFloatValue(self, "PDV.Piety")
-    if piety < NeglectActivePietyMax && NeglectEffect != None
-        Game.GetPlayer().AddSpell(NeglectEffect, false)
-    else
-        Game.GetPlayer().RemoveSpell(NeglectEffect)
+Function RunDawnApplySpellAndNeglectLayers()
+    if IsBroadWorshipActive()
+        ClearAllNeglectFlags()
+        return
     endif
+
+    ; Select the lowest-piety eligible deities and cap the active set.
+    ; Current manager default: NEGLECT_ACTIVE_CAP = 3
 EndFunction
 ```
 
-Called from `ProcessDawn()` per deity, after `RecomputeTier()`.
+This keeps neglect quiet, legible, and bounded even at full-pantheon scale.
 
 ### 14.3 Per-race neglect
 
 Some races have race-wide neglect effects (Argonian Hist absence) that are not tied to a single deity. These belong on the race substrate quest (Section 8), not on a deity.
 
-### 14.4 Outstanding neglect decisions
+### 14.4 Locked neglect defaults
 
-- **Stacked neglect effects.** A player ignoring all deities could theoretically get 30+ small neglect effects active. v3 should cap active neglect effects at 3 (the 3 lowest-piety eligible deities) to avoid the "death by a thousand cuts" failure mode.
-- **Neglect vs. broad worship.** Under broad worship, no individual deity is "neglected" in the foreground sense. v3 should treat broad-worship sentinel as suppressing per-deity neglect effects across the board.
+- **Active neglect cap:** 3 simultaneously active per-deity neglect effects at most, chosen from the lowest-piety eligible deities.
+- **Broad worship suppression:** broad worship suppresses all per-deity neglect effects.
+- **Intent:** neglect remains a readable "you have drifted" layer rather than a stack of ambient punishment spells.
 
 ---
 
 ## 15. Decay model (Phase 17)
 
-Decay was deferred in v2. v3 implements per-deity linear decay with a tier-floor.
+Decay was deferred in v2. v3 now treats the live manager defaults as the
+forward architecture: per-deity linear decay, a grace period before drift
+starts, a tier floor, and reduced-rate broad-worship decay. The goal is
+relationship drift that is slow and recoverable, not a daily servicing loop.
 
 ### 15.1 Mechanism
 
 Daily, at dawn, after `PietyToday` is consolidated:
 
 ```papyrus
-Function ApplyDecay()
+Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)
     Float lastEventGameTime = StorageUtil.GetFloatValue(self, "PDV.LastEventGameTime")
-    Float now = Utility.GetCurrentGameTime()
-    Float graceDays = 3.0
-    if (now - lastEventGameTime) < graceDays
+    if (nowTime - lastEventGameTime) < DECAY_GRACE_DAYS
         return   ; grace period - no decay
     endif
     Float currentPiety = StorageUtil.GetFloatValue(self, "PDV.Piety")
-    Float decayRate = GetDecayRatePerDay()       ; e.g. -0.5
+    Float multiplier = 1.0
+    if IsBroadWorshipActive()
+        multiplier = BROAD_WORSHIP_DECAY_MULTIPLIER
+    endif
+    Float decayRate = DECAY_PER_DAY * multiplier * GetReputationDecayMultiplier(deity)
     Float floor = GetDecayFloor()                ; tier-locked floor
-    Float newPiety = currentPiety + decayRate
+    Float newPiety = currentPiety - decayRate
     if newPiety < floor
         newPiety = floor
     endif
@@ -950,11 +990,18 @@ EndFunction
 
 ### 15.3 Decay rate
 
-Default `0.5` piety per day after the grace period. Per-deity tunable. Curse states can multiply decay rate (e.g. Vampire Imperial Divine devotion decays at 5x normal rate per the locked file). Reputation tracks can also modify (Concordat Enforcer state decays Talos faster).
+Default is locked at `0.5` piety per day after the grace period. Per-deity
+tuning is still allowed later, but the baseline architecture now assumes this
+default. Curse states can multiply decay rate (e.g. Vampire Imperial Divine
+devotion decays at 5x normal rate per the locked file). Reputation tracks can
+also modify decay pressure (Concordat Enforcer state decays Talos faster).
 
 ### 15.4 Decay vs broad worship
 
-Under broad worship, decay applies to all deities at a reduced rate (0.2x default). Under primary patron, decay applies to non-patron deities at normal rate.
+Under broad worship, decay applies to all deities at a reduced rate
+(`0.2x` default). Under an active patron, passive decay applies to
+non-patron deities at normal rate while the active patron is skipped by the
+passive drift routine.
 
 ---
 
@@ -966,16 +1013,19 @@ The Phase 5 dev MCM is explicitly not the player surface. v3 builds the player s
 
 Two-tab structure:
 
-- **Player tab.** Patron name, tier, days at tier, eligible deities for offer, broad-worship toggle, declined-offer cooldowns. Most state read-only; one or two player-facing toggles (e.g. "Show piety values numerically" preference).
+- **Player tab.** Patron name, tier, days at tier, eligible deities for offer, broad-worship state, and notification verbosity. Keep it small: most state is read-only, numeric piety is optional, and MCM should not become a required daily management surface.
 - **Dev tab.** Existing Status + Debug pages. Gated behind a player-visible "Developer options" toggle.
 
 ### 16.2 In-world feedback
 
 - **Status spell or lesser power.** "Survey Devotion." Cast it, get a `MessageBox` with current patron + tier + days-at-tier + recent piety direction. Per the description-discipline rules, thematic language for normal play; numeric values only in MCM.
 - **Notifications.** Three levels per the race-architecture reference:
-  - **Quiet** (no notification): routine ambient drift.
-  - **Medium** (Notification): tier change, neglect threshold crossed.
+  - **Quiet** (no notification): routine piety gain/loss, most dawn consolidations, ambient drift.
+  - **Medium** (Notification): tier change, neglect threshold crossed, or a similarly legible state shift.
   - **Loud** (MessageBox): commitment offer, refuse-and-rupture, curse-state transition, restoration rite completion.
+
+Detailed scoring remains debug-only. Normal play should understand major
+changes without being narrated through every event fire.
 
 ### 16.3 Dialogue privileges as UI
 
@@ -1200,6 +1250,7 @@ For content-rich 1.0:
 - Curse states (Werewolf + Vampire) are functional.
 - Patron commitment, decay, and neglect are all live.
 - Player-facing UI is thematic-by-default.
+- Normal play is quiet, recoverable, and vanilla-plus rather than chore-loop driven.
 - Sacrosanct compat patch ships alongside.
 - No regression of any v2 invariant.
 
@@ -1228,7 +1279,7 @@ The race-sheet cleanup does not change the phase order. It does tighten the
 acceptance criteria for the next implementation plans:
 
 - Structural Skeleton now starts from the compile-clean base scaffold scripts named in Section 17.0; next it must add verifier visibility for dev-only records.
-- Phase 7 signal expansion must use event/curated-signal vocabulary, not bucket terminology.
+- Phase 7 signal expansion must use event/curated-signal vocabulary, not bucket terminology, and must preserve the quiet/event-led/recoverable gameplay posture.
 - Phase 8-10 Pattern Proving remains the right first content wave, but the pilots are now fixed: Imperial Concordat, Bosmer Path, Dunmer Ancestor, and Khajiit emergent patron/moon cycle.
 - Orc City/Legion community remains a sacred-place contextual modifier, not a strong substrate.
 - Broad worship remains a first-class patron state with Tier 2 cap for 1.0; Khajiit remains the only no-offer exception.
@@ -1279,7 +1330,7 @@ deferred past 1.0.
 
 ### Before Pattern Proving / privilege pilot
 
-#### D-10  Greybeards-Kynareth privilege pilot  (§9.4)
+#### D-10  Greybeards-Kynareth privilege pilot  (Section 9.4)
 
 - **Question:** Pilot the privilege pattern by editing a vanilla dialogue topic (Arngeir greeting under high Kynareth tier)?
 - **Options:**
@@ -1289,15 +1340,16 @@ deferred past 1.0.
 
 ### Before Daedric path implementation
 
-#### D-12  Daedric in shared FormList  (§11.6)
+#### D-12  Daedric in shared FormList  (Section 11.6)
 
-- **Question:** Mix `PDV_DaedricPath_*` into `PDV_FLST_AllDeities` or keep them separate?
+- **Question:** Keep the current separate Daedric scaffold roster, or converge toward a shared operational roster once Daedric routing scales past the Hircine pilot?
 - **Options:**
-  - (a) Mix into shared FormList; branch in MCM display.
-  - (b) Separate `PDV_FLST_AllDaedricPaths`; iterate both lists in router/dawn.
-- **Recommendation:** (a). One fan-out path simplifies the router; MCM-side branching is cheap.
+  - (a) Converge toward one shared operational roster behind a roster module; keep UI/display branching separate.
+  - (b) Keep `PDV_FLST_AllDaedricPaths` and `PDV_FLST_AllDeities` separate long-term and route both explicitly.
+- **Current scaffold reality:** Verifier/MCM/pilot records use a separate Daedric roster today.
+- **Recommendation:** (a). The current split is acceptable as scaffold truth, but a shared operational roster is still the preferred target if the first non-pilot Daedric pass proves it improves locality.
 
-#### D-13  Stigma decay model  (§11.6)
+#### D-13  Stigma decay model  (Section 11.6)
 
 - **Question:** How does Daedric stigma fade?
 - **Options:**
@@ -1306,7 +1358,7 @@ deferred past 1.0.
   - (c) Both: slow linear baseline + faster rite-triggered drops.
 - **Recommendation:** (c). Defer specifics to content-author phase; lock the model now.
 
-#### D-14  Cross-Prince hostility multipliers  (§11.6)
+#### D-14  Cross-Prince hostility multipliers  (Section 11.6)
 
 - **Question:** Fire rivalry ledger for canonical Prince-vs-Prince hostility (Boethiah/Malacath, Meridia/undead-Princes)?
 - **Options:**
@@ -1317,63 +1369,18 @@ deferred past 1.0.
 
 ### Before neglect/decay implementation
 
-#### D-17  Werewolf detection source  (§13.5)
+#### D-17  Werewolf detection source  (Section 13.5)
 
-- **Question:** How does `PDV_CurseState` detect Werewolf state?
+- **Question:** Which detection adapters should `PDV_CurseState` compose for Werewolf state?
 - **Options:**
   - (a) Companions-quest-specific keyword (`PlayerWerewolfFaction` or quest stage).
   - (b) Active race check (`WerewolfBeastRace`).
   - (c) Both, OR-combined.
 - **Recommendation:** (c). Race check catches transformed state; faction check catches "afflicted but not currently transformed."
 
-#### D-19  Stacked neglect cap  (§14.4)
-
-- **Question:** Cap simultaneously-active neglect effects?
-- **Options:**
-  - (a) Cap at 3 (lowest-piety eligible deities).
-  - (b) Cap at 5.
-  - (c) No cap.
-- **Recommendation:** (a). Avoids the "death by a thousand cuts" failure mode at full-pantheon scale.
-
-#### D-20  Neglect under broad worship  (§14.4)
-
-- **Question:** Do per-deity neglect effects apply during broad worship?
-- **Options:**
-  - (a) Suppress all per-deity neglect under broad worship.
-  - (b) Apply normally.
-  - (c) Apply only to deities the player explicitly disqualified (e.g. via curse).
-- **Recommendation:** (a). Broad worship is conceptually "acknowledged by all, dedicated to none" - neglect doesn't apply.
-
-#### D-21  Decay rate default  (§15.3)
-
-- **Question:** Default linear decay rate per day after grace period?
-- **Options:**
-  - (a) 0.5 piety/day.
-  - (b) 0.25 piety/day (slower, more forgiving).
-  - (c) 1.0 piety/day (faster, more pressure).
-- **Recommendation:** (a). Roughly 50 days from Tier 2 floor to None without activity - feels appropriate for long-running characters.
-
-#### D-22  Grace period default  (§15.1)
-
-- **Question:** Days of no activity before decay starts?
-- **Options:**
-  - (a) 3 days.
-  - (b) 7 days.
-  - (c) 1 day.
-- **Recommendation:** (a). Balances "you can take a week off without consequence" against "you can't just stop forever."
-
-#### D-23  Decay under broad worship  (§15.4)
-
-- **Question:** Decay rate multiplier under broad worship?
-- **Options:**
-  - (a) 0.2x normal (default).
-  - (b) Same as primary worship (1.0x).
-  - (c) No decay under broad worship.
-- **Recommendation:** (a). Broad worship should accrue slower and decay slower - the relationship is shallower in both directions.
-
 ### Before authoring/perf tooling expansion
 
-#### D-30  StorageUtil read budget  (§19.3)
+#### D-30  StorageUtil read budget  (Section 19.3)
 
 - **Question:** Add per-deity StorageUtil read count to verifier output?
 - **Options:**
@@ -1382,7 +1389,7 @@ deferred past 1.0.
   - (c) No.
 - **Recommendation:** (a). Visibility is cheap; capping prematurely is constraining.
 
-#### D-31  pdv_author.mjs compat-patch scope  (§20.4)
+#### D-31  pdv_author.mjs compat-patch scope  (Section 20.4)
 
 - **Question:** Should `pdv_author.mjs` learn to author compat-patch ESPs (Requiem, Sacrosanct, etc.)?
 - **Options:**
@@ -1407,6 +1414,7 @@ defer to this section when the two disagree.
 - **V3 Preflight comes before Phase 7.** Signal expansion should not begin until the hardening work below is compile-clean, verifier-clean, and smoke-tested.
 - **Beta has two gates.** Technical Beta proves system stability for trusted testers; Content-Feel Beta proves the religious roleplay feel.
 - **Launch target is content-rich 1.0.** Public launch waits for broad authored religious texture, not merely a stable narrow core.
+- **Feel matters as much as function.** New systems that technically work but read as spammy, farmable, or chore-like are not ready for beta.
 
 ### 25.2 V3 Preflight
 
@@ -1497,6 +1505,7 @@ Ready when:
 - Install/update path is documented.
 - Core systems are stable on clean starts.
 - MCM/status surfaces are readable.
+- Normal play does not require debug surfaces, daily service actions, or tolerance for routine notification spam.
 - No known hard verifier failures remain.
 - At least several worship paths are content-ready.
 - Testers can report bugs against normal play, not console-only flows.
@@ -1519,6 +1528,7 @@ Ready when:
 - Commitment, neglect, decay, curse-state, and UI are live.
 - Enough dialogue, shrine, notification, and recognition texture exists to judge religious feel.
 - Dev-only scaffolds remain hidden from player-facing surfaces.
+- The play loop feels quiet, recoverable, and lore-reactive rather than like a second hunger meter.
 
 Tester expectation:
 
@@ -1535,6 +1545,7 @@ Ready when:
 - No original multi-stage questlines are required for 1.0.
 - Compatibility posture is documented.
 - External beta feedback has been addressed or explicitly deferred.
+- The release build reads as vanilla-plus in ordinary play: low spam, no obvious farm loops, and no mandatory religious chore maintenance.
 
 ### 25.8 External beta brief
 
@@ -1546,6 +1557,21 @@ with this document, update the brief to match v3.
 ---
 
 ## 26. Revisions
+
+### v3.10 - 2026-05-18 - Gameplay refinement and tracker hardening
+
+Pulled the Bosmer Pact ratification and the new gameplay/UX posture back into
+the forward architecture. v3 now treats PDV as quiet, event-led,
+lore-reactive, recoverable, and vanilla-plus by default; explicitly rejects
+raw skill-XP scoring, raw craft-count scoring, routine notification spam, and
+chore-loop religion; and updates Bosmer Old Contract to the locked
+`PactBound` / `GreenPactCompliance` model with forced reckoning, one-time
+re-entry, and terminal second renunciation.
+
+Closed `D-19` through `D-23` to match the live manager scaffold defaults for
+neglect and decay. Reframed `D-12` as an active roster-shape tension: the
+current separate Daedric roster is scaffold truth today, while the longer-term
+operational roster may still converge behind a shared fan-out seam.
 
 ### v3.9 - 2026-05-17 - Broad structural scaffold gate closed
 
