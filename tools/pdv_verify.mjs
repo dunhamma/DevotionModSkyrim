@@ -204,6 +204,7 @@ const COMPILED_SCRIPTS = {
   PDV_Deity_AuriEl: "required",
   PDV_EventTypes: "required",
   PDV_EventBus: "required",
+  PDV_PlayerEvents: "required",
   PDV_ReputationTrack: "required",
   PDV_StateTrack: "required",
   PDV_SubstrateBase: "required",
@@ -1908,13 +1909,25 @@ class Verifier {
     ]);
     this.checkSourceContains("V3 Pattern Proving source", "PDV_EventBus", [
       "Function RouteConcordatPressure",
+      "Function RouteSleepStop",
+      "Function RouteDunmerPortableShrinePrayer",
+      "Function RouteKhajiitMoonObservance",
     ]);
     this.checkSourceContains("V3 Pattern Proving source", "PDV_EventTypes", [
       "EVT_CONCORDAT_COMPLIANCE",
       "EVT_CONCORDAT_DEFIANCE",
+      "EVT_SLEEP_MOON_OBSERVANCE",
+      "EVT_DUNMER_PORTABLE_SHRINE",
+      "EVT_KHAJIIT_ROAD_HOME",
     ]);
     this.checkSourceContains("V3 Pattern Proving source", "PDV_DaedricPathBase", [
       "DAEDRIC_STATE_FOREIGN",
+    ]);
+    this.checkSourceContains("V3 Pattern Proving source", "PDV_PlayerEvents", [
+      "Event OnPlayerLoadGame()",
+      "Event OnSleepStop(Bool abInterrupted)",
+      "PDV_EventBus Property PDV_EventBusService",
+      "PDV_Origin Property PDV_OriginQuest",
     ]);
   }
 

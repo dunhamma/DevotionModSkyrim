@@ -15,6 +15,7 @@
 | `tools/pdv_compile.mjs` | PapyrusCompiler wrapper for stale/all/targeted PDV script compiles |
 | `tools/pdv_verify.mjs` | Read-only verifier for Anvil/MO2/ESP/script wiring drift |
 | `tools/pdv_author.mjs` | Safe overlay-patch authoring helper for supported ESP wiring on existing PDV records |
+| `native/DevotionPrismaBridge/` | C++ SKSE/Prisma bridge scaffold plus mirrored runtime Prisma panel assets |
 | `references/PDV_Anvil_MO2_MCP_Intake.md` | Codex-facing intake for the Anvil MO2 MCP plugin and optional tool status |
 
 ---
@@ -161,10 +162,64 @@ Creation Kit's built-in Papyrus compiler (Ctrl+F7 in the CK script editor) remai
 | `skyrimse.ppj` | Legacy â€” do not use |
 | `meta.ini` | MO2 mod metadata â€” do not edit manually |
 
+### Native Prisma bridge scaffold
+
+Prisma UI is a C++ SKSE API, not a Papyrus API. PDV's bridge scaffold lives in:
+
+```text
+C:\Users\Admin\Documents\Devotion Mod Project\native\DevotionPrismaBridge\
+```
+
+The live Devotion mod now carries the Papyrus declaration and first Prisma view assets:
+
+```text
+D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\PDV_PrismaBridge.psc
+D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\PDV_PrismaBridge.pex
+D:\Wabbajack\modlists\Anvil\mods\Devotion\PrismaUI\views\Devotion\index.html
+D:\Wabbajack\modlists\Anvil\mods\Devotion\PrismaUI\views\Devotion\styles.css
+D:\Wabbajack\modlists\Anvil\mods\Devotion\PrismaUI\views\Devotion\app.js
+D:\Wabbajack\modlists\Anvil\mods\Devotion\SKSE\Plugins\DevotionPrismaBridge.dll
+D:\Wabbajack\modlists\Anvil\mods\Devotion\SKSE\Plugins\DevotionPrismaBridge.pdb
+```
+
+Papyrus surface:
+
+```papyrus
+Bool Function IsAvailable() Global Native
+Bool Function OpenDevotionPanel() Global Native
+Bool Function CloseDevotionPanel() Global Native
+Bool Function ToggleDevotionPanel() Global Native
+Bool Function SendJson(String payload) Global Native
+```
+
+`PDV_PrismaBridge.psc` compiled cleanly on 2026-05-18. The native DLL also
+builds cleanly with Visual Studio Build Tools 2022 installed at `C:\BuildTools`
+and portable xmake at `C:\Users\Admin\Documents\xmake-v3.0.8-win64\`. Build from
+`native\DevotionPrismaBridge\` with:
+
+```powershell
+$env:PDV_MOD_PATH = "D:\Wabbajack\modlists\Anvil\mods\Devotion"
+& "C:\Users\Admin\Documents\xmake-v3.0.8-win64\xmake\xmake.exe" f -y -m releasedbg
+& "C:\Users\Admin\Documents\xmake-v3.0.8-win64\xmake\xmake.exe" -y
+```
+
+The live DLL was verified on 2026-05-18 with matching SHA256 between build output
+and `Devotion\SKSE\Plugins`, and `dumpbin /exports` shows the expected
+`SKSEPlugin_Load`, `SKSEPlugin_Query`, and `SKSEPlugin_Version` exports. The
+current Anvil MCP VFS can cache file listings, so restart or refresh the MCP
+server if newly copied SKSE files do not immediately appear through `mo2_*`
+tools.
+
 ### Project layout
 
 ```
 D:\Wabbajack\modlists\Anvil\mods\Devotion\
+  PrismaUI\
+    views\
+      Devotion\
+        index.html
+        styles.css
+        app.js
   Scripts\
     PDV__MainQuest.pex
     PDV_Origin.pex
@@ -177,6 +232,7 @@ D:\Wabbajack\modlists\Anvil\mods\Devotion\
     PDV_Deity_AuriEl.pex
     PDV_EventTypes.pex
     PDV_EventBus.pex
+    PDV_PrismaBridge.pex
     Source\
       PDV__MainQuest.psc
       PDV_Origin.psc
@@ -190,6 +246,7 @@ D:\Wabbajack\modlists\Anvil\mods\Devotion\
       PDV_EventTypes.psc
       PDV_EventBus.psc
       PDV_MCM.psc
+      PDV_PrismaBridge.psc
   PlayerDevotion_Framework.esp
   compile.ps1                 (legacy, ignore)
   skyrimse.ppj                (legacy, ignore)
@@ -511,6 +568,7 @@ Phase 4 implementation note:
 
 - `PDV_GLO_OriginRace` should default to `-1` in CK so `PDV_Origin.InitializeOrigin()` can detect "not initialized yet" safely.
 - `PDV_Origin` normalizes vanilla vampire race records back to the corresponding base race before writing `PDV_GLO_OriginRace`. If the current race is only a temporary beast form (`WerewolfBeastRace` or Dawnguard Vampire Lord), initialization defers instead of writing a fallback.
+- The CK global editor only shows the plugin default for `PDV_GLO_OriginRace`. Use in-game `GetGlobalValue PDV_GLO_OriginRace` / `set PDV_GLO_OriginRace to -1` when you need to inspect or reset the runtime value in a live save during smoke testing.
 - `PDV_GLO_PatronDeity` is now written by `PDV__ManagerQuest.SetActiveDeity()`. It is a cache/helper global, not the canonical source of truth for patron state.
 
 Coupled Talos + Auri-El follow-on note:
@@ -608,7 +666,7 @@ Usually a corrupted plugin. Check your load order in MO2. Ensure no plugin has a
 Confirm `Start Game Enabled` is checked on the quest record in CK. Confirm the script is attached to the quest (Quest â†’ Scripts tab, not just saved in the source folder).
 
 **Trace messages not appearing in Papyrus.0.log:**  
-Confirm `bEnableLogging=1` and `bEnableTrace=1` in CreationKit.ini. Confirm you're looking at the right log file â€” there may be Papyrus.0.log and Papyrus.1.log. The most recent session is .0.
+Confirm `bEnableLogging=1` and `bEnableTrace=1` in the active game/profile INIs, not just CK defaults. For the current `Devotion Dev` runtime, the live Papyrus path is `C:\Users\Admin\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`. There may also be `Papyrus.1.log`; `.0` is usually the newest active session, but verify timestamps instead of assuming.
 
 **Event not firing:**  
 For Phase 3 Story Manager events, check that the receiver quest is under the correct SM Event Node, that `Shares Event` is checked, and that the receiver quest is not already stuck running. Use `SQV PDV__SM_KillActor` around a kill test and check Papyrus logs for the receiver trace.
@@ -717,7 +775,13 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-05-17 - V3 broad structural scaffold gate closed:** The broad Structural Skeleton pass is now merged into `PlayerDevotion_Framework.esp`. New substrate, sacred-place, Hircine, curse-state, FormList, and `PDV_MCM` scaffold wiring is present on the framework ESP; `references\authoring\PDV_StructuralSystemsScaffold.manifest.json` and `references\authoring\PDV_StructuralSystemsArrays.manifest.json` are the tracked authoring/readback companions; and `tools\pdv_author.mjs` now recognizes array manifest syntax for planning while keeping array writes manual. Gate-close verification is clean: `node .\tools\pdv_verify.mjs --strict-skeleton` and `node .\tools\pdv_verify.mjs --strict-preflight --strict-skeleton` both return `FAIL=0, WARN=0, TODO=0, PASS=401, INFO=30`. Runtime smoke also passed in game on the `PDV_MCM` Debug page: `Show structural map` and `Run scaffold smoke` completed without changing patron mirrors, dawn behavior, or EventBus routing, and Papyrus confirmed read/write/restore traces for reputation, state, substrate, sacred-place, daedric, and curse scaffolds.
 
-**2026-05-18 - Pattern Proving smoke and VMAD duplicate guardrail:** The first V3 Pattern Proving smoke now has live proof on the current framework baseline: Imperial Concordat and the fresh-save Khajiit emergent/moon-cycle lane both passed in game. The important workflow lesson is save-bake discipline: after VMAD/property merge-back or live MCM/runtime quest wiring changes, the first trustworthy smoke should be from a new save or main-menu `coc qasmoke`, because existing saves can preserve stale script instances that masquerade as missing manager/property wiring. `tools\pdv_verify.mjs` now warns when a quest record carries duplicate same-name VMAD script attachments, since that drift can look verifier-clean while still producing confusing runtime behavior. `PDV_VmadConsolidationOverlay.esp` was generated as a temporary diagnostic/containment overlay during investigation, but it is not a steady-state requirement and should remain inactive unless explicitly needed for future recovery work.
+**2026-05-18 - Pattern Proving smoke and verifier guardrail:** The first V3 Pattern Proving smoke now has live proof on the current framework baseline: Imperial Concordat and the Khajiit emergent/moon-cycle lane both passed in game, but only the later Khajiit pass after runtime-origin reset counts as the formal proof. The important workflow lesson is save-bake discipline: after VMAD/property merge-back or live MCM/runtime quest wiring changes, the first trustworthy smoke should be from a new save or main-menu `coc qasmoke`, because existing saves can preserve stale script instances that masquerade as missing manager/property wiring. `tools\pdv_verify.mjs` now warns when a quest record carries duplicate same-name VMAD script attachments, since that drift can look verifier-clean while still producing confusing runtime behavior. `PDV_VmadConsolidationOverlay.esp` was generated as a temporary diagnostic/containment overlay during investigation, but it is not a steady-state requirement and should remain inactive unless explicitly needed for future recovery work.
+
+**2026-05-18 - Pattern Proving ingress code landed, smoke reused, alias wiring still manual:** The kickoff implementation pass did not need to re-run the proving smokes from last night and this morning; those remain the live evidence base. Instead, the code/deepening work added the first normal-play ingress surface around the already-proven pilot slice: `PDV_PlayerEvents.psc` now exists as the canonical player `ReferenceAlias` event script, `PDV_EventBus.psc` gained routed non-kill handlers for sleep, Dunmer ancestor prayer/home bonus, Khajiit moon/road-home cadence, Green Pact violation, and Hircine hunt rite, and `PDV__ManagerQuest.psc` / `PDV_MCM.psc` now prefer semantic EventBus routes over direct debug-only mutation. The targeted compile pass succeeded cleanly for `PDV__ManagerQuest`, `PDV_EventBus`, `PDV_EventTypes`, `PDV_MCM`, `PDV_Substrate_DunmerAncestor`, `PDV_Substrate_KhajiitLunar`, `PDV_DaedricPath_Hircine`, and `PDV_PlayerEvents`, and the latest strict verification remains clean on `FAIL=0, TODO=0` with `PASS=458, WARN=2, INFO=28` at 2026-05-18 16:47 AEST. Remaining warnings are now `PDV_MCM` duplicate VMAD plus stale SEQ freshness; manager duplicate-VMAD noise is no longer part of the current gate. Important boundary: the safe authoring stack can compile and verify `PDV_PlayerEvents`, but it still cannot mint quest aliases, so `PDV_Player` was attached manually and any future alias additions remain manual CK/xEdit work. `PDV_PatternProvingCoreOverlay.esp` is not an active profile dependency in `Devotion Dev`; the current proving baseline lives on the framework/source side, with overlays kept as tracked artifacts only.
+
+**2026-05-18 - Khajiit sleep ingress proof and origin-runtime lesson:** The `PDV_Player` alias is now live on `PDV__ManagerQuest` with `PDV_PlayerEvents` attached and its three alias properties filled (`PDV_EventBusService`, `PDV_OriginQuest`, `PDV_GLO_DebugLevel`). The debugging lesson from this pass is that the hard part was runtime timing, not missing linkage: fresh/load paths could still see Skyrim's temporary Nord placeholder and bake `PDV_GLO_OriginRace = 0` before Khajiit settled. `PDV__MainQuest` now defers origin work to alias-side ingress, `PDV_PlayerEvents` queues origin retries, and `PDV_Origin` treats the first Nord read as provisional. Early Khajiit sleep attempts before resetting the live runtime global should be treated as exploratory only, not counted proof. Counted Khajiit smoke should reset the runtime global in-game if a stale save already baked the wrong value, confirm `PDV_GLO_DebugLevel = 2`, then sleep once and inspect `C:\Users\Admin\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`. The counted proof on 2026-05-18 showed `EventBus: RouteSleepStop complete`, `Manager: Khajiit moon observance routed...`, and `KhajiitLunar: Moon observance recorded...` with `PDV_GLO_OriginRace` holding at `6`. Remaining boundary for the next planning pass: Dunmer portable shrine/home bonus currently has backend routing plus MCM/debug coverage, but no confirmed normal-play shrine/item trigger is built yet.
+
+**2026-05-18 - Prisma UI bridge scaffold:** Prisma UI's API header is installed and visible through the Anvil MO2 MCP. Added `native\DevotionPrismaBridge\` as the first C++ SKSE bridge scaffold, vendored `PrismaUI_API.h`, mirrored the initial `PrismaUI\views\Devotion\` HTML/CSS/JS panel into the live `Devotion` mod, and added compile-clean native Papyrus declarations in `PDV_PrismaBridge.psc` / `.pex`. Visual Studio Build Tools 2022 and portable xmake are now installed locally; the `releasedbg` DLL builds cleanly, exports the expected SKSE plugin entrypoints, and copies `DevotionPrismaBridge.dll` / `.pdb` to `Devotion\SKSE\Plugins\`. The vendored local Prisma header is intentionally shimmed for CommonLibSSE-NG by avoiding `Windows.h`, while the installed MO2 Prisma API header mod remains unchanged.
 
 **2026-05-16 - Completed phase docs archived:** Finished Phase 2/3 walkthroughs, older planning/delivery notes, and the now-complete Phase 4/5/6 CK walkthroughs were moved to `archive/completed-phase-docs-2026-05-16/` so the root folder stays focused on living architecture/setup/standards docs.
 

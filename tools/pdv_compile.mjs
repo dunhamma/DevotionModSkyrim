@@ -44,6 +44,7 @@ const ACTIVE_SCRIPTS = [
   "PDV_Deity_AuriEl",
   "PDV_EventTypes",
   "PDV_EventBus",
+  "PDV_PlayerEvents",
   "PDV_ActionRouter",
   "PDV__SM_KillActor",
   "PDV_MCM",

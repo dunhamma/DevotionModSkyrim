@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-17 (v3.9 - Broad structural scaffold gate closed)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked.
+Last revised: 2026-05-18 (v3.10 - Pattern Proving ingress sync)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving ingress is partially proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperials/Khajiit proof on the first normal-play ingress slice, while Dunmer portable shrine/home bonus, Bosmer Green Pact, and Hircine hunt rite still need non-debug in-game trigger proof.
 
 ---
 
@@ -136,7 +136,7 @@ Every v3 signal flows through one of three patterns and writes only through `PDV
 | Pattern | Use when | Receiver | Cost |
 |---|---|---|---|
 | Story Manager receiver | The event is in the vanilla SM tree (Kill Actor, Add Item, Increase Skill, Change Location, etc.) | New `PDV__SM_<Event>` non-Start-Game-Enabled quest, calls router | A (cheap) |
-| Player alias event | The event needs player-attached hooks (`OnSleepStart`, `OnObjectEquipped`, `OnPlayerLoadGame`) | `PDV_PlayerEvents` alias script (deferred build from v2) | A (cheap) |
+| Player alias event | The event needs player-attached hooks (`OnSleepStart`, `OnObjectEquipped`, `OnPlayerLoadGame`) | `PDV_PlayerEvents` alias script on `PDV__ManagerQuest` player alias | A (cheap) |
 | Curated CK signal | The event is a quest-stage outcome, dialogue choice, faction-join, or other CK-author-driven moment | Direct `AwardCuratedSignal()` from a CK fragment or dialogue script fragment | A-B |
 
 `PDV_ActionRouter` continues to fan to all deities. New event types extend the `EVT_*` integer enum on the router. The router itself stays slim; per-deity scoring lives in each `ScoreAction()`.

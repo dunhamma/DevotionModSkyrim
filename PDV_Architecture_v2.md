@@ -63,7 +63,7 @@ Deity becomes a first-class Quest, not a value. The manager becomes a dispatcher
 
 | File | Status | Notes |
 |------|--------|-------|
-| `PDV__MainQuest.psc` | Keep - Phase 4 script complete | Bootstrap, RunOnce. `OnInit()` now calls `PDV_Origin.InitializeOrigin()`. |
+| `PDV__MainQuest.psc` | Keep - Phase 4 script complete | Bootstrap, RunOnce. Live implementation now hard-checks PapyrusUtil and defers origin capture to the player-alias ingress instead of forcing `PDV_Origin.InitializeOrigin()` directly from `OnInit()`. |
 | `PDV__ManagerQuest.psc` | Refactor - Phase 4 script/framework wired | Owns the per-deity ledger, dawn consolidation, mirror refresh, stance-aware scratch writes, rivalry plumbing, poll-based debug harness, and framework-owned patron global property. |
 | `PDV_MasterQuest.psc` | ~~Delete~~ **Done 2026-05-10** | Pre-rename ancestor. ESP record removed via xEdit; `.psc` and `.pex` deleted. |
 | `PDV_ActionRouter.psc` | New - wired/tested | Persistent fan-out service called by Story Manager receiver quests; fans actions to deities. CK quest/property wiring complete; hostile bandit/wolf routes verified. |
@@ -72,9 +72,9 @@ Deity becomes a first-class Quest, not a value. The manager becomes a dispatcher
 | `PDV_Deity_Kyne.psc` | New - Phase 4 proof slice script complete | First concrete deity. Template for all others; expects Nord-native / everyone-else-foreign stance wiring plus boon records in CK. |
 | `PDV_Deity_Talos.psc` | New - coupled slice script complete | First hostile-path proof deity. Uses curated Talos-facing defiance signals and one-way Altmer rivalry to Auri-El. |
 | `PDV_Deity_AuriEl.psc` | New - coupled slice script complete | Minimum viable Altmer foundation deity and real Talos rivalry target. |
-| `PDV_Origin.psc` | New - script complete | One-shot race detection, sets origin global, seeds Kyne proof slice. |
+| `PDV_Origin.psc` | New - script complete | One-shot race detection, sets origin global, seeds Kyne proof slice, and now treats the first Nord read as provisional so placeholder new-game race state does not lock too early. |
 | `PDV_MCM.psc` | New - framework wired | SkyUI `Status` + `Debug` dev MCM, iterates `PDV_FLST_AllDeities`, attached directly to `PDV_MCM` in the framework ESP. |
-| `PDV_PlayerEvents.psc` | New (deferred) | Player-alias script for the ~20% of events Story Manager can't reach. Build only when needed. |
+| `PDV_PlayerEvents.psc` | New - V3 ingress live | Player-alias script on `PDV__ManagerQuest` for sleep/load and other non-kill pilot signals that Story Manager cannot reach cleanly. |
 
 ---
 
@@ -82,7 +82,7 @@ Deity becomes a first-class Quest, not a value. The manager becomes a dispatcher
 
 ```
 PDV__MainQuest          (bootstrap, runs once at game start)
-  +- stage 10: init StorageUtil, run PDV_Origin, register deities
+  +- stage 10: init StorageUtil, verify PapyrusUtil, register deities
   +- stage 20: stop self
 
 PDV__ManagerQuest       (Start-Game-Enabled, persistent)
@@ -109,8 +109,9 @@ PDV_Deity_Kyne          (Start-Game-Enabled, persistent)
 PDV_MCM                 (SkyUI menu)
   +- generates panels by iterating PDV_FLST_AllDeities
 
-PDV_Origin              (utility quest, fired by MainQuest)
-  +- reads player race -> sets PDV_GLO_OriginRace once
+PDV_Origin              (utility quest, called by player-alias ingress)
+  +- reads player race -> sets PDV_GLO_OriginRace once after the live race is stable
+  +- treats the first Nord read as provisional if startup race resolution still looks placeholder
   +- seeds Kyne proof-slice starting piety
 ```
 
@@ -299,7 +300,7 @@ So `ProcessDawn` shrinks dramatically - it's now a loop that consolidates per-de
 
 ## 7. Origin system
 
-`PDV_Origin` runs once from MainQuest stage 10. Reads the player's current race, normalizes vanilla vampire race variants back to their birth-race index, and writes `PDV_GLO_OriginRace`. If the only visible race is a temporary beast-form race such as `WerewolfBeastRace` or Dawnguard's Vampire Lord race, initialization defers rather than permanently writing a fallback. Fixed thereafter - no recomputation on race-change mods (re-run only via MCM debug).
+`PDV_Origin` now resolves from the player-alias ingress path rather than being forced immediately by `PDV__MainQuest.OnInit()`. It reads the player's current race, normalizes vanilla vampire race variants back to their birth-race index, and writes `PDV_GLO_OriginRace` once the live race is stable. If the only visible race is a temporary beast-form race such as `WerewolfBeastRace` or Dawnguard's Vampire Lord race, initialization defers rather than permanently writing a fallback. The live implementation also treats the first Nord read as provisional so Skyrim's temporary startup placeholder does not incorrectly bake `0` before Khajiit and other new-game races settle. Fixed thereafter - no recomputation on race-change mods (re-run only via MCM debug).
 
 Each deity reads the global at action-scoring time and looks up the player's *stance* toward that deity (See Section 12.2) - `NATIVE / FOREIGN / TABOO / HOSTILE`. Stance drives the gain multiplier and any side-effects (rivalry penalties, NPC reactions). This replaces the simpler per-origin float multipliers from earlier drafts.
 
@@ -555,7 +556,7 @@ Int Property RACE_ORSIMER   = 8 AutoReadOnly
 Int Property RACE_REDGUARD  = 9 AutoReadOnly
 ```
 
-`PDV_Origin.DetectAndSet()` runs once at MainQuest stage 10. Reads the player's current race, matches normal vanilla races through CK-wired properties, normalizes the ten vanilla `*RaceVampire` records to the same base indexes, and writes the int to `PDV_GLO_OriginRace`. Temporary transformation races such as `WerewolfBeastRace` and Dawnguard's Vampire Lord race return `RACE_UNKNOWN` so bootstrap can defer rather than baking the wrong origin. Custom races without a known mapping default to `RACE_IMPERIAL` with a debug trace flag - this is the most religiously syncretic baseline, least likely to feel wrong.
+`PDV_Origin.DetectAndSet()` now runs from the player-alias ingress path after bootstrap instead of being forced directly at MainQuest stage 10. It reads the player's current race, matches normal vanilla races through CK-wired properties, normalizes the ten vanilla `*RaceVampire` records to the same base indexes, and writes the int to `PDV_GLO_OriginRace`. Temporary transformation races such as `WerewolfBeastRace` and Dawnguard's Vampire Lord race return `RACE_UNKNOWN` so bootstrap can defer rather than baking the wrong origin. The live implementation also treats the first Nord read as provisional to avoid Skyrim's placeholder startup race being locked as the permanent origin. Custom races without a known mapping default to `RACE_IMPERIAL` with a debug trace flag - this is the most religiously syncretic baseline, least likely to feel wrong.
 
 ### 12.2 Stance taxonomy
 
