@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-18 (v3.10 - Pattern Proving ingress sync)
+Last revised: 2026-05-18 (v3.12 - PO3 dependency decision)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving ingress is partially proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperials/Khajiit proof on the first normal-play ingress slice, while Dunmer portable shrine/home bonus, Bosmer Green Pact, and Hircine hunt rite still need non-debug in-game trigger proof.
 
 ---
@@ -39,8 +39,9 @@ These are non-negotiable. Every v3 subsystem must respect them.
 6. **Player-facing strings are ASCII.** No curly quotes, em dashes, ellipses, bullets, or multibyte punctuation in MCM, dialogue, notifications, books, or message boxes.
 7. **The framework ESP keeps `Skyrim.esm` as the first master.** Overlay patches authored via `pdv_author.mjs` must preserve this. Manually inserting `Skyrim.esm` into an existing patch without remapping FormIDs is destructive.
 8. **PapyrusUtil is a hard runtime dependency.** Missing PapyrusUtil should hard-fail with a player-visible message, not silently fall back.
-9. **Race architecture preservation.** The locked race architectures in `references/PDV_RaceArchitecture_DesignReference.md` are authoritative. v3 subsystems must not flatten races into a uniform patron model.
-10. **The hybrid boon policy is asymmetric.** Not every race gets a persistent substrate; structurally layered religions (Dunmer, Khajiit, Argonian) do, others lean on privileges and contextual favors. Most races should never feel like they have more than two meaningful always-on boon families at once.
+9. **powerofthree's Papyrus Extender is a hard runtime dependency.** PDV accepts the PO3 dependency chain for richer runtime event hooks: SKSE64, Address Library for SKSE Plugins, powerofthree's Tweaks, and the PO3 Papyrus Extender scripts/DLL. Use PO3 for event surfaces that vanilla Story Manager/player aliases cannot expose cleanly; do not use it for keyword/NPC/classification distribution that the offline patcher can generate.
+10. **Race architecture preservation.** The locked race architectures in `references/PDV_RaceArchitecture_DesignReference.md` are authoritative. v3 subsystems must not flatten races into a uniform patron model.
+11. **The hybrid boon policy is asymmetric.** Not every race gets a persistent substrate; structurally layered religions (Dunmer, Khajiit, Argonian) do, others lean on privileges and contextual favors. Most races should never feel like they have more than two meaningful always-on boon families at once.
 
 ### 2.1 Tier vocabulary boundary
 
@@ -113,7 +114,7 @@ The v3 architecture adds the following subsystems on top of the v2 core. Each ge
 | 14 | Neglect subsystem | Tier downgrade + privilege/favor removal; small thematic effects |
 | 15 | Decay model | New `ProcessDawn` step; per-deity floor and grace logic |
 | 16 | Player-facing UI | MCM evolution + status spell + notification policy |
-| 17 | Content authoring pipeline | Template scripts, `pdv_author.mjs` scope, verifier coverage |
+| 17 | Content authoring pipeline | Template scripts, `pdv_author.mjs` scope, offline classification/distribution patcher, verifier coverage |
 | 18 | ESP module structure | Framework-monolithic through 1.0; race ESP split deferred |
 | 19 | Performance budget | Pantheon-scale FormList iteration, dawn cost ceiling |
 | 20 | Mod compatibility | Soft-compat targets, signal cross-routing, optional patch ESPs |
@@ -221,6 +222,8 @@ These race-specific signal rules were locked during the grilling review and affe
 **Nord broad-worship combo (LOCKED):**
 - At Faithful (Tier 2), multiple active deity relationships produce combined contextual favors
 - Favors are watered-down versions of individual deity rewards, combined for breadth-specific feel
+- Broad worship counts as its own devotional lane for contextual favors
+- The broad lane gets 3-5 blended trigger families, capped at Faithful, rather than activating each deity's full favor set
 - Combo recipes are content-authored; architecture provides the multi-deity piety-read mechanism
 
 **Orc community investment (LOCKED):**
@@ -515,7 +518,7 @@ No mirror globals for substrate. CK Conditions that need substrate state read fr
 
 ### 8.4 Interaction with patron boons
 
-Substrate boons and patron boons coexist. Family caps (Section 10.3) prevent stacking abuse. For balance, treat substrate boons as the "always quiet" layer and patron boons as the "louder" foreground layer.
+Substrate boons and patron boons coexist. Family caps (Section 10.7) prevent stacking abuse. For balance, treat substrate boons as the "always quiet" layer and patron boons as the "louder" foreground layer.
 
 ### 8.5 Sacred Place shared system (LOCKED)
 
@@ -633,35 +636,82 @@ Where a privilege genuinely needs a value not surfaced by the mirrors (e.g. "hig
 
 ## 10. Contextual favor subsystem (Phase 12)
 
-Contextual favors are passive conditional magic effects (e.g. "Frost resistance +25% while outdoors in Eastmarch and Kyne is your patron at Devoted or higher"). They are the main carrier of race-specific identity per the locked hybrid boon policy.
+Contextual favors are automatic, signal-triggered temporary boosts. They are not hotbar powers, lesser powers, or player-invoked religion abilities. An authored preferred signal for the active patron, path, mode, or substrate may also trigger a favor. They are the main carrier of race-specific identity per the locked hybrid boon policy.
 
 ### 10.1 Pattern
 
-Each favor is a single Magic Effect on a permanent ability spell that all foreground patrons grant when active. The ability holds N magic effects; each effect's CK Conditions gate when it fires.
+Each favor is authored as a Magic Effect or short-duration ability that the favor subsystem applies automatically after a qualifying signal. The active foreground patron/path/mode exposes its favor set, but the player can have only one contextual favor boost active at a time, globally across PDV.
 
 ```
 PDV_Favor_<Patron>_<Description>          Magic Effect
-PDV_Ability_<Patron>_ContextualFavors     Spell (granted as patron foreground ability)
+PDV_Ability_<Patron>_ContextualFavors     Spell or favor-set holder
 ```
 
-The ability is patron-only and tier-gated (most contextual favors unlock at Tier 2 Devoted; some at Tier 3 Champion).
+The favor set is patron-only and tier-gated. A favor may fire again after the current boost expires, but only when the player hits another qualifying preferred signal.
 
-### 10.2 Favor count target
+### 10.2 Marked-signal rule
 
-The race-architecture pre-matrix requirements call for 3-5 contextual favors per path. v3 enforces this as a soft cap; the verifier should warn if a patron's contextual-favor list exceeds 5.
+Favor eligibility is authored, not inferred from piety sign. Most favor triggers will be positive piety signals, but some costly or ambiguous events may trigger a favor when they are meaningfully faithful to the current god/path/layer. Examples include defiance under Concordat pressure, re-commitment after rupture, cure-and-return rites, or choosing orthodoxy after a dissonant Altmer event.
 
-### 10.3 Family caps (anti-stack)
+Pure penalties, failures, hostile-rival signals, and ordinary negative drift do not trigger favors unless an explicit restoration or recommitment signal is authored. Implementation-facing matrix rows should carry an explicit `CanTriggerFavor` / `FavorFamily` decision rather than deriving favor eligibility from positive piety alone.
 
-Multiple favors from the same effect family (e.g. "frost resistance," "shout cooldown reduction") should not stack into burst power. v3 enforces this via:
+### 10.3 One-active-boost cap
+
+The cap is global across all PDV contextual favors, including temporary favors from substrates. A Khajiit lunar favor and Khenarthi road favor, for example, cannot both be active temporary boosts at the same time.
+
+Outside the cap:
+
+- Baseline blessings
+- Low-power persistent substrate boons
+- Religious privileges
+- Neglect state changes
+- Restoration state changes, unless they grant a temporary contextual favor
+
+### 10.4 Favor count target
+
+The race-architecture pre-matrix requirements call for 3-5 contextual favor trigger families per devotional lane. A lane may be a focused deity, path, mode, substrate layer, or broad-worship state depending on the race architecture.
+
+These should be sourced from the same authored tables that decide what generates piety. v3 enforces 5 as a soft cap; the verifier should warn if a lane's contextual-favor trigger list exceeds 5.
+
+Broad worship is a lane, not a request to activate every individual deity's favor set. Broad-worship lanes get 3-5 blended trigger families, remain capped at Faithful / Tier 2, and should feel culturally complete but softer and less personal than focused Devoted patron favor sets.
+
+### 10.5 Duration buckets
+
+Use a small shared duration vocabulary instead of custom timing per deity:
+
+| Bucket | Use for | Target duration |
+|---|---|---|
+| `Momentary combat favor` | Mercy, near-death, impossible odds, honorable kill, protecting someone | 30-90 seconds |
+| `After-act favor` | Death rites, oath kept, caravan aid, meaningful quest beat | 2-4 in-game hours |
+| `Environmental favor` | Storm, water, road, tomb, shrine, dawn/dusk, outdoor sleep aftermath | While the context is true or until the place/time window ends |
+| `Rare major favor` | HoonDing make-way, Ash'abah major tomb cleansing, Baan Dar reversal, major patron recognition | 24 in-game hours |
+
+Player-facing language should describe these as "for this fight," "for this journey," "while I am in the sacred context," or "until the next day," not as precise timer mechanics.
+
+### 10.6 Surfacing ladder
+
+The shorter the favor, the quieter it should be. Most short combat favors should be felt through the effect itself rather than announced. Longer or rarer favors can be surfaced more clearly because they are less likely to spam the player.
+
+| Surfacing level | Default bucket | Player feedback |
+|---|---|---|
+| `Quiet` | Momentary combat favor | No notification by default; effect icon or felt gameplay change only |
+| `Noted` | After-act favor, environmental favor | Short notification when the context is meaningful and rare enough |
+| `Marked` | Rare major favor, costly-but-faithful restoration/recommitment moments | Named notification or message; reserved for moments the player should remember |
+
+Costly-but-faithful events may be surfaced one level higher than their duration bucket when the point of the event is that the character paid a real theological cost.
+
+### 10.7 Family caps (anti-stack)
+
+Multiple favors from the same effect family (e.g. "frost resistance," "shout cooldown reduction") should not stack into burst power. The one-active-boost rule is the primary guardrail. v3 also enforces this via:
 
 - **Keyword tagging.** Each `PDV_Favor_*` magic effect carries one or more `PDV_FavorFamily_<Name>` keywords (e.g. `PDV_FavorFamily_FrostResist`, `PDV_FavorFamily_ShoutCooldown`).
 - **Cap enforcement.** Cross-deity favors within the same family use the same numerical value rather than additively stacking. Implementation: prefer "Set Value" / "Max Of" archetypes over "Mod Value" archetypes where Skyrim's magic effect resolution allows.
 
 This is design discipline more than a script feature. The verifier should detect "multiple PDV_FavorFamily_X effects with Mod Value archetype" as a balance warning.
 
-### 10.4 Authoring overhead
+### 10.8 Authoring overhead
 
-Each favor is: one magic effect, one entry in the patron's ContextualFavors ability spell, a family keyword, and a CK Condition stack. A typical patron has 3-5 favors. Across 25-35 deities that's roughly 100-150 favor effects in v1.0 - manageable in CK without templating, but a candidate for `pdv_author.mjs` expansion later.
+Each favor is: one magic effect or short-duration ability, one trigger-family entry in the patron's contextual-favor set, a family keyword, and any needed CK Condition stack. A typical patron has 3-5 favors. Across 25-35 deities that's roughly 100-150 favor effects in v1.0 - manageable in CK without templating, but a candidate for `pdv_author.mjs` expansion later.
 
 ---
 
@@ -788,12 +838,15 @@ No popup, no shrine event, no "Azurah notices you" moment. The emergent patron i
 
 ### 12.5 "Broad worship" as a first-class state
 
-Per the locked Nord/Imperial/Breton designs, broad worship is a real state, not just "no patron set." v3 introduces:
+For race designs where broad worship is culturally normal and experientially useful, broad worship is a real state, not just "no patron set." v3 introduces:
 
 - `PDV_GLO_PatronState` stores the explicit patron state: unset, broad worship, or active patron. `PDV_GLO_PatronDeity` remains an active-target cache only when the state is active; do not overload it with broad-worship sentinels.
 - Broad worship is selected via the same setup choice that sets a state track (Section 7.4).
 - Under broad worship, scoring is dampened and capped at Tier 2 for 1.0 unless later race content proves a narrower exception is needed.
 - Commitment offers still fire from under broad worship; accepting transitions out of broad.
+- Broad worship counts as its own contextual-favor lane. It receives blended Faithful-capped favor families rather than enabling every individual deity's patron favor set.
+
+Broad-worship lane eligibility is content-authored, not automatic for every race with multiple worship targets. Current first-release posture: Nord, Imperial, and Redguard receive broad-worship lanes; Dunmer uses a special layered equivalent; Breton and Altmer do not receive a generic broad lane.
 
 ### 12.6 Commitment offer defaults
 
@@ -1113,6 +1166,43 @@ The verifier needs to scale. v3 expectations:
 - **Templating vs. duplication.** Do not add an abstract `PDV_Deity_Template.psc` for 1.0. Build one excellent concrete pattern per subsystem, then clone the closest concrete script; revisit only if script-side deity creation routinely takes more than 30 minutes before CK work.
 - **MCM display order.** Use `PDV_FLST_AllDeities` order as the default display order, with an optional manual override property for special cases such as "Akatosh first."
 
+### 17.6 Offline classification and distribution patcher
+
+PDV should build its own **offline Mutagen-backed patcher** for KID/SPID/SkyPatcher-like classification and distribution work instead of making those runtime frameworks hard dependencies for core 1.0.
+
+Working name: `tools/pdv_patch.mjs` or a dedicated Mutagen/Synthesis-style patcher. The exact host can change, but the architecture is:
+
+1. Read the user's resolved load order.
+2. Read PDV-owned classification/distribution rules from tracked CSV/JSON manifests.
+3. Resolve target records from the winning load order.
+4. Emit one generated patch plugin, e.g. `PDV_ClassificationPatch.esp`, with overrides only where PDV needs added keywords, FormList entries, NPC spells/perks/items, or lightweight record tweaks.
+5. Verify the generated patch with `pdv_verify.mjs` before treating it as a supported artifact.
+
+This is inspired by KID, SPID, and SkyPatcher, but it is intentionally **patch-build-time**, not runtime:
+
+| Existing framework pattern | PDV-owned offline equivalent | First PDV use |
+|---|---|---|
+| KID keyword distribution | Add PDV semantic keywords to `WEAP`, `ARMO`, `BOOK`, `INGR`, `ALCH`, `MGEF`, `SPEL`, `LCTN`, `ACTI`, `FLOR`, `FURN`, `RACE`, and related records in a generated ESP | Green Pact tagging, sacred texts, taboo gear, offering items, magic-school/domain classification |
+| SPID spell/perk/item distribution | Add spells, perks, factions, outfits/items, packages, or keywords to NPC/base-actor records in a generated ESP | Priests, Vigilants, Thalmor pressure actors, stronghold/community NPC hooks |
+| SkyPatcher-style record edits | Apply declarative field patches into a generated ESP | Small compatibility/tuning patches that do not justify hand-edited CK work |
+| FLM/FormList injection | Add existing records to PDV FormLists in a generated ESP | Sacred places, deity artifact lists, offering whitelists, compat FormLists |
+
+The patcher should be **idempotent**: rerunning it with the same rules and load order produces the same patch. It should never mutate source plugins in place. Generated patches are build artifacts, not design source.
+
+Use Mutagen rather than xEdit Pascal for the long-term tool because Mutagen exposes keyword lists and other record lists as typed APIs and handles Skyrim keyword count subrecords (`KSIZ`/`KWDA`) internally. xEdit Pascal remains a useful proofing fallback when a specific record edge case is easier to inspect interactively.
+
+### 17.7 Runtime framework dependency posture
+
+Runtime distribution frameworks are valuable, but PDV should not inherit them casually:
+
+- **KID:** good model for semantic keyword distribution, but current KID depends on SKSE, Address Library, and powerofthree's Tweaks. PDV core should prefer the offline patcher for keyword classification.
+- **SPID:** deferred. It may become worth the cost if PDV later needs runtime actor-load distribution, outfit lifecycle behavior, or wide NPC spell/perk/item injection that cannot be represented cleanly in a generated patch. Until then, the offline patcher owns NPC/base-actor distribution.
+- **SkyPatcher:** excellent conceptually for declarative patching, but current public docs/snippets show a powerofthree's Tweaks dependency. PDV should copy the design idea into its own offline patcher before making it a runtime requirement.
+- **PO3 Papyrus Extender:** accepted as a hard runtime dependency for event hooks that cannot be baked into an ESP. This also brings Address Library and powerofthree's Tweaks into the runtime dependency chain. Treat PO3 as separate from classification/distribution: it is for runtime events, not keyword/NPC distribution.
+- **JContainers:** keep out of 1.0 core unless a later rule format genuinely needs nested runtime data. Build-time JSON manifests do not require JContainers.
+
+Default rule: if the work can be compiled into a patch plugin, PDV should tool it offline. If the work needs to observe runtime-only behavior, then a runtime framework may be justified.
+
 ---
 
 ## 18. ESP module structure (decision)
@@ -1200,6 +1290,7 @@ Per the race-architecture pre-matrix requirements, every signal row has a surviv
 
 - **Compat patch authoring tool.** Should `pdv_author.mjs` learn to author compat-patch ESPs? Probably yes, but only after the v3 core subsystems are stable.
 - **Wintersun coexistence.** PDV documents Wintersun as parallel-but-divergent coexistence for 1.0. Do not detect Wintersun, suppress features, or build active integration unless a later compatibility phase proves a concrete need.
+- **Generated compat patches.** The Section 17 offline patcher is the preferred long-term path for optional KID/SPID/SkyPatcher-style compatibility work. It should emit visible patch ESPs rather than adding KID, SPID, SkyPatcher, or powerofthree's Tweaks as hard requirements solely for classification/distribution.
 
 ---
 
@@ -1222,14 +1313,14 @@ excellent reusable example per subsystem, then clone.
 | **9** | State track + first instance (Bosmer Path) | Phase 8 | Bosmer path persists, eligibility filtering works in commitment offers, and Old Contract Green Pact tags are independent of external mods |
 | **10** | Race substrate (Dunmer Ancestor first pilot) | Phase 9 | Portable-shrine prayer and home bonus grant origin-only substrate progress; substrate metric stays separate from patron piety |
 | **11** | Privilege subsystem first wave (shrine + dialogue privileges for Kyne/Mara) | Phase 8/9 | CK conditions read mirror globals + track globals; dialogue topics gate cleanly |
-| **12** | Contextual favor subsystem (Kyne foreground favor set) | Phase 11 | 3-5 conditional magic effects per patron; family caps prevent stacking |
+| **12** | Contextual favor subsystem (Kyne foreground favor set) | Phase 11 | 3-5 automatic signal-triggered favor families per devotional lane; one active boost cap prevents stacking |
 | **13** | Daedric path architecture + first Prince (Boethiah pilot) | Phase 11 | Boon/price/stigma triple works; commitment gating works; stigma readout via global |
 | **14** | Patron commitment mechanism (in-world offer + accept/decline/refuse) | Phase 9/11 | Offers fire from dawn pass; threshold gate works; 70% carry-over on accept |
 | **15** | Curse-state overlay (Werewolf first, Vampire second) | Phase 14 | Curse multiplier composes correctly; transition events fire per-deity reactions |
 | **16** | Neglect subsystem (per-deity neglect effects, max 3 active) | Phase 14 | Neglect spells apply/remove at dawn; broad-worship suppresses |
 | **17** | Decay model (linear with tier-floor + grace) | Phase 14 | Decay applies at dawn; floors respected; curse/track modifiers compose |
 | **18** | Player-facing UI (player MCM tab, status spell, notification policy) | Phase 14 | Thematic display default; numeric override behind toggle |
-| **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + verifier coverage) | Parallel | Add-a-deity workflow time roughly halved vs. Phase 6 |
+| **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Add-a-deity workflow time roughly halved vs. Phase 6; first generated classification patch can add PDV keywords/FormList entries from rules |
 | **20** | Mod compatibility first patch (Sacrosanct for vampire cross-routing) | Phase 15 | Sacrosanct feed events translate to PDV signals; no double-fire |
 | **21** | 1.0 content lock + polish | All above | Pantheon at 25-35 deities, all 10 races have at least one foreground option, all locked race architectures honored |
 
@@ -1271,6 +1362,7 @@ Enhancement custom content (improves experience, not required for core function)
 - No original multi-stage questlines. Per the race-architecture pre-matrix requirements, the first release uses existing gameplay loops and CK-gated interactions, not bespoke quest arcs. Light authored moments such as commitment offers, shrine/ritual interactions, dialogue recognition, and notifications are in scope.
 - No hard Survival/Requiem dependency.
 - No DLL plugins authored by PDV.
+- No hard KID, SPID, or SkyPatcher dependency solely for keyword/classification/NPC distribution. powerofthree's Tweaks is accepted only as part of the PO3 Papyrus Extender runtime-event dependency chain, not as a reason to adopt KID/SkyPatcher distribution. Prefer the offline patcher unless a runtime-only feature proves the need.
 - No replacement of vanilla shrine activator scripts. (Use overlay receiver quests instead.)
 
 ### 21.4 Implementation-plan review after race-sheet cleanup
@@ -1310,7 +1402,7 @@ These are intentionally not solved in v3.
 
 - **Per-race ESP split.** Stays monolithic through 1.0; revisit only on need (Section 18.2).
 - **JContainers escalation.** StorageUtil is enough through 1.0. If post-1.0 features require nested structures (e.g. a complex stigma history per Daedric path with timestamp arrays), revisit. JContainers stays out of the v1.0 dependency tree.
-- **PO3 Papyrus Extender adoption.** Same: only if a specific event source requires it.
+- **SPID adoption.** Deferred. Revisit if future NPC distribution needs runtime actor-load behavior, outfit lifecycle handling, or broad dynamic injection that cannot be safely represented by the offline patcher.
 - **Custom race authoring support.** A custom-race patch shape ("here's how a custom race plugin tells PDV which devotional identity it should be") is plausible post-1.0.
 - **Multi-character cross-save patron memory.** Each save is independent; cross-save persistence is not architecturally interesting.
 - **Localization.** All player-facing strings are ASCII English. A second-pass localization effort post-1.0 is in scope; the architecture supports it via string-table externalization, which would be a minor refactor.

@@ -15,6 +15,7 @@
 | `tools/pdv_compile.mjs` | PapyrusCompiler wrapper for stale/all/targeted PDV script compiles |
 | `tools/pdv_verify.mjs` | Read-only verifier for Anvil/MO2/ESP/script wiring drift |
 | `tools/pdv_author.mjs` | Safe overlay-patch authoring helper for supported ESP wiring on existing PDV records |
+| `tools/pdv_extract_vanilla_gameplay_refs.mjs` | Read-only vanilla/DLC gameplay reference extractor |
 | `native/DevotionPrismaBridge/` | C++ SKSE/Prisma bridge scaffold plus mirrored runtime Prisma panel assets |
 | `references/PDV_Anvil_MO2_MCP_Intake.md` | Codex-facing intake for the Anvil MO2 MCP plugin and optional tool status |
 
@@ -30,6 +31,9 @@
 | **Creation Kit for SSE** | Latest | Steam (free DLC) | Do not update mid-project |
 | **SKSE64** | Match your SSE version exactly | skse.silverlock.org | NOT from Nexus |
 | **SkyUI** | 5.2SE | Nexus #12604 | Required for MCM |
+| **Address Library for SKSE Plugins** | Match your SSE runtime | Nexus | Required by the PO3/Tweaks SKSE plugin chain |
+| **powerofthree's Tweaks** | Match your SSE runtime | Nexus | Required by PO3 Papyrus Extender |
+| **powerofthree's Papyrus Extender** | Match your SSE runtime | Nexus | Hard runtime dependency for v3 event hooks |
 | **Mod Organizer 2** | 2.5.x | Nexus #6194 | Development environment manager |
 | **SSEEdit (xEdit)** | 4.x | Nexus #164771 | Conflict checking |
 
@@ -75,6 +79,9 @@ Dragonborn.esm
 ---
 SKSE
 SkyUI.esp
+Address Library for SKSE Plugins
+powerofthree's Tweaks
+powerofthree's Papyrus Extender
 ---
 PlayerDevotion_Framework.esp    â† your core file
 PDV_Nord.esp                    â† race module (add as built)
@@ -88,7 +95,7 @@ PDV_Orc.esp
 PDV_Argonian.esp
 ```
 
-**Rule:** Keep the Devotion Dev profile minimal â€” Skyrim/DLC, SKSE, SkyUI, and PDV plugins only. Every additional mod is a potential false positive when debugging. The Anvil instance hosts a full modlist; Devotion Dev is the curated subset for PDV work.
+**Rule:** Keep the Devotion Dev profile minimal â€” Skyrim/DLC, SKSE, SkyUI, Address Library, powerofthree's Tweaks, powerofthree's Papyrus Extender, and PDV plugins only. Every additional mod is a potential false positive when debugging. The Anvil instance hosts a full modlist; Devotion Dev is the curated subset for PDV work.
 
 ### MO2 Settings to Configure
 
@@ -292,6 +299,7 @@ node .\tools\pdv_author.mjs plan structural-systems-scaffold
 node .\tools\pdv_author.mjs apply structural-systems-scaffold
 node .\tools\pdv_author.mjs plan structural-systems-arrays
 node .\tools\pdv_author.mjs apply structural-systems-arrays
+node .\tools\pdv_extract_vanilla_gameplay_refs.mjs
 ```
 
 The compiler spawns `PapyrusCompiler.exe` directly with the project import chain, compiles known scripts whose `.pex` output is missing or older than source, treats Papyrus warnings as failures, and runs the verifier after successful compiles unless `--skip-verify` is used. The active set now includes the proven v2 scripts plus the V3 Preflight script slice (`PDV_EventTypes` and `PDV_EventBus`); the optional known set includes the V3 Structural Skeleton base scripts (`PDV_ReputationTrack`, `PDV_StateTrack`, `PDV_SubstrateBase`, `PDV_SacredPlace`, `PDV_DaedricPathBase`, `PDV_CurseState`). `--strict-phase3`, `--strict-preflight`, and `--strict-skeleton` pass through to the verifier. The emitted compiler command uses the short canonical flags: `-f=<flags>`, `-i=<source-dirs>`, and `-o=<output-dir>`.
@@ -299,6 +307,8 @@ The compiler spawns `PapyrusCompiler.exe` directly with the project import chain
 The verifier is read-only. It checks expected Anvil paths, reads `PlayerDevotion_Framework.esp` through the Anvil MO2 MCP Mutagen bridge, validates baseline framework records and VMAD properties, checks script source/pex freshness, reports SEQ drift, confirms the active MO2 profile/load order, and looks for CK output shadow files. V3 Preflight source/pex readiness is covered; the framework-owned CK/xEdit records (`PDV_GLO_PatronState`, `PDV_EventTypes`, `PDV_EventBus`) report as INFO in default mode, and `--strict-preflight` promotes unresolved Preflight gaps to FAIL for gate-close runs. V3 Structural Skeleton now covers the full dev-only scaffold contract: track records/globals/FormLists, substrate/sacred-place/Daedric/curse records, required VMAD wiring, dev FormList membership, MCM scaffold properties, and the Hircine-not-in-`PDV_FLST_AllDeities` contradiction check. Array readback is verifier-visible when arrays exist, but absent manual arrays remain INFO in default mode. The verifier also reads back `PDV_PreflightRouterServicesOverlay.esp` when that reversible canary exists.
 
 `tools\pdv_author.mjs` is the safe authoring companion to that loop. It inspects the live framework ESP through the same local Mutagen bridge, then emits a **new overlay patch plugin** into the `Devotion` mod when asked to apply changes. Current supported writes are existing-record script attachment, scalar/object VMAD properties, and FormList membership. It does **not** create new records or overwrite `PlayerDevotion_Framework.esp` in place. It now recognizes `IntArray`, `FloatArray`, `StringArray`, and `ObjectArray` manifest syntax for planning/reporting, but VMAD array writes remain manual CK/xEdit work until the Mutagen bridge can actually emit them.
+
+`tools\pdv_extract_vanilla_gameplay_refs.mjs` is a read-only reference-data helper. It scans local Anvil stock/cleaned base masters through the Mutagen bridge and refreshes generated CSVs under `references\vanilla-gameplay\extracted\`. Use those generated tables as implementation reference data for signal matrices, offline patcher rules, and compatibility planning; curated design decisions still belong in the `references\vanilla-gameplay\pdv-crosswalk\` tables.
 
 Tracked JSON manifests live under `references\authoring\` and can be addressed by manifest id or file path. `mcm-property-wiring` is the canonical batch target for the current `PDV_MCM` properties and defaults to `PDV_PropertyWiringOverlay.esp`, replacing repeated `PDV_Author_one_off_*` property patches when CK property editing is unstable. `preflight-router-services` is the V3 canary target for co-attaching `PDV_EventTypes` and `PDV_EventBus` to `PDV_ActionRouter`; it defaults to `PDV_PreflightRouterServicesOverlay.esp`. `skeleton-track-scaffold` is the V3 Structural Skeleton track wiring batch for the locked 12 track quests/globals/FormLists and defaults to `PDV_SkeletonTrackScaffoldOverlay.esp`. `structural-systems-scaffold` is the broad follow-on batch for substrates, sacred places, Hircine, curse state, and MCM scaffold properties. `structural-systems-arrays` is a reporting/TODO manifest for manual threshold/state-array wiring. All three require CK/xEdit creation of the records first. Use `plan` first to inspect a batch, then `apply`, then run `node .\tools\pdv_verify.mjs`.
 
@@ -726,6 +736,8 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 **2026-05-10 â€” Variable storage (v2):** StorageUtil (PapyrusUtil SE) is source of truth for all per-deity piety/tier values, keyed by deity FormID. Three mirror GlobalVariables shadow the active patron's values for vanilla CK Condition reads. Mirrors are write-only caches. `PDV_GLO_DevotionLevel` and the three buckets removed.
 
 **2026-05-10 â€” PapyrusUtil SE:** SKSE DLL plugin â€” no ESP master, no xEdit step. Call `StorageUtil.*` directly. Never add as a plugin master.
+
+**2026-05-18 - PO3 Papyrus Extender dependency:** PDV v3 accepts powerofthree's Papyrus Extender as a hard runtime dependency for event hooks that vanilla Story Manager/player aliases cannot expose cleanly. This also makes Address Library for SKSE Plugins and powerofthree's Tweaks required runtime SKSE-plugin dependencies. These are not ESP masters. Use PO3 for runtime event hooks, not keyword/classification/NPC distribution; that remains offline patcher territory. SPID remains deferred for future cost-benefit review if PDV needs actor-load distribution, outfit lifecycle behavior, or broad dynamic injection that generated patches cannot represent cleanly.
 
 **2026-05-10 â€” CK compiler toolchain, revised 2026-05-12:** Source `.psc` files live in `Scripts\Source\`. Compiled `.pex` output to `Scripts\`. Terminal/Codex compiles use `tools\pdv_compile.mjs`, which spawns `PapyrusCompiler.exe` directly with `<script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>`. CK compiler (Ctrl+F7) remains valid for interactive CK work. `compile.ps1`, `skyrimse.ppj`, and Bethesda's shipped `ScriptCompile.bat` are legacy/stale artifacts and should not be used.
 

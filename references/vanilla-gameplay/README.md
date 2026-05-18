@@ -22,12 +22,15 @@ Use the strongest available source for the question being answered:
 | Folder | Purpose |
 |---|---|
 | `schema/` | CSV conventions, CK record type notes, and extraction assumptions. |
+| `extracted/` | Generated vanilla/DLC record tables from local Anvil master data. |
 | `core/` | Actor values, condition functions, keywords, record signatures, and FormID conventions. |
 | `story/` | Quest categories, Story Manager events, and radiant quest cautions. |
 | `social-crime/` | Factions, crime scopes, bounty mechanics, and civic-order signals. |
 | `races-actors/` | Playable race mechanics, PDV origin indices, vampire/temporary race handling, and actor-type tags. |
 | `religion-magic/` | Shrine blessings, diseases, magic effect archetypes, and vanilla religion records. |
 | `world/` | Worldspaces, locations, location-type keywords, dungeon categories, and encounter-zone notes. |
+| `rewards/` | Reward/neglect/effect magnitude palette and stacking cautions. |
+| `compatibility/` | Compatibility dossiers for major religion, survival, curse, and gameplay overhauls. |
 | `pdv-crosswalk/` | PDV signal hook index, UX lessons, deity/shrine crosswalks, and implementation risk notes. |
 
 ## First-Pass Findings
@@ -50,7 +53,19 @@ Use the strongest available source for the question being answered:
 | 1 | `religion-magic/magic-effect-archetypes.csv` | Keeps boons/neglect effects compatible with vanilla stacking and UI behavior. |
 | 2 | `social-crime/factions.csv` | Needed for civic order, Thalmor pressure, guild paths, Vigilants, Companions, Blood-Kin, and hold-level community signals. |
 | 2 | `world/loctype-keywords.csv` | Needed for sacred places, wilderness/temple/dungeon distinctions, sleep/location signals, and race-substrate layers. |
-| 3 | `story/quest-milestones.csv` | Later pass should add handpicked quest-stage signals for Daedric, faction, civil war, and major moral choices. |
+| 3 | `pdv-crosswalk/quest-moral-signal-crosswalk.csv` | Handpicked quest/faction/Daedric moral signals for future quest-stage implementation. |
+
+## Generated Extraction Pack
+
+Run this from the project root to refresh the local vanilla/DLC extraction pack:
+
+```text
+node .\tools\pdv_extract_vanilla_gameplay_refs.mjs
+```
+
+The generated tables live under `extracted/`. They are implementation reference
+data, not final design decisions. Use the `pdv-crosswalk/` tables to curate
+which extracted records become real PDV signals or patcher rules.
 
 ## Design North Star
 

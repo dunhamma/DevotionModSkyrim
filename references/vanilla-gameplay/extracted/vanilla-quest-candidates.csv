@@ -1,0 +1,764 @@
+plugin,formid,editor_id,pdv_use,detail_status,validation
+Dawnguard.esm,Skyrim.esm:01CEF4,C03,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Skyrim.esm:0AEBFE,C03Rampage,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Skyrim.esm:02D512,DA04,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Skyrim.esm:0242AF,DA16,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:006BDA,DLC1_BF_DunTempleQST,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0034DE,DLC1_WESC01,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0034EA,DLC1_WESC02,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0034D0,DLC1_WESC03,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0034D4,DLC1_WESC04,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0034DA,DLC1_WESC05,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:003511,DLC1_WESC06,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0034F8,DLC1_WESC06_CacheTracking,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:003508,DLC1_WESC07,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0034FF,DLC1_WESC07_CacheTracking,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00351E,DLC1_WESC08,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:003500,DLC1_WESC08_CacheTracking,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:014BF1,DLC1_WESC09,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:013768,DLC1DialogueDexionLore,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:016848,DLC1DialogueFerrySystem,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:014FAE,DLC1DialogueGeneric,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:014FAC,DLC1DialogueGenericUniqueVoices,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01AA71,DLC1DialogueGuardsGeneral,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004E0D,DLC1DialogueHunterBase,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0163B4,DLC1DialogueHunterBaseScene1,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:003FD3,DLC1DialogueHunterBaseScene10,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0163B6,DLC1DialogueHunterBaseScene2,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0163B8,DLC1DialogueHunterBaseScene3,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0163BA,DLC1DialogueHunterBaseScene4,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0163BC,DLC1DialogueHunterBaseScene5,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0163BE,DLC1DialogueHunterBaseScene6,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:017FF3,DLC1DialogueHunterBaseScene7,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:017FF5,DLC1DialogueHunterBaseScene8,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:003FD1,DLC1DialogueHunterBaseScene9,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01693D,DLC1DialogueHunterVampireBlock,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0198F9,DLC1DialogueRefugeeCamp,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01964A,DLC1DialogueVampire,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004E0C,DLC1DialogueVampireBase,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004E18,DLC1DialogueVampireBaseScene01,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004E1A,DLC1DialogueVampireBaseScene02,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004E1C,DLC1DialogueVampireBaseScene03,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004E1E,DLC1DialogueVampireBaseScene04,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004E20,DLC1DialogueVampireBaseScene05,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004E22,DLC1DialogueVampireBaseScene06,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01693F,DLC1DialogueVampireCuredBlock,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004CE2,DLC1DialogueVampireLordBlock,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:019BB1,DLC1DialogueWerewolfBlock,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:007773,DLC1dunMasterQST,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:007C4F,DLC1dunRedwaterDenQST,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01629F,DLC1EclipseAttack1,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:017648,DLC1EclipseAttack2,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:017649,DLC1EclipseAttack3,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01764A,DLC1EclipseAttack4,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01764B,DLC1EclipseAttack5,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01764C,DLC1EclipseAttack6,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0123E5,DLC1GargoyleFactionRelations,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01AA70,DLC1HireableDogs,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0198B2,DLC1HunterBaseEnableSet1,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01991F,DLC1HunterBaseEnableSet2,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:011F0D,DLC1HunterBaseFlorentiusChange,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004E24,DLC1HunterBaseIntro,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:002B01,DLC1HunterBaseIntroAmbush,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:013F1F,DLC1HunterBaseStage2,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:002C09,DLC1Init,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:005817,DLC1LD,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004D6B,DLC1LD_Arkngthamz,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00CFFF,DLC1LD_Bthalft,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004D6C,DLC1LD_ChangeLocation,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00CFFE,DLC1LD_CraftItemManager,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:003F56,DLC1LD_DarkfallCave,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00B639,DLC1LD_Misc,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00CFFD,DLC1LD_Postquest,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0088E5,DLC1LDIceDragonFight,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:019DD2,DLC1LDIceDragonFight02,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:015AA3,DLC1NPCCommentary01,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:015AA4,DLC1NPCCommentary02,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:015AA5,DLC1NPCCommentary03,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:002B6E,DLC1NPCMentalModel,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:003BC0,DLC1NPCMonitoringPlayer,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:008E51,DLC1PlayerFactionRelation,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00A2A9,DLC1PlayerVampirePowerItems,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0071D0,DLC1PlayerVampireQuest,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004C1C,DLC1Radiant,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0132CC,DLC1RadiantAttackGuardComments,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01574C,DLC1RadiantDisguised,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00420E,DLC1RadiantDisguisedVampireLordSpawner,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00F899,DLC1RegiftingLycanthropy,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:005E4A,DLC1RH01,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:005E53,DLC1RH02,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:005E58,DLC1RH03,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:006952,DLC1RH04,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:006BAC,DLC1RH05,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:007201,DLC1RH06,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:007EC5,DLC1RH07,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:015017,DLC1RH08,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0190C3,DLC1RNPCClickedHellos,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0190C2,DLC1RNPCGeneralHellos,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004C1B,DLC1RV01,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004C30,DLC1RV01AssaultMonitorNOTUSING,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004C2E,DLC1RV01KillActorMonitor,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0050B9,DLC1RV02,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0050BD,DLC1RV03,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0050C1,DLC1RV03KillActorMonitor,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0056FD,DLC1RV04,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:005702,DLC1RV05,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0058CA,DLC1RV06,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00A29C,DLC1RV07,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01434C,DLC1RV07Post,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00CE06,DLC1RV08,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00CE0B,DLC1RV09,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:019938,DLC1RV10,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0041CF,DLC1ScoutPatrol,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:011A83,DLC1ScrollHandling,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:012F92,DLC1ScrollHandlingChangeLoc,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:005044,DLC1SeranaCureSelfQuest,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:016072,DLC1SoulCairnDialogue,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:016352,DLC1SoulCairnHuskMerchant,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00697C,DLC1Surgery,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0162F8,DLC1ThrallDialogue,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00594C,DLC1VampireBaseIntro,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:014CB9,DLC1VampireFeedBystander,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0071D2,DLC1VampireLordTrackingQuest,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00BF73,DLC1VampireMesmerize,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:008E3B,DLC1VampireSleep,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00588C,DLC1VampireTurn,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01909F,DLC1VampireTutorial,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01A428,DLC1VCController,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00D90E,DLC1VQ00,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00D90B,DLC1VQ00ChangeLocation,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00352A,DLC1VQ01,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00D06C,DLC1VQ01MiscObjective,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00E6A7,DLC1VQ01RNPC,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:002F65,DLC1VQ02,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:015AA7,DLC1VQ02RNPC,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0098CB,DLC1VQ03Hunter,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00F363,DLC1VQ03RNPC,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004C3D,DLC1VQ03Vampire,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00284F,DLC1VQ04,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:016673,DLC1VQ04RNPC,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:002850,DLC1VQ05,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00D2D5,DLC1VQ05DragonFight,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:015A16,DLC1VQ05Post,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0176C2,DLC1VQ05RNPC,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00EA41,DLC1VQ05SoulGemHandler,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:002852,DLC1VQ06,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0176C3,DLC1VQ06RNPC,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:002853,DLC1VQ07,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01681C,DLC1VQ07Combat,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:015A68,DLC1VQ07Post,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0176C4,DLC1VQ07RNPC,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:007C25,DLC1VQ08,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01A8BB,DLC1VQ08HunterMove,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01A1C1,DLC1VQ08Post,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004BBF,DLC1VQ08RNPC,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01A415,DLC1VQCastleGuard,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00C73A,DLC1VQDragon,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01119F,DLC1VQDragonMisc,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:005DA9,DLC1VQElder,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0181BF,DLC1VQElderHandler,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:019DB9,DLC1VQElderQuestItemHandler,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0083A4,DLC1VQFactions,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01A3E4,DLC1VQFVBooks,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01400B,DLC1VQSaint,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01400D,DLC1VQSaintPost,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00876D,DLC1WE00,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00876E,DLC1WE01,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:008771,DLC1WE02,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:017861,DLC1WE03,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:017863,DLC1WE04,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:017865,DLC1WE05,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:017867,DLC1WE06,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0041FE,DLC1WE07,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:004201,DLC1WE08,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01420C,DLC1WEDB01,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:01420F,DLC1WEDB02,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:014215,DLC1WEDB03,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00F7F0,DLC1WEJS01,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:010AE7,DLC1WEJS02,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:010AEB,DLC1WEJS04,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0127EE,DLC1WEJS05,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:0127F0,DLC1WEJS06,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Dawnguard.esm:00F711,DLC1WerewolfPerkExplanation,Dawnguard/vampire/Arkay-Stendarr candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Skyrim.esm:021551,TG05,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Skyrim.esm:02C367,TG05SP,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dawnguard.esm,Skyrim.esm:021554,TG08B,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:027EC7,DLC2_dunMQ02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:038423,DLC2AshSpawnAttack,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03216C,DLC2BlackBook03Quest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03216E,DLC2BlackBook04Quest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03216D,DLC2BlackBook05Quest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03216F,DLC2BlackBook06Quest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:032170,DLC2BlackBook07Quest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02648D,DLC2BlackBookRewards,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:027282,DLC2BloodskalBladeQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03A35E,DLC2Book01PuzzleQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:016E21,DLC2BookDungeonController,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:034FB6,DLC2CreatureDialogueWerebear,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03546D,DLC2CultistAmbush,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:038FB1,DLC2CultistOrdersQuestObjectHandler,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0383B3,DLC2DamphallMine01SceneQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:024CAC,DLC2DialogueBandits,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02C0A5,DLC2DialogueCrimeGuards,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:034E60,DLC2DialogueCultists,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:033BB5,DLC2DialogueGenericCommandedDarkElf,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:033BB2,DLC2DialogueGenericDarkElf,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:033BB6,DLC2DialogueGenericFriendlyHitDarkElf,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03A4CB,DLC2DialogueGenericHunter,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:032897,DLC2DialogueGenericRieklings,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02BA40,DLC2DialogueGenericUniqueVoices,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:018B0F,DLC2DialogueRavenRock,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0271E5,DLC2DialogueRavenRockRumors,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:033BB7,DLC2DialogueRelationshipGenericDarkElf,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019B49,DLC2DialogueSkaalVillage,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02C05D,DLC2DialogueSkaalVillage2,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02C05E,DLC2DialogueSkaalVillageGeneric,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:017E85,DLC2DialogueTelMithryn,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01A52F,DLC2DialogueThirskMeadHall,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:024137,DLC2DialogueThirskMeadHallAfterRieklings,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02782F,DLC2DialogueWaterStone,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F9E6,DLC2dunFrostmoonQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:035E2F,DLC2dunFrostmoonQSTMisc,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:038FB0,DLC2dunHaknirQSTIncreaseLevel,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:024002,DLC2dunHaknirTreasureQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03661B,DLC2dunHaknirTreasureQSTMisc,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:037560,DLC2dunHrodulf,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:029EFF,DLC2dunInstrumentalQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0247F8,DLC2dunKarstaagQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02667E,DLC2dunKolbjornMiscQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0277E8,DLC2dunKolbjornPhase1TrackingQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0277E9,DLC2dunKolbjornPhase2TrackingQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0277EA,DLC2dunKolbjornPhase3TrackingQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01810B,DLC2dunKolbjornQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01D4CD,DLC2dunNchardakReset,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0173BE,DLC2dunNchardakTracking,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02A86C,DLC2dunTT2,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02C49E,DLC2EbonyWarriorQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:017962,DLC2ExpSpiderQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01847D,DLC2FlingQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:038566,DLC2HirelingQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:016E02,DLC2Init,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03166D,DLC2KagrumezQST,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:033C89,DLC2MerchDialogue,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01A50B,DLC2MH01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01D98F,DLC2MH01PostQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01A50C,DLC2MH02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0208DA,DLC2MH02PostQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0251FC,DLC2MHBujoldElmusReclaimScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0251F7,DLC2MHBujoldElmusScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0251FE,DLC2MHBujoldHilundReclaimScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01A545,DLC2MHBujoldHilundScene,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:025200,DLC2MHBujoldKuvarReclaimScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:025202,DLC2MHBujoldKuvarReclaimScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:025204,DLC2MHBujoldKuvarReclaimScene03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01A53F,DLC2MHBujoldKuvarScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01A541,DLC2MHBujoldKuvarScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01A543,DLC2MHBujoldKuvarScene03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02520A,DLC2MHElmusKuvarReclaimScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0251F3,DLC2MHElmusKuvarScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0251F5,DLC2MHElmusKuvarScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:025208,DLC2MHKuvarHilundReclaimScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0251F9,DLC2MHKuvarHilundScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02BAB0,DLC2MHMisc,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01A523,DLC2MHRieklingHandler,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:026242,DLC2MQ00,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:017F8E,DLC2MQ01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:017F8F,DLC2MQ02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0327AD,DLC2MQ02FreaTempleSceneQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:017F90,DLC2MQ03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:035440,DLC2MQ03B,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:016E1F,DLC2MQ04,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0179DE,DLC2MQ05,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02871F,DLC2MQ05SkaalSceneFiller,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0179D7,DLC2MQ06,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03854C,DLC2MQ07,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01C4E4,DLC2Pillar,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:028664,DLC2PillarDestroyed,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:038C07,DLC2RieklingRescue,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BFE9,DLC2RR00,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:018B13,DLC2RR01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:018B14,DLC2RR02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:018B15,DLC2RR03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:020A1C,DLC2RR03Intro,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03332B,DLC2RR03Mine,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03332C,DLC2RR03MineCL,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03332A,DLC2RR03Priest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01992F,DLC2RRAlorHouseScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019931,DLC2RRAlorHouseScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C32,DLC2RRAnyLocScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C34,DLC2RRAnyLocScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C36,DLC2RRAnyLocScene03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C38,DLC2RRAnyLocScene04,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C3A,DLC2RRAnyLocScene05,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C3C,DLC2RRAnyLocScene06,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C3E,DLC2RRAnyLocScene07,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C40,DLC2RRAnyLocScene08,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C42,DLC2RRAnyLocScene09,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C44,DLC2RRAnyLocScene10,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C46,DLC2RRAnyLocScene11,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C48,DLC2RRAnyLocScene12,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:025813,DLC2RRAnyLocScene13,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:025815,DLC2RRAnyLocScene14,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01993F,DLC2RRAnyLocScene15,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:025817,DLC2RRAnyLocScene16,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:025819,DLC2RRAnyLocScene17,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0347FC,DLC2RRAnyLocScene18,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0347FE,DLC2RRAnyLocScene19,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:034800,DLC2RRAnyLocScene20,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:034802,DLC2RRAnyLocScene21,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02ADDA,DLC2RRArrivalScene,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C4B,DLC2RRBeggarScene,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019935,DLC2RRCresciusHouseScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019937,DLC2RRCresciusHouseScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:024DDE,DLC2RRFavor01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:024DE7,DLC2RRFavor02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:024DFC,DLC2RRFavor03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:024E04,DLC2RRFavor04,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:024FA8,DLC2RRFavor05,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:024FAD,DLC2RRFavor06,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02BAC6,DLC2RRFavor07,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019C4E,DLC2RRGuardDialogue,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019941,DLC2RRIenthFarmScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01991F,DLC2RRMorvaynManorScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019921,DLC2RRMorvaynManorScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019923,DLC2RRMorvaynManorScene03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019925,DLC2RRMorvaynManorScene04,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019927,DLC2RRMorvaynManorScene05,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019929,DLC2RRMorvaynManorScene06,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019943,DLC2RRNetchScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019945,DLC2RRNetchScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019947,DLC2RRNetchScene03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019949,DLC2RRNetchScene04,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01994B,DLC2RRNetchScene05,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01994D,DLC2RRNetchScene06,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01994F,DLC2RRNetchScene07,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02B992,DLC2RRNetchScene08,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02B994,DLC2RRNetchScene09,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02B997,DLC2RRNetchScene10,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019939,DLC2RRSeverinManorScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01993B,DLC2RRSeverinManorScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01993D,DLC2RRSeverinManorScene03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01992B,DLC2RRTempleScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01992D,DLC2RRTempleScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019933,DLC2RRTempleScene03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02581B,DLC2RRTempleScene04,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:025ACC,DLC2RRTempleScene05,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02BC66,DLC2Services,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02C1E9,DLC2SiltStriderMerchantQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02C8AA,DLC2SkaalVillageFreeform1,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:031787,DLC2SkaalVillageFreeform2,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0200D8,DLC2SoulSteal,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:019B4A,DLC2SV01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0337F5,DLC2SV01Post,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01CAF1,DLC2SV02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:027E15,DLC2SV02AncarionMerchant,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01E169,DLC2SV02Misc,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0214CC,DLC2SVBaldorMorwenScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0214CE,DLC2SVBaldorMorwenScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0214D0,DLC2SVBaldorMorwenScene03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BBF5,DLC2SVDeorWulfScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BD47,DLC2SVDeorWulfScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0214D6,DLC2SVDeorWulfScene03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0214D8,DLC2SVDeorYrsaScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0214DA,DLC2SVDeorYrsaScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BD44,DLC2SVEdlaNikulasScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BBF1,DLC2SVFanariTharstanScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BBF3,DLC2SVFanariTharstanScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BBF9,DLC2SVMorwenTharstanScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BD42,DLC2SVOslafAetaScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0214D2,DLC2SVOslafFinnaScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0214D4,DLC2SVOslafFinnaScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BBF7,DLC2SVOslafYrsaScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0179E2,DLC2TameDragon,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03A31F,DLC2TelMithrynDrovasElyneaScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03A321,DLC2TelMithrynDrovasElyneaScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03A319,DLC2TelMithrynDrovasNelothScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03A317,DLC2TelMithrynDrovasNelothScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03A31D,DLC2TelMithrynDrovasTalvasScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03A31B,DLC2TelMithrynDrovasTalvasScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BD10,DLC2TelMithrynNelothTalvasScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BD12,DLC2TelMithrynNelothTalvasScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BD14,DLC2TelMithrynNelothTalvasScene03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BD16,DLC2TelMithrynNelothTalvasScene04,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F909,DLC2TelMithrynVaronaElyneaScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F90B,DLC2TelMithrynVaronaElyneaScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F913,DLC2TelMithrynVaronaNelothScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F915,DLC2TelMithrynVaronaNelothScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F917,DLC2TelMithrynVaronaTalvasScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F919,DLC2TelMithrynVaronaTalvasScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F90E,DLC2TelMithrynVaronaUlvesScene01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F90D,DLC2TelMithrynVaronaUlvesScene02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:02AD26,DLC2TGQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:038EBF,DLC2ThirskFFElmus,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:038EC4,DLC2ThirskFFElmusBack,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:038FBC,DLC2ThirskFFHalbarn,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:038FBB,DLC2ThirskFFHilund,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0208CC,DLC2ThirskRieklingSpawner,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:017E8D,DLC2TT1,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01844E,DLC2TT1b,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0195A1,DLC2TT2,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01AAB0,DLC2TTF1,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01AAC8,DLC2TTF2,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01B65F,DLC2TTR1,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01C06E,DLC2TTR2,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01B65D,DLC2TTR3a,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01D8D1,DLC2TTR3b,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01B664,DLC2TTR4a,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01CDE1,DLC2TTR4b,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01C05C,DLC2TTR5,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01BD18,DLC2TTR7,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F13B,DLC2TTR8,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:027826,DLC2WaterStoneSailAwayQuest,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0209AE,DLC2WB01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:020FBE,DLC2WE00,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F980,DLC2WE01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F981,DLC2WE02,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F989,DLC2WE03,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:01F98C,DLC2WE04,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:020FC0,DLC2WE05,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:027A14,DLC2WE06,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:027E92,DLC2WE07,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:027E9D,DLC2WE08,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0331C0,DLC2WE09,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0362B9,DLC2WE10,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03724A,DLC2WE11,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03923B,DLC2WE12,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:03971F,DLC2WE13,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:0398A3,DLC2WE14,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:039A77,DLC2WE15,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Dragonborn.esm,Dragonborn.esm:034025,DLC2WESL01,Solstheim/Hermaeus Mora/Dunmer candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:005207,BYOHHouseBanditAttack,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:0008A8,BYOHHouseBanditAttack2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:0008C3,BYOHHouseBanditPacifier,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:00305D,BYOHHouseBuilding,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:015D5A,BYOHHouseDialogueHousecarl,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:00305E,BYOHHouseFalkreath,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:000C3E,BYOHHouseGiantAttack,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:00BE09,BYOHHouseHjaalmarch,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:010BEE,BYOHHousePale,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:010A44,BYOHHouseSkeeverInfestation,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:00308B,BYOHHouseStewardOffer,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:000C39,BYOHHouseWolfAttack,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:004291,BYOHRelationshipAdoptable,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:004286,BYOHRelationshipAdoptableOrphanage,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:00E29A,BYOHRelationshipAdoptableOrphanageCL,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:003F7B,BYOHRelationshipAdoptableStewardCourier,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:004100,BYOHRelationshipAdoptableUrchins,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:0042B4,BYOHRelationshipAdoption,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:003F7E,BYOHRelationshipAdoptionCWSiegeHandler,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:003F6E,BYOHRelationshipAdoptionNewAdoptionHandler,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+HearthFires.esm,HearthFires.esm:00401C,BYOHRelationshipAdoptionScheduler,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D944F,BardsCollegeDrum,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D9431,BardsCollegeFlute,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D93FA,BardsCollegeLute,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E7814,BardsCollegePoeticEdda,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:04B2D9,C00,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A81FE,C00DebugFollowerComeHere,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0C97D9,C00GiantAttack,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0BC0BD,C00JorrvaskrFight,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A3EC5,C00LocationMonitoring1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A3EE4,C00LocationMonitoring2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A3EE5,C00LocationMonitoring3,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:10FBF5,C00PlayerTheftPoke,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0FF235,C00SwapVignarAndBrillOnAscension,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A3EBC,C00VilkasTrainingQuest,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:06E803,C01,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:06E804,C02,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A3EF8,C02Kicker,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A3EF9,C02PostQuest,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01CEF4,C03,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0AEF91,C03AelaRadiantKicker,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B3E08,C03PostQuest,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0AEBFE,C03Rampage,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01CEF5,C04,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0AD39D,C04JorrvaskrCommotion,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:06E805,C05,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01CEF6,C06,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E30E7,C06FuneralObserversQuest,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B627D,C06PostQuest,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:108059,CompanionsBladeFragmentTracking,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0AD39C,CompanionsBrawlingQuest,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D19B9,CompanionsMiscObjective,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:109AAA,CompanionsRadiantMiscObjective,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0880E1,CompanionsRejoinQuest,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0880EB,CompanionsSingleCombatQuest,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D3C5F,CW00A,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E1B5A,CW00B,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D5165,CW00SolitudeMapTableScene,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E1B36,CW00WindhelmMapTableScene,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D517A,CW01A,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0C349B,CW01AOutfitImperial,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E2D29,CW01B,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D5F0A,CW01SolitudeMapTableScene,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E2D3A,CW01WindhelmMapTableScene,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02D75C,CW02A,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02610B,CW02B,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D661C,CW03,civil-war/Talos/civic candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:028AD6,DA01,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:089CD1,DA01dunIlinaltasDeepQST,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01DD49,DA01FIN,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:092E25,DA01Intro,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:04D8D6,DA02,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B18E1,DA02ChangeLoc,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B48FB,DA02DeadBody,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B3E56,DA02GuardWarn,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:04D917,DA02KillFriend,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:052795,DA02KillObj,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01A4EA,DA02Post,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01BFC4,DA03,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D7939,DA03Start,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02D512,DA04,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:10481C,DA04SeptimusSendForPlayerQuest,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02A49A,DA05,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0955CF,DA05_dunBloatedMansGrottoQST,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:090CF0,DA05FuneralSpectatorsQuest,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05D330,DA05LocationCheck,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:03B681,DA06,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0240B8,DA07,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0BA1CC,DA07FIN,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:094D89,DA07intro,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:096FD7,DA07MuseumScenes,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:04A37B,DA08,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:10FAEC,DA08EbonyBladeTracking,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:10FAEE,DA08FriendKill,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0DC9E0,DA08RumorPointer,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:04E4E1,DA09,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:081C59,DA09ChangeLocation,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:022F08,DA10,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:028D34,DA10FIN,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02BB38,DA10HauntingController,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0DC53C,DA10MiscObjective,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02C358,DA11,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A7242,DA11ConvoEolaBanning,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A71AC,DA11ConvoEolaHogni,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A7240,DA11ConvoEolaLisbet,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A71A7,DA11ConvoHogniBanning,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A71A9,DA11ConvoHogniLisbet,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A7185,DA11ConvoLisbetBanning,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A0D26,DA11DialogueReachcliff,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:04D217,DA11FIN,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:07D950,DA11HallScene,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:07D949,DA11Intro,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0AEC22,DA11IntroScene,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:08998D,DA13,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0BEDEC,Da13Intro,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01BB9B,DA14,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:03FA17,DA14Start,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02AC68,DA15,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B3B44,DA15Loathing,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B3B1C,DA15Paranoia,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:10FF8F,DA15Return,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D7897,DA15Rumor,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B3B1D,DA15Terror,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:09B248,DA15WabbajackQST,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0242AF,DA16,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E16CC,DA16MiniScenes,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:1093CF,DA16SkullHandler,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E16C6,DA16WalkSceneMonitor,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA5C,DarkBrotherhood,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:051417,DarkBrotherhoodadditionalNPCDialogue,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02E7B0,DarkBrotherhoodSanctuaryConversation1,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:03444D,DarkBrotherhoodSanctuaryConvSystem,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02E7AF,DarkBrotherhoodSanctuaryDialogue,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:087BA2,DarkBrotherhoodSanctuaryRepair,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA50,DB01,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA4F,DB01Misc,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0BC8B6,DB01MiscObjective,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0BC8B7,DB01Objective,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA51,DB02,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:022F47,DB02a,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA52,DB03,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:08D5DA,DB03GetArrestedQuest,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA53,DB04,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02AD16,DB04a,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA54,DB05,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA55,DB06,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA56,DB07,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA57,DB08,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA58,DB09,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:03CEDA,DB10,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01EA59,DB11,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0C6020,DB11_dunKatariahQST,Sithis/assassination candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935DE,DialogueCompanionsAelaNjada1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935E0,DialogueCompanionsAelaNjada2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935E2,DialogueCompanionsFarkasAthis1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935E4,DialogueCompanionsFarkasAthis2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935E6,DialogueCompanionsFarkasTorvar1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935EA,DialogueCompanionsFarkasTorvar2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:023E60,DialogueCompanionsJorrvaskr,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935FA,DialogueCompanionsKodlakAela1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935FC,DialogueCompanionsKodlakAela2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935FE,DialogueCompanionsKodlakFarkas1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:093600,DialogueCompanionsKodlakFarkas2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935F6,DialogueCompanionsKodlakSkjor1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935F8,DialogueCompanionsKodlakSkjor2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:093602,DialogueCompanionsKodlakTorvar1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:093604,DialogueCompanionsKodlakTorvar2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935EE,DialogueCompanionsRiaVilkas1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935F0,DialogueCompanionsRiaVilkas2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935F2,DialogueCompanionsRiaVilkas3,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935D6,DialogueCompanionsSkjorAela1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935D8,DialogueCompanionsSkjorAela2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935DA,DialogueCompanionsSkjorNjada1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935DC,DialogueCompanionsSkjorNjada2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935E8,DialogueCompanionsTorvarAthis1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0935EC,DialogueCompanionsTorvarAthis2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:10074F,DialogueDremora,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B3293,DialogueGenericVigilantsOfStendarr,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:046B3D,DialogueRiftenTempleofMaraScene01,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:046B3F,DialogueRiftenTempleofMaraScene02,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E38C7,DialogueSkyHavenTemple,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E6DE7,DialogueSkyHavenTempleConversation01,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E6DE9,DialogueSkyHavenTempleConversation02,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E6DEB,DialogueSkyHavenTempleConversation03,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E6DED,DialogueSkyHavenTempleConversation04,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D6A1A,DialogueSolitudeBardsCollegeClassGiraudScene1,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E780C,DialogueSolitudeBardsCollegeClassGiraudScene2,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D6A1C,DialogueSolitudeBardsCollegeClassIngeScene1,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E780E,DialogueSolitudeBardsCollegeClassIngeScene2,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D6A1D,DialogueSolitudeBardsCollegeClassPanteaScene1,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E780F,DialogueSolitudeBardsCollegeClassPanteaScene2,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0367EB,DialogueSolitudeTempleScene1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0367ED,DialogueSolitudeTempleScene2,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0367EE,DialogueSolitudeTempleScene3,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D74FC,DialogueWhiterunTemple,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D8BE0,DialogueWhiterunTempleHealFarmer,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D7D5B,DialogueWhiterunTempleHealSoldier,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:019FD1,DialogueWhiterunTempleofKynarethScene1,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D8BE1,DialogueWhiterunTempleTalkFarmer,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D8BE2,DialogueWhiterunTempleTalkSoldier,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:03618F,DialogueWinterholdCollege,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037DD4,DialogueWinterholdCollegeArcanaeumScene02,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037DD3,DialogueWinterholdCollegeArcanaeumScene03,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037DD7,DialogueWinterholdCollegeArcanaeumScene04,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037E7E,DialogueWinterholdCollegeArcanaeumScene05,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037E80,DialogueWinterholdCollegeArcanaeumScene06,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05E2D7,DialogueWinterholdCollegeArcanaeumScene07,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037EDA,DialogueWinterholdCollegeDormitoryScene01,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037EDC,DialogueWinterholdCollegeDormitoryScene02,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05D32A,DialogueWinterholdCollegeDormitoryScene03,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05D32C,DialogueWinterholdCollegeDormitoryScene04,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05D32E,DialogueWinterholdCollegeDormitoryScene05,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05E2D9,DialogueWinterholdCollegeDormitoryScene06,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05E2DB,DialogueWinterholdCollegeDormitoryScene07,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05E2DF,DialogueWinterholdCollegeDormitoryScene08,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05E2E1,DialogueWinterholdCollegeDormitoryScene09,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B3242,DialogueWinterholdCollegeDormitoryScene10,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B3248,DialogueWinterholdCollegeDormitoryScene11,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037E82,DialogueWinterholdCollegeGHallScene01,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037E84,DialogueWinterholdCollegeGHallScene02,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037E86,DialogueWinterholdCollegeGHallScene03,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:037ED8,DialogueWinterholdCollegeGHallScene04,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05E2DD,DialogueWinterholdCollegeGHallScene05,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B3240,DialogueWinterholdCollegeGHallScene06,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:107E40,DialogueWinterholdCollegePostSceneQuest,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:065BDF,FreeformRiftenThane,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E38C9,FreeformSkyhavenTempleA,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E3E67,FreeformSkyHavenTempleB,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E6DE3,FreeformSkyHavenTempleC,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E6DF1,FreeformSkyHavenTempleD,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:05D2E9,FreeformWinterholdCollegeA,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E357D,FreeformWinterholdCollegeB,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01F251,MG01,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:054D0A,MG01Pointer,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B812E,MG01ShoutUpdate,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01F252,MG02,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:08563B,MG02MinerDialogue,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0FBFDD,MG02MonkSceneQuest,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01F253,MG03,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:076C30,MG03_dunFellglowKeepQST,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01F254,MG04,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:076F39,MG04MonkSceneQuest,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01F255,MG05,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01F256,mg06,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01F257,MG07,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01F258,MG08,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E0C67,MGCollegeLectureInfos,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01C5D9,MQ00,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:03372B,MQ101,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D0593,MQ101DragonAttack,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:04E50D,MQ102,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02BF9C,MQ102A,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02610A,MQ102B,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D0800,MQ103,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02610C,MQ104,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0242BA,MQ105,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0713DC,MQ105Ustengrav,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:032926,MQ106,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:035D5F,MQ201,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:04CECE,MQ201Malborn,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:063B57,MQ201Party,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0BC3E0,MQ201PartyScene1ElenwenAndGuest,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0BC3FD,MQ201PartyScene2JarlAndJarl,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0BF25B,MQ201PartyScene3GuestAndGuest,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A7921,MQ201RecoverGearMISC,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:030B15,MQ201ThalmorEmbassy,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:036191,MQ202,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:036192,MQ203,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02D515,MQ204,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02D516,MQ205,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:036193,MQ206,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:044C56,MQ301,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:045923,MQ302,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0876E6,MQ302FillAliases,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:04BA68,MQ302Test,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:046EF0,MQ303,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:046EF1,MQ304,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:046EF2,MQ305,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:046EF3,MQ306,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:021556,TG00,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B882D,TG00ArrestMonitor,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:064A14,TG00MaulHandler,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0C99EF,TG00MiscHandler,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:020BE7,TG00SP,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:04EF25,TG00SPArrest,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:01F326,TG01,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B882F,TG01ActorKillMonitor,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02154E,TG02,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:084ABD,TG02B,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:07EB37,TG02SP,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02154F,TG03,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B8830,TG03ActorKillMonitor,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0549F3,TG03SP,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:021550,TG04,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B8831,TG04ActorKiIllMonitor,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:07A282,TG04Brinewater,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:1007FC,TG04EECHandler,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0D3AC6,TG04Post,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:050763,TG04SP,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:021551,TG05,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:02C367,TG05SP,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:021552,TG06,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:087105,TG06_dunMarkarthWizardsQuartersQST,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:021553,TG07,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:055AA4,TG07SP,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:057F99,TG08A,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:021554,TG08B,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:021555,TG09,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0DFB01,TG09NightingalesDialogue,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0E1782,TG09Post,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B328F,WEDLVigilOfStendarr01,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B329E,WEDLVigilOfStendarr02,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B32D6,WEDLVigilOfStendarr03,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0B32F2,WEDLVigilOfStendarr04,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Skyrim.esm,Skyrim.esm:0A8651,WICommentCollegeRobes,Julianos/Magnus/magic-study candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:04B2D9,C00,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:06E803,C01,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:06E804,C02,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:0A3EF9,C02PostQuest,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:06E805,C05,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:01CEF6,C06,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:0880EB,CompanionsSingleCombatQuest,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:04D8D6,DA02,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:02A49A,DA05,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:0240B8,DA07,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:04E4E1,DA09,Daedric/moral-choice candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:0E38C7,DialogueSkyHavenTemple,quest-stage signal candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:035D5F,MQ201,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:036191,MQ202,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:044C56,MQ301,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:046EF1,MQ304,main-quest/Dragonborn candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:01F326,TG01,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:02154F,TG03,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:021551,TG05,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan
+Update.esm,Skyrim.esm:021552,TG06,Nocturnal/theft candidate,scan-only; read specific quest records before implementing stage hooks,candidate-scan

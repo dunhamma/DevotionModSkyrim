@@ -1,0 +1,97 @@
+plugin,formid,editor_id,name,model,keywords,pdv_use,validation
+Dawnguard.esm,Dawnguard.esm:0066DF,DLC01SoulCairnReaperAltarTrig,,,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:00785C,DLC01TempWayshrine,,Architecture\Sovengarde\SovngardeStatue02.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:003284,DLC1AurielsBlessedExplosionScriptMarker,,Effects\FXEmptyObject.nif,,religious activator candidate,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:005060,DLC1AurielsBowActivateTrig,,,,religious activator candidate,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:009405,DLC1BloodMagicShrine,,DLC01\Clutter\DLC01VampireLordStatueBlood.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:011ECE,DLC1dunHarkonShrineSlipTrigger,,,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:01240B,DLC1FalmerTempleIceChaurusPose01,,DLC01\Effects\DLC1CharusFrozenInIcePose01.nif,,religious activator candidate,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:01240C,DLC1FalmerTempleIceFalmerPose01,,DLC01\Effects\DLC1Falmer_VampFrozenPose01.nif,,religious activator candidate,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:01240D,DLC1FalmerTempleIceFalmerPose02,,DLC01\Effects\DLC1Falmer_VampFrozenPose02.nif,,religious activator candidate,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:01240E,DLC1FalmerTempleIceFalmerPose03,,DLC01\Effects\DLC1Falmer_VampFrozenPose03.nif,,religious activator candidate,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:009404,DLC1NightPowerShrine,,DLC01\Clutter\DLC01VampireLordStatueMoon.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:014B8C,DLC1SEWayShrinePortalCave,,DLC01\Architecture\SnowElfRuins\SEWayShrinePortal01.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:014B8D,DLC1SEWayShrinePortalGrove,,DLC01\Architecture\SnowElfRuins\SEWayShrinePortal01.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:014B8E,DLC1SEWayShrinePortalLake,,DLC01\Architecture\SnowElfRuins\SEWayShrinePortal01.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:014B8F,DLC1SEWayShrinePortalPassage,,DLC01\Architecture\SnowElfRuins\SEWayShrinePortal01.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:014B90,DLC1SEWayShrinePortalValley,,DLC01\Architecture\SnowElfRuins\SEWayShrinePortal01.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:014B91,DLC1SEWayShrinePortalWaterfalls,,DLC01\Architecture\SnowElfRuins\SEWayShrinePortal01.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:00C86B,DLC1ShrineofAuriel,,DLC01\Architecture\SnowElfRuins\SEAurielSunPedestal01.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:00A8C0,DLC1VQ07TempleEntryTrigger,,,,religious activator candidate,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:014F53,DLC1VQ07Wayshrine01CastTrigger,,,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:014F58,DLC1VQ07Wayshrine02CastTrigger,,,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:014F5B,DLC1VQ07Wayshrine03CastTrigger,,,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:014F5E,DLC1VQ07Wayshrine04CastTrigger,,,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:019953,DLC1VQ07WayshrineActivateTrigger,,,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:00A8AB,DLC1VQ07WayshrineAimTrigger,,,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:0049AA,DLC1WayShrineLightBeam01,,DLC01\Effects\DLC1WayShrineLightBeam01.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:0049AD,SEAurielsPedestal01,,DLC01\Architecture\SnowElfRuins\SEAurielsPedestal01.nif,,religious activator candidate,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:0121AD,SERuinsHallBGDoorSecretAltar01,,DLC01\Architecture\SnowElfRuins\Animated\SerSecretDoorAltar\SERuinsHallBGDoorSecretAltar01.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:002F5B,SERuinsTemplePuzzle01,,DLC01\Architecture\SnowElfRuins\SERuinsTemplePuzzle01\SERuinsTemplePuzzle01.nif,,religious activator candidate,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:00F891,SERuinsWayshrine01,,DLC01\Architecture\SnowElfRuins\SERuinsWaygate01.nif,,shrine/prayer activation,candidate-extracted
+Dawnguard.esm,Dawnguard.esm:00D082,TempDestSnowElfTemple01,,DLC01\Architecture\SnowElfRuins\TempDestSnowElfTemple01.nif,,religious activator candidate,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:0340C2,DLC2dunTempleOfMiraakRumbleTrigger,,,,religious activator candidate,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:037AE6,DLC2HermaeusMoraFaceFXAct,,,,religious activator candidate,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:023F83,DLC2HMDaedraAshPile,,DLC02\Effects\DLC2HMDaedraRagPile01.nif,,religious activator candidate,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:01CBE3,DLC2MQ05HermaeusMoraActivatorShunt,,,,religious activator candidate,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:02BF18,DLC2RRShrineTrigger,,,,shrine/prayer activation,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:03A484,DLC2ShrineAzura,,DLC02\Clutter\DLC02GodPlinth3.nif,,shrine/prayer activation,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:039E34,DLC2ShrineBoethiah,,DLC02\Clutter\DLC02GodPlinth.nif,,shrine/prayer activation,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:03A481,DLC2ShrineMephala,,DLC02\Clutter\DLC02GodPlinth2.nif,,shrine/prayer activation,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:01EDA5,dlc2StandingStoneBeastACT,,DLC02\Landscape\StandingStone\DLC2StandingStoneBeast.nif,,standing-stone contextual blessing,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:01EDB1,dlc2StandingStoneEarthACT,,DLC02\Landscape\StandingStone\DLC2StandingStoneEarth.nif,,standing-stone contextual blessing,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:01EDAD,dlc2StandingStoneSunACT,,DLC02\Landscape\StandingStone\DLC2StandingStoneSun.nif,,standing-stone contextual blessing,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:01EDAB,dlc2StandingStoneTreeACT,,DLC02\Landscape\StandingStone\DLC2StandingStoneTree.nif,,standing-stone contextual blessing,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:01EDA9,dlc2StandingStoneWaterACT,,DLC02\Landscape\StandingStone\DLC2StandingStoneWater.nif,,standing-stone contextual blessing,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:01EDA7,dlc2StandingStoneWindACT,,DLC02\Landscape\StandingStone\DLC2StandingStoneWind.nif,,standing-stone contextual blessing,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:037ADA,HermaeusMorasFace01,,DLC02\Dungeons\Apocrypha\Animated\HermaeusMorasFace01.nif,,religious activator candidate,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:037AE0,HermaeusMorasFace02,,DLC02\Dungeons\Apocrypha\Animated\HermaeusMorasFace02.nif,,religious activator candidate,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:037AE1,HermaeusMorasFace03,,DLC02\Dungeons\Apocrypha\Animated\HermaeusMorasFace03.nif,,religious activator candidate,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:033157,TempleEntrancePuzzle01,,DLC02\Dungeons\Nordic\Animated\TempleEntrancePuzzle01\TempleEntrancePuzzle01.nif,,religious activator candidate,candidate-extracted
+Dragonborn.esm,Dragonborn.esm:03315B,TempleEntrancePuzzle02,,DLC02\Dungeons\Nordic\Animated\TempleEntrancePuzzle02\TempleEntrancePuzzle02.nif,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:0C7B72,AltarOfMolagBal01,,Clutter\Statues\AltarOfMolagBal\AltarOfMolagBal01.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D96C3,critterSpawnInsects_ManyNocturnalOnly,,Markers\CritterMarkers\CritterMarker01.nif,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D96C2,critterSpawnInsects_SingleNocturnalOnly,,Markers\CritterMarkers\CritterMarker01.nif,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:04C444,DA01AzuraSpeaksTrigger,Azura,,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:092492,DA01ShrineofAzura,Shrine of Azura,Clutter\Ruins\RuinSmallFloorSconce.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:04D90E,DA02ShrineApproachTrigger,,,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0F5AFF,DA04HermaeusMoraActivatorShunt,Wretched Abyss,,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:1097B4,DA05ConclusionFGHircineActivator,,,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:0C3D1B,DA07MehrunesReforgeTrigger,Altar of Mehrunes Dagon,,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:043A0F,DA07ShrineofMehrunesDagonExitTrigger,DA07ShrineofMehrunesDagonExitTrigger,,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:04E4D5,DA09MeridiaStatue,,Clutter\Statues\StatueofMeridia01.nif,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:022F0D,DA10BoethiahStatue,Boethiah Statue,Clutter\Ruins\RuinSmallFloorSconce.nif,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:08796D,DA11NamiraShrineRoomTrigger,,,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D2331,DoomstoneApprentice,The Apprentice Stone,Clutter\PowerShrines\PowerShrine01\ApprenticeStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D2334,DoomstoneAtronach,The Atronach Stone,Clutter\PowerShrines\PowerShrine01\AtronachStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D2330,DoomstoneLady,The Lady Stone,Clutter\PowerShrines\PowerShrine01\LadyStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D2336,DoomstoneLord,The Lord Stone,Clutter\PowerShrines\PowerShrine01\LordStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D2332,DoomstoneLover,The Lover Stone,Clutter\PowerShrines\PowerShrine01\LoverStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D232E,DoomstoneMage,The Mage Stone,Clutter\PowerShrines\PowerShrine01\WizardStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D2337,DoomstoneRitual,The Ritual Stone,Clutter\PowerShrines\PowerShrine01\RitualStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D2339,DoomstoneSerpent,The Serpent Stone,Clutter\PowerShrines\PowerShrine01\SerpentStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D2335,DoomstoneShadow,The Shadow Stone,Clutter\PowerShrines\PowerShrine01\ShadowStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D2333,DoomstoneSteed,The Steed Stone,Clutter\PowerShrines\PowerShrine01\SteedStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D232F,DoomstoneThief,The Thief Stone,Clutter\PowerShrines\PowerShrine01\ThiefStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D2338,DoomstoneTower,The Tower Stone,Clutter\PowerShrines\PowerShrine01\TowerStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D232D,DoomstoneWarrior,The Warrior Stone,Clutter\PowerShrines\PowerShrine01\WarriorStone.nif,,standing-stone contextual blessing,candidate-extracted
+Skyrim.esm,Skyrim.esm:0C05D1,dunBorderWallNocturnalTrapDoor,,,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:0F98CD,dunLabyrinthianMazeStaffAltarTrigger,,,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0BF2B6,MehrunesDagonAltar01,,Clutter\MehrunesDagonAltar\MehrunesDagonAltar01.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:099F44,MGRitualSummonDremoraPlatform,,Dungeons\Imperial\ExteriorIce\ImpExtIceTowerShellBase01.nif,MGRitualSummon (Skyrim.esm:099F4B),religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:023DD0,MQpathToHHShrineTablet,Etched Tablet,Architecture\HighHrothgar\MQEtchedShrineActivator.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0A3462,NocturnalsSecretDoor01,,Clutter\BlackPool\BlackPoolSecretDoor\NocturnalsSecretDoor01.nif,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:068BC3,NorTempleEntranceHallDoor01,,Dungeons\Nordic\Exterior\Animated\NorTempleEntranceHallDoor\NorTempleEntranceHallDoor01.nif,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D9883,ShrineofAkatosh,Shrine of Akatosh,Clutter\Shrines\ShrineAkatosh.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:071854,ShrineofArkay,Shrine of Arkay,Clutter\Shrines\ShrineArkay.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D9881,ShrineofDibella,Shrine of Dibella,Clutter\Shrines\ShrineDibella.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D9885,ShrineofJulianos,Shrine of Julianos,Clutter\Shrines\ShrineJulianos.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D987F,ShrineOfKynareth,Shrine of Kynareth,Clutter\Shrines\ShrineKynareth.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D9887,ShrineofMara,Shrine of Mara,Clutter\Shrines\ShrineMara.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:10E8B0,ShrineOfNocturnal,Shrine of Nocturnal,Clutter\Statues\NocturnalStatue.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D987D,ShrineofStendarr,Shrine of Stendarr,Clutter\Shrines\ShrineStendarr.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:100780,ShrineofTalos,Shrine of Talos,Clutter\Shrines\ShrineTalos.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:0D987B,ShrineOfZenithar,Shrine of Zenithar,Clutter\Shrines\ShrineZenithar.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:06C9F1,T01DibellasAltarActivator,Altar of Dibella,Dungeons\Nordic\Levers\RuinsLever01\MetalLever01.nif,,shrine/prayer activation,candidate-extracted
+Skyrim.esm,Skyrim.esm:01CB7E,T03TempleEntranceTrigger,,,,religious activator candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:0FCC17,TG08ANightingaleArmorActivator,Nightingale Armor Stone,Clutter\Nightingale\NightingaleBlock01.nif,,religious activator candidate,candidate-extracted
