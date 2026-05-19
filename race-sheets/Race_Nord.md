@@ -1,6 +1,6 @@
 # Nord
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Nord.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Nord.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; reward numbers remain tunable.
 
 > The gods of Skyrim do not ask for prayer. They ask for deeds.
 
@@ -69,13 +69,28 @@ This isn't a menu. It's emergent from how you play.
 
 ## The Daedric Question
 
-For Nords, Daedric worship is **taboo** across the board. The Nordic religious frame is built on communal honor, hearth-safety, and gods who fought alongside mortal men. Daedric princes represent the opposite — alien forces that take rather than give.
+For Nords, Daedric worship is usually **taboo**. The Nordic religious frame is built on communal honor, hearth-safety, oath, kin, and gods who fought beside mortal people. A Prince can tempt a Nord, empower a Nord, or curse a Nord, but the relationship almost never becomes normal worship.
 
-- **Azura, Boethiah, Mephala, Nocturnal, Hermaeus Mora** — all severe taboo. Intelligible as temptation but corrosive to Nordic honor.
-- **Hircine** — the exception-that-isn't. The Companions' curse makes Hircine *available* but never *welcome*. It's a strain on Sovngarde, not a path to it.
-- **Molag Bal** — vampirism's source. The ultimate violation of Nordic afterlife theology.
+| Prince | Nord treatment | What that means in play |
+|---|---|---|
+| **Azura** | Taboo | Twilight prophecy is foreign cult pressure. Her quest can mark a threshold, but a Nord returns through shrine cleansing or rededication to accepted gods. |
+| **Boethiah** | Taboo | Proving by betrayal corrodes open honor. Trial and victory can tempt warrior pride, but random cruelty never becomes Nordic devotion. |
+| **Mephala** | Taboo | Hidden murder-webs strain kin trust. Secret leverage may be useful, but it sits outside the hearth-and-oath frame. |
+| **Malacath** | Foreign | The rejected-god code is understandable to outcasts, but not a Nord lane. It can read as exile pressure, not home religion. |
+| **Meridia** | Tolerated | Anti-undead service can fit Arkay/Kyne-style cleansing duty if kept subordinate. It is useful outsider service, not a new patron home. |
+| **Hircine** | Curse-access | The Companions make Hircine available but not welcome. The hunt strains Shor, Sovngarde, and honorable battle; cure or hard renunciation is the clean route back. |
+| **Molag Bal** | Curse-access | Vampirism is the deepest afterlife rupture. It severs Sovngarde expectation and requires cure plus rededication before normal Nordic devotion can breathe again. |
+| **Nocturnal** | Taboo | The Nightingale oath is a criminal shadow compact. It opposes open honor even when a stealth build finds the power attractive. |
+| **Hermaeus Mora** | Taboo | Dangerous knowledge strains the mythic frame. A Nord can seek secrets, but worshipping the hoarder of knowledge is corrosive. |
+| **Mehrunes Dagon** | Taboo | Ruin-cult violence opposes hearth, hold, and continuity. Destructive victories do not become devotion unless the player embraces rupture. |
+| **Sheogorath** | Taboo | Madness and instability threaten kin stability. Wabbajack contact can leave residue, but it is not a healthy Nordic path. |
+| **Namira** | Taboo | Corpse-taboo and revulsion cults violate hearth, honor, and death-respect. This is one of the least Nordic temptations. |
+| **Sanguine** | Taboo | Revelry exists in Nord culture, but Sanguine devotion means loss of discipline and oath-reliability, not a mead-hall blessing. |
+| **Clavicus Vile** | Taboo | Shortcut bargains strain straightforward honor. A deal may tempt a desperate Nord, but the price must remain visible. |
+| **Peryite** | Foreign | Task-order and affliction can be understood as hardship, but the cult remains alien and narrow. Keep it quest-anchored. |
+| **Vaermina** | Taboo | Nightmare and memory corruption attack hearth safety. Cleanse or abandon rather than normalize the path. |
 
-Consequences of straying: loss of standing with your patron, increased difficulty recovering devotion, and a sense that the Nordic divine frame is pulling away from you.
+Consequences of straying: loss of standing with your patron, increased difficulty recovering devotion, and a sense that the Nordic divine frame is pulling away from you. Meridia is the main tolerated utility exception; Hircine and Molag Bal are handled through curse logic rather than ordinary patron logic.
 
 ## Curse States
 

@@ -1,6 +1,6 @@
 # Orc
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Orc.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; hook-costing and reward numbers remain tunable.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Orc.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; hook-costing and reward numbers remain tunable.
 
 > There is one god. He was thrown out. So were you. The question is how you carry the code when the world won't make room for it.
 
@@ -76,15 +76,28 @@ Mode changes are socially and religiously consequential — not casual swaps:
 
 ## The Daedric Question
 
-For Orcs, most Daedric worship is **foreign** — not hostile in the way Altmer feel it, but simply *irrelevant*. The code is Malacath. Other powers don't have a framework inside Orc theology.
+For Orcs, most Daedric worship is **foreign**: not always hostile in the Altmer sense, but usually irrelevant or corrosive because the code is Malacath. Other powers do not have a stable framework inside Orc theology.
 
-- **Malacath** — Native. The entire Orc religious system.
-- **Boethiah** — Hostile. Deepest rival. The betrayer of Trinimac (Malacath's original form). Load-bearing hostility.
-- **Auri-El** — Hostile. Trinimac's betrayal narrative.
-- **Hircine** — Taboo, but *conditionally defensible* through proven strength and control (see Curse States).
-- **Molag Bal** — Taboo. Dependency contradicts the code.
-- **Nocturnal** — Taboo. Cunning can tempt exiles but isn't Malacath code.
-- **Most other princes** — Foreign. Outsider paths that don't fit the code.
+| Prince | Orc treatment | What that means in play |
+|---|---|---|
+| **Azura** | Taboo | Outsider path beside Malacath's code. Hard renunciation if it becomes commitment. |
+| **Boethiah** | Hostile | Deepest rival. The betrayer of Trinimac and load-bearing enemy pressure against Malacath memory. |
+| **Mephala** | Taboo | Hidden corruption strains oath, open proof, and code. Renunciation requires proof and cost. |
+| **Malacath** | Native | The entire Orc religious system. Oath, exile, code, labor, vengeance, and judgment are normal devotion. |
+| **Meridia** | Foreign | Tolerated anti-undead utility, not Orc core lane. Renounce through action if it becomes worship. |
+| **Hircine** | Curse-access | Conditionally defensible through proven strength and control. The beast must serve the code, not replace it. |
+| **Molag Bal** | Taboo | Dependency and domination contradict the code. Cure or hard renunciation is required. |
+| **Nocturnal** | Taboo | Cunning can tempt exiles, but shadow oath is not Malacath's code. |
+| **Hermaeus Mora** | Taboo | Cunning bargains for knowledge strain the code. Pay the cost and renounce. |
+| **Mehrunes Dagon** | Taboo | Destruction for its own sake strains provision, oath, and community. |
+| **Sheogorath** | Taboo | Chaotic mockery undermines endurance and seriousness of the code. |
+| **Namira** | Foreign | Outcast identity alone does not make filth-cult Orcish. |
+| **Sanguine** | Foreign | Revelry under humiliation is not dignity. It distracts from labor, oath, and proof. |
+| **Clavicus Vile** | Foreign | Outsider bargains strain oath-code and should carry consequence. |
+| **Peryite** | Foreign | Harsh duty exists under Malacath, but Peryite's low-order submission is outsider order. |
+| **Vaermina** | Foreign | Nightmare corruption strains endurance ethic and offers no code. |
+
+- **Auri-El** — Hostile, but not Daedric. Trinimac's betrayal narrative makes him relevant pressure, not a worship path.
 
 ### Trinimac
 

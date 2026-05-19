@@ -1,6 +1,6 @@
 # Argonian
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Argonian.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Argonian.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; reward numbers remain tunable.
 
 > The Hist is far away. The people are here. The void is always close. You begin inside absence, not abundance.
 
@@ -91,15 +91,30 @@ Every Argonian has a baseline awareness of Sithis — the void, change, death-fa
 
 Argonians don't engage with the Daedric/Aedric framework at all. Their cosmology is entirely separate:
 
-- **Hist** — Native. The only constitutive source.
-- **Sithis** — Native. Acknowledged void/change. Not the same as Dark Brotherhood's reading, but connected.
-- **Everything else** — Foreign. The Aedra are someone else's gods. The Daedra are someone else's temptations. None of them have theological weight for Argonians.
+| Power | Argonian treatment | What that means in play |
+|---|---|---|
+| **Hist** | Native | The only constitutive source. This is not worship so much as soul relation. |
+| **Sithis** | Native-adjacent | Acknowledged void/change. Connected to Dark Brotherhood signals, but not equal to Hist and not automatically healthy. |
+| **Azura** | Foreign | Outside Hist/community substrate. A quest may matter as a task, not as Argonian devotion. |
+| **Boethiah** | Foreign | Trial and overthrow do not map to Hist relation. Abandon or cleanse if it becomes commitment. |
+| **Mephala** | Foreign | Generic stealth or web-work does not justify a Hist lane. |
+| **Malacath** | Foreign | Outsider exile code is understandable, but not Argonian theology. |
+| **Meridia** | Foreign/tolerated utility | Can aid corruption-fighting, but does not replace Hist or community. |
+| **Hircine** | Curse-access | Werewolf strains Hist relation but is not total collapse. Cure or stabilize through care. |
+| **Molag Bal** | Curse-access | Vampirism damages Hist and community deeply. Sithis pressure rises, but that does not justify domination. |
+| **Nocturnal** | Foreign | Stealth or outsider life does not make Nocturnal native. |
+| **Hermaeus Mora** | Foreign | Dangerous knowledge can matter, but not as Hist substitute. |
+| **Mehrunes Dagon** | Foreign | Collapse and change are not automatically Sithis. Dagon is outsider ruin. |
+| **Sheogorath** | Foreign | Change and void are not identical to madness. Abandon rather than integrate. |
+| **Namira** | Foreign | Outcast darkness can tempt grief states, but it is not Hist/community relation. |
+| **Sanguine** | Foreign | Excess is not a Saxhleel devotional lane. |
+| **Clavicus Vile** | Foreign | Exile can make bargains tempting, but they do not become theology. |
+| **Peryite** | Foreign | Affliction and imposed order do not replace Hist/community. |
+| **Vaermina** | Foreign | Dreams may matter in exile, but Vaermina remains outsider corruption. |
 
-This means Daedric quests don't create the theological tension they do for other races. An Argonian completing Azura's Star isn't committing apostasy — they're just... doing a task. The spiritual damage, if any, comes from what *else* they're neglecting while doing it.
+This means Daedric quests do not create the theological tension they do for other races. An Argonian completing Azura's Star is not committing apostasy; they are doing a task. The spiritual damage, if any, comes from what else they neglect while doing it.
 
-- **Molag Bal (vampirism)** — Not taboo in the Daedric sense, but devastating because of what it does to Hist relation.
-- **Hircine (werewolfism)** — Strains Hist but doesn't collapse it.
-- **Dark Brotherhood (Sithis)** — Actually *native-adjacent*. The strongest active Sithis lane.
+- **Dark Brotherhood (Sithis)** — Native-adjacent and the strongest active Sithis lane, but still not a replacement for the Hist.
 
 ## Curse States
 

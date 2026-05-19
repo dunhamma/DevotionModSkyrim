@@ -1,6 +1,6 @@
 # Khajiit
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Khajiit.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Khajiit.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; reward numbers remain tunable.
 
 > The moons do not ask to be worshipped. They simply are. And so, beneath them, are you.
 
@@ -89,16 +89,26 @@ These aren't chosen — they're *recognized*. The system watches your behavior a
 
 Khajiit have an unusually nuanced relationship with Daedric forces because several "Daedric" figures are actually *native* to Khajiit theology under different names:
 
-- **Azurah** — Native. Core lunar theology. Not "Daedric worship" in Khajiit terms.
-- **Boethiah/Boethra** — Native. Can sit inside the Khajiit frame where explicitly chosen.
-- **Mephala/Mafala** — Native. Culturally meaningful under Khajiit reading.
-- **Baan Dar** — Native. The survival god is not a prince by the usual reckoning.
-- **Rajhin** — Native. Khajiit-specific. Not a generic thief-prince.
-- **Nocturnal** — Taboo. *External pressure* even for a thief. Rajhin is the native alternative.
-- **Hircine** — Taboo. Beast-shape strains belonging. Moon-identity remains but is contested.
-- **Hermaeus Mora/Hermorah** — Legible (culturally intelligible) but not a native primary path.
-- **Sanguine/Sangiin** — Legible as dark pressure inside the Khajiit mythic field. Not a core path.
-- **Namiira** — Legible as dark pressure. Not a baseline devotion.
+| Prince | Khajiit treatment | What that means in play |
+|---|---|---|
+| **Azurah** | Native | Core lunar theology. Not "Daedric worship" in Khajiit terms, and one of the main focused emphases. |
+| **Boethra** | Native where supported | Can sit inside the Khajiit frame when explicitly chosen, but does not replace the lunar substrate. |
+| **Mafala** | Native where supported | Culturally meaningful as hidden wisdom and social web, but distinct from generic crime. |
+| **Malacath** | Foreign | Not a standard lunar lane. Outcast strength can be understood, but it is not Khajiit religion. |
+| **Meridia** | Foreign | Anti-undead service can be respected situationally, but it cannot replace moon order. |
+| **Hircine** | Curse-access | Beast-shape strains belonging. Moon-identity remains, but the shape is contested and needs cure or controlled distancing. |
+| **Molag Bal** | Curse-access | Vampirism corrupts and weakens belonging. The lattice remains, but caravan and community compatibility suffer. |
+| **Nocturnal** | Taboo | External shadow pressure even for a thief. Rajhin is the native trickster alternative. |
+| **Hermaeus Mora/Hermorah** | Legible | Culturally intelligible as dangerous knowledge, but should not overwrite the lunar substrate. |
+| **Mehrunes Dagon** | Taboo | Chaos and ruin conflict with lunar order except as dark pressure. |
+| **Sheogorath/Sheggorath** | Taboo | Dark-pressure figure, not normal lunar lane. Keep distinct from Rajhin-style play. |
+| **Namira/Namiira** | Legible dark pressure | Exists as a dark mythic pressure, not baseline devotion. Withdraw or cleanse rather than normalize. |
+| **Sanguine/Sangiin** | Legible dark pressure | Temptation is intelligible inside the mythic field, but not a core path. |
+| **Clavicus Vile** | Foreign | Trickster overlap exists, but Vile is not native cleverness and should not replace Baan Dar or Rajhin. |
+| **Peryite** | Foreign | Burden and affliction can be familiar, but this is not a normal lunar lane. |
+| **Vaermina** | Foreign | Dream pressure can occur, but it is not native primary devotion. |
+- **Baan Dar** — Native. The survival god is not a Prince by the usual reckoning.
+- **Rajhin** — Native. Khajiit-specific. Not a generic thief-Prince.
 
 The key insight: for Khajiit, the line between "Daedric" and "native" is drawn differently than for any other race. Azurah, Boethra, and Mafala aren't foreign — they're *family*.
 

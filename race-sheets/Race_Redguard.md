@@ -1,6 +1,6 @@
 # Redguard
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Redguard.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Redguard.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; reward numbers remain tunable.
 
 > The dead are watching. The blade remembers. The way must be made.
 
@@ -104,12 +104,26 @@ All three remain inside the same Yokudan religious universe. They differ by emph
 
 Redguard theology has specific, named hostilities:
 
-- **Molag Bal** — Hostile. The strongest Redguard hostility. Breaks everything: Far Shores, Tu'whacca's guidance, mortality order.
-- **Malacath/Malooc** — Hostile. Cautionary enemy-god in Yokudan memory.
-- **Sep** — Hostile (but not Daedric per se). The cautionary serpent, failed creation, banished error.
-- **Mehrunes Dagon** — Hostile. Foreign destroyer opposing way-making and civic survival.
-- **Hircine** — Taboo (Curse access). No true Redguard home for beast-shape.
-- **Most other princes** — Foreign. Outsider paths that don't map to Yokudan devotion.
+| Prince | Redguard treatment | What that means in play |
+|---|---|---|
+| **Azura** | Foreign | Not a core Yokudan lane. A shrine or ancestor re-entry route restores the frame. |
+| **Boethiah** | Foreign | Outsider proving ethos may challenge honor, but it is not Redguard martial discipline. |
+| **Mephala** | Foreign | Secret-web devotion is alien to the open honor frame. Hard re-entry to civic trust if embraced. |
+| **Malacath/Malooc** | Hostile | Cautionary enemy-god in Yokudan memory. Severe rupture only. |
+| **Meridia** | Tolerated | Anti-undead service can fit Tu'whacca duties if clearly subordinate. Dawnbreaker is tool/service, not a replacement god. |
+| **Hircine** | Curse-access | No true Redguard home for beast-shape. Cure then restore through sect and ancestor duty. |
+| **Molag Bal** | Hostile | The strongest Redguard hostility. Breaks Far Shores destiny, Tu'whacca's guidance, and mortality order. |
+| **Nocturnal** | Taboo | Outsider criminal oath against honor. Renounce and restore trust. |
+| **Hermaeus Mora** | Foreign | Dangerous scholarship exists, but not as Redguard backbone. Abandon rather than integrate. |
+| **Mehrunes Dagon** | Hostile | Foreign destroyer opposing way-making and civic survival. Severe rupture only. |
+| **Sheogorath** | Taboo | Destabilizing indulgence strains honor and duty. |
+| **Namira** | Taboo | Corpse taboo breaks ancestor and social law. Cleanse or hard-renounce. |
+| **Sanguine** | Foreign | Indulgence is not Yokudan backbone. Keep it temptation-only. |
+| **Clavicus Vile** | Foreign | Contracts matter to Redguards, but Vile corrupts them into exploitative bargains. |
+| **Peryite** | Foreign | Drudgery and disease do not map cleanly to Yokudan devotion. |
+| **Vaermina** | Foreign | Fear and nightmare paths strain communal duty and do not become a Redguard lane. |
+
+- **Sep** — Hostile, but not Daedric. The cautionary serpent, failed creation, banished error.
 
 Redguards don't have the Breton's cultural legibility with Daedric forces. There's no "intelligible but risky" middle ground for most princes — they're simply *outside the frame*.
 

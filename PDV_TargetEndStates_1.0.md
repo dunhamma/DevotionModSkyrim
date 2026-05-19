@@ -26,6 +26,40 @@ decisions. This document owns launch acceptance and race-roadmap traceability.
 implementation rules. `race-sheets/*.md` owns player-facing race experience and
 race-specific build notes.
 
+## Daedric Coverage Role
+
+The full Daedric end state is Prince-first and race-modified. The canonical
+implementation-facing matrix is `references/phase4/PDV_DaedricRacePrinceMatrix.csv`;
+the architecture baseline lives in `references/PDV_RaceArchitecture_DesignReference.md`
+Section 11; the readable race sheets carry the race-by-race treatment maps.
+This tracker records launch feel and race acceptance, not all 160 race-Prince
+pairings.
+
+Each race sheet should name all sixteen vanilla Skyrim-facing Prince surfaces
+and state whether that Prince is native, legible, tolerated, foreign, taboo,
+hostile, or curse-access for that race. This is deliberately broader than
+"standalone Daedric quest." Fifteen Princes have normal Daedric quest/artifact
+routes; Nocturnal is present through the Thieves Guild / Nightingale chain and
+Skeleton Key, which does not count toward vanilla Oblivion Walker. Jyggalag is
+out of 1.0 scope unless future Creation Club or Sheogorath/Jyggalag content is
+explicitly adopted.
+
+Native-integrated Princes use the race's own worship language. External
+Daedric paths use the global Daedric path system and present as deviation, pact,
+pressure, temptation, stigma, curse, or rupture rather than as ordinary race
+devotion.
+
+Implementation handoff must not rely on race-sheet prose alone. Before a
+Daedric path is built for a race, the matching matrix cell must be expanded
+into the Section 11 contract fields: surface type, response state, commitment
+signal, temptation pressure, boon, price, stigma, faith friction, vanilla hook
+priority, buildability tag, exit route, residue, and required player feedback.
+The race sheet answers "what should this feel like"; the matrix and
+architecture contract answer "what state and hooks make it buildable."
+`PDV_Architecture_v3.md` Section 21.5 is the implementation handoff for turning
+that contract into a build slice; use it before starting any Daedric pilot or
+race subsystem implementation.
+
 ## 1.0 Acceptance Tracker
 
 Status values:

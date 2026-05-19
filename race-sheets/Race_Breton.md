@@ -1,6 +1,6 @@
 # Breton
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Breton.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Breton.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; reward numbers remain tunable.
 
 > Half the court prays at the chapel. The other half meets in the cellar. Some attend both.
 
@@ -84,15 +84,28 @@ Your tradition is the druidic covenant — Y'ffre worship through nature-site ri
 
 ## The Daedric Question
 
-Bretons have the most *legible* relationship with Daedric worship of any human race. Where Nords see taboo and Imperials see civic betrayal, Bretons see... complicated tradition. Witchcraft is woven into their culture through the Glenmoril Wyrd, hedge-magic, and generations of occult families.
+Bretons have the most *legible* relationship with Daedric worship of any human race. Where Nords see taboo and Imperials see civic betrayal, Bretons see complicated family history, hedge practice, hidden rooms, and old bargains. The key question is not "can a Breton understand this?" but "which tradition pays the price?"
 
-- **Hircine** — Legible through Glenmoril. The most "natural" werewolf path in all of Tamriel for a witch-tradition Breton.
-- **Hermaeus Mora** — Legible through scholarship and secret-seeking. Costly but culturally intelligible.
-- **Namira** — Legible through outcast heritage. Dangerous but not alien.
-- **Nocturnal** — Shadow bargains fit Breton margins but stain public standing.
-- **Azura, Mephala** — More legible than for most humans. Still risky.
+| Prince | Breton treatment | What that means in play |
+|---|---|---|
+| **Azura** | Legible | Threshold witchcraft is intelligible but socially risky. It can support Hidden Art play, while Knight's Road and Green Way require cover or rededication. |
+| **Boethiah** | Taboo | Proving and betrayal can tempt occult margins, but the social corrosion is high. It is not a normal Breton tradition lane. |
+| **Mephala** | Legible | Secrecy and web-work fit hedge politics and hidden families. Still risky: Mephala strengthens the double life rather than making it safe. |
+| **Malacath** | Foreign | Harsh outsider code can resonate with exile or humiliation, but it is not Breton baseline. |
+| **Meridia** | Tolerated | Anti-undead service can sit outside witchcraft and even support Knight's Road or Arkay-adjacent play if it remains service rather than cult. |
+| **Hircine** | Legible | The clearest Breton Prince through Glenmoril and druidic werewolf tension. Hidden Art accepts him most easily; Green Way handles him through the Druidic Trial. |
+| **Molag Bal** | Curse-access | Witchcraft can understand the danger, but domination and vampirism carry severe price. Hidden Art survives it best; Knight's Road and Green Way suffer hard rupture. |
+| **Nocturnal** | Legible | Shadow bargains fit Breton margins but stain public standing. The Nightingale oath raises WitchcraftExposure and can damage vows. |
+| **Hermaeus Mora** | Legible | Forbidden knowledge is one of the cleanest Hidden Art scholarly routes. The cost is agency erosion and exposure, not confusion. |
+| **Mehrunes Dagon** | Taboo | Occult rebellion is intelligible but socially catastrophic. Treat as rupture, not ordinary Hidden Art practice. |
+| **Sheogorath** | Taboo | Madness can be understood by occult circles, but it corrodes stability and public standing too quickly to be a normal lane. |
+| **Namira** | Legible | Outcast darkness and witch-heritage make her understandable. The path is dangerous, socially ugly, and strongest inside Hidden Art. |
+| **Sanguine** | Foreign | Mixed society understands temptation, but Sanguine is not a core Breton tradition. Avoid turning tavern excess into devotion. |
+| **Clavicus Vile** | Legible | Contract-magic and hedge bargains are culturally intelligible. The danger is loophole faith: getting exactly what was asked for and paying more than expected. |
+| **Peryite** | Foreign | Unpleasant duty and affliction can be read, but Peryite is not a primary tradition. Keep it narrow. |
+| **Vaermina** | Foreign | Occult dream pressure exists, but nightmare corruption is not core Breton religion. Cover or renounce if it grows. |
 
-For Hidden Art Bretons, Daedric worship is the *core devotional act* — but managed through the WitchcraftExposure system. The deeper you go, the more powerful AND the more dangerous. For Knight's Road and Green Way Bretons, Daedric engagement damages their primary tradition (vow integrity or druidic standing).
+For Hidden Art Bretons, Daedric worship can be the *core devotional act*, managed through WitchcraftExposure. The deeper you go, the more powerful and the more dangerous. For Knight's Road and Green Way Bretons, Daedric engagement damages the primary tradition unless an explicit fork, such as Hircine through the Druidic Trial, says otherwise.
 
 ## Curse States
 

@@ -1,6 +1,6 @@
 # Altmer
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Altmer.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; Altmer remains the only partial implementation-spec lock.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Altmer.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; Altmer remains the only partial implementation-spec lock.
 
 > The mortal world is a prison. Every act either reaches toward escape or sinks deeper into the cage Lorkhan built.
 
@@ -116,16 +116,28 @@ Some story moments are too large to be treated as ordinary penalties. Discoverin
 
 ## The Daedric Question
 
-For Altmer, Daedric worship is **apostasy** — breaking the oldest religious law of their people. This isn't mere social disapproval; it's a fundamental violation of the Apotheosis project.
+For Altmer, Daedric worship is **apostasy**: breaking the oldest religious law of their people. This is not mere social disapproval; it is a fundamental violation of the Apotheosis project. Study, artifact contact, or tactical use can happen in stories, but worship means accepting a power outside the ancestral return.
 
-- **Boethiah** — Hostile. The Betrayer of Trinimac. Load-bearing enemy in Altmer theology.
-- **Azura** — Taboo. Threatens Auri-El's order.
-- **Mephala** — Taboo. Covert corruption violates orthodoxy.
-- **Hermaeus Mora** — Taboo. Study is not worship, but Mora is still apostasy.
-- **Hircine** — Hostile. Beast regression is the *precise inverse* of Apotheosis.
-- **Molag Bal** — Taboo/Curse. Catastrophic under vampirism.
+| Prince | Altmer treatment | What that means in play |
+|---|---|---|
+| **Azura** | Taboo | Prophecy and twilight threaten Auri-El's ordered ascent. Difficult absolution only. |
+| **Boethiah** | Hostile | The Betrayer of Trinimac. This is load-bearing hostility, not ordinary taboo. |
+| **Mephala** | Taboo | Covert corruption and hidden murder violate disciplined order and lineage coherence. |
+| **Malacath** | Taboo | The degraded Trinimac narrative makes Malacath a shameful outsider pressure, not an alternate ancestor. |
+| **Meridia** | Foreign | Anti-undead utility can be understood, but she is not core orthodoxy and still requires renunciation if worshipped. |
+| **Hircine** | Hostile | Beast regression is almost the precise inverse of Apotheosis. Cure is the only clean route. |
+| **Molag Bal** | Curse-access | Vampirism is catastrophic apostasy with no clean restoration while cursed. Molag Bal is hostile patron pressure, not a secret Altmer lane. |
+| **Nocturnal** | Taboo | Shadow oath is apostasy from order, lineage, and visible self-cultivation. |
+| **Hermaeus Mora** | Taboo | Study is not worship, but Mora is still apostasy. Psijic-like scholarship must stay distinct from bargain with Apocrypha. |
+| **Mehrunes Dagon** | Taboo | Destructive anti-order cult violates the whole civilizational project. |
+| **Sheogorath** | Taboo | Unstable reality-play and madness oppose disciplined self-cultivation. |
+| **Namira** | Taboo | Impurity and degradation oppose Altmer order, refinement, and ascent. |
+| **Sanguine** | Taboo | Indulgence is not merely messy; it pulls the self away from disciplined return. |
+| **Clavicus Vile** | Taboo | Bargaining with power violates orthodoxy even when the contract looks clever. |
+| **Peryite** | Taboo | Diseased submission and low-order task logic violate purity and self-cultivation. |
+| **Vaermina** | Taboo | Nightmare and memory corruption attack the disciplined self. |
 
-Any Daedric quest acceptance creates a sharp negative orthodoxy signal that outweighs ordinary magical practice.
+Any Daedric quest acceptance creates a sharp negative orthodoxy signal that outweighs ordinary magical practice. A heterodox Altmer can study dangerous material, but worship turns scholarship into apostasy.
 
 ## Curse States
 

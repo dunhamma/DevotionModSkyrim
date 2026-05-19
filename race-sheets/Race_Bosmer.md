@@ -1,6 +1,6 @@
 # Bosmer
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Bosmer.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; hook-costing and reward numbers remain tunable.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Bosmer.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; hook-costing and reward numbers remain tunable.
 
 > The Pact was not a promise. It was a contract. And contracts have terms.
 
@@ -72,14 +72,28 @@ These are strongest on The Living Story path but present across all four.
 
 ## The Daedric Question
 
-Bosmer have their own native trickster-survival theology through Baan Dar, which means they don't *need* most Daedric princes to fill that role. The distinction matters:
+Bosmer have their own native trickster-survival theology through Baan Dar, which means they do not need most Daedric Princes to fill that role. External Princes are evaluated against the chosen Bosmer path: Old Contract, Living Story, Exchange, or Bandit Road.
+
+| Prince | Bosmer treatment | What that means in play |
+|---|---|---|
+| **Azura** | Foreign/intelligible | Threshold worship can be understood, but it is not a core Bosmer path. Quiet abandonment or cleansing is the normal exit. |
+| **Boethiah** | Taboo | Proving by betrayal is pressure, not normal Bosmer devotion. Costly renunciation if it takes root. |
+| **Mephala** | Foreign | Trickster overlap exists, but hidden murder-webs are not Baan Dar or Y'ffre. Quiet abandonment is preferred. |
+| **Malacath** | Foreign | Exile and burden can be read through the Wild-Hunt world, but not as Bosmer core religion. |
+| **Meridia** | Foreign | Anti-undead utility can be useful, but it is not Bosmer backbone. |
+| **Hircine** | Legible pressure | Beast-shape and hunt are intelligible through Wild Hunt adjacency, but not orthodox. The Wild Hunt is canonical horror, not a player-facing devotional track. |
+| **Molag Bal** | Curse-access | Vampirism is a hard theological break across all Bosmer paths. Cure or costly re-entry is required. |
+| **Nocturnal** | Legible external pressure | Criminal overlap exists, but the Nightingale oath is not Bosmer theology. Baan Dar remains the native survival alternative. |
+| **Hermaeus Mora** | Foreign | Bosmer Herma-Mora is explicitly separate from this Prince. Do not treat Herma-Mora folklore as Mora worship. |
+| **Mehrunes Dagon** | Taboo | Ruin cult opposes continuity and covenant. Renunciation is the expected return. |
+| **Sheogorath** | Taboo | Disruptive trickster energy exists, but it is not Bosmer story, Pact, Exchange, or Bandit Road. |
+| **Namira** | Taboo | Decay and corpse taboo oppose continuity and covenant. |
+| **Sanguine** | Foreign | Revelry exists, but Baan Dar/Y'ffre frames remain primary. Avoid tavern-grind devotion. |
+| **Clavicus Vile** | Foreign | Bargain cunning exists, but not as Bosmer backbone. Vile is contract pressure, not Exchange justice. |
+| **Peryite** | Foreign | Disease-order is not Bosmer backbone. Keep it narrow and quest-anchored. |
+| **Vaermina** | Foreign | Sleep-fear corruption does not map cleanly to Bosmer worship. |
 
 - **Baan Dar** — Native. The Bosmer trickster-survival path is a legitimate religious lane, not a crime spree.
-- **Hircine** — Legible but not orthodox. Beast-shape is intelligible to Bosmer theology as external pressure without being welcomed. Note: the Wild Hunt is canonical horror, not a player-facing devotional track — it is the lore reason the Pact exists, never a state the mod invites you into.
-- **Nocturnal** — Foreign. The Thieves Guild's Nightingale oath is a *Skyrim criminal* overlap, not Bosmer theology. Baan Dar is the native alternative.
-- **Hermaeus Mora** — Foreign. Bosmer Herma-Mora is kept explicitly separate from the general knowledge-corruption reading.
-- **Azura, Mephala** — Foreign but intelligible. Not core Bosmer, but not alien either.
-- **Molag Bal** — Taboo. Hard theological break across all paths.
 
 ## Curse States
 

@@ -1,6 +1,6 @@
 # PlayerDevotion (PDV) — Race Architecture Design Reference
 **Started:** May 12, 2026
-**Last updated:** May 19, 2026 (race implementation-lock audit; Altmer partial closeout remains)
+**Last updated:** May 19, 2026 (Daedric race-sheet coverage sync; Altmer partial closeout remains)
 **Status:** Living reference — race architecture and pre-matrix requirements locked as confirmed
 
 **Current implementation boundary:** Early sections of this reference were
@@ -2836,7 +2836,13 @@ Explicit correction:
 
 ### 11.7 Prince Path Definitions
 
-All sixteen active Skyrim-facing Prince paths are in scope. Jyggalag remains omitted unless future Sheogorath content requires a lore note.
+All sixteen vanilla Skyrim-facing Prince surfaces are in scope. This means
+fifteen normal Daedric quest/artifact routes plus Nocturnal's Thieves Guild /
+Nightingale route. Nocturnal should be treated as a questline/oath/surface
+exception, not as a normal standalone Daedric quest. The Skeleton Key is a
+Daedric artifact but does not count toward vanilla Oblivion Walker. Jyggalag
+remains omitted unless future Creation Club or Sheogorath/Jyggalag content is
+explicitly adopted.
 
 | Prince | PDV path type | Commitment/progression logic | Primary price type |
 |---|---|---|---|
@@ -2945,7 +2951,10 @@ Performance posture:
 
 ### 11.11 Signal Matrix Requirements
 
-The future race signal matrix must include Daedric-specific fields where relevant.
+The Phase 4 Daedric matrix now carries the implementation-facing race-by-Prince
+crosswalk. Future signal tables that touch Daedric content should reference
+`references/phase4/PDV_DaedricRacePrinceMatrix.csv` rather than re-deriving
+race response states from prose.
 
 Required fields:
 
@@ -2964,7 +2973,34 @@ Required fields:
 | `Exit route` | Cure, cleansing, artifact rejection, rededication, sustained opposite behavior |
 | `Residue` | Limited remaining stigma, floor shift, memory flag, or temptation pressure |
 
-This section is locked as the architectural baseline. The detailed race-by-Prince signal matrix remains future work.
+This section is locked as the architectural baseline. The detailed
+race-by-Prince response matrix now lives in
+`references/phase4/PDV_DaedricRacePrinceMatrix.csv`, with race-sheet summaries
+kept in `race-sheets/Race_*.md` for readable end-state context.
+
+Current matrix compression rule:
+- The active Phase 4 CSV is Prince-first. Its race columns compress response
+  state, stigma, faith friction, exit route, and sometimes residue into one
+  readable cell per race.
+- That compression is acceptable for architecture review, but not sufficient
+  as an implementation handoff by itself.
+- Before implementing any Daedric slice, expand the target Prince/race cells
+  into either a 160-row implementation table, an authoring manifest, or an
+  equivalent script-side data structure that carries every required field above
+  explicitly.
+- `PDV_Architecture_v3.md` Section 21.5 consumes this rule as the Slice 8
+  Daedric pilot gate.
+- `Nocturnal` expansion must use `FactionOathSurface`, not
+  `StandaloneDaedricQuest`; `Jyggalag` expansion must remain
+  `Rejected for Scope` unless a future adopted content surface changes that.
+
+Player-feedback rule:
+- Any `Taboo`, `Hostile`, or `Curse` commitment must produce explicit feedback
+  through MCM/status text, notification, effect description, or authored
+  devotional copy. It must not be silent piety math.
+- `Native`, `Legible`, and `Tolerated` commitments may use lighter feedback,
+  but still need an exposed commitment/pressure state if they create a boon,
+  price, or exit residue.
 
 ---
 

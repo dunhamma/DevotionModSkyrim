@@ -1,6 +1,6 @@
 # Dunmer
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Dunmer.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; launch content weighting remains tunable.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Dunmer.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; launch content weighting remains tunable.
 
 > The ancestors are always watching. The question is not whether you pray — it is whether your prayer carries weight across the ash.
 
@@ -58,16 +58,28 @@ In 4E 201, a Dunmer in Skyrim carries this entire structure in exile. There are 
 
 ## The Daedric Question
 
-Dunmer have the most nuanced Daedric relationship of any race. The Good Daedra (Azura, Boethiah, Mephala) are **native** — not outsider corruption but integrated protectors. This is unique in Tamriel.
+Dunmer have the most nuanced Daedric relationship of any race. The Good Daedra are **native**: not outsider corruption, but integrated protectors and religious centers. Other Princes may be playable through the global Daedric system, but they land as deviation, trial, pact, taboo, curse pressure, or foreign bargain rather than normal Dunmer worship.
 
-- **Azura, Boethiah, Mephala** — Native. No stigma, no penalty. Standard Dunmer deepening.
-- **Malacath** — Taboo. House of Troubles-adjacent.
-- **Hircine** — Foreign. No Dunmer framework for the beast-shape.
-- **Molag Bal** — Taboo, but accessible under vampirism (see Curse States).
-- **Hermaeus Mora** — Foreign but not uniquely catastrophic. Scholars may engage cautiously.
-- **Nocturnal, Sheogorath** — Taboo. Hidden-network overlap doesn't make Nocturnal welcome; madness path is House of Troubles pressure.
+| Prince | Dunmer treatment | What that means in play |
+|---|---|---|
+| **Azura** | Native Reclamation | A normal Dunmer focus. Thresholds, painful truth, transformation, exile continuity, and Azura's Star carry real religious weight. |
+| **Boethiah** | Native Reclamation | A normal Dunmer focus. Trial, overthrow, betrayal-as-test, and Chimeric self-authorship matter; generic cruelty does not. |
+| **Mephala** | Native Reclamation | A normal Dunmer focus. Hidden obligation, protected community, necessary lies, and social webs matter; generic crime does not. |
+| **Malacath** | Taboo deviation | House of Troubles-adjacent pressure. Strong class appeal for outcasts and oath-bound warriors, but hard rededication on exit. |
+| **Meridia** | Foreign/tolerated utility | Useful against undead, but not a Dunmer religious center. Dawnbreaker service can be respected without replacing ancestors. |
+| **Hircine** | Foreign curse pressure | No stable Dunmer framework for beast-shape. Lycanthropy strains the whole structure without giving a real home. |
+| **Molag Bal** | Taboo/curse pressure | House of Troubles and vampire rupture. A vampire Dunmer may access him as a hostile functional patron while ancestor posture goes silent. |
+| **Nocturnal** | Taboo outsider | Hidden-network overlap does not make her Mephala. The Nightingale oath is an external shadow debt. |
+| **Hermaeus Mora** | Foreign dangerous knowledge | Scholars may engage, especially through Black Books, but Mora is not Dunmer core faith. |
+| **Mehrunes Dagon** | Taboo deviation | House of Troubles ruin pressure. Destruction and revolution can tempt, but no destruction spam should score. |
+| **Sheogorath** | Taboo deviation | House of Troubles madness pressure. Wabbajack contact is rupture, not healthy Dunmer practice. |
+| **Namira** | Foreign corruption | Outcast hunger and corpse taboo create strong social and ancestor friction. |
+| **Sanguine** | Foreign indulgence | Appealing to social rogues or bards, but unreliable and outside ancestor/Reclamation duty. |
+| **Clavicus Vile** | Foreign bargain | Exile can make bargains tempting. The price must stay visible and the pact remains outside core faith. |
+| **Peryite** | Foreign affliction-order | Defensive or plague-doctor fantasies can work as Daedric deviation, not Reclamation faith. |
+| **Vaermina** | Foreign nightmare | Dream and memory corruption are strong illusion/fear hooks, but not ancestor communion. |
 
-The key distinction: for Dunmer, the Good Daedra are *not Daedric worship* in the way other races would understand it. They're legitimate ancestral protectors who happen to also be Daedric princes.
+The key distinction: for Dunmer, the Good Daedra are *not Daedric worship* in the way other races would understand it. They are legitimate ancestral protectors who happen to also be Daedric Princes. The other Princes broaden roleplay appeal without becoming a fourth Reclamation.
 
 ## Curse States
 

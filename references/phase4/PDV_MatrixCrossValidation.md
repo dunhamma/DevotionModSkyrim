@@ -1,7 +1,7 @@
 # PDV Phase 4 Matrix Cross-Validation
 
 Status: Living validation note for the Phase 4 matrix pass
-Last revised: 2026-05-13
+Last revised: 2026-05-19
 
 ## Files Validated
 
@@ -45,8 +45,28 @@ Interpretation:
 
 ### Daedric matrix
 
-- `16` Prince rows currently covered.
-- All active Skyrim-facing Prince paths from the locked baseline are present.
+- `16` vanilla Skyrim-facing Prince surfaces currently covered.
+- This means the `15` normal Daedric quest/artifact routes plus Nocturnal's
+  Thieves Guild / Nightingale surface.
+- Nocturnal is a questline/oath exception, not a normal standalone Daedric
+  quest. The Skeleton Key does not count toward vanilla Oblivion Walker.
+- Jyggalag is out of first-release scope unless future Creation Club or
+  Sheogorath/Jyggalag content is explicitly adopted.
+
+Implementation handoff check:
+
+- The current CSV is sufficient for architecture alignment, race-sheet sync,
+  and first-pass path planning.
+- It is not, by itself, the final data shape for CK/Papyrus implementation.
+  Each implemented Prince/race pairing must be expanded into the Section 11
+  contract fields in `references/PDV_RaceArchitecture_DesignReference.md`.
+- The expansion must preserve the source distinction between normal Daedric
+  quest/artifact routes, Nocturnal's faction-oath surface, curse-state surfaces
+  for Molag Bal and Hircine, and out-of-scope Jyggalag material.
+- Race-sheet prose is acceptance context only; implementation should use the
+  matrix plus the Section 11 contract as the build source.
+- `PDV_Architecture_v3.md` Section 21.5 now treats this expansion as the Slice
+  8 entry gate before any Prince/race implementation begins.
 
 ## Validation Rules Applied
 

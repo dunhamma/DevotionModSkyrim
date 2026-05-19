@@ -1,6 +1,6 @@
 # Imperial
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Imperial.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Imperial.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; reward numbers remain tunable.
 
 > Faith is civic duty. But duty has a conscience — and sometimes conscience demands treason.
 
@@ -86,12 +86,26 @@ Walking back from an extreme is possible, but harder at the edges. An Open Defia
 
 ## The Daedric Question
 
-Imperials view Daedric worship as **anti-civic** — a rejection of the public religious order that holds society together. It's not the cosmic horror a Nord feels, but a kind of social treason.
+Imperials view Daedric worship as **anti-civic**: a rejection of the public religious order that holds society together. It is not always cosmic horror, but it is usually social and religious treason. The exception is narrow service that can be framed as civic duty without replacing the Divines.
 
-- **Most princes** are taboo — intelligible as temptation but corrosive to public virtue.
-- **Meridia** is tolerated for her anti-undead utility (fits the Arkay frame).
-- **Nocturnal** stains public standing through the Thieves Guild's Nightingale oath.
-- **Molag Bal** under vampirism causes total Divine collapse — civic faith cannot accommodate the undead.
+| Prince | Imperial treatment | What that means in play |
+|---|---|---|
+| **Azura** | Taboo | Prophecy-cult devotion strains public Divine order. Shrine cleansing or rededication is the normal return. |
+| **Boethiah** | Taboo | Betrayal-as-trial is anti-civic and anti-legal. It may tempt ambitious characters but damages public virtue. |
+| **Mephala** | Taboo | Hidden murder, secret networks, and manipulated loyalties oppose civic trust. Confession, cleansing, or abandonment is the exit shape. |
+| **Malacath** | Taboo | Outsider vengeance and harsh code are legally suspect. An Imperial may sympathize with the rejected, but worship is not civic religion. |
+| **Meridia** | Tolerated | Anti-undead service fits Arkay-facing public duty if subordinate. Dawnbreaker can be useful civic cleansing, not a replacement faith. |
+| **Hircine** | Curse-access | Werewolf access overrides normal rejection. The beast creates spiritual homelessness, with cure or slow rededication as recovery. |
+| **Molag Bal** | Curse-access | Vampirism collapses Divine civic life. Post-cure restoration starts from a lowered floor. |
+| **Nocturnal** | Taboo | The Nightingale oath is a non-civic shadow compact. It stains public standing even when stealth work is useful. |
+| **Hermaeus Mora** | Taboo | Forbidden knowledge strains law, piety, and institutional trust. Study is acceptable; worship and bargain are not. |
+| **Mehrunes Dagon** | Hostile | Oblivion Crisis memory makes Dagon enemy pressure, not generic taboo. Ruin against civic survival is a hard rupture. |
+| **Sheogorath** | Taboo | Anti-civic instability undermines public order. Abandonment is the clean route out. |
+| **Namira** | Taboo | Revulsion, corpse taboo, and hidden cannibal fellowship are civic and religious rupture. |
+| **Sanguine** | Taboo | Social indulgence exists in Imperial life, but devotion to excess erodes restraint and reliability. |
+| **Clavicus Vile** | Taboo | Exploitative contracts corrupt civic virtue. Imperial law understands contracts, which is exactly why Vile's version is dangerous. |
+| **Peryite** | Foreign | Low-order duty and affliction are intelligible but not core civic devotion. Keep the path narrow and quest-anchored. |
+| **Vaermina** | Taboo | Nightmare and memory violation oppose mercy, order, and public trust. |
 
 ## Curse States
 

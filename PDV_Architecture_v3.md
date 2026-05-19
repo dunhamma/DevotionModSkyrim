@@ -1477,6 +1477,228 @@ acceptance criteria for the next implementation plans:
 - Broad worship remains a first-class patron state with Tier 2 cap for 1.0; Khajiit remains the only no-offer exception.
 - No v2 implementation needs to be reopened solely because of the race sheets.
 
+### 21.5 v3.16 implementation handoff plan
+
+This section is the operating handoff from architecture to build work. It does
+not replace the subsystem sections above; it tells future sessions which deep
+module pattern must be proven first, what interface it exposes to the next
+slice, and what evidence closes the slice. Do not clone broad content from a
+slice until its verifier and normal-play proof are both clean.
+
+**Implementation-ready definition:**
+
+A slice is implementation-ready when all of the following are true:
+
+- Its owning subsystem is named in v3 and its race/product acceptance is named
+  in `PDV_TargetEndStates_1.0.md`.
+- The race-specific rules it depends on are locked in
+  `references/PDV_RaceArchitecture_DesignReference.md` or the relevant
+  `race-sheets/Race_*.md`.
+- Any compressed planning source has been expanded into implementation fields.
+  For Daedric work, the race-sheet treatment map is acceptance context only;
+  the target Prince/race cells from
+  `references/phase4/PDV_DaedricRacePrinceMatrix.csv` must be expanded into
+  the Section 11 contract fields before coding or CK authoring starts.
+- The interface is small enough to call from EventBus, manager dawn, deity
+  scoring, or CK Conditions without callers learning the slice internals.
+- The verifier can distinguish missing records/properties from intentional
+  dev-only scaffolds.
+- There is one normal-play in-game proof path. Debug/MCM helpers may accelerate
+  setup, but they do not count as the only proof.
+- No open decision in Section 24 blocks the slice, or the handoff card names
+  the explicit waiver that lets the slice proceed.
+
+**First implementation packet checklist:**
+
+Before starting a Pattern Proving slice, create a short working handoff note in
+chat or in the implementation issue using the handoff-card template below. It
+should answer the contract questions before any Papyrus or CK work begins.
+
+1. Record the current baseline: `git status --short`, latest verifier command
+   and result, current in-game proof state, and known waivers such as duplicate
+   VMAD or SEQ freshness.
+2. Name the narrow slice and its owner. Avoid mixing reputation, substrate,
+   favor, commitment, Daedric, curse, and neglect behavior in one build pass
+   unless the table below explicitly couples them.
+3. Pull the source contract from the owning docs: v3 subsystem section,
+   `PDV_TargetEndStates_1.0.md`, the relevant race sheet, and
+   `references/PDV_RaceArchitecture_DesignReference.md`.
+4. Define the data shape: StorageUtil keys, globals, FormLists, CK records,
+   script properties, arrays, manifest rows, and MCM/debug visibility.
+5. Define the normal-play proof path, including setup, trigger, expected
+   traces, player-visible feedback, dawn behavior, save/load expectation, and
+   cleanup/exit route where relevant.
+6. Define the clone boundary: what future slices may reuse after this proof,
+   and what remains a pilot-only shortcut.
+7. After implementation, update only the living docs that own changed facts and
+   add verifier coverage before broadening the pattern.
+
+**Handoff card template:**
+
+Use this shape before starting any slice:
+
+| Field | Required answer |
+|---|---|
+| Slice | Short name and v3 phase |
+| Owning module | Signal, reputation track, state track, substrate, favor, Daedric path, commitment, curse, neglect, decay, UI, or authoring |
+| Source contract | Exact v3 section, target-tracker section, race sheet, matrix, or reference rule being implemented |
+| Interface guarantee | What other modules can rely on without knowing implementation details |
+| Data/state shape | StorageUtil keys, globals, FormLists, records, properties, arrays, and MCM/debug visibility |
+| Implementation locations | Papyrus scripts, CK records, FormLists, globals, manifests, verifier paths |
+| Entry gate | Prior slices, open decisions, and required current verifier state |
+| Verifier gate | Exact strict/default verifier expectation |
+| In-game proof | One repeatable normal-play scenario, player feedback, dawn behavior, save/load expectation, and log/screen evidence expected |
+| Exit/recovery | How the player backs out, cures, rededicates, decays, or clears residue where the slice creates lasting state |
+| Not in scope | What must not be pulled forward by enthusiasm |
+| Docs touched | v3, target tracker, race sheet, `AGENTS.md`, `PDV_MOD_SETUP.md`, or none |
+
+**Pattern Proving build order:**
+
+| Order | Slice | Owns / proves | Interface guarantee | Entry gate | Done when |
+|---:|---|---|---|---|---|
+| 0 | Baseline inventory | Confirms the closed Preflight/Skeleton and current Pattern Proving evidence | Future work starts from known `FAIL=0` verifier state and known partial proofs | Clean worktree; no code change | Current strict verifier commands and current in-game proof notes are recorded before new implementation begins |
+| 1 | Normal-play ingress closeout | EventBus non-kill routing beyond debug-only paths | Receivers can send typed devotional events without scoring directly or knowing deity internals | Existing EventBus/PlayerEvents proof | Dunmer portable shrine/home bonus, Bosmer Green Pact, and Hircine hunt rite each have one non-debug trigger proof or an explicit waiver |
+| 2 | Imperial Concordat reputation pilot | `PDV_ReputationTrack` and `ConcordatStanding` as the first real reputation track | Scoring can ask for current band/multiplier; CK can read a mirror global; callers do not know band math | Slice 1; crime events may wait if they would create empty scaffolding | Uncommitted/private/open edge walk-back works, stance multiplier composes with track multiplier, verifier covers records/properties |
+| 3 | Bosmer Path state pilot | `PDV_StateTrack` and `PDV_State_BosmerPath` as the first real state track | Commitment and scoring can ask active path and eligibility; callers do not know switch proof history | Slice 2 or explicit waiver if reputation is not needed | Setup/default path, destination-gated switch, Old Contract Green Pact tagging, and PactBound separation work in normal play |
+| 4 | Dunmer Ancestor substrate pilot | `PDV_Substrate_DunmerAncestor` as the first strong substrate | Dawn/scoring can adjust substrate metric without writing patron piety; CK can inspect substrate tier/posture | Slice 1; no need to wait for all state tracks | Portable shrine prayer and player-owned-home bonus grant origin-only substrate progress; vampire/werewolf posture remains separate |
+| 5 | Khajiit lunar exception closeout | Lunar substrate plus emergent focused emphasis | Khajiit can update broad/focused state without formal patron offers | Slice 4 if shared substrate helpers are reused | Moon-cycle cadence, road-home circuit, and focused-emphasis lead logic work without `PDV_GLO_PatronState = active primary` |
+| 6 | Contextual favor pilot | One automatic favor family, preferably Kyne foreground unless a prior slice gives cleaner hooks | Event/scoring can request a favor opportunity; favor manager enforces one-active-boost cap | At least one reliable signal family from Slices 1-5 | 3-5 favor triggers exist for one devotional lane, duration/surfacing rules work, and anti-stack is verifier or smoke covered |
+| 7 | Commitment offer pilot | Shared formal offer flow | Dawn can recompute candidates, fire at most one offer, and persist accepted patron state without a queue | Slice 3 for eligibility filtering; Slice 6 not required | Accept / Not Yet / Refuse works; 70% carry-over on accept works; no competing 1.0 offers fire after acceptance |
+| 8 | Daedric price/stigma pilot | First full Daedric path price/stigma loop | Daedric path scoring exposes boon, price, stigma, and race response through a narrow path interface | D-12, D-13, D-14 resolved; Hircine hunt proof may remain ingress-only | One Prince path has commitment, price, stigma, race response, and exit/residue behavior proven |
+| 9 | Curse-state pilot | Werewolf first, vampire second | Scoring asks curse state/modifier without knowing detection source | D-17 resolved | Curse transition changes scoring posture and restoration behavior without mutating origin race |
+| 10 | Neglect/decay pilot | One accepted patron relationship weakening over time | Dawn owns decay and neglect effects; runtime events never write persistent decay directly | Slice 7 | Decay floors, grace, neglect spell apply/remove, and broad-worship suppression work |
+| 11 | Privilege pilot | Shrine/dialogue privilege pattern | CK Conditions can read mirror globals and track globals without script glue in dialogue/shrine content | D-10 resolved; Slice 2/7 preferred | One shrine or dialogue privilege proves condition shape and coexistence discipline |
+
+**Immediate handoff packets:**
+
+These packets are the next implementation handoff. They are deliberately
+narrower than a full phase plan: they define what to prove before cloning any
+more content.
+
+### Slice 0 packet - baseline inventory
+
+| Field | Required answer |
+|---|---|
+| Slice | `0 - Baseline inventory`, v3.16 handoff |
+| Owning module | Verification / implementation control |
+| Source contract | v3 Section 21.5, `AGENTS.md` current build status, `PDV_MOD_SETUP.md` toolchain notes |
+| Interface guarantee | Future implementation starts from a named strict-verifier state and named runtime-proof state |
+| Data/state shape | No new gameplay data. Records current git status, verifier counts, warning waivers, and proof gaps |
+| Implementation locations | Documentation only: v3, `AGENTS.md`, and `PDV_MOD_SETUP.md` |
+| Entry gate | No code or ESP change. Current workspace may contain documentation edits; code implementation should start after those edits are committed or deliberately accepted |
+| Verifier gate | `node .\tools\pdv_verify.mjs --strict-preflight --strict-skeleton --strict-pattern-proving --json` returned `PASS=458, WARN=2, INFO=28`, with no `FAIL` or `TODO`, at 2026-05-19 16:44 AEST |
+| In-game proof | Reuses counted prior proof: clean Preflight smoke, Structural Skeleton Debug-page smoke, Imperial Concordat proof, and counted Khajiit sleep/moon observance proof from 2026-05-18 |
+| Exit/recovery | None. This slice creates no player state |
+| Not in scope | Running new in-game smoke, editing scripts, changing ESP records, fixing the known warnings |
+| Docs touched | v3, `AGENTS.md`, `PDV_MOD_SETUP.md` |
+
+Known Slice 0 waivers:
+- `PDV_MCM` duplicate VMAD attachment remains a known warning until manual
+  CK/xEdit consolidation.
+- Devotion SEQ freshness remains a normal post-CK refresh reminder, not a
+  Pattern Proving blocker while no dialogue behavior is being closed.
+- `PDV_Player` alias creation remains manual CK/xEdit work; safe authoring can
+  compile and verify `PDV_PlayerEvents`, but cannot mint future aliases.
+
+### Slice 1 packet - normal-play ingress closeout
+
+| Field | Required answer |
+|---|---|
+| Slice | `1 - Normal-play ingress closeout`, V3 Pattern Proving |
+| Owning module | Signal ingress / EventBus semantic routing |
+| Source contract | v3 Sections 6, 7, 11, 21.5, and 25.4; Dunmer, Bosmer, and Hircine rules in `PDV_TargetEndStates_1.0.md`, `race-sheets/Race_Dunmer.md`, `race-sheets/Race_Bosmer.md`, and `references/PDV_RaceArchitecture_DesignReference.md` |
+| Interface guarantee | Normal-play receivers call typed `PDV_EventBus` routes; receivers do not write piety, substrate metrics, Green Pact state, or Daedric path state directly |
+| Data/state shape | Existing event constants `EVT_DUNMER_PORTABLE_SHRINE`, `EVT_DUNMER_HOME_BONUS`, `EVT_GREEN_PACT_VIOLATION`, and `EVT_HIRCINE_HUNT_RITE`; existing routes `RouteDunmerPortableShrinePrayer`, `RouteDunmerPlayerHomeBonus`, `RouteGreenPactViolation`, and `RouteHircineHuntRite`; existing manager/substrate/Hircine handlers |
+| Implementation locations | `PDV_PlayerEvents.psc` only if player-alias events are needed; otherwise small CK-authored activators, items, spells, or magic effects that call EventBus; verifier source checks for the new route surface |
+| Entry gate | Slice 0 verifier baseline remains `FAIL=0, TODO=0`; no open Section 24 decision blocks this slice |
+| Verifier gate | Existing combined strict verifier remains clean; add or tighten `--strict-pattern-proving` checks if new source files, properties, records, or FormList entries are introduced |
+| In-game proof | Three normal-play micro-proofs: one Dunmer portable shrine prayer plus home/private-shrine bonus, one Bosmer Green Pact violation, and one Hircine hunt rite. Each proof must show a player action, EventBus trace, manager/substrate/path trace, MCM summary change, and save/load sanity where state persists |
+| Exit/recovery | Dunmer proof has no rupture and only daily anti-repeat throttling. Bosmer proof must remain a single violation, not forced Pact reckoning. Hircine proof may use existing renounce/debug reset only as cleanup until Slice 8 defines real Daedric exit/residue |
+| Not in scope | Full Green Pact tagging, full Bosmer path switching, full Dunmer substrate tuning, Daedric boon/price/stigma completion, curse detection, broad animal-kill scoring, new player-facing quest content |
+| Docs touched | v3 and `AGENTS.md` for proof status; `PDV_MOD_SETUP.md` only if tool/verify commands change; race sheets only if player-facing behavior changes |
+
+Preferred Slice 1 trigger shapes:
+
+| Micro-proof | Preferred trigger | Why |
+|---|---|---|
+| Dunmer portable shrine/home | A permanent portable shrine item or activator that calls EventBus, plus an explicit private-shrine/home-context activator for the bonus | Proves the authored route without depending on broad home-location detection yet |
+| Bosmer Green Pact violation | A curated plant-food / plant-use test record or activator with a PDV-owned semantic tag | Proves PDV-owned Green Pact tagging without trying to classify all food, ingredients, firewood, flora, and potions |
+| Hircine hunt rite | A curated hunt-rite token, shrine, or magic effect that gates one qualifying prey kill or route activation | Proves normal play can enter the Hircine route without making every animal kill a Daedric act |
+
+Slice 1 closes only when all three micro-proofs are non-debug in-game proofs or
+one is explicitly waived with the reason and follow-up owner recorded in
+`AGENTS.md`.
+
+**Daedric implementation bridge from the initial hardening pass:**
+
+Do not start Slice 8 from the race sheets alone. The initial hardening pass
+established a three-layer handoff:
+
+1. `race-sheets/Race_*.md` answer player-facing end-state feel.
+2. `references/phase4/PDV_DaedricRacePrinceMatrix.csv` answers Prince-first
+   race response and buildability planning.
+3. `references/PDV_RaceArchitecture_DesignReference.md` Section 11 answers the
+   implementation contract fields.
+
+Slice 8 must choose one Prince/race pairing, then expand it into explicit
+records before writing code: surface type, response state, commitment signal,
+temptation pressure, boon, price, stigma, faith friction, vanilla hook priority,
+buildability tag, exit route, residue, and player feedback. `Nocturnal` uses
+`FactionOathSurface`, not `StandaloneDaedricQuest`; `Jyggalag` remains
+`Rejected for Scope`; Molag Bal and Hircine must account for curse-state entry
+and cure/restoration behavior.
+
+For the first Daedric pilot, prefer a pairing that proves the contract without
+requiring broad content authoring. Good candidates are:
+
+| Candidate | Why it proves the pattern | Main caution |
+|---|---|---|
+| `Hircine + Bosmer` | Connects existing hunt-rite ingress, Bosmer path tension, and curse/Daedric ambiguity | Must not collapse Y'ffre/Green Pact into generic Hircine worship |
+| `Hircine + Nord` | Uses Companions/werewolf/Sovngarde tension with strong vanilla hooks | Needs clear afterlife/curse feedback and cure residue |
+| `Molag Bal + Dunmer` | Proves curse rupture, ancestor silence, and recoverable-but-scarred restoration | Vampire implementation depends on curse detection reliability |
+| `Boethiah + Orc` | Proves hostile Prince response and cross-Prince pressure against Malacath | Should wait until D-14 hostility posture is resolved |
+
+The first pilot should usually be Hircine unless a later implementation session
+chooses to resolve vampire detection first.
+
+**Decision blocker map:**
+
+| Decision | Blocks | Does not block |
+|---|---|---|
+| D-10 Greybeards-Kynareth privilege pilot | Slice 11 privilege pilot | Slices 1-10 |
+| D-12 Daedric roster convergence | Slice 8 full Daedric price/stigma pilot | Hircine ingress proof, Aedric/cultural pilots |
+| D-13 Daedric stigma decay | Slice 8 full Daedric price/stigma pilot | Non-Daedric commitment, reputation, state, substrate, favor |
+| D-14 Cross-Prince hostility | Slice 8 full Daedric price/stigma pilot beyond one isolated proof | Non-Daedric rivalry and existing Talos/Auri-El behavior |
+| D-17 Werewolf detection source | Slice 9 curse-state pilot | Altmer/Breton/Khajiit static curse architecture notes |
+| D-30 StorageUtil read budget | Phase 12+ performance hardening | Early Pattern Proving if traces remain cheap |
+| D-31 `pdv_author.mjs` compat-patch scope | Phase 19+ compat authoring automation | Manual compat notes and core v3 implementation |
+
+**Verifier command ladder:**
+
+Use the lowest strict mode that proves the slice, then run the combined gate
+before declaring completion:
+
+```text
+node .\tools\pdv_verify.mjs
+node .\tools\pdv_verify.mjs --strict-preflight
+node .\tools\pdv_verify.mjs --strict-skeleton
+node .\tools\pdv_verify.mjs --strict-pattern-proving
+node .\tools\pdv_verify.mjs --strict-preflight --strict-skeleton --strict-pattern-proving
+```
+
+If a slice adds a new verifier mode later, update this ladder and
+`PDV_MOD_SETUP.md` in the same session. A clean compile remains required after
+any `.psc` edit; verifier-only success is not enough for script changes.
+
+**Documentation handoff rule:**
+
+For each completed slice, update only the documents that own changed facts:
+v3 for subsystem/phase status, `PDV_TargetEndStates_1.0.md` for race acceptance
+or product readiness, the relevant race sheet for player-facing experience or
+race-specific build notes, `AGENTS.md` for cross-session decision/status, and
+`PDV_MOD_SETUP.md` for tooling/build commands. Do not copy detailed subsystem
+internals into the target tracker.
+
 ---
 
 ## 22. Risk register
@@ -1766,6 +1988,25 @@ or architecture contract changes.
 ---
 
 ## 26. Revisions
+
+### v3.16 - 2026-05-19 - Implementation handoff hardening
+
+Added Section 21.5 as the operating implementation handoff between the
+architecture and build work. The new handoff defines implementation-ready
+criteria, a reusable handoff-card template, Pattern Proving build order,
+decision blockers, verifier command ladder, and documentation update rules.
+The hardening pass now also defines the first implementation packet checklist,
+source-contract/data-shape requirements, exit/recovery proof expectations, and
+the bridge from the Daedric race-sheet/matrix hardening into Slice 8. No
+subsystem architecture changed; the pass clarifies how to execute the
+already-approved v3 roadmap without cloning incomplete patterns or treating
+compressed design prose as implementation data.
+Follow-up hardening added the concrete Slice 0 and Slice 1 handoff packets.
+Slice 0 records the 2026-05-19 combined strict verifier baseline
+(`PASS=458, WARN=2, INFO=28`, no `FAIL` or `TODO`) and names the known warning
+waivers. Slice 1 now has a build-ready normal-play ingress closeout packet for
+Dunmer portable shrine/home bonus, Bosmer Green Pact violation, and Hircine
+hunt rite micro-proofs.
 
 ### v3.15 - 2026-05-19 - Documentation authority cleanup
 
