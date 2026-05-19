@@ -1,7 +1,7 @@
 # PDV Race Design — Khajiit
 **Last updated:** 2026-05-19
 **Implementation status:** LOCKED (lunar substrate, focused emphasis, road homes, curse posture, and launch hook scope)
-**Status:** Working draft — targets and proposals, not locked specs
+**Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.6)
 
 ---

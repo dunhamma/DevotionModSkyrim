@@ -1,5 +1,7 @@
 # Altmer
 
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Altmer.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; Altmer remains the only partial implementation-spec lock.
+
 > The mortal world is a prison. Every act either reaches toward escape or sinks deeper into the cage Lorkhan built.
 
 ## Who They Worship
@@ -74,7 +76,7 @@ This is the most distinctive mechanic in the mod. Lorkhan — the Corpse-God —
 
 **Faction modifier:** Thalmor Orthodox feels these penalties 50% harder. Psijic Tradition feels them 25% less. The Divine Body takes them at standard weight.
 
-**Design intent:** A player who engages normally with Skyrim's content *will* accumulate minor Tier 3 reactions. This is intentional, but it is lightly weighted. Marriage, homesteads, adoption, and similar mortal-continuity acts should create evocative dissonance, not devastating devotion collapse. The entire mortal world is Lorkhan's creation. For an Altmer, simply *being in Mundus* is already a theological compromise.
+**Design intent:** A player who chooses explicit mortal-continuity or Lorkhan/Shor/Talos-adjacent acts will accumulate minor Tier 3 reactions. This is intentional, but it is lightly weighted and capped. Marriage, homesteads, adoption, Nine Divines infrastructure, and similar authored actions should create evocative dissonance, not devastating devotion collapse. Ordinary travel, ordinary quests, ordinary friendships, and simply being in Mundus are theological context, not automatic penalty triggers.
 
 ### Crisis of Faith
 

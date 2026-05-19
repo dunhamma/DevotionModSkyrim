@@ -1,5 +1,7 @@
 # Orc
 
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Orc.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; hook-costing and reward numbers remain tunable.
+
 > There is one god. He was thrown out. So were you. The question is how you carry the code when the world won't make room for it.
 
 ## Who They Worship

@@ -1,4 +1,4 @@
-# CLAUDE.md - PlayerDevotion (PDV) Mod Project
+# Claude.md - PlayerDevotion (PDV) Mod Project
 
 ## How Claude Works In This Repo
 
@@ -30,7 +30,7 @@ decision history. Claude defers to it.
 | Dev environment, tooling, naming conventions | `PDV_MOD_SETUP.md` |
 | Proven v2 architecture baseline | `PDV_Architecture_v2.md` |
 | Forward v3 roadmap and architecture | `PDV_Architecture_v3.md` |
-| External beta tester expectations | `PDV_BetaTesterBrief.md` |
+| 1.0 product target and per-race acceptance state | `PDV_TargetEndStates_1.0.md` |
 | Papyrus API/source guidance | `references/PAPYRUS_KNOWLEDGE_INTAKE.md` |
 | Race theology and reward contract | `references/PDV_RaceArchitecture_DesignReference.md` |
 | Phase 4 matrices | `references/phase4/` |
@@ -59,7 +59,7 @@ relevant architecture doc instead.
 ## Coexistence With Codex
 
 - `AGENTS.md` is Codex's canonical project context.
-- `CLAUDE.md` is Claude's entrypoint and should stay small.
+- `Claude.md` is Claude's entrypoint and should stay small.
 - Shared docs and scripts can be edited when the user asks, but changes should
   be reflected in the canonical docs when they alter architecture, status, or
   workflow.

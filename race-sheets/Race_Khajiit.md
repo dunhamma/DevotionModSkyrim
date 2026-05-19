@@ -1,5 +1,7 @@
 # Khajiit
 
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Khajiit.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+
 > The moons do not ask to be worshipped. They simply are. And so, beneath them, are you.
 
 ## Who They Worship

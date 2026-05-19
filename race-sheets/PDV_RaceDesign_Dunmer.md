@@ -1,7 +1,7 @@
 # PDV Race Design — Dunmer
 **Last updated:** 2026-05-19
 **Implementation status:** LOCKED (ancestor substrate, focus gate, curse posture, and Daedric deviation option map)
-**Status:** Working draft — targets and proposals, not locked specs
+**Status:** Implementation locked for 1.0 experience shape; launch content weighting remains tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.4)
 
 ---

@@ -10,11 +10,11 @@
 
 Altmer religion is a project: the Apotheosis project. Auri-El, the god of time and the supreme Aldmeri ancestor, escaped Mundus — the mortal plane, the trap. The Altmer want to follow. Every devotional act is a step toward re-achieving the divine nature their ancestors lost when Lorkhan tricked them into creating the mortal world.
 
-The problem — the beautiful, mechanically rich problem — is that Skyrim is Lorkhan's world. Every comfortable thing in it is a concession to Lorkhan's creation: marriage, homesteading, Nord friends, the Companions. Being Dragonborn validates the mortal experiment. Learning the Thu'um, gifted by Kyne who was Shor/Lorkhan's wife, touches the Corpse-God's influence. Entering Sovngarde is entering Shor's hall.
+The problem — the beautiful, mechanically rich problem — is that Skyrim is Lorkhan's world. Some comfortable, story-significant acts become concessions to Lorkhan's creation: marriage, homesteading, the Companions, the Dragonborn declaration, the Thu'um, and Sovngarde. Ordinary existence, ordinary travel, ordinary friendships, and unremarkable quests are not penalty surfaces.
 
-A devout Altmer in Skyrim is constantly compromising. The theology knows it. The Lorkhan Adjacency Penalty is the mod representing the theological cost of simply *being here*.
+A devout Altmer in Skyrim is often compromising. The theology knows it. The Lorkhan Adjacency Penalty represents authored moments where the player materially validates or touches the thing Altmer theology says broke them.
 
-**Core design intent:** Altmer should feel judged by coherence, rupture, and orthodoxy more than by raw devotion volume. Reaching Champion means you navigated the constant penalty pressure and held faith anyway — that's the statement.
+**Core design intent:** Altmer should feel judged by coherence, rupture, and orthodoxy more than by raw devotion volume. Reaching Champion means you navigated recurring authored Lorkhan pressure, kept devotional upkeep positive, and held faith anyway — that's the statement.
 
 ---
 
@@ -119,7 +119,7 @@ This is the defining Altmer mechanic. It fires on specific acts and directly red
 - The Divine Body: penalty x1.0 (standard)
 - Psijic Tradition: penalty x0.75 (more philosophical about mortal plane)
 
-*Design intent (LOCKED):* Tier 3 acts mean a player who engages normally with Skyrim's content accumulates minor penalties constantly. This is intentional — the entire mortal world is Lorkhan's creation. For an Altmer, simply being in Mundus is already a theological compromise. Reaching Champion despite this pressure is the statement.
+*Design intent (LOCKED):* Tier 3 acts are explicit mortal-validation actions, capped and lightly weighted. They should create recognisable dissonance when the player marries, adopts, builds a home, uses Nine Divines infrastructure, or knowingly honors Lorkhan/Shor-positive material. They do not fire from simply existing in Mundus, ordinary travel, ordinary quests, ordinary friendships, or ordinary indoor life. Reaching Champion despite this authored pressure is the statement.
 
 Lorkhan penalties are piety pressure plus narrative reaction, not harsh permanent collapse. Tier 1 can hurt, Tier 2 should meaningfully sting, and Tier 3 should mostly create dissonance and small pressure. Major main-story conflicts that most directly challenge Altmer theology should fire `PDV_State_AltmerCrisis` instead of simple punishment: a flavorful crisis-of-faith beat with a minimal temporary sting to reflect emotional dysregulation, then resolution through continued coherent behavior.
 
@@ -149,7 +149,7 @@ A normal Altmer who performs basic devotional upkeep should trend positive. Lork
 
 **Rejected penalty surfaces:**
 - Walking through Nord towns
-- Having Nord friends
+- Having Nord friends, unless an authored quest/action explicitly turns that friendship into Lorkhan/Shor/Talos validation
 - Sleeping indoors
 - Doing ordinary Skyrim quests
 - Existing as Dragonborn after the first authored crisis or declaration beat
@@ -207,7 +207,7 @@ If the player would not reasonably understand the theological meaning, do not pe
 
 ## Signature Friction
 
-**The Lorkhan Adjacency Penalty is the signature mechanic of Altmer play.** It does not ask permission. Being Dragonborn costs you. Learning Thu'um costs you. Getting married costs you. Building a house costs you. The friction isn't "don't do these things" — the game won't stop you. The friction is: *every engagement with Skyrim's content has a theological price for an Altmer, and that price is always accumulating against your piety.*
+**The Lorkhan Adjacency Penalty is the signature mechanic of Altmer play.** It does not ask permission when an authored trigger fires. Being declared Dragonborn can cost you once. Learning the Thu'um can cost you through curated milestones. Getting married or building a house can cost you because those are explicit mortal-continuity choices. The friction is not that every engagement with Skyrim is taxed; the friction is that certain meaningful engagements have a theological price.
 
 The question the penalty system asks is: **how much of Skyrim are you willing to forgo on Altmer terms?** Some players will turn down questlines for theological reasons. Some will complete them and accept the penalty. Neither approach is wrong — but neither is free.
 
@@ -221,7 +221,7 @@ Altmer neglect is **inconsistency**, not absence.
 
 - **Orthodoxy drift:** An Orthodox Altmer whose ThalmørAlignment drifts from 75 toward the middle because they keep making heterodox choices doesn't feel penalized — they feel increasingly undefined. The enforcement signals that used to generate strong piety stop landing as hard.
 - **Psijic drift:** A Psijic-path player who stops advancing their magical skills, stops reading, stops cultivating themselves — the self-cultivation multiplier that was their advantage fades. They become ordinary.
-- **Lorkhan accumulation:** Not technically "neglect," but: if the Lorkhan penalties are firing regularly (Dragonborn storyline, marriage, Nord friendships) and devotion signals aren't keeping pace, the piety balance slides. The penalties aren't neglect, but they have the same mathematical effect if devotion input doesn't compensate.
+- **Lorkhan accumulation:** Not technically "neglect," but if authored Lorkhan penalties are firing from main-story beats, marriage, homestead, Talos/Shor/Nordic religious support, or other explicit tags and devotion signals are not keeping pace, the piety balance slides. The penalties are capped pressure, not ambient friendship or existence tax, but they have the same mathematical effect if devotion input does not compensate.
 
 The failure mode the mod should make legible: a devout Altmer who fully engaged with Skyrim's content and didn't navigate the theological cost carefully will plateau at Tier 2 and struggle to push into Tier 3. That's not a bug — it's the design. Skyrim is Lorkhan's world.
 

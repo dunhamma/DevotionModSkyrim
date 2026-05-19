@@ -1,5 +1,7 @@
 # Imperial
 
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Imperial.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+
 > Faith is civic duty. But duty has a conscience — and sometimes conscience demands treason.
 
 ## Who They Worship

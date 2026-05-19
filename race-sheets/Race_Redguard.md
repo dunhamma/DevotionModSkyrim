@@ -1,5 +1,7 @@
 # Redguard
 
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Redguard.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+
 > The dead are watching. The blade remembers. The way must be made.
 
 ## Who They Worship

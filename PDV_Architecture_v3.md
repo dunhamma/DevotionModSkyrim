@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-19 (v3.14 - Prisma UI repo boundary)
+Last revised: 2026-05-19 (v3.15 - documentation authority cleanup)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving ingress is partially proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperials/Khajiit proof on the first normal-play ingress slice, while Dunmer portable shrine/home bonus, Bosmer Green Pact, and Hircine hunt rite still need non-debug in-game trigger proof.
 
 ---
@@ -456,7 +456,7 @@ The patron-commitment mechanism (Section 12) reads `IsEligibleForPlayer()` befor
 | `PDV_State_BretonTradition` | KnightsRoad, HiddenArt, GreenWay | Breton | Primary identity chosen explicitly at setup; no silent default; `KnightsRoad = 0`, `HiddenArt = 1`, `GreenWay = 2`; patron offers normally come only from the chosen tradition |
 | `PDV_State_BretonDruidicFork` | Stable, Contested, GreenAccepted, HircineClaimed, Excommunicated, Penitent, Restored | Breton Green Way | Curse-state fork/readout paired with `PDV_RepTrack_DruidicStanding`; `Stable = 0`, `Contested = 1`, `GreenAccepted = 2`, `HircineClaimed = 3`, `Excommunicated = 4`, `Penitent = 5`, `Restored = 6`; Hircine is fork-access, not baseline Breton worship |
 | `PDV_State_RedguardSect` | Crown, Forebear, AshAbah | Redguard | First-run setup choice. `Crown = 0`, `Forebear = 1`, `AshAbah = 2`; fallback is `Forebear`. Crown/Forebear switching requires two sect-coded signal days within seven; AshAbah entry requires a major death, undead, tomb, funerary, or impurity-bearing burden signal. |
-| `PDV_State_DunmerPath` | Ancestor, GoodDaedra, TribunalRemnant | Dunmer | Default Ancestor; promoted by sustained worship |
+| `PDV_State_DunmerAncestorPosture` | Normal, Strained, Silent, RestoredScarred | Dunmer | Curse/restoration posture for the ancestor substrate. Dunmer native focus uses shared patron state; do not implement `PDV_State_DunmerPath`. |
 | `PDV_State_AltmerCrisis` | Stable, Questioning, ResolvedOrthodox, ResolvedHeterodox | Altmer | Temporary crisis-of-faith state for major lore-challenging story points |
 
 Do not add race-specific state tracks whose only job is `Broad` vs `Primary`.
@@ -1597,8 +1597,9 @@ deferred past 1.0.
 This section is the high-level release roadmap. It is intentionally less
 detailed than the subsystem sections above: it names the gates and readiness
 bars that future phase plans must satisfy. Architecture truth stays in this
-document. External tester messaging lives in `PDV_BetaTesterBrief.md` and must
-defer to this section when the two disagree.
+document. `PDV_TargetEndStates_1.0.md` is the product-facing tracker for 1.0
+race acceptance and roadmap traceability; it must defer to this document for
+architecture contracts.
 
 ### 25.1 Roadmap posture
 
@@ -1646,7 +1647,7 @@ Must complete:
 
 - Full 1.0 worship-target scaffold, dev-only by default.
 - Strong substrate scaffolds for Khajiit, Dunmer, and Argonian.
-- Reputation-track and state-track scaffolds for all locked first-release race tracks: ConcordatStanding, ThalmorAlignment, WitchcraftExposure, KnightlyVowIntegrity, DruidicStanding, BosmerPath, OrcLifeMode, NordPantheonBaseline, BretonTradition, RedguardSect, DunmerPath, and AltmerCrisis. Do not scaffold redundant Broad/Primary state tracks such as `PDV_State_ImperialWorship`; shared patron state owns commitment depth.
+- Reputation-track and state-track scaffolds for all locked first-release race tracks: ConcordatStanding, ThalmorAlignment, WitchcraftExposure, KnightlyVowIntegrity, DruidicStanding, BosmerPath, OrcLifeMode, NordPantheonBaseline, BretonTradition, RedguardSect, DunmerAncestorPosture, and AltmerCrisis. Do not scaffold redundant Broad/Primary state tracks such as `PDV_State_ImperialWorship`; shared patron state owns commitment depth.
 - Sacred-place scaffolds for Argonian bed-of-choice, Khajiit road homes, and Orc City/Legion community location, with Orc marked as a contextual mode modifier rather than a strong substrate.
 - Matrix-driven CK authoring support where feasible, especially stance rows, FormList membership, rivalry wiring, and verifier expectations.
 - Dev-only FormList indexes for authoring/dev inspection across tracks, substrates, sacred places, and Daedric pilots. Canonical per-record visibility properties are deferred; FormLists are the live operational visibility surface in this wave.
@@ -1754,16 +1755,26 @@ Ready when:
 - External beta feedback has been addressed or explicitly deferred.
 - The release build reads as vanilla-plus in ordinary play: low spam, no obvious farm loops, and no mandatory religious chore maintenance.
 
-### 25.8 External beta brief
+### 25.8 1.0 product target tracker
 
-`PDV_BetaTesterBrief.md` is the external-facing tester communication doc. It
-explains what testers should expect, how to report issues, and what each beta
-gate means in player terms. It is not architecture authority. If it conflicts
-with this document, update the brief to match v3.
+`PDV_TargetEndStates_1.0.md` is the living product/end-state tracker for
+launch feel, per-race acceptance state, and roadmap traceability. It should not
+restate subsystem internals from v3. When launch expectations change, update
+the target tracker for product acceptance and this roadmap only when the gate
+or architecture contract changes.
 
 ---
 
 ## 26. Revisions
+
+### v3.15 - 2026-05-19 - Documentation authority cleanup
+
+Promoted `PDV_TargetEndStates_1.0.md` as the living product/end-state tracker
+and removed the separate tester-brief surface from the documentation
+architecture. v3 remains the authority for architecture contracts, subsystem
+gates, and beta/launch readiness; the target-end-state tracker owns per-race
+1.0 acceptance and roadmap traceability. No implementation or phase-status
+changes.
 
 ### v3.14 - 2026-05-19 - Prisma UI repo boundary
 
@@ -1893,9 +1904,8 @@ documented Wintersun coexistence.
 Added the high-level roadmap from V3 Preflight through Structural Skeleton,
 Pattern Proving, Technical Beta, Content-Feel Beta, and content-rich 1.0
 launch. This revision locks the split between structural completeness and
-content completeness, keeps unfinished scaffolds dev-only, and identifies
-`PDV_BetaTesterBrief.md` as external tester communication rather than
-architecture authority.
+content completeness, keeps unfinished scaffolds dev-only, and keeps
+architecture authority in this document.
 
 ### v3.0 - 2026-05-16 - Initial forward-architecture draft
 

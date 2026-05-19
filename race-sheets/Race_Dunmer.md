@@ -1,5 +1,7 @@
 # Dunmer
 
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Dunmer.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; launch content weighting remains tunable.
+
 > The ancestors are always watching. The question is not whether you pray — it is whether your prayer carries weight across the ash.
 
 ## Who They Worship

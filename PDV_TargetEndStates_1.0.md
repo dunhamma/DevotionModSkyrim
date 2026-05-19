@@ -1,16 +1,56 @@
-# PDV Target End States — 1.0 Design Draft
-**Created:** 2026-05-18  
-**Status:** Working draft — rough targets, not locked specs  
-**Purpose:** Define what each race's devotion should *feel like* in practice at launch,
-before race modules are built. These targets should guide signal selection, blessing
-design, and tier threshold decisions during implementation.
+# PDV Target End States - 1.0 Product Tracker
+**Created:** 2026-05-18
+**Last updated:** 2026-05-19
+**Status:** Living 1.0 product/end-state tracker
+**Purpose:** Track what each race's devotion should feel like at launch, how
+close each race is to implementation-ready acceptance, and where the 1.0
+roadmap still has gaps. This document owns product feel and launch acceptance;
+`PDV_Architecture_v3.md` owns architecture contracts and subsystem gates.
 
 **Three questions per race:**
-1. **Champion moment** — What does Tier 3 feel like that Tier 2 doesn't? What door opens?
-2. **Signature friction** — What unique daily or behavioral constraint makes this race *feel different to play*?
-3. **Neglect texture** — When devotion decays, does it feel like something specific and thematic, or just a stat going down?
+1. **Champion moment** - What does Tier 3 feel like that Tier 2 doesn't? What door opens?
+2. **Signature friction** - What unique daily or behavioral constraint makes this race *feel different to play*?
+3. **Neglect texture** - When devotion decays, does it feel like something specific and thematic, or just a stat going down?
 
-> These are player-experience targets, not mechanical specs. Treat them as the "north star" when making implementation tradeoffs.
+> These are player-experience targets and acceptance checkpoints, not a second
+> architecture spec. Treat them as the "north star" when making implementation
+> tradeoffs, and defer to v3 when a subsystem contract is in question.
+
+## Documentation Architecture Role
+
+Improve Codebase Architecture review result: keep the documentation modules
+deep rather than merging them into one oversized roadmap. `PDV_Architecture_v3.md`
+owns the implementation architecture, phase gates, and open architectural
+decisions. This document owns launch acceptance and race-roadmap traceability.
+`references/PDV_RaceArchitecture_DesignReference.md` owns locked theology and
+implementation rules. `race-sheets/*.md` owns player-facing race experience and
+race-specific build notes.
+
+## 1.0 Acceptance Tracker
+
+Status values:
+- `Locked`: ready to plan implementation; remaining changes are tuning or content.
+- `Partial`: architecture is stable, but named implementation decisions remain.
+- `Pending`: not yet built or proven.
+
+| Race | Architecture locked | Implementation-spec locked | Hook feasibility checked | Content authored | Verifier-covered | In-game proven |
+|---|---|---|---|---|---|---|
+| Nord | Locked | Locked | Locked | Pending | Pending | Pending |
+| Imperial | Locked | Locked | Locked | Pending | Partial | Partial |
+| Breton | Locked | Locked | Locked | Pending | Pending | Pending |
+| Dunmer | Locked | Locked | Locked | Pending | Partial | Pending |
+| Altmer | Locked | Partial | Partial | Pending | Partial | Partial |
+| Khajiit | Locked | Locked | Locked | Pending | Partial | Partial |
+| Bosmer | Locked | Locked | Partial | Pending | Pending | Pending |
+| Redguard | Locked | Locked | Locked | Pending | Pending | Pending |
+| Orc | Locked | Locked | Partial | Pending | Pending | Pending |
+| Argonian | Locked | Locked | Locked | Pending | Pending | Pending |
+
+Altmer is the only race still partial at implementation-spec level. Remaining
+closeout items are crisis resolution hooks, final crisis trigger list,
+contextual favor lanes, and focused-deity hook posture. Reward magnitudes and
+exact effect values remain tuning work for every race until implementation and
+playtesting prove the feel.
 
 ## Global Contextual Favor Rule
 
@@ -69,7 +109,7 @@ Pilot clearance result: Nord, Imperial, and Redguard cleared the cross-pilot rev
 
 Dunmer contextual-favor clearance result: Dunmer cleared user-experience review on 2026-05-18. The cleared shape is shared ancestor + Good Daedra favor before primary focus, then five focused trigger families each for Azura, Boethiah, and Mephala. Hook feasibility, substrate/focus implementation, curse posture, and Daedric deviation option mapping are now locked; remaining launch work is content weighting and implementation.
 
-Implementation-lock audit result (2026-05-19): all races are architecture-locked, but not all are implementation-spec locked. Nord, Imperial, Breton, Dunmer, Bosmer, Redguard, Orc, Khajiit, and Argonian are implementation-locked. Breton is closed at the explicit tradition setup, all-three-track, normal no-switching, hook feasibility, dawn math, recovery cadence, Hidden Art cover/notoriety, and tradition-authored favor-lane level; reward magnitudes remain tuning work. Redguard is closed at the state/offer and launch-hook-posture level: death-duty is buildable, Tu'whacca uses the Dunmer portable/private shrine pattern rather than a pure Arkay proxy, HoonDing can ship through curated milestone hooks, `MS08` is stage-verified, and Ash'abah social stigma is limited to light authored/custom 1.0 content. Dunmer is closed at the ancestor substrate, focus-gate, curse-posture, portable-shrine, and Daedric-deviation option-map level. Khajiit is closed at the lunar substrate, silent focused-emphasis, road-home circuit, curse posture, ShadowDrift boundary, five launch paths, and launch-hook-posture level. Argonian is closed at the single layered Hist substrate, visible Hist/People/Void layers, gentle Hist distance, one bed-of-choice anchor, Sithis activation threshold, and curse posture level. Altmer is partially closed: shared patron-state use, no generic broad lane, `ThalmorAlignment` bands/start values, and bounded Lorkhan economy are locked; crisis resolution, final crisis triggers, contextual favor lanes, and focused-deity hook posture still need closeout before implementation-lock.
+Implementation-lock audit result (2026-05-19): all races are architecture-locked. Nord, Imperial, Breton, Dunmer, Bosmer, Redguard, Orc, Khajiit, and Argonian are implementation-locked; Altmer is the only remaining partial implementation-spec lock. Breton is closed at the explicit tradition setup, all-three-track, normal no-switching, hook feasibility, dawn math, recovery cadence, Hidden Art cover/notoriety, and tradition-authored favor-lane level; reward magnitudes remain tuning work. Redguard is closed at the state/offer and launch-hook-posture level: death-duty is buildable, Tu'whacca uses the Dunmer portable/private shrine pattern rather than a pure Arkay proxy, HoonDing can ship through curated milestone hooks, `MS08` is stage-verified, and Ash'abah social stigma is limited to light authored/custom 1.0 content. Dunmer is closed at the ancestor substrate, focus-gate, curse-posture, portable-shrine, and Daedric-deviation option-map level. Khajiit is closed at the lunar substrate, silent focused-emphasis, road-home circuit, curse posture, ShadowDrift boundary, five launch paths, and launch-hook-posture level. Argonian is closed at the single layered Hist substrate, visible Hist/People/Void layers, gentle Hist distance, one bed-of-choice anchor, Sithis activation threshold, and curse posture level. Altmer is partially closed: shared patron-state use, no generic broad lane, `ThalmorAlignment` bands/start values, and bounded Lorkhan economy are locked; crisis resolution, final crisis triggers, contextual favor lanes, and focused-deity hook posture still need closeout before implementation-lock.
 
 ---
 
@@ -241,7 +281,7 @@ The **infrastructure ceiling** — you simply cannot do proper burial rites, can
 The **ancestors are always watching** is the subtler ongoing friction. Combat acts, social choices, the things you do to other Dunmer — the ancestor layer interprets all of it. Playing a Dunmer who exploits their own people costs more than it looks like on the surface.
 
 ### Neglect texture
-The ash-prayer going quiet. There's no dramatic punishment — the ancestor layer simply stops generating the small flavor confirmations that told you they were present. 
+The ash-prayer going quiet. There's no dramatic punishment — the ancestor layer simply stops generating the small flavor confirmations that told you they were present.
 
 Dunmer neglect is about **silence**, not punishment. Ancestors don't curse you for drifting. They just stop responding. After weeks of nothing, the ancestral layer has a hollow quality that's hard to describe mechanically but is its own kind of loss.
 
@@ -260,14 +300,14 @@ Vampire note: the ash-prayer going SILENT (ancestors don't speak to undead) is o
 **Altmer economy posture:** Basic devotional upkeep should trend positive: dawn Auri-El observance, study, magic milestones, College/Psijic milestones, and faction-coherent acts are the positive counterweight. Lorkhan pressure uses implementation tags `PDV_ALT_LORKHAN_T1_DIRECT`, `PDV_ALT_LORKHAN_T2_SHOR_ADJ`, `PDV_ALT_LORKHAN_T3_MORTAL_VALIDATION`, `PDV_ALT_LORKHAN_T4_CONTEXT`, and `PDV_ALT_CRISIS_FAITH`. Tier 3 penalties are explicit-action only, capped once per in-game day, and never fire for walking through Nord towns, having Nord friends, sleeping indoors, ordinary quests, or simply continuing to exist as Dragonborn after the authored crisis/declaration beat. If the theological meaning would not be obvious, reject the penalty or surface a first-time Altmer interpretation notification.
 
 ### Champion moment
-The most demanding and most interesting Champion to reach. Getting to Tier 3 as an Altmer means you've maintained devotion while the Lorkhan Adjacency Penalty system was firing constantly — being Dragonborn costs you, visiting Mara's temple costs you, the *Companions questline* costs you. Reaching Champion means you managed all of that and still kept faith.
+The most demanding and most interesting Champion to reach. Getting to Tier 3 as an Altmer means you've maintained devotion while authored Lorkhan pressure kept testing your coherence — the Dragonborn declaration can cost you, visiting Mara's temple can cost you, the *Companions questline* can cost you. Reaching Champion means you managed those explicit collisions and still kept faith.
 
 - **Thalmor Orthodox Champion (Trinimac/Auri-El):** Theological coherence rewarded. Your enforcement acts and martial excellence feel divinely grounded. The Thalmor respond to you as someone who embodies the faith rather than just following orders. Lorkhan penalties hit you hardest (1.5x) AND you still got here — that's the statement.
 - **Divine Body Champion (Magnus/Xarxes):** Scholarship and self-cultivation at its apex. Your magical investment feels like the right path toward the spirits you were before Mundus. College of Winterhold content feels spiritually productive rather than just academically interesting.
 - **Psijic Champion:** The rarest path and the most internally coherent — meditation, the Elder Way, heterodox independence. Lorkhan penalties are softer (0.75x), which means reaching Champion here is more achievable but the penalties still exist. The payoff is a quieter, more self-possessed faith.
 
 ### Signature friction
-The **Lorkhan Adjacency Penalty** is the signature mechanic of the whole Altmer experience, and it's the most aggressive friction in the mod. It's not about what you did wrong — it's about what the mortal world *is* from the Altmer perspective. Simply being Dragonborn fires Tier 2 penalties. Visiting Hall of Valor fires them. Getting married fires them.
+The **Lorkhan Adjacency Penalty** is the signature mechanic of the whole Altmer experience, and it's the most aggressive friction in the mod. It's not about what you did wrong — it's about what certain explicit mortal-world commitments mean from the Altmer perspective. Being declared Dragonborn can fire a Tier 2 beat once. Visiting the Hall of Valor fires when the authored story/location hook proves it. Getting married fires because it is a deliberate mortal-continuity choice.
 
 The question the friction asks is: *how much of Skyrim's content are you willing to engage with on Altmer terms?* Some Altmer players will find themselves turning down questlines for theological reasons — which is exactly the right kind of friction.
 
@@ -450,7 +490,7 @@ Curse posture: `PDV_State_ArgonianHistPosture` uses `Normal = 0`, `Distant = 1`,
 
 ### Priority order for building (suggested)
 1. **Nord** — already the prototype, most vanilla-hook surface
-2. **Orc** — single god, clearest signal logic, mode-ceiling gives natural difficulty curve  
+2. **Orc** — single god, clearest signal logic, mode-ceiling gives natural difficulty curve
 3. **Dunmer** — layered architecture is complex but the ancestor-always-active pattern is distinct
 4. **Altmer** — Lorkhan Adjacency Penalty is implementation-demanding but the proof slice already exists
 5. **Khajiit** — silent emergent patron + lunar substrate has locked launch hooks; implementation should stay careful around signal weighting

@@ -1,6 +1,6 @@
 # PlayerDevotion (PDV) — Race Architecture Design Reference
 **Started:** May 12, 2026
-**Last updated:** May 19, 2026 (race implementation-lock audit through Breton)
+**Last updated:** May 19, 2026 (race implementation-lock audit; Altmer partial closeout remains)
 **Status:** Living reference — race architecture and pre-matrix requirements locked as confirmed
 
 **Current implementation boundary:** Early sections of this reference were
@@ -322,7 +322,7 @@ Rationale:
 - `tamriel-daily-worship-4e201.html` — all 10 races, daily practices, class breakdowns
 - `tamriel-cursed-worship-4e201.html` — vampirism and lycanthropy theological shifts
 - `tamriel-daedric-worship-4e201.html` — all 15 Daedric prince devotional practices
-- `skyrim-gods-reference.jsx` — cross-cultural deity equivalency table
+- `references/skyrim-deity-reference.jsx` - cross-cultural deity equivalency table
 - UESP Wiki: Argonian cosmology (Hist, Sithis, soul return, Varieties of Faith)
 
 ### Key Findings:
@@ -1158,13 +1158,13 @@ Applies to Green Way players as `PDV_RepTrack_DruidicStanding` (`0..100`) plus `
 ```
 EXCOMMUNICATED: triggered on becoming vampire
   Y'ffre devotion halted entirely (not reduced — stopped)
-  
+
 PENITENT: triggered if cured of vampirism
   Y'ffre devotion resumes at 50% rate
   Player must complete ritual act to begin restoration:
     → Visit specific outdoor location (standing stone, ancient grove)
     → Make offering (animal remains, not plant matter — Pact-consistent)
-  
+
 RESTORED: after sustained Pact-aligned behaviour post-ritual
   Y'ffre devotion resumes fully
   Permanent piety/tier scar from excommunication period
@@ -1403,10 +1403,10 @@ Class appeal balance: Native Dunmer focus covers mage/restoration/threshold (`Az
 ```
 Combat signals = acts witnessed by ancestors (honour/shame framework)
   Boethiah adds: trial, overthrow, betrayal-as-test, and self-authorship
-  
+
 Social signals = community solidarity, ancestor consultation, oral history
   Mephala adds: hidden communities, lethal secrets, obligation webs, and necessary lies
-  
+
 Lifestyle/devotional signals = shrine maintenance, offerings, daily ash-prayer practice
   Azura adds: threshold awareness, painful truth, transformation witnessed, and prophetic attentiveness
 ```
@@ -1651,11 +1651,13 @@ TIER 4 — Contextual (no automatic penalty — ThalmørAlignment shift only):
 - The Divine Body: penalty × 1.0 (standard)
 - Psijic Tradition: penalty × 0.75 (more philosophical about mortal plane)
 
-**Design intent (LOCKED):** Tier 3 acts mean a player who engages normally with
-Skyrim's content accumulates minor penalties. This is intentional — the entire
-mortal world is Lorkhan's creation. For an Altmer, simply being in Mundus is
-already a theological compromise. The penalties reflect constant low-grade
-dissonance of Altmer existence.
+**Design intent (LOCKED):** Tier 3 acts are explicit mortal-validation actions,
+capped and lightly weighted. This is intentional — the entire mortal world is
+Lorkhan's creation, but ordinary existence is theological context rather than
+an automatic penalty trigger. The penalties reflect authored moments of
+low-grade dissonance: marriage, adoption, homesteading, Nine Divines
+infrastructure, explicit Nord religious aid, or clearly Lorkhan/Shor-positive
+material.
 
 Lorkhan penalties are piety pressure plus narrative reaction, not harsh permanent collapse. Tier 1 can hurt, Tier 2 should meaningfully sting, and Tier 3 should mostly create dissonance and small pressure. The largest main-story theological collisions should become crisis-of-faith events with flavor and a minimal temporary sting rather than larger permanent punishment.
 
@@ -1685,7 +1687,7 @@ A normal Altmer who performs basic devotional upkeep should trend positive. Lork
 
 **Rejected penalty surfaces:**
 - Walking through Nord towns
-- Having Nord friends
+- Having Nord friends, unless an authored quest/action explicitly turns that friendship into Lorkhan/Shor/Talos validation
 - Sleeping indoors
 - Doing ordinary Skyrim quests
 - Existing as Dragonborn after the first authored crisis or declaration beat

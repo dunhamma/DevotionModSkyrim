@@ -1,5 +1,7 @@
 # Nord
 
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Nord.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+
 > The gods of Skyrim do not ask for prayer. They ask for deeds.
 
 ## Who They Worship

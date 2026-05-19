@@ -1,6 +1,6 @@
 # Player Devotion â€” Mod Development Setup Reference
-**Project:** PlayerDevotion Framework + Race Modules  
-**Engine:** Skyrim Special Edition (SSE)  
+**Project:** PlayerDevotion Framework + Race Modules
+**Engine:** Skyrim Special Edition (SSE)
 **Last Updated:** 4E 201 (update this when your setup changes)
 
 ---
@@ -9,9 +9,13 @@
 
 | File | Purpose |
 |------|---------|
-| `skyrim-gods-reference.jsx` | Cross-cultural deity equivalency table â€” canonical lore reference |
-| `tamriel-daily-worship-4e201.html` | Race-by-race daily practice reference â€” design source document |
+| `references/skyrim-deity-reference.jsx` | Cross-cultural deity equivalency table - canonical lore reference |
+| `references/tamriel-daily-worship-4e201.html` | Race-by-race daily practice reference - design source document |
+| `references/tamriel-cursed-worship-4e201.html` | Race-by-race curse-state religious interpretation source |
+| `references/tamriel-daedric-worship-4e201.html` | Race-by-race Daedric practice source |
 | `PDV_MOD_SETUP.md` | This file â€” dev environment and architecture reference |
+| `PDV_Architecture_v3.md` | Forward architecture, subsystem gates, beta/launch roadmap |
+| `PDV_TargetEndStates_1.0.md` | 1.0 product target, per-race acceptance state, roadmap traceability |
 | `tools/pdv_compile.mjs` | PapyrusCompiler wrapper for stale/all/targeted PDV script compiles |
 | `tools/pdv_verify.mjs` | Read-only verifier for Anvil/MO2/ESP/script wiring drift |
 | `tools/pdv_author.mjs` | Safe overlay-patch authoring helper for supported ESP wiring on existing PDV records |
@@ -110,7 +114,7 @@ PDV_Argonian.esp
 
 ### INI Settings
 
-Navigate to: `Documents\My Games\Skyrim Special Edition\CreationKit.ini`  
+Navigate to: `Documents\My Games\Skyrim Special Edition\CreationKit.ini`
 Add or confirm these values:
 
 ```ini
@@ -125,7 +129,7 @@ bLoadDebugInformation = 1
 bBlockMessageBoxes = 0
 ```
 
-Navigate to: `Documents\My Games\Skyrim Special Edition\CreationKitPrefs.ini`  
+Navigate to: `Documents\My Games\Skyrim Special Edition\CreationKitPrefs.ini`
 Add or confirm:
 
 ```ini
@@ -488,7 +492,7 @@ Consistent prefixing is non-negotiable. It prevents conflicts, makes records fin
 
 Enable detailed Papyrus logging for development.
 
-**Log location:**  
+**Log location:**
 `Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`
 
 **What to look for:**
@@ -499,7 +503,7 @@ error  â† search this to find script errors
 warning â† non-fatal issues worth addressing
 ```
 
-**Recommended log viewer:** Notepad++ with auto-refresh enabled.  
+**Recommended log viewer:** Notepad++ with auto-refresh enabled.
 Open log â†’ Edit â†’ Monitoring (tail -f equivalent).
 
 **Add trace calls to every significant function during development:**
@@ -685,22 +689,22 @@ Check off as you go. If something at step N breaks, the problem is in step N â�
 
 ## Common Errors and Fixes
 
-**CK crashes on load:**  
+**CK crashes on load:**
 Usually a corrupted plugin. Check your load order in MO2. Ensure no plugin has a missing master.
 
-**Script compiles but quest doesn't run:**  
+**Script compiles but quest doesn't run:**
 Confirm `Start Game Enabled` is checked on the quest record in CK. Confirm the script is attached to the quest (Quest â†’ Scripts tab, not just saved in the source folder).
 
-**Trace messages not appearing in Papyrus.0.log:**  
+**Trace messages not appearing in Papyrus.0.log:**
 Confirm `bEnableLogging=1` and `bEnableTrace=1` in the active game/profile INIs, not just CK defaults. For the current `Devotion Dev` runtime, the live Papyrus path is `C:\Users\Admin\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`. There may also be `Papyrus.1.log`; `.0` is usually the newest active session, but verify timestamps instead of assuming.
 
-**Event not firing:**  
+**Event not firing:**
 For Phase 3 Story Manager events, check that the receiver quest is under the correct SM Event Node, that `Shares Event` is checked, and that the receiver quest is not already stuck running. Use `SQV PDV__SM_KillActor` around a kill test and check Papyrus logs for the receiver trace.
 
-**Piety changing unexpectedly:**  
+**Piety changing unexpectedly:**
 Check whether the change is in `PDV.PietyToday` or persistent `PDV.Piety`. Runtime events should only write `PDV.PietyToday`; persistent piety and mirrors should change only after `ProcessDawn()`.
 
-**Story Manager hook firing more than once:**  
+**Story Manager hook firing more than once:**
 For repeatable live events such as kills, duplicates are not handled with one-shot globals. Confirm the receiver quest stops/resets after dispatch, then test rapid kills to verify exactly one routed action per valid kill.
 
 **Parser errors that point at the wrong line:**
@@ -734,7 +738,7 @@ git commit -m "Initial project structure"
 CreationKitPrefs.ini
 ```
 
-Commit after every completed build step. Branch for experimental features.  
+Commit after every completed build step. Branch for experimental features.
 Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doubling`.
 
 ---
@@ -756,6 +760,8 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 **2026-05-18 - PO3 Papyrus Extender dependency:** PDV v3 accepts powerofthree's Papyrus Extender as a hard runtime dependency for event hooks that vanilla Story Manager/player aliases cannot expose cleanly. This also makes Address Library for SKSE Plugins and powerofthree's Tweaks required runtime SKSE-plugin dependencies. These are not ESP masters. Use PO3 for runtime event hooks, not keyword/classification/NPC distribution; that remains offline patcher territory. SPID remains deferred for future cost-benefit review if PDV needs actor-load distribution, outfit lifecycle behavior, or broad dynamic injection that generated patches cannot represent cleanly.
 
 **2026-05-19 - Race end-state implementation-lock pass:** The player-experience lock pass now lives in `PDV_TargetEndStates_1.0.md`, `race-sheets/*.md`, and `references/PDV_RaceArchitecture_DesignReference.md`. Breton is implementation-locked for 1.0 experience shape; reward numbers remain tuning. Altmer is partially closed: shared patron-state use, no generic broad lane, `ThalmorAlignment` bands/start values, crisis-of-faith posture, and bounded Lorkhan economy are locked. Altmer Lorkhan pressure must use explicit tags/hooks, basic devotional upkeep should trend positive, and ordinary existence in Skyrim is not a penalty source. Remaining Altmer closeout is crisis resolution hooks, final crisis trigger list, contextual favor lanes, and focused-deity hook posture.
+
+**2026-05-19 - Documentation authority cleanup:** `PDV_TargetEndStates_1.0.md` is now the living 1.0 product/end-state tracker. Improve Codebase Architecture review result: keep v3 as the deep architecture module, keep the target-end-state doc as the launch acceptance and roadmap-traceability module, keep the race architecture reference as the locked theology/rule module, and keep race sheets as player-facing race-experience modules. The separate beta-brief surface was removed to reduce duplicate beta/launch claims.
 
 **2026-05-10 â€” CK compiler toolchain, revised 2026-05-12:** Source `.psc` files live in `Scripts\Source\`. Compiled `.pex` output to `Scripts\`. Terminal/Codex compiles use `tools\pdv_compile.mjs`, which spawns `PapyrusCompiler.exe` directly with `<script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>`. CK compiler (Ctrl+F7) remains valid for interactive CK work. `compile.ps1`, `skyrimse.ppj`, and Bethesda's shipped `ScriptCompile.bat` are legacy/stale artifacts and should not be used.
 
@@ -791,7 +797,7 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-05-16 - Phase 4 and Phase 6 full closeout proof:** Phase 4 and Phase 6 are now proven in game end to end, not just verifier-clean. The closeout pass covered clean-start origin bootstrap, seeded ledger expectations, patron-only boon grant/removal, rivalry-driven Talos hostile-path transfer against Auri-El across dawn consolidation, and save/load sanity on the proven final state. The Phase 6 pass also exposed a real workflow gap: curated Talos/Auri-El signal testing was not reachable through the previously proven debug surface, so `PDV__ManagerQuest` and `PDV_MCM` were extended with a surfaced curated-signal debug helper rather than relying on an unproven console `cqf` path.
 
-**2026-05-16 - v3 roadmap and beta gates:** `PDV_Architecture_v3.md` now owns the forward roadmap after the proven Phase 4/5/6 baseline. The roadmap separates structural completeness from content completeness, requires V3 Preflight before Phase 7 signal expansion, adds a Structural Skeleton pass for dev-only 1.0 scaffolding, and defines Technical Beta, Content-Feel Beta, and content-rich 1.0 launch readiness. `PDV_BetaTesterBrief.md` is external tester communication only and must defer to v3 for architecture truth.
+**2026-05-16 - v3 roadmap and beta gates:** `PDV_Architecture_v3.md` now owns the forward roadmap after the proven Phase 4/5/6 baseline. The roadmap separates structural completeness from content completeness, requires V3 Preflight before Phase 7 signal expansion, adds a Structural Skeleton pass for dev-only 1.0 scaffolding, and defines Technical Beta, Content-Feel Beta, and content-rich 1.0 launch readiness.
 
 **2026-05-16 - v3 Section 24 cleanup:** `PDV_Architecture_v3.md` now removes already-settled decisions from the open tracker instead of leaving them as recommended-but-open items. Resolved IDs are D-09, D-11, D-15, D-16, D-18, D-24, D-25, D-26, D-27, D-28, D-29, and D-32. The operational defaults are structural completeness first, monolithic 1.0, strong substrates only for Khajiit/Dunmer/Argonian, shrine overlays, Tier 2 broad worship, three-option commitment offers, curse-state pressure without automatic Daedric unlocks, thematic UI by default, in-world patron switching, concrete pattern cloning, FormList-driven MCM ordering, Phase 12 stack-depth benchmarking, and documented Wintersun coexistence.
 

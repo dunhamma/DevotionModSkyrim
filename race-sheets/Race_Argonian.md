@@ -1,5 +1,7 @@
 # Argonian
 
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Argonian.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+
 > The Hist is far away. The people are here. The void is always close. You begin inside absence, not abundance.
 
 ## Who They Worship

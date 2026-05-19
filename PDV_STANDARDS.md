@@ -14,21 +14,30 @@ The repo runs a two-class document system: **LIVING** docs that always reflect c
 
 | Doc | Purpose | Update when |
 |---|---|---|
+| `README.md` | Minimal repository overview | The public repo tagline or high-level project description changes |
+| `Claude.md` | Claude entrypoint that defers to `AGENTS.md` | Claude-specific entrypoint instructions or navigation changes |
 | `AGENTS.md` | Project context, file map, current build status, decisions log | Architecture changes, build status advances, decision lands |
 | `PDV_MOD_SETUP.md` | Dev environment, tooling, variable reference, build order | Tool version changes, new variable added, build step changes |
 | `PDV_Architecture_v2.md` | Architecture spec, data model, quest topology, phase plan, revision log | Architecture changes, phase status changes, major design decisions |
 | `PDV_Architecture_v3.md` | Forward architecture, v3 subsystem plan, roadmap to beta and launch | v3 architecture changes, roadmap gates change, beta/launch readiness definitions change |
-| `PDV_BetaTesterBrief.md` | External-facing beta tester communication; not architecture authority | Tester expectations, beta instructions, or launch communication changes |
+| `PDV_TargetEndStates_1.0.md` | 1.0 product target, per-race end-state acceptance, and roadmap traceability | Launch target changes, per-race acceptance state changes, end-state roadmap tracking changes |
 | `archive/completed-phase-docs-*/README.md` | Archive index for completed phase walkthroughs and summaries | The archive set changes or a completed phase moves out of the root workflow |
 | `PDV_SkyrimConsoleReference.md` | Skyrim console command reference for testing | Console command source correction or new verified test command |
 | `PDV_STANDARDS.md` (this file) | Operating rules | A rule changes; an anti-pattern is observed; a new rule is needed |
 | `references/PAPYRUS_KNOWLEDGE_INTAKE.md` | Papyrus/API/source-layer guidance | Papyrus reference strategy changes or new verified API-source learnings |
+| `references/PDV_Anvil_MO2_MCP_Intake.md` | Anvil MO2 MCP tool-surface and setup intake | MO2 MCP endpoint, plugin tooling, or optional binary status changes |
+| `references/PDV_BosmerPactModel_Planning.md` | Ratified Bosmer Old Contract / Green Pact model | Bosmer Pact commitment, compliance, violation, or renunciation rules change |
+| `references/PDV_V3_Preflight_SmokeChecklist.md` | V3 Preflight smoke-test checklist | V3 Preflight smoke path or acceptance evidence changes |
 | `references/PDV_RaceArchitecture_DesignReference.md` | Race architecture reference and pre-matrix design requirements | Race theology decisions, curse behavior, quest weighting, reward contract, or signal-matrix requirements change |
 | `references/phase4/*.md`, `references/phase4/*.csv` | Phase 4 matrix scaffold, signal matrixes, and cross-validation notes | Matrix scope changes, stance/Daedric crosswalk changes, or implementation-facing Phase 4 design decisions land |
 | `references/vanilla-gameplay/*` | Vanilla Skyrim gameplay mechanics, CK data surfaces, and immersive UX reference backbone | Gameplay source correction, new signal hook source, CK table expansion, UX research update, or PDV gameplay-design implication changes |
 | `race-sheets/*.md` | Race-by-race player-facing design sheets and overview | Race architecture, gameplay expression, curse behavior, reward contract, or custom-content priority changes |
 | `references/skyrim-deity-reference.jsx` | Cross-cultural deity table | Lore correction surfaces; new pantheon mapping needed |
 | `references/tamriel-daily-worship-4e201.html` | Race-by-race daily practice source | Should not change — third-party source design doc |
+| `references/tamriel-cursed-worship-4e201.html` | Race-by-race curse-state religious interpretation source | Curse-state lore correction or locked curse interpretation changes |
+| `references/tamriel-daedric-worship-4e201.html` | Race-by-race Daedric practice source | Daedric lore correction or locked Daedric-path interpretation changes |
+| `docs/agents/*.md` | Agent issue-tracker, triage-label, and domain-doc instructions | Agent workflow metadata, issue tracker, or domain-doc routing changes |
+| `native/DevotionPrismaBridge/README.md` | Native Prisma bridge implementation notes | Prisma bridge build, payload, or runtime integration details change |
 | `skills/*/SKILL.md` | Local Codex workflow skills for repeated PDV tasks | Repeated workflow pain changes, project paths change, or skill instructions drift |
 
 Anything not on this list is ARCHIVE or should not exist in the repo.
@@ -431,4 +440,3 @@ The files under `archive/` are frozen source material. The inherited HOUSECARL_*
 ---
 
 *End of PDV_STANDARDS.*
-

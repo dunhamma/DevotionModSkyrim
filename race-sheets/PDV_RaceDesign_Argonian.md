@@ -1,7 +1,7 @@
 # PDV Race Design — Argonian (Saxhleel)
 **Last updated:** 2026-05-19
 **Implementation status:** LOCKED (single layered substrate, bed of choice, Hist distance, Sithis activation, and curse posture)
-**Status:** Working draft — targets and proposals, not locked specs
+**Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §4.3, §10.10)
 
 ---

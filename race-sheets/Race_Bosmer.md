@@ -1,5 +1,7 @@
 # Bosmer
 
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Bosmer.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; hook-costing and reward numbers remain tunable.
+
 > The Pact was not a promise. It was a contract. And contracts have terms.
 
 ## Who They Worship

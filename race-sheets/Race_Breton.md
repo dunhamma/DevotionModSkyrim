@@ -1,5 +1,7 @@
 # Breton
 
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Breton.md`, `PDV_TargetEndStates_1.0.md`, and `references/PDV_RaceArchitecture_DesignReference.md`; reward numbers remain tunable.
+
 > Half the court prays at the chapel. The other half meets in the cellar. Some attend both.
 
 ## Who They Worship

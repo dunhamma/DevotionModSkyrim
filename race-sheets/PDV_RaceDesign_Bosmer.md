@@ -1,6 +1,6 @@
 # PDV Race Design — Bosmer
 **Last updated:** 2026-05-18
-**Status:** Working draft — targets and proposals, not locked specs
+**Status:** Implementation locked for 1.0 experience shape; hook-costing and reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.7)
 **Extended spec:** See references/PDV_BosmerPactModel_Planning.md for full Old Contract details.
 
