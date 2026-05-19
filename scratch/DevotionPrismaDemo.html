@@ -1,0 +1,1418 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Devotion Prisma Demo</title>
+  <style>
+:root {
+  color-scheme: dark;
+  font-family: "Inter", "Segoe UI", "Trebuchet MS", sans-serif;
+  background: transparent;
+  color: #f5f0e6;
+  --ink: #10100f;
+  --panel: rgba(19, 19, 17, 0.92);
+  --panel-strong: rgba(31, 30, 26, 0.96);
+  --line: rgba(224, 204, 158, 0.28);
+  --line-strong: rgba(224, 204, 158, 0.48);
+  --gold: #d8b35a;
+  --gold-soft: rgba(216, 179, 90, 0.18);
+  --green: #8bbf9f;
+  --blue: #9db8d2;
+  --red: #c97968;
+  --muted: #bcb3a2;
+  --shadow: rgba(0, 0, 0, 0.56);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: transparent;
+}
+
+button {
+  font: inherit;
+}
+
+.devotion-shell {
+  display: none;
+  width: min(840px, calc(100vw - 72px));
+  max-height: calc(100vh - 72px);
+}
+
+body.panel-visible {
+  background:
+    radial-gradient(circle at 26% 18%, rgba(216, 179, 90, 0.13), transparent 28%),
+    linear-gradient(135deg, rgba(8, 9, 8, 0.38), rgba(9, 16, 19, 0.58));
+}
+
+body.panel-visible .devotion-shell {
+  display: block;
+}
+
+.devotion-panel {
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(48, 43, 34, 0.28), transparent 160px),
+    var(--panel);
+  box-shadow: 0 22px 78px var(--shadow);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.patron-mark {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--line-strong);
+  border-radius: 50%;
+  background:
+    linear-gradient(145deg, rgba(216, 179, 90, 0.22), rgba(139, 191, 159, 0.08)),
+    rgba(0, 0, 0, 0.18);
+  color: var(--gold);
+  line-height: 1;
+}
+
+.patron-mark span,
+.toast__mark,
+.list-symbol,
+.symbol-swatch__mark {
+  color: var(--gold);
+}
+
+.patron-mark span {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.symbol {
+  width: 86%;
+  height: 86%;
+  display: block;
+  margin: auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.8;
+}
+
+.symbol .symbol-fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.symbol .symbol-thin {
+  stroke-width: 1.5;
+}
+
+.title-block {
+  min-width: 0;
+}
+
+.eyebrow,
+.label {
+  margin: 0;
+  color: var(--green);
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 3px 0 7px;
+  color: #fff8e8;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.summary {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.state-pill {
+  min-width: 92px;
+  border: 1px solid rgba(157, 184, 210, 0.42);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: var(--blue);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.tab {
+  min-height: 44px;
+  border: 0;
+  border-radius: 0;
+  background: rgba(16, 16, 14, 0.76);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.tab:hover,
+.tab:focus-visible {
+  color: #fff8e8;
+  background: rgba(48, 43, 34, 0.78);
+  outline: none;
+}
+
+.tab.is-active {
+  color: #fff8e8;
+  background: rgba(64, 51, 29, 0.74);
+  box-shadow: inset 0 -2px 0 var(--gold);
+}
+
+.tab-panel {
+  display: none;
+  padding: 22px 24px 24px;
+}
+
+.tab-panel.is-active {
+  display: block;
+}
+
+.patron-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.92fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.deity-block,
+.meter-block,
+.today-grid article,
+.debug-item,
+.relation-strip {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(9, 9, 8, 0.28);
+}
+
+.deity-block,
+.meter-block {
+  padding: 18px;
+}
+
+.deity-block strong {
+  display: block;
+  margin-top: 8px;
+  color: #fff8e8;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 34px;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.deity-block p {
+  margin: 12px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.meter-block {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+}
+
+.meter-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: #fff8e8;
+}
+
+.meter-row--subtle {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.piety-meter {
+  height: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(216, 179, 90, 0.36);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.26);
+}
+
+.piety-meter span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green), var(--gold) 72%, #f5df9b);
+  transition: width 260ms ease;
+}
+
+.relation-strip {
+  margin-top: 16px;
+  padding: 14px 16px;
+}
+
+.relation-strip p,
+.event-list,
+.rite-list {
+  margin: 0;
+}
+
+.relation-list,
+.event-list,
+.rite-list {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.relation-item,
+.event-list li,
+.rite-list li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.event-list li.has-symbol,
+.rite-list li.has-symbol {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding-left: 0;
+}
+
+.relation-item::before,
+.event-list li::before,
+.rite-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.63em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.relation-item.is-warning::before {
+  background: var(--red);
+}
+
+.relation-item.is-good::before,
+.rite-list li::before {
+  background: var(--green);
+}
+
+.event-list li.has-symbol::before,
+.rite-list li.has-symbol::before {
+  display: none;
+}
+
+.list-symbol {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(216, 179, 90, 0.42);
+  border-radius: 50%;
+  color: var(--gold);
+}
+
+.list-symbol .symbol {
+  width: 82%;
+  height: 82%;
+  stroke-width: 2.8;
+}
+
+.list-content {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.list-content strong {
+  color: #fff8e8;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.list-content span {
+  overflow-wrap: anywhere;
+}
+
+.list-item.is-warning .list-symbol {
+  border-color: rgba(201, 121, 104, 0.54);
+  color: var(--red);
+}
+
+.list-item.is-good .list-symbol {
+  border-color: rgba(139, 191, 159, 0.54);
+  color: var(--green);
+}
+
+.today-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.today-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.today-grid article,
+.today-stat {
+  padding: 18px;
+}
+
+.today-grid article {
+  min-height: 228px;
+}
+
+.today-stat {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(9, 9, 8, 0.28);
+}
+
+.today-stat strong {
+  display: block;
+  margin-top: 8px;
+  color: #fff8e8;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.today-stat p {
+  margin: 9px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.today-grid .label {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.debug-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.debug-item {
+  min-height: 82px;
+  padding: 14px;
+}
+
+.debug-key {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--blue);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.debug-value {
+  color: #fff8e8;
+  font-size: 19px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.symbol-gallery {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(9, 9, 8, 0.28);
+  padding: 16px;
+}
+
+.symbol-gallery[hidden] {
+  display: none;
+}
+
+.symbol-gallery .label {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.symbol-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.symbol-swatch {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  min-height: 86px;
+  border: 1px solid rgba(224, 204, 158, 0.18);
+  border-radius: 8px;
+  padding: 10px 8px;
+  color: var(--gold);
+}
+
+.symbol-swatch__mark {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+}
+
+.symbol-swatch__label {
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.empty {
+  color: var(--muted);
+}
+
+.toast-stack {
+  position: fixed;
+  right: 28px;
+  bottom: 32px;
+  z-index: 50;
+  display: grid;
+  gap: 10px;
+  width: min(380px, calc(100vw - 48px));
+  pointer-events: none;
+}
+
+.toast {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(216, 179, 90, 0.18), rgba(15, 16, 14, 0.9) 38%),
+    rgba(15, 16, 14, 0.94);
+  box-shadow: 0 14px 40px var(--shadow);
+  padding: 12px 14px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: toast-in 220ms ease forwards, toast-out 360ms ease forwards;
+  animation-delay: 0ms, var(--toast-life, 4200ms);
+}
+
+.toast__mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(216, 179, 90, 0.5);
+  border-radius: 50%;
+}
+
+.toast__mark .symbol {
+  width: 84%;
+  height: 84%;
+  stroke-width: 3;
+}
+
+.toast__title {
+  margin: 0 0 2px;
+  color: #fff8e8;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.toast__text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.toast.is-good {
+  border-color: rgba(139, 191, 159, 0.58);
+}
+
+.toast.is-warning {
+  border-color: rgba(201, 121, 104, 0.6);
+}
+
+.demo-controls {
+  position: fixed;
+  left: 28px;
+  bottom: 32px;
+  z-index: 60;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: min(430px, calc(100vw - 56px));
+}
+
+.demo-controls[hidden] {
+  display: none;
+}
+
+.demo-controls button {
+  min-height: 36px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: rgba(16, 16, 14, 0.88);
+  color: #fff8e8;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.demo-controls button:hover,
+.demo-controls button:focus-visible {
+  border-color: var(--gold);
+  outline: none;
+}
+
+@keyframes toast-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (max-width: 720px) {
+  body {
+    overflow: auto;
+    place-items: start center;
+    padding: 14px 0 96px;
+  }
+
+  .devotion-shell {
+    width: calc(100vw - 28px);
+    max-height: none;
+  }
+
+  .panel-header,
+  .patron-layout,
+  .today-overview,
+  .today-grid,
+  .debug-grid,
+  .symbol-gallery__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-header {
+    gap: 12px;
+  }
+
+  .state-pill {
+    justify-self: start;
+  }
+
+  .patron-mark {
+    width: 52px;
+    height: 52px;
+    font-size: 28px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .tab-panel,
+  .panel-header {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .toast-stack {
+    right: 14px;
+    bottom: 14px;
+    width: calc(100vw - 28px);
+  }
+
+  .demo-controls {
+    left: 14px;
+    bottom: 14px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main class="devotion-shell" aria-label="PlayerDevotion status">
+    <section class="devotion-panel" aria-labelledby="pdv-title">
+      <header class="panel-header">
+        <div class="patron-mark" aria-hidden="true">
+          <span id="pdv-mark"></span>
+        </div>
+        <div class="title-block">
+          <p class="eyebrow">PlayerDevotion</p>
+          <h1 id="pdv-title">Devotion</h1>
+          <p class="summary" id="pdv-summary">No patron has answered yet.</p>
+        </div>
+        <div class="state-pill" id="pdv-status">Waiting</div>
+      </header>
+
+      <nav class="tabs" aria-label="Devotion views">
+        <button class="tab is-active" type="button" data-tab="patron" aria-selected="true">Patron</button>
+        <button class="tab" type="button" data-tab="today" aria-selected="false">Today</button>
+        <button class="tab" type="button" data-tab="debug" aria-selected="false">Debug</button>
+      </nav>
+
+      <section class="tab-panel is-active" id="tab-patron" data-panel="patron">
+        <div class="patron-layout">
+          <article class="deity-block">
+            <span class="label">Current patron</span>
+            <strong id="pdv-patron">None</strong>
+            <p id="pdv-patron-note">Choose a path through play, prayer, and consequence.</p>
+          </article>
+
+          <div class="meter-block" aria-label="Devotion tier and piety">
+            <div class="meter-row">
+              <span>Tier</span>
+              <strong id="pdv-tier-label">None</strong>
+            </div>
+            <div class="piety-meter" aria-hidden="true">
+              <span id="pdv-piety-bar"></span>
+            </div>
+            <div class="meter-row meter-row--subtle">
+              <span id="pdv-piety-text">0 piety</span>
+              <span id="pdv-next-text">Seeker at 10</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relation-strip" id="pdv-relations" aria-label="Devotional relations">
+          <p>No rivalries or cultural stance notes are active.</p>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="tab-today" data-panel="today">
+        <div class="today-overview" aria-label="Today summary">
+          <article class="today-stat">
+            <span class="label">Today remembered</span>
+            <strong id="pdv-today-delta">0</strong>
+            <p id="pdv-today-mood">No devotional acts have settled yet.</p>
+          </article>
+          <article class="today-stat">
+            <span class="label">Dawn passage</span>
+            <strong id="pdv-drift-label">Quiet</strong>
+            <p id="pdv-dawn-status">Nothing is waiting for dawn.</p>
+          </article>
+        </div>
+        <div class="today-grid">
+          <article>
+            <span class="label">Recent signs</span>
+            <ul class="event-list" id="pdv-acts"></ul>
+          </article>
+          <article>
+            <span class="label">Rites nearby</span>
+            <ul class="rite-list" id="pdv-rites"></ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="tab-debug" data-panel="debug">
+        <div class="debug-grid" id="pdv-debug"></div>
+        <div class="symbol-gallery" id="pdv-symbol-gallery" hidden>
+          <span class="label">Symbol set</span>
+          <div class="symbol-gallery__grid" id="pdv-symbol-grid"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <aside class="toast-stack" id="pdv-toasts" aria-live="polite" aria-atomic="false"></aside>
+  <aside class="demo-controls" id="pdv-demo-controls" aria-label="Toast preview controls" hidden>
+    <button type="button" data-demo-toast="favor">Favor</button>
+    <button type="button" data-demo-toast="dawn">Dawn</button>
+    <button type="button" data-demo-toast="neglect">Neglect</button>
+    <button type="button" data-demo-toast="tier">Tier</button>
+    <button type="button" data-demo-toast="rivalry">Rivalry</button>
+  </aside>
+
+  <script>
+(() => {
+  const thresholds = [
+    { label: "Seeker", value: 10 },
+    { label: "Devoted", value: 50 },
+    { label: "Champion", value: 150 },
+  ];
+  const svgNamespace = "http://www.w3.org/2000/svg";
+  const symbolAliases = {
+    auriel: "auri-el",
+    "auri el": "auri-el",
+    auriEl: "auri-el",
+    kynareth: "kyne",
+    system: "journal",
+  };
+  const gallerySymbols = [
+    ["kyne", "Kyne"],
+    ["talos", "Talos"],
+    ["auri-el", "Auri-El"],
+    ["akatosh", "Akatosh"],
+    ["arkay", "Arkay"],
+    ["dibella", "Dibella"],
+    ["julianos", "Julianos"],
+    ["mara", "Mara"],
+    ["stendarr", "Stendarr"],
+    ["zenithar", "Zenithar"],
+    ["dawn", "Dawn"],
+    ["journal", "Journal"],
+  ];
+  const symbolSpecs = {
+    journal: [
+      ["path", { d: "M11 14v23c5 -2 9 -2 13 1V15c-4 -3 -8 -3 -13 -1Z" }],
+      ["path", { d: "M24 15v23c4 -3 8 -3 13 -1V14c-5 -2 -9 -2 -13 1Z" }],
+      ["path", { d: "M15 20h5M15 26h5M28 20h5M28 26h5", class: "symbol-thin" }],
+    ],
+    dawn: [
+      ["path", { d: "M8 33h32" }],
+      ["path", { d: "M15 33a9 9 0 0 1 18 0" }],
+      ["path", { d: "M24 10v7M12 18l5 5M36 18l-5 5" }],
+    ],
+    kyne: [
+      ["path", { d: "M10 29c7 -10 16 -13 28 -7" }],
+      ["path", { d: "M14 34c7 -5 14 -5 23 0" }],
+      ["path", { d: "M24 10v13M20 15l4 -5 4 5" }],
+    ],
+    talos: [
+      ["path", { d: "M24 8v30" }],
+      ["path", { d: "M16 18h16" }],
+      ["path", { d: "M19 38h10" }],
+      ["path", { d: "M18 13l6 -5 6 5" }],
+    ],
+    "auri-el": [
+      ["circle", { cx: "24", cy: "24", r: "8" }],
+      ["path", { d: "M24 7v7M24 34v7M7 24h7M34 24h7M12 12l5 5M31 31l5 5M36 12l-5 5M17 31l-5 5" }],
+    ],
+    akatosh: [
+      ["path", { d: "M15 9h18M15 39h18M17 11c0 8 14 8 14 18M31 37c0 -8 -14 -8 -14 -18" }],
+      ["path", { d: "M19 24h10", class: "symbol-thin" }],
+    ],
+    arkay: [
+      ["circle", { cx: "24", cy: "24", r: "13" }],
+      ["path", { d: "M24 11v26M14 24h20" }],
+    ],
+    dibella: [
+      ["path", { d: "M24 17c3 -7 10 -7 11 -1 1 6 -7 10 -11 18 -4 -8 -12 -12 -11 -18 1 -6 8 -6 11 1Z" }],
+      ["circle", { cx: "24", cy: "24", r: "3", class: "symbol-thin" }],
+    ],
+    julianos: [
+      ["path", { d: "M24 8l4 12 12 4 -12 4 -4 12 -4 -12 -12 -4 12 -4 4 -12Z" }],
+      ["path", { d: "M24 17v14M17 24h14", class: "symbol-thin" }],
+    ],
+    mara: [
+      ["path", { d: "M11 25c8 -13 18 -13 26 0" }],
+      ["path", { d: "M15 25v12h18V25" }],
+      ["path", { d: "M20 37v-8h8v8" }],
+    ],
+    stendarr: [
+      ["path", { d: "M24 8l14 6v10c0 8 -6 14 -14 17 -8 -3 -14 -9 -14 -17V14l14 -6Z" }],
+      ["path", { d: "M24 15v17M17 23h14" }],
+    ],
+    zenithar: [
+      ["path", { d: "M15 32h18l4 6H11l4 -6Z" }],
+      ["path", { d: "M18 19l8 -8 5 5 -8 8" }],
+      ["path", { d: "M14 23l8 8" }],
+    ],
+  };
+
+  const nodes = {
+    title: document.getElementById("pdv-title"),
+    status: document.getElementById("pdv-status"),
+    mark: document.getElementById("pdv-mark"),
+    summary: document.getElementById("pdv-summary"),
+    patron: document.getElementById("pdv-patron"),
+    patronNote: document.getElementById("pdv-patron-note"),
+    tierLabel: document.getElementById("pdv-tier-label"),
+    pietyBar: document.getElementById("pdv-piety-bar"),
+    pietyText: document.getElementById("pdv-piety-text"),
+    nextText: document.getElementById("pdv-next-text"),
+    todayDelta: document.getElementById("pdv-today-delta"),
+    todayMood: document.getElementById("pdv-today-mood"),
+    driftLabel: document.getElementById("pdv-drift-label"),
+    dawnStatus: document.getElementById("pdv-dawn-status"),
+    relations: document.getElementById("pdv-relations"),
+    acts: document.getElementById("pdv-acts"),
+    rites: document.getElementById("pdv-rites"),
+    debug: document.getElementById("pdv-debug"),
+    symbolGallery: document.getElementById("pdv-symbol-gallery"),
+    symbolGrid: document.getElementById("pdv-symbol-grid"),
+    toasts: document.getElementById("pdv-toasts"),
+    demoControls: document.getElementById("pdv-demo-controls"),
+  };
+
+  const fallbackState = {
+    title: "Devotion",
+    status: "Waiting",
+    patron: "None",
+    patronNote: "Choose a path through play, prayer, and consequence.",
+    summary: "No patron has answered yet.",
+    tier: 0,
+    tierLabel: "None",
+    piety: 0,
+    pietyToday: 0,
+    todayMood: "No devotional acts have settled yet.",
+    driftLabel: "Quiet",
+    dawnStatus: "Nothing is waiting for dawn.",
+    originRace: "Unknown",
+    patronState: "Unset",
+    acts: ["No devotional acts have been recorded today."],
+    rites: ["No rites are available yet."],
+    relations: [],
+    debug: {},
+  };
+
+  let state = { ...fallbackState };
+
+  const normalizeSymbol = (value, fallback = "journal") => {
+    const key = text(value, fallback).trim().toLowerCase();
+    return symbolAliases[key] || key || fallback;
+  };
+
+  const makeSvgElement = (tagName, attributes = {}) => {
+    const element = document.createElementNS(svgNamespace, tagName);
+    Object.entries(attributes).forEach(([key, value]) => {
+      element.setAttribute(key, value);
+    });
+    return element;
+  };
+
+  const createSymbol = (symbolName) => {
+    const normalized = normalizeSymbol(symbolName);
+    const spec = symbolSpecs[normalized] || symbolSpecs.journal;
+    const svg = makeSvgElement("svg", {
+      class: "symbol",
+      viewBox: "0 0 48 48",
+      preserveAspectRatio: "xMidYMid meet",
+      focusable: "false",
+      "aria-hidden": "true",
+    });
+    spec.forEach(([tagName, attributes]) => {
+      svg.appendChild(makeSvgElement(tagName, attributes));
+    });
+    return svg;
+  };
+
+  const renderSymbol = (node, symbolName) => {
+    clear(node);
+    node.appendChild(createSymbol(symbolName));
+  };
+
+  const text = (value, fallback = "") => {
+    if (value === undefined || value === null || value === "") {
+      return fallback;
+    }
+    return String(value);
+  };
+
+  const numberOrZero = (value) => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+
+  const tierName = (tier) => {
+    const numeric = numberOrZero(tier);
+    if (numeric >= 3) return "Champion";
+    if (numeric >= 2) return "Devoted";
+    if (numeric >= 1) return "Seeker";
+    return "None";
+  };
+
+  const nextThresholdText = (piety) => {
+    const next = thresholds.find((threshold) => piety < threshold.value);
+    if (!next) {
+      return "Champion path";
+    }
+    return `${next.label} at ${next.value}`;
+  };
+
+  const signedText = (value) => {
+    const numeric = numberOrZero(value);
+    const rounded = Math.round(numeric * 10) / 10;
+    const rendered = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+    return rounded > 0 ? `+${rendered}` : rendered;
+  };
+
+  const eventAliases = {
+    piety: "favor",
+    gain: "favor",
+    piety_gain: "favor",
+    dawn_settle: "dawn",
+    dawn_settled: "dawn",
+    decay: "neglect",
+    warning: "neglect",
+    tier_up: "tier",
+    tier_change: "tier",
+    rival: "rivalry",
+  };
+
+  const eventName = (payload = {}) => {
+    const rawName = text(payload.event || payload.type || payload.kind, "").trim().toLowerCase();
+    return eventAliases[rawName] || rawName;
+  };
+
+  const deityName = (payload = {}) => text(payload.deity || payload.deityName || payload.patron, text(state.patron, "Devotion"));
+
+  const possessive = (value) => {
+    const name = text(value, "Devotion");
+    return name.endsWith("s") ? `${name}'` : `${name}'s`;
+  };
+
+  const contextName = (payload = {}) => text(payload.context || payload.act || payload.source || payload.label, "");
+
+  const eventLanguage = {
+    favor: {
+      tone: "good",
+      symbol: (payload) => payload.symbol || payload.mark || deityName(payload),
+      title: (payload) => `${deityName(payload)} remembers`,
+      message: (payload) => {
+        const context = contextName(payload);
+        return context ? `${context} did not pass unseen.` : "Your act did not pass unseen.";
+      },
+      listTitle: (payload) => contextName(payload) || "Favor remembered",
+      listText: (payload) => text(payload.text || payload.message, `${deityName(payload)} took notice.`),
+    },
+    dawn: {
+      tone: "neutral",
+      symbol: () => "dawn",
+      title: () => "Dawn settles",
+      message: () => "Your prayers settle into practice.",
+      listTitle: () => "Dawn passage",
+      listText: () => "The day's signs wait for dawn.",
+    },
+    neglect: {
+      tone: "warning",
+      symbol: () => "journal",
+      title: () => "Rites thinning",
+      message: (payload) => `${possessive(deityName(payload))} rites have grown quiet.`,
+      listTitle: () => "Rites thinning",
+      listText: (payload) => `${possessive(deityName(payload))} path needs attention.`,
+    },
+    tier: {
+      tone: "good",
+      symbol: (payload) => payload.symbol || payload.mark || deityName(payload),
+      title: () => "Devotion deepens",
+      message: (payload) => `${deityName(payload)} names you ${text(payload.tierLabel || payload.tierName, "faithful")}.`,
+      listTitle: (payload) => text(payload.tierLabel || payload.tierName, "Tier changed"),
+      listText: (payload) => `${possessive(deityName(payload))} path has deepened.`,
+    },
+    rivalry: {
+      tone: "warning",
+      symbol: (payload) => payload.symbol || payload.mark || text(payload.rivalSymbol || payload.rival, "journal"),
+      title: () => "Rivalry stirs",
+      message: (payload) => `${text(payload.rival || payload.rivalName, "A rival path")} turns colder toward this devotion.`,
+      listTitle: () => "Rivalry stirred",
+      listText: (payload) => `${text(payload.rival || payload.rivalName, "A rival path")} has taken note.`,
+    },
+  };
+
+  const resolveEventPayload = (payload = {}) => {
+    if (!payload || typeof payload === "string") {
+      return payload;
+    }
+
+    const name = eventName(payload);
+    const language = eventLanguage[name];
+    if (!language) {
+      return { ...payload };
+    }
+
+    const resolved = { ...payload, event: name };
+    resolved.tone = text(payload.tone, language.tone);
+    resolved.symbol = text(payload.symbol || payload.mark, language.symbol(payload));
+    resolved.title = text(payload.title, language.title(payload));
+    resolved.message = text(payload.message || payload.text, language.message(payload));
+    resolved.listTitle = text(payload.listTitle || payload.title || payload.label, language.listTitle(payload));
+    resolved.listText = text(payload.listText || payload.text || payload.message, language.listText(payload));
+    return resolved;
+  };
+
+  const asArray = (value) => {
+    if (!value) return [];
+    return Array.isArray(value) ? value : [value];
+  };
+
+  const clear = (node) => {
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+  };
+
+  const appendEmpty = (node, message) => {
+    clear(node);
+    const item = document.createElement("li");
+    item.className = "empty";
+    item.textContent = message;
+    node.appendChild(item);
+  };
+
+  const appendSymbolMark = (node, symbolName) => {
+    const mark = document.createElement("span");
+    mark.className = "list-symbol";
+    renderSymbol(mark, symbolName);
+    node.appendChild(mark);
+  };
+
+  const renderList = (node, items, emptyMessage) => {
+    clear(node);
+    const list = asArray(items).filter(Boolean);
+    if (!list.length) {
+      appendEmpty(node, emptyMessage);
+      return;
+    }
+
+    list.forEach((item) => {
+      const li = document.createElement("li");
+      if (typeof item === "string") {
+        li.textContent = item;
+      } else {
+        const displayItem = resolveEventPayload(item);
+        const tone = text(displayItem.tone, "");
+        const symbol = text(displayItem.symbol || displayItem.mark, "");
+        li.className = `list-item${tone ? ` is-${tone}` : ""}${symbol ? " has-symbol" : ""}`;
+        if (symbol) {
+          appendSymbolMark(li, symbol);
+        }
+
+        const content = document.createElement("span");
+        content.className = "list-content";
+
+        const title = document.createElement("strong");
+        title.textContent = text(displayItem.listTitle || displayItem.title || displayItem.label, "");
+        content.appendChild(title);
+
+        const details = document.createElement("span");
+        const amount = displayItem.amount === undefined ? "" : `(${signedText(displayItem.amount)})`;
+        const message = text(displayItem.listText || displayItem.text || displayItem.message, "");
+        details.textContent = [message, amount].filter(Boolean).join(" ");
+        content.appendChild(details);
+        li.appendChild(content);
+      }
+      node.appendChild(li);
+    });
+  };
+
+  const renderRelations = (relations) => {
+    clear(nodes.relations);
+    const items = asArray(relations).filter(Boolean);
+    if (!items.length) {
+      const paragraph = document.createElement("p");
+      paragraph.className = "empty";
+      paragraph.textContent = "No rivalries or cultural stance notes are active.";
+      nodes.relations.appendChild(paragraph);
+      return;
+    }
+
+    const list = document.createElement("ul");
+    list.className = "relation-list";
+    items.forEach((item) => {
+      const li = document.createElement("li");
+      const displayItem = typeof item === "string" ? item : resolveEventPayload(item);
+      const tone = typeof displayItem === "string" ? "" : text(displayItem.tone, "");
+      li.className = `relation-item${tone ? ` is-${tone}` : ""}`;
+      li.textContent = typeof displayItem === "string"
+        ? displayItem
+        : text(displayItem.listText || displayItem.text || displayItem.label || displayItem.message, "");
+      list.appendChild(li);
+    });
+    nodes.relations.appendChild(list);
+  };
+
+  const renderDebug = (payload) => {
+    clear(nodes.debug);
+    const debug = {
+      Patron: payload.patron,
+      Tier: payload.tierLabel || tierName(payload.tier),
+      Piety: payload.piety,
+      Today: payload.pietyToday,
+      Origin: payload.originRace,
+      State: payload.patronState,
+      ...payload.debug,
+    };
+
+    Object.entries(debug).forEach(([key, value]) => {
+      const item = document.createElement("div");
+      item.className = "debug-item";
+
+      const label = document.createElement("span");
+      label.className = "debug-key";
+      label.textContent = key;
+
+      const output = document.createElement("div");
+      output.className = "debug-value";
+      output.textContent = text(value, "None");
+
+      item.append(label, output);
+      nodes.debug.appendChild(item);
+    });
+  };
+
+  const render = (payload = {}) => {
+    state = { ...fallbackState, ...payload };
+    const piety = Math.max(0, Math.min(200, numberOrZero(state.piety)));
+    const pietyPercent = Math.min(100, Math.round((piety / 150) * 100));
+    const patronName = text(state.patron, "None");
+
+    nodes.title.textContent = text(state.title, patronName === "None" ? "Devotion" : patronName);
+    nodes.status.textContent = text(state.status, "Live");
+    renderSymbol(nodes.mark, state.symbol || state.mark || patronName || "journal");
+    nodes.summary.textContent = text(state.summary, "No patron has answered yet.");
+    nodes.patron.textContent = patronName;
+    nodes.patronNote.textContent = text(state.patronNote, "Choose a path through play, prayer, and consequence.");
+    nodes.tierLabel.textContent = text(state.tierLabel, tierName(state.tier));
+    nodes.pietyBar.style.width = `${pietyPercent}%`;
+    nodes.pietyText.textContent = `${piety} piety`;
+    nodes.nextText.textContent = text(state.nextText, nextThresholdText(piety));
+    nodes.todayDelta.textContent = signedText(state.pietyToday);
+    nodes.todayMood.textContent = text(state.todayMood, fallbackState.todayMood);
+    nodes.driftLabel.textContent = text(state.driftLabel, fallbackState.driftLabel);
+    nodes.dawnStatus.textContent = text(state.dawnStatus, fallbackState.dawnStatus);
+
+    renderRelations(state.relations);
+    renderList(nodes.acts, state.acts || state.recentActs, "No devotional acts have been recorded today.");
+    renderList(nodes.rites, state.rites, "No rites are available yet.");
+    renderDebug(state);
+  };
+
+  const removeToast = (toast) => {
+    if (toast.parentElement) {
+      toast.parentElement.removeChild(toast);
+    }
+  };
+
+  const showToast = (toastPayload = {}) => {
+    const copy = resolveEventPayload(toastPayload);
+    const toast = document.createElement("section");
+    const tone = text(copy.tone, "neutral");
+    const duration = Math.max(1800, numberOrZero(copy.duration) || 4200);
+
+    toast.className = `toast is-${tone}`;
+    toast.style.setProperty("--toast-life", `${duration}ms`);
+
+    const mark = document.createElement("div");
+    mark.className = "toast__mark";
+    renderSymbol(mark, copy.symbol || copy.mark || state.symbol || state.mark || state.patron || "journal");
+
+    const body = document.createElement("div");
+    const title = document.createElement("p");
+    title.className = "toast__title";
+    title.textContent = text(copy.title, "Devotion");
+
+    const message = document.createElement("p");
+    message.className = "toast__text";
+    message.textContent = text(copy.message || copy.text, "Your path is remembered.");
+
+    body.append(title, message);
+    toast.append(mark, body);
+    nodes.toasts.prepend(toast);
+
+    window.setTimeout(() => removeToast(toast), duration + 700);
+  };
+
+  const handlePayload = (payload) => {
+    if (payload.toast) {
+      showToast(payload.toast);
+    }
+
+    asArray(payload.toasts).forEach((toast, index) => {
+      window.setTimeout(() => showToast(toast), index * 700);
+    });
+
+    if (payload.mode === "toast") {
+      return;
+    }
+
+    render(payload);
+  };
+
+  const handleOverlayPayload = (payload) => {
+    if (payload.toast) {
+      showToast(payload.toast);
+    }
+
+    asArray(payload.toasts).forEach((toast, index) => {
+      window.setTimeout(() => showToast(toast), index * 700);
+    });
+  };
+
+  document.querySelectorAll(".tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const selected = tab.dataset.tab;
+      document.querySelectorAll(".tab").forEach((candidate) => {
+        const active = candidate.dataset.tab === selected;
+        candidate.classList.toggle("is-active", active);
+        candidate.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      document.querySelectorAll(".tab-panel").forEach((panel) => {
+        panel.classList.toggle("is-active", panel.dataset.panel === selected);
+      });
+    });
+  });
+
+  const renderSymbolGallery = () => {
+    clear(nodes.symbolGrid);
+    gallerySymbols.forEach(([symbolName, labelText]) => {
+      const swatch = document.createElement("div");
+      swatch.className = "symbol-swatch";
+
+      const mark = document.createElement("div");
+      mark.className = "symbol-swatch__mark";
+      renderSymbol(mark, symbolName);
+
+      const label = document.createElement("span");
+      label.className = "symbol-swatch__label";
+      label.textContent = labelText;
+
+      swatch.append(mark, label);
+      nodes.symbolGrid.appendChild(swatch);
+    });
+  };
+
+  window.PDVBridge = {
+    receiveJson(payloadText) {
+      try {
+        const payload = typeof payloadText === "string" ? JSON.parse(payloadText || "{}") : payloadText || {};
+        document.body.classList.add("panel-visible");
+        handlePayload(payload);
+      } catch (error) {
+        nodes.status.textContent = "Bad JSON";
+        appendEmpty(nodes.acts, error instanceof Error ? error.message : "Could not parse payload.");
+      }
+    },
+    receiveOverlayJson(payloadText) {
+      try {
+        const payload = typeof payloadText === "string" ? JSON.parse(payloadText || "{}") : payloadText || {};
+        handleOverlayPayload(payload);
+      } catch (error) {
+        showToast({
+          symbol: "journal",
+          tone: "warning",
+          title: "Prisma payload",
+          message: error instanceof Error ? error.message : "Could not parse payload.",
+        });
+      }
+    },
+    showToast,
+    render,
+  };
+
+  window.ReceivePDVJson = (payloadText) => window.PDVBridge.receiveJson(payloadText);
+  window.ReceivePDVOverlayJson = (payloadText) => window.PDVBridge.receiveOverlayJson(payloadText);
+
+  const demoToasts = {
+    favor: { event: "favor", deity: "Kyne", symbol: "kyne", context: "The clean hunt" },
+    dawn: { event: "dawn" },
+    neglect: { event: "neglect", deity: "Kyne" },
+    tier: { event: "tier", deity: "Kyne", symbol: "kyne", tierLabel: "Devoted" },
+    rivalry: { event: "rivalry", rival: "Auri-El", rivalSymbol: "auri-el" },
+  };
+
+  window.PDVDemo = () => {
+    window.PDVBridge.receiveJson({
+      title: "Kyne",
+      status: "Live",
+      symbol: "kyne",
+      patron: "Kyne",
+      patronNote: "Native Nord practice. Clean hunts, open sky, and storms strengthen this path.",
+      summary: "Kyne's favor is steady; the day's acts lean toward reverence rather than routine.",
+      tier: 2,
+      tierLabel: "Devoted",
+      piety: 72,
+      pietyToday: 8,
+      originRace: "Nord",
+      patronState: "Active patron",
+      acts: [
+        { event: "favor", deity: "Kyne", symbol: "kyne", context: "Clean hunt", text: "Honored Kyne without waste.", amount: 4 },
+        { event: "favor", deity: "Kyne", symbol: "dawn", context: "Open sky", text: "Rested beneath weather and stars.", amount: 3 },
+        { event: "favor", deity: "Kyne", symbol: "journal", context: "Mercy noted", text: "Spared a fleeing animal.", amount: 1 }
+      ],
+      todayMood: "The day leans toward reverence rather than routine.",
+      driftLabel: "Settling",
+      dawnStatus: "At dawn, today's signs will fold into Kyne's ledger.",
+      rites: [
+        { symbol: "dawn", title: "Dawn prayer", text: "Pray before taking the road." },
+        { symbol: "kyne", title: "Clean hunt", text: "Take only what the day requires." },
+        { symbol: "journal", title: "Weather rite", text: "Stand in the weather without complaint." }
+      ],
+      relations: [
+        { tone: "good", text: "Native practice: Nord rites answer clearly." },
+        { event: "rivalry", rival: "Auri-El", listText: "Auri-El reverence remains distant from this path." }
+      ],
+      debug: {
+        "Patron FormID": "0x04000D62",
+        "Origin Global": 1,
+        "Last Event": "SleepOutside"
+      },
+      toasts: [demoToasts.favor, demoToasts.dawn, demoToasts.neglect, demoToasts.tier, demoToasts.rivalry]
+    });
+  };
+
+  render(fallbackState);
+
+  if (true) {
+    nodes.demoControls.hidden = false;
+    nodes.symbolGallery.hidden = false;
+    renderSymbolGallery();
+    nodes.demoControls.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-demo-toast]");
+      if (!button) return;
+      showToast(demoToasts[button.dataset.demoToast]);
+    });
+    window.setTimeout(() => window.PDVDemo(), 250);
+  }
+})();
+
+  </script>
+</body>
+</html>
