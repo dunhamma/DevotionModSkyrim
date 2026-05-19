@@ -30,6 +30,7 @@ const IMPORT_ROOTS = [
   DEVOTION_SOURCE,
   path.join(ANVIL_ROOT, "mods", "SKSE Script Sources - Compile Only", "scripts", "source"),
   path.join(ANVIL_ROOT, "mods", "PapyrusUtil AE - Scripting Utility Functions", "Scripts", "Source"),
+  path.join(ANVIL_ROOT, "mods", "powerofthree's Papyrus Extender", "Source", "scripts"),
   path.join(STOCK_GAME, "Data", "Source", "Scripts"),
   SKYUI_HEADERS_SOURCE,
 ];
@@ -123,6 +124,7 @@ function parseArgs(argv) {
     strictPreflight: false,
     strictSkeleton: false,
     strictPatternProving: false,
+    strictPhase7: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -156,6 +158,8 @@ function parseArgs(argv) {
       args.strictSkeleton = true;
     } else if (arg === "--strict-pattern-proving") {
       args.strictPatternProving = true;
+    } else if (arg === "--strict-phase7") {
+      args.strictPhase7 = true;
     } else if (arg === "-h" || arg === "--help") {
       usage(null, 0);
     } else {
@@ -187,6 +191,7 @@ function usage(error = null, exitCode = 2) {
     "  --strict-preflight    Pass --strict-preflight to the verifier.",
     "  --strict-skeleton     Pass --strict-skeleton to the verifier.",
     "  --strict-pattern-proving Pass --strict-pattern-proving to the verifier.",
+    "  --strict-phase7       Pass --strict-phase7 to the verifier.",
     "  --allow-warnings      Do not convert Papyrus warnings into failures.",
   ].join("\n");
 
@@ -301,6 +306,9 @@ function runVerifier(args) {
   }
   if (args.strictPatternProving) {
     verifierArgs.push("--strict-pattern-proving");
+  }
+  if (args.strictPhase7) {
+    verifierArgs.push("--strict-phase7");
   }
 
   const result = spawnSync(process.execPath, verifierArgs, {

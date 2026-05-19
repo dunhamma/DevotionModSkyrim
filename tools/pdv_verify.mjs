@@ -47,6 +47,18 @@ const SLICE1_SIGNAL_RECEIVER_MANIFEST = path.join(
   "authoring",
   "PDV_Slice1SignalReceivers.manifest.json",
 );
+const PHASE7_SIGNAL_RECEIVER_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase7SignalReceivers.manifest.json",
+);
+const PATCH_RULES_DIR = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "patch-rules",
+);
 const MANAGER_PATRON_WIRE_PATCH = "PDV_ManagerPatronWirePatch.esp";
 const MCM_WIRE_PATCH = "PDV_MCMWirePatch.esp";
 const RETIRED_OVERLAY_PATCHES = [MANAGER_PATRON_WIRE_PATCH, MCM_WIRE_PATCH];
@@ -227,6 +239,16 @@ const SLICE1_SIGNAL_RECEIVER_DEFINITIONS = [
     recordType: "ACTI",
     scriptName: "PDV_EventSignalActivator",
     routeId: 34,
+    requiredOriginRace: -1,
+  },
+];
+
+const PHASE7_SIGNAL_RECEIVER_DEFINITIONS = [
+  {
+    recordEdid: "PDV_ACTI_TalosShrineDefianceSignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 35,
     requiredOriginRace: -1,
   },
 ];
@@ -426,11 +448,18 @@ const PATTERN_PROVING_MANIFEST = path.join(
 );
 
 class Verifier {
-  constructor({ strictPhase3 = false, strictPreflight = false, strictSkeleton = false, strictPatternProving = false } = {}) {
+  constructor({
+    strictPhase3 = false,
+    strictPreflight = false,
+    strictSkeleton = false,
+    strictPatternProving = false,
+    strictPhase7 = false,
+  } = {}) {
     this.strictPhase3 = strictPhase3;
     this.strictPreflight = strictPreflight;
     this.strictSkeleton = strictSkeleton;
     this.strictPatternProving = strictPatternProving;
+    this.strictPhase7 = strictPhase7;
     this.findings = [];
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
@@ -490,6 +519,14 @@ class Verifier {
     }
   }
 
+  phase7Gap(check, detail, filePath = null) {
+    if (this.strictPhase7) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   async run() {
     this.checkPaths();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
@@ -507,6 +544,8 @@ class Verifier {
       this.checkPhase3Records();
       this.checkSkeletonScaffold();
       this.checkPatternProving();
+      this.checkPhase7();
+      this.checkOfflinePatcherRules();
       this.checkPreflightOverlayPatch();
     }
     this.checkScripts();
@@ -1071,6 +1110,42 @@ class Verifier {
     this.checkSlice1SignalReceiverRecords();
   }
 
+  checkPhase7() {
+    this.checkPhase7SignalReceiverManifest();
+    this.checkPhase7SignalReceiverRecords();
+  }
+
+  checkOfflinePatcherRules() {
+    if (!exists(PATCH_RULES_DIR)) {
+      this.info("Offline patch rule manifests", "Patch-rules directory is not present yet.", PATCH_RULES_DIR);
+      return;
+    }
+
+    const files = fs.readdirSync(PATCH_RULES_DIR, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".json"))
+      .map((entry) => path.join(PATCH_RULES_DIR, entry.name))
+      .sort((left, right) => left.localeCompare(right));
+
+    if (!files.length) {
+      this.info("Offline patch rule manifests", "Patch-rules directory exists but has no JSON manifests yet.", PATCH_RULES_DIR);
+      return;
+    }
+
+    this.pass("Offline patch rule manifests", `Found ${files.length} patch-rule manifest(s).`, PATCH_RULES_DIR);
+    for (const filePath of files) {
+      try {
+        const parsed = JSON.parse(fs.readFileSync(filePath, "utf8"));
+        if (parsed.ruleType === "pdv_patch_rules_v0" && Array.isArray(parsed.rules)) {
+          this.pass("Offline patch rule manifest", `${path.basename(filePath)} parsed and declares pdv_patch_rules_v0.`, filePath);
+        } else {
+          this.warn("Offline patch rule manifest", `${path.basename(filePath)} parsed, but does not look like a pdv_patch_rules_v0 manifest.`, filePath);
+        }
+      } catch (error) {
+        this.fail("Offline patch rule manifest", `${path.basename(filePath)} could not be parsed: ${error.message}`, filePath);
+      }
+    }
+  }
+
   checkPatternProvingManifest() {
     if (exists(PATTERN_PROVING_MANIFEST)) {
       this.pass("V3 Pattern Proving manifest", "Pattern proving manifest exists.", PATTERN_PROVING_MANIFEST);
@@ -1091,6 +1166,22 @@ class Verifier {
         "V3 Slice 1 signal receiver manifest",
         "Slice 1 signal receiver CK record manifest is missing.",
         SLICE1_SIGNAL_RECEIVER_MANIFEST,
+      );
+    }
+  }
+
+  checkPhase7SignalReceiverManifest() {
+    if (exists(PHASE7_SIGNAL_RECEIVER_MANIFEST)) {
+      this.pass(
+        "Phase 7 signal receiver manifest",
+        "Phase 7 signal receiver CK record manifest exists.",
+        PHASE7_SIGNAL_RECEIVER_MANIFEST,
+      );
+    } else {
+      this.phase7Gap(
+        "Phase 7 signal receiver manifest",
+        "Phase 7 signal receiver CK record manifest is missing.",
+        PHASE7_SIGNAL_RECEIVER_MANIFEST,
       );
     }
   }
@@ -1254,6 +1345,45 @@ class Verifier {
       this.checkObjectPropertyTarget("V3 Slice 1 signal receiver property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.patternGap.bind(this));
       this.checkScalarProperty("V3 Slice 1 signal receiver property", props, "RouteId", definition.routeId, this.patternGap.bind(this));
       this.checkScalarProperty("V3 Slice 1 signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.patternGap.bind(this));
+    }
+  }
+
+  checkPhase7SignalReceiverRecords() {
+    for (const definition of PHASE7_SIGNAL_RECEIVER_DEFINITIONS) {
+      const record = this.recordsByEdid.get(definition.recordEdid);
+      const detail = this.recordDetails.get(definition.recordEdid);
+      if (!record || !detail) {
+        this.phase7Gap(
+          "Phase 7 signal receiver record",
+          `${definition.recordEdid} is not present yet; manual CK/xEdit proof-record creation remains pending.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      if (record.type !== definition.recordType) {
+        this.fail(
+          "Phase 7 signal receiver record",
+          `${definition.recordEdid} has type ${record.type}, expected ${definition.recordType}.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      this.pass("Phase 7 signal receiver record", `${definition.recordEdid} exists as ${definition.recordType}.`, PDV_ESP);
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.phase7Gap("Phase 7 signal receiver script", `${definition.scriptName} is not attached to ${definition.recordEdid}.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("Phase 7 signal receiver script", `${definition.scriptName} is attached to ${definition.recordEdid}.`, PDV_ESP);
+      const props = propertyMap(script);
+      this.checkObjectPropertyTarget("Phase 7 signal receiver property", props, "PDV_EventBusService", "PDV_EventBus", this.phase7Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 7 signal receiver property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase7Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 7 signal receiver property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase7Gap.bind(this));
+      this.checkScalarProperty("Phase 7 signal receiver property", props, "RouteId", definition.routeId, this.phase7Gap.bind(this));
+      this.checkScalarProperty("Phase 7 signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.phase7Gap.bind(this));
     }
   }
 
@@ -1968,6 +2098,7 @@ class Verifier {
     }
 
     this.checkPreflightSourceContracts();
+    this.checkPhase7SourceContracts();
   }
 
   checkPreflightSourceContracts() {
@@ -2057,6 +2188,50 @@ class Verifier {
       "RouteDunmerPlayerHomeBonus",
       "RouteGreenPactViolation",
       "RouteHircineHuntRite",
+    ]);
+  }
+
+  checkPhase7SourceContracts() {
+    this.checkSourceContains("Phase 7 source", "PDV_PlayerEvents", [
+      "PO3_Events_Alias.RegisterForShoutAttack(Self)",
+      "Event OnShoutAttack(Shout akShout)",
+      "PDV_EventBusService.RouteShoutAttack(GetActorRef(), akShout)",
+    ]);
+    this.checkSourceContains("Phase 7 source", "PDV_EventBus", [
+      "Function RouteShoutAttack(Actor playerRef, Shout shoutUsed)",
+      "Function RouteTalosShrineDefiance()",
+      "PDV_Manager.HandleShoutAttack(eventType, playerRef, shoutUsed, \"eventbus_\" + eventType)",
+      "PDV_Manager.HandleTalosShrineDefiance(\"eventbus_\" + eventType)",
+    ]);
+    this.checkSourceContains("Phase 7 source", "PDV_EventTypes", [
+      "EVT_TALOS_SHRINE_DEFIANCE = 35",
+      "EVT_SHOUT_ATTACK = 40",
+    ]);
+    this.checkSourceContains("Phase 7 source", "PDV__ManagerQuest", [
+      "Function HandleTalosShrineDefiance(String reason)",
+      "Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, String reason)",
+      "ApplyConcordatPressure(-15, \"talos_shrine_\" + reason)",
+      "AwardCuratedSignal(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None)",
+    ]);
+    this.checkSourceContains("Phase 7 source", "PDV_EventSignalActivator", [
+      "Int Property ROUTE_TALOS_SHRINE_DEFIANCE = 35 AutoReadOnly",
+      "PDV_EventBusService.RouteTalosShrineDefiance()",
+    ]);
+    this.checkSourceContains("Phase 7 source", "PDV_DeityBase", [
+      "Float Function ScoreRepeatableAction(Int eventType, Float delta, Int dailyCap, Float cooldownDays)",
+      "String keyPrefix = \"PDV.Event.\" + eventType",
+      "String countKey = keyPrefix + \".Count\"",
+      "String lastFireKey = keyPrefix + \".LastFire\"",
+    ]);
+    this.checkSourceContains("Phase 7 source", "PDV_Deity_Kyne", [
+      "Int Property EVT_SHOUT_ATTACK = 40 AutoReadOnly",
+      "Float Property DELTA_SHOUT_ATTACK = 0.35 Auto",
+      "ScoreRepeatableAction(eventType, DELTA_SHOUT_ATTACK, SHOUT_DAILY_CAP, SHOUT_COOLDOWN_DAYS)",
+    ]);
+    this.checkSourceContains("Phase 7 source", "PDV_Deity_Talos", [
+      "Int Property EVT_SHOUT_ATTACK = 40 AutoReadOnly",
+      "Float Property DELTA_SHOUT_ATTACK = 0.5 Auto",
+      "ScoreRepeatableAction(eventType, DELTA_SHOUT_ATTACK, SHOUT_DAILY_CAP, SHOUT_COOLDOWN_DAYS)",
     ]);
   }
 
@@ -2496,6 +2671,7 @@ function parseArgs(argv) {
     strictPreflight: false,
     strictSkeleton: false,
     strictPatternProving: false,
+    strictPhase7: false,
   };
 
   for (const arg of argv) {
@@ -2509,8 +2685,10 @@ function parseArgs(argv) {
       args.strictSkeleton = true;
     } else if (arg === "--strict-pattern-proving") {
       args.strictPatternProving = true;
+    } else if (arg === "--strict-phase7") {
+      args.strictPhase7 = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -2527,6 +2705,7 @@ const verifier = new Verifier({
   strictPreflight: args.strictPreflight,
   strictSkeleton: args.strictSkeleton,
   strictPatternProving: args.strictPatternProving,
+  strictPhase7: args.strictPhase7,
 });
 const findings = await verifier.run();
 const counts = verifier.counts();

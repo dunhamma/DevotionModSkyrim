@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-19 (v3.18 - Slice 1 runtime proof closeout)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records.
+Last revised: 2026-05-20 (v3.20 - Phase 19 tooling foundation kickoff)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 source/tooling implementation is in progress.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 code/tooling now covers PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, and the hidden Talos shrine proof-record contract, but CK proof and exact Civil War one-shot wiring remain open.
 
 ---
 
@@ -19,7 +19,7 @@ Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Pro
 - Patron-only, cumulative-by-tier boon assignment.
 - `PDV_MCM` dev surface (Status + Debug only), framework-attached.
 - Curated-signal helpers (`AwardCuratedSignal*`) for CK-driven devotional events.
-- Local toolchain: `pdv_compile.mjs`, `pdv_verify.mjs`, `pdv_author.mjs`.
+- Local toolchain: `pdv_compile.mjs`, `pdv_verify.mjs`, `pdv_author.mjs`, `pdv_patch.mjs`.
 
 v3 plans everything past that point: signal expansion, the per-race overlay subsystems the locked race architecture requires, Daedric path architecture, curse-state handling, neglect, decay, the player-facing UX surface, the content authoring pipeline, mod compatibility, and the path to a 1.0 release.
 
@@ -252,6 +252,33 @@ those are design axes only. Implementation uses event IDs, curated signal IDs,
 per-deity `ScoreAction()` / `ScoreCuratedSignal()`, and optional track or
 substrate modifiers. Do not add bucket globals, bucket StorageUtil keys, or a
 generic race bucket quest to satisfy older reference wording.
+
+### 5.7 Current Phase 7 packet (2026-05-19)
+
+The current implementation packet is intentionally narrow and Nord/Imperial
+first:
+
+- `PDV_PlayerEvents.psc` now registers
+  `PO3_Events_Alias.RegisterForShoutAttack(Self)` and routes
+  `OnShoutAttack(Shout akShout)` through `PDV_EventBus`.
+- `PDV_EventTypes.psc` now reserves `35` for hidden Talos shrine defiance and
+  `40` for shout use.
+- `PDV_EventBus.psc` now exposes `RouteShoutAttack(...)` and
+  `RouteTalosShrineDefiance()`, both of which stay manager-facing rather than
+  writing devotion state directly.
+- `PDV__ManagerQuest.psc` now owns `HandleShoutAttack(...)` and
+  `HandleTalosShrineDefiance(...)`. The shrine helper routes the Talos curated
+  signal and applies Concordat pressure in one place.
+- `PDV_DeityBase.psc` now provides a reusable deity-side repeatable-action
+  helper for daily cap plus cooldown enforcement, and the live Phase 7 users are
+  `PDV_Deity_Kyne.psc` and `PDV_Deity_Talos.psc` for ambient shout scoring.
+- `PDV_EventSignalActivator.psc` can now route a hidden Talos shrine proof
+  surface through `RouteId = 35`. The record contract is documented in
+  `references/authoring/PDV_Phase7SignalReceivers.manifest.json`.
+
+Still intentionally out of scope for this packet: crime/arrest Story Manager
+events, broad deity-roster expansion, and guessed Civil War hooks. Civil War
+one-shots must still be verified from local game data before CK wiring.
 
 ---
 
@@ -1238,6 +1265,14 @@ This is mostly the same pipeline as Phase 6's Talos/Auri-El work. The big lever 
 - Contextual-favor ability spell + magic effect record creation (currently fully manual).
 - FormList membership (already supported).
 
+Current tool reality: `pdv_author.mjs` now treats VMAD array work as a
+first-class planning/reporting boundary instead of a vague unsupported note.
+When a tracked manifest asks for `IntArray`, `FloatArray`, `StringArray`, or
+`ObjectArray` work, the helper emits an explicit manual follow-up packet with
+the target record, script/property, intended payload, and verifier readback
+expectation. Array writes themselves remain manual CK/xEdit work until the
+Mutagen bridge can emit them safely.
+
 ### 17.2 Add-a-substrate workflow
 
 1. Create `PDV_Substrate_<Name>.psc` extending `PDV_SubstrateBase`. Implement `RegisterForSubstrateEvents()` and aggregate-metric scoring.
@@ -1268,7 +1303,18 @@ The verifier needs to scale. v3 expectations:
 
 ### 17.6 Offline classification and distribution patcher
 
-PDV should build its own **offline Mutagen-backed patcher** for KID/SPID/SkyPatcher-like classification and distribution work instead of making those runtime frameworks hard dependencies for core 1.0.
+PDV should build its own **offline Mutagen-backed patcher** for
+KID/SPID/SkyPatcher-like classification and distribution work instead of
+making those runtime frameworks hard dependencies for core 1.0.
+
+That direction now has a real planning-first foundation: `tools/pdv_patch.mjs`
+exists as a v0 dry-run patcher. It reads tracked
+`pdv_patch_rules_v0` manifests under `references/authoring/patch-rules/`,
+validates their schema strictly, reads the resolved `Devotion Dev` load order
+through the same Mutagen/MO2 context already used by `pdv_author.mjs` and
+`pdv_verify.mjs`, resolves winning target records, and emits deterministic
+plan output for review/automation. The first tracked example manifest is
+tooling-only and must not be treated as approved live content.
 
 Working name: `tools/pdv_patch.mjs` or a dedicated Mutagen/Synthesis-style patcher. The exact host can change, but the architecture is:
 
@@ -1277,6 +1323,11 @@ Working name: `tools/pdv_patch.mjs` or a dedicated Mutagen/Synthesis-style patch
 3. Resolve target records from the winning load order.
 4. Emit one generated patch plugin, e.g. `PDV_ClassificationPatch.esp`, with overrides only where PDV needs added keywords, FormList entries, NPC spells/perks/items, or lightweight record tweaks.
 5. Verify the generated patch with `pdv_verify.mjs` before treating it as a supported artifact.
+
+Current v0 scope closes Steps 1-3 and the review side of Step 4. It does not
+write a generated ESP yet. That is deliberate: schema, load-order, and
+target-resolution determinism are proven first so later patch emission lands on
+a trustworthy planning surface instead of bypassing review.
 
 This is inspired by KID, SPID, and SkyPatcher, but it is intentionally **patch-build-time**, not runtime:
 
@@ -1420,7 +1471,7 @@ excellent reusable example per subsystem, then clone.
 | **16** | Neglect subsystem (per-deity neglect effects, max 3 active) | Phase 14 | Neglect spells apply/remove at dawn; broad-worship suppresses |
 | **17** | Decay model (linear with tier-floor + grace) | Phase 14 | Decay applies at dawn; floors respected; curse/track modifiers compose |
 | **18** | Player-facing UI (player MCM tab, status spell, notification policy) | Phase 14 | Thematic display default; numeric override behind toggle |
-| **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Add-a-deity workflow time roughly halved vs. Phase 6; first generated classification patch can add PDV keywords/FormList entries from rules |
+| **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Planning-first patcher validates rules against the resolved load order, `pdv_author.mjs` emits explicit manual follow-up packets for array work, and later generated classification patches can add PDV keywords/FormList entries from rules |
 | **20** | Mod compatibility first patch (Sacrosanct for vampire cross-routing) | Phase 15 | Sacrosanct feed events translate to PDV signals; no double-fire |
 | **21** | 1.0 content lock + polish | All above | Pantheon at 25-35 deities, all 10 races have at least one foreground option, all locked race architectures honored |
 
@@ -1683,7 +1734,8 @@ node .\tools\pdv_verify.mjs
 node .\tools\pdv_verify.mjs --strict-preflight
 node .\tools\pdv_verify.mjs --strict-skeleton
 node .\tools\pdv_verify.mjs --strict-pattern-proving
-node .\tools\pdv_verify.mjs --strict-preflight --strict-skeleton --strict-pattern-proving
+node .\tools\pdv_verify.mjs --strict-phase7
+node .\tools\pdv_verify.mjs --strict-phase7 --strict-preflight --strict-skeleton --strict-pattern-proving
 ```
 
 If a slice adds a new verifier mode later, update this ladder and
@@ -1988,6 +2040,18 @@ or architecture contract changes.
 ---
 
 ## 26. Revisions
+
+### v3.20 - 2026-05-20 - Phase 19 tooling foundation kickoff
+
+Section 17 now reflects the first live Phase 19 tooling pass instead of
+treating it as purely future work. `tools/pdv_patch.mjs` exists as a
+planning-first dry-run patcher that validates tracked
+`pdv_patch_rules_v0` manifests, reads the resolved `Devotion Dev` load order,
+resolves winning records, and emits deterministic review output without
+writing a generated ESP yet. `pdv_author.mjs` planning/status output now also
+promotes VMAD-array work into explicit manual follow-up packets with intended
+payload plus verifier readback expectations instead of generic unsupported
+notes.
 
 ### v3.18 - 2026-05-19 - Slice 1 runtime proof closeout
 

@@ -1,0 +1,16 @@
+{
+  "id": "phase7-signal-receivers",
+  "title": "PDV Phase 7 signal receiver CK record plan",
+  "defaultOutput": "PDV_Phase7SignalReceiversOverlay.esp",
+  "notes": [
+    "This manifest records the CK/xEdit proof-record contract for Phase 7 Nord/Imperial signal expansion.",
+    "pdv_author cannot mint new ACTI, QUST, INFO, or player-alias records, so proof-record creation and Civil War hook wiring remain manual CK/xEdit work.",
+    "Once the records exist, strict-phase7 verifier readback checks script attachment plus route and origin/debug properties."
+  ],
+  "unsupported": [
+    "Create hidden ACTI record PDV_ACTI_TalosShrineDefianceSignal with PDV_EventSignalActivator: RouteId=35, RequiredOriginRace=-1, PDV_EventBusService=PDV_EventBus, PlayerREF=PlayerRef, PDV_GLO_OriginRace=PDV_GLO_OriginRace, PDV_GLO_DebugLevel=PDV_GLO_DebugLevel, optional OncePerDayKey=PDV.Signal.TalosShrineDefiance.Activator.",
+    "Verify live Civil War join markers from local game data before CK wiring. The current design seeds are in references/vanilla-gameplay/pdv-crosswalk/quest-moral-signal-crosswalk.csv, but exact records/stages must be confirmed locally before adding one-shot compliance or defiance hooks.",
+    "Attach curated compliance/defiance one-shots to the verified Civil War records after local record confirmation; do not guess from prose or reuse crime/arrest Story Manager events in Phase 7."
+  ],
+  "operations": []
+}

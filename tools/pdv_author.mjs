@@ -588,7 +588,7 @@ function runStatus(phaseName, options) {
   const lines = [
     `${spec.id}: ${manifest.title}`,
     `source=${spec.source}`,
-    `ready=${report.summary.ready} blocked=${report.summary.blocked} unsupported=${report.summary.unsupported}`,
+    `supported_write=${report.summary.ready} manual_only=${report.summary.manual} blocked=${report.summary.blocked} unsupported_notes=${report.summary.unsupported}`,
   ];
 
   if (manifest.unsupported.length) {
@@ -607,17 +607,7 @@ function runStatus(phaseName, options) {
     }
   }
 
-  lines.push("");
-  lines.push("Operations:");
-  for (const item of report.operations) {
-    const target = item.kind === "setProperty"
-      ? `${item.record}.${item.script}.${item.property}`
-      : `${item.record} += ${item.entry}`;
-    lines.push(`- [${item.status}] ${target}`);
-    if (item.detail) {
-      lines.push(`  ${item.detail}`);
-    }
-  }
+  appendReportSections(lines, report);
 
   console.log(lines.join("\n"));
 }
@@ -643,6 +633,7 @@ function runPlan(phaseName, options) {
     `source=${spec.source}`,
     `output=${path.basename(patchRequest.output_path)}`,
     `records=${patchRequest.records.length}`,
+    `supported_write=${report.summary.ready} manual_only=${report.summary.manual} blocked=${report.summary.blocked}`,
   ];
   if (manifest.notes.length) {
     lines.push("");
@@ -651,18 +642,43 @@ function runPlan(phaseName, options) {
       lines.push(`- ${item}`);
     }
   }
+  appendReportSections(lines, report);
+  console.log(lines.join("\n"));
+}
+
+function appendReportSections(lines, report) {
+  appendOperationSection(lines, "Supported write operations", report.operations.filter((item) => item.status === "READY"));
+  appendOperationSection(lines, "Manual-only operations", report.operations.filter((item) => item.status === "MANUAL"));
+  appendOperationSection(lines, "Blocked operations", report.operations.filter((item) => item.status === "BLOCKED"));
+
+  if (report.manualActions.length) {
+    lines.push("");
+    lines.push("Manual follow-up packet:");
+    for (const action of report.manualActions) {
+      lines.push(`- ${action.target}`);
+      lines.push(`  action: ${action.manualAction}`);
+      if (action.valueType) {
+        lines.push(`  value_type: ${action.valueType}`);
+      }
+      lines.push(`  intended_value: ${JSON.stringify(action.intendedValue)}`);
+      lines.push(`  verifier: ${action.verifierExpectation}`);
+    }
+  }
+}
+
+function appendOperationSection(lines, title, operations) {
+  if (!operations.length) {
+    return;
+  }
+
   lines.push("");
-  lines.push("Planned operations:");
-  for (const item of report.operations) {
-    const target = item.kind === "setProperty"
-      ? `${item.record}.${item.script}.${item.property}`
-      : `${item.record} += ${item.entry}`;
-    lines.push(`- [${item.status}] ${target}`);
+  lines.push(`${title}:`);
+  for (const item of operations) {
+    lines.push(`- [${item.status}] ${describeOperationTarget(item)}`);
     if (item.detail) {
       lines.push(`  ${item.detail}`);
     }
   }
-  console.log(lines.join("\n"));
 }
 
 function runApplyPhase(phaseName, options) {
@@ -975,12 +991,17 @@ function buildManifestReport(manifest, context) {
   const operations = manifest.operations.map((operation) => evaluateOperation(operation, context));
   const summary = {
     ready: operations.filter((item) => item.status === "READY").length,
+    manual: operations.filter((item) => item.status === "MANUAL").length,
     blocked: operations.filter((item) => item.status === "BLOCKED").length,
     unsupported: manifest.unsupported.length,
   };
+  const manualActions = operations
+    .filter((item) => item.status === "MANUAL")
+    .map((item) => buildManualFollowUpAction(item, context));
   return {
     summary,
     operations,
+    manualActions,
     unsupported: manifest.unsupported,
     notes: manifest.notes,
   };
@@ -1027,7 +1048,7 @@ function evaluateOperation(operation, context) {
 
       return {
         ...operation,
-        status: "BLOCKED",
+        status: "MANUAL",
         detail: "VMAD array properties are recognized for planning/reporting, but mutagen-bridge does not currently expose array writes through attach_scripts. Wire this array manually in CK/xEdit and use verifier readback to confirm it.",
       };
     }
@@ -1096,6 +1117,65 @@ function describeScriptAttachment(recordEdid, scriptName, detailMap) {
   }
 
   return `${scriptName} is not attached yet; bridge will attach/update it if the record type supports VMAD.`;
+}
+
+function buildManualFollowUpAction(operation, context) {
+  const action = {
+    target: describeOperationTarget(operation),
+    kind: operation.kind,
+    record: operation.record || null,
+    script: operation.script || null,
+    property: operation.property || null,
+    valueType: operation.valueType || null,
+    intendedValue: operation.value,
+    manualAction: "Review in CK/xEdit and complete the unsupported wiring manually.",
+    verifierExpectation: buildVerifierExpectation(operation),
+    detail: operation.detail || "",
+  };
+
+  if (operation.kind === "setProperty" && ARRAY_VALUE_TYPES.has(operation.valueType)) {
+    action.manualAction = `Wire ${operation.property} manually on ${operation.record}.${operation.script} in CK/xEdit; the current bridge path cannot emit ${operation.valueType} writes.`;
+    action.intendedValue = describeManualIntendedValue(operation, context);
+  } else if (operation.kind === "attachScript") {
+    action.manualAction = `Attach ${operation.script} manually to ${operation.record} in CK/xEdit.`;
+  } else if (operation.kind === "addFormListEntry") {
+    action.manualAction = `Add ${operation.entry} manually to FormList ${operation.record} in CK/xEdit.`;
+  }
+
+  return action;
+}
+
+function describeManualIntendedValue(operation, context) {
+  if (!Array.isArray(operation.value)) {
+    return operation.value;
+  }
+
+  if (operation.valueType !== "ObjectArray") {
+    return [...operation.value];
+  }
+
+  return operation.value.map((entry) => {
+    const resolved = resolveReferenceValue(entry, context);
+    return resolved.ok
+      ? { source: entry, resolvedFormId: resolved.formid }
+      : { source: entry, unresolved: resolved.reason };
+  });
+}
+
+function buildVerifierExpectation(operation) {
+  if (operation.kind === "setProperty" && operation.record && operation.script && operation.property) {
+    return `After manual wiring, rerun pdv_verify and confirm ${operation.record}.${operation.script}.${operation.property} reads back with the intended value.`;
+  }
+
+  if (operation.kind === "attachScript" && operation.record && operation.script) {
+    return `After manual wiring, rerun pdv_verify and confirm ${operation.script} is attached to ${operation.record}.`;
+  }
+
+  if (operation.kind === "addFormListEntry" && operation.record && operation.entry) {
+    return `After manual wiring, rerun pdv_verify and confirm ${operation.entry} is present in ${operation.record}.`;
+  }
+
+  return "After manual wiring, rerun pdv_verify and confirm the intended readback is visible.";
 }
 
 function resolveExternalReferences(operations, pdvRecordsByEdid) {

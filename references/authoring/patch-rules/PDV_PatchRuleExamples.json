@@ -1,0 +1,66 @@
+{
+  "ruleType": "pdv_patch_rules_v0",
+  "id": "pdv-patch-rule-examples",
+  "title": "PDV offline patcher dry-run examples",
+  "notes": [
+    "Tooling example rules only. These are not design authority and should not be treated as approved live content patches.",
+    "The examples are intentionally planning-first so pdv_patch.mjs can prove schema validation and winning-record resolution before any patch writer exists."
+  ],
+  "rules": [
+    {
+      "id": "example-book-classification",
+      "description": "Example keyword/classification pass against a real vanilla book candidate.",
+      "operation": "keyword_add",
+      "target": {
+        "plugins": ["Skyrim.esm"],
+        "signatures": ["BOOK"],
+        "editorIds": ["MQ103FarengarBook"]
+      },
+      "payload": {
+        "keywords": ["PDV_KW_EXAMPLE_SacredText"]
+      },
+      "provenance": {
+        "status": "tooling-example",
+        "source": "Phase 19 dry-run bootstrap",
+        "comment": "Demonstrates keyword/classification planning against a resolved winning vanilla record."
+      }
+    },
+    {
+      "id": "example-formlist-injection",
+      "description": "Example FormList injection pass against the proven Hircine pilot record.",
+      "operation": "formlist_inject",
+      "target": {
+        "plugins": ["PlayerDevotion_Framework.esp"],
+        "signatures": ["QUST"],
+        "editorIds": ["PDV_DaedricPath_Hircine"]
+      },
+      "payload": {
+        "formList": "PDV_FLST_DaedricPaths_All"
+      },
+      "provenance": {
+        "status": "tooling-example",
+        "source": "Phase 19 dry-run bootstrap",
+        "comment": "Demonstrates FormList injection planning through a PDV-owned record that already exists in the framework."
+      }
+    },
+    {
+      "id": "example-actor-distribution",
+      "description": "Example NPC/base-record distribution planning against a real Dawnguard actor candidate.",
+      "operation": "actor_distribution",
+      "target": {
+        "plugins": ["Dawnguard.esm"],
+        "signatures": ["NPC_"],
+        "editorIds": ["DLC1DawnguardExterior01"]
+      },
+      "payload": {
+        "addKeywords": ["PDV_KW_EXAMPLE_StendarrService"],
+        "addSpells": ["PDV_SPEL_EXAMPLE_ContextualFavor"]
+      },
+      "provenance": {
+        "status": "tooling-example",
+        "source": "Phase 19 dry-run bootstrap",
+        "comment": "Demonstrates actor/base-record distribution planning without making the symbolic payload refs authoritative."
+      }
+    }
+  ]
+}
