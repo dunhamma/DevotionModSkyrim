@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-19 (v3.15 - documentation authority cleanup)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving ingress is partially proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperials/Khajiit proof on the first normal-play ingress slice, while Dunmer portable shrine/home bonus, Bosmer Green Pact, and Hircine hunt rite still need non-debug in-game trigger proof.
+Last revised: 2026-05-19 (v3.18 - Slice 1 runtime proof closeout)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records.
 
 ---
 
@@ -1608,11 +1608,11 @@ Known Slice 0 waivers:
 | Owning module | Signal ingress / EventBus semantic routing |
 | Source contract | v3 Sections 6, 7, 11, 21.5, and 25.4; Dunmer, Bosmer, and Hircine rules in `PDV_TargetEndStates_1.0.md`, `race-sheets/Race_Dunmer.md`, `race-sheets/Race_Bosmer.md`, and `references/PDV_RaceArchitecture_DesignReference.md` |
 | Interface guarantee | Normal-play receivers call typed `PDV_EventBus` routes; receivers do not write piety, substrate metrics, Green Pact state, or Daedric path state directly |
-| Data/state shape | Existing event constants `EVT_DUNMER_PORTABLE_SHRINE`, `EVT_DUNMER_HOME_BONUS`, `EVT_GREEN_PACT_VIOLATION`, and `EVT_HIRCINE_HUNT_RITE`; existing routes `RouteDunmerPortableShrinePrayer`, `RouteDunmerPlayerHomeBonus`, `RouteGreenPactViolation`, and `RouteHircineHuntRite`; existing manager/substrate/Hircine handlers |
-| Implementation locations | `PDV_PlayerEvents.psc` only if player-alias events are needed; otherwise small CK-authored activators, items, spells, or magic effects that call EventBus; verifier source checks for the new route surface |
+| Data/state shape | Existing event constants `EVT_DUNMER_PORTABLE_SHRINE`, `EVT_DUNMER_HOME_BONUS`, `EVT_GREEN_PACT_VIOLATION`, and `EVT_HIRCINE_HUNT_RITE`; existing routes `RouteDunmerPortableShrinePrayer`, `RouteDunmerPlayerHomeBonus`, `RouteGreenPactViolation`, and `RouteHircineHuntRite`; existing manager/substrate/Hircine handlers; receiver `RouteId` values `30`, `31`, `32`, and `34` |
+| Implementation locations | `PDV_EventSignalActivator.psc` for ACTI proof records; `PDV_EventSignalEffect.psc` for MGEF/consumable proof records; `references/authoring/PDV_Slice1SignalReceivers.manifest.json` names manual CK/xEdit record creation because `pdv_author.mjs` cannot mint records; `PDV_PlayerEvents.psc` only if a future player-alias event is truly needed |
 | Entry gate | Slice 0 verifier baseline remains `FAIL=0, TODO=0`; no open Section 24 decision blocks this slice |
-| Verifier gate | Existing combined strict verifier remains clean; add or tighten `--strict-pattern-proving` checks if new source files, properties, records, or FormList entries are introduced |
-| In-game proof | Three normal-play micro-proofs: one Dunmer portable shrine prayer plus home/private-shrine bonus, one Bosmer Green Pact violation, and one Hircine hunt rite. Each proof must show a player action, EventBus trace, manager/substrate/path trace, MCM summary change, and save/load sanity where state persists |
+| Verifier gate | Existing combined strict verifier remains clean. Current closeout gate: `FAIL=0, TODO=0, PASS=522, WARN=2, INFO=28` at 2026-05-19 20:28 AEST. Strict Pattern Proving checks receiver source/pex freshness, the Slice 1 receiver manifest, and ACTI/MGEF property readback for the proof records |
+| In-game proof | COMPLETE on 2026-05-19: Dunmer portable shrine plus home/private shrine reached `prayers=1; homes=1`; Bosmer OldContract Green Pact violation reached `gp=1`; Hircine hunt rite reached `sig=1; stigma=1.000000; state=Legible`. Papyrus logs showed EventBus and manager/substrate/path traces for the counted routes, and Bosmer/Hircine save-load sanity passed |
 | Exit/recovery | Dunmer proof has no rupture and only daily anti-repeat throttling. Bosmer proof must remain a single violation, not forced Pact reckoning. Hircine proof may use existing renounce/debug reset only as cleanup until Slice 8 defines real Daedric exit/residue |
 | Not in scope | Full Green Pact tagging, full Bosmer path switching, full Dunmer substrate tuning, Daedric boon/price/stigma completion, curse detection, broad animal-kill scoring, new player-facing quest content |
 | Docs touched | v3 and `AGENTS.md` for proof status; `PDV_MOD_SETUP.md` only if tool/verify commands change; race sheets only if player-facing behavior changes |
@@ -1625,9 +1625,9 @@ Preferred Slice 1 trigger shapes:
 | Bosmer Green Pact violation | A curated plant-food / plant-use test record or activator with a PDV-owned semantic tag | Proves PDV-owned Green Pact tagging without trying to classify all food, ingredients, firewood, flora, and potions |
 | Hircine hunt rite | A curated hunt-rite token, shrine, or magic effect that gates one qualifying prey kill or route activation | Proves normal play can enter the Hircine route without making every animal kill a Daedric act |
 
-Slice 1 closes only when all three micro-proofs are non-debug in-game proofs or
-one is explicitly waived with the reason and follow-up owner recorded in
-`AGENTS.md`.
+Slice 1 is closed as of 2026-05-19. All three micro-proofs passed as non-debug
+in-game receiver proofs, with final strict verification clean on `FAIL=0` and
+`TODO=0`.
 
 **Daedric implementation bridge from the initial hardening pass:**
 
@@ -1988,6 +1988,40 @@ or architecture contract changes.
 ---
 
 ## 26. Revisions
+
+### v3.18 - 2026-05-19 - Slice 1 runtime proof closeout
+
+Closed Slice 1 as a runtime-proven Pattern Proving ingress packet. Manual
+ACTI/MGEF proof records now exist and pass verifier readback. Dunmer portable
+and private shrine practice, Bosmer OldContract Green Pact violation, and the
+Hircine hunt rite all routed through the new receiver layer into existing
+EventBus/manager/substrate/path handlers.
+
+Runtime proof surfaced two containment fixes: `PDV_PlayerEvents` now waits for
+playable controls and retries after `RaceSex Menu` closes before final origin
+capture, and `PDV_MCM` now falls back through `PDV_EventBusService` when a
+duplicate VMAD attachment leaves the active MCM instance missing direct
+manager/debug properties. The duplicate VMAD remains a known consolidation
+cleanup item, but it no longer blocks Slice 1 proof.
+
+Final closeout gate: `node .\tools\pdv_verify.mjs --strict-preflight
+--strict-skeleton --strict-pattern-proving --json` returned `FAIL=0, TODO=0,
+PASS=522, WARN=2, INFO=28` at 2026-05-19 20:28 AEST.
+
+### v3.17 - 2026-05-19 - Slice 1 receiver hardening
+
+Added the compile-clean Slice 1 receiver layer: `PDV_EventSignalActivator` for
+ACTI proof records and `PDV_EventSignalEffect` for MGEF/consumable proof
+records. The receiver scripts validate player/origin/day gates, route only
+through existing EventBus functions, and never write downstream devotion state
+directly.
+
+`tools/pdv_compile.mjs` now treats the receiver scripts as active, and
+`tools/pdv_verify.mjs --strict-pattern-proving` checks receiver source/pex
+freshness, `references/authoring/PDV_Slice1SignalReceivers.manifest.json`, and
+manual proof-record readback once the ACTI/MGEF records exist. The receiver
+layer gate was clean at `FAIL=0, TODO=0, PASS=494, WARN=2, INFO=32` before the
+manual records and runtime proof were completed in v3.18.
 
 ### v3.16 - 2026-05-19 - Implementation handoff hardening
 

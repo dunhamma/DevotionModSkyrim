@@ -52,6 +52,7 @@ const MANIFEST_INDEX = {
   "structural-systems-scaffold": path.join(PROJECT_ROOT, "references", "authoring", "PDV_StructuralSystemsScaffold.manifest.json"),
   "structural-systems-arrays": path.join(PROJECT_ROOT, "references", "authoring", "PDV_StructuralSystemsArrays.manifest.json"),
   "pattern-proving-core": path.join(PROJECT_ROOT, "references", "authoring", "PDV_PatternProvingCore.manifest.json"),
+  "slice1-signal-receivers": path.join(PROJECT_ROOT, "references", "authoring", "PDV_Slice1SignalReceivers.manifest.json"),
   "vmad-consolidation": path.join(PROJECT_ROOT, "references", "authoring", "PDV_VmadConsolidation.manifest.json"),
 };
 

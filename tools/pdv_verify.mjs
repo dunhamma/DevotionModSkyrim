@@ -41,6 +41,12 @@ const XEDIT_SEQ = path.join(
   "PlayerDevotion_Framework.seq",
 );
 const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "PlayerDevotion_Framework.seq");
+const SLICE1_SIGNAL_RECEIVER_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Slice1SignalReceivers.manifest.json",
+);
 const MANAGER_PATRON_WIRE_PATCH = "PDV_ManagerPatronWirePatch.esp";
 const MCM_WIRE_PATCH = "PDV_MCMWirePatch.esp";
 const RETIRED_OVERLAY_PATCHES = [MANAGER_PATRON_WIRE_PATCH, MCM_WIRE_PATCH];
@@ -194,6 +200,37 @@ const SKELETON_SERVICE_DEFINITIONS = [
   },
 ];
 
+const SLICE1_SIGNAL_RECEIVER_DEFINITIONS = [
+  {
+    recordEdid: "PDV_ACTI_DunmerPortableShrineSignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 30,
+    requiredOriginRace: 5,
+  },
+  {
+    recordEdid: "PDV_ACTI_DunmerPrivateShrineSignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 31,
+    requiredOriginRace: 5,
+  },
+  {
+    recordEdid: "PDV_MGEF_BosmerGreenPactViolationSignal",
+    recordType: "MGEF",
+    scriptName: "PDV_EventSignalEffect",
+    routeId: 32,
+    requiredOriginRace: 4,
+  },
+  {
+    recordEdid: "PDV_ACTI_HircineHuntRiteSignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 34,
+    requiredOriginRace: -1,
+  },
+];
+
 const COMPILED_SCRIPTS = {
   PDV__MainQuest: "required",
   PDV_Origin: "required",
@@ -204,6 +241,8 @@ const COMPILED_SCRIPTS = {
   PDV_Deity_AuriEl: "required",
   PDV_EventTypes: "required",
   PDV_EventBus: "required",
+  PDV_EventSignalActivator: "required",
+  PDV_EventSignalEffect: "required",
   PDV_PlayerEvents: "required",
   PDV_ReputationTrack: "required",
   PDV_StateTrack: "required",
@@ -1028,6 +1067,8 @@ class Verifier {
     this.checkPatternMcmRecord();
     this.checkPatternPilotScripts();
     this.checkPatternArrayReadback();
+    this.checkSlice1SignalReceiverManifest();
+    this.checkSlice1SignalReceiverRecords();
   }
 
   checkPatternProvingManifest() {
@@ -1035,6 +1076,22 @@ class Verifier {
       this.pass("V3 Pattern Proving manifest", "Pattern proving manifest exists.", PATTERN_PROVING_MANIFEST);
     } else {
       this.patternGap("V3 Pattern Proving manifest", "Pattern proving manifest is missing.", PATTERN_PROVING_MANIFEST);
+    }
+  }
+
+  checkSlice1SignalReceiverManifest() {
+    if (exists(SLICE1_SIGNAL_RECEIVER_MANIFEST)) {
+      this.pass(
+        "V3 Slice 1 signal receiver manifest",
+        "Slice 1 signal receiver CK record manifest exists.",
+        SLICE1_SIGNAL_RECEIVER_MANIFEST,
+      );
+    } else {
+      this.patternGap(
+        "V3 Slice 1 signal receiver manifest",
+        "Slice 1 signal receiver CK record manifest is missing.",
+        SLICE1_SIGNAL_RECEIVER_MANIFEST,
+      );
     }
   }
 
@@ -1158,6 +1215,45 @@ class Verifier {
           10,
         );
       }
+    }
+  }
+
+  checkSlice1SignalReceiverRecords() {
+    for (const definition of SLICE1_SIGNAL_RECEIVER_DEFINITIONS) {
+      const record = this.recordsByEdid.get(definition.recordEdid);
+      const detail = this.recordDetails.get(definition.recordEdid);
+      if (!record || !detail) {
+        this.info(
+          "V3 Slice 1 signal receiver record",
+          `${definition.recordEdid} is not present yet; manual CK/xEdit proof-record creation remains pending.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      if (record.type !== definition.recordType) {
+        this.fail(
+          "V3 Slice 1 signal receiver record",
+          `${definition.recordEdid} has type ${record.type}, expected ${definition.recordType}.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      this.pass("V3 Slice 1 signal receiver record", `${definition.recordEdid} exists as ${definition.recordType}.`, PDV_ESP);
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.patternGap("V3 Slice 1 signal receiver script", `${definition.scriptName} is not attached to ${definition.recordEdid}.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("V3 Slice 1 signal receiver script", `${definition.scriptName} is attached to ${definition.recordEdid}.`, PDV_ESP);
+      const props = propertyMap(script);
+      this.checkObjectPropertyTarget("V3 Slice 1 signal receiver property", props, "PDV_EventBusService", "PDV_EventBus", this.patternGap.bind(this));
+      this.checkObjectPropertyTarget("V3 Slice 1 signal receiver property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.patternGap.bind(this));
+      this.checkObjectPropertyTarget("V3 Slice 1 signal receiver property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.patternGap.bind(this));
+      this.checkScalarProperty("V3 Slice 1 signal receiver property", props, "RouteId", definition.routeId, this.patternGap.bind(this));
+      this.checkScalarProperty("V3 Slice 1 signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.patternGap.bind(this));
     }
   }
 
@@ -1911,6 +2007,9 @@ class Verifier {
       "Function RouteConcordatPressure",
       "Function RouteSleepStop",
       "Function RouteDunmerPortableShrinePrayer",
+      "Function RouteDunmerPlayerHomeBonus",
+      "Function RouteGreenPactViolation",
+      "Function RouteHircineHuntRite",
       "Function RouteKhajiitMoonObservance",
     ]);
     this.checkSourceContains("V3 Pattern Proving source", "PDV_EventTypes", [
@@ -1928,6 +2027,36 @@ class Verifier {
       "Event OnSleepStop(Bool abInterrupted)",
       "PDV_EventBus Property PDV_EventBusService",
       "PDV_Origin Property PDV_OriginQuest",
+    ]);
+    this.checkSourceContains("V3 Pattern Proving source", "PDV_EventSignalActivator", [
+      "Scriptname PDV_EventSignalActivator extends ObjectReference",
+      "PDV_EventBus Property PDV_EventBusService",
+      "Actor Property PlayerREF",
+      "GlobalVariable Property PDV_GLO_OriginRace",
+      "Int Property RouteId",
+      "Int Property RequiredOriginRace",
+      "String Property OncePerDayKey",
+      "Event OnActivate(ObjectReference akActionRef)",
+      "Function RouteSignal()",
+      "RouteDunmerPortableShrinePrayer",
+      "RouteDunmerPlayerHomeBonus",
+      "RouteGreenPactViolation",
+      "RouteHircineHuntRite",
+    ]);
+    this.checkSourceContains("V3 Pattern Proving source", "PDV_EventSignalEffect", [
+      "Scriptname PDV_EventSignalEffect extends ActiveMagicEffect",
+      "PDV_EventBus Property PDV_EventBusService",
+      "Actor Property PlayerREF",
+      "GlobalVariable Property PDV_GLO_OriginRace",
+      "Int Property RouteId",
+      "Int Property RequiredOriginRace",
+      "String Property OncePerDayKey",
+      "Event OnEffectStart(Actor akTarget, Actor akCaster)",
+      "Function RouteSignal()",
+      "RouteDunmerPortableShrinePrayer",
+      "RouteDunmerPlayerHomeBonus",
+      "RouteGreenPactViolation",
+      "RouteHircineHuntRite",
     ]);
   }
 

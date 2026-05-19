@@ -1,0 +1,17 @@
+{
+  "id": "slice1-signal-receivers",
+  "title": "PDV V3 Slice 1 signal receiver CK record plan",
+  "defaultOutput": "PDV_Slice1SignalReceiversOverlay.esp",
+  "notes": [
+    "This manifest records the CK/xEdit proof-record contract for Slice 1 normal-play ingress.",
+    "pdv_author cannot mint new ACTI/MGEF/ALCH records, so record creation remains manual CK/xEdit work.",
+    "Once the records exist, strict-pattern-proving verifier readback checks script attachment and route/origin properties."
+  ],
+  "unsupported": [
+    "Create ACTI record PDV_ACTI_DunmerPortableShrineSignal with PDV_EventSignalActivator: RouteId=30, RequiredOriginRace=5, PDV_EventBusService=PDV_EventBus, PlayerREF=PlayerRef, PDV_GLO_OriginRace=PDV_GLO_OriginRace, PDV_GLO_DebugLevel=PDV_GLO_DebugLevel, optional OncePerDayKey=PDV.Signal.DunmerPortableShrine.Activator.",
+    "Create ACTI record PDV_ACTI_DunmerPrivateShrineSignal with PDV_EventSignalActivator: RouteId=31, RequiredOriginRace=5, PDV_EventBusService=PDV_EventBus, PlayerREF=PlayerRef, PDV_GLO_OriginRace=PDV_GLO_OriginRace, PDV_GLO_DebugLevel=PDV_GLO_DebugLevel, optional OncePerDayKey=PDV.Signal.DunmerHome.Activator.",
+    "Create MGEF record PDV_MGEF_BosmerGreenPactViolationSignal with PDV_EventSignalEffect: RouteId=32, RequiredOriginRace=4, PDV_EventBusService=PDV_EventBus, PlayerREF=PlayerRef, PDV_GLO_OriginRace=PDV_GLO_OriginRace, PDV_GLO_DebugLevel=PDV_GLO_DebugLevel. Attach it to a curated plant-use/plant-food proof item.",
+    "Create ACTI or MGEF record PDV_ACTI_HircineHuntRiteSignal with PDV_EventSignalActivator or PDV_EventSignalEffect: RouteId=34, RequiredOriginRace=-1, PDV_EventBusService=PDV_EventBus, PlayerREF=PlayerRef, PDV_GLO_OriginRace=PDV_GLO_OriginRace, PDV_GLO_DebugLevel=PDV_GLO_DebugLevel."
+  ],
+  "operations": []
+}
