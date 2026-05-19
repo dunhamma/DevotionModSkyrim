@@ -144,6 +144,43 @@ development artifact with internal `C:\Projects\TESV\Build...` paths.
 - If JContainers is introduced, store FormIDs rather than Actor/Form objects
   in long-lived JArray/JDB collections, then resolve with `Game.GetForm()`.
 
+## Runtime And Save Hygiene
+
+- Prefer CK data, conditions, aliases, linked refs, quest stages, scenes,
+  packages, perks, spells, magic-effect conditions, and default scripts before
+  writing custom Papyrus.
+- Prefer events over polling. Use `RegisterForSingleUpdate` /
+  `RegisterForSingleUpdateGameTime` chains for repeated timers, and register
+  the next update only after deciding work should continue.
+- Every loop/timer needs an exit condition: quest stop, effect finish, alias
+  clear, target death, object unload, dependency loss, timeout, or max
+  iteration.
+- Avoid long `Utility.Wait()` workflows. Store progress, exit, and resume from
+  a timer/event instead.
+- Keep handlers short. Split large work into bounded chunks or a manager-owned
+  queue.
+- Assume external calls can allow re-entry. Use states, busy flags, version
+  tokens, or queues when multiple events can touch the same state.
+- Do not keep references persistent accidentally. Avoid ObjectReference/Actor
+  properties unless justified, prefer aliases/linked refs/event args, clear temp
+  refs to `None`, and unregister events when finished.
+- `Actor Property PlayerREF Auto` is acceptable for repeated player access; the
+  player is already persistent.
+- Use CK-filled properties for owned/static forms. Use `Game.GetFormFromFile`
+  only for optional dependencies or prototypes, resolve once, guard for `None`,
+  and never call it in hot loops.
+- Treat `None`, stale property, bad cast, missing script, type mismatch, and
+  unloaded-cell warnings as bugs, not normal control flow.
+- Treat save files as Papyrus databases. Renaming/removing scripts, properties,
+  variables, functions, or VMAD data is a migration problem. Do not rely on
+  `OnInit()` rerunning for existing saved instances.
+- For update-safe scripts, use an integer version and idempotent migration from
+  load/timer paths; stop old timers and unregister old events during migration.
+- Do not advise giant Papyrus INI budget/memory tweaks as a fix. Profile with
+  Papyrus tools and fix the measured bottleneck.
+- Before accepting a Papyrus script, ask whether it survives duplicate events,
+  out-of-order events, save/load, and a queued event resuming after a wait.
+
 ## CK Wiring Checklist
 
 - Launch CK by opening `D:\Wabbajack\modlists\Anvil\Anvil.exe`, selecting

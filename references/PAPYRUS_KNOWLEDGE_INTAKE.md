@@ -26,6 +26,137 @@ These project-local rules come from the 2026-05-14 external Skyrim modding lesso
 - Retest script behavior from a new game or main-menu `coc qasmoke` path when save-baked state may be masking the current source.
 - Pick one persistence backend per key. Do not read a key through JFormDB if writers use StorageUtil, or vice versa. For long-lived JArray/JDB collections, store integer FormIDs and resolve with `Game.GetForm()` instead of storing Actor/Form objects directly.
 
+## Papyrus Runtime And Save Hygiene Rules
+
+These rules come from the 2026-05-19 `papyrus-scripting-cache.md` intake. They
+are practical hygiene rules for writing PDV Papyrus that survives real saves,
+heavy modlists, and update cycles.
+
+### Prefer engine data before Papyrus
+
+- Use CK conditions, quest/package/scene fragments, aliases, linked refs,
+  default scripts, perks, spells, magic-effect conditions, and plugin data before
+  adding custom Papyrus.
+- Papyrus should be event-driven glue: receive a meaningful event, validate it,
+  call a small API, store deliberate state, and exit.
+- Do not use Papyrus to emulate a condition, package, FormList, keyword, or
+  magic-effect archetype that the engine can already evaluate.
+
+### Events, timers, and polling
+
+- Prefer events over polling.
+- Prefer `RegisterForSingleUpdate` / `RegisterForSingleUpdateGameTime` chains
+  over perpetual `RegisterForUpdate`, unless a true periodic service is required
+  and is always unregistered.
+- Register the next single update at the end of the handler, after deciding the
+  loop should continue.
+- Every loop/timer must have a known exit: quest stop, effect finish, alias
+  clear, target death, object unload, dependency loss, timeout, or max
+  iteration.
+- Avoid long `Utility.Wait()` / `WaitGameTime()` workflows. Latent waits are
+  imprecise, keep the running object persistent, and can resume after queued
+  state has changed.
+
+### Queueing and re-entrancy
+
+- Papyrus has one active thread per script instance; other events queue behind
+  it, but external calls can release the script lock and allow another queued
+  event to enter.
+- Do not assume state remains unchanged after calling another script/object,
+  reading/writing another object's property, waiting, opening UI, or calling a
+  latent/native path.
+- Use states, busy flags, version tokens, or explicit queues when overlapping
+  events can hit the same object.
+- Keep event handlers and functions short; split large work across bounded
+  updates or manager-owned queues.
+
+### Reference persistence
+
+- CK-filled `ObjectReference` and `Actor` properties, script variables pointing
+  at refs, long-running functions, and registered events can keep references
+  persistent.
+- Prefer aliases, linked refs, event arguments, local variables, and FormLists
+  over permanent reference properties.
+- `Actor Property PlayerREF Auto` remains acceptable because the player is
+  already persistent and repeated `Game.GetPlayer()` calls are worse in hot
+  paths.
+- Clear temporary reference variables to `None` when their work is complete.
+- Unregister updates/events as soon as they are no longer needed.
+- Treat mass script attachment to base objects, many refs, many actors, or many
+  active effects as high-risk unless the event surface is tiny and cleanup is
+  proven.
+
+### Form lookup and optional dependencies
+
+- Use CK-filled properties for forms owned by PDV or hard dependencies.
+- Reserve `Game.GetFormFromFile` for optional dependencies, rare dynamic lookup,
+  or prototypes that will be converted before release.
+- If `Game.GetFormFromFile` is unavoidable, resolve once, cache, guard for
+  `None`, and never call it inside frequent loops or updates.
+
+### Runtime errors are bugs
+
+- `None` calls, bad casts, stale properties, missing scripts, type mismatches,
+  and unloaded-cell warnings are not harmless log noise.
+- Guard every optional form/ref/cast before use.
+- Avoid `Cast` / `RemoteCast` from unloaded refs; delay until the source and
+  target are in a valid loaded state or use an engine-safe route.
+- Fix recurring Papyrus warnings from PDV scripts before interpreting gameplay
+  behavior. Log spam can hide the real bug and increase VM load.
+
+### Save-update safety
+
+- Treat a Skyrim save as a stateful Papyrus database.
+- Saves can remember script instances, property/variable values, running stacks,
+  dynamic FormList changes, and old functions that were running when the save
+  was made.
+- Adding variables/properties is safer than renaming/removing them. A rename is
+  effectively delete plus add.
+- Do not rely on `OnInit()` rerunning for existing saved instances.
+- Changing a property value in the plugin may not overwrite an already-saved
+  value.
+- Removing scripts/properties from plugin VMAD does not guarantee old saved
+  instances disappear.
+- For update-safe scripts, use an integer version, run idempotent migration from
+  a load/timer path, stop old timers, unregister old events, and leave
+  compatibility shutdown code when abandoning old behavior.
+- Do not promise safe mid-save uninstall unless the mod intentionally stops
+  quests, unregisters events, clears aliases, removes added spells/perks/items
+  where appropriate, and shuts down timers.
+
+### Profiling and INI discipline
+
+- Profile before guessing. Papyrus timing is non-intuitive.
+- Use Papyrus logging for development/diagnosis, not as a permanent user
+  requirement.
+- Use `DumpPapyrusStacks` / `DPS`, `StartPapyrusScriptProfile` / `StartPSP`, and
+  script-side profiling only when the relevant INI flags are enabled for a
+  controlled test.
+- Do not "fix" PDV by advising huge Papyrus INI budget or memory increases.
+  CK-derived documentation treats those settings as tradeoffs that can hurt
+  frame time, memory behavior, or stack stability.
+- Papyrus Tweaks NG and similar engine-tweak plugins are not permission to write
+  sloppy Papyrus.
+
+### Review checklist additions
+
+Before accepting a PDV Papyrus script, also ask:
+
+- Can this be CK data, a condition, a magic effect, an alias, a linked ref, a
+  quest stage, or a default script instead?
+- Is every repeated update a single-update chain or a justified, unregistered
+  periodic service?
+- Does every loop/timer have a stop condition?
+- Are all optional refs/forms/casts guarded?
+- Are ref properties avoided unless the target is intentionally persistent?
+- Are temporary refs cleared?
+- Are events unregistered on shutdown/effect finish/quest stop?
+- Is `PlayerREF` a property when the player is accessed repeatedly?
+- Is `Game.GetFormFromFile` absent from hot paths?
+- Are removed/renamed properties and VMAD changes treated as save migrations?
+- Could the script behave correctly if events fire twice, out of order, or after
+  a wait?
+
 ---
 
 ## 1. Why this exists
