@@ -22,7 +22,7 @@ Every race has a different relationship with the divine. A Nord earns the attent
 | 2 | **Wavering** | Drift. The connection is loosening. |
 | 1 | **Distant** | Silence. The divine is far away. |
 
-**Broad vs. Focused worship:** Races with pantheons (multiple gods) can worship broadly — honoring many gods at once. This is culturally normal but caps your potential at Faithful. Broad worship is not empty or failed worship; for some races, especially Nords, it creates its own blended favors. To reach Devoted, you must commit to a primary deity. This isn't an MCM toggle — it's a theological act, usually triggered when your actions reveal which god has truly noticed you.
+**Broad vs. Focused worship:** Some races with pantheons can worship broadly — honoring many gods at once. Where this is culturally normal, it caps your potential at Faithful and is not empty or failed worship. For some races, especially Nords, broad worship is its own devotional lane with blended favors. To reach Devoted, you must commit to a primary deity. This isn't an MCM toggle — it's a theological act, usually triggered when your actions reveal which god has truly noticed you.
 
 **Patron commitment usually comes from the god.** For most races, a deity reaches out once your behavior has crossed a meaningful threshold. You can accept, delay, or refuse. Khajiit are the exception: they never get a formal offer, because their strongest deity emphasis emerges silently from how they live under the moons.
 
@@ -30,12 +30,18 @@ Every race has a different relationship with the divine. A Nord earns the attent
 
 **Rewards come in layers:**
 - **Baseline blessings** — Modest, steady, always-on signs that devotion matters
-- **Contextual favors** — Stronger momentary help when the right conditions are present
+- **Contextual favors** — Automatic, temporary help when your current god, path, or layer recognizes a fitting act
 - **Religious privileges** — Access, recognition, special interactions, shrine options
 - **Neglect effects** — What you lose when you drift away
 - **Restoration paths** — How you recover from major spiritual rupture
 
 Some races also have a persistent cultural substrate underneath deity devotion: Khajiit moon-cycle observance and road homes, Argonian Hist/community maintenance, Dunmer portable ancestor practice, and Orc community-building all reward continuity rather than single dramatic acts.
+
+Dunmer are the special case inside broad/focused language. Their shared ancestor + Good Daedra layer can answer with contextual favor before a primary focus, but it presents as cumulative Reclamation practice rather than generic pantheon worship.
+
+Dunmer contextual-favor review cleared on 2026-05-18. The experience shape is shared ancestor/Reclamations favor first, then distinct Azura, Boethiah, and Mephala focused lanes with anti-generic boundaries.
+
+Implementation hook feasibility is now recorded for Nord, Imperial, Dunmer, Redguard, Orc, Khajiit, and Argonian. Redguard is implementation-locked for 1.0 at the state, offer, sect-switch, and launch-hook-posture level. Dunmer is implementation-locked at the ancestor substrate, focus-gate, curse-posture, portable-shrine, and Daedric-deviation option-map level. Khajiit is implementation-locked at the lunar substrate, silent focused-emphasis, road-home circuit, curse posture, ShadowDrift boundary, five launch paths, and launch-hook-posture level. Argonian is implementation-locked at the single layered Hist substrate, visible Hist/People/Void readout, gentle Hist distance, one bed-of-choice anchor, Sithis activation threshold, and curse posture level.
 
 ---
 
@@ -67,6 +73,10 @@ Not every race worships the same way. The mod recognizes three fundamental struc
 
 ---
 
+**Orc contextual favor note:** Orcs do not get a generic Malacath favor lane. Their contextual favors follow current life-mode: Stronghold, City, or Legion/Exile. Implementation uses one active state track: `City = 0`, `Stronghold = 1`, `LegionExile = 2`. City is the default bridge state; Stronghold requires Blood-Kin or equivalent acceptance plus active stronghold conduct; Legion/Exile requires explicit service/exile commitment or completed pressure-bearing service. Setup/MCM records intent, but the world confirms the active lane. City and Legion/Exile dignity, oath, and self-made community moments use curated hooks or `PDV_SacredPlace` state only, since broad social simulation is too brittle for launch design.
+
+---
+
 ## Curse States
 
 Becoming a vampire or werewolf is never neutral. Every race treats these curses differently:
@@ -89,6 +99,14 @@ Each race has its own document. They're designed to be read independently — pi
 4. How Daedric princes interact with their faith
 5. What happens under curse states
 6. What playing this race *feels* like
+
+When a race sheet defines contextual favors, it should use the shared table shape: `Lane`, `Trigger family`, `Hook candidates`, `Favor bucket`, `Surfacing`, and `Notes`. This keeps the player experience comparable across races while still letting each theology feel specific.
+
+The table rollout was pilot-first. Nord, Imperial, and Redguard cleared cross-pilot review on 2026-05-18, so the table shape can now be propagated to every race sheet.
+
+Pilot tables can live directly in race sheets. Cleared pilot rows remain race-sheet content; architecture owns the shared shape and rules, not every race-specific row.
+
+For the cleared pilot, broad-worship lanes came first and focused deity examples stayed as short contrast notes. Full focused-deity tables can now be drafted after broad-lane coverage is in place.
 
 ---
 

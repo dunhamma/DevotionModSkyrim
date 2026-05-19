@@ -33,6 +33,12 @@ Use the strongest available source for the question being answered:
 | `compatibility/` | Compatibility dossiers for major religion, survival, curse, and gameplay overhauls. |
 | `pdv-crosswalk/` | PDV signal hook index, UX lessons, deity/shrine crosswalks, and implementation risk notes. |
 
+## External Reference Bridge
+
+Use `PDV_SkyrimGamePlayReferences_Bridge.md` when PDV needs to query the neutral
+`dunhamma/SkyrimGamePlayReferences` repo for broad vanilla/DLC discovery
+without copying its whole data layer into this project.
+
 ## First-Pass Findings
 
 1. **PDV should stay event-led, not poll-led.** CK Story Manager and player-alias events provide the right signal shape; deity scripts should score curated events instead of raw skill XP, raw crafting counts, or constant timers.
@@ -66,6 +72,14 @@ node .\tools\pdv_extract_vanilla_gameplay_refs.mjs
 The generated tables live under `extracted/`. They are implementation reference
 data, not final design decisions. Use the `pdv-crosswalk/` tables to curate
 which extracted records become real PDV signals or patcher rules.
+
+For broader neutral-reference lookup, use the read-only bridge:
+
+```text
+node .\tools\pdv_skyrim_refs_bridge.mjs status
+node .\tools\pdv_skyrim_refs_bridge.mjs tables
+node .\tools\pdv_skyrim_refs_bridge.mjs search reverse-keywords daedra --limit 10
+```
 
 ## Design North Star
 

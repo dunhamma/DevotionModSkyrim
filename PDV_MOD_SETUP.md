@@ -16,6 +16,7 @@
 | `tools/pdv_verify.mjs` | Read-only verifier for Anvil/MO2/ESP/script wiring drift |
 | `tools/pdv_author.mjs` | Safe overlay-patch authoring helper for supported ESP wiring on existing PDV records |
 | `tools/pdv_extract_vanilla_gameplay_refs.mjs` | Read-only vanilla/DLC gameplay reference extractor |
+| `tools/pdv_skyrim_refs_bridge.mjs` | Read-only bridge for querying the neutral `SkyrimGamePlayReferences` repo |
 | `native/DevotionPrismaBridge/` | C++ SKSE/Prisma bridge scaffold plus mirrored runtime Prisma panel assets |
 | `references/PDV_Anvil_MO2_MCP_Intake.md` | Codex-facing intake for the Anvil MO2 MCP plugin and optional tool status |
 
@@ -197,6 +198,7 @@ Bool Function OpenDevotionPanel() Global Native
 Bool Function CloseDevotionPanel() Global Native
 Bool Function ToggleDevotionPanel() Global Native
 Bool Function SendJson(String payload) Global Native
+Bool Function SendOverlayJson(String payload) Global Native
 ```
 
 `PDV_PrismaBridge.psc` compiled cleanly on 2026-05-18. The native DLL also
@@ -216,6 +218,16 @@ and `Devotion\SKSE\Plugins`, and `dumpbin /exports` shows the expected
 current Anvil MCP VFS can cache file listings, so restart or refresh the MCP
 server if newly copied SKSE files do not immediately appear through `mo2_*`
 tools.
+
+The first player-facing Prisma UX prototype was mirrored into the live mod on
+2026-05-19. It keeps the native bridge contract unchanged (`ReceivePDVJson`) and
+renders a devotional status panel with Patron, Today, and Debug tabs. Payloads
+may also include `toast`, `toasts`, or `mode: "toast"` for short-lived feedback
+such as devotional acknowledgements, dawn reflections, and neglect warnings.
+Marks are symbol-driven (`symbol: "kyne"`, `symbol: "dawn"`,
+`symbol: "journal"`, etc.) rather than letter-initial driven. Use
+`SendJson(payload)` for focused panel payloads and `SendOverlayJson(payload)`
+for transient overlay payloads such as real event toasts.
 
 ### Project layout
 
@@ -300,6 +312,8 @@ node .\tools\pdv_author.mjs apply structural-systems-scaffold
 node .\tools\pdv_author.mjs plan structural-systems-arrays
 node .\tools\pdv_author.mjs apply structural-systems-arrays
 node .\tools\pdv_extract_vanilla_gameplay_refs.mjs
+node .\tools\pdv_skyrim_refs_bridge.mjs status
+node .\tools\pdv_skyrim_refs_bridge.mjs tables
 ```
 
 The compiler spawns `PapyrusCompiler.exe` directly with the project import chain, compiles known scripts whose `.pex` output is missing or older than source, treats Papyrus warnings as failures, and runs the verifier after successful compiles unless `--skip-verify` is used. The active set now includes the proven v2 scripts plus the V3 Preflight script slice (`PDV_EventTypes` and `PDV_EventBus`); the optional known set includes the V3 Structural Skeleton base scripts (`PDV_ReputationTrack`, `PDV_StateTrack`, `PDV_SubstrateBase`, `PDV_SacredPlace`, `PDV_DaedricPathBase`, `PDV_CurseState`). `--strict-phase3`, `--strict-preflight`, and `--strict-skeleton` pass through to the verifier. The emitted compiler command uses the short canonical flags: `-f=<flags>`, `-i=<source-dirs>`, and `-o=<output-dir>`.
@@ -309,6 +323,8 @@ The verifier is read-only. It checks expected Anvil paths, reads `PlayerDevotion
 `tools\pdv_author.mjs` is the safe authoring companion to that loop. It inspects the live framework ESP through the same local Mutagen bridge, then emits a **new overlay patch plugin** into the `Devotion` mod when asked to apply changes. Current supported writes are existing-record script attachment, scalar/object VMAD properties, and FormList membership. It does **not** create new records or overwrite `PlayerDevotion_Framework.esp` in place. It now recognizes `IntArray`, `FloatArray`, `StringArray`, and `ObjectArray` manifest syntax for planning/reporting, but VMAD array writes remain manual CK/xEdit work until the Mutagen bridge can actually emit them.
 
 `tools\pdv_extract_vanilla_gameplay_refs.mjs` is a read-only reference-data helper. It scans local Anvil stock/cleaned base masters through the Mutagen bridge and refreshes generated CSVs under `references\vanilla-gameplay\extracted\`. Use those generated tables as implementation reference data for signal matrices, offline patcher rules, and compatibility planning; curated design decisions still belong in the `references\vanilla-gameplay\pdv-crosswalk\` tables.
+
+`tools\pdv_skyrim_refs_bridge.mjs` is a read-only lookup bridge into the neutral `dunhamma/SkyrimGamePlayReferences` repo. Set `SKYRIM_GAMEPLAY_REFERENCES_ROOT` when the clone is not under `scratch\SkyrimGamePlayReferences`. Use it to list or search broad reference tables such as reverse keywords, faction relationships, condition-bearing effects, cells, containers/furniture, enchantments, leveled lists, FormLists, shouts, and worldspaces. It does not copy data into PDV or replace local xEdit/CK verification. Bridge rules live in `references\vanilla-gameplay\PDV_SkyrimGamePlayReferences_Bridge.md`.
 
 Tracked JSON manifests live under `references\authoring\` and can be addressed by manifest id or file path. `mcm-property-wiring` is the canonical batch target for the current `PDV_MCM` properties and defaults to `PDV_PropertyWiringOverlay.esp`, replacing repeated `PDV_Author_one_off_*` property patches when CK property editing is unstable. `preflight-router-services` is the V3 canary target for co-attaching `PDV_EventTypes` and `PDV_EventBus` to `PDV_ActionRouter`; it defaults to `PDV_PreflightRouterServicesOverlay.esp`. `skeleton-track-scaffold` is the V3 Structural Skeleton track wiring batch for the locked 12 track quests/globals/FormLists and defaults to `PDV_SkeletonTrackScaffoldOverlay.esp`. `structural-systems-scaffold` is the broad follow-on batch for substrates, sacred places, Hircine, curse state, and MCM scaffold properties. `structural-systems-arrays` is a reporting/TODO manifest for manual threshold/state-array wiring. All three require CK/xEdit creation of the records first. Use `plan` first to inspect a batch, then `apply`, then run `node .\tools\pdv_verify.mjs`.
 
@@ -739,6 +755,8 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-05-18 - PO3 Papyrus Extender dependency:** PDV v3 accepts powerofthree's Papyrus Extender as a hard runtime dependency for event hooks that vanilla Story Manager/player aliases cannot expose cleanly. This also makes Address Library for SKSE Plugins and powerofthree's Tweaks required runtime SKSE-plugin dependencies. These are not ESP masters. Use PO3 for runtime event hooks, not keyword/classification/NPC distribution; that remains offline patcher territory. SPID remains deferred for future cost-benefit review if PDV needs actor-load distribution, outfit lifecycle behavior, or broad dynamic injection that generated patches cannot represent cleanly.
 
+**2026-05-19 - Race end-state implementation-lock pass:** The player-experience lock pass now lives in `PDV_TargetEndStates_1.0.md`, `race-sheets/*.md`, and `references/PDV_RaceArchitecture_DesignReference.md`. Breton is implementation-locked for 1.0 experience shape; reward numbers remain tuning. Altmer is partially closed: shared patron-state use, no generic broad lane, `ThalmorAlignment` bands/start values, crisis-of-faith posture, and bounded Lorkhan economy are locked. Altmer Lorkhan pressure must use explicit tags/hooks, basic devotional upkeep should trend positive, and ordinary existence in Skyrim is not a penalty source. Remaining Altmer closeout is crisis resolution hooks, final crisis trigger list, contextual favor lanes, and focused-deity hook posture.
+
 **2026-05-10 â€” CK compiler toolchain, revised 2026-05-12:** Source `.psc` files live in `Scripts\Source\`. Compiled `.pex` output to `Scripts\`. Terminal/Codex compiles use `tools\pdv_compile.mjs`, which spawns `PapyrusCompiler.exe` directly with `<script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>`. CK compiler (Ctrl+F7) remains valid for interactive CK work. `compile.ps1`, `skyrimse.ppj`, and Bethesda's shipped `ScriptCompile.bat` are legacy/stale artifacts and should not be used.
 
 **2026-05-10 â€” Console command source of truth:** `PDV_SkyrimConsoleReference.md` (UESP-sourced). Confirmed working: `GetGlobalValue <var>` (read), `set <var> to <value>` (write). `cgf` does not work on instance functions.
@@ -794,6 +812,10 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 **2026-05-18 - Khajiit sleep ingress proof and origin-runtime lesson:** The `PDV_Player` alias is now live on `PDV__ManagerQuest` with `PDV_PlayerEvents` attached and its three alias properties filled (`PDV_EventBusService`, `PDV_OriginQuest`, `PDV_GLO_DebugLevel`). The debugging lesson from this pass is that the hard part was runtime timing, not missing linkage: fresh/load paths could still see Skyrim's temporary Nord placeholder and bake `PDV_GLO_OriginRace = 0` before Khajiit settled. `PDV__MainQuest` now defers origin work to alias-side ingress, `PDV_PlayerEvents` queues origin retries, and `PDV_Origin` treats the first Nord read as provisional. Early Khajiit sleep attempts before resetting the live runtime global should be treated as exploratory only, not counted proof. Counted Khajiit smoke should reset the runtime global in-game if a stale save already baked the wrong value, confirm `PDV_GLO_DebugLevel = 2`, then sleep once and inspect `C:\Users\Admin\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`. The counted proof on 2026-05-18 showed `EventBus: RouteSleepStop complete`, `Manager: Khajiit moon observance routed...`, and `KhajiitLunar: Moon observance recorded...` with `PDV_GLO_OriginRace` holding at `6`. Remaining boundary for the next planning pass: Dunmer portable shrine/home bonus currently has backend routing plus MCM/debug coverage, but no confirmed normal-play shrine/item trigger is built yet.
 
 **2026-05-18 - Prisma UI bridge scaffold:** Prisma UI's API header is installed and visible through the Anvil MO2 MCP. Added `native\DevotionPrismaBridge\` as the first C++ SKSE bridge scaffold, vendored `PrismaUI_API.h`, mirrored the initial `PrismaUI\views\Devotion\` HTML/CSS/JS panel into the live `Devotion` mod, and added compile-clean native Papyrus declarations in `PDV_PrismaBridge.psc` / `.pex`. Visual Studio Build Tools 2022 and portable xmake are now installed locally; the `releasedbg` DLL builds cleanly, exports the expected SKSE plugin entrypoints, and copies `DevotionPrismaBridge.dll` / `.pdb` to `Devotion\SKSE\Plugins\`. The vendored local Prisma header is intentionally shimmed for CommonLibSSE-NG by avoiding `Windows.h`, while the installed MO2 Prisma API header mod remains unchanged.
+
+**2026-05-19 - Prisma devotional UX prototype:** The first real Prisma view now renders a devotional panel rather than a raw metric card: Patron, Today, and Debug tabs; stance/rivalry notes; piety progress; recent devotional acts; suggested rites; and payload-driven transient toasts. Toast/panel marks now use an inline SVG symbol registry for deities and system notices instead of initials, with larger marks and thicker rings for readability. The bridge/native DLL now exports the new Papyrus route `SendOverlayJson(payload)` so event toasts can use the overlay receiver without focusing the panel path. `PDV__ManagerQuest` gained the first Papyrus toast helper plus dawn and active-patron positive-gain hooks. The Prisma client now expands compact event payloads for `favor`, `dawn`, `neglect`, `tier`, and `rivalry` into authored-feeling tone/title/message defaults while still allowing explicit copy overrides. Updated `index.html`, `styles.css`, and `app.js` were mirrored to `D:\Wabbajack\modlists\Anvil\mods\Devotion\PrismaUI\views\Devotion\` for in-game iteration. A single-file static share demo lives at `scratch\DevotionPrismaDemo.html`; it embeds the current CSS/JS and forces demo mode for Discord-style preview sharing.
+
+**2026-05-19 - Prisma bounded-monorepo decision:** Keep Prisma UI in the main PDV repo for now as a bounded subsystem under `native\DevotionPrismaBridge\`. This keeps the SKSE bridge, Papyrus native declaration, Prisma view source, and payload contract together while the UI is tightly coupled to PDV runtime events. `scratch\DevotionPrismaDemo.html` is a generated/share review artifact, not canonical source. Reassess a separate UI repo only if Prisma gains its own JS build system, asset pipeline, UI test suite, independent release cadence, non-PDV reuse target, or recurring context noise for Papyrus/CK work.
 
 **2026-05-16 - Completed phase docs archived:** Finished Phase 2/3 walkthroughs, older planning/delivery notes, and the now-complete Phase 4/5/6 CK walkthroughs were moved to `archive/completed-phase-docs-2026-05-16/` so the root folder stays focused on living architecture/setup/standards docs.
 

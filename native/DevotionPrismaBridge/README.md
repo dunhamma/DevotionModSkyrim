@@ -19,6 +19,28 @@ The first UI view is loaded from:
 Data/PrismaUI/views/Devotion/index.html
 ```
 
+## Context Boundary
+
+This directory is the bounded home for the Prisma UI bridge and its current
+player-facing prototype. Keep source UI changes here while the UI remains
+tightly coupled to PDV's Papyrus payloads and SKSE bridge.
+
+Source-of-truth rules:
+
+- Editable UI source lives under `mod/PrismaUI/views/Devotion/`.
+- Papyrus-facing native declarations live under `mod/Scripts/Source/`.
+- C++ bridge behavior lives under `src/`.
+- `scratch/DevotionPrismaDemo.html` is a generated/share artifact only.
+- UI notes do not override PDV piety, StorageUtil, dawn, EventBus, or CK record
+  architecture.
+- Payload schemas are contracts only after this README or
+  `PDV_Architecture_v3.md` documents them.
+
+Keep Prisma in the main repo until at least two split triggers are true: a JS
+build system, asset pipeline, UI test suite, independent release cadence,
+non-PDV reuse target, large reusable visual asset set, or recurring UI context
+noise for Papyrus/CK work.
+
 ## Build
 
 This scaffold follows the CommonLibSSE-NG `xmake` pattern used by Anvil's
@@ -104,3 +126,20 @@ event defaults when Papyrus needs authored wording for a special case.
 current player-facing prototype outside the dev environment. It embeds the
 current Devotion view CSS/JS and forces demo mode, so it does not require
 Skyrim, SKSE, Prisma, MO2, or the rest of this repo.
+
+Do not manually treat the static demo as the editable source. Regenerate or
+replace it from `mod/PrismaUI/views/Devotion/` after meaningful UI changes. If
+the demo starts creating repo noise, move future copies to release artifacts or
+leave regenerated previews untracked.
+
+## Payload Maturity
+
+Use these maturity labels when growing the UI contract:
+
+- `prototype`: useful for demo or one in-game smoke path; shape may change.
+- `stable`: documented here and safe for Papyrus helpers to rely on.
+- `deprecated`: still accepted by the UI but should not be emitted by new
+  Papyrus code.
+
+Current toast events are prototype-level until the next accessibility and
+payload-contract pass promotes them.

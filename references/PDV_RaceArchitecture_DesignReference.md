@@ -1,6 +1,6 @@
 # PlayerDevotion (PDV) — Race Architecture Design Reference
 **Started:** May 12, 2026
-**Last updated:** May 16, 2026 (v3 vocabulary cleanup and implementation-plan sync)
+**Last updated:** May 19, 2026 (race implementation-lock audit through Breton)
 **Status:** Living reference — race architecture and pre-matrix requirements locked as confirmed
 
 **Current implementation boundary:** Early sections of this reference were
@@ -41,7 +41,7 @@ domain-signal shorthand, not as a request to restore bucket records or
 - The old `CombatBucket`, `SocialBucket`, and `LifestyleBucket` records are removed
 - Design may still group signals as combat, social, lifestyle, devotional, craft, faction/quest, curse, or Daedric for readability
 - Each race/deity/path interprets those signal families differently
-- Bosmer Old Contract and Argonian Hist/community/Sithis still need custom interpretation, but not custom bucket records
+- Bosmer Old Contract and Argonian Hist/community/Sithis require custom interpretation, but not custom bucket records
 - Comments in scoring functions must document WHY each signal matters theologically
 
 ---
@@ -131,7 +131,7 @@ Broad worship is theologically incoherent. Setup choice is depth/interpretation,
 | Bosmer (orthodox) | Y'ffre / Green Pact | A covenant made specifically with the Bosmer. Not a choice — a contract. |
 
 **POLY — Pantheon worship is native and expected:**
-Broad worship is the cultural norm. Players can worship all gods (diluted) or choose a primary (focused).
+Multiple worship targets are culturally available. Broad-worship lane eligibility is narrower and defined below.
 
 | Race | Pantheon | Notes |
 |------|----------|-------|
@@ -151,10 +151,29 @@ Broad worship is the cultural norm. Players can worship all gods (diluted) or ch
 
 ### 3.2 Dilution System for Poly Races (LOCKED)
 
+**Broad-worship lane eligibility:**
+
+Broad-worship lanes exist only where culturally normal and experientially useful, not for every race with multiple worship targets. The Poly classification above means "multiple worship targets exist," not "generic whole-pantheon worship is always the active lane."
+
+| Race | Broad-worship lane? | Reason |
+|---|---|---|
+| Nord | Yes | Whole-pantheon reverence is culturally normal; breadth should feel complete |
+| Imperial | Yes | Civic Nine Divines worship is institutional and profession/life-event shaped |
+| Redguard | Yes, sect-shaped | Yokudan worship is broad inside Crown / Forebear / Ash'abah framing |
+| Dunmer | Special layered equivalent | Ancestors + Good Daedra are cumulative layers, not casual pantheon breadth |
+| Breton | No generic broad lane | The tradition choice is the real lane; god choice flavors that tradition |
+| Altmer | No generic broad lane | Coherence, faction alignment, and Lorkhan pressure matter more than casual breadth |
+| Khajiit | No | Lunar substrate and emergent patron emphasis replace broad pantheon worship |
+| Bosmer | No | Path choice defines the theology |
+| Orc | No | Malacath-centered modes, not multiple gods |
+| Argonian | No | Hist/community/Sithis exile architecture, not pantheon worship |
+
 **Broad worship (no primary god chosen):**
 - Signals can contribute to multiple deity relationships, but gains are dampened
 - Maximum devotion cap defaults to Tier 2 / Faithful for 1.0
 - Broad worship has its own reward vocabulary, especially Nord combo/contextual favors
+- Broad worship counts as its own devotional lane for contextual favor authoring
+- Broad-worship favors are blended across the pantheon, capped at Faithful, and should be softer / less specific than focused patron favors
 - Represents: "acknowledged by the gods, beloved by none specifically"
 
 **Primary god chosen:**
@@ -192,6 +211,31 @@ weighting instead of formal offers.
 | Redguard | Sect-Layered Poly | Sect state; light ancestor reverence | Crown vs Forebear vs Ash'abah | LOCKED |
 | Orc | Single-Core Social Modes | `OrcLifeMode` state and `PDV_SacredPlace` contextual modifier | Malacath across Stronghold / City / Exile | LOCKED |
 | Argonian | Layered Custom | Strong Hist substrate, community, Sithis pressure | Hist / Collective / Sithis exile architecture | LOCKED |
+
+### 4.1a Implementation Lock Audit (2026-05-19)
+
+This audit separates **architecture locked** from **implementation-spec locked**. Every race has a locked 1.0 architecture. A race is implementation-spec locked only when its launch state tracks, setup/default rules, switch or commitment gates, fallback behavior, and major unresolved value deferrals are documented tightly enough for later build work.
+
+| Race | Implementation-lock status | Locked enough to build? | Remaining implementation decisions |
+|---|---|---|---|
+| Nord | Locked | Yes | `PDV_State_NordPantheonBaseline` is split from patron state; dawn offer evaluation, per-deity decline cooldowns, accepted-patron stability, Faithful offer threshold, and recomputed offer candidates are locked |
+| Imperial | Locked | Yes | Shared patron state, global offer gate, Concordat offer filters, Talos rupture acceptance, civic amplification, and Enforcer damping are locked |
+| Breton | Locked | Yes | Explicit tradition setup, all three state tracks, normal no-switching rule, hook feasibility, dawn math, recovery cadence, threshold values, Hidden Art cover/notoriety split, and tradition-authored favor lanes are locked; reward magnitudes remain tunable |
+| Dunmer | Locked | Yes | No `PDV_State_DunmerPath`; shared patron state owns native focus, `PDV_Substrate_DunmerAncestor` owns the ancestor substrate, `PDV_State_DunmerAncestorPosture` owns curse/restoration posture, and the Dunmer Daedric deviation option map is locked |
+| Altmer | Partial | Mostly; final closeout still needed | `ThalmorAlignment` bands/start values, shared patron-state use, no generic broad lane, and bounded Lorkhan economy are locked. Still close crisis-state enum values/resolution hooks, final crisis trigger list, contextual favor lanes, and launch-focused deity hook posture |
+| Khajiit | Locked | Yes | Lunar substrate namespace, hybrid moon-cycle model, real/fallback phase source, silent no-offer emergence, focused-emphasis enum/threshold/fallback, road-home circuit rules, lunar posture enum, curse posture, ShadowDrift boundary, five launch focused paths, and launch hook posture are locked |
+| Bosmer | Locked | Yes | Path enum, Old Contract split, Living Story fallback, shared Pact-positive signal weighting, path-switch request shape, destination gates, ledger preservation, and seven-day switch lockout are locked |
+| Redguard | Locked | Yes | `PDV_State_RedguardSect`, setup/default, ancestor layer posture, sect switching, broad -> focused offer gate, Dunmer-pattern portable/private Tu'whacca shrine, HoonDing 1.0 milestone posture, MS08 stage hooks, and launch hook posture are locked; Ash'abah social stigma is limited to light authored 1.0 content |
+| Orc | Locked | Yes | `PDV_State_OrcLifeMode` is locked as `City = 0`, `Stronghold = 1`, `LegionExile = 2`; setup/MCM records intent; active lane is world-confirmed; soft and major switch gates are defined |
+| Argonian | Locked | Yes | `PDV_Substrate_ArgonianHist`, visible `Hist` / `People` / `Void` layers, StorageUtil keys, gentle Hist distance, single bed-of-choice cadence, Sithis activation threshold, and curse posture enum are locked |
+
+**Remaining implementation-lock priority recommendation:**
+1. `Altmer` - core alignment and Lorkhan economy are bounded; finish crisis/favor/deity-hook closeout before marking implementation-locked
+
+Do not mark this audit as complete by changing the top-level race `LOCKED` status. Top-level `LOCKED` means architecture locked. Implementation lock should be advanced race by race as the exact state-track and substrate contracts are ratified.
+
+**Shared patron-state implementation rule (LOCKED 2026-05-19):**
+Do not create race-specific state tracks whose only job is `Broad` vs `Primary`. Formal patron/deity commitment uses the shared patron state model: `PDV_GLO_PatronState` for unset / broad worship / active primary, and `PDV_GLO_PatronDeity` for the accepted patron. Race-specific state tracks are reserved for orthogonal identity axes such as pantheon baseline, sect, tradition, life-mode, crisis state, substrate posture, or reputation state. This applies to Nord and Imperial immediately, and should be presumed for Redguard, Breton, Dunmer, Altmer, or any later formal-offer race unless a race-specific exception is explicitly documented. Khajiit remain the no-formal-offer exception.
 
 ### 4.2 Bosmer (LOCKED)
 
@@ -379,11 +423,107 @@ These requirements govern the next race signal matrix. They define what each sig
 
 **Contextual favors:**
 
-- Passive only; no hotbar powers, lesser powers, or activatable religion kit in the core design
-- Temporary and condition-based; they turn on only while their conditions are true
-- Each path should generally aim for `3-5` contextual favors
+- Automatic only; no hotbar powers, lesser powers, or activatable religion kit in the core design
+- Temporary and signal-triggered; an authored preferred signal for the active patron, path, mode, or substrate may also start a favor
+- Each devotional lane should generally use `3-5` trigger families, sourced from the same authored tables that decide what generates piety
+- Only one contextual favor boost may be active on the player at a time, globally across PDV
+- A favor may fire again after the current boost expires, but only when the player hits another qualifying preferred signal
 - Similar favor mechanics may be shared across races or paths with different theological explanation wrappers
-- Use family caps so multiple favors from the same effect family do not stack into burst power
+- Use family caps so overlapping favors from the same effect family do not stack into burst power
+
+**Devotional lane counting rule:**
+
+Favor counts are per active devotional lane, not per race. A lane may be a focused deity, path, mode, substrate layer, or broad-worship state depending on the race architecture. Broad worship therefore receives its own `3-5` blended favor trigger families, rather than inheriting every individual deity's favor set at once.
+
+Broad-worship favor constraints:
+
+- Capped at Faithful / Tier 2
+- Built from blended pantheon meanings, not a pile of individual patron favors
+- Softer or less specific than Devoted patron favors
+- Still a complete, culturally normal experience for races where broad worship is normal
+
+**One-active-boost cap:**
+
+The cap is global across all PDV contextual favors, including temporary favors from substrates. A Khajiit lunar favor and Khenarthi road favor, for example, cannot both be active temporary boosts at the same time. Baseline blessings, low-power persistent substrate boons, religious privileges, neglect state changes, and restoration state changes are outside this cap unless they grant a temporary contextual favor.
+
+**Marked-signal rule:**
+
+Contextual favors are not restricted to simple positive piety events. A signal can trigger a favor when the authored matrix marks it as a preferred or meaningfully faithful moment for the current god/path/layer. This may include costly-but-faithful events such as defiance under Concordat pressure, re-commitment after rupture, cure-and-return rites, or choosing orthodoxy after a dissonant Altmer event. Pure penalties, failures, hostile-rival signals, and ordinary negative drift do not trigger favors unless an explicit restoration or recommitment signal is authored.
+
+Implementation-facing matrix rows should carry an explicit `CanTriggerFavor` / `FavorFamily` decision rather than inferring favor eligibility from piety sign alone.
+
+**Contextual favor duration buckets:**
+
+| Bucket | Use for | Target duration |
+|---|---|---|
+| `Momentary combat favor` | Mercy, near-death, impossible odds, honorable kill, protecting someone | 30-90 seconds |
+| `After-act favor` | Death rites, oath kept, caravan aid, meaningful quest beat | 2-4 in-game hours |
+| `Environmental favor` | Storm, water, road, tomb, shrine, dawn/dusk, outdoor sleep aftermath | While the context is true or until the place/time window ends |
+| `Rare major favor` | HoonDing make-way, Ash'abah major tomb cleansing, Baan Dar reversal, major patron recognition | 24 in-game hours |
+
+Player-facing language should describe these as "for this fight," "for this journey," "while I am in the sacred context," or "until the next day," not as precise timer mechanics.
+
+**Contextual favor surfacing:**
+
+The shorter the favor, the quieter it should be. Most short combat favors should be felt through the effect itself rather than announced. Longer or rarer favors can be surfaced more clearly because they are less likely to spam the player.
+
+| Surfacing level | Default bucket | Player feedback |
+|---|---|---|
+| `Quiet` | Momentary combat favor | No notification by default; effect icon or felt gameplay change only |
+| `Noted` | After-act favor, environmental favor | Short notification when the context is meaningful and rare enough |
+| `Marked` | Rare major favor, costly-but-faithful restoration/recommitment moments | Named notification or message; reserved for moments the player should remember |
+
+Costly-but-faithful events may be surfaced one level higher than their duration bucket when the point of the event is that the character paid a real theological cost.
+
+**Standard contextual-favor table shape:**
+
+Each race sheet should express contextual favors with the same columns so lane-to-lane comparisons stay visible during the signal/reward pass:
+
+| Column | Meaning |
+|---|---|
+| `Lane` | The active devotional lane: focused deity, path, mode, substrate layer, or broad-worship state |
+| `Trigger family` | The 3-5 authored signal families that may start a favor for that lane |
+| `Hook candidates` | Buildable Skyrim hooks: quest stages, Story Manager events, location keywords, shrine/Hall interactions, dialogue/faction states, sleep/rest events, or curated story events |
+| `Favor bucket` | Momentary combat, after-act, environmental, or rare major |
+| `Surfacing` | Quiet, Noted, or Marked |
+| `Notes` | Anti-farm rule, theological caveat, build risk, or why the moment should feel marked |
+
+This table is authoring scaffolding, not player-facing UI. A lane may have fewer final implemented favors than the table lists if hook reality forces a narrower launch scope, but the sheet should make that tradeoff explicit.
+
+**Contextual-favor table rollout:**
+
+Use a pilot-first rollout. Populate and review the shared table shape for the three broad-worship edge cases first:
+
+- `Nord`: whole-pantheon breadth, Old Ways / Nine Divines texture, god-notices-you offer path
+- `Imperial`: civic/institutional breadth under Concordat pressure
+- `Redguard`: sect-shaped breadth across `Crown`, `Forebear`, and `Ash'abah`
+
+Only after those three clear review should the table shape be propagated to all remaining race sheets. The pilot should prove that the columns help compare user experience without flattening race-specific theology.
+
+Pilot tables may live in the affected race sheets with `Status: Pilot draft` while they are being worked. Do not promote their specific rows into this architecture reference until the pilot clears review. The architecture reference owns the table shape, rollout rule, and clearance criteria; the race sheets own draft race-specific content.
+
+Pilot scope is broad-worship lanes only. Do not draft full focused-deity contextual-favor tables until the broad-lane pilot clears. Each pilot race should include a short `Focused contrast note` to show what focused devotion would sharpen later, but the note is only orientation, not a second table.
+
+Pilot clearance requires:
+
+1. Each pilot broad-worship lane has `3-5` trigger families.
+2. Every trigger family has at least one strong vanilla hook candidate, or an explicit `custom / post-1.0` note.
+3. Every row has a clear favor bucket and surfacing level.
+4. Each pilot race includes a short user-experience sentence proving the lane does not feel like the other two broad-worship lanes.
+
+The fourth requirement is the guardrail: `Nord` must not read like furred `Imperial`, `Imperial` must not read like civic `Nord`, and `Redguard` must not flatten into generic Yokudan pantheon worship.
+
+**Pilot clearance result (2026-05-18):**
+
+The Nord / Imperial / Redguard pilot cleared review against the criteria above. The shared table shape may now be propagated to the remaining race sheets. Do not promote the race-specific pilot rows into this architecture reference; keep the architecture at the level of shape, rules, and clearance.
+
+**Dunmer layered-favor propagation rule (LOCKED 2026-05-18):**
+
+Dunmer `Layer 1 + Layer 2` practice may trigger contextual favors before the player commits to a primary Good Daedra focus. This is not broad pantheon worship; it is the shared ancestor + Reclamations layer answering back. These shared favors should be mostly Quiet or Noted, with Marked surfacing reserved for primary-focus moments, vampire cure/restoration, major diaspora burden, or major Good Daedra quest recognition.
+
+**Dunmer contextual-favor clearance result (2026-05-18):**
+
+The Dunmer table is review-cleared for user-experience shape. It has five shared ancestor + Good Daedra trigger families, five focused trigger families each for Azura, Boethiah, and Mephala, and explicit boundaries preventing Azura from becoming a time-of-day faucet, Boethiah from becoming a generic violence wrapper, and Mephala from becoming a generic crime wrapper. Hook feasibility, substrate/focus implementation, curse posture, and Daedric deviation option mapping are now locked; remaining launch work is content weighting and implementation, not the experience model.
 
 **Religious privileges:**
 
@@ -580,6 +720,66 @@ Step 2: Worship broadly until a god's offer fires
 - Player can decline ("Not yet") — offer cooldown applies, broad worship continues
 - 70% piety carry-over on commitment
 
+**Nord implementation split (LOCKED 2026-05-19):**
+- Do not use one overloaded `PDV_State_NordWorship` enum for both pantheon identity and commitment depth
+- Implement pantheon baseline as `PDV_State_NordPantheonBaseline`
+- Enum values are `OldWays = 0`, `NineDivines = 1`
+- Commitment depth uses the shared patron state model: `PDV_GLO_PatronState` for broad worship vs active patron, and `PDV_GLO_PatronDeity` for the committed primary god
+- A Nord's active devotional framing is therefore the composition of baseline plus patron state: Old Ways + Broad, Nine Divines + Broad, Old Ways + Primary, or Nine Divines + Primary
+- This preserves distinct Talos presentation: Old Ways Talos / Ysmir reads as ancestral identity defiance, while Nine Divines Talos reads as carrying contradiction inside a public Divine frame
+
+**Nord primary-offer gate (LOCKED 2026-05-19):**
+- Primary offers are evaluated during `ProcessDawn()`, not mid-event
+- A god becomes offer-eligible only if the god belongs to the chosen pantheon baseline, current piety meets the offer threshold, that god has qualifying signal activity on at least two separate in-game days within the last seven days, and no offer cooldown blocks it
+- Default offer threshold is the Faithful / Tier 2 threshold: `50` persistent piety
+- The threshold remains per-deity tunable, but lower or special thresholds require explicit race/deity exception text
+- If multiple gods qualify on the same dawn, offer the highest recent signal-strength god first
+- Major sacred events such as Sovngarde / Tsun, hidden Talos shrine protection, or major Kyne / Thu'um milestones may count as one qualifying day, but do not bypass the sustained-pattern requirement by themselves
+- Once the player is primary-committed, competing primary offers do not fire unless a later patron-drift / reorientation system explicitly exists
+
+**Nord offer-decline rule (LOCKED 2026-05-19):**
+- Declining an offer with "Not yet" does not lower piety
+- Decline sets a per-deity cooldown, not a global Nord offer cooldown
+- Suggested StorageUtil key: `PDV.OfferCooldownUntil.<Deity>`
+- Initial cooldown is seven in-game days for that deity
+- A second decline of the same deity extends cooldown to fourteen in-game days; later declines stay at fourteen days unless testing shows abuse
+- Broad worship continues normally during cooldown
+- Other qualifying gods may still offer on later dawns
+- If multiple gods qualify while one is cooling down, skip the cooled-down god and offer the next highest recent signal-strength god
+- Accepting a patron clears pending Nord offer queues and sets the shared patron state to active primary
+- Rationale: Nord worship should let a god notice the character while preserving player agency about whether recognition becomes commitment
+
+**Nord acceptance / no-switching rule (LOCKED 2026-05-19):**
+- Accepting a primary offer sets `PDV_GLO_PatronState` to active primary and `PDV_GLO_PatronDeity` to the accepted deity
+- Accepting clears pending Nord offer candidates
+- The accepted deity receives the standard 70% piety carry-over
+- Other deity ledgers remain intact but become background-only
+- Competing primary offers do not fire while active primary is set
+- If devotion later decays below Tier 3, the patron relationship weakens but does not automatically clear
+- For 1.0, there is no active Nord patron-switching / reorientation system
+- Future patron switching should be an explicit post-1.0 rupture, restoration, or reorientation feature, not hidden automatic drift
+
+**Nord offer-candidate storage rule (LOCKED 2026-05-19):**
+- Do not persist a real queue / array of pending Nord offers
+- At each `ProcessDawn()` offer pass, recompute offer candidates from current state
+- Candidate filter: deity belongs to chosen pantheon baseline, persistent piety is at or above `50`, two qualifying signal days exist within the last seven in-game days, and no per-deity cooldown is active
+- Select at most one offer per dawn by highest recent signal strength
+- Store only per-deity decline cooldowns, recent signal-day evidence, and optional last-offered deity / time for debug
+- If an offer presentation is ignored or interrupted, re-evaluate on the next dawn rather than preserving a stale queue
+- Once a patron is accepted, the offer pass stops for formal patron offers
+
+**Broad Nine Divines Nord rule (LOCKED):**
+- Broad Nine Divines Nords mostly use the same deed/world hook surface as Broad Old Ways Nords
+- The names and moral framing shift toward Kynareth, Arkay, Stendarr, Zenithar, and the temple-readable Divines
+- The play texture remains Nord: holds, weather, family, death, honor, and Talos pressure rather than Imperial civic/institutional religion
+
+**Broad Nord Talos pressure rule (LOCKED):**
+- Talos pressure belongs in both broad Nord lanes
+- In Broad Old Ways, it presents as ancestral identity defiance
+- In Broad Nine Divines, it presents as carrying a contradiction inside a public Divine frame
+- In both lanes, contextual favor should require costly faithful signals, not generic anti-Thalmor violence or ordinary Civil War preference
+- Default surfacing is `Noted`; escalate to `Marked` only for high-cost events like hiding a worshipper, protecting a shrine, or defying Thalmor pressure face-to-face
+
 **Threshold Trigger Rules (LOCKED):**
 - Single domain-threshold pattern for most gods
 - Combined domain threshold only for multi-domain gods (Mara, Talos)
@@ -622,9 +822,8 @@ Step 2: Worship broadly until a god's offer fires
 - Jhunal — Forgotten by 4E 201 Nords, absorbed into Julianos
 
 **Open for balancing (not architectural):**
-- Exact offer-threshold values
-- Number of consecutive days required
-- Offer cooldown / piety handling on "Not yet" decline
+- Exact piety values above the global Faithful offer threshold, if a specific deity needs stricter tuning
+- Exact per-signal recent-strength weights used to break ties between multiple qualifying offer candidates
 
 **Curse state weight notes (to detail during implementation):**
 - Werewolf Nord: Hircine pulls against Shor/Sovngarde — combat signals shift toward hunt interpretation
@@ -640,6 +839,41 @@ Cap: Tier 2 (Faithful) — civic observance is culturally normal
 Tier 3 only through primary god commitment
 Same piety-threshold offer system as Nord
 ```
+
+**Imperial patron-state rule (LOCKED 2026-05-19):**
+- Do not create `PDV_State_ImperialWorship` for Broad vs Primary
+- Imperial broad worship and accepted primary commitment use the shared patron state model: `PDV_GLO_PatronState` and `PDV_GLO_PatronDeity`
+- Imperial-specific state lives in `PDV_RepTrack_ConcordatStanding`, not in a duplicate worship enum
+- Rationale: `ConcordatStanding` is the Imperial identity/pressure axis; Broad vs Primary is global patron machinery
+
+**Imperial offer-gate rule (LOCKED 2026-05-19):**
+- Imperial uses the global formal patron-offer gate: dawn-only evaluation, `50` persistent piety by default, qualifying signal activity on at least two separate in-game days within the last seven days, per-deity cooldowns, and no persistent offer queue
+- Broad vs Primary is handled by shared patron state
+- `ConcordatStanding` may modify offer eligibility and presentation, especially for Talos, but it does not replace the global offer machinery
+
+**Imperial broad-worship lane (LOCKED):**
+
+Imperial broad worship is civic and institutional, not mythic breadth. Its contextual favors should be led by civic acts, with institutional places acting as amplifiers, recognition surfaces, or cleaner hooks where the game supports them.
+
+| Broad trigger family | Favor presentation |
+|---|---|
+| Mercy / restraint under civic pressure | Brief Stendarr-coded protection or steadiness |
+| Burial, Hall of the Dead, anti-necromancer duty | Arkay-coded rest, disease/undead protection, or institutional recognition |
+| Lawful order, Legion duty, public service | Akatosh / civic-order stability favor |
+| Honest trade, craft, tax / contract order | Zenithar-coded speech or commerce steadiness |
+| Public/private Talos pressure | Talos favor only when the authored signal is faithful defiance, not generic rebellion |
+
+Concordat compliance may move `ConcordatStanding`, alter access, or qualify Akatosh/civic-order favor when the authored act is genuinely order-preserving. It does not trigger Talos contextual favor. Talos favor comes only from authored faithful defiance, never generic rebellion or plain anti-Thalmor violence.
+
+Legion allegiance, court status, and official faction state may provide scoring context, but they do not trigger Imperial contextual favor by themselves. Lawful-order favor requires a concrete public-service or order-preserving act, and the act must not be cruelty disguised as order.
+
+`Public Compliant` and `Concordat Enforcer` may amplify Akatosh / Zenithar civic-order offer eligibility when the qualifying acts are genuinely order-preserving, public-service, or honest civic-exchange signals. They never amplify Talos. Cruelty disguised as order does not qualify.
+
+`Private Defiant` allows Talos offers, but presentation should remain quiet / private by default. `Open Defiant` may surface more openly when the authored moment is costly enough. `Uncommitted` leaves all Nine Divines offer eligibility neutral, including Talos, provided the player has real god-specific signal evidence.
+
+Bounty payment is not a generic mercy/restraint favor trigger. It counts only when authored as preventing harm or resolving a real civic conflict; ordinary pay-bounty menu interactions do not trigger favor.
+
+Final trigger selection must follow buildable Skyrim hooks: quest stages, shrine/Hall of the Dead interactions, dialogue choices, faction states, and curated story events before ambient inference.
 
 **Unique Mechanic: Concordat Standing Track (LOCKED)**
 
@@ -690,9 +924,27 @@ Positive = Compliance (enforcing ban, reporting worshippers)
 - God/domain mapping follows the Nine Divines column from the Nord table
 
 **Talos commitment gate (LOCKED):**
-- Full Talos primary commitment is available only in `Uncommitted`, `Private Defiant`, and `Open Defiant`
-- `Public Compliant` and `Concordat Enforcer` cannot fully commit to Talos as primary patron
-- Rationale: high Concordat compliance must have real theological cost, not just slower Talos gain
+- Full Talos primary commitment is normally available only in `Uncommitted`, `Private Defiant`, and `Open Defiant`
+- `Public Compliant` and `Concordat Enforcer` normally block Talos primary offers
+- A fresh costly-defiance signal may create a rupture exception that lets Talos offer despite a compliant current state
+- The rupture exception must be authored as faithful defiance, not generic anti-Thalmor violence or ordinary political preference
+- Rationale: high Concordat compliance must have real theological cost, while a costly act of conscience can still open the door
+
+**Talos rupture acceptance rule (LOCKED 2026-05-19):**
+- If an Imperial in `Public Compliant` or `Concordat Enforcer` accepts a Talos offer after a costly-defiance rupture, `ConcordatStanding` immediately moves at least to `Private Defiant`
+- A public or high-risk authored rupture may move the player farther, including to `Open Defiant`, but only for major curated signals
+- A hidden or private rupture moves the player to `Private Defiant`
+- Accepting Talos cannot leave the character publicly theologically compliant
+
+**Civic offer amplification rule (LOCKED 2026-05-19):**
+- `Public Compliant` and `Concordat Enforcer` may increase Akatosh / Zenithar recent signal strength for offer priority when the qualifying acts are genuinely order-preserving, public-service, or honest civic-exchange signals
+- Civic amplification does not lower the global Faithful / Tier 2 offer threshold
+- Civic amplification never applies to Talos and never applies to cruelty disguised as order
+
+**Enforcer repair-gate rule (LOCKED 2026-05-19):**
+- `Concordat Enforcer` dampens Stendarr and Arkay offer eligibility unless the player has recent mercy or death-rite repair signals
+- Repair signals must be concrete authored acts, such as mercy under pressure, prisoner protection, death-rite restoration, or anti-necromancer / burial duty
+- Rationale: Imperial civic religion should judge its own failures; persecution and inadequate death care should not passively produce mercy or death-order devotion
 
 **Secondary Concordat modifiers (Arkay + Stendarr):**
 Reuses ConcordatStanding track — no new system needed. Two additional conditionals in `ApplyBaseInterpretation()`:
@@ -775,15 +1027,29 @@ Step 1: Choose primary tradition (spine of devotional life)
 → [The Hidden Art]     Occult practice, Daedric dealings, double lives
 → [The Green Way]      Druidic covenant, standing stones, nature rites
 
-Step 2: Worship broadly within tradition until focused deity emphasis emerges
-→ Broad worship cap: Tier 2 (Faithful)
+Step 2: Practice tradition breadth until focused deity emphasis emerges
+→ Tradition breadth cap: Tier 2 (Faithful)
 → Tier 3 (Devoted) only through focused deity commitment within tradition
 
 Traditions can pull against each other — cross-tradition acts create tension
 ```
 
+Breton does **not** use the generic broad-worship lane. Tradition breadth is a Breton-specific setup layer: the player lives within a chosen tradition before a focused deity or Daedric patron emerges. Patron offers normally come only from the chosen tradition unless an authored major fork explicitly opens another route.
+
 **Three-Track Restructure (LOCKED):**
 The Breton identity is defined by *which tradition you walk*, not which god you pick from a list. God choice is a secondary flavor layer within each track — adding depth to your tradition rather than replacing it. The three tracks can pull against each other, creating the signature Breton tension between respectability, power, and nature.
+
+**Implementation-lock refinements (2026-05-19):**
+- Setup requires an explicit `PDV_State_BretonTradition` choice. There is no silent default into a tradition.
+- `PDV_State_BretonTradition` enum values are `KnightsRoad = 0`, `HiddenArt = 1`, `GreenWay = 2`.
+- `WitchcraftExposure` is global for all Bretons because occult visibility matters even outside the Hidden Art tradition.
+- `KnightlyVowIntegrity` exists for all Bretons, starts at `100`, and is presented/active only for Knight's Road play. Major dishonor can still write the track while dormant so later attempts to walk the Knight's Road remember what the player has done.
+- `DruidicStanding` exists for all Bretons, starts at `50`, and is presented/active only for Green Way play or explicit Green Way forks. It does not punish non-Green Bretons for ordinary non-druidic life.
+- `PDV_State_BretonDruidicFork` enum values are `Stable = 0`, `Contested = 1`, `GreenAccepted = 2`, `HircineClaimed = 3`, `Excommunicated = 4`, `Penitent = 5`, `Restored = 6`.
+- Cross-lane pressure is asymmetric: Hidden Art can strongly damage KnightlyVowIntegrity and raise WitchcraftExposure; public knightly cover can slowly lower WitchcraftExposure but cannot erase severe occult commitments by itself; Knight's Road and Green Way overlap gently; Hidden Art and Green Way overlap mainly through Hircine/old magic and should create fork pressure.
+- Normal Breton tradition switching is not available in 1.0. The setup tradition is stable; major authored forks may rupture or redirect a path, but casual mid-game reorientation is deferred to a later explicit feature.
+- Breton contextual favors are authored per tradition lane for launch, not per deity: Knight's Road, Hidden Art, and Green Way each receive `3-5` trigger families. Focused deities may tune presentation, but they do not create separate launch favor tables.
+- Hidden Art supports two valid end states: careful cover in the `Hidden` / `Suspected` bands and open notoriety in the `Notorious` band. Cover should feel subtle and safer; notoriety should feel stronger, louder, and socially ruptured rather than simply better.
 
 **Focused deity options within each tradition:**
 
@@ -795,6 +1061,8 @@ The Breton identity is defined by *which tradition you walk*, not which god you 
 
 **UESP Confirmed:** Magnus is listed under "Additional Deities with Significant Breton Cults" — legitimate pantheon inclusion. Phynaster available for players emphasising elven heritage.
 
+Hircine is Breton-legible but not Breton-native. The stance matrix's Breton `TABOO` reading and the Daedric matrix's Breton `Legible` reading are reconciled by treating Hircine as fork-access: he is available through Hidden Art commitment signals or the Green Way werewolf fork, not as ordinary Breton baseline worship.
+
 ---
 
 **Unique Mechanic 1: WitchcraftExposure Track (LOCKED)**
@@ -804,10 +1072,12 @@ Same code pattern as Imperial's ConcordatStanding — one reusable `PDV_Reputati
 ```
 WitchcraftExposure (0–100, starts at 0)
 0–25   = Hidden       (private coven practice, socially invisible)
-26–50  = Suspected    (Vigilants take notice, some Bretons uncomfortable)
-51–75  = Known        (actively hunted by Vigilants, most Bretons distance)
+26–50  = Suspected    (Vigilants may take notice through authored/contextual reactions, some Bretons uncomfortable)
+51–75  = Known        (Vigilants become a credible danger when occult state is manifest or PDV-authored pressure fires, most Bretons distance)
 76–100 = Notorious    (Daedra cultist in all but name, full social rupture)
 ```
+
+The bands and modifiers are locked for 1.0. The `Notorious` x1.25 modifier applies only to Daedric / Hidden Art commitment, not to all Breton religion.
 
 **Exposure modifiers on Witchcraft path devotion:**
 ```papyrus
@@ -835,15 +1105,15 @@ removed social bucket.
 - Killing a Vigilant of Stendarr (+25)
 
 **What lowers exposure:**
-- Time passing without visible acts (slow passive decay −1/day)
-- Maintaining public Imperial Divines worship as cover (−5 per sustained period)
+- Time passing without visible acts (slow passive decay -1/day; visible exposure can return to `Hidden`, but one-shot major-act markers remain in history)
+- Maintaining public Imperial Divines worship as cover (-5 per sustained period; requires no major occult signal for 3 in-game days and is capped once per 7 days)
 - Avoiding Daedric-associated locations (passive)
 
 ---
 
 **Unique Mechanic 2: KnightlyVowIntegrity Track (LOCKED)**
 
-Applies to knight-path players (Stendarr or Akatosh as primary god).
+Applies to Knight's Road players. Stendarr and Akatosh read it most strongly, but the track belongs to the tradition rather than only to two gods.
 
 ```
 KnightlyVowIntegrity (0–100, starts at 100 for knight-path)
@@ -857,25 +1127,32 @@ KnightlyVowIntegrity (0–100, starts at 100 for knight-path)
 
 **Effects of low integrity:**
 ```papyrus
-if KnightlyVowIntegrity < 50
-    StendarrDailyShift *= 0.5
-    AkatoshDailyShift *= 0.75
-
-elseIf KnightlyVowIntegrity < 25
+if KnightlyVowIntegrity < 25
+    AllKnightsRoadDailyShift *= 0.5
     StendarrDailyShift *= 0.25
     AkatoshDailyShift *= 0.5
+
+elseIf KnightlyVowIntegrity < 50
+    AllKnightsRoadDailyShift *= 0.75
+    StendarrDailyShift *= 0.5
+    AkatoshDailyShift *= 0.75
+endif
 ```
+
+At `0`, all Knight's Road relationship progress halts until Integrity is restored above `25`; Stendarr and Akatosh recognition is fully withdrawn.
 
 **Restoration:**
 - Acts of mercy and justice rebuild integrity slowly (+5 per significant act)
-- Visiting Stendarr shrine with clean hands (+10)
+- Visiting Stendarr shrine with clean hands (+10; can restore collapse but cannot raise Integrity above 75)
 - Completing a quest to help an NPC without reward (+5)
+
+Integrity above 75 requires lived conduct: curated mercy, justice, protection, or reparation acts. Shrine visits can help a fallen knight stand back up, but they cannot by themselves make the player honorable.
 
 ---
 
 **Unique Mechanic 3: Druidic Standing (LOCKED)**
 
-Applies to Y'ffre path players.
+Applies to Green Way players as `PDV_RepTrack_DruidicStanding` (`0..100`) plus `PDV_State_BretonDruidicFork`. Starts at `50`, representing an open but unproven covenant. Decay is cadence-based rather than daily punishment: if no Green Way signal occurred in 5 in-game days, apply `-2` at dawn, with a non-curse floor of `30`.
 
 **Vampire interaction:**
 ```
@@ -892,6 +1169,8 @@ RESTORED: after sustained Pact-aligned behaviour post-ritual
   Y'ffre devotion resumes fully
   Permanent piety/tier scar from excommunication period
 ```
+
+Green Way vampire recovery is harder than ordinary neglect recovery: vampire state sets `Excommunicated`, cure moves the player only to `Penitent`, and full restoration requires a curated outdoor rite plus sustained Green Way behavior. Even restored players keep a permanent scar from the rupture.
 
 **Werewolf interaction (LOCKED — unique fork mechanic):**
 ```
@@ -923,6 +1202,28 @@ Rationale: The lore explicitly says Druidic Circles are split on werewolfism. Th
 - `Nature-site`, `standing stone`, grove, or wilderness-rite choices strongly weight `Druidic Y'ffre`
 - `Thieves Guild`, `Dark Brotherhood`, and broken-oath quest choices heavily damage `KnightlyVowIntegrity` and increase witchcraft pressure where appropriate
 - The `Druidic Trial` after werewolf transformation is an explicit theological quest-fork, not ambient drift
+
+**Breton 1.0 hook feasibility locks (LOCKED 2026-05-19):**
+- Knight's Road positive scoring is curated-only for launch. Strong surfaces are faction/quest/stage/location/shrine hooks: `DLC1HunterFaction` for Dawnguard protection, `VigilantOfStendarrFaction`, `StendarrsBeaconLocation`, `HalloftheVigilantLocation`, Divine shrine activators, `Destroy Brotherhood`, `Book of Love`, `Paarthurnax choice`, and selected justice/mercy quest outcomes. Generic "helped without reward" intent detection is not a launch hook unless a specific quest outcome cleanly exposes it.
+- Knightly vow pressure uses strong faction/crime/state hooks first: `ThievesGuildFaction`, `CrimeFactionThievesGuild`, `DarkBrotherhoodFaction`, `DB10SanctuaryFamilyFaction`, major murder/crime proxies, and explicit oath-breaking quest outcomes. Petty theft spam and radiant crime loops do not drive the track.
+- WitchcraftExposure is major-act only. Strong surfaces are Daedric quest outcomes, Nightingale oath / Nocturnal compact, Black Book / Apocrypha / Oghma-style forbidden knowledge, killing or directly opposing Vigilants, Daedric Tier 2, and vampire/Volkihar state. Generic spellcasting, stealth, artifact ownership alone, or visiting spooky places does not count.
+- Vigilant pressure has partial vanilla support, but not as a general exposure-based hunter system. `VigilantOfStendarrFaction` is hostile to vampire, Daedra, undead, necromancer, hagraven, and werewolf factions; world interactions include Vigilants fighting abominations; and `A Daedra's Best Friend` can make Vigilants attack Barbas. UESP also documents unused Daedric-artifact confrontation dialogue that is set to never happen in-game. Therefore 1.0 may use existing hostility/world-interaction surfaces and authored PDV pressure, but exposure-driven hunter squads are custom content, not assumed vanilla behavior.
+- Optional Vigilant pressure extension: a light authored encounter can be added later using the disabled Daedric-artifact confrontation as design precedent. Do not implement this as real crime-gold bounty: bounty is hold-scoped reported lawbreaking, while WitchcraftExposure is religious stigma. Preferred shape is a PDV-authored road confrontation, courier/letter warning, or contract-style encounter keyed to `Known`/`Notorious`, recent major occult signal, and long cooldown. This is desirable but should not block Breton 1.0 implementation lock unless the encounter pattern proves cheap.
+- Witchcraft-to-Knight drag is major-act based. Thieves Guild / Dark Brotherhood commitment, Nightingale oath, Daedric quest commitment, Namira feast, Molag Bal domination, and killing Vigilants can damage `KnightlyVowIntegrity`; ordinary magic, College membership, private curiosity, and shrine visits do not.
+- Green Way launch scoring is location/rite-first. Strong surfaces are standing-stone activators (`Doomstone*` and Solstheim `dlc2StandingStone*ACT`), `LocTypeSprigganGrove` (`MossMotherCavernLocation`, `RoadsideRuinsLocation`, `ShadowgreenCavernLocation`), Kynareth shrine/temple as modest Y'ffre-adjacent support, outdoor sleep cadence, and the `PlayerWerewolfFaction` / Companions beast-blood route for the one-time Druidic Trial.
+- Hunting is secondary and cautious for 1.0. Use curated hunts or strict context filters only; do not infer Y'ffre devotion from ordinary animal kills.
+- Breton dawn processing order is event deltas -> curse/fork state -> cross-lane drag -> devotion modifiers -> piety consolidation.
+- Player presentation is threshold-only: tradition chosen, patron offer, WitchcraftExposure band changes, Integrity crossing 50/25/0, Druidic Trial, vampire excommunication/restoration, Hircine fork, and Champion.
+- WitchcraftExposure visible decay can return to `Hidden`, but major-act history remains for debug, offer context, and future authored pressure.
+- Public Divine cover is not shrine-spam laundering: no major occult signal for 3 days, `-5` at most once per 7 days.
+- Knightly shrine restoration is capped at 75; Integrity above 75 requires lived mercy, justice, protection, or reparation.
+- DruidicStanding decay is gentle: no Green Way signal for 5 days -> `-2` at dawn, floor `30` unless curse-state rules override.
+- Green Way vampire recovery is stricter than neglect: `Excommunicated` -> `Penitent` -> outdoor rite plus sustained Green Way behavior, with permanent scar.
+- All three Breton tracks exist for every Breton. `WitchcraftExposure` is always active; `KnightlyVowIntegrity` and `DruidicStanding` can remain dormant/presented only when their tradition matters, but major authored events may write them so future path pressure has memory.
+- Normal Breton tradition switching is unavailable in 1.0. Only major authored forks, such as Green Way -> Hircine through the Druidic Trial, can redirect the active religious frame.
+- Breton contextual favors are tradition-lane authored for launch: Knight's Road, Hidden Art, and Green Way each use `3-5` trigger families, with focused deity flavor layered on top.
+- Hidden Art has two valid intentional end states: concealed occult practice and open Notorious rupture. Do not tune Notorious as a pure upgrade; it is stronger but socially costly.
+- Breton is implementation-locked as of 2026-05-19. Remaining reward numbers and exact effect magnitudes are balancing work, not open experience architecture.
 
 ---
 
@@ -1021,31 +1322,93 @@ Layer 3 — OPTIONAL DEPTH (primary Good Daedra focus)
   Triggered by sustained piety/signal threshold (same offer family as Nord/Breton)
   Ancestor practice (Layer 1) remains at FULL weight always
   Choosing Azura never reduces ash-prayer — only adds weight on top
+Daedric deviation - OPTIONAL RUPTURE / PACT
+  Other Daedric Princes may qualify only through the global Daedric path system
+  Presents as deviation, trial, pact, taboo, curse pressure, or foreign bargain
+  Aedric patron commitment is not a Dunmer 1.0 path
 ```
 
 **Critical distinction:** Choosing a primary Good Daedra never competes with ancestor devotion. They are theologically the same tradition at different depths.
+
+**Implementation split (LOCKED 2026-05-19):**
+- Do not implement `PDV_State_DunmerPath` as a path/focus enum; Dunmer has no selectable worship path
+- Native focus uses shared patron state: `PDV_GLO_PatronState` for broad/shared vs active primary and `PDV_GLO_PatronDeity` for the accepted focus
+- Dunmer-specific state is reserved for ancestor substrate posture and curse/restoration handling
+- The always-active ancestor layer is origin-gated through `PDV_Substrate_DunmerAncestor`
+- Existing substrate keys use `PDV.Substrate.DunmerAncestor.*`, including `Metric`, `Tier`, `LastEvent`, `PrayerCount`, and `HomeCount`
+- Add posture as `PDV.Substrate.DunmerAncestor.Posture` if a StorageUtil key is needed, with optional CK-readable mirror `PDV_GLO_State_DunmerAncestorPosture`
+
+**Ancestor posture enum (LOCKED 2026-05-19):**
+- `PDV_State_DunmerAncestorPosture` uses exact enum values: `Normal = 0`, `Strained = 1`, `Silent = 2`, `RestoredScarred = 3`
+- `Normal` is the launch default for living Dunmer
+- `Strained` covers werewolf / ritual-unclean states
+- `Silent` covers active vampirism, where ancestor responses are inert
+- `RestoredScarred` covers post-cure return: the ash-prayer works again, but the substrate remembers the silence
+
+**Focus gate and deviation rule (LOCKED 2026-05-19):**
+- Native Dunmer focus uses the global formal-offer gate: Faithful / `50` persistent piety by default, two qualifying signal-days within seven, dawn-only offer evaluation, per-deity cooldowns, no persistent offer queue, and stable accepted patron for 1.0
+- Offer language presents the moment as a Reclamation deepening through the life already being lived, not abandoning ancestors or choosing a replacement religion
+- Native 1.0 Dunmer focus is `Azura`, `Boethiah`, and `Mephala`
+- Non-Reclamation commitments may qualify only through the global Daedric path system
+- Non-Reclamation Daedric commitments present as deviation, trial, pact, taboo, curse pressure, or foreign bargain, not a fourth normal Reclamation lane
+- Aedric patron commitment is not a Dunmer 1.0 path
+
+**Contextual Favor Presentation (LOCKED):**
+
+The shared `Layer 1 + Layer 2` state can trigger contextual favor before a primary Good Daedra focus. This is the special layered equivalent to broad worship, but should never present as a generic pantheon lane. The player experience is cumulative: the ancestors witness the act, while Azura, Boethiah, and Mephala give it shape through the Reclamations.
+
+Default presentation:
+- Shared layered favors are mostly `Quiet` or `Noted`
+- `Marked` moments usually wait for primary focus, vampire cure/restoration, major diaspora burden, or major Good Daedra quest recognition
+- Shared favor language should reinforce that ancestor practice remains the ground floor
+- Layer 3 primary focus adds weight on top; it never replaces or reduces the ancestor layer
 
 **Primary God Options (Layer 3):**
 
 | God | Primary Signal Domain | Threshold Trigger | Devotional Acts |
 |-----|----------------|------------------|-----------------|
-| Azura | Dawn/dusk, prophecy, thresholds | Sustained Azura-coded piety | Dawn/dusk observance, prophetic dreams, Azura's Star quest |
-| Boethiah | Strength, rivalry, overthrow | Sustained Boethiah-coded piety | Strength proved, rivalry overcome, conspiracy acts |
-| Mephala | Secrets, hidden community, information | Sustained Mephala-coded piety | Secrets maintained, hidden communities, information acts |
+| Azura | Painful truth, transformation, exile, and thresholds | Sustained Azura-coded piety | Dawn/dusk observance, truth-revealing choices, transformation/cure arcs, Azura's Star quest |
+| Boethiah | Trial, overthrow, betrayal-as-test, and self-authorship | Sustained Boethiah-coded piety | Strength proved, false authority defeated, conspiracy acts, Chimeric rejection of imposed order |
+| Mephala | Hidden community, lethal secrets, obligation webs, and necessary lies | Sustained Mephala-coded piety | Secrets maintained, hidden communities protected, targeted hidden violence, information-network acts |
+
+Layer 3 Dunmer focused lanes should target five trigger families each. The three Good Daedra are full Dunmer religious centers, not thin patron tags, so each focus needs enough width to feel like a complete Devoted identity. Rows should remain additive: they describe what the chosen Prince contributes on top of the always-active ancestor ground floor.
 
 Other two Good Daedra remain active at × 0.75 after Layer 3 commitment.
+
+**Dunmer Daedric deviation option map (LOCKED 2026-05-19):**
+
+| Option | Dunmer response tag | Prince path type | Strongest vanilla hooks | Class appeal / roleplay pull | Implementation posture |
+|---|---|---|---|---|---|
+| `Azura` | Native Reclamation | `Fate-dawn-dusk-prophecy` | `The Black Star`, Azura shrine, artifact outcome, dawn/dusk threshold acts, cure/restoration beats | Mage, healer/restorer, pilgrim, threshold-heavy roleplay | Normal Dunmer focus; no outsider stigma |
+| `Boethiah` | Native Reclamation | `Struggle-overthrow-trial` | `Boethiah's Calling`, sacrifice/betrayal outcome, boss or higher-level kills, false authority removed, Altmer/Thalmor rivalry beats | Warrior, spellsword, battlemage, assassin, revolutionary | Normal Dunmer focus; reject generic cruelty/violence |
+| `Mephala` | Native Reclamation | `Web-secret-murder-clan` | `The Whispering Door`, Ebony Blade, Thieves Guild/network stages, protected secrets, Grey Quarter hidden-community support | Thief, assassin, bard/social manipulator, merchant-network character | Normal Dunmer focus; reject generic crime/theft/murder |
+| `Malacath` | Taboo; House of Troubles-adjacent | `Oath-exile-code-vengeance` | `The Cursed Tribe`, Volendrung, Blood-Kin/stronghold context | Heavy warrior, smith, outcast, oath-bound mercenary | Daedric path only; hard rededication on exit |
+| `Mehrunes Dagon` | Taboo; House of Troubles | `Destruction-revolution-ruin` | `Pieces of the Past`, Mehrunes' Razor, destructive quest outcomes | Destruction mage, rebel, warlord, chaos fighter | Daedric path only; high rupture, no destruction spam |
+| `Molag Bal` | Taboo; House of Troubles / vampire pressure | `Domination-vampirism-enslavement` | `The House of Horrors`, active vampirism, Mace of Molag Bal | Vampire, dark knight, domination mage | Curse/rupture path; ancestor posture usually `Silent` while vampire |
+| `Sheogorath` | Taboo; House of Troubles pressure | `Madness-disruption-instability` | `The Mind of Madness`, Wabbajack, instability choices | Chaos mage, trickster, wild-card roleplay | Daedric path only; hard rededication |
+| `Meridia` | Foreign / tolerated utility | `Cleansing-light-anti-undead overlay` | `The Break of Dawn`, Dawnbreaker, undead/necromancer cleansing | Paladin, undead hunter, restoration mage | Useful outsider service, not a Dunmer religious center |
+| `Hircine` | Foreign curse pressure | `Hunt-lycanthropy-predator` | `Ill Met by Moonlight`, active lycanthropy, Companions werewolf state | Hunter, ranger, werewolf, survival fighter | Daedric/curse pressure only; no stable Dunmer framework |
+| `Nocturnal` | Taboo outsider pressure | `Shadow-oath-luck-debt` | Thieves Guild, Nightingale oath, Skeleton Key | Thief, stealth archer, nightblade, luck-driven rogue | External oath; Mephala remains the native hidden-network option |
+| `Hermaeus Mora` | Foreign dangerous knowledge | `Forbidden-knowledge-artifact` | `Discerning the Transmundane`, Oghma Infinium, Black Books | Scholar, mage, enchanter, seeker of secrets | Daedric path only; not core faith |
+| `Namira` | Foreign corruption / outcast hunger | `Revulsion-decay-outcast-hunger` | `The Taste of Death`, Ring of Namira, corpse taboo | Outcast, dark survivalist, horror roleplay | Daedric path only; strong social and ancestor friction |
+| `Sanguine` | Foreign indulgence | `Excess-temptation-indulgence` | `A Night to Remember`, Sanguine Rose, revelry/excess contexts | Bard, social rogue, party character, temptation arc | Daedric path only; appealing but unreliable |
+| `Clavicus Vile` | Foreign bargain | `Bargain-wish-contract` | `A Daedra's Best Friend`, Masque/Rueful Axe outcome, Barbas/deal logic | Merchant, negotiator, pact mage, social climber | Daedric path only; bargain price must remain visible |
+| `Peryite` | Foreign affliction-order | `Plague-order-lowest-task` | `The Only Cure`, Spellbreaker, disease/affliction contexts | Shield user, alchemist, plague doctor, endurance build | Daedric path only; defensive fantasy, not Reclamation faith |
+| `Vaermina` | Foreign dream/nightmare | `Dream-nightmare-memory` | `Waking Nightmare`, Skull of Corruption, sleep/nightmare corruption | Illusion mage, dream/nightmare roleplay, fear caster | Daedric path only; memory/sleep price is load-bearing |
+
+Class appeal balance: Native Dunmer focus covers mage/restoration/threshold (`Azura`), warrior/spellsword/revolution (`Boethiah`), and stealth/social/network (`Mephala`). Non-Reclamation Daedric paths broaden appeal for undead hunters, scholars, hunters, vampires, outcasts, merchants, bards, tanks, and nightmare/illusion builds without making those paths normal Dunmer religion.
 
 **Signal Meanings (Dunmer-specific interpretation):**
 
 ```
 Combat signals = acts witnessed by ancestors (honour/shame framework)
-  Boethiah adds: strength proved beyond mere survival
+  Boethiah adds: trial, overthrow, betrayal-as-test, and self-authorship
   
 Social signals = community solidarity, ancestor consultation, oral history
-  Mephala adds: hidden communities, webs of trust/knowledge
+  Mephala adds: hidden communities, lethal secrets, obligation webs, and necessary lies
   
 Lifestyle/devotional signals = shrine maintenance, offerings, daily ash-prayer practice
-  Azura adds: dawn/dusk observance, prophetic attentiveness
+  Azura adds: threshold awareness, painful truth, transformation witnessed, and prophetic attentiveness
 ```
 
 **Quest-choice integration (LOCKED):**
@@ -1053,11 +1416,20 @@ Lifestyle/devotional signals = shrine maintenance, offerings, daily ash-prayer p
 - When a quest touches exile, family, hidden community, or Good Daedra legitimacy, it should carry heavy weight
 
 **Heavy Dunmer quest signals (LOCKED):**
-- `Azura's Star` and other twilight, prophecy, or threshold quests strongly weight `Azura`
-- `Boethiah's Calling` and other rivalry, overthrow, or strength-proving resolutions strongly weight `Boethiah`
-- `The Whispering Door`, hidden-network, or secret-brokerage quest content strongly weights `Mephala`
+- `Azura's Star` and other twilight, painful-truth, transformation, exile, or threshold quests strongly weight `Azura`
+- `Boethiah's Calling` and other trial, betrayal-as-test, false-authority, rivalry, overthrow, or strength-proving resolutions strongly weight `Boethiah`
+- `The Whispering Door`, hidden-network, obligation-web, secret-keeping, or targeted hidden-violence content strongly weights `Mephala`
 - `Grey Quarter`, Dunmer solidarity, refugee-protection, and diaspora-survival choices strongly weight the ancestor layer plus broad `Good Daedra` legitimacy
 - `Burial`, `family duty`, and proper-dead obligations, when Skyrim exposes them, strongly weight the ancestor layer
+
+**Azura favor boundary (LOCKED):**
+Dawn, dusk, night, and magic-adjacent play do not trigger Azura contextual favor by themselves after the basic shared-layer rhythm. Focused Azura favor requires a real threshold, painful truth, transformation, exile-continuity, artifact/shrine rite, or curated major transition. Twilight frames the moment; it is not the whole moment.
+
+**Boethiah favor boundary (LOCKED):**
+Random betrayal, generic violence, casual cruelty, and ordinary faction hostility never trigger Boethiah contextual favor. Boethiah favor requires trial, overthrow, false authority, betrayal-as-test, Chimeric self-authorship, or curated quest/artifact context. This keeps Boethiah as the Reclamation of tested strength and chosen destiny rather than a broad violence-reward wrapper.
+
+**Mephala favor boundary (LOCKED):**
+Random murder, casual theft, convenient lying, and generic crime never trigger Mephala contextual favor. Mephala favor requires hidden obligation, protected community, dangerous knowledge, targeted hidden violence, a maintained network, or curated artifact/quest context. This keeps Mephala as the Webspinner of survival and lethal secrets rather than a broad crime-reward wrapper.
 
 **Infrastructure Ceiling (LOCKED):**
 No passive devotion decay — portable shrine assumed maintained.
@@ -1114,7 +1486,7 @@ House Telvanni exception (minor):
 - Werewolf: primary path strained but not closed, no alternative path available
 - Vampire is more mechanically interesting; werewolf is more theologically isolated
 
-### 10.5 Altmer (LOCKED — penalty values deferred to implementation review)
+### 10.5 Altmer (LOCKED - economy implementation review in progress)
 
 **Setup Flow:**
 ```
@@ -1123,12 +1495,23 @@ Step 1: Choose faction alignment
 → [The Divine Body]     ThalmørAlignment starts at 50 (moderate cultural practice)
 → [Psijic Tradition]    ThalmørAlignment starts at 25 (Old Ways, heterodox)
 
-Step 2: Worship broadly or commit to primary god
-→ Broad worship cap: Tier 2 (Faithful)
+Step 2: Aldmeri pantheon breadth or commit to primary god
+→ Pantheon breadth cap: Tier 2 (Faithful)
+→ This is not a generic broad-worship lane; coherence is the lane
 → Tier 3 only through primary god commitment
-→ Piety-threshold offer system (same as all poly races)
+→ Shared patron-state offer system; piety threshold plus sustained signal pattern
 → Faction shapes accessibility of gods, not availability
 ```
+
+**Altmer implementation-lock refinements (2026-05-19):**
+- Altmer uses the shared patron-state model for formal commitment. `ThalmorAlignment` is the orthodoxy/coherence track, not a Broad/Primary commitment state.
+- Altmer does not use a generic broad-worship lane. The experience is Auri-El foundation plus faction-theological coherence plus secondary focus; pantheon breadth exists, but coherence is the lane.
+- `ThalmorAlignment` bands remain `0-30 Heterodox`, `31-69 Orthodox Moderate`, and `70-100 Thalmor Devout`.
+- Setup starts remain `75` for Thalmor Orthodox, `50` for Divine Body, and `25` for Psijic Tradition so each path begins inside its intended band while leaving room for drift.
+- Lorkhan penalties are piety pressure plus narrative reaction, not harsh permanent collapse. Tier 1 can hurt, Tier 2 should meaningfully sting, and Tier 3 should mostly create dissonance and small pressure.
+- Major main-story conflicts that most directly challenge Altmer theology should fire `PDV_State_AltmerCrisis` instead of simple punishment: a flavorful crisis-of-faith beat with a minimal temporary sting to reflect emotional dysregulation, then resolution through continued coherent behavior.
+
+---
 
 **Worship Structure: Layered Poly (same pattern as Dunmer)**
 ```
@@ -1216,7 +1599,7 @@ The track handles drift toward or away from orthodoxy.
 
 ---
 
-**Unique Mechanic: Lorkhan Adjacency Penalty (LOCKED — values deferred)**
+**Unique Mechanic: Lorkhan Adjacency Penalty (LOCKED - economy bounded)**
 
 UESP/Imperial Library confirmed: Lorkhan is the Corpse-God, the most unholy power
 in Altmer theology. He permanently broke Altmer connection to the spirit plane.
@@ -1230,7 +1613,7 @@ it's "you touched the thing that broke us." Theologically categorical.
 Lorkhan (Altmer), Shor (Nordic), Shor/Shezarr (Cyrodiilic), Sheor (Breton),
 Sep (Hammerfell), Lorkhaj (Khajiit), Lorkh (Reachmen)
 
-**Tier structure (penalty values deferred to implementation review):**
+**Tier structure (bounded values locked 2026-05-19):**
 
 TIER 1 — Direct Lorkhan/Shor/Talos Connection (highest penalty):
 - Activating a Talos shrine / carrying Amulet of Talos
@@ -1273,6 +1656,43 @@ Skyrim's content accumulates minor penalties. This is intentional — the entire
 mortal world is Lorkhan's creation. For an Altmer, simply being in Mundus is
 already a theological compromise. The penalties reflect constant low-grade
 dissonance of Altmer existence.
+
+Lorkhan penalties are piety pressure plus narrative reaction, not harsh permanent collapse. Tier 1 can hurt, Tier 2 should meaningfully sting, and Tier 3 should mostly create dissonance and small pressure. The largest main-story theological collisions should become crisis-of-faith events with flavor and a minimal temporary sting rather than larger permanent punishment.
+
+**Implementation economy lock (2026-05-19):**
+
+A normal Altmer who performs basic devotional upkeep should trend positive. Lorkhan pressure slows ascent and makes Skyrim theologically expensive; it must not create a hidden debt spiral from simply existing in the world.
+
+**Positive income tags and hooks:**
+
+| Tag | Value posture | Hook candidates | Cadence |
+|---|---:|---|---|
+| `PDV_ALT_POS_AURIEL_DAWN` | `+2` Auri-El piety | Dawn time-window check, custom Auri-El shrine/rite, future sun acknowledgment activator | Once per in-game day |
+| `PDV_ALT_POS_STUDY_TEXT` | `+3` to `+5` relevant piety | Curated rare/skill/lore book list, book-read or activator proxy where implementation-proven | Once per book |
+| `PDV_ALT_POS_MAGIC_MILESTONE` | `+6` to `+10` relevant piety | Increase Skill Story Manager event or actor-value threshold polling at `25/50/75/100` | Once per school milestone |
+| `PDV_ALT_POS_COLLEGE_PSIJIC` | `+8` to `+12` relevant piety | College, Eye of Magnus, Psijic-adjacent quest stages | Once per authored milestone |
+| `PDV_ALT_POS_ALIGNMENT_COHERENT` | `+8` to `+12` relevant piety or signal strength | Thalmor cooperation/enforcement quest stages, orthodox restraint, Psijic self-cultivation, Divine Body balanced conduct | Once per authored milestone; anti-farm on repeatables |
+
+**Lorkhan pressure tags and hooks:**
+
+| Tag | Base effect | Hook candidates | Cadence / cap |
+|---|---:|---|---|
+| `PDV_ALT_LORKHAN_T1_DIRECT` | `-10` piety before faction modifier | Talos shrine activation, Amulet of Talos equip/carry check, Talos aid quest stage, Sovngarde/Tsun main-quest stage or location, Keening/Sunder/Wraithguard equip/carry check | One-time per major source; repeatable direct worship sources require long cooldown |
+| `PDV_ALT_LORKHAN_T2_SHOR_ADJ` | `-5` piety before faction modifier | Dragonborn declaration quest stage, curated Word of Power milestones if hook-proven, Stormcloak join, Companions completion, Hall of Valor location/story stage, Wuuthrad equip/carry check | One-time per source or milestone; no repeat spam |
+| `PDV_ALT_LORKHAN_T3_MORTAL_VALIDATION` | Default `-1`; authored stronger Tier 3 `-2`, before faction modifier | Marriage, adoption, homestead build/expansion, Nine Divines shrine activation, explicit Nord religious aid, clearly Lorkhan/Shor-positive text | At most once per in-game day |
+| `PDV_ALT_LORKHAN_T4_CONTEXT` | `0` piety; alignment/flag only | Unprovoked Thalmor killing, Septimus/Dwemer/Heart-adjacent curiosity, Dark Brotherhood/Sithis-adjacent commitment | Authored event cadence; normal anti-farm |
+| `PDV_ALT_CRISIS_FAITH` | Replaces normal penalty; minimal temporary sting only | Major main-story theological collisions such as Dragonborn identity, Sovngarde/Shor reality, Talos/Lorkhan/apotheosis contradiction, Thalmor certainty destabilized | One-time per crisis source; resolves through coherent behavior |
+
+**Rejected penalty surfaces:**
+- Walking through Nord towns
+- Having Nord friends
+- Sleeping indoors
+- Doing ordinary Skyrim quests
+- Existing as Dragonborn after the first authored crisis or declaration beat
+- Ambient Dwemer ruin exploration unless a curated Heart/Lorkhan-adjacent event is present
+
+**Obviousness rule:**
+If the player would not reasonably understand the theological meaning, do not penalize it silently. Either reject the signal or surface a first-time Altmer-interpretation notification. Example presentation: "You feel the old dissonance: this rite honors the mortal world Lorkhan made."
 
 ---
 
@@ -1408,6 +1828,28 @@ Rationale:
 - `Lorkhaj`
 - `Sheggorath`
 
+**Khajiit lunar implementation locks (LOCKED 2026-05-19):**
+- `PDV_Substrate_KhajiitLunar` is the canonical substrate owner
+- Use the existing StorageUtil prefix `PDV.Substrate.KhajiitLunar.*`, extending from current keys rather than renaming them
+- Canonical first keys are `Metric`, `Tier`, `LastEvent`, `LastPhase`, `ObservanceCount`, and `RoadHomeCount`
+- 1.0 uses the hybrid moon model: current phase gives small per-phase activity bonuses, while full-cycle consistency determines overall substrate strength
+- Prefer reliable real Skyrim Masser/Secunda state where available; if implementation proof is weak or brittle, use an abstract 28-day fallback cycle
+- Khajiit remain the only no-offer race in 1.0. Focused deity emphasis shifts silently at dawn based on weighted behavior; no formal patron offer fires
+- Do not use `PDV_GLO_PatronState = active primary` to represent Khajiit focus
+- Add a Khajiit-specific current emphasis state, recommended as `PDV_State_KhajiitFocusedEmphasis`, with a CK-readable mirror only if implementation needs conditions
+- The player notices focus through stronger domain rewards, status readout, and flavor, not a commitment prompt
+- `PDV_State_KhajiitFocusedEmphasis` uses exact enum values: `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, `Alkosh = 5`
+- Focus activates only when one focused deity has at least `50` persistent piety and leads the next-highest Khajiit focused deity by at least `15` piety, evaluated at dawn
+- If no deity has a clear lead, the Khajiit remains in broad lunar Faithful state; balanced worship is complete and valid, not an error state
+- Khajiit road homes are `2-3` player-designated rest anchors, not one sacred place
+- Road-home piety requires cycling between anchors over time; repeatedly using the same camp, bed, or convenient outdoor rest does not count as cadence
+- Add `PDV_State_KhajiitLunarPosture` for curse and shadow pressure, using exact enum values `Normal = 0`, `Strained = 1`, `Corrupted = 2`, and `ShadowDrift = 3`
+- Active vampirism sets `PDV_State_KhajiitLunarPosture = Corrupted`; the Lattice still holds the character, but caravan/community belonging and ordinary lunar rewards weaken
+- Active lycanthropy sets `PDV_State_KhajiitLunarPosture = Strained`; Hircine adds a competing shape, but Khajiit identity remains recognizably Khajiit
+- `ShadowDrift` is reserved for dominant shadow behavior: Nocturnal alignment, vampire posture plus repeated night-only predation, or other explicitly shadow-coded patterns. Ordinary night travel, stealth, or moon observance must not set it
+- All five focused emphases ship as valid 1.0 launch options: `Khenarthi`, `Azurah`, `Baan Dar`, `Rajhin`, and `Alkosh`
+- Launch hook posture is locked: Khenarthi/open-road and Azurah/threshold are strongest general lanes; Baan Dar/reversal and Rajhin/elegant theft are behavior-specific; Alkosh/dragon-order is rare but well supported by main quest and named dragon content
+
 **Primary deity priority in Skyrim 4E 201 (LOCKED):**
 1. `Riddle'Thar / ja-Kha'jay / Jone / Jode` as substrate
 2. `Khenarthi`
@@ -1506,6 +1948,34 @@ Switching is possible, but only in limited, high-cost ways
 2. `The Living Story` = moderate `Y'ffre`
 3. `The Exchange` = `Z'en`
 4. `The Bandit Road` = `Baan Dar`
+
+**Bosmer path implementation locks (LOCKED 2026-05-19):**
+- `PDV_State_BosmerPath` uses exact enum values: `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`
+- First-run setup should require an explicit path choice
+- If the path state is unset, corrupt, or cannot be resolved, fall back to `LivingStory` as the safest bridge path
+- `OldContract` path state remains separate from `PactBound`, `GreenPactCompliance`, and `LapsedFromPact`
+- `PDV_State_BosmerPath = OldContract` means the character is oriented toward the Old Contract path; `PactBound` means Y'ffre exclusivity and Green Pact compliance are currently active
+- If a non-Old-Contract Bosmer loses path coherence through neglect, they drift toward `LivingStory` rather than becoming unset
+- Path switching is explicit and destination-gated, not automatic drift
+- `LivingStory` is the easiest bridge/default destination; `OldContract` is the hardest to re-enter
+- First-run setup choice is free; later path switching is not a simple MCM toggle
+- After setup, MCM/status dialogue may record switch intent, but the world must confirm the new path through destination-gated signals
+- `LivingStory` may be entered through one strong Living Story, community, or story-continuity signal, and remains the fallback for incoherent/corrupt path state
+- `Exchange` and `BanditRoad` require two destination-coded signals on separate in-game days within seven, evaluated at dawn; a major curated quest beat may switch immediately if it clearly proves the destination path
+- `OldContract` re-entry requires explicit recommitment, no terminal second renunciation, and three Pact-positive days within seven
+- On `OldContract` re-entry, `GreenPactCompliance` snaps to 30 so the player is Lapsed but recoverable, not instantly Observant
+- Preserve path deity ledgers when switching; only the active path receives full scoring, contextual favor, and Champion eligibility
+- After a path switch, automatic switching is locked for seven in-game days unless an explicitly authored major exception fires
+
+**Shared Green Pact memory rule (LOCKED 2026-05-19):**
+- Green Pact respect is culturally meaningful for all Bosmer paths, not only `OldContract`
+- Proper hunting conduct, animal-sourced food, avoidance of needless plant use where the game can detect it cleanly, and respect for the living world may provide modest positive weighting across `LivingStory`, `Exchange`, and `BanditRoad`
+- `OldContract` remains the only path with Green Pact penalties, `GreenPactCompliance`, forced reckoning, Y'ffre exclusivity, and terminal renunciation
+- Non-Old-Contract paths should not receive plant-use penalties or GPC loss; at most, they miss the shared positive weighting
+- Implementation should treat this as shared Bosmer signal weighting, not as a hidden background `OldContract` or Y'ffre covenant ledger
+- Shared Pact-positive signals are tagged once, then interpreted by the active path's scoring table: `LivingStory` reads them as inheritance/story continuity, `Exchange` as balance with the living world, and `BanditRoad` as old survival memory
+- These shared weights may add modest path-local piety or recent-signal strength, but they do not write `GreenPactCompliance`, do not advance `PactBound`, and do not trigger Old Contract penalties outside `OldContract`
+- Rationale: the Green Pact is a core Bosmer cultural inheritance, but only Old Contract characters submit to the hard covenant burden
 
 **Secondary Bosmer religious layer (LOCKED):**
 - `Arkay`
@@ -1679,10 +2149,33 @@ Rationale:
 - Moderate for `Forebear`
 - Very strong for `Ash'abah`
 - Never a separate selectable path or deity focus
+- Implement as a light origin-gated modifier / substrate-style helper, not as a selectable path or full second blessing family
+- It may add small death-adjacent piety weight, anti-undead recognition, and Hall of the Dead / equivalent privilege surfaces
+- It must stay quieter than the active sect/focused deity lane
 
 **Current-era 4E 201 weighting rule (LOCKED):**
 - Weight gods by how a Redguard in Skyrim would actually live and interpret them in 4E 201
 - Do not flatten the pantheon into equal pan-historical relevance
+
+**Redguard sect implementation locks (LOCKED 2026-05-19):**
+- `PDV_State_RedguardSect` uses exact enum values: `Crown = 0`, `Forebear = 1`, `AshAbah = 2`
+- First-run setup should require an explicit sect choice
+- If sect state is unset, corrupt, or cannot be resolved, fall back to `Forebear` as the broadest Skyrim bridge position
+- Sect state is an orthogonal identity axis; broad vs focused primary commitment uses shared patron state, not a Redguard-specific Broad/Primary track
+- `Crown` <-> `Forebear` switching requires two sect-coded signals on separate in-game days within seven, evaluated at dawn; a major curated sect-defining quest beat may switch immediately
+- `AshAbah` entry requires a major death, undead, tomb, funerary, or impurity-bearing burden signal; casual undead fighting is not enough
+- Leaving `AshAbah` requires a clear sect reorientation signal plus the same two-day/six-day Crown or Forebear destination proof; do not drift out because the player had a quiet week
+- Formal focused-deity commitment uses the global offer gate: Faithful / `50` persistent piety, two qualifying signal-days within seven, dawn-only offer evaluation, per-deity cooldowns, no persistent queue, and stable accepted primary for 1.0
+- Sect filters deity priority and presentation, but does not replace shared patron-state machinery
+
+**Redguard hook feasibility cross-check (LOCKED 2026-05-19):**
+- Strong launch hooks: Kill Actor Story Manager with undead classification; `LocTypeDraugrCrypt`, `LocTypeClearable`, and Nordic ruin location keywords; Hall of the Dead / Arkay quest stages; PDV-authored Tu'whacca devotional surface; curated quest-stage rows for death, necromancy, and burial outcomes
+- Medium launch hooks: Forebear contracts, service, bounty/delivery, and mixed-society work through curated quest stages; travel through location-change plus no-fast-travel validation; Crown and Leki honorable combat through kill event plus weapon/sneak/follower/context filters
+- Rare/controlled hooks: HoonDing make-way through major quest milestones, dragons/named bosses, final boss clears, or combat-resolution checks for outnumbered / outleveled fights; curated milestones belong in 1.0, while combat-odds triggers require proof testing, weekly caps, and anti-farm controls
+- Weak vanilla hooks: Ash'abah social stigma, Redguard dignity dialogue, and Yokudan form maintained in foreign spaces; these can ship in 1.0 only as light authored/custom content, not broad vanilla social simulation
+- Implementation posture: launch can support the duty side of Ash'abah well and may include light social stigma through custom Redguard reaction lines and status text; do not add Ash'abah service penalties for 1.0. Full dynamic social treatment remains post-1.0
+- `MS08` / `In My Time Of Need` is verified in Skyrim.esm as QUST `Skyrim.esm:01CF25`; stage `200` completes the Saadia-helped route, and stage `201` completes the Kematu/Alik'r-delivery route. One-time sect meaning is locked: stage `201` is Crown / Hammerfell justice / ancestor-duty positive; stage `200` is Forebear / exile-protection / anti-Alik'r positive.
+- Tu'whacca should not collapse into Arkay. Redguard copies the Dunmer portable/private shrine implementation pattern: a permanent portable devotional item usable anywhere, with a player-owned-property or authored private-shrine bonus. The Redguard object is a portable Far Shores token, with optional sword-tending rite texture. Arkay shrines are fallback death infrastructure only, especially for Hall of the Dead service or Forebear interpretive overlap.
 
 **Shared active Redguard god pool (LOCKED):**
 - `Satakal`
@@ -1723,6 +2216,7 @@ Rationale:
 **Crown**
 - Preservation, orthodoxy, bearing, sacred martial inheritance, keeping Yokudan form intact in exile
 - Strong ancestor layer
+- May receive rare make-way favor only as Ruptga/HoonDing-adjacent sacred survival through honorable adversity, not Forebear improvisation or social adaptation
 
 **Forebear**
 - Adaptation, public life, pragmatic survival, and living Redguard identity in mixed or foreign spaces
@@ -1738,6 +2232,7 @@ Rationale:
 **Ash'abah burden rule (LOCKED):**
 - Ash'abah gains stronger devotion potential around death, tombs, undead, and funerary duty
 - Ash'abah loses normal social standing and broad community ease relative to Crown and Forebear
+- Routine undead-cleansing and burial duty should usually be Noted; Marked moments require real burden-bearing such as major tombs, major necromancer operations, costly impurity choices, or later custom social-stigma content
 
 **Broad → focused structure (LOCKED):**
 ```
@@ -1749,6 +2244,10 @@ Tier 3 (Devoted) requires focused primary deity emphasis
 Rationale:
 - Broad Redguard worship is still real devotion, not indecision
 - Focused commitment is what unlocks deepest personal favor
+
+**Contextual favor lane implication (LOCKED):**
+- `Crown`, `Forebear`, and `Ash'abah` broad worship count as separate broad-worship devotional lanes for contextual-favor authoring
+- They share a Yokudan spine, but do not collapse into one generic Redguard/Yokudan broad lane
 
 **Ash'abah broad worship rule (LOCKED):**
 - Even broad Ash'abah worship is narrower and more tightly pulled toward `Tu'whacca` and ancestor duty from the start
@@ -1935,6 +2434,47 @@ Rationale:
 - `City Orc` and other compromise modes should only use high-confidence detectable Skyrim proxies
 - Do not attempt brittle social simulation for urban compromise
 
+**Contextual favor lane rule (LOCKED 2026-05-19):**
+- Orc contextual favor is authored through the current Malacath life-mode, not through one generic Malacath lane
+- `Stronghold Orc`, `City Orc`, and `Legion / service / exile Orc` each count as separate devotional lanes for contextual-favor authoring
+- Stronghold mode has the strongest vanilla support: stronghold locations, Blood-Kin, `The Cursed Tribe`, Orc community factions, forge/labor hooks, and proven-strength events
+- City and Legion / service / exile dignity, oath, and service content must use curated high-confidence hooks only: quest stages, faction ranks, favor/disposition proxies, explicit service milestones, or PDV-authored sacred-place/community state
+- Do not attempt broad simulation of public disrespect, contract honor, or generic oath-breaking unless an implementation pass proves a concrete hook
+
+**Orc contextual-favor table locks (LOCKED 2026-05-19):**
+- Launch table targets four trigger families per life-mode; avoid padding City or Legion / service / exile to five without a strong hook
+- Forge favor requires quality, value, or context; raw crafting count never triggers favor
+- Blood-Kin and `The Cursed Tribe` are the main Marked Stronghold moments
+- City Orc dignity is curated-hook only; generic persuasion, intimidation, or ambient disrespect does not trigger favor
+- Legion / service / exile favor requires completed pressure-bearing service; faction membership alone is context, not a trigger
+- Stronghold worthy-challenge favor is Quiet by default; reserve Noted presentation for stronghold crisis, boss, trial, or Malacath-significant fights
+- Self-made community can serve both City Orc and Legion / service / exile Orc, but only through `PDV_SacredPlace` or faction-favor proxy hooks; City presents it as belonging built, while Legion / service / exile presents it as burden returned from
+- Legion / service / exile endurance is context, not piety by itself; overextension may receive only tiny flavor or funny debuff at most
+- Communal provision and oath kept stay bundled for launch unless implementation discovers clean separate hooks
+- Orc contextual favor is review-cleared for user-experience shape; implementation-costing remains before build
+
+**Life-mode selection rule (LOCKED 2026-05-19):**
+- `City Orc` is the default bridge state for an Orc who is not currently proven inside a stronghold or bound into a service / exile pattern
+- `Stronghold Orc` requires `Blood-Kin` or equivalent stronghold acceptance plus active stronghold conduct; location alone is not enough
+- `Legion / service / exile Orc` requires explicit service / exile commitment or a completed pressure-bearing service milestone; faction membership alone can make the lane eligible but does not switch the favor lane or trigger favor
+- Mode changes happen at major gates or dawn consolidation after sustained evidence, not from one stray quest, one city visit, or one dungeon
+- The player may declare a mode during setup / MCM, but the world can challenge or confirm it through high-confidence signals
+
+**Life-mode implementation rule (LOCKED 2026-05-19):**
+- Implement Orc mode as one active state track, `PDV_State_OrcLifeMode`, with exactly one active scoring / favor lane at a time
+- Enum values are `City = 0`, `Stronghold = 1`, `LegionExile = 2`
+- The active state modifies Malacath piety rate, contextual-favor eligibility, and CK-readable mode conditions
+- Player setup / MCM records intent, not entitlement; if the declared mode is not eligible, the active lane remains or returns to `City` until confirmed by world signals
+- Use `PDV_GLO_State_OrcLifeMode` for CK-readable current state and StorageUtil keys for intent, eligibility, last switch time, lock-in, and recent mode evidence
+- Suggested StorageUtil keys: `PDV.Track.OrcLifeMode.Intent`, `PDV.Track.OrcLifeMode.LastSwitch`, `PDV.Track.OrcLifeMode.LockInUntil`, `PDV.Track.OrcLifeMode.EligibleStronghold`, and `PDV.Track.OrcLifeMode.EligibleLegionExile`
+- Mode transition helpers should be `SetOrcLifeMode(mode, reason)`, `RecordOrcModeSignal(mode, strength, reason)`, and `EvaluateOrcLifeModeAtDawn()`
+- `Stronghold` may switch immediately on a major gate that already proves conduct, such as `Blood-Kin` gained through stronghold aid or `The Cursed Tribe` resolved in a pro-stronghold way; otherwise it requires eligibility plus two qualifying stronghold signals on separate in-game days within a seven-day window
+- `LegionExile` may switch immediately on completed pressure-bearing service or explicit exile / service commitment; faction membership grants eligibility only; otherwise it requires two qualifying service / exile signals on separate in-game days within a seven-day window
+- Soft mode switches are evaluated at dawn consolidation, while major gates may switch immediately
+- After a mode switch, automatic soft switching is locked for three in-game days unless a major gate fires
+- Leaving `Stronghold` requires contradiction or sustained confirmed life elsewhere; travel time alone never demotes the player
+- Leaving `LegionExile` requires completed service resolution plus community reinvestment, or a new stronghold gate; quitting a faction is not enough
+
 **Quest weighting rule (LOCKED):**
 - Orc life-modes are driven by both:
   - repeatable behavioral signals
@@ -2043,6 +2583,24 @@ Rationale:
 - `Hist relation` answers: how connected am I to what makes me Saxhleel at all?
 - `Collective / community identity` answers: if the Hist is distant, am I still being held together by my people?
 - `Sithis acknowledgment` answers: how much am I making meaning through change, death, void, and acceptance rather than through belonging?
+
+**Argonian implementation locks (LOCKED 2026-05-19):**
+- `PDV_Substrate_ArgonianHist` is the canonical substrate owner
+- Use one layered substrate with visible `Hist`, `People`, and `Void` readout layers, not three selectable paths or patron commitments
+- Use the StorageUtil prefix `PDV.Substrate.ArgonianHist.*`
+- Canonical first keys are `Hist`, `People`, `Void`, `Tier`, `LastHistEvent`, `LastPeopleEvent`, `LastVoidEvent`, `LastMaintenanceDay`, `SithisSignalCount`, `BedOfChoiceSleepCount`, and `BedOfChoiceLastSleep`
+- `Hist` remains primary; `People` can buffer low Hist relation; `Void` can stabilize but never replace the Hist
+- Hist distance is dawn-evaluated and always gently running in Skyrim. If no valid Hist-maintenance signal occurred in the last three in-game days, reduce `Hist` by `1` per dawn, with a non-curse floor of `20`
+- Valid Hist maintenance comes from water, wetland, rest, reflection, and the 1.0 Hist sap meditation tool; ordinary helping quests, ordinary combat, and generic crafting do not restore Hist
+- 1.0 does not provide full home-equivalent restoration outside Black Marsh
+- Argonian bed of choice uses the shared `PDV_SacredPlace` pattern with `MaxLocations = 1`
+- Bed-of-choice cadence is three qualifying sleeps at the chosen bed within a rolling 30 in-game days. Missing cadence removes the place bonus and applies light `People` decay, not harsh punishment
+- Sithis baseline awareness is always present, but full active `Void` scoring requires at least three significant Sithis signals. Joining the Dark Brotherhood counts as one major signal, not full activation by itself
+- Valid full-activation signals are Dark Brotherhood milestones/contracts and curated death/void/change choices. Generic stealth, generic murder, and ordinary killing do not count
+- Add `PDV_State_ArgonianHistPosture` with exact enum values `Normal = 0`, `Distant = 1`, `Strained = 2`, `Silenced = 3`, and `Corrupted = 4`
+- Low uncursed Hist relation may become `Distant`; active lycanthropy sets `Strained`; active vampirism sets at least `Silenced`, and may become `Corrupted` when paired with Molag Bal / domination / feeding-pattern pressure
+- Vampire is the deep grief state: Hist silenced or corrupted, community damaged, and Sithis more available but not automatically good
+- Werewolf is serious strain but recoverable: altered shape, stressed Hist relation, but Saxhleel identity remains intact
 
 **Tiered implementation plan (LOCKED):**
 
@@ -2482,17 +3040,26 @@ A City or Legion/Exile Orc who builds their own community in a location gets a d
 
 Uses the shared PDV_SacredPlace system with Orc-specific progression parameters (empty → established → thriving).
 
+Presentation split:
+- `City Orc`: the chosen place reads as belonging built inside mixed society
+- `Legion / service / exile Orc`: the chosen place reads as a burden returned from, a private anchor after service or displacement
+
+Hook boundary:
+- Use `PDV_SacredPlace`, location/faction/relationship hooks, and faction-favor proxy investment events
+- Repeated visits alone do not count without investment, service, relationship, or community-building evidence
+- This is not viable as a pure vanilla inference system; it is viable as authored PDV state using the shared sacred-place contract
+
 ### 12.8 Bosmer — Own Green Pact Tagging System (LOCKED)
 
 The Old Contract path uses its own tagging system for Green Pact detection, mirroring the approach Requiem/Races Redone use. This is NOT a dependency on those mods — PDV implements its own tag layer that functions independently.
 
-### 12.9 Altmer — Tier 3 Lorkhan Penalty Weighting (LOCKED)
+### 12.9 Altmer - Tier 3 Lorkhan Penalty Weighting (LOCKED)
 
-Tier 3 mortal-validation penalties (marriage, homestead, adoption, etc.) are **lightly weighted**. Not meant to punish normal play — meant to trigger evocative reactions and reflect internal pressure.
+Tier 3 mortal-validation penalties (marriage, homestead, adoption, etc.) are **lightly weighted**. Default effect is `-1` piety before faction modifier; an authored stronger Tier 3 event may use `-2`. Tier 3 is capped once per in-game day and applies only to explicit, player-legible mortal-validation acts.
 
-Design intent: The penalty triggers events and flavor, not harsh mechanical punishment. A player who marries or builds a home gets a spiritual *reaction* — internal Altmer dissonance manifesting as flavor/notification — not a devastating devotion collapse.
+Design intent: The penalty triggers events and flavor, not harsh mechanical punishment. A player who marries or builds a home gets a spiritual reaction - internal Altmer dissonance manifesting as flavor/notification - not a devastating devotion collapse.
 
-This clarifies the "values deferred to implementation review" note in Section 10.5.
+This is now governed by the Section 10.5 Altmer economy lock and its explicit Lorkhan pressure tags.
 
 ### 12.10 Shared Sacred Place System (LOCKED)
 
@@ -2539,7 +3106,7 @@ Nord broad worship at Faithful (Tier 2) combines watered-down blessings from the
 
 ### 12.14 Altmer — Crisis of Faith Events (LOCKED)
 
-Major story points that challenge Altmer theological worldview (e.g., discovering Thalmor hypocrisy, Talos mantling evidence) create genuine crisis-of-faith events rather than simple piety adjustment. These trigger temporary states (doubt, questioning, vulnerability) that the player must resolve through continued behavior in one direction or another. Not harsh punishment — evocative narrative pressure.
+Major story points that challenge Altmer theological worldview (e.g., discovering Thalmor hypocrisy, Talos mantling evidence) create genuine crisis-of-faith events rather than simple piety adjustment. These trigger temporary states (doubt, questioning, vulnerability) that the player resolves through continued behavior in one direction or another. The presentation should carry more flavor and only a minimal temporary sting, reflecting emotional dysregulation rather than theological failure or permanent collapse.
 
 ### 12.15 Bosmer — Pact Failure Mechanic (LOCKED)
 
@@ -2553,9 +3120,22 @@ For Argonian death-rites and Hist-connection to feel meaningful, custom content 
 
 For all non-Khajiit races, the patron commitment model is: "if you've done enough, a god notices you and reaches out." The deity initiates once piety crosses the offer threshold. This is presented as the god acknowledging the player's consistent behavior — not the player choosing from a menu. The player then accepts, delays, or refuses. Khajiit bypass this entirely per §12.4a (emergent patron, no notification).
 
+**Offer threshold default (LOCKED 2026-05-19):**
+For all formal patron/deity commitment races, the default commitment-offer threshold is the Faithful / Tier 2 threshold: `50` persistent piety with that deity, plus any race-specific sustained-pattern, state-track, or eligibility gates. The default may be tuned upward or made more complex for a deity with multiple domains, but lowering it or bypassing it requires an explicit race/deity exception. This keeps patron commitment as a move from established faith into depth, not a response to early interest.
+
+**Offer evaluation default (LOCKED 2026-05-19):**
+For formal patron/deity commitment races, offers are evaluated during the dawn pass only. A candidate must meet the piety threshold, race/state eligibility filters, per-deity cooldown filters, and qualifying signal activity on at least two separate in-game days within the last seven days unless an explicit race/deity exception is documented. Do not persist pending-offer queues; recompute candidates each dawn from current ledgers, state tracks, recent signal evidence, and cooldowns. Fire at most one offer per dawn, choosing the highest recent signal-strength candidate and using stable deity index only as a tie-breaker.
+
+**1.0 no-switching rule (LOCKED 2026-05-19):**
+For all races with formal patron/deity commitment, accepting a patron is stable for 1.0 unless a race-specific exception is explicitly documented. The accepted patron remains the active patron even if devotion later decays below Tier 3; decay weakens benefits and relationship strength, but does not silently clear or replace the commitment. Competing patron offers do not fire while `PDV_GLO_PatronState` is active primary. Patron switching, rupture, renunciation, or reorientation is deferred to a later explicit in-world feature. Khajiit remain the special no-formal-offer exception, because their focused deity emphasis emerges silently through the lunar substrate rather than an accepted offer.
+
+Rationale: player agency matters after divine recognition. Commitment should feel chosen and consequential, not overwritten by automatic drift because the player spent a week doing another god-coded activity.
+
 ### 12.18 Orc — Community Standing Mechanic (LOCKED)
 
 Preferred implementation: NPC disposition tracking for the self-made community system. For 1.0, use a faction-favor proxy system if full disposition tracking proves too complex. The progression (stranger → acquaintance → friend → community member) drives the devotion bonus from the Orc's invested location. Recommended approach is faction-favor proxy for initial implementation.
+
+City and Legion / service / exile may share the same community substrate, but they should not present the same way. City mode frames the place as belonging built; Legion / service / exile frames it as return from burden. The hook surface is appropriate only when backed by explicit `PDV_SacredPlace` state, relationship/faction-favor proxy milestones, or curated investment events; generic repeated visits are not enough.
 
 ### 12.19 Redguard — HoonDing Accessibility (LOCKED)
 

@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-18 (v3.12 - PO3 dependency decision)
+Last revised: 2026-05-19 (v3.14 - Prisma UI repo boundary)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving ingress is partially proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperials/Khajiit proof on the first normal-play ingress slice, while Dunmer portable shrine/home bonus, Bosmer Green Pact, and Hircine hunt rite still need non-debug in-game trigger proof.
 
 ---
@@ -209,9 +209,11 @@ These race-specific signal rules were locked during the grilling review and affe
 
 **Altmer crisis-of-faith (LOCKED):**
 - Tier 3 Lorkhan-adjacent mortal-validation events (marriage, homestead, adoption, similar normal-life commitments) are lightly weighted reactions, not harsh collapses.
-- Major lore-challenging story points fire crisis events instead of simple piety adjustments
-- Crisis creates a temporary "questioning" state that suppresses normal gain/loss until resolved through continued consistent behavior
+- Major main-story lore collisions fire crisis events instead of simple piety adjustments when they are among the biggest conflicts with Altmer theology.
+- Crisis creates a temporary "questioning" state with more flavor and only a minimal temporary sting, reflecting emotional dysregulation rather than theological failure or permanent collapse.
+- Crisis suppresses or softens normal gain/loss until resolved through continued consistent behavior.
 - Duration and resolution are content-authored per crisis trigger (not a fixed timer)
+- Altmer economy guardrail: ordinary existence in Skyrim is never a penalty source. Lorkhan pressure must use explicit tags/hooks, and basic devotional upkeep should trend positive through Auri-El dawn observance, study, magic milestones, College/Psijic milestones, or coherent factional acts.
 
 **Dunmer Tribunal shrine random-thought (LOCKED):**
 - Praying at a Tribunal shrine (Almalexia/Vivec/Sotha Sil) produces a random selection from a curated buff/debuff pool
@@ -394,6 +396,31 @@ needs its own bound/unbound lifecycle and discipline state. `PactBound`,
 track so Y'ffre exclusivity, forced reckoning, and terminal renunciation are
 not collapsed into a single enum.
 
+Green Pact respect is not exclusive to the `OldContract` path. Proper hunting,
+animal-sourced food, restraint around needless plant use where detectable, and
+respect for the living world may provide modest positive weighting for all
+Bosmer paths. Only `OldContract` converts those tenets into hard covenant law:
+plant-use penalties, `GreenPactCompliance`, forced reckoning, Y'ffre
+exclusivity, and terminal renunciation. Non-Old-Contract paths can receive
+shared Pact-positive weight, but they do not suffer Old Contract penalties.
+Implement this as shared Bosmer signal weighting, not a hidden background
+`OldContract` or Y'ffre covenant ledger: tag Pact-positive signals once, let
+the active Bosmer path interpret them, and write only modest path-local piety
+or recent-signal strength outside `OldContract`.
+
+Bosmer path switching is destination-gated. The first setup choice is free, but
+later MCM/status-dialogue input records intent only; the world must confirm the
+destination through signals. `LivingStory` can be entered through one strong
+community/story signal and is the fallback for incoherent or corrupt state.
+`Exchange` and `BanditRoad` require two destination-coded signals on separate
+in-game days within seven, evaluated at dawn, unless a major curated quest beat
+proves the destination immediately. `OldContract` re-entry requires explicit
+recommitment, no terminal second renunciation, and three Pact-positive days
+within seven; on re-entry `GreenPactCompliance` snaps to 30. Path deity ledgers
+are preserved across switches, but only the active path receives full scoring,
+contextual favor, and Champion eligibility. After a switch, automatic switching
+is locked for seven in-game days unless a major authored exception fires.
+
 v3 adds an optional `EligibleStateTrack` + `EligibleStateValues` filter on `PDV_DeityBase`:
 
 ```papyrus
@@ -423,15 +450,21 @@ The patron-commitment mechanism (Section 12) reads `IsEligibleForPlayer()` befor
 
 | Track | States | Owner race | Notes |
 |---|---|---|---|
-| `PDV_State_BosmerPath` | OldContract, LivingStory, Exchange, BanditRoad | Bosmer | Set at character setup or first-run quest; `OldContract` additionally reads `PactBound`, `LapsedFromPact`, and `GreenPactCompliance` |
-| `PDV_State_OrcLifeMode` | Stronghold, City, Exile | Orc | Default Stronghold; transition via threshold events |
-| `PDV_State_ImperialWorship` | Broad, Primary | Imperial | Promoted by Concordat-rep + piety-threshold |
-| `PDV_State_NordWorship` | OldWays, NineDivines, Broad, Primary | Nord | Setup choice + commitment event |
-| `PDV_State_BretonTradition` | KnightsRoad, HiddenArt, GreenWay | Breton | Primary identity chosen at setup; tracks can pull against each other |
-| `PDV_State_BretonDruidicFork` | Stable, Contested, GreenAccepted, HircineClaimed, Excommunicated, Penitent, Restored | Breton Green Way | Curse-state fork/readout paired with `PDV_RepTrack_DruidicStanding` |
-| `PDV_State_RedguardSect` | Crown, Forebear, AshAbah | Redguard | Faction-driven |
+| `PDV_State_BosmerPath` | OldContract, LivingStory, Exchange, BanditRoad | Bosmer | Set at character setup or first-run quest. `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`. Fallback for unset/corrupt state is `LivingStory`. Later switching is destination-gated; switch intent is confirmed by path-coded signals. `OldContract` additionally reads `PactBound`, `LapsedFromPact`, and `GreenPactCompliance`. |
+| `PDV_State_OrcLifeMode` | City, Stronghold, LegionExile | Orc | Default City; setup/MCM records intent, but active mode is world-confirmed. `City = 0`, `Stronghold = 1`, `LegionExile = 2`. Stronghold requires Blood-Kin/equivalent acceptance plus conduct; LegionExile requires service/exile gate or completed pressure-bearing service. Soft switches require two qualifying signals on separate in-game days within seven days and resolve at dawn; major gates may switch immediately. |
+| `PDV_State_NordPantheonBaseline` | OldWays, NineDivines | Nord | Setup/MCM pantheon baseline only. `OldWays = 0`, `NineDivines = 1`. Commitment depth uses `PDV_GLO_PatronState`; do not overload the baseline state with Broad/Primary. |
+| `PDV_State_BretonTradition` | KnightsRoad, HiddenArt, GreenWay | Breton | Primary identity chosen explicitly at setup; no silent default; `KnightsRoad = 0`, `HiddenArt = 1`, `GreenWay = 2`; patron offers normally come only from the chosen tradition |
+| `PDV_State_BretonDruidicFork` | Stable, Contested, GreenAccepted, HircineClaimed, Excommunicated, Penitent, Restored | Breton Green Way | Curse-state fork/readout paired with `PDV_RepTrack_DruidicStanding`; `Stable = 0`, `Contested = 1`, `GreenAccepted = 2`, `HircineClaimed = 3`, `Excommunicated = 4`, `Penitent = 5`, `Restored = 6`; Hircine is fork-access, not baseline Breton worship |
+| `PDV_State_RedguardSect` | Crown, Forebear, AshAbah | Redguard | First-run setup choice. `Crown = 0`, `Forebear = 1`, `AshAbah = 2`; fallback is `Forebear`. Crown/Forebear switching requires two sect-coded signal days within seven; AshAbah entry requires a major death, undead, tomb, funerary, or impurity-bearing burden signal. |
 | `PDV_State_DunmerPath` | Ancestor, GoodDaedra, TribunalRemnant | Dunmer | Default Ancestor; promoted by sustained worship |
 | `PDV_State_AltmerCrisis` | Stable, Questioning, ResolvedOrthodox, ResolvedHeterodox | Altmer | Temporary crisis-of-faith state for major lore-challenging story points |
+
+Do not add race-specific state tracks whose only job is `Broad` vs `Primary`.
+Formal patron/deity commitment uses `PDV_GLO_PatronState` and
+`PDV_GLO_PatronDeity`. State tracks are for orthogonal identity axes such as
+pantheon baseline, sect, tradition, life-mode, crisis, or curse fork. Imperial
+therefore does not need `PDV_State_ImperialWorship`; its unique axis is
+`PDV_RepTrack_ConcordatStanding`.
 
 ### 7.5 Naming
 
@@ -501,6 +534,12 @@ feedback proves the lighter pattern insufficient. In particular, Orc
 City/Legion community location tracking uses `PDV_SacredPlace`, but it is not a
 strong persistent substrate and should not compete with Malacath's foreground
 mode as the main Orc boon lane.
+
+`PDV_State_OrcLifeMode` owns the active Orc scoring lane. `PDV_SacredPlace`
+may modify City and LegionExile presentation/reward context, but it must not
+silently change the active mode by location visits alone. Mode changes come
+from the Orc state-track gates: major gates immediately, or dawn-evaluated
+soft switches after sustained evidence.
 
 **Substrate promotion policy (LOCKED):** Non-substrate races (Nord, Imperial, Breton, Redguard, Altmer, Orc) can be promoted to full substrate if playtest proves lighter mechanics insufficient. Architecture supports promotion without refactoring. Candidates: Nord (pantheon-level broad worship may need always-on tracking), Breton (tension system may already provide equivalent depth).
 
@@ -796,20 +835,22 @@ Function ProcessCommitmentOffers()
     ; Find candidates: deities whose persistent piety crossed an offer threshold
     ; AND who are eligible by state-track filter
     ; AND whose offer hasn't been declined-and-cooled-down
-    ; Fire the first qualifying offer; queue others
+    ; Fire the highest-current-priority qualifying offer; do not persist a queue
 EndFunction
 ```
+
+Formal patron offers use the shared 1.0 gate unless a race-specific exception is documented: evaluate during the dawn pass only, require the Faithful / Tier 2 threshold (`50` persistent piety by default), require qualifying signal activity on at least two separate in-game days within the last seven days, respect per-deity decline cooldowns, and fire at most one offer. Do not persist pending-offer queues; recompute candidates each dawn from current ledgers, state tracks, recent signal evidence, and cooldowns.
 
 ### 12.2 Offer threshold
 
 Per-deity property on `PDV_DeityBase`:
 
 ```papyrus
-Float Property CommitmentOfferThreshold = 20.0 Auto      ; piety required to fire the offer
+Float Property CommitmentOfferThreshold = 50.0 Auto      ; Faithful threshold required to fire the offer
 Int   Property OfferDeclineCooldownDays = 7 Auto         ; min days before re-offering after decline
 ```
 
-Most deities use the default 20.0. Multi-domain deities (Mara, Talos) can require a higher threshold or a combined check across multiple `PDV.Piety.<*>` reads.
+Most formal patron-offer deities use the default 50.0, matching the Faithful / Tier 2 threshold. A deity should not offer commitment because the player showed early interest; the offer represents sustained faith deep enough to move from broad relationship into primary commitment. Multi-domain deities (Mara, Talos) can require a higher threshold or a combined check across multiple `PDV.Piety.<*>` reads. Race-specific exceptions must be explicitly documented; Khajiit remain the standing no-formal-offer exception.
 
 ### 12.3 Offer presentation
 
@@ -823,7 +864,9 @@ The offer is an in-world threshold event, not an MCM toggle. Per the locked Nord
 
 ### 12.4 Multi-offer ordering
 
-If multiple deities qualify simultaneously, queue offers in DeityIndex order. Only one offer fires per dawn cycle. Player resolves before the next dawn surfaces another candidate.
+If multiple deities qualify simultaneously, fire at most one offer in the dawn cycle. Select by highest recent signal strength, using DeityIndex only as a deterministic tie-breaker. Player resolves before the next dawn can surface another candidate.
+
+For 1.0, offer recomputation runs only while the player is unset or in broad worship. Once a formal patron offer is accepted, `PDV_GLO_PatronState` becomes active primary, `PDV_GLO_PatronDeity` stores the accepted deity, candidate recomputation stops, and no competing patron offers fire. Devotion decay may weaken the active patron relationship, but it does not silently clear or replace the accepted patron. Patron switching / reorientation is deferred to a post-1.0 explicit in-world rupture or restoration feature unless a race-specific exception is documented.
 
 ### 12.4a Khajiit emergent patron exception (LOCKED)
 
@@ -841,7 +884,7 @@ No popup, no shrine event, no "Azurah notices you" moment. The emergent patron i
 For race designs where broad worship is culturally normal and experientially useful, broad worship is a real state, not just "no patron set." v3 introduces:
 
 - `PDV_GLO_PatronState` stores the explicit patron state: unset, broad worship, or active patron. `PDV_GLO_PatronDeity` remains an active-target cache only when the state is active; do not overload it with broad-worship sentinels.
-- Broad worship is selected via the same setup choice that sets a state track (Section 7.4).
+- Broad worship is represented by `PDV_GLO_PatronState`, not by a race-specific Broad/Primary state track. A race-specific setup choice may set an orthogonal state track such as pantheon baseline, sect, or tradition.
 - Under broad worship, scoring is dampened and capped at Tier 2 for 1.0 unless later race content proves a narrower exception is needed.
 - Commitment offers still fire from under broad worship; accepting transitions out of broad.
 - Broad worship counts as its own contextual-favor lane. It receives blended Faithful-capped favor families rather than enabling every individual deity's patron favor set.
@@ -1087,7 +1130,64 @@ Most race-coded UI lives in NPC reactions (Section 9). v3 should target ~30-50 r
 ### 16.4 UI defaults
 
 - **Thematic by default.** Player-facing status uses thematic language first, with numeric values behind a debug/advanced MCM preference for power users.
-- **In-world patron switching.** Switching from one patron to another mid-game is a theological act. The player path is an in-world threshold commitment offer from the new patron; MCM patron swap remains dev-only for testing.
+- **In-world patron switching.** Switching from one patron to another mid-game is a theological act and is deferred past 1.0 as an explicit rupture / restoration / reorientation feature. In 1.0, accepting a formal patron prevents competing patron offers; MCM patron swap remains dev-only for testing.
+
+### 16.5 Prisma devotional surface
+
+The Prisma surface is the current prototype path for player-facing devotional
+texture. Until the player surface is promoted, the full panel remains reachable
+only from MCM/debug or another explicit development opener. Runtime gameplay may
+send transient overlay toasts through `PDV_PrismaBridge.SendOverlayJson()`
+without focusing the panel.
+
+Smoke expectations:
+
+- Opening the panel from the MCM/debug opener shows the patron, today, and debug
+  views without console or bridge errors.
+- A real active-patron devotional gain can raise a transient deity-symbol toast
+  without opening or focusing the full panel.
+- `ProcessDawn()` can raise a transient dawn/system-symbol toast.
+- Toasts are short-lived, symbol-led, and quiet enough for normal play; routine
+  scoring still must not become notification spam.
+- A missing toast with otherwise correct piety math is treated as a Prisma
+  smoke failure, not as a devotional scoring failure.
+
+### 16.6 Prisma UI repo boundary and staging
+
+Default repo posture is bounded monorepo. Prisma UI source stays beside the
+SKSE bridge and Papyrus payload declaration under `native/DevotionPrismaBridge/`
+because the surface is currently tightly coupled to PDV's runtime payloads.
+Prisma UI design notes must not override core piety, StorageUtil, dawn,
+EventBus, or CK record architecture.
+
+Source-of-truth rules:
+
+- Editable Prisma UI source lives under
+  `native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/`.
+- `scratch/DevotionPrismaDemo.html` is a generated/share review aid, not
+  canonical source.
+- Payload schemas become contracts only when documented in the bridge README or
+  this architecture section.
+- MCM remains configuration/debug/opening support until a later player-facing
+  MCM pass explicitly changes that boundary.
+
+UI staging sequence:
+
+1. Accessibility hardening: tab semantics, keyboard navigation, focus states,
+   live-region behavior, reduced motion, color contrast, and text scaling.
+2. Payload contract cleanup: mark toast/panel payload fields as prototype,
+   stable, or deprecated.
+3. Visual system pass: symbols, spacing, tone colors, responsive constraints,
+   and Skyrim overlay readability.
+4. Runtime integration expansion: route more real devotional events through
+   `SendOverlayJson()` without increasing notification spam.
+5. Smoke/tester workflow: keep the local preview, static share demo, and
+   in-game Prisma smoke aligned.
+
+Reassess a separate Prisma UI repo only when at least two are true: it needs
+its own JS build system, asset pipeline, UI test suite, release cadence,
+non-PDV reuse target, large reusable visual asset set, or recurring UI context
+noise that distracts from Papyrus/CK architecture work.
 
 ---
 
@@ -1546,7 +1646,7 @@ Must complete:
 
 - Full 1.0 worship-target scaffold, dev-only by default.
 - Strong substrate scaffolds for Khajiit, Dunmer, and Argonian.
-- Reputation-track and state-track scaffolds for all locked first-release race tracks: ConcordatStanding, ThalmorAlignment, WitchcraftExposure, KnightlyVowIntegrity, DruidicStanding, BosmerPath, OrcLifeMode, NordWorship, BretonTradition, RedguardSect, DunmerPath, and AltmerCrisis.
+- Reputation-track and state-track scaffolds for all locked first-release race tracks: ConcordatStanding, ThalmorAlignment, WitchcraftExposure, KnightlyVowIntegrity, DruidicStanding, BosmerPath, OrcLifeMode, NordPantheonBaseline, BretonTradition, RedguardSect, DunmerPath, and AltmerCrisis. Do not scaffold redundant Broad/Primary state tracks such as `PDV_State_ImperialWorship`; shared patron state owns commitment depth.
 - Sacred-place scaffolds for Argonian bed-of-choice, Khajiit road homes, and Orc City/Legion community location, with Orc marked as a contextual mode modifier rather than a strong substrate.
 - Matrix-driven CK authoring support where feasible, especially stance rows, FormList membership, rivalry wiring, and verifier expectations.
 - Dev-only FormList indexes for authoring/dev inspection across tracks, substrates, sacred places, and Daedric pilots. Canonical per-record visibility properties are deferred; FormLists are the live operational visibility surface in this wave.
@@ -1587,6 +1687,21 @@ Exit gate:
 
 - Each pattern is playable, verifier-covered, documented, and reusable.
 - Each pattern has one clean in-game proof path that future clones can repeat.
+
+Prisma UI smoke companion:
+
+- Start from a closed Skyrim state after bridge DLL, Prisma UI, or toast-Papyrus
+  changes; launch through the normal MO2/SKSE path.
+- Open the Prisma panel through the MCM/debug opener and confirm the status
+  surface is readable.
+- Trigger one real active-patron positive devotional event and confirm the
+  transient deity-symbol toast appears without focusing the panel.
+- Trigger the debug dawn path and confirm the transient dawn/system-symbol toast
+  appears.
+- Check `DevotionPrismaBridge.log` for bridge, DOM-ready, interop, or JavaScript
+  errors before calling the smoke pass clean.
+- Keep the panel opener dev-only while this remains a prototype; normal play
+  should see only rare, meaningful toasts.
 
 ### 25.5 Technical Beta
 
@@ -1649,6 +1764,23 @@ with this document, update the brief to match v3.
 ---
 
 ## 26. Revisions
+
+### v3.14 - 2026-05-19 - Prisma UI repo boundary
+
+Locked the Prisma UI repo posture as bounded monorepo for now. Prisma source
+stays under `native/DevotionPrismaBridge/`, the static HTML demo is a review
+artifact rather than canonical source, and a separate repo should be
+reconsidered only after clear split triggers such as an independent build
+system, asset pipeline, UI tests, release cadence, non-PDV reuse, or recurring
+context noise. No phase status changes.
+
+### v3.13 - 2026-05-19 - Prisma UI smoke companion
+
+Added the Prisma devotional surface as the current prototype path for
+player-facing UI texture, including transient symbol-led overlay toasts sent
+through `PDV_PrismaBridge.SendOverlayJson()`. The Pattern Proving gate now has a
+repeatable Prisma smoke companion for panel open, active-patron toast, dawn
+toast, and bridge-log checks. No phase status changes.
 
 ### v3.10 - 2026-05-18 - Gameplay refinement and tracker hardening
 
@@ -1751,7 +1883,7 @@ tradeoffs, then removed them from the open tracker. The locked defaults are:
 strong substrates only for Khajiit, Dunmer, and Argonian; shrine overlays rather
 than vanilla activator replacement; Tier 2 broad-worship cap; three-option
 commitment offers; curse states as multiplier/pressure overlays rather than
-Daedric unlocks; thematic UI by default; in-world patron switching; concrete
+Daedric unlocks; thematic UI by default; post-1.0 in-world patron switching; concrete
 script cloning over an abstract template; FormList-driven MCM ordering;
 monolithic framework ESP through 1.0; Phase 12 stack-depth benchmarking; and
 documented Wintersun coexistence.
