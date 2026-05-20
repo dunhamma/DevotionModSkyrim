@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-20 (v3.24 - FragmentBridge verifier expansion and refreshed baseline)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 runtime infrastructure proof is complete; exact Civil War social-hook closeout remains open.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, and the hidden Talos shrine reference contract. The remaining open packet is exact Civil War compliance/defiance one-shot wiring after local record confirmation.
+Last revised: 2026-05-20 (v3.25 - Phase 7 fully closed)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks.
 
 ---
 
@@ -302,8 +302,10 @@ first:
 
 Still intentionally out of scope for this packet: crime/arrest Story Manager
 events, broad deity-roster expansion, and guessed Civil War hooks. Civil War
-one-shots are now locally verified, but the final fragment wiring and runtime
-smoke remain manual CK work.
+one-shots are now locally verified, wired, and runtime-proven through the
+vanilla-safe mod-event path; the lasting lesson is to keep vanilla quest
+fragments tiny (`SendModEvent(...)`) and let PDV-owned scripts keep the real
+devotion math.
 
 ---
 
@@ -2135,6 +2137,23 @@ effect is that commitment now exists before decay is tuned against broad/patron
 state, favor tuning becomes decay-aware, privilege and Prisma toast contracts
 stabilize before broad authored content growth, and the first full Daedric
 pilot enters after those calibration layers instead of alongside them.
+
+### v3.25 - 2026-05-20 - Phase 7 fully closed
+
+Phase 7 is now fully closed. The final manual packet ended on tiny vanilla
+quest-fragment mod events rather than custom fragment properties or inline
+EventBus casts: `CW01A` stage `200` now fires
+`SendModEvent("PDV.ConcordatCompliance")`, and `CW01B` stage `200` now fires
+`SendModEvent("PDV.ConcordatDefiance")`. Runtime proof in `Papyrus.0.log`
+showed the full `PDV_PlayerEvents -> PDV_EventBus -> PDV__ManagerQuest` chain
+for both sides on 2026-05-20: Legion compliance logged
+`RouteConcordatPressure complete: 20 adjustment 15`, and Stormcloak defiance
+logged `RouteConcordatPressure complete: 21 adjustment -15`, with no Talos
+award on either join marker. The strict verifier was rerun after the CK/SEQ
+closeout and stayed fully clean at `FAIL=0, WARN=0, TODO=0, PASS=588, INFO=28`
+at 2026-05-20 16:44 AEST. Durable lesson: when a vanilla quest fragment only
+needs to notify PDV, `SendModEvent(...)` is the safer posture than trying to
+teach the fragment compiler about custom PDV script types.
 
 ### v3.22 - 2026-05-20 - Phase 7 runtime proof and zero-warning baseline
 

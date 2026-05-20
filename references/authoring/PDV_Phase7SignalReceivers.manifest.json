@@ -1,11 +1,12 @@
 {
   "id": "phase7-signal-receivers",
-  "title": "PDV Phase 7 hidden shrine and Civil War closeout plan",
+  "title": "PDV Phase 7 hidden shrine and Civil War closeout contract",
   "defaultOutput": "PDV_Phase7SignalReceiversOverlay.esp",
   "notes": [
-    "This manifest records the CK/xEdit contract for Phase 7 Nord/Imperial signal expansion on the real hidden Talos shrine reference plus the final Civil War compliance/defiance one-shot packet.",
+    "This manifest records the CK/xEdit contract that closed Phase 7 Nord/Imperial signal expansion on the real hidden Talos shrine reference plus the final Civil War compliance/defiance one-shot packet.",
     "pdv_author cannot mint or relocate placed references, ACTI, QUST, INFO, or player-alias records, so shrine-reference wiring and Civil War hook wiring remain manual CK/xEdit work.",
-    "Once the shrine reference exists with an EditorID, strict-phase7 verifier readback checks script attachment plus route and origin/debug properties. Civil War fragment wiring is documented here and in the dedicated checklist, but is not yet strict-verifier readback."
+    "Once the shrine reference exists with an EditorID, strict-phase7 verifier readback checks script attachment plus route and origin/debug properties. Civil War fragment wiring is documented here and in the dedicated checklist, but remains runtime-smoke proof rather than strict-verifier readback.",
+    "The live framework baseline now has both Civil War hooks wired and runtime-proven: CW01A stage 200 compliance logged EventBus adjustment 15 at 2026-05-20 16:38:24 AEST, and CW01B stage 200 defiance logged EventBus adjustment -15 at 2026-05-20 16:42:44 AEST."
   ],
   "unsupported": [
     "Find the actual hidden Talos shrine placed reference, assign it the EditorID PDV_REFR_TalosShrineDefianceSignal, and co-attach PDV_EventSignalActivator directly on that reference instead of creating a nearby helper ACTI.",

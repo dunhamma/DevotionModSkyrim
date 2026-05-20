@@ -188,3 +188,18 @@ Phase 7 can be called fully closed when all are true:
 - `CW01A` stage `200` compliance hook is wired and runtime-proven
 - `CW01B` stage `200` defiance hook is wired and runtime-proven
 - combined strict verifier remains clean on `FAIL=0, WARN=0, TODO=0`
+
+## Completion Note
+
+This checklist is now satisfied on the live framework baseline.
+
+- `CW01A` runtime proof landed at `2026-05-20 16:38:24 AEST` with:
+  - `PlayerEvents: Concordat compliance mod event routed.`
+  - `EventBus: RouteConcordatPressure complete: 20 adjustment 15`
+- `CW01B` runtime proof landed at `2026-05-20 16:42:44 AEST` with:
+  - `PlayerEvents: Concordat defiance mod event routed.`
+  - `EventBus: RouteConcordatPressure complete: 21 adjustment -15`
+- No Talos award was attached to either Civil War join marker.
+- The post-closeout strict gate was rerun at `2026-05-20 16:44:48 AEST` and
+  stayed fully clean:
+  - `FAIL=0, WARN=0, TODO=0, PASS=588, INFO=28`
