@@ -45,6 +45,7 @@ const ACTIVE_SCRIPTS = [
   "PDV_Deity_AuriEl",
   "PDV_EventTypes",
   "PDV_EventBus",
+  "PDV_FragmentBridge",
   "PDV_EventSignalActivator",
   "PDV_EventSignalEffect",
   "PDV_PlayerEvents",

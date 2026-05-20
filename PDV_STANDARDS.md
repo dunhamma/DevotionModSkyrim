@@ -52,6 +52,7 @@ ARCHIVE = frozen historical record. Currently:
 - `archive/HOUSECARL_SKILL_AUTHORING.md`
 - `archive/Skyrim_Modding_Lessons_2026-05-14.md` - frozen external practical Skyrim/Papyrus lessons intake
 - `archive/Skyrim_Modding_Lessons_Full_2026-05-14.md` - expanded frozen external practical Skyrim/Papyrus lessons intake
+- `archive/phase-order-recommendations-2026-05-20.md` - frozen planning analysis for the Section 21.5 reduced reorder decision
 
 **Immutability:** Files in `archive/` are not edited after first commit. If a fact in an archive doc is wrong, the correction goes in the relevant LIVING doc — not back into the archive. The archive is a timestamped record; editing it retroactively makes the historical record unreliable.
 
@@ -434,6 +435,7 @@ The files under `archive/` are frozen source material. The inherited HOUSECARL_*
 - `archive/HOUSECARL_MCP_AUTHORING.md` — applies only if PDV ever grows a tooling MCP component. Currently out of scope.
 - `archive/Skyrim_Modding_Lessons_2026-05-14.md` — external practical Skyrim/Papyrus lesson intake. Its actionable rules are folded into this standards doc, `AGENTS.md`, `PDV_MOD_SETUP.md`, `references/PAPYRUS_KNOWLEDGE_INTAKE.md`, and the PDV Papyrus/CK skill.
 - `archive/Skyrim_Modding_Lessons_Full_2026-05-14.md` — expanded external lesson intake covering compile workflow, arrays, dialogue, storage backends, JContainers, debug traces, MCM OIDs, CSF, and runtime identity patterns.
+- `archive/phase-order-recommendations-2026-05-20.md` — frozen branch-review analysis for why the living v3 plan adopted the reduced Pattern Proving reorder instead of the full extra-slice rewrite.
 
 **Don't copy text from the archive into LIVING docs verbatim.** If a rule from the archive should apply to PDV, restate it scoped to PDV and cite the archive as source. Verbatim copies create the parallel-doc-drift problem § 2.1 exists to prevent.
 

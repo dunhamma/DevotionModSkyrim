@@ -263,6 +263,7 @@ const COMPILED_SCRIPTS = {
   PDV_Deity_AuriEl: "required",
   PDV_EventTypes: "required",
   PDV_EventBus: "required",
+  PDV_FragmentBridge: "required",
   PDV_EventSignalActivator: "required",
   PDV_EventSignalEffect: "required",
   PDV_PlayerEvents: "required",
@@ -2243,6 +2244,12 @@ class Verifier {
       "Function RouteTalosShrineDefiance()",
       "PDV_Manager.HandleShoutAttack(eventType, playerRef, shoutUsed, \"eventbus_\" + eventType)",
       "PDV_Manager.HandleTalosShrineDefiance(\"eventbus_\" + eventType)",
+    ]);
+    this.checkSourceContains("Phase 7 source", "PDV_FragmentBridge", [
+      "Scriptname PDV_FragmentBridge Hidden",
+      "Bool Function RouteConcordatFromQuest(Quest eventBusQuest, Bool isCompliance) Global",
+      "PDV_EventBus eventBus = eventBusQuest as PDV_EventBus",
+      "eventBus.RouteConcordatPressure(isCompliance)",
     ]);
     this.checkSourceContains("Phase 7 source", "PDV_EventTypes", [
       "EVT_TALOS_SHRINE_DEFIANCE = 35",

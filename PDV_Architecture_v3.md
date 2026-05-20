@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-20 (v3.22 - Phase 7 runtime proof and zero-warning baseline)
+Last revised: 2026-05-20 (v3.24 - FragmentBridge verifier expansion and refreshed baseline)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 runtime infrastructure proof is complete; exact Civil War social-hook closeout remains open.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, and the hidden Talos shrine reference contract. The remaining open packet is exact Civil War compliance/defiance one-shot wiring after local record confirmation.
 
 ---
@@ -288,10 +288,22 @@ first:
   cooldown uses in-game time (`0.0208` days, about 30 in-game minutes), so a
   second shout after vanilla cooldown but before enough in-game time passes is
   expected to route without award.
+- Local Civil War confirmation is now also exact rather than seed-only:
+  `CW01A` (`Joining the Legion`, `Skyrim.esm:0D517A`) and `CW01B`
+  (`Joining the Stormcloaks`, `Skyrim.esm:0E2D29`) are the first clean join
+  markers, both with objective `160` `Take the oath` and once-only completion
+  at stage `200`. The recommended Phase 7 hook point is stage `200` on each
+  quest. The current manual fragment contract uses `PDV_FragmentBridge`
+  rather than inline casts inside the vanilla quest fragments, and now prefers
+  no-property helper calls because CK can accumulate duplicate/ghost fragment
+  properties on vanilla quests. Preferred calls are
+  `PDV_FragmentBridge.RouteConcordatCompliance()` and
+  `PDV_FragmentBridge.RouteConcordatDefiance()`.
 
 Still intentionally out of scope for this packet: crime/arrest Story Manager
 events, broad deity-roster expansion, and guessed Civil War hooks. Civil War
-one-shots must still be verified from local game data before CK wiring.
+one-shots are now locally verified, but the final fragment wiring and runtime
+smoke remain manual CK work.
 
 ---
 
@@ -1618,6 +1630,14 @@ Use this shape before starting any slice:
 
 **Pattern Proving build order:**
 
+2026-05-20 phase-order review outcome: adopt a reduced reorder only. Do not add
+standalone base-script-verification or signal-breadth slices: Structural
+Skeleton and the current Phase 7 proof already cover those seams in the live
+repo state. The live order change is to prove commitment before decay, make
+decay/favor tuning decay-aware, harden privilege and Prisma toast contracts
+before the first full Daedric price/stigma pilot, and push curse-state after
+that Daedric comparison point.
+
 | Order | Slice | Owns / proves | Interface guarantee | Entry gate | Done when |
 |---:|---|---|---|---|---|
 | 0 | Baseline inventory | Confirms the closed Preflight/Skeleton and current Pattern Proving evidence | Future work starts from known `FAIL=0` verifier state and known partial proofs | Clean worktree; no code change | Current strict verifier commands and current in-game proof notes are recorded before new implementation begins |
@@ -1626,12 +1646,13 @@ Use this shape before starting any slice:
 | 3 | Bosmer Path state pilot | `PDV_StateTrack` and `PDV_State_BosmerPath` as the first real state track | Commitment and scoring can ask active path and eligibility; callers do not know switch proof history | Slice 2 or explicit waiver if reputation is not needed | Setup/default path, destination-gated switch, Old Contract Green Pact tagging, and PactBound separation work in normal play |
 | 4 | Dunmer Ancestor substrate pilot | `PDV_Substrate_DunmerAncestor` as the first strong substrate | Dawn/scoring can adjust substrate metric without writing patron piety; CK can inspect substrate tier/posture | Slice 1; no need to wait for all state tracks | Portable shrine prayer and player-owned-home bonus grant origin-only substrate progress; vampire/werewolf posture remains separate |
 | 5 | Khajiit lunar exception closeout | Lunar substrate plus emergent focused emphasis | Khajiit can update broad/focused state without formal patron offers | Slice 4 if shared substrate helpers are reused | Moon-cycle cadence, road-home circuit, and focused-emphasis lead logic work without `PDV_GLO_PatronState = active primary` |
-| 6 | Contextual favor pilot | One automatic favor family, preferably Kyne foreground unless a prior slice gives cleaner hooks | Event/scoring can request a favor opportunity; favor manager enforces one-active-boost cap | At least one reliable signal family from Slices 1-5 | 3-5 favor triggers exist for one devotional lane, duration/surfacing rules work, and anti-stack is verifier or smoke covered |
-| 7 | Commitment offer pilot | Shared formal offer flow | Dawn can recompute candidates, fire at most one offer, and persist accepted patron state without a queue | Slice 3 for eligibility filtering; Slice 6 not required | Accept / Not Yet / Refuse works; 70% carry-over on accept works; no competing 1.0 offers fire after acceptance |
-| 8 | Daedric price/stigma pilot | First full Daedric path price/stigma loop | Daedric path scoring exposes boon, price, stigma, and race response through a narrow path interface | D-12, D-13, D-14 resolved; Hircine hunt proof may remain ingress-only | One Prince path has commitment, price, stigma, race response, and exit/residue behavior proven |
-| 9 | Curse-state pilot | Werewolf first, vampire second | Scoring asks curse state/modifier without knowing detection source | D-17 resolved | Curse transition changes scoring posture and restoration behavior without mutating origin race |
-| 10 | Neglect/decay pilot | One accepted patron relationship weakening over time | Dawn owns decay and neglect effects; runtime events never write persistent decay directly | Slice 7 | Decay floors, grace, neglect spell apply/remove, and broad-worship suppression work |
-| 11 | Privilege pilot | Shrine/dialogue privilege pattern | CK Conditions can read mirror globals and track globals without script glue in dialogue/shrine content | D-10 resolved; Slice 2/7 preferred | One shrine or dialogue privilege proves condition shape and coexistence discipline |
+| 6 | Commitment offer pilot | Shared formal offer flow | Dawn can recompute candidates, fire at most one offer, and persist accepted patron state without a queue | Slice 3 for eligibility filtering; favor, decay, and privilege do not need to exist yet | Accept / Not Yet / Refuse works; 70% carry-over on accept works; no competing 1.0 offers fire after acceptance |
+| 7 | Neglect/decay pilot | One accepted patron relationship weakening over time | Dawn owns decay and neglect effects; runtime events never write persistent decay directly | Slice 6 | Decay floors, grace, neglect spell apply/remove, and broad-worship suppression work |
+| 8 | Privilege pilot | Shrine/dialogue privilege pattern | CK Conditions can read mirror globals and track globals without script glue in dialogue/shrine content | D-10 resolved; Slice 6 preferred | One shrine or dialogue privilege proves condition shape and coexistence discipline |
+| 9 | Contextual favor pilot | One automatic favor family, preferably Kyne foreground unless a prior slice gives cleaner hooks | Event/scoring can request a favor opportunity; favor manager enforces one-active-boost cap | Slice 7; at least one reliable signal family from Slices 1-5 | 3-5 favor triggers exist for one devotional lane, duration/surfacing rules work, and anti-stack is verifier or smoke covered |
+| 10 | UI toast hardening | Prisma overlay-toast payload contract for authored race content | Papyrus callers can rely on a stable overlay schema while the UI keeps ownership of default copy/tone expansion | Existing prototype toast path works; Slice 9 preferred before broad authored call-site growth | `favor`, `dawn`, `neglect`, `tier`, and `rivalry` all render with documented stable fields, and the README / v3 payload maturity labels agree |
+| 11 | Daedric price/stigma pilot | First full Daedric path price/stigma loop | Daedric path scoring exposes boon, price, stigma, and race response through a narrow path interface | D-12, D-13, D-14 resolved; Slices 7-10 complete; Hircine hunt proof may remain ingress-only | One Prince path has commitment, price, stigma, race response, and exit/residue behavior proven |
+| 12 | Curse-state pilot | Werewolf first, vampire second | Scoring asks curse state/modifier without knowing detection source | D-17 resolved; Slice 11 preferred so curse tuning can compare against a real Daedric path | Curse transition changes scoring posture and restoration behavior without mutating origin race |
 
 **Immediate handoff packets:**
 
@@ -1677,7 +1698,7 @@ Known Slice 0 waivers:
 | Entry gate | Slice 0 verifier baseline remains `FAIL=0, TODO=0`; no open Section 24 decision blocks this slice |
 | Verifier gate | Existing combined strict verifier remains clean. Current closeout gate: `FAIL=0, TODO=0, PASS=522, WARN=2, INFO=28` at 2026-05-19 20:28 AEST. Strict Pattern Proving checks receiver source/pex freshness, the Slice 1 receiver manifest, and ACTI/MGEF property readback for the proof records |
 | In-game proof | COMPLETE on 2026-05-19: Dunmer portable shrine plus home/private shrine reached `prayers=1; homes=1`; Bosmer OldContract Green Pact violation reached `gp=1`; Hircine hunt rite reached `sig=1; stigma=1.000000; state=Legible`. Papyrus logs showed EventBus and manager/substrate/path traces for the counted routes, and Bosmer/Hircine save-load sanity passed |
-| Exit/recovery | Dunmer proof has no rupture and only daily anti-repeat throttling. Bosmer proof must remain a single violation, not forced Pact reckoning. Hircine proof may use existing renounce/debug reset only as cleanup until Slice 8 defines real Daedric exit/residue |
+| Exit/recovery | Dunmer proof has no rupture and only daily anti-repeat throttling. Bosmer proof must remain a single violation, not forced Pact reckoning. Hircine proof may use existing renounce/debug reset only as cleanup until Slice 11 defines real Daedric exit/residue |
 | Not in scope | Full Green Pact tagging, full Bosmer path switching, full Dunmer substrate tuning, Daedric boon/price/stigma completion, curse detection, broad animal-kill scoring, new player-facing quest content |
 | Docs touched | v3 and `AGENTS.md` for proof status; `PDV_MOD_SETUP.md` only if tool/verify commands change; race sheets only if player-facing behavior changes |
 
@@ -1695,7 +1716,7 @@ in-game receiver proofs, with final strict verification clean on `FAIL=0` and
 
 **Daedric implementation bridge from the initial hardening pass:**
 
-Do not start Slice 8 from the race sheets alone. The initial hardening pass
+Do not start Slice 11 from the race sheets alone. The initial hardening pass
 established a three-layer handoff:
 
 1. `race-sheets/Race_*.md` answer player-facing end-state feel.
@@ -1704,7 +1725,7 @@ established a three-layer handoff:
 3. `references/PDV_RaceArchitecture_DesignReference.md` Section 11 answers the
    implementation contract fields.
 
-Slice 8 must choose one Prince/race pairing, then expand it into explicit
+Slice 11 must choose one Prince/race pairing, then expand it into explicit
 records before writing code: surface type, response state, commitment signal,
 temptation pressure, boon, price, stigma, faith friction, vanilla hook priority,
 buildability tag, exit route, residue, and player feedback. `Nocturnal` uses
@@ -1729,11 +1750,11 @@ chooses to resolve vampire detection first.
 
 | Decision | Blocks | Does not block |
 |---|---|---|
-| D-10 Greybeards-Kynareth privilege pilot | Slice 11 privilege pilot | Slices 1-10 |
-| D-12 Daedric roster convergence | Slice 8 full Daedric price/stigma pilot | Hircine ingress proof, Aedric/cultural pilots |
-| D-13 Daedric stigma decay | Slice 8 full Daedric price/stigma pilot | Non-Daedric commitment, reputation, state, substrate, favor |
-| D-14 Cross-Prince hostility | Slice 8 full Daedric price/stigma pilot beyond one isolated proof | Non-Daedric rivalry and existing Talos/Auri-El behavior |
-| D-17 Werewolf detection source | Slice 9 curse-state pilot | Altmer/Breton/Khajiit static curse architecture notes |
+| D-10 Greybeards-Kynareth privilege pilot | Slice 8 privilege pilot | Slices 1-7 |
+| D-12 Daedric roster convergence | Slice 11 full Daedric price/stigma pilot | Hircine ingress proof, Aedric/cultural pilots |
+| D-13 Daedric stigma decay | Slice 11 full Daedric price/stigma pilot | Non-Daedric commitment, reputation, state, substrate, favor |
+| D-14 Cross-Prince hostility | Slice 11 full Daedric price/stigma pilot beyond one isolated proof | Non-Daedric rivalry and existing Talos/Auri-El behavior |
+| D-17 Werewolf detection source | Slice 12 curse-state pilot | Altmer/Breton/Khajiit static curse architecture notes |
 | D-30 StorageUtil read budget | Phase 12+ performance hardening | Early Pattern Proving if traces remain cheap |
 | D-31 `pdv_author.mjs` compat-patch scope | Phase 19+ compat authoring automation | Manual compat notes and core v3 implementation |
 
@@ -2054,6 +2075,33 @@ or architecture contract changes.
 
 ## 26. Revisions
 
+### v3.24 - 2026-05-20 - FragmentBridge verifier expansion and refreshed baseline
+
+The strict compile/verify surface now explicitly includes `PDV_FragmentBridge`
+as part of the live Phase 7 closeout tooling rather than treating the Civil War
+fragment helper as an undocumented sidecar. `tools/pdv_compile.mjs` now keeps
+the script in the active compile set, `tools/pdv_verify.mjs` now requires it
+and checks the bridge-source contract, and the combined strict gate remained
+fully clean after that coverage expansion: `FAIL=0, WARN=0, TODO=0, PASS=579,
+INFO=28` at 2026-05-20 15:51 AEST. This is tooling/readback hardening, not a
+new phase closeout, but it is the current verifier baseline the living docs
+should quote.
+
+### v3.23 - 2026-05-20 - Pattern Proving reduced reorder adopted
+
+Section 21.5 now adopts the reduced phase-order reorder ratified from the
+archived review note at `archive/phase-order-recommendations-2026-05-20.md`
+rather than the full extra-slice rewrite proposed there. The first four pilot
+slices stay intact, then the live order becomes commitment, neglect/decay,
+privilege, contextual favor, UI toast hardening, Daedric price/stigma, and
+curse-state. No standalone base-script-verification slice or standalone
+signal-breadth slice was added because Structural Skeleton and the current
+Phase 7 proof already cover those seams in the live repo state. The practical
+effect is that commitment now exists before decay is tuned against broad/patron
+state, favor tuning becomes decay-aware, privilege and Prisma toast contracts
+stabilize before broad authored content growth, and the first full Daedric
+pilot enters after those calibration layers instead of alongside them.
+
 ### v3.22 - 2026-05-20 - Phase 7 runtime proof and zero-warning baseline
 
 Phase 7 now has counted runtime proof for the live shrine/shout surfaces that
@@ -2067,7 +2115,8 @@ runtime. The strict verifier baseline is also fully quiet again: after manual
 xEdit consolidation of `PDV_MCM` VMAD and post-merge-back SEQ freshness, the
 combined strict gate now reads `FAIL=0, WARN=0, TODO=0, PASS=572, INFO=28` at
 2026-05-20 13:45 AEST. The remaining open Phase 7 packet is exact Civil War
-compliance/defiance one-shot wiring after local record confirmation.
+compliance/defiance one-shot wiring after local record confirmation, using the
+fragment-bridge pattern instead of direct inline EventBus casting.
 
 ### v3.21 - 2026-05-20 - Hidden shrine reference posture
 
@@ -2132,7 +2181,7 @@ criteria, a reusable handoff-card template, Pattern Proving build order,
 decision blockers, verifier command ladder, and documentation update rules.
 The hardening pass now also defines the first implementation packet checklist,
 source-contract/data-shape requirements, exit/recovery proof expectations, and
-the bridge from the Daedric race-sheet/matrix hardening into Slice 8. No
+the bridge from the Daedric race-sheet/matrix hardening into the Daedric pilot. No
 subsystem architecture changed; the pass clarifies how to execute the
 already-approved v3 roadmap without cloning incomplete patterns or treating
 compressed design prose as implementation data.
