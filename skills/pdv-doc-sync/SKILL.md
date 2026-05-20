@@ -4,9 +4,9 @@ description: >
   End-of-session documentation sync for the PlayerDevotion (PDV) Skyrim SSE
   mod project. Use after meaningful implementation, CK wiring, compile/test
   work, or explicit requests to update/sync project docs. Reads AGENTS.md,
-  PDV_Architecture_v2.md, PDV_MOD_SETUP.md, phase docs, and the actual
-  Devotion .psc/.pex files to keep project status, decisions, and durable
-  session learnings consistent.
+  PDV_Architecture_v2.md, PDV_Architecture_v3.md, PDV_MOD_SETUP.md, phase
+  docs, and the actual Devotion .psc/.pex files to keep project status,
+  decisions, and durable session learnings consistent.
 ---
 
 # PDV Doc Sync
@@ -26,6 +26,7 @@ Documentation root:
 Canonical living docs:
 - `AGENTS.md` - cross-session context, current status, decisions log
 - `PDV_Architecture_v2.md` - architecture, phase plan, revision log
+- `PDV_Architecture_v3.md` - forward architecture, roadmap, revision log
 - `PDV_MOD_SETUP.md` - tooling, paths, build order, troubleshooting
 - `PDV_Phase*_*.md` - phase-specific instructions/status
 - `PDV_STANDARDS.md` - operating rules; read when needed, edit only if a rule changes
@@ -50,6 +51,8 @@ the living context source.
    - decisions/session learnings in `AGENTS.md`
    - tooling/build notes in `PDV_MOD_SETUP.md`
 4. Perform a session learnings capture pass:
+   - this pass is mandatory on every PDV doc sync, even when the answer is
+     "no new durable learnings"
    - identify what was newly learned in the session, not just what files changed
    - keep only durable learnings: workflows, constraints, gotchas, verified
      behavior, architecture decisions, tool quirks, and repeatable debugging
@@ -70,6 +73,8 @@ the living context source.
 5. Keep archive docs frozen.
 6. Report files changed, what learnings were captured, and any residual code or
    CK wiring risks.
+7. If no new learning qualified, say that explicitly in the final report rather
+   than silently omitting the lessons-learned section.
 
 ## Status Semantics
 
@@ -110,6 +115,8 @@ When this skill runs, the final report should explicitly include:
 
 - which docs were updated
 - which durable learnings were captured
+- or an explicit `no new durable learnings captured` statement when nothing
+  qualified
 - any important learnings intentionally not recorded because they were still
   provisional
 - what remains unresolved

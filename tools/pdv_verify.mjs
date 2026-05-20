@@ -245,8 +245,8 @@ const SLICE1_SIGNAL_RECEIVER_DEFINITIONS = [
 
 const PHASE7_SIGNAL_RECEIVER_DEFINITIONS = [
   {
-    recordEdid: "PDV_ACTI_TalosShrineDefianceSignal",
-    recordType: "ACTI",
+    recordEdid: "PDV_REFR_TalosShrineDefianceSignal",
+    recordType: "REFR",
     scriptName: "PDV_EventSignalActivator",
     routeId: 35,
     requiredOriginRace: -1,
@@ -438,6 +438,12 @@ const MANAGER_PATTERN_PROPERTIES = {
 
 const MCM_PATTERN_PROPERTIES = {
   PDV_EventBusService: "PDV_EventBus",
+};
+
+const PLAYER_ALIAS_PROPERTIES = {
+  PDV_EventBusService: "PDV_EventBus",
+  PDV_OriginQuest: "PDV_Origin",
+  PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
 };
 
 const PATTERN_PROVING_MANIFEST = path.join(
@@ -1104,6 +1110,7 @@ class Verifier {
     this.checkPatternProvingManifest();
     this.checkPatternManagerRecord();
     this.checkPatternMcmRecord();
+    this.checkPlayerAliasContract(this.patternGap.bind(this), "V3 player alias contract");
     this.checkPatternPilotScripts();
     this.checkPatternArrayReadback();
     this.checkSlice1SignalReceiverManifest();
@@ -1111,6 +1118,7 @@ class Verifier {
   }
 
   checkPhase7() {
+    this.checkPlayerAliasContract(this.phase7Gap.bind(this), "Phase 7 player alias contract");
     this.checkPhase7SignalReceiverManifest();
     this.checkPhase7SignalReceiverRecords();
   }
@@ -1218,6 +1226,30 @@ class Verifier {
     for (const [propName, expectedEdid] of Object.entries(MCM_PATTERN_PROPERTIES)) {
       this.checkObjectPropertyTarget("V3 Pattern Proving MCM property", props, propName, expectedEdid, this.patternGap.bind(this));
     }
+  }
+
+  checkPlayerAliasContract(gapFn, checkLabel) {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const fields = detail.fields || {};
+    const questAlias = findQuestAlias(fields, "PDV_Player");
+    if (!questAlias) {
+      gapFn(checkLabel, "PDV__ManagerQuest is missing quest alias PDV_Player.", PDV_ESP);
+      return;
+    }
+
+    this.pass(checkLabel, "PDV_Player alias exists on PDV__ManagerQuest.", PDV_ESP);
+    const aliasScript = findAliasScript(fields, questAlias.ID, "PDV_PlayerEvents");
+    if (!aliasScript) {
+      gapFn(checkLabel, "PDV_Player alias is missing PDV_PlayerEvents.", PDV_ESP);
+      return;
+    }
+
+    this.pass(checkLabel, "PDV_Player alias has PDV_PlayerEvents attached.", PDV_ESP);
+    this.checkObjectProperties("PDV_Player alias property", propertyMap(aliasScript), PLAYER_ALIAS_PROPERTIES);
   }
 
   checkPatternPilotScripts() {
@@ -1355,7 +1387,7 @@ class Verifier {
       if (!record || !detail) {
         this.phase7Gap(
           "Phase 7 signal receiver record",
-          `${definition.recordEdid} is not present yet; manual CK/xEdit proof-record creation remains pending.`,
+          `${definition.recordEdid} is not present yet; manual CK/xEdit co-attachment on the real hidden shrine reference remains pending.`,
           PDV_ESP,
         );
         continue;
@@ -1384,6 +1416,15 @@ class Verifier {
       this.checkObjectPropertyTarget("Phase 7 signal receiver property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase7Gap.bind(this));
       this.checkScalarProperty("Phase 7 signal receiver property", props, "RouteId", definition.routeId, this.phase7Gap.bind(this));
       this.checkScalarProperty("Phase 7 signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.phase7Gap.bind(this));
+    }
+
+    const legacyHelper = this.recordsByEdid.get("PDV_ACTI_TalosShrineDefianceSignal");
+    if (legacyHelper) {
+      this.info(
+        "Phase 7 legacy helper activator",
+        "PDV_ACTI_TalosShrineDefianceSignal still exists. Preferred posture is script co-attachment on the real shrine reference, not a nearby helper ACTI.",
+        PDV_ESP,
+      );
     }
   }
 
@@ -2208,6 +2249,10 @@ class Verifier {
       "EVT_SHOUT_ATTACK = 40",
     ]);
     this.checkSourceContains("Phase 7 source", "PDV__ManagerQuest", [
+      "PO3_Events_Form.RegisterForShoutAttack(Self)",
+      "Event OnPlayerShoutAttack(Shout akShout)",
+      "Function RegisterManagerShoutSignals()",
+      "ShouldSuppressDuplicateShoutAttack()",
       "Function HandleTalosShrineDefiance(String reason)",
       "Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, String reason)",
       "ApplyConcordatPressure(-15, \"talos_shrine_\" + reason)",
@@ -2453,6 +2498,29 @@ function findScripts(fields, name) {
 
 function findScript(fields, name) {
   const matches = findScripts(fields, name);
+  if (!matches.length) {
+    return null;
+  }
+  if (matches.length === 1) {
+    return matches[0];
+  }
+
+  return {
+    ...matches.at(-1),
+    Properties: matches.flatMap((script) => script.Properties || []),
+  };
+}
+
+function findQuestAlias(fields, aliasName) {
+  return (fields.Aliases || []).find((alias) => alias.Name === aliasName) || null;
+}
+
+function findAliasScript(fields, aliasId, scriptName) {
+  const vmad = fields.VirtualMachineAdapter || {};
+  const matches = (vmad.Aliases || [])
+    .filter((aliasEntry) => Number(aliasEntry?.Property?.Alias) === Number(aliasId))
+    .flatMap((aliasEntry) => (aliasEntry.Scripts || []).filter((script) => script.Name === scriptName));
+
   if (!matches.length) {
     return null;
   }

@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-20 (v3.20 - Phase 19 tooling foundation kickoff)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 source/tooling implementation is in progress.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 code/tooling now covers PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, and the hidden Talos shrine proof-record contract, but CK proof and exact Civil War one-shot wiring remain open.
+Last revised: 2026-05-20 (v3.22 - Phase 7 runtime proof and zero-warning baseline)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 runtime infrastructure proof is complete; exact Civil War social-hook closeout remains open.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, and the hidden Talos shrine reference contract. The remaining open packet is exact Civil War compliance/defiance one-shot wiring after local record confirmation.
 
 ---
 
@@ -261,6 +261,11 @@ first:
 - `PDV_PlayerEvents.psc` now registers
   `PO3_Events_Alias.RegisterForShoutAttack(Self)` and routes
   `OnShoutAttack(Shout akShout)` through `PDV_EventBus`.
+- `PDV__ManagerQuest.psc` now also registers a quest-level fallback through
+  `PO3_Events_Form.RegisterForShoutAttack(Self)` and handles
+  `OnPlayerShoutAttack(Shout akShout)` so live shout ingress does not depend on
+  the alias receiver family alone. Duplicate callbacks inside a tiny time window
+  are suppressed in manager code before scoring.
 - `PDV_EventTypes.psc` now reserves `35` for hidden Talos shrine defiance and
   `40` for shout use.
 - `PDV_EventBus.psc` now exposes `RouteShoutAttack(...)` and
@@ -272,9 +277,17 @@ first:
 - `PDV_DeityBase.psc` now provides a reusable deity-side repeatable-action
   helper for daily cap plus cooldown enforcement, and the live Phase 7 users are
   `PDV_Deity_Kyne.psc` and `PDV_Deity_Talos.psc` for ambient shout scoring.
-- `PDV_EventSignalActivator.psc` can now route a hidden Talos shrine proof
-  surface through `RouteId = 35`. The record contract is documented in
+- `PDV_EventSignalActivator.psc` can now route Talos shrine defiance through
+  `RouteId = 35` when it is co-attached to the actual hidden shrine reference.
+  The reference contract is documented in
   `references/authoring/PDV_Phase7SignalReceivers.manifest.json`.
+- Runtime proof on 2026-05-20 now exists for both live surfaces in scope:
+  the hidden Talos shrine reference path is proven in game on an Imperial save,
+  and counted shout ingress is proven in game on a clean Nord save.
+- The shout anti-farm lesson is now part of the Phase 7 contract: deity-side
+  cooldown uses in-game time (`0.0208` days, about 30 in-game minutes), so a
+  second shout after vanilla cooldown but before enough in-game time passes is
+  expected to route without award.
 
 Still intentionally out of scope for this packet: crime/arrest Story Manager
 events, broad deity-roster expansion, and guessed Civil War hooks. Civil War
@@ -696,7 +709,7 @@ Where a privilege genuinely needs a value not surfaced by the mirrors (e.g. "hig
 ### 9.4 Privilege pilot and shrine discipline
 
 - **Greybeards-Kynareth recognition.** A Nord with high Kynareth tier could get a unique greeting from Arngeir. This requires editing a vanilla dialogue topic with a `Shares Dialogue` discipline. v3 should pilot this with the Kyne content as a "does the privilege pattern hold up?" test.
-- **Shrine activator overlays.** PDV does not replace vanilla shrine activator scripts for 1.0. Shrine extensions use overlay receiver quests, aliases, or new nearby activator references so shrine-modifying mods remain easier to coexist with.
+- **Shrine activator overlays.** PDV does not replace vanilla shrine activator scripts for 1.0. Preferred posture is per-reference co-attachment on the actual shrine reference when a specific shrine needs devotional routing; helper objects or nearby activators are fallback proof shapes only. Global base-script replacement stays out of bounds so shrine-modifying mods remain easier to coexist with.
 
 ---
 
@@ -1514,7 +1527,7 @@ Enhancement custom content (improves experience, not required for core function)
 - No hard Survival/Requiem dependency.
 - No DLL plugins authored by PDV.
 - No hard KID, SPID, or SkyPatcher dependency solely for keyword/classification/NPC distribution. powerofthree's Tweaks is accepted only as part of the PO3 Papyrus Extender runtime-event dependency chain, not as a reason to adopt KID/SkyPatcher distribution. Prefer the offline patcher unless a runtime-only feature proves the need.
-- No replacement of vanilla shrine activator scripts. (Use overlay receiver quests instead.)
+- No replacement of vanilla shrine activator scripts. Prefer per-reference co-attachment or overlay receiver patterns instead of global base-script overrides.
 
 ### 21.4 Implementation-plan review after race-sheet cleanup
 
@@ -2040,6 +2053,30 @@ or architecture contract changes.
 ---
 
 ## 26. Revisions
+
+### v3.22 - 2026-05-20 - Phase 7 runtime proof and zero-warning baseline
+
+Phase 7 now has counted runtime proof for the live shrine/shout surfaces that
+were in scope for this wave. The hidden Talos shrine reference on an Imperial
+save proved curated Talos award, Concordat pressure, repeat protection,
+save/load persistence, and next-day reopen while preserving shrine behavior.
+The shout lane on a clean Nord save proved counted PO3 ingress, deity-side
+anti-farm behavior, and the manager fallback pattern after alias-only
+`OnShoutAttack(Shout akShout)` failed to surface counted events reliably in
+runtime. The strict verifier baseline is also fully quiet again: after manual
+xEdit consolidation of `PDV_MCM` VMAD and post-merge-back SEQ freshness, the
+combined strict gate now reads `FAIL=0, WARN=0, TODO=0, PASS=572, INFO=28` at
+2026-05-20 13:45 AEST. The remaining open Phase 7 packet is exact Civil War
+compliance/defiance one-shot wiring after local record confirmation.
+
+### v3.21 - 2026-05-20 - Hidden shrine reference posture
+
+Phase 7 shrine routing is now documented as a real-reference wiring problem,
+not a helper-activator problem. Preferred posture is co-attachment on the
+actual hidden Talos shrine reference when that devotional surface is needed;
+nearby helper ACTIs remain fallback proof shapes only, and global shrine
+base-script replacement stays out of bounds. Sections 5, 9, and 21 now align
+the architecture with that narrower compatibility-first rule.
 
 ### v3.20 - 2026-05-20 - Phase 19 tooling foundation kickoff
 

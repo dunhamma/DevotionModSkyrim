@@ -1,14 +1,16 @@
 {
   "id": "phase7-signal-receivers",
-  "title": "PDV Phase 7 signal receiver CK record plan",
+  "title": "PDV Phase 7 hidden shrine reference wiring plan",
   "defaultOutput": "PDV_Phase7SignalReceiversOverlay.esp",
   "notes": [
-    "This manifest records the CK/xEdit proof-record contract for Phase 7 Nord/Imperial signal expansion.",
-    "pdv_author cannot mint new ACTI, QUST, INFO, or player-alias records, so proof-record creation and Civil War hook wiring remain manual CK/xEdit work.",
-    "Once the records exist, strict-phase7 verifier readback checks script attachment plus route and origin/debug properties."
+    "This manifest records the CK/xEdit contract for Phase 7 Nord/Imperial signal expansion on the real hidden Talos shrine reference.",
+    "pdv_author cannot mint or relocate placed references, ACTI, QUST, INFO, or player-alias records, so shrine-reference wiring and Civil War hook wiring remain manual CK/xEdit work.",
+    "Once the reference exists with an EditorID, strict-phase7 verifier readback checks script attachment plus route and origin/debug properties."
   ],
   "unsupported": [
-    "Create hidden ACTI record PDV_ACTI_TalosShrineDefianceSignal with PDV_EventSignalActivator: RouteId=35, RequiredOriginRace=-1, PDV_EventBusService=PDV_EventBus, PlayerREF=PlayerRef, PDV_GLO_OriginRace=PDV_GLO_OriginRace, PDV_GLO_DebugLevel=PDV_GLO_DebugLevel, optional OncePerDayKey=PDV.Signal.TalosShrineDefiance.Activator.",
+    "Find the actual hidden Talos shrine placed reference, assign it the EditorID PDV_REFR_TalosShrineDefianceSignal, and co-attach PDV_EventSignalActivator directly on that reference instead of creating a nearby helper ACTI.",
+    "Fill PDV_EventSignalActivator on PDV_REFR_TalosShrineDefianceSignal with RouteId=35, RequiredOriginRace=-1, PDV_EventBusService=PDV_EventBus, PlayerREF=PlayerRef, PDV_GLO_OriginRace=PDV_GLO_OriginRace, PDV_GLO_DebugLevel=PDV_GLO_DebugLevel, and optional OncePerDayKey=PDV.Signal.TalosShrineDefiance.Activator.",
+    "Preserve normal shrine behavior on the hidden shrine reference unless a later content pass deliberately changes it. Phase 7 only needs the devotional signal layer, not a global shrine-script override.",
     "Verify live Civil War join markers from local game data before CK wiring. The current design seeds are in references/vanilla-gameplay/pdv-crosswalk/quest-moral-signal-crosswalk.csv, but exact records/stages must be confirmed locally before adding one-shot compliance or defiance hooks.",
     "Attach curated compliance/defiance one-shots to the verified Civil War records after local record confirmation; do not guess from prose or reuse crime/arrest Story Manager events in Phase 7."
   ],
