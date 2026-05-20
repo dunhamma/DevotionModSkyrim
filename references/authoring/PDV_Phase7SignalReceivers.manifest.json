@@ -12,7 +12,7 @@
     "Fill PDV_EventSignalActivator on PDV_REFR_TalosShrineDefianceSignal with RouteId=35, RequiredOriginRace=-1, PDV_EventBusService=PDV_EventBus, PlayerREF=PlayerRef, PDV_GLO_OriginRace=PDV_GLO_OriginRace, PDV_GLO_DebugLevel=PDV_GLO_DebugLevel, and optional OncePerDayKey=PDV.Signal.TalosShrineDefiance.Activator.",
     "Preserve normal shrine behavior on the hidden shrine reference unless a later content pass deliberately changes it. Phase 7 only needs the devotional signal layer, not a global shrine-script override.",
     "Local Civil War confirmation is now complete: CW01A (Skyrim.esm:0D517A, Joining the Legion) and CW01B (Skyrim.esm:0E2D29, Joining the Stormcloaks) both expose objective 160 'Take the oath' and complete at stage 200.",
-    "Attach curated one-shot compliance/defiance hooks at stage 200 on CW01A/CW01B through the no-property fragment bridge path when possible. Preferred calls are PDV_FragmentBridge.RouteConcordatCompliance() on CW01A and PDV_FragmentBridge.RouteConcordatDefiance() on CW01B. Keep the older Quest-property path only as a recovery fallback if CK fragment state is already wired that way.",
+    "Attach curated one-shot compliance/defiance hooks at stage 200 on CW01A/CW01B through vanilla-safe SKSE mod events. Preferred calls are SendModEvent(\"PDV.ConcordatCompliance\") on CW01A and SendModEvent(\"PDV.ConcordatDefiance\") on CW01B, with PDV_PlayerEvents registering those mod events and routing them into the existing EventBus.",
     "Do not guess alternate Civil War hooks from prose, do not broaden into crime/arrest Story Manager events in Phase 7, and do not add Talos award on the Civil War join fragments."
   ],
   "operations": []

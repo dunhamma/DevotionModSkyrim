@@ -2238,6 +2238,15 @@ class Verifier {
       "PO3_Events_Alias.RegisterForShoutAttack(Self)",
       "Event OnShoutAttack(Shout akShout)",
       "PDV_EventBusService.RouteShoutAttack(GetActorRef(), akShout)",
+      "String Property MOD_EVENT_CONCORDAT_COMPLIANCE = \"PDV.ConcordatCompliance\" AutoReadOnly",
+      "String Property MOD_EVENT_CONCORDAT_DEFIANCE = \"PDV.ConcordatDefiance\" AutoReadOnly",
+      "RegisterForCivilWarSignals()",
+      "RegisterForModEvent(MOD_EVENT_CONCORDAT_COMPLIANCE, \"OnPDVConcordatCompliance\")",
+      "RegisterForModEvent(MOD_EVENT_CONCORDAT_DEFIANCE, \"OnPDVConcordatDefiance\")",
+      "Event OnPDVConcordatCompliance(String eventName, String strArg, Float numArg, Form sender)",
+      "Event OnPDVConcordatDefiance(String eventName, String strArg, Float numArg, Form sender)",
+      "PDV_EventBusService.RouteConcordatPressure(true)",
+      "PDV_EventBusService.RouteConcordatPressure(false)",
     ]);
     this.checkSourceContains("Phase 7 source", "PDV_EventBus", [
       "Function RouteShoutAttack(Actor playerRef, Shout shoutUsed)",

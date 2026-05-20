@@ -293,12 +293,12 @@ first:
   (`Joining the Stormcloaks`, `Skyrim.esm:0E2D29`) are the first clean join
   markers, both with objective `160` `Take the oath` and once-only completion
   at stage `200`. The recommended Phase 7 hook point is stage `200` on each
-  quest. The current manual fragment contract uses `PDV_FragmentBridge`
-  rather than inline casts inside the vanilla quest fragments, and now prefers
-  no-property helper calls because CK can accumulate duplicate/ghost fragment
-  properties on vanilla quests. Preferred calls are
-  `PDV_FragmentBridge.RouteConcordatCompliance()` and
-  `PDV_FragmentBridge.RouteConcordatDefiance()`.
+  quest. The current manual fragment contract now prefers vanilla-safe SKSE
+  mod-event calls because CK proved brittle around custom PDV script
+  visibility and duplicate/ghost fragment-property state on vanilla quests.
+  Preferred calls are `SendModEvent("PDV.ConcordatCompliance")` and
+  `SendModEvent("PDV.ConcordatDefiance")`, with `PDV_PlayerEvents` catching
+  those events and routing them through the existing EventBus path.
 
 Still intentionally out of scope for this packet: crime/arrest Story Manager
 events, broad deity-roster expansion, and guessed Civil War hooks. Civil War
@@ -1654,6 +1654,29 @@ that Daedric comparison point.
 | 11 | Daedric price/stigma pilot | First full Daedric path price/stigma loop | Daedric path scoring exposes boon, price, stigma, and race response through a narrow path interface | D-12, D-13, D-14 resolved; Slices 7-10 complete; Hircine hunt proof may remain ingress-only | One Prince path has commitment, price, stigma, race response, and exit/residue behavior proven |
 | 12 | Curse-state pilot | Werewolf first, vampire second | Scoring asks curse state/modifier without knowing detection source | D-17 resolved; Slice 11 preferred so curse tuning can compare against a real Daedric path | Curse transition changes scoring posture and restoration behavior without mutating origin race |
 
+**Overnight enabler rule:**
+
+Section 21.5's order remains authoritative for declaring slice completion, but
+the implementation queue may pull forward narrowly scoped enabler work when it
+unblocks unattended overnight execution and does not claim the parent slice
+complete early. Current approved enabler pulls are:
+
+- `Commitment + neglect/decay hardening` as active-now dawn-loop work because
+  the manager-owned source contract already exists.
+- `UI toast contract stabilization` as a parallel Prisma contract task because
+  the overlay path already works and later authored call-sites depend on a
+  stable payload shape.
+- `Khajiit focused-emphasis scaffold` as a split-out part of Slice 5: build the
+  state/readback/debug/verifier scaffold early, but do not claim Khajiit closeout
+  until the emergent weighting and normal-play proof land.
+- `Bosmer path bookkeeping scaffold` may move early only for intent/cooldown/
+  state bookkeeping; do not claim Bosmer path closeout until destination-gated
+  switching, `OldContract` separation, and normal-play proof are real.
+
+Do not use this rule to front-load privilege, full Daedric price/stigma, or
+curse-state implementation. Those remain sequence-sensitive and should stay
+behind the current Section 21.5 gates.
+
 **Immediate handoff packets:**
 
 These packets are the next implementation handoff. They are deliberately
@@ -2086,6 +2109,17 @@ fully clean after that coverage expansion: `FAIL=0, WARN=0, TODO=0, PASS=579,
 INFO=28` at 2026-05-20 15:51 AEST. This is tooling/readback hardening, not a
 new phase closeout, but it is the current verifier baseline the living docs
 should quote.
+
+### v3.24 - 2026-05-20 - Overnight enabler rule added to Section 21.5
+
+Section 21.5 now explicitly allows a narrow class of pull-forward work:
+overnight enabler micro-slices. This does **not** change the authoritative
+completion order. Instead, it records that implementation may pull forward
+`Commitment + Neglect/decay` hardening, `UI toast` contract stabilization, the
+`Khajiit focused-emphasis` scaffold, and limited `Bosmer path` bookkeeping when
+those tasks unblock unattended overnight work without falsely declaring the
+parent slices complete. Privilege, full Daedric price/stigma, and curse-state
+remain intentionally sequence-sensitive and stay behind the live gates.
 
 ### v3.23 - 2026-05-20 - Pattern Proving reduced reorder adopted
 

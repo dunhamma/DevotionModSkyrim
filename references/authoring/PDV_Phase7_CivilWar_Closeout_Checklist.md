@@ -35,26 +35,27 @@ Reason:
 
 ## Fragment Call Contract
 
-Use a tiny hidden Papyrus bridge from the vanilla quest completion fragment.
-Preferred recovery posture is now **no fragment property at all** for these
-vanilla Civil War quests. CK fragment scripts can safely call a global helper,
-while avoiding duplicate/ghost property state on the generated `QF_*` script.
+Use an SKSE mod event from the vanilla quest completion fragment and let the
+already-live `PDV_PlayerEvents` alias route it into `PDV_EventBus`.
 
-Bridge helper:
+Why this is now preferred:
 
-- script: `PDV_FragmentBridge`
-- preferred functions:
-  - `RouteConcordatCompliance()`
-  - `RouteConcordatDefiance()`
-- compatibility fallback:
-  - `RouteConcordatFromQuest(Quest eventBusQuest, Bool isCompliance)`
+- the fragment body stays one line and uses no PDV custom types
+- no fragment property is needed
+- it avoids duplicate/ghost fragment-property state on vanilla `QF_*` scripts
+- the runtime signal still lands on the existing EventBus path
+
+Registered event names:
+
+- `PDV.ConcordatCompliance`
+- `PDV.ConcordatDefiance`
 
 Fragment calls:
 
 - Imperial join:
-  - `PDV_FragmentBridge.RouteConcordatCompliance()`
+  - `SendModEvent("PDV.ConcordatCompliance")`
 - Stormcloak join:
-  - `PDV_FragmentBridge.RouteConcordatDefiance()`
+  - `SendModEvent("PDV.ConcordatDefiance")`
 
 That preserves the locked Phase 7 posture:
 
@@ -83,11 +84,11 @@ That preserves the locked Phase 7 posture:
    - objective `160` should read `Take the oath`
 3. Open stage `200`
 4. Add or edit the stage `200` fragment/result script so it calls the PDV
-   bridge helper
+   mod event
 5. Fragment body should call:
 
 ```papyrus
-PDV_FragmentBridge.RouteConcordatCompliance()
+SendModEvent("PDV.ConcordatCompliance")
 ```
 
 Meaning:
@@ -106,7 +107,7 @@ Meaning:
 5. Fragment body should call:
 
 ```papyrus
-PDV_FragmentBridge.RouteConcordatDefiance()
+SendModEvent("PDV.ConcordatDefiance")
 ```
 
 Meaning:
@@ -118,11 +119,8 @@ Meaning:
 
 - Keep the fragment logic tiny
 - do not duplicate Concordat math in the fragment
-- prefer the no-property helper calls over adding fragment properties on these
-  vanilla quests
-- if recovery requires the older property path, do not type-cast
-  `PDV_EventBus` inline inside the fragment body; keep the cast inside
-  `PDV_FragmentBridge`
+- do not add fragment properties for the preferred path
+- do not type-cast PDV quest script types inside the fragment body
 - do not call `PDV__ManagerQuest.ApplyConcordatPressure(...)` directly from the
   vanilla quest fragment when the EventBus route already exists
 - do not add Talos piety award here
