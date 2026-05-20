@@ -1222,6 +1222,9 @@ Source-of-truth rules:
   canonical source.
 - Payload schemas become contracts only when documented in the bridge README or
   this architecture section.
+- Overlay toasts for `favor`, `dawn`, `neglect`, `tier`, and `rivalry` are the
+  current stable payload contract; panel payloads and any other event shapes
+  remain prototype until a later player-surface pass promotes them.
 - MCM remains configuration/debug/opening support until a later player-facing
   MCM pass explicitly changes that boundary.
 
@@ -2099,6 +2102,19 @@ or architecture contract changes.
 ---
 
 ## 26. Revisions
+
+### v3.26 - 2026-05-20 - Overnight enabler implementation sync
+
+The first approved overnight-enabler work is now reflected in the living v3
+contract. `PDV__ManagerQuest.psc` hardening now treats commitment proof as
+recent signal-day evidence plus per-deity cooldown storage and allows accepted
+patrons to decay once per in-game day without falsely closing the full
+commitment or neglect slices. Prisma Section 16.6 also now promotes the
+overlay-toast payload contract for `favor`, `dawn`, `neglect`, `tier`, and
+`rivalry` to stable while keeping panel payloads and other event shapes at
+prototype maturity. The targeted compile pass for `PDV__ManagerQuest` and the
+strict Pattern Proving verifier both ran clean on 2026-05-20; tomorrow's
+remaining proof boundary is runtime smoke, not source or doc uncertainty.
 
 ### v3.24 - 2026-05-20 - FragmentBridge verifier expansion and refreshed baseline
 
