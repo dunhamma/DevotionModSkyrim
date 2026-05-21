@@ -1,0 +1,14 @@
+{
+  "id": "phase8-concordat-talos",
+  "title": "PDV Phase 8 Concordat and Talos property overlay",
+  "defaultOutput": "PDV_Phase8ConcordatTalosOverlay.esp",
+  "notes": [
+    "This manifest wires the Talos-to-Concordat object properties needed by the Phase 8 runtime contract.",
+    "Talos multiplier arrays remain source-defaulted in PDV_DeityBase because the current mutagen-bridge path still cannot emit VMAD array writes.",
+    "Apply this after the live framework baseline already contains PDV_RepTrack_ConcordatStanding and PDV_Deity_Talos."
+  ],
+  "operations": [
+    { "kind": "setProperty", "record": "PDV_Deity_Talos", "script": "PDV_Deity_Talos", "property": "GainModifyingTrack", "valueType": "Object", "value": "PDV_RepTrack_ConcordatStanding" },
+    { "kind": "setProperty", "record": "PDV_Deity_Talos", "script": "PDV_Deity_Talos", "property": "DecayModifyingTrack", "valueType": "Object", "value": "PDV_RepTrack_ConcordatStanding" }
+  ]
+}

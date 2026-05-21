@@ -219,14 +219,44 @@
     return eventAliases[rawName] || rawName;
   };
 
-  const deityName = (payload = {}) => text(payload.deity || payload.deityName || payload.patron, text(state.patron, "Devotion"));
+  const normalizeToastPayload = (payload = {}) => {
+    if (!payload || typeof payload === "string") {
+      return payload;
+    }
+
+    const normalized = { ...payload };
+    normalized.event = eventName(payload);
+
+    if (!normalized.deity) {
+      normalized.deity = text(payload.deityName || payload.patron, "");
+    }
+    if (!normalized.symbol) {
+      normalized.symbol = text(payload.mark, "");
+    }
+    if (!normalized.context) {
+      normalized.context = text(payload.act || payload.source || payload.label, "");
+    }
+    if (!normalized.message) {
+      normalized.message = text(payload.text, "");
+    }
+    if (!normalized.tierLabel) {
+      normalized.tierLabel = text(payload.tierName, "");
+    }
+    if (!normalized.rival) {
+      normalized.rival = text(payload.rivalName, "");
+    }
+
+    return normalized;
+  };
+
+  const deityName = (payload = {}) => text(payload.deity, text(state.patron, "Devotion"));
 
   const possessive = (value) => {
     const name = text(value, "Devotion");
     return name.endsWith("s") ? `${name}'` : `${name}'s`;
   };
 
-  const contextName = (payload = {}) => text(payload.context || payload.act || payload.source || payload.label, "");
+  const contextName = (payload = {}) => text(payload.context, "");
 
   const eventLanguage = {
     favor: {
@@ -275,23 +305,24 @@
   };
 
   const resolveEventPayload = (payload = {}) => {
-    if (!payload || typeof payload === "string") {
-      return payload;
+    const normalized = normalizeToastPayload(payload);
+    if (!normalized || typeof normalized === "string") {
+      return normalized;
     }
 
-    const name = eventName(payload);
+    const name = eventName(normalized);
     const language = eventLanguage[name];
     if (!language) {
-      return { ...payload };
+      return { ...normalized };
     }
 
-    const resolved = { ...payload, event: name };
-    resolved.tone = text(payload.tone, language.tone);
-    resolved.symbol = text(payload.symbol || payload.mark, language.symbol(payload));
-    resolved.title = text(payload.title, language.title(payload));
-    resolved.message = text(payload.message || payload.text, language.message(payload));
-    resolved.listTitle = text(payload.listTitle || payload.title || payload.label, language.listTitle(payload));
-    resolved.listText = text(payload.listText || payload.text || payload.message, language.listText(payload));
+    const resolved = { ...normalized, event: name };
+    resolved.tone = text(normalized.tone, language.tone);
+    resolved.symbol = text(normalized.symbol, language.symbol(normalized));
+    resolved.title = text(normalized.title, language.title(normalized));
+    resolved.message = text(normalized.message, language.message(normalized));
+    resolved.listTitle = text(normalized.listTitle || normalized.title || normalized.label, language.listTitle(normalized));
+    resolved.listText = text(normalized.listText || normalized.message, language.listText(normalized));
     return resolved;
   };
 
@@ -456,6 +487,8 @@
 
     toast.className = `toast is-${tone}`;
     toast.style.setProperty("--toast-life", `${duration}ms`);
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-atomic", "true");
 
     const mark = document.createElement("div");
     mark.className = "toast__mark";

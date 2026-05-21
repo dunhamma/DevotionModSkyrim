@@ -107,7 +107,8 @@ the view without focusing or pausing the panel path and sends the payload to the
 overlay receiver, which is currently used for transient devotion toasts.
 
 The Devotion view accepts compact event payloads and expands player-facing copy
-client-side. Current event names:
+client-side. The overlay-toast path is now stable for the five pilot events
+below:
 
 ```json
 { "toast": { "event": "favor", "deity": "Kyne", "symbol": "kyne", "context": "Clean hunt", "amount": 4 } }
@@ -119,6 +120,30 @@ client-side. Current event names:
 
 Explicit `title`, `message`, `tone`, or `symbol` fields still override the
 event defaults when Papyrus needs authored wording for a special case.
+
+Stable common toast fields:
+
+- `event`
+- `symbol`
+- `tone`
+- `title`
+- `message`
+- `duration`
+
+Stable event-specific fields:
+
+- `favor`: `deity`, optional `context`, optional `amount`
+- `dawn`: no additional fields required
+- `neglect`: `deity`
+- `tier`: `deity`, `tierLabel`
+- `rivalry`: `rival`, optional `rivalSymbol`
+
+Deprecated-but-accepted toast aliases:
+
+- Event aliases: `piety`, `gain`, `piety_gain`, `dawn_settle`,
+  `dawn_settled`, `decay`, `warning`, `tier_up`, `tier_change`, `rival`
+- Field aliases: `type`, `kind`, `deityName`, `patron`, `mark`, `act`,
+  `source`, `label`, `text`, `tierName`, `rivalName`
 
 ## Static Demo
 
@@ -141,5 +166,6 @@ Use these maturity labels when growing the UI contract:
 - `deprecated`: still accepted by the UI but should not be emitted by new
   Papyrus code.
 
-Current toast events are prototype-level until the next accessibility and
-payload-contract pass promotes them.
+Overlay toasts for `favor`, `dawn`, `neglect`, `tier`, and `rivalry` are now
+`stable` for the current pilot path. Panel payloads and any non-listed toast
+event shapes remain `prototype`.
