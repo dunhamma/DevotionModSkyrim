@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, Dunmer, Khajiit, Imperial, Redguard, Bosmer, and Breton; Altmer and Breton drafted except their gated slots; slot-only rows for the remaining 1 (Argonian).
+**Status:** Authoring manifest. Inventory across all 10 races, all with full draft prose. Altmer and Breton carry gated slots (Section 13.13, Section 18.14) held until their specs close; everything else is content-author-ready for Phase 19.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -114,7 +114,7 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 7. Redguard (full draft prose)
 8. Bosmer (full draft prose; four-path divergence)
 9. Breton (full draft prose; three-tradition divergence; Vigilant pressure gated)
-10. Argonian (slot rows only)
+10. Argonian (full draft prose)
 
 ---
 
@@ -1651,27 +1651,168 @@ A Faithful Hidden Art Breton in steady occult play (Daedric quests, careful cove
 
 Tier-up notifications: one per save per deity per direction. There is no dawn offer, so no Faithful suppression rule applies. The gated Vigilant pressure encounter is excluded from this estimate and will need a fresh density pass if it is built.
 
-## 19. Argonian (slot frame)
+## 19. Argonian (full draft)
 
-Implementation-locked. Single layered Hist substrate (Hist, People, Void). `PDV_State_ArgonianHistPosture` with `Normal = 0`, `Distant = 1`, `Strained = 2`, `Silenced = 3`, `Corrupted = 4`. No deity choice.
+Implementation-locked. One layered Hist substrate carrying three visible layers (Hist, People, Void); no deity choice and no commitment offer. `PDV_Substrate_ArgonianHist` owns the substrate. `PDV_State_ArgonianHistPosture` with `Normal = 0`, `Distant = 1`, `Strained = 2`, `Silenced = 3`, `Corrupted = 4`.
 
-| Category | Slot pattern | Source |
-|---|---|---|
-| Substrate readout (Hist/People/Void) | `PDV_Msg_Argonian_Hist_<Distance>`, `PDV_Msg_Argonian_People_<Belonging>`, `PDV_Msg_Argonian_Void_<Dormancy|Active>` | TargetEndStates Section "Argonian Implementation state" lines 498-499 |
-| Blessing description | `PDV_Bless_Argonian_<Hist|People|Void>_T<1|2|3>` | RaceDesign_Argonian Section "Tier Rewards" |
-| Tier-up notification | `PDV_Notif_Argonian_<Layer>_<Tier>Entry`, `PDV_Notif_Argonian_<Layer>_<Tier>Lapse` | RaceDesign_Argonian |
-| Champion entry per layer | `PDV_Msg_Argonian_ChampionEntry_<Hist|People|Void>` | TargetEndStates Section "Argonian Champion moment" lines 507-511 |
-| Hist sap meditation prompt | `PDV_Msg_Argonian_HistSapMeditation_<Activate|Effect>` | TargetEndStates Section "Hist distance" line 500; Section "Custom content priority" line 1529; Architecture v3 Section 21.2 |
-| Bed of choice anchor | `PDV_Msg_Argonian_BedOfChoice_<Designate|Return|MissedCadence>` | TargetEndStates Section "Bed of choice" line 502 |
-| Sithis activation threshold | `PDV_Msg_Argonian_SithisActivation_<FirstSignal|FullActivation>` | TargetEndStates Section "Sithis activation" line 504 |
-| Neglect texture | `PDV_Notif_Argonian_HistThinning_NeglectTexture`, `PDV_Notif_Argonian_PeopleIsolation_NeglectTexture`, `PDV_Notif_Argonian_VoidDormancy_NeglectTexture` | TargetEndStates Section "Argonian Neglect texture" line 517 |
-| Posture transition | `PDV_Msg_Argonian_HistPosture_<Distant|Strained|Silenced|Corrupted>_Entry` | TargetEndStates Section "Curse posture" line 519 |
-| Survey readout | `PDV_Msg_Argonian_Survey_Layered` | Architecture v3 Section 16.2 |
-| Contextual favor (Noted/Marked) | `PDV_Notif_Argonian_FavorNoted_<Lane>_<TriggerFamily>`, `PDV_Msg_Argonian_FavorMarked_<Lane>_<TriggerFamily>` | RaceDesign_Argonian |
-| Curse-state transition | `PDV_Msg_Argonian_CurseState_VampireOnset_HistSilenced`, `PDV_Msg_Argonian_CurseState_VampireCured`, `PDV_Msg_Argonian_CurseState_WerewolfOnset_Strain` | TargetEndStates Section "Curse posture" line 519 |
-| Shrine / privilege dialogue | `PDV_Dlog_Argonian_<WindhelmAssemblage|RiftenDocks|HistKeeper>_Recognition` | Architecture v3 Section 16.3 |
+**Slot-frame correction:** the planning-pass frame implied per-layer Tier 1/2/3 blessings (`PDV_Bless_Argonian_<Hist|People|Void>_T<1|2|3>`). The locked `RaceDesign_Argonian` "Tier Rewards" gives Tier 1 and Tier 2 as the single layered experience (all three layers at once), and Tier 3 splits into the three Champion sub-rewards. The corrected set is five blessing records: `PDV_Bless_Argonian_Layered_T1`, `_Layered_T2`, and `_Hist_T3` / `_Community_T3` / `_Sithis_T3`.
 
-Note: Argonian has no standard commitment-offer slot because there is no deity choice. The People layer's belonging milestones use `PDV_Msg_Argonian_People_*` flavor rather than offer copy.
+### 19.1 Tone profiles
+
+| Voice | Tone profile |
+|---|---|
+| The Hist | Not a god; the ancient sentient trees that give and receive Saxhleel souls; constitutive, distant in Skyrim; it reaches, or fails to reach, rather than speaks. |
+| The People | The Saxhleel held together by each other in exile; warm, practical, mutual; the family chosen when the trees cannot be reached. |
+| Sithis | The primordial void -- change, death, the dark before and around all things; acknowledged, never worshipped; speaks rarely, and never to comfort. |
+
+### 19.2 Substrate posture readouts (`PDV_Msg_Argonian_HistPosture_*`)
+
+Narrator voice. Status readout surface (shown by Survey Devotion and on posture transitions). Budget 240 hard / 180 target. One per `PDV_State_ArgonianHistPosture` value.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Argonian_HistPosture_Normal | Status spell readout | Quiet | Narrator | 240/180 | RaceDesign_Argonian "Curse posture enum" | Default | The Hist is distant, as it always is in Skyrim, but it still reaches you. You are held. |
+| PDV_Msg_Argonian_HistPosture_Distant | Status spell readout | Noted | Narrator | 240/180 | RaceDesign_Argonian "Curse posture enum" | Low uncursed Hist relation; fires on transition | The Hist has thinned to almost nothing. You feel like a stranger in your own skin. |
+| PDV_Msg_Argonian_HistPosture_Strained | Status spell readout | Noted | Narrator | 240/180 | RaceDesign_Argonian "Curse posture enum" | Lycanthropy; fires on transition | The Hist relation is strained. The beast-shape sits between you and the trees, but they have not let go. |
+| PDV_Msg_Argonian_HistPosture_Silenced | Status spell readout | Marked | Narrator | 240/180 | RaceDesign_Argonian "Curse posture enum" | Active vampirism; fires on transition | The Hist has gone silent. It does not speak to its own undead. The cycle is interrupted. |
+| PDV_Msg_Argonian_HistPosture_Corrupted | Status spell readout | Marked | Narrator | 240/180 | RaceDesign_Argonian "Curse posture enum" | Vampirism plus domination pressure; fires on transition | The Hist relation is corrupted. Undeath and domination have fouled the connection at its root. |
+
+### 19.3 Blessing descriptions (`PDV_Bless_Argonian_*`)
+
+Narrator voice. Budget 200 hard / 140 target. Tier 1 and Tier 2 are the layered experience; Tier 3 splits into the three Champion sub-rewards. Anti-farm: passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Argonian_Layered_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Tier 1" | Passive SPEL; layered | The Hist is distant but present; the People know you. Water breathing deepens; swimming +10%; near water, +2 health a second; disease resistance +15%. |
+| PDV_Bless_Argonian_Layered_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Tier 2" | Passive SPEL; layered | All three layers are maintained under exile. Near water, +5 health a second; rest near water restores health and stamina fully; helping a Saxhleel returns stamina. |
+| PDV_Bless_Argonian_Hist_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Hist Champion" | Passive SPEL; Hist layer | The Hist reaches you where water reaches. In wetland and water, damage resistance +10%, sneak +15, attack speed +3%. The swamp gives what dry stone cannot. |
+| PDV_Bless_Argonian_Community_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Community Champion" | Passive SPEL; Community layer | The People are your armor. Helping Saxhleel returns strong piety; a friendly Argonian nearby grants +8 armor; the exile network knows you. |
+| PDV_Bless_Argonian_Sithis_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Sithis Champion" | Passive SPEL; Void layer | Sithis holds those who faced the void unflinching. Near death, a burst of stamina regeneration; a Dark Brotherhood contract sharpens speed and stealth after. |
+
+### 19.4 Tier-up notifications (`PDV_Notif_Argonian_*`)
+
+Narrator voice. HUD notifications. Budget 80 hard / 60 target. No `%s` deity token (there is no deity); no `suppress-if-offer-same-dawn` flag (no commitment offer).
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Argonian_Observant_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Argonian "Tier 1" | One per save | The Hist reaches you, and the People know you. Observant. |
+| PDV_Notif_Argonian_Faithful_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Argonian "Tier 2" | One per save | All three layers hold under exile. Faithful. |
+| PDV_Notif_Argonian_Devoted_Entry | Notification | Marked | Narrator | 80/60 | RaceDesign_Argonian "Tier 3" | One per save | The Hist knows you still, across all that distance. Devoted. |
+| PDV_Notif_Argonian_Observant_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Argonian "Neglect Texture" | One per direction per save | The layers are thinning. Your standing has slipped to Wavering. |
+| PDV_Notif_Argonian_Faithful_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Argonian "Neglect Texture" | One per direction per save | The exile identity is fraying. Observant. |
+| PDV_Notif_Argonian_Devoted_Lapse | Notification | Marked | Narrator | 80/60 | RaceDesign_Argonian "Neglect Texture" | One per save per Devoted loss | The deepest connection loosens. The Devoted bond is not held. |
+
+### 19.5 Champion entry and ambient
+
+Champion shapes: **Hist** and **Community** are `Entry + ambient`; **Sithis** is `Entry-only`. **Voice deviation:** the Hist Champion entry uses Narrator voice, because the Hist reaches rather than speaks (there is no Hist voice to deliver a god-voice message). The Community entry is the People's collective voice; the Sithis entry is Sithis-voice.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Argonian_ChampionEntry_Hist | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Argonian "Hist Champion"; voice deviation justified above | One-time on first Hist-layer Devoted | Title: "Hist-Touched" Body: "Across all the miles from Black Marsh, in the wetlands and waters of this cold province, the Hist has found a way to reach you. It does not speak. It does not need to. You are Saxhleel, wholly, even here." |
+| PDV_Notif_Argonian_Hist_ChampionAmbient_Water | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Hist Champion" | Hist-layer Devoted + near water; one per in-game day | Near the water, the Hist is almost here. You can feel it. |
+| PDV_Msg_Argonian_ChampionEntry_Community | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Argonian "Community Champion" | One-time on first Community-layer Devoted; the People's voice | Title: "The Saxhleel Bond" Body: "You kept the exile community alive when the Hist could not hold us. The Assemblage, the docks, every Saxhleel you stood beside -- we know you. You are the family we chose, as we are yours." |
+| PDV_Notif_Argonian_Community_ChampionAmbient_KinPresent | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Community Champion" | Community-layer Devoted + Argonian ally present; per qualifying event | A Saxhleel beside you. The exile community holds. |
+| PDV_Msg_Argonian_ChampionEntry_Sithis | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Argonian "Sithis Champion" | One-time on first Sithis-layer Devoted; Entry-only | Title: "Void-Held" Body: "You looked into the dark that precedes and surrounds all things, and you did not flinch. Sithis does not comfort. But Sithis catches what has truly accepted the void. You have. Walk on, unafraid of the ending." |
+
+### 19.6 Hist sap meditation (`PDV_Notif_Argonian_HistSapMeditation_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Argonian` "Hist distance rule" and `PDV_Architecture_v3.md` Section 21.2 essential custom content: the Hist sap meditation tool is a Hist-maintenance signal.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Argonian_HistSapMeditation_Activate | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Hist recovery signals"; Architecture v3 Section 21.2 | Per meditation use; daily cap on the Hist gain | You take the Hist sap and go still. The trees feel a little nearer. |
+| PDV_Notif_Argonian_HistSapMeditation_Effect | Notification | Quiet | Player-2nd | 80/60 | RaceDesign_Argonian "Hist recovery signals" | Felt effect; quiet | The meditation steadies you. The Hist relation holds against the distance. |
+
+### 19.7 Bed of choice (`PDV_Notif_Argonian_BedOfChoice_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Argonian` "Bed of choice": one `PDV_SacredPlace` anchor, "the family I chose"; cadence is three qualifying sleeps within a rolling 30 in-game days.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Argonian_BedOfChoice_Designate | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Bed of choice" | On designating the single anchor | You have chosen this bed: the family you chose. The exile has an anchor. |
+| PDV_Notif_Argonian_BedOfChoice_Return | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Bed of choice" | On a qualifying sleep at the chosen bed | Back at the bed you chose. The People hold you a little closer. |
+| PDV_Notif_Argonian_BedOfChoice_MissedCadence | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Bed of choice" | On cadence lapse; light People decay, place bonus removed | You have not returned to your chosen bed in too long. The anchor weakens. |
+
+### 19.8 Sithis activation (`PDV_Notif_Argonian_SithisActivation_*`)
+
+Narrator voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Argonian` "Sithis activation": baseline awareness is always present; full Void scoring needs at least three significant Sithis signals.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Argonian_SithisActivation_FirstSignal | Notification | Noted | Narrator | 80/60 | RaceDesign_Argonian "Sithis activation" | On the first significant Sithis signal | Sithis stirs at the edge of you -- change, death, the void acknowledged. |
+| PDV_Notif_Argonian_SithisActivation_FullActivation | Notification | Marked | Narrator | 80/60 | RaceDesign_Argonian "Sithis activation" | On reaching the three-signal activation threshold | Sithis is fully awake in you now, a third way to make meaning in exile. |
+
+### 19.9 Neglect texture (`PDV_Notif_Argonian_*_NeglectTexture`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Argonian` "Neglect Texture", one per layer. Each fires on the first day of a meaningful lapse.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Argonian_HistThinning_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Hist relation neglect" | One per lapse-band crossing | The Hist is thinning. You feel less Saxhleel than you did. |
+| PDV_Notif_Argonian_PeopleIsolation_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Community neglect" | One per lapse-band crossing | Alone too long, no Saxhleel near. Isolation deepens the distance. |
+| PDV_Notif_Argonian_VoidDormancy_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Sithis neglect" | One per lapse-band crossing | Sithis lies dormant. The void is there, but you have not faced it. |
+
+### 19.10 Posture transition notifications (`PDV_Notif_Argonian_HistPosture_*_Entry`)
+
+Narrator voice. Notifications. Budget 80 hard / 60 target. The `Distant` and `Strained` transitions fire here; the `Silenced` and `Corrupted` transitions are vampirism-linked and surface through the curse-state messages in Section 19.13 instead, to avoid double-notifying the same event.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Argonian_HistPosture_Distant_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Argonian "Curse posture enum" | On transition to Distant | The Hist has grown distant. You are becoming a stranger in your own skin. |
+| PDV_Notif_Argonian_HistPosture_Strained_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Argonian "Curse split" | On transition to Strained (lycanthropy) | The Hist relation is strained. The beast-shape sits between you and the trees. |
+
+### 19.11 Survey Devotion readout (`PDV_Msg_Argonian_Survey_Layered`)
+
+Narrator voice. Body budget 240 hard / 180 target. One layered readout; `%s` tokens bind the tier name and the three layer states.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Argonian_Survey_Layered | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion; %s1 tier, %s2 Hist, %s3 People, %s4 Void | You carry the Saxhleel exile, far from Black Marsh. Standing: %s1. The Hist is %s2, the People %s3, the void %s4. |
+
+### 19.12 Contextual favor surfacings
+
+`RaceDesign_Argonian` does not enumerate a formal contextual-favor table; the rows below are derived from the per-layer Tier Rewards and Signal Examples. All are `Noted` -- consistent with the design's quiet, maintenance-against-the-current texture, the Argonian race carries no Marked favor row. Player-second-person voice. Lane families should be re-checked when a formal Argonian favor table is added to the race sheet.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Argonian_FavorNoted_Hist_NearWater | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Hist recovery signals" | Environmental; daily cap | Near the water, the Hist relation steadies. The distance shrinks a little. |
+| PDV_Notif_Argonian_FavorNoted_Hist_Reflection | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Hist recovery signals" | After-act; solitary reflection in a wild place | A still moment in a wild place. The Hist reaches toward it. |
+| PDV_Notif_Argonian_FavorNoted_Community_SaxhleelAid | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 2 ... Primary signals" | After-act; cooldown per Argonian NPC | You helped one of your own. The exile community holds. |
+| PDV_Notif_Argonian_FavorNoted_Community_AssemblageKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 2 ... Primary signals" | After-act; Windhelm Assemblage extra weight | The Windhelm Assemblage is surer for what you did. Kinship. |
+| PDV_Notif_Argonian_FavorNoted_Void_DeathFaced | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 3 ... Sithis rises through" | After-act; curated death-facing choice | You faced a death without flinching. Sithis acknowledges it. |
+| PDV_Notif_Argonian_FavorNoted_Void_BrotherhoodContract | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 3 ... Sithis rises through" | After-act; per Dark Brotherhood contract | A contract completed for the Brotherhood. The void answers. |
+
+### 19.13 Curse-state transitions (`PDV_Msg_Argonian_CurseState_*`)
+
+MessageBox. Body budget 500 hard / 280 target. **Voice deviation:** all three rows use Narrator voice. The Hist reaches rather than speaks, and the deepest curse content is precisely the Hist's silence; no god-voice can carry it. Per `RaceDesign_Argonian` "Curse State Summary": vampirism is the deep grief state, werewolf is recoverable strain. Fires once per cure cycle.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Argonian_CurseState_VampireOnset | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Argonian "Vampire"; sets posture Silenced or Corrupted | Once on becoming vampire | Title: "The Hist Falls Silent" Body: "You are undead now. The Hist gives Saxhleel souls and receives them at death -- and yours is no longer going where it was meant to go. The Hist falls silent. The People cannot safely hold you. Only the void stays near. This is the deepest grief." |
+| PDV_Msg_Argonian_CurseState_VampireCured | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Argonian "Vampire" | Once on cure | Title: "The Hist Reaches Again" Body: "The undeath is lifted. The Hist's silence breaks slowly -- it must learn to reach you again across both the distance and the memory of what you were. The People can hold you once more. It will take time. It can be done." |
+| PDV_Msg_Argonian_CurseState_WerewolfOnset | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Argonian "Werewolf"; sets posture Strained | Once on first transformation | Title: "A Changed Shape" Body: "The beast is in you. The Hist is accustomed to Saxhleel who change -- the shape strains the relation but does not sever it. The People can still recognize you. This is serious, but it is not the silence. It can be carried." |
+
+### 19.14 Shrine and privilege dialogue topics (`PDV_Dlog_Argonian_*`)
+
+Player-second-person on topic name. Branch dialogue authored separately in CK. Topic-line budget 120 hard / 80 target. Three archetypes grounded in the Skyrim Argonian exile community.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Dlog_Argonian_WindhelmAssemblage_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Argonian "Layer 2" | Faithful or above | "I keep faith with our people in exile. What does the Assemblage need?" |
+| PDV_Dlog_Argonian_RiftenDocks_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Argonian "Layer 2" | Faithful or above | "We hold each other where the Hist cannot reach. Tell me what is needed." |
+| PDV_Dlog_Argonian_HistKeeper_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Argonian "Layer 1" | Hist-layer Devoted | "The Hist still reaches me, faintly. Speak of the old connection." |
+
+### 19.15 Argonian firing-density sanity
+
+A Faithful community-leaning Argonian in steady exile play (Windhelm Assemblage support, water-proximity maintenance, occasional Sithis beat):
+
+- Marked: 0 most days; Champion entries, Sithis full activation, and curse onsets are all one-time. Inside the `<1 per 2h` target.
+- Noted: ~1-2 per day (a near-water Hist favor, an occasional Saxhleel-aid favor, Hist sap meditation). Argonian carries no Marked favor row by design, so steady play is quiet. Inside the `<2 per h` target.
+- Quiet: uncounted; icon-only (the Hist sap meditation effect line is Quiet).
+
+Tier-up notifications: one per save per direction. There is no commitment offer, so no Faithful suppression rule applies. Bed-of-choice acknowledgments are gated to the cadence rule, and posture transitions are rare (curse-linked or sustained Hist decay).
+
+Argonian has no commitment-offer slot: there is no deity choice. The bed-of-choice and Sithis-activation beats above are the closest the layered system comes to a commitment moment, and both are authored as gentle notifications rather than offer MessageBoxes.
 
 ---
 
@@ -1688,7 +1829,7 @@ Note: Argonian has no standard commitment-offer slot because there is no deity c
 | Redguard | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Bosmer | drafted | drafted | drafted | drafted | drafted | n/a (path setup) | drafted | drafted | drafted | drafted | YES |
 | Breton | drafted | drafted | drafted | drafted | drafted | n/a (tradition setup) | drafted | drafted | drafted | drafted | YES (Vigilant gated) |
-| Argonian | slot only | slot only | slot only | slot only | slot only | n/a | slot only | slot only | slot only | slot only | -- |
+| Argonian | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 
 `n/a` rows mean the race does not use the standard commitment-offer pattern (Khajiit silent emergent, Orc mode-deepening, Bosmer setup choice, Breton tradition setup, Argonian no deity choice). The setup-choice MessageBoxes for Bosmer and Breton are slot-only rows in their sections, not in the commitment-offer pattern.
 
@@ -1735,4 +1876,12 @@ This manifest's own verification, per the plan:
 
 ## 23. Next slice
 
-Nord, Orc, Dunmer, Khajiit, Imperial, Redguard, Bosmer, and Breton carry full draft prose; Altmer and Breton are drafted except their gated slots. The final race-prose pass extends draft prose to the last race in Section 9 priority order (Argonian). Argonian adds the single layered Hist substrate (Hist, People, Void), the Hist sap meditation tool, the bed-of-choice anchor, and the Sithis activation threshold. After Argonian, all ten races carry draft prose and the manifest is content-author-ready for Phase 19.
+All ten races carry full draft prose. The manifest is content-author-ready for Phase 19 (`PDV_Architecture_v3.md` Section 17).
+
+The remaining open work is no longer race-by-race prose drafting but the following:
+
+1. **Close the gated slots.** When the Altmer implementation-spec closes (`PDV_TargetEndStates_1.0.md` line 146), author the three gated Altmer slot groups in Section 13.13. When a Breton Vigilant pressure encounter pattern is proven cheap, author Section 18.14.
+2. **Promote ratified prose.** Once reviewed, migrate the draft prose into the shipped ESP records (Phase 19) and into the `Race_*.md` player handbooks where it serves as player-facing copy.
+3. **Fill formal contextual-favor tables.** Khajiit, Bosmer, and Argonian favor rows here are derived from hook cross-checks and Tier Rewards because those race sheets carry no formal favor table yet. When those tables are added to the race sheets, re-check the lane families and row counts.
+4. **Per-deity offer prose for Breton** (optional refinement): the single templated focus-emergence notification could be expanded into bespoke per-deity offers if the design later confirms full patron offers within traditions.
+5. **Update `PDV_TargetEndStates_1.0.md`** "Content authored" column from Pending toward Drafted for each race as this manifest's prose is ratified.
