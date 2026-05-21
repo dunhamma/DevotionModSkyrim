@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, and Dunmer; Altmer drafted except its gated slots; slot-only rows for the remaining 6.
+**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, Dunmer, and Khajiit; Altmer drafted except its gated slots; slot-only rows for the remaining 5.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -109,7 +109,7 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 2. Orc (full draft prose)
 3. Dunmer (full draft prose)
 4. Altmer (drafted except gated slots; Altmer is the only Partial implementation-spec; gated slots flagged in Section 13.13)
-5. Khajiit (slot rows only; no formal commitment offer per Section 12.4a)
+5. Khajiit (full draft prose; no formal commitment offer per Section 12.4a)
 6. Imperial (slot rows only)
 7. Redguard (slot rows only)
 8. Bosmer (slot rows only; four-path divergence)
@@ -802,23 +802,163 @@ A Faithful Divine Body Altmer in steady play (dawn observance, College progressi
 
 Tier-up notifications: one per save per direction; Faithful entry suppressed on a same-dawn focus offer. ThalmorAlignment band crossings are infrequent (the track moves on authored enforcement/defiance acts). Gated contextual-favor rows are excluded from this estimate and will need a fresh density pass when the lanes lock.
 
-## 14. Khajiit (slot frame)
+## 14. Khajiit (full draft)
 
-Implementation-locked. No formal commitment offer per `PDV_Architecture_v3.md` Section 12.4a; focused emphasis emerges silently. `PDV_State_KhajiitFocusedEmphasis` with `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, `Alkosh = 5`.
+Implementation-locked. No formal commitment offer per `PDV_Architecture_v3.md` Section 12.4a; focused emphasis emerges silently. `PDV_Substrate_KhajiitLunar` owns the always-active lunar substrate. `PDV_State_KhajiitFocusedEmphasis` with `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, `Alkosh = 5`. `PDV_State_KhajiitLunarPosture` with `Normal = 0`, `Strained = 1`, `Corrupted = 2`, `ShadowDrift = 3`.
 
-| Category | Slot pattern | Source |
-|---|---|---|
-| Blessing description | `PDV_Bless_Khajiit_<Khenarthi|Azurah|BaanDar|Rajhin|Alkosh>_T<1|2|3>` | RaceDesign_Khajiit Section "Tier Rewards" |
-| Lunar substrate readout | `PDV_Msg_Khajiit_LunarPhase_<Masser|Secunda|Crossed>`, `PDV_Msg_Khajiit_LunarPosture_<Normal|Strained|Corrupted|ShadowDrift>` | TargetEndStates Section "Khajiit implementation state" line 359 |
-| Tier-up notification | `PDV_Notif_Khajiit_<Deity>_<Tier>Entry`, `PDV_Notif_Khajiit_<Deity>_<Tier>Lapse` | RaceDesign_Khajiit Section "Tier Rewards" |
-| Champion entry (silent emergent) | `PDV_Msg_Khajiit_<Deity>_ChampionEntry` -- Champion shape `Entry-only` or `Texture-only`; no god-voice offer | TargetEndStates Section "Khajiit Champion moment", Section "emergent patron exception" |
-| Champion ambient | `PDV_Notif_Khajiit_<Deity>_ChampionAmbient_<TwilightThreshold|RoadGrace|ReversalEscape|ElegantTheft|DragonBattle>` | TargetEndStates Section "Khajiit Champion moment" lines 365-369 |
-| Neglect texture | `PDV_Notif_Khajiit_LunarThinning_NeglectTexture`, `PDV_Notif_Khajiit_CommunityFading_NeglectTexture` | TargetEndStates lines 378-381 |
-| Survey readout | `PDV_Msg_Khajiit_Survey_<Broad|<Deity>>` | Architecture v3 Section 16.2 |
-| Road-home acknowledgment | `PDV_Msg_Khajiit_RoadHome_<Designate|Return|MissedCadence>` | TargetEndStates line 359; Architecture v3 Section 21.2 essential content |
-| Contextual favor (Noted/Marked) | `PDV_Notif_Khajiit_FavorNoted_<Lane>_<TriggerFamily>`, `PDV_Msg_Khajiit_FavorMarked_<Lane>_<TriggerFamily>` | RaceDesign_Khajiit |
-| Curse-state transition | `PDV_Msg_Khajiit_CurseState_<VampireOnset_Corrupted|WerewolfOnset_Strained|ShadowDrift_Entry|ShadowDrift_Exit>` | TargetEndStates line 359 (KhajiitLunarPosture enum) |
-| Shrine / privilege dialogue | `PDV_Dlog_Khajiit_<Caravaneer|MoonSinger>_Recognition` | Architecture v3 Section 16.3 |
+**Slot-frame corrections:**
+- **Blessings include a substrate baseline and shared Tier 1/2.** The locked `RaceDesign_Khajiit` "Tier Rewards" gives the always-active lunar substrate its own passive expression, then shared Tier 1 and Tier 2, then per-focus Tier 3. The corrected set is eight blessing records: `PDV_Bless_Khajiit_Lunar_Substrate`, `_Lunar_T1`, `_Lunar_T2`, and `_Khenarthi_T3` / `_Azurah_T3` / `_BaanDar_T3` / `_Rajhin_T3` / `_Alkosh_T3`.
+- **No commitment offer; silent focus emergence instead.** Khajiit is the only no-offer race. The commitment slot is replaced by a single gentle focus-emergence notification (Section 14.5), templated by the `%s` deity token, surfaced as a Noted notification rather than a MessageBox so it never reads as a popup the player accepts.
+- **Survey readout simplified.** One Broad row plus one Focused row templated by `%s` deity and `%s` tier, rather than one row per deity.
+
+### 14.1 Tone profiles
+
+| Voice | Tone profile |
+|---|---|
+| The Lunar Lattice | Vast, impersonal, cosmological; not a voice that addresses you so much as a structure you live inside; spoken of by the narrator, never speaking itself. |
+| Khenarthi | Wind-voiced, road-knowing, merciful; speaks of passage, of arriving when needed, of the open sky; always moving. |
+| Azurah | Twilight-voiced, threshold-knowing; the mother who shaped the Khajiit; speaks of fate and the hinges of the world; tender and certain. |
+| Baan Dar | Sly, warm to the outcast, reversal-voiced; a pariah's god speaking to a pariah; speaks of the improbable escape and the clever turn. |
+| Rajhin | A performer's voice, delighted, legend-making; speaks of theft as art and of the story worth telling; never petty. |
+| Alkosh | Rare, immense, order-keeping; the dragon-lord; speaks of cosmic chaos held back and the line that must not break. |
+
+### 14.2 Lunar substrate readouts and phase flavor
+
+Lunar posture readouts are narrator voice, status readout surface, budget 240 hard / 180 target. Lunar phase shift flavor is a curated cosmetic pool, narrator voice, Notification, budget 80 hard / 60 target, with no scoring impact.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Khajiit_LunarPosture_Normal | Status spell readout | Quiet | Narrator | 240/180 | RaceDesign_Khajiit "Lunar posture enum" | Default | The Lunar Lattice holds you cleanly. The moons know your form, and the road knows your step. |
+| PDV_Msg_Khajiit_LunarPosture_Strained | Status spell readout | Noted | Narrator | 240/180 | RaceDesign_Khajiit "Werewolf posture" | Lycanthropy; fires on transition | The Lattice holds you, but strained. The beast-shape is a competing form, and the caravans keep their distance. |
+| PDV_Msg_Khajiit_LunarPosture_Corrupted | Status spell readout | Marked | Narrator | 240/180 | RaceDesign_Khajiit "Vampire posture" | Vampirism; fires on transition | The Lattice still holds you, corrupted and thinned. The moons do not disown the undead, but the community does. |
+| PDV_Msg_Khajiit_LunarPosture_ShadowDrift | Status spell readout | Marked | Narrator | 240/180 | RaceDesign_Khajiit "ShadowDrift boundary" | Dominant shadow behavior; fires on transition | You have drifted into shadow. The moons grow distant; the Lattice loosens toward the dark between the stars. |
+| PDV_Notif_Khajiit_LunarPhase_FullMoons | Notification | Noted | Narrator | 80/60 | RaceDesign_Khajiit "Moon-cycle model"; Race_Khajiit "The Lunar Cycle" | Curated pool; cosmetic; per phase shift | Masser and Secunda are both full. The night's devotion runs strong. |
+| PDV_Notif_Khajiit_LunarPhase_Crossed | Notification | Noted | Narrator | 80/60 | RaceDesign_Khajiit "Moon-cycle model" | Curated pool; cosmetic; per phase shift | The moons cross overhead. You feel the Lattice tighten in the bone. |
+| PDV_Notif_Khajiit_LunarPhase_Waning | Notification | Noted | Narrator | 80/60 | RaceDesign_Khajiit "Moon-cycle model" | Curated pool; cosmetic; per phase shift | The moons wane. The road asks for a quieter, steadier faith now. |
+
+### 14.3 Blessing descriptions (`PDV_Bless_Khajiit_*`)
+
+Narrator voice. Budget 200 hard / 140 target. The substrate baseline is always active; Tier 1 and Tier 2 are shared; Tier 3 is per focused deity. Anti-farm: passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Khajiit_Lunar_Substrate | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Lunar Substrate" | Passive SPEL; always active | The Lunar Lattice holds you. Night vision is keener after dark; outdoor night life and caravan kinship are felt as devotion. |
+| PDV_Bless_Khajiit_Lunar_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Tier 1" | Passive SPEL; shared | The moons have noticed how you move. Moving outdoors at night, stamina regenerates 5% faster; disease resistance +10%. |
+| PDV_Bless_Khajiit_Lunar_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Tier 2" | Passive SPEL; shared | The Lattice holds you steady. Outdoor night travel carries more; cold and storms press lighter; full moons strengthen the day's devotion. |
+| PDV_Bless_Khajiit_Khenarthi_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Khenarthi Champion" | Passive SPEL; Khenarthi focus | Khenarthi names you to the road. Sprinting outdoors drains 15% less stamina; storms no longer chill you; outdoor sleep restores health and stamina both. |
+| PDV_Bless_Khajiit_Azurah_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Azurah Champion" | Passive SPEL; Azurah focus | Azurah watches your thresholds. Spells cost 10% less at night and 15% less at dawn and dusk. The hinges of the world turn where you stand. |
+| PDV_Bless_Khajiit_BaanDar_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Baan Dar Champion" | Passive SPEL; Baan Dar focus | Baan Dar walks with the pariah. Once a week, a near-fatal escape returns a day-long pulse of fortune. Acts beyond the city walls weigh heavier. |
+| PDV_Bless_Khajiit_Rajhin_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Rajhin Champion" | Passive SPEL; Rajhin focus | Rajhin marks the artful thief. A theft from a notable target opens a brief unseen window; the first strike of a fight cuts deeper. |
+| PDV_Bless_Khajiit_Alkosh_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Alkosh Champion" | Passive SPEL; Alkosh focus | Alkosh keeps the cosmic line. Fire resistance +15%; felling a named dragon grants a two-day blessing of order. |
+
+### 14.4 Tier-up notifications (`PDV_Notif_Khajiit_*`)
+
+Narrator voice. HUD notifications. Budget 80 hard / 60 target. Observant and Faithful are shared lunar worship; no `suppress-if-offer-same-dawn` flag because Khajiit has no offer. The Devoted entry is the per-deity Champion entry (Section 14.6); only the Devoted lapse lives here.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Khajiit_Lunar_ObservantEntry | Notification | Noted | Narrator | 80/60 | RaceDesign_Khajiit "Tier 1" | One per save | The moons have noticed how you move. Observant. |
+| PDV_Notif_Khajiit_Lunar_FaithfulEntry | Notification | Noted | Narrator | 80/60 | RaceDesign_Khajiit "Tier 2" | One per save | The Lattice holds you steady now. Faithful. |
+| PDV_Notif_Khajiit_Lunar_ObservantLapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Khajiit "Neglect Texture" | One per direction per save | The moons mark you less surely now. Wavering. |
+| PDV_Notif_Khajiit_Lunar_FaithfulLapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Khajiit "Neglect Texture" | One per direction per save | The Lattice holds you more thinly. Observant. |
+| PDV_Notif_Khajiit_Focus_DevotedLapse | Notification | Marked | Narrator | 80/60 | RaceDesign_Khajiit "Focused patron neglect" | One per save per focus loss; %s is the focus deity | The lean toward %s fades. The Devoted bond is not held. |
+
+### 14.5 Silent focus emergence (`PDV_Notif_Khajiit_FocusEmergence`)
+
+Narrator voice. HUD notification, not a MessageBox, so it never reads as a popup the player accepts. Budget 80 hard / 60 target. This is the Khajiit-specific replacement for a commitment offer: per `RaceDesign_Khajiit` "Silent patron emergence", focus shifts silently at dawn when one deity has 50+ piety and a 15-piety lead. One templated row; the `%s` token binds the emerging deity name (Khenarthi, Azurah, Baan Dar, Rajhin, or Alkosh).
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Khajiit_FocusEmergence | Notification | Noted | Narrator | 80/60 | RaceDesign_Khajiit "Silent patron emergence"; Architecture v3 Section 12.4a | Fires once at dawn when emphasis shifts None to a deity; %s is the emerging deity | Your devotion has been leaning toward %s. The moons already knew. |
+
+### 14.6 Champion entry and ambient
+
+Champion entries are the Tier 3 / Devoted recognition. They are MessageBoxes with no choice -- a recognition delivered, not an offer accepted -- so they honor the silent-system rule (the moon noticed you; you did not apply). God-voice on entries; player-second-person on ambients. Champion shapes: Khenarthi, Azurah, and Baan Dar are `Entry + ambient`; Rajhin and Alkosh are `Entry-only` (Rajhin's theft texture and Alkosh's rare dragon work surface as gameplay, not authored ambient lines).
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Khajiit_Khenarthi_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Khenarthi Champion" | One-time on first Khenarthi Devoted | Title: "Khenarthi's Road" Body: "The wind has carried you so long it has learned your name. Walk, and the road walks with you. The open sky was always your temple roof." |
+| PDV_Notif_Khajiit_Khenarthi_ChampionAmbient_Road | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Khenarthi Champion" | Khenarthi Devoted + open-road travel; one per in-game day | The road runs easy under you. Khenarthi's wind is at your back. |
+| PDV_Msg_Khajiit_Azurah_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Azurah Champion" | One-time on first Azurah Devoted | Title: "Azurah's Twilight" Body: "I shaped the Khajiit at the first dusk. I have watched you stand at every threshold since. You feel the world's hinges now. Cross well." |
+| PDV_Notif_Khajiit_Azurah_ChampionAmbient_Threshold | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Azurah Champion" | Azurah Devoted + threshold beat; one per in-game day | A threshold ahead. Azurah's twilight goes before you. |
+| PDV_Msg_Khajiit_BaanDar_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Baan Dar Champion" | One-time on first Baan Dar Devoted | Title: "Baan Dar's Favor" Body: "The world offered you nothing, exile, and you made a life of it anyway. That is my whole gospel. When the reversal should have killed you, look for my hand." |
+| PDV_Notif_Khajiit_BaanDar_ChampionAmbient_Reversal | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Baan Dar Champion" | Baan Dar Devoted + improbable survival; weekly cap | You should not have walked away from that. Baan Dar's hand. |
+| PDV_Msg_Khajiit_Rajhin_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Rajhin Champion" | One-time on first Rajhin Devoted; Entry-only | Title: "Rajhin's Touch" Body: "The Footpad himself stole from an Emperor and wore Mephala's ring. You steal as though a story is being told. It is. I am telling it." |
+| PDV_Msg_Khajiit_Alkosh_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Alkosh Champion" | One-time on first Alkosh Devoted; Entry-only | Title: "Alkosh's Line" Body: "Lorkhaj's chaos gnaws at the seams of the world. Few are asked to hold the line against it. You were. You held. The dragon-lord knows your face." |
+
+### 14.7 Neglect texture (`PDV_Notif_Khajiit_NeglectTexture_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Khajiit` "Neglect Texture": cumulative thinning from being indoors, urban, and cut off from road and community. Each fires on the first day of a meaningful lapse.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Khajiit_NeglectTexture_SubstrateThinning | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Substrate neglect" | One per lapse-band crossing | Too long indoors and walled in. The Lattice holds you more thinly. |
+| PDV_Notif_Khajiit_NeglectTexture_PatronFading | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Focused patron neglect" | One per lapse-band crossing; %s is the focus deity | %s sends less than you had grown used to. The lean is fading. |
+| PDV_Notif_Khajiit_NeglectTexture_CaravanForgotten | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "The caravan dimension" | One per lapse-band crossing | The caravans do not know your face. You have not been where they go. |
+
+### 14.8 Survey Devotion readouts (`PDV_Msg_Khajiit_Survey_*`)
+
+Narrator voice. Body budget 240 hard / 180 target. One Broad row and one Focused row. The Focused row uses two tokens: `%s` deity name and `%s` tier name.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Khajiit_Survey_Broad | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2; RaceDesign_Khajiit "Broad fallback" | Cast Survey Devotion | You walk inside the Lunar Lattice, broad and unfocused, held by the moons and the road. Standing: %s. No god leads yet, and that is whole. |
+| PDV_Msg_Khajiit_Survey_Focused | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion; %s1 deity, %s2 tier | The Lattice holds you, and %s1 leads your devotion now. Standing: %s2. You did not choose it; you were walking it. |
+
+### 14.9 Contextual favor surfacings
+
+`RaceDesign_Khajiit` does not enumerate a formal contextual-favor table the way the Nord, Imperial, Redguard, and Dunmer sheets do; the rows below are derived from its "In-game hook cross-check", the Tier 2 path-specific notes, and the Champion specifics. The lane families should be re-checked when a formal Khajiit favor table is added to the race sheet. Player-second-person on Noted; god-voice on Marked. The Baan Dar reversal is a `Rare major favor` per `PDV_TargetEndStates_1.0.md` line 112.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Khajiit_FavorNoted_Substrate_RoadLife | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "In-game hook cross-check" (open road) | Environmental; daily cap; no fast-travel | The road carries you kindly tonight. The moons are near. |
+| PDV_Notif_Khajiit_FavorNoted_Substrate_CaravanKinship | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "In-game hook cross-check" (caravan belonging) | After-act; cooldown per caravan encounter | The caravan knows you and is glad of it. Kinship counts. |
+| PDV_Notif_Khajiit_FavorNoted_Khenarthi_RoadGrace | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Khenarthi Champion" | Environmental; Khenarthi emphasis | Khenarthi's wind finds your back on the open road. |
+| PDV_Notif_Khajiit_FavorNoted_Azurah_Threshold | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Azurah thresholds" | After-act; real threshold required | A crossing made well. Azurah's twilight marks it. |
+| PDV_Notif_Khajiit_FavorNoted_BaanDar_Outnumbered | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Baan Dar reversals" | Momentary combat; adversity filter; cooldown | Outnumbered and still standing. Baan Dar favors the long odds. |
+| PDV_Msg_Khajiit_FavorMarked_BaanDar_Reversal | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Baan Dar Champion"; TargetEndStates line 112 (rare major favor) | Weekly cap; near-fatal escape only | Title: "Pariah's Fortune" Body: "That was not survivable, and you survived it. The god of pariahs wrote you a way out, because once, someone should have done the same for him." |
+| PDV_Notif_Khajiit_FavorNoted_Rajhin_ElegantTheft | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Rajhin elegant theft" | After-act; notable target; no petty-theft spam | A theft worth a story. Rajhin is delighted. |
+| PDV_Notif_Khajiit_FavorNoted_Alkosh_DragonOrder | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Alkosh dragon/order" | After-act; named dragon or order-keeping beat | A dragon down, the line held. Alkosh marks the order kept. |
+
+### 14.10 Road home acknowledgment (`PDV_Notif_Khajiit_RoadHome_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Khajiit` "Road homes": 2-3 designated anchors; piety requires cycling the circuit, not repeating one anchor.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Khajiit_RoadHome_Designate | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Road homes"; Architecture v3 Section 21.2 | On designating an anchor (max 2-3) | You have made this a road home. The circuit has an anchor here. |
+| PDV_Notif_Khajiit_RoadHome_Return | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Road-home cadence" | On returning to an anchor after cycling; not repeat-camping | Back at a road home, the circuit holding. The Lattice steadies. |
+| PDV_Notif_Khajiit_RoadHome_MissedCadence | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Khajiit "Road-home cadence" | On cadence lapse | You have not walked the circuit in too long. The anchors grow cold. |
+
+### 14.11 Curse-state transitions (`PDV_Msg_Khajiit_CurseState_*`)
+
+MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Khajiit` "Curse State Summary": curses damage belonging rather than erasing Khajiit identity; both are recoverable. God-voice is Azurah (the mother who shaped the Khajiit and guards their passage, the protective reading for the undead). **Voice deviation:** the ShadowDrift row uses narrator voice, because ShadowDrift is the Lattice loosening its hold -- there is no god present to speak it.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Khajiit_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Vampire"; sets posture Corrupted | Once on becoming vampire | Title: "The Lattice Corrupted" Body: "The thirst has taken you, little moon. The Lattice does not cast you out -- the moons do not disown their own -- but the caravans will fear you, and rightly. I will not look away. Few of the others can say the same." |
+| PDV_Msg_Khajiit_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Vampire" | Once on cure; clears posture toward Normal | Title: "The Lattice Clears" Body: "The thirst is gone. The corruption lifts from the Lattice, and the caravans may learn your face again. Walk back into the moonlight. It was always waiting." |
+| PDV_Msg_Khajiit_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Werewolf"; sets posture Strained | Once on first transformation | Title: "A Competing Shape" Body: "Hircine has given you another shape. The moons are about form, and you carry one too many now. You are still Khajiit -- strained, watched, but not erased. The community will fear the wolf. Hold to the road." |
+| PDV_Msg_Khajiit_CurseState_ShadowDriftEntry | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Khajiit "ShadowDrift boundary"; sets posture ShadowDrift | Once on entering ShadowDrift; voice deviation justified above | Title: "The Shadow Between Stars" Body: "You have lived too long in the shadow -- night-only, predatory, drawn to the dark between the moons. The Lattice loosens its hold. Khenarthi's road and Azurah's twilight both feel far away now." |
+
+### 14.12 Shrine and privilege dialogue topics (`PDV_Dlog_Khajiit_*`)
+
+Player-second-person on topic name. Branch dialogue authored separately in CK. Topic-line budget 120 hard / 80 target. Two archetypes grounded in Khajiit road life.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Dlog_Khajiit_Caravaneer_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Khajiit "caravan belonging" | Faithful or above | "I walk the road and the moons walk with me. What does the caravan need?" |
+| PDV_Dlog_Khajiit_MoonPriest_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; Race_Khajiit "Who They Worship" | Any tier | "The Lattice holds me. Speak of the moons, and of Riddle'Thar." |
+
+### 14.13 Khajiit firing-density sanity
+
+A Faithful broad-worship Khajiit in steady road play (outdoor sleep, caravan encounters, foot travel between holds):
+
+- Marked: 0 most days; Champion entries and curse onsets are one-time, and the Baan Dar reversal favor is weekly-capped. Inside the `<1 per 2h` target.
+- Noted: ~2 per day (a road-life favor, a caravan-kinship favor, occasional lunar-phase flavor on a shift). Phase flavor is per-shift so it cannot compound. Inside the `<2 per h` target.
+- Quiet: uncounted; icon-only.
+
+The silent focus emergence fires once per save when emphasis first activates. Tier-up notifications are one per save per direction. There is no offer, so no Faithful suppression rule applies. Road-home acknowledgments are gated to the cadence rule, so repeat-camping cannot farm them.
 
 ## 15. Imperial (slot frame)
 
@@ -930,7 +1070,7 @@ Note: Argonian has no standard commitment-offer slot because there is no deity c
 | Orc | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 | Dunmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Altmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | gated | drafted | drafted | PARTIAL |
-| Khajiit | slot only | slot only | slot only | slot only | slot only | n/a | slot only | slot only | slot only | slot only | -- |
+| Khajiit | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 | Imperial | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | -- |
 | Redguard | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | -- |
 | Bosmer | slot only | slot only | slot only | slot only | slot only | n/a (path setup) | slot only | slot only | slot only | slot only | -- |
@@ -982,4 +1122,4 @@ This manifest's own verification, per the plan:
 
 ## 23. Next slice
 
-Nord, Orc, and Dunmer carry full draft prose; Altmer is drafted except its three gated slot groups (Section 13.13). The natural next pass extends draft prose to the next race in Section 9 priority order (Khajiit). Khajiit has no formal commitment offer (silent emergent emphasis per Architecture v3 Section 12.4a) and adds the lunar substrate readout, so the next pass exercises the no-offer pattern and a second substrate-readout shape.
+Nord, Orc, Dunmer, and Khajiit carry full draft prose; Altmer is drafted except its three gated slot groups (Section 13.13). The natural next pass extends draft prose to the next race in Section 9 priority order (Imperial). Imperial reuses the broad-worship-plus-focus shape and the formal-offer pattern, and adds the `ConcordatStanding` reputation-track band crossings.
