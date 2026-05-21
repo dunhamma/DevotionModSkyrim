@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races, full pilot prose for Nord, slot-only rows for the other 9.
+**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord and Orc; slot-only rows for the other 8.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -105,8 +105,8 @@ Per `PDV_Architecture_v3.md` Section 23 (post-1.0 localization deferred, externa
 
 Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Priority order for building" (lines 525-534):
 
-1. Nord (full pilot prose)
-2. Orc (slot rows only)
+1. Nord (full draft prose)
+2. Orc (full draft prose)
 3. Dunmer (slot rows only)
 4. Altmer (slot rows only; Altmer is the only Partial implementation-spec; affected slots are flagged)
 5. Khajiit (slot rows only; no formal commitment offer per Section 12.4a)
@@ -327,26 +327,144 @@ The Champion `Entry + ambient` cadence for Kyne is one storm-acknowledgment per 
 
 ---
 
-## 11. Orc (slot frame)
+## 11. Orc (full draft)
 
-Implementation-locked. Single Malacath devotion, life-mode-divergent. `PDV_State_OrcLifeMode` with `City = 0`, `Stronghold = 1`, `LegionExile = 2`. No separate focused-primary deity layer per `PDV_TargetEndStates_1.0.md` line 463. Champion shape per mode `TBD` until pilot.
+Implementation-locked. Single Malacath devotion, life-mode-divergent. `PDV_State_OrcLifeMode` with `City = 0`, `Stronghold = 1`, `LegionExile = 2`. No separate focused-primary deity layer per `PDV_TargetEndStates_1.0.md` line 463.
 
-Slots to fill:
+**Slot-frame correction:** the planning-pass slot frame assumed one blessing set with mode as a state interpretation. The locked `RaceDesign_Orc` "Tier Rewards" section in fact mode-differentiates Tier 2 and Tier 3 blessings (Stronghold / City / Legion-Exile each get distinct blessing text). Tier 1 is shared across modes. The blessing slot list below reflects the corrected seven-record set.
 
-| Category | Slot pattern | Source |
-|---|---|---|
-| Blessing description | `PDV_Bless_Orc_Malacath_T<1|2|3>` (one set; mode is a separate state interpretation, not a separate blessing record) | RaceDesign_Orc Section "Tier Rewards" |
-| Tier-up notification | `PDV_Notif_Orc_Malacath_<Tier>Entry`, `PDV_Notif_Orc_Malacath_<Tier>Lapse` | RaceDesign_Orc Section "Tier Rewards" |
-| Champion entry | `PDV_Msg_Orc_Malacath_ChampionEntry_<Stronghold|City|LegionExile>` | TargetEndStates Section "Orc Champion moment" |
-| Champion ambient | `PDV_Notif_Orc_Malacath_ChampionAmbient_<ForgeWork|StrongholdAccept|PrivateOath>` | TargetEndStates Section "Orc Champion moment" |
-| Neglect texture | `PDV_Notif_Orc_Malacath_NeglectTexture_<Forge|Oath|Mode>` | TargetEndStates Section "Orc Neglect texture", lines 488-491 |
-| Survey readout per mode | `PDV_Msg_Orc_Survey_<Stronghold|City|LegionExile>` | Architecture v3 Section 16.2; TargetEndStates line 463 |
-| Contextual favor (Noted/Marked) | `PDV_Notif_Orc_FavorNoted_<Mode>_<TriggerFamily>`, `PDV_Msg_Orc_FavorMarked_<Mode>_<TriggerFamily>` | TargetEndStates lines 465-473 |
-| Curse-state transition | `PDV_Msg_Orc_CurseState_<WerewolfOnset|VampireOnset|VampireCured>` | RaceDesign_Orc Section "Curse States" |
-| Life-mode shift | `PDV_Msg_Orc_LifeMode_<Stronghold|City|LegionExile>_Entry` | TargetEndStates Section "Life-mode selection lock" line 469 |
-| Shrine / privilege dialogue topic | `PDV_Dlog_Orc_<Chief|Shaman|LegionOfficer>_Recognition` | Architecture v3 Section 16.3 |
+**No commitment offer.** Orc has no separate focused-primary offer per `TargetEndStates` line 463. Deepening comes through mode-specific Malacath excellence; Tier 3 entry uses the Devoted tier-up notification plus the per-mode Champion entry MessageBox. No god-voice offer beat is authored.
 
-Commitment offer is **not** authored: Orc has no separate focused-primary offer per `TargetEndStates` line 463. Deepening comes through mode-specific Malacath excellence, not a god-voice offer beat. Tier 3 entry uses the Devoted tier-up notification only.
+### 11.1 Tone profiles
+
+| Voice | Tone profile |
+|---|---|
+| Malacath | Blunt, verdict-toned, exile-coded; never petitioned, never warm; speaks of the code, the forge, the oath, and what he has witnessed; a judgment rendered, not a comfort offered. |
+| Stronghold shaman (ambient) | Old, ritual, mountain-stronghold-coded; interprets Malacath's will aloud; the only Orc voice that speaks for the god rather than as him. Used only in Stronghold Champion ambient lines. |
+
+### 11.2 Blessing descriptions (`PDV_Bless_Orc_Malacath_*`)
+
+Narrator voice. Budget 200 hard / 140 target. Tier 1 shared; Tier 2 and Tier 3 mode-differentiated per the corrected set above. Anti-farm: passive SPEL, no firing cost.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Orc_Malacath_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Tier 1" | Passive SPEL; all modes | Malacath has noted your conduct. Smithing experience +5%; Orcish armor you wear adds 5 armor; disease resistance +10%; brawl damage +5%. |
+| PDV_Bless_Orc_Malacath_T2_Stronghold | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Tier 2 -- Stronghold Orc" | Passive SPEL; Stronghold mode | Malacath watches the code carried in full. Your forge work tempers higher. Proving strength against a hard foe restores health after the fight. |
+| PDV_Bless_Orc_Malacath_T2_City | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Tier 2 -- City Orc" | Passive SPEL; City mode | Malacath sees the code held with no stronghold to hold it for you. Quality work earns his eye. Standing firm against scorn steadies your next words. |
+| PDV_Bless_Orc_Malacath_T2_LegionExile | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Tier 2 -- Legion/Exile Orc" | Passive SPEL; LegionExile mode | Malacath weighs the code carried under foreign command. A contract honored under pressure is counted. Endurance through the long march is counted. |
+| PDV_Bless_Orc_Malacath_T3_Stronghold | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Stronghold Orc Champion" | Passive SPEL; Stronghold mode | Malacath's witness is complete. Weapons you forged strike 5% harder in your hands alone. Near death, once a day, his fury restores stamina and lightens your blows. |
+| PDV_Bless_Orc_Malacath_T3_City | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "City Orc Champion" | Passive SPEL; City mode | Malacath saw you hold the code where nothing rewarded it. Your craft always reaches its ceiling. Met with scorn and unbroken, your next fight steadies you. |
+| PDV_Bless_Orc_Malacath_T3_LegionExile | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Legion/Exile Orc Champion" | Passive SPEL; LegionExile mode | Malacath acknowledged the endurance. A hard service completed steadies the next fight. You carry 15 more weight; the exile's back is broad. |
+
+### 11.3 Tier-up notifications (`PDV_Notif_Orc_Malacath_*`)
+
+Narrator voice. HUD notifications. Budget 80 hard / 60 target. No `suppress-if-offer-same-dawn` flag: Orc has no commitment offer. Anti-farm: one per direction per save.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Orc_Malacath_ObservantEntry | Notification | Noted | Narrator | 80/60 | RaceDesign_Orc "Tier 1" | One per save | Malacath has begun to watch your conduct. Observant. |
+| PDV_Notif_Orc_Malacath_FaithfulEntry | Notification | Noted | Narrator | 80/60 | RaceDesign_Orc "Tier 2" | One per save | Malacath sees the pattern. The code is carried. Faithful. |
+| PDV_Notif_Orc_Malacath_DevotedEntry | Notification | Marked | Narrator | 80/60 | RaceDesign_Orc "Tier 3" | One per save; precedes the per-mode Champion entry | Malacath's witness is complete. Devoted. |
+| PDV_Notif_Orc_Malacath_ObservantLapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Orc "Neglect Texture" | One per direction per save | Malacath's eye has drifted from you. Wavering. |
+| PDV_Notif_Orc_Malacath_FaithfulLapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Orc "Neglect Texture" | One per direction per save | The code shows thin to Malacath now. Observant. |
+| PDV_Notif_Orc_Malacath_DevotedLapse | Notification | Marked | Narrator | 80/60 | RaceDesign_Orc "Neglect Texture" | One per save per Devoted loss | Malacath no longer holds the Devoted witness. |
+
+### 11.4 Champion entry and ambient
+
+Champion shapes: **Stronghold** is `Entry + ambient` (forge and shaman texture is ongoing recognition per `RaceDesign_Orc` "Stronghold Orc Champion"). **City** is `Entry + ambient` (one dignity-under-scorn ambient line; the source's "brief resolve bonus when insulted" is a recurring beat). **Legion/Exile** is `Entry-only` (the source frames it as a completed statement, not a recurring texture).
+
+God-voice on entry MessageBoxes; player-second-person on ambient notifications.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Orc_Malacath_ChampionEntry_Stronghold | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Stronghold Orc Champion"; TargetEndStates "Orc Champion moment" | One-time on first Stronghold Devoted | Title: "The Forge Sings" Body: "I do not bless. I witness. The forge, the oath, the strength, the kin -- you carried all four. The stronghold is yours, and the work you make knows your hand." |
+| PDV_Msg_Orc_Malacath_ChampionEntry_City | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "City Orc Champion"; TargetEndStates lines 478-479 | One-time on first City Devoted | Title: "Witnessed Alone" Body: "No chief confirmed you. No shaman named you. No stronghold held the code for you. I did. You held it where nothing made you, and that is the harder thing." |
+| PDV_Msg_Orc_Malacath_ChampionEntry_LegionExile | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Legion/Exile Orc Champion"; TargetEndStates line 480 | One-time on first LegionExile Devoted; Entry-only Champion | Title: "The Burden Carried" Body: "You carried my code through a foreign army, a foreign province, years that wanted you smaller. You did not get smaller. The exile who endures is my truest word." |
+| PDV_Notif_Orc_Malacath_ChampionAmbient_ForgeWork | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Stronghold Orc Champion" | Stronghold Devoted + forge use; one per in-game day | The forge work feels like prayer answered. |
+| PDV_Notif_Orc_Malacath_ChampionAmbient_StrongholdAccept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Stronghold Orc Champion" ("the shaman's voice feels present") | Stronghold Devoted + at a stronghold; one per stronghold visit | At the stronghold, the shaman's words seem meant for you. |
+| PDV_Notif_Orc_Malacath_ChampionAmbient_PrivateOath | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "City Orc Champion" | City Devoted + dignity-under-scorn beat; per qualifying event | Scorned, and unbroken. Malacath's witness holds. |
+
+### 11.5 Neglect texture (`PDV_Notif_Orc_Malacath_NeglectTexture_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Orc` "Neglect Texture": emptiness at the forge, mode-specific drift, and the explicit oath-breaking signal. Each fires on the first day of a meaningful lapse, not continuously.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Orc_Malacath_NeglectTexture_Forge | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Neglect Texture" line 184; "Stronghold neglect" | One per lapse-band crossing | The forge is only iron and heat now. The work has stopped being prayer. |
+| PDV_Notif_Orc_Malacath_NeglectTexture_CityQuality | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "City Orc neglect" line 187 | One per lapse-band crossing; City mode | The work is just work now. There is nothing of the code left in it. |
+| PDV_Notif_Orc_Malacath_NeglectTexture_LegionErasure | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Legion/Exile neglect" line 188 | One per lapse-band crossing; LegionExile mode | Folded away to fit in, you have left Malacath nothing to watch. |
+| PDV_Notif_Orc_Malacath_NeglectTexture_OathBroken | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Oath-breaking" line 189 | One per oath-break event; sustained breaking accrues separately | An oath set down is an oath Malacath saw you set down. |
+
+### 11.6 Survey Devotion readouts (`PDV_Msg_Orc_Survey_*`)
+
+Narrator voice. Body budget 240 hard / 180 target. One variant per life-mode. The `%s` token is bound to the tier-name external table.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Orc_Survey_Stronghold | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2; RaceDesign_Orc "Mode Philosophies" | Cast Survey Devotion | You carry Malacath's code inside the stronghold, where forge, kin, and oath hold it with you. Standing: %s. The witness continues. |
+| PDV_Msg_Orc_Survey_City | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2; RaceDesign_Orc "Mode Philosophies" | Cast Survey Devotion | You carry Malacath's code in the city, alone, with no stronghold to confirm it. Standing: %s. Malacath watches what no one else does. |
+| PDV_Msg_Orc_Survey_LegionExile | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2; RaceDesign_Orc "Mode Philosophies" | Cast Survey Devotion | You carry Malacath's code under foreign discipline. The contract is the oath; the endurance is the strength. Standing: %s. |
+
+### 11.7 Contextual favor surfacings
+
+Four trigger families per life-mode per `RaceDesign_Orc` "Contextual Favor Table". Only `Noted` and `Marked` rows are authored; `Quiet` rows are icon-only. Player-second-person on Noted; god-voice on Marked. Per the table review locks, the two Marked moments are Stronghold Blood-Kin crisis and Legion/Exile exile-burden return.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Orc_FavorNoted_Stronghold_ForgeExcellence | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 128 | After-act; quality/value/context required; daily cap | The work serves the hold. Malacath marks the maker. |
+| PDV_Notif_Orc_FavorNoted_Stronghold_BloodKinCrisis | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 129 | After-act; ordinary stronghold aid | The stronghold stands a little surer for what you did. |
+| PDV_Msg_Orc_FavorMarked_Stronghold_BloodKinCrisis | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Contextual Favor Table" line 129; "Table review locks" line 161 | Major crisis resolution or stronghold re-entry only; per-event | Title: "Blood-Kin" Body: "You answered the stronghold's worst hour. The kin will not forget it, and neither will I." |
+| PDV_Notif_Orc_FavorNoted_Stronghold_CommunalProvision | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 130 | After-act; curated provision/oath stages | Provision given, oath kept. The kin are held. |
+| PDV_Notif_Orc_FavorNoted_Stronghold_WorthyChallenge | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 131 | Noted only for stronghold crisis, boss, trial, or Malacath-significant fight; else Quiet | A true test met. Malacath was watching that one. |
+| PDV_Notif_Orc_FavorNoted_City_QualityLabor | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 132 | After-act; named commission or quality threshold | The city does not know the work was a rite. Malacath does. |
+| PDV_Notif_Orc_FavorNoted_City_Dignity | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 133 | After-act; curated hostile/dismissive outcome only | Met with scorn, you did not bend. The code held. |
+| PDV_Notif_Orc_FavorNoted_City_OrcSolidarity | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 134 | After-act; named Orc aid; cooldown | You stood by your own where no stronghold would. Counted. |
+| PDV_Notif_Orc_FavorNoted_City_SelfMadeCommunity | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 135 | Environmental/after-act; `PDV_SacredPlace` investment required | The place you built has witnesses now. |
+| PDV_Notif_Orc_FavorNoted_LegionExile_ContractPressure | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 136 | After-act; completed pressure-bearing service only | The contract held under weight. Malacath counts the hard ones. |
+| PDV_Notif_Orc_FavorNoted_LegionExile_Endurance | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 137 | Environmental/after-act; caps; endurance is context | The long road did not break you. Endurance is the strength. |
+| PDV_Notif_Orc_FavorNoted_LegionExile_Discipline | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 138 | After-act; authored milestone proving the code was carried | You served without erasing yourself. The code crossed the border with you. |
+| PDV_Notif_Orc_FavorNoted_LegionExile_ExileBurden | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Orc "Contextual Favor Table" line 139 | After-act; ordinary return to invested place | Returned from service to the place you made. The burden set down a while. |
+| PDV_Msg_Orc_FavorMarked_LegionExile_ExileBurden | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Contextual Favor Table" line 139; "Table review locks" line 165 | Major return, restoration, or community-established moment only; per-event | Title: "The Burden Returned" Body: "You went out under another's banner and came back to the place you made. The exile who returns carrying the code is the word I am proudest to speak." |
+
+### 11.8 Life-mode shift notifications (`PDV_Notif_Orc_LifeMode_*`)
+
+**Slot-frame correction:** the planning-pass slot frame used `PDV_Msg_Orc_LifeMode_*` (MessageBox). A life-mode shift is a band-crossing-class state change, not a god speaking; it is downgraded to a `Notification` with `Narrator` voice. Per `RaceDesign_Orc` "Life-mode selection rule": shifts resolve at major gates or dawn consolidation.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Orc_LifeMode_Stronghold_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Orc "Life-mode selection rule"; TargetEndStates line 469 | Fires on confirmed switch into Stronghold | You live inside the code now. Stronghold Orc. |
+| PDV_Notif_Orc_LifeMode_City_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Orc "Life-mode selection rule" | Fires on confirmed switch into City | You carry the code in the city now. City Orc. |
+| PDV_Notif_Orc_LifeMode_LegionExile_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Orc "Life-mode selection rule" | Fires on confirmed switch into LegionExile | You carry the code in service now. Legion and exile. |
+
+### 11.9 Curse-state transitions (`PDV_Msg_Orc_CurseState_*`)
+
+God-voice. MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Orc` "Curse State Summary": werewolf is conditionally defensible, vampirism is near-total collapse. Fires once per cure cycle.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Orc_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Werewolf"; Race_Orc "Curse States" | Once on first transformation as Orc | Title: "The Beast Tested" Body: "The wolf is in you. I do not turn away from it. But the beast is judged by my code as the smith is: is it strong, does it endure, does it serve the kin or break them? Prove the wolf." |
+| PDV_Msg_Orc_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Vampire"; Race_Orc "Curse States" | Once on becoming vampire | Title: "Outside the Test" Body: "You feed on the living now. That is dependency, and dependency is the thing my code exists to refuse. You stand outside the test. Cure this, or I have nothing to witness." |
+| PDV_Msg_Orc_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Vampire" | Once on cure completion | Title: "Back Within Reach" Body: "The thirst is gone. You are a living Orc again, and a living Orc can be tested. Begin. The kin will remember the lapse longer than the code does." |
+
+### 11.10 Shrine and privilege dialogue topics (`PDV_Dlog_Orc_*`)
+
+Player-second-person on topic name. Branch dialogue authored separately in CK. Topic-line budget 120 hard / 80 target. Three representative archetypes, one per life-mode's spiritual-authority figure per `Race_Orc` "Spiritual Authority".
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Dlog_Orc_Chief_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Orc "Stronghold NPC recognition" | Stronghold Devoted or Blood-Kin | "I carry the code. Tell me what the stronghold needs." |
+| PDV_Dlog_Orc_Shaman_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; Race_Orc "Spiritual Authority" | Stronghold mode, any tier | "Speak Malacath's will. I will hear it." |
+| PDV_Dlog_Orc_LegionOfficer_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Orc "Legion/Exile" | LegionExile Devoted | "I serve under your command, and I serve the code. Both hold." |
+
+### 11.11 Orc pilot firing-density sanity
+
+A Faithful City Orc in steady mixed-society play (crafting commissions, occasional Orc-aid beat):
+
+- Marked: 0 most days; Stronghold Blood-Kin crisis and Legion/Exile burden-return are rare quest-anchored events. Inside the `<1 per 2h` target.
+- Noted: ~1-2 per day (one quality-labor favor, occasional dignity or solidarity beat). Inside the `<2 per h` target.
+- Quiet: uncounted; icon-only (worthy-challenge favor is Quiet outside stronghold crisis context).
+
+Tier-up notifications: at most one per save per direction. Life-mode shift notifications are gated to confirmed switches at major gates or dawn, with a three-day soft-switch lock-out, so they cannot fire repeatedly.
 
 ## 12. Dunmer (slot frame)
 
@@ -510,7 +628,7 @@ Note: Argonian has no standard commitment-offer slot because there is no deity c
 | Race | Tone profiles | Blessings | Tier-up | Champion | Neglect | Offer | Survey | Favors | Curse | Dialogue topics | Pilot prose |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Nord | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
-| Orc | slot only | slot only | slot only | slot only | slot only | n/a | slot only | slot only | slot only | slot only | -- |
+| Orc | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 | Dunmer | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | -- |
 | Altmer | slot only | slot only | slot only | slot only | slot only | slot only | slot only | gated | gated | gated | -- |
 | Khajiit | slot only | slot only | slot only | slot only | slot only | n/a | slot only | slot only | slot only | slot only | -- |
@@ -565,4 +683,4 @@ This manifest's own verification, per the plan:
 
 ## 23. Next slice
 
-After this manifest lands, the natural next pass is to extend draft prose to the next race in Section 9 priority order (Orc), reusing the proven Nord row template. Out of scope here.
+Nord and Orc carry full draft prose. The natural next pass extends draft prose to the next race in Section 9 priority order (Dunmer), reusing the proven row template. Dunmer adds the always-active ancestor substrate readout and the layered focus model (Azura / Boethiah / Mephala), so the next pass also exercises the substrate-readout slot shape for the first time.
