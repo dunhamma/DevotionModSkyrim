@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, and Dunmer; slot-only rows for the other 7.
+**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, and Dunmer; Altmer drafted except its gated slots; slot-only rows for the remaining 6.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -108,7 +108,7 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 1. Nord (full draft prose)
 2. Orc (full draft prose)
 3. Dunmer (full draft prose)
-4. Altmer (slot rows only; Altmer is the only Partial implementation-spec; affected slots are flagged)
+4. Altmer (drafted except gated slots; Altmer is the only Partial implementation-spec; gated slots flagged in Section 13.13)
 5. Khajiit (slot rows only; no formal commitment offer per Section 12.4a)
 6. Imperial (slot rows only)
 7. Redguard (slot rows only)
@@ -637,23 +637,170 @@ A Faithful no-focus Dunmer in steady play (occasional Grey Quarter beat, portabl
 
 Tier-up notifications: at most one per save per direction; Faithful entry is suppressed on a same-dawn focus offer. Posture readouts fire only on posture transitions, which are rare (curse onset/cure).
 
-## 13. Altmer (slot frame, partial-locked)
+## 13. Altmer (partial draft -- gated slots flagged)
 
-Altmer is the only Partial implementation-spec per `PDV_TargetEndStates_1.0.md` lines 76-87. Affected slots are flagged with `(gated)` and listed in the deferred appendix (Section 21) rather than authored.
+Altmer is the only Partial implementation-spec per `PDV_TargetEndStates_1.0.md` lines 76-87. The non-gated slots are authored below in full. Three slot groups stay gated until the spec closes (crisis resolution hooks, final crisis trigger list, contextual-favor lanes, focused-deity hook posture): the contextual-favor surfacings, the Lorkhan crisis-of-faith copy, and the post-vampire Exiled Altmer micro-path flavor. Gated slots are listed in Section 13.13 with their gate, not drafted.
 
-| Category | Slot pattern | Source |
+`ThalmorAlignment` is the orthodoxy/coherence track (`0-30 Heterodox`, `31-69 Orthodox Moderate`, `70-100 Thalmor Devout`). Layer 1 Auri-El is always active. Focused commitment uses the shared patron state.
+
+**Slot-frame corrections:**
+- **Blessings are not per-deity for Tier 1 and 2.** `RaceDesign_Altmer` "Tier Rewards" locks Tier 1 and Tier 2 as the shared Auri-El-foundation-plus-pantheon experience; only Tier 3 is per focused deity. Corrected to `PDV_Bless_Altmer_Pantheon_T1`, `_Pantheon_T2`, and `_AuriEl_T3` / `_Magnus_T3` / `_Trinimac_T3` / `_Xarxes_T3` / `_Syrabane_T3`. "Psijic" is a faction, not a deity; the Psijic-aligned focuses are Magnus and Syrabane.
+- **Five focused deities, not three.** The planning-pass Champion-entry frame named only Trinimac/Magnus/Psijic. The locked Tier 3 set is Auri-El, Magnus, Trinimac, Xarxes, Syrabane.
+
+### 13.1 Tone profiles
+
+| Voice | Tone profile |
+|---|---|
+| Auri-El | Vast, serene, time-and-sun; speaks of the return, the path back, the dawn; patient on a scale that dwarfs a mortal life. |
+| Magnus | Precise, scholarly, escape-coded; the architect who got out; speaks of the Elder Way and of the arts as the road. |
+| Trinimac | Stern, militant, civilizational; speaks of the project defended by force and orthodoxy held; the martial ancestor. |
+| Xarxes | Dry, archival, lineage-keeping; speaks of what is written, the genealogy, the quiet truth that outlasts enforcement. |
+| Syrabane | Gentle, guardian-toned, warding; the apprentices' protector; speaks of the magic that shields the one still on the path. |
+
+### 13.2 Blessing descriptions (`PDV_Bless_Altmer_*`)
+
+Narrator voice. Budget 200 hard / 140 target. Tier 1 and Tier 2 are the shared Auri-El-plus-pantheon experience; Tier 3 is per focused deity. Anti-farm: passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Altmer_Pantheon_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Tier 1" | Passive SPEL; shared | Auri-El is acknowledged at dawn. Spell cost -3% in all schools; magic resistance +5%. |
+| PDV_Bless_Altmer_Pantheon_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Tier 2" | Passive SPEL; shared | The pantheon relationship is stable and coherent. At dawn, a spell-cost reduction holds until noon. Advancing a magic skill makes the next cast of that school free. |
+| PDV_Bless_Altmer_AuriEl_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Auri-El focus" | Passive SPEL; Auri-El focus | Auri-El watches your return. Magic regenerates 25% faster out of combat; from dawn to midday, spells cost 15% less. |
+| PDV_Bless_Altmer_Magnus_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Magnus focus" | Passive SPEL; Magnus focus | Magnus marks the scholar's discipline. Alteration and Illusion cost 10% less; magic regenerates 20% faster out of combat. |
+| PDV_Bless_Altmer_Trinimac_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Trinimac focus" | Passive SPEL; Trinimac focus; ThalmorAlignment 70+ | Trinimac blesses the project defended by force. One-handed damage +5%; an enforcement act under high orthodoxy grants armor +15 for a day. |
+| PDV_Bless_Altmer_Xarxes_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Xarxes focus" | Passive SPEL; Xarxes focus | Xarxes keeps your lineage. Lockpicking and Alteration +5%; a quest of real ancestry returns a day of cheaper magic. |
+| PDV_Bless_Altmer_Syrabane_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Syrabane focus" | Passive SPEL; Syrabane focus | Syrabane shields the apprentice. Magic-using foes deal 15% less damage; your wards absorb 15% more. |
+
+### 13.3 Tier-up notifications (`PDV_Notif_Altmer_*`)
+
+Narrator voice. HUD notifications. Budget 80 hard / 60 target. Observant and Faithful are shared; Devoted is per focused deity (`%s` binds the focus deity name). Faithful entry carries `suppress-if-offer-same-dawn` (Altmer uses the formal-offer gate).
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Altmer_Pantheon_ObservantEntry | Notification | Noted | Narrator | 80/60 | RaceDesign_Altmer "Tier 1" | One per save | The dawn is acknowledged and the path is begun. Observant. |
+| PDV_Notif_Altmer_Pantheon_FaithfulEntry | Notification | Noted | Narrator | 80/60 | RaceDesign_Altmer "Tier 2" | One per save; suppress-if-offer-same-dawn | Your theology holds its coherence. Faithful. |
+| PDV_Notif_Altmer_Focus_DevotedEntry | Notification | Marked | Narrator | 80/60 | RaceDesign_Altmer "Tier 3" | One per save; %s is the focus deity | %s recognizes your coherence. Devoted. |
+| PDV_Notif_Altmer_Pantheon_ObservantLapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Altmer "Neglect Texture" | One per direction per save | The path is acknowledged less surely now. Wavering. |
+| PDV_Notif_Altmer_Pantheon_FaithfulLapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Altmer "Neglect Texture" | One per direction per save | Your coherence is slipping. Observant. |
+| PDV_Notif_Altmer_Focus_DevotedLapse | Notification | Marked | Narrator | 80/60 | RaceDesign_Altmer "Neglect Texture" | One per save per focus loss | The bond with %s loosens. The Devoted bond is not held. |
+
+### 13.4 Champion entry and ambient
+
+Champion shapes: **Auri-El** and **Magnus** are `Entry + ambient` (dawn return and skill-milestone are recurring in-fiction beats). **Trinimac**, **Xarxes**, and **Syrabane** are `Entry-only` (their ongoing recognition is dialogue privilege, authored in Section 13.12, not ambient lines). God-voice on entries; player-second-person on ambients.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_AuriEl_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Auri-El focus"; TargetEndStates "Altmer Champion" | One-time on first Auri-El Devoted | Title: "Auri-El's Dawn" Body: "You held the path through a world built to make you forget it. The return is not a doctrine to you; it is a daily practice. Keep walking toward the dawn. I am the dawn." |
+| PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Auri-El focus" | Auri-El Devoted + dawn observance; one per in-game day | The dawn answers you, and the return feels near. |
+| PDV_Msg_Altmer_Magnus_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Magnus focus"; TargetEndStates "Divine Body Champion" | One-time on first Magnus Devoted | Title: "The Elder Way" Body: "I did not break the trap with force. I studied until the wall became a door. You have studied as I studied. The arts are the road, and you are far along it." |
+| PDV_Notif_Altmer_Magnus_ChampionAmbient_Milestone | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Magnus focus" | Magnus Devoted + magic skill milestone; per milestone | A school mastered further. Magnus marks the discipline. |
+| PDV_Msg_Altmer_Trinimac_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Trinimac focus"; TargetEndStates "Thalmor Orthodox Champion" | One-time on first Trinimac Devoted; Entry-only | Title: "Trinimac's Sword" Body: "The project does not defend itself. You have defended it -- by force, by orthodoxy held without flinching. The Lorkhan world strikes hardest at those who strike hardest for me. You did not yield." |
+| PDV_Msg_Altmer_Xarxes_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Xarxes focus" | One-time on first Xarxes Devoted; Entry-only | Title: "Xarxes' Record" Body: "Enforcement forgets. The record does not. You have kept faith with the lineage and the written truth. Your name is set down where it cannot be unwritten." |
+| PDV_Msg_Altmer_Syrabane_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Syrabane focus" | One-time on first Syrabane Devoted; Entry-only | Title: "Syrabane's Ward" Body: "The path is long and the one who walks it can fall. I have shielded apprentices since the first of them. I shield you now. Walk on, and walk warded." |
+
+### 13.5 Neglect texture (`PDV_Notif_Altmer_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Altmer` "Neglect Texture": Altmer neglect is inconsistency, not absence. Each fires on the first day of a meaningful lapse.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Altmer_NeglectTexture_OrthodoxyDrift | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Orthodoxy drift" | One per lapse-band crossing | Your acts no longer match your stated theology. You feel undefined. |
+| PDV_Notif_Altmer_NeglectTexture_CultivationFading | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Psijic drift" | One per lapse-band crossing | You have stopped cultivating yourself. The discipline that set you apart fades. |
+| PDV_Notif_Altmer_NeglectTexture_AuriElDistant | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Neglect Texture" | One per lapse-band crossing | The dawn is only the dawn now. The return feels far away. |
+
+### 13.6 Lorkhan Adjacency pressure (`PDV_Notif_Altmer_LorkhanPressure_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Altmer` "Lorkhan Adjacency Penalty System": the tags `PDV_ALT_LORKHAN_T1/T2/T3` are locked. Per the "Obviousness rule", the interpretation must be surfaced so the player understands the theological meaning. The example presentation in the design ("You feel the old dissonance: this rite honors the mortal world Lorkhan made.") informs the Tier 3 line.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Altmer_LorkhanPressure_T1 | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Lorkhan ... Tier 1"; tag `PDV_ALT_LORKHAN_T1_DIRECT` | One-time per major source; long cooldown on repeatable worship sources | You have touched the thing that broke your people. The dissonance is deep. |
+| PDV_Notif_Altmer_LorkhanPressure_T2 | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Lorkhan ... Tier 2"; tag `PDV_ALT_LORKHAN_T2_SHOR_ADJ` | One-time per source or milestone; no repeat spam | This act belongs to Shor's framework, not yours. It stings to be here. |
+| PDV_Notif_Altmer_LorkhanPressure_T3 | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Lorkhan ... Tier 3"; "Obviousness rule"; tag `PDV_ALT_LORKHAN_T3_MORTAL_VALIDATION` | At most once per in-game day; surfaces the interpretation on first instance | You feel the old dissonance: this honors the mortal world Lorkhan made. |
+
+Tier 4 (`PDV_ALT_LORKHAN_T4_CONTEXT`) adjusts `ThalmorAlignment` only and carries no piety penalty; it produces no dedicated notification beyond the band-crossing rows in Section 13.7.
+
+### 13.7 ThalmorAlignment band crossings (`PDV_Notif_Altmer_ThalmorAlignment_*`)
+
+Narrator voice. Notifications. Budget 80 hard / 60 target. Bands locked at `0-30 Heterodox`, `31-69 Orthodox Moderate`, `70-100 Thalmor Devout`. Fires on band entry.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Altmer_ThalmorAlignment_Heterodox | Notification | Noted | Narrator | 80/60 | RaceDesign_Altmer "ThalmorAlignment Track" | One per band entry | Alignment: Heterodox. Self-cultivation is favored; enforcement rings hollow. |
+| PDV_Notif_Altmer_ThalmorAlignment_OrthodoxModerate | Notification | Noted | Narrator | 80/60 | RaceDesign_Altmer "ThalmorAlignment Track" | One per band entry | Alignment: Orthodox Moderate. The whole pantheon stands equally open. |
+| PDV_Notif_Altmer_ThalmorAlignment_ThalmorDevout | Notification | Noted | Narrator | 80/60 | RaceDesign_Altmer "ThalmorAlignment Track" | One per band entry; unlocks Trinimac focus eligibility | Alignment: Thalmor Devout. Enforcement is worship; Trinimac's path opens. |
+
+### 13.8 Commitment offers (`PDV_Msg_Altmer_*_Offer` and `PDV_Msg_Altmer_OfferResponse_*`)
+
+God-voice on offer bodies; player-second-person on responses. MessageBox. Body budget 500 hard / 280 target; title 40/30. Trinimac's offer is gated on `ThalmorAlignment` 70+ per `RaceDesign_Altmer` "Trinimac gating".
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_AuriEl_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Worship Structure" | Dawn-fire; per-deity cooldown | Title: "Auri-El's Path" Body: "You have kept the dawn through every temptation to forget it. Make the return your focus, and the foundation becomes the whole of your faith. Will you name me?" |
+| PDV_Msg_Altmer_Magnus_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Worship Structure" | Dawn-fire; per-deity cooldown | Title: "Magnus and the Elder Way" Body: "You study as escape, not as utility. That is my path. Name me your focus, and the arts become the road back. Will you?" |
+| PDV_Msg_Altmer_Trinimac_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Trinimac gating" | Dawn-fire; per-deity cooldown; requires ThalmorAlignment 70+ | Title: "Trinimac's Call" Body: "You have defended the project with the sword, not only the prayer. The orthodox path is the hardest, and the Lorkhan world will strike you hardest for it. Name me, and carry that weight." |
+| PDV_Msg_Altmer_Xarxes_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Xarxes focus" | Dawn-fire; per-deity cooldown | Title: "Xarxes and the Record" Body: "You trust what is written over what is enforced. Name me your focus, and the lineage and the quiet truth become your devotion. Will you?" |
+| PDV_Msg_Altmer_Syrabane_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Syrabane focus" | Dawn-fire; per-deity cooldown | Title: "Syrabane's Guard" Body: "You cast to shield, not only to strike. Name me your focus, and the warding arts become your path. Will you walk it guarded?" |
+| PDV_Msg_Altmer_OfferResponse_Accept | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Shared across Altmer offers | Name this focus. |
+| PDV_Msg_Altmer_OfferResponse_NotYet | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Sets per-deity cooldown only | Not yet. |
+| PDV_Msg_Altmer_OfferResponse_Refuse | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Broad coherent worship continues | Keep to the foundation. |
+
+### 13.9 Survey Devotion readouts (`PDV_Msg_Altmer_Survey_*`)
+
+Narrator voice. Body budget 240 hard / 180 target. One variant per faction alignment. `%s` binds the tier-name external table.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_Survey_ThalmorOrthodox | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2; RaceDesign_Altmer "Worship Structure" | Cast Survey Devotion | You hold the orthodox path: enforcement as faith, the project defended by force. Standing: %s. The Lorkhan world costs you most, and you pay it. |
+| PDV_Msg_Altmer_Survey_DivineBody | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2; RaceDesign_Altmer "Worship Structure" | Cast Survey Devotion | You hold the Divine Body path: balanced cultural practice, the return pursued without rigid enforcement. Standing: %s. |
+| PDV_Msg_Altmer_Survey_Psijic | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2; RaceDesign_Altmer "Worship Structure" | Cast Survey Devotion | You hold the Psijic path: the Old Ways, private meditation, heterodox scholarship. Standing: %s. The Lorkhan world costs you least. |
+
+### 13.10 Curse-state transitions (`PDV_Msg_Altmer_CurseState_*`)
+
+God-voice (Auri-El). MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Altmer` "Curse State Summary": both states are terminal -- vampirism has no clean restoration, werewolf halts devotion entirely. Fires once on onset. The post-vampire Exiled Altmer micro-path flavor is gated (Section 13.13).
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Vampire"; Race_Altmer "Curse States" | Once on becoming vampire; terminal -- no restoration arc | Title: "Auri-El Closes" Body: "You flee the sun now, and the sun is the god of return. There is no path back from where you stand. The records will not hold your name. This is not a punishment. It is what shrinking from the dawn has always meant." |
+| PDV_Msg_Altmer_CurseState_WerewolfHardHalt | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Werewolf"; TargetEndStates "Altmer werewolf note" line 351 | Once on first transformation; devotion halts entirely | Title: "The Project Inverted" Body: "The whole of Altmer faith is to become spirit again. You have become a beast. There is no doctrine for this, no heresy small enough to hold it, no path in any direction. Devotion stops here." |
+
+### 13.11 Lorkhan first-interpretation notice (`PDV_Msg_Altmer_LorkhanInterp_FirstTime`)
+
+God-voice deviation: this is a one-time teaching MessageBox, narrator voice, that fires the first time any Lorkhan pressure tag triggers, so the player learns what the dissonance means before the Section 13.6 short notifications carry it alone. Per `RaceDesign_Altmer` "Obviousness rule".
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_LorkhanInterp_FirstTime | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Obviousness rule" | One-time, first Lorkhan pressure of any tier | Title: "The Old Dissonance" Body: "Lorkhan made the mortal world, the trap your ancestors fell into. Acts that honor, strengthen, or celebrate his creation press against your faith -- not because a god disapproves, but because you have touched the thing that broke your people. You will feel this again." |
+
+### 13.12 Shrine and privilege dialogue topics (`PDV_Dlog_Altmer_*`)
+
+Player-second-person on topic name. Branch dialogue authored separately in CK. Topic-line budget 120 hard / 80 target. Three archetypes per the recognition-privilege payoffs in `RaceDesign_Altmer` "Tier Rewards".
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Dlog_Altmer_AuriElDevotee_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Altmer "Auri-El focus" | Auri-El Devoted | "I keep the dawn and the path back. Speak of the return." |
+| PDV_Dlog_Altmer_CollegeMage_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Altmer "Magnus focus" | Magnus or Syrabane focus; College context | "The arts are my devotion. Show me what the College keeps closed." |
+| PDV_Dlog_Altmer_ThalmorOfficer_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Altmer "Trinimac focus" | Trinimac Devoted; ThalmorAlignment 70+ | "I defend the project by the sword. The orthodoxy knows my name." |
+
+### 13.13 Gated slots (not drafted)
+
+These three slot groups stay gated until the Altmer implementation-spec closes (`PDV_TargetEndStates_1.0.md` line 146: crisis resolution hooks, final crisis trigger list, contextual-favor lanes, focused-deity hook posture).
+
+| Slot group | Slot pattern | Gate |
 |---|---|---|
-| Blessing description | `PDV_Bless_Altmer_<AuriEl|Trinimac|Magnus|Xarxes|Psijic>_T<1|2|3>` | RaceDesign_Altmer Section "Tier Rewards" |
-| Tier-up notification | `PDV_Notif_Altmer_<Deity>_<Tier>Entry`, `PDV_Notif_Altmer_<Deity>_<Tier>Lapse` | RaceDesign_Altmer Section "Tier Rewards" |
-| Champion entry | `PDV_Msg_Altmer_<Trinimac|Magnus|Psijic>_ChampionEntry` (per faction alignment) | TargetEndStates Section "Altmer Champion moment" |
-| Neglect texture | `PDV_Notif_Altmer_<Deity>_NeglectTexture`, plus `PDV_Notif_Altmer_ThalmorAlignment_Drift` (incoherence band crossings) | TargetEndStates lines 348-351 |
-| Commitment offer | `PDV_Msg_Altmer_<Deity>_Offer`; reuse response triplet | RaceDesign_Altmer Section "Primary-offer gate" |
-| Survey readout | `PDV_Msg_Altmer_Survey_<ThalmorOrthodox|DivineBody|Psijic>` | Architecture v3 Section 16.2 |
-| Contextual favor (Noted/Marked) | `PDV_Notif_Altmer_FavorNoted_<Faction>_<TriggerFamily>` | **gated**: contextual-favor lanes Partial per TargetEndStates line 146 |
-| Lorkhan crisis-of-faith | `PDV_Msg_Altmer_LorkhanCrisis_<DragonbornDeclaration|SovngardeBeat|MarriageBeat|CompanionsFork>` | **gated**: final crisis trigger list Partial per TargetEndStates line 146 |
-| Lorkhan pressure (per tier) | `PDV_Notif_Altmer_LorkhanPressure_T<1|2|3>` | TargetEndStates Section "Lorkhan pressure posture" line 332 |
-| Werewolf hard-halt notice | `PDV_Msg_Altmer_CurseState_WerewolfHardHalt` | TargetEndStates Section "Altmer werewolf note" line 351 |
-| Vampire flavor | `PDV_Msg_Altmer_CurseState_VampireOnset`, `PDV_Msg_Altmer_CurseState_VampireCured_Exiled` | **gated**: Enhancement custom content per TargetEndStates Section "Custom content priority" line 1536 |
+| Contextual favor (Noted/Marked) | `PDV_Notif_Altmer_FavorNoted_<Faction>_<TriggerFamily>`, `PDV_Msg_Altmer_FavorMarked_<Faction>_<TriggerFamily>` | Contextual-favor lanes are Partial per `TargetEndStates` line 146. Lane families must be locked before favor strings can be authored without rework. |
+| Lorkhan crisis-of-faith | `PDV_Msg_Altmer_LorkhanCrisis_<DragonbornDeclaration|SovngardeBeat|MarriageBeat|CompanionsFork>` | Final crisis trigger list is Partial per `TargetEndStates` line 146 (`PDV_ALT_CRISIS_FAITH` source list not yet locked). |
+| Post-vampire Exiled Altmer flavor | `PDV_Msg_Altmer_VampireExiledPath_<Entry|Recognition>` | Enhancement custom content per `TargetEndStates` Section 21.2 line 1536; not required for core function. The locked terminal vampire-onset notice is authored above (Section 13.10); only the optional Exiled micro-path flavor is gated. |
+
+### 13.14 Altmer firing-density sanity
+
+A Faithful Divine Body Altmer in steady play (dawn observance, College progression, occasional Lorkhan-adjacent beat from the main quest):
+
+- Marked: 0 most days; the Champion entry and curse onsets are one-time. The Lorkhan first-interpretation notice fires once per save. Inside the `<1 per 2h` target.
+- Noted: ~1-2 per day (dawn ambient if Champion, occasional study milestone). Lorkhan pressure notifications are one-time-per-source and main-quest-paced, so they do not compound. Inside the `<2 per h` target.
+- Quiet: uncounted; icon-only.
+
+Tier-up notifications: one per save per direction; Faithful entry suppressed on a same-dawn focus offer. ThalmorAlignment band crossings are infrequent (the track moves on authored enforcement/defiance acts). Gated contextual-favor rows are excluded from this estimate and will need a fresh density pass when the lanes lock.
 
 ## 14. Khajiit (slot frame)
 
@@ -782,7 +929,7 @@ Note: Argonian has no standard commitment-offer slot because there is no deity c
 | Nord | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Orc | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 | Dunmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
-| Altmer | slot only | slot only | slot only | slot only | slot only | slot only | slot only | gated | gated | gated | -- |
+| Altmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | gated | drafted | drafted | PARTIAL |
 | Khajiit | slot only | slot only | slot only | slot only | slot only | n/a | slot only | slot only | slot only | slot only | -- |
 | Imperial | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | -- |
 | Redguard | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | -- |
@@ -835,4 +982,4 @@ This manifest's own verification, per the plan:
 
 ## 23. Next slice
 
-Nord, Orc, and Dunmer carry full draft prose. The natural next pass extends draft prose to the next race in Section 9 priority order (Altmer). Altmer is the only Partial implementation-spec: its blessing, tier-up, neglect, offer, survey, and Lorkhan-pressure slots are authorable now, but the contextual-favor Marked rows, the Lorkhan crisis-of-faith copy, and the post-vampire flavor stay gated per Section 21 until the spec closes. The next pass authors the non-gated Altmer slots and leaves the gated ones explicitly marked.
+Nord, Orc, and Dunmer carry full draft prose; Altmer is drafted except its three gated slot groups (Section 13.13). The natural next pass extends draft prose to the next race in Section 9 priority order (Khajiit). Khajiit has no formal commitment offer (silent emergent emphasis per Architecture v3 Section 12.4a) and adds the lunar substrate readout, so the next pass exercises the no-offer pattern and a second substrate-readout shape.
