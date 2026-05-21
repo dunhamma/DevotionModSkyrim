@@ -53,6 +53,12 @@ const PHASE7_SIGNAL_RECEIVER_MANIFEST = path.join(
   "authoring",
   "PDV_Phase7SignalReceivers.manifest.json",
 );
+const PHASE8_CONCORDAT_TALOS_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase8ConcordatTalos.manifest.json",
+);
 const PATCH_RULES_DIR = path.join(
   PROJECT_ROOT,
   "references",
@@ -64,6 +70,7 @@ const MCM_WIRE_PATCH = "PDV_MCMWirePatch.esp";
 const RETIRED_OVERLAY_PATCHES = [MANAGER_PATRON_WIRE_PATCH, MCM_WIRE_PATCH];
 const CANONICAL_PROPERTY_WIRING_PATCH = "PDV_PropertyWiringOverlay.esp";
 const PREFLIGHT_ROUTER_OVERLAY_PATCH = "PDV_PreflightRouterServicesOverlay.esp";
+const PHASE8_CONCORDAT_TALOS_OVERLAY_PATCH = "PDV_Phase8ConcordatTalosOverlay.esp";
 const ONE_OFF_AUTHOR_PATCH_PREFIX = "PDV_Author_one_off_";
 const MO2_MCP_HOST = "127.0.0.1";
 const MO2_MCP_PORT = 27016;
@@ -461,12 +468,14 @@ class Verifier {
     strictSkeleton = false,
     strictPatternProving = false,
     strictPhase7 = false,
+    strictPhase8 = false,
   } = {}) {
     this.strictPhase3 = strictPhase3;
     this.strictPreflight = strictPreflight;
     this.strictSkeleton = strictSkeleton;
     this.strictPatternProving = strictPatternProving;
     this.strictPhase7 = strictPhase7;
+    this.strictPhase8 = strictPhase8;
     this.findings = [];
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
@@ -534,6 +543,14 @@ class Verifier {
     }
   }
 
+  phase8Gap(check, detail, filePath = null) {
+    if (this.strictPhase8) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   async run() {
     this.checkPaths();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
@@ -551,6 +568,7 @@ class Verifier {
       this.checkPhase3Records();
       this.checkSkeletonScaffold();
       this.checkPatternProving();
+      this.checkPhase8();
       this.checkPhase7();
       this.checkOfflinePatcherRules();
       this.checkPreflightOverlayPatch();
@@ -1124,6 +1142,13 @@ class Verifier {
     this.checkPhase7SignalReceiverRecords();
   }
 
+  checkPhase8() {
+    this.checkPhase8Manifest();
+    this.checkPhase8ManagerRecord();
+    this.checkPhase8ConcordatTrackRecord();
+    this.checkPhase8TalosRecord();
+  }
+
   checkOfflinePatcherRules() {
     if (!exists(PATCH_RULES_DIR)) {
       this.info("Offline patch rule manifests", "Patch-rules directory is not present yet.", PATCH_RULES_DIR);
@@ -1195,6 +1220,22 @@ class Verifier {
     }
   }
 
+  checkPhase8Manifest() {
+    if (exists(PHASE8_CONCORDAT_TALOS_MANIFEST)) {
+      this.pass(
+        "Phase 8 manifest",
+        "Phase 8 Concordat/Talos property manifest exists.",
+        PHASE8_CONCORDAT_TALOS_MANIFEST,
+      );
+    } else {
+      this.phase8Gap(
+        "Phase 8 manifest",
+        "Phase 8 Concordat/Talos property manifest is missing.",
+        PHASE8_CONCORDAT_TALOS_MANIFEST,
+      );
+    }
+  }
+
   checkPatternManagerRecord() {
     const detail = this.recordDetails.get("PDV__ManagerQuest");
     if (!detail) {
@@ -1227,6 +1268,192 @@ class Verifier {
     for (const [propName, expectedEdid] of Object.entries(MCM_PATTERN_PROPERTIES)) {
       this.checkObjectPropertyTarget("V3 Pattern Proving MCM property", props, propName, expectedEdid, this.patternGap.bind(this));
     }
+  }
+
+  checkPhase8ManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget("Phase 8 manager property", props, "PDV_ConcordatStandingTrack", "PDV_RepTrack_ConcordatStanding", this.phase8Gap.bind(this));
+  }
+
+  checkPhase8ConcordatTrackRecord() {
+    const detail = this.recordDetails.get("PDV_RepTrack_ConcordatStanding");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV_ReputationTrack");
+    if (!script) {
+      this.phase8Gap("Phase 8 Concordat track", "PDV_ReputationTrack is not attached to PDV_RepTrack_ConcordatStanding.", PDV_ESP);
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget("Phase 8 Concordat track property", props, "StorageBacking", "PDV_GLO_ConcordatStanding", this.phase8Gap.bind(this));
+    this.checkRequiredArrayLength(
+      "Phase 8 Concordat track property",
+      "PDV_RepTrack_ConcordatStanding",
+      "ThresholdValues",
+      extractNumericArrayProperty(props.get("ThresholdValues")),
+      4,
+      this.phase8Gap.bind(this),
+    );
+    this.checkRequiredArrayLength(
+      "Phase 8 Concordat track property",
+      "PDV_RepTrack_ConcordatStanding",
+      "ThresholdLabels",
+      extractStringArrayProperty(props.get("ThresholdLabels")),
+      5,
+      this.phase8Gap.bind(this),
+    );
+  }
+
+  checkPhase8TalosRecord() {
+    const detail = this.recordDetails.get("PDV_Deity_Talos");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV_Deity_Talos");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    const overlayContext = this.getActiveOverlayScriptContext(
+      PHASE8_CONCORDAT_TALOS_OVERLAY_PATCH,
+      "PDV_Deity_Talos",
+      "PDV_Deity_Talos",
+      "Phase 8 overlay",
+    );
+    const managerSource = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
+    const managerText = exists(managerSource) ? fs.readFileSync(managerSource, "utf8") : "";
+    const hasRuntimeWiring = managerText.includes("Function EnsurePhase8RuntimeWiring()")
+      && managerText.includes("PDV_Talos.GainModifyingTrack = PDV_ConcordatStandingTrack")
+      && managerText.includes("PDV_Talos.DecayModifyingTrack = PDV_ConcordatStandingTrack");
+    this.checkObjectPropertyTargetWithOverlay("Phase 8 Talos property", props, "GainModifyingTrack", "PDV_RepTrack_ConcordatStanding", overlayContext, this.phase8Gap.bind(this), hasRuntimeWiring);
+    this.checkObjectPropertyTargetWithOverlay("Phase 8 Talos property", props, "DecayModifyingTrack", "PDV_RepTrack_ConcordatStanding", overlayContext, this.phase8Gap.bind(this), hasRuntimeWiring);
+
+    const gainMultipliers = extractNumericArrayProperty(props.get("GainMultiplierPerTrackState"));
+    if (gainMultipliers.length === 5) {
+      this.pass("Phase 8 Talos property", "GainMultiplierPerTrackState exposes 5 entries.", PDV_ESP);
+    } else {
+      this.checkSourceContains("Phase 8 Talos source fallback", "PDV_DeityBase", [
+        "DeityName == \"Talos\" && track.TrackName == \"ConcordatStanding\"",
+        "if stateIndex == 0",
+        "return 1.5",
+        "elseIf stateIndex >= 4",
+        "return 0.5",
+      ], this.phase8Gap.bind(this));
+    }
+
+    const decayMultipliers = extractNumericArrayProperty(props.get("DecayMultiplierPerTrackState"));
+    if (decayMultipliers.length === 5) {
+      this.pass("Phase 8 Talos property", "DecayMultiplierPerTrackState exposes 5 entries.", PDV_ESP);
+    } else {
+      this.checkSourceContains("Phase 8 Talos source fallback", "PDV_DeityBase", [
+        "elseIf stateIndex == 3",
+        "return 1.25",
+        "elseIf stateIndex >= 4",
+        "return 1.5",
+      ], this.phase8Gap.bind(this));
+    }
+  }
+
+  getActiveOverlayScriptContext(overlayPatchName, editorId, scriptName, checkName) {
+    const overlayPath = path.join(DEVOTION_MOD, overlayPatchName);
+    if (!exists(overlayPath) || !exists(DEV_PROFILE_PLUGINS)) {
+      return null;
+    }
+
+    const overlayLine = readLines(DEV_PROFILE_PLUGINS)
+      .find((line) => line.replace(/^\*/, "").toLowerCase() === overlayPatchName.toLowerCase());
+    if (overlayLine !== `*${overlayPatchName}`) {
+      return null;
+    }
+
+    let overlayInventory;
+    try {
+      overlayInventory = this.scanPlugin(overlayPath);
+    } catch (error) {
+      this.phase8Gap(checkName, `${overlayPatchName} scan failed: ${error.message}`, overlayPath);
+      return null;
+    }
+
+    const overlayRecord = overlayInventory.recordsByEdid.get(editorId);
+    if (!overlayRecord) {
+      this.phase8Gap(checkName, `${overlayPatchName} does not override ${editorId}.`, overlayPath);
+      return null;
+    }
+
+    let overlayDetail;
+    try {
+      overlayDetail = this.readPluginRecordDetail(overlayPath, overlayRecord.formid);
+    } catch (error) {
+      this.phase8Gap(checkName, `${overlayPatchName} detail read failed: ${error.message}`, overlayPath);
+      return null;
+    }
+
+    const overlayScript = findScript(overlayDetail.fields || {}, scriptName);
+    if (!overlayScript) {
+      this.phase8Gap(checkName, `${scriptName} is missing from ${overlayPatchName}.`, overlayPath);
+      return null;
+    }
+
+    const combinedRecordsByEdid = new Map(this.recordsByEdid);
+    for (const [edid, record] of overlayInventory.recordsByEdid.entries()) {
+      combinedRecordsByEdid.set(edid, record);
+    }
+
+    return {
+      path: overlayPath,
+      props: propertyMap(overlayScript),
+      recordsByEdid: combinedRecordsByEdid,
+    };
+  }
+
+  checkObjectPropertyTargetWithOverlay(checkName, baseProps, propName, expectedEdid, overlayContext, gapFn, allowRuntimeFallback = false) {
+    const baseProp = baseProps.get(propName);
+    if (baseProp) {
+      const baseEdid = objectEdid(baseProp, this.recordsByEdid);
+      if (baseEdid === expectedEdid) {
+        this.pass(checkName, `${propName} points at ${expectedEdid}.`, PDV_ESP);
+        return;
+      }
+    }
+
+    if (overlayContext?.props) {
+      const overlayProp = overlayContext.props.get(propName);
+      if (overlayProp) {
+        const overlayEdid = objectEdid(overlayProp, overlayContext.recordsByEdid);
+        if (overlayEdid === expectedEdid) {
+          this.pass(checkName, `${propName} points at ${expectedEdid} via active overlay.`, overlayContext.path);
+          return;
+        }
+      }
+    }
+
+    if (allowRuntimeFallback) {
+      this.pass(checkName, `${propName} is runtime-wired by PDV__ManagerQuest.`, path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc"));
+      return;
+    }
+
+    if (!baseProp) {
+      gapFn(checkName, `${propName} is missing.`, PDV_ESP);
+      return;
+    }
+
+    const actualEdid = objectEdid(baseProp, this.recordsByEdid);
+    gapFn(checkName, `${propName} points at ${actualEdid || baseProp.Object || "unassigned"}, expected ${expectedEdid}.`, PDV_ESP);
   }
 
   checkPlayerAliasContract(gapFn, checkLabel) {
@@ -1558,16 +1785,17 @@ class Verifier {
     }
   }
 
-  checkRequiredArrayLength(checkName, recordEdid, propName, values, expectedLength) {
+  checkRequiredArrayLength(checkName, recordEdid, propName, values, expectedLength, gapFn = null) {
+    const reportGap = gapFn || this.patternGap.bind(this);
     if (!values.length) {
-      this.patternGap(checkName, `${recordEdid}.${propName} is missing; expected length ${expectedLength}.`, PDV_ESP);
+      reportGap(checkName, `${recordEdid}.${propName} is missing; expected length ${expectedLength}.`, PDV_ESP);
       return;
     }
 
     if (values.length === expectedLength) {
       this.pass(checkName, `${recordEdid}.${propName} length is ${expectedLength}.`, PDV_ESP);
     } else {
-      this.patternGap(checkName, `${recordEdid}.${propName} length is ${values.length}, expected ${expectedLength}.`, PDV_ESP);
+      reportGap(checkName, `${recordEdid}.${propName} length is ${values.length}, expected ${expectedLength}.`, PDV_ESP);
     }
   }
 
@@ -2140,6 +2368,7 @@ class Verifier {
     }
 
     this.checkPreflightSourceContracts();
+    this.checkPhase8SourceContracts();
     this.checkPhase7SourceContracts();
   }
 
@@ -2233,6 +2462,59 @@ class Verifier {
     ]);
   }
 
+  checkPhase8SourceContracts() {
+    this.checkSourceContains("Phase 8 source", "PDV_ReputationTrack", [
+      "Int Function GetRawStateIndex()",
+      "Int Function GetPendingStateIndex()",
+      "Bool Function IsTransitionPending()",
+      "Float Function GetLockInUntil()",
+      "Function RefreshState()",
+      "Function EnsureStateStorage()",
+      "Function StartPendingTransition(Int pendingState)",
+      "Function CommitState(Int newState, String reason)",
+      "Bool Function ShouldHalveInwardAdjustment(Int adjustment)",
+      "\"PDV.Track.CommittedState\"",
+      "\"PDV.Track.PendingState\"",
+    ], this.phase8Gap.bind(this));
+    this.checkSourceContains("Phase 8 source", "PDV_DeityBase", [
+      "PDV_ReputationTrack Property GainModifyingTrack Auto",
+      "Float[] Property GainMultiplierPerTrackState Auto",
+      "PDV_ReputationTrack Property DecayModifyingTrack Auto",
+      "Float[] Property DecayMultiplierPerTrackState Auto",
+      "Float Function GetTrackGainMultiplier()",
+      "Float Function GetEffectiveGainMultiplier()",
+      "Float Function GetEffectiveDecayMultiplier()",
+    ], this.phase8Gap.bind(this));
+    this.checkSourceContains("Phase 8 source", "PDV__ManagerQuest", [
+      "Function EnsurePhase8RuntimeWiring()",
+      "PDV_Talos.GainModifyingTrack = PDV_ConcordatStandingTrack",
+      "PDV_Talos.DecayModifyingTrack = PDV_ConcordatStandingTrack",
+      "Function RunDawnRefreshTrackStates()",
+      "appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplier()",
+      "deity.GetEffectiveDecayMultiplier()",
+      "String Function DebugGetConcordatStateLabel()",
+      "String Function DebugGetConcordatPendingStateLabel()",
+      "String Function DebugGetConcordatGateLabel()",
+      "Float Function GetTalosEffectiveGainMultiplier()",
+    ], this.phase8Gap.bind(this));
+    this.checkSourceContains("Phase 8 source", "PDV_MCM", [
+      "AddHeaderOption(\"Phase 8 Concordat\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Committed state\", GetConcordatStateLabel(), OPTION_FLAG_DISABLED)",
+      "AddTextOption(\"Pending state\", GetConcordatPendingStateLabel(), OPTION_FLAG_DISABLED)",
+      "AddTextOption(\"Extreme gate\", GetConcordatGateLabel(), OPTION_FLAG_DISABLED)",
+      "AddTextOption(\"Talos gain x\", GetTalosGainMultiplierLabel(), OPTION_FLAG_DISABLED)",
+    ], this.phase8Gap.bind(this));
+    this.checkSourceContains("Phase 8 source", "PDV_PlayerEvents", [
+      "PDV_EventBusService.RouteConcordatPressure(true)",
+      "PDV_EventBusService.RouteConcordatPressure(false)",
+    ], this.phase8Gap.bind(this));
+    this.checkSourceContains("Phase 8 source", "PDV_EventBus", [
+      "Function RouteConcordatPressure(Bool isCompliance)",
+      "PDV_Manager.ApplyConcordatPressure(adjustment, \"eventbus_\" + eventType)",
+      "Function RouteTalosShrineDefiance()",
+    ], this.phase8Gap.bind(this));
+  }
+
   checkPhase7SourceContracts() {
     this.checkSourceContains("Phase 7 source", "PDV_PlayerEvents", [
       "PO3_Events_Alias.RegisterForShoutAttack(Self)",
@@ -2296,10 +2578,11 @@ class Verifier {
     ]);
   }
 
-  checkSourceContains(checkName, scriptName, snippets) {
+  checkSourceContains(checkName, scriptName, snippets, gapFn = null) {
+    const reportGap = gapFn || this.fail.bind(this);
     const source = path.join(DEVOTION_SOURCE, `${scriptName}.psc`);
     if (!exists(source)) {
-      this.fail(checkName, `${scriptName}.psc is missing.`, source);
+      reportGap(checkName, `${scriptName}.psc is missing.`, source);
       return;
     }
 
@@ -2308,7 +2591,7 @@ class Verifier {
       if (text.includes(snippet)) {
         this.pass(checkName, `${scriptName}.psc contains ${snippet}.`, source);
       } else {
-        this.fail(checkName, `${scriptName}.psc is missing ${snippet}.`, source);
+        reportGap(checkName, `${scriptName}.psc is missing ${snippet}.`, source);
       }
     }
   }
@@ -2756,6 +3039,7 @@ function parseArgs(argv) {
     strictSkeleton: false,
     strictPatternProving: false,
     strictPhase7: false,
+    strictPhase8: false,
   };
 
   for (const arg of argv) {
@@ -2771,8 +3055,10 @@ function parseArgs(argv) {
       args.strictPatternProving = true;
     } else if (arg === "--strict-phase7") {
       args.strictPhase7 = true;
+    } else if (arg === "--strict-phase8") {
+      args.strictPhase8 = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -2790,6 +3076,7 @@ const verifier = new Verifier({
   strictSkeleton: args.strictSkeleton,
   strictPatternProving: args.strictPatternProving,
   strictPhase7: args.strictPhase7,
+  strictPhase8: args.strictPhase8,
 });
 const findings = await verifier.run();
 const counts = verifier.counts();

@@ -126,6 +126,7 @@ function parseArgs(argv) {
     strictSkeleton: false,
     strictPatternProving: false,
     strictPhase7: false,
+    strictPhase8: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -161,6 +162,8 @@ function parseArgs(argv) {
       args.strictPatternProving = true;
     } else if (arg === "--strict-phase7") {
       args.strictPhase7 = true;
+    } else if (arg === "--strict-phase8") {
+      args.strictPhase8 = true;
     } else if (arg === "-h" || arg === "--help") {
       usage(null, 0);
     } else {
@@ -193,6 +196,7 @@ function usage(error = null, exitCode = 2) {
     "  --strict-skeleton     Pass --strict-skeleton to the verifier.",
     "  --strict-pattern-proving Pass --strict-pattern-proving to the verifier.",
     "  --strict-phase7       Pass --strict-phase7 to the verifier.",
+    "  --strict-phase8       Pass --strict-phase8 to the verifier.",
     "  --allow-warnings      Do not convert Papyrus warnings into failures.",
   ].join("\n");
 
@@ -310,6 +314,9 @@ function runVerifier(args) {
   }
   if (args.strictPhase7) {
     verifierArgs.push("--strict-phase7");
+  }
+  if (args.strictPhase8) {
+    verifierArgs.push("--strict-phase8");
   }
 
   const result = spawnSync(process.execPath, verifierArgs, {

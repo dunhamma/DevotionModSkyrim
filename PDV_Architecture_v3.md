@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-20 (v3.25 - Phase 7 fully closed)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks.
+Last revised: 2026-05-21 (v3.27 - Phase 8 runtime proof closeout)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot.
 
 ---
 
@@ -318,6 +318,11 @@ component instead of bespoke race scripts. The first-release family includes
 Imperial `ConcordatStanding`, Altmer `ThalmorAlignment`, Breton
 `WitchcraftExposure`, Breton `KnightlyVowIntegrity`, and Breton
 `DruidicStanding`.
+
+Status note (2026-05-21): the first live instance, `PDV_RepTrack_ConcordatStanding`,
+is now runtime-proven. The committed-state/pending-state split, 3-day lock-in,
+extreme-band gate, committed-state multiplier readback, and save/load
+persistence all passed on an Imperial save.
 
 ### 6.1 Pattern
 
@@ -1490,7 +1495,7 @@ excellent reusable example per subsystem, then clone.
 | **V3 Structural Skeleton** | Full 1.0 structural scaffold | V3 Preflight | Dev-only scaffold targets, locked race tracks, and strong substrates are inert, hidden from player surfaces, and verifier-visible |
 | **V3 Pattern Proving** | One excellent reusable pattern per subsystem | Structural Skeleton | Imperial Concordat, Bosmer Path, Dunmer Ancestor, Khajiit emergent/moon-cycle exception, contextual favor family, Daedric price/stigma path, commitment offer, and neglect/decay path are proven |
 | **7** | Signal expansion (sleep, shrine, shout, social) | V3 Preflight + EventBus pattern | New events routed; per-target rubric updates; signal policy anti-farm caps functional |
-| **8** | Reputation track + first instance (Concordat Standing) | Phase 7 | Imperial Concordat bands, wide Uncommitted state, and edge walk-back gate work; stance-mult composes with track-mult; verifier covers |
+| **8** | Reputation track + first instance (Concordat Standing) | Phase 7 | Imperial Concordat bands, wide Uncommitted state, edge walk-back gate, committed-state multiplier composition, and save/load persistence are runtime-proven; verifier covers |
 | **9** | State track + first instance (Bosmer Path) | Phase 8 | Bosmer path persists, eligibility filtering works in commitment offers, and Old Contract Green Pact tags are independent of external mods |
 | **10** | Race substrate (Dunmer Ancestor first pilot) | Phase 9 | Portable-shrine prayer and home bonus grant origin-only substrate progress; substrate metric stays separate from patron piety |
 | **11** | Privilege subsystem first wave (shrine + dialogue privileges for Kyne/Mara) | Phase 8/9 | CK conditions read mirror globals + track globals; dialogue topics gate cleanly |
@@ -2102,6 +2107,28 @@ or architecture contract changes.
 ---
 
 ## 26. Revisions
+
+### v3.27 - 2026-05-21 - Phase 8 runtime proof closeout
+
+Phase 8 is now fully runtime-proven on an Imperial save. Baseline
+`Uncommitted` raw-value movement, pending start/cancel, 3-day commit into
+`PublicCompliant`, committed-state multiplier persistence under raw rollback,
+3-day commit into `ConcordatEnforcer`, halved inward movement while the
+extreme gate stayed locked, save/load persistence before and after gate
+unlock, and 3-day exit back to `PublicCompliant` all passed. This closeout
+relied on the already-proven Phase 7 ingress surfaces (`CW01A`, `CW01B`, and
+hidden Talos shrine defiance) and focused the new runtime proof on the
+reputation-track state machine itself. The strict combined closeout gate also
+passed clean after the hotfixes: `node .\tools\pdv_compile.mjs --script
+PDV__ManagerQuest --strict-phase8 --strict-phase7 --strict-preflight
+--strict-skeleton --strict-pattern-proving` =>
+`FAIL=0, WARN=0, TODO=0, PASS=642, INFO=28` at 2026-05-20 20:20:45 AEST.
+Durable lesson: the generated `PDV_Phase8ConcordatTalosOverlay.esp` was unsafe
+as a steady-state runtime solution because a partial VMAD override could win
+with blank/default Talos properties. The live fix is manager-owned runtime
+wiring plus save-healing (`EnsurePhase8RuntimeWiring()` and
+`EnsureTalosRuntimeIdentity()`), and the overlay now remains an inactive
+historical authoring artifact.
 
 ### v3.26 - 2026-05-20 - Overnight enabler implementation sync
 
