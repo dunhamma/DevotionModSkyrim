@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, Dunmer, and Khajiit; Altmer drafted except its gated slots; slot-only rows for the remaining 5.
+**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, Dunmer, Khajiit, and Imperial; Altmer drafted except its gated slots; slot-only rows for the remaining 4.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -110,7 +110,7 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 3. Dunmer (full draft prose)
 4. Altmer (drafted except gated slots; Altmer is the only Partial implementation-spec; gated slots flagged in Section 13.13)
 5. Khajiit (full draft prose; no formal commitment offer per Section 12.4a)
-6. Imperial (slot rows only)
+6. Imperial (full draft prose)
 7. Redguard (slot rows only)
 8. Bosmer (slot rows only; four-path divergence)
 9. Breton (slot rows only; three-tradition divergence)
@@ -960,23 +960,177 @@ A Faithful broad-worship Khajiit in steady road play (outdoor sleep, caravan enc
 
 The silent focus emergence fires once per save when emphasis first activates. Tier-up notifications are one per save per direction. There is no offer, so no Faithful suppression rule applies. Road-home acknowledgments are gated to the cadence rule, so repeat-camping cannot farm them.
 
-## 15. Imperial (slot frame)
+## 15. Imperial (full draft)
 
-Implementation-locked. Broad Nine Divines + `PDV_RepTrack_ConcordatStanding` (`Open Defiant`, `Private Defiant`, `Uncommitted`, `Public Compliant`, `Concordat Enforcer`).
+Implementation-locked. Broad Nine Divines worship plus the formal-offer focus pattern, with `PDV_RepTrack_ConcordatStanding` running underneath (`Open Defiant`, `Private Defiant`, `Uncommitted`, `Public Compliant`, `Concordat Enforcer`). Nine focused deities: Akatosh, Talos, Kynareth, Mara, Zenithar, Arkay, Stendarr, Julianos, Dibella.
 
-| Category | Slot pattern | Source |
-|---|---|---|
-| Blessing description | `PDV_Bless_Imperial_<Akatosh|Kynareth|Mara|Zenithar|Arkay|Stendarr|Julianos|Dibella|Talos>_T<1|2|3>` | RaceDesign_Imperial Section "Tier Rewards" |
-| Tier-up notification | `PDV_Notif_Imperial_<Deity>_<Tier>Entry`, `PDV_Notif_Imperial_<Deity>_<Tier>Lapse` | RaceDesign_Imperial |
-| Champion entry | `PDV_Msg_Imperial_<Stendarr|Akatosh|Arkay|Talos>_ChampionEntry` | TargetEndStates Section "Imperial Champion moment" lines 230-234 |
-| ConcordatStanding band crossing | `PDV_Notif_Imperial_ConcordatStanding_<OpenDefiant|PrivateDefiant|Uncommitted|PublicCompliant|ConcordatEnforcer>_Entry` | TargetEndStates lines 217-220 |
-| Neglect texture | `PDV_Notif_Imperial_<Deity>_NeglectTexture`, `PDV_Notif_Imperial_CivicScaffoldingHollow_NeglectTexture` | TargetEndStates lines 242-245 |
-| Commitment offer | `PDV_Msg_Imperial_<Deity>_Offer`; reuse response triplet | RaceDesign_Imperial Section "Primary-offer gate" |
-| Survey readout | `PDV_Msg_Imperial_Survey_<BroadDivines|Focused>_<ConcordatBand>` | Architecture v3 Section 16.2 |
-| Contextual favor (Noted/Marked) | `PDV_Notif_Imperial_FavorNoted_<Lane>_<TriggerFamily>`, `PDV_Msg_Imperial_FavorMarked_<Lane>_<TriggerFamily>` | TargetEndStates lines 207-218 |
-| Talos defiance after rupture | `PDV_Msg_Imperial_Talos_PrivateDefiance_Surface`, `PDV_Msg_Imperial_Talos_OpenDefiance_Surface` | TargetEndStates lines 218-220 |
-| Curse-state transition | `PDV_Msg_Imperial_CurseState_VampireOnset_CompleteCollapse`, `PDV_Msg_Imperial_CurseState_VampireCured_ReEntry`, `PDV_Msg_Imperial_CurseState_WerewolfOnset` | TargetEndStates Section "Imperial Vampire note" line 246 |
-| Shrine / privilege dialogue | `PDV_Dlog_Imperial_<NineDivinesPriest|HallOfTheDead|VigilantOfStendarr|LegionOfficer>_Recognition` | Architecture v3 Section 16.3 |
+**Slot-frame correction:** the planning-pass frame listed separate `PDV_Msg_Imperial_Talos_PrivateDefiance_Surface` / `_OpenDefiance_Surface` rows. Private versus open delivery is a presentation variant of the single Talos commitment offer (the offer surfaces privately at Private Defiant), not separate strings; it is folded into the Talos offer's dep-notes rather than authored as its own slot.
+
+### 15.1 Tone profiles
+
+| Voice | Tone profile |
+|---|---|
+| Akatosh | Imperial, institutional, time-and-law; the Empire's own god; speaks of continuity and the unbroken line; formal. |
+| Talos | The forbidden god; speaks low and urgent of conscience against law, of the man who made the Empire; defiant, costly, never safe. |
+| Kynareth | Temple-framed weather grace; speaks of road and open sky in a civic Divine register; steadier than the Nord's Kyne. |
+| Mara | Civic warmth, the mother of the people; speaks of marriage, household, the bonds that hold a community; kind and public. |
+| Zenithar | The merchant's god; plainspoken, honest-trade; speaks of fair weight, the honored contract, the day's work. |
+| Arkay | Ceremonial, death-keeping; speaks of the Hall of the Dead, proper burial, the cycle the law must protect; grave and steady. |
+| Stendarr | Mercy under civic pressure; speaks of restraint where persecution would be easier; the conscience of the Empire. |
+| Julianos | Law, logic, applied wisdom; speaks of the written code, the studied truth, the just judgment; precise. |
+| Dibella | Civic grace, beauty, the well-made word; speaks of art and persuasion as public virtue; refined and warm. |
+
+### 15.2 Blessing descriptions (`PDV_Bless_Imperial_*`)
+
+Narrator voice. Budget 200 hard / 140 target. Tier 1/2/3 per deity. Anti-farm: passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Imperial_Akatosh_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Akatosh steadies your civic hours. Time-pressure checks are more forgiving; dragon breath resistance +5%. |
+| PDV_Bless_Imperial_Akatosh_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Akatosh rewards the unwavering. Long devotion streaks return bonus piety; dragon-order service scores strongly. |
+| PDV_Bless_Imperial_Akatosh_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Akatosh keeps the long order. Unbroken devotion of fourteen days returns cumulative skill experience; the Amulet of Akatosh doubles its effect. |
+| PDV_Bless_Imperial_Talos_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Talos answers even the quiet faith. Shout recharge +5%; civil war service is felt as worship. |
+| PDV_Bless_Imperial_Talos_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Talos answers defiance. At Private Defiant, hidden shrines bless deeper; at Open Defiant, devotion gains a further measure. |
+| PDV_Bless_Imperial_Talos_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Talos marks faith held against the law. Shout recharge +15%; Stormcloak ground and defiance return a surge of stamina and health. |
+| PDV_Bless_Imperial_Kynareth_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Kynareth shelters the traveler. Cold and storm resistance +10%; outdoor stamina regen +5%. |
+| PDV_Bless_Imperial_Kynareth_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Kynareth steadies the open way. Outdoor rest fully restores stamina; her shrine cleansing fully restores health. |
+| PDV_Bless_Imperial_Kynareth_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Kynareth grants passage. In storm and rain, power attacks cost 10% less stamina; outdoor sleep removes all exposure penalty. |
+| PDV_Bless_Imperial_Mara_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Mara counts your kindness. Healing magic is 5% more effective; vendors offer better prices. |
+| PDV_Bless_Imperial_Mara_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Mara holds your household. Marriage and community-restoration work earn extra devotion; her temple grants healing at reduced cost. |
+| PDV_Bless_Imperial_Mara_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Mara warms the people's house. Helping a family restores full health on next rest; her temple heals you freely once a week. |
+| PDV_Bless_Imperial_Zenithar_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Zenithar weighs honest work. Crafting experience +5%; honest commerce is felt as worship. |
+| PDV_Bless_Imperial_Zenithar_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Zenithar honors the finished work. After a major crafting project, your next trade goes favorably. |
+| PDV_Bless_Imperial_Zenithar_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Zenithar sanctifies honest work. A crafted item may rise one quality step beyond your perk rank; honest trade steadies your next persuasion. |
+| PDV_Bless_Imperial_Arkay_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Arkay marks the keeper of rites. Disease resistance +10%; undead deal 5% less harm. |
+| PDV_Bless_Imperial_Arkay_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Arkay keeps the death-rites. Completing one restores full health on next rest; undead deal 10% less harm. |
+| PDV_Bless_Imperial_Arkay_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Arkay's covenant holds. Undead deal 20% less harm; a completed death-rite restores full health on next rest. |
+| PDV_Bless_Imperial_Stendarr_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Stendarr counts the spared hand. Brawl damage +5%; Vigilants of Stendarr stay neutral. |
+| PDV_Bless_Imperial_Stendarr_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Stendarr arms the merciful. After mercy chosen in dialogue, the next fight grants an armor boost; Vigilants treat you as a peer. |
+| PDV_Bless_Imperial_Stendarr_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Stendarr makes mercy your armor. Sparing a surrendering foe grants 15% damage resistance for the rest of the fight. |
+| PDV_Bless_Imperial_Julianos_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Julianos reads your study. Novice and Apprentice spells cost 3% less. |
+| PDV_Bless_Imperial_Julianos_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Julianos rewards study. Skill books return piety; College and law-adjacent work scores. |
+| PDV_Bless_Imperial_Julianos_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Julianos sharpens applied wisdom. All spell costs -8%; a new magic skill rank grants one free cast of that school. |
+| PDV_Bless_Imperial_Dibella_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Dibella notes the well-said word. Speech +5%; first impressions are warmer. |
+| PDV_Bless_Imperial_Dibella_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Dibella carries the right word. After a strong persuasion, the next social check is steadier. |
+| PDV_Bless_Imperial_Dibella_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Dibella crowns civic grace. After a major persuasion or performance, the next equivalent check succeeds on its own, once a day. |
+
+### 15.3 Tier-up notifications (`PDV_Notif_Imperial_*`)
+
+Narrator voice. HUD notifications. Budget 80 hard / 60 target. The `%s` token binds the deity name. Faithful entry carries `suppress-if-offer-same-dawn`.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Imperial_Observant_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Imperial "Tier 1" | One per deity per save; %s deity | %s has noticed your civic faith. Observant. |
+| PDV_Notif_Imperial_Faithful_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Imperial "Tier 2" | One per deity per save; suppress-if-offer-same-dawn | Your standing with %s is steady now. Faithful. |
+| PDV_Notif_Imperial_Devoted_Entry | Notification | Marked | Narrator | 80/60 | RaceDesign_Imperial "Tier 3" | One per save; the patron's name | %s knows your name. Devoted. |
+| PDV_Notif_Imperial_Observant_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Imperial "Neglect Texture" | One per deity per direction per save | Your standing with %s has slipped to Wavering. |
+| PDV_Notif_Imperial_Faithful_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Imperial "Neglect Texture" | One per deity per direction per save | The favor of %s is thinning. Observant. |
+| PDV_Notif_Imperial_Devoted_Lapse | Notification | Marked | Narrator | 80/60 | RaceDesign_Imperial "Neglect Texture" | One per save per patron loss | The bond with %s loosens. The Devoted bond is not held. |
+
+### 15.4 ConcordatStanding band crossings (`PDV_Notif_Imperial_Concordat_*`)
+
+Narrator voice. Notifications. Budget 80 hard / 60 target. Five bands per `RaceDesign_Imperial` "ConcordatStanding Track". Fires on band entry.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Imperial_Concordat_OpenDefiant | Notification | Noted | Narrator | 80/60 | RaceDesign_Imperial "ConcordatStanding Track" | One per band entry | Open Defiant now. The Thalmor hunt you; Talos answers all the louder. |
+| PDV_Notif_Imperial_Concordat_PrivateDefiant | Notification | Noted | Narrator | 80/60 | RaceDesign_Imperial "ConcordatStanding Track" | One per band entry | Private Defiant now. The Thalmor grow suspicious; Talos hears you. |
+| PDV_Notif_Imperial_Concordat_Uncommitted | Notification | Noted | Narrator | 80/60 | RaceDesign_Imperial "ConcordatStanding Track" | One per band entry | Uncommitted on the Talos question. The Thalmor pass you by. |
+| PDV_Notif_Imperial_Concordat_PublicCompliant | Notification | Noted | Narrator | 80/60 | RaceDesign_Imperial "ConcordatStanding Track" | One per band entry | Public Compliant now. The Thalmor are friendly; Talos grows distant. |
+| PDV_Notif_Imperial_Concordat_ConcordatEnforcer | Notification | Noted | Narrator | 80/60 | RaceDesign_Imperial "ConcordatStanding Track" | One per band entry | Concordat Enforcer. Thalmor allied; mercy and the death-rites suffer for it. |
+
+### 15.5 Champion entries (`PDV_Msg_Imperial_*_ChampionEntry`)
+
+God-voice. MessageBox. Body budget 500 hard / 280 target. `Entry-only` for all four: the Imperial Champions are recognition of a held political and civic position, not recurring ambient texture. The four politically-loaded Champions are authored per `PDV_TargetEndStates_1.0.md` lines 230-234.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Imperial_Talos_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates lines 234, 166 | One-time on first Talos Devoted | Title: "Faith Against the Law" Body: "You kept me when keeping me was a crime -- not in a free province, but in the Empire that signed me away. That is the faith I remember. Speak, and the old breath answers." |
+| PDV_Msg_Imperial_Stendarr_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates lines 231-232 | One-time on first Stendarr Devoted | Title: "Mercy in Defiance" Body: "A merciful hand is easy in peace. You held it merciful in a province built for persecution. That is the Empire I would have. Wear my restraint as armor." |
+| PDV_Msg_Imperial_Akatosh_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates line 232 | One-time on first Akatosh Devoted | Title: "The Unbroken Line" Body: "Empires fall when the line breaks. You did not break. Through war and upheaval your devotion held its hour, day on day. The god of time keeps what keeps faith." |
+| PDV_Msg_Imperial_Arkay_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates line 233 | One-time on first Arkay Devoted | Title: "The Death-Covenant" Body: "This province is full of the wrongly dead. You gave them their rites when the war would not. The cycle is honored in you. The Hall of the Dead knows your name." |
+
+### 15.6 Neglect texture (`PDV_Notif_Imperial_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Imperial` "Neglect Texture": civic hollowness -- the institutional religion becomes mere performance.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Imperial_Arkay_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Imperial "Arkay neglect" | One per lapse-band crossing | The unburied dead around you feel like a duty you let fall. |
+| PDV_Notif_Imperial_Stendarr_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Imperial "Stendarr neglect" | One per lapse-band crossing | Mercy has not been asked of you in a while, nor offered. |
+| PDV_Notif_Imperial_Talos_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Imperial "Talos neglect" | One per lapse-band crossing | The hidden shrines are cold stone now. The risk meant something once. |
+| PDV_Notif_Imperial_CivicScaffoldingHollow_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Imperial "General neglect" | One per general lapse band per save | The Divines feel like institutions now, not presences. |
+
+### 15.7 Commitment offers (`PDV_Msg_Imperial_*_Offer` and `PDV_Msg_Imperial_OfferResponse_*`)
+
+God-voice on offer bodies; player-second-person on responses. MessageBox. Body budget 500 hard / 280 target; title 40/30. The Talos offer is gated on `ConcordatStanding` per `RaceDesign_Imperial` "Talos commitment gate": normally available only at Uncommitted, Private Defiant, or Open Defiant, and surfaces privately at Private Defiant.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Imperial_Akatosh_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Imperial "Offer-gate rule" | Dawn-fire; per-deity cooldown | Title: "Akatosh's Order" Body: "Your devotion has not wavered through upheaval. Carry the god of time as your own, and the long order becomes your faith. Will you?" |
+| PDV_Msg_Imperial_Talos_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Imperial "Talos commitment gate" | Dawn-fire; requires non-compliant ConcordatStanding; surfaces privately at Private Defiant | Title: "Talos Calls the Defier" Body: "You kept faith with me where the law forbade it. Carry the old breath openly, and the Empire's own god answers a treason of conscience. Will you?" |
+| PDV_Msg_Imperial_Kynareth_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Imperial "Offer-gate rule" | Dawn-fire; per-deity cooldown | Title: "Kynareth's Road" Body: "The open way has been kind to you. Carry Kynareth as your own, and the road and the sky answer. Will you?" |
+| PDV_Msg_Imperial_Mara_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Imperial "Offer-gate rule" | Dawn-fire; per-deity cooldown | Title: "Mara's House" Body: "You have built and mended where you could. Carry the mother of the people as your own, and the civic heart is yours to keep. Will you?" |
+| PDV_Msg_Imperial_Zenithar_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Imperial "Offer-gate rule" | Dawn-fire; per-deity cooldown | Title: "Zenithar's Trade" Body: "Your work is honest and your weight is true. Carry the trade-god as your own, and the day's labor becomes worship. Will you?" |
+| PDV_Msg_Imperial_Arkay_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Imperial "Offer-gate rule" | Dawn-fire; per-deity cooldown | Title: "Arkay's Covenant" Body: "You have kept the rites the war neglected. Carry Arkay as your own, and the death-cycle is your charge. Will you?" |
+| PDV_Msg_Imperial_Stendarr_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Imperial "Offer-gate rule" | Dawn-fire; per-deity cooldown | Title: "Stendarr's Mercy" Body: "You have stayed the killing hand where the province wanted it loosed. Carry Stendarr as your own. Will you?" |
+| PDV_Msg_Imperial_Julianos_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Imperial "Offer-gate rule" | Dawn-fire; per-deity cooldown | Title: "Julianos' Code" Body: "You study, you weigh, you judge with care. Carry Julianos as your own, and the written truth is your devotion. Will you?" |
+| PDV_Msg_Imperial_Dibella_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Imperial "Offer-gate rule" | Dawn-fire; per-deity cooldown | Title: "Dibella's Grace" Body: "You make beauty and speak well where it matters most. Carry Dibella as your own. Will you?" |
+| PDV_Msg_Imperial_OfferResponse_Accept | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Shared across Imperial offers | Accept the patron. |
+| PDV_Msg_Imperial_OfferResponse_NotYet | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Sets per-deity cooldown only | Not yet. |
+| PDV_Msg_Imperial_OfferResponse_Refuse | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Broad worship continues | Keep to broad worship. |
+
+### 15.8 Survey Devotion readouts (`PDV_Msg_Imperial_Survey_*`)
+
+Narrator voice. Body budget 240 hard / 180 target. `%s` tokens bind deity, tier, and ConcordatStanding band as noted per row.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Imperial_Survey_BroadDivines | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion; %s1 tier, %s2 Concordat band | You worship the Nine Divines broadly, civic and public. Standing: %s1. On the Talos question you stand %s2. |
+| PDV_Msg_Imperial_Survey_Focused | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion; %s1 deity, %s2 tier, %s3 Concordat band | %s1 holds your focus among the Nine. Standing: %s2. On the Talos question you stand %s3. |
+
+### 15.9 Contextual favor surfacings
+
+Five trigger families in the Broad Nine Divines lane per `RaceDesign_Imperial` "Contextual Favor Pilot Table". Only `Noted` and `Marked` rows are authored; the honest-work family is `Quiet` and icon-only. Player-second-person on Noted; god-voice on Marked.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Imperial_FavorNoted_MercyRestraint | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Imperial favor table line 81 | Momentary/after-act; meaningful pressure; pay-bounty menu does not count | Mercy chosen under pressure. Stendarr steadies you. |
+| PDV_Notif_Imperial_FavorNoted_BurialDuty | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Imperial favor table line 82 | After-act; per Hall-of-the-Dead or anti-necromancy beat | The dead are given their rites. Arkay marks it. |
+| PDV_Notif_Imperial_FavorNoted_LawfulOrder | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Imperial favor table line 83 | After-act; concrete order-preserving act, not faction membership | Order kept, the public served. Akatosh is steady with you. |
+| PDV_Notif_Imperial_FavorNoted_TalosPressure | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Imperial favor table line 85 | After-act; authored faithful defiance only | A faith kept hidden, at real cost. Talos hears it. |
+| PDV_Msg_Imperial_FavorMarked_TalosDefiance | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Imperial favor table line 85 | High-cost defiance only; per-event cooldown | Title: "Talos Notes the Risk" Body: "You stood between the Thalmor and one of mine, in the Empire that outlawed me. That is worship. Carry the old breath a little longer." |
+
+### 15.10 Curse-state transitions (`PDV_Msg_Imperial_CurseState_*`)
+
+MessageBox. Body budget 500 hard / 280 target. **Voice deviation:** all three rows use Narrator voice rather than god-voice. Imperial religion is civic infrastructure, not a single personal patron; the curse messages are institutional statements that no one god speaks. Fires once per cure cycle.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Imperial_CurseState_VampireOnset | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Imperial "Vampire"; Race_Imperial "Curse States" | Once on becoming vampire; Divine devotion halts | Title: "The Civic Faith Halts" Body: "You are undead now, and the Nine Divines are a religion of the living community. The civic faith does not bend to accommodate this. It stops. The Concordat no longer touches your soul, only your safety." |
+| PDV_Msg_Imperial_CurseState_VampireCured | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Imperial "Vampire" | Once on cure; resumes from lowered floor | Title: "Re-Entry From a Lower Floor" Body: "The undeath is lifted. The Nine Divines are open to you again -- but the civic faith resumes from a lowered floor, not your old standing. The community religion remembers the absence." |
+| PDV_Msg_Imperial_CurseState_WerewolfOnset | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Imperial "Werewolf"; Race_Imperial "Curse States" | Once on first transformation | Title: "Homeless Within the Faith" Body: "The beast is in you, and the Nine Divines have no place for it. Your devotion continues, weaker, its civic-facing parts thinned. Hircine offers an Imperial nothing. You are isolated within your own faith." |
+
+### 15.11 Shrine and privilege dialogue topics (`PDV_Dlog_Imperial_*`)
+
+Player-second-person on topic name. Branch dialogue authored separately in CK. Topic-line budget 120 hard / 80 target. Four archetypes per the recognition payoffs in `RaceDesign_Imperial`.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Dlog_Imperial_NineDivinesPriest_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3 | Faithful or above | "I keep the Nine as the Empire keeps them. Speak of the temple's needs." |
+| PDV_Dlog_Imperial_HallOfTheDead_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Imperial "Arkay" | Arkay Devoted | "I tend the rites the war forgot. What do the dead here need?" |
+| PDV_Dlog_Imperial_VigilantOfStendarr_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Imperial "Stendarr" | Stendarr Devoted | "Stendarr's mercy is mine to carry. Count me among the Vigil." |
+| PDV_Dlog_Imperial_LegionOfficer_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Imperial "Akatosh" | Akatosh Devoted; Legion context | "I serve the Empire and its gods both. Where am I needed?" |
+
+### 15.12 Imperial firing-density sanity
+
+A Faithful broad-worship Imperial in steady civic play (Hall of the Dead quests, occasional Thalmor or Talos beat, civil-war decisions):
+
+- Marked: 0 most days; Champion entries and curse onsets are one-time. The Marked Talos defiance favor is high-cost and quest-paced. Inside the `<1 per 2h` target.
+- Noted: ~1-2 per day (a burial-duty or lawful-order favor, occasional mercy favor). ConcordatStanding band crossings are rare (the band moves on sustained political behavior, and the Uncommitted band is intentionally wide). Inside the `<2 per h` target.
+- Quiet: uncounted; icon-only (the honest-work favor family is Quiet).
+
+Tier-up notifications: one per save per deity per direction; Faithful entry suppressed on a same-dawn focus offer.
 
 ## 16. Redguard (slot frame)
 
@@ -1071,7 +1225,7 @@ Note: Argonian has no standard commitment-offer slot because there is no deity c
 | Dunmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Altmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | gated | drafted | drafted | PARTIAL |
 | Khajiit | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
-| Imperial | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | -- |
+| Imperial | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Redguard | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | -- |
 | Bosmer | slot only | slot only | slot only | slot only | slot only | n/a (path setup) | slot only | slot only | slot only | slot only | -- |
 | Breton | slot only | slot only | slot only | slot only | slot only | n/a (tradition setup) | slot only | gated (Vigilant) | slot only | slot only | -- |
@@ -1122,4 +1276,4 @@ This manifest's own verification, per the plan:
 
 ## 23. Next slice
 
-Nord, Orc, Dunmer, and Khajiit carry full draft prose; Altmer is drafted except its three gated slot groups (Section 13.13). The natural next pass extends draft prose to the next race in Section 9 priority order (Imperial). Imperial reuses the broad-worship-plus-focus shape and the formal-offer pattern, and adds the `ConcordatStanding` reputation-track band crossings.
+Nord, Orc, Dunmer, Khajiit, and Imperial carry full draft prose; Altmer is drafted except its three gated slot groups (Section 13.13). The natural next pass extends draft prose to the next race in Section 9 priority order (Redguard). Redguard adds the three-sect divergence (Crown, Forebear, Ash'abah), the Tu'whacca portable token, and the HoonDing make-way moments.
