@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, Dunmer, Khajiit, and Imperial; Altmer drafted except its gated slots; slot-only rows for the remaining 4.
+**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, Dunmer, Khajiit, Imperial, and Redguard; Altmer drafted except its gated slots; slot-only rows for the remaining 3.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -111,7 +111,7 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 4. Altmer (drafted except gated slots; Altmer is the only Partial implementation-spec; gated slots flagged in Section 13.13)
 5. Khajiit (full draft prose; no formal commitment offer per Section 12.4a)
 6. Imperial (full draft prose)
-7. Redguard (slot rows only)
+7. Redguard (full draft prose)
 8. Bosmer (slot rows only; four-path divergence)
 9. Breton (slot rows only; three-tradition divergence)
 10. Argonian (slot rows only)
@@ -1132,25 +1132,173 @@ A Faithful broad-worship Imperial in steady civic play (Hall of the Dead quests,
 
 Tier-up notifications: one per save per deity per direction; Faithful entry suppressed on a same-dawn focus offer.
 
-## 16. Redguard (slot frame)
+## 16. Redguard (full draft)
 
-Implementation-locked. `PDV_State_RedguardSect` with `Crown = 0`, `Forebear = 1`, `AshAbah = 2`. Ancestor reverence always active.
+Implementation-locked. Sect-divergent (Crown, Forebear, Ash'abah) within one Yokudan religious universe; ancestor reverence always active. `PDV_State_RedguardSect` with `Crown = 0`, `Forebear = 1`, `AshAbah = 2`.
 
-| Category | Slot pattern | Source |
-|---|---|---|
-| Blessing description | `PDV_Bless_Redguard_<Satakal|Tuwhacca|Ruptga|Leki|Tava|HoonDing|Onsi|Zeht>_T<1|2|3>` | RaceDesign_Redguard Section "Tier Rewards" |
-| Tier-up notification | `PDV_Notif_Redguard_<Deity>_<Tier>Entry`, `PDV_Notif_Redguard_<Deity>_<Tier>Lapse` | RaceDesign_Redguard |
-| Champion entry | `PDV_Msg_Redguard_ChampionEntry_<Crown|Forebear|AshAbah>` | TargetEndStates Section "Redguard Champion moment" lines 433-437 |
-| Champion ambient | `PDV_Notif_Redguard_ChampionAmbient_<Tomb|RoadGuided|HoonDingMakeWay|AshAbahDeathDuty>` | TargetEndStates lines 433-441 |
-| Sect entry | `PDV_Msg_Redguard_Sect_<Crown|Forebear|AshAbah>_Entry` | RaceDesign_Redguard Section "Implementation state" |
-| Neglect texture | `PDV_Notif_Redguard_AncestorsDistant_NeglectTexture`, `PDV_Notif_Redguard_AshAbah_BurdenUnmet_NeglectTexture` | TargetEndStates lines 452-455 |
-| Commitment offer | `PDV_Msg_Redguard_<Deity>_Offer`; reuse response triplet | RaceDesign_Redguard |
-| Survey readout | `PDV_Msg_Redguard_Survey_<Crown|Forebear|AshAbah>_<Broad|Focused>` | Architecture v3 Section 16.2 |
-| Contextual favor (Noted/Marked) | `PDV_Notif_Redguard_FavorNoted_<Sect>_<TriggerFamily>`, `PDV_Msg_Redguard_FavorMarked_<Sect>_<TriggerFamily>` | TargetEndStates lines 422-423 |
-| Tu'whacca portable shrine | `PDV_Msg_Redguard_FarShoresToken_<Activate|PrivateContext>` | TargetEndStates Section "Tu'whacca surface" line 428 |
-| HoonDing make-way | `PDV_Msg_Redguard_HoonDingMakeWay_<DragonClear|NamedBossClear|FinalBoss>` | TargetEndStates Section "Hook feasibility" line 426; line 441 |
-| Curse-state transition | `PDV_Msg_Redguard_CurseState_VampireOnset`, `PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry`, `PDV_Msg_Redguard_CurseState_WerewolfOnset` | TargetEndStates Section "Redguard Vampire cure recovery note" line 457 |
-| Shrine / privilege dialogue | `PDV_Dlog_Redguard_<AlikR|HallOfTheDead|TombKeeper>_Recognition` | Architecture v3 Section 16.3 |
+**Slot-frame corrections:**
+- **Blessings: Tier 1 shared, Tier 2 sect-shaped, Tier 3 per focused deity.** The locked `RaceDesign_Redguard` "Tier Rewards" gives Tier 1 a single all-sect record, Tier 2 three sect-shaped records, and Tier 3 per focused deity. The corrected set is ten blessing records: `PDV_Bless_Redguard_Yokudan_T1`, `_Crown_T2` / `_Forebear_T2` / `_AshAbah_T2`, and `_Satakal_T3` / `_Tuwhacca_T3` / `_Ruptga_T3` / `_Leki_T3` / `_Tava_T3` / `_HoonDing_T3`. Onsi and Zeht are minor and have no focused Tier 3 per the locked Tier 3 list.
+- **HoonDing make-way folded into contextual favor.** The planning-pass frame listed separate `PDV_Msg_Redguard_HoonDingMakeWay_*` rows. Make-way is authored as the Marked make-way favor rows in Section 16.9 (Crown, Forebear, Ash'abah); the curated milestone hooks (dragon, named boss, final boss, weekly cap) live in those rows' dep-notes.
+
+### 16.1 Tone profiles
+
+| Voice | Tone profile |
+|---|---|
+| Ancestors (Redguard) | The watching dead; a gravity rather than a voice; present at tombs and death; speak rarely, of how you lived and whether the Far Shores will have you. |
+| Satakal | The Worldskin; vast, cyclical; speaks of the shedding, of creation and destruction as one motion, of death as correct when its time has come. |
+| Tu'whacca | The guide of souls to the Far Shores; quiet, grave, grateful to those who tend the dead; the gentlest Yokudan voice. |
+| Ruptga | Tall Papa, the pathfinder; the first to find the Far Shores; speaks of the way charted and of survival as a sacred achievement. |
+| Leki | Saint of the Spirit Sword; disciplined, exact; speaks of the blade as devotion, the honorable cut, the art learned with patience. |
+| Tava | The bird-god of wind and passage; speaks of safe arrival, the road carried, the storm steered through. |
+| HoonDing | The Make-Way God; surges and does not linger; speaks only in the moment a way is forced where there was none. |
+
+### 16.2 Blessing descriptions (`PDV_Bless_Redguard_*`)
+
+Narrator voice. Budget 200 hard / 140 target. Tier 1 shared; Tier 2 sect-shaped; Tier 3 per focused deity. Anti-farm: passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Redguard_Yokudan_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 1" | Passive SPEL; all sects | Satakal's cycle is acknowledged and Tu'whacca's guidance sought. Disease resistance +10%; one-handed damage +3%; felling undead returns minor health. |
+| PDV_Bless_Redguard_Crown_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 2 -- Crown" | Passive SPEL; Crown sect | The Yokudan gods recognize a kept orthodoxy. Honorable combat sharpens your blade for a time; tomb sites draw the ancestors near. |
+| PDV_Bless_Redguard_Forebear_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 2 -- Forebear" | Passive SPEL; Forebear sect | The Yokudan gods recognize the way made in exile. Surviving hard odds or a long road returns stamina; honored contracts earn Tava's favor. |
+| PDV_Bless_Redguard_AshAbah_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 2 -- Ash'abah" | Passive SPEL; Ash'abah sect | The Yokudan gods recognize the unclean duty borne. Cleansing a tomb restores full health on next rest; undead deal 15% less harm. |
+| PDV_Bless_Redguard_Satakal_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Satakal Champion" | Passive SPEL; Satakal focus | Satakal sheds the Worldskin around you. A quest of cosmic or generational stakes returns a day of fear resistance and health regeneration. |
+| PDV_Bless_Redguard_Tuwhacca_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tu'whacca Champion" | Passive SPEL; Tu'whacca focus | Tu'whacca draws the Far Shores nearer. Undead deal up to 25% less harm; a completed death-rite restores full health, and the dead feel present at the tombs. |
+| PDV_Bless_Redguard_Ruptga_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Ruptga Champion" | Passive SPEL; Ruptga focus | Ruptga charts your way. Making a path through the impossible returns a day of steady bonus across your disciplines. |
+| PDV_Bless_Redguard_Leki_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Leki Champion" | Passive SPEL; Leki focus | Leki makes the blade discipline holy. One-handed damage +8%; honorable sword-work returns power-attack stamina. |
+| PDV_Bless_Redguard_Tava_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tava Champion" | Passive SPEL; Tava focus | Tava rides the wind with you. Storms no longer penalize the open road; sprinting drains 15% less stamina; a long journey's end restores health and stamina. |
+| PDV_Bless_Redguard_HoonDing_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "HoonDing Champion" | Passive SPEL; HoonDing focus | HoonDing makes the way. Once a week, an impossible-odds victory returns a day-long surge of combat strength. |
+
+### 16.3 Tier-up notifications (`PDV_Notif_Redguard_*`)
+
+Narrator voice. HUD notifications. Budget 80 hard / 60 target. The `%s` token binds the deity name. Faithful entry carries `suppress-if-offer-same-dawn`.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Redguard_Observant_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Redguard "Tier 1" | One per deity per save | %s has marked your conduct. Observant. |
+| PDV_Notif_Redguard_Faithful_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Redguard "Tier 2" | One per deity per save; suppress-if-offer-same-dawn | Your standing with %s is steady now. Faithful. |
+| PDV_Notif_Redguard_Devoted_Entry | Notification | Marked | Narrator | 80/60 | RaceDesign_Redguard "Tier 3" | One per save; the patron's name | %s knows your name, and your ancestors speak of you. Devoted. |
+| PDV_Notif_Redguard_Observant_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Redguard "Neglect Texture" | One per deity per direction per save | Your standing with %s has slipped to Wavering. |
+| PDV_Notif_Redguard_Faithful_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Redguard "Neglect Texture" | One per deity per direction per save | The favor of %s is thinning. Observant. |
+| PDV_Notif_Redguard_Devoted_Lapse | Notification | Marked | Narrator | 80/60 | RaceDesign_Redguard "Neglect Texture" | One per save per patron loss | The bond with %s loosens. The Devoted bond is not held. |
+
+### 16.4 Sect entry notifications (`PDV_Notif_Redguard_Sect_*`)
+
+Narrator voice. Notifications. Budget 80 hard / 60 target. Fires on first-run sect choice or a confirmed sect switch per `RaceDesign_Redguard` "Sect switching locks".
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Redguard_Sect_Crown_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Redguard "Implementation locks" | On confirmed switch into Crown | You hold the Crown way: orthodoxy kept, the old inheritance intact. |
+| PDV_Notif_Redguard_Sect_Forebear_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Redguard "Implementation locks" | On confirmed switch into Forebear | You hold the Forebear way: Redguard identity carried among outsiders. |
+| PDV_Notif_Redguard_Sect_AshAbah_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Redguard "Sect switching locks" | On taking up the Ash'abah burden | You take up the Ash'abah duty: the unclean work others will not touch. |
+
+### 16.5 Champion entry and ambient
+
+One sect-level Champion per sect, `Entry + ambient`. God-voice on entries (ancestors for Crown, HoonDing for Forebear, Tu'whacca for Ash'abah); player-second-person on ambients.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Redguard_ChampionEntry_Crown | MessageBox | Marked | God-voice | 500/280 | TargetEndStates "Crown Champion" lines 433-435 | One-time on first Crown Devoted | Title: "The Inheritance Kept" Body: "You carried the old way into exile and did not let it thin -- the blade, the bearing, the rites, all intact. The ancestors who died holding Hammerfell see their orthodoxy alive in you." |
+| PDV_Notif_Redguard_Crown_ChampionAmbient_Tomb | Notification | Noted | Player-2nd | 80/60 | TargetEndStates "Crown Champion" | Crown Devoted + tomb site; one per in-game day | At the tomb, the ancestors feel close and approving. |
+| PDV_Msg_Redguard_ChampionEntry_Forebear | MessageBox | Marked | God-voice | 500/280 | TargetEndStates "Forebear Champion" line 436 | One-time on first Forebear Devoted | Title: "The Way Made" Body: "You made a life in a province that was never yours, and stayed Redguard doing it. That is the way-making. The god who held the Alik'r line knows the same quality in you." |
+| PDV_Notif_Redguard_Forebear_ChampionAmbient_Road | Notification | Noted | Player-2nd | 80/60 | TargetEndStates "Forebear Champion" | Forebear Devoted + hard passage; per qualifying event | The road yields. HoonDing's way-making is in your step. |
+| PDV_Msg_Redguard_ChampionEntry_AshAbah | MessageBox | Marked | God-voice | 500/280 | TargetEndStates "Ash'abah Champion" line 437 | One-time on first Ash'abah Devoted | Title: "Burden-Bearer's Grace" Body: "You did the work your own people will not thank you for. You cleansed the unclean dead and bore the stigma. The god of the Far Shores is grateful, even where the living are not." |
+| PDV_Notif_Redguard_AshAbah_ChampionAmbient_DeathSite | Notification | Noted | Player-2nd | 80/60 | TargetEndStates "Ash'abah Champion" | Ash'abah Devoted + major tomb or death site; one per in-game day | At the death-site, Tu'whacca's presence is close. |
+
+### 16.6 Neglect texture (`PDV_Notif_Redguard_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Redguard` "Neglect Texture": the ancestor layer and sect frame quieting, not punishment. Each fires on the first day of a meaningful lapse.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Redguard_AncestorLayer_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard "Ancestor layer neglect" | One per lapse-band crossing | You have handled the dead carelessly. The Far Shores seem further away. |
+| PDV_Notif_Redguard_Crown_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard "Crown neglect" | One per lapse-band crossing; Crown sect | Yokudan practice has slid into Divines convenience. The orthodoxy thins. |
+| PDV_Notif_Redguard_Forebear_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard "Forebear neglect" | One per lapse-band crossing; Forebear sect | You have taken only the easy road. HoonDing does not notice the safe. |
+| PDV_Notif_Redguard_AshAbah_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard "Ash'abah neglect" | One per lapse-band crossing; Ash'abah sect | The undead duty goes unmet. The burden is just weight now, unhonored. |
+
+### 16.7 Commitment offers (`PDV_Msg_Redguard_*_Offer` and `PDV_Msg_Redguard_OfferResponse_*`)
+
+God-voice on offer bodies; player-second-person on responses. MessageBox. Body budget 500 hard / 280 target; title 40/30. Sect filters which deities offer and how, per `RaceDesign_Redguard` "Focused deity gate".
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Redguard_Satakal_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Satakal's Cycle" Body: "You have lived as one who knows the Worldskin sheds. Carry Satakal as your own, and the great cycle becomes your devotion. Will you?" |
+| PDV_Msg_Redguard_Tuwhacca_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Tu'whacca's Charge" Body: "You tend the dead and turn back the undead. Carry Tu'whacca as your own, and the guidance of souls to the Far Shores is your charge. Will you?" |
+| PDV_Msg_Redguard_Ruptga_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Ruptga's Path" Body: "You have made ways and charted survival. Carry Ruptga, Tall Papa, as your own, and the path itself becomes your faith. Will you?" |
+| PDV_Msg_Redguard_Leki_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Leki's Blade" Body: "Your sword-work is disciplined and honest. Carry Leki as your own, and the blade becomes devotion made exact. Will you?" |
+| PDV_Msg_Redguard_Tava_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Tava's Wind" Body: "The road has carried you far, and you have carried it well. Carry Tava as your own, and the wind of good passage is yours. Will you?" |
+| PDV_Msg_Redguard_HoonDing_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "HoonDing's Call" Body: "Again and again you have made a way where there was none. Carry the Make-Way God as your own, and the impossible passage becomes your devotion. Will you?" |
+| PDV_Msg_Redguard_OfferResponse_Accept | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Shared across Redguard offers | Accept the patron. |
+| PDV_Msg_Redguard_OfferResponse_NotYet | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Sets per-deity cooldown only | Not yet. |
+| PDV_Msg_Redguard_OfferResponse_Refuse | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Broad sect worship continues | Keep to the sect's broad worship. |
+
+### 16.8 Survey Devotion readouts (`PDV_Msg_Redguard_Survey_*`)
+
+Narrator voice. Body budget 240 hard / 180 target. One row per sect; `%s` binds the tier name.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Redguard_Survey_Crown | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion | You keep the Crown way: orthodox Yokudan practice carried intact in exile. Standing: %s. The ancestors are strong at your back. |
+| PDV_Msg_Redguard_Survey_Forebear | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion | You keep the Forebear way: Redguard identity lived among outsiders. Standing: %s. The road and the contract are your proving ground. |
+| PDV_Msg_Redguard_Survey_AshAbah | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion | You keep the Ash'abah duty: the unclean dead are your charge. Standing: %s. Tu'whacca honors the burden few will. |
+
+### 16.9 Contextual favor surfacings
+
+Four trigger families per sect per `RaceDesign_Redguard` "Contextual Favor Pilot Table". Only `Noted` and `Marked` rows are authored; the Crown sacred-martial-bearing family is `Quiet` and icon-only. Player-second-person on Noted; god-voice on Marked. The three Marked make-way favors carry the curated HoonDing milestone hooks (dragon, named boss, final boss; weekly cap) in their dep-notes.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Redguard_FavorNoted_Crown_TombRespect | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard Crown favor table line 93 | Environmental/after-act; per site, not repeat visits | The ancestors are close at this tomb. Orthodoxy carried in exile. |
+| PDV_Notif_Redguard_FavorNoted_Crown_YokudanForm | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard Crown favor table line 94 | After-act; curated Yokudan-form hooks | You kept Yokudan form where Divines convenience beckoned. Counted. |
+| PDV_Msg_Redguard_FavorMarked_Crown_MakeWay | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard Crown favor table line 95; "Crown make-way rule" | Rare major; honorable adversity only; curated milestone, weekly cap | Title: "Sacred Survival" Body: "You came through honorable adversity that should have ended you. Ruptga charted such ways first, and HoonDing forces them still. The Far Shores draw a little nearer." |
+| PDV_Notif_Redguard_FavorNoted_Forebear_RoadPassage | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard Forebear favor table line 101 | Environmental; reject fast travel | The road carried you well. Tava's wind was with the journey. |
+| PDV_Notif_Redguard_FavorNoted_Forebear_HonoredContract | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard Forebear favor table line 102 | After-act; honored contract, not gold-making | A contract honored under pressure. Pragmatic honor, and it counts. |
+| PDV_Notif_Redguard_FavorNoted_Forebear_RespectfulBridge | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard Forebear favor table line 104 | After-act; identity kept while cooperating | You cooperated with outsiders and stayed Redguard doing it. |
+| PDV_Msg_Redguard_FavorMarked_Forebear_MakeWay | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard Forebear favor table line 103 | Rare major; impossible-odds only; curated milestone, weekly cap | Title: "The Way Forced" Body: "Severely outmatched, and still you made a way through. That is my whole nature. The god who held the Dominion back is in your step." |
+| PDV_Notif_Redguard_FavorNoted_AshAbah_UndeadCleansing | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard Ash'abah favor table line 110 | After-act; per site/boss, not repeat farm | The unclean dead are put to rest. Tu'whacca marks the work. |
+| PDV_Notif_Redguard_FavorNoted_AshAbah_HallBurialDuty | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard Ash'abah favor table line 111 | After-act; per hold/quest | The burial duty is kept. The burden is bearable when honored. |
+| PDV_Notif_Redguard_FavorNoted_AshAbah_ImpurityBorne | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard Ash'abah favor table line 112 | After-act; ordinary impurity-bearing | You bore the duty no one else would touch. It is seen. |
+| PDV_Msg_Redguard_FavorMarked_AshAbah_ImpurityBorne | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard Ash'abah favor table line 112; "Ash'abah marking rule" | Marked only for costly burden moments | Title: "The Burden Honored" Body: "You did the work your own people recoil from, and you paid its cost in their eyes. I do not recoil. The Far Shores keep a place for the burden-bearer." |
+| PDV_Msg_Redguard_FavorMarked_AshAbah_HardPassage | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard Ash'abah favor table line 113 | Rare major; major tomb or named undead boss; weekly cap | Title: "A Way Through the Unclean" Body: "You cut a path through ritual uncleanness that would have turned anyone else back. The way is made. The dead behind you can rest." |
+
+### 16.10 Tu'whacca portable token (`PDV_Notif_Redguard_FarShoresToken_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Redguard` "Tu'whacca devotional surface": a permanent portable Far Shores token, with a private/home bonus context. Player-facing copy addresses Tu'whacca, never Arkay.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Redguard_FarShoresToken_Activate | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard "Tu'whacca devotional surface" | Per token use; daily cap on the favor it feeds | You tend the Far Shores token and speak to Tu'whacca. |
+| PDV_Notif_Redguard_FarShoresToken_PrivateContext | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard "Tu'whacca devotional surface" | Player-owned property or authored private shrine context | Tended within your own walls, the rite carries further. |
+
+### 16.11 Curse-state transitions (`PDV_Msg_Redguard_CurseState_*`)
+
+God-voice. MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Redguard` "Curse State Summary": vampirism is near-total collapse with a Tu'whacca-first cure re-entry; werewolf is strained, not severed. Fires once per cure cycle.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Redguard_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Vampire" | Once on becoming vampire; devotion collapses across all sects | Title: "Outside the Cycle" Body: "You are undead now, and undeath is a soul that has left the cycle I guide. The Far Shores cannot receive you while the curse holds. Devotion across all three sects falls quiet. Cure this, and return to me first." |
+| PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Vampire recovery note" line 211 | Once on cure; Tu'whacca re-entry precedes other devotion | Title: "Right Re-Entry" Body: "The curse is lifted. Come back through me before any other god -- proper mortality, ancestor order, the right return to the cycle. When that is done, the Far Shores are open, and your sect may have you again." |
+| PDV_Msg_Redguard_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Werewolf"; Race_Redguard "Curse States" | Once on first transformation; strained, not severed | Title: "Strained, Not Severed" Body: "The beast is in you. The Yokudan gods and your sect remain within reach, but strained -- Hircine is an intrusion, not a home. The ancestors do not turn away. They only watch more closely." |
+
+### 16.12 Shrine and privilege dialogue topics (`PDV_Dlog_Redguard_*`)
+
+Player-second-person on topic name. Branch dialogue authored separately in CK. Topic-line budget 120 hard / 80 target. Three archetypes grounded in Redguard death-duty and diaspora.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Dlog_Redguard_AlikR_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Redguard "Alik'r ... diaspora" | Faithful or above | "I keep the Yokudan way as the Alik'r kept Hammerfell. What is needed?" |
+| PDV_Dlog_Redguard_HallOfTheDead_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Redguard "Hall of the Dead duty" | Tu'whacca Devoted or Ash'abah sect | "I tend the dead for Tu'whacca. What restless ones are here?" |
+| PDV_Dlog_Redguard_TombKeeper_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Redguard "Ash'abah" | Ash'abah Devoted | "The unclean dead are my charge. Tell me what walks here." |
+
+### 16.13 Redguard firing-density sanity
+
+A Faithful Ash'abah Redguard in steady death-duty play (draugr crypts, Hall of the Dead quests, occasional necromancer operation):
+
+- Marked: 0 most days; Champion entries and curse onsets are one-time, and the Marked make-way and impurity favors are weekly-capped or costly-burden-gated. Inside the `<1 per 2h` target.
+- Noted: ~1-2 per day (an undead-cleansing favor, occasional burial-duty favor, Far Shores token use). Inside the `<2 per h` target.
+- Quiet: uncounted; icon-only (the Crown sacred-martial-bearing favor family is Quiet).
+
+Tier-up notifications: one per save per deity per direction; Faithful entry suppressed on a same-dawn focus offer. Sect entry notifications are gated to confirmed switches with a two-day destination proof, so they cannot fire repeatedly.
 
 ## 17. Bosmer (slot frame)
 
@@ -1226,7 +1374,7 @@ Note: Argonian has no standard commitment-offer slot because there is no deity c
 | Altmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | gated | drafted | drafted | PARTIAL |
 | Khajiit | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 | Imperial | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
-| Redguard | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | -- |
+| Redguard | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Bosmer | slot only | slot only | slot only | slot only | slot only | n/a (path setup) | slot only | slot only | slot only | slot only | -- |
 | Breton | slot only | slot only | slot only | slot only | slot only | n/a (tradition setup) | slot only | gated (Vigilant) | slot only | slot only | -- |
 | Argonian | slot only | slot only | slot only | slot only | slot only | n/a | slot only | slot only | slot only | slot only | -- |
@@ -1276,4 +1424,4 @@ This manifest's own verification, per the plan:
 
 ## 23. Next slice
 
-Nord, Orc, Dunmer, Khajiit, and Imperial carry full draft prose; Altmer is drafted except its three gated slot groups (Section 13.13). The natural next pass extends draft prose to the next race in Section 9 priority order (Redguard). Redguard adds the three-sect divergence (Crown, Forebear, Ash'abah), the Tu'whacca portable token, and the HoonDing make-way moments.
+Nord, Orc, Dunmer, Khajiit, Imperial, and Redguard carry full draft prose; Altmer is drafted except its three gated slot groups (Section 13.13). The natural next pass extends draft prose to the next race in Section 9 priority order (Bosmer). Bosmer adds the four-path divergence (Old Contract, Living Story, Exchange, Bandit Road), the Old Contract forced-reckoning beat, and the Green Pact compliance band feedback.
