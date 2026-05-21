@@ -87,6 +87,9 @@ Per `PDV_Architecture_v3.md` Section 23 (post-1.0 localization deferred, externa
 3. No embedded numerals in prose where the tier vocabulary will do. `"Faithful"` is fine because that is the localized tier word; `"50 piety"` is not.
 4. Each row is self-contained. If a longer readout swaps clauses by condition, that is multiple rows with a shared parent slot id, not one row with embedded conditionals.
 
+The complete externalized vocabulary -- every `%s` token and its closed value
+set -- is enumerated in Section 24 (Token tables).
+
 ## 8. Shared row template
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
@@ -1885,3 +1888,137 @@ The remaining open work is no longer race-by-race prose drafting but the followi
 3. **Fill formal contextual-favor tables.** Khajiit, Bosmer, and Argonian favor rows here are derived from hook cross-checks and Tier Rewards because those race sheets carry no formal favor table yet. When those tables are added to the race sheets, re-check the lane families and row counts.
 4. **Per-deity offer prose for Breton** (optional refinement): the single templated focus-emergence notification could be expanded into bespoke per-deity offers if the design later confirms full patron offers within traditions.
 5. **Update `PDV_TargetEndStates_1.0.md`** "Content authored" column from Pending toward Drafted for each race as this manifest's prose is ratified.
+
+---
+
+## 24. Token tables
+
+This section makes the localization-readiness rule (Section 7) concrete: every
+`%s` substitution token used in the manifest, and its full value set, is
+enumerated here. Section 7's "externalized vocabulary" is exactly the tables
+below. The companion `race-sheets/PDV_DaedricContent_Manifest.md` reuses these
+tables.
+
+### 24.1 Token syntax convention
+
+- A row with **one** substitution slot uses bare `%s`.
+- A row with **two or more** slots uses numbered `%s1`, `%s2`, `%s3`, `%s4`.
+- Numbered indices are **row-local and positional**, not global: `%s1` binds
+  to the deity name in `PDV_Msg_Nord_Survey_Focused` but to the tier name in
+  `PDV_Msg_Imperial_Survey_BroadDivines`. Each row's `Anti-farm / dep notes`
+  column states what each token binds. This satisfies Section 7 rule 1 (no
+  free interpolation): the only substituted values are the closed vocabularies
+  below.
+- Tokens are filled by the caller from these tables; prose is never
+  concatenated.
+
+### 24.2 Tier-name vocabulary
+
+| Ladder | Values (low to high) | Used by |
+|---|---|---|
+| Aedric / native devotion ladder | `Distant`, `Wavering`, `Observant`, `Faithful`, `Devoted` | Every race's tier-up notifications and `Standing: %s` survey readouts |
+| Daedric path ladder | `Seeker`, `Devoted`, `Champion` | `PDV_DaedricContent_Manifest.md` boon/price tiers (`PDV_Architecture_v3.md` Section 11.1) |
+
+`Devoted` appears in both ladders; `Champion` is a Daedric tier name, while in
+the Aedric ladder "Champion" is only the experience term for the Devoted tier,
+never a substituted value.
+
+### 24.3 Deity-name rosters
+
+The deity name that fills `%s` in a race's tier-up, focus, and survey rows is
+drawn from that race's roster:
+
+| Race | Deity-name values |
+|---|---|
+| Nord | Shor, Kyne, Talos / Ysmir, Tsun, Stuhn, Mara, Akatosh, Kynareth, Arkay, Stendarr, Zenithar, Julianos, Dibella |
+| Imperial | Akatosh, Talos, Kynareth, Mara, Zenithar, Arkay, Stendarr, Julianos, Dibella |
+| Dunmer | Azura, Boethiah, Mephala (focused Reclamation) |
+| Altmer | Auri-El, Magnus, Trinimac, Xarxes, Syrabane |
+| Khajiit | Khenarthi, Azurah, Baan Dar, Rajhin, Alkosh |
+| Redguard | Satakal, Tu'whacca, Ruptga, Leki, Tava, HoonDing |
+| Bosmer | Y'ffre, Z'en, Baan Dar (the active path's deity) |
+| Breton | Stendarr, Akatosh, Mara, Hermaeus Mora, Hircine, Nocturnal, Namira, Y'ffre, Magnus, Phynaster |
+| Orc | Malacath only -- named literally in prose, never via `%s` |
+| Argonian | none -- no deity-name token (no deity choice) |
+
+### 24.4 Track and state vocabularies
+
+Band, posture, and mode names that fill `%s` tokens in survey readouts and
+band-crossing notifications:
+
+| Track / state | Values | Source |
+|---|---|---|
+| ConcordatStanding (Imperial) | Open Defiant, Private Defiant, Uncommitted, Public Compliant, Concordat Enforcer | RaceDesign_Imperial "ConcordatStanding Track" |
+| ThalmorAlignment (Altmer) | Heterodox, Orthodox Moderate, Thalmor Devout | RaceDesign_Altmer "ThalmorAlignment Track" |
+| GreenPactCompliance (Bosmer Old Contract) | Apostate, Lapsed, Observant, Strict | RaceDesign_Bosmer "GreenPactCompliance State Model" |
+| KnightlyVowIntegrity (Breton) | Intact, Strained, Broken | RaceDesign_Breton "KnightlyVowIntegrity Track" |
+| WitchcraftExposure (Breton) | Hidden, Suspected, Known, Notorious | RaceDesign_Breton "WitchcraftExposure Track" |
+| DruidicStanding (Breton) | Open, Acknowledged, Frayed | RaceDesign_Breton "DruidicStanding" |
+| Orc life-mode | City, Stronghold, Legion/Exile | RaceDesign_Orc "Life-mode implementation rule" |
+| Khajiit focused emphasis | None (broad), Khenarthi, Azurah, Baan Dar, Rajhin, Alkosh | RaceDesign_Khajiit "Focused-emphasis enum" |
+| Dunmer ancestor posture | Normal, Strained, Silent, RestoredScarred | RaceDesign_Dunmer "Ancestor posture enum" |
+| Khajiit lunar posture | Normal, Strained, Corrupted, ShadowDrift | RaceDesign_Khajiit "Lunar posture enum" |
+| Argonian Hist posture | Normal, Distant, Strained, Silenced, Corrupted | RaceDesign_Argonian "Curse posture enum" |
+
+**Argonian layered survey states.** `PDV_Msg_Argonian_Survey_Layered` uses
+`%s2` / `%s3` / `%s4` for the three layer readouts. The planning-pass row left
+these undefined; the consistency audit (Section 25) flagged the gap. Defined
+values:
+
+| Layer | `%s` values (low to high) |
+|---|---|
+| Hist (`%s2`) | silent, distant, thinning, reaching |
+| People (`%s3`) | isolated, strained, holding |
+| Void (`%s4`) | dormant, stirring, awake |
+
+---
+
+## 25. Consistency audit log
+
+### 25.1 Audit -- 2026-05-21 (all 606 race rows)
+
+**Scope.** All 606 authored rows across the ten race sections, plus the
+manifest's shared conventions. Run after the verification tool
+(`tools/pdv_content_verify.mjs`) landed.
+
+**Checked and clean:**
+- **ASCII and budgets.** `node tools/pdv_content_verify.mjs` reports
+  `FAIL=0, WARN=0, PASS=606`. Every row is ASCII-only and within its
+  per-Surface hard cap.
+- **Slot-ID uniqueness and convention.** No collisions; all slot IDs match
+  the `PDV_(Msg|Notif|Bless|Dlog|PrismaToast|Price)_*` scheme. The longest
+  IDs (the Khajiit/Nord favor and champion-ambient slots, ~45-52 chars) sit
+  over the 32-char comfort note but under the tool's 64-char warn line; CK
+  shorthand at Phase 19 remains acceptable per Section 22 item 8.
+- **Voice-by-Surface matrix.** Tool `WARN=0` on the mechanically-checkable
+  families (blessing, price, dialogue, survey, posture all narrator/player as
+  expected). The documented narrator-voice deviations -- Dunmer vampire
+  ash-silenced, the three Imperial curse-states, Khajiit ShadowDrift, the
+  Argonian Hist Champion and three Argonian curse-states, the Altmer Lorkhan
+  first-interpretation message -- each carry an inline justification in their
+  section text. Confirmed intentional.
+- **Tier-up register.** Observant / Faithful / Devoted entries were compared
+  across all ten races. They share one register (narrator-voice recognition
+  ending in the tier name) while carrying race-distinct flavor -- this is the
+  intended per-race content variation, not drift.
+- **Blessing tone.** Every `PDV_Bless_*` row leads with theology and follows
+  with a concrete effect; effects worded qualitatively ("a little faster",
+  "full health", "reduced cost") are valid per `PDV_STANDARDS.md` Section 3.3,
+  whose own conformance example carries no numerals.
+- **Marked surfacing.** The higher Marked counts (Nord 27, Imperial 22) are
+  driven by commitment-offer suites and curse-state messages, all legitimately
+  Marked MessageBoxes; per-race firing-density sanity sections already show
+  Marked *firing* stays inside the `<1 per 2h` target because offers and
+  curse onsets are rare events. No `Noted` source event was found promoted to
+  `Marked`.
+
+**Gap found and resolved:**
+- The `%s` token conventions were never written down, and
+  `PDV_Msg_Argonian_Survey_Layered` referenced `%s2`/`%s3`/`%s4` with no
+  defined value set. Resolved by adding Section 24 (Token tables), which
+  documents the `%s` / `%sN` convention and defines the Argonian layer-state
+  vocabulary.
+
+**Result.** No row-level prose rewrites were required; the manifest is
+internally consistent. The only change this audit produced is the new
+Section 24.
