@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, Dunmer, Khajiit, Imperial, Redguard, and Bosmer; Altmer drafted except its gated slots; slot-only rows for the remaining 2.
+**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, Dunmer, Khajiit, Imperial, Redguard, Bosmer, and Breton; Altmer and Breton drafted except their gated slots; slot-only rows for the remaining 1 (Argonian).
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -113,7 +113,7 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 6. Imperial (full draft prose)
 7. Redguard (full draft prose)
 8. Bosmer (full draft prose; four-path divergence)
-9. Breton (slot rows only; three-tradition divergence)
+9. Breton (full draft prose; three-tradition divergence; Vigilant pressure gated)
 10. Argonian (slot rows only)
 
 ---
@@ -1461,26 +1461,195 @@ A Faithful Living Story Bosmer in steady community play (preservation quests, na
 
 Tier-up notifications: one per save per direction. There is no commitment offer, so no Faithful suppression rule applies. Path-entry notifications are gated to confirmed switches with the seven-day switch lock-out, so they cannot fire repeatedly.
 
-## 18. Breton (slot frame)
+## 18. Breton (full draft -- one gated slot)
 
-Implementation-locked. Three-tradition divergence. `PDV_State_BretonTradition` with `KnightsRoad`, `HiddenArt`, `GreenWay`. Tracks: `WitchcraftExposure`, `KnightlyVowIntegrity`, `DruidicStanding`.
+Implementation-locked. The most mechanically complex race: three-tradition divergence (Knight's Road, Hidden Art, Green Way) plus three parallel tracks. `PDV_State_BretonTradition` with `KnightsRoad = 0`, `HiddenArt = 1`, `GreenWay = 2`. Tracks: `KnightlyVowIntegrity`, `WitchcraftExposure`, `DruidicStanding` (paired with `PDV_State_BretonDruidicFork`).
 
-| Category | Slot pattern | Source |
+**Slot-frame corrections:**
+- **Blessings: per-tradition Tier 1/2, per-deity Tier 3.** The locked `RaceDesign_Breton` "Tier Rewards" gives each tradition its own Tier 1 and Tier 2, then per-focused-deity Tier 3. The corrected set is sixteen blessing records: `_KnightsRoad_T1` / `_T2`, `_HiddenArt_T1` / `_T2`, `_GreenWay_T1` / `_T2`, and ten Tier 3 records (Stendarr, Akatosh, Mara; Hermaeus Mora, Hircine, Nocturnal, Namira; Y'ffre, Magnus, Phynaster).
+- **Focused deity uses emergence, not a bespoke offer suite.** `RaceDesign_Breton` line 33 references "patron offers" within the tradition, while `PDV_TargetEndStates_1.0.md` line 252 says "focused deity emphasis emerges". With ten possible focused deities across three traditions, the manifest reconciles these by treating the tradition setup as the headline commitment and the focused deity as an emergence within the tradition, surfaced by one templated notification (Section 18.5). This matches the `n/a (tradition setup)` coverage marking. Authoring ten bespoke per-deity offer MessageBoxes is a possible later refinement, noted but not in this pass.
+- **Champion entries are tradition-level (3), not per-deity.** `RaceDesign_Breton` writes one "Champion moment for [tradition]" per tradition.
+- **Vigilant pressure encounter stays gated** (Section 18.14).
+
+### 18.1 Tone profiles
+
+| Voice | Tone profile |
+|---|---|
+| Knight's Road | Chivalric, civic, oath-bound; speaks of the vow kept, of mercy and justice, of protection given without reward; earnest. |
+| Hidden Art | Occult, double-lived, conspiratorial; speaks low of the practice concealed or the rupture declared; the patron's voice is hungry and precise. |
+| Green Way | Druidic, covenantal, outdoor; speaks of the standing stones, the living world, the old knowledge Bretons still half-hear; quiet. |
+| Stendarr | Mercy and the protective shield; speaks of the vow, the spared, the defended; stern but warm. |
+| Akatosh | Time, order, the unbroken streak; speaks of continuance and the long-kept faith; formal. |
+| Mara | Hearth and community; speaks of the family held and the home restored; warm. |
+| Y'ffre (Breton Green Way) | The Earth-Bones as the druids half-remember; speaks of the covenant, the stone circle, the forest taught to know you; gentle, old. |
+| Magnus | The Elder Way, magic as discipline; speaks of the arts mastered and the architecture of the spell; precise. |
+| Phynaster | Longevity and the elven inheritance; speaks of the long life and the magic in half-elven blood; measured. |
+| Hidden Art patrons | Hermaeus Mora, Hircine, Nocturnal, and Namira each speak in the Hidden Art register, sharpened to their domain: knowledge priced, the hunt, the shadow, the corruption named. |
+
+### 18.2 Blessing descriptions (`PDV_Bless_Breton_*`)
+
+Narrator voice. Budget 200 hard / 140 target. Per tradition Tier 1/2; per focused deity Tier 3. Anti-farm: passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Breton_KnightsRoad_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Knight's Road" | Passive SPEL; Knight's Road | The vow is kept. Magic resistance +5%; defending an NPC in combat grants +20 max health for a time. |
+| PDV_Bless_Breton_KnightsRoad_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Knight's Road" | Passive SPEL; Knight's Road | Stendarr and the Divines answer the knight. Mercy and unrewarded aid arm the next fight; high Integrity steadies your block. |
+| PDV_Bless_Breton_HiddenArt_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Hidden Art" | Passive SPEL; Hidden Art | The hidden practice answers. Novice and Apprentice spells cost 5% less; magic regenerates faster at night. |
+| PDV_Bless_Breton_HiddenArt_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Hidden Art" | Passive SPEL; Hidden Art | Your patron rewards the occult work. Daedric shrines and rituals sharpen your magic; at Notorious, devotion gains a quarter again. |
+| PDV_Bless_Breton_GreenWay_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Green Way" | Passive SPEL; Green Way | The old covenant stirs. Poison resistance +10%; foraging yields an extra harvest. |
+| PDV_Bless_Breton_GreenWay_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Green Way" | Passive SPEL; Green Way | Y'ffre answers the druid. Outdoor sleep restores stamina and half your missing health; animals rarely turn on you; standing stones answer. |
+| PDV_Bless_Breton_Stendarr_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Stendarr Champion" | Passive SPEL; Stendarr focus | Stendarr's Aegis is yours. Protecting an ally grants 15% damage resistance; Vigilants treat you as a peer; Daedra and undead take heavier hits. |
+| PDV_Bless_Breton_Akatosh_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Akatosh Champion" | Passive SPEL; Akatosh focus | Akatosh keeps the order. Unbroken devotion of fourteen days at high Integrity returns 15% skill experience; the Amulet of Akatosh doubles its effect. |
+| PDV_Bless_Breton_Mara_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Mara Champion" | Passive SPEL; Mara focus | Mara holds the community. Helping a family restores full health on next rest; her temple grants full recognition; companions heal better near you. |
+| PDV_Bless_Breton_HermaeusMora_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Hermaeus Mora Champion" | Passive SPEL; Hermaeus Mora focus | Hermaeus Mora prices your scholarship. Alteration, Conjuration, and Illusion gain 10-20% more experience; the deeper you are seen, the more he gives. |
+| PDV_Bless_Breton_Hircine_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Hircine Champion" | Passive SPEL; Hircine focus | Hircine bonds the beast. Beast form lasts longer; the hunt scores stronger; the change comes smoother. |
+| PDV_Bless_Breton_Nocturnal_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Nocturnal Champion" | Passive SPEL; Nocturnal focus | Nocturnal marks the shadow. Sneak attacks deal 15% more; a theft from a notable target opens a brief unseen window. |
+| PDV_Bless_Breton_Namira_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Namira Champion" | Passive SPEL; Namira focus | Namira's corruption is yours. Squalor and hunger press lighter; she notices the things others will not name. |
+| PDV_Bless_Breton_Yffre_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Y'ffre Champion" | Passive SPEL; Y'ffre focus | Y'ffre's Living Story runs through you. In forest, armor +10; hunting shots strike deep; nature-site quests count double. |
+| PDV_Bless_Breton_Magnus_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Magnus Champion" | Passive SPEL; Magnus focus | Magnus opens the Elder Way. All spell costs -10%, Alteration -15%; Psijic-adjacent study scores strongly. |
+| PDV_Bless_Breton_Phynaster_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Phynaster Champion" | Passive SPEL; Phynaster focus | Phynaster's long life is in your blood. Magic resistance +15% over your Breton birthright; elven-heritage acts return piety. |
+
+### 18.3 Tier-up notifications (`PDV_Notif_Breton_*`)
+
+Narrator voice. HUD notifications. Budget 80 hard / 60 target. The `%s` token binds the deity name. No `suppress-if-offer-same-dawn` flag: Breton uses tradition setup and focus emergence rather than a dawn offer.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Breton_Observant_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "Tier Rewards" | One per deity per save | %s has noticed your tradition. Observant. |
+| PDV_Notif_Breton_Faithful_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "Tier Rewards" | One per deity per save | Your standing with %s is steady now. Faithful. |
+| PDV_Notif_Breton_Devoted_Entry | Notification | Marked | Narrator | 80/60 | RaceDesign_Breton "Tier Rewards" | One per save | %s knows your name. Devoted. |
+| PDV_Notif_Breton_Observant_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "Neglect Texture" | One per deity per direction per save | Your standing with %s has slipped to Wavering. |
+| PDV_Notif_Breton_Faithful_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "Neglect Texture" | One per deity per direction per save | The favor of %s is thinning. Observant. |
+| PDV_Notif_Breton_Devoted_Lapse | Notification | Marked | Narrator | 80/60 | RaceDesign_Breton "Neglect Texture" | One per save per Devoted loss | The bond with %s loosens. The Devoted bond is not held. |
+
+### 18.4 Tradition setup and entry (`PDV_Msg_Breton_TraditionChoice_Setup`, `PDV_Notif_Breton_Tradition_*`)
+
+The setup prompt is narrator voice, a MessageBox presenting the three-tradition choice. Tradition entries are narrator voice. Per `RaceDesign_Breton` "Worship Structure": the setup choice is explicit and, in 1.0, stable.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Breton_TraditionChoice_Setup | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Breton "Worship Structure"; TargetEndStates line 254 | First-run setup; one-time | Title: "Which Tradition" Body: "Breton faith is the tradition you walk; the gods give it shape after. Choose: the Knight's Road of vow and mercy, the Hidden Art of occult practice, or the Green Way of the old druidic covenant." |
+| PDV_Notif_Breton_Tradition_KnightsRoad_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "Worship Structure" | On tradition set to Knight's Road | You walk the Knight's Road. The vow is yours to keep. |
+| PDV_Notif_Breton_Tradition_HiddenArt_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "Worship Structure" | On tradition set to Hidden Art | You walk the Hidden Art. The occult practice is yours, and its risks. |
+| PDV_Notif_Breton_Tradition_GreenWay_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "Worship Structure" | On tradition set to Green Way | You walk the Green Way. The old druidic covenant is yours. |
+
+### 18.5 Focus emergence (`PDV_Notif_Breton_FocusEmergence`)
+
+Narrator voice. HUD notification. Budget 80 hard / 60 target. One templated row; the `%s` token binds the emerging focused deity within the chosen tradition. See the slot-frame correction above for why emergence rather than a bespoke offer suite.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Breton_FocusEmergence | Notification | Noted | Narrator | 80/60 | TargetEndStates line 252; RaceDesign_Breton line 33 | Fires when focused emphasis settles within the tradition; %s deity | Within your tradition, your devotion has settled on %s. The focus has emerged. |
+
+### 18.6 Champion entries (`PDV_Msg_Breton_ChampionEntry_*`)
+
+God-voice in the tradition register. MessageBox. Body budget 500 hard / 280 target. `Entry-only`, one per tradition.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Breton_ChampionEntry_KnightsRoad | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Champion moment for Knight's Road"; TargetEndStates lines 272-273 | One-time on first Knight's Road Devoted | Title: "The Vow Unbroken" Body: "Skyrim offered you the Guild, the Brotherhood, every expedient shortcut -- and you kept the vow through all of it. That is the hardest road in this province. The shield you carry for others is real now." |
+| PDV_Msg_Breton_ChampionEntry_HiddenArt | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Champion moment for Hidden Art"; TargetEndStates line 274 | One-time on first Hidden Art Devoted | Title: "The Double Life Resolved" Body: "You chose -- the practice hidden completely, or declared and Notorious. You did not linger in the safe middle. Your patron rewards the one who commits, whichever way. The art is fully yours." |
+| PDV_Msg_Breton_ChampionEntry_GreenWay | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Champion moment for Green Way"; TargetEndStates line 275 | One-time on first Green Way Devoted | Title: "The Forest Knows You" Body: "Skyrim's woods are cold and they do not welcome easily. They welcome you. The animals settle, the hunt is guided, the standing stones answer. The old covenant is kept, quietly and completely." |
+
+### 18.7 Track band crossings (`PDV_Notif_Breton_*`)
+
+Narrator voice. Notifications. Budget 80 hard / 60 target. Three tracks per `RaceDesign_Breton`: KnightlyVowIntegrity, WitchcraftExposure, DruidicStanding. Fires on band entry.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Breton_KnightlyVowIntegrity_Intact | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "KnightlyVowIntegrity Track" | One per band entry | Your knightly vow stands intact. Stendarr reads it clearly. |
+| PDV_Notif_Breton_KnightlyVowIntegrity_Strained | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "KnightlyVowIntegrity Track" | One per band entry | Your knightly vow is strained. Knight's Road favor comes harder now. |
+| PDV_Notif_Breton_KnightlyVowIntegrity_Broken | Notification | Marked | Narrator | 80/60 | RaceDesign_Breton "KnightlyVowIntegrity Track" | One per band entry | Your knightly vow is broken. The Knight's Road halts until you restore it. |
+| PDV_Notif_Breton_WitchcraftExposure_Hidden | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "WitchcraftExposure Track" | One per band entry | Your occult practice is Hidden. It is invisible to those who would object. |
+| PDV_Notif_Breton_WitchcraftExposure_Suspected | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "WitchcraftExposure Track" | One per band entry | Your practice is Suspected. The Vigilants may begin to notice. |
+| PDV_Notif_Breton_WitchcraftExposure_Known | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "WitchcraftExposure Track" | One per band entry | Your practice is Known. The Vigilants are a real danger now. |
+| PDV_Notif_Breton_WitchcraftExposure_Notorious | Notification | Marked | Narrator | 80/60 | RaceDesign_Breton "WitchcraftExposure Track" | One per band entry | Practice now Notorious. Society ruptures; the patron rewards full commitment. |
+| PDV_Notif_Breton_DruidicStanding_Open | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "DruidicStanding" | One per band entry | The druidic covenant is open but unproven. Y'ffre waits. |
+| PDV_Notif_Breton_DruidicStanding_Acknowledged | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "DruidicStanding" | One per band entry | The druidic covenant is acknowledged. Y'ffre answers you steadily. |
+| PDV_Notif_Breton_DruidicStanding_Frayed | Notification | Noted | Narrator | 80/60 | RaceDesign_Breton "DruidicStanding" | One per band entry | The druidic covenant frays. The forest is forgetting you. |
+
+### 18.8 Druidic Trial fork (`PDV_Msg_Breton_GreenWay_DruidicTrial_*`)
+
+The Druidic Trial fires once, on a Green Way Breton's first werewolf transformation. The confrontation is god-voice (Y'ffre), a MessageBox with the two-way choice; the responses are player-second-person. Per `RaceDesign_Breton` "Druidic Trial details".
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Breton_GreenWay_DruidicTrial_Confront | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Druidic Trial details"; TargetEndStates line 280 | One-time, on first werewolf transformation as Green Way | Title: "The Druidic Trial" Body: "The beast is in you now. The druid circles have always been split on this. Decide: the beast serves the Green, and the covenant deepens around the new shape -- or Hircine's gift becomes your own, and the Green closes to you. Choose." |
+| PDV_Msg_Breton_GreenWay_DruidicTrial_BeastServesGreen | MessageBox | Marked | Player-2nd | 60/40 | RaceDesign_Breton "Druidic Trial details" | Y'ffre devotion resumes full; Hircine path locked out | The beast serves the Green. |
+| PDV_Msg_Breton_GreenWay_DruidicTrial_HircineClaimed | MessageBox | Marked | Player-2nd | 60/40 | RaceDesign_Breton "Druidic Trial details" | Y'ffre excommunication begins; Hircine drift begins | Hircine's gift is mine. |
+
+### 18.9 Neglect texture (`PDV_Notif_Breton_*_NeglectTexture`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Breton` "Neglect Texture", one per tradition. Each fires on the first day of a meaningful lapse.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Breton_KnightsRoad_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Knight's Road neglect" | One per lapse-band crossing | The vow feels hollow. Your patron is disappointed, not distant. |
+| PDV_Notif_Breton_HiddenArt_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Hidden Art neglect" | One per lapse-band crossing | You went Notorious, then stopped. The cost remains; the reward is gone. |
+| PDV_Notif_Breton_GreenWay_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Green Way neglect" | One per lapse-band crossing | The forest stopped noticing you. Nature is only background now. |
+
+### 18.10 Survey Devotion readouts (`PDV_Msg_Breton_Survey_*`)
+
+Narrator voice. Body budget 240 hard / 180 target. One row per tradition; `%s` tokens bind the tier name and the tradition's signature track.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Breton_Survey_KnightsRoad | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion; %s1 tier, %s2 Integrity band | You walk the Knight's Road: vow, mercy, protective justice. Standing: %s1. Knightly Vow Integrity: %s2. |
+| PDV_Msg_Breton_Survey_HiddenArt | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion; %s1 tier, %s2 Exposure band | You walk the Hidden Art: occult practice and the double life. Standing: %s1. Witchcraft Exposure: %s2. |
+| PDV_Msg_Breton_Survey_GreenWay | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion; %s1 tier, %s2 Druidic Standing | You walk the Green Way: the old druidic covenant. Standing: %s1. Druidic Standing: %s2. |
+
+### 18.11 Contextual favor surfacings
+
+Three to five trigger families per tradition lane per `RaceDesign_Breton` "Approved 1.0 lock additions" line 290. The race sheet does not enumerate a formal favor table; the rows below are derived from the per-tradition Tier Rewards and the 1.0 hook evidence. Player-second-person on Noted; god-voice on Marked. The Notorious rupture is a Marked Hidden Art moment.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Breton_FavorNoted_KnightsRoad_MercyJustice | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Tier Rewards -- Knight's Road" | After-act; curated mercy/justice outcomes | Mercy chosen, justice kept. The vow holds, and Stendarr sees it. |
+| PDV_Notif_Breton_FavorNoted_KnightsRoad_ProtectedOther | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Tier Rewards -- Knight's Road" | Momentary/after-act; curated defense situations | You stood between the weak and the blade. The shield is real. |
+| PDV_Notif_Breton_FavorNoted_KnightsRoad_UnrewardedAid | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Tier Rewards -- Knight's Road" | After-act; curated zero-reward quest variants | Help given with no reward asked. The Knight's Road counts it. |
+| PDV_Notif_Breton_FavorNoted_HiddenArt_OccultWork | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Tier Rewards -- Hidden Art" | After-act; major occult acts only | The hidden practice deepens. Your patron is pleased, and quiet. |
+| PDV_Notif_Breton_FavorNoted_HiddenArt_DaedricRite | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Hidden Art: strong 1.0 hooks" | After-act; Daedric quest outcomes | A Daedric rite completed. The patron's reward flows strong. |
+| PDV_Msg_Breton_FavorMarked_HiddenArt_NotoriousRupture | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Champion moment for Hidden Art"; "WitchcraftExposure Track" | One-time on first reaching Notorious | Title: "Notorious" Body: "You have stopped hiding. Society recoils, and there is no taking it back -- but I no longer have to whisper to you. The art is loud now, and it is fully yours." |
+| PDV_Notif_Breton_FavorNoted_GreenWay_StandingStone | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Green Way: strong 1.0 hooks" | Environmental; per stone, first visit | At the standing stone, the old covenant answers. |
+| PDV_Notif_Breton_FavorNoted_GreenWay_OutdoorLife | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Tier Rewards -- Green Way" | Environmental; cadence-based, daily cap | The wild keeps you. Y'ffre's covenant is steady. |
+| PDV_Notif_Breton_FavorNoted_GreenWay_NatureRestraint | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Breton "Cross-lane pressure rule" | After-act; nature-aligned restraint | You spared the living world where you could. Counted. |
+
+### 18.12 Curse-state transitions (`PDV_Msg_Breton_CurseState_*`)
+
+God-voice. MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Breton` "Curse State Summary": the curse outcome is a three-tradition matrix. The vampire onset carries the per-tradition split in one body; werewolf has a per-tradition split (Green Way werewolf is the Druidic Trial in Section 18.8). Fires once per cure cycle.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Breton_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary" | Once on becoming vampire | Title: "The Curse and the Tradition" Body: "You are undead now, and each tradition answers differently. The Knight's Road breaks -- oaths and Divines lost. The Green Way excommunicates -- Y'ffre closes. Only the Hidden Art finds you a partial home, in the Volkihar court and the witch-mother's acceptance." |
+| PDV_Msg_Breton_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary"; "Approved 1.0 lock additions" line 287 | Once on cure | Title: "Re-Entry" Body: "The undeath is lifted. The Knight's Road may be rebuilt through restored Integrity. The Green Way moves from Excommunicated to Penitent; full restoration needs an outdoor rite and sustained covenant, and leaves a permanent scar." |
+| PDV_Msg_Breton_CurseState_WerewolfOnset_KnightsRoad | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary" | Once on first transformation; Knight's Road | Title: "Homeless in the Vow" Body: "The beast is in you, and the Knight's Road has no frame for it. There is no theological home for the wolf here. Your Integrity degrades on each transformation, and the knightly orders will not understand." |
+| PDV_Msg_Breton_CurseState_WerewolfOnset_HiddenArt | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary" | Once on first transformation; Hidden Art | Title: "The Beast Belongs" Body: "The beast is in you, and the Hidden Art already holds Hircine. Glenmoril is family here. There is no rupture -- the wolf fits the occult frame as though it were always meant to." |
+
+### 18.13 Shrine and privilege dialogue topics (`PDV_Dlog_Breton_*`)
+
+Player-second-person on topic name. Branch dialogue authored separately in CK. Topic-line budget 120 hard / 80 target. Three archetypes, one per tradition.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Dlog_Breton_StendarrShrine_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Breton "Knight's Road" | Knight's Road, Faithful or above | "I keep the knightly vow for Stendarr. Where is mercy needed?" |
+| PDV_Dlog_Breton_HiddenArtContact_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Breton "The Hidden Art" | Hidden Art tradition | "I practice the hidden art. Speak plainly -- no one is listening." |
+| PDV_Dlog_Breton_DruidicKeeper_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Breton "The Green Way" | Green Way tradition | "The Green Way is mine. Tell me of the standing stones here." |
+
+### 18.14 Gated slot (not drafted)
+
+| Slot group | Slot pattern | Gate |
 |---|---|---|
-| Blessing description | `PDV_Bless_Breton_<Stendarr|Akatosh|Yffre|<DaedricPrince>>_T<1|2|3>` | RaceDesign_Breton Section "Tier Rewards" |
-| Tier-up notification | `PDV_Notif_Breton_<Deity>_<Tier>Entry`, `PDV_Notif_Breton_<Deity>_<Tier>Lapse` | RaceDesign_Breton |
-| Tradition setup | `PDV_Msg_Breton_TraditionChoice_Setup`, `PDV_Msg_Breton_Tradition_<KnightsRoad|HiddenArt|GreenWay>_Entry` | TargetEndStates Section "Breton Implementation-lock note" line 254 |
-| Champion entry per tradition | `PDV_Msg_Breton_ChampionEntry_<KnightsRoad|HiddenArt|GreenWay>` | TargetEndStates Section "Breton Champion moment" lines 270-275 |
-| Knightly Vow Integrity band | `PDV_Notif_Breton_KnightlyVowIntegrity_<Strong|Strained|Broken>_BandEntry` | TargetEndStates Section "Track math posture" line 264 |
-| Witchcraft Exposure band | `PDV_Notif_Breton_WitchcraftExposure_<Hidden|Visible|Notorious>_BandEntry` | TargetEndStates Section "Recovery cadence posture" line 266 |
-| Druidic Standing band | `PDV_Notif_Breton_DruidicStanding_<Open|Acknowledged|Embraced>_BandEntry` | TargetEndStates line 264 |
-| Vigilant pressure encounter | `PDV_Msg_Breton_VigilantPressure_<Letter|RoadEncounter|Confrontation>` | TargetEndStates Section "Vigilant pressure note", Section "Extension candidate" lines 260-262; **gated**: may slip post-1.0 per "should not block Breton 1.0 unless the encounter pattern proves cheap" |
-| Druidic Trial fork (Green Way werewolf) | `PDV_Msg_Breton_GreenWay_DruidicTrial_<TheBeastServesGreen|TheBeastTakesOver>` | TargetEndStates Section "Druidic Standing + Werewolf fork" line 280 |
-| Neglect texture | `PDV_Notif_Breton_<Tradition>_NeglectTexture` | TargetEndStates Section "Breton Neglect texture" lines 282-285 |
-| Survey readout | `PDV_Msg_Breton_Survey_<Tradition>` | Architecture v3 Section 16.2 |
-| Contextual favor (Noted/Marked) | `PDV_Notif_Breton_FavorNoted_<Tradition>_<TriggerFamily>`, `PDV_Msg_Breton_FavorMarked_<Tradition>_<TriggerFamily>` | TargetEndStates Section "Contextual favor posture" line 268 |
-| Curse-state transition | `PDV_Msg_Breton_CurseState_<VampireOnset|VampireCured|WerewolfOnset_GreenWayFork|WerewolfOnset_NonGreenWay>` | RaceDesign_Breton Section "Curse States" |
-| Shrine / privilege dialogue | `PDV_Dlog_Breton_<StendarrShrine|NightingaleSentinel|DruidicCirclekeeper>_Recognition` | Architecture v3 Section 16.3 |
+| Vigilant pressure encounter | `PDV_Msg_Breton_VigilantPressure_<Letter|RoadEncounter|Confrontation>` | Extension candidate per `PDV_TargetEndStates_1.0.md` lines 260-262: vanilla has no general "known Daedra worshipper" hunter system, and an authored pressure encounter "should not block Breton 1.0 unless the encounter pattern proves cheap." Held until the encounter pattern is proven; the WitchcraftExposure band crossings in Section 18.7 carry the exposure feel in the interim. |
+
+### 18.15 Breton firing-density sanity
+
+A Faithful Hidden Art Breton in steady occult play (Daedric quests, careful cover, occasional exposure shift):
+
+- Marked: 0 most days; Champion entries, the tradition-setup choice, the Druidic Trial, the one-time Notorious rupture, and curse onsets are all one-time. Inside the `<1 per 2h` target.
+- Noted: ~1-2 per day (an occult-work favor, an occasional Daedric-rite favor). Track band crossings are infrequent because all three tracks move on major authored acts, not ambient behavior. Inside the `<2 per h` target.
+- Quiet: uncounted; icon-only.
+
+Tier-up notifications: one per save per deity per direction. There is no dawn offer, so no Faithful suppression rule applies. The gated Vigilant pressure encounter is excluded from this estimate and will need a fresh density pass if it is built.
 
 ## 19. Argonian (slot frame)
 
@@ -1518,7 +1687,7 @@ Note: Argonian has no standard commitment-offer slot because there is no deity c
 | Imperial | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Redguard | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Bosmer | drafted | drafted | drafted | drafted | drafted | n/a (path setup) | drafted | drafted | drafted | drafted | YES |
-| Breton | slot only | slot only | slot only | slot only | slot only | n/a (tradition setup) | slot only | gated (Vigilant) | slot only | slot only | -- |
+| Breton | drafted | drafted | drafted | drafted | drafted | n/a (tradition setup) | drafted | drafted | drafted | drafted | YES (Vigilant gated) |
 | Argonian | slot only | slot only | slot only | slot only | slot only | n/a | slot only | slot only | slot only | slot only | -- |
 
 `n/a` rows mean the race does not use the standard commitment-offer pattern (Khajiit silent emergent, Orc mode-deepening, Bosmer setup choice, Breton tradition setup, Argonian no deity choice). The setup-choice MessageBoxes for Bosmer and Breton are slot-only rows in their sections, not in the commitment-offer pattern.
@@ -1566,4 +1735,4 @@ This manifest's own verification, per the plan:
 
 ## 23. Next slice
 
-Nord, Orc, Dunmer, Khajiit, Imperial, Redguard, and Bosmer carry full draft prose; Altmer is drafted except its three gated slot groups (Section 13.13). The natural next pass extends draft prose to the next race in Section 9 priority order (Breton). Breton adds the three-tradition divergence (Knight's Road, Hidden Art, Green Way) and three reputation/standing tracks (WitchcraftExposure, KnightlyVowIntegrity, DruidicStanding); the light Vigilant pressure encounter stays gated per Section 21.
+Nord, Orc, Dunmer, Khajiit, Imperial, Redguard, Bosmer, and Breton carry full draft prose; Altmer and Breton are drafted except their gated slots. The final race-prose pass extends draft prose to the last race in Section 9 priority order (Argonian). Argonian adds the single layered Hist substrate (Hist, People, Void), the Hist sap meditation tool, the bed-of-choice anchor, and the Sithis activation threshold. After Argonian, all ten races carry draft prose and the manifest is content-author-ready for Phase 19.
