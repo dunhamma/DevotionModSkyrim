@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord and Orc; slot-only rows for the other 8.
+**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, and Dunmer; slot-only rows for the other 7.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -107,7 +107,7 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 
 1. Nord (full draft prose)
 2. Orc (full draft prose)
-3. Dunmer (slot rows only)
+3. Dunmer (full draft prose)
 4. Altmer (slot rows only; Altmer is the only Partial implementation-spec; affected slots are flagged)
 5. Khajiit (slot rows only; no formal commitment offer per Section 12.4a)
 6. Imperial (slot rows only)
@@ -466,24 +466,176 @@ A Faithful City Orc in steady mixed-society play (crafting commissions, occasion
 
 Tier-up notifications: at most one per save per direction. Life-mode shift notifications are gated to confirmed switches at major gates or dawn, with a three-day soft-switch lock-out, so they cannot fire repeatedly.
 
-## 12. Dunmer (slot frame)
+## 12. Dunmer (full draft)
 
-Implementation-locked. Layered substrate (Ancestor always active) plus three focus options (Azura, Boethiah, Mephala). `PDV_State_DunmerAncestorPosture` with `Normal = 0`, `Strained = 1`, `Silent = 2`, `RestoredScarred = 3`.
+Implementation-locked. Layered, not path-based: Layer 1 ancestor substrate is always active; Layer 2 is shared Good Daedra acknowledgment (Tier 2 cap); Layer 3 is a single focused Reclamation (Azura, Boethiah, or Mephala). `PDV_Substrate_DunmerAncestor` owns the substrate; `PDV_State_DunmerAncestorPosture` has `Normal = 0`, `Strained = 1`, `Silent = 2`, `RestoredScarred = 3`.
 
-| Category | Slot pattern | Source |
-|---|---|---|
-| Blessing description | `PDV_Bless_Dunmer_<Azura|Boethiah|Mephala>_T<1|2|3>` | RaceDesign_Dunmer Section "Tier Rewards" |
-| Ancestor substrate readout | `PDV_Msg_Dunmer_AncestorPosture_<Normal|Strained|Silent|RestoredScarred>` | TargetEndStates Section "Dunmer", lines 292-293 |
-| Tier-up notification | `PDV_Notif_Dunmer_<Deity>_<Tier>Entry`, `PDV_Notif_Dunmer_<Deity>_<Tier>Lapse` | RaceDesign_Dunmer Section "Tier Rewards" |
-| Champion entry | `PDV_Msg_Dunmer_<Azura|Boethiah|Mephala>_ChampionEntry` | TargetEndStates Section "Dunmer Champion moment" |
-| Champion ambient | `PDV_Notif_Dunmer_<Deity>_ChampionAmbient_<Threshold|Trial|HiddenObligation>` | TargetEndStates Section "Dunmer Champion moment", per Azura/Boethiah/Mephala anti-generic boundaries |
-| Neglect texture | `PDV_Notif_Dunmer_AncestorQuiet_NeglectTexture` (ash-prayer goes quiet) | TargetEndStates lines 318-320 |
-| Commitment offer | `PDV_Msg_Dunmer_<Deity>_Offer`; shared response slots reuse `PDV_Msg_Dunmer_OfferResponse_<Accept|NotYet|Refuse>` | RaceDesign_Dunmer; Architecture v3 Section 12.3 |
-| Survey readout | `PDV_Msg_Dunmer_Survey_<NoFocus|Azura|Boethiah|Mephala>` | Architecture v3 Section 16.2 |
-| Contextual favor (Noted/Marked) | `PDV_Notif_Dunmer_FavorNoted_<Lane>_<TriggerFamily>`, `PDV_Msg_Dunmer_FavorMarked_<Lane>_<TriggerFamily>` | RaceDesign_Dunmer; TargetEndStates Section "Dunmer contextual-favor clearance result" line 144 |
-| Portable shrine prompt | `PDV_Msg_Dunmer_PortableShrine_<Activate|PrivateContext>` | TargetEndStates Section "Custom content priority classification" line 1530; Architecture v3 Section 21.2 |
-| Curse-state transition | `PDV_Msg_Dunmer_CurseState_<VampireOnset_AshSilenced|VampireCured_Scarred|WerewolfOnset>` | TargetEndStates Section "Dunmer Vampire note" line 322; RaceDesign_Dunmer Section "Curse States" |
-| Shrine / privilege dialogue | `PDV_Dlog_Dunmer_<TempleNewLifeReclamations|AncestralTomb|HouseDunmer>_Recognition` | Architecture v3 Section 16.3 |
+**Slot-frame corrections:**
+- **Blessings are not per-deity for Tier 1 and 2.** `RaceDesign_Dunmer` "Tier Rewards" locks Tier 1 and Tier 2 as the shared Layer 1 + Layer 2 experience; only Tier 3 is per-focused-Reclamation. The corrected set is five blessing records: `PDV_Bless_Dunmer_GoodDaedra_T1`, `_GoodDaedra_T2`, and `_Azura_T3` / `_Boethiah_T3` / `_Mephala_T3`.
+- **Shrine dialogue archetypes revised.** The planning-pass frame named `TempleNewLifeReclamations`, `AncestralTomb`, and `HouseDunmer`, none of which exist as Skyrim surfaces (the infrastructure ceiling means no Dunmer tombs or House shrines). Corrected to Grey Quarter elder, a Reclamations devotee, and general Dunmer kin.
+- **Tribunal Memory added.** `RaceDesign_Dunmer` "Tribunal Memory (LOCKED)" is a named flavor content category (occasional notification text referencing Vivec, Sotha Sil, Almalexia). The planning-pass frame omitted it; it is authored below as a curated pool.
+
+### 12.1 Tone profiles
+
+| Voice | Tone profile |
+|---|---|
+| Ancestors | Quiet, old, witnessing; the ash and the dead; never punish, only answer or fall silent; speak of being seen and held across distance. |
+| Azura | Twilight-voiced, prophetic, tender about painful truth; speaks of thresholds and of becoming truer, not merely stronger; warns rather than commands. |
+| Boethiah | Trial-voiced, sharp, strength-testing; speaks of the unworthy cut away and the self authored through struggle; combative, never cruel. |
+| Mephala | Soft, conspiratorial, web-voiced; speaks of the hidden people, the secret kept, the web drawn close; intimate rather than loud. |
+
+### 12.2 Ancestor substrate posture readouts (`PDV_Msg_Dunmer_AncestorPosture_*`)
+
+Narrator voice. Status readout surface (shown by Survey Devotion and on posture transitions). Budget 240 hard / 180 target. One per posture enum value.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Dunmer_AncestorPosture_Normal | Status spell readout | Quiet | Narrator | 240/180 | RaceDesign_Dunmer "Ancestor posture enum"; TargetEndStates lines 292-293 | Default for living Dunmer | The ash-prayer carries. The ancestors are present, and they answer the life you are living. |
+| PDV_Msg_Dunmer_AncestorPosture_Strained | Status spell readout | Noted | Narrator | 240/180 | RaceDesign_Dunmer "Ancestor posture enum" | Werewolf or ritual-unclean state; fires on transition | The ash-prayer carries, but thinly. Something in you sits uneasy with the ancestors -- the beast, or an unclean rite. |
+| PDV_Msg_Dunmer_AncestorPosture_Silent | Status spell readout | Marked | Narrator | 240/180 | RaceDesign_Dunmer "Ancestor posture enum"; "Curse State Summary" | Active vampirism; fires on transition | The ash-prayer meets no answer. The ancestors do not speak to the undead. The silence is not punishment; it is what you have become. |
+| PDV_Msg_Dunmer_AncestorPosture_RestoredScarred | Status spell readout | Marked | Narrator | 240/180 | RaceDesign_Dunmer "Ancestor posture enum" | Post-cure return; fires on transition | The ash-prayer carries again. The ancestors answer -- but they remember the silence, and so do you. |
+
+### 12.3 Blessing descriptions (`PDV_Bless_Dunmer_*`)
+
+Narrator voice. Budget 200 hard / 140 target. Tier 1 and Tier 2 are the shared Layer 1 + Layer 2 experience; Tier 3 is per focused Reclamation. Anti-farm: passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Dunmer_GoodDaedra_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Tier 1" | Passive SPEL; shared Layer 1+2 | The ash-prayer is kept and the Good Daedra are acknowledged. Fire resistance +5%; magic resistance +5%. |
+| PDV_Bless_Dunmer_GoodDaedra_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Tier 2" | Passive SPEL; shared Layer 1+2 | The Reclamations hold steady around your exile. From dawn to midday, fire resistance +10% and magic resistance +5%. A power-attack kill on a strong foe returns stamina. |
+| PDV_Bless_Dunmer_Azura_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Azura focus" | Passive SPEL; Azura focus | Azura watches your thresholds. From dawn to noon, fire and magic resistance climb together; by night, magic costs 10% less. |
+| PDV_Bless_Dunmer_Boethiah_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Boethiah focus" | Passive SPEL; Boethiah focus | Boethiah marks proven strength. After felling a significant foe, carry weight +25 and lighter power attacks for a day. The ancestors record the victory. |
+| PDV_Bless_Dunmer_Mephala_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Mephala focus" | Passive SPEL; Mephala focus | Mephala draws the web close. Poison resistance +20%; the hidden network returns 5% more gold. Discretion opens doors others never see. |
+
+### 12.4 Tier-up notifications (`PDV_Notif_Dunmer_*`)
+
+Narrator voice. HUD notifications. Budget 80 hard / 60 target. Observant and Faithful are shared-layer; Devoted is per focused Reclamation (the `%s` token binds the focus deity name). Faithful entry carries `suppress-if-offer-same-dawn` because Dunmer focus uses the formal-offer gate.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Dunmer_GoodDaedra_ObservantEntry | Notification | Noted | Narrator | 80/60 | RaceDesign_Dunmer "Tier 1" | One per save | The ash-prayer holds and the Good Daedra answer. Observant. |
+| PDV_Notif_Dunmer_GoodDaedra_FaithfulEntry | Notification | Noted | Narrator | 80/60 | RaceDesign_Dunmer "Tier 2" | One per save; suppress-if-offer-same-dawn | The Reclamations are steady in your exile. Faithful. |
+| PDV_Notif_Dunmer_Focus_DevotedEntry | Notification | Marked | Narrator | 80/60 | RaceDesign_Dunmer "Tier 3" | One per save; %s is the focus deity | %s knows your name now. Devoted. |
+| PDV_Notif_Dunmer_GoodDaedra_ObservantLapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Dunmer "Neglect Texture" | One per direction per save | The Good Daedra answer more faintly now. Wavering. |
+| PDV_Notif_Dunmer_GoodDaedra_FaithfulLapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Dunmer "Neglect Texture" | One per direction per save | The Reclamations are thinning toward silence. Observant. |
+| PDV_Notif_Dunmer_Focus_DevotedLapse | Notification | Marked | Narrator | 80/60 | RaceDesign_Dunmer "Neglect Texture" | One per save per focus loss | The bond with %s loosens. The Devoted bond is not held. |
+
+### 12.5 Champion entry and ambient
+
+All three Reclamation Champions are `Entry + ambient`: each end-state passage describes ongoing in-fiction recognition (Azura's threshold flavor, Boethiah's "they have seen" on rival kills, Mephala's web texture). God-voice on entry MessageBoxes; player-second-person on ambient notifications.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Dunmer_Azura_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Azura focus"; TargetEndStates "Azura Champion" | One-time on first Azura Devoted | Title: "Azura at the Threshold" Body: "I marked your people once, at the worst crossing they ever made. I mark you now. Stand at the thresholds, and you will not stand at them blind." |
+| PDV_Notif_Dunmer_Azura_ChampionAmbient_Threshold | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer "Azura focus" | Azura Devoted + threshold beat; one per in-game day | At the threshold, Azura's voice goes ahead of you. |
+| PDV_Msg_Dunmer_Boethiah_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Boethiah focus"; TargetEndStates "Boethiah Champion" | One-time on first Boethiah Devoted | Title: "Boethiah's Mark" Body: "You did not survive. You overcame. The unworthy fell, and you stood where they stood. Author yourself further -- I am watching, and so are the dead." |
+| PDV_Notif_Dunmer_Boethiah_ChampionAmbient_Trial | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer "Boethiah focus" | Boethiah Devoted + rival-strength kill; cooldown | A worthy foe down. The ancestors have seen. |
+| PDV_Msg_Dunmer_Mephala_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Mephala focus"; TargetEndStates "Mephala Champion" | One-time on first Mephala Devoted | Title: "Mephala's Web" Body: "The hidden people survive because someone holds the threads. You hold them now. The web knows your hand, and it will not let you fall through it." |
+| PDV_Notif_Dunmer_Mephala_ChampionAmbient_HiddenObligation | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer "Mephala focus" | Mephala Devoted + hidden-community beat; per qualifying event | The web tightens, quietly, in your favor. |
+
+### 12.6 Commitment offers (`PDV_Msg_Dunmer_*_Offer` and `PDV_Msg_Dunmer_OfferResponse_*`)
+
+God-voice on offer bodies; player-second-person on responses. MessageBox. Body budget 500 hard / 280 target; title 40/30. Per `RaceDesign_Dunmer` "Focus gate (LOCKED)": the offer must present as a Reclamation deepening through the life already lived, never as abandoning the ancestors.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Dunmer_Azura_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Focus gate" | Dawn-fire; per-deity cooldown | Title: "Azura's Twilight" Body: "You have lived toward me without naming it -- the thresholds kept, the hard truths faced. This is not leaving the ancestors. It is the ash-prayer deepening toward dawn. Will you name me your focus?" |
+| PDV_Msg_Dunmer_Boethiah_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Focus gate" | Dawn-fire; per-deity cooldown | Title: "Boethiah's Trial" Body: "You have proven yourself against the unworthy again and again. The ancestors witnessed it; now I ask for it by name. This deepens the Reclamation; it does not replace the ash. Will you name me your focus?" |
+| PDV_Msg_Dunmer_Mephala_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Focus gate" | Dawn-fire; per-deity cooldown | Title: "Mephala's Whisper" Body: "You have kept the web whole without being asked. The hidden people are safer for you. Name me your focus, and the ash-prayer deepens into the web -- nothing of the ancestors is set down. Will you?" |
+| PDV_Msg_Dunmer_OfferResponse_Accept | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Shared across Dunmer offers | Deepen toward this Reclamation. |
+| PDV_Msg_Dunmer_OfferResponse_NotYet | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Sets per-deity cooldown only | Not yet. |
+| PDV_Msg_Dunmer_OfferResponse_Refuse | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Broad shared worship continues | Stay with the shared Reclamations. |
+
+### 12.7 Neglect texture (`PDV_Notif_Dunmer_*`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Dunmer` "Neglect Texture": silence, not punishment, across all three layers. Each fires on the first day of a meaningful lapse.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Dunmer_Layer1_AshPrayerQuiet | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer "Layer 1 neglect"; TargetEndStates lines 318-320 | One per lapse-band crossing | The ash-prayer goes out, and nothing comes back. The ancestors have gone quiet. |
+| PDV_Notif_Dunmer_Layer2_GoodDaedraThin | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer "Layer 2 neglect" | One per lapse-band crossing | The Good Daedra feel far off. The dawn no longer warms the way it did. |
+| PDV_Notif_Dunmer_Layer3_FocusFading | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer "Layer 3 neglect" | One per lapse-band crossing; %s is the focus deity | %s no longer waits at your thresholds. The bond is thinning. |
+
+### 12.8 Survey Devotion readouts (`PDV_Msg_Dunmer_Survey_*`)
+
+Narrator voice. Body budget 240 hard / 180 target. One variant for no-focus shared worship and one per focused Reclamation. The `%s` token binds the tier-name external table.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Dunmer_Survey_NoFocus | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion | The ash-prayer holds and the three Good Daedra answer together. Standing: %s. No single Reclamation has your name yet. |
+| PDV_Msg_Dunmer_Survey_Azura | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion | Azura holds your focus; the ash-prayer carries beneath her. Standing: %s. The thresholds are watched. |
+| PDV_Msg_Dunmer_Survey_Boethiah | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion | Boethiah holds your focus; the ash-prayer carries beneath. Standing: %s. The dead record your victories. |
+| PDV_Msg_Dunmer_Survey_Mephala | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion | Mephala holds your focus; the ash-prayer carries beneath. Standing: %s. The web holds you, and you hold it. |
+
+### 12.9 Contextual favor surfacings
+
+Five trigger families in the shared lane and five each for Azura, Boethiah, and Mephala per `RaceDesign_Dunmer` "Contextual Favor Table". Only `Noted` and `Marked` rows are authored; `Quiet` rows are icon-only. Player-second-person on Noted; god-voice on Marked. The locked anti-generic boundaries (Azura threshold, Boethiah cruelty, Mephala crime) carry into the dep-notes column.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Dunmer_FavorNoted_Shared_AshPrayer | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 152 | Environmental/after-act; home improves but is not required | The ash-prayer carries, even here. The ancestors are near. |
+| PDV_Notif_Dunmer_FavorNoted_Shared_DiasporaSolidarity | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 154 | After-act; curated Dunmer-aid hooks | You stood by your own in exile. The ancestors count it. |
+| PDV_Notif_Dunmer_FavorNoted_Shared_ReclamationAck | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 155 | After-act; stays blended pre-focus | The Reclamations stir. All three are with you yet. |
+| PDV_Notif_Dunmer_FavorNoted_Shared_DeadObligations | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 156 | After-act; buildable proxies only, no penalty for impossible rites | The dead are tended as the ash allows. It is enough. |
+| PDV_Notif_Dunmer_FavorNoted_Azura_ThresholdKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 157 | Environmental/after-act; real threshold required, not decorative twilight | You crossed knowing it was a crossing. Azura goes with you. |
+| PDV_Notif_Dunmer_FavorNoted_Azura_PainfulTruth | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 158 | After-act; truth without cost stays Noted | You chose the hard truth over the useful lie. Azura marks it. |
+| PDV_Msg_Dunmer_FavorMarked_Azura_PainfulTruth | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer favor table line 158 | Marked only when the truth costs safety, power, or belonging | Title: "Azura's Star" Body: "The truth cost you safety, and you took it anyway. That is the becoming I watch for. Walk on, clearer than you were." |
+| PDV_Notif_Dunmer_FavorNoted_Azura_ExileEndured | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 159 | After-act/environmental; continuity across distance | Far from home, the practice held. Exile did not dissolve you. |
+| PDV_Msg_Dunmer_FavorMarked_Azura_ChangedBody | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer favor table line 160 | Rare major; curse-state confrontation or major cleansing only | Title: "Azura Knows" Body: "Your body has changed, and I did not look away. What you are now is not simple, and I will not pretend it is. But you are still becoming, and I am still here." |
+| PDV_Notif_Dunmer_FavorNoted_Azura_StarRite | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 161 | Environmental/after-act; shrine and artifact signals | The Star and the twilight answer you personally now. |
+| PDV_Notif_Dunmer_FavorNoted_Boethiah_TrialSurvived | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 162 | Momentary/after-act; real pressure required, not every kill | Pressed hard, you proved strong. Boethiah counts it. |
+| PDV_Notif_Dunmer_FavorNoted_Boethiah_FalseAuthority | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 163 | After-act; ordinary overthrow stays Noted | An unworthy power pulled down. Boethiah is pleased. |
+| PDV_Msg_Dunmer_FavorMarked_Boethiah_FalseAuthority | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer favor table line 163 | Marked for major quest outcomes only | Title: "Boethiah's Calling" Body: "You cut away an order that did not deserve to stand. This is the trial: not destruction, but the worthier thing put in its place. Stand there." |
+| PDV_Notif_Dunmer_FavorNoted_Boethiah_BetrayalTest | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 164 | After-act; for surviving the test, never casual cruelty | Betrayed, and you answered with strength. The test is passed. |
+| PDV_Notif_Dunmer_FavorNoted_Boethiah_ChimericSelf | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 165 | After-act; generic Altmer kills do not qualify | You chose a Dunmer destiny over an order imposed. Counted. |
+| PDV_Notif_Dunmer_FavorNoted_Boethiah_Conspiracy | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 166 | Quiet/Noted; recognizes decisive covert action | The strike landed clean and unseen. Boethiah favors the plot. |
+| PDV_Notif_Dunmer_FavorNoted_Mephala_HiddenCommunity | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 167 | After-act; keeping the hidden people intact, not generic charity | The hidden people are whole because you kept them so. |
+| PDV_Notif_Dunmer_FavorNoted_Mephala_SecretKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 168 | Quiet/Noted; only when the secret preserves an obligation | A secret held, and an obligation with it. The web holds. |
+| PDV_Msg_Dunmer_FavorMarked_Mephala_LethalSecret | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer favor table line 169 | Marked only for major Mephala quest/artifact moments | Title: "The Whispering Door" Body: "A blade in the dark, drawn for the web and not for yourself. The hidden people will never know it was you. I will." |
+| PDV_Notif_Dunmer_FavorNoted_Mephala_ObligationWeb | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 170 | Quiet/Noted; the web tightening helpfully | A favor passed along an unseen thread. The web tightens kindly. |
+| PDV_Notif_Dunmer_FavorNoted_Mephala_NecessaryLie | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer favor table line 171 | After-act; the survival lie, curated hooks, not broad fraud | The lie protected the web. Mephala knows the difference. |
+
+### 12.10 Portable shrine and Tribunal Memory
+
+Portable shrine activation is the core low-friction Dunmer rhythm (the ash-prayer ceremony). Player-second-person, Notification, Noted. Tribunal Memory is a curated cosmetic flavor pool, narrator voice, Noted, with no scoring impact per `RaceDesign_Dunmer` "Tribunal Memory (LOCKED)".
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Dunmer_PortableShrine_Activate | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer "Infrastructure ceiling"; Architecture v3 Section 21.2 | Per ash-prayer use; daily cap on the favor it feeds | You set the ash and pray. The portable shrine answers. |
+| PDV_Notif_Dunmer_PortableShrine_PrivateContext | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Dunmer "Infrastructure ceiling"; Race_Dunmer "Portable shrine practice" | Player-owned home bonus context | Prayed within your own walls, the ash-prayer carries further. |
+| PDV_Notif_Dunmer_TribunalMemory_Vivec | Notification | Noted | Narrator | 80/60 | RaceDesign_Dunmer "Tribunal Memory" | Curated trigger pool; cosmetic, no scoring; rare cadence | For a breath, you think of Vivec, and the city that is gone. |
+| PDV_Notif_Dunmer_TribunalMemory_SothaSil | Notification | Noted | Narrator | 80/60 | RaceDesign_Dunmer "Tribunal Memory" | Curated trigger pool; cosmetic, no scoring; rare cadence | Sotha Sil's clockwork silence crosses your mind, then passes. |
+| PDV_Notif_Dunmer_TribunalMemory_Almalexia | Notification | Noted | Narrator | 80/60 | RaceDesign_Dunmer "Tribunal Memory" | Curated trigger pool; cosmetic, no scoring; rare cadence | Almalexia's name surfaces, bright and bitter, and sinks again. |
+
+### 12.11 Curse-state transitions (`PDV_Msg_Dunmer_CurseState_*`)
+
+MessageBox. Body budget 500 hard / 280 target. Fires once per cure cycle. **Voice deviation:** the vampire-onset row uses Narrator voice, not god-voice, because its theological content is precisely the absence of the god-voice -- the ancestors have gone silent and cannot speak the message. The cure and werewolf rows use god-voice (the ancestors).
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Dunmer_CurseState_VampireOnset_AshSilenced | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Dunmer "Curse States"; TargetEndStates line 322 | Once on becoming vampire; sets posture Silent; voice deviation justified above | Title: "The Ash-Prayer Silenced" Body: "You set the ash and speak the prayer, and for the first time in your life nothing answers. The ancestors do not speak to the undead. The silence is total, and it is yours now." |
+| PDV_Msg_Dunmer_CurseState_VampireCured_Scarred | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Curse States"; TargetEndStates line 322 | Once on cure; sets posture RestoredScarred | Title: "The Ancestors Answer" Body: "The ash-prayer carries again. We hear you. But we heard the silence too, and it does not leave us, or you. Return -- scarred, and still ours." |
+| PDV_Msg_Dunmer_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Werewolf"; Race_Dunmer "Curse States" | Once on first transformation; sets posture Strained | Title: "Ritually Unclean" Body: "The beast in you has no place in the ash or the Reclamations. The ancestors do not turn away, but they answer thinly now. Hircine offers nothing to fill the gap." |
+
+### 12.12 Shrine and privilege dialogue topics (`PDV_Dlog_Dunmer_*`)
+
+Player-second-person on topic name. Branch dialogue authored separately in CK. Topic-line budget 120 hard / 80 target. Three archetypes grounded in Skyrim Dunmer surfaces.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Dlog_Dunmer_GreyQuarterElder_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Dunmer "diaspora solidarity" | Faithful or above | "I carry the ash-prayer in exile, as you do. Tell me what the quarter needs." |
+| PDV_Dlog_Dunmer_ReclamationsDevotee_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Dunmer "Layer 2" | Focused on any Reclamation | "The Good Daedra answer me. Speak of the Reclamations." |
+| PDV_Dlog_Dunmer_DunmerKin_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Dunmer "Religious Identity" | Any tier | "We are far from Morrowind, kin. The ancestors still watch us both." |
+
+### 12.13 Dunmer firing-density sanity
+
+A Faithful no-focus Dunmer in steady play (occasional Grey Quarter beat, portable ash-prayer most mornings, Good Daedra shrine when found):
+
+- Marked: 0 most days; the Marked Azura/Boethiah/Mephala favors are quest-anchored and rare. Inside the `<1 per 2h` target.
+- Noted: ~1-2 per day (ash-prayer rhythm plus an occasional shared-layer favor or Tribunal Memory line). The Tribunal Memory pool is rare-cadence so it does not compound. Inside the `<2 per h` target.
+- Quiet: uncounted; icon-only (witnessed-victory, several Boethiah and Mephala families are Quiet outside their stronger contexts).
+
+Tier-up notifications: at most one per save per direction; Faithful entry is suppressed on a same-dawn focus offer. Posture readouts fire only on posture transitions, which are rare (curse onset/cure).
 
 ## 13. Altmer (slot frame, partial-locked)
 
@@ -629,7 +781,7 @@ Note: Argonian has no standard commitment-offer slot because there is no deity c
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Nord | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Orc | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
-| Dunmer | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | -- |
+| Dunmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Altmer | slot only | slot only | slot only | slot only | slot only | slot only | slot only | gated | gated | gated | -- |
 | Khajiit | slot only | slot only | slot only | slot only | slot only | n/a | slot only | slot only | slot only | slot only | -- |
 | Imperial | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | slot only | -- |
@@ -683,4 +835,4 @@ This manifest's own verification, per the plan:
 
 ## 23. Next slice
 
-Nord and Orc carry full draft prose. The natural next pass extends draft prose to the next race in Section 9 priority order (Dunmer), reusing the proven row template. Dunmer adds the always-active ancestor substrate readout and the layered focus model (Azura / Boethiah / Mephala), so the next pass also exercises the substrate-readout slot shape for the first time.
+Nord, Orc, and Dunmer carry full draft prose. The natural next pass extends draft prose to the next race in Section 9 priority order (Altmer). Altmer is the only Partial implementation-spec: its blessing, tier-up, neglect, offer, survey, and Lorkhan-pressure slots are authorable now, but the contextual-favor Marked rows, the Lorkhan crisis-of-faith copy, and the post-vampire flavor stay gated per Section 21 until the spec closes. The next pass authors the non-gated Altmer slots and leaves the gated ones explicitly marked.
