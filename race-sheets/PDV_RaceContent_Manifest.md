@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, Dunmer, Khajiit, Imperial, and Redguard; Altmer drafted except its gated slots; slot-only rows for the remaining 3.
+**Status:** Authoring manifest. Inventory across all 10 races. Full draft prose for Nord, Orc, Dunmer, Khajiit, Imperial, Redguard, and Bosmer; Altmer drafted except its gated slots; slot-only rows for the remaining 2.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -112,7 +112,7 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 5. Khajiit (full draft prose; no formal commitment offer per Section 12.4a)
 6. Imperial (full draft prose)
 7. Redguard (full draft prose)
-8. Bosmer (slot rows only; four-path divergence)
+8. Bosmer (full draft prose; four-path divergence)
 9. Breton (slot rows only; three-tradition divergence)
 10. Argonian (slot rows only)
 
@@ -1300,24 +1300,166 @@ A Faithful Ash'abah Redguard in steady death-duty play (draugr crypts, Hall of t
 
 Tier-up notifications: one per save per deity per direction; Faithful entry suppressed on a same-dawn focus offer. Sect entry notifications are gated to confirmed switches with a two-day destination proof, so they cannot fire repeatedly.
 
-## 17. Bosmer (slot frame)
+## 17. Bosmer (full draft)
 
-Implementation-locked. Four-path divergence. `PDV_State_BosmerPath` with `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`.
+Implementation-locked. Four-path divergence: Old Contract (Y'ffre orthodox), Living Story (Y'ffre moderate), Exchange (Z'en), Bandit Road (Baan Dar). `PDV_State_BosmerPath` with `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`.
 
-| Category | Slot pattern | Source |
-|---|---|---|
-| Blessing description | `PDV_Bless_Bosmer_<Yffre|Arkay|Xarxes|Mara|Stendarr|Zen|BaanDar>_T<1|2|3>` | RaceDesign_Bosmer Section "Tier Rewards" |
-| Tier-up notification | `PDV_Notif_Bosmer_<Deity>_<Tier>Entry`, `PDV_Notif_Bosmer_<Deity>_<Tier>Lapse` | RaceDesign_Bosmer |
-| Champion entry per path | `PDV_Msg_Bosmer_ChampionEntry_<OldContract|LivingStory|Exchange|BanditRoad>` | TargetEndStates Section "Bosmer Champion moment" lines 396-401 |
-| Path setup choice | `PDV_Msg_Bosmer_PathChoice_Setup`, `PDV_Msg_Bosmer_Path_<OldContract|LivingStory|Exchange|BanditRoad>_Entry` | RaceDesign_Bosmer Section "Implementation state"; TargetEndStates Section "Path switching" line 393 |
-| Old Contract forced reckoning | `PDV_Msg_Bosmer_OldContract_ForcedReckoning_<Recommit|Renounce>`, `PDV_Msg_Bosmer_OldContract_Terminal` | TargetEndStates Section "Forced reckoning moment" line 408; Section "Bosmer Neglect texture" line 411 |
-| Green Pact compliance feedback | `PDV_Notif_Bosmer_GreenPact_<Strict|Lapsed|Apostate>_BandEntry` | RaceDesign_Bosmer Section "Shared Pact memory"; deferred per-item feedback per Architecture v3 Section 21.2 |
-| Neglect texture | `PDV_Notif_Bosmer_<Path>_NeglectTexture` | TargetEndStates Section "Bosmer Neglect texture" lines 410-414 |
-| Survey readout | `PDV_Msg_Bosmer_Survey_<Path>_<Broad|Focused>` | Architecture v3 Section 16.2 |
-| Contextual favor (Noted/Marked) | `PDV_Notif_Bosmer_FavorNoted_<Path>_<TriggerFamily>`, `PDV_Msg_Bosmer_FavorMarked_<Path>_<TriggerFamily>` | RaceDesign_Bosmer |
-| Werewolf Druidic Trial fork (Green Way) | `PDV_Msg_Bosmer_GreenWay_DruidicTrial_<TheBeastServesGreen|TheBeastTakesOver>` | TargetEndStates Section "Druidic Standing + Werewolf fork" line 280; Breton/Bosmer overlap referenced |
-| Curse-state transition | `PDV_Msg_Bosmer_CurseState_<VampireOnset|VampireCured|WerewolfOnset>` | RaceDesign_Bosmer Section "Curse States" |
-| Shrine / privilege dialogue | `PDV_Dlog_Bosmer_<YffreShrine|GraahliTradition>_Recognition` | Architecture v3 Section 16.3 |
+**Slot-frame corrections:**
+- **Blessings are per-path, not per-deity.** The locked `RaceDesign_Bosmer` "Tier Rewards" gives each of the four paths its own Tier 1/2/3. Old Contract and Living Story are both Y'ffre but materially different. The corrected set is twelve blessing records: `PDV_Bless_Bosmer_<OldContract|LivingStory|Exchange|BanditRoad>_T<1|2|3>`. Arkay/Xarxes/Mara/Stendarr are a background secondary layer with no separate blessing records.
+- **No commitment offer.** The path setup choice is the commitment; Tier 3 is reached through continued focused devotion within the path. No god-voice offer beat is authored, so Faithful tier-up carries no `suppress-if-offer-same-dawn` flag.
+- **Erroneous "Green Way Druidic Trial" slot removed.** Green Way is a Breton tradition, not a Bosmer path. The Bosmer werewolf treatment is per-path and is authored in the curse-state section.
+
+### 17.1 Tone profiles
+
+| Voice | Tone profile |
+|---|---|
+| Y'ffre | The Earth-Bones, the Storyteller; speaks of the covenant, of form held by the Now, of the Green Pact's terms; ancient, exact, and -- on the Old Contract -- unbending. |
+| Z'en | The god of payment in kind; speaks of debt, balance, the account settled; precise rather than vengeful; nothing is free. |
+| Baan Dar (Bosmer) | The Bandit God, the exile's trickster; desperate cleverness, not polished crime; speaks warm to pariahs of the improbable survival. |
+
+### 17.2 Blessing descriptions (`PDV_Bless_Bosmer_*`)
+
+Narrator voice. Budget 200 hard / 140 target. Per path, Tier 1/2/3. Anti-farm: passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Bosmer_OldContract_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- Old Contract" | Passive SPEL; Old Contract path | The Green Pact is kept. Archery damage +3%; poison resistance +15%; dagger damage +2%. |
+| PDV_Bless_Bosmer_OldContract_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- Old Contract" | Passive SPEL; Old Contract path | Y'ffre answers the kept covenant. Hunting kills restore stamina; animals never flee unprovoked. At Strict compliance, devotion gains a fifth again. |
+| PDV_Bless_Bosmer_OldContract_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- Old Contract" | Passive SPEL; Old Contract path | Y'ffre's Mark is on you. In forest and wild, archery damage +8%; animals never flee; the first arrow of a hunt strikes true and deep. |
+| PDV_Bless_Bosmer_LivingStory_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Living Story" | Passive SPEL; Living Story path | The Story is carried. Speech +5%; outdoor stamina regen +5%; poison resistance +10%. |
+| PDV_Bless_Bosmer_LivingStory_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Living Story" | Passive SPEL; Living Story path | Y'ffre and the secondary gods answer the diaspora faith. Community acts return piety; nature sites and outdoor combat steady you. |
+| PDV_Bless_Bosmer_LivingStory_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Living Story" | Passive SPEL; Living Story path | You carry the Story itself. Speech +10%; preserving a community or tradition returns a day of broadened skill. The dialogue of memory opens to you. |
+| PDV_Bless_Bosmer_Exchange_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Exchange" | Passive SPEL; Exchange path | Z'en weighs your dealings. Barter +5%; merchant prices improve; defending against a first-striker returns minor health. |
+| PDV_Bless_Bosmer_Exchange_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Exchange" | Passive SPEL; Exchange path | Z'en answers the settled account. Proportionate vengeance grants a day of stronger weapons; honored debts and fair trade return piety. |
+| PDV_Bless_Bosmer_Exchange_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Exchange" | Passive SPEL; Exchange path | Balance is restored through you. A debt settled or a wrong redressed returns a day of stronger skill growth; proportionate kills return stamina. |
+| PDV_Bless_Bosmer_BanditRoad_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Bandit Road" | Passive SPEL; Bandit Road path | The road teaches you. Pickpocket +5%; sneak +3%; a night slept outdoors sharpens the next day's first stealth. |
+| PDV_Bless_Bosmer_BanditRoad_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Bandit Road" | Passive SPEL; Bandit Road path | Baan Dar answers the exile. Surviving severe odds returns a burst of stamina; road-life scores; outcasts deal with you kindly. |
+| PDV_Bless_Bosmer_BanditRoad_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Bandit Road" | Passive SPEL; Bandit Road path | Baan Dar's luck is yours. Once a week, a survival you should not have had returns a day-long pulse of fortune; the wild road weighs heavier than the city. |
+
+### 17.3 Tier-up notifications (`PDV_Notif_Bosmer_*`)
+
+Narrator voice. HUD notifications. Budget 80 hard / 60 target. The `%s` token binds the path's deity (Y'ffre, Z'en, or Baan Dar). No `suppress-if-offer-same-dawn` flag: Bosmer has no commitment offer.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Bosmer_Observant_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "Tier Rewards" | One per path per save; %s deity | %s has noticed your path. Observant. |
+| PDV_Notif_Bosmer_Faithful_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "Tier Rewards" | One per path per save | Your standing with %s is steady now. Faithful. |
+| PDV_Notif_Bosmer_Devoted_Entry | Notification | Marked | Narrator | 80/60 | RaceDesign_Bosmer "Tier Rewards" | One per save | %s knows your name. Devoted. |
+| PDV_Notif_Bosmer_Observant_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "Neglect Texture" | One per direction per save | Your standing with %s has slipped to Wavering. |
+| PDV_Notif_Bosmer_Faithful_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "Neglect Texture" | One per direction per save | The favor of %s is thinning. Observant. |
+| PDV_Notif_Bosmer_Devoted_Lapse | Notification | Marked | Narrator | 80/60 | RaceDesign_Bosmer "Neglect Texture" | One per save per Devoted loss | The bond with %s loosens. The Devoted bond is not held. |
+
+### 17.4 Champion entries (`PDV_Msg_Bosmer_ChampionEntry_*`)
+
+God-voice. MessageBox. Body budget 500 hard / 280 target. `Entry-only` for all four paths; the path's ongoing texture is gameplay (the hunt, the Story dialogue, the settled account, the weekly luck) rather than authored ambient lines.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Bosmer_ChampionEntry_OldContract | MessageBox | Marked | God-voice | 500/280 | TargetEndStates "Old Contract Champion" line 398 | One-time on first Old Contract Devoted | Title: "Y'ffre's Mark" Body: "You kept the Pact in exile, where no warden watched and no forest enforced it. You kept it because it is true, not because it is law. The covenant is fully yours, and the wild knows you for its own." |
+| PDV_Msg_Bosmer_ChampionEntry_LivingStory | MessageBox | Marked | God-voice | 500/280 | TargetEndStates "Living Story Champion" line 399 | One-time on first Living Story Devoted | Title: "The Story Carried" Body: "The forest could not follow you here, so you carried the Story instead -- in memory, in community, in the telling. Y'ffre is the Now held by narrative. You hold a piece of it." |
+| PDV_Msg_Bosmer_ChampionEntry_Exchange | MessageBox | Marked | God-voice | 500/280 | TargetEndStates "Exchange Champion" line 400 | One-time on first Exchange Devoted | Title: "The Account Clean" Body: "Debt by debt, wrong by wrong, you have kept the world even. Nothing free, nothing owed, nothing left unpaid. Z'en's balance runs through you now." |
+| PDV_Msg_Bosmer_ChampionEntry_BanditRoad | MessageBox | Marked | God-voice | 500/280 | TargetEndStates "Bandit Road Champion" line 401 | One-time on first Bandit Road Devoted | Title: "The Story by the Fire" Body: "You are the one who should not have made it -- and did, and again, and again. That is the story exiles tell in the dark. Baan Dar writes those stories, and you are in his book." |
+
+### 17.5 Path setup and entry (`PDV_Msg_Bosmer_PathChoice_Setup`, `PDV_Notif_Bosmer_Path_*`)
+
+The setup prompt is narrator voice (a MessageBox presenting the four-path choice). Path entry notifications are narrator voice. Per `RaceDesign_Bosmer` "Path switching locks": first-run choice is free; later switching is destination-gated.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Bosmer_PathChoice_Setup | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Bosmer "Worship Structure"; TargetEndStates line 393 | First-run setup; one-time | Title: "The Covenant in Exile" Body: "Y'ffre made a covenant with the Bosmer. In Skyrim, far from Valenwood's enforcement, you must decide what you still carry of it. Choose your path: the Old Contract, the Living Story, the Exchange, or the Bandit Road." |
+| PDV_Notif_Bosmer_Path_OldContract_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "Path implementation locks" | On confirmed entry into Old Contract | You walk the Old Contract. The Green Pact is yours to keep, in full. |
+| PDV_Notif_Bosmer_Path_LivingStory_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "Path implementation locks" | On confirmed entry into Living Story | You walk the Living Story. The covenant lives in memory and community. |
+| PDV_Notif_Bosmer_Path_Exchange_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "Path implementation locks" | On confirmed entry into Exchange | You walk the Exchange. The world should be even, and you keep it so. |
+| PDV_Notif_Bosmer_Path_BanditRoad_Entry | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "Path implementation locks" | On confirmed entry into Bandit Road | You walk the Bandit Road. The exile's road is your theology now. |
+
+### 17.6 Old Contract forced reckoning (`PDV_Msg_Bosmer_OldContract_*`)
+
+The forced-reckoning confrontation is god-voice (Y'ffre), a MessageBox with the recommit/renounce choice. The responses are player-second-person. The terminal message is god-voice. Per `RaceDesign_Bosmer` "Forced reckoning" and "One cycle, then the door closes".
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Bosmer_OldContract_ForcedReckoning_Confront | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "Forced reckoning"; TargetEndStates line 408 | Fires after three consecutive in-game days at Apostate | Title: "Y'ffre Confronts You" Body: "Three days you have stood Apostate to the Pact we made. I will not let it fade in silence. Recommit, and the covenant holds. Renounce, and it is set down. Choose. There is no third answer." |
+| PDV_Msg_Bosmer_OldContract_ForcedReckoning_Recommit | MessageBox | Marked | Player-2nd | 40/30 | RaceDesign_Bosmer "Forced reckoning" | Recommit; GreenPactCompliance snaps to 30 | Recommit to the Pact. |
+| PDV_Msg_Bosmer_OldContract_ForcedReckoning_Renounce | MessageBox | Marked | Player-2nd | 40/30 | RaceDesign_Bosmer "Forced reckoning" | Renounce; first renunciation allows one re-entry | Renounce the Pact. |
+| PDV_Msg_Bosmer_OldContract_Terminal | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "One cycle, then the door closes"; TargetEndStates line 411 | Fires on second renunciation; Y'ffre ledger frozen permanently | Title: "The Door Closes" Body: "You have set the Pact down a second time. There is no third taking-up. Y'ffre's ledger is closed to you now, and stays closed. The other Bosmer gods remain -- but the covenant is over." |
+
+### 17.7 Green Pact compliance band feedback (`PDV_Notif_Bosmer_GreenPact_*`)
+
+Narrator voice. Notifications. Budget 80 hard / 60 target. Old Contract path only. Bands per `RaceDesign_Bosmer` "GreenPactCompliance State Model". Fires on band entry. (Per-item plant-consumption feedback stays gated per Architecture v3 Section 21.2 until the Green Pact tag layer ships -- see Section 21.)
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Bosmer_GreenPact_Apostate | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model" | One per band entry | Compliance fallen to Apostate. Y'ffre's favor is locked; the reckoning begins. |
+| PDV_Notif_Bosmer_GreenPact_Lapsed | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model" | One per band entry | Compliance has slipped to Lapsed. Y'ffre's favor comes at half. |
+| PDV_Notif_Bosmer_GreenPact_Observant | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model" | One per band entry | Compliance restored to Observant. Y'ffre's favor flows full again. |
+| PDV_Notif_Bosmer_GreenPact_Strict | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model" | One per band entry | Compliance risen to Strict. Y'ffre's favor flows a fifth again stronger. |
+
+### 17.8 Neglect texture (`PDV_Notif_Bosmer_*_NeglectTexture`)
+
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Bosmer` "Neglect Texture", one per path. Each fires on the first day of a meaningful lapse.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Bosmer_OldContract_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Old Contract neglect" | One per lapse-band crossing | The Pact is slipping, and you can feel the reckoning coming. |
+| PDV_Notif_Bosmer_LivingStory_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Living Story neglect" | One per lapse-band crossing | The oral tradition dries up. You have stopped carrying the Story. |
+| PDV_Notif_Bosmer_Exchange_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Exchange neglect" | One per lapse-band crossing | Debts go unpaid and unnoticed. The world's balance ignores you. |
+| PDV_Notif_Bosmer_BanditRoad_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Bandit Road neglect" | One per lapse-band crossing | Baan Dar's luck has gone dormant. The road is just hardship now. |
+
+### 17.9 Survey Devotion readouts (`PDV_Msg_Bosmer_Survey_*`)
+
+Narrator voice. Body budget 240 hard / 180 target. One row per path; `%s` binds the tier name (and the compliance band for Old Contract).
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Bosmer_Survey_OldContract | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion; %s1 tier, %s2 compliance band | You walk the Old Contract, the Green Pact kept in full. Standing: %s1. Compliance: %s2. Y'ffre holds you to the terms. |
+| PDV_Msg_Bosmer_Survey_LivingStory | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion | You walk the Living Story, the covenant carried in memory and community. Standing: %s. The Story passes through you. |
+| PDV_Msg_Bosmer_Survey_Exchange | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion | You walk the Exchange, the world kept even debt by debt. Standing: %s. Z'en weighs your account. |
+| PDV_Msg_Bosmer_Survey_BanditRoad | Status spell readout | Quiet | Narrator | 240/180 | Architecture v3 Section 16.2 | Cast Survey Devotion | You walk the Bandit Road, the exile's theology of the open road. Standing: %s. Baan Dar favors the improbable. |
+
+### 17.10 Contextual favor surfacings
+
+`RaceDesign_Bosmer` does not enumerate a formal contextual-favor table; the rows below are derived from the per-path Tier Rewards and Signal Examples. Lane families should be re-checked when a formal Bosmer favor table is added to the race sheet. Player-second-person on Noted; god-voice on Marked. The Bandit Road reversal is a `Rare major favor` per `PDV_TargetEndStates_1.0.md` line 112.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Bosmer_FavorNoted_OldContract_ProperHunt | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Tier Rewards -- Old Contract"; Signal Examples | After-act; daily cap; proper hunting conduct | A clean hunt, the Pact honored. Y'ffre's wild answers. |
+| PDV_Notif_Bosmer_FavorNoted_OldContract_ForestKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Old Contract"; Race_Bosmer "Old Contract" | After-act; anti-desecration beat | You turned back desecration of the living world. Counted. |
+| PDV_Notif_Bosmer_FavorNoted_LivingStory_CommunityKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Tier Rewards -- The Living Story" | After-act; non-trivial preservation | Something preserved, something remembered. The Story holds. |
+| PDV_Notif_Bosmer_FavorNoted_LivingStory_NatureSite | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Tier Rewards -- The Living Story" | Environmental; per site, daily cap | At the grove, Y'ffre's presence is quiet and near. |
+| PDV_Notif_Bosmer_FavorNoted_Exchange_DebtSettled | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Tier Rewards -- The Exchange" | After-act; honored debt or contract | A debt paid, an account made even. Z'en is satisfied. |
+| PDV_Notif_Bosmer_FavorNoted_Exchange_ProportionateVengeance | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Tier Rewards -- The Exchange" | After-act; redress quest, proportionate only | The wrong is redressed, no more and no less. Balance. |
+| PDV_Notif_Bosmer_FavorNoted_BanditRoad_RoadLife | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Tier Rewards -- The Bandit Road" | Environmental; road-life acts; daily cap | The road keeps you. Baan Dar favors the wandering exile. |
+| PDV_Notif_Bosmer_FavorNoted_BanditRoad_PariahSolidarity | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "Tier 3 -- The Bandit Road" | After-act; aiding other outcasts | You stood by another outcast. Baan Dar marks his own. |
+| PDV_Msg_Bosmer_FavorMarked_BanditRoad_Reversal | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "Bandit Road Champion"; TargetEndStates line 112 (rare major favor) | Weekly cap; near-death survival or impossible escape only | Title: "Baan Dar's Luck" Body: "You should not have walked away from that. You did. That is the story they will tell about you in the dark, around the fire. I gave you the ending." |
+
+### 17.11 Curse-state transitions (`PDV_Msg_Bosmer_CurseState_*`)
+
+God-voice. MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Bosmer` "Curse State Summary": vampirism breaks the Old Contract's PactBound immediately and strains the other paths; werewolfism is a serious Old Contract violation but contested strain elsewhere. The per-path difference is carried in one body each rather than separate path rows. Fires once per cure cycle.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Bosmer_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "Vampire" | Once on becoming vampire | Title: "The Covenant and the Undead" Body: "You are undead now. The living covenant does not reach the unliving. On the Old Contract the Pact breaks at once; on the other paths the bond strains hard but holds by a thread. Y'ffre is the Now, and you have stepped outside it." |
+| PDV_Msg_Bosmer_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "Vampire" | Once on cure | Title: "Back Within the Now" Body: "The undeath is lifted. You stand within the living world again, and your path is open -- though the Old Contract, broken this way, must be retaken like any lapse." |
+| PDV_Msg_Bosmer_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "Werewolf by path" | Once on first transformation | Title: "The Hunt Without Sanction" Body: "The beast is in you. It echoes the Wild Hunt, so Bosmer theology can read it -- but it is not Y'ffre's sanction. On the Old Contract this is a serious violation; on the other paths, contested strain. The shape is intelligible. It is not approved." |
+
+### 17.12 Shrine and privilege dialogue topics (`PDV_Dlog_Bosmer_*`)
+
+Player-second-person on topic name. Branch dialogue authored separately in CK. Topic-line budget 120 hard / 80 target. Two archetypes; Y'ffre has no Skyrim shrine, so the Kynareth shrine serves as the proxy per `RaceDesign_Bosmer` Implementation Notes.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Dlog_Bosmer_YffreShrine_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Bosmer Implementation Notes | Old Contract or Living Story path | "Y'ffre's covenant is mine to carry. I keep it where Kynareth's shrine stands." |
+| PDV_Dlog_Bosmer_BosmerElder_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Bosmer "The Living Story" | Faithful or above | "I carry the Story for our people in exile. What must be remembered here?" |
+
+### 17.13 Bosmer firing-density sanity
+
+A Faithful Living Story Bosmer in steady community play (preservation quests, nature-site visits, secondary-god acts):
+
+- Marked: 0 most days; Champion entries, the path-setup choice, the forced-reckoning confrontation, and curse onsets are all one-time, and the Bandit Road reversal favor is weekly-capped. Inside the `<1 per 2h` target.
+- Noted: ~1-2 per day (a community-kept favor, an occasional nature-site favor). Green Pact band crossings (Old Contract only) are infrequent because the meter is act-driven with no passive decay. Inside the `<2 per h` target.
+- Quiet: uncounted; icon-only.
+
+Tier-up notifications: one per save per direction. There is no commitment offer, so no Faithful suppression rule applies. Path-entry notifications are gated to confirmed switches with the seven-day switch lock-out, so they cannot fire repeatedly.
 
 ## 18. Breton (slot frame)
 
@@ -1375,7 +1517,7 @@ Note: Argonian has no standard commitment-offer slot because there is no deity c
 | Khajiit | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 | Imperial | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Redguard | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
-| Bosmer | slot only | slot only | slot only | slot only | slot only | n/a (path setup) | slot only | slot only | slot only | slot only | -- |
+| Bosmer | drafted | drafted | drafted | drafted | drafted | n/a (path setup) | drafted | drafted | drafted | drafted | YES |
 | Breton | slot only | slot only | slot only | slot only | slot only | n/a (tradition setup) | slot only | gated (Vigilant) | slot only | slot only | -- |
 | Argonian | slot only | slot only | slot only | slot only | slot only | n/a | slot only | slot only | slot only | slot only | -- |
 
@@ -1424,4 +1566,4 @@ This manifest's own verification, per the plan:
 
 ## 23. Next slice
 
-Nord, Orc, Dunmer, Khajiit, Imperial, and Redguard carry full draft prose; Altmer is drafted except its three gated slot groups (Section 13.13). The natural next pass extends draft prose to the next race in Section 9 priority order (Bosmer). Bosmer adds the four-path divergence (Old Contract, Living Story, Exchange, Bandit Road), the Old Contract forced-reckoning beat, and the Green Pact compliance band feedback.
+Nord, Orc, Dunmer, Khajiit, Imperial, Redguard, and Bosmer carry full draft prose; Altmer is drafted except its three gated slot groups (Section 13.13). The natural next pass extends draft prose to the next race in Section 9 priority order (Breton). Breton adds the three-tradition divergence (Knight's Road, Hidden Art, Green Way) and three reputation/standing tracks (WitchcraftExposure, KnightlyVowIntegrity, DruidicStanding); the light Vigilant pressure encounter stays gated per Section 21.
