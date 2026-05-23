@@ -1,0 +1,18 @@
+{
+  "name": "creation-authoring-automation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Project-agnostic Creation Engine authoring automation layer.",
+  "bin": {
+    "creation-authoring": "./src/cli.mjs",
+    "creation-authoring-live": "./src/live-runner.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --test && node ./src/cli.mjs plan ./examples/simple-wiring.manifest.json --profile ./examples/simple-project.profile.json --json"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

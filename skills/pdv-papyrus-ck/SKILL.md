@@ -29,6 +29,7 @@ commands, CKPE wiring steps, Story Manager setup, or Skyrim console tests.
 - Docs: `C:\Users\Admin\Documents\Devotion Mod Project`
 - Compiler tool: `C:\Users\Admin\Documents\Devotion Mod Project\tools\pdv_compile.mjs`
 - Verifier tool: `C:\Users\Admin\Documents\Devotion Mod Project\tools\pdv_verify.mjs`
+- BellCube lookup helper: `C:\Users\Admin\Documents\Devotion Mod Project\tools\pdv_papyrus_lookup.mjs`
 - Mod: `D:\Wabbajack\modlists\Anvil\mods\Devotion`
 - Source: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source`
 - Output: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts`
@@ -37,6 +38,16 @@ commands, CKPE wiring steps, Story Manager setup, or Skyrim console tests.
 - CK ini: `D:\Wabbajack\modlists\Anvil\Stock Game\CreationKit.ini`
 
 ## Compile Pattern
+
+When a Papyrus function or plugin surface is uncertain, query the local BellCube helper before guessing:
+
+```text
+node .\tools\pdv_papyrus_lookup.mjs --query PushString
+node .\tools\pdv_papyrus_lookup.mjs --script PapyrusUtil --function PushString
+node .\tools\pdv_papyrus_lookup.mjs --script StringUtil
+```
+
+Treat BellCube lookup as a reference step, not proof. If the API assumption matters, still compile or verify it in the live PDV environment.
 
 Prefer the local compiler wrapper from the docs workspace:
 

@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-21 (v3.27 - Phase 8 runtime proof closeout)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot.
+Last revised: 2026-05-23 (v3.28 - CKRA GLOB duplicate-create authoring proof)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Authoring infrastructure now has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, for generated/disposable plugins only; this does not change gameplay phase status.
 
 ---
 
@@ -441,7 +441,7 @@ API mirrors the reputation track: `GetCurrentState()`, `GetStateLabel()`, `SetSt
 
 ### 7.2 Where state tracks come from
 
-- **Setup quests** at character start (Bosmer four-path choice via MCM or first-run dialogue).
+- **Setup quests** at character start or immediately after startup/origin resolution (Bosmer four-path choice via a post-startup popup, not MCM-at-character-creation).
 - **Threshold events** during play (Orc Stronghold-to-City transition triggered by sustained outside-stronghold residency, or a story event).
 - **Quest resolutions** (Imperial Concordat "Open Defiant" reached via sustained track threshold).
 
@@ -453,7 +453,10 @@ For Bosmer, `PDV_State_BosmerPath` selects the path, but `OldContract` also
 needs its own bound/unbound lifecycle and discipline state. `PactBound`,
 `LapsedFromPact`, and `GreenPactCompliance` remain separate from the path
 track so Y'ffre exclusivity, forced reckoning, and terminal renunciation are
-not collapsed into a single enum.
+not collapsed into a single enum. `LivingStory` and `OldContract` deliberately
+share one `Y'ffre` deity ledger; the path state changes exclusivity, scoring
+interpretation, and Pact behavior rather than swapping to separate Y'ffre
+records.
 
 Green Pact respect is not exclusive to the `OldContract` path. Proper hunting,
 animal-sourced food, restraint around needless plant use where detectable, and
@@ -468,8 +471,9 @@ the active Bosmer path interpret them, and write only modest path-local piety
 or recent-signal strength outside `OldContract`.
 
 Bosmer path switching is destination-gated. The first setup choice is free, but
-later MCM/status-dialogue input records intent only; the world must confirm the
-destination through signals. `LivingStory` can be entered through one strong
+later switching uses Bosmer-specific system-suggested popup offers plus a
+confirmation rite; it does not ride the generic deity-offer queue and it is
+not a simple MCM toggle. `LivingStory` can be entered through one strong
 community/story signal and is the fallback for incoherent or corrupt state.
 `Exchange` and `BanditRoad` require two destination-coded signals on separate
 in-game days within seven, evaluated at dawn, unless a major curated quest beat
@@ -509,7 +513,7 @@ The patron-commitment mechanism (Section 12) reads `IsEligibleForPlayer()` befor
 
 | Track | States | Owner race | Notes |
 |---|---|---|---|
-| `PDV_State_BosmerPath` | OldContract, LivingStory, Exchange, BanditRoad | Bosmer | Set at character setup or first-run quest. `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`. Fallback for unset/corrupt state is `LivingStory`. Later switching is destination-gated; switch intent is confirmed by path-coded signals. `OldContract` additionally reads `PactBound`, `LapsedFromPact`, and `GreenPactCompliance`. |
+| `PDV_State_BosmerPath` | OldContract, LivingStory, Exchange, BanditRoad | Bosmer | Set by a post-startup Bosmer path popup. `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`. The startup popup auto-commits the matching foreground patron; fallback for unset/corrupt state is `LivingStory`. Later switching is destination-gated through Bosmer-specific popup offers plus a confirmation rite. `OldContract` additionally reads `PactBound`, `LapsedFromPact`, and `GreenPactCompliance`. |
 | `PDV_State_OrcLifeMode` | City, Stronghold, LegionExile | Orc | Default City; setup/MCM records intent, but active mode is world-confirmed. `City = 0`, `Stronghold = 1`, `LegionExile = 2`. Stronghold requires Blood-Kin/equivalent acceptance plus conduct; LegionExile requires service/exile gate or completed pressure-bearing service. Soft switches require two qualifying signals on separate in-game days within seven days and resolve at dawn; major gates may switch immediately. |
 | `PDV_State_NordPantheonBaseline` | OldWays, NineDivines | Nord | Setup/MCM pantheon baseline only. `OldWays = 0`, `NineDivines = 1`. Commitment depth uses `PDV_GLO_PatronState`; do not overload the baseline state with Broad/Primary. |
 | `PDV_State_BretonTradition` | KnightsRoad, HiddenArt, GreenWay | Breton | Primary identity chosen explicitly at setup; no silent default; `KnightsRoad = 0`, `HiddenArt = 1`, `GreenWay = 2`; patron offers normally come only from the chosen tradition |
@@ -1307,6 +1311,16 @@ When a tracked manifest asks for `IntArray`, `FloatArray`, `StringArray`, or
 the target record, script/property, intended payload, and verifier readback
 expectation. Array writes themselves remain manual CK/xEdit work until the
 Mutagen bridge can emit them safely.
+
+CKRA / `tools\creation-authoring` now proves one generated-record path:
+`glob.duplicate_create` for GLOB records in a disposable generated plugin. The
+proof chain is CK-owned Object Window duplicate replay, active-plugin-owned
+duplicate identity, guarded FNAM/FLTV mutation, CK UI save, direct saved-ESP
+readback, strict proof ledger, and capability-matrix promotion. Treat this as a
+narrow GLOB authoring capability and a pattern for future family proofs, not as
+generic record creation. The remaining hardening boundary is also a user
+experience boundary: the current proof still depends on the Object Window
+source row/focus/context-menu path matching the explicit source guard.
 
 ### 17.2 Add-a-substrate workflow
 
@@ -2107,6 +2121,21 @@ or architecture contract changes.
 ---
 
 ## 26. Revisions
+
+### v3.28 - 2026-05-23 - CKRA GLOB duplicate-create authoring proof
+
+The CKPE authoring workbench now has its first proof-ledger-supported creation
+capability: `glob.duplicate_create` for disposable generated plugins. The
+strict evidence chain duplicates `PDV_GLO_ActivePiety` through CK's Object
+Window path, proves the created GLOB is owned by the active generated plugin,
+mutates FNAM/FLTV to short `1`, posts CK's native save command, reads the
+saved ESP back directly, and promotes only GLOB in the generated capability
+matrix. This is an authoring/tooling revision, not a PDV runtime phase
+closeout. It does not prove quest, message, activator, FormList, VMAD array,
+Story Manager, alias, or source-plugin promotion workflows. Durable lesson:
+CK automation must respect both UX state and lower-layer persistence; right
+click selection/focus/popup behavior and active-plugin save/readback are part
+of the proof, not incidental noise.
 
 ### v3.27 - 2026-05-21 - Phase 8 runtime proof closeout
 

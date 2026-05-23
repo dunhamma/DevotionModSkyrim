@@ -9,10 +9,13 @@ This is a single-context repo. There is no `CONTEXT-MAP.md`, and skills should t
 ## Before exploring, read these
 
 - `AGENTS.md` at the repo root for the current project context and workflow rules
+- `CONTEXT.md` for the project glossary
 - `PDV_STANDARDS.md` for operating rules, safety constraints, and doc hygiene
 - `PDV_MOD_SETUP.md` for environment, build order, and variable reference
 - `PDV_Architecture_v2.md` for architecture, phase planning, and system model
 - `references/PAPYRUS_KNOWLEDGE_INTAKE.md` when the task touches Papyrus APIs, imports, compiler setup, or plugin-provided functions
+- `https://github.com/BellCubeDev/papyrus-index` and `https://papyrus.bellcube.dev/` as the default external Papyrus API index when local source and CK Wiki do not fully answer a signature or plugin-surface question
+- `tools/pdv_papyrus_lookup.mjs` as the first local helper to query that BellCube corpus from the repo workspace
 - `references/PDV_RaceArchitecture_DesignReference.md` when the task touches race theology, reward logic, or design intent
 - `docs/adr/` if it is added later and contains decisions relevant to the area being changed
 

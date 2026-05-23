@@ -1,0 +1,2907 @@
+{
+  "schema": "creation-authoring.apply-request.v1",
+  "plan": {
+    "schema": "creation-authoring.plan.v1",
+    "manifest": {
+      "project": "player-devotion-phase9",
+      "game": "SkyrimSE",
+      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "output": "PDV_Phase9BosmerStateOverlay.esp"
+    },
+    "profile": {
+      "modId": "player-devotion-phase9",
+      "game": "SkyrimSE",
+      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "outputPolicy": "overlay"
+    },
+    "availableBackends": [
+      "manual-packet",
+      "mo2-mcp-patch-request"
+    ],
+    "operations": [
+      {
+        "operation": {
+          "id": "bosmer-track-state-labels",
+          "kind": "vmad.array_property",
+          "target": "PDV_StateTrack_BosmerPath",
+          "payload": {
+            "script": "PDV_StateTrack",
+            "property": "StateLabels",
+            "type": "StringArray",
+            "values": [
+              "OldContract",
+              "LivingStory",
+              "Exchange",
+              "BanditRoad"
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.array_property",
+          "supportedBackends": [],
+          "verifier": "vmad.array-property",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "Array element ordering and VMAD property shapes have not been proven for this backend."
+          ],
+          "notes": "Recognized as intent, but v1 emits deterministic CK/xEdit packets instead of writing arrays."
+        },
+        "targetResolution": {
+          "identifier": "PDV_StateTrack_BosmerPath",
+          "editorId": "PDV_StateTrack_BosmerPath",
+          "formid": "PlayerDevotion_Framework.esp:0499C5",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp",
+          "winningPlugin": "PlayerDevotion_Framework.esp",
+          "scripts": [],
+          "entries": [],
+          "keywords": [],
+          "spells": [],
+          "perks": [],
+          "packages": [],
+          "inventory": [],
+          "resolved": true
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.array-property",
+        "manualPacket": {
+          "operationId": "bosmer-track-state-labels",
+          "kind": "vmad.array_property",
+          "target": "PDV_StateTrack_BosmerPath",
+          "reason": "No safe backend is available for this operation in the active profile.",
+          "capability": "vmad.array_property",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_StateTrack_BosmerPath",
+            "editorId": "PDV_StateTrack_BosmerPath",
+            "formid": "PlayerDevotion_Framework.esp:0499C5",
+            "recordType": "QUST",
+            "plugin": "PlayerDevotion_Framework.esp",
+            "winningPlugin": "PlayerDevotion_Framework.esp",
+            "scripts": [],
+            "entries": [],
+            "keywords": [],
+            "spells": [],
+            "perks": [],
+            "packages": [],
+            "inventory": [],
+            "resolved": true
+          },
+          "steps": [
+            "Perform vmad.array_property on PDV_StateTrack_BosmerPath with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.array-property"
+        }
+      },
+      {
+        "operation": {
+          "id": "yffre-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_Deity_Yffre",
+          "payload": {
+            "script": "PDV_Deity_Yffre",
+            "properties": [
+              {
+                "name": "DeityName",
+                "type": "String",
+                "value": "Y'ffre",
+                "resolvedValue": "Y'ffre",
+                "resolution": {
+                  "identifier": "Y'ffre",
+                  "formid": null,
+                  "editorId": "Y'ffre",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "DeityDomain",
+                "type": "String",
+                "value": "Story, Green Pact, Forest Law",
+                "resolvedValue": "Story, Green Pact, Forest Law",
+                "resolution": {
+                  "identifier": "Story, Green Pact, Forest Law",
+                  "formid": null,
+                  "editorId": "Story, Green Pact, Forest Law",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "DeityIndex",
+                "type": "Int",
+                "value": 3,
+                "resolvedValue": 3,
+                "resolution": null
+              },
+              {
+                "name": "Stance_Bosmer",
+                "type": "Int",
+                "value": 0,
+                "resolvedValue": 0,
+                "resolution": null
+              },
+              {
+                "name": "PDV_GLO_DebugLevel",
+                "type": "Object",
+                "value": "PDV_GLO_DebugLevel",
+                "resolvedValue": "PlayerDevotion_Framework.esp:01DBD9",
+                "resolution": {
+                  "identifier": "PDV_GLO_DebugLevel",
+                  "editorId": "PDV_GLO_DebugLevel",
+                  "formid": "PlayerDevotion_Framework.esp:01DBD9",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PDV_GLO_OriginRace",
+                "type": "Object",
+                "value": "PDV_GLO_OriginRace",
+                "resolvedValue": "PlayerDevotion_Framework.esp:02C5C6",
+                "resolution": {
+                  "identifier": "PDV_GLO_OriginRace",
+                  "editorId": "PDV_GLO_OriginRace",
+                  "formid": "PlayerDevotion_Framework.esp:02C5C6",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "EligibleStateTrack",
+                "type": "Object",
+                "value": "PDV_StateTrack_BosmerPath",
+                "resolvedValue": "PlayerDevotion_Framework.esp:0499C5",
+                "resolution": {
+                  "identifier": "PDV_StateTrack_BosmerPath",
+                  "editorId": "PDV_StateTrack_BosmerPath",
+                  "formid": "PlayerDevotion_Framework.esp:0499C5",
+                  "recordType": "QUST",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "DELTA_PACT_POSITIVE",
+                "type": "Float",
+                "value": 2,
+                "resolvedValue": 2,
+                "resolution": null
+              },
+              {
+                "name": "DELTA_LIVING_STORY",
+                "type": "Float",
+                "value": 2.5,
+                "resolvedValue": 2.5,
+                "resolution": null
+              }
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.attach_script",
+          "supportedBackends": [
+            "mutagen-patch-request",
+            "mo2-mcp-patch-request"
+          ],
+          "verifier": "vmad.script-properties",
+          "fallback": "manual-packet",
+          "notes": "Attaches or updates a primary VMAD script and scalar/object properties on an existing record."
+        },
+        "targetResolution": {
+          "identifier": "PDV_Deity_Yffre",
+          "editorId": "PDV_Deity_Yffre",
+          "formid": "PlayerDevotion_Framework.esp:06CB52",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp",
+          "winningPlugin": "PlayerDevotion_Framework.esp",
+          "scripts": [],
+          "entries": [],
+          "keywords": [],
+          "spells": [],
+          "perks": [],
+          "packages": [],
+          "inventory": [],
+          "resolved": true
+        },
+        "backend": "mo2-mcp-patch-request",
+        "status": "ready",
+        "verifier": "vmad.script-properties",
+        "manualPacket": null
+      },
+      {
+        "operation": {
+          "id": "yffre-eligible-states",
+          "kind": "vmad.array_property",
+          "target": "PDV_Deity_Yffre",
+          "payload": {
+            "script": "PDV_Deity_Yffre",
+            "property": "EligibleStateValues",
+            "type": "IntArray",
+            "values": [
+              0,
+              1
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.array_property",
+          "supportedBackends": [],
+          "verifier": "vmad.array-property",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "Array element ordering and VMAD property shapes have not been proven for this backend."
+          ],
+          "notes": "Recognized as intent, but v1 emits deterministic CK/xEdit packets instead of writing arrays."
+        },
+        "targetResolution": {
+          "identifier": "PDV_Deity_Yffre",
+          "editorId": "PDV_Deity_Yffre",
+          "formid": "PlayerDevotion_Framework.esp:06CB52",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp",
+          "winningPlugin": "PlayerDevotion_Framework.esp",
+          "scripts": [],
+          "entries": [],
+          "keywords": [],
+          "spells": [],
+          "perks": [],
+          "packages": [],
+          "inventory": [],
+          "resolved": true
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.array-property",
+        "manualPacket": {
+          "operationId": "yffre-eligible-states",
+          "kind": "vmad.array_property",
+          "target": "PDV_Deity_Yffre",
+          "reason": "No safe backend is available for this operation in the active profile.",
+          "capability": "vmad.array_property",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_Deity_Yffre",
+            "editorId": "PDV_Deity_Yffre",
+            "formid": "PlayerDevotion_Framework.esp:06CB52",
+            "recordType": "QUST",
+            "plugin": "PlayerDevotion_Framework.esp",
+            "winningPlugin": "PlayerDevotion_Framework.esp",
+            "scripts": [],
+            "entries": [],
+            "keywords": [],
+            "spells": [],
+            "perks": [],
+            "packages": [],
+            "inventory": [],
+            "resolved": true
+          },
+          "steps": [
+            "Perform vmad.array_property on PDV_Deity_Yffre with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.array-property"
+        }
+      },
+      {
+        "operation": {
+          "id": "manager-bosmer-ready",
+          "kind": "vmad.attach_script",
+          "target": "PDV__ManagerQuest",
+          "payload": {
+            "script": "PDV__ManagerQuest",
+            "properties": [
+              {
+                "name": "PDV_BosmerPathTrack",
+                "type": "Object",
+                "value": "PDV_StateTrack_BosmerPath",
+                "resolvedValue": "PlayerDevotion_Framework.esp:0499C5",
+                "resolution": {
+                  "identifier": "PDV_StateTrack_BosmerPath",
+                  "editorId": "PDV_StateTrack_BosmerPath",
+                  "formid": "PlayerDevotion_Framework.esp:0499C5",
+                  "recordType": "QUST",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PDV_Yffre",
+                "type": "Object",
+                "value": "PDV_Deity_Yffre",
+                "resolvedValue": "PlayerDevotion_Framework.esp:06CB52",
+                "resolution": {
+                  "identifier": "PDV_Deity_Yffre",
+                  "editorId": "PDV_Deity_Yffre",
+                  "formid": "PlayerDevotion_Framework.esp:06CB52",
+                  "recordType": "QUST",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              }
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.attach_script",
+          "supportedBackends": [
+            "mutagen-patch-request",
+            "mo2-mcp-patch-request"
+          ],
+          "verifier": "vmad.script-properties",
+          "fallback": "manual-packet",
+          "notes": "Attaches or updates a primary VMAD script and scalar/object properties on an existing record."
+        },
+        "targetResolution": {
+          "identifier": "PDV__ManagerQuest",
+          "editorId": "PDV__ManagerQuest",
+          "formid": "PlayerDevotion_Framework.esp:00C325",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp",
+          "winningPlugin": "PlayerDevotion_Framework.esp",
+          "scripts": [],
+          "entries": [],
+          "keywords": [],
+          "spells": [],
+          "perks": [],
+          "packages": [],
+          "inventory": [],
+          "resolved": true
+        },
+        "backend": "mo2-mcp-patch-request",
+        "status": "ready",
+        "verifier": "vmad.script-properties",
+        "manualPacket": null
+      },
+      {
+        "operation": {
+          "id": "deity-list-yffre",
+          "kind": "formlist.add",
+          "target": "PDV_FLST_AllDeities",
+          "payload": {
+            "entry": "PDV_Deity_Yffre",
+            "resolvedEntry": "PlayerDevotion_Framework.esp:06CB52",
+            "entryResolution": {
+              "identifier": "PDV_Deity_Yffre",
+              "editorId": "PDV_Deity_Yffre",
+              "formid": "PlayerDevotion_Framework.esp:06CB52",
+              "recordType": "QUST",
+              "plugin": "PlayerDevotion_Framework.esp",
+              "winningPlugin": "PlayerDevotion_Framework.esp",
+              "scripts": [],
+              "entries": [],
+              "keywords": [],
+              "spells": [],
+              "perks": [],
+              "packages": [],
+              "inventory": [],
+              "resolved": true
+            }
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "formlist.add",
+          "supportedBackends": [
+            "mutagen-patch-request",
+            "mo2-mcp-patch-request"
+          ],
+          "verifier": "formlist.contains",
+          "fallback": "manual-packet",
+          "notes": "Adds an existing form to an existing FormList."
+        },
+        "targetResolution": {
+          "identifier": "PDV_FLST_AllDeities",
+          "editorId": "PDV_FLST_AllDeities",
+          "formid": "PlayerDevotion_Framework.esp:017E47",
+          "recordType": "FLST",
+          "plugin": "PlayerDevotion_Framework.esp",
+          "winningPlugin": "PlayerDevotion_Framework.esp",
+          "scripts": [],
+          "entries": [],
+          "keywords": [],
+          "spells": [],
+          "perks": [],
+          "packages": [],
+          "inventory": [],
+          "resolved": true
+        },
+        "backend": "mo2-mcp-patch-request",
+        "status": "ready",
+        "verifier": "formlist.contains",
+        "manualPacket": null
+      },
+      {
+        "operation": {
+          "id": "zen-record",
+          "kind": "record.create",
+          "target": "PDV_Deity_Zen",
+          "payload": {
+            "recordType": "QUST",
+            "script": "PDV_Deity_Zen",
+            "playerFacingName": "Z'en"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_Deity_Zen",
+          "formid": null,
+          "editorId": "PDV_Deity_Zen",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "zen-record",
+          "kind": "record.create",
+          "target": "PDV_Deity_Zen",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_Deity_Zen",
+            "formid": null,
+            "editorId": "PDV_Deity_Zen",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_Deity_Zen with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "zen-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_Deity_Zen",
+          "payload": {
+            "script": "PDV_Deity_Zen",
+            "properties": [
+              {
+                "name": "DeityName",
+                "type": "String",
+                "value": "Z'en",
+                "resolvedValue": "Z'en",
+                "resolution": {
+                  "identifier": "Z'en",
+                  "formid": null,
+                  "editorId": "Z'en",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "DeityDomain",
+                "type": "String",
+                "value": "Exchange, Reciprocity, Restitution",
+                "resolvedValue": "Exchange, Reciprocity, Restitution",
+                "resolution": {
+                  "identifier": "Exchange, Reciprocity, Restitution",
+                  "formid": null,
+                  "editorId": "Exchange, Reciprocity, Restitution",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "DeityIndex",
+                "type": "Int",
+                "value": 4,
+                "resolvedValue": 4,
+                "resolution": null
+              },
+              {
+                "name": "Stance_Bosmer",
+                "type": "Int",
+                "value": 0,
+                "resolvedValue": 0,
+                "resolution": null
+              },
+              {
+                "name": "PDV_GLO_DebugLevel",
+                "type": "Object",
+                "value": "PDV_GLO_DebugLevel",
+                "resolvedValue": "PlayerDevotion_Framework.esp:01DBD9",
+                "resolution": {
+                  "identifier": "PDV_GLO_DebugLevel",
+                  "editorId": "PDV_GLO_DebugLevel",
+                  "formid": "PlayerDevotion_Framework.esp:01DBD9",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PDV_GLO_OriginRace",
+                "type": "Object",
+                "value": "PDV_GLO_OriginRace",
+                "resolvedValue": "PlayerDevotion_Framework.esp:02C5C6",
+                "resolution": {
+                  "identifier": "PDV_GLO_OriginRace",
+                  "editorId": "PDV_GLO_OriginRace",
+                  "formid": "PlayerDevotion_Framework.esp:02C5C6",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "EligibleStateTrack",
+                "type": "Object",
+                "value": "PDV_StateTrack_BosmerPath",
+                "resolvedValue": "PlayerDevotion_Framework.esp:0499C5",
+                "resolution": {
+                  "identifier": "PDV_StateTrack_BosmerPath",
+                  "editorId": "PDV_StateTrack_BosmerPath",
+                  "formid": "PlayerDevotion_Framework.esp:0499C5",
+                  "recordType": "QUST",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              }
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.attach_script",
+          "supportedBackends": [
+            "mutagen-patch-request",
+            "mo2-mcp-patch-request"
+          ],
+          "verifier": "vmad.script-properties",
+          "fallback": "manual-packet",
+          "notes": "Attaches or updates a primary VMAD script and scalar/object properties on an existing record."
+        },
+        "targetResolution": {
+          "identifier": "PDV_Deity_Zen",
+          "formid": null,
+          "editorId": "PDV_Deity_Zen",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.script-properties",
+        "manualPacket": {
+          "operationId": "zen-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_Deity_Zen",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "vmad.attach_script",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_Deity_Zen",
+            "formid": null,
+            "editorId": "PDV_Deity_Zen",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Open the record PDV_Deity_Zen.",
+            "Attach or select script PDV_Deity_Zen.",
+            "Set property DeityName to Z'en.",
+            "Set property DeityDomain to Exchange, Reciprocity, Restitution.",
+            "Set property DeityIndex to 4.",
+            "Set property Stance_Bosmer to 0.",
+            "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+            "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+            "Set property EligibleStateTrack to PDV_StateTrack_BosmerPath.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.script-properties"
+        }
+      },
+      {
+        "operation": {
+          "id": "zen-eligible-states",
+          "kind": "vmad.array_property",
+          "target": "PDV_Deity_Zen",
+          "payload": {
+            "script": "PDV_Deity_Zen",
+            "property": "EligibleStateValues",
+            "type": "IntArray",
+            "values": [
+              2
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.array_property",
+          "supportedBackends": [],
+          "verifier": "vmad.array-property",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "Array element ordering and VMAD property shapes have not been proven for this backend."
+          ],
+          "notes": "Recognized as intent, but v1 emits deterministic CK/xEdit packets instead of writing arrays."
+        },
+        "targetResolution": {
+          "identifier": "PDV_Deity_Zen",
+          "formid": null,
+          "editorId": "PDV_Deity_Zen",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.array-property",
+        "manualPacket": {
+          "operationId": "zen-eligible-states",
+          "kind": "vmad.array_property",
+          "target": "PDV_Deity_Zen",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "vmad.array_property",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_Deity_Zen",
+            "formid": null,
+            "editorId": "PDV_Deity_Zen",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform vmad.array_property on PDV_Deity_Zen with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.array-property"
+        }
+      },
+      {
+        "operation": {
+          "id": "baandar-record",
+          "kind": "record.create",
+          "target": "PDV_Deity_BaanDar",
+          "payload": {
+            "recordType": "QUST",
+            "script": "PDV_Deity_BaanDar",
+            "playerFacingName": "Baan Dar"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_Deity_BaanDar",
+          "formid": null,
+          "editorId": "PDV_Deity_BaanDar",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "baandar-record",
+          "kind": "record.create",
+          "target": "PDV_Deity_BaanDar",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_Deity_BaanDar",
+            "formid": null,
+            "editorId": "PDV_Deity_BaanDar",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_Deity_BaanDar with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "baandar-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_Deity_BaanDar",
+          "payload": {
+            "script": "PDV_Deity_BaanDar",
+            "properties": [
+              {
+                "name": "DeityName",
+                "type": "String",
+                "value": "Baan Dar",
+                "resolvedValue": "Baan Dar",
+                "resolution": {
+                  "identifier": "Baan Dar",
+                  "formid": null,
+                  "editorId": "Baan Dar",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "DeityDomain",
+                "type": "String",
+                "value": "Road, Theft, Survival Cunning",
+                "resolvedValue": "Road, Theft, Survival Cunning",
+                "resolution": {
+                  "identifier": "Road, Theft, Survival Cunning",
+                  "formid": null,
+                  "editorId": "Road, Theft, Survival Cunning",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "DeityIndex",
+                "type": "Int",
+                "value": 5,
+                "resolvedValue": 5,
+                "resolution": null
+              },
+              {
+                "name": "Stance_Bosmer",
+                "type": "Int",
+                "value": 0,
+                "resolvedValue": 0,
+                "resolution": null
+              },
+              {
+                "name": "PDV_GLO_DebugLevel",
+                "type": "Object",
+                "value": "PDV_GLO_DebugLevel",
+                "resolvedValue": "PlayerDevotion_Framework.esp:01DBD9",
+                "resolution": {
+                  "identifier": "PDV_GLO_DebugLevel",
+                  "editorId": "PDV_GLO_DebugLevel",
+                  "formid": "PlayerDevotion_Framework.esp:01DBD9",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PDV_GLO_OriginRace",
+                "type": "Object",
+                "value": "PDV_GLO_OriginRace",
+                "resolvedValue": "PlayerDevotion_Framework.esp:02C5C6",
+                "resolution": {
+                  "identifier": "PDV_GLO_OriginRace",
+                  "editorId": "PDV_GLO_OriginRace",
+                  "formid": "PlayerDevotion_Framework.esp:02C5C6",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "EligibleStateTrack",
+                "type": "Object",
+                "value": "PDV_StateTrack_BosmerPath",
+                "resolvedValue": "PlayerDevotion_Framework.esp:0499C5",
+                "resolution": {
+                  "identifier": "PDV_StateTrack_BosmerPath",
+                  "editorId": "PDV_StateTrack_BosmerPath",
+                  "formid": "PlayerDevotion_Framework.esp:0499C5",
+                  "recordType": "QUST",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              }
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.attach_script",
+          "supportedBackends": [
+            "mutagen-patch-request",
+            "mo2-mcp-patch-request"
+          ],
+          "verifier": "vmad.script-properties",
+          "fallback": "manual-packet",
+          "notes": "Attaches or updates a primary VMAD script and scalar/object properties on an existing record."
+        },
+        "targetResolution": {
+          "identifier": "PDV_Deity_BaanDar",
+          "formid": null,
+          "editorId": "PDV_Deity_BaanDar",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.script-properties",
+        "manualPacket": {
+          "operationId": "baandar-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_Deity_BaanDar",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "vmad.attach_script",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_Deity_BaanDar",
+            "formid": null,
+            "editorId": "PDV_Deity_BaanDar",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Open the record PDV_Deity_BaanDar.",
+            "Attach or select script PDV_Deity_BaanDar.",
+            "Set property DeityName to Baan Dar.",
+            "Set property DeityDomain to Road, Theft, Survival Cunning.",
+            "Set property DeityIndex to 5.",
+            "Set property Stance_Bosmer to 0.",
+            "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+            "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+            "Set property EligibleStateTrack to PDV_StateTrack_BosmerPath.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.script-properties"
+        }
+      },
+      {
+        "operation": {
+          "id": "baandar-eligible-states",
+          "kind": "vmad.array_property",
+          "target": "PDV_Deity_BaanDar",
+          "payload": {
+            "script": "PDV_Deity_BaanDar",
+            "property": "EligibleStateValues",
+            "type": "IntArray",
+            "values": [
+              3
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.array_property",
+          "supportedBackends": [],
+          "verifier": "vmad.array-property",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "Array element ordering and VMAD property shapes have not been proven for this backend."
+          ],
+          "notes": "Recognized as intent, but v1 emits deterministic CK/xEdit packets instead of writing arrays."
+        },
+        "targetResolution": {
+          "identifier": "PDV_Deity_BaanDar",
+          "formid": null,
+          "editorId": "PDV_Deity_BaanDar",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.array-property",
+        "manualPacket": {
+          "operationId": "baandar-eligible-states",
+          "kind": "vmad.array_property",
+          "target": "PDV_Deity_BaanDar",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "vmad.array_property",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_Deity_BaanDar",
+            "formid": null,
+            "editorId": "PDV_Deity_BaanDar",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform vmad.array_property on PDV_Deity_BaanDar with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.array-property"
+        }
+      },
+      {
+        "operation": {
+          "id": "manager-bosmer-unresolved",
+          "kind": "manual.unsupported",
+          "target": "PDV__ManagerQuest",
+          "payload": {
+            "properties": [
+              {
+                "name": "PDV_Zen",
+                "type": "Object",
+                "value": "PDV_Deity_Zen"
+              },
+              {
+                "name": "PDV_BaanDar",
+                "type": "Object",
+                "value": "PDV_Deity_BaanDar"
+              },
+              {
+                "name": "PDV_MSG_BosmerSetupChoice",
+                "type": "Object",
+                "value": "PDV_MSG_BosmerSetupChoice"
+              },
+              {
+                "name": "PDV_MSG_BosmerSuggestLivingStory",
+                "type": "Object",
+                "value": "PDV_MSG_BosmerSuggestLivingStory"
+              },
+              {
+                "name": "PDV_MSG_BosmerSuggestExchange",
+                "type": "Object",
+                "value": "PDV_MSG_BosmerSuggestExchange"
+              },
+              {
+                "name": "PDV_MSG_BosmerSuggestBanditRoad",
+                "type": "Object",
+                "value": "PDV_MSG_BosmerSuggestBanditRoad"
+              },
+              {
+                "name": "PDV_MSG_BosmerSuggestOldContract",
+                "type": "Object",
+                "value": "PDV_MSG_BosmerSuggestOldContract"
+              },
+              {
+                "name": "PDV_MSG_BosmerReckoning",
+                "type": "Object",
+                "value": "PDV_MSG_BosmerReckoning"
+              }
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "manual.unsupported",
+          "supportedBackends": [],
+          "verifier": "manual.review",
+          "fallback": "manual-packet",
+          "notes": "Migration fallback for operation shapes the generic authoring schema cannot represent yet."
+        },
+        "targetResolution": {
+          "identifier": "PDV__ManagerQuest",
+          "editorId": "PDV__ManagerQuest",
+          "formid": "PlayerDevotion_Framework.esp:00C325",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp",
+          "winningPlugin": "PlayerDevotion_Framework.esp",
+          "scripts": [],
+          "entries": [],
+          "keywords": [],
+          "spells": [],
+          "perks": [],
+          "packages": [],
+          "inventory": [],
+          "resolved": true
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "manual.review",
+        "manualPacket": {
+          "operationId": "manager-bosmer-unresolved",
+          "kind": "manual.unsupported",
+          "target": "PDV__ManagerQuest",
+          "reason": "No safe backend is available for this operation in the active profile.",
+          "capability": "manual.unsupported",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV__ManagerQuest",
+            "editorId": "PDV__ManagerQuest",
+            "formid": "PlayerDevotion_Framework.esp:00C325",
+            "recordType": "QUST",
+            "plugin": "PlayerDevotion_Framework.esp",
+            "winningPlugin": "PlayerDevotion_Framework.esp",
+            "scripts": [],
+            "entries": [],
+            "keywords": [],
+            "spells": [],
+            "perks": [],
+            "packages": [],
+            "inventory": [],
+            "resolved": true
+          },
+          "steps": [
+            "Perform manual.unsupported on PDV__ManagerQuest with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "manual.review"
+        }
+      },
+      {
+        "operation": {
+          "id": "deity-list-zen-baandar",
+          "kind": "manual.unsupported",
+          "target": "PDV_FLST_AllDeities",
+          "payload": {
+            "entries": [
+              "PDV_Deity_Zen",
+              "PDV_Deity_BaanDar"
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "manual.unsupported",
+          "supportedBackends": [],
+          "verifier": "manual.review",
+          "fallback": "manual-packet",
+          "notes": "Migration fallback for operation shapes the generic authoring schema cannot represent yet."
+        },
+        "targetResolution": {
+          "identifier": "PDV_FLST_AllDeities",
+          "editorId": "PDV_FLST_AllDeities",
+          "formid": "PlayerDevotion_Framework.esp:017E47",
+          "recordType": "FLST",
+          "plugin": "PlayerDevotion_Framework.esp",
+          "winningPlugin": "PlayerDevotion_Framework.esp",
+          "scripts": [],
+          "entries": [],
+          "keywords": [],
+          "spells": [],
+          "perks": [],
+          "packages": [],
+          "inventory": [],
+          "resolved": true
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "manual.review",
+        "manualPacket": {
+          "operationId": "deity-list-zen-baandar",
+          "kind": "manual.unsupported",
+          "target": "PDV_FLST_AllDeities",
+          "reason": "No safe backend is available for this operation in the active profile.",
+          "capability": "manual.unsupported",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_FLST_AllDeities",
+            "editorId": "PDV_FLST_AllDeities",
+            "formid": "PlayerDevotion_Framework.esp:017E47",
+            "recordType": "FLST",
+            "plugin": "PlayerDevotion_Framework.esp",
+            "winningPlugin": "PlayerDevotion_Framework.esp",
+            "scripts": [],
+            "entries": [],
+            "keywords": [],
+            "spells": [],
+            "perks": [],
+            "packages": [],
+            "inventory": [],
+            "resolved": true
+          },
+          "steps": [
+            "Perform manual.unsupported on PDV_FLST_AllDeities with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "manual.review"
+        }
+      },
+      {
+        "operation": {
+          "id": "msg-bosmer-setup-choice",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerSetupChoice",
+          "payload": {
+            "recordType": "MESG",
+            "text": "Choose the Bosmer path you will walk first.",
+            "buttons": [
+              "OldContract",
+              "LivingStory",
+              "Exchange",
+              "BanditRoad"
+            ],
+            "buttonContract": "0=OldContract, 1=LivingStory, 2=Exchange, 3=BanditRoad"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_MSG_BosmerSetupChoice",
+          "formid": null,
+          "editorId": "PDV_MSG_BosmerSetupChoice",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "msg-bosmer-setup-choice",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerSetupChoice",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_MSG_BosmerSetupChoice",
+            "formid": null,
+            "editorId": "PDV_MSG_BosmerSetupChoice",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_MSG_BosmerSetupChoice with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "msg-bosmer-suggest-living-story",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerSuggestLivingStory",
+          "payload": {
+            "recordType": "MESG",
+            "text": "Your recent life points toward Living Story. Accept this path offer? A rite still confirms the change.",
+            "buttons": [
+              "Accept",
+              "Refuse"
+            ],
+            "buttonContract": "0=accept, nonzero=refuse"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_MSG_BosmerSuggestLivingStory",
+          "formid": null,
+          "editorId": "PDV_MSG_BosmerSuggestLivingStory",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "msg-bosmer-suggest-living-story",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerSuggestLivingStory",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_MSG_BosmerSuggestLivingStory",
+            "formid": null,
+            "editorId": "PDV_MSG_BosmerSuggestLivingStory",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_MSG_BosmerSuggestLivingStory with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "msg-bosmer-suggest-exchange",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerSuggestExchange",
+          "payload": {
+            "recordType": "MESG",
+            "text": "Your recent life points toward Exchange. Accept this path offer? A rite still confirms the change.",
+            "buttons": [
+              "Accept",
+              "Refuse"
+            ],
+            "buttonContract": "0=accept, nonzero=refuse"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_MSG_BosmerSuggestExchange",
+          "formid": null,
+          "editorId": "PDV_MSG_BosmerSuggestExchange",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "msg-bosmer-suggest-exchange",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerSuggestExchange",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_MSG_BosmerSuggestExchange",
+            "formid": null,
+            "editorId": "PDV_MSG_BosmerSuggestExchange",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_MSG_BosmerSuggestExchange with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "msg-bosmer-suggest-bandit-road",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerSuggestBanditRoad",
+          "payload": {
+            "recordType": "MESG",
+            "text": "Your recent life points toward Bandit Road. Accept this path offer? A rite still confirms the change.",
+            "buttons": [
+              "Accept",
+              "Refuse"
+            ],
+            "buttonContract": "0=accept, nonzero=refuse"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_MSG_BosmerSuggestBanditRoad",
+          "formid": null,
+          "editorId": "PDV_MSG_BosmerSuggestBanditRoad",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "msg-bosmer-suggest-bandit-road",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerSuggestBanditRoad",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_MSG_BosmerSuggestBanditRoad",
+            "formid": null,
+            "editorId": "PDV_MSG_BosmerSuggestBanditRoad",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_MSG_BosmerSuggestBanditRoad with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "msg-bosmer-suggest-old-contract",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerSuggestOldContract",
+          "payload": {
+            "recordType": "MESG",
+            "text": "Your recent life points toward Old Contract. Accept this path offer? A rite still confirms the change.",
+            "buttons": [
+              "Accept",
+              "Refuse"
+            ],
+            "buttonContract": "0=accept, nonzero=refuse"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_MSG_BosmerSuggestOldContract",
+          "formid": null,
+          "editorId": "PDV_MSG_BosmerSuggestOldContract",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "msg-bosmer-suggest-old-contract",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerSuggestOldContract",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_MSG_BosmerSuggestOldContract",
+            "formid": null,
+            "editorId": "PDV_MSG_BosmerSuggestOldContract",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_MSG_BosmerSuggestOldContract with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "msg-bosmer-reckoning",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerReckoning",
+          "payload": {
+            "recordType": "MESG",
+            "text": "The Pact demands reckoning. Recommit now, or renounce it.",
+            "buttons": [
+              "Recommit",
+              "Renounce"
+            ],
+            "buttonContract": "0=recommit, nonzero=renounce"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_MSG_BosmerReckoning",
+          "formid": null,
+          "editorId": "PDV_MSG_BosmerReckoning",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "msg-bosmer-reckoning",
+          "kind": "record.create",
+          "target": "PDV_MSG_BosmerReckoning",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_MSG_BosmerReckoning",
+            "formid": null,
+            "editorId": "PDV_MSG_BosmerReckoning",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_MSG_BosmerReckoning with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "acti-bosmer-living-story-record",
+          "kind": "record.create",
+          "target": "PDV_ACTI_BosmerLivingStorySignal",
+          "payload": {
+            "recordType": "ACTI",
+            "script": "PDV_EventSignalActivator"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_ACTI_BosmerLivingStorySignal",
+          "formid": null,
+          "editorId": "PDV_ACTI_BosmerLivingStorySignal",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "acti-bosmer-living-story-record",
+          "kind": "record.create",
+          "target": "PDV_ACTI_BosmerLivingStorySignal",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_ACTI_BosmerLivingStorySignal",
+            "formid": null,
+            "editorId": "PDV_ACTI_BosmerLivingStorySignal",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_ACTI_BosmerLivingStorySignal with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "acti-bosmer-living-story-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_ACTI_BosmerLivingStorySignal",
+          "payload": {
+            "script": "PDV_EventSignalActivator",
+            "properties": [
+              {
+                "name": "PDV_EventBusService",
+                "type": "Object",
+                "value": "PDV_EventBus",
+                "resolvedValue": "PlayerDevotion_Framework.esp:046AF7",
+                "resolution": {
+                  "identifier": "PDV_EventBus",
+                  "editorId": "PDV_EventBus",
+                  "formid": "PlayerDevotion_Framework.esp:046AF7",
+                  "recordType": "QUST",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PlayerREF",
+                "type": "Object",
+                "value": "PlayerRef",
+                "resolvedValue": "PlayerRef",
+                "resolution": {
+                  "identifier": "PlayerRef",
+                  "formid": null,
+                  "editorId": "PlayerRef",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "PDV_GLO_OriginRace",
+                "type": "Object",
+                "value": "PDV_GLO_OriginRace",
+                "resolvedValue": "PlayerDevotion_Framework.esp:02C5C6",
+                "resolution": {
+                  "identifier": "PDV_GLO_OriginRace",
+                  "editorId": "PDV_GLO_OriginRace",
+                  "formid": "PlayerDevotion_Framework.esp:02C5C6",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PDV_GLO_DebugLevel",
+                "type": "Object",
+                "value": "PDV_GLO_DebugLevel",
+                "resolvedValue": "PlayerDevotion_Framework.esp:01DBD9",
+                "resolution": {
+                  "identifier": "PDV_GLO_DebugLevel",
+                  "editorId": "PDV_GLO_DebugLevel",
+                  "formid": "PlayerDevotion_Framework.esp:01DBD9",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "RouteId",
+                "type": "Int",
+                "value": 41,
+                "resolvedValue": 41,
+                "resolution": null
+              },
+              {
+                "name": "RequiredOriginRace",
+                "type": "Int",
+                "value": 4,
+                "resolvedValue": 4,
+                "resolution": null
+              }
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.attach_script",
+          "supportedBackends": [
+            "mutagen-patch-request",
+            "mo2-mcp-patch-request"
+          ],
+          "verifier": "vmad.script-properties",
+          "fallback": "manual-packet",
+          "notes": "Attaches or updates a primary VMAD script and scalar/object properties on an existing record."
+        },
+        "targetResolution": {
+          "identifier": "PDV_ACTI_BosmerLivingStorySignal",
+          "formid": null,
+          "editorId": "PDV_ACTI_BosmerLivingStorySignal",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.script-properties",
+        "manualPacket": {
+          "operationId": "acti-bosmer-living-story-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_ACTI_BosmerLivingStorySignal",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "vmad.attach_script",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_ACTI_BosmerLivingStorySignal",
+            "formid": null,
+            "editorId": "PDV_ACTI_BosmerLivingStorySignal",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Open the record PDV_ACTI_BosmerLivingStorySignal.",
+            "Attach or select script PDV_EventSignalActivator.",
+            "Set property PDV_EventBusService to PDV_EventBus.",
+            "Set property PlayerREF to PlayerRef.",
+            "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+            "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+            "Set property RouteId to 41.",
+            "Set property RequiredOriginRace to 4.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.script-properties"
+        }
+      },
+      {
+        "operation": {
+          "id": "acti-bosmer-exchange-record",
+          "kind": "record.create",
+          "target": "PDV_ACTI_BosmerExchangeSignal",
+          "payload": {
+            "recordType": "ACTI",
+            "script": "PDV_EventSignalActivator"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_ACTI_BosmerExchangeSignal",
+          "formid": null,
+          "editorId": "PDV_ACTI_BosmerExchangeSignal",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "acti-bosmer-exchange-record",
+          "kind": "record.create",
+          "target": "PDV_ACTI_BosmerExchangeSignal",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_ACTI_BosmerExchangeSignal",
+            "formid": null,
+            "editorId": "PDV_ACTI_BosmerExchangeSignal",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_ACTI_BosmerExchangeSignal with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "acti-bosmer-exchange-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_ACTI_BosmerExchangeSignal",
+          "payload": {
+            "script": "PDV_EventSignalActivator",
+            "properties": [
+              {
+                "name": "PDV_EventBusService",
+                "type": "Object",
+                "value": "PDV_EventBus",
+                "resolvedValue": "PlayerDevotion_Framework.esp:046AF7",
+                "resolution": {
+                  "identifier": "PDV_EventBus",
+                  "editorId": "PDV_EventBus",
+                  "formid": "PlayerDevotion_Framework.esp:046AF7",
+                  "recordType": "QUST",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PlayerREF",
+                "type": "Object",
+                "value": "PlayerRef",
+                "resolvedValue": "PlayerRef",
+                "resolution": {
+                  "identifier": "PlayerRef",
+                  "formid": null,
+                  "editorId": "PlayerRef",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "PDV_GLO_OriginRace",
+                "type": "Object",
+                "value": "PDV_GLO_OriginRace",
+                "resolvedValue": "PlayerDevotion_Framework.esp:02C5C6",
+                "resolution": {
+                  "identifier": "PDV_GLO_OriginRace",
+                  "editorId": "PDV_GLO_OriginRace",
+                  "formid": "PlayerDevotion_Framework.esp:02C5C6",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PDV_GLO_DebugLevel",
+                "type": "Object",
+                "value": "PDV_GLO_DebugLevel",
+                "resolvedValue": "PlayerDevotion_Framework.esp:01DBD9",
+                "resolution": {
+                  "identifier": "PDV_GLO_DebugLevel",
+                  "editorId": "PDV_GLO_DebugLevel",
+                  "formid": "PlayerDevotion_Framework.esp:01DBD9",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "RouteId",
+                "type": "Int",
+                "value": 42,
+                "resolvedValue": 42,
+                "resolution": null
+              },
+              {
+                "name": "RequiredOriginRace",
+                "type": "Int",
+                "value": 4,
+                "resolvedValue": 4,
+                "resolution": null
+              }
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.attach_script",
+          "supportedBackends": [
+            "mutagen-patch-request",
+            "mo2-mcp-patch-request"
+          ],
+          "verifier": "vmad.script-properties",
+          "fallback": "manual-packet",
+          "notes": "Attaches or updates a primary VMAD script and scalar/object properties on an existing record."
+        },
+        "targetResolution": {
+          "identifier": "PDV_ACTI_BosmerExchangeSignal",
+          "formid": null,
+          "editorId": "PDV_ACTI_BosmerExchangeSignal",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.script-properties",
+        "manualPacket": {
+          "operationId": "acti-bosmer-exchange-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_ACTI_BosmerExchangeSignal",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "vmad.attach_script",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_ACTI_BosmerExchangeSignal",
+            "formid": null,
+            "editorId": "PDV_ACTI_BosmerExchangeSignal",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Open the record PDV_ACTI_BosmerExchangeSignal.",
+            "Attach or select script PDV_EventSignalActivator.",
+            "Set property PDV_EventBusService to PDV_EventBus.",
+            "Set property PlayerREF to PlayerRef.",
+            "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+            "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+            "Set property RouteId to 42.",
+            "Set property RequiredOriginRace to 4.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.script-properties"
+        }
+      },
+      {
+        "operation": {
+          "id": "acti-bosmer-bandit-road-record",
+          "kind": "record.create",
+          "target": "PDV_ACTI_BosmerBanditRoadSignal",
+          "payload": {
+            "recordType": "ACTI",
+            "script": "PDV_EventSignalActivator"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_ACTI_BosmerBanditRoadSignal",
+          "formid": null,
+          "editorId": "PDV_ACTI_BosmerBanditRoadSignal",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "acti-bosmer-bandit-road-record",
+          "kind": "record.create",
+          "target": "PDV_ACTI_BosmerBanditRoadSignal",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_ACTI_BosmerBanditRoadSignal",
+            "formid": null,
+            "editorId": "PDV_ACTI_BosmerBanditRoadSignal",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_ACTI_BosmerBanditRoadSignal with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "acti-bosmer-bandit-road-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_ACTI_BosmerBanditRoadSignal",
+          "payload": {
+            "script": "PDV_EventSignalActivator",
+            "properties": [
+              {
+                "name": "PDV_EventBusService",
+                "type": "Object",
+                "value": "PDV_EventBus",
+                "resolvedValue": "PlayerDevotion_Framework.esp:046AF7",
+                "resolution": {
+                  "identifier": "PDV_EventBus",
+                  "editorId": "PDV_EventBus",
+                  "formid": "PlayerDevotion_Framework.esp:046AF7",
+                  "recordType": "QUST",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PlayerREF",
+                "type": "Object",
+                "value": "PlayerRef",
+                "resolvedValue": "PlayerRef",
+                "resolution": {
+                  "identifier": "PlayerRef",
+                  "formid": null,
+                  "editorId": "PlayerRef",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "PDV_GLO_OriginRace",
+                "type": "Object",
+                "value": "PDV_GLO_OriginRace",
+                "resolvedValue": "PlayerDevotion_Framework.esp:02C5C6",
+                "resolution": {
+                  "identifier": "PDV_GLO_OriginRace",
+                  "editorId": "PDV_GLO_OriginRace",
+                  "formid": "PlayerDevotion_Framework.esp:02C5C6",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PDV_GLO_DebugLevel",
+                "type": "Object",
+                "value": "PDV_GLO_DebugLevel",
+                "resolvedValue": "PlayerDevotion_Framework.esp:01DBD9",
+                "resolution": {
+                  "identifier": "PDV_GLO_DebugLevel",
+                  "editorId": "PDV_GLO_DebugLevel",
+                  "formid": "PlayerDevotion_Framework.esp:01DBD9",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "RouteId",
+                "type": "Int",
+                "value": 43,
+                "resolvedValue": 43,
+                "resolution": null
+              },
+              {
+                "name": "RequiredOriginRace",
+                "type": "Int",
+                "value": 4,
+                "resolvedValue": 4,
+                "resolution": null
+              }
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.attach_script",
+          "supportedBackends": [
+            "mutagen-patch-request",
+            "mo2-mcp-patch-request"
+          ],
+          "verifier": "vmad.script-properties",
+          "fallback": "manual-packet",
+          "notes": "Attaches or updates a primary VMAD script and scalar/object properties on an existing record."
+        },
+        "targetResolution": {
+          "identifier": "PDV_ACTI_BosmerBanditRoadSignal",
+          "formid": null,
+          "editorId": "PDV_ACTI_BosmerBanditRoadSignal",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.script-properties",
+        "manualPacket": {
+          "operationId": "acti-bosmer-bandit-road-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_ACTI_BosmerBanditRoadSignal",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "vmad.attach_script",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_ACTI_BosmerBanditRoadSignal",
+            "formid": null,
+            "editorId": "PDV_ACTI_BosmerBanditRoadSignal",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Open the record PDV_ACTI_BosmerBanditRoadSignal.",
+            "Attach or select script PDV_EventSignalActivator.",
+            "Set property PDV_EventBusService to PDV_EventBus.",
+            "Set property PlayerREF to PlayerRef.",
+            "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+            "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+            "Set property RouteId to 43.",
+            "Set property RequiredOriginRace to 4.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.script-properties"
+        }
+      },
+      {
+        "operation": {
+          "id": "acti-bosmer-pact-positive-record",
+          "kind": "record.create",
+          "target": "PDV_ACTI_BosmerPactPositiveSignal",
+          "payload": {
+            "recordType": "ACTI",
+            "script": "PDV_EventSignalActivator"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_ACTI_BosmerPactPositiveSignal",
+          "formid": null,
+          "editorId": "PDV_ACTI_BosmerPactPositiveSignal",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "acti-bosmer-pact-positive-record",
+          "kind": "record.create",
+          "target": "PDV_ACTI_BosmerPactPositiveSignal",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_ACTI_BosmerPactPositiveSignal",
+            "formid": null,
+            "editorId": "PDV_ACTI_BosmerPactPositiveSignal",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_ACTI_BosmerPactPositiveSignal with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "acti-bosmer-pact-positive-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_ACTI_BosmerPactPositiveSignal",
+          "payload": {
+            "script": "PDV_EventSignalActivator",
+            "properties": [
+              {
+                "name": "PDV_EventBusService",
+                "type": "Object",
+                "value": "PDV_EventBus",
+                "resolvedValue": "PlayerDevotion_Framework.esp:046AF7",
+                "resolution": {
+                  "identifier": "PDV_EventBus",
+                  "editorId": "PDV_EventBus",
+                  "formid": "PlayerDevotion_Framework.esp:046AF7",
+                  "recordType": "QUST",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PlayerREF",
+                "type": "Object",
+                "value": "PlayerRef",
+                "resolvedValue": "PlayerRef",
+                "resolution": {
+                  "identifier": "PlayerRef",
+                  "formid": null,
+                  "editorId": "PlayerRef",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "PDV_GLO_OriginRace",
+                "type": "Object",
+                "value": "PDV_GLO_OriginRace",
+                "resolvedValue": "PlayerDevotion_Framework.esp:02C5C6",
+                "resolution": {
+                  "identifier": "PDV_GLO_OriginRace",
+                  "editorId": "PDV_GLO_OriginRace",
+                  "formid": "PlayerDevotion_Framework.esp:02C5C6",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PDV_GLO_DebugLevel",
+                "type": "Object",
+                "value": "PDV_GLO_DebugLevel",
+                "resolvedValue": "PlayerDevotion_Framework.esp:01DBD9",
+                "resolution": {
+                  "identifier": "PDV_GLO_DebugLevel",
+                  "editorId": "PDV_GLO_DebugLevel",
+                  "formid": "PlayerDevotion_Framework.esp:01DBD9",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "RouteId",
+                "type": "Int",
+                "value": 44,
+                "resolvedValue": 44,
+                "resolution": null
+              },
+              {
+                "name": "RequiredOriginRace",
+                "type": "Int",
+                "value": 4,
+                "resolvedValue": 4,
+                "resolution": null
+              }
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.attach_script",
+          "supportedBackends": [
+            "mutagen-patch-request",
+            "mo2-mcp-patch-request"
+          ],
+          "verifier": "vmad.script-properties",
+          "fallback": "manual-packet",
+          "notes": "Attaches or updates a primary VMAD script and scalar/object properties on an existing record."
+        },
+        "targetResolution": {
+          "identifier": "PDV_ACTI_BosmerPactPositiveSignal",
+          "formid": null,
+          "editorId": "PDV_ACTI_BosmerPactPositiveSignal",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.script-properties",
+        "manualPacket": {
+          "operationId": "acti-bosmer-pact-positive-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_ACTI_BosmerPactPositiveSignal",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "vmad.attach_script",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_ACTI_BosmerPactPositiveSignal",
+            "formid": null,
+            "editorId": "PDV_ACTI_BosmerPactPositiveSignal",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Open the record PDV_ACTI_BosmerPactPositiveSignal.",
+            "Attach or select script PDV_EventSignalActivator.",
+            "Set property PDV_EventBusService to PDV_EventBus.",
+            "Set property PlayerREF to PlayerRef.",
+            "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+            "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+            "Set property RouteId to 44.",
+            "Set property RequiredOriginRace to 4.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.script-properties"
+        }
+      },
+      {
+        "operation": {
+          "id": "acti-state-transition-confirm-rite-record",
+          "kind": "record.create",
+          "target": "PDV_ACTI_StateTransitionConfirmRite",
+          "payload": {
+            "recordType": "ACTI",
+            "script": "PDV_EventSignalActivator"
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "record.create",
+          "supportedBackends": [],
+          "verifier": "record.exists",
+          "fallback": "manual-packet",
+          "unsafeWhen": [
+            "New-record FormID allocation policy is project-specific until the writer owns deterministic ID ranges."
+          ],
+          "notes": "Reserved for future deterministic record minting."
+        },
+        "targetResolution": {
+          "identifier": "PDV_ACTI_StateTransitionConfirmRite",
+          "formid": null,
+          "editorId": "PDV_ACTI_StateTransitionConfirmRite",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "record.exists",
+        "manualPacket": {
+          "operationId": "acti-state-transition-confirm-rite-record",
+          "kind": "record.create",
+          "target": "PDV_ACTI_StateTransitionConfirmRite",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "record.create",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_ACTI_StateTransitionConfirmRite",
+            "formid": null,
+            "editorId": "PDV_ACTI_StateTransitionConfirmRite",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform record.create on PDV_ACTI_StateTransitionConfirmRite with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "record.exists"
+        }
+      },
+      {
+        "operation": {
+          "id": "acti-state-transition-confirm-rite-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_ACTI_StateTransitionConfirmRite",
+          "payload": {
+            "script": "PDV_EventSignalActivator",
+            "properties": [
+              {
+                "name": "PDV_EventBusService",
+                "type": "Object",
+                "value": "PDV_EventBus",
+                "resolvedValue": "PlayerDevotion_Framework.esp:046AF7",
+                "resolution": {
+                  "identifier": "PDV_EventBus",
+                  "editorId": "PDV_EventBus",
+                  "formid": "PlayerDevotion_Framework.esp:046AF7",
+                  "recordType": "QUST",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PlayerREF",
+                "type": "Object",
+                "value": "PlayerRef",
+                "resolvedValue": "PlayerRef",
+                "resolution": {
+                  "identifier": "PlayerRef",
+                  "formid": null,
+                  "editorId": "PlayerRef",
+                  "recordType": null,
+                  "plugin": null,
+                  "winningPlugin": null,
+                  "resolved": false
+                }
+              },
+              {
+                "name": "PDV_GLO_OriginRace",
+                "type": "Object",
+                "value": "PDV_GLO_OriginRace",
+                "resolvedValue": "PlayerDevotion_Framework.esp:02C5C6",
+                "resolution": {
+                  "identifier": "PDV_GLO_OriginRace",
+                  "editorId": "PDV_GLO_OriginRace",
+                  "formid": "PlayerDevotion_Framework.esp:02C5C6",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "PDV_GLO_DebugLevel",
+                "type": "Object",
+                "value": "PDV_GLO_DebugLevel",
+                "resolvedValue": "PlayerDevotion_Framework.esp:01DBD9",
+                "resolution": {
+                  "identifier": "PDV_GLO_DebugLevel",
+                  "editorId": "PDV_GLO_DebugLevel",
+                  "formid": "PlayerDevotion_Framework.esp:01DBD9",
+                  "recordType": "GLOB",
+                  "plugin": "PlayerDevotion_Framework.esp",
+                  "winningPlugin": "PlayerDevotion_Framework.esp",
+                  "scripts": [],
+                  "entries": [],
+                  "keywords": [],
+                  "spells": [],
+                  "perks": [],
+                  "packages": [],
+                  "inventory": [],
+                  "resolved": true
+                }
+              },
+              {
+                "name": "RouteId",
+                "type": "Int",
+                "value": 45,
+                "resolvedValue": 45,
+                "resolution": null
+              },
+              {
+                "name": "RequiredOriginRace",
+                "type": "Int",
+                "value": -1,
+                "resolvedValue": -1,
+                "resolution": null
+              }
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "vmad.attach_script",
+          "supportedBackends": [
+            "mutagen-patch-request",
+            "mo2-mcp-patch-request"
+          ],
+          "verifier": "vmad.script-properties",
+          "fallback": "manual-packet",
+          "notes": "Attaches or updates a primary VMAD script and scalar/object properties on an existing record."
+        },
+        "targetResolution": {
+          "identifier": "PDV_ACTI_StateTransitionConfirmRite",
+          "formid": null,
+          "editorId": "PDV_ACTI_StateTransitionConfirmRite",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "vmad.script-properties",
+        "manualPacket": {
+          "operationId": "acti-state-transition-confirm-rite-vmad",
+          "kind": "vmad.attach_script",
+          "target": "PDV_ACTI_StateTransitionConfirmRite",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "vmad.attach_script",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_ACTI_StateTransitionConfirmRite",
+            "formid": null,
+            "editorId": "PDV_ACTI_StateTransitionConfirmRite",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Open the record PDV_ACTI_StateTransitionConfirmRite.",
+            "Attach or select script PDV_EventSignalActivator.",
+            "Set property PDV_EventBusService to PDV_EventBus.",
+            "Set property PlayerREF to PlayerRef.",
+            "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+            "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+            "Set property RouteId to 45.",
+            "Set property RequiredOriginRace to -1.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "vmad.script-properties"
+        }
+      },
+      {
+        "operation": {
+          "id": "bosmer-proof-surface-placement",
+          "kind": "manual.unsupported",
+          "target": "PDV_Phase9_BosmerPlacement",
+          "payload": {
+            "placedInstancesRequired": [
+              "PDV_ACTI_BosmerLivingStorySignal",
+              "PDV_ACTI_BosmerExchangeSignal",
+              "PDV_ACTI_BosmerBanditRoadSignal",
+              "PDV_ACTI_BosmerPactPositiveSignal",
+              "PDV_ACTI_StateTransitionConfirmRite"
+            ]
+          },
+          "requires": [],
+          "preferredBackend": null,
+          "metadata": {}
+        },
+        "capability": {
+          "kind": "manual.unsupported",
+          "supportedBackends": [],
+          "verifier": "manual.review",
+          "fallback": "manual-packet",
+          "notes": "Migration fallback for operation shapes the generic authoring schema cannot represent yet."
+        },
+        "targetResolution": {
+          "identifier": "PDV_Phase9_BosmerPlacement",
+          "formid": null,
+          "editorId": "PDV_Phase9_BosmerPlacement",
+          "recordType": null,
+          "plugin": null,
+          "winningPlugin": null,
+          "resolved": false
+        },
+        "backend": "manual-packet",
+        "status": "manual",
+        "verifier": "manual.review",
+        "manualPacket": {
+          "operationId": "bosmer-proof-surface-placement",
+          "kind": "manual.unsupported",
+          "target": "PDV_Phase9_BosmerPlacement",
+          "reason": "Target could not be resolved by the active resource connectors.",
+          "capability": "manual.unsupported",
+          "requiresCkSemantics": false,
+          "targetResolution": {
+            "identifier": "PDV_Phase9_BosmerPlacement",
+            "formid": null,
+            "editorId": "PDV_Phase9_BosmerPlacement",
+            "recordType": null,
+            "plugin": null,
+            "winningPlugin": null,
+            "resolved": false
+          },
+          "steps": [
+            "Perform manual.unsupported on PDV_Phase9_BosmerPlacement with the manifest payload.",
+            "Save the plugin and run the verifier/readback command."
+          ],
+          "verifier": "manual.review"
+        }
+      }
+    ],
+    "summary": {
+      "total": 30,
+      "ready": 3,
+      "manual": 27,
+      "abort": 0
+    }
+  },
+  "patchRequest": {
+    "output_name": "PDV_Phase9BosmerStateOverlay.esp",
+    "author": "Creation Authoring Automation",
+    "esl_flag": true,
+    "records": [
+      {
+        "op": "override",
+        "formid": "PlayerDevotion_Framework.esp:06CB52",
+        "attach_scripts": [
+          {
+            "name": "PDV_Deity_Yffre",
+            "properties": [
+              {
+                "name": "DeityName",
+                "type": "String",
+                "value": "Y'ffre"
+              },
+              {
+                "name": "DeityDomain",
+                "type": "String",
+                "value": "Story, Green Pact, Forest Law"
+              },
+              {
+                "name": "DeityIndex",
+                "type": "Int",
+                "value": 3
+              },
+              {
+                "name": "Stance_Bosmer",
+                "type": "Int",
+                "value": 0
+              },
+              {
+                "name": "PDV_GLO_DebugLevel",
+                "type": "Object",
+                "value": "PlayerDevotion_Framework.esp:01DBD9"
+              },
+              {
+                "name": "PDV_GLO_OriginRace",
+                "type": "Object",
+                "value": "PlayerDevotion_Framework.esp:02C5C6"
+              },
+              {
+                "name": "EligibleStateTrack",
+                "type": "Object",
+                "value": "PlayerDevotion_Framework.esp:0499C5"
+              },
+              {
+                "name": "DELTA_PACT_POSITIVE",
+                "type": "Float",
+                "value": 2
+              },
+              {
+                "name": "DELTA_LIVING_STORY",
+                "type": "Float",
+                "value": 2.5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "op": "override",
+        "formid": "PlayerDevotion_Framework.esp:00C325",
+        "attach_scripts": [
+          {
+            "name": "PDV__ManagerQuest",
+            "properties": [
+              {
+                "name": "PDV_BosmerPathTrack",
+                "type": "Object",
+                "value": "PlayerDevotion_Framework.esp:0499C5"
+              },
+              {
+                "name": "PDV_Yffre",
+                "type": "Object",
+                "value": "PlayerDevotion_Framework.esp:06CB52"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "op": "override",
+        "formid": "PlayerDevotion_Framework.esp:017E47",
+        "add_form_list_entries": [
+          "PlayerDevotion_Framework.esp:06CB52"
+        ]
+      }
+    ]
+  },
+  "note": "The host adapter is responsible for passing this patch request to a concrete writer."
+}

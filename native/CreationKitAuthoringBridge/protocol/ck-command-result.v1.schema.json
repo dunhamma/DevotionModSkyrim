@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "creation-authoring.ck-command-result.v1",
+  "title": "Creation Kit Command Result",
+  "type": "object",
+  "required": ["schema", "status", "commands"],
+  "properties": {
+    "schema": { "const": "creation-authoring.ck-command-result.v1" },
+    "status": { "enum": ["PASS", "FAIL", "REQUESTED", "UNSAFE_BLOCKED", "UNSUPPORTED"] },
+    "transport": { "type": "string" },
+    "ckLogPath": { "type": "string" },
+    "plugin": { "type": "string" },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["op", "status"],
+        "properties": {
+          "op": { "type": "string" },
+          "operationId": { "type": "string" },
+          "status": { "enum": ["PASS", "FAIL", "UNSAFE_BLOCKED", "UNSUPPORTED"] },
+          "message": { "type": "string" },
+          "evidence": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "message": { "type": "string" }
+  },
+  "additionalProperties": true
+}

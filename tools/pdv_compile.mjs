@@ -43,6 +43,9 @@ const ACTIVE_SCRIPTS = [
   "PDV_Deity_Kyne",
   "PDV_Deity_Talos",
   "PDV_Deity_AuriEl",
+  "PDV_Deity_Yffre",
+  "PDV_Deity_Zen",
+  "PDV_Deity_BaanDar",
   "PDV_EventTypes",
   "PDV_EventBus",
   "PDV_FragmentBridge",
@@ -127,6 +130,7 @@ function parseArgs(argv) {
     strictPatternProving: false,
     strictPhase7: false,
     strictPhase8: false,
+    strictPhase9: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -164,6 +168,8 @@ function parseArgs(argv) {
       args.strictPhase7 = true;
     } else if (arg === "--strict-phase8") {
       args.strictPhase8 = true;
+    } else if (arg === "--strict-phase9") {
+      args.strictPhase9 = true;
     } else if (arg === "-h" || arg === "--help") {
       usage(null, 0);
     } else {
@@ -197,6 +203,7 @@ function usage(error = null, exitCode = 2) {
     "  --strict-pattern-proving Pass --strict-pattern-proving to the verifier.",
     "  --strict-phase7       Pass --strict-phase7 to the verifier.",
     "  --strict-phase8       Pass --strict-phase8 to the verifier.",
+    "  --strict-phase9       Pass --strict-phase9 to the verifier.",
     "  --allow-warnings      Do not convert Papyrus warnings into failures.",
   ].join("\n");
 
@@ -317,6 +324,9 @@ function runVerifier(args) {
   }
   if (args.strictPhase8) {
     verifierArgs.push("--strict-phase8");
+  }
+  if (args.strictPhase9) {
+    verifierArgs.push("--strict-phase9");
   }
 
   const result = spawnSync(process.execPath, verifierArgs, {

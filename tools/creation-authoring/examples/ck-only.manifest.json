@@ -1,0 +1,20 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "example-mod",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_AutoWire.esp",
+  "operations": [
+    {
+      "id": "kill-actor-node",
+      "kind": "story_manager.node",
+      "target": "EXM_SM_KillActor",
+      "requires": ["ck-semantics"],
+      "payload": {
+        "event": "Kill Actor",
+        "receiverQuest": "EXM__SM_KillActor",
+        "sharesEvent": true
+      }
+    }
+  ]
+}

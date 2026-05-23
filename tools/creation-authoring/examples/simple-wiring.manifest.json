@@ -1,0 +1,32 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "example-mod",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_AutoWire.esp",
+  "operations": [
+    {
+      "id": "main-quest-script",
+      "kind": "vmad.attach_script",
+      "target": "EXM_MainQuest",
+      "payload": {
+        "script": "EXM_MainQuestScript",
+        "properties": [
+          {
+            "name": "DebugGlobal",
+            "type": "Object",
+            "value": "EXM_GLO_Debug"
+          }
+        ]
+      }
+    },
+    {
+      "id": "service-list-entry",
+      "kind": "formlist.add",
+      "target": "EXM_FLST_AllServices",
+      "payload": {
+        "entry": "EXM_ServiceQuest"
+      }
+    }
+  ]
+}

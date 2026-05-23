@@ -1,0 +1,5 @@
+native/CreationKitAuthoringBridge/bin/
+native/CreationKitAuthoringBridge/obj/
+tools/creation-merge-runner/bin/
+tools/creation-merge-runner/obj/
+native/vendor/Creation-Kit-Platform-Extended/

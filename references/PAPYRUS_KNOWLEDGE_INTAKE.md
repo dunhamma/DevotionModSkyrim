@@ -7,6 +7,17 @@
 
 ---
 
+## PDV Operational Reference Order
+
+For day-to-day PDV Papyrus work, use this lookup order:
+
+1. Shipped local `.psc` source from the active mod or dependency when available.
+2. `node .\tools\pdv_papyrus_lookup.mjs --query <FunctionOrScript>` or `--script <Script> --function <Function>` as the default local BellCube lookup helper.
+3. CK Wiki / SKSE source / plugin source when BellCube does not cover the function or the exact game/plugin version still looks ambiguous.
+4. Compile or verifier proof in the live PDV environment before treating any uncertain API use as settled.
+
+BellCube is the default external Papyrus reference for this repo. It is curated and extremely useful, but it is not exhaustive and does not replace compile verification.
+
 ## PDV Practical Parser Notes
 
 These project-local rules come from the 2026-05-14 external Skyrim modding lessons intake and should be treated as authoring guardrails alongside API-source verification:

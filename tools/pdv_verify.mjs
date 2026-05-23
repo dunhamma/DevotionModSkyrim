@@ -59,6 +59,12 @@ const PHASE8_CONCORDAT_TALOS_MANIFEST = path.join(
   "authoring",
   "PDV_Phase8ConcordatTalos.manifest.json",
 );
+const PHASE9_BOSMER_STATE_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase9BosmerState.manifest.json",
+);
 const PATCH_RULES_DIR = path.join(
   PROJECT_ROOT,
   "references",
@@ -101,6 +107,20 @@ const PREFLIGHT_RECORDS = {
   PDV_GLO_PatronState: "GLOB",
   PDV_EventTypes: "QUST",
   PDV_EventBus: "QUST",
+};
+
+const PHASE9_RECORDS = {
+  PDV_GLO_BosmerPath: "GLOB",
+  PDV_StateTrack_BosmerPath: "QUST",
+  PDV_Deity_Yffre: "QUST",
+  PDV_Deity_Zen: "QUST",
+  PDV_Deity_BaanDar: "QUST",
+  PDV_MSG_BosmerSetupChoice: "MESG",
+  PDV_MSG_BosmerSuggestLivingStory: "MESG",
+  PDV_MSG_BosmerSuggestExchange: "MESG",
+  PDV_MSG_BosmerSuggestBanditRoad: "MESG",
+  PDV_MSG_BosmerSuggestOldContract: "MESG",
+  PDV_MSG_BosmerReckoning: "MESG",
 };
 
 const SKELETON_REPUTATION_TRACKS = [
@@ -260,6 +280,44 @@ const PHASE7_SIGNAL_RECEIVER_DEFINITIONS = [
   },
 ];
 
+const PHASE9_SIGNAL_RECEIVER_DEFINITIONS = [
+  {
+    recordEdid: "PDV_ACTI_BosmerLivingStorySignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 41,
+    requiredOriginRace: 4,
+  },
+  {
+    recordEdid: "PDV_ACTI_BosmerExchangeSignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 42,
+    requiredOriginRace: 4,
+  },
+  {
+    recordEdid: "PDV_ACTI_BosmerBanditRoadSignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 43,
+    requiredOriginRace: 4,
+  },
+  {
+    recordEdid: "PDV_ACTI_BosmerPactPositiveSignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 44,
+    requiredOriginRace: 4,
+  },
+  {
+    recordEdid: "PDV_ACTI_StateTransitionConfirmRite",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 45,
+    requiredOriginRace: -1,
+  },
+];
+
 const COMPILED_SCRIPTS = {
   PDV__MainQuest: "required",
   PDV_Origin: "required",
@@ -268,6 +326,9 @@ const COMPILED_SCRIPTS = {
   PDV_Deity_Kyne: "required",
   PDV_Deity_Talos: "required",
   PDV_Deity_AuriEl: "required",
+  PDV_Deity_Yffre: "required",
+  PDV_Deity_Zen: "required",
+  PDV_Deity_BaanDar: "required",
   PDV_EventTypes: "required",
   PDV_EventBus: "required",
   PDV_FragmentBridge: "required",
@@ -444,6 +505,19 @@ const MANAGER_PATTERN_PROPERTIES = {
   PDV_CurseStateService: "PDV_CurseState",
 };
 
+const PHASE9_MANAGER_PROPERTIES = {
+  PDV_Yffre: "PDV_Deity_Yffre",
+  PDV_Zen: "PDV_Deity_Zen",
+  PDV_BaanDar: "PDV_Deity_BaanDar",
+  PDV_BosmerPathTrack: "PDV_StateTrack_BosmerPath",
+  PDV_MSG_BosmerSetupChoice: "PDV_MSG_BosmerSetupChoice",
+  PDV_MSG_BosmerSuggestLivingStory: "PDV_MSG_BosmerSuggestLivingStory",
+  PDV_MSG_BosmerSuggestExchange: "PDV_MSG_BosmerSuggestExchange",
+  PDV_MSG_BosmerSuggestBanditRoad: "PDV_MSG_BosmerSuggestBanditRoad",
+  PDV_MSG_BosmerSuggestOldContract: "PDV_MSG_BosmerSuggestOldContract",
+  PDV_MSG_BosmerReckoning: "PDV_MSG_BosmerReckoning",
+};
+
 const MCM_PATTERN_PROPERTIES = {
   PDV_EventBusService: "PDV_EventBus",
 };
@@ -469,6 +543,7 @@ class Verifier {
     strictPatternProving = false,
     strictPhase7 = false,
     strictPhase8 = false,
+    strictPhase9 = false,
   } = {}) {
     this.strictPhase3 = strictPhase3;
     this.strictPreflight = strictPreflight;
@@ -476,6 +551,7 @@ class Verifier {
     this.strictPatternProving = strictPatternProving;
     this.strictPhase7 = strictPhase7;
     this.strictPhase8 = strictPhase8;
+    this.strictPhase9 = strictPhase9;
     this.findings = [];
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
@@ -551,6 +627,14 @@ class Verifier {
     }
   }
 
+  phase9Gap(check, detail, filePath = null) {
+    if (this.strictPhase9) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   async run() {
     this.checkPaths();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
@@ -570,6 +654,7 @@ class Verifier {
       this.checkPatternProving();
       this.checkPhase8();
       this.checkPhase7();
+      this.checkPhase9();
       this.checkOfflinePatcherRules();
       this.checkPreflightOverlayPatch();
     }
@@ -1149,6 +1234,29 @@ class Verifier {
     this.checkPhase8TalosRecord();
   }
 
+  checkPhase9() {
+    this.checkPhase9Manifest();
+    this.checkPhase9Records();
+    this.checkPhase9ManagerRecord();
+    this.checkPhase9BosmerTrackRecord();
+    this.checkPhase9DeityRecord("PDV_Deity_Yffre", "PDV_Deity_Yffre", {
+      DeityName: "Y'ffre",
+      DeityIndex: 3,
+      Stance_Bosmer: 0,
+    });
+    this.checkPhase9DeityRecord("PDV_Deity_Zen", "PDV_Deity_Zen", {
+      DeityName: "Z'en",
+      DeityIndex: 4,
+      Stance_Bosmer: 0,
+    });
+    this.checkPhase9DeityRecord("PDV_Deity_BaanDar", "PDV_Deity_BaanDar", {
+      DeityName: "Baan Dar",
+      DeityIndex: 5,
+      Stance_Bosmer: 0,
+    });
+    this.checkPhase9SignalReceiverRecords();
+  }
+
   checkOfflinePatcherRules() {
     if (!exists(PATCH_RULES_DIR)) {
       this.info("Offline patch rule manifests", "Patch-rules directory is not present yet.", PATCH_RULES_DIR);
@@ -1236,6 +1344,37 @@ class Verifier {
     }
   }
 
+  checkPhase9Manifest() {
+    if (exists(PHASE9_BOSMER_STATE_MANIFEST)) {
+      this.pass(
+        "Phase 9 manifest",
+        "Phase 9 Bosmer state/property manifest exists.",
+        PHASE9_BOSMER_STATE_MANIFEST,
+      );
+    } else {
+      this.phase9Gap(
+        "Phase 9 manifest",
+        "Phase 9 Bosmer state/property manifest is missing.",
+        PHASE9_BOSMER_STATE_MANIFEST,
+      );
+    }
+  }
+
+  checkPhase9Records() {
+    for (const [edid, expectedType] of Object.entries(PHASE9_RECORDS)) {
+      const record = this.recordsByEdid.get(edid);
+      if (!record) {
+        this.phase9Gap("Phase 9 record", `${expectedType} record ${edid} is not in the framework ESP yet; CK/xEdit creation or wiring remains pending.`, PDV_ESP);
+        continue;
+      }
+      if (record.type !== expectedType) {
+        this.fail("Phase 9 record", `${edid} has type ${record.type}, expected ${expectedType}.`, PDV_ESP);
+      } else {
+        this.pass("Phase 9 record", `${edid} exists as ${expectedType}.`, PDV_ESP);
+      }
+    }
+  }
+
   checkPatternManagerRecord() {
     const detail = this.recordDetails.get("PDV__ManagerQuest");
     if (!detail) {
@@ -1283,6 +1422,115 @@ class Verifier {
 
     const props = propertyMap(script);
     this.checkObjectPropertyTarget("Phase 8 manager property", props, "PDV_ConcordatStandingTrack", "PDV_RepTrack_ConcordatStanding", this.phase8Gap.bind(this));
+  }
+
+  checkPhase9ManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    for (const [propName, expectedEdid] of Object.entries(PHASE9_MANAGER_PROPERTIES)) {
+      this.checkObjectPropertyTarget("Phase 9 manager property", props, propName, expectedEdid, this.phase9Gap.bind(this));
+    }
+  }
+
+  checkPhase9BosmerTrackRecord() {
+    const detail = this.recordDetails.get("PDV_StateTrack_BosmerPath");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV_StateTrack");
+    if (!script) {
+      this.phase9Gap("Phase 9 Bosmer track", "PDV_StateTrack is not attached to PDV_StateTrack_BosmerPath.", PDV_ESP);
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget("Phase 9 Bosmer track property", props, "StateGlobal", "PDV_GLO_BosmerPath", this.phase9Gap.bind(this));
+    this.checkRequiredArrayLength(
+      "Phase 9 Bosmer track property",
+      "PDV_StateTrack_BosmerPath",
+      "StateLabels",
+      extractStringArrayProperty(props.get("StateLabels")),
+      4,
+      this.phase9Gap.bind(this),
+    );
+  }
+
+  checkPhase9DeityRecord(recordEdid, scriptName, expectedData) {
+    const detail = this.recordDetails.get(recordEdid);
+    if (!detail) {
+      return;
+    }
+
+    const fields = detail.fields || {};
+    const script = findScript(fields, scriptName);
+    if (!script) {
+      this.phase9Gap("Phase 9 deity script", `${scriptName} is not attached to ${recordEdid}.`, PDV_ESP);
+      return;
+    }
+
+    this.pass("Phase 9 deity script", `${scriptName} is attached to ${recordEdid}.`, PDV_ESP);
+    const props = propertyMap(script);
+    for (const [propName, expected] of Object.entries(expectedData)) {
+      const actual = propValue(props.get(propName));
+      if (valuesEqual(actual, expected)) {
+        this.pass("Phase 9 deity property", `${recordEdid}.${propName} = ${JSON.stringify(expected)}.`, PDV_ESP);
+      } else {
+        this.phase9Gap("Phase 9 deity property", `${recordEdid}.${propName} is ${JSON.stringify(actual)}, expected ${JSON.stringify(expected)}.`, PDV_ESP);
+      }
+    }
+
+    this.checkObjectPropertyTarget("Phase 9 deity property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase9Gap.bind(this));
+    this.checkObjectPropertyTarget("Phase 9 deity property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase9Gap.bind(this));
+    this.checkObjectPropertyTarget("Phase 9 deity property", props, "EligibleStateTrack", "PDV_StateTrack_BosmerPath", this.phase9Gap.bind(this));
+  }
+
+  checkPhase9SignalReceiverRecords() {
+    for (const definition of PHASE9_SIGNAL_RECEIVER_DEFINITIONS) {
+      const record = this.recordsByEdid.get(definition.recordEdid);
+      const detail = this.recordDetails.get(definition.recordEdid);
+      if (!record || !detail) {
+        this.phase9Gap(
+          "Phase 9 signal receiver record",
+          `${definition.recordEdid} is not present yet; manual CK/xEdit Bosmer proof-surface creation remains pending.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      if (record.type !== definition.recordType) {
+        this.fail(
+          "Phase 9 signal receiver record",
+          `${definition.recordEdid} has type ${record.type}, expected ${definition.recordType}.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      this.pass("Phase 9 signal receiver record", `${definition.recordEdid} exists as ${definition.recordType}.`, PDV_ESP);
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.phase9Gap("Phase 9 signal receiver script", `${definition.scriptName} is not attached to ${definition.recordEdid}.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("Phase 9 signal receiver script", `${definition.scriptName} is attached to ${definition.recordEdid}.`, PDV_ESP);
+      const props = propertyMap(script);
+      this.checkObjectPropertyTarget("Phase 9 signal receiver property", props, "PDV_EventBusService", "PDV_EventBus", this.phase9Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 9 signal receiver property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase9Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 9 signal receiver property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase9Gap.bind(this));
+      this.checkScalarProperty("Phase 9 signal receiver property", props, "RouteId", definition.routeId, this.phase9Gap.bind(this));
+      this.checkScalarProperty("Phase 9 signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.phase9Gap.bind(this));
+    }
   }
 
   checkPhase8ConcordatTrackRecord() {
@@ -2370,6 +2618,7 @@ class Verifier {
     this.checkPreflightSourceContracts();
     this.checkPhase8SourceContracts();
     this.checkPhase7SourceContracts();
+    this.checkPhase9SourceContracts();
   }
 
   checkPreflightSourceContracts() {
@@ -2576,6 +2825,108 @@ class Verifier {
       "Float Property DELTA_SHOUT_ATTACK = 0.5 Auto",
       "ScoreRepeatableAction(eventType, DELTA_SHOUT_ATTACK, SHOUT_DAILY_CAP, SHOUT_COOLDOWN_DAYS)",
     ]);
+  }
+
+  checkPhase9SourceContracts() {
+    this.checkSourceContains("Phase 9 source", "PDV_StateTrack", [
+      "Float Property OfferCooldownDays = 7.0 Auto",
+      "Float Property TransitionLockoutDays = 7.0 Auto",
+      "Int Function GetOfferedState()",
+      "Int Function GetPendingState()",
+      "Function OfferTransition(Int newState, String reason)",
+      "Function AcceptOfferedTransition(String reason)",
+      "Function RefuseOfferedTransition(String reason)",
+      "Function ConfirmPendingTransition(String reason)",
+      "Function CancelPendingTransition(String reason)",
+      "Function RecordEvidenceDay(Int stateValue, String reason)",
+      "Int Function GetRecentEvidenceDayCount(Int stateValue, Int windowDays)",
+      "Bool Function HasRecentEvidenceDays(Int stateValue, Int requiredCount, Int windowDays)",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_DeityBase", [
+      "PDV_StateTrack Property EligibleStateTrack Auto",
+      "Int[] Property EligibleStateValues Auto",
+      "Float Property InactivePathGainMultiplier = 0.25 Auto",
+      "Float Function GetEligibilityGainMultiplier()",
+      "Bool Function IsEligibleForPlayer()",
+      "Bool Function IsEligibleForState(Int currentState)",
+      "Int Function GetTierCap()",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV__ManagerQuest", [
+      "Function EnsureBosmerRuntimeWiring()",
+      "Function EnsureBosmerSetupChoice()",
+      "Function ApplyBosmerInitialChoice(Int pathState, String reason)",
+      "Function EnterBosmerOldContract(Bool isStartupChoice, String reason)",
+      "Function ExitBosmerOldContract(Bool countLapse, String reason)",
+      "Function EvaluateBosmerForcedReckoning()",
+      "Function EvaluateBosmerPathSuggestion()",
+      "Function ConfirmBosmerPendingTransition(String reason)",
+      "Function CanConfirmBosmerPathState(Int targetState)",
+      "Function RestoreActiveDeityFromStoredPatron()",
+      "return originRace == ORIGIN_KHAJIIT || originRace == ORIGIN_BOSMER",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_EventBus", [
+      "Function RouteBosmerLivingStory()",
+      "Function RouteBosmerExchange()",
+      "Function RouteBosmerBanditRoad()",
+      "Function RouteBosmerPactPositive()",
+      "Function RouteStateTransitionConfirmationRite()",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_EventTypes", [
+      "EVT_BOSMER_LIVING_STORY = 41",
+      "EVT_BOSMER_EXCHANGE = 42",
+      "EVT_BOSMER_BANDIT_ROAD = 43",
+      "EVT_BOSMER_PACT_POSITIVE = 44",
+      "EVT_STATE_TRANSITION_CONFIRM_RITE = 45",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_EventSignalActivator", [
+      "Int Property ROUTE_BOSMER_LIVING_STORY = 41 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_EXCHANGE = 42 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_BANDIT_ROAD = 43 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_PACT_POSITIVE = 44 AutoReadOnly",
+      "Int Property ROUTE_STATE_TRANSITION_CONFIRM_RITE = 45 AutoReadOnly",
+      "PDV_EventBusService.RouteBosmerLivingStory()",
+      "PDV_EventBusService.RouteBosmerExchange()",
+      "PDV_EventBusService.RouteBosmerBanditRoad()",
+      "PDV_EventBusService.RouteBosmerPactPositive()",
+      "PDV_EventBusService.RouteStateTransitionConfirmationRite()",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_EventSignalEffect", [
+      "Int Property ROUTE_BOSMER_LIVING_STORY = 41 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_EXCHANGE = 42 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_BANDIT_ROAD = 43 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_PACT_POSITIVE = 44 AutoReadOnly",
+      "Int Property ROUTE_STATE_TRANSITION_CONFIRM_RITE = 45 AutoReadOnly",
+      "PDV_EventBusService.RouteBosmerLivingStory()",
+      "PDV_EventBusService.RouteBosmerExchange()",
+      "PDV_EventBusService.RouteBosmerBanditRoad()",
+      "PDV_EventBusService.RouteBosmerPactPositive()",
+      "PDV_EventBusService.RouteStateTransitionConfirmationRite()",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_MCM", [
+      "Bosmer Living Story",
+      "Bosmer Exchange",
+      "Bosmer Bandit Road",
+      "Bosmer Pact-positive",
+      "Bosmer confirm rite",
+      "RouteStateTransitionConfirmationRite()",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_Deity_Yffre", [
+      "SIGNAL_PACT_POSITIVE = 301",
+      "SIGNAL_LIVING_STORY = 302",
+      "SIGNAL_PACT_VIOLATION = 303",
+      "SIGNAL_RECOMMITMENT = 304",
+      "SIGNAL_SHARED_PACT_MEMORY = 305",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_Deity_Zen", [
+      "SIGNAL_EXCHANGE = 401",
+      "SIGNAL_SHARED_PACT_MEMORY = 402",
+      "SIGNAL_CONFIRMATION = 403",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_Deity_BaanDar", [
+      "SIGNAL_BANDIT_ROAD = 501",
+      "SIGNAL_SHARED_PACT_MEMORY = 502",
+      "SIGNAL_CONFIRMATION = 503",
+    ], this.phase9Gap.bind(this));
   }
 
   checkSourceContains(checkName, scriptName, snippets, gapFn = null) {
@@ -3040,6 +3391,7 @@ function parseArgs(argv) {
     strictPatternProving: false,
     strictPhase7: false,
     strictPhase8: false,
+    strictPhase9: false,
   };
 
   for (const arg of argv) {
@@ -3057,8 +3409,10 @@ function parseArgs(argv) {
       args.strictPhase7 = true;
     } else if (arg === "--strict-phase8") {
       args.strictPhase8 = true;
+    } else if (arg === "--strict-phase9") {
+      args.strictPhase9 = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -3077,6 +3431,7 @@ const verifier = new Verifier({
   strictPatternProving: args.strictPatternProving,
   strictPhase7: args.strictPhase7,
   strictPhase8: args.strictPhase8,
+  strictPhase9: args.strictPhase9,
 });
 const findings = await verifier.run();
 const counts = verifier.counts();

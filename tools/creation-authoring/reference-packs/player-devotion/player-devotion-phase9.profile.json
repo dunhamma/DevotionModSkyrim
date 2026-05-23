@@ -1,0 +1,119 @@
+{
+  "schema": "creation-profile.v1",
+  "game": "SkyrimSE",
+  "modId": "player-devotion-phase9",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "outputPolicy": "overlay",
+  "defaultOutput": "PDV_Phase9BosmerStateOverlay.esp",
+  "referencePack": "player-devotion",
+  "resourceConnectors": [
+    {
+      "type": "mo2-mcp",
+      "name": "anvil-devotion-dev"
+    },
+    {
+      "type": "ckpe",
+      "name": "creation-kit-authoring-bridge",
+      "transport": "named-pipe",
+      "pipe": "\\\\.\\pipe\\CreationKitAuthoringBridge",
+      "launch": {
+        "loader": "D:\\Wabbajack\\modlists\\Anvil\\Stock Game\\ckpe_loader.exe",
+        "via": "MO2/Anvil Creation Kit executable"
+      }
+    },
+    {
+      "type": "pdv-verifier",
+      "name": "pdv-phase9-strict",
+      "command": "node",
+      "args": [
+        "pdv_verify.mjs",
+        "--strict-phase9",
+        "--strict-phase8",
+        "--strict-phase7",
+        "--strict-preflight",
+        "--strict-skeleton",
+        "--strict-pattern-proving"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Devotion Mod Project\\tools"
+    },
+    {
+      "type": "papyrus-compiler",
+      "name": "pdv-compiler-request",
+      "message": "Use ..\\pdv_compile.mjs when manifests declare script compile requirements."
+    },
+    {
+      "type": "fixture",
+      "name": "pdv-phase9-reference-records",
+      "records": {
+        "PDV_MCM": {
+          "formid": "PlayerDevotion_Framework.esp:03AFBE",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV__ManagerQuest": {
+          "formid": "PlayerDevotion_Framework.esp:00C325",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_FLST_AllDeities": {
+          "formid": "PlayerDevotion_Framework.esp:017E47",
+          "recordType": "FLST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_ActivePiety": {
+          "formid": "PlayerDevotion_Framework.esp:00945A",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_ActiveTier": {
+          "formid": "PlayerDevotion_Framework.esp:00945B",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_ActiveDeityIndex": {
+          "formid": "PlayerDevotion_Framework.esp:00945C",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_DebugLevel": {
+          "formid": "PlayerDevotion_Framework.esp:01DBD9",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_PatronDeity": {
+          "formid": "PlayerDevotion_Framework.esp:02C5C7",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_OriginRace": {
+          "formid": "PlayerDevotion_Framework.esp:02C5C6",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_BosmerPath": {
+          "formid": "PlayerDevotion_Framework.esp:0499D1",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_EventBus": {
+          "formid": "PlayerDevotion_Framework.esp:046AF7",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_StateTrack_BosmerPath": {
+          "formid": "PlayerDevotion_Framework.esp:0499C5",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_Deity_Yffre": {
+          "formid": "PlayerDevotion_Framework.esp:06CB52",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        }
+      }
+    }
+  ],
+  "verifierRules": [
+    "pdv-no-duplicate-vmad"
+  ]
+}
