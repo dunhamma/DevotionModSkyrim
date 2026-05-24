@@ -373,6 +373,7 @@ Codex is configured for the Anvil MO2 MCP server at `http://127.0.0.1:27016/mcp`
 Toolchain usage rules:
 - After any `.psc` edit, run `node .\tools\pdv_compile.mjs` or a targeted `--script` compile.
 - After CK/ESP changes, property wiring, FormList edits, SEQ generation, or MO2 profile edits, run `node .\tools\pdv_verify.mjs`.
+- After doing a new kind of work, review what was manual, fragile, repeated, or easy to forget, then improve the verifier/helper/manifest/checklist/docs path when the next pass would benefit.
 - Use `node .\tools\pdv_author.mjs` when supported existing-record property/FormList wiring should be scripted into a reversible overlay patch instead of repeated CK clicking.
 - Before declaring Phase 3 CK wiring complete, run `node .\tools\pdv_verify.mjs --strict-phase3`.
 - Before declaring V3 Preflight complete, run `node .\tools\pdv_verify.mjs --strict-preflight` (or compile with `node .\tools\pdv_compile.mjs --strict-preflight`) and resolve all FAILs.
@@ -397,6 +398,9 @@ Use this as the default order after substantive PDV work:
 4. If a design review locked a new rule, ratify it across the living docs in
    the same session so `AGENTS.md`, setup notes, and race/design docs do not
    drift.
+5. If the work introduced a new pattern, do a tooling harvest: decide whether
+   verifier coverage, an authoring helper, a manifest, a checklist, or a local
+   skill should make the next pass easier.
 
 This order reflects the recent project pattern: the expensive mistakes are not
 usually raw code edits, but stale record wiring, one-off overlay drift, and
