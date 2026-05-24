@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-23 (v3.29 - Phase 9 framework record closeout)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path framework record and proof-placement readback are clean; counted runtime proof remains pending.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 now has live framework ESP records for the Bosmer Y'ffre/Z'en/Baan Dar path trio, message boxes, manager properties, deity FormList membership, ACTI proof-surface base records, and five checked placed proof references, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Authoring infrastructure also has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, for generated/disposable plugins only; this does not broaden generic gameplay authoring support.
+Last revised: 2026-05-24 (v3.30 - Phase 9 status sync and Phase 10/11 handoff)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Authoring infrastructure also has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, for generated/disposable plugins only; this does not broaden generic gameplay authoring support.
 
 ---
 
@@ -2121,6 +2121,23 @@ or architecture contract changes.
 ---
 
 ## 26. Revisions
+
+### v3.30 - 2026-05-24 - Phase 9 status sync and Phase 10/11 handoff
+
+Corrected the top-level architecture status to match the completed Phase 9
+runtime proof already recorded in the Phase 9 closeout entry and target-state
+tracker. Phase 9 Bosmer Path is fully runtime-proven: setup, all five route
+proof surfaces, path offers, confirmation-rite switching, Old Contract re-entry,
+PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning
+`Recommit`, save/load persistence, and the combined strict gate at `PASS=808,
+WARN=0, FAIL=0, INFO=28` are the current closeout evidence.
+
+Phase 10/11 planning now treats those phase numbers as subsystem labels while
+Section 21.5 remains authoritative for execution order. Phase 10 may proceed as
+a Dunmer ancestor substrate proof-graduation slice. Phase 11 may receive
+documentation, verifier, and D-10 privilege-pilot prep, but live privilege
+implementation remains behind the Section 21.5 commitment and neglect/decay
+gates.
 
 ### v3.28 - 2026-05-23 - CKRA GLOB duplicate-create authoring proof
 
