@@ -6,7 +6,8 @@
   "output": "PDV_Phase9BosmerStateOverlay.esp",
   "metadata": {
     "phase": "phase9",
-    "note": "Creation-authoring source of truth for the Bosmer state-path slice. Manual packets are development blockers; CK-owned record creation, VMAD arrays, and placement intent route through CKPE for shippable automation proof."
+    "note": "Creation-authoring source of truth for the Bosmer state-path slice. Manual packets are development blockers; CK-owned record creation, VMAD arrays, and placement intent route through CKPE for shippable automation proof.",
+    "runtimeProof": "Closed 2026-05-24: all route IDs 41-45, destination offers, confirmation rite switching, Old Contract re-entry, reckoning Renounce/Recommit, and save/load persistence passed. PDV_StateTrack now retains three evidence days for three-day offers."
   },
   "operations": [
     {
@@ -193,10 +194,10 @@
         "recordType": "MESG",
         "text": "Choose the Bosmer path you will walk first.",
         "buttons": [
-          "OldContract",
-          "LivingStory",
+          "Old Contract",
+          "Living Story",
           "Exchange",
-          "BanditRoad"
+          "Bandit Road"
         ],
         "buttonContract": "0=OldContract, 1=LivingStory, 2=Exchange, 3=BanditRoad"
       }
@@ -292,7 +293,8 @@
           { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
           { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
           { "name": "RouteId", "type": "Int", "value": 41 },
-          { "name": "RequiredOriginRace", "type": "Int", "value": 4 }
+          { "name": "RequiredOriginRace", "type": "Int", "value": 4 },
+          { "name": "TraceLabel", "type": "String", "value": "PDV_ACTI_BosmerLivingStorySignal" }
         ]
       }
     },
@@ -317,7 +319,8 @@
           { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
           { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
           { "name": "RouteId", "type": "Int", "value": 42 },
-          { "name": "RequiredOriginRace", "type": "Int", "value": 4 }
+          { "name": "RequiredOriginRace", "type": "Int", "value": 4 },
+          { "name": "TraceLabel", "type": "String", "value": "PDV_ACTI_BosmerExchangeSignal" }
         ]
       }
     },
@@ -342,7 +345,8 @@
           { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
           { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
           { "name": "RouteId", "type": "Int", "value": 43 },
-          { "name": "RequiredOriginRace", "type": "Int", "value": 4 }
+          { "name": "RequiredOriginRace", "type": "Int", "value": 4 },
+          { "name": "TraceLabel", "type": "String", "value": "PDV_ACTI_BosmerBanditRoadSignal" }
         ]
       }
     },
@@ -367,7 +371,8 @@
           { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
           { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
           { "name": "RouteId", "type": "Int", "value": 44 },
-          { "name": "RequiredOriginRace", "type": "Int", "value": 4 }
+          { "name": "RequiredOriginRace", "type": "Int", "value": 4 },
+          { "name": "TraceLabel", "type": "String", "value": "PDV_ACTI_BosmerPactPositiveSignal" }
         ]
       }
     },
@@ -392,7 +397,8 @@
           { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
           { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
           { "name": "RouteId", "type": "Int", "value": 45 },
-          { "name": "RequiredOriginRace", "type": "Int", "value": -1 }
+          { "name": "RequiredOriginRace", "type": "Int", "value": -1 },
+          { "name": "TraceLabel", "type": "String", "value": "PDV_ACTI_StateTransitionConfirmRite" }
         ]
       }
     },

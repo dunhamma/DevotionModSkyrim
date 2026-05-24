@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-23 (v3.28 - CKRA GLOB duplicate-create authoring proof)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Authoring infrastructure now has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, for generated/disposable plugins only; this does not change gameplay phase status.
+Last revised: 2026-05-23 (v3.29 - Phase 9 framework record closeout)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path framework record and proof-placement readback are clean; counted runtime proof remains pending.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 now has live framework ESP records for the Bosmer Y'ffre/Z'en/Baan Dar path trio, message boxes, manager properties, deity FormList membership, ACTI proof-surface base records, and five checked placed proof references, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Authoring infrastructure also has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, for generated/disposable plugins only; this does not broaden generic gameplay authoring support.
 
 ---
 
@@ -1510,7 +1510,7 @@ excellent reusable example per subsystem, then clone.
 | **V3 Pattern Proving** | One excellent reusable pattern per subsystem | Structural Skeleton | Imperial Concordat, Bosmer Path, Dunmer Ancestor, Khajiit emergent/moon-cycle exception, contextual favor family, Daedric price/stigma path, commitment offer, and neglect/decay path are proven |
 | **7** | Signal expansion (sleep, shrine, shout, social) | V3 Preflight + EventBus pattern | New events routed; per-target rubric updates; signal policy anti-farm caps functional |
 | **8** | Reputation track + first instance (Concordat Standing) | Phase 7 | Imperial Concordat bands, wide Uncommitted state, edge walk-back gate, committed-state multiplier composition, and save/load persistence are runtime-proven; verifier covers |
-| **9** | State track + first instance (Bosmer Path) | Phase 8 | Bosmer path persists, eligibility filtering works in commitment offers, and Old Contract Green Pact tags are independent of external mods |
+| **9** | State track + first instance (Bosmer Path) | Phase 8 | Bosmer path setup, destination-gated offers, confirmation-rite switching, Old Contract PactBound/compliance separation, reckoning renounce/recommit, save/load persistence, framework ESP readback, and placed proof-reference routing are runtime-proven; verifier covers |
 | **10** | Race substrate (Dunmer Ancestor first pilot) | Phase 9 | Portable-shrine prayer and home bonus grant origin-only substrate progress; substrate metric stays separate from patron piety |
 | **11** | Privilege subsystem first wave (shrine + dialogue privileges for Kyne/Mara) | Phase 8/9 | CK conditions read mirror globals + track globals; dialogue topics gate cleanly |
 | **12** | Contextual favor subsystem (Kyne foreground favor set) | Phase 11 | 3-5 automatic signal-triggered favor families per devotional lane; one active boost cap prevents stacking |
@@ -2136,6 +2136,31 @@ Story Manager, alias, or source-plugin promotion workflows. Durable lesson:
 CK automation must respect both UX state and lower-layer persistence; right
 click selection/focus/popup behavior and active-plugin save/readback are part
 of the proof, not incidental noise.
+
+### v3.27 - 2026-05-21 - Phase 8 runtime proof closeout
+
+### v3.28 - 2026-05-24 - Phase 9 Bosmer path closeout
+
+Phase 9 is now fully runtime-proven on a Bosmer save. The live framework ESP
+contains the Bosmer path state track, Y'ffre/Z'en/Baan Dar path eligibility,
+all setup/suggestion/reckoning messages, manager properties, deity FormList
+membership, and five placed proof-surface activators. Runtime proof covered all
+five route IDs (`41-45`), Old Contract startup, Living Story offer and
+confirmation, Exchange offer and confirmation, Bandit Road offer and
+confirmation, Old Contract re-entry through three Pact-positive days,
+save/load persistence, and both forced-reckoning outcomes. Renounce moved the
+player to `LivingStory`, cleared `PactBound`, and incremented
+`LapsedFromPact`; Recommit preserved `OldContract`/`PactBound` and restored
+`GreenPactCompliance` to `30`.
+
+Runtime proof surfaced one implementation bug: `PDV_StateTrack` retained only
+two evidence days, while Old Contract re-entry requires three Pact-positive
+days within seven. `PDV_StateTrack.psc` now stores and counts
+`LatestDay`, `PreviousDay`, and `ThirdDay`, and `PDV_StateTrack.pex` compiles
+cleanly. The final strict closeout gate remains clean:
+`node .\tools\pdv_verify.mjs --strict-phase9 --strict-phase8 --strict-phase7
+--strict-preflight --strict-skeleton --strict-pattern-proving --json` =>
+`PASS=808, WARN=0, FAIL=0, INFO=28` on 2026-05-24 AEST.
 
 ### v3.27 - 2026-05-21 - Phase 8 runtime proof closeout
 

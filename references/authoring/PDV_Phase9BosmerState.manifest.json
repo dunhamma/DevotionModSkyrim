@@ -4,18 +4,16 @@
   "defaultOutput": "PDV_Phase9BosmerStateOverlay.esp",
   "notes": [
     "This manifest records the CK/xEdit contract for the first live PDV_StateTrack gameplay slice: Bosmer path-state setup, Bosmer-specific path offers, and the shared confirmation-rite route.",
-    "pdv_author still cannot mint new QUST, GLOB, MESG, ACTI, REFR, or MGEF records, and it cannot write VMAD arrays such as EligibleStateValues or StateLabels. Phase 9 therefore lands as source/runtime/tooling first with manual CK/xEdit follow-up tracked here.",
+    "As of 2026-05-24, the framework ESP record packet is live and strict-verifier clean for the Bosmer path deity trio, message boxes, manager properties, FormList membership, and ACTI proof-surface base records. The five expected placed proof references also read back through tools/pdv-phase9-author -- --check-placements.",
+    "Runtime proof is complete for all five proof-surface routes, Living Story, Exchange, Bandit Road, Old Contract re-entry, confirmation-rite switching, Old Contract PactBound/compliance separation, forced reckoning Renounce/Recommit, and save/load persistence.",
+    "Runtime proof fixed the shared PDV_StateTrack evidence retention contract: tracks now retain LatestDay, PreviousDay, and ThirdDay so three-day destination offers can actually fire.",
     "Strict-phase9 verifier coverage now checks the Bosmer state-track source contract, manager wiring, deity path-eligibility plumbing, and the Bosmer proof-surface editor IDs documented below.",
-    "Unlike the Phase 8 Talos overlay exceptions, strict-phase9 currently reads the framework ESP directly. Generated overlay patches can still help runtime or staging, but they do not satisfy the closeout gate until the underlying framework records are authored in CK/xEdit."
+    "Unlike the Phase 8 Talos overlay exceptions, strict-phase9 reads the framework ESP directly. Generated overlay patches can still help runtime or staging, but they do not satisfy the closeout gate until the underlying framework records are authored in CK/xEdit."
   ],
   "unsupported": [
-    "PDV_GLO_BosmerPath and PDV_StateTrack_BosmerPath now exist in the framework ESP, but StateLabels and other VMAD arrays remain CK/xEdit-only authoring surfaces.",
-    "Create the missing QUST records PDV_Deity_Zen and PDV_Deity_BaanDar with their matching scripts attached. Fill PDV_GLO_DebugLevel, PDV_GLO_OriginRace, EligibleStateTrack=PDV_StateTrack_BosmerPath, and EligibleStateValues to Z'en=[2] and Baan Dar=[3].",
-    "PDV_Deity_Yffre already exists in the framework ESP with script attachment and Bosmer path-eligibility wiring. Its current remaining framework-side cleanup is the swapped DELTA_PACT_POSITIVE / DELTA_LIVING_STORY values unless those are corrected manually in CK/xEdit.",
-    "Fill the remaining PDV__ManagerQuest properties PDV_Zen, PDV_BaanDar, PDV_MSG_BosmerSetupChoice, PDV_MSG_BosmerSuggestLivingStory, PDV_MSG_BosmerSuggestExchange, PDV_MSG_BosmerSuggestBanditRoad, PDV_MSG_BosmerSuggestOldContract, and PDV_MSG_BosmerReckoning. PDV_BosmerPathTrack is already wired in the framework ESP.",
-    "Create message records PDV_MSG_BosmerSetupChoice, PDV_MSG_BosmerSuggestLivingStory, PDV_MSG_BosmerSuggestExchange, PDV_MSG_BosmerSuggestBanditRoad, PDV_MSG_BosmerSuggestOldContract, and PDV_MSG_BosmerReckoning. The startup choice auto-commits one of the four Bosmer paths after origin/startup completes; the later suggestion messages only accept or refuse a pending transition offer.",
-    "Create ACTI proof-surface records PDV_ACTI_BosmerLivingStorySignal, PDV_ACTI_BosmerExchangeSignal, PDV_ACTI_BosmerBanditRoadSignal, PDV_ACTI_BosmerPactPositiveSignal, and PDV_ACTI_StateTransitionConfirmRite with PDV_EventSignalActivator attached.",
-    "Fill the Bosmer proof surfaces with RouteId values 41, 42, 43, 44, and 45 respectively; RequiredOriginRace should be 4 for the Bosmer path-evidence surfaces and -1 for the shared confirmation rite. Also fill PDV_EventBusService=PDV_EventBus, PlayerREF=PlayerRef, PDV_GLO_OriginRace=PDV_GLO_OriginRace, and PDV_GLO_DebugLevel=PDV_GLO_DebugLevel.",
+    "pdv_author still cannot mint new QUST, GLOB, MESG, ACTI, REFR, or MGEF records, and it cannot write VMAD arrays such as EligibleStateValues or StateLabels. The 2026-05-23 framework packet used the narrow tools/pdv-phase9-author helper instead.",
+    "The current strict verifier covers ACTI base records, while tools/pdv-phase9-author -- --check-placements covers the CK-placed Phase 9 REFR proof instances.",
+    "Phase 9 runtime proof is complete as of 2026-05-24; future changes to offer thresholds must re-run the relevant in-game evidence-window proof.",
     "Do not treat Zenithar as a stand-in for Z'en in either editor IDs or player-facing text. The internal deity record remains PDV_Deity_Zen while visible strings should say Z'en."
   ],
   "operations": [
