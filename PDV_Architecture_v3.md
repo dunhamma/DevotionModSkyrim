@@ -731,7 +731,7 @@ Where a privilege genuinely needs a value not surfaced by the mirrors (e.g. "hig
 
 ### 9.4 Privilege pilot and shrine discipline
 
-- **Greybeards-Kynareth recognition.** A Nord with high Kynareth tier could get a unique greeting from Arngeir. This requires editing a vanilla dialogue topic with a `Shares Dialogue` discipline. v3 should pilot this with the Kyne content as a "does the privilege pattern hold up?" test.
+- **Greybeards-Kynareth recognition.** D-10 is resolved: Phase 11's first privilege pilot is an Arngeir/Kynareth recognition line for a Nord Kyne Champion. The CK-readable gate is `PDV_GLO_OriginRace = Nord`, `PDV_GLO_ActiveDeityIndex = Kyne`, and `PDV_GLO_ActiveTier >= 3`. It should use `Shares Dialogue` discipline on the targeted vanilla dialogue surface, with negative proof for non-Nord origin, wrong active deity, and Kyne below Champion. The prep contract lives in `references/authoring/PDV_Phase11PrivilegePilot.manifest.json`; live implementation remains behind the Section 21.5 commitment and neglect/decay gates.
 - **Shrine activator overlays.** PDV does not replace vanilla shrine activator scripts for 1.0. Preferred posture is per-reference co-attachment on the actual shrine reference when a specific shrine needs devotional routing; helper objects or nearby activators are fallback proof shapes only. Global base-script replacement stays out of bounds so shrine-modifying mods remain easier to coexist with.
 
 ---
@@ -1512,7 +1512,7 @@ excellent reusable example per subsystem, then clone.
 | **8** | Reputation track + first instance (Concordat Standing) | Phase 7 | Imperial Concordat bands, wide Uncommitted state, edge walk-back gate, committed-state multiplier composition, and save/load persistence are runtime-proven; verifier covers |
 | **9** | State track + first instance (Bosmer Path) | Phase 8 | Bosmer path setup, destination-gated offers, confirmation-rite switching, Old Contract PactBound/compliance separation, reckoning renounce/recommit, save/load persistence, framework ESP readback, and placed proof-reference routing are runtime-proven; verifier covers |
 | **10** | Race substrate (Dunmer Ancestor first pilot) | Phase 9 | Portable-shrine prayer and home bonus grant origin-only substrate progress; substrate metric stays separate from patron piety |
-| **11** | Privilege subsystem first wave (shrine + dialogue privileges for Kyne/Mara) | Phase 8/9 | CK conditions read mirror globals + track globals; dialogue topics gate cleanly |
+| **11** | Privilege subsystem first wave (Arngeir/Kynareth pilot; Mara deferred until the pattern proves clean) | Phase 8/9 plus Section 21.5 commitment and neglect/decay gates | CK conditions read mirror globals + track globals; the Arngeir/Kynareth dialogue pilot gates cleanly for Nord Kyne Champion and hides for non-Nord, wrong deity, or lower tier |
 | **12** | Contextual favor subsystem (Kyne foreground favor set) | Phase 11 | 3-5 automatic signal-triggered favor families per devotional lane; one active boost cap prevents stacking |
 | **13** | Daedric path architecture + first Prince (Boethiah pilot) | Phase 11 | Boon/price/stigma triple works; commitment gating works; stigma readout via global |
 | **14** | Patron commitment mechanism (in-world offer + accept/decline/refuse) | Phase 9/11 | Offers fire from dawn pass; threshold gate works; 70% carry-over on accept |
@@ -1797,7 +1797,6 @@ chooses to resolve vampire detection first.
 
 | Decision | Blocks | Does not block |
 |---|---|---|
-| D-10 Greybeards-Kynareth privilege pilot | Slice 8 privilege pilot | Slices 1-7 |
 | D-12 Daedric roster convergence | Slice 11 full Daedric price/stigma pilot | Hircine ingress proof, Aedric/cultural pilots |
 | D-13 Daedric stigma decay | Slice 11 full Daedric price/stigma pilot | Non-Daedric commitment, reputation, state, substrate, favor |
 | D-14 Cross-Prince hostility | Slice 11 full Daedric price/stigma pilot beyond one isolated proof | Non-Daedric rivalry and existing Talos/Auri-El behavior |
@@ -1817,6 +1816,8 @@ node .\tools\pdv_verify.mjs --strict-skeleton
 node .\tools\pdv_verify.mjs --strict-pattern-proving
 node .\tools\pdv_verify.mjs --strict-phase7
 node .\tools\pdv_verify.mjs --strict-phase7 --strict-preflight --strict-skeleton --strict-pattern-proving
+node .\tools\pdv_verify.mjs --strict-phase10
+node .\tools\pdv_verify.mjs --strict-phase11
 ```
 
 If a slice adds a new verifier mode later, update this ladder and
@@ -1868,22 +1869,12 @@ These are intentionally not solved in v3.
 
 Mobile-friendly worklist of every architectural decision still open in v3.
 Each entry is sized for phone scrolling. Decision IDs (`D-NN`) are stable:
-reference them in chat as "decide D-10 as (b)" or "defer D-17."
+reference them in chat as "defer D-17" or "resolve D-30."
 
 Numbering gaps are intentional. When a decision lands, remove it from this
 open tracker and resolve it by rewriting the relevant v3 section, adding an
 entry to `AGENTS.md` Decisions Log, or moving the item to Section 23 if it is
 deferred past 1.0.
-
-### Before Pattern Proving / privilege pilot
-
-#### D-10  Greybeards-Kynareth privilege pilot  (Section 9.4)
-
-- **Question:** Pilot the privilege pattern by editing a vanilla dialogue topic (Arngeir greeting under high Kynareth tier)?
-- **Options:**
-  - (a) Yes, with `Shares Dialogue` discipline.
-  - (b) No, only add new topics; never edit vanilla.
-- **Recommendation:** (a). One pilot proves whether the pattern holds before scaling.
 
 ### Before Daedric path implementation
 

@@ -65,6 +65,12 @@ const PHASE9_BOSMER_STATE_MANIFEST = path.join(
   "authoring",
   "PDV_Phase9BosmerState.manifest.json",
 );
+const PHASE11_PRIVILEGE_PILOT_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase11PrivilegePilot.manifest.json",
+);
 const PATCH_RULES_DIR = path.join(
   PROJECT_ROOT,
   "references",
@@ -269,6 +275,11 @@ const SLICE1_SIGNAL_RECEIVER_DEFINITIONS = [
     requiredOriginRace: -1,
   },
 ];
+
+const PHASE10_DUNMER_SIGNAL_RECEIVER_DEFINITIONS = SLICE1_SIGNAL_RECEIVER_DEFINITIONS.filter((definition) =>
+  definition.recordEdid === "PDV_ACTI_DunmerPortableShrineSignal"
+    || definition.recordEdid === "PDV_ACTI_DunmerPrivateShrineSignal"
+);
 
 const PHASE7_SIGNAL_RECEIVER_DEFINITIONS = [
   {
@@ -544,6 +555,8 @@ class Verifier {
     strictPhase7 = false,
     strictPhase8 = false,
     strictPhase9 = false,
+    strictPhase10 = false,
+    strictPhase11 = false,
   } = {}) {
     this.strictPhase3 = strictPhase3;
     this.strictPreflight = strictPreflight;
@@ -552,6 +565,8 @@ class Verifier {
     this.strictPhase7 = strictPhase7;
     this.strictPhase8 = strictPhase8;
     this.strictPhase9 = strictPhase9;
+    this.strictPhase10 = strictPhase10;
+    this.strictPhase11 = strictPhase11;
     this.findings = [];
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
@@ -635,6 +650,22 @@ class Verifier {
     }
   }
 
+  phase10Gap(check, detail, filePath = null) {
+    if (this.strictPhase10) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  phase11Gap(check, detail, filePath = null) {
+    if (this.strictPhase11) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   async run() {
     this.checkPaths();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
@@ -655,6 +686,8 @@ class Verifier {
       this.checkPhase8();
       this.checkPhase7();
       this.checkPhase9();
+      this.checkPhase10();
+      this.checkPhase11();
       this.checkOfflinePatcherRules();
       this.checkPreflightOverlayPatch();
     }
@@ -1257,6 +1290,16 @@ class Verifier {
     this.checkPhase9SignalReceiverRecords();
   }
 
+  checkPhase10() {
+    this.checkPhase10DunmerSubstrateRecord();
+    this.checkPhase10ManagerRecord();
+    this.checkPhase10SignalReceiverRecords();
+  }
+
+  checkPhase11() {
+    this.checkPhase11PrivilegePilotManifest();
+  }
+
   checkOfflinePatcherRules() {
     if (!exists(PATCH_RULES_DIR)) {
       this.info("Offline patch rule manifests", "Patch-rules directory is not present yet.", PATCH_RULES_DIR);
@@ -1530,6 +1573,151 @@ class Verifier {
       this.checkObjectPropertyTarget("Phase 9 signal receiver property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase9Gap.bind(this));
       this.checkScalarProperty("Phase 9 signal receiver property", props, "RouteId", definition.routeId, this.phase9Gap.bind(this));
       this.checkScalarProperty("Phase 9 signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.phase9Gap.bind(this));
+    }
+  }
+
+  checkPhase10DunmerSubstrateRecord() {
+    const detail = this.recordDetails.get("PDV_Substrate_DunmerAncestor");
+    if (!detail) {
+      this.phase10Gap(
+        "Phase 10 Dunmer substrate record",
+        "PDV_Substrate_DunmerAncestor is missing; Phase 10 substrate graduation cannot be verified.",
+        PDV_ESP,
+      );
+      return;
+    }
+
+    const baseScript = findScript(detail.fields || {}, "PDV_SubstrateBase");
+    if (!baseScript) {
+      this.phase10Gap(
+        "Phase 10 Dunmer substrate script",
+        "PDV_SubstrateBase is not attached to PDV_Substrate_DunmerAncestor.",
+        PDV_ESP,
+      );
+    } else {
+      this.pass("Phase 10 Dunmer substrate script", "PDV_SubstrateBase is attached to PDV_Substrate_DunmerAncestor.", PDV_ESP);
+      const baseProps = propertyMap(baseScript);
+      this.checkScalarProperty("Phase 10 Dunmer substrate property", baseProps, "SubstrateName", "DunmerAncestor", this.phase10Gap.bind(this));
+      this.checkScalarProperty("Phase 10 Dunmer substrate property", baseProps, "RequiredOriginRace", 5, this.phase10Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 10 Dunmer substrate property", baseProps, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase10Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 10 Dunmer substrate property", baseProps, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase10Gap.bind(this));
+    }
+
+    const pilotScript = findScript(detail.fields || {}, "PDV_Substrate_DunmerAncestor");
+    if (!pilotScript) {
+      this.phase10Gap(
+        "Phase 10 Dunmer substrate pilot script",
+        "PDV_Substrate_DunmerAncestor is not attached to PDV_Substrate_DunmerAncestor.",
+        PDV_ESP,
+      );
+    } else {
+      this.pass("Phase 10 Dunmer substrate pilot script", "PDV_Substrate_DunmerAncestor is attached to PDV_Substrate_DunmerAncestor.", PDV_ESP);
+    }
+  }
+
+  checkPhase10ManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget(
+      "Phase 10 manager property",
+      props,
+      "PDV_DunmerAncestorSubstrate",
+      "PDV_Substrate_DunmerAncestor",
+      this.phase10Gap.bind(this),
+    );
+  }
+
+  checkPhase10SignalReceiverRecords() {
+    for (const definition of PHASE10_DUNMER_SIGNAL_RECEIVER_DEFINITIONS) {
+      const record = this.recordsByEdid.get(definition.recordEdid);
+      const detail = this.recordDetails.get(definition.recordEdid);
+      if (!record || !detail) {
+        this.phase10Gap(
+          "Phase 10 Dunmer signal receiver record",
+          `${definition.recordEdid} is missing; Phase 10 should reuse the existing Slice 1 Dunmer proof surface.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      if (record.type !== definition.recordType) {
+        this.fail(
+          "Phase 10 Dunmer signal receiver record",
+          `${definition.recordEdid} has type ${record.type}, expected ${definition.recordType}.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      this.pass("Phase 10 Dunmer signal receiver record", `${definition.recordEdid} exists as ${definition.recordType}.`, PDV_ESP);
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.phase10Gap("Phase 10 Dunmer signal receiver script", `${definition.scriptName} is not attached to ${definition.recordEdid}.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("Phase 10 Dunmer signal receiver script", `${definition.scriptName} is attached to ${definition.recordEdid}.`, PDV_ESP);
+      const props = propertyMap(script);
+      this.checkObjectPropertyTarget("Phase 10 Dunmer signal receiver property", props, "PDV_EventBusService", "PDV_EventBus", this.phase10Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 10 Dunmer signal receiver property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase10Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 10 Dunmer signal receiver property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase10Gap.bind(this));
+      this.checkScalarProperty("Phase 10 Dunmer signal receiver property", props, "RouteId", definition.routeId, this.phase10Gap.bind(this));
+      this.checkScalarProperty("Phase 10 Dunmer signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.phase10Gap.bind(this));
+    }
+  }
+
+  checkPhase11PrivilegePilotManifest() {
+    if (!exists(PHASE11_PRIVILEGE_PILOT_MANIFEST)) {
+      this.phase11Gap(
+        "Phase 11 privilege pilot manifest",
+        "Phase 11 privilege pilot prep manifest is missing.",
+        PHASE11_PRIVILEGE_PILOT_MANIFEST,
+      );
+      return;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(PHASE11_PRIVILEGE_PILOT_MANIFEST, "utf8"));
+    } catch (error) {
+      this.fail("Phase 11 privilege pilot manifest", `Manifest could not be parsed: ${error.message}`, PHASE11_PRIVILEGE_PILOT_MANIFEST);
+      return;
+    }
+
+    const gate = parsed.pilot?.gate || {};
+    const expectedGate = {
+      originRace: "Nord",
+      activeDeityIndex: "Kyne",
+      minimumActiveTier: 3,
+    };
+    if (
+      parsed.id === "phase11-privilege-pilot"
+      && parsed.pilot?.name === "Arngeir Kynareth recognition"
+      && gate.originRace === expectedGate.originRace
+      && gate.activeDeityIndex === expectedGate.activeDeityIndex
+      && gate.minimumActiveTier === expectedGate.minimumActiveTier
+      && parsed.implementationStatus === "prep-only"
+    ) {
+      this.pass(
+        "Phase 11 privilege pilot manifest",
+        "D-10 prep manifest locks the Arngeir/Kynareth gate and marks live implementation as blocked.",
+        PHASE11_PRIVILEGE_PILOT_MANIFEST,
+      );
+    } else {
+      this.phase11Gap(
+        "Phase 11 privilege pilot manifest",
+        "Manifest does not match the locked D-10 Arngeir/Kynareth prep-only contract.",
+        PHASE11_PRIVILEGE_PILOT_MANIFEST,
+      );
     }
   }
 
@@ -2619,6 +2807,7 @@ class Verifier {
     this.checkPhase8SourceContracts();
     this.checkPhase7SourceContracts();
     this.checkPhase9SourceContracts();
+    this.checkPhase10SourceContracts();
   }
 
   checkPreflightSourceContracts() {
@@ -2927,6 +3116,34 @@ class Verifier {
       "SIGNAL_SHARED_PACT_MEMORY = 502",
       "SIGNAL_CONFIRMATION = 503",
     ], this.phase9Gap.bind(this));
+  }
+
+  checkPhase10SourceContracts() {
+    this.checkSourceContains("Phase 10 source", "PDV_Substrate_DunmerAncestor", [
+      "Function RecordPortableShrinePrayerScaled(Float multiplier, String reason)",
+      "Function RecordPlayerHomeBonusScaled(Float multiplier, String reason)",
+      "\"PDV.Substrate.DunmerAncestor.PrayerCount\"",
+      "\"PDV.Substrate.DunmerAncestor.HomeCount\"",
+      "String Function GetPilotSummary()",
+      "Function ResetPilotForDebug()",
+    ], this.phase10Gap.bind(this));
+    this.checkSourceContains("Phase 10 source", "PDV__ManagerQuest", [
+      "Function HandleDunmerPortableShrinePrayer(String reason)",
+      "Function HandleDunmerPlayerHomeBonus(String reason)",
+      "PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)",
+      "PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)",
+      "String Function GetDunmerAncestorSummary()",
+    ], this.phase10Gap.bind(this));
+    this.checkSourceContains("Phase 10 source", "PDV_EventBus", [
+      "Function RouteDunmerPortableShrinePrayer()",
+      "Function RouteDunmerPlayerHomeBonus()",
+      "PDV_Manager.HandleDunmerPortableShrinePrayer(\"eventbus_\" + eventType)",
+      "PDV_Manager.HandleDunmerPlayerHomeBonus(\"eventbus_\" + eventType)",
+    ], this.phase10Gap.bind(this));
+    this.checkSourceContains("Phase 10 source", "PDV_EventSignalActivator", [
+      "PDV_EventBusService.RouteDunmerPortableShrinePrayer()",
+      "PDV_EventBusService.RouteDunmerPlayerHomeBonus()",
+    ], this.phase10Gap.bind(this));
   }
 
   checkSourceContains(checkName, scriptName, snippets, gapFn = null) {
@@ -3392,6 +3609,8 @@ function parseArgs(argv) {
     strictPhase7: false,
     strictPhase8: false,
     strictPhase9: false,
+    strictPhase10: false,
+    strictPhase11: false,
   };
 
   for (const arg of argv) {
@@ -3411,8 +3630,12 @@ function parseArgs(argv) {
       args.strictPhase8 = true;
     } else if (arg === "--strict-phase9") {
       args.strictPhase9 = true;
+    } else if (arg === "--strict-phase10") {
+      args.strictPhase10 = true;
+    } else if (arg === "--strict-phase11") {
+      args.strictPhase11 = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-phase11]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -3432,6 +3655,8 @@ const verifier = new Verifier({
   strictPhase7: args.strictPhase7,
   strictPhase8: args.strictPhase8,
   strictPhase9: args.strictPhase9,
+  strictPhase10: args.strictPhase10,
+  strictPhase11: args.strictPhase11,
 });
 const findings = await verifier.run();
 const counts = verifier.counts();

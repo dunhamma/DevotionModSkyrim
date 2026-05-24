@@ -1,0 +1,43 @@
+{
+  "id": "phase11-privilege-pilot",
+  "title": "PDV Phase 11 privilege pilot prep",
+  "implementationStatus": "prep-only",
+  "notes": [
+    "D-10 is resolved to the Arngeir/Kynareth recognition pilot.",
+    "This manifest documents the CK condition contract before live dialogue implementation.",
+    "Live privilege records remain blocked until the Section 21.5 commitment and neglect/decay gates are proven.",
+    "Do not replace vanilla shrine base scripts as part of this pilot."
+  ],
+  "pilot": {
+    "name": "Arngeir Kynareth recognition",
+    "surface": "vanilla dialogue topic with Shares Dialogue discipline",
+    "gate": {
+      "originRace": "Nord",
+      "activeDeityIndex": "Kyne",
+      "minimumActiveTier": 3
+    },
+    "ckConditions": [
+      {
+        "source": "PDV_GLO_OriginRace",
+        "operator": "==",
+        "value": "Nord"
+      },
+      {
+        "source": "PDV_GLO_ActiveDeityIndex",
+        "operator": "==",
+        "value": "Kyne"
+      },
+      {
+        "source": "PDV_GLO_ActiveTier",
+        "operator": ">=",
+        "value": 3
+      }
+    ],
+    "negativeProofs": [
+      "non-Nord origin",
+      "wrong active deity",
+      "active Kyne tier below Champion"
+    ]
+  },
+  "operations": []
+}
