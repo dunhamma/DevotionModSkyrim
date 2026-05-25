@@ -1,0 +1,17 @@
+{
+  "records": {
+    "EXM_MainQuest": {
+      "scripts": [
+        {
+          "name": "EXM_MainQuestScript",
+          "properties": {
+            "DebugGlobal": "EXM_GLO_Debug"
+          }
+        }
+      ]
+    },
+    "EXM_FLST_AllServices": {
+      "entries": ["EXM_ServiceQuest"]
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "creation-profile.v1",
+  "game": "SkyrimSE",
+  "modId": "player-devotion-reference",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "outputPolicy": "overlay",
+  "defaultOutput": "PDV_AutoWireReference.esp",
+  "referencePack": "player-devotion",
+  "resourceConnectors": [
+    {
+      "type": "mo2-mcp",
+      "name": "anvil-devotion-dev"
+    },
+    {
+      "type": "pdv-verifier",
+      "name": "pdv-strict-reference",
+      "command": "node",
+      "args": ["pdv_verify.mjs", "--strict-phase7", "--strict-preflight", "--strict-skeleton", "--strict-pattern-proving"],
+      "cwd": "C:\\Users\\Admin\\Documents\\Devotion Mod Project\\tools"
+    },
+    {
+      "type": "papyrus-compiler",
+      "name": "pdv-compiler-request",
+      "message": "Use ..\\pdv_compile.mjs when manifests declare script compile requirements."
+    },
+    {
+      "type": "fixture",
+      "name": "pdv-reference-records",
+      "records": {
+        "PDV_MCM": {
+          "formid": "PlayerDevotion_Framework.esp:03AFBE",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV__ManagerQuest": {
+          "formid": "PlayerDevotion_Framework.esp:00C325",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_FLST_AllDeities": {
+          "formid": "PlayerDevotion_Framework.esp:017E47",
+          "recordType": "FLST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_ActivePiety": {
+          "formid": "PlayerDevotion_Framework.esp:00945A",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_ActiveTier": {
+          "formid": "PlayerDevotion_Framework.esp:00945B",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_ActiveDeityIndex": {
+          "formid": "PlayerDevotion_Framework.esp:00945C",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_DebugLevel": {
+          "formid": "PlayerDevotion_Framework.esp:01DBD9",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_PatronDeity": {
+          "formid": "PlayerDevotion_Framework.esp:02C5C7",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        }
+      }
+    }
+  ],
+  "verifierRules": ["pdv-no-duplicate-vmad", "pdv-mcm-core-properties"]
+}

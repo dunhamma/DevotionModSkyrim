@@ -1,0 +1,41 @@
+{
+  "schema": "creation-profile.v1",
+  "game": "SkyrimSE",
+  "modId": "example-mod",
+  "sourcePlugin": "ExampleMod.esp",
+  "outputPolicy": "overlay",
+  "defaultOutput": "ExampleMod_AutoWire.esp",
+  "resourceConnectors": [
+    {
+      "type": "fixture",
+      "name": "example-fixture",
+      "records": {
+        "EXM_MainQuest": {
+          "formid": "ExampleMod.esp:000800",
+          "recordType": "QUST",
+          "plugin": "ExampleMod.esp"
+        },
+        "EXM_GLO_Debug": {
+          "formid": "ExampleMod.esp:000801",
+          "recordType": "GLOB",
+          "plugin": "ExampleMod.esp"
+        },
+        "EXM_FLST_AllServices": {
+          "formid": "ExampleMod.esp:000802",
+          "recordType": "FLST",
+          "plugin": "ExampleMod.esp"
+        },
+        "EXM_ServiceQuest": {
+          "formid": "ExampleMod.esp:000803",
+          "recordType": "QUST",
+          "plugin": "ExampleMod.esp"
+        }
+      }
+    },
+    {
+      "type": "mo2-mcp",
+      "name": "host-provided-mo2-mcp"
+    }
+  ],
+  "verifierRules": ["no-duplicate-vmad", "resolved-targets"]
+}

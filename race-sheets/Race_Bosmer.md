@@ -14,7 +14,7 @@ The Green Pact is the defining theological fact of Bosmer life: Y'ffre gave them
 
 **Worship type:** Multi-Path (closed system) — not a pantheon of gods to choose between, but four distinct *interpretations* of Bosmer religious life.
 
-**Setup choice:** At the start of play, you choose one of four devotional paths. This is the central decision for a Bosmer character — more defining than any other race's initial choice.
+**Setup choice:** Shortly after startup, once Bosmer origin is known, the game asks you to choose one of four devotional paths. That popup immediately commits the matching foreground patron. This is the central decision for a Bosmer character — more defining than any other race's initial choice.
 
 **Path switching is possible but costly.** You're not permanently locked, but changing paths requires meaningful threshold events and carries real spiritual cost. The Old Contract is hardest to leave and hardest to re-enter. The Living Story is the easiest bridge between paths.
 
@@ -113,7 +113,7 @@ Switching between Bosmer paths is possible but not casual:
 - **The Old Contract** is the hardest to leave and the hardest to re-enter. The Pact is governed by an explicit one-cycle rule: you may leave and return exactly once, and the second renunciation closes Y'ffre permanently. See the Old Contract section above and `references/PDV_BosmerPactModel_Planning.md` for full mechanics.
 - **The Exchange** and **The Bandit Road** sit between those poles.
 
-Switching into or out of the Living Story, Exchange, or Bandit Road requires meaningful threshold events and carries real spiritual cost. Entering or leaving the Old Contract is gated by a qualifying in-world act plus an MCM confirmation — the toggle exists, but the friction is structural rather than purely UI.
+Switching into or out of the Living Story, Exchange, or Bandit Road requires meaningful threshold events and carries real spiritual cost. Entering or leaving the Old Contract is gated by a qualifying in-world act plus a Bosmer-specific offer-and-rite flow. The friction is structural rather than purely UI.
 
 ## Playing This Race — What to Expect
 

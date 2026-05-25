@@ -1,0 +1,684 @@
+{
+  "schema": "creation-authoring.manual-packets.v1",
+  "manifest": {
+    "project": "player-devotion-phase9",
+    "game": "SkyrimSE",
+    "sourcePlugin": "PlayerDevotion_Framework.esp",
+    "output": "PDV_Phase9BosmerStateOverlay.esp"
+  },
+  "packets": [
+    {
+      "operationId": "bosmer-track-state-labels",
+      "kind": "vmad.array_property",
+      "target": "PDV_StateTrack_BosmerPath",
+      "reason": "No safe backend is available for this operation in the active profile.",
+      "capability": "vmad.array_property",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_StateTrack_BosmerPath",
+        "editorId": "PDV_StateTrack_BosmerPath",
+        "formid": "PlayerDevotion_Framework.esp:0499C5",
+        "recordType": "QUST",
+        "plugin": "PlayerDevotion_Framework.esp",
+        "winningPlugin": "PlayerDevotion_Framework.esp",
+        "scripts": [],
+        "entries": [],
+        "keywords": [],
+        "spells": [],
+        "perks": [],
+        "packages": [],
+        "inventory": [],
+        "resolved": true
+      },
+      "steps": [
+        "Perform vmad.array_property on PDV_StateTrack_BosmerPath with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.array-property"
+    },
+    {
+      "operationId": "yffre-eligible-states",
+      "kind": "vmad.array_property",
+      "target": "PDV_Deity_Yffre",
+      "reason": "No safe backend is available for this operation in the active profile.",
+      "capability": "vmad.array_property",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_Deity_Yffre",
+        "editorId": "PDV_Deity_Yffre",
+        "formid": "PlayerDevotion_Framework.esp:06CB52",
+        "recordType": "QUST",
+        "plugin": "PlayerDevotion_Framework.esp",
+        "winningPlugin": "PlayerDevotion_Framework.esp",
+        "scripts": [],
+        "entries": [],
+        "keywords": [],
+        "spells": [],
+        "perks": [],
+        "packages": [],
+        "inventory": [],
+        "resolved": true
+      },
+      "steps": [
+        "Perform vmad.array_property on PDV_Deity_Yffre with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.array-property"
+    },
+    {
+      "operationId": "zen-record",
+      "kind": "record.create",
+      "target": "PDV_Deity_Zen",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_Deity_Zen",
+        "formid": null,
+        "editorId": "PDV_Deity_Zen",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_Deity_Zen with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "zen-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_Deity_Zen",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "vmad.attach_script",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_Deity_Zen",
+        "formid": null,
+        "editorId": "PDV_Deity_Zen",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Open the record PDV_Deity_Zen.",
+        "Attach or select script PDV_Deity_Zen.",
+        "Set property DeityName to Z'en.",
+        "Set property DeityDomain to Exchange, Reciprocity, Restitution.",
+        "Set property DeityIndex to 4.",
+        "Set property Stance_Bosmer to 0.",
+        "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+        "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+        "Set property EligibleStateTrack to PDV_StateTrack_BosmerPath.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.script-properties"
+    },
+    {
+      "operationId": "zen-eligible-states",
+      "kind": "vmad.array_property",
+      "target": "PDV_Deity_Zen",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "vmad.array_property",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_Deity_Zen",
+        "formid": null,
+        "editorId": "PDV_Deity_Zen",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform vmad.array_property on PDV_Deity_Zen with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.array-property"
+    },
+    {
+      "operationId": "baandar-record",
+      "kind": "record.create",
+      "target": "PDV_Deity_BaanDar",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_Deity_BaanDar",
+        "formid": null,
+        "editorId": "PDV_Deity_BaanDar",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_Deity_BaanDar with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "baandar-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_Deity_BaanDar",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "vmad.attach_script",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_Deity_BaanDar",
+        "formid": null,
+        "editorId": "PDV_Deity_BaanDar",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Open the record PDV_Deity_BaanDar.",
+        "Attach or select script PDV_Deity_BaanDar.",
+        "Set property DeityName to Baan Dar.",
+        "Set property DeityDomain to Road, Theft, Survival Cunning.",
+        "Set property DeityIndex to 5.",
+        "Set property Stance_Bosmer to 0.",
+        "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+        "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+        "Set property EligibleStateTrack to PDV_StateTrack_BosmerPath.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.script-properties"
+    },
+    {
+      "operationId": "baandar-eligible-states",
+      "kind": "vmad.array_property",
+      "target": "PDV_Deity_BaanDar",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "vmad.array_property",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_Deity_BaanDar",
+        "formid": null,
+        "editorId": "PDV_Deity_BaanDar",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform vmad.array_property on PDV_Deity_BaanDar with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.array-property"
+    },
+    {
+      "operationId": "manager-bosmer-unresolved",
+      "kind": "manual.unsupported",
+      "target": "PDV__ManagerQuest",
+      "reason": "No safe backend is available for this operation in the active profile.",
+      "capability": "manual.unsupported",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV__ManagerQuest",
+        "editorId": "PDV__ManagerQuest",
+        "formid": "PlayerDevotion_Framework.esp:00C325",
+        "recordType": "QUST",
+        "plugin": "PlayerDevotion_Framework.esp",
+        "winningPlugin": "PlayerDevotion_Framework.esp",
+        "scripts": [],
+        "entries": [],
+        "keywords": [],
+        "spells": [],
+        "perks": [],
+        "packages": [],
+        "inventory": [],
+        "resolved": true
+      },
+      "steps": [
+        "Perform manual.unsupported on PDV__ManagerQuest with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "manual.review"
+    },
+    {
+      "operationId": "deity-list-zen-baandar",
+      "kind": "manual.unsupported",
+      "target": "PDV_FLST_AllDeities",
+      "reason": "No safe backend is available for this operation in the active profile.",
+      "capability": "manual.unsupported",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_FLST_AllDeities",
+        "editorId": "PDV_FLST_AllDeities",
+        "formid": "PlayerDevotion_Framework.esp:017E47",
+        "recordType": "FLST",
+        "plugin": "PlayerDevotion_Framework.esp",
+        "winningPlugin": "PlayerDevotion_Framework.esp",
+        "scripts": [],
+        "entries": [],
+        "keywords": [],
+        "spells": [],
+        "perks": [],
+        "packages": [],
+        "inventory": [],
+        "resolved": true
+      },
+      "steps": [
+        "Perform manual.unsupported on PDV_FLST_AllDeities with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "manual.review"
+    },
+    {
+      "operationId": "msg-bosmer-setup-choice",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerSetupChoice",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_MSG_BosmerSetupChoice",
+        "formid": null,
+        "editorId": "PDV_MSG_BosmerSetupChoice",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_MSG_BosmerSetupChoice with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "msg-bosmer-suggest-living-story",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerSuggestLivingStory",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_MSG_BosmerSuggestLivingStory",
+        "formid": null,
+        "editorId": "PDV_MSG_BosmerSuggestLivingStory",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_MSG_BosmerSuggestLivingStory with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "msg-bosmer-suggest-exchange",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerSuggestExchange",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_MSG_BosmerSuggestExchange",
+        "formid": null,
+        "editorId": "PDV_MSG_BosmerSuggestExchange",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_MSG_BosmerSuggestExchange with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "msg-bosmer-suggest-bandit-road",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerSuggestBanditRoad",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_MSG_BosmerSuggestBanditRoad",
+        "formid": null,
+        "editorId": "PDV_MSG_BosmerSuggestBanditRoad",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_MSG_BosmerSuggestBanditRoad with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "msg-bosmer-suggest-old-contract",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerSuggestOldContract",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_MSG_BosmerSuggestOldContract",
+        "formid": null,
+        "editorId": "PDV_MSG_BosmerSuggestOldContract",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_MSG_BosmerSuggestOldContract with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "msg-bosmer-reckoning",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerReckoning",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_MSG_BosmerReckoning",
+        "formid": null,
+        "editorId": "PDV_MSG_BosmerReckoning",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_MSG_BosmerReckoning with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "acti-bosmer-living-story-record",
+      "kind": "record.create",
+      "target": "PDV_ACTI_BosmerLivingStorySignal",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_ACTI_BosmerLivingStorySignal",
+        "formid": null,
+        "editorId": "PDV_ACTI_BosmerLivingStorySignal",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_ACTI_BosmerLivingStorySignal with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "acti-bosmer-living-story-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_ACTI_BosmerLivingStorySignal",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "vmad.attach_script",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_ACTI_BosmerLivingStorySignal",
+        "formid": null,
+        "editorId": "PDV_ACTI_BosmerLivingStorySignal",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Open the record PDV_ACTI_BosmerLivingStorySignal.",
+        "Attach or select script PDV_EventSignalActivator.",
+        "Set property PDV_EventBusService to PDV_EventBus.",
+        "Set property PlayerREF to PlayerRef.",
+        "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+        "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+        "Set property RouteId to 41.",
+        "Set property RequiredOriginRace to 4.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.script-properties"
+    },
+    {
+      "operationId": "acti-bosmer-exchange-record",
+      "kind": "record.create",
+      "target": "PDV_ACTI_BosmerExchangeSignal",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_ACTI_BosmerExchangeSignal",
+        "formid": null,
+        "editorId": "PDV_ACTI_BosmerExchangeSignal",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_ACTI_BosmerExchangeSignal with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "acti-bosmer-exchange-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_ACTI_BosmerExchangeSignal",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "vmad.attach_script",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_ACTI_BosmerExchangeSignal",
+        "formid": null,
+        "editorId": "PDV_ACTI_BosmerExchangeSignal",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Open the record PDV_ACTI_BosmerExchangeSignal.",
+        "Attach or select script PDV_EventSignalActivator.",
+        "Set property PDV_EventBusService to PDV_EventBus.",
+        "Set property PlayerREF to PlayerRef.",
+        "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+        "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+        "Set property RouteId to 42.",
+        "Set property RequiredOriginRace to 4.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.script-properties"
+    },
+    {
+      "operationId": "acti-bosmer-bandit-road-record",
+      "kind": "record.create",
+      "target": "PDV_ACTI_BosmerBanditRoadSignal",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_ACTI_BosmerBanditRoadSignal",
+        "formid": null,
+        "editorId": "PDV_ACTI_BosmerBanditRoadSignal",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_ACTI_BosmerBanditRoadSignal with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "acti-bosmer-bandit-road-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_ACTI_BosmerBanditRoadSignal",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "vmad.attach_script",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_ACTI_BosmerBanditRoadSignal",
+        "formid": null,
+        "editorId": "PDV_ACTI_BosmerBanditRoadSignal",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Open the record PDV_ACTI_BosmerBanditRoadSignal.",
+        "Attach or select script PDV_EventSignalActivator.",
+        "Set property PDV_EventBusService to PDV_EventBus.",
+        "Set property PlayerREF to PlayerRef.",
+        "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+        "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+        "Set property RouteId to 43.",
+        "Set property RequiredOriginRace to 4.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.script-properties"
+    },
+    {
+      "operationId": "acti-bosmer-pact-positive-record",
+      "kind": "record.create",
+      "target": "PDV_ACTI_BosmerPactPositiveSignal",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_ACTI_BosmerPactPositiveSignal",
+        "formid": null,
+        "editorId": "PDV_ACTI_BosmerPactPositiveSignal",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_ACTI_BosmerPactPositiveSignal with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "acti-bosmer-pact-positive-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_ACTI_BosmerPactPositiveSignal",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "vmad.attach_script",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_ACTI_BosmerPactPositiveSignal",
+        "formid": null,
+        "editorId": "PDV_ACTI_BosmerPactPositiveSignal",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Open the record PDV_ACTI_BosmerPactPositiveSignal.",
+        "Attach or select script PDV_EventSignalActivator.",
+        "Set property PDV_EventBusService to PDV_EventBus.",
+        "Set property PlayerREF to PlayerRef.",
+        "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+        "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+        "Set property RouteId to 44.",
+        "Set property RequiredOriginRace to 4.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.script-properties"
+    },
+    {
+      "operationId": "acti-state-transition-confirm-rite-record",
+      "kind": "record.create",
+      "target": "PDV_ACTI_StateTransitionConfirmRite",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "record.create",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_ACTI_StateTransitionConfirmRite",
+        "formid": null,
+        "editorId": "PDV_ACTI_StateTransitionConfirmRite",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform record.create on PDV_ACTI_StateTransitionConfirmRite with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "record.exists"
+    },
+    {
+      "operationId": "acti-state-transition-confirm-rite-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_ACTI_StateTransitionConfirmRite",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "vmad.attach_script",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_ACTI_StateTransitionConfirmRite",
+        "formid": null,
+        "editorId": "PDV_ACTI_StateTransitionConfirmRite",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Open the record PDV_ACTI_StateTransitionConfirmRite.",
+        "Attach or select script PDV_EventSignalActivator.",
+        "Set property PDV_EventBusService to PDV_EventBus.",
+        "Set property PlayerREF to PlayerRef.",
+        "Set property PDV_GLO_OriginRace to PDV_GLO_OriginRace.",
+        "Set property PDV_GLO_DebugLevel to PDV_GLO_DebugLevel.",
+        "Set property RouteId to 45.",
+        "Set property RequiredOriginRace to -1.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "vmad.script-properties"
+    },
+    {
+      "operationId": "bosmer-proof-surface-placement",
+      "kind": "manual.unsupported",
+      "target": "PDV_Phase9_BosmerPlacement",
+      "reason": "Target could not be resolved by the active resource connectors.",
+      "capability": "manual.unsupported",
+      "requiresCkSemantics": false,
+      "targetResolution": {
+        "identifier": "PDV_Phase9_BosmerPlacement",
+        "formid": null,
+        "editorId": "PDV_Phase9_BosmerPlacement",
+        "recordType": null,
+        "plugin": null,
+        "winningPlugin": null,
+        "resolved": false
+      },
+      "steps": [
+        "Perform manual.unsupported on PDV_Phase9_BosmerPlacement with the manifest payload.",
+        "Save the plugin and run the verifier/readback command."
+      ],
+      "verifier": "manual.review"
+    }
+  ]
+}

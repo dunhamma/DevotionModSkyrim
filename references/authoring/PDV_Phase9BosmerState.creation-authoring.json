@@ -1,0 +1,420 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "player-devotion-phase9",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "output": "PDV_Phase9BosmerStateOverlay.esp",
+  "metadata": {
+    "phase": "phase9",
+    "note": "Creation-authoring source of truth for the Bosmer state-path slice. Manual packets are development blockers; CK-owned record creation, VMAD arrays, and placement intent route through CKPE for shippable automation proof.",
+    "runtimeProof": "Closed 2026-05-24: all route IDs 41-45, destination offers, confirmation rite switching, Old Contract re-entry, reckoning Renounce/Recommit, and save/load persistence passed. PDV_StateTrack now retains three evidence days for three-day offers."
+  },
+  "operations": [
+    {
+      "id": "bosmer-track-state-labels",
+      "kind": "vmad.array_property",
+      "target": "PDV_StateTrack_BosmerPath",
+      "payload": {
+        "script": "PDV_StateTrack",
+        "property": "StateLabels",
+        "type": "StringArray",
+        "values": [
+          "OldContract",
+          "LivingStory",
+          "Exchange",
+          "BanditRoad"
+        ]
+      }
+    },
+    {
+      "id": "yffre-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_Deity_Yffre",
+      "payload": {
+        "script": "PDV_Deity_Yffre",
+        "properties": [
+          { "name": "DeityName", "type": "String", "value": "Y'ffre" },
+          { "name": "DeityDomain", "type": "String", "value": "Story, Green Pact, Forest Law" },
+          { "name": "DeityIndex", "type": "Int", "value": 3 },
+          { "name": "Stance_Bosmer", "type": "Int", "value": 0 },
+          { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
+          { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
+          { "name": "EligibleStateTrack", "type": "Object", "value": "PDV_StateTrack_BosmerPath" },
+          { "name": "DELTA_PACT_POSITIVE", "type": "Float", "value": 2.0 },
+          { "name": "DELTA_LIVING_STORY", "type": "Float", "value": 2.5 }
+        ]
+      }
+    },
+    {
+      "id": "yffre-eligible-states",
+      "kind": "vmad.array_property",
+      "target": "PDV_Deity_Yffre",
+      "payload": {
+        "script": "PDV_Deity_Yffre",
+        "property": "EligibleStateValues",
+        "type": "IntArray",
+        "values": [0, 1]
+      }
+    },
+    {
+      "id": "manager-bosmer-ready",
+      "kind": "vmad.attach_script",
+      "target": "PDV__ManagerQuest",
+      "payload": {
+        "script": "PDV__ManagerQuest",
+        "properties": [
+          { "name": "PDV_BosmerPathTrack", "type": "Object", "value": "PDV_StateTrack_BosmerPath" },
+          { "name": "PDV_Yffre", "type": "Object", "value": "PDV_Deity_Yffre" }
+        ]
+      }
+    },
+    {
+      "id": "deity-list-yffre",
+      "kind": "formlist.add",
+      "target": "PDV_FLST_AllDeities",
+      "payload": {
+        "entry": "PDV_Deity_Yffre"
+      }
+    },
+    {
+      "id": "zen-record",
+      "kind": "record.create",
+      "target": "PDV_Deity_Zen",
+      "payload": {
+        "recordType": "QUST",
+        "script": "PDV_Deity_Zen",
+        "playerFacingName": "Z'en"
+      }
+    },
+    {
+      "id": "zen-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_Deity_Zen",
+      "payload": {
+        "script": "PDV_Deity_Zen",
+        "properties": [
+          { "name": "DeityName", "type": "String", "value": "Z'en" },
+          { "name": "DeityDomain", "type": "String", "value": "Exchange, Reciprocity, Restitution" },
+          { "name": "DeityIndex", "type": "Int", "value": 4 },
+          { "name": "Stance_Bosmer", "type": "Int", "value": 0 },
+          { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
+          { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
+          { "name": "EligibleStateTrack", "type": "Object", "value": "PDV_StateTrack_BosmerPath" }
+        ]
+      }
+    },
+    {
+      "id": "zen-eligible-states",
+      "kind": "vmad.array_property",
+      "target": "PDV_Deity_Zen",
+      "payload": {
+        "script": "PDV_Deity_Zen",
+        "property": "EligibleStateValues",
+        "type": "IntArray",
+        "values": [2]
+      }
+    },
+    {
+      "id": "baandar-record",
+      "kind": "record.create",
+      "target": "PDV_Deity_BaanDar",
+      "payload": {
+        "recordType": "QUST",
+        "script": "PDV_Deity_BaanDar",
+        "playerFacingName": "Baan Dar"
+      }
+    },
+    {
+      "id": "baandar-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_Deity_BaanDar",
+      "payload": {
+        "script": "PDV_Deity_BaanDar",
+        "properties": [
+          { "name": "DeityName", "type": "String", "value": "Baan Dar" },
+          { "name": "DeityDomain", "type": "String", "value": "Road, Theft, Survival Cunning" },
+          { "name": "DeityIndex", "type": "Int", "value": 5 },
+          { "name": "Stance_Bosmer", "type": "Int", "value": 0 },
+          { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
+          { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
+          { "name": "EligibleStateTrack", "type": "Object", "value": "PDV_StateTrack_BosmerPath" }
+        ]
+      }
+    },
+    {
+      "id": "baandar-eligible-states",
+      "kind": "vmad.array_property",
+      "target": "PDV_Deity_BaanDar",
+      "payload": {
+        "script": "PDV_Deity_BaanDar",
+        "property": "EligibleStateValues",
+        "type": "IntArray",
+        "values": [3]
+      }
+    },
+    {
+      "id": "manager-bosmer-unresolved",
+      "kind": "vmad.attach_script",
+      "target": "PDV__ManagerQuest",
+      "payload": {
+        "script": "PDV__ManagerQuest",
+        "properties": [
+          { "name": "PDV_Zen", "type": "Object", "value": "PDV_Deity_Zen" },
+          { "name": "PDV_BaanDar", "type": "Object", "value": "PDV_Deity_BaanDar" },
+          { "name": "PDV_MSG_BosmerSetupChoice", "type": "Object", "value": "PDV_MSG_BosmerSetupChoice" },
+          { "name": "PDV_MSG_BosmerSuggestLivingStory", "type": "Object", "value": "PDV_MSG_BosmerSuggestLivingStory" },
+          { "name": "PDV_MSG_BosmerSuggestExchange", "type": "Object", "value": "PDV_MSG_BosmerSuggestExchange" },
+          { "name": "PDV_MSG_BosmerSuggestBanditRoad", "type": "Object", "value": "PDV_MSG_BosmerSuggestBanditRoad" },
+          { "name": "PDV_MSG_BosmerSuggestOldContract", "type": "Object", "value": "PDV_MSG_BosmerSuggestOldContract" },
+          { "name": "PDV_MSG_BosmerReckoning", "type": "Object", "value": "PDV_MSG_BosmerReckoning" }
+        ]
+      }
+    },
+    {
+      "id": "deity-list-zen",
+      "kind": "formlist.add",
+      "target": "PDV_FLST_AllDeities",
+      "payload": {
+        "entry": "PDV_Deity_Zen"
+      }
+    },
+    {
+      "id": "deity-list-baandar",
+      "kind": "formlist.add",
+      "target": "PDV_FLST_AllDeities",
+      "payload": {
+        "entry": "PDV_Deity_BaanDar"
+      }
+    },
+    {
+      "id": "msg-bosmer-setup-choice",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerSetupChoice",
+      "payload": {
+        "recordType": "MESG",
+        "text": "Choose the Bosmer path you will walk first.",
+        "buttons": [
+          "Old Contract",
+          "Living Story",
+          "Exchange",
+          "Bandit Road"
+        ],
+        "buttonContract": "0=OldContract, 1=LivingStory, 2=Exchange, 3=BanditRoad"
+      }
+    },
+    {
+      "id": "msg-bosmer-suggest-living-story",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerSuggestLivingStory",
+      "payload": {
+        "recordType": "MESG",
+        "text": "Your recent life points toward Living Story. Accept this path offer? A rite still confirms the change.",
+        "buttons": [
+          "Accept",
+          "Refuse"
+        ],
+        "buttonContract": "0=accept, nonzero=refuse"
+      }
+    },
+    {
+      "id": "msg-bosmer-suggest-exchange",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerSuggestExchange",
+      "payload": {
+        "recordType": "MESG",
+        "text": "Your recent life points toward Exchange. Accept this path offer? A rite still confirms the change.",
+        "buttons": [
+          "Accept",
+          "Refuse"
+        ],
+        "buttonContract": "0=accept, nonzero=refuse"
+      }
+    },
+    {
+      "id": "msg-bosmer-suggest-bandit-road",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerSuggestBanditRoad",
+      "payload": {
+        "recordType": "MESG",
+        "text": "Your recent life points toward Bandit Road. Accept this path offer? A rite still confirms the change.",
+        "buttons": [
+          "Accept",
+          "Refuse"
+        ],
+        "buttonContract": "0=accept, nonzero=refuse"
+      }
+    },
+    {
+      "id": "msg-bosmer-suggest-old-contract",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerSuggestOldContract",
+      "payload": {
+        "recordType": "MESG",
+        "text": "Your recent life points toward Old Contract. Accept this path offer? A rite still confirms the change.",
+        "buttons": [
+          "Accept",
+          "Refuse"
+        ],
+        "buttonContract": "0=accept, nonzero=refuse"
+      }
+    },
+    {
+      "id": "msg-bosmer-reckoning",
+      "kind": "record.create",
+      "target": "PDV_MSG_BosmerReckoning",
+      "payload": {
+        "recordType": "MESG",
+        "text": "The Pact demands reckoning. Recommit now, or renounce it.",
+        "buttons": [
+          "Recommit",
+          "Renounce"
+        ],
+        "buttonContract": "0=recommit, nonzero=renounce"
+      }
+    },
+    {
+      "id": "acti-bosmer-living-story-record",
+      "kind": "record.create",
+      "target": "PDV_ACTI_BosmerLivingStorySignal",
+      "payload": {
+        "recordType": "ACTI",
+        "script": "PDV_EventSignalActivator"
+      }
+    },
+    {
+      "id": "acti-bosmer-living-story-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_ACTI_BosmerLivingStorySignal",
+      "payload": {
+        "script": "PDV_EventSignalActivator",
+        "properties": [
+          { "name": "PDV_EventBusService", "type": "Object", "value": "PDV_EventBus" },
+          { "name": "PlayerREF", "type": "Object", "value": "PlayerRef" },
+          { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
+          { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
+          { "name": "RouteId", "type": "Int", "value": 41 },
+          { "name": "RequiredOriginRace", "type": "Int", "value": 4 },
+          { "name": "TraceLabel", "type": "String", "value": "PDV_ACTI_BosmerLivingStorySignal" }
+        ]
+      }
+    },
+    {
+      "id": "acti-bosmer-exchange-record",
+      "kind": "record.create",
+      "target": "PDV_ACTI_BosmerExchangeSignal",
+      "payload": {
+        "recordType": "ACTI",
+        "script": "PDV_EventSignalActivator"
+      }
+    },
+    {
+      "id": "acti-bosmer-exchange-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_ACTI_BosmerExchangeSignal",
+      "payload": {
+        "script": "PDV_EventSignalActivator",
+        "properties": [
+          { "name": "PDV_EventBusService", "type": "Object", "value": "PDV_EventBus" },
+          { "name": "PlayerREF", "type": "Object", "value": "PlayerRef" },
+          { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
+          { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
+          { "name": "RouteId", "type": "Int", "value": 42 },
+          { "name": "RequiredOriginRace", "type": "Int", "value": 4 },
+          { "name": "TraceLabel", "type": "String", "value": "PDV_ACTI_BosmerExchangeSignal" }
+        ]
+      }
+    },
+    {
+      "id": "acti-bosmer-bandit-road-record",
+      "kind": "record.create",
+      "target": "PDV_ACTI_BosmerBanditRoadSignal",
+      "payload": {
+        "recordType": "ACTI",
+        "script": "PDV_EventSignalActivator"
+      }
+    },
+    {
+      "id": "acti-bosmer-bandit-road-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_ACTI_BosmerBanditRoadSignal",
+      "payload": {
+        "script": "PDV_EventSignalActivator",
+        "properties": [
+          { "name": "PDV_EventBusService", "type": "Object", "value": "PDV_EventBus" },
+          { "name": "PlayerREF", "type": "Object", "value": "PlayerRef" },
+          { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
+          { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
+          { "name": "RouteId", "type": "Int", "value": 43 },
+          { "name": "RequiredOriginRace", "type": "Int", "value": 4 },
+          { "name": "TraceLabel", "type": "String", "value": "PDV_ACTI_BosmerBanditRoadSignal" }
+        ]
+      }
+    },
+    {
+      "id": "acti-bosmer-pact-positive-record",
+      "kind": "record.create",
+      "target": "PDV_ACTI_BosmerPactPositiveSignal",
+      "payload": {
+        "recordType": "ACTI",
+        "script": "PDV_EventSignalActivator"
+      }
+    },
+    {
+      "id": "acti-bosmer-pact-positive-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_ACTI_BosmerPactPositiveSignal",
+      "payload": {
+        "script": "PDV_EventSignalActivator",
+        "properties": [
+          { "name": "PDV_EventBusService", "type": "Object", "value": "PDV_EventBus" },
+          { "name": "PlayerREF", "type": "Object", "value": "PlayerRef" },
+          { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
+          { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
+          { "name": "RouteId", "type": "Int", "value": 44 },
+          { "name": "RequiredOriginRace", "type": "Int", "value": 4 },
+          { "name": "TraceLabel", "type": "String", "value": "PDV_ACTI_BosmerPactPositiveSignal" }
+        ]
+      }
+    },
+    {
+      "id": "acti-state-transition-confirm-rite-record",
+      "kind": "record.create",
+      "target": "PDV_ACTI_StateTransitionConfirmRite",
+      "payload": {
+        "recordType": "ACTI",
+        "script": "PDV_EventSignalActivator"
+      }
+    },
+    {
+      "id": "acti-state-transition-confirm-rite-vmad",
+      "kind": "vmad.attach_script",
+      "target": "PDV_ACTI_StateTransitionConfirmRite",
+      "payload": {
+        "script": "PDV_EventSignalActivator",
+        "properties": [
+          { "name": "PDV_EventBusService", "type": "Object", "value": "PDV_EventBus" },
+          { "name": "PlayerREF", "type": "Object", "value": "PlayerRef" },
+          { "name": "PDV_GLO_OriginRace", "type": "Object", "value": "PDV_GLO_OriginRace" },
+          { "name": "PDV_GLO_DebugLevel", "type": "Object", "value": "PDV_GLO_DebugLevel" },
+          { "name": "RouteId", "type": "Int", "value": 45 },
+          { "name": "RequiredOriginRace", "type": "Int", "value": -1 },
+          { "name": "TraceLabel", "type": "String", "value": "PDV_ACTI_StateTransitionConfirmRite" }
+        ]
+      }
+    },
+    {
+      "id": "bosmer-proof-surface-placement",
+      "kind": "reference.place",
+      "target": "PDV_Phase9_BosmerPlacement",
+      "payload": {
+        "placedInstancesRequired": [
+          "PDV_ACTI_BosmerLivingStorySignal",
+          "PDV_ACTI_BosmerExchangeSignal",
+          "PDV_ACTI_BosmerBanditRoadSignal",
+          "PDV_ACTI_BosmerPactPositiveSignal",
+          "PDV_ACTI_StateTransitionConfirmRite"
+        ]
+      }
+    }
+  ]
+}

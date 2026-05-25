@@ -59,6 +59,18 @@ const PHASE8_CONCORDAT_TALOS_MANIFEST = path.join(
   "authoring",
   "PDV_Phase8ConcordatTalos.manifest.json",
 );
+const PHASE9_BOSMER_STATE_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase9BosmerState.manifest.json",
+);
+const PHASE11_PRIVILEGE_PILOT_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase11PrivilegePilot.manifest.json",
+);
 const PATCH_RULES_DIR = path.join(
   PROJECT_ROOT,
   "references",
@@ -101,6 +113,20 @@ const PREFLIGHT_RECORDS = {
   PDV_GLO_PatronState: "GLOB",
   PDV_EventTypes: "QUST",
   PDV_EventBus: "QUST",
+};
+
+const PHASE9_RECORDS = {
+  PDV_GLO_BosmerPath: "GLOB",
+  PDV_StateTrack_BosmerPath: "QUST",
+  PDV_Deity_Yffre: "QUST",
+  PDV_Deity_Zen: "QUST",
+  PDV_Deity_BaanDar: "QUST",
+  PDV_MSG_BosmerSetupChoice: "MESG",
+  PDV_MSG_BosmerSuggestLivingStory: "MESG",
+  PDV_MSG_BosmerSuggestExchange: "MESG",
+  PDV_MSG_BosmerSuggestBanditRoad: "MESG",
+  PDV_MSG_BosmerSuggestOldContract: "MESG",
+  PDV_MSG_BosmerReckoning: "MESG",
 };
 
 const SKELETON_REPUTATION_TRACKS = [
@@ -250,12 +276,70 @@ const SLICE1_SIGNAL_RECEIVER_DEFINITIONS = [
   },
 ];
 
+const PHASE10_DUNMER_SIGNAL_RECEIVER_DEFINITIONS = SLICE1_SIGNAL_RECEIVER_DEFINITIONS.filter((definition) =>
+  definition.recordEdid === "PDV_ACTI_DunmerPortableShrineSignal"
+    || definition.recordEdid === "PDV_ACTI_DunmerPrivateShrineSignal"
+).map((definition) => ({
+  ...definition,
+  expectedOncePerDayKey: definition.recordEdid === "PDV_ACTI_DunmerPortableShrineSignal"
+    ? "PDV.Signal.DunmerPortableShrine.Activator"
+    : "PDV.Signal.DunmerHome.Activator",
+}));
+
+const KHAJIIT_FOCUSED_EMPHASIS_GLOBAL = "PDV_GLO_KhajiitFocusedEmphasis";
+const KYNE_NEGLECT_MAGIC_EFFECT = "PDV_MGEF_Neglect_Kyne";
+const KYNE_NEGLECT_SPELL = "PDV_SPEL_Neglect_Kyne";
+const PHASE11_ARNGEIR_BRANCH = "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch";
+const PHASE11_ARNGEIR_TOPIC = "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic";
+const PHASE11_ARNGEIR_INFO = "PDV_INFO_Phase11ArngeirKyneRecognition";
+const PHASE11_ARNGEIR_NPC_FORMID = "Skyrim.esm:02C6C7";
+const PHASE11_ARNGEIR_PROMPT = "Has Kyne marked my path?";
+const PHASE11_ARNGEIR_LINE = "The wind has marked you, Dragonborn. Walk with Kyne's breath.";
+
 const PHASE7_SIGNAL_RECEIVER_DEFINITIONS = [
   {
     recordEdid: "PDV_REFR_TalosShrineDefianceSignal",
     recordType: "REFR",
     scriptName: "PDV_EventSignalActivator",
     routeId: 35,
+    requiredOriginRace: -1,
+  },
+];
+
+const PHASE9_SIGNAL_RECEIVER_DEFINITIONS = [
+  {
+    recordEdid: "PDV_ACTI_BosmerLivingStorySignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 41,
+    requiredOriginRace: 4,
+  },
+  {
+    recordEdid: "PDV_ACTI_BosmerExchangeSignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 42,
+    requiredOriginRace: 4,
+  },
+  {
+    recordEdid: "PDV_ACTI_BosmerBanditRoadSignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 43,
+    requiredOriginRace: 4,
+  },
+  {
+    recordEdid: "PDV_ACTI_BosmerPactPositiveSignal",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 44,
+    requiredOriginRace: 4,
+  },
+  {
+    recordEdid: "PDV_ACTI_StateTransitionConfirmRite",
+    recordType: "ACTI",
+    scriptName: "PDV_EventSignalActivator",
+    routeId: 45,
     requiredOriginRace: -1,
   },
 ];
@@ -268,6 +352,9 @@ const COMPILED_SCRIPTS = {
   PDV_Deity_Kyne: "required",
   PDV_Deity_Talos: "required",
   PDV_Deity_AuriEl: "required",
+  PDV_Deity_Yffre: "required",
+  PDV_Deity_Zen: "required",
+  PDV_Deity_BaanDar: "required",
   PDV_EventTypes: "required",
   PDV_EventBus: "required",
   PDV_FragmentBridge: "required",
@@ -444,6 +531,19 @@ const MANAGER_PATTERN_PROPERTIES = {
   PDV_CurseStateService: "PDV_CurseState",
 };
 
+const PHASE9_MANAGER_PROPERTIES = {
+  PDV_Yffre: "PDV_Deity_Yffre",
+  PDV_Zen: "PDV_Deity_Zen",
+  PDV_BaanDar: "PDV_Deity_BaanDar",
+  PDV_BosmerPathTrack: "PDV_StateTrack_BosmerPath",
+  PDV_MSG_BosmerSetupChoice: "PDV_MSG_BosmerSetupChoice",
+  PDV_MSG_BosmerSuggestLivingStory: "PDV_MSG_BosmerSuggestLivingStory",
+  PDV_MSG_BosmerSuggestExchange: "PDV_MSG_BosmerSuggestExchange",
+  PDV_MSG_BosmerSuggestBanditRoad: "PDV_MSG_BosmerSuggestBanditRoad",
+  PDV_MSG_BosmerSuggestOldContract: "PDV_MSG_BosmerSuggestOldContract",
+  PDV_MSG_BosmerReckoning: "PDV_MSG_BosmerReckoning",
+};
+
 const MCM_PATTERN_PROPERTIES = {
   PDV_EventBusService: "PDV_EventBus",
 };
@@ -469,6 +569,12 @@ class Verifier {
     strictPatternProving = false,
     strictPhase7 = false,
     strictPhase8 = false,
+    strictPhase9 = false,
+    strictPhase10 = false,
+    strictPhase11 = false,
+    strictKhajiit = false,
+    strictCommitment = false,
+    strictNeglectDecay = false,
   } = {}) {
     this.strictPhase3 = strictPhase3;
     this.strictPreflight = strictPreflight;
@@ -476,6 +582,12 @@ class Verifier {
     this.strictPatternProving = strictPatternProving;
     this.strictPhase7 = strictPhase7;
     this.strictPhase8 = strictPhase8;
+    this.strictPhase9 = strictPhase9;
+    this.strictPhase10 = strictPhase10;
+    this.strictPhase11 = strictPhase11;
+    this.strictKhajiit = strictKhajiit;
+    this.strictCommitment = strictCommitment;
+    this.strictNeglectDecay = strictNeglectDecay;
     this.findings = [];
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
@@ -551,6 +663,54 @@ class Verifier {
     }
   }
 
+  phase9Gap(check, detail, filePath = null) {
+    if (this.strictPhase9) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  phase10Gap(check, detail, filePath = null) {
+    if (this.strictPhase10) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  phase11Gap(check, detail, filePath = null) {
+    if (this.strictPhase11) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  khajiitGap(check, detail, filePath = null) {
+    if (this.strictKhajiit) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  commitmentGap(check, detail, filePath = null) {
+    if (this.strictCommitment) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  neglectDecayGap(check, detail, filePath = null) {
+    if (this.strictNeglectDecay) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   async run() {
     this.checkPaths();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
@@ -570,6 +730,12 @@ class Verifier {
       this.checkPatternProving();
       this.checkPhase8();
       this.checkPhase7();
+      this.checkPhase9();
+      this.checkPhase10();
+      this.checkKhajiit();
+      this.checkCommitment();
+      this.checkNeglectDecay();
+      this.checkPhase11();
       this.checkOfflinePatcherRules();
       this.checkPreflightOverlayPatch();
     }
@@ -1149,6 +1315,61 @@ class Verifier {
     this.checkPhase8TalosRecord();
   }
 
+  checkPhase9() {
+    this.checkPhase9Manifest();
+    this.checkPhase9Records();
+    this.checkPhase9ManagerRecord();
+    this.checkPhase9BosmerTrackRecord();
+    this.checkPhase9DeityRecord("PDV_Deity_Yffre", "PDV_Deity_Yffre", {
+      DeityName: "Y'ffre",
+      DeityIndex: 3,
+      Stance_Bosmer: 0,
+    });
+    this.checkPhase9DeityRecord("PDV_Deity_Zen", "PDV_Deity_Zen", {
+      DeityName: "Z'en",
+      DeityIndex: 4,
+      Stance_Bosmer: 0,
+    });
+    this.checkPhase9DeityRecord("PDV_Deity_BaanDar", "PDV_Deity_BaanDar", {
+      DeityName: "Baan Dar",
+      DeityIndex: 5,
+      Stance_Bosmer: 0,
+    });
+    this.checkPhase9SignalReceiverRecords();
+  }
+
+  checkPhase10() {
+    this.checkPhase10DunmerSubstrateRecord();
+    this.checkPhase10ManagerRecord();
+    this.checkPhase10SignalReceiverRecords();
+  }
+
+  checkKhajiit() {
+    this.checkKhajiitFocusedEmphasisRecord();
+    this.checkKhajiitManagerRecord();
+  }
+
+  checkCommitment() {
+    this.checkCommitmentManagerRecord();
+  }
+
+  checkNeglectDecay() {
+    this.checkNeglectDecayManagerRecord();
+  }
+
+  checkPhase11() {
+    const manifest = this.checkPhase11PrivilegePilotManifest();
+    if (manifest?.implementationStatus === "live-dialogue-authored") {
+      this.checkPhase11ArngeirDialogueRecords();
+    } else {
+      this.info(
+        "Phase 11 Arngeir dialogue records",
+        "Live dialogue readback is skipped because the manifest is prep-only.",
+        PHASE11_PRIVILEGE_PILOT_MANIFEST,
+      );
+    }
+  }
+
   checkOfflinePatcherRules() {
     if (!exists(PATCH_RULES_DIR)) {
       this.info("Offline patch rule manifests", "Patch-rules directory is not present yet.", PATCH_RULES_DIR);
@@ -1236,6 +1457,37 @@ class Verifier {
     }
   }
 
+  checkPhase9Manifest() {
+    if (exists(PHASE9_BOSMER_STATE_MANIFEST)) {
+      this.pass(
+        "Phase 9 manifest",
+        "Phase 9 Bosmer state/property manifest exists.",
+        PHASE9_BOSMER_STATE_MANIFEST,
+      );
+    } else {
+      this.phase9Gap(
+        "Phase 9 manifest",
+        "Phase 9 Bosmer state/property manifest is missing.",
+        PHASE9_BOSMER_STATE_MANIFEST,
+      );
+    }
+  }
+
+  checkPhase9Records() {
+    for (const [edid, expectedType] of Object.entries(PHASE9_RECORDS)) {
+      const record = this.recordsByEdid.get(edid);
+      if (!record) {
+        this.phase9Gap("Phase 9 record", `${expectedType} record ${edid} is not in the framework ESP yet; CK/xEdit creation or wiring remains pending.`, PDV_ESP);
+        continue;
+      }
+      if (record.type !== expectedType) {
+        this.fail("Phase 9 record", `${edid} has type ${record.type}, expected ${expectedType}.`, PDV_ESP);
+      } else {
+        this.pass("Phase 9 record", `${edid} exists as ${expectedType}.`, PDV_ESP);
+      }
+    }
+  }
+
   checkPatternManagerRecord() {
     const detail = this.recordDetails.get("PDV__ManagerQuest");
     if (!detail) {
@@ -1283,6 +1535,461 @@ class Verifier {
 
     const props = propertyMap(script);
     this.checkObjectPropertyTarget("Phase 8 manager property", props, "PDV_ConcordatStandingTrack", "PDV_RepTrack_ConcordatStanding", this.phase8Gap.bind(this));
+  }
+
+  checkPhase9ManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    for (const [propName, expectedEdid] of Object.entries(PHASE9_MANAGER_PROPERTIES)) {
+      this.checkObjectPropertyTarget("Phase 9 manager property", props, propName, expectedEdid, this.phase9Gap.bind(this));
+    }
+  }
+
+  checkPhase9BosmerTrackRecord() {
+    const detail = this.recordDetails.get("PDV_StateTrack_BosmerPath");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV_StateTrack");
+    if (!script) {
+      this.phase9Gap("Phase 9 Bosmer track", "PDV_StateTrack is not attached to PDV_StateTrack_BosmerPath.", PDV_ESP);
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget("Phase 9 Bosmer track property", props, "StateGlobal", "PDV_GLO_BosmerPath", this.phase9Gap.bind(this));
+    this.checkRequiredArrayLength(
+      "Phase 9 Bosmer track property",
+      "PDV_StateTrack_BosmerPath",
+      "StateLabels",
+      extractStringArrayProperty(props.get("StateLabels")),
+      4,
+      this.phase9Gap.bind(this),
+    );
+  }
+
+  checkPhase9DeityRecord(recordEdid, scriptName, expectedData) {
+    const detail = this.recordDetails.get(recordEdid);
+    if (!detail) {
+      return;
+    }
+
+    const fields = detail.fields || {};
+    const script = findScript(fields, scriptName);
+    if (!script) {
+      this.phase9Gap("Phase 9 deity script", `${scriptName} is not attached to ${recordEdid}.`, PDV_ESP);
+      return;
+    }
+
+    this.pass("Phase 9 deity script", `${scriptName} is attached to ${recordEdid}.`, PDV_ESP);
+    const props = propertyMap(script);
+    for (const [propName, expected] of Object.entries(expectedData)) {
+      const actual = propValue(props.get(propName));
+      if (valuesEqual(actual, expected)) {
+        this.pass("Phase 9 deity property", `${recordEdid}.${propName} = ${JSON.stringify(expected)}.`, PDV_ESP);
+      } else {
+        this.phase9Gap("Phase 9 deity property", `${recordEdid}.${propName} is ${JSON.stringify(actual)}, expected ${JSON.stringify(expected)}.`, PDV_ESP);
+      }
+    }
+
+    this.checkObjectPropertyTarget("Phase 9 deity property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase9Gap.bind(this));
+    this.checkObjectPropertyTarget("Phase 9 deity property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase9Gap.bind(this));
+    this.checkObjectPropertyTarget("Phase 9 deity property", props, "EligibleStateTrack", "PDV_StateTrack_BosmerPath", this.phase9Gap.bind(this));
+  }
+
+  checkPhase9SignalReceiverRecords() {
+    for (const definition of PHASE9_SIGNAL_RECEIVER_DEFINITIONS) {
+      const record = this.recordsByEdid.get(definition.recordEdid);
+      const detail = this.recordDetails.get(definition.recordEdid);
+      if (!record || !detail) {
+        this.phase9Gap(
+          "Phase 9 signal receiver record",
+          `${definition.recordEdid} is not present yet; manual CK/xEdit Bosmer proof-surface creation remains pending.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      if (record.type !== definition.recordType) {
+        this.fail(
+          "Phase 9 signal receiver record",
+          `${definition.recordEdid} has type ${record.type}, expected ${definition.recordType}.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      this.pass("Phase 9 signal receiver record", `${definition.recordEdid} exists as ${definition.recordType}.`, PDV_ESP);
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.phase9Gap("Phase 9 signal receiver script", `${definition.scriptName} is not attached to ${definition.recordEdid}.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("Phase 9 signal receiver script", `${definition.scriptName} is attached to ${definition.recordEdid}.`, PDV_ESP);
+      const props = propertyMap(script);
+      this.checkObjectPropertyTarget("Phase 9 signal receiver property", props, "PDV_EventBusService", "PDV_EventBus", this.phase9Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 9 signal receiver property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase9Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 9 signal receiver property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase9Gap.bind(this));
+      this.checkScalarProperty("Phase 9 signal receiver property", props, "RouteId", definition.routeId, this.phase9Gap.bind(this));
+      this.checkScalarProperty("Phase 9 signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.phase9Gap.bind(this));
+    }
+  }
+
+  checkPhase10DunmerSubstrateRecord() {
+    const detail = this.recordDetails.get("PDV_Substrate_DunmerAncestor");
+    if (!detail) {
+      this.phase10Gap(
+        "Phase 10 Dunmer substrate record",
+        "PDV_Substrate_DunmerAncestor is missing; Phase 10 substrate graduation cannot be verified.",
+        PDV_ESP,
+      );
+      return;
+    }
+
+    const baseScript = findScript(detail.fields || {}, "PDV_SubstrateBase");
+    if (!baseScript) {
+      this.phase10Gap(
+        "Phase 10 Dunmer substrate script",
+        "PDV_SubstrateBase is not attached to PDV_Substrate_DunmerAncestor.",
+        PDV_ESP,
+      );
+    } else {
+      this.pass("Phase 10 Dunmer substrate script", "PDV_SubstrateBase is attached to PDV_Substrate_DunmerAncestor.", PDV_ESP);
+      const baseProps = propertyMap(baseScript);
+      this.checkScalarProperty("Phase 10 Dunmer substrate property", baseProps, "SubstrateName", "DunmerAncestor", this.phase10Gap.bind(this));
+      this.checkScalarProperty("Phase 10 Dunmer substrate property", baseProps, "RequiredOriginRace", 5, this.phase10Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 10 Dunmer substrate property", baseProps, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase10Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 10 Dunmer substrate property", baseProps, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase10Gap.bind(this));
+    }
+
+    const pilotScript = findScript(detail.fields || {}, "PDV_Substrate_DunmerAncestor");
+    if (!pilotScript) {
+      this.phase10Gap(
+        "Phase 10 Dunmer substrate pilot script",
+        "PDV_Substrate_DunmerAncestor is not attached to PDV_Substrate_DunmerAncestor.",
+        PDV_ESP,
+      );
+    } else {
+      this.pass("Phase 10 Dunmer substrate pilot script", "PDV_Substrate_DunmerAncestor is attached to PDV_Substrate_DunmerAncestor.", PDV_ESP);
+    }
+  }
+
+  checkPhase10ManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget(
+      "Phase 10 manager property",
+      props,
+      "PDV_DunmerAncestorSubstrate",
+      "PDV_Substrate_DunmerAncestor",
+      this.phase10Gap.bind(this),
+    );
+  }
+
+  checkPhase10SignalReceiverRecords() {
+    for (const definition of PHASE10_DUNMER_SIGNAL_RECEIVER_DEFINITIONS) {
+      const record = this.recordsByEdid.get(definition.recordEdid);
+      const detail = this.recordDetails.get(definition.recordEdid);
+      if (!record || !detail) {
+        this.phase10Gap(
+          "Phase 10 Dunmer signal receiver record",
+          `${definition.recordEdid} is missing; Phase 10 should reuse the existing Slice 1 Dunmer proof surface.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      if (record.type !== definition.recordType) {
+        this.fail(
+          "Phase 10 Dunmer signal receiver record",
+          `${definition.recordEdid} has type ${record.type}, expected ${definition.recordType}.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      this.pass("Phase 10 Dunmer signal receiver record", `${definition.recordEdid} exists as ${definition.recordType}.`, PDV_ESP);
+      const script = findScript(detail.fields || {}, definition.scriptName);
+      if (!script) {
+        this.phase10Gap("Phase 10 Dunmer signal receiver script", `${definition.scriptName} is not attached to ${definition.recordEdid}.`, PDV_ESP);
+        continue;
+      }
+
+      this.pass("Phase 10 Dunmer signal receiver script", `${definition.scriptName} is attached to ${definition.recordEdid}.`, PDV_ESP);
+      const props = propertyMap(script);
+      this.checkObjectPropertyTarget("Phase 10 Dunmer signal receiver property", props, "PDV_EventBusService", "PDV_EventBus", this.phase10Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 10 Dunmer signal receiver property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase10Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 10 Dunmer signal receiver property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase10Gap.bind(this));
+      this.checkScalarProperty("Phase 10 Dunmer signal receiver property", props, "RouteId", definition.routeId, this.phase10Gap.bind(this));
+      this.checkScalarProperty("Phase 10 Dunmer signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.phase10Gap.bind(this));
+      this.checkScalarProperty("Phase 10 Dunmer signal receiver property", props, "OncePerDayKey", definition.expectedOncePerDayKey, this.phase10Gap.bind(this));
+    }
+
+    const keys = PHASE10_DUNMER_SIGNAL_RECEIVER_DEFINITIONS
+      .map((definition) => {
+        const detail = this.recordDetails.get(definition.recordEdid);
+        const script = detail ? findScript(detail.fields || {}, definition.scriptName) : null;
+        const prop = script ? propertyMap(script).get("OncePerDayKey") : null;
+        return prop ? propValue(prop) : null;
+      })
+      .filter(Boolean);
+    if (keys.length === 2 && keys[0] !== keys[1]) {
+      this.pass("Phase 10 Dunmer signal receiver property", "Portable and private shrine OncePerDayKey values are distinct.", PDV_ESP);
+    } else {
+      this.phase10Gap("Phase 10 Dunmer signal receiver property", "Portable and private shrine OncePerDayKey values must be distinct.", PDV_ESP);
+    }
+  }
+
+  checkKhajiitFocusedEmphasisRecord() {
+    const record = this.recordsByEdid.get(KHAJIIT_FOCUSED_EMPHASIS_GLOBAL);
+    if (record?.type === "GLOB") {
+      this.pass("Khajiit focused-emphasis global", `${KHAJIIT_FOCUSED_EMPHASIS_GLOBAL} exists as GLOB.`, PDV_ESP);
+    } else {
+      this.khajiitGap(
+        "Khajiit focused-emphasis global",
+        `${KHAJIIT_FOCUSED_EMPHASIS_GLOBAL} is missing; Khajiit focus needs CK-readable mirror readback.`,
+        PDV_ESP,
+      );
+    }
+  }
+
+  checkKhajiitManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget(
+      "Khajiit focused-emphasis manager property",
+      props,
+      "PDV_GLO_KhajiitFocusedEmphasis",
+      KHAJIIT_FOCUSED_EMPHASIS_GLOBAL,
+      this.khajiitGap.bind(this),
+    );
+  }
+
+  checkCommitmentManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget("Commitment manager property", props, "PDV_Kyne", "PDV_Deity_Kyne", this.commitmentGap.bind(this));
+    this.checkObjectPropertyTarget("Commitment manager property", props, "PDV_GLO_PatronState", "PDV_GLO_PatronState", this.commitmentGap.bind(this));
+  }
+
+  checkNeglectDecayManagerRecord() {
+    const magicEffect = this.recordsByEdid.get(KYNE_NEGLECT_MAGIC_EFFECT);
+    if (magicEffect?.type === "MGEF") {
+      this.pass("Neglect/decay Kyne magic effect", `${KYNE_NEGLECT_MAGIC_EFFECT} exists as MGEF.`, PDV_ESP);
+    } else {
+      this.neglectDecayGap(
+        "Neglect/decay Kyne magic effect",
+        `${KYNE_NEGLECT_MAGIC_EFFECT} is missing; Slice 7 needs a real magic-effect surface.`,
+        PDV_ESP,
+      );
+    }
+
+    const spell = this.recordsByEdid.get(KYNE_NEGLECT_SPELL);
+    if (spell?.type === "SPEL") {
+      this.pass("Neglect/decay Kyne spell", `${KYNE_NEGLECT_SPELL} exists as SPEL.`, PDV_ESP);
+    } else {
+      this.neglectDecayGap(
+        "Neglect/decay Kyne spell",
+        `${KYNE_NEGLECT_SPELL} is missing; Slice 7 needs a real spell apply/remove surface.`,
+        PDV_ESP,
+      );
+    }
+
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget("Neglect/decay manager property", props, "PDV_SPEL_Neglect_Kyne", KYNE_NEGLECT_SPELL, this.neglectDecayGap.bind(this));
+  }
+
+  checkPhase11PrivilegePilotManifest() {
+    if (!exists(PHASE11_PRIVILEGE_PILOT_MANIFEST)) {
+      this.phase11Gap(
+        "Phase 11 privilege pilot manifest",
+        "Phase 11 privilege pilot prep manifest is missing.",
+        PHASE11_PRIVILEGE_PILOT_MANIFEST,
+      );
+      return null;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(PHASE11_PRIVILEGE_PILOT_MANIFEST, "utf8"));
+    } catch (error) {
+      this.fail("Phase 11 privilege pilot manifest", `Manifest could not be parsed: ${error.message}`, PHASE11_PRIVILEGE_PILOT_MANIFEST);
+      return null;
+    }
+
+    const gate = parsed.pilot?.gate || {};
+    const expectedGate = {
+      originRace: "Nord",
+      activeDeityIndex: "Kyne",
+      minimumActiveTier: 3,
+    };
+    if (
+      parsed.id === "phase11-privilege-pilot"
+      && parsed.pilot?.name === "Arngeir Kynareth recognition"
+      && gate.originRace === expectedGate.originRace
+      && gate.activeDeityIndex === expectedGate.activeDeityIndex
+      && gate.minimumActiveTier === expectedGate.minimumActiveTier
+      && ["prep-only", "live-dialogue-authored"].includes(parsed.implementationStatus)
+    ) {
+      this.pass(
+        "Phase 11 privilege pilot manifest",
+        `D-10 manifest locks the Arngeir/Kynareth gate with status ${parsed.implementationStatus}.`,
+        PHASE11_PRIVILEGE_PILOT_MANIFEST,
+      );
+    } else {
+      this.phase11Gap(
+        "Phase 11 privilege pilot manifest",
+        "Manifest does not match the locked D-10 Arngeir/Kynareth prep-only contract.",
+        PHASE11_PRIVILEGE_PILOT_MANIFEST,
+      );
+    }
+    return parsed;
+  }
+
+  checkPhase11ArngeirDialogueRecords() {
+    const branchRecord = this.recordsByEdid.get(PHASE11_ARNGEIR_BRANCH);
+    const topicRecord = this.recordsByEdid.get(PHASE11_ARNGEIR_TOPIC);
+    const infoRecord = this.recordsByEdid.get(PHASE11_ARNGEIR_INFO);
+
+    if (branchRecord?.type === "DLBR") {
+      this.pass("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_BRANCH} exists as DLBR.`, PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_BRANCH} is missing or not a DLBR.`, PDV_ESP);
+    }
+
+    if (topicRecord?.type === "DIAL") {
+      this.pass("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_TOPIC} exists as DIAL.`, PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_TOPIC} is missing or not a DIAL.`, PDV_ESP);
+    }
+
+    if (infoRecord?.type === "INFO") {
+      this.pass("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_INFO} exists as INFO.`, PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_INFO} is missing or not an INFO.`, PDV_ESP);
+    }
+
+    const branch = this.recordDetails.get(PHASE11_ARNGEIR_BRANCH)?.fields || {};
+    if (branch.Quest === this.recordsByEdid.get("PDV__ManagerQuest")?.formid) {
+      this.pass("Phase 11 Arngeir dialogue branch", "Branch is owned by PDV__ManagerQuest.", PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue branch", "Branch is not owned by PDV__ManagerQuest.", PDV_ESP);
+    }
+    if (branch.Category === "Player" && branch.Flags === "TopLevel" && branch.StartingTopic === topicRecord?.formid) {
+      this.pass("Phase 11 Arngeir dialogue branch", "Branch is a player top-level branch pointing at the PDV topic.", PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue branch", "Branch category/flags/starting topic do not match the PDV top-level contract.", PDV_ESP);
+    }
+
+    const topic = this.recordDetails.get(PHASE11_ARNGEIR_TOPIC)?.fields || {};
+    if (topic.Quest === this.recordsByEdid.get("PDV__ManagerQuest")?.formid && topic.Branch === branchRecord?.formid) {
+      this.pass("Phase 11 Arngeir dialogue topic", "Topic is owned by PDV__ManagerQuest and linked to the PDV branch.", PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue topic", "Topic quest/branch links do not match the PDV branch contract.", PDV_ESP);
+    }
+    if (topic.Name === PHASE11_ARNGEIR_PROMPT && topic.Category === "Topic" && topic.Subtype === "Custom") {
+      this.pass("Phase 11 Arngeir dialogue topic", `Topic prompt is "${PHASE11_ARNGEIR_PROMPT}".`, PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue topic", "Topic prompt/category/subtype do not match the contract.", PDV_ESP);
+    }
+
+    const info = this.recordDetails.get(PHASE11_ARNGEIR_INFO)?.fields || {};
+    this.checkPhase11ArngeirInfo(info, infoRecord?.formid, topicRecord?.formid);
+  }
+
+  checkPhase11ArngeirInfo(info, infoFormid, topicFormid) {
+    if (!info || !Object.keys(info).length) {
+      this.phase11Gap("Phase 11 Arngeir dialogue info", "INFO detail readback is missing.", PDV_ESP);
+      return;
+    }
+
+    if (info.Topic === topicFormid && info.Speaker === PHASE11_ARNGEIR_NPC_FORMID && info.Prompt === PHASE11_ARNGEIR_PROMPT) {
+      this.pass("Phase 11 Arngeir dialogue info", "INFO is tied to the PDV topic, Arngeir speaker, and expected prompt.", PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue info", "INFO topic/speaker/prompt readback does not match the Arngeir contract.", PDV_ESP);
+    }
+
+    const responseLine = info.Responses?.[0]?.Text;
+    if (responseLine === PHASE11_ARNGEIR_LINE) {
+      this.pass("Phase 11 Arngeir dialogue info", "INFO response line matches the locked recognition text.", PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue info", `INFO response line is ${JSON.stringify(responseLine)}, expected ${JSON.stringify(PHASE11_ARNGEIR_LINE)}.`, PDV_ESP);
+    }
+
+    const conditions = Array.isArray(info.Conditions) ? info.Conditions : [];
+    const hasArngeirCondition = conditions.some((condition) =>
+      condition.CompareOperator === "EqualTo"
+      && condition.ComparisonValue === 1
+      && condition.Data?.Object?.Link === PHASE11_ARNGEIR_NPC_FORMID);
+    const hasOriginCondition = this.hasGlobalCondition(conditions, "PDV_GLO_OriginRace", "EqualTo", 0);
+    const hasDeityCondition = this.hasGlobalCondition(conditions, "PDV_GLO_ActiveDeityIndex", "EqualTo", 0);
+    const hasTierCondition = this.hasGlobalCondition(conditions, "PDV_GLO_ActiveTier", "GreaterThanOrEqualTo", 3);
+
+    if (hasArngeirCondition && hasOriginCondition && hasDeityCondition && hasTierCondition) {
+      this.pass("Phase 11 Arngeir dialogue conditions", "INFO gates on Arngeir, Nord origin, active Kyne, and Champion tier.", PDV_ESP);
+    } else {
+      this.phase11Gap(
+        "Phase 11 Arngeir dialogue conditions",
+        `Condition readback missing expected gates: Arngeir=${hasArngeirCondition}, Origin=${hasOriginCondition}, Deity=${hasDeityCondition}, Tier=${hasTierCondition}.`,
+        PDV_ESP,
+      );
+    }
+  }
+
+  hasGlobalCondition(conditions, globalEdid, compareOperator, comparisonValue) {
+    const globalFormid = this.recordsByEdid.get(globalEdid)?.formid;
+    return conditions.some((condition) =>
+      condition.CompareOperator === compareOperator
+      && condition.ComparisonValue === comparisonValue
+      && condition.Data?.Global?.Link === globalFormid);
   }
 
   checkPhase8ConcordatTrackRecord() {
@@ -2370,6 +3077,11 @@ class Verifier {
     this.checkPreflightSourceContracts();
     this.checkPhase8SourceContracts();
     this.checkPhase7SourceContracts();
+    this.checkPhase9SourceContracts();
+    this.checkPhase10SourceContracts();
+    this.checkKhajiitSourceContracts();
+    this.checkCommitmentSourceContracts();
+    this.checkNeglectDecaySourceContracts();
   }
 
   checkPreflightSourceContracts() {
@@ -2576,6 +3288,196 @@ class Verifier {
       "Float Property DELTA_SHOUT_ATTACK = 0.5 Auto",
       "ScoreRepeatableAction(eventType, DELTA_SHOUT_ATTACK, SHOUT_DAILY_CAP, SHOUT_COOLDOWN_DAYS)",
     ]);
+  }
+
+  checkPhase9SourceContracts() {
+    this.checkSourceContains("Phase 9 source", "PDV_StateTrack", [
+      "Float Property OfferCooldownDays = 7.0 Auto",
+      "Float Property TransitionLockoutDays = 7.0 Auto",
+      "Int Function GetOfferedState()",
+      "Int Function GetPendingState()",
+      "Function OfferTransition(Int newState, String reason)",
+      "Function AcceptOfferedTransition(String reason)",
+      "Function RefuseOfferedTransition(String reason)",
+      "Function ConfirmPendingTransition(String reason)",
+      "Function CancelPendingTransition(String reason)",
+      "Function RecordEvidenceDay(Int stateValue, String reason)",
+      "Int Function GetRecentEvidenceDayCount(Int stateValue, Int windowDays)",
+      "Bool Function HasRecentEvidenceDays(Int stateValue, Int requiredCount, Int windowDays)",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_DeityBase", [
+      "PDV_StateTrack Property EligibleStateTrack Auto",
+      "Int[] Property EligibleStateValues Auto",
+      "Float Property InactivePathGainMultiplier = 0.25 Auto",
+      "Float Function GetEligibilityGainMultiplier()",
+      "Bool Function IsEligibleForPlayer()",
+      "Bool Function IsEligibleForState(Int currentState)",
+      "Int Function GetTierCap()",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV__ManagerQuest", [
+      "Function EnsureBosmerRuntimeWiring()",
+      "Function EnsureBosmerSetupChoice()",
+      "Function ApplyBosmerInitialChoice(Int pathState, String reason)",
+      "Function EnterBosmerOldContract(Bool isStartupChoice, String reason)",
+      "Function ExitBosmerOldContract(Bool countLapse, String reason)",
+      "Function EvaluateBosmerForcedReckoning()",
+      "Function EvaluateBosmerPathSuggestion()",
+      "Function ConfirmBosmerPendingTransition(String reason)",
+      "Function CanConfirmBosmerPathState(Int targetState)",
+      "Function RestoreActiveDeityFromStoredPatron()",
+      "return originRace == ORIGIN_KHAJIIT || originRace == ORIGIN_BOSMER",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_EventBus", [
+      "Function RouteBosmerLivingStory()",
+      "Function RouteBosmerExchange()",
+      "Function RouteBosmerBanditRoad()",
+      "Function RouteBosmerPactPositive()",
+      "Function RouteStateTransitionConfirmationRite()",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_EventTypes", [
+      "EVT_BOSMER_LIVING_STORY = 41",
+      "EVT_BOSMER_EXCHANGE = 42",
+      "EVT_BOSMER_BANDIT_ROAD = 43",
+      "EVT_BOSMER_PACT_POSITIVE = 44",
+      "EVT_STATE_TRANSITION_CONFIRM_RITE = 45",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_EventSignalActivator", [
+      "Int Property ROUTE_BOSMER_LIVING_STORY = 41 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_EXCHANGE = 42 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_BANDIT_ROAD = 43 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_PACT_POSITIVE = 44 AutoReadOnly",
+      "Int Property ROUTE_STATE_TRANSITION_CONFIRM_RITE = 45 AutoReadOnly",
+      "PDV_EventBusService.RouteBosmerLivingStory()",
+      "PDV_EventBusService.RouteBosmerExchange()",
+      "PDV_EventBusService.RouteBosmerBanditRoad()",
+      "PDV_EventBusService.RouteBosmerPactPositive()",
+      "PDV_EventBusService.RouteStateTransitionConfirmationRite()",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_EventSignalEffect", [
+      "Int Property ROUTE_BOSMER_LIVING_STORY = 41 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_EXCHANGE = 42 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_BANDIT_ROAD = 43 AutoReadOnly",
+      "Int Property ROUTE_BOSMER_PACT_POSITIVE = 44 AutoReadOnly",
+      "Int Property ROUTE_STATE_TRANSITION_CONFIRM_RITE = 45 AutoReadOnly",
+      "PDV_EventBusService.RouteBosmerLivingStory()",
+      "PDV_EventBusService.RouteBosmerExchange()",
+      "PDV_EventBusService.RouteBosmerBanditRoad()",
+      "PDV_EventBusService.RouteBosmerPactPositive()",
+      "PDV_EventBusService.RouteStateTransitionConfirmationRite()",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_MCM", [
+      "Bosmer Living Story",
+      "Bosmer Exchange",
+      "Bosmer Bandit Road",
+      "Bosmer Pact-positive",
+      "Bosmer confirm rite",
+      "RouteStateTransitionConfirmationRite()",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_Deity_Yffre", [
+      "SIGNAL_PACT_POSITIVE = 301",
+      "SIGNAL_LIVING_STORY = 302",
+      "SIGNAL_PACT_VIOLATION = 303",
+      "SIGNAL_RECOMMITMENT = 304",
+      "SIGNAL_SHARED_PACT_MEMORY = 305",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_Deity_Zen", [
+      "SIGNAL_EXCHANGE = 401",
+      "SIGNAL_SHARED_PACT_MEMORY = 402",
+      "SIGNAL_CONFIRMATION = 403",
+    ], this.phase9Gap.bind(this));
+    this.checkSourceContains("Phase 9 source", "PDV_Deity_BaanDar", [
+      "SIGNAL_BANDIT_ROAD = 501",
+      "SIGNAL_SHARED_PACT_MEMORY = 502",
+      "SIGNAL_CONFIRMATION = 503",
+    ], this.phase9Gap.bind(this));
+  }
+
+  checkPhase10SourceContracts() {
+    this.checkSourceContains("Phase 10 source", "PDV_Substrate_DunmerAncestor", [
+      "Function RecordPortableShrinePrayerScaled(Float multiplier, String reason)",
+      "Function RecordPlayerHomeBonusScaled(Float multiplier, String reason)",
+      "\"PDV.Substrate.DunmerAncestor.PrayerCount\"",
+      "\"PDV.Substrate.DunmerAncestor.HomeCount\"",
+      "String Function GetPilotSummary()",
+      "Function ResetPilotForDebug()",
+    ], this.phase10Gap.bind(this));
+    this.checkSourceContains("Phase 10 source", "PDV__ManagerQuest", [
+      "Function HandleDunmerPortableShrinePrayer(String reason)",
+      "Function HandleDunmerPlayerHomeBonus(String reason)",
+      "PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)",
+      "PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)",
+      "String Function GetDunmerAncestorSummary()",
+    ], this.phase10Gap.bind(this));
+    this.checkSourceContains("Phase 10 source", "PDV_EventBus", [
+      "Function RouteDunmerPortableShrinePrayer()",
+      "Function RouteDunmerPlayerHomeBonus()",
+      "PDV_Manager.HandleDunmerPortableShrinePrayer(\"eventbus_\" + eventType)",
+      "PDV_Manager.HandleDunmerPlayerHomeBonus(\"eventbus_\" + eventType)",
+    ], this.phase10Gap.bind(this));
+    this.checkSourceContains("Phase 10 source", "PDV_EventSignalActivator", [
+      "PDV_EventBusService.RouteDunmerPortableShrinePrayer()",
+      "PDV_EventBusService.RouteDunmerPlayerHomeBonus()",
+    ], this.phase10Gap.bind(this));
+  }
+
+  checkKhajiitSourceContracts() {
+    this.checkSourceContains("Khajiit source", "PDV__ManagerQuest", [
+      "GlobalVariable Property PDV_GLO_KhajiitFocusedEmphasis Auto",
+      "KHAJIIT_FOCUS_KHENARTHI = 1",
+      "KHAJIIT_FOCUS_AZURAH = 2",
+      "KHAJIIT_FOCUS_THRESHOLD = 50.0",
+      "KHAJIIT_FOCUS_LEAD_REQUIRED = 15.0",
+      "Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason)",
+      "Function EvaluateKhajiitFocusedEmphasis()",
+      "Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)",
+      "PDV_GLO_KhajiitFocusedEmphasis.SetValue(focusValue as Float)",
+      "AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_AZURAH",
+      "AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI",
+      "focus=",
+    ], this.khajiitGap.bind(this));
+    this.checkSourceContains("Khajiit source", "PDV_MCM", [
+      "Khajiit moon observance",
+      "Khajiit road-home cadence",
+      "RouteKhajiitMoonObservance(0)",
+      "RouteKhajiitRoadHome()",
+    ], this.khajiitGap.bind(this));
+  }
+
+  checkCommitmentSourceContracts() {
+    this.checkSourceContains("Commitment source", "PDV__ManagerQuest", [
+      "Float Property COMMITMENT_OFFER_THRESHOLD = 50.0 AutoReadOnly",
+      "Float Property COMMITMENT_CARRYOVER_MULTIPLIER = 0.7 AutoReadOnly",
+      "Function EvaluateKyneCommitmentOffer()",
+      "HasRecentCommitmentSignalDays(PDV_Kyne, 2, 7)",
+      "Function DebugAcceptPendingCommitment()",
+      "Function DebugDeclinePendingCommitment()",
+      "Function DebugRefusePendingCommitment()",
+      "StorageUtil.SetFloatValue(None, \"PDV.Commitment.LastCarryover\", carryAmount)",
+      "return originRace == ORIGIN_KHAJIIT || originRace == ORIGIN_BOSMER",
+    ], this.commitmentGap.bind(this));
+    this.checkSourceContains("Commitment source", "PDV_MCM", [
+      "Evaluate commitment",
+      "Accept commitment",
+      "Decline commitment",
+      "Refuse commitment",
+    ], this.commitmentGap.bind(this));
+  }
+
+  checkNeglectDecaySourceContracts() {
+    this.checkSourceContains("Neglect/decay source", "PDV__ManagerQuest", [
+      "Spell Property PDV_SPEL_Neglect_Kyne Auto",
+      "Function RunDawnApplyDecay()",
+      "Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)",
+      "StorageUtil.GetIntValue(deityForm, \"PDV.LastDecayAppliedDay\") == currentDay",
+      "BROAD_WORSHIP_DECAY_MULTIPLIER",
+      "Function RunDawnApplySpellAndNeglectLayers()",
+      "GetPatronState() != PATRON_STATE_ACTIVE",
+      "Function SyncKyneNeglectSpell(Bool shouldBeActive)",
+      "playerRef.AddSpell(PDV_SPEL_Neglect_Kyne, False)",
+      "playerRef.RemoveSpell(PDV_SPEL_Neglect_Kyne)",
+      "PDV.Neglect.KyneSpellActive",
+      "String Function GetNeglectSummary()",
+    ], this.neglectDecayGap.bind(this));
   }
 
   checkSourceContains(checkName, scriptName, snippets, gapFn = null) {
@@ -3040,6 +3942,12 @@ function parseArgs(argv) {
     strictPatternProving: false,
     strictPhase7: false,
     strictPhase8: false,
+    strictPhase9: false,
+    strictPhase10: false,
+    strictPhase11: false,
+    strictKhajiit: false,
+    strictCommitment: false,
+    strictNeglectDecay: false,
   };
 
   for (const arg of argv) {
@@ -3057,8 +3965,20 @@ function parseArgs(argv) {
       args.strictPhase7 = true;
     } else if (arg === "--strict-phase8") {
       args.strictPhase8 = true;
+    } else if (arg === "--strict-phase9") {
+      args.strictPhase9 = true;
+    } else if (arg === "--strict-phase10") {
+      args.strictPhase10 = true;
+    } else if (arg === "--strict-phase11") {
+      args.strictPhase11 = true;
+    } else if (arg === "--strict-khajiit") {
+      args.strictKhajiit = true;
+    } else if (arg === "--strict-commitment") {
+      args.strictCommitment = true;
+    } else if (arg === "--strict-neglect-decay") {
+      args.strictNeglectDecay = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -3077,6 +3997,12 @@ const verifier = new Verifier({
   strictPatternProving: args.strictPatternProving,
   strictPhase7: args.strictPhase7,
   strictPhase8: args.strictPhase8,
+  strictPhase9: args.strictPhase9,
+  strictPhase10: args.strictPhase10,
+  strictPhase11: args.strictPhase11,
+  strictKhajiit: args.strictKhajiit,
+  strictCommitment: args.strictCommitment,
+  strictNeglectDecay: args.strictNeglectDecay,
 });
 const findings = await verifier.run();
 const counts = verifier.counts();

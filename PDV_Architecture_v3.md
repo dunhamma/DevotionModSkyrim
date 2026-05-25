@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-21 (v3.27 - Phase 8 runtime proof closeout)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot.
+Last revised: 2026-05-25 (v3.35 - Khajiit commitment neglect runtime proof)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Khajiit focused emphasis, Kyne commitment, and Kyne neglect/decay are runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. The Khajiit/commitment/neglect runtime smoke proved Khenarthi then Azurah focus with save/load persistence, Kyne commitment offer/decline/refuse/accept with accepted-patron persistence, and Kyne neglect/decay grace, once-per-day decay, spell apply, and spell removal. The generated PDV-owned Arngeir dialogue records were removed after CrashLogger tied a CTD to the generated topic/branch shape, so Phase 11 is prep-only again until rebuilt through a CK-safe path. The current full strict gate is clean at `PASS=898, INFO=29`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure also has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, for generated/disposable plugins only; this does not broaden generic gameplay authoring support.
 
 ---
 
@@ -441,7 +441,7 @@ API mirrors the reputation track: `GetCurrentState()`, `GetStateLabel()`, `SetSt
 
 ### 7.2 Where state tracks come from
 
-- **Setup quests** at character start (Bosmer four-path choice via MCM or first-run dialogue).
+- **Setup quests** at character start or immediately after startup/origin resolution (Bosmer four-path choice via a post-startup popup, not MCM-at-character-creation).
 - **Threshold events** during play (Orc Stronghold-to-City transition triggered by sustained outside-stronghold residency, or a story event).
 - **Quest resolutions** (Imperial Concordat "Open Defiant" reached via sustained track threshold).
 
@@ -453,7 +453,10 @@ For Bosmer, `PDV_State_BosmerPath` selects the path, but `OldContract` also
 needs its own bound/unbound lifecycle and discipline state. `PactBound`,
 `LapsedFromPact`, and `GreenPactCompliance` remain separate from the path
 track so Y'ffre exclusivity, forced reckoning, and terminal renunciation are
-not collapsed into a single enum.
+not collapsed into a single enum. `LivingStory` and `OldContract` deliberately
+share one `Y'ffre` deity ledger; the path state changes exclusivity, scoring
+interpretation, and Pact behavior rather than swapping to separate Y'ffre
+records.
 
 Green Pact respect is not exclusive to the `OldContract` path. Proper hunting,
 animal-sourced food, restraint around needless plant use where detectable, and
@@ -468,8 +471,9 @@ the active Bosmer path interpret them, and write only modest path-local piety
 or recent-signal strength outside `OldContract`.
 
 Bosmer path switching is destination-gated. The first setup choice is free, but
-later MCM/status-dialogue input records intent only; the world must confirm the
-destination through signals. `LivingStory` can be entered through one strong
+later switching uses Bosmer-specific system-suggested popup offers plus a
+confirmation rite; it does not ride the generic deity-offer queue and it is
+not a simple MCM toggle. `LivingStory` can be entered through one strong
 community/story signal and is the fallback for incoherent or corrupt state.
 `Exchange` and `BanditRoad` require two destination-coded signals on separate
 in-game days within seven, evaluated at dawn, unless a major curated quest beat
@@ -509,7 +513,7 @@ The patron-commitment mechanism (Section 12) reads `IsEligibleForPlayer()` befor
 
 | Track | States | Owner race | Notes |
 |---|---|---|---|
-| `PDV_State_BosmerPath` | OldContract, LivingStory, Exchange, BanditRoad | Bosmer | Set at character setup or first-run quest. `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`. Fallback for unset/corrupt state is `LivingStory`. Later switching is destination-gated; switch intent is confirmed by path-coded signals. `OldContract` additionally reads `PactBound`, `LapsedFromPact`, and `GreenPactCompliance`. |
+| `PDV_State_BosmerPath` | OldContract, LivingStory, Exchange, BanditRoad | Bosmer | Set by a post-startup Bosmer path popup. `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`. The startup popup auto-commits the matching foreground patron; fallback for unset/corrupt state is `LivingStory`. Later switching is destination-gated through Bosmer-specific popup offers plus a confirmation rite. `OldContract` additionally reads `PactBound`, `LapsedFromPact`, and `GreenPactCompliance`. |
 | `PDV_State_OrcLifeMode` | City, Stronghold, LegionExile | Orc | Default City; setup/MCM records intent, but active mode is world-confirmed. `City = 0`, `Stronghold = 1`, `LegionExile = 2`. Stronghold requires Blood-Kin/equivalent acceptance plus conduct; LegionExile requires service/exile gate or completed pressure-bearing service. Soft switches require two qualifying signals on separate in-game days within seven days and resolve at dawn; major gates may switch immediately. |
 | `PDV_State_NordPantheonBaseline` | OldWays, NineDivines | Nord | Setup/MCM pantheon baseline only. `OldWays = 0`, `NineDivines = 1`. Commitment depth uses `PDV_GLO_PatronState`; do not overload the baseline state with Broad/Primary. |
 | `PDV_State_BretonTradition` | KnightsRoad, HiddenArt, GreenWay | Breton | Primary identity chosen explicitly at setup; no silent default; `KnightsRoad = 0`, `HiddenArt = 1`, `GreenWay = 2`; patron offers normally come only from the chosen tradition |
@@ -727,7 +731,7 @@ Where a privilege genuinely needs a value not surfaced by the mirrors (e.g. "hig
 
 ### 9.4 Privilege pilot and shrine discipline
 
-- **Greybeards-Kynareth recognition.** A Nord with high Kynareth tier could get a unique greeting from Arngeir. This requires editing a vanilla dialogue topic with a `Shares Dialogue` discipline. v3 should pilot this with the Kyne content as a "does the privilege pattern hold up?" test.
+- **Greybeards-Kynareth recognition.** D-10 is resolved: Phase 11's first privilege pilot is an Arngeir/Kynareth recognition line for a Nord Kyne Champion. The CK-readable gate is `PDV_GLO_OriginRace = Nord`, `PDV_GLO_ActiveDeityIndex = Kyne`, and `PDV_GLO_ActiveTier >= 3`, with Arngeir as the speaker gate. The generated PDV-owned dialogue records were removed on 2026-05-24 after CrashLogger tied a CTD to the generated topic/branch shape. The pilot remains locked in `references/authoring/PDV_Phase11PrivilegePilot.manifest.json`, but live implementation must be rebuilt through a CK-safe dialogue path. Negative proof must cover non-Nord origin, wrong active deity, and Kyne below Champion. Runtime completion remains behind the Section 21.5 commitment and neglect/decay gates plus future SEQ refresh.
 - **Shrine activator overlays.** PDV does not replace vanilla shrine activator scripts for 1.0. Preferred posture is per-reference co-attachment on the actual shrine reference when a specific shrine needs devotional routing; helper objects or nearby activators are fallback proof shapes only. Global base-script replacement stays out of bounds so shrine-modifying mods remain easier to coexist with.
 
 ---
@@ -1308,6 +1312,16 @@ the target record, script/property, intended payload, and verifier readback
 expectation. Array writes themselves remain manual CK/xEdit work until the
 Mutagen bridge can emit them safely.
 
+CKRA / `tools\creation-authoring` now proves one generated-record path:
+`glob.duplicate_create` for GLOB records in a disposable generated plugin. The
+proof chain is CK-owned Object Window duplicate replay, active-plugin-owned
+duplicate identity, guarded FNAM/FLTV mutation, CK UI save, direct saved-ESP
+readback, strict proof ledger, and capability-matrix promotion. Treat this as a
+narrow GLOB authoring capability and a pattern for future family proofs, not as
+generic record creation. The remaining hardening boundary is also a user
+experience boundary: the current proof still depends on the Object Window
+source row/focus/context-menu path matching the explicit source guard.
+
 ### 17.2 Add-a-substrate workflow
 
 1. Create `PDV_Substrate_<Name>.psc` extending `PDV_SubstrateBase`. Implement `RegisterForSubstrateEvents()` and aggregate-metric scoring.
@@ -1496,9 +1510,9 @@ excellent reusable example per subsystem, then clone.
 | **V3 Pattern Proving** | One excellent reusable pattern per subsystem | Structural Skeleton | Imperial Concordat, Bosmer Path, Dunmer Ancestor, Khajiit emergent/moon-cycle exception, contextual favor family, Daedric price/stigma path, commitment offer, and neglect/decay path are proven |
 | **7** | Signal expansion (sleep, shrine, shout, social) | V3 Preflight + EventBus pattern | New events routed; per-target rubric updates; signal policy anti-farm caps functional |
 | **8** | Reputation track + first instance (Concordat Standing) | Phase 7 | Imperial Concordat bands, wide Uncommitted state, edge walk-back gate, committed-state multiplier composition, and save/load persistence are runtime-proven; verifier covers |
-| **9** | State track + first instance (Bosmer Path) | Phase 8 | Bosmer path persists, eligibility filtering works in commitment offers, and Old Contract Green Pact tags are independent of external mods |
+| **9** | State track + first instance (Bosmer Path) | Phase 8 | Bosmer path setup, destination-gated offers, confirmation-rite switching, Old Contract PactBound/compliance separation, reckoning renounce/recommit, save/load persistence, framework ESP readback, and placed proof-reference routing are runtime-proven; verifier covers |
 | **10** | Race substrate (Dunmer Ancestor first pilot) | Phase 9 | Portable-shrine prayer and home bonus grant origin-only substrate progress; substrate metric stays separate from patron piety |
-| **11** | Privilege subsystem first wave (shrine + dialogue privileges for Kyne/Mara) | Phase 8/9 | CK conditions read mirror globals + track globals; dialogue topics gate cleanly |
+| **11** | Privilege subsystem first wave (Arngeir/Kynareth pilot; Mara deferred until the pattern proves clean) | Phase 8/9 plus Section 21.5 commitment and neglect/decay gates | CK conditions read mirror globals + track globals; the Arngeir/Kynareth dialogue pilot gates cleanly for Nord Kyne Champion and hides for non-Nord, wrong deity, or lower tier |
 | **12** | Contextual favor subsystem (Kyne foreground favor set) | Phase 11 | 3-5 automatic signal-triggered favor families per devotional lane; one active boost cap prevents stacking |
 | **13** | Daedric path architecture + first Prince (Boethiah pilot) | Phase 11 | Boon/price/stigma triple works; commitment gating works; stigma readout via global |
 | **14** | Patron commitment mechanism (in-world offer + accept/decline/refuse) | Phase 9/11 | Offers fire from dawn pass; threshold gate works; 70% carry-over on accept |
@@ -1783,7 +1797,6 @@ chooses to resolve vampire detection first.
 
 | Decision | Blocks | Does not block |
 |---|---|---|
-| D-10 Greybeards-Kynareth privilege pilot | Slice 8 privilege pilot | Slices 1-7 |
 | D-12 Daedric roster convergence | Slice 11 full Daedric price/stigma pilot | Hircine ingress proof, Aedric/cultural pilots |
 | D-13 Daedric stigma decay | Slice 11 full Daedric price/stigma pilot | Non-Daedric commitment, reputation, state, substrate, favor |
 | D-14 Cross-Prince hostility | Slice 11 full Daedric price/stigma pilot beyond one isolated proof | Non-Daedric rivalry and existing Talos/Auri-El behavior |
@@ -1803,6 +1816,8 @@ node .\tools\pdv_verify.mjs --strict-skeleton
 node .\tools\pdv_verify.mjs --strict-pattern-proving
 node .\tools\pdv_verify.mjs --strict-phase7
 node .\tools\pdv_verify.mjs --strict-phase7 --strict-preflight --strict-skeleton --strict-pattern-proving
+node .\tools\pdv_verify.mjs --strict-phase10
+node .\tools\pdv_verify.mjs --strict-phase11
 ```
 
 If a slice adds a new verifier mode later, update this ladder and
@@ -1854,22 +1869,12 @@ These are intentionally not solved in v3.
 
 Mobile-friendly worklist of every architectural decision still open in v3.
 Each entry is sized for phone scrolling. Decision IDs (`D-NN`) are stable:
-reference them in chat as "decide D-10 as (b)" or "defer D-17."
+reference them in chat as "defer D-17" or "resolve D-30."
 
 Numbering gaps are intentional. When a decision lands, remove it from this
 open tracker and resolve it by rewriting the relevant v3 section, adding an
 entry to `AGENTS.md` Decisions Log, or moving the item to Section 23 if it is
 deferred past 1.0.
-
-### Before Pattern Proving / privilege pilot
-
-#### D-10  Greybeards-Kynareth privilege pilot  (Section 9.4)
-
-- **Question:** Pilot the privilege pattern by editing a vanilla dialogue topic (Arngeir greeting under high Kynareth tier)?
-- **Options:**
-  - (a) Yes, with `Shares Dialogue` discipline.
-  - (b) No, only add new topics; never edit vanilla.
-- **Recommendation:** (a). One pilot proves whether the pattern holds before scaling.
 
 ### Before Daedric path implementation
 
@@ -2107,6 +2112,157 @@ or architecture contract changes.
 ---
 
 ## 26. Revisions
+
+### v3.35 - 2026-05-25 - Khajiit, commitment, and neglect runtime proof
+
+Closed the live runtime smoke for the Section 21.5 next packet, excluding
+Phase 11 dialogue which remains prep-only after v3.34. Khajiit proof showed
+road-home cadence producing Khenarthi focus at
+`KhajiitLunar=metric=13.139999; tier=1; roadhome=3; focus=Khenarthi;
+kh=54.75; az=0.00`, then moon observance switching focus to Azurah at
+`metric=24.904676; tier=1; phase=1; observance=6; roadhome=3; focus=Azurah;
+kh=54.75; az=73.52`; save/load persistence held at `metric=24.904699`.
+
+Kyne commitment proof used two positive Kyne signal days to produce
+`Commitment=pending=0; days=2; cooldown=0.00`, then proved `Not Yet`
+clearing pending with rupture `0` and about 7 days cooldown, `Refuse` clearing
+pending with rupture `1` and 14 days cooldown, and `Accept` setting
+`Active patron=KYNE [0]`, `Patron state=ACTIVE PATRON`,
+`Active piety=51.000000`, `Active tier=DEVOTED`, and active deity index `0`.
+The accepted patron state persisted across reload.
+
+Kyne neglect/decay proof passed no-decay inside the 3-day grace window, one
+decay tick after grace, no second same-day decay, low-piety Kyne neglect spell
+application, and spell removal after piety recovery. Final strict verifier:
+`PASS=898, INFO=29`, with no `FAIL`, `WARN`, or `TODO`.
+
+### v3.34 - 2026-05-24 - Phase 11 dialogue CTD remediation
+
+CrashLogger tied a Skyrim CTD to the generated Phase 11 Arngeir dialogue topic
+and branch (`PDV_DIAL_Phase11ArngeirKyneRecognitionTopic` /
+`PDV_DIAL_Phase11ArngeirKyneRecognitionBranch`). The generated
+`DLBR`/`DIAL`/`INFO` records were removed from `PlayerDevotion_Framework.esp`
+with a targeted helper pass, preserving the Khajiit, commitment, and
+neglect/decay packet records. `references/authoring/PDV_Phase11PrivilegePilot.manifest.json`
+is demoted back to `prep-only`, and `--strict-phase11` now checks live dialogue
+records only when the manifest status is `live-dialogue-authored`.
+
+### v3.33 - 2026-05-24 - Phase 11 Arngeir dialogue readback
+
+Superseded by v3.34. The generated dialogue records passed static readback but
+were unsafe at runtime and have been removed.
+
+The next-packet helper now authors the PDV-owned Arngeir/Kynareth recognition
+dialogue records directly into `PlayerDevotion_Framework.esp`:
+`PDV_DIAL_Phase11ArngeirKyneRecognitionBranch`,
+`PDV_DIAL_Phase11ArngeirKyneRecognitionTopic`, and
+`PDV_INFO_Phase11ArngeirKyneRecognition`. `--strict-phase11` now reads back the
+manifest plus live `DLBR`/`DIAL`/`INFO` structure, Arngeir speaker, prompt,
+recognition line, and the Arngeir/Nord/Kyne/Champion condition stack.
+
+Current combined strict gate:
+`PASS=908, WARN=1, FAIL=0, INFO=28`. The one warning is SEQ freshness because
+dialogue changed after the last SEQ generation. Runtime completion remains open
+until SEQ refresh and the two-branch runtime smoke.
+
+### v3.32 - 2026-05-24 - Khajiit/commitment/neglect packet scaffold
+
+Implemented the next Section 21.5 packet scaffold without claiming runtime
+closeout. Source and verifier coverage now exist for Khajiit focused emphasis,
+Kyne formal commitment, and Kyne neglect/decay. The Khajiit focus mirror is
+`PDV_GLO_KhajiitFocusedEmphasis`, with enum values `None=0`, `Khenarthi=1`,
+`Azurah=2`, `BaanDar=3`, `Rajhin=4`, and `Alkosh=5`; it is deliberately
+separate from `PDV_GLO_PatronState`.
+
+`tools/pdv-next-packet-author` repaired the Phase 10 Dunmer cooldown-key drift:
+portable shrine practice now uses `PDV.Signal.DunmerPortableShrine.Activator`,
+private/home shrine practice keeps `PDV.Signal.DunmerHome.Activator`, and
+`--strict-phase10` fails if both ACTI records share one once-per-day key again.
+
+The helper also created `PDV_MGEF_Neglect_Kyne` and `PDV_SPEL_Neglect_Kyne`,
+wired `PDV__ManagerQuest.PDV_SPEL_Neglect_Kyne`, and authored the live
+PDV-owned Arngeir/Kynareth recognition `DLBR`/`DIAL`/`INFO` records. The
+combined strict gate is now down to `PASS=908, WARN=1, FAIL=0, INFO=28`; the
+warning is SEQ freshness after dialogue ESP mutation.
+
+Open proof boundary: refresh SEQ, then run the combined strict gate plus the
+two-branch runtime smoke in
+`references/authoring/PDV_NextPacket_DocGrilledPlan.md`.
+
+### v3.31 - 2026-05-24 - Phase 10 Dunmer substrate runtime proof
+
+Closed Phase 10 as a Dunmer ancestor substrate proof-graduation slice. Counted
+runtime proof used a fresh Dunmer baseline with active patron piety and deity
+roster values at `0.000000`, then proved both reused normal-play ACTI surfaces:
+private/home shrine route `31` advanced the substrate to
+`DunmerAncestor=metric=8.000000; tier=1; prayers=0; homes=1`, and portable
+shrine route `30` after the daily gate cleared advanced it to
+`DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`. Patron piety
+remained separate, save/load persistence passed, and the combined strict gate
+was clean at `PASS=847, WARN=0, FAIL=0, INFO=28`.
+
+The proof also exposed a small live-record follow-up: both Dunmer ACTI proof
+records shared `OncePerDayKey = PDV.Signal.DunmerHome.Activator`, which forced
+the portable-shrine proof to wait for the shared key to clear after the
+private/home activation. v3.32 corrected that drift and added strict verifier
+coverage without reopening the runtime proof.
+
+### v3.30 - 2026-05-24 - Phase 9 status sync and Phase 10/11 handoff
+
+Corrected the top-level architecture status to match the completed Phase 9
+runtime proof already recorded in the Phase 9 closeout entry and target-state
+tracker. Phase 9 Bosmer Path is fully runtime-proven: setup, all five route
+proof surfaces, path offers, confirmation-rite switching, Old Contract re-entry,
+PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning
+`Recommit`, save/load persistence, and the combined strict gate at `PASS=808,
+WARN=0, FAIL=0, INFO=28` are the current closeout evidence.
+
+Phase 10/11 planning now treats those phase numbers as subsystem labels while
+Section 21.5 remains authoritative for execution order. Phase 10 may proceed as
+a Dunmer ancestor substrate proof-graduation slice. Phase 11 may receive
+documentation, verifier, and D-10 privilege-pilot prep, but live privilege
+implementation remains behind the Section 21.5 commitment and neglect/decay
+gates.
+
+### v3.28 - 2026-05-23 - CKRA GLOB duplicate-create authoring proof
+
+The CKPE authoring workbench now has its first proof-ledger-supported creation
+capability: `glob.duplicate_create` for disposable generated plugins. The
+strict evidence chain duplicates `PDV_GLO_ActivePiety` through CK's Object
+Window path, proves the created GLOB is owned by the active generated plugin,
+mutates FNAM/FLTV to short `1`, posts CK's native save command, reads the
+saved ESP back directly, and promotes only GLOB in the generated capability
+matrix. This is an authoring/tooling revision, not a PDV runtime phase
+closeout. It does not prove quest, message, activator, FormList, VMAD array,
+Story Manager, alias, or source-plugin promotion workflows. Durable lesson:
+CK automation must respect both UX state and lower-layer persistence; right
+click selection/focus/popup behavior and active-plugin save/readback are part
+of the proof, not incidental noise.
+
+### v3.27 - 2026-05-21 - Phase 8 runtime proof closeout
+
+### v3.28 - 2026-05-24 - Phase 9 Bosmer path closeout
+
+Phase 9 is now fully runtime-proven on a Bosmer save. The live framework ESP
+contains the Bosmer path state track, Y'ffre/Z'en/Baan Dar path eligibility,
+all setup/suggestion/reckoning messages, manager properties, deity FormList
+membership, and five placed proof-surface activators. Runtime proof covered all
+five route IDs (`41-45`), Old Contract startup, Living Story offer and
+confirmation, Exchange offer and confirmation, Bandit Road offer and
+confirmation, Old Contract re-entry through three Pact-positive days,
+save/load persistence, and both forced-reckoning outcomes. Renounce moved the
+player to `LivingStory`, cleared `PactBound`, and incremented
+`LapsedFromPact`; Recommit preserved `OldContract`/`PactBound` and restored
+`GreenPactCompliance` to `30`.
+
+Runtime proof surfaced one implementation bug: `PDV_StateTrack` retained only
+two evidence days, while Old Contract re-entry requires three Pact-positive
+days within seven. `PDV_StateTrack.psc` now stores and counts
+`LatestDay`, `PreviousDay`, and `ThirdDay`, and `PDV_StateTrack.pex` compiles
+cleanly. The final strict closeout gate remains clean:
+`node .\tools\pdv_verify.mjs --strict-phase9 --strict-phase8 --strict-phase7
+--strict-preflight --strict-skeleton --strict-pattern-proving --json` =>
+`PASS=808, WARN=0, FAIL=0, INFO=28` on 2026-05-24 AEST.
 
 ### v3.27 - 2026-05-21 - Phase 8 runtime proof closeout
 

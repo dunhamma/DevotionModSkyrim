@@ -43,6 +43,9 @@ const ACTIVE_SCRIPTS = [
   "PDV_Deity_Kyne",
   "PDV_Deity_Talos",
   "PDV_Deity_AuriEl",
+  "PDV_Deity_Yffre",
+  "PDV_Deity_Zen",
+  "PDV_Deity_BaanDar",
   "PDV_EventTypes",
   "PDV_EventBus",
   "PDV_FragmentBridge",
@@ -127,6 +130,12 @@ function parseArgs(argv) {
     strictPatternProving: false,
     strictPhase7: false,
     strictPhase8: false,
+    strictPhase9: false,
+    strictPhase10: false,
+    strictPhase11: false,
+    strictKhajiit: false,
+    strictCommitment: false,
+    strictNeglectDecay: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -164,6 +173,18 @@ function parseArgs(argv) {
       args.strictPhase7 = true;
     } else if (arg === "--strict-phase8") {
       args.strictPhase8 = true;
+    } else if (arg === "--strict-phase9") {
+      args.strictPhase9 = true;
+    } else if (arg === "--strict-phase10") {
+      args.strictPhase10 = true;
+    } else if (arg === "--strict-phase11") {
+      args.strictPhase11 = true;
+    } else if (arg === "--strict-khajiit") {
+      args.strictKhajiit = true;
+    } else if (arg === "--strict-commitment") {
+      args.strictCommitment = true;
+    } else if (arg === "--strict-neglect-decay") {
+      args.strictNeglectDecay = true;
     } else if (arg === "-h" || arg === "--help") {
       usage(null, 0);
     } else {
@@ -197,6 +218,12 @@ function usage(error = null, exitCode = 2) {
     "  --strict-pattern-proving Pass --strict-pattern-proving to the verifier.",
     "  --strict-phase7       Pass --strict-phase7 to the verifier.",
     "  --strict-phase8       Pass --strict-phase8 to the verifier.",
+    "  --strict-phase9       Pass --strict-phase9 to the verifier.",
+    "  --strict-phase10      Pass --strict-phase10 to the verifier.",
+    "  --strict-phase11      Pass --strict-phase11 to the verifier.",
+    "  --strict-khajiit      Pass --strict-khajiit to the verifier.",
+    "  --strict-commitment   Pass --strict-commitment to the verifier.",
+    "  --strict-neglect-decay Pass --strict-neglect-decay to the verifier.",
     "  --allow-warnings      Do not convert Papyrus warnings into failures.",
   ].join("\n");
 
@@ -317,6 +344,24 @@ function runVerifier(args) {
   }
   if (args.strictPhase8) {
     verifierArgs.push("--strict-phase8");
+  }
+  if (args.strictPhase9) {
+    verifierArgs.push("--strict-phase9");
+  }
+  if (args.strictPhase10) {
+    verifierArgs.push("--strict-phase10");
+  }
+  if (args.strictPhase11) {
+    verifierArgs.push("--strict-phase11");
+  }
+  if (args.strictKhajiit) {
+    verifierArgs.push("--strict-khajiit");
+  }
+  if (args.strictCommitment) {
+    verifierArgs.push("--strict-commitment");
+  }
+  if (args.strictNeglectDecay) {
+    verifierArgs.push("--strict-neglect-decay");
   }
 
   const result = spawnSync(process.execPath, verifierArgs, {

@@ -1948,20 +1948,22 @@ Switching is possible, but only in limited, high-cost ways
 **Primary paths (LOCKED):**
 1. `The Old Contract` = strict `Y'ffre / Green Pact`
 2. `The Living Story` = moderate `Y'ffre`
-3. `The Exchange` = `Z'en`
+3. `The Exchange` = `Z'en` (distinct from `Zenithar`; do not use `Zenithar` as the Bosmer Exchange stand-in)
 4. `The Bandit Road` = `Baan Dar`
 
 **Bosmer path implementation locks (LOCKED 2026-05-19):**
 - `PDV_State_BosmerPath` uses exact enum values: `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`
-- First-run setup should require an explicit path choice
+- First-run setup should require an explicit post-startup path choice popup after Bosmer origin/startup is resolved
 - If the path state is unset, corrupt, or cannot be resolved, fall back to `LivingStory` as the safest bridge path
 - `OldContract` path state remains separate from `PactBound`, `GreenPactCompliance`, and `LapsedFromPact`
 - `PDV_State_BosmerPath = OldContract` means the character is oriented toward the Old Contract path; `PactBound` means Y'ffre exclusivity and Green Pact compliance are currently active
+- `The Living Story` and `The Old Contract` share one `Y'ffre` deity ledger; the path state changes exclusivity and Pact handling rather than selecting separate Y'ffre variants
 - If a non-Old-Contract Bosmer loses path coherence through neglect, they drift toward `LivingStory` rather than becoming unset
 - Path switching is explicit and destination-gated, not automatic drift
 - `LivingStory` is the easiest bridge/default destination; `OldContract` is the hardest to re-enter
-- First-run setup choice is free; later path switching is not a simple MCM toggle
-- After setup, MCM/status dialogue may record switch intent, but the world must confirm the new path through destination-gated signals
+- First-run setup choice is free and auto-commits the matching foreground patron
+- Later path switching is not a simple MCM toggle and does not use the generic deity-offer queue
+- After setup, Bosmer-specific system-suggested popup offers may surface when destination evidence is sufficient, but the world must still confirm the new path through destination-gated signals and a curated rite
 - `LivingStory` may be entered through one strong Living Story, community, or story-continuity signal, and remains the fallback for incoherent/corrupt path state
 - `Exchange` and `BanditRoad` require two destination-coded signals on separate in-game days within seven, evaluated at dawn; a major curated quest beat may switch immediately if it clearly proves the destination path
 - `OldContract` re-entry requires explicit recommitment, no terminal second renunciation, and three Pact-positive days within seven

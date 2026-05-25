@@ -314,6 +314,31 @@ This project has repeatedly hit compile failures that looked like logic problems
 but were really missing imports, invented helpers, or Papyrus syntax limits.
 Treat "the logic is wrong" as the fourth guess, not the first.
 
+### 4.9 Tooling harvest after new work
+
+When the project does something new, review the work while it is still fresh
+and ask whether the next pass should be easier, safer, or more repeatable.
+This applies to new CK wiring, xEdit edits, runtime proof routes, verifier
+checks, helper scripts, source-generation patterns, and manual walkthroughs.
+
+Use this order:
+
+1. Finish or stabilize the immediate work enough that the real pain point is
+   visible.
+2. Identify what was manual, fragile, repeated, easy to misread, or easy to
+   forget.
+3. Decide whether the improvement belongs in an existing verifier check, an
+   authoring helper, a manifest, a checklist, a local skill, or a living doc.
+4. Make the small improvement in the same session when it is low-risk and
+   clearly scoped.
+5. If the improvement is bigger than the current task, record the follow-up
+   with enough evidence that a later session can implement it without
+   rediscovering the problem.
+
+Do not turn every one-off into new infrastructure. The bar is repeatability:
+if the same kind of work is likely to happen again, or if a future miss would
+be expensive to diagnose, harvest the lesson into the workflow.
+
 ---
 
 ## 5. Decision Logging

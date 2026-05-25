@@ -1,0 +1,51 @@
+{
+  "id": "phase9-bosmer-state",
+  "title": "PDV Phase 9 Bosmer path-state and transition contract",
+  "defaultOutput": "PDV_Phase9BosmerStateOverlay.esp",
+  "notes": [
+    "This manifest records the CK/xEdit contract for the first live PDV_StateTrack gameplay slice: Bosmer path-state setup, Bosmer-specific path offers, and the shared confirmation-rite route.",
+    "As of 2026-05-24, the framework ESP record packet is live and strict-verifier clean for the Bosmer path deity trio, message boxes, manager properties, FormList membership, and ACTI proof-surface base records. The five expected placed proof references also read back through tools/pdv-phase9-author -- --check-placements.",
+    "Runtime proof is complete for all five proof-surface routes, Living Story, Exchange, Bandit Road, Old Contract re-entry, confirmation-rite switching, Old Contract PactBound/compliance separation, forced reckoning Renounce/Recommit, and save/load persistence.",
+    "Runtime proof fixed the shared PDV_StateTrack evidence retention contract: tracks now retain LatestDay, PreviousDay, and ThirdDay so three-day destination offers can actually fire.",
+    "Strict-phase9 verifier coverage now checks the Bosmer state-track source contract, manager wiring, deity path-eligibility plumbing, and the Bosmer proof-surface editor IDs documented below.",
+    "Unlike the Phase 8 Talos overlay exceptions, strict-phase9 reads the framework ESP directly. Generated overlay patches can still help runtime or staging, but they do not satisfy the closeout gate until the underlying framework records are authored in CK/xEdit."
+  ],
+  "unsupported": [
+    "pdv_author still cannot mint new QUST, GLOB, MESG, ACTI, REFR, or MGEF records, and it cannot write VMAD arrays such as EligibleStateValues or StateLabels. The 2026-05-23 framework packet used the narrow tools/pdv-phase9-author helper instead.",
+    "The current strict verifier covers ACTI base records, while tools/pdv-phase9-author -- --check-placements covers the CK-placed Phase 9 REFR proof instances.",
+    "Phase 9 runtime proof is complete as of 2026-05-24; future changes to offer thresholds must re-run the relevant in-game evidence-window proof.",
+    "Do not treat Zenithar as a stand-in for Z'en in either editor IDs or player-facing text. The internal deity record remains PDV_Deity_Zen while visible strings should say Z'en."
+  ],
+  "operations": [
+    {
+      "kind": "setProperty",
+      "record": "PDV_Deity_Yffre",
+      "script": "PDV_Deity_Yffre",
+      "property": "DELTA_PACT_POSITIVE",
+      "valueType": "Float",
+      "value": 2.0
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_Deity_Yffre",
+      "script": "PDV_Deity_Yffre",
+      "property": "DELTA_LIVING_STORY",
+      "valueType": "Float",
+      "value": 2.5
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV__ManagerQuest",
+      "script": "PDV__ManagerQuest",
+      "property": "PDV_Yffre",
+      "valueType": "Object",
+      "value": "PDV_Deity_Yffre"
+    },
+    {
+      "kind": "addFormListEntry",
+      "record": "PDV_FLST_AllDeities",
+      "entry": "PDV_Deity_Yffre",
+      "note": "Add Y'ffre to the live deity iteration list once the shared Bosmer ledger is present."
+    }
+  ]
+}
