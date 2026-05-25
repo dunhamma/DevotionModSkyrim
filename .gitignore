@@ -4,4 +4,6 @@ tools/creation-merge-runner/bin/
 tools/creation-merge-runner/obj/
 tools/pdv-phase9-author/bin/
 tools/pdv-phase9-author/obj/
+tools/pdv-next-packet-author/bin/
+tools/pdv-next-packet-author/obj/
 native/vendor/Creation-Kit-Platform-Extended/

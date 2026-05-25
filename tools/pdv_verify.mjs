@@ -279,7 +279,22 @@ const SLICE1_SIGNAL_RECEIVER_DEFINITIONS = [
 const PHASE10_DUNMER_SIGNAL_RECEIVER_DEFINITIONS = SLICE1_SIGNAL_RECEIVER_DEFINITIONS.filter((definition) =>
   definition.recordEdid === "PDV_ACTI_DunmerPortableShrineSignal"
     || definition.recordEdid === "PDV_ACTI_DunmerPrivateShrineSignal"
-);
+).map((definition) => ({
+  ...definition,
+  expectedOncePerDayKey: definition.recordEdid === "PDV_ACTI_DunmerPortableShrineSignal"
+    ? "PDV.Signal.DunmerPortableShrine.Activator"
+    : "PDV.Signal.DunmerHome.Activator",
+}));
+
+const KHAJIIT_FOCUSED_EMPHASIS_GLOBAL = "PDV_GLO_KhajiitFocusedEmphasis";
+const KYNE_NEGLECT_MAGIC_EFFECT = "PDV_MGEF_Neglect_Kyne";
+const KYNE_NEGLECT_SPELL = "PDV_SPEL_Neglect_Kyne";
+const PHASE11_ARNGEIR_BRANCH = "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch";
+const PHASE11_ARNGEIR_TOPIC = "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic";
+const PHASE11_ARNGEIR_INFO = "PDV_INFO_Phase11ArngeirKyneRecognition";
+const PHASE11_ARNGEIR_NPC_FORMID = "Skyrim.esm:02C6C7";
+const PHASE11_ARNGEIR_PROMPT = "Has Kyne marked my path?";
+const PHASE11_ARNGEIR_LINE = "The wind has marked you, Dragonborn. Walk with Kyne's breath.";
 
 const PHASE7_SIGNAL_RECEIVER_DEFINITIONS = [
   {
@@ -557,6 +572,9 @@ class Verifier {
     strictPhase9 = false,
     strictPhase10 = false,
     strictPhase11 = false,
+    strictKhajiit = false,
+    strictCommitment = false,
+    strictNeglectDecay = false,
   } = {}) {
     this.strictPhase3 = strictPhase3;
     this.strictPreflight = strictPreflight;
@@ -567,6 +585,9 @@ class Verifier {
     this.strictPhase9 = strictPhase9;
     this.strictPhase10 = strictPhase10;
     this.strictPhase11 = strictPhase11;
+    this.strictKhajiit = strictKhajiit;
+    this.strictCommitment = strictCommitment;
+    this.strictNeglectDecay = strictNeglectDecay;
     this.findings = [];
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
@@ -666,6 +687,30 @@ class Verifier {
     }
   }
 
+  khajiitGap(check, detail, filePath = null) {
+    if (this.strictKhajiit) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  commitmentGap(check, detail, filePath = null) {
+    if (this.strictCommitment) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  neglectDecayGap(check, detail, filePath = null) {
+    if (this.strictNeglectDecay) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   async run() {
     this.checkPaths();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
@@ -687,6 +732,9 @@ class Verifier {
       this.checkPhase7();
       this.checkPhase9();
       this.checkPhase10();
+      this.checkKhajiit();
+      this.checkCommitment();
+      this.checkNeglectDecay();
       this.checkPhase11();
       this.checkOfflinePatcherRules();
       this.checkPreflightOverlayPatch();
@@ -1296,8 +1344,30 @@ class Verifier {
     this.checkPhase10SignalReceiverRecords();
   }
 
+  checkKhajiit() {
+    this.checkKhajiitFocusedEmphasisRecord();
+    this.checkKhajiitManagerRecord();
+  }
+
+  checkCommitment() {
+    this.checkCommitmentManagerRecord();
+  }
+
+  checkNeglectDecay() {
+    this.checkNeglectDecayManagerRecord();
+  }
+
   checkPhase11() {
-    this.checkPhase11PrivilegePilotManifest();
+    const manifest = this.checkPhase11PrivilegePilotManifest();
+    if (manifest?.implementationStatus === "live-dialogue-authored") {
+      this.checkPhase11ArngeirDialogueRecords();
+    } else {
+      this.info(
+        "Phase 11 Arngeir dialogue records",
+        "Live dialogue readback is skipped because the manifest is prep-only.",
+        PHASE11_PRIVILEGE_PILOT_MANIFEST,
+      );
+    }
   }
 
   checkOfflinePatcherRules() {
@@ -1672,7 +1742,109 @@ class Verifier {
       this.checkObjectPropertyTarget("Phase 10 Dunmer signal receiver property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase10Gap.bind(this));
       this.checkScalarProperty("Phase 10 Dunmer signal receiver property", props, "RouteId", definition.routeId, this.phase10Gap.bind(this));
       this.checkScalarProperty("Phase 10 Dunmer signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.phase10Gap.bind(this));
+      this.checkScalarProperty("Phase 10 Dunmer signal receiver property", props, "OncePerDayKey", definition.expectedOncePerDayKey, this.phase10Gap.bind(this));
     }
+
+    const keys = PHASE10_DUNMER_SIGNAL_RECEIVER_DEFINITIONS
+      .map((definition) => {
+        const detail = this.recordDetails.get(definition.recordEdid);
+        const script = detail ? findScript(detail.fields || {}, definition.scriptName) : null;
+        const prop = script ? propertyMap(script).get("OncePerDayKey") : null;
+        return prop ? propValue(prop) : null;
+      })
+      .filter(Boolean);
+    if (keys.length === 2 && keys[0] !== keys[1]) {
+      this.pass("Phase 10 Dunmer signal receiver property", "Portable and private shrine OncePerDayKey values are distinct.", PDV_ESP);
+    } else {
+      this.phase10Gap("Phase 10 Dunmer signal receiver property", "Portable and private shrine OncePerDayKey values must be distinct.", PDV_ESP);
+    }
+  }
+
+  checkKhajiitFocusedEmphasisRecord() {
+    const record = this.recordsByEdid.get(KHAJIIT_FOCUSED_EMPHASIS_GLOBAL);
+    if (record?.type === "GLOB") {
+      this.pass("Khajiit focused-emphasis global", `${KHAJIIT_FOCUSED_EMPHASIS_GLOBAL} exists as GLOB.`, PDV_ESP);
+    } else {
+      this.khajiitGap(
+        "Khajiit focused-emphasis global",
+        `${KHAJIIT_FOCUSED_EMPHASIS_GLOBAL} is missing; Khajiit focus needs CK-readable mirror readback.`,
+        PDV_ESP,
+      );
+    }
+  }
+
+  checkKhajiitManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget(
+      "Khajiit focused-emphasis manager property",
+      props,
+      "PDV_GLO_KhajiitFocusedEmphasis",
+      KHAJIIT_FOCUSED_EMPHASIS_GLOBAL,
+      this.khajiitGap.bind(this),
+    );
+  }
+
+  checkCommitmentManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget("Commitment manager property", props, "PDV_Kyne", "PDV_Deity_Kyne", this.commitmentGap.bind(this));
+    this.checkObjectPropertyTarget("Commitment manager property", props, "PDV_GLO_PatronState", "PDV_GLO_PatronState", this.commitmentGap.bind(this));
+  }
+
+  checkNeglectDecayManagerRecord() {
+    const magicEffect = this.recordsByEdid.get(KYNE_NEGLECT_MAGIC_EFFECT);
+    if (magicEffect?.type === "MGEF") {
+      this.pass("Neglect/decay Kyne magic effect", `${KYNE_NEGLECT_MAGIC_EFFECT} exists as MGEF.`, PDV_ESP);
+    } else {
+      this.neglectDecayGap(
+        "Neglect/decay Kyne magic effect",
+        `${KYNE_NEGLECT_MAGIC_EFFECT} is missing; Slice 7 needs a real magic-effect surface.`,
+        PDV_ESP,
+      );
+    }
+
+    const spell = this.recordsByEdid.get(KYNE_NEGLECT_SPELL);
+    if (spell?.type === "SPEL") {
+      this.pass("Neglect/decay Kyne spell", `${KYNE_NEGLECT_SPELL} exists as SPEL.`, PDV_ESP);
+    } else {
+      this.neglectDecayGap(
+        "Neglect/decay Kyne spell",
+        `${KYNE_NEGLECT_SPELL} is missing; Slice 7 needs a real spell apply/remove surface.`,
+        PDV_ESP,
+      );
+    }
+
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget("Neglect/decay manager property", props, "PDV_SPEL_Neglect_Kyne", KYNE_NEGLECT_SPELL, this.neglectDecayGap.bind(this));
   }
 
   checkPhase11PrivilegePilotManifest() {
@@ -1682,7 +1854,7 @@ class Verifier {
         "Phase 11 privilege pilot prep manifest is missing.",
         PHASE11_PRIVILEGE_PILOT_MANIFEST,
       );
-      return;
+      return null;
     }
 
     let parsed;
@@ -1690,7 +1862,7 @@ class Verifier {
       parsed = JSON.parse(fs.readFileSync(PHASE11_PRIVILEGE_PILOT_MANIFEST, "utf8"));
     } catch (error) {
       this.fail("Phase 11 privilege pilot manifest", `Manifest could not be parsed: ${error.message}`, PHASE11_PRIVILEGE_PILOT_MANIFEST);
-      return;
+      return null;
     }
 
     const gate = parsed.pilot?.gate || {};
@@ -1705,11 +1877,11 @@ class Verifier {
       && gate.originRace === expectedGate.originRace
       && gate.activeDeityIndex === expectedGate.activeDeityIndex
       && gate.minimumActiveTier === expectedGate.minimumActiveTier
-      && parsed.implementationStatus === "prep-only"
+      && ["prep-only", "live-dialogue-authored"].includes(parsed.implementationStatus)
     ) {
       this.pass(
         "Phase 11 privilege pilot manifest",
-        "D-10 prep manifest locks the Arngeir/Kynareth gate and marks live implementation as blocked.",
+        `D-10 manifest locks the Arngeir/Kynareth gate with status ${parsed.implementationStatus}.`,
         PHASE11_PRIVILEGE_PILOT_MANIFEST,
       );
     } else {
@@ -1719,6 +1891,105 @@ class Verifier {
         PHASE11_PRIVILEGE_PILOT_MANIFEST,
       );
     }
+    return parsed;
+  }
+
+  checkPhase11ArngeirDialogueRecords() {
+    const branchRecord = this.recordsByEdid.get(PHASE11_ARNGEIR_BRANCH);
+    const topicRecord = this.recordsByEdid.get(PHASE11_ARNGEIR_TOPIC);
+    const infoRecord = this.recordsByEdid.get(PHASE11_ARNGEIR_INFO);
+
+    if (branchRecord?.type === "DLBR") {
+      this.pass("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_BRANCH} exists as DLBR.`, PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_BRANCH} is missing or not a DLBR.`, PDV_ESP);
+    }
+
+    if (topicRecord?.type === "DIAL") {
+      this.pass("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_TOPIC} exists as DIAL.`, PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_TOPIC} is missing or not a DIAL.`, PDV_ESP);
+    }
+
+    if (infoRecord?.type === "INFO") {
+      this.pass("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_INFO} exists as INFO.`, PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_INFO} is missing or not an INFO.`, PDV_ESP);
+    }
+
+    const branch = this.recordDetails.get(PHASE11_ARNGEIR_BRANCH)?.fields || {};
+    if (branch.Quest === this.recordsByEdid.get("PDV__ManagerQuest")?.formid) {
+      this.pass("Phase 11 Arngeir dialogue branch", "Branch is owned by PDV__ManagerQuest.", PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue branch", "Branch is not owned by PDV__ManagerQuest.", PDV_ESP);
+    }
+    if (branch.Category === "Player" && branch.Flags === "TopLevel" && branch.StartingTopic === topicRecord?.formid) {
+      this.pass("Phase 11 Arngeir dialogue branch", "Branch is a player top-level branch pointing at the PDV topic.", PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue branch", "Branch category/flags/starting topic do not match the PDV top-level contract.", PDV_ESP);
+    }
+
+    const topic = this.recordDetails.get(PHASE11_ARNGEIR_TOPIC)?.fields || {};
+    if (topic.Quest === this.recordsByEdid.get("PDV__ManagerQuest")?.formid && topic.Branch === branchRecord?.formid) {
+      this.pass("Phase 11 Arngeir dialogue topic", "Topic is owned by PDV__ManagerQuest and linked to the PDV branch.", PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue topic", "Topic quest/branch links do not match the PDV branch contract.", PDV_ESP);
+    }
+    if (topic.Name === PHASE11_ARNGEIR_PROMPT && topic.Category === "Topic" && topic.Subtype === "Custom") {
+      this.pass("Phase 11 Arngeir dialogue topic", `Topic prompt is "${PHASE11_ARNGEIR_PROMPT}".`, PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue topic", "Topic prompt/category/subtype do not match the contract.", PDV_ESP);
+    }
+
+    const info = this.recordDetails.get(PHASE11_ARNGEIR_INFO)?.fields || {};
+    this.checkPhase11ArngeirInfo(info, infoRecord?.formid, topicRecord?.formid);
+  }
+
+  checkPhase11ArngeirInfo(info, infoFormid, topicFormid) {
+    if (!info || !Object.keys(info).length) {
+      this.phase11Gap("Phase 11 Arngeir dialogue info", "INFO detail readback is missing.", PDV_ESP);
+      return;
+    }
+
+    if (info.Topic === topicFormid && info.Speaker === PHASE11_ARNGEIR_NPC_FORMID && info.Prompt === PHASE11_ARNGEIR_PROMPT) {
+      this.pass("Phase 11 Arngeir dialogue info", "INFO is tied to the PDV topic, Arngeir speaker, and expected prompt.", PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue info", "INFO topic/speaker/prompt readback does not match the Arngeir contract.", PDV_ESP);
+    }
+
+    const responseLine = info.Responses?.[0]?.Text;
+    if (responseLine === PHASE11_ARNGEIR_LINE) {
+      this.pass("Phase 11 Arngeir dialogue info", "INFO response line matches the locked recognition text.", PDV_ESP);
+    } else {
+      this.phase11Gap("Phase 11 Arngeir dialogue info", `INFO response line is ${JSON.stringify(responseLine)}, expected ${JSON.stringify(PHASE11_ARNGEIR_LINE)}.`, PDV_ESP);
+    }
+
+    const conditions = Array.isArray(info.Conditions) ? info.Conditions : [];
+    const hasArngeirCondition = conditions.some((condition) =>
+      condition.CompareOperator === "EqualTo"
+      && condition.ComparisonValue === 1
+      && condition.Data?.Object?.Link === PHASE11_ARNGEIR_NPC_FORMID);
+    const hasOriginCondition = this.hasGlobalCondition(conditions, "PDV_GLO_OriginRace", "EqualTo", 0);
+    const hasDeityCondition = this.hasGlobalCondition(conditions, "PDV_GLO_ActiveDeityIndex", "EqualTo", 0);
+    const hasTierCondition = this.hasGlobalCondition(conditions, "PDV_GLO_ActiveTier", "GreaterThanOrEqualTo", 3);
+
+    if (hasArngeirCondition && hasOriginCondition && hasDeityCondition && hasTierCondition) {
+      this.pass("Phase 11 Arngeir dialogue conditions", "INFO gates on Arngeir, Nord origin, active Kyne, and Champion tier.", PDV_ESP);
+    } else {
+      this.phase11Gap(
+        "Phase 11 Arngeir dialogue conditions",
+        `Condition readback missing expected gates: Arngeir=${hasArngeirCondition}, Origin=${hasOriginCondition}, Deity=${hasDeityCondition}, Tier=${hasTierCondition}.`,
+        PDV_ESP,
+      );
+    }
+  }
+
+  hasGlobalCondition(conditions, globalEdid, compareOperator, comparisonValue) {
+    const globalFormid = this.recordsByEdid.get(globalEdid)?.formid;
+    return conditions.some((condition) =>
+      condition.CompareOperator === compareOperator
+      && condition.ComparisonValue === comparisonValue
+      && condition.Data?.Global?.Link === globalFormid);
   }
 
   checkPhase8ConcordatTrackRecord() {
@@ -2808,6 +3079,9 @@ class Verifier {
     this.checkPhase7SourceContracts();
     this.checkPhase9SourceContracts();
     this.checkPhase10SourceContracts();
+    this.checkKhajiitSourceContracts();
+    this.checkCommitmentSourceContracts();
+    this.checkNeglectDecaySourceContracts();
   }
 
   checkPreflightSourceContracts() {
@@ -3144,6 +3418,66 @@ class Verifier {
       "PDV_EventBusService.RouteDunmerPortableShrinePrayer()",
       "PDV_EventBusService.RouteDunmerPlayerHomeBonus()",
     ], this.phase10Gap.bind(this));
+  }
+
+  checkKhajiitSourceContracts() {
+    this.checkSourceContains("Khajiit source", "PDV__ManagerQuest", [
+      "GlobalVariable Property PDV_GLO_KhajiitFocusedEmphasis Auto",
+      "KHAJIIT_FOCUS_KHENARTHI = 1",
+      "KHAJIIT_FOCUS_AZURAH = 2",
+      "KHAJIIT_FOCUS_THRESHOLD = 50.0",
+      "KHAJIIT_FOCUS_LEAD_REQUIRED = 15.0",
+      "Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason)",
+      "Function EvaluateKhajiitFocusedEmphasis()",
+      "Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)",
+      "PDV_GLO_KhajiitFocusedEmphasis.SetValue(focusValue as Float)",
+      "AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_AZURAH",
+      "AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI",
+      "focus=",
+    ], this.khajiitGap.bind(this));
+    this.checkSourceContains("Khajiit source", "PDV_MCM", [
+      "Khajiit moon observance",
+      "Khajiit road-home cadence",
+      "RouteKhajiitMoonObservance(0)",
+      "RouteKhajiitRoadHome()",
+    ], this.khajiitGap.bind(this));
+  }
+
+  checkCommitmentSourceContracts() {
+    this.checkSourceContains("Commitment source", "PDV__ManagerQuest", [
+      "Float Property COMMITMENT_OFFER_THRESHOLD = 50.0 AutoReadOnly",
+      "Float Property COMMITMENT_CARRYOVER_MULTIPLIER = 0.7 AutoReadOnly",
+      "Function EvaluateKyneCommitmentOffer()",
+      "HasRecentCommitmentSignalDays(PDV_Kyne, 2, 7)",
+      "Function DebugAcceptPendingCommitment()",
+      "Function DebugDeclinePendingCommitment()",
+      "Function DebugRefusePendingCommitment()",
+      "StorageUtil.SetFloatValue(None, \"PDV.Commitment.LastCarryover\", carryAmount)",
+      "return originRace == ORIGIN_KHAJIIT || originRace == ORIGIN_BOSMER",
+    ], this.commitmentGap.bind(this));
+    this.checkSourceContains("Commitment source", "PDV_MCM", [
+      "Evaluate commitment",
+      "Accept commitment",
+      "Decline commitment",
+      "Refuse commitment",
+    ], this.commitmentGap.bind(this));
+  }
+
+  checkNeglectDecaySourceContracts() {
+    this.checkSourceContains("Neglect/decay source", "PDV__ManagerQuest", [
+      "Spell Property PDV_SPEL_Neglect_Kyne Auto",
+      "Function RunDawnApplyDecay()",
+      "Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)",
+      "StorageUtil.GetIntValue(deityForm, \"PDV.LastDecayAppliedDay\") == currentDay",
+      "BROAD_WORSHIP_DECAY_MULTIPLIER",
+      "Function RunDawnApplySpellAndNeglectLayers()",
+      "GetPatronState() != PATRON_STATE_ACTIVE",
+      "Function SyncKyneNeglectSpell(Bool shouldBeActive)",
+      "playerRef.AddSpell(PDV_SPEL_Neglect_Kyne, False)",
+      "playerRef.RemoveSpell(PDV_SPEL_Neglect_Kyne)",
+      "PDV.Neglect.KyneSpellActive",
+      "String Function GetNeglectSummary()",
+    ], this.neglectDecayGap.bind(this));
   }
 
   checkSourceContains(checkName, scriptName, snippets, gapFn = null) {
@@ -3611,6 +3945,9 @@ function parseArgs(argv) {
     strictPhase9: false,
     strictPhase10: false,
     strictPhase11: false,
+    strictKhajiit: false,
+    strictCommitment: false,
+    strictNeglectDecay: false,
   };
 
   for (const arg of argv) {
@@ -3634,8 +3971,14 @@ function parseArgs(argv) {
       args.strictPhase10 = true;
     } else if (arg === "--strict-phase11") {
       args.strictPhase11 = true;
+    } else if (arg === "--strict-khajiit") {
+      args.strictKhajiit = true;
+    } else if (arg === "--strict-commitment") {
+      args.strictCommitment = true;
+    } else if (arg === "--strict-neglect-decay") {
+      args.strictNeglectDecay = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-phase11]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -3657,6 +4000,9 @@ const verifier = new Verifier({
   strictPhase9: args.strictPhase9,
   strictPhase10: args.strictPhase10,
   strictPhase11: args.strictPhase11,
+  strictKhajiit: args.strictKhajiit,
+  strictCommitment: args.strictCommitment,
+  strictNeglectDecay: args.strictNeglectDecay,
 });
 const findings = await verifier.run();
 const counts = verifier.counts();

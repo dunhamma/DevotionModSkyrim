@@ -1,16 +1,18 @@
 {
   "id": "phase11-privilege-pilot",
-  "title": "PDV Phase 11 privilege pilot prep",
+  "title": "PDV Phase 11 privilege pilot prep contract",
   "implementationStatus": "prep-only",
   "notes": [
     "D-10 is resolved to the Arngeir/Kynareth recognition pilot.",
-    "This manifest documents the CK condition contract before live dialogue implementation.",
-    "Live privilege records remain blocked until the Section 21.5 commitment and neglect/decay gates are proven.",
+    "The generated PDV-owned Arngeir dialogue branch/topic/info records were removed on 2026-05-24 after CrashLogger tied a CTD to the generated dialogue topic/branch shape.",
+    "Keep Phase 11 at prep-only until the dialogue surface is rebuilt through a CK-safe path and re-proven.",
+    "Runtime proof remains blocked until the Section 21.5 commitment and neglect/decay gates are proven.",
     "Do not replace vanilla shrine base scripts as part of this pilot."
   ],
   "pilot": {
     "name": "Arngeir Kynareth recognition",
     "surface": "vanilla dialogue topic with Shares Dialogue discipline",
+    "recognitionLine": "The wind has marked you, Dragonborn. Walk with Kyne's breath.",
     "gate": {
       "originRace": "Nord",
       "activeDeityIndex": "Kyne",

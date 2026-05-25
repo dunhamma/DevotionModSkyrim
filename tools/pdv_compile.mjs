@@ -133,6 +133,9 @@ function parseArgs(argv) {
     strictPhase9: false,
     strictPhase10: false,
     strictPhase11: false,
+    strictKhajiit: false,
+    strictCommitment: false,
+    strictNeglectDecay: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -176,6 +179,12 @@ function parseArgs(argv) {
       args.strictPhase10 = true;
     } else if (arg === "--strict-phase11") {
       args.strictPhase11 = true;
+    } else if (arg === "--strict-khajiit") {
+      args.strictKhajiit = true;
+    } else if (arg === "--strict-commitment") {
+      args.strictCommitment = true;
+    } else if (arg === "--strict-neglect-decay") {
+      args.strictNeglectDecay = true;
     } else if (arg === "-h" || arg === "--help") {
       usage(null, 0);
     } else {
@@ -212,6 +221,9 @@ function usage(error = null, exitCode = 2) {
     "  --strict-phase9       Pass --strict-phase9 to the verifier.",
     "  --strict-phase10      Pass --strict-phase10 to the verifier.",
     "  --strict-phase11      Pass --strict-phase11 to the verifier.",
+    "  --strict-khajiit      Pass --strict-khajiit to the verifier.",
+    "  --strict-commitment   Pass --strict-commitment to the verifier.",
+    "  --strict-neglect-decay Pass --strict-neglect-decay to the verifier.",
     "  --allow-warnings      Do not convert Papyrus warnings into failures.",
   ].join("\n");
 
@@ -341,6 +353,15 @@ function runVerifier(args) {
   }
   if (args.strictPhase11) {
     verifierArgs.push("--strict-phase11");
+  }
+  if (args.strictKhajiit) {
+    verifierArgs.push("--strict-khajiit");
+  }
+  if (args.strictCommitment) {
+    verifierArgs.push("--strict-commitment");
+  }
+  if (args.strictNeglectDecay) {
+    verifierArgs.push("--strict-neglect-decay");
   }
 
   const result = spawnSync(process.execPath, verifierArgs, {
