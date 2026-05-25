@@ -746,7 +746,7 @@ Phase 12 is a favor-first phase, not a toast-hardening phase and not a generic C
 - `Nord Broad Old Ways`
 - `Nord Broad Nine Divines`
 
-Manual CK/xEdit shells remain acceptable for the new `MGEF` / `SPEL` / `KYWD` assets in this phase. The implementation target is strong runtime, manifest, helper, and verifier coverage around those shells rather than generic source-plugin record creation.
+The normal authoring path for this phase is the narrow direct helper plus manifest-driven readback, not generic source-plugin record creation. `tools/pdv-phase12-author --create-missing` may create the tracked Phase 12 `MGEF` / `SPEL` / `KYWD` packet and `PDV_State_NordPantheonBaseline` when absent; manual CK/xEdit shells remain fallback-only if that helper path is unavailable or intentionally bypassed.
 
 ### 10.1 Pattern
 
