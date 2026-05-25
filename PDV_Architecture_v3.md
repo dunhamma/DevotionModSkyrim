@@ -740,16 +740,31 @@ Where a privilege genuinely needs a value not surfaced by the mirrors (e.g. "hig
 
 Contextual favors are automatic, signal-triggered temporary boosts. They are not hotbar powers, lesser powers, or player-invoked religion abilities. An authored preferred signal for the active patron, path, mode, or substrate may also trigger a favor. They are the main carrier of race-specific identity per the locked hybrid boon policy.
 
+Phase 12 is a favor-first phase, not a toast-hardening phase and not a generic CKPE bridge-expansion phase. The first live runtime pass is locked to three lanes in one tranche:
+
+- focused `Kyne` foreground favors
+- `Nord Broad Old Ways`
+- `Nord Broad Nine Divines`
+
+Manual CK/xEdit shells remain acceptable for the new `MGEF` / `SPEL` / `KYWD` assets in this phase. The implementation target is strong runtime, manifest, helper, and verifier coverage around those shells rather than generic source-plugin record creation.
+
 ### 10.1 Pattern
 
 Each favor is authored as a Magic Effect or short-duration ability that the favor subsystem applies automatically after a qualifying signal. The active foreground patron/path/mode exposes its favor set, but the player can have only one contextual favor boost active at a time, globally across PDV.
 
 ```
-PDV_Favor_<Patron>_<Description>          Magic Effect
-PDV_Ability_<Patron>_ContextualFavors     Spell or favor-set holder
+PDV_Favor_<Lane>_<Description>            Magic Effect
+PDV_SPEL_Favor_<Lane>_<Description>       Spell or short-duration carrier ability
+PDV_FavorFamily_<Name>                    Shared anti-stack keyword
 ```
 
-The favor set is patron-only and tier-gated. A favor may fire again after the current boost expires, but only when the player hits another qualifying preferred signal.
+The runtime contract for Phase 12 is a hybrid split:
+
+- `PDV__ManagerQuest` owns orchestration, lane resolution, suppression, apply/remove, expiry, and debug summary.
+- A separate favor-state/effect-holder contract exists only through shared StorageUtil keys, family keywords, and stable record naming.
+- Do not add a new always-on generic favor service quest in this phase.
+
+The current `PDV.KyneFavor.ConditionMask` seam is not the general subsystem. It may remain as a Kyne-only debug adapter while the generic favor contract takes over, but future authored favor logic must route through the shared Phase 12 state model instead of Kyne-only mask math.
 
 ### 10.2 Marked-signal rule
 
@@ -760,6 +775,8 @@ Pure penalties, failures, hostile-rival signals, and ordinary negative drift do 
 ### 10.3 One-active-boost cap
 
 The cap is global across all PDV contextual favors, including temporary favors from substrates. A Khajiit lunar favor and Khenarthi road favor, for example, cannot both be active temporary boosts at the same time.
+
+For Phase 12, this cap suppresses new activation while another favor is active. Do not replace an active favor in place, and do not refresh an already-active favor's timer from a second trigger during this phase.
 
 Outside the cap:
 
@@ -814,6 +831,33 @@ This is design discipline more than a script feature. The verifier should detect
 ### 10.8 Authoring overhead
 
 Each favor is: one magic effect or short-duration ability, one trigger-family entry in the patron's contextual-favor set, a family keyword, and any needed CK Condition stack. A typical patron has 3-5 favors. Across 25-35 deities that's roughly 100-150 favor effects in v1.0 - manageable in CK without templating, but a candidate for `pdv_author.mjs` expansion later.
+
+### 10.9 Phase 12 pilot lock
+
+Phase 12 is the first real runtime of the contextual-favor subsystem. The lock for this phase is:
+
+- `Kyne` focused foreground lane with 4 trigger families:
+  - `open-sky rest recovery`
+  - `storm-road grace`
+  - `guided hunt`
+  - `wind-marked passage`
+- `Nord Broad Old Ways` with the 5 trigger families locked in `race-sheets/PDV_RaceDesign_Nord.md`
+- `Nord Broad Nine Divines` with the 5 trigger families locked in `race-sheets/PDV_RaceDesign_Nord.md`
+
+Focused Kyne proves the deeper personal lane. The two Nord broad lanes prove that shared broad worship is a first-class lane with softer, Faithful-capped output rather than a bundle of every individual deity's patron favors.
+
+### 10.10 Runtime shape
+
+Phase 12 stores the minimum generic state needed to make favors durable and verifier-visible:
+
+- active lane id
+- active favor family
+- active effect/spell or logical favor id
+- activation timestamp
+- expiration timestamp
+- last-trigger anti-farm state per lane/family
+
+The manager should expose one generic debug summary string for MCM and runtime proof rather than phase-specific one-off counters.
 
 ---
 
@@ -1517,7 +1561,7 @@ excellent reusable example per subsystem, then clone.
 | **9** | State track + first instance (Bosmer Path) | Phase 8 | Bosmer path setup, destination-gated offers, confirmation-rite switching, Old Contract PactBound/compliance separation, reckoning renounce/recommit, save/load persistence, framework ESP readback, and placed proof-reference routing are runtime-proven; verifier covers |
 | **10** | Race substrate (Dunmer Ancestor first pilot) | Phase 9 | Portable-shrine prayer and home bonus grant origin-only substrate progress; substrate metric stays separate from patron piety |
 | **11** | Privilege subsystem first wave (Arngeir/Kynareth pilot; Mara deferred until the pattern proves clean) | Phase 8/9 plus Section 21.5 commitment and neglect/decay gates | CK conditions read mirror globals + track globals; the Arngeir/Kynareth dialogue pilot gates cleanly for Nord Kyne Champion and hides for non-Nord, wrong deity, or lower tier |
-| **12** | Contextual favor subsystem (Kyne foreground favor set) | Phase 11 | 3-5 automatic signal-triggered favor families per devotional lane; one active boost cap prevents stacking |
+| **12** | Contextual favor subsystem (focused Kyne plus Nord broad-lane pilot) | Phase 11 | Focused Kyne plus Broad Old Ways and Broad Nine Divines prove the generic favor runtime, 3-5 trigger families per lane, and the one-active-boost cap |
 | **13** | Daedric path architecture + first Prince (Boethiah pilot) | Phase 11 | Boon/price/stigma triple works; commitment gating works; stigma readout via global |
 | **14** | Patron commitment mechanism (in-world offer + accept/decline/refuse) | Phase 9/11 | Offers fire from dawn pass; threshold gate works; 70% carry-over on accept |
 | **15** | Curse-state overlay (Werewolf first, Vampire second) | Phase 14 | Curse multiplier composes correctly; transition events fire per-deity reactions |
@@ -1677,7 +1721,7 @@ that Daedric comparison point.
 | 6 | Commitment offer pilot | Shared formal offer flow | Dawn can recompute candidates, fire at most one offer, and persist accepted patron state without a queue | Slice 3 for eligibility filtering; favor, decay, and privilege do not need to exist yet | Accept / Not Yet / Refuse works; 70% carry-over on accept works; no competing 1.0 offers fire after acceptance |
 | 7 | Neglect/decay pilot | One accepted patron relationship weakening over time | Dawn owns decay and neglect effects; runtime events never write persistent decay directly | Slice 6 | Decay floors, grace, neglect spell apply/remove, and broad-worship suppression work |
 | 8 | Privilege pilot | Shrine/dialogue privilege pattern | CK Conditions can read mirror globals and track globals without script glue in dialogue/shrine content | D-10 resolved; Slice 6 preferred | One shrine or dialogue privilege proves condition shape and coexistence discipline |
-| 9 | Contextual favor pilot | One automatic favor family, preferably Kyne foreground unless a prior slice gives cleaner hooks | Event/scoring can request a favor opportunity; favor manager enforces one-active-boost cap | Slice 7; at least one reliable signal family from Slices 1-5 | 3-5 favor triggers exist for one devotional lane, duration/surfacing rules work, and anti-stack is verifier or smoke covered |
+| 9 | Contextual favor pilot | Generic favor runtime with focused Kyne plus Nord broad-lane proof | Event/scoring can request a favor opportunity; the manager-owned favor runtime enforces one-active-boost cap, lane resolution, expiry, and anti-farm state | Slice 7; at least one reliable signal family from Slices 1-5 plus Nord baseline scaffolding | Focused Kyne and the two Nord broad lanes have locked trigger families, duration/surfacing rules work, and one-active anti-stack is verifier or smoke covered |
 | 10 | UI toast hardening | Prisma overlay-toast payload contract for authored race content | Papyrus callers can rely on a stable overlay schema while the UI keeps ownership of default copy/tone expansion | Existing prototype toast path works; Slice 9 preferred before broad authored call-site growth | `favor`, `dawn`, `neglect`, `tier`, and `rivalry` all render with documented stable fields, and the README / v3 payload maturity labels agree |
 | 11 | Daedric price/stigma pilot | First full Daedric path price/stigma loop | Daedric path scoring exposes boon, price, stigma, and race response through a narrow path interface | D-12, D-13, D-14 resolved; Slices 7-10 complete; Hircine hunt proof may remain ingress-only | One Prince path has commitment, price, stigma, race response, and exit/residue behavior proven |
 | 12 | Curse-state pilot | Werewolf first, vampire second | Scoring asks curse state/modifier without knowing detection source | D-17 resolved; Slice 11 preferred so curse tuning can compare against a real Daedric path | Curse transition changes scoring posture and restoration behavior without mutating origin race |
@@ -2165,6 +2209,19 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.37 - 2026-05-25 - Phase 11 CK authoring packet
+
+The Phase 11 Arngeir/Kynareth manifest now doubles as a
+`creation-authoring.v1` manifest while preserving its verifier-facing D-10
+contract. A dedicated Phase 11 creation-authoring profile points at the CKPE
+bridge and the full strict packet verifier, and the planner reports the branch,
+topic, info, and SEQ operations as CKPE-ready. This does not promote live Phase
+11 status: the installed native bridge still blocks mutating dialogue handlers,
+so the next live step remains manual CK authoring using
+`PDV_Phase11_CKSafeDialogue_Runbook.md`, followed by SEQ refresh, manifest
+promotion to `live-dialogue-authored`, strict readback, and runtime
+positive/negative proof.
 
 ### v3.36 - 2026-05-25 - Phase 11 generated-dialogue guard
 

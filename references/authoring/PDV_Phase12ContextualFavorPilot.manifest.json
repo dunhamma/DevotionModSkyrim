@@ -1,0 +1,251 @@
+{
+  "id": "phase12-contextual-favor-pilot",
+  "title": "PDV Phase 12 contextual favor and Nord breadth pilot contract",
+  "implementationStatus": "manual-shells-required",
+  "notes": [
+    "Phase 12 is a favor-first phase, not UI toast hardening and not generic CKPE bridge expansion.",
+    "The first live runtime tranche is focused Kyne plus the two Nord broad-worship lanes.",
+    "The one-active contextual-favor cap is global. While a favor is active, new favor triggers are suppressed. This phase does not replace or refresh an already-active favor in place.",
+    "Runtime ownership is hybrid split: PDV__ManagerQuest owns orchestration, while shared StorageUtil keys, family keywords, and stable favor record naming carry the effect-holder contract.",
+    "Manual CK/xEdit shells remain acceptable for the new MGEF, SPEL, and KYWD records. The Phase 12 helper must not claim generic record creation support."
+  ],
+  "manager": {
+    "record": "PDV__ManagerQuest",
+    "script": "PDV__ManagerQuest",
+    "requiredProperties": [
+      "PDV_NordPantheonBaselineTrack",
+      "PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery",
+      "PDV_SPEL_Favor_Kyne_StormRoadGrace",
+      "PDV_SPEL_Favor_Kyne_GuidedHunt",
+      "PDV_SPEL_Favor_Kyne_WindMarkedPassage",
+      "PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance",
+      "PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal",
+      "PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense",
+      "PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet",
+      "PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance",
+      "PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace",
+      "PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty",
+      "PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy",
+      "PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft",
+      "PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine"
+    ]
+  },
+  "nordBaseline": {
+    "track": "PDV_State_NordPantheonBaseline",
+    "states": {
+      "OldWays": 0,
+      "NineDivines": 1
+    },
+    "note": "This track stores setup framing only. It must not be overloaded with broad vs primary commitment depth."
+  },
+  "lanes": [
+    {
+      "laneId": "Kyne",
+      "runtimeLaneValue": 1,
+      "type": "focused",
+      "requires": {
+        "activeDeity": "PDV_Deity_Kyne",
+        "minimumTier": 3
+      },
+      "families": [
+        {
+          "familyId": "OpenSkyRestRecovery",
+          "runtimeFamilyValue": 1,
+          "triggerLabel": "open-sky rest recovery",
+          "bucket": "Environmental",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_OpenSkyRecovery",
+          "magicEffect": "PDV_Favor_Kyne_OpenSkyRestRecovery",
+          "spell": "PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery"
+        },
+        {
+          "familyId": "StormRoadGrace",
+          "runtimeFamilyValue": 2,
+          "triggerLabel": "storm-road grace",
+          "bucket": "Environmental",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_RoadGrace",
+          "magicEffect": "PDV_Favor_Kyne_StormRoadGrace",
+          "spell": "PDV_SPEL_Favor_Kyne_StormRoadGrace"
+        },
+        {
+          "familyId": "GuidedHunt",
+          "runtimeFamilyValue": 3,
+          "triggerLabel": "guided hunt",
+          "bucket": "Momentary combat",
+          "surfacing": "Quiet",
+          "keyword": "PDV_FavorFamily_GuidedHunt",
+          "magicEffect": "PDV_Favor_Kyne_GuidedHunt",
+          "spell": "PDV_SPEL_Favor_Kyne_GuidedHunt"
+        },
+        {
+          "familyId": "WindMarkedPassage",
+          "runtimeFamilyValue": 4,
+          "triggerLabel": "wind-marked passage",
+          "bucket": "After-act",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_WindPassage",
+          "magicEffect": "PDV_Favor_Kyne_WindMarkedPassage",
+          "spell": "PDV_SPEL_Favor_Kyne_WindMarkedPassage"
+        }
+      ]
+    },
+    {
+      "laneId": "NordBroadOldWays",
+      "runtimeLaneValue": 2,
+      "type": "broad",
+      "requires": {
+        "originRace": "Nord",
+        "patronState": "Broad",
+        "baselineState": "OldWays",
+        "maximumTierSemantic": 2
+      },
+      "families": [
+        {
+          "familyId": "SkyRoadEndurance",
+          "runtimeFamilyValue": 11,
+          "triggerLabel": "sky-road endurance",
+          "bucket": "Environmental",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_RoadGrace",
+          "magicEffect": "PDV_Favor_NordBroadOldWays_SkyRoadEndurance",
+          "spell": "PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance"
+        },
+        {
+          "familyId": "HonorableOrdeal",
+          "runtimeFamilyValue": 12,
+          "triggerLabel": "honorable ordeal",
+          "bucket": "Momentary combat",
+          "surfacing": "Quiet",
+          "keyword": "PDV_FavorFamily_HonorableOrdeal",
+          "magicEffect": "PDV_Favor_NordBroadOldWays_HonorableOrdeal",
+          "spell": "PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal"
+        },
+        {
+          "familyId": "HearthAndHoldDefense",
+          "runtimeFamilyValue": 13,
+          "triggerLabel": "hearth and hold defense",
+          "bucket": "After-act",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_HoldDefense",
+          "magicEffect": "PDV_Favor_NordBroadOldWays_HearthAndHoldDefense",
+          "spell": "PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense"
+        },
+        {
+          "familyId": "DeathRightAncestorQuiet",
+          "runtimeFamilyValue": 14,
+          "triggerLabel": "death-right and ancestor quiet",
+          "bucket": "After-act",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_AncestorQuiet",
+          "magicEffect": "PDV_Favor_NordBroadOldWays_DeathRightAncestorQuiet",
+          "spell": "PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet"
+        },
+        {
+          "familyId": "HiddenTalosDefiance",
+          "runtimeFamilyValue": 15,
+          "triggerLabel": "hidden Talos defiance with restraint",
+          "bucket": "After-act",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_TalosPressure",
+          "magicEffect": "PDV_Favor_NordBroadOldWays_HiddenTalosDefiance",
+          "spell": "PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance"
+        }
+      ]
+    },
+    {
+      "laneId": "NordBroadNineDivines",
+      "runtimeLaneValue": 3,
+      "type": "broad",
+      "requires": {
+        "originRace": "Nord",
+        "patronState": "Broad",
+        "baselineState": "NineDivines",
+        "maximumTierSemantic": 2
+      },
+      "families": [
+        {
+          "familyId": "KynarethRoadGrace",
+          "runtimeFamilyValue": 21,
+          "triggerLabel": "Kynareth's road grace",
+          "bucket": "Environmental",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_RoadGrace",
+          "magicEffect": "PDV_Favor_NordBroadNineDivines_KynarethRoadGrace",
+          "spell": "PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace"
+        },
+        {
+          "familyId": "HouseholdAndMercyDuty",
+          "runtimeFamilyValue": 22,
+          "triggerLabel": "household and mercy duty",
+          "bucket": "After-act",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_MercyDuty",
+          "magicEffect": "PDV_Favor_NordBroadNineDivines_HouseholdAndMercyDuty",
+          "spell": "PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty"
+        },
+        {
+          "familyId": "ProperDeathAndAntiNecromancy",
+          "runtimeFamilyValue": 23,
+          "triggerLabel": "proper death and anti-necromancy",
+          "bucket": "After-act",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_ProperDeath",
+          "magicEffect": "PDV_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy",
+          "spell": "PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy"
+        },
+        {
+          "familyId": "HonestWorkAndLearnedCraft",
+          "runtimeFamilyValue": 24,
+          "triggerLabel": "honest work and learned craft",
+          "bucket": "After-act",
+          "surfacing": "Quiet",
+          "keyword": "PDV_FavorFamily_HonestWork",
+          "magicEffect": "PDV_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft",
+          "spell": "PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft"
+        },
+        {
+          "familyId": "TalosPressureInsideTheNine",
+          "runtimeFamilyValue": 25,
+          "triggerLabel": "Talos pressure inside the Nine",
+          "bucket": "After-act",
+          "surfacing": "Noted",
+          "keyword": "PDV_FavorFamily_TalosPressure",
+          "magicEffect": "PDV_Favor_NordBroadNineDivines_TalosPressureInsideTheNine",
+          "spell": "PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine"
+        }
+      ]
+    }
+  ],
+  "verifierExpectations": {
+    "strictFlag": "--strict-phase12",
+    "rules": [
+      "every required spell and magic effect record exists",
+      "every listed family keyword exists",
+      "every manager property is wired",
+      "the Nord pantheon baseline track is wired and labeled for OldWays and NineDivines",
+      "focused Kyne exposes exactly 4 trigger families",
+      "each Nord broad lane exposes exactly 5 trigger families",
+      "broad Nord lanes remain capped at Faithful or Tier 2 semantics",
+      "the manager source contains the one-active cap, expiry, and per-lane last-trigger storage contract"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "Kyne Champion can trigger all 4 focused Kyne favor families",
+      "Nord broad Old Ways can trigger all 5 broad-lane families while broad worship is active and baseline is OldWays",
+      "Nord broad Nine Divines can trigger all 5 broad-lane families while broad worship is active and baseline is NineDivines"
+    ],
+    "negative": [
+      "wrong active deity does not trigger focused Kyne favors",
+      "Kyne below Champion does not trigger focused Kyne favors",
+      "non-Nord does not trigger Nord broad lanes",
+      "active primary patron suppresses broad Nord favor activation",
+      "an active favor suppresses a second favor trigger until expiry"
+    ],
+    "persistence": [
+      "active favor survives save/load",
+      "expired favor clears after load and does not remain stuck on the player"
+    ]
+  }
+}

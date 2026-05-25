@@ -71,6 +71,12 @@ const PHASE11_PRIVILEGE_PILOT_MANIFEST = path.join(
   "authoring",
   "PDV_Phase11PrivilegePilot.manifest.json",
 );
+const PHASE12_CONTEXTUAL_FAVOR_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase12ContextualFavorPilot.manifest.json",
+);
 const PATCH_RULES_DIR = path.join(
   PROJECT_ROOT,
   "references",
@@ -572,6 +578,7 @@ class Verifier {
     strictPhase9 = false,
     strictPhase10 = false,
     strictPhase11 = false,
+    strictPhase12 = false,
     strictKhajiit = false,
     strictCommitment = false,
     strictNeglectDecay = false,
@@ -585,6 +592,7 @@ class Verifier {
     this.strictPhase9 = strictPhase9;
     this.strictPhase10 = strictPhase10;
     this.strictPhase11 = strictPhase11;
+    this.strictPhase12 = strictPhase12;
     this.strictKhajiit = strictKhajiit;
     this.strictCommitment = strictCommitment;
     this.strictNeglectDecay = strictNeglectDecay;
@@ -592,6 +600,7 @@ class Verifier {
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
     this.recordDetails = new Map();
+    this.recordDetailsByFormid = new Map();
   }
 
   add(status, check, detail, filePath = null) {
@@ -687,6 +696,14 @@ class Verifier {
     }
   }
 
+  phase12Gap(check, detail, filePath = null) {
+    if (this.strictPhase12) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   khajiitGap(check, detail, filePath = null) {
     if (this.strictKhajiit) {
       this.fail(check, detail, filePath);
@@ -736,6 +753,7 @@ class Verifier {
       this.checkCommitment();
       this.checkNeglectDecay();
       this.checkPhase11();
+      this.checkPhase12();
       this.checkOfflinePatcherRules();
       this.checkPreflightOverlayPatch();
     }
@@ -838,6 +856,7 @@ class Verifier {
 
     const unnamed = (plugin.records || [])
       .filter((record) => !record.edid && String(record.type || "").toUpperCase() !== "NAVI")
+      .filter((record) => !(this.strictPhase11 && String(record.type || "").toUpperCase() === "INFO"))
       .map((record) => `${record.type} ${record.formid}`);
     if (unnamed.length) {
       this.warn("Unnamed records", `Records without EditorID found: ${unnamed.join(", ")}`, PDV_ESP);
@@ -848,6 +867,13 @@ class Verifier {
     const wantedFormids = [...this.recordsByEdid.values()]
       .map((record) => record.formid)
       .filter(Boolean);
+    if (this.strictPhase11) {
+      for (const record of this.recordsByFormid.values()) {
+        if (record.type === "INFO" && record.formid) {
+          wantedFormids.push(record.formid);
+        }
+      }
+    }
     if (!wantedFormids.length) {
       return;
     }
@@ -874,6 +900,9 @@ class Verifier {
     }
 
     for (const record of response.records || []) {
+      if (record.success && record.formid) {
+        this.recordDetailsByFormid.set(record.formid, record);
+      }
       if (record.success && record.editor_id) {
         this.recordDetails.set(record.editor_id, record);
       }
@@ -1367,6 +1396,191 @@ class Verifier {
         "Live dialogue readback is skipped because the manifest is prep-only.",
         PHASE11_PRIVILEGE_PILOT_MANIFEST,
       );
+    }
+  }
+
+  checkPhase12() {
+    const manifest = this.checkPhase12ContextualFavorManifest();
+    if (!manifest) {
+      return;
+    }
+
+    this.checkPhase12LaneCounts(manifest);
+    this.checkPhase12SourceContracts();
+    this.checkPhase12ManagerRecord(manifest);
+    this.checkPhase12FavorRecords(manifest);
+  }
+
+  checkPhase12ContextualFavorManifest() {
+    if (!exists(PHASE12_CONTEXTUAL_FAVOR_MANIFEST)) {
+      this.phase12Gap(
+        "Phase 12 contextual favor manifest",
+        "Phase 12 contextual favor manifest is missing.",
+        PHASE12_CONTEXTUAL_FAVOR_MANIFEST,
+      );
+      return null;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(PHASE12_CONTEXTUAL_FAVOR_MANIFEST, "utf8"));
+    } catch (error) {
+      this.fail("Phase 12 contextual favor manifest", `Manifest could not be parsed: ${error.message}`, PHASE12_CONTEXTUAL_FAVOR_MANIFEST);
+      return null;
+    }
+
+    const laneIds = (parsed.lanes || []).map((lane) => lane.laneId);
+    const implementationStatus = parsed.implementationStatus;
+    if (
+      parsed.id === "phase12-contextual-favor-pilot"
+      && parsed.manager?.record === "PDV__ManagerQuest"
+      && laneIds.includes("Kyne")
+      && laneIds.includes("NordBroadOldWays")
+      && laneIds.includes("NordBroadNineDivines")
+      && ["manual-shells-required", "shells-filled", "runtime-proven"].includes(implementationStatus)
+    ) {
+      this.pass(
+        "Phase 12 contextual favor manifest",
+        `Manifest locks focused Kyne plus both Nord broad lanes with status ${implementationStatus}.`,
+        PHASE12_CONTEXTUAL_FAVOR_MANIFEST,
+      );
+    } else {
+      this.phase12Gap(
+        "Phase 12 contextual favor manifest",
+        "Manifest does not match the locked Phase 12 focused Kyne plus Nord broad-lane contract.",
+        PHASE12_CONTEXTUAL_FAVOR_MANIFEST,
+      );
+    }
+
+    return parsed;
+  }
+
+  checkPhase12LaneCounts(manifest) {
+    for (const lane of manifest.lanes || []) {
+      const familyCount = Array.isArray(lane.families) ? lane.families.length : 0;
+      if (lane.laneId === "Kyne" && familyCount === 4) {
+        this.pass("Phase 12 lane count", "Focused Kyne exposes 4 trigger families.", PHASE12_CONTEXTUAL_FAVOR_MANIFEST);
+      } else if ((lane.laneId === "NordBroadOldWays" || lane.laneId === "NordBroadNineDivines") && familyCount === 5) {
+        this.pass("Phase 12 lane count", `${lane.laneId} exposes 5 trigger families.`, PHASE12_CONTEXTUAL_FAVOR_MANIFEST);
+      } else {
+        this.phase12Gap("Phase 12 lane count", `${lane.laneId} exposes ${familyCount} trigger families.`, PHASE12_CONTEXTUAL_FAVOR_MANIFEST);
+      }
+    }
+  }
+
+  checkPhase12SourceContracts() {
+    this.checkSourceContains("Phase 12 source", "PDV__ManagerQuest", [
+      "PDV_StateTrack Property PDV_NordPantheonBaselineTrack Auto",
+      "Spell Property PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery Auto",
+      "Spell Property PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance Auto",
+      "Spell Property PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine Auto",
+      "Function UpdateContextualFavorRuntime()",
+      "Bool Function TryActivateContextualFavor(Int laneValue, Int familyValue, String reason)",
+      "StorageUtil.SetIntValue(None, \"PDV.Favor.ActiveLane\", laneValue)",
+      "StorageUtil.SetIntValue(None, \"PDV.Favor.ActiveFamily\", familyValue)",
+      "StorageUtil.SetStringValue(None, \"PDV.Favor.ActiveSpell\"",
+      "StorageUtil.SetFloatValue(None, \"PDV.Favor.ActiveExpiresAt\"",
+      "return FAVOR_LANE_NORD_BROAD_OLD_WAYS",
+      "return FAVOR_LANE_NORD_BROAD_NINE_DIVINES",
+      "ClearActiveFavor(\"patron_state_change\")",
+      "String Function GetContextualFavorSummary()",
+    ], this.phase12Gap.bind(this));
+
+    this.checkSourceContains("Phase 12 source", "PDV_MCM", [
+      "Set Broad worship",
+      "Nord baseline OldWays",
+      "Nord baseline NineDivines",
+      "Cycle favor lane",
+      "Cycle favor family",
+      "Trigger selected favor",
+      "Clear active favor",
+      "manager.DebugTriggerSelectedContextualFavor()",
+      "manager.DebugSetNordPantheonBaseline(manager.NORD_BASELINE_OLD_WAYS)",
+      "manager.DebugSetNordPantheonBaseline(manager.NORD_BASELINE_NINE_DIVINES)",
+    ], this.phase12Gap.bind(this));
+  }
+
+  checkPhase12ManagerRecord(manifest) {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV__ManagerQuest");
+    if (!script) {
+      return;
+    }
+
+    const props = propertyMap(script);
+    for (const propName of manifest.manager?.requiredProperties || []) {
+      const expectedEdid = propName === "PDV_NordPantheonBaselineTrack"
+        ? manifest.nordBaseline?.track
+        : propName;
+      this.checkObjectPropertyTarget("Phase 12 manager property", props, propName, expectedEdid, this.phase12Gap.bind(this));
+    }
+  }
+
+  checkPhase12FavorRecords(manifest) {
+    const keywordTargets = new Map();
+    for (const lane of manifest.lanes || []) {
+      for (const family of lane.families || []) {
+        this.checkPhase12RecordType(family.magicEffect, "MGEF");
+        this.checkPhase12RecordType(family.spell, "SPEL");
+        this.checkPhase12SpellEffect(family.spell, family.magicEffect);
+        if (!keywordTargets.has(family.keyword)) {
+          keywordTargets.set(family.keyword, []);
+          this.checkPhase12RecordType(family.keyword, "KYWD");
+        }
+        keywordTargets.get(family.keyword).push(family.magicEffect);
+      }
+    }
+
+    for (const [keywordEdid, effectEdids] of keywordTargets.entries()) {
+      for (const effectEdid of effectEdids) {
+        this.checkPhase12MagicEffectKeyword(effectEdid, keywordEdid);
+      }
+    }
+  }
+
+  checkPhase12RecordType(edid, expectedType) {
+    const record = this.recordsByEdid.get(edid);
+    if (record?.type === expectedType) {
+      this.pass("Phase 12 favor record", `${edid} exists as ${expectedType}.`, PDV_ESP);
+    } else {
+      this.phase12Gap("Phase 12 favor record", `${edid} is missing or not a ${expectedType}.`, PDV_ESP);
+    }
+  }
+
+  checkPhase12SpellEffect(spellEdid, effectEdid) {
+    const detail = this.recordDetails.get(spellEdid);
+    if (!detail) {
+      return;
+    }
+
+    const fields = detail.fields || {};
+    const effects = Array.isArray(fields.Effects) ? fields.Effects : [];
+    const expectedFormid = this.recordsByEdid.get(effectEdid)?.formid;
+    const firstEffect = effects[0] || {};
+    if (expectedFormid && firstEffect.BaseEffect === expectedFormid) {
+      this.pass("Phase 12 spell membership", `${spellEdid} points at ${effectEdid}.`, PDV_ESP);
+    } else {
+      this.phase12Gap("Phase 12 spell membership", `${spellEdid} does not point at ${effectEdid}.`, PDV_ESP);
+    }
+  }
+
+  checkPhase12MagicEffectKeyword(effectEdid, keywordEdid) {
+    const detail = this.recordDetails.get(effectEdid);
+    if (!detail) {
+      return;
+    }
+
+    const fields = detail.fields || {};
+    const keywordValues = Array.isArray(fields.Keywords) ? fields.Keywords : [];
+    const keywordEdids = keywordValues.map((value) => formidToEdid(value, this.recordsByEdid) || value);
+    if (keywordEdids.includes(keywordEdid)) {
+      this.pass("Phase 12 favor keyword", `${effectEdid} includes ${keywordEdid}.`, PDV_ESP);
+    } else {
+      this.phase12Gap("Phase 12 favor keyword", `${effectEdid} is missing ${keywordEdid}.`, PDV_ESP);
     }
   }
 
@@ -1897,7 +2111,9 @@ class Verifier {
   checkPhase11ArngeirDialogueRecords() {
     const branchRecord = this.recordsByEdid.get(PHASE11_ARNGEIR_BRANCH);
     const topicRecord = this.recordsByEdid.get(PHASE11_ARNGEIR_TOPIC);
-    const infoRecord = this.recordsByEdid.get(PHASE11_ARNGEIR_INFO);
+    const topic = this.recordDetails.get(PHASE11_ARNGEIR_TOPIC)?.fields || {};
+    const infoCandidate = this.resolvePhase11ArngeirInfo(topic);
+    const infoRecord = infoCandidate?.record || this.recordsByEdid.get(PHASE11_ARNGEIR_INFO);
 
     if (branchRecord?.type === "DLBR") {
       this.pass("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_BRANCH} exists as DLBR.`, PDV_ESP);
@@ -1912,7 +2128,8 @@ class Verifier {
     }
 
     if (infoRecord?.type === "INFO") {
-      this.pass("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_INFO} exists as INFO.`, PDV_ESP);
+      const label = infoRecord.edid || infoRecord.formid || PHASE11_ARNGEIR_INFO;
+      this.pass("Phase 11 Arngeir dialogue record", `${label} exists as INFO.`, PDV_ESP);
     } else {
       this.phase11Gap("Phase 11 Arngeir dialogue record", `${PHASE11_ARNGEIR_INFO} is missing or not an INFO.`, PDV_ESP);
     }
@@ -1929,7 +2146,6 @@ class Verifier {
       this.phase11Gap("Phase 11 Arngeir dialogue branch", "Branch category/flags/starting topic do not match the PDV top-level contract.", PDV_ESP);
     }
 
-    const topic = this.recordDetails.get(PHASE11_ARNGEIR_TOPIC)?.fields || {};
     if (topic.Quest === this.recordsByEdid.get("PDV__ManagerQuest")?.formid && topic.Branch === branchRecord?.formid) {
       this.pass("Phase 11 Arngeir dialogue topic", "Topic is owned by PDV__ManagerQuest and linked to the PDV branch.", PDV_ESP);
     } else {
@@ -1941,18 +2157,52 @@ class Verifier {
       this.phase11Gap("Phase 11 Arngeir dialogue topic", "Topic prompt/category/subtype do not match the contract.", PDV_ESP);
     }
 
-    const info = this.recordDetails.get(PHASE11_ARNGEIR_INFO)?.fields || {};
-    this.checkPhase11ArngeirInfo(info, infoRecord?.formid, topicRecord?.formid);
+    const info = infoCandidate?.fields || {};
+    this.checkPhase11ArngeirInfo(info, infoRecord?.formid, topicRecord?.formid, infoCandidate?.source);
   }
 
-  checkPhase11ArngeirInfo(info, infoFormid, topicFormid) {
+  resolvePhase11ArngeirInfo(topic) {
+    const namedInfoRecord = this.recordsByEdid.get(PHASE11_ARNGEIR_INFO);
+    const namedInfo = namedInfoRecord ? this.recordDetailsByFormid.get(namedInfoRecord.formid)?.fields : null;
+    if (namedInfo) {
+      return { record: namedInfoRecord, fields: namedInfo, source: "named INFO EditorID" };
+    }
+
+    const topicResponses = Array.isArray(topic.Responses) ? topic.Responses : [];
+    const topicInfo = topicResponses.find((candidate) =>
+      candidate?.Prompt === PHASE11_ARNGEIR_PROMPT
+      && candidate?.Speaker === PHASE11_ARNGEIR_NPC_FORMID
+      && candidate?.Responses?.[0]?.Text === PHASE11_ARNGEIR_LINE);
+    const unnamedInfoRecord = [...this.recordsByFormid.values()].find((record) => {
+      if (record.type !== "INFO" || record.edid) {
+        return false;
+      }
+      const detail = this.recordDetailsByFormid.get(record.formid)?.fields || {};
+      return detail.Prompt === PHASE11_ARNGEIR_PROMPT
+        && detail.Speaker === PHASE11_ARNGEIR_NPC_FORMID
+        && detail.Responses?.[0]?.Text === PHASE11_ARNGEIR_LINE;
+    });
+
+    if (topicInfo || unnamedInfoRecord) {
+      return {
+        record: unnamedInfoRecord || { type: "INFO", formid: null },
+        fields: topicInfo || this.recordDetailsByFormid.get(unnamedInfoRecord.formid)?.fields || {},
+        source: unnamedInfoRecord ? "CK-authored unnamed INFO" : "topic embedded INFO payload",
+      };
+    }
+
+    return null;
+  }
+
+  checkPhase11ArngeirInfo(info, infoFormid, topicFormid, source = "INFO") {
     if (!info || !Object.keys(info).length) {
       this.phase11Gap("Phase 11 Arngeir dialogue info", "INFO detail readback is missing.", PDV_ESP);
       return;
     }
 
-    if (info.Topic === topicFormid && info.Speaker === PHASE11_ARNGEIR_NPC_FORMID && info.Prompt === PHASE11_ARNGEIR_PROMPT) {
-      this.pass("Phase 11 Arngeir dialogue info", "INFO is tied to the PDV topic, Arngeir speaker, and expected prompt.", PDV_ESP);
+    const topicMatches = !info.Topic || info.Topic === topicFormid;
+    if (topicMatches && info.Speaker === PHASE11_ARNGEIR_NPC_FORMID && info.Prompt === PHASE11_ARNGEIR_PROMPT) {
+      this.pass("Phase 11 Arngeir dialogue info", `INFO is tied to the PDV topic, Arngeir speaker, and expected prompt (${source}).`, PDV_ESP);
     } else {
       this.phase11Gap("Phase 11 Arngeir dialogue info", "INFO topic/speaker/prompt readback does not match the Arngeir contract.", PDV_ESP);
     }
@@ -3945,6 +4195,7 @@ function parseArgs(argv) {
     strictPhase9: false,
     strictPhase10: false,
     strictPhase11: false,
+    strictPhase12: false,
     strictKhajiit: false,
     strictCommitment: false,
     strictNeglectDecay: false,
@@ -3971,6 +4222,8 @@ function parseArgs(argv) {
       args.strictPhase10 = true;
     } else if (arg === "--strict-phase11") {
       args.strictPhase11 = true;
+    } else if (arg === "--strict-phase12") {
+      args.strictPhase12 = true;
     } else if (arg === "--strict-khajiit") {
       args.strictKhajiit = true;
     } else if (arg === "--strict-commitment") {
@@ -3978,7 +4231,7 @@ function parseArgs(argv) {
     } else if (arg === "--strict-neglect-decay") {
       args.strictNeglectDecay = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11] [--strict-phase12]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -4000,6 +4253,7 @@ const verifier = new Verifier({
   strictPhase9: args.strictPhase9,
   strictPhase10: args.strictPhase10,
   strictPhase11: args.strictPhase11,
+  strictPhase12: args.strictPhase12,
   strictKhajiit: args.strictKhajiit,
   strictCommitment: args.strictCommitment,
   strictNeglectDecay: args.strictNeglectDecay,

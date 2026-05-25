@@ -92,6 +92,17 @@ Contextual favors are automatic. They are never hotbar powers, lesser powers, or
 
 Each devotional lane should use 3-5 trigger families, drawn from the same authored tables that decide what generates piety. A lane may be a focused deity, path, mode, substrate layer, or broad-worship state. The player may have only one contextual favor boost active at a time, globally across PDV. Once it expires, another fitting preferred signal can trigger a new boost.
 
+For the first live runtime pass, Phase 12 is locked to three lanes in one tranche:
+
+- focused `Kyne`
+- `Nord Broad Old Ways`
+- `Nord Broad Nine Divines`
+
+That pilot keeps two guardrails explicit:
+
+- the one-active cap suppresses new activation while another favor is active
+- Phase 12 does not replace or refresh an already-active favor in place
+
 Broad-worship lanes exist only where culturally normal and experientially useful, not for every race with multiple worship targets. First-release broad lanes are Nord, Imperial, and Redguard; Dunmer uses a special layered equivalent. Breton and Altmer do not get generic broad lanes because tradition and coherence are their real organizing lanes.
 
 Dunmer's special layered equivalent can trigger contextual favor before a primary Good Daedra focus. This should present as the shared ancestor + Reclamations layer answering back, not as generic broad pantheon worship. Shared Dunmer favors are usually quieter than primary Azura, Boethiah, or Mephala favors.
@@ -135,7 +146,7 @@ Rollout is pilot-first: populate and review Nord, Imperial, and Redguard before 
 
 Pilot table rows may live in the race sheets as `Status: Pilot draft` until review clears them. Architecture should not absorb race-specific pilot rows until the pilot has proven the format.
 
-Pilot scope is broad-worship lanes only. Each pilot race may include a short focused contrast note, but full focused-deity tables wait until the broad lanes are locked.
+The broader race-sheet pilot remains broad-lane first, but Phase 12's implementation pilot adds one focused contrast lane as the runtime depth proof: `Kyne` alongside the two Nord broad lanes. This is a runtime architecture concession, not a change in the long-form race-sheet review order.
 
 The pilot clears only when each pilot broad-worship lane has 3-5 trigger families, each trigger family has a strong vanilla hook candidate or explicit custom/post-1.0 note, every row has a favor bucket and surfacing level, and each race has a short user-experience sentence proving it does not feel like the other two broad-worship lanes.
 

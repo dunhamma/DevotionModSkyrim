@@ -133,6 +133,7 @@ function parseArgs(argv) {
     strictPhase9: false,
     strictPhase10: false,
     strictPhase11: false,
+    strictPhase12: false,
     strictKhajiit: false,
     strictCommitment: false,
     strictNeglectDecay: false,
@@ -179,6 +180,8 @@ function parseArgs(argv) {
       args.strictPhase10 = true;
     } else if (arg === "--strict-phase11") {
       args.strictPhase11 = true;
+    } else if (arg === "--strict-phase12") {
+      args.strictPhase12 = true;
     } else if (arg === "--strict-khajiit") {
       args.strictKhajiit = true;
     } else if (arg === "--strict-commitment") {
@@ -221,6 +224,7 @@ function usage(error = null, exitCode = 2) {
     "  --strict-phase9       Pass --strict-phase9 to the verifier.",
     "  --strict-phase10      Pass --strict-phase10 to the verifier.",
     "  --strict-phase11      Pass --strict-phase11 to the verifier.",
+    "  --strict-phase12      Pass --strict-phase12 to the verifier.",
     "  --strict-khajiit      Pass --strict-khajiit to the verifier.",
     "  --strict-commitment   Pass --strict-commitment to the verifier.",
     "  --strict-neglect-decay Pass --strict-neglect-decay to the verifier.",
@@ -353,6 +357,9 @@ function runVerifier(args) {
   }
   if (args.strictPhase11) {
     verifierArgs.push("--strict-phase11");
+  }
+  if (args.strictPhase12) {
+    verifierArgs.push("--strict-phase12");
   }
   if (args.strictKhajiit) {
     verifierArgs.push("--strict-khajiit");

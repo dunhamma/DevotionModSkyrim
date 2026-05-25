@@ -38,6 +38,11 @@ The implemented native commands are `heartbeat`, `version`/`environment`, and
 `capabilities`. Mutating CK commands deliberately return `UNSAFE_BLOCKED` until
 their CK object handler and MO2 readback verifier are both implemented.
 
+The Node live runner talks to the named pipe directly first. On Windows, if
+Node's stream client cannot write to CKPE's message-mode pipe, the runner falls
+back to a local PowerShell `NamedPipeClientStream` call. This is still the same
+local bridge transport; it only changes the client-side pipe implementation.
+
 ## Build
 
 The project file is:

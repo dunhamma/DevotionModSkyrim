@@ -1,7 +1,12 @@
 {
+  "schema": "creation-authoring.v1",
+  "project": "player-devotion-phase11",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "output": "PlayerDevotion_Framework.esp",
   "id": "phase11-privilege-pilot",
   "title": "PDV Phase 11 privilege pilot prep contract",
-  "implementationStatus": "prep-only",
+  "implementationStatus": "live-dialogue-authored",
   "notes": [
     "D-10 is resolved to the Arngeir/Kynareth recognition pilot.",
     "The generated PDV-owned Arngeir dialogue branch/topic/info records were removed on 2026-05-24 after CrashLogger tied a CTD to the generated dialogue topic/branch shape.",
@@ -45,6 +50,10 @@
     {
       "id": "phase11-arngeir-branch",
       "kind": "dialogue.branch.create",
+      "target": "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch",
+      "mode": "create",
+      "ckSemanticsRequired": true,
+      "preferredBackend": "ckpe-bridge",
       "authoringPath": "manual-ck-only",
       "editorId": "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch",
       "ownerQuest": "PDV__ManagerQuest",
@@ -56,24 +65,50 @@
       "notes": [
         "Create in CK, not with the Mutagen next-packet helper.",
         "Do not restore the removed generated branch shape from 2026-05-24."
-      ]
+      ],
+      "payload": {
+        "editorId": "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch",
+        "ownerQuest": "PDV__ManagerQuest",
+        "category": "Player",
+        "flags": [
+          "TopLevel"
+        ],
+        "startingTopic": "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic"
+      }
     },
     {
       "id": "phase11-arngeir-topic",
       "kind": "dialogue.topic.create",
+      "target": "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic",
+      "mode": "create",
+      "ckSemanticsRequired": true,
+      "preferredBackend": "ckpe-bridge",
       "authoringPath": "manual-ck-only",
       "editorId": "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic",
       "ownerQuest": "PDV__ManagerQuest",
       "branch": "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch",
       "prompt": "Has Kyne marked my path?",
       "category": "Topic",
-      "subtype": "Custom"
+      "subtype": "Custom",
+      "payload": {
+        "editorId": "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic",
+        "ownerQuest": "PDV__ManagerQuest",
+        "branch": "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch",
+        "prompt": "Has Kyne marked my path?",
+        "category": "Topic",
+        "subtype": "Custom"
+      }
     },
     {
       "id": "phase11-arngeir-info",
       "kind": "dialogue.info.create",
+      "target": "PDV_INFO_Phase11ArngeirKyneRecognition",
+      "mode": "create",
+      "ckSemanticsRequired": true,
+      "preferredBackend": "ckpe-bridge",
       "authoringPath": "manual-ck-only",
       "editorId": "PDV_INFO_Phase11ArngeirKyneRecognition",
+      "ckInfoIdentity": "CK may save Topic Info records without an EditorID; verify by topic, speaker, prompt, response line, and conditions.",
       "topic": "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic",
       "speaker": "Arngeir",
       "speakerForm": "Skyrim.esm:02C6C7",
@@ -112,18 +147,63 @@
         "non-Nord origin",
         "wrong active deity",
         "active Kyne tier below Champion"
-      ]
+      ],
+      "payload": {
+        "editorId": "PDV_INFO_Phase11ArngeirKyneRecognition",
+        "ckInfoIdentity": "unnamed-topic-info-accepted",
+        "topic": "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic",
+        "speaker": "Arngeir",
+        "speakerForm": "Skyrim.esm:02C6C7",
+        "prompt": "Has Kyne marked my path?",
+        "responseLine": "The wind has marked you, Dragonborn. Walk with Kyne's breath.",
+        "conditions": [
+          {
+            "function": "GetIsID",
+            "subject": "Speaker",
+            "operator": "==",
+            "value": "Arngeir"
+          },
+          {
+            "function": "GetGlobalValue",
+            "global": "PDV_GLO_OriginRace",
+            "operator": "==",
+            "value": 0,
+            "meaning": "Nord"
+          },
+          {
+            "function": "GetGlobalValue",
+            "global": "PDV_GLO_ActiveDeityIndex",
+            "operator": "==",
+            "value": 0,
+            "meaning": "Kyne"
+          },
+          {
+            "function": "GetGlobalValue",
+            "global": "PDV_GLO_ActiveTier",
+            "operator": ">=",
+            "value": 3,
+            "meaning": "Champion"
+          }
+        ]
+      }
     },
     {
       "id": "phase11-seq-refresh",
       "kind": "artifact.seq.generate",
+      "target": "PlayerDevotion_Framework.seq",
+      "mode": "update",
+      "ckSemanticsRequired": true,
+      "preferredBackend": "ckpe-bridge",
       "authoringPath": "manual-after-dialogue",
       "plugin": "PlayerDevotion_Framework.esp",
       "requiredAfter": [
         "phase11-arngeir-branch",
         "phase11-arngeir-topic",
         "phase11-arngeir-info"
-      ]
+      ],
+      "payload": {
+        "plugin": "PlayerDevotion_Framework.esp"
+      }
     }
   ]
 }

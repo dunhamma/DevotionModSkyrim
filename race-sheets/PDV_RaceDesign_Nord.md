@@ -94,9 +94,12 @@ Step 4: Primary patron committed → Tier 3 (Devoted) becomes reachable
 
 ## Contextual Favor Pilot Table
 
-**Status:** Pilot cleared (2026-05-18 cross-pilot pass)
+**Status:** Pilot cleared for broad-lane table shape (2026-05-18 cross-pilot pass). Phase 12 runtime lock adds one focused contrast lane: `Kyne`.
 
-**Pilot scope:** Broad-worship lanes only. Focused patron tables wait until this broad-lane pattern clears review.
+**Pilot scope:** Phase 12 implements one focused patron lane plus both broad Nord lanes:
+- focused `Kyne`
+- `Broad Old Ways`
+- `Broad Nine Divines`
 
 **User-experience proof:** Nord broad worship should feel like a hold-born mythic life where weather, ancestors, household duty, honorable combat, and Talos pressure occasionally rhyme together. It is deed-led and mythic, not Imperial civic infrastructure and not Redguard sect duty.
 
@@ -136,6 +139,15 @@ Step 4: Primary patron committed → Tier 3 (Devoted) becomes reachable
 | Broad Nine Divines | Proper death and anti-necromancy | Hall of the Dead quests; Arkay shrine or priest interactions; necromancer operation completion; undead boss completion | After-act | Noted | Arkay plus Stendarr. A Nord in the Divines frame treats death order as proper religious maintenance. |
 | Broad Nine Divines | Honest work and learned craft | Meaningful crafting completion; merchant/trade quest stages; skill book read; College-adjacent learning beats | After-act | Quiet | Zenithar plus Julianos/Dibella. Must require meaningful quality or curated quest beats, not raw craft-count grinding. |
 | Broad Nine Divines | Talos pressure inside the Nine | Hidden Talos shrine activation; Thalmor/Talos quest stages; public restraint/private reverence state; Civil War religious beats | After-act | Noted / Marked if high-cost | The Nine frame makes Talos pressure a contradiction to carry. Mark only costly faithful moments, not ordinary political preference. |
+
+### Focused Kyne
+
+| Lane | Trigger family | Hook candidates | Favor bucket | Surfacing | Notes |
+|---|---|---|---|---|---|
+| Focused Kyne | Open-sky rest recovery | Outdoor sleep event; wilderness/outdoor location keywords; player alias sleep registration | Environmental | Noted | The simplest first live Kyne proof. Must come from genuine outdoor rest, not indoor beds or menu abuse. |
+| Focused Kyne | Storm-road grace | Wilderness travel evidence; weather or cold-state context where available; mountain or road journey beats | Environmental | Noted | The road feels lighter under Kyne. Keep it conservative; ordinary walking loops and fast travel do not count. |
+| Focused Kyne | Guided hunt | Direct-player animal kill; no follower assist where detectable; no sneak-opener farming where detectable | Momentary combat | Quiet | The hunt should feel guided, not like generic wildlife slaughter. Use real hunt posture and anti-farm discipline. |
+| Focused Kyne | Wind-marked passage | Shout/Thu'um route; Word Wall or mountain pilgrimage beats; outdoor sky-facing travel context | After-act | Noted | The wind answers back. This is the Phase 12 shout-facing contrast to the broader Nord weather/travel rows. |
 
 **Focused contrast note:** Focused patron design should later sharpen one voice. Focused Kyne makes the outdoors actively responsive; focused Talos makes defiance personal and dangerous; focused Shor makes honorable ordeal feel like Sovngarde looking back. Broad Nord worship remains blended, softer, culturally normal, and capped at Faithful.
 

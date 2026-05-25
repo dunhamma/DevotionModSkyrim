@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { analyzeDrift, buildCkCommandPacket, buildPatchRequest, buildReviewJson, createPlan, evaluatePromotionGates, handleAuthoringRequest, migratePdvAuthorManifest, normalizeManifest, normalizeMo2RecordDetail, normalizeProfile, parseToolResult, promoteRunReport, runPipeline, verifyManifest } from "../src/index.mjs";
+import { pipeServerNameFromPath } from "../src/ck-ipc-adapter.mjs";
 
 const profile = normalizeProfile({
   schema: "creation-profile.v1",
@@ -57,6 +58,12 @@ test("plans supported operations against available backends", () => {
   assert.equal(plan.summary.ready, 2);
   assert.equal(plan.summary.manual, 0);
   assert.equal(plan.operations[0].backend, "mo2-mcp-patch-request");
+});
+
+test("normalizes Windows named-pipe paths for the PowerShell fallback", () => {
+  assert.equal(pipeServerNameFromPath("\\\\.\\pipe\\CreationKitAuthoringBridge"), "CreationKitAuthoringBridge");
+  assert.equal(pipeServerNameFromPath("//./pipe/CreationKitAuthoringBridge"), "CreationKitAuthoringBridge");
+  assert.equal(pipeServerNameFromPath("CreationKitAuthoringBridge"), "CreationKitAuthoringBridge");
 });
 
 test("builds a deterministic patch request", () => {
