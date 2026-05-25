@@ -1408,6 +1408,7 @@ class Verifier {
     this.checkPhase12LaneCounts(manifest);
     this.checkPhase12SourceContracts();
     this.checkPhase12ManagerRecord(manifest);
+    this.checkPhase12NordBaselineTrack(manifest);
     this.checkPhase12FavorRecords(manifest);
   }
 
@@ -1437,7 +1438,7 @@ class Verifier {
       && laneIds.includes("Kyne")
       && laneIds.includes("NordBroadOldWays")
       && laneIds.includes("NordBroadNineDivines")
-      && ["manual-shells-required", "shells-filled", "runtime-proven"].includes(implementationStatus)
+      && ["manual-shells-required", "helper-can-create-missing", "shells-filled", "runtime-proven"].includes(implementationStatus)
     ) {
       this.pass(
         "Phase 12 contextual favor manifest",
@@ -1517,6 +1518,26 @@ class Verifier {
         ? manifest.nordBaseline?.track
         : propName;
       this.checkObjectPropertyTarget("Phase 12 manager property", props, propName, expectedEdid, this.phase12Gap.bind(this));
+    }
+  }
+
+  checkPhase12NordBaselineTrack(manifest) {
+    const trackEdid = manifest.nordBaseline?.track;
+    if (!trackEdid) {
+      return;
+    }
+
+    this.checkPhase12RecordType(trackEdid, "QUST");
+    const detail = this.recordDetails.get(trackEdid);
+    if (!detail) {
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV_StateTrack");
+    if (script) {
+      this.pass("Phase 12 nord baseline track", `${trackEdid} is attached to PDV_StateTrack.`, PDV_ESP);
+    } else {
+      this.phase12Gap("Phase 12 nord baseline track", `${trackEdid} is missing the PDV_StateTrack VMAD attachment.`, PDV_ESP);
     }
   }
 

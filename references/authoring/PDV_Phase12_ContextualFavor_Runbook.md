@@ -4,13 +4,13 @@
 
 This runbook closes the gap between the Phase 12 manifest, the live manager runtime, and the narrow source-plugin helper.
 
-Phase 12 is intentionally conservative:
+Phase 12 remains intentionally narrow:
 
-- manual CK/xEdit shells are acceptable for new `MGEF` / `SPEL` / `KYWD` assets
-- `tools/pdv-phase12-author` fills and wires those shells
-- the verifier proves the runtime contract, record presence, lane counts, and manager wiring
+- `tools/pdv-phase12-author` can create the missing Phase 12 `KYWD` / `MGEF` / `SPEL` records when invoked with `--create-missing`
+- the helper also fills spell/effect membership, family keywords, the Nord baseline track script attachment, and manager property wiring
+- the verifier proves the runtime contract, record presence, lane counts, manager wiring, and Nord baseline track attachment
 
-Do not widen the CKPE capability claim from this work. Generic safe source-plugin `MGEF` / `SPEL` / `KYWD` creation is still out of scope.
+Do not widen the CKPE capability claim from this work. Generic safe source-plugin record creation outside the Phase 12 manifest remains out of scope.
 
 ## Locked Runtime Scope
 
@@ -22,24 +22,36 @@ The first live favor phase contains exactly three lanes:
 
 The one-active favor cap is global. Phase 12 suppresses new activation while a favor is active. It does not replace or refresh an already-active favor in place.
 
-## Manual CK/xEdit Shells
+## Normal Helper Workflow
 
-Create or confirm these shells before running the helper.
+Run dry-run first:
 
-### 1. Nord baseline track
+```powershell
+dotnet run --project .\tools\pdv-phase12-author -- --dry-run --create-missing
+```
 
-Confirm `PDV_State_NordPantheonBaseline` exists and is usable by `PDV__ManagerQuest`.
+Live write:
 
-- State labels:
-  - `OldWays = 0`
-  - `NineDivines = 1`
-- This track stores setup framing only.
-- Do not encode `Broad` or `Primary` in this track.
+```powershell
+dotnet run --project .\tools\pdv-phase12-author -- --create-missing
+```
 
-### 2. Family keywords
+Helper contract:
 
-Create:
+- takes a timestamped backup of `PlayerDevotion_Framework.esp`
+- uses `references/authoring/PDV_Phase12ContextualFavorPilot.manifest.json` as the source of truth for the Phase 12 favor record set
+- creates missing Phase 12 `KYWD`, `MGEF`, and `SPEL` records only when `--create-missing` is supplied
+- creates `PDV_State_NordPantheonBaseline` only if it is actually absent
+- fills names/descriptions, spell-to-effect membership, family keywords, the Nord baseline `PDV_StateTrack` attachment, and `PDV__ManagerQuest` object properties
+- remains conservative by default: without `--create-missing`, the helper still fails on missing records instead of creating them implicitly
 
+## Fallback Manual Path
+
+Use manual CK/xEdit creation only if the helper is blocked by a real record-type conflict or the direct in-place write path is unavailable.
+
+Manual fallback inventory:
+
+- `PDV_State_NordPantheonBaseline`
 - `PDV_FavorFamily_OpenSkyRecovery`
 - `PDV_FavorFamily_RoadGrace`
 - `PDV_FavorFamily_GuidedHunt`
@@ -51,9 +63,6 @@ Create:
 - `PDV_FavorFamily_MercyDuty`
 - `PDV_FavorFamily_ProperDeath`
 - `PDV_FavorFamily_HonestWork`
-
-### 3. Focused Kyne shells
-
 - `PDV_Favor_Kyne_OpenSkyRestRecovery`
 - `PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery`
 - `PDV_Favor_Kyne_StormRoadGrace`
@@ -62,9 +71,6 @@ Create:
 - `PDV_SPEL_Favor_Kyne_GuidedHunt`
 - `PDV_Favor_Kyne_WindMarkedPassage`
 - `PDV_SPEL_Favor_Kyne_WindMarkedPassage`
-
-### 4. Nord Broad Old Ways shells
-
 - `PDV_Favor_NordBroadOldWays_SkyRoadEndurance`
 - `PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance`
 - `PDV_Favor_NordBroadOldWays_HonorableOrdeal`
@@ -75,9 +81,6 @@ Create:
 - `PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet`
 - `PDV_Favor_NordBroadOldWays_HiddenTalosDefiance`
 - `PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance`
-
-### 5. Nord Broad Nine Divines shells
-
 - `PDV_Favor_NordBroadNineDivines_KynarethRoadGrace`
 - `PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace`
 - `PDV_Favor_NordBroadNineDivines_HouseholdAndMercyDuty`
@@ -89,32 +92,9 @@ Create:
 - `PDV_Favor_NordBroadNineDivines_TalosPressureInsideTheNine`
 - `PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine`
 
-## Helper Workflow
-
-Run dry-run first:
-
-```powershell
-dotnet run --project .\tools\pdv-phase12-author -- --dry-run
-```
-
-Live write:
-
-```powershell
-dotnet run --project .\tools\pdv-phase12-author
-```
-
-Helper contract:
-
-- takes a timestamped backup of `PlayerDevotion_Framework.esp`
-- assumes shells already exist
-- fills names/descriptions and spell-to-effect membership
-- assigns family keywords to the listed magic effects
-- wires `PDV__ManagerQuest` Phase 12 object properties
-- does not claim generic record creation support
-
 ## Verifier Workflow
 
-Once shells are present and the helper has run:
+Once the helper has run:
 
 ```powershell
 node .\tools\pdv_verify.mjs --strict-phase12
@@ -125,7 +105,8 @@ node .\tools\pdv_verify.mjs --strict-phase12 --strict-khajiit --strict-commitmen
 
 - required Phase 12 favor records
 - manager property wiring
-- Nord baseline track wiring
+- `PDV_State_NordPantheonBaseline` existing as `QUST`
+- `PDV_StateTrack` attached to `PDV_State_NordPantheonBaseline`
 - lane trigger counts
 - one-active storage contract in source
 - broad-lane Tier 2 / Faithful cap posture

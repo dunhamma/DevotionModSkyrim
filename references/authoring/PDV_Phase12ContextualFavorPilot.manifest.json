@@ -1,13 +1,13 @@
 {
   "id": "phase12-contextual-favor-pilot",
   "title": "PDV Phase 12 contextual favor and Nord breadth pilot contract",
-  "implementationStatus": "manual-shells-required",
+  "implementationStatus": "helper-can-create-missing",
   "notes": [
     "Phase 12 is a favor-first phase, not UI toast hardening and not generic CKPE bridge expansion.",
     "The first live runtime tranche is focused Kyne plus the two Nord broad-worship lanes.",
     "The one-active contextual-favor cap is global. While a favor is active, new favor triggers are suppressed. This phase does not replace or refresh an already-active favor in place.",
     "Runtime ownership is hybrid split: PDV__ManagerQuest owns orchestration, while shared StorageUtil keys, family keywords, and stable favor record naming carry the effect-holder contract.",
-    "Manual CK/xEdit shells remain acceptable for the new MGEF, SPEL, and KYWD records. The Phase 12 helper must not claim generic record creation support."
+    "The Phase 12 helper can create the missing Phase 12 KYWD, MGEF, and SPEL records when invoked with --create-missing. Generic record creation outside this manifest remains out of scope."
   ],
   "manager": {
     "record": "PDV__ManagerQuest",
@@ -54,6 +54,8 @@
           "triggerLabel": "open-sky rest recovery",
           "bucket": "Environmental",
           "surfacing": "Noted",
+          "name": "Kyne: Open-Sky Rest",
+          "description": "Kyne restores your breath after rest beneath the open sky.",
           "keyword": "PDV_FavorFamily_OpenSkyRecovery",
           "magicEffect": "PDV_Favor_Kyne_OpenSkyRestRecovery",
           "spell": "PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery"
@@ -64,6 +66,8 @@
           "triggerLabel": "storm-road grace",
           "bucket": "Environmental",
           "surfacing": "Noted",
+          "name": "Kyne: Storm-Road Grace",
+          "description": "Kyne lightens the hard road for a short while.",
           "keyword": "PDV_FavorFamily_RoadGrace",
           "magicEffect": "PDV_Favor_Kyne_StormRoadGrace",
           "spell": "PDV_SPEL_Favor_Kyne_StormRoadGrace"
@@ -74,6 +78,8 @@
           "triggerLabel": "guided hunt",
           "bucket": "Momentary combat",
           "surfacing": "Quiet",
+          "name": "Kyne: Guided Hunt",
+          "description": "The hunt briefly feels guided by Kyne's breath.",
           "keyword": "PDV_FavorFamily_GuidedHunt",
           "magicEffect": "PDV_Favor_Kyne_GuidedHunt",
           "spell": "PDV_SPEL_Favor_Kyne_GuidedHunt"
@@ -84,6 +90,8 @@
           "triggerLabel": "wind-marked passage",
           "bucket": "After-act",
           "surfacing": "Noted",
+          "name": "Kyne: Wind-Marked Passage",
+          "description": "The wind carries you for a little while.",
           "keyword": "PDV_FavorFamily_WindPassage",
           "magicEffect": "PDV_Favor_Kyne_WindMarkedPassage",
           "spell": "PDV_SPEL_Favor_Kyne_WindMarkedPassage"
@@ -107,6 +115,8 @@
           "triggerLabel": "sky-road endurance",
           "bucket": "Environmental",
           "surfacing": "Noted",
+          "name": "Old Ways: Sky-Road Endurance",
+          "description": "The old gods make the road feel briefly companionable.",
           "keyword": "PDV_FavorFamily_RoadGrace",
           "magicEffect": "PDV_Favor_NordBroadOldWays_SkyRoadEndurance",
           "spell": "PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance"
@@ -117,6 +127,8 @@
           "triggerLabel": "honorable ordeal",
           "bucket": "Momentary combat",
           "surfacing": "Quiet",
+          "name": "Old Ways: Honorable Ordeal",
+          "description": "For this fight, the Old Ways steady your courage.",
           "keyword": "PDV_FavorFamily_HonorableOrdeal",
           "magicEffect": "PDV_Favor_NordBroadOldWays_HonorableOrdeal",
           "spell": "PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal"
@@ -127,6 +139,8 @@
           "triggerLabel": "hearth and hold defense",
           "bucket": "After-act",
           "surfacing": "Noted",
+          "name": "Old Ways: Hearth and Hold",
+          "description": "Household duty and hold-defense briefly answer back.",
           "keyword": "PDV_FavorFamily_HoldDefense",
           "magicEffect": "PDV_Favor_NordBroadOldWays_HearthAndHoldDefense",
           "spell": "PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense"
@@ -137,6 +151,8 @@
           "triggerLabel": "death-right and ancestor quiet",
           "bucket": "After-act",
           "surfacing": "Noted",
+          "name": "Old Ways: Ancestor Quiet",
+          "description": "The dead settle and the old stories rest easier for a time.",
           "keyword": "PDV_FavorFamily_AncestorQuiet",
           "magicEffect": "PDV_Favor_NordBroadOldWays_DeathRightAncestorQuiet",
           "spell": "PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet"
@@ -147,6 +163,8 @@
           "triggerLabel": "hidden Talos defiance with restraint",
           "bucket": "After-act",
           "surfacing": "Noted",
+          "name": "Old Ways: Hidden Talos Defiance",
+          "description": "Costly hidden defiance leaves a brief steadiness behind.",
           "keyword": "PDV_FavorFamily_TalosPressure",
           "magicEffect": "PDV_Favor_NordBroadOldWays_HiddenTalosDefiance",
           "spell": "PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance"
@@ -170,6 +188,8 @@
           "triggerLabel": "Kynareth's road grace",
           "bucket": "Environmental",
           "surfacing": "Noted",
+          "name": "Nine Divines: Kynareth's Road Grace",
+          "description": "Kynareth briefly steadies the road ahead.",
           "keyword": "PDV_FavorFamily_RoadGrace",
           "magicEffect": "PDV_Favor_NordBroadNineDivines_KynarethRoadGrace",
           "spell": "PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace"
@@ -180,6 +200,8 @@
           "triggerLabel": "household and mercy duty",
           "bucket": "After-act",
           "surfacing": "Noted",
+          "name": "Nine Divines: Household and Mercy",
+          "description": "Mercy and household duty briefly answer in kind.",
           "keyword": "PDV_FavorFamily_MercyDuty",
           "magicEffect": "PDV_Favor_NordBroadNineDivines_HouseholdAndMercyDuty",
           "spell": "PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty"
@@ -190,6 +212,8 @@
           "triggerLabel": "proper death and anti-necromancy",
           "bucket": "After-act",
           "surfacing": "Noted",
+          "name": "Nine Divines: Proper Death",
+          "description": "The proper ordering of death leaves a brief blessing.",
           "keyword": "PDV_FavorFamily_ProperDeath",
           "magicEffect": "PDV_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy",
           "spell": "PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy"
@@ -200,6 +224,8 @@
           "triggerLabel": "honest work and learned craft",
           "bucket": "After-act",
           "surfacing": "Quiet",
+          "name": "Nine Divines: Honest Work",
+          "description": "Honest work and learned craft briefly sharpen your purpose.",
           "keyword": "PDV_FavorFamily_HonestWork",
           "magicEffect": "PDV_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft",
           "spell": "PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft"
@@ -210,6 +236,8 @@
           "triggerLabel": "Talos pressure inside the Nine",
           "bucket": "After-act",
           "surfacing": "Noted",
+          "name": "Nine Divines: Talos Pressure",
+          "description": "A costly private contradiction leaves a brief resolve behind.",
           "keyword": "PDV_FavorFamily_TalosPressure",
           "magicEffect": "PDV_Favor_NordBroadNineDivines_TalosPressureInsideTheNine",
           "spell": "PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine"
