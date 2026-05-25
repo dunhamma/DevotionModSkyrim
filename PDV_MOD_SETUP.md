@@ -20,6 +20,7 @@
 | `tools/pdv_verify.mjs` | Read-only verifier for Anvil/MO2/ESP/script wiring drift |
 | `tools/pdv_author.mjs` | Safe overlay-patch authoring helper for supported ESP wiring on existing PDV records |
 | `tools/pdv_patch.mjs` | Planning-first offline patcher for classification/distribution dry-run manifests |
+| `tools/pdv_content_verify.mjs` | Read-only verifier for the race/Daedric content manifests (ASCII, budgets, slot IDs, voice) |
 | `tools/pdv_extract_vanilla_gameplay_refs.mjs` | Read-only vanilla/DLC gameplay reference extractor |
 | `tools/pdv_skyrim_refs_bridge.mjs` | Read-only bridge for querying the neutral `SkyrimGamePlayReferences` repo |
 | `native/DevotionPrismaBridge/` | C++ SKSE/Prisma bridge scaffold plus mirrored runtime Prisma panel assets |
@@ -304,6 +305,8 @@ node .\tools\pdv_verify.mjs --strict-preflight
 node .\tools\pdv_verify.mjs --strict-skeleton
 node .\tools\pdv_verify.mjs --strict-pattern-proving
 node .\tools\pdv_verify.mjs --strict-phase7
+node .\tools\pdv_content_verify.mjs
+node .\tools\pdv_content_verify.mjs --json
 node .\tools\pdv_author.mjs list-manifests
 node .\tools\pdv_author.mjs status phase4
 node .\tools\pdv_author.mjs plan phase4
@@ -378,6 +381,7 @@ Toolchain usage rules:
 - After any `.psc` edit, run `node .\tools\pdv_compile.mjs` or a targeted `--script` compile.
 - After CK/ESP changes, property wiring, FormList edits, SEQ generation, or MO2 profile edits, run `node .\tools\pdv_verify.mjs`.
 - After doing a new kind of work, review what was manual, fragile, repeated, or easy to forget, then improve the verifier/helper/manifest/checklist/docs path when the next pass would benefit.
+- After editing any `race-sheets\PDV_*Content_Manifest.md` content manifest, run `node .\tools\pdv_content_verify.mjs` and resolve all FAILs (ASCII drift, budget caps, slot-ID collisions).
 - Use `node .\tools\pdv_author.mjs` when supported existing-record property/FormList wiring should be scripted into a reversible overlay patch instead of repeated CK clicking.
 - Before declaring Phase 3 CK wiring complete, run `node .\tools\pdv_verify.mjs --strict-phase3`.
 - Before declaring V3 Preflight complete, run `node .\tools\pdv_verify.mjs --strict-preflight` (or compile with `node .\tools\pdv_compile.mjs --strict-preflight`) and resolve all FAILs.

@@ -1264,6 +1264,10 @@ light sacred-place/state helpers, five first-release reputation tracks, roughly
 8-10 state tracks, ~100-150 contextual favor effects, and many dialogue topics.
 The pipeline matters.
 
+The player-facing prose this pipeline promotes is drafted ahead of time on the
+content authoring track (25.9); this section covers only the code-side
+promotion of ratified strings into records.
+
 ### 17.0 Structural scaffold code order
 
 The first Structural Skeleton code-deepening pass added compile-clean base
@@ -2109,6 +2113,55 @@ restate subsystem internals from v3. When launch expectations change, update
 the target tracker for product acceptance and this roadmap only when the gate
 or architecture contract changes.
 
+### 25.9 Content authoring track (parallel workstream)
+
+Player-facing religious prose is drafted on a content authoring track that
+runs **in parallel with, and separate from, the coding roadmap** in
+25.2-25.7. Drafting and ratifying prose does not depend on the code
+subsystems existing; only the final promotion of ratified strings into ESP
+records does. This subsection is a standing reminder that content breadth must
+be built deliberately on its own track, not improvised at the 1.0 gate.
+
+Home artifacts: `race-sheets/PDV_RaceContent_Manifest.md` (Aedric and native
+devotion), `race-sheets/PDV_DaedricContent_Manifest.md` (Daedric paths), and
+`tools/pdv_content_verify.mjs` (the read-only content verifier). The manifests
+are the single source of truth for draft prose; this document stays the
+architecture truth they author against.
+
+Phases:
+
+- **CAT-1 - Aedric and native draft prose. COMPLETE.** All 10 races drafted in
+  the race content manifest: tone profiles, blessings, tier-ups, champion
+  moments, neglect, commitment offers, survey readouts, contextual favors,
+  curse-state transitions, and dialogue-topic stubs.
+- **CAT-2 - Content tooling and consistency. COMPLETE.** The content verifier,
+  the token tables, and the consistency audit (race manifest Sections 24-25).
+- **CAT-3 - Daedric pilot. COMPLETE.** Boethiah authored end to end in the
+  Daedric manifest; the boon/price/stigma row template is proven.
+- **CAT-4 - Daedric expansion. NOT STARTED.** Author the remaining Princes to
+  the 8-12 content-ready target (21.1). Resolve the Section 11.6 open Daedric
+  decisions (stigma decay model, roster shape, cross-Prince hostility) first,
+  since they shape the content; Boethiah rows authored against the provisional
+  stigma model are flagged in the Daedric manifest. Resolve the curse-access
+  template variation when Hircine or Molag Bal is first authored.
+- **CAT-5 - Gated-slot closure. NOT STARTED.** Author the deferred slots once
+  their specs close: Altmer crisis-of-faith copy (gated on the Altmer Partial
+  implementation-spec, 21.4) and Breton Vigilant pressure copy.
+- **CAT-6 - Ratification and promotion handoff. NOT STARTED, code-coupled.**
+  Ratify the draft prose, then promote ratified strings into ESP records via
+  the Phase 19 add-a-deity pipeline (17.1) and into the `Race_*.md` player
+  handbooks. A string can only be promoted once its owning subsystem exists.
+
+Gate coupling:
+
+- CAT-1 through CAT-5 (drafting and ratifying) may run ahead of the code
+  roadmap and are not blocked by Pattern Proving or Technical Beta.
+- CAT-6 (promotion) follows the code: it interleaves with Phase 19 and the
+  run-up to Content-Feel Beta.
+- The track must be substantially complete to clear the Content-Feel Beta gate
+  (25.6) and fully ratified and promoted to clear the Content-rich 1.0 gate
+  (25.7, "player-facing text is polished and ASCII-safe").
+
 ---
 
 ## 26. Revisions
@@ -2263,6 +2316,21 @@ cleanly. The final strict closeout gate remains clean:
 `node .\tools\pdv_verify.mjs --strict-phase9 --strict-phase8 --strict-phase7
 --strict-preflight --strict-skeleton --strict-pattern-proving --json` =>
 `PASS=808, WARN=0, FAIL=0, INFO=28` on 2026-05-24 AEST.
+
+### v3.29 - 2026-05-21 - Content authoring track recorded as a parallel workstream
+
+Added Section 25.9, naming the content authoring track as a workstream that
+runs in parallel with and separate from the coding roadmap. The track covers
+drafting, verification, and ratification of player-facing religious prose in
+`race-sheets/PDV_RaceContent_Manifest.md` and
+`race-sheets/PDV_DaedricContent_Manifest.md`, validated by
+`tools/pdv_content_verify.mjs`. CAT-1 (Aedric/native draft prose, all 10
+races), CAT-2 (content verifier, token tables, consistency audit), and CAT-3
+(the Boethiah Daedric pilot) are complete; CAT-4 (Daedric expansion), CAT-5
+(gated-slot closure), and CAT-6 (ratification and ESP promotion) are the
+remaining work. Drafting runs ahead of code; promotion (CAT-6) follows the
+code roadmap and feeds the Content-Feel Beta and 1.0 gates. Section 17 now
+points to 25.9 for the prose-drafting side. No architecture contract changed.
 
 ### v3.27 - 2026-05-21 - Phase 8 runtime proof closeout
 
