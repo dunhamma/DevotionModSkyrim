@@ -10,8 +10,6 @@ using SkyrimGlobalFloat = Mutagen.Bethesda.Skyrim.GlobalFloat;
 
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
 const string defaultSkyrimEsm = @"D:\Wabbajack\modlists\Anvil\Stock Game\Data\Skyrim.esm";
-var skyrimModKey = ModKey.FromNameAndExtension("Skyrim.esm");
-var arngeirNpc = new FormKey(skyrimModKey, 0x02C6C7);
 
 if (args.Contains("--inspect-dialogue-types"))
 {
@@ -41,6 +39,7 @@ var espPath = GetArg(args, "--esp") ?? defaultEsp;
 var skyrimEsmPath = GetArg(args, "--skyrim-esm") ?? defaultSkyrimEsm;
 var dryRun = args.Contains("--dry-run");
 var removePhase11Dialogue = args.Contains("--remove-phase11-dialogue");
+var generatePhase11Dialogue = args.Contains("--unsafe-generate-phase11-dialogue");
 
 if (args.Contains("--scan-arngeir-dialogue"))
 {
@@ -74,6 +73,12 @@ try
         return 0;
     }
 
+    if (generatePhase11Dialogue)
+    {
+        throw new InvalidOperationException(
+            "Generated Phase 11 Arngeir dialogue is blocked. Rebuild the dialogue surface through a CK-safe path and verify it with --strict-phase11.");
+    }
+
     var khajiitFocusGlobal = EnsureGlobal(mod, index, allocator, "PDV_GLO_KhajiitFocusedEmphasis", 0.0f);
     report.Actions.Add("Ensured PDV_GLO_KhajiitFocusedEmphasis.");
 
@@ -102,8 +107,7 @@ try
     WireQuestScript(manager, "PDV__ManagerQuest", managerProperties);
     report.Actions.Add("Wired PDV__ManagerQuest next-packet properties.");
 
-    EnsureArngeirKyneRecognitionDialogue(mod, index, allocator, manager, khajiitFocusGlobal.FormKey, arngeirNpc);
-    report.Actions.Add("Ensured Phase 11 Arngeir/Kynareth recognition dialogue records.");
+    report.Actions.Add("Skipped Phase 11 Arngeir/Kynareth dialogue generation; CK-safe authoring is required.");
 
     WriteModIfNeeded(mod, espPath, dryRun, report, "next-packet");
 
@@ -325,75 +329,6 @@ static Spell EnsureKyneNeglectSpell(SkyrimMod mod, Dictionary<string, ISkyrimMaj
     return spell;
 }
 
-static void EnsureArngeirKyneRecognitionDialogue(
-    SkyrimMod mod,
-    Dictionary<string, ISkyrimMajorRecordGetter> index,
-    FormKeyAllocator allocator,
-    Quest manager,
-    FormKey unusedKhajiitFocusGlobal,
-    FormKey arngeirNpc)
-{
-    const string branchEdid = "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch";
-    const string topicEdid = "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic";
-    const string infoEdid = "PDV_INFO_Phase11ArngeirKyneRecognition";
-
-    var originRaceGlobal = RequireRecord<SkyrimGlobal>(index, "PDV_GLO_OriginRace");
-    var activeDeityGlobal = RequireRecord<SkyrimGlobal>(index, "PDV_GLO_ActiveDeityIndex");
-    var activeTierGlobal = RequireRecord<SkyrimGlobal>(index, "PDV_GLO_ActiveTier");
-
-    var branch = EnsureDialogBranch(mod, index, allocator, branchEdid);
-    var topic = EnsureDialogTopic(mod, index, allocator, topicEdid);
-    var info = EnsureDialogResponses(topic, index, allocator, infoEdid);
-
-    branch.EditorID = branchEdid;
-    branch.FormVersion = 44;
-    branch.Quest = manager.FormKey.ToLink<IQuestGetter>();
-    branch.Category = DialogBranch.CategoryType.Player;
-    branch.Flags = DialogBranch.Flag.TopLevel;
-    branch.StartingTopic = topic.FormKey.ToNullableLink<IDialogTopicGetter>();
-
-    topic.EditorID = topicEdid;
-    topic.FormVersion = 44;
-    topic.Name = Tx("Has Kyne marked my path?");
-    topic.Priority = 50.0f;
-    topic.Branch = branch.FormKey.ToNullableLink<IDialogBranchGetter>();
-    topic.Quest = manager.FormKey.ToNullableLink<IQuestGetter>();
-    topic.Category = DialogTopic.CategoryEnum.Topic;
-    topic.Subtype = DialogTopic.SubtypeEnum.Custom;
-
-    info.EditorID = infoEdid;
-    info.FormVersion = 44;
-    info.Topic = topic.FormKey.ToNullableLink<IDialogTopicGetter>();
-    info.Speaker = arngeirNpc.ToNullableLink<INpcGetter>();
-    info.Prompt = Tx("Has Kyne marked my path?");
-    info.Flags = new DialogResponseFlags();
-    info.Conditions.Clear();
-    info.Conditions.Add(FloatCondition(
-        IsIdConditionData(arngeirNpc),
-        CompareOperator.EqualTo,
-        1.0f));
-    info.Conditions.Add(FloatCondition(
-        GlobalValueConditionData(originRaceGlobal.FormKey),
-        CompareOperator.EqualTo,
-        0.0f));
-    info.Conditions.Add(FloatCondition(
-        GlobalValueConditionData(activeDeityGlobal.FormKey),
-        CompareOperator.EqualTo,
-        0.0f));
-    info.Conditions.Add(FloatCondition(
-        GlobalValueConditionData(activeTierGlobal.FormKey),
-        CompareOperator.GreaterThanOrEqualTo,
-        3.0f));
-    info.Responses.Clear();
-    info.Responses.Add(new DialogResponse
-    {
-        Emotion = Emotion.Neutral,
-        EmotionValue = 50,
-        ResponseNumber = 1,
-        Text = Tx("The wind has marked you, Dragonborn. Walk with Kyne's breath.")
-    });
-}
-
 static void RemovePhase11ArngeirDialogue(
     SkyrimMod mod,
     Dictionary<string, ISkyrimMajorRecordGetter> index,
@@ -451,92 +386,6 @@ static void WriteModIfNeeded(SkyrimMod mod, string espPath, bool dryRun, AuthorR
     File.Copy(tempPath, espPath, overwrite: true);
     File.Delete(tempPath);
     report.TouchedFiles.Add(espPath);
-}
-
-static DialogBranch EnsureDialogBranch(SkyrimMod mod, Dictionary<string, ISkyrimMajorRecordGetter> index, FormKeyAllocator allocator, string editorId)
-{
-    if (index.TryGetValue(editorId, out var existing))
-    {
-        if (existing is not DialogBranch branch)
-        {
-            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected DialogBranch.");
-        }
-        return branch;
-    }
-
-    var created = new DialogBranch(allocator.Next(), SkyrimRelease.SkyrimSE);
-    mod.DialogBranches.Add(created);
-    index[editorId] = created;
-    return created;
-}
-
-static DialogTopic EnsureDialogTopic(SkyrimMod mod, Dictionary<string, ISkyrimMajorRecordGetter> index, FormKeyAllocator allocator, string editorId)
-{
-    if (index.TryGetValue(editorId, out var existing))
-    {
-        if (existing is not DialogTopic topic)
-        {
-            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected DialogTopic.");
-        }
-        return topic;
-    }
-
-    var created = new DialogTopic(allocator.Next(), SkyrimRelease.SkyrimSE);
-    mod.DialogTopics.Add(created);
-    index[editorId] = created;
-    return created;
-}
-
-static DialogResponses EnsureDialogResponses(DialogTopic topic, Dictionary<string, ISkyrimMajorRecordGetter> index, FormKeyAllocator allocator, string editorId)
-{
-    var existingInfo = topic.Responses.FirstOrDefault(response => string.Equals(response.EditorID, editorId, StringComparison.OrdinalIgnoreCase));
-    if (existingInfo is not null)
-    {
-        index[editorId] = existingInfo;
-        return existingInfo;
-    }
-
-    if (index.TryGetValue(editorId, out var existing))
-    {
-        if (existing is not DialogResponses info)
-        {
-            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected DialogResponses.");
-        }
-        topic.Responses.Add(info);
-        return info;
-    }
-
-    var created = new DialogResponses(allocator.Next(), SkyrimRelease.SkyrimSE)
-    {
-        EditorID = editorId
-    };
-    topic.Responses.Add(created);
-    index[editorId] = created;
-    return created;
-}
-
-static ConditionFloat FloatCondition(ConditionData data, CompareOperator compareOperator, float comparisonValue)
-{
-    return new ConditionFloat
-    {
-        Data = data,
-        CompareOperator = compareOperator,
-        ComparisonValue = comparisonValue
-    };
-}
-
-static GetGlobalValueConditionData GlobalValueConditionData(FormKey globalKey)
-{
-    var data = new GetGlobalValueConditionData();
-    data.Global = new FormLinkOrIndex<IGlobalGetter>(data, globalKey);
-    return data;
-}
-
-static GetIsIDConditionData IsIdConditionData(FormKey objectKey)
-{
-    var data = new GetIsIDConditionData();
-    data.Object = new FormLinkOrIndex<IReferenceableObjectGetter>(data, objectKey);
-    return data;
 }
 
 static void UpsertActivatorStringProperty(SkyrimActivator activator, string scriptName, string propertyName, string propertyValue)

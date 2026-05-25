@@ -2113,6 +2113,16 @@ or architecture contract changes.
 
 ## 26. Revisions
 
+### v3.36 - 2026-05-25 - Phase 11 generated-dialogue guard
+
+After promoting the Phase 9/next-packet branch into `main`, the full strict
+packet verifier stayed clean at `PASS=898, INFO=29`. The next-packet helper now
+fails closed if asked to generate Phase 11 Arngeir dialogue, preserving only the
+removal path for those records. `PDV_Phase11PrivilegePilot.manifest.json` now
+records the manual CK-only branch/topic/info/SEQ packet for the future
+Arngeir/Kynareth recognition rebuild. Phase 11 remains prep-only until CK-safe
+dialogue readback, SEQ refresh, and positive/negative runtime proof pass.
+
 ### v3.35 - 2026-05-25 - Khajiit, commitment, and neglect runtime proof
 
 Closed the live runtime smoke for the Section 21.5 next packet, excluding

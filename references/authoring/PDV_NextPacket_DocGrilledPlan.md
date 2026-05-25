@@ -21,11 +21,13 @@ Do not include full Daedric, curse-state, contextual favor, or live toast work i
 - Khajiit enum is locked: `None=0`, `Khenarthi=1`, `Azurah=2`, `BaanDar=3`, `Rajhin=4`, `Alkosh=5`.
 - Kyne commitment and neglect/decay source hooks are present in `PDV__ManagerQuest.psc`.
 - `tools/pdv-next-packet-author` ensures the Khajiit mirror global, repairs Dunmer keys, creates `PDV_MGEF_Neglect_Kyne` / `PDV_SPEL_Neglect_Kyne`, and wires manager properties.
+- `tools/pdv-next-packet-author` now fails closed for generated Phase 11 Arngeir dialogue. The only valid next Phase 11 path is CK-safe dialogue authoring followed by strict verifier readback.
 
 ## Remaining CK-Owned Work
 
 - The generated Arngeir/Greybeards `DLBR`/`DIAL`/`INFO` records were removed after CrashLogger tied a CTD to `PDV_DIAL_Phase11ArngeirKyneRecognitionTopic` and the generated branch.
 - Phase 11 is demoted back to prep-only until the dialogue surface is rebuilt through a CK-safe path.
+- `references/authoring/PDV_Phase11PrivilegePilot.manifest.json` records the manual CK-only branch/topic/info/SEQ packet expected for that rebuild.
 - Recognition line: `The wind has marked you, Dragonborn. Walk with Kyne's breath.`
 - The line is gated on Arngeir speaker, `PDV_GLO_OriginRace = Nord`, `PDV_GLO_ActiveDeityIndex = Kyne`, and `PDV_GLO_ActiveTier >= 3`.
 - Refresh SEQ after future dialogue work.
@@ -110,6 +112,7 @@ node .\tools\pdv_verify.mjs --strict-phase10 --strict-phase9 --strict-phase8 --s
 
 - Deferred after CTD remediation.
 - Rebuild the Arngeir recognition surface through a CK-safe dialogue path before runtime proof.
+- Do not run the next-packet helper as a dialogue writer; it is blocked from generating Phase 11 `DLBR`/`DIAL`/`INFO` records.
 - Keep the future negative gates unchanged: non-Nord, wrong deity, and Kyne below Champion.
 
 ### 6. Final Gate
