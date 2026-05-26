@@ -2,6 +2,7 @@
   "id": "phase12-contextual-favor-pilot",
   "title": "PDV Phase 12 contextual favor and Nord breadth pilot contract",
   "implementationStatus": "helper-can-create-missing",
+  "runtimeProofStatus": "manual-pending",
   "notes": [
     "Phase 12 is a favor-first phase, not UI toast hardening and not generic CKPE bridge expansion.",
     "The first live runtime tranche is focused Kyne plus the two Nord broad-worship lanes.",
@@ -259,6 +260,7 @@
     ]
   },
   "runtimeProof": {
+    "statusDate": "2026-05-26",
     "positive": [
       "Kyne Champion can trigger all 4 focused Kyne favor families",
       "Nord broad Old Ways can trigger all 5 broad-lane families while broad worship is active and baseline is OldWays",
@@ -274,6 +276,12 @@
     "persistence": [
       "active favor survives save/load",
       "expired favor clears after load and does not remain stuck on the player"
+    ],
+    "strictGate": "PASS=1060, INFO=28, WARN=1 (unnamed phase11 dialogue info only), TODO=0, FAIL=0",
+    "manualRequired": [
+      "14 in-game positive proof cases (focused + both broad lanes)",
+      "negative guard checks, including wrong deity, wrong origin, active patron suppression, active-favor suppression",
+      "save/load active/expired favor behavior"
     ]
   }
 }

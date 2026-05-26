@@ -111,6 +111,23 @@ node .\tools\pdv_verify.mjs --strict-phase12 --strict-khajiit --strict-commitmen
 - one-active storage contract in source
 - broad-lane Tier 2 / Faithful cap posture
 
+## Closeout Evidence (Phase 12)
+
+- Automated gate pass (2026-05-26):
+  - `node .\tools\pdv_verify.mjs --strict-phase12 --strict-khajiit --strict-commitment --strict-neglect-decay --strict-phase11 --strict-phase10 --strict-phase9 --strict-phase8 --strict-phase7 --strict-preflight --strict-skeleton --strict-pattern-proving`
+  - Result: `FAIL=0, WARN=0, TODO=0, PASS=1060, INFO=28`
+  - `node .\tools\pdv_verify.mjs --strict-phase12`
+  - Result: `FAIL=0, WARN=1, TODO=0, PASS=1060, INFO=28` (WARN is the known unnamed Phase11 phase dialogue info record)
+- Helper evidence (dry-run, no writes):
+  - `dotnet run --project .\tools\pdv-phase12-author -- --dry-run --create-missing`
+  - Result: PASS, no file writes, favor records and `PDV__ManagerQuest` properties reported as wired.
+
+Manual runtime proof is still required for full closeout before phase status flips to `runtimeProofStatus=passed`:
+
+- 14 positive favor-trigger activations (4 focused Kyne + 5 broad Old Ways + 5 broad Nine Divines).
+- 6+ negative guards (wrong deity, wrong origin, no broad baseline, active-patron suppression, no-fire-during-active-favor, broad-passage gating).
+- save/load persistence for active and expired favors.
+
 ## Runtime Proof Order
 
 1. Focused `Kyne`:
