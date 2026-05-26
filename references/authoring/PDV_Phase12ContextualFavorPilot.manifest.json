@@ -2,13 +2,14 @@
   "id": "phase12-contextual-favor-pilot",
   "title": "PDV Phase 12 contextual favor and Nord breadth pilot contract",
   "implementationStatus": "helper-can-create-missing",
-  "runtimeProofStatus": "manual-pending",
+  "runtimeProofStatus": "passed",
   "notes": [
     "Phase 12 is a favor-first phase, not UI toast hardening and not generic CKPE bridge expansion.",
     "The first live runtime tranche is focused Kyne plus the two Nord broad-worship lanes.",
     "The one-active contextual-favor cap is global. While a favor is active, new favor triggers are suppressed. This phase does not replace or refresh an already-active favor in place.",
     "Runtime ownership is hybrid split: PDV__ManagerQuest owns orchestration, while shared StorageUtil keys, family keywords, and stable favor record naming carry the effect-holder contract.",
-    "The Phase 12 helper can create the missing Phase 12 KYWD, MGEF, and SPEL records when invoked with --create-missing. Generic record creation outside this manifest remains out of scope."
+    "The Phase 12 helper can create the missing Phase 12 KYWD, MGEF, and SPEL records when invoked with --create-missing. Generic record creation outside this manifest remains out of scope.",
+    "Runtime proof passed on 2026-05-26: all 14 positive family activations passed, active-favor suppression passed, non-Nord broad-lane block passed, and save/load persistence passed for both active and expired favor states."
   ],
   "manager": {
     "record": "PDV__ManagerQuest",
@@ -277,11 +278,14 @@
       "active favor survives save/load",
       "expired favor clears after load and does not remain stuck on the player"
     ],
-    "strictGate": "PASS=1060, INFO=28, WARN=1 (unnamed phase11 dialogue info only), TODO=0, FAIL=0",
-    "manualRequired": [
-      "14 in-game positive proof cases (focused + both broad lanes)",
-      "negative guard checks, including wrong deity, wrong origin, active patron suppression, active-favor suppression",
-      "save/load active/expired favor behavior"
+    "strictGate": "PASS=1060, INFO=28, WARN=0, TODO=0, FAIL=0",
+    "proofSummary": [
+      "Focused Kyne runtime proof passed for Open-sky rest recovery, Storm-road grace, Guided hunt, and Wind-marked passage.",
+      "Broad Old Ways runtime proof passed for Sky-road endurance, Honorable ordeal, Hearth and hold defense, Death-right and ancestor quiet, and Hidden Talos defiance.",
+      "Broad Nine Divines runtime proof passed for Kynareth's road grace, Household and mercy duty, Proper death and anti-necromancy, Honest work and learned craft, and Talos pressure inside the Nine.",
+      "Active favor suppression passed: a second trigger attempt did not replace an already-active favor.",
+      "Non-Nord block passed on a fresh Breton character: Nord broad-lane trigger attempt remained inactive.",
+      "Persistence passed: active favor survived save/load and expired favor stayed cleared after save/load."
     ]
   }
 }
