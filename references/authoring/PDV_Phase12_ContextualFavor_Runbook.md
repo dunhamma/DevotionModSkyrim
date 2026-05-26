@@ -129,6 +129,17 @@ node .\tools\pdv_verify.mjs --strict-phase12 --strict-khajiit --strict-commitmen
 
 Phase 12 runtime proof is complete. Further runtime work on this subsystem should be treated as regression coverage, not initial proof.
 
+## Lessons Learned
+
+- Focused `Kyne` runtime eligibility is stricter than the mirror globals suggest. Setting `PDV_GLO_ActiveTier = 3` alone is not enough for debug proving; the manager resolves the focused lane from the live deity ledger via `GetTier(PDV_Kyne)` plus active-patron state, so proof setup must raise the real Kyne piety/tier and not only the UI globals.
+- `Trigger selected favor` is the correct debug control even though the MCM labels it `Phase 12 gate`. It still routes through the real manager path and therefore proves actual lane/family eligibility instead of a fake bypass.
+- A blank `spell=` field in the pattern summary only means no favor is active. It is not evidence that the helper missed spell membership or property wiring if the same family previously activated and showed the expected `PDV_SPEL_Favor_*` record.
+- For persistence proving, use a longer-duration family such as `Nord Broad Old Ways / Sky-road endurance`. The momentary families round to `expires=0.00` too quickly and produce noisy evidence.
+- Expiry is stored, but cleanup is not background-polled. The manager clears expired favors when runtime refresh work runs, so the clean manual expiry proof is: trigger a long-duration favor, wait past the expiry window, run `Run dawn pass`, then confirm `Favor=lane=None`.
+- Broad-lane proving should start from broad worship directly. It does not require a focused Kyne Champion setup; it requires `PATRON_STATE_BROAD`, `OriginRace = Nord`, and the matching Nord baseline.
+- The strongest non-Nord negative is a fresh non-Nord character, not a mid-save `setrace` swap. `PDV_GLO_OriginRace` is captured as origin state, so mid-save race changes can leave ambiguous proof about whether the runtime blocked on live race or stale origin data.
+- The efficient MCM proving loop is stable now: set broad/focused state first, select lane, select family, trigger, inspect summary, then clear only when moving to the next proof case. Saving after the summary confirms the active state avoids false persistence failures caused by saving after expiry.
+
 ## Runtime Proof Order
 
 1. Focused `Kyne`:
