@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-26 (v3.39 - Phase 12 runtime proof)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Khajiit focused emphasis, Kyne commitment, Kyne neglect/decay, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. The Khajiit/commitment/neglect runtime smoke proved Khenarthi then Azurah focus with save/load persistence, Kyne commitment offer/decline/refuse/accept with accepted-patron persistence, and Kyne neglect/decay grace, once-per-day decay, spell apply, and spell removal. Phase 11 now uses a CK-authored Arngeir dialogue branch/topic/unnamed INFO and passes positive/negative/save-load runtime proof for the Nord/Kyne Champion gate. Phase 12 runtime proof passed for all 14 positive favor families across focused Kyne plus the two Nord broad lanes, active-favor suppression, non-Nord broad-lane blocking, and save/load persistence for both active and expired favors. The current full strict gate is clean at `PASS=1060, WARN=0, FAIL=0, INFO=28`. Authoring infrastructure also has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, for generated/disposable plugins only; this does not broaden generic gameplay authoring support.
+Last revised: 2026-05-28 (v3.42 - Phase 13 runtime closeout and cadence lesson)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. The current targeted Phase 14-16 strict gate is clean at `FAIL=0, WARN=1, PASS=1092, INFO=28`, with only the expected `SEQ freshness` warning remaining after the live script write. Authoring infrastructure also has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, for generated/disposable plugins only; this does not broaden generic gameplay authoring support.
 
 ---
 
@@ -897,6 +897,10 @@ Unlike Aedric deities, Daedric paths require *commitment signals* before they be
 
 Implementation: each Daedric path tracks `PDV.Daedric.<Prince>.CommitmentSignals` in StorageUtil. Until that counter exceeds `CommitmentSignalsRequired`, `ScoreAction()` returns 0 and the path's contract is not engaged. Once committed, `ScoreAction()` resolves normally.
 
+The first full runtime proof for this subsystem is locked as `Hircine + Nord`.
+Phase 13 does not broaden into a second Prince until the Hircine/Nord
+boon/price/stigma, curse-entry, cure/renounce, and residue loop are all stable.
+
 ### 11.4 Per-race response
 
 The Daedric matrix encodes per-race response as `<State>; <Stigma/Friction>; <Exit>` cells. v3 stores these on `PDV_DaedricPathBase`:
@@ -913,15 +917,24 @@ Native-integrated exceptions (Azura/Azurah for Khajiit, Boethra for Dunmer, Mafa
 
 - `PDV_DaedricPath_<Prince>` for the quest. `PDV_DaedricPath_Boethiah`, `PDV_DaedricPath_Hircine`.
 - `PDV_DaedricPathBase` for the base class.
-- `PDV_FLST_AllDaedricPaths` is the current scaffold/verifier/MCM roster for Daedric pilots. `PDV_FLST_AllDeities` remains the live Aedric/cultural roster today.
-- Current separate rosters are implementation truth, not final architecture truth. The long-term operational roster may still converge behind a shared fan-out shape once the first non-pilot Daedric expansion proves the better locality/performance tradeoff.
-- Preserve a future roster module as the seam. Routing, dawn, UI, and verifier callers should eventually ask that module which worship targets matter instead of baking FormList splits into each caller.
+- `PDV_FLST_AllDaedricPaths` is the operational Daedric roster for routing,
+  verifier, and MCM. `PDV_FLST_AllDeities` remains the live
+  Aedric/cultural roster.
+- Preserve a future roster module as the seam so callers do not bake FormList
+  reads directly, but the 1.0 contract keeps the Daedric roster separate.
 
-### 11.6 Outstanding Daedric decisions
+### 11.6 Locked Daedric defaults
 
-- **Daedric roster shape.** Current scaffolds keep `PDV_FLST_AllDaedricPaths` separate for verifier and MCM clarity. The longer-term target may still converge on a shared operational roster if that gives better locality in routing and dawn logic. Keep this open until the first real multi-Prince pass; whichever way it lands, future callers should go through a roster module rather than reading FormLists directly.
-- **Stigma decay model.** Linear with abstention? Triggered by specific cleansing rites? Defer to content-author phase.
-- **Cross-Prince hostility.** Some Princes are canonically hostile (Boethiah vs. Malacath, Meridia vs. all undead-friendly Princes). Should this fire the rivalry ledger? Recommendation: yes, but with smaller multipliers than Aedric-Daedric rivalries (0.3 typical vs. 1.0 for Talos/Auri-El).
+- **D-12: Separate operational roster.** Keep `PDV_FLST_AllDaedricPaths` and
+  `PDV_FLST_AllDeities` separate. Do not converge them during the Hircine-only
+  Phase 13 tranche.
+- **D-13: Mixed recovery by default.** Cure or renounce starts recovery; rites
+  or authored restoration beats accelerate or complete it. Race/lane handlers
+  may harden or soften recovery, but the default is not instant absolution and
+  not rite-only absolution.
+- **D-14: Reduced cross-Prince hostility.** Canonical Prince-vs-Prince
+  hostility uses reduced rivalry math rather than full Aedric-strength
+  cancellation and rather than stigma-only treatment.
 
 ---
 
@@ -1014,6 +1027,9 @@ Werewolf and Vampire transitions shift theological weights per race. The race ar
 `PDV_CurseState` is the single curse-detection seam. Future vanilla and compat
 support should arrive as detection adapters behind this module rather than
 spreading werewolf/vampire checks across deity scripts, the manager, or MCM.
+For Phase 15, the locked default is combined werewolf detection: active beast
+race plus afflicted-state / faction / quest-style evidence on the same shared
+service seam.
 
 ```papyrus
 Scriptname PDV_CurseState extends Quest
@@ -1068,6 +1084,11 @@ When the player becomes a werewolf or vampire:
 - `OnCurseStateChange(oldState, newState)` fires per deity (iterate `PDV_FLST_AllDeities`).
 - Deities can implement transition reactions: e.g. Vampire Imperial collapses Divine devotion entirely per the locked race file; this fires as a one-time `PDV.Piety.<Divine>` reduction with a notification.
 - The cure path is structurally the reverse: piety doesn't fully restore on cure, but the multiplier reactivates.
+
+The service remains shared even when response behavior is race-owned. Bosmer,
+Breton, Dunmer, Altmer, and Nord curse reactions should be handled as
+race/lane-specific consequences hanging off the same curse transition seam, not
+as separate curse systems.
 
 ### 13.4 Curse-state restoration path
 
@@ -1562,10 +1583,10 @@ excellent reusable example per subsystem, then clone.
 | **10** | Race substrate (Dunmer Ancestor first pilot) | Phase 9 | Portable-shrine prayer and home bonus grant origin-only substrate progress; substrate metric stays separate from patron piety |
 | **11** | Privilege subsystem first wave (Arngeir/Kynareth pilot; Mara deferred until the pattern proves clean) | Phase 8/9 plus Section 21.5 commitment and neglect/decay gates | CK conditions read mirror globals + track globals; the Arngeir/Kynareth dialogue pilot gates cleanly for Nord Kyne Champion and hides for non-Nord, wrong deity, or lower tier |
 | **12** | Contextual favor subsystem (focused Kyne plus Nord broad-lane pilot) | Phase 11 | Focused Kyne plus Broad Old Ways and Broad Nine Divines prove the generic favor runtime, 3-5 trigger families per lane, and the one-active-boost cap |
-| **13** | Daedric path architecture + first Prince (Boethiah pilot) | Phase 11 | Boon/price/stigma triple works; commitment gating works; stigma readout via global |
-| **14** | Patron commitment mechanism (in-world offer + accept/decline/refuse) | Phase 9/11 | Offers fire from dawn pass; threshold gate works; 70% carry-over on accept |
-| **15** | Curse-state overlay (Werewolf first, Vampire second) | Phase 14 | Curse multiplier composes correctly; transition events fire per-deity reactions |
-| **16** | Neglect subsystem (per-deity neglect effects, max 3 active) | Phase 14 | Neglect spells apply/remove at dawn; broad-worship suppresses |
+| **13** | Daedric path architecture + first Prince (Hircine/Nord pilot) | Phase 12 | Runtime-proven for the Hircine gate and first live exit loop: negative no-piety pre-gate rites, Seeker and Devoted price activation, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path |
+| **14** | Patron commitment mechanism (generic formal-offer engine) | Phase 12/13 | Kyne proves the generic offer surface end to end: seed/evaluate, decline, refuse, accept, and accepted-patron stability |
+| **15** | Curse-state overlay (shared service; werewolf and vampire live) | Phase 14 | Shared curse seam is runtime-proven for werewolf, vampire, and clear transitions; Hircine/Nord handlers trace live through curse-entry and werewolf-cure routing |
+| **16** | Neglect subsystem (generic per-deity selection, max 3 active) | Phase 14 | Generic neglect selection is runtime-proven for low-piety active Kyne plus broad-worship suppression clearing the active neglect set on re-evaluation |
 | **17** | Decay model (linear with tier-floor + grace) | Phase 14 | Decay applies at dawn; floors respected; curse/track modifiers compose |
 | **18** | Player-facing UI (player MCM tab, status spell, notification policy) | Phase 14 | Thematic display default; numeric override behind toggle |
 | **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Planning-first patcher validates rules against the resolved load order, `pdv_author.mjs` emits explicit manual follow-up packets for array work, and later generated classification patches can add PDV keywords/FormList entries from rules |
@@ -1723,7 +1744,7 @@ that Daedric comparison point.
 | 8 | Privilege pilot | Shrine/dialogue privilege pattern | CK Conditions can read mirror globals and track globals without script glue in dialogue/shrine content | D-10 resolved; Slice 6 preferred | One shrine or dialogue privilege proves condition shape and coexistence discipline |
 | 9 | Contextual favor pilot | Generic favor runtime with focused Kyne plus Nord broad-lane proof | Event/scoring can request a favor opportunity; the manager-owned favor runtime enforces one-active-boost cap, lane resolution, expiry, and anti-farm state | Slice 7; at least one reliable signal family from Slices 1-5 plus Nord baseline scaffolding | Focused Kyne and the two Nord broad lanes have locked trigger families, duration/surfacing rules work, and one-active anti-stack is verifier or smoke covered |
 | 10 | UI toast hardening | Prisma overlay-toast payload contract for authored race content | Papyrus callers can rely on a stable overlay schema while the UI keeps ownership of default copy/tone expansion | Existing prototype toast path works; Slice 9 preferred before broad authored call-site growth | `favor`, `dawn`, `neglect`, `tier`, and `rivalry` all render with documented stable fields, and the README / v3 payload maturity labels agree |
-| 11 | Daedric price/stigma pilot | First full Daedric path price/stigma loop | Daedric path scoring exposes boon, price, stigma, and race response through a narrow path interface | D-12, D-13, D-14 resolved; Slices 7-10 complete; Hircine hunt proof may remain ingress-only | One Prince path has commitment, price, stigma, race response, and exit/residue behavior proven |
+| 11 | Daedric price/stigma pilot | First full Daedric path price/stigma loop | Daedric path scoring exposes boon, price, stigma, and race response through a narrow path interface | D-12, D-13, D-14 resolved; Slices 7-10 complete | One Prince path has commitment, price, stigma, race response, and exit/residue behavior proven |
 | 12 | Curse-state pilot | Werewolf first, vampire second | Scoring asks curse state/modifier without knowing detection source | D-17 resolved; Slice 11 preferred so curse tuning can compare against a real Daedric path | Curse transition changes scoring posture and restoration behavior without mutating origin race |
 
 **Overnight enabler rule:**
@@ -1928,41 +1949,33 @@ deferred past 1.0.
 
 #### D-12  Daedric in shared FormList  (Section 11.6)
 
-- **Question:** Keep the current separate Daedric scaffold roster, or converge toward a shared operational roster once Daedric routing scales past the Hircine pilot?
-- **Options:**
-  - (a) Converge toward one shared operational roster behind a roster module; keep UI/display branching separate.
-  - (b) Keep `PDV_FLST_AllDaedricPaths` and `PDV_FLST_AllDeities` separate long-term and route both explicitly.
-- **Current scaffold reality:** Verifier/MCM/pilot records use a separate Daedric roster today.
-- **Recommendation:** (a). The current split is acceptable as scaffold truth, but a shared operational roster is still the preferred target if the first non-pilot Daedric pass proves it improves locality.
+- **Decision:** Keep `PDV_FLST_AllDaedricPaths` and `PDV_FLST_AllDeities`
+  separate as the operational 1.0 contract.
+- **Reason:** The Hircine-only tranche already benefits from explicit
+  ownership, verifier clarity, and not forcing Daedric routing into the
+  Aedric/cultural roster before multi-Prince pressure is real.
 
 #### D-13  Stigma decay model  (Section 11.6)
 
-- **Question:** How does Daedric stigma fade?
-- **Options:**
-  - (a) Linear decay with abstention.
-  - (b) Triggered by specific cleansing rites only.
-  - (c) Both: slow linear baseline + faster rite-triggered drops.
-- **Recommendation:** (c). Defer specifics to content-author phase; lock the model now.
+- **Decision:** Mixed recovery by default.
+- **Meaning:** Cure or renounce starts recovery, while rites or authored
+  restoration beats accelerate or complete it. Race/lane handlers can make that
+  recovery easier or harder, but they do not replace the mixed default.
 
 #### D-14  Cross-Prince hostility multipliers  (Section 11.6)
 
-- **Question:** Fire rivalry ledger for canonical Prince-vs-Prince hostility (Boethiah/Malacath, Meridia/undead-Princes)?
-- **Options:**
-  - (a) Yes, at full Aedric-Daedric multiplier (1.0).
-  - (b) Yes, at reduced multiplier (0.3 typical).
-  - (c) No, treat as stigma-only.
-- **Recommendation:** (b). Real consequence without making Daedric play exhaustingly self-cancelling.
+- **Decision:** Canonical Prince-vs-Prince hostility uses reduced rivalry math.
+- **Meaning:** Do not run full Aedric-strength cancellation, but do not reduce
+  the relationship to stigma-only either.
 
 ### Before neglect/decay implementation
 
 #### D-17  Werewolf detection source  (Section 13.5)
 
-- **Question:** Which detection adapters should `PDV_CurseState` compose for Werewolf state?
-- **Options:**
-  - (a) Companions-quest-specific keyword (`PlayerWerewolfFaction` or quest stage).
-  - (b) Active race check (`WerewolfBeastRace`).
-  - (c) Both, OR-combined.
-- **Recommendation:** (c). Race check catches transformed state; faction check catches "afflicted but not currently transformed."
+- **Decision:** Combined detection.
+- **Meaning:** `PDV_CurseState` should compose active beast-race checks with
+  afflicted-state / faction / quest-style evidence so transformed and
+  afflicted-not-currently-transformed states both resolve through one service.
 
 ### Before authoring/perf tooling expansion
 
@@ -2209,6 +2222,54 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.42 - 2026-05-28 - Phase 13 runtime closeout and cadence lesson
+
+The Hircine/Nord pilot is now runtime-proven as a first full Daedric path.
+Fresh-save Debug-page proof confirmed the negative gate before day-three
+commitment signals, Seeker and Devoted price activation on the real multi-day
+hunt-rite cadence, werewolf curse-entry pressure, cure-started residue,
+renounce reset plus residue, and the vampire negative path. The important
+runtime lesson is that `HandleHircineHuntRite()` applies the shared daily
+repeat multiplier before the pilot records stigma or piety; same-day rites
+scale at `1.0`, `0.7`, `0.49`, so `sig=3` can still leave `p=5.88`, `tier=0`,
+and `price=None`. Counted Seeker proof therefore requires one rite on each of
+three in-game days instead of same-day spam.
+
+### v3.41 - 2026-05-28 - Phase 14-16 runtime closeout and Phase 13 status correction
+
+Closed the live runtime matrix for the generic Phase 14-16 seams and removed
+the stale overclaim that Phase 13 was already fully proven. Fresh-save runtime
+proof on the Debug page confirmed Kyne offer seed/evaluate, decline, refuse,
+accept, and accepted-patron stability for Phase 14; the shared werewolf /
+vampire / none curse seam plus Hircine curse-entry and werewolf-cure traces
+for Phase 15; and active-Kyne low-piety neglect selection plus broad-worship
+suppression on re-evaluation for Phase 16. The same pass also hardened the
+debug path itself: `PDV_MCM` now reports `SelectedCommitment=...` directly, the
+Kyne commitment seed helper uses the live encoded-day format with a debug-seed
+override for day-0 fresh starts, and the current targeted strict gate is clean
+at `FAIL=0, WARN=1, PASS=1092, INFO=28` with only `SEQ freshness` left as a
+warning. Durable status correction: Hircine hunt-rite ingress remains proven
+and current logs show curse-entry/cure traces, but the full Hircine/Nord
+boon/price/renounce/residue/mixed-recovery loop is still open until it is
+recorded explicitly.
+
+### v3.40 - 2026-05-26 - Phase 13-16 framework closeout
+
+Locked the Phase 13-16 architecture defaults in Sections 11-14 and the living
+product/race docs: D-12 now keeps Daedric paths on a separate operational
+roster, D-13 now uses mixed recovery by default, D-14 now uses reduced
+cross-Prince rivalry math, and D-17 now resolves werewolf detection through a
+combined shared-service seam. The first full Phase 13 pilot is now explicitly
+`Hircine + Nord`. A new `tools/pdv-phase13-author` helper created and wired the
+three Hircine price records into `PlayerDevotion_Framework.esp`, and SEQ was
+refreshed after the live write. Phase 14-16 manifests now reflect the generic
+formal-offer engine, live curse detection, and generic neglect selection pass.
+`tools/pdv_verify.mjs` now checks the generic Phase 14 source surface, the live
+Phase 15 curse-transition surface, and the generic Phase 16 neglect-selection
+surface. The full strict ladder is clean at `PASS=1089, WARN=0, FAIL=0,
+INFO=28`. Remaining work is the manual runtime proof matrix for Hircine/Nord
+cure-residue behavior plus the Phase 14-16 positive/negative/save-load proofs.
 
 ### v3.38 - 2026-05-26 - Phase 11 runtime proof
 

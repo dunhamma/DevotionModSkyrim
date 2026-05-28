@@ -1,0 +1,53 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "player-devotion-phase14",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "output": "PlayerDevotion_Framework.esp",
+  "id": "phase14-commitment-pilot",
+  "title": "PDV Phase 14 patron commitment pilot contract",
+  "implementationStatus": "runtime-proven",
+  "notes": [
+    "Phase 14 now uses a generic formal-offer engine on PDV__ManagerQuest, with Kyne as the first proven runtime path.",
+    "The repo already has a live debug offer flow and strict verifier gate under --strict-commitment.",
+    "Dawn-only recomputation, per-deity cooldowns, stable accepted patrons, and no persistent pending-offer queue remain the locked contract.",
+    "Runtime proof closed on 2026-05-28 for seed/evaluate, Accept, Decline, Refuse, and accepted-patron persistence on the Kyne pilot.",
+    "Khajiit remains the standing no-formal-offer exception."
+  ],
+  "pilot": {
+    "managerRecord": "PDV__ManagerQuest",
+    "managerScript": "PDV__ManagerQuest",
+    "deityRecord": "PDV_Deity_Kyne",
+    "stateGlobal": "PDV_GLO_PatronState",
+    "mcmActions": [
+      "Evaluate commitment",
+      "Accept commitment",
+      "Decline commitment",
+      "Refuse commitment"
+    ],
+    "remainingDeferred": [
+      "additional in-world presentation surfaces beyond debug MCM",
+      "more authored deity-specific offer content beyond Kyne",
+      "future packet work only where a deity needs custom offer presentation"
+    ]
+  },
+  "verifierExpectations": {
+    "strictFlag": "--strict-phase14",
+    "rules": [
+      "the manager owns PDV_Kyne and PDV_GLO_PatronState",
+      "the generic formal-offer source contract remains compile-visible, with Kyne as the first live candidate",
+      "the MCM debug controls remain wired to the commitment pilot"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "pending Kyne offer can be evaluated from the manager",
+      "Accept carries over piety and activates Kyne as patron",
+      "Decline and Refuse apply the intended cooldown semantics"
+    ],
+    "negative": [
+      "Khajiit does not use the formal commitment offer flow",
+      "Bosmer path play does not enter the Kyne commitment pilot"
+    ]
+  }
+}

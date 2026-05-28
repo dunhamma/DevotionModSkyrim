@@ -1,0 +1,55 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "player-devotion-phase16",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "output": "PlayerDevotion_Framework.esp",
+  "id": "phase16-neglect-pilot",
+  "title": "PDV Phase 16 neglect pilot contract",
+  "implementationStatus": "runtime-proven",
+  "notes": [
+    "Phase 16 now uses a generic manager-owned neglect selection pass, with Kyne as the first authored spell packet.",
+    "The manager-owned neglect cap is already present; additional per-deity record packets remain optional future content work.",
+    "Broad worship suppression is part of the live neglect contract.",
+    "Runtime proof closed on 2026-05-28 for active-Kyne low-piety selection, Kyne neglect-spell application, and broad-worship suppression.",
+    "Current strict verification remains coupled under --strict-neglect-decay because decay and neglect share the same dawn pass in source."
+  ],
+  "pilot": {
+    "managerRecord": "PDV__ManagerQuest",
+    "managerScript": "PDV__ManagerQuest",
+    "activeCapProperty": "NEGLECT_ACTIVE_CAP",
+    "activeCapValue": 3,
+    "spell": "PDV_SPEL_Neglect_Kyne",
+    "magicEffect": "PDV_MGEF_Neglect_Kyne",
+    "stateKeys": [
+      "PDV.Neglect.ActiveCount",
+      "PDV.Neglect.Active",
+      "PDV.Neglect.KyneSpellActive"
+    ],
+    "remainingDeferred": [
+      "per-deity neglect spells beyond Kyne where authored content needs them",
+      "race-specific neglect effect packets",
+      "standalone phase16 verifier gate decoupled from decay"
+    ]
+  },
+  "verifierExpectations": {
+    "strictFlag": "--strict-phase16",
+    "rules": [
+      "the Kyne neglect spell and magic effect exist and are wired on the manager",
+      "NEGLECT_ACTIVE_CAP remains 3 in source",
+      "broad worship suppression remains explicit in the neglect pass",
+      "generic per-deity neglect selection remains compile-visible"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "Kyne neglect activates only when Kyne is one of the lowest-piety eligible deities",
+      "the active neglect count is capped at 3",
+      "the Kyne neglect spell applies and removes cleanly"
+    ],
+    "negative": [
+      "broad worship clears all per-deity neglect flags",
+      "inactive Kyne neglect does not leave the spell stuck on the player"
+    ]
+  }
+}

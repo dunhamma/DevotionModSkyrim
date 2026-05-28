@@ -1,0 +1,52 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "player-devotion-phase15",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "output": "PlayerDevotion_Framework.esp",
+  "id": "phase15-curse-overlay",
+  "title": "PDV Phase 15 curse overlay service contract",
+  "implementationStatus": "runtime-proven",
+  "notes": [
+    "Phase 15 uses one shared curse service, global, manager property, and MCM seam for both werewolf and vampire live behavior.",
+    "Werewolf detection is combined: active beast-race plus afflicted-state / faction evidence on the same service seam.",
+    "Race/lane-specific reaction behavior hangs off the shared transition seam rather than splitting curse ownership by race.",
+    "Runtime proof closed on 2026-05-28 for werewolf, vampire, and clear transitions on the shared service seam.",
+    "Do not spread curse checks across deity scripts or MCM while this service remains the canonical owner."
+  ],
+  "service": {
+    "record": "PDV_CurseState",
+    "script": "PDV_CurseState",
+    "global": "PDV_GLO_CurseState",
+    "managerProperty": "PDV_CurseStateService",
+    "mcmProperty": "PDV_CurseStateService",
+    "liveDetection": [
+      "werewolf beast-race detection",
+      "werewolf afflicted-state / faction detection",
+      "vampire spell and faction detection"
+    ],
+    "remainingDeferred": [
+      "mod-specific compat adapters such as Sacrosanct cross-routing",
+      "additional deity-authored reaction content beyond the live race/lane handlers"
+    ]
+  },
+  "verifierExpectations": {
+    "strictFlag": "--strict-phase15",
+    "rules": [
+      "the curse service record and global exist and are wired",
+      "the manager and MCM both point at PDV_CurseState",
+      "live detection and transition routing remain compile-visible on the shared curse seam"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "MCM smoke can set and restore the curse state through PDV_CurseState",
+      "werewolf and vampire live detection both resolve through PDV_CurseState",
+      "manager curse multiplier helpers read the service rather than ad hoc race checks"
+    ],
+    "negative": [
+      "no deity script bypasses PDV_CurseState for curse ownership",
+      "curse transitions do not mutate the player's origin race"
+    ]
+  }
+}

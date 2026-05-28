@@ -1,5 +1,5 @@
 # PDV Race Design — Nord
-**Last updated:** 2026-05-19
+**Last updated:** 2026-05-28
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.1)
 
@@ -45,6 +45,17 @@ Step 4: Primary patron committed → Tier 3 (Devoted) becomes reachable
 **Acceptance / no-switching rule (LOCKED):** Accepting a primary offer sets the shared patron state to active primary, stores the accepted deity in `PDV_GLO_PatronDeity`, clears pending Nord offer candidates, and applies the standard 70% piety carry-over. Other deity ledgers remain intact but background-only. No competing primary offers fire in 1.0 while active primary is set. If devotion later decays below Tier 3, the relationship weakens but does not automatically clear.
 
 **Offer-candidate storage rule (LOCKED):** Do not persist a real pending-offer queue for Nord. Each dawn recomputes candidates from current piety, pantheon baseline, recent signal-day evidence, and per-deity cooldowns, then fires at most one offer for the highest recent signal-strength candidate. Store cooldowns, recent signal evidence, and optional debug last-offered data only.
+
+**Phase 13 lock (LOCKED):** the first full Daedric Nord path is `Hircine`.
+Keep it as a separate curse-access path with explicit Sovngarde vs Hunting
+Grounds tension. Do not broaden Nord into a general Daedric menu before that
+Hircine loop is closed by runtime proof. As of 2026-05-28, that closeout is
+recorded: multi-day hunt rites prove the negative gate plus Seeker/Devoted
+price activation, werewolf curse-entry adds Hircine pressure, cure and renounce
+both start readable residue recovery, and the vampire path stays negative.
+Durable cadence lesson: same-day hunt rites are repeat-scaled, so counted
+Seeker proof must use one rite on each of three in-game days rather than
+same-day spam.
 
 ---
 
@@ -247,10 +258,11 @@ Nord neglect should feel like **absence and distance**, not punishment.
 - Hircine pulls against Shor/Sovngarde — combat signals shift toward hunt interpretation
 - Shor/Tsun/Stuhn piety gain reduced while transformed or in active Companions werewolf arc
 - Kyne has complex relationship with beasts — not penalized, but signals shift toward hunt/nature rather than storm
-- No native Hircine Nord path opens, but the hunting/predatory signal interpretation creates a natural drift toward Hircine devotion if the player engages with that content
+- The first full Daedric Nord closure is a real Hircine curse-access path: werewolf state can open Hircine pressure, commitment, price, stigma, and residue behavior
+- Cure or renounce starts recovery, but Nord should still carry readable hunt-residue until recovery advances
 
 **Vampire:**
 - Severs Sovngarde afterlife claim — Shor/Tsun path weight significantly reduced
-- Molag Bal becomes available as an opposing pressure
+- Molag Bal becomes available as an opposing pressure, but a full Molag Bal path is not required in the Phase 13-16 tranche
 - Kyne, Mara, Arkay all weakened while active vampirism persists
 - Cure restores access but Sovngarde path carries a permanent scar (reduced ceiling) reflecting the theological rupture

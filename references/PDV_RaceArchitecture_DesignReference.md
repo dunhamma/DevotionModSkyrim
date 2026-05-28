@@ -1,6 +1,6 @@
 # PlayerDevotion (PDV) — Race Architecture Design Reference
 **Started:** May 12, 2026
-**Last updated:** May 19, 2026 (Daedric race-sheet coverage sync; Altmer partial closeout remains)
+**Last updated:** May 26, 2026 (Phase 13-16 closure defaults synced)
 **Status:** Living reference — race architecture and pre-matrix requirements locked as confirmed
 
 **Current implementation boundary:** Early sections of this reference were
@@ -30,6 +30,21 @@ domain-signal shorthand, not as a request to restore bucket records or
 - Curse states never move an event into a different theology; they change magnitude, eligibility, and interpretation
 - v3 owns this through `PDV_CurseState` plus race/deity modifier tables
 - Detection should be centralized so deity scripts read one current curse state
+
+### 1.2a Phase 13-16 closure defaults
+- Daedric paths stay on a separate operational roster from `PDV_FLST_AllDeities`
+- The first full Daedric completion target is `Hircine + Nord`
+- Daedric recovery is mixed by default: cure/renounce starts recovery, rites accelerate or complete it
+- Canonical Prince-vs-Prince hostility uses reduced rivalry math, not full-strength cancellation and not stigma-only handling
+- `PDV_CurseState` remains the single curse seam for both werewolf and vampire live behavior
+- Werewolf detection should be combined: active beast-race plus afflicted-state / faction / quest-style evidence
+
+Runtime status update (2026-05-28):
+- Phase 13 is runtime-proven on the Hircine/Nord pilot: early hunt rites prove the negative gate, the multi-day rite cadence proves Seeker and Devoted price activation, werewolf curse-entry raises Hircine pressure, cure and renounce both start residue recovery, and vampire remains the negative path.
+- Phase 14 is runtime-proven on the Kyne commitment pilot.
+- Phase 15 is runtime-proven on the shared curse seam.
+- Phase 16 is runtime-proven on the Kyne neglect pilot.
+- Durable Hircine lesson: same-day hunt rites are anti-repeat-scaled before stigma or piety is applied, so counted Seeker proof requires one rite on each of three in-game days.
 
 ### 1.3 Event Granularity is Simple (for now)
 - Events are simple integers: `EVENT_COMBAT_WIN`, `EVENT_SHRINE_VISIT`, etc.

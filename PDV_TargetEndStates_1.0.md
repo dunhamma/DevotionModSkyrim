@@ -1,6 +1,6 @@
 # PDV Target End States - 1.0 Product Tracker
 **Created:** 2026-05-18
-**Last updated:** 2026-05-19
+**Last updated:** 2026-05-26
 **Status:** Living 1.0 product/end-state tracker
 **Purpose:** Track what each race's devotion should feel like at launch, how
 close each race is to implementation-ready acceptance, and where the 1.0
@@ -156,6 +156,43 @@ Dunmer contextual-favor clearance result: Dunmer cleared user-experience review 
 
 Implementation-lock audit result (2026-05-19): all races are architecture-locked. Nord, Imperial, Breton, Dunmer, Bosmer, Redguard, Orc, Khajiit, and Argonian are implementation-locked; Altmer is the only remaining partial implementation-spec lock. Breton is closed at the explicit tradition setup, all-three-track, normal no-switching, hook feasibility, dawn math, recovery cadence, Hidden Art cover/notoriety, and tradition-authored favor-lane level; reward magnitudes remain tuning work. Redguard is closed at the state/offer and launch-hook-posture level: death-duty is buildable, Tu'whacca uses the Dunmer portable/private shrine pattern rather than a pure Arkay proxy, HoonDing can ship through curated milestone hooks, `MS08` is stage-verified, and Ash'abah social stigma is limited to light authored/custom 1.0 content. Dunmer is closed at the ancestor substrate, focus-gate, curse-posture, portable-shrine, and Daedric-deviation option-map level. Khajiit is closed at the lunar substrate, silent focused-emphasis, road-home circuit, curse posture, ShadowDrift boundary, five launch paths, and launch-hook-posture level. Argonian is closed at the single layered Hist substrate, visible Hist/People/Void layers, gentle Hist distance, one bed-of-choice anchor, Sithis activation threshold, and curse posture level. Altmer is partially closed: shared patron-state use, no generic broad lane, `ThalmorAlignment` bands/start values, and bounded Lorkhan economy are locked; crisis resolution, final crisis triggers, contextual favor lanes, and focused-deity hook posture still need closeout before implementation-lock.
 
+Phase 13-16 closure defaults (2026-05-26):
+
+- **Phase 13:** Hircine-only first full Daedric completion, anchored on Nord.
+  The full proof bar is boon, price, stigma, curse-entry pressure,
+  cure/renounce exit, and lingering residue until recovery advances.
+- **Phase 14:** formal patron commitment is a generic dawn-owned offer engine,
+  with Kyne as the first proven path. Accepted patrons stay stable; Khajiit
+  remain the standing no-formal-offer exception.
+- **Phase 15:** `PDV_CurseState` is the shared curse seam for both werewolf and
+  vampire live behavior. Werewolf detection is combined: active beast-race plus
+  afflicted-state / faction / quest-style evidence.
+- **Phase 16:** neglect is a generic dawn-owned subsystem. Broad worship
+  suppresses per-deity neglect, the active set is capped at `3`, and Kyne is
+  only the first authored spell packet, not the whole subsystem.
+- **Daedric recovery default:** cure or renounce starts recovery; rites or
+  authored restoration beats accelerate or complete it.
+- **Cross-Prince pressure default:** canonical Prince-vs-Prince hostility uses
+  reduced rivalry math rather than full-strength cancellation and rather than
+  stigma-only treatment.
+
+Runtime closeout update (2026-05-28):
+
+- **Phase 13:** runtime-proven on the Hircine/Nord pilot. The counted pass covered
+  the negative gate before day-three commitment signals, Seeker and Devoted
+  price activation on the real multi-day hunt-rite cadence, werewolf
+  curse-entry pressure, cure-started residue, renounce reset plus residue, and
+  the vampire negative path.
+- **Phase 14:** runtime-proven on the Kyne pilot for seed/evaluate, `Not Yet`,
+  `Refuse`, `Accept`, and accepted-patron persistence.
+- **Phase 15:** runtime-proven on the shared `PDV_CurseState` seam for
+  werewolf, vampire, and clear transitions.
+- **Phase 16:** runtime-proven on the Kyne neglect pilot for low-piety active
+  selection, neglect-spell application, and broad-worship suppression.
+- **Durable Phase 13 cadence lesson:** same-day `Hircine hunt rite` repeats are
+  anti-repeat-scaled before stigma or piety is applied, so counted Seeker proof
+  must use one rite on each of three in-game days rather than same-day spam.
+
 ---
 
 ## Nord
@@ -183,6 +220,10 @@ Broad Nine Divines Nords mostly use the same hook surface as Broad Old Ways Nord
 Talos pressure belongs in both broad Nord lanes. Old Ways Talos pressure reads as ancestral identity defiance; Nine Divines Talos pressure reads as carrying contradiction inside a public Divine frame. In both lanes, it should trigger favor only when the signal is costly and faithful, not merely anti-Thalmor violence or ordinary Civil War preference. Default surfacing is Noted; reserve Marked for high-cost events like hiding a worshipper, protecting a shrine, or defying Thalmor pressure face-to-face.
 
 Example broad favor shapes: honorable fight outdoors (Shor + Kyne steadiness), defending home/hold/family (Mara + Stuhn protection), death-rite acts (Arkay + ancestor quiet), hidden Talos reverence with public restraint (muted defiant resolve), and varied worship across several domains (rare pantheon-harmony after-act favor).
+
+**Phase 13 lock:** the first full Daedric Nord path is `Hircine`, not a generic
+Nord Daedric menu. It is curse-accessed and should surface the Hunting Grounds
+vs Sovngarde tension clearly.
 
 ### Champion moment
 The defining payoff for Nord is that the *right* god claimed you — the one that matches how you actually played. A player who hunted and camped and learned the Thu'um gets claimed by Kyne. A player who fought with the Stormcloaks and defied the ban gets claimed by Talos/Ysmir. The Champion moment should feel like recognition, not just a bigger number.

@@ -1,0 +1,80 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "player-devotion-phase13",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "output": "PlayerDevotion_Framework.esp",
+  "id": "phase13-daedric-hircine-pilot",
+  "title": "PDV Phase 13 Daedric Hircine pilot contract",
+  "implementationStatus": "runtime-proven",
+  "notes": [
+    "Phase 13 stays Hircine-only and remains outside PDV_FLST_AllDeities as a separate operational Daedric roster proof.",
+    "The structural scaffold, manager routing, EventBus routing, and MCM debug seams are live.",
+    "The direct-authoring price packet creates and wires the three Hircine price marker records without widening the CKPE bridge claim.",
+    "Runtime proof closed on 2026-05-28 for the negative pre-gate behavior, Seeker and Devoted price activation, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path.",
+    "Durable cadence lesson: same-day Hircine hunt rites are anti-repeat-scaled before stigma or piety is applied, so counted Seeker proof must use one rite on each of three in-game days.",
+    "Do not widen this packet into a second Prince, generic Daedric roster convergence, or full cross-Prince rivalry work in this tranche."
+  ],
+  "pilot": {
+    "quest": "PDV_DaedricPath_Hircine",
+    "script": "PDV_DaedricPath_Hircine",
+    "baseScript": "PDV_DaedricPathBase",
+    "signalSurface": "PDV_ACTI_HircineHuntRiteSignal",
+    "managerProperty": "PDV_HircinePath",
+    "curseService": "PDV_CurseState",
+    "stigmaGlobal": "PDV_GLO_HircineStigma",
+    "arrays": [
+      "StateByRace",
+      "StigmaModByRace",
+      "ExitDifficultyByRace"
+    ],
+    "pricePacket": [
+      {
+        "property": "Price_Seeker",
+        "magicEffect": "PDV_MGEF_HircinePrice_Seeker",
+        "spell": "PDV_SPEL_HircinePrice_Seeker",
+        "name": "Hircine's Price - Seeker",
+        "description": "The first mark of Hircine lingers after the hunt."
+      },
+      {
+        "property": "Price_Devoted",
+        "magicEffect": "PDV_MGEF_HircinePrice_Devoted",
+        "spell": "PDV_SPEL_HircinePrice_Devoted",
+        "name": "Hircine's Price - Devoted",
+        "description": "The hunt follows you more closely until you make peace with the wild."
+      },
+      {
+        "property": "Price_Champion",
+        "magicEffect": "PDV_MGEF_HircinePrice_Champion",
+        "spell": "PDV_SPEL_HircinePrice_Champion",
+        "name": "Hircine's Price - Champion",
+        "description": "Hircine's deepest claim leaves a lasting predatory residue."
+      }
+    ]
+  },
+  "verifierExpectations": {
+    "strictFlag": "--strict-phase13",
+    "rules": [
+      "the Hircine pilot quest exists with both PDV_DaedricPathBase and PDV_DaedricPath_Hircine behavior visible",
+      "PDV_GLO_HircineStigma exists and is wired",
+      "the manager owns PDV_HircinePath and routes the hunt rite into the pilot",
+      "the Hircine pilot arrays read back with length 10",
+      "the Hircine price packet exists and Price_Seeker / Price_Devoted / Price_Champion point at the tracked spells"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "one Hircine hunt rite increments commitment signals and stigma",
+      "the third qualifying hunt rite on separate in-game days opens Hircine piety and Seeker price activation",
+      "later multi-day hunt rites can advance Hircine into Devoted price activation",
+      "werewolf curse-entry adds Hircine pressure and cure leaves Nord residue behind recovery",
+      "renouncing the path clears active piety, starts residue recovery, and leaves the curse posture readable"
+    ],
+    "negative": [
+      "without enough commitment signals, hunt rites do not award Hircine piety",
+      "same-day repeated hunt rites can reach signal-count 3 while still staying below ThresholdSeeker because the shared repeat multiplier scales the rite before piety is applied",
+      "non-Hircine Aedric paths do not accidentally consume the Hircine signal",
+      "vampire state does not receive the werewolf-favoring Hircine gain multiplier"
+    ]
+  }
+}
