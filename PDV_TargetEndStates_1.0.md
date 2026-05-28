@@ -69,7 +69,7 @@ Status values:
 
 | Race | Architecture locked | Implementation-spec locked | Hook feasibility checked | Content authored | Verifier-covered | In-game proven |
 |---|---|---|---|---|---|---|
-| Nord | Locked | Locked | Locked | Pending | Pending | Pending |
+| Nord | Locked | Locked | Locked | Partial | Partial | Pending |
 | Imperial | Locked | Locked | Locked | Pending | Partial | Partial |
 | Breton | Locked | Locked | Locked | Pending | Pending | Pending |
 | Dunmer | Locked | Locked | Locked | Pending | Partial | Pending |
@@ -182,6 +182,10 @@ Phase 13-16 closure defaults (2026-05-26):
 - **Phase 16:** neglect is a generic dawn-owned subsystem. Broad worship
   suppresses per-deity neglect, the active set is capped at `3`, and Kyne is
   only the first authored spell packet, not the whole subsystem.
+- **Phase 17:** decay is a generic dawn-owned subsystem. Active patrons are
+  protected from passive drift, non-patron deities can still decay, broad
+  worship uses reduced-rate drift, and tier floors preserve the locked
+  Champion/Devoted promises.
 - **Daedric recovery default:** cure or renounce starts recovery; rites or
   authored restoration beats accelerate or complete it.
 - **Cross-Prince pressure default:** canonical Prince-vs-Prince hostility uses
@@ -201,9 +205,26 @@ Runtime closeout update (2026-05-28):
   werewolf, vampire, and clear transitions.
 - **Phase 16:** runtime-proven on the Kyne neglect pilot for low-piety active
   selection, neglect-spell application, and broad-worship suppression.
+- **Phase 17:** runtime-proven with a standalone `--strict-phase17` gate. The
+  counted pass covered grace no-op, eligible tick, same-day guard,
+  broad-worship reduction, active-patron skip, non-patron drift, Devoted floor,
+  Champion floor, and Phase 16 neglect regression.
 - **Durable Phase 13 cadence lesson:** same-day `Hircine hunt rite` repeats are
   anti-repeat-scaled before stigma or piety is applied, so counted Seeker proof
   must use one rite on each of three in-game days rather than same-day spam.
+
+Phase 18A/B source/readback update (2026-05-28):
+
+- **Player surface:** `Survey Devotion` and the MCM `Player` page are live in
+  source/readback. Numeric Status/Debug surfaces are gated behind Developer
+  Options.
+- **Nord pilot scaffold:** broad Old Ways, broad Nine Divines, focused Kyne,
+  Talos status, Hircine/werewolf feedback, and Nord vampire rupture/scar
+  feedback have source/readback coverage. Fresh-save runtime proof is still
+  pending.
+- **Dialogue boundary:** Froki, Heimskr, Andurs, and Aela recognition topics are
+  contracted for manual CK authoring. They are not complete until CK records,
+  SEQ refresh, and positive/negative runtime proof are done.
 
 ---
 
@@ -236,6 +257,12 @@ Example broad favor shapes: honorable fight outdoors (Shor + Kyne steadiness), d
 **Phase 13 lock:** the first full Daedric Nord path is `Hircine`, not a generic
 Nord Daedric menu. It is curse-accessed and should surface the Hunting Grounds
 vs Sovngarde tension clearly.
+
+**Phase 18 vampire rule:** Nord vampire state is rupture feedback, not a Molag
+Bal devotional lane. While vampire, Nord formal commitment offers and contextual
+favors are suppressed and Survey Devotion should say that Sovngarde is closed.
+Cure restores access but leaves a visible scar/status note. Existing patron
+piety is not cleared.
 
 ### Champion moment
 The defining payoff for Nord is that the *right* god claimed you — the one that matches how you actually played. A player who hunted and camped and learned the Thu'um gets claimed by Kyne. A player who fought with the Stormcloaks and defied the ban gets claimed by Talos/Ysmir. The Champion moment should feel like recognition, not just a bigger number.

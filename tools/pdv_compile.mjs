@@ -54,6 +54,7 @@ const ACTIVE_SCRIPTS = [
   "PDV_PlayerEvents",
   "PDV_ActionRouter",
   "PDV__SM_KillActor",
+  "PDV_SurveyDevotionEffect",
   "PDV_MCM",
   "PDV_Substrate_DunmerAncestor",
   "PDV_Substrate_KhajiitLunar",
@@ -138,6 +139,9 @@ function parseArgs(argv) {
     strictPhase14: false,
     strictPhase15: false,
     strictPhase16: false,
+    strictPhase17: false,
+    strictPhase18: false,
+    strictNord: false,
     strictKhajiit: false,
     strictCommitment: false,
     strictNeglectDecay: false,
@@ -194,6 +198,13 @@ function parseArgs(argv) {
       args.strictPhase15 = true;
     } else if (arg === "--strict-phase16") {
       args.strictPhase16 = true;
+    } else if (arg === "--strict-phase17") {
+      args.strictPhase17 = true;
+    } else if (arg === "--strict-phase18") {
+      args.strictPhase18 = true;
+    } else if (arg === "--strict-nord") {
+      args.strictNord = true;
+      args.strictPhase18 = true;
     } else if (arg === "--strict-khajiit") {
       args.strictKhajiit = true;
     } else if (arg === "--strict-commitment") {
@@ -241,6 +252,9 @@ function usage(error = null, exitCode = 2) {
     "  --strict-phase14      Pass --strict-phase14 to the verifier.",
     "  --strict-phase15      Pass --strict-phase15 to the verifier.",
     "  --strict-phase16      Pass --strict-phase16 to the verifier.",
+    "  --strict-phase17      Pass --strict-phase17 to the verifier.",
+    "  --strict-phase18      Pass --strict-phase18 to the verifier.",
+    "  --strict-nord         Pass --strict-nord to the verifier.",
     "  --strict-khajiit      Pass --strict-khajiit to the verifier.",
     "  --strict-commitment   Pass --strict-commitment to the verifier.",
     "  --strict-neglect-decay Pass --strict-neglect-decay to the verifier.",
@@ -388,6 +402,15 @@ function runVerifier(args) {
   }
   if (args.strictPhase16) {
     verifierArgs.push("--strict-phase16");
+  }
+  if (args.strictPhase17) {
+    verifierArgs.push("--strict-phase17");
+  }
+  if (args.strictPhase18) {
+    verifierArgs.push("--strict-phase18");
+  }
+  if (args.strictNord) {
+    verifierArgs.push("--strict-nord");
   }
   if (args.strictKhajiit) {
     verifierArgs.push("--strict-khajiit");

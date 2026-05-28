@@ -101,6 +101,18 @@ const PHASE16_NEGLECT_MANIFEST = path.join(
   "authoring",
   "PDV_Phase16NeglectPilot.manifest.json",
 );
+const PHASE17_DECAY_MODEL_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase17DecayModel.manifest.json",
+);
+const PHASE18_STATUS_NORD_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase18StatusNord.manifest.json",
+);
 const PATCH_RULES_DIR = path.join(
   PROJECT_ROOT,
   "references",
@@ -158,6 +170,57 @@ const PHASE9_RECORDS = {
   PDV_MSG_BosmerSuggestOldContract: "MESG",
   PDV_MSG_BosmerReckoning: "MESG",
 };
+
+const PHASE18_RECORDS = {
+  PDV_MGEF_SurveyDevotion: "MGEF",
+  PDV_SPEL_SurveyDevotion: "SPEL",
+  PDV_Msg_Nord_CurseState_WerewolfOnset: "MESG",
+  PDV_Msg_Nord_CurseState_VampireOnset: "MESG",
+  PDV_Msg_Nord_CurseState_VampireCured: "MESG",
+};
+
+const PHASE18_MANAGER_PROPERTIES = {
+  PDV_SPEL_SurveyDevotion: "PDV_SPEL_SurveyDevotion",
+  PDV_Msg_Nord_CurseState_WerewolfOnset: "PDV_Msg_Nord_CurseState_WerewolfOnset",
+  PDV_Msg_Nord_CurseState_VampireOnset: "PDV_Msg_Nord_CurseState_VampireOnset",
+  PDV_Msg_Nord_CurseState_VampireCured: "PDV_Msg_Nord_CurseState_VampireCured",
+};
+
+const PHASE18_EFFECT_PROPERTIES = {
+  PDV_Manager: "PDV__ManagerQuest",
+  PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
+};
+
+const PHASE18_NORD_DIALOGUE_CONTRACTS = [
+  {
+    id: "froki-kyne-champion",
+    topic: "PDV_TIF_Nord_Froki_KyneChampion",
+    speaker: "Froki",
+    prompt: "I sleep where Kyne sleeps. I hunt where she hunts.",
+    response: "Then you know her by more than shrine-talk. Keep to the sky, hunter.",
+  },
+  {
+    id: "heimskr-talos-champion",
+    topic: "PDV_TIF_Nord_Heimskr_TalosChampion",
+    speaker: "Heimskr",
+    prompt: "The old breath is mine to carry. Tell me what is needed.",
+    response: "Then shout it where they can hear. Talos lives in every brave breath.",
+  },
+  {
+    id: "andurs-broad-death-rite",
+    topic: "PDV_TIF_Nord_Andurs_DeathRite",
+    speaker: "Andurs",
+    prompt: "I keep the rites. What is owed the dead here?",
+    response: "Then help me keep them. Arkay asks little, but the dead are owed much.",
+  },
+  {
+    id: "aela-hircine-tension",
+    topic: "PDV_TIF_Nord_Aela_HircineTension",
+    speaker: "Aela",
+    prompt: "The hunt pulls at Sovngarde. What do you see in me?",
+    response: "I see a hunter, not a feast-hall saint. Carry the beast, or master it.",
+  },
+];
 
 const SKELETON_REPUTATION_TRACKS = [
   "ConcordatStanding",
@@ -403,6 +466,7 @@ const COMPILED_SCRIPTS = {
   PDV_DaedricPath_Hircine: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
+  PDV_SurveyDevotionEffect: "required",
   PDV_MCM: "required",
 };
 
@@ -608,6 +672,9 @@ class Verifier {
     strictPhase14 = false,
     strictPhase15 = false,
     strictPhase16 = false,
+    strictPhase17 = false,
+    strictPhase18 = false,
+    strictNord = false,
     strictKhajiit = false,
     strictCommitment = false,
     strictNeglectDecay = false,
@@ -626,6 +693,9 @@ class Verifier {
     this.strictPhase14 = strictPhase14;
     this.strictPhase15 = strictPhase15;
     this.strictPhase16 = strictPhase16;
+    this.strictPhase17 = strictPhase17;
+    this.strictPhase18 = strictPhase18;
+    this.strictNord = strictNord;
     this.strictKhajiit = strictKhajiit;
     this.strictCommitment = strictCommitment;
     this.strictNeglectDecay = strictNeglectDecay;
@@ -769,6 +839,22 @@ class Verifier {
     }
   }
 
+  phase17Gap(check, detail, filePath = null) {
+    if (this.strictPhase17) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  phase18Gap(check, detail, filePath = null) {
+    if (this.strictPhase18 || this.strictNord) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   khajiitGap(check, detail, filePath = null) {
     if (this.strictKhajiit) {
       this.fail(check, detail, filePath);
@@ -823,6 +909,8 @@ class Verifier {
       this.checkPhase14();
       this.checkPhase15();
       this.checkPhase16();
+      this.checkPhase17();
+      this.checkPhase18();
       this.checkOfflinePatcherRules();
       this.checkPreflightOverlayPatch();
     }
@@ -1978,6 +2066,15 @@ class Verifier {
     this.checkPhase16SourceContracts();
   }
 
+  checkPhase17() {
+    const manifest = this.checkPhase17Manifest();
+    if (!manifest) {
+      return;
+    }
+
+    this.checkPhase17SourceContracts();
+  }
+
   checkPhase16Manifest() {
     if (!exists(PHASE16_NEGLECT_MANIFEST)) {
       this.phase16Gap(
@@ -2020,6 +2117,48 @@ class Verifier {
     return parsed;
   }
 
+  checkPhase17Manifest() {
+    if (!exists(PHASE17_DECAY_MODEL_MANIFEST)) {
+      this.phase17Gap(
+        "Phase 17 decay manifest",
+        "Phase 17 decay model manifest is missing.",
+        PHASE17_DECAY_MODEL_MANIFEST,
+      );
+      return null;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(PHASE17_DECAY_MODEL_MANIFEST, "utf8"));
+    } catch (error) {
+      this.fail("Phase 17 decay manifest", `Manifest could not be parsed: ${error.message}`, PHASE17_DECAY_MODEL_MANIFEST);
+      return null;
+    }
+
+    const implementationStatus = parsed.implementationStatus;
+    if (
+      parsed.id === "phase17-decay-model"
+      && parsed.model?.managerRecord === "PDV__ManagerQuest"
+      && parsed.model?.decayPerDayValue === 0.5
+      && parsed.model?.broadWorshipMultiplierValue === 0.2
+      && ["source-readback", "runtime-proven"].includes(implementationStatus)
+    ) {
+      this.pass(
+        "Phase 17 decay manifest",
+        `Manifest locks the decay model with status ${implementationStatus}.`,
+        PHASE17_DECAY_MODEL_MANIFEST,
+      );
+    } else {
+      this.phase17Gap(
+        "Phase 17 decay manifest",
+        "Manifest does not match the current decay model contract.",
+        PHASE17_DECAY_MODEL_MANIFEST,
+      );
+    }
+
+    return parsed;
+  }
+
   checkPhase14SourceContracts() {
     this.checkSourceContains("Phase 14 source", "PDV__ManagerQuest", [
       "Function EvaluateFormalCommitmentOffer()",
@@ -2051,6 +2190,184 @@ class Verifier {
       "Bool Function IsEligibleForNeglectSelection(PDV_DeityBase deity)",
       "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne))",
     ], this.phase16Gap.bind(this));
+  }
+
+  checkPhase17SourceContracts() {
+    this.checkSourceContains("Phase 17 source", "PDV__ManagerQuest", [
+      "Float Property DECAY_GRACE_DAYS = 3.0 AutoReadOnly",
+      "Float Property DECAY_PER_DAY = 0.5 AutoReadOnly",
+      "Float Property BROAD_WORSHIP_DECAY_MULTIPLIER = 0.2 AutoReadOnly",
+      "Function RunDawnApplyDecay()",
+      "Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)",
+      "if GetPatronState() == PATRON_STATE_ACTIVE && deity == _activeDeity",
+      "StorageUtil.GetIntValue(deityForm, \"PDV.LastDecayAppliedDay\") == currentDay",
+      "deity.GetEffectiveDecayMultiplier()",
+      "GetCurseGainMultiplier(deity)",
+      "GetDaedricStigmaGainMultiplier(deity)",
+      "Function GetDecayFloorForDeity(PDV_DeityBase deity, Float currentPiety)",
+      "StorageUtil.GetFloatValue(deity as Form, \"PDV.PassiveDecayFloor\")",
+      "Function GetDecayFloorForTier(PDV_DeityBase deity, Int tierValue)",
+      "Function RefreshPassiveDecayFloorForDeity(PDV_DeityBase deity, Int tierValue)",
+      "StorageUtil.SetFloatValue(deityForm, \"PDV.PassiveDecayFloor\", tierFloor)",
+      "Function DebugPrimeDecayGraceByIndex(Int deityIndex)",
+      "Function DebugPrimeDecayEligibleByIndex(Int deityIndex)",
+      "Function DebugRunDecayPass()",
+      "Function DebugRunDecayProofDaysByIndex(Int deityIndex)",
+      "String Function DebugGetDecaySummaryByIndex(Int deityIndex)",
+    ], this.phase17Gap.bind(this));
+
+    this.checkSourceContains("Phase 17 MCM source", "PDV_MCM", [
+      "AddTextOption(\"Prime decay grace\", \"Phase 17 proof\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Prime decay eligible\", \"Phase 17 proof\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Run decay pass\", \"Targeted phase 17\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Run decay proof days\", \"Compressed proof\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Show decay summary\", \"Selected deity\", OPTION_FLAG_NONE)",
+      "manager.DebugPrimeDecayGraceByIndex(selectedDeity.DeityIndex)",
+      "manager.DebugPrimeDecayEligibleByIndex(selectedDeity.DeityIndex)",
+      "manager.DebugRunDecayPass()",
+      "manager.DebugRunDecayProofDaysByIndex(selectedDeity.DeityIndex)",
+      "PDV_Manager.DebugGetDecaySummaryByIndex(deity.DeityIndex)",
+    ], this.phase17Gap.bind(this));
+  }
+
+  checkPhase18() {
+    const manifest = this.checkPhase18Manifest();
+    this.checkPhase18SourceContracts();
+    this.checkPhase18Records();
+    this.checkPhase18ManagerRecord();
+    this.checkPhase18SurveyEffectRecord();
+    this.checkPhase18SpellEffect();
+    this.checkPhase18DialogueContracts(manifest);
+  }
+
+  checkPhase18Manifest() {
+    if (!exists(PHASE18_STATUS_NORD_MANIFEST)) {
+      this.phase18Gap("Phase 18 status/Nord manifest", "Phase 18 status/Nord manifest is missing.", PHASE18_STATUS_NORD_MANIFEST);
+      return null;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(PHASE18_STATUS_NORD_MANIFEST, "utf8"));
+    } catch (error) {
+      this.fail("Phase 18 status/Nord manifest", `Manifest could not be parsed: ${error.message}`, PHASE18_STATUS_NORD_MANIFEST);
+      return null;
+    }
+
+    const hasSurvey = parsed.survey?.spell === "PDV_SPEL_SurveyDevotion"
+      && parsed.survey?.magicEffect === "PDV_MGEF_SurveyDevotion"
+      && parsed.survey?.script === "PDV_SurveyDevotionEffect";
+    const hasMessages = Array.isArray(parsed.messages)
+      && ["PDV_Msg_Nord_CurseState_WerewolfOnset", "PDV_Msg_Nord_CurseState_VampireOnset", "PDV_Msg_Nord_CurseState_VampireCured"]
+        .every((edid) => parsed.messages.some((message) => message.editorId === edid));
+    const contracts = parsed.dialogue?.contracts || [];
+    const hasDialogueContracts = PHASE18_NORD_DIALOGUE_CONTRACTS.every((expected) =>
+      contracts.some((actual) =>
+        actual.id === expected.id
+        && actual.topic === expected.topic
+        && actual.speaker === expected.speaker
+        && actual.prompt === expected.prompt
+        && actual.response === expected.response,
+      ),
+    );
+
+    if (hasSurvey && hasMessages && hasDialogueContracts) {
+      this.pass("Phase 18 status/Nord manifest", `Manifest locks Survey Devotion, Nord curse messages, and dialogue contracts with status ${parsed.status}.`, PHASE18_STATUS_NORD_MANIFEST);
+    } else {
+      this.phase18Gap("Phase 18 status/Nord manifest", `Manifest contract mismatch: survey=${hasSurvey}, messages=${hasMessages}, dialogue=${hasDialogueContracts}.`, PHASE18_STATUS_NORD_MANIFEST);
+    }
+
+    return parsed;
+  }
+
+  checkPhase18SourceContracts() {
+    this.checkSourceContains("Phase 18 status source", "PDV_SurveyDevotionEffect", [
+      "Scriptname PDV_SurveyDevotionEffect extends ActiveMagicEffect",
+      "PDV__ManagerQuest Property PDV_Manager Auto",
+      "PDV_Manager.GetSurveyDevotionText()",
+    ], this.phase18Gap.bind(this));
+
+    this.checkSourceContains("Phase 18 manager source", "PDV__ManagerQuest", [
+      "Spell Property PDV_SPEL_SurveyDevotion Auto",
+      "Function EnsureSurveyDevotionPower()",
+      "String Function GetSurveyDevotionText()",
+      "Bool Function IsNordVampireSuppressed()",
+      "PDV.Nord.VampireScar",
+      "ClearActiveFavor(\"nord_vampire\")",
+      "ClearPendingCommitment()",
+    ], this.phase18Gap.bind(this));
+
+    this.checkSourceContains("Phase 18 MCM source", "PDV_MCM", [
+      "String Property PAGE_PLAYER = \"Player\" AutoReadOnly",
+      "Developer Options",
+      "Survey Devotion",
+      "Enable Developer Options on the Player page to view this page.",
+      "PDV.UI.DeveloperOptions",
+    ], this.phase18Gap.bind(this));
+  }
+
+  checkPhase18Records() {
+    for (const [edid, expectedType] of Object.entries(PHASE18_RECORDS)) {
+      const record = this.recordsByEdid.get(edid);
+      if (!record) {
+        this.phase18Gap("Phase 18 record", `${expectedType} record ${edid} is missing.`, PDV_ESP);
+        continue;
+      }
+      if (record.type !== expectedType) {
+        this.fail("Phase 18 record", `${edid} has type ${record.type}, expected ${expectedType}.`, PDV_ESP);
+      } else {
+        this.pass("Phase 18 record", `${edid} exists as ${expectedType}.`, PDV_ESP);
+      }
+    }
+  }
+
+  checkPhase18ManagerRecord() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    const script = detail ? findScript(detail.fields || {}, "PDV__ManagerQuest") : null;
+    if (!script) {
+      this.phase18Gap("Phase 18 manager property", "PDV__ManagerQuest script readback is missing.", PDV_ESP);
+      return;
+    }
+    this.checkObjectProperties("Phase 18 manager property", propertyMap(script), PHASE18_MANAGER_PROPERTIES);
+  }
+
+  checkPhase18SurveyEffectRecord() {
+    const detail = this.recordDetails.get("PDV_MGEF_SurveyDevotion");
+    const script = detail ? findScript(detail.fields || {}, "PDV_SurveyDevotionEffect") : null;
+    if (!script) {
+      this.phase18Gap("Phase 18 Survey effect script", "PDV_SurveyDevotionEffect is not attached to PDV_MGEF_SurveyDevotion.", PDV_ESP);
+      return;
+    }
+    this.pass("Phase 18 Survey effect script", "PDV_SurveyDevotionEffect is attached to PDV_MGEF_SurveyDevotion.", PDV_ESP);
+    this.checkObjectProperties("Phase 18 Survey effect property", propertyMap(script), PHASE18_EFFECT_PROPERTIES);
+  }
+
+  checkPhase18SpellEffect() {
+    const detail = this.recordDetails.get("PDV_SPEL_SurveyDevotion");
+    const effects = detail?.fields?.Effects || [];
+    const hasEffect = effects.some((effect) => formidToEdid(effect.BaseEffect, this.recordsByEdid) === "PDV_MGEF_SurveyDevotion");
+    if (hasEffect && detail?.fields?.Type === "LesserPower") {
+      this.pass("Phase 18 Survey spell", "PDV_SPEL_SurveyDevotion is a LesserPower using PDV_MGEF_SurveyDevotion.", PDV_ESP);
+    } else {
+      this.phase18Gap("Phase 18 Survey spell", `Survey spell readback mismatch: type=${detail?.fields?.Type || "missing"}, effect=${hasEffect}.`, PDV_ESP);
+    }
+  }
+
+  checkPhase18DialogueContracts(manifest) {
+    const status = manifest?.dialogue?.implementationStatus || "missing";
+    if (status !== "live-dialogue-authored") {
+      this.info("Phase 18 Nord dialogue records", `Live dialogue readback is skipped because dialogue implementationStatus is ${status}.`, PHASE18_STATUS_NORD_MANIFEST);
+      return;
+    }
+
+    for (const contract of PHASE18_NORD_DIALOGUE_CONTRACTS) {
+      const topic = this.recordsByEdid.get(contract.topic);
+      if (topic?.type === "DIAL") {
+        this.pass("Phase 18 Nord dialogue topic", `${contract.topic} exists for ${contract.speaker}.`, PDV_ESP);
+      } else {
+        this.phase18Gap("Phase 18 Nord dialogue topic", `${contract.topic} is missing or not a DIAL record.`, PDV_ESP);
+      }
+    }
   }
 
   checkOfflinePatcherRules() {
@@ -4682,6 +4999,9 @@ function parseArgs(argv) {
     strictPhase14: false,
     strictPhase15: false,
     strictPhase16: false,
+    strictPhase17: false,
+    strictPhase18: false,
+    strictNord: false,
     strictKhajiit: false,
     strictCommitment: false,
     strictNeglectDecay: false,
@@ -4719,15 +5039,23 @@ function parseArgs(argv) {
       args.strictPhase15 = true;
     } else if (arg === "--strict-phase16") {
       args.strictPhase16 = true;
-      args.strictNeglectDecay = true;
+    } else if (arg === "--strict-phase17") {
+      args.strictPhase17 = true;
+    } else if (arg === "--strict-phase18") {
+      args.strictPhase18 = true;
+    } else if (arg === "--strict-nord") {
+      args.strictNord = true;
+      args.strictPhase18 = true;
     } else if (arg === "--strict-khajiit") {
       args.strictKhajiit = true;
     } else if (arg === "--strict-commitment") {
       args.strictCommitment = true;
     } else if (arg === "--strict-neglect-decay") {
       args.strictNeglectDecay = true;
+      args.strictPhase16 = true;
+      args.strictPhase17 = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16] [--strict-phase17] [--strict-phase18] [--strict-nord]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -4754,6 +5082,9 @@ const verifier = new Verifier({
   strictPhase14: args.strictPhase14,
   strictPhase15: args.strictPhase15,
   strictPhase16: args.strictPhase16,
+  strictPhase17: args.strictPhase17,
+  strictPhase18: args.strictPhase18,
+  strictNord: args.strictNord,
   strictKhajiit: args.strictKhajiit,
   strictCommitment: args.strictCommitment,
   strictNeglectDecay: args.strictNeglectDecay,

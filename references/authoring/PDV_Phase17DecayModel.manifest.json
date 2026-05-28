@@ -1,0 +1,67 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "player-devotion-phase17",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "output": "PlayerDevotion_Framework.esp",
+  "id": "phase17-decay-model",
+  "title": "PDV Phase 17 decay model contract",
+  "implementationStatus": "runtime-proven",
+  "notes": [
+    "Phase 17 owns the passive dawn decay bridge between Phase 16 neglect and Phase 18 player-facing status.",
+    "The locked model is per-deity linear decay after a grace period, once per in-game day, with tier floors and broad-worship reduced-rate drift.",
+    "Active patrons are skipped by passive decay; non-patron deities can still drift while an active patron is protected.",
+    "Runtime proof completed on 2026-05-28 after fixing fresh-save eligible decay and persistent tier-floor behavior."
+  ],
+  "model": {
+    "managerRecord": "PDV__ManagerQuest",
+    "managerScript": "PDV__ManagerQuest",
+    "graceDaysProperty": "DECAY_GRACE_DAYS",
+    "graceDaysValue": 3.0,
+    "decayPerDayProperty": "DECAY_PER_DAY",
+    "decayPerDayValue": 0.5,
+    "broadWorshipMultiplierProperty": "BROAD_WORSHIP_DECAY_MULTIPLIER",
+    "broadWorshipMultiplierValue": 0.2,
+    "stateKeys": [
+      "PDV.LastEventGameTime",
+      "PDV.LastDecayAppliedDay",
+      "PDV.Piety",
+      "PDV.Tier",
+      "PDV.PassiveDecayFloor"
+    ],
+    "debugActions": [
+      "Prime decay grace",
+      "Prime decay eligible",
+      "Run decay pass",
+      "Run decay proof days",
+      "Show decay summary"
+    ],
+    "remainingDeferred": [
+      "per-deity authored decay tuning beyond the default model"
+    ]
+  },
+  "verifierExpectations": {
+    "strictFlag": "--strict-phase17",
+    "rules": [
+      "the decay constants stay at the locked defaults",
+      "passive decay skips the active patron while allowing non-patron drift",
+      "decay respects grace, once-per-day guard, broad worship multiplier, and persistent tier floors",
+      "the MCM debug proof controls remain wired to manager-owned helper functions"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "recent activity prevented decay during grace: 20.00 -> 20.00",
+      "eligible post-grace Kyne piety decayed by 0.5: 20.00 -> 19.50",
+      "broad worship decayed at 0.2x: 20.00 -> 19.90",
+      "non-patron deity drift still occurred while active Kyne stayed protected"
+    ],
+    "negative": [
+      "same-day duplicate decay did not apply: 19.50 stayed 19.50",
+      "active patron Kyne piety did not passively decay: 20.00 stayed 20.00",
+      "Devoted floor clamped decay at 10.00",
+      "Champion floor clamped decay at 50.00",
+      "Phase 16 regression held: broad worship suppressed neglect and active Kyne produced count=1 with kyneSpell=1"
+    ]
+  }
+}

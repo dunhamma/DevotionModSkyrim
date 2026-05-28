@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-28 (v3.45 - Phase 20 compatibility rebaseline)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. The current targeted Phase 14-16 strict gate is clean at `FAIL=0, WARN=1, PASS=1092, INFO=28`, with only the expected `SEQ freshness` warning remaining after the live script write. Authoring infrastructure also has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, for generated/disposable plugins only; this does not broaden generic gameplay authoring support.
+Last revised: 2026-05-28 (v3.46 - Phase 17 decay runtime closeout)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are runtime-proven. Phase 18A/B is source/readback implemented for the player status surface and Nord pilot scaffold, with runtime proof and CK-authored Nord dialogue still pending.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. The current targeted Phase 18 bridge strict gate, now including runtime-proven Phase 17, is clean at `FAIL=0, WARN=1, PASS=1155, INFO=29`, with only the expected `SEQ freshness` warning remaining after the live ESP write. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, plus a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding; this does not broaden generated dialogue or generic gameplay authoring support.
 
 ---
 
@@ -73,7 +73,7 @@ These items were live or deferred when v2 was closed. v3 inherits them.
 
 ### 3.2 Architecturally deferred
 
-- **Decay model.** Not implemented. Linear daily decay if no recent `PietyToday` activity is the leading candidate. v3 owns this - see Section 15.
+- **Decay model.** Runtime-proven for the Phase 17 bridge. Linear daily decay now has locked grace, once-per-day guard, persistent tier floors, broad-worship reduction, active-patron passive-decay protection, and non-patron drift while a patron is protected - see Section 15.
 - **Storage migration.** v1 saves loading into v2/v3 mods: `PDV_GLO_DevotionLevel` is dead, Kyne piety reseeds from origin. Treat as a save-game gotcha rather than a migration path. v3 should document this in the mod page changelog when 1.0 ships.
 - **PapyrusUtil missing-failure behavior.** Locked: add a visible hard-fail guard to `PDV__MainQuest.OnInit()` before any partial state writes. Missing PapyrusUtil should show a player-visible message, trace the dependency failure, and abort PDV bootstrap.
 - **Custom-race fallback.** Locked: `PDV_Origin` may keep defaulting unknown races to `RACE_IMPERIAL`, but v3 must surface this as both a one-time first-load notice and an MCM/status diagnostic. A later custom-race soft-compat hook remains post-1.0 unless a concrete patch target appears sooner.
@@ -1168,6 +1168,9 @@ Decay was deferred in v2. v3 now treats the live manager defaults as the
 forward architecture: per-deity linear decay, a grace period before drift
 starts, a tier floor, and reduced-rate broad-worship decay. The goal is
 relationship drift that is slow and recoverable, not a daily servicing loop.
+As of v3.46, this model is runtime-proven from a fresh-save proof pass. Runtime
+also promoted `PDV.PassiveDecayFloor` as the persistent floor key so a deity
+that has reached Devoted or Champion cannot decay below the locked floor later.
 
 ### 15.1 Mechanism
 
@@ -1175,6 +1178,9 @@ Daily, at dawn, after `PietyToday` is consolidated:
 
 ```papyrus
 Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)
+    if GetPatronState() == PATRON_STATE_ACTIVE && deity == _activeDeity
+        return   ; active patrons are protected from passive drift
+    endif
     Float lastEventGameTime = StorageUtil.GetFloatValue(self, "PDV.LastEventGameTime")
     if (nowTime - lastEventGameTime) < DECAY_GRACE_DAYS
         return   ; grace period - no decay
@@ -1201,14 +1207,19 @@ Per the locked design, Champion tier should not decay below Devoted threshold; t
 ```papyrus
 Float Function GetDecayFloor()
     Int tier = StorageUtil.GetFloatValue(self, "PDV.Tier") as Int
+    Float storedFloor = StorageUtil.GetFloatValue(self, "PDV.PassiveDecayFloor")
+    Float currentFloor = 0.0
     if tier >= 3
-        return ThresholdDevoted    ; Champion floor at Devoted threshold
+        currentFloor = ThresholdDevoted    ; Champion floor at Devoted threshold
     elseif tier >= 2
-        return ThresholdSeeker     ; Devoted floor at Seeker threshold
+        currentFloor = ThresholdSeeker     ; Devoted floor at Seeker threshold
     elseif tier >= 1
-        return 0.0                 ; Seeker can decay to None
+        currentFloor = 0.0                 ; Seeker can decay to None
     endif
-    return 0.0
+    if storedFloor > currentFloor
+        return storedFloor
+    endif
+    return currentFloor
 EndFunction
 ```
 
@@ -1227,22 +1238,39 @@ Under broad worship, decay applies to all deities at a reduced rate
 non-patron deities at normal rate while the active patron is skipped by the
 passive drift routine.
 
+### 15.5 Phase 17 closeout status
+
+The standalone Phase 17 source/readback gate is
+`node .\tools\pdv_verify.mjs --strict-phase17`. The full Phase 18 bridge gate is
+`node .\tools\pdv_verify.mjs --strict-phase16 --strict-phase17 --strict-phase18 --strict-nord --strict-phase13 --strict-phase14 --strict-phase15`.
+The current runtime-proven result is `FAIL=0, WARN=1, PASS=1155, INFO=29`,
+with only the existing `SEQ freshness` warning. Fresh-save proof passed grace
+no-op (`20.00 -> 20.00`), eligible tick (`20.00 -> 19.50`), same-day guard
+(`19.50` held), broad-worship reduced decay (`20.00 -> 19.90`), active-patron
+skip, non-patron drift while Kyne stayed protected, Devoted floor
+(`50.00 -> 10.00`), and Champion floor (`150.00 -> 50.00`). Phase 16 regression
+also held: broad worship suppressed neglect (`count=0; kyneSpell=0`) and active
+Kyne still produced targeted neglect (`count=1; active=Kyne; kyneSpell=1`).
+
 ---
 
 ## 16. Player-facing UI (Phase 18)
 
-The Phase 5 dev MCM is explicitly not the player surface. v3 builds the player surface on top of the dev MCM and adds in-world feedback.
+The Phase 5 dev MCM is explicitly not the player surface. Phase 18A now builds the player surface on top of the dev MCM and adds in-world feedback through `Survey Devotion`.
 
 ### 16.1 MCM evolution
 
-Two-tab structure:
+Current Phase 18A structure:
 
-- **Player tab.** Patron name, tier, days at tier, eligible deities for offer, broad-worship state, and notification verbosity. Keep it small: most state is read-only, numeric piety is optional, and MCM should not become a required daily management surface.
-- **Dev tab.** Existing Status + Debug pages. Gated behind a player-visible "Developer options" toggle.
+- **Player tab.** Always visible. Shows thematic summary, mode, patron, standing, curse, favor, and neglect rows, plus a `Survey Devotion` readout action. Numeric piety is not shown here.
+- **Status page.** Existing roster/status diagnostics. Locked until the player enables `Developer Options`.
+- **Debug page.** Existing mutation and proof controls. Locked until the player enables `Developer Options`.
+
+Developer Options are stored in `StorageUtil` key `PDV.UI.DeveloperOptions`, so the setting is save-persistent.
 
 ### 16.2 In-world feedback
 
-- **Status spell or lesser power.** "Survey Devotion." Cast it, get a `MessageBox` with current patron + tier + days-at-tier + recent piety direction. Per the description-discipline rules, thematic language for normal play; numeric values only in MCM.
+- **Status spell or lesser power.** `Survey Devotion` is implemented as `PDV_SPEL_SurveyDevotion` + `PDV_MGEF_SurveyDevotion` backed by `PDV_SurveyDevotionEffect`. Cast it to get a manager-owned thematic `MessageBox`. Numeric piety remains dev-only.
 - **Notifications.** Three levels per the race-architecture reference:
   - **Quiet** (no notification): routine piety gain/loss, most dawn consolidations, ambient drift.
   - **Medium** (Notification): tier change, neglect threshold crossed, or a similarly legible state shift.
@@ -1250,6 +1278,8 @@ Two-tab structure:
 
 Detailed scoring remains debug-only. Normal play should understand major
 changes without being narrated through every event fire.
+
+Phase 18B Nord-specific rule: while a Nord is a vampire, formal Nord commitment offers and contextual favors are suppressed. Cure restores access but leaves a visible scar/status note. This is curse feedback and rupture handling, not a Molag Bal progression lane, and it does not clear patron piety.
 
 ### 16.3 Dialogue privileges as UI
 
@@ -1390,6 +1420,14 @@ narrow GLOB authoring capability and a pattern for future family proofs, not as
 generic record creation. The remaining hardening boundary is also a user
 experience boundary: the current proof still depends on the Object Window
 source row/focus/context-menu path matching the explicit source guard.
+
+For dialogue, `tools\creation-authoring` now carries a reusable `dialogue-v1`
+proof lane. It can scaffold branch/topic/INFO/SEQ manifest intent and verify
+CK-authored `DLBR`, `DIAL`, and unnamed `INFO` readback by topic, speaker,
+response, and conditions. This is not generated dialogue creation support:
+strict mode must still fail closed until native CK-owned graph mutation,
+active-plugin save, MO2 readback, verifier proof, and command evidence all
+exist for the target operation.
 
 ### 17.2 Add-a-substrate workflow
 
@@ -1628,6 +1666,7 @@ Papyrus errors, broken MCM/status/prayer/dawn/save flows, or unresolved
 high-risk record conflicts. Handoff packages may carry only non-blocking known
 issues: cosmetic conflicts, unsupported outlier shrines, deferred quest hooks,
 or low-risk warnings.
+
 ---
 
 ## 21. Forward phase plan
@@ -1654,7 +1693,7 @@ excellent reusable example per subsystem, then clone.
 | **14** | Patron commitment mechanism (generic formal-offer engine) | Phase 12/13 | Kyne proves the generic offer surface end to end: seed/evaluate, decline, refuse, accept, and accepted-patron stability |
 | **15** | Curse-state overlay (shared service; werewolf and vampire live) | Phase 14 | Shared curse seam is runtime-proven for werewolf, vampire, and clear transitions; Hircine/Nord handlers trace live through curse-entry and werewolf-cure routing |
 | **16** | Neglect subsystem (generic per-deity selection, max 3 active) | Phase 14 | Generic neglect selection is runtime-proven for low-piety active Kyne plus broad-worship suppression clearing the active neglect set on re-evaluation |
-| **17** | Decay model (linear with tier-floor + grace) | Phase 14 | Decay applies at dawn; floors respected; curse/track modifiers compose |
+| **17** | Decay model (linear with tier-floor + grace) | Phase 14 | Runtime-proven for grace, eligible tick, same-day guard, broad reduction, active-patron skip, non-patron drift, Devoted floor, and Champion floor |
 | **18** | Player-facing UI (player MCM tab, status spell, notification policy) | Phase 14 | Thematic display default; numeric override behind toggle |
 | **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Planning-first patcher validates rules against the resolved load order, `pdv_author.mjs` emits explicit manual follow-up packets for array work, and later generated classification patches can add PDV keywords/FormList entries from rules |
 | **20** | Authoria-first list compatibility packages | Phase 15 + Phase 19 | Authoria reaches accepted integration/test package; JOJ, TOT, HOH, MOM, DoD, and VOV reach `patch-packaged` with exact removals, one list patch, placement notes, patcher steps, and focused smoke checklist |
@@ -2302,6 +2341,45 @@ religion-overhaul removal sets, targeted shrine adapters, system-family
 policies for survival/curse/quest/social mods, and maintainer briefs with
 focused smoke checklists. The 1.0 compatibility gate is Authoria accepted into
 its integration/test flow, with the other six lists at least `patch-packaged`.
+
+### v3.46 - 2026-05-28 - Phase 17 decay runtime closeout
+
+Phase 17 is runtime-proven. The fresh-save proof pass covered grace no-op
+(`20.00 -> 20.00`), eligible decay (`20.00 -> 19.50`), same-day guard
+(`19.50` held), broad worship reduced decay (`20.00 -> 19.90`), active-patron
+skip, non-patron drift while Kyne stayed protected, Devoted floor
+(`50.00 -> 10.00`), and Champion floor (`150.00 -> 50.00`). The Phase 16
+regression pass also held: broad worship suppressed neglect and active Kyne
+still produced targeted neglect with `count=1` and `kyneSpell=1`.
+
+Runtime proof exposed two manager fixes that are now live and compiled: fresh
+debug eligibility can use negative proof timestamps on a fresh save, and tier
+floors persist through `PDV.PassiveDecayFloor` instead of recalculating downward
+from the current piety tier each day. The full bridge ladder is clean at
+`FAIL=0, WARN=1, PASS=1155, INFO=29`; the remaining warning is expected `SEQ
+freshness`.
+
+### v3.44 - 2026-05-28 - Phase 17 decay bridge source/readback
+
+Phase 17 now bridges Phase 16 neglect and Phase 18 player status with a
+standalone manifest and verifier gate. `PDV__ManagerQuest` keeps the locked
+`3.0` day grace, `0.5` daily decay, and `0.2x` broad-worship multiplier, skips
+passive decay for the active patron, and leaves non-patron deities eligible to
+drift. `PDV_MCM` exposes gated debug controls for grace, eligible decay,
+decay-only pass, compressed proof days, and selected-deity decay summary.
+`PDV__ManagerQuest` and `PDV_MCM` compile with zero Papyrus warnings, and the
+full Phase 18 bridge gate is clean at `FAIL=0, WARN=1, PASS=1151, INFO=29`.
+The remaining warning is the existing `SEQ freshness`. This source/readback
+entry is superseded by v3.46 runtime closeout.
+
+### v3.43 - 2026-05-28 - CKRA dialogue proof lane handoff
+
+The vendored `tools\creation-authoring` package now includes a generic
+`dialogue-v1` proof lane for future CK-authored dialogue work. It supports
+manifest/readback proof for branch, topic, unnamed Topic Info, condition stack,
+and SEQ freshness, while strict product mode still fails closed until native
+CK command evidence exists. This reduces manual authoring bookkeeping without
+reopening the unsafe generated dialogue path that caused the Phase 11 CTD risk.
 
 ### v3.42 - 2026-05-28 - Phase 13 runtime closeout and cadence lesson
 
