@@ -229,6 +229,34 @@ Anything the player will read at any point is a description-engineering surface.
 **Debug spell readout — doesn't conform (textbook):**
 > Multi-paragraph explanation of the formula, the bucket caps, the descriptor thresholds, and the SMF list. Move that to `PDV_MOD_SETUP.md` and let the spell stay scannable.
 
+### 3.5 Grammar and style rules
+
+These rules apply to all player-facing surfaces listed in § 3.1. They are the baseline before any writer-review pass. The verifier enforces the two automatable rules (terminal punctuation, contractions); the rest are manual review targets.
+
+**Name capitalisation.** Always capitalise:
+- Deity and divine names: Kyne, Talos, Mara, Auri-El, Malacath, Hircine, Riddle'Thar.
+- Race names: Nord, Khajiit, Dunmer, Argonian, Orsimer (and Orc as a shorthand).
+- Hold, city, and settlement names: Whiterun, Eastmarch, Riften, Solitude, Black Marsh.
+- Faction names and named groupings: The Companions, College of Winterhold, Vigilants of Stendarr, Thalmor.
+- Named systems and pacts when referenced by title: the Talos ban, the Green Pact, the Wild Hunt, the Civil War, the Concordat.
+- Skill names when named explicitly: Smithing, Speech, Alteration.
+
+Do not capitalise generic nouns: "the hall," "a shrine," "the temple," "a blessing." Capitalise only when the word is part of a proper name ("Temple of Mara," "Hall of the Dead").
+
+**Stat notation format.** Mechanical stat changes use numeral + symbol with an explicit sign: "+10%", "-5%", "+15 stamina." Never spell out a stat change: write "+10%" not "ten percent more." Descriptive percentages inside a prose sentence that are not direct stat changes spell out: "five percent of your health." Do not mix conventions in a single string — if the string has a stat line, that line uses the numeral form.
+
+**Terminal punctuation.** Every player-facing string ends with a full stop, exclamation mark, or question mark. No trailing space after the terminal character. The verifier flags missing terminal punctuation as a warning.
+
+**Tense.** Present tense for active effect descriptions: "Kyne shelters the hunter." Timeless narrative for deity acknowledgment: "Kyne has noticed your steps." Do not switch tenses within a single string.
+
+**Contractions.** Do not use modern contractions in any player-facing text. Write "do not" not "don't," "you are" not "you're," "it is" not "it's." The verifier flags known contractions as a warning.
+
+**Oxford comma.** Use the Oxford comma in any list of three or more items: "health, stamina, and magicka" — not "health, stamina and magicka."
+
+**Sentence fragments.** A fragment is acceptable as the mechanical-effect clause at the end of a two-part blessing string: "Kyne has noticed your steps. Cold resistance +10%." The fragment is always the second clause and is always a stat notation line. Do not use fragments in other positions.
+
+---
+
 ### 3.4 Papyrus trace messages
 
 Same rules apply, scaled down:
