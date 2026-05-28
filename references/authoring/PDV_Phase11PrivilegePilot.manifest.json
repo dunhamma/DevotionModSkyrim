@@ -5,13 +5,14 @@
   "sourcePlugin": "PlayerDevotion_Framework.esp",
   "output": "PlayerDevotion_Framework.esp",
   "id": "phase11-privilege-pilot",
-  "title": "PDV Phase 11 privilege pilot prep contract",
+  "title": "PDV Phase 11 privilege pilot contract",
   "implementationStatus": "live-dialogue-authored",
+  "runtimeProofStatus": "passed",
   "notes": [
     "D-10 is resolved to the Arngeir/Kynareth recognition pilot.",
     "The generated PDV-owned Arngeir dialogue branch/topic/info records were removed on 2026-05-24 after CrashLogger tied a CTD to the generated dialogue topic/branch shape.",
-    "Keep Phase 11 at prep-only until the dialogue surface is rebuilt through a CK-safe path and re-proven.",
-    "Runtime proof remains blocked until the Section 21.5 commitment and neglect/decay gates are proven.",
+    "The live Phase 11 dialogue surface was rebuilt through CK-safe manual authoring, then verified against the saved ESP and refreshed SEQ.",
+    "Runtime proof passed on 2026-05-26: Nord/Kyne Champion receives the Arngeir recognition line; non-Nord, wrong active deity, and Kyne below Champion do not; save/load sanity passed.",
     "Do not replace vanilla shrine base scripts as part of this pilot."
   ],
   "pilot": {
@@ -44,7 +45,18 @@
       "non-Nord origin",
       "wrong active deity",
       "active Kyne tier below Champion"
-    ]
+    ],
+    "runtimeProof": {
+      "date": "2026-05-26",
+      "positive": "Fresh Nord/Kyne Champion state receives the Arngeir recognition line.",
+      "negative": [
+        "non-Nord origin does not receive it",
+        "Nord with wrong active deity does not receive it",
+        "Nord/Kyne below Champion does not receive it"
+      ],
+      "saveLoad": "Positive proof state remains valid after save/load.",
+      "strictGate": "PASS=908, INFO=28, no WARN/FAIL/TODO"
+    }
   },
   "operations": [
     {

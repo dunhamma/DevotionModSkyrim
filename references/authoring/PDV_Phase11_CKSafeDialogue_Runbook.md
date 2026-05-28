@@ -1,11 +1,16 @@
 # PDV Phase 11 CK-Safe Arngeir Dialogue Runbook
 
-Status: ready for manual CK authoring
+Status: runtime-proven
 
 Phase 11 must be authored through Creation Kit. Do not use
 `tools/pdv-next-packet-author --unsafe-generate-phase11-dialogue`; that path is
 blocked because the previous generated `DLBR`/`DIAL`/`INFO` records caused a
 CrashLogger-confirmed CTD.
+
+Runtime proof passed on 2026-05-26. The positive Nord/Kyne Champion state
+received the Arngeir recognition line; non-Nord, wrong active deity, and
+Nord/Kyne below Champion states did not; save/load sanity on the positive state
+passed.
 
 ## Target Packet
 
@@ -102,14 +107,19 @@ pass MO2 readback for the exact Arngeir/Kyne packet.
 
 Positive:
 
-- Fresh Nord/Kyne Champion state receives the Arngeir recognition line.
+- PASS: Fresh Nord/Kyne Champion state receives the Arngeir recognition line.
 
 Negatives:
 
-- non-Nord does not receive it.
-- Nord with wrong active deity does not receive it.
-- Nord/Kyne below Champion does not receive it.
+- PASS: non-Nord does not receive it.
+- PASS: Nord with wrong active deity does not receive it.
+- PASS: Nord/Kyne below Champion does not receive it.
 
 Final sanity:
 
-- Save/load the positive proof state and confirm the line remains available.
+- PASS: Save/load the positive proof state and confirm the line remains
+  available.
+
+Final strict verifier:
+
+- `PASS=908`, `INFO=28`, no `WARN`, `FAIL`, or `TODO`.

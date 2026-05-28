@@ -77,6 +77,30 @@ const PHASE12_CONTEXTUAL_FAVOR_MANIFEST = path.join(
   "authoring",
   "PDV_Phase12ContextualFavorPilot.manifest.json",
 );
+const PHASE13_DAEDRIC_HIRCINE_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase13DaedricHircinePilot.manifest.json",
+);
+const PHASE14_COMMITMENT_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase14CommitmentPilot.manifest.json",
+);
+const PHASE15_CURSE_OVERLAY_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase15CurseOverlay.manifest.json",
+);
+const PHASE16_NEGLECT_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase16NeglectPilot.manifest.json",
+);
 const PATCH_RULES_DIR = path.join(
   PROJECT_ROOT,
   "references",
@@ -298,6 +322,7 @@ const KYNE_NEGLECT_SPELL = "PDV_SPEL_Neglect_Kyne";
 const PHASE11_ARNGEIR_BRANCH = "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch";
 const PHASE11_ARNGEIR_TOPIC = "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic";
 const PHASE11_ARNGEIR_INFO = "PDV_INFO_Phase11ArngeirKyneRecognition";
+const PHASE11_ARNGEIR_INFO_FORMID = "PlayerDevotion_Framework.esp:0704F4";
 const PHASE11_ARNGEIR_NPC_FORMID = "Skyrim.esm:02C6C7";
 const PHASE11_ARNGEIR_PROMPT = "Has Kyne marked my path?";
 const PHASE11_ARNGEIR_LINE = "The wind has marked you, Dragonborn. Walk with Kyne's breath.";
@@ -579,6 +604,10 @@ class Verifier {
     strictPhase10 = false,
     strictPhase11 = false,
     strictPhase12 = false,
+    strictPhase13 = false,
+    strictPhase14 = false,
+    strictPhase15 = false,
+    strictPhase16 = false,
     strictKhajiit = false,
     strictCommitment = false,
     strictNeglectDecay = false,
@@ -593,6 +622,10 @@ class Verifier {
     this.strictPhase10 = strictPhase10;
     this.strictPhase11 = strictPhase11;
     this.strictPhase12 = strictPhase12;
+    this.strictPhase13 = strictPhase13;
+    this.strictPhase14 = strictPhase14;
+    this.strictPhase15 = strictPhase15;
+    this.strictPhase16 = strictPhase16;
     this.strictKhajiit = strictKhajiit;
     this.strictCommitment = strictCommitment;
     this.strictNeglectDecay = strictNeglectDecay;
@@ -704,6 +737,38 @@ class Verifier {
     }
   }
 
+  phase13Gap(check, detail, filePath = null) {
+    if (this.strictPhase13) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  phase14Gap(check, detail, filePath = null) {
+    if (this.strictPhase14) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  phase15Gap(check, detail, filePath = null) {
+    if (this.strictPhase15) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  phase16Gap(check, detail, filePath = null) {
+    if (this.strictPhase16) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   khajiitGap(check, detail, filePath = null) {
     if (this.strictKhajiit) {
       this.fail(check, detail, filePath);
@@ -754,6 +819,10 @@ class Verifier {
       this.checkNeglectDecay();
       this.checkPhase11();
       this.checkPhase12();
+      this.checkPhase13();
+      this.checkPhase14();
+      this.checkPhase15();
+      this.checkPhase16();
       this.checkOfflinePatcherRules();
       this.checkPreflightOverlayPatch();
     }
@@ -856,7 +925,7 @@ class Verifier {
 
     const unnamed = (plugin.records || [])
       .filter((record) => !record.edid && String(record.type || "").toUpperCase() !== "NAVI")
-      .filter((record) => !(this.strictPhase11 && String(record.type || "").toUpperCase() === "INFO"))
+      .filter((record) => !this.isAllowedUnnamedRecord(record))
       .map((record) => `${record.type} ${record.formid}`);
     if (unnamed.length) {
       this.warn("Unnamed records", `Records without EditorID found: ${unnamed.join(", ")}`, PDV_ESP);
@@ -1605,6 +1674,385 @@ class Verifier {
     }
   }
 
+  checkPhase13() {
+    const manifest = this.checkPhase13Manifest();
+    if (!manifest) {
+      return;
+    }
+
+    this.checkPhase13PilotRecord();
+    this.checkPhase13SourceContracts();
+  }
+
+  checkPhase13Manifest() {
+    if (!exists(PHASE13_DAEDRIC_HIRCINE_MANIFEST)) {
+      this.phase13Gap(
+        "Phase 13 Daedric manifest",
+        "Phase 13 Daedric Hircine pilot manifest is missing.",
+        PHASE13_DAEDRIC_HIRCINE_MANIFEST,
+      );
+      return null;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(PHASE13_DAEDRIC_HIRCINE_MANIFEST, "utf8"));
+    } catch (error) {
+      this.fail("Phase 13 Daedric manifest", `Manifest could not be parsed: ${error.message}`, PHASE13_DAEDRIC_HIRCINE_MANIFEST);
+      return null;
+    }
+
+    const implementationStatus = parsed.implementationStatus;
+    if (
+      parsed.id === "phase13-daedric-hircine-pilot"
+      && parsed.pilot?.quest === "PDV_DaedricPath_Hircine"
+      && parsed.pilot?.stigmaGlobal === "PDV_GLO_HircineStigma"
+      && parsed.pilot?.signalSurface === "PDV_ACTI_HircineHuntRiteSignal"
+      && ["hircine-pilot-live-price-deferred", "price-packet-live", "runtime-proven"].includes(implementationStatus)
+    ) {
+      this.pass(
+        "Phase 13 Daedric manifest",
+        `Manifest locks the Hircine pilot with status ${implementationStatus}.`,
+        PHASE13_DAEDRIC_HIRCINE_MANIFEST,
+      );
+    } else {
+      this.phase13Gap(
+        "Phase 13 Daedric manifest",
+        "Manifest does not match the locked Hircine boon-price-stigma pilot contract.",
+        PHASE13_DAEDRIC_HIRCINE_MANIFEST,
+      );
+    }
+
+    return parsed;
+  }
+
+  checkPhase13PilotRecord() {
+    const hircine = this.recordsByEdid.get("PDV_DaedricPath_Hircine");
+    if (hircine?.type === "QUST") {
+      this.pass("Phase 13 Daedric pilot", "PDV_DaedricPath_Hircine exists as QUST.", PDV_ESP);
+    } else {
+      this.phase13Gap("Phase 13 Daedric pilot", "PDV_DaedricPath_Hircine is missing or not a QUST.", PDV_ESP);
+    }
+
+    const stigma = this.recordsByEdid.get("PDV_GLO_HircineStigma");
+    if (stigma?.type === "GLOB") {
+      this.pass("Phase 13 stigma global", "PDV_GLO_HircineStigma exists as GLOB.", PDV_ESP);
+    } else {
+      this.phase13Gap("Phase 13 stigma global", "PDV_GLO_HircineStigma is missing or not a GLOB.", PDV_ESP);
+    }
+
+    const detail = this.recordDetails.get("PDV_DaedricPath_Hircine");
+    const pilotScript = detail ? findScript(detail.fields || {}, "PDV_DaedricPath_Hircine") : null;
+    const baseScript = detail ? findScript(detail.fields || {}, "PDV_DaedricPathBase") : null;
+    const script = pilotScript || baseScript;
+    if (script) {
+      this.pass("Phase 13 Daedric pilot", "PDV_DaedricPath_Hircine exposes the expected pilot/base VMAD surface.", PDV_ESP);
+      const props = propertyMap(script);
+      this.checkObjectPropertyTarget("Phase 13 Daedric pilot property", props, "StigmaGlobal", "PDV_GLO_HircineStigma", this.phase13Gap.bind(this));
+      this.checkRequiredArrayLength("Phase 13 Daedric pilot array", "PDV_DaedricPath_Hircine", "StateByRace", extractNumericArrayProperty(props.get("StateByRace")), 10, this.phase13Gap.bind(this));
+      this.checkRequiredArrayLength("Phase 13 Daedric pilot array", "PDV_DaedricPath_Hircine", "StigmaModByRace", extractNumericArrayProperty(props.get("StigmaModByRace")), 10, this.phase13Gap.bind(this));
+      this.checkRequiredArrayLength("Phase 13 Daedric pilot array", "PDV_DaedricPath_Hircine", "ExitDifficultyByRace", extractNumericArrayProperty(props.get("ExitDifficultyByRace")), 10, this.phase13Gap.bind(this));
+    }
+    if (pilotScript) {
+      const pilotProps = propertyMap(pilotScript);
+      this.checkObjectPropertyTarget("Phase 13 Hircine price property", pilotProps, "Price_Seeker", "PDV_SPEL_HircinePrice_Seeker", this.phase13Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 13 Hircine price property", pilotProps, "Price_Devoted", "PDV_SPEL_HircinePrice_Devoted", this.phase13Gap.bind(this));
+      this.checkObjectPropertyTarget("Phase 13 Hircine price property", pilotProps, "Price_Champion", "PDV_SPEL_HircinePrice_Champion", this.phase13Gap.bind(this));
+    } else {
+      this.phase13Gap("Phase 13 Hircine price property", "PDV_DaedricPath_Hircine is missing the live pilot script VMAD attachment.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    if (managerDetail) {
+      const managerScript = findScript(managerDetail.fields || {}, "PDV__ManagerQuest");
+      if (managerScript) {
+        const props = propertyMap(managerScript);
+        this.checkObjectPropertyTarget("Phase 13 manager property", props, "PDV_HircinePath", "PDV_DaedricPath_Hircine", this.phase13Gap.bind(this));
+        this.checkObjectPropertyTarget("Phase 13 manager property", props, "PDV_CurseStateService", "PDV_CurseState", this.phase13Gap.bind(this));
+      }
+    }
+  }
+
+  checkPhase13SourceContracts() {
+    this.checkSourceContains("Phase 13 source", "PDV_DaedricPath_Hircine", [
+      "Function RecordHuntRiteScaled(Float multiplier, String reason)",
+      "AddCommitmentSignal(\"hunt_rite_\" + reason)",
+      "AddStigma(HuntRiteStigmaDelta * appliedMultiplier, \"hunt_rite_\" + reason)",
+      "Function RenouncePath(String reason)",
+      "String Function GetPilotSummary()",
+    ], this.phase13Gap.bind(this));
+
+    this.checkSourceContains("Phase 13 source", "PDV__ManagerQuest", [
+      "PDV_DaedricPath_Hircine Property PDV_HircinePath Auto",
+      "PDV_CurseState Property PDV_CurseStateService Auto",
+      "Function HandleHircineHuntRite(String reason)",
+      "PDV_HircinePath.RecordHuntRiteScaled(multiplier, reason)",
+      "Float Function GetDaedricStigmaGainMultiplier(PDV_DeityBase deity)",
+      "Float stigma = PDV_HircinePath.GetStigma()",
+    ], this.phase13Gap.bind(this));
+
+    this.checkSourceContains("Phase 13 source", "PDV_EventBus", [
+      "Function RouteHircineHuntRite()",
+      "PDV_Manager.HandleHircineHuntRite(\"eventbus_\" + eventType)",
+    ], this.phase13Gap.bind(this));
+  }
+
+  checkPhase14() {
+    const manifest = this.checkPhase14Manifest();
+    if (!manifest) {
+      return;
+    }
+
+    this.checkPhase14SourceContracts();
+  }
+
+  checkPhase14Manifest() {
+    if (!exists(PHASE14_COMMITMENT_MANIFEST)) {
+      this.phase14Gap(
+        "Phase 14 commitment manifest",
+        "Phase 14 commitment pilot manifest is missing.",
+        PHASE14_COMMITMENT_MANIFEST,
+      );
+      return null;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(PHASE14_COMMITMENT_MANIFEST, "utf8"));
+    } catch (error) {
+      this.fail("Phase 14 commitment manifest", `Manifest could not be parsed: ${error.message}`, PHASE14_COMMITMENT_MANIFEST);
+      return null;
+    }
+
+    const implementationStatus = parsed.implementationStatus;
+    if (
+      parsed.id === "phase14-commitment-pilot"
+      && parsed.pilot?.managerRecord === "PDV__ManagerQuest"
+      && parsed.pilot?.deityRecord === "PDV_Deity_Kyne"
+      && parsed.pilot?.stateGlobal === "PDV_GLO_PatronState"
+      && ["kyne-pilot-live-generalization-deferred", "generalized-packet-live", "runtime-proven"].includes(implementationStatus)
+    ) {
+      this.pass(
+        "Phase 14 commitment manifest",
+        `Manifest locks the Kyne commitment pilot with status ${implementationStatus}.`,
+        PHASE14_COMMITMENT_MANIFEST,
+      );
+    } else {
+      this.phase14Gap(
+        "Phase 14 commitment manifest",
+        "Manifest does not match the current Kyne-first commitment pilot contract.",
+        PHASE14_COMMITMENT_MANIFEST,
+      );
+    }
+
+    return parsed;
+  }
+
+  checkPhase15() {
+    const manifest = this.checkPhase15Manifest();
+    if (!manifest) {
+      return;
+    }
+
+    this.checkPhase15ServiceRecord();
+    this.checkPhase15SourceContracts();
+  }
+
+  checkPhase15Manifest() {
+    if (!exists(PHASE15_CURSE_OVERLAY_MANIFEST)) {
+      this.phase15Gap(
+        "Phase 15 curse manifest",
+        "Phase 15 curse overlay manifest is missing.",
+        PHASE15_CURSE_OVERLAY_MANIFEST,
+      );
+      return null;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(PHASE15_CURSE_OVERLAY_MANIFEST, "utf8"));
+    } catch (error) {
+      this.fail("Phase 15 curse manifest", `Manifest could not be parsed: ${error.message}`, PHASE15_CURSE_OVERLAY_MANIFEST);
+      return null;
+    }
+
+    const implementationStatus = parsed.implementationStatus;
+    if (
+      parsed.id === "phase15-curse-overlay"
+      && parsed.service?.record === "PDV_CurseState"
+      && parsed.service?.global === "PDV_GLO_CurseState"
+      && ["service-live-detection-deferred", "detection-live", "runtime-proven"].includes(implementationStatus)
+    ) {
+      this.pass(
+        "Phase 15 curse manifest",
+        `Manifest locks the curse service contract with status ${implementationStatus}.`,
+        PHASE15_CURSE_OVERLAY_MANIFEST,
+      );
+    } else {
+      this.phase15Gap(
+        "Phase 15 curse manifest",
+        "Manifest does not match the current curse service contract.",
+        PHASE15_CURSE_OVERLAY_MANIFEST,
+      );
+    }
+
+    return parsed;
+  }
+
+  checkPhase15ServiceRecord() {
+    const service = this.recordsByEdid.get("PDV_CurseState");
+    if (service?.type === "QUST") {
+      this.pass("Phase 15 curse service", "PDV_CurseState exists as QUST.", PDV_ESP);
+    } else {
+      this.phase15Gap("Phase 15 curse service", "PDV_CurseState is missing or not a QUST.", PDV_ESP);
+    }
+
+    const global = this.recordsByEdid.get("PDV_GLO_CurseState");
+    if (global?.type === "GLOB") {
+      this.pass("Phase 15 curse global", "PDV_GLO_CurseState exists as GLOB.", PDV_ESP);
+    } else {
+      this.phase15Gap("Phase 15 curse global", "PDV_GLO_CurseState is missing or not a GLOB.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    if (managerDetail) {
+      const managerScript = findScript(managerDetail.fields || {}, "PDV__ManagerQuest");
+      if (managerScript) {
+        const props = propertyMap(managerScript);
+        this.checkObjectPropertyTarget("Phase 15 manager property", props, "PDV_CurseStateService", "PDV_CurseState", this.phase15Gap.bind(this));
+      }
+    }
+
+    const mcmDetail = this.recordDetails.get("PDV_MCM");
+    if (mcmDetail) {
+      const mcmScript = findScript(mcmDetail.fields || {}, "PDV_MCM");
+      if (mcmScript) {
+        const props = propertyMap(mcmScript);
+        this.checkObjectPropertyTarget("Phase 15 MCM property", props, "PDV_CurseStateService", "PDV_CurseState", this.phase15Gap.bind(this));
+      }
+    }
+  }
+
+  checkPhase15SourceContracts() {
+    this.checkSourceContains("Phase 15 source", "PDV_CurseState", [
+      "GlobalVariable Property PDV_GLO_CurseState Auto",
+      "Function RefreshFromPlayerState()",
+      "Int Function DetectCurseState(Actor playerRef)",
+      "Bool Function IsWerewolfSignalActive(Actor playerRef)",
+      "Bool Function IsVampireSignalActive(Actor playerRef)",
+      "Function OnCurseStateChange(Int oldState, Int newState, String reason)",
+    ], this.phase15Gap.bind(this));
+
+    this.checkSourceContains("Phase 15 source", "PDV__ManagerQuest", [
+      "PDV_CurseState Property PDV_CurseStateService Auto",
+      "Float Function GetCurseGainMultiplier(PDV_DeityBase deity)",
+      "if PDV_CurseStateService.IsWerewolf()",
+      "elseIf PDV_CurseStateService.IsVampire()",
+      "Function HandleCurseStateRefresh(String reason)",
+      "Function HandleCurseStateTransition(Int oldState, Int newState, String reason)",
+    ], this.phase15Gap.bind(this));
+
+    this.checkSourceContains("Phase 15 source", "PDV_PlayerEvents", [
+      "Event OnLycanthropyStateChanged(Bool abIsWerewolf)",
+      "Event OnVampirismStateChanged(Bool abIsVampire)",
+      "PDV_EventBusService.RouteCurseStateRefresh(reason)",
+    ], this.phase15Gap.bind(this));
+
+    this.checkSourceContains("Phase 15 source", "PDV_EventBus", [
+      "Function RouteCurseStateRefresh(String reason)",
+      "PDV_Manager.HandleCurseStateRefresh(\"eventbus_\" + reason)",
+    ], this.phase15Gap.bind(this));
+
+    this.checkSourceContains("Phase 15 source", "PDV_MCM", [
+      "String Function RunCurseStateSmoke()",
+      "PDV_CurseStateService.SetCurseState(PDV_CurseStateService.CURSE_UNKNOWN, \"mcm_scaffold_smoke\")",
+    ], this.phase15Gap.bind(this));
+  }
+
+  checkPhase16() {
+    const manifest = this.checkPhase16Manifest();
+    if (!manifest) {
+      return;
+    }
+
+    this.checkPhase16SourceContracts();
+  }
+
+  checkPhase16Manifest() {
+    if (!exists(PHASE16_NEGLECT_MANIFEST)) {
+      this.phase16Gap(
+        "Phase 16 neglect manifest",
+        "Phase 16 neglect pilot manifest is missing.",
+        PHASE16_NEGLECT_MANIFEST,
+      );
+      return null;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(PHASE16_NEGLECT_MANIFEST, "utf8"));
+    } catch (error) {
+      this.fail("Phase 16 neglect manifest", `Manifest could not be parsed: ${error.message}`, PHASE16_NEGLECT_MANIFEST);
+      return null;
+    }
+
+    const implementationStatus = parsed.implementationStatus;
+    if (
+      parsed.id === "phase16-neglect-pilot"
+      && parsed.pilot?.managerRecord === "PDV__ManagerQuest"
+      && parsed.pilot?.spell === "PDV_SPEL_Neglect_Kyne"
+      && parsed.pilot?.magicEffect === "PDV_MGEF_Neglect_Kyne"
+      && ["kyne-live-generalization-deferred", "generalized-packet-live", "runtime-proven"].includes(implementationStatus)
+    ) {
+      this.pass(
+        "Phase 16 neglect manifest",
+        `Manifest locks the Kyne neglect pilot with status ${implementationStatus}.`,
+        PHASE16_NEGLECT_MANIFEST,
+      );
+    } else {
+      this.phase16Gap(
+        "Phase 16 neglect manifest",
+        "Manifest does not match the current Kyne-first neglect pilot contract.",
+        PHASE16_NEGLECT_MANIFEST,
+      );
+    }
+
+    return parsed;
+  }
+
+  checkPhase14SourceContracts() {
+    this.checkSourceContains("Phase 14 source", "PDV__ManagerQuest", [
+      "Function EvaluateFormalCommitmentOffer()",
+      "PDV_DeityBase Function GetBestFormalCommitmentOfferCandidate()",
+      "Bool Function IsEligibleForFormalCommitmentOffer(PDV_DeityBase deity)",
+      "Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)",
+      "Function DebugAcceptPendingCommitment()",
+    ], this.phase14Gap.bind(this));
+
+    this.checkSourceContains("Phase 14 source", "PDV_MCM", [
+      "AddTextOption(\"Evaluate commitment\", \"Dawn-equivalent\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Accept commitment\", \"Carry-over\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Decline commitment\", \"Postpone\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Refuse commitment\", \"Cooldown\", OPTION_FLAG_NONE)",
+      "manager.DebugEvaluateCommitmentOffer()",
+      "manager.DebugAcceptPendingCommitment()",
+      "manager.DebugDeclinePendingCommitment()",
+      "manager.DebugRefusePendingCommitment()",
+    ], this.phase14Gap.bind(this));
+  }
+
+  checkPhase16SourceContracts() {
+    this.checkSourceContains("Phase 16 source", "PDV__ManagerQuest", [
+      "Int Property NEGLECT_ACTIVE_CAP = 3 AutoReadOnly",
+      "Function RunDawnApplySpellAndNeglectLayers()",
+      "if IsBroadWorshipActive()",
+      "Int activeCount = ApplyGenericNeglectFlags()",
+      "Int Function ApplyGenericNeglectFlags()",
+      "Bool Function IsEligibleForNeglectSelection(PDV_DeityBase deity)",
+      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne))",
+    ], this.phase16Gap.bind(this));
+  }
+
   checkOfflinePatcherRules() {
     if (!exists(PATCH_RULES_DIR)) {
       this.info("Offline patch rule manifests", "Patch-rules directory is not present yet.", PATCH_RULES_DIR);
@@ -2213,6 +2661,19 @@ class Verifier {
     }
 
     return null;
+  }
+
+  isAllowedUnnamedRecord(record) {
+    const recordType = String(record?.type || "").toUpperCase();
+    if (recordType !== "INFO") {
+      return false;
+    }
+
+    if (record?.formid === PHASE11_ARNGEIR_INFO_FORMID) {
+      return true;
+    }
+
+    return this.strictPhase11;
   }
 
   checkPhase11ArngeirInfo(info, infoFormid, topicFormid, source = "INFO") {
@@ -4217,6 +4678,10 @@ function parseArgs(argv) {
     strictPhase10: false,
     strictPhase11: false,
     strictPhase12: false,
+    strictPhase13: false,
+    strictPhase14: false,
+    strictPhase15: false,
+    strictPhase16: false,
     strictKhajiit: false,
     strictCommitment: false,
     strictNeglectDecay: false,
@@ -4245,6 +4710,16 @@ function parseArgs(argv) {
       args.strictPhase11 = true;
     } else if (arg === "--strict-phase12") {
       args.strictPhase12 = true;
+    } else if (arg === "--strict-phase13") {
+      args.strictPhase13 = true;
+    } else if (arg === "--strict-phase14") {
+      args.strictPhase14 = true;
+      args.strictCommitment = true;
+    } else if (arg === "--strict-phase15") {
+      args.strictPhase15 = true;
+    } else if (arg === "--strict-phase16") {
+      args.strictPhase16 = true;
+      args.strictNeglectDecay = true;
     } else if (arg === "--strict-khajiit") {
       args.strictKhajiit = true;
     } else if (arg === "--strict-commitment") {
@@ -4252,7 +4727,7 @@ function parseArgs(argv) {
     } else if (arg === "--strict-neglect-decay") {
       args.strictNeglectDecay = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11] [--strict-phase12]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -4275,6 +4750,10 @@ const verifier = new Verifier({
   strictPhase10: args.strictPhase10,
   strictPhase11: args.strictPhase11,
   strictPhase12: args.strictPhase12,
+  strictPhase13: args.strictPhase13,
+  strictPhase14: args.strictPhase14,
+  strictPhase15: args.strictPhase15,
+  strictPhase16: args.strictPhase16,
   strictKhajiit: args.strictKhajiit,
   strictCommitment: args.strictCommitment,
   strictNeglectDecay: args.strictNeglectDecay,

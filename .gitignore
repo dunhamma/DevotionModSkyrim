@@ -6,4 +6,8 @@ tools/pdv-phase9-author/bin/
 tools/pdv-phase9-author/obj/
 tools/pdv-next-packet-author/bin/
 tools/pdv-next-packet-author/obj/
+tools/pdv-phase12-author/bin/
+tools/pdv-phase12-author/obj/
+tools/pdv-phase13-author/bin/
+tools/pdv-phase13-author/obj/
 native/vendor/Creation-Kit-Platform-Extended/

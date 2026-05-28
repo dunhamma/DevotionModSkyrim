@@ -134,6 +134,10 @@ function parseArgs(argv) {
     strictPhase10: false,
     strictPhase11: false,
     strictPhase12: false,
+    strictPhase13: false,
+    strictPhase14: false,
+    strictPhase15: false,
+    strictPhase16: false,
     strictKhajiit: false,
     strictCommitment: false,
     strictNeglectDecay: false,
@@ -182,6 +186,14 @@ function parseArgs(argv) {
       args.strictPhase11 = true;
     } else if (arg === "--strict-phase12") {
       args.strictPhase12 = true;
+    } else if (arg === "--strict-phase13") {
+      args.strictPhase13 = true;
+    } else if (arg === "--strict-phase14") {
+      args.strictPhase14 = true;
+    } else if (arg === "--strict-phase15") {
+      args.strictPhase15 = true;
+    } else if (arg === "--strict-phase16") {
+      args.strictPhase16 = true;
     } else if (arg === "--strict-khajiit") {
       args.strictKhajiit = true;
     } else if (arg === "--strict-commitment") {
@@ -225,6 +237,10 @@ function usage(error = null, exitCode = 2) {
     "  --strict-phase10      Pass --strict-phase10 to the verifier.",
     "  --strict-phase11      Pass --strict-phase11 to the verifier.",
     "  --strict-phase12      Pass --strict-phase12 to the verifier.",
+    "  --strict-phase13      Pass --strict-phase13 to the verifier.",
+    "  --strict-phase14      Pass --strict-phase14 to the verifier.",
+    "  --strict-phase15      Pass --strict-phase15 to the verifier.",
+    "  --strict-phase16      Pass --strict-phase16 to the verifier.",
     "  --strict-khajiit      Pass --strict-khajiit to the verifier.",
     "  --strict-commitment   Pass --strict-commitment to the verifier.",
     "  --strict-neglect-decay Pass --strict-neglect-decay to the verifier.",
@@ -360,6 +376,18 @@ function runVerifier(args) {
   }
   if (args.strictPhase12) {
     verifierArgs.push("--strict-phase12");
+  }
+  if (args.strictPhase13) {
+    verifierArgs.push("--strict-phase13");
+  }
+  if (args.strictPhase14) {
+    verifierArgs.push("--strict-phase14");
+  }
+  if (args.strictPhase15) {
+    verifierArgs.push("--strict-phase15");
+  }
+  if (args.strictPhase16) {
+    verifierArgs.push("--strict-phase16");
   }
   if (args.strictKhajiit) {
     verifierArgs.push("--strict-khajiit");
