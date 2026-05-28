@@ -189,6 +189,10 @@ class ContentVerifier {
       return;
     }
 
+    // Style checks (§ 3.5 of PDV_STANDARDS).
+    this.checkTerminalPunctuation(prose, slot, loc);
+    this.checkContractions(prose, slot, loc);
+
     const hard = parseBudget(budget);
     if (hard === null) {
       this.warn("Budget format", `'${slot}' Budget '${budget}' is not hard/target form.`, loc);
@@ -218,6 +222,39 @@ class ContentVerifier {
       this.fail("Budget cap", `'${slot}' prose is ${prose.length} chars, over the ${hard} cap.`, loc);
     } else {
       this.pass("Budget cap", `'${slot}' within budget.`, loc);
+    }
+  }
+
+  checkTerminalPunctuation(prose, slot, loc) {
+    const last = prose.trimEnd().slice(-1);
+    if (last !== "." && last !== "!" && last !== "?") {
+      this.warn(
+        "Terminal punctuation",
+        `'${slot}' does not end with a period, exclamation mark, or question mark (ends with '${last}').`,
+        loc,
+      );
+    }
+  }
+
+  checkContractions(prose, slot, loc) {
+    const CONTRACTIONS = [
+      "don't", "can't", "won't", "isn't", "aren't", "wasn't", "weren't",
+      "hasn't", "haven't", "hadn't", "you're", "you've", "you'll", "you'd",
+      "i'm", "i've", "i'll", "i'd", "he's", "she's", "it's", "we're",
+      "we've", "we'll", "we'd", "they're", "they've", "they'll", "they'd",
+      "that's", "who's", "what's", "where's", "there's", "couldn't",
+      "wouldn't", "shouldn't", "didn't", "doesn't",
+    ];
+    const lower = prose.toLowerCase();
+    for (const contraction of CONTRACTIONS) {
+      if (lower.includes(contraction)) {
+        this.warn(
+          "Contraction",
+          `'${slot}' contains contraction '${contraction}' -- use the full form.`,
+          loc,
+        );
+        return; // One report per row.
+      }
     }
   }
 }
