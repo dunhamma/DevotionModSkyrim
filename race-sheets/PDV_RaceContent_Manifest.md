@@ -197,11 +197,11 @@ Tier-up notifications use one shared template per tier (the deity name is the va
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Notif_Nord_Observant_Entry | Notification | Noted | Narrator | 80/60 | TargetEndStates Section "Nord", Architecture v3 Section 16.2 | One per deity per save; deity inserted by caller | %s has begun to notice your deeds. Observant. |
-| PDV_Notif_Nord_Faithful_Entry | Notification | Noted | Narrator | 80/60 | TargetEndStates Section "Nord", Architecture v3 Section 16.2 | One per deity per save; suppress-if-offer-same-dawn | Your standing with %s is steady now. Faithful. |
-| PDV_Notif_Nord_Devoted_Entry | Notification | Marked | Narrator | 80/60 | TargetEndStates Section "Nord", Architecture v3 Section 16.2 | One per save; the patron's name | %s claims you. Devoted. |
+| PDV_Notif_Nord_Observant_Entry | Notification | Noted | Narrator | 80/60 | TargetEndStates Section "Nord", Architecture v3 Section 16.2 | One per deity per save; deity inserted by caller | %s has begun to notice your deeds. |
+| PDV_Notif_Nord_Faithful_Entry | Notification | Noted | Narrator | 80/60 | TargetEndStates Section "Nord", Architecture v3 Section 16.2 | One per deity per save; suppress-if-offer-same-dawn | Your standing with %s is steady now. |
+| PDV_Notif_Nord_Devoted_Entry | Notification | Marked | Narrator | 80/60 | TargetEndStates Section "Nord", Architecture v3 Section 16.2 | One per save; the patron's name | %s claims you. |
 | PDV_Notif_Nord_Observant_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per deity per direction per save | Your standing with %s has slipped to Wavering. |
-| PDV_Notif_Nord_Faithful_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per deity per direction per save | The favor of %s is thinning. Observant. |
+| PDV_Notif_Nord_Faithful_Lapse | Notification | Noted | Narrator | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per deity per direction per save | The favor of %s is thinning. |
 | PDV_Notif_Nord_Devoted_Lapse | Notification | Marked | Narrator | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per save per patron loss | The bond with %s loosens. The Devoted bond is not held. |
 
 Note on the `%s` token: this is a single-token substitution slot bound to the deity name, not free-form interpolation. Localization-readiness rule 1 still holds (no string concatenation, no player name); the deity name table is the only externalized variable.
