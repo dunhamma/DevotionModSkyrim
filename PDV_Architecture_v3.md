@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-28 (v3.46 - Phase 17 decay runtime closeout)
+Last revised: 2026-05-28 (v3.47 - Phase 18 Nord runtime matrix contract)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are runtime-proven. Phase 18A/B is source/readback implemented for the player status surface and Nord pilot scaffold, with runtime proof and CK-authored Nord dialogue still pending.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. The current targeted Phase 18 bridge strict gate, now including runtime-proven Phase 17, is clean at `FAIL=0, WARN=1, PASS=1155, INFO=29`, with only the expected `SEQ freshness` warning remaining after the live ESP write. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, plus a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding; this does not broaden generated dialogue or generic gameplay authoring support.
 
 ---
@@ -1279,11 +1279,20 @@ Developer Options are stored in `StorageUtil` key `PDV.UI.DeveloperOptions`, so 
 Detailed scoring remains debug-only. Normal play should understand major
 changes without being narrated through every event fire.
 
-Phase 18B Nord-specific rule: while a Nord is a vampire, formal Nord commitment offers and contextual favors are suppressed. Cure restores access but leaves a visible scar/status note. This is curse feedback and rupture handling, not a Molag Bal progression lane, and it does not clear patron piety.
+Phase 18B Nord-specific rule: while a Nord is a vampire, formal Nord commitment offers and contextual favors are suppressed. Cure restores access but leaves a visible scar/status note. This is curse feedback and rupture handling, not a Molag Bal progression lane, and it does not clear patron piety. The counted runtime matrix for this rule is now part of the Phase 18 manifest and runbook.
 
 ### 16.3 Dialogue privileges as UI
 
 Most race-coded UI lives in NPC reactions (Section 9). v3 should target ~30-50 race-coded dialogue topics for 1.0, focused on patron NPCs (priests, faction leaders, named characters with clear theological alignment).
+
+Phase 18B locks the first Nord review quartet into `references/authoring/PDV_Phase18StatusNord.manifest.json` and `references/authoring/PDV_Phase18_StatusNord_Runbook.md`:
+
+- Froki: Nord origin, active Kyne, Champion or higher.
+- Heimskr: Nord origin, active Talos, Champion or higher.
+- Andurs: Nord origin, broad patron state, not vampire.
+- Aela: Nord origin plus werewolf curse state or active Hircine path.
+
+These topics are manual CK work. CK may save the INFO records unnamed; readback must accept unnamed Topic Info only when speaker, prompt, response, owning topic, and conditions match. Phase 18 closeout also now carries a runtime matrix covering Player-page behavior, Developer Options persistence, Survey Devotion for broad/focused Nord states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative checks for all four dialogue surfaces.
 
 ### 16.4 UI defaults
 
@@ -2341,6 +2350,17 @@ religion-overhaul removal sets, targeted shrine adapters, system-family
 policies for survival/curse/quest/social mods, and maintainer briefs with
 focused smoke checklists. The 1.0 compatibility gate is Authoria accepted into
 its integration/test flow, with the other six lists at least `patch-packaged`.
+
+### v3.47 - 2026-05-28 - Phase 18 Nord runtime matrix contract
+
+Phase 18 now has a locked handoff/runtime matrix rather than a loose pending
+proof note. `references/authoring/PDV_Phase18StatusNord.manifest.json` records
+branch/topic/INFO hints for Froki, Heimskr, Andurs, and Aela; it also records
+the required Player-page, Developer Options, Survey Devotion, broad/focused
+Nord, Hircine/werewolf, vampire suppression/cure scar, save/load, and dialogue
+positive/negative proof cases. `references/authoring/PDV_Phase18_StatusNord_Runbook.md`
+expands those cases into CK-safe operator steps and keeps generated dialogue
+creation out of scope.
 
 ### v3.46 - 2026-05-28 - Phase 17 decay runtime closeout
 

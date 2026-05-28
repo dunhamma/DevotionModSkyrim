@@ -225,6 +225,10 @@ Phase 18A/B source/readback update (2026-05-28):
 - **Dialogue boundary:** Froki, Heimskr, Andurs, and Aela recognition topics are
   contracted for manual CK authoring. They are not complete until CK records,
   SEQ refresh, and positive/negative runtime proof are done.
+- **Runtime matrix:** Phase 18 now explicitly requires Player page, Developer
+  Options persistence, Survey Devotion for broad/focused Nord states,
+  Hircine/werewolf tension, vampire suppression, vampire cure scar, save/load
+  persistence, and per-speaker positive/negative dialogue proof.
 
 ---
 

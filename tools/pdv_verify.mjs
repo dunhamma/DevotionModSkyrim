@@ -222,6 +222,26 @@ const PHASE18_NORD_DIALOGUE_CONTRACTS = [
   },
 ];
 
+const PHASE18_SYSTEM_RUNTIME_CASES = [
+  "player-surface-fresh-nord",
+  "developer-options-persistence",
+  "survey-broad-old-ways",
+  "survey-broad-nine-divines",
+  "survey-focused-kyne",
+  "survey-focused-talos",
+  "hircine-werewolf-tension",
+  "nord-vampire-suppression",
+  "nord-vampire-cure-scar",
+  "save-load-persistence",
+];
+
+const PHASE18_DIALOGUE_RUNTIME_CASES = [
+  "froki-kyne-champion",
+  "heimskr-talos-champion",
+  "andurs-broad-death-rite",
+  "aela-hircine-tension",
+];
+
 const SKELETON_REPUTATION_TRACKS = [
   "ConcordatStanding",
   "ThalmorAlignment",
@@ -2270,11 +2290,16 @@ class Verifier {
         && actual.response === expected.response,
       ),
     );
+    const systemCases = parsed.runtimeMatrix?.systemCases || [];
+    const dialogueCases = parsed.runtimeMatrix?.dialogueCases || [];
+    const hasRuntimeMatrix = parsed.runtimeMatrix?.status === "planned-pending-runtime-proof"
+      && PHASE18_SYSTEM_RUNTIME_CASES.every((id) => systemCases.some((actual) => actual.id === id))
+      && PHASE18_DIALOGUE_RUNTIME_CASES.every((id) => dialogueCases.some((actual) => actual.id === id));
 
-    if (hasSurvey && hasMessages && hasDialogueContracts) {
-      this.pass("Phase 18 status/Nord manifest", `Manifest locks Survey Devotion, Nord curse messages, and dialogue contracts with status ${parsed.status}.`, PHASE18_STATUS_NORD_MANIFEST);
+    if (hasSurvey && hasMessages && hasDialogueContracts && hasRuntimeMatrix) {
+      this.pass("Phase 18 status/Nord manifest", `Manifest locks Survey Devotion, Nord curse messages, dialogue contracts, and runtime matrix with status ${parsed.status}.`, PHASE18_STATUS_NORD_MANIFEST);
     } else {
-      this.phase18Gap("Phase 18 status/Nord manifest", `Manifest contract mismatch: survey=${hasSurvey}, messages=${hasMessages}, dialogue=${hasDialogueContracts}.`, PHASE18_STATUS_NORD_MANIFEST);
+      this.phase18Gap("Phase 18 status/Nord manifest", `Manifest contract mismatch: survey=${hasSurvey}, messages=${hasMessages}, dialogue=${hasDialogueContracts}, runtimeMatrix=${hasRuntimeMatrix}.`, PHASE18_STATUS_NORD_MANIFEST);
     }
 
     return parsed;
