@@ -1,6 +1,6 @@
 # PDV Target End States - 1.0 Product Tracker
 **Created:** 2026-05-18
-**Last updated:** 2026-05-26
+**Last updated:** 2026-05-28
 **Status:** Living 1.0 product/end-state tracker
 **Purpose:** Track what each race's devotion should feel like at launch, how
 close each race is to implementation-ready acceptance, and where the 1.0
@@ -85,6 +85,18 @@ closeout items are crisis resolution hooks, final crisis trigger list,
 contextual favor lanes, and focused-deity hook posture. Reward magnitudes and
 exact effect values remain tuning work for every race until implementation and
 playtesting prove the feel.
+
+## 1.0 Compatibility Gate
+
+Phase 20 release compatibility is list-author focused, not end-user Wabbajack
+swap support. The hard 1.0 compatibility gate is an accepted Authoria / ARR
+integration-test package. The other six Bordello target lists (JOJ, TOT, HOH,
+MOM, DoD, and VOV) should reach `patch-packaged`: exact religion-removal set,
+one list-specific compatibility patch, exact placement notes, patcher rerun
+steps, maintainer brief, and focused smoke checklist.
+
+Compatibility patches may tune mechanics, route signals, and classify records,
+but they must not change PDV theology or race/deity target end states.
 
 ## Global Contextual Favor Rule
 

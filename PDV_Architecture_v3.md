@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-28 (v3.42 - Phase 13 runtime closeout and cadence lesson)
+Last revised: 2026-05-28 (v3.45 - Phase 20 compatibility rebaseline)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. The current targeted Phase 14-16 strict gate is clean at `FAIL=0, WARN=1, PASS=1092, INFO=28`, with only the expected `SEQ freshness` warning remaining after the live script write. Authoring infrastructure also has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, for generated/disposable plugins only; this does not broaden generic gameplay authoring support.
 
 ---
@@ -117,7 +117,7 @@ The v3 architecture adds the following subsystems on top of the v2 core. Each ge
 | 17 | Content authoring pipeline | Template scripts, `pdv_author.mjs` scope, offline classification/distribution patcher, verifier coverage |
 | 18 | ESP module structure | Framework-monolithic through 1.0; race ESP split deferred |
 | 19 | Performance budget | Pantheon-scale FormList iteration, dawn cost ceiling |
-| 20 | Mod compatibility | Soft-compat targets, signal cross-routing, optional patch ESPs |
+| 20 | Mod compatibility | Authoria-first list-author packages, tracked matrix, targeted adapters |
 
 ---
 
@@ -1527,40 +1527,107 @@ At 25-35 deities, the v2 architecture's hot paths scale linearly with deity coun
 
 ## 20. Mod compatibility (Phase 20)
 
-Compatibility targets from the project brief: Requiem, Sacrosanct, Growl, Vigilant, Pilgrim, Wintersun. v3 plans compatibility as optional patch ESPs rather than built-in framework awareness.
+Phase 20 is now an Authoria-first, list-author compatibility program. The
+release target is not end-user Wabbajack swap support; it is maintainer-ready
+packages that list authors can test, accept, and include. The tracked source of
+truth lives in `references/vanilla-gameplay/compatibility/phase20-targets.csv`
+plus the companion notes in that folder.
 
-### 20.1 Compat patch pattern
+The seven target lists are JOJ, TOT, HOH, MOM, DoD, VOV, and Authoria/ARR.
+Authoria is the P0 proof lane. The local ARR `ARSE` profile is the first
+analysis target, then the package must refresh against the Authoria authors'
+current list before patch development. Local DoD is a prototype lane only until
+its current public/plugin evidence is refreshed.
 
-Each compat patch is a separate ESP with `Skyrim.esm` + `PlayerDevotion_Framework.esp` + the target mod as masters. The patch typically does one or more of:
+### 20.1 Status ladder
 
-- **Stance row override.** A Requiem-aware build might shift specific deity stance rows to align with Requiem's harder cultural assumptions.
-- **Signal cross-routing.** Sacrosanct's vampire mechanics fire different events than vanilla; a compat patch wires a `PDV__SM_SacrosanctFeed` receiver to translate those into PDV signals.
-- **Boon adjustment.** Requiem's stat economy is different from vanilla; a compat patch swaps the framework's small contextual-favor magic effects for Requiem-tuned values.
+Compatibility status uses explicit non-public labels:
 
-### 20.2 Per-target compat posture
+- `plugin-reviewed`: plugin/mod list and initial overlap scan complete.
+- `patch-packaged`: exact removal set, one list-specific compat patch,
+  placement notes, patcher steps, and maintainer brief are ready.
+- `author-testing`: the package is with the list author for testing.
+- `smoke-passed`: focused author or local smoke passed.
+- `list-included`: the list has accepted PDV into its integration/test flow or
+  public build.
+- `public-supported`: PDV can publicly name the list as supported.
 
-| Target | Posture | Notes |
-|---|---|---|
-| Wintersun | Soft compat. Both mods can run; deity overlap is acknowledged via stance text rather than blocked. | Wintersun is the closest existing analogue. Document that PDV and Wintersun model devotion differently and can coexist for users who want both. |
-| Requiem | Patch ESP. Stance and contextual-favor adjustments for Requiem-tuned values. | The biggest single-mod compat lift. Defer to post-1.0 unless a strong reason emerges. |
-| Sacrosanct | Patch ESP. Vampire-state cross-routing. | Important for the curse-state subsystem (Section 13). |
-| Growl | Patch ESP. Werewolf-state cross-routing. | Companion to Sacrosanct on the werewolf side. |
-| Vigilant | Light compat. Vigilant's content already pressures Daedric stigma; ensure PDV's Daedric stigma doesn't double-fire. | Mostly a stigma-cadence question. |
-| Pilgrim | Soft compat. Pilgrim adds shrine mechanics that PDV's privilege subsystem must respect rather than override. | Shrine-activator override discipline matters here. |
+Public claims wait until endorsement/inclusion. Repo docs may name technical
+targets and evidence, but must not imply maintainer approval before it exists.
 
-### 20.3 Survival overlap
+### 20.2 Patch package rules
 
-Per the race-architecture pre-matrix requirements, every signal row has a survival-overlap field. v3 should:
+Each target list receives one list-specific compatibility patch, ESL-flagged
+unless record count, FormID shape, or tooling makes that unsafe. Shared
+templates or rules may be reused internally, but the author-facing package
+should not require a stack of generic compatibility ESPs.
 
-- Treat Survival Mode as the default reference; signals that overlap survival (sleep outdoor, exposure) should be detectable but not duplicated.
-- Provide a soft-compat patch for Frostfall and similar mods if it turns out vanilla Survival Mode coverage is too thin.
+Patch constraints:
 
-### 20.4 Compatibility decisions
+- Do not edit list-owned plugins directly.
+- Keep masters minimal: base game files, `PlayerDevotion_Framework.esp`, and
+  only the target plugins whose records are touched.
+- List patches win over generic internal templates.
+- No new hard dependencies are added for Phase 20.
+- Requiem lists receive PDV input patches and a reference-only RFTI output for
+  the exact snapshot; the list author regenerates final RFTI/Reqtificator
+  output in their own stack.
 
-- **Compat patch authoring tool.** Should `pdv_author.mjs` learn to author compat-patch ESPs? Probably yes, but only after the v3 core subsystems are stable.
-- **Wintersun coexistence.** PDV documents Wintersun as parallel-but-divergent coexistence for 1.0. Do not detect Wintersun, suppress features, or build active integration unless a later compatibility phase proves a concrete need.
-- **Generated compat patches.** The Section 17 offline patcher is the preferred long-term path for optional KID/SPID/SkyPatcher-style compatibility work. It should emit visible patch ESPs rather than adding KID, SPID, SkyPatcher, or powerofthree's Tweaks as hard requirements solely for classification/distribution.
+### 20.3 Replacement and adapter policy
 
+PDV is replacement-first for religion overhauls. A target list should remove
+the active religion overhaul plus direct dependent religion patches. Other
+religion mods such as Wintersun, Pilgrim, Archon, or Gods and Worship are
+research sources and removal targets, not 1.0 coexistence systems.
+
+Shrine behavior is hybrid:
+
+- PDV may own replacement religion shrine reward behavior through targeted
+  adapters for the core religion set.
+- Do not replace global vanilla shrine activator scripts.
+- Reference/classify survival, visual, temple, statue, and worldspace content
+  rather than taking ownership of those systems.
+- Cover vanilla Divine/Talos and major Daedric worship surfaces plus visible
+  list-added replacements. Unsupported deities receive context-only
+  recognition rather than invented blessing mechanics.
+
+System-family rules:
+
+- **Survival/needs:** context only. Survival state can affect eligibility,
+  caps, or duplicate-punishment avoidance, but not raw piety gain/loss.
+- **Curse mods:** curated theology transitions only: onset, cure, voluntary
+  embrace/renunciation, major feeding/restraint choices, beast-form rites, and
+  Hircine/Molag Bal/Azura-relevant moments.
+- **Quest/newland mods:** high-signal theology hooks only, with stable stages,
+  clear religious meaning, and supported-list relevance.
+- **Adult/romance/social frameworks:** curated authored hooks only. Do not add
+  generic framework event adapters.
+- **Requiem:** core PDV remains vanilla-plus; Requiem/list-specific balance
+  lives in the compatibility patch.
+
+Compatibility patches may tune mechanics, route signals, and classify records,
+but they must not change PDV theology, race/deity topology, patron logic, or
+player-facing doctrine.
+
+### 20.4 Handoff and smoke
+
+Each maintainer brief must include the exact removal set, exact load-order
+placement block, required patcher reruns, known non-blocking issues, and a
+focused smoke checklist. Non-local lists may start from public Bordello
+load-order pages; if author files differ, allow one normal package revision.
+
+Static analysis before packaging is names-plus-conflicts: scan plugin/mod
+names, then inspect targeted record conflicts for shrines, spells/effects,
+quests, races, keywords, globals, and patch masters. The PDV scanner/Mutagen
+style is preferred first; xEdit is the fallback for ambiguous conflicts.
+
+Focused smoke covers startup, MCM/status, shrine prayer, one devotion action,
+relevant curse/survival case where applicable, dawn tick, save/reload, and
+Papyrus log review. Smoke fails on missing masters, crash/startup failure, PDV
+Papyrus errors, broken MCM/status/prayer/dawn/save flows, or unresolved
+high-risk record conflicts. Handoff packages may carry only non-blocking known
+issues: cosmetic conflicts, unsupported outlier shrines, deferred quest hooks,
+or low-risk warnings.
 ---
 
 ## 21. Forward phase plan
@@ -1590,7 +1657,7 @@ excellent reusable example per subsystem, then clone.
 | **17** | Decay model (linear with tier-floor + grace) | Phase 14 | Decay applies at dawn; floors respected; curse/track modifiers compose |
 | **18** | Player-facing UI (player MCM tab, status spell, notification policy) | Phase 14 | Thematic display default; numeric override behind toggle |
 | **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Planning-first patcher validates rules against the resolved load order, `pdv_author.mjs` emits explicit manual follow-up packets for array work, and later generated classification patches can add PDV keywords/FormList entries from rules |
-| **20** | Mod compatibility first patch (Sacrosanct for vampire cross-routing) | Phase 15 | Sacrosanct feed events translate to PDV signals; no double-fire |
+| **20** | Authoria-first list compatibility packages | Phase 15 + Phase 19 | Authoria reaches accepted integration/test package; JOJ, TOT, HOH, MOM, DoD, and VOV reach `patch-packaged` with exact removals, one list patch, placement notes, patcher steps, and focused smoke checklist |
 | **21** | 1.0 content lock + polish | All above | Pantheon at 25-35 deities, all 10 races have at least one foreground option, all locked race architectures honored |
 
 V3 Preflight and Structural Skeleton are acceleration gates: they make the
@@ -1611,7 +1678,8 @@ For content-rich 1.0:
 - Patron commitment, decay, and neglect are all live.
 - Player-facing UI is thematic-by-default.
 - Normal play is quiet, recoverable, and vanilla-plus rather than chore-loop driven.
-- Sacrosanct compat patch ships alongside.
+- Authoria has an accepted integration/test package. JOJ, TOT, HOH, MOM, DoD,
+  and VOV are at least `patch-packaged`.
 - No regression of any v2 invariant.
 
 ### 21.2 Custom content priority classification (LOCKED)
@@ -1916,7 +1984,7 @@ internals into the target tracker.
 | Contested-lore stance assignments cause community pushback at 1.0 | Low | Document the contested-lore decisions in the public mod page; flag stance text per item; the architecture supports overriding stance via compat patches |
 | Werewolf/Vampire detection edge cases (Dawnguard VL race, vanilla beast race, modded curse states) | Medium | Defer-on-unknown rather than baking false state; Section 13.1 already specifies this for transient races |
 | `pdv_author.mjs` writes a patch that violates "Skyrim.esm first master" | Low (mitigated) | Tool already warns; document the manual remap path; verifier flags violations |
-| Wintersun coexistence confuses players | Low | Document explicitly; the systems can coexist with thematic confusion only |
+| Religion-overhaul replacement messaging is mistaken for public list endorsement | Medium | Keep internal target/evidence docs explicit, but public support claims wait for `list-included`/`public-supported` status |
 | Custom-race players see "Imperial fallback" without context | Low | Surface in MCM diagnostic; consider a player-visible "your race is treated as Imperial for devotion purposes - this can be overridden by a custom race patch" notification at first load |
 
 ---
@@ -1988,14 +2056,15 @@ deferred past 1.0.
   - (c) No.
 - **Recommendation:** (a). Visibility is cheap; capping prematurely is constraining.
 
-#### D-31  pdv_author.mjs compat-patch scope  (Section 20.4)
+#### D-31  Phase 20 compat-patch packaging  (Section 20.2)
 
-- **Question:** Should `pdv_author.mjs` learn to author compat-patch ESPs (Requiem, Sacrosanct, etc.)?
-- **Options:**
-  - (a) Yes, after v3 core subsystems are stable (post-Phase 17).
-  - (b) Yes, immediately.
-  - (c) No, keep compat patches manual.
-- **Recommendation:** (a). The tool's scope should follow proven need; compat patches are first manual, then templated when patterns emerge.
+- **Question:** Should Phase 20 ship generic compat patches, list-specific
+  patches, or generated packages?
+- **Resolution:** Use one list-specific patch per target list package, with
+  ESL flagging unless unsafe. Shared templates and scanner rules may be reused
+  internally, but the maintainer-facing package should stay list-specific and
+  simple. `pdv_author.mjs` or the offline patcher may learn these templates
+  after repeated patterns are proven; they are not new hard dependencies.
 
 ---
 
@@ -2222,6 +2291,17 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.45 - 2026-05-28 - Phase 20 compatibility rebaseline
+
+Phase 20 is rebaselined from a Sacrosanct-first standalone patch into an
+Authoria-first list-author compatibility program. The seven target lists are
+JOJ, TOT, HOH, MOM, DoD, VOV, and Authoria/ARR. Compatibility work now uses a
+tracked matrix/status ladder, one list-specific patch per package, exact
+religion-overhaul removal sets, targeted shrine adapters, system-family
+policies for survival/curse/quest/social mods, and maintainer briefs with
+focused smoke checklists. The 1.0 compatibility gate is Authoria accepted into
+its integration/test flow, with the other six lists at least `patch-packaged`.
 
 ### v3.42 - 2026-05-28 - Phase 13 runtime closeout and cadence lesson
 
@@ -2783,7 +2863,8 @@ commitment offers; curse states as multiplier/pressure overlays rather than
 Daedric unlocks; thematic UI by default; post-1.0 in-world patron switching; concrete
 script cloning over an abstract template; FormList-driven MCM ordering;
 monolithic framework ESP through 1.0; Phase 12 stack-depth benchmarking; and
-documented Wintersun coexistence.
+the then-current Wintersun coexistence note. Phase 20 later superseded the
+religion-overhaul posture with replacement-first list-author packages.
 
 ### v3.1 - 2026-05-16 - Roadmap, beta, and launch gates
 

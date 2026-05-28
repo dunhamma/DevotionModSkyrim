@@ -30,7 +30,7 @@ Use the strongest available source for the question being answered:
 | `religion-magic/` | Shrine blessings, diseases, magic effect archetypes, and vanilla religion records. |
 | `world/` | Worldspaces, locations, location-type keywords, dungeon categories, and encounter-zone notes. |
 | `rewards/` | Reward/neglect/effect magnitude palette and stacking cautions. |
-| `compatibility/` | Compatibility dossiers for major religion, survival, curse, and gameplay overhauls. |
+| `compatibility/` | Phase 20 target matrix plus dossiers for list-author packages, religion replacement, survival, curse, and gameplay-overhaul compatibility. |
 | `pdv-crosswalk/` | PDV signal hook index, UX lessons, deity/shrine crosswalks, and implementation risk notes. |
 
 ## External Reference Bridge

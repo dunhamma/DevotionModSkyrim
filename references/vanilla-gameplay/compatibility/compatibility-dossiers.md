@@ -1,176 +1,221 @@
 # PDV Compatibility Dossiers
 
-Status: living reference - first broad planning pass
+Status: living reference - Phase 20 rebaseline
 
-These are not compatibility commitments. They define what to inspect when PDV
-later chooses a compatibility target.
+These are internal planning dossiers. They do not claim public support,
+maintainer approval, or end-user Wabbajack swap safety. Phase 20 targets
+list-author packages first, with Authoria / ARR as P0.
+
+The tracked target matrix is `phase20-targets.csv`. The operating rules for
+status, package shape, smoke, and public claims live in
+`PDV_Phase20_CompatibilityNotes.md`.
 
 ## Default Compatibility Posture
 
-- Prefer soft compatibility through vanilla events, keywords, factions,
-  locations, and generated patch ESPs.
-- Do not make a major overhaul a hard dependency.
+- Use replacement-first handling for active religion overhauls.
+- Remove the target list's religion overhaul plus direct dependent religion
+  patches; keep non-religion survival, curse, visual, temple, city, quest, and
+  world content unless a concrete conflict appears.
+- Prefer one list-specific ESL-first patch per list package.
+- Do not edit list-owned plugins directly.
+- Keep patch masters minimal and avoid new hard dependencies.
 - Read external mod state only through explicit adapters.
 - Never let an external mod become PDV's piety source of truth.
-- If integration requires records from another plugin, put them in an optional
-  generated patch or hand-authored compat patch.
+- Public list support waits for `public-supported` status.
 
-## Wintersun - Faiths of Skyrim
+## List-Author Targets
 
-Source: `nexus_wintersun`
+### Authoria / ARR
 
-PDV posture: coexist by default, integrate only if a later compatibility phase
-proves a clear need.
+Phase 20 priority: P0.
 
-Why it matters:
+Posture: first full package lane. The local `D:\Wabbajack\modlists\ARR`
+install and selected `ARSE` profile are initial evidence only; patch
+development must refresh against the Authoria authors' current list.
 
-- It is the most obvious player comparison for Skyrim religion.
-- It has its own deity/favor/tenet model, so direct mechanical integration can
-  create doubled religion systems.
+Known overlap families from the local pass:
 
-Likely PDV route:
-
-- Do not detect or suppress Wintersun in 1.0.
-- Avoid overwriting shrine activators broadly.
-- Optional later patch could suppress duplicate notifications or map selected
-  Wintersun worship state into PDV read-only context, but not source-of-truth.
-
-## Pilgrim - A Religion Overhaul
-
-Source: `nexus_pilgrim`
-
-PDV posture: shrine/effect coexistence review.
-
-Why it matters:
-
-- It changes religion through shrine/effect balance rather than a large hidden
-  piety simulation.
-- It can overlap with PDV's blessing/privilege layer.
+- Requiem stack and RFTI output.
+- Archon religion layer to replace.
+- Frostfall, SunHelm, Campfire, and Survival Mode context.
+- Vampire/werewolf support and feeding-related plugins.
+- Daedric shrine surfaces, Vigilant/Glenmoril/Unslaad/LOTD-style quest and
+  newland content, and major shrine/statue/worldspace additions.
 
 Likely PDV route:
 
-- Avoid replacing shrine activators.
-- Use PDV's own blessings/neglect as separate spells/effects.
-- Later generated patch may classify Pilgrim shrine records if needed.
+- Ship one Authoria-specific compat patch with minimal masters.
+- Include a reference-only RFTI output for the exact snapshot if useful, but
+  require the author to regenerate final RFTI.
+- Keep Authoria priority as proof order only; do not fork PDV theology or
+  create Authoria-special mechanics.
 
-## Requiem - The Roleplaying Overhaul
+### Diaries of Dibella
 
-Source: `public_requiem_github`
+Phase 20 priority: P1.
 
-PDV posture: optional balance compatibility after core 1.0.
+Posture: local prototype lane, not release evidence. The installed DoD profile
+is slightly outdated, so use it to exercise the matrix/conflict/smoke process,
+then refresh from current public or author-provided evidence before packaging.
 
-Why it matters:
+Known overlap families from the local pass:
 
-- Requiem changes combat, perks, race balance, enemy danger, and economy
-  expectations.
-- PDV effect magnitudes that are modest in vanilla may be too strong or too weak
-  in Requiem.
-
-Likely PDV route:
-
-- Keep 1.0 magnitudes vanilla-safe.
-- Add a Requiem tuning patch later for reward/neglect magnitudes.
-- Avoid assumptions about enemy difficulty from vanilla actor categories.
-
-## Sacrosanct - Vampires of Skyrim
-
-Source: `nexus_sacrosanct`
-
-PDV posture: high-value optional curse-state adapter.
-
-Why it matters:
-
-- Vampire feeding, progression, and scripts can diverge from vanilla vampire
-  assumptions.
-- Its mod page warns about modified vampire scripts and compatibility patches,
-  which is exactly the kind of area PDV should touch carefully.
+- Wintersun religion layer and dependent Wintersun patches.
+- Growl, Sacrilege, Moonlight Tales Mini, and vampire feeding support.
+- Frostfall, Last Seed, Campfire, and bathing/cleanliness systems.
+- Dibella, Mara, Talos, temple, shrine, and social-location content.
 
 Likely PDV route:
 
-- Do not overwrite vampire quest scripts.
-- Prefer PO3/vanilla curse-state observation and optional Sacrosanct adapter
-  events if available.
-- Keep PDV vampire theology independent of Sacrosanct progression math.
+- Replace Wintersun and direct religion patches.
+- Keep survival, curse, bathing, social, temple, and visual content unless a
+  concrete conflict appears.
+- Use curated authored hooks for Dibella/Mara/Talos content only where
+  high-signal and stable.
 
-## Growl - Werebeasts of Skyrim
+### JOJ, TOT, HOH, MOM, VOV
 
-Source: `nexus_growl`
+Phase 20 priority: P1.
 
-PDV posture: optional werewolf/Hircine adapter.
+Posture: public Bordello load-order pages are acceptable pre-handoff evidence
+for initial package work. If author-provided files differ, perform one normal
+revision pass before author smoke.
+
+Likely PDV route:
+
+- Build exact removal sets from the current public plugin/modlist evidence.
+- Ship one list-specific ESL-first patch per package.
+- Treat list theme as compatibility context, not a reason to change PDV
+  theology.
+
+## System-Family Dossiers
+
+### Religion Overhauls
+
+Examples: Wintersun, Pilgrim, Archon, Gods and Worship.
+
+PDV posture: replacement-first research targets.
+
+Why they matter:
+
+- They identify common shrine, blessing, deity, favor, tenet, and notification
+  surfaces.
+- They often carry many direct dependent patches inside curated modlists.
+
+Likely PDV route:
+
+- Remove the active religion overhaul and direct dependent patches for a
+  supported-list package.
+- Use their compatibility notes to discover likely conflicts, not to inherit
+  their whole patch universe.
+- Do not promise triple-stack coexistence for 1.0.
+
+### Requiem - The Roleplaying Overhaul
+
+PDV posture: vanilla-plus core, list-specific Requiem patch.
 
 Why it matters:
 
-- It changes werebeast progression and can interact with werewolf race/form
+- Requiem changes combat, races, perks, economy, enemy danger, and reward
+  magnitude expectations.
+- Authoria is Requiem-based, so Requiem support is part of the P0 proof lane.
+
+Likely PDV route:
+
+- Keep core PDV vanilla-plus.
+- Tune values and classification through the Authoria/Requiem list patch.
+- Require author-side RFTI regeneration. Reference RFTI output is snapshot
+  proof, not a portable final artifact.
+
+### Curse Mods
+
+Examples: Sacrosanct, Sacrilege, Growl, Moonlight Tales, Vampire Feeding
+Tweaks, vampire/werewolf visual or behavior addons.
+
+PDV posture: curated theology transitions.
+
+Why they matter:
+
+- Vampirism and lycanthropy are major theological states for PDV.
+- List curse stacks may diverge from vanilla feeding, cure, or beast-form
   behavior.
-- Hircine, Bosmer, Nord, and curse-state overlays all care about beast form.
 
 Likely PDV route:
 
-- Observe beast-form state, do not modify Growl's progression.
-- Optional patch can map Growl-specific perks/effects into PDV curse context.
-- Keep Hircine piety separate from werewolf power growth.
+- Detect state reliably and avoid double-fire.
+- Support onset, cure, voluntary embrace/renunciation, major feeding or
+  restraint choices, beast-form rites, and Hircine/Molag Bal/Azura-relevant
+  moments when safe.
+- Do not mirror rank, perk, hunger, blood potency, or progression systems.
 
-## SunHelm / Streamlined Survival
+### Survival And Needs
 
-Source: `nexus_sunhelm`
+Examples: Survival Mode, Frostfall, SunHelm, Last Seed, Campfire, iNeed-style
+systems, bathing/cleanliness systems when they affect roleplay cadence.
 
-PDV posture: qualitative UX reference and optional survival-context adapter.
+PDV posture: context only.
 
-Why it matters:
+Why they matter:
 
-- It is a common modern survival/needs style and demonstrates configurable,
-  low-friction survival UX.
-- PDV travel, hunger, rest, weather, and wilderness signals can overlap with
-  survival mods.
-
-Likely PDV route:
-
-- Do not require survival mods.
-- If present, read survival state only through optional adapters.
-- Avoid punishing players twice for hunger/cold/fatigue.
-
-## Frostfall - Hypothermia Camping Survival
-
-Source: `nexus_frostfall`
-
-PDV posture: optional cold-weather context adapter, not a baseline dependency.
-
-Why it matters:
-
-- It makes weather, water, exposure, fire, and shelter mechanically meaningful.
-- Kyne/Kynareth/Khenarthi travel and weather favors can become too strong if
-  they also solve Frostfall problems.
+- Weather, rest, travel, hunger, exposure, camping, bathing, and hardship can
+  overlap with Kyne/Kynareth/Khenarthi, exile, pilgrimage, and wilderness
+  favors.
 
 Likely PDV route:
 
-- Keep weather favors modest and contextual.
-- Later patch can add Frostfall-aware caps or alternate favor magnitudes.
-- Avoid mandatory cold-survival worship loops.
+- Use survival state to shape eligibility, caps, or duplicate-punishment
+  avoidance.
+- Do not award or remove raw piety from hunger, cold, thirst, exposure, or
+  cleanliness meters.
+- Keep survival mods installed unless a specific record conflict exists.
 
-## Vigilant
+### Quest And Newland Mods
 
-Source: `nexus_vigilant`
+Examples: Vigilant, Glenmoril, Unslaad, LOTD, Wyrmstooth, major Daedric or
+temple quest expansions.
 
-PDV posture: later quest-content compatibility, not 1.0 core.
+PDV posture: high-signal curated hooks only.
 
-Why it matters:
+Why they matter:
 
-- It is a major Stendarr/Daedric quest mod with heavy moral and theological
-  content.
-- It can become a rich curated quest-stage source, but only with focused review.
+- Some quest choices are directly religious or Daedric.
+- Broad quest-stage mapping would turn compatibility into a content phase.
 
 Likely PDV route:
 
-- Do not infer from mod presence alone.
-- Optional compatibility pass should map selected quest stages to PDV signals.
-- Keep PDV Stendarr/Vigilant baseline playable without Vigilant installed.
+- Add hooks only when stages are stable, theology is clear, and the target is
+  relevant to a supported list.
+- Do not infer theology from plugin presence alone.
+- Defer low-impact quest hooks as non-blocking known issues.
 
-## Wintersun/Pilgrim/PDV Triple-Stack Rule
+### Adult, Romance, And Social Frameworks
 
-If a player runs multiple religion mods:
+PDV posture: curated authored hooks only.
 
-- PDV should remain quiet and additive.
-- Do not fight over shrine scripts.
-- Prefer separate blessings/effects with clear names.
-- Avoid duplicate daily prompts.
-- Offer MCM/debug visibility rather than forced migration.
+Why they matter:
+
+- Dibella, Mara, Sanguine, Molag Bal, taboo, and social-role content can overlap
+  with adult, romance, and social systems in curated lists.
+
+Likely PDV route:
+
+- Do not read generic framework events.
+- Recognize only specific authored quests, relationships, places, or outcomes
+  with clear religious meaning.
+- Keep PDV from becoming a generic interaction counter.
+
+## Shrine And Prayer Rule
+
+PDV may replace religion-mod shrine reward behavior after the old religion
+overhaul is removed. The implementation path is targeted adapters, not global
+vanilla shrine activator replacement.
+
+Release-list coverage target:
+
+- Vanilla Divine and Talos worship surfaces.
+- Major Daedric worship surfaces.
+- Visible list-added replacements for the core religion set.
+- Context-only recognition for unsupported deities or outlier shrine objects.
+
+Survival, visual, temple, statue, and worldspace records should be classified
+or referenced without taking ownership of those systems.
