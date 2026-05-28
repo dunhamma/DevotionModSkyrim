@@ -1,0 +1,25 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "ckra-live-proof",
+  "game": "SkyrimSE",
+  "generatedPlugin": "CKRA_LiveProof_Generated.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    { "op": "setActivePlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    {
+      "op": "duplicateCreateGlob",
+      "mode": "duplicate-create",
+      "plugin": "CKRA_LiveProof_Generated.esp",
+      "recordFamily": "GLOB",
+      "sourceEditorId": "CKRATest",
+      "targetEditorId": "CKRA_Blocked_UnsupportedValue_GLOB_Phase43",
+      "valueType": "script",
+      "value": "PDV_MCM",
+      "expectedResult": "UNSAFE_BLOCKED",
+      "expectedBlocker": "only primitive GLOB type/value mutation is in scope"
+    },
+    { "op": "closeSafeStatus" }
+  ]
+}

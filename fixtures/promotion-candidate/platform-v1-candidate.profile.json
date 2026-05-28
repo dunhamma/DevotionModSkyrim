@@ -1,0 +1,24 @@
+{
+  "schema": "creation-profile.v1",
+  "game": "SkyrimSE",
+  "modId": "platform-v1-promotion-candidate",
+  "sourcePlugin": "ExampleMod.esp",
+  "outputPolicy": "overlay",
+  "defaultOutput": "ExampleMod_Generated.esp",
+  "reportsDir": "reports",
+  "resourceConnectors": [
+    {
+      "type": "fixture",
+      "records": {
+        "EXM_MainQuest": {
+          "formid": "ExampleMod.esp:000800",
+          "recordType": "QUST"
+        },
+        "EXM_FLST_AllServices": {
+          "formid": "ExampleMod.esp:000802",
+          "recordType": "FLST"
+        }
+      }
+    }
+  ]
+}

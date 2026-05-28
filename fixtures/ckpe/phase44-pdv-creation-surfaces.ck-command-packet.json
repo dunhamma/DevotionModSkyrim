@@ -1,0 +1,29 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "player-devotion-phase9-12",
+  "game": "SkyrimSE",
+  "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "PDV_Phase9To12_CKProof.esp", "active": true },
+    { "op": "setActivePlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "inspectRecordCreationSurface", "recordFamily": "MESG", "target": "MESG" },
+    { "op": "inspectRecordCreationSurface", "recordFamily": "ACTI", "target": "ACTI" },
+    { "op": "inspectRecordCreationSurface", "recordFamily": "QUST", "target": "QUST" },
+    { "op": "inspectRecordCreationSurface", "recordFamily": "FLST", "target": "FLST" },
+    { "op": "inspectRecordFactorySurface", "recordFamily": "MESG", "target": "MESG" },
+    { "op": "inspectRecordFactorySurface", "recordFamily": "ACTI", "target": "ACTI" },
+    { "op": "inspectRecordFactorySurface", "recordFamily": "QUST", "target": "QUST" },
+    { "op": "inspectRecordFactorySurface", "recordFamily": "FLST", "target": "FLST" },
+    { "op": "inspectEditorIdSurface", "recordFamily": "MESG", "target": "MESG" },
+    { "op": "inspectEditorIdSurface", "recordFamily": "ACTI", "target": "ACTI" },
+    { "op": "inspectEditorIdSurface", "recordFamily": "QUST", "target": "QUST" },
+    { "op": "inspectEditorIdSurface", "recordFamily": "FLST", "target": "FLST" },
+    { "op": "inspectFormOwnershipSurface", "recordFamily": "MESG", "target": "MESG" },
+    { "op": "inspectFormOwnershipSurface", "recordFamily": "ACTI", "target": "ACTI" },
+    { "op": "inspectFormOwnershipSurface", "recordFamily": "QUST", "target": "QUST" },
+    { "op": "inspectFormOwnershipSurface", "recordFamily": "FLST", "target": "FLST" },
+    { "op": "closeSafeStatus" }
+  ]
+}

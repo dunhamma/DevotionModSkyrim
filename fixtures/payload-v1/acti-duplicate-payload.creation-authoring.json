@@ -1,0 +1,41 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "example-mod",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PayloadV1Proof.esp",
+  "operations": [
+    {
+      "id": "duplicate-activator-shell",
+      "kind": "record.duplicate_create",
+      "target": "EXM_ACTI_SourceDUPLICATE001",
+      "recordFamily": "ACTI",
+      "payload": {
+        "recordType": "ACTI",
+        "sourceEditorId": "EXM_ACTI_Source",
+        "sourceFormid": "ExampleMod.esp:001200",
+        "createdEditorId": "EXM_ACTI_SourceDUPLICATE001"
+      },
+      "verifierExpectations": [
+        {
+          "type": "conflictChainPresent"
+        }
+      ]
+    },
+    {
+      "id": "set-activator-payload",
+      "kind": "activator.payload.set",
+      "target": "EXM_ACTI_SourceDUPLICATE001",
+      "recordFamily": "ACTI",
+      "payload": {
+        "fullName": "Payload Proof Activator",
+        "model": "Clutter\\Common\\Basket01.nif"
+      },
+      "verifierExpectations": [
+        {
+          "type": "conflictChainPresent"
+        }
+      ]
+    }
+  ]
+}

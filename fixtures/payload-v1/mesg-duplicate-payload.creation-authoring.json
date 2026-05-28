@@ -1,0 +1,53 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "example-mod",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PayloadV1Proof.esp",
+  "operations": [
+    {
+      "id": "duplicate-message-shell",
+      "kind": "record.duplicate_create",
+      "target": "EXM_MSG_SourceDUPLICATE001",
+      "recordFamily": "MESG",
+      "payload": {
+        "recordType": "MESG",
+        "sourceEditorId": "EXM_MSG_Source",
+        "sourceFormid": "ExampleMod.esp:001100",
+        "createdEditorId": "EXM_MSG_SourceDUPLICATE001"
+      },
+      "verifierExpectations": [
+        {
+          "type": "conflictChainPresent"
+        }
+      ]
+    },
+    {
+      "id": "set-message-payload",
+      "kind": "message.payload.set",
+      "target": "EXM_MSG_SourceDUPLICATE001",
+      "recordFamily": "MESG",
+      "payload": {
+        "title": "Payload proof title",
+        "text": "Payload proof body",
+        "buttons": [
+          {
+            "text": "Accept"
+          },
+          {
+            "text": "Decline"
+          }
+        ]
+      },
+      "verifierExpectations": [
+        {
+          "type": "conflictChainPresent"
+        },
+        {
+          "type": "messageButton",
+          "text": "Accept"
+        }
+      ]
+    }
+  ]
+}

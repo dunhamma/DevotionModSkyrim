@@ -1,0 +1,18 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "ckra-liveproof-generated-lifecycle",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "generatedPlugin": "CKRA_LiveProof_Generated.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject", "profile": "Devotion Dev", "game": "SkyrimSE" },
+    { "op": "environment" },
+    { "op": "capabilities" },
+    { "op": "loadPlugin", "target": "CKRA_LiveProof_Generated.esp", "plugin": "CKRA_LiveProof_Generated.esp" },
+    { "op": "setActivePlugin", "target": "CKRA_LiveProof_Generated.esp", "plugin": "CKRA_LiveProof_Generated.esp" },
+    { "op": "getActivePlugin" },
+    { "op": "closeSafeStatus" }
+  ],
+  "verifierExpectations": []
+}

@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "output_path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/CKRA_PlatformV1SafeWriterProof.esp",
+  "records_written": 4,
+  "successful_count": 4,
+  "failed_count": 0,
+  "esl_flagged": true,
+  "masters": [
+    "Skyrim.esm",
+    "PlayerDevotion_Framework.esp"
+  ],
+  "details": [
+    {
+      "formid": "PlayerDevotion_Framework.esp:017E47",
+      "record_type": "FLST",
+      "op": "override",
+      "source": "PDV_Phase9To12_AutoWire.esp",
+      "modifications": {
+        "form_list_added": 1
+      }
+    },
+    {
+      "formid": "PlayerDevotion_Framework.esp:03AFBE",
+      "record_type": "QUST",
+      "op": "override",
+      "source": "PDV_Phase9To12_CKProof.esp",
+      "modifications": {
+        "scripts_attached": 1
+      }
+    },
+    {
+      "formid": "Skyrim.esm:01A696",
+      "record_type": "NPC_",
+      "op": "override",
+      "source": "ANV_SynHPHRaceMenuPatcher.esp",
+      "modifications": {
+        "keywords_added": 1,
+        "spells_added": 1,
+        "perks_added": 1,
+        "packages_added": 1,
+        "inventory_added": 1
+      }
+    },
+    {
+      "formid": "Skyrim.esm:0317C8",
+      "record_type": "PACK",
+      "op": "override",
+      "source": "Skyrim.esm",
+      "modifications": {
+        "conditions_added": 1
+      }
+    }
+  ],
+  "refresh_status": "complete"
+}

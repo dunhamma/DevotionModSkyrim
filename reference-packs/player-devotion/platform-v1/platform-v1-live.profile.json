@@ -1,0 +1,67 @@
+{
+  "schema": "creation-profile.v1",
+  "game": "SkyrimSE",
+  "modId": "player-devotion-platform-v1-live",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "outputPolicy": "generated-patch",
+  "defaultOutput": "CKRA_PlatformV1SafeWriterProof.esp",
+  "referencePack": "player-devotion",
+  "resourceConnectors": [
+    {
+      "type": "mo2-mcp",
+      "name": "anvil-devotion-dev"
+    },
+    {
+      "type": "fixture",
+      "name": "platform-v1-live-records",
+      "records": {
+        "PDV_MCM": {
+          "formid": "PlayerDevotion_Framework.esp:03AFBE",
+          "recordType": "QUST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_FLST_AllDeities": {
+          "formid": "PlayerDevotion_Framework.esp:017E47",
+          "recordType": "FLST",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "PDV_GLO_DebugLevel": {
+          "formid": "PlayerDevotion_Framework.esp:01DBD9",
+          "recordType": "GLOB",
+          "plugin": "PlayerDevotion_Framework.esp"
+        },
+        "AelaTheHuntress": {
+          "formid": "Skyrim.esm:01A696",
+          "recordType": "NPC_",
+          "plugin": "Skyrim.esm"
+        },
+        "ActorTypeNPC": {
+          "formid": "Skyrim.esm:013794",
+          "recordType": "KYWD",
+          "plugin": "Skyrim.esm"
+        },
+        "Candlelight": {
+          "formid": "Skyrim.esm:043324",
+          "recordType": "SPEL",
+          "plugin": "Skyrim.esm"
+        },
+        "Armsman00": {
+          "formid": "Skyrim.esm:0BABE4",
+          "recordType": "PERK",
+          "plugin": "Skyrim.esm"
+        },
+        "DefaultSandboxEditorLocation1024": {
+          "formid": "Skyrim.esm:0317C8",
+          "recordType": "PACK",
+          "plugin": "Skyrim.esm"
+        },
+        "Gold001": {
+          "formid": "Skyrim.esm:00000F",
+          "recordType": "MISC",
+          "plugin": "Skyrim.esm"
+        }
+      }
+    }
+  ]
+}
+

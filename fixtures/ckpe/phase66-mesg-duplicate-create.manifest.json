@@ -1,0 +1,34 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "pdv-ckproof",
+  "game": "SkyrimSE",
+  "sourcePlugin": "Skyrim.esm",
+  "output": "PDV_Phase9To12_CKProof.esp",
+  "operations": [
+    {
+      "id": "duplicate-mesg",
+      "kind": "record.duplicate_create",
+      "target": "_HelpPipBoyItemsDUPLICATE002",
+      "mode": "create",
+      "recordFamily": "MESG",
+      "ckSemanticsRequired": true,
+      "payload": {
+        "sourceEditorId": "_HelpPipBoyItems",
+        "targetEditorId": "_HelpPipBoyItemsDUPLICATE002",
+        "createdEditorId": "_HelpPipBoyItemsDUPLICATE002"
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "MESG"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.buttonCount",
+          "value": 0
+        }
+      ]
+    }
+  ]
+}

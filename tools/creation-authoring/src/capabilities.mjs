@@ -89,6 +89,36 @@ export const DEFAULT_CAPABILITIES = [
     notes: "Adds conditions to supported condition carriers."
   },
   {
+    kind: "glob.duplicate_create",
+    supportedBackends: ["ckpe-bridge"],
+    verifier: "record.exists",
+    fallback: "manual-packet",
+    requiresCkSemantics: true,
+    notes: "Duplicates an existing GLOB through in-process CKPE replay of CK's own duplicate/create path. This is narrower than generic createRecord support."
+  },
+  {
+    kind: "record.duplicate_create",
+    supportedBackends: ["ckpe-bridge"],
+    verifier: "record.exists",
+    fallback: "manual-packet",
+    requiresCkSemantics: true,
+    notes: "Duplicates an existing FLST/MESG/ACTI/QUST through guarded CK Object Window replay. This is family-specific and not generic record.create support."
+  },
+  {
+    kind: "message.payload.set",
+    supportedBackends: ["mutagen-patch-request", "mo2-mcp-patch-request"],
+    verifier: "message.payload",
+    fallback: "manual-packet",
+    notes: "Sets narrow MESG payload fields on a generated duplicate through a structured writer. This does not imply generic MESG create/update support."
+  },
+  {
+    kind: "activator.payload.set",
+    supportedBackends: ["mutagen-patch-request", "mo2-mcp-patch-request"],
+    verifier: "activator.payload",
+    fallback: "manual-packet",
+    notes: "Sets narrow ACTI payload fields on a generated duplicate through a structured writer. This does not imply generic ACTI create/update support."
+  },
+  {
     kind: "record.create",
     supportedBackends: ["ckpe-bridge"],
     verifier: "record.exists",
@@ -279,6 +309,10 @@ const DEFAULT_TIER_BY_KIND = {
   "package.add": "safe_writer",
   "inventory.add": "safe_writer",
   "condition.add": "safe_writer",
+  "glob.duplicate_create": "ck_required",
+  "record.duplicate_create": "ck_required",
+  "message.payload.set": "safe_writer",
+  "activator.payload.set": "safe_writer",
   "record.create": "ck_required",
   "record.update": "ck_required",
   "quest.create": "ck_required",

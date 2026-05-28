@@ -1,0 +1,28 @@
+{
+  "schema": "creation-authoring.ck-readback-proof.v1",
+  "phase": "phase58-glob-saved-readback",
+  "plugin": "PDV_Phase9To12_CKProof.esp",
+  "path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/PDV_Phase9To12_CKProof.esp",
+  "fileLength": 2992,
+  "records": [
+    {
+      "editorId": "PDV_GLO_ActivePietyDUPLICATE001",
+      "formId": "0x050036c8",
+      "recordType": "GLOB",
+      "flags": "0x0",
+      "fields": {
+        "FNAM": "s",
+        "FLTV": 1
+      }
+    }
+  ],
+  "proof": {
+    "savedDuplicateFound": true,
+    "winningPlugin": "PDV_Phase9To12_CKProof.esp",
+    "payloadMatchesRequested": true,
+    "requestedValueType": "short",
+    "requestedValue": 1,
+    "readbackMethod": "direct ESP binary subrecord scan after CK UI save",
+    "supportGate": "readback proof only; promotion still requires proof-ledger and product command wiring"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "player-devotion-ckpe-lookup",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "generatedPlugin": "PlayerDevotion_Framework.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "findRecordByEditorId", "target": "PDV_MCM", "editorId": "PDV_MCM", "recordFamily": "QUST" },
+    { "op": "findRecordByEditorId", "target": "PDV__ManagerQuest", "editorId": "PDV__ManagerQuest", "recordFamily": "QUST" },
+    { "op": "findRecordByEditorId", "target": "PDV_FLST_AllDeities", "editorId": "PDV_FLST_AllDeities", "recordFamily": "FLST" },
+    { "op": "findRecordByEditorId", "target": "PDV_GLO_ActivePiety", "editorId": "PDV_GLO_ActivePiety", "recordFamily": "GLOB" }
+  ],
+  "verifierExpectations": [
+    { "type": "recordExists", "target": "PDV_MCM", "recordFamily": "QUST" },
+    { "type": "recordExists", "target": "PDV__ManagerQuest", "recordFamily": "QUST" },
+    { "type": "recordExists", "target": "PDV_FLST_AllDeities", "recordFamily": "FLST" },
+    { "type": "recordExists", "target": "PDV_GLO_ActivePiety", "recordFamily": "GLOB" }
+  ]
+}

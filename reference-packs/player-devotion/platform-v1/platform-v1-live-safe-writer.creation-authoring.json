@@ -1,0 +1,107 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v1-live-safe-writer",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "output": "CKRA_PlatformV1SafeWriterProof.esp",
+  "operations": [
+    {
+      "id": "vmad-attach-script",
+      "kind": "vmad.attach_script",
+      "target": "PDV_MCM",
+      "recordFamily": "QUST",
+      "payload": {
+        "script": "CKRA_PlatformV1ProofScript",
+        "properties": [
+          {
+            "name": "DebugGlobal",
+            "type": "Object",
+            "value": "PDV_GLO_DebugLevel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "formlist-add",
+      "kind": "formlist.add",
+      "target": "PDV_FLST_AllDeities",
+      "recordFamily": "FLST",
+      "payload": {
+        "entry": "PDV_MCM"
+      }
+    },
+    {
+      "id": "keyword-add",
+      "kind": "keyword.add",
+      "target": "AelaTheHuntress",
+      "recordFamily": "NPC_",
+      "payload": {
+        "keywords": [
+          "ActorTypeNPC"
+        ]
+      }
+    },
+    {
+      "id": "spell-add",
+      "kind": "spell.add",
+      "target": "AelaTheHuntress",
+      "recordFamily": "NPC_",
+      "payload": {
+        "spells": [
+          "Candlelight"
+        ]
+      }
+    },
+    {
+      "id": "perk-add",
+      "kind": "perk.add",
+      "target": "AelaTheHuntress",
+      "recordFamily": "NPC_",
+      "payload": {
+        "perks": [
+          "Armsman00"
+        ]
+      }
+    },
+    {
+      "id": "package-add",
+      "kind": "package.add",
+      "target": "AelaTheHuntress",
+      "recordFamily": "NPC_",
+      "payload": {
+        "packages": [
+          "DefaultSandboxEditorLocation1024"
+        ]
+      }
+    },
+    {
+      "id": "inventory-add",
+      "kind": "inventory.add",
+      "target": "AelaTheHuntress",
+      "recordFamily": "NPC_",
+      "payload": {
+        "items": [
+          {
+            "item": "Gold001",
+            "count": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "condition-add",
+      "kind": "condition.add",
+      "target": "DefaultSandboxEditorLocation1024",
+      "recordFamily": "PACK",
+      "payload": {
+        "conditions": [
+          {
+            "function": "GetIsID",
+            "operator": "EqualTo"
+          }
+        ]
+      }
+    }
+  ]
+}
+

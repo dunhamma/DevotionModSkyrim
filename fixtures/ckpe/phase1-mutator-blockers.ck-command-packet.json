@@ -1,0 +1,59 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "generic-ckpe-phase1-mutator-blockers",
+  "game": "SkyrimSE",
+  "sourcePlugin": "Skyrim.esm",
+  "generatedPlugin": "CKRA_Smoke_Generated.esp",
+  "failClosed": true,
+  "commands": [
+    {
+      "op": "createRecord",
+      "recordFamily": "GLOB",
+      "editorId": "CKRA_Test_Global",
+      "plugin": "CKRA_Smoke_Generated.esp"
+    },
+    {
+      "op": "attachScript",
+      "target": "CKRA_Test_Quest",
+      "recordFamily": "QUST",
+      "payload": {
+        "script": "CKRA_TestQuestScript"
+      }
+    },
+    {
+      "op": "setProperty",
+      "target": "CKRA_Test_Quest",
+      "recordFamily": "QUST",
+      "payload": {
+        "script": "CKRA_TestQuestScript",
+        "name": "DebugGlobal",
+        "type": "Object",
+        "value": "CKRA_Test_Global"
+      }
+    },
+    {
+      "op": "setArrayProperty",
+      "target": "CKRA_Test_Quest",
+      "recordFamily": "QUST",
+      "payload": {
+        "script": "CKRA_TestQuestScript",
+        "name": "Targets",
+        "type": "Object[]",
+        "values": ["CKRA_Test_Global"]
+      }
+    },
+    {
+      "op": "addFormListEntry",
+      "target": "CKRA_Test_List",
+      "recordFamily": "FLST",
+      "payload": {
+        "entry": "CKRA_Test_Global"
+      }
+    },
+    {
+      "op": "generateSeq",
+      "plugin": "CKRA_Smoke_Generated.esp"
+    }
+  ],
+  "verifierExpectations": []
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "mesg-payload-v1-live",
+  "game": "SkyrimSE",
+  "sourcePlugin": "Skyrim.esm",
+  "output": "PDV_Phase9To12_CKProof.esp",
+  "operations": [
+    {
+      "id": "duplicate-message-shell",
+      "kind": "record.duplicate_create",
+      "target": "_HelpPipBoyItemsDUPLICATE002",
+      "mode": "create",
+      "recordFamily": "MESG",
+      "ckSemanticsRequired": true,
+      "payload": {
+        "recordType": "MESG",
+        "sourceEditorId": "_HelpPipBoyItems",
+        "targetEditorId": "_HelpPipBoyItemsDUPLICATE002",
+        "createdEditorId": "_HelpPipBoyItemsDUPLICATE002"
+      },
+      "verifierExpectations": [
+        {
+          "type": "conflictChainPresent"
+        }
+      ]
+    },
+    {
+      "id": "set-message-payload",
+      "kind": "message.payload.set",
+      "target": "_HelpPipBoyItemsDUPLICATE002",
+      "recordFamily": "MESG",
+      "payload": {
+        "title": "CKRA Payload Proof",
+        "text": "MESG payload proof body",
+        "buttons": [
+          {
+            "text": "Accept"
+          }
+        ]
+      },
+      "verifierExpectations": [
+        {
+          "type": "conflictChainPresent"
+        },
+        {
+          "type": "messageButton",
+          "text": "Accept"
+        }
+      ]
+    }
+  ]
+}

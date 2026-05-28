@@ -1,0 +1,91 @@
+{
+  "schema": "creation-authoring.proof-ledger.v1",
+  "generatedAt": "2026-05-23T03:35:39.699Z",
+  "sourceReport": "fixtures/ckpe/phase61-glob-duplicate-create-strict-run-report.json",
+  "project": "pdv-ckproof",
+  "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+  "status": "PASS",
+  "proofs": [
+    {
+      "id": "GLOB:glob.duplicate_create:PDV_GLO_ActivePietyDUPLICATE002",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "fixture": "fixtures/ckpe/phase59-glob-duplicate-create-product-command.ck-command-packet.json",
+      "verifiedAt": "2026-05-23T03:35:39.699Z",
+      "operation": "glob.duplicate_create",
+      "target": "PDV_GLO_ActivePietyDUPLICATE002",
+      "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+      "strictReport": "fixtures/ckpe/phase61-glob-duplicate-create-strict-run-report.json",
+      "reportStatus": "PASS",
+      "backend": "ckpe-bridge",
+      "verifierStatus": "PASS",
+      "readbackStatus": "PASS",
+      "readbackNormalizer": {
+        "status": "PASS",
+        "operation": "glob.duplicate_create",
+        "recordFamily": "GLOB",
+        "normalizer": "record-exists"
+      },
+      "commandEvidenceStatus": "PASS",
+      "coverage": {
+        "manifestOperation": true,
+        "backend": true,
+        "ckpeOrWriterHandler": true,
+        "ckCommandEvidence": true,
+        "readbackNormalizer": true,
+        "verifier": true,
+        "strictReport": true,
+        "proofFixture": true
+      },
+      "missingCoverage": [],
+      "commandEvidence": [
+        {
+          "op": "duplicateCreateGlob",
+          "status": "PASS",
+          "target": "PDV_GLO_ActivePietyDUPLICATE002",
+          "recordFamily": "GLOB",
+          "evidence": {
+            "requested": {
+              "op": "duplicateCreateGlob",
+              "targetEditorId": "PDV_GLO_ActivePietyDUPLICATE002",
+              "sourceEditorId": "PDV_GLO_ActivePiety",
+              "recordFamily": "GLOB",
+              "plugin": "PDV_Phase9To12_CKProof.esp",
+              "valueType": "short",
+              "value": "1"
+            },
+            "guards": {
+              "targetEditorIdProvided": true,
+              "targetEditorIdAbsentBeforeReplay": true,
+              "selectionDependentReplayGuardedByExplicitSource": true
+            },
+            "replay": {
+              "attempted": true,
+              "proven": true
+            },
+            "mutation": {
+              "attempted": true,
+              "provenInMemory": true
+            },
+            "createdRecord": {
+              "record": {
+                "found": true,
+                "editorId": "PDV_GLO_ActivePietyDUPLICATE002",
+                "formId": 83912081,
+                "formType": 9,
+                "ownedByActivePlugin": true
+              }
+            },
+            "productCommandReadyForSave": true
+          }
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "schema": "creation-authoring.proof-ledger-verification.v1",
+    "status": "PASS",
+    "generatedAt": "2026-05-23T03:35:39.700Z",
+    "failures": []
+  }
+}

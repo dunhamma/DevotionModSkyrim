@@ -83,6 +83,44 @@
       "fallback": "manual-packet"
     },
     {
+      "kind": "glob.duplicate_create",
+      "tier": "ck_required",
+      "recordFamilies": ["GLOB"],
+      "supportedBackends": ["ckpe-bridge"],
+      "verifier": "record.exists",
+      "fallback": "manual-packet",
+      "requiresCkSemantics": true,
+      "notes": "Duplicates an existing GLOB through in-process CKPE replay of CK's own duplicate/create path. This is narrower than generic createRecord support."
+    },
+    {
+      "kind": "record.duplicate_create",
+      "tier": "ck_required",
+      "recordFamilies": ["FLST", "MESG", "ACTI", "QUST"],
+      "supportedBackends": ["ckpe-bridge"],
+      "verifier": "record.exists",
+      "fallback": "manual-packet",
+      "requiresCkSemantics": true,
+      "notes": "Duplicates an existing FLST/MESG/ACTI/QUST through guarded CK Object Window replay. This remains proof-gated per family and does not promote generic record.create."
+    },
+    {
+      "kind": "message.payload.set",
+      "tier": "safe_writer",
+      "recordFamilies": ["MESG"],
+      "supportedBackends": ["mutagen-patch-request", "mo2-mcp-patch-request"],
+      "verifier": "message.payload",
+      "fallback": "manual-packet",
+      "notes": "Sets narrow MESG payload fields on a generated duplicate through a structured writer. This remains proof-gated and does not promote generic MESG create/update."
+    },
+    {
+      "kind": "activator.payload.set",
+      "tier": "safe_writer",
+      "recordFamilies": ["ACTI"],
+      "supportedBackends": ["mutagen-patch-request", "mo2-mcp-patch-request"],
+      "verifier": "activator.payload",
+      "fallback": "manual-packet",
+      "notes": "Sets narrow ACTI payload fields on a generated duplicate through a structured writer. This remains proof-gated and does not promote generic ACTI create/update."
+    },
+    {
       "kind": "record.create",
       "tier": "research_only",
       "recordFamilies": ["*"],

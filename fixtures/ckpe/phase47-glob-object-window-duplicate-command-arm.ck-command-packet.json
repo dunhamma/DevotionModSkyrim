@@ -1,0 +1,16 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "transport": "named-pipe",
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "setActivePlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    {
+      "op": "armGlobCreateCallObserver",
+      "plugin": "PDV_Phase9To12_CKProof.esp",
+      "recordFamily": "GLOB",
+      "target": "objectWindowWndProc"
+    },
+    { "op": "closeSafeStatus" }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "schema": "creation-authoring.run-report.v1",
+  "status": "PASS",
+  "startedAt": "2026-05-23T03:29:00.000Z",
+  "finishedAt": "2026-05-23T03:30:00.000Z",
+  "reportPath": "fixtures/ckpe/phase61-glob-duplicate-create-strict-run-report.json",
+  "manifest": {
+    "project": "pdv-ckproof",
+    "game": "SkyrimSE",
+    "sourcePlugin": "PlayerDevotion_Framework.esp",
+    "output": "PDV_Phase9To12_CKProof.esp"
+  },
+  "profile": {
+    "modId": "pdv-ckproof",
+    "outputPolicy": "overlay"
+  },
+  "phases": [
+    {
+      "phase": "plan",
+      "status": "PASS",
+      "summary": {
+        "total": 1,
+        "ready": 1,
+        "manual": 0,
+        "abort": 0
+      }
+    },
+    {
+      "phase": "apply",
+      "status": "SKIPPED",
+      "message": "No safe patch operations were ready to execute."
+    },
+    {
+      "phase": "ck-apply",
+      "status": "PASS",
+      "message": "Phase 59 CKPE packet completed.",
+      "operations": ["duplicate-global"],
+      "adapterResult": {
+        "schema": "creation-authoring.ck-command-result.v1",
+        "status": "PASS",
+        "sourceFixture": "generated/phase59-glob-duplicate-create-product-command.ck-result.json",
+        "commands": [
+          {
+            "op": "duplicateCreateGlob",
+            "status": "PASS",
+            "target": "PDV_GLO_ActivePietyDUPLICATE002",
+            "evidence": {
+              "requested": {
+                "op": "duplicateCreateGlob",
+                "targetEditorId": "PDV_GLO_ActivePietyDUPLICATE002",
+                "sourceEditorId": "PDV_GLO_ActivePiety",
+                "recordFamily": "GLOB",
+                "plugin": "PDV_Phase9To12_CKProof.esp",
+                "valueType": "short",
+                "value": "1"
+              },
+              "guards": {
+                "targetEditorIdProvided": true,
+                "targetEditorIdAbsentBeforeReplay": true,
+                "selectionDependentReplayGuardedByExplicitSource": true
+              },
+              "replay": {
+                "attempted": true,
+                "proven": true
+              },
+              "mutation": {
+                "attempted": true,
+                "provenInMemory": true
+              },
+              "createdRecord": {
+                "record": {
+                  "found": true,
+                  "editorId": "PDV_GLO_ActivePietyDUPLICATE002",
+                  "formId": 83912081,
+                  "formType": 9,
+                  "ownedByActivePlugin": true
+                }
+              },
+              "productCommandReadyForSave": true
+            }
+          },
+          {
+            "op": "postUiSaveCommand",
+            "status": "PASS",
+            "evidence": {
+              "requestedPlugin": "PDV_Phase9To12_CKProof.esp",
+              "guards": {
+                "requestedPluginLoaded": true,
+                "requestedPluginIsActive": true,
+                "targetIsDisposableGeneratedPlugin": true,
+                "mainWindowFound": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "phase": "compile",
+      "status": "SKIPPED",
+      "message": "No Papyrus compilation is required for GLOB duplicate-create proof."
+    },
+    {
+      "phase": "readback-collect",
+      "status": "PASS",
+      "sourceFixture": "fixtures/ckpe/phase60-glob-product-saved-readback-proof.json",
+      "message": "Phase 60 direct ESP readback found the saved duplicate payload."
+    },
+    {
+      "phase": "verify",
+      "status": "PASS",
+      "report": {
+        "schema": "creation-authoring.verify-report.v1",
+        "status": "PASS",
+        "summary": {
+          "PASS": 1,
+          "FAIL": 0,
+          "TODO": 0
+        },
+        "results": [
+          {
+            "operationId": "duplicate-global",
+            "target": "PDV_GLO_ActivePietyDUPLICATE002",
+            "status": "PASS",
+            "message": "PDV_GLO_ActivePietyDUPLICATE002 GLOB duplicate-create matches readback.",
+            "details": {
+              "readbackNormalizer": {
+                "status": "PASS",
+                "operation": "glob.duplicate_create",
+                "recordFamily": "GLOB",
+                "normalizer": "record-exists"
+              },
+              "created": {
+                "editorId": "PDV_GLO_ActivePietyDUPLICATE002",
+                "formid": "0x05006591"
+              },
+              "source": {
+                "editorId": "PDV_GLO_ActivePiety"
+              },
+              "global": {
+                "type": "short",
+                "value": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "phase": "project-verifier",
+      "status": "SKIPPED",
+      "message": "No project-specific verifier is required for isolated CK proof plugin promotion."
+    },
+    {
+      "phase": "strict-gate",
+      "status": "PASS",
+      "message": "Strict mode passed.",
+      "blockers": []
+    }
+  ],
+  "manualPackets": [],
+  "planSummary": {
+    "total": 1,
+    "ready": 1,
+    "manual": 0,
+    "abort": 0
+  },
+  "planOperations": [
+    {
+      "id": "duplicate-global",
+      "kind": "glob.duplicate_create",
+      "target": "PDV_GLO_ActivePietyDUPLICATE002",
+      "mode": "create",
+      "onConflict": "fail",
+      "recordFamily": "GLOB",
+      "ckSemanticsRequired": true,
+      "capabilityTier": "ck_required",
+      "backend": "ckpe-bridge",
+      "status": "ready",
+      "mergePolicy": {
+        "promote": "reviewed",
+        "preserveFormId": "when-safe",
+        "requiresCkFinalization": false,
+        "allowSourceMutation": false
+      },
+      "reviewIntent": null,
+      "verifierExpectations": [],
+      "runtimeSmokeRequired": false
+    }
+  ]
+}

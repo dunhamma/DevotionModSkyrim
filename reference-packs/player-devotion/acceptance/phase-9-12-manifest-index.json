@@ -1,0 +1,47 @@
+{
+  "schema": "creation-authoring.project-pack-manifest-index.v1",
+  "project": "player-devotion",
+  "acceptanceTarget": "phase9-12",
+  "profile": "../player-devotion-phase9-12.profile.json",
+  "combinedManifest": "../manifests/PDV_Phase9To12_Acceptance.creation-authoring.json",
+  "phaseManifests": [
+    {
+      "phase": "phase9",
+      "manifest": "../manifests/PDV_Phase9BosmerState.creation-authoring.json",
+      "status": "static-ready",
+      "notes": "Bosmer state-path slice plans without manual packets and is ready for generated-plugin live proof."
+    },
+    {
+      "phase": "phase10",
+      "manifest": null,
+      "status": "live-discovery-required",
+      "notes": "Do not infer intent. Extract from live Devotion records, scripts, and pdv_verify gates before adding executable operations."
+    },
+    {
+      "phase": "phase11",
+      "manifest": null,
+      "status": "live-discovery-required",
+      "notes": "Do not infer intent. Extract from live Devotion records, scripts, and pdv_verify gates before adding executable operations."
+    },
+    {
+      "phase": "phase12",
+      "manifest": null,
+      "status": "live-discovery-required",
+      "notes": "Do not infer intent. Extract from live Devotion records, scripts, and pdv_verify gates before adding executable operations."
+    }
+  ],
+  "staticChecks": [
+    "plan",
+    "manual-packet",
+    "matrix --verify"
+  ],
+  "liveProofBoundary": [
+    "MO2 MCP preflight",
+    "generated plugin write",
+    "CKPE packet execution",
+    "Papyrus compile",
+    "MO2 readback",
+    "pdv_verify strict phase gates",
+    "proof-ledger promotion"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "transport": "named-pipe",
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "setActivePlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    {
+      "op": "mutateGlobTypeValueInMemory",
+      "plugin": "PDV_Phase9To12_CKProof.esp",
+      "editorId": "PDV_GLO_ActivePietyDUPLICATE001",
+      "recordFamily": "GLOB",
+      "valueType": "short",
+      "value": 1
+    },
+    { "op": "closeSafeStatus" }
+  ]
+}

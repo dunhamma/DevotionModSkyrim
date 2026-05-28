@@ -1,0 +1,55 @@
+{
+  "records": {
+    "EXM_MainQuest": {
+      "editorId": "EXM_MainQuest",
+      "recordType": "QUST",
+      "winningPlugin": "ExampleMod_PlatformV1Proof.esp",
+      "scripts": [
+        {
+          "name": "EXM_MainQuestScript",
+          "properties": {
+            "DebugGlobal": "EXM_GLO_Debug"
+          }
+        }
+      ],
+      "conditions": [
+        {
+          "function": "GetIsID",
+          "operator": "==",
+          "value": "PlayerRef"
+        }
+      ]
+    },
+    "EXM_FLST_AllServices": {
+      "editorId": "EXM_FLST_AllServices",
+      "recordType": "FLST",
+      "winningPlugin": "ExampleMod_PlatformV1Proof.esp",
+      "entries": [
+        "EXM_ServiceQuest"
+      ]
+    },
+    "EXM_NPC_Test": {
+      "editorId": "EXM_NPC_Test",
+      "recordType": "NPC_",
+      "winningPlugin": "ExampleMod_PlatformV1Proof.esp",
+      "keywords": [
+        "EXM_KW_PlatformV1"
+      ],
+      "spells": [
+        "EXM_Spell_PlatformV1"
+      ],
+      "perks": [
+        "EXM_Perk_PlatformV1"
+      ],
+      "packages": [
+        "EXM_Package_PlatformV1"
+      ],
+      "inventory": [
+        {
+          "item": "EXM_Item_PlatformV1",
+          "count": 1
+        }
+      ]
+    }
+  }
+}

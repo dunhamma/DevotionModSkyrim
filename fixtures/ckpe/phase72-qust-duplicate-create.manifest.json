@@ -1,0 +1,44 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "pdv-ckproof",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "output": "PDV_Phase9To12_CKProof.esp",
+  "operations": [
+    {
+      "id": "duplicate-qust",
+      "kind": "record.duplicate_create",
+      "target": "PDV__ManagerQuestDUPLICATE002",
+      "mode": "create",
+      "recordFamily": "QUST",
+      "ckSemanticsRequired": true,
+      "payload": {
+        "sourceEditorId": "PDV__ManagerQuest",
+        "targetEditorId": "PDV__ManagerQuestDUPLICATE002",
+        "createdEditorId": "PDV__ManagerQuestDUPLICATE002"
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "QUST"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "PDV Manager"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.hasVmad",
+          "value": true
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.stageCount",
+          "value": 1
+        }
+      ]
+    }
+  ]
+}

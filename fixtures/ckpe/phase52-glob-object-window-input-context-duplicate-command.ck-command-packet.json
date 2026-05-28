@@ -1,0 +1,17 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "transport": "named-pipe",
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "setActivePlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    {
+      "op": "replayGlobObjectWindowDuplicateCommand",
+      "plugin": "PDV_Phase9To12_CKProof.esp",
+      "recordFamily": "GLOB",
+      "sourceEditorId": "PDV_GLO_ActivePiety",
+      "mode": "input_context_async_command"
+    },
+    { "op": "closeSafeStatus" }
+  ]
+}

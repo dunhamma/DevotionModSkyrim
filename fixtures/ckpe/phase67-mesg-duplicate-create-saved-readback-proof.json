@@ -1,0 +1,76 @@
+{
+  "schema": "creation-authoring.esp-editorid-readback.v1",
+  "generatedAt": "2026-05-23T10:51:43.291Z",
+  "plugin": "PDV_Phase9To12_CKProof.esp",
+  "path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/PDV_Phase9To12_CKProof.esp",
+  "fileLength": 5049,
+  "lastWriteTime": "2026-05-23T10:51:13.372Z",
+  "requestedEditorIds": [
+    "_HelpPipBoyItemsDUPLICATE002"
+  ],
+  "records": [
+    {
+      "editorId": "_HelpPipBoyItemsDUPLICATE002",
+      "formId": "0x0500F1EF",
+      "recordType": "MESG",
+      "flags": "0x0",
+      "offset": "0x1363",
+      "size": 62,
+      "fields": {
+        "subrecordTypes": [
+          {
+            "type": "EDID",
+            "count": 1
+          },
+          {
+            "type": "DESC",
+            "count": 1
+          },
+          {
+            "type": "INAM",
+            "count": 1
+          },
+          {
+            "type": "DNAM",
+            "count": 1
+          }
+        ],
+        "buttonCount": 0
+      },
+      "subrecords": [
+        {
+          "type": "EDID",
+          "size": 29,
+          "text": "_HelpPipBoyItemsDUPLICATE002",
+          "hex": "5F48656C70506970426F794974656D734455504C494341544530303200"
+        },
+        {
+          "type": "DESC",
+          "size": 1,
+          "text": "",
+          "hex": "00"
+        },
+        {
+          "type": "INAM",
+          "size": 4,
+          "uint32": 0,
+          "formId": "0x00000000",
+          "hex": "00000000"
+        },
+        {
+          "type": "DNAM",
+          "size": 4,
+          "uint32": 1,
+          "formId": "0x00000001",
+          "hex": "01000000"
+        }
+      ]
+    }
+  ],
+  "proof": {
+    "requestedCount": 1,
+    "foundCount": 1,
+    "allRequestedFound": true,
+    "readbackMethod": "direct ESP record scan for EDID subrecords"
+  }
+}

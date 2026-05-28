@@ -1,0 +1,18 @@
+{
+  "schema": "creation-profile.v1",
+  "game": "SkyrimSE",
+  "modId": "creation-fill-spike-v1",
+  "sourcePlugin": "Skyrim.esm",
+  "outputPolicy": "generated-patch",
+  "defaultOutput": "CKRA_CreationFillSpikeV1.esp",
+  "resourceConnectors": [
+    {
+      "type": "ckpe",
+      "transport": "named-pipe",
+      "pipe": "\\\\.\\pipe\\CreationKitAuthoringBridge"
+    },
+    {
+      "type": "mo2-mcp"
+    }
+  ]
+}

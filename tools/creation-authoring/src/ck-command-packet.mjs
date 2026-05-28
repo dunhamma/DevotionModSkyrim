@@ -1,24 +1,46 @@
 export function buildCkCommandPacket(plan, options = {}) {
+  const generatedPlugin = options.generatedPlugin || plan.manifest.output;
   const ckOperations = plan.operations.filter((item) => {
-    return item.capability.requiresCkSemantics ||
-      item.operation.ckSemanticsRequired ||
-      item.backend === "ckpe-bridge" ||
-      item.backend === "ui-automation";
+    return item.status === "ready" && (
+      item.capability.requiresCkSemantics ||
+        item.operation.ckSemanticsRequired ||
+        item.backend === "ckpe-bridge" ||
+        item.backend === "ui-automation"
+    );
   });
+  const saveCommand = options.saveCommand || "postUiSaveCommand";
+  const sourcePlugin = plan.manifest.sourcePlugin || plan.profile.sourcePlugin;
+  const requiredPlugins = collectRequiredPlugins(plan, generatedPlugin, sourcePlugin);
 
   return {
     schema: "creation-authoring.ck-command-packet.v1",
     project: plan.manifest.project,
     game: plan.manifest.game,
     sourcePlugin: plan.manifest.sourcePlugin,
-    generatedPlugin: options.generatedPlugin || plan.manifest.output,
+    generatedPlugin,
     backendOrder: ["ckpe-bridge", "ui-automation", "manual-packet"],
     failClosed: true,
     commands: [
       { op: "openProject", profile: plan.profile.modId, game: plan.profile.game },
-      { op: "loadPlugin", plugin: options.generatedPlugin || plan.manifest.output, active: true },
-      ...ckOperations.flatMap((item) => operationToCommands(item)),
-      { op: "savePlugin", plugin: options.generatedPlugin || plan.manifest.output }
+      {
+        op: "loadPluginSet",
+        requiredPlugins,
+        plugins: requiredPlugins.map((plugin) => ({
+          name: plugin,
+          selected: true,
+          active: plugin === generatedPlugin
+        })),
+        sourcePlugin,
+        generatedPlugin,
+        activePlugin: generatedPlugin,
+        intendedSaveTarget: generatedPlugin,
+        sourcePluginNotActive: true
+      },
+      ...ckOperations.flatMap((item) => operationToCommands(item, { generatedPlugin })),
+      saveCommand === "savePlugin"
+        ? { op: "savePlugin", plugin: generatedPlugin }
+        : { op: "postUiSaveCommand", plugin: generatedPlugin },
+      { op: "closeSafeStatus" }
     ],
     verifierExpectations: ckOperations.flatMap((item) => {
       return (item.operation.verifierExpectations || []).map((expectation) => ({
@@ -30,7 +52,17 @@ export function buildCkCommandPacket(plan, options = {}) {
   };
 }
 
-function operationToCommands(item) {
+function collectRequiredPlugins(plan, generatedPlugin, sourcePlugin) {
+  const plugins = [
+    sourcePlugin,
+    generatedPlugin,
+    ...plan.operations.flatMap((item) => item.operation.mastersExpected || []),
+    ...plan.operations.flatMap((item) => item.operation.payload?.requiredPlugins || [])
+  ].filter(Boolean);
+  return [...new Set(plugins)];
+}
+
+function operationToCommands(item, context = {}) {
   const operation = item.operation;
   const payload = operation.payload || {};
 
@@ -39,8 +71,44 @@ function operationToCommands(item) {
       {
         op: "createRecord",
         operationId: operation.id,
+        plugin: context.generatedPlugin,
         target: operation.target,
-        recordFamily: operation.recordFamily || payload.recordType,
+        recordFamily: recordFamilyForCommand(operation, payload),
+        payload
+      }
+    ];
+  }
+
+  if (operation.kind === "glob.duplicate_create") {
+    return [
+      {
+        op: "duplicateCreateGlob",
+        operationId: operation.id,
+        plugin: context.generatedPlugin,
+        sourceEditorId: payload.sourceEditorId,
+        target: operation.target,
+        targetEditorId: payload.targetEditorId || payload.createdEditorId || operation.target,
+        recordFamily: "GLOB",
+        mode: payload.replayMode || payload.dispatchMode || "input_context_focus_async_command",
+        valueType: payload.valueType || payload.type || payload.globalType,
+        value: payload.value ?? payload.globalValue,
+        payload
+      }
+    ];
+  }
+
+  if (operation.kind === "record.duplicate_create") {
+    return [
+      {
+        op: "duplicateCreateRecord",
+        operationId: operation.id,
+        plugin: context.generatedPlugin,
+        sourceEditorId: payload.sourceEditorId,
+        target: operation.target,
+        targetEditorId: payload.targetEditorId || payload.createdEditorId || operation.target,
+        createdEditorId: payload.createdEditorId || payload.targetEditorId || operation.target,
+        recordFamily: recordFamilyForCommand(operation, payload),
+        mode: payload.replayMode || payload.dispatchMode || "input_context_focus_async_command",
         payload
       }
     ];
@@ -52,8 +120,9 @@ function operationToCommands(item) {
       {
         op: "updateRecord",
         operationId: operation.id,
+        plugin: context.generatedPlugin,
         target: operation.target,
-        recordFamily: operation.recordFamily || payload.recordType,
+        recordFamily: recordFamilyForCommand(operation, payload),
         payload
       }
     ];
@@ -244,4 +313,11 @@ function operationToCommands(item) {
     target: operation.target,
     payload
   }];
+}
+
+function recordFamilyForCommand(operation, payload = {}) {
+  if (operation.recordFamily && operation.recordFamily !== "record") {
+    return operation.recordFamily;
+  }
+  return payload.recordType || operation.recordFamily;
 }

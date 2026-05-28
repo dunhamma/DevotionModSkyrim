@@ -1,0 +1,28 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "transport": "named-pipe",
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "setActivePlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    {
+      "op": "inspectGlobObjectWindowReplaySurface",
+      "plugin": "PDV_Phase9To12_CKProof.esp",
+      "recordFamily": "GLOB",
+      "sourceEditorId": "PDV_GLO_ActivePiety"
+    },
+    {
+      "op": "preflightGlobDuplicateCreateReplay",
+      "plugin": "PDV_Phase9To12_CKProof.esp",
+      "recordFamily": "GLOB",
+      "sourceEditorId": "PDV_GLO_ActivePiety",
+      "target": "PDV_GLO_SelectionHardeningProbe",
+      "targetEditorId": "PDV_GLO_SelectionHardeningProbe",
+      "mode": "duplicate_create",
+      "onConflict": "fail",
+      "valueType": "short",
+      "value": 1
+    },
+    { "op": "closeSafeStatus" }
+  ]
+}

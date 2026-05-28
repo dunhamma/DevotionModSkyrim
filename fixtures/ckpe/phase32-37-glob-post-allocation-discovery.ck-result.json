@@ -1,0 +1,92 @@
+{
+  "schema": "creation-authoring.ck-command-result.v1",
+  "status": "PASS",
+  "transport": "named-pipe",
+  "commands": [
+    {
+      "op": "inspectGlobPostAllocationCandidate",
+      "operationId": "phase32-glob-post-allocation-1411d8610",
+      "target": "CKRA_Phase32_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "postAllocationProof": {
+          "postAllocationCandidate": false,
+          "candidateAddress": "0x1411d8610",
+          "noisy": true,
+          "matchedExpectedCreatedForm": false
+        }
+      }
+    },
+    {
+      "op": "inspectGlobPostAllocationCandidate",
+      "operationId": "phase33-glob-post-allocation-141618120",
+      "target": "CKRA_Phase33_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "postAllocationProof": {
+          "postAllocationCandidate": true,
+          "candidateAddress": "0x141618120",
+          "callerReturn": "0x14146c662",
+          "rdxValue": 83959999,
+          "expectedCreatedFormId": 83959999,
+          "expectedCreatedFormType": 9,
+          "matchedExpectedCreatedForm": true,
+          "discoveryGatePassed": true
+        }
+      }
+    },
+    {
+      "op": "inspectGlobPostAllocationCandidate",
+      "operationId": "phase35-glob-post-allocation-141469e90",
+      "target": "CKRA_Phase35_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "postAllocationProof": {
+          "postAllocationCandidate": false,
+          "candidateAddress": "0x141469e90",
+          "sidePathReturn": "0x14146a795",
+          "matchedExpectedCreatedForm": false
+        }
+      }
+    },
+    {
+      "op": "inspectGlobPostAllocationCandidate",
+      "operationId": "phase36-glob-post-allocation-14169c840",
+      "target": "CKRA_Phase36_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "postAllocationProof": {
+          "postAllocationCandidate": false,
+          "candidateAddress": "0x14169c840",
+          "fired": false,
+          "fireCount": 0
+        }
+      }
+    },
+    {
+      "op": "inspectGlobPostAllocationCandidate",
+      "operationId": "phase37-glob-post-allocation-14129e540",
+      "target": "CKRA_Phase37_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "postAllocationProof": {
+          "postAllocationCandidate": false,
+          "candidateAddress": "0x14129e540",
+          "fired": false,
+          "fireCount": 0
+        }
+      }
+    }
+  ],
+  "message": "Phase32-37 post-allocation discovery results preserved for runner proof. Phase33 is the sole gate-passing post-allocation candidate, but createRecord remains unsupported until guarded mutation, save, readback, verifier, and ledger proof pass."
+}

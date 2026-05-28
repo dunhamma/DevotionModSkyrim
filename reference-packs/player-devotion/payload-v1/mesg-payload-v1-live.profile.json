@@ -1,0 +1,30 @@
+{
+  "schema": "creation-profile.v1",
+  "game": "SkyrimSE",
+  "modId": "player-devotion-payload-v1-live",
+  "sourcePlugin": "Skyrim.esm",
+  "outputPolicy": "generated-patch",
+  "defaultOutput": "PDV_Phase9To12_CKProof.esp",
+  "referencePack": "player-devotion",
+  "resourceConnectors": [
+    {
+      "type": "mo2-mcp",
+      "name": "anvil-devotion-dev"
+    },
+    {
+      "type": "ckpe",
+      "transport": "named-pipe",
+      "pipe": "\\\\.\\pipe\\CreationKitAuthoringBridge"
+    },
+    {
+      "type": "fixture",
+      "name": "payload-v1-live-source-records",
+      "records": {
+        "_HelpPipBoyItems": {
+          "recordType": "MESG",
+          "plugin": "Skyrim.esm"
+        }
+      }
+    }
+  ]
+}

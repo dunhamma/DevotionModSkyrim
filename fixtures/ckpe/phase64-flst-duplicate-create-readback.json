@@ -1,0 +1,28 @@
+{
+  "records": {
+    "PDV_FLST_AllDeitiesDUPLICATE002": {
+      "editorId": "PDV_FLST_AllDeitiesDUPLICATE002",
+      "formid": "0x0500F1EE",
+      "recordType": "FLST",
+      "winningPlugin": "PDV_Phase9To12_CKProof.esp",
+      "fields": {
+        "entries": [
+          "0x040120B6",
+          "0x0403DE87",
+          "0x0403DE88",
+          "0x0406CB52",
+          "0x0406CB52",
+          "0x0406CB52"
+        ]
+      },
+      "entries": [
+        "0x040120B6",
+        "0x0403DE87",
+        "0x0403DE88",
+        "0x0406CB52",
+        "0x0406CB52",
+        "0x0406CB52"
+      ]
+    }
+  }
+}

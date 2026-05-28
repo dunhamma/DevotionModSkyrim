@@ -1,0 +1,48 @@
+{
+  "records": {
+    "EXM_MSG_SourceDUPLICATE001": {
+      "editorId": "EXM_MSG_SourceDUPLICATE001",
+      "formid": "ExampleMod_PayloadV1Proof.esp:000800",
+      "recordType": "MESG",
+      "winningPlugin": "ExampleMod_PayloadV1Proof.esp",
+      "generatedPlugin": "ExampleMod_PayloadV1Proof.esp",
+      "source": {
+        "editorId": "EXM_MSG_Source",
+        "formid": "ExampleMod.esp:001100"
+      },
+      "message": {
+        "title": "Payload proof title",
+        "text": "Payload proof body",
+        "buttons": [
+          {
+            "text": "Accept"
+          },
+          {
+            "text": "Decline"
+          }
+        ]
+      },
+      "conflictChain": [
+        "ExampleMod.esp",
+        "ExampleMod_PayloadV1Proof.esp"
+      ]
+    },
+    "EXM_ACTI_SourceDUPLICATE001": {
+      "editorId": "EXM_ACTI_SourceDUPLICATE001",
+      "formid": "ExampleMod_PayloadV1Proof.esp:000801",
+      "recordType": "ACTI",
+      "winningPlugin": "ExampleMod_PayloadV1Proof.esp",
+      "generatedPlugin": "ExampleMod_PayloadV1Proof.esp",
+      "source": {
+        "editorId": "EXM_ACTI_Source",
+        "formid": "ExampleMod.esp:001200"
+      },
+      "fullName": "Payload Proof Activator",
+      "model": "Clutter\\Common\\Basket01.nif",
+      "conflictChain": [
+        "ExampleMod.esp",
+        "ExampleMod_PayloadV1Proof.esp"
+      ]
+    }
+  }
+}

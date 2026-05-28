@@ -1,0 +1,516 @@
+{
+  "schema": "creation-authoring.proof-ledger.v1",
+  "generatedAt": "2026-05-24T00:57:05.150Z",
+  "sourceReport": "fixtures/ckpe/phase71-acti-duplicate-create-strict-run-report.json",
+  "project": "pdv-ckproof",
+  "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+  "status": "PASS",
+  "proofs": [
+    {
+      "id": "ACTI:record.duplicate_create:DefaultAshPileDUPLICATE003",
+      "recordFamily": "ACTI",
+      "status": "PASS",
+      "fixture": "fixtures/ckpe/phase69-acti-duplicate-create-product-command.ck-command-packet.json",
+      "verifiedAt": "2026-05-24T00:57:05.150Z",
+      "operation": "record.duplicate_create",
+      "target": "DefaultAshPileDUPLICATE003",
+      "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+      "strictReport": "fixtures/ckpe/phase71-acti-duplicate-create-strict-run-report.json",
+      "reportStatus": "PASS",
+      "backend": "ckpe-bridge",
+      "verifierStatus": "PASS",
+      "readbackStatus": "PASS",
+      "readbackNormalizer": {
+        "status": "PASS",
+        "operation": "record.duplicate_create",
+        "recordFamily": "ACTI",
+        "normalizer": "record-exists",
+        "familyNormalizers": [
+          "record-exists",
+          "vmad-scripts",
+          "vmad-properties",
+          "vmad-array-properties"
+        ],
+        "message": "Readback normalizer record-exists covers record.duplicate_create."
+      },
+      "commandEvidenceStatus": "PASS",
+      "proofClass": "ck-object-window-family-duplicate-shell",
+      "proofMechanics": {
+        "objectWindowDuplicateReplay": true,
+        "requestedPluginLoaded": true,
+        "requestedPluginActive": true,
+        "disposableGeneratedPlugin": true,
+        "explicitSourceResolved": true,
+        "explicitSourceSelectionGuard": true,
+        "familyCountDelta": true,
+        "nextFormIdDelta": true,
+        "familyArrayIdentity": true,
+        "activePluginOwnership": true,
+        "editorIdRetarget": true,
+        "requestedEditorIdResolved": true,
+        "requestedFamilyResolved": true,
+        "verifierReadback": true
+      },
+      "proofMechanicsStatus": "PASS",
+      "coverage": {
+        "manifestOperation": true,
+        "backend": true,
+        "ckpeOrWriterHandler": true,
+        "ckCommandEvidence": true,
+        "readbackNormalizer": true,
+        "verifier": true,
+        "strictReport": true,
+        "proofFixture": true,
+        "familyDuplicateShellMechanics": true,
+        "familyMatrixPromotion": true
+      },
+      "missingCoverage": [],
+      "commandEvidence": [
+        {
+          "op": "duplicateCreateRecord",
+          "status": "PASS",
+          "target": "DefaultAshPileDUPLICATE003",
+          "recordFamily": "ACTI",
+          "evidence": {
+            "requested": {
+              "op": "duplicateCreateRecord",
+              "targetEditorId": "DefaultAshPileDUPLICATE003",
+              "sourceEditorId": "DefaultAshPile1",
+              "recordFamily": "ACTI",
+              "plugin": "PDV_Phase9To12_CKProof.esp"
+            },
+            "guards": {
+              "targetEditorIdProvided": true,
+              "targetEditorIdAbsentBeforeReplay": true,
+              "supportedProductFamily": true,
+              "selectionDependentReplayGuardedByExplicitSource": true
+            },
+            "replay": {
+              "attempted": true,
+              "proven": true,
+              "evidence": {
+                "requested": {
+                  "op": "replayObjectWindowDuplicateCommand",
+                  "plugin": "PDV_Phase9To12_CKProof.esp",
+                  "mode": "input_context_focus_async_command",
+                  "sourceEditorId": "DefaultAshPile1",
+                  "recordFamily": "ACTI"
+                },
+                "guards": {
+                  "dataHandlerAvailable": true,
+                  "supportedDiscoveryFamily": true,
+                  "requestedPluginLoaded": true,
+                  "requestedPluginIsActive": true,
+                  "targetIsDisposableGeneratedPlugin": true,
+                  "sourceResolved": true,
+                  "sourceMatchesRequestedFamily": true,
+                  "objectWindowFound": true,
+                  "objectWindowItemListFound": true,
+                  "selectedUiFormFound": true,
+                  "selectedUiFormMatchesRequestedFamily": true,
+                  "selectedUiSelectionIsSingle": true,
+                  "selectedUiFormMatchesExplicitSource": true,
+                  "phase48DuplicateCommandRouteProven": true,
+                  "safeToReplay": true
+                },
+                "activePlugin": {
+                  "dataHandlerAvailable": true,
+                  "activePlugin": {
+                    "fileName": "PDV_Phase9To12_CKProof.esp",
+                    "filePath": "Data\\",
+                    "loadIndex": 5,
+                    "selected": true,
+                    "active": true,
+                    "master": false,
+                    "smallMaster": false,
+                    "ownedFormCount": 0
+                  }
+                },
+                "requestedPlugin": {
+                  "fileName": "PDV_Phase9To12_CKProof.esp",
+                  "filePath": "Data\\",
+                  "loadIndex": 5,
+                  "selected": true,
+                  "active": true,
+                  "master": false,
+                  "smallMaster": false,
+                  "ownedFormCount": 0
+                },
+                "source": {
+                  "record": {
+                    "found": true,
+                    "editorId": "DefaultAshPile1",
+                    "formId": 27,
+                    "formType": 24,
+                    "sourceArray": "arrACTI",
+                    "modified": false,
+                    "fromMaster": true,
+                    "ownerFile": {
+                      "fileName": "Skyrim.esm",
+                      "filePath": "Data\\",
+                      "loadIndex": 0,
+                      "selected": true,
+                      "active": false,
+                      "master": true,
+                      "smallMaster": false,
+                      "ownedFormCount": 0
+                    },
+                    "ownedByActivePlugin": false
+                  },
+                  "rawHeader": {
+                    "formAddress": "0xe7d943a0",
+                    "vtableAddress": "0x143045578",
+                    "modInfo": {
+                      "address": "0x3af9980",
+                      "size": 1,
+                      "entriesReadable": true,
+                      "entries": [
+                        {
+                          "fileName": "Skyrim.esm",
+                          "filePath": "Data\\",
+                          "loadIndex": 0,
+                          "selected": true,
+                          "active": false,
+                          "master": true,
+                          "smallMaster": false,
+                          "ownedFormCount": 0
+                        }
+                      ]
+                    },
+                    "formFlagsRaw": 9,
+                    "formId": 27,
+                    "editorIdPointer": "0x17dd94c88",
+                    "editorIdReadable": true,
+                    "editorIdPrintable": true,
+                    "editorIdString": "DefaultAshPile1",
+                    "tracking": {
+                      "day": 0,
+                      "month": 0,
+                      "year": 2003
+                    },
+                    "formType": 24
+                  }
+                },
+                "objectWindow": {
+                  "candidateCount": 2,
+                  "selected": {
+                    "handle": "0x460590",
+                    "visible": true,
+                    "className": "#32770",
+                    "title": "Object Window",
+                    "treeControl": "0xd8063e",
+                    "itemListControl": "0x29075a",
+                    "filterControl": "0xbf0992",
+                    "selectedCount": 1,
+                    "selectedIndex": 0
+                  }
+                },
+                "selectedUiForm": {
+                  "record": {
+                    "found": true,
+                    "editorId": "DefaultAshPile1",
+                    "formId": 27,
+                    "formType": 24,
+                    "sourceArray": "",
+                    "modified": false,
+                    "fromMaster": true,
+                    "ownerFile": {
+                      "fileName": "Skyrim.esm",
+                      "filePath": "Data\\",
+                      "loadIndex": 0,
+                      "selected": true,
+                      "active": false,
+                      "master": true,
+                      "smallMaster": false,
+                      "ownedFormCount": 0
+                    },
+                    "ownedByActivePlugin": false
+                  },
+                  "rawHeader": {
+                    "formAddress": "0xe7d943a0",
+                    "vtableAddress": "0x143045578",
+                    "modInfo": {
+                      "address": "0x3af9980",
+                      "size": 1,
+                      "entriesReadable": true,
+                      "entries": [
+                        {
+                          "fileName": "Skyrim.esm",
+                          "filePath": "Data\\",
+                          "loadIndex": 0,
+                          "selected": true,
+                          "active": false,
+                          "master": true,
+                          "smallMaster": false,
+                          "ownedFormCount": 0
+                        }
+                      ]
+                    },
+                    "formFlagsRaw": 9,
+                    "formId": 27,
+                    "editorIdPointer": "0x17dd94c88",
+                    "editorIdReadable": true,
+                    "editorIdPrintable": true,
+                    "editorIdString": "DefaultAshPile1",
+                    "tracking": {
+                      "day": 0,
+                      "month": 0,
+                      "year": 2003
+                    },
+                    "formType": 24
+                  }
+                },
+                "message": {
+                  "kind": "WM_COMMAND",
+                  "commandId": 248,
+                  "commandIdHex": "0xf8",
+                  "dispatchMode": "FocusObjectWindowList+SendInputRightClick+popup-wait+WM_COMMAND+main-thread-pump",
+                  "targetWindow": "0x460590",
+                  "contextMenu": {
+                    "posted": true,
+                    "asyncReplayStarted": true,
+                    "foregroundSet": true,
+                    "itemListFocused": true,
+                    "cursorOnItemList": true,
+                    "itemListMessageFallbackUsed": false,
+                    "popupMenuObserved": true,
+                    "escapeSent": true,
+                    "wParam": "0x29075a",
+                    "screenPointReady": true,
+                    "x": 553,
+                    "y": 266,
+                    "lParam": "0x10a0229"
+                  },
+                  "sent": true,
+                  "commandPosted": true,
+                  "dispatchResult": "0x1",
+                  "pumpedMessageCount": 54,
+                  "pumpTimeoutMs": 2500
+                },
+                "before": {
+                  "active": true,
+                  "family": "ACTI",
+                  "threadId": 24444,
+                  "tickCount": 293358265,
+                  "activePlugin": {
+                    "fileName": "PDV_Phase9To12_CKProof.esp",
+                    "loadIndex": 5,
+                    "nextFormID": 83948016,
+                    "ownedIdCount": 0
+                  },
+                  "recordCounts": {
+                    "GLOB": 965,
+                    "MESG": 853,
+                    "ACTI": 2218,
+                    "QUST": 2123,
+                    "FLST": 965
+                  }
+                },
+                "after": {
+                  "active": true,
+                  "family": "ACTI",
+                  "threadId": 24444,
+                  "tickCount": 293358859,
+                  "activePlugin": {
+                    "fileName": "PDV_Phase9To12_CKProof.esp",
+                    "loadIndex": 5,
+                    "nextFormID": 83948017,
+                    "ownedIdCount": 0
+                  },
+                  "recordCounts": {
+                    "GLOB": 965,
+                    "MESG": 853,
+                    "ACTI": 2219,
+                    "QUST": 2123,
+                    "FLST": 965
+                  }
+                },
+                "delta": {
+                  "family": "ACTI",
+                  "sameActivePlugin": true,
+                  "familyCountDelta": 1,
+                  "ownedIdDelta": 0,
+                  "nextFormIdDelta": 1,
+                  "creationObserved": true,
+                  "before": {
+                    "active": true,
+                    "family": "ACTI",
+                    "threadId": 24444,
+                    "tickCount": 293358265,
+                    "activePlugin": {
+                      "fileName": "PDV_Phase9To12_CKProof.esp",
+                      "loadIndex": 5,
+                      "nextFormID": 83948016,
+                      "ownedIdCount": 0
+                    },
+                    "recordCounts": {
+                      "GLOB": 965,
+                      "MESG": 853,
+                      "ACTI": 2218,
+                      "QUST": 2123,
+                      "FLST": 965
+                    }
+                  },
+                  "after": {
+                    "active": true,
+                    "family": "ACTI",
+                    "threadId": 24444,
+                    "tickCount": 293358859,
+                    "activePlugin": {
+                      "fileName": "PDV_Phase9To12_CKProof.esp",
+                      "loadIndex": 5,
+                      "nextFormID": 83948017,
+                      "ownedIdCount": 0
+                    },
+                    "recordCounts": {
+                      "GLOB": 965,
+                      "MESG": 853,
+                      "ACTI": 2219,
+                      "QUST": 2123,
+                      "FLST": 965
+                    }
+                  }
+                },
+                "createdIdentityCandidate": {
+                  "expectedCreatedFormId": 83948016,
+                  "record": {
+                    "found": true,
+                    "editorId": "DefaultAshPileDUPLICATE003",
+                    "formId": 83948016,
+                    "formType": 24,
+                    "sourceArray": "TESForm::FindFormByFormID",
+                    "modified": true,
+                    "fromMaster": true,
+                    "ownerFile": {
+                      "fileName": "PDV_Phase9To12_CKProof.esp",
+                      "filePath": "Data\\",
+                      "loadIndex": 5,
+                      "selected": true,
+                      "active": true,
+                      "master": false,
+                      "smallMaster": false,
+                      "ownedFormCount": 0
+                    },
+                    "ownedByActivePlugin": true
+                  },
+                  "rawHeader": {
+                    "formAddress": "0x9edb0a0",
+                    "vtableAddress": "0x143045578",
+                    "modInfo": {
+                      "address": "0x15dbaf8a0",
+                      "size": 1,
+                      "entriesReadable": true,
+                      "entries": [
+                        {
+                          "fileName": "PDV_Phase9To12_CKProof.esp",
+                          "filePath": "Data\\",
+                          "loadIndex": 5,
+                          "selected": true,
+                          "active": true,
+                          "master": false,
+                          "smallMaster": false,
+                          "ownedFormCount": 0
+                        }
+                      ]
+                    },
+                    "formFlagsRaw": 11,
+                    "formId": 83948016,
+                    "editorIdPointer": "0x17dd94cd8",
+                    "editorIdReadable": true,
+                    "editorIdPrintable": true,
+                    "editorIdString": "DefaultAshPileDUPLICATE003",
+                    "tracking": {
+                      "day": 183,
+                      "month": 4,
+                      "year": 2007
+                    },
+                    "formType": 24
+                  },
+                  "sameTypeAsSource": true,
+                  "ownedByActivePlugin": true
+                },
+                "replayOutcome": {
+                  "attempted": true,
+                  "familyDeltaObserved": true,
+                  "replayProven": true,
+                  "selectionIndependentReplayProven": false,
+                  "productMutationReady": false
+                },
+                "implementationRule": "This is a guarded discovery replay for Object Window duplicate across known families. It requires the current Object Window selection to match the explicit source and does not mutate payload fields, save, run readback, or promote support."
+              }
+            },
+            "createdRecord": {
+              "record": {
+                "found": true,
+                "editorId": "DefaultAshPileDUPLICATE003",
+                "formId": 83948016,
+                "formType": 24,
+                "sourceArray": "arrACTI",
+                "modified": true,
+                "fromMaster": true,
+                "ownerFile": {
+                  "fileName": "PDV_Phase9To12_CKProof.esp",
+                  "filePath": "Data\\",
+                  "loadIndex": 5,
+                  "selected": true,
+                  "active": true,
+                  "master": false,
+                  "smallMaster": false,
+                  "ownedFormCount": 0
+                },
+                "ownedByActivePlugin": true
+              },
+              "rawHeader": {
+                "formAddress": "0x9edb0a0",
+                "vtableAddress": "0x143045578",
+                "modInfo": {
+                  "address": "0x15dbaf8a0",
+                  "size": 1,
+                  "entriesReadable": true,
+                  "entries": [
+                    {
+                      "fileName": "PDV_Phase9To12_CKProof.esp",
+                      "filePath": "Data\\",
+                      "loadIndex": 5,
+                      "selected": true,
+                      "active": true,
+                      "master": false,
+                      "smallMaster": false,
+                      "ownedFormCount": 0
+                    }
+                  ]
+                },
+                "formFlagsRaw": 11,
+                "formId": 83948016,
+                "editorIdPointer": "0x17dd94cd8",
+                "editorIdReadable": true,
+                "editorIdPrintable": true,
+                "editorIdString": "DefaultAshPileDUPLICATE003",
+                "tracking": {
+                  "day": 183,
+                  "month": 4,
+                  "year": 2007
+                },
+                "formType": 24
+              },
+              "matchesRequestedFamily": true,
+              "ownedByActivePlugin": true
+            },
+            "payloadMutationAttempted": false,
+            "saveAttempted": false,
+            "readbackAttempted": false,
+            "productCommandReadyForSave": true,
+            "nextProofNeeded": "post CK UI save and prove saved family payload through readback, verifier, proof ledger, and matrix promotion",
+            "implementationRule": "This is a narrow family duplicate composition around CK-owned Object Window replay. It supports only explicit-source guarded FLST/MESG/ACTI/QUST duplicate identity and copied payload preservation; it is not generic record.create and does not mutate payload fields by itself."
+          }
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "schema": "creation-authoring.proof-ledger-verification.v1",
+    "status": "PASS",
+    "generatedAt": "2026-05-24T00:57:05.151Z",
+    "failures": []
+  }
+}

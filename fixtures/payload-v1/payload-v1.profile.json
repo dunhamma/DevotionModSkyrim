@@ -1,0 +1,31 @@
+{
+  "schema": "creation-profile.v1",
+  "game": "SkyrimSE",
+  "modId": "example-mod",
+  "sourcePlugin": "ExampleMod.esp",
+  "outputPolicy": "overlay",
+  "defaultOutput": "ExampleMod_PayloadV1Proof.esp",
+  "resourceConnectors": [
+    {
+      "type": "fixture",
+      "records": {
+        "EXM_MSG_Source": {
+          "formid": "ExampleMod.esp:001100",
+          "recordType": "MESG"
+        },
+        "EXM_ACTI_Source": {
+          "formid": "ExampleMod.esp:001200",
+          "recordType": "ACTI"
+        }
+      }
+    },
+    {
+      "type": "ckpe",
+      "transport": "named-pipe",
+      "pipe": "\\\\.\\pipe\\CreationKitAuthoringBridge"
+    },
+    {
+      "type": "mo2-mcp"
+    }
+  ]
+}

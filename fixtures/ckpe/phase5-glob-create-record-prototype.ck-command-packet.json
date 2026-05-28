@@ -1,0 +1,22 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "ckra-live-proof",
+  "game": "SkyrimSE",
+  "generatedPlugin": "CKRA_LiveProof_Generated.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    { "op": "setActivePlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    {
+      "op": "createRecord",
+      "plugin": "CKRA_LiveProof_Generated.esp",
+      "recordFamily": "GLOB",
+      "editorId": "CKRA_AutoCreate_GLOB_Prototype",
+      "mode": "create",
+      "onConflict": "fail",
+      "templateEditorId": "PDV_GLO_ActivePiety"
+    },
+    { "op": "closeSafeStatus" }
+  ]
+}

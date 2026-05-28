@@ -1,0 +1,25 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "ckra-live-proof",
+  "game": "SkyrimSE",
+  "generatedPlugin": "CKRA_LiveProof_Generated.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "PlayerDevotion_Framework.esp" },
+    { "op": "setActivePlugin", "plugin": "PlayerDevotion_Framework.esp" },
+    {
+      "op": "duplicateCreateGlob",
+      "mode": "duplicate-create",
+      "plugin": "PlayerDevotion_Framework.esp",
+      "recordFamily": "GLOB",
+      "sourceEditorId": "PDV_GLO_ActivePiety",
+      "targetEditorId": "CKRA_Blocked_NonGenerated_GLOB_Phase43",
+      "valueType": "short",
+      "value": 0,
+      "expectedResult": "UNSAFE_BLOCKED",
+      "expectedBlocker": "target plugin is not the disposable generated plugin"
+    },
+    { "op": "closeSafeStatus" }
+  ]
+}

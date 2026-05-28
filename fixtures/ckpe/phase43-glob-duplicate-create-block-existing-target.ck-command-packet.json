@@ -1,0 +1,25 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "ckra-live-proof",
+  "game": "SkyrimSE",
+  "generatedPlugin": "CKRA_LiveProof_Generated.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    { "op": "setActivePlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    {
+      "op": "duplicateCreateGlob",
+      "mode": "duplicate-create",
+      "plugin": "CKRA_LiveProof_Generated.esp",
+      "recordFamily": "GLOB",
+      "sourceEditorId": "CKRATest",
+      "targetEditorId": "CKRATest",
+      "valueType": "short",
+      "value": 0,
+      "expectedResult": "UNSAFE_BLOCKED",
+      "expectedBlocker": "target EditorID already exists"
+    },
+    { "op": "closeSafeStatus" }
+  ]
+}

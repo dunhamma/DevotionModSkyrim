@@ -1,0 +1,176 @@
+{
+  "schema": "creation-authoring.readback-fixture.v1",
+  "records": {
+    "CKRA_SPIKE_Spell": {
+      "editorId": "CKRA_SPIKE_Spell",
+      "formid": "CKRA_CreationFillSpikeV1.esp:000801",
+      "recordType": "SPEL",
+      "winningPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "conflictChain": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "fields": {
+        "FULL": "CKRA Spike Spell",
+        "DESC": "Static spell creation-fill proof payload.",
+        "SPIT": {
+          "type": "Spell",
+          "cost": 7
+        }
+      }
+    },
+    "CKRA_SPIKE_MagicEffect": {
+      "editorId": "CKRA_SPIKE_MagicEffect",
+      "formid": "CKRA_CreationFillSpikeV1.esp:000802",
+      "recordType": "MGEF",
+      "winningPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "conflictChain": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "fields": {
+        "FULL": "CKRA Spike Magic Effect",
+        "DNAM": {
+          "archetype": "ValueModifier",
+          "castingType": "FireAndForget"
+        }
+      }
+    },
+    "CKRA_SPIKE_Enchantment": {
+      "editorId": "CKRA_SPIKE_Enchantment",
+      "formid": "CKRA_CreationFillSpikeV1.esp:000803",
+      "recordType": "ENCH",
+      "winningPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "conflictChain": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "fields": {
+        "FULL": "CKRA Spike Enchantment",
+        "ENIT": {
+          "charge": 10,
+          "type": "Enchantment"
+        }
+      }
+    },
+    "CKRA_SPIKE_Scroll": {
+      "editorId": "CKRA_SPIKE_Scroll",
+      "formid": "CKRA_CreationFillSpikeV1.esp:000804",
+      "recordType": "SCRL",
+      "winningPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "conflictChain": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "fields": {
+        "FULL": "CKRA Spike Scroll",
+        "DESC": "Static scroll creation-fill proof payload.",
+        "MDOB": "EditorMarker"
+      }
+    },
+    "CKRA_SPIKE_Weapon": {
+      "editorId": "CKRA_SPIKE_Weapon",
+      "formid": "CKRA_CreationFillSpikeV1.esp:000805",
+      "recordType": "WEAP",
+      "winningPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "conflictChain": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "fields": {
+        "FULL": "CKRA Spike Weapon",
+        "DATA": {
+          "damage": 3,
+          "weight": 1
+        }
+      }
+    },
+    "CKRA_SPIKE_Armor": {
+      "editorId": "CKRA_SPIKE_Armor",
+      "formid": "CKRA_CreationFillSpikeV1.esp:000806",
+      "recordType": "ARMO",
+      "winningPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "conflictChain": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "fields": {
+        "FULL": "CKRA Spike Armor",
+        "DATA": {
+          "armorRating": 2,
+          "weight": 1
+        }
+      }
+    },
+    "CKRA_SPIKE_Ammo": {
+      "editorId": "CKRA_SPIKE_Ammo",
+      "formid": "CKRA_CreationFillSpikeV1.esp:000807",
+      "recordType": "AMMO",
+      "winningPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "conflictChain": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "fields": {
+        "FULL": "CKRA Spike Ammo",
+        "DATA": {
+          "damage": 1
+        }
+      }
+    },
+    "CKRA_SPIKE_Book": {
+      "editorId": "CKRA_SPIKE_Book",
+      "formid": "CKRA_CreationFillSpikeV1.esp:000808",
+      "recordType": "BOOK",
+      "winningPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "conflictChain": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "fields": {
+        "FULL": "CKRA Spike Book",
+        "DESC": "Static book creation-fill proof payload.",
+        "CNAM": "CKRA static book text."
+      }
+    },
+    "CKRA_SPIKE_Container": {
+      "editorId": "CKRA_SPIKE_Container",
+      "formid": "CKRA_CreationFillSpikeV1.esp:000809",
+      "recordType": "CONT",
+      "winningPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "conflictChain": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "fields": {
+        "FULL": "CKRA Spike Container",
+        "DATA": {
+          "respawns": false
+        }
+      },
+      "inventory": [
+        {
+          "item": "Gold001",
+          "count": 1
+        }
+      ]
+    },
+    "CKRA_SPIKE_Misc": {
+      "editorId": "CKRA_SPIKE_Misc",
+      "formid": "CKRA_CreationFillSpikeV1.esp:00080A",
+      "recordType": "MISC",
+      "winningPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "conflictChain": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "fields": {
+        "FULL": "CKRA Spike Misc Item",
+        "DATA": {
+          "value": 1,
+          "weight": 0.1
+        }
+      }
+    }
+  }
+}

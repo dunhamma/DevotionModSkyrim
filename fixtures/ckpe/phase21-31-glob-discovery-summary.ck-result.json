@@ -1,0 +1,104 @@
+{
+  "schema": "creation-authoring.ck-command-result.v1",
+  "status": "PASS",
+  "transport": "named-pipe",
+  "commands": [
+    {
+      "op": "inspectGlobCreateRecordInvocationPlan",
+      "operationId": "phase21-glob-invocation-plan",
+      "target": "CKRA_Phase21_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "invocationPlan": {
+          "invocationPlanPassed": true,
+          "mutationReady": false,
+          "supportBlockers": [
+            "CK UI stack/context still required",
+            "ownership registration not proven",
+            "save proof not proven",
+            "MO2 readback proof not proven"
+          ]
+        }
+      }
+    },
+    {
+      "op": "inspectGlobCreateRecordCandidateReturn",
+      "operationId": "phase22-glob-candidate-1413886f0",
+      "target": "CKRA_Phase22_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "candidateResult": {
+          "invocationTarget": "0x1413886f0",
+          "returnedExistingFormId": 903642,
+          "returnedPointerKind": "existing-source-template-glob",
+          "expectedNewFormId": true
+        }
+      }
+    },
+    {
+      "op": "inspectGlobCreateRecordCandidateReturn",
+      "operationId": "phase24-glob-candidate-14129de20",
+      "target": "CKRA_Phase24_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "candidateResult": {
+          "invocationTarget": "0x14129de20",
+          "returnedPointerKind": "context-pointer"
+        }
+      }
+    },
+    {
+      "op": "inspectGlobCreateRecordCandidateReturn",
+      "operationId": "phase27-glob-candidate-141388300",
+      "target": "CKRA_Phase27_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "candidateResult": {
+          "invocationTarget": "0x141388300",
+          "returnedPointerKind": "existing-glob-template-forms"
+        }
+      }
+    },
+    {
+      "op": "inspectGlobCreateRecordCandidateReturn",
+      "operationId": "phase29-glob-candidate-141a681f0",
+      "target": "CKRA_Phase29_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "candidateResult": {
+          "invocationTarget": "0x141a681f0",
+          "fired": false,
+          "fireCount": 0
+        }
+      }
+    },
+    {
+      "op": "inspectGlobCreateRecordCandidateReturn",
+      "operationId": "phase30-glob-candidate-14123ac90",
+      "target": "CKRA_Phase30_GLOB_Discovery",
+      "recordFamily": "GLOB",
+      "status": "PASS",
+      "evidence": {
+        "recordFamily": "GLOB",
+        "candidateResult": {
+          "invocationTarget": "0x14123ac90",
+          "fired": true,
+          "fireCount": 16,
+          "booleanReturn": 1,
+          "returnedPointerKind": "boolean"
+        }
+      }
+    }
+  ],
+  "message": "Phase21-31 GLOB createRecord discovery results preserved for runner proof. These results do not prove automated createRecord support."
+}

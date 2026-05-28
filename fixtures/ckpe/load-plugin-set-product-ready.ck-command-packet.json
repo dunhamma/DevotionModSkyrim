@@ -1,0 +1,27 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "load-plugin-set-product-ready",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "generatedPlugin": "ExampleMod_GeneratedCk.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject", "profile": "load-plugin-set-product-ready", "game": "SkyrimSE" },
+    {
+      "op": "loadPluginSet",
+      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
+      "plugins": [
+        { "name": "Skyrim.esm", "selected": true, "active": false },
+        { "name": "ExampleMod.esp", "selected": true, "active": false },
+        { "name": "ExampleMod_GeneratedCk.esp", "selected": true, "active": true }
+      ],
+      "sourcePlugin": "ExampleMod.esp",
+      "generatedPlugin": "ExampleMod_GeneratedCk.esp",
+      "activePlugin": "ExampleMod_GeneratedCk.esp",
+      "intendedSaveTarget": "ExampleMod_GeneratedCk.esp",
+      "sourcePluginNotActive": true
+    },
+    { "op": "closeSafeStatus" }
+  ],
+  "expectedRuntimeStatus": "PASS"
+}

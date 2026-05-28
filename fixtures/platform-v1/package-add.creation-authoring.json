@@ -1,0 +1,20 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v1-package-add",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV1Proof.esp",
+  "operations": [
+    {
+      "id": "package-add",
+      "kind": "package.add",
+      "target": "EXM_NPC_Test",
+      "recordFamily": "NPC_",
+      "payload": {
+        "packages": [
+          "EXM_Package_PlatformV1"
+        ]
+      }
+    }
+  ]
+}

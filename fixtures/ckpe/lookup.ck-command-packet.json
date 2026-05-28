@@ -1,0 +1,17 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "generic-ckpe-lookup-smoke",
+  "game": "SkyrimSE",
+  "sourcePlugin": "Skyrim.esm",
+  "generatedPlugin": "CKRA_Smoke_Generated.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "findRecordByEditorId", "editorId": "Player" }
+  ],
+  "verifierExpectations": [
+    {
+      "type": "recordExists",
+      "target": "Player"
+    }
+  ]
+}

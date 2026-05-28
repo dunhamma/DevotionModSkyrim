@@ -1,0 +1,60 @@
+{
+  "records": {
+    "PDV_MCM": {
+      "editorId": "PDV_MCM",
+      "recordType": "QUST",
+      "winningPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+      "scripts": [
+        {
+          "name": "CKRA_PlatformV1ProofScript",
+          "properties": {
+            "DebugGlobal": "PDV_GLO_DebugLevel"
+          }
+        }
+      ]
+    },
+    "PDV_FLST_AllDeities": {
+      "editorId": "PDV_FLST_AllDeities",
+      "recordType": "FLST",
+      "winningPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+      "entries": [
+        "PDV_MCM"
+      ]
+    },
+    "AelaTheHuntress": {
+      "editorId": "AelaTheHuntress",
+      "recordType": "NPC_",
+      "winningPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+      "keywords": [
+        "ActorTypeNPC"
+      ],
+      "spells": [
+        "Candlelight"
+      ],
+      "perks": [
+        "Armsman00"
+      ],
+      "packages": [
+        "DefaultSandboxEditorLocation1024"
+      ],
+      "inventory": [
+        {
+          "item": "Gold001",
+          "count": 1
+        }
+      ]
+    },
+    "DefaultSandboxEditorLocation1024": {
+      "editorId": "DefaultSandboxEditorLocation1024",
+      "recordType": "PACK",
+      "winningPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+      "conditions": [
+        {
+          "function": "GetIsID",
+          "operator": "EqualTo"
+        }
+      ]
+    }
+  }
+}
+

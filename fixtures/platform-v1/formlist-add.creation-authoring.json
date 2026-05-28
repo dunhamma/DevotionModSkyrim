@@ -1,0 +1,18 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v1-formlist-add",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV1Proof.esp",
+  "operations": [
+    {
+      "id": "formlist-add",
+      "kind": "formlist.add",
+      "target": "EXM_FLST_AllServices",
+      "recordFamily": "FLST",
+      "payload": {
+        "entry": "EXM_ServiceQuest"
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "generic-ckpe-phase1-lifecycle",
+  "game": "SkyrimSE",
+  "sourcePlugin": "Skyrim.esm",
+  "generatedPlugin": "CKRA_Smoke_Generated.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject", "profile": "generic-ckpe-phase1-lifecycle", "game": "SkyrimSE" },
+    { "op": "environment" },
+    { "op": "capabilities" },
+    { "op": "loadPlugin", "target": "CKRA_Smoke_Generated.esp", "plugin": "CKRA_Smoke_Generated.esp" },
+    { "op": "setActivePlugin", "target": "CKRA_Smoke_Generated.esp", "plugin": "CKRA_Smoke_Generated.esp" },
+    { "op": "getActivePlugin" },
+    { "op": "savePlugin", "target": "CKRA_Smoke_Generated.esp", "plugin": "CKRA_Smoke_Generated.esp" },
+    { "op": "closeSafeStatus" }
+  ],
+  "verifierExpectations": []
+}

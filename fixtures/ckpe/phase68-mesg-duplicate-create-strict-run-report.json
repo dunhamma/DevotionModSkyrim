@@ -1,0 +1,739 @@
+{
+  "schema": "creation-authoring.run-report.v1",
+  "status": "PASS",
+  "startedAt": "2026-05-23T10:51:00.000Z",
+  "finishedAt": "2026-05-23T10:53:00.000Z",
+  "reportPath": "fixtures/ckpe/phase68-mesg-duplicate-create-strict-run-report.json",
+  "manifest": {
+    "project": "pdv-ckproof",
+    "game": "SkyrimSE",
+    "sourcePlugin": "Skyrim.esm",
+    "output": "PDV_Phase9To12_CKProof.esp"
+  },
+  "profile": {
+    "modId": "platform-v1-pdv-live",
+    "outputPolicy": "overlay"
+  },
+  "phases": [
+    {
+      "phase": "plan",
+      "status": "PASS",
+      "summary": {
+        "total": 1,
+        "ready": 1,
+        "manual": 0,
+        "abort": 0
+      }
+    },
+    {
+      "phase": "apply",
+      "status": "SKIPPED",
+      "message": "No safe patch operations were ready to execute."
+    },
+    {
+      "phase": "ck-apply",
+      "status": "PASS",
+      "message": "Phase 66 CKPE packet completed.",
+      "operations": [
+        "duplicate-mesg"
+      ],
+      "adapterResult": {
+        "schema": "creation-authoring.ck-command-result.v1",
+        "status": "PASS",
+        "transport": "named-pipe",
+        "commands": [
+          {
+            "op": "openProject",
+            "status": "PASS",
+            "message": "Bridge is loaded in the current CK project context.",
+            "evidence": {
+              "ckpeVersion": 0,
+              "ckpeCommonVersion": 0,
+              "ckpeGameLibraryVersion": 0,
+              "runtimeVersion": 0,
+              "pipe": "\\\\.\\pipe\\CreationKitAuthoringBridge"
+            }
+          },
+          {
+            "op": "loadPlugin",
+            "status": "PASS",
+            "message": "Requested plugin is loaded in TESDataHandler.",
+            "evidence": {
+              "requestedPlugin": "PDV_Phase9To12_CKProof.esp",
+              "found": true,
+              "plugin": {
+                "fileName": "PDV_Phase9To12_CKProof.esp",
+                "filePath": "Data\\",
+                "loadIndex": 5,
+                "selected": true,
+                "active": true,
+                "master": false,
+                "smallMaster": false,
+                "ownedFormCount": 0
+              },
+              "activePlugin": {
+                "dataHandlerAvailable": true,
+                "activePlugin": {
+                  "fileName": "PDV_Phase9To12_CKProof.esp",
+                  "filePath": "Data\\",
+                  "loadIndex": 5,
+                  "selected": true,
+                  "active": true,
+                  "master": false,
+                  "smallMaster": false,
+                  "ownedFormCount": 0
+                }
+              }
+            }
+          },
+          {
+            "op": "setActivePlugin",
+            "status": "PASS",
+            "message": "Requested plugin is already active.",
+            "evidence": {
+              "requestedPlugin": "PDV_Phase9To12_CKProof.esp",
+              "found": true,
+              "plugin": {
+                "fileName": "PDV_Phase9To12_CKProof.esp",
+                "filePath": "Data\\",
+                "loadIndex": 5,
+                "selected": true,
+                "active": true,
+                "master": false,
+                "smallMaster": false,
+                "ownedFormCount": 0
+              },
+              "activePlugin": {
+                "dataHandlerAvailable": true,
+                "activePlugin": {
+                  "fileName": "PDV_Phase9To12_CKProof.esp",
+                  "filePath": "Data\\",
+                  "loadIndex": 5,
+                  "selected": true,
+                  "active": true,
+                  "master": false,
+                  "smallMaster": false,
+                  "ownedFormCount": 0
+                }
+              }
+            }
+          },
+          {
+            "op": "duplicateCreateRecord",
+            "status": "PASS",
+            "message": "Record duplicate-create replayed CK duplicate path for the requested family; save/readback proof is still required.",
+            "evidence": {
+              "requested": {
+                "op": "duplicateCreateRecord",
+                "targetEditorId": "_HelpPipBoyItemsDUPLICATE002",
+                "sourceEditorId": "_HelpPipBoyItems",
+                "recordFamily": "MESG",
+                "plugin": "PDV_Phase9To12_CKProof.esp"
+              },
+              "guards": {
+                "targetEditorIdProvided": true,
+                "targetEditorIdAbsentBeforeReplay": true,
+                "supportedProductFamily": true,
+                "selectionDependentReplayGuardedByExplicitSource": true
+              },
+              "replay": {
+                "attempted": true,
+                "proven": true,
+                "evidence": {
+                  "requested": {
+                    "op": "replayObjectWindowDuplicateCommand",
+                    "plugin": "PDV_Phase9To12_CKProof.esp",
+                    "mode": "input_context_focus_async_command",
+                    "sourceEditorId": "_HelpPipBoyItems",
+                    "recordFamily": "MESG"
+                  },
+                  "guards": {
+                    "dataHandlerAvailable": true,
+                    "supportedDiscoveryFamily": true,
+                    "requestedPluginLoaded": true,
+                    "requestedPluginIsActive": true,
+                    "targetIsDisposableGeneratedPlugin": true,
+                    "sourceResolved": true,
+                    "sourceMatchesRequestedFamily": true,
+                    "objectWindowFound": true,
+                    "objectWindowItemListFound": true,
+                    "selectedUiFormFound": true,
+                    "selectedUiFormMatchesRequestedFamily": true,
+                    "selectedUiSelectionIsSingle": true,
+                    "selectedUiFormMatchesExplicitSource": true,
+                    "phase48DuplicateCommandRouteProven": true,
+                    "safeToReplay": true
+                  },
+                  "activePlugin": {
+                    "dataHandlerAvailable": true,
+                    "activePlugin": {
+                      "fileName": "PDV_Phase9To12_CKProof.esp",
+                      "filePath": "Data\\",
+                      "loadIndex": 5,
+                      "selected": true,
+                      "active": true,
+                      "master": false,
+                      "smallMaster": false,
+                      "ownedFormCount": 0
+                    }
+                  },
+                  "requestedPlugin": {
+                    "fileName": "PDV_Phase9To12_CKProof.esp",
+                    "filePath": "Data\\",
+                    "loadIndex": 5,
+                    "selected": true,
+                    "active": true,
+                    "master": false,
+                    "smallMaster": false,
+                    "ownedFormCount": 0
+                  },
+                  "source": {
+                    "record": {
+                      "found": true,
+                      "editorId": "_HelpPipBoyItems",
+                      "formId": 365,
+                      "formType": 105,
+                      "sourceArray": "arrMESG",
+                      "modified": false,
+                      "fromMaster": true,
+                      "ownerFile": {
+                        "fileName": "Skyrim.esm",
+                        "filePath": "Data\\",
+                        "loadIndex": 0,
+                        "selected": true,
+                        "active": false,
+                        "master": true,
+                        "smallMaster": false,
+                        "ownedFormCount": 0
+                      },
+                      "ownedByActivePlugin": false
+                    },
+                    "rawHeader": {
+                      "formAddress": "0x8270ed0",
+                      "vtableAddress": "0x143014548",
+                      "modInfo": {
+                        "address": "0x3af9980",
+                        "size": 1,
+                        "entriesReadable": true,
+                        "entries": [
+                          {
+                            "fileName": "Skyrim.esm",
+                            "filePath": "Data\\",
+                            "loadIndex": 0,
+                            "selected": true,
+                            "active": false,
+                            "master": true,
+                            "smallMaster": false,
+                            "ownedFormCount": 0
+                          }
+                        ]
+                      },
+                      "formFlagsRaw": 9,
+                      "formId": 365,
+                      "editorIdPointer": "0x17dd94be8",
+                      "editorIdReadable": true,
+                      "editorIdPrintable": true,
+                      "editorIdString": "_HelpPipBoyItems",
+                      "tracking": {
+                        "day": 0,
+                        "month": 0,
+                        "year": 2003
+                      },
+                      "formType": 105
+                    }
+                  },
+                  "objectWindow": {
+                    "candidateCount": 2,
+                    "selected": {
+                      "handle": "0x460590",
+                      "visible": true,
+                      "className": "#32770",
+                      "title": "Object Window",
+                      "treeControl": "0xd8063e",
+                      "itemListControl": "0x29075a",
+                      "filterControl": "0xbf0992",
+                      "selectedCount": 1,
+                      "selectedIndex": 0
+                    }
+                  },
+                  "selectedUiForm": {
+                    "record": {
+                      "found": true,
+                      "editorId": "_HelpPipBoyItems",
+                      "formId": 365,
+                      "formType": 105,
+                      "sourceArray": "",
+                      "modified": false,
+                      "fromMaster": true,
+                      "ownerFile": {
+                        "fileName": "Skyrim.esm",
+                        "filePath": "Data\\",
+                        "loadIndex": 0,
+                        "selected": true,
+                        "active": false,
+                        "master": true,
+                        "smallMaster": false,
+                        "ownedFormCount": 0
+                      },
+                      "ownedByActivePlugin": false
+                    },
+                    "rawHeader": {
+                      "formAddress": "0x8270ed0",
+                      "vtableAddress": "0x143014548",
+                      "modInfo": {
+                        "address": "0x3af9980",
+                        "size": 1,
+                        "entriesReadable": true,
+                        "entries": [
+                          {
+                            "fileName": "Skyrim.esm",
+                            "filePath": "Data\\",
+                            "loadIndex": 0,
+                            "selected": true,
+                            "active": false,
+                            "master": true,
+                            "smallMaster": false,
+                            "ownedFormCount": 0
+                          }
+                        ]
+                      },
+                      "formFlagsRaw": 9,
+                      "formId": 365,
+                      "editorIdPointer": "0x17dd94be8",
+                      "editorIdReadable": true,
+                      "editorIdPrintable": true,
+                      "editorIdString": "_HelpPipBoyItems",
+                      "tracking": {
+                        "day": 0,
+                        "month": 0,
+                        "year": 2003
+                      },
+                      "formType": 105
+                    }
+                  },
+                  "message": {
+                    "kind": "WM_COMMAND",
+                    "commandId": 248,
+                    "commandIdHex": "0xf8",
+                    "dispatchMode": "FocusObjectWindowList+SendInputRightClick+popup-wait+WM_COMMAND+main-thread-pump",
+                    "targetWindow": "0x460590",
+                    "contextMenu": {
+                      "posted": true,
+                      "asyncReplayStarted": true,
+                      "foregroundSet": true,
+                      "itemListFocused": true,
+                      "cursorOnItemList": true,
+                      "itemListMessageFallbackUsed": false,
+                      "popupMenuObserved": true,
+                      "escapeSent": true,
+                      "wParam": "0x29075a",
+                      "screenPointReady": true,
+                      "x": 553,
+                      "y": 266,
+                      "lParam": "0x10a0229"
+                    },
+                    "sent": true,
+                    "commandPosted": true,
+                    "dispatchResult": "0x1",
+                    "pumpedMessageCount": 53,
+                    "pumpTimeoutMs": 2500
+                  },
+                  "before": {
+                    "active": true,
+                    "family": "MESG",
+                    "threadId": 24444,
+                    "tickCount": 292881593,
+                    "activePlugin": {
+                      "fileName": "PDV_Phase9To12_CKProof.esp",
+                      "loadIndex": 5,
+                      "nextFormID": 83948015,
+                      "ownedIdCount": 0
+                    },
+                    "recordCounts": {
+                      "GLOB": 965,
+                      "MESG": 852,
+                      "ACTI": 2218,
+                      "QUST": 2123,
+                      "FLST": 965
+                    }
+                  },
+                  "after": {
+                    "active": true,
+                    "family": "MESG",
+                    "threadId": 24444,
+                    "tickCount": 292882171,
+                    "activePlugin": {
+                      "fileName": "PDV_Phase9To12_CKProof.esp",
+                      "loadIndex": 5,
+                      "nextFormID": 83948016,
+                      "ownedIdCount": 0
+                    },
+                    "recordCounts": {
+                      "GLOB": 965,
+                      "MESG": 853,
+                      "ACTI": 2218,
+                      "QUST": 2123,
+                      "FLST": 965
+                    }
+                  },
+                  "delta": {
+                    "family": "MESG",
+                    "sameActivePlugin": true,
+                    "familyCountDelta": 1,
+                    "ownedIdDelta": 0,
+                    "nextFormIdDelta": 1,
+                    "creationObserved": true,
+                    "before": {
+                      "active": true,
+                      "family": "MESG",
+                      "threadId": 24444,
+                      "tickCount": 292881593,
+                      "activePlugin": {
+                        "fileName": "PDV_Phase9To12_CKProof.esp",
+                        "loadIndex": 5,
+                        "nextFormID": 83948015,
+                        "ownedIdCount": 0
+                      },
+                      "recordCounts": {
+                        "GLOB": 965,
+                        "MESG": 852,
+                        "ACTI": 2218,
+                        "QUST": 2123,
+                        "FLST": 965
+                      }
+                    },
+                    "after": {
+                      "active": true,
+                      "family": "MESG",
+                      "threadId": 24444,
+                      "tickCount": 292882171,
+                      "activePlugin": {
+                        "fileName": "PDV_Phase9To12_CKProof.esp",
+                        "loadIndex": 5,
+                        "nextFormID": 83948016,
+                        "ownedIdCount": 0
+                      },
+                      "recordCounts": {
+                        "GLOB": 965,
+                        "MESG": 853,
+                        "ACTI": 2218,
+                        "QUST": 2123,
+                        "FLST": 965
+                      }
+                    }
+                  },
+                  "createdIdentityCandidate": {
+                    "expectedCreatedFormId": 83948015,
+                    "record": {
+                      "found": true,
+                      "editorId": "_HelpPipBoyItemsDUPLICATE002",
+                      "formId": 83948015,
+                      "formType": 105,
+                      "sourceArray": "TESForm::FindFormByFormID",
+                      "modified": true,
+                      "fromMaster": true,
+                      "ownerFile": {
+                        "fileName": "PDV_Phase9To12_CKProof.esp",
+                        "filePath": "Data\\",
+                        "loadIndex": 5,
+                        "selected": true,
+                        "active": true,
+                        "master": false,
+                        "smallMaster": false,
+                        "ownedFormCount": 0
+                      },
+                      "ownedByActivePlugin": true
+                    },
+                    "rawHeader": {
+                      "formAddress": "0x175173080",
+                      "vtableAddress": "0x143014548",
+                      "modInfo": {
+                        "address": "0x15dbaf8a0",
+                        "size": 1,
+                        "entriesReadable": true,
+                        "entries": [
+                          {
+                            "fileName": "PDV_Phase9To12_CKProof.esp",
+                            "filePath": "Data\\",
+                            "loadIndex": 5,
+                            "selected": true,
+                            "active": true,
+                            "master": false,
+                            "smallMaster": false,
+                            "ownedFormCount": 0
+                          }
+                        ]
+                      },
+                      "formFlagsRaw": 11,
+                      "formId": 83948015,
+                      "editorIdPointer": "0x17dd94c38",
+                      "editorIdReadable": true,
+                      "editorIdPrintable": true,
+                      "editorIdString": "_HelpPipBoyItemsDUPLICATE002",
+                      "tracking": {
+                        "day": 183,
+                        "month": 4,
+                        "year": 2007
+                      },
+                      "formType": 105
+                    },
+                    "sameTypeAsSource": true,
+                    "ownedByActivePlugin": true
+                  },
+                  "replayOutcome": {
+                    "attempted": true,
+                    "familyDeltaObserved": true,
+                    "replayProven": true,
+                    "selectionIndependentReplayProven": false,
+                    "productMutationReady": false
+                  },
+                  "implementationRule": "This is a guarded discovery replay for Object Window duplicate across known families. It requires the current Object Window selection to match the explicit source and does not mutate payload fields, save, run readback, or promote support."
+                }
+              },
+              "createdRecord": {
+                "record": {
+                  "found": true,
+                  "editorId": "_HelpPipBoyItemsDUPLICATE002",
+                  "formId": 83948015,
+                  "formType": 105,
+                  "sourceArray": "arrMESG",
+                  "modified": true,
+                  "fromMaster": true,
+                  "ownerFile": {
+                    "fileName": "PDV_Phase9To12_CKProof.esp",
+                    "filePath": "Data\\",
+                    "loadIndex": 5,
+                    "selected": true,
+                    "active": true,
+                    "master": false,
+                    "smallMaster": false,
+                    "ownedFormCount": 0
+                  },
+                  "ownedByActivePlugin": true
+                },
+                "rawHeader": {
+                  "formAddress": "0x175173080",
+                  "vtableAddress": "0x143014548",
+                  "modInfo": {
+                    "address": "0x15dbaf8a0",
+                    "size": 1,
+                    "entriesReadable": true,
+                    "entries": [
+                      {
+                        "fileName": "PDV_Phase9To12_CKProof.esp",
+                        "filePath": "Data\\",
+                        "loadIndex": 5,
+                        "selected": true,
+                        "active": true,
+                        "master": false,
+                        "smallMaster": false,
+                        "ownedFormCount": 0
+                      }
+                    ]
+                  },
+                  "formFlagsRaw": 11,
+                  "formId": 83948015,
+                  "editorIdPointer": "0x17dd94c38",
+                  "editorIdReadable": true,
+                  "editorIdPrintable": true,
+                  "editorIdString": "_HelpPipBoyItemsDUPLICATE002",
+                  "tracking": {
+                    "day": 183,
+                    "month": 4,
+                    "year": 2007
+                  },
+                  "formType": 105
+                },
+                "matchesRequestedFamily": true,
+                "ownedByActivePlugin": true
+              },
+              "payloadMutationAttempted": false,
+              "saveAttempted": false,
+              "readbackAttempted": false,
+              "productCommandReadyForSave": true,
+              "nextProofNeeded": "post CK UI save and prove saved family payload through readback, verifier, proof ledger, and matrix promotion",
+              "implementationRule": "This is a narrow family duplicate composition around CK-owned Object Window replay. It supports only explicit-source guarded FLST/MESG/ACTI/QUST duplicate identity and copied payload preservation; it is not generic record.create and does not mutate payload fields by itself."
+            }
+          },
+          {
+            "op": "postUiSaveCommand",
+            "status": "PASS",
+            "message": "CK native save command was posted to the main window.",
+            "evidence": {
+              "requestedPlugin": "PDV_Phase9To12_CKProof.esp",
+              "guards": {
+                "dataHandlerAvailable": true,
+                "requestedPluginLoaded": true,
+                "requestedPluginIsActive": true,
+                "targetIsDisposableGeneratedPlugin": true,
+                "mainWindowFound": true
+              },
+              "activePlugin": {
+                "dataHandlerAvailable": true,
+                "activePlugin": {
+                  "fileName": "PDV_Phase9To12_CKProof.esp",
+                  "filePath": "Data\\",
+                  "loadIndex": 5,
+                  "selected": true,
+                  "active": true,
+                  "master": false,
+                  "smallMaster": false,
+                  "ownedFormCount": 0
+                }
+              },
+              "requestedPluginState": {
+                "fileName": "PDV_Phase9To12_CKProof.esp",
+                "filePath": "Data\\",
+                "loadIndex": 5,
+                "selected": true,
+                "active": true,
+                "master": false,
+                "smallMaster": false,
+                "ownedFormCount": 0
+              },
+              "mainWindow": {
+                "handle": "0xa80ab0",
+                "visible": true,
+                "hasMenu": true,
+                "ownerless": true,
+                "className": "Creation Kit Skyrim Special Edition [v1.6.1378.1]",
+                "title": "Creation Kit Skyrim Special Edition [v1.6.1378.1] 64-bit - [PDV_Phase9To12_CKProof.esp] <ESL Capable - 4087 IDs remaining>*",
+                "candidateCount": 17
+              },
+              "message": {
+                "kind": "WM_COMMAND",
+                "commandId": 40127,
+                "posted": true
+              },
+              "implementationRule": "This posts CK's native File > Save command to the CK main window for the active disposable generated plugin only. It does not call TESFile::WriteTESInfo directly; MO2 filesystem readback remains required."
+            }
+          },
+          {
+            "op": "closeSafeStatus",
+            "status": "PASS",
+            "message": "Bridge has no in-flight CK mutation transaction.",
+            "evidence": {
+              "safeToClose": true,
+              "mutatingHandlersImplemented": false
+            }
+          }
+        ],
+        "message": "CreationKitAuthoringBridge lifecycle commands completed inside CKPE.",
+        "sourceFixture": "generated/phase66-mesg-duplicate-create-product-command.ck-result.json"
+      }
+    },
+    {
+      "phase": "compile",
+      "status": "SKIPPED",
+      "message": "No Papyrus compilation is required for MESG duplicate-create proof."
+    },
+    {
+      "phase": "readback-collect",
+      "status": "PASS",
+      "sourceFixture": "fixtures/ckpe/phase67-mesg-duplicate-create-saved-readback-proof.json",
+      "message": "Phase 67 direct ESP readback found the saved MESG duplicate and copied message payload fields."
+    },
+    {
+      "phase": "verify",
+      "status": "PASS",
+      "report": {
+        "schema": "creation-authoring.verify.v1",
+        "manifest": {
+          "project": "pdv-ckproof",
+          "game": "SkyrimSE",
+          "sourcePlugin": "Skyrim.esm",
+          "output": "PDV_Phase9To12_CKProof.esp"
+        },
+        "results": [
+          {
+            "operationId": "duplicate-mesg",
+            "kind": "record.duplicate_create",
+            "target": "_HelpPipBoyItemsDUPLICATE002",
+            "status": "PASS",
+            "message": "_HelpPipBoyItemsDUPLICATE002 exists in readback.",
+            "details": {
+              "targetResolution": {
+                "identifier": "_HelpPipBoyItemsDUPLICATE002",
+                "formid": null,
+                "editorId": "_HelpPipBoyItemsDUPLICATE002",
+                "recordType": null,
+                "plugin": null,
+                "winningPlugin": null,
+                "resolved": false
+              },
+              "readbackNormalizer": {
+                "status": "PASS",
+                "operation": "record.duplicate_create",
+                "recordFamily": "MESG",
+                "normalizer": "record-exists",
+                "familyNormalizers": [
+                  "record-exists",
+                  "message"
+                ],
+                "message": "Readback normalizer record-exists covers record.duplicate_create."
+              }
+            }
+          }
+        ],
+        "summary": {
+          "PASS": 1,
+          "FAIL": 0,
+          "WARN": 0,
+          "TODO": 0
+        }
+      }
+    },
+    {
+      "phase": "project-verifier",
+      "status": "SKIPPED",
+      "message": "No project-specific verifier is required for isolated CK proof plugin promotion."
+    },
+    {
+      "phase": "strict-gate",
+      "status": "PASS",
+      "message": "Strict mode passed.",
+      "blockers": []
+    }
+  ],
+  "manualPackets": [],
+  "planSummary": {
+    "total": 1,
+    "ready": 1,
+    "manual": 0,
+    "abort": 0
+  },
+  "planOperations": [
+    {
+      "id": "duplicate-mesg",
+      "kind": "record.duplicate_create",
+      "target": "_HelpPipBoyItemsDUPLICATE002",
+      "mode": "create",
+      "onConflict": "fail",
+      "recordFamily": "MESG",
+      "ckSemanticsRequired": true,
+      "capabilityTier": "ck_required",
+      "backend": "ckpe-bridge",
+      "status": "ready",
+      "mergePolicy": {
+        "promote": "reviewed",
+        "preserveFormId": "when-safe",
+        "requiresCkFinalization": false,
+        "allowSourceMutation": false
+      },
+      "reviewIntent": null,
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "MESG"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.buttonCount",
+          "value": 0
+        }
+      ],
+      "runtimeSmokeRequired": false
+    }
+  ]
+}

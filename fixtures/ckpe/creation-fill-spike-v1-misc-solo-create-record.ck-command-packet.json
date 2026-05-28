@@ -1,0 +1,50 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "creation-fill-spike-v1",
+  "game": "SkyrimSE",
+  "sourcePlugin": "Skyrim.esm",
+  "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+  "backendOrder": [
+    "ckpe-bridge"
+  ],
+  "failClosed": true,
+  "commands": [
+    {
+      "op": "openProject",
+      "profile": "creation-fill-spike-v1",
+      "game": "SkyrimSE"
+    },
+    {
+      "op": "loadPlugin",
+      "plugin": "CKRA_CreationFillSpikeV1.esp",
+      "active": true
+    },
+    {
+      "op": "setActivePlugin",
+      "plugin": "CKRA_CreationFillSpikeV1.esp"
+    },
+    {
+      "op": "createRecord",
+      "operationId": "create-misc-solo",
+      "plugin": "CKRA_CreationFillSpikeV1.esp",
+      "target": "Gold001DUPLICATE001",
+      "createdEditorId": "Gold001DUPLICATE001",
+      "sourceEditorId": "Gold001",
+      "recordFamily": "MISC",
+      "mode": "input_context_focus_async_command",
+      "payload": {
+        "recordType": "MISC",
+        "sourceEditorId": "Gold001",
+        "targetEditorId": "Gold001DUPLICATE001",
+        "createdEditorId": "Gold001DUPLICATE001"
+      }
+    },
+    {
+      "op": "postUiSaveCommand",
+      "plugin": "CKRA_CreationFillSpikeV1.esp"
+    },
+    {
+      "op": "closeSafeStatus"
+    }
+  ]
+}

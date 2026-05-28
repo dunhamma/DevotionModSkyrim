@@ -1,0 +1,355 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "creation-fill-spike-v1",
+  "game": "SkyrimSE",
+  "sourcePlugin": "Skyrim.esm",
+  "output": "CKRA_CreationFillSpikeV1.esp",
+  "metadata": {
+    "proofLane": "discovery-only",
+    "supportClaim": false,
+    "reason": "Generic record.create remains blocked until strict live proof, proof-ledger promotion, and capability-matrix acceptance pass per family."
+  },
+  "operations": [
+    {
+      "id": "create-spell",
+      "kind": "record.create",
+      "target": "CKRA_SPIKE_Spell",
+      "mode": "create",
+      "recordFamily": "SPEL",
+      "payload": {
+        "recordType": "SPEL",
+        "fields": {
+          "FULL": "CKRA Spike Spell",
+          "DESC": "Static spell creation-fill proof payload.",
+          "SPIT": {
+            "type": "Spell",
+            "cost": 7
+          }
+        }
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "SPEL"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "CKRA Spike Spell"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.SPIT.cost",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": "create-magic-effect",
+      "kind": "record.create",
+      "target": "CKRA_SPIKE_MagicEffect",
+      "mode": "create",
+      "recordFamily": "MGEF",
+      "payload": {
+        "recordType": "MGEF",
+        "fields": {
+          "FULL": "CKRA Spike Magic Effect",
+          "DNAM": {
+            "archetype": "ValueModifier",
+            "castingType": "FireAndForget"
+          }
+        }
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "MGEF"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "CKRA Spike Magic Effect"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.DNAM.archetype",
+          "value": "ValueModifier"
+        }
+      ]
+    },
+    {
+      "id": "create-enchantment",
+      "kind": "record.create",
+      "target": "CKRA_SPIKE_Enchantment",
+      "mode": "create",
+      "recordFamily": "ENCH",
+      "payload": {
+        "recordType": "ENCH",
+        "fields": {
+          "FULL": "CKRA Spike Enchantment",
+          "ENIT": {
+            "charge": 10,
+            "type": "Enchantment"
+          }
+        }
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "ENCH"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "CKRA Spike Enchantment"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.ENIT.charge",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": "create-scroll",
+      "kind": "record.create",
+      "target": "CKRA_SPIKE_Scroll",
+      "mode": "create",
+      "recordFamily": "SCRL",
+      "payload": {
+        "recordType": "SCRL",
+        "fields": {
+          "FULL": "CKRA Spike Scroll",
+          "DESC": "Static scroll creation-fill proof payload.",
+          "MDOB": "EditorMarker"
+        }
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "SCRL"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "CKRA Spike Scroll"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.MDOB",
+          "value": "EditorMarker"
+        }
+      ]
+    },
+    {
+      "id": "create-weapon",
+      "kind": "record.create",
+      "target": "CKRA_SPIKE_Weapon",
+      "mode": "create",
+      "recordFamily": "WEAP",
+      "payload": {
+        "recordType": "WEAP",
+        "fields": {
+          "FULL": "CKRA Spike Weapon",
+          "DATA": {
+            "damage": 3,
+            "weight": 1
+          }
+        }
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "WEAP"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "CKRA Spike Weapon"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.DATA.damage",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "create-armor",
+      "kind": "record.create",
+      "target": "CKRA_SPIKE_Armor",
+      "mode": "create",
+      "recordFamily": "ARMO",
+      "payload": {
+        "recordType": "ARMO",
+        "fields": {
+          "FULL": "CKRA Spike Armor",
+          "DATA": {
+            "armorRating": 2,
+            "weight": 1
+          }
+        }
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "ARMO"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "CKRA Spike Armor"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.DATA.armorRating",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "create-ammo",
+      "kind": "record.create",
+      "target": "CKRA_SPIKE_Ammo",
+      "mode": "create",
+      "recordFamily": "AMMO",
+      "payload": {
+        "recordType": "AMMO",
+        "fields": {
+          "FULL": "CKRA Spike Ammo",
+          "DATA": {
+            "damage": 1
+          }
+        }
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "AMMO"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "CKRA Spike Ammo"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.DATA.damage",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "create-book",
+      "kind": "record.create",
+      "target": "CKRA_SPIKE_Book",
+      "mode": "create",
+      "recordFamily": "BOOK",
+      "payload": {
+        "recordType": "BOOK",
+        "fields": {
+          "FULL": "CKRA Spike Book",
+          "DESC": "Static book creation-fill proof payload.",
+          "CNAM": "CKRA static book text."
+        }
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "BOOK"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "CKRA Spike Book"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.CNAM",
+          "value": "CKRA static book text."
+        }
+      ]
+    },
+    {
+      "id": "create-container",
+      "kind": "record.create",
+      "target": "CKRA_SPIKE_Container",
+      "mode": "create",
+      "recordFamily": "CONT",
+      "payload": {
+        "recordType": "CONT",
+        "fields": {
+          "FULL": "CKRA Spike Container",
+          "DATA": {
+            "respawns": false
+          }
+        },
+        "inventory": [
+          {
+            "item": "Gold001",
+            "count": 1
+          }
+        ]
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "CONT"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "CKRA Spike Container"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "inventory.0.item",
+          "value": "Gold001"
+        }
+      ]
+    },
+    {
+      "id": "create-misc",
+      "kind": "record.create",
+      "target": "CKRA_SPIKE_Misc",
+      "mode": "create",
+      "recordFamily": "MISC",
+      "payload": {
+        "recordType": "MISC",
+        "fields": {
+          "FULL": "CKRA Spike Misc Item",
+          "DATA": {
+            "value": 1,
+            "weight": 0.1
+          }
+        }
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "MISC"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "CKRA Spike Misc Item"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.DATA.value",
+          "value": 1
+        }
+      ]
+    }
+  ]
+}

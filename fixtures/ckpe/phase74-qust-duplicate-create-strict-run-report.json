@@ -1,0 +1,775 @@
+{
+  "schema": "creation-authoring.run-report.v1",
+  "status": "PASS",
+  "startedAt": "2026-05-23T11:03:00.000Z",
+  "finishedAt": "2026-05-23T11:05:00.000Z",
+  "reportPath": "fixtures/ckpe/phase74-qust-duplicate-create-strict-run-report.json",
+  "manifest": {
+    "project": "pdv-ckproof",
+    "game": "SkyrimSE",
+    "sourcePlugin": "PlayerDevotion_Framework.esp",
+    "output": "PDV_Phase9To12_CKProof.esp"
+  },
+  "profile": {
+    "modId": "platform-v1-pdv-live",
+    "outputPolicy": "overlay"
+  },
+  "phases": [
+    {
+      "phase": "plan",
+      "status": "PASS",
+      "summary": {
+        "total": 1,
+        "ready": 1,
+        "manual": 0,
+        "abort": 0
+      }
+    },
+    {
+      "phase": "apply",
+      "status": "SKIPPED",
+      "message": "No safe patch operations were ready to execute."
+    },
+    {
+      "phase": "ck-apply",
+      "status": "PASS",
+      "message": "Phase 72 CKPE packet completed.",
+      "operations": [
+        "duplicate-qust"
+      ],
+      "adapterResult": {
+        "schema": "creation-authoring.ck-command-result.v1",
+        "status": "PASS",
+        "transport": "named-pipe",
+        "commands": [
+          {
+            "op": "openProject",
+            "status": "PASS",
+            "message": "Bridge is loaded in the current CK project context.",
+            "evidence": {
+              "ckpeVersion": 0,
+              "ckpeCommonVersion": 0,
+              "ckpeGameLibraryVersion": 0,
+              "runtimeVersion": 0,
+              "pipe": "\\\\.\\pipe\\CreationKitAuthoringBridge"
+            }
+          },
+          {
+            "op": "loadPlugin",
+            "status": "PASS",
+            "message": "Requested plugin is loaded in TESDataHandler.",
+            "evidence": {
+              "requestedPlugin": "PDV_Phase9To12_CKProof.esp",
+              "found": true,
+              "plugin": {
+                "fileName": "PDV_Phase9To12_CKProof.esp",
+                "filePath": "Data\\",
+                "loadIndex": 5,
+                "selected": true,
+                "active": true,
+                "master": false,
+                "smallMaster": false,
+                "ownedFormCount": 0
+              },
+              "activePlugin": {
+                "dataHandlerAvailable": true,
+                "activePlugin": {
+                  "fileName": "PDV_Phase9To12_CKProof.esp",
+                  "filePath": "Data\\",
+                  "loadIndex": 5,
+                  "selected": true,
+                  "active": true,
+                  "master": false,
+                  "smallMaster": false,
+                  "ownedFormCount": 0
+                }
+              }
+            }
+          },
+          {
+            "op": "setActivePlugin",
+            "status": "PASS",
+            "message": "Requested plugin is already active.",
+            "evidence": {
+              "requestedPlugin": "PDV_Phase9To12_CKProof.esp",
+              "found": true,
+              "plugin": {
+                "fileName": "PDV_Phase9To12_CKProof.esp",
+                "filePath": "Data\\",
+                "loadIndex": 5,
+                "selected": true,
+                "active": true,
+                "master": false,
+                "smallMaster": false,
+                "ownedFormCount": 0
+              },
+              "activePlugin": {
+                "dataHandlerAvailable": true,
+                "activePlugin": {
+                  "fileName": "PDV_Phase9To12_CKProof.esp",
+                  "filePath": "Data\\",
+                  "loadIndex": 5,
+                  "selected": true,
+                  "active": true,
+                  "master": false,
+                  "smallMaster": false,
+                  "ownedFormCount": 0
+                }
+              }
+            }
+          },
+          {
+            "op": "duplicateCreateRecord",
+            "status": "PASS",
+            "message": "Record duplicate-create replayed CK duplicate path for the requested family; save/readback proof is still required.",
+            "evidence": {
+              "requested": {
+                "op": "duplicateCreateRecord",
+                "targetEditorId": "PDV__ManagerQuestDUPLICATE002",
+                "sourceEditorId": "PDV__ManagerQuest",
+                "recordFamily": "QUST",
+                "plugin": "PDV_Phase9To12_CKProof.esp"
+              },
+              "guards": {
+                "targetEditorIdProvided": true,
+                "targetEditorIdAbsentBeforeReplay": true,
+                "supportedProductFamily": true,
+                "selectionDependentReplayGuardedByExplicitSource": true
+              },
+              "replay": {
+                "attempted": true,
+                "proven": true,
+                "evidence": {
+                  "requested": {
+                    "op": "replayObjectWindowDuplicateCommand",
+                    "plugin": "PDV_Phase9To12_CKProof.esp",
+                    "mode": "input_context_focus_async_command",
+                    "sourceEditorId": "PDV__ManagerQuest",
+                    "recordFamily": "QUST"
+                  },
+                  "guards": {
+                    "dataHandlerAvailable": true,
+                    "supportedDiscoveryFamily": true,
+                    "requestedPluginLoaded": true,
+                    "requestedPluginIsActive": true,
+                    "targetIsDisposableGeneratedPlugin": true,
+                    "sourceResolved": true,
+                    "sourceMatchesRequestedFamily": true,
+                    "objectWindowFound": true,
+                    "objectWindowItemListFound": true,
+                    "selectedUiFormFound": true,
+                    "selectedUiFormMatchesRequestedFamily": true,
+                    "selectedUiSelectionIsSingle": true,
+                    "selectedUiFormMatchesExplicitSource": true,
+                    "phase48DuplicateCommandRouteProven": true,
+                    "safeToReplay": true
+                  },
+                  "activePlugin": {
+                    "dataHandlerAvailable": true,
+                    "activePlugin": {
+                      "fileName": "PDV_Phase9To12_CKProof.esp",
+                      "filePath": "Data\\",
+                      "loadIndex": 5,
+                      "selected": true,
+                      "active": true,
+                      "master": false,
+                      "smallMaster": false,
+                      "ownedFormCount": 0
+                    }
+                  },
+                  "requestedPlugin": {
+                    "fileName": "PDV_Phase9To12_CKProof.esp",
+                    "filePath": "Data\\",
+                    "loadIndex": 5,
+                    "selected": true,
+                    "active": true,
+                    "master": false,
+                    "smallMaster": false,
+                    "ownedFormCount": 0
+                  },
+                  "source": {
+                    "record": {
+                      "found": true,
+                      "editorId": "PDV__ManagerQuest",
+                      "formId": 67158821,
+                      "formType": 77,
+                      "sourceArray": "arrQUST",
+                      "modified": true,
+                      "fromMaster": true,
+                      "ownerFile": {
+                        "fileName": "PDV_Phase9To12_CKProof.esp",
+                        "filePath": "Data\\",
+                        "loadIndex": 5,
+                        "selected": true,
+                        "active": true,
+                        "master": false,
+                        "smallMaster": false,
+                        "ownedFormCount": 0
+                      },
+                      "ownedByActivePlugin": true
+                    },
+                    "rawHeader": {
+                      "formAddress": "0x6754e60",
+                      "vtableAddress": "0x142ffecf0",
+                      "modInfo": {
+                        "address": "0x15dbaf8c0",
+                        "size": 2,
+                        "entriesReadable": true,
+                        "entries": [
+                          {
+                            "fileName": "PlayerDevotion_Framework.esp",
+                            "filePath": "Data\\",
+                            "loadIndex": 4,
+                            "selected": true,
+                            "active": false,
+                            "master": true,
+                            "smallMaster": false,
+                            "ownedFormCount": 0
+                          },
+                          {
+                            "fileName": "PDV_Phase9To12_CKProof.esp",
+                            "filePath": "Data\\",
+                            "loadIndex": 5,
+                            "selected": true,
+                            "active": true,
+                            "master": false,
+                            "smallMaster": false,
+                            "ownedFormCount": 0
+                          }
+                        ]
+                      },
+                      "formFlagsRaw": 11,
+                      "formId": 67158821,
+                      "editorIdPointer": "0x175b28ef8",
+                      "editorIdReadable": true,
+                      "editorIdPrintable": true,
+                      "editorIdString": "PDV__ManagerQuest",
+                      "tracking": {
+                        "day": 0,
+                        "month": 0,
+                        "year": 2003
+                      },
+                      "formType": 77
+                    }
+                  },
+                  "objectWindow": {
+                    "candidateCount": 2,
+                    "selected": {
+                      "handle": "0x460590",
+                      "visible": true,
+                      "className": "#32770",
+                      "title": "Object Window",
+                      "treeControl": "0xd8063e",
+                      "itemListControl": "0x29075a",
+                      "filterControl": "0xbf0992",
+                      "selectedCount": 1,
+                      "selectedIndex": 0
+                    }
+                  },
+                  "selectedUiForm": {
+                    "record": {
+                      "found": true,
+                      "editorId": "PDV__ManagerQuest",
+                      "formId": 67158821,
+                      "formType": 77,
+                      "sourceArray": "",
+                      "modified": true,
+                      "fromMaster": true,
+                      "ownerFile": {
+                        "fileName": "PDV_Phase9To12_CKProof.esp",
+                        "filePath": "Data\\",
+                        "loadIndex": 5,
+                        "selected": true,
+                        "active": true,
+                        "master": false,
+                        "smallMaster": false,
+                        "ownedFormCount": 0
+                      },
+                      "ownedByActivePlugin": true
+                    },
+                    "rawHeader": {
+                      "formAddress": "0x6754e60",
+                      "vtableAddress": "0x142ffecf0",
+                      "modInfo": {
+                        "address": "0x15dbaf8c0",
+                        "size": 2,
+                        "entriesReadable": true,
+                        "entries": [
+                          {
+                            "fileName": "PlayerDevotion_Framework.esp",
+                            "filePath": "Data\\",
+                            "loadIndex": 4,
+                            "selected": true,
+                            "active": false,
+                            "master": true,
+                            "smallMaster": false,
+                            "ownedFormCount": 0
+                          },
+                          {
+                            "fileName": "PDV_Phase9To12_CKProof.esp",
+                            "filePath": "Data\\",
+                            "loadIndex": 5,
+                            "selected": true,
+                            "active": true,
+                            "master": false,
+                            "smallMaster": false,
+                            "ownedFormCount": 0
+                          }
+                        ]
+                      },
+                      "formFlagsRaw": 11,
+                      "formId": 67158821,
+                      "editorIdPointer": "0x175b28ef8",
+                      "editorIdReadable": true,
+                      "editorIdPrintable": true,
+                      "editorIdString": "PDV__ManagerQuest",
+                      "tracking": {
+                        "day": 0,
+                        "month": 0,
+                        "year": 2003
+                      },
+                      "formType": 77
+                    }
+                  },
+                  "message": {
+                    "kind": "WM_COMMAND",
+                    "commandId": 248,
+                    "commandIdHex": "0xf8",
+                    "dispatchMode": "FocusObjectWindowList+SendInputRightClick+popup-wait+WM_COMMAND+main-thread-pump",
+                    "targetWindow": "0x460590",
+                    "contextMenu": {
+                      "posted": true,
+                      "asyncReplayStarted": true,
+                      "foregroundSet": true,
+                      "itemListFocused": true,
+                      "cursorOnItemList": true,
+                      "itemListMessageFallbackUsed": false,
+                      "popupMenuObserved": true,
+                      "escapeSent": true,
+                      "wParam": "0x29075a",
+                      "screenPointReady": true,
+                      "x": 553,
+                      "y": 266,
+                      "lParam": "0x10a0229"
+                    },
+                    "sent": true,
+                    "commandPosted": true,
+                    "dispatchResult": "0x1",
+                    "pumpedMessageCount": 59,
+                    "pumpTimeoutMs": 2500
+                  },
+                  "before": {
+                    "active": true,
+                    "family": "QUST",
+                    "threadId": 24444,
+                    "tickCount": 293608968,
+                    "activePlugin": {
+                      "fileName": "PDV_Phase9To12_CKProof.esp",
+                      "loadIndex": 5,
+                      "nextFormID": 83948017,
+                      "ownedIdCount": 0
+                    },
+                    "recordCounts": {
+                      "GLOB": 965,
+                      "MESG": 853,
+                      "ACTI": 2219,
+                      "QUST": 2123,
+                      "FLST": 965
+                    }
+                  },
+                  "after": {
+                    "active": true,
+                    "family": "QUST",
+                    "threadId": 24444,
+                    "tickCount": 293609593,
+                    "activePlugin": {
+                      "fileName": "PDV_Phase9To12_CKProof.esp",
+                      "loadIndex": 5,
+                      "nextFormID": 83948018,
+                      "ownedIdCount": 0
+                    },
+                    "recordCounts": {
+                      "GLOB": 965,
+                      "MESG": 853,
+                      "ACTI": 2219,
+                      "QUST": 2124,
+                      "FLST": 965
+                    }
+                  },
+                  "delta": {
+                    "family": "QUST",
+                    "sameActivePlugin": true,
+                    "familyCountDelta": 1,
+                    "ownedIdDelta": 0,
+                    "nextFormIdDelta": 1,
+                    "creationObserved": true,
+                    "before": {
+                      "active": true,
+                      "family": "QUST",
+                      "threadId": 24444,
+                      "tickCount": 293608968,
+                      "activePlugin": {
+                        "fileName": "PDV_Phase9To12_CKProof.esp",
+                        "loadIndex": 5,
+                        "nextFormID": 83948017,
+                        "ownedIdCount": 0
+                      },
+                      "recordCounts": {
+                        "GLOB": 965,
+                        "MESG": 853,
+                        "ACTI": 2219,
+                        "QUST": 2123,
+                        "FLST": 965
+                      }
+                    },
+                    "after": {
+                      "active": true,
+                      "family": "QUST",
+                      "threadId": 24444,
+                      "tickCount": 293609593,
+                      "activePlugin": {
+                        "fileName": "PDV_Phase9To12_CKProof.esp",
+                        "loadIndex": 5,
+                        "nextFormID": 83948018,
+                        "ownedIdCount": 0
+                      },
+                      "recordCounts": {
+                        "GLOB": 965,
+                        "MESG": 853,
+                        "ACTI": 2219,
+                        "QUST": 2124,
+                        "FLST": 965
+                      }
+                    }
+                  },
+                  "createdIdentityCandidate": {
+                    "expectedCreatedFormId": 83948017,
+                    "record": {
+                      "found": true,
+                      "editorId": "PDV__ManagerQuestDUPLICATE002",
+                      "formId": 83948017,
+                      "formType": 77,
+                      "sourceArray": "TESForm::FindFormByFormID",
+                      "modified": true,
+                      "fromMaster": true,
+                      "ownerFile": {
+                        "fileName": "PDV_Phase9To12_CKProof.esp",
+                        "filePath": "Data\\",
+                        "loadIndex": 5,
+                        "selected": true,
+                        "active": true,
+                        "master": false,
+                        "smallMaster": false,
+                        "ownedFormCount": 0
+                      },
+                      "ownedByActivePlugin": true
+                    },
+                    "rawHeader": {
+                      "formAddress": "0x6c420d0",
+                      "vtableAddress": "0x142ffecf0",
+                      "modInfo": {
+                        "address": "0x15dbaf8a0",
+                        "size": 1,
+                        "entriesReadable": true,
+                        "entries": [
+                          {
+                            "fileName": "PDV_Phase9To12_CKProof.esp",
+                            "filePath": "Data\\",
+                            "loadIndex": 5,
+                            "selected": true,
+                            "active": true,
+                            "master": false,
+                            "smallMaster": false,
+                            "ownedFormCount": 0
+                          }
+                        ]
+                      },
+                      "formFlagsRaw": 11,
+                      "formId": 83948017,
+                      "editorIdPointer": "0x17dd94dc8",
+                      "editorIdReadable": true,
+                      "editorIdPrintable": true,
+                      "editorIdString": "PDV__ManagerQuestDUPLICATE002",
+                      "tracking": {
+                        "day": 183,
+                        "month": 4,
+                        "year": 2007
+                      },
+                      "formType": 77
+                    },
+                    "sameTypeAsSource": true,
+                    "ownedByActivePlugin": true
+                  },
+                  "replayOutcome": {
+                    "attempted": true,
+                    "familyDeltaObserved": true,
+                    "replayProven": true,
+                    "selectionIndependentReplayProven": false,
+                    "productMutationReady": false
+                  },
+                  "implementationRule": "This is a guarded discovery replay for Object Window duplicate across known families. It requires the current Object Window selection to match the explicit source and does not mutate payload fields, save, run readback, or promote support."
+                }
+              },
+              "createdRecord": {
+                "record": {
+                  "found": true,
+                  "editorId": "PDV__ManagerQuestDUPLICATE002",
+                  "formId": 83948017,
+                  "formType": 77,
+                  "sourceArray": "arrQUST",
+                  "modified": true,
+                  "fromMaster": true,
+                  "ownerFile": {
+                    "fileName": "PDV_Phase9To12_CKProof.esp",
+                    "filePath": "Data\\",
+                    "loadIndex": 5,
+                    "selected": true,
+                    "active": true,
+                    "master": false,
+                    "smallMaster": false,
+                    "ownedFormCount": 0
+                  },
+                  "ownedByActivePlugin": true
+                },
+                "rawHeader": {
+                  "formAddress": "0x6c420d0",
+                  "vtableAddress": "0x142ffecf0",
+                  "modInfo": {
+                    "address": "0x15dbaf8a0",
+                    "size": 1,
+                    "entriesReadable": true,
+                    "entries": [
+                      {
+                        "fileName": "PDV_Phase9To12_CKProof.esp",
+                        "filePath": "Data\\",
+                        "loadIndex": 5,
+                        "selected": true,
+                        "active": true,
+                        "master": false,
+                        "smallMaster": false,
+                        "ownedFormCount": 0
+                      }
+                    ]
+                  },
+                  "formFlagsRaw": 11,
+                  "formId": 83948017,
+                  "editorIdPointer": "0x17dd94dc8",
+                  "editorIdReadable": true,
+                  "editorIdPrintable": true,
+                  "editorIdString": "PDV__ManagerQuestDUPLICATE002",
+                  "tracking": {
+                    "day": 183,
+                    "month": 4,
+                    "year": 2007
+                  },
+                  "formType": 77
+                },
+                "matchesRequestedFamily": true,
+                "ownedByActivePlugin": true
+              },
+              "payloadMutationAttempted": false,
+              "saveAttempted": false,
+              "readbackAttempted": false,
+              "productCommandReadyForSave": true,
+              "nextProofNeeded": "post CK UI save and prove saved family payload through readback, verifier, proof ledger, and matrix promotion",
+              "implementationRule": "This is a narrow family duplicate composition around CK-owned Object Window replay. It supports only explicit-source guarded FLST/MESG/ACTI/QUST duplicate identity and copied payload preservation; it is not generic record.create and does not mutate payload fields by itself."
+            }
+          },
+          {
+            "op": "postUiSaveCommand",
+            "status": "PASS",
+            "message": "CK native save command was posted to the main window.",
+            "evidence": {
+              "requestedPlugin": "PDV_Phase9To12_CKProof.esp",
+              "guards": {
+                "dataHandlerAvailable": true,
+                "requestedPluginLoaded": true,
+                "requestedPluginIsActive": true,
+                "targetIsDisposableGeneratedPlugin": true,
+                "mainWindowFound": true
+              },
+              "activePlugin": {
+                "dataHandlerAvailable": true,
+                "activePlugin": {
+                  "fileName": "PDV_Phase9To12_CKProof.esp",
+                  "filePath": "Data\\",
+                  "loadIndex": 5,
+                  "selected": true,
+                  "active": true,
+                  "master": false,
+                  "smallMaster": false,
+                  "ownedFormCount": 0
+                }
+              },
+              "requestedPluginState": {
+                "fileName": "PDV_Phase9To12_CKProof.esp",
+                "filePath": "Data\\",
+                "loadIndex": 5,
+                "selected": true,
+                "active": true,
+                "master": false,
+                "smallMaster": false,
+                "ownedFormCount": 0
+              },
+              "mainWindow": {
+                "handle": "0xa80ab0",
+                "visible": true,
+                "hasMenu": true,
+                "ownerless": true,
+                "className": "Creation Kit Skyrim Special Edition [v1.6.1378.1]",
+                "title": "Creation Kit Skyrim Special Edition [v1.6.1378.1] 64-bit - [PDV_Phase9To12_CKProof.esp] <ESL Capable - 4085 IDs remaining>*",
+                "candidateCount": 17
+              },
+              "message": {
+                "kind": "WM_COMMAND",
+                "commandId": 40127,
+                "posted": true
+              },
+              "implementationRule": "This posts CK's native File > Save command to the CK main window for the active disposable generated plugin only. It does not call TESFile::WriteTESInfo directly; MO2 filesystem readback remains required."
+            }
+          },
+          {
+            "op": "closeSafeStatus",
+            "status": "PASS",
+            "message": "Bridge has no in-flight CK mutation transaction.",
+            "evidence": {
+              "safeToClose": true,
+              "mutatingHandlersImplemented": false
+            }
+          }
+        ],
+        "message": "CreationKitAuthoringBridge lifecycle commands completed inside CKPE.",
+        "sourceFixture": "generated/phase72-qust-duplicate-create-product-command.ck-result.json"
+      }
+    },
+    {
+      "phase": "compile",
+      "status": "SKIPPED",
+      "message": "No Papyrus compilation is required for QUST duplicate-create proof."
+    },
+    {
+      "phase": "readback-collect",
+      "status": "PASS",
+      "sourceFixture": "fixtures/ckpe/phase73-qust-duplicate-create-saved-readback-proof.json",
+      "message": "Phase 73 direct ESP readback found the saved QUST duplicate and copied quest payload fields."
+    },
+    {
+      "phase": "verify",
+      "status": "PASS",
+      "report": {
+        "schema": "creation-authoring.verify.v1",
+        "manifest": {
+          "project": "pdv-ckproof",
+          "game": "SkyrimSE",
+          "sourcePlugin": "PlayerDevotion_Framework.esp",
+          "output": "PDV_Phase9To12_CKProof.esp"
+        },
+        "results": [
+          {
+            "operationId": "duplicate-qust",
+            "kind": "record.duplicate_create",
+            "target": "PDV__ManagerQuestDUPLICATE002",
+            "status": "PASS",
+            "message": "PDV__ManagerQuestDUPLICATE002 exists in readback.",
+            "details": {
+              "targetResolution": {
+                "identifier": "PDV__ManagerQuestDUPLICATE002",
+                "formid": null,
+                "editorId": "PDV__ManagerQuestDUPLICATE002",
+                "recordType": null,
+                "plugin": null,
+                "winningPlugin": null,
+                "resolved": false
+              },
+              "readbackNormalizer": {
+                "status": "PASS",
+                "operation": "record.duplicate_create",
+                "recordFamily": "QUST",
+                "normalizer": "record-exists",
+                "familyNormalizers": [
+                  "record-exists",
+                  "vmad-scripts",
+                  "vmad-properties",
+                  "vmad-array-properties",
+                  "aliases",
+                  "quest-stages",
+                  "conditions",
+                  "artifact-seq"
+                ],
+                "message": "Readback normalizer record-exists covers record.duplicate_create."
+              }
+            }
+          }
+        ],
+        "summary": {
+          "PASS": 1,
+          "FAIL": 0,
+          "WARN": 0,
+          "TODO": 0
+        }
+      }
+    },
+    {
+      "phase": "project-verifier",
+      "status": "SKIPPED",
+      "message": "No project-specific verifier is required for isolated CK proof plugin promotion."
+    },
+    {
+      "phase": "strict-gate",
+      "status": "PASS",
+      "message": "Strict mode passed.",
+      "blockers": []
+    }
+  ],
+  "manualPackets": [],
+  "planSummary": {
+    "total": 1,
+    "ready": 1,
+    "manual": 0,
+    "abort": 0
+  },
+  "planOperations": [
+    {
+      "id": "duplicate-qust",
+      "kind": "record.duplicate_create",
+      "target": "PDV__ManagerQuestDUPLICATE002",
+      "mode": "create",
+      "onConflict": "fail",
+      "recordFamily": "QUST",
+      "ckSemanticsRequired": true,
+      "capabilityTier": "ck_required",
+      "backend": "ckpe-bridge",
+      "status": "ready",
+      "mergePolicy": {
+        "promote": "reviewed",
+        "preserveFormId": "when-safe",
+        "requiresCkFinalization": false,
+        "allowSourceMutation": false
+      },
+      "reviewIntent": null,
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "QUST"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "PDV Manager"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.hasVmad",
+          "value": true
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.stageCount",
+          "value": 1
+        }
+      ],
+      "runtimeSmokeRequired": false
+    }
+  ]
+}

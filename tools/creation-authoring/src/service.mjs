@@ -31,6 +31,12 @@ export function handleAuthoringRequest(request) {
     return promoteRunReport(request.runReport, profile, {
       approved: Boolean(request.approved),
       allowSourceMutation: Boolean(request.allowSourceMutation),
+      reportPath: request.reportPath,
+      sourcePath: request.sourcePath,
+      generatedPath: request.generatedPath,
+      mergeOutputPath: request.mergeOutputPath,
+      backupRoot: request.backupRoot,
+      proofLedger: request.proofLedger,
       backupRunner: request.adapters?.backupRunner,
       mergeRunner: request.adapters?.mergeRunner,
       ckFinalizer: request.adapters?.ckFinalizer,
@@ -39,7 +45,9 @@ export function handleAuthoringRequest(request) {
   }
 
   const manifest = normalizeManifest(request.manifest, profile);
-  const plan = createPlan(manifest, profile);
+  const plan = createPlan(manifest, profile, {
+    allowUnprovenCk: Boolean(request.allowUnprovenCk)
+  });
 
   if (action === "plan") {
     return plan;
@@ -77,6 +85,7 @@ export function handleAuthoringRequest(request) {
   if (action === "run") {
     return runPipeline(manifest, profile, {
       allowManualPackets: Boolean(request.allowManualPackets),
+      allowUnprovenCk: Boolean(request.allowUnprovenCk),
       strict: Boolean(request.strict),
       executeLive: Boolean(request.executeLive),
       patchOptions: request.patchOptions || {},

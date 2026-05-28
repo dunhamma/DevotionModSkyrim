@@ -1,0 +1,44 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "ckra-glob-duplicate-create-proof",
+  "game": "SkyrimSE",
+  "generatedPlugin": "CKRA_LiveProof_Generated.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "CKRA_LiveProof_Generated.esp", "active": true },
+    { "op": "setActivePlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    {
+      "op": "duplicateCreateGlob",
+      "operationId": "phase45-duplicate-glob",
+      "mode": "duplicate-create",
+      "plugin": "CKRA_LiveProof_Generated.esp",
+      "recordFamily": "GLOB",
+      "sourceEditorId": "CKRATest",
+      "target": "CKRA_AutoDuplicate_GLOB_Phase45",
+      "targetEditorId": "CKRA_AutoDuplicate_GLOB_Phase45",
+      "valueType": "short",
+      "value": 1,
+      "requires": [
+        "generated-plugin-active",
+        "source-glob-readable",
+        "target-editorid-absent",
+        "ck-owned-duplicate-command-path",
+        "ck-generated-created-identity",
+        "type-value-mutation",
+        "changed-registration",
+        "save-readback-proof"
+      ],
+      "expectedResult": "PASS"
+    },
+    { "op": "savePlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    {
+      "op": "findRecordByEditorId",
+      "plugin": "CKRA_LiveProof_Generated.esp",
+      "recordFamily": "GLOB",
+      "target": "CKRA_AutoDuplicate_GLOB_Phase45",
+      "editorId": "CKRA_AutoDuplicate_GLOB_Phase45"
+    },
+    { "op": "closeSafeStatus" }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "schema": "creation-authoring.esp-editorid-readback.v1",
+  "generatedAt": "2026-05-23T10:40:46.262Z",
+  "plugin": "PDV_Phase9To12_CKProof.esp",
+  "path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/PDV_Phase9To12_CKProof.esp",
+  "fileLength": 4963,
+  "lastWriteTime": "2026-05-23T10:40:16.529Z",
+  "requestedEditorIds": [
+    "PDV_FLST_AllDeitiesDUPLICATE002"
+  ],
+  "records": [
+    {
+      "editorId": "PDV_FLST_AllDeitiesDUPLICATE002",
+      "formId": "0x0500F1EE",
+      "recordType": "FLST",
+      "flags": "0x0",
+      "offset": "0x127B",
+      "size": 98,
+      "fields": {
+        "subrecordTypes": [
+          {
+            "type": "EDID",
+            "count": 1
+          },
+          {
+            "type": "LNAM",
+            "count": 6
+          }
+        ],
+        "entries": [
+          "0x040120B6",
+          "0x0403DE87",
+          "0x0403DE88",
+          "0x0406CB52",
+          "0x0406CB52",
+          "0x0406CB52"
+        ]
+      },
+      "subrecords": [
+        {
+          "type": "EDID",
+          "size": 32,
+          "text": "PDV_FLST_AllDeitiesDUPLICATE002",
+          "hex": "5044565F464C53545F416C6C446569746965734455504C494341544530303200"
+        },
+        {
+          "type": "LNAM",
+          "size": 4,
+          "uint32": 67182774,
+          "formId": "0x040120B6",
+          "hex": "B6200104"
+        },
+        {
+          "type": "LNAM",
+          "size": 4,
+          "uint32": 67362439,
+          "formId": "0x0403DE87",
+          "hex": "87DE0304"
+        },
+        {
+          "type": "LNAM",
+          "size": 4,
+          "uint32": 67362440,
+          "formId": "0x0403DE88",
+          "hex": "88DE0304"
+        },
+        {
+          "type": "LNAM",
+          "size": 4,
+          "uint32": 67554130,
+          "formId": "0x0406CB52",
+          "hex": "52CB0604"
+        },
+        {
+          "type": "LNAM",
+          "size": 4,
+          "uint32": 67554130,
+          "formId": "0x0406CB52",
+          "hex": "52CB0604"
+        },
+        {
+          "type": "LNAM",
+          "size": 4,
+          "uint32": 67554130,
+          "formId": "0x0406CB52",
+          "hex": "52CB0604"
+        }
+      ]
+    }
+  ],
+  "proof": {
+    "requestedCount": 1,
+    "foundCount": 1,
+    "allRequestedFound": true,
+    "readbackMethod": "direct ESP record scan for EDID subrecords"
+  }
+}

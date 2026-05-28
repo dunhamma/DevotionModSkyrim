@@ -1,0 +1,20 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v1-spell-add",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV1Proof.esp",
+  "operations": [
+    {
+      "id": "spell-add",
+      "kind": "spell.add",
+      "target": "EXM_NPC_Test",
+      "recordFamily": "NPC_",
+      "payload": {
+        "spells": [
+          "EXM_Spell_PlatformV1"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "schema": "creation-authoring.esp-editorid-readback.v1",
+  "generatedAt": "2026-05-23T11:03:42.707Z",
+  "plugin": "PDV_Phase9To12_CKProof.esp",
+  "path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/PDV_Phase9To12_CKProof.esp",
+  "fileLength": 6563,
+  "lastWriteTime": "2026-05-23T11:03:20.775Z",
+  "requestedEditorIds": [
+    "PDV__ManagerQuestDUPLICATE002"
+  ],
+  "records": [
+    {
+      "editorId": "PDV__ManagerQuestDUPLICATE002",
+      "formId": "0x0500F1F1",
+      "recordType": "QUST",
+      "flags": "0x0",
+      "offset": "0x1222",
+      "size": 1323,
+      "fields": {
+        "subrecordTypes": [
+          {
+            "type": "EDID",
+            "count": 1
+          },
+          {
+            "type": "VMAD",
+            "count": 1
+          },
+          {
+            "type": "FULL",
+            "count": 1
+          },
+          {
+            "type": "DNAM",
+            "count": 1
+          },
+          {
+            "type": "NEXT",
+            "count": 1
+          },
+          {
+            "type": "INDX",
+            "count": 1
+          },
+          {
+            "type": "QSDT",
+            "count": 1
+          },
+          {
+            "type": "ANAM",
+            "count": 1
+          }
+        ],
+        "FULL": "PDV Manager",
+        "aliasCount": 0,
+        "stageCount": 1,
+        "hasVmad": true
+      },
+      "subrecords": [
+        {
+          "type": "EDID",
+          "size": 30,
+          "text": "PDV__ManagerQuestDUPLICATE002",
+          "hex": "5044565F5F4D616E6167657251756573744455504C494341544530303200"
+        },
+        {
+          "type": "VMAD",
+          "size": 1212
+        },
+        {
+          "type": "FULL",
+          "size": 12,
+          "text": "PDV Manager",
+          "hex": "504456204D616E6167657200"
+        },
+        {
+          "type": "DNAM",
+          "size": 12,
+          "hex": "19003C410000000000000000"
+        },
+        {
+          "type": "NEXT",
+          "size": 0,
+          "hex": ""
+        },
+        {
+          "type": "INDX",
+          "size": 4,
+          "uint32": 0,
+          "formId": "0x00000000",
+          "hex": "00000000"
+        },
+        {
+          "type": "QSDT",
+          "size": 1,
+          "hex": "00"
+        },
+        {
+          "type": "ANAM",
+          "size": 4,
+          "uint32": 0,
+          "formId": "0x00000000",
+          "hex": "00000000"
+        }
+      ]
+    }
+  ],
+  "proof": {
+    "requestedCount": 1,
+    "foundCount": 1,
+    "allRequestedFound": true,
+    "readbackMethod": "direct ESP record scan for EDID subrecords"
+  }
+}

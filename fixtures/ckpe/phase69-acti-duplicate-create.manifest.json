@@ -1,0 +1,39 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "pdv-ckproof",
+  "game": "SkyrimSE",
+  "sourcePlugin": "Skyrim.esm",
+  "output": "PDV_Phase9To12_CKProof.esp",
+  "operations": [
+    {
+      "id": "duplicate-acti",
+      "kind": "record.duplicate_create",
+      "target": "DefaultAshPileDUPLICATE003",
+      "mode": "create",
+      "recordFamily": "ACTI",
+      "ckSemanticsRequired": true,
+      "payload": {
+        "sourceEditorId": "DefaultAshPile1",
+        "targetEditorId": "DefaultAshPileDUPLICATE003",
+        "createdEditorId": "DefaultAshPileDUPLICATE003"
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "ACTI"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.FULL",
+          "value": "Ash Pile"
+        },
+        {
+          "type": "fieldEquals",
+          "path": "fields.model",
+          "value": "Effects\\AshPile01.nif"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v1-perk-add",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV1Proof.esp",
+  "operations": [
+    {
+      "id": "perk-add",
+      "kind": "perk.add",
+      "target": "EXM_NPC_Test",
+      "recordFamily": "NPC_",
+      "payload": {
+        "perks": [
+          "EXM_Perk_PlatformV1"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v1-inventory-add",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV1Proof.esp",
+  "operations": [
+    {
+      "id": "inventory-add",
+      "kind": "inventory.add",
+      "target": "EXM_NPC_Test",
+      "recordFamily": "NPC_",
+      "payload": {
+        "items": [
+          {
+            "item": "EXM_Item_PlatformV1",
+            "count": 1
+          }
+        ]
+      }
+    }
+  ]
+}

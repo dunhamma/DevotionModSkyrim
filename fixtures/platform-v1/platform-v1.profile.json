@@ -1,0 +1,38 @@
+{
+  "schema": "creation-profile.v1",
+  "game": "SkyrimSE",
+  "modId": "platform-v1-fixtures",
+  "sourcePlugin": "ExampleMod.esp",
+  "outputPolicy": "overlay",
+  "defaultOutput": "ExampleMod_PlatformV1Proof.esp",
+  "resourceConnectors": [
+    {
+      "type": "fixture",
+      "records": {
+        "EXM_MainQuest": {
+          "formid": "ExampleMod.esp:000800",
+          "recordType": "QUST"
+        },
+        "EXM_GLO_Debug": {
+          "formid": "ExampleMod.esp:000801",
+          "recordType": "GLOB"
+        },
+        "EXM_FLST_AllServices": {
+          "formid": "ExampleMod.esp:000802",
+          "recordType": "FLST"
+        },
+        "EXM_ServiceQuest": {
+          "formid": "ExampleMod.esp:000803",
+          "recordType": "QUST"
+        },
+        "EXM_NPC_Test": {
+          "formid": "ExampleMod.esp:000804",
+          "recordType": "NPC_"
+        }
+      }
+    },
+    {
+      "type": "mo2-mcp"
+    }
+  ]
+}

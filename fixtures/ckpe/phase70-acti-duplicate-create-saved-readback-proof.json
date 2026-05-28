@@ -1,0 +1,113 @@
+{
+  "schema": "creation-authoring.esp-editorid-readback.v1",
+  "generatedAt": "2026-05-23T10:59:42.156Z",
+  "plugin": "PDV_Phase9To12_CKProof.esp",
+  "path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/PDV_Phase9To12_CKProof.esp",
+  "fileLength": 5216,
+  "lastWriteTime": "2026-05-23T10:59:10.054Z",
+  "requestedEditorIds": [
+    "DefaultAshPileDUPLICATE003"
+  ],
+  "records": [
+    {
+      "editorId": "DefaultAshPileDUPLICATE003",
+      "formId": "0x0500F1F0",
+      "recordType": "ACTI",
+      "flags": "0x0",
+      "offset": "0x283",
+      "size": 143,
+      "fields": {
+        "subrecordTypes": [
+          {
+            "type": "EDID",
+            "count": 1
+          },
+          {
+            "type": "OBND",
+            "count": 1
+          },
+          {
+            "type": "FULL",
+            "count": 1
+          },
+          {
+            "type": "MODL",
+            "count": 1
+          },
+          {
+            "type": "MODT",
+            "count": 1
+          },
+          {
+            "type": "PNAM",
+            "count": 1
+          },
+          {
+            "type": "RNAM",
+            "count": 1
+          },
+          {
+            "type": "FNAM",
+            "count": 1
+          }
+        ],
+        "FULL": "Ash Pile",
+        "hasVmad": false,
+        "model": "Effects\\AshPile01.nif"
+      },
+      "subrecords": [
+        {
+          "type": "EDID",
+          "size": 27,
+          "text": "DefaultAshPileDUPLICATE003",
+          "hex": "44656661756C7441736850696C654455504C494341544530303300"
+        },
+        {
+          "type": "OBND",
+          "size": 12,
+          "hex": "000000000000000000000000"
+        },
+        {
+          "type": "FULL",
+          "size": 9,
+          "text": "Ash Pile",
+          "hex": "4173682050696C6500"
+        },
+        {
+          "type": "MODL",
+          "size": 22,
+          "text": "Effects\\AshPile01.nif",
+          "hex": "456666656374735C41736850696C6530312E6E696600"
+        },
+        {
+          "type": "MODT",
+          "size": 12,
+          "hex": "020000000000000000000000"
+        },
+        {
+          "type": "PNAM",
+          "size": 4,
+          "uint32": 3361996,
+          "formId": "0x00334CCC",
+          "hex": "CC4C3300"
+        },
+        {
+          "type": "RNAM",
+          "size": 7,
+          "hex": "53656172636800"
+        },
+        {
+          "type": "FNAM",
+          "size": 2,
+          "hex": "0000"
+        }
+      ]
+    }
+  ],
+  "proof": {
+    "requestedCount": 1,
+    "foundCount": 1,
+    "allRequestedFound": true,
+    "readbackMethod": "direct ESP record scan for EDID subrecords"
+  }
+}

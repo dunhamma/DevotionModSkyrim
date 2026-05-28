@@ -1,0 +1,18 @@
+{
+  "records": {
+    "DefaultAshPileDUPLICATE003": {
+      "editorId": "DefaultAshPileDUPLICATE003",
+      "formid": "0x0500F1F0",
+      "recordType": "ACTI",
+      "winningPlugin": "PDV_Phase9To12_CKProof.esp",
+      "fields": {
+        "FULL": "Ash Pile",
+        "hasVmad": false,
+        "model": "Effects\\AshPile01.nif"
+      },
+      "fullName": "Ash Pile",
+      "model": "Effects\\AshPile01.nif",
+      "scripts": []
+    }
+  }
+}

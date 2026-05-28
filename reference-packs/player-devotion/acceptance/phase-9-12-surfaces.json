@@ -1,0 +1,50 @@
+{
+  "schema": "creation-authoring.project-pack-acceptance-surfaces.v1",
+  "project": "player-devotion",
+  "phases": [
+    "phase9",
+    "phase10",
+    "phase11",
+    "phase12"
+  ],
+  "discoverySource": "live-mo2-devotion-environment",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "knownRecordFamilies": [
+    "GLOB",
+    "MESG",
+    "ACTI",
+    "QUST",
+    "FLST",
+    "MGEF",
+    "SPEL",
+    "ALCH",
+    "REFR",
+    "CELL"
+  ],
+  "firstProofFamilies": [
+    "GLOB",
+    "MESG",
+    "ACTI",
+    "QUST",
+    "FLST"
+  ],
+  "firstProofOperations": [
+    "record.create",
+    "record.update",
+    "vmad.attach_script",
+    "vmad.set_property",
+    "vmad.set_array_property",
+    "formlist.add",
+    "artifact.seq.generate"
+  ],
+  "blockedUntilDiscovered": [
+    "phase10",
+    "phase11",
+    "phase12"
+  ],
+  "notes": [
+    "Phase 9 manifest exists and is the seed fixture.",
+    "Phase 10-12 manifests must be generated from live Devotion records, scripts, and verifier expectations before proof can pass.",
+    "CELL and REFR are inventoried for Devotion acceptance but remain research/proof gated."
+  ]
+}

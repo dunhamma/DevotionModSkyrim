@@ -8,6 +8,11 @@ import { handleAuthoringRequest } from "./service.mjs";
 import { runLocalMergeRunner } from "./merge-runner-adapter.mjs";
 import { runCkIpcPacket } from "./ck-ipc-adapter.mjs";
 import { writeReviewReports } from "./review-report.mjs";
+import { createPlan } from "./planner.mjs";
+import { executeApply } from "./executor.mjs";
+import { analyzeMixedCkWriterSequence, hydratePlanFromReadback } from "./orchestrator.mjs";
+import { verifyManifest } from "./verifier.mjs";
+import { buildStrictGatePhase, summarizePhaseStatuses } from "./release-status.mjs";
 import {
   createCompileRunner,
   createLiveMcpContext,
@@ -30,6 +35,14 @@ async function main(argv) {
     }
     if (command === "run" || command === "generate") {
       await runCommand(command, positional, options);
+      return;
+    }
+    if (command === "ck-from-report") {
+      await ckFromReportCommand(positional, options);
+      return;
+    }
+    if (command === "finalize-report") {
+      await finalizeReportCommand(positional, options);
       return;
     }
     if (command === "promote") {
@@ -57,8 +70,8 @@ async function runCommand(command, positional, options) {
   const context = createLiveMcpContext({ mcpUrl: options.mcpUrl });
   const live = await prepareLiveProfile(manifest, baseProfile, context);
 
-  const compileArgs = compilerArgsFromProfile(live.profile);
-  const verifierArgs = verifierArgsFromProfile(live.profile);
+  const compileConfig = compilerConfigFromProfile(live.profile);
+  const verifierConfig = verifierConfigFromProfile(live.profile);
   const report = await handleAuthoringRequest({
     action: "run",
     manifest,
@@ -66,6 +79,7 @@ async function runCommand(command, positional, options) {
     strict: Boolean(options.strict),
     executeLive: true,
     allowManualPackets: Boolean(options.allowManualPackets),
+    allowUnprovenCk: Boolean(options.allowUnprovenCk),
     patchOptions: {
       output: options.output,
       author: options.author,
@@ -80,13 +94,17 @@ async function runCommand(command, positional, options) {
         queueDir: options.ckQueueDir,
         timeoutMs: options.ckTimeoutMs
       }),
-      compileRunner: createCompileRunner(PROJECT_ROOT, compileArgs),
-      verifierRunner: createPdvVerifierRunner(PROJECT_ROOT, verifierArgs)
+      compileRunner: compileConfig.enabled ? createCompileRunner(PROJECT_ROOT, compileConfig.args, {
+        cwd: compileConfig.cwd || verifierConfig.cwd
+      }) : null,
+      verifierRunner: verifierConfig.enabled ? createPdvVerifierRunner(PROJECT_ROOT, verifierConfig.args, {
+        cwd: verifierConfig.cwd
+      }) : null
     }
   });
 
   report.phases.unshift(...live.preflight);
-  report.status = summarizeReport(report.phases);
+  report.status = summarizePhaseStatuses(report.phases);
 
   const reportsDir = path.resolve(options.reportsDir || live.profile.reportsDir || "reports");
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
@@ -130,26 +148,49 @@ async function promoteCommand(positional, options) {
     });
   } : null;
 
+  const verifierConfig = verifierConfigFromProfile(profile);
   const promotion = await handleAuthoringRequest({
     action: "promote",
     profile,
     runReport,
     approved: Boolean(options.approved),
+    allowSourceMutation: Boolean(options.allowSourceMutation),
+    sourcePath: options.sourcePath,
+    generatedPath: options.generatedPath,
+    mergeOutputPath: options.mergeOutputPath,
+    backupRoot: options.backupRoot,
     adapters: {
       backupRunner: mergeRunner ? async () => ({ status: "DEFERRED_TO_MERGE_RUNNER" }) : null,
       mergeRunner,
       ckFinalizer: async (mergeRequest) => {
+        const sourcePlugin = profile.sourcePlugin;
+        const generatedPlugin = runReport.manifest?.output || profile.defaultOutput;
+        const candidatePlugin = options.mergeOutputPath || profile.sourcePlugin;
+        const requiredPlugins = [...new Set([sourcePlugin, generatedPlugin, candidatePlugin].filter(Boolean))];
         const packet = {
           schema: "creation-authoring.ck-command-packet.v1",
           project: profile.modId,
           game: profile.game,
-          sourcePlugin: profile.sourcePlugin,
-          generatedPlugin: runReport.manifest?.output || profile.defaultOutput,
+          sourcePlugin,
+          generatedPlugin,
           failClosed: true,
           commands: [
             { op: "openProject", profile: profile.modId, game: profile.game },
-            { op: "loadPlugin", plugin: options.mergeOutputPath || profile.sourcePlugin, active: true },
-            { op: "savePlugin", plugin: options.mergeOutputPath || profile.sourcePlugin }
+            {
+              op: "loadPluginSet",
+              requiredPlugins,
+              plugins: requiredPlugins.map((plugin) => ({
+                name: plugin,
+                selected: true,
+                active: plugin === candidatePlugin
+              })),
+              sourcePlugin,
+              generatedPlugin,
+              activePlugin: candidatePlugin,
+              intendedSaveTarget: candidatePlugin,
+              sourcePluginNotActive: candidatePlugin !== sourcePlugin
+            },
+            { op: "postUiSaveCommand", plugin: candidatePlugin }
           ],
           verifierExpectations: mergeRequest.operations.flatMap((operation) => operation.verifierExpectations || [])
         };
@@ -160,7 +201,9 @@ async function promoteCommand(positional, options) {
           timeoutMs: options.ckTimeoutMs
         });
       },
-      postMergeVerifier: createPdvVerifierRunner(PROJECT_ROOT, verifierArgsFromProfile(profile))
+      postMergeVerifier: createPdvVerifierRunner(PROJECT_ROOT, verifierConfig.args, {
+        cwd: verifierConfig.cwd
+      })
     }
   });
 
@@ -177,27 +220,249 @@ async function promoteCommand(positional, options) {
   });
 }
 
-function compilerArgsFromProfile(profile) {
+function compilerConfigFromProfile(profile) {
   const connector = profile.resourceConnectors.find((item) => item.type === "papyrus-compiler" && Array.isArray(item.args));
-  return connector?.args || ["pdv_compile.mjs"];
+  if (!connector) {
+    return {
+      enabled: false,
+      args: [],
+      cwd: null
+    };
+  }
+  return {
+    enabled: true,
+    args: connector.args,
+    cwd: connector.cwd || null
+  };
 }
 
-function verifierArgsFromProfile(profile) {
+async function ckFromReportCommand(positional, options) {
+  const reportPath = positional[0];
+  if (!reportPath) {
+    usage(1, "ck-from-report requires a run report path.");
+  }
+  const report = readDocument(reportPath).document;
+  const ckPhaseIndex = report.phases.findIndex((phase) => phase.phase === "ck-apply");
+  if (ckPhaseIndex < 0 || !report.phases[ckPhaseIndex].packet) {
+    throw new Error("Run report does not contain a ck-apply packet.");
+  }
+
+  const packet = report.phases[ckPhaseIndex].packet;
+  const adapterResult = await runCkIpcPacket(packet, {
+    mode: options.ckMode || "named-pipe",
+    pipeName: options.ckPipe,
+    queueDir: options.ckQueueDir,
+    timeoutMs: options.ckTimeoutMs
+  });
+  const status = normalizeCkAdapterStatus(adapterResult);
+  report.phases[ckPhaseIndex] = {
+    ...report.phases[ckPhaseIndex],
+    status,
+    message: status === "PASS" ? "CK adapter completed." : "CK adapter did not complete all commands safely.",
+    adapterResult
+  };
+  report.status = summarizePhaseStatuses(report.phases);
+  report.finishedAt = new Date().toISOString();
+
+  const outputPath = options.reportPath || reportPath;
+  report.reportPath = writeJson(outputPath, report);
+  print(report, options, () => {
+    return [
+      `Status: ${report.status}`,
+      `CK status: ${status}`,
+      `Run report: ${report.reportPath}`
+    ].join("\n") + "\n";
+  });
+}
+
+function passedCkDuplicateTargets(report = {}) {
+  const ckPhase = (report.phases || []).find((phase) => phase.phase === "ck-apply" && phase.status === "PASS");
+  return (ckPhase?.adapterResult?.commands || [])
+    .filter((command) => command.op === "duplicateCreateRecord" && command.status === "PASS")
+    .map((command) => {
+      return command.evidence?.createdRecord?.record?.editorId ||
+        command.evidence?.requested?.targetEditorId ||
+        command.evidence?.requested?.createdEditorId ||
+        command.evidence?.requested?.target ||
+        null;
+    })
+    .filter(Boolean);
+}
+
+async function finalizeReportCommand(positional, options) {
+  const reportPath = positional[0];
+  if (!reportPath) {
+    usage(1, "finalize-report requires a run report path.");
+  }
+  if (!options.profile) {
+    usage(1, "finalize-report requires --profile <path>.");
+  }
+  const manifestPath = positional[1];
+  if (!manifestPath) {
+    usage(1, "finalize-report requires a manifest path after the report path.");
+  }
+
+  const baseProfile = loadProfile(options.profile);
+  const manifest = loadManifest(manifestPath, baseProfile);
+  const context = createLiveMcpContext({ mcpUrl: options.mcpUrl });
+  const live = await prepareLiveProfile(manifest, baseProfile, context);
+  const plan = createPlan(manifest, live.profile, {
+    allowUnprovenCk: Boolean(options.allowUnprovenCk)
+  });
+  const report = readDocument(reportPath).document;
+  const sequencing = analyzeMixedCkWriterSequence(plan, {
+    completedIdentityTargets: passedCkDuplicateTargets(report)
+  });
+  const compileConfig = compilerConfigFromProfile(live.profile);
+  const verifierConfig = verifierConfigFromProfile(live.profile);
+
+  const preserved = report.phases.filter((phase) => {
+    return ![
+      "mo2-ping",
+      "mo2-record-index",
+      "mo2-plugin-state",
+      "compile",
+      "post-ck-readback",
+      "post-ck-identity-gate",
+      "payload-apply",
+      "readback-collect",
+      "verify",
+      "project-verifier",
+      "strict-gate"
+    ].includes(phase.phase);
+  });
+  const phases = [
+    ...live.preflight,
+    ...preserved
+  ];
+
+  if (sequencing.delayedWriterOperationIds.size) {
+    const ckPhase = phases.find((phase) => phase.phase === "ck-apply");
+    if (!ckPhase || ckPhase.status !== "PASS") {
+      phases.push({
+        phase: "post-ck-identity-gate",
+        status: "UNSAFE_BLOCKED",
+        message: "Payload writer operations are blocked until the preserved CK phase is PASS."
+      });
+    } else {
+      const postCkReadback = await createReadbackCollector(context)({ manifest, profile: live.profile, plan, phases });
+      phases.push({
+        phase: "post-ck-readback",
+        status: "PASS",
+        message: "Readback collector completed after CK duplicate/save."
+      });
+      const identityManifest = {
+        ...manifest,
+        operations: manifest.operations.filter((operation) => sequencing.identityOperationIds.has(operation.id))
+      };
+      const identityVerify = verifyManifest(identityManifest, live.profile, postCkReadback);
+      const identityStatus = identityVerify.summary.FAIL ? "FAIL" : identityVerify.summary.TODO ? "TODO" : "PASS";
+      phases.push({
+        phase: "post-ck-identity-gate",
+        status: identityStatus,
+        message: identityStatus === "PASS"
+          ? "Generated duplicate identity is proven for payload writer sequencing."
+          : "Generated duplicate identity is not proven; payload writer is blocked.",
+        report: identityVerify
+      });
+      if (identityStatus === "PASS") {
+        const payloadPlan = hydratePlanFromReadback(plan, postCkReadback, sequencing.delayedWriterOperationIds);
+        phases.push(await executeApply(payloadPlan, {
+          patchOptions: {
+            eslFlag: options.esl === undefined ? true : options.esl
+          },
+          patchWriter: createPatchWriter(context),
+          phaseName: "payload-apply",
+          operationFilter: (item) => sequencing.delayedWriterOperationIds.has(item.operation.id)
+        }));
+      }
+    }
+  }
+
+  if (compileConfig.enabled) {
+    phases.push(await createCompileRunner(PROJECT_ROOT, compileConfig.args, {
+    cwd: compileConfig.cwd || verifierConfig.cwd
+    })({ manifest, profile: live.profile, plan }));
+  } else {
+    phases.push({
+      phase: "compile",
+      status: "SKIPPED",
+      message: "No papyrus-compiler connector is configured."
+    });
+  }
+
+  const readback = await createReadbackCollector(context)({ manifest, profile: live.profile, plan, phases });
+  phases.push({
+    phase: "readback-collect",
+    status: "PASS",
+    message: "Readback collector completed."
+  });
+  const verifyReport = verifyManifest(manifest, live.profile, readback);
+  phases.push({
+    phase: "verify",
+    status: verifyReport.summary.FAIL ? "FAIL" : verifyReport.summary.TODO ? "TODO" : "PASS",
+    report: verifyReport
+  });
+  if (verifierConfig.enabled) {
+    phases.push(await createPdvVerifierRunner(PROJECT_ROOT, verifierConfig.args, {
+    cwd: verifierConfig.cwd
+    })({ profile: live.profile }));
+  } else {
+    phases.push({
+      phase: "project-verifier",
+      status: "SKIPPED",
+      message: "No pdv-verifier connector is configured."
+    });
+  }
+  if (options.strict) {
+    phases.push(buildStrictGatePhase(phases, report.manualPackets || []));
+  }
+
+  report.phases = phases;
+  report.status = summarizePhaseStatuses(phases);
+  report.finishedAt = new Date().toISOString();
+  report.planSummary = plan.summary;
+  const outputPath = options.reportPath || reportPath;
+  report.reportPath = writeJson(outputPath, report);
+  const reportsDir = path.resolve(options.reportsDir || live.profile.reportsDir || "reports");
+  const review = writeReviewReports(report, { reportsDir });
+  report.reviewArtifacts = review;
+  writeJson(outputPath, report);
+
+  print(report, options, () => {
+    return [
+      `Status: ${report.status}`,
+      `Run report: ${report.reportPath}`,
+      `Review markdown: ${review.markdownPath}`,
+      `Review JSON: ${review.jsonPath}`
+    ].join("\n") + "\n";
+  });
+}
+
+function verifierConfigFromProfile(profile) {
   const connector = profile.resourceConnectors.find((item) => item.type === "pdv-verifier" && Array.isArray(item.args));
-  return connector?.args || ["pdv_verify.mjs", "--strict-phase9"];
+  if (!connector) {
+    return {
+      enabled: false,
+      args: [],
+      cwd: null
+    };
+  }
+  return {
+    enabled: true,
+    args: connector.args,
+    cwd: connector.cwd || null
+  };
 }
 
-function summarizeReport(phases) {
-  if (phases.some((phase) => phase.status === "FAIL" || phase.status === "UNSAFE_BLOCKED")) {
+function normalizeCkAdapterStatus(result) {
+  if (!result) {
     return "FAIL";
   }
-  if (phases.some((phase) => phase.status === "REQUESTED")) {
-    return "REQUESTED";
+  if (["PASS", "SKIPPED", "REQUESTED", "UNSAFE_BLOCKED"].includes(result.status)) {
+    return result.status;
   }
-  if (phases.some((phase) => phase.status === "TODO" || phase.status === "MANUAL")) {
-    return "TODO";
-  }
-  return "PASS";
+  return "FAIL";
 }
 
 function parseArgs(argv) {
@@ -212,6 +477,7 @@ function parseArgs(argv) {
     else if (arg.startsWith("--profile=")) options.profile = arg.slice("--profile=".length);
     else if (arg === "--strict") options.strict = true;
     else if (arg === "--allow-manual-packets") options.allowManualPackets = true;
+    else if (arg === "--allow-unproven-ck") options.allowUnprovenCk = true;
     else if (arg === "--approved") options.approved = true;
     else if (arg === "--dry-run") options.dryRun = true;
     else if (arg === "--mcp-url") options.mcpUrl = requireNext(argv, ++index, arg);
@@ -256,7 +522,7 @@ function usage(exitCode, message = null) {
     console.error(message);
   }
   process.stdout.write(`Usage:
-  node ./src/live-runner.mjs run <manifest.json> --profile <profile.json> [--strict] [--allow-manual-packets] [--json]
+  node ./src/live-runner.mjs run <manifest.json> --profile <profile.json> [--strict] [--allow-manual-packets] [--allow-unproven-ck] [--json]
   node ./src/live-runner.mjs promote <run-report.json> --profile <profile.json> --approved --merge-runner <csproj> --source-path <esp> --generated-path <esp> --merge-output-path <esp> [--json]
 `);
   process.exit(exitCode);

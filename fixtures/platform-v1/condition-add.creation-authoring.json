@@ -1,0 +1,24 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v1-condition-add",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV1Proof.esp",
+  "operations": [
+    {
+      "id": "condition-add",
+      "kind": "condition.add",
+      "target": "EXM_MainQuest",
+      "recordFamily": "QUST",
+      "payload": {
+        "conditions": [
+          {
+            "function": "GetIsID",
+            "operator": "==",
+            "value": "PlayerRef"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "generic-ckpe-heartbeat",
+  "game": "SkyrimSE",
+  "failClosed": true,
+  "commands": [
+    { "op": "heartbeat" }
+  ],
+  "verifierExpectations": []
+}

@@ -1,0 +1,75 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "load-plugin-set-blocked-cases",
+  "game": "SkyrimSE",
+  "failClosed": true,
+  "commands": [
+    {
+      "op": "loadPluginSet",
+      "case": "missing-source-plugin",
+      "requiredPlugins": ["Skyrim.esm", "MissingSource.esp", "ExampleMod_GeneratedCk.esp"],
+      "sourcePlugin": "MissingSource.esp",
+      "generatedPlugin": "ExampleMod_GeneratedCk.esp",
+      "activePlugin": "ExampleMod_GeneratedCk.esp",
+      "intendedSaveTarget": "ExampleMod_GeneratedCk.esp",
+      "sourcePluginNotActive": true,
+      "expectedBlocker": "missing_source_plugin"
+    },
+    {
+      "op": "loadPluginSet",
+      "case": "missing-generated-or-candidate-plugin",
+      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "MissingGenerated.esp"],
+      "sourcePlugin": "ExampleMod.esp",
+      "generatedPlugin": "MissingGenerated.esp",
+      "activePlugin": "MissingGenerated.esp",
+      "intendedSaveTarget": "MissingGenerated.esp",
+      "sourcePluginNotActive": true,
+      "expectedBlocker": "missing_generated_or_candidate_plugin"
+    },
+    {
+      "op": "loadPluginSet",
+      "case": "generated-loaded-but-not-active",
+      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
+      "sourcePlugin": "ExampleMod.esp",
+      "generatedPlugin": "ExampleMod_GeneratedCk.esp",
+      "activePlugin": "ExampleMod_GeneratedCk.esp",
+      "intendedSaveTarget": "ExampleMod_GeneratedCk.esp",
+      "sourcePluginNotActive": true,
+      "expectedBlocker": "generated_or_candidate_plugin_not_active"
+    },
+    {
+      "op": "loadPluginSet",
+      "case": "source-plugin-active",
+      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
+      "sourcePlugin": "ExampleMod.esp",
+      "generatedPlugin": "ExampleMod_GeneratedCk.esp",
+      "activePlugin": "ExampleMod_GeneratedCk.esp",
+      "intendedSaveTarget": "ExampleMod_GeneratedCk.esp",
+      "sourcePluginNotActive": true,
+      "expectedBlocker": "source_plugin_active"
+    },
+    {
+      "op": "loadPluginSet",
+      "case": "save-target-mismatch",
+      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
+      "sourcePlugin": "ExampleMod.esp",
+      "generatedPlugin": "ExampleMod_GeneratedCk.esp",
+      "activePlugin": "ExampleMod_GeneratedCk.esp",
+      "intendedSaveTarget": "StaleProofName.esp",
+      "sourcePluginNotActive": true,
+      "expectedBlocker": "intended_save_target_mismatch"
+    },
+    {
+      "op": "loadPluginSet",
+      "case": "small-master-active-target",
+      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esl"],
+      "sourcePlugin": "ExampleMod.esp",
+      "generatedPlugin": "ExampleMod_GeneratedCk.esl",
+      "activePlugin": "ExampleMod_GeneratedCk.esl",
+      "intendedSaveTarget": "ExampleMod_GeneratedCk.esl",
+      "sourcePluginNotActive": true,
+      "expectedBlocker": "active_target_not_normal_writable_esp"
+    }
+  ],
+  "expectedRuntimeStatus": "UNSAFE_BLOCKED"
+}

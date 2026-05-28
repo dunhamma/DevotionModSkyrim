@@ -1,0 +1,25 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v1-vmad-attach-script",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV1Proof.esp",
+  "operations": [
+    {
+      "id": "vmad-attach-script",
+      "kind": "vmad.attach_script",
+      "target": "EXM_MainQuest",
+      "recordFamily": "QUST",
+      "payload": {
+        "script": "EXM_MainQuestScript",
+        "properties": [
+          {
+            "name": "DebugGlobal",
+            "type": "Object",
+            "value": "EXM_GLO_Debug"
+          }
+        ]
+      }
+    }
+  ]
+}

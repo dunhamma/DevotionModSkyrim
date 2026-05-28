@@ -1,0 +1,104 @@
+{
+  "schema": "creation-authoring.run-report.v1",
+  "status": "PASS",
+  "startedAt": "2026-05-25T00:00:00.000Z",
+  "finishedAt": "2026-05-25T00:00:01.000Z",
+  "manifest": {
+    "project": "platform-v1-promotion-candidate",
+    "game": "SkyrimSE",
+    "sourcePlugin": "ExampleMod.esp",
+    "output": "ExampleMod_Generated.esp"
+  },
+  "phases": [
+    {
+      "phase": "plan",
+      "status": "PASS",
+      "summary": {
+        "total": 2,
+        "ready": 2,
+        "manual": 0,
+        "abort": 0
+      }
+    },
+    {
+      "phase": "apply",
+      "status": "PASS",
+      "patchRequest": {
+        "output_name": "ExampleMod_Generated.esp",
+        "records": [
+          {
+            "op": "override",
+            "formid": "ExampleMod.esp:000800",
+            "record_type": "QUST"
+          },
+          {
+            "op": "override",
+            "formid": "ExampleMod.esp:000802",
+            "record_type": "FLST"
+          }
+        ]
+      },
+      "writerResult": {
+        "success": true,
+        "output": "ExampleMod_Generated.esp",
+        "records_written": 2
+      }
+    },
+    {
+      "phase": "verify",
+      "status": "PASS",
+      "report": {
+        "summary": {
+          "PASS": 2,
+          "FAIL": 0,
+          "TODO": 0
+        },
+        "results": [
+          {
+            "operationId": "script",
+            "status": "PASS"
+          },
+          {
+            "operationId": "list",
+            "status": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "strict-gate",
+      "status": "PASS"
+    }
+  ],
+  "manualPackets": [],
+  "planOperations": [
+    {
+      "id": "script",
+      "kind": "vmad.attach_script",
+      "target": "EXM_MainQuest",
+      "mode": "update",
+      "onConflict": "fail",
+      "recordFamily": "vmad",
+      "ckSemanticsRequired": false,
+      "mergePolicy": {
+        "promote": "reviewed",
+        "preserveFormId": "when-safe"
+      },
+      "reviewIntent": "Promote generated VMAD attachment into the reviewed candidate plugin."
+    },
+    {
+      "id": "list",
+      "kind": "formlist.add",
+      "target": "EXM_FLST_AllServices",
+      "mode": "update",
+      "onConflict": "fail",
+      "recordFamily": "formlist",
+      "ckSemanticsRequired": false,
+      "mergePolicy": {
+        "promote": "reviewed",
+        "preserveFormId": "when-safe"
+      },
+      "reviewIntent": "Promote generated FormList entry into the reviewed candidate plugin."
+    }
+  ]
+}

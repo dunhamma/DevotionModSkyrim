@@ -1,21 +1,27 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TOOL_ROOT = path.resolve(__dirname, "..");
 const PROJECT_ROOT = path.resolve(TOOL_ROOT, "..", "..");
-const DEFAULT_RUNNER_PROJECT = path.join(PROJECT_ROOT, "tools", "creation-merge-runner", "CreationMergeRunner.csproj");
+const DEFAULT_RUNNER_PROJECT = path.join(PROJECT_ROOT, "native", "CreationMergeRunner", "CreationMergeRunner.csproj");
 
 export async function runLocalMergeRunner(mergeRequest, context = {}, options = {}) {
   const runnerProject = options.runnerProject || DEFAULT_RUNNER_PROJECT;
   const sourcePath = requireOption(options.sourcePath, "sourcePath");
   const generatedPath = requireOption(options.generatedPath, "generatedPath");
   const outputPath = requireOption(options.outputPath, "outputPath");
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "creation-merge-"));
+  assertSafeMergePaths({ sourcePath, generatedPath, outputPath, allowSourceMutation: options.allowSourceMutation });
+  const tempRoot = path.join(PROJECT_ROOT, "temp");
+  fs.mkdirSync(tempRoot, { recursive: true });
+  const tempDir = fs.mkdtempSync(path.join(tempRoot, "creation-merge-"));
   const requestPath = path.join(tempDir, "structured-merge-request.json");
+  const dotnetHome = path.join(tempDir, "dotnet-home");
+  const dotnetAppData = path.join(tempDir, "dotnet-appdata");
+  fs.mkdirSync(dotnetHome, { recursive: true });
+  fs.mkdirSync(dotnetAppData, { recursive: true });
   fs.writeFileSync(requestPath, JSON.stringify(mergeRequest, null, 2));
 
   const args = [
@@ -45,6 +51,14 @@ export async function runLocalMergeRunner(mergeRequest, context = {}, options = 
 
   const result = spawnSync("dotnet", args, {
     encoding: "utf8",
+    env: {
+      ...process.env,
+      APPDATA: dotnetAppData,
+      DOTNET_CLI_HOME: dotnetHome,
+      DOTNET_NOLOGO: "1",
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1",
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+    },
     maxBuffer: 64 * 1024 * 1024,
     windowsHide: true
   });
@@ -75,9 +89,25 @@ export async function runLocalMergeRunner(mergeRequest, context = {}, options = 
   };
 }
 
+export function assertSafeMergePaths({ sourcePath, generatedPath, outputPath, allowSourceMutation = false } = {}) {
+  const normalizedSource = normalizePath(sourcePath);
+  const normalizedGenerated = normalizePath(generatedPath);
+  const normalizedOutput = normalizePath(outputPath);
+  if (normalizedSource && normalizedGenerated && normalizedSource === normalizedGenerated) {
+    throw new Error("Generated plugin path must not be the source plugin path.");
+  }
+  if (!allowSourceMutation && normalizedSource && normalizedOutput && normalizedSource === normalizedOutput) {
+    throw new Error("Merge output path must be a reviewed candidate path, not the source plugin path.");
+  }
+}
+
 function requireOption(value, name) {
   if (!value) {
     throw new Error(`Local merge runner requires ${name}.`);
   }
   return value;
+}
+
+function normalizePath(value) {
+  return value ? path.resolve(String(value)).toLowerCase() : null;
 }

@@ -1,0 +1,40 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "ckra-live-proof",
+  "game": "SkyrimSE",
+  "generatedPlugin": "CKRA_LiveProof_Generated.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    { "op": "setActivePlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    {
+      "op": "duplicateCreateGlob",
+      "mode": "duplicate-create",
+      "plugin": "CKRA_LiveProof_Generated.esp",
+      "recordFamily": "GLOB",
+      "sourceEditorId": "CKRATest",
+      "targetEditorId": "CKRA_AutoDuplicate_GLOB_Phase43",
+      "valueType": "short",
+      "value": 0,
+      "requires": [
+        "generated-plugin-active",
+        "source-glob-readable",
+        "target-editorid-absent",
+        "ck-owned-duplicate-command-path",
+        "changed-registration",
+        "save-readback-proof"
+      ],
+      "expectedResult": "UNSAFE_BLOCKED"
+    },
+    { "op": "savePlugin", "plugin": "CKRA_LiveProof_Generated.esp" },
+    {
+      "op": "findRecordByEditorId",
+      "plugin": "CKRA_LiveProof_Generated.esp",
+      "recordFamily": "GLOB",
+      "target": "CKRA_AutoDuplicate_GLOB_Phase43",
+      "editorId": "CKRA_AutoDuplicate_GLOB_Phase43"
+    },
+    { "op": "closeSafeStatus" }
+  ]
+}

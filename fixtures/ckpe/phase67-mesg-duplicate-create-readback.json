@@ -1,0 +1,32 @@
+{
+  "records": {
+    "_HelpPipBoyItemsDUPLICATE002": {
+      "editorId": "_HelpPipBoyItemsDUPLICATE002",
+      "formid": "0x0500F1EF",
+      "recordType": "MESG",
+      "winningPlugin": "PDV_Phase9To12_CKProof.esp",
+      "fields": {
+        "subrecordTypes": [
+          {
+            "type": "EDID",
+            "count": 1
+          },
+          {
+            "type": "DESC",
+            "count": 1
+          },
+          {
+            "type": "INAM",
+            "count": 1
+          },
+          {
+            "type": "DNAM",
+            "count": 1
+          }
+        ],
+        "buttonCount": 0
+      },
+      "buttonCount": 0
+    }
+  }
+}

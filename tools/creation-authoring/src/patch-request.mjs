@@ -1,8 +1,12 @@
 export function buildPatchRequest(plan, options = {}) {
   const records = new Map();
+  const operationFilter = options.operationFilter || (() => true);
 
   for (const item of plan.operations) {
     if (item.status !== "ready") {
+      continue;
+    }
+    if (!operationFilter(item)) {
       continue;
     }
     if (!["mutagen-patch-request", "mo2-mcp-patch-request", "xedit-script-request"].includes(item.backend)) {
@@ -70,6 +74,22 @@ function addOperationToPatch(records, item) {
   if (operation.kind === "condition.add") {
     spec.add_conditions = spec.add_conditions || [];
     spec.add_conditions.push(...(operation.payload.conditions || []));
+  }
+
+  if (operation.kind === "message.payload.set") {
+    spec.set_message_payload = {
+      ...(operation.payload.title !== undefined ? { title: operation.payload.title } : {}),
+      ...(operation.payload.text !== undefined ? { text: operation.payload.text } : {}),
+      ...(operation.payload.buttons !== undefined ? { buttons: operation.payload.buttons } : {})
+    };
+  }
+
+  if (operation.kind === "activator.payload.set") {
+    spec.set_activator_payload = {
+      ...(operation.payload.fullName !== undefined ? { fullName: operation.payload.fullName } : {}),
+      ...(operation.payload.name !== undefined ? { fullName: operation.payload.name } : {}),
+      ...(operation.payload.model !== undefined ? { model: operation.payload.model } : {})
+    };
   }
 }
 

@@ -1,0 +1,20 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v1-keyword-add",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV1Proof.esp",
+  "operations": [
+    {
+      "id": "keyword-add",
+      "kind": "keyword.add",
+      "target": "EXM_NPC_Test",
+      "recordFamily": "NPC_",
+      "payload": {
+        "keywords": [
+          "EXM_KW_PlatformV1"
+        ]
+      }
+    }
+  ]
+}

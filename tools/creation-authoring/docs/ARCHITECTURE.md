@@ -11,7 +11,7 @@ Agent / MCP Client
   -> Resource Resolver
   -> Backend Executor
   -> Verification Oracle
-  -> Report / Patch Request / Manual Packet
+  -> Report / Patch Request / Proof Ledger
 ```
 
 ## v1 Boundaries
@@ -19,10 +19,26 @@ Agent / MCP Client
 - JSON manifests and profiles are implemented. YAML is reserved by the schema but intentionally not loaded by the no-dependency CLI yet.
 - `apply` emits a deterministic patch request that a host adapter can pass to MO2 MCP, Mutagen, or another writer.
 - The CLI does not write ESP binaries directly.
-- CK-only surfaces produce manual packets unless a profile advertises a future `ckpe` or `windows-ui-automation` connector.
+- CK-owned surfaces require a `ckpe` connector for the shippable path. Without a verified CKPE adapter they fail closed; manual packets are development diagnostics only.
+- CKPE availability is not enough to make a CK-semantic operation executable. Unproven CK operations are manual/blocked by default; `allowUnprovenCk` / `--allow-unproven-ck` intentionally opens discovery mode only.
 - Verification reads a supplied readback document. An MCP wrapper should generate that readback from the active environment.
 - Record creation intent is explicit: `mode` defaults to `update`, `onConflict` defaults to `fail`, and authored EditorIDs are treated as design identity.
 - `generate` / `run --execute-live` are orchestration requests. Standalone Node still needs host adapters for live MO2, CK, readback, merge, and verifier actions.
+
+## Platform v1 Release Lanes
+
+Platform v1 is an internal-tooling release, not a public SDK. The package has
+two release lanes:
+
+- Authoring Utilities: safe-writer operations for existing records, including
+  script attachment, FormList entries, keyword/spell/perk/package/inventory
+  adds, and conditions.
+- CK Creation: CK-owned creation/finalization, currently supported only for the
+  narrow `GLOB glob.duplicate_create` surface and proof-gated for `MESG`,
+  `ACTI`, `FLST`, and `QUST`.
+
+Both lanes use the same proof rule: no support claim without strict proof,
+readback, verifier pass, proof ledger, and capability matrix promotion.
 
 ## Connector Types
 
@@ -30,8 +46,8 @@ Agent / MCP Client
 - `mo2-mcp`: host-provided MO2 MCP tools; enables MO2 patch request planning.
 - `mutagen`: host-provided Mutagen writer; enables Mutagen patch request planning.
 - `xedit`: future xEdit script request backend.
-- `ckpe`: future native CK bridge backend.
-- `windows-ui-automation`: future RPA fallback backend.
+- `ckpe`: native CK bridge backend for CK-semantic operations.
+- `windows-ui-automation`: lab-only fallback; not part of the shippable green path.
 
 ## Commands
 
@@ -41,6 +57,7 @@ node ./src/cli.mjs apply ./examples/simple-wiring.manifest.json --profile ./exam
 node ./src/cli.mjs verify ./examples/simple-wiring.manifest.json --profile ./examples/simple-project.profile.json --readback ./examples/simple-readback.after.json
 node ./src/cli.mjs manual-packet ./examples/ck-only.manifest.json --profile ./examples/simple-project.profile.json
 node ./src/cli.mjs run ./examples/simple-wiring.manifest.json --profile ./examples/simple-project.profile.json --readback ./examples/simple-readback.after.json
+node ./src/cli.mjs prove ./examples/simple-wiring.manifest.json --profile ./examples/simple-project.profile.json --strict --proof-output ./generated/example.proof-ledger.json
 node ./src/cli.mjs migrate-pdv ../../references/authoring/PDV_MCMPropertyWiring.manifest.json --profile ./reference-packs/player-devotion/player-devotion.profile.json
 node ./src/cli.mjs explain story_manager.node
 ```
@@ -65,7 +82,7 @@ const response = handleAuthoringRequest({
 });
 ```
 
-Supported actions are `plan`, `apply`, `ck-apply`, `run`, `verify`, `manual-packet`, `migrate-pdv`, and `explain`. The returned object is JSON-serializable.
+Supported actions are `plan`, `apply`, `ck-apply`, `run`, `verify`, `manual-packet`, `migrate-pdv`, and `explain`. The returned object is JSON-serializable. Service callers may pass `allowUnprovenCk: true` for explicit discovery plans; product callers should leave it unset.
 
 ## Full Pipeline Target
 
@@ -84,6 +101,30 @@ MO2 MCP server over JSON-RPC HTTP, prepares a live fixture resolver from
 compiler/verifier connectors, and writes both machine run reports and human
 review reports. CK packets are sent to the CKPE IPC adapter when available; if
 the bridge is not running, the CK phase is fail-closed.
+
+Strict proof runs can write `creation-authoring.proof-ledger.v1` through
+`prove --proof-output` or from an existing strict run report with
+`proof-ledger <run-report> --output-file <ledger>`. The capability matrix consumes proof ledgers; a row may
+be promoted to `supported` only when the ledger proves the operation, handler,
+readback normalizer, verifier, fixture, and strict report.
+
+## Readback Oracle
+
+`src/readback-oracle.mjs` is the Phase 2 seam for live readback. It owns record lookup by EditorID/FormID/resolver output, operation/family normalizer coverage, partial-overlay detection, shared VMAD script/property normalization helpers, and read-path access used by verifier expectations.
+
+The verifier consumes this oracle before checking operation-specific intent. If a manifest operation has no readback normalizer coverage, verification returns `TODO`; proof ledgers cannot promote that row to `supported`.
+
+The Phase 2 oracle foundation covers VMAD scalar/object/array properties, FormLists, message buttons, quest aliases/stages, Story Manager `Shares Event`, dialogue branch/topic/INFO readback, placed reference proof surfaces, generated artifact freshness, conflict-chain expectations, and partial-overlay failure. Dialogue support remains proof-gated: readback coverage can verify a CK-authored branch/topic/unnamed INFO, but `DIAL` and `INFO` cannot move to `supported` until native CKPE handlers create and save the records and strict proof includes passing command evidence.
+
+## Reference Pack Static Gates
+
+Project packs may define static readiness checks before live proof. The Player Devotion pack uses:
+
+```powershell
+.\scripts\check-devotion-phase9-12-static.ps1
+```
+
+That check plans the Phase 9 seed manifest, plans the Phase 9-12 combined acceptance manifest, verifies the capability matrix, and reports which operations are ready versus manually blocked. Passing this check means the pack is ready for live MO2/CKPE proof, not that all Phase 9-12 CK operations are executable.
 
 ## Generated-First Promotion Lifecycle
 
@@ -108,9 +149,11 @@ node ./src/cli.mjs generate ./examples/simple-wiring.manifest.json --profile ./e
 node ./src/cli.mjs promote ./reports/<run-report>.json --profile ./examples/simple-project.profile.json --approved
 ```
 
-`promote` does not merge binaries by itself. It evaluates gates and emits machine-readable backup, structured-merge, CK-finalization, and post-merge-verification requests for a host adapter. Promotion is blocked unless the run report passed, no manual packets remain, and human approval is recorded.
+`promote` evaluates gates and can delegate to the local merge adapter when `--merge-runner` and explicit source/generated/output paths are supplied. Promotion is blocked unless the run report passed, no manual packets remain, human approval is recorded, and `--merge-output-path` names a reviewed candidate plugin rather than the source or generated proof plugin.
 
-The first local merge adapter lives in `../creation-merge-runner`. It is a
+`promotion-candidate-check` is the repo-local release-candidate dry-run proof. It forces the local merge runner into dry-run mode, verifies no source/generated/candidate output path changed, and records expected live release blockers such as `post-merge-verify: REQUESTED`.
+
+The first local merge adapter lives in `native/CreationMergeRunner` at the repo root. It is a
 Mutagen-backed .NET runner that consumes `structured-merge-request.v1`, requires
 explicit source/generated/output paths plus `--approved`, writes a candidate
 source plugin output, and emits JSON. It is intentionally limited to proven
@@ -121,11 +164,19 @@ CK-semantic phases emit `creation-authoring.ck-command-packet.v1`; see
 `docs/CK_BRIDGE.md`. A CK adapter must execute that packet and then let normal
 live readback verify the result.
 
-The CKPE authoring bridge scaffold lives under
-`../../native/CreationKitAuthoringBridge`. It is an authoring-only tool
-boundary, not a player-facing runtime dependency. The current scaffold defines
-transport and result contracts; CK record mutation handlers must still be
-implemented behind proof tests before CK-owned operations can pass.
+The CKPE authoring bridge lives under `native/CreationKitAuthoringBridge` at the repo root. It is an authoring-only tool boundary, not a player-facing runtime dependency. It currently has named-pipe transport, a CK main-thread command queue, lifecycle/lookup handlers, and fail-closed mutator placeholders; CK record mutation handlers must still be implemented behind proof tests before CK-owned operations can pass.
+
+## CK Load Set And Active Plugin
+
+CK's active file is not implied by manifest output. The live runner must command and prove the CK Data dialog load set before any CK-semantic phase:
+
+```text
+openProject -> loadPluginSet -> CK mutations -> postUiSaveCommand -> closeSafeStatus
+```
+
+Generated-first runs require the manifest output or profile default generated plugin to be active. Promotion finalization requires the reviewed merge candidate to be active. Strict mode fails if the source plugin is active by mistake, if required masters are missing, or if the save target does not match the active plugin.
+
+`loadPluginSet` is the atomic load-set proof command. The current bridge implementation verifies the requested load set and active save target fail-closed; it does not mutate CK Data dialog state until a safe active-file setter is proven. Legacy `loadPlugin` and `setActivePlugin` remain diagnostics.
 
 ## Capability Tiers
 

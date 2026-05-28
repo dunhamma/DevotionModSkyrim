@@ -1,0 +1,17 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "ckra-family-duplicate-discovery",
+  "game": "SkyrimSE",
+  "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+  "failClosed": true,
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "PDV_Phase9To12_CKProof.esp", "active": true },
+    { "op": "setActivePlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "inspectFamilyDuplicateReplayPlan", "recordFamily": "MESG", "target": "MESG", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "inspectFamilyDuplicateReplayPlan", "recordFamily": "ACTI", "target": "ACTI", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "inspectFamilyDuplicateReplayPlan", "recordFamily": "QUST", "target": "QUST", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "inspectFamilyDuplicateReplayPlan", "recordFamily": "FLST", "target": "FLST", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "closeSafeStatus" }
+  ]
+}

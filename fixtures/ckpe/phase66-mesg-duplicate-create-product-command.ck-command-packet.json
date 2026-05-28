@@ -1,0 +1,20 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "transport": "named-pipe",
+  "commands": [
+    { "op": "openProject" },
+    { "op": "loadPlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "setActivePlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    {
+      "op": "duplicateCreateRecord",
+      "plugin": "PDV_Phase9To12_CKProof.esp",
+      "recordFamily": "MESG",
+      "sourceEditorId": "_HelpPipBoyItems",
+      "targetEditorId": "_HelpPipBoyItemsDUPLICATE002",
+      "createdEditorId": "_HelpPipBoyItemsDUPLICATE002",
+      "mode": "input_context_focus_async_command"
+    },
+    { "op": "postUiSaveCommand", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    { "op": "closeSafeStatus" }
+  ]
+}

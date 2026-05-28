@@ -1,0 +1,34 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "pdv-ckproof",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "output": "PDV_Phase9To12_CKProof.esp",
+  "operations": [
+    {
+      "id": "duplicate-flst",
+      "kind": "record.duplicate_create",
+      "target": "PDV_FLST_AllDeitiesDUPLICATE002",
+      "mode": "create",
+      "recordFamily": "FLST",
+      "ckSemanticsRequired": true,
+      "payload": {
+        "sourceEditorId": "PDV_FLST_AllDeities",
+        "targetEditorId": "PDV_FLST_AllDeitiesDUPLICATE002",
+        "createdEditorId": "PDV_FLST_AllDeitiesDUPLICATE002"
+      },
+      "verifierExpectations": [
+        {
+          "type": "fieldEquals",
+          "path": "recordType",
+          "value": "FLST"
+        },
+        {
+          "type": "contains",
+          "path": "entries",
+          "value": "0x040120B6"
+        }
+      ]
+    }
+  ]
+}

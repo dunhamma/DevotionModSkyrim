@@ -1,0 +1,98 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "dialogue-v1",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_DialogueV1Proof.esp",
+  "metadata": {
+    "supportClaim": false,
+    "proofLane": "dialogue-v1-discovery",
+    "notes": [
+      "Generic future dialogue proof scaffold; not Phase 11-specific.",
+      "Direct binary authoring is not accepted. CK must create and save the dialogue graph before proof can promote support."
+    ]
+  },
+  "operations": [
+    {
+      "id": "dialogue-branch",
+      "kind": "dialogue.branch.create",
+      "target": "EXM_DIAL_GenericRecognitionBranch",
+      "recordFamily": "DIAL",
+      "mode": "create",
+      "ckSemanticsRequired": true,
+      "preferredBackend": "ckpe-bridge",
+      "payload": {
+        "recordType": "DLBR",
+        "editorId": "EXM_DIAL_GenericRecognitionBranch",
+        "ownerQuest": "EXM__DialogueQuest",
+        "category": "Player",
+        "flags": [
+          "TopLevel"
+        ],
+        "startingTopic": "EXM_DIAL_GenericRecognitionTopic"
+      }
+    },
+    {
+      "id": "dialogue-topic",
+      "kind": "dialogue.topic.create",
+      "target": "EXM_DIAL_GenericRecognitionTopic",
+      "recordFamily": "DIAL",
+      "mode": "create",
+      "ckSemanticsRequired": true,
+      "preferredBackend": "ckpe-bridge",
+      "payload": {
+        "recordType": "DIAL",
+        "editorId": "EXM_DIAL_GenericRecognitionTopic",
+        "ownerQuest": "EXM__DialogueQuest",
+        "branch": "EXM_DIAL_GenericRecognitionBranch",
+        "prompt": "Do you know the old oath?",
+        "category": "Topic",
+        "subtype": "Custom"
+      }
+    },
+    {
+      "id": "dialogue-info",
+      "kind": "dialogue.info.create",
+      "target": "EXM_INFO_GenericRecognition",
+      "recordFamily": "INFO",
+      "mode": "create",
+      "ckSemanticsRequired": true,
+      "preferredBackend": "ckpe-bridge",
+      "payload": {
+        "recordType": "INFO",
+        "ckInfoIdentity": "unnamed-topic-info-accepted",
+        "topic": "EXM_DIAL_GenericRecognitionTopic",
+        "speaker": "EXM_NPC_Mentor",
+        "speakerForm": "ExampleMod.esp:000901",
+        "prompt": "Do you know the old oath?",
+        "responseLine": "I remember it. Speak, and I will answer.",
+        "conditions": [
+          {
+            "function": "GetIsID",
+            "subject": "Speaker",
+            "operator": "==",
+            "value": "EXM_NPC_Mentor"
+          },
+          {
+            "function": "GetGlobalValue",
+            "global": "EXM_GLO_DialogueGate",
+            "operator": "==",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "dialogue-seq",
+      "kind": "artifact.seq.generate",
+      "target": "EXM__DialogueQuest",
+      "recordFamily": "QUST",
+      "mode": "update",
+      "ckSemanticsRequired": true,
+      "preferredBackend": "ckpe-bridge",
+      "payload": {
+        "plugin": "ExampleMod_DialogueV1Proof.esp"
+      }
+    }
+  ]
+}

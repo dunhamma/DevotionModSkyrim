@@ -8,7 +8,7 @@ export function createPlan(manifest, profile, options = {}) {
   const availableBackends = options.availableBackends || availableBackendsForProfile(profile);
   const plannedCreates = new Set(
     manifest.operations
-      .filter((operation) => operation.kind === "record.create" || operation.kind === "quest.create")
+      .filter((operation) => ["record.create", "quest.create", "record.duplicate_create", "glob.duplicate_create"].includes(operation.kind))
       .map((operation) => operation.target.toLowerCase())
   );
 
@@ -22,7 +22,8 @@ export function createPlan(manifest, profile, options = {}) {
     const enrichedOperation = enrichPayload(operation, resolver, plannedCreates);
     const backend = selectBackend(enrichedOperation, capability, availableBackends, {
       targetIsPlannedCreate,
-      payloadReferencesPlannedCreate: hasPlannedCreateReference(enrichedOperation, plannedCreates)
+      payloadReferencesPlannedCreate: hasPlannedCreateReference(enrichedOperation, plannedCreates),
+      allowUnprovenCk: Boolean(options.allowUnprovenCk)
     });
     const conflict = classifyConflict(enrichedOperation, targetResolution, capability);
 
@@ -109,10 +110,25 @@ function selectBackend(operation, capability, availableBackends, context = {}) {
   }
 
   const available = new Set(availableBackends);
+  const needsCkSemantics =
+    operation.ckSemanticsRequired ||
+    capability.requiresCkSemantics ||
+    context.targetIsPlannedCreate ||
+    context.payloadReferencesPlannedCreate;
+  if (
+    !context.allowUnprovenCk &&
+    available.has("ckpe-bridge") &&
+    capability.supportedBackends.includes("ckpe-bridge") &&
+    needsCkSemantics &&
+    operation.kind !== "glob.duplicate_create" &&
+    operation.kind !== "record.duplicate_create"
+  ) {
+    return null;
+  }
   if (
     available.has("ckpe-bridge") &&
     capability.supportedBackends.includes("ckpe-bridge") &&
-    (operation.ckSemanticsRequired || capability.requiresCkSemantics || context.targetIsPlannedCreate || context.payloadReferencesPlannedCreate)
+    needsCkSemantics
   ) {
     return "ckpe-bridge";
   }

@@ -1,0 +1,29 @@
+{
+  "records": {
+    "PDV__ManagerQuestDUPLICATE002": {
+      "editorId": "PDV__ManagerQuestDUPLICATE002",
+      "formid": "0x0500F1F1",
+      "recordType": "QUST",
+      "winningPlugin": "PDV_Phase9To12_CKProof.esp",
+      "fields": {
+        "FULL": "PDV Manager",
+        "aliasCount": 0,
+        "stageCount": 1,
+        "hasVmad": true
+      },
+      "fullName": "PDV Manager",
+      "scripts": [
+        {
+          "name": "vmad-present",
+          "properties": {}
+        }
+      ],
+      "stages": [
+        {
+          "index": 0
+        }
+      ],
+      "aliases": []
+    }
+  }
+}
