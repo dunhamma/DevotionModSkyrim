@@ -217,7 +217,7 @@ Note on the `%s` token: this is a single-token substitution slot bound to the de
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Msg_Nord_Kyne_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates lines 179-180 | One-time on first Kyne Devoted | Body: "Kyne has named her hunter." Title: "Kyne's Recognition" |
+| PDV_Msg_Nord_Kyne_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates lines 179-180 | One-time on first Kyne Devoted | Body: "You sleep where the storm sleeps. You walk where the wind walks. Kyne has named her hunter." Title: "Kyne's Recognition" |
 | PDV_Notif_Nord_Kyne_ChampionAmbient_Storm | Notification | Noted | Player-2nd | 80/60 | TargetEndStates lines 179-180 | Kyne Devoted + outdoor + storm weather; one per in-game day | The wind is blowing your way. |
 | PDV_Notif_Nord_Kyne_ChampionAmbient_OutdoorRest | Notification | Quiet | Player-2nd | 80/60 | TargetEndStates lines 179-180 | Kyne Devoted + outdoor sleep complete; one per rest | You awake settled within. |
 | PDV_Msg_Nord_Talos_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates lines 180-181 | One-time on first Talos Devoted | Body: "You did not let me die. The old breath is yours to carry. Speak, and Tamriel hears Talos." Title: "Talos Names You" |
