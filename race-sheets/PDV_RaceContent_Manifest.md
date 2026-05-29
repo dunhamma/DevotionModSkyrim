@@ -217,9 +217,9 @@ Note on the `%s` token: this is a single-token substitution slot bound to the de
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Msg_Nord_Kyne_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates lines 179-180 | One-time on first Kyne Devoted | Body: "You sleep where the storm sleeps. You walk where the wind walks. Kyne names her hunter." Title: "Kyne's Recognition" |
-| PDV_Notif_Nord_Kyne_ChampionAmbient_Storm | Notification | Noted | Player-2nd | 80/60 | TargetEndStates lines 179-180 | Kyne Devoted + outdoor + storm weather; one per in-game day | The wind is going your way. |
-| PDV_Notif_Nord_Kyne_ChampionAmbient_OutdoorRest | Notification | Quiet | Player-2nd | 80/60 | TargetEndStates lines 179-180 | Kyne Devoted + outdoor sleep complete; one per rest | You wake settled. |
+| PDV_Msg_Nord_Kyne_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates lines 179-180 | One-time on first Kyne Devoted | Body: "Kyne has named her hunter." Title: "Kyne's Recognition" |
+| PDV_Notif_Nord_Kyne_ChampionAmbient_Storm | Notification | Noted | Player-2nd | 80/60 | TargetEndStates lines 179-180 | Kyne Devoted + outdoor + storm weather; one per in-game day | The wind is blowing your way. |
+| PDV_Notif_Nord_Kyne_ChampionAmbient_OutdoorRest | Notification | Quiet | Player-2nd | 80/60 | TargetEndStates lines 179-180 | Kyne Devoted + outdoor sleep complete; one per rest | You awake settled within. |
 | PDV_Msg_Nord_Talos_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates lines 180-181 | One-time on first Talos Devoted | Body: "You did not let me die. The old breath is yours to carry. Speak, and Tamriel hears Talos." Title: "Talos Names You" |
 | PDV_Msg_Nord_Shor_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates line 181 | Texture-only Champion: no entry MessageBox at present. Row reserved; prose left for review if Texture-only is overruled. | -- |
 | PDV_Msg_Nord_Kynareth_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates lines 182-183 | One-time on first Kynareth Devoted | Body: "You walked the long road in my sky. Kynareth's grace stays with you in wind and rain." Title: "Kynareth's Grace" |
@@ -247,7 +247,7 @@ Per-deity offer bodies are authored. Response options (Accept / Not Yet / Refuse
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Msg_Nord_Kyne_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate"; TargetEndStates Section "Nord" | Dawn-fire; one Kyne offer per cooldown window | Title: "Kyne Reaches Back" Body: "You sleep where I am. You hunt where I watch. Will you carry my name now, or will you stay among the many?" |
+| PDV_Msg_Nord_Kyne_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate"; TargetEndStates Section "Nord" | Dawn-fire; one Kyne offer per cooldown window | Title: "Kyne Reaches Back" Body: "You sleep where I am. You hunt where I watch. Will you carry My name now, or will you stay among the many?" |
 | PDV_Msg_Nord_Shor_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate" | Dawn-fire; per-deity cooldown | Title: "Shor Calls You" Body: "Your sword is honest. Your dead are counted by Tsun. Take a seat I am keeping for you, or wait and prove the road further." |
 | PDV_Msg_Nord_Talos_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate" | Dawn-fire; per-deity cooldown | Title: "Talos Marks the Defier" Body: "You would not let them silence me. Carry the old breath openly, and Tamriel will hear Talos through you. Or hold the secret and walk the broad road yet." |
 | PDV_Msg_Nord_Tsun_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate" | Dawn-fire; per-deity cooldown | Title: "Tsun Weighs You" Body: "You have stood the bad odds. Will you take the shield-thane's mark, or come at the bridge again unweighed?" |
