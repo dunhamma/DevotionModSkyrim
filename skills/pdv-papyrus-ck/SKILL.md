@@ -5,13 +5,19 @@ description: >
   Skyrim SSE mod project. Use when writing/reviewing PDV .psc scripts,
   running the local compiler/verifier toolchain, compiling with
   PapyrusCompiler, planning CK property wiring, Story Manager event capture,
-  or in-game console tests.
+  or in-game console tests. In PDV sessions this skill supersedes the generic
+  MO2 `papyrus-compilation` skill and the generic `session-strategy` skill —
+  always use `pdv_compile.mjs` over `mo2_compile_script` for PDV scripts,
+  and follow the PDV operating rules in `references/PDV_Anvil_MO2_MCP_Intake.md`
+  over generic MO2 session guidance.
 ---
 
 # PDV Papyrus / CK Workflow
 
 Use this skill before editing or reviewing PDV Papyrus scripts, compile
 commands, CKPE wiring steps, Story Manager setup, or Skyrim console tests.
+This skill supersedes the MO2 `papyrus-compilation` skill and `session-strategy`
+skill for all PDV work.
 
 ## Ground Rules
 

@@ -286,6 +286,27 @@ function checkEnvironment() {
     .filter(([, filePath]) => !exists(filePath))
     .map(([label, filePath]) => ({ label, path: filePath }));
 
+  // Probe write access on the .pex output folder. PapyrusCompiler emits a
+  // cryptic ".pas is denied" OS error when it cannot write its temp files;
+  // a pre-flight write probe catches sandbox restrictions before the compiler
+  // spawns and surfaces a clear actionable message instead.
+  if (failures.length === 0) {
+    const probe = path.join(DEVOTION_PEX, ".pdv_write_probe");
+    try {
+      fs.writeFileSync(probe, "");
+      fs.unlinkSync(probe);
+    } catch {
+      failures.push({
+        label: "Devotion output (write access)",
+        path: DEVOTION_PEX,
+        detail:
+          "Cannot write to the Devotion Scripts folder. " +
+          "PapyrusCompiler will fail with a '.pas is denied' error. " +
+          "Rerun outside the Codex sandbox so the compiler can write its temp files.",
+      });
+    }
+  }
+
   return {
     ok: failures.length === 0,
     failures,
@@ -475,6 +496,9 @@ function printEnvironmentFailures(failures, json) {
   console.error("PDV compiler environment check failed:");
   for (const failure of failures) {
     console.error(`[FAIL] ${failure.label}: ${failure.path}`);
+    if (failure.detail) {
+      console.error(`       ${failure.detail}`);
+    }
   }
 }
 

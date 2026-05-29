@@ -1,7 +1,7 @@
 # PDV Anvil MO2 MCP Intake
 
-**Date:** 2026-05-14, updated 2026-05-16
-**Scope:** Local intake of `D:\Wabbajack\modlists\Anvil\plugins\Anvilmo2_mcp` for Codex-driven PDV work.
+**Date:** 2026-05-14, updated 2026-05-29
+**Scope:** Anvil MO2 MCP server setup, operating rules, and skill precedence for Codex-driven PDV work.
 
 ## Current Integration State
 
@@ -19,20 +19,13 @@
 
 ## Tool Surface
 
-The plugin registers these MCP tools when the server is live:
-
-| Area | Tools |
-|---|---|
-| Connection | `mo2_ping` |
-| Modlist | `mo2_list_mods`, `mo2_mod_info`, `mo2_list_plugins`, `mo2_plugin_info`, `mo2_find_conflicts` |
-| Filesystem | `mo2_resolve_path`, `mo2_list_files`, `mo2_read_file`, `mo2_analyze_dll` |
-| Write | `mo2_write_file` |
-| Records | `mo2_record_index_status`, `mo2_build_record_index`, `mo2_query_records`, `mo2_record_detail`, `mo2_conflict_chain`, `mo2_plugin_conflicts`, `mo2_conflict_summary` |
-| ESP patching | `mo2_create_patch` |
-| Papyrus | `mo2_compile_script` |
-| Archives | `mo2_list_bsa`, `mo2_extract_bsa`, `mo2_extract_bsa_file`, `mo2_validate_bsa` |
-| NIF | `mo2_nif_info`, `mo2_nif_list_textures`, `mo2_nif_shader_info` |
-| Audio | `mo2_audio_info`, `mo2_extract_fuz` |
+The authoritative tool list and descriptions live in the MCP registry — call
+`mo2_ping` to confirm the server is live, then `tools/list` (or let Codex
+auto-discover on session start). The table that was here has been removed to
+prevent it drifting from the live registry (per the HOUSECARL authoring
+standard: the registry is the single source of truth for what tools exist and
+how to call them). Run `node tools/pdv_mcp_check.mjs` for a quick health check
+that validates the server is live and the active profile is `Devotion Dev`.
 
 ## Optional Tool Status
 
@@ -75,12 +68,38 @@ These will be available to future Codex sessions once skill discovery refreshes.
 
 ## PDV Operating Rules
 
-- Prefer PDV's local `tools\pdv_compile.mjs` for PDV source compilation. It already calls `PapyrusCompiler.exe` directly with the project-verified import chain and verifier loop.
-- Use `mo2_compile_script` only for MCP-managed ad hoc compile flows where the source text is provided to the tool.
-- Use `mo2_record_detail`, `mo2_query_records`, and `mo2_conflict_chain` for ESP inspection once the MCP server is live.
-- Use `mo2_create_patch` for override patch plugins; do not hand-edit ESP binaries.
-- The MCP output mod default is now `Devotion`, matching PDV's active project output target.
-- After editing plugin Python files, delete `__pycache__` and fully restart MO2. Stopping/starting the server inside MO2 is not enough because MO2 keeps Python modules loaded.
+**Skill precedence.** In PDV sessions, the `pdv-papyrus-ck` and `pdv-doc-sync`
+project skills supersede the generic MO2 plugin skills. Specifically:
+- `pdv-papyrus-ck` supersedes the MO2 `papyrus-compilation` skill.
+- These PDV rules supersede the MO2 `session-strategy` skill guidance.
+Follow the rules below rather than generic MO2 session advice.
+
+**Papyrus compilation.**
+- **Never use `mo2_compile_script` for PDV `.psc` files.** The MCP compiler
+  path does not use PDV's verified import chain and does not run the verifier
+  afterward. Always use `node tools/pdv_compile.mjs` instead.
+- `mo2_compile_script` is reserved for one-off MCP-managed flows where source
+  text is provided directly to the tool and the PDV script set is not involved.
+- `pdv_compile.mjs` will detect sandbox write-access restrictions and emit a
+  clear error (`rerun outside the Codex sandbox`) before attempting to spawn
+  the compiler.
+
+**ESP inspection and patching.**
+- Use `mo2_record_detail`, `mo2_query_records`, and `mo2_conflict_chain` for
+  ESP record inspection once the MCP server is live.
+- Use `mo2_create_patch` for override patch plugins; do not hand-edit ESP
+  binaries. Use `tools/pdv_author.mjs` for PDV-specific manifest-driven
+  overlay patches against existing records.
+
+**Server hygiene.**
+- The MCP output mod default is `Devotion`, matching PDV's active output target.
+- After editing plugin Python files, delete `__pycache__` and **fully restart
+  MO2**. Stopping/starting the server inside MO2 is not enough — MO2 keeps
+  Python modules loaded.
+- The Anvil MCP VFS can cache file listings. If newly copied SKSE files or
+  scripts do not appear through `mo2_*` tools, restart or refresh the MCP
+  server. Run `node tools/pdv_mcp_check.mjs` to confirm the server is live
+  and on the `Devotion Dev` profile before starting a work session.
 
 ## Remaining Setup Gap
 
