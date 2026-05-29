@@ -24,12 +24,16 @@ Documentation root:
 - `C:\Users\Admin\Documents\Devotion Mod Project`
 
 Canonical living docs:
-- `AGENTS.md` - cross-session context, current status, decisions log
+- `AGENTS.md` - cross-session context, current status, Standing Rules, decisions log
 - `PDV_Architecture_v2.md` - architecture, phase plan, revision log
 - `PDV_Architecture_v3.md` - forward architecture, roadmap, revision log
 - `PDV_MOD_SETUP.md` - tooling, paths, build order, troubleshooting
 - `PDV_Phase*_*.md` - phase-specific instructions/status
 - `PDV_STANDARDS.md` - operating rules; read when needed, edit only if a rule changes
+
+Dated archives (frozen, not edited except to receive rolled-out entries):
+- `archive/PDV_DecisionsLog_Archive_YYYY-MM.md` - decisions-log entries rolled
+  out of the live `AGENTS.md` window; each keeps a title+date index entry
 
 Implementation truth:
 - `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\*.psc`
@@ -70,10 +74,21 @@ the living context source.
      - `PDV_STANDARDS.md` only when a true project rule changed
    - if a learning came from investigation rather than code changes, still
      record it if it would save future re-discovery
-5. Keep archive docs frozen.
-6. Report files changed, what learnings were captured, and any residual code or
+5. Keep the decisions log scoped with the rolling-window convention:
+   - Append new decisions to `AGENTS.md` § Decisions Log as usual.
+   - Keep only the current phase arc in the live log. When entries for
+     fully-closed phases predate the active arc, roll their full text into the
+     newest `archive/PDV_DecisionsLog_Archive_YYYY-MM.md`, leaving a title+date
+     line in that archive's index. Do not delete; relocate.
+   - Before archiving an entry, check whether it states a still-active rule.
+     Live invariants belong in `AGENTS.md` Architecture Summary / Naming
+     Conventions; active process rules belong in `AGENTS.md` § Standing Rules.
+     Promote the rule to the right live section, then archive the dated entry.
+   - Start a new dated archive file per month when the current one grows large.
+6. Keep archive docs frozen apart from receiving rolled-out entries.
+7. Report files changed, what learnings were captured, and any residual code or
    CK wiring risks.
-7. If no new learning qualified, say that explicitly in the final report rather
+8. If no new learning qualified, say that explicitly in the final report rather
    than silently omitting the lessons-learned section.
 
 ## Status Semantics
