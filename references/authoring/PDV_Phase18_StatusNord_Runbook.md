@@ -38,7 +38,7 @@ Last direct readback found these saved records in `PlayerDevotion_Framework.esp`
 - Andurs branch/topic/INFO exists and matches the broad death-rite contract.
 - Aela branch/topic/INFO exists and matches the werewolf/Hircine tension contract.
 
-`dialogue.implementationStatus` is now `live-dialogue-authored`; strict Phase 18/Nord verification checks branch/topic/INFO payload and condition readback. SEQ has been refreshed for the current save. Runtime proof remains the remaining closeout gate, and future CK dialogue edits must refresh SEQ again before closeout.
+`dialogue.implementationStatus` is now `live-dialogue-authored`; strict Phase 18/Nord verification checks branch/topic/INFO payload and condition readback. SEQ has been refreshed for the current save. Fresh-save player/status runtime proof has passed for the Nord pilot. Per-speaker dialogue runtime proof remains the last human smoke gate unless it has also been run in game, and future CK dialogue edits must refresh SEQ again before closeout.
 
 Useful CK global conditions:
 
@@ -66,6 +66,8 @@ The Aela "active Hircine path" side is not yet a simple CK global condition. If 
 ## Runtime Matrix
 
 Run the matrix after the helper packet, manual CK dialogue save, SEQ refresh, and strict verifier pass. Use Developer Options for setup/inspection only; the counted proof surface is the Player page, `Survey Devotion`, spell/favor state, dialogue availability, and Papyrus log/readback where relevant.
+
+`Survey Devotion` is a lesser power. The manager grants it automatically and equips it into the voice/power slot only if the player has no power or shout selected, so a fresh tester can press `Z` without losing an existing chosen power.
 
 | Case | Setup | Expected positive | Expected negative |
 | --- | --- | --- | --- |

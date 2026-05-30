@@ -2342,6 +2342,8 @@ class Verifier {
     this.checkSourceContains("Phase 18 manager source", "PDV__ManagerQuest", [
       "Spell Property PDV_SPEL_SurveyDevotion Auto",
       "Function EnsureSurveyDevotionPower()",
+      "GetEquippedShout() == None",
+      "EquipSpell(PDV_SPEL_SurveyDevotion, 2)",
       "String Function GetSurveyDevotionText()",
       "Bool Function IsNordVampireSuppressed()",
       "PDV.Nord.VampireScar",
