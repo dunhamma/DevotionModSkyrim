@@ -243,12 +243,12 @@ cells route to the race manifest and carry no Daedric response row.
 | Mehrunes Dagon | drafted (Section 7.7) |
 | Sheogorath | drafted (Section 7.8) |
 | Clavicus Vile | drafted (Section 7.9) |
-| Namira / Namiira | pending |
-| Sanguine / Sangiin | pending |
+| Vaermina | drafted (Section 7.10) |
+| Sanguine / Sangiin | drafted (Section 7.11) |
+| Namira / Namiira | drafted (Section 7.12) |
+| Peryite | drafted (Section 7.13) |
 | Hircine | pending (curse-access) |
 | Molag Bal | pending (curse-access) |
-| Peryite | pending |
-| Vaermina | pending |
 
 The stub table below keeps each pending Prince's PrincePathType and authoring
 notes for reference until it is authored into a subsection.
@@ -933,6 +933,298 @@ Source: the `Clavicus Vile` row of the matrix -- PathType `Bargain-wish-contract
 
 ---
 
+### 7.10 Vaermina
+
+Source: the `Vaermina` row of the matrix -- PathType `Dream-nightmare-memory`, CommitmentSignal `Waking Nightmare, Skull of Corruption, nightmare manipulation threshold`, Boon `Nightmare fascination, memory violation curiosity, fear-use temptation`, Price `Sleep corruption and memory/fear instability`, Hook `Waking Nightmare > Skull of Corruption > nightmare/sleep corruption`. Matrix note: should stay tightly quest-anchored for first release. No native-integration exception. **EditorID note:** Slot IDs use `Vaermina` token; boon/price/msg IDs exceed 32 chars; flagged for Phase 19 abbreviation review.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Vaermina (Daedric path) | Quiet, invasive, certain; the god of the dream that knows you better than you do; she does not threaten, she reveals what is already there; her register is the nightmare's particular certainty -- slow, low, unhurried, already inside; she does not need to be loud because she is already in the sleep. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Vaermina_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Vaermina_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Vaermina" Boon | Passive SPEL; pact engaged | Vaermina's touch opens the dream-path. Sleep reveals more than it hides; you read fear in others before they know you are reading it. |
+| PDV_Bless_Daedric_Vaermina_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Vaermina" Boon | Passive SPEL | Vaermina's nightmare deepens. Dream insight comes readily; the fear of others is legible, and you press it where it matters. |
+| PDV_Bless_Daedric_Vaermina_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Vaermina" Boon | Passive SPEL | Vaermina names you her nightmare-walker. Sleep is your domain; you read fear with precision, and what haunts others gives you advantage. |
+
+**Price descriptions** (`PDV_Price_Daedric_Vaermina_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Vaermina_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Vaermina" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the dream-path: sleep corrupts. Vaermina does not only give you the dream; she leaves herself in it when you sleep. |
+| PDV_Price_Daedric_Vaermina_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Vaermina" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: memory instability. Time in Vaermina's nightmare blurs the boundary between what happened and what was shown. |
+| PDV_Price_Daedric_Vaermina_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Vaermina" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: fear and memory are hers. You wield fear outward, but Vaermina's access to yours is absolute; nothing you dream is private. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Vaermina_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Vaermina marks you a Seeker of the dream-path. |
+| PDV_Notif_Daedric_Vaermina_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Vaermina's nightmare takes a deeper hold. Devoted. |
+| PDV_Notif_Daedric_Vaermina_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Vaermina's presence recedes. The dream-path grows dark. |
+| PDV_Msg_Daedric_Vaermina_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Vaermina"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Vaermina's Nightmare-Walker" Body: "You walked into the nightmare and did not wake from it. That is what Champion means in my keeping. I know your fears -- all of them, named and unnamed. Use that knowledge. It cuts better than anything you carry. I have made certain it also cuts both ways." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Vaermina_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Vaermina" CommitmentSignal | Fires once when the commitment gate clears | Title: "Vaermina's Opening" Body: "Three times you used the nightmare as a tool rather than fleeing from it. That is the gate. Vaermina does not offer comfort; she offers access. The dream-path is open -- the fear-leverage, the memory of things not meant to be legible. The price is that she reads the same in you." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Vaermina_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Vaermina's mark is suspected. You know too much about others' fears. |
+| PDV_Notif_Daedric_Vaermina_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Vaermina devotion is known. People fear the nightmare-walker. |
+| PDV_Notif_Daedric_Vaermina_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Vaermina's nightmare-walker. No settled place trusts you. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Vaermina_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You leave the dream-path. Vaermina fades; the fear-leverage withdraws. |
+| PDV_Msg_Daedric_Vaermina_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Vaermina's Withdrawal" Body: "You step back from the nightmare. Vaermina does not argue; she simply closes the path. The dream-insight goes dark, the fear-leverage withdraws, and what you knew about others' nightmares fades with the access that gave it to you. Vaermina keeps what she learned about yours." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Vaermina_Response_*`). Narrator, 500/280. All ten races; three Taboo (Nord, Imperial, Altmer), one Breton Foreign-but-legible at margins, six purely Foreign.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Vaermina_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Nord cell | One-time on a Nord committing | Title: "Against Hearth Safety" Body: "For a Nord, Vaermina's nightmare cult strains hearth safety and kin-trust. The one who sleeps beside you should not be a nightmarer. The dream that reveals what you most fear has no place in the honest hall. Leaving asks cleansing and sincere recommitment." |
+| PDV_Msg_Daedric_Vaermina_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Imperial cell | One-time on an Imperial committing | Title: "Against Civic Memory" Body: "For an Imperial, memory violation opposes civic order and mercy -- a society of records trusts them unaltered. Vaermina corrodes that trust; her path undoes the archival virtue the Empire rests on. Leaving is abandonment and recommitment to the civic devotional frame." |
+| PDV_Msg_Daedric_Vaermina_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Breton cell | One-time on a Breton committing | Title: "Not Core, Despite the Shape" Body: "A Breton can read Vaermina's dream-path at the margins -- the nightmare has a shape in Breton tradition. But this is not a core Breton lane; the sleep corruption and memory violation sit outside the craft's actual lines. Cover is possible; renunciation is cleaner." |
+| PDV_Msg_Daedric_Vaermina_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Dunmer cell | One-time on a Dunmer committing | Title: "Outside the Fear-Lanes" Body: "For a Dunmer, Vaermina's nightmare is an outsider pressure -- the fear-path and the memory violation do not connect to ancestor-duty, Good Daedra theology, or the Reclamations. The path is foreign; it is set down by abandonment with no particular ceremony required." |
+| PDV_Msg_Daedric_Vaermina_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Altmer cell | One-time on an Altmer committing | Title: "Corruption of Self-Cultivation" Body: "For an Altmer, Vaermina's nightmare corruption violates disciplined self-cultivation -- the upward path requires a clear mind, and the nightmare that rewrites memory is its enemy. Absolution is difficult and requires active doctrinal re-anchoring." |
+| PDV_Msg_Daedric_Vaermina_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Khajiit cell | One-time on a Khajiit committing | Title: "Dream Pressure, Not a Lane" Body: "A Khajiit may encounter Vaermina through dream pressure -- the lattice acknowledges dream-paths. But dream pressure is not devotion, and Vaermina is not a lunar lane. The path is foreign and is set down by abandonment." |
+| PDV_Msg_Daedric_Vaermina_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Bosmer cell | One-time on a Bosmer committing | Title: "Sleep Fear, No Green Root" Body: "For a Bosmer, Vaermina's sleep-fear corruption has no root in the Green Pact. The nightmare is not the forest; it is an outsider thing beside the path. The path is set down by abandonment when its course is done." |
+| PDV_Msg_Daedric_Vaermina_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Redguard cell | One-time on a Redguard committing | Title: "Against Communal Duty" Body: "For a Redguard, Vaermina strains communal duty -- the Yokudan frame values the clear head and the kept record. The nightmare that corrupts memory is the enemy of the trusted deed. The path is foreign; abandonment and recommitment to the clean record is the exit." |
+| PDV_Msg_Daedric_Vaermina_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Orc cell | One-time on an Orc committing | Title: "Against Endurance" Body: "For an Orc, Vaermina's nightmare corruption strains the endurance ethic -- endurance requires knowing what you endure, and the nightmare that rewrites what you know is its opposite. The path is foreign; it is abandoned when its course is done." |
+| PDV_Msg_Daedric_Vaermina_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Argonian cell | One-time on an Argonian committing | Title: "Exile Dreams, Outsider Rot" Body: "To an Argonian, Vaermina is foreign -- dreams matter in exile, but Vaermina is not the Hist's dream-channel; she is outsider corruption moving through sleep. The path is set down by abandonment; the Hist does not hold the absence against the one who returns." |
+
+---
+
+### 7.11 Sanguine
+
+Source: the `Sanguine / Sangiin` row of the matrix -- PathType `Excess-temptation-indulgence`, CommitmentSignal `A Night to Remember, Sanguine Rose, explicit excess/temptation threshold`, Boon `Pleasure-seeking, revelry, lax restraint, deliberate indulgence`, Price `Overindulgence, unreliability, and restraint loss`, Hook `A Night to Remember > Sanguine Rose > excess contexts`. Matrix notes: must not become generic 'go to tavern, gain devotion' -- commitment requires genuine excess threshold; Sangiin is a dark-pressure reading inside Khajiit mythic field, not core path; distinct from Nocturnal (shadow-oath) and Clavicus Vile (contract). **EditorID note:** Slot IDs use `Sanguine` token; extended IDs exceed 32 chars; flagged for Phase 19 review.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Sanguine (Daedric path) | Warm, charming, genuinely pleased; the god of indulgence and excess who never mentions the cost; his register is the invitation that sounds reasonable right up until three days in when you cannot remember your name -- not malicious, simply indulgent, and content to watch the evening keep going; distinct from Nocturnal's oath-debt and Vile's contract: Sanguine's path is a mood, not a deal. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Sanguine_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Sanguine_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Sanguine" Boon | Passive SPEL; pact engaged | Sanguine's ease settles in you. Revelry lands lighter; you navigate excess with more grace than before. |
+| PDV_Bless_Daedric_Sanguine_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Sanguine" Boon | Passive SPEL | Sanguine's indulgence deepens. You endure revelry where others wilt; temptation has a familiar, comfortable face. |
+| PDV_Bless_Daedric_Sanguine_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Sanguine" Boon | Passive SPEL | Sanguine names you his own. Excess is your element; the revelry that should end simply continues. |
+
+**Price descriptions** (`PDV_Price_Daedric_Sanguine_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Sanguine_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Sanguine" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the indulgence path: overindulgence. Sanguine does not enforce the limit, and without the limit the morning arrives harder. |
+| PDV_Price_Daedric_Sanguine_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Sanguine" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: unreliability. The devotee's word runs alongside the evening's plans; sober commitments dissolve. |
+| PDV_Price_Daedric_Sanguine_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Sanguine" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: restraint is gone. Sanguine does not ask for it back; indulgence is always the more pressing call now. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Sanguine_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Sanguine marks you a Seeker. The first round is on him. |
+| PDV_Notif_Daedric_Sanguine_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Sanguine's indulgence takes a deeper hold. Devoted. |
+| PDV_Notif_Daedric_Sanguine_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Sanguine's ease withdraws. The revelry grows ordinary. |
+| PDV_Msg_Daedric_Sanguine_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Sanguine"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Sanguine's Own" Body: "Well done. You have arrived at the end of the road that begins with one more. I am delighted. The ease is yours permanently -- the revelry, the comfort, the wonderful inability to stop when the evening is still young. That is the gift. You already know what it costs. Welcome." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Sanguine_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Sanguine" CommitmentSignal | Fires once when the commitment gate clears | Title: "Sanguine's Invitation" Body: "Three times the evening ran past what it should have, and three times you let it. That is the signal I read. This is not an oath -- I do not do those -- and it is not a bargain. It is simply a recognition that you are the sort of person the night finds. Enjoy that." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Sanguine_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Sanguine's ease on you is suspected. Some note the morning arrivals. |
+| PDV_Notif_Daedric_Sanguine_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Sanguine devotion is known. The indulgence path has a visible residue. |
+| PDV_Notif_Daedric_Sanguine_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Sanguine's. The restrained give you a wide berth. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Sanguine_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You return to restraint. Sanguine's ease lifts; the indulgence edge fades. |
+| PDV_Msg_Daedric_Sanguine_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Sanguine's Shrug" Body: "You are walking away from it. Sanguine does not mind; he finds that charming in its own way. The ease lifts, the revelry loses its warmth, and the temptation that felt comfortable goes back to feeling like what it is. That is fine. The door is not locked." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Sanguine_Response_*`). Narrator, 500/280. All ten races; Khajiit Legible via Sangiin dark-pressure; Breton Foreign-but-intelligible; Nord/Imperial/Altmer Taboo; others Foreign.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Sanguine_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sanguine" Nord cell | One-time on a Nord committing | Title: "Against Discipline and Honor" Body: "For a Nord, Sanguine's indulgence strains the discipline and honor that underpin Nord life -- the warrior who cannot refuse excess is not the warrior who holds the line. The path is a quiet erosion; leaving means accepting whatever residue the indulgence left." |
+| PDV_Msg_Daedric_Sanguine_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sanguine" Imperial cell | One-time on an Imperial committing | Title: "Anti-Civic Devotion" Body: "For an Imperial, indulgence is tolerated in pieces -- the tavern exists and the law acknowledges it. But as devotion, Sanguine's path is anti-civic; it erodes the self-discipline that public service and honest commerce require. Renunciation is recommitment to the civic frame." |
+| PDV_Msg_Daedric_Sanguine_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sanguine" Breton cell | One-time on a Breton committing | Title: "Intelligible, Not Core" Body: "A Breton can read Sanguine -- revelry and mixed-company ease are part of the Breton social world. But Sanguine is not a core Breton tradition; the intelligibility is social, not theological. Cover works at low commitment; renunciation is cleaner once the path takes hold." |
+| PDV_Msg_Daedric_Sanguine_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sanguine" Dunmer cell | One-time on a Dunmer committing | Title: "Outsider Indulgence" Body: "For a Dunmer, Sanguine's indulgence is an outsider temptation -- it does not connect to ancestor-duty or the Reclamations. The ease is real, but it has no root in the Dunmer spiritual center. The path is set down by abandonment; no special ceremony is needed." |
+| PDV_Msg_Daedric_Sanguine_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sanguine" Altmer cell | One-time on an Altmer committing | Title: "Against Disciplined Apotheosis" Body: "For an Altmer, Sanguine's indulgence is the opposite of Apotheosis -- the upward path requires discipline, and permanent restraint-loss is not a detour, it is a retreat. Absolution is difficult and requires re-anchoring to the Aldmeri project." |
+| PDV_Msg_Daedric_Sanguine_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sanguine" Khajiit cell; Notes "Sangiin is dark-pressure, not core path" | One-time on a Khajiit committing | Title: "Sangiin's Dark Lane" Body: "A Khajiit finds Sanguine legible through Sangiin, a dark-pressure in the Khajiiti lattice. But Sangiin is acknowledged, not honored. Taking Sanguine as patron crosses from familiarity into an outside pull. Withdrawal or cleansing keeps the substrate intact." |
+| PDV_Msg_Daedric_Sanguine_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sanguine" Bosmer cell | One-time on a Bosmer committing | Title: "Revelry Without a Root" Body: "A Bosmer lives in a world that has Baan Dar's cunning and Y'ffre's continuity -- there is room for revelry, but the patron is not Sanguine. The indulgence path has no root in the covenant or the trickster tradition. The path is set down by abandonment when it runs its course." |
+| PDV_Msg_Daedric_Sanguine_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sanguine" Redguard cell | One-time on a Redguard committing | Title: "Indulgence Without Honor" Body: "For a Redguard, indulgence as devotion is foreign -- the Yokudan frame values the disciplined warrior and the kept oath, neither of which is served by Sanguine's ease. The path does not belong to Redguard backbone theology; abandonment is direct." |
+| PDV_Msg_Daedric_Sanguine_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sanguine" Orc cell | One-time on an Orc committing | Title: "Not Malacath's Revelry" Body: "For an Orc, Sanguine's revelry has no place in Malacath's code -- the code is endurance, not ease. Revelry under humiliation is not the code's way; devotion to indulgence is foreign to the stronghold ethic. The path is abandoned when it runs its course." |
+| PDV_Msg_Daedric_Sanguine_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sanguine" Argonian cell | One-time on an Argonian committing | Title: "Not a Hist Lane" Body: "To an Argonian, Sanguine is foreign -- indulgence is not the Hist's frame, and the community does not breathe that way. The ease the path offers is real but rootless. The path drifts away; the Hist does not hold the drift against the one who returns." |
+
+---
+
+### 7.12 Namira
+
+Source: the `Namira / Namiira` row of the matrix -- PathType `Revulsion-decay-outcast-hunger`, CommitmentSignal `Taste of Death, Ring of Namira, corpse-taboo acceptance, chosen outcast solidarity`, Boon `Attraction to darkness, taboo, outcast fellowship, hunger`, Price `Social revulsion and consumption taboo`, Hook `The Taste of Death > Ring of Namira > corpse-taboo acts`. Matrix note: Khajiit legibility (Namiira dark-pressure) should remain dark-pressure framing, not baseline devotion. Breton and Khajiit are Legible; Bosmer and Redguard are Taboo. No native-integration exception.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Namira (Daedric path) | Quiet, low, strangely welcoming; the god who calls from the darkest outcast corners -- she is the hunger the respectable pretend does not exist, the fellowship of the cast-out; her register is not threatening, it is recognizing; she speaks to the ones who have nothing left to lose, not against the ones who turned them away. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Namira_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Namira_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Namira" Boon | Passive SPEL; pact engaged | Namira's darkness settles around you. Revulsion that breaks others steels you; you endure the forgotten places without flinching. |
+| PDV_Bless_Daedric_Namira_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Namira" Boon | Passive SPEL | Namira's outcast fellowship deepens. The resilience of one who has nothing to lose is yours; the places that repel others are your domain. |
+| PDV_Bless_Daedric_Namira_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Namira" Boon | Passive SPEL | Namira names you of the outcast faithful. You are the hunger the respectable pretend does not exist; what they revile sustains you. |
+
+**Price descriptions** (`PDV_Price_Daedric_Namira_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Namira_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Namira" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the outcast path: social revulsion. Those who accept Namira's follower are few, and they are not the respectable. |
+| PDV_Price_Daedric_Namira_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Namira" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: consumption taboo. The hunger Namira feeds takes a shape others find unacceptable, and hiding it grows harder. |
+| PDV_Price_Daedric_Namira_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Namira" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: revulsion is your medium. The respectable do not welcome Namira's Champion, and she does not ask them to. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Namira_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Namira marks you a Seeker of the outcast path. |
+| PDV_Notif_Daedric_Namira_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Namira's darkness takes a deeper hold. Devoted. |
+| PDV_Notif_Daedric_Namira_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Namira's fellowship withdraws. The outcast resilience fades. |
+| PDV_Msg_Daedric_Namira_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Namira"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Namira's Outcast Faithful" Body: "The respectable have their clean altars. You found your way here instead, and three times you chose the path that brought you lower in their eyes and deeper in mine. That is enough. The hunger is real. The fellowship is real. The revulsion is their problem." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Namira_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Namira" CommitmentSignal | Fires once when the commitment gate clears | Title: "Namira's Welcome" Body: "Three times you sat with the taboo and did not flinch from it. That is the gate. Namira does not call the clean; she calls those the clean have turned away. If you are here, you already understand the welcome that waits in the dark places." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Namira_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Namira's mark is suspected. People read the filth-path in your traces. |
+| PDV_Notif_Daedric_Namira_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Namira devotion is known. The outcast-path marks its follower openly. |
+| PDV_Notif_Daedric_Namira_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Namira's. The respectable give the outcast-faithful a wide berth. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Namira_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You step away from the outcast path. Namira's fellowship dims; the hunger fades. |
+| PDV_Msg_Daedric_Namira_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Namira's Release" Body: "You leave the outcast path. Namira does not argue; she has more than enough of the cast-out. The hunger fades, the outcast resilience lifts, and the revulsion you carried becomes ordinary repulsion again -- manageable, human, the kind that does not sustain you." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Namira_Response_*`). Narrator, 500/280. All ten races; Breton Legible (outcast witchcraft heritage); Khajiit Legible via Namiira dark-pressure; Bosmer and Redguard Taboo; others Taboo (Nord, Imperial, Altmer) or Foreign (Dunmer, Orc, Argonian).
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Namira_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Namira" Nord cell | One-time on a Nord committing | Title: "Against Hearth and Honor" Body: "For a Nord, Namira's corpse-and-filth cult is a direct attack on the hearth -- the home is where you honor the dead and protect the living, and the outcast-hungry path corrupts both. Leaving asks sincere cleansing and direct renunciation; the rupture leaves a mark." |
+| PDV_Msg_Daedric_Namira_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Namira" Imperial cell | One-time on an Imperial committing | Title: "Civic and Religious Rupture" Body: "For an Imperial, Namira's revulsion cult is both civic and religious rupture -- the Divines ask for piety toward the living community, and the decay-path is its enemy in both registers. Cleansing or abandonment are the exits, with formal recommitment to the civic divine frame." |
+| PDV_Msg_Daedric_Namira_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Namira" Breton cell | One-time on a Breton committing | Title: "Outcast Witchcraft Heritage" Body: "A Breton can read Namira -- the witchcraft and outcast heritage has always had dark corners, and Namira's fellowship is intelligible in that frame. But the danger is real, not merely social; cover or renounce as the commitment deepens." |
+| PDV_Msg_Daedric_Namira_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Namira" Dunmer cell | One-time on a Dunmer committing | Title: "Outsider Corruption" Body: "For a Dunmer, Namira's decay and outcast path is outsider corruption -- it does not connect to ancestor-duty, the Reclamations, or the Good Daedra. The filth-cult has no root in the Dunmer spiritual center; the path is set down by abandonment with no particular ceremony." |
+| PDV_Msg_Daedric_Namira_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Namira" Altmer cell | One-time on an Altmer committing | Title: "Impurity Against the Project" Body: "For an Altmer, Namira's impurity and degradation are the direct opposite of Apotheosis -- the upward trajectory of purity and self-refinement cannot coexist with the chosen descent into filth. Absolution is difficult and requires deliberate re-anchoring to the Aldmeri project." |
+| PDV_Msg_Daedric_Namira_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Namira" Khajiit cell; Notes "Namiira is dark-pressure, not baseline devotion" | One-time on a Khajiit committing | Title: "Namiira's Dark Pressure" Body: "A Khajiit knows Namiira as dark-pressure in the Khajiiti lattice -- the hungry void kept at the edge. But dark-pressure is not devotion; Namiira is acknowledged, not honored. Taking her as patron crosses from familiarity into an outside pull. Withdrawal or cleansing returns." |
+| PDV_Msg_Daedric_Namira_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Namira" Bosmer cell | One-time on a Bosmer committing | Title: "Against Continuity and Covenant" Body: "For a Bosmer, Namira's decay path opposes continuity and covenant -- the Green Pact is the contract of what lives and what the living owe each other. Decay as a devotional frame cuts against that covenant at the root. Renunciation is the only clean exit." |
+| PDV_Msg_Daedric_Namira_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Namira" Redguard cell | One-time on a Redguard committing | Title: "Against Ancestor and Social Law" Body: "For a Redguard, Namira's corpse-taboo breaks ancestor law and social law both. The dead are honored, not consumed; the outcast is pitied, not made a cult. Cleansing and hard renunciation are the exits, both requiring visible recommitment to the ancestor-honoring frame." |
+| PDV_Msg_Daedric_Namira_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Namira" Orc cell | One-time on an Orc committing | Title: "Filth-Cult, Not Exile Code" Body: "For an Orc, Namira's filth-cult is an outsider thing -- Malacath's code is endurance and provision, not the chosen descent into decay. The exiles Namira calls are a different kind of cast-out than the ones Malacath honors. The path is foreign; abandonment is direct." |
+| PDV_Msg_Daedric_Namira_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Namira" Argonian cell | One-time on an Argonian committing | Title: "Grief Temptation, Not Hist" Body: "To an Argonian, Namira tempts the grief-states -- the outcast in exile finds recognition in her call. But the Hist is not the decay-path; community does not breathe that way. The path is set down by abandonment; the Hist does not hold the absence against the one who returns." |
+
+---
+
+### 7.13 Peryite
+
+Source: the `Peryite` row of the matrix -- PathType `Plague-order-lowest-task`, CommitmentSignal `The Only Cure, Spellbreaker, disease/affliction threshold, unpleasant-duty acceptance`, Boon `Tolerance for drudgery, disease themes, low-order submission`, Price `Affliction and submission to task/order`, Hook `The Only Cure > Spellbreaker > disease/affliction contexts`. Matrix note: good example of a Prince likely kept narrow and quest-anchored. Only Altmer cell is Taboo; all others are Foreign. **EditorID note:** Slot IDs use `Peryite` token; extended IDs exceed 32 chars; flagged for Phase 19 review.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Peryite (Daedric path) | Dry, dutiful, faintly officious; the god of the lowest task and the disease it comes with; speaks in assignment, not invitation -- the work must be done, and he assigns it without apology or explanation; his register is completely indifferent to whether you find the task noble, because he is not asking. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Peryite_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Peryite_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Peryite" Boon | Passive SPEL; pact engaged | Peryite's resilience settles in you. Affliction finds you harder to bring down, and the unpleasant tasks others refuse are simply tasks. |
+| PDV_Bless_Daedric_Peryite_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Peryite" Boon | Passive SPEL | Peryite's imposed order deepens. Disease weakens you less; the tasks you are assigned, however low, run efficiently. |
+| PDV_Bless_Daedric_Peryite_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Peryite" Boon | Passive SPEL | Peryite names you keeper of the lowest order. Affliction barely touches you; the unwanted tasks run efficiently through your hands. |
+
+**Price descriptions** (`PDV_Price_Daedric_Peryite_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Peryite_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Peryite" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the affliction path: you carry what Peryite assigns, and some assignments are diseases. |
+| PDV_Price_Daedric_Peryite_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Peryite" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: task-order submission. Peryite assigns; the devotee's judgment yields to it, not ahead of it. |
+| PDV_Price_Daedric_Peryite_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Peryite" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: you are the lowest-order mechanism. Peryite assigns; you execute; the nature of the assignment is not yours to question. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Peryite_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Peryite marks you a Seeker of the affliction order. |
+| PDV_Notif_Daedric_Peryite_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Peryite's task-order deepens its hold. Devoted. |
+| PDV_Notif_Daedric_Peryite_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Peryite reassigns. The affliction resilience withdraws. |
+| PDV_Msg_Daedric_Peryite_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Peryite"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Peryite's Task-Keeper" Body: "You have completed three tasks no one else would take. That is the gate. I do not offer meaning; I offer efficiency. The lowest order must run, and it runs best through those who accept it without complaint. You are that now. The assignment list continues." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Peryite_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Peryite" CommitmentSignal | Fires once when the commitment gate clears | Title: "Peryite's Assignment" Body: "Three times the task was unpleasant and you did it anyway. That is not virtue; that is efficiency. The lowest order must run, and you are suited to it. The commitment is registered. The next assignment is already listed." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Peryite_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Peryite's affliction-path is suspected. The disease-keeper draws wary eyes. |
+| PDV_Notif_Daedric_Peryite_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Peryite devotion is known. Disease-cult marks its follower with suspicion. |
+| PDV_Notif_Daedric_Peryite_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Peryite's. The disease-keeper is not welcome in the healthy. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Peryite_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You leave the task undone. Peryite reassigns. The affliction edge fades. |
+| PDV_Msg_Daedric_Peryite_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Peryite's Reassignment" Body: "You are released from the assignment. Peryite does not argue; the work will be done by someone else. The affliction resilience goes, the task-efficiency withdraws, and the diseases you carried under his order no longer stay with you on his schedule. The work continues without you." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Peryite_Response_*`). Narrator, 500/280. All ten races; Altmer is Taboo; all nine others are Foreign.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Peryite_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Peryite" Nord cell | One-time on a Nord committing | Title: "Task-Order, No Hearth Fit" Body: "For a Nord, Peryite's task-order is alien -- the Nord world has duty, but it runs through kin and oath, not through submission to a disease-cult. The path can be read at the surface but has no true root. Setting it down is direct abandonment." |
+| PDV_Msg_Daedric_Peryite_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Peryite" Imperial cell | One-time on an Imperial committing | Title: "Low-Order Duty, Not Civic" Body: "For an Imperial, Peryite's low-order duty has a legible shape -- the Empire runs on people doing their tasks. But Peryite is not civic devotion; he is submission to affliction, and the Divines are the proper frame for Imperial duty. Abandonment is direct." |
+| PDV_Msg_Daedric_Peryite_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Peryite" Breton cell | One-time on a Breton committing | Title: "Unpleasant Duty, No Core" Body: "A Breton can see the unpleasant-duty reading at the margins -- there is a strand of the craftworker tradition that honors the worst tasks done well. But Peryite is not a Breton core tradition; the intelligibility is peripheral and does not root. The path is set down by abandonment." |
+| PDV_Msg_Daedric_Peryite_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Peryite" Dunmer cell | One-time on a Dunmer committing | Title: "Outsider Affliction Order" Body: "For a Dunmer, Peryite's affliction-order is an outsider path -- it does not connect to ancestor-duty, the Reclamations, or the House structure. Submission to disease-task is not a Dunmer devotional lane; the path is set down by abandonment with no ceremony required." |
+| PDV_Msg_Daedric_Peryite_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Peryite" Altmer cell | One-time on an Altmer committing | Title: "Diseased Submission Against Apotheosis" Body: "For an Altmer, Peryite's diseased submission violates Aldmeri order -- purity is the project, and voluntary affliction-association is its opposite. The path is not merely foreign; it is actively incompatible with Apotheosis. Absolution is difficult." |
+| PDV_Msg_Daedric_Peryite_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Peryite" Khajiit cell | One-time on a Khajiit committing | Title: "Burdens Without a Moon" Body: "A Khajiit knows burdens -- the road is long and the tasks are often thankless. But Peryite's disease-order is not a lunar lane; the lattice does not run through affliction-submission. The path is foreign, and it is set down by abandonment; the substrate does not hold the gap." |
+| PDV_Msg_Daedric_Peryite_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Peryite" Bosmer cell | One-time on a Bosmer committing | Title: "Disease-Order, No Green Root" Body: "For a Bosmer, Peryite's disease-order has no root in the Green Pact or the spirit world. The covenant concerns the living in relation to the living; submission to affliction-task is not Bosmer theology. The path is set down by abandonment when its course is done." |
+| PDV_Msg_Daedric_Peryite_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Peryite" Redguard cell | One-time on a Redguard committing | Title: "Drudgery Without Honor" Body: "For a Redguard, Peryite's drudgery and disease do not map to Yokudan devotion -- the Yokudan frame values the disciplined warrior and the meaningful task, not the low-order submission to affliction. The path is foreign and is set down by direct abandonment." |
+| PDV_Msg_Daedric_Peryite_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Peryite" Orc cell | One-time on an Orc committing | Title: "Harsh Duty, Wrong Master" Body: "An Orc can see the shape of harsh duty in Peryite's order -- Malacath's code has its own harsh assignments. But Peryite is not Malacath; his affliction-order is outsider submission, not the code. The path is foreign, and it is abandoned by direct renunciation." |
+| PDV_Msg_Daedric_Peryite_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Peryite" Argonian cell | One-time on an Argonian committing | Title: "Affliction, No Hist Root" Body: "To an Argonian, Peryite's affliction-order is foreign -- the Hist does not route devotion through disease-task submission. The community breathes together. The path is abandoned; the Hist does not hold the absence against the one who returns." |
+
+---
+
 ## 8. Coverage
 
 | Prince | Tone | Boon | Price | Tier-up | Commitment | Stigma | Neglect/Exit | Per-race response | Status |
@@ -947,7 +1239,12 @@ Source: the `Clavicus Vile` row of the matrix -- PathType `Bargain-wish-contract
 | Mehrunes Dagon | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.7) |
 | Sheogorath | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.8) |
 | Clavicus Vile | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.9) |
-| 6 others | -- | -- | -- | -- | -- | -- | -- | -- | pending (Section 7 ledger) |
+| Vaermina | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.10) |
+| Sanguine | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.11) |
+| Namira | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.12) |
+| Peryite | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.13) |
+| Hircine | -- | -- | -- | -- | -- | -- | -- | -- | pending curse-access (7.14) |
+| Molag Bal | -- | -- | -- | -- | -- | -- | -- | -- | pending curse-access (7.15) |
 
 ## 9. Verification
 
