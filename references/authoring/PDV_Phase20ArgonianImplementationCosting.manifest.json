@@ -1,0 +1,291 @@
+{
+  "schema": "pdv-race-implementation-costing.v1",
+  "project": "player-devotion-phase20-argonian",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "id": "phase20-argonian-implementation-costing",
+  "title": "PDV Phase 20 Argonian Hist, People, and Void implementation costing",
+  "race": "Argonian",
+  "implementationStatus": "record-wired",
+  "decisionSources": [
+    "race-sheets/PDV_RaceDesign_Argonian.md",
+    "race-sheets/PDV_RaceContent_Manifest.md#19-argonian",
+    "references/authoring/PDV_RaceGameplayBalanceAudit.md",
+    "references/authoring/PDV_RaceImplementationCostingBacklog.md",
+    "references/authoring/PDV_RaceRewardBudgetLedger.md",
+    "references/authoring/PDV_RacePlaystyleCoverageLedger.md"
+  ],
+  "designRules": [
+    "Hist and People play must be viable before Void/Sithis receives deeper runtime reward.",
+    "Sithis is a threshold layer, not the default Argonian build.",
+    "Water, rest, reflection, and chosen-family cadence should feel like maintenance, not chores.",
+    "Vampire, werewolf, and domination pressure change Hist posture visibly without deleting Saxhleel identity.",
+    "Community support must have readable surfacing because vanilla social hooks are sparse."
+  ],
+  "stateSurfaces": [
+    {
+      "editorId": "PDV_Substrate_ArgonianHist",
+      "type": "substrate-track",
+      "status": "record-wired",
+      "notes": [
+        "Tracks Hist, People, and Void relation keys quietly behind the layered Argonian standing.",
+        "Dawn decay should be gentle and capped so normal play trends maintainable."
+      ]
+    },
+    {
+      "editorId": "PDV_State_ArgonianHistPosture",
+      "type": "state-track",
+      "status": "record-wired",
+      "enum": [
+        {
+          "name": "Normal",
+          "value": 0
+        },
+        {
+          "name": "Distant",
+          "value": 1
+        },
+        {
+          "name": "Strained",
+          "value": 2
+        },
+        {
+          "name": "Silenced",
+          "value": 3
+        },
+        {
+          "name": "Corrupted",
+          "value": 4
+        }
+      ],
+      "notes": [
+        "Normal can still mean distant-in-Skyrim; it is the healthy exile state.",
+        "Silenced is vampire grief; Corrupted requires stronger domination pressure."
+      ]
+    },
+    {
+      "editorId": "PDV_State_ArgonianBedOfChoice",
+      "type": "anchor-state",
+      "status": "source-scaffolded",
+      "notes": [
+        "The current proof slice stores bed-of-choice cadence in PDV_Substrate_ArgonianHist counters rather than a separate CK state-track record.",
+        "Promote to a dedicated placed-anchor or sacred-place record only when player-designated bed support lands.",
+        "One active chosen-bed anchor at a time.",
+        "Repeating one generic inn bed must not become the People economy."
+      ]
+    }
+  ],
+  "requiredContentRows": [
+    "PDV_Msg_Argonian_HistPosture_Normal",
+    "PDV_Msg_Argonian_HistPosture_Distant",
+    "PDV_Msg_Argonian_HistPosture_Strained",
+    "PDV_Msg_Argonian_HistPosture_Silenced",
+    "PDV_Msg_Argonian_HistPosture_Corrupted",
+    "PDV_Notif_Argonian_HistSapMeditation_Activate",
+    "PDV_Notif_Argonian_HistSapMeditation_Effect",
+    "PDV_Notif_Argonian_BedOfChoice_Designate",
+    "PDV_Notif_Argonian_BedOfChoice_Return",
+    "PDV_Notif_Argonian_BedOfChoice_MissedCadence",
+    "PDV_Notif_Argonian_SithisActivation_FirstSignal",
+    "PDV_Notif_Argonian_SithisActivation_FullActivation",
+    "PDV_Msg_Argonian_Survey_Layered",
+    "PDV_Msg_Argonian_CurseState_VampireOnset",
+    "PDV_Msg_Argonian_CurseState_VampireCured",
+    "PDV_Msg_Argonian_CurseState_WerewolfOnset"
+  ],
+  "favorFamilies": [
+    {
+      "id": "hist-near-water",
+      "row": "PDV_Notif_Argonian_FavorNoted_Hist_NearWater",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "near water",
+        "wetland or safe-water context",
+        "daily cap"
+      ],
+      "rewardIntent": "Hist distance shrinks through place, not through grind"
+    },
+    {
+      "id": "hist-reflection",
+      "row": "PDV_Notif_Argonian_FavorNoted_Hist_Reflection",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "solitary reflection",
+        "wild place",
+        "restoration cadence"
+      ],
+      "rewardIntent": "non-assassin spiritual maintenance"
+    },
+    {
+      "id": "community-saxhleel-aid",
+      "row": "PDV_Notif_Argonian_FavorNoted_Community_SaxhleelAid",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "named Argonian aid",
+        "cooldown per NPC or quest"
+      ],
+      "rewardIntent": "chosen-family stability"
+    },
+    {
+      "id": "community-assemblage-kept",
+      "row": "PDV_Notif_Argonian_FavorNoted_Community_AssemblageKept",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "Windhelm Assemblage",
+        "community survival",
+        "rare stronger weight"
+      ],
+      "rewardIntent": "make sparse vanilla Argonian community visible"
+    },
+    {
+      "id": "void-death-faced",
+      "row": "PDV_Notif_Argonian_FavorNoted_Void_DeathFaced",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "curated death-facing choice",
+        "threshold signal"
+      ],
+      "rewardIntent": "Void meaning without generic murder"
+    },
+    {
+      "id": "void-brotherhood-contract",
+      "row": "PDV_Notif_Argonian_FavorNoted_Void_BrotherhoodContract",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "Dark Brotherhood contract",
+        "post-threshold context"
+      ],
+      "rewardIntent": "Sithis route payoff after activation, not before"
+    }
+  ],
+  "rejectedHooks": [
+    "generic swimming loops",
+    "standing in water forever",
+    "ordinary travel",
+    "generic inn sleep",
+    "repeating one bed without context",
+    "generic murder",
+    "generic stealth",
+    "ordinary kills",
+    "one Dark Brotherhood join event as full Sithis activation",
+    "curse state silently replacing Hist identity"
+  ],
+  "triggerSurfaces": [
+    {
+      "id": "hist-maintenance-proof",
+      "editorId": "PDV_ACTI_ArgonianHistMaintenanceSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementStatus": "proof-cell-wired",
+      "placementRefEditorId": "PDV_REFR_ArgonianHistMaintenanceSignal",
+      "routeId": 60,
+      "requiredOriginRace": 7,
+      "signalValue": 0,
+      "signalSourceId": "argonian_hist_maintenance_proof",
+      "name": "PDV Argonian Hist Maintenance Signal",
+      "activateText": "Record Hist Maintenance",
+      "oncePerDayKey": "PDV.Signal.ArgonianHistMaintenance",
+      "immersionProof": "A safe water/reflection proxy for maintaining a distant Hist connection; not a generic swimming faucet."
+    },
+    {
+      "id": "people-support-proof",
+      "editorId": "PDV_ACTI_ArgonianPeopleSupportSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementStatus": "proof-cell-wired",
+      "placementRefEditorId": "PDV_REFR_ArgonianPeopleSupportSignal",
+      "routeId": 61,
+      "requiredOriginRace": 7,
+      "signalValue": 0,
+      "signalSourceId": "argonian_people_support_proof",
+      "name": "PDV Argonian People Support Signal",
+      "activateText": "Record People Support",
+      "oncePerDayKey": "PDV.Signal.ArgonianPeopleSupport",
+      "immersionProof": "A chosen-community proxy for Saxhleel mutual aid in Skyrim's sparse Argonian social world."
+    },
+    {
+      "id": "void-threshold-proof",
+      "editorId": "PDV_ACTI_ArgonianVoidSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementStatus": "proof-cell-wired",
+      "placementRefEditorId": "PDV_REFR_ArgonianVoidSignal",
+      "routeId": 62,
+      "requiredOriginRace": 7,
+      "signalValue": 0,
+      "signalSourceId": "argonian_void_threshold_proof",
+      "name": "PDV Argonian Void Signal",
+      "activateText": "Record Void Signal",
+      "oncePerDayKey": "PDV.Signal.ArgonianVoidSignal",
+      "immersionProof": "A threshold Sithis signal used only to prove repeated significant death-facing events; one signal is not full activation."
+    },
+    {
+      "id": "bed-of-choice-proof",
+      "editorId": "PDV_ACTI_ArgonianBedOfChoiceSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementStatus": "proof-cell-wired",
+      "placementRefEditorId": "PDV_REFR_ArgonianBedOfChoiceSignal",
+      "routeId": 63,
+      "requiredOriginRace": 7,
+      "signalValue": 0,
+      "signalSourceId": "argonian_bed_of_choice_proof",
+      "name": "PDV Argonian Bed Of Choice Signal",
+      "activateText": "Record Bed Of Choice",
+      "oncePerDayKey": "PDV.Signal.ArgonianBedOfChoice",
+      "immersionProof": "A chosen-bed cadence proof for the family the exile chose; repeating any generic inn bed must not count."
+    }
+  ],
+  "immersionProof": {
+    "signaturePromise": "Hist memory, chosen people, and Void distance define Argonian exile identity before Sithis ever becomes attractive.",
+    "diegeticTriggerMeaning": [
+      "Water, reflection, Hist sap, and chosen-bed cadence are maintenance of distant Hist connection rather than survival stat faucets.",
+      "People-layer rewards make chosen community visible; Void rewards require threshold death-facing signals, not ordinary stealth."
+    ],
+    "feedbackSurface": [
+      "Hist posture messages and Survey layered copy explain Normal, Distant, Strained, Silenced, and Corrupted states.",
+      "Bed-of-choice, Hist sap, and community notifications teach maintenance, lapse, and belonging without requiring constant popups."
+    ],
+    "rejectedGenericBehavior": [
+      "generic swimming loops",
+      "standing in water forever",
+      "generic inn sleep",
+      "generic murder",
+      "one Dark Brotherhood join event as full Sithis activation"
+    ],
+    "normalSessionFeel": "A non-assassin Argonian can feel spiritually maintained through water, rest, reflection, and community support without needing Dark Brotherhood play.",
+    "runtimePromotionGate": "Before Void expansion, prove one Hist/People maintenance loop, one chosen-community surface, and negative cases for water, bed, and murder farming."
+  },
+  "verifierExpectations": {
+    "strictFlags": [
+      "--strict-phase20-race-costing"
+    ],
+    "status": "proof-placement-gate-live",
+    "rules": [
+      "state surfaces, enum values, and required content rows are present before runtime work",
+      "Hist and People hooks are costed before deeper Void expansion",
+      "rejected hook families are converted into verifier or runtime negative cases before build completion",
+      "runtime proof includes non-assassin Argonian maintenance and Sithis threshold tests"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "a non-assassin Argonian can maintain identity through water, rest, reflection, and community aid",
+      "a chosen bed can be designated, returned to, and lapsed with readable feedback",
+      "three significant Void signals can activate Sithis without making the first Dark Brotherhood beat sufficient",
+      "vampire and werewolf states produce distinct Hist posture and recovery behavior"
+    ],
+    "negative": [
+      "standing in water or swimming repeatedly does not farm Hist gain",
+      "generic inn sleep does not satisfy bed-of-choice cadence",
+      "ordinary stealth, ordinary kills, or a single Brotherhood join do not activate Sithis",
+      "vampire state does not delete Argonian identity or become a cleaner route"
+    ]
+  },
+  "firstImplementationSlice": [
+    "Create or wire the Hist substrate and Hist posture enum/readback before Void reward expansion.",
+    "Add Hist sap, water/reflection maintenance, and bed-of-choice cadence with anti-farm gates.",
+    "Wire community recognition for Windhelm/Riften or named Argonian aid as visible People support.",
+    "Add negative tests for water loops, generic sleep, generic murder, and first-join Sithis shortcuts."
+  ]
+}

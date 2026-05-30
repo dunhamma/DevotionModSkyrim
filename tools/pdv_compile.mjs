@@ -58,6 +58,7 @@ const ACTIVE_SCRIPTS = [
   "PDV_MCM",
   "PDV_Substrate_DunmerAncestor",
   "PDV_Substrate_KhajiitLunar",
+  "PDV_Substrate_ArgonianHist",
   "PDV_DaedricPath_Hircine",
 ];
 
@@ -141,6 +142,10 @@ function parseArgs(argv) {
     strictPhase16: false,
     strictPhase17: false,
     strictPhase18: false,
+    strictPhase19: false,
+    strictPhase20Roster: false,
+    strictPhase20Altmer: false,
+    strictPhase20RaceCosting: false,
     strictNord: false,
     strictKhajiit: false,
     strictCommitment: false,
@@ -202,6 +207,14 @@ function parseArgs(argv) {
       args.strictPhase17 = true;
     } else if (arg === "--strict-phase18") {
       args.strictPhase18 = true;
+    } else if (arg === "--strict-phase19") {
+      args.strictPhase19 = true;
+    } else if (arg === "--strict-phase20-roster" || arg === "--strict-phase21-roster") {
+      args.strictPhase20Roster = true;
+    } else if (arg === "--strict-phase20-altmer") {
+      args.strictPhase20Altmer = true;
+    } else if (arg === "--strict-phase20-race-costing") {
+      args.strictPhase20RaceCosting = true;
     } else if (arg === "--strict-nord") {
       args.strictNord = true;
       args.strictPhase18 = true;
@@ -254,6 +267,10 @@ function usage(error = null, exitCode = 2) {
     "  --strict-phase16      Pass --strict-phase16 to the verifier.",
     "  --strict-phase17      Pass --strict-phase17 to the verifier.",
     "  --strict-phase18      Pass --strict-phase18 to the verifier.",
+    "  --strict-phase19      Pass --strict-phase19 to the verifier.",
+    "  --strict-phase20-roster       Pass --strict-phase20-roster to the verifier.",
+    "  --strict-phase20-altmer       Pass --strict-phase20-altmer to the verifier.",
+    "  --strict-phase20-race-costing Pass --strict-phase20-race-costing to the verifier.",
     "  --strict-nord         Pass --strict-nord to the verifier.",
     "  --strict-khajiit      Pass --strict-khajiit to the verifier.",
     "  --strict-commitment   Pass --strict-commitment to the verifier.",
@@ -429,6 +446,18 @@ function runVerifier(args) {
   }
   if (args.strictPhase18) {
     verifierArgs.push("--strict-phase18");
+  }
+  if (args.strictPhase19) {
+    verifierArgs.push("--strict-phase19");
+  }
+  if (args.strictPhase20Roster) {
+    verifierArgs.push("--strict-phase20-roster");
+  }
+  if (args.strictPhase20Altmer) {
+    verifierArgs.push("--strict-phase20-altmer");
+  }
+  if (args.strictPhase20RaceCosting) {
+    verifierArgs.push("--strict-phase20-race-costing");
   }
   if (args.strictNord) {
     verifierArgs.push("--strict-nord");

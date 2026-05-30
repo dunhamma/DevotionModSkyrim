@@ -1,0 +1,299 @@
+{
+  "schema": "pdv-race-implementation-costing.v1",
+  "project": "player-devotion-phase20-redguard",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "id": "phase20-redguard-implementation-costing",
+  "title": "PDV Phase 20 Redguard sect, Far Shores, and make-way implementation costing",
+  "race": "Redguard",
+  "implementationStatus": "record-wired",
+  "decisionSources": [
+    "race-sheets/PDV_RaceDesign_Redguard.md",
+    "race-sheets/PDV_RaceContent_Manifest.md#16-redguard",
+    "references/authoring/PDV_RaceGameplayBalanceAudit.md",
+    "references/authoring/PDV_RaceImplementationCostingBacklog.md",
+    "references/authoring/PDV_RaceRewardBudgetLedger.md",
+    "references/authoring/PDV_RacePlaystyleCoverageLedger.md"
+  ],
+  "designRules": [
+    "Crown, Forebear, and Ash'abah must remain distinct in play, not only in text.",
+    "Death-duty is important but must not swallow Redguard religion into an undead-clearing economy.",
+    "HoonDing is rare make-way drama with a cap, not a steady combat buff loop.",
+    "Tu'whacca surfaces can use Arkay-adjacent game spaces while remaining explicitly Yokudan.",
+    "Werewolf strains Redguard devotion; vampire breaks the cycle until Tu'whacca re-entry."
+  ],
+  "stateSurfaces": [
+    {
+      "editorId": "PDV_StateTrack_RedguardSect",
+      "type": "state-track",
+      "status": "record-wired",
+      "enum": [
+        {
+          "name": "Crown",
+          "value": 0
+        },
+        {
+          "name": "Forebear",
+          "value": 1
+        },
+        {
+          "name": "AshAbah",
+          "value": 2
+        }
+      ],
+      "notes": [
+        "Forebear is the safe fallback if setup or evidence is ambiguous.",
+        "Reuses the skeleton scaffold record already present in the framework ESP.",
+        "Switches should require setup or credible world evidence."
+      ]
+    },
+    {
+      "editorId": "PDV_GLO_RedguardSect",
+      "type": "global-mirror",
+      "status": "record-wired",
+      "notes": [
+        "Existing skeleton global mirrors the active Redguard sect for records, dialogue conditions, and Survey Devotion."
+      ]
+    },
+    {
+      "editorId": "PDV.Redguard.FarShoresToken",
+      "type": "storage-counter",
+      "status": "source-scaffolded",
+      "notes": [
+        "Portable/private Tu'whacca devotional surface with a home/private bonus.",
+        "Tracked as StorageUtil proof texture in the first implementation slice, not as an Arkay shrine replacement."
+      ]
+    }
+  ],
+  "triggerSurfaces": [
+    {
+      "id": "redguard-crown-tomb-respect-proof",
+      "editorId": "PDV_ACTI_RedguardCrownTombRespectSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_RedguardCrownTombRespectSignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 80,
+      "requiredOriginRace": 9,
+      "signalValue": 0,
+      "signalSourceId": "redguard_crown_tomb_respect_proof",
+      "oncePerDayKey": "PDV.Signal.RedguardCrownTombRespect",
+      "name": "PDV Redguard Crown Tomb Respect Signal",
+      "activateText": "Record Crown Tomb Respect"
+    },
+    {
+      "id": "redguard-forebear-road-proof",
+      "editorId": "PDV_ACTI_RedguardForebearRoadSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_RedguardForebearRoadSignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 81,
+      "requiredOriginRace": 9,
+      "signalValue": 1,
+      "signalSourceId": "redguard_forebear_road_proof",
+      "oncePerDayKey": "PDV.Signal.RedguardForebearRoad",
+      "name": "PDV Redguard Forebear Road Signal",
+      "activateText": "Record Forebear Road"
+    },
+    {
+      "id": "redguard-ashabah-death-duty-proof",
+      "editorId": "PDV_ACTI_RedguardAshAbahDeathDutySignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_RedguardAshAbahDeathDutySignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 82,
+      "requiredOriginRace": 9,
+      "signalValue": 2,
+      "signalSourceId": "redguard_ashabah_death_duty_proof",
+      "oncePerDayKey": "PDV.Signal.RedguardAshAbahDeathDuty",
+      "name": "PDV Redguard AshAbah Death Duty Signal",
+      "activateText": "Record AshAbah Death Duty"
+    },
+    {
+      "id": "redguard-far-shores-token-proof",
+      "editorId": "PDV_ACTI_RedguardFarShoresTokenSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_RedguardFarShoresTokenSignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 83,
+      "requiredOriginRace": 9,
+      "signalValue": 1,
+      "signalSourceId": "redguard_far_shores_token_proof",
+      "oncePerDayKey": "PDV.Signal.RedguardFarShoresToken",
+      "name": "PDV Redguard Far Shores Token Signal",
+      "activateText": "Record Far Shores Token"
+    }
+  ],
+  "requiredContentRows": [
+    "PDV_Notif_Redguard_Sect_Crown_Entry",
+    "PDV_Notif_Redguard_Sect_Forebear_Entry",
+    "PDV_Notif_Redguard_Sect_AshAbah_Entry",
+    "PDV_Msg_Redguard_Survey_Crown",
+    "PDV_Msg_Redguard_Survey_Forebear",
+    "PDV_Msg_Redguard_Survey_AshAbah",
+    "PDV_Msg_Redguard_ChampionEntry_Crown",
+    "PDV_Msg_Redguard_ChampionEntry_Forebear",
+    "PDV_Msg_Redguard_ChampionEntry_AshAbah",
+    "PDV_Notif_Redguard_FarShoresToken_Activate",
+    "PDV_Notif_Redguard_FarShoresToken_PrivateContext",
+    "PDV_Msg_Redguard_CurseState_VampireOnset",
+    "PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry",
+    "PDV_Msg_Redguard_CurseState_WerewolfOnset"
+  ],
+  "favorFamilies": [
+    {
+      "id": "crown-tomb-respect",
+      "row": "PDV_Notif_Redguard_FavorNoted_Crown_TombRespect",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "tomb site",
+        "ancestral presence",
+        "per-site cap"
+      ],
+      "rewardIntent": "orthodoxy carried in exile"
+    },
+    {
+      "id": "crown-yokudan-form",
+      "row": "PDV_Notif_Redguard_FavorNoted_Crown_YokudanForm",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "curated Yokudan-form hooks",
+        "ritual or bearing"
+      ],
+      "rewardIntent": "Crown form has value beyond combat"
+    },
+    {
+      "id": "forebear-road-passage",
+      "row": "PDV_Notif_Redguard_FavorNoted_Forebear_RoadPassage",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "long road",
+        "no fast travel",
+        "weather or hardship"
+      ],
+      "rewardIntent": "Forebear adaptation and travel dignity"
+    },
+    {
+      "id": "forebear-honored-contract",
+      "row": "PDV_Notif_Redguard_FavorNoted_Forebear_HonoredContract",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "honored contract",
+        "pressure",
+        "not gold farming"
+      ],
+      "rewardIntent": "pragmatic honor"
+    },
+    {
+      "id": "ashabah-undead-cleansing",
+      "row": "PDV_Notif_Redguard_FavorNoted_AshAbah_UndeadCleansing",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "site or boss",
+        "death duty",
+        "anti-repeat"
+      ],
+      "rewardIntent": "unclean dead put to rest without repeat farming"
+    },
+    {
+      "id": "ashabah-impurity-borne",
+      "row": "PDV_Msg_Redguard_FavorMarked_AshAbah_ImpurityBorne",
+      "mode": "marked",
+      "hookSources": [
+        "costly burden",
+        "social stigma",
+        "major duty"
+      ],
+      "rewardIntent": "the burden is emotionally legible"
+    },
+    {
+      "id": "make-way-crown",
+      "row": "PDV_Msg_Redguard_FavorMarked_Crown_MakeWay",
+      "mode": "marked",
+      "hookSources": [
+        "rare honorable adversity",
+        "curated milestone",
+        "weekly cap"
+      ],
+      "rewardIntent": "make-way remains dramatic and rare"
+    },
+    {
+      "id": "make-way-forebear",
+      "row": "PDV_Msg_Redguard_FavorMarked_Forebear_MakeWay",
+      "mode": "marked",
+      "hookSources": [
+        "severely outmatched survival",
+        "curated milestone",
+        "weekly cap"
+      ],
+      "rewardIntent": "Forebear way-making without generic combat loops"
+    }
+  ],
+  "rejectedHooks": [
+    "pure menu choice without supporting play",
+    "generic combat identity",
+    "generic undead spam",
+    "Arkay worship replacement",
+    "generic amulet use",
+    "generic gold-making",
+    "fast travel as road proof",
+    "generic body count",
+    "broad simulated stigma without authored surfacing",
+    "Hircine integration as a true Redguard path"
+  ],
+  "immersionProof": {
+    "signaturePromise": "Yokudan sect, death duty, and honor shape Redguard worship on Skyrim's roads without becoming generic undead combat.",
+    "diegeticTriggerMeaning": [
+      "Crown, Forebear, and Ash'abah rewards express form, adaptation, impurity, and duty as distinct religious postures.",
+      "Far Shores and Tu'whacca surfaces use Skyrim death spaces while staying explicitly Yokudan."
+    ],
+    "feedbackSurface": [
+      "Sect entry and Survey rows tell the player which posture is active and why.",
+      "Far Shores token and marked Ash'abah/make-way copy carry private ritual, burden, and rare drama."
+    ],
+    "rejectedGenericBehavior": [
+      "generic combat identity",
+      "generic undead spam",
+      "Arkay worship replacement",
+      "fast travel as road proof",
+      "generic body count"
+    ],
+    "normalSessionFeel": "A Redguard can feel Crown, Forebear, or Ash'abah through road, ritual, duty, and social burden without farming undead or kill counts.",
+    "runtimePromotionGate": "Before expanding death-duty rewards, prove sect readback, Far Shores private ritual, one non-undead sect reward, and negative cases for generic combat, fast travel, and Arkay replacement."
+  },
+  "verifierExpectations": {
+    "strictFlags": [
+      "--strict-phase20-race-costing"
+    ],
+    "status": "proof-placement-gate-live",
+    "rules": [
+      "sect state/readback and survey rows exist before sect rewards ship",
+      "Far Shores token remains Tu'whacca-labeled and not Arkay replacement copy",
+      "make-way favors have curated source lists and weekly caps",
+      "Ash'abah has stigma surfacing before stronger undead/death-duty rewards expand"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "Crown, Forebear, and Ash'abah each enter and survey as distinct postures",
+      "Far Shores token can be used in a private or death-duty context with Yokudan copy",
+      "Forebear road or contract play can compete with undead cleansing",
+      "Ash'abah burden can be marked without turning every undead kill into a faucet"
+    ],
+    "negative": [
+      "generic combat and body count do not satisfy HoonDing make-way",
+      "fast travel does not satisfy Forebear road passage",
+      "generic undead spam does not repeatedly feed Ash'abah reward",
+      "Arkay shrine use does not silently replace Tu'whacca devotion"
+    ]
+  },
+  "firstImplementationSlice": [
+    "Create or wire Redguard sect state/readback and survey/status surfacing.",
+    "Build the Far Shores token as a Tu'whacca private/death-duty proof surface.",
+    "Add one Crown, one Forebear, and one Ash'abah favor proof before increasing undead reward density.",
+    "Add rejected-hook assertions for fast travel, generic combat, generic undead spam, and Arkay replacement."
+  ]
+}

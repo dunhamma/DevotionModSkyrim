@@ -1,7 +1,14 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-30 (v3.51 - Phase 19 live content closeout)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
+Last revised: 2026-05-31 AEST (v3.68 - Phase 20 proof placement packet)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates. Phase 20 now owns the full-roster 1.0 content target: every locked race-architecture god and all sixteen Skyrim-present Daedric Prince surfaces must be content-ready for every race, with `references/authoring/PDV_DeityCoverageMatrix.json` and `--strict-phase20-roster` as the roster authority gate. The first Altmer Phase 20 runtime lane is source-scaffolded, compile-verified, crisis-record-wired, has the first two Altmer favor spell records wired, has four Altmer ACTI trigger proof base records wired for crisis, Lorkhan pressure, dawn steadiness, and orthodox cost, and now has Altmer Exiled vampire / werewolf halt manager source plus three `MESG` records wired to `PDV__ManagerQuest`; its four QASmoke proof references read back cleanly. Argonian, Orc, Redguard, Bosmer, and Khajiit have also crossed into source/record-wired proof slices, and all 30 Phase 20 proof references are now QASmoke-placed with helper/readback proof. Runtime proof and final immersive world placement remain open; `tools/pdv_phase20_runtime_check.mjs` and `references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` now define the counted route-log, Survey/status, immersion, negative-hook, and anti-farm proof lane. The race gameplay audit now treats immersion as an explicit reward-budget axis, and `--strict-phase20-race-costing` enforces `immersionProof` blocks for all Phase 20 race-costing manifests. The current Phase 20 Altmer/race-costing gate is clean at `PASS=1985, WARN=1, INFO=28`, with the only warning being the existing unnamed CK-authored INFO record class. Phase 21 is the Authoria-first compatibility package lane because compatibility testing must wait until the mod's full content surface is stable enough to test against modlists.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
+
+Current v3.68 addendum: the Phase 20 proof-placement packet created and
+readback-verified all 30 QASmoke proof references for Altmer, Argonian, Orc,
+Redguard, Khajiit, and Bosmer. The current combined Phase 20
+Altmer/race-costing verifier result is `PASS=1985, WARN=1, INFO=28`; the only
+warning is the existing unnamed CK-authored INFO record class. Runtime proof and
+final immersive world placement remain open.
 
 ---
 
@@ -117,7 +124,8 @@ The v3 architecture adds the following subsystems on top of the v2 core. Each ge
 | 17 | Content authoring pipeline | Template scripts, `pdv_author.mjs` scope, offline classification/distribution patcher, verifier coverage |
 | 18 | ESP module structure | Framework-monolithic through 1.0; race ESP split deferred |
 | 19 | Performance budget | Pantheon-scale FormList iteration, dawn cost ceiling |
-| 20 | Mod compatibility | Authoria-first list-author packages, tracked matrix, targeted adapters |
+| 20 | Full roster content lock | Locked god/Prince roster, every-race handling, content-ready gates |
+| 21 | Mod compatibility | Authoria-first list-author packages, tracked matrix, targeted adapters |
 
 ---
 
@@ -514,13 +522,14 @@ The patron-commitment mechanism (Section 12) reads `IsEligibleForPlayer()` befor
 | Track | States | Owner race | Notes |
 |---|---|---|---|
 | `PDV_State_BosmerPath` | OldContract, LivingStory, Exchange, BanditRoad | Bosmer | Set by a post-startup Bosmer path popup. `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`. The startup popup auto-commits the matching foreground patron; fallback for unset/corrupt state is `LivingStory`. Later switching is destination-gated through Bosmer-specific popup offers plus a confirmation rite. `OldContract` additionally reads `PactBound`, `LapsedFromPact`, and `GreenPactCompliance`. |
-| `PDV_State_OrcLifeMode` | City, Stronghold, LegionExile | Orc | Default City; setup/MCM records intent, but active mode is world-confirmed. `City = 0`, `Stronghold = 1`, `LegionExile = 2`. Stronghold requires Blood-Kin/equivalent acceptance plus conduct; LegionExile requires service/exile gate or completed pressure-bearing service. Soft switches require two qualifying signals on separate in-game days within seven days and resolve at dawn; major gates may switch immediately. |
+| `PDV_StateTrack_OrcLifeMode` | City, Stronghold, LegionExile | Orc | Existing skeleton state track; default City; setup/MCM records intent, but active mode is world-confirmed. `City = 0`, `Stronghold = 1`, `LegionExile = 2`. Stronghold requires Blood-Kin/equivalent acceptance plus conduct; LegionExile requires service/exile gate or completed pressure-bearing service. Soft switches require two qualifying signals on separate in-game days within seven days and resolve at dawn; major gates may switch immediately. |
 | `PDV_State_NordPantheonBaseline` | OldWays, NineDivines | Nord | Setup/MCM pantheon baseline only. `OldWays = 0`, `NineDivines = 1`. Commitment depth uses `PDV_GLO_PatronState`; do not overload the baseline state with Broad/Primary. |
 | `PDV_State_BretonTradition` | KnightsRoad, HiddenArt, GreenWay | Breton | Primary identity chosen explicitly at setup; no silent default; `KnightsRoad = 0`, `HiddenArt = 1`, `GreenWay = 2`; patron offers normally come only from the chosen tradition |
 | `PDV_State_BretonDruidicFork` | Stable, Contested, GreenAccepted, HircineClaimed, Excommunicated, Penitent, Restored | Breton Green Way | Curse-state fork/readout paired with `PDV_RepTrack_DruidicStanding`; `Stable = 0`, `Contested = 1`, `GreenAccepted = 2`, `HircineClaimed = 3`, `Excommunicated = 4`, `Penitent = 5`, `Restored = 6`; Hircine is fork-access, not baseline Breton worship |
-| `PDV_State_RedguardSect` | Crown, Forebear, AshAbah | Redguard | First-run setup choice. `Crown = 0`, `Forebear = 1`, `AshAbah = 2`; fallback is `Forebear`. Crown/Forebear switching requires two sect-coded signal days within seven; AshAbah entry requires a major death, undead, tomb, funerary, or impurity-bearing burden signal. |
+| `PDV_StateTrack_RedguardSect` | Crown, Forebear, AshAbah | Redguard | First-run setup choice. `Crown = 0`, `Forebear = 1`, `AshAbah = 2`; fallback is `Forebear`. Crown/Forebear switching requires two sect-coded signal days within seven; AshAbah entry requires a major death, undead, tomb, funerary, or impurity-bearing burden signal. `PDV_GLO_RedguardSect` mirrors the current value for CK/readback surfaces. |
 | `PDV_State_DunmerAncestorPosture` | Normal, Strained, Silent, RestoredScarred | Dunmer | Curse/restoration posture for the ancestor substrate. Dunmer native focus uses shared patron state; do not implement `PDV_State_DunmerPath`. |
-| `PDV_State_AltmerCrisis` | Stable, Questioning, ResolvedOrthodox, ResolvedHeterodox | Altmer | Temporary crisis-of-faith state for major lore-challenging story points |
+| `PDV_State_AltmerCrisis` | None, Dissonant, Questioning, Reasserting, ScarredResolved | Altmer | Temporary crisis-of-faith state for major lore-challenging story points; source-scaffolded in `PDV__ManagerQuest`, record-wired as a `PDV_StateTrack`, and now paired with the first two Altmer contextual-favor spell records |
+| `PDV_State_ArgonianHistPosture` | Normal, Distant, Strained, Silenced, Corrupted | Argonian | Visible Hist-posture readout paired with `PDV_Substrate_ArgonianHist`; record-wired as a `PDV_StateTrack` and refreshed by manager curse/dawn handlers |
 
 Do not add race-specific state tracks whose only job is `Broad` vs `Primary`.
 Formal patron/deity commitment uses `PDV_GLO_PatronState` and
@@ -588,7 +597,7 @@ meaningful strength.
 |---|---|---|---|
 | `PDV_Substrate_KhajiitLunar` | Khajiit | Lunar phase observance + moon cycle compliance + road-home cycling | Moon-observance count, modulated by cycle phase and road-home return frequency |
 | `PDV_Substrate_DunmerAncestor` | Dunmer | Portable shrine prayer, ancestor invocation, home-site bonus | Ancestor-event count, decays with neglect; bonus at player-owned property |
-| `PDV_Substrate_ArgonianHist` | Argonian | Distance-from-Black-Marsh + community contact + Hist sap meditation | Hist-connection metric, biased to "diminishing distance from Hist" semantics |
+| `PDV_Substrate_ArgonianHist` | Argonian | Hist maintenance + People support + Void threshold + bed-of-choice cadence | Layered Hist/People/Void relation metric, with Hist primary, People as buffer, and Void threshold-gated so Sithis cannot replace normal Argonian identity by default |
 
 Altmer orthodoxy, Redguard ancestor reverence, and Orc life-mode standing
 express identity through privileges, contextual favors, sacred-place modifiers,
@@ -598,7 +607,7 @@ City/Legion community location tracking uses `PDV_SacredPlace`, but it is not a
 strong persistent substrate and should not compete with Malacath's foreground
 mode as the main Orc boon lane.
 
-`PDV_State_OrcLifeMode` owns the active Orc scoring lane. `PDV_SacredPlace`
+`PDV_StateTrack_OrcLifeMode` owns the active Orc scoring lane. `PDV_SacredPlace`
 may modify City and LegionExile presentation/reward context, but it must not
 silently change the active mode by location visits alone. Mode changes come
 from the Orc state-track gates: major gates immediately, or dawn-evaluated
@@ -830,7 +839,7 @@ This is design discipline more than a script feature. The verifier should detect
 
 ### 10.8 Authoring overhead
 
-Each favor is: one magic effect or short-duration ability, one trigger-family entry in the patron's contextual-favor set, a family keyword, and any needed CK Condition stack. A typical patron has 3-5 favors. Across 25-35 deities that's roughly 100-150 favor effects in v1.0 - manageable in CK without templating, but a candidate for `pdv_author.mjs` expansion later.
+Each favor is: one magic effect or short-duration ability, one trigger-family entry in the patron's contextual-favor set, a family keyword, and any needed CK Condition stack. A typical patron has 3-5 favors where the lane calls for contextual favor support. Across the full Phase 20 roster, favor count is roster-driven rather than capped by the old 25-35 deity estimate; this remains manageable only if every lane is matrix-owned, verifier-visible, and promoted through proven authoring patterns.
 
 ### 10.9 Phase 12 pilot lock
 
@@ -1363,9 +1372,11 @@ noise that distracts from Papyrus/CK architecture work.
 
 ## 17. Content authoring pipeline (Phase 19)
 
-By 1.0 there will be 25-35 deities, three strong substrate quests, several
-light sacred-place/state helpers, five first-release reputation tracks, roughly
-8-10 state tracks, ~100-150 contextual favor effects, and many dialogue topics.
+By 1.0 the full Phase 20 roster will include every locked race-architecture
+worship target plus all sixteen Skyrim-present Daedric Prince surfaces, three
+strong substrate quests, several light sacred-place/state helpers, five
+first-release reputation tracks, roughly 8-10 state tracks, roster-driven
+contextual favor effects, and many dialogue topics.
 The pipeline matters.
 
 The player-facing prose this pipeline promotes is drafted ahead of time on the
@@ -1548,7 +1559,7 @@ The v2 design and the `AGENTS.md` ESP Structure section both diagram a future pe
 
 Split per-race ESPs only if one or more of the following hits:
 
-- The framework ESP approaches Skyrim's load-order or record-count practical limits (very unlikely at 25-35 deities and supporting records).
+- The framework ESP approaches Skyrim's load-order or record-count practical limits. This remains unlikely, but the full Phase 20 roster must be rechecked against real generated record counts instead of the old 25-35 deity assumption.
 - A specific race module has so much dialogue or quest content that it deserves its own load-order slot for compatibility patching.
 - A community contributor wants to author a race module independently.
 
@@ -1560,7 +1571,7 @@ Mod compatibility patches (Requiem, Sacrosanct, etc.) live in their own ESPs (Se
 
 ## 19. Performance budget
 
-At 25-35 deities, the v2 architecture's hot paths scale linearly with deity count. v3 sets explicit budgets so we know when to optimize.
+At the full Phase 20 roster, the v2 architecture's hot paths still scale linearly with deity/path count. v3 sets explicit budgets so we know when to optimize.
 
 ### 19.1 Targets
 
@@ -1584,13 +1595,18 @@ At 25-35 deities, the v2 architecture's hot paths scale linearly with deity coun
 
 ---
 
-## 20. Mod compatibility (Phase 20)
+## 20. Mod compatibility (Phase 21)
 
-Phase 20 is now an Authoria-first, list-author compatibility program. The
+Phase 21 is now an Authoria-first, list-author compatibility program. The
 release target is not end-user Wabbajack swap support; it is maintainer-ready
 packages that list authors can test, accept, and include. The tracked source of
 truth lives in `references/vanilla-gameplay/compatibility/phase20-targets.csv`
 plus the companion notes in that folder.
+
+Phase 21 intentionally follows the full roster/content lock. The compatibility
+package lane should not begin full list smoke until Phase 20 has stabilized the
+god/Prince roster, player-facing handling, and verifier-covered content
+surfaces that a modlist will actually test.
 
 The seven target lists are JOJ, TOT, HOH, MOM, DoD, VOV, and Authoria/ARR.
 Authoria is the P0 proof lane. The local ARR `ARSE` profile is the first
@@ -1627,7 +1643,7 @@ Patch constraints:
 - Keep masters minimal: base game files, `PlayerDevotion_Framework.esp`, and
   only the target plugins whose records are touched.
 - List patches win over generic internal templates.
-- No new hard dependencies are added for Phase 20.
+- No new hard dependencies are added for Phase 21.
 - Requiem lists receive PDV input patches and a reference-only RFTI output for
   the exact snapshot; the list author regenerates final RFTI/Reqtificator
   output in their own stack.
@@ -1717,23 +1733,26 @@ excellent reusable example per subsystem, then clone.
 | **17** | Decay model (linear with tier-floor + grace) | Phase 14 | Runtime-proven for grace, eligible tick, same-day guard, broad reduction, active-patron skip, non-patron drift, Devoted floor, and Champion floor |
 | **18** | Player-facing UI (player MCM tab, status spell, notification policy) | Phase 14 | Thematic display default; numeric override behind toggle |
 | **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Patcher validates rules against the resolved load order, resolves payload references, emits an active verifier-covered `PDV_ClassificationPatch.esp` with the first approved Temple LCTN packet, and keeps future main-ESP promotion behind a separate release-packaging merge gate |
-| **20** | Authoria-first list compatibility packages | Phase 15 + Phase 19 | Authoria reaches accepted integration/test package; JOJ, TOT, HOH, MOM, DoD, and VOV reach `patch-packaged` with exact removals, one list patch, placement notes, patcher steps, and focused smoke checklist |
-| **21** | 1.0 content lock + polish | All above | Pantheon at 25-35 deities, all 10 races have at least one foreground option, all locked race architectures honored |
+| **20** | Full roster content lock + polish | All above except list compatibility | All locked race-architecture gods and all sixteen Skyrim-present Daedric Prince surfaces are content-ready, every race has authored handling for every god/Prince, and all locked race architectures are honored |
+| **21** | Authoria-first list compatibility packages | Phase 20 + Phase 19 | Authoria reaches accepted integration/test package; JOJ, TOT, HOH, MOM, DoD, and VOV reach `patch-packaged` with exact removals, one list patch, placement notes, patcher steps, and focused smoke checklist |
 
 V3 Preflight and Structural Skeleton are acceleration gates: they make the
 system safe to scale before broad content lands. Phases 7-9 then widen what the
 system can see and react to. Phases 10-12 are the per-race overlay layer. Phase
 13 brings Daedric paths online. Phases 14-17 turn the system from "tracks
 piety" into "feels like a relationship." Phase 18 is the player handoff.
-Phases 19-21 are scaling and polish.
+Phase 19 is tooling scale, Phase 20 is full content scale, and Phase 21 is
+compatibility packaging against the stable mod.
 
 ### 21.1 What "1.0" means
 
 For content-rich 1.0:
 
-- All 10 races have at least one foreground patron path that respects their locked architecture.
-- All 9 Divines + Talos are implemented as content-ready deities. The Aedric pantheon is lore-complete; Old Ways (Shor, Tsun, Stuhn, Ysmir, Orkey) are at least structurally scaffolded and dev-only unless authored.
-- 8-12 Daedric paths are content-ready. The remaining Princes may be structurally scaffolded, but scaffolded paths stay dev-only.
+- All locked race-architecture worship targets are implemented as content-ready deities or cultural worship surfaces.
+- All sixteen Skyrim-present Daedric Prince surfaces are content-ready: Azura, Boethiah, Mephala, Malacath, Meridia, Hircine, Molag Bal, Nocturnal, Hermaeus Mora, Mehrunes Dagon, Sheogorath, Namira, Sanguine, Clavicus Vile, Peryite, and Vaermina. Nocturnal is represented through the Thieves Guild / Nightingale surface. Jyggalag remains excluded unless future adopted content explicitly adds him.
+- Every race/deity and race/Prince pairing has explicit authored handling: response state, commitment gate, boon/favor surface, price/neglect/stigma, exit/residue, hook source, and player-facing feedback. This does not mean every race can worship every target safely.
+- Native, tolerated, foreign, taboo, hostile, and curse-access paths all have player-facing feedback.
+- Dev-only scaffold may exist while Phase 20 is being built, but no Skyrim-present god or Prince may remain dev-only at the 1.0 lock.
 - Curse states (Werewolf + Vampire) are functional.
 - Patron commitment, decay, and neglect are all live.
 - Player-facing UI is thematic-by-default.
@@ -1741,6 +1760,40 @@ For content-rich 1.0:
 - Authoria has an accepted integration/test package. JOJ, TOT, HOH, MOM, DoD,
   and VOV are at least `patch-packaged`.
 - No regression of any v2 invariant.
+
+Phase 20 is split into roster-completion slices:
+
+- **20A - Roster and coverage matrix.** Maintain
+  `references/authoring/PDV_DeityCoverageMatrix.json` as the implementation
+  authority by reconciling race sheets, the Phase 4 stance matrix, the Phase 4
+  Daedric matrix, and the locked race architecture.
+- **20B - Full Aedric/native god content.** Promote all non-Daedric
+  race-relevant gods from scaffold or draft into content-ready lanes, including
+  Divines, Talos/Ysmir, Old Ways, Yokudan, Khajiit, Dunmer, Altmer, Orc,
+  Argonian, Breton, Bosmer, and other locked cultural targets.
+- **20C - Full Skyrim-present Daedric content.** Build all sixteen
+  Skyrim-present Prince surfaces with Hircine as the proven pattern for
+  boon/price/stigma/exit/readout discipline.
+- **20D - Race completeness passes.** Verify every race has authored handling
+  across the full roster, including unsafe, taboo, hostile, and curse-access
+  meanings.
+- **20E - Content-rich 1.0 lock.** Close verifier coverage, runtime smoke,
+  text polish, package readiness, compatibility gates, and performance budget
+  rechecks against the full roster.
+
+Race gameplay parity is the cross-cutting Phase 20 product gate. Use
+`references/authoring/PDV_RaceGameplayBalanceAudit.md` for the multi-lens
+audit, `PDV_RaceRewardBudgetLedger.md` and
+`PDV_RacePlaystyleCoverageLedger.md` for reward/playstyle pressure, and
+`PDV_RaceImplementationCostingBacklog.md` to translate accepted audit findings
+into state artifacts, hook sources, rejected-hook assertions, player surfacing,
+verifier gates, runtime proof, and compatibility notes before implementation.
+The first implementation-costing manifest set covers Altmer, Argonian, Orc,
+Redguard, Bosmer non-hunter parity, and Khajiit, with
+`--strict-phase20-race-costing` as the shared manifest/content/source/readback
+gate as each race moves beyond `costed-not-built`. Altmer
+also keeps the narrower `--strict-phase20-altmer` crisis/Lorkhan/favor gate
+until that runtime slice is built and proven.
 
 ### 21.2 Custom content priority classification (LOCKED)
 
@@ -2116,9 +2169,9 @@ deferred past 1.0.
   - (c) No.
 - **Recommendation:** (a). Visibility is cheap; capping prematurely is constraining.
 
-#### D-31  Phase 20 compat-patch packaging  (Section 20.2)
+#### D-31  Phase 21 compat-patch packaging  (Section 20.2)
 
-- **Question:** Should Phase 20 ship generic compat patches, list-specific
+- **Question:** Should Phase 21 ship generic compat patches, list-specific
   patches, or generated packages?
 - **Resolution:** Use one list-specific patch per target list package, with
   ESL flagging unless unsafe. Shared templates and scanner rules may be reused
@@ -2140,6 +2193,7 @@ architecture contracts.
 ### 25.1 Roadmap posture
 
 - **Structural completeness comes before content completeness.** v3 may scaffold the full 1.0 shape early, but incomplete scaffolds stay dev-only until content-ready.
+- **Full roster completeness is the 1.0 content target.** The old selective target is retired; launch requires content-ready handling for every locked god and every Skyrim-present Prince named in the Phase 20 roster authority.
 - **V3 Preflight comes before Phase 7.** Signal expansion should not begin until the hardening work below is compile-clean, verifier-clean, and smoke-tested.
 - **Beta has two gates.** Technical Beta proves system stability for trusted testers; Content-Feel Beta proves the religious roleplay feel.
 - **Launch target is content-rich 1.0.** Public launch waits for broad authored religious texture, not merely a stable narrow core.
@@ -2283,7 +2337,8 @@ Tester expectation:
 Ready when:
 
 - All 10 races have satisfying authored devotional play.
-- Major Aedric, Nordic, and Daedric paths are not merely scaffolded.
+- All locked race-architecture gods and all sixteen Skyrim-present Daedric Prince surfaces are content-ready, not merely scaffolded.
+- Every race has authored handling across the full god/Prince roster; unsafe worship is valid, silent or generic fallback handling is not.
 - Player-facing text is polished and ASCII-safe.
 - Light authored moments are present: commitment offers, shrine/ritual interactions, dialogue recognition, and notifications.
 - No original multi-stage questlines are required for 1.0.
@@ -2308,11 +2363,18 @@ subsystems existing; only the final promotion of ratified strings into ESP
 records does. This subsection is a standing reminder that content breadth must
 be built deliberately on its own track, not improvised at the 1.0 gate.
 
-Home artifacts: `race-sheets/PDV_RaceContent_Manifest.md` (Aedric and native
-devotion), `race-sheets/PDV_DaedricContent_Manifest.md` (Daedric paths), and
-`tools/pdv_content_verify.mjs` (the read-only content verifier). The manifests
-are the single source of truth for draft prose; this document stays the
-architecture truth they author against.
+Home artifacts: `references/authoring/PDV_DeityCoverageMatrix.json` (Phase 20
+roster authority), `references/authoring/PDV_RaceGameplayBalanceAudit.md` plus
+`PDV_RaceImplementationCostingBacklog.md` and
+`PDV_Phase20*ImplementationCosting.manifest.json` (race parity and build
+costing),
+`race-sheets/PDV_RaceContent_Manifest.md` (Aedric and native devotion),
+`race-sheets/PDV_DaedricContent_Manifest.md` (Daedric paths), and
+`tools/pdv_content_verify.mjs` plus `tools/pdv_verify.mjs` (read-only content
+and implementation-costing verifiers). The coverage matrix owns roster
+completeness; the content manifests are the single source of truth for draft
+prose; the implementation-costing manifests own build readiness; this document
+stays the architecture truth they author against.
 
 Phases:
 
@@ -2324,15 +2386,17 @@ Phases:
   the token tables, and the consistency audit (race manifest Sections 24-25).
 - **CAT-3 - Daedric pilot. COMPLETE.** Boethiah authored end to end in the
   Daedric manifest; the boon/price/stigma row template is proven.
-- **CAT-4 - Daedric expansion. NOT STARTED.** Author the remaining Princes to
-  the 8-12 content-ready target (21.1). Resolve the Section 11.6 open Daedric
+- **CAT-4 - Daedric expansion. NOT STARTED.** Author all sixteen
+  Skyrim-present Prince surfaces to the Phase 20 content-ready target (21.1).
+  Resolve the Section 11.6 open Daedric
   decisions (stigma decay model, roster shape, cross-Prince hostility) first,
   since they shape the content; Boethiah rows authored against the provisional
   stigma model are flagged in the Daedric manifest. Resolve the curse-access
   template variation when Hircine or Molag Bal is first authored.
-- **CAT-5 - Gated-slot closure. NOT STARTED.** Author the deferred slots once
-  their specs close: Altmer crisis-of-faith copy (gated on the Altmer Partial
-  implementation-spec, 21.4) and Breton Vigilant pressure copy.
+- **CAT-5 - Gated-slot closure. PARTIAL / ALTMER COMPLETE.** Altmer
+  crisis-of-faith, contextual-favor, and Exiled vampire slots are now drafted
+  after the 2026-05-30 implementation-spec closeout. Breton Vigilant pressure
+  remains optional/slip-able post-1.0 unless promoted by a later content pass.
 - **CAT-6 - Ratification and promotion handoff. NOT STARTED, code-coupled.**
   Ratify the draft prose, then promote ratified strings into ESP records via
   the Phase 19 add-a-deity pipeline (17.1) and into the `Race_*.md` player
@@ -2351,6 +2415,132 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.69 - 2026-05-31 AEST - Phase 20 runtime proof harness
+
+Added the consolidated Phase 20 QASmoke runtime proof lane after placement
+readback. `tools/pdv_phase20_runtime_check.mjs` reads the Skyrim SE
+`Papyrus.0.log` and checks the Altmer, Argonian, Orc, Redguard, Khajiit, and
+Bosmer route markers emitted by the 30 QASmoke proof references. The new
+`references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` keeps route
+proof separate from Survey/MCM status evidence, immersion feel, wrong-origin
+negative checks, same-anchor or major-favor anti-farm checks, and final world
+placement. The checker self-test passes, but live runtime proof remains open
+until an in-game pass produces fresh log and status evidence.
+
+### v3.68 - 2026-05-31 AEST - Phase 20 proof placement packet
+
+Promoted the Phase 20 proof-reference boundary from pending CK placement to a
+shell-reproducible QASmoke proof packet. `tools/pdv-phase20-proof-placement-author`
+created and readback-verified 30 placed references across Altmer, Argonian,
+Orc, Redguard, Khajiit, and Bosmer, each pointing at the matching Phase 20
+proof ACTI base record. The per-race `--check-placements` helpers now pass for
+all six race packets, `pdv_refresh_seq` was rerun, and the combined
+`node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json`
+gate is clean at `PASS=1985, WARN=1, INFO=28`. Runtime proof and final
+immersive world placement remain open; the QASmoke cluster is a proof harness,
+not the shipped worldbuilding pass.
+
+### v3.67 - 2026-05-31 AEST - Phase 20 Bosmer non-hunter parity proof slice
+
+Promoted the Bosmer non-hunter parity lane from costing-only into
+compile-verified source and record wiring without expanding Green Pact item/tag
+enforcement. `PDV__ManagerQuest` now records path-specific favor counters under
+`PDV.Bosmer.Favor.*`, exposes `favor=oc/ls/ex/br` in Bosmer status readback,
+and gates Bandit Road reversal through a seven-day major-favor cooldown. The
+EventTypes/EventBus/receiver chain now routes Bosmer proof IDs `100-107` for
+Old Contract proper hunt/forest kept, Living Story community/nature proof,
+Exchange debt/redress, and Bandit Road road-life/reversal.
+`tools/pdv-phase20-bosmer-author --create-missing` created/wired eight ACTI
+proof base records. `references/authoring/PDV_Phase20_BosmerProofPlacement_Runbook.md`
+now names the eight CK-owned `PDV_REFR_Bosmer*` placements and runtime smoke
+matrix. SEQ was refreshed, and the combined Phase 20 Altmer/race-costing strict
+gate is clean at `PASS=1963, WARN=1, INFO=28`, with only the existing unnamed
+CK-authored INFO warning.
+
+### v3.66 - 2026-05-31 AEST - Phase 20 Khajiit moon/road/focus proof slice
+
+Promoted the Khajiit moon/road/focus lane from costing-only into
+compile-verified source plus framework records. `PDV__ManagerQuest` now
+origin-gates Khajiit moon and road-home scoring, rejects immediate repeats of
+the same road-home anchor, exposes all five focus weights in summary readback,
+and records Baan Dar, Rajhin, and Alkosh focus movement through dedicated proof
+handlers.
+
+`PDV_EventTypes`, `PDV_EventBus`, and `PDV_EventSignalActivator` now route
+Khajiit proof IDs `10`, `33`, and `90-92` for moon observance, road-home
+anchors, Baan Dar road trickery, Rajhin elegant theft, and Alkosh dragon/order
+response. `pdv-phase20-khajiit-author --create-missing` created/wired six ACTI
+proof base records and rewired `PDV_KhajiitLunarSubstrate` plus
+`PDV_GLO_KhajiitFocusedEmphasis` on `PDV__ManagerQuest`.
+`references/authoring/PDV_Phase20_KhajiitProofPlacement_Runbook.md` now names
+the six CK-owned `PDV_REFR_Khajiit*` placements and runtime smoke matrix. SEQ
+was refreshed, and `node .\tools\pdv_verify.mjs --strict-phase20-altmer
+--strict-phase20-race-costing --json` returned `PASS=1857, WARN=1, INFO=28`;
+the only warning is the existing unnamed CK-authored INFO record class. Direct
+automation still stops before CK placement and in-game proof.
+
+### v3.65 - 2026-05-30 - Phase 20 Redguard sect proof slice
+
+Promoted the Redguard sect lane from costing-only into compile-verified source
+plus framework records. `PDV__ManagerQuest` now owns `ORIGIN_REDGUARD`, the
+`Crown`, `Forebear`, and `AshAbah` sect constants, four routed proof handlers,
+Survey/status surfacing, Far Shores token state, and a curse-cycle pressure
+marker so vampire/werewolf posture does not become normal sect scoring.
+
+`PDV_EventTypes`, `PDV_EventBus`, and `PDV_EventSignalActivator` reserve and
+route Redguard proof IDs `80-83` for Crown tomb respect, Forebear road passage,
+Ash'abah death duty, and Far Shores token use. `pdv-phase20-redguard-author
+--create-missing` filled `PDV_StateTrack_RedguardSect`, created/wired four ACTI
+proof base records, and wired `PDV_RedguardSectTrack` on `PDV__ManagerQuest`.
+`references/authoring/PDV_Phase20_RedguardProofPlacement_Runbook.md` now names
+the four CK-owned `PDV_REFR_Redguard*` placements and runtime smoke matrix. SEQ
+was refreshed, and `node .\tools\pdv_verify.mjs --strict-phase20-altmer
+--strict-phase20-race-costing --json` returned `PASS=1762, WARN=1, INFO=28`;
+the only warning is the existing unnamed CK-authored INFO record class. Direct
+automation still stops before CK placement and in-game proof.
+
+### v3.64 - 2026-05-30 - Phase 20 Orc life-mode proof slice
+
+Promoted the Orc life-mode lane from costing-only into compile-verified source
+plus framework records. `PDV__ManagerQuest` now owns `ORIGIN_ORC`, the
+`City`, `Stronghold`, and `LegionExile` life-mode constants, four routed proof
+handlers, Survey/status surfacing, summary readback, and a separate curse
+code-pressure marker so vampire/werewolf posture does not become normal
+life-mode scoring.
+
+`PDV_EventTypes`, `PDV_EventBus`, and `PDV_EventSignalActivator` reserve and
+route Orc proof IDs `70-73` for Stronghold forge, City dignity,
+Legion/Exile service, and self-made community. `pdv-phase20-orc-author
+--create-missing` filled `PDV_StateTrack_OrcLifeMode`, created/wired four ACTI
+proof base records, and wired `PDV_OrcLifeModeTrack` on `PDV__ManagerQuest`.
+`references/authoring/PDV_Phase20_OrcProofPlacement_Runbook.md` now names the
+four CK-owned `PDV_REFR_Orc*` placements and runtime smoke matrix. SEQ was
+refreshed, and `node .\tools\pdv_verify.mjs --strict-phase20-altmer
+--strict-phase20-race-costing --json` returned `PASS=1697, WARN=1, INFO=29`;
+the only warning is the existing unnamed CK-authored INFO record class. Direct
+automation still stops before CK placement and in-game proof.
+
+### v3.63 - 2026-05-30 - Phase 20 Argonian Hist/People proof slice
+
+Promoted the Argonian Hist/People lane from costing-only into compile-verified
+source plus framework records. `PDV_Substrate_ArgonianHist` now owns separate
+Hist, People, Void, posture, Sithis-signal, and bed-of-choice cadence keys with
+gentle Hist-distance dawn decay, a non-curse floor, and threshold-gated Void
+activation. `PDV__ManagerQuest` refreshes Argonian posture on dawn and curse
+changes, surfaces layered status text, and routes Hist maintenance, People
+support, Void signal, and bed-of-choice proof handlers. `PDV_EventTypes`,
+`PDV_EventBus`, and `PDV_EventSignalActivator` reserve and route Argonian proof
+route IDs `60-63`.
+
+`pdv-phase20-argonian-author --create-missing` attached the concrete substrate,
+created/wired `PDV_State_ArgonianHistPosture`, created/wired four ACTI proof
+base records, and wired the manager properties. `references/authoring/PDV_Phase20_ArgonianProofPlacement_Runbook.md`
+now names the four CK-owned `PDV_REFR_Argonian*` placements and runtime smoke
+matrix. SEQ was refreshed, and `node .\tools\pdv_verify.mjs --strict-phase20-altmer
+--strict-phase20-race-costing --json` returned `PASS=1633, WARN=1, INFO=30`;
+the only warning is the existing unnamed CK-authored INFO record class. Direct
+automation still stops before CK placement and in-game proof.
 
 ### v3.51 - 2026-05-30 - Phase 19 live content closeout
 
@@ -2384,9 +2574,9 @@ injection in a generated ESL-flagged patch, but does not approve live gameplay
 classification content. `tools/pdv_verify.mjs --strict-phase19` verifies dry-run
 determinism, generated patch readback, and source-plugin safety.
 
-### v3.45 - 2026-05-28 - Phase 20 compatibility rebaseline
+### v3.45 - 2026-05-28 - Compatibility rebaseline (renumbered to Phase 21)
 
-Phase 20 is rebaselined from a Sacrosanct-first standalone patch into an
+The compatibility lane was rebaselined from a Sacrosanct-first standalone patch into an
 Authoria-first list-author compatibility program. The seven target lists are
 JOJ, TOT, HOH, MOM, DoD, VOV, and Authoria/ARR. Compatibility work now uses a
 tracked matrix/status ladder, one list-specific patch per package, exact
@@ -2866,6 +3056,151 @@ cleanup item, but it no longer blocks Slice 1 proof.
 Final closeout gate: `node .\tools\pdv_verify.mjs --strict-preflight
 --strict-skeleton --strict-pattern-proving --json` returned `FAIL=0, TODO=0,
 PASS=522, WARN=2, INFO=28` at 2026-05-19 20:28 AEST.
+
+### v3.62 - 2026-05-30 - Phase 20 Altmer proof-placement handoff
+
+Converted the remaining Altmer proof-trigger manual boundary into an exact CK
+packet. `references/authoring/PDV_Phase20_AltmerProofPlacement_Runbook.md`
+now names the four proof ACTI placements, the expected `PDV_REFR_Altmer*`
+reference EditorIDs, the post-save placement readback, and the runtime smoke
+matrix. The Altmer manifest now carries `placementRefEditorId` for each wired
+trigger surface. `pdv-phase20-altmer-author --check-placements` is a read-only
+placement checker matching the Phase 9 proof-reference pattern, and
+`--strict-phase20-altmer` is ready to validate placed references once
+`placementStatus` is promoted beyond `manual-placement-required`. Direct
+automation still stops before CK placement and in-game proof.
+
+### v3.61 - 2026-05-30 - Phase 20 Altmer curse-message slice
+
+Promoted the Altmer Exiled curse surface out of prose. `PDV__ManagerQuest` now
+handles Altmer vampire exile pressure, werewolf hard halt, cure scar text, and
+survey/status summary through compile-verified source helpers, and
+`pdv-phase20-altmer-author` now creates/fills the three tracked `MESG` records:
+`PDV_Msg_Altmer_VampireExiledPath_Entry`,
+`PDV_Msg_Altmer_VampireExiledPath_Recognition`, and
+`PDV_Msg_Altmer_CurseState_WerewolfHardHalt`. The helper wires those properties
+on `PDV__ManagerQuest`, the Altmer manifest status is `curse-message-wired`,
+SEQ was refreshed, and `node .\tools\pdv_verify.mjs --strict-phase20-altmer
+--strict-phase20-race-costing --json` returned `PASS=1549, WARN=1, INFO=30`;
+the only warning is the existing unnamed CK-authored INFO record class. CK
+placement/attachment of the four proof ACTIs and runtime proof remain open.
+
+### v3.60 - 2026-05-30 - Phase 20 Altmer trigger-proof slice
+
+Promoted the Altmer route scaffold into concrete proof surfaces. The reusable
+`PDV_EventSignalActivator` and `PDV_EventSignalEffect` receivers now understand
+Altmer route IDs `50-53`, carry `SignalValue` plus `SignalSourceId`, and route
+Lorkhan pressure, crisis source, dawn steadiness, and orthodox-cost signals into
+the existing EventBus/manager path. `pdv-phase20-altmer-author` now creates and
+wires the four tracked ACTI base records:
+`PDV_ACTI_AltmerDragonbornCrisisSignal`,
+`PDV_ACTI_AltmerLorkhanPressureSignal`,
+`PDV_ACTI_AltmerDawnSteadinessSignal`, and
+`PDV_ACTI_AltmerOrthodoxCostSignal`. The Altmer manifest status is now
+`trigger-proof-wired`; CK placement/attachment, Exiled vampire handling, and
+runtime proof remain open. The receiver scripts compiled cleanly, SEQ was
+refreshed, and `node .\tools\pdv_verify.mjs --strict-phase20-altmer
+--strict-phase20-race-costing --json` returned `PASS=1543, WARN=1, INFO=30`;
+the only warning is the existing unnamed CK-authored INFO record class.
+
+### v3.59 - 2026-05-30 - Phase 20 Altmer favor-record slice
+
+Promoted the two source-level Altmer favor families into real contextual-favor
+records. `PDV__ManagerQuest` now exposes the two Altmer favor spell properties,
+activates `FAVOR_LANE_ALTMER` through `TryActivateContextualFavor()` for dawn
+steadiness and orthodox costly enforcement, and suppresses the clean positive
+favor lane while an Altmer curse/exile pressure state is active. The
+`pdv-phase20-altmer-author` helper now creates/fills the matching `KYWD`,
+`MGEF`, and `SPEL` records and wires those spell properties on
+`PDV__ManagerQuest`. The Altmer manifest status became `favor-records-wired`;
+later v3.60 promoted four trigger proof ACTI base records while CK placement,
+Exiled vampire handling, and runtime proof stayed open. `PDV__ManagerQuest`
+compiled cleanly, SEQ was refreshed, and
+`node .\tools\pdv_verify.mjs --strict-phase20-altmer
+--strict-phase20-race-costing --json` returned `PASS=1493, WARN=1, INFO=30`;
+the only warning is the existing unnamed CK-authored INFO record class.
+
+### v3.58 - 2026-05-30 - Phase 20 immersion-proof gate
+
+Added `immersionProof` blocks to the Altmer, Argonian, Orc, Redguard, Bosmer
+non-hunter, and Khajiit Phase 20 implementation-costing manifests. Each block
+names the race's signature promise, diegetic trigger meaning, feedback surface,
+rejected generic behavior, normal-session feel, and runtime promotion gate.
+`tools/pdv_verify.mjs --strict-phase20-race-costing` now fails missing or thin
+immersion proof, and the Altmer-specific gate validates the Altmer proof as
+well. The hardened strict gate returned `PASS=1481, WARN=1, INFO=30` on
+2026-05-30; the warning is the existing unnamed CK-authored INFO record class.
+
+### v3.57 - 2026-05-30 - Race immersion budget and Altmer crisis record wiring
+
+Promoted immersion from an implied balance concern into an explicit race reward
+budget axis. `PDV_RaceRewardBudgetLedger.md` now carries immersion budget rules
+and a race-by-race immersion matrix; `PDV_RaceGameplayBalanceAudit.md` requires
+an immersion proof before runtime promotion; and
+`PDV_RaceImplementationCostingBacklog.md` requires each slice to name the
+diegetic trigger meaning, feedback surface, rejected generic behavior, and
+normal-session feel. Later v3.58 made that requirement verifier-enforced.
+
+`tools/pdv-phase20-altmer-author --create-missing` created and wired
+`PDV_State_AltmerCrisis` as a `PDV_StateTrack` and set
+`PDV_AltmerCrisisTrack` on `PDV__ManagerQuest`. The Altmer implementation
+manifest became `record-wired`; later v3.59 wired the first two Altmer favor
+spell records.
+
+### v3.56 - 2026-05-30 - Altmer source scaffold
+
+Promoted the Altmer Phase 20 pilot from costing-only into compile-verified
+source scaffolding. `PDV__ManagerQuest` now owns the crisis enum constants,
+StorageUtil-backed crisis state, Lorkhan pressure intake, accepted crisis
+sources, rejected-surface assertions, debug helpers, and two source-level
+favor families: quiet dawn steadiness and marked orthodox costly enforcement.
+`PDV_EventBus` exposes Altmer route helpers, and `PDV_EventTypes` reserves
+event IDs `50-53` for those routes. The Altmer implementation manifest is now
+`source-scaffolded`; later v3.57 record-wired `PDV_State_AltmerCrisis`, and
+v3.59 wired the first two Altmer favor spell records.
+
+### v3.55 - 2026-05-30 - Phase 20 race-costing manifest gate
+
+Expanded the race implementation-costing lane from the Altmer pilot into the
+first P1 manifest set: Argonian Hist/People, Orc life-mode, Redguard sect,
+Bosmer non-hunter parity, and Khajiit lunar/road. Added
+`--strict-phase20-race-costing` to validate all Phase 20 race costing manifests
+for schema, decision sources, state surfaces, enum contracts, required content
+rows, rejected hooks, verifier gates, first implementation slices, and runtime
+proof cases. `pdv_compile.mjs` now passes Phase 19/20 strict verifier flags
+through when a compile should immediately run one of those gates.
+
+### v3.54 - 2026-05-30 - Race implementation-costing backlog
+
+Added `references/authoring/PDV_RaceImplementationCostingBacklog.md` as the
+bridge between the race gameplay audit and runtime implementation. Phase 20
+race slices now need to cost state artifacts, hook sources, rejected hooks,
+player surfacing, verifier/readback gates, runtime proof, and compatibility
+notes before coding or CK authoring starts. Added
+`references/authoring/PDV_Phase20AltmerImplementationCosting.manifest.json` and
+`--strict-phase20-altmer` as the first manifest-level gate. Altmer gated content
+slots are no longer blocked by an open implementation spec; the remaining
+Altmer work is source/record implementation, runtime proof, and tuning.
+
+### v3.53 - 2026-05-30 - Phase 20/21 order flip
+
+Flipped the endgame order: Phase 20 is now the full roster/content lock and
+Phase 21 is the Authoria-first compatibility package lane. Rationale:
+compatibility testing cannot be meaningful until the full mod surface is ready
+to test against a modlist. `--strict-phase20-roster` is the canonical roster
+gate; `--strict-phase21-roster` remains accepted as a temporary alias.
+
+### v3.52 - 2026-05-30 - Full roster architecture lock
+
+Retired the old 1.0 target of 25-35 deities and 8-12 Daedric paths. The roster phase
+now requires content-ready handling for every locked race-architecture worship
+target and all sixteen Skyrim-present Daedric Prince surfaces, with Jyggalag
+excluded unless future adopted content explicitly adds him.
+
+Added `references/authoring/PDV_DeityCoverageMatrix.json` as the roster
+authority and strict roster verifier coverage as the first machine check. This
+entry was originally drafted as Phase 21 and was immediately renumbered by
+v3.53 so roster completion precedes compatibility testing.
 
 ### v3.17 - 2026-05-19 - Slice 1 receiver hardening
 

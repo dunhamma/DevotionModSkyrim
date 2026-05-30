@@ -1,10 +1,15 @@
 # PDV Compatibility Dossiers
 
-Status: living reference - Phase 20 rebaseline
+Status: living reference - Phase 21 compatibility rebaseline
 
 These are internal planning dossiers. They do not claim public support,
-maintainer approval, or end-user Wabbajack swap safety. Phase 20 targets
+maintainer approval, or end-user Wabbajack swap safety. Phase 21 targets
 list-author packages first, with Authoria / ARR as P0.
+
+Compatibility package work is now Phase 21. It waits on the Phase 20 full
+roster/content lock so every list package is tested against the complete mod
+surface. The `phase20-targets.csv` and `PDV_Phase20_CompatibilityNotes.md`
+filenames are retained for continuity with existing handoff references.
 
 The tracked target matrix is `phase20-targets.csv`. The operating rules for
 status, package shape, smoke, and public claims live in
@@ -27,7 +32,7 @@ status, package shape, smoke, and public claims live in
 
 ### Authoria / ARR
 
-Phase 20 priority: P0.
+Phase 21 priority: P0.
 
 Posture: first full package lane. The local `D:\Wabbajack\modlists\ARR`
 install and selected `ARSE` profile are initial evidence only; patch
@@ -52,7 +57,7 @@ Likely PDV route:
 
 ### Diaries of Dibella
 
-Phase 20 priority: P1.
+Phase 21 priority: P1.
 
 Posture: local prototype lane, not release evidence. The installed DoD profile
 is slightly outdated, so use it to exercise the matrix/conflict/smoke process,
@@ -75,7 +80,7 @@ Likely PDV route:
 
 ### JOJ, TOT, HOH, MOM, VOV
 
-Phase 20 priority: P1.
+Phase 21 priority: P1.
 
 Posture: public Bordello load-order pages are acceptable pre-handoff evidence
 for initial package work. If author-provided files differ, perform one normal

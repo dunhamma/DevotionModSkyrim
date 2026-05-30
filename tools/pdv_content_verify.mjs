@@ -8,12 +8,13 @@
  * voice-by-Surface matrix, non-empty source citations, and non-empty draft
  * prose. It does not modify any file, the ESP, or MO2 state.
  *
- * Usage: node tools/pdv_content_verify.mjs [--json]
+ * Usage: node tools/pdv_content_verify.mjs [--json] [--strict-phase20-roster]
  */
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { verifyPhase21RosterCoverage } from "./lib/pdv-roster-coverage.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
@@ -36,7 +37,8 @@ const RESERVED_NOTE_RE = /texture-only|reserved/i;
 const COLUMN_COUNT = 8; // Slot ID, Surface, Surfacing, Voice, Budget, Source, Notes, Draft prose
 
 class ContentVerifier {
-  constructor() {
+  constructor({ strictPhase20Roster = false } = {}) {
+    this.strictPhase20Roster = strictPhase20Roster;
     this.findings = [];
     this.slotSeen = new Map();
   }
@@ -83,7 +85,17 @@ class ContentVerifier {
     if (!verifiedAny) {
       this.fail("Manifest presence", "No content manifest files found to verify.", RACE_SHEETS);
     }
+    this.verifyPhase21RosterCoverage();
     return this.findings;
+  }
+
+  verifyPhase21RosterCoverage() {
+    const findings = verifyPhase21RosterCoverage(PROJECT_ROOT, {
+      strictContentReady: this.strictPhase20Roster,
+    });
+    for (const finding of findings) {
+      this.add(finding.status, finding.check, finding.detail, finding.path);
+    }
   }
 
   verifyFile(filePath, fileName) {
@@ -315,12 +327,14 @@ function localTimestamp() {
 }
 
 function parseArgs(argv) {
-  const args = { json: false };
+  const args = { json: false, strictPhase20Roster: false };
   for (const arg of argv) {
     if (arg === "--json") {
       args.json = true;
+    } else if (arg === "--strict-phase20-roster" || arg === "--strict-phase21-roster") {
+      args.strictPhase20Roster = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_content_verify.mjs [--json]");
+      console.log("Usage: node tools/pdv_content_verify.mjs [--json] [--strict-phase20-roster]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -331,7 +345,7 @@ function parseArgs(argv) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-const verifier = new ContentVerifier();
+const verifier = new ContentVerifier({ strictPhase20Roster: args.strictPhase20Roster });
 const findings = verifier.run();
 const counts = verifier.counts();
 

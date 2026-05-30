@@ -1,16 +1,16 @@
 # PDV Writer Review -- Index
 
-**Regenerated:** 2026-05-27 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md`
 
 Per-race writer-review files. Each `<Race>_Review.md` groups every drafted in-game string by the moment in which the player encounters it, with deity tone, voice, char count vs hard cap, and an empty `Edit` column for revisions.
 
 | Race | Rows | Over budget | Moments covered | MD | CSV |
 |---|---|---|---|---|---|
-| Nord | 92 | - | 14 | [Nord_Review.md](Nord_Review.md) | [Nord_Review.csv](Nord_Review.csv) |
+| Nord | 111 | - | 14 | [Nord_Review.md](Nord_Review.md) | [Nord_Review.csv](Nord_Review.csv) |
 | Orc | 49 | - | 10 | [Orc_Review.md](Orc_Review.md) | [Orc_Review.csv](Orc_Review.csv) |
 | Dunmer | 66 | - | 15 | [Dunmer_Review.md](Dunmer_Review.md) | [Dunmer_Review.csv](Dunmer_Review.csv) |
-| Altmer | 46 | - | 14 | [Altmer_Review.md](Altmer_Review.md) | [Altmer_Review.csv](Altmer_Review.csv) |
+| Altmer | 62 | - | 16 | [Altmer_Review.md](Altmer_Review.md) | [Altmer_Review.csv](Altmer_Review.csv) |
 | Khajiit | 51 | - | 15 | [Khajiit_Review.md](Khajiit_Review.md) | [Khajiit_Review.csv](Khajiit_Review.csv) |
 | Imperial | 72 | - | 14 | [Imperial_Review.md](Imperial_Review.md) | [Imperial_Review.csv](Imperial_Review.csv) |
 | Redguard | 61 | - | 15 | [Redguard_Review.md](Redguard_Review.md) | [Redguard_Review.csv](Redguard_Review.csv) |

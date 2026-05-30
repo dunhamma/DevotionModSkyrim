@@ -1,8 +1,8 @@
 # PDV Race Design — Altmer
-**Last updated:** 2026-05-19
-**Status:** Implementation-lock pass in progress
+**Last updated:** 2026-05-30
+**Status:** Implementation-locked for 1.0; reward magnitudes still tune during build/playtest
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.5)
-**Note:** Lorkhan Adjacency Penalty economy is implementation-locked at the experience level; exact reward magnitudes can still tune inside the documented ranges.
+**Note:** Lorkhan Adjacency Penalty economy, crisis handling, contextual-favor lanes, and focused-deity launch hook posture are implementation-locked at the experience level; exact reward magnitudes can still tune inside the documented ranges.
 
 ---
 
@@ -147,6 +147,44 @@ A normal Altmer who performs basic devotional upkeep should trend positive. Lork
 | `PDV_ALT_LORKHAN_T4_CONTEXT` | `0` piety; alignment/flag only | Unprovoked Thalmor killing, Septimus/Dwemer/Heart-adjacent curiosity, Dark Brotherhood/Sithis-adjacent commitment | Authored event cadence; normal anti-farm |
 | `PDV_ALT_CRISIS_FAITH` | Replaces normal penalty; minimal temporary sting only | Major main-story theological collisions such as Dragonborn identity, Sovngarde/Shor reality, Talos/Lorkhan/apotheosis contradiction, Thalmor certainty destabilized | One-time per crisis source; resolves through coherent behavior |
 
+### Crisis State And Resolution Closeout
+
+**Status:** LOCKED 2026-05-30 for 1.0 implementation. Crisis beats are not a
+second punishment layer. They replace ordinary Lorkhan penalty handling when the
+moment is large enough that the character should question the frame itself.
+
+`PDV_State_AltmerCrisis` uses:
+
+| Value | Name | Meaning |
+|---:|---|---|
+| `0` | `None` | No active crisis. |
+| `1` | `Dissonant` | The player has touched a major contradiction and must live coherently afterward. |
+| `2` | `Questioning` | The player is moving toward heterodox or Psijic interpretation. |
+| `3` | `Reasserting` | The player is repairing orthodoxy through coherent action. |
+| `4` | `ScarredResolved` | The crisis is resolved, but the source remains part of the character's history. |
+
+Final 1.0 crisis sources:
+
+| Source | Trigger posture | Initial state | Resolution route | Notes |
+|---|---|---|---|---|
+| Dragonborn declaration | Main-quest declaration or first unavoidable Dragonborn identity proof | `Dissonant` | Three coherent devotional days, or one major Auri-El/Magnus/Trinimac/Xarxes/Syrabane milestone after the declaration | Fires once. It teaches the player that the main quest is theologically loaded without punishing the rest of the playthrough forever. |
+| Sovngarde / Tsun reality | Sovngarde entry, Hall of Valor, or Tsun confrontation where locally provable | `Dissonant` | Auri-El dawn rite plus one focused-deity act after returning to Mundus | Strongest crisis flavor. Do not stack every Sovngarde sub-beat. |
+| Talos / Thalmor contradiction | Costly Talos aid, hidden shrine protection, face-to-face defiance, or Thalmor hypocrisy proof | `Questioning` or `Reasserting` based on alignment direction | Heterodox resolution through self-cultivation, or orthodox repair through rejecting the contradiction later | This is about what the Altmer does with evidence, not generic anti-Thalmor violence. |
+| Companions / Wuuthrad / beast fork | Companions completion, Wuuthrad equip/carry, or werewolf pressure entering the same theological neighborhood | `Dissonant` unless actual werewolf state halts devotion | Coherent rejection, cure/avoidance, or a later Trinimac/Auri-El repair act | If the player becomes werewolf, the curse-state hard halt supersedes crisis. |
+| Mortal continuity commitment | Marriage, adoption, or homestead ownership after the first interpretation notice | No crisis by default; Tier 3 dissonance only | Optional favor if the player follows it with coherent dawn or lineage practice | These are not full crisis beats unless a future authored scene deliberately escalates them. |
+
+Resolution rules:
+
+- A crisis never removes the accepted patron by itself.
+- While unresolved, Altmer positive piety still works; this avoids hidden debt spirals.
+- One active crisis source is presented at a time. Later sources can update the
+  last source marker, but do not spam new MessageBoxes on the same day.
+- `ScarredResolved` is a memory state. It can affect Survey Devotion wording or
+  rare flavor, but it is not a permanent mechanical penalty.
+- Crisis resolution can trigger contextual favor only when the player responds
+  with coherent action. Pure penalties, failures, and ordinary negative drift do
+  not trigger favor.
+
 **Rejected penalty surfaces:**
 - Walking through Nord towns
 - Having Nord friends, unless an authored quest/action explicitly turns that friendship into Lorkhan/Shor/Talos validation
@@ -202,6 +240,53 @@ If the player would not reasonably understand the theological meaning, do not pe
 **Syrabane focus (magical protection, Psijic or Divine Body primary):**
 - *Champion moment:* The apprentices' protector watches over you. Magic-using enemies deal 15% less damage at Champion. After casting a protective spell (Ward, Oakflesh-line), next non-protection spell cost -10%. College and magical-institution content generates strong piety.
 - *Specific payoff:* Ward spells absorb more (15% bonus to ward strength). Magical institutions treat you with recognition privilege.
+
+## Focused-Deity Launch Hook Posture
+
+**Status:** LOCKED 2026-05-30 for 1.0 implementation. These hooks describe
+what should be buildable first; they are not a license to score every similar
+action.
+
+| Focus | Strong 1.0 hooks | Medium / authored hooks | Rejected launch hooks | Balance note |
+|---|---|---|---|---|
+| Auri-El | Dawn rite, Auri-El shrine, crisis resolution after Lorkhan pressure, stable coherence after main-quest contradiction | Sunlit sacred place, Dawnguard/Auriel shrine comparison if locally verified | Generic daytime play, generic undead fighting, passive sun exposure | Auri-El is the foundation. Keep steady value modest so it does not outpay focused secondary gods. |
+| Magnus | Magic school milestones, College/Eye of Magnus stages, rare study texts, Psijic-coded quest milestones | Spell learned, skill book, staff/artifact study if curated | Raw spell casts, generic spell cost stacking, every College errand | Reward discipline and study, not button volume. |
+| Trinimac | ThalmorAlignment 70+, orthodoxy defense, meaningful enforcement/defense-of-civilization beats, martial victory against a qualifying threat | Armor/one-handed milestone, Thalmor recognition dialogue, civilizational protection quest stages | Generic bandit kills, generic anti-Stormcloak violence, cruelty dressed as order | This is the sharpest Orthodox path; gate hard and keep Marked moments rare. |
+| Xarxes | Rare texts, genealogy/family/record quests, hidden truth preserved, lineage or archive recovery | Lock/secret knowledge if tied to record or duty, forbidden text read with consequence | Generic lockpicking, every book read, convenient lying | The record matters because it binds lineage and truth, not because all secrets are sacred. |
+| Syrabane | Ward/protection spell milestones, anti-mage survival, apprentice/College aid, magical institution recognition | Disease/curse warding, defensive spell learned, protecting a vulnerable mage | Generic magic resistance farming, every ward cast, random mage kills | Protection is the identity. Favor should feel like warding someone still on the path. |
+
+## Contextual Favor Table
+
+**Status:** Review-cleared and implementation-locked for user-experience shape
+(2026-05-30); exact effect values remain tuning work.
+
+**User-experience proof:** Altmer contextual favor should feel like coherence
+answering back after pressure. The player is not being rewarded for volume;
+they are being recognized for holding a theological shape in a hostile world.
+
+| Lane | Trigger family | Hook candidates | Favor bucket | Surfacing | Notes |
+|---|---|---|---|---|---|
+| Shared Auri-El foundation | Dawn steadiness after dissonance | Dawn rite after a Lorkhan pressure day, Auri-El shrine, coherent day following `PDV_State_AltmerCrisis` | Environmental / until noon | Noted | This is the core recovery rhythm. It should calm pressure, not erase history. |
+| Shared coherence | Orthodoxy or heterodoxy held consistently | Three-day coherent behavior window, no contradictory major signal, alignment band maintained | Environmental / until next dawn | Quiet / Noted | Works for all three faction alignments; the meaning changes with the band. |
+| Thalmor Orthodox | Costly enforcement as faith | ThalmorAlignment 70+, curated enforcement/defense act, heresy protection rejected, Trinimac-compatible martial proof | After-act / rare major | Noted / Marked | Marked only when the act carries real cost, public risk, or major quest weight. |
+| Divine Body | Balanced cultivation under compromise | Moderate alignment held, College or civic act completed without either rigid enforcement or collapse into heterodoxy | After-act | Noted | This lane keeps the middle path from feeling like a weaker version of Orthodox or Psijic. |
+| Psijic / Heterodox | Self-cultivation after doubt | ThalmorAlignment below 30, rare text, College/Psijic milestone, crisis resolved through study rather than enforcement | After-act / environmental | Noted / Marked | Marked only for major self-possessed resolution after a crisis. |
+| Auri-El focus | Return reaffirmed | Dawn rite after `Dissonant`, Auriel shrine, crisis resolution, major sun/return-coded authored beat | Environmental / until noon | Noted / Marked | Auri-El focus gets the cleanest crisis-resolution favor, but not generic day travel. |
+| Magnus focus | The arts made into a road | Magic milestone, Eye of Magnus/College stage, curated spell learned, rare arcane text | After-act / until next major cast | Noted | Use one-shot markers by milestone/book/spell family. |
+| Trinimac focus | Civilization defended by force | Orthodoxy-gated martial proof, threat to elven/civil order defeated, defense quest stage | Momentary combat / after-act | Quiet / Noted / Marked | No generic kill wrappers. Requires alignment and meaningful threat context. |
+| Xarxes focus | Record, lineage, or truth preserved | Ancestry/family/record quest, rare lore book, protected archive/secret that preserves obligation | After-act | Noted | Do not reward generic lockpicking or every hidden thing. |
+| Syrabane focus | The vulnerable mage warded | Ward/protection spell milestone, apprentice/College aid, anti-mage survival, curse/disease warding where curated | Momentary / after-act | Quiet / Noted | Favor should feel protective rather than offensive. |
+
+**Favor boundaries (LOCKED):**
+
+- Generic spell casting, generic book reading, every lock, every kill, every
+  shrine, and ordinary daylight never trigger favor by themselves.
+- Tier 1 / Tier 2 / Tier 3 Lorkhan penalties do not trigger favor just because
+  they happened. Favor requires the player's coherent response afterward.
+- `ThalmorAlignment` band entry can unlock or weight favor families, but the
+  band-crossing notification itself is not a favor.
+- Only one PDV contextual favor boost may be active at a time, using the global
+  cap from the architecture reference.
 
 ---
 

@@ -104,7 +104,7 @@ headers.
 | Neglect texture          | 10.5  | 11.5  | 12.7   | 13.5   | 14.7    | 15.6     | 16.6     | 17.8   | 18.9   | 19.9     |
 | Commitment offer         | 10.6  | n/a   | 12.6   | 13.8   | n/a (silent) | 15.7 | 16.7     | n/a (path setup 17.5) | n/a (tradition setup 18.4) | n/a |
 | Survey readout           | 10.7  | 11.6  | 12.8   | 13.9   | 14.8    | 15.8     | 16.8     | 17.9   | 18.10  | 19.11    |
-| Contextual favors        | 10.8  | 11.7  | 12.9   | gated 13.13 | 14.9 | 15.9 | 16.9   | 17.10  | 18.11  | 19.12    |
+| Contextual favors        | 10.8  | 11.7  | 12.9   | 13.13 | 14.9 | 15.9 | 16.9   | 17.10  | 18.11  | 19.12    |
 | Curse-state transitions  | 10.9  | 11.9  | 12.11  | 13.10  | 14.11   | 15.10    | 16.11    | 17.11  | 18.12  | 19.13    |
 | Shrine / dialogue topics | 10.10 | 11.10 | 12.12  | 13.12  | 14.12   | 15.11    | 16.12    | 17.12  | 18.13  | 19.14    |
 | Race-specific extras     | --    | LifeMode 11.8 | AncestorPosture 12.2 / Tribunal 12.10 | LorkhanPressure 13.6 / ThalmorAlignment 13.7 / LorkhanInterp 13.11 | LunarPhase 14.2 / FocusEmergence 14.5 / RoadHome 14.10 | ConcordatStanding 15.4 | SectEntry 16.4 / FarShoresToken 16.10 | PathChoice 17.5 / OldContract 17.6 / GreenPact 17.7 | TraditionChoice 18.4 / FocusEmergence 18.5 / Track bands 18.7 / DruidicTrial 18.8 | HistPosture 19.2 / HistSap 19.6 / BedOfChoice 19.7 / SithisActivation 19.8 / PostureTransitions 19.10 |
@@ -116,7 +116,7 @@ headers.
 | Nord | drafted (full pilot) | -- |
 | Orc | drafted | -- |
 | Dunmer | drafted | -- |
-| Altmer | **partial** | Crisis-of-faith trigger copy, contextual-favor Marked rows, post-vampire Exiled flavor -- all gated on Altmer implementation-spec close (`PDV_TargetEndStates_1.0.md` line 146) |
+| Altmer | drafted | Altmer crisis/contextual/Exiled rows closed in RaceContent Manifest Section 13.13 after the 2026-05-30 implementation-spec closeout |
 | Khajiit | drafted | -- |
 | Imperial | drafted | -- |
 | Redguard | drafted | -- |
@@ -154,9 +154,11 @@ Neglect / Exit, Per-race response (8 non-native cells per Prince).
 | Vaermina | Dream-nightmare-memory | 7 (stub) | not drafted | Skull of Corruption hooks |
 | Jyggalag | -- | -- | **out of 1.0 scope** | Per `PDV_TargetEndStates_1.0.md` |
 
-1.0 target per Architecture v3 Section 21.1: **8-12 content-ready Princes**.
-Selection prioritizes vanilla hook strength (matrix `BuildabilityTag` and
-`VanillaHookPriority` columns).
+1.0 target per Architecture v3: **all sixteen Skyrim-present Daedric Prince
+surfaces content-ready for every race**. Buildability and vanilla hook strength
+(matrix `BuildabilityTag` and `VanillaHookPriority` columns) still guide
+authoring order, but no Skyrim-present Prince is optional for 1.0. Jyggalag
+remains out of scope unless future adopted content explicitly adds him.
 
 ---
 
@@ -236,9 +238,8 @@ certain about while assembling this matrix:
       its own row?
 - [ ] Section 3 "Race-specific extras" cell: is one cell per race enough,
       or do you want one row per track?
-- [ ] Section 4 "1.0 target 8-12 Princes": which 8 should be authored next?
-      Hircine + Molag Bal are forced by curse-access; the other 6-10 are a
-      choice.
+- [ ] Section 4 "all sixteen Skyrim-present Princes": confirm authoring order
+      now that every Skyrim-present Prince surface is required for 1.0.
 - [ ] Section 6 "Promotion path": is this the criterion you want, or
       should *all* curse + champion + Daedric-response rows promote
       automatically?

@@ -1,0 +1,369 @@
+{
+  "schema": "pdv-race-implementation-costing.v1",
+  "project": "player-devotion-phase20-khajiit",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "id": "phase20-khajiit-implementation-costing",
+  "title": "PDV Phase 20 Khajiit lunar, focus, and road-home implementation costing",
+  "race": "Khajiit",
+  "implementationStatus": "record-wired",
+  "decisionSources": [
+    "race-sheets/PDV_RaceDesign_Khajiit.md",
+    "race-sheets/PDV_RaceContent_Manifest.md#14-khajiit",
+    "references/authoring/PDV_RaceGameplayBalanceAudit.md",
+    "references/authoring/PDV_RaceImplementationCostingBacklog.md",
+    "references/authoring/PDV_RaceRewardBudgetLedger.md",
+    "references/authoring/PDV_RacePlaystyleCoverageLedger.md"
+  ],
+  "designRules": [
+    "Moon phases add texture and small amplification; they must not become required scheduling chores.",
+    "Focused emphasis emerges from play and remains silent by default, not a formal patron-pick menu.",
+    "Khenarthi and Azurah are naturally easy hooks, so Baan Dar, Rajhin, and Alkosh need sharper proof.",
+    "Road homes should reward a circuit and belonging, not repeated camping at one bed.",
+    "ShadowDrift is a priced boundary state, not a free stealth reward."
+  ],
+  "stateSurfaces": [
+    {
+      "editorId": "PDV_GLO_KhajiitFocusedEmphasis",
+      "type": "global-mirror",
+      "status": "record-wired",
+      "enum": [
+        {
+          "name": "None",
+          "value": 0
+        },
+        {
+          "name": "Khenarthi",
+          "value": 1
+        },
+        {
+          "name": "Azurah",
+          "value": 2
+        },
+        {
+          "name": "BaanDar",
+          "value": 3
+        },
+        {
+          "name": "Rajhin",
+          "value": 4
+        },
+        {
+          "name": "Alkosh",
+          "value": 5
+        }
+      ],
+      "notes": [
+        "Focus requires a piety threshold and a meaningful lead; the mirror is CK-readable for verifier/status proof.",
+        "Broad lunar worship remains whole when no focus leads."
+      ]
+    },
+    {
+      "editorId": "PDV_State_KhajiitLunarPosture",
+      "type": "state-track",
+      "status": "planned",
+      "enum": [
+        {
+          "name": "Normal",
+          "value": 0
+        },
+        {
+          "name": "Strained",
+          "value": 1
+        },
+        {
+          "name": "Corrupted",
+          "value": 2
+        },
+        {
+          "name": "ShadowDrift",
+          "value": 3
+        }
+      ],
+      "notes": [
+        "Werewolf strains form, vampire corrupts the Lattice, and ShadowDrift is a behavior boundary."
+      ]
+    },
+    {
+      "editorId": "PDV_State_KhajiitRoadHomeCircuit",
+      "type": "storage-anchor-state",
+      "status": "source-scaffolded",
+      "notes": [
+        "Two or three anchors maximum.",
+        "Requires a circuit; one repeated location alone must not count.",
+        "The first proof slice rejects immediate same-anchor repeats through PDV.Khajiit.RoadHome.LastAnchor."
+      ]
+    }
+  ],
+  "triggerSurfaces": [
+    {
+      "id": "khajiit-moon-observance-proof",
+      "recordStatus": "record-wired",
+      "recordType": "ACTI",
+      "editorId": "PDV_ACTI_KhajiitMoonObservanceSignal",
+      "placementRefEditorId": "PDV_REFR_KhajiitMoonObservanceSignal",
+      "routeId": 10,
+      "requiredOriginRace": 6,
+      "signalValue": 1,
+      "signalSourceId": "khajiit_moon_observance_proof",
+      "oncePerDayKey": "PDV.Signal.KhajiitMoonObservance.Activator",
+      "name": "PDV Khajiit Moon Observance Signal",
+      "activateText": "Record Moon Observance",
+      "placementStatus": "proof-cell-wired"
+    },
+    {
+      "id": "khajiit-road-home-anchor-one-proof",
+      "recordStatus": "record-wired",
+      "recordType": "ACTI",
+      "editorId": "PDV_ACTI_KhajiitRoadHomeAnchorOneSignal",
+      "placementRefEditorId": "PDV_REFR_KhajiitRoadHomeAnchorOneSignal",
+      "routeId": 33,
+      "requiredOriginRace": 6,
+      "signalValue": 1,
+      "signalSourceId": "khajiit_road_home_anchor_one_proof",
+      "oncePerDayKey": "PDV.Signal.KhajiitRoadHome.Activator",
+      "name": "PDV Khajiit Road Home Anchor One Signal",
+      "activateText": "Record Road Home",
+      "placementStatus": "proof-cell-wired"
+    },
+    {
+      "id": "khajiit-road-home-anchor-two-proof",
+      "recordStatus": "record-wired",
+      "recordType": "ACTI",
+      "editorId": "PDV_ACTI_KhajiitRoadHomeAnchorTwoSignal",
+      "placementRefEditorId": "PDV_REFR_KhajiitRoadHomeAnchorTwoSignal",
+      "routeId": 33,
+      "requiredOriginRace": 6,
+      "signalValue": 2,
+      "signalSourceId": "khajiit_road_home_anchor_two_proof",
+      "oncePerDayKey": "PDV.Signal.KhajiitRoadHome.Activator",
+      "name": "PDV Khajiit Road Home Anchor Two Signal",
+      "activateText": "Record Road Home",
+      "placementStatus": "proof-cell-wired"
+    },
+    {
+      "id": "khajiit-baandar-road-trick-proof",
+      "recordStatus": "record-wired",
+      "recordType": "ACTI",
+      "editorId": "PDV_ACTI_KhajiitBaanDarRoadTrickSignal",
+      "placementRefEditorId": "PDV_REFR_KhajiitBaanDarRoadTrickSignal",
+      "routeId": 90,
+      "requiredOriginRace": 6,
+      "signalValue": 0,
+      "signalSourceId": "khajiit_baandar_road_trick_proof",
+      "oncePerDayKey": "PDV.Signal.KhajiitBaanDarRoadTrick.Activator",
+      "name": "PDV Khajiit Baan Dar Road Trick Signal",
+      "activateText": "Record Baan Dar Road Trick",
+      "placementStatus": "proof-cell-wired"
+    },
+    {
+      "id": "khajiit-rajhin-elegant-theft-proof",
+      "recordStatus": "record-wired",
+      "recordType": "ACTI",
+      "editorId": "PDV_ACTI_KhajiitRajhinElegantTheftSignal",
+      "placementRefEditorId": "PDV_REFR_KhajiitRajhinElegantTheftSignal",
+      "routeId": 91,
+      "requiredOriginRace": 6,
+      "signalValue": 0,
+      "signalSourceId": "khajiit_rajhin_elegant_theft_proof",
+      "oncePerDayKey": "PDV.Signal.KhajiitRajhinElegantTheft.Activator",
+      "name": "PDV Khajiit Rajhin Elegant Theft Signal",
+      "activateText": "Record Rajhin Elegant Theft",
+      "placementStatus": "proof-cell-wired"
+    },
+    {
+      "id": "khajiit-alkosh-dragon-order-proof",
+      "recordStatus": "record-wired",
+      "recordType": "ACTI",
+      "editorId": "PDV_ACTI_KhajiitAlkoshDragonOrderSignal",
+      "placementRefEditorId": "PDV_REFR_KhajiitAlkoshDragonOrderSignal",
+      "routeId": 92,
+      "requiredOriginRace": 6,
+      "signalValue": 0,
+      "signalSourceId": "khajiit_alkosh_dragon_order_proof",
+      "oncePerDayKey": "PDV.Signal.KhajiitAlkoshDragonOrder.Activator",
+      "name": "PDV Khajiit Alkosh Dragon Order Signal",
+      "activateText": "Record Alkosh Dragon Order",
+      "placementStatus": "proof-cell-wired"
+    }
+  ],
+  "requiredContentRows": [
+    "PDV_Msg_Khajiit_LunarPosture_Normal",
+    "PDV_Msg_Khajiit_LunarPosture_Strained",
+    "PDV_Msg_Khajiit_LunarPosture_Corrupted",
+    "PDV_Msg_Khajiit_LunarPosture_ShadowDrift",
+    "PDV_Notif_Khajiit_LunarPhase_FullMoons",
+    "PDV_Notif_Khajiit_LunarPhase_Crossed",
+    "PDV_Notif_Khajiit_LunarPhase_Waning",
+    "PDV_Notif_Khajiit_FocusEmergence",
+    "PDV_Msg_Khajiit_Survey_Broad",
+    "PDV_Msg_Khajiit_Survey_Focused",
+    "PDV_Notif_Khajiit_RoadHome_Designate",
+    "PDV_Notif_Khajiit_RoadHome_Return",
+    "PDV_Notif_Khajiit_RoadHome_MissedCadence",
+    "PDV_Msg_Khajiit_CurseState_VampireOnset",
+    "PDV_Msg_Khajiit_CurseState_VampireCured",
+    "PDV_Msg_Khajiit_CurseState_WerewolfOnset",
+    "PDV_Msg_Khajiit_CurseState_ShadowDriftEntry"
+  ],
+  "favorFamilies": [
+    {
+      "id": "substrate-road-life",
+      "row": "PDV_Notif_Khajiit_FavorNoted_Substrate_RoadLife",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "open road",
+        "outdoor night",
+        "no fast travel",
+        "daily cap"
+      ],
+      "rewardIntent": "road and moon texture without chores"
+    },
+    {
+      "id": "substrate-caravan-kinship",
+      "row": "PDV_Notif_Khajiit_FavorNoted_Substrate_CaravanKinship",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "caravan aid",
+        "community encounter",
+        "cooldown"
+      ],
+      "rewardIntent": "belonging outside cities"
+    },
+    {
+      "id": "khenarthi-road-grace",
+      "row": "PDV_Notif_Khajiit_FavorNoted_Khenarthi_RoadGrace",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "Khenarthi emphasis",
+        "open road",
+        "weather or travel"
+      ],
+      "rewardIntent": "road focus with a clear lane"
+    },
+    {
+      "id": "azurah-threshold",
+      "row": "PDV_Notif_Khajiit_FavorNoted_Azurah_Threshold",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "threshold",
+        "dawn or dusk",
+        "major transition"
+      ],
+      "rewardIntent": "mage/scholar/fate route without generic spell spam"
+    },
+    {
+      "id": "baandar-outnumbered",
+      "row": "PDV_Notif_Khajiit_FavorNoted_BaanDar_Outnumbered",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "adversity filter",
+        "outnumbered",
+        "cooldown"
+      ],
+      "rewardIntent": "survival reversal, not combat farming"
+    },
+    {
+      "id": "baandar-reversal",
+      "row": "PDV_Msg_Khajiit_FavorMarked_BaanDar_Reversal",
+      "mode": "marked",
+      "hookSources": [
+        "near-fatal escape",
+        "weekly cap",
+        "pariah survival"
+      ],
+      "rewardIntent": "rare story beat for exile survival"
+    },
+    {
+      "id": "rajhin-elegant-theft",
+      "row": "PDV_Notif_Khajiit_FavorNoted_Rajhin_ElegantTheft",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "notable target",
+        "artful theft",
+        "no petty spam"
+      ],
+      "rewardIntent": "legend-making theft"
+    },
+    {
+      "id": "alkosh-dragon-order",
+      "row": "PDV_Notif_Khajiit_FavorNoted_Alkosh_DragonOrder",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "named dragon",
+        "order-keeping beat",
+        "rare"
+      ],
+      "rewardIntent": "rare cosmic-order lane without dragon-kill spam"
+    }
+  ],
+  "rejectedHooks": [
+    "required visual moon inspection",
+    "fragile weather or sky dependency",
+    "moon-sugar use",
+    "manual focus selection as entitlement",
+    "generic crime",
+    "generic combat",
+    "repeating one bed",
+    "fast travel loop",
+    "generic inn sleep",
+    "Khenarthi or Azurah crowding every playstyle",
+    "Rajhin generic theft",
+    "Alkosh generic dragon kill spam",
+    "ShadowDrift as free stealth reward"
+  ],
+  "immersionProof": {
+    "signaturePromise": "The moons and road shape Khajiit belonging without becoming a calendar chore or stealth tax.",
+    "diegeticTriggerMeaning": [
+      "Moon cadence is texture and small amplification; focus emerges from lived behavior rather than manual patron selection.",
+      "Road homes, caravan kinship, and Baan Dar/Rajhin/Alkosh hooks give movement, trickery, legend, and order their own lanes."
+    ],
+    "feedbackSurface": [
+      "Lunar posture, focus emergence, broad/focused Survey rows, and road-home notifications explain current belonging.",
+      "Quiet favor rows keep moon/road presence light; marked Baan Dar reversal carries rare story payoff."
+    ],
+    "rejectedGenericBehavior": [
+      "required visual moon inspection",
+      "moon-sugar use",
+      "manual focus selection as entitlement",
+      "fast travel loop",
+      "Rajhin generic theft",
+      "Alkosh generic dragon kill spam"
+    ],
+    "normalSessionFeel": "A Khajiit feels held by moon and road during ordinary travel, sleep, and community play without needing to schedule phases or farm crime.",
+    "runtimePromotionGate": "Before high-value focus favors, prove fallback moon cadence, focus readback, road-home anti-chore behavior, and negative cases for moon-sugar, fast travel, generic theft, and dragon spam."
+  },
+  "verifierExpectations": {
+    "strictFlags": [
+      "--strict-phase20-race-costing"
+    ],
+    "status": "proof-placement-gate-live",
+    "rules": [
+      "moon source must have a safe fallback and small non-required phase bonus",
+      "focused-emphasis enum/readback and threshold rules are checked before focus rewards expand",
+      "road-home cadence requires cycling and rejects one-bed loops",
+      "Baan Dar, Rajhin, and Alkosh have distinct accepted and rejected surfaces"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "fallback lunar cadence works even without reliable visible moon detection",
+      "focused emphasis emerges from play at threshold and can be explained in Survey/status",
+      "road-home circuit rewards varied anchors while keeping broad worship intact",
+      "Baan Dar, Rajhin, and Alkosh each have at least one sharp behavior-specific proof route"
+    ],
+    "negative": [
+      "moon-sugar use does not drive lunar devotion",
+      "fast travel or one-bed camping does not satisfy road-home cadence",
+      "generic crime or petty theft does not satisfy Rajhin",
+      "generic dragon kills do not repeatedly satisfy Alkosh",
+      "ordinary night stealth does not enter ShadowDrift"
+    ]
+  },
+  "firstImplementationSlice": [
+    "Implement or verify fallback moon cadence and focused-emphasis readback before high-value focus favors.",
+    "Build road-home anchor/circuit behavior with one-bed and fast-travel negative cases.",
+    "Add one proof route each for Baan Dar, Rajhin, and Alkosh so Khenarthi/Azurah do not dominate.",
+    "Add ShadowDrift posture as a priced boundary with explicit rejection of ordinary night stealth."
+  ]
+}

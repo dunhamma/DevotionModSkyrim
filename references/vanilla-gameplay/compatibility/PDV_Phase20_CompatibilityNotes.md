@@ -1,13 +1,18 @@
-# PDV Phase 20 Compatibility Notes
+# PDV Phase 21 Compatibility Notes
 
-Status: living reference - Phase 20 rebaseline
+Status: living reference - Phase 21 compatibility rebaseline
 
 This file explains how to read `phase20-targets.csv`. It is internal planning
 evidence, not a public support claim and not maintainer endorsement.
 
+Filename note: the `phase20-*` filenames are retained for continuity with
+existing handoff references, but compatibility package work is now Phase 21.
+Phase 21 begins after Phase 20 stabilizes the full roster/content lock, because
+compatibility smoke is only meaningful against the complete mod surface.
+
 ## Target And Release Bar
 
-Phase 20 targets seven list-author packages:
+Phase 21 targets seven list-author packages:
 
 - P0: Authoria / ARR
 - P1: JOJ, TOT, HOH, MOM, DoD, VOV

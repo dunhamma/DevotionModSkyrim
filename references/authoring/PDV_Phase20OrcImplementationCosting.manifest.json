@@ -1,0 +1,277 @@
+{
+  "schema": "pdv-race-implementation-costing.v1",
+  "project": "player-devotion-phase20-orc",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "id": "phase20-orc-implementation-costing",
+  "title": "PDV Phase 20 Orc life-mode and Malacath parity implementation costing",
+  "race": "Orc",
+  "implementationStatus": "record-wired",
+  "decisionSources": [
+    "race-sheets/PDV_RaceDesign_Orc.md",
+    "race-sheets/PDV_RaceContent_Manifest.md#11-orc",
+    "references/authoring/PDV_RaceGameplayBalanceAudit.md",
+    "references/authoring/PDV_RaceImplementationCostingBacklog.md",
+    "references/authoring/PDV_RaceRewardBudgetLedger.md",
+    "references/authoring/PDV_RacePlaystyleCoverageLedger.md"
+  ],
+  "designRules": [
+    "Malacath is the religious spine; depth comes from life mode, not deity shopping.",
+    "Stronghold, City, and Legion/Exile need distinct value, not one full route and two weaker variants.",
+    "Forge rewards require quality, context, value, or commission filters.",
+    "City and Legion/Exile play must show dignity, service, and self-made community instead of missing stronghold status.",
+    "Werewolf can be judged by the code; vampire remains outside the test until cured."
+  ],
+  "stateSurfaces": [
+    {
+      "editorId": "PDV_StateTrack_OrcLifeMode",
+      "type": "state-track",
+      "status": "record-wired",
+      "enum": [
+        {
+          "name": "City",
+          "value": 0
+        },
+        {
+          "name": "Stronghold",
+          "value": 1
+        },
+        {
+          "name": "LegionExile",
+          "value": 2
+        }
+      ],
+      "notes": [
+        "Only one life-mode scoring lane can be active at a time.",
+        "Reuses the skeleton scaffold record already present in the framework ESP.",
+        "Switches should resolve through world evidence or setup confirmation, then soft-lock briefly."
+      ]
+    },
+    {
+      "editorId": "PDV_GLO_OrcLifeMode",
+      "type": "global-mirror",
+      "status": "record-wired",
+      "notes": [
+        "Existing skeleton global mirrors the active life mode for records, dialogue conditions, and Survey Devotion."
+      ]
+    }
+  ],
+  "triggerSurfaces": [
+    {
+      "id": "orc-stronghold-forge-proof",
+      "editorId": "PDV_ACTI_OrcStrongholdForgeSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_OrcStrongholdForgeSignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 70,
+      "requiredOriginRace": 8,
+      "signalValue": 1,
+      "signalSourceId": "orc_stronghold_forge_proof",
+      "oncePerDayKey": "PDV.Signal.OrcStrongholdForge",
+      "name": "PDV Orc Stronghold Forge Signal",
+      "activateText": "Record Stronghold Forge"
+    },
+    {
+      "id": "orc-city-dignity-proof",
+      "editorId": "PDV_ACTI_OrcCityDignitySignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_OrcCityDignitySignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 71,
+      "requiredOriginRace": 8,
+      "signalValue": 0,
+      "signalSourceId": "orc_city_dignity_proof",
+      "oncePerDayKey": "PDV.Signal.OrcCityDignity",
+      "name": "PDV Orc City Dignity Signal",
+      "activateText": "Record City Dignity"
+    },
+    {
+      "id": "orc-legion-service-proof",
+      "editorId": "PDV_ACTI_OrcLegionServiceSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_OrcLegionServiceSignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 72,
+      "requiredOriginRace": 8,
+      "signalValue": 2,
+      "signalSourceId": "orc_legion_service_proof",
+      "oncePerDayKey": "PDV.Signal.OrcLegionService",
+      "name": "PDV Orc Legion Service Signal",
+      "activateText": "Record Legion Service"
+    },
+    {
+      "id": "orc-self-made-community-proof",
+      "editorId": "PDV_ACTI_OrcSelfMadeCommunitySignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_OrcSelfMadeCommunitySignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 73,
+      "requiredOriginRace": 8,
+      "signalValue": 0,
+      "signalSourceId": "orc_self_made_community_proof",
+      "oncePerDayKey": "PDV.Signal.OrcSelfMadeCommunity",
+      "name": "PDV Orc Self-Made Community Signal",
+      "activateText": "Record Self-Made Community"
+    }
+  ],
+  "requiredContentRows": [
+    "PDV_Msg_Orc_Survey_Stronghold",
+    "PDV_Msg_Orc_Survey_City",
+    "PDV_Msg_Orc_Survey_LegionExile",
+    "PDV_Notif_Orc_LifeMode_Stronghold_Entry",
+    "PDV_Notif_Orc_LifeMode_City_Entry",
+    "PDV_Notif_Orc_LifeMode_LegionExile_Entry",
+    "PDV_Msg_Orc_Malacath_ChampionEntry_Stronghold",
+    "PDV_Msg_Orc_Malacath_ChampionEntry_City",
+    "PDV_Msg_Orc_Malacath_ChampionEntry_LegionExile",
+    "PDV_Msg_Orc_CurseState_WerewolfOnset",
+    "PDV_Msg_Orc_CurseState_VampireOnset",
+    "PDV_Msg_Orc_CurseState_VampireCured"
+  ],
+  "favorFamilies": [
+    {
+      "id": "stronghold-forge-excellence",
+      "row": "PDV_Notif_Orc_FavorNoted_Stronghold_ForgeExcellence",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "quality forge",
+        "value or commission threshold",
+        "daily cap"
+      ],
+      "rewardIntent": "forge-as-rite without raw craft spam"
+    },
+    {
+      "id": "stronghold-bloodkin-crisis",
+      "row": "PDV_Msg_Orc_FavorMarked_Stronghold_BloodKinCrisis",
+      "mode": "marked",
+      "hookSources": [
+        "major stronghold crisis",
+        "Blood-Kin context",
+        "rare event"
+      ],
+      "rewardIntent": "kinship recognized as high-value communal proof"
+    },
+    {
+      "id": "city-quality-labor",
+      "row": "PDV_Notif_Orc_FavorNoted_City_QualityLabor",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "named commission",
+        "quality labor",
+        "city context"
+      ],
+      "rewardIntent": "City Orc is not failed Stronghold Orc"
+    },
+    {
+      "id": "city-dignity",
+      "row": "PDV_Notif_Orc_FavorNoted_City_Dignity",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "curated dismissal",
+        "dignity under pressure"
+      ],
+      "rewardIntent": "social friction becomes visible faith texture"
+    },
+    {
+      "id": "city-self-made-community",
+      "row": "PDV_Notif_Orc_FavorNoted_City_SelfMadeCommunity",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "protected place",
+        "community investment",
+        "non-stronghold anchor"
+      ],
+      "rewardIntent": "belonging built outside the hold"
+    },
+    {
+      "id": "legion-contract-pressure",
+      "row": "PDV_Notif_Orc_FavorNoted_LegionExile_ContractPressure",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "pressure-bearing service completion",
+        "curated faction stage"
+      ],
+      "rewardIntent": "foreign discipline can carry the code"
+    },
+    {
+      "id": "legion-exile-burden",
+      "row": "PDV_Msg_Orc_FavorMarked_LegionExile_ExileBurden",
+      "mode": "marked",
+      "hookSources": [
+        "major return",
+        "service completed",
+        "place restored or built"
+      ],
+      "rewardIntent": "service and exile earn a memorable return"
+    }
+  ],
+  "rejectedHooks": [
+    "raw craft count",
+    "generic kill count",
+    "generic dungeon clear",
+    "ordinary city presence",
+    "ambient insult parser",
+    "raw barter count",
+    "Legion faction membership alone",
+    "generic patrol",
+    "mode chosen only from MCM without world confirmation",
+    "Aedra or Daedra as normal Orc worship beside Malacath"
+  ],
+  "immersionProof": {
+    "signaturePromise": "Malacath devotion is dignity under pressure across Stronghold, City, and Legion or Exile life.",
+    "diegeticTriggerMeaning": [
+      "Quality labor, kinship crisis, service pressure, and self-made community are proofs of code and dignity, not generic crafting or faction reward.",
+      "Life-mode rewards explain where the Orc belongs right now while keeping Malacath as the religious spine."
+    ],
+    "feedbackSurface": [
+      "Survey/status distinguishes Stronghold, City, and LegionExile life modes.",
+      "Quiet favor copy handles labor and dignity; marked favor copy handles Blood-Kin crisis or exile burden."
+    ],
+    "rejectedGenericBehavior": [
+      "raw craft count",
+      "generic kill count",
+      "ordinary city presence",
+      "Legion faction membership alone",
+      "mode chosen only from MCM without world confirmation"
+    ],
+    "normalSessionFeel": "A City or Legion/Exile Orc has a complete devotional life through dignity, service, quality labor, and self-made belonging beside Stronghold play.",
+    "runtimePromotionGate": "Do not ship Stronghold-only Orc depth; prove one Stronghold beat and one City or Legion/Exile parity beat with rejected craft, kill, and membership loops."
+  },
+  "verifierExpectations": {
+    "strictFlags": [
+      "--strict-phase20-race-costing"
+    ],
+    "status": "proof-placement-gate-live",
+    "rules": [
+      "life-mode enum/readback exists and is wired before mode-specific rewards ship",
+      "four Orc proof ACTI records route through EventSignalActivator and EventBus",
+      "Stronghold, City, and Legion/Exile have at least one proofable favor family each",
+      "forge and combat hooks include quality/context filters and caps",
+      "runtime proof includes at least one City or Legion/Exile parity beat beside Stronghold"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "a Stronghold Orc can receive a quality-forge or Blood-Kin favor without raw crafting loops",
+      "a City Orc can receive dignity, quality labor, or self-made community recognition",
+      "a Legion/Exile Orc can receive service pressure and return-burden recognition",
+      "Survey Devotion reports the active life mode and standing clearly"
+    ],
+    "negative": [
+      "raw craft count does not farm Malacath favor",
+      "generic kills or dungeon clears do not satisfy worthy challenge",
+      "Legion membership alone does not enter LegionExile devotion",
+      "ordinary city presence or ambient insult text does not create City-mode reward"
+    ]
+  },
+  "firstImplementationSlice": [
+    "Wire Orc life-mode state/readback and status copy.",
+    "Implement Stronghold forge, City dignity, Legion/Exile service, and self-made community proof surfaces before any Stronghold-only expansion.",
+    "Add anti-farm assertions for raw crafting, generic kills, generic patrols, and MCM-only mode choice.",
+    "Keep vampire and werewolf curse posture separate from normal life-mode scoring."
+  ]
+}

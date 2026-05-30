@@ -1,0 +1,422 @@
+{
+  "schema": "pdv-race-implementation-costing.v1",
+  "project": "player-devotion-phase20-altmer",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "id": "phase20-altmer-implementation-costing",
+  "title": "PDV Phase 20 Altmer crisis, Lorkhan, and favor implementation costing",
+  "race": "Altmer",
+  "implementationStatus": "curse-message-wired",
+  "decisionSources": [
+    "race-sheets/PDV_RaceDesign_Altmer.md",
+    "race-sheets/PDV_RaceContent_Manifest.md#13-altmer",
+    "references/authoring/PDV_RaceGameplayBalanceAudit.md",
+    "references/authoring/PDV_RaceImplementationCostingBacklog.md"
+  ],
+  "designRules": [
+    "Auri-El remains the foundation; secondary focus and alignment modify play but do not create generic broad worship.",
+    "Lorkhan pressure is authored and tagged, not ambient Skyrim existence.",
+    "Crisis states are player-readable and recoverable; they do not silently remove a patron.",
+    "Positive devotional upkeep must trend net-positive for normal Altmer play.",
+    "Vampire Altmer is terminal or exile-limited while cursed; werewolf hard-halts advancement.",
+    "Only one active contextual favor family should be loud at a time unless a later manifest explicitly widens that rule."
+  ],
+  "stateSurfaces": [
+    {
+      "editorId": "PDV_State_AltmerCrisis",
+      "type": "state-track",
+      "status": "record-wired",
+      "enum": [
+        {
+          "name": "None",
+          "value": 0
+        },
+        {
+          "name": "Dissonant",
+          "value": 1
+        },
+        {
+          "name": "Questioning",
+          "value": 2
+        },
+        {
+          "name": "Reasserting",
+          "value": 3
+        },
+        {
+          "name": "ScarredResolved",
+          "value": 4
+        }
+      ],
+      "notes": [
+        "Record-wired as a PDV_StateTrack on PDV__ManagerQuest through pdv-phase20-altmer-author.",
+        "ScarredResolved is memory, not an active punishment state."
+      ]
+    },
+    {
+      "editorId": "PDV_RepTrack_ThalmorAlignment",
+      "type": "rep-track",
+      "status": "existing-design-contract",
+      "bands": [
+        {
+          "name": "Heterodox",
+          "min": 0,
+          "max": 30
+        },
+        {
+          "name": "OrthodoxModerate",
+          "min": 31,
+          "max": 69
+        },
+        {
+          "name": "ThalmorDevout",
+          "min": 70,
+          "max": 100
+        }
+      ],
+      "startValues": [
+        {
+          "setup": "orthodox",
+          "value": 75
+        },
+        {
+          "setup": "moderate",
+          "value": 50
+        },
+        {
+          "setup": "heterodox",
+          "value": 25
+        }
+      ],
+      "notes": [
+        "Alignment gates interpretation, access, and Trinimac posture.",
+        "It is not a third steady boon package."
+      ]
+    }
+  ],
+  "crisisSources": [
+    {
+      "id": "dragonborn-declaration",
+      "surface": "Main quest / Dragonborn identity",
+      "crisisWeight": "major-first-time",
+      "contentRow": "PDV_Msg_Altmer_LorkhanCrisis_DragonbornDeclaration",
+      "antiRepeat": "first authored declaration only; later Dragonborn identity is scar/context, not repeated penalty"
+    },
+    {
+      "id": "sovngarde-tsun-reality",
+      "surface": "Sovngarde / Tsun proof",
+      "crisisWeight": "major",
+      "contentRow": "PDV_Msg_Altmer_LorkhanCrisis_SovngardeBeat",
+      "antiRepeat": "quest-stage or milestone only"
+    },
+    {
+      "id": "talos-thalmor-contradiction",
+      "surface": "Talos / Thalmor contradiction",
+      "crisisWeight": "major",
+      "contentRow": "PDV_Msg_Altmer_LorkhanCrisis_TalosContradiction",
+      "antiRepeat": "authored contradiction only; generic anti-Thalmor violence rejected"
+    },
+    {
+      "id": "companions-wuuthrad-beast-fork",
+      "surface": "Companions / Wuuthrad / beast fork",
+      "crisisWeight": "major",
+      "contentRow": "PDV_Msg_Altmer_LorkhanCrisis_CompanionsFork",
+      "antiRepeat": "curated Companions or beast-form fork only"
+    }
+  ],
+  "favorFamilies": [
+    {
+      "id": "shared-dawn-steadiness",
+      "row": "PDV_Notif_Altmer_FavorNoted_Shared_DawnSteadiness",
+      "runtimeFamilyValue": 31,
+      "recordStatus": "record-wired",
+      "keyword": "PDV_FavorFamily_AltmerDawnSteadiness",
+      "magicEffect": "PDV_Favor_Altmer_Shared_DawnSteadiness",
+      "spell": "PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness",
+      "name": "Altmer: Dawn Steadiness",
+      "description": "The dissonance settles into disciplined dawn practice.",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "dawn practice",
+        "coherent upkeep"
+      ],
+      "rewardIntent": "stability and reassurance"
+    },
+    {
+      "id": "shared-coherence-held",
+      "row": "PDV_Notif_Altmer_FavorNoted_Shared_CoherenceHeld",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "explicit crisis restraint",
+        "reassertion without denial"
+      ],
+      "rewardIntent": "recovery after pressure"
+    },
+    {
+      "id": "orthodox-costly-enforcement",
+      "row": "PDV_Msg_Altmer_FavorMarked_Orthodox_CostlyEnforcement",
+      "runtimeFamilyValue": 32,
+      "recordStatus": "record-wired",
+      "keyword": "PDV_FavorFamily_AltmerOrthodoxCost",
+      "magicEffect": "PDV_Favor_Altmer_Orthodox_CostlyEnforcement",
+      "spell": "PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement",
+      "name": "Altmer: Orthodox Cost",
+      "description": "Costly enforcement leaves a brief steadiness of ancestral order.",
+      "mode": "marked",
+      "hookSources": [
+        "ThalmorAlignment >= 70",
+        "orthodoxy-gated threat defeated",
+        "meaningful institutional duty"
+      ],
+      "rewardIntent": "authority and discipline without generic violence"
+    },
+    {
+      "id": "divine-body-balanced-cultivation",
+      "row": "PDV_Notif_Altmer_FavorNoted_DivineBody_BalancedCultivation",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "bounded self-cultivation",
+        "restoration or warding framed through preservation"
+      ],
+      "rewardIntent": "low-violence support through coherence"
+    },
+    {
+      "id": "psijic-crisis-study",
+      "row": "PDV_Msg_Altmer_FavorMarked_Psijic_CrisisStudy",
+      "mode": "marked",
+      "hookSources": [
+        "heterodox study",
+        "crisis investigation",
+        "rare text or threshold learning"
+      ],
+      "rewardIntent": "scholarship that pays for uncertainty"
+    },
+    {
+      "id": "auriel-return-reaffirmed",
+      "row": "PDV_Notif_Altmer_FavorNoted_AuriEl_ReturnReaffirmed",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "Auri-El foundation",
+        "dawn and return imagery",
+        "resolved crisis posture"
+      ],
+      "rewardIntent": "foundation recovery"
+    },
+    {
+      "id": "magnus-arts-road",
+      "row": "PDV_Notif_Altmer_FavorNoted_Magnus_ArtsRoad",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "magic milestone",
+        "study",
+        "restraint in power use"
+      ],
+      "rewardIntent": "mage/scholar parity without spell-spam"
+    },
+    {
+      "id": "trinimac-civilization-defended",
+      "row": "PDV_Notif_Altmer_FavorNoted_Trinimac_CivilizationDefended",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "ThalmorAlignment >= 70",
+        "civilization defense",
+        "orthodoxy-gated threat"
+      ],
+      "rewardIntent": "warrior/enforcer support with a high gate"
+    },
+    {
+      "id": "xarxes-record-kept",
+      "row": "PDV_Notif_Altmer_FavorNoted_Xarxes_RecordKept",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "records",
+        "genealogy",
+        "rare text",
+        "institutional memory"
+      ],
+      "rewardIntent": "non-combat record keeping"
+    },
+    {
+      "id": "syrabane-warded",
+      "row": "PDV_Notif_Altmer_FavorNoted_Syrabane_Warded",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "warding",
+        "protective magic",
+        "safe recovery"
+      ],
+      "rewardIntent": "protective support without generic mercy copy"
+    }
+  ],
+  "triggerSurfaces": [
+    {
+      "id": "altmer-dragonborn-crisis-proof",
+      "recordStatus": "record-wired",
+      "placementStatus": "proof-cell-wired",
+      "recordType": "ACTI",
+      "editorId": "PDV_ACTI_AltmerDragonbornCrisisSignal",
+      "placementRefEditorId": "PDV_REFR_AltmerDragonbornCrisisSignal",
+      "routeId": 51,
+      "requiredOriginRace": 3,
+      "signalValue": 1,
+      "signalSourceId": "altmer_dragonborn_declaration_proof",
+      "oncePerDayKey": "PDV.Signal.AltmerDragonbornCrisis.Activator",
+      "name": "Altmer: Dragonborn Crisis Signal",
+      "activateText": "Contemplate the Dragonborn contradiction",
+      "runtimeIntent": "first authored crisis source proof for Dissonant"
+    },
+    {
+      "id": "altmer-lorkhan-pressure-proof",
+      "recordStatus": "record-wired",
+      "placementStatus": "proof-cell-wired",
+      "recordType": "ACTI",
+      "editorId": "PDV_ACTI_AltmerLorkhanPressureSignal",
+      "placementRefEditorId": "PDV_REFR_AltmerLorkhanPressureSignal",
+      "routeId": 50,
+      "requiredOriginRace": 3,
+      "signalValue": 3,
+      "signalSourceId": "altmer_lorkhan_mortal_validation_proof",
+      "oncePerDayKey": "PDV.Signal.AltmerLorkhanPressure.Activator",
+      "name": "Altmer: Lorkhan Pressure Signal",
+      "activateText": "Study the mortal contradiction",
+      "runtimeIntent": "tagged Lorkhan pressure proof without ambient Skyrim penalties"
+    },
+    {
+      "id": "altmer-dawn-steadiness-proof",
+      "recordStatus": "record-wired",
+      "placementStatus": "proof-cell-wired",
+      "recordType": "ACTI",
+      "editorId": "PDV_ACTI_AltmerDawnSteadinessSignal",
+      "placementRefEditorId": "PDV_REFR_AltmerDawnSteadinessSignal",
+      "routeId": 52,
+      "requiredOriginRace": 3,
+      "signalValue": 0,
+      "signalSourceId": "altmer_dawn_steadiness_proof",
+      "oncePerDayKey": "PDV.Signal.AltmerDawnSteadiness.Activator",
+      "name": "Altmer: Dawn Steadiness Signal",
+      "activateText": "Keep dawn discipline",
+      "runtimeIntent": "daily-life positive loop proof"
+    },
+    {
+      "id": "altmer-orthodox-cost-proof",
+      "recordStatus": "record-wired",
+      "placementStatus": "proof-cell-wired",
+      "recordType": "ACTI",
+      "editorId": "PDV_ACTI_AltmerOrthodoxCostSignal",
+      "placementRefEditorId": "PDV_REFR_AltmerOrthodoxCostSignal",
+      "routeId": 53,
+      "requiredOriginRace": 3,
+      "signalValue": 0,
+      "signalSourceId": "altmer_orthodox_cost_proof",
+      "oncePerDayKey": "PDV.Signal.AltmerOrthodoxCost.Activator",
+      "name": "Altmer: Orthodox Cost Signal",
+      "activateText": "Bear the orthodox cost",
+      "runtimeIntent": "marked orthodox-cost favor proof"
+    }
+  ],
+  "curseAndExileRules": [
+    {
+      "id": "vampire-exile-entry",
+      "row": "PDV_Msg_Altmer_VampireExiledPath_Entry",
+      "recordStatus": "record-wired",
+      "recordType": "MESG",
+      "title": "Exile From The Dawn",
+      "body": "Auri-El is closed while you flee the sun. Still, an Altmer does not become nothing because the records cast them out. What remains is exile: a narrow discipline, a name kept privately, never a full return.",
+      "requiredBehavior": "block full orthodox restoration while cursed; allow exile-limited flavor only"
+    },
+    {
+      "id": "vampire-exile-recognition",
+      "row": "PDV_Msg_Altmer_VampireExiledPath_Recognition",
+      "recordStatus": "record-wired",
+      "recordType": "MESG",
+      "title": "Exiled From The Dawn",
+      "body": "You are exiled from the dawn, not restored to it. A thin discipline remains, capped low, held only by refusal to collapse.",
+      "requiredBehavior": "recognition is scarred and conditional, not a clean replacement path"
+    },
+    {
+      "id": "werewolf-hard-halt",
+      "row": "PDV_Msg_Altmer_CurseState_WerewolfHardHalt",
+      "recordStatus": "record-wired",
+      "recordType": "MESG",
+      "title": "The Project Inverted",
+      "body": "The whole of Altmer faith is to become spirit again. You have become a beast. There is no doctrine for this, no heresy small enough to hold it, no path in any direction. Devotion stops here.",
+      "requiredBehavior": "halt advancement instead of opening a rival viable Altmer path"
+    }
+  ],
+  "rejectedHooks": [
+    "ordinary existence in Skyrim",
+    "ordinary friendship with Nords or non-Altmer",
+    "ordinary settlement travel",
+    "generic combat",
+    "generic helping",
+    "generic spellcasting spam",
+    "raw skill gain without context",
+    "generic College membership",
+    "generic anti-Thalmor violence",
+    "post-first-crisis Dragonborn identity as repeated penalty",
+    "vampire power as a clean devotion route"
+  ],
+  "immersionProof": {
+    "signaturePromise": "Coherence is tested by Skyrim's Lorkhan-shaped world without punishing ordinary life.",
+    "diegeticTriggerMeaning": [
+      "Lorkhan pressure fires only when an authored event forces an Altmer theological contradiction.",
+      "Dawn steadiness and orthodox costly enforcement read as Auri-El/coherence maintenance, not generic magic reward."
+    ],
+    "feedbackSurface": [
+      "Crisis messages and StateLabels explain None, Dissonant, Questioning, Reasserting, and ScarredResolved.",
+      "Survey/status through GetAltmerSummary and quiet/marked favor copy tells the player whether pressure, recovery, or orthodoxy is active."
+    ],
+    "rejectedGenericBehavior": [
+      "ordinary existence in Skyrim",
+      "ordinary friendship with Nords or non-Altmer",
+      "generic spellcasting spam",
+      "generic anti-Thalmor violence",
+      "post-first-crisis Dragonborn identity as repeated penalty"
+    ],
+    "normalSessionFeel": "A non-edge Altmer can study, practice dawn devotion, travel, and recover from one major crisis without hidden theological debt.",
+    "runtimePromotionGate": "Before stronger Altmer rewards ship, prove one authored crisis, one daily-life positive loop, rejected ordinary surfaces, and recovery or scar readout."
+  },
+  "verifierExpectations": {
+    "strictFlag": "--strict-phase20-altmer",
+    "strictFlags": [
+      "--strict-phase20-race-costing",
+      "--strict-phase20-altmer"
+    ],
+    "status": "proof-placement-gate-live",
+    "rules": [
+      "PDV_State_AltmerCrisis exists or the source has a tracked TODO-blocking assertion naming the missing record",
+      "manager source defines the crisis enum with the locked numeric values",
+      "record-wired Altmer favor families have KYWD, MGEF, and SPEL records and manager spell properties",
+      "all Altmer crisis, favor, curse, and Exiled vampire rows named in this manifest exist in PDV_RaceContent_Manifest.md",
+      "record-wired Altmer curse and Exiled vampire rows have MESG records and manager message properties",
+      "Lorkhan pressure routes only reference tagged/curated source families",
+      "record-wired Altmer trigger surfaces have ACTI records with PDV_EventSignalActivator, route IDs, origin gates, source IDs, and daily keys",
+      "Altmer trigger surfaces declare placementRefEditorId values and proof-placement-gate-live surfaces read back their QASmoke references",
+      "rejected hook strings are represented by verifier assertions or runtime negative cases before the slice is marked built",
+      "contextual favor logic exposes one active loud favor family unless the later implementation manifest explicitly widens this"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "fresh Altmer can maintain net-positive devotion through dawn practice, study, and coherent behavior without perfect play",
+      "a first authored crisis source can enter Dissonant or Questioning and show the matching player-facing message",
+      "a coherent recovery route can move toward Reasserting or ScarredResolved without clearing patron piety",
+      "a focused-deity favor can fire from its intended hook family and remain readable in Survey/status"
+    ],
+    "negative": [
+      "ordinary travel and ordinary friendships do not apply Lorkhan pressure",
+      "generic spellcasting or raw magic skill gain does not trigger Magnus/Syrabane/Xarxes favor by itself",
+      "generic anti-Thalmor violence does not count as Talos contradiction or Trinimac civilization defense",
+      "post-first-crisis Dragonborn identity does not repeatedly penalize the player",
+      "vampire state does not become a stronger clean Altmer devotion route"
+    ]
+  },
+  "firstImplementationSlice": [
+    "PDV_State_AltmerCrisis is record-wired; keep its readback gate clean as trigger work begins.",
+    "The two source-level Altmer favor families now have planned/wired spell surfaces: shared dawn steadiness and orthodox costly enforcement.",
+    "Altmer proof trigger activators are wired as ACTI base records and QASmoke proof references; runtime proof remains pending.",
+    "Add normal-play Lorkhan tag placement and rejected-surface runtime assertions.",
+    "Altmer Exiled vampire and werewolf halt messages are record-wired and manager-wired; runtime proof remains pending.",
+    "Expand --strict-phase20-altmer from manifest/content/source/readback gating into runtime assertions as trigger records exist."
+  ]
+}

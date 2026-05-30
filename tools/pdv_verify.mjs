@@ -12,6 +12,7 @@ import fs from "node:fs";
 import net from "node:net";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { verifyPhase21RosterCoverage } from "./lib/pdv-roster-coverage.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
@@ -112,6 +113,31 @@ const PHASE18_STATUS_NORD_MANIFEST = path.join(
   "references",
   "authoring",
   "PDV_Phase18StatusNord.manifest.json",
+);
+const PHASE20_DEITY_COVERAGE_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_DeityCoverageMatrix.json",
+);
+const PHASE20_ALTMER_IMPLEMENTATION_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase20AltmerImplementationCosting.manifest.json",
+);
+const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
+  PHASE20_ALTMER_IMPLEMENTATION_MANIFEST,
+  path.join(PROJECT_ROOT, "references", "authoring", "PDV_Phase20ArgonianImplementationCosting.manifest.json"),
+  path.join(PROJECT_ROOT, "references", "authoring", "PDV_Phase20OrcImplementationCosting.manifest.json"),
+  path.join(PROJECT_ROOT, "references", "authoring", "PDV_Phase20RedguardImplementationCosting.manifest.json"),
+  path.join(PROJECT_ROOT, "references", "authoring", "PDV_Phase20BosmerNonHunterImplementationCosting.manifest.json"),
+  path.join(PROJECT_ROOT, "references", "authoring", "PDV_Phase20KhajiitImplementationCosting.manifest.json"),
+];
+const RACE_CONTENT_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "race-sheets",
+  "PDV_RaceContent_Manifest.md",
 );
 const PATCH_RULES_DIR = path.join(
   PROJECT_ROOT,
@@ -558,6 +584,7 @@ const COMPILED_SCRIPTS = {
   PDV_CurseState: "required",
   PDV_Substrate_DunmerAncestor: "required",
   PDV_Substrate_KhajiitLunar: "required",
+  PDV_Substrate_ArgonianHist: "required",
   PDV_DaedricPath_Hircine: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
@@ -770,6 +797,9 @@ class Verifier {
     strictPhase17 = false,
     strictPhase18 = false,
     strictPhase19 = false,
+    strictPhase20Roster = false,
+    strictPhase20Altmer = false,
+    strictPhase20RaceCosting = false,
     strictNord = false,
     strictKhajiit = false,
     strictCommitment = false,
@@ -792,6 +822,9 @@ class Verifier {
     this.strictPhase17 = strictPhase17;
     this.strictPhase18 = strictPhase18;
     this.strictPhase19 = strictPhase19;
+    this.strictPhase20Roster = strictPhase20Roster;
+    this.strictPhase20Altmer = strictPhase20Altmer;
+    this.strictPhase20RaceCosting = strictPhase20RaceCosting;
     this.strictNord = strictNord;
     this.strictKhajiit = strictKhajiit;
     this.strictCommitment = strictCommitment;
@@ -960,6 +993,78 @@ class Verifier {
     }
   }
 
+  phase20RosterGap(check, detail, filePath = null) {
+    if (this.strictPhase20Roster) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  phase20AltmerGap(check, detail, filePath = null) {
+    if (this.strictPhase20Altmer) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  phase20RaceCostingGap(check, detail, filePath = null) {
+    if (this.strictPhase20RaceCosting) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  checkPhase20ImmersionProofContract(raceName, manifest, manifestPath, gapFn) {
+    const proof = manifest.immersionProof || {};
+    const issues = [];
+    const stringFields = [
+      "signaturePromise",
+      "normalSessionFeel",
+      "runtimePromotionGate",
+    ];
+    const arrayFields = [
+      ["diegeticTriggerMeaning", 2],
+      ["feedbackSurface", 2],
+      ["rejectedGenericBehavior", 2],
+    ];
+
+    for (const field of stringFields) {
+      if (typeof proof[field] !== "string" || proof[field].trim().length < 20) {
+        issues.push(`${field} is missing or too thin`);
+      }
+    }
+
+    for (const [field, minimum] of arrayFields) {
+      const values = proof[field];
+      if (!Array.isArray(values) || values.filter((value) => typeof value === "string" && value.trim().length >= 10).length < minimum) {
+        issues.push(`${field} needs at least ${minimum} concrete item(s)`);
+      }
+    }
+
+    const rejectedHooks = new Set(manifest.rejectedHooks || []);
+    const rejectedGenericBehavior = Array.isArray(proof.rejectedGenericBehavior) ? proof.rejectedGenericBehavior : [];
+    if (rejectedHooks.size > 0 && !rejectedGenericBehavior.some((hook) => rejectedHooks.has(hook))) {
+      issues.push("rejectedGenericBehavior must include at least one exact rejectedHooks entry");
+    }
+
+    if (issues.length === 0) {
+      this.pass(
+        `Phase 20 ${raceName} immersion proof`,
+        "Manifest declares diegetic trigger meaning, feedback, rejected generic behavior, normal-session feel, and runtime promotion gate.",
+        manifestPath,
+      );
+    } else {
+      gapFn(
+        `Phase 20 ${raceName} immersion proof`,
+        `Immersion proof issue(s): ${issues.join("; ")}.`,
+        manifestPath,
+      );
+    }
+  }
+
   khajiitGap(check, detail, filePath = null) {
     if (this.strictKhajiit) {
       this.fail(check, detail, filePath);
@@ -1018,6 +1123,16 @@ class Verifier {
       this.checkPhase18();
       this.checkOfflinePatcherRules();
       this.checkPhase19GeneratedPatch();
+      this.checkPhase21RosterCoverage();
+      if (this.strictPhase20Altmer || exists(PHASE20_ALTMER_IMPLEMENTATION_MANIFEST)) {
+        this.checkPhase20AltmerImplementationCosting();
+      }
+      if (
+        this.strictPhase20RaceCosting
+        || PHASE20_RACE_IMPLEMENTATION_MANIFESTS.some((manifestPath) => exists(manifestPath))
+      ) {
+        this.checkPhase20RaceImplementationCosting();
+      }
       this.checkPreflightOverlayPatch();
     }
     this.checkScripts();
@@ -2764,6 +2879,1321 @@ class Verifier {
       this.pass("Phase 19 source plugin safety", "PlayerDevotion_Framework.esp does not contain the retired proof-only state-track list injection.", PDV_ESP);
     } else {
       this.phase19Gap("Phase 19 source plugin safety", "PlayerDevotion_Framework.esp unexpectedly contains the retired proof-only state-track list injection.", PDV_ESP);
+    }
+  }
+
+  checkPhase21RosterCoverage() {
+    const findings = verifyPhase21RosterCoverage(PROJECT_ROOT, {
+      strictContentReady: this.strictPhase20Roster,
+    });
+    for (const finding of findings) {
+      const filePath = finding.path || PHASE20_DEITY_COVERAGE_MANIFEST;
+      if (finding.status === "PASS") {
+        this.pass(finding.check, finding.detail, filePath);
+      } else if (finding.status === "INFO") {
+        this.info(finding.check, finding.detail, filePath);
+      } else if (finding.status === "WARN") {
+        this.warn(finding.check, finding.detail, filePath);
+      } else {
+        this.phase20RosterGap(finding.check, finding.detail, filePath);
+      }
+    }
+  }
+
+  checkPhase20AltmerImplementationCosting() {
+    if (!exists(PHASE20_ALTMER_IMPLEMENTATION_MANIFEST)) {
+      this.phase20AltmerGap(
+        "Phase 20 Altmer costing manifest",
+        "Altmer implementation-costing manifest is missing.",
+        PHASE20_ALTMER_IMPLEMENTATION_MANIFEST,
+      );
+      return;
+    }
+
+    let manifest;
+    try {
+      manifest = JSON.parse(fs.readFileSync(PHASE20_ALTMER_IMPLEMENTATION_MANIFEST, "utf8"));
+    } catch (error) {
+      this.phase20AltmerGap(
+        "Phase 20 Altmer costing manifest",
+        `Altmer implementation-costing manifest could not be parsed: ${error.message}`,
+        PHASE20_ALTMER_IMPLEMENTATION_MANIFEST,
+      );
+      return;
+    }
+
+    if (
+      manifest.schema === "pdv-race-implementation-costing.v1"
+      && manifest.id === "phase20-altmer-implementation-costing"
+      && manifest.race === "Altmer"
+    ) {
+      this.pass("Phase 20 Altmer costing manifest", "Altmer costing manifest parsed with the expected schema, id, and race.", PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+    } else {
+      this.phase20AltmerGap(
+        "Phase 20 Altmer costing manifest",
+        `Manifest identity mismatch: schema=${manifest.schema}, id=${manifest.id}, race=${manifest.race}.`,
+        PHASE20_ALTMER_IMPLEMENTATION_MANIFEST,
+      );
+    }
+
+    for (const source of manifest.decisionSources || []) {
+      const relativePath = String(source).split("#")[0];
+      const sourcePath = path.join(PROJECT_ROOT, relativePath);
+      if (exists(sourcePath)) {
+        this.pass("Phase 20 Altmer decision source", `${relativePath} exists.`, sourcePath);
+      } else {
+        this.phase20AltmerGap("Phase 20 Altmer decision source", `${relativePath} is missing.`, sourcePath);
+      }
+    }
+
+    const crisisState = (manifest.stateSurfaces || []).find((surface) => surface.editorId === "PDV_State_AltmerCrisis");
+    const expectedEnum = {
+      None: 0,
+      Dissonant: 1,
+      Questioning: 2,
+      Reasserting: 3,
+      ScarredResolved: 4,
+    };
+    const actualEnum = new Map((crisisState?.enum || []).map((entry) => [entry.name, entry.value]));
+    const enumMismatches = Object.entries(expectedEnum)
+      .filter(([name, value]) => actualEnum.get(name) !== value)
+      .map(([name, value]) => `${name}=${actualEnum.get(name)} expected ${value}`);
+    if (crisisState && enumMismatches.length === 0 && actualEnum.size === Object.keys(expectedEnum).length) {
+      this.pass("Phase 20 Altmer crisis enum", "PDV_State_AltmerCrisis declares the locked crisis enum values.", PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+    } else {
+      this.phase20AltmerGap(
+        "Phase 20 Altmer crisis enum",
+        `PDV_State_AltmerCrisis enum mismatch: ${enumMismatches.join("; ") || "unexpected extra/missing enum entries"}.`,
+        PHASE20_ALTMER_IMPLEMENTATION_MANIFEST,
+      );
+    }
+
+    const implementationStatus = manifest.implementationStatus || "missing";
+    const sourceStatuses = new Set(["source-scaffolded", "source-wired", "record-wired", "favor-records-wired", "trigger-proof-wired", "curse-message-wired", "runtime-proven"]);
+    const recordRequiredStatuses = new Set(["record-wired", "favor-records-wired", "trigger-proof-wired", "curse-message-wired", "runtime-proven"]);
+    const crisisRecord = this.recordsByEdid.get("PDV_State_AltmerCrisis");
+    if (recordRequiredStatuses.has(implementationStatus)) {
+      if (crisisRecord) {
+        this.pass("Phase 20 Altmer crisis record", `PDV_State_AltmerCrisis exists as ${crisisRecord.type}.`, PDV_ESP);
+      } else {
+        this.phase20AltmerGap("Phase 20 Altmer crisis record", "PDV_State_AltmerCrisis is missing after manifest status moved beyond costing.", PDV_ESP);
+      }
+    } else {
+      this.info("Phase 20 Altmer crisis record", `Record readback is not required while manifest status is ${implementationStatus}.`, PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+    }
+
+    if (sourceStatuses.has(implementationStatus)) {
+      const sourceContracts = [
+        {
+          name: "Phase 20 Altmer manager source contract",
+          filePath: path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc"),
+          snippets: [
+            "Int Property ALTMER_CRISIS_NONE = 0 AutoReadOnly",
+            "Int Property ALTMER_CRISIS_SCARRED_RESOLVED = 4 AutoReadOnly",
+            "Int Property FAVOR_LANE_ALTMER = 4 AutoReadOnly",
+            "PDV_StateTrack Property PDV_AltmerCrisisTrack Auto",
+            "Spell Property PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness Auto",
+            "Spell Property PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement Auto",
+            "Message Property PDV_Msg_Altmer_VampireExiledPath_Entry Auto",
+            "Message Property PDV_Msg_Altmer_VampireExiledPath_Recognition Auto",
+            "Message Property PDV_Msg_Altmer_CurseState_WerewolfHardHalt Auto",
+            "FAVOR_FAMILY_ALTMER_DAWN_STEADINESS",
+            "FAVOR_FAMILY_ALTMER_ORTHODOX_COST",
+            "Bool Function IsAltmerFavorSuppressedByCurse",
+            "Function ApplyAltmerCurseHandlers",
+            "Function HandleAltmerLorkhanPressure",
+            "Function HandleAltmerCrisisSource",
+            "Function HandleAltmerDawnSteadiness",
+            "Function HandleAltmerOrthodoxCostlyEnforcement",
+            "TryActivateContextualFavor(FAVOR_LANE_ALTMER",
+            "PDV.Altmer.VampireExileActive",
+            "PDV.Altmer.WerewolfHalt",
+            "Bool Function IsAltmerRejectedLorkhanSurface",
+            "Bool Function DebugAssertAltmerRejectedSurface",
+            "String Function GetAltmerCurseSummary",
+            "String Function GetAltmerSummary",
+          ],
+        },
+        {
+          name: "Phase 20 Altmer event bus source contract",
+          filePath: path.join(DEVOTION_SOURCE, "PDV_EventBus.psc"),
+          snippets: [
+            "Function RouteAltmerLorkhanPressure",
+            "Function RouteAltmerCrisisSource",
+            "Function RouteAltmerDawnSteadiness",
+            "Function RouteAltmerOrthodoxCostlyEnforcement",
+          ],
+        },
+        {
+          name: "Phase 20 Altmer event type source contract",
+          filePath: path.join(DEVOTION_SOURCE, "PDV_EventTypes.psc"),
+          snippets: [
+            "EVT_ALTMER_LORKHAN_PRESSURE",
+            "EVT_ALTMER_CRISIS_SOURCE",
+            "EVT_ALTMER_DAWN_STEADINESS",
+            "EVT_ALTMER_ORTHODOX_COST",
+          ],
+        },
+        {
+          name: "Phase 20 Altmer activator source contract",
+          filePath: path.join(DEVOTION_SOURCE, "PDV_EventSignalActivator.psc"),
+          snippets: [
+            "Int Property SignalValue = 0 Auto",
+            "String Property SignalSourceId = \"\" Auto",
+            "ROUTE_ALTMER_LORKHAN_PRESSURE",
+            "ROUTE_ALTMER_CRISIS_SOURCE",
+            "ROUTE_ALTMER_DAWN_STEADINESS",
+            "ROUTE_ALTMER_ORTHODOX_COST",
+            "RouteAltmerLorkhanPressure(pressureTier, GetSignalSourceId())",
+            "RouteAltmerCrisisSource(crisisSource, GetSignalSourceId())",
+            "Function GetSignalSourceId()",
+          ],
+        },
+        {
+          name: "Phase 20 Altmer effect source contract",
+          filePath: path.join(DEVOTION_SOURCE, "PDV_EventSignalEffect.psc"),
+          snippets: [
+            "Int Property SignalValue = 0 Auto",
+            "String Property SignalSourceId = \"\" Auto",
+            "ROUTE_ALTMER_LORKHAN_PRESSURE",
+            "ROUTE_ALTMER_CRISIS_SOURCE",
+            "ROUTE_ALTMER_DAWN_STEADINESS",
+            "ROUTE_ALTMER_ORTHODOX_COST",
+            "RouteAltmerLorkhanPressure(pressureTier, GetSignalSourceId())",
+            "RouteAltmerCrisisSource(crisisSource, GetSignalSourceId())",
+            "Function GetSignalSourceId()",
+          ],
+        },
+      ];
+
+      for (const contract of sourceContracts) {
+        const source = exists(contract.filePath) ? fs.readFileSync(contract.filePath, "utf8") : "";
+        const missingSnippets = contract.snippets.filter((snippet) => !source.includes(snippet));
+        if (source && missingSnippets.length === 0) {
+          this.pass(contract.name, `${path.basename(contract.filePath)} carries the expected Altmer source hooks.`, contract.filePath);
+        } else {
+          this.phase20AltmerGap(
+            contract.name,
+            `Missing source hook(s): ${missingSnippets.join(", ") || "source file missing"}.`,
+            contract.filePath,
+          );
+        }
+      }
+    } else {
+      this.info("Phase 20 Altmer source contract", `Source hook checks are not required while manifest status is ${implementationStatus}.`, PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+    }
+
+    if (recordRequiredStatuses.has(implementationStatus)) {
+      const trackDetail = this.recordDetails.get("PDV_State_AltmerCrisis");
+      const trackScript = trackDetail ? findScript(trackDetail.fields || {}, "PDV_StateTrack") : null;
+      if (trackScript) {
+        const props = propertyMap(trackScript);
+        this.pass("Phase 20 Altmer crisis track script", "PDV_State_AltmerCrisis carries PDV_StateTrack.", PDV_ESP);
+        this.checkScalarProperty("Phase 20 Altmer crisis track property", props, "TrackName", "AltmerCrisis", this.phase20AltmerGap.bind(this));
+        this.checkObjectPropertyTarget("Phase 20 Altmer crisis track property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase20AltmerGap.bind(this));
+        const labels = propValue(props.get("StateLabels")) || [];
+        const expectedLabels = ["None", "Dissonant", "Questioning", "Reasserting", "ScarredResolved"];
+        if (Array.isArray(labels) && labels.length === expectedLabels.length && labels.every((label, index) => label === expectedLabels[index])) {
+          this.pass("Phase 20 Altmer crisis track property", "StateLabels match the locked crisis enum order.", PDV_ESP);
+        } else {
+          this.phase20AltmerGap("Phase 20 Altmer crisis track property", `StateLabels are ${JSON.stringify(labels)}, expected ${JSON.stringify(expectedLabels)}.`, PDV_ESP);
+        }
+      } else {
+        this.phase20AltmerGap("Phase 20 Altmer crisis track script", "PDV_State_AltmerCrisis is missing PDV_StateTrack.", PDV_ESP);
+      }
+
+      const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+      const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+      if (managerScript) {
+        const managerProps = propertyMap(managerScript);
+        this.checkObjectPropertyTarget("Phase 20 Altmer manager property", managerProps, "PDV_AltmerCrisisTrack", "PDV_State_AltmerCrisis", this.phase20AltmerGap.bind(this));
+        for (const family of (manifest.favorFamilies || []).filter((entry) => entry.recordStatus === "record-wired")) {
+          if (family.spell) {
+            this.checkObjectPropertyTarget("Phase 20 Altmer favor manager property", managerProps, family.spell, family.spell, this.phase20AltmerGap.bind(this));
+          }
+        }
+        for (const rule of (manifest.curseAndExileRules || []).filter((entry) => entry.recordStatus === "record-wired")) {
+          if (rule.row) {
+            this.checkObjectPropertyTarget("Phase 20 Altmer curse manager property", managerProps, rule.row, rule.row, this.phase20AltmerGap.bind(this));
+          }
+        }
+      } else {
+        this.phase20AltmerGap("Phase 20 Altmer manager property", "PDV__ManagerQuest script readback is missing.", PDV_ESP);
+      }
+    }
+
+    for (const family of (manifest.favorFamilies || []).filter((entry) => entry.recordStatus === "record-wired")) {
+      this.checkPhase20AltmerRecordType(family.keyword, "KYWD");
+      this.checkPhase20AltmerRecordType(family.magicEffect, "MGEF");
+      this.checkPhase20AltmerRecordType(family.spell, "SPEL");
+      this.checkPhase20AltmerSpellEffect(family.spell, family.magicEffect);
+      this.checkPhase20AltmerMagicEffectKeyword(family.magicEffect, family.keyword);
+    }
+
+    for (const trigger of (manifest.triggerSurfaces || []).filter((entry) => entry.recordStatus === "record-wired")) {
+      this.checkPhase20AltmerTriggerSurface(trigger);
+    }
+
+    for (const rule of (manifest.curseAndExileRules || []).filter((entry) => entry.recordStatus === "record-wired")) {
+      this.checkPhase20AltmerCurseMessage(rule);
+    }
+
+    const requiredRows = [
+      ...(manifest.crisisSources || []).map((entry) => entry.contentRow),
+      ...(manifest.favorFamilies || []).map((entry) => entry.row),
+      ...(manifest.curseAndExileRules || []).map((entry) => entry.row),
+    ].filter(Boolean);
+    const raceContent = exists(RACE_CONTENT_MANIFEST) ? fs.readFileSync(RACE_CONTENT_MANIFEST, "utf8") : "";
+    if (!raceContent) {
+      this.phase20AltmerGap("Phase 20 Altmer race content", "Race content manifest is missing or empty.", RACE_CONTENT_MANIFEST);
+    }
+    for (const row of requiredRows) {
+      if (raceContent.includes(row)) {
+        this.pass("Phase 20 Altmer content row", `${row} is present in the race content manifest.`, RACE_CONTENT_MANIFEST);
+      } else {
+        this.phase20AltmerGap("Phase 20 Altmer content row", `${row} is missing from the race content manifest.`, RACE_CONTENT_MANIFEST);
+      }
+    }
+
+    const requiredRejectedHooks = [
+      "ordinary existence in Skyrim",
+      "ordinary friendship with Nords or non-Altmer",
+      "generic spellcasting spam",
+      "generic anti-Thalmor violence",
+      "post-first-crisis Dragonborn identity as repeated penalty",
+      "vampire power as a clean devotion route",
+    ];
+    const rejectedHooks = new Set(manifest.rejectedHooks || []);
+    const missingRejected = requiredRejectedHooks.filter((hook) => !rejectedHooks.has(hook));
+    if (missingRejected.length === 0) {
+      this.pass("Phase 20 Altmer rejected hooks", "Manifest names the high-risk rejected Altmer hook families.", PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+    } else {
+      this.phase20AltmerGap("Phase 20 Altmer rejected hooks", `Manifest is missing rejected hook(s): ${missingRejected.join(", ")}.`, PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+    }
+
+    this.checkPhase20ImmersionProofContract(
+      "Altmer",
+      manifest,
+      PHASE20_ALTMER_IMPLEMENTATION_MANIFEST,
+      this.phase20AltmerGap.bind(this),
+    );
+
+    if (manifest.verifierExpectations?.strictFlag === "--strict-phase20-altmer") {
+      this.pass("Phase 20 Altmer verifier contract", "Manifest declares --strict-phase20-altmer as the verifier gate.", PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+    } else {
+      this.phase20AltmerGap("Phase 20 Altmer verifier contract", "Manifest does not declare --strict-phase20-altmer.", PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+    }
+
+    const positiveProof = manifest.runtimeProof?.positive || [];
+    const negativeProof = manifest.runtimeProof?.negative || [];
+    if (positiveProof.length >= 4 && negativeProof.length >= 5) {
+      this.pass("Phase 20 Altmer runtime proof contract", `Manifest has ${positiveProof.length} positive and ${negativeProof.length} negative runtime proof cases.`, PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+    } else {
+      this.phase20AltmerGap("Phase 20 Altmer runtime proof contract", `Manifest has ${positiveProof.length} positive and ${negativeProof.length} negative proof cases; expected at least 4 and 5.`, PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+    }
+  }
+
+  checkPhase20AltmerRecordType(edid, expectedType) {
+    if (!edid) {
+      this.phase20AltmerGap("Phase 20 Altmer favor record", `Favor record metadata is missing a ${expectedType} editor ID.`, PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+      return;
+    }
+
+    const record = this.recordsByEdid.get(edid);
+    if (record?.type === expectedType) {
+      this.pass("Phase 20 Altmer favor record", `${edid} exists as ${expectedType}.`, PDV_ESP);
+    } else {
+      this.phase20AltmerGap("Phase 20 Altmer favor record", `${edid} is missing or not a ${expectedType}.`, PDV_ESP);
+    }
+  }
+
+  checkPhase20AltmerSpellEffect(spellEdid, effectEdid) {
+    if (!spellEdid || !effectEdid) {
+      return;
+    }
+
+    const detail = this.recordDetails.get(spellEdid);
+    if (!detail) {
+      return;
+    }
+
+    const fields = detail.fields || {};
+    const effects = Array.isArray(fields.Effects) ? fields.Effects : [];
+    const expectedFormid = this.recordsByEdid.get(effectEdid)?.formid;
+    const firstEffect = effects[0] || {};
+    if (expectedFormid && firstEffect.BaseEffect === expectedFormid) {
+      this.pass("Phase 20 Altmer spell membership", `${spellEdid} points at ${effectEdid}.`, PDV_ESP);
+    } else {
+      this.phase20AltmerGap("Phase 20 Altmer spell membership", `${spellEdid} does not point at ${effectEdid}.`, PDV_ESP);
+    }
+  }
+
+  checkPhase20AltmerMagicEffectKeyword(effectEdid, keywordEdid) {
+    if (!effectEdid || !keywordEdid) {
+      return;
+    }
+
+    const detail = this.recordDetails.get(effectEdid);
+    if (!detail) {
+      return;
+    }
+
+    const fields = detail.fields || {};
+    const keywordValues = Array.isArray(fields.Keywords) ? fields.Keywords : [];
+    const keywordEdids = keywordValues.map((value) => formidToEdid(value, this.recordsByEdid) || value);
+    if (keywordEdids.includes(keywordEdid)) {
+      this.pass("Phase 20 Altmer favor keyword", `${effectEdid} includes ${keywordEdid}.`, PDV_ESP);
+    } else {
+      this.phase20AltmerGap("Phase 20 Altmer favor keyword", `${effectEdid} is missing ${keywordEdid}.`, PDV_ESP);
+    }
+  }
+
+  checkPhase20AltmerTriggerSurface(trigger) {
+    const edid = trigger.editorId;
+    const expectedType = trigger.recordType || "ACTI";
+    const record = this.recordsByEdid.get(edid);
+    const detail = this.recordDetails.get(edid);
+    if (!record || !detail) {
+      this.phase20AltmerGap("Phase 20 Altmer trigger surface", `${edid || "(missing editorId)"} is missing.`, PDV_ESP);
+      return;
+    }
+
+    if (record.type === expectedType) {
+      this.pass("Phase 20 Altmer trigger surface", `${edid} exists as ${expectedType}.`, PDV_ESP);
+    } else {
+      this.phase20AltmerGap("Phase 20 Altmer trigger surface", `${edid} has type ${record.type}, expected ${expectedType}.`, PDV_ESP);
+      return;
+    }
+
+    const script = findScript(detail.fields || {}, "PDV_EventSignalActivator");
+    if (!script) {
+      this.phase20AltmerGap("Phase 20 Altmer trigger script", `PDV_EventSignalActivator is not attached to ${edid}.`, PDV_ESP);
+      return;
+    }
+
+    this.pass("Phase 20 Altmer trigger script", `PDV_EventSignalActivator is attached to ${edid}.`, PDV_ESP);
+    const props = propertyMap(script);
+    this.checkObjectPropertyTarget("Phase 20 Altmer trigger property", props, "PDV_EventBusService", "PDV_EventBus", this.phase20AltmerGap.bind(this));
+    this.checkObjectPropertyTarget("Phase 20 Altmer trigger property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20AltmerGap.bind(this));
+    this.checkObjectPropertyTarget("Phase 20 Altmer trigger property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase20AltmerGap.bind(this));
+    this.checkScalarProperty("Phase 20 Altmer trigger property", props, "RouteId", trigger.routeId, this.phase20AltmerGap.bind(this));
+    this.checkScalarProperty("Phase 20 Altmer trigger property", props, "RequiredOriginRace", trigger.requiredOriginRace, this.phase20AltmerGap.bind(this));
+    this.checkScalarProperty("Phase 20 Altmer trigger property", props, "SignalValue", trigger.signalValue || 0, this.phase20AltmerGap.bind(this));
+    this.checkScalarProperty("Phase 20 Altmer trigger property", props, "SignalSourceId", trigger.signalSourceId, this.phase20AltmerGap.bind(this));
+    this.checkScalarProperty("Phase 20 Altmer trigger property", props, "TraceLabel", edid, this.phase20AltmerGap.bind(this));
+    if (trigger.oncePerDayKey) {
+      this.checkScalarProperty("Phase 20 Altmer trigger property", props, "OncePerDayKey", trigger.oncePerDayKey, this.phase20AltmerGap.bind(this));
+    }
+
+    if (trigger.placementStatus === "manual-placement-required") {
+      this.pass("Phase 20 Altmer trigger placement", `${edid} declares manual placement before runtime proof.`, PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+      if (trigger.placementRefEditorId) {
+        this.pass("Phase 20 Altmer trigger placement contract", `${edid} expects placed reference ${trigger.placementRefEditorId}.`, PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+      } else {
+        this.phase20AltmerGap("Phase 20 Altmer trigger placement contract", `${edid} is missing placementRefEditorId.`, PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+      }
+    } else {
+      this.checkPhase20AltmerTriggerPlacement(trigger);
+    }
+  }
+
+  checkPhase20AltmerTriggerPlacement(trigger) {
+    const refEdid = trigger.placementRefEditorId;
+    if (!refEdid) {
+      this.phase20AltmerGap("Phase 20 Altmer trigger placement", `${trigger.editorId || "(missing editorId)"} does not declare placementRefEditorId.`, PHASE20_ALTMER_IMPLEMENTATION_MANIFEST);
+      return;
+    }
+
+    const record = this.recordsByEdid.get(refEdid);
+    const detail = this.recordDetails.get(refEdid);
+    if (!record || !detail) {
+      this.phase20AltmerGap("Phase 20 Altmer trigger placement", `${refEdid} is missing after placementStatus moved beyond manual placement.`, PDV_ESP);
+      return;
+    }
+
+    if (record.type !== "REFR") {
+      this.phase20AltmerGap("Phase 20 Altmer trigger placement", `${refEdid} has type ${record.type}, expected REFR.`, PDV_ESP);
+      return;
+    }
+
+    const baseEdid = formidToEdid(detail.fields?.Base, this.recordsByEdid);
+    if (baseEdid !== trigger.editorId) {
+      this.phase20AltmerGap("Phase 20 Altmer trigger placement", `${refEdid} points at ${baseEdid || detail.fields?.Base || "(missing base)"}, expected ${trigger.editorId}.`, PDV_ESP);
+      return;
+    }
+
+    this.pass("Phase 20 Altmer trigger placement", `${refEdid} points at ${trigger.editorId}.`, PDV_ESP);
+  }
+
+  checkPhase20RaceTriggerPlacement(label, trigger, manifestPath) {
+    const refEdid = trigger.placementRefEditorId;
+    if (!refEdid) {
+      this.phase20RaceCostingGap(label, `${trigger.editorId || "(missing editorId)"} does not declare placementRefEditorId.`, manifestPath);
+      return;
+    }
+
+    if (trigger.placementStatus === "manual-placement-required" || !trigger.placementStatus) {
+      this.pass(label, `${trigger.editorId || "(missing editorId)"} declares placement reference ${refEdid}; readback waits for placementStatus promotion.`, manifestPath);
+      return;
+    }
+
+    const record = this.recordsByEdid.get(refEdid);
+    const detail = this.recordDetails.get(refEdid);
+    if (!record || !detail) {
+      this.phase20RaceCostingGap(label, `${refEdid} is missing after placementStatus moved to ${trigger.placementStatus}.`, PDV_ESP);
+      return;
+    }
+
+    if (record.type !== "REFR") {
+      this.phase20RaceCostingGap(label, `${refEdid} has type ${record.type}, expected REFR.`, PDV_ESP);
+      return;
+    }
+
+    const baseEdid = formidToEdid(detail.fields?.Base, this.recordsByEdid);
+    if (baseEdid !== trigger.editorId) {
+      this.phase20RaceCostingGap(label, `${refEdid} points at ${baseEdid || detail.fields?.Base || "(missing base)"}, expected ${trigger.editorId}.`, PDV_ESP);
+      return;
+    }
+
+    this.pass(label, `${refEdid} points at ${trigger.editorId}.`, PDV_ESP);
+  }
+
+  checkPhase20AltmerCurseMessage(rule) {
+    const edid = rule.row;
+    const expectedType = rule.recordType || "MESG";
+    const record = this.recordsByEdid.get(edid);
+    if (record?.type === expectedType) {
+      this.pass("Phase 20 Altmer curse message", `${edid} exists as ${expectedType}.`, PDV_ESP);
+    } else {
+      this.phase20AltmerGap("Phase 20 Altmer curse message", `${edid || "(missing editorId)"} is missing or not a ${expectedType}.`, PDV_ESP);
+    }
+  }
+
+  checkPhase20RaceImplementationCosting() {
+    const raceContent = exists(RACE_CONTENT_MANIFEST) ? fs.readFileSync(RACE_CONTENT_MANIFEST, "utf8") : "";
+    if (!raceContent) {
+      this.phase20RaceCostingGap("Phase 20 race costing content source", "Race content manifest is missing or empty.", RACE_CONTENT_MANIFEST);
+    }
+
+    for (const manifestPath of PHASE20_RACE_IMPLEMENTATION_MANIFESTS) {
+      if (!exists(manifestPath)) {
+        this.phase20RaceCostingGap("Phase 20 race costing manifest", `${path.basename(manifestPath)} is missing.`, manifestPath);
+        continue;
+      }
+
+      let manifest;
+      try {
+        manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+      } catch (error) {
+        this.phase20RaceCostingGap(
+          "Phase 20 race costing manifest",
+          `${path.basename(manifestPath)} could not be parsed: ${error.message}`,
+          manifestPath,
+        );
+        continue;
+      }
+
+      const raceName = manifest.race || path.basename(manifestPath);
+      if (
+        manifest.schema === "pdv-race-implementation-costing.v1"
+        && typeof manifest.id === "string"
+        && manifest.id.startsWith("phase20-")
+        && typeof manifest.race === "string"
+      ) {
+        this.pass(`Phase 20 ${raceName} costing manifest`, "Manifest parsed with the expected schema, id, and race.", manifestPath);
+      } else {
+        this.phase20RaceCostingGap(
+          `Phase 20 ${raceName} costing manifest`,
+          `Manifest identity mismatch: schema=${manifest.schema}, id=${manifest.id}, race=${manifest.race}.`,
+          manifestPath,
+        );
+      }
+
+      const allowedStatuses = new Set(["costed-not-built", "source-scaffolded", "source-wired", "record-wired", "favor-records-wired", "trigger-proof-wired", "curse-message-wired", "runtime-proven"]);
+      if (allowedStatuses.has(manifest.implementationStatus)) {
+        this.pass(`Phase 20 ${raceName} implementation status`, `Status is ${manifest.implementationStatus}.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap(
+          `Phase 20 ${raceName} implementation status`,
+          `Unexpected implementationStatus: ${manifest.implementationStatus}.`,
+          manifestPath,
+        );
+      }
+
+      for (const source of manifest.decisionSources || []) {
+        const relativePath = String(source).split("#")[0];
+        const sourcePath = path.join(PROJECT_ROOT, relativePath);
+        if (exists(sourcePath)) {
+          this.pass(`Phase 20 ${raceName} decision source`, `${relativePath} exists.`, sourcePath);
+        } else {
+          this.phase20RaceCostingGap(`Phase 20 ${raceName} decision source`, `${relativePath} is missing.`, sourcePath);
+        }
+      }
+
+      const stateSurfaces = manifest.stateSurfaces || [];
+      if (stateSurfaces.length > 0) {
+        this.pass(`Phase 20 ${raceName} state surfaces`, `${stateSurfaces.length} planned or existing state surface(s) declared.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap(`Phase 20 ${raceName} state surfaces`, "Manifest declares no state surfaces.", manifestPath);
+      }
+
+      for (const surface of stateSurfaces) {
+        if (!surface.enum) {
+          continue;
+        }
+        const enumNames = new Set();
+        const enumValues = new Set();
+        const enumErrors = [];
+        for (const entry of surface.enum) {
+          if (typeof entry.name !== "string" || entry.name.length === 0) {
+            enumErrors.push("missing enum name");
+          }
+          if (typeof entry.value !== "number") {
+            enumErrors.push(`${entry.name || "unknown"} has non-numeric value`);
+          }
+          if (enumNames.has(entry.name)) {
+            enumErrors.push(`duplicate name ${entry.name}`);
+          }
+          if (enumValues.has(entry.value)) {
+            enumErrors.push(`duplicate value ${entry.value}`);
+          }
+          enumNames.add(entry.name);
+          enumValues.add(entry.value);
+        }
+        if (enumErrors.length === 0 && enumNames.size > 0) {
+          this.pass(`Phase 20 ${raceName} enum contract`, `${surface.editorId || "state surface"} has stable unique enum entries.`, manifestPath);
+        } else {
+          this.phase20RaceCostingGap(
+            `Phase 20 ${raceName} enum contract`,
+            `${surface.editorId || "state surface"} enum issue(s): ${enumErrors.join("; ") || "missing enum entries"}.`,
+            manifestPath,
+          );
+        }
+      }
+
+      const rowSources = [
+        ...(manifest.requiredContentRows || []),
+        ...(manifest.crisisSources || []).map((entry) => entry.contentRow),
+        ...(manifest.favorFamilies || []).map((entry) => entry.row),
+        ...(manifest.curseAndExileRules || []).map((entry) => entry.row),
+      ].filter(Boolean);
+      const requiredRows = [...new Set(rowSources)];
+      if (requiredRows.length >= 4) {
+        this.pass(`Phase 20 ${raceName} content contract`, `${requiredRows.length} content row(s) are required by the manifest.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap(`Phase 20 ${raceName} content contract`, `Only ${requiredRows.length} required content row(s) declared.`, manifestPath);
+      }
+      for (const row of requiredRows) {
+        if (raceContent.includes(row)) {
+          this.pass(`Phase 20 ${raceName} content row`, `${row} is present in the race content manifest.`, RACE_CONTENT_MANIFEST);
+        } else {
+          this.phase20RaceCostingGap(`Phase 20 ${raceName} content row`, `${row} is missing from the race content manifest.`, RACE_CONTENT_MANIFEST);
+        }
+      }
+
+      const rejectedHooks = manifest.rejectedHooks || [];
+      if (rejectedHooks.length >= 5) {
+        this.pass(`Phase 20 ${raceName} rejected hooks`, `${rejectedHooks.length} rejected hook families are named.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap(`Phase 20 ${raceName} rejected hooks`, `Only ${rejectedHooks.length} rejected hook families are named.`, manifestPath);
+      }
+
+      this.checkPhase20ImmersionProofContract(
+        raceName,
+        manifest,
+        manifestPath,
+        this.phase20RaceCostingGap.bind(this),
+      );
+
+      const strictFlags = new Set([
+        manifest.verifierExpectations?.strictFlag,
+        ...(manifest.verifierExpectations?.strictFlags || []),
+      ].filter(Boolean));
+      if (strictFlags.has("--strict-phase20-race-costing")) {
+        this.pass(`Phase 20 ${raceName} verifier contract`, "Manifest declares --strict-phase20-race-costing as a verifier gate.", manifestPath);
+      } else {
+        this.phase20RaceCostingGap(`Phase 20 ${raceName} verifier contract`, "Manifest does not declare --strict-phase20-race-costing.", manifestPath);
+      }
+
+      const positiveProof = manifest.runtimeProof?.positive || [];
+      const negativeProof = manifest.runtimeProof?.negative || [];
+      if (positiveProof.length >= 3 && negativeProof.length >= 3) {
+        this.pass(`Phase 20 ${raceName} runtime proof contract`, `Manifest has ${positiveProof.length} positive and ${negativeProof.length} negative runtime proof cases.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap(
+          `Phase 20 ${raceName} runtime proof contract`,
+          `Manifest has ${positiveProof.length} positive and ${negativeProof.length} negative proof cases; expected at least 3 and 3.`,
+          manifestPath,
+        );
+      }
+
+      const firstSlice = manifest.firstImplementationSlice || [];
+      if (firstSlice.length >= 3) {
+        this.pass(`Phase 20 ${raceName} first implementation slice`, `${firstSlice.length} first-slice step(s) declared.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap(`Phase 20 ${raceName} first implementation slice`, `Only ${firstSlice.length} first-slice step(s) declared.`, manifestPath);
+      }
+
+      if (raceName === "Argonian" && manifest.implementationStatus !== "costed-not-built") {
+        this.checkPhase20ArgonianSourceScaffold(manifest, manifestPath);
+      }
+
+      if (raceName === "Orc" && manifest.implementationStatus !== "costed-not-built") {
+        this.checkPhase20OrcSourceScaffold(manifest, manifestPath);
+      }
+
+      if (raceName === "Redguard" && manifest.implementationStatus !== "costed-not-built") {
+        this.checkPhase20RedguardSourceScaffold(manifest, manifestPath);
+      }
+
+      if (raceName === "Bosmer" && manifest.implementationStatus !== "costed-not-built") {
+        this.checkPhase20BosmerSourceScaffold(manifest, manifestPath);
+      }
+
+      if (raceName === "Khajiit" && manifest.implementationStatus !== "costed-not-built") {
+        this.checkPhase20KhajiitSourceScaffold(manifest, manifestPath);
+      }
+    }
+  }
+
+  checkPhase20ArgonianSourceScaffold(manifest, manifestPath) {
+    this.checkSourceContains("Phase 20 Argonian source", "PDV_Substrate_ArgonianHist", [
+      "Scriptname PDV_Substrate_ArgonianHist extends PDV_SubstrateBase",
+      "Function RecordHistMaintenanceScaled(Float multiplier, String reason)",
+      "Function RecordPeopleSupportScaled(Float multiplier, String reason)",
+      "Function RecordBedOfChoiceReturnScaled(Float multiplier, String reason)",
+      "Function RecordVoidSignalScaled(Float multiplier, String reason)",
+      "Function ProcessHistDistanceDawn(Bool curseActive, String reason)",
+      "\"PDV.Substrate.ArgonianHist.Hist\"",
+      "\"PDV.Substrate.ArgonianHist.People\"",
+      "\"PDV.Substrate.ArgonianHist.Void\"",
+      "VoidActivationSignalsRequired = 3",
+      "String Function GetPilotSummary()",
+    ]);
+    this.checkSourceContains("Phase 20 Argonian manager source", "PDV__ManagerQuest", [
+      "PDV_Substrate_ArgonianHist Property PDV_ArgonianHistSubstrate Auto",
+      "PDV_StateTrack Property PDV_ArgonianHistPostureTrack Auto",
+      "ORIGIN_ARGONIAN = 7",
+      "Function HandleArgonianHistMaintenance(String reason)",
+      "Function HandleArgonianPeopleSupport(String reason)",
+      "Function HandleArgonianBedOfChoiceReturn(String reason)",
+      "Function HandleArgonianVoidSignal(String reason)",
+      "Function RunDawnRefreshArgonianHist()",
+      "Function RefreshArgonianHistPosture(String reason)",
+      "String Function GetArgonianSurveyText()",
+      "String Function GetArgonianHistSummary()",
+    ]);
+    this.checkSourceContains("Phase 20 Argonian EventTypes source", "PDV_EventTypes", [
+      "EVT_ARGONIAN_HIST_MAINTENANCE = 60",
+      "EVT_ARGONIAN_PEOPLE_SUPPORT = 61",
+      "EVT_ARGONIAN_VOID_SIGNAL = 62",
+      "EVT_ARGONIAN_BED_OF_CHOICE = 63",
+      "argonian-hist-maintenance",
+      "argonian-bed-of-choice",
+    ]);
+    this.checkSourceContains("Phase 20 Argonian EventBus source", "PDV_EventBus", [
+      "Function RouteArgonianHistMaintenance()",
+      "Function RouteArgonianPeopleSupport()",
+      "Function RouteArgonianVoidSignal()",
+      "Function RouteArgonianBedOfChoice()",
+      "PDV_Manager.HandleArgonianHistMaintenance(\"eventbus_\" + eventType)",
+      "PDV_Manager.HandleArgonianBedOfChoiceReturn(\"eventbus_\" + eventType)",
+    ]);
+    this.checkSourceContains("Phase 20 Argonian receiver source", "PDV_EventSignalActivator", [
+      "ROUTE_ARGONIAN_HIST_MAINTENANCE = 60",
+      "ROUTE_ARGONIAN_PEOPLE_SUPPORT = 61",
+      "ROUTE_ARGONIAN_VOID_SIGNAL = 62",
+      "ROUTE_ARGONIAN_BED_OF_CHOICE = 63",
+      "PDV_EventBusService.RouteArgonianHistMaintenance()",
+      "PDV_EventBusService.RouteArgonianBedOfChoice()",
+    ]);
+
+    const triggerSurfaces = manifest.triggerSurfaces || [];
+    if (triggerSurfaces.length >= 4) {
+      this.pass("Phase 20 Argonian trigger contract", `${triggerSurfaces.length} trigger surface(s) declared for the first proof slice.`, manifestPath);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Argonian trigger contract", `Only ${triggerSurfaces.length} trigger surface(s) declared.`, manifestPath);
+    }
+
+    for (const trigger of triggerSurfaces) {
+      if (typeof trigger.placementRefEditorId === "string" && trigger.placementRefEditorId.startsWith("PDV_REFR_")) {
+        this.pass("Phase 20 Argonian placement contract", `${trigger.editorId} declares CK placement reference ${trigger.placementRefEditorId}.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Argonian placement contract", `${trigger.editorId || "(missing editorId)"} is missing placementRefEditorId.`, manifestPath);
+      }
+    }
+
+    if (manifest.implementationStatus === "record-wired" || manifest.implementationStatus === "runtime-proven") {
+      this.checkPhase20ArgonianRecordReadback(manifest, manifestPath);
+    }
+  }
+
+  checkPhase20ArgonianRecordReadback(manifest, manifestPath) {
+    const substrateRecord = this.recordsByEdid.get("PDV_Substrate_ArgonianHist");
+    if (substrateRecord?.type === "QUST") {
+      this.pass("Phase 20 Argonian substrate record", "PDV_Substrate_ArgonianHist exists as QUST.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Argonian substrate record", "PDV_Substrate_ArgonianHist is missing or not a QUST.", PDV_ESP);
+    }
+
+    const substrateDetail = this.recordDetails.get("PDV_Substrate_ArgonianHist");
+    const substrateScript = substrateDetail ? findScript(substrateDetail.fields || {}, "PDV_Substrate_ArgonianHist") : null;
+    if (substrateScript) {
+      this.pass("Phase 20 Argonian substrate script", "PDV_Substrate_ArgonianHist script is attached.", PDV_ESP);
+      const props = propertyMap(substrateScript);
+      this.checkScalarProperty("Phase 20 Argonian substrate property", props, "SubstrateName", "ArgonianHist", this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Phase 20 Argonian substrate property", props, "RequiredOriginRace", 7, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Argonian substrate property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Argonian substrate property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Argonian substrate script", "PDV_Substrate_ArgonianHist script is not attached.", PDV_ESP);
+    }
+
+    const postureRecord = this.recordsByEdid.get("PDV_State_ArgonianHistPosture");
+    if (postureRecord?.type === "QUST") {
+      this.pass("Phase 20 Argonian posture record", "PDV_State_ArgonianHistPosture exists as QUST.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Argonian posture record", "PDV_State_ArgonianHistPosture is missing or not a QUST.", PDV_ESP);
+    }
+
+    const postureDetail = this.recordDetails.get("PDV_State_ArgonianHistPosture");
+    const postureScript = postureDetail ? findScript(postureDetail.fields || {}, "PDV_StateTrack") : null;
+    if (postureScript) {
+      this.pass("Phase 20 Argonian posture script", "PDV_StateTrack is attached to PDV_State_ArgonianHistPosture.", PDV_ESP);
+      const props = propertyMap(postureScript);
+      this.checkScalarProperty("Phase 20 Argonian posture property", props, "TrackName", "ArgonianHistPosture", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Argonian posture property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Argonian posture script", "PDV_StateTrack is not attached to PDV_State_ArgonianHistPosture.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      const props = propertyMap(managerScript);
+      this.checkObjectPropertyTarget("Phase 20 Argonian manager property", props, "PDV_ArgonianHistSubstrate", "PDV_Substrate_ArgonianHist", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Argonian manager property", props, "PDV_ArgonianHistPostureTrack", "PDV_State_ArgonianHistPosture", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Argonian manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    for (const trigger of manifest.triggerSurfaces || []) {
+      if (!trigger.editorId) {
+        continue;
+      }
+
+      const record = this.recordsByEdid.get(trigger.editorId);
+      if (record?.type === "ACTI") {
+        this.pass("Phase 20 Argonian trigger record", `${trigger.editorId} exists as ACTI.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Argonian trigger record", `${trigger.editorId} is missing or not an ACTI.`, PDV_ESP);
+        continue;
+      }
+
+      const detail = this.recordDetails.get(trigger.editorId);
+      const script = detail ? findScript(detail.fields || {}, "PDV_EventSignalActivator") : null;
+      if (!script) {
+        this.phase20RaceCostingGap("Phase 20 Argonian trigger script", `${trigger.editorId} is missing PDV_EventSignalActivator.`, PDV_ESP);
+        continue;
+      }
+
+      const props = propertyMap(script);
+      this.checkScalarProperty("Phase 20 Argonian trigger property", props, "RouteId", trigger.routeId, this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Phase 20 Argonian trigger property", props, "RequiredOriginRace", 7, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Argonian trigger property", props, "PDV_EventBusService", "PDV_EventBus", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Argonian trigger property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20RaceCostingGap.bind(this));
+      this.checkPhase20RaceTriggerPlacement("Phase 20 Argonian trigger placement", trigger, manifestPath);
+    }
+  }
+
+  checkPhase20OrcSourceScaffold(manifest, manifestPath) {
+    this.checkSourceContains("Phase 20 Orc manager source", "PDV__ManagerQuest", [
+      "PDV_StateTrack Property PDV_OrcLifeModeTrack Auto",
+      "ORIGIN_ORC = 8",
+      "ORC_LIFE_MODE_CITY = 0",
+      "ORC_LIFE_MODE_STRONGHOLD = 1",
+      "ORC_LIFE_MODE_LEGION_EXILE = 2",
+      "Function HandleOrcStrongholdForge(String reason)",
+      "Function HandleOrcCityDignity(String reason)",
+      "Function HandleOrcLegionService(String reason)",
+      "Function HandleOrcSelfMadeCommunity(String reason)",
+      "Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)",
+      "String Function GetOrcSurveyText()",
+      "String Function GetOrcSummary()",
+      "\"PDV.Curse.Orc.CodePressure\"",
+    ]);
+    this.checkSourceContains("Phase 20 Orc EventTypes source", "PDV_EventTypes", [
+      "EVT_ORC_STRONGHOLD_FORGE = 70",
+      "EVT_ORC_CITY_DIGNITY = 71",
+      "EVT_ORC_LEGION_SERVICE = 72",
+      "EVT_ORC_SELF_MADE_COMMUNITY = 73",
+      "orc-stronghold-forge",
+      "orc-self-made-community",
+    ]);
+    this.checkSourceContains("Phase 20 Orc EventBus source", "PDV_EventBus", [
+      "Function RouteOrcStrongholdForge()",
+      "Function RouteOrcCityDignity()",
+      "Function RouteOrcLegionService()",
+      "Function RouteOrcSelfMadeCommunity()",
+      "PDV_Manager.HandleOrcStrongholdForge(\"eventbus_\" + eventType)",
+      "PDV_Manager.HandleOrcSelfMadeCommunity(\"eventbus_\" + eventType)",
+    ]);
+    this.checkSourceContains("Phase 20 Orc receiver source", "PDV_EventSignalActivator", [
+      "ROUTE_ORC_STRONGHOLD_FORGE = 70",
+      "ROUTE_ORC_CITY_DIGNITY = 71",
+      "ROUTE_ORC_LEGION_SERVICE = 72",
+      "ROUTE_ORC_SELF_MADE_COMMUNITY = 73",
+      "PDV_EventBusService.RouteOrcStrongholdForge()",
+      "PDV_EventBusService.RouteOrcSelfMadeCommunity()",
+    ]);
+
+    const triggerSurfaces = manifest.triggerSurfaces || [];
+    if (triggerSurfaces.length >= 4) {
+      this.pass("Phase 20 Orc trigger contract", `${triggerSurfaces.length} trigger surface(s) declared for the first proof slice.`, manifestPath);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Orc trigger contract", `Only ${triggerSurfaces.length} trigger surface(s) declared.`, manifestPath);
+    }
+
+    for (const trigger of triggerSurfaces) {
+      if (typeof trigger.placementRefEditorId === "string" && trigger.placementRefEditorId.startsWith("PDV_REFR_")) {
+        this.pass("Phase 20 Orc placement contract", `${trigger.editorId} declares CK placement reference ${trigger.placementRefEditorId}.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Orc placement contract", `${trigger.editorId || "(missing editorId)"} is missing placementRefEditorId.`, manifestPath);
+      }
+    }
+
+    if (manifest.implementationStatus === "record-wired" || manifest.implementationStatus === "runtime-proven") {
+      this.checkPhase20OrcRecordReadback(manifest, manifestPath);
+    }
+  }
+
+  checkPhase20OrcRecordReadback(manifest, manifestPath) {
+    const trackRecord = this.recordsByEdid.get("PDV_StateTrack_OrcLifeMode");
+    if (trackRecord?.type === "QUST") {
+      this.pass("Phase 20 Orc life-mode record", "PDV_StateTrack_OrcLifeMode exists as QUST.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Orc life-mode record", "PDV_StateTrack_OrcLifeMode is missing or not a QUST.", PDV_ESP);
+    }
+
+    const trackDetail = this.recordDetails.get("PDV_StateTrack_OrcLifeMode");
+    const trackScript = trackDetail ? findScript(trackDetail.fields || {}, "PDV_StateTrack") : null;
+    if (trackScript) {
+      this.pass("Phase 20 Orc life-mode script", "PDV_StateTrack is attached to PDV_StateTrack_OrcLifeMode.", PDV_ESP);
+      const props = propertyMap(trackScript);
+      this.checkScalarProperty("Phase 20 Orc life-mode property", props, "TrackName", "OrcLifeMode", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Orc life-mode property", props, "StateGlobal", "PDV_GLO_OrcLifeMode", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Orc life-mode property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase20RaceCostingGap.bind(this));
+      const labels = propValue(props.get("StateLabels")) || [];
+      const expectedLabels = ["City", "Stronghold", "LegionExile"];
+      if (Array.isArray(labels) && labels.length === expectedLabels.length && labels.every((label, index) => label === expectedLabels[index])) {
+        this.pass("Phase 20 Orc life-mode property", "StateLabels match the locked Orc life-mode enum order.", PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Orc life-mode property", `StateLabels are ${JSON.stringify(labels)}, expected ${JSON.stringify(expectedLabels)}.`, PDV_ESP);
+      }
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Orc life-mode script", "PDV_StateTrack is not attached to PDV_StateTrack_OrcLifeMode.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      const props = propertyMap(managerScript);
+      this.checkObjectPropertyTarget("Phase 20 Orc manager property", props, "PDV_OrcLifeModeTrack", "PDV_StateTrack_OrcLifeMode", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Orc manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    for (const trigger of manifest.triggerSurfaces || []) {
+      if (!trigger.editorId) {
+        continue;
+      }
+
+      const record = this.recordsByEdid.get(trigger.editorId);
+      if (record?.type === "ACTI") {
+        this.pass("Phase 20 Orc trigger record", `${trigger.editorId} exists as ACTI.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Orc trigger record", `${trigger.editorId} is missing or not an ACTI.`, PDV_ESP);
+        continue;
+      }
+
+      const detail = this.recordDetails.get(trigger.editorId);
+      const script = detail ? findScript(detail.fields || {}, "PDV_EventSignalActivator") : null;
+      if (!script) {
+        this.phase20RaceCostingGap("Phase 20 Orc trigger script", `${trigger.editorId} is missing PDV_EventSignalActivator.`, PDV_ESP);
+        continue;
+      }
+
+      const props = propertyMap(script);
+      this.checkScalarProperty("Phase 20 Orc trigger property", props, "RouteId", trigger.routeId, this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Phase 20 Orc trigger property", props, "RequiredOriginRace", 8, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Orc trigger property", props, "PDV_EventBusService", "PDV_EventBus", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Orc trigger property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20RaceCostingGap.bind(this));
+      this.checkPhase20RaceTriggerPlacement("Phase 20 Orc trigger placement", trigger, manifestPath);
+    }
+  }
+
+  checkPhase20RedguardSourceScaffold(manifest, manifestPath) {
+    this.checkSourceContains("Phase 20 Redguard manager source", "PDV__ManagerQuest", [
+      "PDV_StateTrack Property PDV_RedguardSectTrack Auto",
+      "ORIGIN_REDGUARD = 9",
+      "REDGUARD_SECT_CROWN = 0",
+      "REDGUARD_SECT_FOREBEAR = 1",
+      "REDGUARD_SECT_ASHABAH = 2",
+      "Function HandleRedguardCrownTombRespect(String reason)",
+      "Function HandleRedguardForebearRoadPassage(String reason)",
+      "Function HandleRedguardAshAbahDeathDuty(String reason)",
+      "Function HandleRedguardFarShoresToken(String reason)",
+      "Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason)",
+      "String Function GetRedguardSurveyText()",
+      "String Function GetRedguardSummary()",
+      "\"PDV.Redguard.FarShoresToken\"",
+      "\"PDV.Curse.Redguard.CyclePressure\"",
+    ]);
+    this.checkSourceContains("Phase 20 Redguard EventTypes source", "PDV_EventTypes", [
+      "EVT_REDGUARD_CROWN_TOMB_RESPECT = 80",
+      "EVT_REDGUARD_FOREBEAR_ROAD = 81",
+      "EVT_REDGUARD_ASHABAH_DEATH_DUTY = 82",
+      "EVT_REDGUARD_FAR_SHORES_TOKEN = 83",
+      "redguard-crown-tomb-respect",
+      "redguard-far-shores-token",
+    ]);
+    this.checkSourceContains("Phase 20 Redguard EventBus source", "PDV_EventBus", [
+      "Function RouteRedguardCrownTombRespect()",
+      "Function RouteRedguardForebearRoadPassage()",
+      "Function RouteRedguardAshAbahDeathDuty()",
+      "Function RouteRedguardFarShoresToken()",
+      "PDV_Manager.HandleRedguardCrownTombRespect(\"eventbus_\" + eventType)",
+      "PDV_Manager.HandleRedguardFarShoresToken(\"eventbus_\" + eventType)",
+    ]);
+    this.checkSourceContains("Phase 20 Redguard receiver source", "PDV_EventSignalActivator", [
+      "ROUTE_REDGUARD_CROWN_TOMB_RESPECT = 80",
+      "ROUTE_REDGUARD_FOREBEAR_ROAD = 81",
+      "ROUTE_REDGUARD_ASHABAH_DEATH_DUTY = 82",
+      "ROUTE_REDGUARD_FAR_SHORES_TOKEN = 83",
+      "PDV_EventBusService.RouteRedguardCrownTombRespect()",
+      "PDV_EventBusService.RouteRedguardFarShoresToken()",
+    ]);
+
+    const triggerSurfaces = manifest.triggerSurfaces || [];
+    if (triggerSurfaces.length >= 4) {
+      this.pass("Phase 20 Redguard trigger contract", `${triggerSurfaces.length} trigger surface(s) declared for the first proof slice.`, manifestPath);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Redguard trigger contract", `Only ${triggerSurfaces.length} trigger surface(s) declared.`, manifestPath);
+    }
+
+    for (const trigger of triggerSurfaces) {
+      if (typeof trigger.placementRefEditorId === "string" && trigger.placementRefEditorId.startsWith("PDV_REFR_")) {
+        this.pass("Phase 20 Redguard placement contract", `${trigger.editorId} declares CK placement reference ${trigger.placementRefEditorId}.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Redguard placement contract", `${trigger.editorId || "(missing editorId)"} is missing placementRefEditorId.`, manifestPath);
+      }
+    }
+
+    if (manifest.implementationStatus === "record-wired" || manifest.implementationStatus === "runtime-proven") {
+      this.checkPhase20RedguardRecordReadback(manifest, manifestPath);
+    }
+  }
+
+  checkPhase20RedguardRecordReadback(manifest, manifestPath) {
+    const trackRecord = this.recordsByEdid.get("PDV_StateTrack_RedguardSect");
+    if (trackRecord?.type === "QUST") {
+      this.pass("Phase 20 Redguard sect record", "PDV_StateTrack_RedguardSect exists as QUST.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Redguard sect record", "PDV_StateTrack_RedguardSect is missing or not a QUST.", PDV_ESP);
+    }
+
+    const trackDetail = this.recordDetails.get("PDV_StateTrack_RedguardSect");
+    const trackScript = trackDetail ? findScript(trackDetail.fields || {}, "PDV_StateTrack") : null;
+    if (trackScript) {
+      this.pass("Phase 20 Redguard sect script", "PDV_StateTrack is attached to PDV_StateTrack_RedguardSect.", PDV_ESP);
+      const props = propertyMap(trackScript);
+      this.checkScalarProperty("Phase 20 Redguard sect property", props, "TrackName", "RedguardSect", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Redguard sect property", props, "StateGlobal", "PDV_GLO_RedguardSect", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Redguard sect property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase20RaceCostingGap.bind(this));
+      const labels = propValue(props.get("StateLabels")) || [];
+      const expectedLabels = ["Crown", "Forebear", "AshAbah"];
+      if (Array.isArray(labels) && labels.length === expectedLabels.length && labels.every((label, index) => label === expectedLabels[index])) {
+        this.pass("Phase 20 Redguard sect property", "StateLabels match the locked Redguard sect enum order.", PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Redguard sect property", `StateLabels are ${JSON.stringify(labels)}, expected ${JSON.stringify(expectedLabels)}.`, PDV_ESP);
+      }
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Redguard sect script", "PDV_StateTrack is not attached to PDV_StateTrack_RedguardSect.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      const props = propertyMap(managerScript);
+      this.checkObjectPropertyTarget("Phase 20 Redguard manager property", props, "PDV_RedguardSectTrack", "PDV_StateTrack_RedguardSect", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Redguard manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    for (const trigger of manifest.triggerSurfaces || []) {
+      if (!trigger.editorId) {
+        continue;
+      }
+
+      const record = this.recordsByEdid.get(trigger.editorId);
+      if (record?.type === "ACTI") {
+        this.pass("Phase 20 Redguard trigger record", `${trigger.editorId} exists as ACTI.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Redguard trigger record", `${trigger.editorId} is missing or not an ACTI.`, PDV_ESP);
+        continue;
+      }
+
+      const detail = this.recordDetails.get(trigger.editorId);
+      const script = detail ? findScript(detail.fields || {}, "PDV_EventSignalActivator") : null;
+      if (!script) {
+        this.phase20RaceCostingGap("Phase 20 Redguard trigger script", `${trigger.editorId} is missing PDV_EventSignalActivator.`, PDV_ESP);
+        continue;
+      }
+
+      const props = propertyMap(script);
+      this.checkScalarProperty("Phase 20 Redguard trigger property", props, "RouteId", trigger.routeId, this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Phase 20 Redguard trigger property", props, "RequiredOriginRace", 9, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Redguard trigger property", props, "PDV_EventBusService", "PDV_EventBus", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Redguard trigger property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20RaceCostingGap.bind(this));
+      this.checkPhase20RaceTriggerPlacement("Phase 20 Redguard trigger placement", trigger, manifestPath);
+    }
+  }
+
+  checkPhase20BosmerSourceScaffold(manifest, manifestPath) {
+    this.checkSourceContains("Phase 20 Bosmer manager source", "PDV__ManagerQuest", [
+      "ORIGIN_BOSMER = 4",
+      "Function HandleBosmerOldContractProperHunt(String reason)",
+      "Function HandleBosmerOldContractForestKept(String reason)",
+      "Function HandleBosmerLivingStoryCommunityKept(String reason)",
+      "Function HandleBosmerLivingStoryNatureSite(String reason)",
+      "Function HandleBosmerExchangeDebtSettled(String reason)",
+      "Function HandleBosmerExchangeProportionateVengeance(String reason)",
+      "Function HandleBosmerBanditRoadRoadLife(String reason)",
+      "Function HandleBosmerBanditRoadReversal(String reason)",
+      "Bool Function RecordBosmerFavorSignal(String favorKey, Int pathState, String reason)",
+      "Bool Function CanRecordBosmerMajorFavor(String favorKey, Float cooldownDays, String reason)",
+      "String Function GetBosmerFavorSummary()",
+      "\"PDV.Bosmer.Favor.\"",
+    ]);
+    this.checkSourceContains("Phase 20 Bosmer EventTypes source", "PDV_EventTypes", [
+      "EVT_BOSMER_OLD_CONTRACT_PROPER_HUNT = 100",
+      "EVT_BOSMER_OLD_CONTRACT_FOREST_KEPT = 101",
+      "EVT_BOSMER_LIVING_STORY_COMMUNITY = 102",
+      "EVT_BOSMER_EXCHANGE_DEBT_SETTLED = 104",
+      "EVT_BOSMER_BANDIT_ROAD_REVERSAL = 107",
+      "bosmer-old-contract-proper-hunt",
+      "bosmer-living-story-community",
+      "bosmer-bandit-road-reversal",
+    ]);
+    this.checkSourceContains("Phase 20 Bosmer EventBus source", "PDV_EventBus", [
+      "Function RouteBosmerOldContractProperHunt()",
+      "Function RouteBosmerLivingStoryCommunityKept()",
+      "Function RouteBosmerExchangeDebtSettled()",
+      "Function RouteBosmerBanditRoadReversal()",
+      "PDV_Manager.HandleBosmerOldContractProperHunt(\"eventbus_\" + eventType)",
+      "PDV_Manager.HandleBosmerBanditRoadReversal(\"eventbus_\" + eventType)",
+    ]);
+    this.checkSourceContains("Phase 20 Bosmer receiver source", "PDV_EventSignalActivator", [
+      "ROUTE_BOSMER_OLD_CONTRACT_PROPER_HUNT = 100",
+      "ROUTE_BOSMER_LIVING_STORY_COMMUNITY = 102",
+      "ROUTE_BOSMER_EXCHANGE_DEBT_SETTLED = 104",
+      "ROUTE_BOSMER_BANDIT_ROAD_REVERSAL = 107",
+      "PDV_EventBusService.RouteBosmerOldContractProperHunt()",
+      "PDV_EventBusService.RouteBosmerBanditRoadReversal()",
+    ]);
+
+    const triggerSurfaces = manifest.triggerSurfaces || [];
+    if (triggerSurfaces.length >= 8) {
+      this.pass("Phase 20 Bosmer trigger contract", `${triggerSurfaces.length} trigger surface(s) declared for the non-hunter parity proof slice.`, manifestPath);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Bosmer trigger contract", `Only ${triggerSurfaces.length} trigger surface(s) declared.`, manifestPath);
+    }
+
+    for (const trigger of triggerSurfaces) {
+      if (typeof trigger.placementRefEditorId === "string" && trigger.placementRefEditorId.startsWith("PDV_REFR_")) {
+        this.pass("Phase 20 Bosmer placement contract", `${trigger.editorId} declares CK placement reference ${trigger.placementRefEditorId}.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Bosmer placement contract", `${trigger.editorId || "(missing editorId)"} is missing placementRefEditorId.`, manifestPath);
+      }
+    }
+
+    if (manifest.implementationStatus === "record-wired" || manifest.implementationStatus === "runtime-proven") {
+      this.checkPhase20BosmerRecordReadback(manifest, manifestPath);
+    }
+  }
+
+  checkPhase20BosmerRecordReadback(manifest, manifestPath) {
+    for (const trigger of manifest.triggerSurfaces || []) {
+      if (!trigger.editorId) {
+        continue;
+      }
+
+      const record = this.recordsByEdid.get(trigger.editorId);
+      if (record?.type === "ACTI") {
+        this.pass("Phase 20 Bosmer trigger record", `${trigger.editorId} exists as ACTI.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Bosmer trigger record", `${trigger.editorId} is missing or not an ACTI.`, PDV_ESP);
+        continue;
+      }
+
+      const detail = this.recordDetails.get(trigger.editorId);
+      const script = detail ? findScript(detail.fields || {}, "PDV_EventSignalActivator") : null;
+      if (!script) {
+        this.phase20RaceCostingGap("Phase 20 Bosmer trigger script", `${trigger.editorId} is missing PDV_EventSignalActivator.`, PDV_ESP);
+        continue;
+      }
+
+      const props = propertyMap(script);
+      this.checkScalarProperty("Phase 20 Bosmer trigger property", props, "RouteId", trigger.routeId, this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Phase 20 Bosmer trigger property", props, "RequiredOriginRace", 4, this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Phase 20 Bosmer trigger property", props, "SignalValue", trigger.signalValue || 0, this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Phase 20 Bosmer trigger property", props, "SignalSourceId", trigger.signalSourceId || "", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Bosmer trigger property", props, "PDV_EventBusService", "PDV_EventBus", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Bosmer trigger property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Bosmer trigger property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase20RaceCostingGap.bind(this));
+      this.checkPhase20RaceTriggerPlacement("Phase 20 Bosmer trigger placement", trigger, manifestPath);
+    }
+  }
+
+  checkPhase20KhajiitSourceScaffold(manifest, manifestPath) {
+    this.checkSourceContains("Phase 20 Khajiit substrate source", "PDV_Substrate_KhajiitLunar", [
+      "Scriptname PDV_Substrate_KhajiitLunar extends PDV_SubstrateBase",
+      "Function ObserveMoonPhaseScaled(Int phaseIndex, Float multiplier, String reason)",
+      "Function RecordRoadHomeCadenceScaled(Float multiplier, String reason)",
+      "\"PDV.Substrate.KhajiitLunar.LastPhase\"",
+      "\"PDV.Substrate.KhajiitLunar.RoadHomeCount\"",
+      "String Function GetPilotSummary()",
+    ]);
+    this.checkSourceContains("Phase 20 Khajiit manager source", "PDV__ManagerQuest", [
+      "PDV_Substrate_KhajiitLunar Property PDV_KhajiitLunarSubstrate Auto",
+      "GlobalVariable Property PDV_GLO_KhajiitFocusedEmphasis Auto",
+      "ORIGIN_KHAJIIT = 6",
+      "KHAJIIT_FOCUS_BAANDAR = 3",
+      "KHAJIIT_FOCUS_RAJHIN = 4",
+      "KHAJIIT_FOCUS_ALKOSH = 5",
+      "Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)",
+      "Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)",
+      "Function HandleKhajiitBaanDarRoadTrick(String reason)",
+      "Function HandleKhajiitRajhinElegantTheft(String reason)",
+      "Function HandleKhajiitAlkoshDragonOrder(String reason)",
+      "Function RecordKhajiitFocusSignal(Int focusValue, String keyPrefix, String label, String reason)",
+      "Bool Function IsKhajiitOrigin()",
+      "\"PDV.Khajiit.RoadHome.LastAnchor\"",
+      "\"PDV.Khajiit.RoadHome.RepeatRejectCount\"",
+      "\"PDV.Signal.KhajiitBaanDarRoadTrick\"",
+      "bd=",
+    ]);
+    this.checkSourceContains("Phase 20 Khajiit EventTypes source", "PDV_EventTypes", [
+      "EVT_KHAJIIT_ROAD_HOME = 33",
+      "EVT_KHAJIIT_BAANDAR_ROAD_TRICK = 90",
+      "EVT_KHAJIIT_RAJHIN_ELEGANT_THEFT = 91",
+      "EVT_KHAJIIT_ALKOSH_DRAGON_ORDER = 92",
+      "khajiit-road-home",
+      "khajiit-baandar-road-trick",
+      "khajiit-alkosh-dragon-order",
+    ]);
+    this.checkSourceContains("Phase 20 Khajiit EventBus source", "PDV_EventBus", [
+      "Function RouteKhajiitMoonObservance(Int phaseIndex)",
+      "Function RouteKhajiitRoadHomeAnchor(Int anchorId)",
+      "Function RouteKhajiitBaanDarRoadTrick()",
+      "Function RouteKhajiitRajhinElegantTheft()",
+      "Function RouteKhajiitAlkoshDragonOrder()",
+      "PDV_Manager.HandleKhajiitRoadHomeAnchor(anchorId, \"eventbus_\" + eventType)",
+      "PDV_Manager.HandleKhajiitBaanDarRoadTrick(\"eventbus_\" + eventType)",
+      "PDV_Manager.HandleKhajiitAlkoshDragonOrder(\"eventbus_\" + eventType)",
+    ]);
+    this.checkSourceContains("Phase 20 Khajiit receiver source", "PDV_EventSignalActivator", [
+      "ROUTE_KHAJIIT_MOON_OBSERVANCE = 10",
+      "ROUTE_KHAJIIT_ROAD_HOME = 33",
+      "ROUTE_KHAJIIT_BAANDAR_ROAD_TRICK = 90",
+      "ROUTE_KHAJIIT_RAJHIN_ELEGANT_THEFT = 91",
+      "ROUTE_KHAJIIT_ALKOSH_DRAGON_ORDER = 92",
+      "PDV_EventBusService.RouteKhajiitMoonObservance(SignalValue)",
+      "PDV_EventBusService.RouteKhajiitRoadHomeAnchor(SignalValue)",
+      "PDV_EventBusService.RouteKhajiitBaanDarRoadTrick()",
+      "PDV_EventBusService.RouteKhajiitAlkoshDragonOrder()",
+    ]);
+
+    const triggerSurfaces = manifest.triggerSurfaces || [];
+    if (triggerSurfaces.length >= 6) {
+      this.pass("Phase 20 Khajiit trigger contract", `${triggerSurfaces.length} trigger surface(s) declared for the first proof slice.`, manifestPath);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Khajiit trigger contract", `Only ${triggerSurfaces.length} trigger surface(s) declared.`, manifestPath);
+    }
+
+    for (const trigger of triggerSurfaces) {
+      if (typeof trigger.placementRefEditorId === "string" && trigger.placementRefEditorId.startsWith("PDV_REFR_")) {
+        this.pass("Phase 20 Khajiit placement contract", `${trigger.editorId} declares CK placement reference ${trigger.placementRefEditorId}.`, manifestPath);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Khajiit placement contract", `${trigger.editorId || "(missing editorId)"} is missing placementRefEditorId.`, manifestPath);
+      }
+    }
+
+    if (manifest.implementationStatus === "record-wired" || manifest.implementationStatus === "runtime-proven") {
+      this.checkPhase20KhajiitRecordReadback(manifest, manifestPath);
+    }
+  }
+
+  checkPhase20KhajiitRecordReadback(manifest, manifestPath) {
+    const substrateRecord = this.recordsByEdid.get("PDV_Substrate_KhajiitLunar");
+    if (substrateRecord?.type === "QUST") {
+      this.pass("Phase 20 Khajiit lunar substrate record", "PDV_Substrate_KhajiitLunar exists as QUST.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Khajiit lunar substrate record", "PDV_Substrate_KhajiitLunar is missing or not a QUST.", PDV_ESP);
+    }
+
+    const substrateDetail = this.recordDetails.get("PDV_Substrate_KhajiitLunar");
+    const substrateScript = substrateDetail ? findScript(substrateDetail.fields || {}, "PDV_Substrate_KhajiitLunar") : null;
+    if (substrateScript) {
+      this.pass("Phase 20 Khajiit lunar substrate script", "PDV_Substrate_KhajiitLunar is attached to the substrate quest.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Khajiit lunar substrate script", "PDV_Substrate_KhajiitLunar script is not attached.", PDV_ESP);
+    }
+
+    const focusGlobal = this.recordsByEdid.get("PDV_GLO_KhajiitFocusedEmphasis");
+    if (focusGlobal?.type === "GLOB") {
+      this.pass("Phase 20 Khajiit focus mirror", "PDV_GLO_KhajiitFocusedEmphasis exists as GLOB.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Khajiit focus mirror", "PDV_GLO_KhajiitFocusedEmphasis is missing or not a GLOB.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      const props = propertyMap(managerScript);
+      this.checkObjectPropertyTarget("Phase 20 Khajiit manager property", props, "PDV_KhajiitLunarSubstrate", "PDV_Substrate_KhajiitLunar", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Khajiit manager property", props, "PDV_GLO_KhajiitFocusedEmphasis", "PDV_GLO_KhajiitFocusedEmphasis", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Khajiit manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    for (const trigger of manifest.triggerSurfaces || []) {
+      if (!trigger.editorId) {
+        continue;
+      }
+
+      const record = this.recordsByEdid.get(trigger.editorId);
+      if (record?.type === "ACTI") {
+        this.pass("Phase 20 Khajiit trigger record", `${trigger.editorId} exists as ACTI.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 Khajiit trigger record", `${trigger.editorId} is missing or not an ACTI.`, PDV_ESP);
+        continue;
+      }
+
+      const detail = this.recordDetails.get(trigger.editorId);
+      const script = detail ? findScript(detail.fields || {}, "PDV_EventSignalActivator") : null;
+      if (!script) {
+        this.phase20RaceCostingGap("Phase 20 Khajiit trigger script", `${trigger.editorId} is missing PDV_EventSignalActivator.`, PDV_ESP);
+        continue;
+      }
+
+      const props = propertyMap(script);
+      this.checkScalarProperty("Phase 20 Khajiit trigger property", props, "RouteId", trigger.routeId, this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Phase 20 Khajiit trigger property", props, "RequiredOriginRace", 6, this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Phase 20 Khajiit trigger property", props, "SignalValue", trigger.signalValue || 0, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Khajiit trigger property", props, "PDV_EventBusService", "PDV_EventBus", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Phase 20 Khajiit trigger property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20RaceCostingGap.bind(this));
+      this.checkPhase20RaceTriggerPlacement("Phase 20 Khajiit trigger placement", trigger, manifestPath);
     }
   }
 
@@ -5397,6 +6827,9 @@ function parseArgs(argv) {
     strictPhase17: false,
     strictPhase18: false,
     strictPhase19: false,
+    strictPhase20Roster: false,
+    strictPhase20Altmer: false,
+    strictPhase20RaceCosting: false,
     strictNord: false,
     strictKhajiit: false,
     strictCommitment: false,
@@ -5441,6 +6874,12 @@ function parseArgs(argv) {
       args.strictPhase18 = true;
     } else if (arg === "--strict-phase19") {
       args.strictPhase19 = true;
+    } else if (arg === "--strict-phase20-roster" || arg === "--strict-phase21-roster") {
+      args.strictPhase20Roster = true;
+    } else if (arg === "--strict-phase20-altmer") {
+      args.strictPhase20Altmer = true;
+    } else if (arg === "--strict-phase20-race-costing") {
+      args.strictPhase20RaceCosting = true;
     } else if (arg === "--strict-nord") {
       args.strictNord = true;
       args.strictPhase18 = true;
@@ -5453,7 +6892,7 @@ function parseArgs(argv) {
       args.strictPhase16 = true;
       args.strictPhase17 = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16] [--strict-phase17] [--strict-phase18] [--strict-phase19] [--strict-nord]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16] [--strict-phase17] [--strict-phase18] [--strict-phase19] [--strict-phase20-roster] [--strict-phase20-altmer] [--strict-phase20-race-costing] [--strict-nord]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -5483,6 +6922,9 @@ const verifier = new Verifier({
   strictPhase17: args.strictPhase17,
   strictPhase18: args.strictPhase18,
   strictPhase19: args.strictPhase19,
+  strictPhase20Roster: args.strictPhase20Roster,
+  strictPhase20Altmer: args.strictPhase20Altmer,
+  strictPhase20RaceCosting: args.strictPhase20RaceCosting,
   strictNord: args.strictNord,
   strictKhajiit: args.strictKhajiit,
   strictCommitment: args.strictCommitment,

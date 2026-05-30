@@ -218,16 +218,17 @@ the occasional overthrow quest beat):
 
 ---
 
-## 7. Remaining 1.0 Daedric Princes (stubs)
+## 7. Remaining Phase 20 Daedric Prince Surfaces (stubs)
 
 After Boethiah proves the template, the remaining Princes are authored in
-follow-up passes. `PDV_Architecture_v3.md` Section 21.1 sets the 1.0 target at
-**8-12 content-ready Daedric paths**; the final selection prioritizes the
-strongest vanilla hooks (the matrix `BuildabilityTag` and `VanillaHookPriority`
-columns). All 15 Skyrim-facing Princes are listed; Jyggalag is out of 1.0
-scope per `PDV_TargetEndStates_1.0.md`. Each stub will reuse the Section 6 row
-shape: tone profile, boon and price descriptions, tier-ups, commitment,
-stigma, neglect, exit, and per-race response.
+follow-up passes. `PDV_Architecture_v3.md` now sets the 1.0 target at
+**all sixteen Skyrim-present Daedric Prince surfaces content-ready for every
+race**. Buildability and vanilla hook strength still guide authoring order, but
+they no longer decide whether a Skyrim-present Prince is in scope. Jyggalag is
+out of 1.0 scope per `PDV_TargetEndStates_1.0.md` unless future adopted content
+explicitly adds him. Each stub will reuse the Section 6 row shape: tone
+profile, boon and price descriptions, tier-ups, commitment, stigma, neglect,
+exit, and per-race response.
 
 | Prince | PrincePathType | Authoring notes |
 |---|---|---|

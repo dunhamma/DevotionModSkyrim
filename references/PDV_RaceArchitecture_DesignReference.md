@@ -237,7 +237,7 @@ This audit separates **architecture locked** from **implementation-spec locked**
 | Imperial | Locked | Yes | Shared patron state, global offer gate, Concordat offer filters, Talos rupture acceptance, civic amplification, and Enforcer damping are locked |
 | Breton | Locked | Yes | Explicit tradition setup, all three state tracks, normal no-switching rule, hook feasibility, dawn math, recovery cadence, threshold values, Hidden Art cover/notoriety split, and tradition-authored favor lanes are locked; reward magnitudes remain tunable |
 | Dunmer | Locked | Yes | No `PDV_State_DunmerPath`; shared patron state owns native focus, `PDV_Substrate_DunmerAncestor` owns the ancestor substrate, `PDV_State_DunmerAncestorPosture` owns curse/restoration posture, and the Dunmer Daedric deviation option map is locked |
-| Altmer | Partial | Mostly; final closeout still needed | `ThalmorAlignment` bands/start values, shared patron-state use, no generic broad lane, and bounded Lorkhan economy are locked. Still close crisis-state enum values/resolution hooks, final crisis trigger list, contextual favor lanes, and launch-focused deity hook posture |
+| Altmer | Locked | Yes | `ThalmorAlignment` bands/start values, shared patron-state use, no generic broad lane, bounded Lorkhan economy, `PDV_State_AltmerCrisis`, crisis source/resolution routes, contextual favor lanes, and launch-focused deity hook posture are locked |
 | Khajiit | Locked | Yes | Lunar substrate namespace, hybrid moon-cycle model, real/fallback phase source, silent no-offer emergence, focused-emphasis enum/threshold/fallback, road-home circuit rules, lunar posture enum, curse posture, ShadowDrift boundary, five launch focused paths, and launch hook posture are locked |
 | Bosmer | Locked | Yes | Path enum, Old Contract split, Living Story fallback, shared Pact-positive signal weighting, path-switch request shape, destination gates, ledger preservation, and seven-day switch lockout are locked |
 | Redguard | Locked | Yes | `PDV_State_RedguardSect`, setup/default, ancestor layer posture, sect switching, broad -> focused offer gate, Dunmer-pattern portable/private Tu'whacca shrine, HoonDing 1.0 milestone posture, MS08 stage hooks, and launch hook posture are locked; Ash'abah social stigma is limited to light authored 1.0 content |
@@ -245,7 +245,7 @@ This audit separates **architecture locked** from **implementation-spec locked**
 | Argonian | Locked | Yes | `PDV_Substrate_ArgonianHist`, visible `Hist` / `People` / `Void` layers, StorageUtil keys, gentle Hist distance, single bed-of-choice cadence, Sithis activation threshold, and curse posture enum are locked |
 
 **Remaining implementation-lock priority recommendation:**
-1. `Altmer` - core alignment and Lorkhan economy are bounded; finish crisis/favor/deity-hook closeout before marking implementation-locked
+All ten races are implementation-spec locked as of the 2026-05-30 Altmer closeout. The next priority is implementation costing and verifier assertion design, not further architecture lock work.
 
 Do not mark this audit as complete by changing the top-level race `LOCKED` status. Top-level `LOCKED` means architecture locked. Implementation lock should be advanced race by race as the exact state-track and substrate contracts are ratified.
 
@@ -1501,7 +1501,7 @@ House Telvanni exception (minor):
 - Werewolf: primary path strained but not closed, no alternative path available
 - Vampire is more mechanically interesting; werewolf is more theologically isolated
 
-### 10.5 Altmer (LOCKED - economy implementation review in progress)
+### 10.5 Altmer (LOCKED - implementation spec closed 2026-05-30)
 
 **Setup Flow:**
 ```
@@ -3162,6 +3162,8 @@ Nord broad worship at Faithful (Tier 2) combines watered-down blessings from the
 ### 12.14 Altmer — Crisis of Faith Events (LOCKED)
 
 Major story points that challenge Altmer theological worldview (e.g., discovering Thalmor hypocrisy, Talos mantling evidence) create genuine crisis-of-faith events rather than simple piety adjustment. These trigger temporary states (doubt, questioning, vulnerability) that the player resolves through continued behavior in one direction or another. The presentation should carry more flavor and only a minimal temporary sting, reflecting emotional dysregulation rather than theological failure or permanent collapse.
+
+Closeout lock (2026-05-30): `PDV_State_AltmerCrisis` uses `None = 0`, `Dissonant = 1`, `Questioning = 2`, `Reasserting = 3`, and `ScarredResolved = 4`. Launch crisis sources are Dragonborn declaration, Sovngarde/Tsun proof, Talos/Thalmor contradiction, and the Companions/Wuuthrad/beast fork. Marriage, adoption, and homestead ownership remain Tier 3 mortal-continuity dissonance by default, not full crisis events. Crisis resolves through coherent behavior afterward and may trigger contextual favor only when the response is itself faithful or self-possessed.
 
 ### 12.15 Bosmer — Pact Failure Mechanic (LOCKED)
 

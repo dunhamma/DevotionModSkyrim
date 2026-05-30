@@ -1,6 +1,6 @@
 # PDV Target End States - 1.0 Product Tracker
 **Created:** 2026-05-18
-**Last updated:** 2026-05-28
+**Last updated:** 2026-05-31
 **Status:** Living 1.0 product/end-state tracker
 **Purpose:** Track what each race's devotion should feel like at launch, how
 close each race is to implementation-ready acceptance, and where the 1.0
@@ -32,8 +32,10 @@ The full Daedric end state is Prince-first and race-modified. The canonical
 implementation-facing matrix is `references/phase4/PDV_DaedricRacePrinceMatrix.csv`;
 the architecture baseline lives in `references/PDV_RaceArchitecture_DesignReference.md`
 Section 11; the readable race sheets carry the race-by-race treatment maps.
-This tracker records launch feel and race acceptance, not all 160 race-Prince
-pairings.
+This tracker records launch feel and race acceptance. Full race/deity and
+race-Prince coverage is now a 1.0 acceptance requirement, but the implementation
+authority for those pairings is `references/authoring/PDV_DeityCoverageMatrix.json`
+rather than duplicated prose in this tracker.
 
 Each race sheet should name all sixteen vanilla Skyrim-facing Prince surfaces
 and state whether that Prince is native, legible, tolerated, foreign, taboo,
@@ -60,6 +62,47 @@ architecture contract answer "what state and hooks make it buildable."
 that contract into a build slice; use it before starting any Daedric pilot or
 race subsystem implementation.
 
+## 1.0 Full Roster Gate
+
+The launch target is full roster readiness, not a selective content lock.
+`references/authoring/PDV_DeityCoverageMatrix.json` is the current roster
+authority for this gate.
+`references/authoring/PDV_RaceGameplayBalanceAudit.md` is the companion
+gameplay audit for benefit wealth, class/playstyle coverage, non-god immersion
+lanes, writing/surfacing, hook reality, compatibility, and proof status. It
+does not replace the roster authority; it checks whether the covered content
+will feel equally rich in play. Its working ledgers are
+`references/authoring/PDV_RaceRewardBudgetLedger.md` and
+`references/authoring/PDV_RacePlaystyleCoverageLedger.md`; its reward ledger
+now includes an explicit immersion budget matrix, and its build-costing handoff
+is `references/authoring/PDV_RaceImplementationCostingBacklog.md`.
+The first implementation-costing manifest set covers Altmer, Argonian, Orc,
+Redguard, Bosmer non-hunter parity, and Khajiit. Each manifest must carry
+`immersionProof` so reward parity includes diegetic trigger meaning, feedback,
+rejected generic behavior, and normal-session feel. Run
+`node .\tools\pdv_verify.mjs --strict-phase20-race-costing` after changing any
+of those manifests or the race-costing scope.
+
+Acceptance:
+
+- All locked race-architecture gods and cultural worship targets are
+  content-ready.
+- All sixteen Skyrim-present Daedric Prince surfaces are content-ready for
+  1.0: Azura, Boethiah, Mephala, Malacath, Meridia, Hircine, Molag Bal,
+  Nocturnal, Hermaeus Mora, Mehrunes Dagon, Sheogorath, Namira, Sanguine,
+  Clavicus Vile, Peryite, and Vaermina.
+- Every race/god and race/Prince pairing has authored handling: response
+  state, commitment gate, boon or favor surface, price/neglect/stigma,
+  exit/residue, hook source, implementation status, verifier status, runtime
+  proof status, and player-facing feedback.
+- Race runtime slices with parity risk have implementation-costing manifests
+  before source or CK work: state surfaces, accepted hooks, rejected hooks,
+  immersion proof, player surfacing, verifier gate, and runtime proof route.
+- Native, tolerated, foreign, taboo, hostile, and curse-access paths all have
+  visible handling. Universal safe worship is not required.
+- No Skyrim-present locked god or Prince may remain dev-only at 1.0.
+- Jyggalag remains excluded unless future adopted content explicitly adds him.
+
 ## 1.0 Acceptance Tracker
 
 Status values:
@@ -73,22 +116,63 @@ Status values:
 | Imperial | Locked | Locked | Locked | Pending | Partial | Partial |
 | Breton | Locked | Locked | Locked | Pending | Pending | Pending |
 | Dunmer | Locked | Locked | Locked | Pending | Partial | Pending |
-| Altmer | Locked | Partial | Partial | Pending | Partial | Partial |
-| Khajiit | Locked | Locked | Locked | Pending | Partial | Partial |
-| Bosmer | Locked | Locked | Partial | Pending | Pending | Pending |
-| Redguard | Locked | Locked | Locked | Pending | Pending | Pending |
-| Orc | Locked | Locked | Partial | Pending | Pending | Pending |
-| Argonian | Locked | Locked | Locked | Pending | Pending | Pending |
+| Altmer | Locked | Locked | Locked | Partial | Partial | Partial |
+| Khajiit | Locked | Locked | Locked | Partial | Partial | Partial |
+| Bosmer | Locked | Locked | Locked | Partial | Partial | Partial |
+| Redguard | Locked | Locked | Locked | Partial | Partial | Pending |
+| Orc | Locked | Locked | Locked | Partial | Partial | Pending |
+| Argonian | Locked | Locked | Locked | Partial | Partial | Pending |
 
-Altmer is the only race still partial at implementation-spec level. Remaining
-closeout items are crisis resolution hooks, final crisis trigger list,
-contextual favor lanes, and focused-deity hook posture. Reward magnitudes and
-exact effect values remain tuning work for every race until implementation and
-playtesting prove the feel.
+All ten races are now implementation-spec locked at the design level. Altmer's
+remaining closeout items (crisis resolution hooks, final crisis trigger list,
+contextual favor lanes, and focused-deity hook posture) were locked on
+2026-05-30 and drafted in the race content manifest. The first Altmer crisis,
+Lorkhan, rejected-surface, and source-level favor scaffold now compiles, and
+`PDV_State_AltmerCrisis` is record-wired. The first two Altmer favor spell
+records are also wired for dawn steadiness and orthodox costly enforcement,
+four Altmer ACTI trigger proof base records are wired for crisis, Lorkhan
+pressure, dawn steadiness, and orthodox cost, and three Altmer curse/exile
+message records are wired to manager source for vampire exile pressure,
+werewolf hard halt, and cured-vampire scar recognition. The four Altmer proof
+references are now placed in `QASmoke` and read back cleanly; runtime proof and
+final immersive world placement remain open.
+The first Argonian Hist/People proof slice is source/record-wired:
+`PDV_Substrate_ArgonianHist`, `PDV_State_ArgonianHistPosture`, four ACTI proof
+base records, manager/status surfacing, and route IDs `60-63` exist. The four
+Argonian proof references are now placed in `QASmoke` and read back cleanly;
+runtime proof and final immersive world placement remain open. The first Orc
+life-mode proof slice is
+also source/record-wired: `PDV_StateTrack_OrcLifeMode`, `PDV_GLO_OrcLifeMode`,
+four ACTI proof base records, manager/status surfacing, and route IDs `70-73`
+exist. The first Redguard sect proof slice is also source/record-wired:
+`PDV_StateTrack_RedguardSect`, `PDV_GLO_RedguardSect`, four ACTI proof base
+records, manager/status surfacing, and route IDs `80-83` exist. The Orc and
+Redguard proof references are now placed in `QASmoke` and read back cleanly;
+runtime proof and final immersive world placement remain open. The first
+Khajiit Phase 20 proof slice is also
+source/record-wired: the existing `PDV_Substrate_KhajiitLunar` and
+`PDV_GLO_KhajiitFocusedEmphasis` are readback-covered, six ACTI proof base
+records exist for moon observance, two road-home anchors, Baan Dar, Rajhin, and
+Alkosh, manager/status surfacing exposes all five focus weights, and route IDs
+`10`, `33`, and `90-92` exist. The Bosmer non-hunter parity packet is also
+source/record-wired: eight proof ACTI base records exist for Old Contract,
+Living Story, Exchange, and Bandit Road favor variants, manager/status surfacing
+shows `favor=oc/ls/ex/br` counters, route IDs `100-107` exist, and Baan Dar
+reversal carries a seven-day major-favor cooldown. The Khajiit and Bosmer proof
+references are now placed in `QASmoke` and read back cleanly; runtime proof and
+final immersive world placement remain open for all six Phase 20 proof packets.
+The counted runtime lane now has a consolidated runbook and log checker:
+`references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` and
+`node .\tools\pdv_phase20_runtime_check.mjs --race all`. The checker proves
+route markers only; Survey/status immersion, negative hooks, anti-farm behavior,
+and final world placement remain separate acceptance evidence.
+Reward magnitudes,
+immersion proof, and exact effect values remain tuning work for every race until
+implementation and playtesting prove the feel.
 
 ## 1.0 Compatibility Gate
 
-Phase 20 release compatibility is list-author focused, not end-user Wabbajack
+Phase 21 release compatibility is list-author focused, not end-user Wabbajack
 swap support. The hard 1.0 compatibility gate is an accepted Authoria / ARR
 integration-test package. The other six Bordello target lists (JOJ, TOT, HOH,
 MOM, DoD, and VOV) should reach `patch-packaged`: exact religion-removal set,
@@ -166,7 +250,7 @@ Pilot clearance result: Nord, Imperial, and Redguard cleared the cross-pilot rev
 
 Dunmer contextual-favor clearance result: Dunmer cleared user-experience review on 2026-05-18. The cleared shape is shared ancestor + Good Daedra favor before primary focus, then five focused trigger families each for Azura, Boethiah, and Mephala. Hook feasibility, substrate/focus implementation, curse posture, and Daedric deviation option mapping are now locked; remaining launch work is content weighting and implementation.
 
-Implementation-lock audit result (2026-05-19): all races are architecture-locked. Nord, Imperial, Breton, Dunmer, Bosmer, Redguard, Orc, Khajiit, and Argonian are implementation-locked; Altmer is the only remaining partial implementation-spec lock. Breton is closed at the explicit tradition setup, all-three-track, normal no-switching, hook feasibility, dawn math, recovery cadence, Hidden Art cover/notoriety, and tradition-authored favor-lane level; reward magnitudes remain tuning work. Redguard is closed at the state/offer and launch-hook-posture level: death-duty is buildable, Tu'whacca uses the Dunmer portable/private shrine pattern rather than a pure Arkay proxy, HoonDing can ship through curated milestone hooks, `MS08` is stage-verified, and Ash'abah social stigma is limited to light authored/custom 1.0 content. Dunmer is closed at the ancestor substrate, focus-gate, curse-posture, portable-shrine, and Daedric-deviation option-map level. Khajiit is closed at the lunar substrate, silent focused-emphasis, road-home circuit, curse posture, ShadowDrift boundary, five launch paths, and launch-hook-posture level. Argonian is closed at the single layered Hist substrate, visible Hist/People/Void layers, gentle Hist distance, one bed-of-choice anchor, Sithis activation threshold, and curse posture level. Altmer is partially closed: shared patron-state use, no generic broad lane, `ThalmorAlignment` bands/start values, and bounded Lorkhan economy are locked; crisis resolution, final crisis triggers, contextual favor lanes, and focused-deity hook posture still need closeout before implementation-lock.
+Implementation-lock audit result (2026-05-19; Altmer closeout 2026-05-30): all races are architecture-locked and implementation-spec locked. Breton is closed at the explicit tradition setup, all-three-track, normal no-switching, hook feasibility, dawn math, recovery cadence, Hidden Art cover/notoriety, and tradition-authored favor-lane level; reward magnitudes remain tuning work. Redguard is closed at the state/offer and launch-hook-posture level: death-duty is buildable, Tu'whacca uses the Dunmer portable/private shrine pattern rather than a pure Arkay proxy, HoonDing can ship through curated milestone hooks, `MS08` is stage-verified, and Ash'abah social stigma is limited to light authored/custom 1.0 content. Dunmer is closed at the ancestor substrate, focus-gate, curse-posture, portable-shrine, and Daedric-deviation option-map level. Khajiit is closed at the lunar substrate, silent focused-emphasis, road-home circuit, curse posture, ShadowDrift boundary, five launch paths, and launch-hook-posture level. Argonian is closed at the single layered Hist substrate, visible Hist/People/Void layers, gentle Hist distance, one bed-of-choice anchor, Sithis activation threshold, and curse posture level. Altmer is now closed at shared patron-state use, no generic broad lane, `ThalmorAlignment` bands/start values, bounded Lorkhan economy, crisis-state enum/resolution routes, final crisis source list, contextual-favor lane families, and focused-deity launch hook posture.
 
 Phase 13-16 closure defaults (2026-05-26):
 
@@ -422,7 +506,7 @@ Vampire note: the ash-prayer going SILENT (ancestors don't speak to undead) is o
 
 **Setup shape:** Choose faction alignment (Thalmor Orthodox / Divine Body / Psijic) → ThalmørAlignment starts accordingly → Layer 1 (Auri-El) always active → primary secondary deity through piety threshold → Tier 3.
 
-**Implementation-lock note (2026-05-19):** Altmer uses shared patron state for formal commitment. `ThalmorAlignment` is the orthodoxy/coherence track, not a Broad/Primary state. There is no generic broad-worship lane: the player experience is Auri-El foundation, faction-theological coherence, and secondary focus. Bands remain `0-30 Heterodox`, `31-69 Orthodox Moderate`, `70-100 Thalmor Devout`; setup starts remain `75`, `50`, and `25`.
+**Implementation-lock note (2026-05-19; closeout 2026-05-30):** Altmer uses shared patron state for formal commitment. `ThalmorAlignment` is the orthodoxy/coherence track, not a Broad/Primary state. There is no generic broad-worship lane: the player experience is Auri-El foundation, faction-theological coherence, and secondary focus. Bands remain `0-30 Heterodox`, `31-69 Orthodox Moderate`, `70-100 Thalmor Devout`; setup starts remain `75`, `50`, and `25`. The final implementation-spec closeout locks `PDV_State_AltmerCrisis`, the crisis source list, resolution routes, contextual-favor lane families, focused-deity launch hooks, and rejected-surface tests in `race-sheets/PDV_RaceDesign_Altmer.md`.
 
 **Lorkhan pressure posture:** Lorkhan penalties are piety pressure plus narrative reaction, not harsh permanent collapse. Tier 1 can hurt, Tier 2 should sting, and Tier 3 should mostly create dissonance and small pressure. Major main-story conflicts that are the biggest clashes with Altmer theology should fire a crisis-of-faith moment with stronger flavor and only a minimal temporary sting to reflect emotional dysregulation.
 
@@ -443,7 +527,7 @@ The question the friction asks is: *how much of Skyrim's content are you willing
 ### Neglect texture
 ThalmørAlignment drift in the wrong direction for your faction is the primary neglect signal. An Orthodox Altmer who consorts with Daedra or helps Talos worshippers isn't just losing piety — they're becoming theologically incoherent. The neglect texture is **inconsistency**, not absence.
 
-Werewolf note: complete halt — no path forward, not even the heretical Tier 1 that vampire gets. The beast is the precise inversion of the Apotheosis project. This should be surfaced clearly when it happens, not just silently kill progress.
+Werewolf note: complete halt — no path forward, not even the heretical Tier 1 that vampire gets. The beast is the precise inversion of the Apotheosis project. This is now source/record-wired through the Altmer curse-message slice, but still needs runtime proof.
 
 ---
 
@@ -451,7 +535,7 @@ Werewolf note: complete halt — no path forward, not even the heretical Tier 1 
 
 **Setup shape:** All Khajiit begin inside the Lunar Lattice automatically (no choice). Broad lunar worship (Tier 2 cap). Focused deity emphasis emerges *silently* through behavior — no formal offer system. Tier 3 through focused commitment.
 
-**Implementation state:** `PDV_Substrate_KhajiitLunar` owns the lunar substrate with canonical prefix `PDV.Substrate.KhajiitLunar.*`. Existing first keys are `Metric`, `Tier`, `LastEvent`, `LastPhase`, `ObservanceCount`, and `RoadHomeCount`. 1.0 uses the hybrid moon model: current phase gives small per-phase bonuses, while full-cycle consistency determines substrate strength. Prefer real Masser/Secunda state where reliable; otherwise use an abstract 28-day fallback. Khajiit do not use formal offer state for focus; add `PDV_State_KhajiitFocusedEmphasis` for the leading deity emphasis. Enum values are `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, `Alkosh = 5`. Focus requires `50` piety and a `15` piety lead over the next-highest focused deity; otherwise broad lunar worship remains valid. Road homes are `2-3` player-designated rest anchors, and piety requires cycling between them rather than repeating one convenient rest point. Curse/shadow pressure uses `PDV_State_KhajiitLunarPosture`: `Normal = 0`, `Strained = 1`, `Corrupted = 2`, `ShadowDrift = 3`. Vampirism sets `Corrupted`, lycanthropy sets `Strained`, and `ShadowDrift` requires dominant Nocturnal/shadow behavior rather than ordinary night travel.
+**Implementation state:** `PDV_Substrate_KhajiitLunar` owns the lunar substrate with canonical prefix `PDV.Substrate.KhajiitLunar.*`. Existing first keys are `Metric`, `Tier`, `LastEvent`, `LastPhase`, `ObservanceCount`, and `RoadHomeCount`. 1.0 uses the hybrid moon model: current phase gives small per-phase bonuses, while full-cycle consistency determines substrate strength. Prefer real Masser/Secunda state where reliable; otherwise use an abstract 28-day fallback. Khajiit do not use formal offer state for focus; `PDV_GLO_KhajiitFocusedEmphasis` mirrors the leading deity emphasis for CK/readback proof. Enum values are `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, `Alkosh = 5`. Focus requires `50` piety and a `15` piety lead over the next-highest focused deity; otherwise broad lunar worship remains valid. Road homes are `2-3` player-designated rest anchors, and piety requires cycling between them rather than repeating one convenient rest point. The first Phase 20 proof packet now wires ACTI bases for moon observance, two road-home anchors, Baan Dar road trickery, Rajhin elegant theft, and Alkosh dragon/order response; the manager rejects immediate same-anchor road-home repeats and exposes all five focus weights in summary readback. Curse/shadow pressure uses `PDV_State_KhajiitLunarPosture`: `Normal = 0`, `Strained = 1`, `Corrupted = 2`, `ShadowDrift = 3`. Vampirism sets `Corrupted`, lycanthropy sets `Strained`, and `ShadowDrift` requires dominant Nocturnal/shadow behavior rather than ordinary night travel. The six proof references are placed in `QASmoke` and pass readback; runtime proof remains open.
 
 ### Champion moment
 
@@ -481,7 +565,7 @@ Caravan helpers don't notice you the same way. Night travel feels more dangerous
 
 **Setup shape:** Post-startup explicit Bosmer path choice (Old Contract / Living Story / Exchange / Bandit Road). The first Bosmer popup auto-commits the matching foreground patron after startup/origin resolution rather than using an MCM-at-character-creation flow. Each path is a meaningfully different experience. Path switching has real cost.
 
-**Implementation state:** `PDV_State_BosmerPath` uses `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`. First-run setup requires a choice; unset/corrupt fallback is `LivingStory`. `OldContract` path state is separate from `PactBound`, `GreenPactCompliance`, and `LapsedFromPact`; path orientation and active Y'ffre exclusivity are not the same variable. `LivingStory` and `OldContract` intentionally share one `Y'ffre` deity ledger; path state changes exclusivity and Pact behavior rather than swapping to a second Y'ffre record. Non-Old-Contract incoherence drifts toward `LivingStory`, and path switching is explicit/destination-gated rather than automatic drift. As of 2026-05-24, Phase 9 is runtime-proven: the framework ESP contains the Bosmer path deity trio (`PDV_Deity_Yffre`, `PDV_Deity_Zen`, `PDV_Deity_BaanDar`), setup/suggestion/reckoning messages, manager properties, deity FormList membership, ACTI proof-surface base records, and verified placed proof references. Runtime proof passed for all five proof-surface routes, Living Story/Exchange/Bandit Road/Old Contract offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence after Old Contract re-entry.
+**Implementation state:** `PDV_State_BosmerPath` uses `OldContract = 0`, `LivingStory = 1`, `Exchange = 2`, `BanditRoad = 3`. First-run setup requires a choice; unset/corrupt fallback is `LivingStory`. `OldContract` path state is separate from `PactBound`, `GreenPactCompliance`, and `LapsedFromPact`; path orientation and active Y'ffre exclusivity are not the same variable. `LivingStory` and `OldContract` intentionally share one `Y'ffre` deity ledger; path state changes exclusivity and Pact behavior rather than swapping to a second Y'ffre record. Non-Old-Contract incoherence drifts toward `LivingStory`, and path switching is explicit/destination-gated rather than automatic drift. As of 2026-05-24, Phase 9 is runtime-proven: the framework ESP contains the Bosmer path deity trio (`PDV_Deity_Yffre`, `PDV_Deity_Zen`, `PDV_Deity_BaanDar`), setup/suggestion/reckoning messages, manager properties, deity FormList membership, ACTI proof-surface base records, and verified placed proof references. Runtime proof passed for all five proof-surface routes, Living Story/Exchange/Bandit Road/Old Contract offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence after Old Contract re-entry. The Phase 20 non-hunter parity packet now adds route IDs `100-107` and eight ACTI proof base records for Old Contract proper hunt/forest kept, Living Story community/nature-site proof, Exchange debt/redress, and Bandit Road road-life/reversal proof. Survey/status readback exposes `favor=oc/ls/ex/br` counters, and Bandit Road reversal has a seven-day major-favor cooldown. The eight proof references are placed in `QASmoke` and pass readback; runtime proof remains open.
 
 **Shared Pact memory:** Green Pact respect has modest positive weight across all Bosmer paths because it is core Bosmer inheritance. Proper hunting, animal-sourced food, restraint around needless plant use, and respect for the living world can help Living Story, Exchange, and Bandit Road. Only Old Contract carries penalties, `GreenPactCompliance`, forced reckoning, and Y'ffre exclusivity. This should be implemented as shared Bosmer signal weighting interpreted by the active path, not as a hidden background Old Contract ledger.
 
@@ -516,7 +600,7 @@ The other paths have friction through **path identity** — you made a choice, a
 
 **Broad worship lane:** Redguard breadth is sect-shaped. Crown, Forebear, and Ash'abah each count as their own broad-worship devotional lane for contextual favors; they share a Yokudan spine but should not collapse into one generic Yokudan package.
 
-**Implementation state:** `PDV_State_RedguardSect` uses `Crown = 0`, `Forebear = 1`, `AshAbah = 2`. First-run setup requires a sect choice; unset/corrupt fallback is `Forebear`. Ancestor reverence is a light origin-gated modifier/recognition layer, not a selectable path or full second blessing family. Formal focused-deity offers use the global offer gate and shared patron state.
+**Implementation state:** `PDV_StateTrack_RedguardSect` and `PDV_GLO_RedguardSect` use `Crown = 0`, `Forebear = 1`, `AshAbah = 2`. First-run setup requires a sect choice; unset/corrupt fallback is `Forebear`. Ancestor reverence is a light origin-gated modifier/recognition layer, not a selectable path or full second blessing family. Formal focused-deity offers use the global offer gate and shared patron state. The first Redguard source/record slice is live: manager route handling, status/survey surfacing, curse-cycle pressure markers, and four route `80-83` ACTI proof bases exist for Crown tomb respect, Forebear road passage, Ash'abah death duty, and Far Shores token use. The four proof references are placed in `QASmoke` and pass readback; runtime proof remains open.
 
 **Hook feasibility:** Redguard launch hooks are strongest around death duty: undead kill classification, draugr crypt / clearable location keywords, dungeon-cleared state, Hall of the Dead / Arkay quest stages, a PDV-authored Tu'whacca devotional surface, and curated necromancy/burial/tomb outcomes. Forebear contracts and travel are buildable when curated and capped. Crown honorable combat and HoonDing make-way are feasible with conservative filters; HoonDing 1.0 should use curated milestones, dragons, named bosses, and final boss clears before any combat-odds automation. Ash'abah social stigma and Redguard dignity dialogue are weak in vanilla and should ship only as light authored/custom 1.0 content unless a concrete broader hook is proven.
 
@@ -563,7 +647,7 @@ Launch table locks: four trigger families per life-mode; forge favor requires qu
 
 Life-mode selection lock: City Orc is the default bridge state unless the character is proven inside stronghold life or bound into service/exile. Stronghold requires Blood-Kin or equivalent stronghold acceptance plus active stronghold conduct. Legion/Exile requires explicit service/exile commitment or a completed pressure-bearing service milestone; faction membership alone is only eligibility context. Mode changes occur at major gates or dawn consolidation after sustained evidence, not from one stray activity.
 
-Implementation lock: Orc mode is a single active state track, `PDV_State_OrcLifeMode`, with enum values `City = 0`, `Stronghold = 1`, and `LegionExile = 2`. Setup/MCM records intent, but active mode is confirmed by world signals. Soft switches need two qualifying signals on separate in-game days within seven days and resolve at dawn; major gates such as Blood-Kin-through-aid, pro-stronghold `The Cursed Tribe`, or completed pressure-bearing service may switch immediately. After switching, automatic soft switching is locked for three in-game days. Travel alone does not remove Stronghold mode, and quitting a faction alone does not leave Legion/Exile.
+Implementation lock: Orc mode is a single active state track, `PDV_StateTrack_OrcLifeMode`, with enum values `City = 0`, `Stronghold = 1`, and `LegionExile = 2`. Setup/MCM records intent, but active mode is confirmed by world signals. Soft switches need two qualifying signals on separate in-game days within seven days and resolve at dawn; major gates such as Blood-Kin-through-aid, pro-stronghold `The Cursed Tribe`, or completed pressure-bearing service may switch immediately. After switching, automatic soft switching is locked for three in-game days. Travel alone does not remove Stronghold mode, and quitting a faction alone does not leave Legion/Exile. The first proof slice now wires `PDV_StateTrack_OrcLifeMode`, `PDV_GLO_OrcLifeMode`, four route `70-73` ACTI proof base records, and manager/status surfacing; the four proof references are placed in `QASmoke` and pass readback, while runtime proof remains open.
 
 Additional favor locks: worthy-challenge favor is Quiet by default and becomes Noted only for stronghold crisis, boss, trial, or Malacath-significant fights. Self-made community is valid for both City and Legion/Exile only through `PDV_SacredPlace` or faction-favor proxy hooks; City presents it as belonging built, while Legion/Exile presents it as burden returned from. Endurance is context, not piety by itself, with only tiny flavor or funny debuff allowed for overextension.
 
@@ -590,7 +674,7 @@ For Stronghold Orc neglect: drifting toward city life without maintaining the co
 
 **Setup shape:** No normal deity choice. All Argonians begin inside one layered Saxhleel exile system: `Hist`, `People`, and `Void`. The player experience is not "pick a patron"; it is watching which part of identity still holds while the Hist is distant.
 
-**Implementation state:** `PDV_Substrate_ArgonianHist` owns all three visible layers using `PDV.Substrate.ArgonianHist.*`. Canonical first keys are `Hist`, `People`, `Void`, `Tier`, `LastHistEvent`, `LastPeopleEvent`, `LastVoidEvent`, `LastMaintenanceDay`, `SithisSignalCount`, `BedOfChoiceSleepCount`, and `BedOfChoiceLastSleep`. Hist is primary; People can buffer; Void can stabilize but never replace Hist.
+**Implementation state:** `PDV_Substrate_ArgonianHist` owns all three visible layers using `PDV.Substrate.ArgonianHist.*`. Canonical first keys are `Hist`, `People`, `Void`, `Tier`, `LastHistEvent`, `LastPeopleEvent`, `LastVoidEvent`, `LastMaintenanceDay`, `LastDecayDay`, `SithisSignalCount`, `BedOfChoiceSleepCount`, `BedOfChoiceLastSleep`, and `Posture`. Hist is primary; People can buffer; Void can stabilize but never replace Hist. The concrete substrate, `PDV_State_ArgonianHistPosture`, four route `60-63` ACTI proof base records, and manager/status surfacing are now record-wired; the four proof references are placed in `QASmoke` and pass readback, while runtime proof remains open.
 
 **Hist distance:** Hist distance is always gently running in Skyrim. Dawn reduces `Hist` by `1` only if no valid Hist-maintenance signal fired in the last three in-game days, with a non-curse floor of `20`. Water, wetland, rest, reflection, and the 1.0 Hist sap meditation tool can maintain or recover it. There is no full home-equivalent restoration outside Black Marsh in 1.0.
 

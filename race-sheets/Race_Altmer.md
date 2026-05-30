@@ -1,6 +1,6 @@
 # Altmer
 
-**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Altmer.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; Altmer remains the only partial implementation-spec lock.
+**Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Altmer.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; Altmer implementation spec closed on 2026-05-30.
 
 > The mortal world is a prison. Every act either reaches toward escape or sinks deeper into the cage Lorkhan built.
 
@@ -81,6 +81,8 @@ This is the most distinctive mechanic in the mod. Lorkhan — the Corpse-God —
 ### Crisis of Faith
 
 Some story moments are too large to be treated as ordinary penalties. Discovering Thalmor hypocrisy, encountering evidence that destabilizes the Talos question, or being forced to confront the meaning of Dragonborn identity can trigger a crisis-of-faith state. This is a temporary condition of doubt, vulnerability, or questioning that resolves through sustained behavior afterward. The point is narrative pressure, not punishment for playing the main quest.
+
+The locked launch crisis beats are Dragonborn identity, Sovngarde or Tsun proof, a real Talos/Thalmor contradiction, and the Companions/Wuuthrad/beast-fork problem. Marriage, adoption, and homesteading remain minor mortal-continuity dissonance by default, not full crises. A crisis resolves by answering with coherent behavior afterward: dawn practice, study, orthodoxy repaired, or a chosen heterodox path held steadily.
 
 ## Paths of Devotion
 

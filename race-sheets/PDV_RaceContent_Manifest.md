@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races, all with full draft prose. Altmer and Breton carry gated slots (Section 13.13, Section 18.14) held until their specs close; everything else is content-author-ready for Phase 19.
+**Status:** Authoring manifest. Inventory across all 10 races, all with full draft prose. Altmer gated slots closed on 2026-05-30 in Section 13.13; Breton still carries the optional Vigilant pressure gate in Section 18.14. Everything else is content-author-ready for Phase 19.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -111,7 +111,7 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 1. Nord (full draft prose)
 2. Orc (full draft prose)
 3. Dunmer (full draft prose)
-4. Altmer (drafted except gated slots; Altmer is the only Partial implementation-spec; gated slots flagged in Section 13.13)
+4. Altmer (full draft prose; implementation-spec closed 2026-05-30)
 5. Khajiit (full draft prose; no formal commitment offer per Section 12.4a)
 6. Imperial (full draft prose)
 7. Redguard (full draft prose)
@@ -656,9 +656,9 @@ A Faithful no-focus Dunmer in steady play (occasional Grey Quarter beat, portabl
 
 Tier-up notifications: at most one per save per direction; Faithful entry is suppressed on a same-dawn focus offer. Posture readouts fire only on posture transitions, which are rare (curse onset/cure).
 
-## 13. Altmer (partial draft -- gated slots flagged)
+## 13. Altmer (full draft; implementation-spec closed)
 
-Altmer is the only Partial implementation-spec per `PDV_TargetEndStates_1.0.md` lines 76-87. The non-gated slots are authored below in full. Three slot groups stay gated until the spec closes (crisis resolution hooks, final crisis trigger list, contextual-favor lanes, focused-deity hook posture): the contextual-favor surfacings, the Lorkhan crisis-of-faith copy, and the post-vampire Exiled Altmer micro-path flavor. Gated slots are listed in Section 13.13 with their gate, not drafted.
+Altmer was the only open implementation-spec in the earlier manifest pass. The 2026-05-30 closeout in `PDV_RaceDesign_Altmer.md` locks crisis handling, final crisis trigger list, contextual-favor lanes, and focused-deity hook posture, so the previously gated slot groups are now drafted in Section 13.13.
 
 `ThalmorAlignment` is the orthodoxy/coherence track (`0-30 Heterodox`, `31-69 Orthodox Moderate`, `70-100 Thalmor Devout`). Layer 1 Auri-El is always active. Focused commitment uses the shared patron state.
 
@@ -776,7 +776,7 @@ Narrator voice. Body budget 240 hard / 180 target. One variant per faction align
 
 ### 13.10 Curse-state transitions (`PDV_Msg_Altmer_CurseState_*`)
 
-God-voice (Auri-El). MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Altmer` "Curse State Summary": both states are terminal -- vampirism has no clean restoration, werewolf halts devotion entirely. Fires once on onset. The post-vampire Exiled Altmer micro-path flavor is gated (Section 13.13).
+God-voice (Auri-El). MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Altmer` "Curse State Summary": both states are terminal -- vampirism has no clean restoration, werewolf halts devotion entirely. Fires once on onset. The post-vampire Exiled Altmer micro-path flavor is drafted in Section 13.13 as enhancement custom content.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -801,25 +801,56 @@ Player-second-person on topic name. Branch dialogue authored separately in CK. T
 | PDV_Dlog_Altmer_CollegeMage_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Altmer "Magnus focus" | Magnus or Syrabane focus; College context | "The arts are my devotion. Show me what the College keeps closed." |
 | PDV_Dlog_Altmer_ThalmorOfficer_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Altmer "Trinimac focus" | Trinimac Devoted; ThalmorAlignment 70+ | "I defend the project by the sword. The orthodoxy knows my name." |
 
-### 13.13 Gated slots (not drafted)
+### 13.13 Contextual favors and closeout slots
 
-These three slot groups stay gated until the Altmer implementation-spec closes (`PDV_TargetEndStates_1.0.md` line 146: crisis resolution hooks, final crisis trigger list, contextual-favor lanes, focused-deity hook posture).
+The 2026-05-30 Altmer closeout in `PDV_RaceDesign_Altmer.md` locks the final crisis trigger list, resolution routes, contextual-favor lane families, and focused-deity hook posture. These rows draft the formerly gated slot groups.
 
-| Slot group | Slot pattern | Gate |
-|---|---|---|
-| Contextual favor (Noted/Marked) | `PDV_Notif_Altmer_FavorNoted_<Faction>_<TriggerFamily>`, `PDV_Msg_Altmer_FavorMarked_<Faction>_<TriggerFamily>` | Contextual-favor lanes are Partial per `TargetEndStates` line 146. Lane families must be locked before favor strings can be authored without rework. |
-| Lorkhan crisis-of-faith | `PDV_Msg_Altmer_LorkhanCrisis_<DragonbornDeclaration|SovngardeBeat|MarriageBeat|CompanionsFork>` | Final crisis trigger list is Partial per `TargetEndStates` line 146 (`PDV_ALT_CRISIS_FAITH` source list not yet locked). |
-| Post-vampire Exiled Altmer flavor | `PDV_Msg_Altmer_VampireExiledPath_<Entry|Recognition>` | Enhancement custom content per `TargetEndStates` Section 21.2 line 1536; not required for core function. The locked terminal vampire-onset notice is authored above (Section 13.10); only the optional Exiled micro-path flavor is gated. |
+#### 13.13a Contextual favor surfacings
+
+Narrator voice unless a row says otherwise. Notifications use budget 80 hard / 60 target. MessageBox rows use body budget 500 hard / 280 target and title budget 40 / 30. Favor rows require the global one-active-favor cap.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Altmer_FavorNoted_Shared_DawnSteadiness | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Contextual Favor Table" | Dawn rite after Lorkhan pressure or crisis; one per day | The dawn holds. The dissonance settles for now. |
+| PDV_Notif_Altmer_FavorNoted_Shared_CoherenceHeld | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Shared coherence" | Three coherent days; no contradictory major signal | Your acts still make one shape. The path holds. |
+| PDV_Msg_Altmer_FavorMarked_Orthodox_CostlyEnforcement | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Thalmor Orthodox" | High alignment plus costly, curated enforcement only | Title: "Orthodoxy Held" Body: "This was not obedience for its own sake. You defended the project where compromise would have been easier. The old order recognizes the cost." |
+| PDV_Notif_Altmer_FavorNoted_DivineBody_BalancedCultivation | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Divine Body" | Moderate alignment held through a real choice | Neither zeal nor collapse. The middle path remains yours. |
+| PDV_Msg_Altmer_FavorMarked_Psijic_CrisisStudy | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Psijic / Heterodox" | Major crisis resolved through study/self-cultivation | Title: "Doubt Given Shape" Body: "You did not flee the contradiction. You studied it until it became a path you could walk. The old doubt quiets, not because it is gone, but because it is understood." |
+| PDV_Notif_Altmer_FavorNoted_AuriEl_ReturnReaffirmed | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Auri-El focus" | Auri-El focused crisis resolution or dawn rite | Auri-El's dawn does not erase the scar. It shows the way through. |
+| PDV_Notif_Altmer_FavorNoted_Magnus_ArtsRoad | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Magnus focus" | Magic milestone, Eye/College stage, curated spell learned | The arts become a road again. Magnus marks the discipline. |
+| PDV_Notif_Altmer_FavorNoted_Trinimac_CivilizationDefended | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Trinimac focus" | Orthodoxy-gated threat defeated; meaningful context only | Trinimac notes the defense, not the violence. |
+| PDV_Notif_Altmer_FavorNoted_Xarxes_RecordKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Xarxes focus" | Record/lineage/truth preserved; one-shot marker | The record holds. Xarxes keeps what must not be lost. |
+| PDV_Notif_Altmer_FavorNoted_Syrabane_Warded | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Syrabane focus" | Protection milestone, apprentice aid, anti-mage survival | The ward held when it mattered. Syrabane was near. |
+
+#### 13.13b Lorkhan crisis-of-faith copy
+
+Crisis MessageBoxes are narrator voice. They fire once per crisis source and replace ordinary penalty presentation for that source.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_LorkhanCrisis_DragonbornDeclaration | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Dragonborn declaration" | One-time; starts `Dissonant` | Title: "Named By The Mortal Story" Body: "The world has named you Dragonborn. To Skyrim, this is glory. To Altmer faith, it is a mortal story closing around you. The path is not broken, but it has become harder to hold." |
+| PDV_Msg_Altmer_LorkhanCrisis_SovngardeBeat | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Sovngarde / Tsun reality" | One-time; strongest crisis flavor | Title: "Shor's Hall Is Real" Body: "You have stood where Altmer doctrine would rather not look. Shor's dead have a hall, and its bridge had a guardian. This does not answer your faith. It wounds it with evidence." |
+| PDV_Msg_Altmer_LorkhanCrisis_TalosContradiction | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Talos / Thalmor contradiction" | Costly Talos aid, shrine protection, or hypocrisy proof only | Title: "The Forbidden Question" Body: "Talos should be simple. Heresy. Usurpation. A mortal lie. Yet the world keeps offering evidence that simplicity cannot hold. What you do next will decide whether this becomes doubt or repair." |
+| PDV_Msg_Altmer_LorkhanCrisis_CompanionsFork | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Companions / Wuuthrad / beast fork" | Companions, Wuuthrad, or nearby beast pressure; curse hard halt overrides | Title: "Ysgramor's Shadow" Body: "The old human war story has touched you. Honor, beast-blood, Wuuthrad, Shor's people -- none of it is neutral to an Altmer soul. You can pass through it, but not without naming what it cost." |
+
+#### 13.13c Post-vampire Exiled Altmer flavor
+
+These rows are enhancement custom content. They do not contradict the locked curse rule: active vampirism has no clean Altmer restoration path, and the Exiled path is capped at the lowest recognition band.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_VampireExiledPath_Entry | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Vampire"; Race_Altmer "Exiled Altmer" | Optional enhancement after vampire onset; Tier 1 cap only | Title: "Exile From The Dawn" Body: "Auri-El is closed while you flee the sun. Still, an Altmer does not become nothing because the records cast them out. What remains is exile: a narrow discipline, a name kept privately, never a full return." |
+| PDV_Msg_Altmer_VampireExiledPath_Recognition | Status spell readout | Noted | Narrator | 240/180 | RaceDesign_Altmer "Vampire"; Race_Altmer "Exiled Altmer" | Survey/recognition while vampire micro-path is active | You are exiled from the dawn, not restored to it. A thin discipline remains, capped low, held only by refusal to collapse. |
 
 ### 13.14 Altmer firing-density sanity
 
 A Faithful Divine Body Altmer in steady play (dawn observance, College progression, occasional Lorkhan-adjacent beat from the main quest):
 
-- Marked: 0 most days; the Champion entry and curse onsets are one-time. The Lorkhan first-interpretation notice fires once per save. Inside the `<1 per 2h` target.
-- Noted: ~1-2 per day (dawn ambient if Champion, occasional study milestone). Lorkhan pressure notifications are one-time-per-source and main-quest-paced, so they do not compound. Inside the `<2 per h` target.
+- Marked: 0 most days; Champion entry, curse onsets, crisis MessageBoxes, and the Lorkhan first-interpretation notice are one-time or rare quest-paced events. Inside the `<1 per 2h` target.
+- Noted: ~1-2 per day in steady play (dawn ambient/favor after pressure, occasional study milestone, rare contextual favor). Lorkhan pressure notifications are one-time-per-source and main-quest-paced, so they do not compound. Inside the `<2 per h` target.
 - Quiet: uncounted; icon-only.
 
-Tier-up notifications: one per save per direction; Faithful entry suppressed on a same-dawn focus offer. ThalmorAlignment band crossings are infrequent (the track moves on authored enforcement/defiance acts). Gated contextual-favor rows are excluded from this estimate and will need a fresh density pass when the lanes lock.
+Tier-up notifications: one per save per direction; Faithful entry suppressed on a same-dawn focus offer. ThalmorAlignment band crossings are infrequent (the track moves on authored enforcement/defiance acts). Contextual-favor rows are now included in this estimate and are constrained by the global one-active-favor cap.
 
 ## 14. Khajiit (full draft)
 
@@ -1842,7 +1873,7 @@ Argonian has no commitment-offer slot: there is no deity choice. The bed-of-choi
 | Nord | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Orc | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 | Dunmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
-| Altmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | gated | drafted | drafted | PARTIAL |
+| Altmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Khajiit | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 | Imperial | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Redguard | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
@@ -1856,13 +1887,12 @@ Argonian has no commitment-offer slot: there is no deity choice. The bed-of-choi
 
 ## 21. Gated and deferred appendix
 
-These slots are deliberately not authored in this pass.
+These slots are deliberately not authored in this pass. Altmer's previously
+gated crisis, contextual-favor, and post-vampire Exiled rows were drafted in
+Section 13.13 after the 2026-05-30 implementation-spec closeout.
 
 | Item | Gate | Reason |
 |---|---|---|
-| Altmer crisis-of-faith trigger copy | Close out Altmer Partial implementation-spec: crisis resolution hooks, final crisis trigger list, contextual-favor lanes, focused-deity hook posture (`PDV_TargetEndStates_1.0.md` line 146). | Spec is Partial; authoring now risks rework. |
-| Altmer contextual-favor Marked rows | Same gate. | Lanes are Partial. |
-| Altmer post-vampire Exiled flavor | Enhancement custom content category (`PDV_Architecture_v3.md` Section 21.2). | Not required for core function. |
 | Daedric path content | Now authored in the companion file `race-sheets/PDV_DaedricContent_Manifest.md`: Boethiah is drafted end to end as the pilot, and the remaining 15 Skyrim-facing Princes are stub-listed there for follow-up passes. No longer deferred here. | Boethiah pilot complete; see the Daedric manifest. |
 | Bosmer Green Pact per-item violation feedback | `PDV_Architecture_v3.md` Section 21.2 essential custom content: PDV-owned Green Pact tag layer must ship first. | Item-level surfacing depends on the tag layer existing. |
 | MCM player tab copy | `PDV_Architecture_v3.md` Section 16.1, Section 16.4: MCM should not be a daily management surface. | Authored alongside the player tab itself, not as flavor content. |
@@ -1882,7 +1912,7 @@ This manifest's own verification, per the plan:
 4. **Nord pilot completeness:** every Nord row has non-empty `Draft prose`. All thirteen worshippable deities carry a `ChampionEntry` MessageBox per the universal-champion decision in Section 10.4; no row is left reserved.
 5. **Blessing discipline:** Nord blessing rows lead with theological tone and follow with a concrete numeric effect, matching the `PDV_STANDARDS.md` Section 3.3 conformance example. No formids, no `PDV_*` record names in prose, no `bucket` / `hook` jargon.
 6. **Surfacing-vs-source:** every `Marked` row is one the source explicitly named as Marked or as a high-cost / costly-but-faithful moment. The two Marked Talos rows in Section 10.8 are flagged by `RaceDesign_Nord` lines 128 and 138 respectively.
-7. **Deferred appendix:** Altmer crisis copy, Green Pact per-item feedback, MCM player tab, localization, and Vigilant pressure appear in Section 21 with the gate cited. Daedric path content has moved to its own companion manifest (`PDV_DaedricContent_Manifest.md`), no longer deferred.
+7. **Deferred appendix:** Green Pact per-item feedback, MCM player tab, localization, and Vigilant pressure appear in Section 21 with the gate cited. Altmer crisis/contextual/Exiled rows moved into Section 13.13 after the 2026-05-30 closeout. Daedric path content has moved to its own companion manifest (`PDV_DaedricContent_Manifest.md`), no longer deferred.
 8. **Slot-ID convention:** every Nord slot id matches the `PDV_Msg_*` / `PDV_Notif_*` / `PDV_Bless_*` / `PDV_Dlog_*` / `PDV_PrismaToast_*` scheme. None exceed 32 EditorID characters where the CK editor truncates. (Longest Nord id: `PDV_Notif_Nord_Kynareth_ChampionAmbient_Storm` is 45 chars; flagged for review -- some CK fields tolerate longer EditorIDs but MESG/SPEL EditorIDs are safer under 32. Recommend `PDV_Notif_Nord_Kyn_ChampAmb_Storm` style abbreviations at Phase 19 hand-off if the truncation rule bites. Slot id stability vs. the manifest is the contract; CK shorthand is acceptable so long as the Slot ID column carries both.)
 9. **Length-budget:** every Nord `Draft prose` cell is at or under the row's `Budget` cap. The longest drafted body is `PDV_Msg_Nord_CurseState_VampireOnset` at 252 chars (under the 500 hard / 280 target). Notifications stay at or under 60 chars in nearly all cases; the few that touch 70-80 carry the body inside the 80 hard cap.
 10. **Voice-matrix compliance:** every Nord row's `Voice` matches the Section 3 matrix. No drift.
@@ -1899,10 +1929,10 @@ All ten races carry full draft prose. The manifest is content-author-ready for P
 
 The remaining open work is no longer race-by-race prose drafting but the following:
 
-1. **Close the gated slots.** When the Altmer implementation-spec closes (`PDV_TargetEndStates_1.0.md` line 146), author the three gated Altmer slot groups in Section 13.13. When a Breton Vigilant pressure encounter pattern is proven cheap, author Section 18.14.
-2. **Promote ratified prose.** Once reviewed, migrate the draft prose into the shipped ESP records (Phase 19) and into the `Race_*.md` player handbooks where it serves as player-facing copy.
-3. **Fill formal contextual-favor tables.** Khajiit, Bosmer, and Argonian favor rows here are derived from hook cross-checks and Tier Rewards because those race sheets carry no formal favor table yet. When those tables are added to the race sheets, re-check the lane families and row counts.
-4. **Per-deity offer prose for Breton** (optional refinement): the single templated focus-emergence notification could be expanded into bespoke per-deity offers if the design later confirms full patron offers within traditions.
+1. **Promote ratified prose.** Once reviewed, migrate the draft prose into the shipped ESP records (Phase 19) and into the `Race_*.md` player handbooks where it serves as player-facing copy.
+2. **Fill formal contextual-favor tables.** Khajiit, Bosmer, and Argonian favor rows here are derived from hook cross-checks and Tier Rewards because those race sheets carry no formal favor table yet. When those tables are added to the race sheets, re-check the lane families and row counts.
+3. **Breton Vigilant pressure** remains optional refinement: when a cheap encounter pattern is proven, author Section 18.14.
+4. **Per-deity offer prose for Breton** remains optional refinement: the single templated focus-emergence notification could be expanded into bespoke per-deity offers if the design later confirms full patron offers within traditions.
 5. **Update `PDV_TargetEndStates_1.0.md`** "Content authored" column from Pending toward Drafted for each race as this manifest's prose is ratified.
 
 ---

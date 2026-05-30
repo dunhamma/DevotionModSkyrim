@@ -1,0 +1,160 @@
+{
+  "schema": "pdv_deity_coverage_matrix_v1",
+  "status": "phase20-roster-authority",
+  "lastRevised": "2026-05-30",
+  "summary": "Phase 20 roster authority for the revised 1.0 target: every locked worship target and every Skyrim-present Daedric Prince surface must be content-ready, with authored handling for every race. Phase 21 compatibility testing follows only after this roster is stable enough to test against modlists.",
+  "requiredRaces": [
+    "Nord",
+    "Imperial",
+    "Breton",
+    "Dunmer",
+    "Altmer",
+    "Khajiit",
+    "Bosmer",
+    "Redguard",
+    "Orc",
+    "Argonian"
+  ],
+  "sourceMatrices": {
+    "stanceMatrix": "references/phase4/PDV_StanceMatrix.csv",
+    "daedricRacePrinceMatrix": "references/phase4/PDV_DaedricRacePrinceMatrix.csv",
+    "raceSignalMatrix": "references/phase4/PDV_RaceSignalMatrix.csv"
+  },
+  "coverageColumns": [
+    "deityOrPrince",
+    "culturalForm",
+    "skyrimPresentStatus",
+    "race",
+    "responseState",
+    "commitmentGate",
+    "boonOrFavorSurface",
+    "priceNeglectOrStigma",
+    "exitOrResidue",
+    "hookSource",
+    "playerFeedback",
+    "implementationStatus",
+    "verifierStatus",
+    "runtimeProofStatus"
+  ],
+  "contentReadyForEveryRaceDefinition": {
+    "universalSafeWorship": false,
+    "requiredPerRaceFields": [
+      "responseState",
+      "commitmentGate",
+      "boonOrFavorSurface",
+      "priceNeglectOrStigma",
+      "exitOrResidue",
+      "hookSource",
+      "playerFeedback",
+      "implementationStatus",
+      "verifierStatus",
+      "runtimeProofStatus"
+    ],
+    "rule": "Every race/deity or race/Prince pairing must have explicit authored handling. Native, tolerated, foreign, taboo, hostile, and curse-access paths all require player-facing feedback when the player engages the god or Prince. Unsafe worship may remain unsafe; absence of authored handling is no longer acceptable for 1.0."
+  },
+  "implementationStatusValues": [
+    "phase20-required",
+    "draft-prose",
+    "content-ready",
+    "verifier-covered",
+    "runtime-proven"
+  ],
+  "lockedWorshipObjects": [
+    "Kyne",
+    "Kynareth",
+    "Talos",
+    "Shor",
+    "Tsun",
+    "Stuhn",
+    "Mara",
+    "Akatosh",
+    "Arkay",
+    "Stendarr",
+    "Julianos",
+    "Dibella",
+    "Zenithar",
+    "Magnus",
+    "Phynaster",
+    "Y'ffre",
+    "Auri-El",
+    "Syrabane",
+    "Xarxes",
+    "Azura / Azurah",
+    "Boethiah / Boethra",
+    "Mephala / Mafala",
+    "Baan Dar",
+    "Rajhin",
+    "Alkosh",
+    "Khenarthi",
+    "Riddle'Thar / ja-Kha'jay",
+    "Jone / Jode",
+    "Satakal",
+    "Ruptga",
+    "Tu'whacca",
+    "Tava",
+    "Leki",
+    "Onsi",
+    "HoonDing",
+    "Malacath / Mauloch",
+    "Hircine",
+    "Meridia",
+    "Nocturnal",
+    "Hermaeus Mora / Hermorah",
+    "Molag Bal",
+    "Hist",
+    "Sithis",
+    "Sep",
+    "Trinimac"
+  ],
+  "skyrimPresentDaedricPrinces": [
+    "Azura / Azurah",
+    "Boethiah / Boethra",
+    "Mephala / Mafala",
+    "Malacath / Mauloch",
+    "Meridia",
+    "Hircine",
+    "Molag Bal",
+    "Nocturnal",
+    "Hermaeus Mora",
+    "Mehrunes Dagon",
+    "Sheogorath",
+    "Namira / Namiira",
+    "Sanguine / Sangiin",
+    "Clavicus Vile",
+    "Peryite",
+    "Vaermina"
+  ],
+  "excludedDaedricPrinces": [
+    {
+      "name": "Jyggalag",
+      "reason": "Excluded from 1.0 unless future Creation Club or Sheogorath/Jyggalag content is explicitly adopted."
+    }
+  ],
+  "phase20Slices": [
+    {
+      "id": "20A",
+      "name": "Roster and coverage matrix",
+      "exitGate": "This manifest, the Phase 4 stance matrix, and the Daedric race/Prince matrix all cover every required race and roster target."
+    },
+    {
+      "id": "20B",
+      "name": "Full Aedric/native god content",
+      "exitGate": "Every non-Daedric locked worship target is content-ready and has authored race handling."
+    },
+    {
+      "id": "20C",
+      "name": "Full Skyrim-present Daedric content",
+      "exitGate": "All sixteen Skyrim-present Prince surfaces are content-ready, including Nocturnal as the Thieves Guild/Nightingale oath surface."
+    },
+    {
+      "id": "20D",
+      "name": "Race completeness passes",
+      "exitGate": "Each race has authored handling across the full roster, including unsafe/hostile feedback."
+    },
+    {
+      "id": "20E",
+      "name": "Content-rich 1.0 lock",
+      "exitGate": "Full verifier coverage, runtime smoke, text polish, package readiness, and compatibility gates are clean."
+    }
+  ]
+}
