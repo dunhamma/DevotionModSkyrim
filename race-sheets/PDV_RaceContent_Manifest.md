@@ -234,7 +234,7 @@ Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `PDV_
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
 | PDV_Notif_Nord_Kyne_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture", TargetEndStates lines 192-194 | One per lapse-band crossing per deity | The wind passes you by today. |
-| PDV_Notif_Nord_Talos_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | Your Voice feels quieter today. |
+| PDV_Notif_Nord_Talos_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | Your Voice feels quieter. |
 | PDV_Notif_Nord_Shor_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | The hard fight is only a hard fight. |
 | PDV_Notif_Nord_Mara_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | The hearth feels colder when you come home. |
 | PDV_Notif_Nord_General_AncestorsQuiet | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" line 184; TargetEndStates line 194 | One per lapse into the general broad-worship neglect band per save | The ancestors are quiet. |
