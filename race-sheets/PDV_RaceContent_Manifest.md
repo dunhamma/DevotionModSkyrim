@@ -244,6 +244,15 @@ Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `PDV_
 | PDV_Notif_Nord_Talos_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | Your Voice feels quieter. |
 | PDV_Notif_Nord_Shor_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | The hard fight is lacking. |
 | PDV_Notif_Nord_Mara_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | The hearth feels colder when you come home. |
+| PDV_Notif_Nord_Tsun_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | Your trials go unweighed. |
+| PDV_Notif_Nord_Stuhn_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | The open hand goes unseen. |
+| PDV_Notif_Nord_Akatosh_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | Your days run on, unmeasured. |
+| PDV_Notif_Nord_Kynareth_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | The road gives nothing back. |
+| PDV_Notif_Nord_Arkay_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | The cycle turns without you. |
+| PDV_Notif_Nord_Stendarr_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | Your mercy feels like nothing now. |
+| PDV_Notif_Nord_Zenithar_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | The honest day earns only its wage. |
+| PDV_Notif_Nord_Julianos_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | Your study goes unread. |
+| PDV_Notif_Nord_Dibella_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" | One per lapse-band crossing per deity | The well-said word goes unnoticed. |
 | PDV_Notif_Nord_General_AncestorsQuiet | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Nord Section "Neglect Texture" line 184; TargetEndStates line 194 | One per lapse into the general broad-worship neglect band per save | The ancestors are quiet. |
 
 ### 10.6 Commitment offers (`PDV_Msg_Nord_*_Offer` and `PDV_Msg_Nord_OfferResponse_*`)
