@@ -2,7 +2,7 @@
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 19 (Argonian (full draft))
 **Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
-**Rows:** 47 drafted
+**Rows:** 49 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -73,7 +73,7 @@ _5 rows._
 
 ## Contextual favor (small, Noted)
 
-_6 rows._
+_8 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
@@ -83,6 +83,8 @@ _6 rows._
 | _(no tone match)_ | `PDV_Notif_Argonian_FavorNoted_Community_AssemblageKept` | HUD corner notification. After-act; Windhelm Assemblage extra weight. | Player-2nd | 59 / 80 |  | The Windhelm Assemblage is surer for what you did. Kinship. |  |
 | _(no tone match)_ | `PDV_Notif_Argonian_FavorNoted_Void_DeathFaced` | HUD corner notification. After-act; curated death-facing choice. | Player-2nd | 60 / 80 |  | You faced a death without flinching. Sithis acknowledges it. |  |
 | _(no tone match)_ | `PDV_Notif_Argonian_FavorNoted_Void_BrotherhoodContract` | HUD corner notification. After-act; per Dark Brotherhood contract. | Player-2nd | 59 / 80 |  | A contract completed for the Brotherhood. The void answers. |  |
+| _(no tone match)_ | `PDV_Notif_Argonian_FavorNoted_Hist_SapMeditation` | HUD corner notification. After-act; designated Hist contemplation site; daily cap; MECHANICS-BLOCKED: requires Hist-sap vessel feature from Phase 21 custom content. | Player-2nd | 73 / 80 |  | Sap taken. The distance closes a little; the Hist hears across the marsh. |  |
+| _(no tone match)_ | `PDV_Notif_Argonian_FavorNoted_Community_SettlementKept` | HUD corner notification. After-act; defending Argonian settlement or Assemblage from direct threat; cooldown per event. | Player-2nd | 67 / 80 |  | You kept the People from harm. The exile community is safer for it. |  |
 
 ## Curse onset / cure
 

@@ -2,7 +2,7 @@
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 17 (Bosmer (full draft))
 **Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
-**Rows:** 58 drafted
+**Rows:** 61 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -118,7 +118,7 @@ _5 rows._
 
 ## Track / posture transition (Bosmer Green Pact)
 
-_4 rows._
+_7 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
@@ -126,6 +126,9 @@ _4 rows._
 | _(no tone match)_ | `PDV_Notif_Bosmer_GreenPact_Lapsed` | HUD corner notification. One per band entry. | Narrator | 63 / 80 |  | Compliance has slipped to Lapsed. Y'ffre's favor comes at half. |  |
 | _(no tone match)_ | `PDV_Notif_Bosmer_GreenPact_Observant` | HUD corner notification. One per band entry. | Narrator | 66 / 80 |  | Compliance restored to Observant. Y'ffre's favor flows full again. |  |
 | _(no tone match)_ | `PDV_Notif_Bosmer_GreenPact_Strict` | HUD corner notification. One per band entry. | Narrator | 72 / 80 |  | Compliance risen to Strict. Y'ffre's favor flows a fifth again stronger. |  |
+| _(no tone match)_ | `PDV_Notif_Bosmer_GreenPact_PlantConsumed` | HUD corner notification. MECHANICS-BLOCKED: tag layer required. Per tagged plant item consumed; cooldown window set by implementation. | Player-2nd | 47 / 80 |  | Plant flesh consumed. The Pact holds the count. |  |
+| _(no tone match)_ | `PDV_Notif_Bosmer_GreenPact_PlantConsumed_NearBand` | HUD corner notification. MECHANICS-BLOCKED: tag layer required. Fires when within implementation-defined threshold of the next downward band crossing. | Player-2nd | 60 / 80 |  | Another plant consumed. Compliance approaches the next fall. |  |
+| _(no tone match)_ | `PDV_Msg_Bosmer_GreenPact_PlantConsumed_Marked` | MessageBox. MECHANICS-BLOCKED: tag layer required. Fires on deliberate curated high-value plant consumption (ingredient hooks, not incidental food); per-event cooldown. | God-voice | 18+199 / 40+500 |  | Title: "The Pact Remembers"   Body: "You ate from the living world. The Pact does not argue with the hunger; it holds the record. Each plant consumed is a mark against the covenant. The count is yours to weigh; Y'ffre weighs it already." |  |
 
 ## Path / tradition setup
 

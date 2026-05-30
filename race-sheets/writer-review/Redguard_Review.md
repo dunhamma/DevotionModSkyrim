@@ -77,7 +77,7 @@ _3 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Msg_Redguard_OfferResponse_Accept` | MessageBox. Shared across Redguard offers. | Player-2nd | 18 / 40 |  | Accept the patron. |  |
+| _(no tone match)_ | `PDV_Msg_Redguard_OfferResponse_Accept` | MessageBox. Shared across Redguard offers. | Player-2nd | 20 / 40 |  | Walk under this god. |  |
 | _(no tone match)_ | `PDV_Msg_Redguard_OfferResponse_NotYet` | MessageBox. Sets per-deity cooldown only. | Player-2nd | 8 / 40 |  | Not yet. |  |
 | _(no tone match)_ | `PDV_Msg_Redguard_OfferResponse_Refuse` | MessageBox. Broad sect worship continues. | Player-2nd | 33 / 40 |  | Keep to the sect's broad worship. |  |
 

@@ -14,9 +14,9 @@ Per-race writer-review files. Each `<Race>_Review.md` groups every drafted in-ga
 | Khajiit | 52 | - | 15 | [Khajiit_Review.md](Khajiit_Review.md) | [Khajiit_Review.csv](Khajiit_Review.csv) |
 | Imperial | 73 | - | 14 | [Imperial_Review.md](Imperial_Review.md) | [Imperial_Review.csv](Imperial_Review.csv) |
 | Redguard | 62 | - | 15 | [Redguard_Review.md](Redguard_Review.md) | [Redguard_Review.csv](Redguard_Review.csv) |
-| Bosmer | 58 | - | 13 | [Bosmer_Review.md](Bosmer_Review.md) | [Bosmer_Review.csv](Bosmer_Review.csv) |
+| Bosmer | 61 | - | 13 | [Bosmer_Review.md](Bosmer_Review.md) | [Bosmer_Review.csv](Bosmer_Review.csv) |
 | Breton | 69 | - | 13 | [Breton_Review.md](Breton_Review.md) | [Breton_Review.csv](Breton_Review.csv) |
-| Argonian | 47 | - | 15 | [Argonian_Review.md](Argonian_Review.md) | [Argonian_Review.csv](Argonian_Review.csv) |
+| Argonian | 49 | - | 15 | [Argonian_Review.md](Argonian_Review.md) | [Argonian_Review.csv](Argonian_Review.csv) |
 
 ## How to use
 
