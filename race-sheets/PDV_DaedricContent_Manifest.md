@@ -218,16 +218,40 @@ the occasional overthrow quest beat):
 
 ---
 
-## 7. Remaining 1.0 Daedric Princes (stubs)
+## 7. Daedric Princes (full authoring)
 
-After Boethiah proves the template, the remaining Princes are authored in
-follow-up passes. `PDV_Architecture_v3.md` Section 21.1 sets the 1.0 target at
-**8-12 content-ready Daedric paths**; the final selection prioritizes the
-strongest vanilla hooks (the matrix `BuildabilityTag` and `VanillaHookPriority`
-columns). All 15 Skyrim-facing Princes are listed; Jyggalag is out of 1.0
-scope per `PDV_TargetEndStates_1.0.md`. Each stub will reuse the Section 6 row
-shape: tone profile, boon and price descriptions, tier-ups, commitment,
-stigma, neglect, exit, and per-race response.
+For the Phase 20 content lock, all 16 Skyrim-facing Princes are authored to the
+Section 6 Boethiah template (tone profile, boon and price descriptions,
+tier-ups, commitment, stigma, neglect, exit, and bespoke per-race responses).
+Jyggalag stays out of 1.0 scope per `PDV_TargetEndStates_1.0.md`. Authoring runs
+in buildability-ranked batches; each authored Prince is a subsection below, and
+the ledger tracks progress. Per-race responses are written individually from
+each Prince's `PDV_DaedricRacePrinceMatrix.csv` cell; native-integrated race
+cells route to the race manifest and carry no Daedric response row.
+
+**Progress ledger.**
+
+| Prince | Status |
+|---|---|
+| Boethiah / Boethra | drafted (Section 6 pilot) |
+| Azura / Azurah | drafted (Section 7.1) |
+| Mephala / Mafala | drafted (Section 7.2) |
+| Malacath / Mauloch | drafted (Section 7.3) |
+| Meridia | pending |
+| Hircine | pending (curse-access) |
+| Molag Bal | pending (curse-access) |
+| Nocturnal | pending |
+| Hermaeus Mora | pending |
+| Mehrunes Dagon | pending |
+| Sheogorath | pending |
+| Namira / Namiira | pending |
+| Sanguine / Sangiin | pending |
+| Clavicus Vile | pending |
+| Peryite | pending |
+| Vaermina | pending |
+
+The stub table below keeps each pending Prince's PrincePathType and authoring
+notes for reference until it is authored into a subsection.
 
 | Prince | PrincePathType | Authoring notes |
 |---|---|---|
@@ -257,12 +281,229 @@ template variation to resolve when the first curse-access Prince is authored.
 
 ---
 
+### 7.1 Azura
+
+Source: the `Azura / Azurah` row of `PDV_DaedricRacePrinceMatrix.csv` -- PathType `Fate-dawn-dusk-prophecy`, CommitmentSignal `Azura quest outcome, artifact alignment, repeated twilight-threshold acts`, Boon `Threshold foresight and liminal protection`, Price `Fate obligation and prophetic burden`, Hook `The Black Star > Azura shrine > artifact outcome`. Native-integrated for Dunmer and Khajiit (routed to the race manifest); the global path covers the other eight races.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Azura (Daedric path) | Prophetic, twilight-voiced, poised between dawn and dusk; speaks of fate, thresholds, and what is foreseen; the gentlest of the Princes, but her foresight binds. On the global path she is a foreign star, not the Dunmer mother. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Azura_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Azura_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Azura" Boon; Architecture v3 Section 11.2 | Passive SPEL; pact engaged | Azura opens the threshold a little. At dawn and dusk your sight sharpens -- a brief foresight that reads danger before it strikes. |
+| PDV_Bless_Daedric_Azura_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Azura" Boon; Architecture v3 Section 11.2 | Passive SPEL | Azura's twilight is yours. Crossing thresholds -- doorways, dawns, deaths narrowly escaped -- grants a span of clearer sight and warded steps. |
+| PDV_Bless_Daedric_Azura_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Azura" Boon; Architecture v3 Section 11.2 | Passive SPEL | Azura names you her seer. Foresight holds through the dim hours; what is fated to harm you announces itself, and her star shelters your passage. |
+
+**Price descriptions** (`PDV_Price_Daedric_Azura_*`). Narrator, 200/140, paired with each boon.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Azura_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Azura" PrimaryPrice | Passive SPEL; paired with the Seeker boon | The price of foresight: the burden of knowing. Visions intrude unbidden, and what you have seen cannot be unseen. |
+| PDV_Price_Daedric_Azura_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Azura" PrimaryPrice | Passive SPEL; paired with the Devoted boon | The price deepens: fate obligates. Azura's sight comes with her demands, and the path she shows is not always the one you would choose. |
+| PDV_Price_Daedric_Azura_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Azura" PrimaryPrice | Passive SPEL; paired with the Champion boon | The full price: you are bound to the prophecy. The sight that protects you also commits you; you serve the pattern Azura reveals, whether or not it serves you. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Azura_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Azura counts you a Seeker at the threshold. |
+| PDV_Notif_Daedric_Azura_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Azura holds you in her twilight. Devoted. |
+| PDV_Notif_Daedric_Azura_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Azura's star dims for you. The foresight fades. |
+| PDV_Msg_Daedric_Azura_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Azura"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Azura's Seer" Body: "You watched the thresholds and trusted what you saw there. Few outside my children do. I name you seer, Champion -- and a seer belongs to the fate they witness. Walk the pattern. It was always going to be you." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Azura_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Azura" CommitmentSignal | Fires once when the commitment gate clears | Title: "Azura's Star" Body: "Three times you turned toward the dawn-and-dusk and read the omen true. You are not of my Dunmer, and still you came. Take the threshold-sight, and accept its weight: to see what is coming is to be bound to meet it." |
+
+**Stigma band crossings.** Azura is a good Daedra -- lower stigma, but a foreign cult on the global path.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Azura_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Your turn toward Azura is noticed. A foreign star, some murmur. |
+| PDV_Notif_Daedric_Azura_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your devotion to Azura is known. To most here she is an outsider's Daedra. |
+| PDV_Notif_Daedric_Azura_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Azura's. The wary keep their distance from her seer. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Azura_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You turn from the thresholds. Azura's foresight clouds; only unease remains. |
+| PDV_Msg_Daedric_Azura_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Azura's Patience" Body: "You set the star down. Azura does not rage; she has seen this too. The foresight closes, and the world dims to its ordinary dark. What you glimpsed of the pattern lingers, and so does the wariness of those who knew you walked by twilight." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Azura_Response_*`). Narrator, 500/280, one-time on commitment. Eight non-native races; Dunmer and Khajiit route to the race manifest.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Azura_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Nord cell | One-time on a Nord committing | Title: "A Foreign Star Among Nords" Body: "To a Nord, Azura is a foreign cult -- twilight prophecy sits poorly against a hearth-and-war faith built on what a hand can do. The path can be walked, but it strains the Nord frame, and the way back is to cleanse the star and rededicate to the old gods." |
+| PDV_Msg_Daedric_Azura_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Imperial cell | One-time on an Imperial committing | Title: "A Cult Outside the Order" Body: "To an Imperial, devotion to Azura reads as a non-civic cult -- a private prophecy outside the Divine public order the Empire keeps. The path strains that order, and return runs through shrine cleansing or rededication to the Nine." |
+| PDV_Msg_Daedric_Azura_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Breton cell | One-time on a Breton committing | Title: "Legible, but Watched" Body: "A Breton can read Azura plainly -- threshold witchcraft and star-prophecy are within the Hidden Art's reach. It is intelligible, but socially risky; keep it covered, or rededicate. The danger here is exposure, not incomprehension." |
+| PDV_Msg_Daedric_Azura_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Altmer cell | One-time on an Altmer committing | Title: "Apostasy from the Dawn" Body: "For an Altmer, turning to Azura is apostasy -- the Auri-El order does not share its dawn with a Daedric star. The path is taboo, and the road back is difficult absolution, not a simple change of heart." |
+| PDV_Msg_Daedric_Azura_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Bosmer cell | One-time on a Bosmer committing | Title: "Foreign to the Green" Body: "To a Bosmer, Azura is intelligible but foreign -- not a Green Pact lane, only an outsider's star. The path can be walked and as easily set down: cleansing, or quiet abandonment, and the Green closes over the gap." |
+| PDV_Msg_Daedric_Azura_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Redguard cell | One-time on a Redguard committing | Title: "Outside the Yokudan Way" Body: "To a Redguard, Azura is a foreign star -- not part of the Yokudan pantheon or the way of the sword-singers. The path is outside the lane; leaving it means shrine or ancestor re-entry to the Redguard dead." |
+| PDV_Msg_Daedric_Azura_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Orc cell | One-time on an Orc committing | Title: "Beside the Code, Not In It" Body: "For an Orc, Azura sits outside the Malacath code -- an outsider's prophecy with no place in stronghold or oath. The path is taboo beside the code, and renouncing it is hard: the stronghold does not easily forget a star-walker." |
+| PDV_Msg_Daedric_Azura_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Argonian cell | One-time on an Argonian committing | Title: "Outside the Hist" Body: "To an Argonian, Azura has no root in the Hist or the exile community -- she is simply foreign, a star outside the substrate. The path can be walked and then drifted from, or set down by ritual cleansing, and the Hist neither holds nor mourns it." |
+
+---
+
+### 7.2 Mephala
+
+Source: the `Mephala / Mafala` row of the matrix -- PathType `Web-secret-murder-clan`, CommitmentSignal `Whispering Door / Ebony Blade threshold, hidden-loyalty bargains, deliberate web-building`, Boon `Secret-network leverage and hidden-path advantage`, Price `Social corruption and hidden violence`, Hook `The Whispering Door > Ebony Blade > hidden-network choices`. Matrix note: do not flatten Mephala into generic stealth. Native-integrated for Dunmer and Khajiit; the global path covers the other eight races.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Mephala (Daedric path) | Whispering, sidelong, web-voiced; speaks of secrets kept and bonds spun and cut; never raises her voice because she does not need to; offers corruption as intimacy. The web is social and the violence is personal -- not a thief's skill, a spider's patience. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Mephala_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Mephala_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Mephala" Boon | Passive SPEL; pact engaged | Mephala spins you a first thread. Secrets find their way to you, and a hidden path opens where others see only wall. |
+| PDV_Bless_Daedric_Mephala_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Mephala" Boon | Passive SPEL | Mephala's web is yours to read. Hidden loyalties and unseen routes reveal themselves; what is whispered in one room reaches you in another. |
+| PDV_Bless_Daedric_Mephala_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Mephala" Boon | Passive SPEL | Mephala names you of the web. The network is yours -- leverage over the connected, passage through the closed, and the quiet knowledge of who owes whom. |
+
+**Price descriptions** (`PDV_Price_Daedric_Mephala_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Mephala_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Mephala" PrimaryPrice | Passive SPEL; paired with the Seeker boon | The price of the web: corruption seeps in. The secrets you gather stain the gathering; trust given to you frays a little for the knowing. |
+| PDV_Price_Daedric_Mephala_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Mephala" PrimaryPrice | Passive SPEL; paired with the Devoted boon | The price deepens: the web demands feeding. Hidden violence and quiet betrayal are its currency, and Mephala's advantage dims if the threads go slack. |
+| PDV_Price_Daedric_Mephala_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Mephala" PrimaryPrice | Passive SPEL; paired with the Champion boon | The full price: you are a knot in the web, not its master. Every bond you hold holds you; the corruption you spread runs back along the threads to you. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Mephala_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Mephala counts you a Seeker of the web. |
+| PDV_Notif_Daedric_Mephala_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Mephala draws you into the web. Devoted. |
+| PDV_Notif_Daedric_Mephala_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Mephala's threads loosen. The web's advantage thins. |
+| PDV_Msg_Daedric_Mephala_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Mephala"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Mephala's Web" Body: "You learned that everything is connected, and that the one who holds the threads holds the room. I do not shout; neither should you. You are of the web now, Champion -- and the web is never set down cleanly. Pull, and see who moves." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Mephala_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Mephala" CommitmentSignal | Fires once when the commitment gate clears | Title: "Mephala's Whisper" Body: "Three times you chose the hidden way -- the bargain struck in the dark, the loyalty spun and cut, the web built with intent. You hear me, then. Take the threads. Their price is that you will never again see a room and not count its secrets." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Mephala_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Something about you invites suspicion. People guard their words near you now. |
+| PDV_Notif_Daedric_Mephala_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your hand in the hidden web is known. Trust closes quietly wherever you go. |
+| PDV_Notif_Daedric_Mephala_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are known for the web you spin. The honest have turned against you. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Mephala_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You let the threads go slack. Mephala's web dims; the distrust you spun remains. |
+| PDV_Msg_Daedric_Mephala_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Mephala's Indifference" Body: "You cut yourself free of the web. Mephala does not mind -- a single thread is nothing to her. The leverage is gone, the hidden ways close. But the corruption you carried leaves its mark slowly, and those who learned to distrust you do not relearn trust on your schedule." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Mephala_Response_*`). Narrator, 500/280. Eight non-native races; Dunmer and Khajiit route to the race manifest.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Mephala_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Nord cell | One-time on a Nord committing | Title: "Against Open Honor" Body: "To a Nord, Mephala's hidden murder-web is taboo -- it rots the open honor and kin-trust a Nord life is built on. The path can be walked in shadow, but a Nord who walks it works against his own, and the way back is shrine cleansing or outright renunciation." |
+| PDV_Msg_Daedric_Mephala_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Imperial cell | One-time on an Imperial committing | Title: "Against Public Virtue" Body: "To an Imperial, Mephala's secrecy is anti-civic -- a corrosion of the public virtue that holds the Empire together. The path is a quiet treason, and return runs through confession and cleansing, or simple abandonment of the threads." |
+| PDV_Msg_Daedric_Mephala_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Breton cell | One-time on a Breton committing | Title: "Legible in the Margins" Body: "A Breton can read Mephala plainly -- witchcraft has always kept secrets. It is intelligible but risky; keep the web covered, or rededicate. What undoes a Breton here is exposure, not the strangeness of the thing." |
+| PDV_Msg_Daedric_Mephala_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Altmer cell | One-time on an Altmer committing | Title: "Covert Corruption" Body: "For an Altmer, Mephala's covert corruption violates orthodoxy outright -- the project is purity, and the web is rot dressed as intimacy. The path is taboo, and only difficult absolution leads back." |
+| PDV_Msg_Daedric_Mephala_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Bosmer cell | One-time on a Bosmer committing | Title: "Trickster, but Not the Green" Body: "A Bosmer feels the trickster overlap -- there is a sidelong kinship -- but Mephala is not Green Pact theology. The path is foreign at root; it is walked lightly and set down by quiet abandonment, not reckoning." |
+| PDV_Msg_Daedric_Mephala_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Redguard cell | One-time on a Redguard committing | Title: "Alien to Open Honor" Body: "To a Redguard, the secret-web is alien -- the Yokudan way is open honor and the clean stroke, not the whispered knot. The path is foreign and corrosive to that frame; returning means hard re-entry into the civic trust you spent." |
+| PDV_Msg_Daedric_Mephala_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Orc cell | One-time on an Orc committing | Title: "Rot in the Code" Body: "For an Orc, Mephala's hidden corruption strains the Malacath code -- the stronghold runs on plain oath, not secret leverage. The path is taboo, and renunciation comes only through proof and real cost paid back to the kin." |
+| PDV_Msg_Daedric_Mephala_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Argonian cell | One-time on an Argonian committing | Title: "Not a Hist Lane" Body: "To an Argonian, Mephala is foreign -- the Hist does not whisper, and a knack for shadows is not devotion to the web. The path has no root in the substrate; it is simply drifted from, and the Hist neither held it nor misses it." |
+
+---
+
+### 7.3 Malacath
+
+Source: the `Malacath / Mauloch` row of the matrix -- PathType `Oath-exile-code-vengeance`, CommitmentSignal `The Cursed Tribe / Volendrung / Blood-Kin / exile-defense threshold`, Boon `Endurance, oath retaliation, and outsider resilience`, Price `Harsh judgment and code burden`, Hook `The Cursed Tribe > Volendrung > stronghold/Blood-Kin context`. Matrix note: Orc-native exception, Redguard hostility (Malooc) explicitly preserved. Native-integrated for Orc (routed to the race manifest); the global path covers the other nine races.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Malacath (Daedric path) | Blunt, bitter, oath-bound; the god of the spurned and exiled; speaks of the code kept, the oath answered, the strong enduring what breaks the weak; no comfort, only respect earned. On the global path he is the outsider's god, pariah-strength offered to the cast-out of any race. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Malacath_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Malacath_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Malacath" Boon | Passive SPEL; pact engaged | Malacath hardens the outcast. You endure a little more before you break, and a blow struck against you is answered the harder. |
+| PDV_Bless_Daedric_Malacath_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Malacath" Boon | Passive SPEL | Malacath's endurance is yours. Pain moves you less, and those who break their oath to you, or strike you first, take the cost back doubled. |
+| PDV_Bless_Daedric_Malacath_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Malacath" Boon | Passive SPEL | Malacath names you of the spurned-and-strong. You stand where others fall, your oath is iron, and vengeance for a broken word comes due through your hand. |
+
+**Price descriptions** (`PDV_Price_Daedric_Malacath_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Malacath_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Malacath" PrimaryPrice | Passive SPEL; paired with the Seeker boon | The price of the code: harsh judgment. Malacath holds you to the oath as hard as your enemies, and weakness in yourself is not forgiven. |
+| PDV_Price_Daedric_Malacath_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Malacath" PrimaryPrice | Passive SPEL; paired with the Devoted boon | The price deepens: the code burdens. You cannot bend a sworn word without loss, and the world treats the pariah-god's follower as the outsider he is. |
+| PDV_Price_Daedric_Malacath_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Malacath" PrimaryPrice | Passive SPEL; paired with the Champion boon | The full price: you are the code, and it is merciless. Every oath binds you absolutely; every mercy you would give, Malacath counts as weakness, and the exile he grants is permanent. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Malacath_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Malacath counts you a Seeker of the code. |
+| PDV_Notif_Daedric_Malacath_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Malacath counts your oath iron. Devoted. |
+| PDV_Notif_Daedric_Malacath_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Malacath's regard hardens away. The code's strength leaves you. |
+| PDV_Msg_Daedric_Malacath_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Malacath"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Malacath's Sworn" Body: "You are not mine by blood, and still you kept the oath when keeping it cost you everything. That is the code. The spurned do not get comfort, Champion -- they get strength, and the right to endure. Stand. That is all I have ever asked of anyone." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Malacath_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Malacath" CommitmentSignal | Fires once when the commitment gate clears | Title: "Malacath's Oath" Body: "Three times you stood by the sworn word when the easy road was to break it, and three times you took the outsider's part. You understand me, though you are not Orc. Take the code. Its price is that you will be held to it without mercy, by me and by everyone who learns whose god you keep." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Malacath_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Your turn to the pariah-god is suspected. Some eye the outsider's strength. |
+| PDV_Notif_Daedric_Malacath_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your oath to Malacath is known. He is the spurned Daedra here; you are suspect. |
+| PDV_Notif_Daedric_Malacath_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Malacath's. The wary treat his sworn as one of the cast-out. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Malacath_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You let the oath go soft. Malacath's strength withdraws; only the mark stays. |
+| PDV_Msg_Daedric_Malacath_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Malacath's Contempt" Body: "You set the code down. Malacath has no surprise in him -- the weak always find the oath too heavy in the end. The endurance leaves you. The mark of the pariah fades on its own slow time, and the people who saw you swear by the spurned god remember it longer than you would like." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Malacath_Response_*`). Narrator, 500/280. Nine non-native races; Orc routes to the race manifest.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Malacath_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Malacath" Nord cell | One-time on a Nord committing | Title: "An Outsider's God" Body: "To a Nord, Malacath is an understandable outsider god -- strength and grudge are not strange -- but he is not a normal Nord lane. The path is foreign; it can be walked and then abandoned, or cleansed away at a shrine of the old gods." |
+| PDV_Msg_Daedric_Malacath_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Malacath" Imperial cell | One-time on an Imperial committing | Title: "Civically Suspect" Body: "To an Imperial, Malacath is a legally and civically suspect path -- an outsider's god whose code answers oath with vengeance, not law. The path strains the civic order; return runs through cleansing or public renunciation." |
+| PDV_Msg_Daedric_Malacath_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Malacath" Breton cell | One-time on a Breton committing | Title: "A Harsh Outsider Code" Body: "A Breton can read Malacath as a harsh outsider code -- intelligible, even respectable in its way -- but it is not the Breton baseline. The path is foreign; keep it covered, or renounce it, as the occult margins allow." |
+| PDV_Msg_Daedric_Malacath_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Malacath" Dunmer cell | One-time on a Dunmer committing | Title: "House of Troubles" Body: "To a Dunmer, Malacath sits near the House of Troubles -- a pressure to be warded against, not a devotion to keep. The path is taboo against the Reclamations and ancestors; the way back is hard rededication to the proper dead." |
+| PDV_Msg_Daedric_Malacath_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Malacath" Altmer cell | One-time on an Altmer committing | Title: "The Degraded Ancestor" Body: "For an Altmer, Malacath is the degraded ancestor -- Trinimac unmade, the orthodoxy's worst cautionary tale worn as a crown. To follow him is taboo against everything the project means, and only difficult absolution leads back." |
+| PDV_Msg_Daedric_Malacath_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Malacath" Khajiit cell | One-time on a Khajiit committing | Title: "Outside the Lattice" Body: "To a Khajiit, Malacath is foreign -- not a lunar lane, no thread in the Lattice. The path is an outsider's, walked and then abandoned, or cleansed; the moons neither lit it nor lose it." |
+| PDV_Msg_Daedric_Malacath_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Malacath" Bosmer cell | One-time on a Bosmer committing | Title: "Exile, but Not the Green" Body: "A Bosmer can read Malacath's exile -- the Wild-Hunt world knows the cast-out -- but it is not a core Bosmer path. The way is foreign at root; it is drifted from, not renounced, and the Green closes over it." |
+| PDV_Msg_Daedric_Malacath_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Malacath" Redguard cell; Notes "Redguard hostility (Malooc) explicitly preserved" | One-time on a Redguard committing | Title: "Malooc the Enemy" Body: "For a Redguard this is not mere foreignness. Malacath is Malooc, the enemy-god of the old crossing, a cautionary name spoken against. To take this oath is severe rupture against the Yokudan dead, and there is no gentle road back from it." |
+| PDV_Msg_Daedric_Malacath_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Malacath" Argonian cell | One-time on an Argonian committing | Title: "Outside the Hist" Body: "To an Argonian, Malacath is foreign -- no root in the Hist, no place in the exile community despite his exile theme. The path is an outsider's; it is set down by quiet abandonment, and the substrate neither held it nor marks its leaving." |
+
+---
+
 ## 8. Coverage
 
 | Prince | Tone | Boon | Price | Tier-up | Commitment | Stigma | Neglect/Exit | Per-race response | Status |
 |---|---|---|---|---|---|---|---|---|---|
 | Boethiah | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (8 non-native) | PILOT COMPLETE |
-| 15 others | -- | -- | -- | -- | -- | -- | -- | -- | stub (Section 7) |
+| Azura | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (8 non-native) | COMPLETE (7.1) |
+| Mephala | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (8 non-native) | COMPLETE (7.2) |
+| Malacath | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (9 non-native) | COMPLETE (7.3) |
+| 12 others | -- | -- | -- | -- | -- | -- | -- | -- | pending (Section 7 ledger) |
 
 ## 9. Verification
 
