@@ -11,7 +11,8 @@ export async function checkPromotionCandidateDryRun(runReport, profile, options 
 
   const promotionReport = await promoteRunReport(runReport, profile, {
     ...options,
-    dryRun: true
+    dryRun: true,
+    postMergeVerifier: options.postMergeVerifier || createDryRunPostMergeVerifier({ sourcePath, generatedPath, candidatePath })
   });
   const stablePromotionReport = sanitizePromotionReport(promotionReport);
 
@@ -58,11 +59,18 @@ export async function checkPromotionCandidateDryRun(runReport, profile, options 
     status: phase.status,
     message: phase.message || null
   }));
+  if (!failures.length) {
+    releaseBlockers.push({
+      phase: "live-post-merge-verify",
+      status: "REQUESTED",
+      message: "Repo-local dry-run proof passed, but live post-merge readback and project verifier evidence are still required for release readiness."
+    });
+  }
 
   return {
     schema: "creation-authoring.promotion-candidate-check.v1",
     status: failures.length ? "FAIL" : "PASS",
-    releaseReady: promotionReport.status === "PASS",
+    releaseReady: false,
     failures,
     releaseBlockers,
     sourcePath,
@@ -72,6 +80,59 @@ export async function checkPromotionCandidateDryRun(runReport, profile, options 
     phaseStatuses: Object.fromEntries(phases.map((phase) => [phase.phase, phase.status])),
     fileStates: { before, after },
     promotionReport: stablePromotionReport
+  };
+}
+
+function createDryRunPostMergeVerifier({ sourcePath, generatedPath, candidatePath }) {
+  return async ({ mergeRequest, mergeResult, ckFinalizerResult, postMergeVerifyRequest }) => {
+    const blockers = [];
+    if (postMergeVerifyRequest?.schema !== "creation-authoring.post-merge-verify-request.v1") {
+      blockers.push("Post-merge verify request schema is missing or unsupported.");
+    }
+    if (!postMergeVerifyRequest?.requiresCandidateWinnerProof) {
+      blockers.push("Post-merge verify request must require candidate winner proof.");
+    }
+    if (!postMergeVerifyRequest?.requiresProjectVerifierPass) {
+      blockers.push("Post-merge verify request must require project verifier PASS.");
+    }
+    if (!candidatePath || !sameResolvedPath(postMergeVerifyRequest?.candidatePlugin, candidatePath)) {
+      blockers.push("Post-merge verify request candidate does not match the reviewed candidate path.");
+    }
+    if (sourcePath && !sameResolvedPath(postMergeVerifyRequest?.sourcePlugin, sourcePath) && path.basename(String(sourcePath)).toLowerCase() !== String(postMergeVerifyRequest?.sourcePlugin || "").toLowerCase()) {
+      blockers.push("Post-merge verify request source plugin does not match the promotion source.");
+    }
+    if (generatedPath && !sameResolvedPath(postMergeVerifyRequest?.generatedPlugin, generatedPath) && path.basename(String(generatedPath)).toLowerCase() !== String(postMergeVerifyRequest?.generatedPlugin || "").toLowerCase()) {
+      blockers.push("Post-merge verify request generated plugin does not match the promotion generated output.");
+    }
+
+    const mergeReport = mergeResult?.report || {};
+    if (mergeResult?.status !== "PASS" || mergeReport.status !== "PASS") {
+      blockers.push("Structured merge dry-run must PASS before post-merge verifier dry-run can pass.");
+    }
+    if (mergeReport.dryRun !== true) {
+      blockers.push("Structured merge report must prove dryRun=true.");
+    }
+    if (!sameResolvedPath(mergeReport.outputPath, candidatePath)) {
+      blockers.push("Structured merge report output path does not match the reviewed candidate path.");
+    }
+    const mergeOperationIds = new Set((mergeRequest?.operations || []).map((operation) => operation.id).filter(Boolean));
+    const verifyOperationIds = new Set((postMergeVerifyRequest?.operations || []).map((operation) => operation.id).filter(Boolean));
+    const missing = [...mergeOperationIds].filter((id) => !verifyOperationIds.has(id));
+    if (missing.length) {
+      blockers.push(`Post-merge verify request is missing promoted operations: ${missing.join(", ")}.`);
+    }
+    if (ckFinalizerResult && !["PASS", "SKIPPED"].includes(ckFinalizerResult.status)) {
+      blockers.push(`CK finalizer status is ${ckFinalizerResult.status}; expected PASS or SKIPPED.`);
+    }
+
+    return {
+      status: blockers.length ? "FAIL" : "PASS",
+      mode: "repo-local-dry-run",
+      verifier: "promotion-candidate-post-merge-contract",
+      candidatePath,
+      operationCount: verifyOperationIds.size,
+      blockers
+    };
   };
 }
 
@@ -184,6 +245,10 @@ function sanitizeRunnerResult(result) {
   return {
     status: result.status,
     exitCode: result.exitCode,
+    mode: result.mode,
+    verifier: result.verifier,
+    operationCount: result.operationCount,
+    blockers: result.blockers,
     runnerProject: result.runnerProject,
     sourcePath: result.sourcePath,
     generatedPath: result.generatedPath,

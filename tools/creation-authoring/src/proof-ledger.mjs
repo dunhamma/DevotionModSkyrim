@@ -112,9 +112,8 @@ function isDiscoveryOnlyReport(report = {}) {
 }
 
 export function mergeProofResults(documents = [], options = {}) {
-  const results = [];
+  const resultsBySurface = new Map();
   const sources = [];
-  const seen = new Map();
 
   for (const document of documents) {
     const flattened = flattenProofLedgerResults(document);
@@ -125,24 +124,33 @@ export function mergeProofResults(documents = [], options = {}) {
       sources.push(sourceLedger);
     }
     for (const proof of flattened.results || []) {
-      const key = proofResultIdentityKey(proof);
-      const mergedProof = {
-        ...proof,
-        proofLedger: proof.proofLedger || sourceLedger || null
-      };
-      if (seen.has(key)) {
-        const existingIndex = seen.get(key);
-        const existing = results[existingIndex];
-        if (existing.status !== "PASS" && mergedProof.status === "PASS") {
-          results[existingIndex] = mergedProof;
-        }
+      const exactKey = [
+        proof.recordFamily,
+        proof.operation,
+        proof.target,
+        proof.strictReport,
+        proof.fixture
+      ].join("|");
+      const surfaceKey = [
+        proof.recordFamily,
+        proof.operation,
+        proof.generatedPlugin || "",
+        proof.discoveryOnly === true ? "discovery" : "support"
+      ].join("|");
+      const proofLedger = proof.proofLedger || sourceLedger || null;
+      const existing = resultsBySurface.get(surfaceKey);
+      if (existing?.__exactKey === exactKey && existing.proofLedger === proofLedger) {
         continue;
       }
-      seen.set(key, results.length);
-      results.push(mergedProof);
+      resultsBySurface.set(surfaceKey, {
+        ...proof,
+        __exactKey: exactKey,
+        proofLedger
+      });
     }
   }
 
+  const results = [...resultsBySurface.values()].map(({ __exactKey, ...proof }) => proof);
   results.sort((left, right) => {
     return String(left.recordFamily || "").localeCompare(String(right.recordFamily || "")) ||
       String(left.operation || "").localeCompare(String(right.operation || "")) ||
@@ -157,14 +165,6 @@ export function mergeProofResults(documents = [], options = {}) {
     game: options.game || null,
     results
   };
-}
-
-function proofResultIdentityKey(proof = {}) {
-  return [
-    String(proof.recordFamily || "").toUpperCase(),
-    proof.operation || "",
-    proof.target || ""
-  ].join("|");
 }
 
 export function verifyProofLedger(ledger) {

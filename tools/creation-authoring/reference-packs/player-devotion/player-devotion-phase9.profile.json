@@ -4,6 +4,7 @@
   "modId": "player-devotion-phase9",
   "sourcePlugin": "PlayerDevotion_Framework.esp",
   "outputPolicy": "overlay",
+  "sourceMutationPolicy": "candidate-only",
   "defaultOutput": "PDV_Phase9BosmerStateOverlay.esp",
   "referencePack": "player-devotion",
   "resourceConnectors": [
@@ -27,6 +28,7 @@
       "command": "node",
       "args": [
         "pdv_verify.mjs",
+        "--json",
         "--strict-phase9",
         "--strict-phase8",
         "--strict-phase7",
@@ -38,8 +40,13 @@
     },
     {
       "type": "papyrus-compiler",
-      "name": "pdv-compiler-request",
-      "message": "Use ..\\pdv_compile.mjs when manifests declare script compile requirements."
+      "name": "pdv-compiler",
+      "command": "node",
+      "args": [
+        "pdv_compile.mjs",
+        "--json"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Devotion Mod Project\\tools"
     },
     {
       "type": "fixture",

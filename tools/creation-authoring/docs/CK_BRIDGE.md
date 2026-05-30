@@ -83,11 +83,14 @@ CK does not write to "whatever plugin the manifest mentions." It writes to the a
 
 Generated-first runs require the generated plugin to be active. Promotion finalization requires the reviewed merge candidate to be active. The source plugin may be active only when a profile explicitly enables in-place authoring. Strict mode fails before any CK-semantic mutation if this evidence is absent or inconsistent.
 
-The native `loadPluginSet` command is verification-only. A product run must
-block before mutation when evidence reports a missing source plugin, missing
-generated or promotion-candidate plugin, generated/candidate plugin loaded but
-not active, active source plugin, intended-save-target mismatch, stale generated
-or candidate name, or a CK-active master/small-master target.
+The native `loadPluginSet` command is verification-only. Product evidence must
+report stable blocker codes such as `missing_source_plugin`,
+`missing_generated_or_candidate_plugin`,
+`generated_or_candidate_plugin_not_active`,
+`source_plugin_active`,
+`intended_save_target_mismatch`, and
+`active_target_not_normal_writable_esp`, plus adjacent diagnostics for missing
+declarations, selection gaps, active-plugin mismatch, and required-plugin drift.
 
 Current implementation status:
 
@@ -131,8 +134,41 @@ Current implementation status:
   plugin: `PDV_GLO_ActivePietyDUPLICATE002` read back from disk with FNAM `s`
   and FLTV `1`.
 - Phase 61 promotes that evidence through the strict proof ledger and capability
-  matrix. `GLOB` is now supported only for the narrow `glob.duplicate_create`
-  operation; generic `record.create` remains blocked.
+  matrix. Phase 78 is the current release-candidate rerun used by Platform v1
+  packaging. `GLOB` is now supported only for the narrow
+  `glob.duplicate_create` operation; generic `record.create` remains blocked.
+- Phase 62 proves saved duplicate identity, but not product support, for the
+  first expansion families. The active proof plugin was saved after guarded
+  Object Window replay, and direct ESP EDID readback found
+  `PDV_FLST_AllDeitiesDUPLICATE001`, `_HelpPipBoyItemsDUPLICATE001`,
+  `DefaultAshPileDUPLICATE002`, and `PDV__ManagerQuestDUPLICATE001` as
+  `FLST`, `MESG`, `ACTI`, and `QUST` records. Those families remain
+  discovery-only until payload mutation, verifier expectations, proof ledger,
+  and matrix promotion pass.
+- Phase 63-65 promote the first non-GLOB family surface: narrow
+  `FLST record.duplicate_create`. Phase 63 wraps guarded Object Window duplicate
+  replay as `duplicateCreateRecord`, Phase 64 proves the saved duplicate and its
+  copied `LNAM` entries through direct ESP readback, and Phase 65 promotes that
+  exact surface through a strict proof ledger and capability matrix. This is not
+  generic `record.create` and does not claim arbitrary FormList entry mutation.
+- Phase 66-68 promote narrow `MESG record.duplicate_create`. Phase 66 uses the
+  same guarded product wrapper against `_HelpPipBoyItems`, Phase 67 proves the
+  saved duplicate `_HelpPipBoyItemsDUPLICATE002` and copied `DESC`/`INAM`/`DNAM`
+  message shape through direct ESP readback, and Phase 68 promotes that exact
+  surface through a strict proof ledger and capability matrix. This is not
+  generic message authoring.
+- Phase 69-71 promote narrow `ACTI record.duplicate_create`. Phase 69 uses the
+  guarded product wrapper against `DefaultAshPile1`, Phase 70 proves the saved
+  duplicate `DefaultAshPileDUPLICATE003` and copied `FULL`/`MODL` activator
+  shape through direct ESP readback, and Phase 71 promotes that exact surface
+  through a strict proof ledger and capability matrix. This is not generic
+  activator authoring.
+- Phase 72-74 promote narrow `QUST record.duplicate_create`. Phase 72 uses the
+  guarded product wrapper against `PDV__ManagerQuest`, Phase 73 proves the saved
+  duplicate `PDV__ManagerQuestDUPLICATE002` and copied quest
+  identity/VMAD/stage shape through direct ESP readback, and Phase 74 promotes
+  that exact surface through a strict proof ledger and capability matrix. This
+  is not generic quest authoring.
 - `creation-authoring` now emits product packets only for ready CK operations by
   default. Broad Phase 9-12 manifests that contain unproven `record.create`,
   VMAD, FormList, artifact, or placed-reference work return a skipped/blocked

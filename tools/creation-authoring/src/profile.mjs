@@ -2,6 +2,7 @@ import { readDocument } from "./io.mjs";
 import { ValidationError } from "./errors.mjs";
 
 const OUTPUT_POLICIES = new Set(["overlay", "generated-patch", "in-place-explicit"]);
+const SOURCE_MUTATION_POLICIES = new Set(["candidate-only", "explicit-source-mutation"]);
 
 export function loadProfile(filePath) {
   const { path, document } = readDocument(filePath);
@@ -19,6 +20,7 @@ export function normalizeProfile(input, sourcePath = null) {
     modId: requireString(input.modId, "profile.modId"),
     sourcePlugin: requireString(input.sourcePlugin, "profile.sourcePlugin"),
     outputPolicy: input.outputPolicy || "overlay",
+    sourceMutationPolicy: input.sourceMutationPolicy || "candidate-only",
     defaultOutput: input.defaultOutput || null,
     reportsDir: input.reportsDir || "reports",
     resourceConnectors: Array.isArray(input.resourceConnectors) ? input.resourceConnectors : [],
@@ -34,6 +36,13 @@ export function normalizeProfile(input, sourcePath = null) {
   if (!OUTPUT_POLICIES.has(profile.outputPolicy)) {
     throw new ValidationError(`Unsupported outputPolicy: ${profile.outputPolicy}`, {
       allowed: [...OUTPUT_POLICIES],
+      sourcePath
+    });
+  }
+
+  if (!SOURCE_MUTATION_POLICIES.has(profile.sourceMutationPolicy)) {
+    throw new ValidationError(`Unsupported sourceMutationPolicy: ${profile.sourceMutationPolicy}`, {
+      allowed: [...SOURCE_MUTATION_POLICIES],
       sourcePath
     });
   }

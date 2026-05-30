@@ -4,12 +4,20 @@ export { loadProfile, normalizeProfile } from "./profile.mjs";
 export { createResolver } from "./resolver.mjs";
 export { createPlan } from "./planner.mjs";
 export { buildPatchRequest } from "./patch-request.mjs";
+export {
+  LOAD_PLUGIN_SET_DIAGNOSTIC_BLOCKERS,
+  LOAD_PLUGIN_SET_RELEASE_BLOCKERS,
+  findLoadPluginSetCommand,
+  hasLegacyLoadStateCommands,
+  validateShipPathLoadSet
+} from "./load-set-proof.mjs";
 export { verifyManifest } from "./verifier.mjs";
 export { handleAuthoringRequest } from "./service.mjs";
 export { executeApply, executeCkApply } from "./executor.mjs";
-export { buildCkCommandPacket } from "./ck-command-packet.mjs";
+export { buildCkCommandPacket, buildLoadPluginSetCommand } from "./ck-command-packet.mjs";
 export { runPipeline } from "./orchestrator.mjs";
-export { promoteRunReport, evaluatePromotionGates, buildStructuredMergeRequest, buildBackupRequest } from "./promotion.mjs";
+export { selectPacketCase } from "./ck-packet-selection.mjs";
+export { promoteRunReport, evaluatePromotionGates, buildStructuredMergeRequest, buildBackupRequest, buildPostMergeVerifyRequest } from "./promotion.mjs";
 export { checkPromotionCandidateDryRun, formatPromotionCandidateCheck } from "./promotion-candidate-check.mjs";
 export { assertSafeMergePaths, runLocalMergeRunner } from "./merge-runner-adapter.mjs";
 export { analyzeDrift } from "./drift.mjs";

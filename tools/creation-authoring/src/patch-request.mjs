@@ -29,16 +29,51 @@ function addOperationToPatch(records, item) {
   const spec = getRecordSpec(records, targetFormId);
 
   if (operation.kind === "vmad.attach_script") {
-    const script = {
-      name: operation.payload.script,
-      properties: (operation.payload.properties || []).map((property) => ({
+    const script = getOrCreateAttachedScript(spec, operation.payload.script);
+    script.properties = script.properties || [];
+    script.properties.push(...(operation.payload.properties || []).map((property) => ({
         name: property.name,
         type: property.type || inferPropertyType(property.value),
         value: property.resolvedValue || property.value
-      }))
+      })));
+  }
+
+  if (operation.kind === "vmad.set_array_property" || operation.kind === "vmad.array_property") {
+    const script = getOrCreateAttachedScript(spec, operation.payload.script);
+    script.properties = script.properties || [];
+    script.properties.push({
+      name: operation.payload.property || operation.payload.name,
+      type: normalizeArrayPropertyType(operation.payload.type),
+      value: operation.payload.values || operation.payload.value || []
+    });
+  }
+
+  if (operation.kind === "message.update") {
+    spec.set_message = {
+      text: operation.payload.text ?? null,
+      buttons: Array.isArray(operation.payload.buttons) ? operation.payload.buttons : [],
+      button_contract: operation.payload.buttonContract || null
     };
-    spec.attach_scripts = spec.attach_scripts || [];
-    spec.attach_scripts.push(script);
+  }
+
+  if (operation.kind === "acti.update") {
+    const model = operation.payload.model || {};
+    spec.set_activator = {
+      name: operation.payload.name || operation.payload.playerFacingName || null,
+      activate_text_override: operation.payload.activateTextOverride || operation.payload.activateText || null,
+      model: {
+        file: model.file || operation.payload.modelFile || null
+      }
+    };
+    if (operation.payload.script && Array.isArray(operation.payload.properties)) {
+      const script = getOrCreateAttachedScript(spec, operation.payload.script);
+      script.properties = script.properties || [];
+      script.properties.push(...(operation.payload.properties || []).map((property) => ({
+        name: property.name,
+        type: property.type || inferPropertyType(property.value),
+        value: property.resolvedValue || property.value
+      })));
+    }
   }
 
   if (operation.kind === "formlist.add") {
@@ -48,32 +83,32 @@ function addOperationToPatch(records, item) {
 
   if (operation.kind === "keyword.add") {
     spec.add_keywords = spec.add_keywords || [];
-    spec.add_keywords.push(...normalizeArrayPayload(operation.payload, "keywords", "keyword"));
+    spec.add_keywords.push(...normalizeArrayPayload(operation.payload, "resolvedKeywords", "keyword"));
   }
 
   if (operation.kind === "spell.add") {
     spec.add_spells = spec.add_spells || [];
-    spec.add_spells.push(...normalizeArrayPayload(operation.payload, "spells", "spell"));
+    spec.add_spells.push(...normalizeArrayPayload(operation.payload, "resolvedSpells", "spell"));
   }
 
   if (operation.kind === "perk.add") {
     spec.add_perks = spec.add_perks || [];
-    spec.add_perks.push(...normalizeArrayPayload(operation.payload, "perks", "perk"));
+    spec.add_perks.push(...normalizeArrayPayload(operation.payload, "resolvedPerks", "perk"));
   }
 
   if (operation.kind === "package.add") {
     spec.add_packages = spec.add_packages || [];
-    spec.add_packages.push(...normalizeArrayPayload(operation.payload, "packages", "package"));
+    spec.add_packages.push(...normalizeArrayPayload(operation.payload, "resolvedPackages", "package"));
   }
 
   if (operation.kind === "inventory.add") {
     spec.add_inventory = spec.add_inventory || [];
-    spec.add_inventory.push(...(operation.payload.items || operation.payload.inventory || []));
+    spec.add_inventory.push(...(operation.payload.resolvedItems || operation.payload.items || operation.payload.inventory || []));
   }
 
   if (operation.kind === "condition.add") {
     spec.add_conditions = spec.add_conditions || [];
-    spec.add_conditions.push(...(operation.payload.conditions || []));
+    spec.add_conditions.push(...(operation.payload.resolvedConditions || operation.payload.conditions || []));
   }
 
   if (operation.kind === "message.payload.set") {
@@ -93,6 +128,16 @@ function addOperationToPatch(records, item) {
   }
 }
 
+function getOrCreateAttachedScript(spec, scriptName) {
+  spec.attach_scripts = spec.attach_scripts || [];
+  let script = spec.attach_scripts.find((entry) => entry.name === scriptName);
+  if (!script) {
+    script = { name: scriptName };
+    spec.attach_scripts.push(script);
+  }
+  return script;
+}
+
 function getRecordSpec(records, formid) {
   if (!records.has(formid)) {
     records.set(formid, {
@@ -101,6 +146,14 @@ function getRecordSpec(records, formid) {
     });
   }
   return records.get(formid);
+}
+
+function normalizeArrayPropertyType(type) {
+  const normalized = String(type || "").trim();
+  if (!normalized) {
+    return "ObjectArray";
+  }
+  return normalized.endsWith("Array") ? normalized : `${normalized}Array`;
 }
 
 function inferPropertyType(value) {

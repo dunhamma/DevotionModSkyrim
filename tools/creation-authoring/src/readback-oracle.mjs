@@ -19,9 +19,6 @@ const OPERATION_NORMALIZERS = {
   "quest.stage.fragment": "quest-stages",
   "story_manager.node": "story-manager",
   "story_manager.node.create": "story-manager",
-  "dialogue.branch.create": "dialogue-branch",
-  "dialogue.topic.create": "dialogue-topic",
-  "dialogue.info.create": "dialogue-info",
   "reference.place": "placed-reference",
   "artifact.seq.generate": "artifact-seq",
   "artifact.lip.generate": "artifact-lip",
@@ -30,11 +27,8 @@ const OPERATION_NORMALIZERS = {
 
 const FAMILY_NORMALIZERS = {
   ACTI: ["record-exists", "activator-payload", "vmad-scripts", "vmad-properties", "vmad-array-properties"],
-  DIAL: ["record-exists", "dialogue-branch", "dialogue-topic", "conditions"],
-  DLBR: ["record-exists", "dialogue-branch"],
   FLST: ["record-exists", "formlist"],
   GLOB: ["record-exists"],
-  INFO: ["record-exists", "dialogue-info", "conditions", "artifact-lip"],
   MESG: ["record-exists", "message", "message-payload"],
   NPC_: ["record-exists", "keywords", "spells", "perks", "packages", "inventory"],
   QUST: ["record-exists", "vmad-scripts", "vmad-properties", "vmad-array-properties", "aliases", "quest-stages", "conditions", "artifact-seq"],
@@ -47,8 +41,7 @@ const FAMILY_NORMALIZERS = {
 export function createReadbackOracle(readback = null) {
   return {
     find(operation, targetResolution = {}) {
-      const record = findReadbackRecord(readback, operation.target, targetResolution, readbackIdentityCandidates(operation)) ||
-        findSemanticReadbackRecord(readback, operation);
+      const record = findReadbackRecord(readback, operation.target, targetResolution, readbackIdentityCandidates(operation));
       return {
         record,
         normalizer: describeReadbackNormalizer(operation, record)
@@ -111,73 +104,13 @@ export function readbackIdentityCandidates(operation = {}) {
     created.EditorID,
     created.formid,
     created.FormID,
-    payload.formid,
-    payload.FormID,
-    payload.formID,
     payload.createdEditorId,
     payload.createdFormid,
     payload.createdFormID,
     payload.expectedEditorId,
     payload.expectedFormid,
-    payload.expectedFormID,
-    payload.expectedFormId,
-    payload.ckFormid,
-    payload.ckFormID
+    payload.expectedFormID
   ].filter(Boolean);
-}
-
-function findSemanticReadbackRecord(readback, operation = {}) {
-  if (operation.kind !== "dialogue.info.create") {
-    return null;
-  }
-  const payload = operation.payload || {};
-  const topic = payload.topic || payload.parentTopic || payload.topicEditorId;
-  const speaker = payload.speaker || payload.speakerEditorId || payload.speakerForm;
-  const responseLine = payload.responseLine || payload.response || payload.text;
-  if (!topic && !speaker && !responseLine) {
-    return null;
-  }
-  return readbackRecords(readback).find((record) => {
-    if (!recordTypeMatches(record, "INFO")) {
-      return false;
-    }
-    return optionalAnyValueMatches(dialogueValues(record, ["topic", "parentTopic"]), topic) &&
-      optionalAnyValueMatches(dialogueValues(record, ["speaker", "speakerEditorId", "speakerForm"]), speaker) &&
-      optionalAnyValueMatches(dialogueValues(record, ["responseLine", "response", "text"]), responseLine);
-  }) || null;
-}
-
-function readbackRecords(readback) {
-  if (!readback) {
-    return [];
-  }
-  const records = readback.records || readback;
-  return Array.isArray(records) ? records : Object.values(records);
-}
-
-function recordTypeMatches(record = {}, expected) {
-  return String(record.recordType || record.type || record.RecordType || "").toUpperCase() === expected;
-}
-
-function dialogueValues(record = {}, keys = []) {
-  const dialogue = record.dialogue || record.Dialogue || record.topicInfo || record.TopicInfo || {};
-  const fields = record.fields || record.Fields || {};
-  const values = [];
-  for (const key of keys) {
-    const pascal = key.charAt(0).toUpperCase() + key.slice(1);
-    const value = record[key] ?? dialogue[key] ?? fields[key] ?? fields[pascal];
-    if (value !== undefined && value !== null && value !== "") {
-      values.push(value);
-    }
-  }
-  return values;
-}
-
-function optionalAnyValueMatches(actualValues, expected) {
-  if (expected === undefined || expected === null || expected === "") {
-    return true;
-  }
-  return actualValues.some((actual) => valueMatches(actual, expected));
 }
 
 export function normalizeGlobalPayload(record = {}) {

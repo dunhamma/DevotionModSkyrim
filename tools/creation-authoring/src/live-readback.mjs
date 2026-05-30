@@ -21,22 +21,22 @@ export function normalizeMo2RecordDetail(detail) {
     records[key] = {
       editorId,
       formid,
-      recordType: normalizeRecordType(source.record_type || detail.record_type),
+      recordType: source.record_type || detail.record_type,
       plugin: source.plugin || detail.plugin || null,
-      winningPlugin: source.winning_plugin || source.winningPlugin || detail.winning_plugin || source.plugin || detail.plugin || null,
+      winningPlugin: source.winning_plugin || source.winningPlugin || detail.winning_plugin || null,
       scripts: normalizeVmadScripts(fields.VirtualMachineAdapter?.Scripts || []),
       entries: normalizeFormListEntries(fields.Items || fields.Entries || fields.FormListEntries || []),
       aliases: normalizeAliases(fields.Aliases || fields.QuestAliases || []),
       stages: normalizeStages(fields.Stages || fields.QuestStages || []),
       keywords: normalizeFormListEntries(fields.Keywords || []),
-      spells: normalizeFormListEntries(fields.Spells || fields.ActorEffects || []),
+      spells: normalizeFormListEntries(fields.Spells || fields.ActorEffects || fields.ActorEffect || []),
       perks: normalizeFormListEntries(fields.Perks || []),
       packages: normalizeFormListEntries(fields.Packages || fields.AIPackages || []),
       inventory: normalizeInventory(fields.Items || fields.Inventory || []),
       conditions: normalizeConditions(fields.Conditions || fields.DialogConditions || fields.EventConditions || []),
-      dialogue: normalizeDialogue(fields),
       storyManager: normalizeStoryManager(fields.StoryManager || fields.StoryManagerNode || fields.StoryEvent || {}),
       message: normalizeMessage(fields),
+      activator: normalizeActivator(fields),
       artifacts: normalizeArtifacts(fields.Artifacts || fields.GeneratedArtifacts || []),
       conflictChain: source.conflictChain || source.conflicts || detail.conflictChain || null,
       partialOverlay: source.partialOverlay ?? fields.PartialOverlay ?? null,
@@ -47,13 +47,6 @@ export function normalizeMo2RecordDetail(detail) {
   }
 
   return { records };
-}
-
-function normalizeRecordType(recordType) {
-  if (recordType === "MESSAGE") {
-    return "MESG";
-  }
-  return recordType;
 }
 
 function normalizeStages(stages) {
@@ -113,7 +106,7 @@ function normalizeFormListEntries(entries) {
     if (typeof entry === "string") {
       return entry;
     }
-    return entry.Form || entry.Item || entry.Reference || entry.formid || entry.EditorID || entry.editorId || entry;
+    return entry.Form || entry.Item || entry.Perk || entry.Spell || entry.Package || entry.Reference || entry.formid || entry.EditorID || entry.editorId || entry;
   });
 }
 
@@ -144,45 +137,48 @@ function normalizeConditions(conditions) {
     return [];
   }
   return conditions.map((condition) => ({
-    function: condition.Function || condition.function || condition.Data?.Function || null,
-    operator: condition.Operator || condition.operator || null,
+    function: condition.Function || condition.function || condition.Data?.Function || inferConditionFunction(condition),
+    operator: normalizeConditionOperator(condition.Operator || condition.operator || condition.CompareOperator),
     value: condition.Value ?? condition.value ?? condition.ComparisonValue ?? null,
-    subject: condition.Subject || condition.subject || condition.RunOn || condition.runOn || null,
-    global: condition.Global || condition.global || condition.Parameter || condition.parameter || null,
     runOn: condition.RunOn || condition.run_on || condition.runOn || null,
+    parameters: normalizeConditionParameters(condition.Data || condition.parameters || {}),
     raw: condition
   }));
 }
 
-function normalizeDialogue(fields = {}) {
-  return {
-    ownerQuest: firstDefined(fields.OwnerQuest, fields.Quest, fields.OwnerQuestEditorID, fields.QuestEditorID),
-    branch: firstDefined(fields.Branch, fields.DialogBranch, fields.BranchEditorID),
-    startingTopic: firstDefined(fields.StartingTopic, fields.StartingTopicEditorID),
-    topic: firstDefined(fields.Topic, fields.TopicEditorID, fields.ParentTopic),
-    prompt: firstDefined(fields.Prompt, fields.Name, fields.FullName),
-    category: firstDefined(fields.Category),
-    subtype: firstDefined(fields.Subtype),
-    flags: normalizeTextArray(fields.Flags),
-    speaker: firstDefined(fields.Speaker, fields.SpeakerEditorID),
-    speakerForm: firstDefined(fields.SpeakerForm, fields.SpeakerFormID),
-    responseLine: firstDefined(fields.ResponseLine, fields.ResponseText, fields.DialogueText, fields.Text),
-    conditions: normalizeConditions(fields.Conditions || fields.DialogConditions || [])
+function inferConditionFunction(condition) {
+  const data = condition?.Data || {};
+  if (data.Object) {
+    return "GetIsID";
+  }
+  return null;
+}
+
+function normalizeConditionParameters(data) {
+  const result = {};
+  if (data.Object) {
+    result.Object = normalizeLinkValue(data.Object);
+  }
+  return result;
+}
+
+function normalizeLinkValue(value) {
+  if (!value || typeof value !== "object") {
+    return value;
+  }
+  return value.Link || value.FormID || value.formid || value.EditorID || value.editorId || value;
+}
+
+function normalizeConditionOperator(operator) {
+  const map = {
+    EqualTo: "==",
+    NotEqualTo: "!=",
+    GreaterThan: ">",
+    GreaterThanOrEqualTo: ">=",
+    LessThan: "<",
+    LessThanOrEqualTo: "<="
   };
-}
-
-function firstDefined(...values) {
-  return values.find((value) => value !== undefined && value !== null && value !== "");
-}
-
-function normalizeTextArray(value) {
-  if (Array.isArray(value)) {
-    return value.map((item) => String(item));
-  }
-  if (typeof value === "string") {
-    return value.split(/[,\|]/u).map((item) => item.trim()).filter(Boolean);
-  }
-  return [];
+  return map[operator] || operator || null;
 }
 
 function normalizeStoryManager(value) {
@@ -201,6 +197,17 @@ function normalizeMessage(fields) {
     title: fields.Title || fields.Name || fields.FullName || null,
     text: fields.Description || fields.MessageText || fields.Text || null,
     buttons: normalizeButtons(fields.Buttons || fields.MenuButtons || [])
+  };
+}
+
+function normalizeActivator(fields) {
+  const model = fields.Model || fields.MODL || {};
+  return {
+    name: fields.Name || fields.FullName || fields.Title || null,
+    activateTextOverride: fields.ActivateTextOverride || fields.ActivateText || null,
+    model: {
+      file: typeof model === "string" ? model : model.File || model.file || fields.ModelFile || null
+    }
   };
 }
 

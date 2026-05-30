@@ -4,6 +4,7 @@
   "modId": "player-devotion-reference",
   "sourcePlugin": "PlayerDevotion_Framework.esp",
   "outputPolicy": "overlay",
+  "sourceMutationPolicy": "candidate-only",
   "defaultOutput": "PDV_AutoWireReference.esp",
   "referencePack": "player-devotion",
   "resourceConnectors": [
@@ -15,13 +16,15 @@
       "type": "pdv-verifier",
       "name": "pdv-strict-reference",
       "command": "node",
-      "args": ["pdv_verify.mjs", "--strict-phase7", "--strict-preflight", "--strict-skeleton", "--strict-pattern-proving"],
+      "args": ["pdv_verify.mjs", "--json", "--strict-phase7", "--strict-preflight", "--strict-skeleton", "--strict-pattern-proving"],
       "cwd": "C:\\Users\\Admin\\Documents\\Devotion Mod Project\\tools"
     },
     {
       "type": "papyrus-compiler",
-      "name": "pdv-compiler-request",
-      "message": "Use ..\\pdv_compile.mjs when manifests declare script compile requirements."
+      "name": "pdv-compiler",
+      "command": "node",
+      "args": ["pdv_compile.mjs", "--json"],
+      "cwd": "C:\\Users\\Admin\\Documents\\Devotion Mod Project\\tools"
     },
     {
       "type": "fixture",

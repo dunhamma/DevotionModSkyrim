@@ -114,7 +114,7 @@ readback normalizer, verifier, fixture, and strict report.
 
 The verifier consumes this oracle before checking operation-specific intent. If a manifest operation has no readback normalizer coverage, verification returns `TODO`; proof ledgers cannot promote that row to `supported`.
 
-The Phase 2 oracle foundation covers VMAD scalar/object/array properties, FormLists, message buttons, quest aliases/stages, Story Manager `Shares Event`, dialogue branch/topic/INFO readback, placed reference proof surfaces, generated artifact freshness, conflict-chain expectations, and partial-overlay failure. Dialogue support remains proof-gated: readback coverage can verify a CK-authored branch/topic/unnamed INFO, but `DIAL` and `INFO` cannot move to `supported` until native CKPE handlers create and save the records and strict proof includes passing command evidence.
+The Phase 2 oracle foundation covers VMAD scalar/object/array properties, FormLists, message buttons, quest aliases/stages, Story Manager `Shares Event`, placed reference proof surfaces, generated artifact freshness, conflict-chain expectations, and partial-overlay failure. Additional record families still need family-specific proof fixtures before they can move to `supported`.
 
 ## Reference Pack Static Gates
 
@@ -151,7 +151,7 @@ node ./src/cli.mjs promote ./reports/<run-report>.json --profile ./examples/simp
 
 `promote` evaluates gates and can delegate to the local merge adapter when `--merge-runner` and explicit source/generated/output paths are supplied. Promotion is blocked unless the run report passed, no manual packets remain, human approval is recorded, and `--merge-output-path` names a reviewed candidate plugin rather than the source or generated proof plugin.
 
-`promotion-candidate-check` is the repo-local release-candidate dry-run proof. It forces the local merge runner into dry-run mode, verifies no source/generated/candidate output path changed, and records expected live release blockers such as `post-merge-verify: REQUESTED`.
+`promotion-candidate-check` is the repo-local release-candidate dry-run proof. It forces the local merge runner into dry-run mode, verifies no source/generated/candidate output path changed, and runs a repo-local post-merge verifier that checks the candidate verification request, reviewed candidate path, dry-run merge result, and promoted operation coverage without writing plugin files.
 
 The first local merge adapter lives in `native/CreationMergeRunner` at the repo root. It is a
 Mutagen-backed .NET runner that consumes `structured-merge-request.v1`, requires

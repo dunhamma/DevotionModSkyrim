@@ -1,11 +1,7 @@
+import fs from "node:fs";
 import path from "node:path";
 import { McpHttpClient } from "./mcp-client.mjs";
-import {
-  applyExistingMessagePayloadPatch,
-  canApplyExistingMessagePayloadPatch
-} from "./esp-message-payload-writer.mjs";
 import { normalizeMo2RecordDetail } from "./live-readback.mjs";
-import { findReadbackRecord } from "./readback-oracle.mjs";
 import { runProcess } from "./process-runner.mjs";
 
 const FORMID_PATTERN = /^[^:]+:[0-9a-fA-F]{1,8}$/;
@@ -16,6 +12,27 @@ export function createLiveMcpContext(options = {}) {
     recordCache: new Map(),
     conflictCache: new Map()
   };
+}
+
+export async function refreshLiveRecordIndex(context, phase = "mo2-record-index-refresh") {
+  try {
+    const build = await context.mcp.callTool("mo2_build_record_index", { force_rebuild: true });
+    context.recordCache.clear();
+    context.conflictCache.clear();
+    return {
+      phase,
+      status: missingMasters(build).length ? "FAIL" : "PASS",
+      message: "MO2 record index was force rebuilt after an external plugin write.",
+      result: build
+    };
+  } catch (error) {
+    return {
+      phase,
+      status: "FAIL",
+      message: "MO2 record index force rebuild failed after an external plugin write.",
+      error: serializeError(error)
+    };
+  }
 }
 
 export async function prepareLiveProfile(manifest, profile, context) {
@@ -124,31 +141,94 @@ function serializeError(error) {
   };
 }
 
-export function createPatchWriter(context) {
+export function createPatchWriter(context, options = {}) {
   return async (patchRequest) => {
     const result = await context.mcp.callTool("mo2_create_patch", patchRequest);
-    const existingPath = result?.existing_path || result?.existingPath;
-    if (isExistingFileRefusal(result) && canApplyExistingMessagePayloadPatch(patchRequest, existingPath)) {
-      return {
-        ...applyExistingMessagePayloadPatch(patchRequest, { existingPath }),
-        delegatedWriter: {
-          name: "proof-scoped-existing-mesg-payload-writer",
-          reason: "MO2 MCP patch writer refused to create an output plugin that CK already created.",
-          originalResult: result
-        }
-      };
+    if (!shouldUseExistingGeneratedPayloadWriter(result, patchRequest, options)) {
+      return result;
     }
-    return result;
+    const fallback = await runExistingGeneratedPayloadWriter(patchRequest, result.existing_path, options);
+    return {
+      ...fallback,
+      fallbackFrom: "mo2_create_patch",
+      initialResult: result
+    };
   };
 }
 
-function isExistingFileRefusal(result) {
-  return Boolean(result?.existing_path || result?.existingPath) &&
-    /file already exists/i.test(String(result?.error || result?.message || ""));
+function shouldUseExistingGeneratedPayloadWriter(result, patchRequest, options = {}) {
+  if (!result?.existing_path || !/file already exists/i.test(String(result.error || result.message || ""))) {
+    return false;
+  }
+  const outputName = patchRequest.output_name || options.generatedPlugin;
+  const sourcePlugin = options.sourcePlugin;
+  const existingName = path.basename(result.existing_path);
+  if (!outputName || existingName.toLowerCase() !== String(outputName).toLowerCase()) {
+    return false;
+  }
+  if (sourcePlugin && existingName.toLowerCase() === String(sourcePlugin).toLowerCase()) {
+    return false;
+  }
+  return Array.isArray(patchRequest.records) &&
+    patchRequest.records.length > 0 &&
+    patchRequest.records.every((record) => {
+      return record.set_message ||
+        record.set_message_payload ||
+        record.set_activator ||
+        record.set_activator_payload;
+    });
+}
+
+async function runExistingGeneratedPayloadWriter(patchRequest, pluginPath, options = {}) {
+  const projectRoot = options.projectRoot || process.cwd();
+  const reportsDir = path.resolve(projectRoot, options.reportsDir || "reports");
+  const requestDir = path.join(reportsDir, "payload-writer-requests");
+  fs.mkdirSync(requestDir, { recursive: true });
+  const requestPath = path.join(requestDir, `${patchRequest.output_name || "payload"}-${Date.now()}.json`);
+  fs.writeFileSync(requestPath, JSON.stringify(patchRequest, null, 2));
+
+  const writerExe = path.join(projectRoot, "native", "CreationPayloadWriter", "bin", "Debug", "net8.0", "CreationPayloadWriter.exe");
+  const writerProject = path.join(projectRoot, "native", "CreationPayloadWriter", "CreationPayloadWriter.csproj");
+  const command = fs.existsSync(writerExe) ? writerExe : "dotnet";
+  const args = fs.existsSync(writerExe)
+    ? ["--plugin-path", pluginPath, "--request", requestPath, "--output-path", pluginPath]
+    : ["run", "--project", writerProject, "--", "--plugin-path", pluginPath, "--request", requestPath, "--output-path", pluginPath];
+  const result = await runProcess(command, args, { cwd: projectRoot });
+  const report = parsePayloadWriterReport(result.stdout);
+  return {
+    status: result.status,
+    exitCode: result.exitCode,
+    stdout: result.stdout,
+    stderr: result.stderr,
+    writer: "CreationPayloadWriter",
+    requestPath,
+    pluginPath,
+    report
+  };
+}
+
+function parsePayloadWriterReport(stdout) {
+  const trimmed = String(stdout || "").trim();
+  if (!trimmed) {
+    return null;
+  }
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    const lastJson = trimmed.split(/\r?\n/).reverse().find((line) => line.trim().startsWith("{"));
+    if (!lastJson) {
+      return null;
+    }
+    try {
+      return JSON.parse(lastJson);
+    } catch {
+      return null;
+    }
+  }
 }
 
 export function createReadbackCollector(context) {
-  return async ({ manifest, plan, phases = [] }) => {
+  return async ({ manifest, plan }) => {
     const formids = [];
     const unresolved = [];
     for (const item of plan.operations) {
@@ -184,23 +264,12 @@ export function createReadbackCollector(context) {
     const normalized = normalizeMo2RecordDetail({
       records: details.flatMap((detail) => detail.records || [detail])
     });
-    const duplicateSources = ckDuplicateSourceMap(phases);
     normalized.conflicts = {};
     for (const operation of manifest.operations) {
       try {
-        const conflict = await getConflictChain(operation.target, context);
-        normalized.conflicts[operation.target] = conflict;
-        const record = findReadbackRecord(normalized, operation.target);
-        if (record) {
-          const sourceEditorId = duplicateSources.get(String(operation.target || "").toLowerCase());
-          if (sourceEditorId && !record.source && !record.duplicatedFrom && !record.createdFrom) {
-            record.createdFrom = { editorId: sourceEditorId };
-          }
-          record.conflictChain = Array.isArray(conflict)
-            ? conflict
-            : (Array.isArray(conflict?.chain) ? conflict.chain : []);
-          record.conflictChainDetail = conflict;
-        }
+        const chain = await getConflictChain(operation.target, context);
+        normalized.conflicts[operation.target] = chain;
+        attachConflictChain(normalized, operation, chain);
       } catch {
         normalized.conflicts[operation.target] = null;
       }
@@ -209,24 +278,40 @@ export function createReadbackCollector(context) {
   };
 }
 
-function ckDuplicateSourceMap(phases = []) {
-  const result = new Map();
-  const ckPhase = phases.find((phase) => phase.phase === "ck-apply" && phase.status === "PASS");
-  for (const command of ckPhase?.adapterResult?.commands || []) {
-    if (command.op !== "duplicateCreateRecord" || command.status !== "PASS") {
+function attachConflictChain(readback, operation, chain) {
+  const conflictChain = normalizeConflictChain(chain);
+  const records = readback.records || {};
+  const candidates = [
+    operation.target,
+    operation.payload?.createdEditorId,
+    operation.payload?.targetEditorId
+  ].filter(Boolean);
+  for (const record of Object.values(records)) {
+    if (!record || typeof record !== "object") {
       continue;
     }
-    const target = command.evidence?.createdRecord?.record?.editorId ||
-      command.evidence?.requested?.targetEditorId ||
-      command.evidence?.requested?.createdEditorId ||
-      command.evidence?.requested?.target;
-    const source = command.evidence?.requested?.sourceEditorId ||
-      command.evidence?.replay?.evidence?.source?.record?.editorId;
-    if (target && source) {
-      result.set(String(target).toLowerCase(), source);
+    const matches = candidates.some((candidate) =>
+      equals(record.editorId || record.EditorID, candidate) ||
+      equals(record.formid || record.FormID, candidate)
+    );
+    if (matches) {
+      record.conflictChain = conflictChain;
+      record.conflictChainDetail = chain;
     }
   }
-  return result;
+}
+
+function normalizeConflictChain(chain) {
+  if (Array.isArray(chain)) {
+    return chain;
+  }
+  if (Array.isArray(chain?.chain)) {
+    return chain.chain;
+  }
+  if (Array.isArray(chain?.conflictChain)) {
+    return chain.conflictChain;
+  }
+  return [];
 }
 
 export function createCompileRunner(projectRoot, args = [], options = {}) {

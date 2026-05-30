@@ -77,12 +77,17 @@ export function buildPlatformProofSummary(matrix, options = {}) {
 export function formatPlatformProofSummary(summary) {
   const lines = [
     `Game: ${summary.game}`,
-    `Platform v1 product ready: ${summary.platformV1ProductReady ? "yes" : "no"}`,
-    `Release ready: ${summary.releaseReady ? "yes" : "no"}`,
+    `Platform v1 product ready (operation gate only): ${summary.platformV1ProductReady ? "yes" : "no"}`,
+    `Release ready (full matrix and live proof): ${summary.releaseReady ? "yes" : "no"}`,
     `Supported: ${summary.totals.supported}`,
     `Discovery-only: ${summary.totals.discoveryOnly}`,
     `Blocked: ${summary.totals.blocked}`
   ];
+
+  lines.push(
+    "Summary scope: derived from current proof-results and matrix artifacts.",
+    "Summary scope does not re-run live loadPluginSet proof or post-merge verification."
+  );
 
   if (summary.platformV1Gate) {
     lines.push(

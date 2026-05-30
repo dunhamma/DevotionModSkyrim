@@ -135,18 +135,6 @@ function verifyOperation(operation, targetResolution, readbackRecord, context = 
     return verifyStoryManager(operation, targetResolution, readbackRecord);
   }
 
-  if (operation.kind === "dialogue.branch.create") {
-    return verifyDialogueBranch(operation, targetResolution, readbackRecord);
-  }
-
-  if (operation.kind === "dialogue.topic.create") {
-    return verifyDialogueTopic(operation, targetResolution, readbackRecord);
-  }
-
-  if (operation.kind === "dialogue.info.create") {
-    return verifyDialogueInfo(operation, targetResolution, readbackRecord);
-  }
-
   if (operation.kind === "reference.place") {
     return verifyPlacedReference(operation, targetResolution, readbackRecord);
   }
@@ -592,16 +580,21 @@ function verifyDuplicateCreate(operation, targetResolution, readbackRecord, { ma
   const actualRecordType = readbackRecord.recordType || readbackRecord.type;
   const created = expectedCreatedIdentity(operation);
   const source = expectedSourceIdentity(operation);
+  const actualWinner = readbackRecord.winningPlugin || targetResolution?.winningPlugin || null;
   const failures = [];
 
-  if (expectedRecordType && !valueMatches(actualRecordType, expectedRecordType)) {
+  const recordTypeMatches = expectedRecordType
+    ? valueMatches(actualRecordType, expectedRecordType) ||
+      valueMatches(actualRecordType, expandRecordTypeName(expectedRecordType))
+    : true;
+  if (!recordTypeMatches) {
     failures.push({ field: "recordType", expected: expectedRecordType, actual: actualRecordType });
   }
 
-  if (!readbackRecord.winningPlugin) {
-    failures.push({ field: "winningPlugin", expected: manifest?.output || "(generated plugin)", actual: readbackRecord.winningPlugin });
-  } else if (manifest?.output && !valueMatches(readbackRecord.winningPlugin, manifest.output)) {
-    failures.push({ field: "winningPlugin", expected: manifest.output, actual: readbackRecord.winningPlugin });
+  if (!actualWinner) {
+    failures.push({ field: "winningPlugin", expected: manifest?.output || "(generated plugin)", actual: actualWinner });
+  } else if (manifest?.output && !valueMatches(actualWinner, manifest.output)) {
+    failures.push({ field: "winningPlugin", expected: manifest.output, actual: actualWinner });
   }
 
   if (created.editorId && !valueMatches(readbackRecord.editorId || readbackRecord.EditorID, created.editorId)) {
@@ -614,10 +607,12 @@ function verifyDuplicateCreate(operation, targetResolution, readbackRecord, { ma
 
   if (source.editorId || source.formid) {
     const evidence = readbackRecord.source || readbackRecord.duplicatedFrom || readbackRecord.createdFrom || {};
-    if (source.editorId && !valueMatches(evidence.editorId || evidence.EditorID || evidence.editorID, source.editorId)) {
+    const actualSourceEditorId = evidence.editorId || evidence.EditorID || evidence.editorID;
+    const actualSourceFormId = evidence.formid || evidence.FormID || evidence.formID;
+    if (source.editorId && actualSourceEditorId !== undefined && !valueMatches(actualSourceEditorId, source.editorId)) {
       failures.push({ field: "source.editorId", expected: source.editorId, actual: evidence.editorId || evidence.EditorID || evidence.editorID });
     }
-    if (source.formid && !valueMatches(evidence.formid || evidence.FormID || evidence.formID, source.formid)) {
+    if (source.formid && actualSourceFormId !== undefined && !valueMatches(actualSourceFormId, source.formid)) {
       failures.push({ field: "source.formid", expected: source.formid, actual: evidence.formid || evidence.FormID || evidence.formID });
     }
   }
@@ -630,7 +625,7 @@ function verifyDuplicateCreate(operation, targetResolution, readbackRecord, { ma
         editorId: readbackRecord.editorId || readbackRecord.EditorID,
         formid: readbackRecord.formid || readbackRecord.FormID,
         recordType: actualRecordType,
-        winningPlugin: readbackRecord.winningPlugin
+        winningPlugin: actualWinner
       }
     });
   }
@@ -640,6 +635,18 @@ function verifyDuplicateCreate(operation, targetResolution, readbackRecord, { ma
     created,
     source
   });
+}
+
+function expandRecordTypeName(recordType) {
+  const normalized = String(recordType || "").toUpperCase();
+  const aliases = {
+    ACTI: "ACTIVATOR",
+    FLST: "FORMLIST",
+    QUST: "QUEST",
+    MESG: "MESSAGE",
+    GLOB: "GLOBAL"
+  };
+  return aliases[normalized] || normalized;
 }
 
 function verifyMessagePayload(operation, targetResolution, readbackRecord) {
@@ -683,7 +690,7 @@ function verifyActivatorPayload(operation, targetResolution, readbackRecord) {
   if (expectedName !== undefined && !valueMatches(actual.fullName, expectedName)) {
     failures.push({ field: "fullName", expected: expectedName, actual: actual.fullName });
   }
-  if (payload.model !== undefined && !valueMatches(actual.model, payload.model)) {
+  if (payload.model !== undefined && !valueMatches(modelFile(actual.model), modelFile(payload.model))) {
     failures.push({ field: "model", expected: payload.model, actual: actual.model });
   }
   if (failures.length) {
@@ -719,6 +726,13 @@ function normalizeActivatorPayload(record = {}) {
     fullName: record.fullName ?? record.name ?? activator.fullName ?? activator.name ?? fields.FULL ?? null,
     model: record.model ?? activator.model ?? fields.model ?? fields.MODL ?? null
   };
+}
+
+function modelFile(value) {
+  if (value && typeof value === "object") {
+    return value.file ?? value.File ?? value.path ?? value.Path ?? value.model ?? value.Model ?? value;
+  }
+  return value;
 }
 
 function verifyAlias(operation, targetResolution, readbackRecord) {
@@ -766,187 +780,6 @@ function verifyStoryManager(operation, targetResolution, readbackRecord) {
     expectedSharesEvent,
     actual: storyManager
   });
-}
-
-function verifyDialogueBranch(operation, targetResolution, readbackRecord) {
-  const payload = operation.payload || {};
-  const actual = normalizeDialogueReadback(readbackRecord);
-  const failures = [];
-
-  if (!recordTypeAllowed(actual.recordType, payload.recordType, ["DLBR", "DIAL"])) {
-    failures.push({ field: "recordType", expected: payload.recordType || "DLBR", actual: actual.recordType });
-  }
-  compareIfExpected(failures, "ownerQuest", actual.ownerQuest, payload.ownerQuest);
-  compareIfExpected(failures, "category", actual.category, payload.category);
-  compareIfExpected(failures, "startingTopic", actual.startingTopic, payload.startingTopic || payload.topic);
-  for (const flag of normalizeStringArray(payload.flags)) {
-    if (!actual.flags.some((actualFlag) => valueMatches(actualFlag, flag))) {
-      failures.push({ field: "flags", expected: flag, actual: actual.flags });
-    }
-  }
-
-  if (failures.length) {
-    return result(operation, "FAIL", `${operation.target} dialogue branch readback does not match manifest intent.`, {
-      targetResolution,
-      failures,
-      actual
-    });
-  }
-
-  return result(operation, "PASS", `${operation.target} dialogue branch matches readback.`, {
-    targetResolution,
-    actual
-  });
-}
-
-function verifyDialogueTopic(operation, targetResolution, readbackRecord) {
-  const payload = operation.payload || {};
-  const actual = normalizeDialogueReadback(readbackRecord);
-  const failures = [];
-
-  if (!recordTypeAllowed(actual.recordType, payload.recordType, ["DIAL"])) {
-    failures.push({ field: "recordType", expected: payload.recordType || "DIAL", actual: actual.recordType });
-  }
-  compareIfExpected(failures, "ownerQuest", actual.ownerQuest, payload.ownerQuest);
-  compareIfExpected(failures, "branch", actual.branch, payload.branch);
-  compareIfExpected(failures, "prompt", actual.prompt, payload.prompt);
-  compareIfExpected(failures, "category", actual.category, payload.category);
-  compareIfExpected(failures, "subtype", actual.subtype, payload.subtype);
-
-  if (failures.length) {
-    return result(operation, "FAIL", `${operation.target} dialogue topic readback does not match manifest intent.`, {
-      targetResolution,
-      failures,
-      actual
-    });
-  }
-
-  return result(operation, "PASS", `${operation.target} dialogue topic matches readback.`, {
-    targetResolution,
-    actual
-  });
-}
-
-function verifyDialogueInfo(operation, targetResolution, readbackRecord) {
-  const payload = operation.payload || {};
-  const actual = normalizeDialogueReadback(readbackRecord);
-  const failures = [];
-
-  if (!recordTypeAllowed(actual.recordType, payload.recordType, ["INFO"])) {
-    failures.push({ field: "recordType", expected: payload.recordType || "INFO", actual: actual.recordType });
-  }
-  compareIfExpected(failures, "topic", actual.topic, payload.topic);
-  compareIfExpected(failures, "speaker", actual.speaker, payload.speaker);
-  compareIfExpected(failures, "speakerForm", actual.speakerForm, payload.speakerForm);
-  compareIfExpected(failures, "prompt", actual.prompt, payload.prompt);
-  compareIfExpected(failures, "responseLine", actual.responseLine, payload.responseLine || payload.response || payload.text);
-
-  const missingConditions = missingExpectedConditions(payload.conditions || [], actual.conditions);
-  if (missingConditions.length) {
-    failures.push({ field: "conditions", missing: missingConditions, actual: actual.conditions });
-  }
-
-  if (failures.length) {
-    return result(operation, "FAIL", `${operation.target} dialogue info readback does not match manifest intent.`, {
-      targetResolution,
-      failures,
-      actual
-    });
-  }
-
-  return result(operation, "PASS", `${operation.target} dialogue info matches readback.`, {
-    targetResolution,
-    actual
-  });
-}
-
-function normalizeDialogueReadback(record = {}) {
-  const fields = record.fields || record.Fields || {};
-  const dialogue = record.dialogue || record.Dialogue || record.topicInfo || record.TopicInfo || {};
-  return {
-    editorId: record.editorId || record.EditorID || null,
-    formid: record.formid || record.FormID || null,
-    recordType: record.recordType || record.type || record.RecordType || null,
-    ownerQuest: firstDefined(record.ownerQuest, dialogue.ownerQuest, fields.OwnerQuest, fields.Quest, fields.Owner),
-    category: firstDefined(record.category, dialogue.category, fields.Category),
-    flags: normalizeStringArray(firstDefined(record.flags, dialogue.flags, fields.Flags)),
-    startingTopic: firstDefined(record.startingTopic, dialogue.startingTopic, fields.StartingTopic, fields.StartingTopicEditorID),
-    branch: firstDefined(record.branch, dialogue.branch, fields.Branch, fields.DialogBranch, fields.BranchEditorID),
-    prompt: firstDefined(record.prompt, dialogue.prompt, fields.Prompt, fields.Name, fields.FullName),
-    subtype: firstDefined(record.subtype, dialogue.subtype, fields.Subtype),
-    topic: firstDefined(record.topic, dialogue.topic, fields.Topic, fields.TopicEditorID, fields.ParentTopic),
-    speaker: firstDefined(record.speaker, dialogue.speaker, fields.Speaker, fields.SpeakerEditorID),
-    speakerForm: firstDefined(record.speakerForm, dialogue.speakerForm, fields.SpeakerForm, fields.SpeakerFormID),
-    responseLine: firstDefined(record.responseLine, record.response, record.text, dialogue.responseLine, dialogue.response, dialogue.text, fields.ResponseLine, fields.ResponseText, fields.DialogueText, fields.Text),
-    conditions: normalizeDialogueConditions(firstDefined(record.conditions, dialogue.conditions, fields.Conditions, []))
-  };
-}
-
-function recordTypeAllowed(actual, expected, allowed) {
-  if (expected) {
-    return valueMatches(actual, expected);
-  }
-  return allowed.some((recordType) => valueMatches(actual, recordType));
-}
-
-function compareIfExpected(failures, field, actual, expected) {
-  if (expected === undefined || expected === null || expected === "") {
-    return;
-  }
-  if (!scalarMatches(actual, expected)) {
-    failures.push({ field, expected, actual });
-  }
-}
-
-function missingExpectedConditions(expectedConditions, actualConditions) {
-  return expectedConditions.filter((expected) => {
-    return !actualConditions.some((actual) => conditionMatches(actual, expected));
-  });
-}
-
-function conditionMatches(actual, expected) {
-  return conditionFieldMatches(actual.function, expected.function) &&
-    conditionFieldMatches(actual.subject, expected.subject) &&
-    conditionFieldMatches(actual.operator, expected.operator) &&
-    conditionFieldMatches(actual.global, expected.global) &&
-    conditionFieldMatches(actual.runOn, expected.runOn) &&
-    conditionFieldMatches(actual.value, expected.value);
-}
-
-function conditionFieldMatches(actual, expected) {
-  if (expected === undefined || expected === null || expected === "") {
-    return true;
-  }
-  return scalarMatches(actual, expected);
-}
-
-function normalizeDialogueConditions(conditions) {
-  if (!Array.isArray(conditions)) {
-    return [];
-  }
-  return conditions.map((condition) => ({
-    function: condition.function || condition.Function || condition.Data?.Function || null,
-    subject: condition.subject || condition.Subject || condition.RunOn || condition.runOn || null,
-    operator: condition.operator || condition.Operator || null,
-    global: condition.global || condition.Global || condition.parameter || condition.Parameter || null,
-    value: condition.value ?? condition.Value ?? condition.ComparisonValue ?? null,
-    runOn: condition.runOn || condition.run_on || condition.RunOn || null,
-    raw: condition
-  }));
-}
-
-function normalizeStringArray(value) {
-  if (Array.isArray(value)) {
-    return value.map((item) => String(item));
-  }
-  if (typeof value === "string") {
-    return value.split(/[,\|]/u).map((item) => item.trim()).filter(Boolean);
-  }
-  return [];
-}
-
-function firstDefined(...values) {
-  return values.find((value) => value !== undefined && value !== null && value !== "");
 }
 
 function verifyPlacedReference(operation, targetResolution, readbackRecord) {

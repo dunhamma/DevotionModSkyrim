@@ -1,10 +1,23 @@
 import fs from "node:fs";
 import path from "node:path";
+import {
+  LOAD_PLUGIN_SET_RELEASE_BLOCKERS,
+  validateShipPathLoadSet
+} from "./load-set-proof.mjs";
 
 const DEFAULT_PROOF_RESULTS = "generated/proof-results.skyrimse.json";
 const DEFAULT_MATRIX = "generated/capability-matrix.skyrimse.json";
 const DEFAULT_SUMMARY = "generated/platform-v1-proof-summary.json";
 const CK_SHELL_FAMILIES = new Set(["FLST", "MESG", "ACTI", "QUST"]);
+const LOAD_SET_PRODUCT_READY_FIXTURE = "fixtures/ckpe/load-plugin-set-product-ready.ck-command-packet.json";
+const LOAD_SET_BLOCKED_CASES_FIXTURE = "fixtures/ckpe/load-plugin-set-blocked-cases.ck-command-packet.json";
+const PRODUCT_CK_PACKET_FIXTURES = [
+  "fixtures/ckpe/phase59-glob-duplicate-create-product-command.ck-command-packet.json",
+  "fixtures/ckpe/phase63-flst-duplicate-create-product-command.ck-command-packet.json",
+  "fixtures/ckpe/phase66-mesg-duplicate-create-product-command.ck-command-packet.json",
+  "fixtures/ckpe/phase69-acti-duplicate-create-product-command.ck-command-packet.json",
+  "fixtures/ckpe/phase72-qust-duplicate-create-product-command.ck-command-packet.json"
+];
 
 export function verifyPlatformV1Evidence({
   proofResultsPath = DEFAULT_PROOF_RESULTS,
@@ -38,6 +51,7 @@ export function verifyPlatformV1Evidence({
   validateMatrixAgreement(proofResults, matrix, proofResultsPath, repoRoot, failures);
   validateSummaryAgreement(proofResults, summary, proofResultsPath, repoRoot, failures);
   validatePlatformV1Semantics(matrix, summary, failures);
+  validateLoadSetFixtures(repoRoot, failures);
 
   return buildReport({ proofResultsPath, matrixPath, summaryPath, repoRoot, failures });
 }
@@ -293,6 +307,215 @@ function validatePlatformV1Semantics(matrix, summary, failures) {
       message: `Platform v1 proof summary gate status is ${summary.platformV1Gate?.status || "MISSING"}.`
     });
   }
+}
+
+function validateLoadSetFixtures(repoRoot, failures) {
+  const productReadyPacket = readProductPacketFixture(LOAD_SET_PRODUCT_READY_FIXTURE, repoRoot, failures);
+  if (productReadyPacket) {
+    validatePacketSchema(productReadyPacket, LOAD_SET_PRODUCT_READY_FIXTURE, failures);
+    validateProductLoadSetPacket(productReadyPacket, LOAD_SET_PRODUCT_READY_FIXTURE, failures);
+  }
+
+  const blockedCasesPacket = readProductPacketFixture(LOAD_SET_BLOCKED_CASES_FIXTURE, repoRoot, failures);
+  if (blockedCasesPacket) {
+    validatePacketSchema(blockedCasesPacket, LOAD_SET_BLOCKED_CASES_FIXTURE, failures);
+    validateBlockedLoadSetCasesPacket(blockedCasesPacket, LOAD_SET_BLOCKED_CASES_FIXTURE, failures);
+  }
+
+  for (const fixturePath of PRODUCT_CK_PACKET_FIXTURES) {
+    const packet = readProductPacketFixture(fixturePath, repoRoot, failures);
+    if (!packet) {
+      continue;
+    }
+    validatePacketSchema(packet, fixturePath, failures);
+    validateProductLoadSetPacket(packet, fixturePath, failures);
+  }
+}
+
+function readProductPacketFixture(fixturePath, repoRoot, failures) {
+  const absolutePath = resolveEvidencePath(fixturePath, repoRoot);
+  if (!fs.existsSync(absolutePath)) {
+    failures.push({
+      code: "missing_load_plugin_set_fixture",
+      message: `Required loadPluginSet fixture is missing: ${fixturePath}.`,
+      path: normalizeRepoPath(fixturePath, repoRoot)
+    });
+    return null;
+  }
+  try {
+    return JSON.parse(fs.readFileSync(absolutePath, "utf8"));
+  } catch (error) {
+    failures.push({
+      code: "invalid_load_plugin_set_fixture_json",
+      message: `loadPluginSet fixture is not valid JSON: ${fixturePath} (${error.message}).`,
+      path: normalizeRepoPath(fixturePath, repoRoot)
+    });
+    return null;
+  }
+}
+
+function validatePacketSchema(packet, fixturePath, failures) {
+  if (packet?.schema !== "creation-authoring.ck-command-packet.v1") {
+    failures.push({
+      code: "invalid_load_plugin_set_fixture_schema",
+      message: `${fixturePath} schema is ${packet?.schema || "MISSING"}; expected creation-authoring.ck-command-packet.v1.`
+    });
+  }
+}
+
+function validateProductLoadSetPacket(packet, fixturePath, failures) {
+  const commands = Array.isArray(packet?.commands) ? packet.commands : [];
+  const loadSetGate = validateShipPathLoadSet(commands, {
+    requireOpenProjectPrelude: true,
+    expectedActivePlugin: inferExpectedActivePlugin(packet, commands),
+    expectedSaveTarget: inferExpectedSaveTarget(packet, commands)
+  });
+  if (loadSetGate.status !== "PASS") {
+    for (const failure of loadSetGate.failures) {
+      failures.push({
+        code: "invalid_load_plugin_set_contract",
+        message: `${fixturePath}: ${failure}`
+      });
+    }
+    return;
+  }
+
+  const loadPluginSet = loadSetGate.command || {};
+  for (const field of ["requiredPlugins", "plugins", "sourcePlugin", "generatedPlugin", "activePlugin", "intendedSaveTarget"]) {
+    if (!loadPluginSet[field]) {
+      failures.push({
+        code: "load_plugin_set_missing_field",
+        message: `${fixturePath} loadPluginSet is missing ${field}.`
+      });
+    }
+  }
+  if (!Array.isArray(loadPluginSet.requiredPlugins) || !loadPluginSet.requiredPlugins.length) {
+    failures.push({
+      code: "load_plugin_set_required_plugins_invalid",
+      message: `${fixturePath} loadPluginSet.requiredPlugins must be a non-empty array.`
+    });
+  }
+  if (!Array.isArray(loadPluginSet.plugins) || !loadPluginSet.plugins.length) {
+    failures.push({
+      code: "load_plugin_set_plugins_invalid",
+      message: `${fixturePath} loadPluginSet.plugins must be a non-empty array.`
+    });
+  } else {
+    const activePlugins = loadPluginSet.plugins.filter((plugin) => plugin?.active);
+    if (activePlugins.length !== 1) {
+      failures.push({
+        code: "load_plugin_set_active_plugin_invalid",
+        message: `${fixturePath} loadPluginSet.plugins must declare exactly one active plugin.`
+      });
+    }
+    for (const plugin of loadPluginSet.plugins) {
+      if (!plugin?.name) {
+        failures.push({
+          code: "load_plugin_set_plugin_name_missing",
+          message: `${fixturePath} loadPluginSet.plugins entries must declare name.`
+        });
+        break;
+      }
+    }
+  }
+  if (loadPluginSet.sourcePluginNotActive !== true) {
+    failures.push({
+      code: "load_plugin_set_source_not_active_missing",
+      message: `${fixturePath} loadPluginSet must require sourcePluginNotActive=true.`
+    });
+  }
+}
+
+function validateBlockedLoadSetCasesPacket(packet, fixturePath, failures) {
+  const commands = Array.isArray(packet?.commands) ? packet.commands : [];
+  if (!commands.length) {
+    failures.push({
+      code: "load_plugin_set_blocked_cases_missing_commands",
+      message: `${fixturePath} must declare one or more blocked-case loadPluginSet commands.`
+    });
+    return;
+  }
+
+  const actualBlockers = new Set();
+  for (const command of commands) {
+    if (command?.op !== "loadPluginSet") {
+      failures.push({
+        code: "load_plugin_set_blocked_case_invalid_op",
+        message: `${fixturePath} blocked-case scenario catalog may contain only loadPluginSet commands.`
+      });
+      break;
+    }
+
+    if (!command.expectedBlocker) {
+      failures.push({
+        code: "load_plugin_set_expected_blocker_missing",
+        message: `${fixturePath} blocked-case scenarios must declare expectedBlocker.`
+      });
+      continue;
+    }
+
+    actualBlockers.add(command.expectedBlocker);
+
+    const scenarioPacket = {
+      ...packet,
+      commands: [command]
+    };
+    validateProductLoadSetScenario(scenarioPacket, fixturePath, command.expectedBlocker, failures);
+  }
+
+  for (const blocker of LOAD_PLUGIN_SET_RELEASE_BLOCKERS) {
+    if (!actualBlockers.has(blocker)) {
+      failures.push({
+        code: "load_plugin_set_release_blocker_missing",
+        message: `${fixturePath} blocked-case scenarios must cover ${blocker}.`
+      });
+    }
+  }
+}
+
+function validateProductLoadSetScenario(packet, fixturePath, expectedBlocker, failures) {
+  const commands = Array.isArray(packet?.commands) ? packet.commands : [];
+  const loadSetGate = validateShipPathLoadSet(commands, {
+    expectedActivePlugin: inferExpectedActivePlugin(packet, commands),
+    expectedSaveTarget: inferExpectedSaveTarget(packet, commands)
+  });
+  if (loadSetGate.status !== "PASS") {
+    for (const failure of loadSetGate.failures) {
+      if (/exactly one loadPluginSet/.test(failure)) {
+        continue;
+      }
+      failures.push({
+        code: "invalid_load_plugin_set_blocked_case_contract",
+        message: `${fixturePath} (${expectedBlocker}): ${failure}`
+      });
+    }
+  }
+
+  const loadPluginSet = loadSetGate.command || {};
+  for (const field of ["requiredPlugins", "plugins", "sourcePlugin", "generatedPlugin", "activePlugin", "intendedSaveTarget"]) {
+    if (!loadPluginSet[field]) {
+      failures.push({
+        code: "load_plugin_set_blocked_case_missing_field",
+        message: `${fixturePath} (${expectedBlocker}) loadPluginSet is missing ${field}.`
+      });
+    }
+  }
+  if (loadPluginSet.sourcePluginNotActive !== true) {
+    failures.push({
+      code: "load_plugin_set_blocked_case_source_not_active_missing",
+      message: `${fixturePath} (${expectedBlocker}) loadPluginSet must require sourcePluginNotActive=true.`
+    });
+  }
+}
+
+function inferExpectedActivePlugin(packet, commands) {
+  const loadPluginSet = commands.find((command) => command?.op === "loadPluginSet");
+  return packet?.generatedPlugin || loadPluginSet?.generatedPlugin || loadPluginSet?.activePlugin || null;
+}
+
+function inferExpectedSaveTarget(packet, commands) {
+  const loadPluginSet = commands.find((command) => command?.op === "loadPluginSet");
+  return loadPluginSet?.intendedSaveTarget || inferExpectedActivePlugin(packet, commands);
 }
 
 function compareProofFields(sourceName, expected, actual, proofResultsPath, repoRoot, failures) {

@@ -1,5 +1,6 @@
 import path from "node:path";
 import { writeJson } from "./io.mjs";
+import { validateShipPathLoadSet } from "./load-set-proof.mjs";
 import { normalizeRunnerStatus, PASS_PHASE_STATUSES, summarizePhaseStatuses } from "./release-status.mjs";
 
 const DISCOVERY_ONLY_PATTERN = /(discover|discovery|observer|observe|trace|surface|inventory|inspect|introspect|wrapper|caller|contract|invocationPlan|mutationReady|sourceLookup|lookup|template|selector|context|init|guard|boolean|candidate|postAllocation|post-allocation|rdx|register|ownership|dirty|missed|noisy|readback|report)/i;
@@ -80,7 +81,15 @@ export async function promoteRunReport(runReport, profile, options = {}) {
   });
 
   const postMergeVerifierResult = options.postMergeVerifier
-    ? await options.postMergeVerifier({ runReport, profile, mergeRequest })
+    ? await options.postMergeVerifier({
+        runReport,
+        profile,
+        mergeRequest,
+        backupResult,
+        mergeResult,
+        ckFinalizerResult,
+        postMergeVerifyRequest: buildPostMergeVerifyRequest(runReport, profile, mergeRequest, options)
+      })
     : null;
   phases.push({
     phase: "post-merge-verify",
@@ -88,6 +97,7 @@ export async function promoteRunReport(runReport, profile, options = {}) {
     message: options.postMergeVerifier
       ? "Post-merge verifier completed."
       : "A host adapter must verify live source-plugin state after promotion.",
+    postMergeVerifyRequest: buildPostMergeVerifyRequest(runReport, profile, mergeRequest, options),
     result: postMergeVerifierResult
   });
 
@@ -216,6 +226,35 @@ export function buildBackupRequest(runReport, profile, options = {}) {
       ].filter(Boolean),
       restoreStrategy: "restore timestamped backups before re-running post-merge verification"
     }
+  };
+}
+
+export function buildPostMergeVerifyRequest(runReport, profile, mergeRequest, options = {}) {
+  const operations = mergeRequest?.operations || collectOperations(runReport);
+  const candidatePlugin = options.mergeOutputPath || null;
+  const sourcePlugin = runReport.manifest?.sourcePlugin || profile.sourcePlugin;
+  const generatedPlugin = runReport.manifest?.output || profile.defaultOutput;
+
+  return {
+    schema: "creation-authoring.post-merge-verify-request.v1",
+    sourcePlugin,
+    generatedPlugin,
+    candidatePlugin,
+    requiresGeneratedFirstProof: true,
+    requiresCandidateWinnerProof: true,
+    requiresProjectVerifierPass: true,
+    requiredOutcomes: [
+      "candidate load state is explicit and writable",
+      "candidate plugin wins readback for every promoted operation",
+      "project verifier passes against candidate output"
+    ],
+    operations: operations.map((operation) => ({
+      id: operation.id,
+      kind: operation.kind,
+      target: operation.target,
+      recordFamily: operation.recordFamily || "unknown",
+      ckSemanticsRequired: Boolean(operation.ckSemanticsRequired)
+    }))
   };
 }
 
@@ -364,7 +403,7 @@ function evaluateCreateRecordPromotion(runReport, proofLedger, generatedOutput) 
     blockers.push("createRecord promotion requires a run report with no UNSAFE_BLOCKED phase or command results.");
   }
   if (!hasActiveGeneratedPluginProof(runReport, generatedOutput)) {
-    blockers.push("createRecord promotion requires CK load/set-active PASS evidence for the generated plugin.");
+    blockers.push("createRecord promotion requires CK loadPluginSet PASS evidence for the generated plugin.");
   }
   if (!hasGeneratedPluginSaveProof(runReport, generatedOutput)) {
     blockers.push("createRecord promotion requires generated plugin save PASS evidence.");
@@ -411,27 +450,15 @@ function hasActiveGeneratedPluginProof(runReport, generatedOutput) {
   if (!generatedOutput) {
     return false;
   }
-  const commands = (runReport.phases || [])
+  return (runReport.phases || [])
     .filter((phase) => phase.phase === "ck-apply")
-    .flatMap((phase) => phase.adapterResult?.commands || []);
-  return commands.some((command) => {
-    if (command.op === "loadPluginSet" && command.status === "PASS") {
-      const evidence = command.evidence || {};
-      return samePathOrName(evidence.requestedActivePlugin || command.activePlugin, generatedOutput) &&
-        samePathOrName(evidence.intendedSaveTarget || command.intendedSaveTarget, generatedOutput) &&
-        evidence.activePluginMatchesRequest === true &&
-        evidence.saveTargetMatchesActive === true &&
-        evidence.sourcePluginActive !== true;
-    }
-    if (!["loadPlugin", "setActivePlugin"].includes(command.op) || command.status !== "PASS") {
-      return false;
-    }
-    const requested = command.evidence?.requestedPlugin || command.plugin;
-    const active = command.evidence?.activePlugin?.activePlugin || command.evidence?.plugin || null;
-    return samePathOrName(requested, generatedOutput) &&
-      (active?.active === true || command.active === true) &&
-      (!active?.fileName || samePathOrName(active.fileName, generatedOutput));
-  });
+    .some((phase) => {
+      const commands = phase.adapterResult?.commands || [];
+      return validateShipPathLoadSet(commands, {
+        expectedActivePlugin: generatedOutput,
+        expectedSaveTarget: generatedOutput
+      }).status === "PASS";
+    });
 }
 
 function hasGeneratedPluginSaveProof(runReport, generatedOutput) {

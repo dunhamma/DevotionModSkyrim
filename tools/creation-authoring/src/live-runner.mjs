@@ -13,13 +13,15 @@ import { executeApply } from "./executor.mjs";
 import { analyzeMixedCkWriterSequence, hydratePlanFromReadback } from "./orchestrator.mjs";
 import { verifyManifest } from "./verifier.mjs";
 import { buildStrictGatePhase, summarizePhaseStatuses } from "./release-status.mjs";
+import { buildLoadPluginSetCommand } from "./ck-command-packet.mjs";
 import {
   createCompileRunner,
   createLiveMcpContext,
   createPatchWriter,
   createPdvVerifierRunner,
   createReadbackCollector,
-  prepareLiveProfile
+  prepareLiveProfile,
+  refreshLiveRecordIndex
 } from "./live-mcp-adapters.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -69,6 +71,7 @@ async function runCommand(command, positional, options) {
   const manifest = loadManifest(manifestPath, baseProfile);
   const context = createLiveMcpContext({ mcpUrl: options.mcpUrl });
   const live = await prepareLiveProfile(manifest, baseProfile, context);
+  const reportsDir = path.resolve(options.reportsDir || live.profile.reportsDir || "reports");
 
   const compileConfig = compilerConfigFromProfile(live.profile);
   const verifierConfig = verifierConfigFromProfile(live.profile);
@@ -86,7 +89,12 @@ async function runCommand(command, positional, options) {
       eslFlag: options.esl === undefined ? true : options.esl
     },
     adapters: {
-      patchWriter: createPatchWriter(context),
+      patchWriter: createPatchWriter(context, {
+        projectRoot: PROJECT_ROOT,
+        reportsDir,
+        generatedPlugin: manifest.output,
+        sourcePlugin: manifest.sourcePlugin
+      }),
       readbackCollector: createReadbackCollector(context),
       ckAdapter: async (packet) => runCkIpcPacket(packet, {
         mode: options.ckMode || "named-pipe",
@@ -106,7 +114,6 @@ async function runCommand(command, positional, options) {
   report.phases.unshift(...live.preflight);
   report.status = summarizePhaseStatuses(report.phases);
 
-  const reportsDir = path.resolve(options.reportsDir || live.profile.reportsDir || "reports");
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const reportPath = options.reportPath || path.join(reportsDir, `${manifest.project}-${timestamp}.run-report.json`);
   report.reportPath = writeJson(reportPath, report);
@@ -164,32 +171,26 @@ async function promoteCommand(positional, options) {
       mergeRunner,
       ckFinalizer: async (mergeRequest) => {
         const sourcePlugin = profile.sourcePlugin;
-        const generatedPlugin = runReport.manifest?.output || profile.defaultOutput;
         const candidatePlugin = options.mergeOutputPath || profile.sourcePlugin;
+        const generatedPlugin = runReport.manifest?.output || profile.defaultOutput;
         const requiredPlugins = [...new Set([sourcePlugin, generatedPlugin, candidatePlugin].filter(Boolean))];
         const packet = {
           schema: "creation-authoring.ck-command-packet.v1",
           project: profile.modId,
           game: profile.game,
           sourcePlugin,
-          generatedPlugin,
+          generatedPlugin: candidatePlugin,
           failClosed: true,
           commands: [
             { op: "openProject", profile: profile.modId, game: profile.game },
-            {
-              op: "loadPluginSet",
+            buildLoadPluginSetCommand({
               requiredPlugins,
-              plugins: requiredPlugins.map((plugin) => ({
-                name: plugin,
-                selected: true,
-                active: plugin === candidatePlugin
-              })),
               sourcePlugin,
-              generatedPlugin,
+              generatedPlugin: candidatePlugin,
               activePlugin: candidatePlugin,
               intendedSaveTarget: candidatePlugin,
               sourcePluginNotActive: candidatePlugin !== sourcePlugin
-            },
+            }),
             { op: "postUiSaveCommand", plugin: candidatePlugin }
           ],
           verifierExpectations: mergeRequest.operations.flatMap((operation) => operation.verifierExpectations || [])
@@ -275,20 +276,6 @@ async function ckFromReportCommand(positional, options) {
   });
 }
 
-function passedCkDuplicateTargets(report = {}) {
-  const ckPhase = (report.phases || []).find((phase) => phase.phase === "ck-apply" && phase.status === "PASS");
-  return (ckPhase?.adapterResult?.commands || [])
-    .filter((command) => command.op === "duplicateCreateRecord" && command.status === "PASS")
-    .map((command) => {
-      return command.evidence?.createdRecord?.record?.editorId ||
-        command.evidence?.requested?.targetEditorId ||
-        command.evidence?.requested?.createdEditorId ||
-        command.evidence?.requested?.target ||
-        null;
-    })
-    .filter(Boolean);
-}
-
 async function finalizeReportCommand(positional, options) {
   const reportPath = positional[0];
   if (!reportPath) {
@@ -309,12 +296,13 @@ async function finalizeReportCommand(positional, options) {
   const plan = createPlan(manifest, live.profile, {
     allowUnprovenCk: Boolean(options.allowUnprovenCk)
   });
-  const report = readDocument(reportPath).document;
   const sequencing = analyzeMixedCkWriterSequence(plan, {
-    completedIdentityTargets: passedCkDuplicateTargets(report)
+    includeNonReadyIdentity: true
   });
+  const report = readDocument(reportPath).document;
   const compileConfig = compilerConfigFromProfile(live.profile);
   const verifierConfig = verifierConfigFromProfile(live.profile);
+  const reportsDir = path.resolve(options.reportsDir || live.profile.reportsDir || "reports");
 
   const preserved = report.phases.filter((phase) => {
     return ![
@@ -322,9 +310,11 @@ async function finalizeReportCommand(positional, options) {
       "mo2-record-index",
       "mo2-plugin-state",
       "compile",
+      "post-ck-record-index",
       "post-ck-readback",
       "post-ck-identity-gate",
       "payload-apply",
+      "post-payload-record-index",
       "readback-collect",
       "verify",
       "project-verifier",
@@ -345,6 +335,7 @@ async function finalizeReportCommand(positional, options) {
         message: "Payload writer operations are blocked until the preserved CK phase is PASS."
       });
     } else {
+      phases.push(await refreshLiveRecordIndex(context, "post-ck-record-index"));
       const postCkReadback = await createReadbackCollector(context)({ manifest, profile: live.profile, plan, phases });
       phases.push({
         phase: "post-ck-readback",
@@ -367,14 +358,23 @@ async function finalizeReportCommand(positional, options) {
       });
       if (identityStatus === "PASS") {
         const payloadPlan = hydratePlanFromReadback(plan, postCkReadback, sequencing.delayedWriterOperationIds);
-        phases.push(await executeApply(payloadPlan, {
+        const payloadApply = await executeApply(payloadPlan, {
           patchOptions: {
             eslFlag: options.esl === undefined ? true : options.esl
           },
-          patchWriter: createPatchWriter(context),
+          patchWriter: createPatchWriter(context, {
+            projectRoot: PROJECT_ROOT,
+            reportsDir,
+            generatedPlugin: manifest.output,
+            sourcePlugin: manifest.sourcePlugin
+          }),
           phaseName: "payload-apply",
           operationFilter: (item) => sequencing.delayedWriterOperationIds.has(item.operation.id)
-        }));
+        });
+        phases.push(payloadApply);
+        if (payloadApply.status === "PASS") {
+          phases.push(await refreshLiveRecordIndex(context, "post-payload-record-index"));
+        }
       }
     }
   }
@@ -424,7 +424,6 @@ async function finalizeReportCommand(positional, options) {
   report.planSummary = plan.summary;
   const outputPath = options.reportPath || reportPath;
   report.reportPath = writeJson(outputPath, report);
-  const reportsDir = path.resolve(options.reportsDir || live.profile.reportsDir || "reports");
   const review = writeReviewReports(report, { reportsDir });
   report.reviewArtifacts = review;
   writeJson(outputPath, report);

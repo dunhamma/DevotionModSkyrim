@@ -295,19 +295,6 @@ Manifest authors do not manually pick CK's active file. The profile and live run
 
 Generated-first runs select required masters and source plugins as dependencies, then make the generated plugin active. Promotion finalization makes the reviewed merge candidate active. Do not make the source plugin active for generated-first automation unless the profile explicitly opts into in-place authoring.
 
-`loadPluginSet` is verification-only in the current bridge. It must prove the
-source plugin, generated or candidate plugin, active plugin, intended save
-target, missing-plugin list, and source-not-active rule before mutation. If it
-reports blockers such as `missing_source_plugin`,
-`generated_or_candidate_plugin_not_active`, `source_plugin_active`,
-`intended_save_target_mismatch`, or `active_target_not_normal_writable_esp`, fix
-CK's loaded/active state before running the proof.
-
-```powershell
-node .\scripts\send-ckpe-packet.mjs .\fixtures\ckpe\load-plugin-set-product-ready.ck-command-packet.json
-node .\scripts\send-ckpe-packet.mjs .\fixtures\ckpe\load-plugin-set-blocked-cases.ck-command-packet.json --allow-blocked --expect-status UNSAFE_BLOCKED
-```
-
 ## Review And Promote
 
 Generate first:
@@ -335,16 +322,7 @@ node .\src\cli.mjs promote .\reports\example-run-report.json `
   --merge-output-path .\scratch\ExampleMod.merge-candidate.esp
 ```
 
-Promotion requires a passing run report, no manual packets, human approval, an explicit candidate output path, timestamped backup, structured merge, CK finalization when required, and post-merge verification. Use `promotion-candidate-check` for repo-local dry-run proof; it must pass while still reporting `releaseReady: false` until live post-merge verification runs.
-
-Payload proof has its own runner and should start with MESG before ACTI:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\run-payload-v1-proof.ps1 -Surface MESG -Stage Prepare
-powershell -ExecutionPolicy Bypass -File .\scripts\run-payload-v1-proof.ps1 -Surface MESG -Stage Ck
-powershell -ExecutionPolicy Bypass -File .\scripts\run-payload-v1-proof.ps1 -Surface MESG -Stage Finalize
-powershell -ExecutionPolicy Bypass -File .\scripts\run-payload-v1-proof.ps1 -Surface ACTI -Stage All -DryRun
-```
+Promotion requires a passing run report, no manual packets, human approval, an explicit candidate output path, timestamped backup, structured merge, CK finalization when required, and post-merge verification. Use `promotion-candidate-check` for repo-local dry-run proof; it must pass with the dry-run post-merge verifier proving the candidate verification contract while still proving that no source, generated, or candidate plugin path was written.
 
 ## Prove A Capability
 
@@ -360,24 +338,3 @@ node .\src\cli.mjs prove .\examples\record-create.manifest.json `
 Then run `matrix --proof-results <ledger> --verify`. If the row remains unproven, use `docs/capability-promotion.md` or the `ck-record-family-promoter` skill.
 
 Strict proof also requires readback-oracle coverage. If a manifest uses an operation without a normalizer, an unsupported verifier expectation, or a partial winning overlay, verification returns `TODO`/`FAIL` and the proof ledger cannot promote the row.
-
-## Prepare A Dialogue Proof
-
-Dialogue authoring is CK-owned. Use `fixtures/dialogue-v1` as the reusable
-shape for future dialogue packets; it is intentionally generic and not tied to
-any Player Devotion phase. It verifies CK-authored `DLBR`, `DIAL`, unnamed
-`INFO`, condition stack, and separate SEQ freshness readback.
-
-Static discovery planning can be checked with unproven CK explicitly enabled:
-
-```powershell
-node .\src\cli.mjs fixture-check ..\..\fixtures\dialogue-v1 `
-  --profile ..\..\fixtures\dialogue-v1\dialogue-v1.profile.json `
-  --readback ..\..\fixtures\dialogue-v1\dialogue-v1.readback.json `
-  --allow-unproven-ck
-```
-
-Without `--allow-unproven-ck`, the same fixture must stay manual/blocked. Do not
-promote `DIAL` or `INFO` support from fixture readback alone; a support proof
-needs CKPE-side branch/topic/info creation, active generated-plugin save, MO2
-readback, verifier pass, strict gate, proof ledger, and matrix verification.

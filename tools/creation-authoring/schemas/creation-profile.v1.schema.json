@@ -12,6 +12,9 @@
     "outputPolicy": {
       "enum": ["overlay", "generated-patch", "in-place-explicit"]
     },
+    "sourceMutationPolicy": {
+      "enum": ["candidate-only", "explicit-source-mutation"]
+    },
     "defaultOutput": { "type": "string" },
     "reportsDir": { "type": "string" },
     "referencePack": { "type": "string" },

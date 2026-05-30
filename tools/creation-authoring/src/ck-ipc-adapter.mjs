@@ -39,15 +39,13 @@ function writeFileQueuePacket(packet, options) {
 }
 
 function sendNamedPipePacket(packet, options) {
-  if (process.platform === "win32") {
-    return sendWindowsNamedPipePacket(packet, options);
-  }
-
   return new Promise((resolve) => {
     const startedAt = new Date();
-    const client = net.createConnection(options.pipeName);
+    const retryUntil = Date.now() + Number(options.timeoutMs || 60000);
     let settled = false;
     let responseText = "";
+    let lastError = null;
+    let client = null;
 
     const timer = setTimeout(() => {
       finish({
@@ -61,27 +59,67 @@ function sendNamedPipePacket(packet, options) {
       });
     }, options.timeoutMs);
 
-    client.on("connect", () => {
-      client.write(`${JSON.stringify(packet)}\n`);
-    });
+    attemptConnection();
 
-    client.on("data", (chunk) => {
-      responseText += chunk.toString();
-    });
-
-    client.on("error", (error) => {
-      finish({
-        schema: "creation-authoring.ck-command-result.v1",
-        status: "UNSAFE_BLOCKED",
-        transport: "named-pipe",
-        pipeName: options.pipeName,
-        startedAt: startedAt.toISOString(),
-        finishedAt: new Date().toISOString(),
-        message: `CKPE authoring bridge is not available: ${error.message}`
+    function attemptConnection() {
+      if (settled) {
+        return;
+      }
+      client = net.createConnection({
+        path: options.pipeName,
+        allowHalfOpen: true
       });
-    });
 
-    client.on("end", () => {
+      client.on("connect", () => {
+        client.write(JSON.stringify(packet));
+      });
+
+      client.on("data", (chunk) => {
+        responseText += chunk.toString();
+      });
+
+      client.on("error", (error) => {
+        lastError = error;
+        if (responseText.trim()) {
+          finishFromResponse();
+          return;
+        }
+        const retryable = ["ECONNREFUSED", "ENOENT", "EBUSY", "EPERM"].includes(error.code);
+        if (retryable && Date.now() < retryUntil) {
+          client.destroy();
+          client = null;
+          setTimeout(attemptConnection, 100);
+          return;
+        }
+        finish({
+          schema: "creation-authoring.ck-command-result.v1",
+          status: "UNSAFE_BLOCKED",
+          transport: "named-pipe",
+          pipeName: options.pipeName,
+          startedAt: startedAt.toISOString(),
+          finishedAt: new Date().toISOString(),
+          message: `CKPE authoring bridge is not available: ${error.message || lastError?.message}`
+        });
+      });
+
+      client.on("end", () => {
+        if (!responseText.trim()) {
+          finish({
+            schema: "creation-authoring.ck-command-result.v1",
+            status: "UNSAFE_BLOCKED",
+            transport: "named-pipe",
+            pipeName: options.pipeName,
+            startedAt: startedAt.toISOString(),
+            finishedAt: new Date().toISOString(),
+            message: "CKPE authoring bridge closed without returning a response."
+          });
+          return;
+        }
+        finishFromResponse();
+      });
+    }
+
+    function finishFromResponse() {
       try {
         finish(JSON.parse(responseText));
       } catch {
@@ -96,7 +134,7 @@ function sendNamedPipePacket(packet, options) {
           responseText
         });
       }
-    });
+    }
 
     function finish(result) {
       if (settled) {
@@ -104,52 +142,10 @@ function sendNamedPipePacket(packet, options) {
       }
       settled = true;
       clearTimeout(timer);
-      client.destroy();
+      if (client) {
+        client.destroy();
+      }
       resolve(result);
     }
   });
-}
-
-function sendWindowsNamedPipePacket(packet, options) {
-  const startedAt = new Date();
-  let fd = null;
-  const retryUntil = Date.now() + Number(options.timeoutMs || 60000);
-  let lastError = null;
-  try {
-    for (;;) {
-      try {
-        fd = fs.openSync(options.pipeName, "r+");
-        break;
-      } catch (error) {
-        lastError = error;
-        if (!["EBUSY", "ENOENT", "EPERM"].includes(error.code) || Date.now() >= retryUntil) {
-          throw error;
-        }
-        Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
-      }
-    }
-    fs.writeSync(fd, Buffer.from(JSON.stringify(packet), "utf8"));
-    const responseBuffer = Buffer.alloc(1024 * 1024);
-    const bytesRead = fs.readSync(fd, responseBuffer, 0, responseBuffer.length, null);
-    const responseText = responseBuffer.subarray(0, bytesRead).toString("utf8");
-    return JSON.parse(responseText);
-  } catch (error) {
-    return {
-      schema: "creation-authoring.ck-command-result.v1",
-      status: "UNSAFE_BLOCKED",
-      transport: "named-pipe",
-      pipeName: options.pipeName,
-      startedAt: startedAt.toISOString(),
-      finishedAt: new Date().toISOString(),
-      message: `CKPE authoring bridge is not available: ${error.message || lastError?.message}`
-    };
-  } finally {
-    if (fd !== null) {
-      try {
-        fs.closeSync(fd);
-      } catch {
-        // The bridge may close the pipe after writing; the response has already been handled.
-      }
-    }
-  }
 }

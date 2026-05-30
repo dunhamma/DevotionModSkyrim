@@ -11,31 +11,26 @@ export function buildCkCommandPacket(plan, options = {}) {
   const saveCommand = options.saveCommand || "postUiSaveCommand";
   const sourcePlugin = plan.manifest.sourcePlugin || plan.profile.sourcePlugin;
   const requiredPlugins = collectRequiredPlugins(plan, generatedPlugin, sourcePlugin);
+  const loadPluginSet = buildLoadPluginSetCommand({
+    requiredPlugins,
+    sourcePlugin,
+    generatedPlugin,
+    activePlugin: generatedPlugin,
+    intendedSaveTarget: generatedPlugin,
+    sourcePluginNotActive: true
+  });
 
   return {
     schema: "creation-authoring.ck-command-packet.v1",
     project: plan.manifest.project,
     game: plan.manifest.game,
-    sourcePlugin: plan.manifest.sourcePlugin,
+    sourcePlugin,
     generatedPlugin,
     backendOrder: ["ckpe-bridge", "ui-automation", "manual-packet"],
     failClosed: true,
     commands: [
       { op: "openProject", profile: plan.profile.modId, game: plan.profile.game },
-      {
-        op: "loadPluginSet",
-        requiredPlugins,
-        plugins: requiredPlugins.map((plugin) => ({
-          name: plugin,
-          selected: true,
-          active: plugin === generatedPlugin
-        })),
-        sourcePlugin,
-        generatedPlugin,
-        activePlugin: generatedPlugin,
-        intendedSaveTarget: generatedPlugin,
-        sourcePluginNotActive: true
-      },
+      loadPluginSet,
       ...ckOperations.flatMap((item) => operationToCommands(item, { generatedPlugin })),
       saveCommand === "savePlugin"
         ? { op: "savePlugin", plugin: generatedPlugin }
@@ -52,14 +47,65 @@ export function buildCkCommandPacket(plan, options = {}) {
   };
 }
 
+export function buildLoadPluginSetCommand(options = {}) {
+  const sourcePlugin = normalizePluginName(options.sourcePlugin);
+  const generatedPlugin = normalizePluginName(options.generatedPlugin);
+  const activePlugin = normalizePluginName(options.activePlugin || generatedPlugin);
+  const intendedSaveTarget = normalizePluginName(options.intendedSaveTarget || activePlugin);
+
+  if (!sourcePlugin) {
+    throw new Error("CK-semantic packet generation requires a source plugin for loadPluginSet.");
+  }
+  if (!activePlugin) {
+    throw new Error("CK-semantic packet generation requires a generated or candidate write target for loadPluginSet.");
+  }
+  if (!intendedSaveTarget) {
+    throw new Error("CK-semantic packet generation requires an intended save target for loadPluginSet.");
+  }
+
+  const requiredPlugins = uniquePlugins([
+    ...(options.requiredPlugins || []),
+    sourcePlugin,
+    generatedPlugin,
+    activePlugin,
+    intendedSaveTarget
+  ]);
+
+  if (!requiredPlugins.length) {
+    throw new Error("CK-semantic packet generation requires a non-empty required plugin set for loadPluginSet.");
+  }
+
+  return {
+    op: "loadPluginSet",
+    requiredPlugins,
+    plugins: requiredPlugins.map((plugin) => ({
+      name: plugin,
+      selected: true,
+      active: plugin === activePlugin
+    })),
+    sourcePlugin,
+    generatedPlugin: generatedPlugin || activePlugin,
+    activePlugin,
+    intendedSaveTarget,
+    sourcePluginNotActive: options.sourcePluginNotActive !== false
+  };
+}
+
 function collectRequiredPlugins(plan, generatedPlugin, sourcePlugin) {
-  const plugins = [
+  return uniquePlugins([
     sourcePlugin,
     generatedPlugin,
     ...plan.operations.flatMap((item) => item.operation.mastersExpected || []),
     ...plan.operations.flatMap((item) => item.operation.payload?.requiredPlugins || [])
-  ].filter(Boolean);
-  return [...new Set(plugins)];
+  ]);
+}
+
+function uniquePlugins(plugins = []) {
+  return [...new Set(plugins.map((plugin) => normalizePluginName(plugin)).filter(Boolean))];
+}
+
+function normalizePluginName(plugin) {
+  return typeof plugin === "string" ? plugin.trim() : "";
 }
 
 function operationToCommands(item, context = {}) {
