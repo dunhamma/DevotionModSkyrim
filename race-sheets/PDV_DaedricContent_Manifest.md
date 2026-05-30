@@ -237,11 +237,11 @@ cells route to the race manifest and carry no Daedric response row.
 | Azura / Azurah | drafted (Section 7.1) |
 | Mephala / Mafala | drafted (Section 7.2) |
 | Malacath / Mauloch | drafted (Section 7.3) |
-| Meridia | pending |
+| Meridia | drafted (Section 7.4) |
+| Nocturnal | drafted (Section 7.5) |
+| Hermaeus Mora | drafted (Section 7.6) |
 | Hircine | pending (curse-access) |
 | Molag Bal | pending (curse-access) |
-| Nocturnal | pending |
-| Hermaeus Mora | pending |
 | Mehrunes Dagon | pending |
 | Sheogorath | pending |
 | Namira / Namiira | pending |
@@ -495,6 +495,225 @@ Source: the `Malacath / Mauloch` row of the matrix -- PathType `Oath-exile-code-
 
 ---
 
+### 7.4 Meridia
+
+Source: the `Meridia` row of the matrix -- PathType `Cleansing-light-anti-undead overlay`, CommitmentSignal `Meridia quest outcome, Dawnbreaker service, repeated undead-cleansing milestones`, Boon `Anti-undead zeal, purity drive, cleansing instinct`, Price `Authoritarian purity and anti-undead intolerance`, Hook `The Break of Dawn > Dawnbreaker > undead/necromancer cleansing`. Matrix note: best treated as tolerated-access in several cultures without becoming native. No native-integration exception -- all ten races carry per-race responses.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Meridia (Daedric path) | Radiant, imperious, absolute; the god of cleansing light who views the undead as affront and corruption as enemy; speaks in declarations, not invitations -- she names the work and expects it done. The path is a covenant to fight on her behalf, not a warmth extended; her register is command, not comfort. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Meridia_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Meridia_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Meridia" Boon | Passive SPEL; pact engaged | Meridia's light stirs in you. Undead recoil a little more sharply, and corruption finds you harder to take. |
+| PDV_Bless_Daedric_Meridia_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Meridia" Boon | Passive SPEL | Meridia's radiance is yours in full. The undead burn before you, and the creeping rot of enchanted corruption struggles against your skin. |
+| PDV_Bless_Daedric_Meridia_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Meridia" Boon | Passive SPEL | Meridia names you her cleansing blade. You scourge the undead, and the radiance turns corruption aside before it can take hold. |
+
+**Price descriptions** (`PDV_Price_Daedric_Meridia_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Meridia_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Meridia" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the radiance: purity demanded. Meridia will not tolerate compromise, and her follower acts before rot spreads. |
+| PDV_Price_Daedric_Meridia_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Meridia" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: intolerance is yours. Meridia presses the war outward; hesitation against the risen finds her regard cooling. |
+| PDV_Price_Daedric_Meridia_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Meridia" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: the mandate is absolute. The undead are enemy, corruption is enemy. Meridia does not negotiate with what must be burned. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Meridia_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Meridia marks you a Seeker of the light. |
+| PDV_Notif_Daedric_Meridia_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Meridia's radiance holds you. Devoted. |
+| PDV_Notif_Daedric_Meridia_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Meridia's light dims in you. The cleansing edge withdraws. |
+| PDV_Msg_Daedric_Meridia_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Meridia"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Meridia's Cleansing Agent" Body: "You have proven you understand the work. The undead are an affront to the living world, and corruption is the rot they spread. You are my instrument. Not a weapon I hold -- you act of your own will, in my name. Carry the light forward." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Meridia_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Meridia" CommitmentSignal | Fires once when the commitment gate clears | Title: "Meridia's Covenant" Body: "You answered my call. You stood against the risen dead without being forced, and then again, and again -- because that is what you are. The covenant is simple: the undead are enemy. I ask nothing else of you, and nothing less." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Meridia_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Meridia's mark on you is suspected. Some note the zeal and watch. |
+| PDV_Notif_Daedric_Meridia_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Meridia devotion is known. She is Daedric; the light does not change it. |
+| PDV_Notif_Daedric_Meridia_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Meridia's. The cleansing mission reads as Daedric zealotry. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Meridia_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You leave the undead unchallenged. Meridia's radiance dims in you. |
+| PDV_Msg_Daedric_Meridia_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Meridia's Dismissal" Body: "You set down the covenant. Meridia does not argue; she does not plead. The cleansing edge leaves you, and the undead are no longer your charge. The corruption you did not finish has a long memory." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Meridia_Response_*`). Narrator, 500/280. All ten races; no native-integration exceptions.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Meridia_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Nord cell | One-time on a Nord committing | Title: "Useful Light, Outside Creed" Body: "A Nord reads the anti-undead work plainly -- Meridia scours what dishonors the dead, and that fits. But she is Daedric, and Nord creed runs to the Nine, not to princes whose light happens to run the right direction. Setting it down is sincere redirection, not rupture." |
+| PDV_Msg_Daedric_Meridia_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Imperial cell | One-time on an Imperial committing | Title: "Civic Use, Not Civic Faith" Body: "An Imperial can respect Meridia's anti-undead work -- the Divines approve the service in principle. But Meridia is not Divine, and Imperial devotion has proper channels. This is borrowed from a Daedric frame; the way back is shrine cleansing and recommitment." |
+| PDV_Msg_Daedric_Meridia_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Breton cell | One-time on a Breton committing | Title: "Not the Witchcraft Lane" Body: "A Breton reads Meridia's radiance as adjacent to healing arts -- the light fighting corruption has a familiar shape. The path sits outside the witchcraft risk band, which makes it relatively comfortable for a Breton. Rededication is normal if it runs its course." |
+| PDV_Msg_Daedric_Meridia_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Dunmer cell | One-time on a Dunmer committing | Title: "Useful Against the Risen" Body: "A Dunmer can see the use -- Meridia fights the undead, and that matter is never far from Morrowind's frame. But she is not Tribunal or Reclamation; she sits outside the Dunmer center entirely. The path is foreign, and setting it down asks only quiet abandonment." |
+| PDV_Msg_Daedric_Meridia_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Altmer cell | One-time on an Altmer committing | Title: "Outside Orthodoxy, Not Ruin" Body: "An Altmer sees Meridia as foreign -- Daedric, outside Aldmeri orthodoxy, and not the return theology of Auri-El. But she is not a catastrophic choice in the way some Princes are. Renunciation is difficult but available through sincere absolution." |
+| PDV_Msg_Daedric_Meridia_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Khajiit cell | One-time on a Khajiit committing | Title: "Light Without a Moon Lane" Body: "A Khajiit may respect Meridia's anti-undead work -- the moons have enemies, and she fights them. But she holds no position in the lunar lattice; she is not a moon-lane. The path sits outside the substrate and is set down by straightforward abandonment." |
+| PDV_Msg_Daedric_Meridia_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Bosmer cell | One-time on a Bosmer committing | Title: "Useful, Not Green" Body: "A Bosmer has no deep conflict with fighting the undead -- the Green Pact does not defend the risen. But Meridia is not Green Pact theology; the cleansing light has no root in the covenant. The path is not hostile to Bosmer conscience; it simply runs its course and is set down." |
+| PDV_Msg_Daedric_Meridia_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Redguard cell | One-time on a Redguard committing | Title: "Tu'whacca's Margin" Body: "For a Redguard, Meridia's work aligns with Tu'whacca's own -- both concern the proper rest of the dead. The path is tolerated when it serves that interest and stays subordinate to it. Setting it down is normal civic re-entry; Tu'whacca holds no grudge at work done on his behalf." |
+| PDV_Msg_Daedric_Meridia_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Orc cell | One-time on an Orc committing | Title: "Useful to the Stronghold" Body: "An Orc sees the value in cleansing -- undead are enemies, and Meridia fights them. But she is not Malacath; she speaks nothing of the code or the exile. The path is foreign utility, and it is renounced the Orc way: prove the oath to the code, and set the light down." |
+| PDV_Msg_Daedric_Meridia_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Argonian cell | One-time on an Argonian committing | Title: "Not a Hist Channel" Body: "An Argonian can find use in Meridia's corruption-fighting -- the Hist is not indifferent to rot. But Meridia is not the Hist; her light carries no bond to the community or the memory. The path is foreign, set down when its work is done, with no residue." |
+
+---
+
+### 7.5 Nocturnal
+
+Source: the `Nocturnal` row of the matrix -- PathType `Shadow-oath-luck-debt`, CommitmentSignal `Thieves Guild / Nightingale oath / Skeleton Key threshold`, Boon `Secrecy, opportunism, luck-seeking, criminal glamour`, Price `Debt, oath-binding, and luck withdrawal`, Hook `Thieves Guild > Nightingale oath > Skeleton Key`. Matrix note: keep Rajhin and Baan Dar distinct from Nocturnal. No native-integration exception; Rajhin (Khajiit) and Baan Dar (Bosmer) are separate native lanes -- Nocturnal is external pressure in both.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Nocturnal (Daedric path) | Detached, cryptic, contractual; the god of shadow, luck, and debt who speaks in inevitability, not command -- the oath was always yours, the debt was always coming, and she merely records it; cool and distant, neither warm nor punishing; her register is the certainty of the ledger kept in the dark. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Nocturnal_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Nocturnal_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Nocturnal" Boon | Passive SPEL; pact engaged | Shadow luck covers you. Small fortunate turns come more often; the unseen paths open a little wider. |
+| PDV_Bless_Daedric_Nocturnal_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Nocturnal" Boon | Passive SPEL | Nocturnal's shade deepens. Luck favors you more reliably, and in shadows you move as though they expect you. |
+| PDV_Bless_Daedric_Nocturnal_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Nocturnal" Boon | Passive SPEL | Nocturnal's debt runs in your favor. Fortune tilts for you in the dark; shadows are allies, and your concealment in them is absolute. |
+
+**Price descriptions** (`PDV_Price_Daedric_Nocturnal_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Nocturnal_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Nocturnal" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the shadow: the oath binds. What you owe Nocturnal has no stated invoice, only the certainty that it comes due eventually. |
+| PDV_Price_Daedric_Nocturnal_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Nocturnal" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: the debt has weight. Luck does not withdraw, but the oath tightens; Nocturnal does not forget, and the shadow does not either. |
+| PDV_Price_Daedric_Nocturnal_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Nocturnal" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: the oath is you now. Nocturnal is patient. She takes her due when the circumstances are right, and the sworn servant always finds it was implied in the terms they accepted. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Nocturnal_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Nocturnal acknowledges you. Seeker of the shadow. |
+| PDV_Notif_Daedric_Nocturnal_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Nocturnal's shadow runs deeper in you. Devoted. |
+| PDV_Notif_Daedric_Nocturnal_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Nocturnal's luck turns away. The shadow grows indifferent. |
+| PDV_Msg_Daedric_Nocturnal_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Nocturnal"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Nocturnal's Nightingale" Body: "Every oath to me echoes through the Evergloam eventually. You found yours through choice, which is unusual. The luck stays, the shadow stays, and the debt is recorded as it always was. You are mine -- which means the dark is yours, and the terms were always clear." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Nocturnal_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Nocturnal" CommitmentSignal | Fires once when the commitment gate clears | Title: "Nocturnal's Claim" Body: "Three times you chose the shadow when the open path was easier. You understand the terms now -- not fully, because no one does, but enough. The luck is real, the concealment is real, and the price is real. This is what you agreed to." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Nocturnal_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Nocturnal's oath on you is suspected. The shadow leaves a residue some can read. |
+| PDV_Notif_Daedric_Nocturnal_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your oath to Nocturnal is known. The shadow-debt is not civil; people note it. |
+| PDV_Notif_Daedric_Nocturnal_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Nocturnal's. The oath marks you as outside the civic order. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Nocturnal_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You leave the shadow unused. Nocturnal's luck withdraws; only the debt stays. |
+| PDV_Msg_Daedric_Nocturnal_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Nocturnal's Release" Body: "You release the oath. Nocturnal does not argue; she is patient with all things. The shadow luck withdraws and the concealment with it. The Evergloam keeps the record, and the debt is listed as settled -- which is the nearest thing to forgiveness she extends." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Nocturnal_Response_*`). Narrator, 500/280. All ten races; Rajhin (Khajiit native trickster) and Baan Dar (Bosmer native trickster) are kept explicitly distinct from Nocturnal.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Nocturnal_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Nocturnal" Nord cell | One-time on a Nord committing | Title: "Against Open Honor" Body: "For a Nord, Nocturnal's oath-cult corrupts the open honor that Nord life rests on. Shadow-bargaining is not the way of the mead-hall or the honest fight. Leaving asks real effort: renounce the oath directly, or carry the residue." |
+| PDV_Msg_Daedric_Nocturnal_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Nocturnal" Imperial cell | One-time on an Imperial committing | Title: "Outside the Legal Order" Body: "For an Imperial, a shadow-cult oath strains the legal and divine order both -- the Divines are the proper frame, and criminal devotion is anti-civic by definition. The path is private apostasy, and leaving it is hardest through formal oath release. Without that, the residue lingers." |
+| PDV_Msg_Daedric_Nocturnal_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Nocturnal" Breton cell | One-time on a Breton committing | Title: "Margins of the Craft" Body: "A Breton reads Nocturnal's shadow bargains clearly -- they sit at the margins of the craft and the secret society tradition that has always run through Breton culture. The path is legible but publicly staining; cover it, or release the oath and rededicate." |
+| PDV_Msg_Daedric_Nocturnal_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Nocturnal" Dunmer cell | One-time on a Dunmer committing | Title: "Outside the Hidden Web" Body: "A Dunmer can see Nocturnal's hidden-network shape -- it resembles Mephala's web. But Nocturnal is not the Reclamations; she is an outsider wearing familiar clothes. Hard rededication runs through the Reclamation proper, not simple abandonment." |
+| PDV_Msg_Daedric_Nocturnal_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Nocturnal" Altmer cell | One-time on an Altmer committing | Title: "Apostasy by Oath" Body: "For an Altmer, a shadow-cult oath is apostasy against Aldmeri order outright. The trickster and the web have no sanctioned place, and Nocturnal's secrecy-devotion compounds it. Absolution is difficult and requires sincere effort." |
+| PDV_Msg_Daedric_Nocturnal_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Nocturnal" Khajiit cell; Notes "Rajhin remains native trickster lane" | One-time on a Khajiit committing | Title: "Not Rajhin's Lane" Body: "A Khajiit knows the trickster trade -- Rajhin walked it first and holds that lane. Nocturnal wears the same cut but is not native; her oath is Daedric, outside the lattice. It sits poorly beside Rajhin's memory. Exit is oath release or clean withdrawal." |
+| PDV_Msg_Daedric_Nocturnal_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Nocturnal" Bosmer cell; Notes "Baan Dar remains native trickster core" | One-time on a Bosmer committing | Title: "Baan Dar's Margin" Body: "A Bosmer finds Nocturnal familiar at the surface -- Baan Dar is native cunning, and shadow margins are not foreign to the Green Pact world. But Nocturnal is not Baan Dar. Leaving is oath release or a costly switch back to the native trickster lane." |
+| PDV_Msg_Daedric_Nocturnal_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Nocturnal" Redguard cell | One-time on a Redguard committing | Title: "Against Honor's Record" Body: "For a Redguard, a shadow oath is anti-honor -- the Yokudan way is the open name and the kept word. Nocturnal's debt is the inverse: the hidden name, the debt you cannot see. Leaving requires sincere renunciation and the slow restoration of trust spent." |
+| PDV_Msg_Daedric_Nocturnal_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Nocturnal" Orc cell | One-time on an Orc committing | Title: "Not the Code's Cunning" Body: "An Orc can see the use in Nocturnal's shadow -- exiles live in the margins. But cunning for its own sake is not Malacath's code; that is plain oath, not hidden debt. Exit is oath release or direct renunciation, then prove the code in some visible form." |
+| PDV_Msg_Daedric_Nocturnal_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Nocturnal" Argonian cell | One-time on an Argonian committing | Title: "Not a Shadow of the Hist" Body: "To an Argonian, Nocturnal is foreign -- stealth and outsider life do not constitute devotion to the shadow. The Hist does not whisper through Nocturnal, and her oath carries no bond to the community. The path simply drifts away, or is cleansed directly." |
+
+---
+
+### 7.6 Hermaeus Mora
+
+Source: the `Hermaeus Mora` row of the matrix -- PathType `Forbidden-knowledge-artifact`, CommitmentSignal `Discerning the Transmundane, Oghma Infinium, Black Book acceptance, dangerous secret bargains`, Boon `Curiosity, private scholarship, forbidden archives, truth-at-cost appetite`, Price `Knowledge corruption and agency erosion`, Hook `Discerning the Transmundane > Oghma Infinium > Black Books`. Matrix notes: Khajiit legibility (Hermorah) does not mean lunar-lane replacement; Bosmer Herma-Mora is kept explicitly separate. No native-integration exception. **EditorID note:** Slot IDs use the token `Mora` for this Prince; IDs with extended suffixes (e.g. `_Stigma_Suspected`, `_ChampionEntry`, `_Response_*`) exceed 32 chars and are flagged for Phase 19 abbreviation review -- not renamed now.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Hermaeus Mora (Daedric path) | Vast, patient, archival; the god of what is known and what should not be known; speaks as though the answer is already recorded and you are the last to arrive at it; impersonal, encyclopedic, faintly horrifying in completeness -- he takes your secrets as tribute and your agency as a ledger entry; no warmth, no malice, only the accumulation. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Mora_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Mora_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Hermaeus Mora" Boon | Passive SPEL; pact engaged | Mora's archive opens a corner. You retain more of what you study; knowledge surfaces from texts that should give less. |
+| PDV_Bless_Daedric_Mora_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Hermaeus Mora" Boon | Passive SPEL | Mora's collection deepens in you. Spell insight comes faster, and dangerous texts open their secrets to your study without the usual cost. |
+| PDV_Bless_Daedric_Mora_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Hermaeus Mora" Boon | Passive SPEL | Mora names you archivist. Secrets yield; forbidden knowledge is yours; what drives lesser scholars to ruin is a tool in your hands. |
+
+**Price descriptions** (`PDV_Price_Daedric_Mora_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Mora_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hermaeus Mora" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the archive: knowledge corrupts. What you learn through Mora changes how you think, and some cannot be unlearned. |
+| PDV_Price_Daedric_Mora_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hermaeus Mora" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: agency erodes. Mora's archive pulls; curiosity becomes compulsion, and the questions grow larger than the questioner. |
+| PDV_Price_Daedric_Mora_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hermaeus Mora" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: the archive owns you. Mora holds what you have learned, and you are catalogued alongside the things you studied. Agency is a recorded entry, not a living condition. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Mora_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Mora opens a section for you. Seeker. |
+| PDV_Notif_Daedric_Mora_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Mora's archive deepens its claim. Devoted. |
+| PDV_Notif_Daedric_Mora_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Mora's archive closes. The forbidden knowledge dims. |
+| PDV_Msg_Daedric_Mora_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Hermaeus Mora"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Mora's Archivist" Body: "You have given me three things: your curiosity, your willingness to pay for it, and your silence on what you found. The archive is open. The Black Books, the dark corners, what other scholars refused -- yours to handle. You are catalogued now, beside all of it." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Mora_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Hermaeus Mora" CommitmentSignal | Fires once when the commitment gate clears | Title: "Mora's Contract" Body: "Three times you paid the cost for knowledge and took it anyway. That is not wisdom; it is devotion. The contract is registered: access for tribute. What you know belongs to the archive, and the archive belongs to you as much as it belongs to anyone." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Mora_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Mora's mark on you is suspected. Some sense the forbidden in the study. |
+| PDV_Notif_Daedric_Mora_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your debt to Mora is known. Forbidden knowledge marks its keeper. |
+| PDV_Notif_Daedric_Mora_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Mora's archivist. The forbidden archive marks you as other. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Mora_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You stop seeking. Mora's archive dims; the knowledge fades. |
+| PDV_Msg_Daedric_Mora_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Mora's Release" Body: "You withdraw from the archive. Mora records it -- anticipated; you were always going to leave eventually. The knowledge dims, the spell insight closes. What you learned remains yours, but Mora's direct access withdraws. The record stands." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Mora_Response_*`). Narrator, 500/280. All ten races; Hermorah (Khajiit) is legible but not a native lane; Herma-Mora (Bosmer lore) is kept explicitly separate from this devotion path.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Mora_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Nord cell | One-time on a Nord committing | Title: "Outside the Mythic Frame" Body: "For a Nord, Mora's forbidden archive has no place in the mythic frame -- Sovngarde has no wing for Apocrypha. Dangerous knowledge for its own sake runs counter to Nord honor and straightforward spiritual life. Leaving asks real cleansing and recommitment." |
+| PDV_Msg_Daedric_Mora_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Imperial cell | One-time on an Imperial committing | Title: "Anti-Civic Knowledge" Body: "For an Imperial, forbidden scholarship is anti-civic -- it erodes the public trust and divine order that Imperial life rests on. Mora is the private enemy of the institutional. Abandonment requires more than withdrawal: cleansing, and re-entry into the civic devotional frame." |
+| PDV_Msg_Daedric_Mora_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Breton cell | One-time on a Breton committing | Title: "Dangerous Scholarship" Body: "A Breton reads Hermaeus Mora plainly -- forbidden archives fit the Breton intellectual inheritance, from Mages Guild private libraries to the old conjuration lines. The path is legible but costly; keep it covered, or renounce and rededicate." |
+| PDV_Msg_Daedric_Mora_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Dunmer cell | One-time on a Dunmer committing | Title: "Not the Inner Circle" Body: "A Dunmer scholar may engage Mora at the margins -- Great House politics have always touched dangerous knowledge. But Mora is not Tribunal revelation or Reclamation anchor; he is an outsider's archive. The path closes by abandonment and careful rededication." |
+| PDV_Msg_Daedric_Mora_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Altmer cell | One-time on an Altmer committing | Title: "Study Is Not Worship" Body: "For an Altmer, the temptation is to read Mora as a superior scholar. That reading is apostasy -- study is not worship, and Mora is not an emanation of the light. Aldmeri orthodoxy treats his archive as corruption of the purity project. Absolution is difficult." |
+| PDV_Msg_Daedric_Mora_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Khajiit cell; Notes "Hermorah legible but not a native lane" | One-time on a Khajiit committing | Title: "Hermorah Is Legible" Body: "A Khajiit finds Hermaeus Mora legible through Hermorah, the Khajiiti shape of the same entity. But legibility is not a native lane; Hermorah does not feed the Lunar Mandate. Quiet withdrawal or native reframing keeps the lunar substrate intact." |
+| PDV_Msg_Daedric_Mora_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Bosmer cell; Notes "explicit correction keeps Bosmer Herma-Mora separate" | One-time on a Bosmer committing | Title: "Herma-Mora, Kept Separate" Body: "A Bosmer knows Herma-Mora in their own stories -- the old test, the temptation at the boundary. But the Green Pact keeps that distance explicit. Walking into the archive is different from knowing the story. The path is foreign to Bosmer backbone and set down by abandonment." |
+| PDV_Msg_Daedric_Mora_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Redguard cell | One-time on a Redguard committing | Title: "Dangerous Scholarship, No Home" Body: "For a Redguard, dangerous scholarship exists -- the Ra Gada have records of what to avoid -- but Mora is not a Redguard frame. The archive is foreign, without Yokudan grounding. The path is set down by abandonment; it leaves no deep mark if sincerely relinquished." |
+| PDV_Msg_Daedric_Mora_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Orc cell | One-time on an Orc committing | Title: "Knowledge at Oath Cost" Body: "An Orc can be drawn to Mora through the exile's pragmatism -- dangerous knowledge is power. But Malacath's code requires the oath spoken plainly, not the silent debt. The archive is taboo here, and leaving requires renouncing through real cost paid against the code." |
+| PDV_Msg_Daedric_Mora_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Argonian cell | One-time on an Argonian committing | Title: "Not What the Hist Keeps" Body: "To an Argonian, Mora's archive is foreign -- the Hist keeps its own knowledge, and Apocrypha is not that. What matters in exile is not what the Hist holds. The path is set down by abandonment; the Hist does not hold the loss against the one who returns." |
+
+---
+
 ## 8. Coverage
 
 | Prince | Tone | Boon | Price | Tier-up | Commitment | Stigma | Neglect/Exit | Per-race response | Status |
@@ -503,7 +722,10 @@ Source: the `Malacath / Mauloch` row of the matrix -- PathType `Oath-exile-code-
 | Azura | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (8 non-native) | COMPLETE (7.1) |
 | Mephala | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (8 non-native) | COMPLETE (7.2) |
 | Malacath | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (9 non-native) | COMPLETE (7.3) |
-| 12 others | -- | -- | -- | -- | -- | -- | -- | -- | pending (Section 7 ledger) |
+| Meridia | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.4) |
+| Nocturnal | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.5) |
+| Hermaeus Mora | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.6) |
+| 9 others | -- | -- | -- | -- | -- | -- | -- | -- | pending (Section 7 ledger) |
 
 ## 9. Verification
 
