@@ -1,0 +1,65 @@
+{
+  "id": "experience-mode",
+  "title": "PDV Experience Mode (Wayfarer's Path vs Pilgrim's Path) CK record and wiring plan",
+  "defaultOutput": "PDV_ExperienceModeOverlay.esp",
+  "notes": [
+    "This manifest records the CK/xEdit contract for the user-facing experience-mode toggle. Design lock lives in references/PDV_ExperienceMode_DesignReference.md.",
+    "pdv_author cannot mint new GlobalVariable or Quest records, so the records below remain manual CK/xEdit work. Once the records exist, this manifest's operations apply the script attachments and property wiring as a reversible overlay.",
+    "The PDV_ModePreset script is the single owner of the preset scalars. Other scripts (PDV__ManagerQuest, PDV_ActionRouter, PDV_MCM) consume those scalars at the integration slots named in the design reference.",
+    "Default PDV.Mode value is 0 (Pilgrim's Path) so authored behavior is preserved on first read."
+  ],
+  "unsupported": [
+    "Create GlobalVariable record PDV_GLO_Mode with Type=Short and InitialValue=0. Used as the CK-Condition mirror of PDV.Mode (0 = Pilgrim's Path, 1 = Wayfarer's Path).",
+    "Create Quest record PDV_ModePreset as a hidden start-game-enabled persistent quest with no aliases. Attach script PDV_ModePreset (see references/PDV_ExperienceMode_DesignReference.md Section 4 for canonical source). Properties: PDV_Manager -> PDV__ManagerQuest, PDV_GLO_Mode -> PDV_GLO_Mode.",
+    "Extend PDV_MCM quest with the third 'Experience Mode' page handler. Add property PDV_ModePresetRef -> PDV_ModePreset on the existing PDV_MCM script attachment.",
+    "Extend PDV__ManagerQuest script attachment with property PDV_ModePresetRef -> PDV_ModePreset and apply the in-script integrations in AwardPietyInternal (post-stance gain multiplier) and ProcessDawn (per-dawn ceiling scalar, decay/grace scalars when v3 decay slot is implemented).",
+    "Extend PDV_ActionRouter script attachment with property PDV_ModePresetRef -> PDV_ModePreset and gate the cheap-repeatable signal rejection branch on AllowCheapRepeatables(); apply CheapRepeatableWeight() to admitted dispatches."
+  ],
+  "operations": [
+    {
+      "kind": "setProperty",
+      "record": "PDV_ModePreset",
+      "script": "PDV_ModePreset",
+      "property": "PDV_Manager",
+      "valueType": "Object",
+      "value": "PDV__ManagerQuest",
+      "note": "Manager reference is required for the StorageUtil PDV.Mode key, which lives on PDV__ManagerQuest as Form."
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_ModePreset",
+      "script": "PDV_ModePreset",
+      "property": "PDV_GLO_Mode",
+      "valueType": "Object",
+      "value": "PDV_GLO_Mode",
+      "note": "Mirror global for CK Condition reads. Refreshed by SetMode()."
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_MCM",
+      "script": "PDV_MCM",
+      "property": "PDV_ModePresetRef",
+      "valueType": "Object",
+      "value": "PDV_ModePreset",
+      "note": "Wires the Experience Mode page toggle to the preset resolver."
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV__ManagerQuest",
+      "script": "PDV__ManagerQuest",
+      "property": "PDV_ModePresetRef",
+      "valueType": "Object",
+      "value": "PDV_ModePreset",
+      "note": "Used by AwardPietyInternal (post-stance gain scalar) and ProcessDawn (per-dawn ceiling, decay step, grace window) integrations."
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV_ActionRouter",
+      "script": "PDV_ActionRouter",
+      "property": "PDV_ModePresetRef",
+      "valueType": "Object",
+      "value": "PDV_ModePreset",
+      "note": "Used by the cheap-repeatable signal gate (AllowCheapRepeatables + CheapRepeatableWeight)."
+    }
+  ]
+}
