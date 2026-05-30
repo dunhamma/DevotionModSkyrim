@@ -286,7 +286,7 @@ class ContentVerifier {
     ];
     const lower = prose.toLowerCase();
     for (const contraction of CONTRACTIONS) {
-      if (lower.includes(contraction)) {
+      if (new RegExp('\\b' + contraction + '\\b').test(lower)) {
         this.warn(
           "Contraction",
           `'${slot}' contains contraction '${contraction}' -- use the full form.`,

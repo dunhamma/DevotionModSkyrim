@@ -247,8 +247,8 @@ cells route to the race manifest and carry no Daedric response row.
 | Sanguine / Sangiin | drafted (Section 7.11) |
 | Namira / Namiira | drafted (Section 7.12) |
 | Peryite | drafted (Section 7.13) |
-| Hircine | pending (curse-access) |
-| Molag Bal | pending (curse-access) |
+| Hircine | drafted (Section 7.14) |
+| Molag Bal | drafted (Section 7.15) |
 
 The stub table below keeps each pending Prince's PrincePathType and authoring
 notes for reference until it is authored into a subsection.
@@ -1225,6 +1225,152 @@ Source: the `Peryite` row of the matrix -- PathType `Plague-order-lowest-task`, 
 
 ---
 
+### 7.14 Hircine
+
+Source: the `Hircine` row of the matrix -- PathType `Hunt-lycanthropy-predator`, CommitmentSignal `Ill Met by Moonlight, active lycanthropy, Companions/wild-hunt threshold`, Boon `Tracking, hunt momentum, and predator clarity`, Price `Predatory instinct and social/afterlife tension`, Hook `Ill Met by Moonlight > werewolf state > Companions`. **Curse-access Prince:** the `_Commitment` slot is reframed as a curse-onset embrace -- Hircine speaks directly when the player commits to his path while carrying lycanthropy; the gate is three Hircine-aligned signals with the wolf in play, not a general piety accumulation. Existing race CurseState rows (e.g., `PDV_Msg_Nord_CurseState_WerewolfOnset` voiced by Shor) fire at transformation onset and are additive -- different trigger, different voice. **EditorID note:** Slot IDs use `Hircine` token; all extended IDs exceed 32 chars; flagged for Phase 19 review.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Hircine (Daedric path) | Primal, joyful, predatory; speaks from the hunt, not from doctrine; does not argue theology or negotiate -- he names what is already true and invites you to recognize it; warm in the way the predator is warm toward the one who hunts alongside it; no contempt for the beasts he makes. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Hircine_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Hircine_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" Boon | Passive SPEL; pact engaged | Hircine's hunt-sense is in you. Prey announces itself; the predator reads the terrain with new clarity. |
+| PDV_Bless_Daedric_Hircine_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" Boon | Passive SPEL | The hunt runs deeper now. Hircine's predator-edge extends into stamina, and the prey does not slip away. |
+| PDV_Bless_Daedric_Hircine_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" Boon | Passive SPEL | You see the whole arc of the hunt -- target, approach, kill, clean territory. Hircine's Champion reads it without effort. |
+
+**Price descriptions** (`PDV_Price_Daedric_Hircine_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Hircine_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the hunt-path: the predator register. The civilized world reads the beast in you and keeps its distance. |
+| PDV_Price_Daedric_Hircine_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: the beast shapes the social register. Others read Hircine's claim and do not find it comfortable. |
+| PDV_Price_Daedric_Hircine_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: the Huntsman's isolation. The civilian world is an afterthought to the hunt, and the hunt does not make friends. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Hircine_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Hircine marks you a Seeker of the hunt-path. |
+| PDV_Notif_Daedric_Hircine_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Hircine's hunt-claim deepens. Devoted. |
+| PDV_Notif_Daedric_Hircine_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Hircine's hunt withdraws. The predator-edge fades; the beast-claim loosens. |
+| PDV_Msg_Daedric_Hircine_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Hircine"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Hircine's Huntsman" Body: "You have run with the wolf when you could have cured it, hunted when the prey was inconvenient, and taken three kills that satisfied no one but the beast and you. That is the standard. You are my Huntsman now. The forest is yours, and the forest asks only one thing: that you run." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Hircine_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Hircine" CommitmentSignal | Fires once when commitment gate clears; curse-access reframe: player carries lycanthropy and has signaled three times | Title: "Hircine's Claim" Body: "The wolf is in you, and you know what that means now -- not the fear that comes first, but the thing after the fear: the hunting-ground opened, the prey was visible, and the body knew before the mind. That moment is mine. Welcome, Hunter." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Hircine_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Your Hircine devotion is suspected. The beast-path draws wary eyes. |
+| PDV_Notif_Daedric_Hircine_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Hircine devotion is known. The hunt-path marks its follower plainly. |
+| PDV_Notif_Daedric_Hircine_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Hircine's. The beast-walker is not welcome in the settled hold. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Hircine_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | The hunt goes quiet. Hircine's predator-edge fades; the beast-claim withdraws. |
+| PDV_Msg_Daedric_Hircine_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Hircine's Release" Body: "You leave the hunt-path. Hircine does not argue; the forest closes to others as easily. The predator-edge withdraws, the hunt-sense dims, and the wolf's claim over you returns to where it was before the path began -- the curse remains if you carry it, but Hircine's favor is withdrawn." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Hircine_Response_*`). Narrator, 500/280. All ten races; Altmer Hostile; Breton and Bosmer Legible; all others Curse or Foreign.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Hircine_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hircine" Nord cell | One-time on a Nord committing | Title: "Hunt Against the Bridge" Body: "For a Nord, Hircine's claim sits against Sovngarde -- the hunt-soul and the hall-soul cannot both be honored fully, and Hircine does not yield. The beast is intelligible here, through the Companions and the wild, but it strains the bridge. The path requires cure or hard renunciation to close; the scar on the bridge remains." |
+| PDV_Msg_Daedric_Hircine_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hircine" Imperial cell | One-time on an Imperial committing | Title: "The Civic Override" Body: "For an Imperial, Hircine's lane opens through the werewolf state -- the normal civic rejection is overridden by the curse access, but the Divines do not recognize it as legitimate devotion. The path is a crisis for the civic-faith frame. Cure and slow rededication to the Nine rebuild what the curse disrupted." |
+| PDV_Msg_Daedric_Hircine_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hircine" Breton cell | One-time on a Breton committing | Title: "Wild Hunt at the Margin" Body: "A Breton can read Hircine -- the druidic and witchcraft frames both hold wild-hunt strands, and Glenmoril is close enough to make the beast-path intelligible at the margin. The cost varies by path: the Knight's Road severs; the Hidden Art holds. The exit is a fork, a cure, or a deliberate rededication." |
+| PDV_Msg_Daedric_Hircine_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hircine" Dunmer cell | One-time on a Dunmer committing | Title: "No Ash Fit" Body: "For a Dunmer, Hircine's hunt-claim is an outsider pressure -- the Reclamations do not reach it, and the ancestors do not hold a lane for the beast-god. The wolf is ritually unclean in any case; Hircine's added claim only deepens the disconnection. The path is set down by cure or direct abandonment." |
+| PDV_Msg_Daedric_Hircine_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hircine" Altmer cell | One-time on an Altmer committing | Title: "Beast Regression Against Apotheosis" Body: "For an Altmer, Hircine's beast-path is the literal reversal of Apotheosis -- the whole project is upward into spirit, and becoming the beast is the descent the project was built to prevent. There is almost no positive lane available. The only clean exit is cure; the damage to the Aldmeri project is not easily repaired even after." |
+| PDV_Msg_Daedric_Hircine_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hircine" Khajiit cell | One-time on a Khajiit committing | Title: "Form Against the Lattice" Body: "A Khajiit's moon-identity remains under the curse, but the beast-shape strains the Lattice -- Khajiit form is moon-given and precise, and Hircine's wolf is a competing form that the moons did not provide. The caravans will keep their distance from the beast-walker. Cure or controlled distancing are the exits; the Lattice does not disown you." |
+| PDV_Msg_Daedric_Hircine_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hircine" Bosmer cell | One-time on a Bosmer committing | Title: "Wild Hunt Adjacent" Body: "For a Bosmer, Hircine reads through Wild-Hunt adjacency -- the theology can hold the beast-hunt frame at its edges, but it is not orthodox devotion and carries cost. On the Old Contract the breach is serious; on the other paths the reading is merely contested. The exit requires cure or costly re-entry into covenant standing." |
+| PDV_Msg_Daedric_Hircine_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hircine" Redguard cell | One-time on a Redguard committing | Title: "Homelessness Under the Beast" Body: "For a Redguard, the wolf-curse carries no Yokudan home -- the Yokudan gods do not answer it, and no sect gives the beast-walker a frame. Hircine's claim produces only spiritual homelessness; there is no honor in it and no path from it. Cure first, then Tu'whacca's restoration rites rebuild the broken connection." |
+| PDV_Msg_Daedric_Hircine_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hircine" Orc cell | One-time on an Orc committing | Title: "The Beast Tested Against the Code" Body: "For an Orc, the wolf-curse has a conditional Malacath reading -- the beast may be defensible if it is disciplined and does not break the kin. But Hircine is not Malacath, and the claim competes with the code. Proving discipline is the path that keeps the connection; the failure state is abandonment or cure." |
+| PDV_Msg_Daedric_Hircine_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hircine" Argonian cell | One-time on an Argonian committing | Title: "The Beast and the Hist" Body: "For an Argonian, Hircine's wolf-curse strains the Hist relation without breaking it entirely -- the beast-shape is a competing form the Hist did not provide, and the community feels the strain. But the Hist does not disown you; the relation is thin, not severed. Cure or careful stabilization can restore what the beast-shape pulls against." |
+
+---
+
+### 7.15 Molag Bal
+
+Source: the `Molag Bal` row of the matrix -- PathType `Domination-vampirism-enslavement`, CommitmentSignal `House of Horrors, active vampirism, Volkihar / domination threshold`, Boon `Domination edge, coercive pressure, vampiric leverage`, Price `Domination corruption and spiritual violation`, Hook `The House of Horrors > vampirism > Mace of Molag Bal`. **Curse-access Prince:** the `_Commitment` slot is reframed as a vampiric embrace -- Molag Bal speaks directly when the player commits to his path while carrying vampirism; the gate is three domination/Molag-aligned signals with the thirst in play, not a general piety accumulation. Existing race CurseState rows (e.g., `PDV_Msg_Nord_CurseState_VampireOnset` voiced by Shor) fire at vampire onset and are additive -- different trigger, different voice. Matrix note: Molag Bal is mostly a curse-access lane even where not literally marked Curse. **EditorID note:** Slot IDs use `Molag` token; all extended IDs exceed 32 chars; flagged for Phase 19 review.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Molag Bal (Daedric path) | Crushing, domination-absolute; cold contempt that occasionally warms when you are useful; does not persuade -- he states; the hierarchy is its own argument; speaks to those who understand that power over others is its own purpose; no warmth toward the player themselves, only toward their utility. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Molag_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Molag_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Molag Bal" Boon | Passive SPEL; pact engaged | Molag Bal's domination-edge settles in you. Coercive leverage comes more easily; hierarchy bends in your direction. |
+| PDV_Bless_Daedric_Molag_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Molag Bal" Boon | Passive SPEL | The grip deepens. Molag Bal's vampiric authority extends your reach -- the dominated stay dominated. |
+| PDV_Bless_Daedric_Molag_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Molag Bal" Boon | Passive SPEL | You carry the full weight of Molag Bal's domination. The hierarchy bends; resistance buckles; the leverage is yours. |
+
+**Price descriptions** (`PDV_Price_Daedric_Molag_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Molag_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Molag Bal" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the domination-path: the cruelty it asks of you will return. Those you bend do not forget. |
+| PDV_Price_Daedric_Molag_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Molag Bal" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: isolation of the predator. Those who sense Molag Bal's claim keep their distance or their silence. |
+| PDV_Price_Daedric_Molag_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Molag Bal" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: everything mediated through dominance. Molag Bal's Champion relates to others through leverage, and leverage corrodes. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Molag_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Molag Bal marks you a Seeker of the domination-path. |
+| PDV_Notif_Daedric_Molag_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Molag Bal's grip deepens. Devoted. |
+| PDV_Notif_Daedric_Molag_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Molag Bal's claim loosens. The domination-edge fades; the leverage withdraws. |
+| PDV_Msg_Daedric_Molag_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Molag Bal"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Molag Bal's Instrument" Body: "You have done it three times -- bent the will, taken the leverage, made the hierarchy work in your favor. That is the commitment. You are useful to me; in my terms, that is the closest thing to honor I extend. Use the domination well. Do not mistake it for permission to stop." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Molag_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Molag Bal" CommitmentSignal | Fires once when commitment gate clears; curse-access reframe: player carries vampirism and has signaled three times | Title: "Molag Bal's Touch" Body: "The thirst is in you, and you know what the thing under the hunger is: the hierarchy reflex, the dominance that makes sense now in a way it did not before the curse. That is mine. You chose to keep it three times when the cure was available. That is the commitment I record." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Molag_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Your Molag Bal devotion is suspected. The domination-path draws wary eyes. |
+| PDV_Notif_Daedric_Molag_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Molag Bal devotion is known. Domination-cult devotion is not trusted. |
+| PDV_Notif_Daedric_Molag_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Molag Bal's. The enslaver's servant is feared wherever you walk. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Molag_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You ease the grip. Molag Bal's domination-edge withdraws; the leverage fades. |
+| PDV_Msg_Daedric_Molag_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Molag Bal's Dismissal" Body: "You leave the domination-path. Molag Bal does not argue; there are others. The vampiric authority withdraws, the coercive leverage fades, and the hierarchy-reflex Molag Bal sharpened in you dulls back toward ordinary cruelty. The curse remains if you carry it, but his favor is withdrawn." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Molag_Response_*`). Narrator, 500/280. All ten races; Redguard Hostile; Dunmer and Orc Taboo; all others Curse.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Molag_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Nord cell | One-time on a Nord committing | Title: "Sovngarde Severed" Body: "For a Nord, Molag Bal's vampiric claim cuts Sovngarde off completely -- the thirst and the hall cannot coexist, and Molag Bal does not compromise. Cure first, then rededicate; even cured, the scar on the bridge is deeper than most curses leave. Tsun will mark what walked into Molag Bal's domain." |
+| PDV_Msg_Daedric_Molag_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Imperial cell | One-time on an Imperial committing | Title: "The Civic Faith Collapses" Body: "For an Imperial, Molag Bal's vampiric claim collapses the civic-faith frame entirely -- the Nine Divines are a religion of the living community, and the undead do not qualify. Devotion stops. Cure first, then return; but the floor is lower than where you began, and the community remembers the absence." |
+| PDV_Msg_Daedric_Molag_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Breton cell | One-time on a Breton committing | Title: "Danger the Tradition Reads" Body: "A Breton can read Molag Bal -- the witchcraft tradition knows his pressure and has navigated it before, but it names the price clearly: this is not a safe lane, and the cost is severe. Cover may delay the exit; cure or renunciation are the clean ones. The tradition holds the knowledge of what Molag Bal costs." |
+| PDV_Msg_Daedric_Molag_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Dunmer cell | One-time on a Dunmer committing | Title: "House of Troubles Pressure" Body: "For a Dunmer, Molag Bal sits in the House of Troubles -- the Dunmer theology knows him as one who tested the Tribunal, not one who was honored. Vampirism has its own Dunmer lane, but it is not devotion; it is an alternative that replaces the ancestors. Cure first, then ancestor rededication rebuilds what the curse closed." |
+| PDV_Msg_Daedric_Molag_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Altmer cell | One-time on an Altmer committing | Title: "Catastrophic Apostasy" Body: "For an Altmer, Molag Bal's vampiric claim is catastrophic apostasy -- the flight from daylight is the flight from Auri-El, and there is no clean recovery. Cure brings the door back open; but Aldmeri theology does not restore an Apotheosis-track cleanly after this kind of breach. The damage does not fully reverse." |
+| PDV_Msg_Daedric_Molag_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Khajiit cell | One-time on a Khajiit committing | Title: "Moon Corrupted by the Thirst" Body: "A Khajiit's moon-identity remains under the vampiric curse, but it is corrupted and thinned -- Molag Bal's thirst competes with the Lattice's light and weakens both the devotional identity and the community bond. Cure cleanses the corruption; shadow withdrawal may delay the community response while the path is carried." |
+| PDV_Msg_Daedric_Molag_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Bosmer cell | One-time on a Bosmer committing | Title: "Hard Break Across All Paths" Body: "For a Bosmer, Molag Bal's vampiric claim breaks theology across all three paths: on the Old Contract, the undead violate the Pact directly; on the Green Way, Y'ffre is the Now and you have stepped outside it; on the Hidden Art, the witch-mothers can hold it, but at severe cost. Cure is the cleanest exit; re-entry is costly on every path." |
+| PDV_Msg_Daedric_Molag_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Redguard cell | One-time on a Redguard committing | Title: "Against the Far Shores" Body: "For a Redguard, Molag Bal's vampiric claim breaks the Far Shores entirely -- Tu'whacca guides souls through the proper death-cycle, and the undead have stepped outside the cycle in the most destructive way. Devotion across all sects collapses. Cure first, then return through Tu'whacca's rites before any other god. Even cured, the restoration takes time." |
+| PDV_Msg_Daedric_Molag_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Orc cell | One-time on an Orc committing | Title: "Against the Code" Body: "For an Orc, Molag Bal's vampiric claim contradicts Malacath's code entirely -- the code is endurance and provision, and the thirst is dependency. An Orc who feeds on others has placed survival above the kin's code. Malacath does not look away from this. Cure and hard renunciation are the exits; the kin will remember the breach longer than the code does." |
+| PDV_Msg_Daedric_Molag_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Argonian cell | One-time on an Argonian committing | Title: "The Hist Grieved" Body: "For an Argonian, Molag Bal's vampiric claim damages the Hist relation deeply and raises Sithis-pressure -- the undead Saxhleel is a soul the Hist cannot receive, and the void reads it as its own. But Sithis's pressure does not justify the curse; it only marks its gravity. Cure first, then slow recovery; the Hist reaches again, but it takes time and grief." |
+
+---
+
 ## 8. Coverage
 
 | Prince | Tone | Boon | Price | Tier-up | Commitment | Stigma | Neglect/Exit | Per-race response | Status |
@@ -1243,8 +1389,8 @@ Source: the `Peryite` row of the matrix -- PathType `Plague-order-lowest-task`, 
 | Sanguine | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.11) |
 | Namira | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.12) |
 | Peryite | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.13) |
-| Hircine | -- | -- | -- | -- | -- | -- | -- | -- | pending curse-access (7.14) |
-| Molag Bal | -- | -- | -- | -- | -- | -- | -- | -- | pending curse-access (7.15) |
+| Hircine | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.14) |
+| Molag Bal | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.15) |
 
 ## 9. Verification
 
