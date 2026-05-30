@@ -1590,15 +1590,15 @@ excellent reusable example per subsystem, then clone.
 | **17** | Decay model (linear with tier-floor + grace) | Phase 14 | Decay applies at dawn; floors respected; curse/track modifiers compose |
 | **18** | Player-facing UI (player MCM tab, status spell, notification policy) | Phase 14 | Thematic display default; numeric override behind toggle |
 | **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Planning-first patcher validates rules against the resolved load order, `pdv_author.mjs` emits explicit manual follow-up packets for array work, and later generated classification patches can add PDV keywords/FormList entries from rules |
-| **20** | Mod compatibility first patch (Sacrosanct for vampire cross-routing) | Phase 15 | Sacrosanct feed events translate to PDV signals; no double-fire |
-| **21** | 1.0 content lock + polish | All above | Pantheon at 25-35 deities, all 10 races have at least one foreground option, all locked race architectures honored |
+| **20** | 1.0 content lock + polish | All above | Pantheon at 25-35 deities, all 10 races have at least one foreground option, all locked race architectures honored; Aedric and Daedric authored content complete |
+| **21** | Mod compatibility first patch (Sacrosanct for vampire cross-routing) | Phase 15 | Sacrosanct feed events translate to PDV signals; no double-fire |
 
 V3 Preflight and Structural Skeleton are acceleration gates: they make the
 system safe to scale before broad content lands. Phases 7-9 then widen what the
 system can see and react to. Phases 10-12 are the per-race overlay layer. Phase
 13 brings Daedric paths online. Phases 14-17 turn the system from "tracks
 piety" into "feels like a relationship." Phase 18 is the player handoff.
-Phases 19-21 are scaling and polish.
+Phase 19 is tooling; Phase 20 is the authored content lock (Aedric and Daedric); Phase 21 is compat.
 
 ### 21.1 What "1.0" means
 
