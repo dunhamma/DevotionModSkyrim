@@ -240,13 +240,13 @@ cells route to the race manifest and carry no Daedric response row.
 | Meridia | drafted (Section 7.4) |
 | Nocturnal | drafted (Section 7.5) |
 | Hermaeus Mora | drafted (Section 7.6) |
-| Hircine | pending (curse-access) |
-| Molag Bal | pending (curse-access) |
-| Mehrunes Dagon | pending |
-| Sheogorath | pending |
+| Mehrunes Dagon | drafted (Section 7.7) |
+| Sheogorath | drafted (Section 7.8) |
+| Clavicus Vile | drafted (Section 7.9) |
 | Namira / Namiira | pending |
 | Sanguine / Sangiin | pending |
-| Clavicus Vile | pending |
+| Hircine | pending (curse-access) |
+| Molag Bal | pending (curse-access) |
 | Peryite | pending |
 | Vaermina | pending |
 
@@ -714,6 +714,225 @@ Source: the `Hermaeus Mora` row of the matrix -- PathType `Forbidden-knowledge-a
 
 ---
 
+### 7.7 Mehrunes Dagon
+
+Source: the `Mehrunes Dagon` row of the matrix -- PathType `Destruction-revolution-ruin`, CommitmentSignal `Pieces of the Past, Razor commitment, catastrophic overthrow alignment`, Boon `Attraction to ruin, anti-order violence, revolutionary destruction`, Price `Ruin escalation and civic-spiritual rupture`, Hook `Pieces of the Past > Mehrunes' Razor > destructive outcomes`. Matrix note: Imperial hostility is stronger than generic taboo because of Oblivion Crisis memory; Redguard cell is also Hostile (destroyer of the way-making civilization). No native-integration exception; slot IDs use `Dagon` token.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Mehrunes Dagon (Daedric path) | Cold, totalizing, anti-order; the god of destruction and revolution who does not argue his case -- the end is not a cause he feels, it is a fact he embodies; speaks in declarations that assume the result is already decided; his register is not passionate, it is absolute, the way the fall of a wall is absolute. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Dagon_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Dagon_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Mehrunes Dagon" Boon | Passive SPEL; pact engaged | Dagon's edge is yours at the threshold. Your blow against entrenched opposition carries extra weight; the wall that should hold breaks harder. |
+| PDV_Bless_Daedric_Dagon_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Mehrunes Dagon" Boon | Passive SPEL | Dagon's ruin deepens in you. Barriers fall faster, fortifications yield, and the things built to last crack first. |
+| PDV_Bless_Daedric_Dagon_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Mehrunes Dagon" Boon | Passive SPEL | Dagon names you his ruin made walking. What stands is enemy; what is entrenched is target. You are the end that cannot be stopped. |
+
+**Price descriptions** (`PDV_Price_Daedric_Dagon_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Dagon_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Mehrunes Dagon" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the ruin path: escalation. Dagon does not distinguish your order from the enemy's; the destruction begins to include you. |
+| PDV_Price_Daedric_Dagon_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Mehrunes Dagon" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: civic rupture. The communities that held you are part of the order Dagon destroys; the world around you empties. |
+| PDV_Price_Daedric_Dagon_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Mehrunes Dagon" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: you are the principle. Dagon's ruin does not stop when you stop pointing it; you have become the revolution, no off state. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Dagon_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Dagon marks you a Seeker of the ruin path. |
+| PDV_Notif_Daedric_Dagon_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Dagon's ruin runs in you. Devoted. |
+| PDV_Notif_Daedric_Dagon_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Dagon's favor withdraws. The destructive edge dims. |
+| PDV_Msg_Daedric_Dagon_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Mehrunes Dagon"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Dagon's Ruin-Walker" Body: "Every world ends. Every order falls. You have simply chosen to be the thing that helps it along, and three times now you did not hesitate when the walls were in front of you. Champion. The Razor is yours in spirit if not in hand. Walk forward." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Dagon_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Mehrunes Dagon" CommitmentSignal | Fires once when the commitment gate clears | Title: "Dagon's Call" Body: "Three times you chose the ruin when preservation was offered. That is not chaos -- it is conviction. You understand what I am. The destruction does not ask permission, and neither do you. You are my Walker, and the works of order are the target. Begin." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Dagon_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Dagon's path is suspected on you. Some read the ruins you leave. |
+| PDV_Notif_Daedric_Dagon_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your devotion to Dagon is known. A ruin-walker leaves more than enemies behind. |
+| PDV_Notif_Daedric_Dagon_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Dagon's. The ruin-walker is not trusted by any settled order. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Dagon_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You step back from the ruin. Dagon's edge dims; the destructive drive fades. |
+| PDV_Msg_Daedric_Dagon_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Dagon's Severance" Body: "You step away from the ruin path. Dagon does not argue -- destruction needs no particular agent, and you were always replaceable. The edge leaves you. The rupture you caused does not heal, but it no longer grows. Whether the order you fractured recovers is its problem, not yours." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Dagon_Response_*`). Narrator, 500/280. All ten races. Imperial and Redguard cells are Hostile (hardest rupture framing); all others are Taboo except Argonian (Foreign).
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Dagon_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mehrunes Dagon" Nord cell | One-time on a Nord committing | Title: "Against Hearth and Continuity" Body: "For a Nord, Dagon's ruin cult attacks hearth, continuity, and the kin-bonds that Nord life rests on. The apocalypse opposes Shor's hall and the honoring of the dead. Leaving asks sincere cleansing and rededication; the rupture leaves a mark." |
+| PDV_Msg_Daedric_Dagon_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mehrunes Dagon" Imperial cell; Notes "Imperial hostility stronger than generic taboo, Oblivion memory" | One-time on an Imperial committing; Hostile cell -- maximum rupture framing | Title: "Enemy of the Empire" Body: "For an Imperial, Dagon is not taboo -- he is enemy. The Oblivion Crisis is recent: cities burned, gates opened, the Emperor died. This oath is active betrayal of everything Imperial. There is no gentle exit; the rupture is total, and return is hard and public." |
+| PDV_Msg_Daedric_Dagon_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mehrunes Dagon" Breton cell | One-time on a Breton committing | Title: "Occult Rebellion, Social Ruin" Body: "A Breton can read Dagon's revolutionary energy -- the occult rebellion has a shape Breton culture knows. But the apocalypse is not manageable; the catastrophe is social ruin even for the practitioner. Cover is possible early; direct renunciation is the cleaner path." |
+| PDV_Msg_Daedric_Dagon_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mehrunes Dagon" Dunmer cell | One-time on a Dunmer committing | Title: "Outsider Ruin Path" Body: "For a Dunmer, Dagon's ruin has no home in layered duty or community. The Reclamations are about reclaiming, not ending. Destruction for its own sake cuts against House loyalty, kin-debt, and the ancestor-substrate. It is set down by abandonment and redirection." |
+| PDV_Msg_Daedric_Dagon_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mehrunes Dagon" Altmer cell | One-time on an Altmer committing | Title: "Against the Ordained Order" Body: "For an Altmer, Dagon is the opposite of the Aldmeri project -- Apotheosis, purity, return to Auri-El are upward trajectories, and Dagon is their negation. The cult is not merely heretical; it is structurally incompatible. Absolution is difficult and requires genuine re-anchoring." |
+| PDV_Msg_Daedric_Dagon_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mehrunes Dagon" Khajiit cell | One-time on a Khajiit committing | Title: "Chaos, Not Dark Pressure" Body: "A Khajiit can read Dagon as dark pressure -- chaos is not unknown to the lattice. But his ruin cult is not a moon lane; it conflicts with the lunar order rather than supplements it. The path is dark indulgence, not substrate fit, and is set down by abandonment." |
+| PDV_Msg_Daedric_Dagon_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mehrunes Dagon" Bosmer cell | One-time on a Bosmer committing | Title: "Against Continuity and Covenant" Body: "For a Bosmer, Dagon's ruin cult is anti-covenant -- the Green Pact is continuity, and ruin is its opposite. The end of things is not Bosmer theology even in its darkest corners. The path is not legible here; renunciation is the only clean exit." |
+| PDV_Msg_Daedric_Dagon_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mehrunes Dagon" Redguard cell; Hostile cell -- severe rupture framing | One-time on a Redguard committing | Title: "Enemy of the Way-Makers" Body: "For a Redguard, Dagon is an enemy in the deep Yokudan sense -- the destroyer of roads, cities, and the civilization the Ra Gada crossed the sea to build. This is not foreign devotion; it is betrayal of the crossing itself. Rupture is severe and total; return is hard and public." |
+| PDV_Msg_Daedric_Dagon_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mehrunes Dagon" Orc cell | One-time on an Orc committing | Title: "Ruin Against Provision" Body: "An Orc can see the use in destruction -- Malacath's code includes the right to fight back. But destruction for its own sake is not provision; the stronghold that only tears down cannot feed or defend. Dagon's ruin offers no return, and Orc life requires one. Renounce directly." |
+| PDV_Msg_Daedric_Dagon_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mehrunes Dagon" Argonian cell | One-time on an Argonian committing | Title: "Ruin Is Not Sithis" Body: "To an Argonian, Dagon is foreign -- collapse does not make him Sithis-adjacent; the Hist distinguishes between void that renews and ruin that simply ends. His destruction has no Hist root and no community purpose. The path is abandoned, not renounced with ceremony." |
+
+---
+
+### 7.8 Sheogorath
+
+Source: the `Sheogorath` row of the matrix -- PathType `Madness-disruption-instability`, CommitmentSignal `Mind of Madness, Wabbajack commitment, repeated unstable-bargain choices`, Boon `Fascination with absurdity, instability, and warped outcomes`, Price `Unpredictability and loss of stable control`, Hook `The Mind of Madness > Wabbajack > instability choices`. Matrix note: keep distinct from Sanguine (indulgence) and Rajhin-style trickster energy; Khajiit cell acknowledges Sheggorath's place in the lunar lattice as dark-pressure, not devotion. No native-integration exception; slot IDs use `Sheo` token. **EditorID note:** Extended suffixes (e.g. `_Stigma_Suspected`, `_Response_*`) will exceed 32 chars; flagged for Phase 19 abbreviation review.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Sheogorath (Daedric path) | Theatrical, manic, brilliantly unstable; the Madgod lurches between the genuinely insightful and the completely unhinged; his voice is the disruption that arrives smiling, distinct from Sanguine's temptation and Rajhin's cunning -- Sheogorath is not pleasure or cleverness, he is unmooring, and his register reflects that the ground is always about to shift. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Sheo_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Sheo_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Sheogorath" Boon | Passive SPEL; pact engaged | Sheogorath's absurdity opens a crack. Where the direct approach fails, something sideways succeeds; solutions arrive from the wrong angle. |
+| PDV_Bless_Daedric_Sheo_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Sheogorath" Boon | Passive SPEL | Sheogorath's disruption deepens. Chaotic outcomes bend your way; the problem that should not break breaks, the wall that should hold falls. |
+| PDV_Bless_Daedric_Sheo_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Sheogorath" Boon | Passive SPEL | Sheogorath names you the Madgod's own. Unpredictability is your ally; the stable is always about to become otherwise. |
+
+**Price descriptions** (`PDV_Price_Daedric_Sheo_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Sheo_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Sheogorath" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the madness path: unpredictability cuts both ways. The disruption does not promise to hit only the targets you choose. |
+| PDV_Price_Daedric_Sheo_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Sheogorath" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: control erodes. The Madgod's touch does not stop at useful chaos; the devotee's own certainties grow unreliable. |
+| PDV_Price_Daedric_Sheo_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Sheogorath" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: you cannot put it down. Sheogorath does not give back stability; the one who carries his full mark has become the disruption they chose, and it moves with them now. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Sheo_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Sheogorath marks you a Seeker. How delightful. |
+| PDV_Notif_Daedric_Sheo_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Sheogorath's madness deepens in you. Devoted. |
+| PDV_Notif_Daedric_Sheo_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Sheogorath grows bored. The chaotic edge fades. |
+| PDV_Msg_Daedric_Sheo_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Sheogorath"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "The Madgod's Own" Body: "Champion! Oh, how I love that word. You have broken three things that were perfectly good and intact, and you did it in the most interesting ways possible. Do you know what that tells me? Nothing at all! Which is exactly right. The disruption is yours. Do not drop it; it bites." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Sheo_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Sheogorath" CommitmentSignal | Fires once when the commitment gate clears | Title: "Sheogorath's Touch" Body: "Three times you let the chaos choose instead of your plan, and three times it chose better than you would have. I love it when mortals discover that. The commitment is recorded in the Book of Instability, which I made up just now. It is quite real. Welcome." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Sheo_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Sheogorath's touch on you is suspected. The odd outcomes draw notice. |
+| PDV_Notif_Daedric_Sheo_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Sheogorath devotion is known. The Madgod's follower is thought unstable. |
+| PDV_Notif_Daedric_Sheo_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Sheogorath's. Settled people step away from the Madgod's marked. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Sheo_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You choose the predictable. Sheogorath grows bored; the disruption edge fades. |
+| PDV_Msg_Daedric_Sheo_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Sheogorath's Indifference" Body: "You are leaving? That is fine. I have other toys. The chaos drains out of you -- slowly, in the way that cheese drains. The disruption that was yours goes looking for someone more interesting. You will find stability eventually. Good luck with that." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Sheo_Response_*`). Narrator, 500/280. All ten races; Sheggorath's dark-pressure position in the Khajiit lunar lattice is acknowledged but explicitly distinguished from devotion.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Sheo_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sheogorath" Nord cell | One-time on a Nord committing | Title: "Against Oath Stability" Body: "For a Nord, Sheogorath strains the kin-bonds and oath-stability that Nord life rests on. A mead-hall where the patron is unpredictable does not hold together. The path is corrosive; leaving means direct abandonment or enduring the residue." |
+| PDV_Msg_Daedric_Sheo_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sheogorath" Imperial cell | One-time on an Imperial committing | Title: "Anti-Civic Instability" Body: "For an Imperial, Sheogorath is anti-civic by definition -- public order is the foundation of Imperial civilization, and the Madgod is its enemy. The chaos runs against the rule of law as readily as against any enemy. Setting it down is straightforward abandonment." |
+| PDV_Msg_Daedric_Sheo_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sheogorath" Breton cell | One-time on a Breton committing | Title: "Corrosive in the Margins" Body: "A Breton can read Sheogorath at the surface -- the occult margins have room for the strange. But the madness is socially corrosive even when kept private. Cover works at low commitment; renunciation is the cleaner path once it escalates." |
+| PDV_Msg_Daedric_Sheo_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sheogorath" Dunmer cell | One-time on a Dunmer committing | Title: "House of Troubles Pressure" Body: "For a Dunmer, Sheogorath sits in the House of Troubles context -- the Dunmer know his pressure. But that context is about resistance, not devotion; embracing him is failing the test. Hard rededication runs through the Reclamation proper." |
+| PDV_Msg_Daedric_Sheo_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sheogorath" Altmer cell | One-time on an Altmer committing | Title: "Opposed to Disciplined Apotheosis" Body: "For an Altmer, Sheogorath's unstable reality-play violates Apotheosis -- disciplined refinement and Aldmeri purity require stability. Madness is not a detour on the upward path; it is the opposite terminus. Absolution is difficult and requires active re-anchoring." |
+| PDV_Msg_Daedric_Sheo_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sheogorath" Khajiit cell; Notes "Sheggorath is dark-pressure, not normal lunar lane" | One-time on a Khajiit committing | Title: "Sheggorath's Dark Lane" Body: "A Khajiit knows Sheogorath as Sheggorath in the lattice -- a dark-pressure the lunar calendar acknowledges. But acknowledgment is not devotion; he is the dark lane, held at the edge. Taking him as patron destabilizes the substrate; abandonment is the way back." |
+| PDV_Msg_Daedric_Sheo_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sheogorath" Bosmer cell | One-time on a Bosmer committing | Title: "Not the Trickster Lane" Body: "A Bosmer can feel the surface trickster energy, but Sheogorath is not Baan Dar -- the madness is not cunning, and the disruption is not the Green Pact's wild note. The path is corrosive and not Bosmer backbone; abandonment is the clean exit." |
+| PDV_Msg_Daedric_Sheo_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sheogorath" Redguard cell | One-time on a Redguard committing | Title: "Against Honor and Duty" Body: "For a Redguard, Sheogorath strains honor and duty -- the Yokudan frame values the disciplined warrior and the kept oath. Madness corrodes both. The path eats what Redguard civic life rests on; renunciation is direct." |
+| PDV_Msg_Daedric_Sheo_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sheogorath" Orc cell | One-time on an Orc committing | Title: "Mockery of the Code" Body: "For an Orc, Sheogorath's chaotic mockery strains the code directly -- the code is plain, spoken, and kept, and the Madgod's disruption is none of those things. An exile who laughs at the code is not keeping it. Renunciation is direct; demonstrate the code in some visible form." |
+| PDV_Msg_Daedric_Sheo_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Sheogorath" Argonian cell | One-time on an Argonian committing | Title: "Change Is Not Madness" Body: "To an Argonian, Sheogorath is foreign -- the Hist knows change and void, but renewing void is not madness that unmoors. His instability has no Hist root and no community purpose. The path is abandoned, not renounced with ceremony." |
+
+---
+
+### 7.9 Clavicus Vile
+
+Source: the `Clavicus Vile` row of the matrix -- PathType `Bargain-wish-contract`, CommitmentSignal `Daedra's Best Friend, Masque/Rueful Axe choice, explicit wish-at-cost bargain`, Boon `Deal-seeking, shortcut desire, contract hunger, loophole curiosity`, Price `Bargain backlash and exploitative terms`, Hook `A Daedra's Best Friend > Masque/Rueful Axe > deal logic`. Matrix note: different from Sanguine (indulgence) and Nocturnal (shadow oath) despite overlap in temptation. No native-integration exception; slot IDs use `Vile` token. **EditorID note:** Extended suffixes will exceed 32 chars; flagged for Phase 19 abbreviation review.
+
+**Tone profile.**
+
+| Voice | Tone profile |
+|---|---|
+| Clavicus Vile (Daedric path) | Cheerful, contractual, deliberately vague on the terms; the god of deals and wishes who speaks with the satisfied pleasantness of someone who has already gotten the better end; his register is friendly and almost helpful -- the trap is always in the fine print, and he never points it out; distinct from Nocturnal's oath-debt and Sanguine's indulgence: Vile offers what you want, and the cost is the thing you forgot to read. |
+
+**Boon descriptions** (`PDV_Bless_Daedric_Vile_*`). Narrator, 200/140, passive SPEL.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Bless_Daedric_Vile_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Clavicus Vile" Boon | Passive SPEL; pact engaged | Vile's transactional edge is yours. Favorable terms come a little more often; the deal that should fall through somehow does not. |
+| PDV_Bless_Daedric_Vile_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Clavicus Vile" Boon | Passive SPEL | Vile's contract deepens. Favorable turns come more reliably; the bargain you should not win goes your way. |
+| PDV_Bless_Daedric_Vile_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Clavicus Vile" Boon | Passive SPEL | Vile names you his preferred client. Favorable terms become your default; loopholes open before you, and the deals bend your direction. |
+
+**Price descriptions** (`PDV_Price_Daedric_Vile_*`). Narrator, 200/140.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Price_Daedric_Vile_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Clavicus Vile" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the bargain: Vile's terms have fine print. What you get is real; what it costs is also real, and the invoice arrives later. |
+| PDV_Price_Daedric_Vile_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Clavicus Vile" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: exploitative terms. Vile's contracts tighten; the backlash when a deal turns arrives harder than it should. |
+| PDV_Price_Daedric_Vile_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Clavicus Vile" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: you are the preferred client, which means Vile takes interest in what you do with the terms. The favors are real. The dependencies they create are also real. |
+
+**Tier-up notifications and Champion entry.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Vile_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Vile acknowledges you as a Seeker. The terms look good. |
+| PDV_Notif_Daedric_Vile_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Vile's contract deepens its hold. Devoted. |
+| PDV_Notif_Daedric_Vile_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Vile's interest cools. The favorable terms withdraw. |
+| PDV_Msg_Daedric_Vile_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Clavicus Vile"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Vile's Preferred Client" Body: "You have done this three times -- asked for something, accepted the terms, and not complained about the fine print afterward. That is rare. Most patrons I prefer have the good sense not to re-read what they agreed to. You are my preferred client. Enjoy the terms. They are very good." |
+
+**Commitment / pact.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Vile_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Clavicus Vile" CommitmentSignal | Fires once when the commitment gate clears | Title: "Vile's Contract" Body: "Three times you made the deal and paid the price without disputing the terms. Most mortals try to renegotiate at least once. The commitment is registered: preferred client access, and the most interesting obligations that come with it. Read them carefully." |
+
+**Stigma band crossings.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Vile_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Vile's dealings in you are suspected. Favorable outcomes draw notice. |
+| PDV_Notif_Daedric_Vile_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your deal with Vile is known. His clients share the contract's reputation. |
+| PDV_Notif_Daedric_Vile_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Vile's client. People know what his preferred terms cost. |
+
+**Neglect texture and exit.**
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Daedric_Vile_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You stop making deals. Vile's favor cools; the obligations remain. |
+| PDV_Msg_Daedric_Vile_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Vile's Discard" Body: "You are ending the contract? That is your right -- the terms allowed for it. The favorable edge withdraws, and the outstanding obligations resolve themselves, usually in ways that feel slightly worse than you would prefer. Vile finds the whole thing amusing. He always does." |
+
+**Per-race responses** (`PDV_Msg_Daedric_Vile_Response_*`). Narrator, 500/280. All ten races. Breton is Legible; Dunmer/Khajiit/Bosmer/Redguard/Orc/Argonian are Foreign; Nord/Imperial/Altmer are Taboo.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Daedric_Vile_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Clavicus Vile" Nord cell | One-time on a Nord committing | Title: "Shortcuts Dishonor the Deed" Body: "For a Nord, Vile's shortcuts dishonor the deed -- the thing earned through honest struggle is the thing that counts. A deal that delivers the outcome without the work is a lie about who did it. The path corrodes Nord honor; leaving asks sincere cleansing and recommitment." |
+| PDV_Msg_Daedric_Vile_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Clavicus Vile" Imperial cell | One-time on an Imperial committing | Title: "Against Civic Virtue" Body: "For an Imperial, Vile's exploitative contracts strain the civic virtue that holds the Empire together -- a deal that deceives the other party is anti-law by design. The Divines favor the honest contract; Vile profits on the dishonest one. Setting it down is abandonment." |
+| PDV_Msg_Daedric_Vile_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Clavicus Vile" Breton cell | One-time on a Breton committing | Title: "Contract Magic, Careful Terms" Body: "A Breton reads Vile immediately -- contract-magic and the hedge bargain are part of the Breton inheritance. The risk is exposure: a Breton can keep the contract covered, but renunciation is the cleaner option once it grows." |
+| PDV_Msg_Daedric_Vile_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Clavicus Vile" Dunmer cell | One-time on a Dunmer committing | Title: "Exile Temptation, Not Core" Body: "A Dunmer in exile may be tempted by Vile's deals -- the power of a contract when you have nothing is real. But Vile is not the Reclamations, and bargain-logic does not replace House duty or ancestor-debt. The path is foreign; abandonment is direct." |
+| PDV_Msg_Daedric_Vile_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Clavicus Vile" Altmer cell | One-time on an Altmer committing | Title: "Deal-With-Power Is Apostasy" Body: "For an Altmer, Vile's deal-with-power violates Aldmeri orthodoxy -- the Altmer project is Apotheosis through disciplined refinement, not a contract with an opportunistic Daedra. Absolution is difficult and requires dismantling the contract's remaining terms." |
+| PDV_Msg_Daedric_Vile_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Clavicus Vile" Khajiit cell | One-time on a Khajiit committing | Title: "Not Rajhin's Cunning" Body: "A Khajiit may see the trickster shape in Vile -- the loophole found, the deal well made. But Vile is not Rajhin; the contract is not road-wisdom, and following Vile does not honor the clever ancestor. The overlap is surface-level; the path is foreign. Abandonment is direct." |
+| PDV_Msg_Daedric_Vile_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Clavicus Vile" Bosmer cell | One-time on a Bosmer committing | Title: "Bargain Cunning, No Root" Body: "A Bosmer has no deep conflict with deal-making -- Baan Dar respects cunning. But Vile is not Baan Dar, and deal-cunning for Vile's sake is not the native trickster lane. The path has no root; it is set down when it runs its course." |
+| PDV_Msg_Daedric_Vile_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Clavicus Vile" Redguard cell | One-time on a Redguard committing | Title: "Contracts Without Honor" Body: "For a Redguard, contracts matter -- the Yokudan world was built on agreements that held. But Vile corrupts the contract; his terms exploit, and a deal-maker who profits on ignorance is a covenant-breaker. Renunciation requires restoring the terms of any deal Vile arranged." |
+| PDV_Msg_Daedric_Vile_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Clavicus Vile" Orc cell | One-time on an Orc committing | Title: "Against the Plain Oath" Body: "An Orc in exile may be drawn to Vile's bargains -- the favorable deal is tempting. But Malacath's code is the plain oath, not the fine-print contract. Vile's terms strain the code because they produce uneven results; renounce through consequence." |
+| PDV_Msg_Daedric_Vile_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Clavicus Vile" Argonian cell | One-time on an Argonian committing | Title: "Tempting in Exile, Not Hist" Body: "To an Argonian, Vile is foreign -- tempting in exile, but the Hist does not bargain with power; it breathes together. Vile's contract is no substitute for the substrate. The path is abandoned; the Hist does not hold the absence against the one who returns." |
+
+---
+
 ## 8. Coverage
 
 | Prince | Tone | Boon | Price | Tier-up | Commitment | Stigma | Neglect/Exit | Per-race response | Status |
@@ -725,7 +944,10 @@ Source: the `Hermaeus Mora` row of the matrix -- PathType `Forbidden-knowledge-a
 | Meridia | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.4) |
 | Nocturnal | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.5) |
 | Hermaeus Mora | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.6) |
-| 9 others | -- | -- | -- | -- | -- | -- | -- | -- | pending (Section 7 ledger) |
+| Mehrunes Dagon | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.7) |
+| Sheogorath | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.8) |
+| Clavicus Vile | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.9) |
+| 6 others | -- | -- | -- | -- | -- | -- | -- | -- | pending (Section 7 ledger) |
 
 ## 9. Verification
 
