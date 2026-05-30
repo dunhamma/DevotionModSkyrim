@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /*
  * Offline patch-planning helper for PlayerDevotion classification/distribution
- * work. v0 is planning-first: it validates tracked rule manifests, reads the
- * resolved MO2 load order through the same Mutagen bridge context used by
- * pdv_author/pdv_verify, resolves winning records, and emits deterministic
- * dry-run plans. It does not write a generated patch plugin yet.
+ * work. It validates tracked rule manifests, reads the resolved MO2 load order
+ * through the same Mutagen bridge context used by pdv_author/pdv_verify,
+ * resolves winning records and payload references, emits deterministic dry-run
+ * plans, and can write a generated patch plugin through the existing bridge
+ * patch-request contract.
  */
 
 import { spawnSync } from "node:child_process";
@@ -31,10 +32,21 @@ const MUTAGEN_BRIDGE = path.join(
   "mutagen-bridge.exe",
 );
 const DEFAULT_RULES_DIR = path.join(PROJECT_ROOT, "references", "authoring", "patch-rules");
+const DEFAULT_OUTPUT = "PDV_ClassificationPatch.esp";
 const BRIDGE_MAX_BUFFER = 128 * 1024 * 1024;
 const RULE_SCHEMA = "pdv_patch_rules_v0";
 const SUPPORTED_OPERATIONS = new Set(["keyword_add", "formlist_inject", "actor_distribution"]);
-const DISTRIBUTION_PAYLOAD_KEYS = ["addKeywords", "addSpells", "addPerks", "addFactions", "addItems"];
+const DISTRIBUTION_PAYLOAD_KEYS = ["addKeywords", "addSpells", "addPerks", "addFactions", "addItems", "addPackages"];
+const ALLOWED_PROVENANCE_STATUSES = new Set(["tooling-example", "candidate", "approved", "blocked"]);
+const PLAN_ONLY_PROVENANCE_STATUSES = new Set(["tooling-example"]);
+const PAYLOAD_EXPECTED_TYPES = {
+  keywords: ["KYWD"],
+  addKeywords: ["KYWD"],
+  addSpells: ["SPEL"],
+  addPerks: ["PERK"],
+  addFactions: ["FACT"],
+  addPackages: ["PACK"],
+};
 
 main(process.argv.slice(2));
 
@@ -60,6 +72,40 @@ function main(argv) {
     return;
   }
 
+  if (args.command === "build") {
+    const result = buildRuleEvaluation(args);
+    const plan = buildDryRunPlan(result);
+    const build = buildGeneratedPatchRequest(result, args);
+    const payload = { ...result, plan, build };
+
+    if (!args.dryRun) {
+      if (build.blockedRuleCount) {
+        throw new Error(`Refusing to build with ${build.blockedRuleCount} build-blocked rule(s). Re-run with --dry-run to inspect the ready subset.`);
+      }
+      if (!build.patchRequest.records.length) {
+        throw new Error("Refusing to build because no build-ready rules produced patch records.");
+      }
+      const mutationCheck = snapshotSourcePlugins(build.sourcePluginPaths);
+      const writeResult = invokePatchWrite(build.patchRequest);
+      payload.write = {
+        ...writeResult,
+        mutationCheck: compareSourceSnapshots(mutationCheck),
+      };
+    } else {
+      payload.write = {
+        dryRun: true,
+        message: "No patch plugin was written.",
+      };
+    }
+
+    writeOptionalArtifacts(args, payload);
+    if (args.writeRequest) {
+      writeJsonArtifact(args.writeRequest, build.patchRequest);
+    }
+    printResult(payload, args.json);
+    return;
+  }
+
   usage(`Unknown command: ${args.command}`);
 }
 
@@ -73,13 +119,16 @@ function usage(errorMessage = null) {
     "Usage:",
     "  node .\\tools\\pdv_patch.mjs validate [--rules <path>] [--json]",
     "  node .\\tools\\pdv_patch.mjs plan [--rules <path>] [--json]",
+    "  node .\\tools\\pdv_patch.mjs build [--rules <path>] [--output <filename>] [--dry-run] [--allow-candidates] [--allow-tooling-examples] [--json]",
     "Optional output:",
     "  --write-plan <path>     write machine-readable JSON payload",
     "  --write-report <path>   write human-readable dry-run report",
+    "  --write-request <path>  write generated patch-request JSON",
     "Notes:",
     `  - Default rules directory: ${toWindows(DEFAULT_RULES_DIR)}`,
+    `  - Default generated patch: ${DEFAULT_OUTPUT}`,
     `  - Supported manifest schema: ${RULE_SCHEMA}`,
-    "  - v0 is planning-only and does not emit a patch ESP.",
+    "  - validate and plan are read-only; build writes only to the Devotion mod folder unless --dry-run is supplied.",
   ].join("\n"));
   process.exit(errorMessage ? 1 : 0);
 }
@@ -91,6 +140,13 @@ function parseArgs(argv) {
     rulesPath: null,
     writePlan: null,
     writeReport: null,
+    writeRequest: null,
+    output: DEFAULT_OUTPUT,
+    author: "PlayerDevotion Phase 19 patcher",
+    esl: true,
+    dryRun: false,
+    allowCandidates: false,
+    allowToolingExamples: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -111,6 +167,26 @@ function parseArgs(argv) {
       args.writeReport = requireNext(argv, ++index, "--write-report");
     } else if (arg.startsWith("--write-report=")) {
       args.writeReport = arg.slice("--write-report=".length);
+    } else if (arg === "--write-request") {
+      args.writeRequest = requireNext(argv, ++index, "--write-request");
+    } else if (arg.startsWith("--write-request=")) {
+      args.writeRequest = arg.slice("--write-request=".length);
+    } else if (arg === "--output") {
+      args.output = requireNext(argv, ++index, "--output");
+    } else if (arg.startsWith("--output=")) {
+      args.output = arg.slice("--output=".length);
+    } else if (arg === "--author") {
+      args.author = requireNext(argv, ++index, "--author");
+    } else if (arg.startsWith("--author=")) {
+      args.author = arg.slice("--author=".length);
+    } else if (arg === "--no-esl") {
+      args.esl = false;
+    } else if (arg === "--dry-run") {
+      args.dryRun = true;
+    } else if (arg === "--allow-candidates") {
+      args.allowCandidates = true;
+    } else if (arg === "--allow-tooling-examples") {
+      args.allowToolingExamples = true;
     } else if (arg === "-h" || arg === "--help") {
       usage();
     } else {
@@ -144,6 +220,9 @@ function buildRuleEvaluation(args) {
     ruleCount: evaluations.length,
     ready: evaluations.filter((item) => item.status === "READY").length,
     blocked: evaluations.filter((item) => item.status === "BLOCKED").length,
+    buildReady: evaluations.filter((item) => item.buildStatus === "BUILD_READY").length,
+    planOnly: evaluations.filter((item) => item.buildStatus === "PLAN_ONLY").length,
+    buildBlocked: evaluations.filter((item) => item.buildStatus === "BUILD_BLOCKED").length,
     totalResolvedTargets: evaluations.reduce((sum, item) => sum + item.resolvedTargets.length, 0),
     enabledPluginCount: winningContext.enabledListings.length,
   };
@@ -191,7 +270,9 @@ function buildDryRunPlan(result) {
       operation: rule.operation,
       target: rule.target,
       payload: rule.payload,
+      resolvedPayload: serializeResolvedPayload(rule.resolvedPayload),
       provenance: rule.provenance,
+      buildStatus: rule.buildStatus,
       resolvedTargets: rule.resolvedTargets.map((target) => ({
         plugin: target.pluginName,
         formid: target.formid,
@@ -202,6 +283,110 @@ function buildDryRunPlan(result) {
       recordActionSummary: buildRecordActionSummary(rule),
     })),
   };
+}
+
+function buildGeneratedPatchRequest(result, args) {
+  const outputPath = buildSafeOutputPath(args.output);
+  const includeRule = (rule) => {
+    if (rule.buildStatus !== "BUILD_READY") {
+      return false;
+    }
+    const provenanceStatus = normalizeProvenanceStatus(rule.provenance.status);
+    if (provenanceStatus === "approved") {
+      return true;
+    }
+    if (provenanceStatus === "candidate") {
+      return args.allowCandidates;
+    }
+    if (PLAN_ONLY_PROVENANCE_STATUSES.has(provenanceStatus)) {
+      return args.allowToolingExamples;
+    }
+    return false;
+  };
+  const buildRules = result.evaluations.filter(includeRule);
+  const skippedPlanOnly = result.evaluations.filter((rule) =>
+    rule.buildStatus === "PLAN_ONLY" && !args.allowToolingExamples,
+  );
+  const skippedCandidates = result.evaluations.filter((rule) =>
+    rule.buildStatus === "BUILD_READY"
+      && normalizeProvenanceStatus(rule.provenance.status) === "candidate"
+      && !args.allowCandidates,
+  );
+  const blockedRuleCount = result.evaluations.filter((rule) => rule.buildStatus === "BUILD_BLOCKED").length;
+  const records = new Map();
+
+  for (const rule of buildRules) {
+    if (rule.operation === "keyword_add") {
+      for (const target of rule.resolvedTargets) {
+        const spec = getOrCreatePatchRecord(records, target);
+        spec.add_keywords = uniqueStrings([...(spec.add_keywords || []), ...rule.resolvedPayload.keywords.map((record) => record.formid)]);
+      }
+    } else if (rule.operation === "formlist_inject") {
+      const spec = getOrCreatePatchRecord(records, rule.resolvedFormList);
+      spec.add_form_list_entries = uniqueStrings([...(spec.add_form_list_entries || []), ...rule.resolvedTargets.map((record) => record.formid)]);
+    } else if (rule.operation === "actor_distribution") {
+      for (const target of rule.resolvedTargets) {
+        const spec = getOrCreatePatchRecord(records, target);
+        appendResolvedField(spec, "add_keywords", rule.resolvedPayload.addKeywords);
+        appendResolvedField(spec, "add_spells", rule.resolvedPayload.addSpells);
+        appendResolvedField(spec, "add_perks", rule.resolvedPayload.addPerks);
+        appendResolvedField(spec, "add_factions", rule.resolvedPayload.addFactions);
+        appendResolvedField(spec, "add_inventory", rule.resolvedPayload.addItems);
+        appendResolvedField(spec, "add_packages", rule.resolvedPayload.addPackages);
+      }
+    }
+  }
+
+  const patchRequest = {
+    output_path: toPosix(outputPath),
+    esl_flag: Boolean(args.esl),
+    author: args.author,
+    records: [...records.values()].sort((left, right) => left.formid.localeCompare(right.formid)),
+    load_order: buildWriterLoadOrderContext(outputPath),
+  };
+
+  const sourcePluginPaths = uniqueStrings(
+    patchRequest.records
+      .map((record) => record.source_path)
+      .filter(Boolean),
+  );
+
+  return {
+    kind: "pdv_patch_build_v0",
+    outputPath: toWindows(outputPath),
+    dryRun: Boolean(args.dryRun),
+    allowCandidates: Boolean(args.allowCandidates),
+    allowToolingExamples: Boolean(args.allowToolingExamples),
+    buildRuleCount: buildRules.length,
+    blockedRuleCount,
+    skippedPlanOnlyRuleCount: skippedPlanOnly.length,
+    skippedCandidateRuleCount: skippedCandidates.length,
+    patchRecordCount: patchRequest.records.length,
+    sourcePluginPaths: sourcePluginPaths.map(toWindows),
+    patchRequest,
+  };
+}
+
+function getOrCreatePatchRecord(records, sourceRecord) {
+  const key = sourceRecord.formid;
+  let spec = records.get(key);
+  if (!spec) {
+    spec = {
+      op: "override",
+      formid: sourceRecord.formid,
+      source_plugin: sourceRecord.pluginName,
+      source_path: toPosix(sourceRecord.pluginPath),
+    };
+    records.set(key, spec);
+  }
+  return spec;
+}
+
+function appendResolvedField(spec, fieldName, records = []) {
+  if (!records.length) {
+    return;
+  }
+  spec[fieldName] = uniqueStrings([...(spec[fieldName] || []), ...records.map((record) => record.formid)]);
 }
 
 function buildRecordActionSummary(rule) {
@@ -238,12 +423,15 @@ function renderTextReport(payload) {
   const lines = [
     `schema=${payload.schema}`,
     `rules_source=${payload.source.rulesPath}`,
-    `manifests=${payload.summary.manifestCount} rules=${payload.summary.ruleCount} ready=${payload.summary.ready} blocked=${payload.summary.blocked} targets=${payload.summary.totalResolvedTargets}`,
+    `manifests=${payload.summary.manifestCount} rules=${payload.summary.ruleCount} ready=${payload.summary.ready} blocked=${payload.summary.blocked} build_ready=${payload.summary.buildReady} plan_only=${payload.summary.planOnly} build_blocked=${payload.summary.buildBlocked} targets=${payload.summary.totalResolvedTargets}`,
     `enabled_plugins=${payload.summary.enabledPluginCount}`,
   ];
 
   if (payload.plan) {
     lines.push(`plan_ready_rules=${payload.plan.readyRuleCount} blocked_rules=${payload.plan.blockedRuleCount} target_records=${payload.plan.totalTargetRecords}`);
+  }
+  if (payload.build) {
+    lines.push(`build_rules=${payload.build.buildRuleCount} blocked=${payload.build.blockedRuleCount} skipped_plan_only=${payload.build.skippedPlanOnlyRuleCount} skipped_candidates=${payload.build.skippedCandidateRuleCount} patch_records=${payload.build.patchRecordCount} output=${payload.build.outputPath}`);
   }
 
   lines.push("");
@@ -257,6 +445,7 @@ function renderTextReport(payload) {
   lines.push("Rules:");
   for (const evaluation of payload.evaluations) {
     lines.push(`- [${evaluation.status}] ${evaluation.manifestId}.${evaluation.ruleId} (${evaluation.operation})`);
+    lines.push(`  provenance_status=${evaluation.provenance.status} build_status=${evaluation.buildStatus}`);
     lines.push(`  description=${evaluation.description}`);
     lines.push(`  target=${describeTargetSelection(evaluation.target)}`);
     lines.push(`  matches=${evaluation.resolvedTargets.length}`);
@@ -264,6 +453,7 @@ function renderTextReport(payload) {
       lines.push(`  form_list=${evaluation.resolvedFormList.editorId || evaluation.resolvedFormList.formid}`);
     }
     lines.push(`  payload=${JSON.stringify(evaluation.payload)}`);
+    lines.push(`  resolved_payload=${JSON.stringify(serializeResolvedPayload(evaluation.resolvedPayload))}`);
     lines.push(`  provenance=${JSON.stringify(evaluation.provenance)}`);
     if (evaluation.resolvedTargets.length) {
       lines.push(`  resolved=${evaluation.resolvedTargets.map((item) => `${item.pluginName}:${item.edid || item.formid}:${item.type}`).join("; ")}`);
@@ -279,6 +469,10 @@ function renderTextReport(payload) {
     for (const [operation, count] of Object.entries(payload.plan.countsByOperation).sort(([a], [b]) => a.localeCompare(b))) {
       lines.push(`- ${operation}=${count}`);
     }
+  }
+  if (payload.write) {
+    lines.push("");
+    lines.push(`Write: ${payload.write.dryRun ? payload.write.message : JSON.stringify(payload.write)}`);
   }
 
   return lines.join("\n");
@@ -363,6 +557,7 @@ function evaluateRule(manifest, rule, ruleIndex, context) {
   const ruleId = validateRuleShape(manifest, rule, ruleIndex);
   const messages = [];
   const resolvedTargets = resolveTargetRecords(rule.target, context);
+  const provenanceStatus = normalizeProvenanceStatus(rule.provenance.status);
 
   if (!resolvedTargets.length) {
     messages.push("error=no winning records matched the target selector");
@@ -378,13 +573,20 @@ function evaluateRule(manifest, rule, ruleIndex, context) {
     }
   }
 
+  const resolvedPayload = resolvePayloadReferences(rule, context, messages);
+  if (provenanceStatus === "blocked") {
+    messages.push("error=rule provenance status is blocked");
+  }
+
   const status = messages.length ? "BLOCKED" : "READY";
   if (status === "READY") {
     messages.push(`ok=matched ${resolvedTargets.length} winning record(s)`);
   }
+  const buildStatus = determineBuildStatus(rule.provenance.status, status, messages);
 
   return {
     status,
+    buildStatus,
     manifestId: manifest.id,
     manifestTitle: manifest.title,
     ruleId,
@@ -392,11 +594,25 @@ function evaluateRule(manifest, rule, ruleIndex, context) {
     operation: rule.operation,
     target: rule.target,
     payload: rule.payload,
+    resolvedPayload,
     provenance: rule.provenance,
     resolvedTargets,
     resolvedFormList,
     messages,
   };
+}
+
+function determineBuildStatus(provenanceStatus, status, messages) {
+  const normalized = normalizeProvenanceStatus(provenanceStatus);
+  if (normalized === "blocked" || status === "BLOCKED") {
+    return PLAN_ONLY_PROVENANCE_STATUSES.has(normalized) && !messages.some((message) => message.startsWith("error=no winning records"))
+      ? "PLAN_ONLY"
+      : "BUILD_BLOCKED";
+  }
+  if (PLAN_ONLY_PROVENANCE_STATUSES.has(normalized)) {
+    return "PLAN_ONLY";
+  }
+  return "BUILD_READY";
 }
 
 function validateRuleShape(manifest, rule, ruleIndex) {
@@ -486,6 +702,56 @@ function validateProvenanceShape(provenance, ruleLabel) {
       throw new Error(`${ruleLabel}.provenance.${key} must be a string.`);
     }
   }
+  if (!ALLOWED_PROVENANCE_STATUSES.has(normalizeProvenanceStatus(provenance.status))) {
+    throw new Error(`${ruleLabel}.provenance.status must be one of ${[...ALLOWED_PROVENANCE_STATUSES].join(", ")}.`);
+  }
+}
+
+function normalizeProvenanceStatus(status) {
+  return String(status || "").trim().toLowerCase();
+}
+
+function resolvePayloadReferences(rule, context, messages) {
+  if (rule.operation === "keyword_add") {
+    return {
+      keywords: resolvePayloadRecordArray(rule.payload.keywords, context, messages, `${rule.id}.payload.keywords`, PAYLOAD_EXPECTED_TYPES.keywords),
+    };
+  }
+
+  if (rule.operation === "formlist_inject") {
+    return {
+      formList: resolveRecordReference(rule.payload.formList, context),
+    };
+  }
+
+  if (rule.operation === "actor_distribution") {
+    const resolved = {};
+    for (const key of DISTRIBUTION_PAYLOAD_KEYS) {
+      resolved[key] = rule.payload[key]
+        ? resolvePayloadRecordArray(rule.payload[key], context, messages, `${rule.id}.payload.${key}`, PAYLOAD_EXPECTED_TYPES[key] || null)
+        : [];
+    }
+    return resolved;
+  }
+
+  return {};
+}
+
+function resolvePayloadRecordArray(references, context, messages, label, expectedTypes = null) {
+  const resolved = [];
+  for (const reference of references || []) {
+    const record = resolveRecordReference(reference, context);
+    if (!record) {
+      messages.push(`error=${label} reference '${reference}' could not be resolved from the winning load order`);
+      continue;
+    }
+    if (expectedTypes && !expectedTypes.includes(String(record.type || "").toUpperCase())) {
+      messages.push(`error=${label} reference '${reference}' resolved to ${record.type}, expected ${expectedTypes.join("/")}`);
+      continue;
+    }
+    resolved.push(record);
+  }
+  return resolved.sort(compareResolvedRecords);
 }
 
 function resolveTargetRecords(target, context) {
@@ -686,10 +952,31 @@ function collectRelevantPluginNames(manifests) {
       if (rule.operation === "formlist_inject" && looksLikeFormId(rule.payload.formList)) {
         pluginNames.add(getPluginNameFromFormId(rule.payload.formList).toLowerCase());
       }
+      for (const reference of collectPayloadReferences(rule)) {
+        if (looksLikeFormId(reference)) {
+          pluginNames.add(getPluginNameFromFormId(reference).toLowerCase());
+        }
+      }
     }
   }
 
   return pluginNames;
+}
+
+function collectPayloadReferences(rule) {
+  if (!rule || !rule.payload) {
+    return [];
+  }
+  if (rule.operation === "keyword_add") {
+    return rule.payload.keywords || [];
+  }
+  if (rule.operation === "formlist_inject") {
+    return [rule.payload.formList].filter(Boolean);
+  }
+  if (rule.operation === "actor_distribution") {
+    return DISTRIBUTION_PAYLOAD_KEYS.flatMap((key) => rule.payload[key] || []);
+  }
+  return [];
 }
 
 function getPluginNameFromFormId(formId) {
@@ -737,6 +1024,75 @@ function bridge(request, timeoutMs = 30_000) {
   return payload;
 }
 
+function invokePatchWrite(request) {
+  return bridge(request, 120_000);
+}
+
+function buildWriterLoadOrderContext(outputPath = null) {
+  const loadOrder = buildLoadOrderContext();
+  const normalizedOutputPath = outputPath ? path.resolve(outputPath).toLowerCase() : null;
+  const ctx = {
+    game_release: "SkyrimSE",
+    listings: loadOrder.listings
+      .filter((listing) => !normalizedOutputPath || path.resolve(listing.path).toLowerCase() !== normalizedOutputPath)
+      .map((listing) => ({
+        mod_key: listing.name,
+        path: toPosix(listing.path),
+        enabled: listing.enabled,
+      })),
+  };
+
+  if (exists(STOCK_GAME_DATA)) {
+    ctx.data_folder = toPosix(STOCK_GAME_DATA);
+  }
+
+  const cccPath = path.join(STOCK_GAME, "Skyrim.ccc");
+  if (exists(cccPath)) {
+    ctx.ccc_path = toPosix(cccPath);
+  }
+
+  return ctx;
+}
+
+function buildSafeOutputPath(output) {
+  const raw = output || DEFAULT_OUTPUT;
+  const resolved = path.isAbsolute(raw)
+    ? path.resolve(raw)
+    : path.resolve(DEVOTION_MOD, raw);
+  const devotionRoot = path.resolve(DEVOTION_MOD);
+  const relative = path.relative(devotionRoot, resolved);
+
+  if (relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error(`Generated patch output must stay inside the Devotion mod folder: ${resolved}`);
+  }
+  if (path.resolve(resolved).toLowerCase() === path.resolve(path.join(DEVOTION_MOD, "PlayerDevotion_Framework.esp")).toLowerCase()) {
+    throw new Error("Generated patch output must not overwrite PlayerDevotion_Framework.esp.");
+  }
+  if (!/\.esp$/i.test(resolved)) {
+    throw new Error("Generated patch output must be an .esp file.");
+  }
+
+  return resolved;
+}
+
+function snapshotSourcePlugins(sourcePluginPaths) {
+  return new Map(sourcePluginPaths.map((filePath) => [filePath, exists(filePath) ? fs.statSync(filePath).mtimeMs : null]));
+}
+
+function compareSourceSnapshots(before) {
+  const results = [];
+  for (const [filePath, beforeMtime] of before.entries()) {
+    const afterMtime = exists(filePath) ? fs.statSync(filePath).mtimeMs : null;
+    results.push({
+      path: toWindows(filePath),
+      unchanged: beforeMtime === afterMtime,
+      beforeMtime,
+      afterMtime,
+    });
+  }
+  return results;
+}
+
 function writeJsonArtifact(targetPath, payload) {
   const resolved = path.isAbsolute(targetPath)
     ? targetPath
@@ -749,6 +1105,34 @@ function writeTextArtifact(targetPath, text) {
     ? targetPath
     : path.join(PROJECT_ROOT, targetPath);
   fs.writeFileSync(resolved, `${text}\n`, "utf8");
+}
+
+function serializeResolvedPayload(resolvedPayload = {}) {
+  const serialized = {};
+  for (const [key, value] of Object.entries(resolvedPayload)) {
+    if (Array.isArray(value)) {
+      serialized[key] = value.map((record) => ({
+        plugin: record.pluginName,
+        formid: record.formid,
+        editorId: record.edid,
+        signature: record.type,
+      }));
+    } else if (value && typeof value === "object") {
+      serialized[key] = {
+        plugin: value.pluginName,
+        formid: value.formid,
+        editorId: value.edid,
+        signature: value.type,
+      };
+    } else {
+      serialized[key] = value;
+    }
+  }
+  return serialized;
+}
+
+function uniqueStrings(values) {
+  return [...new Set(values.filter(Boolean))].sort((left, right) => left.localeCompare(right));
 }
 
 function readPluginList(filePath, starredOnly) {

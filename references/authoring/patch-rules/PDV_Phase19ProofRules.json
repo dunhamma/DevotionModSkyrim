@@ -1,0 +1,47 @@
+{
+  "ruleType": "pdv_patch_rules_v0",
+  "id": "pdv-phase19-proof-rules",
+  "title": "PDV Phase 19 generated patch proof rules",
+  "notes": [
+    "Proof rules for the Phase 19 generated-patch writer and verifier lane.",
+    "These rules are retired tooling proof, not approved live gameplay content."
+  ],
+  "rules": [
+    {
+      "id": "phase19-proof-book-keyword",
+      "description": "Proof keyword/classification override against one harmless vanilla book candidate.",
+      "operation": "keyword_add",
+      "target": {
+        "plugins": ["Skyrim.esm"],
+        "signatures": ["BOOK"],
+        "editorIds": ["MQ103FarengarBook"]
+      },
+      "payload": {
+        "keywords": ["LocTypeTemple"]
+      },
+      "provenance": {
+        "status": "tooling-example",
+        "source": "Phase 19 generated-patch proof",
+        "comment": "Retired proof rule. Kept for plan/test review only; not emitted by default live builds."
+      }
+    },
+    {
+      "id": "phase19-proof-formlist-injection",
+      "description": "Proof FormList injection override against an existing PDV-owned state-track development list.",
+      "operation": "formlist_inject",
+      "target": {
+        "plugins": ["PlayerDevotion_Framework.esp"],
+        "signatures": ["QUST"],
+        "editorIds": ["PDV_State_NordPantheonBaseline"]
+      },
+      "payload": {
+        "formList": "PDV_FLST_StateTracks_DevOnly"
+      },
+      "provenance": {
+        "status": "tooling-example",
+        "source": "Phase 19 generated-patch proof",
+        "comment": "Retired proof rule. Kept for plan/test review only; not emitted by default live builds."
+      }
+    }
+  ]
+}

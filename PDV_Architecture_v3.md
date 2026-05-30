@@ -1,7 +1,7 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-30 (v3.49 - Phase 18 runtime closeout)
-Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are runtime-proven.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current targeted Phase 18/Nord strict gate resolves the live unnamed INFO records by speaker, prompt, response, owning topic, and condition stack, and is clean at `PASS=1185, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, plus a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding; this does not broaden generated dialogue or generic gameplay authoring support.
+Last revised: 2026-05-30 (v3.51 - Phase 19 live content closeout)
+Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
 
 ---
 
@@ -1472,14 +1472,18 @@ PDV should build its own **offline Mutagen-backed patcher** for
 KID/SPID/SkyPatcher-like classification and distribution work instead of
 making those runtime frameworks hard dependencies for core 1.0.
 
-That direction now has a real planning-first foundation: `tools/pdv_patch.mjs`
-exists as a v0 dry-run patcher. It reads tracked
-`pdv_patch_rules_v0` manifests under `references/authoring/patch-rules/`,
-validates their schema strictly, reads the resolved `Devotion Dev` load order
-through the same Mutagen/MO2 context already used by `pdv_author.mjs` and
-`pdv_verify.mjs`, resolves winning target records, and emits deterministic
-plan output for review/automation. The first tracked example manifest is
-tooling-only and must not be treated as approved live content.
+That direction now has a live generated-patch lane: `tools/pdv_patch.mjs`
+reads tracked `pdv_patch_rules_v0` manifests under
+`references/authoring/patch-rules/`, validates their schema strictly, reads the
+resolved `Devotion Dev` load order through the same Mutagen/MO2 context already
+used by `pdv_author.mjs` and `pdv_verify.mjs`, resolves winning target records
+plus payload references, and emits deterministic `validate`, `plan`, and
+`build` output. `build` writes only the generated `PDV_ClassificationPatch.esp`
+artifact through the existing Mutagen bridge patch-request contract. Default
+live output emits only `approved` rules; candidate and tooling-example emission
+requires explicit test flags. The tracked example/proof manifests remain
+tooling-only, while `PDV_Phase19TempleLocationRules.json` is the first approved
+live content packet.
 
 Working name: `tools/pdv_patch.mjs` or a dedicated Mutagen/Synthesis-style patcher. The exact host can change, but the architecture is:
 
@@ -1489,10 +1493,18 @@ Working name: `tools/pdv_patch.mjs` or a dedicated Mutagen/Synthesis-style patch
 4. Emit one generated patch plugin, e.g. `PDV_ClassificationPatch.esp`, with overrides only where PDV needs added keywords, FormList entries, NPC spells/perks/items, or lightweight record tweaks.
 5. Verify the generated patch with `pdv_verify.mjs` before treating it as a supported artifact.
 
-Current v0 scope closes Steps 1-3 and the review side of Step 4. It does not
-write a generated ESP yet. That is deliberate: schema, load-order, and
-target-resolution determinism are proven first so later patch emission lands on
-a trustworthy planning surface instead of bypassing review.
+Current scope closes Steps 1-5 for the first live packet: schema validation,
+load-order resolution, target/payload resolution, safe generated patch emission,
+active Devotion Dev profile placement, generated-patch readback, retired
+proof-rule absence, and source-plugin safety are verifier-covered by
+`--strict-phase19`. Broad production classification and NPC distribution rules
+remain future content work.
+
+Packaging policy: `PDV_ClassificationPatch.esp` is a temporary generated
+review/dev artifact for core rules. Approved core vanilla/DLC rules may be
+promoted into `PlayerDevotion_Framework.esp` later through a separate
+release-packaging merge gate. Mod-list/list-specific compatibility rules remain
+separate generated patches permanently.
 
 This is inspired by KID, SPID, and SkyPatcher, but it is intentionally **patch-build-time**, not runtime:
 
@@ -1704,7 +1716,7 @@ excellent reusable example per subsystem, then clone.
 | **16** | Neglect subsystem (generic per-deity selection, max 3 active) | Phase 14 | Generic neglect selection is runtime-proven for low-piety active Kyne plus broad-worship suppression clearing the active neglect set on re-evaluation |
 | **17** | Decay model (linear with tier-floor + grace) | Phase 14 | Runtime-proven for grace, eligible tick, same-day guard, broad reduction, active-patron skip, non-patron drift, Devoted floor, and Champion floor |
 | **18** | Player-facing UI (player MCM tab, status spell, notification policy) | Phase 14 | Thematic display default; numeric override behind toggle |
-| **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Planning-first patcher validates rules against the resolved load order, `pdv_author.mjs` emits explicit manual follow-up packets for array work, and later generated classification patches can add PDV keywords/FormList entries from rules |
+| **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Patcher validates rules against the resolved load order, resolves payload references, emits an active verifier-covered `PDV_ClassificationPatch.esp` with the first approved Temple LCTN packet, and keeps future main-ESP promotion behind a separate release-packaging merge gate |
 | **20** | Authoria-first list compatibility packages | Phase 15 + Phase 19 | Authoria reaches accepted integration/test package; JOJ, TOT, HOH, MOM, DoD, and VOV reach `patch-packaged` with exact removals, one list patch, placement notes, patcher steps, and focused smoke checklist |
 | **21** | 1.0 content lock + polish | All above | Pantheon at 25-35 deities, all 10 races have at least one foreground option, all locked race architectures honored |
 
@@ -2339,6 +2351,38 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.51 - 2026-05-30 - Phase 19 live content closeout
+
+Phase 19 now has one approved live content packet. Default
+`tools/pdv_patch.mjs build` emits only `approved` rules; `candidate` and
+`tooling-example` output require explicit test flags. The retired proof
+manifest remains plan-only, and
+`references/authoring/patch-rules/PDV_Phase19TempleLocationRules.json` adds
+`LocTypeTemple` to six obvious shrine/temple `LCTN` records in the generated
+`PDV_ClassificationPatch.esp`.
+
+`PDV_ClassificationPatch.esp` is active in Devotion Dev immediately after
+`PlayerDevotion_Framework.esp`. `tools/pdv_verify.mjs --strict-phase19`
+verifies active profile placement, six Temple LCTN overrides, absence of the
+retired proof overrides, and source-plugin safety. Packaging policy is locked:
+core vanilla/DLC approved rules may later promote into the framework ESP via a
+separate release-packaging merge gate; list-specific compatibility rules remain
+separate generated patches.
+
+### v3.50 - 2026-05-30 - Phase 19 generated patcher proof
+
+Phase 19 now has a generated-patch proof lane. `tools/pdv_patch.mjs build`
+writes `PDV_ClassificationPatch.esp` through the existing Mutagen bridge
+patch-request contract, while `validate` and `plan` remain read-only. The
+patcher resolves payload references, blocks unresolved candidate/approved
+rules, and keeps tooling examples plan-only by default.
+
+`references/authoring/patch-rules/PDV_Phase19ProofRules.json` is the first
+candidate proof manifest. It proves one keyword override and one FormList
+injection in a generated ESL-flagged patch, but does not approve live gameplay
+classification content. `tools/pdv_verify.mjs --strict-phase19` verifies dry-run
+determinism, generated patch readback, and source-plugin safety.
 
 ### v3.45 - 2026-05-28 - Phase 20 compatibility rebaseline
 

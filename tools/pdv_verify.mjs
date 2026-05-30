@@ -119,6 +119,54 @@ const PATCH_RULES_DIR = path.join(
   "authoring",
   "patch-rules",
 );
+const PHASE19_GENERATED_PATCH = path.join(DEVOTION_MOD, "PDV_ClassificationPatch.esp");
+const PHASE19_PROOF_RULE_MANIFEST = path.join(PATCH_RULES_DIR, "PDV_Phase19ProofRules.json");
+const PHASE19_TEMPLE_RULE_MANIFEST = path.join(PATCH_RULES_DIR, "PDV_Phase19TempleLocationRules.json");
+const PHASE19_PROOF_BOOK_FORMID = "Skyrim.esm:0FBA57";
+const PHASE19_PROOF_BOOK_KEYWORD = "Skyrim.esm:01CD56";
+const PHASE19_PROOF_STATE_LIST_FORMID = "PlayerDevotion_Framework.esp:0499DB";
+const PHASE19_PROOF_STATE_TRACK_FORMID = "PlayerDevotion_Framework.esp:07051C";
+const SKYRIM_ESM = path.join(ANVIL_ROOT, "Stock Game", "Data", "Skyrim.esm");
+const DAWNGUARD_ESM = path.join(ANVIL_ROOT, "mods", "Cleaned Base Game Masters", "Dawnguard.esm");
+const PHASE19_TEMPLE_KEYWORD = "Skyrim.esm:01CD56";
+const PHASE19_TEMPLE_LOCATION_RECORDS = [
+  {
+    edid: "DLC1FalmerValleyTempleLocation",
+    formid: "Dawnguard.esm:01379F",
+    sourcePlugin: "Dawnguard.esm",
+    sourcePath: DAWNGUARD_ESM,
+  },
+  {
+    edid: "MarkarthShrineofTalosLocation",
+    formid: "Skyrim.esm:06E830",
+    sourcePlugin: "Skyrim.esm",
+    sourcePath: SKYRIM_ESM,
+  },
+  {
+    edid: "ShrineofAzuraLocation",
+    formid: "Skyrim.esm:092497",
+    sourcePlugin: "Skyrim.esm",
+    sourcePath: SKYRIM_ESM,
+  },
+  {
+    edid: "ShrineofBoethiahLocation",
+    formid: "Skyrim.esm:0F5BA7",
+    sourcePlugin: "Skyrim.esm",
+    sourcePath: SKYRIM_ESM,
+  },
+  {
+    edid: "ShrineofMehrunesDagonLocation",
+    formid: "Skyrim.esm:0240E6",
+    sourcePlugin: "Skyrim.esm",
+    sourcePath: SKYRIM_ESM,
+  },
+  {
+    edid: "ShrineofPeryiteLocation",
+    formid: "Skyrim.esm:0F5BA5",
+    sourcePlugin: "Skyrim.esm",
+    sourcePath: SKYRIM_ESM,
+  },
+];
 const MANAGER_PATRON_WIRE_PATCH = "PDV_ManagerPatronWirePatch.esp";
 const MCM_WIRE_PATCH = "PDV_MCMWirePatch.esp";
 const RETIRED_OVERLAY_PATCHES = [MANAGER_PATRON_WIRE_PATCH, MCM_WIRE_PATCH];
@@ -721,6 +769,7 @@ class Verifier {
     strictPhase16 = false,
     strictPhase17 = false,
     strictPhase18 = false,
+    strictPhase19 = false,
     strictNord = false,
     strictKhajiit = false,
     strictCommitment = false,
@@ -742,6 +791,7 @@ class Verifier {
     this.strictPhase16 = strictPhase16;
     this.strictPhase17 = strictPhase17;
     this.strictPhase18 = strictPhase18;
+    this.strictPhase19 = strictPhase19;
     this.strictNord = strictNord;
     this.strictKhajiit = strictKhajiit;
     this.strictCommitment = strictCommitment;
@@ -902,6 +952,14 @@ class Verifier {
     }
   }
 
+  phase19Gap(check, detail, filePath = null) {
+    if (this.strictPhase19) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   khajiitGap(check, detail, filePath = null) {
     if (this.strictKhajiit) {
       this.fail(check, detail, filePath);
@@ -959,6 +1017,7 @@ class Verifier {
       this.checkPhase17();
       this.checkPhase18();
       this.checkOfflinePatcherRules();
+      this.checkPhase19GeneratedPatch();
       this.checkPreflightOverlayPatch();
     }
     this.checkScripts();
@@ -2554,6 +2613,158 @@ class Verifier {
         this.fail("Offline patch rule manifest", `${path.basename(filePath)} could not be parsed: ${error.message}`, filePath);
       }
     }
+
+    this.checkOfflinePatcherDryRun();
+  }
+
+  checkOfflinePatcherDryRun() {
+    const patcherPath = path.join(PROJECT_ROOT, "tools", "pdv_patch.mjs");
+    if (!exists(patcherPath)) {
+      this.phase19Gap("Phase 19 patcher dry-run", "tools/pdv_patch.mjs is missing.", patcherPath);
+      return;
+    }
+
+    const result = spawnSync(process.execPath, [patcherPath, "build", "--dry-run", "--json"], {
+      cwd: PROJECT_ROOT,
+      encoding: "utf8",
+      timeout: 120_000,
+      windowsHide: true,
+      maxBuffer: 128 * 1024 * 1024,
+    });
+
+    if (result.error) {
+      this.phase19Gap("Phase 19 patcher dry-run", `pdv_patch build --dry-run failed to run: ${result.error.message}`, patcherPath);
+      return;
+    }
+    if (result.status !== 0) {
+      this.phase19Gap("Phase 19 patcher dry-run", `pdv_patch build --dry-run exited ${result.status}: ${(result.stderr || result.stdout || "").slice(0, 500)}`, patcherPath);
+      return;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(result.stdout);
+    } catch (error) {
+      this.phase19Gap("Phase 19 patcher dry-run", `pdv_patch JSON output could not be parsed: ${error.message}`, patcherPath);
+      return;
+    }
+
+    if (
+      parsed.schema === "pdv_patch_rules_v0"
+        && parsed.summary?.buildReady >= PHASE19_TEMPLE_LOCATION_RECORDS.length
+        && parsed.summary?.buildBlocked === 0
+        && parsed.build?.patchRecordCount === PHASE19_TEMPLE_LOCATION_RECORDS.length
+        && parsed.build?.buildRuleCount === PHASE19_TEMPLE_LOCATION_RECORDS.length
+    ) {
+      this.pass("Phase 19 patcher dry-run", `Dry-run emits ${parsed.build.patchRecordCount} approved Temple LCTN patch record(s), keeps ${parsed.summary.planOnly} proof/tooling rule(s) plan-only, and has ${parsed.summary.buildBlocked} build-blocked rule(s).`, patcherPath);
+    } else {
+      this.phase19Gap("Phase 19 patcher dry-run", `Unexpected dry-run summary: ${JSON.stringify(parsed.summary || {})}.`, patcherPath);
+    }
+
+    if (parsed.build?.patchRequest?.output_path?.replace(/\\/g, "/").endsWith("/PDV_ClassificationPatch.esp")) {
+      this.pass("Phase 19 patch request", `Dry-run generated ${parsed.build.patchRecordCount} patch record(s) for PDV_ClassificationPatch.esp.`, patcherPath);
+    } else {
+      this.phase19Gap("Phase 19 patch request", "Dry-run did not produce the expected PDV_ClassificationPatch.esp patch request.", patcherPath);
+    }
+  }
+
+  checkPhase19GeneratedPatch() {
+    if (!exists(PHASE19_PROOF_RULE_MANIFEST)) {
+      this.phase19Gap("Phase 19 proof rules", "Phase 19 proof rule manifest is missing.", PHASE19_PROOF_RULE_MANIFEST);
+      return;
+    }
+    if (!exists(PHASE19_TEMPLE_RULE_MANIFEST)) {
+      this.phase19Gap("Phase 19 Temple rules", "Approved Phase 19 Temple LCTN rule manifest is missing.", PHASE19_TEMPLE_RULE_MANIFEST);
+      return;
+    }
+
+    if (!exists(PHASE19_GENERATED_PATCH)) {
+      this.phase19Gap("Phase 19 generated patch", "PDV_ClassificationPatch.esp has not been generated yet.", PHASE19_GENERATED_PATCH);
+      return;
+    }
+
+    let scan;
+    try {
+      scan = this.scanPlugin(PHASE19_GENERATED_PATCH);
+    } catch (error) {
+      this.phase19Gap("Phase 19 generated patch", `Generated patch scan failed: ${error.message}`, PHASE19_GENERATED_PATCH);
+      return;
+    }
+
+    const plugin = scan.plugin;
+    const masters = plugin.masters || [];
+    if (plugin.is_light && masters.includes("Skyrim.esm") && masters.includes("Dawnguard.esm")) {
+      this.pass("Phase 19 generated patch", "PDV_ClassificationPatch.esp is ESL-flagged and carries the expected Skyrim/Dawnguard masters.", PHASE19_GENERATED_PATCH);
+    } else {
+      this.phase19Gap("Phase 19 generated patch", `Generated patch flags/masters mismatch: is_light=${plugin.is_light}, masters=${masters.join(", ")}.`, PHASE19_GENERATED_PATCH);
+    }
+
+    const activePlugins = exists(DEV_PROFILE_PLUGINS) ? readLines(DEV_PROFILE_PLUGINS).map((line) => line.trim().toLowerCase()) : [];
+    if (activePlugins.includes("*pdv_classificationpatch.esp")) {
+      this.pass("Phase 19 generated patch profile", "PDV_ClassificationPatch.esp is active in the Devotion Dev profile.", DEV_PROFILE_PLUGINS);
+    } else {
+      this.phase19Gap("Phase 19 generated patch profile", "PDV_ClassificationPatch.esp is not active in the Devotion Dev profile.", DEV_PROFILE_PLUGINS);
+    }
+
+    const loadorder = exists(DEV_PROFILE_LOADORDER) ? readLines(DEV_PROFILE_LOADORDER).map((line) => line.trim()).filter((line) => line && !line.startsWith("#")) : [];
+    const frameworkIndex = loadorder.findIndex((line) => line.toLowerCase() === "playerdevotion_framework.esp");
+    const patchIndex = loadorder.findIndex((line) => line.toLowerCase() === "pdv_classificationpatch.esp");
+    if (frameworkIndex >= 0 && patchIndex === frameworkIndex + 1) {
+      this.pass("Phase 19 generated patch load order", "PDV_ClassificationPatch.esp is listed immediately after PlayerDevotion_Framework.esp.", DEV_PROFILE_LOADORDER);
+    } else {
+      this.phase19Gap("Phase 19 generated patch load order", "PDV_ClassificationPatch.esp is not listed immediately after PlayerDevotion_Framework.esp.", DEV_PROFILE_LOADORDER);
+    }
+
+    for (const location of PHASE19_TEMPLE_LOCATION_RECORDS) {
+      const locationPatch = this.readPluginRecordDetail(PHASE19_GENERATED_PATCH, location.formid)?.fields || {};
+      const keywords = normalizeStringList(locationPatch.Keywords || []);
+      if (keywords.includes(PHASE19_TEMPLE_KEYWORD)) {
+        this.pass("Phase 19 Temple LCTN readback", `Generated patch adds LocTypeTemple to ${location.edid}.`, PHASE19_GENERATED_PATCH);
+      } else {
+        this.phase19Gap("Phase 19 Temple LCTN readback", `Generated patch is missing LocTypeTemple on ${location.edid}.`, PHASE19_GENERATED_PATCH);
+      }
+    }
+
+    if (!scan.recordsByFormid.has(PHASE19_PROOF_BOOK_FORMID)) {
+      this.pass("Phase 19 proof override absence", "Generated live patch does not include the retired MQ103FarengarBook proof override.", PHASE19_GENERATED_PATCH);
+    } else {
+      this.phase19Gap("Phase 19 proof override absence", "Generated live patch still includes the retired MQ103FarengarBook proof override.", PHASE19_GENERATED_PATCH);
+    }
+    if (!scan.recordsByFormid.has(PHASE19_PROOF_STATE_LIST_FORMID)) {
+      this.pass("Phase 19 proof override absence", "Generated live patch does not include the retired state-track FormList proof override.", PHASE19_GENERATED_PATCH);
+    } else {
+      this.phase19Gap("Phase 19 proof override absence", "Generated live patch still includes the retired state-track FormList proof override.", PHASE19_GENERATED_PATCH);
+    }
+
+    this.checkPhase19SourcePluginNotMutated();
+  }
+
+  checkPhase19SourcePluginNotMutated() {
+    const bookSource = this.readPluginRecordDetail(SKYRIM_ESM, PHASE19_PROOF_BOOK_FORMID)?.fields || {};
+    const sourceBookKeywords = normalizeStringList(bookSource.Keywords || []);
+    if (!sourceBookKeywords.includes(PHASE19_PROOF_BOOK_KEYWORD)) {
+      this.pass("Phase 19 source plugin safety", "Skyrim.esm does not contain the retired proof-only LocTypeTemple book keyword.", SKYRIM_ESM);
+    } else {
+      this.phase19Gap("Phase 19 source plugin safety", "Skyrim.esm unexpectedly contains the retired proof-only book keyword.", SKYRIM_ESM);
+    }
+
+    for (const location of PHASE19_TEMPLE_LOCATION_RECORDS) {
+      const locationSource = this.readPluginRecordDetail(location.sourcePath, location.formid)?.fields || {};
+      const sourceKeywords = normalizeStringList(locationSource.Keywords || []);
+      if (!sourceKeywords.includes(PHASE19_TEMPLE_KEYWORD)) {
+        this.pass("Phase 19 source plugin safety", `${location.sourcePlugin} source record ${location.edid} remains unmodified; the generated patch owns LocTypeTemple.`, location.sourcePath);
+      } else {
+        this.phase19Gap("Phase 19 source plugin safety", `${location.sourcePlugin} source record ${location.edid} unexpectedly contains LocTypeTemple.`, location.sourcePath);
+      }
+    }
+
+    const listSource = this.readPluginRecordDetail(PDV_ESP, PHASE19_PROOF_STATE_LIST_FORMID)?.fields || {};
+    const sourceListItems = normalizeStringList(listSource.Items || []);
+    if (!sourceListItems.includes(PHASE19_PROOF_STATE_TRACK_FORMID)) {
+      this.pass("Phase 19 source plugin safety", "PlayerDevotion_Framework.esp does not contain the retired proof-only state-track list injection.", PDV_ESP);
+    } else {
+      this.phase19Gap("Phase 19 source plugin safety", "PlayerDevotion_Framework.esp unexpectedly contains the retired proof-only state-track list injection.", PDV_ESP);
+    }
   }
 
   checkPatternProvingManifest() {
@@ -3145,7 +3356,7 @@ class Verifier {
       return true;
     }
 
-    return this.strictPhase11 || this.strictPhase18 || this.strictNord;
+    return this.strictPhase11 || this.strictPhase18 || this.strictPhase19 || this.strictNord;
   }
 
   checkPhase11ArngeirInfo(info, infoFormid, topicFormid, source = "INFO") {
@@ -5078,6 +5289,23 @@ function exists(filePath) {
   return fs.existsSync(filePath);
 }
 
+function normalizeStringList(values) {
+  if (!Array.isArray(values)) {
+    return [];
+  }
+  return values
+    .map((value) => {
+      if (typeof value === "string") {
+        return value;
+      }
+      if (value && typeof value === "object") {
+        return value.Object || value.FormKey || value.FormId || value.formid || null;
+      }
+      return null;
+    })
+    .filter(Boolean);
+}
+
 function mtimeMs(filePath) {
   return fs.statSync(filePath).mtimeMs;
 }
@@ -5168,6 +5396,7 @@ function parseArgs(argv) {
     strictPhase16: false,
     strictPhase17: false,
     strictPhase18: false,
+    strictPhase19: false,
     strictNord: false,
     strictKhajiit: false,
     strictCommitment: false,
@@ -5210,6 +5439,8 @@ function parseArgs(argv) {
       args.strictPhase17 = true;
     } else if (arg === "--strict-phase18") {
       args.strictPhase18 = true;
+    } else if (arg === "--strict-phase19") {
+      args.strictPhase19 = true;
     } else if (arg === "--strict-nord") {
       args.strictNord = true;
       args.strictPhase18 = true;
@@ -5222,7 +5453,7 @@ function parseArgs(argv) {
       args.strictPhase16 = true;
       args.strictPhase17 = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16] [--strict-phase17] [--strict-phase18] [--strict-nord]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16] [--strict-phase17] [--strict-phase18] [--strict-phase19] [--strict-nord]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -5251,6 +5482,7 @@ const verifier = new Verifier({
   strictPhase16: args.strictPhase16,
   strictPhase17: args.strictPhase17,
   strictPhase18: args.strictPhase18,
+  strictPhase19: args.strictPhase19,
   strictNord: args.strictNord,
   strictKhajiit: args.strictKhajiit,
   strictCommitment: args.strictCommitment,

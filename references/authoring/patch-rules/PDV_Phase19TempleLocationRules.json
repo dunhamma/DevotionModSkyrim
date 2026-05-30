@@ -1,0 +1,120 @@
+{
+  "ruleType": "pdv_patch_rules_v0",
+  "id": "pdv-phase19-temple-location-rules",
+  "title": "PDV Phase 19 approved Temple location rules",
+  "notes": [
+    "First approved live-content packet for the Phase 19 generated classification patch.",
+    "Adds the existing vanilla LocTypeTemple keyword to obvious shrine/temple LCTN records that currently lack it.",
+    "This is core vanilla/DLC classification content eligible for later main-ESP promotion, but Phase 19 keeps it in the generated review artifact."
+  ],
+  "rules": [
+    {
+      "id": "temple-lctn-markarth-talos-shrine",
+      "description": "Classify the Markarth Shrine of Talos location as a temple/rite location.",
+      "operation": "keyword_add",
+      "target": {
+        "plugins": ["Skyrim.esm"],
+        "signatures": ["LCTN"],
+        "editorIds": ["MarkarthShrineofTalosLocation"]
+      },
+      "payload": {
+        "keywords": ["Skyrim.esm:01CD56"]
+      },
+      "provenance": {
+        "status": "approved",
+        "source": "Phase 19 live content closeout",
+        "comment": "Obvious shrine location missing LocTypeTemple in the resolved load order."
+      }
+    },
+    {
+      "id": "temple-lctn-azura-shrine",
+      "description": "Classify the Shrine of Azura location as a temple/rite location.",
+      "operation": "keyword_add",
+      "target": {
+        "plugins": ["Skyrim.esm"],
+        "signatures": ["LCTN"],
+        "editorIds": ["ShrineofAzuraLocation"]
+      },
+      "payload": {
+        "keywords": ["Skyrim.esm:01CD56"]
+      },
+      "provenance": {
+        "status": "approved",
+        "source": "Phase 19 live content closeout",
+        "comment": "Obvious shrine location missing LocTypeTemple in the resolved load order."
+      }
+    },
+    {
+      "id": "temple-lctn-boethiah-shrine",
+      "description": "Classify the Shrine of Boethiah location as a temple/rite location.",
+      "operation": "keyword_add",
+      "target": {
+        "plugins": ["Skyrim.esm"],
+        "signatures": ["LCTN"],
+        "editorIds": ["ShrineofBoethiahLocation"]
+      },
+      "payload": {
+        "keywords": ["Skyrim.esm:01CD56"]
+      },
+      "provenance": {
+        "status": "approved",
+        "source": "Phase 19 live content closeout",
+        "comment": "Obvious shrine location missing LocTypeTemple in the resolved load order."
+      }
+    },
+    {
+      "id": "temple-lctn-mehrunes-dagon-shrine",
+      "description": "Classify the Shrine of Mehrunes Dagon location as a temple/rite location.",
+      "operation": "keyword_add",
+      "target": {
+        "plugins": ["Skyrim.esm"],
+        "signatures": ["LCTN"],
+        "editorIds": ["ShrineofMehrunesDagonLocation"]
+      },
+      "payload": {
+        "keywords": ["Skyrim.esm:01CD56"]
+      },
+      "provenance": {
+        "status": "approved",
+        "source": "Phase 19 live content closeout",
+        "comment": "Obvious shrine location missing LocTypeTemple in the resolved load order."
+      }
+    },
+    {
+      "id": "temple-lctn-peryite-shrine",
+      "description": "Classify the Shrine of Peryite location as a temple/rite location.",
+      "operation": "keyword_add",
+      "target": {
+        "plugins": ["Skyrim.esm"],
+        "signatures": ["LCTN"],
+        "editorIds": ["ShrineofPeryiteLocation"]
+      },
+      "payload": {
+        "keywords": ["Skyrim.esm:01CD56"]
+      },
+      "provenance": {
+        "status": "approved",
+        "source": "Phase 19 live content closeout",
+        "comment": "Obvious shrine location missing LocTypeTemple in the resolved load order."
+      }
+    },
+    {
+      "id": "temple-lctn-falmer-valley-temple",
+      "description": "Classify the Forgotten Vale Falmer temple location as a temple/rite location.",
+      "operation": "keyword_add",
+      "target": {
+        "plugins": ["Dawnguard.esm"],
+        "signatures": ["LCTN"],
+        "editorIds": ["DLC1FalmerValleyTempleLocation"]
+      },
+      "payload": {
+        "keywords": ["Skyrim.esm:01CD56"]
+      },
+      "provenance": {
+        "status": "approved",
+        "source": "Phase 19 live content closeout",
+        "comment": "Obvious Dawnguard temple location missing LocTypeTemple in the resolved load order."
+      }
+    }
+  ]
+}
