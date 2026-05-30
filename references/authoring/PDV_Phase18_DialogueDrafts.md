@@ -7,14 +7,15 @@ into `PDV_Phase18StatusNord.manifest.json` and
 
 ## Current Contract
 
-These are the four Phase 18 manual CK topics currently planned.
+These are the four Phase 18 CK-authored topics currently live. The final
+response column is the ESP/readback contract.
 
 | Id | Speaker | Prompt | Current response | Final response |
 | --- | --- | --- | --- | --- |
-| `froki-kyne-champion` | Froki | `I sleep where Kyne sleeps. I hunt where she hunts.` | `Then you know her by more than shrine-talk. Keep to the sky, hunter.` | TODO |
-| `heimskr-talos-champion` | Heimskr | `The old breath is mine to carry. Tell me what is needed.` | `Then shout it where they can hear. Talos lives in every brave breath.` | TODO |
-| `andurs-broad-death-rite` | Andurs | `I keep the rites. What is owed the dead here?` | `Then help me keep them. Arkay asks little, but the dead are owed much.` | TODO |
-| `aela-hircine-tension` | Aela | `The hunt pulls at Sovngarde. What do you see in me?` | `I see a hunter, not a feast-hall saint. Carry the beast, or master it.` | TODO |
+| `froki-kyne-champion` | Froki | `I sleep where Kyne sleeps. I hunt where she hunts.` | `Then you know her by more than shrine-talk. Keep to the sky, hunter.` | `Then you know the old wind. Do not let temple smoke blind you.` |
+| `heimskr-talos-champion` | Heimskr | `The old breath is mine to carry. Tell me what is needed.` | `Then shout it where they can hear. Talos lives in every brave breath.` | `Then let the cowards hear it. Talos needs no quiet servants.` |
+| `andurs-broad-death-rite` | Andurs | `I keep the rites. What is owed the dead here?` | `Then help me keep them. Arkay asks little, but the dead are owed much.` | `A name, a prayer, and clean hands. That is more than many give.` |
+| `aela-hircine-tension` | Aela | `The hunt pulls at Sovngarde. What do you see in me?` | `I see a hunter, not a feast-hall saint. Carry the beast, or master it.` | `I see someone standing between the hall and the hunt. Choose well.` |
 
 ## Optional Revisions
 

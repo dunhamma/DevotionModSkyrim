@@ -1,7 +1,7 @@
 {
   "phase": "18A/B",
   "name": "Player Status Surface + Nord Complete Pilot",
-  "status": "helper-authored-records-live",
+  "status": "helper-records-and-ck-dialogue-readback-live",
   "survey": {
     "spell": "PDV_SPEL_SurveyDevotion",
     "magicEffect": "PDV_MGEF_SurveyDevotion",
@@ -40,7 +40,7 @@
     }
   ],
   "dialogue": {
-    "implementationStatus": "manual-ck-required",
+    "implementationStatus": "live-dialogue-authored",
     "contracts": [
       {
         "id": "froki-kyne-champion",
@@ -49,7 +49,7 @@
         "topic": "PDV_TIF_Nord_Froki_KyneChampion",
         "infoHint": "PDV_INFO_Nord_Froki_KyneChampion",
         "prompt": "I sleep where Kyne sleeps. I hunt where she hunts.",
-        "response": "Then you know her by more than shrine-talk. Keep to the sky, hunter.",
+        "response": "Then you know the old wind. Do not let temple smoke blind you.",
         "conditions": [ "speaker Froki", "origin Nord", "active Kyne", "tier >= Champion" ]
       },
       {
@@ -59,7 +59,7 @@
         "topic": "PDV_TIF_Nord_Heimskr_TalosChampion",
         "infoHint": "PDV_INFO_Nord_Heimskr_TalosChampion",
         "prompt": "The old breath is mine to carry. Tell me what is needed.",
-        "response": "Then shout it where they can hear. Talos lives in every brave breath.",
+        "response": "Then let the cowards hear it. Talos needs no quiet servants.",
         "conditions": [ "speaker Heimskr", "origin Nord", "active Talos", "tier >= Champion" ]
       },
       {
@@ -69,7 +69,7 @@
         "topic": "PDV_TIF_Nord_Andurs_DeathRite",
         "infoHint": "PDV_INFO_Nord_Andurs_DeathRite",
         "prompt": "I keep the rites. What is owed the dead here?",
-        "response": "Then help me keep them. Arkay asks little, but the dead are owed much.",
+        "response": "A name, a prayer, and clean hands. That is more than many give.",
         "conditions": [ "speaker Andurs", "origin Nord", "broad patron state", "curse state not Vampire" ]
       },
       {
@@ -79,7 +79,7 @@
         "topic": "PDV_TIF_Nord_Aela_HircineTension",
         "infoHint": "PDV_INFO_Nord_Aela_HircineTension",
         "prompt": "The hunt pulls at Sovngarde. What do you see in me?",
-        "response": "I see a hunter, not a feast-hall saint. Carry the beast, or master it.",
+        "response": "I see someone standing between the hall and the hunt. Choose well.",
         "conditions": [ "speaker Aela", "origin Nord", "curse state Werewolf or active Hircine path" ]
       }
     ]

@@ -213,7 +213,7 @@ Runtime closeout update (2026-05-28):
   anti-repeat-scaled before stigma or piety is applied, so counted Seeker proof
   must use one rite on each of three in-game days rather than same-day spam.
 
-Phase 18A/B source/readback update (2026-05-28):
+Phase 18A/B source/readback update (2026-05-30):
 
 - **Player surface:** `Survey Devotion` and the MCM `Player` page are live in
   source/readback. Numeric Status/Debug surfaces are gated behind Developer
@@ -223,8 +223,8 @@ Phase 18A/B source/readback update (2026-05-28):
   feedback have source/readback coverage. Fresh-save runtime proof is still
   pending.
 - **Dialogue boundary:** Froki, Heimskr, Andurs, and Aela recognition topics are
-  contracted for manual CK authoring. They are not complete until CK records,
-  SEQ refresh, and positive/negative runtime proof are done.
+  CK-authored/live as branch/topic/unnamed INFO chains. They are not complete
+  until positive/negative runtime proof is done.
 - **Runtime matrix:** Phase 18 now explicitly requires Player page, Developer
   Options persistence, Survey Devotion for broad/focused Nord states,
   Hircine/werewolf tension, vampire suppression, vampire cure scar, save/load

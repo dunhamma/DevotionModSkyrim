@@ -194,31 +194,58 @@ const PHASE18_EFFECT_PROPERTIES = {
 const PHASE18_NORD_DIALOGUE_CONTRACTS = [
   {
     id: "froki-kyne-champion",
+    branch: "PDV_DIAL_Nord_Froki_KyneChampionBranch",
     topic: "PDV_TIF_Nord_Froki_KyneChampion",
     speaker: "Froki",
+    speakerFormid: "Skyrim.esm:0185F6",
     prompt: "I sleep where Kyne sleeps. I hunt where she hunts.",
-    response: "Then you know her by more than shrine-talk. Keep to the sky, hunter.",
+    response: "Then you know the old wind. Do not let temple smoke blind you.",
+    gates: [
+      { global: "PDV_GLO_OriginRace", op: "EqualTo", value: 0, label: "Nord origin" },
+      { global: "PDV_GLO_ActiveDeityIndex", op: "EqualTo", value: 0, label: "active Kyne" },
+      { global: "PDV_GLO_ActiveTier", op: "GreaterThanOrEqualTo", value: 3, label: "Champion tier" },
+    ],
   },
   {
     id: "heimskr-talos-champion",
+    branch: "PDV_DIAL_Nord_Heimskr_TalosChampionBranch",
     topic: "PDV_TIF_Nord_Heimskr_TalosChampion",
     speaker: "Heimskr",
+    speakerFormid: "Skyrim.esm:013BAC",
     prompt: "The old breath is mine to carry. Tell me what is needed.",
-    response: "Then shout it where they can hear. Talos lives in every brave breath.",
+    response: "Then let the cowards hear it. Talos needs no quiet servants.",
+    gates: [
+      { global: "PDV_GLO_OriginRace", op: "EqualTo", value: 0, label: "Nord origin" },
+      { global: "PDV_GLO_ActiveDeityIndex", op: "EqualTo", value: 1, label: "active Talos" },
+      { global: "PDV_GLO_ActiveTier", op: "GreaterThanOrEqualTo", value: 3, label: "Champion tier" },
+    ],
   },
   {
     id: "andurs-broad-death-rite",
+    branch: "PDV_DIAL_Nord_Andurs_DeathRiteBranch",
     topic: "PDV_TIF_Nord_Andurs_DeathRite",
     speaker: "Andurs",
+    speakerFormid: "Skyrim.esm:013BA8",
     prompt: "I keep the rites. What is owed the dead here?",
-    response: "Then help me keep them. Arkay asks little, but the dead are owed much.",
+    response: "A name, a prayer, and clean hands. That is more than many give.",
+    gates: [
+      { global: "PDV_GLO_OriginRace", op: "EqualTo", value: 0, label: "Nord origin" },
+      { global: "PDV_GLO_PatronState", op: "EqualTo", value: 1, label: "broad patron state" },
+      { global: "PDV_GLO_CurseState", op: "NotEqualTo", value: 2, label: "not vampire" },
+    ],
   },
   {
     id: "aela-hircine-tension",
+    branch: "PDV_DIAL_Nord_Aela_HircineTensionBranch",
     topic: "PDV_TIF_Nord_Aela_HircineTension",
     speaker: "Aela",
+    speakerFormid: "Skyrim.esm:01A696",
     prompt: "The hunt pulls at Sovngarde. What do you see in me?",
-    response: "I see a hunter, not a feast-hall saint. Carry the beast, or master it.",
+    response: "I see someone standing between the hall and the hunt. Choose well.",
+    gates: [
+      { global: "PDV_GLO_OriginRace", op: "EqualTo", value: 0, label: "Nord origin" },
+      { global: "PDV_GLO_CurseState", op: "EqualTo", value: 1, label: "werewolf curse state" },
+    ],
   },
 ];
 
@@ -1044,7 +1071,7 @@ class Verifier {
     const wantedFormids = [...this.recordsByEdid.values()]
       .map((record) => record.formid)
       .filter(Boolean);
-    if (this.strictPhase11) {
+    if (this.strictPhase11 || this.strictPhase18 || this.strictNord) {
       for (const record of this.recordsByFormid.values()) {
         if (record.type === "INFO" && record.formid) {
           wantedFormids.push(record.formid);
@@ -2386,12 +2413,112 @@ class Verifier {
     }
 
     for (const contract of PHASE18_NORD_DIALOGUE_CONTRACTS) {
+      const branchRecord = this.recordsByEdid.get(contract.branch);
       const topic = this.recordsByEdid.get(contract.topic);
+      const branchFields = this.recordDetails.get(contract.branch)?.fields || {};
+      const topicFields = this.recordDetails.get(contract.topic)?.fields || {};
+      const infoCandidate = this.resolvePhase18NordDialogueInfo(contract, topicFields);
+
+      if (branchRecord?.type === "DLBR") {
+        this.pass("Phase 18 Nord dialogue branch", `${contract.branch} exists for ${contract.speaker}.`, PDV_ESP);
+      } else {
+        this.phase18Gap("Phase 18 Nord dialogue branch", `${contract.branch} is missing or not a DLBR record.`, PDV_ESP);
+      }
+      if (
+        branchFields.Quest === this.recordsByEdid.get("PDV__ManagerQuest")?.formid
+        && branchFields.Category === "Player"
+        && branchFields.Flags === "TopLevel"
+        && branchFields.StartingTopic === topic?.formid
+      ) {
+        this.pass("Phase 18 Nord dialogue branch", `${contract.branch} is a player top-level branch owned by PDV__ManagerQuest.`, PDV_ESP);
+      } else {
+        this.phase18Gap("Phase 18 Nord dialogue branch", `${contract.branch} ownership, flags, category, or starting topic do not match the contract.`, PDV_ESP);
+      }
+
       if (topic?.type === "DIAL") {
         this.pass("Phase 18 Nord dialogue topic", `${contract.topic} exists for ${contract.speaker}.`, PDV_ESP);
       } else {
         this.phase18Gap("Phase 18 Nord dialogue topic", `${contract.topic} is missing or not a DIAL record.`, PDV_ESP);
       }
+      if (
+        topicFields.Quest === this.recordsByEdid.get("PDV__ManagerQuest")?.formid
+        && topicFields.Branch === branchRecord?.formid
+        && topicFields.Category === "Topic"
+        && topicFields.Subtype === "Custom"
+      ) {
+        this.pass("Phase 18 Nord dialogue topic", `${contract.topic} is owned by PDV__ManagerQuest and linked to ${contract.branch}.`, PDV_ESP);
+      } else {
+        this.phase18Gap("Phase 18 Nord dialogue topic", `${contract.topic} quest, branch, category, or subtype do not match the contract.`, PDV_ESP);
+      }
+
+      this.checkPhase18NordDialogueInfo(contract, infoCandidate, topic?.formid);
+    }
+  }
+
+  resolvePhase18NordDialogueInfo(contract, topic) {
+    const topicResponses = Array.isArray(topic.Responses) ? topic.Responses : [];
+    const topicInfo = topicResponses.find((candidate) =>
+      candidate?.Prompt === contract.prompt
+      && candidate?.Responses?.[0]?.Text === contract.response
+      && this.hasSpeakerGate(candidate, contract.speakerFormid));
+    const unnamedInfoRecord = [...this.recordsByFormid.values()].find((record) => {
+      if (record.type !== "INFO" || record.edid) {
+        return false;
+      }
+      const detail = this.recordDetailsByFormid.get(record.formid)?.fields || {};
+      return detail.Prompt === contract.prompt
+        && detail.Responses?.[0]?.Text === contract.response
+        && this.hasSpeakerGate(detail, contract.speakerFormid);
+    });
+
+    if (topicInfo || unnamedInfoRecord) {
+      return {
+        record: unnamedInfoRecord || { type: "INFO", formid: null },
+        fields: topicInfo || this.recordDetailsByFormid.get(unnamedInfoRecord.formid)?.fields || {},
+        source: unnamedInfoRecord ? "CK-authored unnamed INFO" : "topic embedded INFO payload",
+      };
+    }
+
+    return null;
+  }
+
+  checkPhase18NordDialogueInfo(contract, infoCandidate, topicFormid) {
+    const info = infoCandidate?.fields || {};
+    if (!info || !Object.keys(info).length) {
+      this.phase18Gap("Phase 18 Nord dialogue info", `${contract.id} INFO detail readback is missing.`, PDV_ESP);
+      return;
+    }
+
+    const topicMatches = !info.Topic || info.Topic === topicFormid;
+    if (topicMatches && info.Prompt === contract.prompt) {
+      this.pass("Phase 18 Nord dialogue info", `${contract.id} prompt matches (${infoCandidate.source}).`, PDV_ESP);
+    } else {
+      this.phase18Gap("Phase 18 Nord dialogue info", `${contract.id} prompt/topic readback does not match the contract.`, PDV_ESP);
+    }
+
+    const responseLine = info.Responses?.[0]?.Text;
+    if (responseLine === contract.response) {
+      this.pass("Phase 18 Nord dialogue info", `${contract.id} response line matches the locked text.`, PDV_ESP);
+    } else {
+      this.phase18Gap("Phase 18 Nord dialogue info", `${contract.id} response line is ${JSON.stringify(responseLine)}, expected ${JSON.stringify(contract.response)}.`, PDV_ESP);
+    }
+
+    const conditions = Array.isArray(info.Conditions) ? info.Conditions : [];
+    const hasSpeakerCondition = this.hasSpeakerGate(info, contract.speakerFormid);
+    const gateResults = contract.gates.map((gate) => ({
+      label: gate.label,
+      ok: this.hasGlobalCondition(conditions, gate.global, gate.op, gate.value),
+    }));
+    const missing = gateResults.filter((gate) => !gate.ok).map((gate) => gate.label);
+
+    if (hasSpeakerCondition && missing.length === 0) {
+      this.pass("Phase 18 Nord dialogue conditions", `${contract.id} gates on ${contract.speaker} plus ${contract.gates.map((gate) => gate.label).join(", ")}.`, PDV_ESP);
+    } else {
+      this.phase18Gap(
+        "Phase 18 Nord dialogue conditions",
+        `${contract.id} condition readback missing expected gates: speaker=${hasSpeakerCondition}, missing=${missing.join(", ") || "none"}.`,
+        PDV_ESP,
+      );
     }
   }
 
@@ -3015,7 +3142,7 @@ class Verifier {
       return true;
     }
 
-    return this.strictPhase11;
+    return this.strictPhase11 || this.strictPhase18 || this.strictNord;
   }
 
   checkPhase11ArngeirInfo(info, infoFormid, topicFormid, source = "INFO") {
@@ -3064,6 +3191,18 @@ class Verifier {
       condition.CompareOperator === compareOperator
       && condition.ComparisonValue === comparisonValue
       && condition.Data?.Global?.Link === globalFormid);
+  }
+
+  hasSpeakerGate(info, speakerFormid) {
+    if (info?.Speaker === speakerFormid) {
+      return true;
+    }
+
+    const conditions = Array.isArray(info?.Conditions) ? info.Conditions : [];
+    return conditions.some((condition) =>
+      condition.CompareOperator === "EqualTo"
+      && condition.ComparisonValue === 1
+      && condition.Data?.Object?.Link === speakerFormid);
   }
 
   checkPhase8ConcordatTrackRecord() {

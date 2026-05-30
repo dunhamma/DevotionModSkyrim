@@ -15,10 +15,10 @@ Create one branch/topic/INFO path per row. CK may save INFO records without stab
 
 | Speaker | Branch EditorID | Topic EditorID | INFO hint | Prompt | Response |
 | --- | --- | --- | --- | --- | --- |
-| Froki | `PDV_DIAL_Nord_Froki_KyneChampionBranch` | `PDV_TIF_Nord_Froki_KyneChampion` | `PDV_INFO_Nord_Froki_KyneChampion` | `I sleep where Kyne sleeps. I hunt where she hunts.` | `Then you know her by more than shrine-talk. Keep to the sky, hunter.` |
-| Heimskr | `PDV_DIAL_Nord_Heimskr_TalosChampionBranch` | `PDV_TIF_Nord_Heimskr_TalosChampion` | `PDV_INFO_Nord_Heimskr_TalosChampion` | `The old breath is mine to carry. Tell me what is needed.` | `Then shout it where they can hear. Talos lives in every brave breath.` |
-| Andurs | `PDV_DIAL_Nord_Andurs_DeathRiteBranch` | `PDV_TIF_Nord_Andurs_DeathRite` | `PDV_INFO_Nord_Andurs_DeathRite` | `I keep the rites. What is owed the dead here?` | `Then help me keep them. Arkay asks little, but the dead are owed much.` |
-| Aela | `PDV_DIAL_Nord_Aela_HircineTensionBranch` | `PDV_TIF_Nord_Aela_HircineTension` | `PDV_INFO_Nord_Aela_HircineTension` | `The hunt pulls at Sovngarde. What do you see in me?` | `I see a hunter, not a feast-hall saint. Carry the beast, or master it.` |
+| Froki | `PDV_DIAL_Nord_Froki_KyneChampionBranch` | `PDV_TIF_Nord_Froki_KyneChampion` | `PDV_INFO_Nord_Froki_KyneChampion` | `I sleep where Kyne sleeps. I hunt where she hunts.` | `Then you know the old wind. Do not let temple smoke blind you.` |
+| Heimskr | `PDV_DIAL_Nord_Heimskr_TalosChampionBranch` | `PDV_TIF_Nord_Heimskr_TalosChampion` | `PDV_INFO_Nord_Heimskr_TalosChampion` | `The old breath is mine to carry. Tell me what is needed.` | `Then let the cowards hear it. Talos needs no quiet servants.` |
+| Andurs | `PDV_DIAL_Nord_Andurs_DeathRiteBranch` | `PDV_TIF_Nord_Andurs_DeathRite` | `PDV_INFO_Nord_Andurs_DeathRite` | `I keep the rites. What is owed the dead here?` | `A name, a prayer, and clean hands. That is more than many give.` |
+| Aela | `PDV_DIAL_Nord_Aela_HircineTensionBranch` | `PDV_TIF_Nord_Aela_HircineTension` | `PDV_INFO_Nord_Aela_HircineTension` | `The hunt pulls at Sovngarde. What do you see in me?` | `I see someone standing between the hall and the hunt. Choose well.` |
 
 ## Condition Contract
 
@@ -28,6 +28,17 @@ Create one branch/topic/INFO path per row. CK may save INFO records without stab
 - Aela: speaker is Aela, origin is Nord, and either curse state is Werewolf or the Hircine pilot path is active.
 
 Use globals/properties already surfaced by the manager where possible. If a condition cannot be expressed safely in CK without new helper globals, stop and add the missing readback/global contract before authoring the topic.
+
+## Current CK Readback
+
+Last direct readback found these saved records in `PlayerDevotion_Framework.esp`:
+
+- Froki branch/topic/INFO exists and matches the Kyne Champion contract.
+- Heimskr branch/topic/INFO exists and matches the Talos Champion contract.
+- Andurs branch/topic/INFO exists and matches the broad death-rite contract.
+- Aela branch/topic/INFO exists and matches the werewolf/Hircine tension contract.
+
+`dialogue.implementationStatus` is now `live-dialogue-authored`; strict Phase 18/Nord verification checks branch/topic/INFO payload and condition readback. SEQ has been refreshed for the current save. Runtime proof remains the remaining closeout gate, and future CK dialogue edits must refresh SEQ again before closeout.
 
 Useful CK global conditions:
 
@@ -42,6 +53,13 @@ Useful CK global conditions:
 | Not vampire | `GetGlobalValue PDV_GLO_CurseState != 2` |
 | Werewolf | `GetGlobalValue PDV_GLO_CurseState == 1` |
 | Vampire | `GetGlobalValue PDV_GLO_CurseState == 2` |
+
+Speaker IDs verified from `Skyrim.esm`:
+
+- Froki: `dunHunterFroki` / `Skyrim.esm:0185F6`
+- Heimskr: `Heimskr` / `Skyrim.esm:013BAC`
+- Andurs: `Andurs` / `Skyrim.esm:013BA8`
+- Aela: `AelaTheHuntress` / `Skyrim.esm:01A696`
 
 The Aela "active Hircine path" side is not yet a simple CK global condition. If the werewolf condition is not enough for the first CK pass, stop and add a helper global/readback contract rather than embedding a fragile fragment or script workaround in the Topic Info.
 
