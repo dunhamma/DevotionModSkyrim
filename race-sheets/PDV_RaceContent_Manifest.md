@@ -963,7 +963,7 @@ Narrator voice. Body budget 240 hard / 180 target. One Broad row and one Focused
 
 ### 14.9 Contextual favor surfacings
 
-`RaceDesign_Khajiit` does not enumerate a formal contextual-favor table the way the Nord, Imperial, Redguard, and Dunmer sheets do; the rows below are derived from its "In-game hook cross-check", the Tier 2 path-specific notes, and the Champion specifics. The lane families should be re-checked when a formal Khajiit favor table is added to the race sheet. Player-second-person on Noted; god-voice on Marked. The Baan Dar reversal is a `Rare major favor` per `PDV_TargetEndStates_1.0.md` line 112.
+Six trigger families, formalized from `RaceDesign_Khajiit` "In-game hook cross-check", Tier 2 path-specific notes, and Champion specifics. **Substrate/Road** (daily environmental and caravan-kinship); **Khenarthi** (open-road wind grace); **Azurah** (threshold-crossings); **Baan Dar** (adversity and near-fatal reversal); **Rajhin** (elegant theft); **Alkosh** (dragon and order). Player-second-person on Noted; god-voice on Marked. The Baan Dar reversal is a `Rare major favor` per `PDV_TargetEndStates_1.0.md` line 112.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -1286,7 +1286,7 @@ God-voice on offer bodies; player-second-person on responses. MessageBox. Body b
 | PDV_Msg_Redguard_Leki_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Leki's Blade" Body: "Your sword-work is disciplined and honest. Carry Leki as your own, and the blade becomes devotion made exact. Will you?" |
 | PDV_Msg_Redguard_Tava_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Tava's Wind" Body: "The road has carried you far, and you have carried it well. Carry Tava as your own, and the wind of good passage is yours. Will you?" |
 | PDV_Msg_Redguard_HoonDing_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "HoonDing's Call" Body: "Again and again you have made a way where there was none. Carry the Make-Way God as your own, and the impossible passage becomes your devotion. Will you?" |
-| PDV_Msg_Redguard_OfferResponse_Accept | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Shared across Redguard offers | Accept the patron. |
+| PDV_Msg_Redguard_OfferResponse_Accept | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Shared across Redguard offers | Walk under this god. |
 | PDV_Msg_Redguard_OfferResponse_NotYet | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Sets per-deity cooldown only | Not yet. |
 | PDV_Msg_Redguard_OfferResponse_Refuse | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Broad sect worship continues | Keep to the sect's broad worship. |
 
@@ -1453,6 +1453,18 @@ Narrator voice. Notifications. Budget 80 hard / 60 target. Old Contract path onl
 | PDV_Notif_Bosmer_GreenPact_Observant | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model" | One per band entry | Compliance restored to Observant. Y'ffre's favor flows full again. |
 | PDV_Notif_Bosmer_GreenPact_Strict | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model" | One per band entry | Compliance risen to Strict. Y'ffre's favor flows a fifth again stronger. |
 
+### 17.7a Green Pact per-item violation feedback (prose drafted; MECHANICS-BLOCKED)
+
+**Mechanics dependency:** requires the PDV-owned Green Pact tag layer (Architecture v3 Section 21.2 essential custom content) that intercepts plant-item consumption events and decrements `GreenPactCompliance`. The tag layer must ship before these rows can fire. Prose is authored here so Phase 20 content-lock is not blocked on implementation.
+
+Narrator / God-voice per row. Budget per column. Old Contract path only. Anti-spam gating: cooldown window (exact window set by implementation) prevents rapid-fire from looting a chest. The Marked row fires only on deliberate curated violations.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Bosmer_GreenPact_PlantConsumed | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model"; Architecture v3 Section 21.2 | MECHANICS-BLOCKED: tag layer required. Per tagged plant item consumed; cooldown window set by implementation | Plant flesh consumed. The Pact holds the count. |
+| PDV_Notif_Bosmer_GreenPact_PlantConsumed_NearBand | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model"; Architecture v3 Section 21.2 | MECHANICS-BLOCKED: tag layer required. Fires when within implementation-defined threshold of the next downward band crossing | Another plant consumed. Compliance approaches the next fall. |
+| PDV_Msg_Bosmer_GreenPact_PlantConsumed_Marked | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "GreenPactCompliance State Model"; Architecture v3 Section 21.2 | MECHANICS-BLOCKED: tag layer required. Fires on deliberate curated high-value plant consumption (ingredient hooks, not incidental food); per-event cooldown | Title: "The Pact Remembers" Body: "You ate from the living world. The Pact does not argue with the hunger; it holds the record. Each plant consumed is a mark against the covenant. The count is yours to weigh; Y'ffre weighs it already." |
+
 ### 17.8 Neglect texture (`PDV_Notif_Bosmer_*_NeglectTexture`)
 
 Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Bosmer` "Neglect Texture", one per path. Each fires on the first day of a meaningful lapse.
@@ -1477,7 +1489,7 @@ Narrator voice. Body budget 240 hard / 180 target. One row per path; `%s` binds 
 
 ### 17.10 Contextual favor surfacings
 
-`RaceDesign_Bosmer` does not enumerate a formal contextual-favor table; the rows below are derived from the per-path Tier Rewards and Signal Examples. Lane families should be re-checked when a formal Bosmer favor table is added to the race sheet. Player-second-person on Noted; god-voice on Marked. The Bandit Road reversal is a `Rare major favor` per `PDV_TargetEndStates_1.0.md` line 112.
+Four trigger families, formalized from `RaceDesign_Bosmer` per-path Tier Rewards and Signal Examples. **Old Contract** (proper hunt, forest kept against desecration); **Living Story** (community preserved, nature-site presence); **Exchange** (debt honored, proportionate redress); **Bandit Road** (road-life, pariah solidarity, near-fatal reversal). Player-second-person on Noted; god-voice on Marked. The Bandit Road reversal is a `Rare major favor` per `PDV_TargetEndStates_1.0.md` line 112.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -1836,7 +1848,7 @@ Narrator voice. Body budget 240 hard / 180 target. One layered readout; `%s` tok
 
 ### 19.12 Contextual favor surfacings
 
-`RaceDesign_Argonian` does not enumerate a formal contextual-favor table; the rows below are derived from the per-layer Tier Rewards and Signal Examples. All are `Noted` -- consistent with the design's quiet, maintenance-against-the-current texture, the Argonian race carries no Marked favor row. Player-second-person voice. Lane families should be re-checked when a formal Argonian favor table is added to the race sheet.
+Three trigger families, formalized from `RaceDesign_Argonian` per-layer Tier Rewards and Signal Examples. **Hist** (near-water steadying, solitary reflection, Hist-sap meditation); **Community/People** (Saxhleel aid, Assemblage held, settlement protection); **Void** (death-facing, Dark Brotherhood contract). All are `Noted` -- consistent with the design's quiet, maintenance-against-the-current texture; the Argonian race carries no Marked favor row by design. Player-second-person voice.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -1846,6 +1858,8 @@ Narrator voice. Body budget 240 hard / 180 target. One layered readout; `%s` tok
 | PDV_Notif_Argonian_FavorNoted_Community_AssemblageKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 2 ... Primary signals" | After-act; Windhelm Assemblage extra weight | The Windhelm Assemblage is surer for what you did. Kinship. |
 | PDV_Notif_Argonian_FavorNoted_Void_DeathFaced | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 3 ... Sithis rises through" | After-act; curated death-facing choice | You faced a death without flinching. Sithis acknowledges it. |
 | PDV_Notif_Argonian_FavorNoted_Void_BrotherhoodContract | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 3 ... Sithis rises through" | After-act; per Dark Brotherhood contract | A contract completed for the Brotherhood. The void answers. |
+| PDV_Notif_Argonian_FavorNoted_Hist_SapMeditation | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Hist recovery signals"; mechanics-dep: Hist-sap vessel custom feature | After-act; designated Hist contemplation site; daily cap; MECHANICS-BLOCKED: requires Hist-sap vessel feature from Phase 21 custom content | Sap taken. The distance closes a little; the Hist hears across the marsh. |
+| PDV_Notif_Argonian_FavorNoted_Community_SettlementKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 2 ... Primary signals" | After-act; defending Argonian settlement or Assemblage from direct threat; cooldown per event | You kept the People from harm. The exile community is safer for it. |
 
 ### 19.13 Curse-state transitions (`PDV_Msg_Argonian_CurseState_*`)
 
@@ -1873,7 +1887,7 @@ Player-second-person on topic name. Branch dialogue authored separately in CK. T
 A Faithful community-leaning Argonian in steady exile play (Windhelm Assemblage support, water-proximity maintenance, occasional Sithis beat):
 
 - Marked: 0 most days; Champion entries, Sithis full activation, and curse onsets are all one-time. Inside the `<1 per 2h` target.
-- Noted: ~1-2 per day (a near-water Hist favor, an occasional Saxhleel-aid favor, Hist sap meditation). Argonian carries no Marked favor row by design, so steady play is quiet. Inside the `<2 per h` target.
+- Noted: ~1-2 per day (a near-water Hist favor, an occasional Saxhleel-aid or settlement-protection favor). Argonian carries no Marked favor row by design, so steady play is quiet. Inside the `<2 per h` target. The Hist-sap meditation favor row is MECHANICS-BLOCKED and does not contribute until the vessel feature ships.
 - Quiet: uncounted; icon-only (the Hist sap meditation effect line is Quiet).
 
 Tier-up notifications: one per save per direction. There is no commitment offer, so no Faithful suppression rule applies. Bed-of-choice acknowledgments are gated to the cadence rule, and posture transitions are rare (curse-linked or sustained Hist decay).
@@ -1908,7 +1922,7 @@ These slots are deliberately not authored in this pass. (The Altmer crisis-of-fa
 | Item | Gate | Reason |
 |---|---|---|
 | Daedric path content | Now authored in the companion file `race-sheets/PDV_DaedricContent_Manifest.md`: Boethiah is drafted end to end as the pilot, and the remaining 15 Skyrim-facing Princes are in scope for the Phase 20 content lock. No longer deferred here. | Boethiah pilot complete; see the Daedric manifest. |
-| Bosmer Green Pact per-item violation feedback | `PDV_Architecture_v3.md` Section 21.2 essential custom content: PDV-owned Green Pact tag layer must ship first. | Item-level surfacing depends on the tag layer existing. |
+| Bosmer Green Pact per-item violation feedback | `PDV_Architecture_v3.md` Section 21.2 essential custom content: PDV-owned Green Pact tag layer must ship first. Prose is now authored in Section 17.7a with a MECHANICS-BLOCKED flag; implementation can wire up the tag layer without further content authoring. | Item-level surfacing depends on the tag layer existing. |
 | MCM player tab copy | `PDV_Architecture_v3.md` Section 16.1, Section 16.4: MCM should not be a daily management surface. | Authored alongside the player tab itself, not as flavor content. |
 | Localization / non-ASCII variants | `PDV_Architecture_v3.md` Section 23: deferred post-1.0; minor refactor via string-table externalization. | Out of 1.0 scope by architecture. |
 | Daedric race-by-Prince matrix expansion strings | In scope for Phase 20 content lock. `references/phase4/PDV_DaedricRacePrinceMatrix.csv` is the implementation matrix; each cell must be expanded into the Section 11 contract before strings are authored. No longer deferred past content lock. | Expansion authoring follows Phase 13 pilot and `PDV_DaedricContent_Manifest.md` pattern. |
