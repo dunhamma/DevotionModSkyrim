@@ -1,8 +1,8 @@
 # Bosmer -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 17 (Bosmer (full draft))
-**Regenerated:** 2026-05-27 via `node tools/pdv_writer_review.mjs`
-**Rows:** 57 drafted
+**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Rows:** 58 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -86,13 +86,14 @@ _1 row._
 
 ## Curse onset / cure
 
-_3 rows._
+_4 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Bosmer_CurseState_VampireOnset` | MessageBox. Once on becoming vampire. | God-voice | 27+229 / 40+500 |  | Title: "The Covenant and the Undead"   Body: "You are undead now. The living covenant does not reach the unliving. On the Old Contract the Pact breaks at once; on the other paths the bond strains hard but holds by a thread. Y'ffre is the Now, and you have stepped outside it." |  |
 | _(no tone match)_ | `PDV_Msg_Bosmer_CurseState_VampireCured` | MessageBox. Once on cure. | God-voice | 19+162 / 40+500 |  | Title: "Back Within the Now"   Body: "The undeath is lifted. You stand within the living world again, and your path is open -- though the Old Contract, broken this way, must be retaken like any lapse." |  |
 | _(no tone match)_ | `PDV_Msg_Bosmer_CurseState_WerewolfOnset` | MessageBox. Once on first transformation. | God-voice | 25+246 / 40+500 |  | Title: "The Hunt Without Sanction"   Body: "The beast is in you. It echoes the Wild Hunt, so Bosmer theology can read it -- but it is not Y'ffre's sanction. On the Old Contract this is a serious violation; on the other paths, contested strain. The shape is intelligible. It is not approved." |  |
+| _(no tone match)_ | `PDV_Msg_Bosmer_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; Old Contract retaken like a lapse. | God-voice | 17+223 / 40+500 |  | Title: "The Hunt Set Down"   Body: "The beast is set down. The unsanctioned shape leaves you, and you stand within Y'ffre's Now again. On the Old Contract the violation must be retaken like any lapse; on the other paths the strain simply eases. The Now holds." |  |
 
 ## Shrine and privilege dialogue
 

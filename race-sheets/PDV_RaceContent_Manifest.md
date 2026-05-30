@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races, all with full draft prose. Altmer and Breton carry gated slots (Section 13.13, Section 18.14) held until their specs close; everything else is content-author-ready for Phase 19.
+**Status:** Authoring manifest. Inventory across all 10 races, all with full draft prose. The former Altmer and Breton gated slots (Sections 13.13, 18.14) are now authored for the Phase 20 content lock; everything else is content-author-ready for Phase 19.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -111,12 +111,12 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 1. Nord (full draft prose)
 2. Orc (full draft prose)
 3. Dunmer (full draft prose)
-4. Altmer (drafted except gated slots; Altmer is the only Partial implementation-spec; gated slots flagged in Section 13.13)
+4. Altmer (full draft; the former gated slots are authored in Section 13.13 for the Phase 20 content lock)
 5. Khajiit (full draft prose; no formal commitment offer per Section 12.4a)
 6. Imperial (full draft prose)
 7. Redguard (full draft prose)
 8. Bosmer (full draft prose; four-path divergence)
-9. Breton (full draft prose; three-tradition divergence; Vigilant pressure gated)
+9. Breton (full draft prose; three-tradition divergence; Vigilant pressure authored)
 10. Argonian (full draft prose)
 
 ---
@@ -659,9 +659,9 @@ A Faithful no-focus Dunmer in steady play (occasional Grey Quarter beat, portabl
 
 Tier-up notifications: at most one per save per direction; Faithful entry is suppressed on a same-dawn focus offer. Posture readouts fire only on posture transitions, which are rare (curse onset/cure).
 
-## 13. Altmer (partial draft -- gated slots flagged)
+## 13. Altmer (full draft)
 
-Altmer is the only Partial implementation-spec per `PDV_TargetEndStates_1.0.md` lines 76-87. The non-gated slots are authored below in full. Three slot groups stay gated until the spec closes (crisis resolution hooks, final crisis trigger list, contextual-favor lanes, focused-deity hook posture): the contextual-favor surfacings, the Lorkhan crisis-of-faith copy, and the post-vampire Exiled Altmer micro-path flavor. Gated slots are listed in Section 13.13 with their gate, not drafted.
+Altmer was the last Partial implementation-spec per `PDV_TargetEndStates_1.0.md` lines 76-87. For the Phase 20 content lock the spec is closed and every slot is authored: the previously gated contextual-favor surfacings, the Lorkhan crisis-of-faith copy, and the post-vampire Exiled Altmer micro-path flavor are now drafted in Section 13.13.
 
 `ThalmorAlignment` is the orthodoxy/coherence track (`0-30 Heterodox`, `31-69 Orthodox Moderate`, `70-100 Thalmor Devout`). Layer 1 Auri-El is always active. Focused commitment uses the shared patron state.
 
@@ -804,15 +804,49 @@ Player-second-person on topic name. Branch dialogue authored separately in CK. T
 | PDV_Dlog_Altmer_CollegeMage_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Altmer "Magnus focus" | Magnus or Syrabane focus; College context | "The arts are my devotion. Show me what the College keeps closed." |
 | PDV_Dlog_Altmer_ThalmorOfficer_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Altmer "Trinimac focus" | Trinimac Devoted; ThalmorAlignment 70+ | "I defend the project by the sword. The orthodoxy knows my name." |
 
-### 13.13 Gated slots (not drafted)
+### 13.13 Contextual favor, Lorkhan crisis, and Exiled path (drafted)
 
-These three slot groups stay gated until the Altmer implementation-spec closes (`PDV_TargetEndStates_1.0.md` line 146: crisis resolution hooks, final crisis trigger list, contextual-favor lanes, focused-deity hook posture).
+Spec closed for Phase 20 content lock. The contextual-favor lanes are keyed to the three locked alignment paths (Altmer carries no generic broad lane per `RaceDesign_Altmer`): ThalmorOrthodox, DivineBody, Psijic. Noted favor is player-second-person (Notification, 80/60); Marked favor is god-voice Auri-El, the always-active foundation (MessageBox, 500/280). The four Lorkhan crisis beats are the locked trigger list (`PDV_ALT_CRISIS_FAITH`): the Dragonborn declaration, the Sovngarde beat, a marriage beat, and the Companions beast-blood fork; narrator voice, matching the Section 13.11 dissonance teaching. The post-vampire Exiled micro-path is authored as optional enhancement flavor after the terminal onset in Section 13.10.
 
-| Slot group | Slot pattern | Gate |
-|---|---|---|
-| Contextual favor (Noted/Marked) | `PDV_Notif_Altmer_FavorNoted_<Faction>_<TriggerFamily>`, `PDV_Msg_Altmer_FavorMarked_<Faction>_<TriggerFamily>` | Contextual-favor lanes are Partial per `TargetEndStates` line 146. Lane families must be locked before favor strings can be authored without rework. |
-| Lorkhan crisis-of-faith | `PDV_Msg_Altmer_LorkhanCrisis_<DragonbornDeclaration|SovngardeBeat|MarriageBeat|CompanionsFork>` | Final crisis trigger list is Partial per `TargetEndStates` line 146 (`PDV_ALT_CRISIS_FAITH` source list not yet locked). |
-| Post-vampire Exiled Altmer flavor | `PDV_Msg_Altmer_VampireExiledPath_<Entry|Recognition>` | Enhancement custom content per `TargetEndStates` Section 21.2 line 1536; not required for core function. The locked terminal vampire-onset notice is authored above (Section 13.10); only the optional Exiled micro-path flavor is gated. |
+Contextual favor -- ThalmorOrthodox lane:
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Altmer_FavorNoted_ThalmorOrthodox_Enforcement | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | After-act; one per enforcement act, daily cap | Heresy named and answered. The orthodoxy marks the hand that enforces. |
+| PDV_Notif_Altmer_FavorNoted_ThalmorOrthodox_OrthodoxRite | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Environmental; dawn rite at an orthodox shrine, daily cap | The dawn kept by the strict rite. Doctrine is served as written. |
+| PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Rare major; a costly act defending orthodoxy by the sword | Title: "Auri-El Marks the Sword" Body: "You did not only pray for the project; you bled for it. The hardest path is the one that answers Lorkhan's world with steel, and you walked into the cost with open eyes. The dawn knows what it took from you." |
+
+Contextual favor -- DivineBody lane:
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Altmer_FavorNoted_DivineBody_Cultivation | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | After-act; mastery milestone, daily cap | Mastery earned and refined. You raise yourself as the project asks. |
+| PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Environmental; unforced dawn observance, daily cap | You greet the dawn unforced. The return is honored, not compelled. |
+| PDV_Msg_Altmer_FavorMarked_DivineBody_ReturnAffirmed | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Rare major; affirming the return without enforcement | Title: "Auri-El Marks the Return" Body: "You turned toward the dawn when the mortal world offered every reason to forget it, and you did it without a whip at anyone's back. This is the return as it was meant: chosen, not enforced. I keep it." |
+
+Contextual favor -- Psijic lane:
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Altmer_FavorNoted_Psijic_OldWaysMeditation | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Environmental; private meditation, daily cap | The Old Ways kept in private. The quiet path costs you least. |
+| PDV_Notif_Altmer_FavorNoted_Psijic_ForbiddenLore | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | After-act; heterodox lore recovered, daily cap | Hidden knowledge recovered. What is written outlasts what is enforced. |
+| PDV_Msg_Altmer_FavorMarked_Psijic_UnseenStep | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Rare major; a lonely, unrewarded Old Ways moment | Title: "Auri-El Marks the Quiet Path" Body: "You kept the Old Ways where no one could see and no one could reward you. The heterodox road is lonely and easy to abandon, and you did not abandon it. The foundation holds you still." |
+
+Lorkhan crisis-of-faith (`PDV_Msg_Altmer_LorkhanCrisis_*`):
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_LorkhanCrisis_DragonbornDeclaration | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Obviousness rule"; TargetEndStates line 146 crisis-trigger closeout | One-time on being named Dragonborn | Title: "Named for the Mortal World" Body: "They call you Dragonborn -- a mortal soul carrying the dragon's, blessed by the world Lorkhan made and the people who live in it. The gift is real. So is the dissonance: the thing that honors you is the thing your ancestors died trying to escape. You will carry both." |
+| PDV_Msg_Altmer_LorkhanCrisis_SovngardeBeat | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Obviousness rule"; TargetEndStates line 146 crisis-trigger closeout | One-time on the Sovngarde beat | Title: "The Hall That Should Not Be" Body: "Sovngarde is real -- a hall of mortal dead who feast and do not dissolve, who chose to stay in the world rather than return beyond it. To an Altmer this is the trap made beautiful. You have seen it now, and you cannot unsee that the mortal world keeps its own." |
+| PDV_Msg_Altmer_LorkhanCrisis_MarriageBeat | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Obviousness rule"; TargetEndStates line 146 crisis-trigger closeout | One-time on taking a spouse | Title: "Bound to the World" Body: "You have taken a spouse, a door, a hearth -- ties to the mortal world Lorkhan built. The Psijics would call it attachment; the orthodox would call it descent. It may be the truest thing you have done, or the deepest forgetting. Only you can say which." |
+| PDV_Msg_Altmer_LorkhanCrisis_CompanionsFork | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Obviousness rule"; TargetEndStates line 146 crisis-trigger closeout | One-time at the Companions beast-blood fork | Title: "The Beast at the Threshold" Body: "The Companions offer you the blood of the beast -- to become, by choice, the furthest thing from spirit an Altmer can be. The whole of your faith is to rise out of flesh, not deeper into it. Refuse, and you keep the project. Accept, and there is no doctrine left to hold you." |
+
+Post-vampire Exiled Altmer path (`PDV_Msg_Altmer_VampireExiledPath_*`, optional enhancement flavor after the Section 13.10 terminal onset):
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_VampireExiledPath_Entry | MessageBox | Marked | Narrator | 500/280 | TargetEndStates Section 21.2 line 1536 enhancement content | One-time after vampire onset, if the Exiled path is enabled | Title: "The Exile's Road" Body: "Auri-El has closed, and the records will not hold your name. What remains is not devotion but exile -- a long walk outside the return, among others the dawn has let go. There is no path back. There is only how you carry the dark you have become." |
+| PDV_Msg_Altmer_VampireExiledPath_Recognition | MessageBox | Marked | Narrator | 500/280 | TargetEndStates Section 21.2 line 1536 enhancement content | On reaching the Exiled-path recognition beat | Title: "Known Among the Exiled" Body: "The others outside the dawn know you now -- the cast-out Altmer, the ones the return forgot. It is not a congregation and it is not grace. It is recognition, of a kind, among those who share the same closed door. You are not alone in the exile, even if you stand alone before the god." |
 
 ### 13.14 Altmer firing-density sanity
 
@@ -822,7 +856,7 @@ A Faithful Divine Body Altmer in steady play (dawn observance, College progressi
 - Noted: ~1-2 per day (dawn ambient if Champion, occasional study milestone). Lorkhan pressure notifications are one-time-per-source and main-quest-paced, so they do not compound. Inside the `<2 per h` target.
 - Quiet: uncounted; icon-only.
 
-Tier-up notifications: one per save per direction; Faithful entry suppressed on a same-dawn focus offer. ThalmorAlignment band crossings are infrequent (the track moves on authored enforcement/defiance acts). Gated contextual-favor rows are excluded from this estimate and will need a fresh density pass when the lanes lock.
+Tier-up notifications: one per save per direction; Faithful entry suppressed on a same-dawn focus offer. ThalmorAlignment band crossings are infrequent (the track moves on authored enforcement/defiance acts). The Section 13.13 contextual-favor rows are now drafted; each lane is capped at one Noted favor per family per day with a single rare Marked, keeping the lane inside the `<2 per h` Noted target.
 
 ## 14. Khajiit (full draft)
 
@@ -1487,7 +1521,7 @@ A Faithful Living Story Bosmer in steady community play (preservation quests, na
 
 Tier-up notifications: one per save per direction. There is no commitment offer, so no Faithful suppression rule applies. Path-entry notifications are gated to confirmed switches with the seven-day switch lock-out, so they cannot fire repeatedly.
 
-## 18. Breton (full draft -- one gated slot)
+## 18. Breton (full draft)
 
 Implementation-locked. The most mechanically complex race: three-tradition divergence (Knight's Road, Hidden Art, Green Way) plus three parallel tracks. `PDV_State_BretonTradition` with `KnightsRoad = 0`, `HiddenArt = 1`, `GreenWay = 2`. Tracks: `KnightlyVowIntegrity`, `WitchcraftExposure`, `DruidicStanding` (paired with `PDV_State_BretonDruidicFork`).
 
@@ -1495,7 +1529,7 @@ Implementation-locked. The most mechanically complex race: three-tradition diver
 - **Blessings: per-tradition Tier 1/2, per-deity Tier 3.** The locked `RaceDesign_Breton` "Tier Rewards" gives each tradition its own Tier 1 and Tier 2, then per-focused-deity Tier 3. The corrected set is sixteen blessing records: `_KnightsRoad_T1` / `_T2`, `_HiddenArt_T1` / `_T2`, `_GreenWay_T1` / `_T2`, and ten Tier 3 records (Stendarr, Akatosh, Mara; Hermaeus Mora, Hircine, Nocturnal, Namira; Y'ffre, Magnus, Phynaster).
 - **Focused deity uses emergence, not a bespoke offer suite.** `RaceDesign_Breton` line 33 references "patron offers" within the tradition, while `PDV_TargetEndStates_1.0.md` line 252 says "focused deity emphasis emerges". With ten possible focused deities across three traditions, the manifest reconciles these by treating the tradition setup as the headline commitment and the focused deity as an emergence within the tradition, surfaced by one templated notification (Section 18.5). This matches the `n/a (tradition setup)` coverage marking. Authoring ten bespoke per-deity offer MessageBoxes is a possible later refinement, noted but not in this pass.
 - **Champion entries are tradition-level (3), not per-deity.** `RaceDesign_Breton` writes one "Champion moment for [tradition]" per tradition.
-- **Vigilant pressure encounter stays gated** (Section 18.14).
+- **Vigilant pressure encounter is authored** (Section 18.14) for the Phase 20 content lock.
 
 ### 18.1 Tone profiles
 
@@ -1662,11 +1696,15 @@ Player-second-person on topic name. Branch dialogue authored separately in CK. T
 | PDV_Dlog_Breton_HiddenArtContact_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Breton "The Hidden Art" | Hidden Art tradition | "I practice the hidden art. Speak plainly -- no one is listening." |
 | PDV_Dlog_Breton_DruidicKeeper_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Breton "The Green Way" | Green Way tradition | "The Green Way is mine. Tell me of the standing stones here." |
 
-### 18.14 Gated slot (not drafted)
+### 18.14 Vigilant pressure encounter (drafted)
 
-| Slot group | Slot pattern | Gate |
-|---|---|---|
-| Vigilant pressure encounter | `PDV_Msg_Breton_VigilantPressure_<Letter|RoadEncounter|Confrontation>` | Extension candidate per `PDV_TargetEndStates_1.0.md` lines 260-262: vanilla has no general "known Daedra worshipper" hunter system, and an authored pressure encounter "should not block Breton 1.0 unless the encounter pattern proves cheap." Held until the encounter pattern is proven; the WitchcraftExposure band crossings in Section 18.7 carry the exposure feel in the interim. |
+Authored for Phase 20 content lock. Narrator voice, MessageBox 500/280, matching the Section 18.7 WitchcraftExposure band voice. The three beats escalate with exposure: the Letter fires on entering the Known band, the road encounter on continued Known-band visibility, and the confrontation on the Notorious band. Each is one-time per exposure climb; the WitchcraftExposure band crossings carry the ongoing exposure feel between them.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Breton_VigilantPressure_Letter | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Breton "WitchcraftExposure Track"; TargetEndStates lines 260-262 | One-time on entering the Known exposure band | Title: "A Letter from the Vigil" Body: "A sealed letter finds you, unsigned but unmistakable. The Vigilants of Stendarr have heard what you keep, and they are watching the roads you take. It is a warning, this time. They do not send a second." |
+| PDV_Msg_Breton_VigilantPressure_RoadEncounter | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Breton "WitchcraftExposure Track"; TargetEndStates lines 260-262 | One-time on continued Known-band visibility after the Letter | Title: "The Vigil on the Road" Body: "Two Vigilants block the road ahead, hands near their maces, reading you for the mark of the thing you serve. They ask their questions knowing the answers. How this ends depends on what they decide they saw -- and on whether your cover holds one more time." |
+| PDV_Msg_Breton_VigilantPressure_Confrontation | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Breton "WitchcraftExposure Track"; TargetEndStates lines 260-262 | One-time on entering the Notorious exposure band | Title: "The Vigil Comes for You" Body: "The watching is over. The Vigilants have named you a servant of the Daedra, and they have come in number to end it. There is no letter now, no question, no road to slip down. What you practiced in the dark has found you in the light, and only one of you walks away." |
 
 ### 18.15 Breton firing-density sanity
 
@@ -1676,7 +1714,7 @@ A Faithful Hidden Art Breton in steady occult play (Daedric quests, careful cove
 - Noted: ~1-2 per day (an occult-work favor, an occasional Daedric-rite favor). Track band crossings are infrequent because all three tracks move on major authored acts, not ambient behavior. Inside the `<2 per h` target.
 - Quiet: uncounted; icon-only.
 
-Tier-up notifications: one per save per deity per direction. There is no dawn offer, so no Faithful suppression rule applies. The gated Vigilant pressure encounter is excluded from this estimate and will need a fresh density pass if it is built.
+Tier-up notifications: one per save per deity per direction. There is no dawn offer, so no Faithful suppression rule applies. The Section 18.14 Vigilant pressure encounter fires its three beats one-time each across an exposure climb, so it does not compound the daily Noted count.
 
 ## 19. Argonian (full draft)
 
@@ -1851,12 +1889,12 @@ Argonian has no commitment-offer slot: there is no deity choice. The bed-of-choi
 | Nord | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Orc | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 | Dunmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
-| Altmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | gated | drafted | drafted | PARTIAL |
+| Altmer | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Khajiit | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 | Imperial | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Redguard | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Bosmer | drafted | drafted | drafted | drafted | drafted | n/a (path setup) | drafted | drafted | drafted | drafted | YES |
-| Breton | drafted | drafted | drafted | drafted | drafted | n/a (tradition setup) | drafted | drafted | drafted | drafted | YES (Vigilant gated) |
+| Breton | drafted | drafted | drafted | drafted | drafted | n/a (tradition setup) | drafted | drafted | drafted | drafted | YES |
 | Argonian | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 
 `n/a` rows mean the race does not use the standard commitment-offer pattern (Khajiit silent emergent, Orc mode-deepening, Bosmer setup choice, Breton tradition setup, Argonian no deity choice). The setup-choice MessageBoxes for Bosmer and Breton are slot-only rows in their sections, not in the commitment-offer pattern.
@@ -1865,18 +1903,14 @@ Argonian has no commitment-offer slot: there is no deity choice. The bed-of-choi
 
 ## 21. Gated and deferred appendix
 
-These slots are deliberately not authored in this pass.
+These slots are deliberately not authored in this pass. (The Altmer crisis-of-faith copy, Altmer contextual-favor lanes, Altmer post-vampire Exiled flavor, and the Breton Vigilant pressure encounter were gated here in earlier passes and are now authored for the Phase 20 content lock -- see Sections 13.13 and 18.14.)
 
 | Item | Gate | Reason |
 |---|---|---|
-| Altmer crisis-of-faith trigger copy | Close out Altmer Partial implementation-spec: crisis resolution hooks, final crisis trigger list, contextual-favor lanes, focused-deity hook posture (`PDV_TargetEndStates_1.0.md` line 146). | Spec is Partial; authoring now risks rework. |
-| Altmer contextual-favor Marked rows | Same gate. | Lanes are Partial. |
-| Altmer post-vampire Exiled flavor | Enhancement custom content category (`PDV_Architecture_v3.md` Section 21.2). | Not required for core function. |
-| Daedric path content | Now authored in the companion file `race-sheets/PDV_DaedricContent_Manifest.md`: Boethiah is drafted end to end as the pilot, and the remaining 15 Skyrim-facing Princes are stub-listed there for follow-up passes. No longer deferred here. | Boethiah pilot complete; see the Daedric manifest. |
+| Daedric path content | Now authored in the companion file `race-sheets/PDV_DaedricContent_Manifest.md`: Boethiah is drafted end to end as the pilot, and the remaining 15 Skyrim-facing Princes are in scope for the Phase 20 content lock. No longer deferred here. | Boethiah pilot complete; see the Daedric manifest. |
 | Bosmer Green Pact per-item violation feedback | `PDV_Architecture_v3.md` Section 21.2 essential custom content: PDV-owned Green Pact tag layer must ship first. | Item-level surfacing depends on the tag layer existing. |
 | MCM player tab copy | `PDV_Architecture_v3.md` Section 16.1, Section 16.4: MCM should not be a daily management surface. | Authored alongside the player tab itself, not as flavor content. |
 | Localization / non-ASCII variants | `PDV_Architecture_v3.md` Section 23: deferred post-1.0; minor refactor via string-table externalization. | Out of 1.0 scope by architecture. |
-| Breton Vigilant pressure encounter copy | `PDV_TargetEndStates_1.0.md` Section "Extension candidate" lines 260-262: should not block Breton 1.0 unless the encounter pattern proves cheap. | Slip-able to post-1.0. |
 | Daedric race-by-Prince matrix expansion strings | In scope for Phase 20 content lock. `references/phase4/PDV_DaedricRacePrinceMatrix.csv` is the implementation matrix; each cell must be expanded into the Section 11 contract before strings are authored. No longer deferred past content lock. | Expansion authoring follows Phase 13 pilot and `PDV_DaedricContent_Manifest.md` pattern. |
 
 ---
@@ -1891,7 +1925,7 @@ This manifest's own verification, per the plan:
 4. **Nord pilot completeness:** every Nord row has non-empty `Draft prose`. All thirteen worshippable deities carry a `ChampionEntry` MessageBox per the universal-champion decision in Section 10.4; no row is left reserved.
 5. **Blessing discipline:** Nord blessing rows lead with theological tone and follow with a concrete numeric effect, matching the `PDV_STANDARDS.md` Section 3.3 conformance example. No formids, no `PDV_*` record names in prose, no `bucket` / `hook` jargon.
 6. **Surfacing-vs-source:** every `Marked` row is one the source explicitly named as Marked or as a high-cost / costly-but-faithful moment. The two Marked Talos rows in Section 10.8 are flagged by `RaceDesign_Nord` lines 128 and 138 respectively.
-7. **Deferred appendix:** Altmer crisis copy, Green Pact per-item feedback, MCM player tab, localization, and Vigilant pressure appear in Section 21 with the gate cited. Daedric path content has moved to its own companion manifest (`PDV_DaedricContent_Manifest.md`), no longer deferred. Daedric race-by-Prince matrix expansion strings are now in scope for Phase 20 content lock, not deferred past it.
+7. **Deferred appendix:** Green Pact per-item feedback, MCM player tab, and localization appear in Section 21 with the gate cited. The former Altmer crisis copy, Altmer contextual-favor lanes, Altmer Exiled flavor, and Breton Vigilant pressure are now authored (Sections 13.13, 18.14) for the Phase 20 content lock. Daedric path content has moved to its own companion manifest (`PDV_DaedricContent_Manifest.md`), no longer deferred. Daedric race-by-Prince matrix expansion strings are now in scope for Phase 20 content lock, not deferred past it.
 8. **Slot-ID convention:** every Nord slot id matches the `PDV_Msg_*` / `PDV_Notif_*` / `PDV_Bless_*` / `PDV_Dlog_*` / `PDV_PrismaToast_*` scheme. None exceed 32 EditorID characters where the CK editor truncates. (Longest Nord id: `PDV_Notif_Nord_Kynareth_ChampionAmbient_Storm` is 45 chars; flagged for review -- some CK fields tolerate longer EditorIDs but MESG/SPEL EditorIDs are safer under 32. Recommend `PDV_Notif_Nord_Kyn_ChampAmb_Storm` style abbreviations at Phase 19 hand-off if the truncation rule bites. Slot id stability vs. the manifest is the contract; CK shorthand is acceptable so long as the Slot ID column carries both.)
 9. **Length-budget:** every Nord `Draft prose` cell is at or under the row's `Budget` cap. The longest drafted body is `PDV_Msg_Nord_CurseState_VampireOnset` at 252 chars (under the 500 hard / 280 target). Notifications stay at or under 60 chars in nearly all cases; the few that touch 70-80 carry the body inside the 80 hard cap.
 10. **Voice-matrix compliance:** every Nord row's `Voice` matches the Section 3 matrix. No drift.
@@ -1908,7 +1942,7 @@ All ten races carry full draft prose. The manifest is content-author-ready for P
 
 The remaining open work is no longer race-by-race prose drafting but the following:
 
-1. **Close the gated slots.** When the Altmer implementation-spec closes (`PDV_TargetEndStates_1.0.md` line 146), author the three gated Altmer slot groups in Section 13.13. When a Breton Vigilant pressure encounter pattern is proven cheap, author Section 18.14.
+1. **Gated slots closed.** The three Altmer slot groups (Section 13.13) and the Breton Vigilant pressure encounter (Section 18.14) were authored for the Phase 20 content lock. The Altmer implementation-spec questions (`PDV_TargetEndStates_1.0.md` line 146) are resolved in those sections: the favor lanes are keyed to the three alignment paths, and the crisis trigger list is the four locked beats.
 2. **Promote ratified prose.** Once reviewed, migrate the draft prose into the shipped ESP records (Phase 19) and into the `Race_*.md` player handbooks where it serves as player-facing copy.
 3. **Fill formal contextual-favor tables.** Khajiit, Bosmer, and Argonian favor rows here are derived from hook cross-checks and Tier Rewards because those race sheets carry no formal favor table yet. When those tables are added to the race sheets, re-check the lane families and row counts.
 4. **Per-deity offer prose for Breton** (optional refinement): the single templated focus-emergence notification could be expanded into bespoke per-deity offers if the design later confirms full patron offers within traditions.

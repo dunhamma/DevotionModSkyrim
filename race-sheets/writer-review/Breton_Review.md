@@ -1,8 +1,8 @@
 # Breton -- Writer Review
 
-**Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 18 (Breton (full draft -- one gated slot))
-**Regenerated:** 2026-05-27 via `node tools/pdv_writer_review.mjs`
-**Rows:** 65 drafted
+**Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 18 (Breton (full draft))
+**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Rows:** 69 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -96,7 +96,7 @@ _1 row._
 
 ## Curse onset / cure
 
-_4 rows._
+_5 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
@@ -104,6 +104,7 @@ _4 rows._
 | _(no tone match)_ | `PDV_Msg_Breton_CurseState_VampireCured` | MessageBox. Once on cure. | God-voice | 8+228 / 40+500 |  | Title: "Re-Entry"   Body: "The undeath is lifted. The Knight's Road may be rebuilt through restored Integrity. The Green Way moves from Excommunicated to Penitent; full restoration needs an outdoor rite and sustained covenant, and leaves a permanent scar." |  |
 | _(no tone match)_ | `PDV_Msg_Breton_CurseState_WerewolfOnset_KnightsRoad` | MessageBox. Once on first transformation; Knight's Road. | God-voice | 19+204 / 40+500 |  | Title: "Homeless in the Vow"   Body: "The beast is in you, and the Knight's Road has no frame for it. There is no theological home for the wolf here. Your Integrity degrades on each transformation, and the knightly orders will not understand." |  |
 | _(no tone match)_ | `PDV_Msg_Breton_CurseState_WerewolfOnset_HiddenArt` | MessageBox. Once on first transformation; Hidden Art. | God-voice | 17+177 / 40+500 |  | Title: "The Beast Belongs"   Body: "The beast is in you, and the Hidden Art already holds Hircine. Glenmoril is family here. There is no rupture -- the wolf fits the occult frame as though it were always meant to." |  |
+| _(no tone match)_ | `PDV_Msg_Breton_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; per-tradition resolution. | God-voice | 18+262 / 40+500 |  | Title: "The Beast Set Down"   Body: "The wolf is set down. On the Knight's Road, Integrity may now be rebuilt, the transformations ended, though the orders remember. In the Hidden Art the beast that belonged is given up by choice; Glenmoril marks the loss, and the occult frame holds an empty place." |  |
 
 ## Shrine and privilege dialogue
 
@@ -137,7 +138,7 @@ _3 rows._
 
 ## Other
 
-_20 rows._
+_23 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
@@ -161,3 +162,6 @@ _20 rows._
 | _(no tone match)_ | `PDV_Notif_Breton_DruidicStanding_Open` | HUD corner notification. One per band entry. | Narrator | 56 / 80 |  | The druidic covenant is open but unproven. Y'ffre waits. |  |
 | _(no tone match)_ | `PDV_Notif_Breton_DruidicStanding_Acknowledged` | HUD corner notification. One per band entry. | Narrator | 66 / 80 |  | The druidic covenant is acknowledged. Y'ffre answers you steadily. |  |
 | _(no tone match)_ | `PDV_Notif_Breton_DruidicStanding_Frayed` | HUD corner notification. One per band entry. | Narrator | 57 / 80 |  | The druidic covenant frays. The forest is forgetting you. |  |
+| _(no tone match)_ | `PDV_Msg_Breton_VigilantPressure_Letter` | MessageBox. One-time on entering the Known exposure band. | Narrator | 23+202 / 40+500 |  | Title: "A Letter from the Vigil"   Body: "A sealed letter finds you, unsigned but unmistakable. The Vigilants of Stendarr have heard what you keep, and they are watching the roads you take. It is a warning, this time. They do not send a second." |  |
+| _(no tone match)_ | `PDV_Msg_Breton_VigilantPressure_RoadEncounter` | MessageBox. One-time on continued Known-band visibility after the Letter. | Narrator | 21+255 / 40+500 |  | Title: "The Vigil on the Road"   Body: "Two Vigilants block the road ahead, hands near their maces, reading you for the mark of the thing you serve. They ask their questions knowing the answers. How this ends depends on what they decide they saw -- and on whether your cover holds one more time." |  |
+| _(no tone match)_ | `PDV_Msg_Breton_VigilantPressure_Confrontation` | MessageBox. One-time on entering the Notorious exposure band. | Narrator | 23+265 / 40+500 |  | Title: "The Vigil Comes for You"   Body: "The watching is over. The Vigilants have named you a servant of the Daedra, and they have come in number to end it. There is no letter now, no question, no road to slip down. What you practiced in the dark has found you in the light, and only one of you walks away." |  |

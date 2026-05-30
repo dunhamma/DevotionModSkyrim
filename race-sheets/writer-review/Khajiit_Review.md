@@ -1,8 +1,8 @@
 # Khajiit -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 14 (Khajiit (full draft))
-**Regenerated:** 2026-05-27 via `node tools/pdv_writer_review.mjs`
-**Rows:** 51 drafted
+**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Rows:** 52 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -107,13 +107,14 @@ _1 row._
 
 ## Curse onset / cure
 
-_4 rows._
+_5 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Khajiit_CurseState_VampireOnset` | MessageBox. Once on becoming vampire. | God-voice | 21+215 / 40+500 |  | Title: "The Lattice Corrupted"   Body: "The thirst has taken you, little moon. The Lattice does not cast you out -- the moons do not disown their own -- but the caravans will fear you, and rightly. I will not look away. Few of the others can say the same." |  |
 | _(no tone match)_ | `PDV_Msg_Khajiit_CurseState_VampireCured` | MessageBox. Once on cure; clears posture toward Normal. | God-voice | 18+155 / 40+500 |  | Title: "The Lattice Clears"   Body: "The thirst is gone. The corruption lifts from the Lattice, and the caravans may learn your face again. Walk back into the moonlight. It was always waiting." |  |
 | _(no tone match)_ | `PDV_Msg_Khajiit_CurseState_WerewolfOnset` | MessageBox. Once on first transformation. | God-voice | 17+206 / 40+500 |  | Title: "A Competing Shape"   Body: "Hircine has given you another shape. The moons are about form, and you carry one too many now. You are still Khajiit -- strained, watched, but not erased. The community will fear the wolf. Hold to the road." |  |
+| _(no tone match)_ | `PDV_Msg_Khajiit_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; clears posture toward Normal. | God-voice | 15+200 / 40+500 |  | Title: "One Shape Again"   Body: "The wolf is set down, little moon. The Lattice holds a single shape once more, and the extra form no longer pulls against the moons. The caravans will lose their fear in time. The road is yours again." |  |
 | _(no tone match)_ | `PDV_Msg_Khajiit_CurseState_ShadowDriftEntry` | MessageBox. Once on entering ShadowDrift; voice deviation justified above. | Narrator | 24+193 / 40+500 |  | Title: "The Shadow Between Stars"   Body: "You have lived too long in the shadow -- night-only, predatory, drawn to the dark between the moons. The Lattice loosens its hold. Khenarthi's road and Azurah's twilight both feel far away now." |  |
 
 ## Shrine and privilege dialogue

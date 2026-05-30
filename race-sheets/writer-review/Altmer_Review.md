@@ -1,8 +1,8 @@
 # Altmer -- Writer Review
 
-**Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 13 (Altmer (partial draft -- gated slots flagged))
-**Regenerated:** 2026-05-27 via `node tools/pdv_writer_review.mjs`
-**Rows:** 46 drafted
+**Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 13 (Altmer (full draft))
+**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Rows:** 61 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -97,6 +97,29 @@ _3 rows._
 | _(no tone match)_ | `PDV_Msg_Altmer_Survey_DivineBody` | Shown via Survey Devotion and on posture transitions. | Narrator | 118 / 240 |  | You hold the Divine Body path: balanced cultural practice, the return pursued without rigid enforcement. Standing: %s. |  |
 | _(no tone match)_ | `PDV_Msg_Altmer_Survey_Psijic` | Shown via Survey Devotion and on posture transitions. | Narrator | 131 / 240 |  | You hold the Psijic path: the Old Ways, private meditation, heterodox scholarship. Standing: %s. The Lorkhan world costs you least. |  |
 
+## Contextual favor (small, Noted)
+
+_6 rows._
+
+| Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
+|---|---|---|---|---|---|---|---|
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_ThalmorOrthodox_Enforcement` | HUD corner notification. After-act; one per enforcement act, daily cap. | Player-2nd | 70 / 80 |  | Heresy named and answered. The orthodoxy marks the hand that enforces. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_ThalmorOrthodox_OrthodoxRite` | HUD corner notification. Environmental; dawn rite at an orthodox shrine, daily cap. | Player-2nd | 64 / 80 |  | The dawn kept by the strict rite. Doctrine is served as written. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_DivineBody_Cultivation` | HUD corner notification. After-act; mastery milestone, daily cap. | Player-2nd | 67 / 80 |  | Mastery earned and refined. You raise yourself as the project asks. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance` | HUD corner notification. Environmental; unforced dawn observance, daily cap. | Player-2nd | 66 / 80 |  | You greet the dawn unforced. The return is honored, not compelled. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_Psijic_OldWaysMeditation` | HUD corner notification. Environmental; private meditation, daily cap. | Player-2nd | 61 / 80 |  | The Old Ways kept in private. The quiet path costs you least. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_Psijic_ForbiddenLore` | HUD corner notification. After-act; heterodox lore recovered, daily cap. | Player-2nd | 70 / 80 |  | Hidden knowledge recovered. What is written outlasts what is enforced. |  |
+
+## Contextual favor (large, Marked)
+
+_3 rows._
+
+| Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
+|---|---|---|---|---|---|---|---|
+| _(no tone match)_ | `PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended` | MessageBox. Rare major; a costly act defending orthodoxy by the sword. | God-voice | 23+207 / 40+500 |  | Title: "Auri-El Marks the Sword"   Body: "You did not only pray for the project; you bled for it. The hardest path is the one that answers Lorkhan's world with steel, and you walked into the cost with open eyes. The dawn knows what it took from you." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_FavorMarked_DivineBody_ReturnAffirmed` | MessageBox. Rare major; affirming the return without enforcement. | God-voice | 24+200 / 40+500 |  | Title: "Auri-El Marks the Return"   Body: "You turned toward the dawn when the mortal world offered every reason to forget it, and you did it without a whip at anyone's back. This is the return as it was meant: chosen, not enforced. I keep it." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_FavorMarked_Psijic_UnseenStep` | MessageBox. Rare major; a lonely, unrewarded Old Ways moment. | God-voice | 28+183 / 40+500 |  | Title: "Auri-El Marks the Quiet Path"   Body: "You kept the Old Ways where no one could see and no one could reward you. The heterodox road is lonely and easy to abandon, and you did not abandon it. The foundation holds you still." |  |
+
 ## Curse onset / cure
 
 _2 rows._
@@ -139,7 +162,7 @@ _3 rows._
 
 ## Other
 
-_6 rows._
+_12 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
@@ -149,3 +172,9 @@ _6 rows._
 | _(no tone match)_ | `PDV_Notif_Altmer_Pantheon_ObservantLapse` | HUD corner notification. One per direction per save. | Narrator | 51 / 80 |  | The path is acknowledged less surely now. Wavering. |  |
 | _(no tone match)_ | `PDV_Notif_Altmer_Pantheon_FaithfulLapse` | HUD corner notification. One per direction per save. | Narrator | 38 / 80 |  | Your coherence is slipping. Observant. |  |
 | _(no tone match)_ | `PDV_Notif_Altmer_Focus_DevotedLapse` | HUD corner notification. One per save per focus loss. | Narrator | 55 / 80 |  | The bond with %s loosens. The Devoted bond is not held. |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_DragonbornDeclaration` | MessageBox. One-time on being named Dragonborn. | Narrator | 26+267 / 40+500 |  | Title: "Named for the Mortal World"   Body: "They call you Dragonborn -- a mortal soul carrying the dragon's, blessed by the world Lorkhan made and the people who live in it. The gift is real. So is the dissonance: the thing that honors you is the thing your ancestors died trying to escape. You will carry both." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_SovngardeBeat` | MessageBox. One-time on the Sovngarde beat. | Narrator | 27+260 / 40+500 |  | Title: "The Hall That Should Not Be"   Body: "Sovngarde is real -- a hall of mortal dead who feast and do not dissolve, who chose to stay in the world rather than return beyond it. To an Altmer this is the trap made beautiful. You have seen it now, and you cannot unsee that the mortal world keeps its own." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_MarriageBeat` | MessageBox. One-time on taking a spouse. | Narrator | 18+251 / 40+500 |  | Title: "Bound to the World"   Body: "You have taken a spouse, a door, a hearth -- ties to the mortal world Lorkhan built. The Psijics would call it attachment; the orthodox would call it descent. It may be the truest thing you have done, or the deepest forgetting. Only you can say which." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_CompanionsFork` | MessageBox. One-time at the Companions beast-blood fork. | Narrator | 26+275 / 40+500 |  | Title: "The Beast at the Threshold"   Body: "The Companions offer you the blood of the beast -- to become, by choice, the furthest thing from spirit an Altmer can be. The whole of your faith is to rise out of flesh, not deeper into it. Refuse, and you keep the project. Accept, and there is no doctrine left to hold you." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_VampireExiledPath_Entry` | MessageBox. One-time after vampire onset, if the Exiled path is enabled. | Narrator | 16+245 / 40+500 |  | Title: "The Exile's Road"   Body: "Auri-El has closed, and the records will not hold your name. What remains is not devotion but exile -- a long walk outside the return, among others the dawn has let go. There is no path back. There is only how you carry the dark you have become." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_VampireExiledPath_Recognition` | MessageBox. On reaching the Exiled-path recognition beat. | Narrator | 22+284 / 40+500 |  | Title: "Known Among the Exiled"   Body: "The others outside the dawn know you now -- the cast-out Altmer, the ones the return forgot. It is not a congregation and it is not grace. It is recognition, of a kind, among those who share the same closed door. You are not alone in the exile, even if you stand alone before the god." |  |

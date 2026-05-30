@@ -1,8 +1,8 @@
 # Dunmer -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 12 (Dunmer (full draft))
-**Regenerated:** 2026-05-27 via `node tools/pdv_writer_review.mjs`
-**Rows:** 66 drafted
+**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Rows:** 67 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -131,13 +131,14 @@ _4 rows._
 
 ## Curse onset / cure
 
-_3 rows._
+_4 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Dunmer_CurseState_VampireOnset_AshSilenced` | MessageBox. Once on becoming vampire; sets posture Silent; voice deviation justified above. | Narrator | 23+175 / 40+500 |  | Title: "The Ash-Prayer Silenced"   Body: "You set the ash and speak the prayer, and for the first time in your life nothing answers. The ancestors do not speak to the undead. The silence is total, and it is yours now." |  |
 | _(no tone match)_ | `PDV_Msg_Dunmer_CurseState_VampireCured_Scarred` | MessageBox. Once on cure; sets posture RestoredScarred. | God-voice | 20+141 / 40+500 |  | Title: "The Ancestors Answer"   Body: "The ash-prayer carries again. We hear you. But we heard the silence too, and it does not leave us, or you. Return -- scarred, and still ours." |  |
 | _(no tone match)_ | `PDV_Msg_Dunmer_CurseState_WerewolfOnset` | MessageBox. Once on first transformation; sets posture Strained. | God-voice | 16+161 / 40+500 |  | Title: "Ritually Unclean"   Body: "The beast in you has no place in the ash or the Reclamations. The ancestors do not turn away, but they answer thinly now. Hircine offers nothing to fill the gap." |  |
+| _(no tone match)_ | `PDV_Msg_Dunmer_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; clears posture Strained. | God-voice | 18+193 / 40+500 |  | Title: "The Ash Runs Clean"   Body: "The beast is set down. The ritual taint lifts, and the ancestors answer at full voice once more. The ash takes your prayer without strain. What was unclean is washed; carry the Reclamations on." |  |
 
 ## Shrine and privilege dialogue
 

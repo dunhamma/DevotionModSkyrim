@@ -1,8 +1,8 @@
 # Orc -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 11 (Orc (full draft))
-**Regenerated:** 2026-05-27 via `node tools/pdv_writer_review.mjs`
-**Rows:** 49 drafted
+**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Rows:** 50 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -75,11 +75,12 @@ _2 rows._
 
 ## Curse onset / cure
 
-_3 rows._
+_4 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Orc_CurseState_WerewolfOnset` | MessageBox. Once on first transformation as Orc. | God-voice | 16+182 / 40+500 |  | Title: "The Beast Tested"   Body: "The wolf is in you. I do not turn away from it. But the beast is judged by my code as the smith is: is it strong, does it endure, does it serve the kin or break them? Prove the wolf." |  |
+| _(no tone match)_ | `PDV_Msg_Orc_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure completion. | God-voice | 18+206 / 40+500 |  | Title: "The Wolf Set Aside"   Body: "You have put the beast down. It was never outside my code; it was a thing to master, and you mastered it by ending it. You are an Orc still, and still tested. The kin will weigh the wolf longer than I will." |  |
 | _(no tone match)_ | `PDV_Msg_Orc_CurseState_VampireOnset` | MessageBox. Once on becoming vampire. | God-voice | 16+170 / 40+500 |  | Title: "Outside the Test"   Body: "You feed on the living now. That is dependency, and dependency is the thing my code exists to refuse. You stand outside the test. Cure this, or I have nothing to witness." |  |
 | _(no tone match)_ | `PDV_Msg_Orc_CurseState_VampireCured` | MessageBox. Once on cure completion. | God-voice | 17+145 / 40+500 |  | Title: "Back Within Reach"   Body: "The thirst is gone. You are a living Orc again, and a living Orc can be tested. Begin. The kin will remember the lapse longer than the code does." |  |
 

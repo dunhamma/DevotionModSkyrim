@@ -1,8 +1,8 @@
 # Argonian -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 19 (Argonian (full draft))
-**Regenerated:** 2026-05-27 via `node tools/pdv_writer_review.mjs`
-**Rows:** 46 drafted
+**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Rows:** 47 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -86,13 +86,14 @@ _6 rows._
 
 ## Curse onset / cure
 
-_3 rows._
+_4 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Argonian_CurseState_VampireOnset` | MessageBox. Once on becoming vampire. | Narrator | 21+245 / 40+500 |  | Title: "The Hist Falls Silent"   Body: "You are undead now. The Hist gives Saxhleel souls and receives them at death -- and yours is no longer going where it was meant to go. The Hist falls silent. The People cannot safely hold you. Only the void stays near. This is the deepest grief." |  |
 | _(no tone match)_ | `PDV_Msg_Argonian_CurseState_VampireCured` | MessageBox. Once on cure. | Narrator | 22+219 / 40+500 |  | Title: "The Hist Reaches Again"   Body: "The undeath is lifted. The Hist's silence breaks slowly -- it must learn to reach you again across both the distance and the memory of what you were. The People can hold you once more. It will take time. It can be done." |  |
 | _(no tone match)_ | `PDV_Msg_Argonian_CurseState_WerewolfOnset` | MessageBox. Once on first transformation. | Narrator | 15+222 / 40+500 |  | Title: "A Changed Shape"   Body: "The beast is in you. The Hist is accustomed to Saxhleel who change -- the shape strains the relation but does not sever it. The People can still recognize you. This is serious, but it is not the silence. It can be carried." |  |
+| _(no tone match)_ | `PDV_Msg_Argonian_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; clears posture Strained. | Narrator | 17+219 / 40+500 |  | Title: "The Shape Settles"   Body: "The beast is set down. The strain on the Hist relation eases, and the People recognize you without reservation again. The shape that pulled at the bond is gone. What was carried is set aside; the Hist reaches you clean." |  |
 
 ## Shrine and privilege dialogue
 

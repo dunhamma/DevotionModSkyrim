@@ -1,8 +1,8 @@
 # Imperial -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 15 (Imperial (full draft))
-**Regenerated:** 2026-05-27 via `node tools/pdv_writer_review.mjs`
-**Rows:** 72 drafted
+**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Rows:** 73 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -132,13 +132,14 @@ _1 row._
 
 ## Curse onset / cure
 
-_3 rows._
+_4 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Imperial_CurseState_VampireOnset` | MessageBox. Once on becoming vampire; Divine devotion halts. | Narrator | 21+202 / 40+500 |  | Title: "The Civic Faith Halts"   Body: "You are undead now, and the Nine Divines are a religion of the living community. The civic faith does not bend to accommodate this. It stops. The Concordat no longer touches your soul, only your safety." |  |
 | _(no tone match)_ | `PDV_Msg_Imperial_CurseState_VampireCured` | MessageBox. Once on cure; resumes from lowered floor. | Narrator | 27+183 / 40+500 |  | Title: "Re-Entry From a Lower Floor"   Body: "The undeath is lifted. The Nine Divines are open to you again -- but the civic faith resumes from a lowered floor, not your old standing. The community religion remembers the absence." |  |
 | _(no tone match)_ | `PDV_Msg_Imperial_CurseState_WerewolfOnset` | MessageBox. Once on first transformation. | Narrator | 25+204 / 40+500 |  | Title: "Homeless Within the Faith"   Body: "The beast is in you, and the Nine Divines have no place for it. Your devotion continues, weaker, its civic-facing parts thinned. Hircine offers an Imperial nothing. You are isolated within your own faith." |  |
+| _(no tone match)_ | `PDV_Msg_Imperial_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; resumes from lowered floor. | Narrator | 27+216 / 40+500 |  | Title: "Homecoming Within the Faith"   Body: "The beast is set aside. The Nine Divines make room again, and the civic-facing devotion thickens back toward what it was. The community religion notes the absence, as it always does, and resumes from a lowered floor." |  |
 
 ## Shrine and privilege dialogue
 

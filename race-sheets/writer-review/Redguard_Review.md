@@ -1,8 +1,8 @@
 # Redguard -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 16 (Redguard (full draft))
-**Regenerated:** 2026-05-27 via `node tools/pdv_writer_review.mjs`
-**Rows:** 61 drafted
+**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Rows:** 62 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -119,13 +119,14 @@ _4 rows._
 
 ## Curse onset / cure
 
-_3 rows._
+_4 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Redguard_CurseState_VampireOnset` | MessageBox. Once on becoming vampire; devotion collapses across all sects. | God-voice | 17+211 / 40+500 |  | Title: "Outside the Cycle"   Body: "You are undead now, and undeath is a soul that has left the cycle I guide. The Far Shores cannot receive you while the curse holds. Devotion across all three sects falls quiet. Cure this, and return to me first." |  |
 | _(no tone match)_ | `PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry` | MessageBox. Once on cure; Tu'whacca re-entry precedes other devotion. | God-voice | 14+208 / 40+500 |  | Title: "Right Re-Entry"   Body: "The curse is lifted. Come back through me before any other god -- proper mortality, ancestor order, the right return to the cycle. When that is done, the Far Shores are open, and your sect may have you again." |  |
 | _(no tone match)_ | `PDV_Msg_Redguard_CurseState_WerewolfOnset` | MessageBox. Once on first transformation; strained, not severed. | God-voice | 21+187 / 40+500 |  | Title: "Strained, Not Severed"   Body: "The beast is in you. The Yokudan gods and your sect remain within reach, but strained -- Hircine is an intrusion, not a home. The ancestors do not turn away. They only watch more closely." |  |
+| _(no tone match)_ | `PDV_Msg_Redguard_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; strain lifts. | God-voice | 16+216 / 40+500 |  | Title: "The Strain Lifts"   Body: "The beast is set down. The strain eases, and the Yokudan gods and your sect come back into full reach. Hircine's intrusion is ended. The ancestors, who only watched more closely, ease their gaze. Wholly theirs again." |  |
 
 ## Shrine and privilege dialogue
 
