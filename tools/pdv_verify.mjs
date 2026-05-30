@@ -2319,12 +2319,13 @@ class Verifier {
     );
     const systemCases = parsed.runtimeMatrix?.systemCases || [];
     const dialogueCases = parsed.runtimeMatrix?.dialogueCases || [];
-    const hasRuntimeMatrix = parsed.runtimeMatrix?.status === "planned-pending-runtime-proof"
+    const runtimeMatrixStatuses = ["planned-pending-runtime-proof", "runtime-proven"];
+    const hasRuntimeMatrix = runtimeMatrixStatuses.includes(parsed.runtimeMatrix?.status)
       && PHASE18_SYSTEM_RUNTIME_CASES.every((id) => systemCases.some((actual) => actual.id === id))
       && PHASE18_DIALOGUE_RUNTIME_CASES.every((id) => dialogueCases.some((actual) => actual.id === id));
 
     if (hasSurvey && hasMessages && hasDialogueContracts && hasRuntimeMatrix) {
-      this.pass("Phase 18 status/Nord manifest", `Manifest locks Survey Devotion, Nord curse messages, dialogue contracts, and runtime matrix with status ${parsed.status}.`, PHASE18_STATUS_NORD_MANIFEST);
+      this.pass("Phase 18 status/Nord manifest", `Manifest locks Survey Devotion, Nord curse messages, dialogue contracts, and runtime matrix with status ${parsed.runtimeMatrix?.status}.`, PHASE18_STATUS_NORD_MANIFEST);
     } else {
       this.phase18Gap("Phase 18 status/Nord manifest", `Manifest contract mismatch: survey=${hasSurvey}, messages=${hasMessages}, dialogue=${hasDialogueContracts}, runtimeMatrix=${hasRuntimeMatrix}.`, PHASE18_STATUS_NORD_MANIFEST);
     }

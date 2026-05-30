@@ -213,22 +213,22 @@ Runtime closeout update (2026-05-28):
   anti-repeat-scaled before stigma or piety is applied, so counted Seeker proof
   must use one rite on each of three in-game days rather than same-day spam.
 
-Phase 18A/B source/readback update (2026-05-30):
+Phase 18A/B runtime closeout (2026-05-30):
 
 - **Player surface:** `Survey Devotion` and the MCM `Player` page are live in
   source/readback. Numeric Status/Debug surfaces are gated behind Developer
   Options.
 - **Nord pilot scaffold:** broad Old Ways, broad Nine Divines, focused Kyne,
   Talos status, Hircine/werewolf feedback, and Nord vampire rupture/scar
-  feedback have source/readback coverage. Fresh-save runtime proof is still
-  pending.
+  feedback have source/readback coverage and fresh-save runtime proof.
 - **Dialogue boundary:** Froki, Heimskr, Andurs, and Aela recognition topics are
-  CK-authored/live as branch/topic/unnamed INFO chains. They are not complete
-  until positive/negative runtime proof is done.
+  CK-authored/live as branch/topic/unnamed INFO chains and have positive/negative
+  in-game dialogue proof.
 - **Runtime matrix:** Phase 18 now explicitly requires Player page, Developer
   Options persistence, Survey Devotion for broad/focused Nord states,
   Hircine/werewolf tension, vampire suppression, vampire cure scar, save/load
-  persistence, and per-speaker positive/negative dialogue proof.
+  persistence, and per-speaker positive/negative dialogue proof; all are now
+  closed for the Nord pilot.
 
 ---
 

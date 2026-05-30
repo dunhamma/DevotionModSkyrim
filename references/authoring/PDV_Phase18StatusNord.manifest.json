@@ -85,7 +85,7 @@
     ]
   },
   "runtimeMatrix": {
-    "status": "planned-pending-runtime-proof",
+    "status": "runtime-proven",
     "closeoutRules": [
       "Run from a fresh Nord save or a main-menu coc qasmoke path; do not count stale script instances.",
       "Use the Player page and Survey Devotion as the player-facing proof surface.",

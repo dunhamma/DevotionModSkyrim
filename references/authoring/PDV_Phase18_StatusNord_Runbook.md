@@ -38,7 +38,7 @@ Last direct readback found these saved records in `PlayerDevotion_Framework.esp`
 - Andurs branch/topic/INFO exists and matches the broad death-rite contract.
 - Aela branch/topic/INFO exists and matches the werewolf/Hircine tension contract.
 
-`dialogue.implementationStatus` is now `live-dialogue-authored`; strict Phase 18/Nord verification checks branch/topic/INFO payload and condition readback. SEQ has been refreshed for the current save. Fresh-save player/status runtime proof has passed for the Nord pilot. Per-speaker dialogue runtime proof remains the last human smoke gate unless it has also been run in game, and future CK dialogue edits must refresh SEQ again before closeout.
+`dialogue.implementationStatus` is now `live-dialogue-authored`; strict Phase 18/Nord verification checks branch/topic/INFO payload and condition readback. SEQ has been refreshed for the current save. Fresh-save player/status runtime proof has passed for the Nord pilot. Per-speaker positive/negative dialogue runtime proof has passed for Froki, Heimskr, Andurs, and Aela. Future CK dialogue edits must refresh SEQ and rerun the speaker smoke checks before closeout.
 
 Useful CK global conditions:
 
