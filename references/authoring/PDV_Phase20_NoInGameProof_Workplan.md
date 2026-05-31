@@ -1,0 +1,495 @@
+# PDV Phase 20 No-In-Game-Proof Workplan
+
+**Created:** 2026-05-31
+**Status:** Planning and implementation queue for Phase 20 work that can proceed before more Skyrim runtime proof
+**Owner:** Companion to `PDV_PreBetaRaceGateLedger.md`, `PDV_PreBetaRaceScalingSpine.md`, `PDV_PreBetaRaceAcceptanceRubric.md`, `PDV_Phase20_NoInGameProof_Gates.json`, `PDV_Phase20_ManualEvidenceLedger.json`, and `PDV_Phase20_PreBetaManualChecks_Runbook.md`
+
+## Purpose
+
+This packet defines the rest of Phase 20 work that can move forward without
+opening Skyrim for live in-game proof.
+
+It does not replace the manual pre-beta gate. It exists so the project can keep
+making useful progress through architecture, manifests, source scaffolds,
+readback checks, verifier gates, content handoff packets, and CK-ready runbooks
+while runtime feel proof is deferred.
+
+## Boundary
+
+Allowed in this pass:
+
+- Manifest and ledger updates.
+- Static source checks.
+- Mutagen/readback checks.
+- Narrow authoring-helper plans or helper implementation where the owner is
+  clear and reversible.
+- Survey/status source and content copy planning.
+- Final-world placement contracts that name intended object, cell/location
+  family, cultural reason, and stop condition.
+- Stack snapshot templates and expected/edge build plans.
+- CAT-6 and recognition packet prep before CK/runtime proof. The first CAT-6
+  pilot may be record/readback-proven, but still does not count as runtime
+  reward distribution or holistic effect approval.
+- Daedric blocker closeout decisions that affect Phase 20 race planning.
+
+Not allowed in this pass:
+
+- Marking any race `Pass` in the pre-beta acceptance ledger.
+- Claiming final placement because QASmoke proof exists.
+- Claiming runtime feel, anti-farm feel, or Survey display proof without a fresh
+  in-game/manual result.
+- Generated dialogue authoring.
+- Broad reward magnitude increases before stack/ceiling packets are complete.
+- Broad Daedric runtime promotion before CAT-4 blocker decisions are closed.
+
+Use `Planning-Ready`, `Readback-Ready`, `CK-Ready`, or `Runtime-Deferred`
+instead of `Pass` when in-game proof is intentionally out of scope.
+
+## Current Automated Baseline
+
+```text
+Content verifier:
+node .\tools\pdv_content_verify.mjs
+Expected current result: FAIL=0, WARN=0, PASS=1079, INFO=4
+
+Strict Phase 20 source/readback gate:
+node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
+Expected current result: PASS=2342, WARN=1, INFO=28
+
+Route-marker list:
+node .\tools\pdv_phase20_runtime_check.mjs --list
+Expected current result: all Phase 20 proof races and route markers list.
+
+Proof placement readback:
+dotnet run --project .\tools\pdv-phase20-proof-placement-author\PdvPhase20ProofPlacementAuthor.csproj -- --check-placements
+Expected current result: Status=PASS, 30 proof references mapped.
+```
+
+The remaining verifier warning is the existing unnamed CK-authored INFO record
+class in `PlayerDevotion_Framework.esp`.
+
+## No-In-Game Definition Of Done
+
+This pass is complete when all of the following are true:
+
+1. Every race has a `Runtime-Deferred` packet in the gate ledger with an
+   expected build, edge build, normal-session route, rejected-hook families,
+   Survey/status requirement, final placement contract, reward floor, reward
+   ceiling, and stack snapshot.
+2. Every P0/P1 race has at least one normal-play hook plan that names the
+   intended signal source, the accepted route, the rejected generic behaviors,
+   and the anti-farm rule.
+3. Every P2 race has an audit-only stack/ceiling packet with no new reward
+   volume requested.
+4. The verifier checks the source/readback parts that can be checked without
+   Skyrim: manifest row IDs, all-race Survey source branches, proof record
+   readback, state-track labels, manager properties, and the narrow CAT-6
+   pilot record where relevant.
+5. CAT-6 has one target-record owner decision for the first pilot, proves that
+   one target by readback, or remains explicitly blocked as
+   `target-record-needed`.
+6. Recognition/dialogue has one CK-safe first packet specification or remains
+   explicitly blocked as `Survey/status fallback only`.
+7. `PDV_Phase20_PreBetaManualChecks_Runbook.md` is ready to receive manual
+   evidence later, with no missing race sections.
+8. `PDV_Phase20_ManualEvidenceLedger.json` has a pending evidence intake packet
+   for every race so future manual proof can be recorded without changing the
+   no-game verdict by accident.
+
+Current implementation note: `PDV_Phase20_NoInGameProof_Gates.json` is the
+structured form of this definition of done. The strict Phase 20 race-costing
+verifier reads it so no-game status, hook contracts, placement contracts,
+stack snapshots, CAT-6 target-record state, recognition packet prep, and
+Daedric blockers cannot silently drift from the prose ledgers.
+`PDV_Phase20_ManualEvidenceLedger.json` is the structured manual-proof intake
+file. The verifier checks that it exists and stays pending until evidence is
+actually recorded.
+
+## Work Waves
+
+## Current Implementation State
+
+Wave 1 is implemented: the gate ledger now records no-in-game status, deferred
+manual proof, and the next automatable action for each race.
+
+Wave 2 is implemented in structured form: `PDV_Phase20_NoInGameProof_Gates.json`
+records the normal-session route, accepted hook families, rejected hook
+families, and anti-farm rules for all ten races.
+
+Wave 3 is implemented: the strict Phase 20 race-costing verifier now reads the
+structured gate and checks race coverage, rejected-hook depth, anti-farm rules,
+stack snapshots, placement contracts, CAT-6 target-record state, recognition
+packet prep, and Daedric blocker status.
+
+Wave 4 is implemented as CK-ready contracts, not live placement: every P0/P1
+race has two final-world placement contracts, while P2 audit lanes intentionally
+have none.
+
+Wave 5 is implemented as no-game stack snapshots: every race has expected and
+edge build stack notes, P2 races stay audit-only, and the structured gate blocks
+accidental P2 placement/reward expansion.
+
+Wave 6 is implemented as source/status requirements: every race has a
+Survey/status requirement and debug-only boundary, but no race receives a
+`Pass` until the readout is manually checked in game.
+
+Wave 7 is implemented through the first pilot record/readback proof: CAT-6 now
+records the first Khajiit candidate as a live pilot-provisional framework
+`SPEL` with two night-gated `MGEF` effects, keeps the Bosmer fallback absent,
+and leaves grant wiring plus full race-effect authoring blocked on later review.
+
+Wave 8 is implemented as packet prep: the first recognition lane is Altmer
+Auri-El crisis recovery with CK-safe identity planning and Survey/status
+fallback, but no generated dialogue and no runtime claim.
+
+Wave 9 is implemented as blocker tracking: Daedric runtime promotion remains
+blocked until stigma, Hircine/Molag Bal access, and Prince order decisions are
+ratified.
+
+Manual evidence intake is implemented as a structured pending ledger:
+`PDV_Phase20_ManualEvidenceLedger.json` names the expected wrong-origin,
+generic-hook, Survey/status, final-placement, stack-snapshot, and manual-feel
+checks for all ten races. The verifier keeps those slots pending until runtime
+or manual proof is actually performed.
+
+### Wave 1 - Gate Ledger Hardening
+
+Goal: make the ledger a complete source of truth for pre-runtime status.
+
+Outputs:
+
+- Add a `No-in-game status` field to every race packet.
+- Convert every current `Fail - internal scaling only` into a more precise
+  pair: `Verdict: Fail - runtime/manual proof deferred` and `No-in-game status:
+  Planning-Ready` or `Readback-Ready`.
+- Add one `Next automatable action` line per race.
+- Add one `Deferred manual proof` line per race.
+
+Owner files:
+
+- `references/authoring/PDV_PreBetaRaceGateLedger.md`
+- `references/authoring/PDV_PreBetaRaceAcceptanceRubric.md`
+
+Stop condition:
+
+- Do not claim a race is ready for external testing. This wave only clarifies
+  what can be done before Skyrim proof resumes.
+
+### Wave 2 - Normal-Play Hook Contracts
+
+Goal: turn each race's next hook into a buildable contract without proving it
+in game.
+
+Outputs:
+
+- Altmer: authored crisis/Lorkhan/dawn/study hook contract with ordinary-life
+  rejection list.
+- Khajiit: moon fallback, two-anchor road-home, and Baan Dar/Rajhin/Alkosh
+  anti-chore contract.
+- Argonian: Hist/People water/rest/bed/community contract before Void depth.
+- Orc: Stronghold/City/Legion quality and service filters.
+- Redguard: Crown/Forebear/Ash'abah/Far Shores/HoonDing cap contract.
+- Bosmer: Old Contract/Living Story/Exchange/Bandit Road non-hunter parity
+  contract.
+- Breton, Dunmer, Imperial, Nord: audit-only hook rejection and stack/ceiling
+  contract.
+
+Owner files:
+
+- `references/authoring/PDV_RaceImplementationCostingBacklog.md`
+- The six Phase 20 race implementation-costing manifests.
+- `references/authoring/PDV_PreBetaRaceGateLedger.md`
+
+Stop condition:
+
+- If a hook needs an unproven Papyrus API, CK graph mutation, or list-specific
+  reference, park it as `manual/CK proof needed` instead of treating it as a
+  normal-play candidate.
+
+### Wave 3 - Static Verifier Expansion
+
+Goal: make the no-game gates fail when docs/manifests/source drift.
+
+Candidate checks:
+
+- Gate ledger contains all ten races and the required no-in-game fields.
+- All P0/P1 packets name at least six rejected-hook families.
+- All P2 packets name at least four rejected-hook families.
+- All ten races have Survey/MCM source branches.
+- CAT-6 first candidate and fallback report target-record availability; the
+  Khajiit first candidate also proves spell text, magic-effect text, effect
+  shape, night conditions, and no manager grant wiring.
+- Final-placement contracts exist separately from QASmoke proof records.
+- P2 packets do not request new reward volume.
+
+Owner files:
+
+- `tools/pdv_verify.mjs`
+- `references/authoring/PDV_PreBetaRaceGateLedger.md`
+- `references/authoring/PDV_CAT6PromotionPilot.md`
+
+Stop condition:
+
+- Do not make the verifier parse prose in brittle ways if a structured manifest
+  field would be cheaper. Add structured fields to manifests first when the
+  check needs stable data.
+
+### Wave 4 - Final-World Placement Contracts
+
+Goal: finish placement planning without CK placement or Skyrim proof.
+
+Each P0/P1 race gets:
+
+- Surface EditorID plan.
+- Intended object type.
+- Target cell/location family.
+- Cultural reason.
+- Positive or pressure/recovery classification.
+- Wrong-origin expectation.
+- QASmoke proof record it relates to, if any.
+- CK/manual stop condition.
+
+First placement concepts:
+
+| Race | Positive surface | Pressure/recovery/status surface |
+|---|---|---|
+| Altmer | Dawn/study surface near scholarship or Auri-El practice | Crisis/Lorkhan pressure surface tied to authored quest context |
+| Khajiit | Road-home/moon/caravan surface | Focus-specific Baan Dar/Rajhin/Alkosh surface |
+| Argonian | Hist/water/rest surface | People/community or death-rite surface |
+| Orc | Stronghold/quality craft surface | City dignity or Legion/Exile service surface |
+| Redguard | Crown/Forebear sect surface | Ash'abah/Far Shores death-duty surface |
+| Bosmer | Living Story or Exchange non-hunter surface | Bandit Road reversal or Pact-lapse surface |
+
+Owner files:
+
+- New or existing placement contract section in
+  `references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md`
+- Per-race Phase 20 proof-placement runbooks where useful
+
+Stop condition:
+
+- Do not place records or mark placement live in this wave. The deliverable is a
+  CK-ready contract.
+
+### Wave 5 - Stack Snapshot And Ceiling Audit
+
+Goal: make reward ceilings inspectable before adding more content volume.
+
+Outputs:
+
+- One expected stack and one edge stack per race.
+- Allowed loud layers.
+- Suppressed, softened, or interpretation-only layers.
+- Active contextual favor cap.
+- Curse/Daedric modifier note.
+- P2 "no new reward volume" confirmation.
+
+Owner files:
+
+- `references/authoring/PDV_RaceRewardBudgetLedger.md`
+- `references/authoring/PDV_RacePlaystyleCoverageLedger.md`
+- `references/authoring/PDV_PreBetaRaceGateLedger.md`
+
+Stop condition:
+
+- If a stack cannot be explained without current god/Daedric content, write the
+  missing content dependency instead of guessing final reward behavior.
+
+### Wave 6 - Survey And Status Copy Lock Prep
+
+Goal: prepare the copy handoff without requiring runtime display proof.
+
+Outputs:
+
+- Per-race Survey copy intent: what the player should understand in one read.
+- Debug-only terms list: route IDs, raw counters, internal enum names, and
+  implementation labels that must not appear in player-facing copy.
+- Copy dependencies on gods/Daedrics content.
+- Static source checks where stable.
+
+Owner files:
+
+- `references/authoring/PDV_PreBetaRaceGateLedger.md`
+- `race-sheets/PDV_RaceContent_Manifest.md`
+- `tools/pdv_verify.mjs`
+
+Stop condition:
+
+- Runtime display remains manual. This wave can make copy ready and source
+  branches present; it cannot prove menu layout, message timing, or player feel.
+
+### Wave 7 - CAT-6 First Pilot Prep
+
+Goal: keep CAT-6 to a single named implementation boundary and one
+record/readback-proven pilot.
+
+Current state:
+
+- `PDV_Bless_Khajiit_Lunar_T1` source row exists.
+- `PDV_Bless_Khajiit_Lunar_T1` target `SPEL` EditorID is present in the live
+  framework ESP as a pilot-provisional CAT-6 record.
+- `PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen` and
+  `PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist` read back as the two
+  pilot-provisional magic effects.
+- Both effects are gated to `GetCurrentTime >= 19 OR <= 7`; the source row
+  says "At night" to match that implementation.
+- `PDV_Bless_Bosmer_Exchange_T1` fallback source row exists.
+- `PDV_Bless_Bosmer_Exchange_T1` target `SPEL` EditorID is also absent.
+
+Next no-game actions:
+
+1. Keep the first pilot away from Daedric stigma and dialogue.
+2. Keep the pilot grant-unwired until the Khajiit runtime reward pass.
+3. Run the holistic race-by-race effect review before full reward authoring.
+4. Keep runtime/menu display proof deferred.
+
+Owner files:
+
+- `references/authoring/PDV_CAT6PromotionPilot.md`
+- `tools/pdv_verify.mjs`
+- New narrow helper only if the ownership boundary is explicit.
+
+Stop condition:
+
+- No broad string promotion. No dialogue. No Daedric stigma or curse-access row
+  for the first pilot.
+
+### Wave 8 - Recognition Packet Prep
+
+Goal: make the first non-Nord recognition packet CK-ready without generating
+dialogue or proving it in game.
+
+Current recommended first candidate:
+
+- Altmer Auri-El crisis recovery recognition.
+- Speaker candidate: Runil if the CK-readable gate can be expressed cleanly.
+- Fallback: Survey/status recognition only.
+
+Next no-game actions:
+
+1. Name the positive gate: Altmer origin, Auri-El/focus state, crisis recovery
+   or scar state, and minimum tier if needed.
+2. Name negative gates: non-Altmer origin, wrong deity/focus, unresolved crisis,
+   wrong tier, curse halt if applicable.
+3. Name the CK record identities that manual authoring would create.
+4. Write the exact line-length and condition contract.
+5. Keep CK authoring and runtime proof deferred.
+
+Owner file:
+
+- `references/authoring/PDV_RecognitionDialogueScalePacket.md`
+
+Stop condition:
+
+- If the gate requires new helper globals or source state, build/readback that
+  helper first. Do not force fragile dialogue conditions.
+
+### Wave 9 - Daedric Phase-20 Blocker Closeout
+
+Goal: close the Daedric decisions that affect race scaling before runtime
+promotion begins.
+
+No-game decisions still useful now:
+
+- Stigma row contract: bands, decay, recovery, and how Survey/status names the
+  current stigma.
+- Hircine/Molag Bal curse-access template: whether curse access is stigma,
+  exception, native reading, or separate price.
+- Prince promotion order after Boethiah: order should follow race-scaling need,
+  not content drafting momentum.
+- Cross-Prince hostility and exit residue language for Survey/status.
+
+Owner files:
+
+- `PDV_Architecture_v3.md`
+- `references/phase4/PDV_DaedricRacePrinceMatrix.csv`
+- `race-sheets/PDV_DaedricContent_Manifest.md`
+- `references/authoring/PDV_CAT6PromotionPilot.md`
+
+Stop condition:
+
+- Do not promote Daedric runtime rows until CAT-4 decisions are ratified and one
+  non-Daedric CAT-6 pilot proves the promotion path.
+
+## Recommended Order
+
+1. Wave 1: harden the gate ledger.
+2. Wave 3: add the lowest-risk verifier checks for ledger/source drift.
+3. Wave 2: write hook contracts for Altmer, Khajiit, and Argonian first.
+4. Wave 5: write P2 stack/ceiling audit packets before any new P2 rewards.
+5. Wave 4: write CK-ready final placement contracts for P0/P1.
+6. Wave 6: prepare Survey/status copy lock notes.
+7. Wave 7: keep the CAT-6 pilot grant-unwired and run holistic race-effect
+   review before broad reward authoring.
+8. Wave 8: prepare the first recognition packet only if the source gate is
+   clean.
+9. Wave 9: close Daedric blocker decisions before any Prince runtime promotion.
+
+## Parallelization Plan
+
+Use subagents or separate workstreams only with disjoint file ownership:
+
+| Workstream | Scope | Files |
+|---|---|---|
+| A | Altmer/Khajiit/Argonian hook contracts | `PDV_RaceImplementationCostingBacklog.md`, three manifests |
+| B | Orc/Redguard/Bosmer hook contracts | `PDV_RaceImplementationCostingBacklog.md`, three manifests |
+| C | P2 stack/ceiling audit | `PDV_RaceRewardBudgetLedger.md`, `PDV_RacePlaystyleCoverageLedger.md` |
+| D | Verifier/check design | `tools/pdv_verify.mjs` |
+| E | CAT-6 and recognition packet prep | `PDV_CAT6PromotionPilot.md`, `PDV_RecognitionDialogueScalePacket.md` |
+
+One primary agent should own final integration into
+`PDV_PreBetaRaceGateLedger.md` to avoid conflicting verdict language.
+
+## Verification Commands
+
+Run these after any no-game Phase 20 planning or source/readback update:
+
+```powershell
+node .\tools\pdv_content_verify.mjs
+node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
+node .\tools\pdv_phase20_runtime_check.mjs --list
+dotnet run --project .\tools\pdv-phase20-proof-placement-author\PdvPhase20ProofPlacementAuthor.csproj -- --check-placements
+git diff --check
+```
+
+If a `.psc` file changes, also run the targeted compile:
+
+```powershell
+node .\tools\pdv_compile.mjs --script PDV__ManagerQuest
+```
+
+## Content Notes For The User
+
+Useful now:
+
+- Final-world placement concepts for Altmer, Khajiit, Argonian, Orc, Redguard,
+  and Bosmer. One positive surface and one pressure/recovery/status surface per
+  race is enough.
+- Survey/status tone preferences for all ten races, especially the P2 audit
+  races where current source can explain state but final copy still needs taste.
+- CAT-6 follow-up: review
+  `references/authoring/PDV_RaceEffectReviewLedger.md` before using the
+  Khajiit pilot mechanics as precedent for full reward authoring.
+- Recognition decision: approve Runil as the first Altmer candidate, name a
+  different speaker, or keep recognition as Survey/status fallback only.
+- Daedric decisions: stigma bands/decay, Hircine/Molag Bal curse-access shape,
+  and Prince promotion order.
+
+Not needed yet:
+
+- Full final god/Daedric prose for every reward.
+- External tester instructions.
+- Numeric reward tuning beyond ceiling/floor budgets.
+
+## Next Work Hook
+
+The remaining Phase 20 work is decision-bound or runtime/manual:
+
+1. Run the holistic race-by-race effect review before scaling beyond the single
+   pilot-provisional CAT-6 Khajiit Tier 1 record.
+2. Approve Runil as the first Altmer recognition speaker, choose another
+   speaker, or keep recognition as Survey/status fallback.
+3. Fill the manual evidence ledger during in-game checks; do not mark any race
+   `Conditional` or `Pass` before those slots have proof notes.
+4. Close the Daedric stigma, Hircine/Molag Bal access, and Prince order
+   decisions before any Daedric runtime promotion.

@@ -88,7 +88,12 @@ will feel equally rich in play. Its working ledgers are
 `references/authoring/PDV_RaceRewardBudgetLedger.md` and
 `references/authoring/PDV_RacePlaystyleCoverageLedger.md`; its reward ledger
 now includes an explicit immersion budget matrix, and its build-costing handoff
-is `references/authoring/PDV_RaceImplementationCostingBacklog.md`.
+is `references/authoring/PDV_RaceImplementationCostingBacklog.md`. The current
+pre-beta gameplay-scaling handoff is
+`references/authoring/PDV_PreBetaRaceScalingSpine.md`: Altmer is the active
+spine, Khajiit is the first contrast, Argonian is the second contrast, Orc /
+Redguard / Bosmer are P1 packets, and Breton / Dunmer / Imperial / Nord are P2
+audit-only lanes until stack and ceiling evidence is recorded.
 The first implementation-costing manifest set covers Altmer, Argonian, Orc,
 Redguard, Bosmer non-hunter parity, and Khajiit. Each manifest must carry
 `immersionProof` so reward parity includes diegetic trigger meaning, feedback,
@@ -122,19 +127,20 @@ Status values:
 - `Locked`: ready to plan implementation; remaining changes are tuning or content.
 - `Partial`: architecture is stable, but named implementation decisions remain.
 - `Pending`: not yet built or proven.
+- `Drafted`: full manifest prose is authored and verifier-clean, pending promotion into shipped ESP records (used in the Content authored column).
 
 | Race | Architecture locked | Implementation-spec locked | Hook feasibility checked | Content authored | Verifier-covered | In-game proven |
 |---|---|---|---|---|---|---|
-| Nord | Locked | Locked | Locked | Partial | Partial | Pending |
-| Imperial | Locked | Locked | Locked | Pending | Partial | Partial |
-| Breton | Locked | Locked | Locked | Pending | Pending | Pending |
-| Dunmer | Locked | Locked | Locked | Pending | Partial | Pending |
-| Altmer | Locked | Locked | Locked | Partial | Partial | Partial |
-| Khajiit | Locked | Locked | Locked | Partial | Partial | Partial |
-| Bosmer | Locked | Locked | Locked | Partial | Partial | Partial |
-| Redguard | Locked | Locked | Locked | Partial | Partial | Pending |
-| Orc | Locked | Locked | Locked | Partial | Partial | Pending |
-| Argonian | Locked | Locked | Locked | Partial | Partial | Pending |
+| Nord | Locked | Locked | Locked | Drafted | Pending | Pending |
+| Imperial | Locked | Locked | Locked | Drafted | Partial | Partial |
+| Breton | Locked | Locked | Locked | Drafted | Pending | Pending |
+| Dunmer | Locked | Locked | Locked | Drafted | Partial | Pending |
+| Altmer | Locked | Partial | Partial | Drafted | Partial | Partial |
+| Khajiit | Locked | Locked | Locked | Drafted | Partial | Partial |
+| Bosmer | Locked | Locked | Partial | Drafted | Pending | Pending |
+| Redguard | Locked | Locked | Locked | Drafted | Pending | Pending |
+| Orc | Locked | Locked | Partial | Drafted | Pending | Pending |
+| Argonian | Locked | Locked | Locked | Drafted | Pending | Pending |
 
 All ten races are now implementation-spec locked at the design level. Altmer's
 remaining closeout items (crisis resolution hooks, final crisis trigger list,
@@ -185,9 +191,74 @@ route markers only; Survey/status immersion, negative hooks, anti-farm behavior,
 pre-beta gameplay scaling, and final world placement remain separate acceptance
 evidence. External beta should wait until those surfaces are built enough that
 testers can judge a race experience rather than missing content.
+The pre-beta scaling gate now requires every race packet to record normal-play
+hooks, rejected generic hooks, Survey/status readout, final placement, reward
+ceiling, reward floor, stack snapshot, runtime proof command, and manual feel
+notes before stronger rewards or external tester judgment.
+`references/authoring/PDV_PreBetaRaceGateLedger.md` records the current
+race-by-race evidence and verdicts. `PDV_PreBetaRaceAcceptanceRubric.md` is the
+measurable acceptance bar for that gate: each race closes as `Pass`,
+`Conditional`, or `Fail` after expected/edge builds, rejected-hook coverage,
+anti-farm cadence, Survey/status legibility, final placement,
+reward floor/ceiling, and stack snapshot evidence are recorded.
+`references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md` is the
+manual handoff packet for proving those checks after automated source,
+manifest, route-list, and placement-readback gates pass.
+`references/authoring/PDV_Phase20_NoInGameProof_Workplan.md` now owns the
+remaining Phase 20 planning and implementation queue that can proceed before
+additional Skyrim runtime proof: gate-ledger hardening, normal-play hook
+contracts, static verifier expansion, final placement contracts, stack audits,
+Survey/status copy prep, the pilot-provisional CAT-6 target-record proof,
+recognition packet prep, and Daedric blocker closeout.
+`PDV_Phase20_NoInGameProof_Gates.json` is the
+structured gate for that work and is checked by the strict Phase 20
+race-costing verifier. It does not permit any race to move to `Pass` without
+manual/runtime evidence. `PDV_Phase20_ManualEvidenceLedger.json` is the
+matching pending intake ledger for recording that future evidence without
+changing the current no-game verdict.
 Reward magnitudes,
 immersion proof, and exact effect values remain tuning work for every race until
 implementation and playtesting prove the feel.
+
+Daedric full-content readiness remains a separate 1.0 content gate. All sixteen
+Skyrim-present Princes now have draft rows, but Section 11.6's remaining
+"decide before promotion" work is stigma row ratification, curse-access
+template handling for Hircine and Molag Bal, and the Prince promotion order.
+Those decisions must be closed before broad runtime promotion of the Prince
+drafts, but they do not block the current pre-beta race hook and Survey/status
+scaling work. Final reward text, Prince prices, stigma, exits,
+and final Survey/status copy remain blocked on those Daedric decisions.
+
+The 2026-05-31 lore cross-review keeps the current workshop defaults. Altmer
+`MarriageBeat` is a Marriage / Mortal Continuity crisis about household,
+lineage, embodied attachment, and continuity inside Lorkhan's mortal world, not
+anti-Mara marriage rejection. Talos/Thalmor remains a lore-valid later optional
+Altmer crisis row, not part of the current four-row list. Khajiit, Argonian,
+and Bosmer Survey/status directions remain source-backed with guardrails:
+Khajiit centers Lunar Lattice, road-home, moon, caravan, and native focus
+movement; Argonian keeps Hist primary with People/community, water, and Void as
+supporting pressures; Bosmer reads through Y'ffre/Green Pact, Living Story,
+Exchange/Z'en, and Bandit Road/Baan Dar without exposing raw counters. Runil is
+scoped to Altmer mortality/scar/recovery recognition. CAT-6 stays on the
+Khajiit lunar blessing first, Bosmer Exchange fallback second.
+
+Experience Mode is design-locked but not implemented. `Pilgrim's Path` remains
+the default authored experience; `Wayfarer's Path` is the future lenient mode.
+The 1.0 target includes this only after `PDV_ModePreset`, `PDV_GLO_Mode`, MCM
+surfacing, manager scalars, ActionRouter cheap-repeatable handling, verifier
+readback, and two-mode runtime smoke are complete.
+
+Recognition/dialogue scaling and CAT-6 promotion now have separate architecture
+packets. `PDV_RecognitionDialogueScalePacket.md` requires one CK-authored
+non-Nord recognition packet with saved-record readback and runtime
+positive/negative proof before broad recognition lines scale; the ratified
+first candidate is Runil for Altmer Auri-El crisis/recovery recognition, with
+Survey/status fallback only if the CK-readable gate is not clean. `PDV_CAT6PromotionPilot.md`
+requires one low-risk non-dialogue draft-to-ESP-to-handbook pilot before broad
+string promotion; the ratified first pilot is `PDV_Bless_Khajiit_Lunar_T1`,
+with `PDV_Bless_Bosmer_Exchange_T1` as fallback only if the Khajiit target
+record path is blocked. Drafting can continue; mass promotion and mass
+recognition should wait for those gates.
 
 ## 1.0 Compatibility Gate
 

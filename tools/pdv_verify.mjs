@@ -134,6 +134,24 @@ const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
   path.join(PROJECT_ROOT, "references", "authoring", "PDV_Phase20BosmerNonHunterImplementationCosting.manifest.json"),
   path.join(PROJECT_ROOT, "references", "authoring", "PDV_Phase20KhajiitImplementationCosting.manifest.json"),
 ];
+const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase20_NoInGameProof_Gates.json",
+);
+const CAT6_PROMOTION_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_CAT6PromotionPilot.manifest.json",
+);
+const PHASE20_MANUAL_EVIDENCE_LEDGER = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase20_ManualEvidenceLedger.json",
+);
 const RACE_CONTENT_MANIFEST = path.join(
   PROJECT_ROOT,
   "race-sheets",
@@ -3552,6 +3570,405 @@ class Verifier {
 
       if (raceName === "Khajiit" && manifest.implementationStatus !== "costed-not-built") {
         this.checkPhase20KhajiitSourceScaffold(manifest, manifestPath);
+      }
+    }
+
+    this.checkPhase20PreBetaSurveySourceScaffold();
+    this.checkPhase20NoInGameProofGates();
+    this.checkPhase20Cat6PromotionPilot();
+    this.checkPhase20ManualEvidenceLedger();
+  }
+
+  checkPhase20PreBetaSurveySourceScaffold() {
+    this.checkSourceContains("Phase 20 pre-beta Survey source", "PDV__ManagerQuest", [
+      "String Function GetSurveyDevotionText()",
+      "return GetAltmerSurveyText()",
+      "return GetKhajiitSurveyText()",
+      "return GetBosmerSurveyText()",
+      "return GetArgonianSurveyText()",
+      "return GetOrcSurveyText()",
+      "return GetRedguardSurveyText()",
+      "return GetImperialSurveyText()",
+      "return GetBretonSurveyText()",
+      "return GetDunmerSurveyText()",
+      "String Function GetAltmerSurveyText()",
+      "String Function GetKhajiitSurveyText()",
+      "String Function GetBosmerSurveyText()",
+      "String Function GetArgonianSurveyText()",
+      "String Function GetOrcSurveyText()",
+      "String Function GetRedguardSurveyText()",
+      "String Function GetImperialSurveyText()",
+      "String Function GetBretonSurveyText()",
+      "String Function GetDunmerSurveyText()",
+      "String Function GetPlayerMcmSummaryLine()",
+      "String Function GetPlayerMcmModeLine()",
+    ], this.phase20RaceCostingGap.bind(this));
+  }
+
+  checkPhase20NoInGameProofGates() {
+    if (!exists(PHASE20_NO_IN_GAME_PROOF_GATES)) {
+      this.phase20RaceCostingGap("Phase 20 no-in-game gates", "Structured no-in-game gate file is missing.", PHASE20_NO_IN_GAME_PROOF_GATES);
+      return;
+    }
+
+    let gates = null;
+    try {
+      gates = JSON.parse(fs.readFileSync(PHASE20_NO_IN_GAME_PROOF_GATES, "utf8"));
+    } catch (error) {
+      this.phase20RaceCostingGap("Phase 20 no-in-game gates", `Could not parse gate file: ${error.message}`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      return;
+    }
+
+    if (gates.schema === "pdv.phase20.no-in-game-proof-gates.v1") {
+      this.pass("Phase 20 no-in-game gates", "Gate schema is current.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 no-in-game gates", `Unexpected schema ${gates.schema || "(missing)"}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+    }
+
+    const races = gates.races || {};
+    const requiredRaces = ["Altmer", "Khajiit", "Argonian", "Orc", "Redguard", "Bosmer", "Breton", "Dunmer", "Imperial", "Nord"];
+    const p0p1 = new Set(["Altmer", "Khajiit", "Argonian", "Orc", "Redguard", "Bosmer"]);
+    const p2 = new Set(["Breton", "Dunmer", "Imperial", "Nord"]);
+    const allowedStatuses = new Set(gates.rules?.allowedStatuses || []);
+    const requiredVerdict = gates.rules?.raceVerdict || "Fail - runtime/manual proof deferred";
+    const p0p1MinimumRejectedHooks = Number(gates.rules?.p0p1MinimumRejectedHooks || 6);
+    const p2MinimumRejectedHooks = Number(gates.rules?.p2MinimumRejectedHooks || 4);
+
+    for (const race of requiredRaces) {
+      const packet = races[race];
+      if (!packet) {
+        this.phase20RaceCostingGap("Phase 20 no-in-game race packet", `${race} packet is missing.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+        continue;
+      }
+
+      if (packet.verdict === requiredVerdict) {
+        this.pass("Phase 20 no-in-game race verdict", `${race} remains runtime/manual proof deferred.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 no-in-game race verdict", `${race} verdict is ${packet.verdict || "(missing)"}, expected ${requiredVerdict}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      }
+
+      if (allowedStatuses.has(packet.noInGameStatus)) {
+        this.pass("Phase 20 no-in-game race status", `${race} status is ${packet.noInGameStatus}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 no-in-game race status", `${race} has invalid no-in-game status ${packet.noInGameStatus || "(missing)"}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      }
+
+      for (const field of ["expectedBuild", "edgeBuild", "normalSessionRoute", "surveyStatusRequirement", "rewardFloor", "rewardCeiling", "nextAutomatableAction", "deferredManualProof"]) {
+        if (typeof packet[field] === "string" && packet[field].trim().length > 0) {
+          this.pass("Phase 20 no-in-game race field", `${race} declares ${field}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 no-in-game race field", `${race} is missing ${field}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+        }
+      }
+
+      const rejectedHooks = packet.rejectedHooks || [];
+      const minimumRejectedHooks = p2.has(race) ? p2MinimumRejectedHooks : p0p1MinimumRejectedHooks;
+      if (rejectedHooks.length >= minimumRejectedHooks) {
+        this.pass("Phase 20 no-in-game rejected hooks", `${race} names ${rejectedHooks.length} rejected hook families.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 no-in-game rejected hooks", `${race} names ${rejectedHooks.length}; expected at least ${minimumRejectedHooks}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      }
+
+      const antiFarmRules = packet.antiFarmRules || [];
+      if (antiFarmRules.length >= 2) {
+        this.pass("Phase 20 no-in-game anti-farm rules", `${race} names ${antiFarmRules.length} anti-farm rule(s).`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 no-in-game anti-farm rules", `${race} names ${antiFarmRules.length}; expected at least 2.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      }
+
+      const stack = packet.stackSnapshot || {};
+      const stackFields = ["expected", "edge", "allowedLoudLayers", "suppressedLayers", "contextualFavorCap", "curseDaedricModifierNote"];
+      const missingStackFields = stackFields.filter((field) => {
+        const value = stack[field];
+        return Array.isArray(value) ? value.length === 0 : !(typeof value === "string" && value.trim().length > 0);
+      });
+      if (missingStackFields.length === 0) {
+        this.pass("Phase 20 no-in-game stack snapshot", `${race} declares expected/edge stack and ceiling controls.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 no-in-game stack snapshot", `${race} missing stack field(s): ${missingStackFields.join(", ")}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      }
+
+      const finalPlacementContracts = packet.finalPlacementContracts || [];
+      if (p0p1.has(race)) {
+        if (finalPlacementContracts.length >= 2) {
+          this.pass("Phase 20 no-in-game placement contracts", `${race} declares ${finalPlacementContracts.length} final-world placement contract(s).`, PHASE20_NO_IN_GAME_PROOF_GATES);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 no-in-game placement contracts", `${race} declares ${finalPlacementContracts.length}; expected at least 2.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+        }
+        for (const contract of finalPlacementContracts) {
+          const missing = ["surfaceEditorIdPlan", "intendedObjectType", "targetLocationFamily", "culturalReason", "classification", "wrongOriginExpectation", "relatedQASmokeProof", "manualStopCondition"].filter((field) => !(typeof contract[field] === "string" && contract[field].trim().length > 0));
+          if (missing.length === 0) {
+            this.pass("Phase 20 no-in-game placement contract", `${race} ${contract.surfaceEditorIdPlan} is CK-ready as a contract.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+          } else {
+            this.phase20RaceCostingGap("Phase 20 no-in-game placement contract", `${race} placement contract is missing ${missing.join(", ")}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+          }
+        }
+      } else if (finalPlacementContracts.length === 0) {
+        this.pass("Phase 20 no-in-game P2 placement restraint", `${race} is audit-only and does not request final-placement buildout.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 no-in-game P2 placement restraint", `${race} is audit-only but declares placement buildout contracts.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      }
+    }
+
+    const cat6 = gates.cat6 || {};
+    const firstTargetPresent = this.recordsByEdid.has(cat6.firstCandidate);
+    const fallbackTargetPresent = this.recordsByEdid.has(cat6.fallbackCandidate);
+    if ((cat6.status === "target-record-needed" || cat6.status === "pilot-record-readback-proven") && cat6.firstTargetRecordPresent === firstTargetPresent && cat6.fallbackTargetRecordPresent === fallbackTargetPresent) {
+      this.pass("Phase 20 CAT-6 target readback status", `CAT-6 target availability is documented: first=${firstTargetPresent}, fallback=${fallbackTargetPresent}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 target readback status", "CAT-6 target availability in the gate file does not match live readback or an allowed CAT-6 status.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    }
+    if (typeof cat6.ownerDecision === "string" && cat6.ownerDecision.includes("target")) {
+      this.pass("Phase 20 CAT-6 owner decision", "CAT-6 names the target-record owner decision still needed.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 owner decision", "CAT-6 does not name the target-record owner decision.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    }
+
+    const recognition = gates.recognition || {};
+    if ((recognition.positiveGate || []).length >= 3 && (recognition.negativeGates || []).length >= 3 && (recognition.recordIdentityPlan || []).length >= 3) {
+      this.pass("Phase 20 recognition packet prep", "Recognition packet has positive gates, negative gates, and planned CK identities.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 recognition packet prep", "Recognition packet is missing positive gates, negative gates, or CK identity plan.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    }
+
+    const daedric = gates.daedricBlockers || {};
+    if (daedric.runtimePromotionAllowed === false && daedric.stigmaRowContract === "open" && daedric.hircineMolagBalCurseAccessTemplate === "open" && daedric.princePromotionOrder === "open") {
+      this.pass("Phase 20 Daedric blocker state", "Daedric runtime promotion remains blocked on stigma, curse-access template, and Prince order.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 Daedric blocker state", "Daedric blocker state is missing or implies runtime promotion is allowed too early.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    }
+  }
+
+  checkPhase20Cat6PromotionPilot() {
+    if (!exists(CAT6_PROMOTION_MANIFEST)) {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 promotion pilot", "CAT-6 promotion manifest is missing.", CAT6_PROMOTION_MANIFEST);
+      return;
+    }
+
+    let manifest = null;
+    try {
+      manifest = JSON.parse(fs.readFileSync(CAT6_PROMOTION_MANIFEST, "utf8"));
+    } catch (error) {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 promotion pilot", `Could not parse CAT-6 manifest: ${error.message}`, CAT6_PROMOTION_MANIFEST);
+      return;
+    }
+
+    if (manifest.schema === "pdv.cat6.promotion-pilot.v1") {
+      this.pass("Phase 20 CAT-6 promotion pilot", "CAT-6 promotion manifest schema is current.", CAT6_PROMOTION_MANIFEST);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 promotion pilot", `Unexpected CAT-6 manifest schema ${manifest.schema || "(missing)"}.`, CAT6_PROMOTION_MANIFEST);
+    }
+
+    const packet = manifest.packets?.[0];
+    if (manifest.packets?.length === 1 && packet?.sourceRow === "PDV_Bless_Khajiit_Lunar_T1" && packet?.spell === "PDV_Bless_Khajiit_Lunar_T1") {
+      this.pass("Phase 20 CAT-6 packet scope", "CAT-6 pilot is restricted to PDV_Bless_Khajiit_Lunar_T1.", CAT6_PROMOTION_MANIFEST);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 packet scope", "CAT-6 pilot must contain exactly the Khajiit Lunar Tier 1 blessing packet.", CAT6_PROMOTION_MANIFEST);
+      return;
+    }
+
+    const sourceText = this.extractContentManifestRowText(packet.sourceRow);
+    if (!sourceText) {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 source row", `${packet.sourceRow} source row text was not found.`, RACE_CONTENT_MANIFEST);
+      return;
+    }
+    if (sourceText.includes("At night") && !sourceText.includes("Moving outdoors at night")) {
+      this.pass("Phase 20 CAT-6 source row", "Khajiit Tier 1 source text matches the night-only pilot wording.", RACE_CONTENT_MANIFEST);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 source row", "Khajiit Tier 1 source text must describe the pilot as night-only, not outdoor/moving-gated.", RACE_CONTENT_MANIFEST);
+    }
+
+    const spellRecord = this.recordsByEdid.get(packet.spell);
+    const spellDetail = this.recordDetails.get(packet.spell);
+    if (spellRecord?.type === "SPEL" && spellDetail?.fields) {
+      this.pass("Phase 20 CAT-6 spell record", `${packet.spell} exists as SPEL.`, PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 spell record", `${packet.spell} is missing as a live SPEL.`, PDV_ESP);
+      return;
+    }
+
+    const spellFields = spellDetail.fields || {};
+    this.checkCat6Text("Phase 20 CAT-6 spell text", packet.spell, spellFields.Description, sourceText, PDV_ESP);
+    if (spellFields.Type === "Ability" && spellFields.CastType === "ConstantEffect" && spellFields.TargetType === "Self") {
+      this.pass("Phase 20 CAT-6 spell shape", "Khajiit Tier 1 spell is a constant self ability.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 spell shape", "Khajiit Tier 1 spell is not a constant self ability.", PDV_ESP);
+    }
+
+    const effects = Array.isArray(packet.effects) ? packet.effects : [];
+    const spellEffects = Array.isArray(spellFields.Effects) ? spellFields.Effects : [];
+    if (effects.length === 2 && spellEffects.length === 2) {
+      this.pass("Phase 20 CAT-6 spell effects", "Khajiit Tier 1 spell has the two pilot effect entries.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 spell effects", `Khajiit Tier 1 spell has ${spellEffects.length} effect entries; expected 2.`, PDV_ESP);
+    }
+
+    for (const effect of effects) {
+      const record = this.recordsByEdid.get(effect.magicEffect);
+      const detail = this.recordDetails.get(effect.magicEffect);
+      if (record?.type === "MGEF" && detail?.fields) {
+        this.pass("Phase 20 CAT-6 magic effect", `${effect.magicEffect} exists as MGEF.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 CAT-6 magic effect", `${effect.magicEffect} is missing as a live MGEF.`, PDV_ESP);
+        continue;
+      }
+
+      const fields = detail.fields || {};
+      this.checkCat6Text("Phase 20 CAT-6 magic effect text", effect.magicEffect, fields.Description, sourceText, PDV_ESP);
+      const archetype = fields.Archetype || {};
+      if (archetype.Type === effect.archetype && archetype.ActorValue === effect.actorValue) {
+        this.pass("Phase 20 CAT-6 magic effect archetype", `${effect.magicEffect} is ${effect.archetype}/${effect.actorValue}.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 CAT-6 magic effect archetype", `${effect.magicEffect} archetype readback did not match ${effect.archetype}/${effect.actorValue}.`, PDV_ESP);
+      }
+
+      const linked = spellEffects.find((entry) => formidToEdid(entry.BaseEffect, this.recordsByEdid) === effect.magicEffect);
+      if (linked) {
+        this.pass("Phase 20 CAT-6 spell link", `${packet.spell} links ${effect.magicEffect}.`, PDV_ESP);
+        const magnitude = Number(linked.Data?.Magnitude);
+        if (Number.isFinite(magnitude) && Math.abs(magnitude - Number(effect.magnitude)) < 0.001) {
+          this.pass("Phase 20 CAT-6 effect magnitude", `${effect.magicEffect} magnitude is ${effect.magnitude}.`, PDV_ESP);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 CAT-6 effect magnitude", `${effect.magicEffect} magnitude is ${linked.Data?.Magnitude}, expected ${effect.magnitude}.`, PDV_ESP);
+        }
+        this.checkCat6NightConditions(linked.Conditions || [], effect.magicEffect);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 CAT-6 spell link", `${packet.spell} does not link ${effect.magicEffect}.`, PDV_ESP);
+      }
+    }
+
+    const managerText = JSON.stringify(this.recordDetails.get("PDV__ManagerQuest")?.fields || {});
+    if (!managerText.includes(packet.spell)) {
+      this.pass("Phase 20 CAT-6 grant restraint", "CAT-6 pilot has no manager grant/property wiring.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 grant restraint", "CAT-6 pilot spell is wired on the manager; grant logic is out of scope for this pilot.", PDV_ESP);
+    }
+  }
+
+  checkCat6Text(check, edid, actual, expected, filePath) {
+    if (actual === expected) {
+      this.pass(check, `${edid} text matches the source manifest exactly.`, filePath);
+    } else {
+      this.phase20RaceCostingGap(check, `${edid} text does not match the source manifest exactly.`, filePath);
+    }
+  }
+
+  checkCat6NightConditions(conditions, effectEdid) {
+    const hasAfterSevenPm = conditions.some((condition) => condition.CompareOperator === "GreaterThanOrEqualTo"
+      && Number(condition.ComparisonValue) === 19
+      && String(condition.Flags || "").includes("OR"));
+    const hasBeforeSevenAm = conditions.some((condition) => condition.CompareOperator === "LessThanOrEqualTo"
+      && Number(condition.ComparisonValue) === 7);
+    if (conditions.length === 2 && hasAfterSevenPm && hasBeforeSevenAm) {
+      this.pass("Phase 20 CAT-6 night conditions", `${effectEdid} is gated to GetCurrentTime >= 19 OR <= 7.`, PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 CAT-6 night conditions", `${effectEdid} does not read back the required 19:00-07:00 condition pair.`, PDV_ESP);
+    }
+  }
+
+  extractContentManifestRowText(rowId) {
+    const text = fs.readFileSync(RACE_CONTENT_MANIFEST, "utf8");
+    const escaped = rowId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const match = text.match(new RegExp(`\\|\\s*${escaped}\\s*\\|(?:[^|]*\\|){6}\\s*([^|]+?)\\s*\\|`));
+    return match ? match[1].trim() : null;
+  }
+
+  checkPhase20ManualEvidenceLedger() {
+    if (!exists(PHASE20_MANUAL_EVIDENCE_LEDGER)) {
+      this.phase20RaceCostingGap("Phase 20 manual evidence ledger", "Structured manual evidence ledger is missing.", PHASE20_MANUAL_EVIDENCE_LEDGER);
+      return;
+    }
+
+    let ledger = null;
+    try {
+      ledger = JSON.parse(fs.readFileSync(PHASE20_MANUAL_EVIDENCE_LEDGER, "utf8"));
+    } catch (error) {
+      this.phase20RaceCostingGap("Phase 20 manual evidence ledger", `Could not parse manual evidence ledger: ${error.message}`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      return;
+    }
+
+    if (ledger.schema === "pdv.phase20.manual-evidence-ledger.v1") {
+      this.pass("Phase 20 manual evidence ledger", "Manual evidence ledger schema is current.", PHASE20_MANUAL_EVIDENCE_LEDGER);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 manual evidence ledger", `Unexpected schema ${ledger.schema || "(missing)"}.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+    }
+
+    if (ledger.status === "pending-manual-runtime-proof") {
+      this.pass("Phase 20 manual evidence status", "Manual evidence ledger remains pending until in-game proof is recorded.", PHASE20_MANUAL_EVIDENCE_LEDGER);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 manual evidence status", `Manual evidence ledger status is ${ledger.status || "(missing)"}, expected pending-manual-runtime-proof.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+    }
+
+    const requiredRaces = ["Altmer", "Khajiit", "Argonian", "Orc", "Redguard", "Bosmer", "Breton", "Dunmer", "Imperial", "Nord"];
+    const p0p1 = new Set(["Altmer", "Khajiit", "Argonian", "Orc", "Redguard", "Bosmer"]);
+    const p2 = new Set(["Breton", "Dunmer", "Imperial", "Nord"]);
+    const requiredSlots = ledger.rules?.requiredSlots || [
+      "wrongOriginRejection",
+      "genericHookRejection",
+      "surveyStatusClarity",
+      "finalPlacement",
+      "stackSnapshot",
+      "manualFeelNote",
+    ];
+    const allowedSlotStatuses = new Set(ledger.rules?.allowedSlotStatuses || ["pending", "not-applicable"]);
+    const disallowedCompletionStatuses = new Set((ledger.rules?.disallowedCompletionStatuses || []).map((status) => status.toLowerCase()));
+    const requiredVerdict = ledger.rules?.raceVerdictBeforeEvidence || "Fail - runtime/manual proof deferred";
+    const races = ledger.races || {};
+
+    for (const race of requiredRaces) {
+      const packet = races[race];
+      if (!packet) {
+        this.phase20RaceCostingGap("Phase 20 manual evidence race packet", `${race} manual evidence packet is missing.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+        continue;
+      }
+
+      if (packet.status === "pending") {
+        this.pass("Phase 20 manual evidence race status", `${race} manual evidence remains pending.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 manual evidence race status", `${race} manual evidence status is ${packet.status || "(missing)"}, expected pending.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      }
+
+      if (packet.raceVerdictBeforeEvidence === requiredVerdict) {
+        this.pass("Phase 20 manual evidence race verdict", `${race} keeps the deferred verdict before evidence is recorded.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 manual evidence race verdict", `${race} verdict before evidence is ${packet.raceVerdictBeforeEvidence || "(missing)"}, expected ${requiredVerdict}.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      }
+
+      if (typeof packet.runtimeProofCommand === "string" && packet.runtimeProofCommand.trim().length > 0) {
+        this.pass("Phase 20 manual evidence runtime route", `${race} declares a runtime/manual proof route.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 manual evidence runtime route", `${race} is missing a runtime/manual proof route.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      }
+
+      const slots = packet.manualEvidenceSlots || {};
+      for (const slotName of requiredSlots) {
+        const slot = slots[slotName];
+        if (!slot) {
+          this.phase20RaceCostingGap("Phase 20 manual evidence slot", `${race} is missing ${slotName}.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+          continue;
+        }
+
+        const slotStatus = String(slot.status || "").toLowerCase();
+        if (allowedSlotStatuses.has(slotStatus) && !disallowedCompletionStatuses.has(slotStatus)) {
+          this.pass("Phase 20 manual evidence slot status", `${race} ${slotName} is ${slotStatus}.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 manual evidence slot status", `${race} ${slotName} has invalid status ${slot.status || "(missing)"}.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+        }
+
+        if (typeof slot.expected === "string" && slot.expected.trim().length > 0) {
+          this.pass("Phase 20 manual evidence expectation", `${race} ${slotName} has an expected result.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 manual evidence expectation", `${race} ${slotName} is missing its expected result.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+        }
+      }
+
+      const finalPlacementStatus = String(slots.finalPlacement?.status || "").toLowerCase();
+      if (p0p1.has(race) && finalPlacementStatus === "pending") {
+        this.pass("Phase 20 manual evidence placement posture", `${race} final placement remains pending manual proof.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      } else if (p2.has(race) && finalPlacementStatus === "not-applicable") {
+        this.pass("Phase 20 manual evidence P2 placement posture", `${race} final placement is not applicable for the audit-only lane.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 manual evidence placement posture", `${race} final placement status ${finalPlacementStatus || "(missing)"} does not match lane posture.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
       }
     }
   }

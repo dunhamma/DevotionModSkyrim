@@ -52,6 +52,7 @@ export {
   formatPlatformProofSummary
 } from "./proof-summary.mjs";
 export { checkFixtureDirectory, checkFixture } from "./fixture-check.mjs";
+export { buildDialogueBatchReport, buildDialogueManifestFromRows } from "./dialogue-batch.mjs";
 export {
   classifyPlatformV1MatrixStatus,
   collectStrictBlockers,

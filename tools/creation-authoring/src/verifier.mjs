@@ -80,19 +80,23 @@ function verifyOperation(operation, targetResolution, readbackRecord, context = 
   }
 
   if (operation.kind === "keyword.add") {
-    return verifyContainsAny(operation, targetResolution, readbackRecord, "keywords", operation.payload.keywords || operation.payload.keyword);
+    const payload = operation.payload || {};
+    return verifyContainsAny(operation, targetResolution, readbackRecord, "keywords", payload.keywords || payload.keyword);
   }
 
   if (operation.kind === "spell.add") {
-    return verifyContainsAny(operation, targetResolution, readbackRecord, "spells", operation.payload.spells || operation.payload.spell);
+    const payload = operation.payload || {};
+    return verifyContainsAny(operation, targetResolution, readbackRecord, "spells", payload.spells || payload.spell);
   }
 
   if (operation.kind === "perk.add") {
-    return verifyContainsAny(operation, targetResolution, readbackRecord, "perks", operation.payload.perks || operation.payload.perk);
+    const payload = operation.payload || {};
+    return verifyContainsAny(operation, targetResolution, readbackRecord, "perks", payload.perks || payload.perk);
   }
 
   if (operation.kind === "package.add") {
-    return verifyContainsAny(operation, targetResolution, readbackRecord, "packages", operation.payload.packages || operation.payload.package);
+    const payload = operation.payload || {};
+    return verifyContainsAny(operation, targetResolution, readbackRecord, "packages", payload.packages || payload.package);
   }
 
   if (operation.kind === "inventory.add") {
@@ -133,6 +137,18 @@ function verifyOperation(operation, targetResolution, readbackRecord, context = 
 
   if (operation.kind === "story_manager.node") {
     return verifyStoryManager(operation, targetResolution, readbackRecord);
+  }
+
+  if (operation.kind === "dialogue.branch.create") {
+    return verifyDialogueBranch(operation, targetResolution, readbackRecord);
+  }
+
+  if (operation.kind === "dialogue.topic.create") {
+    return verifyDialogueTopic(operation, targetResolution, readbackRecord);
+  }
+
+  if (operation.kind === "dialogue.info.create") {
+    return verifyDialogueInfo(operation, targetResolution, readbackRecord);
   }
 
   if (operation.kind === "reference.place") {
@@ -441,6 +457,12 @@ function verifyListContains(operation, targetResolution, readbackRecord) {
 function verifyContainsAny(operation, targetResolution, readbackRecord, field, expectedRaw) {
   const actual = readbackRecord[field] || [];
   const expected = Array.isArray(expectedRaw) ? expectedRaw : [expectedRaw].filter(Boolean);
+  if (!expected.length) {
+    return result(operation, "FAIL", `${operation.target} ${field} verifier payload is missing expected entries.`, {
+      targetResolution,
+      field
+    });
+  }
   const missing = expected.filter((value) => !actual.some((entry) => valueMatches(entry, value)));
   if (!missing.length) {
     return result(operation, "PASS", `${operation.target} ${field} contains expected entries.`, {
@@ -458,7 +480,11 @@ function verifyInventory(operation, targetResolution, readbackRecord) {
   const actual = readbackRecord.inventory || [];
   const expected = operation.payload.items || operation.payload.inventory || [];
   const missing = expected.filter((entry) => {
-    return !actual.some((actualEntry) => valueMatches(actualEntry.item, entry.item || entry));
+    return !actual.some((actualEntry) => {
+      const itemMatches = valueMatches(actualEntry.item, entry.item || entry);
+      const expectedCount = entry.count ?? entry.Count ?? null;
+      return itemMatches && (expectedCount === null || Number(actualEntry.count) === Number(expectedCount));
+    });
   });
   if (!missing.length) {
     return result(operation, "PASS", `${operation.target} inventory contains expected entries.`, {
@@ -478,7 +504,7 @@ function verifyConditions(operation, targetResolution, readbackRecord) {
   const missing = expected.filter((condition) => {
     return !actual.some((actualCondition) => {
       return valueMatches(actualCondition.function, condition.function) &&
-        (!condition.operator || valueMatches(actualCondition.operator, condition.operator));
+        (!condition.operator || conditionOperatorMatches(actualCondition, condition.operator));
     });
   });
   if (!missing.length) {
@@ -491,6 +517,12 @@ function verifyConditions(operation, targetResolution, readbackRecord) {
     missing,
     actual
   });
+}
+
+function conditionOperatorMatches(actualCondition, expectedOperator) {
+  return valueMatches(actualCondition.operator, expectedOperator) ||
+    valueMatches(actualCondition.raw?.CompareOperator, expectedOperator) ||
+    valueMatches(actualCondition.raw?.Operator, expectedOperator);
 }
 
 function verifyGenericRecordPayload(operation, targetResolution, readbackRecord, { manifest } = {}) {
@@ -780,6 +812,187 @@ function verifyStoryManager(operation, targetResolution, readbackRecord) {
     expectedSharesEvent,
     actual: storyManager
   });
+}
+
+function verifyDialogueBranch(operation, targetResolution, readbackRecord) {
+  const payload = operation.payload || {};
+  const actual = normalizeDialogueReadback(readbackRecord);
+  const failures = [];
+
+  if (!recordTypeAllowed(actual.recordType, payload.recordType, ["DLBR", "DIAL"])) {
+    failures.push({ field: "recordType", expected: payload.recordType || "DLBR", actual: actual.recordType });
+  }
+  compareIfExpected(failures, "ownerQuest", actual.ownerQuest, payload.ownerQuest);
+  compareIfExpected(failures, "category", actual.category, payload.category);
+  compareIfExpected(failures, "startingTopic", actual.startingTopic, payload.startingTopic || payload.topic);
+  for (const flag of normalizeStringArray(payload.flags)) {
+    if (!actual.flags.some((actualFlag) => valueMatches(actualFlag, flag))) {
+      failures.push({ field: "flags", expected: flag, actual: actual.flags });
+    }
+  }
+
+  if (failures.length) {
+    return result(operation, "FAIL", `${operation.target} dialogue branch readback does not match manifest intent.`, {
+      targetResolution,
+      failures,
+      actual
+    });
+  }
+
+  return result(operation, "PASS", `${operation.target} dialogue branch matches readback.`, {
+    targetResolution,
+    actual
+  });
+}
+
+function verifyDialogueTopic(operation, targetResolution, readbackRecord) {
+  const payload = operation.payload || {};
+  const actual = normalizeDialogueReadback(readbackRecord);
+  const failures = [];
+
+  if (!recordTypeAllowed(actual.recordType, payload.recordType, ["DIAL"])) {
+    failures.push({ field: "recordType", expected: payload.recordType || "DIAL", actual: actual.recordType });
+  }
+  compareIfExpected(failures, "ownerQuest", actual.ownerQuest, payload.ownerQuest);
+  compareIfExpected(failures, "branch", actual.branch, payload.branch);
+  compareIfExpected(failures, "prompt", actual.prompt, payload.prompt);
+  compareIfExpected(failures, "category", actual.category, payload.category);
+  compareIfExpected(failures, "subtype", actual.subtype, payload.subtype);
+
+  if (failures.length) {
+    return result(operation, "FAIL", `${operation.target} dialogue topic readback does not match manifest intent.`, {
+      targetResolution,
+      failures,
+      actual
+    });
+  }
+
+  return result(operation, "PASS", `${operation.target} dialogue topic matches readback.`, {
+    targetResolution,
+    actual
+  });
+}
+
+function verifyDialogueInfo(operation, targetResolution, readbackRecord) {
+  const payload = operation.payload || {};
+  const actual = normalizeDialogueReadback(readbackRecord);
+  const failures = [];
+
+  if (!recordTypeAllowed(actual.recordType, payload.recordType, ["INFO"])) {
+    failures.push({ field: "recordType", expected: payload.recordType || "INFO", actual: actual.recordType });
+  }
+  compareIfExpected(failures, "topic", actual.topic, payload.topic);
+  compareIfExpected(failures, "speaker", actual.speaker, payload.speaker);
+  compareIfExpected(failures, "speakerForm", actual.speakerForm, payload.speakerForm);
+  compareIfExpected(failures, "prompt", actual.prompt, payload.prompt);
+  compareIfExpected(failures, "responseLine", actual.responseLine, payload.responseLine || payload.response || payload.text);
+
+  const missingConditions = missingExpectedConditions(payload.conditions || [], actual.conditions);
+  if (missingConditions.length) {
+    failures.push({ field: "conditions", missing: missingConditions, actual: actual.conditions });
+  }
+
+  if (failures.length) {
+    return result(operation, "FAIL", `${operation.target} dialogue info readback does not match manifest intent.`, {
+      targetResolution,
+      failures,
+      actual
+    });
+  }
+
+  return result(operation, "PASS", `${operation.target} dialogue info matches readback.`, {
+    targetResolution,
+    actual
+  });
+}
+
+function normalizeDialogueReadback(record = {}) {
+  const fields = record.fields || record.Fields || {};
+  const dialogue = record.dialogue || record.Dialogue || record.topicInfo || record.TopicInfo || {};
+  return {
+    editorId: record.editorId || record.EditorID || null,
+    formid: record.formid || record.FormID || null,
+    recordType: record.recordType || record.type || record.RecordType || null,
+    ownerQuest: firstDefined(record.ownerQuest, dialogue.ownerQuest, fields.OwnerQuest, fields.Quest, fields.Owner),
+    category: firstDefined(record.category, dialogue.category, fields.Category),
+    flags: normalizeStringArray(firstDefined(record.flags, dialogue.flags, fields.Flags)),
+    startingTopic: firstDefined(record.startingTopic, dialogue.startingTopic, fields.StartingTopic, fields.StartingTopicEditorID),
+    branch: firstDefined(record.branch, dialogue.branch, fields.Branch, fields.DialogBranch, fields.BranchEditorID),
+    prompt: firstDefined(record.prompt, dialogue.prompt, fields.Prompt, fields.Name, fields.FullName),
+    subtype: firstDefined(record.subtype, dialogue.subtype, fields.Subtype),
+    topic: firstDefined(record.topic, dialogue.topic, fields.Topic, fields.TopicEditorID, fields.ParentTopic),
+    speaker: firstDefined(record.speaker, dialogue.speaker, fields.Speaker, fields.SpeakerEditorID),
+    speakerForm: firstDefined(record.speakerForm, dialogue.speakerForm, fields.SpeakerForm, fields.SpeakerFormID),
+    responseLine: firstDefined(record.responseLine, record.response, record.text, dialogue.responseLine, dialogue.response, dialogue.text, fields.ResponseLine, fields.ResponseText, fields.DialogueText, fields.Text),
+    conditions: normalizeDialogueConditions(firstDefined(record.conditions, dialogue.conditions, fields.Conditions, []))
+  };
+}
+
+function recordTypeAllowed(actual, expected, allowed) {
+  if (expected) {
+    return valueMatches(actual, expected);
+  }
+  return allowed.some((recordType) => valueMatches(actual, recordType));
+}
+
+function compareIfExpected(failures, field, actual, expected) {
+  if (expected === undefined || expected === null || expected === "") {
+    return;
+  }
+  if (!scalarMatches(actual, expected)) {
+    failures.push({ field, expected, actual });
+  }
+}
+
+function missingExpectedConditions(expectedConditions, actualConditions) {
+  return expectedConditions.filter((expected) => {
+    return !actualConditions.some((actual) => conditionMatches(actual, expected));
+  });
+}
+
+function conditionMatches(actual, expected) {
+  return conditionFieldMatches(actual.function, expected.function) &&
+    conditionFieldMatches(actual.subject, expected.subject) &&
+    conditionFieldMatches(actual.operator, expected.operator) &&
+    conditionFieldMatches(actual.global, expected.global) &&
+    conditionFieldMatches(actual.runOn, expected.runOn) &&
+    conditionFieldMatches(actual.value, expected.value);
+}
+
+function conditionFieldMatches(actual, expected) {
+  if (expected === undefined || expected === null || expected === "") {
+    return true;
+  }
+  return scalarMatches(actual, expected);
+}
+
+function normalizeDialogueConditions(conditions) {
+  if (!Array.isArray(conditions)) {
+    return [];
+  }
+  return conditions.map((condition) => ({
+    function: condition.function || condition.Function || condition.Data?.Function || null,
+    subject: condition.subject || condition.Subject || condition.RunOn || condition.runOn || null,
+    operator: condition.operator || condition.Operator || null,
+    global: condition.global || condition.Global || condition.parameter || condition.Parameter || null,
+    value: condition.value ?? condition.Value ?? condition.ComparisonValue ?? null,
+    runOn: condition.runOn || condition.run_on || condition.RunOn || null,
+    raw: condition
+  }));
+}
+
+function normalizeStringArray(value) {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item));
+  }
+  if (typeof value === "string") {
+    return value.split(/[,\|]/u).map((item) => item.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+function firstDefined(...values) {
+  return values.find((value) => value !== undefined && value !== null && value !== "");
 }
 
 function verifyPlacedReference(operation, targetResolution, readbackRecord) {

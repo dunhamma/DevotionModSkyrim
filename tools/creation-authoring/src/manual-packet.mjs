@@ -24,6 +24,31 @@ export function buildManualPacket(operation, capability, targetResolution, reaso
       steps.push(`Set Shares Event to ${payload.sharesEvent ? "checked" : "unchecked"}.`);
     }
     steps.push("Save the plugin and capture readback evidence.");
+  } else if (operation.kind === "dialogue.branch.create") {
+    steps.push("Open Creation Kit through the project mod manager profile.");
+    steps.push(`Load ${payload.ownerQuest || "the owning quest"} and create dialogue branch ${operation.target}.`);
+    if (payload.startingTopic) {
+      steps.push(`Set the starting topic to ${payload.startingTopic}.`);
+    }
+    steps.push("Save the active generated plugin and capture branch readback.");
+  } else if (operation.kind === "dialogue.topic.create") {
+    steps.push("Open Creation Kit through the project mod manager profile.");
+    steps.push(`Create dialogue topic ${operation.target} under branch ${payload.branch || "(manifest branch)"}.`);
+    if (payload.prompt) {
+      steps.push(`Set prompt text to: ${payload.prompt}`);
+    }
+    steps.push("Save the active generated plugin and capture topic readback.");
+  } else if (operation.kind === "dialogue.info.create") {
+    steps.push("Open Creation Kit through the project mod manager profile.");
+    steps.push(`Create a Topic Info under topic ${payload.topic || operation.target}.`);
+    if (payload.speaker) {
+      steps.push(`Set speaker to ${payload.speaker}.`);
+    }
+    if (payload.responseLine) {
+      steps.push(`Set response text to: ${payload.responseLine}`);
+    }
+    steps.push("Set every manifest condition in CK. If CK leaves the INFO unnamed, verify by topic, speaker, response, and conditions.");
+    steps.push("Save the active generated plugin and capture INFO readback.");
   } else {
     steps.push(`Perform ${operation.kind} on ${operation.target} with the manifest payload.`);
     steps.push("Save the plugin and run the verifier/readback command.");

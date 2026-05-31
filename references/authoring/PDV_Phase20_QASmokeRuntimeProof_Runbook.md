@@ -19,11 +19,11 @@ feedback, rejected-hook protection, and world placement. External beta should
 not be asked to judge absence as experience.
 
 The acceptance bar for that pre-beta gameplay scaling lane is
-`references/authoring/PDV_PreBetaScaling_Rubric.md`: ten scored dimensions
-(P0-1..P0-5, P1-6..P1-10), a per-race Beta-Ready definition, and the
-recommended scaling spine (Altmer first, Nord as the reference race, then a
-contrast race). Route proof here is a precondition for that rubric, not a
-substitute for it.
+`references/authoring/PDV_PreBetaRaceAcceptanceRubric.md` (with the scaling
+spine in `PDV_PreBetaRaceScalingSpine.md` and per-race evidence in
+`PDV_PreBetaRaceGateLedger.md`): the measurable pass/conditional/fail criteria
+for race-scaling completion. Route proof here is a precondition for that rubric,
+not a substitute for it.
 
 ## Preconditions
 

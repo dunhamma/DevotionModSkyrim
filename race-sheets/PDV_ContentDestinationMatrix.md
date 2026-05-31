@@ -137,21 +137,21 @@ Neglect / Exit, Per-race response (8 non-native cells per Prince).
 | Prince | PrincePathType | Manifest section | State | Notes |
 |---|---|---|---|---|
 | Boethiah / Boethra | Struggle-overthrow-trial | 6 (full) | **drafted (pilot)** | Native-integrated for Dunmer + Khajiit (those treatments live in race manifest) |
-| Azura / Azurah | Fate-dawn-dusk-prophecy | 7 (stub) | not drafted | Native for Dunmer + Khajiit -- Daedric path covers other 8 races |
-| Mephala / Mafala | Web-secret-murder-clan | 7 (stub) | not drafted | Native for Dunmer + Khajiit |
-| Malacath / Mauloch | Oath-exile-code-vengeance | 7 (stub) | not drafted | Native for Orc -- Daedric path covers other 9 races |
-| Meridia | Cleansing-light overlay | 7 (stub) | not drafted | Lighter stigma; Tolerated by several races |
-| Hircine | Hunt-lycanthropy-predator | 7 (stub) | not drafted | **Curse-access** -- entry via lycanthropy; reframed commitment slot |
-| Molag Bal | Domination-vampirism-enslavement | 7 (stub) | not drafted | **Curse-access** -- entry via vampirism |
-| Nocturnal | Shadow-oath-luck-debt | 7 (stub) | not drafted | Entry via Thieves Guild / Nightingale |
-| Hermaeus Mora | Forbidden-knowledge-artifact | 7 (stub) | not drafted | Black Book hooks; strong on Solstheim |
-| Mehrunes Dagon | Destruction-revolution-ruin | 7 (stub) | not drafted | High-rupture; enemy pressure for Imperials |
-| Sheogorath | Madness-disruption-instability | 7 (stub) | not drafted | Wabbajack / Mind of Madness |
-| Namira / Namiira | Revulsion-decay-outcast-hunger | 7 (stub) | not drafted | Strong social + ancestor friction |
-| Sanguine / Sangiin | Excess-temptation-indulgence | 7 (stub) | not drafted | Light-touch path |
-| Clavicus Vile | Bargain-wish-contract | 7 (stub) | not drafted | Bargain price must stay visible in copy |
-| Peryite | Plague-order-lowest-task | 7 (stub) | not drafted | Narrow, quest-anchored |
-| Vaermina | Dream-nightmare-memory | 7 (stub) | not drafted | Skull of Corruption hooks |
+| Azura / Azurah | Fate-dawn-dusk-prophecy | 7.1 | drafted | Native for Dunmer + Khajiit -- Daedric path covers other 8 races |
+| Mephala / Mafala | Web-secret-murder-clan | 7.2 | drafted | Native for Dunmer + Khajiit |
+| Malacath / Mauloch | Oath-exile-code-vengeance | 7.3 | drafted | Native for Orc -- Daedric path covers other 9 races |
+| Meridia | Cleansing-light overlay | 7.4 | drafted | Lighter stigma; Tolerated by several races |
+| Hircine | Hunt-lycanthropy-predator | 7.14 | drafted | **Curse-access** -- entry via lycanthropy; reframed commitment slot still needs template ratification |
+| Molag Bal | Domination-vampirism-enslavement | 7.15 | drafted | **Curse-access** -- entry via vampirism; template variation still needs ratification |
+| Nocturnal | Shadow-oath-luck-debt | 7.5 | drafted | Entry via Thieves Guild / Nightingale |
+| Hermaeus Mora | Forbidden-knowledge-artifact | 7.6 | drafted | Black Book hooks; strong on Solstheim |
+| Mehrunes Dagon | Destruction-revolution-ruin | 7.7 | drafted | High-rupture; enemy pressure for Imperials |
+| Sheogorath | Madness-disruption-instability | 7.8 | drafted | Wabbajack / Mind of Madness |
+| Namira / Namiira | Revulsion-decay-outcast-hunger | 7.12 | drafted | Strong social + ancestor friction |
+| Sanguine / Sangiin | Excess-temptation-indulgence | 7.11 | drafted | Light-touch path |
+| Clavicus Vile | Bargain-wish-contract | 7.9 | drafted | Bargain price must stay visible in copy |
+| Peryite | Plague-order-lowest-task | 7.13 | drafted | Narrow, quest-anchored |
+| Vaermina | Dream-nightmare-memory | 7.10 | drafted | Skull of Corruption hooks |
 | Jyggalag | -- | -- | **out of 1.0 scope** | Per `PDV_TargetEndStates_1.0.md` |
 
 1.0 target per Architecture v3: **all sixteen Skyrim-present Daedric Prince

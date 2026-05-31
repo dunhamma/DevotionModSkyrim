@@ -12,6 +12,13 @@
       "name": "anvil-devotion-dev"
     },
     {
+      "type": "pdv-verifier",
+      "name": "pdv-strict-platform-v1",
+      "command": "node",
+      "args": ["pdv_verify.mjs", "--json", "--strict-phase7", "--strict-preflight", "--strict-skeleton", "--strict-pattern-proving"],
+      "cwd": "C:\\Users\\Admin\\Documents\\Devotion Mod Project\\tools"
+    },
+    {
       "type": "fixture",
       "name": "platform-v1-live-records",
       "records": {
@@ -64,4 +71,3 @@
     }
   ]
 }
-

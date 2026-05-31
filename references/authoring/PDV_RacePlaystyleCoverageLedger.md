@@ -20,6 +20,18 @@ Use this before adding or tuning rewards. If a new reward makes an already-stron
 | `Intentional Friction` | The race should make this playstyle costly, taboo, or limited for theological reasons. |
 | `Not Core` | Not a launch priority for that race, but should still avoid confusing feedback. |
 
+## No-In-Game Coverage Gate
+
+`references/authoring/PDV_Phase20_NoInGameProof_Gates.json` now captures the
+expected build, edge build, accepted hooks, rejected hooks, and anti-farm rules
+for each Phase 20 race packet. This ledger remains the design lens for coverage
+quality; the structured gate is the verifier-facing checklist that prevents a
+race from advancing on a single convenient playstyle before in-game proof.
+
+Do not treat no-game coverage as balance proof. It can show that the race has a
+planned warrior, scholar, social, survival, craft, mercy, or curse route, but
+manual/runtime checks still decide whether the route feels real.
+
 ## Coverage Matrix
 
 | Race | Warrior / Front-Line | Mage / Scholar | Stealth / Social | Survival / Travel | Craft / Labor / Trade | Low-Violence / Mercy | Curse / Daedric | Main Coverage Risk |

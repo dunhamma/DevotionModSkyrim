@@ -1,0 +1,34 @@
+{
+  "schema": "creation-authoring.dialogue-rows.v1",
+  "project": "dialogue-v1",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_DialogueV1Proof.esp",
+  "ownerQuest": "EXM__DialogueQuest",
+  "rows": [
+    {
+      "id": "generic-recognition",
+      "branchId": "EXM_DIAL_GenericRecognitionBranch",
+      "topicId": "EXM_DIAL_GenericRecognitionTopic",
+      "infoId": "EXM_INFO_GenericRecognition",
+      "speaker": "EXM_NPC_Mentor",
+      "speakerForm": "ExampleMod.esp:000901",
+      "prompt": "Do you know the old oath?",
+      "responseLine": "I remember it. Speak, and I will answer.",
+      "conditions": [
+        {
+          "function": "GetIsID",
+          "subject": "Speaker",
+          "operator": "==",
+          "value": "EXM_NPC_Mentor"
+        },
+        {
+          "function": "GetGlobalValue",
+          "global": "EXM_GLO_DialogueGate",
+          "operator": "==",
+          "value": 1
+        }
+      ]
+    }
+  ]
+}

@@ -7,19 +7,29 @@
     {
       "op": "loadPluginSet",
       "case": "missing-source-plugin",
-      "requiredPlugins": ["Skyrim.esm", "MissingSource.esp", "ExampleMod_GeneratedCk.esp"],
+      "requiredPlugins": ["Skyrim.esm", "MissingSource.esp", "PDV_Phase9To12_CKProof.esp"],
+      "plugins": [
+        { "name": "Skyrim.esm", "selected": true, "active": false },
+        { "name": "MissingSource.esp", "selected": false, "active": false },
+        { "name": "PDV_Phase9To12_CKProof.esp", "selected": true, "active": true }
+      ],
       "sourcePlugin": "MissingSource.esp",
-      "generatedPlugin": "ExampleMod_GeneratedCk.esp",
-      "activePlugin": "ExampleMod_GeneratedCk.esp",
-      "intendedSaveTarget": "ExampleMod_GeneratedCk.esp",
+      "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+      "activePlugin": "PDV_Phase9To12_CKProof.esp",
+      "intendedSaveTarget": "PDV_Phase9To12_CKProof.esp",
       "sourcePluginNotActive": true,
       "expectedBlocker": "missing_source_plugin"
     },
     {
       "op": "loadPluginSet",
       "case": "missing-generated-or-candidate-plugin",
-      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "MissingGenerated.esp"],
-      "sourcePlugin": "ExampleMod.esp",
+      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "MissingGenerated.esp"],
+      "plugins": [
+        { "name": "Skyrim.esm", "selected": true, "active": false },
+        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": false },
+        { "name": "MissingGenerated.esp", "selected": false, "active": false }
+      ],
+      "sourcePlugin": "PlayerDevotion_Framework.esp",
       "generatedPlugin": "MissingGenerated.esp",
       "activePlugin": "MissingGenerated.esp",
       "intendedSaveTarget": "MissingGenerated.esp",
@@ -29,32 +39,47 @@
     {
       "op": "loadPluginSet",
       "case": "generated-loaded-but-not-active",
-      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
-      "sourcePlugin": "ExampleMod.esp",
-      "generatedPlugin": "ExampleMod_GeneratedCk.esp",
-      "activePlugin": "ExampleMod_GeneratedCk.esp",
-      "intendedSaveTarget": "ExampleMod_GeneratedCk.esp",
+      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esp"],
+      "plugins": [
+        { "name": "Skyrim.esm", "selected": true, "active": false },
+        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": true },
+        { "name": "PDV_Phase9To12_CKProof.esp", "selected": true, "active": false }
+      ],
+      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+      "activePlugin": "PDV_Phase9To12_CKProof.esp",
+      "intendedSaveTarget": "PDV_Phase9To12_CKProof.esp",
       "sourcePluginNotActive": true,
       "expectedBlocker": "generated_or_candidate_plugin_not_active"
     },
     {
       "op": "loadPluginSet",
       "case": "source-plugin-active",
-      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
-      "sourcePlugin": "ExampleMod.esp",
-      "generatedPlugin": "ExampleMod_GeneratedCk.esp",
-      "activePlugin": "ExampleMod_GeneratedCk.esp",
-      "intendedSaveTarget": "ExampleMod_GeneratedCk.esp",
+      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esp"],
+      "plugins": [
+        { "name": "Skyrim.esm", "selected": true, "active": false },
+        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": true },
+        { "name": "PDV_Phase9To12_CKProof.esp", "selected": true, "active": false }
+      ],
+      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+      "activePlugin": "PDV_Phase9To12_CKProof.esp",
+      "intendedSaveTarget": "PDV_Phase9To12_CKProof.esp",
       "sourcePluginNotActive": true,
       "expectedBlocker": "source_plugin_active"
     },
     {
       "op": "loadPluginSet",
       "case": "save-target-mismatch",
-      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
-      "sourcePlugin": "ExampleMod.esp",
-      "generatedPlugin": "ExampleMod_GeneratedCk.esp",
-      "activePlugin": "ExampleMod_GeneratedCk.esp",
+      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esp"],
+      "plugins": [
+        { "name": "Skyrim.esm", "selected": true, "active": false },
+        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": false },
+        { "name": "PDV_Phase9To12_CKProof.esp", "selected": true, "active": true }
+      ],
+      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+      "activePlugin": "PDV_Phase9To12_CKProof.esp",
       "intendedSaveTarget": "StaleProofName.esp",
       "sourcePluginNotActive": true,
       "expectedBlocker": "intended_save_target_mismatch"
@@ -62,11 +87,16 @@
     {
       "op": "loadPluginSet",
       "case": "small-master-active-target",
-      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esl"],
-      "sourcePlugin": "ExampleMod.esp",
-      "generatedPlugin": "ExampleMod_GeneratedCk.esl",
-      "activePlugin": "ExampleMod_GeneratedCk.esl",
-      "intendedSaveTarget": "ExampleMod_GeneratedCk.esl",
+      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esl"],
+      "plugins": [
+        { "name": "Skyrim.esm", "selected": true, "active": false },
+        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": false },
+        { "name": "PDV_Phase9To12_CKProof.esl", "selected": true, "active": true }
+      ],
+      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "generatedPlugin": "PDV_Phase9To12_CKProof.esl",
+      "activePlugin": "PDV_Phase9To12_CKProof.esl",
+      "intendedSaveTarget": "PDV_Phase9To12_CKProof.esl",
       "sourcePluginNotActive": true,
       "expectedBlocker": "active_target_not_normal_writable_esp"
     }

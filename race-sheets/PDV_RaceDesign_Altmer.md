@@ -145,7 +145,7 @@ A normal Altmer who performs basic devotional upkeep should trend positive. Lork
 | `PDV_ALT_LORKHAN_T2_SHOR_ADJ` | `-5` piety before faction modifier | Dragonborn declaration quest stage, curated Word of Power milestones if hook-proven, Stormcloak join, Companions completion, Hall of Valor location/story stage, Wuuthrad equip/carry check | One-time per source or milestone; no repeat spam |
 | `PDV_ALT_LORKHAN_T3_MORTAL_VALIDATION` | Default `-1`; authored stronger Tier 3 `-2`, before faction modifier | Marriage, adoption, homestead build/expansion, Nine Divines shrine activation, explicit Nord religious aid, clearly Lorkhan/Shor-positive text | At most once per in-game day |
 | `PDV_ALT_LORKHAN_T4_CONTEXT` | `0` piety; alignment/flag only | Unprovoked Thalmor killing, Septimus/Dwemer/Heart-adjacent curiosity, Dark Brotherhood/Sithis-adjacent commitment | Authored event cadence; normal anti-farm |
-| `PDV_ALT_CRISIS_FAITH` | Replaces normal penalty; minimal temporary sting only | Major main-story theological collisions such as Dragonborn identity, Sovngarde/Shor reality, Talos/Lorkhan/apotheosis contradiction, Thalmor certainty destabilized | One-time per crisis source; resolves through coherent behavior |
+| `PDV_ALT_CRISIS_FAITH` | Replaces normal penalty; minimal temporary sting only | Major theological collisions such as Dragonborn identity, Sovngarde/Shor reality, marriage as mortal-world continuity, and the Companions beast-blood fork | One-time per crisis source; resolves through coherent behavior |
 
 ### Crisis State And Resolution Closeout
 
@@ -169,9 +169,12 @@ Final 1.0 crisis sources:
 |---|---|---|---|---|
 | Dragonborn declaration | Main-quest declaration or first unavoidable Dragonborn identity proof | `Dissonant` | Three coherent devotional days, or one major Auri-El/Magnus/Trinimac/Xarxes/Syrabane milestone after the declaration | Fires once. It teaches the player that the main quest is theologically loaded without punishing the rest of the playthrough forever. |
 | Sovngarde / Tsun reality | Sovngarde entry, Hall of Valor, or Tsun confrontation where locally provable | `Dissonant` | Auri-El dawn rite plus one focused-deity act after returning to Mundus | Strongest crisis flavor. Do not stack every Sovngarde sub-beat. |
-| Talos / Thalmor contradiction | Costly Talos aid, hidden shrine protection, face-to-face defiance, or Thalmor hypocrisy proof | `Questioning` or `Reasserting` based on alignment direction | Heterodox resolution through self-cultivation, or orthodox repair through rejecting the contradiction later | This is about what the Altmer does with evidence, not generic anti-Thalmor violence. |
+| Marriage / mortal continuity | Taking a spouse as an authored mortal-world continuity beat | `Questioning` | Heterodox acceptance through self-cultivation, or orthodox repair through dawn/lineage practice afterward | This is the current third crisis beat. It is about household, lineage, embodied attachment, and continuity inside Lorkhan's mortal world, not a rejection of Mara or marriage itself. Ordinary friendship, living indoors, and general settlement play stay rejected. |
 | Companions / Wuuthrad / beast fork | Companions completion, Wuuthrad equip/carry, or werewolf pressure entering the same theological neighborhood | `Dissonant` unless actual werewolf state halts devotion | Coherent rejection, cure/avoidance, or a later Trinimac/Auri-El repair act | If the player becomes werewolf, the curse-state hard halt supersedes crisis. |
-| Mortal continuity commitment | Marriage, adoption, or homestead ownership after the first interpretation notice | No crisis by default; Tier 3 dissonance only | Optional favor if the player follows it with coherent dawn or lineage practice | These are not full crisis beats unless a future authored scene deliberately escalates them. |
+
+Talos/Thalmor contradiction is not a current crisis row. It can only return as
+a later additional row through explicit ratification; generic anti-Thalmor
+violence remains rejected.
 
 Resolution rules:
 

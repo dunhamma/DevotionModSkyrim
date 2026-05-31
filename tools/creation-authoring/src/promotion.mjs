@@ -3,7 +3,7 @@ import { writeJson } from "./io.mjs";
 import { validateShipPathLoadSet } from "./load-set-proof.mjs";
 import { normalizeRunnerStatus, PASS_PHASE_STATUSES, summarizePhaseStatuses } from "./release-status.mjs";
 
-const DISCOVERY_ONLY_PATTERN = /(discover|discovery|observer|observe|trace|surface|inventory|inspect|introspect|wrapper|caller|contract|invocationPlan|mutationReady|sourceLookup|lookup|template|selector|context|init|guard|boolean|candidate|postAllocation|post-allocation|rdx|register|ownership|dirty|missed|noisy|readback|report)/i;
+const DISCOVERY_ONLY_PATTERN = /(discover|discovery|observer|observe|trace|surface|inspect|introspect|wrapper|caller|contract|invocationPlan|mutationReady|sourceLookup|lookup|template|selector|context|init|guard|boolean|candidate|postAllocation|post-allocation|rdx|register|ownership|dirty|missed|noisy|readback|report)/i;
 const CK_NON_MUTATING_OPS = new Set([
   "openProject",
   "getActivePlugin",
@@ -65,7 +65,8 @@ export async function promoteRunReport(runReport, profile, options = {}) {
     result: mergeResult
   });
 
-  const needsCkFinalization = mergeRequest.operations.some((operation) => operation.mergePolicy?.requiresCkFinalization || operation.ckSemanticsRequired);
+  const needsCkFinalization = Boolean(options.forceCkFinalization) ||
+    mergeRequest.operations.some((operation) => operation.mergePolicy?.requiresCkFinalization || operation.ckSemanticsRequired);
   const ckFinalizerResult = needsCkFinalization && options.ckFinalizer
     ? await options.ckFinalizer(mergeRequest, { runReport, profile })
     : null;

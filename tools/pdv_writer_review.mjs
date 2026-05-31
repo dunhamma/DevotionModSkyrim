@@ -1,13 +1,22 @@
 #!/usr/bin/env node
 /*
- * Writer-facing review-matrix extractor for the PDV race content manifest.
+ * Writer-facing review-matrix extractor for the PDV content manifests.
  *
- * Reads race-sheets/PDV_RaceContent_Manifest.md and emits one MD plus one
- * CSV per race under race-sheets/writer-review/, grouping every drafted
- * string by the in-game moment in which the player encounters it. Also
- * emits a top-level _Index.md.
+ * Reads race-sheets/PDV_RaceContent_Manifest.md (the 10 races) AND
+ * race-sheets/PDV_DaedricContent_Manifest.md (the 16 Daedric Princes), and
+ * emits one MD plus one CSV per race and per Prince under
+ * race-sheets/writer-review/, grouping every drafted string by the in-game
+ * moment in which the player encounters it. Also emits a top-level _Index.md
+ * with separate race and Daedric tables.
  *
- * Read-only with respect to the manifest. Output directory is overwritten
+ * The race manifest maps cleanly to numbered sections (10-19 = one race
+ * each). The Daedric manifest does not: Boethiah is the Section 6 pilot and
+ * the remaining 15 Princes are Section 7 subsections (7.1-7.15), each with a
+ * `**Tone profile.**` table rather than a numbered `.1` subsection. The two
+ * manifests are therefore parsed by separate functions but share the row
+ * rendering, budget, and moment-grouping machinery.
+ *
+ * Read-only with respect to both manifests. Output directory is overwritten
  * on each run.
  *
  * Usage: node tools/pdv_writer_review.mjs
@@ -21,6 +30,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const RACE_SHEETS = path.join(PROJECT_ROOT, "race-sheets");
 const MANIFEST = path.join(RACE_SHEETS, "PDV_RaceContent_Manifest.md");
+const MANIFEST_DAEDRIC = path.join(RACE_SHEETS, "PDV_DaedricContent_Manifest.md");
 const OUT_DIR = path.join(RACE_SHEETS, "writer-review");
 
 const RACE_BY_SECTION = {
@@ -84,6 +94,36 @@ const MOMENT_RULES = [
 
 function detectMoment(slot) {
   for (const [re, label, order] of MOMENT_RULES) {
+    if (re.test(slot)) return { label, order };
+  }
+  return { label: "Other", order: 999 };
+}
+
+// Daedric moment taxonomy. Slot shape is PDV_<Surface>_Daedric_<Prince>_<Slot>.
+// First match wins; order mirrors the Section 6 Boethiah template reading order
+// (boon -> price -> tier-up -> commitment -> stigma -> neglect/exit -> response).
+const DAEDRIC_MOMENT_RULES = [
+  [/^PDV_Bless_Daedric_[^_]+_Seeker$/, "Boon -- Seeker (Tier 1)", 10],
+  [/^PDV_Bless_Daedric_[^_]+_Devoted$/, "Boon -- Devoted (Tier 2)", 11],
+  [/^PDV_Bless_Daedric_[^_]+_Champion$/, "Boon -- Champion (Tier 3)", 12],
+  [/^PDV_Price_Daedric_[^_]+_Seeker$/, "Price -- Seeker (Tier 1)", 20],
+  [/^PDV_Price_Daedric_[^_]+_Devoted$/, "Price -- Devoted (Tier 2)", 21],
+  [/^PDV_Price_Daedric_[^_]+_Champion$/, "Price -- Champion (Tier 3)", 22],
+  [/^PDV_Notif_Daedric_[^_]+_SeekerEntry$/, "Tier-up -- Seeker", 30],
+  [/^PDV_Notif_Daedric_[^_]+_DevotedEntry$/, "Tier-up -- Devoted", 31],
+  [/^PDV_Notif_Daedric_[^_]+_Lapse$/, "Tier-down (lapse)", 32],
+  [/^PDV_Msg_Daedric_[^_]+_ChampionEntry$/, "Champion recognition (MessageBox)", 33],
+  [/^PDV_Msg_Daedric_[^_]+_Commitment$/, "Commitment / pact (the gate clears)", 40],
+  [/^PDV_Notif_Daedric_[^_]+_Stigma_Suspected$/, "Stigma -- Suspected", 50],
+  [/^PDV_Notif_Daedric_[^_]+_Stigma_Known$/, "Stigma -- Known", 51],
+  [/^PDV_Notif_Daedric_[^_]+_Stigma_Notorious$/, "Stigma -- Notorious", 52],
+  [/^PDV_Notif_Daedric_[^_]+_NeglectTexture$/, "Drifting away (neglect)", 60],
+  [/^PDV_Msg_Daedric_[^_]+_Exit$/, "Renunciation (exit)", 61],
+  [/^PDV_Msg_Daedric_[^_]+_Response_/, "Per-race response (on commitment)", 70],
+];
+
+function detectDaedricMoment(slot) {
+  for (const [re, label, order] of DAEDRIC_MOMENT_RULES) {
     if (re.test(slot)) return { label, order };
   }
   return { label: "Other", order: 999 };
@@ -172,6 +212,9 @@ function findTone(toneTable, slot, raceToken) {
 function synthesiseTrigger(surface, surfacing, notes) {
   const n = notes.trim();
   if (/Passive SPEL/i.test(n)) {
+    if (surface === "Price description") {
+      return "Passive price description (paired with the boon); visible whenever the player views active effects.";
+    }
     return "Passive blessing description; visible whenever the player views active effects.";
   }
   if (surface === "Status spell readout") {
@@ -189,8 +232,11 @@ function synthesiseTrigger(surface, surfacing, notes) {
     if (n) return `Dialogue topic; ${n}.`;
     return `Dialogue topic shown to the player.`;
   }
-  if (surface === "Blessing description") {
+  if (surface === "Blessing description" || surface === "Boon description") {
     return "Passive blessing description; visible whenever the player views active effects.";
+  }
+  if (surface === "Price description") {
+    return "Passive price description (paired with the boon); visible whenever the player views active effects.";
   }
   return `${surface} (${surfacing}). ${n}`.trim();
 }
@@ -281,6 +327,90 @@ function parseManifest(text) {
   return races;
 }
 
+// Parse the Daedric manifest into per-Prince blocks. Boethiah is the Section 6
+// pilot (`## 6. Boethiah ...`); the other 15 Princes are Section 7 subsections
+// (`### 7.1 Azura` ... `### 7.15 Molag Bal`). Each block carries one
+// `| Voice | Tone profile |` row and a run of 8-column PDV rows.
+function parseDaedric(text) {
+  const lines = text.split(/\r?\n/);
+  const princes = []; // { prince, slug, headerTitle, tone, toneKey, rows: [] }
+  let current = null;
+  let inToneTable = false;
+
+  const cleanName = (raw) => raw.replace(/\s*\([^)]*\)\s*/g, " ").trim();
+  const slugify = (name) => name.replace(/[^A-Za-z0-9]/g, "");
+
+  const openBlock = (rawTitle) => {
+    const prince = cleanName(rawTitle);
+    current = {
+      prince,
+      slug: slugify(prince),
+      headerTitle: rawTitle.trim(),
+      tone: "",
+      toneKey: "",
+      rows: [],
+    };
+    princes.push(current);
+    inToneTable = false;
+  };
+
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i];
+
+    // Boethiah pilot: `## 6. Boethiah (full pilot)`
+    const sec6 = line.match(/^##\s+6\.\s+(.+)$/);
+    if (sec6) {
+      openBlock(sec6[1]);
+      continue;
+    }
+    // Any other top-level `## N.` header closes the current block. The
+    // `## 7. Daedric Princes (full authoring)` parent and `## 8. Coverage`
+    // are not blocks themselves; the per-Prince 7.x subsections follow.
+    if (/^##\s+\d+\.\s+/.test(line)) {
+      current = null;
+      inToneTable = false;
+      continue;
+    }
+    // Per-Prince subsection: `### 7.1 Azura`
+    const sec7 = line.match(/^###\s+7\.(\d+)\s+(.+)$/);
+    if (sec7) {
+      openBlock(sec7[2]);
+      continue;
+    }
+
+    if (!current) continue;
+
+    // Tone profile: the single data row of a `| Voice | Tone profile |` table.
+    if (/^\|\s*Voice\s*\|\s*Tone profile\s*\|\s*$/i.test(line)) {
+      inToneTable = true;
+      continue;
+    }
+    if (inToneTable) {
+      if (/^\|\s*-+\s*\|\s*-+\s*\|\s*$/.test(line)) continue; // separator
+      if (line.startsWith("|")) {
+        const cells = splitRow(line);
+        if (cells.length === 2 && cells[0] && cells[1] && !current.tone) {
+          current.toneKey = cells[0];
+          current.tone = `${cells[0]}: ${cells[1]}`;
+        }
+      }
+      inToneTable = false;
+      continue;
+    }
+
+    // Drafted row
+    if (line.startsWith("| PDV_")) {
+      const cells = splitRow(line);
+      if (cells.length !== COLUMN_COUNT) continue;
+      const [slot, surface, surfacing, voice, budget, source, notes, prose] = cells;
+      if (!prose || prose === "--") continue;
+      current.rows.push({ slot, surface, surfacing, voice, budget, source, notes, prose, line: i + 1 });
+    }
+  }
+
+  return princes.filter((p) => p.rows.length > 0);
+}
+
 function csvCell(s) {
   if (s == null) return "";
   const str = String(s);
@@ -290,12 +420,17 @@ function csvCell(s) {
   return str;
 }
 
-function buildRowOutput(race, raceToken, row) {
+function buildRowOutput(race, raceToken, row, detectMomentFn = detectMoment, toneOverride = null) {
   const { slot, surface, surfacing, voice, budget, notes, prose } = row;
   const { hard, target } = parseBudget(budget);
-  const moment = detectMoment(slot);
-  const toneMatch = findTone(race.toneTable, slot, raceToken);
-  const tone = toneMatch ? `${toneMatch.key}: ${toneMatch.line}` : "";
+  const moment = detectMomentFn(slot);
+  let tone;
+  if (toneOverride != null) {
+    tone = toneOverride;
+  } else {
+    const toneMatch = findTone(race.toneTable, slot, raceToken);
+    tone = toneMatch ? `${toneMatch.key}: ${toneMatch.line}` : "";
+  }
 
   const titleBody = parseTitleBody(prose);
   let charCount, hardCap, overBudget;
@@ -340,7 +475,7 @@ function mdEscape(s) {
   return String(s).replace(/\|/g, "\\|").replace(/\n/g, " ");
 }
 
-function renderMd(raceName, race, outRows) {
+function renderMd(title, sourceText, outRows) {
   const grouped = new Map();
   for (const r of outRows) {
     const key = `${r.moment.order}|${r.moment.label}`;
@@ -351,9 +486,9 @@ function renderMd(raceName, race, outRows) {
 
   const overCount = outRows.filter((r) => r.overBudget).length;
   const lines = [];
-  lines.push(`# ${raceName} -- Writer Review`);
+  lines.push(`# ${title} -- Writer Review`);
   lines.push("");
-  lines.push(`**Source:** \`race-sheets/PDV_RaceContent_Manifest.md\` section ${race.section} (${race.headerTitle})`);
+  lines.push(`**Source:** ${sourceText}`);
   lines.push(`**Regenerated:** ${new Date().toISOString().slice(0, 10)} via \`node tools/pdv_writer_review.mjs\``);
   lines.push(`**Rows:** ${outRows.length} drafted${overCount ? `  |  **Over budget:** ${overCount}` : ""}`);
   lines.push("");
@@ -409,30 +544,39 @@ function renderCsv(raceName, outRows) {
   return lines.join("\n") + "\n";
 }
 
-function renderIndex(stats) {
+function renderStatsTable(lines, headerCol, stats) {
+  lines.push(`| ${headerCol} | Rows | Over budget | Moments covered | MD | CSV |`);
+  lines.push("|---|---|---|---|---|---|");
+  for (const s of stats) {
+    lines.push(`| ${s.name} | ${s.rows} | ${s.over || "-"} | ${s.moments} | [${s.file}_Review.md](${s.file}_Review.md) | [${s.file}_Review.csv](${s.file}_Review.csv) |`);
+  }
+  lines.push("");
+}
+
+function renderIndex(raceStats, daedricStats) {
   const lines = [];
   lines.push("# PDV Writer Review -- Index");
   lines.push("");
   lines.push(`**Regenerated:** ${new Date().toISOString().slice(0, 10)} via \`node tools/pdv_writer_review.mjs\``);
-  lines.push("**Source:** `race-sheets/PDV_RaceContent_Manifest.md`");
+  lines.push("**Sources:** `race-sheets/PDV_RaceContent_Manifest.md` (races) and `race-sheets/PDV_DaedricContent_Manifest.md` (Princes)");
   lines.push("");
-  lines.push("Per-race writer-review files. Each `<Race>_Review.md` groups every drafted in-game string by the moment in which the player encounters it, with deity tone, voice, char count vs hard cap, and an empty `Edit` column for revisions.");
+  lines.push("Per-race and per-Prince writer-review files. Each `<Name>_Review.md` groups every drafted in-game string by the moment in which the player encounters it, with deity/Prince tone, voice, char count vs hard cap, and an empty `Edit` column for revisions.");
   lines.push("");
-  lines.push("| Race | Rows | Over budget | Moments covered | MD | CSV |");
-  lines.push("|---|---|---|---|---|---|");
-  for (const s of stats) {
-    lines.push(`| ${s.race} | ${s.rows} | ${s.over || "-"} | ${s.moments} | [${s.race}_Review.md](${s.race}_Review.md) | [${s.race}_Review.csv](${s.race}_Review.csv) |`);
-  }
+  lines.push("## Races (Aedric / native devotion)");
   lines.push("");
+  renderStatsTable(lines, "Race", raceStats);
+  lines.push("## Daedric Princes");
+  lines.push("");
+  renderStatsTable(lines, "Prince", daedricStats);
   lines.push("## How to use");
   lines.push("");
-  lines.push("1. Open the MD for a race to read drafted strings in moment-order with full authoring context (deity tone, voice, char cap).");
+  lines.push("1. Open the MD for a race or Prince to read drafted strings in moment-order with full authoring context (deity/Prince tone, voice, char cap).");
   lines.push("2. Edit in the right-hand `Edit` column, or open the CSV in a spreadsheet for column sorting / filtering.");
-  lines.push("3. When happy with a batch of edits, hand-merge them back into `race-sheets/PDV_RaceContent_Manifest.md` against the matching `Slot ID`.");
+  lines.push("3. When happy with a batch of edits, hand-merge them back into the source manifest against the matching `Slot ID` -- `race-sheets/PDV_RaceContent_Manifest.md` for races, `race-sheets/PDV_DaedricContent_Manifest.md` for Princes.");
   lines.push("4. Re-run `node tools/pdv_content_verify.mjs` to confirm budget / voice / ASCII still pass.");
-  lines.push("5. Re-run `node tools/pdv_writer_review.mjs` to regenerate this view from the updated manifest.");
+  lines.push("5. Re-run `node tools/pdv_writer_review.mjs` to regenerate this view from the updated manifests.");
   lines.push("");
-  lines.push("**Note.** Regenerating overwrites every `<Race>_Review.md` and `<Race>_Review.csv`. Save your in-progress `Edit` columns before re-running, or do your revising in a copy.");
+  lines.push("**Note.** Regenerating overwrites every `<Name>_Review.md` and `<Name>_Review.csv`. Save your in-progress `Edit` columns before re-running, or do your revising in a copy.");
   return lines.join("\n");
 }
 
@@ -446,7 +590,7 @@ function main() {
   const text = fs.readFileSync(MANIFEST, "utf8");
   const races = parseManifest(text);
 
-  const stats = [];
+  const raceStats = [];
   const raceOrder = Object.values(RACE_BY_SECTION);
   let total = 0, totalOver = 0;
 
@@ -458,7 +602,11 @@ function main() {
     }
     const raceToken = raceName; // section title matches slot token
     const outRows = race.rows.map((r) => buildRowOutput(race, raceToken, r));
-    const md = renderMd(raceName, race, outRows);
+    const md = renderMd(
+      raceName,
+      `\`race-sheets/PDV_RaceContent_Manifest.md\` section ${race.section} (${race.headerTitle})`,
+      outRows,
+    );
     const csv = renderCsv(raceName, outRows);
 
     fs.writeFileSync(path.join(OUT_DIR, `${raceName}_Review.md`), md);
@@ -466,8 +614,9 @@ function main() {
 
     const overCount = outRows.filter((r) => r.overBudget).length;
     const momentLabels = new Set(outRows.map((r) => r.moment.label));
-    stats.push({
-      race: raceName,
+    raceStats.push({
+      name: raceName,
+      file: raceName,
       rows: outRows.length,
       over: overCount,
       moments: momentLabels.size,
@@ -476,14 +625,59 @@ function main() {
     totalOver += overCount;
   }
 
-  fs.writeFileSync(path.join(OUT_DIR, "_Index.md"), renderIndex(stats));
+  // Daedric Princes.
+  const daedricStats = [];
+  let daedricTotal = 0, daedricOver = 0;
+  if (!fs.existsSync(MANIFEST_DAEDRIC)) {
+    console.warn(`[warn] Daedric manifest not found: ${MANIFEST_DAEDRIC}`);
+  } else {
+    const daedricText = fs.readFileSync(MANIFEST_DAEDRIC, "utf8");
+    const princes = parseDaedric(daedricText);
+    for (const p of princes) {
+      const outRows = p.rows.map((r) =>
+        buildRowOutput(null, "Daedric", r, detectDaedricMoment, p.tone),
+      );
+      const fileBase = `Daedric_${p.slug}`;
+      const md = renderMd(
+        `Daedric -- ${p.prince}`,
+        `\`race-sheets/PDV_DaedricContent_Manifest.md\` (${p.headerTitle})`,
+        outRows,
+      );
+      const csv = renderCsv(p.prince, outRows);
 
+      fs.writeFileSync(path.join(OUT_DIR, `${fileBase}_Review.md`), md);
+      fs.writeFileSync(path.join(OUT_DIR, `${fileBase}_Review.csv`), csv);
+
+      const overCount = outRows.filter((r) => r.overBudget).length;
+      const momentLabels = new Set(outRows.map((r) => r.moment.label));
+      daedricStats.push({
+        name: p.prince,
+        file: fileBase,
+        rows: outRows.length,
+        over: overCount,
+        moments: momentLabels.size,
+      });
+      daedricTotal += outRows.length;
+      daedricOver += overCount;
+    }
+  }
+
+  fs.writeFileSync(path.join(OUT_DIR, "_Index.md"), renderIndex(raceStats, daedricStats));
+
+  const fileCount = raceStats.length + daedricStats.length;
   console.log(`PDV writer-review extractor`);
-  console.log(`Wrote ${stats.length} race files (MD + CSV) to ${path.relative(PROJECT_ROOT, OUT_DIR)}/`);
-  console.log(`Total drafted rows: ${total}`);
-  if (totalOver) console.log(`Over-budget rows flagged: ${totalOver}`);
-  for (const s of stats) {
-    console.log(`  ${s.race.padEnd(10)} ${String(s.rows).padStart(4)} rows  ${s.moments} moments${s.over ? `  ${s.over} over` : ""}`);
+  console.log(`Wrote ${fileCount} files (MD + CSV) to ${path.relative(PROJECT_ROOT, OUT_DIR)}/`);
+  console.log(`  ${raceStats.length} races (${total} rows), ${daedricStats.length} Princes (${daedricTotal} rows)`);
+  console.log(`Total drafted rows: ${total + daedricTotal}`);
+  const allOver = totalOver + daedricOver;
+  if (allOver) console.log(`Over-budget rows flagged: ${allOver}`);
+  console.log(`Races:`);
+  for (const s of raceStats) {
+    console.log(`  ${s.name.padEnd(10)} ${String(s.rows).padStart(4)} rows  ${s.moments} moments${s.over ? `  ${s.over} over` : ""}`);
+  }
+  console.log(`Daedric Princes:`);
+  for (const s of daedricStats) {
+    console.log(`  ${s.name.padEnd(16)} ${String(s.rows).padStart(4)} rows  ${s.moments} moments${s.over ? `  ${s.over} over` : ""}`);
   }
 }
 

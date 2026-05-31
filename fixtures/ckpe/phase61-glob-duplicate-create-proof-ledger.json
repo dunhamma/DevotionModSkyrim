@@ -1,6 +1,6 @@
 {
   "schema": "creation-authoring.proof-ledger.v1",
-  "generatedAt": "2026-05-23T03:35:39.699Z",
+  "generatedAt": "2026-05-24T00:59:57.240Z",
   "sourceReport": "fixtures/ckpe/phase61-glob-duplicate-create-strict-run-report.json",
   "project": "pdv-ckproof",
   "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
@@ -11,7 +11,7 @@
       "recordFamily": "GLOB",
       "status": "PASS",
       "fixture": "fixtures/ckpe/phase59-glob-duplicate-create-product-command.ck-command-packet.json",
-      "verifiedAt": "2026-05-23T03:35:39.699Z",
+      "verifiedAt": "2026-05-24T00:59:57.240Z",
       "operation": "glob.duplicate_create",
       "target": "PDV_GLO_ActivePietyDUPLICATE002",
       "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
@@ -27,6 +27,16 @@
         "normalizer": "record-exists"
       },
       "commandEvidenceStatus": "PASS",
+      "proofClass": "ck-object-window-glob-duplicate-payload",
+      "proofMechanics": {
+        "objectWindowDuplicateReplay": true,
+        "explicitSourceSelectionGuard": true,
+        "activePluginOwnedCreatedRecord": true,
+        "payloadMutation": true,
+        "productCommandReadyForSave": true,
+        "verifierReadback": true
+      },
+      "proofMechanicsStatus": "PASS",
       "coverage": {
         "manifestOperation": true,
         "backend": true,
@@ -35,7 +45,8 @@
         "readbackNormalizer": true,
         "verifier": true,
         "strictReport": true,
-        "proofFixture": true
+        "proofFixture": true,
+        "globDuplicatePayloadMechanics": true
       },
       "missingCoverage": [],
       "commandEvidence": [
@@ -85,7 +96,7 @@
   "verification": {
     "schema": "creation-authoring.proof-ledger-verification.v1",
     "status": "PASS",
-    "generatedAt": "2026-05-23T03:35:39.700Z",
+    "generatedAt": "2026-05-24T00:59:57.241Z",
     "failures": []
   }
 }

@@ -21,9 +21,9 @@ export function normalizeMo2RecordDetail(detail) {
     records[key] = {
       editorId,
       formid,
-      recordType: source.record_type || detail.record_type,
+      recordType: normalizeRecordType(source.record_type || detail.record_type),
       plugin: source.plugin || detail.plugin || null,
-      winningPlugin: source.winning_plugin || source.winningPlugin || detail.winning_plugin || null,
+      winningPlugin: source.winning_plugin || source.winningPlugin || detail.winning_plugin || source.plugin || detail.plugin || null,
       scripts: normalizeVmadScripts(fields.VirtualMachineAdapter?.Scripts || []),
       entries: normalizeFormListEntries(fields.Items || fields.Entries || fields.FormListEntries || []),
       aliases: normalizeAliases(fields.Aliases || fields.QuestAliases || []),
@@ -34,6 +34,7 @@ export function normalizeMo2RecordDetail(detail) {
       packages: normalizeFormListEntries(fields.Packages || fields.AIPackages || []),
       inventory: normalizeInventory(fields.Items || fields.Inventory || []),
       conditions: normalizeConditions(fields.Conditions || fields.DialogConditions || fields.EventConditions || []),
+      dialogue: normalizeDialogue(fields),
       storyManager: normalizeStoryManager(fields.StoryManager || fields.StoryManagerNode || fields.StoryEvent || {}),
       message: normalizeMessage(fields),
       activator: normalizeActivator(fields),
@@ -47,6 +48,13 @@ export function normalizeMo2RecordDetail(detail) {
   }
 
   return { records };
+}
+
+function normalizeRecordType(recordType) {
+  if (recordType === "MESSAGE") {
+    return "MESG";
+  }
+  return recordType;
 }
 
 function normalizeStages(stages) {
@@ -126,10 +134,14 @@ function normalizeInventory(items) {
   if (!Array.isArray(items)) {
     return [];
   }
-  return items.map((item) => ({
-    item: item.Item || item.Form || item.Reference || item.formid || item.EditorID || item.editorId || item,
-    count: item.Count ?? item.count ?? 1
-  }));
+  return items.map((item) => {
+    const nestedItem = item.Item && typeof item.Item === "object" ? item.Item : null;
+    return {
+      item: nestedItem?.Item || nestedItem?.Form || nestedItem?.Reference || nestedItem?.formid || nestedItem?.EditorID || nestedItem?.editorId ||
+        item.Item || item.Form || item.Reference || item.formid || item.EditorID || item.editorId || item,
+      count: item.Count ?? item.count ?? nestedItem?.Count ?? nestedItem?.count ?? 1
+    };
+  });
 }
 
 function normalizeConditions(conditions) {
@@ -140,10 +152,43 @@ function normalizeConditions(conditions) {
     function: condition.Function || condition.function || condition.Data?.Function || inferConditionFunction(condition),
     operator: normalizeConditionOperator(condition.Operator || condition.operator || condition.CompareOperator),
     value: condition.Value ?? condition.value ?? condition.ComparisonValue ?? null,
+    subject: condition.Subject || condition.subject || condition.RunOn || condition.runOn || null,
+    global: condition.Global || condition.global || condition.Parameter || condition.parameter || null,
     runOn: condition.RunOn || condition.run_on || condition.runOn || null,
     parameters: normalizeConditionParameters(condition.Data || condition.parameters || {}),
     raw: condition
   }));
+}
+
+function normalizeDialogue(fields = {}) {
+  return {
+    ownerQuest: firstDefined(fields.OwnerQuest, fields.Quest, fields.OwnerQuestEditorID, fields.QuestEditorID),
+    branch: firstDefined(fields.Branch, fields.DialogBranch, fields.BranchEditorID),
+    startingTopic: firstDefined(fields.StartingTopic, fields.StartingTopicEditorID),
+    topic: firstDefined(fields.Topic, fields.TopicEditorID, fields.ParentTopic),
+    prompt: firstDefined(fields.Prompt, fields.Name, fields.FullName),
+    category: firstDefined(fields.Category),
+    subtype: firstDefined(fields.Subtype),
+    flags: normalizeTextArray(fields.Flags),
+    speaker: firstDefined(fields.Speaker, fields.SpeakerEditorID),
+    speakerForm: firstDefined(fields.SpeakerForm, fields.SpeakerFormID),
+    responseLine: firstDefined(fields.ResponseLine, fields.ResponseText, fields.DialogueText, fields.Text),
+    conditions: normalizeConditions(fields.Conditions || fields.DialogConditions || [])
+  };
+}
+
+function firstDefined(...values) {
+  return values.find((value) => value !== undefined && value !== null && value !== "");
+}
+
+function normalizeTextArray(value) {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item));
+  }
+  if (typeof value === "string") {
+    return value.split(/[,\|]/u).map((item) => item.trim()).filter(Boolean);
+  }
+  return [];
 }
 
 function inferConditionFunction(condition) {

@@ -37,6 +37,7 @@ export function handleAuthoringRequest(request) {
       mergeOutputPath: request.mergeOutputPath,
       backupRoot: request.backupRoot,
       proofLedger: request.proofLedger,
+      forceCkFinalization: Boolean(request.forceCkFinalization),
       backupRunner: request.adapters?.backupRunner,
       mergeRunner: request.adapters?.mergeRunner,
       ckFinalizer: request.adapters?.ckFinalizer,

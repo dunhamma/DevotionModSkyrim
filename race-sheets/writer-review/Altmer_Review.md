@@ -1,8 +1,8 @@
 # Altmer -- Writer Review
 
-**Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 13 (Altmer (full draft; implementation-spec closed))
-**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
-**Rows:** 62 drafted
+**Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 13 (Altmer (full draft))
+**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
+**Rows:** 61 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -12,7 +12,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Altmer_Pantheon_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 85 / 200 |  | Auri-El is acknowledged at dawn. Spell cost -3% in all schools; magic resistance +5%. |  |
+| _(no tone match)_ | `PDV_Bless_Altmer_Pantheon_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 109 / 200 |  | Auri-El is acknowledged at dawn. Spells in all schools cost 3% less and your resistance to magic rises by 5%. |  |
 
 ## Deepening blessing (Tier 2)
 
@@ -30,8 +30,8 @@ _5 rows._
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Bless_Altmer_AuriEl_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 115 / 200 |  | Auri-El watches your return. Magic regenerates 25% faster out of combat; from dawn to midday, spells cost 15% less. |  |
 | Magnus: Precise, scholarly, escape-coded; the architect who got out; speaks of the Elder Way and of the arts as the road. | `PDV_Bless_Altmer_Magnus_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 121 / 200 |  | Magnus marks the scholar's discipline. Alteration and Illusion cost 10% less; magic regenerates 20% faster out of combat. |  |
-| Trinimac: Stern, militant, civilizational; speaks of the project defended by force and orthodoxy held; the martial ancestor. | `PDV_Bless_Altmer_Trinimac_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 138 / 200 |  | Trinimac blesses the project defended by force. One-handed damage +5%; an enforcement act under high orthodoxy grants armor +15 for a day. |  |
-| Xarxes: Dry, archival, lineage-keeping; speaks of what is written, the genealogy, the quiet truth that outlasts enforcement. | `PDV_Bless_Altmer_Xarxes_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 115 / 200 |  | Xarxes keeps your lineage. Lockpicking and Alteration +5%; a quest of real ancestry returns a day of cheaper magic. |  |
+| Trinimac: Stern, militant, civilizational; speaks of the project defended by force and orthodoxy held; the martial ancestor. | `PDV_Bless_Altmer_Trinimac_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 168 / 200 |  | Trinimac blesses the project defended by force. Your one-handed attacks strike 5% harder, and an enforcement act under high orthodoxy raises your armor by 15 for a day. |  |
+| Xarxes: Dry, archival, lineage-keeping; speaks of what is written, the genealogy, the quiet truth that outlasts enforcement. | `PDV_Bless_Altmer_Xarxes_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 134 / 200 |  | Xarxes keeps your lineage. Your Lockpicking and Alteration improve by 5%, and a quest of real ancestry returns a day of cheaper magic. |  |
 | Syrabane: Gentle, guardian-toned, warding; the apprentices' protector; speaks of the magic that shields the one still on the path. | `PDV_Bless_Altmer_Syrabane_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 99 / 200 |  | Syrabane shields the apprentice. Magic-using foes deal 15% less damage; your wards absorb 15% more. |  |
 
 ## Champion recognition (MessageBox)
@@ -99,27 +99,26 @@ _3 rows._
 
 ## Contextual favor (small, Noted)
 
-_8 rows._
+_6 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_Shared_DawnSteadiness` | HUD corner notification. Dawn rite after Lorkhan pressure or crisis; one per day. | Player-2nd | 47 / 80 |  | The dawn holds. The dissonance settles for now. |  |
-| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_Shared_CoherenceHeld` | HUD corner notification. Three coherent days; no contradictory major signal. | Player-2nd | 47 / 80 |  | Your acts still make one shape. The path holds. |  |
-| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_DivineBody_BalancedCultivation` | HUD corner notification. Moderate alignment held through a real choice. | Player-2nd | 57 / 80 |  | Neither zeal nor collapse. The middle path remains yours. |  |
-| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_AuriEl_ReturnReaffirmed` | HUD corner notification. Auri-El focused crisis resolution or dawn rite. | Player-2nd | 65 / 80 |  | Auri-El's dawn does not erase the scar. It shows the way through. |  |
-| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_Magnus_ArtsRoad` | HUD corner notification. Magic milestone, Eye/College stage, curated spell learned. | Player-2nd | 58 / 80 |  | The arts become a road again. Magnus marks the discipline. |  |
-| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_Trinimac_CivilizationDefended` | HUD corner notification. Orthodoxy-gated threat defeated; meaningful context only. | Player-2nd | 45 / 80 |  | Trinimac notes the defense, not the violence. |  |
-| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_Xarxes_RecordKept` | HUD corner notification. Record/lineage/truth preserved; one-shot marker. | Player-2nd | 53 / 80 |  | The record holds. Xarxes keeps what must not be lost. |  |
-| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_Syrabane_Warded` | HUD corner notification. Protection milestone, apprentice aid, anti-mage survival. | Player-2nd | 50 / 80 |  | The ward held when it mattered. Syrabane was near. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_ThalmorOrthodox_Enforcement` | HUD corner notification. After-act; one per enforcement act, daily cap. | Player-2nd | 70 / 80 |  | Heresy named and answered. The orthodoxy marks the hand that enforces. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_ThalmorOrthodox_OrthodoxRite` | HUD corner notification. Environmental; dawn rite at an orthodox shrine, daily cap. | Player-2nd | 64 / 80 |  | The dawn kept by the strict rite. Doctrine is served as written. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_DivineBody_Cultivation` | HUD corner notification. After-act; mastery milestone, daily cap. | Player-2nd | 67 / 80 |  | Mastery earned and refined. You raise yourself as the project asks. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance` | HUD corner notification. Environmental; unforced dawn observance, daily cap. | Player-2nd | 66 / 80 |  | You greet the dawn unforced. The return is honored, not compelled. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_Psijic_OldWaysMeditation` | HUD corner notification. Environmental; private meditation, daily cap. | Player-2nd | 61 / 80 |  | The Old Ways kept in private. The quiet path costs you least. |  |
+| _(no tone match)_ | `PDV_Notif_Altmer_FavorNoted_Psijic_ForbiddenLore` | HUD corner notification. After-act; heterodox lore recovered, daily cap. | Player-2nd | 70 / 80 |  | Hidden knowledge recovered. What is written outlasts what is enforced. |  |
 
 ## Contextual favor (large, Marked)
 
-_2 rows._
+_3 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Msg_Altmer_FavorMarked_Orthodox_CostlyEnforcement` | MessageBox. High alignment plus costly, curated enforcement only. | Narrator | 14+141 / 40+500 |  | Title: "Orthodoxy Held"   Body: "This was not obedience for its own sake. You defended the project where compromise would have been easier. The old order recognizes the cost." |  |
-| _(no tone match)_ | `PDV_Msg_Altmer_FavorMarked_Psijic_CrisisStudy` | MessageBox. Major crisis resolved through study/self-cultivation. | Narrator | 17+165 / 40+500 |  | Title: "Doubt Given Shape"   Body: "You did not flee the contradiction. You studied it until it became a path you could walk. The old doubt quiets, not because it is gone, but because it is understood." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended` | MessageBox. Rare major; a costly act defending orthodoxy by the sword. | God-voice | 23+207 / 40+500 |  | Title: "Auri-El Marks the Sword"   Body: "You did not only pray for the project; you bled for it. The hardest path is the one that answers Lorkhan's world with steel, and you walked into the cost with open eyes. The dawn knows what it took from you." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_FavorMarked_DivineBody_ReturnAffirmed` | MessageBox. Rare major; affirming the return without enforcement. | God-voice | 24+200 / 40+500 |  | Title: "Auri-El Marks the Return"   Body: "You turned toward the dawn when the mortal world offered every reason to forget it, and you did it without a whip at anyone's back. This is the return as it was meant: chosen, not enforced. I keep it." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_FavorMarked_Psijic_UnseenStep` | MessageBox. Rare major; a lonely, unrewarded Old Ways moment. | God-voice | 28+183 / 40+500 |  | Title: "Auri-El Marks the Quiet Path"   Body: "You kept the Old Ways where no one could see and no one could reward you. The heterodox road is lonely and easy to abandon, and you did not abandon it. The foundation holds you still." |  |
 
 ## Curse onset / cure
 
@@ -173,9 +172,9 @@ _12 rows._
 | _(no tone match)_ | `PDV_Notif_Altmer_Pantheon_ObservantLapse` | HUD corner notification. One per direction per save. | Narrator | 51 / 80 |  | The path is acknowledged less surely now. Wavering. |  |
 | _(no tone match)_ | `PDV_Notif_Altmer_Pantheon_FaithfulLapse` | HUD corner notification. One per direction per save. | Narrator | 38 / 80 |  | Your coherence is slipping. Observant. |  |
 | _(no tone match)_ | `PDV_Notif_Altmer_Focus_DevotedLapse` | HUD corner notification. One per save per focus loss. | Narrator | 55 / 80 |  | The bond with %s loosens. The Devoted bond is not held. |  |
-| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_DragonbornDeclaration` | MessageBox. One-time; starts `Dissonant`. | Narrator | 25+177 / 40+500 |  | Title: "Named By The Mortal Story"   Body: "The world has named you Dragonborn. To Skyrim, this is glory. To Altmer faith, it is a mortal story closing around you. The path is not broken, but it has become harder to hold." |  |
-| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_SovngardeBeat` | MessageBox. One-time; strongest crisis flavor. | Narrator | 19+176 / 40+500 |  | Title: "Shor's Hall Is Real"   Body: "You have stood where Altmer doctrine would rather not look. Shor's dead have a hall, and its bridge had a guardian. This does not answer your faith. It wounds it with evidence." |  |
-| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_TalosContradiction` | MessageBox. Costly Talos aid, shrine protection, or hypocrisy proof only. | Narrator | 22+191 / 40+500 |  | Title: "The Forbidden Question"   Body: "Talos should be simple. Heresy. Usurpation. A mortal lie. Yet the world keeps offering evidence that simplicity cannot hold. What you do next will decide whether this becomes doubt or repair." |  |
-| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_CompanionsFork` | MessageBox. Companions, Wuuthrad, or nearby beast pressure; curse hard halt overrides. | Narrator | 17+190 / 40+500 |  | Title: "Ysgramor's Shadow"   Body: "The old human war story has touched you. Honor, beast-blood, Wuuthrad, Shor's people -- none of it is neutral to an Altmer soul. You can pass through it, but not without naming what it cost." |  |
-| _(no tone match)_ | `PDV_Msg_Altmer_VampireExiledPath_Entry` | MessageBox. Optional enhancement after vampire onset; Tier 1 cap only. | Narrator | 19+205 / 40+500 |  | Title: "Exile From The Dawn"   Body: "Auri-El is closed while you flee the sun. Still, an Altmer does not become nothing because the records cast them out. What remains is exile: a narrow discipline, a name kept privately, never a full return." |  |
-| _(no tone match)_ | `PDV_Msg_Altmer_VampireExiledPath_Recognition` | Shown via Survey Devotion and on posture transitions. | Narrator | 122 / 240 |  | You are exiled from the dawn, not restored to it. A thin discipline remains, capped low, held only by refusal to collapse. |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_DragonbornDeclaration` | MessageBox. One-time on being named Dragonborn. | Narrator | 26+267 / 40+500 |  | Title: "Named for the Mortal World"   Body: "They call you Dragonborn -- a mortal soul carrying the dragon's, blessed by the world Lorkhan made and the people who live in it. The gift is real. So is the dissonance: the thing that honors you is the thing your ancestors died trying to escape. You will carry both." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_SovngardeBeat` | MessageBox. One-time on the Sovngarde beat. | Narrator | 27+260 / 40+500 |  | Title: "The Hall That Should Not Be"   Body: "Sovngarde is real -- a hall of mortal dead who feast and do not dissolve, who chose to stay in the world rather than return beyond it. To an Altmer this is the trap made beautiful. You have seen it now, and you cannot unsee that the mortal world keeps its own." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_MarriageBeat` | MessageBox. One-time on taking a spouse. | Narrator | 18+251 / 40+500 |  | Title: "Bound to the World"   Body: "You have taken a spouse, a door, a hearth -- ties to the mortal world Lorkhan built. The Psijics would call it attachment; the orthodox would call it descent. It may be the truest thing you have done, or the deepest forgetting. Only you can say which." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_LorkhanCrisis_CompanionsFork` | MessageBox. One-time at the Companions beast-blood fork. | Narrator | 26+275 / 40+500 |  | Title: "The Beast at the Threshold"   Body: "The Companions offer you the blood of the beast -- to become, by choice, the furthest thing from spirit an Altmer can be. The whole of your faith is to rise out of flesh, not deeper into it. Refuse, and you keep the project. Accept, and there is no doctrine left to hold you." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_VampireExiledPath_Entry` | MessageBox. One-time after vampire onset, if the Exiled path is enabled. | Narrator | 16+245 / 40+500 |  | Title: "The Exile's Road"   Body: "Auri-El has closed, and the records will not hold your name. What remains is not devotion but exile -- a long walk outside the return, among others the dawn has let go. There is no path back. There is only how you carry the dark you have become." |  |
+| _(no tone match)_ | `PDV_Msg_Altmer_VampireExiledPath_Recognition` | MessageBox. On reaching the Exiled-path recognition beat. | Narrator | 22+284 / 40+500 |  | Title: "Known Among the Exiled"   Body: "The others outside the dawn know you now -- the cast-out Altmer, the ones the return forgot. It is not a congregation and it is not grace. It is recognition, of a kind, among those who share the same closed door. You are not alone in the exile, even if you stand alone before the god." |  |

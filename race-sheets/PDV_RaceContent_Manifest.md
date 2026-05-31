@@ -1,6 +1,6 @@
 # PDV Race Content Manifest (1.0)
 
-**Status:** Authoring manifest. Inventory across all 10 races, all with full draft prose. Altmer gated slots closed on 2026-05-30 in Section 13.13; Breton still carries the optional Vigilant pressure gate in Section 18.14. Everything else is content-author-ready for Phase 19.
+**Status:** Authoring manifest. Inventory across all 10 races, all with full draft prose. The former Altmer and Breton gated slots (Sections 13.13, 18.14) are now authored for the Phase 20 content lock; everything else is content-author-ready for Phase 19.
 **Created:** 2026-05-20
 **Owner doc family:** `PDV_TargetEndStates_1.0.md` (launch feel, per-race acceptance), `race-sheets/PDV_RaceDesign_*.md` (locked design specs and contextual-favor tables), `race-sheets/Race_*.md` (player-facing companion guides), `PDV_Architecture_v3.md` (subsystem contracts, especially Sections 10, 12, 16, 17), `PDV_STANDARDS.md` Section 3 (description-engineering rules).
 **Purpose:** Enumerate every player-facing string slot the 1.0 content-authoring phase has to fill, anchor each to its locked source, and prove the row template by drafting all Nord prose.
@@ -111,12 +111,12 @@ Manifest sections follow the build order from `PDV_TargetEndStates_1.0.md` "Prio
 1. Nord (full draft prose)
 2. Orc (full draft prose)
 3. Dunmer (full draft prose)
-4. Altmer (full draft prose; implementation-spec closed 2026-05-30)
+4. Altmer (full draft; the former gated slots are authored in Section 13.13 for the Phase 20 content lock)
 5. Khajiit (full draft prose; no formal commitment offer per Section 12.4a)
 6. Imperial (full draft prose)
 7. Redguard (full draft prose)
 8. Bosmer (full draft prose; four-path divergence)
-9. Breton (full draft prose; three-tradition divergence; Vigilant pressure gated)
+9. Breton (full draft prose; three-tradition divergence; Vigilant pressure authored)
 10. Argonian (full draft prose)
 
 ---
@@ -149,44 +149,44 @@ Narrator voice. Theological lead + concrete numeric effect, per `PDV_STANDARDS.m
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Bless_Nord_Kyne_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Kyne has noticed your steps. Cold resistance +10%. |
-| PDV_Bless_Nord_Kyne_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Kyne shelters the hunter who sleeps beneath her sky. Your endurance has grown, and wild animals stay calm until provoked. Stamina +35. |
-| PDV_Bless_Nord_Kyne_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3", TargetEndStates Section "Kyne Champion" | Passive SPEL | The storm-mother answers her favored's call. In wind and rain, shouts and arrows carry further; power attack stamina cost -10% in the open. |
-| PDV_Bless_Nord_Talos_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Talos has seen your arm raised in defiance. Melee attack +5%. |
-| PDV_Bless_Nord_Talos_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | The old breath gathers behind your Thu'um. Shout recharge +10%. Defying the Talos ban is counted as worship. |
-| PDV_Bless_Nord_Talos_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3", TargetEndStates Section "Talos/Ysmir Champion" | Passive SPEL | Talos marks the open defier. Health +50. Stormcloak ground and Thalmor defiance return a cumulative surge to base health and stamina, capped at +50 each. |
-| PDV_Bless_Nord_Shor_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Shor's hall has noted your sword. Stamina returns faster when you are outnumbered in melee. |
-| PDV_Bless_Nord_Shor_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Honor in the fight earns Shor's small mercy. A fair kill restores 10 health. Companions work weighs double. |
-| PDV_Bless_Nord_Shor_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3", TargetEndStates Section "Shor Champion" | Passive SPEL | Shor watches your bridge approach. Honorable kills restore health by the foe's strength; near death, stamina holds steady. |
-| PDV_Bless_Nord_Tsun_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Tsun marks the bearer of weight. Power attack stamina cost -5%. |
-| PDV_Bless_Nord_Tsun_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | The shield-thane sees the fight you should have lost. Surviving against severe odds returns a short stamina burst. |
-| PDV_Bless_Nord_Tsun_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Tsun's weighing holds. After a trial against three or more foes, stamina holds at twenty percent for one day. Trial-and-challenge work counts double. |
-| PDV_Bless_Nord_Stuhn_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Stuhn turns his eye to those who answer the blow. Foes who strike first -- against you or an ally -- take +5 damage. |
-| PDV_Bless_Nord_Stuhn_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Stuhn answers the shield raised for another. Freeing a prisoner, honoring a ransom, or pulling enemies from an ally grants +15 armor rating for the next fight. |
-| PDV_Bless_Nord_Stuhn_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Stuhn honors the merciful sword. Honorable kills and spared innocents raise armor by +50; enemies take +15 damage. |
-| PDV_Bless_Nord_Mara_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Mara has counted your kindness. Healing magic +5%. Vendors offer slightly better prices. |
-| PDV_Bless_Nord_Mara_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | The hearth-mother holds your household. Marriage and home work earn extra devotion. Restoring a community is felt as worship. |
-| PDV_Bless_Nord_Mara_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Mara warms your door. Helping a family restores full health on next rest. Temples of Mara grant you healing at reduced cost. |
-| PDV_Bless_Nord_Akatosh_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Akatosh holds your hour a little longer. Time-pressure skill checks are slightly more forgiving. |
-| PDV_Bless_Nord_Akatosh_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Long devotion does not go unmeasured. Streaks of seven steady days return bonus piety at dawn. |
-| PDV_Bless_Nord_Akatosh_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Akatosh keeps your continuance. Unbroken devotion of fourteen days adds cumulative skill XP, capped at +15%. Amulet of Akatosh doubles its vanilla effect. |
-| PDV_Bless_Nord_Kynareth_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL; Nine Divines lane | Kynareth's road shelters your traveling. Cold resistance +10%. |
+| PDV_Bless_Nord_Kyne_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Kyne has noticed your steps. The warrior-mother toughens her own, and the cold bites you 10% less. |
+| PDV_Bless_Nord_Kyne_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Kyne shelters the hunter who sleeps beneath her sky. Your endurance has grown so your maximum stamina rises by 35, and wild animals stay calm until provoked. |
+| PDV_Bless_Nord_Kyne_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3", TargetEndStates Section "Kyne Champion" | Passive SPEL | The storm-mother answers her favored's call. In wind and rain your shouts and arrows fly further, and in the open your power attacks cost 10% less stamina. |
+| PDV_Bless_Nord_Talos_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Talos has seen your arm raised in defiance. Your melee attacks strike 5% harder. |
+| PDV_Bless_Nord_Talos_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | The old breath gathers behind your Thu'um. Your shouts recharge 10% faster, and defying the Talos ban is counted as worship. |
+| PDV_Bless_Nord_Talos_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3", TargetEndStates Section "Talos/Ysmir Champion" | Passive SPEL | Talos marks the open defier. Your maximum health rises by 50. Stormcloak ground and Thalmor defiance return a cumulative surge to base health and stamina, capped at +50 each. |
+| PDV_Bless_Nord_Shor_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Shor's Hall hears the ring of your sword. Your stamina regenerates 5% faster. |
+| PDV_Bless_Nord_Shor_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Honor in battle earns Shor's small mercy. A fair kill restores 10 health. Companions work weighs double. |
+| PDV_Bless_Nord_Shor_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3", TargetEndStates Section "Shor Champion" | Passive SPEL | Shor has kept your seat in the Hall. Honorable kills restore health by the foe's strength; at 20% health in fair combat, stamina holds steady. |
+| PDV_Bless_Nord_Tsun_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Tsun bears some of your weight. Your power attacks cost 5% less stamina. |
+| PDV_Bless_Nord_Tsun_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL. Logic: set bSevereFight when 3+ hostiles target the player or a single hostile is significantly overleveled; track lowest player health % via OnHit; on OnCombatStateChanged to 0 while alive, if bSevereFight AND player dropped below ~25% HP during the fight, apply a short stamina burst, then clear flags. | The shield-thane sees the fight you should have lost. Surviving against severe odds returns a short stamina burst. |
+| PDV_Bless_Nord_Tsun_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Tsun's weighing holds. After a trial against three or more foes, stamina holds at 20% for one day. Trial-and-challenge work counts double. |
+| PDV_Bless_Nord_Stuhn_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Stuhn turns his eye to those who defend the blow. Foes who strike first -- against you or an ally -- take 5 more damage. |
+| PDV_Bless_Nord_Stuhn_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Stuhn answers the shield raised for another. Freeing a prisoner, honoring a ransom, or pulling enemies from an ally raises your armor rating by 15 for the next fight. |
+| PDV_Bless_Nord_Stuhn_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Stuhn honors the merciful sword. As long as you honorably kill enemies and spare the innocent, your armor is raised by 50 and enemies take 15 more damage. |
+| PDV_Bless_Nord_Mara_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Mara has counted your kindness. Healing magic is 5% more effective; vendors offer slightly better prices. |
+| PDV_Bless_Nord_Mara_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | The hearth-mother nurtures your household. Your maximum health rises by 30, and marriage and home work earn extra devotion. |
+| PDV_Bless_Nord_Mara_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Mara warms your door. Restoration spells are 15% more effective and your maximum health rises by 50. Helping a family restores you fully at once. |
+| PDV_Bless_Nord_Akatosh_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Akatosh holds your hour a little longer. Your magicka regenerates 10% faster, and time-pressure skill checks are more forgiving. |
+| PDV_Bless_Nord_Akatosh_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Long devotion does not go unmeasured. Your maximum magicka rises by 30, and steady seven-day streaks return bonus piety at dawn. |
+| PDV_Bless_Nord_Akatosh_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Akatosh keeps your continuance. Unbroken devotion of fourteen days adds cumulative skill experience, capped at 15%. The Amulet of Akatosh doubles its vanilla effect. |
+| PDV_Bless_Nord_Kynareth_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL; Nine Divines lane | Kynareth shelters the traveler on the open road. Her sky tempers the weather, and your resistance to cold rises by 10%. |
 | PDV_Bless_Nord_Kynareth_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL; Nine Divines lane | Kynareth steadies the open way. Outdoor rest fully restores stamina; hawks circle before ambushes as a warning. |
-| PDV_Bless_Nord_Kynareth_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3", TargetEndStates lines 182-183 | Passive SPEL; Nine Divines lane | Kynareth's grace answers your steps. In wind and rain, shouts and arrows carry farther; outdoor sleep restores more. |
-| PDV_Bless_Nord_Arkay_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Arkay marks the keeper of rites. Disease resistance +10%. Undead damage -5%. |
+| PDV_Bless_Nord_Kynareth_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3", TargetEndStates lines 182-183 | Passive SPEL; Nine Divines lane | Kynareth's grace answers your steps. Her winds carry arrow and Voice alike, and a night slept beneath the sky restores more than any roof. |
+| PDV_Bless_Nord_Arkay_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Arkay marks the keeper of rites. Your resistance to disease rises by 10%, and undead deal 5% less harm. |
 | PDV_Bless_Nord_Arkay_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | A burial done well is owed. Completing a death-rite restores full health on next rest. |
-| PDV_Bless_Nord_Arkay_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Arkay's covenant holds. Undead damage -20%. Hall of the Dead priests speak to you as a peer. |
-| PDV_Bless_Nord_Stendarr_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Stendarr counts the spared hand. Brawl damage +5%. Vigilants of Stendarr stay neutral by default. |
-| PDV_Bless_Nord_Stendarr_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Mercy chosen is mercy kept. After sparing a foe in dialogue, the next fight grants a small armor boost. |
-| PDV_Bless_Nord_Stendarr_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Stendarr's restraint becomes your armor. Sparing a surrendering foe grants +15% damage resistance for the rest of the fight. |
-| PDV_Bless_Nord_Zenithar_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Zenithar weighs honest work. Crafting experience +5%. |
-| PDV_Bless_Nord_Zenithar_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | The honest hand makes a finer thing. Smithing improvement quality climbs a little. Honest commerce returns small devotion. |
+| PDV_Bless_Nord_Arkay_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Arkay's covenant holds. Undead deal 20% less harm, and Hall of the Dead priests speak to you as a peer. |
+| PDV_Bless_Nord_Stendarr_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Stendarr counts the spared hand. Your brawling strikes 5% harder, and Vigilants of Stendarr stay neutral by default. |
+| PDV_Bless_Nord_Stendarr_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Mercy chosen is mercy kept. After sparing a foe in dialogue, the next fight grants 5% damage resistance. |
+| PDV_Bless_Nord_Stendarr_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Stendarr's restraint becomes your armor. Sparing a surrendering foe grants 15% damage resistance for the rest of the fight. |
+| PDV_Bless_Nord_Zenithar_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Zenithar weighs honest work. You gain 5% more crafting experience. |
+| PDV_Bless_Nord_Zenithar_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | The honest hand makes a finer thing. Your Smithing rises by 10, and honest commerce returns small devotion. |
 | PDV_Bless_Nord_Zenithar_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Zenithar names the master's work. A crafted item may rise one quality step beyond your perk rank. After an honest sale, your next persuasion has a boost. |
-| PDV_Bless_Nord_Julianos_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Julianos reads your study. Novice and Apprentice spell cost -3%. |
-| PDV_Bless_Nord_Julianos_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Pages turned are devotion paid. Skill books return piety; College work earns extra. |
-| PDV_Bless_Nord_Julianos_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Julianos sharpens your study. All spell costs -8%. Reaching a new magic skill rank grants one free cast of that school. |
-| PDV_Bless_Nord_Dibella_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Dibella notes the well-said word. Speech +5%. First impressions are warmer. |
-| PDV_Bless_Nord_Dibella_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | The right word at the right moment carries. After a strong persuasion, the next social check is steadier. |
+| PDV_Bless_Nord_Julianos_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Julianos reads your study. Novice and Apprentice spells cost 3% less. |
+| PDV_Bless_Nord_Julianos_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | Pages turned are devotion paid. Novice, Apprentice, and Adept spells cost 5% less. Skill books return piety; College work earns extra. |
+| PDV_Bless_Nord_Julianos_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Julianos sharpens your study. All spells cost 8% less. Reaching a new magic skill rank grants one free cast of that school. |
+| PDV_Bless_Nord_Dibella_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 1" | Passive SPEL | Dibella notes the well-said word. Your Speech improves by 5%, and first impressions are warmer. |
+| PDV_Bless_Nord_Dibella_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 2" | Passive SPEL | The right word at the right moment carries. Your Speech improves by 10%, and a strong persuasion steadies the next social check. |
 | PDV_Bless_Nord_Dibella_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Nord Section "Tier 3" | Passive SPEL | Dibella crowns the well-made hour. After a major persuasion or performance, the next equivalent check nearly succeeds on its own. Bards' College work earns strong devotion. |
 
 ### 10.3 Tier-up notifications (`PDV_Notif_Nord_*_Tier*Entry`)
@@ -222,7 +222,7 @@ Note on the `%s` token: this is a single-token substitution slot bound to the de
 | PDV_Msg_Nord_Shor_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates line 181; RaceDesign_Nord Section "Tier 3" | One-time on first Shor Devoted | Body: "Your sword stayed honest to the last blow, and Shor has counted every fall. The seat I kept is yours now. When the bridge comes, you will not cross it as a stranger." Title: "Shor Keeps Your Seat" |
 | PDV_Msg_Nord_Kynareth_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | TargetEndStates lines 182-183 | One-time on first Kynareth Devoted | Body: "You walked the long road in my sky. Kynareth's grace stays with you in wind and rain." Title: "Kynareth's Grace" |
 | PDV_Notif_Nord_Kynareth_ChampionAmbient_Storm | Notification | Noted | Player-2nd | 80/60 | TargetEndStates lines 182-183 | Kynareth Devoted + outdoor + storm; one per in-game day | The road feels held. |
-| PDV_Msg_Nord_Tsun_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Tier 3" | One-time on first Tsun Devoted | Body: "I have watched you stand where lesser men would have run, against odds that should have ended you. The weighing is done. You have the weight to cross, and I will not bar your way." Title: "Tsun Has Weighed You" |
+| PDV_Msg_Nord_Tsun_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Tier 3" | One-time on first Tsun Devoted | Body: "I have watched you stand where lesser men would have run, against odds that should have ended you. The weighing is done. You have the right to cross, and I will not bar your way." Title: "Tsun Has Weighed You" |
 | PDV_Msg_Nord_Stuhn_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Tier 3" | One-time on first Stuhn Devoted | Body: "You have spared the beaten and freed the bound when cruelty would have been easier. The open hand is your banner now. Stuhn knows the merciful sword by name, and yours is known." Title: "Stuhn Names You" |
 | PDV_Msg_Nord_Mara_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Tier 3" | One-time on first Mara Devoted | Body: "You have made hearths where there were none and held families that were breaking. The warmth you gave is given back. Come home to any door of mine, and find it open and warm." Title: "Mara Holds Your Door" |
 | PDV_Msg_Nord_Akatosh_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Tier 3" | One-time on first Akatosh Devoted | Body: "Day upon day, unbroken, you have kept faith while empires forgot theirs. The line does not fray in your hands. The dragon-god marks your continuance, and time keeps what you keep." Title: "Akatosh Keeps the Hour" |
@@ -266,7 +266,7 @@ Per-deity offer bodies are authored. Response options (Accept / Not Yet / Refuse
 | PDV_Msg_Nord_Kyne_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate"; TargetEndStates Section "Nord" | Dawn-fire; one Kyne offer per cooldown window | Title: "Kyne Reaches Back" Body: "You sleep where I am. You hunt where I watch. Will you carry My name now, or will you stay among the many?" |
 | PDV_Msg_Nord_Shor_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate" | Dawn-fire; per-deity cooldown | Title: "Shor Calls You" Body: "Your sword is honest. Your dead are counted by Tsun. Take a seat I am keeping for you, or wait and prove the road further." |
 | PDV_Msg_Nord_Talos_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate" | Dawn-fire; per-deity cooldown | Title: "Talos Marks the Defier" Body: "You would not let them silence me. Carry the old breath openly, and Tamriel will hear Talos through you. Or hold the secret and walk the broad road yet." |
-| PDV_Msg_Nord_Tsun_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate" | Dawn-fire; per-deity cooldown | Title: "Tsun Weighs You" Body: "You have stood the bad odds. Will you take the shield-thane's mark, or come at the bridge again unweighed?" |
+| PDV_Msg_Nord_Tsun_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate" | Dawn-fire; per-deity cooldown | Title: "Tsun Weighs You" Body: "You have withstood the odds. Will you take the shield-thane's mark, or come to Shor's bridge unweighed?" |
 | PDV_Msg_Nord_Stuhn_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate" | Dawn-fire; per-deity cooldown | Title: "Stuhn Sees the Open Hand" Body: "You have spared what you might have struck. Will you carry the ransom-keeper's name, or wait to be tested further?" |
 | PDV_Msg_Nord_Mara_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate" | Dawn-fire; per-deity cooldown | Title: "Mara Opens the Door" Body: "You have made a hearth where there was none. Will you let me hold it with you, or stay welcome among many?" |
 | PDV_Msg_Nord_Akatosh_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Primary-offer gate" | Dawn-fire; per-deity cooldown | Title: "Akatosh Marks the Hour" Body: "Your days have stayed steady. Take the dragon's keeping, or measure your hours further before you choose." |
@@ -319,6 +319,7 @@ God-voice. MessageBox. Body budget 500 hard / 280 target. Per `PDV_Architecture_
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
 | PDV_Msg_Nord_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Curse State Summary"; Race_Nord Section "Curse States" | Once on first transformation as Nord | Title: "Hircine's Pull" Body: "The beast is in the Companions' gift, but it stands against Shor's hall. Your seat on the bridge weakens while the hunt holds." |
+| PDV_Msg_Nord_CurseState_WerewolfCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Curse State Summary" | Once on werewolf cure completion | Title: "The Bridge Holds Again" Body: "The hunt is set down. Hircine's hold is broken, and your seat on the bridge holds firm once more. Shor's hall will name you when the day comes. Tsun marks that you ran with the beast, and does not forget." |
 | PDV_Msg_Nord_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Curse State Summary"; Race_Nord Section "Curse States" | Once on becoming vampire | Title: "Sovngarde Closes" Body: "Molag Bal's shadow has fallen across you. Sovngarde will not name you while you carry his thirst. Cure the curse, and even then the scar remains." |
 | PDV_Msg_Nord_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Nord Section "Curse State Summary" | Once on cure completion | Title: "The Door Stands Ajar" Body: "The thirst is gone. The bridge is open again. But Tsun has seen what walked into the dark, and that is not forgotten." |
 
@@ -367,7 +368,7 @@ Narrator voice. Budget 200 hard / 140 target. Tier 1 shared; Tier 2 and Tier 3 m
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Bless_Orc_Malacath_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Tier 1" | Passive SPEL; all modes | Malacath has noted your conduct. Smithing experience +5%; Orcish armor you wear adds 5 armor; disease resistance +10%; brawl damage +5%. |
+| PDV_Bless_Orc_Malacath_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Tier 1" | Passive SPEL; all modes | Malacath has noted your conduct. Your Smithing gains 5% more experience; Orcish armor you wear adds 5 armor; your resistance to disease rises by 10%; your brawls hit 5% harder. |
 | PDV_Bless_Orc_Malacath_T2_Stronghold | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Tier 2 -- Stronghold Orc" | Passive SPEL; Stronghold mode | Malacath watches the code carried in full. Your forge work tempers higher. Proving strength against a hard foe restores health after the fight. |
 | PDV_Bless_Orc_Malacath_T2_City | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Tier 2 -- City Orc" | Passive SPEL; City mode | Malacath sees the code held with no stronghold to hold it for you. Quality work earns his eye. Standing firm against scorn steadies your next words. |
 | PDV_Bless_Orc_Malacath_T2_LegionExile | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Orc "Tier 2 -- Legion/Exile Orc" | Passive SPEL; LegionExile mode | Malacath weighs the code carried under foreign command. A contract honored under pressure is counted. Endurance through the long march is counted. |
@@ -462,6 +463,7 @@ God-voice. MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Orc` "
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
 | PDV_Msg_Orc_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Werewolf"; Race_Orc "Curse States" | Once on first transformation as Orc | Title: "The Beast Tested" Body: "The wolf is in you. I do not turn away from it. But the beast is judged by my code as the smith is: is it strong, does it endure, does it serve the kin or break them? Prove the wolf." |
+| PDV_Msg_Orc_CurseState_WerewolfCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Werewolf" | Once on werewolf cure completion | Title: "The Wolf Set Aside" Body: "You have put the beast down. It was never outside my code; it was a thing to master, and you mastered it by ending it. You are an Orc still, and still tested. The kin will weigh the wolf longer than I will." |
 | PDV_Msg_Orc_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Vampire"; Race_Orc "Curse States" | Once on becoming vampire | Title: "Outside the Test" Body: "You feed on the living now. That is dependency, and dependency is the thing my code exists to refuse. You stand outside the test. Cure this, or I have nothing to witness." |
 | PDV_Msg_Orc_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Orc "Vampire" | Once on cure completion | Title: "Back Within Reach" Body: "The thirst is gone. You are a living Orc again, and a living Orc can be tested. Begin. The kin will remember the lapse longer than the code does." |
 
@@ -520,11 +522,11 @@ Narrator voice. Budget 200 hard / 140 target. Tier 1 and Tier 2 are the shared L
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Bless_Dunmer_GoodDaedra_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Tier 1" | Passive SPEL; shared Layer 1+2 | The ash-prayer is kept and the Good Daedra are acknowledged. Fire resistance +5%; magic resistance +5%. |
-| PDV_Bless_Dunmer_GoodDaedra_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Tier 2" | Passive SPEL; shared Layer 1+2 | The Reclamations hold steady around your exile. From dawn to midday, fire resistance +10% and magic resistance +5%. A power-attack kill on a strong foe returns stamina. |
+| PDV_Bless_Dunmer_GoodDaedra_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Tier 1" | Passive SPEL; shared Layer 1+2 | The ash-prayer is kept and the Good Daedra are acknowledged. Your resistance to fire rises by 5% and your resistance to magic rises by 5%. |
+| PDV_Bless_Dunmer_GoodDaedra_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Tier 2" | Passive SPEL; shared Layer 1+2 | The Reclamations hold steady around your exile. From dawn to midday, your resistance to fire rises by 10% and your resistance to magic rises by 5%. A power-attack kill on a strong foe returns stamina. |
 | PDV_Bless_Dunmer_Azura_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Azura focus" | Passive SPEL; Azura focus | Azura watches your thresholds. From dawn to noon, fire and magic resistance climb together; by night, magic costs 10% less. |
-| PDV_Bless_Dunmer_Boethiah_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Boethiah focus" | Passive SPEL; Boethiah focus | Boethiah marks proven strength. After felling a significant foe, carry weight +25 and lighter power attacks for a day. The ancestors record the victory. |
-| PDV_Bless_Dunmer_Mephala_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Mephala focus" | Passive SPEL; Mephala focus | Mephala draws the web close. Poison resistance +20%; the hidden network returns 5% more gold. Discretion opens doors others never see. |
+| PDV_Bless_Dunmer_Boethiah_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Boethiah focus" | Passive SPEL; Boethiah focus | Boethiah marks proven strength. After felling a significant foe, you carry 25 more weight and your power attacks grow lighter for a day. The ancestors record the victory. |
+| PDV_Bless_Dunmer_Mephala_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Dunmer "Mephala focus" | Passive SPEL; Mephala focus | Mephala draws the web close. Your resistance to poison rises by 20% and the hidden network returns 5% more gold. Discretion opens doors others never see. |
 
 ### 12.4 Tier-up notifications (`PDV_Notif_Dunmer_*`)
 
@@ -635,6 +637,7 @@ MessageBox. Body budget 500 hard / 280 target. Fires once per cure cycle. **Voic
 | PDV_Msg_Dunmer_CurseState_VampireOnset_AshSilenced | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Dunmer "Curse States"; TargetEndStates line 322 | Once on becoming vampire; sets posture Silent; voice deviation justified above | Title: "The Ash-Prayer Silenced" Body: "You set the ash and speak the prayer, and for the first time in your life nothing answers. The ancestors do not speak to the undead. The silence is total, and it is yours now." |
 | PDV_Msg_Dunmer_CurseState_VampireCured_Scarred | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Curse States"; TargetEndStates line 322 | Once on cure; sets posture RestoredScarred | Title: "The Ancestors Answer" Body: "The ash-prayer carries again. We hear you. But we heard the silence too, and it does not leave us, or you. Return -- scarred, and still ours." |
 | PDV_Msg_Dunmer_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Werewolf"; Race_Dunmer "Curse States" | Once on first transformation; sets posture Strained | Title: "Ritually Unclean" Body: "The beast in you has no place in the ash or the Reclamations. The ancestors do not turn away, but they answer thinly now. Hircine offers nothing to fill the gap." |
+| PDV_Msg_Dunmer_CurseState_WerewolfCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Dunmer "Curse States" | Once on werewolf cure; clears posture Strained | Title: "The Ash Runs Clean" Body: "The beast is set down. The ritual taint lifts, and the ancestors answer at full voice once more. The ash takes your prayer without strain. What was unclean is washed; carry the Reclamations on." |
 
 ### 12.12 Shrine and privilege dialogue topics (`PDV_Dlog_Dunmer_*`)
 
@@ -656,9 +659,9 @@ A Faithful no-focus Dunmer in steady play (occasional Grey Quarter beat, portabl
 
 Tier-up notifications: at most one per save per direction; Faithful entry is suppressed on a same-dawn focus offer. Posture readouts fire only on posture transitions, which are rare (curse onset/cure).
 
-## 13. Altmer (full draft; implementation-spec closed)
+## 13. Altmer (full draft)
 
-Altmer was the only open implementation-spec in the earlier manifest pass. The 2026-05-30 closeout in `PDV_RaceDesign_Altmer.md` locks crisis handling, final crisis trigger list, contextual-favor lanes, and focused-deity hook posture, so the previously gated slot groups are now drafted in Section 13.13.
+Altmer was the last Partial implementation-spec per `PDV_TargetEndStates_1.0.md` lines 76-87. For the Phase 20 content lock the spec is closed and every slot is authored: the previously gated contextual-favor surfacings, the Lorkhan crisis-of-faith copy, and the post-vampire Exiled Altmer micro-path flavor are now drafted in Section 13.13.
 
 `ThalmorAlignment` is the orthodoxy/coherence track (`0-30 Heterodox`, `31-69 Orthodox Moderate`, `70-100 Thalmor Devout`). Layer 1 Auri-El is always active. Focused commitment uses the shared patron state.
 
@@ -682,12 +685,12 @@ Narrator voice. Budget 200 hard / 140 target. Tier 1 and Tier 2 are the shared A
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Bless_Altmer_Pantheon_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Tier 1" | Passive SPEL; shared | Auri-El is acknowledged at dawn. Spell cost -3% in all schools; magic resistance +5%. |
+| PDV_Bless_Altmer_Pantheon_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Tier 1" | Passive SPEL; shared | Auri-El is acknowledged at dawn. Spells in all schools cost 3% less and your resistance to magic rises by 5%. |
 | PDV_Bless_Altmer_Pantheon_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Tier 2" | Passive SPEL; shared | The pantheon relationship is stable and coherent. At dawn, a spell-cost reduction holds until noon. Advancing a magic skill makes the next cast of that school free. |
 | PDV_Bless_Altmer_AuriEl_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Auri-El focus" | Passive SPEL; Auri-El focus | Auri-El watches your return. Magic regenerates 25% faster out of combat; from dawn to midday, spells cost 15% less. |
 | PDV_Bless_Altmer_Magnus_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Magnus focus" | Passive SPEL; Magnus focus | Magnus marks the scholar's discipline. Alteration and Illusion cost 10% less; magic regenerates 20% faster out of combat. |
-| PDV_Bless_Altmer_Trinimac_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Trinimac focus" | Passive SPEL; Trinimac focus; ThalmorAlignment 70+ | Trinimac blesses the project defended by force. One-handed damage +5%; an enforcement act under high orthodoxy grants armor +15 for a day. |
-| PDV_Bless_Altmer_Xarxes_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Xarxes focus" | Passive SPEL; Xarxes focus | Xarxes keeps your lineage. Lockpicking and Alteration +5%; a quest of real ancestry returns a day of cheaper magic. |
+| PDV_Bless_Altmer_Trinimac_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Trinimac focus" | Passive SPEL; Trinimac focus; ThalmorAlignment 70+ | Trinimac blesses the project defended by force. Your one-handed attacks strike 5% harder, and an enforcement act under high orthodoxy raises your armor by 15 for a day. |
+| PDV_Bless_Altmer_Xarxes_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Xarxes focus" | Passive SPEL; Xarxes focus | Xarxes keeps your lineage. Your Lockpicking and Alteration improve by 5%, and a quest of real ancestry returns a day of cheaper magic. |
 | PDV_Bless_Altmer_Syrabane_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Altmer "Syrabane focus" | Passive SPEL; Syrabane focus | Syrabane shields the apprentice. Magic-using foes deal 15% less damage; your wards absorb 15% more. |
 
 ### 13.3 Tier-up notifications (`PDV_Notif_Altmer_*`)
@@ -801,46 +804,59 @@ Player-second-person on topic name. Branch dialogue authored separately in CK. T
 | PDV_Dlog_Altmer_CollegeMage_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Altmer "Magnus focus" | Magnus or Syrabane focus; College context | "The arts are my devotion. Show me what the College keeps closed." |
 | PDV_Dlog_Altmer_ThalmorOfficer_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Altmer "Trinimac focus" | Trinimac Devoted; ThalmorAlignment 70+ | "I defend the project by the sword. The orthodoxy knows my name." |
 
-### 13.13 Contextual favors and closeout slots
+### 13.13 Contextual favor, Lorkhan crisis, and Exiled path (drafted)
 
-The 2026-05-30 Altmer closeout in `PDV_RaceDesign_Altmer.md` locks the final crisis trigger list, resolution routes, contextual-favor lane families, and focused-deity hook posture. These rows draft the formerly gated slot groups.
+Spec closed for Phase 20 content lock. The contextual-favor lanes are keyed to the three locked alignment paths (Altmer carries no generic broad lane per `RaceDesign_Altmer`): ThalmorOrthodox, DivineBody, Psijic. Noted favor is player-second-person (Notification, 80/60); Marked favor is god-voice Auri-El, the always-active foundation (MessageBox, 500/280). The four Lorkhan crisis beats are the locked trigger list (`PDV_ALT_CRISIS_FAITH`): the Dragonborn declaration, the Sovngarde beat, a marriage beat, and the Companions beast-blood fork; narrator voice, matching the Section 13.11 dissonance teaching. The post-vampire Exiled micro-path is authored as optional enhancement flavor after the terminal onset in Section 13.10.
 
-#### 13.13a Contextual favor surfacings
+Ratification note (2026-05-31 AEST): `MarriageBeat` is the current third
+crisis beat, presented in player-facing terms as Marriage / Mortal Continuity,
+not Talos/Thalmor contradiction. Lore cross-review treats the beat as
+household, lineage, embodied attachment, and continuity inside Lorkhan's mortal
+world; it is not anti-Mara and not a claim that Altmer marriage is invalid.
+Talos/Thalmor can only return as a later additional crisis row through an
+explicit decision. The two wired proof reward rows use
+`PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance` for dawn steadiness and
+`PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended` for orthodox cost.
 
-Narrator voice unless a row says otherwise. Notifications use budget 80 hard / 60 target. MessageBox rows use body budget 500 hard / 280 target and title budget 40 / 30. Favor rows require the global one-active-favor cap.
-
-| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
-|---|---|---|---|---|---|---|---|
-| PDV_Notif_Altmer_FavorNoted_Shared_DawnSteadiness | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Contextual Favor Table" | Dawn rite after Lorkhan pressure or crisis; one per day | The dawn holds. The dissonance settles for now. |
-| PDV_Notif_Altmer_FavorNoted_Shared_CoherenceHeld | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Shared coherence" | Three coherent days; no contradictory major signal | Your acts still make one shape. The path holds. |
-| PDV_Msg_Altmer_FavorMarked_Orthodox_CostlyEnforcement | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Thalmor Orthodox" | High alignment plus costly, curated enforcement only | Title: "Orthodoxy Held" Body: "This was not obedience for its own sake. You defended the project where compromise would have been easier. The old order recognizes the cost." |
-| PDV_Notif_Altmer_FavorNoted_DivineBody_BalancedCultivation | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Divine Body" | Moderate alignment held through a real choice | Neither zeal nor collapse. The middle path remains yours. |
-| PDV_Msg_Altmer_FavorMarked_Psijic_CrisisStudy | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Psijic / Heterodox" | Major crisis resolved through study/self-cultivation | Title: "Doubt Given Shape" Body: "You did not flee the contradiction. You studied it until it became a path you could walk. The old doubt quiets, not because it is gone, but because it is understood." |
-| PDV_Notif_Altmer_FavorNoted_AuriEl_ReturnReaffirmed | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Auri-El focus" | Auri-El focused crisis resolution or dawn rite | Auri-El's dawn does not erase the scar. It shows the way through. |
-| PDV_Notif_Altmer_FavorNoted_Magnus_ArtsRoad | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Magnus focus" | Magic milestone, Eye/College stage, curated spell learned | The arts become a road again. Magnus marks the discipline. |
-| PDV_Notif_Altmer_FavorNoted_Trinimac_CivilizationDefended | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Trinimac focus" | Orthodoxy-gated threat defeated; meaningful context only | Trinimac notes the defense, not the violence. |
-| PDV_Notif_Altmer_FavorNoted_Xarxes_RecordKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Xarxes focus" | Record/lineage/truth preserved; one-shot marker | The record holds. Xarxes keeps what must not be lost. |
-| PDV_Notif_Altmer_FavorNoted_Syrabane_Warded | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Syrabane focus" | Protection milestone, apprentice aid, anti-mage survival | The ward held when it mattered. Syrabane was near. |
-
-#### 13.13b Lorkhan crisis-of-faith copy
-
-Crisis MessageBoxes are narrator voice. They fire once per crisis source and replace ordinary penalty presentation for that source.
+Contextual favor -- ThalmorOrthodox lane:
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Msg_Altmer_LorkhanCrisis_DragonbornDeclaration | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Dragonborn declaration" | One-time; starts `Dissonant` | Title: "Named By The Mortal Story" Body: "The world has named you Dragonborn. To Skyrim, this is glory. To Altmer faith, it is a mortal story closing around you. The path is not broken, but it has become harder to hold." |
-| PDV_Msg_Altmer_LorkhanCrisis_SovngardeBeat | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Sovngarde / Tsun reality" | One-time; strongest crisis flavor | Title: "Shor's Hall Is Real" Body: "You have stood where Altmer doctrine would rather not look. Shor's dead have a hall, and its bridge had a guardian. This does not answer your faith. It wounds it with evidence." |
-| PDV_Msg_Altmer_LorkhanCrisis_TalosContradiction | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Talos / Thalmor contradiction" | Costly Talos aid, shrine protection, or hypocrisy proof only | Title: "The Forbidden Question" Body: "Talos should be simple. Heresy. Usurpation. A mortal lie. Yet the world keeps offering evidence that simplicity cannot hold. What you do next will decide whether this becomes doubt or repair." |
-| PDV_Msg_Altmer_LorkhanCrisis_CompanionsFork | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Companions / Wuuthrad / beast fork" | Companions, Wuuthrad, or nearby beast pressure; curse hard halt overrides | Title: "Ysgramor's Shadow" Body: "The old human war story has touched you. Honor, beast-blood, Wuuthrad, Shor's people -- none of it is neutral to an Altmer soul. You can pass through it, but not without naming what it cost." |
+| PDV_Notif_Altmer_FavorNoted_ThalmorOrthodox_Enforcement | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | After-act; one per enforcement act, daily cap | Heresy named and answered. The orthodoxy marks the hand that enforces. |
+| PDV_Notif_Altmer_FavorNoted_ThalmorOrthodox_OrthodoxRite | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Environmental; dawn rite at an orthodox shrine, daily cap | The dawn kept by the strict rite. Doctrine is served as written. |
+| PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Rare major; a costly act defending orthodoxy by the sword | Title: "Auri-El Marks the Sword" Body: "You did not only pray for the project; you bled for it. The hardest path is the one that answers Lorkhan's world with steel, and you walked into the cost with open eyes. The dawn knows what it took from you." |
 
-#### 13.13c Post-vampire Exiled Altmer flavor
-
-These rows are enhancement custom content. They do not contradict the locked curse rule: active vampirism has no clean Altmer restoration path, and the Exiled path is capped at the lowest recognition band.
+Contextual favor -- DivineBody lane:
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Msg_Altmer_VampireExiledPath_Entry | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Vampire"; Race_Altmer "Exiled Altmer" | Optional enhancement after vampire onset; Tier 1 cap only | Title: "Exile From The Dawn" Body: "Auri-El is closed while you flee the sun. Still, an Altmer does not become nothing because the records cast them out. What remains is exile: a narrow discipline, a name kept privately, never a full return." |
-| PDV_Msg_Altmer_VampireExiledPath_Recognition | Status spell readout | Noted | Narrator | 240/180 | RaceDesign_Altmer "Vampire"; Race_Altmer "Exiled Altmer" | Survey/recognition while vampire micro-path is active | You are exiled from the dawn, not restored to it. A thin discipline remains, capped low, held only by refusal to collapse. |
+| PDV_Notif_Altmer_FavorNoted_DivineBody_Cultivation | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | After-act; mastery milestone, daily cap | Mastery earned and refined. You raise yourself as the project asks. |
+| PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Environmental; unforced dawn observance, daily cap | You greet the dawn unforced. The return is honored, not compelled. |
+| PDV_Msg_Altmer_FavorMarked_DivineBody_ReturnAffirmed | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Rare major; affirming the return without enforcement | Title: "Auri-El Marks the Return" Body: "You turned toward the dawn when the mortal world offered every reason to forget it, and you did it without a whip at anyone's back. This is the return as it was meant: chosen, not enforced. I keep it." |
+
+Contextual favor -- Psijic lane:
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Altmer_FavorNoted_Psijic_OldWaysMeditation | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Environmental; private meditation, daily cap | The Old Ways kept in private. The quiet path costs you least. |
+| PDV_Notif_Altmer_FavorNoted_Psijic_ForbiddenLore | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | After-act; heterodox lore recovered, daily cap | Hidden knowledge recovered. What is written outlasts what is enforced. |
+| PDV_Msg_Altmer_FavorMarked_Psijic_UnseenStep | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Worship Structure"; TargetEndStates line 146 favor-lane closeout | Rare major; a lonely, unrewarded Old Ways moment | Title: "Auri-El Marks the Quiet Path" Body: "You kept the Old Ways where no one could see and no one could reward you. The heterodox road is lonely and easy to abandon, and you did not abandon it. The foundation holds you still." |
+
+Lorkhan crisis-of-faith (`PDV_Msg_Altmer_LorkhanCrisis_*`):
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_LorkhanCrisis_DragonbornDeclaration | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Obviousness rule"; TargetEndStates line 146 crisis-trigger closeout | One-time on being named Dragonborn | Title: "Named for the Mortal World" Body: "They call you Dragonborn -- a mortal soul carrying the dragon's, blessed by the world Lorkhan made and the people who live in it. The gift is real. So is the dissonance: the thing that honors you is the thing your ancestors died trying to escape. You will carry both." |
+| PDV_Msg_Altmer_LorkhanCrisis_SovngardeBeat | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Obviousness rule"; TargetEndStates line 146 crisis-trigger closeout | One-time on the Sovngarde beat | Title: "The Hall That Should Not Be" Body: "Sovngarde is real -- a hall of mortal dead who feast and do not dissolve, who chose to stay in the world rather than return beyond it. To an Altmer this is the trap made beautiful. You have seen it now, and you cannot unsee that the mortal world keeps its own." |
+| PDV_Msg_Altmer_LorkhanCrisis_MarriageBeat | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Obviousness rule"; TargetEndStates line 146 crisis-trigger closeout | One-time on taking a spouse | Title: "Bound to the World" Body: "You have taken a spouse, a door, a hearth -- ties to the mortal world Lorkhan built. The Psijics would call it attachment; the orthodox would call it descent. It may be the truest thing you have done, or the deepest forgetting. Only you can say which." |
+| PDV_Msg_Altmer_LorkhanCrisis_CompanionsFork | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Altmer "Obviousness rule"; TargetEndStates line 146 crisis-trigger closeout | One-time at the Companions beast-blood fork | Title: "The Beast at the Threshold" Body: "The Companions offer you the blood of the beast -- to become, by choice, the furthest thing from spirit an Altmer can be. The whole of your faith is to rise out of flesh, not deeper into it. Refuse, and you keep the project. Accept, and there is no doctrine left to hold you." |
+
+Post-vampire Exiled Altmer path (`PDV_Msg_Altmer_VampireExiledPath_*`, optional enhancement flavor after the Section 13.10 terminal onset):
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Altmer_VampireExiledPath_Entry | MessageBox | Marked | Narrator | 500/280 | TargetEndStates Section 21.2 line 1536 enhancement content | One-time after vampire onset, if the Exiled path is enabled | Title: "The Exile's Road" Body: "Auri-El has closed, and the records will not hold your name. What remains is not devotion but exile -- a long walk outside the return, among others the dawn has let go. There is no path back. There is only how you carry the dark you have become." |
+| PDV_Msg_Altmer_VampireExiledPath_Recognition | MessageBox | Marked | Narrator | 500/280 | TargetEndStates Section 21.2 line 1536 enhancement content | On reaching the Exiled-path recognition beat | Title: "Known Among the Exiled" Body: "The others outside the dawn know you now -- the cast-out Altmer, the ones the return forgot. It is not a congregation and it is not grace. It is recognition, of a kind, among those who share the same closed door. You are not alone in the exile, even if you stand alone before the god." |
 
 ### 13.14 Altmer firing-density sanity
 
@@ -850,7 +866,7 @@ A Faithful Divine Body Altmer in steady play (dawn observance, College progressi
 - Noted: ~1-2 per day in steady play (dawn ambient/favor after pressure, occasional study milestone, rare contextual favor). Lorkhan pressure notifications are one-time-per-source and main-quest-paced, so they do not compound. Inside the `<2 per h` target.
 - Quiet: uncounted; icon-only.
 
-Tier-up notifications: one per save per direction; Faithful entry suppressed on a same-dawn focus offer. ThalmorAlignment band crossings are infrequent (the track moves on authored enforcement/defiance acts). Contextual-favor rows are now included in this estimate and are constrained by the global one-active-favor cap.
+Tier-up notifications: one per save per direction; Faithful entry suppressed on a same-dawn focus offer. ThalmorAlignment band crossings are infrequent (the track moves on authored enforcement/defiance acts). The Section 13.13 contextual-favor rows are now drafted; each lane is capped at one Noted favor per family per day with a single rare Marked, keeping the lane inside the `<2 per h` Noted target.
 
 ## 14. Khajiit (full draft)
 
@@ -893,13 +909,13 @@ Narrator voice. Budget 200 hard / 140 target. The substrate baseline is always a
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
 | PDV_Bless_Khajiit_Lunar_Substrate | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Lunar Substrate" | Passive SPEL; always active | The Lunar Lattice holds you. Night vision is keener after dark; outdoor night life and caravan kinship are felt as devotion. |
-| PDV_Bless_Khajiit_Lunar_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Tier 1" | Passive SPEL; shared | The moons have noticed how you move. Moving outdoors at night, stamina regenerates 5% faster; disease resistance +10%. |
+| PDV_Bless_Khajiit_Lunar_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Tier 1" | Passive SPEL; shared | The moons have noticed how you move. At night, your stamina regenerates 5% faster and your resistance to disease rises by 10%. |
 | PDV_Bless_Khajiit_Lunar_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Tier 2" | Passive SPEL; shared | The Lattice holds you steady. Outdoor night travel carries more; cold and storms press lighter; full moons strengthen the day's devotion. |
 | PDV_Bless_Khajiit_Khenarthi_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Khenarthi Champion" | Passive SPEL; Khenarthi focus | Khenarthi names you to the road. Sprinting outdoors drains 15% less stamina; storms no longer chill you; outdoor sleep restores health and stamina both. |
 | PDV_Bless_Khajiit_Azurah_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Azurah Champion" | Passive SPEL; Azurah focus | Azurah watches your thresholds. Spells cost 10% less at night and 15% less at dawn and dusk. The hinges of the world turn where you stand. |
 | PDV_Bless_Khajiit_BaanDar_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Baan Dar Champion" | Passive SPEL; Baan Dar focus | Baan Dar walks with the pariah. Once a week, a near-fatal escape returns a day-long pulse of fortune. Acts beyond the city walls weigh heavier. |
 | PDV_Bless_Khajiit_Rajhin_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Rajhin Champion" | Passive SPEL; Rajhin focus | Rajhin marks the artful thief. A theft from a notable target opens a brief unseen window; the first strike of a fight cuts deeper. |
-| PDV_Bless_Khajiit_Alkosh_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Alkosh Champion" | Passive SPEL; Alkosh focus | Alkosh keeps the cosmic line. Fire resistance +15%; felling a named dragon grants a two-day blessing of order. |
+| PDV_Bless_Khajiit_Alkosh_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Alkosh Champion" | Passive SPEL; Alkosh focus | Alkosh keeps the cosmic line. Your resistance to fire rises by 15%, and felling a named dragon grants a two-day blessing of order. |
 
 ### 14.4 Tier-up notifications (`PDV_Notif_Khajiit_*`)
 
@@ -957,7 +973,7 @@ Narrator voice. Body budget 240 hard / 180 target. One Broad row and one Focused
 
 ### 14.9 Contextual favor surfacings
 
-`RaceDesign_Khajiit` does not enumerate a formal contextual-favor table the way the Nord, Imperial, Redguard, and Dunmer sheets do; the rows below are derived from its "In-game hook cross-check", the Tier 2 path-specific notes, and the Champion specifics. The lane families should be re-checked when a formal Khajiit favor table is added to the race sheet. Player-second-person on Noted; god-voice on Marked. The Baan Dar reversal is a `Rare major favor` per `PDV_TargetEndStates_1.0.md` line 112.
+Six trigger families, formalized from `RaceDesign_Khajiit` "In-game hook cross-check", Tier 2 path-specific notes, and Champion specifics. **Substrate/Road** (daily environmental and caravan-kinship); **Khenarthi** (open-road wind grace); **Azurah** (threshold-crossings); **Baan Dar** (adversity and near-fatal reversal); **Rajhin** (elegant theft); **Alkosh** (dragon and order). Player-second-person on Noted; god-voice on Marked. The Baan Dar reversal is a `Rare major favor` per `PDV_TargetEndStates_1.0.md` line 112.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -989,6 +1005,7 @@ MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Khajiit` "Curse S
 | PDV_Msg_Khajiit_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Vampire"; sets posture Corrupted | Once on becoming vampire | Title: "The Lattice Corrupted" Body: "The thirst has taken you, little moon. The Lattice does not cast you out -- the moons do not disown their own -- but the caravans will fear you, and rightly. I will not look away. Few of the others can say the same." |
 | PDV_Msg_Khajiit_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Vampire" | Once on cure; clears posture toward Normal | Title: "The Lattice Clears" Body: "The thirst is gone. The corruption lifts from the Lattice, and the caravans may learn your face again. Walk back into the moonlight. It was always waiting." |
 | PDV_Msg_Khajiit_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Werewolf"; sets posture Strained | Once on first transformation | Title: "A Competing Shape" Body: "Hircine has given you another shape. The moons are about form, and you carry one too many now. You are still Khajiit -- strained, watched, but not erased. The community will fear the wolf. Hold to the road." |
+| PDV_Msg_Khajiit_CurseState_WerewolfCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Khajiit "Werewolf" | Once on werewolf cure; clears posture toward Normal | Title: "One Shape Again" Body: "The wolf is set down, little moon. The Lattice holds a single shape once more, and the extra form no longer pulls against the moons. The caravans will lose their fear in time. The road is yours again." |
 | PDV_Msg_Khajiit_CurseState_ShadowDriftEntry | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Khajiit "ShadowDrift boundary"; sets posture ShadowDrift | Once on entering ShadowDrift; voice deviation justified above | Title: "The Shadow Between Stars" Body: "You have lived too long in the shadow -- night-only, predatory, drawn to the dark between the moons. The Lattice loosens its hold. Khenarthi's road and Azurah's twilight both feel far away now." |
 
 ### 14.12 Shrine and privilege dialogue topics (`PDV_Dlog_Khajiit_*`)
@@ -1036,31 +1053,31 @@ Narrator voice. Budget 200 hard / 140 target. Tier 1/2/3 per deity. Anti-farm: p
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Bless_Imperial_Akatosh_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Akatosh steadies your civic hours. Time-pressure checks are more forgiving; dragon breath resistance +5%. |
+| PDV_Bless_Imperial_Akatosh_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Akatosh steadies your civic hours. Time-pressure checks are more forgiving and your resistance to dragon breath rises by 5%. |
 | PDV_Bless_Imperial_Akatosh_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Akatosh rewards the unwavering. Long devotion streaks return bonus piety; dragon-order service scores strongly. |
 | PDV_Bless_Imperial_Akatosh_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Akatosh keeps the long order. Unbroken devotion of fourteen days returns cumulative skill experience; the Amulet of Akatosh doubles its effect. |
-| PDV_Bless_Imperial_Talos_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Talos answers even the quiet faith. Shout recharge +5%; civil war service is felt as worship. |
+| PDV_Bless_Imperial_Talos_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Talos answers even the quiet faith. Your shouts recharge 5% faster, and civil war service is felt as worship. |
 | PDV_Bless_Imperial_Talos_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Talos answers defiance. At Private Defiant, hidden shrines bless deeper; at Open Defiant, devotion gains a further measure. |
-| PDV_Bless_Imperial_Talos_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Talos marks faith held against the law. Shout recharge +15%; Stormcloak ground and defiance return a surge of stamina and health. |
-| PDV_Bless_Imperial_Kynareth_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Kynareth shelters the traveler. Cold and storm resistance +10%; outdoor stamina regen +5%. |
+| PDV_Bless_Imperial_Talos_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Talos marks faith held against the law. Your shouts recharge 15% faster, and Stormcloak ground and defiance return a surge of stamina and health. |
+| PDV_Bless_Imperial_Kynareth_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Kynareth shelters the traveler. Your resistance to cold and storms rises by 10%, and your stamina regenerates 5% faster outdoors. |
 | PDV_Bless_Imperial_Kynareth_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Kynareth steadies the open way. Outdoor rest fully restores stamina; her shrine cleansing fully restores health. |
 | PDV_Bless_Imperial_Kynareth_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Kynareth grants passage. In storm and rain, power attacks cost 10% less stamina; outdoor sleep removes all exposure penalty. |
 | PDV_Bless_Imperial_Mara_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Mara counts your kindness. Healing magic is 5% more effective; vendors offer better prices. |
 | PDV_Bless_Imperial_Mara_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Mara holds your household. Marriage and community-restoration work earn extra devotion; her temple grants healing at reduced cost. |
 | PDV_Bless_Imperial_Mara_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Mara warms the people's house. Helping a family restores full health on next rest; her temple heals you freely once a week. |
-| PDV_Bless_Imperial_Zenithar_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Zenithar weighs honest work. Crafting experience +5%; honest commerce is felt as worship. |
+| PDV_Bless_Imperial_Zenithar_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Zenithar weighs honest work. You gain 5% more crafting experience; honest commerce is felt as worship. |
 | PDV_Bless_Imperial_Zenithar_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Zenithar honors the finished work. After a major crafting project, your next trade goes favorably. |
 | PDV_Bless_Imperial_Zenithar_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Zenithar sanctifies honest work. A crafted item may rise one quality step beyond your perk rank; honest trade steadies your next persuasion. |
-| PDV_Bless_Imperial_Arkay_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Arkay marks the keeper of rites. Disease resistance +10%; undead deal 5% less harm. |
+| PDV_Bless_Imperial_Arkay_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Arkay marks the keeper of rites. Your resistance to disease rises by 10% and undead deal 5% less harm. |
 | PDV_Bless_Imperial_Arkay_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Arkay keeps the death-rites. Completing one restores full health on next rest; undead deal 10% less harm. |
 | PDV_Bless_Imperial_Arkay_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Arkay's covenant holds. Undead deal 20% less harm; a completed death-rite restores full health on next rest. |
-| PDV_Bless_Imperial_Stendarr_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Stendarr counts the spared hand. Brawl damage +5%; Vigilants of Stendarr stay neutral. |
+| PDV_Bless_Imperial_Stendarr_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Stendarr counts the spared hand. Your brawling strikes 5% harder; Vigilants of Stendarr stay neutral. |
 | PDV_Bless_Imperial_Stendarr_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Stendarr arms the merciful. After mercy chosen in dialogue, the next fight grants an armor boost; Vigilants treat you as a peer. |
 | PDV_Bless_Imperial_Stendarr_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Stendarr makes mercy your armor. Sparing a surrendering foe grants 15% damage resistance for the rest of the fight. |
-| PDV_Bless_Imperial_Julianos_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Julianos reads your study. Novice and Apprentice spells cost 3% less. |
+| PDV_Bless_Imperial_Julianos_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Julianos weighs your reasoning. Your Novice and Apprentice spells cost 3% less to cast. |
 | PDV_Bless_Imperial_Julianos_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Julianos rewards study. Skill books return piety; College and law-adjacent work scores. |
-| PDV_Bless_Imperial_Julianos_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Julianos sharpens applied wisdom. All spell costs -8%; a new magic skill rank grants one free cast of that school. |
-| PDV_Bless_Imperial_Dibella_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Dibella notes the well-said word. Speech +5%; first impressions are warmer. |
+| PDV_Bless_Imperial_Julianos_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Julianos sharpens applied wisdom. All spells cost 8% less, and a new magic skill rank grants one free cast of that school. |
+| PDV_Bless_Imperial_Dibella_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 1" | Passive SPEL | Dibella favors the gracious tongue. Your Speech improves by 5%, and first impressions are warmer. |
 | PDV_Bless_Imperial_Dibella_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 2" | Passive SPEL | Dibella carries the right word. After a strong persuasion, the next social check is steadier. |
 | PDV_Bless_Imperial_Dibella_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Imperial "Tier 3" | Passive SPEL | Dibella crowns civic grace. After a major persuasion or performance, the next equivalent check succeeds on its own, once a day. |
 
@@ -1160,6 +1177,7 @@ MessageBox. Body budget 500 hard / 280 target. **Voice deviation:** all three ro
 | PDV_Msg_Imperial_CurseState_VampireOnset | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Imperial "Vampire"; Race_Imperial "Curse States" | Once on becoming vampire; Divine devotion halts | Title: "The Civic Faith Halts" Body: "You are undead now, and the Nine Divines are a religion of the living community. The civic faith does not bend to accommodate this. It stops. The Concordat no longer touches your soul, only your safety." |
 | PDV_Msg_Imperial_CurseState_VampireCured | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Imperial "Vampire" | Once on cure; resumes from lowered floor | Title: "Re-Entry From a Lower Floor" Body: "The undeath is lifted. The Nine Divines are open to you again -- but the civic faith resumes from a lowered floor, not your old standing. The community religion remembers the absence." |
 | PDV_Msg_Imperial_CurseState_WerewolfOnset | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Imperial "Werewolf"; Race_Imperial "Curse States" | Once on first transformation | Title: "Homeless Within the Faith" Body: "The beast is in you, and the Nine Divines have no place for it. Your devotion continues, weaker, its civic-facing parts thinned. Hircine offers an Imperial nothing. You are isolated within your own faith." |
+| PDV_Msg_Imperial_CurseState_WerewolfCured | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Imperial "Werewolf" | Once on werewolf cure; resumes from lowered floor | Title: "Homecoming Within the Faith" Body: "The beast is set aside. The Nine Divines make room again, and the civic-facing devotion thickens back toward what it was. The community religion notes the absence, as it always does, and resumes from a lowered floor." |
 
 ### 15.11 Shrine and privilege dialogue topics (`PDV_Dlog_Imperial_*`)
 
@@ -1208,14 +1226,14 @@ Narrator voice. Budget 200 hard / 140 target. Tier 1 shared; Tier 2 sect-shaped;
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Bless_Redguard_Yokudan_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 1" | Passive SPEL; all sects | Satakal's cycle is acknowledged and Tu'whacca's guidance sought. Disease resistance +10%; one-handed damage +3%; felling undead returns minor health. |
+| PDV_Bless_Redguard_Yokudan_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 1" | Passive SPEL; all sects | Satakal's cycle is acknowledged and Tu'whacca's guidance sought. Your resistance to disease rises by 10%; your one-handed attacks strike 3% harder; felling undead returns minor health. |
 | PDV_Bless_Redguard_Crown_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 2 -- Crown" | Passive SPEL; Crown sect | The Yokudan gods recognize a kept orthodoxy. Honorable combat sharpens your blade for a time; tomb sites draw the ancestors near. |
 | PDV_Bless_Redguard_Forebear_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 2 -- Forebear" | Passive SPEL; Forebear sect | The Yokudan gods recognize the way made in exile. Surviving hard odds or a long road returns stamina; honored contracts earn Tava's favor. |
 | PDV_Bless_Redguard_AshAbah_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 2 -- Ash'abah" | Passive SPEL; Ash'abah sect | The Yokudan gods recognize the unclean duty borne. Cleansing a tomb restores full health on next rest; undead deal 15% less harm. |
 | PDV_Bless_Redguard_Satakal_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Satakal Champion" | Passive SPEL; Satakal focus | Satakal sheds the Worldskin around you. A quest of cosmic or generational stakes returns a day of fear resistance and health regeneration. |
 | PDV_Bless_Redguard_Tuwhacca_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tu'whacca Champion" | Passive SPEL; Tu'whacca focus | Tu'whacca draws the Far Shores nearer. Undead deal up to 25% less harm; a completed death-rite restores full health, and the dead feel present at the tombs. |
 | PDV_Bless_Redguard_Ruptga_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Ruptga Champion" | Passive SPEL; Ruptga focus | Ruptga charts your way. Making a path through the impossible returns a day of steady bonus across your disciplines. |
-| PDV_Bless_Redguard_Leki_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Leki Champion" | Passive SPEL; Leki focus | Leki makes the blade discipline holy. One-handed damage +8%; honorable sword-work returns power-attack stamina. |
+| PDV_Bless_Redguard_Leki_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Leki Champion" | Passive SPEL; Leki focus | Leki makes the blade discipline holy. Your one-handed attacks strike 8% harder, and honorable sword-work returns power-attack stamina. |
 | PDV_Bless_Redguard_Tava_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tava Champion" | Passive SPEL; Tava focus | Tava rides the wind with you. Storms no longer penalize the open road; sprinting drains 15% less stamina; a long journey's end restores health and stamina. |
 | PDV_Bless_Redguard_HoonDing_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "HoonDing Champion" | Passive SPEL; HoonDing focus | HoonDing makes the way. Once a week, an impossible-odds victory returns a day-long surge of combat strength. |
 
@@ -1278,7 +1296,7 @@ God-voice on offer bodies; player-second-person on responses. MessageBox. Body b
 | PDV_Msg_Redguard_Leki_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Leki's Blade" Body: "Your sword-work is disciplined and honest. Carry Leki as your own, and the blade becomes devotion made exact. Will you?" |
 | PDV_Msg_Redguard_Tava_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Tava's Wind" Body: "The road has carried you far, and you have carried it well. Carry Tava as your own, and the wind of good passage is yours. Will you?" |
 | PDV_Msg_Redguard_HoonDing_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "HoonDing's Call" Body: "Again and again you have made a way where there was none. Carry the Make-Way God as your own, and the impossible passage becomes your devotion. Will you?" |
-| PDV_Msg_Redguard_OfferResponse_Accept | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Shared across Redguard offers | Accept the patron. |
+| PDV_Msg_Redguard_OfferResponse_Accept | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Shared across Redguard offers | Walk under this god. |
 | PDV_Msg_Redguard_OfferResponse_NotYet | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Sets per-deity cooldown only | Not yet. |
 | PDV_Msg_Redguard_OfferResponse_Refuse | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Broad sect worship continues | Keep to the sect's broad worship. |
 
@@ -1329,6 +1347,7 @@ God-voice. MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Redgua
 | PDV_Msg_Redguard_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Vampire" | Once on becoming vampire; devotion collapses across all sects | Title: "Outside the Cycle" Body: "You are undead now, and undeath is a soul that has left the cycle I guide. The Far Shores cannot receive you while the curse holds. Devotion across all three sects falls quiet. Cure this, and return to me first." |
 | PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Vampire recovery note" line 211 | Once on cure; Tu'whacca re-entry precedes other devotion | Title: "Right Re-Entry" Body: "The curse is lifted. Come back through me before any other god -- proper mortality, ancestor order, the right return to the cycle. When that is done, the Far Shores are open, and your sect may have you again." |
 | PDV_Msg_Redguard_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Werewolf"; Race_Redguard "Curse States" | Once on first transformation; strained, not severed | Title: "Strained, Not Severed" Body: "The beast is in you. The Yokudan gods and your sect remain within reach, but strained -- Hircine is an intrusion, not a home. The ancestors do not turn away. They only watch more closely." |
+| PDV_Msg_Redguard_CurseState_WerewolfCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Werewolf" | Once on werewolf cure; strain lifts | Title: "The Strain Lifts" Body: "The beast is set down. The strain eases, and the Yokudan gods and your sect come back into full reach. Hircine's intrusion is ended. The ancestors, who only watched more closely, ease their gaze. Wholly theirs again." |
 
 ### 16.12 Shrine and privilege dialogue topics (`PDV_Dlog_Redguard_*`)
 
@@ -1373,16 +1392,16 @@ Narrator voice. Budget 200 hard / 140 target. Per path, Tier 1/2/3. Anti-farm: p
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Bless_Bosmer_OldContract_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- Old Contract" | Passive SPEL; Old Contract path | The Green Pact is kept. Archery damage +3%; poison resistance +15%; dagger damage +2%. |
+| PDV_Bless_Bosmer_OldContract_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- Old Contract" | Passive SPEL; Old Contract path | The Green Pact is kept. Your archery strikes 3% harder; your resistance to poison rises by 15%; your daggers cut 2% deeper. |
 | PDV_Bless_Bosmer_OldContract_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- Old Contract" | Passive SPEL; Old Contract path | Y'ffre answers the kept covenant. Hunting kills restore stamina; animals never flee unprovoked. At Strict compliance, devotion gains a fifth again. |
-| PDV_Bless_Bosmer_OldContract_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- Old Contract" | Passive SPEL; Old Contract path | Y'ffre's Mark is on you. In forest and wild, archery damage +8%; animals never flee; the first arrow of a hunt strikes true and deep. |
-| PDV_Bless_Bosmer_LivingStory_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Living Story" | Passive SPEL; Living Story path | The Story is carried. Speech +5%; outdoor stamina regen +5%; poison resistance +10%. |
+| PDV_Bless_Bosmer_OldContract_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- Old Contract" | Passive SPEL; Old Contract path | Y'ffre's Mark is on you. In forest and wild, your archery strikes 8% harder; animals never flee; the first arrow of a hunt strikes true and deep. |
+| PDV_Bless_Bosmer_LivingStory_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Living Story" | Passive SPEL; Living Story path | The Story is carried. Your Speech improves by 5%; your stamina regenerates 5% faster outdoors; your resistance to poison rises by 10%. |
 | PDV_Bless_Bosmer_LivingStory_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Living Story" | Passive SPEL; Living Story path | Y'ffre and the secondary gods answer the diaspora faith. Community acts return piety; nature sites and outdoor combat steady you. |
-| PDV_Bless_Bosmer_LivingStory_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Living Story" | Passive SPEL; Living Story path | You carry the Story itself. Speech +10%; preserving a community or tradition returns a day of broadened skill. The dialogue of memory opens to you. |
-| PDV_Bless_Bosmer_Exchange_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Exchange" | Passive SPEL; Exchange path | Z'en weighs your dealings. Barter +5%; merchant prices improve; defending against a first-striker returns minor health. |
+| PDV_Bless_Bosmer_LivingStory_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Living Story" | Passive SPEL; Living Story path | You carry the Story itself. Your Speech improves by 10%, and preserving a community or tradition returns a day of broadened skill. The dialogue of memory opens to you. |
+| PDV_Bless_Bosmer_Exchange_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Exchange" | Passive SPEL; Exchange path | Z'en weighs your dealings. Your Barter improves by 5%; merchant prices improve; defending against a first-striker returns minor health. |
 | PDV_Bless_Bosmer_Exchange_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Exchange" | Passive SPEL; Exchange path | Z'en answers the settled account. Proportionate vengeance grants a day of stronger weapons; honored debts and fair trade return piety. |
 | PDV_Bless_Bosmer_Exchange_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Exchange" | Passive SPEL; Exchange path | Balance is restored through you. A debt settled or a wrong redressed returns a day of stronger skill growth; proportionate kills return stamina. |
-| PDV_Bless_Bosmer_BanditRoad_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Bandit Road" | Passive SPEL; Bandit Road path | The road teaches you. Pickpocket +5%; sneak +3%; a night slept outdoors sharpens the next day's first stealth. |
+| PDV_Bless_Bosmer_BanditRoad_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Bandit Road" | Passive SPEL; Bandit Road path | The road teaches you. Your Pickpocket improves by 5%; your Sneak improves by 3%; a night slept outdoors sharpens the next day's first stealth. |
 | PDV_Bless_Bosmer_BanditRoad_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Bandit Road" | Passive SPEL; Bandit Road path | Baan Dar answers the exile. Surviving severe odds returns a burst of stamina; road-life scores; outcasts deal with you kindly. |
 | PDV_Bless_Bosmer_BanditRoad_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Bosmer "Tier Rewards -- The Bandit Road" | Passive SPEL; Bandit Road path | Baan Dar's luck is yours. Once a week, a survival you should not have had returns a day-long pulse of fortune; the wild road weighs heavier than the city. |
 
@@ -1444,6 +1463,18 @@ Narrator voice. Notifications. Budget 80 hard / 60 target. Old Contract path onl
 | PDV_Notif_Bosmer_GreenPact_Observant | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model" | One per band entry | Compliance restored to Observant. Y'ffre's favor flows full again. |
 | PDV_Notif_Bosmer_GreenPact_Strict | Notification | Noted | Narrator | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model" | One per band entry | Compliance risen to Strict. Y'ffre's favor flows a fifth again stronger. |
 
+### 17.7a Green Pact per-item violation feedback (prose drafted; MECHANICS-BLOCKED)
+
+**Mechanics dependency:** requires the PDV-owned Green Pact tag layer (Architecture v3 Section 21.2 essential custom content) that intercepts plant-item consumption events and decrements `GreenPactCompliance`. The tag layer must ship before these rows can fire. Prose is authored here so Phase 20 content-lock is not blocked on implementation.
+
+Narrator / God-voice per row. Budget per column. Old Contract path only. Anti-spam gating: cooldown window (exact window set by implementation) prevents rapid-fire from looting a chest. The Marked row fires only on deliberate curated violations.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Notif_Bosmer_GreenPact_PlantConsumed | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model"; Architecture v3 Section 21.2 | MECHANICS-BLOCKED: tag layer required. Per tagged plant item consumed; cooldown window set by implementation | Plant flesh consumed. The Pact holds the count. |
+| PDV_Notif_Bosmer_GreenPact_PlantConsumed_NearBand | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Bosmer "GreenPactCompliance State Model"; Architecture v3 Section 21.2 | MECHANICS-BLOCKED: tag layer required. Fires when within implementation-defined threshold of the next downward band crossing | Another plant consumed. Compliance approaches the next fall. |
+| PDV_Msg_Bosmer_GreenPact_PlantConsumed_Marked | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "GreenPactCompliance State Model"; Architecture v3 Section 21.2 | MECHANICS-BLOCKED: tag layer required. Fires on deliberate curated high-value plant consumption (ingredient hooks, not incidental food); per-event cooldown | Title: "The Pact Remembers" Body: "You ate from the living world. The Pact does not argue with the hunger; it holds the record. Each plant consumed is a mark against the covenant. The count is yours to weigh; Y'ffre weighs it already." |
+
 ### 17.8 Neglect texture (`PDV_Notif_Bosmer_*_NeglectTexture`)
 
 Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Bosmer` "Neglect Texture", one per path. Each fires on the first day of a meaningful lapse.
@@ -1468,7 +1499,7 @@ Narrator voice. Body budget 240 hard / 180 target. One row per path; `%s` binds 
 
 ### 17.10 Contextual favor surfacings
 
-`RaceDesign_Bosmer` does not enumerate a formal contextual-favor table; the rows below are derived from the per-path Tier Rewards and Signal Examples. Lane families should be re-checked when a formal Bosmer favor table is added to the race sheet. Player-second-person on Noted; god-voice on Marked. The Bandit Road reversal is a `Rare major favor` per `PDV_TargetEndStates_1.0.md` line 112.
+Four trigger families, formalized from `RaceDesign_Bosmer` per-path Tier Rewards and Signal Examples. **Old Contract** (proper hunt, forest kept against desecration); **Living Story** (community preserved, nature-site presence); **Exchange** (debt honored, proportionate redress); **Bandit Road** (road-life, pariah solidarity, near-fatal reversal). Player-second-person on Noted; god-voice on Marked. The Bandit Road reversal is a `Rare major favor` per `PDV_TargetEndStates_1.0.md` line 112.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -1491,6 +1522,7 @@ God-voice. MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Bosmer
 | PDV_Msg_Bosmer_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "Vampire" | Once on becoming vampire | Title: "The Covenant and the Undead" Body: "You are undead now. The living covenant does not reach the unliving. On the Old Contract the Pact breaks at once; on the other paths the bond strains hard but holds by a thread. Y'ffre is the Now, and you have stepped outside it." |
 | PDV_Msg_Bosmer_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "Vampire" | Once on cure | Title: "Back Within the Now" Body: "The undeath is lifted. You stand within the living world again, and your path is open -- though the Old Contract, broken this way, must be retaken like any lapse." |
 | PDV_Msg_Bosmer_CurseState_WerewolfOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "Werewolf by path" | Once on first transformation | Title: "The Hunt Without Sanction" Body: "The beast is in you. It echoes the Wild Hunt, so Bosmer theology can read it -- but it is not Y'ffre's sanction. On the Old Contract this is a serious violation; on the other paths, contested strain. The shape is intelligible. It is not approved." |
+| PDV_Msg_Bosmer_CurseState_WerewolfCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Bosmer "Werewolf by path" | Once on werewolf cure; Old Contract retaken like a lapse | Title: "The Hunt Set Down" Body: "The beast is set down. The unsanctioned shape leaves you, and you stand within Y'ffre's Now again. On the Old Contract the violation must be retaken like any lapse; on the other paths the strain simply eases. The Now holds." |
 
 ### 17.12 Shrine and privilege dialogue topics (`PDV_Dlog_Bosmer_*`)
 
@@ -1511,7 +1543,7 @@ A Faithful Living Story Bosmer in steady community play (preservation quests, na
 
 Tier-up notifications: one per save per direction. There is no commitment offer, so no Faithful suppression rule applies. Path-entry notifications are gated to confirmed switches with the seven-day switch lock-out, so they cannot fire repeatedly.
 
-## 18. Breton (full draft -- one gated slot)
+## 18. Breton (full draft)
 
 Implementation-locked. The most mechanically complex race: three-tradition divergence (Knight's Road, Hidden Art, Green Way) plus three parallel tracks. `PDV_State_BretonTradition` with `KnightsRoad = 0`, `HiddenArt = 1`, `GreenWay = 2`. Tracks: `KnightlyVowIntegrity`, `WitchcraftExposure`, `DruidicStanding` (paired with `PDV_State_BretonDruidicFork`).
 
@@ -1519,7 +1551,7 @@ Implementation-locked. The most mechanically complex race: three-tradition diver
 - **Blessings: per-tradition Tier 1/2, per-deity Tier 3.** The locked `RaceDesign_Breton` "Tier Rewards" gives each tradition its own Tier 1 and Tier 2, then per-focused-deity Tier 3. The corrected set is sixteen blessing records: `_KnightsRoad_T1` / `_T2`, `_HiddenArt_T1` / `_T2`, `_GreenWay_T1` / `_T2`, and ten Tier 3 records (Stendarr, Akatosh, Mara; Hermaeus Mora, Hircine, Nocturnal, Namira; Y'ffre, Magnus, Phynaster).
 - **Focused deity uses emergence, not a bespoke offer suite.** `RaceDesign_Breton` line 33 references "patron offers" within the tradition, while `PDV_TargetEndStates_1.0.md` line 252 says "focused deity emphasis emerges". With ten possible focused deities across three traditions, the manifest reconciles these by treating the tradition setup as the headline commitment and the focused deity as an emergence within the tradition, surfaced by one templated notification (Section 18.5). This matches the `n/a (tradition setup)` coverage marking. Authoring ten bespoke per-deity offer MessageBoxes is a possible later refinement, noted but not in this pass.
 - **Champion entries are tradition-level (3), not per-deity.** `RaceDesign_Breton` writes one "Champion moment for [tradition]" per tradition.
-- **Vigilant pressure encounter stays gated** (Section 18.14).
+- **Vigilant pressure encounter is authored** (Section 18.14) for the Phase 20 content lock.
 
 ### 18.1 Tone profiles
 
@@ -1542,11 +1574,11 @@ Narrator voice. Budget 200 hard / 140 target. Per tradition Tier 1/2; per focuse
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Bless_Breton_KnightsRoad_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Knight's Road" | Passive SPEL; Knight's Road | The vow is kept. Magic resistance +5%; defending an NPC in combat grants +20 max health for a time. |
+| PDV_Bless_Breton_KnightsRoad_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Knight's Road" | Passive SPEL; Knight's Road | The vow is kept. Your magic resistance rises by 5%, and defending an NPC in combat grants 20 more maximum health for a time. |
 | PDV_Bless_Breton_KnightsRoad_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Knight's Road" | Passive SPEL; Knight's Road | Stendarr and the Divines answer the knight. Mercy and unrewarded aid arm the next fight; high Integrity steadies your block. |
 | PDV_Bless_Breton_HiddenArt_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Hidden Art" | Passive SPEL; Hidden Art | The hidden practice answers. Novice and Apprentice spells cost 5% less; magic regenerates faster at night. |
 | PDV_Bless_Breton_HiddenArt_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Hidden Art" | Passive SPEL; Hidden Art | Your patron rewards the occult work. Daedric shrines and rituals sharpen your magic; at Notorious, devotion gains a quarter again. |
-| PDV_Bless_Breton_GreenWay_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Green Way" | Passive SPEL; Green Way | The old covenant stirs. Poison resistance +10%; foraging yields an extra harvest. |
+| PDV_Bless_Breton_GreenWay_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Green Way" | Passive SPEL; Green Way | The old covenant stirs. Your resistance to poison rises by 10%, and foraging yields an extra harvest. |
 | PDV_Bless_Breton_GreenWay_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Tier Rewards -- Green Way" | Passive SPEL; Green Way | Y'ffre answers the druid. Outdoor sleep restores stamina and half your missing health; animals rarely turn on you; standing stones answer. |
 | PDV_Bless_Breton_Stendarr_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Stendarr Champion" | Passive SPEL; Stendarr focus | Stendarr's Aegis is yours. Protecting an ally grants 15% damage resistance; Vigilants treat you as a peer; Daedra and undead take heavier hits. |
 | PDV_Bless_Breton_Akatosh_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Akatosh Champion" | Passive SPEL; Akatosh focus | Akatosh keeps the order. Unbroken devotion of fourteen days at high Integrity returns 15% skill experience; the Amulet of Akatosh doubles its effect. |
@@ -1555,9 +1587,9 @@ Narrator voice. Budget 200 hard / 140 target. Per tradition Tier 1/2; per focuse
 | PDV_Bless_Breton_Hircine_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Hircine Champion" | Passive SPEL; Hircine focus | Hircine bonds the beast. Beast form lasts longer; the hunt scores stronger; the change comes smoother. |
 | PDV_Bless_Breton_Nocturnal_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Nocturnal Champion" | Passive SPEL; Nocturnal focus | Nocturnal marks the shadow. Sneak attacks deal 15% more; a theft from a notable target opens a brief unseen window. |
 | PDV_Bless_Breton_Namira_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Namira Champion" | Passive SPEL; Namira focus | Namira's corruption is yours. Squalor and hunger press lighter; she notices the things others will not name. |
-| PDV_Bless_Breton_Yffre_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Y'ffre Champion" | Passive SPEL; Y'ffre focus | Y'ffre's Living Story runs through you. In forest, armor +10; hunting shots strike deep; nature-site quests count double. |
-| PDV_Bless_Breton_Magnus_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Magnus Champion" | Passive SPEL; Magnus focus | Magnus opens the Elder Way. All spell costs -10%, Alteration -15%; Psijic-adjacent study scores strongly. |
-| PDV_Bless_Breton_Phynaster_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Phynaster Champion" | Passive SPEL; Phynaster focus | Phynaster's long life is in your blood. Magic resistance +15% over your Breton birthright; elven-heritage acts return piety. |
+| PDV_Bless_Breton_Yffre_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Y'ffre Champion" | Passive SPEL; Y'ffre focus | Y'ffre's Living Story runs through you. In forest, your armor rises by 10; hunting shots strike deep; nature-site quests count double. |
+| PDV_Bless_Breton_Magnus_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Magnus Champion" | Passive SPEL; Magnus focus | Magnus opens the Elder Way. All spells cost 10% less and Alteration costs 15% less; Psijic-adjacent study scores strongly. |
+| PDV_Bless_Breton_Phynaster_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Breton "Phynaster Champion" | Passive SPEL; Phynaster focus | Phynaster's long life is in your blood. Your resistance to magic rises by 15% over your Breton birthright, and elven-heritage acts return piety. |
 
 ### 18.3 Tier-up notifications (`PDV_Notif_Breton_*`)
 
@@ -1674,6 +1706,7 @@ God-voice. MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Breton
 | PDV_Msg_Breton_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary"; "Approved 1.0 lock additions" line 287 | Once on cure | Title: "Re-Entry" Body: "The undeath is lifted. The Knight's Road may be rebuilt through restored Integrity. The Green Way moves from Excommunicated to Penitent; full restoration needs an outdoor rite and sustained covenant, and leaves a permanent scar." |
 | PDV_Msg_Breton_CurseState_WerewolfOnset_KnightsRoad | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary" | Once on first transformation; Knight's Road | Title: "Homeless in the Vow" Body: "The beast is in you, and the Knight's Road has no frame for it. There is no theological home for the wolf here. Your Integrity degrades on each transformation, and the knightly orders will not understand." |
 | PDV_Msg_Breton_CurseState_WerewolfOnset_HiddenArt | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary" | Once on first transformation; Hidden Art | Title: "The Beast Belongs" Body: "The beast is in you, and the Hidden Art already holds Hircine. Glenmoril is family here. There is no rupture -- the wolf fits the occult frame as though it were always meant to." |
+| PDV_Msg_Breton_CurseState_WerewolfCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary" | Once on werewolf cure; per-tradition resolution | Title: "The Beast Set Down" Body: "The wolf is set down. On the Knight's Road, Integrity may now be rebuilt, the transformations ended, though the orders remember. In the Hidden Art the beast that belonged is given up by choice; Glenmoril marks the loss, and the occult frame holds an empty place." |
 
 ### 18.13 Shrine and privilege dialogue topics (`PDV_Dlog_Breton_*`)
 
@@ -1685,11 +1718,15 @@ Player-second-person on topic name. Branch dialogue authored separately in CK. T
 | PDV_Dlog_Breton_HiddenArtContact_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Breton "The Hidden Art" | Hidden Art tradition | "I practice the hidden art. Speak plainly -- no one is listening." |
 | PDV_Dlog_Breton_DruidicKeeper_Recognition | Dialogue topic | Noted | Player-2nd | 120/80 | Architecture v3 Section 16.3; RaceDesign_Breton "The Green Way" | Green Way tradition | "The Green Way is mine. Tell me of the standing stones here." |
 
-### 18.14 Gated slot (not drafted)
+### 18.14 Vigilant pressure encounter (drafted)
 
-| Slot group | Slot pattern | Gate |
-|---|---|---|
-| Vigilant pressure encounter | `PDV_Msg_Breton_VigilantPressure_<Letter|RoadEncounter|Confrontation>` | Extension candidate per `PDV_TargetEndStates_1.0.md` lines 260-262: vanilla has no general "known Daedra worshipper" hunter system, and an authored pressure encounter "should not block Breton 1.0 unless the encounter pattern proves cheap." Held until the encounter pattern is proven; the WitchcraftExposure band crossings in Section 18.7 carry the exposure feel in the interim. |
+Authored for Phase 20 content lock. Narrator voice, MessageBox 500/280, matching the Section 18.7 WitchcraftExposure band voice. The three beats escalate with exposure: the Letter fires on entering the Known band, the road encounter on continued Known-band visibility, and the confrontation on the Notorious band. Each is one-time per exposure climb; the WitchcraftExposure band crossings carry the ongoing exposure feel between them.
+
+| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
+|---|---|---|---|---|---|---|---|
+| PDV_Msg_Breton_VigilantPressure_Letter | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Breton "WitchcraftExposure Track"; TargetEndStates lines 260-262 | One-time on entering the Known exposure band | Title: "A Letter from the Vigil" Body: "A sealed letter finds you, unsigned but unmistakable. The Vigilants of Stendarr have heard what you keep, and they are watching the roads you take. It is a warning, this time. They do not send a second." |
+| PDV_Msg_Breton_VigilantPressure_RoadEncounter | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Breton "WitchcraftExposure Track"; TargetEndStates lines 260-262 | One-time on continued Known-band visibility after the Letter | Title: "The Vigil on the Road" Body: "Two Vigilants block the road ahead, hands near their maces, reading you for the mark of the thing you serve. They ask their questions knowing the answers. How this ends depends on what they decide they saw -- and on whether your cover holds one more time." |
+| PDV_Msg_Breton_VigilantPressure_Confrontation | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Breton "WitchcraftExposure Track"; TargetEndStates lines 260-262 | One-time on entering the Notorious exposure band | Title: "The Vigil Comes for You" Body: "The watching is over. The Vigilants have named you a servant of the Daedra, and they have come in number to end it. There is no letter now, no question, no road to slip down. What you practiced in the dark has found you in the light, and only one of you walks away." |
 
 ### 18.15 Breton firing-density sanity
 
@@ -1699,7 +1736,7 @@ A Faithful Hidden Art Breton in steady occult play (Daedric quests, careful cove
 - Noted: ~1-2 per day (an occult-work favor, an occasional Daedric-rite favor). Track band crossings are infrequent because all three tracks move on major authored acts, not ambient behavior. Inside the `<2 per h` target.
 - Quiet: uncounted; icon-only.
 
-Tier-up notifications: one per save per deity per direction. There is no dawn offer, so no Faithful suppression rule applies. The gated Vigilant pressure encounter is excluded from this estimate and will need a fresh density pass if it is built.
+Tier-up notifications: one per save per deity per direction. There is no dawn offer, so no Faithful suppression rule applies. The Section 18.14 Vigilant pressure encounter fires its three beats one-time each across an exposure climb, so it does not compound the daily Noted count.
 
 ## 19. Argonian (full draft)
 
@@ -1733,10 +1770,10 @@ Narrator voice. Budget 200 hard / 140 target. Tier 1 and Tier 2 are the layered 
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Bless_Argonian_Layered_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Tier 1" | Passive SPEL; layered | The Hist is distant but present; the People know you. Water breathing deepens; swimming +10%; near water, +2 health a second; disease resistance +15%. |
-| PDV_Bless_Argonian_Layered_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Tier 2" | Passive SPEL; layered | All three layers are maintained under exile. Near water, +5 health a second; rest near water restores health and stamina fully; helping a Saxhleel returns stamina. |
-| PDV_Bless_Argonian_Hist_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Hist Champion" | Passive SPEL; Hist layer | The Hist reaches you where water reaches. In wetland and water, damage resistance +10%, sneak +15, attack speed +3%. The swamp gives what dry stone cannot. |
-| PDV_Bless_Argonian_Community_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Community Champion" | Passive SPEL; Community layer | The People are your armor. Helping Saxhleel returns strong piety; a friendly Argonian nearby grants +8 armor; the exile network knows you. |
+| PDV_Bless_Argonian_Layered_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Tier 1" | Passive SPEL; layered | The Hist is distant but present; the People know you. Water breathing deepens; you swim 10% faster; near water you heal 2 health a second; your resistance to disease rises by 15%. |
+| PDV_Bless_Argonian_Layered_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Tier 2" | Passive SPEL; layered | All three layers are maintained under exile. Near water you heal 5 health a second; rest near water restores health and stamina fully; helping a Saxhleel returns stamina. |
+| PDV_Bless_Argonian_Hist_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Hist Champion" | Passive SPEL; Hist layer | The Hist reaches you where water reaches. In wetland and water, your damage resistance rises by 10%, your Sneak by 15, and your attack speed by 3%. The swamp gives what dry stone cannot. |
+| PDV_Bless_Argonian_Community_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Community Champion" | Passive SPEL; Community layer | The People are your armor. Helping Saxhleel returns strong piety; a friendly Argonian nearby raises your armor by 8; the exile network knows you. |
 | PDV_Bless_Argonian_Sithis_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Argonian "Sithis Champion" | Passive SPEL; Void layer | Sithis holds those who faced the void unflinching. Near death, a burst of stamina regeneration; a Dark Brotherhood contract sharpens speed and stealth after. |
 
 ### 19.4 Tier-up notifications (`PDV_Notif_Argonian_*`)
@@ -1821,7 +1858,7 @@ Narrator voice. Body budget 240 hard / 180 target. One layered readout; `%s` tok
 
 ### 19.12 Contextual favor surfacings
 
-`RaceDesign_Argonian` does not enumerate a formal contextual-favor table; the rows below are derived from the per-layer Tier Rewards and Signal Examples. All are `Noted` -- consistent with the design's quiet, maintenance-against-the-current texture, the Argonian race carries no Marked favor row. Player-second-person voice. Lane families should be re-checked when a formal Argonian favor table is added to the race sheet.
+Three trigger families, formalized from `RaceDesign_Argonian` per-layer Tier Rewards and Signal Examples. **Hist** (near-water steadying, solitary reflection, Hist-sap meditation); **Community/People** (Saxhleel aid, Assemblage held, settlement protection); **Void** (death-facing, Dark Brotherhood contract). All are `Noted` -- consistent with the design's quiet, maintenance-against-the-current texture; the Argonian race carries no Marked favor row by design. Player-second-person voice.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -1831,6 +1868,8 @@ Narrator voice. Body budget 240 hard / 180 target. One layered readout; `%s` tok
 | PDV_Notif_Argonian_FavorNoted_Community_AssemblageKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 2 ... Primary signals" | After-act; Windhelm Assemblage extra weight | The Windhelm Assemblage is surer for what you did. Kinship. |
 | PDV_Notif_Argonian_FavorNoted_Void_DeathFaced | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 3 ... Sithis rises through" | After-act; curated death-facing choice | You faced a death without flinching. Sithis acknowledges it. |
 | PDV_Notif_Argonian_FavorNoted_Void_BrotherhoodContract | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 3 ... Sithis rises through" | After-act; per Dark Brotherhood contract | A contract completed for the Brotherhood. The void answers. |
+| PDV_Notif_Argonian_FavorNoted_Hist_SapMeditation | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Hist recovery signals"; mechanics-dep: Hist-sap vessel custom feature | After-act; designated Hist contemplation site; daily cap; MECHANICS-BLOCKED: requires Hist-sap vessel feature from Phase 21 custom content | Sap taken. The distance closes a little; the Hist hears across the marsh. |
+| PDV_Notif_Argonian_FavorNoted_Community_SettlementKept | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Argonian "Layer 2 ... Primary signals" | After-act; defending Argonian settlement or Assemblage from direct threat; cooldown per event | You kept the People from harm. The exile community is safer for it. |
 
 ### 19.13 Curse-state transitions (`PDV_Msg_Argonian_CurseState_*`)
 
@@ -1841,6 +1880,7 @@ MessageBox. Body budget 500 hard / 280 target. **Voice deviation:** all three ro
 | PDV_Msg_Argonian_CurseState_VampireOnset | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Argonian "Vampire"; sets posture Silenced or Corrupted | Once on becoming vampire | Title: "The Hist Falls Silent" Body: "You are undead now. The Hist gives Saxhleel souls and receives them at death -- and yours is no longer going where it was meant to go. The Hist falls silent. The People cannot safely hold you. Only the void stays near. This is the deepest grief." |
 | PDV_Msg_Argonian_CurseState_VampireCured | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Argonian "Vampire" | Once on cure | Title: "The Hist Reaches Again" Body: "The undeath is lifted. The Hist's silence breaks slowly -- it must learn to reach you again across both the distance and the memory of what you were. The People can hold you once more. It will take time. It can be done." |
 | PDV_Msg_Argonian_CurseState_WerewolfOnset | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Argonian "Werewolf"; sets posture Strained | Once on first transformation | Title: "A Changed Shape" Body: "The beast is in you. The Hist is accustomed to Saxhleel who change -- the shape strains the relation but does not sever it. The People can still recognize you. This is serious, but it is not the silence. It can be carried." |
+| PDV_Msg_Argonian_CurseState_WerewolfCured | MessageBox | Marked | Narrator | 500/280 | RaceDesign_Argonian "Werewolf" | Once on werewolf cure; clears posture Strained | Title: "The Shape Settles" Body: "The beast is set down. The strain on the Hist relation eases, and the People recognize you without reservation again. The shape that pulled at the bond is gone. What was carried is set aside; the Hist reaches you clean." |
 
 ### 19.14 Shrine and privilege dialogue topics (`PDV_Dlog_Argonian_*`)
 
@@ -1857,7 +1897,7 @@ Player-second-person on topic name. Branch dialogue authored separately in CK. T
 A Faithful community-leaning Argonian in steady exile play (Windhelm Assemblage support, water-proximity maintenance, occasional Sithis beat):
 
 - Marked: 0 most days; Champion entries, Sithis full activation, and curse onsets are all one-time. Inside the `<1 per 2h` target.
-- Noted: ~1-2 per day (a near-water Hist favor, an occasional Saxhleel-aid favor, Hist sap meditation). Argonian carries no Marked favor row by design, so steady play is quiet. Inside the `<2 per h` target.
+- Noted: ~1-2 per day (a near-water Hist favor, an occasional Saxhleel-aid or settlement-protection favor). Argonian carries no Marked favor row by design, so steady play is quiet. Inside the `<2 per h` target. The Hist-sap meditation favor row is MECHANICS-BLOCKED and does not contribute until the vessel feature ships.
 - Quiet: uncounted; icon-only (the Hist sap meditation effect line is Quiet).
 
 Tier-up notifications: one per save per direction. There is no commitment offer, so no Faithful suppression rule applies. Bed-of-choice acknowledgments are gated to the cadence rule, and posture transitions are rare (curse-linked or sustained Hist decay).
@@ -1878,7 +1918,7 @@ Argonian has no commitment-offer slot: there is no deity choice. The bed-of-choi
 | Imperial | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Redguard | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted | YES |
 | Bosmer | drafted | drafted | drafted | drafted | drafted | n/a (path setup) | drafted | drafted | drafted | drafted | YES |
-| Breton | drafted | drafted | drafted | drafted | drafted | n/a (tradition setup) | drafted | drafted | drafted | drafted | YES (Vigilant gated) |
+| Breton | drafted | drafted | drafted | drafted | drafted | n/a (tradition setup) | drafted | drafted | drafted | drafted | YES |
 | Argonian | drafted | drafted | drafted | drafted | drafted | n/a | drafted | drafted | drafted | drafted | YES |
 
 `n/a` rows mean the race does not use the standard commitment-offer pattern (Khajiit silent emergent, Orc mode-deepening, Bosmer setup choice, Breton tradition setup, Argonian no deity choice). The setup-choice MessageBoxes for Bosmer and Breton are slot-only rows in their sections, not in the commitment-offer pattern.
@@ -1887,18 +1927,15 @@ Argonian has no commitment-offer slot: there is no deity choice. The bed-of-choi
 
 ## 21. Gated and deferred appendix
 
-These slots are deliberately not authored in this pass. Altmer's previously
-gated crisis, contextual-favor, and post-vampire Exiled rows were drafted in
-Section 13.13 after the 2026-05-30 implementation-spec closeout.
+These slots are deliberately not authored in this pass. (The Altmer crisis-of-faith copy, Altmer contextual-favor lanes, Altmer post-vampire Exiled flavor, and the Breton Vigilant pressure encounter were gated here in earlier passes and are now authored for the Phase 20 content lock -- see Sections 13.13 and 18.14.)
 
 | Item | Gate | Reason |
 |---|---|---|
-| Daedric path content | Now authored in the companion file `race-sheets/PDV_DaedricContent_Manifest.md`: Boethiah is drafted end to end as the pilot, and the remaining 15 Skyrim-facing Princes are stub-listed there for follow-up passes. No longer deferred here. | Boethiah pilot complete; see the Daedric manifest. |
-| Bosmer Green Pact per-item violation feedback | `PDV_Architecture_v3.md` Section 21.2 essential custom content: PDV-owned Green Pact tag layer must ship first. | Item-level surfacing depends on the tag layer existing. |
+| Daedric path content | Now authored in the companion file `race-sheets/PDV_DaedricContent_Manifest.md`: Boethiah is drafted end to end as the pilot, and the remaining 15 Skyrim-facing Princes are in scope for the Phase 20 content lock. No longer deferred here. | Boethiah pilot complete; see the Daedric manifest. |
+| Bosmer Green Pact per-item violation feedback | `PDV_Architecture_v3.md` Section 21.2 essential custom content: PDV-owned Green Pact tag layer must ship first. Prose is now authored in Section 17.7a with a MECHANICS-BLOCKED flag; implementation can wire up the tag layer without further content authoring. | Item-level surfacing depends on the tag layer existing. |
 | MCM player tab copy | `PDV_Architecture_v3.md` Section 16.1, Section 16.4: MCM should not be a daily management surface. | Authored alongside the player tab itself, not as flavor content. |
 | Localization / non-ASCII variants | `PDV_Architecture_v3.md` Section 23: deferred post-1.0; minor refactor via string-table externalization. | Out of 1.0 scope by architecture. |
-| Breton Vigilant pressure encounter copy | `PDV_TargetEndStates_1.0.md` Section "Extension candidate" lines 260-262: should not block Breton 1.0 unless the encounter pattern proves cheap. | Slip-able to post-1.0. |
-| Daedric race-by-Prince matrix expansion strings | `references/phase4/PDV_DaedricRacePrinceMatrix.csv` is the implementation matrix; race sheets are acceptance context only. | Each cell must be expanded into the Section 11 contract before strings are authored. |
+| Daedric race-by-Prince matrix expansion strings | In scope for Phase 20 content lock. `references/phase4/PDV_DaedricRacePrinceMatrix.csv` is the implementation matrix; each cell must be expanded into the Section 11 contract before strings are authored. No longer deferred past content lock. | Expansion authoring follows Phase 13 pilot and `PDV_DaedricContent_Manifest.md` pattern. |
 
 ---
 
@@ -1912,7 +1949,7 @@ This manifest's own verification, per the plan:
 4. **Nord pilot completeness:** every Nord row has non-empty `Draft prose`. All thirteen worshippable deities carry a `ChampionEntry` MessageBox per the universal-champion decision in Section 10.4; no row is left reserved.
 5. **Blessing discipline:** Nord blessing rows lead with theological tone and follow with a concrete numeric effect, matching the `PDV_STANDARDS.md` Section 3.3 conformance example. No formids, no `PDV_*` record names in prose, no `bucket` / `hook` jargon.
 6. **Surfacing-vs-source:** every `Marked` row is one the source explicitly named as Marked or as a high-cost / costly-but-faithful moment. The two Marked Talos rows in Section 10.8 are flagged by `RaceDesign_Nord` lines 128 and 138 respectively.
-7. **Deferred appendix:** Green Pact per-item feedback, MCM player tab, localization, and Vigilant pressure appear in Section 21 with the gate cited. Altmer crisis/contextual/Exiled rows moved into Section 13.13 after the 2026-05-30 closeout. Daedric path content has moved to its own companion manifest (`PDV_DaedricContent_Manifest.md`), no longer deferred.
+7. **Deferred appendix:** Green Pact per-item feedback, MCM player tab, and localization appear in Section 21 with the gate cited. The former Altmer crisis copy, Altmer contextual-favor lanes, Altmer Exiled flavor, and Breton Vigilant pressure are now authored (Sections 13.13, 18.14) for the Phase 20 content lock. Daedric path content has moved to its own companion manifest (`PDV_DaedricContent_Manifest.md`), no longer deferred. Daedric race-by-Prince matrix expansion strings are now in scope for Phase 20 content lock, not deferred past it.
 8. **Slot-ID convention:** every Nord slot id matches the `PDV_Msg_*` / `PDV_Notif_*` / `PDV_Bless_*` / `PDV_Dlog_*` / `PDV_PrismaToast_*` scheme. None exceed 32 EditorID characters where the CK editor truncates. (Longest Nord id: `PDV_Notif_Nord_Kynareth_ChampionAmbient_Storm` is 45 chars; flagged for review -- some CK fields tolerate longer EditorIDs but MESG/SPEL EditorIDs are safer under 32. Recommend `PDV_Notif_Nord_Kyn_ChampAmb_Storm` style abbreviations at Phase 19 hand-off if the truncation rule bites. Slot id stability vs. the manifest is the contract; CK shorthand is acceptable so long as the Slot ID column carries both.)
 9. **Length-budget:** every Nord `Draft prose` cell is at or under the row's `Budget` cap. The longest drafted body is `PDV_Msg_Nord_CurseState_VampireOnset` at 252 chars (under the 500 hard / 280 target). Notifications stay at or under 60 chars in nearly all cases; the few that touch 70-80 carry the body inside the 80 hard cap.
 10. **Voice-matrix compliance:** every Nord row's `Voice` matches the Section 3 matrix. No drift.
@@ -1920,6 +1957,7 @@ This manifest's own verification, per the plan:
 12. **Firing-density:** Section 10.11 sanity table confirms Nord steady play stays inside the `Marked < 1 per 2h` and `Noted < 2 per h` targets.
 13. **Tone-profile coverage:** every Nord deity referenced by a Section 10.2-10.10 row has a Section 10.1 tone-profile entry.
 14. **ASCII stress-test:** the two named stress-test rows -- `PDV_Notif_Nord_General_AncestorsQuiet` ("The ancestors are quiet.") and `PDV_Msg_Nord_FavorMarked_TalosDefiance` ("You stood between them and me. Carry the old breath a little longer.") -- read naturally under ASCII without em dashes or ellipses. The rule is not raising cost back to the user.
+15. **Tone-continuity review (Phase 20 WS-4):** every deity and every Daedric Prince's rows were read against its tone profile, and shared deities worshipped by more than one race were laid side by side to confirm the cultural framing genuinely differs (not just the slot ID). Resolved this pass: Kyne vs. Kynareth differentiated on Nord (different gods, same race); Mara / Stendarr / Zenithar / Kynareth same-god overlap accepted across races with consistent full-sentence format; all 16 Daedric Princes audited and fact-checked against their Skyrim portrayal, with Mehrunes Dagon realigned to his in-game wrathful-command delivery; three cross-Prince MessageBox title collisions resolved. The companion Daedric manifest carries the matching Section 8 coverage. Drafts that drift from the descriptor are rejected at review.
 
 ---
 
@@ -1929,10 +1967,10 @@ All ten races carry full draft prose. The manifest is content-author-ready for P
 
 The remaining open work is no longer race-by-race prose drafting but the following:
 
-1. **Promote ratified prose.** Once reviewed, migrate the draft prose into the shipped ESP records (Phase 19) and into the `Race_*.md` player handbooks where it serves as player-facing copy.
-2. **Fill formal contextual-favor tables.** Khajiit, Bosmer, and Argonian favor rows here are derived from hook cross-checks and Tier Rewards because those race sheets carry no formal favor table yet. When those tables are added to the race sheets, re-check the lane families and row counts.
-3. **Breton Vigilant pressure** remains optional refinement: when a cheap encounter pattern is proven, author Section 18.14.
-4. **Per-deity offer prose for Breton** remains optional refinement: the single templated focus-emergence notification could be expanded into bespoke per-deity offers if the design later confirms full patron offers within traditions.
+1. **Gated slots closed.** The three Altmer slot groups (Section 13.13) and the Breton Vigilant pressure encounter (Section 18.14) were authored for the Phase 20 content lock. The Altmer implementation-spec questions (`PDV_TargetEndStates_1.0.md` line 146) are resolved in those sections: the favor lanes are keyed to the three alignment paths, and the crisis trigger list is the four locked beats.
+2. **Promote ratified prose.** Once reviewed, migrate the draft prose into the shipped ESP records (Phase 19) and into the `Race_*.md` player handbooks where it serves as player-facing copy.
+3. **Fill formal contextual-favor tables.** Khajiit, Bosmer, and Argonian favor rows here are derived from hook cross-checks and Tier Rewards because those race sheets carry no formal favor table yet. When those tables are added to the race sheets, re-check the lane families and row counts.
+4. **Per-deity offer prose for Breton** (optional refinement): the single templated focus-emergence notification could be expanded into bespoke per-deity offers if the design later confirms full patron offers within traditions.
 5. **Update `PDV_TargetEndStates_1.0.md`** "Content authored" column from Pending toward Drafted for each race as this manifest's prose is ratified.
 
 ---

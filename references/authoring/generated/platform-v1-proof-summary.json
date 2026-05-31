@@ -1,0 +1,3371 @@
+{
+  "schema": "creation-authoring.platform-v1-proof-summary.v1",
+  "generatedAt": "2026-05-31T10:27:38.992Z",
+  "game": "SkyrimSE",
+  "sourceMatrix": null,
+  "sourceProofResults": "generated\\proof-results.skyrimse.json",
+  "totals": {
+    "supported": 1,
+    "discoveryOnly": 16,
+    "blocked": 121,
+    "total": 138
+  },
+  "releaseReady": false,
+  "platformV1ProductReady": true,
+  "operationSurfaces": [
+    {
+      "recordFamily": "GLOB",
+      "operation": "glob.duplicate_create",
+      "supportScope": "family",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "PDV_GLO_ActivePietyDUPLICATE002",
+        "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "fixture": "fixtures/ckpe/phase59-glob-duplicate-create-product-command.ck-command-packet.json",
+        "proofLedger": "generated\\proof-results.skyrimse.json",
+        "strictReport": "fixtures/ckpe/phase61-glob-duplicate-create-strict-run-report.json",
+        "backend": "ckpe-bridge",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "PASS"
+      }
+    },
+    {
+      "recordFamily": "MGEF",
+      "operation": "record.create",
+      "supportScope": "blocked_generic_create",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "MGEF",
+      "operation": "record.update",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "MGEF",
+      "operation": "vmad.attach_script",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "MGEF",
+      "operation": "condition.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SPEL",
+      "operation": "record.create",
+      "supportScope": "blocked_generic_create",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SPEL",
+      "operation": "record.update",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SPEL",
+      "operation": "spell.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SPEL",
+      "operation": "condition.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "ACTI",
+      "operation": "record.duplicate_create",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "DefaultAshPileDUPLICATE005",
+        "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "fixture": "reference-packs\\player-devotion\\payload-v1\\acti-payload-v1-live.creation-authoring.json",
+        "proofLedger": "generated\\acti-payload-v1.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\acti-payload-v1.strict.run-report.json",
+        "backend": "ckpe-bridge",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "PASS"
+      }
+    },
+    {
+      "recordFamily": "ACTI",
+      "operation": "activator.payload.set",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "DefaultAshPileDUPLICATE005",
+        "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "fixture": "reference-packs\\player-devotion\\payload-v1\\acti-payload-v1-live.creation-authoring.json",
+        "proofLedger": "generated\\acti-payload-v1.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\acti-payload-v1.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "ACTI",
+      "operation": "record.create",
+      "supportScope": "blocked_generic_create",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "ACTI",
+      "operation": "record.update",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "ACTI",
+      "operation": "vmad.attach_script",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "ACTI",
+      "operation": "vmad.set_property",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "ACTI",
+      "operation": "vmad.set_array_property",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "NPC_",
+      "operation": "record.create",
+      "supportScope": "blocked_generic_create",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "NPC_",
+      "operation": "record.update",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "NPC_",
+      "operation": "keyword.add",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "AelaTheHuntress",
+        "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "NPC_",
+      "operation": "inventory.add",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "AelaTheHuntress",
+        "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "NPC_",
+      "operation": "spell.add",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "AelaTheHuntress",
+        "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "NPC_",
+      "operation": "perk.add",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "AelaTheHuntress",
+        "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "NPC_",
+      "operation": "package.add",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "AelaTheHuntress",
+        "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "NPC_",
+      "operation": "artifact.facegen.generate",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "REFR",
+      "operation": "reference.place",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "DIAL",
+      "operation": "dialogue.branch.create",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "DIAL",
+      "operation": "dialogue.topic.create",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "INFO",
+      "operation": "dialogue.info.create",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "INFO",
+      "operation": "condition.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "INFO",
+      "operation": "artifact.lip.generate",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "record.duplicate_create",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "PDV__ManagerQuestDUPLICATE002",
+        "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "fixture": "fixtures/ckpe/phase72-qust-duplicate-create-product-command.ck-command-packet.json",
+        "proofLedger": "fixtures\\ckpe\\phase74-qust-duplicate-create-proof-ledger.json",
+        "strictReport": "fixtures/ckpe/phase74-qust-duplicate-create-strict-run-report.json",
+        "backend": "ckpe-bridge",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "PASS"
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "record.create",
+      "supportScope": "blocked_generic_create",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "record.update",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "quest.create",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "quest.alias.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "quest.stage.fragment",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "condition.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "vmad.attach_script",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "PDV_MCM",
+        "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "vmad.set_property",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "vmad.set_array_property",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "QUST",
+      "operation": "artifact.seq.generate",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "PACK",
+      "operation": "record.create",
+      "supportScope": "blocked_generic_create",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "PACK",
+      "operation": "record.update",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "PACK",
+      "operation": "package.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "PACK",
+      "operation": "condition.add",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "DefaultSandboxEditorLocation1024",
+        "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "FLST",
+      "operation": "record.duplicate_create",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "PDV_FLST_AllDeitiesDUPLICATE002",
+        "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "fixture": "fixtures/ckpe/phase63-flst-duplicate-create-product-command.ck-command-packet.json",
+        "proofLedger": "fixtures\\ckpe\\phase65-flst-duplicate-create-proof-ledger.json",
+        "strictReport": "fixtures/ckpe/phase65-flst-duplicate-create-strict-run-report.json",
+        "backend": "ckpe-bridge",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "PASS"
+      }
+    },
+    {
+      "recordFamily": "FLST",
+      "operation": "record.create",
+      "supportScope": "blocked_generic_create",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "FLST",
+      "operation": "record.update",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "FLST",
+      "operation": "formlist.add",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "PDV_FLST_AllDeities",
+        "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "PERK",
+      "operation": "record.create",
+      "supportScope": "blocked_generic_create",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "PERK",
+      "operation": "record.update",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "PERK",
+      "operation": "perk.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "PERK",
+      "operation": "condition.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "PERK",
+      "operation": "vmad.attach_script",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "MESG",
+      "operation": "record.duplicate_create",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "_HelpPipBoyItemsDUPLICATE003",
+        "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "fixture": "reference-packs\\player-devotion\\payload-v1\\mesg-payload-v1-live.creation-authoring.json",
+        "proofLedger": "generated\\mesg-payload-v1.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\mesg-payload-v1.strict.run-report.json",
+        "backend": "ckpe-bridge",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "PASS"
+      }
+    },
+    {
+      "recordFamily": "MESG",
+      "operation": "message.payload.set",
+      "supportScope": "operation",
+      "status": "PASS",
+      "proofReferences": {
+        "target": "_HelpPipBoyItemsDUPLICATE003",
+        "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "fixture": "reference-packs\\player-devotion\\payload-v1\\mesg-payload-v1-live.creation-authoring.json",
+        "proofLedger": "generated\\mesg-payload-v1.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\mesg-payload-v1.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "MESG",
+      "operation": "record.create",
+      "supportScope": "blocked_generic_create",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "MESG",
+      "operation": "record.update",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SMBN",
+      "operation": "story_manager.node.create",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SMBN",
+      "operation": "condition.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SMQN",
+      "operation": "story_manager.node.create",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SMQN",
+      "operation": "condition.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SMEN",
+      "operation": "story_manager.node.create",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SMEN",
+      "operation": "condition.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SCEN",
+      "operation": "scene.create",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    },
+    {
+      "recordFamily": "SCEN",
+      "operation": "condition.add",
+      "supportScope": "discovery_only",
+      "status": "UNPROVEN",
+      "proofReferences": {
+        "target": null,
+        "generatedPlugin": null,
+        "fixture": null,
+        "proofLedger": null,
+        "strictReport": null,
+        "backend": null,
+        "verifierStatus": null,
+        "readbackStatus": null,
+        "commandEvidenceStatus": null
+      }
+    }
+  ],
+  "platformV1Gate": {
+    "status": "PASS",
+    "requiredSupportedOperations": [
+      {
+        "operation": "vmad.attach_script",
+        "supported": true,
+        "supportedRecordFamilies": [
+          "QUST"
+        ],
+        "candidateRecordFamilies": [
+          "MGEF",
+          "ACTI",
+          "QUST",
+          "PERK"
+        ],
+        "proofLedgers": [
+          "generated\\platform-v1-live-safe-writer.proof-ledger.json"
+        ]
+      },
+      {
+        "operation": "formlist.add",
+        "supported": true,
+        "supportedRecordFamilies": [
+          "FLST"
+        ],
+        "candidateRecordFamilies": [
+          "FLST"
+        ],
+        "proofLedgers": [
+          "generated\\platform-v1-live-safe-writer.proof-ledger.json"
+        ]
+      },
+      {
+        "operation": "keyword.add",
+        "supported": true,
+        "supportedRecordFamilies": [
+          "NPC_"
+        ],
+        "candidateRecordFamilies": [
+          "NPC_"
+        ],
+        "proofLedgers": [
+          "generated\\platform-v1-live-safe-writer.proof-ledger.json"
+        ]
+      },
+      {
+        "operation": "spell.add",
+        "supported": true,
+        "supportedRecordFamilies": [
+          "NPC_"
+        ],
+        "candidateRecordFamilies": [
+          "SPEL",
+          "NPC_"
+        ],
+        "proofLedgers": [
+          "generated\\platform-v1-live-safe-writer.proof-ledger.json"
+        ]
+      },
+      {
+        "operation": "perk.add",
+        "supported": true,
+        "supportedRecordFamilies": [
+          "NPC_"
+        ],
+        "candidateRecordFamilies": [
+          "NPC_",
+          "PERK"
+        ],
+        "proofLedgers": [
+          "generated\\platform-v1-live-safe-writer.proof-ledger.json"
+        ]
+      },
+      {
+        "operation": "package.add",
+        "supported": true,
+        "supportedRecordFamilies": [
+          "NPC_"
+        ],
+        "candidateRecordFamilies": [
+          "NPC_",
+          "PACK"
+        ],
+        "proofLedgers": [
+          "generated\\platform-v1-live-safe-writer.proof-ledger.json"
+        ]
+      },
+      {
+        "operation": "inventory.add",
+        "supported": true,
+        "supportedRecordFamilies": [
+          "NPC_"
+        ],
+        "candidateRecordFamilies": [
+          "NPC_"
+        ],
+        "proofLedgers": [
+          "generated\\platform-v1-live-safe-writer.proof-ledger.json"
+        ]
+      },
+      {
+        "operation": "condition.add",
+        "supported": true,
+        "supportedRecordFamilies": [
+          "PACK"
+        ],
+        "candidateRecordFamilies": [
+          "MGEF",
+          "SPEL",
+          "INFO",
+          "QUST",
+          "PACK",
+          "PERK",
+          "SMBN",
+          "SMQN",
+          "SMEN",
+          "SCEN"
+        ],
+        "proofLedgers": [
+          "generated\\platform-v1-live-safe-writer.proof-ledger.json"
+        ]
+      },
+      {
+        "operation": "glob.duplicate_create",
+        "supported": true,
+        "supportedRecordFamilies": [
+          "GLOB"
+        ],
+        "candidateRecordFamilies": [
+          "GLOB"
+        ],
+        "proofLedgers": [
+          "generated\\proof-results.skyrimse.json"
+        ]
+      }
+    ],
+    "blockers": [],
+    "nextProofOrder": [
+      {
+        "order": 1,
+        "surface": "Platform v1 release candidate",
+        "reason": "All required Platform v1 proof rows are supported."
+      }
+    ]
+  },
+  "groups": {
+    "supported": [
+      {
+        "recordFamily": "GLOB",
+        "status": "supported",
+        "operations": [
+          "glob.duplicate_create"
+        ],
+        "proofStatus": "PASS",
+        "proofTarget": "PDV_GLO_ActivePietyDUPLICATE002",
+        "proofGeneratedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "proofFixture": "fixtures/ckpe/phase59-glob-duplicate-create-product-command.ck-command-packet.json",
+        "proofLedger": "generated\\proof-results.skyrimse.json",
+        "proofReport": "fixtures/ckpe/phase61-glob-duplicate-create-strict-run-report.json",
+        "operationProofs": [
+          {
+            "operation": "glob.duplicate_create",
+            "status": "PASS",
+            "target": "PDV_GLO_ActivePietyDUPLICATE002",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures/ckpe/phase59-glob-duplicate-create-product-command.ck-command-packet.json",
+            "proofLedger": "generated\\proof-results.skyrimse.json",
+            "strictReport": "fixtures/ckpe/phase61-glob-duplicate-create-strict-run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        ],
+        "reason": null
+      }
+    ],
+    "discoveryOnly": [
+      {
+        "recordFamily": "MGEF",
+        "status": "ck_required_unproven",
+        "operations": [
+          "record.create",
+          "record.update",
+          "vmad.attach_script",
+          "condition.add"
+        ],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "SPEL",
+        "status": "ck_required_unproven",
+        "operations": [
+          "record.create",
+          "record.update",
+          "spell.add",
+          "condition.add"
+        ],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "ACTI",
+        "status": "ck_required_unproven",
+        "operations": [
+          "record.duplicate_create",
+          "activator.payload.set",
+          "record.create",
+          "record.update",
+          "vmad.attach_script",
+          "vmad.set_property",
+          "vmad.set_array_property"
+        ],
+        "proofStatus": "PASS",
+        "proofTarget": "DefaultAshPileDUPLICATE005",
+        "proofGeneratedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "proofFixture": "reference-packs\\player-devotion\\payload-v1\\acti-payload-v1-live.creation-authoring.json",
+        "proofLedger": "generated\\acti-payload-v1.proof-ledger.json",
+        "proofReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\acti-payload-v1.strict.run-report.json",
+        "operationProofs": [
+          {
+            "operation": "record.duplicate_create",
+            "status": "PASS",
+            "target": "DefaultAshPileDUPLICATE005",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\acti-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\acti-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\acti-payload-v1.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          },
+          {
+            "operation": "activator.payload.set",
+            "status": "PASS",
+            "target": "DefaultAshPileDUPLICATE005",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\acti-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\acti-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\acti-payload-v1.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        ],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "NPC_",
+        "status": "ck_required_unproven",
+        "operations": [
+          "record.create",
+          "record.update",
+          "keyword.add",
+          "inventory.add",
+          "spell.add",
+          "perk.add",
+          "package.add",
+          "artifact.facegen.generate"
+        ],
+        "proofStatus": "PASS",
+        "proofTarget": "AelaTheHuntress",
+        "proofGeneratedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "proofFixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "proofReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "operationProofs": [
+          {
+            "operation": "keyword.add",
+            "status": "PASS",
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          },
+          {
+            "operation": "inventory.add",
+            "status": "PASS",
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          },
+          {
+            "operation": "spell.add",
+            "status": "PASS",
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          },
+          {
+            "operation": "perk.add",
+            "status": "PASS",
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          },
+          {
+            "operation": "package.add",
+            "status": "PASS",
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        ],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "REFR",
+        "status": "ck_required_unproven",
+        "operations": [
+          "reference.place"
+        ],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "DIAL",
+        "status": "ck_required_unproven",
+        "operations": [
+          "dialogue.branch.create",
+          "dialogue.topic.create"
+        ],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "INFO",
+        "status": "ck_required_unproven",
+        "operations": [
+          "dialogue.info.create",
+          "condition.add",
+          "artifact.lip.generate"
+        ],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "QUST",
+        "status": "ck_required_unproven",
+        "operations": [
+          "record.duplicate_create",
+          "record.create",
+          "record.update",
+          "quest.create",
+          "quest.alias.add",
+          "quest.stage.fragment",
+          "condition.add",
+          "vmad.attach_script",
+          "vmad.set_property",
+          "vmad.set_array_property",
+          "artifact.seq.generate"
+        ],
+        "proofStatus": "PASS",
+        "proofTarget": "PDV_MCM",
+        "proofGeneratedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "proofFixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "proofReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "operationProofs": [
+          {
+            "operation": "record.duplicate_create",
+            "status": "PASS",
+            "target": "PDV__ManagerQuestDUPLICATE002",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures/ckpe/phase72-qust-duplicate-create-product-command.ck-command-packet.json",
+            "proofLedger": "fixtures\\ckpe\\phase74-qust-duplicate-create-proof-ledger.json",
+            "strictReport": "fixtures/ckpe/phase74-qust-duplicate-create-strict-run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          },
+          {
+            "operation": "vmad.attach_script",
+            "status": "PASS",
+            "target": "PDV_MCM",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        ],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "PACK",
+        "status": "ck_required_unproven",
+        "operations": [
+          "record.create",
+          "record.update",
+          "package.add",
+          "condition.add"
+        ],
+        "proofStatus": "PASS",
+        "proofTarget": "DefaultSandboxEditorLocation1024",
+        "proofGeneratedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+        "proofFixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+        "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+        "proofReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+        "operationProofs": [
+          {
+            "operation": "condition.add",
+            "status": "PASS",
+            "target": "DefaultSandboxEditorLocation1024",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        ],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "FLST",
+        "status": "ck_required_unproven",
+        "operations": [
+          "record.duplicate_create",
+          "record.create",
+          "record.update",
+          "formlist.add"
+        ],
+        "proofStatus": "PASS",
+        "proofTarget": "PDV_FLST_AllDeitiesDUPLICATE002",
+        "proofGeneratedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "proofFixture": "fixtures/ckpe/phase63-flst-duplicate-create-product-command.ck-command-packet.json",
+        "proofLedger": "fixtures\\ckpe\\phase65-flst-duplicate-create-proof-ledger.json",
+        "proofReport": "fixtures/ckpe/phase65-flst-duplicate-create-strict-run-report.json",
+        "operationProofs": [
+          {
+            "operation": "record.duplicate_create",
+            "status": "PASS",
+            "target": "PDV_FLST_AllDeitiesDUPLICATE002",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures/ckpe/phase63-flst-duplicate-create-product-command.ck-command-packet.json",
+            "proofLedger": "fixtures\\ckpe\\phase65-flst-duplicate-create-proof-ledger.json",
+            "strictReport": "fixtures/ckpe/phase65-flst-duplicate-create-strict-run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          },
+          {
+            "operation": "formlist.add",
+            "status": "PASS",
+            "target": "PDV_FLST_AllDeities",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        ],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "PERK",
+        "status": "ck_required_unproven",
+        "operations": [
+          "record.create",
+          "record.update",
+          "perk.add",
+          "condition.add",
+          "vmad.attach_script"
+        ],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "MESG",
+        "status": "ck_required_unproven",
+        "operations": [
+          "record.duplicate_create",
+          "message.payload.set",
+          "record.create",
+          "record.update"
+        ],
+        "proofStatus": "PASS",
+        "proofTarget": "_HelpPipBoyItemsDUPLICATE003",
+        "proofGeneratedPlugin": "PDV_Phase9To12_CKProof.esp",
+        "proofFixture": "reference-packs\\player-devotion\\payload-v1\\mesg-payload-v1-live.creation-authoring.json",
+        "proofLedger": "generated\\mesg-payload-v1.proof-ledger.json",
+        "proofReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\mesg-payload-v1.strict.run-report.json",
+        "operationProofs": [
+          {
+            "operation": "record.duplicate_create",
+            "status": "PASS",
+            "target": "_HelpPipBoyItemsDUPLICATE003",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\mesg-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\mesg-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\mesg-payload-v1.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          },
+          {
+            "operation": "message.payload.set",
+            "status": "PASS",
+            "target": "_HelpPipBoyItemsDUPLICATE003",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\mesg-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\mesg-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\mesg-payload-v1.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        ],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "SMBN",
+        "status": "ck_required_unproven",
+        "operations": [
+          "story_manager.node.create",
+          "condition.add"
+        ],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "SMQN",
+        "status": "ck_required_unproven",
+        "operations": [
+          "story_manager.node.create",
+          "condition.add"
+        ],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "SMEN",
+        "status": "ck_required_unproven",
+        "operations": [
+          "story_manager.node.create",
+          "condition.add"
+        ],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      },
+      {
+        "recordFamily": "SCEN",
+        "status": "ck_required_unproven",
+        "operations": [
+          "scene.create",
+          "condition.add"
+        ],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Manifest operation coverage exists, but CKPE execution and live readback proof is not passing yet."
+      }
+    ],
+    "blocked": [
+      {
+        "recordFamily": "NONE",
+        "status": "not_applicable",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Not a standalone authored CK record family."
+      },
+      {
+        "recordFamily": "TES4",
+        "status": "not_applicable",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Not a standalone authored CK record family."
+      },
+      {
+        "recordFamily": "GRUP",
+        "status": "not_applicable",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Not a standalone authored CK record family."
+      },
+      {
+        "recordFamily": "GMST",
+        "status": "read_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Read-only or engine-owned in this product until a mutation proof exists."
+      },
+      {
+        "recordFamily": "KYWD",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LCRT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "AACT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "TXST",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "MICN",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "CLAS",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "FACT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "HDPT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "EYES",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "RACE",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "SOUN",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ASPC",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "SKIL",
+        "status": "read_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Read-only or engine-owned in this product until a mutation proof exists."
+      },
+      {
+        "recordFamily": "SCPT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LTEX",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ENCH",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "SCRL",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "TACT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ARMO",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "BOOK",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "CONT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "DOOR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "INGR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LIGH",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "MISC",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "APPA",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "STAT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "SCOL",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "MSTT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "GRAS",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "TREE",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "FLOR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "FURN",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "WEAP",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "AMMO",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LVLN",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "KEYM",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ALCH",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "IDLM",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "NOTE",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "COBJ",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "PROJ",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "HAZD",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "SLGM",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LVLI",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "WTHR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "CLMT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "SPGD",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "RFCT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "REGN",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "NAVI",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "CELL",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ACHR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "PMIS",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "PARW",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "PGRE",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "PBEA",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "PFLA",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "PCON",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "PBAR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "PHZD",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "WRLD",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LAND",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "NAVM",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "TLOD",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "IDLE",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "CSTY",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LSCR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LVSP",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ANIO",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "WATR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "EFSH",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "TOFT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "EXPL",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "DEBR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "IMGS",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "IMAD",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "BPTD",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ADDN",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "AVIF",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "CAMS",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "CPTH",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "VTYP",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "MATT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "IPCT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "IPDS",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ARMA",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ECZN",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LCTN",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "RGDL",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "DOBJ",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LGTM",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "MUSC",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "FSTP",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "FSTS",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "DLBR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "MUST",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "DLVW",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "WOOP",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "SHOU",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "EQUP",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "RELA",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ASTP",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "OTFT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "ARTO",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "MATO",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "MOVT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "SNDR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "DUAL",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "SNCT",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "SOPM",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "COLL",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "CLFM",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "REVB",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LENS",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "LSPR",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      },
+      {
+        "recordFamily": "VOLI",
+        "status": "research_only",
+        "operations": [],
+        "proofStatus": "UNPROVEN",
+        "proofTarget": null,
+        "proofGeneratedPlugin": null,
+        "proofFixture": null,
+        "proofLedger": null,
+        "proofReport": null,
+        "operationProofs": [],
+        "reason": "Inventory exists, but no end-to-end CKPE mutation and MO2 readback proof has been defined."
+      }
+    ]
+  }
+}

@@ -1,8 +1,8 @@
 # Argonian -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 19 (Argonian (full draft))
-**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
-**Rows:** 46 drafted
+**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
+**Rows:** 49 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -12,7 +12,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Argonian_Layered_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 150 / 200 |  | The Hist is distant but present; the People know you. Water breathing deepens; swimming +10%; near water, +2 health a second; disease resistance +15%. |  |
+| _(no tone match)_ | `PDV_Bless_Argonian_Layered_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 179 / 200 |  | The Hist is distant but present; the People know you. Water breathing deepens; you swim 10% faster; near water you heal 2 health a second; your resistance to disease rises by 15%. |  |
 
 ## Deepening blessing (Tier 2)
 
@@ -20,7 +20,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Argonian_Layered_T2` | Passive blessing description; visible whenever the player views active effects. | Narrator | 163 / 200 |  | All three layers are maintained under exile. Near water, +5 health a second; rest near water restores health and stamina fully; helping a Saxhleel returns stamina. |  |
+| _(no tone match)_ | `PDV_Bless_Argonian_Layered_T2` | Passive blessing description; visible whenever the player views active effects. | Narrator | 170 / 200 |  | All three layers are maintained under exile. Near water you heal 5 health a second; rest near water restores health and stamina fully; helping a Saxhleel returns stamina. |  |
 
 ## Devoted blessing (Tier 3)
 
@@ -28,8 +28,8 @@ _3 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Argonian_Hist_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 155 / 200 |  | The Hist reaches you where water reaches. In wetland and water, damage resistance +10%, sneak +15, attack speed +3%. The swamp gives what dry stone cannot. |  |
-| _(no tone match)_ | `PDV_Bless_Argonian_Community_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 138 / 200 |  | The People are your armor. Helping Saxhleel returns strong piety; a friendly Argonian nearby grants +8 armor; the exile network knows you. |  |
+| _(no tone match)_ | `PDV_Bless_Argonian_Hist_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 186 / 200 |  | The Hist reaches you where water reaches. In wetland and water, your damage resistance rises by 10%, your Sneak by 15, and your attack speed by 3%. The swamp gives what dry stone cannot. |  |
+| _(no tone match)_ | `PDV_Bless_Argonian_Community_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 145 / 200 |  | The People are your armor. Helping Saxhleel returns strong piety; a friendly Argonian nearby raises your armor by 8; the exile network knows you. |  |
 | Sithis: The primordial void -- change, death, the dark before and around all things; acknowledged, never worshipped; speaks rarely, and never to comfort. | `PDV_Bless_Argonian_Sithis_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 157 / 200 |  | Sithis holds those who faced the void unflinching. Near death, a burst of stamina regeneration; a Dark Brotherhood contract sharpens speed and stealth after. |  |
 
 ## Champion ambient line
@@ -73,7 +73,7 @@ _5 rows._
 
 ## Contextual favor (small, Noted)
 
-_6 rows._
+_8 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
@@ -83,16 +83,19 @@ _6 rows._
 | _(no tone match)_ | `PDV_Notif_Argonian_FavorNoted_Community_AssemblageKept` | HUD corner notification. After-act; Windhelm Assemblage extra weight. | Player-2nd | 59 / 80 |  | The Windhelm Assemblage is surer for what you did. Kinship. |  |
 | _(no tone match)_ | `PDV_Notif_Argonian_FavorNoted_Void_DeathFaced` | HUD corner notification. After-act; curated death-facing choice. | Player-2nd | 60 / 80 |  | You faced a death without flinching. Sithis acknowledges it. |  |
 | _(no tone match)_ | `PDV_Notif_Argonian_FavorNoted_Void_BrotherhoodContract` | HUD corner notification. After-act; per Dark Brotherhood contract. | Player-2nd | 59 / 80 |  | A contract completed for the Brotherhood. The void answers. |  |
+| _(no tone match)_ | `PDV_Notif_Argonian_FavorNoted_Hist_SapMeditation` | HUD corner notification. After-act; designated Hist contemplation site; daily cap; MECHANICS-BLOCKED: requires Hist-sap vessel feature from Phase 21 custom content. | Player-2nd | 73 / 80 |  | Sap taken. The distance closes a little; the Hist hears across the marsh. |  |
+| _(no tone match)_ | `PDV_Notif_Argonian_FavorNoted_Community_SettlementKept` | HUD corner notification. After-act; defending Argonian settlement or Assemblage from direct threat; cooldown per event. | Player-2nd | 67 / 80 |  | You kept the People from harm. The exile community is safer for it. |  |
 
 ## Curse onset / cure
 
-_3 rows._
+_4 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Argonian_CurseState_VampireOnset` | MessageBox. Once on becoming vampire. | Narrator | 21+245 / 40+500 |  | Title: "The Hist Falls Silent"   Body: "You are undead now. The Hist gives Saxhleel souls and receives them at death -- and yours is no longer going where it was meant to go. The Hist falls silent. The People cannot safely hold you. Only the void stays near. This is the deepest grief." |  |
 | _(no tone match)_ | `PDV_Msg_Argonian_CurseState_VampireCured` | MessageBox. Once on cure. | Narrator | 22+219 / 40+500 |  | Title: "The Hist Reaches Again"   Body: "The undeath is lifted. The Hist's silence breaks slowly -- it must learn to reach you again across both the distance and the memory of what you were. The People can hold you once more. It will take time. It can be done." |  |
 | _(no tone match)_ | `PDV_Msg_Argonian_CurseState_WerewolfOnset` | MessageBox. Once on first transformation. | Narrator | 15+222 / 40+500 |  | Title: "A Changed Shape"   Body: "The beast is in you. The Hist is accustomed to Saxhleel who change -- the shape strains the relation but does not sever it. The People can still recognize you. This is serious, but it is not the silence. It can be carried." |  |
+| _(no tone match)_ | `PDV_Msg_Argonian_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; clears posture Strained. | Narrator | 17+219 / 40+500 |  | Title: "The Shape Settles"   Body: "The beast is set down. The strain on the Hist relation eases, and the People recognize you without reservation again. The shape that pulled at the bond is gone. What was carried is set aside; the Hist reaches you clean." |  |
 
 ## Shrine and privilege dialogue
 

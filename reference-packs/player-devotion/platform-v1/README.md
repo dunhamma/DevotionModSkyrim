@@ -12,7 +12,7 @@ onto live records to verify writer/readback coverage.
 Proof command:
 
 ```powershell
-node packages\creation-authoring\src\cli.mjs prove-applied `
+node tools\creation-authoring\src\cli.mjs prove-applied `
   reference-packs\player-devotion\platform-v1\platform-v1-live-safe-writer.creation-authoring.json `
   --profile reference-packs\player-devotion\platform-v1\platform-v1-live.profile.json `
   --readback reference-packs\player-devotion\platform-v1\platform-v1-live-safe-writer.readback.json `
@@ -23,3 +23,6 @@ node packages\creation-authoring\src\cli.mjs prove-applied `
   --proof-output generated\platform-v1-live-safe-writer.proof-ledger.json
 ```
 
+Internal release handoff evidence is mirrored under
+`references/authoring/generated/` and summarized in
+`references/authoring/PDV_PlatformV1InternalRelease.md`.

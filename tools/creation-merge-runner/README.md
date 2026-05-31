@@ -1,6 +1,6 @@
 # Creation Merge Runner
 
-Local Mutagen-backed promotion helper for `tools/creation-authoring`.
+Local Mutagen-backed promotion helper for `packages/creation-authoring`.
 
 The runner consumes `creation-authoring.structured-merge-request.v1`, loads the
 reviewed generated plugin and source plugin, copies approved top-level generated
@@ -17,7 +17,7 @@ It is deliberately narrow:
 Example:
 
 ```powershell
-dotnet run --project .\tools\creation-merge-runner\CreationMergeRunner.csproj -- `
+dotnet run --project .\native\CreationMergeRunner\CreationMergeRunner.csproj -- `
   --request .\scratch\structured-merge-request.json `
   --source-path D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp `
   --generated-path D:\Wabbajack\modlists\Anvil\mods\Devotion\PDV_AutoWireReference.esp `
@@ -33,6 +33,8 @@ Current supported record-family gate:
 - `KYWD`
 - `FLST`
 - `MGEF`
+- `NPC_`
+- `PACK`
 - `PERK`
 - `QUST`
 - `vmad`
