@@ -1,6 +1,6 @@
 # PDV Writer Review -- Index
 
-**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md`
 
 Per-race writer-review files. Each `<Race>_Review.md` groups every drafted in-game string by the moment in which the player encounters it, with deity tone, voice, char count vs hard cap, and an empty `Edit` column for revisions.

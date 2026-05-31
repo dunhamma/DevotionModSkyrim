@@ -1,7 +1,7 @@
 # Argonian -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 19 (Argonian (full draft))
-**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
 **Rows:** 49 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
@@ -12,7 +12,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Argonian_Layered_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 150 / 200 |  | The Hist is distant but present; the People know you. Water breathing deepens; swimming +10%; near water, +2 health a second; disease resistance +15%. |  |
+| _(no tone match)_ | `PDV_Bless_Argonian_Layered_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 179 / 200 |  | The Hist is distant but present; the People know you. Water breathing deepens; you swim 10% faster; near water you heal 2 health a second; your resistance to disease rises by 15%. |  |
 
 ## Deepening blessing (Tier 2)
 
@@ -20,7 +20,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Argonian_Layered_T2` | Passive blessing description; visible whenever the player views active effects. | Narrator | 163 / 200 |  | All three layers are maintained under exile. Near water, +5 health a second; rest near water restores health and stamina fully; helping a Saxhleel returns stamina. |  |
+| _(no tone match)_ | `PDV_Bless_Argonian_Layered_T2` | Passive blessing description; visible whenever the player views active effects. | Narrator | 170 / 200 |  | All three layers are maintained under exile. Near water you heal 5 health a second; rest near water restores health and stamina fully; helping a Saxhleel returns stamina. |  |
 
 ## Devoted blessing (Tier 3)
 
@@ -28,8 +28,8 @@ _3 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Argonian_Hist_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 155 / 200 |  | The Hist reaches you where water reaches. In wetland and water, damage resistance +10%, sneak +15, attack speed +3%. The swamp gives what dry stone cannot. |  |
-| _(no tone match)_ | `PDV_Bless_Argonian_Community_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 138 / 200 |  | The People are your armor. Helping Saxhleel returns strong piety; a friendly Argonian nearby grants +8 armor; the exile network knows you. |  |
+| _(no tone match)_ | `PDV_Bless_Argonian_Hist_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 186 / 200 |  | The Hist reaches you where water reaches. In wetland and water, your damage resistance rises by 10%, your Sneak by 15, and your attack speed by 3%. The swamp gives what dry stone cannot. |  |
+| _(no tone match)_ | `PDV_Bless_Argonian_Community_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 145 / 200 |  | The People are your armor. Helping Saxhleel returns strong piety; a friendly Argonian nearby raises your armor by 8; the exile network knows you. |  |
 | Sithis: The primordial void -- change, death, the dark before and around all things; acknowledged, never worshipped; speaks rarely, and never to comfort. | `PDV_Bless_Argonian_Sithis_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 157 / 200 |  | Sithis holds those who faced the void unflinching. Near death, a burst of stamina regeneration; a Dark Brotherhood contract sharpens speed and stealth after. |  |
 
 ## Champion ambient line

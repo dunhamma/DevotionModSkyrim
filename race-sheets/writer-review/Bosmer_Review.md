@@ -1,7 +1,7 @@
 # Bosmer -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 17 (Bosmer (full draft))
-**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
 **Rows:** 61 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
@@ -12,10 +12,10 @@ _4 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Bosmer_OldContract_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 86 / 200 |  | The Green Pact is kept. Archery damage +3%; poison resistance +15%; dagger damage +2%. |  |
-| _(no tone match)_ | `PDV_Bless_Bosmer_LivingStory_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 84 / 200 |  | The Story is carried. Speech +5%; outdoor stamina regen +5%; poison resistance +10%. |  |
-| _(no tone match)_ | `PDV_Bless_Bosmer_Exchange_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 119 / 200 |  | Z'en weighs your dealings. Barter +5%; merchant prices improve; defending against a first-striker returns minor health. |  |
-| _(no tone match)_ | `PDV_Bless_Bosmer_BanditRoad_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 110 / 200 |  | The road teaches you. Pickpocket +5%; sneak +3%; a night slept outdoors sharpens the next day's first stealth. |  |
+| _(no tone match)_ | `PDV_Bless_Bosmer_OldContract_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 123 / 200 |  | The Green Pact is kept. Your archery strikes 3% harder; your resistance to poison rises by 15%; your daggers cut 2% deeper. |  |
+| _(no tone match)_ | `PDV_Bless_Bosmer_LivingStory_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 134 / 200 |  | The Story is carried. Your Speech improves by 5%; your stamina regenerates 5% faster outdoors; your resistance to poison rises by 10%. |  |
+| _(no tone match)_ | `PDV_Bless_Bosmer_Exchange_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 135 / 200 |  | Z'en weighs your dealings. Your Barter improves by 5%; merchant prices improve; defending against a first-striker returns minor health. |  |
+| _(no tone match)_ | `PDV_Bless_Bosmer_BanditRoad_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 142 / 200 |  | The road teaches you. Your Pickpocket improves by 5%; your Sneak improves by 3%; a night slept outdoors sharpens the next day's first stealth. |  |
 
 ## Deepening blessing (Tier 2)
 
@@ -34,8 +34,8 @@ _4 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Bosmer_OldContract_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 133 / 200 |  | Y'ffre's Mark is on you. In forest and wild, archery damage +8%; animals never flee; the first arrow of a hunt strikes true and deep. |  |
-| _(no tone match)_ | `PDV_Bless_Bosmer_LivingStory_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 147 / 200 |  | You carry the Story itself. Speech +10%; preserving a community or tradition returns a day of broadened skill. The dialogue of memory opens to you. |  |
+| _(no tone match)_ | `PDV_Bless_Bosmer_OldContract_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 145 / 200 |  | Y'ffre's Mark is on you. In forest and wild, your archery strikes 8% harder; animals never flee; the first arrow of a hunt strikes true and deep. |  |
+| _(no tone match)_ | `PDV_Bless_Bosmer_LivingStory_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 167 / 200 |  | You carry the Story itself. Your Speech improves by 10%, and preserving a community or tradition returns a day of broadened skill. The dialogue of memory opens to you. |  |
 | _(no tone match)_ | `PDV_Bless_Bosmer_Exchange_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 144 / 200 |  | Balance is restored through you. A debt settled or a wrong redressed returns a day of stronger skill growth; proportionate kills return stamina. |  |
 | _(no tone match)_ | `PDV_Bless_Bosmer_BanditRoad_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 154 / 200 |  | Baan Dar's luck is yours. Once a week, a survival you should not have had returns a day-long pulse of fortune; the wild road weighs heavier than the city. |  |
 

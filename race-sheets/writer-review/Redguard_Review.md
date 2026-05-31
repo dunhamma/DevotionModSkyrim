@@ -1,7 +1,7 @@
 # Redguard -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 16 (Redguard (full draft))
-**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
 **Rows:** 62 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
@@ -12,7 +12,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Redguard_Yokudan_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 149 / 200 |  | Satakal's cycle is acknowledged and Tu'whacca's guidance sought. Disease resistance +10%; one-handed damage +3%; felling undead returns minor health. |  |
+| _(no tone match)_ | `PDV_Bless_Redguard_Yokudan_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 184 / 200 |  | Satakal's cycle is acknowledged and Tu'whacca's guidance sought. Your resistance to disease rises by 10%; your one-handed attacks strike 3% harder; felling undead returns minor health. |  |
 
 ## Deepening blessing (Tier 2)
 
@@ -33,7 +33,7 @@ _6 rows._
 | Satakal: The Worldskin; vast, cyclical; speaks of the shedding, of creation and destruction as one motion, of death as correct when its time has come. | `PDV_Bless_Redguard_Satakal_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 138 / 200 |  | Satakal sheds the Worldskin around you. A quest of cosmic or generational stakes returns a day of fear resistance and health regeneration. |  |
 | _(no tone match)_ | `PDV_Bless_Redguard_Tuwhacca_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 156 / 200 |  | Tu'whacca draws the Far Shores nearer. Undead deal up to 25% less harm; a completed death-rite restores full health, and the dead feel present at the tombs. |  |
 | Ruptga: Tall Papa, the pathfinder; the first to find the Far Shores; speaks of the way charted and of survival as a sacred achievement. | `PDV_Bless_Redguard_Ruptga_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 115 / 200 |  | Ruptga charts your way. Making a path through the impossible returns a day of steady bonus across your disciplines. |  |
-| Leki: Saint of the Spirit Sword; disciplined, exact; speaks of the blade as devotion, the honorable cut, the art learned with patience. | `PDV_Bless_Redguard_Leki_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 111 / 200 |  | Leki makes the blade discipline holy. One-handed damage +8%; honorable sword-work returns power-attack stamina. |  |
+| Leki: Saint of the Spirit Sword; disciplined, exact; speaks of the blade as devotion, the honorable cut, the art learned with patience. | `PDV_Bless_Redguard_Leki_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 134 / 200 |  | Leki makes the blade discipline holy. Your one-handed attacks strike 8% harder, and honorable sword-work returns power-attack stamina. |  |
 | Tava: The bird-god of wind and passage; speaks of safe arrival, the road carried, the storm steered through. | `PDV_Bless_Redguard_Tava_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 155 / 200 |  | Tava rides the wind with you. Storms no longer penalize the open road; sprinting drains 15% less stamina; a long journey's end restores health and stamina. |  |
 | HoonDing: The Make-Way God; surges and does not linger; speaks only in the moment a way is forced where there was none. | `PDV_Bless_Redguard_HoonDing_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 108 / 200 |  | HoonDing makes the way. Once a week, an impossible-odds victory returns a day-long surge of combat strength. |  |
 

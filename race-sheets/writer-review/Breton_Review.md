@@ -1,7 +1,7 @@
 # Breton -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 18 (Breton (full draft))
-**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
 **Rows:** 69 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
@@ -12,9 +12,9 @@ _3 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Breton_KnightsRoad_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 99 / 200 |  | The vow is kept. Magic resistance +5%; defending an NPC in combat grants +20 max health for a time. |  |
+| _(no tone match)_ | `PDV_Bless_Breton_KnightsRoad_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 124 / 200 |  | The vow is kept. Your magic resistance rises by 5%, and defending an NPC in combat grants 20 more maximum health for a time. |  |
 | _(no tone match)_ | `PDV_Bless_Breton_HiddenArt_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 106 / 200 |  | The hidden practice answers. Novice and Apprentice spells cost 5% less; magic regenerates faster at night. |  |
-| _(no tone match)_ | `PDV_Bless_Breton_GreenWay_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 81 / 200 |  | The old covenant stirs. Poison resistance +10%; foraging yields an extra harvest. |  |
+| _(no tone match)_ | `PDV_Bless_Breton_GreenWay_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 101 / 200 |  | The old covenant stirs. Your resistance to poison rises by 10%, and foraging yields an extra harvest. |  |
 
 ## Deepening blessing (Tier 2)
 
@@ -39,9 +39,9 @@ _10 rows._
 | _(no tone match)_ | `PDV_Bless_Breton_Hircine_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 102 / 200 |  | Hircine bonds the beast. Beast form lasts longer; the hunt scores stronger; the change comes smoother. |  |
 | _(no tone match)_ | `PDV_Bless_Breton_Nocturnal_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 115 / 200 |  | Nocturnal marks the shadow. Sneak attacks deal 15% more; a theft from a notable target opens a brief unseen window. |  |
 | _(no tone match)_ | `PDV_Bless_Breton_Namira_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 108 / 200 |  | Namira's corruption is yours. Squalor and hunger press lighter; she notices the things others will not name. |  |
-| _(no tone match)_ | `PDV_Bless_Breton_Yffre_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 121 / 200 |  | Y'ffre's Living Story runs through you. In forest, armor +10; hunting shots strike deep; nature-site quests count double. |  |
-| Magnus: The Elder Way, magic as discipline; speaks of the arts mastered and the architecture of the spell; precise. | `PDV_Bless_Breton_Magnus_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 105 / 200 |  | Magnus opens the Elder Way. All spell costs -10%, Alteration -15%; Psijic-adjacent study scores strongly. |  |
-| Phynaster: Longevity and the elven inheritance; speaks of the long life and the magic in half-elven blood; measured. | `PDV_Bless_Breton_Phynaster_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 124 / 200 |  | Phynaster's long life is in your blood. Magic resistance +15% over your Breton birthright; elven-heritage acts return piety. |  |
+| _(no tone match)_ | `PDV_Bless_Breton_Yffre_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 134 / 200 |  | Y'ffre's Living Story runs through you. In forest, your armor rises by 10; hunting shots strike deep; nature-site quests count double. |  |
+| Magnus: The Elder Way, magic as discipline; speaks of the arts mastered and the architecture of the spell; precise. | `PDV_Bless_Breton_Magnus_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 122 / 200 |  | Magnus opens the Elder Way. All spells cost 10% less and Alteration costs 15% less; Psijic-adjacent study scores strongly. |  |
+| Phynaster: Longevity and the elven inheritance; speaks of the long life and the magic in half-elven blood; measured. | `PDV_Bless_Breton_Phynaster_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 144 / 200 |  | Phynaster's long life is in your blood. Your resistance to magic rises by 15% over your Breton birthright, and elven-heritage acts return piety. |  |
 
 ## Focus emergence (silent)
 

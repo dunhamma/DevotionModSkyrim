@@ -1,7 +1,7 @@
 # Orc -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 11 (Orc (full draft))
-**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
 **Rows:** 50 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
@@ -12,7 +12,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Malacath: Blunt, verdict-toned, exile-coded; never petitioned, never warm; speaks of the code, the forge, the oath, and what he has witnessed; a judgment rendered, not a comfort offered. | `PDV_Bless_Orc_Malacath_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 136 / 200 |  | Malacath has noted your conduct. Smithing experience +5%; Orcish armor you wear adds 5 armor; disease resistance +10%; brawl damage +5%. |  |
+| Malacath: Blunt, verdict-toned, exile-coded; never petitioned, never warm; speaks of the code, the forge, the oath, and what he has witnessed; a judgment rendered, not a comfort offered. | `PDV_Bless_Orc_Malacath_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 176 / 200 |  | Malacath has noted your conduct. Your Smithing gains 5% more experience; Orcish armor you wear adds 5 armor; your resistance to disease rises by 10%; your brawls hit 5% harder. |  |
 
 ## Champion ambient line
 
