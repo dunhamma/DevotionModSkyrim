@@ -1947,6 +1947,7 @@ This manifest's own verification, per the plan:
 12. **Firing-density:** Section 10.11 sanity table confirms Nord steady play stays inside the `Marked < 1 per 2h` and `Noted < 2 per h` targets.
 13. **Tone-profile coverage:** every Nord deity referenced by a Section 10.2-10.10 row has a Section 10.1 tone-profile entry.
 14. **ASCII stress-test:** the two named stress-test rows -- `PDV_Notif_Nord_General_AncestorsQuiet` ("The ancestors are quiet.") and `PDV_Msg_Nord_FavorMarked_TalosDefiance` ("You stood between them and me. Carry the old breath a little longer.") -- read naturally under ASCII without em dashes or ellipses. The rule is not raising cost back to the user.
+15. **Tone-continuity review (Phase 20 WS-4):** every deity and every Daedric Prince's rows were read against its tone profile, and shared deities worshipped by more than one race were laid side by side to confirm the cultural framing genuinely differs (not just the slot ID). Resolved this pass: Kyne vs. Kynareth differentiated on Nord (different gods, same race); Mara / Stendarr / Zenithar / Kynareth same-god overlap accepted across races with consistent full-sentence format; all 16 Daedric Princes audited and fact-checked against their Skyrim portrayal, with Mehrunes Dagon realigned to his in-game wrathful-command delivery; three cross-Prince MessageBox title collisions resolved. The companion Daedric manifest carries the matching Section 8 coverage. Drafts that drift from the descriptor are rejected at review.
 
 ---
 
