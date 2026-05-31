@@ -340,7 +340,7 @@ static void CheckTriggerPlacements(
             continue;
         }
 
-        report.Actions.Add($"{trigger.PlacementRefEditorId} -> {trigger.EditorId}");
+        report.Actions.Add($"{trigger.PlacementRefEditorId} [{placed.FormKey}] -> {trigger.EditorId} [{baseRecord.FormKey}]");
     }
 }
 

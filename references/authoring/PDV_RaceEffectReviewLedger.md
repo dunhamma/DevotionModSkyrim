@@ -16,6 +16,22 @@ theme, gameplay role, magnitude, conditions, stacking, grant/removal behavior,
 Survey/status explanation, anti-farm posture, curse interaction, and Daedric
 interaction.
 
+## Holistic Review Hook
+
+Use this branch point in the content authoring tree when you want to continue
+without widening reward policy by accident:
+
+```text
+Broad reward authoring remains blocked until each race row in this ledger names
+the floor effect family, ceiling effect family, magnitude range, cadence,
+grant/removal owner, stack cap, Survey/status copy, rejected generic hooks,
+curse/Daedric interaction, and manual feel note.
+```
+
+Treat the CAT-6 Khajiit pilot as a narrow exception only. It proves that one
+provisional packet can exist, not that the race is ready for broad reward
+authoring.
+
 ## Review Rules
 
 - Do not broaden CAT-6 from one passive pilot into race-wide promotion until

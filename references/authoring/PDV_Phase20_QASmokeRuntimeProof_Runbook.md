@@ -64,6 +64,82 @@ reach, use the current runtime RefID from `help "<EditorID>" 4` or local
 readback, then run `prid <RefID>` followed by `moveto player`; close the
 console and activate the object normally.
 
+Known QASmoke reference IDs as of the 2026-05-31 placement readback:
+
+```text
+; Altmer
+prid 071020
+moveto player
+prid 07101F
+moveto player
+prid 071021
+moveto player
+prid 071022
+moveto player
+
+; Argonian
+prid 071023
+moveto player
+prid 071024
+moveto player
+prid 071025
+moveto player
+prid 071026
+moveto player
+
+; Orc
+prid 071027
+moveto player
+prid 071028
+moveto player
+prid 071029
+moveto player
+prid 07102A
+moveto player
+
+; Redguard
+prid 07102B
+moveto player
+prid 07102C
+moveto player
+prid 07102D
+moveto player
+prid 07102E
+moveto player
+
+; Khajiit
+prid 07102F
+moveto player
+prid 071030
+moveto player
+prid 071031
+moveto player
+prid 071032
+moveto player
+prid 071033
+moveto player
+prid 071034
+moveto player
+
+; Bosmer
+prid 071035
+moveto player
+prid 071036
+moveto player
+prid 071037
+moveto player
+prid 071038
+moveto player
+prid 071039
+moveto player
+prid 07103A
+moveto player
+prid 07103B
+moveto player
+prid 07103C
+moveto player
+```
+
 For route-marker smoke, one session can step through all six race groups by
 changing `PDV_GLO_OriginRace` before each group. For counted immersion/status
 proof, prefer one clean proof save per race so the Survey Devotion readout is
