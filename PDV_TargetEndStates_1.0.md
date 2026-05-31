@@ -62,6 +62,19 @@ architecture contract answer "what state and hooks make it buildable."
 that contract into a build slice; use it before starting any Daedric pilot or
 race subsystem implementation.
 
+## Voiced Content Scope (V1 vs V2)
+
+V1 (1.0) ships **no voiced NPC dialogue**, per `PDV_Architecture_v3.md`
+Section 21.3. All spoken-dialogue recognition is deferred to V2 with its voice
+files: the Phase 11 privilege/recognition dialogue lane, the Phase 18 Nord
+recognition quartet, and the 39 `PDV_Dlog_*_Recognition` stubs. Throughout the
+per-race sections below, where a "dialogue privilege," "recognition privilege,"
+or "special dialogue option" payoff is described, read it as: **V1 delivers the
+non-voiced equivalent** (MessageBox, notification, Survey readout, or
+faction/disposition effect), and **the spoken-dialogue version is V2.**
+Metaphorical "the Champion should feel like recognition" design language is
+about player experience, not a voiced line, and is unaffected.
+
 ## 1.0 Full Roster Gate
 
 The launch target is full roster readiness, not a selective content lock.
@@ -311,14 +324,18 @@ Phase 18A/B runtime closeout (2026-05-30):
 - **Nord pilot scaffold:** broad Old Ways, broad Nine Divines, focused Kyne,
   Talos status, Hircine/werewolf feedback, and Nord vampire rupture/scar
   feedback have source/readback coverage and fresh-save runtime proof.
-- **Dialogue boundary:** Froki, Heimskr, Andurs, and Aela recognition topics are
-  CK-authored/live as branch/topic/unnamed INFO chains and have positive/negative
-  in-game dialogue proof.
-- **Runtime matrix:** Phase 18 now explicitly requires Player page, Developer
-  Options persistence, Survey Devotion for broad/focused Nord states,
-  Hircine/werewolf tension, vampire suppression, vampire cure scar, save/load
-  persistence, and per-speaker positive/negative dialogue proof; all are now
-  closed for the Nord pilot.
+- **Dialogue boundary (V2 - voiced):** Froki, Heimskr, Andurs, and Aela
+  recognition topics were CK-authored/live as branch/topic/unnamed INFO chains
+  with positive/negative in-game dialogue proof, but as spoken NPC dialogue they
+  are **deferred to V2** per `PDV_Architecture_v3.md` Section 21.3 (no voiced
+  content in 1.0). Build action: disable/remove these records from the V1
+  release ESP. The proven pattern is retained as the V2 specification.
+- **Runtime matrix:** Phase 18 requires Player page, Developer Options
+  persistence, Survey Devotion for broad/focused Nord states, Hircine/werewolf
+  tension, vampire suppression, vampire cure scar, and save/load persistence for
+  the V1 Nord pilot. The per-speaker positive/negative **dialogue** proof moves
+  to V2 with the dialogue records above; all non-dialogue rows remain closed for
+  the V1 Nord pilot.
 
 ---
 
