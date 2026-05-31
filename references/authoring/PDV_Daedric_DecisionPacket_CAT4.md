@@ -1,9 +1,10 @@
 # PDV Daedric Decision Packet (CAT-4 unblock)
 
 **Created:** 2026-05-31
-**Status:** Proposed locks - pending ratification. Resolves the open Daedric
-content decisions so CAT-4 (the 15 non-pilot Princes) can begin without
-re-authoring risk.
+**Status:** RATIFIED 2026-05-31. D-15..D-18 are locked in
+`PDV_Architecture_v3.md` Section 11.6; this packet is the rationale of record.
+Resolves the open Daedric content decisions so CAT-4 (the 15 non-pilot Princes)
+can begin without re-authoring risk.
 **Owner docs it serves:** `PDV_Architecture_v3.md` Section 11 (architecture),
 Section 25.9 CAT-4 (content track); `race-sheets/PDV_DaedricContent_Manifest.md`
 Sections 5 and 7 (provisional stigma model, stub roster);
@@ -13,10 +14,10 @@ Princes). Boethiah is the only fully authored Prince; 15 are stubs. The audit
 flagged that the remaining Daedric decisions "shape the content," so resolving
 them up front is the highest-leverage de-risk for the largest content block.
 
-> These are written as recommended locks with rationale and the alternative
-> considered, so the human stays the decider. On ratification, fold D-15..D-18
-> into `PDV_Architecture_v3.md` Section 11.6 and flip the manifest Section 5
-> language from "provisional" to "locked".
+> Ratified 2026-05-31. D-15..D-18 now live in `PDV_Architecture_v3.md` Section
+> 11.6, and the manifest Section 5 language is flipped from "provisional" to
+> "locked". This packet remains the rationale of record and the alternatives
+> considered.
 
 ---
 
@@ -243,10 +244,12 @@ and fronts the only re-author risk into the first four Princes.
 
 ## Ratification checklist
 
-- [ ] Ratify D-15 stigma model; fold into v3 Section 11.6; flip manifest
-      Section 5 from "provisional" to "locked".
-- [ ] Ratify D-16 curse-access template; add to v3 Section 11.6 and the
-      manifest Section 7 curse-access note.
-- [ ] Ratify D-17 batch order; record in the manifest Section 7 stub table.
-- [ ] Ratify D-18 content-ready definition; wire as the 20C exit-gate
-      checklist in the coverage matrix `phase20Slices` 20C entry.
+- [x] D-15 stigma model: locked in v3 Section 11.6; manifest Section 5 flipped
+      to "locked" (2026-05-31).
+- [x] D-16 curse-access template: locked in v3 Section 11.6; manifest Section 7
+      curse-access note updated (2026-05-31).
+- [x] D-17 batch order: locked in v3 Section 11.6; referenced from manifest
+      Section 7 (2026-05-31).
+- [x] D-18 content-ready definition: locked in v3 Section 11.6 (2026-05-31).
+- [ ] Follow-up: mirror the D-18 checklist into the coverage matrix
+      `phase20Slices` 20C `exitGate` when that file is next revised.
