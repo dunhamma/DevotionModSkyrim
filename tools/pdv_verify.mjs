@@ -3732,8 +3732,21 @@ class Verifier {
     }
 
     const daedric = gates.daedricBlockers || {};
-    if (daedric.runtimePromotionAllowed === false && daedric.stigmaRowContract === "open" && daedric.hircineMolagBalCurseAccessTemplate === "open" && daedric.princePromotionOrder === "open") {
-      this.pass("Phase 20 Daedric blocker state", "Daedric runtime promotion remains blocked on stigma, curse-access template, and Prince order.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    // A Daedric decision contract is "settled" when it is still open or has been
+    // resolved by a locked architecture decision (D-12..D-18, Section 11.6).
+    // The core invariant is that runtime promotion stays gated until CAT-6 and
+    // the per-Prince effect review pass, regardless of decision state.
+    const daedricSettled = (v) => v === "open" || (typeof v === "string" && /^resolved-by-D1[2-8]/.test(v));
+    if (daedric.runtimePromotionAllowed === false
+      && daedricSettled(daedric.stigmaRowContract)
+      && daedricSettled(daedric.hircineMolagBalCurseAccessTemplate)
+      && daedricSettled(daedric.princePromotionOrder)) {
+      const decisionsResolved = daedric.stigmaRowContract !== "open"
+        || daedric.hircineMolagBalCurseAccessTemplate !== "open"
+        || daedric.princePromotionOrder !== "open";
+      this.pass("Phase 20 Daedric blocker state", decisionsResolved
+        ? "Daedric design decisions are resolved (D-15/D-16/D-17); runtime promotion remains correctly gated by CAT-6 and per-Prince review."
+        : "Daedric runtime promotion remains blocked on stigma, curse-access template, and Prince order.", PHASE20_NO_IN_GAME_PROOF_GATES);
     } else {
       this.phase20RaceCostingGap("Phase 20 Daedric blocker state", "Daedric blocker state is missing or implies runtime promotion is allowed too early.", PHASE20_NO_IN_GAME_PROOF_GATES);
     }

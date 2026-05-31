@@ -408,11 +408,12 @@
     "notAllowed": ["generated dialogue", "roster-wide cloning", "fragile helper state without readback"]
   },
   "daedricBlockers": {
-    "status": "decision-needed-before-runtime-promotion",
-    "stigmaRowContract": "open",
-    "hircineMolagBalCurseAccessTemplate": "open",
-    "princePromotionOrder": "open",
-    "crossPrinceHostilityExitResidue": "needs Survey/status language",
-    "runtimePromotionAllowed": false
+    "status": "decisions-resolved; runtime promotion still gated by CAT-6 and per-Prince review",
+    "stigmaRowContract": "resolved-by-D15",
+    "hircineMolagBalCurseAccessTemplate": "resolved-by-D16",
+    "princePromotionOrder": "resolved-by-D17",
+    "crossPrinceHostilityExitResidue": "resolved-by-D14; exit/residue copy authored in the Daedric manifest",
+    "runtimePromotionAllowed": false,
+    "promotionGatedBy": "CAT-6 ESP promotion and the per-Prince effect review; the design decisions D-15/D-16/D-17 are locked in PDV_Architecture_v3.md Section 11.6 (rationale: references/authoring/PDV_Daedric_DecisionPacket_CAT4.md)"
   }
 }

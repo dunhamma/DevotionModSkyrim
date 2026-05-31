@@ -128,19 +128,35 @@ Status values:
 - `Partial`: architecture is stable, but named implementation decisions remain.
 - `Pending`: not yet built or proven.
 - `Drafted`: full manifest prose is authored and verifier-clean, pending promotion into shipped ESP records (used in the Content authored column).
+- `Ratified`: manifest prose authored, verifier-clean, gap-audited (no missing V1 surface), and checked against the locked content guardrails; pending final editorial read and CAT-6 promotion (used in the Content authored column).
 
 | Race | Architecture locked | Implementation-spec locked | Hook feasibility checked | Content authored | Verifier-covered | In-game proven |
 |---|---|---|---|---|---|---|
-| Nord | Locked | Locked | Locked | Drafted | Pending | Pending |
-| Imperial | Locked | Locked | Locked | Drafted | Partial | Partial |
-| Breton | Locked | Locked | Locked | Drafted | Pending | Pending |
-| Dunmer | Locked | Locked | Locked | Drafted | Partial | Pending |
-| Altmer | Locked | Partial | Partial | Drafted | Partial | Partial |
-| Khajiit | Locked | Locked | Locked | Drafted | Partial | Partial |
-| Bosmer | Locked | Locked | Partial | Drafted | Pending | Pending |
-| Redguard | Locked | Locked | Locked | Drafted | Pending | Pending |
-| Orc | Locked | Locked | Partial | Drafted | Pending | Pending |
-| Argonian | Locked | Locked | Locked | Drafted | Pending | Pending |
+| Nord | Locked | Locked | Locked | Ratified | Pending | Pending |
+| Imperial | Locked | Locked | Locked | Ratified | Partial | Partial |
+| Breton | Locked | Locked | Locked | Ratified | Pending | Pending |
+| Dunmer | Locked | Locked | Locked | Ratified | Partial | Pending |
+| Altmer | Locked | Partial | Partial | Ratified | Partial | Partial |
+| Khajiit | Locked | Locked | Locked | Ratified | Partial | Partial |
+| Bosmer | Locked | Locked | Partial | Ratified | Pending | Pending |
+| Redguard | Locked | Locked | Locked | Ratified | Pending | Pending |
+| Orc | Locked | Locked | Partial | Ratified | Pending | Pending |
+| Argonian | Locked | Locked | Locked | Ratified | Pending | Pending |
+
+Content-authoring ratification audit (2026-05-31): a whole-roster gap audit
+confirmed the V1 manifest prose is content-complete. `pdv_content_verify` is
+clean (FAIL=0, WARN=0, 1,065 rows); all 10 races and all 16 Skyrim-present
+Princes carry their full V1 surface set (blessings/boons, prices, tier-ups,
+champion, commitment, stigma, neglect/exit, per-race responses, Survey/status,
+state/band/posture/crisis transitions); no required V1 surface is missing; and
+guardrail spot-checks passed (Altmer MarriageBeat = mortal continuity, no
+moon-sugar/generic-theft framing for Khajiit, Survey copy fiction-facing with no
+route/debug counters, Redguard Tu'whacca-primary). Remaining content work is
+out of scope here: CAT-6 promotion into ESP records (code track) and V2 voiced
+dialogue. Deferred-with-dependency prose stays recorded in the race manifest:
+Bosmer Green Pact per-item feedback (tag layer, Section 17.7a), MCM player-tab
+copy (Section 16.1/16.4), and localization (Section 23). Final editorial
+read-through is the remaining ratification step.
 
 All ten races are now implementation-spec locked at the design level. Altmer's
 remaining closeout items (crisis resolution hooks, final crisis trigger list,
