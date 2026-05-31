@@ -2,7 +2,7 @@
 
 **Created:** 2026-05-31
 **Status:** Living pre-beta gameplay scaling contract
-**Owner:** Companion to `PDV_PreBetaRaceAcceptanceRubric.md`, `PDV_RaceImplementationCostingBacklog.md`, `PDV_RaceGameplayBalanceAudit.md`, and the Phase 20 race-costing manifests
+**Owner:** Companion to `PDV_PreBetaRaceGateLedger.md`, `PDV_PreBetaRaceAcceptanceRubric.md`, `PDV_Phase20_PreBetaManualChecks_Runbook.md`, `PDV_RaceImplementationCostingBacklog.md`, `PDV_RaceGameplayBalanceAudit.md`, and the Phase 20 race-costing manifests
 
 ## Purpose
 
@@ -12,10 +12,13 @@ activators reach the intended EventBus and manager routes. They do not prove
 normal-play pacing, rejected-hook protection, Survey/status clarity, final
 world placement, or reward ceilings.
 
-`PDV_PreBetaRaceAcceptanceRubric.md` owns the measurable pass/fail bar for
-this plan. This spine owns ordering, lane type, and packet shape; the rubric
-owns whether a race is ready for external playfeel testing or stronger reward
-tuning.
+`PDV_PreBetaRaceGateLedger.md` records the current race-by-race evidence and
+verdict. `PDV_PreBetaRaceAcceptanceRubric.md` owns the measurable pass/fail bar
+for this plan, and `PDV_Phase20_PreBetaManualChecks_Runbook.md` owns the manual
+wrong-origin, rejected-hook, Survey/status, stack snapshot, and final-placement
+handoff. This spine owns ordering, lane type, and packet shape; the ledger
+records whether a race is ready for external playfeel testing or stronger
+reward tuning.
 
 External beta should wait until these pre-beta gates prove a race experience
 rather than missing systems. The current scaling spine is:
@@ -42,6 +45,26 @@ Related merged planning/content work:
   are stigma row ratification, Hircine/Molag Bal curse-access template shape,
   and Prince authoring order.
 
+## Ratified Workshop Outcomes
+
+- `Ratified`: Altmer's third crisis beat is `MarriageBeat`; the Talos/Thalmor
+  contradiction is not part of the current four-row crisis list and should only
+  return through a later explicit additional-row decision.
+- `Ratified`: the two wired Altmer proof rewards use
+  `PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance` for dawn steadiness
+  and `PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended` for
+  orthodox cost.
+- `Ratified`: Survey/status copy for Altmer, Khajiit, Argonian, and Bosmer
+  should read as immersive religious state, not as diagnostic counters. Debug
+  route IDs, raw favor counters, and implementation labels stay out of the
+  player-facing copy.
+- `Ratified`: first final-world placement concepts are Altmer
+  dawn/study/crisis, Khajiit road-home/moon/caravan, and Argonian
+  Hist/People/water/community.
+- `Ratified`: race hook validation can continue before full Daedric lock, but
+  final reward text, Prince prices, stigma, exits, and final Survey/status copy
+  wait for the Daedric blocker decisions above.
+
 ## Shared Gate
 
 Every race packet must record the same evidence before it asks for stronger
@@ -64,7 +87,8 @@ Content dependency:
 ```
 
 The acceptance verdict for that evidence is recorded in
-`PDV_PreBetaRaceAcceptanceRubric.md` as `Pass`, `Conditional`, or `Fail`.
+`PDV_PreBetaRaceGateLedger.md` using the `Pass`, `Conditional`, or `Fail` bar
+from `PDV_PreBetaRaceAcceptanceRubric.md`.
 
 ### Evidence Rules
 
@@ -87,8 +111,8 @@ Lane type: P0 active spine
 Scaling role: Prove explicit theological friction without making ordinary Skyrim play punitive.
 Normal-play hook: First authored crisis source, Lorkhan pressure source, dawn steadiness, orthodox costly enforcement, Exiled vampire or cured-scar transition.
 Rejected generic hooks: Ordinary travel, ordinary friendships, generic spellcasting, raw magic skill gain, generic College membership, generic anti-Thalmor violence, repeated post-first-crisis Dragonborn identity.
-Survey/status readout: Crisis state, Lorkhan pressure, recovery or scar, alignment band, and active favor family read as Altmer coherence pressure rather than debug counters.
-Final placement: Move at least one crisis/pressure proof surface and one positive daily-life proof surface out of QASmoke into a plausible normal-play location or quest-context plan.
+Survey/status readout: Read as Altmer coherence pressure: dawn discipline, study, crisis, recovery or scar, and alignment posture. Do not expose route IDs, raw favor counters, or "debug" language.
+Final placement: First final-world concept is a dawn/study/crisis surface: one positive dawn or study surface plus one authored crisis/pressure surface outside QASmoke.
 Reward ceiling: Auri-El foundation plus one secondary focus plus one active contextual favor family; ThalmorAlignment modifies access or pressure instead of becoming a third boon engine.
 Reward floor: Dawn practice, study, magic milestones, and coherent behavior keep a non-edge Altmer net-positive without perfect play.
 Stack snapshot: Auri-El foundation, secondary focus, active contextual favor, crisis state, ThalmorAlignment, vampire/werewolf/cured-scar effects, and any Daedric deviation.
@@ -107,8 +131,8 @@ Lane type: P1 first contrast
 Scaling role: Prove silent emergent focus and moon/road belonging as the opposite pattern from Altmer crisis pressure.
 Normal-play hook: Fallback lunar cadence, two-anchor road-home cycle, caravan/community recognition, focus movement for Baan Dar, Rajhin, and Alkosh.
 Rejected generic hooks: Required visual moon inspection, moon-sugar use, manual focus entitlement, fast travel loop, one-bed camping, generic inn sleep, generic theft, generic dragon kills, ordinary night stealth.
-Survey/status readout: Lunar substrate, current focus weights, road-home movement, and lunar posture explain belonging without calendar chores.
-Final placement: Plan one moon/road proof surface near real travel or rest play and one focus proof surface tied to behavior-specific context.
+Survey/status readout: Read as road and moon belonging: the Lattice, current focus, road-home movement, and posture should explain where the Khajiit is held without sounding like a calendar task.
+Final placement: First final-world concept is a road-home/moon/caravan surface: one moon or rest surface near real travel plus one caravan or behavior-specific focus surface.
 Reward ceiling: Lunar substrate stays a quiet amplifier; one active focus and one active contextual favor family carry the loud reward.
 Reward floor: A Khajiit feels held by moon and road through ordinary travel, rest, and community play without scheduling phases or farming crime.
 Stack snapshot: Lunar tier, focused emphasis, road-home count/anchor, active favor, lunar posture, ShadowDrift or curse pressure, and Daedric modifiers.
@@ -125,8 +149,8 @@ Lane type: P1 second contrast
 Scaling role: Prove the non-Sithis Hist/People floor before expanding Void depth.
 Normal-play hook: Water/rest/reflection maintenance, Hist sap or equivalent ritual, bed-of-choice cadence, community recognition, Arkay/death-rite reaction, curse posture.
 Rejected generic hooks: Swimming loops, standing in water forever, generic inn sleep, repeated one-bed use, ordinary stealth, ordinary kills, one Dark Brotherhood join as full Sithis activation.
-Survey/status readout: Hist, People, Void, bed-of-choice, and posture read as layered exile belonging; one Void signal does not replace the Hist.
-Final placement: Plan one Hist/People maintenance surface and one community/death-rite surface outside QASmoke before Void reward expansion.
+Survey/status readout: Read as layered exile belonging: Hist reach, People/community support, water or rest maintenance, Void pressure, bed-of-choice, and posture. One Void signal must not sound like it replaces the Hist.
+Final placement: First final-world concept is a Hist/People/water/community surface: one water or Hist maintenance surface plus one community or death-rite surface outside QASmoke before Void reward expansion.
 Reward ceiling: Hist substrate plus one strongest support emphasis: People/community or Void/Sithis. Void can stabilize, but it does not replace Hist.
 Reward floor: A non-assassin Argonian can maintain identity through water, rest, reflection, bed of choice, and community aid.
 Stack snapshot: Hist, People, Void, posture, bed cadence, active favor, curse state, Sithis signal count, and Daedric modifiers.
@@ -179,7 +203,7 @@ Lane type: P1 buildout packet
 Scaling role: Prepare non-hunter parity proof so Living Story, Exchange, and Bandit Road feel as authored as Old Contract.
 Normal-play hook: Old Contract proper hunt/forest kept, Living Story community/nature proof, Exchange debt/redress, Bandit Road road-life/reversal.
 Rejected generic hooks: Generic forest travel, generic kindness, generic bard activity, generic trade profit, random vengeance, raw theft, repeated crime, broad plant detection without reliable item evidence.
-Survey/status readout: OldContract, LivingStory, Exchange, and BanditRoad counters and path state explain the active path without one generic Bosmer favor.
+Survey/status readout: Read as active path theology: Old Contract obligation, Living Story belonging, Exchange debt/redress, or Bandit Road reversal. Raw `favor=oc/ls/ex/br` counters stay readback-only, not player copy.
 Final placement: Plan one non-hunter proof surface outside QASmoke before broad Green Pact item tagging expands.
 Reward ceiling: Old Contract can have the hardest burden and high ceiling, but not the only emotionally rewarding path.
 Reward floor: Non-hunter Bosmer receives clear story, exchange, or road-life recognition before Green Pact tag work.

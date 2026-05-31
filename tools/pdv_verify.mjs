@@ -3554,6 +3554,34 @@ class Verifier {
         this.checkPhase20KhajiitSourceScaffold(manifest, manifestPath);
       }
     }
+
+    this.checkPhase20PreBetaSurveySourceScaffold();
+  }
+
+  checkPhase20PreBetaSurveySourceScaffold() {
+    this.checkSourceContains("Phase 20 pre-beta Survey source", "PDV__ManagerQuest", [
+      "String Function GetSurveyDevotionText()",
+      "return GetAltmerSurveyText()",
+      "return GetKhajiitSurveyText()",
+      "return GetBosmerSurveyText()",
+      "return GetArgonianSurveyText()",
+      "return GetOrcSurveyText()",
+      "return GetRedguardSurveyText()",
+      "return GetImperialSurveyText()",
+      "return GetBretonSurveyText()",
+      "return GetDunmerSurveyText()",
+      "String Function GetAltmerSurveyText()",
+      "String Function GetKhajiitSurveyText()",
+      "String Function GetBosmerSurveyText()",
+      "String Function GetArgonianSurveyText()",
+      "String Function GetOrcSurveyText()",
+      "String Function GetRedguardSurveyText()",
+      "String Function GetImperialSurveyText()",
+      "String Function GetBretonSurveyText()",
+      "String Function GetDunmerSurveyText()",
+      "String Function GetPlayerMcmSummaryLine()",
+      "String Function GetPlayerMcmModeLine()",
+    ], this.phase20RaceCostingGap.bind(this));
   }
 
   checkPhase20ArgonianSourceScaffold(manifest, manifestPath) {

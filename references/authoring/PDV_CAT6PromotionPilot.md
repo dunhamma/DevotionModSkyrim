@@ -27,8 +27,9 @@ Current repo evidence:
 - `race-sheets/PDV_RaceContent_Manifest.md` is the draft source for Aedric and
   native devotion strings.
 - `race-sheets/PDV_DaedricContent_Manifest.md` is the draft source for Daedric
-  path strings; Boethiah is the only full Daedric draft pilot, while the other
-  Princes are stub-listed.
+  path strings; all sixteen Skyrim-present Princes now have draft rows, but
+  Daedric promotion still waits on stigma row ratification, Hircine/Molag Bal
+  curse-access template shape, and Prince authoring order.
 - CK-safe dialogue readback exists for CK-authored dialogue, but generated
   dialogue creation is not a supported promotion path.
 
@@ -239,6 +240,13 @@ Risk:
 - Confirm the target `SPEL` record exists or choose a helper/manual boundary to
   create/fill it before promotion.
 
+2026-05-31 readback check:
+
+- The source row exists in `race-sheets/PDV_RaceContent_Manifest.md`.
+- `PDV_Bless_Khajiit_Lunar_T1` does not currently read back from
+  `PlayerDevotion_Framework.esp` as an EditorID.
+- Treat this as target-record-needed, not as a content-row failure.
+
 Recommendation: use this as the first pilot if the target spell record already
 exists or can be safely filled by an existing narrow helper.
 
@@ -277,6 +285,13 @@ Risk:
 - Phase 9 helper scope may not own final string promotion for this specific
   spell description; confirm the write boundary before use.
 
+2026-05-31 readback check:
+
+- The source row exists in `race-sheets/PDV_RaceContent_Manifest.md`.
+- `PDV_Bless_Bosmer_Exchange_T1` does not currently read back from
+  `PlayerDevotion_Framework.esp` as an EditorID.
+- This fallback also needs a target-record owner before CAT-6 promotion.
+
 ### Candidate D: `PDV_Bless_Altmer_Magnus_T3`
 
 Source: `race-sheets/PDV_RaceContent_Manifest.md`, Altmer blessing
@@ -297,16 +312,22 @@ Risk:
 
 ## 9. First Pilot Recommendation
 
-Start with `PDV_Bless_Khajiit_Lunar_T1`.
+Ratified first pilot: start with `PDV_Bless_Khajiit_Lunar_T1`.
 
 It is the best first CAT-6 candidate because it is a passive, player-visible,
 non-dialogue surface tied to the first contrast race. It does not depend on
 Daedric CAT-4 decisions, does not require generated dialogue, and can be proven
 through record readback plus Active Effects display if the target spell exists.
 
-If the spell record does not exist or cannot be safely filled in a narrow pass,
-fall back to `PDV_Bless_Bosmer_Exchange_T1`. Do not fall forward into dialogue
-or Daedric stigma rows just to keep momentum.
+Ratified fallback: if the Khajiit spell record does not exist or cannot be
+safely filled in a narrow pass, fall back to `PDV_Bless_Bosmer_Exchange_T1`.
+Do not fall forward into dialogue or Daedric stigma rows just to keep momentum.
+
+Current implementation status: both the Khajiit first candidate and Bosmer
+fallback have source rows, but neither target `SPEL` EditorID is present in the
+live framework ESP as of the 2026-05-31 readback check. The next CAT-6 action is
+therefore to create/fill exactly one target record through a named narrow helper
+or manual CK/xEdit boundary, then add verifier readback before promoting text.
 
 ## 10. Interaction With Pre-Beta Race Scaling
 

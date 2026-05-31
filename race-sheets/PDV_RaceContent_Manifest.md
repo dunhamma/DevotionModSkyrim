@@ -808,6 +808,13 @@ Player-second-person on topic name. Branch dialogue authored separately in CK. T
 
 Spec closed for Phase 20 content lock. The contextual-favor lanes are keyed to the three locked alignment paths (Altmer carries no generic broad lane per `RaceDesign_Altmer`): ThalmorOrthodox, DivineBody, Psijic. Noted favor is player-second-person (Notification, 80/60); Marked favor is god-voice Auri-El, the always-active foundation (MessageBox, 500/280). The four Lorkhan crisis beats are the locked trigger list (`PDV_ALT_CRISIS_FAITH`): the Dragonborn declaration, the Sovngarde beat, a marriage beat, and the Companions beast-blood fork; narrator voice, matching the Section 13.11 dissonance teaching. The post-vampire Exiled micro-path is authored as optional enhancement flavor after the terminal onset in Section 13.10.
 
+Ratification note (2026-05-31 AEST): `MarriageBeat` is the current third
+crisis beat, not Talos/Thalmor contradiction. Talos/Thalmor can only return as
+a later additional crisis row through an explicit decision. The two wired proof
+reward rows use `PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance` for
+dawn steadiness and
+`PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended` for orthodox cost.
+
 Contextual favor -- ThalmorOrthodox lane:
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |

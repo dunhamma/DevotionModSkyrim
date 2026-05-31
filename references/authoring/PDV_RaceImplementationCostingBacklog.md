@@ -15,9 +15,14 @@ It is deliberately not a lore rewrite. Use the race sheets and architecture refe
 The shared handoff for the current pre-beta gameplay-scaling pass is
 `references/authoring/PDV_PreBetaRaceScalingSpine.md`. Use that file for the
 race packet template, Altmer/Khajiit/Argonian spine order, P1 buildout packets,
-P2 audit-only split, subagent work split, and verification sequence.
-Use `references/authoring/PDV_PreBetaRaceAcceptanceRubric.md` for the actual
-pass/conditional/fail bar before stronger rewards or external playfeel testing.
+P2 audit-only split, subagent work split, and verification sequence. Use
+`references/authoring/PDV_PreBetaRaceGateLedger.md` for the current evidence
+and race verdicts, and `references/authoring/PDV_PreBetaRaceAcceptanceRubric.md`
+for the actual pass/conditional/fail bar before stronger rewards or external
+playfeel testing. Use
+`references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md` for the
+manual wrong-origin, generic-hook, Survey/status, stack snapshot, and
+final-placement checks after automated gates pass.
 Recognition/dialogue work uses `PDV_RecognitionDialogueScalePacket.md`, and
 CAT-6 content promotion uses `PDV_CAT6PromotionPilot.md`; neither should be
 folded into a race runtime slice without its packet gate.
@@ -70,7 +75,7 @@ Scaling order is now locked for the next implementation session: Altmer first,
 Khajiit as the first contrast, Argonian as the second contrast, and Orc /
 Redguard / Bosmer prepared in parallel as P1 packets. Breton, Dunmer, Imperial,
 and Nord remain P2 audit-only until stack and ceiling evidence is recorded.
-Every promoted race packet now needs a rubric verdict from
+Every promoted race packet now needs a gate-ledger verdict using
 `PDV_PreBetaRaceAcceptanceRubric.md`.
 
 ## P0 - Altmer Costing

@@ -68,7 +68,7 @@ Current evidence used for this pass:
 - `references/phase4/PDV_StanceMatrix.csv` has 45 locked worship-object rows with all ten race columns.
 - `references/phase4/PDV_DaedricRacePrinceMatrix.csv` has all sixteen Skyrim-present Prince rows with all ten race columns.
 - `race-sheets/PDV_RaceContent_Manifest.md` says all ten race-facing manifest sections have full draft prose; Breton's optional Vigilant pressure encounter remains slip-able post-1.0.
-- `race-sheets/PDV_DaedricContent_Manifest.md` has Boethiah drafted end-to-end as the Daedric pilot, while the remaining fifteen Skyrim-present Princes are stub-listed for follow-up passes. Its stigma rows are provisional content rows, not a ratified model to clone across the full Prince roster yet.
+- `race-sheets/PDV_DaedricContent_Manifest.md` now has draft rows for Boethiah plus the remaining fifteen Skyrim-present Princes. Those rows are content-lock inputs, not promotion approval: stigma rows remain provisional until ratified, Hircine/Molag Bal curse-access template variation remains open, and Prince authoring order still needs a locked rollout sequence.
 - `references/PDV_ExperienceMode_DesignReference.md` and `references/authoring/PDV_ExperienceMode.manifest.json` are merged as planning contracts for the future Pilgrim's Path / Wayfarer's Path user-facing difficulty toggle; they are not live runtime evidence for race parity yet.
 - `race-sheets/PDV_ContentDestinationMatrix.md` exposes key open review points: remaining Daedric authoring order, Bosmer Green Pact per-item feedback, Breton Vigilant pressure, and cells marked deferred.
 
@@ -84,7 +84,7 @@ Use all lenses together. A race can pass one lens and still fail the audit.
 | Class and playstyle coverage | Warrior, mage, stealth, social, survival, craft, quest-heavy, curse, and low-violence players can find race-shaped paths where appropriate. | Uneven; Dunmer/Khajiit/Breton are strongest, some sparse-hook races need review. |
 | Hook reality | Claimed signals are backed by vanilla hooks, curated quest stages, CK records, or explicit custom-content scope. | Mixed; hook-rich races are safer than sparse-content races. |
 | Player comprehension | The player can tell why a state changed, why a god responded, and why a taboo or price applied. | Good for status/survey surfaces; content density still unproven for full roster. |
-| Writing and surfacing | Notifications, message boxes, dialogue, and status readouts stay diegetic, quiet enough, and budget-compliant. | Race manifest mostly drafted; Daedric manifest largely stubbed. |
+| Writing and surfacing | Notifications, message boxes, dialogue, and status readouts stay diegetic, quiet enough, and budget-compliant. | Race and Daedric manifests are drafted; broad promotion is still gated by CAT-6 and Daedric contract decisions. |
 | Technical proof | Source, CK records, verifier coverage, and runtime proof exist for the relevant lane. | Strong for pilots; not full roster. |
 | Compatibility and modlist fit | The system remains vanilla-plus, patchable, and list-author friendly. | Phase 21 handles patches, but balance must avoid relying on list-specific assumptions. |
 
@@ -92,7 +92,7 @@ Use all lenses together. A race can pass one lens and still fail the audit.
 
 ### Finding 1: Roster Coverage Is Not The Same As Content Readiness
 
-The Phase 20 roster structure is in place and verifier-covered. That is necessary, but not enough. The content matrix shows Boethiah as the only fully drafted Daedric path pilot; the other fifteen Skyrim-present Princes are currently stub-listed. Full 1.0 readiness still needs the Prince-by-Prince content pass plus per-race response text.
+The Phase 20 roster structure is in place and verifier-covered. That is necessary, but not enough. The content matrix now shows all sixteen Skyrim-present Daedric Princes as drafted, while promotion remains blocked by the shared Daedric contract decisions above. Full 1.0 readiness still needs Prince-by-Prince promotion, per-race response verification, and runtime proof.
 
 Audit consequence: do not mark "all gods and Princes complete" until Phase 20B and 20C have content-ready rows, not merely matrix presence.
 
@@ -239,7 +239,7 @@ Current answer:
 - **Architecture agreement:** Yes; all ten races are architecture-locked and implementation-spec locked.
 - **Roster structure:** Yes; strict Phase 20 roster verification passes.
 - **Race-facing prose inventory:** Yes for core 1.0 race prose; Breton Vigilant pressure remains optional/slip-able.
-- **Daedric full content:** No; Boethiah is drafted, the other fifteen Princes need follow-up.
+- **Daedric full content:** Drafted for all sixteen Skyrim-present Princes, but not promotion-ready until stigma, Hircine/Molag Bal curse-access, and Prince order decisions are locked.
 - **Benefit wealth parity:** Not proven yet; this is the next audit layer.
 - **Immersion parity:** Now first-class in the reward budget; not runtime-proven per race yet.
 - **Class/playstyle parity:** Promising but uneven; needs explicit race-by-race review.

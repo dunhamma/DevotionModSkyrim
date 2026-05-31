@@ -178,6 +178,14 @@ Use a candidate that is small, high-signal, and easy to prove with existing stat
 
 Recommended first proof: Altmer Auri-El crisis recovery recognition, if the positive gate can be expressed through existing origin, active deity/tier, and crisis/scar readback globals. If that requires new helper state, stop and add the helper/readback contract before CK dialogue work.
 
+Ratified first speaker candidate: Runil in Falkreath. He is the preferred first
+Altmer recognition candidate because his Altmer mortality/death context fits
+crisis recovery without turning the first packet into Thalmor politics. The
+first packet should test Altmer origin plus Auri-El/crisis-or-scar readback if
+that gate is CK-readable. If it needs new helper state or fragile conditions,
+defer dialogue and use Survey/status fallback only until the CK dialogue proof
+is worth the time.
+
 ## Fallback Surfaces
 
 If dialogue is too expensive for a race/deity/path, use the cheapest surface that still tells the player what changed and why:

@@ -21,6 +21,24 @@
     "Vampire Altmer is terminal or exile-limited while cursed; werewolf hard-halts advancement.",
     "Only one active contextual favor family should be loud at a time unless a later manifest explicitly widens that rule."
   ],
+  "ratifiedDecisionOutcomes": [
+    {
+      "decision": "Altmer third crisis beat",
+      "outcome": "Ratified",
+      "value": "MarriageBeat replaces the Talos/Thalmor contradiction row for the current crisis-source list.",
+      "notes": "Talos/Thalmor contradiction is not a current Altmer crisis row; restore it only through a later explicit additional-row decision."
+    },
+    {
+      "decision": "Altmer dawn steadiness proof reward row",
+      "outcome": "Ratified",
+      "value": "PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance"
+    },
+    {
+      "decision": "Altmer orthodox cost proof reward row",
+      "outcome": "Ratified",
+      "value": "PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended"
+    }
+  ],
   "stateSurfaces": [
     {
       "editorId": "PDV_State_AltmerCrisis",
@@ -110,11 +128,11 @@
       "antiRepeat": "quest-stage or milestone only"
     },
     {
-      "id": "talos-thalmor-contradiction",
-      "surface": "Talos / Thalmor contradiction",
+      "id": "marriage-mortal-continuity",
+      "surface": "Marriage / mortal-world continuity",
       "crisisWeight": "major",
-      "contentRow": "PDV_Msg_Altmer_LorkhanCrisis_TalosContradiction",
-      "antiRepeat": "authored contradiction only; generic anti-Thalmor violence rejected"
+      "contentRow": "PDV_Msg_Altmer_LorkhanCrisis_MarriageBeat",
+      "antiRepeat": "authored marriage beat only; ordinary friendships, living indoors, and general settlement play are rejected"
     },
     {
       "id": "companions-wuuthrad-beast-fork",
@@ -127,7 +145,7 @@
   "favorFamilies": [
     {
       "id": "shared-dawn-steadiness",
-      "row": "PDV_Notif_Altmer_FavorNoted_Shared_DawnSteadiness",
+      "row": "PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance",
       "runtimeFamilyValue": 31,
       "recordStatus": "record-wired",
       "keyword": "PDV_FavorFamily_AltmerDawnSteadiness",
@@ -144,7 +162,7 @@
     },
     {
       "id": "shared-coherence-held",
-      "row": "PDV_Notif_Altmer_FavorNoted_Shared_CoherenceHeld",
+      "row": "PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance",
       "mode": "quiet-noted",
       "hookSources": [
         "explicit crisis restraint",
@@ -154,7 +172,7 @@
     },
     {
       "id": "orthodox-costly-enforcement",
-      "row": "PDV_Msg_Altmer_FavorMarked_Orthodox_CostlyEnforcement",
+      "row": "PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended",
       "runtimeFamilyValue": 32,
       "recordStatus": "record-wired",
       "keyword": "PDV_FavorFamily_AltmerOrthodoxCost",
@@ -172,7 +190,7 @@
     },
     {
       "id": "divine-body-balanced-cultivation",
-      "row": "PDV_Notif_Altmer_FavorNoted_DivineBody_BalancedCultivation",
+      "row": "PDV_Notif_Altmer_FavorNoted_DivineBody_Cultivation",
       "mode": "quiet-noted",
       "hookSources": [
         "bounded self-cultivation",
@@ -182,7 +200,7 @@
     },
     {
       "id": "psijic-crisis-study",
-      "row": "PDV_Msg_Altmer_FavorMarked_Psijic_CrisisStudy",
+      "row": "PDV_Msg_Altmer_FavorMarked_Psijic_UnseenStep",
       "mode": "marked",
       "hookSources": [
         "heterodox study",
@@ -193,7 +211,7 @@
     },
     {
       "id": "auriel-return-reaffirmed",
-      "row": "PDV_Notif_Altmer_FavorNoted_AuriEl_ReturnReaffirmed",
+      "row": "PDV_Msg_Altmer_FavorMarked_DivineBody_ReturnAffirmed",
       "mode": "quiet-noted",
       "hookSources": [
         "Auri-El foundation",
@@ -204,7 +222,7 @@
     },
     {
       "id": "magnus-arts-road",
-      "row": "PDV_Notif_Altmer_FavorNoted_Magnus_ArtsRoad",
+      "row": "PDV_Notif_Altmer_FavorNoted_Psijic_ForbiddenLore",
       "mode": "quiet-noted",
       "hookSources": [
         "magic milestone",
@@ -215,7 +233,7 @@
     },
     {
       "id": "trinimac-civilization-defended",
-      "row": "PDV_Notif_Altmer_FavorNoted_Trinimac_CivilizationDefended",
+      "row": "PDV_Notif_Altmer_FavorNoted_ThalmorOrthodox_Enforcement",
       "mode": "quiet-noted",
       "hookSources": [
         "ThalmorAlignment >= 70",
@@ -226,7 +244,7 @@
     },
     {
       "id": "xarxes-record-kept",
-      "row": "PDV_Notif_Altmer_FavorNoted_Xarxes_RecordKept",
+      "row": "PDV_Notif_Altmer_FavorNoted_Psijic_ForbiddenLore",
       "mode": "quiet-noted",
       "hookSources": [
         "records",
@@ -238,7 +256,7 @@
     },
     {
       "id": "syrabane-warded",
-      "row": "PDV_Notif_Altmer_FavorNoted_Syrabane_Warded",
+      "row": "PDV_Notif_Altmer_FavorNoted_DivineBody_Cultivation",
       "mode": "quiet-noted",
       "hookSources": [
         "warding",

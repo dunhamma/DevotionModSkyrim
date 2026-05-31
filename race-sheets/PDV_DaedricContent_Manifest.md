@@ -1,9 +1,9 @@
 # PDV Daedric Path Content Manifest (1.0)
 
-**Status:** Authoring manifest. Companion to `race-sheets/PDV_RaceContent_Manifest.md`. Full draft prose for the Boethiah pilot; the remaining 1.0 Daedric Princes are stub-listed.
+**Status:** Authoring manifest. Companion to `race-sheets/PDV_RaceContent_Manifest.md`. Full draft prose now exists for Boethiah plus the remaining fifteen Skyrim-present Daedric Princes; promotion is still blocked on stigma row ratification, Hircine/Molag Bal curse-access template decisions, and Prince authoring order.
 **Created:** 2026-05-21
 **Owner docs:** `PDV_Architecture_v3.md` Section 11 (Daedric path architecture) and Section 21.1 (1.0 scope); `references/PDV_RaceArchitecture_DesignReference.md` Section 11; `references/phase4/PDV_DaedricRacePrinceMatrix.csv` (the canonical Prince-by-race matrix); `PDV_STANDARDS.md` Section 3.
-**Purpose:** Extend manifest-style content authoring to the Daedric paths, which the race content manifest deliberately deferred. Author one Prince (Boethiah) end to end to prove the Daedric row template, then stub the rest.
+**Purpose:** Extend manifest-style content authoring to the Daedric paths, which the race content manifest deliberately deferred. Boethiah proved the Daedric row template first; Sections 7.1-7.15 now carry the other Prince drafts as content-lock inputs pending promotion architecture.
 
 ---
 

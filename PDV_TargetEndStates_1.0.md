@@ -182,22 +182,27 @@ The pre-beta scaling gate now requires every race packet to record normal-play
 hooks, rejected generic hooks, Survey/status readout, final placement, reward
 ceiling, reward floor, stack snapshot, runtime proof command, and manual feel
 notes before stronger rewards or external tester judgment.
-`references/authoring/PDV_PreBetaRaceAcceptanceRubric.md` is the measurable
-acceptance bar for that gate: each race closes as `Pass`, `Conditional`, or
-`Fail` after expected/edge builds, rejected-hook coverage, anti-farm cadence,
-Survey/status legibility, final placement, reward floor/ceiling, and stack
-snapshot evidence are recorded.
+`references/authoring/PDV_PreBetaRaceGateLedger.md` records the current
+race-by-race evidence and verdicts. `PDV_PreBetaRaceAcceptanceRubric.md` is the
+measurable acceptance bar for that gate: each race closes as `Pass`,
+`Conditional`, or `Fail` after expected/edge builds, rejected-hook coverage,
+anti-farm cadence, Survey/status legibility, final placement,
+reward floor/ceiling, and stack snapshot evidence are recorded.
+`references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md` is the
+manual handoff packet for proving those checks after automated source,
+manifest, route-list, and placement-readback gates pass.
 Reward magnitudes,
 immersion proof, and exact effect values remain tuning work for every race until
 implementation and playtesting prove the feel.
 
-Daedric full-content readiness remains a separate 1.0 content gate. Section
-11.6's roster/recovery/hostility defaults are locked, so the remaining Daedric
-"decide before broad authoring" work is stigma row ratification, curse-access
-template handling for Hircine and Molag Bal, and the Prince authoring order.
-Those decisions must be closed before cloning the Boethiah pilot across all
-remaining Princes, but they do not block the current pre-beta race hook and
-Survey/status scaling work.
+Daedric full-content readiness remains a separate 1.0 content gate. All sixteen
+Skyrim-present Princes now have draft rows, but Section 11.6's remaining
+"decide before promotion" work is stigma row ratification, curse-access
+template handling for Hircine and Molag Bal, and the Prince promotion order.
+Those decisions must be closed before broad runtime promotion of the Prince
+drafts, but they do not block the current pre-beta race hook and Survey/status
+scaling work. Final reward text, Prince prices, stigma, exits,
+and final Survey/status copy remain blocked on those Daedric decisions.
 
 Experience Mode is design-locked but not implemented. `Pilgrim's Path` remains
 the default authored experience; `Wayfarer's Path` is the future lenient mode.
@@ -208,10 +213,14 @@ readback, and two-mode runtime smoke are complete.
 Recognition/dialogue scaling and CAT-6 promotion now have separate architecture
 packets. `PDV_RecognitionDialogueScalePacket.md` requires one CK-authored
 non-Nord recognition packet with saved-record readback and runtime
-positive/negative proof before broad recognition lines scale. `PDV_CAT6PromotionPilot.md`
+positive/negative proof before broad recognition lines scale; the ratified
+first candidate is Runil for Altmer Auri-El crisis/recovery recognition, with
+Survey/status fallback only if the CK-readable gate is not clean. `PDV_CAT6PromotionPilot.md`
 requires one low-risk non-dialogue draft-to-ESP-to-handbook pilot before broad
-string promotion. Drafting can continue; mass promotion and mass recognition
-should wait for those gates.
+string promotion; the ratified first pilot is `PDV_Bless_Khajiit_Lunar_T1`,
+with `PDV_Bless_Bosmer_Exchange_T1` as fallback only if the Khajiit target
+record path is blocked. Drafting can continue; mass promotion and mass
+recognition should wait for those gates.
 
 ## 1.0 Compatibility Gate
 
