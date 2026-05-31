@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-05-31 AEST (v3.73 - Phase 20 pre-beta gate implementation)
+Last revised: 2026-05-31 AEST (v3.76 - CAT-6 Khajiit Tier 1 pilot)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates. Phase 20 now owns the full-roster 1.0 content target: every locked race-architecture god and all sixteen Skyrim-present Daedric Prince surfaces must be content-ready for every race, with `references/authoring/PDV_DeityCoverageMatrix.json` and `--strict-phase20-roster` as the roster authority gate. The first Altmer Phase 20 runtime lane is source-scaffolded, compile-verified, crisis-record-wired, has the first two Altmer favor spell records wired, has four Altmer ACTI trigger proof base records wired for crisis, Lorkhan pressure, dawn steadiness, and orthodox cost, and now has Altmer Exiled vampire / werewolf halt manager source plus three `MESG` records wired to `PDV__ManagerQuest`; its four QASmoke proof references read back cleanly. Argonian, Orc, Redguard, Bosmer, and Khajiit have also crossed into source/record-wired proof slices, and all 30 Phase 20 proof references are now QASmoke-placed with helper/readback proof. Runtime proof and final immersive world placement remain open; `tools/pdv_phase20_runtime_check.mjs` and `references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` define the counted route-log, Survey/status, immersion, negative-hook, and anti-farm proof lane. `references/authoring/PDV_PreBetaRaceScalingSpine.md` and `PDV_PreBetaRaceGateLedger.md` now define the internal pre-beta scaling spine and all-race evidence ledger: Altmer active spine, Khajiit first contrast, Argonian second contrast, Orc / Redguard / Bosmer P1 packets, and Breton / Dunmer / Imperial / Nord P2 audit-only packets. The race gameplay audit now treats immersion as an explicit reward-budget axis, and `--strict-phase20-race-costing` enforces `immersionProof` blocks for all Phase 20 race-costing manifests. The current Phase 20 Altmer/race-costing gate is clean again after content-lock row reconciliation; the remaining warning is the existing unnamed CK-authored INFO record class. Phase 21 is the Authoria-first compatibility package lane because compatibility testing must wait until the mod's full content surface is stable enough to test against modlists.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
 
 Current v3.71 addendum: `references/authoring/PDV_PreBetaRaceScalingSpine.md`
@@ -54,6 +54,55 @@ the all-race Survey source scaffold, and
 manual handoff for wrong-origin, generic-hook, Survey/status, stack snapshot,
 and final-placement checks. The strict Phase 20 Altmer/race-costing gate is
 restored to green after the merged content lock.
+
+Current v3.74 addendum: the content decision workshop defaults have been
+cross-reviewed against the local deity, daily-worship, cursed-worship, and
+Daedric reference library plus UESP. The decisions stand, with wording
+guardrails. Altmer `MarriageBeat` should be presented as Marriage / Mortal
+Continuity: household, lineage, embodied attachment, and continuity inside
+Lorkhan's mortal world. It is not anti-Mara and not a claim that Altmer
+marriage is invalid. Talos/Thalmor remains lore-valid but stays out of the
+current four-row crisis list unless later restored as an explicit additional
+row. Khajiit copy and CAT-6 promotion should foreground the Lunar Lattice,
+road-home, moon, caravan, and Baan Dar/Rajhin/Alkosh focus while rejecting
+moon-sugar, generic theft, or generic night-stealth shortcuts. Argonian copy
+keeps Hist primary, People/community and water as support, and Void/Sithis as
+pressure or stabilization that never replaces the Hist. Bosmer copy reads
+through Y'ffre/Green Pact, Living Story, Exchange/Z'en, and Bandit Road/Baan
+Dar without exposing raw path counters. Runil remains the first Altmer
+recognition candidate for mortality, death, scar, and recovery recognition, not
+for Orthodox proclamation. Daedric final promotion still waits on stigma bands,
+Hircine/Molag Bal curse-access templates, and Prince order.
+
+Current v3.75 addendum:
+`references/authoring/PDV_Phase20_NoInGameProof_Workplan.md` now owns the
+remaining Phase 20 planning/implementation work that can continue before
+additional Skyrim runtime proof, and
+`references/authoring/PDV_Phase20_NoInGameProof_Gates.json` is the structured
+gate now checked by `--strict-phase20-race-costing`.
+`references/authoring/PDV_Phase20_ManualEvidenceLedger.json` is the matching
+pending evidence-intake ledger for later wrong-origin, rejected-hook,
+Survey/status, final-placement, stack-snapshot, and manual-feel proof. The
+packet allows manifest, source, readback/verifier, placement-contract,
+stack-audit, Survey/status-copy, CAT-6-prep, recognition-prep, and Daedric
+decision work, but forbids marking any race `Pass`, claiming final placement,
+or broad-promoting rewards/strings without manual/runtime evidence. The
+remaining Phase 20 handoff is decision-bound or runtime/manual: holistic
+race-effect review, Runil/recognition approval, manual evidence capture, and
+Daedric blocker closeout.
+
+Current v3.76 addendum: the first CAT-6 promotion pilot is now
+record/readback-proven. `tools/pdv-phase20-cat6-author` created/finalized
+`PDV_Bless_Khajiit_Lunar_T1` in the framework ESP from the exact race content
+manifest row, along with
+`PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen` and
+`PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist`. Both effects are gated to
+7PM-7AM, and the source copy now says "At night" to match the implementation.
+The pilot remains grant-unwired and provisional: it proves source-to-record
+promotion and readback, not Active Effects runtime display, distribution logic,
+or broad reward policy. `references/authoring/PDV_RaceEffectReviewLedger.md`
+now owns the holistic race-by-race effect review required before broad reward
+authoring.
 
 ---
 
@@ -2479,6 +2528,29 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.75 - 2026-05-31 AEST - Phase 20 no-in-game-proof workplan
+
+Added `references/authoring/PDV_Phase20_NoInGameProof_Workplan.md` as the
+owner for Phase 20 work that can proceed before additional Skyrim runtime
+proof, plus `PDV_Phase20_NoInGameProof_Gates.json` as the structured verifier
+target and `PDV_Phase20_ManualEvidenceLedger.json` as the pending manual-proof
+intake. It defines the no-in-game boundary, the no-game definition of done,
+sequenced waves for ledger hardening, hook contracts, verifier expansion,
+placement contracts, stack audits, Survey/status prep, CAT-6 prep, recognition
+prep, Daedric blocker closeout, and later evidence capture, plus explicit stop
+conditions so paper work does not become a false `Pass`.
+
+### v3.74 - 2026-05-31 AEST - Workshop lore cross-review guardrails
+
+Recorded the cross-review of all workshop choices against the local lore
+library and UESP. The ratified choices stand, but the public-facing wording is
+tightened: Altmer `MarriageBeat` means Marriage / Mortal Continuity, not
+anti-Mara marriage rejection; Talos/Thalmor remains a later optional crisis row;
+Khajiit, Argonian, and Bosmer Survey/status copy now carries explicit lore
+guardrails; Runil is scoped to Altmer mortality/scar/recovery recognition; and
+Daedric promotion remains blocked on stigma, Hircine/Molag Bal curse-access,
+and Prince-order contracts.
 
 ### v3.72 - 2026-05-31 AEST - Content decision workshop ratification
 

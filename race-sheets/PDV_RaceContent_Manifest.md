@@ -809,10 +809,13 @@ Player-second-person on topic name. Branch dialogue authored separately in CK. T
 Spec closed for Phase 20 content lock. The contextual-favor lanes are keyed to the three locked alignment paths (Altmer carries no generic broad lane per `RaceDesign_Altmer`): ThalmorOrthodox, DivineBody, Psijic. Noted favor is player-second-person (Notification, 80/60); Marked favor is god-voice Auri-El, the always-active foundation (MessageBox, 500/280). The four Lorkhan crisis beats are the locked trigger list (`PDV_ALT_CRISIS_FAITH`): the Dragonborn declaration, the Sovngarde beat, a marriage beat, and the Companions beast-blood fork; narrator voice, matching the Section 13.11 dissonance teaching. The post-vampire Exiled micro-path is authored as optional enhancement flavor after the terminal onset in Section 13.10.
 
 Ratification note (2026-05-31 AEST): `MarriageBeat` is the current third
-crisis beat, not Talos/Thalmor contradiction. Talos/Thalmor can only return as
-a later additional crisis row through an explicit decision. The two wired proof
-reward rows use `PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance` for
-dawn steadiness and
+crisis beat, presented in player-facing terms as Marriage / Mortal Continuity,
+not Talos/Thalmor contradiction. Lore cross-review treats the beat as
+household, lineage, embodied attachment, and continuity inside Lorkhan's mortal
+world; it is not anti-Mara and not a claim that Altmer marriage is invalid.
+Talos/Thalmor can only return as a later additional crisis row through an
+explicit decision. The two wired proof reward rows use
+`PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance` for dawn steadiness and
 `PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended` for orthodox cost.
 
 Contextual favor -- ThalmorOrthodox lane:
@@ -906,7 +909,7 @@ Narrator voice. Budget 200 hard / 140 target. The substrate baseline is always a
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
 | PDV_Bless_Khajiit_Lunar_Substrate | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Lunar Substrate" | Passive SPEL; always active | The Lunar Lattice holds you. Night vision is keener after dark; outdoor night life and caravan kinship are felt as devotion. |
-| PDV_Bless_Khajiit_Lunar_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Tier 1" | Passive SPEL; shared | The moons have noticed how you move. Moving outdoors at night, your stamina regenerates 5% faster and your resistance to disease rises by 10%. |
+| PDV_Bless_Khajiit_Lunar_T1 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Tier 1" | Passive SPEL; shared | The moons have noticed how you move. At night, your stamina regenerates 5% faster and your resistance to disease rises by 10%. |
 | PDV_Bless_Khajiit_Lunar_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Tier 2" | Passive SPEL; shared | The Lattice holds you steady. Outdoor night travel carries more; cold and storms press lighter; full moons strengthen the day's devotion. |
 | PDV_Bless_Khajiit_Khenarthi_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Khenarthi Champion" | Passive SPEL; Khenarthi focus | Khenarthi names you to the road. Sprinting outdoors drains 15% less stamina; storms no longer chill you; outdoor sleep restores health and stamina both. |
 | PDV_Bless_Khajiit_Azurah_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Khajiit "Azurah Champion" | Passive SPEL; Azurah focus | Azurah watches your thresholds. Spells cost 10% less at night and 15% less at dawn and dusk. The hinges of the world turn where you stand. |

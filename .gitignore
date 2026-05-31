@@ -12,4 +12,6 @@ tools/pdv-phase13-author/bin/
 tools/pdv-phase13-author/obj/
 tools/pdv-phase18-author/bin/
 tools/pdv-phase18-author/obj/
+tools/pdv-phase20-*-author/bin/
+tools/pdv-phase20-*-author/obj/
 native/vendor/Creation-Kit-Platform-Extended/

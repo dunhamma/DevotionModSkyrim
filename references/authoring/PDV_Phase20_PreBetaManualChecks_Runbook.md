@@ -2,7 +2,7 @@
 
 **Created:** 2026-05-31
 **Status:** Manual handoff packet after automated Phase 20 pre-beta gate work
-**Owner:** Companion to `PDV_PreBetaRaceGateLedger.md`, `PDV_PreBetaRaceScalingSpine.md`, and `PDV_Phase20_QASmokeRuntimeProof_Runbook.md`
+**Owner:** Companion to `PDV_PreBetaRaceGateLedger.md`, `PDV_PreBetaRaceScalingSpine.md`, `PDV_Phase20_NoInGameProof_Gates.json`, `PDV_Phase20_ManualEvidenceLedger.json`, and `PDV_Phase20_QASmokeRuntimeProof_Runbook.md`
 
 ## Purpose
 
@@ -11,8 +11,20 @@ content, manifest, route-list, and placement-readback gates can prove that the
 pre-beta packets are wired and readable. They do not prove player feel.
 
 Use this packet for the manual checks that remain before any race can move from
-`Fail - internal scaling only` to `Conditional` or `Pass` in
+`Fail - runtime/manual proof deferred` to `Conditional` or `Pass` in
 `PDV_PreBetaRaceGateLedger.md`.
+
+The structured no-game gate packet,
+`PDV_Phase20_NoInGameProof_Gates.json`, owns the current final-world placement
+contracts. This runbook records the eventual manual evidence against those
+contracts; it does not count QASmoke or paper placement plans as final
+placement.
+
+Use `PDV_Phase20_ManualEvidenceLedger.json` as the structured intake file when
+manual/runtime evidence starts. It is intentionally checked as `pending` by the
+strict verifier until real in-game evidence exists; do not change a slot to
+complete, conditional, or pass without also updating the gate ledger and adding
+the matching proof note.
 
 ## Before Manual Checks
 
@@ -57,7 +69,31 @@ Stack snapshot:
 Final placement:
   Confirm whether the proof still lives only in QASmoke or has a planned
   final-world placement. Do not count QASmoke as final placement.
+
+Evidence intake:
+  Update the matching slot in `PDV_Phase20_ManualEvidenceLedger.json` only after
+  the manual check is actually run. Until then the structured ledger should
+  remain pending.
 ```
+
+## Final-World Placement Contracts
+
+Before placing anything outside QASmoke, read the matching contract in
+`PDV_Phase20_NoInGameProof_Gates.json`. Every P0/P1 race currently needs one
+positive surface and one pressure, recovery, or status surface:
+
+```text
+Altmer: dawn/study plus crisis/Lorkhan pressure.
+Khajiit: road-home/moon/caravan plus focus-specific Baan Dar/Rajhin/Alkosh.
+Argonian: Hist/water/rest plus People/community or death-rite.
+Orc: Stronghold/quality craft plus City dignity or Legion/Exile service.
+Redguard: Crown/Forebear sect plus Ash'abah/Far Shores death duty.
+Bosmer: Living Story or Exchange non-hunter plus Bandit Road/Pact pressure.
+```
+
+Stop if the chosen object or location would turn a rejected generic hook into a
+scoring surface, such as generic travel, one-bed sleep, raw craft loops, generic
+theft, generic combat, or generic undead farming.
 
 ## Race Checks
 
@@ -87,10 +123,11 @@ Check:
   and ordinary night stealth stay silent.
 - Same road-home anchor repeat does not become a loop.
 - Survey explains Lunar Lattice, moon practice, road-home cadence, and focus.
-- CAT-6 source row exists, but `PDV_Bless_Khajiit_Lunar_T1` is not present as a
-  live framework ESP EditorID as of the 2026-05-31 readback check. Treat CAT-6
-  as target-record-needed work before manual feel proof, not as a manual
-  player-check step.
+- CAT-6 source row exists and `PDV_Bless_Khajiit_Lunar_T1` is present as a
+  live pilot-provisional framework ESP `SPEL` as of the 2026-05-31 readback
+  check. Its two pilot `MGEF` effects are night-gated and grant-unwired. Treat
+  this as record/readback/text proof only, not as manual feel proof, reward
+  distribution proof, or holistic race-effect approval.
 
 ### Argonian
 

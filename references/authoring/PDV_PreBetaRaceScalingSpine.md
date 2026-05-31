@@ -47,9 +47,13 @@ Related merged planning/content work:
 
 ## Ratified Workshop Outcomes
 
-- `Ratified`: Altmer's third crisis beat is `MarriageBeat`; the Talos/Thalmor
-  contradiction is not part of the current four-row crisis list and should only
-  return through a later explicit additional-row decision.
+- `Ratified`: Altmer's third crisis beat is `MarriageBeat`, presented in
+  player-facing terms as Marriage / Mortal Continuity. The beat is about
+  household, lineage, embodied attachment, and continuity inside Lorkhan's
+  mortal world; it is not anti-Mara and not a claim that Altmer marriage is
+  invalid. The Talos/Thalmor contradiction is not part of the current four-row
+  crisis list and should only return through a later explicit additional-row
+  decision.
 - `Ratified`: the two wired Altmer proof rewards use
   `PDV_Notif_Altmer_FavorNoted_DivineBody_DawnObservance` for dawn steadiness
   and `PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended` for
@@ -61,6 +65,13 @@ Related merged planning/content work:
 - `Ratified`: first final-world placement concepts are Altmer
   dawn/study/crisis, Khajiit road-home/moon/caravan, and Argonian
   Hist/People/water/community.
+- `Ratified`: lore cross-review guardrails stand for all four active copy
+  directions. Khajiit copy foregrounds Lunar Lattice, road-home, moon, caravan,
+  and Baan Dar/Rajhin/Alkosh focus, not moon-sugar or generic theft shortcuts.
+  Argonian copy keeps Hist primary, People/community and water as support, and
+  Void/Sithis as pressure or stabilization that never replaces the Hist. Bosmer
+  copy reads through Y'ffre/Green Pact, Living Story, Exchange/Z'en, and Bandit
+  Road/Baan Dar without exposing raw path counters.
 - `Ratified`: race hook validation can continue before full Daedric lock, but
   final reward text, Prince prices, stigma, exits, and final Survey/status copy
   wait for the Daedric blocker decisions above.
@@ -111,7 +122,7 @@ Lane type: P0 active spine
 Scaling role: Prove explicit theological friction without making ordinary Skyrim play punitive.
 Normal-play hook: First authored crisis source, Lorkhan pressure source, dawn steadiness, orthodox costly enforcement, Exiled vampire or cured-scar transition.
 Rejected generic hooks: Ordinary travel, ordinary friendships, generic spellcasting, raw magic skill gain, generic College membership, generic anti-Thalmor violence, repeated post-first-crisis Dragonborn identity.
-Survey/status readout: Read as Altmer coherence pressure: dawn discipline, study, crisis, recovery or scar, and alignment posture. Do not expose route IDs, raw favor counters, or "debug" language.
+Survey/status readout: Read as Altmer coherence pressure: dawn discipline, study, crisis, recovery or scar, and alignment posture. `MarriageBeat` should surface as Marriage / Mortal Continuity, not as a rejection of Mara or marriage itself. Do not expose route IDs, raw favor counters, or "debug" language.
 Final placement: First final-world concept is a dawn/study/crisis surface: one positive dawn or study surface plus one authored crisis/pressure surface outside QASmoke.
 Reward ceiling: Auri-El foundation plus one secondary focus plus one active contextual favor family; ThalmorAlignment modifies access or pressure instead of becoming a third boon engine.
 Reward floor: Dawn practice, study, magic milestones, and coherent behavior keep a non-edge Altmer net-positive without perfect play.
@@ -131,7 +142,7 @@ Lane type: P1 first contrast
 Scaling role: Prove silent emergent focus and moon/road belonging as the opposite pattern from Altmer crisis pressure.
 Normal-play hook: Fallback lunar cadence, two-anchor road-home cycle, caravan/community recognition, focus movement for Baan Dar, Rajhin, and Alkosh.
 Rejected generic hooks: Required visual moon inspection, moon-sugar use, manual focus entitlement, fast travel loop, one-bed camping, generic inn sleep, generic theft, generic dragon kills, ordinary night stealth.
-Survey/status readout: Read as road and moon belonging: the Lattice, current focus, road-home movement, and posture should explain where the Khajiit is held without sounding like a calendar task.
+Survey/status readout: Read as road and moon belonging: the Lattice, current focus, road-home movement, and posture should explain where the Khajiit is held without sounding like a calendar task. Avoid moon-sugar, generic theft, generic night-stealth, or generic dragon-kill language as the identity center.
 Final placement: First final-world concept is a road-home/moon/caravan surface: one moon or rest surface near real travel plus one caravan or behavior-specific focus surface.
 Reward ceiling: Lunar substrate stays a quiet amplifier; one active focus and one active contextual favor family carry the loud reward.
 Reward floor: A Khajiit feels held by moon and road through ordinary travel, rest, and community play without scheduling phases or farming crime.
@@ -149,7 +160,7 @@ Lane type: P1 second contrast
 Scaling role: Prove the non-Sithis Hist/People floor before expanding Void depth.
 Normal-play hook: Water/rest/reflection maintenance, Hist sap or equivalent ritual, bed-of-choice cadence, community recognition, Arkay/death-rite reaction, curse posture.
 Rejected generic hooks: Swimming loops, standing in water forever, generic inn sleep, repeated one-bed use, ordinary stealth, ordinary kills, one Dark Brotherhood join as full Sithis activation.
-Survey/status readout: Read as layered exile belonging: Hist reach, People/community support, water or rest maintenance, Void pressure, bed-of-choice, and posture. One Void signal must not sound like it replaces the Hist.
+Survey/status readout: Read as layered exile belonging: Hist reach, People/community support, water or rest maintenance, Void pressure, bed-of-choice, and posture. One Void signal must not sound like it replaces the Hist; Sithis/Void is pressure or stabilization, not a new primary home.
 Final placement: First final-world concept is a Hist/People/water/community surface: one water or Hist maintenance surface plus one community or death-rite surface outside QASmoke before Void reward expansion.
 Reward ceiling: Hist substrate plus one strongest support emphasis: People/community or Void/Sithis. Void can stabilize, but it does not replace Hist.
 Reward floor: A non-assassin Argonian can maintain identity through water, rest, reflection, bed of choice, and community aid.
@@ -203,7 +214,7 @@ Lane type: P1 buildout packet
 Scaling role: Prepare non-hunter parity proof so Living Story, Exchange, and Bandit Road feel as authored as Old Contract.
 Normal-play hook: Old Contract proper hunt/forest kept, Living Story community/nature proof, Exchange debt/redress, Bandit Road road-life/reversal.
 Rejected generic hooks: Generic forest travel, generic kindness, generic bard activity, generic trade profit, random vengeance, raw theft, repeated crime, broad plant detection without reliable item evidence.
-Survey/status readout: Read as active path theology: Old Contract obligation, Living Story belonging, Exchange debt/redress, or Bandit Road reversal. Raw `favor=oc/ls/ex/br` counters stay readback-only, not player copy.
+Survey/status readout: Read as active path theology: Old Contract obligation, Living Story belonging, Exchange/Z'en debt and proper return, or Bandit Road/Baan Dar reversal. Raw `favor=oc/ls/ex/br` counters stay readback-only, not player copy.
 Final placement: Plan one non-hunter proof surface outside QASmoke before broad Green Pact item tagging expands.
 Reward ceiling: Old Contract can have the hardest burden and high ceiling, but not the only emotionally rewarding path.
 Reward floor: Non-hunter Bosmer receives clear story, exchange, or road-life recognition before Green Pact tag work.

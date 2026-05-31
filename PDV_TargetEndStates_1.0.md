@@ -191,6 +191,18 @@ reward floor/ceiling, and stack snapshot evidence are recorded.
 `references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md` is the
 manual handoff packet for proving those checks after automated source,
 manifest, route-list, and placement-readback gates pass.
+`references/authoring/PDV_Phase20_NoInGameProof_Workplan.md` now owns the
+remaining Phase 20 planning and implementation queue that can proceed before
+additional Skyrim runtime proof: gate-ledger hardening, normal-play hook
+contracts, static verifier expansion, final placement contracts, stack audits,
+Survey/status copy prep, the pilot-provisional CAT-6 target-record proof,
+recognition packet prep, and Daedric blocker closeout.
+`PDV_Phase20_NoInGameProof_Gates.json` is the
+structured gate for that work and is checked by the strict Phase 20
+race-costing verifier. It does not permit any race to move to `Pass` without
+manual/runtime evidence. `PDV_Phase20_ManualEvidenceLedger.json` is the
+matching pending intake ledger for recording that future evidence without
+changing the current no-game verdict.
 Reward magnitudes,
 immersion proof, and exact effect values remain tuning work for every race until
 implementation and playtesting prove the feel.
@@ -203,6 +215,19 @@ Those decisions must be closed before broad runtime promotion of the Prince
 drafts, but they do not block the current pre-beta race hook and Survey/status
 scaling work. Final reward text, Prince prices, stigma, exits,
 and final Survey/status copy remain blocked on those Daedric decisions.
+
+The 2026-05-31 lore cross-review keeps the current workshop defaults. Altmer
+`MarriageBeat` is a Marriage / Mortal Continuity crisis about household,
+lineage, embodied attachment, and continuity inside Lorkhan's mortal world, not
+anti-Mara marriage rejection. Talos/Thalmor remains a lore-valid later optional
+Altmer crisis row, not part of the current four-row list. Khajiit, Argonian,
+and Bosmer Survey/status directions remain source-backed with guardrails:
+Khajiit centers Lunar Lattice, road-home, moon, caravan, and native focus
+movement; Argonian keeps Hist primary with People/community, water, and Void as
+supporting pressures; Bosmer reads through Y'ffre/Green Pact, Living Story,
+Exchange/Z'en, and Bandit Road/Baan Dar without exposing raw counters. Runil is
+scoped to Altmer mortality/scar/recovery recognition. CAT-6 stays on the
+Khajiit lunar blessing first, Bosmer Exchange fallback second.
 
 Experience Mode is design-locked but not implemented. `Pilgrim's Path` remains
 the default authored experience; `Wayfarer's Path` is the future lenient mode.

@@ -1,10 +1,12 @@
 # PDV CAT-6 Content Promotion Pilot
 
-Status: plan-only architecture packet. Do not use this as permission to promote
-broad strings yet.
+Status: first pilot record/readback-proven. Do not use this as permission to
+promote broad strings yet.
 
 Owner scope: CAT-6 ratification and promotion handoff for one non-pilot
 player-facing content surface.
+
+Structured pilot manifest: `PDV_CAT6PromotionPilot.manifest.json`.
 
 ## 1. Purpose
 
@@ -194,8 +196,9 @@ A CAT-6 pilot passes only when all of these are true:
 - The authoring boundary is explicit.
 - The target record reads back with the ratified text.
 - The verifier covers the target field.
-- Runtime or menu proof shows the promoted text, or the packet explains why
-  readback is the strongest valid proof for that surface.
+- Runtime or menu proof shows the promoted text, or the packet explicitly
+  accepts readback-only proof for a pre-runtime pilot and keeps runtime display
+  proof out of scope.
 - The handbook destination is updated or explicitly marked not applicable.
 - Rollback is documented.
 - No dialogue, scene, quest alias, or Story Manager authoring was introduced.
@@ -243,12 +246,23 @@ Risk:
 2026-05-31 readback check:
 
 - The source row exists in `race-sheets/PDV_RaceContent_Manifest.md`.
-- `PDV_Bless_Khajiit_Lunar_T1` does not currently read back from
-  `PlayerDevotion_Framework.esp` as an EditorID.
-- Treat this as target-record-needed, not as a content-row failure.
+- `PDV_Bless_Khajiit_Lunar_T1` now reads back from
+  `PlayerDevotion_Framework.esp` as a pilot-provisional `SPEL`.
+- `PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen` and
+  `PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist` now read back as
+  pilot-provisional `MGEF` records.
+- Both effect entries are gated by `GetCurrentTime >= 19 OR <= 7`. The source
+  row says "At night" so text matches the implemented condition.
+- The pilot remains grant-unwired. It proves record/readback/text promotion, not
+  full Khajiit reward distribution or balance.
 
-Recommendation: use this as the first pilot if the target spell record already
-exists or can be safely filled by an existing narrow helper.
+Implementation helper:
+
+```powershell
+dotnet run --project .\tools\pdv-phase20-cat6-author\PdvPhase20Cat6Author.csproj -- --dry-run --create-missing
+dotnet run --project .\tools\pdv-phase20-cat6-author\PdvPhase20Cat6Author.csproj -- --create-missing
+dotnet run --project .\tools\pdv-phase20-cat6-author\PdvPhase20Cat6Author.csproj -- --check
+```
 
 ### Candidate B: `PDV_Msg_Khajiit_Survey_Broad`
 
@@ -318,16 +332,24 @@ It is the best first CAT-6 candidate because it is a passive, player-visible,
 non-dialogue surface tied to the first contrast race. It does not depend on
 Daedric CAT-4 decisions, does not require generated dialogue, and can be proven
 through record readback plus Active Effects display if the target spell exists.
+Lore cross-review keeps it as the first pilot because the Lunar Lattice,
+road-home, moon, and caravan identity are the Khajiit contrast lane's strongest
+source-backed surface. Do not broaden this pilot into moon-sugar, generic
+theft, generic night-stealth, or generic dragon-kill copy.
 
 Ratified fallback: if the Khajiit spell record does not exist or cannot be
 safely filled in a narrow pass, fall back to `PDV_Bless_Bosmer_Exchange_T1`.
 Do not fall forward into dialogue or Daedric stigma rows just to keep momentum.
+The Bosmer fallback remains valid because Exchange/Z'en debt, proper return,
+and Bandit Road/Baan Dar reversal are source-backed non-dialogue surfaces.
 
-Current implementation status: both the Khajiit first candidate and Bosmer
-fallback have source rows, but neither target `SPEL` EditorID is present in the
-live framework ESP as of the 2026-05-31 readback check. The next CAT-6 action is
-therefore to create/fill exactly one target record through a named narrow helper
-or manual CK/xEdit boundary, then add verifier readback before promoting text.
+Current implementation status: the Khajiit first candidate now has a live
+pilot-provisional `SPEL` plus two live pilot-provisional `MGEF` records in the
+framework ESP, created by the narrow CAT-6 helper. The Bosmer fallback still has
+a source row but no live target `SPEL`. This state is mirrored in
+`PDV_Phase20_NoInGameProof_Gates.json`, described by
+`PDV_CAT6PromotionPilot.manifest.json`, and checked by
+`--strict-phase20-race-costing`.
 
 ## 10. Interaction With Pre-Beta Race Scaling
 

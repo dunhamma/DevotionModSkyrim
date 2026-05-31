@@ -2,7 +2,7 @@
 
 **Created:** 2026-05-31
 **Status:** Required internal validation rubric before external race playfeel testing
-**Owner:** Companion to `PDV_PreBetaRaceScalingSpine.md`, `PDV_RaceRewardBudgetLedger.md`, and `PDV_RaceImplementationCostingBacklog.md`
+**Owner:** Companion to `PDV_PreBetaRaceScalingSpine.md`, `PDV_RaceRewardBudgetLedger.md`, `PDV_RaceImplementationCostingBacklog.md`, and `PDV_Phase20_NoInGameProof_Gates.json`
 
 ## Purpose
 
@@ -25,6 +25,23 @@ Each race packet must end with one verdict.
 | `Fail` | The race still reads as missing systems, generic activity scoring, hidden counters, reward noise, or overstack. | Continue internal scaling only. |
 
 `Conditional` is not a public beta state. It is a short internal handoff only.
+
+## No-In-Game Statuses
+
+When a session intentionally avoids Skyrim runtime proof, use the structured
+status packet in `PDV_Phase20_NoInGameProof_Gates.json`. These statuses are not
+acceptance verdicts.
+
+| Status | Meaning | Allowed Next Step |
+|---|---|---|
+| `Planning-Ready` | The race has a complete paper contract, but source/readback or runtime evidence is still thin. | Continue manifest, copy, verifier, or hook-contract work. |
+| `Readback-Ready` | Source, manifests, and record/readback gates are coherent enough for manual/runtime proof later. | Prepare final placement contracts or runtime/manual check packets. |
+| `CK-Ready` | The next step is manual CK/xEdit authoring with a named record contract. | Author manually, then run readback. |
+| `Runtime-Deferred` | No further paper proof can replace the missing in-game/manual evidence. | Wait for manual/runtime proof. |
+
+The no-game packet must keep the race verdict at
+`Fail - runtime/manual proof deferred`. Do not convert no-game readiness into
+`Pass` or `Conditional`.
 
 ## Minimum Evidence Set
 
@@ -49,6 +66,9 @@ Verifier commands:
 Runtime commands:
 Verdict:
 Blocking follow-up:
+No-in-game status:
+Next automatable action:
+Deferred manual proof:
 ```
 
 ## Acceptance Criteria

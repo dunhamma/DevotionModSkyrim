@@ -12,7 +12,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Khajiit_Lunar_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 142 / 200 |  | The moons have noticed how you move. Moving outdoors at night, your stamina regenerates 5% faster and your resistance to disease rises by 10%. |  |
+| _(no tone match)_ | `PDV_Bless_Khajiit_Lunar_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 130 / 200 |  | The moons have noticed how you move. At night, your stamina regenerates 5% faster and your resistance to disease rises by 10%. |  |
 
 ## Deepening blessing (Tier 2)
 

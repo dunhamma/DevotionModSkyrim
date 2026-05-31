@@ -2,7 +2,7 @@
 
 **Created:** 2026-05-31
 **Status:** Internal Phase 20 pre-beta gate ledger
-**Owner:** Companion to `PDV_PreBetaRaceAcceptanceRubric.md` and `PDV_PreBetaRaceScalingSpine.md`
+**Owner:** Companion to `PDV_PreBetaRaceAcceptanceRubric.md`, `PDV_PreBetaRaceScalingSpine.md`, and `PDV_Phase20_NoInGameProof_Gates.json`
 
 ## Purpose
 
@@ -25,6 +25,9 @@ Strict Phase 20 gate:
 node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
 Latest result after Altmer row reconciliation: PASS=1982, WARN=1, INFO=28
 Latest result after all-race Survey source guard: PASS=2003, WARN=1, INFO=28
+Latest result after structured no-in-game gate guard: PASS=2160, WARN=1, INFO=28
+Latest result after structured manual-evidence intake guard: PASS=2322, WARN=1, INFO=28
+Latest result after CAT-6 Khajiit Tier 1 pilot readback: PASS=2342, WARN=1, INFO=28
 
 Runtime marker list:
 node .\tools\pdv_phase20_runtime_check.mjs --list
@@ -33,6 +36,9 @@ Status: route markers list for Altmer, Argonian, Orc, Redguard, Khajiit, and Bos
 
 The remaining verifier warning is the existing unnamed CK-authored INFO record
 class in `PlayerDevotion_Framework.esp`.
+
+Structured no-in-game gate:
+`references/authoring/PDV_Phase20_NoInGameProof_Gates.json`
 
 ## Global Stop Conditions
 
@@ -43,7 +49,9 @@ class in `PlayerDevotion_Framework.esp`.
 - No broad recognition/dialogue scaling until one non-Nord CK-authored packet
   passes readback and runtime positive/negative proof.
 - No broad CAT-6 string promotion until one low-risk non-dialogue source row is
-  ratified, promoted, read back, displayed, and synced to the handbook.
+  ratified, promoted, read back, displayed or explicitly accepted as readback
+  proof, synced to the handbook, and checked against the holistic race-effect
+  review.
 - No Daedric runtime promotion wave until stigma row contract, Hircine/Molag Bal
   curse-access template, and Prince promotion order are closed.
 
@@ -54,7 +62,8 @@ class in `PlayerDevotion_Framework.esp`.
 ```text
 Race: Altmer
 Lane type: P0 active spine
-Verdict: Fail - internal scaling only
+Verdict: Fail - runtime/manual proof deferred
+No-in-game status: Readback-Ready
 Expected build: Auri-El or Magnus scholar managing dawn practice and study.
 Edge build: Exiled vampire, werewolf halt, or mortal-world pressure run.
 Normal-session route: dawn/study upkeep -> one explicit Lorkhan or crisis beat -> Survey/MCM readout -> recovery/scar check.
@@ -67,6 +76,8 @@ Reward floor: coherent dawn/study play must trend net-positive before crisis rew
 Reward ceiling: Auri-El foundation plus one secondary focus plus one active contextual favor; ThalmorAlignment modifies access/pressure and is not a third boon engine.
 Stack snapshot: Auri-El foundation, secondary focus, active favor, crisis state, pressure count/source, ThalmorAlignment, vampire exile, werewolf halt, scar, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race altmer
+Next automatable action: add structured rejected-surface and placement-contract verifier coverage.
+Deferred manual proof: wrong-origin rejection, ordinary-life rejection, Survey display, Exiled vampire/werewolf status, and final-world placement.
 Blocking follow-up: prove normal-play rejected hooks, Survey display, Exiled vampire/werewolf status, and final placement.
 ```
 
@@ -75,6 +86,12 @@ Blocking follow-up: prove normal-play rejected hooks, Survey display, Exiled vam
 The merged race content manifest is canonical. The Altmer costing manifest now
 uses current Section 13.13 rows while preserving existing wired proof record and
 spell EditorIDs.
+
+Lore cross-review guardrail: `MarriageBeat` should be read as Marriage /
+Mortal Continuity, not anti-Mara marriage rejection. It covers household,
+lineage, embodied attachment, and continuity inside Lorkhan's mortal world.
+Talos/Thalmor remains a lore-valid optional later crisis row, but it is not part
+of the current four-row Altmer crisis list.
 
 ```text
 PDV_Msg_Altmer_LorkhanCrisis_TalosContradiction -> PDV_Msg_Altmer_LorkhanCrisis_MarriageBeat
@@ -90,7 +107,8 @@ Old DivineBody/Psijic/focused-deity favor row IDs -> current ThalmorOrthodox, Di
 ```text
 Race: Khajiit
 Lane type: P1 first contrast
-Verdict: Fail - internal scaling only
+Verdict: Fail - runtime/manual proof deferred
+No-in-game status: Readback-Ready
 Expected build: road-home Khenarthi/Azurah traveler.
 Edge build: Rajhin thief, Alkosh dragon/order run, or ShadowDrift/curse pressure.
 Normal-session route: travel by foot between two road-home anchors -> rest/observe moon fallback -> trigger one Baan Dar, Rajhin, or Alkosh behavior-specific beat -> Survey/MCM readout.
@@ -103,7 +121,9 @@ Reward floor: broad lunar Faithful feels complete through road, sky, rest, and c
 Reward ceiling: lunar substrate plus one focused emphasis plus one active contextual favor; no third loud steady package.
 Stack snapshot: lunar metric/tier/phase/observance/road-home count, focused emphasis, five focus weights, last road-home anchor, repeat rejection count, active favor, lunar posture, ShadowDrift/curse pressure, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race khajiit
-Blocking follow-up: prove anti-chore behavior; CAT-6 source row exists, but PDV_Bless_Khajiit_Lunar_T1 is not present as a live framework ESP EditorID and needs a named narrow helper/manual boundary before promotion.
+Next automatable action: run the holistic race-by-race effect review before using the CAT-6 Khajiit Tier 1 pilot mechanics as broader reward precedent.
+Deferred manual proof: same-anchor rejection, generic theft/dragon/moon-sugar silence, Survey display, and final road/moon placement.
+Blocking follow-up: prove anti-chore behavior; CAT-6 Khajiit Tier 1 now has a live pilot-provisional framework record, but it is grant-unwired and cannot stand in for Khajiit runtime reward proof.
 ```
 
 ### Argonian
@@ -111,7 +131,8 @@ Blocking follow-up: prove anti-chore behavior; CAT-6 source row exists, but PDV_
 ```text
 Race: Argonian
 Lane type: P1 second contrast
-Verdict: Fail - internal scaling only
+Verdict: Fail - runtime/manual proof deferred
+No-in-game status: Readback-Ready
 Expected build: Hist/People community survivor.
 Edge build: Sithis-threshold assassin, vampire rupture, or werewolf strain.
 Normal-session route: safe water/reflection maintenance -> chosen bed return -> Windhelm/Riften/community aid -> Survey/MCM readout; Void sampled only through a curated threshold beat.
@@ -124,6 +145,8 @@ Reward floor: non-assassin Argonian maintains identity through water, rest, refl
 Reward ceiling: Hist substrate plus one strongest support emphasis: People/community or Void/Sithis; Void never replaces Hist.
 Stack snapshot: Hist, People, Void, posture, bed cadence, active favor, curse state, Sithis signal count, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race argonian
+Next automatable action: write Arkay/death-rite and community recognition contracts before deeper Void rewards.
+Deferred manual proof: Hist/People floor, swimming/sleep/murder rejection, Survey display, and final water/community placement.
 Blocking follow-up: prove Hist/People floor, rejected hooks, Arkay/death-rite reaction, and Survey display.
 ```
 
@@ -132,7 +155,8 @@ Blocking follow-up: prove Hist/People floor, rejected hooks, Arkay/death-rite re
 ```text
 Race: Orc
 Lane type: P1 buildout packet
-Verdict: Fail - internal scaling only
+Verdict: Fail - runtime/manual proof deferred
+No-in-game status: Readback-Ready
 Expected build: City or Legion/Exile Orc maintaining Malacath through quality labor or service.
 Edge build: Stronghold/Blood-Kin, werewolf, or vampire-cured code pressure.
 Normal-session route: confirmed life mode -> Stronghold forge/context beat -> City dignity or self-made community beat -> Legion/Exile service beat -> Survey/MCM readout.
@@ -145,6 +169,8 @@ Reward floor: City and Legion/Exile dignity, service, quality labor, and self-ma
 Reward ceiling: one active life-mode lane; Stronghold steadier, City and Legion/Exile sharper, no second substrate.
 Stack snapshot: life mode, mode lockout, Stronghold/City/Legion weights, active favor, craft/service/community proof, last mode reason, curse state, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race orc
+Next automatable action: add quality forge and City/Legion contract rows to the costing backlog.
+Deferred manual proof: raw craft/combat/faction rejection, Survey display, and final Stronghold/City/Legion placement.
 Blocking follow-up: prove parity routes and raw craft/combat rejection before increasing Malacath rewards.
 ```
 
@@ -153,7 +179,8 @@ Blocking follow-up: prove parity routes and raw craft/combat rejection before in
 ```text
 Race: Redguard
 Lane type: P1 buildout packet
-Verdict: Fail - internal scaling only
+Verdict: Fail - runtime/manual proof deferred
+No-in-game status: Readback-Ready
 Expected build: Crown or Forebear tomb/road/contract play.
 Edge build: Ash'abah burden, vampire cure/Tu'whacca re-entry, or HoonDing make-way stack.
 Normal-session route: Crown tomb respect -> Forebear road/contract passage -> Ash'abah death duty -> Far Shores private ritual -> Survey/MCM readout.
@@ -166,6 +193,8 @@ Reward floor: Crown/Forebear form, road, contract, martial conduct, and recognit
 Reward ceiling: broad sect worship reaches Faithful; Devoted requires focused primary; Far Shores supports, not a third boon engine.
 Stack snapshot: sect, active favor, Far Shores token, HoonDing marker, Ash'abah burden, last sect reason, curse state, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race redguard
+Next automatable action: add HoonDing cap and Ash'abah stigma contracts before reward expansion.
+Deferred manual proof: fast-travel/undead/combat rejection, Survey display, and final sect/death-duty placement.
 Blocking follow-up: prove rejected hooks and define HoonDing cap before expanding death-duty rewards.
 ```
 
@@ -174,7 +203,8 @@ Blocking follow-up: prove rejected hooks and define HoonDing cap before expandin
 ```text
 Race: Bosmer
 Lane type: P1 buildout packet
-Verdict: Fail - internal scaling only
+Verdict: Fail - runtime/manual proof deferred
+No-in-game status: Readback-Ready
 Expected build: Living Story or Exchange non-hunter Bosmer.
 Edge build: Bandit Road reversal, Old Contract Pact lapse/renunciation, or curse pressure.
 Normal-session route: Old Contract proper hunt/forest kept -> Living Story community/nature proof -> Exchange debt/redress -> Bandit Road road-life/reversal -> Survey/MCM readout.
@@ -187,6 +217,8 @@ Reward floor: Living Story, Exchange, or Bandit Road recognition before item-tag
 Reward ceiling: Old Contract can have the hardest burden/high ceiling, but cannot be the only emotionally rewarding path.
 Stack snapshot: path, PactBound/compliance/lapse, active favor counters, offered/pending state, path-switch state, Bandit Road reversal cooldown, curse state, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race bosmer
+Next automatable action: write Green Pact tag coverage and non-hunter final placement contracts before item expansion.
+Deferred manual proof: generic commerce/theft/forest/kindness rejection, Survey display, and final non-hunter placement.
 Blocking follow-up: prove Bosmer Survey display and generic commerce/theft/forest/kindness rejection before the race can pass pre-beta feel.
 ```
 
@@ -197,13 +229,16 @@ Blocking follow-up: prove Bosmer Survey display and generic commerce/theft/fores
 ```text
 Race: Breton
 Lane type: P2 audit-only
-Verdict: Fail - audit-only
+Verdict: Fail - runtime/manual proof deferred
+No-in-game status: Planning-Ready
 Expected build: one chosen tradition: Knight's Road, Hidden Art, or Green Way.
 Edge build: Hidden Art plus Daedric rupture or curse pressure.
 Rejected hooks: casual tradition switching, generic spellcasting, generic Daedric artifact ownership, generic help without reward, ordinary animal kills, College membership, private curiosity, generic shrine visits.
 Survey/status result: source now has Breton-specific Survey/MCM readout for tradition, vow, exposure, DruidicStanding, standing, and curse posture; needs runtime display proof and real tradition-track writes before pass.
 Reward ceiling: one tradition spine plus one focused patron; other tracks modify, gate, rupture, or penalize.
 Stack snapshot: tradition, WitchcraftExposure, KnightlyVowIntegrity, DruidicStanding, patron focus, active favor, curse fork, Daedric modifiers.
+Next automatable action: add tradition readback and Hidden Art cost verifier contracts before any reward volume.
+Deferred manual proof: tradition Survey display, rejected spell/artifact/help loops, and expected/edge stack audit.
 Blocking follow-up: no new Breton reward volume until tradition readback, Hidden Art cost, and rejected hooks are proven.
 ```
 
@@ -212,13 +247,16 @@ Blocking follow-up: no new Breton reward volume until tradition readback, Hidden
 ```text
 Race: Dunmer
 Lane type: P2 audit-only
-Verdict: Fail - audit-only
+Verdict: Fail - runtime/manual proof deferred
+No-in-game status: Planning-Ready
 Expected build: ash-prayer and ancestor practice into one Reclamation focus.
 Edge build: ancestor substrate plus Reclamation plus Daedric deviation or curse price.
 Rejected hooks: generic crime as Mephala, generic cruelty as Boethiah, generic twilight/magic as Azura, Tribunal memory as a controllable path, non-Reclamation deviation without price.
 Survey/status result: source now has Dunmer-specific Survey/MCM readout for ancestor layer, portable ash-prayer, private home rite, standing, and curse posture; needs runtime display proof and future Reclamation/deviation price surfacing before pass.
 Reward ceiling: ancestor substrate is identity/utility; Reclamation focus is the loud foreground; deviations carry visible price.
 Stack snapshot: ancestor substrate, posture, Reclamation focus, active favor, portable/home bonus, deviation price, curse state, Daedric modifiers.
+Next automatable action: write deviation-price and overstack verifier contracts before new Dunmer rewards.
+Deferred manual proof: ancestor/Reclamation stack audit, rejected generic Daedric behavior, and Survey display.
 Blocking follow-up: no new Dunmer reward volume until overstack risk is audited.
 ```
 
@@ -227,13 +265,16 @@ Blocking follow-up: no new Dunmer reward volume until overstack risk is audited.
 ```text
 Race: Imperial
 Lane type: P2 audit-only
-Verdict: Fail - audit-only
+Verdict: Fail - runtime/manual proof deferred
+No-in-game status: Planning-Ready
 Expected build: civic Nine Divines broad worship with concrete service.
 Edge build: public/private Talos pressure under ConcordatStanding.
 Rejected hooks: faction membership, generic temple attendance, bounty payment alone, generic anti-Thalmor violence, cruelty framed as order.
 Survey/status result: source now has Imperial-specific Survey/MCM readout for civic faith, ConcordatStanding, Talos pressure tilt, repair gate, standing, and curse posture; needs runtime display proof and future civic favor explanation before pass.
 Reward ceiling: civic acts must remain concrete; ConcordatStanding modifies access or pressure, not a buff track.
 Stack snapshot: ConcordatStanding, public/private Talos state, primary patron, active civic favor, repair/rupture state, curse state, Daedric modifiers.
+Next automatable action: write civic act whitelist and rejected faction/attendance verifier contracts.
+Deferred manual proof: civic Survey display, faction/attendance rejection, public/private Talos edge stack.
 Blocking follow-up: no new civic surfaces until whitelisted civic acts and rejected faction/attendance tests are in the ledger.
 ```
 
@@ -242,13 +283,16 @@ Blocking follow-up: no new civic surfaces until whitelisted civic acts and rejec
 ```text
 Race: Nord
 Lane type: P2 audit-only control
-Verdict: Fail - audit-only
+Verdict: Fail - runtime/manual proof deferred
+No-in-game status: Readback-Ready
 Expected build: broad Old Ways into Kyne or Talos.
 Edge build: Hircine/werewolf stack.
 Rejected hooks: generic kill, generic travel, generic tomb clear, generic anti-Thalmor violence, broad worship inheriting every patron boon, general Nord Daedric menu.
 Survey/status result: strongest current surface; Nord has dedicated Survey and MCM mode labels. Needs shared stack snapshot and over-trigger evidence.
 Reward ceiling: broad blended favors stay softer than focused patron rewards; Kyne/Talos/Hircine cannot stack into a universal build.
 Stack snapshot: pantheon baseline, broad/focused state, primary patron, Kyne/Talos favor, Hircine price, vampire/scar state, active favor, Daedric modifiers.
+Next automatable action: add dense-hook rejection and Hircine/Kyne/Talos stack audit contracts.
+Deferred manual proof: over-trigger audit, generic hook rejection, and expected/edge stack snapshot.
 Blocking follow-up: no new Nord content volume until dense-hook rejection and Hircine/Kyne/Talos stack checks pass.
 ```
 
@@ -259,12 +303,12 @@ Blocking follow-up: no new Nord content volume until dense-hook rejection and Hi
 First candidate remains `PDV_Bless_Khajiit_Lunar_T1`.
 
 ```text
-Status: Candidate-gated
+Status: Pilot-provisional record/readback-proven
 Source row: race-sheets/PDV_RaceContent_Manifest.md Section 14.3
-Reason: low-risk passive non-dialogue blessing description tied to Khajiit contrast lane
-Readback result: source row exists, but PDV_Bless_Khajiit_Lunar_T1 is not present in PlayerDevotion_Framework.esp as of the 2026-05-31 EditorID check
-Blocking follow-up: create/fill exactly one target SPEL through a named narrow helper/manual CK/xEdit boundary, then add verifier readback before promotion
-Fallback: PDV_Bless_Bosmer_Exchange_T1 source row exists, but the live target EditorID is also absent and needs the same target-record owner decision
+Reason: low-risk passive non-dialogue blessing description tied to the Khajiit contrast lane: Lunar Lattice, road-home, moon, and caravan identity
+Readback result: source row exists; PDV_Bless_Khajiit_Lunar_T1 is present in PlayerDevotion_Framework.esp as a pilot-provisional direct-framework CAT-6 record; its two night-gated MGEF effects also read back
+Blocking follow-up: keep the pilot grant-unwired and run holistic race-effect review before full reward authoring
+Fallback: PDV_Bless_Bosmer_Exchange_T1 source row exists, but the live target EditorID is absent and still needs a target-record owner decision; fallback copy should stay in Exchange/Z'en debt, proper return, and Bandit Road/Baan Dar reversal space
 Not allowed for first pilot: Daedric stigma rows, Hircine/Molag Bal curse-access rows, dialogue
 ```
 

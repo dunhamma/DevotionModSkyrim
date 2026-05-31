@@ -23,6 +23,14 @@ playfeel testing. Use
 `references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md` for the
 manual wrong-origin, generic-hook, Survey/status, stack snapshot, and
 final-placement checks after automated gates pass.
+Use `references/authoring/PDV_Phase20_NoInGameProof_Workplan.md` when the next
+session is intentionally not opening Skyrim; it owns the remaining
+source/readback/planning work that can proceed before manual runtime evidence.
+The structured version of that queue is
+`references/authoring/PDV_Phase20_NoInGameProof_Gates.json`; the strict Phase
+20 race-costing verifier reads it to check no-game status, hook contracts,
+final-placement contracts, stack snapshots, CAT-6 target-record state,
+recognition prep, and Daedric blockers.
 Recognition/dialogue work uses `PDV_RecognitionDialogueScalePacket.md`, and
 CAT-6 content promotion uses `PDV_CAT6PromotionPilot.md`; neither should be
 folded into a race runtime slice without its packet gate.

@@ -41,6 +41,28 @@ Use these rules before promoting a reward, favor, privilege, curse state, or non
 6. Surfacing should be quiet unless the event is exceptional. Constant notifications weaken immersion even when the hook is valid.
 7. Moon phases, Hist distance, Green Pact compliance, ConcordatStanding, ThalmorAlignment, life modes, sects, and similar lanes are reward budget, not flavor budget.
 
+## No-In-Game Stack Snapshot Gate
+
+`references/authoring/PDV_Phase20_NoInGameProof_Gates.json` is the structured
+Phase 20 owner for expected and edge stack snapshots while runtime proof is
+deferred. Use this ledger for balance reasoning, but use the structured gate for
+the strict no-game checklist: active layers, suppressed layers, allowed loud
+layers, contextual-favor caps, curse/Daedric modifier notes, and P2 no-new-volume
+restraint.
+
+P2 races stay audit-only until their ceiling risk is understood. A P2 entry in
+the structured gate may name expected and edge builds, but it must not request
+new placement contracts or stronger reward volume.
+
+## Race Effect Review Gate
+
+`references/authoring/PDV_RaceEffectReviewLedger.md` owns the effect-level
+lock before broad reward authoring. This budget ledger can say that a race is
+thin, rich, or overstacked; the effect review ledger must still lock the actual
+effect families, magnitudes, conditions, grant/removal behavior, stack cap,
+Survey explanation, anti-farm posture, and curse/Daedric interactions before a
+reward packet moves beyond pilot-provisional status.
+
 ## Status Vocabulary
 
 | Status | Meaning |

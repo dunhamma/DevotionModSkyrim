@@ -25,8 +25,8 @@
     {
       "decision": "Altmer third crisis beat",
       "outcome": "Ratified",
-      "value": "MarriageBeat replaces the Talos/Thalmor contradiction row for the current crisis-source list.",
-      "notes": "Talos/Thalmor contradiction is not a current Altmer crisis row; restore it only through a later explicit additional-row decision."
+      "value": "MarriageBeat replaces the Talos/Thalmor contradiction row for the current crisis-source list; player-facing framing is Marriage / Mortal Continuity.",
+      "notes": "Lore cross-review frames this as household, lineage, embodied attachment, and continuity inside Lorkhan's mortal world, not anti-Mara marriage rejection. Talos/Thalmor contradiction is not a current Altmer crisis row; restore it only through a later explicit additional-row decision."
     },
     {
       "decision": "Altmer dawn steadiness proof reward row",
