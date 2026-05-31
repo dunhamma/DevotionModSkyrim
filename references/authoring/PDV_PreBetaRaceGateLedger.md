@@ -46,8 +46,8 @@ Structured no-in-game gate:
   `Conditional` in this ledger.
 - No new reward magnitude for P1/P2 lanes until rejected hooks and stack
   ceilings are recorded.
-- No broad recognition/dialogue scaling until one non-Nord CK-authored packet
-  passes readback and runtime positive/negative proof.
+- No V1 dialogue feedback. Recognition is V2 only and stays outside the
+  current content tree until voice assets exist.
 - No broad CAT-6 string promotion until one low-risk non-dialogue source row is
   ratified, promoted, read back, displayed or explicitly accepted as readback
   proof, synced to the handbook, and checked against the holistic race-effect
@@ -312,14 +312,15 @@ Fallback: PDV_Bless_Bosmer_Exchange_T1 source row exists, but the live target Ed
 Not allowed for first pilot: Daedric stigma rows, Hircine/Molag Bal curse-access rows, dialogue
 ```
 
-### Recognition/Dialogue
+### Recognition/Dialogue (V2 only)
 
-First candidate remains Altmer Auri-El crisis recovery recognition only if the
-positive gate is CK-readable without generated dialogue or fragile helper state.
+This lane is deferred from V1. It remains parked for future voice-backed
+recognition work only if the positive gate is CK-readable without generated
+dialogue or fragile helper state.
 
 ```text
 Status: Packet draft only
-Preferred fallback: Survey/status recognition only
+Preferred fallback: Survey/status only
 Blocking follow-up: complete one non-Nord manual CK-authored packet with SEQ refresh, readback, runtime positive proof, and wrong-origin/wrong-state negative proof
 Not allowed: generated dialogue creation or roster-wide recognition cloning
 ```

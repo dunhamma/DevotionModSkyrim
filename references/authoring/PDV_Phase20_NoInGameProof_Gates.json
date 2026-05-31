@@ -398,7 +398,7 @@
     "notAllowed": ["dialogue", "Daedric stigma rows", "Hircine/Molag Bal curse-access rows", "broad string promotion"]
   },
   "recognition": {
-    "status": "CK-ready packet prep only",
+    "status": "deferred-v2",
     "firstCandidate": "Altmer Auri-El crisis recovery recognition",
     "speakerCandidate": "Runil",
     "fallback": "Survey/status recognition only",

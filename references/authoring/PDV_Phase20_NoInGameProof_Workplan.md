@@ -14,6 +14,17 @@ making useful progress through architecture, manifests, source scaffolds,
 readback checks, verifier gates, content handoff packets, and CK-ready runbooks
 while runtime feel proof is deferred.
 
+## Active Lanes
+
+The current V1 content-authoring lanes are:
+
+1. Final-world placement contracts.
+2. Rejected-hook coverage.
+3. Stack snapshot templates and expected/edge build plans.
+4. P2 audit-only lanes.
+
+Recognition/dialogue is V2 only and does not belong in this pass.
+
 ## Boundary
 
 Allowed in this pass:
@@ -27,9 +38,10 @@ Allowed in this pass:
 - Final-world placement contracts that name intended object, cell/location
   family, cultural reason, and stop condition.
 - Stack snapshot templates and expected/edge build plans.
-- CAT-6 and recognition packet prep before CK/runtime proof. The first CAT-6
-  pilot may be record/readback-proven, but still does not count as runtime
-  reward distribution or holistic effect approval.
+- CAT-6 pilot prep before CK/runtime proof. The first CAT-6 pilot may be
+  record/readback-proven, but still does not count as runtime reward
+  distribution or holistic effect approval.
+- Recognition/dialogue is V2 only and stays out of the V1 content tree.
 - Daedric blocker closeout decisions that affect Phase 20 race planning.
 
 Not allowed in this pass:
@@ -88,19 +100,17 @@ This pass is complete when all of the following are true:
 5. CAT-6 has one target-record owner decision for the first pilot, proves that
    one target by readback, or remains explicitly blocked as
    `target-record-needed`.
-6. Recognition/dialogue has one CK-safe first packet specification or remains
-   explicitly blocked as `Survey/status fallback only`.
-7. `PDV_Phase20_PreBetaManualChecks_Runbook.md` is ready to receive manual
+6. `PDV_Phase20_PreBetaManualChecks_Runbook.md` is ready to receive manual
    evidence later, with no missing race sections.
-8. `PDV_Phase20_ManualEvidenceLedger.json` has a pending evidence intake packet
+7. `PDV_Phase20_ManualEvidenceLedger.json` has a pending evidence intake packet
    for every race so future manual proof can be recorded without changing the
    no-game verdict by accident.
 
 Current implementation note: `PDV_Phase20_NoInGameProof_Gates.json` is the
 structured form of this definition of done. The strict Phase 20 race-costing
 verifier reads it so no-game status, hook contracts, placement contracts,
-stack snapshots, CAT-6 target-record state, recognition packet prep, and
-Daedric blockers cannot silently drift from the prose ledgers.
+stack snapshots, CAT-6 target-record state, and Daedric blockers cannot
+silently drift from the prose ledgers.
 `PDV_Phase20_ManualEvidenceLedger.json` is the structured manual-proof intake
 file. The verifier checks that it exists and stays pending until evidence is
 actually recorded.
@@ -138,9 +148,8 @@ records the first Khajiit candidate as a live pilot-provisional framework
 `SPEL` with two night-gated `MGEF` effects, keeps the Bosmer fallback absent,
 and leaves grant wiring plus full race-effect authoring blocked on later review.
 
-Wave 8 is implemented as packet prep: the first recognition lane is Altmer
-Auri-El crisis recovery with CK-safe identity planning and Survey/status
-fallback, but no generated dialogue and no runtime claim.
+Wave 8 is now V2-only: recognition/dialogue is deferred out of the V1 content
+tree and will not be pursued until voice files are available.
 
 Wave 9 is implemented as blocker tracking: Daedric runtime promotion remains
 blocked until stigma, Hircine/Molag Bal access, and Prince order decisions are
@@ -354,26 +363,22 @@ Stop condition:
 - No broad string promotion. No dialogue. No Daedric stigma or curse-access row
   for the first pilot.
 
-### Wave 8 - Recognition Packet Prep
+### Wave 8 - Recognition Deferred To V2
 
-Goal: make the first non-Nord recognition packet CK-ready without generating
-dialogue or proving it in game.
+Goal: keep V1 free of dialogue feedback and leave recognition for a later
+voice-backed pass.
 
-Current recommended first candidate:
+Current status:
 
-- Altmer Auri-El crisis recovery recognition.
-- Speaker candidate: Runil if the CK-readable gate can be expressed cleanly.
-- Fallback: Survey/status recognition only.
+- Recognition/dialogue is not part of the V1 content tree.
+- Survey/status remains the only allowed feedback lane for now.
+- The recognition packet stays parked as a V2 planning artifact.
 
 Next no-game actions:
 
-1. Name the positive gate: Altmer origin, Auri-El/focus state, crisis recovery
-   or scar state, and minimum tier if needed.
-2. Name negative gates: non-Altmer origin, wrong deity/focus, unresolved crisis,
-   wrong tier, curse halt if applicable.
-3. Name the CK record identities that manual authoring would create.
-4. Write the exact line-length and condition contract.
-5. Keep CK authoring and runtime proof deferred.
+1. Do not schedule V1 dialogue writing or voice-backed line authoring.
+2. Keep the recognition packet frozen until V2 voice assets exist.
+3. Revisit only if the V2 scope explicitly reopens recognition.
 
 Owner file:
 
@@ -381,8 +386,7 @@ Owner file:
 
 Stop condition:
 
-- If the gate requires new helper globals or source state, build/readback that
-  helper first. Do not force fragile dialogue conditions.
+- Leave this wave untouched while V1 reward and placement work continues.
 
 ### Wave 9 - Daedric Phase-20 Blocker Closeout
 
@@ -421,9 +425,7 @@ Stop condition:
 6. Wave 6: prepare Survey/status copy lock notes.
 7. Wave 7: keep the CAT-6 pilot grant-unwired and run holistic race-effect
    review before broad reward authoring.
-8. Wave 8: prepare the first recognition packet only if the source gate is
-   clean.
-9. Wave 9: close Daedric blocker decisions before any Prince runtime promotion.
+8. Wave 9: close Daedric blocker decisions before any Prince runtime promotion.
 
 ## Parallelization Plan
 
@@ -435,7 +437,7 @@ Use subagents or separate workstreams only with disjoint file ownership:
 | B | Orc/Redguard/Bosmer hook contracts | `PDV_RaceImplementationCostingBacklog.md`, three manifests |
 | C | P2 stack/ceiling audit | `PDV_RaceRewardBudgetLedger.md`, `PDV_RacePlaystyleCoverageLedger.md` |
 | D | Verifier/check design | `tools/pdv_verify.mjs` |
-| E | CAT-6 and recognition packet prep | `PDV_CAT6PromotionPilot.md`, `PDV_RecognitionDialogueScalePacket.md` |
+| E | V2-only recognition deferred | `PDV_RecognitionDialogueScalePacket.md` |
 
 One primary agent should own final integration into
 `PDV_PreBetaRaceGateLedger.md` to avoid conflicting verdict language.
@@ -470,8 +472,6 @@ Useful now:
 - CAT-6 follow-up: review
   `references/authoring/PDV_RaceEffectReviewLedger.md` before using the
   Khajiit pilot mechanics as precedent for full reward authoring.
-- Recognition decision: approve Runil as the first Altmer candidate, name a
-  different speaker, or keep recognition as Survey/status fallback only.
 - Daedric decisions: stigma bands/decay, Hircine/Molag Bal curse-access shape,
   and Prince promotion order.
 
@@ -487,9 +487,7 @@ The remaining Phase 20 work is decision-bound or runtime/manual:
 
 1. Run the holistic race-by-race effect review before scaling beyond the single
    pilot-provisional CAT-6 Khajiit Tier 1 record.
-2. Approve Runil as the first Altmer recognition speaker, choose another
-   speaker, or keep recognition as Survey/status fallback.
-3. Fill the manual evidence ledger during in-game checks; do not mark any race
+2. Fill the manual evidence ledger during in-game checks; do not mark any race
    `Conditional` or `Pass` before those slots have proof notes.
-4. Close the Daedric stigma, Hircine/Molag Bal access, and Prince order
+3. Close the Daedric stigma, Hircine/Molag Bal access, and Prince order
    decisions before any Daedric runtime promotion.
