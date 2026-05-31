@@ -84,6 +84,16 @@ against a provisional three-band crossing model -- `Suspected`, `Known`,
 later locks a different band count, the stigma rows are the only ones that
 need a revisit.
 
+**Proposed lock (D-15):**
+`references/authoring/PDV_Daedric_DecisionPacket_CAT4.md` resolves this against
+the full four-band `WitchcraftExposure` shape (`Latent` `0..25` with no
+notification, then `Suspected` / `Known` / `Notorious`), per-Prince storage, a
+derived `PDV_GLO_DaedricExposure = max(active path stigma)` social read, three
+weight classes (`Tolerated` / `Standard` / `High-rupture`), slow 1/day decay,
+and a `WasChampion` residue flag. The three crossing notifications above are
+unchanged by that lock; the `Latent` floor simply has no notification, which
+this section already assumes. Pending ratification.
+
 ---
 
 ## 6. Boethiah (full pilot)
@@ -255,6 +265,17 @@ Princes. Their commitment gate is not a chosen pact but a curse acquisition
 curse-onset message and they coordinate with the race manifest's per-race
 `CurseState` rows rather than standing fully apart from them. This is a
 template variation to resolve when the first curse-access Prince is authored.
+
+**Proposed lock (D-16) and authoring order (D-17).**
+`references/authoring/PDV_Daedric_DecisionPacket_CAT4.md` locks the curse-access
+reduced row set (curse-onset replaces the pact; stigma is curse-state-driven;
+exit is the cure path; boon/price/tier/response author normally), the no-double-
+fire coordination rule with the race manifest `CurseState` rows, and the
+batched authoring order. That order fronts a template-variation proof batch
+(Azura, Vaermina, Meridia, Molag Bal) before mass-authoring, and notes Hircine
+is a content-surface-only pass since its Phase 13/15 mechanics are already
+proven. D-18 in the same packet defines the per-Prince content-ready checklist
+for the 20C gate. Pending ratification.
 
 ---
 

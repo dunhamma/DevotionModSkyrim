@@ -185,6 +185,11 @@ Compatibility notes:
 
 ## Immediate Queue
 
+Score every race below against `references/authoring/PDV_PreBetaScaling_Rubric.md`
+(ten dimensions, per-race Beta-Ready definition). The rubric is the acceptance
+bar these queue items build toward; a race is done when all P0 pass and all P1
+are at least Acceptable.
+
 1. Next-session planning hook: choose the pre-beta scaling spine. Recommended path is Altmer first, with Nord as the control/reference for a fully felt race and Khajiit or Argonian as the first contrast race.
 2. Altmer: promote the crisis/favor/Lorkhan scaffold and wired curse-message surface into real normal-play hooks, rejected-surface proof, Exiled vampire proof, remaining favor families, and first crisis playfeel proof.
 3. Argonian: build enough Hist/People state, bed cadence, community, rejected generic hooks, and three-signal Void threshold behavior that non-Sithis play can be judged before deeper Void runtime rewards.
