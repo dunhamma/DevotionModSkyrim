@@ -251,5 +251,6 @@ and fronts the only re-author risk into the first four Princes.
 - [x] D-17 batch order: locked in v3 Section 11.6; referenced from manifest
       Section 7 (2026-05-31).
 - [x] D-18 content-ready definition: locked in v3 Section 11.6 (2026-05-31).
-- [ ] Follow-up: mirror the D-18 checklist into the coverage matrix
-      `phase20Slices` 20C `exitGate` when that file is next revised.
+- [x] Follow-up: mirrored the D-18 checklist into the coverage matrix
+      `phase20Slices` 20C entry as `contentReadyDefinition` (plus a
+      `voicedContentScope` note) (2026-05-31).
