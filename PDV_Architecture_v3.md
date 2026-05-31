@@ -2153,7 +2153,9 @@ internals into the target tracker.
 
 ## 23. Open architectural decisions deferred past 1.0
 
-These are intentionally not solved in v3.
+These are intentionally not solved in v3. The running collection point for all
+post-1.0 work, including the deferred voiced-dialogue lane (Section 21.3), is
+`references/authoring/PDV_V2_Backlog.md`.
 
 - **Per-race ESP split.** Stays monolithic through 1.0; revisit only on need (Section 18.2).
 - **JContainers escalation.** StorageUtil is enough through 1.0. If post-1.0 features require nested structures (e.g. a complex stigma history per Daedric path with timestamp arrays), revisit. JContainers stays out of the v1.0 dependency tree.
