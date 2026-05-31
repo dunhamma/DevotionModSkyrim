@@ -1,8 +1,8 @@
 # Khajiit -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 14 (Khajiit (full draft))
-**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
-**Rows:** 51 drafted
+**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
+**Rows:** 52 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -12,7 +12,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Khajiit_Lunar_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 118 / 200 |  | The moons have noticed how you move. Moving outdoors at night, stamina regenerates 5% faster; disease resistance +10%. |  |
+| _(no tone match)_ | `PDV_Bless_Khajiit_Lunar_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 142 / 200 |  | The moons have noticed how you move. Moving outdoors at night, your stamina regenerates 5% faster and your resistance to disease rises by 10%. |  |
 
 ## Deepening blessing (Tier 2)
 
@@ -32,7 +32,7 @@ _5 rows._
 | Azurah: Twilight-voiced, threshold-knowing; the mother who shaped the Khajiit; speaks of fate and the hinges of the world; tender and certain. | `PDV_Bless_Khajiit_Azurah_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 138 / 200 |  | Azurah watches your thresholds. Spells cost 10% less at night and 15% less at dawn and dusk. The hinges of the world turn where you stand. |  |
 | _(no tone match)_ | `PDV_Bless_Khajiit_BaanDar_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 143 / 200 |  | Baan Dar walks with the pariah. Once a week, a near-fatal escape returns a day-long pulse of fortune. Acts beyond the city walls weigh heavier. |  |
 | Rajhin: A performer's voice, delighted, legend-making; speaks of theft as art and of the story worth telling; never petty. | `PDV_Bless_Khajiit_Rajhin_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 130 / 200 |  | Rajhin marks the artful thief. A theft from a notable target opens a brief unseen window; the first strike of a fight cuts deeper. |  |
-| Alkosh: Rare, immense, order-keeping; the dragon-lord; speaks of cosmic chaos held back and the line that must not break. | `PDV_Bless_Khajiit_Alkosh_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 110 / 200 |  | Alkosh keeps the cosmic line. Fire resistance +15%; felling a named dragon grants a two-day blessing of order. |  |
+| Alkosh: Rare, immense, order-keeping; the dragon-lord; speaks of cosmic chaos held back and the line that must not break. | `PDV_Bless_Khajiit_Alkosh_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 130 / 200 |  | Alkosh keeps the cosmic line. Your resistance to fire rises by 15%, and felling a named dragon grants a two-day blessing of order. |  |
 
 ## Focus emergence (silent)
 
@@ -107,13 +107,14 @@ _1 row._
 
 ## Curse onset / cure
 
-_4 rows._
+_5 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Khajiit_CurseState_VampireOnset` | MessageBox. Once on becoming vampire. | God-voice | 21+215 / 40+500 |  | Title: "The Lattice Corrupted"   Body: "The thirst has taken you, little moon. The Lattice does not cast you out -- the moons do not disown their own -- but the caravans will fear you, and rightly. I will not look away. Few of the others can say the same." |  |
 | _(no tone match)_ | `PDV_Msg_Khajiit_CurseState_VampireCured` | MessageBox. Once on cure; clears posture toward Normal. | God-voice | 18+155 / 40+500 |  | Title: "The Lattice Clears"   Body: "The thirst is gone. The corruption lifts from the Lattice, and the caravans may learn your face again. Walk back into the moonlight. It was always waiting." |  |
 | _(no tone match)_ | `PDV_Msg_Khajiit_CurseState_WerewolfOnset` | MessageBox. Once on first transformation. | God-voice | 17+206 / 40+500 |  | Title: "A Competing Shape"   Body: "Hircine has given you another shape. The moons are about form, and you carry one too many now. You are still Khajiit -- strained, watched, but not erased. The community will fear the wolf. Hold to the road." |  |
+| _(no tone match)_ | `PDV_Msg_Khajiit_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; clears posture toward Normal. | God-voice | 15+200 / 40+500 |  | Title: "One Shape Again"   Body: "The wolf is set down, little moon. The Lattice holds a single shape once more, and the extra form no longer pulls against the moons. The caravans will lose their fear in time. The road is yours again." |  |
 | _(no tone match)_ | `PDV_Msg_Khajiit_CurseState_ShadowDriftEntry` | MessageBox. Once on entering ShadowDrift; voice deviation justified above. | Narrator | 24+193 / 40+500 |  | Title: "The Shadow Between Stars"   Body: "You have lived too long in the shadow -- night-only, predatory, drawn to the dark between the moons. The Lattice loosens its hold. Khenarthi's road and Azurah's twilight both feel far away now." |  |
 
 ## Shrine and privilege dialogue

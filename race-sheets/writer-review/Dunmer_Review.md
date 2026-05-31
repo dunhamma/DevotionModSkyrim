@@ -1,8 +1,8 @@
 # Dunmer -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 12 (Dunmer (full draft))
-**Regenerated:** 2026-05-30 via `node tools/pdv_writer_review.mjs`
-**Rows:** 66 drafted
+**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
+**Rows:** 67 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -12,7 +12,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Dunmer_GoodDaedra_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 103 / 200 |  | The ash-prayer is kept and the Good Daedra are acknowledged. Fire resistance +5%; magic resistance +5%. |  |
+| _(no tone match)_ | `PDV_Bless_Dunmer_GoodDaedra_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 138 / 200 |  | The ash-prayer is kept and the Good Daedra are acknowledged. Your resistance to fire rises by 5% and your resistance to magic rises by 5%. |  |
 
 ## Deepening blessing (Tier 2)
 
@@ -20,7 +20,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Dunmer_GoodDaedra_T2` | Passive blessing description; visible whenever the player views active effects. | Narrator | 168 / 200 |  | The Reclamations hold steady around your exile. From dawn to midday, fire resistance +10% and magic resistance +5%. A power-attack kill on a strong foe returns stamina. |  |
+| _(no tone match)_ | `PDV_Bless_Dunmer_GoodDaedra_T2` | Passive blessing description; visible whenever the player views active effects. | Narrator | 200 / 200 |  | The Reclamations hold steady around your exile. From dawn to midday, your resistance to fire rises by 10% and your resistance to magic rises by 5%. A power-attack kill on a strong foe returns stamina. |  |
 
 ## Devoted blessing (Tier 3)
 
@@ -29,8 +29,8 @@ _3 rows._
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | Azura: Twilight-voiced, prophetic, tender about painful truth; speaks of thresholds and of becoming truer, not merely stronger; warns rather than commands. | `PDV_Bless_Dunmer_Azura_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 123 / 200 |  | Azura watches your thresholds. From dawn to noon, fire and magic resistance climb together; by night, magic costs 10% less. |  |
-| Boethiah: Trial-voiced, sharp, strength-testing; speaks of the unworthy cut away and the self authored through struggle; combative, never cruel. | `PDV_Bless_Dunmer_Boethiah_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 152 / 200 |  | Boethiah marks proven strength. After felling a significant foe, carry weight +25 and lighter power attacks for a day. The ancestors record the victory. |  |
-| Mephala: Soft, conspiratorial, web-voiced; speaks of the hidden people, the secret kept, the web drawn close; intimate rather than loud. | `PDV_Bless_Dunmer_Mephala_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 134 / 200 |  | Mephala draws the web close. Poison resistance +20%; the hidden network returns 5% more gold. Discretion opens doors others never see. |  |
+| Boethiah: Trial-voiced, sharp, strength-testing; speaks of the unworthy cut away and the self authored through struggle; combative, never cruel. | `PDV_Bless_Dunmer_Boethiah_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 170 / 200 |  | Boethiah marks proven strength. After felling a significant foe, you carry 25 more weight and your power attacks grow lighter for a day. The ancestors record the victory. |  |
+| Mephala: Soft, conspiratorial, web-voiced; speaks of the hidden people, the secret kept, the web drawn close; intimate rather than loud. | `PDV_Bless_Dunmer_Mephala_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 153 / 200 |  | Mephala draws the web close. Your resistance to poison rises by 20% and the hidden network returns 5% more gold. Discretion opens doors others never see. |  |
 
 ## Champion recognition (MessageBox)
 
@@ -131,13 +131,14 @@ _4 rows._
 
 ## Curse onset / cure
 
-_3 rows._
+_4 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Dunmer_CurseState_VampireOnset_AshSilenced` | MessageBox. Once on becoming vampire; sets posture Silent; voice deviation justified above. | Narrator | 23+175 / 40+500 |  | Title: "The Ash-Prayer Silenced"   Body: "You set the ash and speak the prayer, and for the first time in your life nothing answers. The ancestors do not speak to the undead. The silence is total, and it is yours now." |  |
 | _(no tone match)_ | `PDV_Msg_Dunmer_CurseState_VampireCured_Scarred` | MessageBox. Once on cure; sets posture RestoredScarred. | God-voice | 20+141 / 40+500 |  | Title: "The Ancestors Answer"   Body: "The ash-prayer carries again. We hear you. But we heard the silence too, and it does not leave us, or you. Return -- scarred, and still ours." |  |
 | _(no tone match)_ | `PDV_Msg_Dunmer_CurseState_WerewolfOnset` | MessageBox. Once on first transformation; sets posture Strained. | God-voice | 16+161 / 40+500 |  | Title: "Ritually Unclean"   Body: "The beast in you has no place in the ash or the Reclamations. The ancestors do not turn away, but they answer thinly now. Hircine offers nothing to fill the gap." |  |
+| _(no tone match)_ | `PDV_Msg_Dunmer_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; clears posture Strained. | God-voice | 18+193 / 40+500 |  | Title: "The Ash Runs Clean"   Body: "The beast is set down. The ritual taint lifts, and the ancestors answer at full voice once more. The ash takes your prayer without strain. What was unclean is washed; carry the Reclamations on." |  |
 
 ## Shrine and privilege dialogue
 

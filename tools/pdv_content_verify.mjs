@@ -34,6 +34,7 @@ const SLOT_RE = new RegExp(`^PDV_(${SLOT_PREFIXES.join("|")})_[A-Za-z0-9_]+$`);
 const SLOT_ID_MAX = 64;
 const TITLE_HARD = 40;
 const RESERVED_NOTE_RE = /texture-only|reserved/i;
+const RACE_TOKEN_RE = /_(Nord|Imperial|Dunmer|Altmer|Khajiit|Redguard|Bosmer|Breton|Orc|Argonian)(_|$)/;
 const COLUMN_COUNT = 8; // Slot ID, Surface, Surfacing, Voice, Budget, Source, Notes, Draft prose
 
 class ContentVerifier {
@@ -41,6 +42,7 @@ class ContentVerifier {
     this.strictPhase20Roster = strictPhase20Roster;
     this.findings = [];
     this.slotSeen = new Map();
+    this.proseSeen = new Map();
   }
 
   add(status, check, detail, location = null) {
@@ -201,9 +203,18 @@ class ContentVerifier {
       return;
     }
 
+    // Parse MessageBox title/body once; the body is the player-facing sentence,
+    // so terminal-punctuation and duplicate checks run on the body, not the raw
+    // "Title: ... Body: ..." wrapper (titles legitimately carry no period).
+    const titleBody = parseTitleBody(prose);
+    const bodyText = surface === "MessageBox" && titleBody ? titleBody.body : prose;
+
     // Style checks (§ 3.5 of PDV_STANDARDS).
-    this.checkTerminalPunctuation(prose, slot, loc);
+    this.checkTerminalPunctuation(bodyText, slot, loc);
     this.checkContractions(prose, slot, loc);
+
+    // Per-race uniqueness: race-keyed rows must be individually written.
+    this.checkDuplicateProse(bodyText, slot, notes, loc);
 
     const hard = parseBudget(budget);
     if (hard === null) {
@@ -211,7 +222,6 @@ class ContentVerifier {
       return;
     }
 
-    const titleBody = parseTitleBody(prose);
     if (surface === "MessageBox" && titleBody) {
       if (titleBody.title.length > TITLE_HARD) {
         this.fail(
@@ -237,8 +247,37 @@ class ContentVerifier {
     }
   }
 
+  checkDuplicateProse(bodyText, slot, notes, loc) {
+    // Only race-keyed rows are compared: a deity/Prince worshipped by multiple
+    // races must read differently per race, and two races must never share body
+    // text. Templated (%s) rows and rows the design declares generic are exempt.
+    if (!RACE_TOKEN_RE.test(slot)) return;
+    if (bodyText.includes("%s")) return;
+    if (/\bgeneric\b/i.test(notes)) return;
+    const norm = bodyText
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .replace(/[\s.!?"']+$/g, "")
+      .trim();
+    if (norm.length < 12) return; // too short to be a meaningful duplicate
+    if (this.proseSeen.has(norm)) {
+      const prior = this.proseSeen.get(norm);
+      this.warn(
+        "Duplicate prose",
+        `'${slot}' shares body text with '${prior.slot}' (${prior.loc}); race-keyed rows must be individually written.`,
+        loc,
+      );
+    } else {
+      this.proseSeen.set(norm, { slot, loc });
+    }
+  }
+
   checkTerminalPunctuation(prose, slot, loc) {
-    const last = prose.trimEnd().slice(-1);
+    let t = prose.trimEnd();
+    // Dialogue and quoted lines wrap the sentence in straight quotes; unwrap one
+    // trailing quote so the check sees the sentence's real terminal character.
+    if (t.endsWith('"')) t = t.slice(0, -1).trimEnd();
+    const last = t.slice(-1);
     if (last !== "." && last !== "!" && last !== "?") {
       this.warn(
         "Terminal punctuation",
@@ -259,7 +298,7 @@ class ContentVerifier {
     ];
     const lower = prose.toLowerCase();
     for (const contraction of CONTRACTIONS) {
-      if (lower.includes(contraction)) {
+      if (new RegExp('\\b' + contraction + '\\b').test(lower)) {
         this.warn(
           "Contraction",
           `'${slot}' contains contraction '${contraction}' -- use the full form.`,
@@ -284,9 +323,13 @@ function parseBudget(budget) {
 }
 
 function parseTitleBody(prose) {
-  const match = prose.match(/^Title:\s*"([^"]*)"\s*Body:\s*"([^"]*)"\s*$/);
-  if (!match) return null;
-  return { title: match[1], body: match[2] };
+  // MessageBox rows appear in both orders in the manifests:
+  //   Title: "..." Body: "..."   and   Body: "..." Title: "..."
+  let match = prose.match(/^Title:\s*"([^"]*)"\s*Body:\s*"([^"]*)"\s*$/);
+  if (match) return { title: match[1], body: match[2] };
+  match = prose.match(/^Body:\s*"([^"]*)"\s*Title:\s*"([^"]*)"\s*$/);
+  if (match) return { title: match[2], body: match[1] };
+  return null;
 }
 
 function expectedVoice(slot) {

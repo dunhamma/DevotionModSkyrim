@@ -1732,17 +1732,16 @@ excellent reusable example per subsystem, then clone.
 | **16** | Neglect subsystem (generic per-deity selection, max 3 active) | Phase 14 | Generic neglect selection is runtime-proven for low-piety active Kyne plus broad-worship suppression clearing the active neglect set on re-evaluation |
 | **17** | Decay model (linear with tier-floor + grace) | Phase 14 | Runtime-proven for grace, eligible tick, same-day guard, broad reduction, active-patron skip, non-patron drift, Devoted floor, and Champion floor |
 | **18** | Player-facing UI (player MCM tab, status spell, notification policy) | Phase 14 | Thematic display default; numeric override behind toggle |
-| **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Patcher validates rules against the resolved load order, resolves payload references, emits an active verifier-covered `PDV_ClassificationPatch.esp` with the first approved Temple LCTN packet, and keeps future main-ESP promotion behind a separate release-packaging merge gate |
-| **20** | Full roster content lock + polish | All above except list compatibility | All locked race-architecture gods and all sixteen Skyrim-present Daedric Prince surfaces are content-ready, every race has authored handling for every god/Prince, and all locked race architectures are honored |
-| **21** | Authoria-first list compatibility packages | Phase 20 + Phase 19 | Authoria reaches accepted integration/test package; JOJ, TOT, HOH, MOM, DoD, and VOV reach `patch-packaged` with exact removals, one list patch, placement notes, patcher steps, and focused smoke checklist |
+| **19** | Content authoring pipeline expansion (`pdv_author.mjs` scope + offline patcher + verifier coverage) | Parallel | Planning-first patcher validates rules against the resolved load order, `pdv_author.mjs` emits explicit manual follow-up packets for array work, and later generated classification patches can add PDV keywords/FormList entries from rules |
+| **20** | 1.0 content lock + polish | All above | Pantheon at 25-35 deities, all 10 races have at least one foreground option, all locked race architectures honored; Aedric and Daedric authored content complete |
+| **21** | Mod compatibility first patch (Sacrosanct for vampire cross-routing) | Phase 15 | Sacrosanct feed events translate to PDV signals; no double-fire |
 
 V3 Preflight and Structural Skeleton are acceleration gates: they make the
 system safe to scale before broad content lands. Phases 7-9 then widen what the
 system can see and react to. Phases 10-12 are the per-race overlay layer. Phase
 13 brings Daedric paths online. Phases 14-17 turn the system from "tracks
 piety" into "feels like a relationship." Phase 18 is the player handoff.
-Phase 19 is tooling scale, Phase 20 is full content scale, and Phase 21 is
-compatibility packaging against the stable mod.
+Phase 19 is tooling; Phase 20 is the authored content lock (Aedric and Daedric); Phase 21 is compat.
 
 ### 21.1 What "1.0" means
 

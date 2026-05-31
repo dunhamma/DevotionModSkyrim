@@ -109,19 +109,20 @@ Status values:
 - `Locked`: ready to plan implementation; remaining changes are tuning or content.
 - `Partial`: architecture is stable, but named implementation decisions remain.
 - `Pending`: not yet built or proven.
+- `Drafted`: full manifest prose is authored and verifier-clean, pending promotion into shipped ESP records (used in the Content authored column).
 
 | Race | Architecture locked | Implementation-spec locked | Hook feasibility checked | Content authored | Verifier-covered | In-game proven |
 |---|---|---|---|---|---|---|
-| Nord | Locked | Locked | Locked | Partial | Partial | Pending |
-| Imperial | Locked | Locked | Locked | Pending | Partial | Partial |
-| Breton | Locked | Locked | Locked | Pending | Pending | Pending |
-| Dunmer | Locked | Locked | Locked | Pending | Partial | Pending |
-| Altmer | Locked | Locked | Locked | Partial | Partial | Partial |
-| Khajiit | Locked | Locked | Locked | Partial | Partial | Partial |
-| Bosmer | Locked | Locked | Locked | Partial | Partial | Partial |
-| Redguard | Locked | Locked | Locked | Partial | Partial | Pending |
-| Orc | Locked | Locked | Locked | Partial | Partial | Pending |
-| Argonian | Locked | Locked | Locked | Partial | Partial | Pending |
+| Nord | Locked | Locked | Locked | Drafted | Pending | Pending |
+| Imperial | Locked | Locked | Locked | Drafted | Partial | Partial |
+| Breton | Locked | Locked | Locked | Drafted | Pending | Pending |
+| Dunmer | Locked | Locked | Locked | Drafted | Partial | Pending |
+| Altmer | Locked | Partial | Partial | Drafted | Partial | Partial |
+| Khajiit | Locked | Locked | Locked | Drafted | Partial | Partial |
+| Bosmer | Locked | Locked | Partial | Drafted | Pending | Pending |
+| Redguard | Locked | Locked | Locked | Drafted | Pending | Pending |
+| Orc | Locked | Locked | Partial | Drafted | Pending | Pending |
+| Argonian | Locked | Locked | Locked | Drafted | Pending | Pending |
 
 All ten races are now implementation-spec locked at the design level. Altmer's
 remaining closeout items (crisis resolution hooks, final crisis trigger list,
