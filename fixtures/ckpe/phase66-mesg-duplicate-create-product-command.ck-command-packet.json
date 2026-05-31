@@ -3,8 +3,19 @@
   "transport": "named-pipe",
   "commands": [
     { "op": "openProject" },
-    { "op": "loadPlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
-    { "op": "setActivePlugin", "plugin": "PDV_Phase9To12_CKProof.esp" },
+    {
+      "op": "loadPluginSet",
+      "requiredPlugins": ["Skyrim.esm", "PDV_Phase9To12_CKProof.esp"],
+      "plugins": [
+        { "name": "Skyrim.esm", "selected": true, "active": false },
+        { "name": "PDV_Phase9To12_CKProof.esp", "selected": true, "active": true }
+      ],
+      "sourcePlugin": "Skyrim.esm",
+      "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+      "activePlugin": "PDV_Phase9To12_CKProof.esp",
+      "intendedSaveTarget": "PDV_Phase9To12_CKProof.esp",
+      "sourcePluginNotActive": true
+    },
     {
       "op": "duplicateCreateRecord",
       "plugin": "PDV_Phase9To12_CKProof.esp",

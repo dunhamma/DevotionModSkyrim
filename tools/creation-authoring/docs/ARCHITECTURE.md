@@ -114,7 +114,7 @@ readback normalizer, verifier, fixture, and strict report.
 
 The verifier consumes this oracle before checking operation-specific intent. If a manifest operation has no readback normalizer coverage, verification returns `TODO`; proof ledgers cannot promote that row to `supported`.
 
-The Phase 2 oracle foundation covers VMAD scalar/object/array properties, FormLists, message buttons, quest aliases/stages, Story Manager `Shares Event`, placed reference proof surfaces, generated artifact freshness, conflict-chain expectations, and partial-overlay failure. Additional record families still need family-specific proof fixtures before they can move to `supported`.
+The Phase 2 oracle foundation covers VMAD scalar/object/array properties, FormLists, message buttons, quest aliases/stages, Story Manager `Shares Event`, dialogue branch/topic/INFO readback, placed reference proof surfaces, generated artifact freshness, conflict-chain expectations, and partial-overlay failure. Dialogue support remains proof-gated: readback coverage can verify a CK-authored branch/topic/unnamed INFO, but `DIAL` and `INFO` cannot move to `supported` until native CKPE handlers create and save the records and strict proof includes passing command evidence.
 
 ## Reference Pack Static Gates
 

@@ -80,19 +80,23 @@ function verifyOperation(operation, targetResolution, readbackRecord, context = 
   }
 
   if (operation.kind === "keyword.add") {
-    return verifyContainsAny(operation, targetResolution, readbackRecord, "keywords", operation.payload.keywords || operation.payload.keyword);
+    const payload = operation.payload || {};
+    return verifyContainsAny(operation, targetResolution, readbackRecord, "keywords", payload.keywords || payload.keyword);
   }
 
   if (operation.kind === "spell.add") {
-    return verifyContainsAny(operation, targetResolution, readbackRecord, "spells", operation.payload.spells || operation.payload.spell);
+    const payload = operation.payload || {};
+    return verifyContainsAny(operation, targetResolution, readbackRecord, "spells", payload.spells || payload.spell);
   }
 
   if (operation.kind === "perk.add") {
-    return verifyContainsAny(operation, targetResolution, readbackRecord, "perks", operation.payload.perks || operation.payload.perk);
+    const payload = operation.payload || {};
+    return verifyContainsAny(operation, targetResolution, readbackRecord, "perks", payload.perks || payload.perk);
   }
 
   if (operation.kind === "package.add") {
-    return verifyContainsAny(operation, targetResolution, readbackRecord, "packages", operation.payload.packages || operation.payload.package);
+    const payload = operation.payload || {};
+    return verifyContainsAny(operation, targetResolution, readbackRecord, "packages", payload.packages || payload.package);
   }
 
   if (operation.kind === "inventory.add") {
@@ -453,6 +457,12 @@ function verifyListContains(operation, targetResolution, readbackRecord) {
 function verifyContainsAny(operation, targetResolution, readbackRecord, field, expectedRaw) {
   const actual = readbackRecord[field] || [];
   const expected = Array.isArray(expectedRaw) ? expectedRaw : [expectedRaw].filter(Boolean);
+  if (!expected.length) {
+    return result(operation, "FAIL", `${operation.target} ${field} verifier payload is missing expected entries.`, {
+      targetResolution,
+      field
+    });
+  }
   const missing = expected.filter((value) => !actual.some((entry) => valueMatches(entry, value)));
   if (!missing.length) {
     return result(operation, "PASS", `${operation.target} ${field} contains expected entries.`, {
@@ -470,7 +480,11 @@ function verifyInventory(operation, targetResolution, readbackRecord) {
   const actual = readbackRecord.inventory || [];
   const expected = operation.payload.items || operation.payload.inventory || [];
   const missing = expected.filter((entry) => {
-    return !actual.some((actualEntry) => valueMatches(actualEntry.item, entry.item || entry));
+    return !actual.some((actualEntry) => {
+      const itemMatches = valueMatches(actualEntry.item, entry.item || entry);
+      const expectedCount = entry.count ?? entry.Count ?? null;
+      return itemMatches && (expectedCount === null || Number(actualEntry.count) === Number(expectedCount));
+    });
   });
   if (!missing.length) {
     return result(operation, "PASS", `${operation.target} inventory contains expected entries.`, {
@@ -490,7 +504,7 @@ function verifyConditions(operation, targetResolution, readbackRecord) {
   const missing = expected.filter((condition) => {
     return !actual.some((actualCondition) => {
       return valueMatches(actualCondition.function, condition.function) &&
-        (!condition.operator || valueMatches(actualCondition.operator, condition.operator));
+        (!condition.operator || conditionOperatorMatches(actualCondition, condition.operator));
     });
   });
   if (!missing.length) {
@@ -503,6 +517,12 @@ function verifyConditions(operation, targetResolution, readbackRecord) {
     missing,
     actual
   });
+}
+
+function conditionOperatorMatches(actualCondition, expectedOperator) {
+  return valueMatches(actualCondition.operator, expectedOperator) ||
+    valueMatches(actualCondition.raw?.CompareOperator, expectedOperator) ||
+    valueMatches(actualCondition.raw?.Operator, expectedOperator);
 }
 
 function verifyGenericRecordPayload(operation, targetResolution, readbackRecord, { manifest } = {}) {

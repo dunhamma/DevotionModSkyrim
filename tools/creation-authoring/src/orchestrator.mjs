@@ -99,11 +99,14 @@ export function analyzeMixedCkWriterSequence(plan, options = {}) {
   const createdTargets = new Set();
   const delayedWriterOperationIds = new Set();
   const identityOperationIds = new Set();
+  const completedIdentityTargets = new Set(
+    [...(options.completedIdentityTargets || [])].map((target) => String(target || "").toLowerCase())
+  );
   const includeNonReadyIdentity = options.includeNonReadyIdentity === true;
 
   for (const item of plan.operations) {
     const targetKey = String(item.operation.target || "").toLowerCase();
-    if ((item.status === "ready" || (includeNonReadyIdentity && item.operation.kind === "record.duplicate_create")) &&
+    if ((item.status === "ready" || completedIdentityTargets.has(targetKey) || (includeNonReadyIdentity && item.operation.kind === "record.duplicate_create")) &&
         item.operation.kind === "record.duplicate_create") {
       createdTargets.add(targetKey);
       identityOperationIds.add(item.operation.id);

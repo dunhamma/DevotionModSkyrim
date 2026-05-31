@@ -335,7 +335,7 @@ node .\src\cli.mjs promote .\reports\example-run-report.json `
   --merge-output-path .\scratch\ExampleMod.merge-candidate.esp
 ```
 
-Promotion requires a passing run report, no manual packets, human approval, an explicit candidate output path, timestamped backup, structured merge, CK finalization when required, and post-merge verification. Use `promotion-candidate-check` for repo-local dry-run proof; it must pass while still reporting `releaseReady: false` until live post-merge verification runs.
+Promotion requires a passing run report, no manual packets, human approval, an explicit candidate output path, timestamped backup, structured merge, CK finalization when required, and post-merge verification. Use `promotion-candidate-check` for repo-local dry-run proof; it must pass with the dry-run post-merge verifier proving the candidate verification contract while still proving that no source, generated, or candidate plugin path was written.
 
 Payload proof has its own runner and should start with MESG before ACTI:
 

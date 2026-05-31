@@ -317,6 +317,7 @@ async function main(argv) {
         generatedPath: options.generatedPath,
         mergeOutputPath: options.mergeOutputPath,
         backupRoot: options.backupRoot,
+        forceCkFinalization: Boolean(options.forceCkFinalization),
         backupRunner: mergeRunner ? async () => ({
           status: "DEFERRED_TO_MERGE_RUNNER",
           message: "The local merge runner performs the timestamped backup immediately before writing output."
@@ -324,7 +325,7 @@ async function main(argv) {
         mergeRunner
       });
       maybeWriteJson(options.outputFile, report);
-      if (report.status !== "PASS") {
+      if (report.status !== "PASS" && !(options.allowRequested && report.status === "REQUESTED")) {
         process.exitCode = 1;
       }
       print(report, options, () => formatPromotion(report));
@@ -606,6 +607,10 @@ function parseArgs(argv) {
       options.executeLive = true;
     } else if (arg === "--approved") {
       options.approved = true;
+    } else if (arg === "--allow-requested") {
+      options.allowRequested = true;
+    } else if (arg === "--force-ck-finalization") {
+      options.forceCkFinalization = true;
     } else if (arg === "--dry-run") {
       options.dryRun = true;
     } else if (arg === "--merge-runner") {
@@ -732,7 +737,7 @@ function usage(exitCode, message = null) {
   creation-authoring run <manifest.json> --profile <profile.json> [--execute-live] [--allow-manual-packets] [--allow-unproven-ck] [--write-report] [--json]
   creation-authoring prove <manifest.json> --profile <profile.json> --strict [--proof-output <path>] [--platform-v1] [--json]
   creation-authoring prove-applied <manifest.json> --profile <profile.json> --readback <readback.json> --writer-evidence <writer-evidence.json> --strict [--proof-output <path>] [--platform-v1] [--json]
-  creation-authoring promote <run-report.json> --profile <profile.json> [--approved] [--merge-runner <csproj>] [--source-path <esp>] [--generated-path <esp>] [--merge-output-path <esp>] [--output-file <path>] [--json]
+  creation-authoring promote <run-report.json> --profile <profile.json> [--approved] [--merge-runner <csproj>] [--source-path <esp>] [--generated-path <esp>] [--merge-output-path <esp>] [--force-ck-finalization] [--allow-requested] [--output-file <path>] [--json]
   creation-authoring promotion-candidate-check <run-report.json> --profile <profile.json> --approved --merge-runner <csproj> --source-path <esp> --generated-path <esp> --merge-output-path <esp> [--output-file <path>] [--json]
   creation-authoring verify <manifest.json> --profile <profile.json> --readback <readback.json> [--json]
   creation-authoring drift <manifest.json> --profile <profile.json> [--readback <readback.json>] [--json]

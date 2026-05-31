@@ -1,0 +1,168 @@
+{
+  "schema": "creation-authoring.ck-command-result.v1",
+  "status": "PASS",
+  "transport": "named-pipe",
+  "commands": [
+    {
+      "op": "openProject",
+      "status": "PASS",
+      "message": "Bridge is loaded in the current CK project context.",
+      "evidence": {
+        "ckpeVersion": 0,
+        "ckpeCommonVersion": 0,
+        "ckpeGameLibraryVersion": 0,
+        "runtimeVersion": 0,
+        "pipe": "\\\\.\\pipe\\CreationKitAuthoringBridge"
+      }
+    },
+    {
+      "op": "loadPluginSet",
+      "status": "PASS",
+      "message": "Requested CK load set and active save target are already proven.",
+      "evidence": {
+        "dataHandlerAvailable": true,
+        "operation": "loadPluginSet",
+        "implementationMode": "verification-only",
+        "implementationRule": "This command proves the requested CK load set and active save target. It does not mutate CK Data dialog state.",
+        "requestedActivePlugin": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+        "intendedSaveTarget": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+        "sourcePlugin": "PlayerDevotion_Framework.esp",
+        "generatedOrCandidatePlugin": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+        "sourcePluginNotActiveRequired": true,
+        "activePlugin": {
+          "fileName": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+          "filePath": "Data\\",
+          "loadIndex": 4,
+          "selected": true,
+          "active": true,
+          "master": false,
+          "smallMaster": false,
+          "ownedFormCount": 0
+        },
+        "sourcePluginState": {
+          "fileName": "PlayerDevotion_Framework.esp",
+          "filePath": "Data\\",
+          "loadIndex": 3,
+          "selected": true,
+          "active": false,
+          "master": true,
+          "smallMaster": false,
+          "ownedFormCount": 0
+        },
+        "generatedOrCandidatePluginState": {
+          "fileName": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+          "filePath": "Data\\",
+          "loadIndex": 4,
+          "selected": true,
+          "active": true,
+          "master": false,
+          "smallMaster": false,
+          "ownedFormCount": 0
+        },
+        "requiredPlugins": [
+          {
+            "name": "PlayerDevotion_Framework.esp",
+            "loaded": true,
+            "selected": true,
+            "plugin": {
+              "fileName": "PlayerDevotion_Framework.esp",
+              "filePath": "Data\\",
+              "loadIndex": 3,
+              "selected": true,
+              "active": false,
+              "master": true,
+              "smallMaster": false,
+              "ownedFormCount": 0
+            }
+          },
+          {
+            "name": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+            "loaded": true,
+            "selected": true,
+            "plugin": {
+              "fileName": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+              "filePath": "Data\\",
+              "loadIndex": 4,
+              "selected": true,
+              "active": true,
+              "master": false,
+              "smallMaster": false,
+              "ownedFormCount": 0
+            }
+          }
+        ],
+        "missingPlugins": [],
+        "allRequiredPluginsLoaded": true,
+        "allRequiredPluginsSelected": true,
+        "sourcePluginLoaded": true,
+        "sourcePluginSelected": true,
+        "generatedOrCandidatePluginLoaded": true,
+        "generatedOrCandidatePluginSelected": true,
+        "generatedOrCandidatePluginActive": true,
+        "generatedOrCandidatePluginNormalWritableEsp": true,
+        "activePluginMatchesRequest": true,
+        "saveTargetMatchesActive": true,
+        "sourcePluginActive": false,
+        "blockers": [],
+        "proofPassed": true
+      }
+    },
+    {
+      "op": "postUiSaveCommand",
+      "status": "PASS",
+      "message": "CK native save command was posted to the main window.",
+      "evidence": {
+        "requestedPlugin": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+        "guards": {
+          "dataHandlerAvailable": true,
+          "requestedPluginLoaded": true,
+          "requestedPluginIsActive": true,
+          "targetIsDisposableGeneratedPlugin": false,
+          "allowRequestedPluginSave": true,
+          "targetIsNormalWritableEsp": true,
+          "targetExplicitlyAllowed": true,
+          "mainWindowFound": true
+        },
+        "activePlugin": {
+          "dataHandlerAvailable": true,
+          "activePlugin": {
+            "fileName": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+            "filePath": "Data\\",
+            "loadIndex": 4,
+            "selected": true,
+            "active": true,
+            "master": false,
+            "smallMaster": false,
+            "ownedFormCount": 0
+          }
+        },
+        "requestedPluginState": {
+          "fileName": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+          "filePath": "Data\\",
+          "loadIndex": 4,
+          "selected": true,
+          "active": true,
+          "master": false,
+          "smallMaster": false,
+          "ownedFormCount": 0
+        },
+        "mainWindow": {
+          "handle": "0x4c0aa2",
+          "visible": true,
+          "hasMenu": true,
+          "ownerless": true,
+          "className": "Creation Kit Skyrim Special Edition [v1.6.1378.1]",
+          "title": "Creation Kit Skyrim Special Edition [v1.6.1378.1] 64-bit - [PlayerDevotion_Framework_PlatformV1_Candidate.esp] <ESL Capable - 4095 IDs remaining>",
+          "candidateCount": 17
+        },
+        "message": {
+          "kind": "WM_COMMAND",
+          "commandId": 40127,
+          "posted": true
+        },
+        "implementationRule": "This posts CK's native File > Save command to the CK main window for an active disposable generated plugin or an explicitly allowed active normal ESP promotion candidate. It does not call TESFile::WriteTESInfo directly; MO2 filesystem readback remains required."
+      }
+    }
+  ],
+  "message": "CreationKitAuthoringBridge lifecycle commands completed inside CKPE."
+}

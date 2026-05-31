@@ -23,5 +23,12 @@ validation on these static fixtures, then uses the live manifest/profile under
 .\scripts\run-payload-v1-proof.ps1 -Surface MESG -Stage Finalize
 ```
 
-`ACTI` is fixture-ready only until the MESG payload sequence is stable. The
-runner refuses live ACTI proof unless explicitly invoked with `-AllowActiLive`.
+Run the ACTI live proof through the same split cycle. The structure is the
+same; only the live manifest/profile differ:
+
+```powershell
+.\scripts\run-payload-v1-proof.ps1 -Surface ACTI -DryRun
+.\scripts\run-payload-v1-proof.ps1 -Surface ACTI -Stage Prepare
+.\scripts\run-payload-v1-proof.ps1 -Surface ACTI -Stage Ck
+.\scripts\run-payload-v1-proof.ps1 -Surface ACTI -Stage Finalize
+```

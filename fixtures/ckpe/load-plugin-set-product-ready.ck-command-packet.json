@@ -2,23 +2,23 @@
   "schema": "creation-authoring.ck-command-packet.v1",
   "project": "load-plugin-set-product-ready",
   "game": "SkyrimSE",
-  "sourcePlugin": "ExampleMod.esp",
-  "generatedPlugin": "ExampleMod_GeneratedCk.esp",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
   "failClosed": true,
   "commands": [
     { "op": "openProject", "profile": "load-plugin-set-product-ready", "game": "SkyrimSE" },
     {
       "op": "loadPluginSet",
-      "requiredPlugins": ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
+      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esp"],
       "plugins": [
         { "name": "Skyrim.esm", "selected": true, "active": false },
-        { "name": "ExampleMod.esp", "selected": true, "active": false },
-        { "name": "ExampleMod_GeneratedCk.esp", "selected": true, "active": true }
+        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": false },
+        { "name": "PDV_Phase9To12_CKProof.esp", "selected": true, "active": true }
       ],
-      "sourcePlugin": "ExampleMod.esp",
-      "generatedPlugin": "ExampleMod_GeneratedCk.esp",
-      "activePlugin": "ExampleMod_GeneratedCk.esp",
-      "intendedSaveTarget": "ExampleMod_GeneratedCk.esp",
+      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+      "activePlugin": "PDV_Phase9To12_CKProof.esp",
+      "intendedSaveTarget": "PDV_Phase9To12_CKProof.esp",
       "sourcePluginNotActive": true
     },
     { "op": "closeSafeStatus" }

@@ -1,0 +1,53 @@
+{
+    "schema":  "creation-authoring.ck-command-packet.v1",
+    "project":  "player-devotion-platform-v1-promotion",
+    "game":  "SkyrimSE",
+    "sourcePlugin":  "PlayerDevotion_Framework.esp",
+    "generatedPlugin":  "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+    "failClosed":  true,
+    "commands":  [
+                     {
+                         "op":  "openProject",
+                         "profile":  "player-devotion-platform-v1-promotion",
+                         "game":  "SkyrimSE"
+                     },
+                     {
+                         "op":  "loadPluginSet",
+                         "requiredPlugins":  [
+                                                 "Skyrim.esm",
+                                                 "PlayerDevotion_Framework.esp",
+                                                 "PlayerDevotion_Framework_PlatformV1_Candidate.esp"
+                                             ],
+                         "selectedPlugins":  [
+                                                 {
+                                                     "name":  "Skyrim.esm",
+                                                     "selected":  true,
+                                                     "active":  false
+                                                 },
+                                                 {
+                                                     "name":  "PlayerDevotion_Framework.esp",
+                                                     "selected":  true,
+                                                     "active":  false
+                                                 },
+                                                 {
+                                                     "name":  "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+                                                     "selected":  true,
+                                                     "active":  true
+                                                 }
+                                             ],
+                         "sourcePlugin":  "PlayerDevotion_Framework.esp",
+                         "generatedPlugin":  "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+                         "activePlugin":  "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+                         "intendedSaveTarget":  "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+                         "sourcePluginNotActive":  true
+                     },
+                     {
+                         "op":  "postUiSaveCommand",
+                         "plugin":  "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
+                         "allowRequestedPluginSave":  true
+                     }
+                 ],
+    "verifierExpectations":  [
+
+                             ]
+}

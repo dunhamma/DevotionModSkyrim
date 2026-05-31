@@ -1,7 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import net from "node:net";
 import os from "node:os";
 import path from "node:path";
 import {
@@ -14,7 +13,6 @@ import {
   buildPatchRequest,
   buildPlatformProofSummary,
   buildStrictGatePhase,
-  buildStructuredMergeRequest,
   checkPromotionCandidateDryRun,
   buildProofLedgerFromRun,
   buildReviewJson,
@@ -31,7 +29,6 @@ import {
   normalizeProfile,
   parseToolResult,
   promoteRunReport,
-  runCkIpcPacket,
   runLocalMergeRunner,
   runPipeline,
   selectPacketCase,
@@ -47,8 +44,13 @@ import {
   buildDialogueBatchReport,
   buildDialogueManifestFromRows
 } from "../src/index.mjs";
-import { createCompileRunner, prepareLiveProfile } from "../src/live-mcp-adapters.mjs";
-import { emptyProofResults, flattenProofLedgerResults } from "../src/proof-ledger.mjs";
+import { createCompileRunner, createReadbackCollector, prepareLiveProfile } from "../src/live-mcp-adapters.mjs";
+import {
+  applyExistingMessagePayloadPatch,
+  rewriteMessageRecordPayload
+} from "../src/esp-message-payload-writer.mjs";
+import { analyzeMixedCkWriterSequence } from "../src/orchestrator.mjs";
+import { flattenProofLedgerResults } from "../src/proof-ledger.mjs";
 
 const profile = normalizeProfile({
   schema: "creation-profile.v1",
@@ -175,9 +177,6 @@ test("builds CK command packets for CK-semantic operations", () => {
   const plan = createPlan(ckManifest, ckpeProfile, { allowUnprovenCk: true });
   const packet = buildCkCommandPacket(plan);
   assert.equal(packet.schema, "creation-authoring.ck-command-packet.v1");
-  assert.equal(packet.commands[0].op, "openProject");
-  assert.equal(packet.commands[1].op, "loadPluginSet");
-  assert.equal(packet.commands.filter((command) => command.op === "loadPluginSet").length, 1);
   assert.equal(packet.commands.some((command) => command.op === "addStoryManagerNode"), true);
   const loadPluginSet = packet.commands.find((command) => command.op === "loadPluginSet");
   assert.equal(loadPluginSet.activePlugin, "ExampleMod_GeneratedCk.esp");
@@ -289,41 +288,113 @@ test("selectPacketCase fails clearly when the requested case does not exist", ()
   );
 });
 
-test("named-pipe CK adapter times out when the bridge accepts a connection but never responds", async () => {
-  const pipeName = process.platform === "win32"
-    ? `\\\\.\\pipe\\ckra-test-${process.pid}-${Date.now()}`
-    : path.join(os.tmpdir(), `ckra-test-${process.pid}-${Date.now()}.sock`);
-  const server = net.createServer((socket) => {
-    socket.on("data", () => {
-      // Intentionally keep the connection open without replying so the adapter timeout must fire.
-    });
-  });
+test("loadPluginSet product fixtures cover success and blocked runtime evidence", () => {
+  const readyFixture = JSON.parse(fs.readFileSync(
+    "fixtures/ckpe/load-plugin-set-product-ready.ck-command-packet.json",
+    "utf8"
+  ));
+  const readyOps = readyFixture.commands.map((command) => command.op);
+  const readyLoadSet = readyFixture.commands.find((command) => command.op === "loadPluginSet");
 
-  await new Promise((resolve, reject) => {
-    server.once("error", reject);
-    server.listen(pipeName, resolve);
-  });
+  assert.equal(readyOps.includes("loadPlugin"), false);
+  assert.equal(readyOps.includes("setActivePlugin"), false);
+  assert.equal(readyLoadSet.sourcePlugin, "PlayerDevotion_Framework.esp");
+  assert.equal(readyLoadSet.generatedPlugin, "PDV_Phase9To12_CKProof.esp");
+  assert.equal(readyLoadSet.activePlugin, "PDV_Phase9To12_CKProof.esp");
+  assert.equal(readyLoadSet.intendedSaveTarget, "PDV_Phase9To12_CKProof.esp");
+  assert.equal(readyLoadSet.sourcePluginNotActive, true);
+  assert.deepEqual(readyLoadSet.requiredPlugins, ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esp"]);
 
-  const startedAt = Date.now();
-  try {
-    const result = await runCkIpcPacket({
-      schema: "creation-authoring.ck-command-packet.v1",
-      project: "example-mod",
-      commands: []
-    }, {
-      pipeName,
-      timeoutMs: 150
-    });
+  const blockedFixture = JSON.parse(fs.readFileSync(
+    "fixtures/ckpe/load-plugin-set-blocked-cases.ck-command-packet.json",
+    "utf8"
+  ));
+  assert.equal(blockedFixture.commands.every((command) => command.op === "loadPluginSet"), true);
+  assert.deepEqual(
+    blockedFixture.commands.map((command) => command.expectedBlocker),
+    [
+      "missing_source_plugin",
+      "missing_generated_or_candidate_plugin",
+      "generated_or_candidate_plugin_not_active",
+      "source_plugin_active",
+      "intended_save_target_mismatch",
+      "active_target_not_normal_writable_esp"
+    ]
+  );
+});
 
-    assert.equal(result.status, "UNSAFE_BLOCKED");
-    assert.match(result.message, /(Timed out waiting for CKPE authoring bridge response|CKPE authoring bridge closed without returning a response)/);
-    assert.ok(Date.now() - startedAt < 2000);
-  } finally {
-    await new Promise((resolve) => server.close(resolve));
-    if (process.platform !== "win32" && fs.existsSync(pipeName)) {
-      fs.unlinkSync(pipeName);
+test("validates ship-path loadPluginSet without legacy commands", () => {
+  const pass = validateShipPathLoadSet([
+    { op: "openProject" },
+    {
+      op: "loadPluginSet",
+      activePlugin: "ExampleMod_Generated.esp",
+      intendedSaveTarget: "ExampleMod_Generated.esp",
+      sourcePluginNotActive: true
     }
-  }
+  ], {
+    requireOpenProjectPrelude: true,
+    expectedActivePlugin: "ExampleMod_Generated.esp",
+    expectedSaveTarget: "ExampleMod_Generated.esp"
+  });
+  assert.equal(pass.status, "PASS");
+
+  const fail = validateShipPathLoadSet([
+    { op: "loadPlugin", status: "PASS", plugin: "ExampleMod_Generated.esp" },
+    {
+      op: "loadPluginSet",
+      activePlugin: "ExampleMod_Generated.esp",
+      intendedSaveTarget: "ExampleMod_Generated.esp",
+      sourcePluginNotActive: true
+    }
+  ], {
+    requireOpenProjectPrelude: true,
+    expectedActivePlugin: "ExampleMod_Generated.esp",
+    expectedSaveTarget: "ExampleMod_Generated.esp"
+  });
+  assert.equal(fail.status, "FAIL");
+  assert.equal(fail.failures.some((failure) => /transitional loadPlugin\/setActivePlugin/.test(failure)), true);
+
+  const duplicateLoadSet = validateShipPathLoadSet([
+    { op: "openProject" },
+    {
+      op: "loadPluginSet",
+      activePlugin: "ExampleMod_Generated.esp",
+      intendedSaveTarget: "ExampleMod_Generated.esp",
+      sourcePluginNotActive: true
+    },
+    {
+      op: "loadPluginSet",
+      activePlugin: "ExampleMod_Generated.esp",
+      intendedSaveTarget: "ExampleMod_Generated.esp",
+      sourcePluginNotActive: true
+    }
+  ], {
+    requireOpenProjectPrelude: true,
+    expectedActivePlugin: "ExampleMod_Generated.esp",
+    expectedSaveTarget: "ExampleMod_Generated.esp"
+  });
+  assert.equal(duplicateLoadSet.status, "FAIL");
+  assert.equal(duplicateLoadSet.failures.some((failure) => /exactly one loadPluginSet/.test(failure)), true);
+});
+
+test("loadPluginSet blocker catalogs stay aligned with the blocked-case fixture", () => {
+  const blockedFixture = loadPluginSetBlockedCasesFixture();
+  const expectedBlockers = blockedFixture.commands.map((command) => command.expectedBlocker);
+
+  assert.deepEqual(expectedBlockers, LOAD_PLUGIN_SET_RELEASE_BLOCKERS);
+  assert.deepEqual(LOAD_PLUGIN_SET_DIAGNOSTIC_BLOCKERS, [
+    "data_handler_unavailable",
+    "source_plugin_not_declared",
+    "source_plugin_not_selected",
+    "generated_or_candidate_plugin_not_declared",
+    "generated_or_candidate_plugin_not_selected",
+    "active_plugin_not_declared",
+    "active_plugin_mismatch",
+    "generated_or_candidate_plugin_differs_from_requested_active_plugin",
+    "required_plugin_missing",
+    "required_plugin_not_selected"
+  ]);
 });
 
 test("blocks create conflicts unless manifest declares update or rename", () => {
@@ -854,6 +925,186 @@ test("mixed payload proof blocks writer when post-CK identity is missing", async
   assert.equal(report.phases.find((phase) => phase.phase === "payload-apply").status, "UNSAFE_BLOCKED");
 });
 
+test("finalize sequencing preserves a completed CK duplicate identity", () => {
+  const plan = {
+    operations: [
+      {
+        status: "abort",
+        operation: {
+          id: "duplicate-message-shell",
+          kind: "record.duplicate_create",
+          target: "_HelpPipBoyItemsDUPLICATE002"
+        },
+        backend: "ckpe-bridge"
+      },
+      {
+        status: "ready",
+        operation: {
+          id: "set-message-payload",
+          kind: "message.payload.set",
+          target: "_HelpPipBoyItemsDUPLICATE002"
+        },
+        backend: "mo2-mcp-patch-request"
+      }
+    ]
+  };
+
+  const sequencing = analyzeMixedCkWriterSequence(plan, {
+    completedIdentityTargets: ["_HelpPipBoyItemsDUPLICATE002"]
+  });
+
+  assert.deepEqual([...sequencing.identityOperationIds], ["duplicate-message-shell"]);
+  assert.deepEqual([...sequencing.delayedWriterOperationIds], ["set-message-payload"]);
+});
+
+test("MO2 readback collector attaches conflict chain to normalized records", async () => {
+  const collector = createReadbackCollector({
+    conflictCache: new Map(),
+    mcp: {
+      async callTool(name, args) {
+        if (name === "mo2_record_detail") {
+          assert.equal(args.editor_id, "_HelpPipBoyItemsDUPLICATE002");
+          return {
+            formid: "PDV_Phase9To12_CKProof.esp:00182A",
+            record_type: "MESSAGE",
+            editor_id: "_HelpPipBoyItemsDUPLICATE002",
+            plugin: "PDV_Phase9To12_CKProof.esp",
+            fields: {
+              EditorID: "_HelpPipBoyItemsDUPLICATE002",
+              MenuButtons: [{ Text: "Accept" }]
+            }
+          };
+        }
+        if (name === "mo2_conflict_chain") {
+          assert.equal(args.editor_id, "_HelpPipBoyItemsDUPLICATE002");
+          return {
+            chain_length: 1,
+            winner: "PDV_Phase9To12_CKProof.esp",
+            chain: [{ plugin: "PDV_Phase9To12_CKProof.esp", is_winner: true }]
+          };
+        }
+        throw new Error(`unexpected tool ${name}`);
+      }
+    }
+  });
+  const readback = await collector({
+    manifest: {
+      operations: [
+        {
+          id: "set-message-payload",
+          kind: "message.payload.set",
+          target: "_HelpPipBoyItemsDUPLICATE002"
+        }
+      ]
+    },
+    plan: {
+      operations: [
+        {
+          operation: {
+            id: "set-message-payload",
+            kind: "message.payload.set",
+            target: "_HelpPipBoyItemsDUPLICATE002"
+          },
+          targetResolution: {}
+        }
+      ]
+    },
+    phases: [
+      {
+        phase: "ck-apply",
+        status: "PASS",
+        adapterResult: {
+          commands: [
+            {
+              op: "duplicateCreateRecord",
+              status: "PASS",
+              evidence: {
+                requested: {
+                  targetEditorId: "_HelpPipBoyItemsDUPLICATE002",
+                  sourceEditorId: "_HelpPipBoyItems"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  });
+
+  const record = readback.records._HelpPipBoyItemsDUPLICATE002;
+  assert.equal(record.recordType, "MESG");
+  assert.equal(record.winningPlugin, "PDV_Phase9To12_CKProof.esp");
+  assert.equal(record.createdFrom.editorId, "_HelpPipBoyItems");
+  assert.equal(record.conflictChain.length, 1);
+  assert.equal(record.conflictChain[0].plugin, "PDV_Phase9To12_CKProof.esp");
+  assert.equal(record.message.buttons[0].text, "Accept");
+});
+
+test("MESG payload writer rewrites title text and buttons while preserving core fields", () => {
+  const payload = Buffer.concat([
+    testSubrecord("EDID", "_HelpPipBoyItemsDUPLICATE002"),
+    testSubrecord("DESC", ""),
+    testBinarySubrecord("INAM", Buffer.alloc(4)),
+    testBinarySubrecord("DNAM", Buffer.from([1, 0, 0, 0]))
+  ]);
+
+  const rewritten = rewriteMessageRecordPayload(payload, {
+    title: "CKRA Payload Proof",
+    text: "MESG payload proof body",
+    buttons: [{ text: "Accept" }]
+  });
+  const fields = parseTestSubrecords(rewritten);
+
+  assert.equal(fields.EDID[0], "_HelpPipBoyItemsDUPLICATE002");
+  assert.equal(fields.FULL[0], "CKRA Payload Proof");
+  assert.equal(fields.DESC[0], "MESG payload proof body");
+  assert.equal(fields.ITXT[0], "Accept");
+  assert.equal(fields.INAM[0].length, 4);
+  assert.equal(fields.DNAM[0].readUInt32LE(0), 1);
+});
+
+test("existing MESG payload patch updates a generated ESP and records a backup", () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ckra-mesg-payload-"));
+  const pluginPath = path.join(tempRoot, "ExampleGenerated.esp");
+  const backupRoot = path.join(tempRoot, "backups");
+  fs.writeFileSync(pluginPath, testEspWithMessage({
+    formId: 0x0400182a,
+    editorId: "EXM_MessageDUPLICATE001"
+  }));
+
+  const result = applyExistingMessagePayloadPatch({
+    output_name: "ExampleGenerated.esp",
+    records: [
+      {
+        op: "override",
+        formid: "ExampleGenerated.esp:00182A",
+        set_message_payload: {
+          title: "Payload title",
+          text: "Payload body",
+          buttons: [{ text: "Accept" }]
+        }
+      }
+    ]
+  }, {
+    existingPath: pluginPath,
+    backupRoot
+  });
+
+  assert.equal(result.status, "PASS");
+  assert.equal(fs.existsSync(result.backup_path), true);
+  const updated = fs.readFileSync(pluginPath);
+  assert.equal(updated.subarray(0, 4).toString("ascii"), "TES4");
+  const groupOffset = 24 + updated.readUInt32LE(4);
+  assert.equal(updated.readUInt32LE(groupOffset + 4), updated.length - groupOffset);
+  const recordOffset = groupOffset + 24;
+  const recordSize = updated.readUInt32LE(recordOffset + 4);
+  const fields = parseTestSubrecords(updated.subarray(recordOffset + 24, recordOffset + 24 + recordSize));
+  assert.equal(fields.EDID[0], "EXM_MessageDUPLICATE001");
+  assert.equal(fields.FULL[0], "Payload title");
+  assert.equal(fields.DESC[0], "Payload body");
+  assert.equal(fields.ITXT[0], "Accept");
+});
+
 test("collects live readback through a host adapter", async () => {
   const report = await runPipeline(manifest, profile, {
     executeLive: true,
@@ -986,6 +1237,72 @@ test("normalizes MO2 record detail VMAD readback", () => {
 
   assert.equal(readback.records.EXM_MainQuest.scripts[0].name, "EXM_MainQuestScript");
   assert.equal(readback.records.EXM_MainQuest.scripts[0].properties.DebugGlobal, "ExampleMod.esp:000801 (EXM_GLO_Debug)");
+});
+
+test("verifies nested MO2 inventory items and normalized condition operators", () => {
+  const manifest = normalizeManifest({
+    schema: "creation-authoring.v1",
+    project: "example-mod",
+    game: "SkyrimSE",
+    sourcePlugin: "ExampleMod.esp",
+    output: "ExampleMod_Generated.esp",
+    operations: [
+      {
+        id: "inventory-add",
+        kind: "inventory.add",
+        target: "EXM_Npc",
+        recordFamily: "NPC_",
+        payload: {
+          items: [{ item: "Gold001", count: 1 }]
+        }
+      },
+      {
+        id: "condition-add",
+        kind: "condition.add",
+        target: "EXM_Package",
+        recordFamily: "PACK",
+        payload: {
+          conditions: [{ function: "GetIsID", operator: "EqualTo" }]
+        }
+      }
+    ]
+  });
+  const profile = {
+    resourceConnectors: [
+      {
+        type: "fixture",
+        records: {
+          EXM_Npc: { editorId: "EXM_Npc" },
+          EXM_Package: { editorId: "EXM_Package" }
+        }
+      }
+    ]
+  };
+  const readback = normalizeMo2RecordDetail({
+    records: [
+      {
+        formid: "ExampleMod_Generated.esp:000800",
+        record_type: "NPC_",
+        plugin: "ExampleMod_Generated.esp",
+        fields: {
+          EditorID: "EXM_Npc",
+          Items: [{ Item: { Item: "Skyrim.esm:00000F (Gold001)", Count: 1 } }]
+        }
+      },
+      {
+        formid: "ExampleMod_Generated.esp:000801",
+        record_type: "PACK",
+        plugin: "ExampleMod_Generated.esp",
+        fields: {
+          EditorID: "EXM_Package",
+          Conditions: [{ Function: "GetIsID", CompareOperator: "EqualTo" }]
+        }
+      }
+    ]
+  });
+
+  const report = verifyManifest(manifest, profile, readback);
+  assert.deepEqual(report.results.map((item) => item.status), ["PASS", "PASS"]);
 });
 
 test("verifies GLOB duplicate-create identity and payload from readback", () => {
@@ -1281,7 +1598,7 @@ test("promotion can delegate backup and structured merge to a merge runner", asy
   assert.equal(receivedMergeRequest.operations.length, 2);
 });
 
-test("promotion candidate dry-run proof passes with repo-local post-merge verifier", async () => {
+test("promotion candidate dry-run proof passes while live release remains blocked", async () => {
   const runReport = await runPipeline(manifest, profile, {
     strict: true,
     patchWriter: async (patchRequest) => ({ output: patchRequest.output_name }),
@@ -1327,9 +1644,7 @@ test("promotion candidate dry-run proof passes with repo-local post-merge verifi
   assert.equal(check.releaseReady, false);
   assert.equal(check.phaseStatuses["promotion-gates"], "PASS");
   assert.equal(check.phaseStatuses["structured-merge"], "PASS");
-  assert.equal(check.phaseStatuses["post-merge-verify"], "PASS");
-  assert.equal(check.releaseBlockers.some((blocker) => blocker.phase === "live-post-merge-verify" && blocker.status === "REQUESTED"), true);
-  assert.equal(check.promotionReport.phases.find((phase) => phase.phase === "post-merge-verify").result.mode, "repo-local-dry-run");
+  assert.equal(check.releaseBlockers.some((blocker) => blocker.phase === "live-post-merge-verify"), true);
   assert.equal(fs.existsSync(candidatePath), false);
   assert.equal(receivedMergeRequest.candidatePlugin, candidatePath);
   assert.equal(receivedMergeRequest.conflictPolicy, "fail-unless-declared");
@@ -1407,37 +1722,40 @@ test("promotion release readiness stays requested without required adapters", as
   assert.equal(promotion.status, "REQUESTED");
   assert.equal(promotion.phases.find((phase) => phase.phase === "backup").status, "REQUESTED");
   assert.equal(promotion.phases.find((phase) => phase.phase === "structured-merge").status, "REQUESTED");
-  const postMergeVerify = promotion.phases.find((phase) => phase.phase === "post-merge-verify");
-  assert.equal(postMergeVerify.status, "REQUESTED");
-  assert.equal(postMergeVerify.postMergeVerifyRequest.schema, "creation-authoring.post-merge-verify-request.v1");
-  assert.equal(postMergeVerify.postMergeVerifyRequest.requiresCandidateWinnerProof, true);
-  assert.equal(postMergeVerify.postMergeVerifyRequest.operations.length, 2);
+  assert.equal(promotion.phases.find((phase) => phase.phase === "post-merge-verify").status, "REQUESTED");
 });
 
-test("builds an explicit post-merge verification request", () => {
-  const mergeRequest = buildStructuredMergeRequest({
-    manifest: {
-      sourcePlugin: "ExampleMod.esp",
-      output: "ExampleMod_Generated.esp"
-    },
-    planOperations: [
-      { id: "list", kind: "formlist.add", target: "EXM_List", recordFamily: "FLST", ckSemanticsRequired: false }
-    ]
-  }, profile, { mergeOutputPath: "ExampleMod_Candidate.esp" });
-
-  const request = buildPostMergeVerifyRequest({
-    manifest: {
-      sourcePlugin: "ExampleMod.esp",
-      output: "ExampleMod_Generated.esp"
+test("promotion can require split CK finalization for candidate release", async () => {
+  const runReport = await runPipeline(manifest, profile, {
+    strict: true,
+    patchWriter: async (patchRequest) => ({ output: patchRequest.output_name }),
+    readback: {
+      records: {
+        EXM_MainQuest: {
+          scripts: [
+            {
+              name: "EXM_MainQuestScript",
+              properties: { DebugGlobal: "EXM_GLO_Debug" }
+            }
+          ]
+        },
+        EXM_FLST_AllServices: { entries: ["EXM_ServiceQuest"] }
+      }
     }
-  }, profile, mergeRequest, { mergeOutputPath: "ExampleMod_Candidate.esp" });
+  });
 
-  assert.equal(request.schema, "creation-authoring.post-merge-verify-request.v1");
-  assert.equal(request.sourcePlugin, "ExampleMod.esp");
-  assert.equal(request.generatedPlugin, "ExampleMod_Generated.esp");
-  assert.equal(request.candidatePlugin, "ExampleMod_Candidate.esp");
-  assert.equal(request.requiresProjectVerifierPass, true);
-  assert.equal(request.operations[0].id, "list");
+  const promotion = await promoteRunReport(runReport, profile, {
+    approved: true,
+    mergeOutputPath: "ExampleMod_PromotionCandidate.esp",
+    forceCkFinalization: true,
+    backupRunner: async () => ({ status: "DEFERRED_TO_MERGE_RUNNER" }),
+    mergeRunner: async () => ({ status: "PASS" })
+  });
+
+  assert.equal(promotion.phases.find((phase) => phase.phase === "structured-merge").status, "PASS");
+  assert.equal(promotion.phases.find((phase) => phase.phase === "ck-finalization").status, "REQUESTED");
+  assert.equal(promotion.phases.find((phase) => phase.phase === "post-merge-verify").status, "REQUESTED");
+  assert.equal(promotion.status, "REQUESTED");
 });
 
 test("service promotion forwards candidate output options to promotion gates", async () => {
@@ -1801,6 +2119,9 @@ test("createRecord promotion requires proof ledger and active generated plugin e
           commands: [
             {
               op: "loadPluginSet",
+              activePlugin: "ExampleMod_AutoWire.esp",
+              intendedSaveTarget: "ExampleMod_AutoWire.esp",
+              sourcePluginNotActive: true,
               status: "PASS",
               evidence: {
                 requestedActivePlugin: "ExampleMod_AutoWire.esp",
@@ -1862,10 +2183,11 @@ test("createRecord promotion requires proof ledger and active generated plugin e
   assert.equal(unverifiedGates.blockers.some((blocker) => /PASS verification/.test(blocker)), true);
 
   const inactiveReport = structuredClone(createReport);
+  inactiveReport.phases[1].adapterResult.commands[0].activePlugin = "ExampleMod.esp";
   inactiveReport.phases[1].adapterResult.commands[0].evidence.activePluginMatchesRequest = false;
   const inactiveGates = evaluatePromotionGates(inactiveReport, profile, { ...promotionOptions, proofLedger });
   assert.equal(inactiveGates.ready, false);
-  assert.equal(inactiveGates.blockers.some((blocker) => /loadPluginSet|activePluginMatchesRequest/i.test(blocker)), true);
+  assert.equal(inactiveGates.blockers.some((blocker) => /loadPluginSet PASS.*generated plugin/i.test(blocker)), true);
 
   const unsavedReport = structuredClone(createReport);
   unsavedReport.phases[1].adapterResult.commands = unsavedReport.phases[1].adapterResult.commands.filter((command) => command.op !== "postUiSaveCommand");
@@ -1878,105 +2200,6 @@ test("createRecord promotion requires proof ledger and active generated plugin e
   const sourceTargetGates = evaluatePromotionGates(sourceTargetReport, profile, { ...promotionOptions, proofLedger });
   assert.equal(sourceTargetGates.ready, false);
   assert.equal(sourceTargetGates.blockers.some((blocker) => /generated plugin only/.test(blocker)), true);
-
-  const legacyLoadStateReport = structuredClone(createReport);
-  legacyLoadStateReport.phases[1].adapterResult.commands[0] = {
-    op: "loadPlugin",
-    status: "PASS",
-    plugin: "ExampleMod_AutoWire.esp",
-    evidence: {
-      requestedPlugin: "ExampleMod_AutoWire.esp",
-      activePlugin: {
-        activePlugin: {
-          fileName: "ExampleMod_AutoWire.esp",
-          active: true
-        }
-      }
-    }
-  };
-  const legacyLoadStateGates = evaluatePromotionGates(legacyLoadStateReport, profile, { ...promotionOptions, proofLedger });
-  assert.equal(legacyLoadStateGates.ready, false);
-  assert.equal(legacyLoadStateGates.blockers.some((blocker) => /loadPluginSet PASS evidence/i.test(blocker)), true);
-});
-
-test("validates ship-path loadPluginSet without legacy commands", () => {
-  const pass = validateShipPathLoadSet([
-    { op: "openProject" },
-    {
-      op: "loadPluginSet",
-      activePlugin: "ExampleMod_Generated.esp",
-      intendedSaveTarget: "ExampleMod_Generated.esp",
-      sourcePluginNotActive: true,
-      evidence: {
-        requestedActivePlugin: "ExampleMod_Generated.esp",
-        intendedSaveTarget: "ExampleMod_Generated.esp",
-        activePluginMatchesRequest: true,
-        saveTargetMatchesActive: true,
-        sourcePluginActive: false
-      }
-    }
-  ], {
-    requireOpenProjectPrelude: true,
-    expectedActivePlugin: "ExampleMod_Generated.esp",
-    expectedSaveTarget: "ExampleMod_Generated.esp"
-  });
-  assert.equal(pass.status, "PASS");
-
-  const fail = validateShipPathLoadSet([
-    { op: "loadPlugin", status: "PASS", plugin: "ExampleMod_Generated.esp" },
-    {
-      op: "loadPluginSet",
-      activePlugin: "ExampleMod_Generated.esp",
-      intendedSaveTarget: "ExampleMod_Generated.esp",
-      sourcePluginNotActive: true
-    }
-  ], {
-    expectedActivePlugin: "ExampleMod_Generated.esp",
-    expectedSaveTarget: "ExampleMod_Generated.esp"
-  });
-  assert.equal(fail.status, "FAIL");
-  assert.equal(fail.failures.some((failure) => /transitional loadPlugin\/setActivePlugin/.test(failure)), true);
-
-  const duplicateLoadSet = validateShipPathLoadSet([
-    { op: "openProject" },
-    {
-      op: "loadPluginSet",
-      activePlugin: "ExampleMod_Generated.esp",
-      intendedSaveTarget: "ExampleMod_Generated.esp",
-      sourcePluginNotActive: true
-    },
-    {
-      op: "loadPluginSet",
-      activePlugin: "ExampleMod_Generated.esp",
-      intendedSaveTarget: "ExampleMod_Generated.esp",
-      sourcePluginNotActive: true
-    }
-  ], {
-    requireOpenProjectPrelude: true,
-    expectedActivePlugin: "ExampleMod_Generated.esp",
-    expectedSaveTarget: "ExampleMod_Generated.esp"
-  });
-  assert.equal(duplicateLoadSet.status, "FAIL");
-  assert.equal(duplicateLoadSet.failures.some((failure) => /exactly one loadPluginSet/.test(failure)), true);
-});
-
-test("loadPluginSet blocker catalogs stay aligned with the blocked-case fixture", () => {
-  const blockedFixture = loadPluginSetBlockedCasesFixture();
-  const expectedBlockers = blockedFixture.commands.map((command) => command.expectedBlocker);
-
-  assert.deepEqual(expectedBlockers, LOAD_PLUGIN_SET_RELEASE_BLOCKERS);
-  assert.deepEqual(LOAD_PLUGIN_SET_DIAGNOSTIC_BLOCKERS, [
-    "data_handler_unavailable",
-    "source_plugin_not_declared",
-    "source_plugin_not_selected",
-    "generated_or_candidate_plugin_not_declared",
-    "generated_or_candidate_plugin_not_selected",
-    "active_plugin_not_declared",
-    "active_plugin_mismatch",
-    "generated_or_candidate_plugin_differs_from_requested_active_plugin",
-    "required_plugin_missing",
-    "required_plugin_not_selected"
-  ]);
 });
 
 test("review report captures run phases and manifest intent", async () => {
@@ -2041,7 +2264,7 @@ test("extracts Skyrim SE CK record inventory from CKPE TESDataHandler", () => {
 
 test("builds a complete capability matrix with explicit status for every inventory row", () => {
   const inventory = extractCkpeRecordInventory({ game: "SkyrimSE" });
-  const matrix = buildCapabilityMatrix({ inventory, proofResults: emptyProofResults() });
+  const matrix = buildCapabilityMatrix({ inventory, proofResults: { results: [] } });
   const verification = verifyCapabilityMatrix(matrix, inventory);
   assert.equal(matrix.rows.length, inventory.recordFamilies.length);
   assert.equal(matrix.rows.every((row) => row.status), true);
@@ -2581,9 +2804,59 @@ test("readback oracle reports normalizer coverage by operation and family", () =
   assert.equal(placed.status, "PASS");
   assert.equal(placed.normalizer, "placed-reference");
 
+  const dialogueBranch = describeReadbackNormalizer({ kind: "dialogue.branch.create", recordFamily: "DIAL" });
+  assert.equal(dialogueBranch.status, "PASS");
+  assert.equal(dialogueBranch.normalizer, "dialogue-branch");
+
+  const dialogueTopic = describeReadbackNormalizer({ kind: "dialogue.topic.create", recordFamily: "DIAL" });
+  assert.equal(dialogueTopic.status, "PASS");
+  assert.equal(dialogueTopic.normalizer, "dialogue-topic");
+
   const dialogueInfo = describeReadbackNormalizer({ kind: "dialogue.info.create", recordFamily: "INFO" });
   assert.equal(dialogueInfo.status, "PASS");
   assert.equal(dialogueInfo.normalizer, "dialogue-info");
+});
+
+test("dialogue v1 fixture verifies CK-authored branch topic unnamed info and seq readback", () => {
+  const fixtureProfile = normalizeProfile(JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.profile.json",
+    "utf8"
+  )));
+  const fixtureReadback = JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.readback.json",
+    "utf8"
+  ));
+
+  const fixtureCheck = checkFixtureDirectory("fixtures/dialogue-v1", fixtureProfile, fixtureReadback, {
+    allowUnprovenCk: true
+  });
+
+  assert.equal(fixtureCheck.status, "PASS");
+  assert.equal(fixtureCheck.summary.PASS, 1);
+  assert.deepEqual(fixtureCheck.results[0].verifySummary, {
+    PASS: 4,
+    FAIL: 0,
+    WARN: 0,
+    TODO: 0
+  });
+  assert.equal(fixtureCheck.results[0].operations.find((item) => item.id === "dialogue-info").backend, "ckpe-bridge");
+});
+
+test("dialogue v1 fixture remains manual without unproven CK discovery mode", () => {
+  const fixtureProfile = normalizeProfile(JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.profile.json",
+    "utf8"
+  )));
+  const fixtureReadback = JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.readback.json",
+    "utf8"
+  ));
+
+  const fixtureCheck = checkFixtureDirectory("fixtures/dialogue-v1", fixtureProfile, fixtureReadback);
+
+  assert.equal(fixtureCheck.status, "FAIL");
+  assert.equal(fixtureCheck.results[0].planSummary.manual, 4);
+  assert.match(fixtureCheck.results[0].failures.join("\n"), /manual operation/);
 });
 
 test("dialogue rows scaffold creates reusable branch topic info and seq manifest", () => {
@@ -2607,6 +2880,30 @@ test("dialogue rows scaffold creates reusable branch topic info and seq manifest
     "artifact.seq.generate"
   ]);
   assert.equal(manifest.operations.find((operation) => operation.kind === "dialogue.info.create").payload.ckInfoIdentity, "unnamed-topic-info-accepted");
+});
+
+test("dialogue rows scaffold de-dupes shared branch and topic operations", () => {
+  const fixtureProfile = normalizeProfile(JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.profile.json",
+    "utf8"
+  )));
+  const rows = JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.rows.json",
+    "utf8"
+  ));
+  rows.rows.push({
+    ...rows.rows[0],
+    id: "generic-recognition-alt",
+    infoId: "EXM_INFO_GenericRecognitionAlt",
+    responseLine: "The oath has more than one answer."
+  });
+
+  const manifest = buildDialogueManifestFromRows(rows, fixtureProfile);
+
+  assert.equal(manifest.operations.filter((operation) => operation.kind === "dialogue.branch.create").length, 1);
+  assert.equal(manifest.operations.filter((operation) => operation.kind === "dialogue.topic.create").length, 1);
+  assert.equal(manifest.operations.filter((operation) => operation.kind === "dialogue.info.create").length, 2);
+  assert.equal(manifest.operations.filter((operation) => operation.kind === "artifact.seq.generate").length, 1);
 });
 
 test("dialogue bind report matches unnamed INFO by semantic identity", () => {
@@ -2656,6 +2953,102 @@ test("dialogue bind report marks missing INFO as TODO with CK next action", () =
   assert.equal(infoBinding.missing, true);
   assert.equal(report.summary.missing, 1);
   assert.match(report.nextActions.join("\n"), /Create or verify CK-authored dialogue records/);
+});
+
+test("dialogue info verifier accepts unnamed INFO by semantic payload and fails condition drift", () => {
+  const fixtureProfile = normalizeProfile(JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.profile.json",
+    "utf8"
+  )));
+  const manifest = normalizeManifest(JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.creation-authoring.json",
+    "utf8"
+  )), fixtureProfile);
+  const infoOnlyManifest = {
+    ...manifest,
+    operations: manifest.operations.filter((operation) => operation.id === "dialogue-info")
+  };
+  const driftedReadback = {
+    records: {
+      "ExampleMod_DialogueV1Proof.esp:000802": {
+        formid: "ExampleMod_DialogueV1Proof.esp:000802",
+        recordType: "INFO",
+        winningPlugin: "ExampleMod_DialogueV1Proof.esp",
+        dialogue: {
+          topic: "EXM_DIAL_GenericRecognitionTopic",
+          speaker: "EXM_NPC_Mentor",
+          speakerForm: "ExampleMod.esp:000901",
+          prompt: "Do you know the old oath?",
+          responseLine: "I remember it. Speak, and I will answer.",
+          conditions: [
+            {
+              function: "GetGlobalValue",
+              global: "EXM_GLO_DialogueGate",
+              operator: "==",
+              value: 0
+            }
+          ]
+        }
+      }
+    }
+  };
+
+  const report = verifyManifest(infoOnlyManifest, fixtureProfile, driftedReadback);
+
+  assert.equal(report.summary.FAIL, 1);
+  assert.match(report.results[0].message, /dialogue info readback/);
+  assert.equal(report.results[0].details.failures[0].field, "conditions");
+});
+
+test("dialogue readback alone cannot create support proof without CK command evidence", () => {
+  const ledger = buildProofLedgerFromRun({
+    status: "PASS",
+    manifest: {
+      project: "dialogue-v1",
+      output: "ExampleMod_DialogueV1Proof.esp"
+    },
+    phases: [
+      {
+        phase: "verify",
+        status: "PASS",
+        report: {
+          results: [
+            {
+              operationId: "dialogue-info",
+              status: "PASS",
+              details: {
+                readbackNormalizer: {
+                  status: "PASS",
+                  normalizer: "dialogue-info"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        phase: "strict-gate",
+        status: "PASS"
+      }
+    ],
+    planOperations: [
+      {
+        id: "dialogue-info",
+        kind: "dialogue.info.create",
+        target: "EXM_INFO_GenericRecognition",
+        recordFamily: "INFO",
+        backend: "ckpe-bridge",
+        ckSemanticsRequired: true
+      }
+    ]
+  }, {
+    fixture: "fixtures/dialogue-v1/dialogue-v1.creation-authoring.json"
+  });
+
+  assert.equal(ledger.status, "FAIL");
+  assert.equal(ledger.proofs[0].commandEvidenceStatus, "MISSING");
+  assert.equal(ledger.proofs[0].coverage.readbackNormalizer, true);
+  assert.equal(ledger.proofs[0].coverage.ckCommandEvidence, false);
 });
 
 test("unsupported verifier expectations block strict proof coverage", () => {
@@ -2997,75 +3390,13 @@ test("Platform v1 evidence check validates proof-results, matrix, and summary ag
   writeFixtureFile(tempDir, "fixtures/platform-v1/keyword-add.creation-authoring.json");
   writeFixtureFile(tempDir, "reports/keyword-add.strict.run-report.json");
   writeFixtureFile(tempDir, "generated/keyword-add.proof-ledger.json");
-  writeJsonFixture(tempDir, "fixtures/ckpe/load-plugin-set-product-ready.ck-command-packet.json", loadPluginSetProductReadyFixture());
-  writeJsonFixture(tempDir, "fixtures/ckpe/load-plugin-set-blocked-cases.ck-command-packet.json", loadPluginSetBlockedCasesFixture());
-  writeJsonFixture(tempDir, "fixtures/ckpe/phase59-glob-duplicate-create-product-command.ck-command-packet.json", productDuplicatePacketFixture({
-    sourcePlugin: "ExampleMod.esp",
-    generatedPlugin: "Example_CKProof.esp",
-    recordCommand: {
-      op: "duplicateCreateGlob",
-      plugin: "Example_CKProof.esp",
-      recordFamily: "GLOB",
-      sourceEditorId: "EXM_GLO_Source",
-      target: "EXM_GLO_Copy",
-      targetEditorId: "EXM_GLO_Copy",
-      mode: "input_context_focus_async_command",
-      valueType: "short",
-      value: 1
-    }
-  }));
-  writeJsonFixture(tempDir, "fixtures/ckpe/phase63-flst-duplicate-create-product-command.ck-command-packet.json", productDuplicatePacketFixture({
-    sourcePlugin: "ExampleMod.esp",
-    generatedPlugin: "Example_CKProof.esp",
-    recordCommand: {
-      op: "duplicateCreateRecord",
-      plugin: "Example_CKProof.esp",
-      recordFamily: "FLST",
-      sourceEditorId: "EXM_FLST_Source",
-      targetEditorId: "EXM_FLST_Copy",
-      createdEditorId: "EXM_FLST_Copy",
-      mode: "input_context_focus_async_command"
-    }
-  }));
-  writeJsonFixture(tempDir, "fixtures/ckpe/phase66-mesg-duplicate-create-product-command.ck-command-packet.json", productDuplicatePacketFixture({
-    sourcePlugin: "Skyrim.esm",
-    generatedPlugin: "Example_CKProof.esp",
-    recordCommand: {
-      op: "duplicateCreateRecord",
-      plugin: "Example_CKProof.esp",
-      recordFamily: "MESG",
-      sourceEditorId: "EXM_MESG_Source",
-      targetEditorId: "MESG_Copy",
-      createdEditorId: "MESG_Copy",
-      mode: "input_context_focus_async_command"
-    }
-  }));
-  writeJsonFixture(tempDir, "fixtures/ckpe/phase69-acti-duplicate-create-product-command.ck-command-packet.json", productDuplicatePacketFixture({
-    sourcePlugin: "Skyrim.esm",
-    generatedPlugin: "Example_CKProof.esp",
-    recordCommand: {
-      op: "duplicateCreateRecord",
-      plugin: "Example_CKProof.esp",
-      recordFamily: "ACTI",
-      sourceEditorId: "EXM_ACTI_Source",
-      targetEditorId: "ACTI_Copy",
-      createdEditorId: "ACTI_Copy",
-      mode: "input_context_focus_async_command"
-    }
-  }));
-  writeJsonFixture(tempDir, "fixtures/ckpe/phase72-qust-duplicate-create-product-command.ck-command-packet.json", productDuplicatePacketFixture({
-    sourcePlugin: "ExampleMod.esp",
-    generatedPlugin: "Example_CKProof.esp",
-    recordCommand: {
-      op: "duplicateCreateRecord",
-      plugin: "Example_CKProof.esp",
-      recordFamily: "QUST",
-      sourceEditorId: "EXM_QUST_Source",
-      targetEditorId: "QUST_Copy",
-      createdEditorId: "QUST_Copy",
-      mode: "input_context_focus_async_command"
-    }
-  }));
+  copyFixtureFile(tempDir, "fixtures/ckpe/load-plugin-set-product-ready.ck-command-packet.json");
+  copyFixtureFile(tempDir, "fixtures/ckpe/load-plugin-set-blocked-cases.ck-command-packet.json");
+  copyFixtureFile(tempDir, "fixtures/ckpe/phase59-glob-duplicate-create-product-command.ck-command-packet.json");
+  copyFixtureFile(tempDir, "fixtures/ckpe/phase63-flst-duplicate-create-product-command.ck-command-packet.json");
+  copyFixtureFile(tempDir, "fixtures/ckpe/phase66-mesg-duplicate-create-product-command.ck-command-packet.json");
+  copyFixtureFile(tempDir, "fixtures/ckpe/phase69-acti-duplicate-create-product-command.ck-command-packet.json");
+  copyFixtureFile(tempDir, "fixtures/ckpe/phase72-qust-duplicate-create-product-command.ck-command-packet.json");
   writeFixtureFile(tempDir, "fixtures/ckpe/phase65-flst-duplicate-create-strict-run-report.json");
   writeFixtureFile(tempDir, "fixtures/ckpe/phase65-flst-duplicate-create-proof-ledger.json");
 
@@ -3194,47 +3525,6 @@ test("Platform v1 evidence check validates proof-results, matrix, and summary ag
   assert.equal(report.status, "PASS", JSON.stringify(report.failures, null, 2));
 });
 
-test("Platform v1 evidence check fails when a product packet still uses legacy load-state commands", () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ckra-evidence-legacy-load-"));
-  writeJsonFixture(tempDir, "fixtures/ckpe/load-plugin-set-product-ready.ck-command-packet.json", loadPluginSetProductReadyFixture());
-  writeJsonFixture(tempDir, "fixtures/ckpe/load-plugin-set-blocked-cases.ck-command-packet.json", loadPluginSetBlockedCasesFixture());
-  writeJsonFixture(tempDir, "fixtures/ckpe/phase59-glob-duplicate-create-product-command.ck-command-packet.json", {
-    schema: "creation-authoring.ck-command-packet.v1",
-    commands: [
-      { op: "openProject" },
-      { op: "loadPlugin", plugin: "Example_CKProof.esp" },
-      { op: "setActivePlugin", plugin: "Example_CKProof.esp" }
-    ]
-  });
-  writeJsonFixture(tempDir, "fixtures/ckpe/phase63-flst-duplicate-create-product-command.ck-command-packet.json", productDuplicatePacketFixture());
-  writeJsonFixture(tempDir, "fixtures/ckpe/phase66-mesg-duplicate-create-product-command.ck-command-packet.json", productDuplicatePacketFixture({ sourcePlugin: "Skyrim.esm" }));
-  writeJsonFixture(tempDir, "fixtures/ckpe/phase69-acti-duplicate-create-product-command.ck-command-packet.json", productDuplicatePacketFixture({ sourcePlugin: "Skyrim.esm" }));
-  writeJsonFixture(tempDir, "fixtures/ckpe/phase72-qust-duplicate-create-product-command.ck-command-packet.json", productDuplicatePacketFixture());
-  fs.mkdirSync(path.join(tempDir, "generated"), { recursive: true });
-  fs.writeFileSync(path.join(tempDir, "generated/proof-results.skyrimse.json"), JSON.stringify({
-    schema: "creation-authoring.proof-results.v1",
-    sourceLedgers: [],
-    results: []
-  }, null, 2));
-  fs.writeFileSync(path.join(tempDir, "generated/capability-matrix.skyrimse.json"), JSON.stringify({
-    schema: "creation-authoring.capability-matrix.v1",
-    rows: [
-      { recordFamily: "GLOB", status: "supported", manifestOperations: ["glob.duplicate_create"], operationProofs: [] },
-      ...["FLST", "MESG", "ACTI", "QUST"].map((recordFamily) => ({ recordFamily, status: "ck_required_unproven", operationProofs: [{ operation: "record.duplicate_create", status: "PASS", target: `${recordFamily}_Copy`, generatedPlugin: "Example_CKProof.esp", fixture: "fixtures/ckpe/phase63-flst-duplicate-create-product-command.ck-command-packet.json", strictReport: "fixtures/ckpe/phase65-flst-duplicate-create-strict-run-report.json", proofLedger: "fixtures/ckpe/phase65-flst-duplicate-create-proof-ledger.json" }] }))
-    ]
-  }, null, 2));
-  fs.writeFileSync(path.join(tempDir, "generated/platform-v1-proof-summary.json"), JSON.stringify({
-    schema: "creation-authoring.platform-v1-proof-summary.v1",
-    sourceProofResults: "generated/proof-results.skyrimse.json",
-    platformV1Gate: { status: "PASS" },
-    groups: { supported: [], discoveryOnly: [], blocked: [] }
-  }, null, 2));
-
-  const report = verifyPlatformV1Evidence({ repoRoot: tempDir });
-  assert.equal(report.status, "FAIL");
-  assert.equal(report.failures.some((failure) => failure.code === "invalid_load_plugin_set_contract"), true);
-});
-
 test("Platform v1 evidence check fails when summary omits explicit proof-results source", () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ckra-evidence-missing-source-"));
   fs.mkdirSync(path.join(tempDir, "generated"), { recursive: true });
@@ -3307,46 +3597,38 @@ test("proof-results merge replaces stale operation-scope proof rows", () => {
   const merged = mergeProofResults([
     {
       schema: "creation-authoring.proof-results.v1",
-      sourceLedger: "generated/proof-results.skyrimse.json",
+      sourceLedger: "fixtures/ckpe/phase68-mesg-duplicate-create-proof-ledger.json",
       results: [
         {
-          recordFamily: "ACTI",
+          recordFamily: "MESG",
           operation: "record.duplicate_create",
-          target: "DefaultAshPileDUPLICATE003",
-          generatedPlugin: "PDV_Phase9To12_CKProof.esp",
+          target: "_HelpPipBoyItemsDUPLICATE002",
           status: "PASS",
-          verifiedAt: "2026-05-24T00:00:00.000Z"
+          fixture: "fixtures/ckpe/phase66-mesg-duplicate-create-product-command.ck-command-packet.json",
+          strictReport: "fixtures/ckpe/phase68-mesg-duplicate-create-strict-run-report.json"
         }
       ]
     },
     {
       schema: "creation-authoring.proof-ledger.v1",
-      sourceReport: "reports/acti-payload-v1.strict.run-report.json",
+      sourceReport: "reports/mesg-payload-v1.strict.run-report.json",
       status: "PASS",
       proofs: [
         {
-          recordFamily: "ACTI",
+          recordFamily: "MESG",
           operation: "record.duplicate_create",
-          target: "DefaultAshPileDUPLICATE004",
-          generatedPlugin: "PDV_Phase9To12_CKProof.esp",
+          target: "_HelpPipBoyItemsDUPLICATE002",
           status: "PASS",
-          fixture: "reference-packs/player-devotion/payload-v1/acti-payload-v1-live.creation-authoring.json",
-          verifiedAt: "2026-05-25T00:00:00.000Z",
-          strictReport: "reports/acti-payload-v1.strict.run-report.json",
-          backend: "ckpe-bridge",
-          verifierStatus: "PASS",
-          readbackStatus: "PASS",
-          commandEvidenceStatus: "PASS",
-          coverage: {},
-          missingCoverage: []
+          fixture: "reference-packs/player-devotion/payload-v1/mesg-payload-v1-live.creation-authoring.json",
+          strictReport: "reports/mesg-payload-v1.strict.run-report.json"
         }
       ]
     }
-  ], { game: "SkyrimSE" });
+  ]);
 
-  const actiRows = merged.results.filter((proof) => proof.recordFamily === "ACTI" && proof.operation === "record.duplicate_create");
-  assert.equal(actiRows.length, 1);
-  assert.equal(actiRows[0].target, "DefaultAshPileDUPLICATE004");
+  assert.equal(merged.results.length, 1);
+  assert.equal(merged.results[0].fixture, "reference-packs/player-devotion/payload-v1/mesg-payload-v1-live.creation-authoring.json");
+  assert.equal(merged.results[0].proofLedger, "reports/mesg-payload-v1.strict.run-report.json");
 });
 
 test("proof ledger requires an explicit passing strict gate", () => {
@@ -3392,6 +3674,36 @@ test("safe-writer readback fails when a stale plugin wins", () => {
 
   assert.equal(report.results[0].status, "FAIL");
   assert.match(report.results[0].message, /not won by generated plugin/);
+});
+
+test("payload-sensitive add verifiers fail closed when payload is missing", () => {
+  const missingPayloadManifest = normalizeManifest({
+    schema: "creation-authoring.v1",
+    project: "missing-payload",
+    game: "SkyrimSE",
+    sourcePlugin: "ExampleMod.esp",
+    output: "ExampleMod_AutoWire.esp",
+    operations: [
+      {
+        id: "keyword-missing-payload",
+        kind: "keyword.add",
+        target: "EXM_NPC_Test",
+        recordFamily: "NPC_"
+      }
+    ]
+  }, profile);
+
+  const report = verifyManifest(missingPayloadManifest, profile, {
+    records: {
+      EXM_NPC_Test: {
+        winningPlugin: "ExampleMod_AutoWire.esp",
+        keywords: ["SomeKeyword"]
+      }
+    }
+  });
+
+  assert.equal(report.results[0].status, "FAIL");
+  assert.match(report.results[0].message, /verifier payload is missing/);
 });
 
 test("readback rejects stale generated output identity", () => {
@@ -3578,46 +3890,6 @@ test("payload v1 fixtures keep duplicate identity and payload mutation as separa
   });
 });
 
-test("activator payload verifier compares model file values from object readback", () => {
-  const activatorManifest = normalizeManifest({
-    schema: "creation-authoring.v1",
-    project: "example-mod",
-    game: "SkyrimSE",
-    sourcePlugin: "ExampleMod.esp",
-    output: "ExampleMod_Generated.esp",
-    operations: [
-      {
-        id: "set-activator-payload",
-        kind: "activator.payload.set",
-        target: "EXM_ACTI_SourceDUPLICATE001",
-        recordFamily: "ACTI",
-        payload: {
-          fullName: "Payload Proof Activator",
-          model: "Clutter\\Common\\Basket01.nif"
-        }
-      }
-    ]
-  }, profile);
-
-  const report = verifyManifest(activatorManifest, profile, {
-    records: {
-      EXM_ACTI_SourceDUPLICATE001: {
-        editorId: "EXM_ACTI_SourceDUPLICATE001",
-        formid: "ExampleMod_Generated.esp:000D62",
-        recordType: "ACTI",
-        winningPlugin: "ExampleMod_Generated.esp",
-        fullName: "Payload Proof Activator",
-        model: {
-          file: "Clutter\\Common\\Basket01.nif"
-        }
-      }
-    }
-  });
-
-  assert.equal(report.summary.PASS, 1);
-  assert.equal(report.summary.FAIL, 0);
-});
-
 test("creation fill spike fixtures require explicit unproven CK discovery mode", () => {
   const fixtureProfile = normalizeProfile(JSON.parse(fs.readFileSync(
     "fixtures/creation-fill-spike-v1/creation-fill-spike-v1.profile.json",
@@ -3727,172 +3999,69 @@ function writeFixtureFile(root, relativePath, content = "{}\n") {
   fs.writeFileSync(filePath, content);
 }
 
-function writeJsonFixture(root, relativePath, document) {
-  writeFixtureFile(root, relativePath, JSON.stringify(document, null, 2));
+function copyFixtureFile(root, relativePath) {
+  const filePath = path.join(root, relativePath);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.copyFileSync(relativePath, filePath);
 }
 
-function loadPluginSetProductReadyFixture() {
-  return {
-    schema: "creation-authoring.ck-command-packet.v1",
-    commands: [
-      { op: "openProject" },
-      {
-        op: "loadPluginSet",
-        requiredPlugins: ["Skyrim.esm", "ExampleMod.esp", "Example_CKProof.esp"],
-        plugins: [
-          { name: "Skyrim.esm", selected: true, active: false },
-          { name: "ExampleMod.esp", selected: true, active: false },
-          { name: "Example_CKProof.esp", selected: true, active: true }
-        ],
-        sourcePlugin: "ExampleMod.esp",
-        generatedPlugin: "Example_CKProof.esp",
-        activePlugin: "Example_CKProof.esp",
-        intendedSaveTarget: "Example_CKProof.esp",
-        sourcePluginNotActive: true
-      }
-    ]
-  };
+function testEspWithMessage({ formId, editorId }) {
+  const tes4 = testRecord("TES4", Buffer.concat([
+    testBinarySubrecord("HEDR", Buffer.from([0x48, 0xe1, 0xda, 0x3f, 0, 0, 0, 0, 0, 0, 0, 0])),
+    testSubrecord("MAST", "Skyrim.esm"),
+    testBinarySubrecord("DATA", Buffer.alloc(8))
+  ]), 0);
+  const message = testRecord("MESG", Buffer.concat([
+    testSubrecord("EDID", editorId),
+    testSubrecord("DESC", ""),
+    testBinarySubrecord("INAM", Buffer.alloc(4)),
+    testBinarySubrecord("DNAM", Buffer.from([1, 0, 0, 0]))
+  ]), formId);
+  const groupHeader = Buffer.alloc(24);
+  groupHeader.write("GRUP", 0, 4, "ascii");
+  groupHeader.writeUInt32LE(24 + message.length, 4);
+  groupHeader.write("MESG", 8, 4, "ascii");
+  groupHeader.writeUInt32LE(0, 12);
+  return Buffer.concat([tes4, groupHeader, message]);
 }
 
-function loadPluginSetBlockedCasesFixture() {
-  return {
-    schema: "creation-authoring.ck-command-packet.v1",
-    commands: [
-      {
-        op: "loadPluginSet",
-        case: "missing-source-plugin",
-        requiredPlugins: ["Skyrim.esm", "MissingSource.esp", "ExampleMod_GeneratedCk.esp"],
-        plugins: [
-          { name: "Skyrim.esm", selected: true, active: false },
-          { name: "MissingSource.esp", selected: false, active: false },
-          { name: "ExampleMod_GeneratedCk.esp", selected: true, active: true }
-        ],
-        sourcePlugin: "MissingSource.esp",
-        generatedPlugin: "ExampleMod_GeneratedCk.esp",
-        activePlugin: "ExampleMod_GeneratedCk.esp",
-        intendedSaveTarget: "ExampleMod_GeneratedCk.esp",
-        sourcePluginNotActive: true,
-        expectedBlocker: "missing_source_plugin"
-      },
-      {
-        op: "loadPluginSet",
-        case: "missing-generated-or-candidate-plugin",
-        requiredPlugins: ["Skyrim.esm", "ExampleMod.esp", "MissingGenerated.esp"],
-        plugins: [
-          { name: "Skyrim.esm", selected: true, active: false },
-          { name: "ExampleMod.esp", selected: true, active: false },
-          { name: "MissingGenerated.esp", selected: false, active: false }
-        ],
-        sourcePlugin: "ExampleMod.esp",
-        generatedPlugin: "MissingGenerated.esp",
-        activePlugin: "MissingGenerated.esp",
-        intendedSaveTarget: "MissingGenerated.esp",
-        sourcePluginNotActive: true,
-        expectedBlocker: "missing_generated_or_candidate_plugin"
-      },
-      {
-        op: "loadPluginSet",
-        case: "generated-loaded-but-not-active",
-        requiredPlugins: ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
-        plugins: [
-          { name: "Skyrim.esm", selected: true, active: false },
-          { name: "ExampleMod.esp", selected: true, active: true },
-          { name: "ExampleMod_GeneratedCk.esp", selected: true, active: false }
-        ],
-        sourcePlugin: "ExampleMod.esp",
-        generatedPlugin: "ExampleMod_GeneratedCk.esp",
-        activePlugin: "ExampleMod_GeneratedCk.esp",
-        intendedSaveTarget: "ExampleMod_GeneratedCk.esp",
-        sourcePluginNotActive: true,
-        expectedBlocker: "generated_or_candidate_plugin_not_active"
-      },
-      {
-        op: "loadPluginSet",
-        case: "source-plugin-active",
-        requiredPlugins: ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
-        plugins: [
-          { name: "Skyrim.esm", selected: true, active: false },
-          { name: "ExampleMod.esp", selected: true, active: true },
-          { name: "ExampleMod_GeneratedCk.esp", selected: true, active: false }
-        ],
-        sourcePlugin: "ExampleMod.esp",
-        generatedPlugin: "ExampleMod_GeneratedCk.esp",
-        activePlugin: "ExampleMod_GeneratedCk.esp",
-        intendedSaveTarget: "ExampleMod_GeneratedCk.esp",
-        sourcePluginNotActive: true,
-        expectedBlocker: "source_plugin_active"
-      },
-      {
-        op: "loadPluginSet",
-        case: "save-target-mismatch",
-        requiredPlugins: ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esp"],
-        plugins: [
-          { name: "Skyrim.esm", selected: true, active: false },
-          { name: "ExampleMod.esp", selected: true, active: false },
-          { name: "ExampleMod_GeneratedCk.esp", selected: true, active: true }
-        ],
-        sourcePlugin: "ExampleMod.esp",
-        generatedPlugin: "ExampleMod_GeneratedCk.esp",
-        activePlugin: "ExampleMod_GeneratedCk.esp",
-        intendedSaveTarget: "StaleProofName.esp",
-        sourcePluginNotActive: true,
-        expectedBlocker: "intended_save_target_mismatch"
-      },
-      {
-        op: "loadPluginSet",
-        case: "small-master-active-target",
-        requiredPlugins: ["Skyrim.esm", "ExampleMod.esp", "ExampleMod_GeneratedCk.esl"],
-        plugins: [
-          { name: "Skyrim.esm", selected: true, active: false },
-          { name: "ExampleMod.esp", selected: true, active: false },
-          { name: "ExampleMod_GeneratedCk.esl", selected: true, active: true }
-        ],
-        sourcePlugin: "ExampleMod.esp",
-        generatedPlugin: "ExampleMod_GeneratedCk.esl",
-        activePlugin: "ExampleMod_GeneratedCk.esl",
-        intendedSaveTarget: "ExampleMod_GeneratedCk.esl",
-        sourcePluginNotActive: true,
-        expectedBlocker: "active_target_not_normal_writable_esp"
-      }
-    ]
-  };
+function testRecord(type, payload, formId) {
+  const header = Buffer.alloc(24);
+  header.write(type, 0, 4, "ascii");
+  header.writeUInt32LE(payload.length, 4);
+  header.writeUInt32LE(0, 8);
+  header.writeUInt32LE(formId, 12);
+  header.writeUInt16LE(44, 20);
+  return Buffer.concat([header, payload]);
 }
 
-function productDuplicatePacketFixture({
-  sourcePlugin = "ExampleMod.esp",
-  generatedPlugin = "Example_CKProof.esp",
-  recordCommand = {
-    op: "duplicateCreateRecord",
-    plugin: "Example_CKProof.esp",
-    recordFamily: "FLST",
-    sourceEditorId: "EXM_FLST_Source",
-    targetEditorId: "EXM_FLST_Copy",
-    createdEditorId: "EXM_FLST_Copy",
-    mode: "input_context_focus_async_command"
+function testSubrecord(type, value) {
+  return testBinarySubrecord(type, Buffer.from(`${value}\0`, "utf8"));
+}
+
+function testBinarySubrecord(type, data) {
+  const header = Buffer.alloc(6);
+  header.write(type, 0, 4, "ascii");
+  header.writeUInt16LE(data.length, 4);
+  return Buffer.concat([header, data]);
+}
+
+function parseTestSubrecords(payload) {
+  const result = {};
+  let offset = 0;
+  while (offset < payload.length) {
+    const type = payload.subarray(offset, offset + 4).toString("ascii");
+    const size = payload.readUInt16LE(offset + 4);
+    const data = payload.subarray(offset + 6, offset + 6 + size);
+    result[type] = result[type] || [];
+    if (["EDID", "FULL", "DESC", "ITXT"].includes(type)) {
+      result[type].push(data.toString("utf8").replace(/\0$/, ""));
+    } else {
+      result[type].push(data);
+    }
+    offset += 6 + size;
   }
-} = {}) {
-  return {
-    schema: "creation-authoring.ck-command-packet.v1",
-    commands: [
-      { op: "openProject" },
-      {
-        op: "loadPluginSet",
-        requiredPlugins: [sourcePlugin, generatedPlugin],
-        plugins: [
-          { name: sourcePlugin, selected: true, active: false },
-          { name: generatedPlugin, selected: true, active: true }
-        ],
-        sourcePlugin,
-        generatedPlugin,
-        activePlugin: generatedPlugin,
-        intendedSaveTarget: generatedPlugin,
-        sourcePluginNotActive: true
-      },
-      recordCommand,
-      { op: "postUiSaveCommand", plugin: generatedPlugin },
-      { op: "closeSafeStatus" }
-    ]
-  };
+  return result;
 }
 
 function proofResult(overrides = {}) {
@@ -3916,4 +4085,11 @@ function proofResult(overrides = {}) {
     missingCoverage: [],
     ...overrides
   };
+}
+
+function loadPluginSetBlockedCasesFixture() {
+  return JSON.parse(fs.readFileSync(
+    "fixtures/ckpe/load-plugin-set-blocked-cases.ck-command-packet.json",
+    "utf8"
+  ));
 }

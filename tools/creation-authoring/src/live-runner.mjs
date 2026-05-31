@@ -166,6 +166,7 @@ async function promoteCommand(positional, options) {
     generatedPath: options.generatedPath,
     mergeOutputPath: options.mergeOutputPath,
     backupRoot: options.backupRoot,
+    forceCkFinalization: Boolean(options.forceCkFinalization),
     adapters: {
       backupRunner: mergeRunner ? async () => ({ status: "DEFERRED_TO_MERGE_RUNNER" }) : null,
       mergeRunner,
@@ -276,6 +277,20 @@ async function ckFromReportCommand(positional, options) {
   });
 }
 
+function passedCkDuplicateTargets(report = {}) {
+  const ckPhase = (report.phases || []).find((phase) => phase.phase === "ck-apply" && phase.status === "PASS");
+  return (ckPhase?.adapterResult?.commands || [])
+    .filter((command) => command.op === "duplicateCreateRecord" && command.status === "PASS")
+    .map((command) => {
+      return command.evidence?.createdRecord?.record?.editorId ||
+        command.evidence?.requested?.targetEditorId ||
+        command.evidence?.requested?.createdEditorId ||
+        command.evidence?.requested?.target ||
+        null;
+    })
+    .filter(Boolean);
+}
+
 async function finalizeReportCommand(positional, options) {
   const reportPath = positional[0];
   if (!reportPath) {
@@ -296,10 +311,11 @@ async function finalizeReportCommand(positional, options) {
   const plan = createPlan(manifest, live.profile, {
     allowUnprovenCk: Boolean(options.allowUnprovenCk)
   });
+  const report = readDocument(reportPath).document;
   const sequencing = analyzeMixedCkWriterSequence(plan, {
+    completedIdentityTargets: passedCkDuplicateTargets(report),
     includeNonReadyIdentity: true
   });
-  const report = readDocument(reportPath).document;
   const compileConfig = compilerConfigFromProfile(live.profile);
   const verifierConfig = verifierConfigFromProfile(live.profile);
   const reportsDir = path.resolve(options.reportsDir || live.profile.reportsDir || "reports");
@@ -478,6 +494,7 @@ function parseArgs(argv) {
     else if (arg === "--allow-manual-packets") options.allowManualPackets = true;
     else if (arg === "--allow-unproven-ck") options.allowUnprovenCk = true;
     else if (arg === "--approved") options.approved = true;
+    else if (arg === "--force-ck-finalization") options.forceCkFinalization = true;
     else if (arg === "--dry-run") options.dryRun = true;
     else if (arg === "--mcp-url") options.mcpUrl = requireNext(argv, ++index, arg);
     else if (arg.startsWith("--mcp-url=")) options.mcpUrl = arg.slice("--mcp-url=".length);
@@ -522,7 +539,7 @@ function usage(exitCode, message = null) {
   }
   process.stdout.write(`Usage:
   node ./src/live-runner.mjs run <manifest.json> --profile <profile.json> [--strict] [--allow-manual-packets] [--allow-unproven-ck] [--json]
-  node ./src/live-runner.mjs promote <run-report.json> --profile <profile.json> --approved --merge-runner <csproj> --source-path <esp> --generated-path <esp> --merge-output-path <esp> [--json]
+  node ./src/live-runner.mjs promote <run-report.json> --profile <profile.json> --approved --merge-runner <csproj> --source-path <esp> --generated-path <esp> --merge-output-path <esp> [--force-ck-finalization] [--json]
 `);
   process.exit(exitCode);
 }

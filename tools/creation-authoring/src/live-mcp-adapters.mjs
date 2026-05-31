@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { McpHttpClient } from "./mcp-client.mjs";
 import { normalizeMo2RecordDetail } from "./live-readback.mjs";
+import { findReadbackRecord } from "./readback-oracle.mjs";
 import { runProcess } from "./process-runner.mjs";
 
 const FORMID_PATTERN = /^[^:]+:[0-9a-fA-F]{1,8}$/;
@@ -228,7 +229,7 @@ function parsePayloadWriterReport(stdout) {
 }
 
 export function createReadbackCollector(context) {
-  return async ({ manifest, plan }) => {
+  return async ({ manifest, plan, phases = [] }) => {
     const formids = [];
     const unresolved = [];
     for (const item of plan.operations) {
@@ -264,18 +265,44 @@ export function createReadbackCollector(context) {
     const normalized = normalizeMo2RecordDetail({
       records: details.flatMap((detail) => detail.records || [detail])
     });
+    const duplicateSources = ckDuplicateSourceMap(phases);
     normalized.conflicts = {};
     for (const operation of manifest.operations) {
       try {
         const chain = await getConflictChain(operation.target, context);
         normalized.conflicts[operation.target] = chain;
         attachConflictChain(normalized, operation, chain);
+        const record = findReadbackRecord(normalized, operation.target);
+        const sourceEditorId = duplicateSources.get(String(operation.target || "").toLowerCase());
+        if (record && sourceEditorId && !record.source && !record.duplicatedFrom && !record.createdFrom) {
+          record.createdFrom = { editorId: sourceEditorId };
+        }
       } catch {
         normalized.conflicts[operation.target] = null;
       }
     }
     return normalized;
   };
+}
+
+function ckDuplicateSourceMap(phases = []) {
+  const result = new Map();
+  const ckPhase = phases.find((phase) => phase.phase === "ck-apply" && phase.status === "PASS");
+  for (const command of ckPhase?.adapterResult?.commands || []) {
+    if (command.op !== "duplicateCreateRecord" || command.status !== "PASS") {
+      continue;
+    }
+    const target = command.evidence?.createdRecord?.record?.editorId ||
+      command.evidence?.requested?.targetEditorId ||
+      command.evidence?.requested?.createdEditorId ||
+      command.evidence?.requested?.target;
+    const source = command.evidence?.requested?.sourceEditorId ||
+      command.evidence?.replay?.evidence?.source?.record?.editorId;
+    if (target && source) {
+      result.set(String(target).toLowerCase(), source);
+    }
+  }
+  return result;
 }
 
 function attachConflictChain(readback, operation, chain) {
@@ -406,13 +433,31 @@ async function checkPlugins(manifest, profile, context) {
     enabled_only: false,
     limit: 25
   });
-  const list = plugins.plugins || plugins.results || [];
+  const outputPlugins = manifest.output && !equals(manifest.output, profile.sourcePlugin)
+    ? await context.mcp.callTool("mo2_list_plugins", {
+        filter: manifest.output,
+        enabled_only: false,
+        limit: 25
+      })
+    : { plugins: [] };
+  const list = [
+    ...(plugins.plugins || plugins.results || []),
+    ...(outputPlugins.plugins || outputPlugins.results || [])
+  ];
   const source = list.find((plugin) => equals(plugin.name, profile.sourcePlugin));
+  const generated = manifest.output ? list.find((plugin) => equals(plugin.name, manifest.output)) : null;
   const blockers = [];
   if (!source) {
     blockers.push(`Source plugin ${profile.sourcePlugin} is not visible in MO2.`);
   } else if (source.enabled === false) {
     blockers.push(`Source plugin ${profile.sourcePlugin} is disabled.`);
+  }
+  if (manifest.output && !equals(manifest.output, profile.sourcePlugin)) {
+    if (!generated) {
+      blockers.push(`Generated or candidate plugin ${manifest.output} is not visible in MO2.`);
+    } else if (generated.enabled === false) {
+      blockers.push(`Generated or candidate plugin ${manifest.output} is disabled.`);
+    }
   }
 
   return {
@@ -421,7 +466,10 @@ async function checkPlugins(manifest, profile, context) {
     sourcePlugin: profile.sourcePlugin,
     generatedPlugin: manifest.output,
     blockers,
-    result: source || null
+    result: {
+      source: source || null,
+      generatedOrCandidate: generated || null
+    }
   };
 }
 
