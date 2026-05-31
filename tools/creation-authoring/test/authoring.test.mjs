@@ -43,7 +43,9 @@ import {
   verifyCapabilityMatrix,
   verifyPlatformV1Evidence,
   verifyProofLedger,
-  verifyManifest
+  verifyManifest,
+  buildDialogueBatchReport,
+  buildDialogueManifestFromRows
 } from "../src/index.mjs";
 import { createCompileRunner, prepareLiveProfile } from "../src/live-mcp-adapters.mjs";
 import { emptyProofResults, flattenProofLedgerResults } from "../src/proof-ledger.mjs";
@@ -2579,8 +2581,81 @@ test("readback oracle reports normalizer coverage by operation and family", () =
   assert.equal(placed.status, "PASS");
   assert.equal(placed.normalizer, "placed-reference");
 
-  const missing = describeReadbackNormalizer({ kind: "dialogue.info.create", recordFamily: "INFO" });
-  assert.equal(missing.status, "MISSING");
+  const dialogueInfo = describeReadbackNormalizer({ kind: "dialogue.info.create", recordFamily: "INFO" });
+  assert.equal(dialogueInfo.status, "PASS");
+  assert.equal(dialogueInfo.normalizer, "dialogue-info");
+});
+
+test("dialogue rows scaffold creates reusable branch topic info and seq manifest", () => {
+  const fixtureProfile = normalizeProfile(JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.profile.json",
+    "utf8"
+  )));
+  const rows = JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.rows.json",
+    "utf8"
+  ));
+  const manifest = buildDialogueManifestFromRows(rows, fixtureProfile);
+
+  assert.equal(manifest.metadata.supportClaim, false);
+  assert.equal(manifest.metadata.supportClaimAllowed, false);
+  assert.equal(manifest.operations.length, 4);
+  assert.deepEqual(manifest.operations.map((operation) => operation.kind), [
+    "dialogue.branch.create",
+    "dialogue.topic.create",
+    "dialogue.info.create",
+    "artifact.seq.generate"
+  ]);
+  assert.equal(manifest.operations.find((operation) => operation.kind === "dialogue.info.create").payload.ckInfoIdentity, "unnamed-topic-info-accepted");
+});
+
+test("dialogue bind report matches unnamed INFO by semantic identity", () => {
+  const fixtureProfile = normalizeProfile(JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.profile.json",
+    "utf8"
+  )));
+  const manifest = normalizeManifest(JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.creation-authoring.json",
+    "utf8"
+  )), fixtureProfile);
+  const fixtureReadback = JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.readback.json",
+    "utf8"
+  ));
+
+  const report = buildDialogueBatchReport(manifest, fixtureProfile, fixtureReadback);
+  const infoBinding = report.bindings.find((binding) => binding.kind === "dialogue.info.create");
+
+  assert.equal(report.supportClaimAllowed, false);
+  assert.equal(report.summary.PASS, 4);
+  assert.equal(report.summary.bound, 4);
+  assert.equal(infoBinding.formid, "ExampleMod_DialogueV1Proof.esp:000802");
+  assert.equal(infoBinding.semanticIdentity.topic, "EXM_DIAL_GenericRecognitionTopic");
+  assert.match(report.nextActions[0], /Review command evidence/);
+});
+
+test("dialogue bind report marks missing INFO as TODO with CK next action", () => {
+  const fixtureProfile = normalizeProfile(JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.profile.json",
+    "utf8"
+  )));
+  const manifest = normalizeManifest(JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.creation-authoring.json",
+    "utf8"
+  )), fixtureProfile);
+  const fixtureReadback = JSON.parse(fs.readFileSync(
+    "fixtures/dialogue-v1/dialogue-v1.readback.json",
+    "utf8"
+  ));
+  delete fixtureReadback.records["ExampleMod_DialogueV1Proof.esp:000802"];
+
+  const report = buildDialogueBatchReport(manifest, fixtureProfile, fixtureReadback);
+  const infoBinding = report.bindings.find((binding) => binding.kind === "dialogue.info.create");
+
+  assert.equal(infoBinding.status, "TODO");
+  assert.equal(infoBinding.missing, true);
+  assert.equal(report.summary.missing, 1);
+  assert.match(report.nextActions.join("\n"), /Create or verify CK-authored dialogue records/);
 });
 
 test("unsupported verifier expectations block strict proof coverage", () => {

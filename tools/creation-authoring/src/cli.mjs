@@ -18,6 +18,7 @@ import { formatPlatformV1EvidenceCheck, verifyPlatformV1Evidence } from "./proof
 import { buildPlatformProofSummary, formatPlatformProofSummary } from "./proof-summary.mjs";
 import { checkFixtureDirectory } from "./fixture-check.mjs";
 import { formatManualPackets, formatPlan, formatVerify } from "./report.mjs";
+import { buildDialogueBatchReport, buildDialogueManifestFromRows } from "./dialogue-batch.mjs";
 import {
   buildCapabilityMatrix,
   defaultCkpeRoot,
@@ -229,6 +230,48 @@ async function main(argv) {
         process.exitCode = 1;
       }
       print({ report, written }, options, () => formatFixtureCheck(report, written));
+      return;
+    }
+
+    if (command === "dialogue-scaffold") {
+      const rowsPath = positional[0];
+      if (!rowsPath) {
+        usage(1, "dialogue-scaffold requires a rows JSON path.");
+      }
+      if (!options.profile) {
+        usage(1, "dialogue-scaffold requires --profile <path>.");
+      }
+      const profile = loadProfile(options.profile);
+      const rowsDocument = readDocument(rowsPath).document;
+      const manifest = buildDialogueManifestFromRows(rowsDocument, profile, {
+        project: options.project,
+        output: options.output
+      });
+      const written = maybeWriteJson(options.outputFile, manifest);
+      print({ manifest, written }, options, () => formatDialogueScaffold(manifest, written));
+      return;
+    }
+
+    if (command === "dialogue-bind") {
+      const manifestPath = positional[0];
+      if (!manifestPath) {
+        usage(1, "dialogue-bind requires a manifest path.");
+      }
+      if (!options.profile) {
+        usage(1, "dialogue-bind requires --profile <path>.");
+      }
+      if (!options.readback) {
+        usage(1, "dialogue-bind requires --readback <path>.");
+      }
+      const profile = loadProfile(options.profile);
+      const manifest = loadManifest(manifestPath, profile);
+      const readback = readDocument(options.readback).document;
+      const report = buildDialogueBatchReport(manifest, profile, readback);
+      const written = maybeWriteJson(options.outputFile, report);
+      if (report.summary.FAIL || report.summary.TODO) {
+        process.exitCode = 1;
+      }
+      print({ report, written }, options, () => formatDialogueBind(report, written));
       return;
     }
 
@@ -511,6 +554,10 @@ function parseArgs(argv) {
       options.game = requireNext(argv, ++index, "--game");
     } else if (arg.startsWith("--game=")) {
       options.game = arg.slice("--game=".length);
+    } else if (arg === "--project") {
+      options.project = requireNext(argv, ++index, "--project");
+    } else if (arg.startsWith("--project=")) {
+      options.project = arg.slice("--project=".length);
     } else if (arg === "--ckpe-root") {
       options.ckpeRoot = requireNext(argv, ++index, "--ckpe-root");
     } else if (arg.startsWith("--ckpe-root=")) {
@@ -698,6 +745,8 @@ function usage(exitCode, message = null) {
   creation-authoring proof-ledger <run-report.json> --output-file <proof-ledger.json> [--fixture <manifest-or-fixture>] [--platform-v1] [--json]
   creation-authoring proof-results <proof-ledger-or-results.json>... --output-file <proof-results.json> [--game SkyrimSE] [--json]
   creation-authoring fixture-check <fixture-dir> --profile <profile.json> --readback <readback.json> [--output-file <path>] [--json]
+  creation-authoring dialogue-scaffold <rows.json> --profile <profile.json> [--project <name>] [--output <esp>] [--output-file <manifest.json>] [--json]
+  creation-authoring dialogue-bind <manifest.json> --profile <profile.json> --readback <readback.json> [--output-file <report.json>] [--json]
   creation-authoring migrate-pdv <pdv-author-manifest.json> [--profile <profile.json>] [--output-file <path>] [--json]
   creation-authoring explain [operation-kind] [--json]
 `);
@@ -719,6 +768,47 @@ function formatFixtureCheck(report, written) {
   }
   if (written) {
     lines.push(`Fixture check: ${written}`);
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+function formatDialogueScaffold(manifest, written) {
+  const counts = manifest.operations.reduce((summary, operation) => {
+    summary[operation.kind] = (summary[operation.kind] || 0) + 1;
+    return summary;
+  }, {});
+  const lines = [
+    `Project: ${manifest.project}`,
+    `Output: ${manifest.output}`,
+    `Operations: ${manifest.operations.length}`,
+    `Support claim allowed: ${manifest.metadata?.supportClaimAllowed === true ? "yes" : "no"}`
+  ];
+  for (const [kind, count] of Object.entries(counts)) {
+    lines.push(`- ${kind}: ${count}`);
+  }
+  if (written) {
+    lines.push(`Manifest written: ${written}`);
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+function formatDialogueBind(report, written) {
+  const lines = [
+    `Dialogue bindings: ${report.summary.bound}/${report.summary.total}`,
+    `PASS: ${report.summary.PASS}`,
+    `FAIL: ${report.summary.FAIL}`,
+    `TODO: ${report.summary.TODO}`,
+    `Missing: ${report.summary.missing}`
+  ];
+  for (const binding of report.bindings) {
+    const identity = binding.formid || binding.editorId || "unbound";
+    lines.push(`- [${binding.status}] ${binding.kind} ${binding.target} -> ${identity}`);
+  }
+  for (const action of report.nextActions) {
+    lines.push(`Next: ${action}`);
+  }
+  if (written) {
+    lines.push(`Dialogue report: ${written}`);
   }
   return `${lines.join("\n")}\n`;
 }

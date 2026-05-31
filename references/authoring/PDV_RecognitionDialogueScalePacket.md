@@ -15,6 +15,11 @@ The current evidence is:
 
 The goal is not to make dialogue automatic. The goal is to make each manual CK recognition line cheap to specify, cheap to verify, and hard to accidentally over-scale.
 
+The Phase 20 no-in-game gate mirrors the first packet as CK-ready prep only:
+Altmer Auri-El crisis recovery, planned Runil identity, explicit positive and
+negative gates, and Survey/status fallback. That keeps recognition available for
+planning without turning it into generated dialogue or a runtime claim.
+
 ## Non-Goals
 
 - No generated dialogue creation.
@@ -37,6 +42,28 @@ Dialogue authoring is CK-first, readback-second.
 7. Run runtime positive and negative dialogue proof.
 
 Do not run MO2 readback or verifier work as if it proves CK authoring while CK-side changes are still unsaved. Do not treat a passing manifest scaffold as a live dialogue record.
+
+## Pulled-Forward Tool Lane
+
+Use the vendored creation-authoring dialogue helpers before broad recognition
+work:
+
+```powershell
+node .\tools\creation-authoring\src\cli.mjs dialogue-scaffold .\fixtures\dialogue-v1\dialogue-v1.rows.json `
+  --profile .\fixtures\dialogue-v1\dialogue-v1.profile.json `
+  --output-file .\scratch\dialogue-v1.scaffold.json
+
+node .\tools\creation-authoring\src\cli.mjs dialogue-bind .\fixtures\dialogue-v1\dialogue-v1.creation-authoring.json `
+  --profile .\fixtures\dialogue-v1\dialogue-v1.profile.json `
+  --readback .\fixtures\dialogue-v1\dialogue-v1.readback.json `
+  --output-file .\scratch\dialogue-v1.bind-report.json
+```
+
+For production PDV packets, replace the fixture rows/profile/readback with the
+current recognition packet paths. The scaffold step reduces manual manifest
+authoring; the bind step reduces manual readback comparison. Neither step
+creates dialogue in CK or allows promotion without command evidence and runtime
+proof.
 
 ## Recognition Packet Template
 
@@ -185,6 +212,12 @@ first packet should test Altmer origin plus Auri-El/crisis-or-scar readback if
 that gate is CK-readable. If it needs new helper state or fragile conditions,
 defer dialogue and use Survey/status fallback only until the CK dialogue proof
 is worth the time.
+
+Lore cross-review guardrail: Runil should speak to mortality, death duty, scar,
+and recovery from an Altmer who has lived with Dominion/war context. Do not use
+him as a generic Thalmor mouthpiece or as an Orthodox Auri-El proclamation
+speaker. If the line cannot stay in that mortality/recovery lane, use the
+Survey/status fallback instead.
 
 ## Fallback Surfaces
 
