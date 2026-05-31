@@ -2,7 +2,7 @@
 
 Status: QASmoke proof references are placed and read back cleanly; all six
 Phase 20 route-marker groups passed runtime proof on 2026-05-31. Final
-immersive world placement and full beta playthrough feel remain open.
+immersive world placement and pre-beta gameplay scaling remain open.
 
 This runbook consolidates the Phase 20 race proof slices into one counted
 runtime pass. It proves that the temporary QASmoke proof activators reach the
@@ -14,8 +14,9 @@ Runtime closeout note, 2026-05-31: `node .\tools\pdv_phase20_runtime_check.mjs
 --strict-manager` both passed after activating Altmer, Argonian, Orc, Redguard,
 Khajiit, and Bosmer proof markers. This should be treated as route-stack proof,
 not final immersion acceptance. "Too thin" or "too mechanical" is best judged
-in a proper beta playthrough where normal travel, quest order, class choices,
-and reward pacing are present.
+after pre-beta gameplay scaling has provided real hooks, rewards, status
+feedback, rejected-hook protection, and world placement. External beta should
+not be asked to judge absence as experience.
 
 ## Preconditions
 
@@ -121,8 +122,10 @@ The runtime pass is incomplete without at least these manual checks:
   blocks immediate farming.
 - Survey/status copy: make sure the resulting player-facing text reads like the
   race's theology and life context, not an internal route/debug label dump.
-- Beta immersion pass: defer full thinness/mechanical-feel judgment to normal
-  playthrough notes; QASmoke is a route-proof location, not a real pacing test.
+- Pre-beta gameplay scaling: defer full thinness/mechanical-feel judgment until
+  the race has enough normal-play hooks, rewards, status feedback, rejected-hook
+  protection, and real-world placement. QASmoke is a route-proof location, not a
+  real pacing test.
 
 ## Closeout Gate
 
