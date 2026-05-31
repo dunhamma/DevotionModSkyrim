@@ -69,8 +69,8 @@
       "signalValue": 1,
       "signalSourceId": "orc_stronghold_forge_proof",
       "oncePerDayKey": "PDV.Signal.OrcStrongholdForge",
-      "name": "PDV Orc Stronghold Forge Signal",
-      "activateText": "Record Stronghold Forge"
+      "name": "PDV ORC STRONGHOLD FORGE SIGNAL",
+      "activateText": "RECORD STRONGHOLD FORGE"
     },
     {
       "id": "orc-city-dignity-proof",
@@ -84,8 +84,8 @@
       "signalValue": 0,
       "signalSourceId": "orc_city_dignity_proof",
       "oncePerDayKey": "PDV.Signal.OrcCityDignity",
-      "name": "PDV Orc City Dignity Signal",
-      "activateText": "Record City Dignity"
+      "name": "PDV ORC CITY DIGNITY SIGNAL",
+      "activateText": "RECORD CITY DIGNITY"
     },
     {
       "id": "orc-legion-service-proof",
@@ -99,8 +99,8 @@
       "signalValue": 2,
       "signalSourceId": "orc_legion_service_proof",
       "oncePerDayKey": "PDV.Signal.OrcLegionService",
-      "name": "PDV Orc Legion Service Signal",
-      "activateText": "Record Legion Service"
+      "name": "PDV ORC LEGION SERVICE SIGNAL",
+      "activateText": "RECORD LEGION SERVICE"
     },
     {
       "id": "orc-self-made-community-proof",
@@ -114,8 +114,8 @@
       "signalValue": 0,
       "signalSourceId": "orc_self_made_community_proof",
       "oncePerDayKey": "PDV.Signal.OrcSelfMadeCommunity",
-      "name": "PDV Orc Self-Made Community Signal",
-      "activateText": "Record Self-Made Community"
+      "name": "PDV ORC SELF-MADE COMMUNITY SIGNAL",
+      "activateText": "RECORD SELF-MADE COMMUNITY"
     }
   ],
   "requiredContentRows": [

@@ -261,8 +261,8 @@
       "signalValue": 1,
       "signalSourceId": "altmer_dragonborn_declaration_proof",
       "oncePerDayKey": "PDV.Signal.AltmerDragonbornCrisis.Activator",
-      "name": "Altmer: Dragonborn Crisis Signal",
-      "activateText": "Contemplate the Dragonborn contradiction",
+      "name": "ALTMER: DRAGONBORN CRISIS SIGNAL",
+      "activateText": "CONTEMPLATE THE DRAGONBORN CONTRADICTION",
       "runtimeIntent": "first authored crisis source proof for Dissonant"
     },
     {
@@ -277,8 +277,8 @@
       "signalValue": 3,
       "signalSourceId": "altmer_lorkhan_mortal_validation_proof",
       "oncePerDayKey": "PDV.Signal.AltmerLorkhanPressure.Activator",
-      "name": "Altmer: Lorkhan Pressure Signal",
-      "activateText": "Study the mortal contradiction",
+      "name": "ALTMER: LORKHAN PRESSURE SIGNAL",
+      "activateText": "STUDY THE MORTAL CONTRADICTION",
       "runtimeIntent": "tagged Lorkhan pressure proof without ambient Skyrim penalties"
     },
     {
@@ -293,8 +293,8 @@
       "signalValue": 0,
       "signalSourceId": "altmer_dawn_steadiness_proof",
       "oncePerDayKey": "PDV.Signal.AltmerDawnSteadiness.Activator",
-      "name": "Altmer: Dawn Steadiness Signal",
-      "activateText": "Keep dawn discipline",
+      "name": "ALTMER: DAWN STEADINESS SIGNAL",
+      "activateText": "KEEP DAWN DISCIPLINE",
       "runtimeIntent": "daily-life positive loop proof"
     },
     {
@@ -309,8 +309,8 @@
       "signalValue": 0,
       "signalSourceId": "altmer_orthodox_cost_proof",
       "oncePerDayKey": "PDV.Signal.AltmerOrthodoxCost.Activator",
-      "name": "Altmer: Orthodox Cost Signal",
-      "activateText": "Bear the orthodox cost",
+      "name": "ALTMER: ORTHODOX COST SIGNAL",
+      "activateText": "BEAR THE ORTHODOX COST",
       "runtimeIntent": "marked orthodox-cost favor proof"
     }
   ],

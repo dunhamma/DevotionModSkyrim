@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Reflection;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
@@ -8,6 +9,13 @@ using Noggog;
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
 const string qasmokeEditorId = "QASmoke";
 var qasmokeFormKey = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x032AE7);
+var qasmokeTemplatePluginCandidates = new[]
+{
+    @"D:\Wabbajack\modlists\Anvil\mods\Anvil - Synthesis Output\ANV_SynW4ENBPatcher.esp",
+    @"D:\Wabbajack\modlists\Anvil\mods\Lux - Water for ENB patch\Lux - Water for ENB patch.esp",
+    @"D:\Wabbajack\modlists\Anvil\mods\Water for ENB (Shades of Skyrim)\Water for ENB (Shades of Skyrim).esp",
+    @"D:\Wabbajack\modlists\Anvil\Stock Game\Data\Skyrim.esm",
+};
 
 var defaultManifests = new[]
 {
@@ -160,14 +168,58 @@ Cell EnsureQASmokeOverride(
         report.Actions.Add("Created QASmoke interior cell sub-block override shell.");
     }
 
-    var qasmoke = new Cell(qasmokeFormKey, SkyrimRelease.SkyrimSE)
-    {
-        EditorID = qasmokeEditorId
-    };
+    var qasmoke = CreateQASmokeOverrideFromTemplate(report);
     targetSubBlock.Cells.Add(qasmoke);
     index[qasmokeEditorId] = qasmoke;
-    report.Actions.Add("Created minimal QASmoke cell override for Phase 20 proof references.");
+    report.Actions.Add("Created QASmoke cell override from existing Anvil cell data for Phase 20 proof references.");
     return qasmoke;
+}
+
+Cell CreateQASmokeOverrideFromTemplate(AuthorReport report)
+{
+    var template = FindQASmokeTemplateCell(report)
+        ?? throw new InvalidOperationException("Could not find a source QASmoke cell template; refusing to write a minimal QASmoke override.");
+
+    var copied = (Cell)DeepCopyRecord(template);
+    copied.EditorID = qasmokeEditorId;
+    copied.Temporary.Clear();
+    copied.Persistent.Clear();
+    return copied;
+}
+
+Cell? FindQASmokeTemplateCell(AuthorReport report)
+{
+    foreach (var candidate in qasmokeTemplatePluginCandidates)
+    {
+        if (!File.Exists(candidate))
+        {
+            continue;
+        }
+
+        var sourceMod = SkyrimMod.CreateFromBinary(candidate, SkyrimRelease.SkyrimSE);
+        foreach (var block in sourceMod.Cells.Records)
+        {
+            foreach (var subBlock in block.SubBlocks)
+            {
+                foreach (var cell in subBlock.Cells)
+                {
+                    if (cell.FormKey == qasmokeFormKey || string.Equals(cell.EditorID, qasmokeEditorId, StringComparison.OrdinalIgnoreCase))
+                    {
+                        report.Actions.Add($"Using QASmoke cell template from {candidate}.");
+                        return cell;
+                    }
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+static object DeepCopyRecord(object record)
+{
+    var method = record.GetType().GetMethod("DeepCopy", BindingFlags.Instance | BindingFlags.Public, Type.EmptyTypes);
+    return method?.Invoke(record, []) ?? record;
 }
 
 static void EnsurePlacedReference(
@@ -256,6 +308,32 @@ static void CheckTriggerPlacements(
             continue;
         }
 
+        if (baseRecord is not Mutagen.Bethesda.Skyrim.Activator activator)
+        {
+            report.Errors.Add($"{trigger.EditorId} is {baseRecord.GetType().Name}, expected Activator.");
+            continue;
+        }
+
+        var actualName = activator.Name?.String ?? "";
+        var actualActivateText = activator.ActivateTextOverride?.String ?? "";
+        if (!string.Equals(actualName, trigger.Name, StringComparison.Ordinal))
+        {
+            report.Errors.Add($"{trigger.EditorId} FULL is '{actualName}', expected '{trigger.Name}'.");
+            continue;
+        }
+
+        if (!string.Equals(actualActivateText, trigger.ActivateText, StringComparison.Ordinal))
+        {
+            report.Errors.Add($"{trigger.EditorId} activate text is '{actualActivateText}', expected '{trigger.ActivateText}'.");
+            continue;
+        }
+
+        if (ContainsAsciiLowercase(actualName) || ContainsAsciiLowercase(actualActivateText))
+        {
+            report.Errors.Add($"{trigger.EditorId} proof display strings must be all caps: FULL='{actualName}', RNAM='{actualActivateText}'.");
+            continue;
+        }
+
         if (placed.Base.FormKey != baseRecord.FormKey)
         {
             report.Errors.Add($"{trigger.PlacementRefEditorId} points at {placed.Base.FormKey}, expected {trigger.EditorId} ({baseRecord.FormKey}).");
@@ -264,6 +342,19 @@ static void CheckTriggerPlacements(
 
         report.Actions.Add($"{trigger.PlacementRefEditorId} -> {trigger.EditorId}");
     }
+}
+
+static bool ContainsAsciiLowercase(string value)
+{
+    foreach (var ch in value)
+    {
+        if (ch >= 'a' && ch <= 'z')
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 static Dictionary<string, ISkyrimMajorRecordGetter> BuildIndex(SkyrimMod mod)
@@ -300,6 +391,8 @@ static IEnumerable<TriggerDefinition> BuildTriggerDefinitions(string manifestPat
 
         if (string.IsNullOrWhiteSpace(trigger.editorId)
             || string.IsNullOrWhiteSpace(trigger.placementRefEditorId)
+            || string.IsNullOrWhiteSpace(trigger.name)
+            || string.IsNullOrWhiteSpace(trigger.activateText)
             || trigger.routeId <= 0)
         {
             throw new InvalidOperationException($"Trigger surface metadata is incomplete for {trigger.id ?? "(unknown)"}.");
@@ -308,6 +401,8 @@ static IEnumerable<TriggerDefinition> BuildTriggerDefinitions(string manifestPat
         yield return new TriggerDefinition(
             trigger.editorId,
             trigger.placementRefEditorId,
+            trigger.name,
+            trigger.activateText,
             trigger.routeId,
             raceOrder,
             raceColumn,
@@ -424,12 +519,16 @@ sealed class ManifestTriggerSurface
     public string? recordType { get; set; }
     public string? editorId { get; set; }
     public string? placementRefEditorId { get; set; }
+    public string? name { get; set; }
+    public string? activateText { get; set; }
     public int routeId { get; set; }
 }
 
 sealed record TriggerDefinition(
     string EditorId,
     string PlacementRefEditorId,
+    string Name,
+    string ActivateText,
     int RouteId,
     int RaceOrder,
     int RaceColumn,

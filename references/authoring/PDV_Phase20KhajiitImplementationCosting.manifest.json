@@ -107,8 +107,8 @@
       "signalValue": 1,
       "signalSourceId": "khajiit_moon_observance_proof",
       "oncePerDayKey": "PDV.Signal.KhajiitMoonObservance.Activator",
-      "name": "PDV Khajiit Moon Observance Signal",
-      "activateText": "Record Moon Observance",
+      "name": "PDV KHAJIIT MOON OBSERVANCE SIGNAL",
+      "activateText": "RECORD MOON OBSERVANCE",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -122,8 +122,8 @@
       "signalValue": 1,
       "signalSourceId": "khajiit_road_home_anchor_one_proof",
       "oncePerDayKey": "PDV.Signal.KhajiitRoadHome.Activator",
-      "name": "PDV Khajiit Road Home Anchor One Signal",
-      "activateText": "Record Road Home",
+      "name": "PDV KHAJIIT ROAD HOME ANCHOR ONE SIGNAL",
+      "activateText": "RECORD ROAD HOME",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -137,8 +137,8 @@
       "signalValue": 2,
       "signalSourceId": "khajiit_road_home_anchor_two_proof",
       "oncePerDayKey": "PDV.Signal.KhajiitRoadHome.Activator",
-      "name": "PDV Khajiit Road Home Anchor Two Signal",
-      "activateText": "Record Road Home",
+      "name": "PDV KHAJIIT ROAD HOME ANCHOR TWO SIGNAL",
+      "activateText": "RECORD ROAD HOME",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -152,8 +152,8 @@
       "signalValue": 0,
       "signalSourceId": "khajiit_baandar_road_trick_proof",
       "oncePerDayKey": "PDV.Signal.KhajiitBaanDarRoadTrick.Activator",
-      "name": "PDV Khajiit Baan Dar Road Trick Signal",
-      "activateText": "Record Baan Dar Road Trick",
+      "name": "PDV KHAJIIT BAAN DAR ROAD TRICK SIGNAL",
+      "activateText": "RECORD BAAN DAR ROAD TRICK",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -167,8 +167,8 @@
       "signalValue": 0,
       "signalSourceId": "khajiit_rajhin_elegant_theft_proof",
       "oncePerDayKey": "PDV.Signal.KhajiitRajhinElegantTheft.Activator",
-      "name": "PDV Khajiit Rajhin Elegant Theft Signal",
-      "activateText": "Record Rajhin Elegant Theft",
+      "name": "PDV KHAJIIT RAJHIN ELEGANT THEFT SIGNAL",
+      "activateText": "RECORD RAJHIN ELEGANT THEFT",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -182,8 +182,8 @@
       "signalValue": 0,
       "signalSourceId": "khajiit_alkosh_dragon_order_proof",
       "oncePerDayKey": "PDV.Signal.KhajiitAlkoshDragonOrder.Activator",
-      "name": "PDV Khajiit Alkosh Dragon Order Signal",
-      "activateText": "Record Alkosh Dragon Order",
+      "name": "PDV KHAJIIT ALKOSH DRAGON ORDER SIGNAL",
+      "activateText": "RECORD ALKOSH DRAGON ORDER",
       "placementStatus": "proof-cell-wired"
     }
   ],

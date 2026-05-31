@@ -182,8 +182,8 @@
       "requiredOriginRace": 7,
       "signalValue": 0,
       "signalSourceId": "argonian_hist_maintenance_proof",
-      "name": "PDV Argonian Hist Maintenance Signal",
-      "activateText": "Record Hist Maintenance",
+      "name": "PDV ARGONIAN HIST MAINTENANCE SIGNAL",
+      "activateText": "RECORD HIST MAINTENANCE",
       "oncePerDayKey": "PDV.Signal.ArgonianHistMaintenance",
       "immersionProof": "A safe water/reflection proxy for maintaining a distant Hist connection; not a generic swimming faucet."
     },
@@ -198,8 +198,8 @@
       "requiredOriginRace": 7,
       "signalValue": 0,
       "signalSourceId": "argonian_people_support_proof",
-      "name": "PDV Argonian People Support Signal",
-      "activateText": "Record People Support",
+      "name": "PDV ARGONIAN PEOPLE SUPPORT SIGNAL",
+      "activateText": "RECORD PEOPLE SUPPORT",
       "oncePerDayKey": "PDV.Signal.ArgonianPeopleSupport",
       "immersionProof": "A chosen-community proxy for Saxhleel mutual aid in Skyrim's sparse Argonian social world."
     },
@@ -214,8 +214,8 @@
       "requiredOriginRace": 7,
       "signalValue": 0,
       "signalSourceId": "argonian_void_threshold_proof",
-      "name": "PDV Argonian Void Signal",
-      "activateText": "Record Void Signal",
+      "name": "PDV ARGONIAN VOID SIGNAL",
+      "activateText": "RECORD VOID SIGNAL",
       "oncePerDayKey": "PDV.Signal.ArgonianVoidSignal",
       "immersionProof": "A threshold Sithis signal used only to prove repeated significant death-facing events; one signal is not full activation."
     },
@@ -230,8 +230,8 @@
       "requiredOriginRace": 7,
       "signalValue": 0,
       "signalSourceId": "argonian_bed_of_choice_proof",
-      "name": "PDV Argonian Bed Of Choice Signal",
-      "activateText": "Record Bed Of Choice",
+      "name": "PDV ARGONIAN BED OF CHOICE SIGNAL",
+      "activateText": "RECORD BED OF CHOICE",
       "oncePerDayKey": "PDV.Signal.ArgonianBedOfChoice",
       "immersionProof": "A chosen-bed cadence proof for the family the exile chose; repeating any generic inn bed must not count."
     }

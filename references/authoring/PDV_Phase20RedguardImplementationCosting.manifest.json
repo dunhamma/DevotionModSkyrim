@@ -78,8 +78,8 @@
       "signalValue": 0,
       "signalSourceId": "redguard_crown_tomb_respect_proof",
       "oncePerDayKey": "PDV.Signal.RedguardCrownTombRespect",
-      "name": "PDV Redguard Crown Tomb Respect Signal",
-      "activateText": "Record Crown Tomb Respect"
+      "name": "PDV REDGUARD CROWN TOMB RESPECT SIGNAL",
+      "activateText": "RECORD CROWN TOMB RESPECT"
     },
     {
       "id": "redguard-forebear-road-proof",
@@ -93,8 +93,8 @@
       "signalValue": 1,
       "signalSourceId": "redguard_forebear_road_proof",
       "oncePerDayKey": "PDV.Signal.RedguardForebearRoad",
-      "name": "PDV Redguard Forebear Road Signal",
-      "activateText": "Record Forebear Road"
+      "name": "PDV REDGUARD FOREBEAR ROAD SIGNAL",
+      "activateText": "RECORD FOREBEAR ROAD"
     },
     {
       "id": "redguard-ashabah-death-duty-proof",
@@ -108,8 +108,8 @@
       "signalValue": 2,
       "signalSourceId": "redguard_ashabah_death_duty_proof",
       "oncePerDayKey": "PDV.Signal.RedguardAshAbahDeathDuty",
-      "name": "PDV Redguard AshAbah Death Duty Signal",
-      "activateText": "Record AshAbah Death Duty"
+      "name": "PDV REDGUARD ASH'ABAH DEATH DUTY SIGNAL",
+      "activateText": "RECORD ASH'ABAH DEATH DUTY"
     },
     {
       "id": "redguard-far-shores-token-proof",
@@ -123,8 +123,8 @@
       "signalValue": 1,
       "signalSourceId": "redguard_far_shores_token_proof",
       "oncePerDayKey": "PDV.Signal.RedguardFarShoresToken",
-      "name": "PDV Redguard Far Shores Token Signal",
-      "activateText": "Record Far Shores Token"
+      "name": "PDV REDGUARD FAR SHORES TOKEN SIGNAL",
+      "activateText": "RECORD FAR SHORES TOKEN"
     }
   ],
   "requiredContentRows": [

@@ -1,12 +1,21 @@
 # PDV Phase 20 QASmoke Runtime Proof Runbook
 
-Status: QASmoke proof references are placed and read back cleanly; runtime proof
-and final immersive world placement remain open.
+Status: QASmoke proof references are placed and read back cleanly; all six
+Phase 20 route-marker groups passed runtime proof on 2026-05-31. Final
+immersive world placement and full beta playthrough feel remain open.
 
 This runbook consolidates the Phase 20 race proof slices into one counted
 runtime pass. It proves that the temporary QASmoke proof activators reach the
 intended EventBus and manager routes. It does not prove final world placement,
 player-facing immersion, or anti-farm tuning by itself.
+
+Runtime closeout note, 2026-05-31: `node .\tools\pdv_phase20_runtime_check.mjs
+--race all` and `node .\tools\pdv_phase20_runtime_check.mjs --race all
+--strict-manager` both passed after activating Altmer, Argonian, Orc, Redguard,
+Khajiit, and Bosmer proof markers. This should be treated as route-stack proof,
+not final immersion acceptance. "Too thin" or "too mechanical" is best judged
+in a proper beta playthrough where normal travel, quest order, class choices,
+and reward pacing are present.
 
 ## Preconditions
 
@@ -22,6 +31,14 @@ The current expected verifier baseline is `PASS=1985, WARN=1, INFO=28`; the
 single warning is the existing unnamed CK-authored INFO record class. If the
 placement helper or strict verifier fails, do not runtime-test. Fix readback
 first.
+
+Placement authoring note: the proof-placement helper must seed the PDV QASmoke
+cell override from the existing Anvil patched QASmoke cell data before adding
+PDV proof references. A minimal QASmoke cell override can become the winning
+cell record after water/lighting patches and crash Skyrim during plugin load.
+The temporary proof activator `FULL` names and activation prompts are all-caps
+debug labels by design; title-case or lower-case proof marker prompts are a
+polish failure because they read like unfinished in-world copy.
 
 Use a fresh proof save or a clean save made before any Phase 20 activator pass.
 Before launching Skyrim, archive the existing Papyrus log so the checker cannot
@@ -39,6 +56,12 @@ Open the console and run:
 set PDV_GLO_DebugLevel to 2
 coc qasmoke
 ```
+
+Console targeting note: Skyrim `prid` takes a numeric reference FormID, not a
+`PDV_REFR_*` EditorID string. If a proof object is not visible or convenient to
+reach, use the current runtime RefID from `help "<EditorID>" 4` or local
+readback, then run `prid <RefID>` followed by `moveto player`; close the
+console and activate the object normally.
 
 For route-marker smoke, one session can step through all six race groups by
 changing `PDV_GLO_OriginRace` before each group. For counted immersion/status
@@ -98,6 +121,8 @@ The runtime pass is incomplete without at least these manual checks:
   blocks immediate farming.
 - Survey/status copy: make sure the resulting player-facing text reads like the
   race's theology and life context, not an internal route/debug label dump.
+- Beta immersion pass: defer full thinness/mechanical-feel judgment to normal
+  playthrough notes; QASmoke is a route-proof location, not a real pacing test.
 
 ## Closeout Gate
 

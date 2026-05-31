@@ -72,8 +72,8 @@
       "signalValue": 1,
       "signalSourceId": "bosmer-old-contract-proper-hunt",
       "oncePerDayKey": "PDV.Signal.BosmerOldContractProperHunt.Activator",
-      "name": "Bosmer Old Contract Proper Hunt Signal",
-      "activateText": "Prove proper hunt",
+      "name": "BOSMER OLD CONTRACT PROPER HUNT SIGNAL",
+      "activateText": "PROVE PROPER HUNT",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -87,8 +87,8 @@
       "signalValue": 2,
       "signalSourceId": "bosmer-old-contract-forest-kept",
       "oncePerDayKey": "PDV.Signal.BosmerOldContractForestKept.Activator",
-      "name": "Bosmer Old Contract Forest Kept Signal",
-      "activateText": "Prove forest kept",
+      "name": "BOSMER OLD CONTRACT FOREST KEPT SIGNAL",
+      "activateText": "PROVE FOREST KEPT",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -102,8 +102,8 @@
       "signalValue": 1,
       "signalSourceId": "bosmer-living-story-community-kept",
       "oncePerDayKey": "PDV.Signal.BosmerLivingStoryCommunityKept.Activator",
-      "name": "Bosmer Living Story Community Kept Signal",
-      "activateText": "Prove story kept",
+      "name": "BOSMER LIVING STORY COMMUNITY KEPT SIGNAL",
+      "activateText": "PROVE STORY KEPT",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -117,8 +117,8 @@
       "signalValue": 2,
       "signalSourceId": "bosmer-living-story-nature-site",
       "oncePerDayKey": "PDV.Signal.BosmerLivingStoryNatureSite.Activator",
-      "name": "Bosmer Living Story Nature Site Signal",
-      "activateText": "Prove nature story",
+      "name": "BOSMER LIVING STORY NATURE SITE SIGNAL",
+      "activateText": "PROVE NATURE STORY",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -132,8 +132,8 @@
       "signalValue": 1,
       "signalSourceId": "bosmer-exchange-debt-settled",
       "oncePerDayKey": "PDV.Signal.BosmerExchangeDebtSettled.Activator",
-      "name": "Bosmer Exchange Debt Settled Signal",
-      "activateText": "Prove debt settled",
+      "name": "BOSMER EXCHANGE DEBT SETTLED SIGNAL",
+      "activateText": "PROVE DEBT SETTLED",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -147,8 +147,8 @@
       "signalValue": 2,
       "signalSourceId": "bosmer-exchange-proportionate-vengeance",
       "oncePerDayKey": "PDV.Signal.BosmerExchangeProportionateVengeance.Activator",
-      "name": "Bosmer Exchange Proportionate Vengeance Signal",
-      "activateText": "Prove redress",
+      "name": "BOSMER EXCHANGE PROPORTIONATE VENGEANCE SIGNAL",
+      "activateText": "PROVE REDRESS",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -162,8 +162,8 @@
       "signalValue": 1,
       "signalSourceId": "bosmer-bandit-road-road-life",
       "oncePerDayKey": "PDV.Signal.BosmerBanditRoadRoadLife.Activator",
-      "name": "Bosmer Bandit Road Road Life Signal",
-      "activateText": "Prove road life",
+      "name": "BOSMER BANDIT ROAD ROAD LIFE SIGNAL",
+      "activateText": "PROVE ROAD LIFE",
       "placementStatus": "proof-cell-wired"
     },
     {
@@ -177,8 +177,8 @@
       "signalValue": 2,
       "signalSourceId": "bosmer-bandit-road-reversal",
       "oncePerDayKey": "PDV.Signal.BosmerBanditRoadReversal.Activator",
-      "name": "Bosmer Bandit Road Reversal Signal",
-      "activateText": "Prove reversal",
+      "name": "BOSMER BANDIT ROAD REVERSAL SIGNAL",
+      "activateText": "PROVE REVERSAL",
       "placementStatus": "proof-cell-wired"
     }
   ],
