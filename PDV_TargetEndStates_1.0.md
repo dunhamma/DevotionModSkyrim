@@ -75,7 +75,12 @@ will feel equally rich in play. Its working ledgers are
 `references/authoring/PDV_RaceRewardBudgetLedger.md` and
 `references/authoring/PDV_RacePlaystyleCoverageLedger.md`; its reward ledger
 now includes an explicit immersion budget matrix, and its build-costing handoff
-is `references/authoring/PDV_RaceImplementationCostingBacklog.md`.
+is `references/authoring/PDV_RaceImplementationCostingBacklog.md`. The current
+pre-beta gameplay-scaling handoff is
+`references/authoring/PDV_PreBetaRaceScalingSpine.md`: Altmer is the active
+spine, Khajiit is the first contrast, Argonian is the second contrast, Orc /
+Redguard / Bosmer are P1 packets, and Breton / Dunmer / Imperial / Nord are P2
+audit-only lanes until stack and ceiling evidence is recorded.
 The first implementation-costing manifest set covers Altmer, Argonian, Orc,
 Redguard, Bosmer non-hunter parity, and Khajiit. Each manifest must carry
 `immersionProof` so reward parity includes diegetic trigger meaning, feedback,
@@ -173,9 +178,40 @@ route markers only; Survey/status immersion, negative hooks, anti-farm behavior,
 pre-beta gameplay scaling, and final world placement remain separate acceptance
 evidence. External beta should wait until those surfaces are built enough that
 testers can judge a race experience rather than missing content.
+The pre-beta scaling gate now requires every race packet to record normal-play
+hooks, rejected generic hooks, Survey/status readout, final placement, reward
+ceiling, reward floor, stack snapshot, runtime proof command, and manual feel
+notes before stronger rewards or external tester judgment.
+`references/authoring/PDV_PreBetaRaceAcceptanceRubric.md` is the measurable
+acceptance bar for that gate: each race closes as `Pass`, `Conditional`, or
+`Fail` after expected/edge builds, rejected-hook coverage, anti-farm cadence,
+Survey/status legibility, final placement, reward floor/ceiling, and stack
+snapshot evidence are recorded.
 Reward magnitudes,
 immersion proof, and exact effect values remain tuning work for every race until
 implementation and playtesting prove the feel.
+
+Daedric full-content readiness remains a separate 1.0 content gate. Section
+11.6's roster/recovery/hostility defaults are locked, so the remaining Daedric
+"decide before broad authoring" work is stigma row ratification, curse-access
+template handling for Hircine and Molag Bal, and the Prince authoring order.
+Those decisions must be closed before cloning the Boethiah pilot across all
+remaining Princes, but they do not block the current pre-beta race hook and
+Survey/status scaling work.
+
+Experience Mode is design-locked but not implemented. `Pilgrim's Path` remains
+the default authored experience; `Wayfarer's Path` is the future lenient mode.
+The 1.0 target includes this only after `PDV_ModePreset`, `PDV_GLO_Mode`, MCM
+surfacing, manager scalars, ActionRouter cheap-repeatable handling, verifier
+readback, and two-mode runtime smoke are complete.
+
+Recognition/dialogue scaling and CAT-6 promotion now have separate architecture
+packets. `PDV_RecognitionDialogueScalePacket.md` requires one CK-authored
+non-Nord recognition packet with saved-record readback and runtime
+positive/negative proof before broad recognition lines scale. `PDV_CAT6PromotionPilot.md`
+requires one low-risk non-dialogue draft-to-ESP-to-handbook pilot before broad
+string promotion. Drafting can continue; mass promotion and mass recognition
+should wait for those gates.
 
 ## 1.0 Compatibility Gate
 

@@ -25,6 +25,10 @@ Use these working artifacts to act on this audit:
 - `references/authoring/PDV_RaceRewardBudgetLedger.md` - tracks reward wealth, always-on layer count, contextual favor budget, privileges, prices, neglect, immersion budget, and overstack/thinness risk.
 - `references/authoring/PDV_RacePlaystyleCoverageLedger.md` - tracks warrior, mage, stealth/social, survival/travel, craft/labor, low-violence, and curse/Daedric support by race.
 - `references/authoring/PDV_RaceImplementationCostingBacklog.md` - translates the audit into buildable records/state, hook sources, rejected-hook assertions, immersion proof, player-facing surfacing, verifier gates, and runtime proof slices.
+- `references/authoring/PDV_PreBetaRaceScalingSpine.md` - owns the shared pre-beta race-scaling gate, Altmer/Khajiit/Argonian spine order, P1 packet split, P2 audit-only split, and subagent handoff template.
+- `references/authoring/PDV_PreBetaRaceAcceptanceRubric.md` - defines the measurable `Pass` / `Conditional` / `Fail` bar before external playfeel testing or stronger reward tuning.
+- `references/authoring/PDV_RecognitionDialogueScalePacket.md` - defines the CK-safe recognition/dialogue scaling packet before broad NPC recognition content.
+- `references/authoring/PDV_CAT6PromotionPilot.md` - defines the first non-dialogue draft-to-ESP-to-handbook promotion proof before broad CAT-6 string promotion.
 - `references/authoring/PDV_Phase20*ImplementationCosting.manifest.json` - child costing contracts for the first high-risk runtime slices; `node .\tools\pdv_verify.mjs --strict-phase20-race-costing` validates the full manifest set, including immersion proof.
 
 Every focused race pass should update the relevant ledger and the costing backlog before it changes runtime scope, manifest prose, or verifier expectations. Reward budget updates must include the immersion budget: what the player sees, understands, and feels as religious life.
@@ -49,7 +53,7 @@ Every focused race pass should update the relevant ledger and the costing backlo
 | Priority | Work | Why |
 |---|---|---|
 | P0 | Phase 20 route proof closeout | All six Phase 20 QASmoke proof packets are source/record/proof-placement wired and route-runtime proven. The remaining gate is pre-beta gameplay scaling for playfeel, negative hooks, anti-farm pressure, final world placement, and enough reward content that testers can judge an experience rather than missing systems. |
-| P1 | Phase 20 pre-beta immersion buildout | These are the main parity risks: thin non-Sithis support, City/Legion parity, sect distinction, non-hunter payoff, and lunar chore pressure. QASmoke cannot judge those, and external beta should wait until normal play has real hooks, rewards, and status surfaces. |
+| P1 | Phase 20 pre-beta immersion buildout | Follow the scaling spine: Altmer first, Khajiit as first contrast, Argonian second contrast, then Orc / Redguard / Bosmer packets. These are the main parity risks: thin non-Sithis support, City/Legion parity, sect distinction, non-hunter payoff, and lunar chore pressure. QASmoke cannot judge those, and external beta should wait until normal play has real hooks, rewards, and status surfaces. |
 | P2 | Breton and Dunmer stack-control gates | Both are rich enough to overpay if tracks/substrates/focuses all reward loudly at once. |
 | P2 | Imperial and Nord ceiling gates | Both are hook-rich and proven enough that concrete-act filters and broad/focused caps matter more than adding content volume. |
 
@@ -64,7 +68,8 @@ Current evidence used for this pass:
 - `references/phase4/PDV_StanceMatrix.csv` has 45 locked worship-object rows with all ten race columns.
 - `references/phase4/PDV_DaedricRacePrinceMatrix.csv` has all sixteen Skyrim-present Prince rows with all ten race columns.
 - `race-sheets/PDV_RaceContent_Manifest.md` says all ten race-facing manifest sections have full draft prose; Breton's optional Vigilant pressure encounter remains slip-able post-1.0.
-- `race-sheets/PDV_DaedricContent_Manifest.md` has Boethiah drafted end-to-end as the Daedric pilot, while the remaining fifteen Skyrim-present Princes are stub-listed for follow-up passes.
+- `race-sheets/PDV_DaedricContent_Manifest.md` has Boethiah drafted end-to-end as the Daedric pilot, while the remaining fifteen Skyrim-present Princes are stub-listed for follow-up passes. Its stigma rows are provisional content rows, not a ratified model to clone across the full Prince roster yet.
+- `references/PDV_ExperienceMode_DesignReference.md` and `references/authoring/PDV_ExperienceMode.manifest.json` are merged as planning contracts for the future Pilgrim's Path / Wayfarer's Path user-facing difficulty toggle; they are not live runtime evidence for race parity yet.
 - `race-sheets/PDV_ContentDestinationMatrix.md` exposes key open review points: remaining Daedric authoring order, Bosmer Green Pact per-item feedback, Breton Vigilant pressure, and cells marked deferred.
 
 ## Audit Lenses
@@ -205,10 +210,11 @@ Phase 20 requires all sixteen Skyrim-present Prince surfaces for every race. Cur
 
 ### P0 - Close Before More Broad Runtime Buildout
 
-1. **Build from the implementation-costing backlog.** The wired Altmer, Argonian, Orc, Redguard, Bosmer, and Khajiit proof triggers are placed and route-runtime proven. Continue with rejected-surface tests, anti-farm tests, pre-beta gameplay scaling, and final world placement before adding more broad race content or asking external testers to judge playfeel.
+1. **Apply the pre-beta acceptance rubric before Altmer scaling.** The wired Altmer, Argonian, Orc, Redguard, Bosmer, and Khajiit proof triggers are placed and route-runtime proven. Continue with rejected-surface tests, anti-farm tests, pre-beta gameplay scaling, and final world placement, but judge each race through `PDV_PreBetaRaceAcceptanceRubric.md` before adding more broad race content or asking external testers to judge playfeel.
 2. **Use the reward-budget ledger.** For each race, keep always-on boons, temporary favors, privileges, recognition surfaces, prices, and neglect effects visible before tuning new rewards. Mark raw-stat impact separately from narrative/privilege impact.
 3. **Use the immersion budget matrix.** For each race, prove the strongest reward loop feels culturally specific in ordinary play before increasing its mechanical power.
-4. **Set the Daedric authoring order.** Boethiah is the pilot. The next passes should prioritize Princes with high race-crossing risk: Hircine, Molag Bal, Nocturnal, Hermaeus Mora, Malacath, Azura, Mephala.
+4. **Resolve the narrow Daedric expansion blockers before broad Prince cloning.** Section 11.6 now locks roster shape, mixed recovery, and reduced cross-Prince hostility, so CAT-4 should no longer treat those as open. The remaining blockers are stigma row ratification, Hircine/Molag Bal curse-access template shape, and authoring order. Boethiah is the pilot; the next passes should prioritize Princes with high race-crossing risk: Hircine, Molag Bal, Nocturnal, Hermaeus Mora, Malacath, Azura, Mephala.
+5. **Prove recognition and CAT-6 promotion before scaling them.** Use `PDV_RecognitionDialogueScalePacket.md` for one CK-authored non-Nord recognition packet before broad NPC recognition, and `PDV_CAT6PromotionPilot.md` for one low-risk non-dialogue string promotion before broad ESP/handbook promotion.
 
 ### P1 - Required For Race Parity
 

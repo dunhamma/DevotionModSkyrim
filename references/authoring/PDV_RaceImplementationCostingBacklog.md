@@ -12,6 +12,16 @@ This backlog turns the race gameplay audit into buildable slices. The race sheet
 
 It is deliberately not a lore rewrite. Use the race sheets and architecture reference for theology. Use this file when costing runtime records, Papyrus state, CK surfaces, content rows, verifier assertions, and runtime proof.
 
+The shared handoff for the current pre-beta gameplay-scaling pass is
+`references/authoring/PDV_PreBetaRaceScalingSpine.md`. Use that file for the
+race packet template, Altmer/Khajiit/Argonian spine order, P1 buildout packets,
+P2 audit-only split, subagent work split, and verification sequence.
+Use `references/authoring/PDV_PreBetaRaceAcceptanceRubric.md` for the actual
+pass/conditional/fail bar before stronger rewards or external playfeel testing.
+Recognition/dialogue work uses `PDV_RecognitionDialogueScalePacket.md`, and
+CAT-6 content promotion uses `PDV_CAT6PromotionPilot.md`; neither should be
+folded into a race runtime slice without its packet gate.
+
 ## Evidence Used
 
 - PDV race architecture and race sheets: `references/PDV_RaceArchitecture_DesignReference.md`, `race-sheets/PDV_RaceDesign_*.md`, and `race-sheets/Race_*.md`.
@@ -55,6 +65,13 @@ Use all lenses when promoting a race slice. A slice can be technically cheap and
 | P1 | Multi-race pre-beta gameplay scaling | Argonian, Orc, Redguard, Bosmer, and Khajiit have moved into source/record/proof-placement wiring and QASmoke route runtime proof. Each has strong fantasy, but still needs normal-play hook validation, rejected-surface checks, status/survey feel checks, final immersive placement, and enough reward content that a tester can judge experience rather than absence. |
 | P2 | Breton and Dunmer stack control | These races are rich enough that track/substrate/focus layers can overpay. Their next audit pass is reward-ceiling and stack-feel validation, not more proof-marker volume. |
 | P2 | Imperial and Nord ceiling control | These races are hook-rich and proven enough that restraint matters more than adding more volume. Their next audit pass is negative-hook and over-trigger validation in normal play. |
+
+Scaling order is now locked for the next implementation session: Altmer first,
+Khajiit as the first contrast, Argonian as the second contrast, and Orc /
+Redguard / Bosmer prepared in parallel as P1 packets. Breton, Dunmer, Imperial,
+and Nord remain P2 audit-only until stack and ceiling evidence is recorded.
+Every promoted race packet now needs a rubric verdict from
+`PDV_PreBetaRaceAcceptanceRubric.md`.
 
 ## P0 - Altmer Costing
 
@@ -165,7 +182,8 @@ Use all lenses when promoting a race slice. A slice can be technically cheap and
 
 ## Required Output Before Building A Race Slice
 
-Each slice should produce this block in its phase plan or manifest:
+Each slice should produce this block in its phase plan or manifest. The expanded
+pre-beta version lives in `PDV_PreBetaRaceScalingSpine.md`.
 
 ```text
 Race:
@@ -183,13 +201,43 @@ Runtime proof route:
 Compatibility notes:
 ```
 
+For pre-beta scaling, also record:
+
+```text
+Lane type:
+Scaling role:
+Normal-play hook:
+Survey/status readout:
+Final placement:
+Stack snapshot:
+Manual feel note:
+Content dependency:
+Rubric verdict:
+```
+
 ## Immediate Queue
 
-1. Next-session planning hook: choose the pre-beta scaling spine. Recommended path is Altmer first, with Nord as the control/reference for a fully felt race and Khajiit or Argonian as the first contrast race.
-2. Altmer: promote the crisis/favor/Lorkhan scaffold and wired curse-message surface into real normal-play hooks, rejected-surface proof, Exiled vampire proof, remaining favor families, and first crisis playfeel proof.
-3. Argonian: build enough Hist/People state, bed cadence, community, rejected generic hooks, and three-signal Void threshold behavior that non-Sithis play can be judged before deeper Void runtime rewards.
-4. Orc: build Stronghold forge, City dignity, Legion service, self-made community, rejected generic hooks, and status/survey readout before increasing Malacath reward magnitude.
-5. Redguard: build Crown tomb respect, Forebear road passage, Ash'abah death duty, Far Shores token use, rejected generic hooks, and status/survey readout before expanding death-duty rewards.
-6. Bosmer: build Old Contract, Living Story, Exchange, Bandit Road, rejected generic hooks, and status/survey readout before broader Green Pact tag work.
-7. Khajiit: build moon fallback, two-anchor road-home anti-chore behavior, Baan Dar/Rajhin/Alkosh focus movement, rejected generic hooks, and status/survey readout before strong focus favors.
-8. P2 stack/ceiling pass: audit Breton, Dunmer, Imperial, and Nord in normal play for over-stacking, over-triggering, and reward ceiling issues once the comparison races have enough content to make the comparison fair.
+1. Altmer active spine: promote the crisis/favor/Lorkhan scaffold and wired curse-message surface into real normal-play hooks, rejected-surface proof, Exiled vampire proof, remaining favor families, first crisis playfeel proof, Survey/status evidence, and final placement planning.
+2. Khajiit first contrast: prove moon fallback, two-anchor road-home anti-chore behavior, Baan Dar/Rajhin/Alkosh focus movement, rejected generic hooks, Survey/status readout, and final placement planning before strong focus favors.
+3. Argonian second contrast: build enough Hist/People state, bed cadence, community, Arkay/death-rite reaction, curse posture, rejected generic hooks, and three-signal Void threshold behavior that non-Sithis play can be judged before deeper Void runtime rewards.
+4. Orc P1 packet: prepare Stronghold forge, City dignity, Legion service, self-made community, rejected generic hooks, status/survey readout, and final placement requirements before increasing Malacath reward magnitude.
+5. Redguard P1 packet: prepare Crown tomb respect, Forebear road passage, Ash'abah death duty, Far Shores token use, HoonDing cap, rejected generic hooks, status/survey readout, and final placement requirements before expanding death-duty rewards.
+6. Bosmer P1 packet: prepare Old Contract, Living Story, Exchange, Bandit Road, rejected generic hooks, status/survey readout, and final placement requirements before broader Green Pact tag work.
+7. P2 stack/ceiling pass: audit Breton, Dunmer, Imperial, and Nord in normal play for over-stacking, over-triggering, Survey/status clarity, generic rejected hooks, expected/edge builds, and reward ceiling issues before adding more reward volume.
+
+Parallel planning note: broad Daedric Prince authoring is not part of this
+pre-beta race-scaling queue. CAT-4 should stay blocked on stigma row
+ratification, Hircine/Molag Bal curse-access template shape, and Prince
+authoring order. Section 11.6 roster shape, recovery default, and
+cross-Prince hostility are already locked defaults and should not be treated as
+open blockers here.
+
+Separate scale gates:
+
+- Recognition/dialogue should remain packet-draft only until
+  `PDV_RecognitionDialogueScalePacket.md` proves one non-Nord CK-authored
+  recognition line through readback and runtime positive/negative proof.
+- CAT-6 string promotion should remain narrow until
+  `PDV_CAT6PromotionPilot.md` proves one low-risk non-dialogue draft row
+  through ratification, ESP promotion, verifier/readback, runtime or menu
+  display, and handbook sync.
