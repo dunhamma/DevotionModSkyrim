@@ -51,10 +51,10 @@ Use all lenses when promoting a race slice. A slice can be technically cheap and
 
 | Priority | Slice | Why |
 |---|---|---|
-| P0 | Altmer proof-placement and runtime follow-through | The implementation-spec gap is closed, the first manager/EventBus/EventTypes/receiver source scaffold compiles, `PDV_State_AltmerCrisis` is record-wired, the first two contextual favor spell records are wired, four Altmer trigger proof ACTI base records are wired, three curse/exile message records are wired, and the four QASmoke proof references pass readback. The next risk is runtime proof without making Lorkhan/crisis pacing punitive. |
-| P1 | Argonian Hist/People, Orc life-mode, Redguard sect, Bosmer non-hunter parity, Khajiit lunar/road costing | Argonian, Orc, Redguard, Bosmer, and Khajiit have moved into source/record/proof-placement wiring and now wait on runtime proof. Each has strong fantasy but needs careful hook and reward proof. |
-| P2 | Breton and Dunmer stack control | These races are rich enough that track/substrate/focus layers can overpay. |
-| P2 | Imperial and Nord ceiling control | These races are hook-rich and proven enough that restraint matters more than adding more volume. |
+| P0 | Altmer route-proof closeout and beta follow-through | The implementation-spec gap is closed, the first manager/EventBus/EventTypes/receiver source scaffold compiles, `PDV_State_AltmerCrisis` is record-wired, the first two contextual favor spell records are wired, four Altmer trigger proof ACTI base records are wired, three curse/exile message records are wired, and the four QASmoke proof references pass readback plus route runtime proof. The next risk is beta playfeel: Lorkhan/crisis pacing, rejected surfaces, Exiled vampire behavior, and whether the first rewards feel authored rather than punitive. |
+| P1 | Argonian Hist/People, Orc life-mode, Redguard sect, Bosmer non-hunter parity, Khajiit lunar/road beta proof | Argonian, Orc, Redguard, Bosmer, and Khajiit have moved into source/record/proof-placement wiring and QASmoke route runtime proof. Each has strong fantasy, but still needs normal-play hook validation, rejected-surface checks, status/survey feel checks, and final immersive placement. |
+| P2 | Breton and Dunmer stack control | These races are rich enough that track/substrate/focus layers can overpay. Their next audit pass is reward-ceiling and stack-feel validation, not more proof-marker volume. |
+| P2 | Imperial and Nord ceiling control | These races are hook-rich and proven enough that restraint matters more than adding more volume. Their next audit pass is negative-hook and over-trigger validation in normal play. |
 
 ## P0 - Altmer Costing
 
@@ -70,7 +70,7 @@ Use all lenses when promoting a race slice. A slice can be technically cheap and
 | Contextual favor families | Shared Auri-El/coherence favor, focused deity families, Thalmor Orthodox, Divine Body, Psijic/Heterodox. Quiet dawn steadiness and marked orthodox costly enforcement now have source handling, manager spell properties, `KYWD`/`MGEF`/`SPEL` records, ACTI proof surfaces, and readback-clean QASmoke proof placement. Remaining families stay open. | Dawn practice, study, magic milestones, records, warding, institutional duty, coherent restraint. | Generic spellcasting spam, raw skill gain without context, generic kindness, generic College membership. | One-active-favor behavior, favor record readback, proof ACTI/REFR readback, focused-family gates, alignment/focus conditions. | Non-edge Altmer receives occasional support from coherent play without constant popups or stacked boons. |
 | Exiled vampire cap | Exile-limited cursed flavor and status copy; no full orthodox restoration while cursed. Manager source, three `MESG` records, and manager message properties are wired for vampire entry, cured scar recognition, and werewolf hard halt. | Vampire state, cure, crisis scar, Auri-El rupture handling. | Vampire power as an alternate clean devotion path. | Cursed Altmer blocks or limits full orthodox surfaces; cured path preserves scar note; record readback confirms the three message surfaces. | Vampire Altmer reads as terminal/exile-limited, not as a stronger build. |
 
-**First implementation-safe slice:** manually place or attach the four proof triggers, then run rejected-surface/runtime assertions, Exiled vampire runtime proof, and first crisis/favor playfeel proof before adding high-value crisis rewards. The first runtime proof should test pacing, clarity, and immersion, not power.
+**First implementation-safe slice:** the four proof triggers are placed/readback-clean and QASmoke route-runtime proven. Next, run rejected-surface assertions, Exiled vampire proof, and first crisis/favor playfeel proof before adding high-value crisis rewards. The beta proof should test pacing, clarity, and immersion, not power.
 
 ## P1 - Argonian Hist / People Costing
 
@@ -86,7 +86,7 @@ Use all lenses when promoting a race slice. A slice can be technically cheap and
 | Void / Sithis threshold | Sithis signal counter and Void activation gates. Source and `PDV_ACTI_ArgonianVoidSignal` route `62` are wired; deeper Void rewards wait until Hist/People proof passes. | Dark Brotherhood major beats, curated death/change/void choices. | Generic murder, generic stealth, ordinary kills, one Dark Brotherhood join event as full activation. | Full Void scoring requires at least three significant signals, preferably across separate quest beats/days. | Sithis route is powerful and readable but not the obvious default Argonian build. |
 | Hist posture | `PDV_State_ArgonianHistPosture` and curse posture messages. The state track is record-wired and manager-wired; message rows still need content/record promotion. | Vampire, werewolf, cure, prolonged distance, recovery rites. | Curse state silently replacing Hist identity. | Enum/source/record contract: `Normal`, `Distant`, `Strained`, `Silenced`, `Corrupted`; Survey/status readout proves posture. | Vampire grief and werewolf strain are distinct, recoverable where intended, and visible in survey/status. |
 
-**First implementation-safe slice:** build Hist/People before Void expansion: Hist sap, water/rest maintenance, bed-of-choice proof, community recognition, Arkay death-rite reactions, and curse-posture readback.
+**First implementation-safe slice:** source/readback, all four proof base records, and all four QASmoke proof references are route-runtime proven. Next, prove Hist/People normal-play feel before Void expansion: Hist sap, water/rest maintenance, bed-of-choice proof, community recognition, Arkay death-rite reactions, rejected generic hooks, and curse-posture readback.
 
 ## P1 - Orc Life-Mode Costing
 
@@ -102,7 +102,7 @@ Use all lenses when promoting a race slice. A slice can be technically cheap and
 | City lane | Self-made community support, dignity under pressure, quality labor beyond forge spam. `PDV_ACTI_OrcCityDignitySignal` route `71` and `PDV_ACTI_OrcSelfMadeCommunitySignal` route `73` are wired for first proof. | Named Orc aid, merchant/service completion, protected place, curated dignity moments. | Ambient insult parser, ordinary city presence, raw barter count. | City lane has distinct favor rows and self-made community key/readback; proof ACTI readback confirms routes `71` and `73`, Orc origin gates, and daily keys. | City Orc feels complete rather than failed-Stronghold. |
 | Legion / Exile lane | Service milestone gates, private endurance, disciplined completion, return-to-place recognition. `PDV_ACTI_OrcLegionServiceSignal` route `72` is wired for first proof. | Pressure-bearing service completion, curated faction stages, hardship recovery. | Legion faction membership, generic patrol, generic combat. | Service gate requires completed pressure-bearing beat; one active lane only; proof ACTI readback confirms route `72`, Orc origin gate, and daily key. | Legion/Exile Orc has sharp situational rewards without a persistent second substrate. |
 
-**First implementation-safe slice:** state/readback, all four proof base records, and all four QASmoke proof references are wired. Next, prove Stronghold, City, Legion/Exile, and self-made community runtime paths before increasing reward magnitude. Do not ship Stronghold-only Orc parity.
+**First implementation-safe slice:** state/readback, all four proof base records, and all four QASmoke proof references are route-runtime proven. Next, prove Stronghold, City, Legion/Exile, and self-made community normal-play paths before increasing reward magnitude. Do not ship Stronghold-only Orc parity.
 
 ## P1 - Redguard Sect Costing
 
@@ -118,7 +118,7 @@ Use all lenses when promoting a race slice. A slice can be technically cheap and
 | Sect favor families | Crown, Forebear, Ash'abah contextual favor rows; first proof ACTIs are wired as `PDV_ACTI_RedguardCrownTombRespectSignal` route `80`, `PDV_ACTI_RedguardForebearRoadSignal` route `81`, and `PDV_ACTI_RedguardAshAbahDeathDutySignal` route `82`. | Honorable form, road dignity, contract success, impurity borne, tomb respect. | Generic gold-making, fast travel, generic body count, broad simulated stigma. | Favor rows/gates; Ash'abah entry requires major death/undead/tomb/funerary/impurity burden; proof ACTI readback confirms Redguard origin gates and daily keys. | Crown, Forebear, and Ash'abah each compete emotionally with undead-clearing. |
 | HoonDing cap | Rare make-way marker, weekly cap, curated major milestones. | Major impossible-odds, named bosses, quest stages, proof-tested odds detection if later added. | Generic combat, ordinary kill streaks, farmable dungeon loops. | Weekly cap and curated source list. | HoonDing feels dramatic and rare, not a damage buff economy. |
 
-**First implementation-safe slice:** state/readback, all four proof base records, and all four QASmoke proof references are wired. Next, prove Crown tomb respect, Forebear road passage, Ash'abah death duty, Far Shores token use, rejected generic hooks, and status/survey readout before increasing death-duty reward magnitude. Add Ash'abah stigma surfacing before increasing undead/death-duty rewards.
+**First implementation-safe slice:** state/readback, all four proof base records, and all four QASmoke proof references are route-runtime proven. Next, prove Crown tomb respect, Forebear road passage, Ash'abah death duty, Far Shores token use, rejected generic hooks, and status/survey readout in normal play before increasing death-duty reward magnitude. Add Ash'abah stigma surfacing before increasing undead/death-duty rewards.
 
 ## P1 - Bosmer Non-Hunter Parity Costing
 
@@ -135,7 +135,7 @@ Use all lenses when promoting a race slice. A slice can be technically cheap and
 | Bandit Road | Pariah survival, luck, Baan Dar edge, road/community outsider beats. Routes `106-107` cover road life and rare reversal, with a seven-day major-favor cooldown for reversal. | Road hardship, near-death luck, outcast aid, difficult escape. | Generic crime, repeated theft, random banditry. | Anti-repeat and context gates; Baan Dar/Road rows stay distinct. | Bandit Road feels sly and costly, not a generic thief buff. |
 | Green Pact tag layer | Item/food/body handling tag plan and compliance proof gates. | CK/tagged items, hunted meat, plant taboo, curated violation surfaces. | Broad plant detection without reliable item evidence. | Tag coverage report and rejected-item tests. | Pact feedback is concrete and fair, not arbitrary inventory punishment. |
 
-**First implementation-safe slice:** source/readback, all eight proof base records, and all eight QASmoke proof references are wired. Next, prove Old Contract, Living Story, Exchange, Bandit Road, rejected generic hooks, and status/survey readout before expanding Green Pact item tagging.
+**First implementation-safe slice:** source/readback, all eight proof base records, and all eight QASmoke proof references are route-runtime proven. Next, prove Old Contract, Living Story, Exchange, Bandit Road, rejected generic hooks, and status/survey readout in normal play before expanding Green Pact item tagging.
 
 ## P1 - Khajiit Lunar / Road Costing
 
@@ -152,7 +152,7 @@ Use all lenses when promoting a race slice. A slice can be technically cheap and
 | Five-focus parity | Favor rows for Khenarthi, Azurah, Baan Dar, Rajhin, Alkosh. Baan Dar, Rajhin, and Alkosh now have proof ACTIs on routes `90-92`. | Wind/road, twilight/threshold, survival trickery, artful theft, rare dragon/order beats. | Khenarthi/Azurah crowding every playstyle, Rajhin generic theft, Alkosh generic dragon kill spam. | Each focus has attractive launch hooks and rejected-surface tests; proof ACTI readback confirms routes `90-92`, Khajiit origin gates, and daily keys. | Baan Dar, Rajhin, and Alkosh are viable without copying Khenarthi/Azurah. |
 | ShadowDrift boundary | Lunar posture and curse/Nocturnal pressure rows. | Curse state, Nocturnal/Nightingale pressure, moon disconnection. | ShadowDrift as free stealth reward. | `PDV_State_KhajiitLunarPosture`: `Normal = 0`, `Strained = 1`, `Corrupted = 2`, `ShadowDrift = 3`. | Curse/Nocturnal edge remains priced and native lattice remains visible. |
 
-**First implementation-safe slice:** source/readback, all six proof base records, and all six QASmoke proof references are wired. Next, prove moon fallback, two-anchor road-home anti-chore behavior, Baan Dar/Rajhin/Alkosh focus movement, rejected generic hooks, and status/survey readout before adding high-value focus favors.
+**First implementation-safe slice:** source/readback, all six proof base records, and all six QASmoke proof references are route-runtime proven. Next, prove moon fallback, two-anchor road-home anti-chore behavior, Baan Dar/Rajhin/Alkosh focus movement, rejected generic hooks, and status/survey readout in normal play before adding high-value focus favors.
 
 ## P2 - Stack And Ceiling Control
 
@@ -185,9 +185,11 @@ Compatibility notes:
 
 ## Immediate Queue
 
-1. Altmer: place/attach the four wired trigger proof ACTIs, then promote the crisis/favor/Lorkhan scaffold and wired curse-message surface into rejected-surface runtime proof, Exiled vampire proof, remaining favor families, and first crisis playfeel proof.
-2. Argonian: placement readback now passes; prove Hist/People state, bed cadence, community, rejected generic hooks, and the three-signal Void threshold before deeper Void runtime rewards.
-3. Orc: placement readback now passes; prove Stronghold forge, City dignity, Legion service, self-made community, rejected generic hooks, and status/survey readout before increasing Malacath reward magnitude.
-4. Redguard: placement readback now passes; prove Crown tomb respect, Forebear road passage, Ash'abah death duty, Far Shores token use, rejected generic hooks, and status/survey readout before expanding death-duty rewards.
-5. Bosmer: placement readback now passes; prove Old Contract, Living Story, Exchange, Bandit Road, rejected generic hooks, and status/survey readout before broader Green Pact tag work.
-6. Khajiit: placement readback now passes; prove moon fallback, two-anchor road-home anti-chore behavior, Baan Dar/Rajhin/Alkosh focus movement, rejected generic hooks, and status/survey readout before strong focus favors.
+1. Beta immersion pass: run one normal-play sample per Phase 20 race slice and record whether the reward feels authored, culturally legible, and worth noticing without feeling like a chore.
+2. Altmer: promote the crisis/favor/Lorkhan scaffold and wired curse-message surface into rejected-surface proof, Exiled vampire proof, remaining favor families, and first crisis playfeel proof.
+3. Argonian: prove Hist/People state, bed cadence, community, rejected generic hooks, and the three-signal Void threshold before deeper Void runtime rewards.
+4. Orc: prove Stronghold forge, City dignity, Legion service, self-made community, rejected generic hooks, and status/survey readout before increasing Malacath reward magnitude.
+5. Redguard: prove Crown tomb respect, Forebear road passage, Ash'abah death duty, Far Shores token use, rejected generic hooks, and status/survey readout before expanding death-duty rewards.
+6. Bosmer: prove Old Contract, Living Story, Exchange, Bandit Road, rejected generic hooks, and status/survey readout before broader Green Pact tag work.
+7. Khajiit: prove moon fallback, two-anchor road-home anti-chore behavior, Baan Dar/Rajhin/Alkosh focus movement, rejected generic hooks, and status/survey readout before strong focus favors.
+8. P2 stack/ceiling pass: audit Breton, Dunmer, Imperial, and Nord in normal play for over-stacking, over-triggering, and reward ceiling issues.
