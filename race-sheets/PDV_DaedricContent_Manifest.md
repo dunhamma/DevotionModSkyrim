@@ -722,13 +722,13 @@ Source: the `Mehrunes Dagon` row of the matrix -- PathType `Destruction-revoluti
 
 | Voice | Tone profile |
 |---|---|
-| Mehrunes Dagon (Daedric path) | Cold, totalizing, anti-order; the god of destruction and revolution who does not argue his case -- the end is not a cause he feels, it is a fact he embodies; speaks in declarations that assume the result is already decided; his register is not passionate, it is absolute, the way the fall of a wall is absolute. |
+| Mehrunes Dagon (Daedric path) | Wrathful, totalizing, grandiose; the Prince of Destruction does not argue his case -- the end is a command he expects you to execute, not a cause he persuades you toward; his register is contemptuous of mortal hesitation and absolutely certain of the result; he is cold toward mortal concerns but his conviction about destruction is furious and absolute; he commands, tests, and dismisses -- you are either the instrument of the ruin or you are in the way of it. |
 
 **Boon descriptions** (`PDV_Bless_Daedric_Dagon_*`). Narrator, 200/140, passive SPEL.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Bless_Daedric_Dagon_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Mehrunes Dagon" Boon | Passive SPEL; pact engaged | Dagon's edge is yours at the threshold. Your blow against entrenched opposition carries extra weight; the wall that should hold breaks harder. |
+| PDV_Bless_Daedric_Dagon_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Mehrunes Dagon" Boon | Passive SPEL; pact engaged | Dagon's edge settles in you. Your blow against what is entrenched carries extra weight; the wall that should hold breaks first. |
 | PDV_Bless_Daedric_Dagon_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Mehrunes Dagon" Boon | Passive SPEL | Dagon's ruin deepens in you. Barriers fall faster, fortifications yield, and the things built to last crack first. |
 | PDV_Bless_Daedric_Dagon_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Mehrunes Dagon" Boon | Passive SPEL | Dagon names you his ruin made walking. What stands is enemy; what is entrenched is target. You are the end that cannot be stopped. |
 
@@ -747,13 +747,13 @@ Source: the `Mehrunes Dagon` row of the matrix -- PathType `Destruction-revoluti
 | PDV_Notif_Daedric_Dagon_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Dagon marks you a Seeker of the ruin path. |
 | PDV_Notif_Daedric_Dagon_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Dagon's ruin runs in you. Devoted. |
 | PDV_Notif_Daedric_Dagon_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Dagon's favor withdraws. The destructive edge dims. |
-| PDV_Msg_Daedric_Dagon_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Mehrunes Dagon"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Dagon's Ruin-Walker" Body: "Every world ends. Every order falls. You have simply chosen to be the thing that helps it along, and three times now you did not hesitate when the walls were in front of you. Champion. The Razor is yours in spirit if not in hand. Walk forward." |
+| PDV_Msg_Daedric_Dagon_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Mehrunes Dagon"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Dagon's Ruin-Walker" Body: "Three times you brought the walls down without flinching. I do not congratulate instruments -- I deploy them. You are my Walker. The Razor is yours in spirit if not in hand, and the order standing before you is already ending. Do not stop. I do not tolerate hesitation in what I name mine." |
 
 **Commitment / pact.**
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Msg_Daedric_Dagon_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Mehrunes Dagon" CommitmentSignal | Fires once when the commitment gate clears | Title: "Dagon's Call" Body: "Three times you chose the ruin when preservation was offered. That is not chaos -- it is conviction. You understand what I am. The destruction does not ask permission, and neither do you. You are my Walker, and the works of order are the target. Begin." |
+| PDV_Msg_Daedric_Dagon_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Mehrunes Dagon" CommitmentSignal | Fires once when the commitment gate clears | Title: "Dagon's Call" Body: "Three times you chose the ruin when you could have preserved it. You understand what I demand. Take the Walker's edge: the works of order are the target, the destruction does not ask permission, and neither will you. You are mine. Begin." |
 
 **Stigma band crossings.**
 
@@ -768,7 +768,7 @@ Source: the `Mehrunes Dagon` row of the matrix -- PathType `Destruction-revoluti
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
 | PDV_Notif_Daedric_Dagon_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You step back from the ruin. Dagon's edge dims; the destructive drive fades. |
-| PDV_Msg_Daedric_Dagon_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Dagon's Severance" Body: "You step away from the ruin path. Dagon does not argue -- destruction needs no particular agent, and you were always replaceable. The edge leaves you. The rupture you caused does not heal, but it no longer grows. Whether the order you fractured recovers is its problem, not yours." |
+| PDV_Msg_Daedric_Dagon_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Dagon's Severance" Body: "You leave the ruin path. Dagon dismisses it -- destruction needs no particular instrument, and you were always replaceable. The edge leaves you. What you fractured does not heal, but it no longer grows. That is the full accounting of what you chose to stop being." |
 
 **Per-race responses** (`PDV_Msg_Daedric_Dagon_Response_*`). Narrator, 500/280. All ten races. Imperial and Redguard cells are Hostile (hardest rupture framing); all others are Taboo except Argonian (Foreign).
 
