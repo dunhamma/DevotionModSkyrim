@@ -38,6 +38,10 @@ notification already defined in `PDV_ContentDestinationMatrix.md`). Recommendati
 this as a single small V1 workstream — **"surface the transitions"** — rather than ten
 race-specific tasks. It is the cheapest way to make the whole mod feel alive.
 
+> **Now specified for implementation** as `PDV_Architecture_v3.md` §16.7 (Transition
+> surfacing contract): the five classes, a shared `SurfaceTransition()` helper with
+> one-shot guards, and the neglect cadence rule.
+
 > Note: a few sub-agent flags were over-stated against current build state. The Bosmer
 > forced-reckoning **logic** is already runtime-proven (Phase 9 Recommit/Renounce), and the
 > Dunmer portable shrine is proven (Phase 10) — so those are *content/copy* gaps, not
@@ -154,10 +158,11 @@ Curated to the strongest items; full detail lives in the arc reviews this doc sy
 These are flagged because they affect consistency across races and are best resolved before
 content lock:
 
-- **Curse-access template asymmetry.** Hircine (werewolf) and Molag Bal (vampire) use
-  different "is the path now open vs mandatory vs severance" framing per race, and the Orc
-  Molag Bal response is missing. Ratify one consistent rule
-  (`PDV_DaedricContent_Manifest.md:6.5,279-284`; `PDV_Architecture_v3.md` D-16).
+- **Curse-access template asymmetry.** ~~Ratify one consistent rule.~~ **Resolved:** the
+  template is locked (D-16); the severance-vs-strain difference is intended per-race weight
+  (§13.2), not template variance — see `PDV_DecisionMemo_CurseAccessReconciliation.md` and
+  architecture §13.7. The missing Orc Molag Bal response is a D-18 content item. The
+  player-facing half (onset/cure feedback) is the §16.7 `curse` transition class.
 - **Peryite / Namira commitment signals** are narrow and quest-anchored — verify 3+ non-gated
   signals actually exist so a committed player isn't stranded at endgame
   (`PDV_DaedricContent_Manifest.md:7.12-7.13`).

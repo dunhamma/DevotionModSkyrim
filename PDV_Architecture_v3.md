@@ -1277,6 +1277,27 @@ Implementation: a special-case branch in the Altmer curse-transition handler tha
 - **Source of Werewolf detection.** Companions-quest-specific keyword? Race check? v3 should test on a vanilla Companions run first.
 - **Hybrid Necromancer / Daedric overlap.** Curse state modifies multipliers, eligibility pressure, and interpretation. It does not auto-open Daedric paths; Hircine, Molag Bal, or other curse-adjacent paths still require commitment signals before real progression.
 
+### 13.7 Curse-access framing is per-race weight, not template variance (clarification)
+
+The curse-access **mechanical template** for Hircine and Molag Bal is locked once
+in D-16 (Section 11.6): commitment gate = curse acquisition, `_Commitment`
+reframed as curse-onset, stigma from this Phase 15 overlay, exit = cure path,
+coordinated with — never double-firing against — race-manifest `CurseState` rows.
+
+The *strength* of the consequence is a different axis and lives in the per-race
+per-curse `GainMultByRaceAndCurse` table (§13.2). So a Nord vampire's Sovngarde
+**severance** versus a Nord werewolf's **strain** are two different cells in that
+table, both expressed through the one template — vampirism is authored as the
+deeper rupture across the roster; werewolf is the recoverable strain. This is the
+system working as intended, anchored by §13.6's rule that curse state never
+auto-opens a path. The earlier "curse-access asymmetry to ratify" flag is closed
+on this basis; rationale of record
+`references/authoring/PDV_DecisionMemo_CurseAccessReconciliation.md`. Missing
+per-race curse-access response rows (e.g. Orc Molag Bal) are tracked as D-18
+content-completeness items, not design decisions. The player-facing half — telling
+the player what changed at curse onset **and cure** — is the §16.7 `curse`
+transition class.
+
 ---
 
 ## 14. Neglect subsystem (Phase 16)
@@ -1532,6 +1553,75 @@ Reassess a separate Prisma UI repo only when at least two are true: it needs
 its own JS build system, asset pipeline, UI test suite, release cadence,
 non-PDV reuse target, large reusable visual asset set, or recurring UI context
 noise that distracts from Papyrus/CK architecture work.
+
+### 16.7 Transition surfacing contract (V1)
+
+The mod computes meaningful state transitions it does not consistently tell the
+player about. The end-to-end immersion audit
+(`references/authoring/PDV_ImmersionAudit_MissedOpportunities.md`) found this is
+the single highest-value, lowest-cost V1 immersion investment: the systems are
+sound, they are just silent. This subsection makes "surface the transitions" an
+explicit V1 implementation contract. It is a discipline over the existing §16.2
+notification levels and the §16.6 toast payload contract — not a new UI system —
+and it stays inside the §16.3 non-voiced boundary (notifications, MessageBoxes,
+Survey/status, Prisma toasts only; no new NPC dialogue or voice).
+
+**The five transition classes that must surface.** Each fires once per direction
+(guarded so reload/`RecomputeCurseState`/dawn re-evaluation does not re-fire),
+and routine per-act scoring stays Quiet — this is about legible *state changes*,
+not narrating every event.
+
+| Class | Trigger | Level (§16.2) | Toast (§16.6) | Notes / gap closed |
+|-------|---------|---------------|---------------|--------------------|
+| `tier` | Broad worship first reaches Faithful, then Devoted | Medium (Notification) | `tier` | First-reach one-shot per tier; the "you've reached Faithful" beat is currently absent for every race |
+| `emergence` | A focused patron / emphasis first dominates (incl. the silent-emergence races) | Loud (MessageBox) | `tier` | Closes the Khajiit silent-patron and Argonian Sithis-activation invisibility (`PDV_RaceDesign_Khajiit.md:206`, `PDV_RaceDesign_Argonian.md:139`). Reuses the commitment-offer MessageBox surface |
+| `curse` | Curse **onset and cure**, per curse type | Loud (MessageBox) | `neglect`/system | Onset already fires (§13.3); **cure is the missing half** across races. Coordinates with the D-16 cure-path exit; must not double-fire against race `CurseState` rows |
+| `reorientation` | A confirmed sect / mode / tradition / path / standing switch | Medium, Loud if a major theological reorientation | system | Redguard sect, Orc mode, Bosmer path, Imperial Concordat standing. Fire on the *confirmed* switch only |
+| `neglect` | A god first crosses a neglect threshold (tier drop) | Medium (Notification) | `neglect` | Cadence rule below; closes "tiers slip with no explanation" |
+
+**Neglect firing cadence (resolves the §14 open).** A neglect notification fires
+**once per tier-drop**, and not again for that deity until the player **recovers a
+tier**. This prevents both spam (re-firing while hovering at a threshold) and
+silence (never telling the player a god went quiet). Recovery re-arms the one-shot.
+
+**Shared implementation shape.** Route all five through one manager helper rather
+than scattering notification calls:
+
+```papyrus
+; PDV__ManagerQuest
+; eventClass: "tier" | "emergence" | "curse" | "reorientation" | "neglect"
+; key: deity/race/curse discriminator so the one-shot is per-subject-per-direction
+Function SurfaceTransition(String eventClass, String key, String direction)
+    String guard = "PDV.Surfaced." + eventClass + "." + key + "." + direction
+    if StorageUtil.GetIntValue(none, guard) == 1
+        return                                  ; already surfaced this direction
+    endif
+    StorageUtil.SetIntValue(none, guard, 1)
+    ; pick Quiet/Medium/Loud per the table, route to Notification or MessageBox,
+    ; and send the matching Prisma toast via PDV_PrismaBridge.SendOverlayJson().
+EndFunction
+```
+
+- One-shot guards live under the `PDV.Surfaced.*` StorageUtil namespace, save-persistent.
+- The **opposite-direction** transition clears the guard for the direction it
+  re-enables (e.g. recovering a tier clears that deity's `neglect` guard;
+  curing a curse clears the onset guard and arms the cure beat).
+- Copy is authored per the §16.3 surfaces and the content-destination slot types
+  in `race-sheets/PDV_ContentDestinationMatrix.md`; no new voiced or NPC content.
+
+**Worked example — Imperial Concordat Talos gate (do not interrupt; make state
+legible).** When high Concordat compliance blocks a Talos offer, the offer must
+still *fail gracefully* — no offer-time "blocked" popup (Imperial design rule,
+`race-sheets/PDV_RaceDesign_Imperial.md:226`). The political cost is surfaced
+instead through the `reorientation` class at the moment **standing** changes
+(crossing into `Public Compliant` / `Concordat Enforcer`) and through the
+compliant Survey/status line. Rationale of record:
+`references/authoring/PDV_DecisionMemo_ImperialComplianceLane.md`.
+
+**V1 scope.** Implement the five classes and the shared helper; author per-race
+copy for the transitions each race can hit. This is the "surface the transitions"
+V1 workstream named in the immersion audit. It does not change scoring, piety,
+curse, or Daedric mechanics — only whether the player is told.
 
 ---
 
@@ -2612,6 +2702,29 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.79 - 2026-06-01 AEST - Transition surfacing contract (§16.7); curse-access framing clarification (§13.7)
+
+Added **§16.7 Transition surfacing contract (V1)**: the "surface the transitions"
+workstream from the end-to-end immersion audit
+(`references/authoring/PDV_ImmersionAudit_MissedOpportunities.md`). Defines five
+one-shot transition classes the mod must surface — `tier`, `emergence`, `curse`
+(onset **and** the currently-missing cure beat), `reorientation`, `neglect` — a
+shared `SurfaceTransition()` helper with `PDV.Surfaced.*` one-shot guards, the
+neglect once-per-tier-drop cadence rule (resolves the §14 open), and the Imperial
+Concordat Talos gate as a worked "make state legible, don't interrupt" example.
+Discipline over existing §16.2 levels and §16.6 toasts; no new UI, no scoring
+change, stays inside the §16.3 non-voiced boundary.
+
+Added **§13.7**: clarifies the curse-access "asymmetry" the audit flagged is
+intended per-race weight (§13.2), not a divergence from the locked D-16 template;
+closes the flag and routes missing per-race curse responses (e.g. Orc Molag Bal)
+to the D-18 content checklist. Two reconciliation memos of record:
+`PDV_DecisionMemo_CurseAccessReconciliation.md` and
+`PDV_DecisionMemo_ImperialComplianceLane.md` (the latter records that Concordat
+compliance is a standing modifier, not an alt-victory or dead loss-path —
+Akatosh/Zenithar remain the compliant Imperial's Champion payoff). Doc/design only;
+no source, record, or verifier behavior change.
 
 ### v3.78 - 2026-06-01 AEST - Daedric D-15..D-18 locked; V1 no-new-NPC-dialogue scope lock
 
