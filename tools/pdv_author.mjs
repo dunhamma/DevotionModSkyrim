@@ -53,6 +53,7 @@ const MANIFEST_INDEX = {
   "structural-systems-arrays": path.join(PROJECT_ROOT, "references", "authoring", "PDV_StructuralSystemsArrays.manifest.json"),
   "pattern-proving-core": path.join(PROJECT_ROOT, "references", "authoring", "PDV_PatternProvingCore.manifest.json"),
   "phase8-concordat-talos": path.join(PROJECT_ROOT, "references", "authoring", "PDV_Phase8ConcordatTalos.manifest.json"),
+  "startup-popup-messages": path.join(PROJECT_ROOT, "references", "authoring", "PDV_StartupPopupMessages.manifest.json"),
   "slice1-signal-receivers": path.join(PROJECT_ROOT, "references", "authoring", "PDV_Slice1SignalReceivers.manifest.json"),
   "vmad-consolidation": path.join(PROJECT_ROOT, "references", "authoring", "PDV_VmadConsolidation.manifest.json"),
 };

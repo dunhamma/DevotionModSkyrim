@@ -107,6 +107,17 @@
     symbolGrid: document.getElementById("pdv-symbol-grid"),
     toasts: document.getElementById("pdv-toasts"),
     demoControls: document.getElementById("pdv-demo-controls"),
+    startupModal: document.getElementById("pdv-startup-modal"),
+    startupTitle: document.getElementById("pdv-startup-title"),
+    startupSummary: document.getElementById("pdv-startup-summary"),
+    startupOptions: document.getElementById("pdv-startup-options"),
+    startupOptionTitle: document.getElementById("pdv-startup-option-title"),
+    startupOptionSummary: document.getElementById("pdv-startup-option-summary"),
+    startupOptionDescription: document.getElementById("pdv-startup-option-description"),
+    startupAdvisory: document.getElementById("pdv-startup-advisory"),
+    startupMode: document.getElementById("pdv-startup-mode"),
+    startupConfirm: document.getElementById("pdv-startup-confirm"),
+    startupClose: document.getElementById("pdv-startup-close"),
   };
 
   const fallbackState = {
@@ -131,6 +142,7 @@
   };
 
   let state = { ...fallbackState };
+  let startupState = null;
 
   const normalizeSymbol = (value, fallback = "journal") => {
     const key = text(value, fallback).trim().toLowerCase();
@@ -331,6 +343,80 @@
     return Array.isArray(value) ? value : [value];
   };
 
+  const startupModeLabel = (mode) => {
+    const normalized = text(mode, "").toLowerCase();
+    if (normalized === "explicit_choice") return "Explicit choice";
+    return "Info only";
+  };
+
+  const startupConfirmLabel = (confirmRequired) => (confirmRequired ? "Confirm required" : "No confirm required");
+
+  const hideStartup = () => {
+    if (!nodes.startupModal) return;
+    nodes.startupModal.hidden = true;
+    document.body.classList.remove("startup-visible");
+  };
+
+  const renderStartupDetails = (option) => {
+    if (!option) return;
+    nodes.startupOptionTitle.textContent = text(option.title, "Path");
+    nodes.startupOptionSummary.textContent = text(option.summary, "");
+    nodes.startupOptionDescription.textContent = text(option.description, "");
+  };
+
+  const renderStartup = (startup = {}) => {
+    if (!nodes.startupModal) return;
+    startupState = startup;
+
+    const options = asArray(startup.options).filter(Boolean);
+    const fallbackOption = options[0] || {
+      option_id: "startup_context",
+      title: "Startup context",
+      summary: text(startup.summary, ""),
+      description: text(startup.summary, ""),
+    };
+    const defaultOptionId = text(startup.default_option_id, fallbackOption.option_id);
+    let selectedOption = options.find((option) => text(option.option_id, "") === defaultOptionId) || fallbackOption;
+
+    nodes.startupTitle.textContent = text(startup.title, "Race startup");
+    nodes.startupSummary.textContent = text(startup.summary, "Your startup context is loading.");
+    nodes.startupAdvisory.textContent = text(startup.advisory_line, "");
+    nodes.startupMode.textContent = startupModeLabel(startup.startup_mode);
+    nodes.startupConfirm.textContent = startupConfirmLabel(Boolean(startup.confirm_required));
+
+    clear(nodes.startupOptions);
+    options.forEach((option) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "startup-option";
+      button.dataset.optionId = text(option.option_id, "");
+
+      const title = document.createElement("strong");
+      title.textContent = text(option.title, "Path");
+      const summary = document.createElement("span");
+      summary.textContent = text(option.summary, "");
+      button.append(title, summary);
+
+      button.addEventListener("click", () => {
+        selectedOption = option;
+        renderStartupDetails(selectedOption);
+        nodes.startupOptions.querySelectorAll(".startup-option").forEach((candidate) => {
+          candidate.classList.toggle("is-active", candidate.dataset.optionId === text(option.option_id, ""));
+        });
+      });
+
+      if (text(option.option_id, "") === text(selectedOption.option_id, "")) {
+        button.classList.add("is-active");
+      }
+
+      nodes.startupOptions.appendChild(button);
+    });
+
+    renderStartupDetails(selectedOption);
+    nodes.startupModal.hidden = false;
+    document.body.classList.add("startup-visible");
+  };
+
   const clear = (node) => {
     while (node.firstChild) {
       node.removeChild(node.firstChild);
@@ -519,7 +605,15 @@
       window.setTimeout(() => showToast(toast), index * 700);
     });
 
+    if (payload.startup) {
+      renderStartup(payload.startup);
+    }
+
     if (payload.mode === "toast") {
+      return;
+    }
+
+    if (payload.mode === "startup") {
       return;
     }
 
@@ -534,6 +628,10 @@
     asArray(payload.toasts).forEach((toast, index) => {
       window.setTimeout(() => showToast(toast), index * 700);
     });
+
+    if (payload.startup) {
+      renderStartup(payload.startup);
+    }
   };
 
   document.querySelectorAll(".tab").forEach((tab) => {
@@ -599,6 +697,10 @@
 
   window.ReceivePDVJson = (payloadText) => window.PDVBridge.receiveJson(payloadText);
   window.ReceivePDVOverlayJson = (payloadText) => window.PDVBridge.receiveOverlayJson(payloadText);
+
+  if (nodes.startupClose) {
+    nodes.startupClose.addEventListener("click", () => hideStartup());
+  }
 
   const demoToasts = {
     favor: { event: "favor", deity: "Kyne", symbol: "kyne", context: "The clean hunt" },

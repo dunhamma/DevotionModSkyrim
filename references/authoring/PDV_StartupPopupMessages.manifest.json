@@ -1,0 +1,42 @@
+{
+  "schema": "pdv.author.manifest.v1",
+  "title": "PDV startup popup message wiring",
+  "notes": [
+    "Startup popup message records must exist in the framework ESP before this wiring applies.",
+    "This manifest wires manager VMAD properties only; it does not create MESG records."
+  ],
+  "operations": [
+    {
+      "kind": "setProperty",
+      "record": "PDV__ManagerQuest",
+      "script": "PDV__ManagerQuest",
+      "property": "PDV_MSG_StartupBretonChoice",
+      "valueType": "Object",
+      "value": "PDV_MSG_StartupBretonChoice"
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV__ManagerQuest",
+      "script": "PDV__ManagerQuest",
+      "property": "PDV_MSG_StartupRedguardChoice",
+      "valueType": "Object",
+      "value": "PDV_MSG_StartupRedguardChoice"
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV__ManagerQuest",
+      "script": "PDV__ManagerQuest",
+      "property": "PDV_MSG_StartupOrcChoice",
+      "valueType": "Object",
+      "value": "PDV_MSG_StartupOrcChoice"
+    },
+    {
+      "kind": "setProperty",
+      "record": "PDV__ManagerQuest",
+      "script": "PDV__ManagerQuest",
+      "property": "PDV_MSG_StartupConfirmChoice",
+      "valueType": "Object",
+      "value": "PDV_MSG_StartupConfirmChoice"
+    }
+  ]
+}

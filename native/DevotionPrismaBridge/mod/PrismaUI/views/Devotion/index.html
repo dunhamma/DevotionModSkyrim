@@ -90,6 +90,35 @@
     </section>
   </main>
 
+  <section class="startup-modal" id="pdv-startup-modal" hidden aria-live="polite">
+    <div class="startup-card" role="dialog" aria-modal="true" aria-labelledby="pdv-startup-title">
+      <header class="startup-header">
+        <p class="eyebrow">PlayerDevotion Startup</p>
+        <h2 id="pdv-startup-title">Race startup</h2>
+        <p class="summary" id="pdv-startup-summary">Your startup context is loading.</p>
+      </header>
+      <div class="startup-body">
+        <aside class="startup-options">
+          <h3>Paths</h3>
+          <div class="startup-option-list" id="pdv-startup-options"></div>
+        </aside>
+        <article class="startup-detail">
+          <h3 id="pdv-startup-option-title">Path</h3>
+          <p class="startup-option-summary" id="pdv-startup-option-summary"></p>
+          <p class="startup-option-description" id="pdv-startup-option-description"></p>
+          <p class="startup-advisory" id="pdv-startup-advisory"></p>
+          <div class="startup-meta">
+            <span class="state-pill" id="pdv-startup-mode">Info only</span>
+            <span class="state-pill" id="pdv-startup-confirm">No confirm required</span>
+          </div>
+        </article>
+      </div>
+      <footer class="startup-footer">
+        <button type="button" id="pdv-startup-close">Continue</button>
+      </footer>
+    </div>
+  </section>
+
   <aside class="toast-stack" id="pdv-toasts" aria-live="polite" aria-atomic="false"></aside>
   <aside class="demo-controls" id="pdv-demo-controls" aria-label="Toast preview controls" hidden>
     <button type="button" data-demo-toast="favor">Favor</button>

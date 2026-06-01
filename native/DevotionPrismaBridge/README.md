@@ -106,6 +106,11 @@ The bridge calls those functions through Prisma `InteropCall`.
 the view without focusing or pausing the panel path and sends the payload to the
 overlay receiver, which is currently used for transient devotion toasts.
 
+Startup popups now also arrive through overlay payloads with `mode: "startup"`.
+The Prisma side is presentation-only for startup: it renders stylized option
+cards and side descriptions, but Papyrus still owns authoritative commitment
+state changes.
+
 The Devotion view accepts compact event payloads and expands player-facing copy
 client-side. The overlay-toast path is now stable for the five pilot events
 below:
@@ -134,6 +139,17 @@ Stable event-specific fields:
 
 - `favor`: `deity`, optional `context`, optional `amount`
 - `dawn`: no additional fields required
+
+Stable startup payload fields:
+
+- `mode`: `"startup"`
+- `startup.event`: `startup_shown | startup_confirmed | startup_info_acknowledged`
+- `startup.race_id`
+- `startup.startup_mode`: `info_only | explicit_choice`
+- `startup.options[]`: `option_id`, `title`, `summary`, `description`
+- `startup.default_option_id`
+- `startup.advisory_line`
+- `startup.confirm_required`
 - `neglect`: `deity`
 - `tier`: `deity`, `tierLabel`
 - `rivalry`: `rival`, optional `rivalSymbol`
