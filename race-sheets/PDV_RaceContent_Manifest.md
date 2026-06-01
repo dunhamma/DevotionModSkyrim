@@ -19,7 +19,7 @@ These were ratified in the planning pass for this manifest.
 4. **Slot IDs are the eventual CK record names.** Naming follows `PDV_Architecture_v3.md` Section 17 conventions and stays EditorID-safe (ASCII letters, digits, underscore; no length over 32 characters where the CK editor truncates):
    - `PDV_Msg_<Race>_<Deity>_<Slot>` for `Message` (MESG) records.
    - `PDV_Notif_<Race>_<Deity>_<Slot>` for HUD notifications routed through `Debug.Notification`.
-   - `PDV_Dlog_<Race>_<NPC|Archetype>_<Slot>` for dialogue topics (placeholder NPC archetype until Section 16.3 dialogue casting fixes the actual NPC alias).
+   - `PDV_Dlog_<Race>_<NPC|Archetype>_<Slot>` for planned V2 dialogue topics (placeholder NPC archetype until Section 16.3 dialogue casting fixes the actual NPC alias). These rows are recognition intent only for V1; do not promote them into new NPC conversation lines for V1.
    - `PDV_Bless_<Race>_<Deity>_T<1|2|3>` for blessing descriptions (the string lives on the existing tier SPEL).
    - `PDV_PrismaToast_<Race>_<Deity>_<Slot>` for Prisma overlay toasts (Section 16.5).
 
@@ -43,7 +43,7 @@ Per `PDV_Architecture_v3.md` Section 2 invariant 6 and `PDV_STANDARDS.md` Sectio
 | Champion Entry MessageBox (`PDV_Msg_*_ChampionEntry`) | God-voice | Narrator (Texture-only races) | Champion entry is the god's recognition. Texture-only races skip the message. |
 | Champion ambient (`PDV_Notif_*_ChampionAmbient_*`) | Player second-person | -- | Fires in fitting context after entry; reads as the player noticing. |
 | Survey Devotion readout (`PDV_Msg_*_Survey_*`) | Third-person narrator | -- | A scannable status block, not a vision. |
-| Shrine / privilege dialogue topic (`PDV_Dlog_*`) | Player second-person | NPC voice (within branch, not in topic name) | Topic name reads from the player's seat; the branch itself is NPC dialogue authored separately in CK. |
+| Shrine / privilege dialogue topic (`PDV_Dlog_*`) | Player second-person | NPC voice (within branch, not in topic name) | Planned V2 only. Topic name reads from the player's seat; branch dialogue would be authored separately in CK after V2 scope opens. |
 | Contextual favor surfacing (`PDV_Notif_*_FavorNoted_*`, `PDV_Msg_*_FavorMarked_*`) | Player second-person (Noted), god-voice (Marked) | -- | Smaller favors feel like a felt response; large favors are the god speaking. |
 | Curse-state transition (`PDV_Msg_*_CurseState_*`) | God-voice | -- | A theological rupture: the god is naming what has changed. |
 | Prisma overlay toast (`PDV_PrismaToast_*`) | Symbol-led, minimal text | -- | Section 16.5: symbol-led, quiet enough for normal play. |
@@ -325,7 +325,11 @@ God-voice. MessageBox. Body budget 500 hard / 280 target. Per `PDV_Architecture_
 
 ### 10.10 Shrine and privilege dialogue topics (`PDV_Dlog_Nord_*`)
 
-Player-second-person on topic name. Branch dialogue itself is NPC voice, authored separately in CK. Topic-line budget 120 hard / 80 target. Per `PDV_Architecture_v3.md` Section 16.3: target ~30-50 race-coded topics for 1.0 across all races; Nord pilot scopes three representative archetypes.
+Player-second-person on topic name. Branch dialogue itself would be NPC voice,
+authored separately in CK after V2 scope opens. Topic-line budget 120 hard / 80
+target. Per `PDV_Architecture_v3.md` Section 16.3, new NPC conversation lines
+are out of V1 scope; the Nord rows below are retained as recognition-intent
+drafts and technical proof only.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -1923,6 +1927,13 @@ Argonian has no commitment-offer slot: there is no deity choice. The bed-of-choi
 
 `n/a` rows mean the race does not use the standard commitment-offer pattern (Khajiit silent emergent, Orc mode-deepening, Bosmer setup choice, Breton tradition setup, Argonian no deity choice). The setup-choice MessageBoxes for Bosmer and Breton are slot-only rows in their sections, not in the commitment-offer pattern.
 
+`Dialogue topics = drafted` means recognition intent exists for every race, but
+new NPC conversation lines, voiced responses, lip files, scene content, and
+broad recognition topics are out of V1 scope. For V1, translate any needed
+recognition into non-voiced fallback surfaces: Survey/status, MCM Player text,
+MessageBox, notification, spell/effect description, book/note, safe service or
+shrine gate, or Prisma toast.
+
 ---
 
 ## 21. Gated and deferred appendix
@@ -1932,6 +1943,7 @@ These slots are deliberately not authored in this pass. (The Altmer crisis-of-fa
 | Item | Gate | Reason |
 |---|---|---|
 | Daedric path content | Now authored in the companion file `race-sheets/PDV_DaedricContent_Manifest.md`: Boethiah is drafted end to end as the pilot, and the remaining 15 Skyrim-facing Princes are in scope for the Phase 20 content lock. No longer deferred here. | Boethiah pilot complete; see the Daedric manifest. |
+| NPC conversation / recognition dialogue | Planned V2 enhancement. Existing `PDV_Dlog_*` rows remain recognition-intent drafts only. | V1 explicitly avoids adding new NPC conversation lines, voiced responses, lip files, scene content, or broad recognition topics. |
 | Bosmer Green Pact per-item violation feedback | `PDV_Architecture_v3.md` Section 21.2 essential custom content: PDV-owned Green Pact tag layer must ship first. Prose is now authored in Section 17.7a with a MECHANICS-BLOCKED flag; implementation can wire up the tag layer without further content authoring. | Item-level surfacing depends on the tag layer existing. |
 | MCM player tab copy | `PDV_Architecture_v3.md` Section 16.1, Section 16.4: MCM should not be a daily management surface. | Authored alongside the player tab itself, not as flavor content. |
 | Localization / non-ASCII variants | `PDV_Architecture_v3.md` Section 23: deferred post-1.0; minor refactor via string-table externalization. | Out of 1.0 scope by architecture. |

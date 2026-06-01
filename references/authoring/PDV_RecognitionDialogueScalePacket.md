@@ -1,11 +1,14 @@
 # PDV Recognition Dialogue Scale Packet
 
-Last revised: 2026-05-31 AEST
-Status: Architecture packet. Do not scale recognition/dialogue content until the acceptance gate in this document is met.
+Last revised: 2026-06-01 AEST
+Status: Planned V2 enhancement packet. V1 must not add new NPC conversation
+lines, voiced responses, lip files, scene content, or broad recognition topics.
+Use this packet to preserve the CK-safe proof shape for a future V2
+recognition/dialogue pass.
 
 ## Purpose
 
-This packet defines the CK-safe pattern for scaling PDV recognition and dialogue surfaces beyond the proven Nord pilots. It exists because recognition is a high-value immersion surface, but PDV has already proven that generated dialogue shape can pass static readback and still be unsafe at runtime.
+This packet defines the CK-safe pattern for scaling PDV recognition and dialogue surfaces beyond the proven Nord pilots when V2 dialogue scope opens. It exists because recognition is a high-value immersion surface, but PDV has already proven that generated dialogue shape can pass static readback and still be unsafe at runtime.
 
 The current evidence is:
 
@@ -13,12 +16,15 @@ The current evidence is:
 - Phase 18 Nord recognition now has CK-authored Froki, Heimskr, Andurs, and Aela surfaces with branch/topic/unnamed INFO readback by speaker, prompt, response, owning topic, and condition stack.
 - Architecture v3 treats `dialogue-v1` as manifest/readback proof for CK-authored dialogue scaffolding, not generated dialogue creation support.
 
-The goal is not to make dialogue automatic. The goal is to make each manual CK recognition line cheap to specify, cheap to verify, and hard to accidentally over-scale.
+The goal is not to make dialogue automatic. The goal is to keep each future
+manual CK recognition line cheap to specify, cheap to verify, and hard to
+accidentally over-scale after V1 ships.
 
-The Phase 20 no-in-game gate mirrors the first packet as CK-ready prep only:
+The Phase 20 no-in-game gate may still mirror the first packet as V2 prep only:
 Altmer Auri-El crisis recovery, planned Runil identity, explicit positive and
 negative gates, and Survey/status fallback. That keeps recognition available for
-planning without turning it into generated dialogue or a runtime claim.
+future planning without turning it into V1 content, generated dialogue, or a
+runtime claim.
 
 ## Non-Goals
 
@@ -26,12 +32,15 @@ planning without turning it into generated dialogue or a runtime claim.
 - No generic branch/topic/INFO writer.
 - No bypassing Creation Kit for dialogue graph creation.
 - No promotion of `dialogue-v1` into product authoring support until CK-owned graph mutation, active-plugin save, MO2 readback, verifier proof, command evidence, and runtime proof all exist for that exact operation.
+- No new V1 NPC conversation lines, voiced responses, lip files, scene content,
+  or broad recognition topics.
 - No new voice, lip, scene, quest-stage, or package authoring scope in this packet.
 - No broad NPC commentary system. Recognition stays curated and state-gated.
 
 ## Operating Boundary
 
-Dialogue authoring is CK-first, readback-second.
+Dialogue authoring is CK-first, readback-second, and V2-only unless a later
+scope decision explicitly reopens no-voice recognition content.
 
 1. Plan the recognition packet in a manifest or runbook.
 2. Author the branch/topic/INFO manually in Creation Kit against `PlayerDevotion_Framework.esp` or the explicitly assigned plugin.
@@ -156,27 +165,37 @@ Not allowed:
 - Unverified generated dialogue.
 - Lines that expose exact piety math to the player.
 
-### 1.0
+### V1
 
 Required:
 
-- Each race has either dialogue recognition, service/privilege recognition, or Survey/status recognition for its main identity.
-- All shipped dialogue has SEQ freshness, saved-ESP readback, condition readback, and runtime positive/negative proof.
-- Dialogue volume is budgeted against race reward ceilings so Nord/Imperial/Breton do not become richer only because they have more vanilla NPCs.
-- Daedric and curse recognition surfaces show price/stigma/rupture where relevant instead of normalizing the path.
+- Each race has non-voiced recognition for its main identity where needed:
+  Survey/status, MCM Player text, MessageBox, notification, spell/effect
+  description, book/note, safe service or shrine gate, or Prisma toast.
+- No new NPC conversation lines, voiced responses, lip files, scene content, or
+  broad recognition topics are added for V1.
+- The existing Nord and Arngeir dialogue surfaces remain technical proof and
+  prototype evidence, not a content-volume requirement for V1.
+- Daedric and curse recognition surfaces show price/stigma/rupture where
+  relevant instead of normalizing the path.
 
 Optional:
 
-- Additional NPC-specific lines for highly iconic matches.
-- Recognition that changes by recovery/scar state, but only if the state is already Survey/status-visible.
+- V2 packet drafts for iconic NPC recognition, including Runil for Altmer
+  mortality/scar/recovery, as long as they remain prep-only.
+- Recovery/scar recognition through non-voiced surfaces when the state is
+  already Survey/status-visible.
 
 Not allowed:
 
-- Any dialogue path whose creation or condition stack cannot be reproduced and read back.
+- Any new V1 dialogue path, even if it can be reproduced and read back.
+- Any dialogue path whose creation or condition stack cannot be reproduced and
+  read back when V2 work starts.
 
 ## Acceptance Gate Before Adding Many Lines
 
-Before scaling recognition content beyond the current Nord set, complete one non-Nord packet through the full chain:
+Before scaling recognition content beyond the current Nord set in V2, complete
+one non-Nord packet through the full chain:
 
 1. Packet fields complete.
 2. CK-readable gate confirmed. If a condition needs a helper global, add and verify that helper before dialogue authoring.
@@ -189,7 +208,9 @@ Before scaling recognition content beyond the current Nord set, complete one non
 9. Save/load sanity does not create duplicate or stale dialogue availability.
 10. Fallback is documented in case the line is cut.
 
-Mass scaling starts only after this gate passes once outside Nord. Until then, new recognition requests are packet drafts, not implementation-ready content.
+Mass scaling starts only after this gate passes once outside Nord and only after
+V2 dialogue scope is explicitly opened. Until then, new recognition requests are
+packet drafts, not implementation-ready content.
 
 ## Recommended First Non-Nord Candidates
 
@@ -203,15 +224,15 @@ Use a candidate that is small, high-signal, and easy to prove with existing stat
 | Orc city/stronghold dignity recognition | Strong fit for social recognition that is not just combat or smithing. | Stronghold access and faction context can complicate conditions. | Good Content-Feel Beta candidate, not necessarily the first architecture proof. |
 | Imperial civic/Talos pressure recognition | High value for public/private religion feel. | Can become a faction-politics tracker if too broad. | Use after the first non-Nord packet proves the repeatable path. |
 
-Recommended first proof: Altmer Auri-El crisis recovery recognition, if the positive gate can be expressed through existing origin, active deity/tier, and crisis/scar readback globals. If that requires new helper state, stop and add the helper/readback contract before CK dialogue work.
+Recommended first V2 proof: Altmer Auri-El crisis recovery recognition, if the positive gate can be expressed through existing origin, active deity/tier, and crisis/scar readback globals. If that requires new helper state, stop and add the helper/readback contract before CK dialogue work.
 
-Ratified first speaker candidate: Runil in Falkreath. He is the preferred first
+Ratified first V2 speaker candidate: Runil in Falkreath. He is the preferred first
 Altmer recognition candidate because his Altmer mortality/death context fits
 crisis recovery without turning the first packet into Thalmor politics. The
 first packet should test Altmer origin plus Auri-El/crisis-or-scar readback if
 that gate is CK-readable. If it needs new helper state or fragile conditions,
-defer dialogue and use Survey/status fallback only until the CK dialogue proof
-is worth the time.
+defer dialogue and use the V1 Survey/status fallback only until the V2 CK
+dialogue proof is worth the time.
 
 Lore cross-review guardrail: Runil should speak to mortality, death duty, scar,
 and recovery from an Altmer who has lived with Dominion/war context. Do not use
@@ -221,14 +242,17 @@ Survey/status fallback instead.
 
 ## Fallback Surfaces
 
-If dialogue is too expensive for a race/deity/path, use the cheapest surface that still tells the player what changed and why:
+For V1, use the cheapest non-voiced surface that still tells the player what
+changed and why. For V2, use this same fallback whenever dialogue is too
+expensive for a race/deity/path:
 
 - `Survey Devotion` wording.
 - MCM Player page row.
 - One-shot message after a major transition.
 - Service/privilege gate without a new dialogue line.
 - A placed proof/ritual activator for internal validation only.
-- No recognition surface for 1.0 if the race already has enough player-facing clarity elsewhere.
+- No recognition surface for V1 if the race already has enough player-facing
+  clarity elsewhere.
 
 Fallback is not failure. Unverified dialogue is failure.
 

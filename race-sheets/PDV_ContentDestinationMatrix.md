@@ -27,7 +27,7 @@ Every string in the mod passes through up to four documents, in order:
 |---|---|---|---|
 | 1 | **Design source** | The *intent* of a string -- which deity, which tier, which mechanic it announces. No prose. | Designer / architect |
 | 2 | **Manifest draft** | The actual ASCII English prose, in a row keyed by `Slot ID`. One row per shippable string. | Writer (you) |
-| 3 | **Shipped CK record** | The Creation Kit record (SPEL desc, MESG body+title, NOTI text, DLOG topic) that the game actually reads. | Phase 19 implementer |
+| 3 | **Shipped CK record** | The Creation Kit record (SPEL desc, MESG body+title, NOTI text; DLOG topics are V2-only unless scope reopens) that the game actually reads. | Phase 19 implementer |
 | 4 | **Player handbook** | Promoted, ratified prose folded back into the public `Race_*.md` reading material. | Player / lore reader |
 
 The pipeline is **Design -> Draft -> Ship -> Promote**, and a string's "home"
@@ -67,13 +67,18 @@ is this thing, mechanically?"
 | Contextual favor (Noted) | `PDV_Notif_<Race>_FavorNoted_<lane>` | MESG (HUD NOTI) | Player-2nd | 80 / 60 | RaceDesign Contextual Favor Pilot Table | Race manifest `.8` / `.9` / `.10` | none |
 | Contextual favor (Marked) | `PDV_Msg_<Race>_FavorMarked_<lane>` | MESG box | God-voice | 500 / 280 + 40 title | RaceDesign Contextual Favor Pilot Table | Race manifest `.8` / `.9` / `.10` | rare; can fold to Race_*.md if iconic |
 | Curse-state transition | `PDV_Msg_<Race>_CurseState_<state>` | MESG box | God-voice | 500 / 280 + 40 title | RaceDesign Curse State Summary | Race manifest `.9` / `.11` / `.13` | Race_*.md "Curse States" |
-| Shrine / privilege dialogue topic | `PDV_Dlog_<Race>_<topic>` | dialogue TOPIC text | Player-2nd | 120 / 80 | RaceDesign Signal Examples / shrine list | Race manifest `.10` / `.12` / `.14` | none (player chooses in-game) |
+| Shrine / privilege dialogue topic | `PDV_Dlog_<Race>_<topic>` | dialogue TOPIC text (planned V2; no new V1 NPC conversation lines) | Player-2nd | 120 / 80 | RaceDesign Signal Examples / shrine list | Race manifest `.10` / `.12` / `.14` | V2 only; use V1 fallback surfaces |
 | Stigma band crossing (Daedric) | `PDV_Notif_Daedric_<Prince>_Stigma_<band>` | MESG (HUD NOTI) | Narrator | 80 / 60 | Architecture v3 Sec 11.2 + Daedric manifest Sec 5 | Daedric manifest 6.6 | none |
 | Per-race Daedric response | `PDV_Msg_Daedric_<Prince>_Response_<Race>` | MESG box | Narrator | 500 / 280 + 40 title | DaedricMatrix per-race cells | Daedric manifest 6.8 | Race_*.md "The Daedric Question" |
 | Daedric exit | `PDV_Msg_Daedric_<Prince>_Exit` | MESG box | God-voice | 500 / 280 + 40 title | Architecture v3 Sec 11.4 / 11.6 | Daedric manifest 6.7 | none |
 | Race-specific posture readout | `PDV_Msg_<Race>_<Track>Posture_*` (Dunmer Ancestor, Argonian Hist, etc.) | MESG box / SPEL DESC | Narrator | 240 / 180 | RaceDesign track model | Race manifest `.2` (Dunmer/Argonian/Khajiit) | Race_*.md "How Devotion Works" framing |
 | Race-specific band/track crossing | `PDV_Notif_<Race>_<Track>_<band>` (Altmer Thalmor, Imperial Concordat, Bosmer GreenPact, Breton Witchcraft etc.) | MESG (HUD NOTI) | Narrator | 80 / 60 | RaceDesign track | Race manifest race-specific subsections | none |
 | Prisma overlay toast | `PDV_PrismaToast_<event>` | UI toast | Symbol-led, minimal | 60 / 40 | Architecture v3 Sec 16.5 | (not yet in manifests -- gated) | none |
+
+V1 scope note: drafted `PDV_Dlog_*` rows remain useful as recognition intent,
+but they are not V1 promotion targets. Promote a non-voiced fallback instead:
+Survey/status, MCM Player text, MessageBox, notification, spell/effect
+description, book/note, safe service or shrine gate, or Prisma toast.
 
 Note: section numbers like `.2 / .3 / .4` are *positional within each race
 section*. Nord is section 10, Orc 11, Dunmer 12, Altmer 13, Khajiit 14,
@@ -106,7 +111,7 @@ headers.
 | Survey readout           | 10.7  | 11.6  | 12.8   | 13.9   | 14.8    | 15.8     | 16.8     | 17.9   | 18.10  | 19.11    |
 | Contextual favors        | 10.8  | 11.7  | 12.9   | 13.13 | 14.9 | 15.9 | 16.9   | 17.10  | 18.11  | 19.12    |
 | Curse-state transitions  | 10.9  | 11.9  | 12.11  | 13.10  | 14.11   | 15.10    | 16.11    | 17.11  | 18.12  | 19.13    |
-| Shrine / dialogue topics | 10.10 | 11.10 | 12.12  | 13.12  | 14.12   | 15.11    | 16.12    | 17.12  | 18.13  | 19.14    |
+| Shrine / dialogue topics | drafted; V2 | drafted; V2 | drafted; V2 | drafted; V2 | drafted; V2 | drafted; V2 | drafted; V2 | drafted; V2 | drafted; V2 | drafted; V2 |
 | Race-specific extras     | --    | LifeMode 11.8 | AncestorPosture 12.2 / Tribunal 12.10 | LorkhanPressure 13.6 / ThalmorAlignment 13.7 / LorkhanInterp 13.11 | LunarPhase 14.2 / FocusEmergence 14.5 / RoadHome 14.10 | ConcordatStanding 15.4 | SectEntry 16.4 / FarShoresToken 16.10 | PathChoice 17.5 / OldContract 17.6 / GreenPact 17.7 | TraditionChoice 18.4 / FocusEmergence 18.5 / Track bands 18.7 / DruidicTrial 18.8 | HistPosture 19.2 / HistSap 19.6 / BedOfChoice 19.7 / SithisActivation 19.8 / PostureTransitions 19.10 |
 
 ### 3.1 Author state (race manifest Section 20, condensed)
@@ -123,6 +128,11 @@ headers.
 | Bosmer | drafted | Green Pact per-item violation feedback (needs PDV-owned tag layer first) |
 | Breton | drafted | Vigilant pressure encounter copy (Section 18.14; slip-able post-1.0) |
 | Argonian | drafted | -- |
+
+The dialogue-topic row above records complete recognition intent only. New NPC
+conversation lines, voiced responses, lip files, scene content, and broad
+recognition topics are out of V1 scope; use the non-voiced fallback surfaces in
+Section 2 for V1 content promotion.
 
 ---
 
@@ -171,7 +181,7 @@ remains out of scope unless future adopted content explicitly adds him.
 | MessageBox body | God-voice for offers/commitments/curse/Champion entries; Narrator for surveys + per-race responses + stigma; Player-2nd for offer-responses | 500 / 280 chars |
 | Blessing / Boon / Price (SPEL DESC) | Narrator | 200 / 140 chars |
 | Survey Devotion readout (status SPEL) | Narrator | 240 / 180 chars |
-| Dialogue topic (player line) | Player-2nd | 120 / 80 chars |
+| Dialogue topic (player line) | Player-2nd | 120 / 80 chars; planned V2 only |
 | Prisma overlay toast | symbol-led, minimal | 60 / 40 chars |
 
 Rules that bite regardless of surface (race manifest Section 7):

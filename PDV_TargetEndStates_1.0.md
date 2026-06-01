@@ -226,8 +226,8 @@ Khajiit centers Lunar Lattice, road-home, moon, caravan, and native focus
 movement; Argonian keeps Hist primary with People/community, water, and Void as
 supporting pressures; Bosmer reads through Y'ffre/Green Pact, Living Story,
 Exchange/Z'en, and Bandit Road/Baan Dar without exposing raw counters. Runil is
-scoped to Altmer mortality/scar/recovery recognition. CAT-6 stays on the
-Khajiit lunar blessing first, Bosmer Exchange fallback second.
+now scoped to the planned V2 recognition/dialogue enhancement, not V1. CAT-6
+stays on the Khajiit lunar blessing first, Bosmer Exchange fallback second.
 
 Experience Mode is design-locked but not implemented. `Pilgrim's Path` remains
 the default authored experience; `Wayfarer's Path` is the future lenient mode.
@@ -236,14 +236,17 @@ surfacing, manager scalars, ActionRouter cheap-repeatable handling, verifier
 readback, and two-mode runtime smoke are complete.
 
 Recognition/dialogue scaling and CAT-6 promotion now have separate architecture
-packets. `PDV_RecognitionDialogueScalePacket.md` requires one CK-authored
-non-Nord recognition packet with saved-record readback and runtime
-positive/negative proof before broad recognition lines scale; the ratified
-first candidate is Runil for Altmer Auri-El crisis/recovery recognition, with
-Survey/status fallback only if the CK-readable gate is not clean. `PDV_CAT6PromotionPilot.md`
-requires one low-risk non-dialogue draft-to-ESP-to-handbook pilot before broad
-string promotion; the ratified first pilot is `PDV_Bless_Khajiit_Lunar_T1`,
-with `PDV_Bless_Bosmer_Exchange_T1` as fallback only if the Khajiit target
+packets. V1 does not add new NPC conversation lines, voiced responses, lip
+files, scenes, or broad recognition topics. `PDV_RecognitionDialogueScalePacket.md`
+is now a planned V2 enhancement packet that preserves the CK-safe proof shape;
+Runil remains the first candidate for Altmer Auri-El crisis/recovery
+recognition only when V2 dialogue scope opens. V1 recognition should use
+Survey/status, MCM Player text, MessageBoxes, notifications, spell/effect
+descriptions, books/notes, safe service or shrine gates, and Prisma toasts where
+supported. `PDV_CAT6PromotionPilot.md` requires one low-risk non-dialogue
+draft-to-ESP-to-handbook pilot before broad string promotion; the ratified first
+pilot is `PDV_Bless_Khajiit_Lunar_T1`, with `PDV_Bless_Bosmer_Exchange_T1` as
+fallback only if the Khajiit target
 record path is blocked. Drafting can continue; mass promotion and mass
 recognition should wait for those gates.
 
@@ -384,12 +387,16 @@ Phase 18A/B runtime closeout (2026-05-30):
   feedback have source/readback coverage and fresh-save runtime proof.
 - **Dialogue boundary:** Froki, Heimskr, Andurs, and Aela recognition topics are
   CK-authored/live as branch/topic/unnamed INFO chains and have positive/negative
-  in-game dialogue proof.
+  in-game dialogue proof. They are retained as technical proof and prototype
+  evidence only; new NPC conversation/recognition lines are out of V1 scope and
+  move to planned V2.
 - **Runtime matrix:** Phase 18 now explicitly requires Player page, Developer
   Options persistence, Survey Devotion for broad/focused Nord states,
   Hircine/werewolf tension, vampire suppression, vampire cure scar, save/load
   persistence, and per-speaker positive/negative dialogue proof; all are now
-  closed for the Nord pilot.
+  closed for the Nord pilot. Future V1 race clarity should prefer non-voiced
+  status, message, notification, spell/effect, book/note, shrine, service-gate,
+  or Prisma surfaces.
 
 ---
 
