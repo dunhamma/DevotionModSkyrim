@@ -3,6 +3,13 @@
 Status: first pilot record/readback-proven. Do not use this as permission to
 promote broad strings yet.
 
+> **V1/V2 note (2026-05-31):** Per `PDV_Architecture_v3.md` Section 21.3, V1
+> ships no voiced NPC dialogue. The **dialogue portion** of CAT-6 promotion (the
+> 39 `PDV_Dlog_*_Recognition` strings) is **V2** and excluded from V1 promotion;
+> see `references/authoring/PDV_V2_Backlog.md`. Non-voiced CAT-6 promotion
+> (MessageBox, notification, Survey, blessing/price descriptions) proceeds for
+> V1 as described below.
+
 Owner scope: CAT-6 ratification and promotion handoff for one non-pilot
 player-facing content surface.
 

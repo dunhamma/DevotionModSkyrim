@@ -6,6 +6,15 @@ lines, voiced responses, lip files, scene content, or broad recognition topics.
 Use this packet to preserve the CK-safe proof shape for a future V2
 recognition/dialogue pass.
 
+> **V1/V2 note (2026-06-01):** Per the voiced-content non-goal in
+> `PDV_Architecture_v3.md` Section 21.3, V1 (1.0) ships no voiced NPC dialogue.
+> Spoken-dialogue recognition is **V2** (`references/authoring/PDV_V2_Backlog.md`).
+> This packet is retained as the V2 specification - it is not deleted - but it
+> must not drive V1 recognition scaling. In V1, recognition payoffs are
+> delivered through non-voiced surfaces (MessageBox, notification, Survey,
+> MCM Player text, spell/effect description, book/note, safe service or shrine
+> gate, Prisma toast, or faction/disposition).
+
 ## Purpose
 
 This packet defines the CK-safe pattern for scaling PDV recognition and dialogue surfaces beyond the proven Nord pilots when V2 dialogue scope opens. It exists because recognition is a high-value immersion surface, but PDV has already proven that generated dialogue shape can pass static readback and still be unsafe at runtime.

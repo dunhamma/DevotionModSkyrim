@@ -18,6 +18,13 @@ after pre-beta gameplay scaling has provided real hooks, rewards, status
 feedback, rejected-hook protection, and world placement. External beta should
 not be asked to judge absence as experience.
 
+The acceptance bar for that pre-beta gameplay scaling lane is
+`references/authoring/PDV_PreBetaRaceAcceptanceRubric.md` (with the scaling
+spine in `PDV_PreBetaRaceScalingSpine.md` and per-race evidence in
+`PDV_PreBetaRaceGateLedger.md`): the measurable pass/conditional/fail criteria
+for race-scaling completion. Route proof here is a precondition for that rubric,
+not a substitute for it.
+
 ## Preconditions
 
 Run these checks before opening Skyrim:

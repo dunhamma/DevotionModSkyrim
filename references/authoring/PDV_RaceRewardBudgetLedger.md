@@ -88,6 +88,16 @@ reward packet moves beyond pilot-provisional status.
 | Orc | Malacath-centered life mode: Stronghold, City, or Legion/Exile. | Light persistent life-mode standing; do not turn community standing into a strong substrate. | One lane per life mode; Stronghold can use richer hooks, City/Legion need curated dignity/service beats. Route proof is closed. | Blood-Kin, stronghold recognition, forged-work identity, private dignity, service/exile recognition. | Code pressure, humiliation/dignity choices, service burden, weak community outside strongholds. | `Watch`; Stronghold and smithing are naturally rich, while City/Legion need dynamic situational parity. | Equalize life-mode value. Forge rewards need quality/context limits; City/Legion need non-smithing recognition and self-made community payoff. |
 | Argonian | Layered Hist-first devotion with People and Void/Sithis thresholds. | Strong Hist substrate, People layer, Void layer, bed of choice, Hist posture. | Hist/environment, People/community, and Void/death-facing favors need distinct caps. Route proof is closed. | Windhelm/Riften Argonian recognition, water/wetland context, bed of choice, Dark Brotherhood/Sithis only at threshold. | Hist distance, exile, vampiric silence/corruption, Sithis threshold risk. | `Thin/Watch`; architecture is locked, but non-Sithis reward wealth needs deliberate support. | Strengthen Hist/People rewards before adding Void runtime depth. Keep Sithis high-threshold so it does not become the obvious Argonian route. |
 
+## Broad Reward Spec (per race)
+
+The per-race broad / floor-ceiling effect specification (floor effect family,
+ceiling effect family, magnitude range, cadence, grant/removal owner, stack cap,
+Survey/status copy, rejected generic hooks, curse/Daedric interaction, and manual
+feel note) lives in `references/authoring/PDV_RaceEffectReviewLedger.md` under
+"Completed Race Rows", which is the canonical effect-review gate. This ledger
+keeps the budget summary in the Race Reward Budget table above; the effect
+review ledger owns the locked per-race effect rows.
+
 ## Cross-Race Balance Flags
 
 | Flag | Races | Why It Matters | Required Response |

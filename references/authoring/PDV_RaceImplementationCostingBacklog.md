@@ -239,11 +239,14 @@ Rubric verdict:
 7. P2 stack/ceiling pass: audit Breton, Dunmer, Imperial, and Nord in normal play for over-stacking, over-triggering, Survey/status clarity, generic rejected hooks, expected/edge builds, and reward ceiling issues before adding more reward volume.
 
 Parallel planning note: broad Daedric Prince authoring is not part of this
-pre-beta race-scaling queue. CAT-4 should stay blocked on stigma row
-ratification, Hircine/Molag Bal curse-access template shape, and Prince
-authoring order. Section 11.6 roster shape, recovery default, and
-cross-Prince hostility are already locked defaults and should not be treated as
-open blockers here.
+pre-beta race-scaling queue. The former CAT-4 blockers - stigma row model,
+Hircine/Molag Bal curse-access template, and Prince authoring order - are now
+resolved by Section 11.6 **D-15/D-16/D-17** (rationale:
+`references/authoring/PDV_Daedric_DecisionPacket_CAT4.md`), and D-18 defines
+per-Prince content-ready. CAT-4 prose may now be authored/promoted against
+those locks on its own track; it still does not belong inside a pre-beta race
+runtime slice. Section 11.6 roster shape, recovery default, and cross-Prince
+hostility (D-12/D-13/D-14) remain locked defaults, not open blockers.
 
 Separate scale gates:
 

@@ -80,6 +80,12 @@ Current pilot mechanics:
 | Imperial | Audit-only pending | Civic Divines, Akatosh/Zenithar, broad worship | What prevents broad-worship reward density from becoming universal best-in-slot? |
 | Nord | Audit-only pending | Fully felt control race and over-trigger audit | Which Kyne/Talos/Hircine/neglect layers are already at ceiling, and which generic hooks must stay silent? |
 
+The broad / floor-ceiling layer of the completion bar is now answered for all
+ten races in the "Completed Race Rows" section below (folded from the
+amazing-goodall branch). The table Status above still tracks the **full**
+holistic effect review, which may carry deeper per-effect work (e.g. Khajiit
+focus variants, Argonian Void effects) beyond the broad layer.
+
 ## Completion Bar Per Race
 
 A race row is complete when it names:
@@ -94,3 +100,124 @@ A race row is complete when it names:
 - Rejected generic hooks.
 - Curse/Daedric interaction.
 - Manual feel note still needed before external beta.
+
+## Completed Race Rows (broad / floor-ceiling effect review)
+
+These rows complete the per-race completion bar above for the broad / baseline
+reward layer (floor and ceiling effect families and the surrounding contract).
+Magnitudes are provisional per the Review Rules and are tuning work. Grounded in
+`PDV_RaceRewardBudgetLedger.md` focused passes and the architecture broad-lane
+rule: real broad-worship lanes for Nord, Imperial, and Redguard; layered/substrate
+baselines for Dunmer, Khajiit, and Argonian; explicit "no generic broad lane"
+baseline equivalents for Bosmer (path), Orc (life mode), Breton (tradition), and
+Altmer (Auri-El coherence). Magnitude convention: broad floor minimal, broad
+ceiling caps at Faithful (Tier 2) and roughly 50-70% of the equivalent
+focused-patron Devoted value; broad never inherits individual patron boons.
+
+### Nord (broad lane: Old Ways / Nine Divines)
+- Floor effect family: light blended hearth/weather/road steadiness reflecting broad Old Ways or Nine Divines practice.
+- Ceiling effect family: Faithful-tier blended broad favor (softened combination of pantheon-adjacent effects); strictly below focused Kyne/Talos Devoted boons.
+- Magnitude range: Observant approx +3-5%, Faithful broad cap approx +6-10% or a minor resist/regen band; below focused Devoted (provisional).
+- Conditions and cadence: dawn-owned steady layer recomputed after broad-worship signals; blended favor refreshed by qualifying broad acts, not per-kill.
+- Grant and removal/suppression owner: dawn pass in `PDV__ManagerQuest`; capped/demoted on patron commitment; stripped on vampire rupture.
+- Stack cap: one steady broad-blessing family plus at most one active contextual favor (global one-active cap).
+- Survey/status explanation: thematic Old Ways vs Nine Divines readout, no piety numbers.
+- Rejected generic hooks: generic anti-Thalmor violence, ordinary travel, raw crafting, faction membership alone, repeat tomb/kill farming.
+- Curse/Daedric interaction: vampire rupture suppresses broad favors (scar on cure); Hircine is a separate focused Daedric lane, not a broad booster.
+- Manual feel note: broad Nord feels culturally complete at Faithful without a patron, yet always quieter than a focused patron; Skyrim notices via weather/hold/hearth, not a stat menu.
+
+### Imperial (broad lane: Nine Divines, civic)
+- Floor effect family: civic Nine-Divines steadiness earned from concrete lawful/mercy/burial acts.
+- Ceiling effect family: Faithful civic blended favor; below focused primary-god Devoted; Talos excluded from broad (favor only via faithful defiance).
+- Magnitude range: small civic-flavored (minor barter/speech/restoration-adjacent or disease/undead protection), Observant to Faithful; below focused (provisional).
+- Conditions and cadence: dawn-owned, refreshed by concrete curated civic acts or value thresholds, not attendance.
+- Grant and removal/suppression owner: dawn pass; modified (access/priority, not buff) by `ConcordatStanding`; Concordat Enforcer corrodes Arkay/Stendarr until repair signals.
+- Stack cap: one steady civic broad-blessing plus one active contextual favor; ConcordatStanding is pressure, not a stacked boon.
+- Survey/status explanation: Concordat band plus public/private Talos tension plus broad Nine Divines state, plain language.
+- Rejected generic hooks: generic faction membership, generic temple attendance, ordinary bounty payment, generic anti-Thalmor violence.
+- Curse/Daedric interaction: vampire collapse suppresses civic broad favor; Talos defiance is a standing/focused lane, never broad.
+- Manual feel note: civic religion under public law and private conscience; non-combat civic play must feel as real as combat.
+
+### Redguard (broad lane: sect-shaped - Crown / Forebear / Ash'abah)
+- Floor effect family: broad sect worship reaching Faithful plus light ancestor reverence / death-duty coloring.
+- Ceiling effect family: Faithful broad sect lane; Devoted requires focused primary commitment; ancestor reverence and Far Shores token support only.
+- Magnitude range: sect-lane small-to-moderate, below focused primary Devoted; HoonDing rare and weekly-capped (provisional).
+- Conditions and cadence: dawn plus sect-coded signal days (two in seven to switch Crown/Forebear); death-duty event-led; HoonDing weekly cap.
+- Grant and removal/suppression owner: `PDV_State_RedguardSect` plus dawn pass; Far Shores token activator; Arkay fallback copy says Tu'whacca.
+- Stack cap: one sect broad lane plus light ancestor layer plus one active favor; not a second substrate.
+- Survey/status explanation: sect (Crown / Forebear / AshAbah) plus death-duty / Far Shores state, Yokudan names primary.
+- Rejected generic hooks: generic undead spam, generic gold-making, fast travel, generic combat, broad social-stigma simulation.
+- Curse/Daedric interaction: Ash'abah impurity stigma; vampire restoration through Tu'whacca; Hircine/Molag Bal are curse-access.
+- Manual feel note: protect Crown/Forebear/Ash'abah distinction; road, contract, form, and stigma must compete with undead-clearing.
+
+### Dunmer (layered baseline equivalent - no generic broad lane)
+- Floor effect family: ancestor ash-prayer substrate (always active, no passive decay) plus portable/private shrine and home bonus and diaspora solidarity.
+- Ceiling effect family: ancestor substrate plus shared Reclamations (Quiet/Noted) up to feeling complete pre-focus; below a focused Reclamation foreground.
+- Magnitude range: substrate interpretive/utility (small, no decay); shared Reclamations Quiet/Noted; marked moments wait for focus or major Good Daedra quests (provisional).
+- Conditions and cadence: substrate continuous (no decay) with ash-prayer/shrine cadence; dawn recompute.
+- Grant and removal/suppression owner: `PDV_Substrate_DunmerAncestor` plus dawn pass; focus uses shared patron state (no Dunmer path enum); ancestor-posture handlers.
+- Stack cap: ancestor substrate plus one Reclamation foreground; other Good Daedra background at reduced weight; never three focus packages.
+- Survey/status explanation: ancestor posture (Normal / Strained / Silent / RestoredScarred) plus shared Reclamations state.
+- Rejected generic hooks: generic cruelty/violence (Boethiah), generic crime (Mephala), generic twilight/magic activity (Azura).
+- Curse/Daedric interaction: ancestor silence posture; vampire cure/restoration scar; Daedric deviations route through the global system as deviation/pact/taboo.
+- Manual feel note: layered, not path-based; broad Dunmer feels complete through ancestors and shrines even before a focus, and Skyrim's missing tombs must not punish.
+
+### Khajiit (lunar baseline - balanced broad worship is valid; CAT-6 Tier 1 pilot lives here)
+- Floor effect family: lunar substrate, an always-active cosmological layer; balanced broad lunar worship is complete at Faithful, with small per-phase amplification. The approved pilot `PDV_Bless_Khajiit_Lunar_T1` (night-only StaminaRateMult +5 / ResistDisease +10) is one provisional instance of this floor.
+- Ceiling effect family: lunar substrate plus one emergent focused emphasis plus the global one-active favor; phase bonuses small and never a third loud package.
+- Magnitude range: phase amplification small; substrate strength from full-cycle consistency; below focused emphasis (pilot magnitudes provisional).
+- Conditions and cadence: substrate continuous; moon phase amplifies (optional, never mandatory scheduling); road-home circuit cadence; dawn focus evaluation. Pilot effects gated 7PM-7AM.
+- Grant and removal/suppression owner: `PDV_Substrate_KhajiitLunar` plus dawn pass; emphasis via `PDV_GLO_KhajiitFocusedEmphasis` (silent, not shared patron state); lunar-posture handlers. Pilot grant intentionally unwired.
+- Stack cap: substrate plus one emphasis plus one active favor.
+- Survey/status explanation: lunar posture plus current emphasis, legible without schedule pressure, no piety numbers.
+- Rejected generic hooks: repeating one convenient camp/bed (road homes need a 2-3 anchor circuit), generic crime/combat for Baan Dar/Rajhin/Alkosh, ordinary night travel for ShadowDrift.
+- Curse/Daedric interaction: lunar posture Strained/Corrupted/ShadowDrift; vampire = Corrupted, lycanthropy = Strained; ShadowDrift only on dominant Nocturnal/shadow behavior.
+- Manual feel note: the moons and road shape belonging without a calendar chore; broad lunar life stays viable at Faithful without forcing a focus.
+
+### Bosmer (active-path baseline - no cross-deity broad lane)
+- Floor effect family: active-path baseline practice (Old Contract / Living Story / Exchange / Bandit Road) plus shared Pact memory as modest positive weighting.
+- Ceiling effect family: within-path deepening; Old Contract highest ceiling but most burdensome; other paths reach comparable felt richness via recognition and momentary favors.
+- Magnitude range: path-baseline small; below path-deepened or forced-reckoning payoff (provisional).
+- Conditions and cadence: path-state-driven; favor routes `100-107` event-led; Bandit Road reversal carries a seven-day cooldown.
+- Grant and removal/suppression owner: `PDV_State_BosmerPath` plus manager favor counters; switching is destination-gated; no generic broad granter.
+- Stack cap: one active path plus shared Pact memory weighting plus one active favor.
+- Survey/status explanation: active path plus `favor=oc/ls/ex/br` counters plus Pact compliance state.
+- Rejected generic hooks: generic theft, generic killing, generic commerce, generic plant avoidance outside tagged surfaces, passive road travel.
+- Curse/Daedric interaction: Green Pact burden; Hircine legible via Wild-Hunt adjacency but priced; path switching cost.
+- Manual feel note: path identity is the frame; a flat broad lane would erase it, so breadth is interpreted through the chosen path.
+
+### Orc (life-mode baseline - no generic broad lane)
+- Floor effect family: Malacath code baseline within the active life mode (Stronghold / City / Legion-Exile): dignity, quality labor, and service as the one religious spine.
+- Ceiling effect family: the active life-mode lane; Stronghold highest ceiling; City and Legion/Exile sharper situational moments but no second persistent substrate.
+- Magnitude range: life-mode baseline small-to-moderate; forge gated by quality/value/context; below deep commitment (provisional).
+- Conditions and cadence: life-mode-state-driven; service requires pressure-bearing completion; three-day soft-switch lockout after a mode change.
+- Grant and removal/suppression owner: `PDV_State_OrcLifeMode` plus dawn pass; exactly one active scoring/favor lane at a time.
+- Stack cap: one life-mode lane plus light life-mode standing plus one active favor; no second substrate.
+- Survey/status explanation: life mode (Stronghold / City / LegionExile) plus standing/dignity text.
+- Rejected generic hooks: raw craft count, generic faction membership, ambient disrespect, ordinary travel, generic oath-breaking without a concrete quest surface.
+- Curse/Daedric interaction: Malacath is native (not a Daedric-stigma path); code pressure applies; curse states are priced.
+- Manual feel note: dignity under pressure across life modes; City and Legion/Exile are complete devotional lives, not failed Strongholds.
+
+### Breton (tradition baseline - no generic broad lane by design)
+- Floor effect family: none generic; the baseline is the chosen tradition (Knight's Road / Hidden Art / Green Way) at its entry standing. Do not implement a flat Breton pantheon or broad-worship blend.
+- Ceiling effect family: within-tradition focused patron; the three standing tracks modify and pressure but never form a broad blend.
+- Magnitude range: not applicable for broad; tradition-baseline magnitudes live in the per-tradition favor tables (provisional there).
+- Conditions and cadence: tradition-state and standing-track driven; no dawn broad blend.
+- Grant and removal/suppression owner: `PDV_State_BretonTradition` plus the three standing tracks (`WitchcraftExposure`, `KnightlyVowIntegrity`, `DruidicStanding`); no broad granter.
+- Stack cap: one tradition spine plus one focused patron; tracks stay pressure/meaning, not stacked boons.
+- Survey/status explanation: chosen tradition plus track bands; explicitly no broad-worship readout.
+- Rejected generic hooks: ordinary magic, College membership, private curiosity, generic shrine visits, generic tavern excess, and any flat-pantheon broad-worship hook.
+- Curse/Daedric interaction: Hidden Art / Hircine fork priced via exposure and rupture; Green Way werewolf is a real fork, not a free hybrid.
+- Manual feel note: Breton religion is tradition-first; a generic broad lane would flatten the spine, so it is intentionally absent.
+
+### Altmer (Auri-El coherence baseline - no generic broad lane)
+- Floor effect family: Auri-El dawn foundation - basic dawn practice, study, magic milestones, and coherent acts keep a non-edge Altmer net-positive (not a multi-god blend).
+- Ceiling effect family: Auri-El foundation plus one secondary focus plus one active coherence favor; orthodoxy/alignment modifies or unlocks but adds no third steady stack.
+- Magnitude range: small coherence/steadiness (dawn steadiness favor), Observant to Faithful baseline; below secondary-focus Devoted (provisional).
+- Conditions and cadence: dawn-owned coherence foundation; favors event-led on coherent acts.
+- Grant and removal/suppression owner: dawn pass; `ThalmorAlignment` modifies access/interpretation; Lorkhan pressure only on tagged signals; curse/exile suppresses the positive lane.
+- Stack cap: Auri-El foundation plus one secondary focus plus one active favor; no broad pantheon stack.
+- Survey/status explanation: crisis state (Dissonant / Questioning / Reasserting / ScarredResolved) plus coherence/orthodoxy; no broad-worship readout.
+- Rejected generic hooks: ordinary existence, ordinary friendships, travel, post-first-crisis Dragonborn identity (no hidden Lorkhan debt); generic spellcasting, raw skill gain, generic kindness.
+- Curse/Daedric interaction: vampire terminal/exile-limited; werewolf hard halt; no clean Daedric broad path.
+- Manual feel note: coherence, not breadth; daily Auri-El life stays net-positive and a generic broad lane is omitted by design.

@@ -1,6 +1,6 @@
 # PDV Daedric Path Content Manifest (1.0)
 
-**Status:** Authoring manifest. Companion to `race-sheets/PDV_RaceContent_Manifest.md`. Full draft prose now exists for Boethiah plus the remaining fifteen Skyrim-present Daedric Princes; promotion is still blocked on stigma row ratification, Hircine/Molag Bal curse-access template decisions, and Prince authoring order.
+**Status:** Authoring manifest. Companion to `race-sheets/PDV_RaceContent_Manifest.md`. Full draft prose now exists for Boethiah plus the remaining fifteen Skyrim-present Daedric Princes. The former promotion blockers are now resolved by `PDV_Architecture_v3.md` Section 11.6 **D-15** (stigma model), **D-16** (Hircine/Molag Bal curse-access template), and **D-17** (Prince authoring order), with **D-18** as the per-Prince content-ready bar; promotion now follows the normal CAT-6 pipeline against those locks.
 **Created:** 2026-05-21
 **Owner docs:** `PDV_Architecture_v3.md` Section 11 (Daedric path architecture) and Section 21.1 (1.0 scope); `references/PDV_RaceArchitecture_DesignReference.md` Section 11; `references/phase4/PDV_DaedricRacePrinceMatrix.csv` (the canonical Prince-by-race matrix); `PDV_STANDARDS.md` Section 3.
 **Purpose:** Extend manifest-style content authoring to the Daedric paths, which the race content manifest deliberately deferred. Boethiah proved the Daedric row template first; Sections 7.1-7.15 now carry the other Prince drafts as content-lock inputs pending promotion architecture.
@@ -74,15 +74,19 @@ Two additions:
   `Boon description`.
 - **Tier vocabulary:** Daedric rows use `Seeker` / `Devoted` / `Champion`.
 
-## 5. Stigma band model (provisional)
+## 5. Stigma band model (locked)
 
-`PDV_Architecture_v3.md` Section 11.6 leaves the stigma decay model open
-("Defer to content-author phase"). This manifest authors stigma feedback
-against a provisional three-band crossing model -- `Suspected`, `Known`,
-`Notorious` -- mirroring the Breton `WitchcraftExposure` shape minus its
-`Hidden` floor (an unmarked path needs no notification). If the architecture
-later locks a different band count, the stigma rows are the only ones that
-need a revisit.
+`PDV_Architecture_v3.md` Section 11.6 **D-15** locks the stigma model. Stigma
+uses the four-band `WitchcraftExposure` shape - `Latent` (`0..25`, no
+notification), `Suspected` (`26..50`), `Known` (`51..75`), `Notorious`
+(`76..100`) - stored per Prince, with broad social reactions keyed off a
+derived `PDV_GLO_DaedricExposure = max(active path stigma)`, three weight
+classes (`Tolerated` / `Standard` / `High-rupture`), slow 1/day decay, and a
+`WasChampion` one-way residue flag. This manifest's three crossing
+notifications (`Suspected`, `Known`, `Notorious`) are exactly the locked model;
+the `Latent` floor simply has no notification, which these rows already assume,
+so no Boethiah stigma prose changes. The full rationale and per-Prince class
+list are in `references/authoring/PDV_Daedric_DecisionPacket_CAT4.md`.
 
 ---
 
@@ -278,6 +282,17 @@ Princes. Their commitment gate is not a chosen pact but a curse acquisition
 curse-onset message and they coordinate with the race manifest's per-race
 `CurseState` rows rather than standing fully apart from them. This is a
 template variation to resolve when the first curse-access Prince is authored.
+
+**Locked: curse-access template (D-16), authoring order (D-17), content-ready
+definition (D-18).** `PDV_Architecture_v3.md` Section 11.6 locks the curse-access
+reduced row set (curse-onset replaces the pact; stigma is curse-state-driven;
+exit is the cure path; boon/price/tier/response author normally), the no-double-
+fire coordination rule with the race manifest `CurseState` rows, and the
+batched authoring order. That order fronts a template-variation proof batch
+(Azura, Vaermina, Meridia, Molag Bal) before mass-authoring, and notes Hircine
+is a content-surface-only pass since its Phase 13/15 mechanics are already
+proven. D-18 defines the per-Prince content-ready checklist for the 20C gate.
+The full rationale is in `references/authoring/PDV_Daedric_DecisionPacket_CAT4.md`.
 
 ---
 

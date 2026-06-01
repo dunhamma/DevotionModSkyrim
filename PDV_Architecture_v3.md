@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-06-01 AEST (v3.77 - V1 no-new-NPC-dialogue scope lock)
+Last revised: 2026-06-01 AEST (v3.78 - Daedric D-15..D-18 locked; V1 no-new-NPC-dialogue scope lock)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates. Phase 20 now owns the full-roster 1.0 content target: every locked race-architecture god and all sixteen Skyrim-present Daedric Prince surfaces must be content-ready for every race, with `references/authoring/PDV_DeityCoverageMatrix.json` and `--strict-phase20-roster` as the roster authority gate. The first Altmer Phase 20 runtime lane is source-scaffolded, compile-verified, crisis-record-wired, has the first two Altmer favor spell records wired, has four Altmer ACTI trigger proof base records wired for crisis, Lorkhan pressure, dawn steadiness, and orthodox cost, and now has Altmer Exiled vampire / werewolf halt manager source plus three `MESG` records wired to `PDV__ManagerQuest`; its four QASmoke proof references read back cleanly. Argonian, Orc, Redguard, Bosmer, and Khajiit have also crossed into source/record-wired proof slices, and all 30 Phase 20 proof references are now QASmoke-placed with helper/readback proof. Runtime proof and final immersive world placement remain open; `tools/pdv_phase20_runtime_check.mjs` and `references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` define the counted route-log, Survey/status, immersion, negative-hook, and anti-farm proof lane. `references/authoring/PDV_PreBetaRaceScalingSpine.md` and `PDV_PreBetaRaceGateLedger.md` now define the internal pre-beta scaling spine and all-race evidence ledger: Altmer active spine, Khajiit first contrast, Argonian second contrast, Orc / Redguard / Bosmer P1 packets, and Breton / Dunmer / Imperial / Nord P2 audit-only packets. The race gameplay audit now treats immersion as an explicit reward-budget axis, and `--strict-phase20-race-costing` enforces `immersionProof` blocks for all Phase 20 race-costing manifests. The current Phase 20 Altmer/race-costing gate is clean again after content-lock row reconciliation; the remaining warning is the existing unnamed CK-authored INFO record class. Phase 21 is the Authoria-first compatibility package lane because compatibility testing must wait until the mod's full content surface is stable enough to test against modlists.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
 
 Current v3.71 addendum: `references/authoring/PDV_PreBetaRaceScalingSpine.md`
@@ -104,6 +104,17 @@ promotion and readback, not Active Effects runtime display, distribution logic,
 or broad reward policy. `references/authoring/PDV_RaceEffectReviewLedger.md`
 now owns the holistic race-by-race effect review required before broad reward
 authoring.
+
+Current v3.77 addendum: the amazing-goodall branch is reconciled into main.
+Daedric decisions **D-15..D-18** are locked in Section 11.6 (stigma model,
+curse-access template, authoring order, per-Prince content-ready), which
+resolves the Daedric blockers earlier entries left open. The voiced-content
+non-goal (Section 21.3) defers all NPC dialogue to V2
+(`references/authoring/PDV_V2_Backlog.md`); `PDV_RecognitionDialogueScalePacket.md`
+and the dialogue half of `PDV_CAT6PromotionPilot.md` are V2-flagged, not deleted.
+The branch broad-reward spec was folded into the per-race rows of
+`PDV_RaceEffectReviewLedger.md`, and the branch pre-beta rubric was dropped in
+favor of `PDV_PreBetaRaceAcceptanceRubric.md`.
 
 ---
 
@@ -808,6 +819,16 @@ EndFunction
 
 ## 9. Privilege subsystem (Phase 11)
 
+**V1/V2 scope (2026-05-31):** Per the voiced-content non-goal in Section 21.3,
+the **dialogue-surfaced** privilege families - Restoration privilege, Dialogue
+privilege, and the spoken-line portion of Recognition privilege, plus the
+Arngeir/Kynareth pilot in 9.4 - are **deferred to V2** because they require
+voice files. **Staying in V1** are the non-voiced privileges: Shrine privilege
+(activator menus), the mechanical/disposition portion of Recognition privilege
+(faction stance and "Hello" preference without a new spoken line), and any
+Threshold privilege that unlocks a non-dialogue effect. The CK-safe dialogue
+authoring pattern is therefore a V2 concern, not a V1 blocker.
+
 Privileges are mostly *access* effects: dialogue gates, shrine options, faction reactions, recognition. They don't need new magic effects; they need consistent CK Conditions on existing records and a stable naming convention so they're discoverable.
 
 ### 9.1 Privilege families
@@ -835,7 +856,7 @@ Where a privilege genuinely needs a value not surfaced by the mirrors (e.g. "hig
 
 ### 9.4 Privilege pilot and shrine discipline
 
-- **Greybeards-Kynareth recognition.** D-10 is resolved and runtime-proven: Phase 11's first privilege pilot is an Arngeir/Kynareth recognition line for a Nord Kyne Champion. The CK-readable gate is `PDV_GLO_OriginRace = Nord`, `PDV_GLO_ActiveDeityIndex = Kyne`, and `PDV_GLO_ActiveTier >= 3`, with Arngeir as the speaker gate. The generated PDV-owned dialogue records were removed on 2026-05-24 after CrashLogger tied a CTD to the generated topic/branch shape; the live replacement is CK-authored and verifier-covered as a `DLBR`, `DIAL`, and CK-authored unnamed `INFO`. Runtime proof passed for the positive Nord/Kyne Champion state, the non-Nord negative, the wrong-active-deity negative, the below-Champion negative, and save/load sanity.
+- **Greybeards-Kynareth recognition (V2 - voiced).** This Arngeir/Kynareth recognition line is a spoken NPC dialogue beat and is deferred to V2 per the Section 21.3 voiced-content non-goal; the design below is retained as the V2 specification. D-10 is resolved and runtime-proven: Phase 11's first privilege pilot is an Arngeir/Kynareth recognition line for a Nord Kyne Champion. The CK-readable gate is `PDV_GLO_OriginRace = Nord`, `PDV_GLO_ActiveDeityIndex = Kyne`, and `PDV_GLO_ActiveTier >= 3`, with Arngeir as the speaker gate. The generated PDV-owned dialogue records were removed on 2026-05-24 after CrashLogger tied a CTD to the generated topic/branch shape; the live replacement is CK-authored and verifier-covered as a `DLBR`, `DIAL`, and CK-authored unnamed `INFO`. Runtime proof passed for the positive Nord/Kyne Champion state, the non-Nord negative, the wrong-active-deity negative, the below-Champion negative, and save/load sanity.
 - **Shrine activator overlays.** PDV does not replace vanilla shrine activator scripts for 1.0. Preferred posture is per-reference co-attachment on the actual shrine reference when a specific shrine needs devotional routing; helper objects or nearby activators are fallback proof shapes only. Global base-script replacement stays out of bounds so shrine-modifying mods remain easier to coexist with.
 
 ---
@@ -1039,6 +1060,44 @@ Native-integrated exceptions (Azura/Azurah for Khajiit, Boethra for Dunmer, Mafa
 - **D-14: Reduced cross-Prince hostility.** Canonical Prince-vs-Prince
   hostility uses reduced rivalry math rather than full Aedric-strength
   cancellation and rather than stigma-only treatment.
+- **D-15: Stigma model.** Daedric stigma uses the four-band `WitchcraftExposure`
+  shape - `Latent` (`0..25`, no notification), `Suspected` (`26..50`), `Known`
+  (`51..75`), `Notorious` (`76..100`). Stigma is stored **per Prince**
+  (`PDV.Daedric.<Prince>.Stigma`, mirrored to the `StigmaGlobal` property), and
+  broad social reactions key off a derived `PDV_GLO_DaedricExposure = max(active
+  path stigma)` rather than an additive sum, consistent with D-14. Base accrual
+  is scaled by a per-Prince weight class - `Tolerated` (Meridia, Peryite, about
+  0.5x), `Standard` (1.0x), `High-rupture` (Mehrunes Dagon, Molag Bal, about
+  1.5x) - then by `StigmaModByRace`; native-integration (Section 11.4) forces
+  zero stigma for the integrated race. Stigma decays slowly at 1/day with the
+  Phase 17 once-per-day guard and clears fully to `Latent`; the only permanent
+  residue is a one-way `PDV.Daedric.<Prince>.WasChampion` dialogue flag set on
+  first Champion entry. The full rationale and the per-Prince class list are in
+  `references/authoring/PDV_Daedric_DecisionPacket_CAT4.md`.
+- **D-16: Curse-access template variation.** Hircine and Molag Bal are
+  curse-access Princes: their commitment gate is a curse acquisition
+  (lycanthropy, vampirism), not a chosen pact. The `_Commitment` slot is
+  reframed as a curse-onset message, stigma is driven by the Phase 15
+  curse-state overlay rather than a per-act counter, and exit is the cure path
+  (D-13), not renounce. Boon, price, tier-up, and per-race response author
+  normally. Curse-access Princes coordinate with - and must not duplicate or
+  double-fire - the race manifest per-race `CurseState` rows. Hircine is a
+  content-surface-only pass because its Phase 13/15 mechanics are already
+  runtime-proven; Molag Bal is the new curse-access build.
+- **D-17: Daedric authoring order.** The 15 non-pilot Princes are authored in a
+  template-variation proof batch first - Azura (native-override), Vaermina
+  (pure standard), Meridia (`Tolerated` class), Molag Bal (curse-access) - to
+  prove all four template shapes before volume, then the remaining Princes in
+  batches by template type. The full batch list is in the decision packet.
+- **D-18: Per-Prince content-ready definition.** A Prince is content-ready for
+  the 20C gate when all Section 6 row types are authored (tone, boon/price x3,
+  tier-up + lapse, Champion entry, commitment or curse-onset, stigma or
+  curse-driven crossings, neglect + exit with residue, per-race response for
+  non-native races), matrix fidelity matches `PDV_DaedricRacePrinceMatrix.csv`,
+  the hook source is named, `pdv_content_verify` is clean with no race-manifest
+  slot collision, and the firing-density sanity paragraph is present. This is
+  the content gate only; runtime proof and world placement follow on the code
+  track.
 
 ---
 
@@ -1918,7 +1977,8 @@ Enhancement custom content (improves experience, not required for core function)
 
 ### 21.3 Explicit non-goals for 1.0
 
-- No original multi-stage questlines. Per the race-architecture pre-matrix requirements, the first release uses existing gameplay loops and CK-gated interactions, not bespoke quest arcs. Light authored moments such as commitment offers, shrine/ritual interactions, dialogue recognition, and notifications are in scope.
+- No original multi-stage questlines. Per the race-architecture pre-matrix requirements, the first release uses existing gameplay loops and CK-gated interactions, not bespoke quest arcs. Light authored moments such as commitment offers, shrine/ritual interactions, and notifications are in scope. NPC dialogue recognition is **not** in 1.0 scope - see the voiced-content non-goal below.
+- **No voiced content in 1.0 (voiced NPC dialogue deferred to V2).** V1 ships no NPC spoken dialogue, because credible NPC lines need voice files and voice work is explicitly held for V2. Deferred to V2: the Phase 11 privilege dialogue/restoration/recognition families and the Arngeir/Kynareth recognition pilot; the Phase 18 Nord recognition quartet (Froki, Heimskr, Andurs, Aela); and the 39 `PDV_Dlog_*_Recognition` stubs drafted across the roster. V1 delivers every player-facing beat through non-voiced surfaces only: MessageBoxes, corner notifications, Survey Devotion readouts, shrine-activator menus, and mechanical faction/disposition/stance effects. **Scope-mapping rule:** where a race sheet or this document describes a "dialogue privilege" or NPC "recognition" payoff, V1 delivers the non-voiced equivalent (notification, MessageBox, Survey readout, or disposition/stance effect) and the spoken-dialogue version lands in V2; metaphorical "feels like recognition" design language is unaffected. **Build action (pending, CK-side):** the already-live Phase 18 Nord dialogue records (`DLBR`/`DIAL`/`INFO`) must be disabled or removed from the V1 release ESP, and their Phase 18 verifier assertions move to V2 scope.
 - No hard Survival/Requiem dependency.
 - No DLL plugins authored by PDV.
 - No hard KID, SPID, or SkyPatcher dependency solely for keyword/classification/NPC distribution. powerofthree's Tweaks is accepted only as part of the PO3 Papyrus Extender runtime-event dependency chain, not as a reason to adopt KID/SkyPatcher distribution. Prefer the offline patcher unless a runtime-only feature proves the need.
@@ -2213,7 +2273,9 @@ internals into the target tracker.
 
 ## 23. Open architectural decisions deferred past 1.0
 
-These are intentionally not solved in v3.
+These are intentionally not solved in v3. The running collection point for all
+post-1.0 work, including the deferred voiced-dialogue lane (Section 21.3), is
+`references/authoring/PDV_V2_Backlog.md`.
 
 - **Per-race ESP split.** Stays monolithic through 1.0; revisit only on need (Section 18.2).
 - **JContainers escalation.** StorageUtil is enough through 1.0. If post-1.0 features require nested structures (e.g. a complex stigma history per Daedric path with timestamp arrays), revisit. JContainers stays out of the v1.0 dependency tree.
@@ -2433,7 +2495,7 @@ Ready when:
 - Strong substrates feel distinct for Khajiit, Dunmer, and Argonian.
 - Named race obligations are testable in normal play: Imperial Concordat neutrality/edge walk-back, Breton three-track tension, Bosmer Green Pact failure handling, Nord broad-worship combo feel, Khajiit no-offer emergent emphasis, Orc community mode support, Redguard HoonDing big-win accessibility, Altmer light Lorkhan reactions/crisis states, Dunmer portable shrine practice, and Argonian Hist/community maintenance.
 - Commitment, neglect, decay, curse-state, and UI are live.
-- Enough dialogue, shrine, notification, and recognition texture exists to judge religious feel.
+- Enough shrine, notification, Survey/status, and MessageBox texture exists to judge religious feel. NPC dialogue and spoken recognition are V2, so feel is judged from non-voiced surfaces in V1.
 - Dev-only scaffolds remain hidden from player-facing surfaces.
 - The play loop feels quiet, recoverable, and lore-reactive rather than like a second hunger meter.
 
@@ -2449,7 +2511,7 @@ Ready when:
 - All locked race-architecture gods and all sixteen Skyrim-present Daedric Prince surfaces are content-ready, not merely scaffolded.
 - Every race has authored handling across the full god/Prince roster; unsafe worship is valid, silent or generic fallback handling is not.
 - Player-facing text is polished and ASCII-safe.
-- Light authored moments are present: commitment offers, shrine/ritual interactions, dialogue recognition, and notifications.
+- Light authored moments are present: commitment offers, shrine/ritual interactions, and notifications. (NPC dialogue recognition is deferred to V2 per Section 21.3.)
 - No original multi-stage questlines are required for 1.0.
 - Compatibility posture is documented.
 - External beta feedback has been addressed or explicitly deferred.
@@ -2506,7 +2568,9 @@ Phases:
   the race content manifest: tone profiles, blessings, tier-ups, champion
   moments, neglect, commitment offers, survey readouts, contextual favors,
   curse-state transitions, and planned V2 dialogue-topic recognition-intent
-  stubs.
+  stubs. Note: the 39 `PDV_Dlog_*_Recognition` stubs are drafted but are V2
+  scope per the Section 21.3 voiced-content non-goal; they are not promoted in
+  V1.
 - **CAT-2 - Content tooling and consistency. COMPLETE.** The content verifier,
   the token tables, and the consistency audit (race manifest Sections 24-25).
 - **CAT-3 - Daedric pilot. COMPLETE.** Boethiah authored end to end in the
@@ -2531,6 +2595,9 @@ Phases:
   Ratify the draft prose, then promote ratified strings into ESP records via
   the Phase 19 add-a-deity pipeline (17.1) and into the `Race_*.md` player
   handbooks. A string can only be promoted once its owning subsystem exists.
+  The `PDV_Dlog_*_Recognition` dialogue strings are **excluded from V1
+  promotion** (V2, voice-dependent); promote only non-voiced surfaces
+  (MessageBox, notification, Survey, blessing/price descriptions) for 1.0.
 
 Gate coupling:
 
@@ -2546,14 +2613,39 @@ Gate coupling:
 
 ## 26. Revisions
 
-### v3.77 - 2026-06-01 AEST - V1 no-new-NPC-dialogue scope lock
+### v3.78 - 2026-06-01 AEST - Daedric D-15..D-18 locked; V1 no-new-NPC-dialogue scope lock
 
-Retired the previous V1 target for new race-coded NPC dialogue topics. V1 now
-uses non-voiced recognition surfaces only: Survey/status, MCM Player text,
-MessageBoxes, notifications, spell/effect descriptions, books/notes, safe
+Reconciled the amazing-goodall branch into main and carried forward the V1/V2
+voice boundary. These locks are design/documentation only; no source or record
+change is implied by this merge.
+
+Locked: **D-15** (four-band `WitchcraftExposure` stigma model - per-Prince
+storage, derived `PDV_GLO_DaedricExposure = max(active path stigma)`, Tolerated/
+Standard/High-rupture weight classes, 1/day decay, `WasChampion` residue),
+**D-16** (curse-access template for Hircine/Molag Bal: curse-onset replaces the
+pact, curse-state-driven stigma, cure-path exit, no-double-fire with race
+`CurseState` rows), **D-17** (template-variation proof batch - Azura, Vaermina,
+Meridia, Molag Bal - before volume), and **D-18** (per-Prince content-ready
+definition for the 20C gate). These resolve the exact Daedric blockers main's
+earlier entries left open: stigma ratification, curse-access template, and
+authoring order. Rationale of record:
+`references/authoring/PDV_Daedric_DecisionPacket_CAT4.md`; manifest Section 5
+is locked; coverage matrix 20C carries the D-18 definition.
+
+V1 now uses non-voiced recognition surfaces only: Survey/status, MCM Player
+text, MessageBoxes, notifications, spell/effect descriptions, books/notes, safe
 service or shrine gates, and Prisma toasts where supported. Existing Arngeir
-and Phase 18 Nord dialogue remain technical proof/prototype evidence, while
-`PDV_RecognitionDialogueScalePacket.md` and Runil move to planned V2 scope.
+and Phase 18 Nord dialogue remain technical proof/prototype evidence. The Phase
+11 dialogue/recognition lane, the Phase 18 Nord quartet, and the 39
+`PDV_Dlog_*_Recognition` stubs are V2
+(`references/authoring/PDV_V2_Backlog.md`). Main's
+`PDV_RecognitionDialogueScalePacket.md` and the dialogue half of
+`PDV_CAT6PromotionPilot.md` are flagged V2-scoped, not deleted.
+
+Reconcile folds: the branch broad-reward spec was re-homed into main's
+`references/authoring/PDV_RaceEffectReviewLedger.md` per-race rows, and the
+branch pre-beta rubric was dropped in favor of main's
+`PDV_PreBetaRaceAcceptanceRubric.md`.
 
 ### v3.75 - 2026-05-31 AEST - Phase 20 no-in-game-proof workplan
 
