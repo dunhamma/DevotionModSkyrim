@@ -1262,7 +1262,7 @@ Source: the `Hircine` row of the matrix -- PathType `Hunt-lycanthropy-predator`,
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Price_Daedric_Hircine_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the hunt-path: the predator register. The civilized world reads the beast in you and keeps its distance. |
+| PDV_Price_Daedric_Hircine_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the hunt-path: the predator register. The civilized world senses the beast in you and keeps its distance. |
 | PDV_Price_Daedric_Hircine_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: the beast shapes the social register. Others read Hircine's claim and do not find it comfortable. |
 | PDV_Price_Daedric_Hircine_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: the Huntsman's isolation. The civilian world is an afterthought to the hunt, and the hunt does not make friends. |
 
@@ -1281,13 +1281,16 @@ Source: the `Hircine` row of the matrix -- PathType `Hunt-lycanthropy-predator`,
 |---|---|---|---|---|---|---|---|
 | PDV_Msg_Daedric_Hircine_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Hircine" CommitmentSignal | Fires once when commitment gate clears; curse-access reframe: player carries lycanthropy and has signaled three times | Title: "Hircine's Claim" Body: "The wolf is in you, and you know what that means now -- not the fear that comes first, but the thing after the fear: the hunting-ground opened, the prey was visible, and the body knew before the mind. That moment is mine. Welcome, Hunter." |
 
-**Stigma band crossings.**
-
-| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
-|---|---|---|---|---|---|---|---|
-| PDV_Notif_Daedric_Hircine_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Your Hircine devotion is suspected. The beast-path draws wary eyes. |
-| PDV_Notif_Daedric_Hircine_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Hircine devotion is known. The hunt-path marks its follower plainly. |
-| PDV_Notif_Daedric_Hircine_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Hircine's. The beast-walker is not welcome in the settled hold. |
+**Stigma band crossings -- curse-state-driven (Model B / D-16).** Hircine is a
+curse-access Prince, so social readability is driven by the Phase 15 curse-state
+overlay (known-werewolf visibility), not an independent per-act Daedric stigma
+counter. No standalone Hircine stigma notifications fire in V1; the per-tier
+**price descriptions** carry the social-register texture ("the civilized world
+senses the beast in you and keeps its distance" -> "the beast shapes the social
+register" -> "the Huntsman's isolation"), and the race `*_CurseState_*` rows own
+the actual NPC reaction. The three drafted independent-stigma lines are pulled to
+the **V2 backlog** (`references/authoring/PDV_V2_Backlog.md`) as ready band copy
+for the planned witnessed-kill notoriety enhancement.
 
 **Neglect texture and exit.**
 
@@ -1354,13 +1357,15 @@ Source: the `Molag Bal` row of the matrix -- PathType `Domination-vampirism-ensl
 |---|---|---|---|---|---|---|---|
 | PDV_Msg_Daedric_Molag_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Molag Bal" CommitmentSignal | Fires once when commitment gate clears; curse-access reframe: player carries vampirism and has signaled three times | Title: "Molag Bal's Touch" Body: "The thirst is in you, and you know what the thing under the hunger is: the hierarchy reflex, the dominance that makes sense now in a way it did not before the curse. That is mine. You chose to keep it three times when the cure was available. That is the commitment I record." |
 
-**Stigma band crossings.**
-
-| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
-|---|---|---|---|---|---|---|---|
-| PDV_Notif_Daedric_Molag_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Your Molag Bal devotion is suspected. The domination-path draws wary eyes. |
-| PDV_Notif_Daedric_Molag_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Molag Bal devotion is known. Domination-cult devotion is not trusted. |
-| PDV_Notif_Daedric_Molag_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Molag Bal's. The enslaver's servant is feared wherever you walk. |
+**Stigma band crossings -- curse-state-driven (Model B / D-16).** Molag Bal is a
+curse-access Prince, so social readability is driven by the Phase 15 curse-state
+overlay (known-vampire visibility), not an independent per-act Daedric stigma
+counter. No standalone Molag Bal stigma notifications fire in V1; the per-tier
+**price descriptions** carry the social-register texture, and the race
+`*_CurseState_*` rows own the actual NPC reaction. The three drafted
+independent-stigma lines are pulled to the **V2 backlog**
+(`references/authoring/PDV_V2_Backlog.md`) as ready band copy for the planned
+witnessed-kill notoriety enhancement.
 
 **Neglect texture and exit.**
 
@@ -1404,8 +1409,8 @@ Source: the `Molag Bal` row of the matrix -- PathType `Domination-vampirism-ensl
 | Sanguine | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.11) |
 | Namira | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.12) |
 | Peryite | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.13) |
-| Hircine | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.14) |
-| Molag Bal | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.15) |
+| Hircine | drafted | drafted | drafted | drafted | drafted | curse-driven (B) | drafted | drafted (10 races) | COMPLETE (7.14) |
+| Molag Bal | drafted | drafted | drafted | drafted | drafted | curse-driven (B) | drafted | drafted (10 races) | COMPLETE (7.15) |
 
 ## 9. Verification
 

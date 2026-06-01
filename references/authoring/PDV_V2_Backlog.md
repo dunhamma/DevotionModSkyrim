@@ -73,7 +73,49 @@ These were deferred before this session; listed here so V2 has one index.
 
 ---
 
-## 3. Triage note
+## 3. Curse-access notoriety enhancement (Hircine / Molag Bal)
+
+**Why deferred:** V1 uses **Model B** for curse-access stigma (decided
+2026-06-01): social readability for Hircine (werewolf) and Molag Bal (vampire)
+is driven by the Phase 15 curse-state overlay (known-werewolf / known-vampire
+visibility), not an independent per-act Daedric stigma counter. Model B is one
+coherent signal that cannot desync from the curse (no "wariness faded but you
+are still a werewolf" incoherence, no orphaned stigma after a cure). The
+independent per-act stigma model (Model A) was rejected for V1 because it
+double-fired with the curse-state and contradicted itself on abstention/cure.
+
+**The V2 enhancement** re-adds the finer notoriety dial, but done properly --
+**witness-based, not a quiet per-act counter**, with a concrete consequence:
+
+- **Trigger:** notoriety accrues when the player is **caught (witnessed) by NPCs
+  killing as a werewolf** (and the vampire-feeding equivalent for Molag Bal),
+  not from unseen devotional acts. This ties the signal to the actual visible
+  fact, so it cannot desync from the curse the way Model A did.
+- **Bands:** reuse `Suspected` / `Known` / `Notorious` (the four-band shape minus
+  the silent `Latent` floor, per D-15).
+- **Consequence at `Known` or above:** the **Vigilants of Stendarr** track the
+  player down and **randomly attack** (beast/undead hunters acting on the
+  notoriety). Notoriety should decay with time/lying-low so it stays recoverable.
+- **Interaction:** layers on top of the curse-state social reaction; must not
+  double-fire the curse-state onset/cure messages (the V1 desync failure mode).
+- **Surfacing:** band-crossing notifications -- the V1 price descriptions already
+  carry the passive per-tier social texture, so these fire only on a real
+  witnessed-notoriety band change.
+
+**Ready band copy (pulled from the V1 manifest on the Model B decision):**
+
+| Band | Hircine | Molag Bal |
+|---|---|---|
+| Suspected | Your Hircine devotion is suspected. The beast-path draws wary eyes. | Your Molag Bal devotion is suspected. The domination-path draws wary eyes. |
+| Known | Your Hircine devotion is known. The hunt-path marks its follower plainly. | Your Molag Bal devotion is known. Domination-cult devotion is not trusted. |
+| Notorious | You are openly Hircine's. The beast-walker is not welcome in the settled hold. | You are openly Molag Bal's. The enslaver's servant is feared wherever you walk. |
+
+(When this lands, the band copy may want a rephrase from "devotion is suspected"
+toward "you have been seen" to match the witness-based trigger.)
+
+---
+
+## 4. Triage note
 
 After 1.0 ships, convert this stub into a real V2 roadmap: group the voiced
 dialogue work into a single CAT-style content lane (draft -> ratify -> voice ->
