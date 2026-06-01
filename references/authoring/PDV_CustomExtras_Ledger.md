@@ -13,7 +13,8 @@ Status legend: 🔒 Locked (1.0 required) · ⚠️ Needed (1.0, lighter) · ⏸
 
 The three "exile" races share one pattern: a permanent, usable-anywhere inventory item
 that supplies a valid maintenance/prayer signal, with a bonus in a player-owned home /
-authored private context. **Build once, reskin three times.**
+authored private context. **Build once, reskin three times.** Full build spec:
+`PDV_PortableDevotionalToken_BuildSpec.md`.
 
 | # | Item | Race | Status | Source |
 |---|------|------|--------|--------|
@@ -27,13 +28,13 @@ Notes: all three reuse vanilla activators/icons — **no custom mesh or texture 
 
 | # | System | Race | Status | Source |
 |---|--------|------|--------|--------|
-| 4 | **Green Pact plant-tagging** — keyword list or manual curation of all plant-based consumables. Called "the most significant custom work on the Bosmer sheet." | Bosmer | 🔒 | `race-sheets/PDV_RaceDesign_Bosmer.md:229` |
+| 4 | **Green Pact plant-tagging** — keyword list or manual curation of all plant-based consumables. Called "the most significant custom work on the Bosmer sheet." Spec: `PDV_Bosmer_OldContract_ContentSpec.md` §4 | Bosmer | 🔒 | `race-sheets/PDV_RaceDesign_Bosmer.md:229` |
 
 ## 3. Authored content (non-voiced text / scenes)
 
 | # | Content | Race | Status | Source |
 |---|---------|------|--------|--------|
-| 5 | **Y'ffre forced-reckoning scene** — one-time event after 3 days in Apostate state; day-counter + localized non-voiced dialogue | Bosmer | ⚠️ | `race-sheets/PDV_RaceDesign_Bosmer.md:230` |
+| 5 | **Y'ffre forced-reckoning scene** — fires after 3 days in Apostate state. **Logic proven (Phase 9)**; remaining work is authored copy. Spec: `PDV_Bosmer_OldContract_ContentSpec.md` §5 | Bosmer | ⚠️ | `race-sheets/PDV_RaceDesign_Bosmer.md:230` |
 | 6 | **Azura threshold flavor text** — curated localized notification strings on major moments | Dunmer | ⚠️ | `race-sheets/PDV_RaceDesign_Dunmer.md:248` |
 | 7 | **Ash'abah social-stigma lines** — light reaction/status text | Redguard | ⏸️ | `race-sheets/PDV_RaceDesign_Redguard.md:69` |
 | 8 | **Tribunal memory flavor text** — cosmetic notifications on events | Dunmer | ⏸️ | `race-sheets/PDV_RaceDesign_Dunmer.md:249` |
