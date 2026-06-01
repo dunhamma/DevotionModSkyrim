@@ -31,3 +31,13 @@
 - Preserve state.
 - Show one-time informational startup card.
 - Do not force re-pick.
+
+## CK Fallback Copy
+
+- CK message records used for explicit-choice fallback:
+  - `PDV_MSG_StartupBretonChoice`
+  - `PDV_MSG_StartupRedguardChoice`
+  - `PDV_MSG_StartupOrcChoice`
+  - `PDV_MSG_StartupConfirmChoice`
+- Authoring source: `tools/pdv-startup-author/Program.cs`.
+- Copy should mirror the same option meaning and advisory line used by the Prisma payload.

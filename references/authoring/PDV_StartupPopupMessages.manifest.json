@@ -3,7 +3,8 @@
   "title": "PDV startup popup message wiring",
   "notes": [
     "Startup popup message records must exist in the framework ESP before this wiring applies.",
-    "This manifest wires manager VMAD properties only; it does not create MESG records."
+    "This manifest wires manager VMAD properties only; it does not create MESG records.",
+    "Record creation/content updates are handled by tools/pdv-startup-author/Program.cs."
   ],
   "operations": [
     {

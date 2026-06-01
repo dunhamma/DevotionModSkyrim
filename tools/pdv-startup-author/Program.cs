@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Strings;
 
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
+const string startupAdvisory = "This begins your journey; your devotion evolves through your choices.";
 
 var espPath = GetArg(args, "--esp") ?? defaultEsp;
 var dryRun = args.Contains("--dry-run");
@@ -35,7 +36,13 @@ try
         index,
         allocator,
         "PDV_MSG_StartupBretonChoice",
-        "Choose your starting Breton tradition.",
+        "Breton startup tradition",
+        "Breton starts with a declared tradition.\n\n" +
+        "Knight's Road: civic honor and vow-kept justice.\n" +
+        "Hidden Art: occult practice under social risk.\n" +
+        "Green Way: druidic covenant and nature rite cadence.\n\n" +
+        "Select a path, review the side description, then confirm.\n\n" +
+        startupAdvisory,
         "Knight's Road",
         "Hidden Art",
         "Green Way");
@@ -45,7 +52,13 @@ try
         index,
         allocator,
         "PDV_MSG_StartupRedguardChoice",
-        "Choose your starting Redguard sect.",
+        "Redguard startup sect",
+        "Redguard starts with a declared sect.\n\n" +
+        "Crown: orthodox Yokudan structure and preserved form.\n" +
+        "Forebear: adaptive public life with Yokudan spine.\n" +
+        "Ash'abah: funerary burden and undead duty at social cost.\n\n" +
+        "Select a path, review the side description, then confirm.\n\n" +
+        startupAdvisory,
         "Crown",
         "Forebear",
         "Ash'abah");
@@ -55,7 +68,13 @@ try
         index,
         allocator,
         "PDV_MSG_StartupOrcChoice",
-        "Choose your starting Orc life mode.",
+        "Orc startup life mode",
+        "Orc starts with a declared life mode.\n\n" +
+        "Stronghold: full-expression Malacath code in communal life.\n" +
+        "City: private fidelity under public compromise.\n" +
+        "Legion/Exile: honor carried under foreign discipline.\n\n" +
+        "Select a path, review the side description, then confirm.\n\n" +
+        startupAdvisory,
         "Stronghold",
         "City",
         "Legion/Exile");
@@ -65,9 +84,12 @@ try
         index,
         allocator,
         "PDV_MSG_StartupConfirmChoice",
-        "Confirm this starting path?",
+        "Startup confirmation",
+        "Confirm this startup path?\n\n" +
+        "This sets your opening state for this save. You can evolve through play afterward.\n\n" +
+        startupAdvisory,
         "Confirm",
-        "Cancel");
+        "Back");
 
     WireQuestScript(manager, "PDV__ManagerQuest", new ScriptProperty[]
     {
@@ -77,7 +99,7 @@ try
         ObjectProp("PDV_MSG_StartupConfirmChoice", confirmChoice.FormKey),
     });
 
-    report.Actions.Add("Created/updated startup MESG records.");
+    report.Actions.Add("Created/updated startup MESG records and copy.");
     report.Actions.Add("Wired startup message properties on PDV__ManagerQuest.");
 
     if (!dryRun)
@@ -149,6 +171,7 @@ static Message EnsureMessage(
     Dictionary<string, ISkyrimMajorRecordGetter> index,
     FormKeyAllocator allocator,
     string editorId,
+    string title,
     string text,
     params string[] buttons)
 {
@@ -176,7 +199,7 @@ static Message EnsureMessage(
     message.Flags = Message.Flag.MessageBox;
     message.FormVersion = 44;
     message.Description = Tx(text);
-    message.Name = Tx(editorId);
+    message.Name = Tx(title);
     message.MenuButtons.Clear();
     foreach (var button in buttons)
     {
