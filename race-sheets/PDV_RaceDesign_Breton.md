@@ -291,6 +291,13 @@ The Old Contract (strict Bosmer Green Pact) gives the full hard-compliance mecha
 - Hidden Art has two valid intentional end states: careful cover in Hidden/Suspected and open Notorious rupture. Notorious is stronger but socially costly, not a pure upgrade.
 - Breton is implementation-locked for 1.0 experience shape. Remaining reward values and exact effect magnitudes are balancing work, not open architecture.
 
+### Implementation acceptance criteria (content review, 2026-06-01)
+
+Derived from the LOCKED rules above; these are pass/fail checks for when the Papyrus layer is authored.
+
+- **Tradition onboarding is explicit with no fallback.** `PDV_State_BretonTradition` setup must require an explicit choice and must **not** auto-assign a default. Because there is no silent fallback tradition, the setup prompt must re-present until answered — it cannot be dismissed into a tradition-less state. (Note the deliberate contrast with Bosmer, which *does* fall back to `LivingStory`.) (Source: `PDV_State_BretonTradition` lock.)
+- **Hidden Art layers on the global Daedric system — no double-count.** Hidden Art deities (Hircine, Hermaeus Mora, Namira, Nocturnal) are reached *via the global Daedric system*, not a Breton-private fork. For Bretons, the global Daedric punitive "Taboo/stigma" response must **not** fire on top of Hidden Art scoring: the matrix `Legible` stance applies (confirmed `Legible` for Hircine, Nocturnal, Hermaeus Mora, Namira in `PDV_DaedricRacePrinceMatrix.csv`), so Daedric acts yield **piety**, not punishment. The Breton-specific social cost is carried **solely** by `WitchcraftExposure` (global, always active) plus authored Vigilant pressure — never a second stigma penalty stacked on the Daedric bond. (Source: "Available deities (Daedric)… via Daedric system"; "Hidden Art players get piety from what others are punished for"; `WitchcraftExposure` global lock; Daedric race/prince matrix.)
+
 ---
 
 ## Curse State Summary
