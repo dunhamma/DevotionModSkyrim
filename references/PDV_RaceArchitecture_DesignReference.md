@@ -2448,6 +2448,7 @@ Rationale:
 - `Stronghold Orc` has the highest devotion ceiling
 - `City Orc` and `Legion / service / exile Orc` have lower ceilings
 - Their compensation is broader survivability and flexibility, not equal devotional depth
+- Numeric lock: implemented as a daily-rate multiplier in ProcessDawn — `Stronghold ×1.00`, `City ×0.75`, `Legion / service / exile ×0.60` of base. Thresholds (25/50/85) are identical across modes; only the rate differs. Calendars and rationale in `references/authoring/PDV_SignalDensityAudit.md` and `PDV_PietyPaceBalancingTable.md`
 
 **High-confidence trigger rule (LOCKED):**
 - `City Orc` and other compromise modes should only use high-confidence detectable Skyrim proxies

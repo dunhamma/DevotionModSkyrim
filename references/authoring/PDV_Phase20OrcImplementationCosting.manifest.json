@@ -20,7 +20,8 @@
     "Stronghold, City, and Legion/Exile need distinct value, not one full route and two weaker variants.",
     "Forge rewards require quality, context, value, or commission filters.",
     "City and Legion/Exile play must show dignity, service, and self-made community instead of missing stronghold status.",
-    "Werewolf can be judged by the code; vampire remains outside the test until cured."
+    "Werewolf can be judged by the code; vampire remains outside the test until cured.",
+    "Mode ceiling rate multipliers are LOCKED in ProcessDawn (pre-clamp): Stronghold x1.00, City x0.75, Legion/Exile x0.60 of base; thresholds (25/50/85) are identical across modes. Calendars: Stronghold 10/20/34, City 13/27/45, Legion/Exile 17/33/57. See PDV_PietyPaceBalancingTable.md and PDV_SignalDensityAudit.md."
   ],
   "stateSurfaces": [
     {

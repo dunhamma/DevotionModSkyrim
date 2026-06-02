@@ -142,7 +142,15 @@ SIGNAL_MINOR_ALIGNED     = 0.5      ; Class B, daily cap 1.5
 SIGNAL_STANDARD_FAVOR    = 1.5      ; Class C, daily cap 3.0
 SIGNAL_MILESTONE         = 5.0      ; Class D, one-time, clamp-BYPASSING + one-shot guarded
 SIGNAL_MILESTONE_SIGNATURE = 8.0    ; Class D, optional: one signature questline per god
+ORC_RATE_MULT_STRONGHOLD   = 1.00   ; Orc life-mode daily-rate multiplier (ProcessDawn, pre-clamp)
+ORC_RATE_MULT_CITY         = 0.75   ; -> City calendar 13/27/45
+ORC_RATE_MULT_LEGIONEXILE  = 0.60   ; -> Legion/Exile calendar 17/33/57
 ```
+
+The `ORC_RATE_MULT_*` values are the only sanctioned per-deity rate multipliers in 1.0; they
+multiply the daily gain in ProcessDawn *before* the clamp, so they scale both the default (2.5)
+and ceiling (3.5) rates. All other gods run at ×1.00. See `PDV_SignalDensityAudit.md` for the
+full per-mode calendar and `PDV_RaceDesign_Orc.md` for the theology.
 
 Class-D milestones are applied via a direct `Adjust(SIGNAL_MILESTONE, reason)` that
 skips the dawn clamp, and each must be wrapped in a one-shot `PDV.Surfaced.*` guard.
