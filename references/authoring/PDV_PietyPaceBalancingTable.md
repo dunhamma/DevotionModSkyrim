@@ -82,12 +82,16 @@ Both columns hit the agreed targets.
   (`PDV_TargetEndStates_1.0.md:430`) — i.e. day ~20 default / ~14 ceiling — and the
   35-piety focused climb to Devoted is the back half of the calendar.
 
-- **Uniform across gods by construction.** Every deity shares the same thresholds,
-  clamp, and schedule, so time-to-tier is identical *given equal daily signal*. The
-  only cross-god variance is **signal density** (how many Class A–C opportunities a
-  god realistically affords per day). Keep an eye on gods whose domains rarely come up
-  in normal play — they may need a slightly richer trigger family, **not** a higher
-  per-act value, to stay on the same calendar.
+- **Uniform across gods by construction — with sanctioned exceptions.** Every deity
+  shares the same thresholds, clamp, and schedule, so time-to-tier is identical *given
+  equal daily signal*. The 10/20/34 default is validated against each god's trigger
+  surface in `PDV_SignalDensityAudit.md`, which confirms most gods clear ~2.5/day and
+  catalogues the deliberate off-calendar cases: **Orc life-modes** (Stronghold 1.00 ×
+  base, City 0.75, Legion 0.60 — a ~57-day Legion climb to Devoted by design),
+  **Argonian Hist** (a passive decay drag, not a multiplier), and **Daedric paths**
+  (multi-day rite cadence, not daily accrual). Genuine density gaps (currently Bosmer
+  Exchange and Breton Knight's Road) are fixed with a **richer trigger family, never a
+  higher per-act value** — pace is set at the value layer, density at the trigger layer.
 
 - **Milestones bypass the clamp (small + one-shot).** Class-D milestones are applied
   through a direct `Adjust(points, reason)` call that **bypasses** the daily clamp
