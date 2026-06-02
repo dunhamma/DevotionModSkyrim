@@ -1356,6 +1356,13 @@ As of v3.46, this model is runtime-proven from a fresh-save proof pass. Runtime
 also promoted `PDV.PassiveDecayFloor` as the persistent floor key so a deity
 that has reached Devoted or Champion cannot decay below the locked floor later.
 
+**Balancing-pass retune (apply at CK tuning, see `references/authoring/PDV_DecayAudit.md`).**
+The Phase 17 pseudocode below is the *as-proven* model at `DECAY_GRACE_DAYS = 3`. The decay audit
+locked three tuning changes to apply: (1) `DECAY_GRACE_DAYS = 2`; (2) a `TIER_DOWN_HYSTERESIS = 5.0`
+so a tier is lost only 5 below its threshold (anti-whiplash); (3) **vampire** curse decay bypasses
+`GetDecayFloor()` (true excommunication to 0) while **werewolf** respects it. Re-run the Phase 17
+grace/floor proof after these land. Two forks remain open there (Orc decay scaling, Druidic volatility).
+
 ### 15.1 Mechanism
 
 Daily, at dawn, after `PietyToday` is consolidated:

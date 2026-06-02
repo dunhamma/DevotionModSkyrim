@@ -1,13 +1,13 @@
-# Signal-Density Audit — can each god generate ~2.5 piety/day in normal play?
+# Signal-Density Audit — can each god generate ~3.3 piety/day in normal play?
 
 **Question.** The pace model (`PDV_PietyPaceBalancingTable.md`) assumes a steady player nets
-**~2.5 piety/day** per god, giving the default 10/20/34-day calendar to Observant/Faithful/Devoted.
-That only holds if each god actually *affords* ~2.5/day of qualifying behavior in normal play.
+**~3.3 piety/day** per god, giving the default 8/15/26-day calendar to Observant/Faithful/Devoted.
+That only holds if each god actually *affords* ~3.3/day of qualifying behavior in normal play.
 This audit checks that, using the per-race trigger families and the manifest's own cadence notes.
 
-**Method / the bar.** Daily piety ≈ a **devotion floor** (prayer/shrine/substrate, ~+1.0/day,
-Class A) **+ favors** (Class B/C). Because a single standard favor is +1.5, **prayer floor + one
-standard favor = 2.5/day** — so a god clears the bar as long as it reliably affords *one*
+**Method / the bar.** Daily piety ≈ a **devotion floor** (prayer/shrine/substrate, ~+1.3/day,
+Class A) **+ favors** (Class B/C). Because a single standard favor is +2.0, **prayer floor + one
+standard favor = 3.3/day** — so a god clears the bar as long as it reliably affords *one*
 qualifying favor per day on top of its floor. The manifest's repeated "~1–2 favors/day in steady
 play" notes are therefore right at or above the bar for any god that *has* a floor.
 
@@ -17,7 +17,7 @@ Hist** has a passive drag instead of a floor. These two are structurally slower,
 
 ## Headline
 
-The uniform calendar **holds as the default**, and most gods clear ~2.5/day comfortably. The real
+The uniform calendar **holds as the default**, and most gods clear ~3.3/day comfortably. The real
 finding is not accidental gaps — it's that **the architecture deliberately runs three things
 off-calendar**, and those need to be recorded as sanctioned exceptions (with real calendars) so
 they aren't mistaken for density bugs. Only a few genuinely thin paths need a trigger top-up, and
@@ -26,7 +26,7 @@ desync every *other* god).
 
 ## Verdict table
 
-`On-calendar` = clears ~2.5/day via floor + ~1 favor · `Sanctioned-slow` = intentionally below
+`On-calendar` = clears ~3.3/day via floor + ~1 favor · `Sanctioned-slow` = intentionally below
 default, documented in design · `Gap (fix)` = accidentally thin, enrich triggers.
 
 | Race / path | ~Favors/day (manifest) | Floor? | Verdict | Action |
@@ -55,23 +55,24 @@ default, documented in design · `Gap (fix)` = accidentally thin, enrich trigger
 
 ## Sanctioned exceptions — the real calendars
 
-These are *intended* to run off the 10/20/34 default. Recording them so they read as design, not bugs.
+These are *intended* to run off the 8/15/26 default. Recording them so they read as design, not bugs.
 
 ### Orc life-mode multipliers (now pinned down)
 
-`PDV_RaceDesign_Orc.md:219` set the multipliers as "TBD" — applying them to the locked 2.5/day
-default (and 3.5 ceiling) gives concrete calendars. The Champion threshold (85) is **the same**
+`PDV_RaceDesign_Orc.md:219` now **locks** the multipliers — applying them to the locked 3.3/day
+default (and 4.3 ceiling) gives concrete calendars. The Champion threshold (85) is **the same**
 across modes; only the rate differs.
 
 | Mode | Rate ×base | Default day to Obs / Faith / Devoted | Ceiling day to Devoted |
 |---|---|---|---|
-| Stronghold | 1.00 → 2.5/day | **10 / 20 / 34** | ~24 |
-| City | 0.75 → 1.9/day | **13 / 27 / 45** | ~32 |
-| Legion/Exile | 0.60 → 1.5/day | **17 / 33 / 57** | ~40 |
+| Stronghold | 1.00 → 3.3/day | **8 / 15 / 26** | ~20 |
+| City | 0.75 → 2.5/day | **10 / 20 / 34** | ~26 |
+| Legion/Exile | 0.60 → 2.0/day | **13 / 25 / 43** | ~33 |
 
-This makes "the burden is highest, the ceiling lowest" (`Orc:63`) a real ~57-day Legion climb to
-Devoted — deliberately the hardest devotional life in the mod. **Recommend locking the 1.00 / 0.75 /
-0.60 multipliers** (they were the design's own rough targets and they produce a coherent spread).
+This makes "the burden is highest, the ceiling lowest" (`Orc:63`) a real ~43-day Legion climb to
+Devoted — deliberately the hardest devotional life in the mod. The 1.00 / 0.75 / 0.60 multipliers
+are **locked** across the Orc sheet, the design-reference LOCKED block, the balancing constants,
+and the Orc costing manifest.
 
 ### Argonian — leaky Hist floor (not a multiplier)
 
@@ -85,7 +86,7 @@ needed**, but expect Argonian Faithful to land a few days later than default in 
 
 Daedric devotion is gated to multi-day authored rites (Hircine proof: one rite on each of three
 separate in-game days = Seeker; same-day repeats are anti-farm-scaled, `Architecture` Phase 13).
-These deliberately do **not** sit on the 2.5/day calendar and should not be balanced against it.
+These deliberately do **not** sit on the 3.3/day calendar and should not be balanced against it.
 
 ## Genuine gaps to fix (trigger enrichment only)
 
@@ -110,7 +111,7 @@ shared calendar. Density gaps are fixed at the *trigger* layer, pace is set at t
 
 ## Net answer
 
-Yes — ~2.5/day is achievable for every god that's supposed to hit it. The shared calendar is sound.
+Yes — ~3.3/day is achievable for every god that's supposed to hit it. The shared calendar is sound.
 Three exception classes (Orc modes, Argonian Hist, Daedric rites) are slower **on purpose** and now
 have explicit calendars; two paths (Bosmer Exchange, Breton Knight's Road) need a small trigger
 top-up to reach the default. With the Orc multipliers locked at 1.00/0.75/0.60 and those two
