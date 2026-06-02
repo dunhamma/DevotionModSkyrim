@@ -87,6 +87,8 @@ averaging for pure-town stretches — acceptable, monitor in playtest.
 
 ## Verify on a vanilla save before locking (per mod discipline, `Architecture:307`)
 
+> Procedure: `PDV_TriggerTopups_DetectionProbe_Runbook.md` runs all five as trace-only probes with pass/fail and fallbacks.
+
 1. `RegisterForMenu` + gold-delta on Barter/Training menu close behaves (no double-fire, catches both directions).
 2. Sneak-attack flag is readable at the Kill-Actor event for the K1 no-opener gate.
 3. Predatory faction EditorIDs (`BanditFaction`, `ForswornFaction`) and whether unique bandit-boss sub-factions inherit them.
