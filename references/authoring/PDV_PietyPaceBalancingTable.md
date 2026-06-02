@@ -157,9 +157,10 @@ ORC_RATE_MULT_LEGIONEXILE  = 0.60   ; -> Legion/Exile calendar 13/25/43
 ```
 
 The `ORC_RATE_MULT_*` values are the only sanctioned per-deity rate multipliers in 1.0; they
-multiply the daily gain in ProcessDawn *before* the clamp, so they scale both the default (3.3)
-and ceiling (4.3) rates. All other gods run at ×1.00. See `PDV_SignalDensityAudit.md` for the
-full per-mode calendar and `PDV_RaceDesign_Orc.md` for the theology.
+multiply the daily **gain** in ProcessDawn *before* the clamp, so they scale both the default (3.3)
+and ceiling (4.3) rates. They scale **gain only** — passive decay stays at the universal 0.5/day
+for every Orc mode (`PDV_DecayAudit.md`). All other gods run at ×1.00. See `PDV_SignalDensityAudit.md`
+for the full per-mode calendar and `PDV_RaceDesign_Orc.md` for the theology.
 
 Class-D milestones are applied via a direct `Adjust(SIGNAL_MILESTONE, reason)` that
 skips the dawn clamp, and each must be wrapped in a one-shot `PDV.Surfaced.*` guard.

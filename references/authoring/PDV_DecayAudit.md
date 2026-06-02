@@ -93,9 +93,7 @@ piety exceptions):
 | Dunmer ancestor | **no passive decay** (infrastructure ceiling LOCKED) (`Dunmer:61`) | **Sanctioned** |
 | Khajiit lunar substrate | never decays severely | **Sanctioned** |
 
-## Decisions
-
-**Locked this pass:**
+## Decisions (all locked)
 
 1. **Tier hysteresis — yes, 5-point buffer.** Fixes fresh-tier fragility + §16.7 whiplash.
 2. **Grace tightened 3 → 2 days.** Coverage means engaged gods are tended ~daily, so this is
@@ -103,23 +101,20 @@ piety exceptions):
    breathes without becoming a chore (broad worship still 0.1/day).
 3. **Vampire curse decay bypasses the floor → 0** (true excommunication); **werewolf respects the
    floor** (strain, not severance).
-
-**Open (need your call):**
-
-4. **Orc + decay.** Orc has no formal patron offer, so Malacath is **not** decay-protected — Orc
-   piety drifts at base 0.5/day. *Provisionally applied my lean:* **scale decay by the same
-   life-mode multiplier** (Stronghold 0.50, City 0.375, Legion 0.30 per day) so the gain:decay ratio
-   is constant across modes ("slow motion" rather than doubly punished — Legion's 43-day climb
-   already expresses "hardest life"). Confirm, or pick: decay stays at base 0.5 for all modes
-   (Legion strictly hardest/most fragile), or Malacath is decay-exempt like a patron.
-5. **DruidicStanding volatility.** At 2.0/dawn to a floor of 30, a Green Way Breton slides 50→30 in
-   ~15 idle days — more volatile than standard piety, despite the "gentle" framing. *Lean: intended
-   (a covenant needs tending), but confirm — if it should feel gentle, lower the rate to ~1.0 or
-   raise the floor.*
+4. **Orc decay stays at base 0.5/day for all life-modes** — the mode multiplier scales *gain only*.
+   Rationale: the multiplier is a gain-generation compensation (it's harder to *show* the code
+   without stronghold structure), not a time-dilation; and decay models "you stopped living the
+   code" — a Stronghold Orc is passively reinforced by the surrounding community, while an
+   exile/Legion Orc holds it alone, so their faith should *not* decay slower. Floor + hysteresis
+   protect every mode equally. No Orc-specific decay constant — decay is universal.
+5. **DruidicStanding kept as-is** (2.0/dawn after 5-day grace, floor 30). The gentleness lives in
+   the generous grace, not the rate; it's an active-covenant axis distinct from accumulated piety,
+   so a steeper per-unit erosion is appropriate. LOCKED value unchanged.
 
 ## Net answer
 
 The decay model is **healthy and on-goal**: gentle 2-day grace, drift at ~1/7 of gain, fully
 recoverable, uniform across gods with a coherent exception set. The one real feel-bug — fresh-tier
-fragility — is **fixed** by the adopted 5-point hysteresis. Two forks remain (Orc decay scaling,
-Druidic volatility); neither changes a locked constant — both are multiplier-scope choices.
+fragility — is **fixed** by the adopted 5-point hysteresis. All forks are now resolved; only the
+hysteresis and grace change touch shared tuning (both already in `PDV_PietyPaceBalancingTable.md`
+§6), and Orc decay needs **no** new constant.

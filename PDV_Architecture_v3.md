@@ -1361,7 +1361,8 @@ The Phase 17 pseudocode below is the *as-proven* model at `DECAY_GRACE_DAYS = 3`
 locked three tuning changes to apply: (1) `DECAY_GRACE_DAYS = 2`; (2) a `TIER_DOWN_HYSTERESIS = 5.0`
 so a tier is lost only 5 below its threshold (anti-whiplash); (3) **vampire** curse decay bypasses
 `GetDecayFloor()` (true excommunication to 0) while **werewolf** respects it. Re-run the Phase 17
-grace/floor proof after these land. Two forks remain open there (Orc decay scaling, Druidic volatility).
+grace/floor proof after these land. Orc decay stays at **base 0.5/day for all life-modes** (the
+mode multiplier scales gain only — no Orc-specific decay constant); DruidicStanding is unchanged.
 
 ### 15.1 Mechanism
 
