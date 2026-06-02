@@ -89,6 +89,9 @@ These deliberately do **not** sit on the 2.5/day calendar and should not be bala
 
 ## Genuine gaps to fix (trigger enrichment only)
 
+> **Resolved:** both gaps are now specced in `PDV_TriggerTopups_Exchange_KnightsRoad.md` (Z'en = Reciprocity family: production + exchange; Knight's Road = Justice family: predator-kill without stealth opener). Detail below retained for rationale.
+
+
 Two paths can't reliably produce even one favor/day on top of the floor:
 
 1. **Bosmer Exchange (Z'en).** Proportionate vengeance is quest-gated, so ordinary days are empty.
