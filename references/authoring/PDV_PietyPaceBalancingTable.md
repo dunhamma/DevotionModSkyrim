@@ -49,7 +49,7 @@ Calibrated so **typical play nets ~2.5/day** and a heavy day saturates the 3.5 c
 | **A — Devotion** | prayer at shrine / portable shrine / home altar | **+1.0** | 8–12 h cooldown; daily cap **2.0** |
 | **B — Minor aligned** | incidental in-domain behavior (a Kyne-aligned wild kill, an Arkay undead cleanse in passing) | **+0.5** | daily cap **1.5** |
 | **C — Standard favor** | a deliberate domain act (Mara charity, defiant Talos shout, Malacath quality-labor) | **+1.5** | ~1/day typical; daily cap **3.0** |
-| **D — Milestone** | quest resolution, rite, artifact, conversion beat | **+5 to +15**, one-time | clamp-respecting (see §5) |
+| **D — Milestone** | quest resolution, rite, artifact, conversion beat | **+5** (one-time); **+8** for a god's signature questline (optional) | clamp-bypassing + one-shot guarded (see §5) |
 | **E — Violation** | counter-aligned act (Green Pact breach, Talos shrine for an Altmer) | **−1.0 to −15** + rival erosion | per the v2 stance/rivalry ledger |
 
 ### Worked days
@@ -89,14 +89,34 @@ Both columns hit the agreed targets.
   in normal play — they may need a slightly richer trigger family, **not** a higher
   per-act value, to stay on the same calendar.
 
-- **Milestones and the clamp (the one tradeoff).** A +10 Class-D milestone on a given
-  day is still clamped to +3.5 that day, so the overflow is "wasted." This is
-  deliberate: it keeps the hard ceiling intact and makes milestone days *guaranteed
-  max days* rather than catapults. If you later decide quest moments should feel
-  bigger than a normal day, the alternative is to route Class-D through a direct
-  `Adjust(points, reason)` call that **bypasses** the daily clamp
-  (`PDV_Architecture_v3.md:495`) — at the cost of the 7/14/24 ceiling guarantee.
-  Recommend keeping milestones clamp-respecting for 1.0.
+- **Milestones bypass the clamp (small + one-shot).** Class-D milestones are applied
+  through a direct `Adjust(points, reason)` call that **bypasses** the daily clamp
+  (`PDV_Architecture_v3.md:495`), so a big story beat actually registers instead of
+  collapsing into a normal day. Under the clamp, milestone *size* is meaningless —
+  any value above 3.5 is clamped to 3.5, so +5 and +15 behave identically — which is
+  why bypass is required for milestones to matter at all.
+
+  The magnitude is kept **small (+5)** so bypass stays safe. At +5 a milestone is worth
+  ~2 default days, so it punctuates the climb without catapulting:
+  - It cannot skip a tier — crossing a 25-piety band needs **5** distinct one-time
+    milestones; reaching Faithful (50) from zero on milestones alone needs **10**,
+    more milestone-grade quests than a god realistically offers.
+  - It cannot trip a premature patron offer or focus emergence off a single quest
+    (a +5 bump moves ~35 → ~40, not across 50).
+  - Because the climb-crossing cross-tier exploit self-closes at this magnitude, the
+    earlier "milestone can't cross a threshold" rule is **not needed** and is dropped.
+
+  The **one required guardrail** is that each milestone is **one-shot guarded**
+  (the `PDV.Surfaced.*` pattern) so a repeatable quest moment can't be farmed.
+
+  **Optional signature peak.** A single *signature* questline per god — the act that
+  makes you its true champion — may use **+8** instead of +5 for one standout moment.
+  This is a ~1-day-of-progress difference, so it is pure flavor; flat +5 everywhere is
+  equally valid and simpler.
+
+  Pace is undisturbed: milestones are sparse, so a full playthrough nets only ~+20–30
+  bonus spread across ~34 days. A quest-dense god will run slightly ahead, which is
+  earned (doing most of a god's content *is* established faith), not an exploit.
 
 - **Decay only bites the inactive.** During an active climb there is effectively no
   decay (grace resets every worship day). The 0.5/day drain matters for *holding* a
@@ -116,9 +136,13 @@ DECAY_GRACE_DAYS          = 3       ; unchanged
 SIGNAL_PRAYER            = 1.0      ; Class A, daily cap 2.0
 SIGNAL_MINOR_ALIGNED     = 0.5      ; Class B, daily cap 1.5
 SIGNAL_STANDARD_FAVOR    = 1.5      ; Class C, daily cap 3.0
-SIGNAL_MILESTONE_MIN     = 5.0      ; Class D, one-time, clamp-respecting
-SIGNAL_MILESTONE_MAX     = 15.0     ; Class D
+SIGNAL_MILESTONE         = 5.0      ; Class D, one-time, clamp-BYPASSING + one-shot guarded
+SIGNAL_MILESTONE_SIGNATURE = 8.0    ; Class D, optional: one signature questline per god
 ```
+
+Class-D milestones are applied via a direct `Adjust(SIGNAL_MILESTONE, reason)` that
+skips the dawn clamp, and each must be wrapped in a one-shot `PDV.Surfaced.*` guard.
+All other classes (A–C) still feed the clamped dawn consolidation.
 
 Per-deity tuning is still allowed on top of these defaults (a multi-domain god may
 warrant a higher milestone band), but the baseline above is what produces the agreed
