@@ -1,9 +1,13 @@
 # Trigger Top-Ups — Bosmer Exchange (Z'en) & Breton Knight's Road
 
 Closes the two density gaps from `PDV_SignalDensityAudit.md`. Policy (decided): **proxies
-for the floor** — reliable behavioral hooks carry the ~2.5/day pace; curated intent hooks stay
+for the floor** — reliable behavioral hooks carry the pace; curated intent hooks stay
 as bonus milestones. Budget: each path's new family must reach **+1.5/day** (Class B, +0.5,
-daily cap 1.5) so that floor (prayer/shrine +1.0) + family = the **2.5/day** default calendar.
+daily cap 1.5) so that floor (prayer/shrine +1.0) + family = one full default day.
+
+> **Scale note:** all values below are **raw** (pre-`GAIN_RATE_SCALE`). The global ×1.32 in
+> ProcessDawn lifts raw `floor 1.0 + family 1.5 = 2.5` to the **3.3/day** effective calendar
+> automatically — no per-value change needed here (`PDV_BalancingImplementationHandoff.md` Task 1).
 
 ## Detection toolkit (what we may hook)
 
@@ -74,7 +78,7 @@ faction gate blocks scoring innocents, guards, or animals.
 
 ---
 
-## Coverage check — does each path clear 2.5/day?
+## Coverage check — does each path clear a full day? (raw values; ×1.32 → 3.3 effective)
 
 | Day type | Z'en (Exchange) | Knight's Road |
 |----------|-----------------|---------------|
