@@ -1623,6 +1623,14 @@ copy for the transitions each race can hit. This is the "surface the transitions
 V1 workstream named in the immersion audit. It does not change scoring, piety,
 curse, or Daedric mechanics — only whether the player is told.
 
+**Coverage / wiring.** The per-race copy for these transitions is essentially
+already drafted in `race-sheets/PDV_RaceContent_Manifest.md`.
+`references/authoring/PDV_TransitionSurfacing_CoverageMap.md` binds each class to
+the existing slot IDs per race, marks the N/A cells, gives the `PDV.Surfaced.*`
+guard keys, and records one behavioural clarification: `tier` fires only at
+Observant/Faithful, and the **Devoted** crossing is surfaced once by the
+`emergence` class (per-deity Champion entry) to avoid a double-fire at Devoted.
+
 ---
 
 ## 17. Content authoring pipeline (Phase 19)
