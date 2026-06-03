@@ -2,7 +2,7 @@
 
 **Created:** 2026-05-31
 **Status:** Planning and implementation queue for Phase 20 work that can proceed before more Skyrim runtime proof
-**Owner:** Companion to `PDV_PreBetaRaceGateLedger.md`, `PDV_PreBetaRaceScalingSpine.md`, `PDV_PreBetaRaceAcceptanceRubric.md`, `PDV_Phase20_NoInGameProof_Gates.json`, `PDV_Phase20_ManualEvidenceLedger.json`, and `PDV_Phase20_PreBetaManualChecks_Runbook.md`
+**Owner:** Companion to `PDV_PreBetaRaceGateLedger.md`, `PDV_PreBetaRaceScalingSpine.md`, `PDV_PreBetaRaceAcceptanceRubric.md`, `PDV_Phase20_NoInGameProof_Gates.json`, `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_Phase20_PreBetaManualChecks_Runbook.md`, and `PDV_Phase20_BetaReadinessRemainder.md`
 
 ## Purpose
 
@@ -24,6 +24,10 @@ The current V1 content-authoring lanes are:
 4. P2 audit-only lanes.
 
 Recognition/dialogue is V2 only and does not belong in this pass.
+
+The current safe source-fill handoff lives in
+`PDV_Phase20_BetaReadinessRemainder.md`. It records what the P2 book-fill
+tranche proves and what remains before beta readiness.
 
 ## Boundary
 
@@ -66,7 +70,16 @@ Expected current result: FAIL=0, WARN=0, PASS=1079, INFO=4
 
 Strict Phase 20 source/readback gate:
 node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
-Expected current result: PASS=2342, WARN=1, INFO=28
+Expected current result: PASS=2630, WARN=1, INFO=29
+
+P2 source-fill readback:
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill
+Expected current result: Status=PASS, 12 approved P2 book entries across 6 groups.
+
+P2 FormList and alias-property readback:
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties
+Expected current result: Status=PASS, all 17 P2 FormLists and alias properties read back.
 
 Route-marker list:
 node .\tools\pdv_phase20_runtime_check.mjs --list

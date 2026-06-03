@@ -1,0 +1,187 @@
+{
+  "schema": "pdv.phase20.source-fill-approval-ledger.v1",
+  "created": "2026-06-03",
+  "status": "p2-book-fill-live-readback-pass",
+  "proofModel": "CKRA-informed: manifest intent is desired state only; accepted state requires structured writer output, live FormList readback, verifier evidence, and a gate summary.",
+  "scope": {
+    "liveFillIncluded": true,
+    "liveFillScope": "Approved P2 book-read sources only.",
+    "questStageFillScope": "Blocked until exact-stage gating exists in the receiver path.",
+    "nonP2FillScope": "Audit/design only until matching receivers/FormLists are implemented and read back."
+  },
+  "liveFillReadback": {
+    "status": "PASS",
+    "filledAt": "2026-06-03T16:02:21+10:00",
+    "sourceFillCheckAt": "2026-06-03T16:02:36+10:00",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260603-160221.bak",
+    "seqBackupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Seq\\PlayerDevotion_Framework.seq.20260603-060425.bak",
+    "touchedFile": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PlayerDevotion_Framework.esp",
+    "filledEntryCount": 12,
+    "formListGroups": 6
+  },
+  "approvalRules": [
+    "Only exact source records with local extracted/readback evidence can be approved.",
+    "Approved entries must name receiver, sourceKind, accepted context, rejected context, duplicate guard, and rationale.",
+    "Quest-stage sources require exact approved stages before live fill.",
+    "Book entries are one-shot per source/form/family through PDV_PlayerEvents repeat gates.",
+    "Do not approve duplicate abbreviated books, broad lore-only books, shrine blessings, spell effects, generic faction records, or generic quest records in this pass."
+  ],
+  "approvedLiveFillGroups": [
+    {
+      "race": "Breton",
+      "receiver": "PDV_FLST_P2_BretonHiddenArtSources",
+      "routeFamily": "Hidden Art",
+      "sourceKind": "book",
+      "semanticVerdict": "plausible",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Witchcraft, hagraven, Reach occult, and hidden-practice reading.",
+      "rejectedContext": "Generic spell learning, ordinary mage loot, generic Reach travel, or Forsworn combat.",
+      "duplicateGuard": "One-shot book-read source route; no quest-stage owner in this tranche.",
+      "sources": [
+        { "formKey": "Skyrim.esm:0ED60B", "editorId": "Book2CommonHagravens" },
+        { "formKey": "Skyrim.esm:07EB03", "editorId": "Book2CommonMadmenoftheReach" },
+        { "formKey": "Skyrim.esm:0DDFB6", "editorId": "dunPOIWitchNote" }
+      ]
+    },
+    {
+      "race": "Dunmer",
+      "receiver": "PDV_FLST_P2_DunmerAzuraSources",
+      "routeFamily": "Azura / Reclamation focus",
+      "sourceKind": "book",
+      "semanticVerdict": "strong",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Azura-specific devotional or lore reading.",
+      "rejectedContext": "Generic Daedric contact, artifact ownership, shrine use, or ash proximity.",
+      "duplicateGuard": "Book-read owner only; DA01 quest-stage outcomes remain blocked until exact-stage gating exists.",
+      "sources": [
+        { "formKey": "Skyrim.esm:01B245", "editorId": "Book4RareInvocationofAzura" },
+        { "formKey": "Skyrim.esm:01ACE9", "editorId": "Book3ValuableAzuraandtheBox" }
+      ]
+    },
+    {
+      "race": "Dunmer",
+      "receiver": "PDV_FLST_P2_DunmerBoethiahSources",
+      "routeFamily": "Boethiah / Reclamation focus",
+      "sourceKind": "book",
+      "semanticVerdict": "strong",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Boethiah-specific Reclamation reading.",
+      "rejectedContext": "Generic betrayal, murder, cruelty, or broad Daedric behavior.",
+      "duplicateGuard": "Book-read owner only; DA02 quest-stage and sacrifice outcomes remain blocked.",
+      "sources": [
+        { "formKey": "Skyrim.esm:01B233", "editorId": "Book4RareBoethiahsGlory" },
+        { "formKey": "Skyrim.esm:032E72", "editorId": "DA02BookBoethiahsProving" }
+      ]
+    },
+    {
+      "race": "Imperial",
+      "receiver": "PDV_FLST_P2_ImperialPublicTalosSources",
+      "routeFamily": "Public Talos pressure",
+      "sourceKind": "book",
+      "semanticVerdict": "strong",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "The Talos Mistake as one-shot public Concordat/Talos pressure reading.",
+      "rejectedContext": "Generic shrine proximity, Civil War rank, or unsplit public/private Talos context.",
+      "duplicateGuard": "Book-read source only; Civil War oath rows remain manual/exact-stage blocked.",
+      "sources": [
+        { "formKey": "Skyrim.esm:0ED04D", "editorId": "Book2ReligiousTalosWorship" }
+      ]
+    },
+    {
+      "race": "Nord",
+      "receiver": "PDV_FLST_P2_NordOldWaysSources",
+      "routeFamily": "Old Ways / Sovngarde",
+      "sourceKind": "book",
+      "semanticVerdict": "plausible",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Nord identity, Sovngarde, and afterlife reading.",
+      "rejectedContext": "Generic combat, cave travel, bandit killing, or broad race-pride loops.",
+      "duplicateGuard": "Book-read source only; MQ304 stage 200 remains exact-stage blocked.",
+      "sources": [
+        { "formKey": "Skyrim.esm:0ED161", "editorId": "Book1CheapNordsArise" },
+        { "formKey": "Skyrim.esm:0ED02F", "editorId": "Book2CommonDreamOfSovngarde" },
+        { "formKey": "Skyrim.esm:0E2FC6", "editorId": "Book3ValuableSovngardeReexamination" }
+      ]
+    },
+    {
+      "race": "Nord",
+      "receiver": "PDV_FLST_P2_NordHircineArkaySources",
+      "routeFamily": "Hircine / Arkay edge",
+      "sourceKind": "book",
+      "semanticVerdict": "plausible",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Hircine totem reading as a one-shot curse/hunt edge context.",
+      "rejectedContext": "Generic animal killing, werewolf state, undead killing, disease, or tomb travel.",
+      "duplicateGuard": "Use only CR12TotemsOfHircine; exclude duplicate abbreviated CR12TotemsOfHircineAbbr.",
+      "sources": [
+        { "formKey": "Skyrim.esm:0F683F", "editorId": "CR12TotemsOfHircine" }
+      ]
+    }
+  ],
+  "blockedReceiverAudit": [
+    {
+      "race": "Redguard",
+      "routeFamily": "Sect / ancestor-duty",
+      "source": "MS08 stages 200/201",
+      "receiverDecision": "new exact-stage receiver needed",
+      "fillDecision": "blocked",
+      "blocker": "No current Redguard quest-stage receiver/FormList with exact stage outcome split."
+    },
+    {
+      "race": "Altmer",
+      "routeFamily": "Lorkhan pressure / Auri-El / Magnus",
+      "source": "MQ104, MQ304, MG08, Dawnguard, HearthFires",
+      "receiverDecision": "new exact-stage or item/effect receiver needed",
+      "fillDecision": "blocked",
+      "blocker": "Current P2 receiver network is Breton/Dunmer/Imperial/Nord only."
+    },
+    {
+      "race": "Argonian",
+      "routeFamily": "Void / Soul Cairn / Sithis",
+      "source": "DB01, DB11, DLC1VQ04",
+      "receiverDecision": "new exact-stage receiver needed",
+      "fillDecision": "blocked",
+      "blocker": "No Argonian exact-stage receiver and no manual/runtime proof for generic-source rejection."
+    },
+    {
+      "race": "Khajiit",
+      "routeFamily": "Alkosh / Nocturnal / road identity",
+      "source": "MQ104, TG08B/TG09",
+      "receiverDecision": "new exact-stage or item receiver needed",
+      "fillDecision": "blocked",
+      "blocker": "No current Khajiit FormList receiver for these exact sources."
+    },
+    {
+      "race": "Bosmer",
+      "routeFamily": "Hircine / hunt law / Green Pact edge",
+      "source": "DA05, Hircine-adjacent rows",
+      "receiverDecision": "new exact-stage receiver or existing Bosmer route adapter needed",
+      "fillDecision": "blocked",
+      "blocker": "Current P2 fill pass does not own Bosmer sources."
+    },
+    {
+      "race": "Orc",
+      "routeFamily": "Boethiah taboo / strength-order pressure",
+      "source": "DA02",
+      "receiverDecision": "new exact-stage receiver needed",
+      "fillDecision": "blocked",
+      "blocker": "No current Orc quest-stage receiver/FormList; sacrifice/champion stage semantics need exact routing."
+    },
+    {
+      "race": "Breton/Dunmer/Imperial/Nord",
+      "routeFamily": "P2 quest-stage sources",
+      "source": "DA01, DA02, C03, C06, DA05, MQ105, MQ304, CW01A/CW01B, Dawnguard",
+      "receiverDecision": "exact-stage support needed before fill",
+      "fillDecision": "blocked",
+      "blocker": "Current quest-stage callback receives quest plus stage, but FormList membership alone cannot restrict to approved stages."
+    }
+  ],
+  "verificationCommands": [
+    "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries --dry-run",
+    "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries",
+    "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill",
+    "node .\\tools\\pdv_content_verify.mjs",
+    "node .\\tools\\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json",
+    "node .\\tools\\pdv_phase20_runtime_check.mjs --list"
+  ]
+}

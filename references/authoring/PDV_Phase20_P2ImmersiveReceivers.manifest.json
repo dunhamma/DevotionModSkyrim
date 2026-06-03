@@ -1,0 +1,359 @@
+{
+  "schema": "pdv.phase20.p2-immersive-receivers.v1",
+  "status": "source-fill-tooling-ready-pending-curated-source-fill",
+  "owner": "references/authoring/PDV_Phase20_NoInGameProof_Gates.json#scriptRouteScaffolds",
+  "script": "PDV_PlayerEvents.psc",
+  "receiverQuest": "PDV__ManagerQuest",
+  "receiverAlias": "PDV_Player",
+  "routeOwnership": "PDV_PlayerEvents receives player/PO3 events only; PDV_EventBus routes; PDV__ManagerQuest owns persistent state and Survey/status text.",
+  "po3Events": [
+    "RegisterForBookRead",
+    "RegisterForSpellLearned",
+    "RegisterForItemHarvested",
+    "RegisterForWeatherChange",
+    "RegisterForQuestStage"
+  ],
+  "sourceProperties": [
+    {
+      "property": "PDV_FLST_P2_BretonKnightsRoadSources",
+      "race": "Breton",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteBretonTraditionChoice(0, sourceId)",
+      "acceptedUse": "Knight's Road tradition confirmation from curated vow, mercy, service, protection, or chivalric sources.",
+      "rejectedUse": "Generic helping, generic Daedric artifact ownership, generic spellcasting, or unrelated Breton quests."
+    },
+    {
+      "property": "PDV_FLST_P2_BretonHiddenArtSources",
+      "race": "Breton",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteBretonTraditionChoice(1, sourceId) plus RouteBretonHiddenArtExposure(sourceId)",
+      "acceptedUse": "Curated occult, forbidden-learning, witchcraft, or hidden-knowledge sources.",
+      "rejectedUse": "Generic spell learning, generic College membership, generic enchanting, or ordinary mage loot."
+    },
+    {
+      "property": "PDV_FLST_P2_BretonGreenWaySources",
+      "race": "Breton",
+      "sourceKinds": [
+        "quest-stage",
+        "book",
+        "weather",
+        "harvest"
+      ],
+      "route": "PDV_EventBus.RouteBretonTraditionChoice(2, sourceId) plus RouteBretonGreenWayStanding(sourceId)",
+      "acceptedUse": "Curated druidic, nature-site, standing-stone, landscape, or Green Way sources.",
+      "rejectedUse": "Generic herb picking, generic forest travel, generic animal kindness, or random standing-stone activation."
+    },
+    {
+      "property": "PDV_FLST_P2_BretonVowSources",
+      "race": "Breton",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteBretonKnightlyVow(sourceId)",
+      "acceptedUse": "Curated vow, mercy, protection, service, or courtly-duty sources.",
+      "rejectedUse": "Generic favor quests, bounty loops, or faction rank alone."
+    },
+    {
+      "property": "PDV_FLST_P2_BretonHiddenArtSpells",
+      "race": "Breton",
+      "sourceKinds": [
+        "spell-learned"
+      ],
+      "route": "PDV_EventBus.RouteBretonHiddenArtExposure(sourceId)",
+      "acceptedUse": "Small whitelist of occult or hidden-art spells whose learning is itself meaningful.",
+      "rejectedUse": "Generic spell learning or ordinary school progression."
+    },
+    {
+      "property": "PDV_FLST_P2_BretonGreenWayHarvests",
+      "race": "Breton",
+      "sourceKinds": [
+        "harvest"
+      ],
+      "route": "PDV_EventBus.RouteBretonGreenWayStanding(sourceId)",
+      "acceptedUse": "Small whitelist of druidic/nature-site harvest sources where the item and place are both curated.",
+      "rejectedUse": "Generic harvest loops or ordinary ingredient gathering."
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerAzuraSources",
+      "race": "Dunmer",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteDunmerReclamationFocus(0, sourceId)",
+      "acceptedUse": "Curated Azura/Reclamation source that can steer foreground focus.",
+      "rejectedUse": "Generic Daedric contact, generic shrine use, or ash proximity."
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerBoethiahSources",
+      "race": "Dunmer",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteDunmerReclamationFocus(1, sourceId)",
+      "acceptedUse": "Curated Boethiah/Reclamation source that can steer foreground focus.",
+      "rejectedUse": "Generic murder, generic betrayal, or generic Daedric contact."
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerMephalaSources",
+      "race": "Dunmer",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteDunmerReclamationFocus(2, sourceId)",
+      "acceptedUse": "Curated Mephala/Reclamation source that can steer foreground focus.",
+      "rejectedUse": "Generic stealth, generic poison, or generic Daedric contact."
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerDeviationSources",
+      "race": "Dunmer",
+      "sourceKinds": [
+        "quest-stage",
+        "book",
+        "spell-learned"
+      ],
+      "route": "PDV_EventBus.RouteDunmerDeviationPrice(sourceId)",
+      "acceptedUse": "Curated deviation, curse, or rival-Prince pressure source.",
+      "rejectedUse": "Generic Daedric behavior or ordinary spell/quest progress."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialCivicSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialCivicService(sourceId)",
+      "acceptedUse": "Curated civic service, repair, law, infrastructure, Legion, or public-order sources.",
+      "rejectedUse": "Generic faction attendance, generic commerce, or ordinary city travel."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPrivateTalosSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialTalosPressure(true, sourceId)",
+      "acceptedUse": "Private Talos pressure or repair source where secrecy matters.",
+      "rejectedUse": "Generic shrine use or generic Talos proximity."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPublicTalosSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialTalosPressure(false, sourceId)",
+      "acceptedUse": "Public Talos pressure, Concordat rupture, or explicit public repair source.",
+      "rejectedUse": "Generic Civil War progress, generic Talos proximity, or faction rank alone."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPatronCivicSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialPatronCivicFavor(sourceId)",
+      "acceptedUse": "Curated patron civic source tied to the active Imperial patron lane.",
+      "rejectedUse": "Generic favor quests or ordinary public-service loops."
+    },
+    {
+      "property": "PDV_FLST_P2_NordOldWaysSources",
+      "race": "Nord",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteNordOldWaysState(sourceId)",
+      "acceptedUse": "Curated Old Ways, ancestor, hearth, hold, ordeal, or sky-road source.",
+      "rejectedUse": "Generic combat, generic cave travel, generic bandit killing, or race pride text."
+    },
+    {
+      "property": "PDV_FLST_P2_NordKyneTalosSources",
+      "race": "Nord",
+      "sourceKinds": [
+        "quest-stage",
+        "book",
+        "weather"
+      ],
+      "route": "PDV_EventBus.RouteNordKyneTalosContext(sourceId)",
+      "acceptedUse": "Curated Kyne weather, storm, shout, Talos, or public pressure context.",
+      "rejectedUse": "Generic weather changes, generic shout use, or generic Civil War progress."
+    },
+    {
+      "property": "PDV_FLST_P2_NordHircineArkaySources",
+      "race": "Nord",
+      "sourceKinds": [
+        "quest-stage",
+        "book",
+        "spell-learned"
+      ],
+      "route": "PDV_EventBus.RouteNordHircineArkayEdge(sourceId)",
+      "acceptedUse": "Curated hunt, curse, death-duty, Arkay, or Hircine edge source.",
+      "rejectedUse": "Generic animal killing, generic undead killing, generic disease, or ordinary tomb travel."
+    }
+  ],
+  "formListShellReadback": {
+    "status": "record-wired",
+    "authorTool": "tools/pdv-phase20-p2-receiver-author",
+    "command": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260603-123133.bak",
+    "readbackResult": "PASS - all 17 PDV_FLST_P2_* receiver FormLists exist as FLST records"
+  },
+  "aliasPropertyReadback": {
+    "status": "alias-properties-wired",
+    "authorTool": "tools/pdv-phase20-p2-receiver-author",
+    "command": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260603-124109.bak",
+    "readbackResult": "PASS - all 17 PDV_FLST_P2_* properties on PDV_PlayerEvents alias point at their matching FLST records"
+  },
+  "sourceFillPlan": {
+    "status": "tooling-ready-pending-exact-source-curation",
+    "fillCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries",
+    "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill",
+    "readbackResult": "PASS - approved P2 book-read source entries filled and read back on 2026-06-03; backup D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260603-160221.bak",
+    "curationRunbook": "references/authoring/PDV_Phase20_P2SourceCuration_Runbook.md",
+    "entryRule": "Only exact source records with status approved-for-fill may be written. This tranche approves book-read entries only; quest-stage source entries stay blocked until exact-stage gating exists.",
+    "formKeyFormat": "ModName.ext:localHex, for example Skyrim.esm:00000014. Do not use load-order FormIDs.",
+    "fillToolSafety": "The fill tool refuses unapproved entries, rejects sourceKind values not declared on the target receiver property, rejects duplicate property/form/sourceKind entries, and writes no ESP changes when sourceFillEntries is empty."
+  },
+  "sourceFillEntries": [
+    {
+      "property": "PDV_FLST_P2_BretonHiddenArtSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0ED60B",
+          "editorId": "Book2CommonHagravens",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Hidden Art context through hagraven/witchcraft reading; rejects generic spell learning and ordinary mage loot."
+        },
+        {
+          "formKey": "Skyrim.esm:07EB03",
+          "editorId": "Book2CommonMadmenoftheReach",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Reach occult context for Breton Hidden Art; rejects generic Reach travel, Forsworn combat, and broad Breton identity text."
+        },
+        {
+          "formKey": "Skyrim.esm:0DDFB6",
+          "editorId": "dunPOIWitchNote",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "Exact witchcraft note source for Hidden Art exposure; rejects generic note reading and unrelated POI discovery."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerAzuraSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01B245",
+          "editorId": "Book4RareInvocationofAzura",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Azura-specific devotional text for Dunmer Reclamation focus; rejects generic Daedric contact."
+        },
+        {
+          "formKey": "Skyrim.esm:01ACE9",
+          "editorId": "Book3ValuableAzuraandtheBox",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Azura-specific lore text for Dunmer Reclamation focus; rejects generic artifact ownership."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerBoethiahSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01B233",
+          "editorId": "Book4RareBoethiahsGlory",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Boethiah-specific Reclamation source; rejects generic betrayal, murder, and Daedric behavior."
+        },
+        {
+          "formKey": "Skyrim.esm:032E72",
+          "editorId": "DA02BookBoethiahsProving",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "Exact Boethiah proving text; uses book-read ownership instead of broad DA02 quest-stage fill."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPublicTalosSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0ED04D",
+          "editorId": "Book2ReligiousTalosWorship",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot public Talos pressure text for Imperial Concordat rupture context; rejects generic shrine proximity or Civil War rank."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_NordOldWaysSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0ED161",
+          "editorId": "Book1CheapNordsArise",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Nord identity and Old Ways context; rejects generic race-pride text loops."
+        },
+        {
+          "formKey": "Skyrim.esm:0ED02F",
+          "editorId": "Book2CommonDreamOfSovngarde",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Sovngarde/afterlife context for Nord Old Ways; rejects generic tomb travel and main-quest progress."
+        },
+        {
+          "formKey": "Skyrim.esm:0E2FC6",
+          "editorId": "Book3ValuableSovngardeReexamination",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot reflective Sovngarde text for Nord Old Ways; rejects duplicate quest-stage ownership."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_NordHircineArkaySources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0F683F",
+          "editorId": "CR12TotemsOfHircine",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Hircine edge text; deliberately excludes duplicate abbreviated Totems book and generic beast/undead hooks."
+        }
+      ]
+    }
+  ],
+  "antiFarmPolicy": [
+    "FormLists must be small curated whitelists, not broad vanilla category lists.",
+    "Quest-stage sources must be terminal, one-shot, or source-marked; do not use whole questlines where every stage would score.",
+    "Harvest, weather, spell, and book sources must be whitelisted by exact form and then proven against generic loops.",
+    "PDV_PlayerEvents enforces source-level repeat gates before routing: book, spell, and quest-stage sources are one-shot per source/form/family; weather and harvest sources are once per in-game day per source/form/family.",
+    "Receivers remain silent when properties are empty, missing, or mismatched."
+  ],
+  "assetRequirement": "No new mesh required; all receiver sources are non-visible gameplay context or existing vanilla records.",
+  "newMeshRequired": false,
+  "missingAssetIfRequired": "none",
+  "remainingBoundary": "Curate and approve exact source records, fill the FormLists through the source-fill tool, register any terminal quest-stage sources, then prove accepted trigger, wrong-origin rejection, generic-hook rejection, repeat/anti-farm behavior, Survey/status clarity, stack snapshot, and manual feel evidence in game."
+}
