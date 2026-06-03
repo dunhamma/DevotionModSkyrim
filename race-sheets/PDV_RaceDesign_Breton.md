@@ -206,7 +206,7 @@ The Old Contract (strict Bosmer Green Pact) gives the full hard-compliance mecha
 | Visit a standing stone | Green Way | Per stone (first visit) | Limited finite pool; rich early-game |
 | Hunt an animal (curated/contextual) | Green Way | Cautious cap | Secondary 1.0 hook only; ordinary animal kills do not count |
 | Werewolf first transformation | Green Way | One-time | Fires Druidic Trial dialogue choice |
-| Read a forbidden or rare tome | Hidden Art | Per book, one-time | Signal for Hermaeus Mora and Magnus paths |
+| Read Hidden Art texts (*Herbane's Bestiary: Hagravens*; *The Madmen of the Reach*; *Anise's Letter*) | Hidden Art | Per book, one-time | Approved occult/witchcraft sources; notifications: `PDV_Notif_Breton_FavorNoted_HiddenArt_BookRead_*` |
 | Stendarr shrine visit with clean hands | Knight's Road | Daily cap | Integrity restoration trigger |
 
 ### 1.0 Hook Evidence and Launch Posture
