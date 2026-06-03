@@ -667,10 +667,28 @@
     });
   };
 
+  const parsePayload = (payloadText) => {
+    if (typeof payloadText !== "string") {
+      return payloadText || {};
+    }
+
+    const textPayload = payloadText || "{}";
+    try {
+      return JSON.parse(textPayload);
+    } catch (error) {
+      const normalizedPayload = textPayload.replace(/\b(TRUE|FALSE)\b/g, (match) => match.toLowerCase());
+      if (normalizedPayload === textPayload) {
+        throw error;
+      }
+
+      return JSON.parse(normalizedPayload);
+    }
+  };
+
   window.PDVBridge = {
     receiveJson(payloadText) {
       try {
-        const payload = typeof payloadText === "string" ? JSON.parse(payloadText || "{}") : payloadText || {};
+        const payload = parsePayload(payloadText);
         document.body.classList.add("panel-visible");
         handlePayload(payload);
       } catch (error) {
@@ -680,7 +698,7 @@
     },
     receiveOverlayJson(payloadText) {
       try {
-        const payload = typeof payloadText === "string" ? JSON.parse(payloadText || "{}") : payloadText || {};
+        const payload = parsePayload(payloadText);
         handleOverlayPayload(payload);
       } catch (error) {
         showToast({
