@@ -258,6 +258,9 @@
     daedric_price: "daedric",
     daedric_lapse: "daedric",
     daedric_residue: "daedric",
+    curse_onset: "curse",
+    curse_cure: "curse",
+    curse_shift: "curse",
   };
 
   const eventName = (payload = {}) => {
@@ -300,6 +303,9 @@
     if (!normalized.phase) {
       normalized.phase = text(payload.phase || payload.daedricPhase, "");
     }
+    if (!normalized.curse) {
+      normalized.curse = text(payload.curse || payload.curseType, "");
+    }
 
     return normalized;
   };
@@ -312,6 +318,13 @@
   };
 
   const contextName = (payload = {}) => text(payload.context, "");
+
+  const curseLabel = (payload = {}) => {
+    const curse = text(payload.curse, "").toLowerCase();
+    if (curse === "vampire") return "Vampirism";
+    if (curse === "werewolf") return "Lycanthropy";
+    return "The curse";
+  };
 
   const eventLanguage = {
     favor: {
@@ -426,6 +439,42 @@
         return phase === "boon"
           ? "The rite was counted."
           : "The Prince has noticed.";
+      },
+    },
+    curse: {
+      tone: (payload) => (text(payload.phase, "") === "cure" ? "good" : "warning"),
+      symbol: (payload) => text(payload.symbol, "journal"),
+      title: (payload) => {
+        const curse = curseLabel(payload);
+        const phase = text(payload.phase, "");
+        if (phase === "onset") return `${curse} takes hold`;
+        if (phase === "cure") return `${curse} is lifted`;
+        if (phase === "shift") return "The curse changes shape";
+        return "A curse stirs";
+      },
+      message: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const phase = text(payload.phase, "");
+        const curse = curseLabel(payload);
+        if (phase === "onset") return `${curse} has taken root in your blood.`;
+        if (phase === "cure") return `${curse} has been driven out.`;
+        if (phase === "shift") return "One curse gives way to another.";
+        return "Something has changed in your blood.";
+      },
+      listTitle: (payload) => {
+        const curse = curseLabel(payload);
+        const phase = text(payload.phase, "");
+        if (phase === "cure") return `${curse}: lifted`;
+        if (phase === "shift") return "Curse shifted";
+        return `${curse}: onset`;
+      },
+      listText: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        return text(payload.phase, "") === "cure"
+          ? "The mark has been lifted."
+          : "The curse weighs on your devotion.";
       },
     },
   };
@@ -850,6 +899,10 @@
     daedric_price: { event: "daedric", prince: "Hircine", phase: "price", symbol: "hircine", context: "Stigma has been rising." },
     daedric_lapse: { event: "daedric", prince: "Hircine", phase: "lapse", symbol: "hircine" },
     daedric_residue: { event: "daedric", prince: "Hircine", phase: "residue", symbol: "hircine" },
+    curse_onset_vampire: { event: "curse", phase: "onset", curse: "vampire", symbol: "curse-vampire", context: "Sovngarde is closed while the thirst remains." },
+    curse_cure_vampire: { event: "curse", phase: "cure", curse: "vampire", symbol: "curse-vampire", context: "The road opens again. The scar remains." },
+    curse_onset_werewolf: { event: "curse", phase: "onset", curse: "werewolf", symbol: "curse-werewolf", context: "The hunt pulls against Sovngarde." },
+    curse_shift: { event: "curse", phase: "shift", curse: "vampire", symbol: "curse-vampire" },
   };
 
   window.PDVDemo = () => {
