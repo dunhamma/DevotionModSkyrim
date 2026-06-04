@@ -37,8 +37,9 @@ Current repo evidence:
   native devotion strings.
 - `race-sheets/PDV_DaedricContent_Manifest.md` is the draft source for Daedric
   path strings; all sixteen Skyrim-present Princes now have draft rows, but
-  Daedric promotion still waits on stigma row ratification, Hircine/Molag Bal
-  curse-access template shape, and Prince authoring order.
+  Daedric promotion now waits on proof-path gates against the locked D-15..D-18
+  decisions: per-Prince CAT-6 target selection, record readback, runtime or
+  display proof, and stack/Survey legibility.
 - CK-safe dialogue readback exists for CK-authored dialogue, but generated
   dialogue creation is not a supported promotion path.
 
@@ -378,12 +379,8 @@ CAT-4 Daedric expansion should not use this first pilot for broad Prince
 promotion.
 
 The first CAT-6 pilot intentionally avoids Daedric stigma and curse-access
-rows. CAT-4 still needs its own closeout before mass Prince authoring:
-
-- Final stigma band/decay row contract.
-- Hircine/Molag Bal curse-access template.
-- Prince-by-Prince authoring order.
-
-After those are locked, a second CAT-6 pilot can promote one Daedric
-non-dialogue row, preferably a `SPEL` boon or price description before stigma
-band feedback. Only after that should Daedric stigma/status rows move in bulk.
+rows. D-15..D-18 now lock the stigma model, Hircine/Molag Bal curse-access
+templates, Prince authoring order, and per-Prince content-ready bar. A second
+CAT-6 pilot can promote one Daedric non-dialogue row against those locks,
+preferably a `SPEL` boon or price description before stigma band feedback. Only
+after that should Daedric stigma/status rows move in bulk.
