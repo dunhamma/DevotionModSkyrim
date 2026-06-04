@@ -850,7 +850,7 @@ String Function GetPanelQuasiPatronTierLabel(Int originRace)
         endIf
         return "Lunar Lattice"
     elseIf originRace == ORIGIN_DUNMER
-        return "Ancestor layer"
+        return "Ancestor layer: " + GetDunmerAncestorLayerLabel()
     elseIf originRace == ORIGIN_REDGUARD
         return GetRedguardSectLabel()
     elseIf originRace == ORIGIN_BOSMER
@@ -1868,12 +1868,25 @@ EndFunction
 Function HandleHircineHuntRite(String reason)
     if PDV_HircinePath
         Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.HircineHuntRite")
+        Float stigmaBefore = PDV_HircinePath.GetStigma()
         PDV_HircinePath.RecordHuntRiteScaled(multiplier, reason)
         if multiplier > 0.0
             SendPrismaDaedricToast("Hircine", "boon", "", "hircine")
+            MaybeEmitHircineStigmaPrice(stigmaBefore, PDV_HircinePath.GetStigma())
             RequestPanelRefresh()
         endIf
         Trace(2, "Hircine hunt rite routed with multiplier " + multiplier)
+    endIf
+EndFunction
+
+; Surface the Hircine "price" only when stigma crosses a meaningful threshold, so the
+; cost lands on a beat the player can feel rather than on every single hunt rite.
+; Thresholds mirror GetDaedricStigmaGainMultiplier (3.0 stirring, 6.0 heavy).
+Function MaybeEmitHircineStigmaPrice(Float stigmaBefore, Float stigmaAfter)
+    if stigmaBefore < 6.0 && stigmaAfter >= 6.0
+        SendPrismaDaedricToast("Hircine", "price", "The hunt's mark has grown heavy.", "hircine")
+    elseIf stigmaBefore < 3.0 && stigmaAfter >= 3.0
+        SendPrismaDaedricToast("Hircine", "price", "The hunt's stigma is beginning to stir.", "hircine")
     endIf
 EndFunction
 
@@ -3672,6 +3685,8 @@ EndFunction
 Function DebugRenounceHircinePath()
     if PDV_HircinePath
         PDV_HircinePath.RenouncePath("mcm")
+        SendPrismaDaedricToast("Hircine", "lapse", "", "hircine")
+        RequestPanelRefresh()
     endIf
 EndFunction
 
