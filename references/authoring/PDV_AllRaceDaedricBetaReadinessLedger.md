@@ -49,11 +49,11 @@ Current missing runtime proof: none for approved filled P2 book families across 
 
 | Race | Current beta-feel state | P2 book/source runtime state | Manual evidence gap |
 |---|---|---|---|
-| Altmer | Fail - runtime/manual proof deferred | Auri-El, Magnus, and Xarxes book source manager-log proof passed on 2026-06-04 | Stack snapshot, manual feel, immersive hook proof, asset status |
-| Khajiit | Fail - runtime/manual proof deferred | Lunar book source manager-log proof passed on 2026-06-04 | Survey/status did not visibly change during smoke; wrong-origin, generic-source silence, stack snapshot, and feel remain pending |
-| Argonian | Fail - runtime/manual proof deferred | Hist book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
-| Orc | Fail - runtime/manual proof deferred | Malacath book source manager-log proof passed on 2026-06-04 | Startup UI overlap was observed and patched in live script; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
-| Redguard | Fail - runtime/manual proof deferred | Ancestor-spine book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
+| Altmer | Fail - runtime/manual proof deferred | Auri-El, Magnus, and Xarxes book source manager-log proof passed on 2026-06-04; toast/status surfacing patched after that proof and needs rerun | Stack snapshot, manual feel, immersive hook proof, asset status |
+| Khajiit | Fail - runtime/manual proof deferred | Lunar book source manager-log proof passed on 2026-06-04; one-book Survey/status surfacing patched after that proof and needs rerun | Survey/status did not visibly change during pre-fix smoke; wrong-origin, generic-source silence, stack snapshot, and feel remain pending |
+| Argonian | Fail - runtime/manual proof deferred | Hist book source manager-log proof passed on 2026-06-04; source-preserving toast/status surfacing patched after that proof and needs rerun | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
+| Orc | Fail - runtime/manual proof deferred | Malacath book source manager-log proof passed on 2026-06-04; toast/status surfacing patched after that proof and needs rerun | Startup UI overlap was observed and patched in live script; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
+| Redguard | Fail - runtime/manual proof deferred | Ancestor-spine book source manager-log proof passed on 2026-06-04; toast/status surfacing patched after that proof and needs rerun | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
 | Bosmer | Fail - runtime/manual proof deferred | P2 FormList shells exist; Bosmer P2 source shells are currently empty | All manual slots pending |
 | Breton | Fail - runtime/manual proof deferred | Hidden Art book source manager-log proof passed in an earlier log; rerun only if same-log proof is desired | All manual slots pending |
 | Dunmer | Fail - runtime/manual proof deferred | Azura and Boethiah book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |

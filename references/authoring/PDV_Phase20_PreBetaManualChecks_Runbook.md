@@ -244,8 +244,15 @@ Current live log status (2026-06-04):
 - `Papyrus.1.log` contains the non-Redguard 2026-06-04 packet after the first
   smoke run. `Papyrus.0.log` contains the Redguard proof after restart/log
   rotation.
-- Khajiit route proof passed even though the Survey/status text did not visibly
-  change during smoke; keep Survey/status clarity pending.
+- A post-smoke source audit patched player-facing P2 surfacing after the
+  accepted-route logs. Altmer, Argonian Hist, Khajiit Lunar, Orc Malacath, and
+  Redguard ancestor-spine book routes now have explicit toast hooks; Khajiit,
+  Argonian, Orc, and Redguard also have one-book Survey/status deltas. Rerun
+  these routes for toast + Survey/status proof rather than treating the earlier
+  route logs as player-facing proof.
+- Khajiit route proof passed before the patch, but the Survey/status text did
+  not visibly change during smoke; keep Survey/status clarity pending until the
+  patched route is rerun.
 - Orc route proof passed, and the startup Prisma/CK MessageBox overlap observed
   during smoke was patched in the live manager script after compile verification.
 - Remaining failures are runtime/manual evidence gaps, not source-fill or

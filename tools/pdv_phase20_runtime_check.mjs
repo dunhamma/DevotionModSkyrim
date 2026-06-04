@@ -374,7 +374,7 @@ const P2_BOOK_RACES = [
       {
         id: "hist-books",
         reference: "PDV_FLST_P2_ArgonianHistSources",
-        required: ["RouteArgonianHistMaintenance complete: 60"],
+        required: ["RouteArgonianHistMaintenanceSource complete: po3_book_argonian_hist"],
         optional: ["Argonian Hist maintenance routed"],
       },
     ],
