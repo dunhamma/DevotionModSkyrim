@@ -1338,10 +1338,19 @@ Function RefreshArgonianHistPosture(String reason)
         curseState = PDV_CurseStateService.GetCurseState()
     endIf
 
+    Int oldPosture = 0
+    if PDV_ArgonianHistPostureTrack
+        oldPosture = PDV_ArgonianHistPostureTrack.GetCurrentState()
+    endIf
+
     Bool dominationPressure = StorageUtil.GetIntValue(None, "PDV.Curse.Argonian.DominationPressure") == 1
     PDV_ArgonianHistSubstrate.RefreshHistPosture(curseState, dominationPressure, reason)
     if PDV_ArgonianHistPostureTrack
         PDV_ArgonianHistPostureTrack.SetState(PDV_ArgonianHistSubstrate.GetHistPosture(), reason)
+        if PDV_ArgonianHistPostureTrack.GetCurrentState() != oldPosture
+            SendPrismaShiftToast(GetArgonianHistPostureLabel(), "", "hist")
+            RequestPanelRefresh()
+        endIf
     endIf
 EndFunction
 
@@ -1421,6 +1430,8 @@ Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
 
     if multiplier > 0.0 && PDV_OrcLifeModeTrack.GetCurrentState() != modeValue
         PDV_OrcLifeModeTrack.SetState(modeValue, reason)
+        SendPrismaShiftToast(GetOrcLifeModeLabel(), "", "malacath")
+        RequestPanelRefresh()
     endIf
 EndFunction
 
@@ -1562,6 +1573,8 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
 
     if multiplier > 0.0 && PDV_RedguardSectTrack.GetCurrentState() != sectValue
         PDV_RedguardSectTrack.SetState(sectValue, reason)
+        SendPrismaShiftToast(GetRedguardSectLabel(), "", "journal")
+        RequestPanelRefresh()
     endIf
 EndFunction
 
@@ -1693,6 +1706,8 @@ Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
 
     if oldFocus != focusValue
         Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
+        SendPrismaShiftToast(GetKhajiitFocusLabel(focusValue), "", GetKhajiitFocusSymbol(focusValue))
+        RequestPanelRefresh()
     endIf
 EndFunction
 
@@ -1728,6 +1743,10 @@ Function HandleHircineHuntRite(String reason)
     if PDV_HircinePath
         Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.HircineHuntRite")
         PDV_HircinePath.RecordHuntRiteScaled(multiplier, reason)
+        if multiplier > 0.0
+            SendPrismaDaedricToast("Hircine", "boon", "", "hircine")
+            RequestPanelRefresh()
+        endIf
         Trace(2, "Hircine hunt rite routed with multiplier " + multiplier)
     endIf
 EndFunction
@@ -3966,6 +3985,156 @@ Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
     StorageUtil.SetStringValue(None, "PDV.Curse.LastTransitionReason", reason)
     ApplyCurseRaceHandlers(oldState, newState, reason)
     Trace(1, "Curse transition " + oldState + " -> " + newState + " (" + reason + ")")
+    SendPrismaCurseToast(oldState, newState)
+    RequestPanelRefresh()
+EndFunction
+
+; Derive a typed "curse" Prisma event from an old→new curse-state transition.
+; Symbol names (curse-vampire, curse-werewolf) fall back to "journal" until
+; the glyph design pass lands — no rendering breakage in the meantime.
+Function SendPrismaCurseToast(Int oldState, Int newState)
+    if !PDV_PrismaBridge.IsAvailable()
+        return
+    endIf
+
+    ; Phase: what kind of transition is this?
+    String phase = ""
+    if oldState == 0
+        phase = "onset"
+    elseIf newState == 0
+        phase = "cure"
+    else
+        phase = "shift"
+    endIf
+
+    ; Curse type: use the *incoming* state for onset/shift; outgoing state for cure
+    ; so the mark and wording match what the player just experienced.
+    Int curseRef = newState
+    if phase == "cure"
+        curseRef = oldState
+    endIf
+    String curseType = ""
+    String symbolName = "journal"
+    if curseRef == 1
+        curseType = "werewolf"
+        symbolName = "curse-werewolf"
+    elseIf curseRef == 2
+        curseType = "vampire"
+        symbolName = "curse-vampire"
+    endIf
+
+    ; Race-aware context so the toast reads right for each theology.
+    String context = GetCurseContextForRace(phase, curseType)
+
+    String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"curse\""
+    j = j + ",\"phase\":\"" + JsonSafeString(phase) + "\""
+    j = j + ",\"curse\":\"" + JsonSafeString(curseType) + "\""
+    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    if context != ""
+        j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
+    endIf
+    if _activeDeity
+        j = j + ",\"deity\":\"" + JsonSafeString(_activeDeity.DeityName) + "\""
+    endIf
+    j = j + "}}"
+    PDV_PrismaBridge.SendOverlayJson(j)
+EndFunction
+
+; Short race-specific context phrase — feeds the UI's listText fallback and any
+; future per-race voice extension. Kept brief; the lore detail stays in the
+; existing modal messages (ShowNordMessage / ShowAltmerMessage).
+String Function GetCurseContextForRace(String phase, String curseType)
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_NORD
+        if phase == "onset" && curseType == "vampire"
+            return "Sovngarde is closed while the thirst remains."
+        elseIf phase == "cure" && curseType == "vampire"
+            return "The road opens again. The scar remains."
+        elseIf phase == "onset" && curseType == "werewolf"
+            return "The hunt pulls against Sovngarde."
+        endIf
+    elseIf originRace == ORIGIN_ALTMER
+        if phase == "onset" && curseType == "vampire"
+            return "Auri-El's light is closed. Only exile remains."
+        elseIf phase == "cure" && curseType == "vampire"
+            return "Exiled from the dawn, not restored to it."
+        elseIf phase == "onset" && curseType == "werewolf"
+            return "Devotion stops here. You have become a beast."
+        endIf
+    elseIf originRace == ORIGIN_BOSMER
+        if phase == "onset"
+            return "The Green Pact does not speak to what you have become."
+        endIf
+    elseIf originRace == ORIGIN_ARGONIAN
+        if phase == "onset" && curseType == "vampire"
+            return "The Hist recoils from what stirs in your blood."
+        elseIf phase == "onset" && curseType == "werewolf"
+            return "The Hist feels the hunt-shape pulling at your form."
+        endIf
+    elseIf originRace == ORIGIN_ORC
+        if phase == "onset"
+            return "Malacath's code bends under this new shape."
+        endIf
+    endIf
+    return ""
+EndFunction
+
+; Emit a "shift" event when a substrate/state-track mode changes.
+; shiftMode = human-readable new state label (e.g. "Khenarthi", "Stronghold")
+; context   = optional short phrase (empty is fine; UI templates the rest)
+; symbolName = Prisma symbol key; falls back to journal until glyphs land
+Function SendPrismaShiftToast(String shiftMode, String context, String symbolName)
+    if !PDV_PrismaBridge.IsAvailable()
+        return
+    endIf
+    String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"shift\""
+    j = j + ",\"shiftMode\":\"" + JsonSafeString(shiftMode) + "\""
+    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    if context != ""
+        j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
+    endIf
+    if _activeDeity
+        j = j + ",\"deity\":\"" + JsonSafeString(_activeDeity.DeityName) + "\""
+    endIf
+    j = j + "}}"
+    PDV_PrismaBridge.SendOverlayJson(j)
+EndFunction
+
+; Emit a "daedric" event for a Daedric Prince interaction.
+; princeName = e.g. "Hircine", "Azura"
+; phase      = "boon" | "price" | "lapse" | "residue"
+; context    = optional short phrase
+; symbolName = Prisma symbol key; falls back to journal until glyphs land
+Function SendPrismaDaedricToast(String princeName, String phase, String context, String symbolName)
+    if !PDV_PrismaBridge.IsAvailable()
+        return
+    endIf
+    String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"daedric\""
+    j = j + ",\"prince\":\"" + JsonSafeString(princeName) + "\""
+    j = j + ",\"phase\":\"" + JsonSafeString(phase) + "\""
+    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    if context != ""
+        j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
+    endIf
+    j = j + "}}"
+    PDV_PrismaBridge.SendOverlayJson(j)
+EndFunction
+
+; Map a Khajiit focus value to a Prisma symbol key.
+; Glyphs for these fall back to journal until the Tier-1/2 design pass lands.
+String Function GetKhajiitFocusSymbol(Int focusValue)
+    if focusValue == KHAJIIT_FOCUS_KHENARTHI
+        return "khenarthi"
+    elseIf focusValue == KHAJIIT_FOCUS_AZURAH
+        return "azurah"
+    elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
+        return "baan-dar"
+    elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
+        return "rajhin"
+    elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
+        return "alkosh"
+    endIf
+    return "lunar"
 EndFunction
 
 Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
@@ -5093,7 +5262,8 @@ Function ConfirmBosmerPendingTransition(String reason)
         endIf
     endIf
 
-    SendPrismaToast("journal", "good", "The path settles", "Your devotion takes a clearer shape.")
+    SendPrismaShiftToast(GetBosmerPathLabel(), "", GetPrismaSymbolForDeity(_activeDeity))
+    RequestPanelRefresh()
 EndFunction
 
 Bool Function CanConfirmBosmerPathState(Int targetState)
