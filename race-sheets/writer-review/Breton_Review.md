@@ -2,7 +2,7 @@
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 18 (Breton (full draft))
 **Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 69 drafted
+**Rows:** 72 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -85,6 +85,9 @@ _8 rows._
 | _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_GreenWay_StandingStone` | HUD corner notification. Environmental; per stone, first visit. | Player-2nd | 48 / 80 |  | At the standing stone, the old covenant answers. |  |
 | _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_GreenWay_OutdoorLife` | HUD corner notification. Environmental; cadence-based, daily cap. | Player-2nd | 48 / 80 |  | The wild keeps you. Y'ffre's covenant is steady. |  |
 | _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_GreenWay_NatureRestraint` | HUD corner notification. After-act; nature-aligned restraint. | Player-2nd | 53 / 80 |  | You spared the living world where you could. Counted. |  |
+| _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_HiddenArt_BookRead_Hagravens` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 61 / 80 |  | Not beasts. Women who chose the other road. You keep reading. |  |
+| _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_HiddenArt_BookRead_MadmenReach` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 55 / 80 |  | The Reach remembers what High Rock was asked to forget. |  |
+| _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_HiddenArt_BookRead_AniseLetter` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 64 / 80 |  | She hid it carefully. You know exactly how much care that takes. |  |
 
 ## Contextual favor (large, Marked)
 

@@ -206,7 +206,7 @@ Imperial neglect should feel like **civic hollowness** — the institutional rel
 | Help an NPC family or community restore itself | Mara | Per quest beat | Marriage generates one-time major + smaller ongoing |
 | Donate to a temple | Any matching god | Daily cap | Anti-farm: diminishing returns after first donation/day |
 | Complete a major crafting order or project | Zenithar | Daily cap | Quality filter needed — not every iron dagger |
-| Read a skill book or study with a tutor | Julianos | Per book, one-time each | Finite pool — no farming possible |
+| Read *The Talos Mistake* | Public Talos | One-time | Concordat-aligned text as conscience-under-pressure signal; notification: `PDV_Notif_Imperial_FavorNoted_TalosPressure_BookRead_TalosMistake` |
 | Win a major persuasion check (not trivial) | Dibella, Julianos | Per check, cooldown | Threshold: only "hard" or above check difficulty |
 | Activate hidden Talos shrine | Talos + ConcordatStanding -15 | Per shrine (one-time each) | Strong signal; rare enough to not need daily cap |
 | Help Talos worshipper escape Thalmor | Talos + ConcordatStanding -15 | Per event | Quest-driven; naturally limited |

@@ -229,6 +229,8 @@ Nord neglect should feel like **absence and distance**, not punishment.
 | Side with Stormcloaks (major quest beats) | Talos/Ysmir, Shor | One-time per beat | Civil War questline carries heavy weight |
 | Complete Companions quest arc stages | Shor, Stuhn | Per beat | Werewolf state shifts interpretation — see Curse States |
 | Visit Sovngarde / cross Tsun's bridge | Shor, Tsun | One-time | Maximum weight; these are threshold events |
+| Read Old Ways texts (*Nords Arise!*; *A Dream of Sovngarde*; *Sovngarde: A Reexamination*) | Shor, Kyne | Per book, one-time | Old Ways identity; notifications: `PDV_Notif_Nord_FavorNoted_OldWays_BookRead_*` |
+| Read *The Totems of Hircine* | Hircine / Arkay edge | One-time | Beast-blood theology; notification: `PDV_Notif_Nord_FavorNoted_HircineArkay_BookRead_TotemsHircine` |
 
 ---
 

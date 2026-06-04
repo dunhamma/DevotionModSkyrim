@@ -2,7 +2,7 @@
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 15 (Imperial (full draft))
 **Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 73 drafted
+**Rows:** 74 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -121,6 +121,7 @@ _4 rows._
 | _(no tone match)_ | `PDV_Notif_Imperial_FavorNoted_BurialDuty` | HUD corner notification. After-act; per Hall-of-the-Dead or anti-necromancy beat. | Player-2nd | 47 / 80 |  | The dead are given their rites. Arkay marks it. |  |
 | _(no tone match)_ | `PDV_Notif_Imperial_FavorNoted_LawfulOrder` | HUD corner notification. After-act; concrete order-preserving act, not faction membership. | Player-2nd | 58 / 80 |  | Order kept, the public served. Akatosh is steady with you. |  |
 | _(no tone match)_ | `PDV_Notif_Imperial_FavorNoted_TalosPressure` | HUD corner notification. After-act; authored faithful defiance only. | Player-2nd | 50 / 80 |  | A faith kept hidden, at real cost. Talos hears it. |  |
+| _(no tone match)_ | `PDV_Notif_Imperial_FavorNoted_TalosPressure_BookRead_TalosMistake` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 76 / 80 |  | The Empire's argument, written cleanly. It does not sit as well as it reads. |  |
 
 ## Contextual favor (large, Marked)
 
