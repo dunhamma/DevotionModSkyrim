@@ -12,6 +12,14 @@ This backlog turns the race gameplay audit into buildable slices. The race sheet
 
 It is deliberately not a lore rewrite. Use the race sheets and architecture reference for theology. Use this file when costing runtime records, Papyrus state, CK surfaces, content rows, verifier assertions, and runtime proof.
 
+This backlog also owns the four V1 authoring lanes that can move without new
+in-game proof:
+
+- final-world placement contracts
+- rejected-hook coverage
+- stack snapshot templates
+- P2 audit-only lanes
+
 The shared handoff for the current pre-beta gameplay-scaling pass is
 `references/authoring/PDV_PreBetaRaceScalingSpine.md`. Use that file for the
 race packet template, Altmer/Khajiit/Argonian spine order, P1 buildout packets,
@@ -85,6 +93,77 @@ Redguard / Bosmer prepared in parallel as P1 packets. Breton, Dunmer, Imperial,
 and Nord remain P2 audit-only until stack and ceiling evidence is recorded.
 Every promoted race packet now needs a gate-ledger verdict using
 `PDV_PreBetaRaceAcceptanceRubric.md`.
+
+## V1 Authoring Lanes
+
+### Final-World Placement Contracts
+
+Placement work is separate from QASmoke proof and separate from reward volume.
+Every P0/P1 race packet needs a final-world placement contract that names:
+
+- the intended object type or object family
+- the target cell, location, or surface family
+- the cultural reason the placement exists
+- whether the placement is a positive surface or a pressure/recovery surface
+- the wrong-origin expectation for that surface
+- the QASmoke proof record it corresponds to, if any
+- the stop condition for CK/manual placement work
+
+P2 audit-only lanes do not get new placement volume. They only get audit
+surface notes that say what would need to exist later.
+
+### Rejected-Hook Coverage
+
+Rejected hooks are part of the build, not an afterthought. Each packet should
+name the ordinary behavior that must stay silent or non-scoring.
+
+Minimum expectation:
+
+- P0/P1 packets: at least six rejected-hook families
+- P2 audit-only packets: at least four rejected-hook families
+
+The common families are travel, sleep, combat, theft, crafting, faction,
+shrine, and generic quest or kill loops. A race packet may add more specific
+rejections, but it should not rely on only one or two broad negatives.
+
+### Stack Snapshot Templates
+
+Every race packet needs a stack snapshot template that can be filled from
+source/readback and later from runtime evidence.
+
+Required fields:
+
+- active boons or favors
+- floor and ceiling families
+- prices, costs, or access gates
+- privileges, exemptions, or recovery rules
+- neglect, scar, or pressure effects
+- curse and Daedric modifiers
+- active cap or stack limit
+- last accepted reason or last state change, where relevant
+- expected build and edge build
+
+The template is for audit and comparison, not for reward escalation by itself.
+
+### P2 Audit-Only Lanes
+
+Breton, Dunmer, Imperial, and Nord remain audit-only until stack and ceiling
+risk is understood.
+
+Each P2 packet should record:
+
+- one expected build
+- one edge build
+- the current active layers
+- one or more rejected-hook families
+- Survey/status clarity requirements
+- a stack snapshot
+- the next automatable action
+- the blocking follow-up
+
+P2 audit lanes do not request new reward volume. They only establish whether
+the current mix is already loud enough and whether the player-facing readout is
+clear.
 
 ## P0 - Altmer Costing
 
@@ -192,6 +271,12 @@ Every promoted race packet now needs a gate-ledger verdict using
 | Dunmer | Ancestor substrate plus Reclamation focus plus deviations can overstack. | Ancestor substrate mostly interpretive/utility; focused Reclamation is the loud reward layer; deviations carry price. |
 | Imperial | Civic/Concordat hooks must stay concrete. | Whitelisted civic acts, public/private Talos tests, rejected faction-attendance tests. |
 | Nord | Hook density needs ceilings. | Broad worship softer than focused patron, Kyne/Talos contrast proof, Hircine stack checks, rejected generic kill/travel tests. |
+
+Structured status: the no-in-game gate now carries `p2AuditContract` packets
+for all four P2 races, and the strict Phase 20 race-costing verifier checks
+audit-only mode, positive probes, rejected probes, required stack evidence,
+pass blockers, and manual evidence targets. This is an audit-readiness gate
+only; it does not add reward volume, placement contracts, or manual evidence.
 
 ## Required Output Before Building A Race Slice
 
