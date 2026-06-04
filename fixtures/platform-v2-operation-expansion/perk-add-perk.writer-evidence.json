@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "output_path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/ExampleMod_PlatformV2Proof.esp",
+  "records_written": 1,
+  "successful_count": 1,
+  "failed_count": 0,
+  "details": [
+    {
+      "formid": "ExampleMod.esp:000902",
+      "record_type": "PERK",
+      "op": "override",
+      "source": "ExampleMod.esp",
+      "modifications": {
+        "perks_added": 1
+      }
+    }
+  ],
+  "refresh_status": "complete"
+}

@@ -51,6 +51,11 @@ export {
   buildPlatformProofSummary,
   formatPlatformProofSummary
 } from "./proof-summary.mjs";
+export {
+  PLATFORM_V2_OPERATION_EXPANSION_TARGETS,
+  buildPlatformV2OperationExpansionSummary,
+  formatPlatformV2OperationExpansionSummary
+} from "./platform-v2-summary.mjs";
 export { checkFixtureDirectory, checkFixture } from "./fixture-check.mjs";
 export { buildDialogueBatchReport, buildDialogueManifestFromRows } from "./dialogue-batch.mjs";
 export {

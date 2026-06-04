@@ -1,0 +1,20 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v2-spell-add-spel",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV2Proof.esp",
+  "operations": [
+    {
+      "id": "spell-add-spel",
+      "kind": "spell.add",
+      "target": "EXM_SPEL_Target",
+      "recordFamily": "SPEL",
+      "payload": {
+        "spells": [
+          "EXM_SPELL_Buffer"
+        ]
+      }
+    }
+  ]
+}

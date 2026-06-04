@@ -1,0 +1,172 @@
+{
+  "schema": "creation-authoring.run-report.v1",
+  "status": "PASS",
+  "startedAt": "2026-05-31T11:31:25.798Z",
+  "finishedAt": "2026-05-31T11:31:25.799Z",
+  "manifest": {
+    "project": "platform-v2-condition-add-spel",
+    "game": "SkyrimSE",
+    "sourcePlugin": "ExampleMod.esp",
+    "output": "ExampleMod_PlatformV2Proof.esp",
+    "metadata": {}
+  },
+  "profile": {
+    "modId": "platform-v2-operation-expansion",
+    "outputPolicy": "overlay"
+  },
+  "phases": [
+    {
+      "phase": "plan",
+      "status": "PASS",
+      "summary": {
+        "total": 1,
+        "ready": 1,
+        "manual": 0,
+        "abort": 0
+      }
+    },
+    {
+      "schema": "creation-authoring.execution.v1",
+      "phase": "apply",
+      "status": "PASS",
+      "message": "Patch writer evidence was supplied for an already-applied generated plugin.",
+      "patchRequest": {
+        "output_name": "ExampleMod_PlatformV2Proof.esp",
+        "author": "Creation Authoring Automation",
+        "esl_flag": true,
+        "records": [
+          {
+            "op": "override",
+            "formid": "ExampleMod.esp:000901",
+            "add_conditions": [
+              {
+                "function": "GetIsID",
+                "operator": "==",
+                "value": "PlayerRef"
+              }
+            ]
+          }
+        ]
+      },
+      "writerResult": {
+        "success": true,
+        "output_path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/ExampleMod_PlatformV2Proof.esp",
+        "records_written": 1,
+        "successful_count": 1,
+        "failed_count": 0,
+        "details": [
+          {
+            "formid": "ExampleMod.esp:000901",
+            "record_type": "SPEL",
+            "op": "override",
+            "source": "ExampleMod.esp",
+            "modifications": {
+              "conditions_added": 1
+            }
+          }
+        ],
+        "refresh_status": "complete"
+      },
+      "manualOperations": 0
+    },
+    {
+      "schema": "creation-authoring.execution.v1",
+      "phase": "ck-apply",
+      "status": "SKIPPED",
+      "message": "No CK-semantic operations are present."
+    },
+    {
+      "phase": "compile",
+      "status": "SKIPPED",
+      "message": "No papyrus-compiler connector is configured."
+    },
+    {
+      "phase": "verify",
+      "status": "PASS",
+      "report": {
+        "schema": "creation-authoring.verify.v1",
+        "manifest": {
+          "project": "platform-v2-condition-add-spel",
+          "game": "SkyrimSE",
+          "sourcePlugin": "ExampleMod.esp",
+          "output": "ExampleMod_PlatformV2Proof.esp"
+        },
+        "results": [
+          {
+            "operationId": "condition-add-spel",
+            "kind": "condition.add",
+            "target": "EXM_SPEL_Target",
+            "status": "PASS",
+            "message": "EXM_SPEL_Target conditions contain expected entries.",
+            "details": {
+              "targetResolution": {
+                "identifier": "EXM_SPEL_Target",
+                "editorId": "EXM_SPEL_Target",
+                "formid": "ExampleMod.esp:000901",
+                "recordType": "SPEL",
+                "plugin": null,
+                "winningPlugin": null,
+                "conflictChain": null,
+                "scripts": [],
+                "entries": [],
+                "keywords": [],
+                "spells": [],
+                "perks": [],
+                "packages": [],
+                "inventory": [],
+                "resolved": true
+              }
+            }
+          }
+        ],
+        "summary": {
+          "PASS": 1,
+          "FAIL": 0,
+          "WARN": 0,
+          "TODO": 0
+        }
+      }
+    },
+    {
+      "phase": "project-verifier",
+      "status": "SKIPPED",
+      "message": "No project verifier connector is configured."
+    },
+    {
+      "phase": "strict-gate",
+      "status": "PASS",
+      "message": "Strict mode passed.",
+      "blockers": []
+    }
+  ],
+  "manualPackets": [],
+  "planSummary": {
+    "total": 1,
+    "ready": 1,
+    "manual": 0,
+    "abort": 0
+  },
+  "planOperations": [
+    {
+      "id": "condition-add-spel",
+      "kind": "condition.add",
+      "target": "EXM_SPEL_Target",
+      "mode": "update",
+      "onConflict": "fail",
+      "recordFamily": "SPEL",
+      "ckSemanticsRequired": false,
+      "capabilityTier": "safe_writer",
+      "backend": "mo2-mcp-patch-request",
+      "status": "ready",
+      "mergePolicy": {
+        "promote": "reviewed",
+        "preserveFormId": "when-safe",
+        "requiresCkFinalization": false,
+        "allowSourceMutation": false
+      },
+      "reviewIntent": null,
+      "verifierExpectations": [],
+      "runtimeSmokeRequired": false
+    }
+  ]
+}

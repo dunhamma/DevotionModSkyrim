@@ -1,0 +1,573 @@
+{
+  "schema": "creation-authoring.platform-v2-create-fill-summary.v1",
+  "generatedAt": "2026-06-01T07:03:57.520Z",
+  "game": "SkyrimSE",
+  "sourceMatrix": null,
+  "sourceProofResults": "generated\\proof-results.skyrimse.json",
+  "tranche": "ck-create-fill",
+  "contract": {
+    "sourceOfTruth": "CKRA",
+    "mirrorTarget": "Devotion",
+    "requiredRecordFamilies": [
+      "ENCH",
+      "SCRL",
+      "WEAP",
+      "ARMO",
+      "AMMO",
+      "BOOK",
+      "CONT",
+      "MISC"
+    ],
+    "requiredOperation": "record.create",
+    "manualCheckpoints": [
+      "pre_ck_preflight",
+      "bounded_ck_manual_stage",
+      "post_ck_readback_verify"
+    ]
+  },
+  "fullMatrixReleaseReady": false,
+  "notes": [
+    "Create-fill gate is row-scoped and requires strict record.create proof for every required family.",
+    "record.create promotion remains generated-first with CK-active save-target proof.",
+    "Full-matrix releaseReady may remain false while research_only families stay out of scope."
+  ],
+  "requiredRows": [
+    {
+      "recordFamily": "ENCH",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "ENCH",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Enchantment",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\ench-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\ench-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\ench-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "SCRL",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "SCRL",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Scroll",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\scrl-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\scrl-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\scrl-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "WEAP",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "WEAP",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Weapon",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\weap-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\weap-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\weap-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "ARMO",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "ARMO",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Armor",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\armo-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\armo-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\armo-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "AMMO",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "AMMO",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Ammo",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\ammo-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\ammo-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\ammo-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "BOOK",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "BOOK",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Book",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\book-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\book-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\book-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "CONT",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "CONT",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Container",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\cont-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\cont-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\cont-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "MISC",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "MISC",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Misc",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\misc-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\misc-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\misc-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    }
+  ],
+  "promotedRows": [
+    {
+      "recordFamily": "ENCH",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "ENCH",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Enchantment",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\ench-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\ench-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\ench-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "SCRL",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "SCRL",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Scroll",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\scrl-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\scrl-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\scrl-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "WEAP",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "WEAP",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Weapon",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\weap-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\weap-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\weap-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "ARMO",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "ARMO",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Armor",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\armo-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\armo-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\armo-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "AMMO",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "AMMO",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Ammo",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\ammo-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\ammo-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\ammo-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "BOOK",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "BOOK",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Book",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\book-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\book-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\book-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "CONT",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "CONT",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Container",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\cont-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\cont-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\cont-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "MISC",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "Required create-fill record.create operation is promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "MISC",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "CKRA_SPIKE_Misc",
+            "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+            "fixture": "fixtures\\platform-v2-create-fill\\misc-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-create-fill\\misc-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-create-fill\\misc-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    }
+  ],
+  "loadPluginSetEvidence": {
+    "status": "PASS",
+    "fixture": "fixtures\\platform-v2-create-fill\\load-plugin-set-product-ready.ck-command-packet.json",
+    "expectedActivePlugin": "CKRA_CreationFillSpikeV1.esp",
+    "expectedSaveTarget": "CKRA_CreationFillSpikeV1.esp",
+    "command": {
+      "op": "loadPluginSet",
+      "requiredPlugins": [
+        "Skyrim.esm",
+        "CKRA_CreationFillSpikeV1.esp"
+      ],
+      "plugins": [
+        {
+          "name": "Skyrim.esm",
+          "selected": true,
+          "active": false
+        },
+        {
+          "name": "CKRA_CreationFillSpikeV1.esp",
+          "selected": true,
+          "active": true
+        }
+      ],
+      "sourcePlugin": "Skyrim.esm",
+      "generatedPlugin": "CKRA_CreationFillSpikeV1.esp",
+      "activePlugin": "CKRA_CreationFillSpikeV1.esp",
+      "intendedSaveTarget": "CKRA_CreationFillSpikeV1.esp",
+      "sourcePluginNotActive": true
+    },
+    "failures": []
+  },
+  "manualLifecycle": {
+    "status": "PASS",
+    "enforce": true,
+    "manualBoundaryPath": "generated\\platform-v2-create-fill-manual-boundaries.json",
+    "requiredCheckpoints": [
+      "pre_ck_preflight",
+      "bounded_ck_manual_stage",
+      "post_ck_readback_verify"
+    ],
+    "declaredCheckpoints": [
+      "pre_ck_preflight",
+      "bounded_ck_manual_stage",
+      "post_ck_readback_verify"
+    ],
+    "completedCheckpoints": [
+      "pre_ck_preflight",
+      "bounded_ck_manual_stage",
+      "post_ck_readback_verify"
+    ],
+    "checks": [
+      {
+        "id": "checkpoint:pre_ck_preflight",
+        "status": "PASS",
+        "detail": "Checkpoint pre_ck_preflight is declared and completed."
+      },
+      {
+        "id": "checkpoint:bounded_ck_manual_stage",
+        "status": "PASS",
+        "detail": "Checkpoint bounded_ck_manual_stage is declared and completed."
+      },
+      {
+        "id": "checkpoint:post_ck_readback_verify",
+        "status": "PASS",
+        "detail": "Checkpoint post_ck_readback_verify is declared and completed."
+      },
+      {
+        "id": "manual_boundary_exceeded",
+        "status": "PASS",
+        "detail": "Manual work stayed within declared checkpoints."
+      }
+    ],
+    "blockers": []
+  },
+  "devotionParity": {
+    "status": "BLOCKED",
+    "enforce": true,
+    "parityPath": "generated\\platform-v2-create-fill-devotion-parity.json",
+    "checks": [
+      {
+        "id": "parity_status",
+        "status": "FAIL",
+        "detail": "Devotion mirror parity artifact status is BLOCKED."
+      },
+      {
+        "id": "tooling_sync",
+        "status": "FAIL",
+        "detail": "Tooling sync status is not PASS."
+      },
+      {
+        "id": "tests",
+        "status": "PASS",
+        "detail": "Mirrored tests passed."
+      },
+      {
+        "id": "evidence",
+        "status": "FAIL",
+        "detail": "Mirrored V2 evidence artifacts status is not PASS."
+      }
+    ],
+    "blockers": [
+      {
+        "code": "v2_devotion_parity_failed",
+        "message": "Devotion parity artifact did not pass."
+      },
+      {
+        "code": "v2_devotion_parity_failed",
+        "message": "Tooling sync parity check failed."
+      },
+      {
+        "code": "v2_devotion_parity_failed",
+        "message": "Mirrored V2 evidence artifacts parity check failed."
+      }
+    ]
+  },
+  "gate": {
+    "status": "BLOCKED",
+    "blockers": [
+      {
+        "taxonomy": "devotion_parity",
+        "code": "v2_devotion_parity_failed",
+        "message": "Devotion parity artifact did not pass."
+      },
+      {
+        "taxonomy": "devotion_parity",
+        "code": "v2_devotion_parity_failed",
+        "message": "Tooling sync parity check failed."
+      },
+      {
+        "taxonomy": "devotion_parity",
+        "code": "v2_devotion_parity_failed",
+        "message": "Mirrored V2 evidence artifacts parity check failed."
+      }
+    ]
+  }
+}

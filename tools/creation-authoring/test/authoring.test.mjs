@@ -12,6 +12,7 @@ import {
   buildPostMergeVerifyRequest,
   buildPatchRequest,
   buildPlatformProofSummary,
+  buildPlatformV2OperationExpansionSummary,
   buildStrictGatePhase,
   checkPromotionCandidateDryRun,
   buildProofLedgerFromRun,
@@ -33,6 +34,7 @@ import {
   runPipeline,
   selectPacketCase,
   formatPlatformProofSummary,
+  formatPlatformV2OperationExpansionSummary,
   LOAD_PLUGIN_SET_DIAGNOSTIC_BLOCKERS,
   LOAD_PLUGIN_SET_RELEASE_BLOCKERS,
   summarizePhaseStatuses,
@@ -3383,6 +3385,241 @@ test("Platform v1 proof summary carries operation-level proof details", () => {
   assert.equal(genericCreateSurface.status, "UNPROVEN");
   assert.equal(genericCreateSurface.supportScope, "blocked_generic_create");
   assert.equal(genericCreateSurface.proofReferences.proofLedger, null);
+});
+
+test("builds Platform v2 operation-expansion summary from operation-proof rows", () => {
+  const summary = buildPlatformV2OperationExpansionSummary({
+    game: "SkyrimSE",
+    rows: [
+      {
+        recordFamily: "SPEL",
+        status: "ck_required_unproven",
+        manifestOperations: ["record.create", "record.update", "spell.add", "condition.add"],
+        operationProofs: [
+          {
+            operation: "spell.add",
+            status: "PASS",
+            target: "EXM_SPEL_Target",
+            fixture: "fixtures/platform-v2-operation-expansion/spell-add-spel.creation-authoring.json",
+            strictReport: "reports/platform-v2-operation-expansion/spell-add-spel.strict.run-report.json",
+            proofLedger: "generated/platform-v2-operation-expansion/spell-add-spel.proof-ledger.json",
+            backend: "mo2-mcp-patch-request",
+            verifierStatus: "PASS",
+            readbackStatus: "PASS",
+            commandEvidenceStatus: "NOT_REQUIRED",
+            coverage: {
+              manifestOperation: true,
+              backend: true,
+              ckpeOrWriterHandler: true,
+              ckCommandEvidence: true,
+              readbackNormalizer: true,
+              verifier: true,
+              strictReport: true,
+              proofFixture: true,
+              supportClaimAllowed: true
+            },
+            missingCoverage: []
+          },
+          {
+            operation: "condition.add",
+            status: "PASS",
+            target: "EXM_SPEL_Target",
+            fixture: "fixtures/platform-v2-operation-expansion/condition-add-spel.creation-authoring.json",
+            strictReport: "reports/platform-v2-operation-expansion/condition-add-spel.strict.run-report.json",
+            proofLedger: "generated/platform-v2-operation-expansion/condition-add-spel.proof-ledger.json",
+            backend: "mo2-mcp-patch-request",
+            verifierStatus: "PASS",
+            readbackStatus: "PASS",
+            commandEvidenceStatus: "NOT_REQUIRED",
+            coverage: {
+              manifestOperation: true,
+              backend: true,
+              ckpeOrWriterHandler: true,
+              ckCommandEvidence: true,
+              readbackNormalizer: true,
+              verifier: true,
+              strictReport: true,
+              proofFixture: true,
+              supportClaimAllowed: true
+            },
+            missingCoverage: []
+          }
+        ]
+      },
+      {
+        recordFamily: "PERK",
+        status: "ck_required_unproven",
+        manifestOperations: ["record.create", "record.update", "perk.add", "condition.add", "vmad.attach_script"],
+        operationProofs: [
+          {
+            operation: "perk.add",
+            status: "PASS",
+            target: "EXM_PERK_Target",
+            fixture: "fixtures/platform-v2-operation-expansion/perk-add-perk.creation-authoring.json",
+            strictReport: "reports/platform-v2-operation-expansion/perk-add-perk.strict.run-report.json",
+            proofLedger: "generated/platform-v2-operation-expansion/perk-add-perk.proof-ledger.json",
+            backend: "mo2-mcp-patch-request",
+            verifierStatus: "PASS",
+            readbackStatus: "PASS",
+            commandEvidenceStatus: "NOT_REQUIRED",
+            coverage: {
+              manifestOperation: true,
+              backend: true,
+              ckpeOrWriterHandler: true,
+              ckCommandEvidence: true,
+              readbackNormalizer: true,
+              verifier: true,
+              strictReport: true,
+              proofFixture: true,
+              supportClaimAllowed: true
+            },
+            missingCoverage: []
+          },
+          {
+            operation: "vmad.attach_script",
+            status: "PASS",
+            target: "EXM_PERK_Target",
+            fixture: "fixtures/platform-v2-operation-expansion/vmad-attach-script-perk.creation-authoring.json",
+            strictReport: "reports/platform-v2-operation-expansion/vmad-attach-script-perk.strict.run-report.json",
+            proofLedger: "generated/platform-v2-operation-expansion/vmad-attach-script-perk.proof-ledger.json",
+            backend: "mo2-mcp-patch-request",
+            verifierStatus: "PASS",
+            readbackStatus: "PASS",
+            commandEvidenceStatus: "NOT_REQUIRED",
+            coverage: {
+              manifestOperation: true,
+              backend: true,
+              ckpeOrWriterHandler: true,
+              ckCommandEvidence: true,
+              readbackNormalizer: true,
+              verifier: true,
+              strictReport: true,
+              proofFixture: true,
+              supportClaimAllowed: true
+            },
+            missingCoverage: []
+          }
+        ]
+      }
+    ]
+  }, {
+    sourceProofResults: "generated/proof-results.skyrimse.json",
+    loadSetFixture: "fixtures/platform-v2-operation-expansion/load-plugin-set-product-ready.ck-command-packet.json",
+    expectedActivePlugin: "ExampleMod_PlatformV2Proof.esp"
+  });
+
+  assert.equal(summary.schema, "creation-authoring.platform-v2-operation-expansion-summary.v1");
+  assert.equal(summary.gate.status, "PASS");
+  assert.equal(summary.promotedRows.length, 4);
+  assert.equal(summary.targets.every((surface) => surface.status === "PASS"), true);
+  assert.equal(summary.loadPluginSetEvidence.status, "PASS");
+  assert.equal(summary.fullMatrixReleaseReady, false);
+  const formatted = formatPlatformV2OperationExpansionSummary(summary);
+  assert.match(formatted, /Promoted target rows: 4\/4/);
+  assert.match(formatted, /Full-matrix releaseReady: no/);
+});
+
+test("Platform v2 operation-expansion gate fails closed when one target row is unproven", () => {
+  const summary = buildPlatformV2OperationExpansionSummary({
+    game: "SkyrimSE",
+    rows: [
+      {
+        recordFamily: "SPEL",
+        status: "ck_required_unproven",
+        manifestOperations: ["spell.add", "condition.add"],
+        operationProofs: [
+          {
+            operation: "spell.add",
+            status: "PASS",
+            target: "EXM_SPEL_Target",
+            fixture: "fixtures/platform-v2-operation-expansion/spell-add-spel.creation-authoring.json",
+            strictReport: "reports/platform-v2-operation-expansion/spell-add-spel.strict.run-report.json",
+            proofLedger: "generated/platform-v2-operation-expansion/spell-add-spel.proof-ledger.json",
+            verifierStatus: "PASS",
+            readbackStatus: "PASS",
+            commandEvidenceStatus: "NOT_REQUIRED",
+            coverage: {
+              manifestOperation: true,
+              backend: true,
+              ckpeOrWriterHandler: true,
+              ckCommandEvidence: true,
+              readbackNormalizer: true,
+              verifier: true,
+              strictReport: true,
+              proofFixture: true,
+              supportClaimAllowed: true
+            },
+            missingCoverage: []
+          },
+          {
+            operation: "condition.add",
+            status: "FAIL"
+          }
+        ]
+      },
+      {
+        recordFamily: "PERK",
+        status: "ck_required_unproven",
+        manifestOperations: ["perk.add", "vmad.attach_script"],
+        operationProofs: [
+          {
+            operation: "perk.add",
+            status: "PASS",
+            target: "EXM_PERK_Target",
+            fixture: "fixtures/platform-v2-operation-expansion/perk-add-perk.creation-authoring.json",
+            strictReport: "reports/platform-v2-operation-expansion/perk-add-perk.strict.run-report.json",
+            proofLedger: "generated/platform-v2-operation-expansion/perk-add-perk.proof-ledger.json",
+            verifierStatus: "PASS",
+            readbackStatus: "PASS",
+            commandEvidenceStatus: "NOT_REQUIRED",
+            coverage: {
+              manifestOperation: true,
+              backend: true,
+              ckpeOrWriterHandler: true,
+              ckCommandEvidence: true,
+              readbackNormalizer: true,
+              verifier: true,
+              strictReport: true,
+              proofFixture: true,
+              supportClaimAllowed: true
+            },
+            missingCoverage: []
+          },
+          {
+            operation: "vmad.attach_script",
+            status: "PASS",
+            target: "EXM_PERK_Target",
+            fixture: "fixtures/platform-v2-operation-expansion/vmad-attach-script-perk.creation-authoring.json",
+            strictReport: "reports/platform-v2-operation-expansion/vmad-attach-script-perk.strict.run-report.json",
+            proofLedger: "generated/platform-v2-operation-expansion/vmad-attach-script-perk.proof-ledger.json",
+            verifierStatus: "PASS",
+            readbackStatus: "PASS",
+            commandEvidenceStatus: "NOT_REQUIRED",
+            coverage: {
+              manifestOperation: true,
+              backend: true,
+              ckpeOrWriterHandler: true,
+              ckCommandEvidence: true,
+              readbackNormalizer: true,
+              verifier: true,
+              strictReport: true,
+              proofFixture: true,
+              supportClaimAllowed: true
+            },
+            missingCoverage: []
+          }
+        ]
+      }
+    ]
+  }, {
+    sourceProofResults: "generated/proof-results.skyrimse.json",
+    loadSetFixture: "fixtures/platform-v2-operation-expansion/load-plugin-set-product-ready.ck-command-packet.json",
+    expectedActivePlugin: "ExampleMod_PlatformV2Proof.esp"
+  });
+
+  assert.equal(summary.gate.status, "BLOCKED");
+  assert.equal(summary.targets.find((surface) => surface.recordFamily === "SPEL" && surface.operation === "condition.add").status, "BLOCKED");
+  assert.equal(summary.gate.blockers.some((blocker) => blocker.code === "v2_target_surface_unproven"), true);
 });
 
 test("Platform v1 evidence check validates proof-results, matrix, and summary agreement", () => {

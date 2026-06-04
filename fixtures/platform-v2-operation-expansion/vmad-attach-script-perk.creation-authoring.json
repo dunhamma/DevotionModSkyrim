@@ -1,0 +1,25 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v2-vmad-attach-script-perk",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV2Proof.esp",
+  "operations": [
+    {
+      "id": "vmad-attach-script-perk",
+      "kind": "vmad.attach_script",
+      "target": "EXM_PERK_Target",
+      "recordFamily": "PERK",
+      "payload": {
+        "script": "EXM_PerkAttachScript",
+        "properties": [
+          {
+            "name": "Enabled",
+            "type": "Bool",
+            "value": true
+          }
+        ]
+      }
+    }
+  ]
+}

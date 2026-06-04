@@ -1,0 +1,24 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v2-condition-add-spel",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV2Proof.esp",
+  "operations": [
+    {
+      "id": "condition-add-spel",
+      "kind": "condition.add",
+      "target": "EXM_SPEL_Target",
+      "recordFamily": "SPEL",
+      "payload": {
+        "conditions": [
+          {
+            "function": "GetIsID",
+            "operator": "==",
+            "value": "PlayerRef"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -16,6 +16,7 @@ import { checkPromotionCandidateDryRun, formatPromotionCandidateCheck } from "./
 import { buildProofLedgerFromRun, mergeProofResults, verifyProofLedger } from "./proof-ledger.mjs";
 import { formatPlatformV1EvidenceCheck, verifyPlatformV1Evidence } from "./proof-freshness.mjs";
 import { buildPlatformProofSummary, formatPlatformProofSummary } from "./proof-summary.mjs";
+import { buildPlatformV2OperationExpansionSummary, formatPlatformV2OperationExpansionSummary } from "./platform-v2-summary.mjs";
 import { checkFixtureDirectory } from "./fixture-check.mjs";
 import { formatManualPackets, formatPlan, formatVerify } from "./report.mjs";
 import { buildDialogueBatchReport, buildDialogueManifestFromRows } from "./dialogue-batch.mjs";
@@ -124,6 +125,37 @@ async function main(argv) {
       print({ summary, written }, options, () => {
         const formatted = formatPlatformProofSummary(summary);
         return written ? `${formatted}Proof summary: ${written}\n` : formatted;
+      });
+      return;
+    }
+
+    if (command === "platform-v2-summary") {
+      const inventory = extractCkpeRecordInventory({
+        game: options.game || "SkyrimSE",
+        ckpeRoot: options.ckpeRoot || defaultCkpeRoot()
+      });
+      const proofResults = loadProofResults(options.proofResults);
+      const matrix = buildCapabilityMatrix({
+        inventory,
+        proofResults,
+        game: options.game || inventory.game
+      });
+      const summary = buildPlatformV2OperationExpansionSummary(matrix, {
+        game: options.game || inventory.game,
+        sourceMatrix: options.matrix || null,
+        sourceProofResults: options.proofResults || null,
+        repoRoot: process.cwd(),
+        loadSetFixture: options.loadSetFixture || "fixtures/platform-v2-operation-expansion/load-plugin-set-product-ready.ck-command-packet.json",
+        expectedActivePlugin: options.expectedActivePlugin || null,
+        expectedSaveTarget: options.expectedSaveTarget || null
+      });
+      const written = maybeWriteJson(options.outputFile, summary);
+      if (options.verifyMatrix && summary.gate.status !== "PASS") {
+        process.exitCode = 1;
+      }
+      print({ summary, written }, options, () => {
+        const formatted = formatPlatformV2OperationExpansionSummary(summary);
+        return written ? `${formatted}Platform v2 summary: ${written}\n` : formatted;
       });
       return;
     }
@@ -575,6 +607,18 @@ function parseArgs(argv) {
       options.summary = requireNext(argv, ++index, "--summary");
     } else if (arg.startsWith("--summary=")) {
       options.summary = arg.slice("--summary=".length);
+    } else if (arg === "--load-set-fixture") {
+      options.loadSetFixture = requireNext(argv, ++index, "--load-set-fixture");
+    } else if (arg.startsWith("--load-set-fixture=")) {
+      options.loadSetFixture = arg.slice("--load-set-fixture=".length);
+    } else if (arg === "--expected-active-plugin") {
+      options.expectedActivePlugin = requireNext(argv, ++index, "--expected-active-plugin");
+    } else if (arg.startsWith("--expected-active-plugin=")) {
+      options.expectedActivePlugin = arg.slice("--expected-active-plugin=".length);
+    } else if (arg === "--expected-save-target") {
+      options.expectedSaveTarget = requireNext(argv, ++index, "--expected-save-target");
+    } else if (arg.startsWith("--expected-save-target=")) {
+      options.expectedSaveTarget = arg.slice("--expected-save-target=".length);
     } else if (arg === "--proof-output") {
       options.proofOutput = requireNext(argv, ++index, "--proof-output");
     } else if (arg.startsWith("--proof-output=")) {
@@ -745,6 +789,7 @@ function usage(exitCode, message = null) {
   creation-authoring inventory [--game SkyrimSE] [--write-generated] [--json]
   creation-authoring matrix [--game SkyrimSE] [--proof-results <path>] [--write-generated] [--verify] [--json]
   creation-authoring proof-summary [--game SkyrimSE] [--proof-results <path>] [--output-file <path>] [--json]
+  creation-authoring platform-v2-summary [--game SkyrimSE] [--proof-results <path>] [--load-set-fixture <path>] [--expected-active-plugin <plugin.esp>] [--expected-save-target <plugin.esp>] [--output-file <path>] [--verify] [--json]
   creation-authoring proof-freshness [--proof-results <path>] [--matrix <path>] [--summary <path>] [--output-file <path>] [--json]
   creation-authoring explain-capability <record-family> [--game SkyrimSE] [--proof-results <path>] [--json]
   creation-authoring proof-ledger <run-report.json> --output-file <proof-ledger.json> [--fixture <manifest-or-fixture>] [--platform-v1] [--json]

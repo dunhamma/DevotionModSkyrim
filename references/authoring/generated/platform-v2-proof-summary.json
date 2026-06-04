@@ -1,0 +1,194 @@
+{
+  "schema": "creation-authoring.platform-v2-operation-expansion-summary.v1",
+  "generatedAt": "2026-05-31T11:31:26.167Z",
+  "game": "SkyrimSE",
+  "sourceMatrix": null,
+  "sourceProofResults": "generated\\proof-results.skyrimse.json",
+  "tranche": "operation-expansion",
+  "fullMatrixReleaseReady": false,
+  "notes": [
+    "Platform v2 operation-expansion gate is operation-first and row-scoped.",
+    "Full-matrix releaseReady may remain false while unrelated rows stay blocked or discovery-only."
+  ],
+  "targets": [
+    {
+      "recordFamily": "SPEL",
+      "operation": "spell.add",
+      "status": "PASS",
+      "reason": "Operation row promoted from strict proof evidence.",
+      "proofReferences": {
+        "target": "EXM_SPEL_Target",
+        "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+        "fixture": "fixtures\\platform-v2-operation-expansion\\spell-add-spel.creation-authoring.json",
+        "proofLedger": "generated\\platform-v2-operation-expansion\\spell-add-spel.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\spell-add-spel.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "SPEL",
+      "operation": "condition.add",
+      "status": "PASS",
+      "reason": "Operation row promoted from strict proof evidence.",
+      "proofReferences": {
+        "target": "EXM_SPEL_Target",
+        "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+        "fixture": "fixtures\\platform-v2-operation-expansion\\condition-add-spel.creation-authoring.json",
+        "proofLedger": "generated\\platform-v2-operation-expansion\\condition-add-spel.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\condition-add-spel.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "PERK",
+      "operation": "perk.add",
+      "status": "PASS",
+      "reason": "Operation row promoted from strict proof evidence.",
+      "proofReferences": {
+        "target": "EXM_PERK_Target",
+        "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+        "fixture": "fixtures\\platform-v2-operation-expansion\\perk-add-perk.creation-authoring.json",
+        "proofLedger": "generated\\platform-v2-operation-expansion\\perk-add-perk.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\perk-add-perk.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "PERK",
+      "operation": "vmad.attach_script",
+      "status": "PASS",
+      "reason": "Operation row promoted from strict proof evidence.",
+      "proofReferences": {
+        "target": "EXM_PERK_Target",
+        "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+        "fixture": "fixtures\\platform-v2-operation-expansion\\vmad-attach-script-perk.creation-authoring.json",
+        "proofLedger": "generated\\platform-v2-operation-expansion\\vmad-attach-script-perk.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\vmad-attach-script-perk.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    }
+  ],
+  "promotedRows": [
+    {
+      "recordFamily": "SPEL",
+      "operation": "spell.add",
+      "status": "PASS",
+      "reason": "Operation row promoted from strict proof evidence.",
+      "proofReferences": {
+        "target": "EXM_SPEL_Target",
+        "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+        "fixture": "fixtures\\platform-v2-operation-expansion\\spell-add-spel.creation-authoring.json",
+        "proofLedger": "generated\\platform-v2-operation-expansion\\spell-add-spel.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\spell-add-spel.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "SPEL",
+      "operation": "condition.add",
+      "status": "PASS",
+      "reason": "Operation row promoted from strict proof evidence.",
+      "proofReferences": {
+        "target": "EXM_SPEL_Target",
+        "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+        "fixture": "fixtures\\platform-v2-operation-expansion\\condition-add-spel.creation-authoring.json",
+        "proofLedger": "generated\\platform-v2-operation-expansion\\condition-add-spel.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\condition-add-spel.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "PERK",
+      "operation": "perk.add",
+      "status": "PASS",
+      "reason": "Operation row promoted from strict proof evidence.",
+      "proofReferences": {
+        "target": "EXM_PERK_Target",
+        "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+        "fixture": "fixtures\\platform-v2-operation-expansion\\perk-add-perk.creation-authoring.json",
+        "proofLedger": "generated\\platform-v2-operation-expansion\\perk-add-perk.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\perk-add-perk.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    },
+    {
+      "recordFamily": "PERK",
+      "operation": "vmad.attach_script",
+      "status": "PASS",
+      "reason": "Operation row promoted from strict proof evidence.",
+      "proofReferences": {
+        "target": "EXM_PERK_Target",
+        "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+        "fixture": "fixtures\\platform-v2-operation-expansion\\vmad-attach-script-perk.creation-authoring.json",
+        "proofLedger": "generated\\platform-v2-operation-expansion\\vmad-attach-script-perk.proof-ledger.json",
+        "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\vmad-attach-script-perk.strict.run-report.json",
+        "backend": "mo2-mcp-patch-request",
+        "verifierStatus": "PASS",
+        "readbackStatus": "PASS",
+        "commandEvidenceStatus": "NOT_REQUIRED"
+      }
+    }
+  ],
+  "loadPluginSetEvidence": {
+    "status": "PASS",
+    "fixture": "fixtures\\platform-v2-operation-expansion\\load-plugin-set-product-ready.ck-command-packet.json",
+    "expectedActivePlugin": "ExampleMod_PlatformV2Proof.esp",
+    "expectedSaveTarget": "ExampleMod_PlatformV2Proof.esp",
+    "command": {
+      "op": "loadPluginSet",
+      "requiredPlugins": [
+        "Skyrim.esm",
+        "ExampleMod.esp",
+        "ExampleMod_PlatformV2Proof.esp"
+      ],
+      "plugins": [
+        {
+          "name": "Skyrim.esm",
+          "selected": true,
+          "active": false
+        },
+        {
+          "name": "ExampleMod.esp",
+          "selected": true,
+          "active": false
+        },
+        {
+          "name": "ExampleMod_PlatformV2Proof.esp",
+          "selected": true,
+          "active": true
+        }
+      ],
+      "sourcePlugin": "ExampleMod.esp",
+      "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+      "activePlugin": "ExampleMod_PlatformV2Proof.esp",
+      "intendedSaveTarget": "ExampleMod_PlatformV2Proof.esp",
+      "sourcePluginNotActive": true
+    },
+    "failures": []
+  },
+  "gate": {
+    "status": "PASS",
+    "blockers": []
+  }
+}
