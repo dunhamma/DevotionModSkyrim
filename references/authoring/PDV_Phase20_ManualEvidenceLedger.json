@@ -30,7 +30,7 @@
     "Altmer": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race altmer",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
           "status": "evidence-recorded",
@@ -58,7 +58,7 @@
         "immersiveHookProof": {
           "status": "pending",
           "expected": "Prove dawn/study devotional context plus non-visible crisis/Lorkhan/orthodox pressure hooks outside QASmoke, with wrong-origin rejection and no visible pressure object.",
-          "note": "2026-06-01: Staged for next immersive hook proof tranche only. Reserved immersive hook proof IDs are PDV_REFR_AltmerDawnStudyWorldSignal and PDV_REFR_AltmerCrisisPressureWorldSignal; execution remains deferred."
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Auri-El, Magnus, and Xarxes via strict manager checker. This is accepted-route proof only; prior QASmoke hook proof remains separate, and stack/feel evidence remains pending."
         },
         "assetStatus": {
           "status": "pending",
@@ -69,7 +69,7 @@
     "Khajiit": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race khajiit",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
           "status": "pending",
@@ -81,7 +81,8 @@
         },
         "surveyStatusClarity": {
           "status": "pending",
-          "expected": "Survey/MCM explains lunar substrate, road-home cadence, focus weight, lunar posture, and active focus in race language."
+          "expected": "Survey/MCM explains lunar substrate, road-home cadence, focus weight, lunar posture, and active focus in race language.",
+          "note": "2026-06-04: Accepted lunar book route proof passed in the log, but tester reported no visible change in the Survey Devotion power text. Keep status clarity pending."
         },
         "stackSnapshot": {
           "status": "pending",
@@ -93,7 +94,8 @@
         },
         "immersiveHookProof": {
           "status": "pending",
-          "expected": "Prove lunar rest/open-sky cadence, road-home anchors, and Baan Dar/Rajhin/Alkosh focus hooks outside QASmoke without fast-travel, moon-sugar, theft, or dragon spam."
+          "expected": "Prove lunar rest/open-sky cadence, road-home anchors, and Baan Dar/Rajhin/Alkosh focus hooks outside QASmoke without fast-travel, moon-sugar, theft, or dragon spam.",
+          "note": "2026-06-04: Accepted P2 lunar book-route log proof recorded via strict manager checker. This is accepted-route proof only; status clarity, wrong-origin, generic-source silence, stack snapshot, and feel remain pending."
         },
         "assetStatus": {
           "status": "pending",
@@ -104,7 +106,7 @@
     "Argonian": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race argonian",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
           "status": "pending",
@@ -128,7 +130,8 @@
         },
         "immersiveHookProof": {
           "status": "pending",
-          "expected": "Prove Hist water/rest, People community, and thresholded Void/death-change hooks outside QASmoke without swimming, sleep, or murder loops."
+          "expected": "Prove Hist water/rest, People community, and thresholded Void/death-change hooks outside QASmoke without swimming, sleep, or murder loops.",
+          "note": "2026-06-04: Accepted P2 Hist book-route log proof recorded via strict manager checker. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
         },
         "assetStatus": {
           "status": "pending",
@@ -139,7 +142,7 @@
     "Orc": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race orc",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
           "status": "pending",
@@ -151,7 +154,8 @@
         },
         "surveyStatusClarity": {
           "status": "pending",
-          "expected": "Survey/MCM explains life mode, dignity/service posture, craft quality context, and recent mode evidence."
+          "expected": "Survey/MCM explains life mode, dignity/service posture, craft quality context, and recent mode evidence.",
+          "note": "2026-06-04: Tester could not read the status because the Prisma startup panel overlapped the CK startup MessageBox. Live manager script was patched and compiled to suppress Prisma startup payloads during CK-backed startup selection."
         },
         "stackSnapshot": {
           "status": "pending",
@@ -163,7 +167,8 @@
         },
         "immersiveHookProof": {
           "status": "pending",
-          "expected": "Prove Stronghold quality forge, City/self-made dignity, and Legion/Exile service hooks outside QASmoke without raw craft, combat, or faction membership loops."
+          "expected": "Prove Stronghold quality forge, City/self-made dignity, and Legion/Exile service hooks outside QASmoke without raw craft, combat, or faction membership loops.",
+          "note": "2026-06-04: Accepted P2 Malacath book-route log proof recorded via strict manager checker after aligning the checker with the live manager marker. This is accepted-route proof only; status clarity, wrong-origin, generic-source silence, stack snapshot, and feel remain pending."
         },
         "assetStatus": {
           "status": "pending",

@@ -234,12 +234,17 @@ snapshot before promoting Breton, Dunmer, Imperial, or Nord beyond audit-only.
 
 Current live log status (2026-06-04):
 - `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager`
-  reports `FAIL` overall because Breton and the newer Altmer/Argonian/Khajiit/
-  Orc/Redguard book families are not all present in the current log.
+  reports `FAIL` overall because Redguard is not present in the current log;
+  Breton is also absent only if a same-log full set is desired.
 - Accepted book-route proof is recorded for Dunmer Azura, Dunmer Boethiah,
-  Imperial public Talos, Nord Old Ways, and Nord Hircine/Arkay. Breton Hidden
-  Art passed in an earlier log and can be rerun only if a same-log full set is
-  desired.
+  Imperial public Talos, Nord Old Ways, Nord Hircine/Arkay, Altmer Auri-El,
+  Altmer Magnus, Altmer Xarxes, Argonian Hist, Khajiit Lunar, and Orc Malacath.
+  Breton Hidden Art passed in an earlier log and can be rerun only if a same-log
+  full set is desired.
+- Khajiit route proof passed even though the Survey/status text did not visibly
+  change during smoke; keep Survey/status clarity pending.
+- Orc route proof passed, and the startup Prisma/CK MessageBox overlap observed
+  during smoke was patched in the live manager script after compile verification.
 - Remaining failures are runtime/manual evidence gaps, not source-fill or
   verifier failures.
 

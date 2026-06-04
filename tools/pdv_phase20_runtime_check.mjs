@@ -405,7 +405,7 @@ const P2_BOOK_RACES = [
         id: "malacath-books",
         reference: "PDV_FLST_P2_OrcMalacathSources",
         required: ["RouteOrcMalacathConduct complete: mode 0 source po3_book_orc_malacath"],
-        optional: ["Orc life-mode signal recorded:"],
+        optional: ["Orc Malacath conduct routed with multiplier"],
       },
     ],
   },
