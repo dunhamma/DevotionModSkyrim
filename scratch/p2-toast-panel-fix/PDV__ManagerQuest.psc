@@ -592,17 +592,32 @@ Bool Function PushDevotionPanel()
     Float piety = 0.0
     Float pietyToday = 0.0
     Int tierValue = TIER_NONE
+    String tierLabelOverride = ""
+
     if _activeDeity
         titleText = _activeDeity.DeityName
         symbolName = GetPrismaSymbolForDeity(_activeDeity)
         piety = GetPiety(_activeDeity)
         pietyToday = GetPietyToday(_activeDeity)
         tierValue = GetTier(_activeDeity)
-    elseIf PDV_GLO_ActivePiety
-        piety = PDV_GLO_ActivePiety.GetValue()
+    else
+        ; Quasi-patron: surface the race's substrate/state-track as panel identity.
+        ; Piety stays 0 for substrate races — there is no single scoring float.
+        ; The tierLabelOverride carries the meaningful state (e.g. "Hist: Strained").
+        titleText = GetPanelQuasiPatronName(originRace)
+        symbolName = GetPanelQuasiPatronSymbol(originRace)
+        tierLabelOverride = GetPanelQuasiPatronTierLabel(originRace)
+        if PDV_GLO_ActivePiety
+            piety = PDV_GLO_ActivePiety.GetValue()
+        endIf
         if PDV_GLO_ActiveTier
             tierValue = PDV_GLO_ActiveTier.GetValueInt()
         endIf
+    endIf
+
+    String tierLabel = tierLabelOverride
+    if tierLabel == ""
+        tierLabel = GetCurrentStandingLabel()
     endIf
 
     String j = "{\"title\":\"" + JsonSafeString(titleText) + "\""
@@ -612,7 +627,7 @@ Bool Function PushDevotionPanel()
     j = j + ",\"patronNote\":\"" + JsonSafeString(GetPanelPatronNote()) + "\""
     j = j + ",\"summary\":\"" + JsonSafeString(GetSurveyDevotionText()) + "\""
     j = j + ",\"tier\":" + tierValue
-    j = j + ",\"tierLabel\":\"" + JsonSafeString(GetCurrentStandingLabel()) + "\""
+    j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
     j = j + ",\"piety\":" + piety
     j = j + ",\"pietyToday\":" + pietyToday
     j = j + ",\"todayMood\":\"" + JsonSafeString(GetPanelTodayMood(pietyToday)) + "\""
@@ -632,13 +647,12 @@ String Function GetPanelPatronNote()
     if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
         return "Choose a path through play, prayer, and consequence."
     endIf
-    if _activeDeity
-        return GetPlayerMcmModeLine()
-    endIf
     if IsBroadWorshipActive()
         return "You keep the broad rites of your people, with no single patron yet named."
     endIf
-    return "No patron has answered yet."
+    ; GetPlayerMcmModeLine handles all races — active patron, substrate, and
+    ; state-track modes — so it works for both deity and quasi-patron cases.
+    return GetPlayerMcmModeLine()
 EndFunction
 
 String Function GetPanelTodayMood(Float pietyToday)
@@ -679,6 +693,16 @@ String Function GetPanelActsJson()
         items = AppendJsonItem(items, PanelPlainObject("journal", "good", GetContextualFavorLaneLabel(lane), GetContextualFavorFamilyLabel(lane, fam)))
     endIf
 
+    ; Quasi-patron: show current substrate/state-track mode as the headline act
+    ; when there is no scoring patron — gives the player their mode at a glance.
+    if !_activeDeity
+        Int originRace = GetPlayerOriginRaceIndex()
+        String quasiLabel = GetPanelQuasiPatronTierLabel(originRace)
+        if quasiLabel != ""
+            items = AppendJsonItem(items, PanelPlainObject(GetPanelQuasiPatronSymbol(originRace), "neutral", "Current practice", quasiLabel))
+        endIf
+    endIf
+
     return items
 EndFunction
 
@@ -686,6 +710,14 @@ String Function GetPanelRitesJson()
     String items = PanelPlainObject("journal", "", "Survey your devotion", "Call on the Survey Devotion power to read where your path stands.")
     if _activeDeity
         items = AppendJsonItem(items, PanelPlainObject(GetPrismaSymbolForDeity(_activeDeity), "", "Keep " + _activeDeity.DeityName + "'s rites", "Act in keeping with " + _activeDeity.DeityName + " to deepen this bond."))
+    else
+        ; Quasi-patron: tell the player what kind of acts build their path.
+        Int originRace = GetPlayerOriginRaceIndex()
+        String patronName = GetPanelQuasiPatronName(originRace)
+        String patronSymbol = GetPanelQuasiPatronSymbol(originRace)
+        if patronName != "Devotion"
+            items = AppendJsonItem(items, PanelPlainObject(patronSymbol, "", "Deepen your practice", "Continue acting in keeping with " + patronName + " to build this path."))
+        endIf
     endIf
     return items
 EndFunction
@@ -739,6 +771,100 @@ String Function GetPanelDebugJson()
     j = j + ",\"Curse\":\"" + JsonSafeString(GetPlayerCursePublicLabel()) + "\""
     j = j + "}"
     return j
+EndFunction
+
+; --- Quasi-patron helpers ---
+; For races whose piety is tracked via substrate/state-track rather than a
+; scoring PDV_DeityBase patron, these derive panel identity fields so the
+; panel is never blank for non-deity races.
+
+String Function GetPanelQuasiPatronName(Int originRace)
+    if originRace == ORIGIN_ARGONIAN
+        return "The Hist"
+    elseIf originRace == ORIGIN_ORC
+        return "Malacath"
+    elseIf originRace == ORIGIN_KHAJIIT
+        Int focus = GetKhajiitFocusedEmphasis()
+        if focus > 0
+            return GetKhajiitFocusLabel(focus)
+        endIf
+        return "Lunar Lattice"
+    elseIf originRace == ORIGIN_DUNMER
+        return "House Ancestors"
+    elseIf originRace == ORIGIN_REDGUARD
+        return "Yokudan Path"
+    elseIf originRace == ORIGIN_BOSMER
+        return "Path Unsettled"
+    elseIf originRace == ORIGIN_IMPERIAL
+        return "Nine Divines"
+    elseIf originRace == ORIGIN_BRETON
+        return "Breton Tradition"
+    elseIf originRace == ORIGIN_NORD
+        return "Nord Worship"
+    elseIf originRace == ORIGIN_ALTMER
+        return "Auri-El Foundation"
+    endIf
+    return "Devotion"
+EndFunction
+
+String Function GetPanelQuasiPatronSymbol(Int originRace)
+    if originRace == ORIGIN_ARGONIAN
+        return "hist"
+    elseIf originRace == ORIGIN_ORC
+        return "malacath"
+    elseIf originRace == ORIGIN_KHAJIIT
+        Int focus = GetKhajiitFocusedEmphasis()
+        if focus > 0
+            return GetKhajiitFocusSymbol(focus)
+        endIf
+        return "lunar"
+    elseIf originRace == ORIGIN_DUNMER
+        return "ancestor"
+    elseIf originRace == ORIGIN_REDGUARD
+        return "journal"
+    elseIf originRace == ORIGIN_BOSMER
+        return "yffre"
+    elseIf originRace == ORIGIN_IMPERIAL
+        return "akatosh"
+    elseIf originRace == ORIGIN_BRETON
+        return "journal"
+    elseIf originRace == ORIGIN_NORD
+        return "kyne"
+    elseIf originRace == ORIGIN_ALTMER
+        return "auri-el"
+    endIf
+    return "journal"
+EndFunction
+
+; Returns a short state label to use as tierLabel when there is no scoring patron.
+; Uses the same label functions as MCM/Survey so the panel matches those surfaces.
+String Function GetPanelQuasiPatronTierLabel(Int originRace)
+    if originRace == ORIGIN_ARGONIAN
+        return "Hist: " + GetArgonianHistPostureLabel()
+    elseIf originRace == ORIGIN_ORC
+        return GetOrcLifeModeLabel()
+    elseIf originRace == ORIGIN_KHAJIIT
+        Int focus = GetKhajiitFocusedEmphasis()
+        if focus > 0
+            return "Focused: " + GetKhajiitFocusLabel(focus)
+        endIf
+        return "Lunar Lattice"
+    elseIf originRace == ORIGIN_DUNMER
+        return "Ancestor layer"
+    elseIf originRace == ORIGIN_REDGUARD
+        return GetRedguardSectLabel()
+    elseIf originRace == ORIGIN_BOSMER
+        return GetBosmerPathLabel()
+    elseIf originRace == ORIGIN_IMPERIAL
+        return GetImperialConcordatLabel()
+    elseIf originRace == ORIGIN_BRETON
+        return GetBretonTraditionLabel()
+    elseIf originRace == ORIGIN_NORD
+        return GetNordDevotionModeLabel()
+    elseIf originRace == ORIGIN_ALTMER
+        return GetAltmerCrisisStateLabel()
+    endIf
+    return ""
 EndFunction
 
 String Function PanelEventObject(String eventName, PDV_DeityBase deity, String context, String itemText, String amountText, String tone, String tierLabel, String rival)
