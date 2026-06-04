@@ -140,6 +140,12 @@ const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
   "authoring",
   "PDV_Phase20_NoInGameProof_Gates.json",
 );
+const PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase20_P2ImmersiveReceivers.manifest.json",
+);
 const CAT6_PROMOTION_MANIFEST = path.join(
   PROJECT_ROOT,
   "references",
@@ -652,9 +658,10 @@ const KYNE_EXPECTED_DATA = {
   DeityName: "Kyne",
   DeityDomain: "Storms, Hunt, Warriors' Spirit",
   DeityIndex: 0,
-  ThresholdSeeker: 10,
+  ThresholdSeeker: 25,
   ThresholdDevoted: 50,
-  ThresholdChampion: 150,
+  ThresholdChampion: 85,
+  IsAedric: true,
   Stance_Nord: 0,
   Stance_Imperial: 1,
   Stance_Breton: 1,
@@ -704,6 +711,10 @@ const EVENTBUS_RECORD_PROPERTIES = {
 const TALOS_EXPECTED_DATA = {
   DeityName: "Talos",
   DeityIndex: 1,
+  ThresholdSeeker: 25,
+  ThresholdDevoted: 50,
+  ThresholdChampion: 85,
+  IsAedric: true,
   Stance_Nord: 0,
   Stance_Imperial: 1,
   Stance_Breton: 0,
@@ -719,6 +730,10 @@ const TALOS_EXPECTED_DATA = {
 const AURIEL_EXPECTED_DATA = {
   DeityName: "Auri-El",
   DeityIndex: 2,
+  ThresholdSeeker: 25,
+  ThresholdDevoted: 50,
+  ThresholdChampion: 85,
+  IsAedric: true,
   Stance_Nord: 1,
   Stance_Imperial: 1,
   Stance_Breton: 1,
@@ -1748,16 +1763,28 @@ class Verifier {
     this.checkPhase9DeityRecord("PDV_Deity_Yffre", "PDV_Deity_Yffre", {
       DeityName: "Y'ffre",
       DeityIndex: 3,
+      ThresholdSeeker: 25,
+      ThresholdDevoted: 50,
+      ThresholdChampion: 85,
+      IsAedric: true,
       Stance_Bosmer: 0,
     });
     this.checkPhase9DeityRecord("PDV_Deity_Zen", "PDV_Deity_Zen", {
       DeityName: "Z'en",
       DeityIndex: 4,
+      ThresholdSeeker: 25,
+      ThresholdDevoted: 50,
+      ThresholdChampion: 85,
+      IsAedric: true,
       Stance_Bosmer: 0,
     });
     this.checkPhase9DeityRecord("PDV_Deity_BaanDar", "PDV_Deity_BaanDar", {
       DeityName: "Baan Dar",
       DeityIndex: 5,
+      ThresholdSeeker: 25,
+      ThresholdDevoted: 50,
+      ThresholdChampion: 85,
+      IsAedric: false,
       Stance_Bosmer: 0,
     });
     this.checkPhase9SignalReceiverRecords();
@@ -2433,9 +2460,13 @@ class Verifier {
 
   checkPhase17SourceContracts() {
     this.checkSourceContains("Phase 17 source", "PDV__ManagerQuest", [
-      "Float Property DECAY_GRACE_DAYS = 3.0 AutoReadOnly",
+      "Float Property PIETY_DAILY_MAX_DELTA = 4.3 AutoReadOnly",
+      "Float Property DECAY_GRACE_DAYS = 2.0 AutoReadOnly",
       "Float Property DECAY_PER_DAY = 0.5 AutoReadOnly",
       "Float Property BROAD_WORSHIP_DECAY_MULTIPLIER = 0.2 AutoReadOnly",
+      "Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly",
+      "Float Property TIER_DOWN_HYSTERESIS = 5.0 AutoReadOnly",
+      "Float Property ORC_RATE_MULT_CITY = 0.75 AutoReadOnly",
       "Function RunDawnApplyDecay()",
       "Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)",
       "if GetPatronState() == PATRON_STATE_ACTIVE && deity == _activeDeity",
@@ -2444,6 +2475,7 @@ class Verifier {
       "GetCurseGainMultiplier(deity)",
       "GetDaedricStigmaGainMultiplier(deity)",
       "Function GetDecayFloorForDeity(PDV_DeityBase deity, Float currentPiety)",
+      "PDV_CurseStateService.IsVampire() && deity.IsAedric",
       "StorageUtil.GetFloatValue(deity as Form, \"PDV.PassiveDecayFloor\")",
       "Function GetDecayFloorForTier(PDV_DeityBase deity, Int tierValue)",
       "Function RefreshPassiveDecayFloorForDeity(PDV_DeityBase deity, Int tierValue)",
@@ -2453,6 +2485,8 @@ class Verifier {
       "Function DebugRunDecayPass()",
       "Function DebugRunDecayProofDaysByIndex(Int deityIndex)",
       "String Function DebugGetDecaySummaryByIndex(Int deityIndex)",
+      "Function GetOrcLifeModeGainMultiplier(PDV_DeityBase deity)",
+      "Function ThresholdForTier(PDV_DeityBase deity, Int tierValue)",
     ], this.phase17Gap.bind(this));
 
     this.checkSourceContains("Phase 17 MCM source", "PDV_MCM", [
@@ -3574,6 +3608,8 @@ class Verifier {
     }
 
     this.checkPhase20PreBetaSurveySourceScaffold();
+    this.checkPhase20ImmersiveHookSourceScaffold();
+    this.checkPhase20P2ImmersiveReceiverManifest();
     this.checkPhase20NoInGameProofGates();
     this.checkPhase20Cat6PromotionPilot();
     this.checkPhase20ManualEvidenceLedger();
@@ -3605,6 +3641,299 @@ class Verifier {
     ], this.phase20RaceCostingGap.bind(this));
   }
 
+  checkPhase20ImmersiveHookSourceScaffold() {
+    this.checkSourceContains("Phase 20 immersive hook EventTypes source", "PDV_EventTypes", [
+      "EVT_BRETON_TRADITION_CHOICE = 120",
+      "EVT_BRETON_KNIGHTLY_VOW = 121",
+      "EVT_BRETON_HIDDEN_ART_EXPOSURE = 122",
+      "EVT_BRETON_GREEN_WAY_STANDING = 123",
+      "EVT_DUNMER_RECLAMATION_FOCUS = 130",
+      "EVT_DUNMER_DEVIATION_PRICE = 131",
+      "EVT_IMPERIAL_CIVIC_SERVICE = 140",
+      "EVT_IMPERIAL_TALOS_PRESSURE = 141",
+      "EVT_IMPERIAL_PATRON_CIVIC_FAVOR = 142",
+      "EVT_NORD_OLD_WAYS_STATE = 150",
+      "EVT_NORD_KYNE_TALOS_CONTEXT = 151",
+      "EVT_NORD_HIRCINE_ARKAY_EDGE = 152",
+      "breton-tradition-choice",
+      "dunmer-reclamation-focus",
+      "imperial-civic-service",
+      "nord-hircine-arkay-edge",
+    ], this.phase20RaceCostingGap.bind(this));
+
+    this.checkSourceContains("Phase 20 immersive hook EventBus source", "PDV_EventBus", [
+      "Function RouteBretonTraditionChoice(Int traditionValue, String sourceId)",
+      "Function RouteBretonKnightlyVow(String sourceId)",
+      "Function RouteBretonHiddenArtExposure(String sourceId)",
+      "Function RouteBretonGreenWayStanding(String sourceId)",
+      "Function RouteDunmerReclamationFocus(Int focusValue, String sourceId)",
+      "Function RouteDunmerDeviationPrice(String sourceId)",
+      "Function RouteImperialCivicService(String sourceId)",
+      "Function RouteImperialTalosPressure(Bool isPrivate, String sourceId)",
+      "Function RouteImperialPatronCivicFavor(String sourceId)",
+      "Function RouteNordOldWaysState(String sourceId)",
+      "Function RouteNordKyneTalosContext(String sourceId)",
+      "Function RouteNordHircineArkayEdge(String sourceId)",
+    ], this.phase20RaceCostingGap.bind(this));
+
+    this.checkSourceContains("Phase 20 immersive hook manager source", "PDV__ManagerQuest", [
+      "Function HandleBretonTraditionChoice(Int traditionValue, String reason)",
+      "Function HandleBretonKnightlyVow(String reason)",
+      "Function HandleBretonHiddenArtExposure(String reason)",
+      "Function HandleBretonGreenWayStanding(String reason)",
+      "Function HandleDunmerReclamationFocus(Int focusValue, String reason)",
+      "Function HandleDunmerDeviationPrice(String reason)",
+      "Function HandleImperialCivicService(String reason)",
+      "Function HandleImperialTalosPressure(Bool isPrivate, String reason)",
+      "Function HandleImperialPatronCivicFavor(String reason)",
+      "Function HandleNordOldWaysState(String reason)",
+      "Function HandleNordKyneTalosContext(String reason)",
+      "Function HandleNordHircineArkayEdge(String reason)",
+      "Function HandleOrcMalacathConduct(Int modeValue, String reason)",
+      "Function HandleRedguardAncestorSpine(String reason)",
+      "String Function GetNordContextSurveyText()",
+      "String Function GetDunmerReclamationFocusLabel(Int focusValue)",
+      "PDV.Breton.TraditionHookCount",
+      "PDV.Dunmer.ReclamationFocusCount",
+      "PDV.Imperial.CivicServiceCount",
+      "PDV.Nord.HircineArkayEdgeCount",
+    ], this.phase20RaceCostingGap.bind(this));
+
+    this.checkSourceContains("Phase 20 immersive hook receiver source", "PDV_PlayerEvents", [
+      "Function RegisterForP2ImmersiveSignals()",
+      "PO3_Events_Alias.RegisterForBookRead(Self)",
+      "PO3_Events_Alias.RegisterForSpellLearned(Self)",
+      "PO3_Events_Alias.RegisterForItemHarvested(Self)",
+      "PO3_Events_Alias.RegisterForWeatherChange(Self)",
+      "PO3_Events_Alias.RegisterForQuestStage(Self, sourceQuest)",
+      "Event OnBookRead(Book akBook)",
+      "Event OnSpellLearned(Spell akSpell)",
+      "Event OnItemHarvested(Form akProduce)",
+      "Event OnWeatherChange(Weather akOldWeather, Weather akNewWeather)",
+      "Event OnQuestStageChange(Quest akQuest, Int aiNewStage)",
+      "Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind)",
+      "Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)",
+      "Function ShouldRouteP2Source(FormList sourceList, Form sourceForm, String routeKey, String sourceKind)",
+      "Function ShouldRouteP2QuestStage(FormList sourceList, Quest sourceQuest, Int expectedFormId, Int approvedStage, String routeKey, Int newStage)",
+      "Function MarkP2SourceRoute(Form sourceForm, String routeKey, String sourceKind)",
+      "Function HasListedForm(FormList sourceList, Form sourceForm)",
+      "PDV.P2Source.",
+      "PDV_FLST_P2_BretonKnightsRoadSources",
+      "PDV_FLST_P2_DunmerAzuraSources",
+      "PDV_FLST_P2_ImperialCivicSources",
+      "PDV_FLST_P2_NordHircineArkaySources",
+      "PDV_FLST_P2_AltmerAurielSources",
+      "PDV_FLST_P2_ArgonianHistSources",
+      "PDV_FLST_P2_BosmerYffreSources",
+      "PDV_FLST_P2_KhajiitLunarSources",
+      "PDV_FLST_P2_OrcMalacathSources",
+      "PDV_FLST_P2_RedguardSpineSources",
+    ], this.phase20RaceCostingGap.bind(this));
+  }
+
+  checkPhase20P2ImmersiveReceiverManifest() {
+    if (!exists(PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST)) {
+      this.phase20RaceCostingGap("Phase 20 P2 immersive receiver manifest", "Manifest is missing.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      return;
+    }
+
+    let manifest = null;
+    try {
+      manifest = JSON.parse(fs.readFileSync(PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST, "utf8"));
+    } catch (error) {
+      this.phase20RaceCostingGap("Phase 20 P2 immersive receiver manifest", `Could not parse manifest: ${error.message}`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      return;
+    }
+
+    if (manifest.schema === "pdv.phase20.p2-immersive-receivers.v1") {
+      this.pass("Phase 20 P2 immersive receiver manifest", "Schema is current.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 P2 immersive receiver manifest", `Unexpected schema ${manifest.schema || "(missing)"}.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    }
+
+    const allowedStatuses = new Set([
+      "source-scaffolded-pending-ck-wiring",
+      "formlist-shells-wired-pending-alias-property-wiring",
+      "alias-properties-wired-pending-curated-source-fill",
+      "source-fill-tooling-ready-pending-curated-source-fill",
+      "p2-book-fill-live-readback-pass-pending-runtime-proof",
+    ]);
+    const formListWiredStatuses = new Set([
+      "formlist-shells-wired-pending-alias-property-wiring",
+      "alias-properties-wired-pending-curated-source-fill",
+      "source-fill-tooling-ready-pending-curated-source-fill",
+      "p2-book-fill-live-readback-pass-pending-runtime-proof",
+    ]);
+    const aliasWiredStatuses = new Set([
+      "alias-properties-wired-pending-curated-source-fill",
+      "source-fill-tooling-ready-pending-curated-source-fill",
+      "p2-book-fill-live-readback-pass-pending-runtime-proof",
+    ]);
+    const sourceFillStatuses = new Set([
+      "source-fill-tooling-ready-pending-curated-source-fill",
+      "p2-book-fill-live-readback-pass-pending-runtime-proof",
+    ]);
+    const sourceFillPlanStatuses = new Set([
+      "tooling-ready-pending-exact-source-curation",
+      "p2-book-fill-live-readback-pass-pending-runtime-proof",
+    ]);
+    if (allowedStatuses.has(manifest.status)) {
+      this.pass("Phase 20 P2 immersive receiver status", "Receiver status preserves CK/runtime boundary.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 P2 immersive receiver status", `Unexpected status ${manifest.status || "(missing)"}.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    }
+
+    const expectedPo3Events = ["RegisterForBookRead", "RegisterForSpellLearned", "RegisterForItemHarvested", "RegisterForWeatherChange", "RegisterForQuestStage"];
+    const po3Events = new Set(Array.isArray(manifest.po3Events) ? manifest.po3Events : []);
+    for (const eventName of expectedPo3Events) {
+      if (po3Events.has(eventName)) {
+        this.pass("Phase 20 P2 immersive PO3 event", `${eventName} is declared.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 P2 immersive PO3 event", `${eventName} is missing.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      }
+    }
+
+    const properties = Array.isArray(manifest.sourceProperties) ? manifest.sourceProperties : [];
+    if (properties.length >= 17) {
+      this.pass("Phase 20 P2 immersive source properties", `${properties.length} receiver source properties are declared.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 P2 immersive source properties", `${properties.length} receiver source properties are declared; expected at least 17.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    }
+
+    const expectedRaces = new Set(["Altmer", "Argonian", "Bosmer", "Breton", "Dunmer", "Imperial", "Khajiit", "Nord", "Orc", "Redguard"]);
+    const seenRaces = new Set();
+    for (const property of properties) {
+      const requiredFields = ["property", "race", "route", "acceptedUse", "rejectedUse"];
+      const missingFields = requiredFields.filter((field) => !(typeof property[field] === "string" && property[field].trim().length > 0));
+      if (!Array.isArray(property.sourceKinds) || property.sourceKinds.length === 0) {
+        missingFields.push("sourceKinds");
+      }
+
+      const propertyName = typeof property.property === "string" && property.property.trim().length > 0 ? property.property : "(unnamed property)";
+      if (missingFields.length === 0) {
+        this.pass("Phase 20 P2 immersive source property", `${propertyName} declares race, source kinds, route, accepted use, and rejected use.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 P2 immersive source property", `${propertyName} missing ${missingFields.join(", ")}.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      }
+
+      if (formListWiredStatuses.has(manifest.status) && propertyName !== "(unnamed property)") {
+        const record = this.recordsByEdid.get(propertyName);
+        if (record?.type === "FLST") {
+          this.pass("Phase 20 P2 immersive FormList shell", `${propertyName} exists as FLST.`, PDV_ESP);
+        } else if (record) {
+          this.phase20RaceCostingGap("Phase 20 P2 immersive FormList shell", `${propertyName} exists as ${record.type}, expected FLST.`, PDV_ESP);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 P2 immersive FormList shell", `${propertyName} is missing from the framework ESP.`, PDV_ESP);
+        }
+      }
+
+      if (expectedRaces.has(property.race)) {
+        seenRaces.add(property.race);
+      }
+    }
+
+    if (formListWiredStatuses.has(manifest.status)) {
+      const readback = manifest.formListShellReadback || {};
+      if (readback.status === "record-wired" && typeof readback.backupPath === "string" && readback.backupPath.trim().length > 0) {
+        this.pass("Phase 20 P2 immersive FormList readback", "Manifest records FormList shell readback and backup path.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 P2 immersive FormList readback", "Manifest status is FormList-wired but readback/backup metadata is incomplete.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      }
+    }
+
+    if (aliasWiredStatuses.has(manifest.status)) {
+      const readback = manifest.aliasPropertyReadback || {};
+      if (readback.status === "alias-properties-wired" && typeof readback.backupPath === "string" && readback.backupPath.trim().length > 0) {
+        this.pass("Phase 20 P2 immersive alias readback", "Manifest records alias property readback and backup path.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 P2 immersive alias readback", "Manifest status is alias-wired but alias readback/backup metadata is incomplete.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      }
+
+      const detail = this.recordDetails.get("PDV__ManagerQuest");
+      const fields = detail?.fields || {};
+      const questAlias = findQuestAlias(fields, "PDV_Player");
+      const aliasScript = questAlias ? findAliasScript(fields, questAlias.ID, "PDV_PlayerEvents") : null;
+      if (!aliasScript) {
+        this.phase20RaceCostingGap("Phase 20 P2 immersive alias property", "PDV_Player alias is missing PDV_PlayerEvents readback.", PDV_ESP);
+      } else {
+        const aliasProps = propertyMap(aliasScript);
+        for (const property of properties) {
+          const propertyName = typeof property.property === "string" && property.property.trim().length > 0 ? property.property : null;
+          if (propertyName) {
+            this.checkObjectPropertyTarget("Phase 20 P2 immersive alias property", aliasProps, propertyName, propertyName, this.phase20RaceCostingGap.bind(this));
+          }
+        }
+      }
+    }
+
+    if (sourceFillStatuses.has(manifest.status)) {
+      const fillPlan = manifest.sourceFillPlan || {};
+      const entries = Array.isArray(manifest.sourceFillEntries) ? manifest.sourceFillEntries : null;
+      const requiredFillFields = ["status", "fillCommand", "checkCommand", "readbackResult", "entryRule", "formKeyFormat", "fillToolSafety"];
+      const missingFillFields = requiredFillFields.filter((field) => !(typeof fillPlan[field] === "string" && fillPlan[field].trim().length > 0));
+      if (missingFillFields.length === 0 && sourceFillPlanStatuses.has(fillPlan.status)) {
+        this.pass("Phase 20 P2 immersive source-fill plan", "Manifest records source-fill tooling, commands, readback, and safety rules.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 P2 immersive source-fill plan", `Source-fill plan metadata is incomplete: ${missingFillFields.join(", ") || "unexpected status"}.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      }
+
+      if (entries) {
+        this.pass("Phase 20 P2 immersive source-fill entries", `${entries.length} approved source-fill group(s) are declared.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 P2 immersive source-fill entries", "sourceFillEntries must be an array, even while empty.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      }
+
+      const questStageGate = manifest.questStageGate || {};
+      const approvedQuestStageEntries = (entries || []).flatMap((group) => (
+        Array.isArray(group.sources) ? group.sources : []
+      )).filter((source) => source.sourceKind === "quest-stage" && source.status === "approved-for-fill");
+      if (typeof questStageGate.rule === "string"
+          && questStageGate.rule.includes("aiNewStage")
+          && typeof questStageGate.checkCommand === "string"
+          && questStageGate.checkCommand.includes("--check-exact-stage-gates")) {
+        this.pass("Phase 20 P2 exact-stage quest gate", "Manifest declares the exact-stage quest-source gate and checker command.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 P2 exact-stage quest gate", "Manifest must declare an aiNewStage-aware quest-stage gate and checker command.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      }
+
+      if (approvedQuestStageEntries.length === 0 && questStageGate.receiverStatus !== "exact-stage-supported") {
+        this.pass("Phase 20 P2 exact-stage quest fill", "No approved quest-stage entries are declared while exact-stage receiver support is blocked.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else if (approvedQuestStageEntries.length > 0 && questStageGate.receiverStatus !== "exact-stage-supported") {
+        this.phase20RaceCostingGap("Phase 20 P2 exact-stage quest fill", `${approvedQuestStageEntries.length} approved quest-stage entries exist before exact-stage receiver support is live.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        const missingStageMetadata = approvedQuestStageEntries.filter((source) => (
+          !Array.isArray(source.approvedStages)
+          || source.approvedStages.length === 0
+          || typeof source.stageReadbackEvidence !== "string"
+          || source.stageReadbackEvidence.trim().length === 0
+          || typeof source.rejectedStageContext !== "string"
+          || source.rejectedStageContext.trim().length === 0
+          || typeof source.duplicateGuard !== "string"
+          || source.duplicateGuard.trim().length === 0
+        ));
+        if (missingStageMetadata.length === 0) {
+          this.pass("Phase 20 P2 exact-stage quest fill", `${approvedQuestStageEntries.length} approved quest-stage entries carry stage metadata.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 P2 exact-stage quest fill", `${missingStageMetadata.length} approved quest-stage entries are missing approvedStages/readback/rejection/duplicate metadata.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+        }
+      }
+    }
+
+    for (const race of expectedRaces) {
+      if (seenRaces.has(race)) {
+        this.pass("Phase 20 P2 immersive race coverage", `${race} has receiver source properties.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 P2 immersive race coverage", `${race} has no receiver source property.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      }
+    }
+
+    if (manifest.newMeshRequired === false && typeof manifest.assetRequirement === "string" && manifest.assetRequirement.toLowerCase().includes("no new mesh required")) {
+      this.pass("Phase 20 P2 immersive asset policy", "Receiver manifest requires no new mesh.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 P2 immersive asset policy", "Receiver manifest must explicitly state no new mesh is required.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    }
+  }
+
   checkPhase20NoInGameProofGates() {
     if (!exists(PHASE20_NO_IN_GAME_PROOF_GATES)) {
       this.phase20RaceCostingGap("Phase 20 no-in-game gates", "Structured no-in-game gate file is missing.", PHASE20_NO_IN_GAME_PROOF_GATES);
@@ -3619,7 +3948,7 @@ class Verifier {
       return;
     }
 
-    if (gates.schema === "pdv.phase20.no-in-game-proof-gates.v1") {
+    if (gates.schema === "pdv.phase20.no-in-game-proof-gates.v2") {
       this.pass("Phase 20 no-in-game gates", "Gate schema is current.", PHASE20_NO_IN_GAME_PROOF_GATES);
     } else {
       this.phase20RaceCostingGap("Phase 20 no-in-game gates", `Unexpected schema ${gates.schema || "(missing)"}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
@@ -3633,6 +3962,13 @@ class Verifier {
     const requiredVerdict = gates.rules?.raceVerdict || "Fail - runtime/manual proof deferred";
     const p0p1MinimumRejectedHooks = Number(gates.rules?.p0p1MinimumRejectedHooks || 6);
     const p2MinimumRejectedHooks = Number(gates.rules?.p2MinimumRejectedHooks || 4);
+    if (typeof gates.rules?.allRaceSourceCurationPolicy === "string"
+        && gates.rules.allRaceSourceCurationPolicy.includes("Do not promote scan-only quest candidates")
+        && gates.sourceCurationRunbook === "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md") {
+      this.pass("Phase 20 all-race source curation policy", "Gate records the all-race exact-source policy and runbook.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 all-race source curation policy", "Gate must record the all-race exact-source policy and curation runbook.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    }
 
     for (const race of requiredRaces) {
       const packet = races[race];
@@ -3651,6 +3987,15 @@ class Verifier {
         this.pass("Phase 20 no-in-game race status", `${race} status is ${packet.noInGameStatus}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
       } else {
         this.phase20RaceCostingGap("Phase 20 no-in-game race status", `${race} has invalid no-in-game status ${packet.noInGameStatus || "(missing)"}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      }
+
+      if (packet.sourceCurationStatus === "exact-source-curation-pending"
+          && packet.sourceCurationRunbook === "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md"
+          && typeof packet.questCandidatePolicy === "string"
+          && packet.questCandidatePolicy.includes("Scan-only quest candidates")) {
+        this.pass("Phase 20 no-in-game source curation status", `${race} is held at exact-source curation pending.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 no-in-game source curation status", `${race} is missing the exact-source curation/runbook policy.`, PHASE20_NO_IN_GAME_PROOF_GATES);
       }
 
       for (const field of ["expectedBuild", "edgeBuild", "normalSessionRoute", "surveyStatusRequirement", "rewardFloor", "rewardCeiling", "nextAutomatableAction", "deferredManualProof"]) {
@@ -3689,24 +4034,91 @@ class Verifier {
       }
 
       const finalPlacementContracts = packet.finalPlacementContracts || [];
-      if (p0p1.has(race)) {
-        if (finalPlacementContracts.length >= 2) {
-          this.pass("Phase 20 no-in-game placement contracts", `${race} declares ${finalPlacementContracts.length} final-world placement contract(s).`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      if (finalPlacementContracts.length === 0) {
+        this.pass("Phase 20 no-in-game legacy placement contracts retired", `${race} no longer uses finalPlacementContracts as the final-world proof model.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 no-in-game legacy placement contracts retired", `${race} still declares ${finalPlacementContracts.length} legacy finalPlacementContracts; use immersiveHookContracts plus devProofContracts.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      }
+
+      const immersiveHookContracts = packet.immersiveHookContracts || [];
+      const minimumImmersiveHookContracts = Number(gates.rules?.minimumImmersiveHookContracts || 2);
+      if (immersiveHookContracts.length >= minimumImmersiveHookContracts) {
+        this.pass("Phase 20 no-in-game immersive hook contracts", `${race} declares ${immersiveHookContracts.length} immersive hook contract(s).`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 no-in-game immersive hook contracts", `${race} declares ${immersiveHookContracts.length}; expected at least ${minimumImmersiveHookContracts}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      }
+
+      const requiredImmersiveHookFields = gates.rules?.requiredImmersiveHookContractFields || [
+        "signalId",
+        "playerExperience",
+        "hookClass",
+        "receiverPlan",
+        "vanillaOrPo3Source",
+        "routeTarget",
+        "acceptedContext",
+        "rejectedContext",
+        "antiFarmRule",
+        "proofPath",
+        "assetRequirement",
+        "newMeshRequired",
+        "missingAssetIfRequired",
+      ];
+      for (const contract of immersiveHookContracts) {
+        const missing = requiredImmersiveHookFields.filter((field) => {
+          const value = contract[field];
+          if (field === "newMeshRequired") return typeof value !== "boolean";
+          return !(typeof value === "string" && value.trim().length > 0);
+        });
+        const signalId = typeof contract.signalId === "string" && contract.signalId.trim().length > 0 ? contract.signalId : "(unnamed signal)";
+        if (missing.length === 0) {
+          this.pass("Phase 20 no-in-game immersive hook contract", `${race} ${signalId} declares receiver, route, proof, and asset policy.`, PHASE20_NO_IN_GAME_PROOF_GATES);
         } else {
-          this.phase20RaceCostingGap("Phase 20 no-in-game placement contracts", `${race} declares ${finalPlacementContracts.length}; expected at least 2.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+          this.phase20RaceCostingGap("Phase 20 no-in-game immersive hook contract", `${race} ${signalId} is missing ${missing.join(", ")}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
         }
-        for (const contract of finalPlacementContracts) {
-          const missing = ["surfaceEditorIdPlan", "intendedObjectType", "targetLocationFamily", "culturalReason", "classification", "wrongOriginExpectation", "relatedQASmokeProof", "manualStopCondition"].filter((field) => !(typeof contract[field] === "string" && contract[field].trim().length > 0));
-          if (missing.length === 0) {
-            this.pass("Phase 20 no-in-game placement contract", `${race} ${contract.surfaceEditorIdPlan} is CK-ready as a contract.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+
+        if (contract.newMeshRequired === true) {
+          if (typeof contract.missingAssetIfRequired === "string" && contract.missingAssetIfRequired.trim().length > 0 && contract.missingAssetIfRequired.trim().toLowerCase() !== "none") {
+            this.pass("Phase 20 no-in-game immersive hook asset request", `${race} ${signalId} names required new mesh asset: ${contract.missingAssetIfRequired}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
           } else {
-            this.phase20RaceCostingGap("Phase 20 no-in-game placement contract", `${race} placement contract is missing ${missing.join(", ")}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+            this.phase20RaceCostingGap("Phase 20 no-in-game immersive hook asset request", `${race} ${signalId} marks newMeshRequired=true but does not name the missing asset.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+          }
+        } else if (contract.newMeshRequired === false) {
+          if (typeof contract.assetRequirement === "string" && contract.assetRequirement.toLowerCase().includes("no new mesh required")) {
+            this.pass("Phase 20 no-in-game immersive hook asset status", `${race} ${signalId} explicitly requires no new mesh.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+          } else {
+            this.phase20RaceCostingGap("Phase 20 no-in-game immersive hook asset status", `${race} ${signalId} marks newMeshRequired=false but assetRequirement does not explicitly say no new mesh is required.`, PHASE20_NO_IN_GAME_PROOF_GATES);
           }
         }
-      } else if (finalPlacementContracts.length === 0) {
-        this.pass("Phase 20 no-in-game P2 placement restraint", `${race} is audit-only and does not request final-placement buildout.`, PHASE20_NO_IN_GAME_PROOF_GATES);
-      } else {
-        this.phase20RaceCostingGap("Phase 20 no-in-game P2 placement restraint", `${race} is audit-only but declares placement buildout contracts.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+      }
+
+      if (p2.has(race)) {
+        const audit = packet.p2AuditContract || {};
+        if (audit.evidenceMode === "full-end-state-wiring-with-stack-audit") {
+          this.pass("Phase 20 no-in-game P2 audit mode", `${race} declares full end-state wiring with stack audit controls.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 no-in-game P2 audit mode", `${race} is missing full-end-state-wiring-with-stack-audit mode.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+        }
+
+        const auditArrayChecks = [
+          ["positiveProbeFamilies", 3],
+          ["rejectedProbeFamilies", 4],
+          ["requiredStackEvidence", 6],
+          ["passBlockers", 3],
+        ];
+        for (const [field, minimum] of auditArrayChecks) {
+          const values = Array.isArray(audit[field]) ? audit[field] : [];
+          if (values.length >= minimum) {
+            this.pass("Phase 20 no-in-game P2 audit contract", `${race} declares ${values.length} ${field}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+          } else {
+            this.phase20RaceCostingGap("Phase 20 no-in-game P2 audit contract", `${race} declares ${values.length} ${field}; expected at least ${minimum}.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+          }
+        }
+
+        if (typeof audit.manualEvidenceTarget === "string" && audit.manualEvidenceTarget.trim().length > 0) {
+          this.pass("Phase 20 no-in-game P2 evidence target", `${race} names the manual evidence target.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 no-in-game P2 evidence target", `${race} is missing a manual evidence target.`, PHASE20_NO_IN_GAME_PROOF_GATES);
+        }
       }
     }
 
@@ -3732,8 +4144,25 @@ class Verifier {
     }
 
     const daedric = gates.daedricBlockers || {};
-    if (daedric.runtimePromotionAllowed === false && daedric.stigmaRowContract === "open" && daedric.hircineMolagBalCurseAccessTemplate === "open" && daedric.princePromotionOrder === "open") {
-      this.pass("Phase 20 Daedric blocker state", "Daedric runtime promotion remains blocked on stigma, curse-access template, and Prince order.", PHASE20_NO_IN_GAME_PROOF_GATES);
+    const batch0 = Array.isArray(daedric.batch0TemplateProof) ? daedric.batch0TemplateProof : [];
+    const decisionsLocked =
+      daedric.stigmaRowContract === "locked-D15" &&
+      daedric.hircineMolagBalCurseAccessTemplate === "locked-D16" &&
+      daedric.princePromotionOrder === "locked-D17" &&
+      daedric.contentReadyDefinition === "locked-D18";
+    const proofStillBlocked =
+      daedric.runtimePromotionAllowed === false &&
+      typeof daedric.readinessLedger === "string" &&
+      daedric.readinessLedger.includes("PDV_AllRaceDaedricBetaReadinessLedger.md") &&
+      typeof daedric.batch0ProofLedger === "string" &&
+      daedric.batch0ProofLedger.includes("PDV_DaedricBatch0_D18ProofLedger.md") &&
+      daedric.batch0StaticD18Proof === "complete-no-esp-writes" &&
+      batch0.includes("Azura / Azurah") &&
+      batch0.includes("Vaermina") &&
+      batch0.includes("Meridia") &&
+      batch0.includes("Molag Bal");
+    if (decisionsLocked && proofStillBlocked) {
+      this.pass("Phase 20 Daedric blocker state", "Daedric decisions D-15..D-18 are locked, and runtime promotion remains blocked on per-Prince proof.", PHASE20_NO_IN_GAME_PROOF_GATES);
     } else {
       this.phase20RaceCostingGap("Phase 20 Daedric blocker state", "Daedric blocker state is missing or implies runtime promotion is allowed too early.", PHASE20_NO_IN_GAME_PROOF_GATES);
     }
@@ -3887,7 +4316,7 @@ class Verifier {
       return;
     }
 
-    if (ledger.schema === "pdv.phase20.manual-evidence-ledger.v1") {
+    if (ledger.schema === "pdv.phase20.manual-evidence-ledger.v2") {
       this.pass("Phase 20 manual evidence ledger", "Manual evidence ledger schema is current.", PHASE20_MANUAL_EVIDENCE_LEDGER);
     } else {
       this.phase20RaceCostingGap("Phase 20 manual evidence ledger", `Unexpected schema ${ledger.schema || "(missing)"}.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
@@ -3900,13 +4329,12 @@ class Verifier {
     }
 
     const requiredRaces = ["Altmer", "Khajiit", "Argonian", "Orc", "Redguard", "Bosmer", "Breton", "Dunmer", "Imperial", "Nord"];
-    const p0p1 = new Set(["Altmer", "Khajiit", "Argonian", "Orc", "Redguard", "Bosmer"]);
-    const p2 = new Set(["Breton", "Dunmer", "Imperial", "Nord"]);
     const requiredSlots = ledger.rules?.requiredSlots || [
       "wrongOriginRejection",
       "genericHookRejection",
       "surveyStatusClarity",
-      "finalPlacement",
+      "immersiveHookProof",
+      "assetStatus",
       "stackSnapshot",
       "manualFeelNote",
     ];
@@ -3962,13 +4390,18 @@ class Verifier {
         }
       }
 
-      const finalPlacementStatus = String(slots.finalPlacement?.status || "").toLowerCase();
-      if (p0p1.has(race) && finalPlacementStatus === "pending") {
-        this.pass("Phase 20 manual evidence placement posture", `${race} final placement remains pending manual proof.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
-      } else if (p2.has(race) && finalPlacementStatus === "not-applicable") {
-        this.pass("Phase 20 manual evidence P2 placement posture", `${race} final placement is not applicable for the audit-only lane.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      const immersiveHookStatus = String(slots.immersiveHookProof?.status || "").toLowerCase();
+      if (immersiveHookStatus === "pending" || immersiveHookStatus === "evidence-recorded") {
+        this.pass("Phase 20 manual evidence immersive hook posture", `${race} immersive hook proof is tracked as ${immersiveHookStatus}.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
       } else {
-        this.phase20RaceCostingGap("Phase 20 manual evidence placement posture", `${race} final placement status ${finalPlacementStatus || "(missing)"} does not match lane posture.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+        this.phase20RaceCostingGap("Phase 20 manual evidence immersive hook posture", `${race} immersive hook proof status ${immersiveHookStatus || "(missing)"} must be pending or evidence-recorded.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      }
+
+      const assetStatus = String(slots.assetStatus?.status || "").toLowerCase();
+      if (assetStatus === "pending" || assetStatus === "evidence-recorded") {
+        this.pass("Phase 20 manual evidence asset status", `${race} asset status is tracked as ${assetStatus}.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 manual evidence asset status", `${race} asset status ${assetStatus || "(missing)"} must be pending or evidence-recorded.`, PHASE20_MANUAL_EVIDENCE_LEDGER);
       }
     }
   }

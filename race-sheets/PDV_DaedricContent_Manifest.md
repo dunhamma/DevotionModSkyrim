@@ -365,6 +365,17 @@ Source: the `Azura / Azurah` row of `PDV_DaedricRacePrinceMatrix.csv` -- PathTyp
 | PDV_Msg_Daedric_Azura_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Orc cell | One-time on an Orc committing | Title: "Beside the Code, Not In It" Body: "For an Orc, Azura sits outside the Malacath code -- an outsider's prophecy with no place in stronghold or oath. The path is taboo beside the code, and renouncing it is hard: the stronghold does not easily forget a star-walker." |
 | PDV_Msg_Daedric_Azura_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Argonian cell | One-time on an Argonian committing | Title: "A Star Outside the Hist" Body: "To an Argonian, Azura has no root in the Hist or the exile community -- she is simply foreign, a star outside the substrate. The path can be walked and then drifted from, or set down by ritual cleansing, and the Hist neither holds nor mourns it." |
 
+**Azura firing-density sanity.** A character on the Azura path in steady play
+(twilight observance, prophecy, artifact alignment, and rare threshold acts):
+
+- Marked: 0 most days. Commitment, Champion entry, per-race response,
+  Notorious stigma, and exit are one-time or rare threshold events. Inside the
+  `<1 per 2h` target.
+- Noted: rare. Seeker/Devoted tier-up, lapse, and early stigma crossings should
+  follow meaningful quest/artifact/twilight thresholds, not ambient dawn/dusk
+  spam. Inside the `<2 per h` target.
+- Quiet: boon and price descriptions are passive SPEL text.
+
 ---
 
 ### 7.2 Mephala
@@ -580,6 +591,19 @@ Source: the `Meridia` row of the matrix -- PathType `Cleansing-light-anti-undead
 | PDV_Msg_Daedric_Meridia_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Redguard cell | One-time on a Redguard committing | Title: "Tu'whacca's Margin" Body: "For a Redguard, Meridia's work aligns with Tu'whacca's own -- both concern the proper rest of the dead. The path is tolerated when it serves that interest and stays subordinate to it. Setting it down is normal civic re-entry; Tu'whacca holds no grudge at work done on his behalf." |
 | PDV_Msg_Daedric_Meridia_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Orc cell | One-time on an Orc committing | Title: "Useful to the Stronghold" Body: "An Orc sees the value in cleansing -- undead are enemies, and Meridia fights them. But she is not Malacath; she speaks nothing of the code or the exile. The path is foreign utility, and it is renounced the Orc way: prove the oath to the code, and set the light down." |
 | PDV_Msg_Daedric_Meridia_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Argonian cell | One-time on an Argonian committing | Title: "Not a Hist Channel" Body: "An Argonian can find use in Meridia's corruption-fighting -- the Hist is not indifferent to rot. But Meridia is not the Hist; her light carries no bond to the community or the memory. The path is foreign, set down when its work is done, with no residue." |
+
+**Meridia firing-density sanity.** A character on the Meridia path in steady
+play (The Break of Dawn, Dawnbreaker service, and curated undead-cleansing
+milestones):
+
+- Marked: 0 most days. Commitment, Champion entry, per-race response,
+  Notorious stigma, and exit are one-time or rare threshold events. Inside the
+  `<1 per 2h` target.
+- Noted: occasional. Undead-cleansing milestones may be more common than other
+  Prince hooks, but tolerated-class stigma keeps Notorious as rare-edge and
+  source curation must prevent generic undead farming. Inside the `<2 per h`
+  target.
+- Quiet: boon and price descriptions are passive SPEL text.
 
 ---
 
@@ -1019,6 +1043,18 @@ Source: the `Vaermina` row of the matrix -- PathType `Dream-nightmare-memory`, C
 | PDV_Msg_Daedric_Vaermina_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Orc cell | One-time on an Orc committing | Title: "Against Endurance" Body: "For an Orc, Vaermina's nightmare corruption strains the endurance ethic -- endurance requires knowing what you endure, and the nightmare that rewrites what you know is its opposite. The path is foreign; it is abandoned when its course is done." |
 | PDV_Msg_Daedric_Vaermina_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Argonian cell | One-time on an Argonian committing | Title: "Exile Dreams, Outsider Rot" Body: "To an Argonian, Vaermina is foreign -- dreams matter in exile, but Vaermina is not the Hist's dream-channel; she is outsider corruption moving through sleep. The path is set down by abandonment; the Hist does not hold the absence against the one who returns." |
 
+**Vaermina firing-density sanity.** A character on the Vaermina path in steady
+play (Waking Nightmare, Skull of Corruption, nightmare/sleep corruption, and
+curated fear-memory thresholds):
+
+- Marked: 0 most days. Commitment, Champion entry, per-race response,
+  Notorious stigma, and exit are one-time or rare threshold events. Inside the
+  `<1 per 2h` target.
+- Noted: rare. Sleep and nightmare hooks must remain quest-anchored or
+  thresholded; ordinary sleeping should not become a repeatable notification
+  faucet. Inside the `<2 per h` target.
+- Quiet: boon and price descriptions are passive SPEL text.
+
 ---
 
 ### 7.11 Sanguine
@@ -1354,7 +1390,9 @@ Source: the `Molag Bal` row of the matrix -- PathType `Domination-vampirism-ensl
 |---|---|---|---|---|---|---|---|
 | PDV_Msg_Daedric_Molag_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Molag Bal" CommitmentSignal | Fires once when commitment gate clears; curse-access reframe: player carries vampirism and has signaled three times | Title: "Molag Bal's Touch" Body: "The thirst is in you, and you know what the thing under the hunger is: the hierarchy reflex, the dominance that makes sense now in a way it did not before the curse. That is mine. You chose to keep it three times when the cure was available. That is the commitment I record." |
 
-**Stigma band crossings.**
+**Curse-state stigma band display.** Per D-16, these rows are display text for
+curse-state visibility bands. They are not independent per-act stigma accrual
+and must not double-fire with race `CurseState` onset rows.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -1383,6 +1421,18 @@ Source: the `Molag Bal` row of the matrix -- PathType `Domination-vampirism-ensl
 | PDV_Msg_Daedric_Molag_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Redguard cell | One-time on a Redguard committing | Title: "Against the Far Shores" Body: "For a Redguard, Molag Bal's vampiric claim breaks the Far Shores entirely -- Tu'whacca guides souls through the proper death-cycle, and the undead have stepped outside the cycle in the most destructive way. Devotion across all sects collapses. Cure first, then return through Tu'whacca's rites before any other god. Even cured, the restoration takes time." |
 | PDV_Msg_Daedric_Molag_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Orc cell | One-time on an Orc committing | Title: "Against the Code" Body: "For an Orc, Molag Bal's vampiric claim contradicts Malacath's code entirely -- the code is endurance and provision, and the thirst is dependency. An Orc who feeds on others has placed survival above the kin's code. Malacath does not look away from this. Cure and hard renunciation are the exits; the kin will remember the breach longer than the code does." |
 | PDV_Msg_Daedric_Molag_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Argonian cell | One-time on an Argonian committing | Title: "The Hist Grieved" Body: "For an Argonian, Molag Bal's vampiric claim damages the Hist relation deeply and raises Sithis-pressure -- the undead Saxhleel is a soul the Hist cannot receive, and the void reads it as its own. But Sithis's pressure does not justify the curse; it only marks its gravity. Cure first, then slow recovery; the Hist reaches again, but it takes time and grief." |
+
+**Molag Bal firing-density sanity.** A character on the Molag Bal path in
+steady play (vampire state, House of Horrors, Volkihar or domination
+thresholds):
+
+- Marked: 0 most days. Commitment, Champion entry, per-race response,
+  Notorious curse-visibility crossing, and exit are one-time or rare threshold
+  events. Inside the `<1 per 2h` target.
+- Noted: rare but higher-stakes. Vampirism may be persistent, but Molag Bal
+  feedback should fire on curated domination/curse-visibility transitions, not
+  ordinary feeding or every vampire-state poll. Inside the `<2 per h` target.
+- Quiet: boon and price descriptions are passive SPEL text.
 
 ---
 

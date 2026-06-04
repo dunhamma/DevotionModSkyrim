@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-06-01 AEST (v3.78 - Daedric D-15..D-18 locked; V1 no-new-NPC-dialogue scope lock)
+Last revised: 2026-06-04 AEST (v3.81 - Daedric Batch 0 static D-18 proof ledger)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates. Phase 20 now owns the full-roster 1.0 content target: every locked race-architecture god and all sixteen Skyrim-present Daedric Prince surfaces must be content-ready for every race, with `references/authoring/PDV_DeityCoverageMatrix.json` and `--strict-phase20-roster` as the roster authority gate. The first Altmer Phase 20 runtime lane is source-scaffolded, compile-verified, crisis-record-wired, has the first two Altmer favor spell records wired, has four Altmer ACTI trigger proof base records wired for crisis, Lorkhan pressure, dawn steadiness, and orthodox cost, and now has Altmer Exiled vampire / werewolf halt manager source plus three `MESG` records wired to `PDV__ManagerQuest`; its four QASmoke proof references read back cleanly. Argonian, Orc, Redguard, Bosmer, and Khajiit have also crossed into source/record-wired proof slices, and all 30 Phase 20 proof references are now QASmoke-placed with helper/readback proof. Runtime proof and final immersive world placement remain open; `tools/pdv_phase20_runtime_check.mjs` and `references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` define the counted route-log, Survey/status, immersion, negative-hook, and anti-farm proof lane. `references/authoring/PDV_PreBetaRaceScalingSpine.md` and `PDV_PreBetaRaceGateLedger.md` now define the internal pre-beta scaling spine and all-race evidence ledger: Altmer active spine, Khajiit first contrast, Argonian second contrast, Orc / Redguard / Bosmer P1 packets, and Breton / Dunmer / Imperial / Nord P2 audit-only packets. The race gameplay audit now treats immersion as an explicit reward-budget axis, and `--strict-phase20-race-costing` enforces `immersionProof` blocks for all Phase 20 race-costing manifests. The current Phase 20 Altmer/race-costing gate is clean again after content-lock row reconciliation; the remaining warning is the existing unnamed CK-authored INFO record class. Phase 21 is the Authoria-first compatibility package lane because compatibility testing must wait until the mod's full content surface is stable enough to test against modlists.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
 
 Current v3.71 addendum: `references/authoring/PDV_PreBetaRaceScalingSpine.md`
@@ -32,9 +32,10 @@ Altmer Auri-El crisis/recovery recognition; V1 uses Survey/status or another
 non-voiced fallback. The first CAT-6 pilot is
 `PDV_Bless_Khajiit_Lunar_T1`; `PDV_Bless_Bosmer_Exchange_T1` is fallback only
 if the Khajiit target record path is blocked. Daedric content can remain
-drafted while race hook validation continues, but final reward text, Prince
-prices, stigma, exits, and final Survey/status copy wait for stigma,
-curse-access, and Prince-order decisions.
+drafted while race hook validation continues; D-15..D-18 now lock the stigma,
+curse-access, authoring-order, and content-ready contracts, while final reward
+text, Prince prices, stigma display, exits, and Survey/status copy wait for
+per-Prince proof/readback/runtime/display evidence.
 
 Current v3.73 addendum:
 `references/authoring/PDV_PreBetaRaceGateLedger.md` is now the all-race
@@ -72,8 +73,10 @@ through Y'ffre/Green Pact, Living Story, Exchange/Z'en, and Bandit Road/Baan
 Dar without exposing raw path counters. Runil remains the first planned V2
 Altmer recognition candidate for mortality, death, scar, and recovery
 recognition, not for Orthodox proclamation; V1 uses non-voiced fallback
-surfaces. Daedric final promotion still waits on stigma bands,
-Hircine/Molag Bal curse-access templates, and Prince order.
+surfaces. D-15..D-18 now lock the Daedric stigma, curse-access, authoring
+order, and content-ready contracts; Daedric final promotion waits on
+per-Prince D-18/CAT-6 proof, readback, runtime/display proof, and stack/Survey
+legibility.
 
 Current v3.75 addendum:
 `references/authoring/PDV_Phase20_NoInGameProof_Workplan.md` now owns the
@@ -86,11 +89,11 @@ pending evidence-intake ledger for later wrong-origin, rejected-hook,
 Survey/status, final-placement, stack-snapshot, and manual-feel proof. The
 packet allows manifest, source, readback/verifier, placement-contract,
 stack-audit, Survey/status-copy, CAT-6-prep, recognition-prep, and Daedric
-decision work, but forbids marking any race `Pass`, claiming final placement,
+proof-path work, but forbids marking any race `Pass`, claiming final placement,
 or broad-promoting rewards/strings without manual/runtime evidence. The
 remaining Phase 20 handoff is decision-bound or runtime/manual: holistic
 race-effect review, non-voiced recognition fallback selection, manual evidence
-capture, and Daedric blocker closeout.
+capture, and Daedric proof-path closeout.
 
 Current v3.76 addendum: the first CAT-6 promotion pilot is now
 record/readback-proven. `tools/pdv-phase20-cat6-author` created/finalized
@@ -115,6 +118,28 @@ and the dialogue half of `PDV_CAT6PromotionPilot.md` are V2-flagged, not deleted
 The branch broad-reward spec was folded into the per-race rows of
 `PDV_RaceEffectReviewLedger.md`, and the branch pre-beta rubric was dropped in
 favor of `PDV_PreBetaRaceAcceptanceRubric.md`.
+
+Current v3.80 addendum:
+`references/authoring/PDV_AllRaceDaedricBetaReadinessLedger.md` is now the
+combined beta-feel blocker ledger. It records that beta feel readiness means all
+ten playable races plus all sixteen Skyrim-present Daedric Princes, with
+Jyggalag excluded. Current automated evidence remains structurally clean
+(`pdv_content_verify` at `FAIL=0, WARN=0, PASS=1079, INFO=4`; strict Phase 20
+Altmer/race-costing at `PASS=2699, WARN=1, INFO=29`), but runtime/manual proof
+still blocks beta readiness. The P2 book checker currently passes Breton Hidden
+Art only and fails the remaining filled book families. Daedric D-15..D-18 are
+locked, and Batch 0 static D-18 proof is now complete, so the remaining 20C
+blockers are per-Prince CAT-6 promotion/readback, runtime or display proof,
+and race-stack legibility rather than unresolved design.
+
+Current v3.81 addendum:
+`references/authoring/PDV_DaedricBatch0_D18ProofLedger.md` now owns static
+D-18 proof for the first Daedric template batch: Azura / Azurah, Vaermina,
+Meridia, and Molag Bal. The Daedric manifest now includes firing-density
+sanity paragraphs for those four Princes, and Molag Bal's stigma rows are
+clarified as curse-state display text rather than independent per-act stigma.
+This is repo/content proof only: no ESP write, no CAT-6 promotion, and no
+runtime or display proof claim.
 
 ---
 
@@ -1355,14 +1380,18 @@ relationship drift that is slow and recoverable, not a daily servicing loop.
 As of v3.46, this model is runtime-proven from a fresh-save proof pass. Runtime
 also promoted `PDV.PassiveDecayFloor` as the persistent floor key so a deity
 that has reached Devoted or Champion cannot decay below the locked floor later.
+As of v3.80, the balancing retune standardizes live deity thresholds to
+`25/50/85`, shortens passive-decay grace to `2.0` days, scales dawn gains by
+`1.32` before the `4.3` daily cap, and gives vampire curse state a floor bypass
+for deities marked `IsAedric`.
 
-**Balancing-pass retune (apply at CK tuning, see `references/authoring/PDV_DecayAudit.md`).**
-The Phase 17 pseudocode below is the *as-proven* model at `DECAY_GRACE_DAYS = 3`. The decay audit
-locked three tuning changes to apply: (1) `DECAY_GRACE_DAYS = 2`; (2) a `TIER_DOWN_HYSTERESIS = 5.0`
-so a tier is lost only 5 below its threshold (anti-whiplash); (3) **vampire** curse decay bypasses
-`GetDecayFloor()` (true excommunication to 0) while **werewolf** respects it. Re-run the Phase 17
-grace/floor proof after these land. Orc decay stays at **base 0.5/day for all life-modes** (the
-mode multiplier scales gain only — no Orc-specific decay constant); DruidicStanding is unchanged.
+**Balancing-pass retune (live as of v3.80; see `references/authoring/PDV_DecayAudit.md`).**
+The Phase 17 pseudocode below records the older proof model at
+`DECAY_GRACE_DAYS = 3`; the live retune now uses `DECAY_GRACE_DAYS = 2`, a
+`TIER_DOWN_HYSTERESIS = 5.0`, and vampire floor bypass for Aedric deities while
+werewolf decay still respects the floor. Orc decay stays at **base 0.5/day for
+all life-modes**; the mode multiplier scales gain only, with no Orc-specific
+decay constant. DruidicStanding is unchanged.
 
 ### 15.1 Mechanism
 
@@ -1383,7 +1412,10 @@ Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)
         multiplier = BROAD_WORSHIP_DECAY_MULTIPLIER
     endif
     Float decayRate = DECAY_PER_DAY * multiplier * GetReputationDecayMultiplier(deity)
-    Float floor = GetDecayFloor()                ; tier-locked floor
+    Float floor = GetDecayFloorForDeity(deity, currentPiety)
+    if PDV_CurseStateService.IsVampire() && deity.IsAedric
+        floor = 0.0                              ; vampire rupture bypasses Aedric floors
+    endif
     Float newPiety = currentPiety - decayRate
     if newPiety < floor
         newPiety = floor
@@ -1415,13 +1447,24 @@ Float Function GetDecayFloor()
 EndFunction
 ```
 
+Tier demotion is also buffered by a `5.0` piety hysteresis window: if the
+recomputed tier would drop but current piety is still within five points below
+the old tier's threshold, the old tier remains visible.
+
 ### 15.3 Decay rate
 
-Default is locked at `0.5` piety per day after the grace period. Per-deity
-tuning is still allowed later, but the baseline architecture now assumes this
-default. Curse states can multiply decay rate (e.g. Vampire Imperial Divine
-devotion decays at 5x normal rate per the locked file). Reputation tracks can
-also modify decay pressure (Concordat Enforcer state decays Talos faster).
+Default is locked at `0.5` piety per day after a `2.0` day grace period.
+Per-deity tuning is still allowed later, but the baseline architecture now
+assumes this default. Curse states can multiply decay rate and can also change
+floors: vampire state bypasses passive tier floors for `IsAedric` records, so
+Aedric/Divine devotion can fall below previously earned floors during vampire
+rupture. Reputation tracks can also modify decay pressure (Concordat Enforcer
+state decays Talos faster).
+
+Positive dawn gains are paced by `GAIN_RATE_SCALE = 1.32` before the existing
+daily cap, now `PIETY_DAILY_MAX_DELTA = 4.3`. Orc life-mode pacing applies only
+after that clamp and only to future Malacath gain: Stronghold `1.0`, City
+`0.75`, Legion/Exile `0.60`. Decay is not scaled by Orc life mode.
 
 ### 15.4 Decay vs broad worship
 
@@ -1435,12 +1478,12 @@ passive drift routine.
 The standalone Phase 17 source/readback gate is
 `node .\tools\pdv_verify.mjs --strict-phase17`. The full Phase 18 bridge gate is
 `node .\tools\pdv_verify.mjs --strict-phase16 --strict-phase17 --strict-phase18 --strict-nord --strict-phase13 --strict-phase14 --strict-phase15`.
-The current full bridge verifier result is `PASS=1185, INFO=28`, with no
-`FAIL`, `WARN`, or `TODO`. Fresh-save Phase 17 proof passed grace
+The current full bridge verifier result after the v3.79 balancing retune is
+`PASS=2369, INFO=29`, with no `FAIL`, `WARN`, or `TODO`. Fresh-save Phase 17 proof passed grace
 no-op (`20.00 -> 20.00`), eligible tick (`20.00 -> 19.50`), same-day guard
 (`19.50` held), broad-worship reduced decay (`20.00 -> 19.90`), active-patron
 skip, non-patron drift while Kyne stayed protected, Devoted floor
-(`50.00 -> 10.00`), and Champion floor (`150.00 -> 50.00`). Phase 16 regression
+(`50.00 -> 25.00`), and Champion floor (`85.00 -> 50.00`). Phase 16 regression
 also held: broad worship suppressed neglect (`count=0; kyneSpell=0`) and active
 Kyne still produced targeted neglect (`count=1; active=Kyne; kyneSpell=1`).
 
@@ -2719,6 +2762,41 @@ Gate coupling:
 
 ## 26. Revisions
 
+### v3.81 - 2026-06-02 AEST - P2 audit-only contract gate for Breton/Dunmer/Imperial/Nord
+
+Added structured `p2AuditContract` packets to
+`PDV_Phase20_NoInGameProof_Gates.json` for Breton, Dunmer, Imperial, and Nord.
+The strict Phase 20 race-costing verifier now checks audit-only no-new-volume
+mode, positive probes, rejected probes, required stack evidence, pass blockers,
+and manual evidence targets for those four P2 lanes. This is an audit-readiness
+gate only: it does not add reward volume, final placement contracts, or manual
+runtime evidence, and all four races remain `Fail - runtime/manual proof
+deferred` until in-game Survey/status, rejected-hook, and stack evidence is
+recorded.
+
+### v3.81 - 2026-06-04 AEST - Daedric Batch 0 static D-18 proof ledger
+
+Added `references/authoring/PDV_DaedricBatch0_D18ProofLedger.md` as the static
+D-18 proof ledger for the first Daedric template-variation batch: Azura /
+Azurah, Vaermina, Meridia, and Molag Bal. Added firing-density sanity
+paragraphs to those four manifest sections and clarified Molag Bal's stigma
+rows as curse-state display text, not independent per-act stigma. This closes
+the repo/content-contract proof for Batch 0 while keeping CAT-6
+promotion/readback and runtime/display proof blocked.
+
+### v3.80 - 2026-06-04 AEST - All-race plus Daedric beta-feel readiness ledger
+
+Added `references/authoring/PDV_AllRaceDaedricBetaReadinessLedger.md` as the
+single blocker ledger for beta-feel readiness across all ten races and all
+sixteen Skyrim-present Daedric Princes. Updated Phase 20 beta-readiness routing
+to treat Daedric 20C proof as part of beta feel readiness: D-15..D-18 are
+locked and Batch 0 static D-18 proof is complete, but per-Prince CAT-6
+promotion/readback, runtime or display proof, and race-stack legibility remain
+blockers. Refreshed current
+evidence to `pdv_content_verify` `FAIL=0, WARN=0, PASS=1079, INFO=4`, strict
+Phase 20 Altmer/race-costing `PASS=2699, WARN=1, INFO=29`, and P2 book runtime
+checker `FAIL` overall with Breton Hidden Art as the only current pass.
+
 ### v3.79 - 2026-06-01 AEST - Transition surfacing contract (§16.7); curse-access framing clarification (§13.7)
 
 Added **§16.7 Transition surfacing contract (V1)**: the "surface the transitions"
@@ -2741,6 +2819,17 @@ to the D-18 content checklist. Two reconciliation memos of record:
 compliance is a standing modifier, not an alt-victory or dead loss-path —
 Akatosh/Zenithar remain the compliant Imperial's Champion payoff). Doc/design only;
 no source, record, or verifier behavior change.
+
+### v3.80 - 2026-06-02 AEST - Balancing retune: piety pace, thresholds, decay grace, vampire floor bypass
+
+Applied the balancing handoff retune to live source and framework records:
+daily positive gains now scale by `1.32` before the `4.3` cap, standard deity
+thresholds are `25/50/85`, tier-down hysteresis holds visible tiers within
+five piety of the prior threshold, passive decay grace is `2.0` days, and
+vampire curse state bypasses passive tier floors for records marked `IsAedric`.
+The live framework VMAD properties were retuned for Kyne, Talos, Auri-El,
+Y'ffre, Z'en, and Baan Dar; strict full bridge verification passed with
+`PASS=2369, INFO=29` and no fail/warn/todo.
 
 ### v3.78 - 2026-06-01 AEST - Daedric D-15..D-18 locked; V1 no-new-NPC-dialogue scope lock
 
@@ -2785,7 +2874,7 @@ target and `PDV_Phase20_ManualEvidenceLedger.json` as the pending manual-proof
 intake. It defines the no-in-game boundary, the no-game definition of done,
 sequenced waves for ledger hardening, hook contracts, verifier expansion,
 placement contracts, stack audits, Survey/status prep, CAT-6 prep, recognition
-prep, Daedric blocker closeout, and later evidence capture, plus explicit stop
+prep, Daedric proof-path closeout, and later evidence capture, plus explicit stop
 conditions so paper work does not become a false `Pass`.
 
 ### v3.74 - 2026-05-31 AEST - Workshop lore cross-review guardrails

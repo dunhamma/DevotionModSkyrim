@@ -46,7 +46,9 @@ Allowed in this pass:
   record/readback-proven, but still does not count as runtime reward
   distribution or holistic effect approval.
 - Recognition/dialogue is V2 only and stays out of the V1 content tree.
-- Daedric blocker closeout decisions that affect Phase 20 race planning.
+- Daedric proof-path closeout after D-15..D-18 lock: Batch 0 static proof,
+  per-Prince CAT-6 target selection/readback, and runtime/display stop
+  conditions.
 
 Not allowed in this pass:
 
@@ -56,7 +58,8 @@ Not allowed in this pass:
   in-game/manual result.
 - Generated dialogue authoring.
 - Broad reward magnitude increases before stack/ceiling packets are complete.
-- Broad Daedric runtime promotion before CAT-4 blocker decisions are closed.
+- Broad Daedric runtime promotion before per-Prince D-18/CAT-6 proof, readback,
+  runtime/display proof, and stack/Survey legibility are recorded.
 
 Use `Planning-Ready`, `Readback-Ready`, `CK-Ready`, or `Runtime-Deferred`
 instead of `Pass` when in-game proof is intentionally out of scope.
@@ -70,20 +73,29 @@ Expected current result: FAIL=0, WARN=0, PASS=1079, INFO=4
 
 Strict Phase 20 source/readback gate:
 node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
-Expected current result: PASS=2630, WARN=1, INFO=29
+Expected current result: PASS=2632, WARN=1, INFO=29
 
 P2 source-fill readback:
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill
 Expected current result: Status=PASS, 12 approved P2 book entries across 6 groups.
 
+P2 exact-stage quest gate:
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates
+Expected current result: Status=PASS, no approved quest-stage entries while receiverStatus=exact-stage-supported.
+
 P2 FormList and alias-property readback:
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties
-Expected current result: Status=PASS, all 17 P2 FormLists and alias properties read back.
+Expected current result: Status=PASS, all 34 P2 FormLists and alias properties read back.
 
 Route-marker list:
 node .\tools\pdv_phase20_runtime_check.mjs --list
-Expected current result: all Phase 20 proof races and route markers list.
+node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --list
+Expected current result: all Phase 20 proof races and P2 book source markers list.
+
+P2 book-source runtime proof:
+node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager
+Expected current result before manual in-game proof: FAIL, because no accepted P2 book-read markers are recorded in the live Papyrus log yet.
 
 Proof placement readback:
 dotnet run --project .\tools\pdv-phase20-proof-placement-author\PdvPhase20ProofPlacementAuthor.csproj -- --check-placements
@@ -122,7 +134,7 @@ This pass is complete when all of the following are true:
 Current implementation note: `PDV_Phase20_NoInGameProof_Gates.json` is the
 structured form of this definition of done. The strict Phase 20 race-costing
 verifier reads it so no-game status, hook contracts, placement contracts,
-stack snapshots, CAT-6 target-record state, and Daedric blockers cannot
+stack snapshots, CAT-6 target-record state, and Daedric proof-path blockers cannot
 silently drift from the prose ledgers.
 `PDV_Phase20_ManualEvidenceLedger.json` is the structured manual-proof intake
 file. The verifier checks that it exists and stays pending until evidence is
@@ -142,7 +154,7 @@ families, and anti-farm rules for all ten races.
 Wave 3 is implemented: the strict Phase 20 race-costing verifier now reads the
 structured gate and checks race coverage, rejected-hook depth, anti-farm rules,
 stack snapshots, placement contracts, CAT-6 target-record state, recognition
-packet prep, and Daedric blocker status.
+packet prep, and Daedric proof-path status.
 
 Wave 4 is implemented as CK-ready contracts, not live placement: every P0/P1
 race has two final-world placement contracts, while P2 audit lanes intentionally
@@ -164,9 +176,10 @@ and leaves grant wiring plus full race-effect authoring blocked on later review.
 Wave 8 is now V2-only: recognition/dialogue is deferred out of the V1 content
 tree and will not be pursued until voice files are available.
 
-Wave 9 is implemented as blocker tracking: Daedric runtime promotion remains
-blocked until stigma, Hircine/Molag Bal access, and Prince order decisions are
-ratified.
+Wave 9 is implemented as proof-path tracking: D-15..D-18 are locked and Batch 0
+static D-18 proof is complete, but Daedric runtime promotion remains blocked
+until per-Prince CAT-6 promotion/readback, runtime or display proof, and
+race-stack legibility are recorded.
 
 Manual evidence intake is implemented as a structured pending ledger:
 `PDV_Phase20_ManualEvidenceLedger.json` names the expected wrong-origin,
@@ -401,32 +414,36 @@ Stop condition:
 
 - Leave this wave untouched while V1 reward and placement work continues.
 
-### Wave 9 - Daedric Phase-20 Blocker Closeout
+### Wave 9 - Daedric Phase-20 Proof-Path Closeout
 
-Goal: close the Daedric decisions that affect race scaling before runtime
-promotion begins.
+Goal: close the Daedric proof path after the D-15..D-18 decision locks before
+runtime promotion begins.
 
-No-game decisions still useful now:
+No-game proof work still useful now:
 
-- Stigma row contract: bands, decay, recovery, and how Survey/status names the
-  current stigma.
-- Hircine/Molag Bal curse-access template: whether curse access is stigma,
-  exception, native reading, or separate price.
-- Prince promotion order after Boethiah: order should follow race-scaling need,
-  not content drafting momentum.
-- Cross-Prince hostility and exit residue language for Survey/status.
+- Keep `PDV_DaedricBatch0_D18ProofLedger.md` as the static D-18 proof pattern
+  for Azura / Azurah, Vaermina, Meridia, and Molag Bal.
+- Select the first Batch 0 CAT-6 target and prove exact target-record readback
+  before any runtime promotion claim.
+- Keep Hircine and Molag Bal curse-access rows no-double-fire with race
+  `CurseState` rows.
+- Keep cross-Prince hostility and exit residue language Survey/status-legible
+  without silently overwriting race identity.
 
 Owner files:
 
 - `PDV_Architecture_v3.md`
 - `references/phase4/PDV_DaedricRacePrinceMatrix.csv`
 - `race-sheets/PDV_DaedricContent_Manifest.md`
+- `references/authoring/PDV_AllRaceDaedricBetaReadinessLedger.md`
+- `references/authoring/PDV_DaedricBatch0_D18ProofLedger.md`
 - `references/authoring/PDV_CAT6PromotionPilot.md`
 
 Stop condition:
 
-- Do not promote Daedric runtime rows until CAT-4 decisions are ratified and one
-  non-Daedric CAT-6 pilot proves the promotion path.
+- Do not promote Daedric runtime rows until the Prince has D-18 static proof,
+  CAT-6 target-record promotion/readback, runtime or display proof, and
+  stack/Survey legibility evidence.
 
 ## Recommended Order
 
@@ -438,7 +455,7 @@ Stop condition:
 6. Wave 6: prepare Survey/status copy lock notes.
 7. Wave 7: keep the CAT-6 pilot grant-unwired and run holistic race-effect
    review before broad reward authoring.
-8. Wave 9: close Daedric blocker decisions before any Prince runtime promotion.
+8. Wave 9: close the Daedric proof path before any Prince runtime promotion.
 
 ## Parallelization Plan
 
@@ -485,8 +502,8 @@ Useful now:
 - CAT-6 follow-up: review
   `references/authoring/PDV_RaceEffectReviewLedger.md` before using the
   Khajiit pilot mechanics as precedent for full reward authoring.
-- Daedric decisions: stigma bands/decay, Hircine/Molag Bal curse-access shape,
-  and Prince promotion order.
+- Daedric proof path: first Batch 0 CAT-6 target, readback requirements,
+  runtime/display proof route, and stack/Survey interaction with race identity.
 
 Not needed yet:
 
@@ -502,5 +519,5 @@ The remaining Phase 20 work is decision-bound or runtime/manual:
    pilot-provisional CAT-6 Khajiit Tier 1 record.
 2. Fill the manual evidence ledger during in-game checks; do not mark any race
    `Conditional` or `Pass` before those slots have proof notes.
-3. Close the Daedric stigma, Hircine/Molag Bal access, and Prince order
-   decisions before any Daedric runtime promotion.
+3. Close the next Daedric CAT-6/readback/runtime/display proof packet before
+   any Daedric runtime promotion.
