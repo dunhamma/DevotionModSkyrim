@@ -6,18 +6,18 @@
   "scope": {
     "liveFillIncluded": true,
     "liveFillScope": "Approved P2 book-read sources only.",
-    "questStageFillScope": "Blocked until exact-stage gating exists in the receiver path.",
-    "nonP2FillScope": "Audit/design only until matching receivers/FormLists are implemented and read back."
+    "questStageFillScope": "Blocked until exact quest/stage metadata is approved and declared; receiver exact-stage support exists but no quest-stage entries are live-approved.",
+    "nonP2FillScope": "Audit/design only for source classes outside the all-race P2 receiver/FormList network."
   },
   "liveFillReadback": {
     "status": "PASS",
-    "filledAt": "2026-06-03T16:02:21+10:00",
-    "sourceFillCheckAt": "2026-06-03T16:02:36+10:00",
-    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260603-160221.bak",
-    "seqBackupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Seq\\PlayerDevotion_Framework.seq.20260603-060425.bak",
+    "filledAt": "2026-06-04T09:41:22+10:00",
+    "sourceFillCheckAt": "2026-06-04T09:41:56+10:00",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260604-094122.bak",
+    "seqBackupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Seq\\PlayerDevotion_Framework.seq.20260603-234346.bak",
     "touchedFile": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PlayerDevotion_Framework.esp",
-    "filledEntryCount": 12,
-    "formListGroups": 6
+    "filledEntryCount": 29,
+    "formListGroups": 13
   },
   "approvalRules": [
     "Only exact source records with local extracted/readback evidence can be approved.",
@@ -116,6 +116,114 @@
       "sources": [
         { "formKey": "Skyrim.esm:0F683F", "editorId": "CR12TotemsOfHircine" }
       ]
+    },
+    {
+      "race": "Altmer",
+      "receiver": "PDV_FLST_P2_AltmerAurielSources",
+      "routeFamily": "Auri-El foundation",
+      "sourceKind": "book",
+      "semanticVerdict": "plausible",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Ayleid/Auri-El and Altmeri ancestry reading.",
+      "rejectedContext": "Generic elf lore, broad magic study, or unrelated ancient-history text.",
+      "duplicateGuard": "Book-read source only; no quest-stage owner in this tranche.",
+      "sources": [
+        { "formKey": "Skyrim.esm:01AF94", "editorId": "Book4RareAdabala" },
+        { "formKey": "Skyrim.esm:01AD06", "editorId": "Book4RareFragmentOnArtaeum" }
+      ]
+    },
+    {
+      "race": "Altmer",
+      "receiver": "PDV_FLST_P2_AltmerMagnusSources",
+      "routeFamily": "Magnus scholarship",
+      "sourceKind": "book",
+      "semanticVerdict": "plausible",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Magic-origin and Magnus-adjacent scholarship reading.",
+      "rejectedContext": "Generic spell learning, College rank, or ordinary mage loot.",
+      "duplicateGuard": "Book-read source only; MG08 quest-stage remains blocked until approved stage metadata is declared.",
+      "sources": [
+        { "formKey": "Skyrim.esm:01ACFE", "editorId": "Book4RareArcanaRestored" },
+        { "formKey": "Skyrim.esm:01ACF1", "editorId": "Book3ValuableMagicFromTheSky" }
+      ]
+    },
+    {
+      "race": "Altmer",
+      "receiver": "PDV_FLST_P2_AltmerXarxesSources",
+      "routeFamily": "Xarxes lineage / record",
+      "sourceKind": "book",
+      "semanticVerdict": "plausible",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Lineage, Ayleid, and record-keeping reading.",
+      "rejectedContext": "Generic library use or unrelated scholarly text.",
+      "duplicateGuard": "Book-read source only; no quest-stage owner in this tranche.",
+      "sources": [
+        { "formKey": "Skyrim.esm:01AD09", "editorId": "Book4RareLastKingOfAyleids" },
+        { "formKey": "Skyrim.esm:01ADB4", "editorId": "Book4RareNefarivigumLore" },
+        { "formKey": "Skyrim.esm:0ED03A", "editorId": "Book4RareAccountingOfTheElderScrolls" }
+      ]
+    },
+    {
+      "race": "Argonian",
+      "receiver": "PDV_FLST_P2_ArgonianHistSources",
+      "routeFamily": "Hist memory",
+      "sourceKind": "book",
+      "semanticVerdict": "plausible",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Argonian Account reading as curated Hist/people memory context.",
+      "rejectedContext": "Generic Black Marsh reference, swamp travel, or ordinary Argonian identity text.",
+      "duplicateGuard": "Book-read source only; quest-stage Void/Sithis rows remain blocked.",
+      "sources": [
+        { "formKey": "Skyrim.esm:01AFD7", "editorId": "Book0ArgonianAccountBook1" },
+        { "formKey": "Skyrim.esm:01ACE7", "editorId": "Book3ValuableArgonianAccountBook2" },
+        { "formKey": "Skyrim.esm:01AFFC", "editorId": "Book0ArgonianAccountBook3" },
+        { "formKey": "Skyrim.esm:01ACE8", "editorId": "Book3ValuableArgonianAccountBook4" }
+      ]
+    },
+    {
+      "race": "Khajiit",
+      "receiver": "PDV_FLST_P2_KhajiitLunarSources",
+      "routeFamily": "Lunar substrate",
+      "sourceKind": "book",
+      "semanticVerdict": "strong",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Clan Mother Ahnissi, Ahzirr Traajijazeri, and Dro'Zira reading as lunar/Khajiit identity sources.",
+      "rejectedContext": "Generic travel, generic thievery, moonless sleep, or broad Khajiit mention.",
+      "duplicateGuard": "Book-read source only; Nocturnal/Thieves Guild and MQ quest-stage rows remain blocked.",
+      "sources": [
+        { "formKey": "Skyrim.esm:01B27D", "editorId": "Book3ValuableWordsofClanMotherAhnissi" },
+        { "formKey": "Skyrim.esm:01AFF3", "editorId": "Book0AhzirrTraajijazeri" },
+        { "formKey": "Skyrim.esm:0F03E3", "editorId": "Book3ValuableTaleOfDroZira" }
+      ]
+    },
+    {
+      "race": "Orc",
+      "receiver": "PDV_FLST_P2_OrcMalacathSources",
+      "routeFamily": "Malacath conduct",
+      "sourceKind": "book",
+      "semanticVerdict": "strong",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Code of Malacath and Orc nature reading as curated Malacath/Orc identity sources.",
+      "rejectedContext": "Generic stronghold proximity, generic combat, or unrelated Orc mention.",
+      "duplicateGuard": "Book-read source only; DA02 quest-stage rows remain blocked.",
+      "sources": [
+        { "formKey": "Skyrim.esm:07EBC9", "editorId": "Book1CheapTheCodeofMalacath" },
+        { "formKey": "Skyrim.esm:01AD16", "editorId": "Book4RareTrueNatureofOrcs" }
+      ]
+    },
+    {
+      "race": "Redguard",
+      "receiver": "PDV_FLST_P2_RedguardSpineSources",
+      "routeFamily": "Ancestor spine",
+      "sourceKind": "book",
+      "semanticVerdict": "plausible",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Manual Mixed Unit Tactics as curated martial/ancestor-duty reading.",
+      "rejectedContext": "Generic combat, random weapon ownership, faction rank, or broad warrior text.",
+      "duplicateGuard": "Book-read source only; MS08 and other quest-stage rows remain blocked.",
+      "sources": [
+        { "formKey": "Skyrim.esm:01ACD1", "editorId": "Book2CommonManualMixedUnitTactics" }
+      ]
     }
   ],
   "blockedReceiverAudit": [
@@ -123,65 +231,67 @@
       "race": "Redguard",
       "routeFamily": "Sect / ancestor-duty",
       "source": "MS08 stages 200/201",
-      "receiverDecision": "new exact-stage receiver needed",
+      "receiverDecision": "exact-stage receiver support exists",
       "fillDecision": "blocked",
-      "blocker": "No current Redguard quest-stage receiver/FormList with exact stage outcome split."
+      "blocker": "No approved live quest-stage entry is declared for the exact MS08 outcome split."
     },
     {
       "race": "Altmer",
       "routeFamily": "Lorkhan pressure / Auri-El / Magnus",
       "source": "MQ104, MQ304, MG08, Dawnguard, HearthFires",
-      "receiverDecision": "new exact-stage or item/effect receiver needed",
+      "receiverDecision": "book receivers are live; Skyrim.esm exact-stage source support exists; Dawnguard/HearthFires rows remain future-review",
       "fillDecision": "blocked",
-      "blocker": "Current P2 receiver network is Breton/Dunmer/Imperial/Nord only."
+      "blocker": "Only approved book-read entries are filled; no approved quest-stage entries are declared."
     },
     {
       "race": "Argonian",
       "routeFamily": "Void / Soul Cairn / Sithis",
       "source": "DB01, DB11, DLC1VQ04",
-      "receiverDecision": "new exact-stage receiver needed",
+      "receiverDecision": "book receivers are live; Skyrim.esm exact-stage source support exists; DLC1 row remains future-review",
       "fillDecision": "blocked",
-      "blocker": "No Argonian exact-stage receiver and no manual/runtime proof for generic-source rejection."
+      "blocker": "Only approved Hist book-read entries are filled; no approved Void/Sithis quest-stage entries are declared."
     },
     {
       "race": "Khajiit",
       "routeFamily": "Alkosh / Nocturnal / road identity",
       "source": "MQ104, TG08B/TG09",
-      "receiverDecision": "new exact-stage or item receiver needed",
+      "receiverDecision": "book receivers are live; MQ104 exact-stage source support exists; Thieves Guild rows remain future-review",
       "fillDecision": "blocked",
-      "blocker": "No current Khajiit FormList receiver for these exact sources."
+      "blocker": "Only approved lunar book-read entries are filled; no approved quest-stage or item entries are declared."
     },
     {
       "race": "Bosmer",
       "routeFamily": "Hircine / hunt law / Green Pact edge",
       "source": "DA05, Hircine-adjacent rows",
-      "receiverDecision": "new exact-stage receiver or existing Bosmer route adapter needed",
+      "receiverDecision": "P2 Bosmer receivers are live and DA05 exact-stage source support exists",
       "fillDecision": "blocked",
-      "blocker": "Current P2 fill pass does not own Bosmer sources."
+      "blocker": "No approved Bosmer source-fill entries are declared in this book tranche."
     },
     {
       "race": "Orc",
       "routeFamily": "Boethiah taboo / strength-order pressure",
       "source": "DA02",
-      "receiverDecision": "new exact-stage receiver needed",
+      "receiverDecision": "book receiver is live and DA02 exact-stage source support exists",
       "fillDecision": "blocked",
-      "blocker": "No current Orc quest-stage receiver/FormList; sacrifice/champion stage semantics need exact routing."
+      "blocker": "Only approved Malacath book-read entries are filled; sacrifice/champion stage semantics need approved quest-stage metadata before fill."
     },
     {
-      "race": "Breton/Dunmer/Imperial/Nord",
+      "race": "All P2 races",
       "routeFamily": "P2 quest-stage sources",
       "source": "DA01, DA02, C03, C06, DA05, MQ105, MQ304, CW01A/CW01B, Dawnguard",
-      "receiverDecision": "exact-stage support needed before fill",
+      "receiverDecision": "exact-stage support exists for current Skyrim.esm source routes; DLC and branch-specific rows remain future-review",
       "fillDecision": "blocked",
-      "blocker": "Current quest-stage callback receives quest plus stage, but FormList membership alone cannot restrict to approved stages."
+      "blocker": "No quest-stage source entry may be filled until the manifest declares exact approvedStages metadata for that receiver/property."
     }
   ],
   "verificationCommands": [
     "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries --dry-run",
     "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries",
     "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill",
+    "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates",
     "node .\\tools\\pdv_content_verify.mjs",
     "node .\\tools\\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json",
-    "node .\\tools\\pdv_phase20_runtime_check.mjs --list"
+    "node .\\tools\\pdv_phase20_runtime_check.mjs --list",
+    "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager"
   ]
 }

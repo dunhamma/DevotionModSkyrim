@@ -16,6 +16,7 @@ var wireAliasProperties = args.Contains("--wire-alias-properties");
 var checkAliasProperties = args.Contains("--check-alias-properties");
 var fillSourceEntries = args.Contains("--fill-source-entries");
 var checkSourceFill = args.Contains("--check-source-fill");
+var checkExactStageGates = args.Contains("--check-exact-stage-gates");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var manifestPath = Path.GetFullPath(GetArg(args, "--manifest") ?? defaultManifest);
 
@@ -31,6 +32,7 @@ var report = new AuthorReport
     CheckAliasProperties = checkAliasProperties,
     FillSourceEntries = fillSourceEntries,
     CheckSourceFill = checkSourceFill,
+    CheckExactStageGates = checkExactStageGates,
     StartedAt = DateTimeOffset.Now
 };
 
@@ -52,9 +54,10 @@ try
         && !wireAliasProperties
         && !checkAliasProperties
         && !fillSourceEntries
-        && !checkSourceFill)
+        && !checkSourceFill
+        && !checkExactStageGates)
     {
-        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, or --check-source-fill. Use --dry-run with write modes for planning only.");
+        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, or --check-exact-stage-gates. Use --dry-run with write modes for planning only.");
     }
 
     var manifest = LoadManifest(manifestPath);
@@ -105,6 +108,16 @@ try
         if (report.Errors.Count > 0)
         {
             throw new InvalidOperationException("P2 receiver source fill check failed.");
+        }
+
+        report.Status = "PASS";
+    }
+    else if (checkExactStageGates)
+    {
+        CheckExactStageGates(manifest, report);
+        if (report.Errors.Count > 0)
+        {
+            throw new InvalidOperationException("P2 receiver exact-stage gate check failed.");
         }
 
         report.Status = "PASS";
@@ -275,6 +288,13 @@ static List<ValidatedSourceFillGroup> ValidateSourceFillEntries(
                 continue;
             }
 
+            if (string.Equals(sourceKind, "quest-stage", StringComparison.OrdinalIgnoreCase)
+                && (requireApproved || string.Equals(status, "approved-for-fill", StringComparison.OrdinalIgnoreCase))
+                && !ValidateQuestStageSource(manifest, propertyName, source, label ?? formKey.ToString(), requireApproved, report))
+            {
+                continue;
+            }
+
             var uniqueKey = $"{propertyName}|{formKey}|{sourceKind}";
             if (!seen.Add(uniqueKey))
             {
@@ -295,6 +315,104 @@ static List<ValidatedSourceFillGroup> ValidateSourceFillEntries(
     }
 
     return validated;
+}
+
+static bool ValidateQuestStageSource(
+    P2ReceiverManifest manifest,
+    string propertyName,
+    P2SourceFillEntry source,
+    string label,
+    bool requireApproved,
+    AuthorReport report)
+{
+    var gate = manifest.questStageGate;
+    if (gate is null)
+    {
+        report.Errors.Add($"{propertyName} quest-stage source {label} is blocked: manifest is missing questStageGate.");
+        return false;
+    }
+
+    var receiverStatus = gate.receiverStatus?.Trim() ?? "";
+    if (!string.Equals(receiverStatus, "exact-stage-supported", StringComparison.OrdinalIgnoreCase))
+    {
+        report.Errors.Add($"{propertyName} quest-stage source {label} is blocked: questStageGate.receiverStatus is {(receiverStatus.Length == 0 ? "(missing)" : receiverStatus)}, expected exact-stage-supported.");
+        return false;
+    }
+
+    if (source.approvedStages is null || source.approvedStages.Count == 0)
+    {
+        report.Errors.Add($"{propertyName} quest-stage source {label} must declare approvedStages before any quest-stage fill.");
+        return false;
+    }
+
+    if (source.approvedStages.Any(stage => stage < 0 || stage > 65535))
+    {
+        report.Errors.Add($"{propertyName} quest-stage source {label} has approvedStages outside the 0-65535 range.");
+        return false;
+    }
+
+    if (requireApproved)
+    {
+        if (string.IsNullOrWhiteSpace(source.stageReadbackEvidence))
+        {
+            report.Errors.Add($"{propertyName} quest-stage source {label} needs stageReadbackEvidence before live fill.");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(source.rejectedStageContext))
+        {
+            report.Errors.Add($"{propertyName} quest-stage source {label} needs rejectedStageContext before live fill.");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(source.duplicateGuard))
+        {
+            report.Errors.Add($"{propertyName} quest-stage source {label} needs duplicateGuard before live fill.");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+static void CheckExactStageGates(P2ReceiverManifest manifest, AuthorReport report)
+{
+    var gate = manifest.questStageGate;
+    if (gate is null)
+    {
+        report.Errors.Add("Manifest is missing questStageGate.");
+        return;
+    }
+
+    var receiverStatus = gate.receiverStatus?.Trim() ?? "";
+    var approvedQuestSources = (manifest.sourceFillEntries ?? [])
+        .SelectMany(group => (group.sources ?? [])
+            .Where(source => string.Equals(source.sourceKind, "quest-stage", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(source.status, "approved-for-fill", StringComparison.OrdinalIgnoreCase))
+            .Select(source => new { Group = group.property ?? "(missing property)", Source = source }))
+        .ToList();
+
+    if (approvedQuestSources.Count == 0)
+    {
+        report.Actions.Add($"No approved quest-stage source entries are declared. Current receiverStatus={receiverStatus}.");
+        return;
+    }
+
+    if (!string.Equals(receiverStatus, "exact-stage-supported", StringComparison.OrdinalIgnoreCase))
+    {
+        report.Errors.Add($"Approved quest-stage entries exist, but questStageGate.receiverStatus is {(receiverStatus.Length == 0 ? "(missing)" : receiverStatus)}; expected exact-stage-supported.");
+    }
+
+    foreach (var entry in approvedQuestSources)
+    {
+        var label = entry.Source.editorId ?? entry.Source.formKey ?? "(unnamed source)";
+        ValidateQuestStageSource(manifest, entry.Group, entry.Source, label, requireApproved: true, report);
+    }
+
+    if (report.Errors.Count == 0)
+    {
+        report.Actions.Add($"{approvedQuestSources.Count} approved quest-stage source entries have exact-stage gate metadata.");
+    }
 }
 
 static bool TryParseFormKey(string? value, out FormKey formKey, out string error)
@@ -706,8 +824,16 @@ sealed class P2ReceiverManifest
 {
     public string? schema { get; set; }
     public string? status { get; set; }
+    public P2QuestStageGate? questStageGate { get; set; }
     public List<P2ReceiverSourceProperty>? sourceProperties { get; set; }
     public List<P2SourceFillGroup>? sourceFillEntries { get; set; }
+}
+
+sealed class P2QuestStageGate
+{
+    public string? status { get; set; }
+    public string? receiverStatus { get; set; }
+    public string? rule { get; set; }
 }
 
 sealed class P2ReceiverSourceProperty
@@ -729,6 +855,10 @@ sealed class P2SourceFillEntry
     public string? sourceKind { get; set; }
     public string? status { get; set; }
     public string? rationale { get; set; }
+    public List<int>? approvedStages { get; set; }
+    public string? stageReadbackEvidence { get; set; }
+    public string? rejectedStageContext { get; set; }
+    public string? duplicateGuard { get; set; }
 }
 
 sealed record ValidatedSourceFillGroup(string Property, List<ValidatedSourceFillEntry> Sources);
@@ -748,6 +878,7 @@ sealed class AuthorReport
     public bool CheckAliasProperties { get; set; }
     public bool FillSourceEntries { get; set; }
     public bool CheckSourceFill { get; set; }
+    public bool CheckExactStageGates { get; set; }
     public DateTimeOffset StartedAt { get; set; }
     public DateTimeOffset FinishedAt { get; set; }
     public string? BackupPath { get; set; }

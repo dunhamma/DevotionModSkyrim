@@ -258,14 +258,187 @@ const RACES = [
   },
 ];
 
-const RACE_KEYS = new Set(RACES.map((race) => race.key));
+const P2_BOOK_RACES = [
+  {
+    key: "breton",
+    label: "Breton P2 book sources",
+    originRace: 2,
+    runbook: "references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md#p2-receiver-wiring-handoff",
+    statusSurface: "Survey/status should show Hidden Art exposure and tradition pressure after approved book-read sources.",
+    checks: [
+      {
+        id: "hidden-art-books",
+        reference: "PDV_FLST_P2_BretonHiddenArtSources",
+        required: [
+          "RouteBretonTraditionChoice complete: 120 tradition 1",
+          "RouteBretonHiddenArtExposure complete:",
+        ],
+        optional: [
+          "Breton tradition choice routed: eventbus_120_po3_book_breton_hidden_art",
+          "Breton Hidden Art exposure routed: eventbus_122_po3_book_breton_hidden_art",
+        ],
+      },
+    ],
+  },
+  {
+    key: "dunmer",
+    label: "Dunmer P2 book sources",
+    originRace: 5,
+    runbook: "references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md#p2-receiver-wiring-handoff",
+    statusSurface: "Survey/status should show Reclamation focus after approved Azura or Boethiah book-read sources.",
+    checks: [
+      {
+        id: "azura-books",
+        reference: "PDV_FLST_P2_DunmerAzuraSources",
+        required: ["RouteDunmerReclamationFocus complete: 130 focus 0"],
+        optional: ["Dunmer Reclamation focus routed: eventbus_130_po3_book_dunmer_azura"],
+      },
+      {
+        id: "boethiah-books",
+        reference: "PDV_FLST_P2_DunmerBoethiahSources",
+        required: ["RouteDunmerReclamationFocus complete: 130 focus 1"],
+        optional: ["Dunmer Reclamation focus routed: eventbus_130_po3_book_dunmer_boethiah"],
+      },
+    ],
+  },
+  {
+    key: "imperial",
+    label: "Imperial P2 book sources",
+    originRace: 1,
+    runbook: "references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md#p2-receiver-wiring-handoff",
+    statusSurface: "Survey/status should show public Talos pressure after the approved Talos book-read source.",
+    checks: [
+      {
+        id: "public-talos-book",
+        reference: "PDV_FLST_P2_ImperialPublicTalosSources",
+        required: ["RouteImperialTalosPressure complete:"],
+        optional: ["Imperial Talos pressure routed: eventbus_141_po3_book_imperial_public_talos"],
+      },
+    ],
+  },
+  {
+    key: "nord",
+    label: "Nord P2 book sources",
+    originRace: 0,
+    runbook: "references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md#p2-receiver-wiring-handoff",
+    statusSurface: "Survey/status should show Old Ways or Hircine/Arkay edge context after approved book-read sources.",
+    checks: [
+      {
+        id: "old-ways-books",
+        reference: "PDV_FLST_P2_NordOldWaysSources",
+        required: ["RouteNordOldWaysState complete:"],
+        optional: ["Nord Old Ways state routed: eventbus_150_po3_book_nord_old_ways"],
+      },
+      {
+        id: "hircine-arkay-book",
+        reference: "PDV_FLST_P2_NordHircineArkaySources",
+        required: ["RouteNordHircineArkayEdge complete:"],
+        optional: ["Nord Hircine/Arkay edge routed: eventbus_152_po3_book_nord_hircine_arkay"],
+      },
+    ],
+  },
+  {
+    key: "altmer",
+    label: "Altmer P2 book sources",
+    originRace: 3,
+    runbook: "references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md#p2-receiver-wiring-handoff",
+    statusSurface: "Survey/status should show Auri-El/Magnus/Xarxes context after approved Altmer book-read sources.",
+    checks: [
+      {
+        id: "auriel-books",
+        reference: "PDV_FLST_P2_AltmerAurielSources",
+        required: ["RouteAltmerAurielFoundation complete: po3_book_altmer_auriel"],
+        optional: ["Altmer source favor recorded:"],
+      },
+      {
+        id: "magnus-books",
+        reference: "PDV_FLST_P2_AltmerMagnusSources",
+        required: ["RouteAltmerMagnusScholarship complete: po3_book_altmer_magnus"],
+        optional: ["Altmer source favor recorded:"],
+      },
+      {
+        id: "xarxes-books",
+        reference: "PDV_FLST_P2_AltmerXarxesSources",
+        required: ["RouteAltmerXarxesLineage complete: po3_book_altmer_xarxes"],
+        optional: ["Altmer source favor recorded:"],
+      },
+    ],
+  },
+  {
+    key: "argonian",
+    label: "Argonian P2 book sources",
+    originRace: 7,
+    runbook: "references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md#p2-receiver-wiring-handoff",
+    statusSurface: "Survey/status should show Hist/people context after approved Argonian book-read sources.",
+    checks: [
+      {
+        id: "hist-books",
+        reference: "PDV_FLST_P2_ArgonianHistSources",
+        required: ["RouteArgonianHistMaintenance complete: 60"],
+        optional: ["Argonian Hist maintenance routed"],
+      },
+    ],
+  },
+  {
+    key: "khajiit",
+    label: "Khajiit P2 book sources",
+    originRace: 6,
+    runbook: "references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md#p2-receiver-wiring-handoff",
+    statusSurface: "Survey/status should show lunar substrate context after approved Khajiit book-read sources.",
+    checks: [
+      {
+        id: "lunar-books",
+        reference: "PDV_FLST_P2_KhajiitLunarSources",
+        required: ["RouteKhajiitLunarSubstrate complete: po3_book_khajiit_lunar"],
+        optional: ["Khajiit moon observance routed"],
+      },
+    ],
+  },
+  {
+    key: "orc",
+    label: "Orc P2 book sources",
+    originRace: 8,
+    runbook: "references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md#p2-receiver-wiring-handoff",
+    statusSurface: "Survey/status should show Malacath conduct context after approved Orc book-read sources.",
+    checks: [
+      {
+        id: "malacath-books",
+        reference: "PDV_FLST_P2_OrcMalacathSources",
+        required: ["RouteOrcMalacathConduct complete: mode 0 source po3_book_orc_malacath"],
+        optional: ["Orc life-mode signal recorded:"],
+      },
+    ],
+  },
+  {
+    key: "redguard",
+    label: "Redguard P2 book sources",
+    originRace: 9,
+    runbook: "references/authoring/PDV_Phase20_PreBetaManualChecks_Runbook.md#p2-receiver-wiring-handoff",
+    statusSurface: "Survey/status should show ancestor-spine context after approved Redguard book-read sources.",
+    checks: [
+      {
+        id: "ancestor-spine-book",
+        reference: "PDV_FLST_P2_RedguardSpineSources",
+        required: ["RouteRedguardAncestorSpine complete: po3_book_redguard_spine"],
+        optional: ["Redguard sect signal recorded:"],
+      },
+    ],
+  },
+];
+
+const TRACKS = new Map([
+  ["route", RACES],
+  ["p2-books", P2_BOOK_RACES],
+  ["all", [...RACES, ...P2_BOOK_RACES]],
+]);
 
 function usage() {
   return [
     "Usage: node .\\tools\\pdv_phase20_runtime_check.mjs [options]",
     "",
     "Options:",
-    "  --race <all|altmer|argonian|orc|redguard|khajiit|bosmer>",
+    "  --track <route|p2-books|all>",
+    "  --race <all|altmer|argonian|orc|redguard|khajiit|bosmer|breton|dunmer|imperial|nord>",
     "  --log <path>          Papyrus log path. Defaults to the Skyrim SE Papyrus.0.log.",
     "  --strict-manager     Also fail when optional manager/status traces are missing.",
     "  --list               Print the expected route markers and exit.",
@@ -277,6 +450,7 @@ function usage() {
 
 function parseArgs(argv) {
   const options = {
+    track: "route",
     race: "all",
     logPath: DEFAULT_LOG,
     strictManager: false,
@@ -290,7 +464,13 @@ function parseArgs(argv) {
     const arg = argv[index];
     if (arg === "--race") {
       index += 1;
-      options.race = normalizeRace(argv[index]);
+      options.race = String(argv[index] || "").toLowerCase();
+    } else if (arg === "--track") {
+      index += 1;
+      options.track = String(argv[index] || "").toLowerCase();
+      if (!TRACKS.has(options.track)) {
+        throw new Error(`Unknown track "${argv[index]}". Expected route, p2-books, or all.`);
+      }
     } else if (arg === "--log") {
       index += 1;
       options.logPath = argv[index];
@@ -312,25 +492,28 @@ function parseArgs(argv) {
     }
   }
 
+  options.race = normalizeRace(options.race, options.track);
   return options;
 }
 
-function normalizeRace(value) {
+function normalizeRace(value, track) {
   const normalized = String(value || "").toLowerCase();
   if (normalized === "all") {
     return "all";
   }
-  if (!RACE_KEYS.has(normalized)) {
-    throw new Error(`Unknown race "${value}". Use --list for valid races.`);
+  const keys = new Set((TRACKS.get(track) || []).map((race) => race.key));
+  if (!keys.has(normalized)) {
+    throw new Error(`Unknown race "${value}" for track "${track}". Use --list for valid races.`);
   }
   return normalized;
 }
 
-function selectedRaces(raceKey) {
+function selectedRaces(raceKey, track) {
+  const races = TRACKS.get(track) || RACES;
   if (raceKey === "all") {
-    return RACES;
+    return races;
   }
-  return RACES.filter((race) => race.key === raceKey);
+  return races.filter((race) => race.key === raceKey);
 }
 
 function markerMatches(lines, marker) {
@@ -353,7 +536,7 @@ function markerMatches(lines, marker) {
 
 function checkLog(logText, options) {
   const lines = logText.split(/\r?\n/);
-  const races = selectedRaces(options.race).map((race) => {
+  const races = selectedRaces(options.race, options.track).map((race) => {
     const checks = race.checks.map((check) => {
       const required = check.required.map((marker) => markerMatches(lines, marker));
       const optional = check.optional.map((marker) => markerMatches(lines, marker));
@@ -395,6 +578,7 @@ function checkLog(logText, options) {
   return {
     status: races.every((race) => race.status === "PASS") ? "PASS" : "FAIL",
     logPath: options.selfTest ? "<embedded-self-test>" : path.resolve(options.logPath),
+    track: options.track,
     race: options.race,
     strictManager: options.strictManager,
     note: "Route-marker proof only. Survey/status, immersion feel, negative hooks, and anti-farm behavior still require the runtime runbook.",
@@ -404,7 +588,7 @@ function checkLog(logText, options) {
 
 function embeddedLog() {
   const lines = [];
-  for (const race of RACES) {
+  for (const race of TRACKS.get("all")) {
     lines.push(`[PDV] Test: ${race.label}`);
     for (const check of race.checks) {
       for (const marker of check.required) {
@@ -422,7 +606,8 @@ function listReport(options) {
   return {
     status: "INFO",
     defaultLog: DEFAULT_LOG,
-    races: selectedRaces(options.race).map((race) => ({
+    track: options.track,
+    races: selectedRaces(options.race, options.track).map((race) => ({
       key: race.key,
       label: race.label,
       originRace: race.originRace,
@@ -440,6 +625,7 @@ function listReport(options) {
 function printList(report) {
   console.log("PDV Phase 20 runtime proof markers");
   console.log(`Default log: ${report.defaultLog}`);
+  console.log(`Track: ${report.track}`);
   for (const race of report.races) {
     console.log("");
     console.log(`${race.label} (origin ${race.originRace})`);
@@ -467,6 +653,7 @@ function sampleSummary(markerReport) {
 function printCheck(report) {
   console.log(`PDV Phase 20 runtime proof check: ${report.status}`);
   console.log(`Log: ${report.logPath}`);
+  console.log(`Track: ${report.track}`);
   console.log(`Race: ${report.race}`);
   console.log(`Strict manager: ${report.strictManager ? "yes" : "no"}`);
   console.log(report.note);
