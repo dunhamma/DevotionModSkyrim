@@ -39,8 +39,9 @@ Known warning: unnamed CK-authored INFO records in PlayerDevotion_Framework.esp
 P2 book runtime checker:
 node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager
 Result: FAIL overall
-Current pass: Breton Hidden Art
-Current missing runtime proof: Dunmer Azura, Dunmer Boethiah, Imperial public Talos, Nord Old Ways, Nord Hircine/Arkay, Altmer Auri-El, Altmer Magnus, Altmer Xarxes, Argonian Hist, Khajiit Lunar, Orc Malacath, Redguard ancestor spine
+Current 2026-06-04 log pass: Dunmer Azura, Dunmer Boethiah, Imperial public Talos, Nord Old Ways, Nord Hircine/Arkay
+Earlier log pass: Breton Hidden Art
+Current missing runtime proof: fresh Breton Hidden Art if a same-log full set is desired, Altmer Auri-El, Altmer Magnus, Altmer Xarxes, Argonian Hist, Khajiit Lunar, Orc Malacath, Redguard ancestor spine
 ```
 
 ## Race Runtime And Manual Gap
@@ -53,10 +54,10 @@ Current missing runtime proof: Dunmer Azura, Dunmer Boethiah, Imperial public Ta
 | Orc | Fail - runtime/manual proof deferred | Filled Malacath book sources lack current manager-log proof | All manual slots pending |
 | Redguard | Fail - runtime/manual proof deferred | Filled ancestor-spine book source lacks current manager-log proof | All manual slots pending |
 | Bosmer | Fail - runtime/manual proof deferred | P2 FormList shells exist; Bosmer P2 source shells are currently empty | All manual slots pending |
-| Breton | Fail - runtime/manual proof deferred | Hidden Art book source manager-log proof currently passes | All manual slots pending |
-| Dunmer | Fail - runtime/manual proof deferred | Filled Azura/Boethiah book sources lack current manager-log proof | All manual slots pending |
-| Imperial | Fail - runtime/manual proof deferred | Filled public Talos book source lacks current manager-log proof | All manual slots pending |
-| Nord | Fail - runtime/manual proof deferred | Filled Old Ways and Hircine/Arkay book sources lack current manager-log proof | All manual slots pending |
+| Breton | Fail - runtime/manual proof deferred | Hidden Art book source manager-log proof passed in an earlier log; rerun only if same-log proof is desired | All manual slots pending |
+| Dunmer | Fail - runtime/manual proof deferred | Azura and Boethiah book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
+| Imperial | Fail - runtime/manual proof deferred | Public Talos book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
+| Nord | Fail - runtime/manual proof deferred | Old Ways and Hircine/Arkay book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
 
 ## P2 FormList Shell State
 

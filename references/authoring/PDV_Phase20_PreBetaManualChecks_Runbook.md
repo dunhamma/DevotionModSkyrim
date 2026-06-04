@@ -232,11 +232,16 @@ Then prove one accepted route from each wired P2 source family, wrong-origin
 silence, generic-source silence, repeat behavior, Survey clarity, and stack
 snapshot before promoting Breton, Dunmer, Imperial, or Nord beyond audit-only.
 
-Current live log status (2026-06-03):
+Current live log status (2026-06-04):
 - `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager`
-  reports `FAIL` for all P2 book families because no accepted in-game book-read
-  proof has been recorded yet.
-- This is a runtime/manual evidence gap, not a source-fill or verifier failure.
+  reports `FAIL` overall because Breton and the newer Altmer/Argonian/Khajiit/
+  Orc/Redguard book families are not all present in the current log.
+- Accepted book-route proof is recorded for Dunmer Azura, Dunmer Boethiah,
+  Imperial public Talos, Nord Old Ways, and Nord Hircine/Arkay. Breton Hidden
+  Art passed in an earlier log and can be rerun only if a same-log full set is
+  desired.
+- Remaining failures are runtime/manual evidence gaps, not source-fill or
+  verifier failures.
 
 ## Race Checks
 

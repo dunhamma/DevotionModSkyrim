@@ -19,6 +19,31 @@
     "filledEntryCount": 29,
     "formListGroups": 13
   },
+  "runtimeRouteProof": {
+    "status": "partial-pass",
+    "checkedAt": "2026-06-04T12:56:36+10:00",
+    "command": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
+    "passedFamilies": [
+      "PDV_FLST_P2_DunmerAzuraSources",
+      "PDV_FLST_P2_DunmerBoethiahSources",
+      "PDV_FLST_P2_ImperialPublicTalosSources",
+      "PDV_FLST_P2_NordOldWaysSources",
+      "PDV_FLST_P2_NordHircineArkaySources"
+    ],
+    "earlierLogPassFamilies": [
+      "PDV_FLST_P2_BretonHiddenArtSources"
+    ],
+    "remainingFamilies": [
+      "PDV_FLST_P2_AltmerAurielSources",
+      "PDV_FLST_P2_AltmerMagnusSources",
+      "PDV_FLST_P2_AltmerXarxesSources",
+      "PDV_FLST_P2_ArgonianHistSources",
+      "PDV_FLST_P2_KhajiitLunarSources",
+      "PDV_FLST_P2_OrcMalacathSources",
+      "PDV_FLST_P2_RedguardSpineSources"
+    ],
+    "boundary": "Accepted-route log proof only. Wrong-origin rejection, generic-source silence, Survey/status clarity, stack snapshots, and true feel remain manual/runtime gates."
+  },
   "approvalRules": [
     "Only exact source records with local extracted/readback evidence can be approved.",
     "Approved entries must name receiver, sourceKind, accepted context, rejected context, duplicate guard, and rationale.",

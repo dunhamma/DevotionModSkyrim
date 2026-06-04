@@ -1,7 +1,7 @@
 {
   "schema": "pdv.phase20.manual-evidence-ledger.v2",
   "status": "pending-manual-runtime-proof",
-  "updated": "2026-06-03",
+  "updated": "2026-06-04",
   "purpose": "Structured intake ledger for Phase 20 empirical runtime evidence after immersive hook contracts are green.",
   "rules": {
     "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
@@ -244,7 +244,7 @@
     "Breton": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "No Phase 20 route command yet; audit manually through Survey/status and stack review.",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
           "status": "pending",
@@ -303,7 +303,8 @@
         },
         "immersiveHookProof": {
           "status": "pending",
-          "expected": "Prove Dunmer portable ash-prayer/home rite, Reclamation focus, and deviation-price immersive hooks outside QASmoke, with stack audit and rejected generic Daedric behavior."
+          "expected": "Prove Dunmer portable ash-prayer/home rite, Reclamation focus, and deviation-price immersive hooks outside QASmoke, with stack audit and rejected generic Daedric behavior.",
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Azura and Boethiah Reclamation focus via strict manager checker. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
         },
         "assetStatus": {
           "status": "pending",
@@ -314,7 +315,7 @@
     "Imperial": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "No Phase 20 route command yet; audit manually through Survey/status and stack review.",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
           "status": "pending",
@@ -338,7 +339,8 @@
         },
         "immersiveHookProof": {
           "status": "pending",
-          "expected": "Prove Imperial civic service, public/private Talos pressure, and focused patron civic immersive hooks outside QASmoke, with stack audit and faction/attendance rejection."
+          "expected": "Prove Imperial civic service, public/private Talos pressure, and focused patron civic immersive hooks outside QASmoke, with stack audit and faction/attendance rejection.",
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for public Talos pressure via strict manager checker. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
         },
         "assetStatus": {
           "status": "pending",
@@ -349,7 +351,7 @@
     "Nord": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race all",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
           "status": "pending",
@@ -373,7 +375,8 @@
         },
         "immersiveHookProof": {
           "status": "pending",
-          "expected": "Prove Nord broad/focused Old Ways, Kyne/Talos context, and Hircine/Arkay curse-edge immersive hooks outside QASmoke, with dense-hook and stack audit."
+          "expected": "Prove Nord broad/focused Old Ways, Kyne/Talos context, and Hircine/Arkay curse-edge immersive hooks outside QASmoke, with dense-hook and stack audit.",
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Old Ways and Hircine/Arkay via strict manager checker. First Old Ways attempt fired before origin settled and was correctly ignored; second settled-origin source routed. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
         },
         "assetStatus": {
           "status": "pending",
