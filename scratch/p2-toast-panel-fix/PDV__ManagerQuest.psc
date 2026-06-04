@@ -1694,7 +1694,6 @@ Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
     if oldFocus != focusValue
         Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
     endIf
-    RequestPanelRefresh()
 EndFunction
 
 Int Function GetKhajiitFocusedEmphasis()
@@ -2912,9 +2911,13 @@ Bool Function TryActivateContextualFavor(Int laneValue, Int familyValue, String 
     StorageUtil.SetFloatValue(None, "PDV.Favor.ActiveExpiresAt", Utility.GetCurrentGameTime() + GetFavorDurationDays(laneValue, familyValue))
     StorageUtil.SetFloatValue(None, GetFavorLastTriggerKey(laneValue, familyValue), Utility.GetCurrentGameTime())
     Trace(1, "Contextual favor applied: " + GetContextualFavorFamilyLabel(laneValue, familyValue) + " (" + reason + ")")
-    SendContextualFavorToast(laneValue, familyValue)
+    if !IsP2BookNoticeReason(reason)
+        SendContextualFavorToast(laneValue, familyValue)
+    endIf
     SyncKyneFavorDebugState()
-    RequestPanelRefresh()
+    if !IsP2BookNoticeReason(reason)
+        RequestPanelRefresh()
+    endIf
     return True
 EndFunction
 

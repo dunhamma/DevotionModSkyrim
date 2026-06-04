@@ -184,6 +184,11 @@ Quest scripts (current):
   `PDV_PlayerEvents` alias, approved book-read fills for the current P2 book
   tranche, and exact-stage quest support in source with no approved live
   quest-stage entries yet.
+- **2026-06-04 P2 proof feedback correction:** P2 book-source proof now uses
+  vanilla top-left `Debug.Notification` messages instead of Prisma toast
+  fallback, and P2 book-state changes no longer auto-open the Prisma panel.
+  Prisma remains the desired future replacement UI, but P2 empirical proof
+  should not depend on an overlay that can trap input or hide CK MessageBoxes.
 - `PDV__MainQuest.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â RunOnce bootstrap quest. **Phase 4 script complete on disk:** verifies PapyrusUtil and defers origin capture to the player-alias ingress instead of forcing `PDV_Origin.InitializeOrigin()` during `OnInit()`.
 - `PDV_Origin.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â **NEW (Phase 4)** One-shot origin helper. Detects and normalizes player origin race, treats vanilla vampire races as their birth race, defers while only a temporary beast-form race is visible, treats the first Nord capture as provisional to avoid placeholder new-game race reads locking too early, writes `PDV_GLO_OriginRace`, and seeds the current proof-slice deity ledgers.
 - `PDV__ManagerQuest.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â **Phase 20 status/P2 hook surface wired:** stance-aware piety, patron state, dawn consolidation, contextual favors, commitment, curse-state handling, and neglect remain manager-owned. The manager auto-grants `Survey Devotion`, auto-equips it into the voice/power slot only when that slot is empty, exposes thematic player-status APIs, suppresses Nord commitment offers/contextual favors while a Nord vampire rupture is active, preserves a cured-vampire scar note without clearing patron piety, and now owns wrong-origin-guarded Breton/Dunmer/Imperial/Nord immersive hook handlers plus Survey acknowledgements for those P2 route contexts.

@@ -250,6 +250,12 @@ Current live log status (2026-06-04):
   Argonian, Orc, and Redguard also have one-book Survey/status deltas. Rerun
   these routes for toast + Survey/status proof rather than treating the earlier
   route logs as player-facing proof.
+- A follow-up Altmer retest showed Survey/status state changing while Prisma
+  swallowed the expected toast and opened the full panel in an unclickable
+  state. The patched proof lane now expects vanilla top-left notifications for
+  P2 book sources and no automatic Prisma panel opening from P2 book-state
+  changes. Prisma is still the intended replacement UI, but it is not the
+  empirical P2 proof surface until its input behavior is proven.
 - Khajiit route proof passed before the patch, but the Survey/status text did
   not visibly change during smoke; keep Survey/status clarity pending until the
   patched route is rerun.

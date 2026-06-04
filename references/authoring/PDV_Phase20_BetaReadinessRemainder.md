@@ -80,9 +80,9 @@ necessary gates, not beta readiness by themselves. Beta readiness still depends
 on live accepted/rejected behavior, anti-farm proof, Survey/status clarity,
 final placement/feel evidence, and a tester-facing handoff.
 
-Current live Papyrus log status on 2026-06-04: the P2 book-source checker
-reports `PASS` for Breton Hidden Art and `FAIL` for Dunmer Azura, Dunmer
-Boethiah, Imperial public Talos, Nord Old Ways, Nord Hircine/Arkay, Altmer
-Auri-El, Altmer Magnus, Altmer Xarxes, Argonian Hist, Khajiit Lunar, Orc
-Malacath, and Redguard ancestor spine. This is expected until the manual
-runtime pass reads the approved books in game.
+Current live Papyrus log status on 2026-06-04 is log-rotation dependent and
+should not be treated as the durable proof ledger. After the P2 feedback-lane
+correction, `Papyrus.0.log` only proves the latest visible subset unless the
+full book set is rerun in one session. Use the runtime checker immediately
+after a proof pass, then record durable accepted-route and Survey/status
+evidence in the manual evidence ledger.
