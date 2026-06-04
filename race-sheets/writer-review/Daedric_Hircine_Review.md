@@ -1,8 +1,8 @@
 # Daedric -- Hircine -- Writer Review
 
 **Source:** `race-sheets/PDV_DaedricContent_Manifest.md` (Hircine)
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 26 drafted
+**Regenerated:** 2026-06-01 via `node tools/pdv_writer_review.mjs`
+**Rows:** 23 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -36,7 +36,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Hircine (Daedric path): Primal, joyful, predatory; speaks from the hunt, not from doctrine; does not argue theology or negotiate -- he names what is already true and invites you to recognize it; warm in the way the predator is warm toward the one who hunts alongside it; no contempt for the beasts he makes. | `PDV_Price_Daedric_Hircine_Seeker` | Passive price description (paired with the boon); visible whenever the player views active effects. | Narrator | 117 / 200 |  | The price of the hunt-path: the predator register. The civilized world reads the beast in you and keeps its distance. |  |
+| Hircine (Daedric path): Primal, joyful, predatory; speaks from the hunt, not from doctrine; does not argue theology or negotiate -- he names what is already true and invites you to recognize it; warm in the way the predator is warm toward the one who hunts alongside it; no contempt for the beasts he makes. | `PDV_Price_Daedric_Hircine_Seeker` | Passive price description (paired with the boon); visible whenever the player views active effects. | Narrator | 118 / 200 |  | The price of the hunt-path: the predator register. The civilized world senses the beast in you and keeps its distance. |  |
 
 ## Price -- Devoted (Tier 2)
 
@@ -93,30 +93,6 @@ _1 row._
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | Hircine (Daedric path): Primal, joyful, predatory; speaks from the hunt, not from doctrine; does not argue theology or negotiate -- he names what is already true and invites you to recognize it; warm in the way the predator is warm toward the one who hunts alongside it; no contempt for the beasts he makes. | `PDV_Msg_Daedric_Hircine_Commitment` | MessageBox. Fires once when commitment gate clears; curse-access reframe: player carries lycanthropy and has signaled three times. | God-voice | 15+238 / 40+500 |  | Title: "Hircine's Claim"   Body: "The wolf is in you, and you know what that means now -- not the fear that comes first, but the thing after the fear: the hunting-ground opened, the prey was visible, and the body knew before the mind. That moment is mine. Welcome, Hunter." |  |
-
-## Stigma -- Suspected
-
-_1 row._
-
-| Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
-|---|---|---|---|---|---|---|---|
-| Hircine (Daedric path): Primal, joyful, predatory; speaks from the hunt, not from doctrine; does not argue theology or negotiate -- he names what is already true and invites you to recognize it; warm in the way the predator is warm toward the one who hunts alongside it; no contempt for the beasts he makes. | `PDV_Notif_Daedric_Hircine_Stigma_Suspected` | HUD corner notification. On entering Suspected. | Narrator | 67 / 80 |  | Your Hircine devotion is suspected. The beast-path draws wary eyes. |  |
-
-## Stigma -- Known
-
-_1 row._
-
-| Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
-|---|---|---|---|---|---|---|---|
-| Hircine (Daedric path): Primal, joyful, predatory; speaks from the hunt, not from doctrine; does not argue theology or negotiate -- he names what is already true and invites you to recognize it; warm in the way the predator is warm toward the one who hunts alongside it; no contempt for the beasts he makes. | `PDV_Notif_Daedric_Hircine_Stigma_Known` | HUD corner notification. On entering Known. | Narrator | 73 / 80 |  | Your Hircine devotion is known. The hunt-path marks its follower plainly. |  |
-
-## Stigma -- Notorious
-
-_1 row._
-
-| Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
-|---|---|---|---|---|---|---|---|
-| Hircine (Daedric path): Primal, joyful, predatory; speaks from the hunt, not from doctrine; does not argue theology or negotiate -- he names what is already true and invites you to recognize it; warm in the way the predator is warm toward the one who hunts alongside it; no contempt for the beasts he makes. | `PDV_Notif_Daedric_Hircine_Stigma_Notorious` | HUD corner notification. On entering Notorious. | Narrator | 78 / 80 |  | You are openly Hircine's. The beast-walker is not welcome in the settled hold. |  |
 
 ## Drifting away (neglect)
 

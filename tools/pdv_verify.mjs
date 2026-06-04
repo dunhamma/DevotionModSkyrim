@@ -4145,13 +4145,17 @@ class Verifier {
 
     const daedric = gates.daedricBlockers || {};
     const batch0 = Array.isArray(daedric.batch0TemplateProof) ? daedric.batch0TemplateProof : [];
+    const lockedByDecision = (value, id) =>
+      value === `locked-${id}` || value === `resolved-by-${id}`;
     const decisionsLocked =
-      daedric.stigmaRowContract === "locked-D15" &&
-      daedric.hircineMolagBalCurseAccessTemplate === "locked-D16" &&
-      daedric.princePromotionOrder === "locked-D17" &&
-      daedric.contentReadyDefinition === "locked-D18";
+      lockedByDecision(daedric.stigmaRowContract, "D15") &&
+      lockedByDecision(daedric.hircineMolagBalCurseAccessTemplate, "D16") &&
+      lockedByDecision(daedric.princePromotionOrder, "D17") &&
+      lockedByDecision(daedric.contentReadyDefinition, "D18");
     const proofStillBlocked =
       daedric.runtimePromotionAllowed === false &&
+      typeof daedric.promotionGatedBy === "string" &&
+      daedric.promotionGatedBy.includes("CAT-6") &&
       typeof daedric.readinessLedger === "string" &&
       daedric.readinessLedger.includes("PDV_AllRaceDaedricBetaReadinessLedger.md") &&
       typeof daedric.batch0ProofLedger === "string" &&

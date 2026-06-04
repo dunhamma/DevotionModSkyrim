@@ -1480,7 +1480,8 @@
     "readinessLedger": "references/authoring/PDV_AllRaceDaedricBetaReadinessLedger.md",
     "batch0ProofLedger": "references/authoring/PDV_DaedricBatch0_D18ProofLedger.md",
     "batch0StaticD18Proof": "complete-no-esp-writes",
-    "crossPrinceHostilityExitResidue": "must be proven through per-Prince D-18 checklist and Survey/status or display proof",
+    "crossPrinceHostilityExitResidue": "locked-D14; exit/residue copy must be proven through per-Prince D-18 checklist and Survey/status or display proof",
+    "promotionGatedBy": "CAT-6 ESP promotion, per-Prince D-18/effect review, record readback, runtime or display proof, and stack/Survey legibility",
     "batch0TemplateProof": [
       "Azura / Azurah",
       "Vaermina",

@@ -1,6 +1,6 @@
 # PDV Writer Review -- Index
 
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-06-01 via `node tools/pdv_writer_review.mjs`
 **Sources:** `race-sheets/PDV_RaceContent_Manifest.md` (races) and `race-sheets/PDV_DaedricContent_Manifest.md` (Princes)
 
 Per-race and per-Prince writer-review files. Each `<Name>_Review.md` groups every drafted in-game string by the moment in which the player encounters it, with deity/Prince tone, voice, char count vs hard cap, and an empty `Edit` column for revisions.
@@ -24,9 +24,9 @@ Per-race and per-Prince writer-review files. Each `<Name>_Review.md` groups ever
 
 | Prince | Rows | Over budget | Moments covered | MD | CSV |
 |---|---|---|---|---|---|
-| Boethiah | 24 | - | 17 | [Daedric_Boethiah_Review.md](Daedric_Boethiah_Review.md) | [Daedric_Boethiah_Review.csv](Daedric_Boethiah_Review.csv) |
+| Boethiah | 25 | - | 17 | [Daedric_Boethiah_Review.md](Daedric_Boethiah_Review.md) | [Daedric_Boethiah_Review.csv](Daedric_Boethiah_Review.csv) |
 | Azura | 24 | - | 17 | [Daedric_Azura_Review.md](Daedric_Azura_Review.md) | [Daedric_Azura_Review.csv](Daedric_Azura_Review.csv) |
-| Mephala | 24 | - | 17 | [Daedric_Mephala_Review.md](Daedric_Mephala_Review.md) | [Daedric_Mephala_Review.csv](Daedric_Mephala_Review.csv) |
+| Mephala | 25 | - | 17 | [Daedric_Mephala_Review.md](Daedric_Mephala_Review.md) | [Daedric_Mephala_Review.csv](Daedric_Mephala_Review.csv) |
 | Malacath | 25 | - | 17 | [Daedric_Malacath_Review.md](Daedric_Malacath_Review.md) | [Daedric_Malacath_Review.csv](Daedric_Malacath_Review.csv) |
 | Meridia | 26 | - | 17 | [Daedric_Meridia_Review.md](Daedric_Meridia_Review.md) | [Daedric_Meridia_Review.csv](Daedric_Meridia_Review.csv) |
 | Nocturnal | 26 | - | 17 | [Daedric_Nocturnal_Review.md](Daedric_Nocturnal_Review.md) | [Daedric_Nocturnal_Review.csv](Daedric_Nocturnal_Review.csv) |
@@ -38,8 +38,8 @@ Per-race and per-Prince writer-review files. Each `<Name>_Review.md` groups ever
 | Sanguine | 26 | - | 17 | [Daedric_Sanguine_Review.md](Daedric_Sanguine_Review.md) | [Daedric_Sanguine_Review.csv](Daedric_Sanguine_Review.csv) |
 | Namira | 26 | - | 17 | [Daedric_Namira_Review.md](Daedric_Namira_Review.md) | [Daedric_Namira_Review.csv](Daedric_Namira_Review.csv) |
 | Peryite | 26 | - | 17 | [Daedric_Peryite_Review.md](Daedric_Peryite_Review.md) | [Daedric_Peryite_Review.csv](Daedric_Peryite_Review.csv) |
-| Hircine | 26 | - | 17 | [Daedric_Hircine_Review.md](Daedric_Hircine_Review.md) | [Daedric_Hircine_Review.csv](Daedric_Hircine_Review.csv) |
-| Molag Bal | 26 | - | 17 | [Daedric_MolagBal_Review.md](Daedric_MolagBal_Review.md) | [Daedric_MolagBal_Review.csv](Daedric_MolagBal_Review.csv) |
+| Hircine | 23 | - | 14 | [Daedric_Hircine_Review.md](Daedric_Hircine_Review.md) | [Daedric_Hircine_Review.csv](Daedric_Hircine_Review.csv) |
+| Molag Bal | 23 | - | 14 | [Daedric_MolagBal_Review.md](Daedric_MolagBal_Review.md) | [Daedric_MolagBal_Review.csv](Daedric_MolagBal_Review.csv) |
 
 ## How to use
 
