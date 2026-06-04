@@ -1,11 +1,12 @@
 {
   "schema": "pdv.cat6.promotion-pilot.v1",
-  "status": "pilot-provisional",
+  "status": "pilot-preserved-reward-contract-owned",
   "updated": "2026-05-31",
+  "supersededGrantOwner": "references/authoring/PDV_Phase20_RewardRecordContracts.json",
   "sourceManifest": "race-sheets/PDV_RaceContent_Manifest.md",
   "allowedRows": ["PDV_Bless_Khajiit_Lunar_T1"],
   "notAllowed": [
-    "grant wiring",
+    "standalone CAT-6 grant wiring outside the all-race reward contract",
     "broad Khajiit reward rollout",
     "Bosmer fallback promotion",
     "Daedric stigma rows",
@@ -24,7 +25,7 @@
       "spellType": "Ability",
       "castType": "ConstantEffect",
       "targetType": "Self",
-      "grantWiring": "none",
+      "grantWiring": "owned-by-phase20-reward-contract",
       "conditions": {
         "mode": "night-only",
         "startHourInclusive": 19,
@@ -62,7 +63,7 @@
         "spell uses both magic effects",
         "spell and magic effect text matches the source manifest row exactly",
         "both effect entries are night-only from 19:00 through 07:00",
-        "no manager grant wiring exists",
+        "manager grant wiring, if present, is owned by PDV_Phase20_RewardRecordContracts.json",
         "no broad CAT-6 promotion is claimed"
       ]
     }

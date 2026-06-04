@@ -7,6 +7,7 @@ using SkyrimFormList = Mutagen.Bethesda.Skyrim.FormList;
 
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
 const string defaultManifest = @"references\authoring\PDV_Phase20_P2ImmersiveReceivers.manifest.json";
+const string defaultPlayerEvents = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\PDV_PlayerEvents.psc";
 
 var dryRun = args.Contains("--dry-run");
 var createMissing = args.Contains("--create-missing");
@@ -17,8 +18,10 @@ var checkAliasProperties = args.Contains("--check-alias-properties");
 var fillSourceEntries = args.Contains("--fill-source-entries");
 var checkSourceFill = args.Contains("--check-source-fill");
 var checkExactStageGates = args.Contains("--check-exact-stage-gates");
+var checkRouteEntries = args.Contains("--check-route-entries");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var manifestPath = Path.GetFullPath(GetArg(args, "--manifest") ?? defaultManifest);
+var playerEventsPath = Path.GetFullPath(GetArg(args, "--player-events") ?? defaultPlayerEvents);
 
 var report = new AuthorReport
 {
@@ -33,6 +36,7 @@ var report = new AuthorReport
     FillSourceEntries = fillSourceEntries,
     CheckSourceFill = checkSourceFill,
     CheckExactStageGates = checkExactStageGates,
+    CheckRouteEntries = checkRouteEntries,
     StartedAt = DateTimeOffset.Now
 };
 
@@ -55,9 +59,10 @@ try
         && !checkAliasProperties
         && !fillSourceEntries
         && !checkSourceFill
-        && !checkExactStageGates)
+        && !checkExactStageGates
+        && !checkRouteEntries)
     {
-        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, or --check-exact-stage-gates. Use --dry-run with write modes for planning only.");
+        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, --check-exact-stage-gates, or --check-route-entries. Use --dry-run with write modes for planning only.");
     }
 
     var manifest = LoadManifest(manifestPath);
@@ -118,6 +123,16 @@ try
         if (report.Errors.Count > 0)
         {
             throw new InvalidOperationException("P2 receiver exact-stage gate check failed.");
+        }
+
+        report.Status = "PASS";
+    }
+    else if (checkRouteEntries)
+    {
+        CheckRouteEntries(manifest, playerEventsPath, report);
+        if (report.Errors.Count > 0)
+        {
+            throw new InvalidOperationException("P2 receiver route-entry check failed.");
         }
 
         report.Status = "PASS";
@@ -412,6 +427,174 @@ static void CheckExactStageGates(P2ReceiverManifest manifest, AuthorReport repor
     if (report.Errors.Count == 0)
     {
         report.Actions.Add($"{approvedQuestSources.Count} approved quest-stage source entries have exact-stage gate metadata.");
+    }
+}
+
+static void CheckRouteEntries(P2ReceiverManifest manifest, string playerEventsPath, AuthorReport report)
+{
+    if (!File.Exists(playerEventsPath))
+    {
+        report.Errors.Add($"PDV_PlayerEvents source not found: {playerEventsPath}");
+        return;
+    }
+
+    var contract = manifest.routeContract;
+    if (contract is null)
+    {
+        report.Errors.Add("Manifest is missing routeContract.");
+    }
+    else
+    {
+        if (!string.Equals(contract.sourceOfTruth, "routeEntries", StringComparison.OrdinalIgnoreCase))
+        {
+            report.Errors.Add($"routeContract.sourceOfTruth is {contract.sourceOfTruth ?? "(missing)"}, expected routeEntries.");
+        }
+
+        if (string.IsNullOrWhiteSpace(contract.verificationCommand)
+            || !contract.verificationCommand.Contains("--check-route-entries", StringComparison.OrdinalIgnoreCase))
+        {
+            report.Errors.Add("routeContract.verificationCommand must include --check-route-entries.");
+        }
+    }
+
+    var declaredProperties = (manifest.sourceProperties ?? [])
+        .Where(property => !string.IsNullOrWhiteSpace(property.property))
+        .ToDictionary(
+            property => property.property!,
+            property => new HashSet<string>(
+                property.sourceKinds ?? [],
+                StringComparer.OrdinalIgnoreCase),
+            StringComparer.OrdinalIgnoreCase);
+
+    var routeEntries = manifest.routeEntries ?? [];
+    if (routeEntries.Count == 0)
+    {
+        report.Errors.Add("Manifest routeEntries is empty.");
+        return;
+    }
+
+    var scriptText = File.ReadAllText(playerEventsPath);
+    var seenIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    var seenRouteKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    var races = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    var mutualExclusionGroups = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+    foreach (var entry in routeEntries)
+    {
+        var label = entry.id?.Trim();
+        if (string.IsNullOrWhiteSpace(label))
+        {
+            report.Errors.Add("A routeEntries item is missing id.");
+            continue;
+        }
+
+        if (!seenIds.Add(label))
+        {
+            report.Errors.Add($"Route entry {label} is declared more than once.");
+        }
+
+        var propertyName = entry.property?.Trim() ?? "";
+        if (propertyName.Length == 0 || !declaredProperties.TryGetValue(propertyName, out var sourceKinds))
+        {
+            report.Errors.Add($"Route entry {label} targets undeclared property {propertyName}.");
+            continue;
+        }
+
+        var sourceKind = entry.sourceKind?.Trim() ?? "";
+        if (!sourceKinds.Contains(sourceKind))
+        {
+            report.Errors.Add($"Route entry {label} uses sourceKind {sourceKind}, which is not declared on {propertyName}.");
+        }
+
+        if (!string.Equals(sourceKind, "quest-stage", StringComparison.OrdinalIgnoreCase))
+        {
+            report.Errors.Add($"Route entry {label} uses sourceKind {sourceKind}; route verification currently supports quest-stage entries only.");
+        }
+
+        if (entry.expectedFormId <= 0)
+        {
+            report.Errors.Add($"Route entry {label} must declare positive expectedFormId.");
+        }
+
+        if (entry.approvedStage < 0 || entry.approvedStage > 65535)
+        {
+            report.Errors.Add($"Route entry {label} approvedStage {entry.approvedStage} is outside 0-65535.");
+        }
+
+        var routeKey = entry.routeKey?.Trim() ?? "";
+        if (routeKey.Length == 0)
+        {
+            report.Errors.Add($"Route entry {label} is missing routeKey.");
+            continue;
+        }
+
+        if (!seenRouteKeys.Add(routeKey))
+        {
+            report.Errors.Add($"Route key {routeKey} is declared more than once.");
+        }
+
+        var dispatch = entry.dispatch?.Trim() ?? "";
+        if (dispatch.Length == 0)
+        {
+            report.Errors.Add($"Route entry {label} is missing dispatch.");
+        }
+
+        foreach (var field in new[]
+                 {
+                     ("acceptedContext", entry.acceptedContext),
+                     ("rejectedContext", entry.rejectedContext),
+                     ("duplicateGuard", entry.duplicateGuard),
+                     ("stageReadbackEvidence", entry.stageReadbackEvidence),
+                     ("implementationStatus", entry.implementationStatus),
+                     ("reviewStatus", entry.reviewStatus)
+                 })
+        {
+            if (string.IsNullOrWhiteSpace(field.Item2))
+            {
+                report.Errors.Add($"Route entry {label} is missing {field.Item1}.");
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(entry.race))
+        {
+            races.Add(entry.race!);
+        }
+
+        if (!string.IsNullOrWhiteSpace(entry.mutualExclusionGroup))
+        {
+            mutualExclusionGroups.TryGetValue(entry.mutualExclusionGroup!, out var count);
+            mutualExclusionGroups[entry.mutualExclusionGroup!] = count + 1;
+        }
+
+        var branchSnippet = $"ShouldRouteP2QuestStage({propertyName}, sourceQuest, {entry.expectedFormId}, {entry.approvedStage}, \"{routeKey}\", newStage)";
+        if (!scriptText.Contains(branchSnippet, StringComparison.Ordinal))
+        {
+            report.Errors.Add($"Route entry {label} is not present in PDV_PlayerEvents: {branchSnippet}");
+        }
+
+        if (dispatch.Length > 0 && !scriptText.Contains(dispatch, StringComparison.Ordinal))
+        {
+            report.Errors.Add($"Route entry {label} dispatch is not present in PDV_PlayerEvents: {dispatch}");
+        }
+    }
+
+    var expectedRaces = new[] { "Altmer", "Argonian", "Bosmer", "Dunmer", "Khajiit", "Nord", "Orc", "Redguard" };
+    foreach (var race in expectedRaces)
+    {
+        if (!races.Contains(race))
+        {
+            report.Errors.Add($"Route entries do not cover {race}.");
+        }
+    }
+
+    foreach (var pair in mutualExclusionGroups.Where(pair => pair.Value > 1))
+    {
+        report.Actions.Add($"Mutual exclusion group {pair.Key} has {pair.Value} route entries.");
+    }
+
+    if (report.Errors.Count == 0)
+    {
+        report.Actions.Add($"{routeEntries.Count} manifest route entries match PDV_PlayerEvents static quest-stage routing.");
     }
 }
 
@@ -825,6 +1008,8 @@ sealed class P2ReceiverManifest
     public string? schema { get; set; }
     public string? status { get; set; }
     public P2QuestStageGate? questStageGate { get; set; }
+    public P2RouteContract? routeContract { get; set; }
+    public List<P2RouteEntry>? routeEntries { get; set; }
     public List<P2ReceiverSourceProperty>? sourceProperties { get; set; }
     public List<P2SourceFillGroup>? sourceFillEntries { get; set; }
 }
@@ -840,6 +1025,35 @@ sealed class P2ReceiverSourceProperty
 {
     public string? property { get; set; }
     public List<string>? sourceKinds { get; set; }
+}
+
+sealed class P2RouteContract
+{
+    public string? status { get; set; }
+    public string? sourceOfTruth { get; set; }
+    public string? script { get; set; }
+    public string? verificationCommand { get; set; }
+    public string? rule { get; set; }
+}
+
+sealed class P2RouteEntry
+{
+    public string? id { get; set; }
+    public string? race { get; set; }
+    public string? property { get; set; }
+    public string? sourceKind { get; set; }
+    public string? formKey { get; set; }
+    public int expectedFormId { get; set; }
+    public int approvedStage { get; set; }
+    public string? routeKey { get; set; }
+    public string? dispatch { get; set; }
+    public string? acceptedContext { get; set; }
+    public string? rejectedContext { get; set; }
+    public string? duplicateGuard { get; set; }
+    public string? mutualExclusionGroup { get; set; }
+    public string? stageReadbackEvidence { get; set; }
+    public string? implementationStatus { get; set; }
+    public string? reviewStatus { get; set; }
 }
 
 sealed class P2SourceFillGroup
@@ -879,6 +1093,7 @@ sealed class AuthorReport
     public bool FillSourceEntries { get; set; }
     public bool CheckSourceFill { get; set; }
     public bool CheckExactStageGates { get; set; }
+    public bool CheckRouteEntries { get; set; }
     public DateTimeOffset StartedAt { get; set; }
     public DateTimeOffset FinishedAt { get; set; }
     public string? BackupPath { get; set; }

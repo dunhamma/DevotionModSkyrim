@@ -146,6 +146,18 @@ const PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST = path.join(
   "authoring",
   "PDV_Phase20_P2ImmersiveReceivers.manifest.json",
 );
+const PHASE20_REWARD_RECORD_CONTRACTS = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase20_RewardRecordContracts.json",
+);
+const PHASE20_CONTENT_HOOK_CLAUDE_REVIEW_PACKET = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_Phase20_ContentHook_ClaudeReviewPacket.md",
+);
 const CAT6_PROMOTION_MANIFEST = path.join(
   PROJECT_ROOT,
   "references",
@@ -3919,6 +3931,74 @@ class Verifier {
       }
     }
 
+    const routeContract = manifest.routeContract || {};
+    const routeEntries = Array.isArray(manifest.routeEntries) ? manifest.routeEntries : null;
+    if (routeContract.sourceOfTruth === "routeEntries"
+        && typeof routeContract.verificationCommand === "string"
+        && routeContract.verificationCommand.includes("--check-route-entries")) {
+      this.pass("Phase 20 P2 route contract", "Manifest declares routeEntries as the static route source of truth and names the route checker.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 P2 route contract", "Manifest must declare routeEntries as source of truth and include --check-route-entries.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    }
+
+    if (routeEntries && routeEntries.length >= 24) {
+      this.pass("Phase 20 P2 route entries", `${routeEntries.length} exact-stage route entries are declared.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 P2 route entries", `${routeEntries ? routeEntries.length : 0} exact-stage route entries are declared; expected at least 24.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    }
+
+    const declaredPropertyNames = new Set(properties.map((property) => property.property).filter(Boolean));
+    const routeKeys = new Set();
+    const routeRaces = new Set();
+    for (const entry of routeEntries || []) {
+      const missingFields = ["id", "race", "property", "sourceKind", "routeKey", "dispatch", "acceptedContext", "rejectedContext", "duplicateGuard", "stageReadbackEvidence", "implementationStatus", "reviewStatus"]
+        .filter((field) => !(typeof entry[field] === "string" && entry[field].trim().length > 0));
+      if (!(Number.isInteger(entry.expectedFormId) && entry.expectedFormId > 0)) {
+        missingFields.push("expectedFormId");
+      }
+      if (!(Number.isInteger(entry.approvedStage) && entry.approvedStage >= 0 && entry.approvedStage <= 65535)) {
+        missingFields.push("approvedStage");
+      }
+
+      const entryLabel = entry.id || "(unnamed route entry)";
+      if (missingFields.length === 0 && declaredPropertyNames.has(entry.property)) {
+        this.pass("Phase 20 P2 route entry", `${entryLabel} declares exact-stage route metadata.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 P2 route entry", `${entryLabel} missing ${missingFields.join(", ") || "declared property"}.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      }
+
+      if (typeof entry.routeKey === "string" && entry.routeKey.trim().length > 0) {
+        if (routeKeys.has(entry.routeKey)) {
+          this.phase20RaceCostingGap("Phase 20 P2 route key", `${entry.routeKey} is declared more than once.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+        }
+        routeKeys.add(entry.routeKey);
+      }
+      if (typeof entry.race === "string") {
+        routeRaces.add(entry.race);
+      }
+    }
+
+    for (const race of ["Altmer", "Argonian", "Bosmer", "Dunmer", "Khajiit", "Nord", "Orc", "Redguard"]) {
+      if (routeRaces.has(race)) {
+        this.pass("Phase 20 P2 exact-stage route race", `${race} has exact-stage route entries.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 P2 exact-stage route race", `${race} has no exact-stage route entry.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+      }
+    }
+
+    if (exists(PHASE20_CONTENT_HOOK_CLAUDE_REVIEW_PACKET)) {
+      const reviewPacket = fs.readFileSync(PHASE20_CONTENT_HOOK_CLAUDE_REVIEW_PACKET, "utf8");
+      if (reviewPacket.includes("not live-fill authority") && reviewPacket.includes("local quest-stage readback is authoritative")) {
+        this.pass("Phase 20 content hook review packet", "Weak/broad hooks are separated from live-fill authority.", PHASE20_CONTENT_HOOK_CLAUDE_REVIEW_PACKET);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 content hook review packet", "Review packet must state that it is not live-fill authority and that local quest-stage readback is authoritative.", PHASE20_CONTENT_HOOK_CLAUDE_REVIEW_PACKET);
+      }
+    } else {
+      this.phase20RaceCostingGap("Phase 20 content hook review packet", "Claude-review packet is missing.", PHASE20_CONTENT_HOOK_CLAUDE_REVIEW_PACKET);
+    }
+
+    this.checkPhase20RewardRecordContracts();
+
     for (const race of expectedRaces) {
       if (seenRaces.has(race)) {
         this.pass("Phase 20 P2 immersive race coverage", `${race} has receiver source properties.`, PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
@@ -3931,6 +4011,164 @@ class Verifier {
       this.pass("Phase 20 P2 immersive asset policy", "Receiver manifest requires no new mesh.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
     } else {
       this.phase20RaceCostingGap("Phase 20 P2 immersive asset policy", "Receiver manifest must explicitly state no new mesh is required.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
+    }
+  }
+
+  checkPhase20RewardRecordContracts() {
+    if (!exists(PHASE20_REWARD_RECORD_CONTRACTS)) {
+      this.phase20RaceCostingGap("Phase 20 reward record contracts", "Reward contract file is missing.", PHASE20_REWARD_RECORD_CONTRACTS);
+      return;
+    }
+
+    let contracts = null;
+    try {
+      contracts = JSON.parse(fs.readFileSync(PHASE20_REWARD_RECORD_CONTRACTS, "utf8"));
+    } catch (error) {
+      this.phase20RaceCostingGap("Phase 20 reward record contracts", `Could not parse reward contracts: ${error.message}`, PHASE20_REWARD_RECORD_CONTRACTS);
+      return;
+    }
+
+    if (contracts.schema === "pdv.phase20.reward-record-contracts.v1") {
+      this.pass("Phase 20 reward record contracts", "Reward contract schema is current.", PHASE20_REWARD_RECORD_CONTRACTS);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 reward record contracts", `Unexpected schema ${contracts.schema || "(missing)"}.`, PHASE20_REWARD_RECORD_CONTRACTS);
+    }
+
+    const recordsPending = contracts.status === "record-contracts-pending-esp-authoring";
+    const recordsAuthored = contracts.status === "records-authored-pending-manager-vmad-wire"
+      || contracts.status === "records-authored-manager-wired-pending-runtime-proof";
+    const managerWired = contracts.runtimeGrantStatus === "manager-wired-pending-runtime-proof";
+    const grantGateMentionsSmoke = typeof contracts.grantGate === "string"
+      && contracts.grantGate.includes("automated smoke");
+
+    if (recordsPending
+        && contracts.runtimeGrantStatus === "not-wired"
+        && grantGateMentionsSmoke) {
+      this.pass("Phase 20 reward grant boundary", "Reward contracts preserve the no-runtime-grant boundary before smoke.", PHASE20_REWARD_RECORD_CONTRACTS);
+    } else if (recordsAuthored
+        && managerWired
+        && grantGateMentionsSmoke
+        && contracts.grantGate.includes("runtime/manual")) {
+      this.pass("Phase 20 reward grant boundary", "Reward contracts are manager-wired but still gated before runtime/manual proof.", PHASE20_REWARD_RECORD_CONTRACTS);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 reward grant boundary", "Reward contracts must be either pending/no-runtime-grant or manager-wired with automated smoke plus runtime/manual proof gates.", PHASE20_REWARD_RECORD_CONTRACTS);
+    }
+
+    if (typeof contracts.authorCommand === "string"
+        && contracts.authorCommand.includes("pdv-phase20-reward-author")
+        && typeof contracts.checkCommand === "string"
+        && contracts.checkCommand.includes("--check")
+        && typeof contracts.wireCommand === "string"
+        && contracts.wireCommand.includes("--wire-manager")) {
+      this.pass("Phase 20 reward authoring commands", "Reward contracts declare author, wire, and readback commands.", PHASE20_REWARD_RECORD_CONTRACTS);
+    } else {
+      this.phase20RaceCostingGap("Phase 20 reward authoring commands", "Reward contracts must declare pdv-phase20-reward-author create/wire/check commands.", PHASE20_REWARD_RECORD_CONTRACTS);
+    }
+
+    this.checkSourceContains("Phase 20 reward manager source", "PDV__ManagerQuest", [
+      "Spell Property PDV_Bless_Altmer_Orthodox_T1 Auto",
+      "Spell Property PDV_Bless_Argonian_Hist_T1 Auto",
+      "Spell Property PDV_Bless_Bosmer_Yffre_T1 Auto",
+      "Spell Property PDV_Bless_Breton_Tradition_T1 Auto",
+      "Spell Property PDV_Bless_Dunmer_Reclamation_T1 Auto",
+      "Spell Property PDV_Bless_Imperial_Civic_T1 Auto",
+      "Spell Property PDV_Bless_Khajiit_Lunar_T1 Auto",
+      "Spell Property PDV_Bless_Nord_OldWays_T1 Auto",
+      "Spell Property PDV_Bless_Orc_Malacath_T1 Auto",
+      "Spell Property PDV_Bless_Redguard_AncestorSpine_T1 Auto",
+      "Function SyncFirstTierRaceRewardRuntime()",
+      "Function IsFirstTierRaceRewardEligible()",
+      "Function SyncRaceRewardSpell(Actor playerRef, Spell rewardSpell, Bool shouldBeActive, String rewardLabel)",
+      "StorageUtil.SetIntValue(None, \"PDV.RaceReward.T1Active\", 1)",
+      "GetPatronState() == PATRON_STATE_ACTIVE",
+    ], this.phase20RaceCostingGap.bind(this));
+
+    const entries = Array.isArray(contracts.races) ? contracts.races : [];
+    const seenRaces = new Set();
+    const requiredFields = [
+      "race",
+      "tier",
+      "spellEditorId",
+      "magicEffectEditorId",
+      "displayName",
+      "playerFacingText",
+      "recordReadbackAssertion",
+      "grantRemovalOwner",
+      "stackCapRule",
+      "daedricInteraction",
+      "implementationStatus",
+    ];
+    for (const entry of entries) {
+      const missing = requiredFields.filter((field) => !(typeof entry[field] === "string" && entry[field].trim().length > 0));
+      if (!Array.isArray(entry.effects) || entry.effects.length === 0) {
+        missing.push("effects");
+      }
+      const race = entry.race || "(unnamed race)";
+      if (missing.length === 0) {
+        this.pass("Phase 20 reward race contract", `${race} declares first-tier reward record and grant-boundary metadata.`, PHASE20_REWARD_RECORD_CONTRACTS);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 reward race contract", `${race} missing ${missing.join(", ")}.`, PHASE20_REWARD_RECORD_CONTRACTS);
+      }
+
+      if (entry.race) {
+        seenRaces.add(entry.race);
+      }
+
+      const text = `${entry.playerFacingText || ""} ${entry.notes || ""}`;
+      if (/[\u0080-\uffff]/.test(text)) {
+        this.phase20RaceCostingGap("Phase 20 reward text encoding", `${race} reward text must remain ASCII-safe.`, PHASE20_REWARD_RECORD_CONTRACTS);
+      }
+
+      for (const effect of entry.effects || []) {
+        const missingEffectFields = ["magicEffectEditorId", "displayName", "actorValue"].filter((field) => !(typeof effect[field] === "string" && effect[field].trim().length > 0));
+        if (!(typeof effect.magnitude === "number")) {
+          missingEffectFields.push("magnitude");
+        }
+        if (missingEffectFields.length === 0) {
+          this.pass("Phase 20 reward effect contract", `${race} effect ${effect.magicEffectEditorId} declares actor value and provisional magnitude.`, PHASE20_REWARD_RECORD_CONTRACTS);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 reward effect contract", `${race} effect is missing ${missingEffectFields.join(", ")}.`, PHASE20_REWARD_RECORD_CONTRACTS);
+        }
+      }
+
+      if (!recordsPending) {
+        const spellRecord = this.recordsByEdid.get(entry.spellEditorId);
+        if (spellRecord?.type === "SPEL") {
+          this.pass("Phase 20 reward spell record", `${entry.spellEditorId} exists as SPEL.`, PDV_ESP);
+        } else {
+          this.phase20RaceCostingGap("Phase 20 reward spell record", `${entry.spellEditorId} is missing as SPEL.`, PDV_ESP);
+        }
+
+        for (const effect of entry.effects || []) {
+          const effectRecord = this.recordsByEdid.get(effect.magicEffectEditorId);
+          if (effectRecord?.type === "MGEF") {
+            this.pass("Phase 20 reward magic effect record", `${effect.magicEffectEditorId} exists as MGEF.`, PDV_ESP);
+          } else {
+            this.phase20RaceCostingGap("Phase 20 reward magic effect record", `${effect.magicEffectEditorId} is missing as MGEF.`, PDV_ESP);
+          }
+        }
+      }
+    }
+
+    for (const race of ["Altmer", "Argonian", "Bosmer", "Breton", "Dunmer", "Imperial", "Khajiit", "Nord", "Orc", "Redguard"]) {
+      if (seenRaces.has(race)) {
+        this.pass("Phase 20 reward race coverage", `${race} has a first-tier reward contract.`, PHASE20_REWARD_RECORD_CONTRACTS);
+      } else {
+        this.phase20RaceCostingGap("Phase 20 reward race coverage", `${race} reward contract is missing.`, PHASE20_REWARD_RECORD_CONTRACTS);
+      }
+    }
+
+    if (managerWired) {
+      const manager = this.recordDetails.get("PDV__ManagerQuest");
+      const managerScript = manager ? findScript(manager.fields, "PDV__ManagerQuest") : null;
+      if (!managerScript) {
+        this.phase20RaceCostingGap("Phase 20 reward manager property", "PDV__ManagerQuest VMAD script is missing.", PDV_ESP);
+      } else {
+        const props = propertyMap(managerScript);
+        for (const entry of entries) {
+          this.checkObjectPropertyTarget("Phase 20 reward manager property", props, entry.spellEditorId, entry.spellEditorId, this.phase20RaceCostingGap.bind(this));
+        }
+      }
     }
   }
 
@@ -4271,10 +4509,30 @@ class Verifier {
     }
 
     const managerText = JSON.stringify(this.recordDetails.get("PDV__ManagerQuest")?.fields || {});
+    const rewardContractOwnsKhajiit = this.phase20RewardContractOwnsSpell(packet.spell);
     if (!managerText.includes(packet.spell)) {
       this.pass("Phase 20 CAT-6 grant restraint", "CAT-6 pilot has no manager grant/property wiring.", PDV_ESP);
+    } else if (rewardContractOwnsKhajiit) {
+      this.pass("Phase 20 CAT-6 grant restraint", "Khajiit CAT-6 spell wiring is owned by the all-race reward contract.", PHASE20_REWARD_RECORD_CONTRACTS);
     } else {
       this.phase20RaceCostingGap("Phase 20 CAT-6 grant restraint", "CAT-6 pilot spell is wired on the manager; grant logic is out of scope for this pilot.", PDV_ESP);
+    }
+  }
+
+  phase20RewardContractOwnsSpell(spellEditorId) {
+    if (!exists(PHASE20_REWARD_RECORD_CONTRACTS)) {
+      return false;
+    }
+
+    try {
+      const contracts = JSON.parse(fs.readFileSync(PHASE20_REWARD_RECORD_CONTRACTS, "utf8"));
+      return contracts.schema === "pdv.phase20.reward-record-contracts.v1"
+        && contracts.status === "records-authored-manager-wired-pending-runtime-proof"
+        && contracts.runtimeGrantStatus === "manager-wired-pending-runtime-proof"
+        && Array.isArray(contracts.races)
+        && contracts.races.some((entry) => entry?.spellEditorId === spellEditorId);
+    } catch {
+      return false;
     }
   }
 

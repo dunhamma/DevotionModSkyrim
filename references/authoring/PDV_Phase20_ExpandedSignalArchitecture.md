@@ -1,9 +1,9 @@
 # PDV Phase 20 — Expanded Signal Architecture
 
 **Created:** 2026-06-03
-**Status:** Architecture proposal — no ESP writes authorized until user approval
+**Status:** Historical architecture proposal, reconciled 2026-06-04 - no ESP writes authorized from this document
 **Companion files:**
-- `PDV_Phase20_P2ImmersiveReceivers.manifest.json` — current approved fills
+- `PDV_Phase20_P2ImmersiveReceivers.manifest.json` — current all-race P2 receiver, route, and approved-fill authority
 - `PDV_Phase20_SourceCurationDossier.md` — quest-stage readback source
 - `PDV_Phase20_P2SourceCuration_Runbook.md` — fill rules and hard stops
 
@@ -11,9 +11,10 @@
 
 ## Purpose
 
-The initial P2 fill tranche approved 12 book-read sources across 4 races (Breton,
-Dunmer, Imperial, Nord). The remaining 6 races (Altmer, Argonian, Bosmer,
-Khajiit, Orc, Redguard) have no P2 FLST properties at all.
+This document began as a proposal after the initial P2 fill tranche. It is now
+historical context: the live P2 receiver manifest has all 34 `PDV_FLST_P2_*`
+receiver shells wired across all ten races, 29 approved book entries read back,
+and manifest-owned exact-stage route entries for the strong quest-stage branches.
 
 This document proposes two expansion tranches:
 
@@ -21,9 +22,10 @@ This document proposes two expansion tranches:
 FLSTs. Additional books and quest-stage entries aligned to each race's theological
 structure and route families.
 
-**Tranche B — New FLST proposals** for the 6 races with no P2 receivers. New
-`PDV_FLST_P2_*` property shells, route assignments, book candidates, and quest-stage
-candidates. These require new shell creation before any fill can run.
+**Tranche B — Historical new-FLST proposals** for the races that previously had
+no P2 receivers. The shell-creation part is complete in the live manifest; the
+candidate rows here are not fill authority unless promoted into
+`PDV_Phase20_P2ImmersiveReceivers.manifest.json`.
 
 **Anti-farm policy remains unchanged.** Books: one-shot per formKey per character.
 Quest stages: one-shot per terminal/source-marked stage. Daily piety cap applies
@@ -534,14 +536,12 @@ They need a receiver branch added to `PDV_PlayerEvents.psc` that processes
 | Imperial / Nord | CW01B Joining Stormcloaks | Same |
 | Imperial | CW01A Destroy Dark Brotherhood | DB destruction path requires scripted intent validation |
 
-### Priority 4 — New FLST shells (Tranche B, Phase 21)
+### Priority 4 — Historical New FLST Shells (Tranche B)
 
-All 16 new FLST properties proposed in Tranche B require:
-1. CK shell creation for each new `PDV_FLST_P2_*` record
-2. New alias property on `PDV_Player` alias
-3. `formListShellReadback` and `aliasPropertyReadback` tool passes
-4. EventBus route functions for new race routing families
-5. Then this document's book/quest-stage candidates can be submitted to the fill tool
+The new `PDV_FLST_P2_*` receiver shells and `PDV_Player` alias properties are now
+represented by the current P2 receiver manifest. This section remains useful only
+for candidate provenance; candidates still require promotion to the manifest,
+source-fill ledger approval, and verifier/readback proof before any fill tool run.
 
 ---
 

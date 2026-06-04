@@ -1,0 +1,275 @@
+{
+  "schema": "pdv.phase20.reward-record-contracts.v1",
+  "status": "records-authored-manager-wired-pending-runtime-proof",
+  "runtimeGrantStatus": "manager-wired-pending-runtime-proof",
+  "owner": "references/authoring/PDV_RaceEffectReviewLedger.md plus references/authoring/PDV_RaceRewardBudgetLedger.md",
+  "authorCommand": "dotnet run --project .\\tools\\pdv-phase20-reward-author\\PdvPhase20RewardAuthor.csproj -- --create-missing",
+  "wireCommand": "dotnet run --project .\\tools\\pdv-phase20-reward-author\\PdvPhase20RewardAuthor.csproj -- --wire-manager",
+  "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-reward-author\\PdvPhase20RewardAuthor.csproj -- --check",
+  "grantGate": "Manager runtime grants are wired only after automated smoke passes for content verify, strict Phase 20 verify, P2 source fill readback, exact-stage gates, route-entry verification, reward SPEL/MGEF readback, and remain pending runtime/manual proof for Active Effects display, save/load, Survey clarity, and balance feel.",
+  "grantOwner": "PDV__ManagerQuest dawn/state logic after record readback",
+  "globalStackRule": "One first-tier race reward active per player origin lane; suppress duplicate grants; remove stale first-tier race reward before adding another; never stack with a higher tier of the same race lane.",
+  "dialogueBoundary": "V1 remains non-voiced. Reward text may surface through spell/effect descriptions, Survey/status, notifications, message boxes, MCM, books/notes, shrine/service gates, or Prisma after separate UI proof.",
+  "races": [
+    {
+      "race": "Altmer",
+      "tier": "T1",
+      "lane": "Auri-El/Xarxes/Magnus baseline under Lorkhan crisis pressure",
+      "spellEditorId": "PDV_Bless_Altmer_Orthodox_T1",
+      "magicEffectEditorId": "PDV_MGEF_Bless_Altmer_Orthodox_T1",
+      "displayName": "Altmer Orthodox Steadiness",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Altmer_Orthodox_T1",
+          "displayName": "Altmer Orthodox Steadiness",
+          "actorValue": "MagickaRateMult",
+          "magnitude": 3.0,
+          "area": 0,
+          "duration": 0
+        }
+      ],
+      "playerFacingText": "Your discipline steadies the old Altmeri path without hiding the cost of the Dragonborn crisis.",
+      "recordReadbackAssertion": "SPEL PDV_Bless_Altmer_Orthodox_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
+      "grantRemovalOwner": "PDV__ManagerQuest dawn consolidation only after smoke; no event-time grant.",
+      "stackCapRule": "Suppress while Altmer curse/crisis penalty effect is active unless manager explicitly resolves precedence.",
+      "daedricInteraction": "Daedric champion effects outrank this T1 steadiness unless the Altmer path is explicitly reconciled.",
+      "implementationStatus": "contract-only-pending-esp-records",
+      "notes": "Magnitude provisional; prefer steadiness/discipline over broad magicka scaling."
+    },
+    {
+      "race": "Argonian",
+      "tier": "T1",
+      "lane": "Hist maintenance and community posture",
+      "spellEditorId": "PDV_Bless_Argonian_Hist_T1",
+      "magicEffectEditorId": "PDV_MGEF_Bless_Argonian_Hist_T1",
+      "displayName": "Argonian Hist Memory",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Argonian_Hist_T1",
+          "displayName": "Argonian Hist Memory",
+          "actorValue": "HealRateMult",
+          "magnitude": 3.0,
+          "area": 0,
+          "duration": 0
+        }
+      ],
+      "playerFacingText": "The Hist path keeps you steady when you act for memory, people, and survival.",
+      "recordReadbackAssertion": "SPEL PDV_Bless_Argonian_Hist_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
+      "grantRemovalOwner": "PDV__ManagerQuest dawn/state logic after Hist posture smoke.",
+      "stackCapRule": "Do not stack with Sithis-only edge rewards; manager chooses the active Argonian lane.",
+      "daedricInteraction": "Sithis and Daedric pressure may annotate or suppress the Hist reward, but should not silently double-stack it.",
+      "implementationStatus": "contract-only-pending-esp-records",
+      "notes": "Keep effect defensive/survival-facing, not a generic poison or disease bundle unless balance review approves it."
+    },
+    {
+      "race": "Bosmer",
+      "tier": "T1",
+      "lane": "Y'ffre living story and exchange parity",
+      "spellEditorId": "PDV_Bless_Bosmer_Yffre_T1",
+      "magicEffectEditorId": "PDV_MGEF_Bless_Bosmer_Yffre_T1",
+      "displayName": "Bosmer Living Story",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Bosmer_Yffre_T1",
+          "displayName": "Bosmer Living Story",
+          "actorValue": "StaminaRateMult",
+          "magnitude": 3.0,
+          "area": 0,
+          "duration": 0
+        }
+      ],
+      "playerFacingText": "The living story answers when pact, exchange, and road wisdom remain in balance.",
+      "recordReadbackAssertion": "SPEL PDV_Bless_Bosmer_Yffre_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
+      "grantRemovalOwner": "PDV__ManagerQuest Bosmer path state at dawn after smoke.",
+      "stackCapRule": "Only one Bosmer path reward active; suppress when Baan Dar or Z'en lane is selected.",
+      "daedricInteraction": "Hircine hunt pressure is an edge, not a free stack with Y'ffre T1.",
+      "implementationStatus": "contract-only-pending-esp-records",
+      "notes": "Avoid generic archery-only reward; needs path/playstyle breadth."
+    },
+    {
+      "race": "Breton",
+      "tier": "T1",
+      "lane": "Knightly vow, hidden art, and Green Way tradition choice",
+      "spellEditorId": "PDV_Bless_Breton_Tradition_T1",
+      "magicEffectEditorId": "PDV_MGEF_Bless_Breton_Tradition_T1",
+      "displayName": "Breton Tradition",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Breton_Tradition_T1",
+          "displayName": "Breton Tradition",
+          "actorValue": "ResistMagic",
+          "magnitude": 3.0,
+          "area": 0,
+          "duration": 0
+        }
+      ],
+      "playerFacingText": "Your chosen Breton tradition holds shape through vow, hidden art, or the green road.",
+      "recordReadbackAssertion": "SPEL PDV_Bless_Breton_Tradition_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
+      "grantRemovalOwner": "PDV__ManagerQuest Breton tradition state at dawn after smoke.",
+      "stackCapRule": "Only the current Breton tradition T1 may be active; remove stale tradition effects on state change.",
+      "daedricInteraction": "Daedric occult pressure may explain hidden-art tension but must not auto-upgrade this reward.",
+      "implementationStatus": "contract-only-pending-esp-records",
+      "notes": "Keep broad enough for knight/mage/nature play without rewarding generic spell spam."
+    },
+    {
+      "race": "Dunmer",
+      "tier": "T1",
+      "lane": "Reclamation focus and ancestor discipline",
+      "spellEditorId": "PDV_Bless_Dunmer_Reclamation_T1",
+      "magicEffectEditorId": "PDV_MGEF_Bless_Dunmer_Reclamation_T1",
+      "displayName": "Dunmer Reclamation",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Dunmer_Reclamation_T1",
+          "displayName": "Dunmer Reclamation",
+          "actorValue": "ResistFire",
+          "magnitude": 3.0,
+          "area": 0,
+          "duration": 0
+        }
+      ],
+      "playerFacingText": "The Reclamations answer a disciplined path; deviation still carries a price.",
+      "recordReadbackAssertion": "SPEL PDV_Bless_Dunmer_Reclamation_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
+      "grantRemovalOwner": "PDV__ManagerQuest Dunmer focus state at dawn after smoke.",
+      "stackCapRule": "Only one Reclamation focus reward active; deviation price suppresses the matching T1 when unresolved.",
+      "daedricInteraction": "Azura, Boethiah, and Mephala lanes remain distinct from generic Daedric champion effects.",
+      "implementationStatus": "contract-only-pending-esp-records",
+      "notes": "Avoid flattening Azura/Boethiah/Mephala into one generic Daedra reward in final tuning."
+    },
+    {
+      "race": "Imperial",
+      "tier": "T1",
+      "lane": "Civic service, lawful patronage, and private/public Talos pressure",
+      "spellEditorId": "PDV_Bless_Imperial_Civic_T1",
+      "magicEffectEditorId": "PDV_MGEF_Bless_Imperial_Civic_T1",
+      "displayName": "Imperial Civic Duty",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Imperial_Civic_T1",
+          "displayName": "Imperial Civic Duty",
+          "actorValue": "SpeechcraftModifier",
+          "magnitude": 3.0,
+          "area": 0,
+          "duration": 0
+        }
+      ],
+      "playerFacingText": "Civic duty lends order to your worship, even where public and private loyalties diverge.",
+      "recordReadbackAssertion": "SPEL PDV_Bless_Imperial_Civic_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
+      "grantRemovalOwner": "PDV__ManagerQuest Imperial civic state at dawn after smoke.",
+      "stackCapRule": "Do not stack civic T1 with an unresolved Talos-pressure penalty or private-Talos privilege.",
+      "daedricInteraction": "Daedric patron rewards should suppress civic T1 only when manager state declares public rupture.",
+      "implementationStatus": "contract-only-pending-esp-records",
+      "notes": "Civil War oath validators remain review-gated until branch evidence is stronger."
+    },
+    {
+      "race": "Khajiit",
+      "tier": "T1",
+      "lane": "Lunar substrate and focused emphasis",
+      "spellEditorId": "PDV_Bless_Khajiit_Lunar_T1",
+      "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen",
+      "displayName": "Khajiit Lunar Road",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen",
+          "displayName": "Khajiit Lunar Road - Stamina",
+          "actorValue": "StaminaRateMult",
+          "magnitude": 5.0,
+          "area": 0,
+          "duration": 0,
+          "nightOnly": true
+        },
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist",
+          "displayName": "Khajiit Lunar Road - Disease",
+          "actorValue": "ResistDisease",
+          "magnitude": 10.0,
+          "area": 0,
+          "duration": 0,
+          "nightOnly": true
+        }
+      ],
+      "playerFacingText": "The moons have noticed how you move. At night, your stamina regenerates 5% faster and your resistance to disease rises by 10%.",
+      "recordReadbackAssertion": "Pilot-provisional SPEL PDV_Bless_Khajiit_Lunar_T1 exists, carries night-gated stamina/disease MGEFs, preserves CAT-6 source text, and is manager-wired through the all-race reward contract.",
+      "grantRemovalOwner": "PDV__ManagerQuest Khajiit lunar substrate at dawn after smoke.",
+      "stackCapRule": "No more than one Khajiit lunar T1 active; night-gated subeffects must not bypass manager suppression.",
+      "daedricInteraction": "Azurah focus and Daedric champion effects are explicit overlays, not silent additions.",
+      "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
+      "notes": "Current CAT-6 pilot record is preserved as the Khajiit T1 reward packet; broad grant behavior is now owned by the all-race reward contract, not by the standalone CAT-6 pilot."
+    },
+    {
+      "race": "Nord",
+      "tier": "T1",
+      "lane": "Old ways, Kyne/Talos context, and Hircine/Arkay edge",
+      "spellEditorId": "PDV_Bless_Nord_OldWays_T1",
+      "magicEffectEditorId": "PDV_MGEF_Bless_Nord_OldWays_T1",
+      "displayName": "Nord Old Ways",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Nord_OldWays_T1",
+          "displayName": "Nord Old Ways",
+          "actorValue": "StaminaRateMult",
+          "magnitude": 3.0,
+          "area": 0,
+          "duration": 0
+        }
+      ],
+      "playerFacingText": "The old ways steady a Nord who keeps voice, kin, and hard choices in view.",
+      "recordReadbackAssertion": "SPEL PDV_Bless_Nord_OldWays_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
+      "grantRemovalOwner": "PDV__ManagerQuest Nord broad-lane state at dawn after smoke.",
+      "stackCapRule": "Suppress during unresolved Nord vampire rupture and do not stack with Hircine/Arkay edge effects.",
+      "daedricInteraction": "Hircine pressure is edge-state content; it must not auto-stack with old-ways T1.",
+      "implementationStatus": "contract-only-pending-esp-records",
+      "notes": "Keep Kyne/Talos context visible without making every shout a reward loop."
+    },
+    {
+      "race": "Orc",
+      "tier": "T1",
+      "lane": "Malacath conduct, stronghold/city/legion life mode",
+      "spellEditorId": "PDV_Bless_Orc_Malacath_T1",
+      "magicEffectEditorId": "PDV_MGEF_Bless_Orc_Malacath_T1",
+      "displayName": "Orc Malacath Conduct",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Orc_Malacath_T1",
+          "displayName": "Orc Malacath Conduct",
+          "actorValue": "DamageResist",
+          "magnitude": 3.0,
+          "area": 0,
+          "duration": 0
+        }
+      ],
+      "playerFacingText": "Malacath's measure holds when exile, duty, and strength are carried with discipline.",
+      "recordReadbackAssertion": "SPEL PDV_Bless_Orc_Malacath_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
+      "grantRemovalOwner": "PDV__ManagerQuest Orc life-mode state at dawn after smoke.",
+      "stackCapRule": "Only one Orc life-mode T1 active; city, legion, and stronghold variants cannot stack.",
+      "daedricInteraction": "Malacath is foreground for Orcs; generic Daedric champion effects still require explicit precedence.",
+      "implementationStatus": "contract-only-pending-esp-records",
+      "notes": "Avoid narrow warrior-only reward; support labor/duty/survival alongside combat."
+    },
+    {
+      "race": "Redguard",
+      "tier": "T1",
+      "lane": "Ancestor spine, Crown/Forebear/Ash'abah/Far Shores sect pressure",
+      "spellEditorId": "PDV_Bless_Redguard_AncestorSpine_T1",
+      "magicEffectEditorId": "PDV_MGEF_Bless_Redguard_AncestorSpine_T1",
+      "displayName": "Redguard Ancestor Spine",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Bless_Redguard_AncestorSpine_T1",
+          "displayName": "Redguard Ancestor Spine",
+          "actorValue": "WeaponSpeedMult",
+          "magnitude": 3.0,
+          "area": 0,
+          "duration": 0
+        }
+      ],
+      "playerFacingText": "The ancestor spine steadies your sect path without making every compromise clean.",
+      "recordReadbackAssertion": "SPEL PDV_Bless_Redguard_AncestorSpine_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
+      "grantRemovalOwner": "PDV__ManagerQuest Redguard sect state at dawn after smoke.",
+      "stackCapRule": "Only one Redguard sect T1 active; Crown, Forebear, Ash'abah, and Far Shores variants resolve through manager state.",
+      "daedricInteraction": "Daedric pressure may suppress or annotate sect standing but must not silently grant a second T1.",
+      "implementationStatus": "contract-only-pending-esp-records",
+      "notes": "MS08 branch routes are static-verified but not live source-fill authority yet."
+    }
+  ]
+}
