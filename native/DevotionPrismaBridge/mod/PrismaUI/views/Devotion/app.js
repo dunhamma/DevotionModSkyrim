@@ -23,6 +23,9 @@
     ["mara", "Mara"],
     ["stendarr", "Stendarr"],
     ["zenithar", "Zenithar"],
+    ["yffre", "Y'ffre"],
+    ["zen", "Z'en"],
+    ["baan-dar", "Baan Dar"],
     ["dawn", "Dawn"],
     ["journal", "Journal"],
   ];
@@ -81,6 +84,30 @@
       ["path", { d: "M15 32h18l4 6H11l4 -6Z" }],
       ["path", { d: "M18 19l8 -8 5 5 -8 8" }],
       ["path", { d: "M14 23l8 8" }],
+    ],
+    yffre: [
+      ["path", { d: "M24 38 C18 38 12 34 11 28" }],
+      ["path", { d: "M24 38 C30 38 36 34 37 28" }],
+      ["path", { d: "M24 38 V20" }],
+      ["path", { d: "M24 20 C16 20 10 16 10 10 C10 8 12 8 14 10 C16 12 18 14 24 14" }],
+      ["path", { d: "M24 20 C32 20 38 16 38 10 C38 8 36 8 34 10 C32 12 30 14 24 14" }],
+      ["circle", { cx: "24", cy: "14", r: "3", class: "symbol-thin" }],
+    ],
+    zen: [
+      ["path", { d: "M24 12 V32" }],
+      ["path", { d: "M18 32 H30" }],
+      ["path", { d: "M14 20 H34" }],
+      ["path", { d: "M14 20 L12 28 H20 L18 20", class: "symbol-thin" }],
+      ["path", { d: "M34 20 L32 28 H40 L38 20", class: "symbol-thin" }],
+      ["circle", { cx: "24", cy: "12", r: "2" }],
+    ],
+    "baan-dar": [
+      ["path", { d: "M16 14 C12 16 10 20 10 24 C10 34 16 38 24 38 C32 38 38 34 38 24 C38 20 36 16 32 14 Z" }],
+      ["path", { d: "M24 10 V38" }],
+      ["path", { d: "M14 22 C14 20 16 19 18 20", class: "symbol-thin" }],
+      ["circle", { cx: "30", cy: "22", r: "2.5" }],
+      ["path", { d: "M27 18 C28 17 32 17 33 18", class: "symbol-thin" }],
+      ["path", { d: "M18 10 C20 8 28 8 30 10" }],
     ],
   };
 
@@ -224,6 +251,13 @@
     tier_up: "tier",
     tier_change: "tier",
     rival: "rivalry",
+    path_shift: "shift",
+    mode_change: "shift",
+    track_shift: "shift",
+    daedric_boon: "daedric",
+    daedric_price: "daedric",
+    daedric_lapse: "daedric",
+    daedric_residue: "daedric",
   };
 
   const eventName = (payload = {}) => {
@@ -256,6 +290,15 @@
     }
     if (!normalized.rival) {
       normalized.rival = text(payload.rivalName, "");
+    }
+    if (!normalized.shiftMode) {
+      normalized.shiftMode = text(payload.shiftMode || payload.mode || payload.state, "");
+    }
+    if (!normalized.prince) {
+      normalized.prince = text(payload.prince || payload.daedra || payload.daedricPrince, "");
+    }
+    if (!normalized.phase) {
+      normalized.phase = text(payload.phase || payload.daedricPhase, "");
     }
 
     return normalized;
@@ -314,6 +357,77 @@
       listTitle: () => "Rivalry stirred",
       listText: (payload) => `${text(payload.rival || payload.rivalName, "A rival path")} has taken note.`,
     },
+    shift: {
+      tone: () => "neutral",
+      symbol: (payload) => text(payload.symbol, "journal"),
+      title: (payload) => {
+        const mode = text(payload.shiftMode, "");
+        return mode ? `Path settles: ${mode}` : "Your path shifts";
+      },
+      message: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const mode = text(payload.shiftMode, "");
+        return mode
+          ? `${mode} shapes what comes next.`
+          : "Your practice has found a new shape.";
+      },
+      listTitle: (payload) => text(payload.shiftMode, "Path shift"),
+      listText: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const mode = text(payload.shiftMode, "");
+        return mode
+          ? `${mode} is now the shape of your practice.`
+          : "Your path has settled into a new mode.";
+      },
+    },
+    daedric: {
+      tone: (payload) => {
+        const phase = text(payload.phase, "");
+        if (phase === "boon") return "good";
+        if (phase === "residue") return "neutral";
+        return "warning";
+      },
+      symbol: (payload) => text(payload.symbol, "journal"),
+      title: (payload) => {
+        const prince = text(payload.prince, "A Daedric Prince");
+        const phase = text(payload.phase, "");
+        if (phase === "boon") return `${prince} is satisfied`;
+        if (phase === "price") return `${prince}'s price stirs`;
+        if (phase === "lapse") return `${prince}'s hold breaks`;
+        if (phase === "residue") return "Residue lingers";
+        return `${prince} takes note`;
+      },
+      message: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const phase = text(payload.phase, "");
+        const prince = text(payload.prince, "The Prince");
+        if (phase === "boon") return "The rite was answered.";
+        if (phase === "price") return `${possessive(prince)} cost is rising.`;
+        if (phase === "lapse") return "The path has been released.";
+        if (phase === "residue") return "The mark has not fully faded.";
+        return "Something stirs in that quarter.";
+      },
+      listTitle: (payload) => {
+        const prince = text(payload.prince, "Daedric");
+        const phase = text(payload.phase, "");
+        if (phase === "boon") return `${prince}: boon`;
+        if (phase === "price") return `${prince}: price`;
+        if (phase === "lapse") return `${prince}: lapse`;
+        if (phase === "residue") return `${prince}: residue`;
+        return `${prince}: contact`;
+      },
+      listText: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const phase = text(payload.phase, "");
+        return phase === "boon"
+          ? "The rite was counted."
+          : "The Prince has noticed.";
+      },
+    },
   };
 
   const resolveEventPayload = (payload = {}) => {
@@ -329,7 +443,8 @@
     }
 
     const resolved = { ...normalized, event: name };
-    resolved.tone = text(normalized.tone, language.tone);
+    const languageTone = typeof language.tone === "function" ? language.tone(normalized) : language.tone;
+    resolved.tone = text(normalized.tone, languageTone);
     resolved.symbol = text(normalized.symbol, language.symbol(normalized));
     resolved.title = text(normalized.title, language.title(normalized));
     resolved.message = text(normalized.message, language.message(normalized));
@@ -726,6 +841,15 @@
     neglect: { event: "neglect", deity: "Kyne" },
     tier: { event: "tier", deity: "Kyne", symbol: "kyne", tierLabel: "Devoted" },
     rivalry: { event: "rivalry", rival: "Auri-El", rivalSymbol: "auri-el" },
+    shift_khajiit: { event: "shift", shiftMode: "Khenarthi", symbol: "khenarthi" },
+    shift_argonian: { event: "shift", shiftMode: "Hist Strained", symbol: "hist" },
+    shift_orc: { event: "shift", shiftMode: "Stronghold", symbol: "malacath" },
+    shift_redguard: { event: "shift", shiftMode: "Crown" },
+    shift_bosmer: { event: "shift", shiftMode: "Old Contract", symbol: "yffre" },
+    daedric_boon: { event: "daedric", prince: "Hircine", phase: "boon", symbol: "hircine" },
+    daedric_price: { event: "daedric", prince: "Hircine", phase: "price", symbol: "hircine", context: "Stigma has been rising." },
+    daedric_lapse: { event: "daedric", prince: "Hircine", phase: "lapse", symbol: "hircine" },
+    daedric_residue: { event: "daedric", prince: "Hircine", phase: "residue", symbol: "hircine" },
   };
 
   window.PDVDemo = () => {
