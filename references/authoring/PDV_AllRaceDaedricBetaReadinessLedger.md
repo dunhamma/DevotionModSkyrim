@@ -38,10 +38,11 @@ Known warning: unnamed CK-authored INFO records in PlayerDevotion_Framework.esp
 
 P2 book runtime checker:
 node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager
-Result: FAIL overall
-Current 2026-06-04 log pass: Dunmer Azura, Dunmer Boethiah, Imperial public Talos, Nord Old Ways, Nord Hircine/Arkay, Altmer Auri-El, Altmer Magnus, Altmer Xarxes, Argonian Hist, Khajiit Lunar, Orc Malacath
+Result: PASS across session logs for all approved filled P2 book families; FAIL only if requiring one current Papyrus.0.log sweep after log rotation
+Papyrus.1.log pass: Dunmer Azura, Dunmer Boethiah, Imperial public Talos, Nord Old Ways, Nord Hircine/Arkay, Altmer Auri-El, Altmer Magnus, Altmer Xarxes, Argonian Hist, Khajiit Lunar, Orc Malacath
+Papyrus.0.log pass: Redguard ancestor spine
 Earlier log pass: Breton Hidden Art
-Current missing runtime proof: Redguard ancestor spine; fresh Breton Hidden Art only if a same-log full set is desired
+Current missing runtime proof: none for approved filled P2 book families across session logs; fresh same-log full sweep remains optional only
 ```
 
 ## Race Runtime And Manual Gap
@@ -52,7 +53,7 @@ Current missing runtime proof: Redguard ancestor spine; fresh Breton Hidden Art 
 | Khajiit | Fail - runtime/manual proof deferred | Lunar book source manager-log proof passed on 2026-06-04 | Survey/status did not visibly change during smoke; wrong-origin, generic-source silence, stack snapshot, and feel remain pending |
 | Argonian | Fail - runtime/manual proof deferred | Hist book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
 | Orc | Fail - runtime/manual proof deferred | Malacath book source manager-log proof passed on 2026-06-04 | Startup UI overlap was observed and patched in live script; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
-| Redguard | Fail - runtime/manual proof deferred | Filled ancestor-spine book source lacks current manager-log proof | All manual slots pending |
+| Redguard | Fail - runtime/manual proof deferred | Ancestor-spine book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
 | Bosmer | Fail - runtime/manual proof deferred | P2 FormList shells exist; Bosmer P2 source shells are currently empty | All manual slots pending |
 | Breton | Fail - runtime/manual proof deferred | Hidden Art book source manager-log proof passed in an earlier log; rerun only if same-log proof is desired | All manual slots pending |
 | Dunmer | Fail - runtime/manual proof deferred | Azura and Boethiah book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |

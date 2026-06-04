@@ -420,7 +420,7 @@ const P2_BOOK_RACES = [
         id: "ancestor-spine-book",
         reference: "PDV_FLST_P2_RedguardSpineSources",
         required: ["RouteRedguardAncestorSpine complete: po3_book_redguard_spine"],
-        optional: ["Redguard sect signal recorded:"],
+        optional: ["Redguard ancestor spine routed with multiplier"],
       },
     ],
   },

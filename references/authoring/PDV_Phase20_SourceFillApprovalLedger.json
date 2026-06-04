@@ -20,8 +20,8 @@
     "formListGroups": 13
   },
   "runtimeRouteProof": {
-    "status": "partial-pass",
-    "checkedAt": "2026-06-04T13:20:17+10:00",
+    "status": "all-filled-families-pass-across-session-logs",
+    "checkedAt": "2026-06-04T14:29:12+10:00",
     "command": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
     "passedFamilies": [
       "PDV_FLST_P2_DunmerAzuraSources",
@@ -34,14 +34,14 @@
       "PDV_FLST_P2_AltmerXarxesSources",
       "PDV_FLST_P2_ArgonianHistSources",
       "PDV_FLST_P2_KhajiitLunarSources",
-      "PDV_FLST_P2_OrcMalacathSources"
+      "PDV_FLST_P2_OrcMalacathSources",
+      "PDV_FLST_P2_RedguardSpineSources"
     ],
     "earlierLogPassFamilies": [
       "PDV_FLST_P2_BretonHiddenArtSources"
     ],
-    "remainingFamilies": [
-      "PDV_FLST_P2_RedguardSpineSources"
-    ],
+    "remainingFamilies": [],
+    "logBoundary": "Papyrus.1.log proves Dunmer, Imperial, Nord, Altmer, Argonian, Khajiit, and Orc after the first smoke packet. Papyrus.0.log proves Redguard after the restart/log rotation. Breton Hidden Art remains earlier-log proof only unless a same-log full sweep is required.",
     "boundary": "Accepted-route log proof only. Wrong-origin rejection, generic-source silence, Survey/status clarity, stack snapshots, and true feel remain manual/runtime gates."
   },
   "approvalRules": [

@@ -179,7 +179,7 @@
     "Redguard": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race redguard",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --race redguard --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
           "status": "pending",
@@ -203,7 +203,8 @@
         },
         "immersiveHookProof": {
           "status": "pending",
-          "expected": "Prove Crown/Forebear sect, Ash'abah/Far Shores death-duty, and HoonDing cap hooks outside QASmoke without Arkay substitution, fast travel, combat, or undead farming."
+          "expected": "Prove Crown/Forebear sect, Ash'abah/Far Shores death-duty, and HoonDing cap hooks outside QASmoke without Arkay substitution, fast travel, combat, or undead farming.",
+          "note": "2026-06-04: Accepted P2 ancestor-spine book-route log proof recorded via strict manager checker in Papyrus.0.log after restart/log rotation. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
         },
         "assetStatus": {
           "status": "pending",
