@@ -60,10 +60,11 @@ first pass (`batch{1-5}_*.png`). Same contract as the other glyph docs (viewBox 
     ["path", { d: "M8 24 C4 20 6 14 4 10 M40 24 C44 20 42 14 44 10 M8 24 C4 28 6 34 4 38 M40 24 C44 28 42 34 44 38", class: "symbol-thin" }],
   ],
   "mehrunes-dagon": [  // (refined)
-    ["path", { d: "M24 6 C27 14 27 18 24 42 C21 18 21 14 24 6 Z" }],
-    ["path", { d: "M15 18 H33" }],
-    ["path", { d: "M16 18 L9 27 M32 18 L39 27" }],
-    ["path", { d: "M24 6 C27 14 27 18 24 42 C21 18 21 14 24 6 Z", class: "symbol-thin" }],
+    ["path", { d: "M24 15 C26 25 26 33 24 43 C22 33 22 25 24 15 Z" }],
+    ["path", { d: "M12 15 C18 18 19 12 24 15 C29 12 30 18 36 15" }],
+    ["path", { d: "M24 15 V8" }],
+    ["circle", { cx: "24", cy: "6", r: "2.4" }],
+    ["path", { d: "M18 19 L21 22 M30 19 L27 22", class: "symbol-thin" }],
   ],
   "sheogorath": [
     ["path", { d: "M24 8 C14 8 12 18 12 26 C12 36 18 42 24 42 Z" }],
@@ -154,9 +155,9 @@ first pass (`batch{1-5}_*.png`). Same contract as the other glyph docs (viewBox 
     ["path", { d: "M18 22 L24 30 L30 22", class: "symbol-thin" }],
   ],
   "tsun": [  // (refined)
-    ["path", { d: "M24 8 V40" }],
-    ["path", { d: "M24 12 C16 12 12 18 12 24 C18 24 22 20 24 16" }],
-    ["path", { d: "M24 12 C32 12 36 18 36 24 C30 24 26 20 24 16" }],
+    ["path", { d: "M24 9 V41" }],
+    ["path", { d: "M24 13 L12 16 L16 24 L24 20 Z" }],
+    ["path", { d: "M24 13 L36 16 L32 24 L24 20 Z" }],
   ],
   "stuhn": [  // (refined)
     ["path", { d: "M24 8 L37 13 V24 C37 32 31 38 24 41 C17 38 11 32 11 24 V13 Z" }],
@@ -203,9 +204,10 @@ first pass (`batch{1-5}_*.png`). Same contract as the other glyph docs (viewBox 
 
 ```js
   "satakal": [  // (refined)
-    ["path", { d: "M30 36 A14 14 0 1 1 33 18" }],
-    ["path", { d: "M33 18 L30 13 L36 15 L34 21 Z" }],
-    ["circle", { cx: "32", cy: "17", r: "0.9", class: "symbol-thin" }],
+    ["path", { d: "M27 11 A13.5 13.5 0 1 0 22 11" }],
+    ["path", { d: "M22 11 L17 8 L20 11 L17 14 Z" }],
+    ["path", { d: "M27 11 L31 10", class: "symbol-thin" }],
+    ["circle", { cx: "19.5", cy: "11", r: "0.8" }],
   ],
   "ruptga": [
     ["circle", { cx: "14", cy: "14", r: "1.8" }],

@@ -11,10 +11,10 @@ P={
  # --- Princes (lore-grounded) ---
  "molag-bal":[("path",{"d":"M24 40 V21"}),("circle",{"cx":"24","cy":"15","r":"6"}),
    *rays(24,15,6,9,8),("path",{"d":"M19 31 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0","class":"thin"})],   # spiked mace + chain link
-  "mehrunes-dagon":[("path",{"d":"M24 6 C27 14 27 18 24 42 C21 18 21 14 24 6 Z"}),
-   ("path",{"d":"M15 18 H33"}),
-   ("path",{"d":"M16 18 L9 27 M32 18 L39 27"}),
-   ("path",{"d":"M24 6 C27 14 27 18 24 42 C21 18 21 14 24 6 Z","class":"thin"})],
+  "mehrunes-dagon":[("path",{"d":"M24 15 C26 25 26 33 24 43 C22 33 22 25 24 15 Z"}),
+   ("path",{"d":"M12 15 C18 18 19 12 24 15 C29 12 30 18 36 15"}),
+   ("path",{"d":"M24 15 V8"}),("circle",{"cx":"24","cy":"6","r":"2.4"}),
+   ("path",{"d":"M18 19 L21 22 M30 19 L27 22","class":"thin"})],
  "namira":[("circle",{"cx":"24","cy":"22","r":"11"}),  # the Ring
    ("path",{"d":"M24 33 C18 38 18 42 24 44 C30 42 30 38 24 33"}),  # hanging vermin body
    ("path",{"d":"M21 38 L17 40 M27 38 L31 40 M22 41 L19 44 M26 41 L29 44","class":"thin"}),  # legs
@@ -40,9 +40,9 @@ P={
    ("path",{"d":"M30 14 A11 11 0 1 1 30 34 A8 11 0 1 0 30 14 Z"}),
    ("path",{"d":"M22 24 Q24 20 26 24","class":"thin"})],  # dance arc
  # --- Nord ---
- "tsun":[("path",{"d":"M24 8 V40"}),  # haft
-   ("path",{"d":"M24 12 C16 12 12 18 12 24 C18 24 22 20 24 16"}),  # axe bit L
-   ("path",{"d":"M24 12 C32 12 36 18 36 24 C30 24 26 20 24 16"})],  # axe bit R (double axe)
+ "tsun":[("path",{"d":"M24 9 V41"}),
+   ("path",{"d":"M24 13 L12 16 L16 24 L24 20 Z"}),
+   ("path",{"d":"M24 13 L36 16 L32 24 L24 20 Z"})],
  "stuhn":[("path",{"d":"M24 8 L37 13 V24 C37 32 31 38 24 41 C17 38 11 32 11 24 V13 Z"}),  # shield
    ("circle",{"cx":"21","cy":"22","r":"3","class":"thin"}),("path",{"d":"M23 24 L30 31 M27 31 H30 V28","class":"thin"})],  # key
  "trinimac":[("path",{"d":"M24 18 V42"}),("path",{"d":"M19 24 L24 18 L29 24"}),  # spear
@@ -52,9 +52,9 @@ P={
  # --- Redguard ---
  "leki":[("path",{"d":"M24 6 V40"}),("path",{"d":"M19 12 H29"}),  # sword
    ("path",{"d":"M14 22 C22 18 26 26 34 22","class":"thin"})],  # ephemeral feint
- "satakal":[("path",{"d":"M30 36 A14 14 0 1 1 33 18"}),  # body
-   ("path",{"d":"M33 18 L30 13 L36 15 L34 21 Z"}),  # head biting
-   ("circle",{"cx":"32","cy":"17","r":"0.9","class":"thin"})],
+ "satakal":[("path",{"d":"M27 11 A13.5 13.5 0 1 0 22 11"}),
+   ("path",{"d":"M22 11 L17 8 L20 11 L17 14 Z"}),
+   ("path",{"d":"M27 11 L31 10","class":"thin"}),("circle",{"cx":"19.5","cy":"11","r":"0.8"})],
  # --- Concepts ---
  "ashabah":[("path",{"d":"M24 6 V30"}),("path",{"d":"M19 11 H29","class":"thin"}),("path",{"d":"M24 30 L21 36 H27 Z"}),  # downward sword
    ("path",{"d":"M12 20 C16 26 32 26 36 20 C34 30 14 30 12 20 Z","class":"thin"})],  # shroud drape

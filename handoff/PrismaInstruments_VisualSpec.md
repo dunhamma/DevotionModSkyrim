@@ -129,6 +129,28 @@ slot (see concept cards for the reference look).
 
 ---
 
+## 3.5 State transforms (deepen / thin / silenced / act)
+
+Every instrument shares one set of **generic state transforms**, driven by `instrument.tier`,
+`instrument.primary`, and a `state` cue (and by the `substrate` toast `phase`). Apply these uniformly so the
+whole set reads consistently — see `scratch/prisma-art/instrument_states.png` for the rendered reference
+(lunar quiet/steady/strong/silenced; hist healthy/thin/silenced; ancestor base/deepen).
+
+| State | Trigger | Generic transform |
+|---|---|---|
+| **base / steady** | normal | full gold line-art (`--gold`), standard weight |
+| **quiet (low tier)** | `tier 0` / low `primary` | dim stroke (`#5f5a4e`), lit fill → muted, most "count" elements empty |
+| **deepen / strong** | `tier` up / high `primary` (`substrate/deepen`) | brighter; **add a soft glow ring** (`rgba(216,179,90,0.33)`, wide stroke, behind); **fill the focal accent**; +1 lit "count" element (phase dot / mask / canopy arc) |
+| **thin** | decay (`substrate/thin`, neglect) | mute everything to `#8a8275`, **opacity ≈ 0.55**, drop the outermost/accent elements, hollow the focal dot |
+| **silenced** | curse posture silences the substrate (e.g. vampire → Hist; see curse `phase`) | muted `#8a8275` + a **dashed diagonal veil** across the mark + dashed/broken primary outline → reads inert |
+| **act (pulse)** | a `substrate/<x>/act` toast | transient (~600ms): briefly add the glow ring on the focal element, then settle to base — a heartbeat, not a permanent change |
+
+Per-instrument "count" elements the transforms act on: lunar → the 8 phase dots + focus-star fill; hist →
+canopy arc count + crown-dot fill; ancestor → lit mask count; forge → flame height/heat; sects → active-sect
+ring; branch → growth-ring count; piety → bar fill + tier pips. Codex implements these as one shared
+`applyInstrumentState(slot, state)` layer over the per-`kind` renderers, so a new instrument inherits states
+for free.
+
 ## 4. Ambient (always-on) rendering
 
 When Codex Track B lands (`SetAmbientVisible`/`SendAmbientJson` → `window.ReceivePDVAmbientJson`):

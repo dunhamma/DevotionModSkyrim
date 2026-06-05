@@ -33,10 +33,10 @@ Only `meridia` stays a rayed sun (canonically "the Sunburst is her symbol"). `mo
 `broad` moved off the sun; `magnus` keeps a sun **with** an architect's compass (distinct enough);
 `trinimac`'s sun is a crown element, not the whole mark.
 
-## Still worth a glance (acceptable, not perfect)
-- `mehrunes-dagon` — improved, but the multi-blade can still read busy at 24px; a single ornate razor is a fallback.
-- `tsun` — the battleaxe reads slightly tulip/anchor-ish at 24px.
-- `satakal` — the bite point is legible but tight.
+## Second refinement pass (resolved)
+- `mehrunes-dagon` — redrawn as a clean ornate **Mehrunes' Razor** (dagger), dropping the busy four-arms.
+- `tsun` — redrawn as a clear angular **double-bitted battleaxe** (labrys), no longer tulip/anchor-ish.
+- `satakal` — fuller **ouroboros** loop with a clearer head-biting-tail at the gap.
 
 ## Unchanged & reading cleanly (first pass kept)
 **Princes:** `azura`, `hircine`, `hermaeus-mora`, `clavicus-vile`, `sanguine`, `sheogorath`, `mephala`, `meridia`, `peryite`, `malacath`.
