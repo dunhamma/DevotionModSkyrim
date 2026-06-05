@@ -24,7 +24,7 @@ This packet holds plausible but unapproved hooks that need lore review, branch p
 | Generic spell-learning filters | Breton hidden art, Altmer Magnus, Dunmer deviation | Current policy rejects generic spell learning; only curated occult/hidden-art spells may pass. | Spell whitelist with rationale, sourceKind `spell-learned`, and no broad school/category fill. |
 | Generic harvest/weather/nature loops | Breton Green Way, Argonian Hist, Bosmer Y'ffre | Broad environmental events can farm or misread normal travel. | Small curated source list, cooldown/duplicate guard, and Survey/status wording. |
 | Broad Daedric artifact possession | Dunmer, Khajiit, Orc, Redguard, all races | Artifact ownership alone often lacks branch intent and can conflict with race-specific theology. | Exact quest outcome or explicit manager-owned Daedric precedence contract. |
-| Reward stack escalation | All races plus all Daedric lanes | First-tier reward records are contract-only until readback and smoke; grants are intentionally unwired. | SPEL/MGEF readback, manager property wiring, one-active/stack-cap verifier, and targeted compile. |
+| Reward stack escalation | All races plus all Daedric lanes | First-tier race reward records and manager grant properties are now contract-owned and readback/smoke clean; future tier, Daedric, or stronger stack escalation is still unapproved. | Runtime Active Effects display, save/load behavior, stack snapshot, Survey clarity, and balance-feel proof before promotion. |
 
 ## Promotion Checklist
 

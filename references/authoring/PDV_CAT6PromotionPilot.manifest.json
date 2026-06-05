@@ -1,7 +1,7 @@
 {
   "schema": "pdv.cat6.promotion-pilot.v1",
   "status": "pilot-preserved-reward-contract-owned",
-  "updated": "2026-05-31",
+  "updated": "2026-06-04",
   "supersededGrantOwner": "references/authoring/PDV_Phase20_RewardRecordContracts.json",
   "sourceManifest": "race-sheets/PDV_RaceContent_Manifest.md",
   "allowedRows": ["PDV_Bless_Khajiit_Lunar_T1"],

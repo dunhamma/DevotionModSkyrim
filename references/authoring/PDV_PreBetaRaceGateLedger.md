@@ -29,6 +29,7 @@ Latest result after structured no-in-game gate guard: PASS=2160, WARN=1, INFO=28
 Latest result after structured manual-evidence intake guard: PASS=2322, WARN=1, INFO=28
 Latest result after CAT-6 Khajiit Tier 1 pilot readback: PASS=2342, WARN=1, INFO=28
 Latest result after all-race + Daedric beta-readiness refresh: PASS=2699, WARN=1, INFO=29
+Latest result after manifest-route and all-race reward-record wave: PASS=2814, WARN=1, INFO=29
 
 Runtime marker list:
 node .\tools\pdv_phase20_runtime_check.mjs --list
@@ -134,9 +135,9 @@ Reward floor: broad lunar Faithful feels complete through road, sky, rest, and c
 Reward ceiling: lunar substrate plus one focused emphasis plus one active contextual favor; no third loud steady package.
 Stack snapshot: lunar metric/tier/phase/observance/road-home count, focused emphasis, five focus weights, last road-home anchor, repeat rejection count, active favor, lunar posture, ShadowDrift/curse pressure, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race khajiit
-Next automatable action: run the holistic race-by-race effect review before using the CAT-6 Khajiit Tier 1 pilot mechanics as broader reward precedent.
-Deferred manual proof: same-anchor rejection, generic theft/dragon/moon-sugar silence, Survey display, immersive road/moon/focus hook proof, and asset-status confirmation.
-Blocking follow-up: prove anti-chore behavior; CAT-6 Khajiit Tier 1 now has a live pilot-provisional framework record, but it is grant-unwired and cannot stand in for Khajiit runtime reward proof.
+Next automatable action: none for reward authoring; all-race T1 record and grant wiring is contract-owned and verifier/readback clean.
+Deferred manual proof: same-anchor rejection, generic theft/dragon/moon-sugar silence, Survey display, immersive road/moon/focus hook proof, Active Effects display, save/load behavior, and asset-status confirmation.
+Blocking follow-up: prove anti-chore behavior and Khajiit reward feel in game; the reward is wired, but automated proof does not stand in for runtime display, stack, or balance proof.
 ```
 
 ### Argonian
@@ -319,8 +320,8 @@ First candidate remains `PDV_Bless_Khajiit_Lunar_T1`.
 Status: Pilot-provisional record/readback-proven
 Source row: race-sheets/PDV_RaceContent_Manifest.md Section 14.3
 Reason: low-risk passive non-dialogue blessing description tied to the Khajiit contrast lane: Lunar Lattice, road-home, moon, and caravan identity
-Readback result: source row exists; PDV_Bless_Khajiit_Lunar_T1 is present in PlayerDevotion_Framework.esp as a pilot-provisional direct-framework CAT-6 record; its two night-gated MGEF effects also read back
-Blocking follow-up: keep the pilot grant-unwired and run holistic race-effect review before full reward authoring
+Readback result: source row exists; PDV_Bless_Khajiit_Lunar_T1 is present in PlayerDevotion_Framework.esp; its two night-gated MGEF effects read back, and manager grant ownership is now under PDV_Phase20_RewardRecordContracts.json with the other race T1 rewards
+Blocking follow-up: runtime/manual proof for Active Effects display, save/load, Survey clarity, stack behavior, and balance feel
 Fallback: PDV_Bless_Bosmer_Exchange_T1 source row exists, but the live target EditorID is absent and still needs a target-record owner decision; fallback copy should stay in Exchange/Z'en debt, proper return, and Bandit Road/Baan Dar reversal space
 Not allowed for first pilot: Daedric stigma rows, Hircine/Molag Bal curse-access rows, dialogue
 ```

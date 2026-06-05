@@ -256,6 +256,10 @@ Current live log status (2026-06-04):
   P2 book sources and no automatic Prisma panel opening from P2 book-state
   changes. Prisma is still the intended replacement UI, but it is not the
   empirical P2 proof surface until its input behavior is proven.
+- Use `PDV_PrismaIntegrationBoundary.md` for the wider split: P2 gameplay proof
+  is manager/log/readback/notification/Survey/manual evidence; Prisma toasts,
+  panels, medallions, and future always-on HUD work are separate UI proof unless
+  readback or logs show the manager state itself is wrong.
 - Khajiit route proof passed before the patch, but the Survey/status text did
   not visibly change during smoke; keep Survey/status clarity pending until the
   patched route is rerun.
@@ -318,10 +322,10 @@ Check:
 - Same road-home anchor repeat does not become a loop.
 - Survey explains Lunar Lattice, moon practice, road-home cadence, and focus.
 - CAT-6 source row exists and `PDV_Bless_Khajiit_Lunar_T1` is present as a
-  live pilot-provisional framework ESP `SPEL` as of the 2026-05-31 readback
-  check. Its two pilot `MGEF` effects are night-gated and grant-unwired. Treat
-  this as record/readback/text proof only, not as manual feel proof, reward
-  distribution proof, or holistic race-effect approval.
+  live framework ESP `SPEL`. Its two `MGEF` effects are night-gated, and
+  Khajiit T1 grant ownership now comes from the all-race reward contract. Treat
+  the automated readback as record/text/wiring proof only, not as manual feel
+  proof, Active Effects display proof, save/load proof, or balance approval.
 
 ### Argonian
 

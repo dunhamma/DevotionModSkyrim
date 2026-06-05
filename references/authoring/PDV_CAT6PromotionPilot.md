@@ -261,8 +261,11 @@ Risk:
   pilot-provisional `MGEF` records.
 - Both effect entries are gated by `GetCurrentTime >= 19 OR <= 7`. The source
   row says "At night" so text matches the implemented condition.
-- The pilot remains grant-unwired. It proves record/readback/text promotion, not
-  full Khajiit reward distribution or balance.
+- The standalone grant-unwired boundary was superseded on 2026-06-04 by
+  `PDV_Phase20_RewardRecordContracts.json`, which owns Khajiit Tier 1 grant
+  wiring with the other nine race rewards. This proves record/readback/text
+  and manager wiring, not Active Effects display, save/load behavior, full
+  Khajiit reward feel, or balance.
 
 Implementation helper:
 
@@ -352,9 +355,11 @@ The Bosmer fallback remains valid because Exchange/Z'en debt, proper return,
 and Bandit Road/Baan Dar reversal are source-backed non-dialogue surfaces.
 
 Current implementation status: the Khajiit first candidate now has a live
-pilot-provisional `SPEL` plus two live pilot-provisional `MGEF` records in the
-framework ESP, created by the narrow CAT-6 helper. The Bosmer fallback still has
-a source row but no live target `SPEL`. This state is mirrored in
+`SPEL` plus two live `MGEF` records in the framework ESP. The original records
+were created by the narrow CAT-6 helper; grant ownership now sits with the
+all-race reward contract. The Bosmer Exchange fallback still has a source row
+but no live target `SPEL`; the all-race reward contract instead uses
+`PDV_Bless_Bosmer_Yffre_T1`. This state is mirrored in
 `PDV_Phase20_NoInGameProof_Gates.json`, described by
 `PDV_CAT6PromotionPilot.manifest.json`, and checked by
 `--strict-phase20-race-costing`.
