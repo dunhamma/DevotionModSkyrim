@@ -261,6 +261,9 @@
     curse_onset: "curse",
     curse_cure: "curse",
     curse_shift: "curse",
+    substrate_act: "substrate",
+    substrate_deepen: "substrate",
+    substrate_thin: "substrate",
   };
 
   const eventName = (payload = {}) => {
@@ -306,6 +309,12 @@
     if (!normalized.curse) {
       normalized.curse = text(payload.curse || payload.curseType, "");
     }
+    if (!normalized.substrate) {
+      normalized.substrate = text(payload.substrate, "");
+    }
+    if (!normalized.state) {
+      normalized.state = text(payload.state, "");
+    }
 
     return normalized;
   };
@@ -324,6 +333,16 @@
     if (curse === "vampire") return "Vampirism";
     if (curse === "werewolf") return "Lycanthropy";
     return "The curse";
+  };
+
+  const substrateName = (payload = {}) => {
+    const s = text(payload.substrate, "").toLowerCase();
+    if (s === "lunar") return "The moons";
+    if (s === "hist") return "The Hist";
+    if (s === "ancestor") return "Your ancestors";
+    if (s === "stronghold") return "The stronghold";
+    if (s === "sect") return "Your sect";
+    return "Your path";
   };
 
   const eventLanguage = {
@@ -475,6 +494,37 @@
         return text(payload.phase, "") === "cure"
           ? "The mark has been lifted."
           : "The curse weighs on your devotion.";
+      },
+    },
+    substrate: {
+      tone: (payload) => (text(payload.phase, "") === "thin" ? "warning" : "good"),
+      symbol: (payload) => text(payload.symbol, "journal"),
+      title: (payload) => {
+        const name = substrateName(payload);
+        const phase = text(payload.phase, "");
+        if (phase === "deepen") return `${name} deepen`;
+        if (phase === "thin") return `${name} thin`;
+        return `${name} answer`;
+      },
+      message: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const name = substrateName(payload);
+        const phase = text(payload.phase, "");
+        if (phase === "deepen") return `${name} hold you more strongly now.`;
+        if (phase === "thin") return `${name} are slipping from you.`;
+        return `${name} marked what you did.`;
+      },
+      listTitle: (payload) => {
+        const state = text(payload.state, "");
+        return state || substrateName(payload);
+      },
+      listText: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        return text(payload.phase, "") === "thin"
+          ? `${substrateName(payload)} need tending.`
+          : `${substrateName(payload)} are with you.`;
       },
     },
   };
@@ -903,6 +953,9 @@
     curse_cure_vampire: { event: "curse", phase: "cure", curse: "vampire", symbol: "curse-vampire", context: "The road opens again. The scar remains." },
     curse_onset_werewolf: { event: "curse", phase: "onset", curse: "werewolf", symbol: "curse-werewolf", context: "The hunt pulls against Sovngarde." },
     curse_shift: { event: "curse", phase: "shift", curse: "vampire", symbol: "curse-vampire" },
+    substrate_lunar: { event: "substrate", substrate: "lunar", phase: "act", symbol: "lunar", state: "Lattice: steady" },
+    substrate_deepen: { event: "substrate", substrate: "hist", phase: "deepen", symbol: "hist", state: "Hist: strong" },
+    substrate_thin: { event: "substrate", substrate: "ancestor", phase: "thin", symbol: "ancestor", state: "Ancestor layer: quiet" },
   };
 
   window.PDVDemo = () => {
