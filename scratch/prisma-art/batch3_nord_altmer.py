@@ -9,5 +9,6 @@ P={
  "syrabane":[("circle",{"cx":"24","cy":"27","r":"11"}),("path",{"d":"M24 16 L20 8 H28 Z"}),("circle",{"cx":"24","cy":"27","r":"4","class":"thin"})],
  "xarxes":[("path",{"d":"M14 12 C12 12 12 16 14 16 H32 C30 16 30 12 32 12 C36 12 36 36 32 36 H14 C12 36 12 32 14 32"}),("path",{"d":"M30 10 L36 22","class":"thin"}),("path",{"d":"M18 22 H27 M18 27 H24","class":"thin"})],
 }
-sheet(P,4,"batch3_nord_altmer.png","Batch 3 — Nord/Imperial + Altmer")
-print("ok",len(P))
+if __name__=='__main__':
+    sheet(P,4,"batch3_nord_altmer.png","Batch 3 — Nord/Imperial + Altmer")
+    print("ok",len(P))

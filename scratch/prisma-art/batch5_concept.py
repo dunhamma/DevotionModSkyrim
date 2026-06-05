@@ -11,5 +11,6 @@ P={
  "broad":[("circle",{"cx":"24","cy":"24","r":"5"})]+[("path",{"d":f"M{24+8*__import__('math').cos(k*3.1416/6):.1f} {24+8*__import__('math').sin(k*3.1416/6):.1f} L{24+13*__import__('math').cos(k*3.1416/6):.1f} {24+13*__import__('math').sin(k*3.1416/6):.1f}","class":"thin"}) for k in range(12)],
  "curse-vampire":[("path",{"d":"M32 10 A15 15 0 1 0 32 38 A12 15 0 1 1 32 10 Z"}),("path",{"d":"M20 24 L22 30 L24 24 M26 24 L28 29 L30 24","class":"thin"})],
 }
-sheet(P,4,"batch5_concept.png","Batch 5 — Tier-3 concept marks")
-print("ok",len(P))
+if __name__=='__main__':
+    sheet(P,4,"batch5_concept.png","Batch 5 — Tier-3 concept marks")
+    print("ok",len(P))

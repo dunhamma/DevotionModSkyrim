@@ -17,5 +17,6 @@ P={
  "peryite":[("path",{"d":"M24 24 m0 -3 a3 3 0 1 1 0 6 a7 7 0 1 1 0 -12 a11 11 0 1 1 0 20 a15 15 0 1 1 0 -28"}),("circle",{"cx":"36","cy":"10","r":"1.6","class":"thin"})],
  "vaermina":[("path",{"d":"M24 22 m0 -2 a2 2 0 1 1 0 4 a5 5 0 1 1 0 -8 a8 8 0 1 1 0 14"}),("path",{"d":"M14 36 A14 14 0 0 1 34 36","class":"thin"}),("path",{"d":"M18 40 L20 36 M24 41 V37 M30 40 L28 36","class":"thin"})],
 }
-sheet(P,4,"batch1_princes.png","Batch 1 — Daedric Princes (Tier 1)")
-print("ok",len(P))
+if __name__=='__main__':
+    sheet(P,4,"batch1_princes.png","Batch 1 — Daedric Princes (Tier 1)")
+    print("ok",len(P))

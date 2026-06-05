@@ -9,5 +9,6 @@ P={
  "sithis":[("circle",{"cx":"24","cy":"24","r":"14","class":"thin"}),("path",{"d":"M24 12 C16 18 16 30 24 36 C30 31 30 17 24 12 Z"})],
  "sep":[("path",{"d":"M14 14 C26 12 30 20 24 24 C18 28 22 36 34 34"}),("path",{"d":"M14 14 L11 11 M14 14 L11 17","class":"thin"}),("circle",{"cx":"33","cy":"34","r":"1.4"})],
 }
-sheet(P,4,"batch2_khajiit_argonian.png","Batch 2 — Khajiit lunar pantheon + Argonian abstract")
-print("ok",len(P))
+if __name__=='__main__':
+    sheet(P,4,"batch2_khajiit_argonian.png","Batch 2 — Khajiit lunar pantheon + Argonian abstract")
+    print("ok",len(P))

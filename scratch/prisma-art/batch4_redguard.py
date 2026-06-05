@@ -8,5 +8,6 @@ P={
  "onsi":[("path",{"d":"M14 40 C12 26 20 12 36 8 C34 12 34 14 36 16 C24 20 18 28 18 40 Z"}),("path",{"d":"M14 40 H22","class":"thin"})],
  "hoon-ding":[("path",{"d":"M12 12 L28 24 L12 36"}),("path",{"d":"M22 12 L38 24 L22 36"})],
 }
-sheet(P,4,"batch4_redguard.png","Batch 4 — Redguard / Yokudan")
-print("ok",len(P))
+if __name__=='__main__':
+    sheet(P,4,"batch4_redguard.png","Batch 4 — Redguard / Yokudan")
+    print("ok",len(P))
