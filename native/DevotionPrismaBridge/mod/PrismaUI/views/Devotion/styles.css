@@ -166,6 +166,71 @@ body.startup-visible .startup-modal {
   line-height: 1.35;
 }
 
+.startup-option.has-symbol {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.startup-option.is-disabled {
+  cursor: default;
+  opacity: 0.64;
+}
+
+.startup-option.is-disabled:hover,
+.startup-option.is-disabled:focus-visible {
+  border-color: var(--line);
+  background: rgba(16, 16, 14, 0.74);
+}
+
+.startup-option .list-symbol {
+  width: 34px;
+  height: 34px;
+}
+
+.medallion-section {
+  display: grid;
+  gap: 8px;
+}
+
+.medallion-section + .medallion-section {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.medallion-section h4 {
+  margin: 0;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.startup-detail-mark {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+  border: 1px solid rgba(216, 179, 90, 0.42);
+  border-radius: 50%;
+  color: var(--gold);
+}
+
+.option-status {
+  margin: 10px 0 0;
+  color: var(--blue);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.option-status.is-disabled {
+  color: var(--muted);
+}
+
 .startup-option-summary {
   margin: 0 0 8px;
   color: #fff8e8;
