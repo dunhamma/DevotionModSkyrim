@@ -67,6 +67,12 @@ Symbols marked with no glyph yet fall back to `journal` non-breakingly.
 
 ## What's next (ordered)
 
+> **Progress update — 2026-06-04, branch `claude/prisma-surfacing` (not yet on `main`):**
+> - **Item 1 (UI) — applied** to the repo `app.js`/`index.html`: Tier-0 glyphs (`yffre`/`zen`/`baan-dar`), and the `shift`, `daedric`, and `curse` event-language blocks + demo buttons. `resolveEventPayload` was extended to support function-valued `tone` (daedric/curse tones are phase-dependent). **The live `D:\Wabbajack\...\app.js` still needs the same edits copied over.**
+> - The missing **`PrismaCurseEvent_UIHandoff.md`** (referenced but never committed) was **reconstructed** from the live emit contract and applied.
+> - **Item 2 (Papyrus) — `price` + `lapse` done** in the `scratch/p2-toast-panel-fix` snapshot; **`residue` still pending** (blocked: lives in `PDV_DaedricPath_Hircine.psc`, not in the repo). **Item 5 (Dunmer depth) done** — quasi-patron label now reads "Ancestor layer: <depth>".
+> - **New: Medallion deity-coverage work — see item 6.**
+
 ### 1. UI design pass — apply handoff docs to `app.js` (frozen file, needs design agent)
 
 Four ready-to-apply handoff documents live in `handoff/`:
@@ -114,6 +120,20 @@ Dunmer's quasi-patron label is "Ancestor layer" (static). Unlike Argonian which 
 - Surface the raw substrate piety-equivalent as a progress note in acts (if `PDV_DunmerAncestorSubstrate` exposes a readable value)
 - Add Reclamation deity toasts (`azura` / `boethiah` / `mephala`) once Prince scoring lands — these would be the richer surface for Dunmer
 
+### 6. Medallion deity-roster surface — audit complete, design pass prepped
+
+The "medallion" (per-race patron-selection surface) does **not** present the full roster of
+gods/Princes a race can choose. Two new docs frame this; **keep them separate** from this handoff:
+
+| Doc | Role |
+|---|---|
+| `references/authoring/PDV_MedallionDeityCoverageAudit.md` | Audit only — per-race gap ledger (native gods + Princes vs. what's wired). Imperial complete; large gaps elsewhere; only Hircine of 16 Princes wired. |
+| `handoff/PrismaMedallionRoster_DesignHandoff.md` | Design-pass brief — access-tier model, the startup-modal payload as extension point, glyph dependencies, and the design decisions to resolve. |
+
+**Hard blocker called out in both:** the definitive scorable-deity set lives in the ESP FormList
+`PDV_FLST_AllDeities`, which is not in the repo. Dump it and reconcile against the audit's WIRED
+column before building — a medallion that offers an unscorable god is a dead button.
+
 ---
 
 ## Key constraints to carry forward
@@ -140,3 +160,5 @@ Dunmer's quasi-patron label is "Ancestor layer" (static). Unlike Argonian which 
 | `handoff/PrismaDaedricEvent_UIHandoff.md` | `app.js` drop-in for `daedric` event |
 | `references/authoring/PDV_PietySurfacingAudit.md` | Full audit + phasing plan |
 | `references/authoring/PDV_DeityCoverageMatrix.json` | Roster authority for Princes |
+| `references/authoring/PDV_MedallionDeityCoverageAudit.md` | Per-race god/Prince coverage gap ledger (audit only) |
+| `handoff/PrismaMedallionRoster_DesignHandoff.md` | Design-pass brief for the medallion roster chooser |

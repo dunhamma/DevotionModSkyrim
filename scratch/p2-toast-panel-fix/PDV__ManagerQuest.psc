@@ -538,10 +538,6 @@ Bool Function SendPrismaToast(String symbolName, String tone, String titleText, 
     return PDV_PrismaBridge.SendOverlayJson(payload)
 EndFunction
 
-Bool Function SendPrismaDeityToast(PDV_DeityBase deity, String tone, String titleText, String messageText)
-    return SendPrismaToast(GetPrismaSymbolForDeity(deity), tone, titleText, messageText)
-EndFunction
-
 Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String context, String tierLabel, String rival)
     if !PDV_PrismaBridge.IsAvailable()
         return False
@@ -850,7 +846,7 @@ String Function GetPanelQuasiPatronTierLabel(Int originRace)
         endIf
         return "Lunar Lattice"
     elseIf originRace == ORIGIN_DUNMER
-        return "Ancestor layer"
+        return "Ancestor layer: " + GetDunmerAncestorLayerLabel()
     elseIf originRace == ORIGIN_REDGUARD
         return GetRedguardSectLabel()
     elseIf originRace == ORIGIN_BOSMER
@@ -1868,12 +1864,25 @@ EndFunction
 Function HandleHircineHuntRite(String reason)
     if PDV_HircinePath
         Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.HircineHuntRite")
+        Float stigmaBefore = PDV_HircinePath.GetStigma()
         PDV_HircinePath.RecordHuntRiteScaled(multiplier, reason)
         if multiplier > 0.0
             SendPrismaDaedricToast("Hircine", "boon", "", "hircine")
+            MaybeEmitHircineStigmaPrice(stigmaBefore, PDV_HircinePath.GetStigma())
             RequestPanelRefresh()
         endIf
         Trace(2, "Hircine hunt rite routed with multiplier " + multiplier)
+    endIf
+EndFunction
+
+; Surface the Hircine "price" only when stigma crosses a meaningful threshold, so the
+; cost lands on a beat the player can feel rather than on every single hunt rite.
+; Thresholds mirror GetDaedricStigmaGainMultiplier (3.0 stirring, 6.0 heavy).
+Function MaybeEmitHircineStigmaPrice(Float stigmaBefore, Float stigmaAfter)
+    if stigmaBefore < 6.0 && stigmaAfter >= 6.0
+        SendPrismaDaedricToast("Hircine", "price", "The hunt's mark has grown heavy.", "hircine")
+    elseIf stigmaBefore < 3.0 && stigmaAfter >= 3.0
+        SendPrismaDaedricToast("Hircine", "price", "The hunt's stigma is beginning to stir.", "hircine")
     endIf
 EndFunction
 
@@ -3672,6 +3681,8 @@ EndFunction
 Function DebugRenounceHircinePath()
     if PDV_HircinePath
         PDV_HircinePath.RenouncePath("mcm")
+        SendPrismaDaedricToast("Hircine", "lapse", "", "hircine")
+        RequestPanelRefresh()
     endIf
 EndFunction
 
@@ -5332,14 +5343,26 @@ Function HandleBosmerSuggestionPopup(Int targetState)
         return
     endIf
 
+    String pathSymbol = GetBosmerPathSymbol(targetState)
     Int choice = suggestionMessage.Show()
     if choice == 0
         PDV_BosmerPathTrack.AcceptOfferedTransition("popup_accept")
-        SendPrismaToast("journal", "good", "A new path stirs", "Confirm the change at the next rite.")
+        SendPrismaToast(pathSymbol, "good", "A new path stirs", "Confirm the change at the next rite.")
     else
         PDV_BosmerPathTrack.RefuseOfferedTransition("popup_refuse")
-        SendPrismaToast("journal", "neutral", "The call fades", "You turn aside from that path for now.")
+        SendPrismaToast(pathSymbol, "neutral", "The call fades", "You turn aside from that path for now.")
     endIf
+EndFunction
+
+; Prisma symbol for a Bosmer path state (used before the path is active, so we can't
+; rely on _activeDeity). Old Contract and Living Story both center on Y'ffre.
+String Function GetBosmerPathSymbol(Int pathState)
+    if pathState == BOSMER_PATH_EXCHANGE
+        return "zen"
+    elseIf pathState == BOSMER_PATH_BANDIT_ROAD
+        return "baan-dar"
+    endIf
+    return "yffre"
 EndFunction
 
 Message Function GetBosmerSuggestionMessage(Int targetState)
@@ -5364,7 +5387,7 @@ Function ConfirmBosmerPendingTransition(String reason)
     Int pendingState = PDV_BosmerPathTrack.GetPendingState()
     if !CanConfirmBosmerPathState(pendingState)
         PDV_BosmerPathTrack.CancelPendingTransition("rite_invalid")
-        SendPrismaToast("journal", "bad", "The rite fails", "The new path has not yet been proven.")
+        SendPrismaToast(GetBosmerPathSymbol(pendingState), "warning", "The rite fails", "The new path has not yet been proven.")
         return
     endIf
 
