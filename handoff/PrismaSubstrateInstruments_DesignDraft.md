@@ -243,4 +243,48 @@ Each phase is two-sided (Papyrus push + UI render) and ships behind the frozen-f
    real effects (e.g. Khajiit moon-phase nudging furstock-flavored buffs)? Out of scope for the UI draft,
    but worth a yes/no on intent.
 
-_This is a draft for discussion. No code changed._
+---
+
+## Decisions locked (2026-06-04 review)
+
+1. **Architecture → Universal model.** Every race uses the instrument slot; the piety bar becomes
+   `kind:"piety"`. Phase 0 reproduces today's bar with no visual change.
+2. **Universal 0–3 tier → yes**, but cyclical instruments (moons) treat `tier` as *depth/strength*, not a
+   linear ladder — the lunar `primary` reflects the substrate strength, the moon phase is its own field.
+3. **Pulse chattiness → conservative** (≈favor cadence, daily-capped via `ConsumeDailyRepeatMultiplier`).
+4. **`shift` vs `substrate` → keep separate.** `shift` = named-mode change (already wired); `substrate` =
+   ongoing pulse (`act`/`deepen`/`thin`).
+5. **Always-on → hybrid opt-in now, with headroom to escalate to always-on HUD** once the native layer
+   lands (see spike).
+6. **Scope → proceed on all three** (refine design + start Phase 0 + the ambient feasibility spike).
+7. **Gameplay tie-in → out of scope** for this UI arc (revisit later).
+
+## Spike result — ambient/always-on feasibility: ✅ GREEN (lighter than expected)
+
+Read of `native/DevotionPrismaBridge/include/prisma/PrismaUI_API.h` + `src/main.cpp` + `PDV_PrismaBridge.psc`:
+
+- PrismaUI **decouples focus from visibility** (`Show`/`Hide` vs `Focus`/`Unfocus`), supports `SetOrder`
+  (layering) and `InteropCall` (cheap data push). A view can be **visible-but-unfocused** = on-screen,
+  no input capture, **no game pause**.
+- The bridge **already uses this**: `SendOverlayJson` does `Show(g_view)` *unfocused* then pushes the
+  toast. So the persistent, transparent, unfocused HUD layer **already exists and is in use** — toasts
+  are the proof of concept. The panel is the same `g_view`, focused + `pauseGame=true`.
+- **Therefore an always-on ambient widget needs no new rendering tech** — it needs the view kept
+  shown-unfocused independent of panel open/close. Today `CloseDevotionPanel` calls `Hide(g_view)`,
+  and the view starts hidden, so the one gap is *lifecycle*: keep an ambient layer shown when the panel
+  is closed.
+- **This gap is native C++** (`src/main.cpp`, built with `xmake`/CommonLibSSE) — a different toolchain
+  from Papyrus (CK) and JS (text). It is the cleanest piece to delegate.
+
+## Work split (who does what)
+
+| Track | Work | Owner | Phase |
+|---|---|---|---|
+| **UI/JS** | `eventLanguage.substrate` + instrument renderer registry in `app.js` (+ index.html slot) | **Claude (this branch)** | 0–1 |
+| **Papyrus** | `instrument` block in `PushDevotionPanel`; `SendPrismaSubstrateToast` + emit wiring | **Codex** (owns live `PDV__ManagerQuest.psc`) | 0–1 |
+| **Native C++** | Ambient layer lifecycle (keep view shown-unfocused; `SetAmbientVisible`/`SendAmbientJson`) | **Codex** (owns `src/main.cpp` + build) | 2 |
+
+→ Codex tracks captured in `handoff/PDV_PrismaSubstrate_CodexHandoff.md`.
+→ Claude UI track captured in `handoff/PrismaInstrument_UIHandoff.md`.
+
+_This is a draft for discussion. Design locked above; implementation split per the table._
