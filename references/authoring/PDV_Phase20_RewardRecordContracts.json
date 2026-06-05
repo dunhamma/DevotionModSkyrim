@@ -33,7 +33,7 @@
       "grantRemovalOwner": "PDV__ManagerQuest dawn consolidation only after smoke; no event-time grant.",
       "stackCapRule": "Suppress while Altmer curse/crisis penalty effect is active unless manager explicitly resolves precedence.",
       "daedricInteraction": "Daedric champion effects outrank this T1 steadiness unless the Altmer path is explicitly reconciled.",
-      "implementationStatus": "contract-only-pending-esp-records",
+      "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
       "notes": "Magnitude provisional; prefer steadiness/discipline over broad magicka scaling."
     },
     {
@@ -58,7 +58,7 @@
       "grantRemovalOwner": "PDV__ManagerQuest dawn/state logic after Hist posture smoke.",
       "stackCapRule": "Do not stack with Sithis-only edge rewards; manager chooses the active Argonian lane.",
       "daedricInteraction": "Sithis and Daedric pressure may annotate or suppress the Hist reward, but should not silently double-stack it.",
-      "implementationStatus": "contract-only-pending-esp-records",
+      "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
       "notes": "Keep effect defensive/survival-facing, not a generic poison or disease bundle unless balance review approves it."
     },
     {
@@ -83,7 +83,7 @@
       "grantRemovalOwner": "PDV__ManagerQuest Bosmer path state at dawn after smoke.",
       "stackCapRule": "Only one Bosmer path reward active; suppress when Baan Dar or Z'en lane is selected.",
       "daedricInteraction": "Hircine hunt pressure is an edge, not a free stack with Y'ffre T1.",
-      "implementationStatus": "contract-only-pending-esp-records",
+      "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
       "notes": "Avoid generic archery-only reward; needs path/playstyle breadth."
     },
     {
@@ -108,7 +108,7 @@
       "grantRemovalOwner": "PDV__ManagerQuest Breton tradition state at dawn after smoke.",
       "stackCapRule": "Only the current Breton tradition T1 may be active; remove stale tradition effects on state change.",
       "daedricInteraction": "Daedric occult pressure may explain hidden-art tension but must not auto-upgrade this reward.",
-      "implementationStatus": "contract-only-pending-esp-records",
+      "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
       "notes": "Keep broad enough for knight/mage/nature play without rewarding generic spell spam."
     },
     {
@@ -133,7 +133,7 @@
       "grantRemovalOwner": "PDV__ManagerQuest Dunmer focus state at dawn after smoke.",
       "stackCapRule": "Only one Reclamation focus reward active; deviation price suppresses the matching T1 when unresolved.",
       "daedricInteraction": "Azura, Boethiah, and Mephala lanes remain distinct from generic Daedric champion effects.",
-      "implementationStatus": "contract-only-pending-esp-records",
+      "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
       "notes": "Avoid flattening Azura/Boethiah/Mephala into one generic Daedra reward in final tuning."
     },
     {
@@ -158,7 +158,7 @@
       "grantRemovalOwner": "PDV__ManagerQuest Imperial civic state at dawn after smoke.",
       "stackCapRule": "Do not stack civic T1 with an unresolved Talos-pressure penalty or private-Talos privilege.",
       "daedricInteraction": "Daedric patron rewards should suppress civic T1 only when manager state declares public rupture.",
-      "implementationStatus": "contract-only-pending-esp-records",
+      "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
       "notes": "Civil War oath validators remain review-gated until branch evidence is stronger."
     },
     {
@@ -218,7 +218,7 @@
       "grantRemovalOwner": "PDV__ManagerQuest Nord broad-lane state at dawn after smoke.",
       "stackCapRule": "Suppress during unresolved Nord vampire rupture and do not stack with Hircine/Arkay edge effects.",
       "daedricInteraction": "Hircine pressure is edge-state content; it must not auto-stack with old-ways T1.",
-      "implementationStatus": "contract-only-pending-esp-records",
+      "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
       "notes": "Keep Kyne/Talos context visible without making every shout a reward loop."
     },
     {
@@ -243,7 +243,7 @@
       "grantRemovalOwner": "PDV__ManagerQuest Orc life-mode state at dawn after smoke.",
       "stackCapRule": "Only one Orc life-mode T1 active; city, legion, and stronghold variants cannot stack.",
       "daedricInteraction": "Malacath is foreground for Orcs; generic Daedric champion effects still require explicit precedence.",
-      "implementationStatus": "contract-only-pending-esp-records",
+      "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
       "notes": "Avoid narrow warrior-only reward; support labor/duty/survival alongside combat."
     },
     {
@@ -268,7 +268,7 @@
       "grantRemovalOwner": "PDV__ManagerQuest Redguard sect state at dawn after smoke.",
       "stackCapRule": "Only one Redguard sect T1 active; Crown, Forebear, Ash'abah, and Far Shores variants resolve through manager state.",
       "daedricInteraction": "Daedric pressure may suppress or annotate sect standing but must not silently grant a second T1.",
-      "implementationStatus": "contract-only-pending-esp-records",
+      "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
       "notes": "MS08 branch routes are static-verified but not live source-fill authority yet."
     }
   ]

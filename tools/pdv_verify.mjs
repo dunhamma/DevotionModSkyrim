@@ -120,6 +120,12 @@ const PHASE20_DEITY_COVERAGE_MANIFEST = path.join(
   "authoring",
   "PDV_DeityCoverageMatrix.json",
 );
+const PHASE20_MEDALLION_ROSTER_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_MedallionRoster.manifest.json",
+);
 const PHASE20_ALTMER_IMPLEMENTATION_MANIFEST = path.join(
   PROJECT_ROOT,
   "references",
@@ -1169,6 +1175,9 @@ class Verifier {
       this.checkOfflinePatcherRules();
       this.checkPhase19GeneratedPatch();
       this.checkPhase21RosterCoverage();
+      if (exists(PHASE20_MEDALLION_ROSTER_MANIFEST)) {
+        this.checkPhase20MedallionRoster();
+      }
       if (this.strictPhase20Altmer || exists(PHASE20_ALTMER_IMPLEMENTATION_MANIFEST)) {
         this.checkPhase20AltmerImplementationCosting();
       }
@@ -2962,6 +2971,182 @@ class Verifier {
         this.phase20RosterGap(finding.check, finding.detail, filePath);
       }
     }
+  }
+
+  checkPhase20MedallionRoster() {
+    let manifest;
+    try {
+      manifest = JSON.parse(fs.readFileSync(PHASE20_MEDALLION_ROSTER_MANIFEST, "utf8"));
+    } catch (error) {
+      this.phase20RosterGap(
+        "Phase 20 medallion roster manifest",
+        `Could not parse medallion roster manifest: ${error.message}`,
+        PHASE20_MEDALLION_ROSTER_MANIFEST,
+      );
+      return;
+    }
+
+    if (
+      manifest.schema === "pdv-medallion-roster.v1"
+      && manifest.id === "phase20-medallion-native-roster"
+      && manifest.runtimePolicy?.selectablePolicy === "requires-live-scorable-deity"
+      && manifest.runtimePolicy?.unwiredEntryPolicy === "visible-disabled"
+    ) {
+      this.pass("Phase 20 medallion roster manifest", "Manifest owns native roster intent with live-readback selectability policy.", PHASE20_MEDALLION_ROSTER_MANIFEST);
+    } else {
+      this.phase20RosterGap(
+        "Phase 20 medallion roster manifest",
+        "Manifest identity or runtime policy does not match the intent-plus-readback contract.",
+        PHASE20_MEDALLION_ROSTER_MANIFEST,
+      );
+    }
+
+    const raceEntries = Array.isArray(manifest.races) ? manifest.races : [];
+    const raceIds = raceEntries.map((race) => race.raceId).filter(Boolean);
+    const expectedRaces = ["nord", "imperial", "breton", "altmer", "bosmer", "dunmer", "khajiit", "argonian", "orc", "redguard"];
+    const missingRaces = expectedRaces.filter((race) => !raceIds.includes(race));
+    if (missingRaces.length) {
+      this.phase20RosterGap("Phase 20 medallion race coverage", `Missing medallion race roster(s): ${missingRaces.join(", ")}.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
+    } else {
+      this.pass("Phase 20 medallion race coverage", "Medallion manifest declares all ten race rosters.", PHASE20_MEDALLION_ROSTER_MANIFEST);
+    }
+
+    const entries = this.collectMedallionEntries(manifest);
+    if (entries.length >= 60) {
+      this.pass("Phase 20 medallion entry coverage", `Medallion manifest declares ${entries.length} visible roster entry surfaces.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
+    } else {
+      this.phase20RosterGap("Phase 20 medallion entry coverage", `Medallion manifest only declares ${entries.length} entries; expected the full native roster surface.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
+    }
+
+    const allDeities = this.recordDetails.get("PDV_FLST_AllDeities");
+    const allDeityItems = new Set(allDeities?.fields?.Items || []);
+    if (allDeities) {
+      this.pass("Phase 20 medallion readback", `Read PDV_FLST_AllDeities with ${allDeityItems.size} live scorable member(s).`, PDV_ESP);
+    } else {
+      this.phase20RosterGap("Phase 20 medallion readback", "PDV_FLST_AllDeities readback is missing; selectable medallion entries cannot be proven.", PDV_ESP);
+    }
+
+    const missingSymbols = new Set();
+    const symbolKeys = this.readPrismaSymbolKeys();
+    const liveSelectableRecords = new Set();
+    for (const entry of entries) {
+      const label = `${entry.raceId}/${entry.optionId}`;
+      if (entry.visible !== true) {
+        this.phase20RosterGap("Phase 20 medallion visibility", `${label} is not marked visible; native roster entries must be visible even while pending.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
+      }
+
+      if (!entry.title || !entry.summary || !entry.description || !entry.symbol || !entry.kind) {
+        this.phase20RosterGap("Phase 20 medallion entry shape", `${label} is missing title, summary, description, symbol, or kind.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
+      }
+
+      if (entry.symbol && !symbolKeys.has(entry.symbol)) {
+        missingSymbols.add(entry.symbol);
+      }
+
+      if (entry.selectable === true) {
+        if (!entry.deityRecord) {
+          this.phase20RosterGap("Phase 20 medallion selectability", `${label} is selectable without a deityRecord.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
+          continue;
+        }
+
+        const record = this.recordsByEdid.get(entry.deityRecord);
+        if (!record) {
+          this.phase20RosterGap("Phase 20 medallion selectability", `${label} points at missing record ${entry.deityRecord}.`, PDV_ESP);
+          continue;
+        }
+
+        if (!allDeityItems.has(record.formid)) {
+          this.phase20RosterGap("Phase 20 medallion selectability", `${label} points at ${entry.deityRecord}, but it is not in PDV_FLST_AllDeities.`, PDV_ESP);
+          continue;
+        }
+
+        liveSelectableRecords.add(entry.deityRecord);
+      } else if (!entry.disabledReason) {
+        this.phase20RosterGap("Phase 20 medallion disabled entry", `${label} is not selectable and lacks disabledReason.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
+      }
+    }
+
+    if (missingSymbols.size) {
+      this.warn("Phase 20 medallion glyph fallback", `Medallion entries will fall back to journal until glyphs land: ${[...missingSymbols].sort().join(", ")}.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
+    } else {
+      this.pass("Phase 20 medallion glyph coverage", "All medallion symbols resolve in the Prisma UI glyph table.", PHASE20_MEDALLION_ROSTER_MANIFEST);
+    }
+
+    const liveDeityEdids = [...allDeityItems]
+      .map((formid) => formidToEdid(formid, this.recordsByEdid))
+      .filter(Boolean)
+      .filter((edid) => edid.startsWith("PDV_Deity_"));
+    const unrepresentedLive = liveDeityEdids.filter((edid) => !liveSelectableRecords.has(edid));
+    if (unrepresentedLive.length) {
+      this.info("Phase 20 medallion live roster", `Live scorable deity record(s) not selectable in the medallion manifest: ${unrepresentedLive.join(", ")}.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
+    } else {
+      this.pass("Phase 20 medallion live roster", "Every live scorable deity record is represented by at least one selectable medallion entry.", PHASE20_MEDALLION_ROSTER_MANIFEST);
+    }
+
+    this.checkSourceContains("Phase 20 medallion manager source", "PDV__ManagerQuest", [
+      "Function SendPrismaMedallionPayload(Int originRace)",
+      "Bool Function SelectMedallionEntry(String optionId)",
+      "Bool Function CanSelectMedallionEntry(String optionId)",
+      "String Function GetMedallionSectionsJson(Int originRace)",
+      "Bool Function IsMedallionDeitySelectable(PDV_DeityBase deity)",
+    ], this.phase20RosterGap.bind(this));
+
+    const livePrismaApp = path.join(DEVOTION_MOD, "PrismaUI", "views", "Devotion", "app.js");
+    if (exists(livePrismaApp)) {
+      const livePrismaSource = fs.readFileSync(livePrismaApp, "utf8");
+      const requiredSnippets = [
+        "const renderMedallion = (medallion = {}) =>",
+        "payload.mode === \"startup\" || payload.mode === \"medallion\"",
+        "window.PDVDemoMedallion",
+      ];
+      for (const snippet of requiredSnippets) {
+        if (livePrismaSource.includes(snippet)) {
+          this.pass("Phase 20 medallion Prisma source", `Live Prisma app contains ${snippet}.`, livePrismaApp);
+        } else {
+          this.phase20RosterGap("Phase 20 medallion Prisma source", `Live Prisma app is missing ${snippet}.`, livePrismaApp);
+        }
+      }
+    } else {
+      this.phase20RosterGap("Phase 20 medallion Prisma source", "Live Prisma app.js is missing.", livePrismaApp);
+    }
+  }
+
+  collectMedallionEntries(manifest) {
+    const entries = [];
+    for (const race of Array.isArray(manifest.races) ? manifest.races : []) {
+      for (const section of Array.isArray(race.sections) ? race.sections : []) {
+        for (const entry of Array.isArray(section.entries) ? section.entries : []) {
+          entries.push({
+            ...entry,
+            raceId: race.raceId || "",
+            sectionId: section.sectionId || "",
+          });
+        }
+      }
+    }
+    return entries;
+  }
+
+  readPrismaSymbolKeys() {
+    const appJsPath = path.join(PROJECT_ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion", "app.js");
+    const keys = new Set(["journal"]);
+    if (!exists(appJsPath)) {
+      return keys;
+    }
+
+    const source = fs.readFileSync(appJsPath, "utf8");
+    const symbolBlock = source.match(/const symbolSpecs = \{([\s\S]*?)\n  \};/);
+    if (!symbolBlock) {
+      return keys;
+    }
+
+    for (const line of symbolBlock[1].split(/\r?\n/)) {
+      const match = line.match(/^\s{4}(?:"([^"]+)"|([A-Za-z0-9_-]+)):\s*\[/);
+      if (match) {
+        keys.add(match[1] || match[2]);
+      }
+    }
+    return keys;
   }
 
   checkPhase20AltmerImplementationCosting() {

@@ -2,7 +2,7 @@
 
 **Created:** 2026-06-03
 **Status:** Handoff hook after expanded all-race P2 receiver wiring and safe P2 book-source FormList fill; beta-feel readiness now includes all sixteen Skyrim-present Daedric Princes
-**Companions:** `PDV_AllRaceDaedricBetaReadinessLedger.md`, `PDV_DaedricBatch0_D18ProofLedger.md`, `PDV_Phase20_SourceFillApprovalLedger.json`, `PDV_Phase20_P2ImmersiveReceivers.manifest.json`, `PDV_PreBetaRaceGateLedger.md`, `PDV_Phase20_PreBetaManualChecks_Runbook.md`
+**Companions:** `PDV_AllRaceDaedricBetaReadinessLedger.md`, `PDV_DaedricBatch0_D18ProofLedger.md`, `PDV_Phase20_SourceFillApprovalLedger.json`, `PDV_Phase20_P2ImmersiveReceivers.manifest.json`, `PDV_PreBetaRaceGateLedger.md`, `PDV_Phase20_PreBetaManualChecks_Runbook.md`, `PDV_PrismaIntegrationBoundary.md`
 
 ## What This Tranche Proved
 

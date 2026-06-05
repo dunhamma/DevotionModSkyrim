@@ -69,6 +69,16 @@ Spell Property PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft Aut
 Spell Property PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine Auto
 Spell Property PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness Auto
 Spell Property PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement Auto
+Spell Property PDV_Bless_Altmer_Orthodox_T1 Auto
+Spell Property PDV_Bless_Argonian_Hist_T1 Auto
+Spell Property PDV_Bless_Bosmer_Yffre_T1 Auto
+Spell Property PDV_Bless_Breton_Tradition_T1 Auto
+Spell Property PDV_Bless_Dunmer_Reclamation_T1 Auto
+Spell Property PDV_Bless_Imperial_Civic_T1 Auto
+Spell Property PDV_Bless_Khajiit_Lunar_T1 Auto
+Spell Property PDV_Bless_Nord_OldWays_T1 Auto
+Spell Property PDV_Bless_Orc_Malacath_T1 Auto
+Spell Property PDV_Bless_Redguard_AncestorSpine_T1 Auto
 Message Property PDV_MSG_BosmerSetupChoice Auto
 Message Property PDV_MSG_BosmerSuggestLivingStory Auto
 Message Property PDV_MSG_BosmerSuggestExchange Auto
@@ -1015,6 +1025,24 @@ PDV_DeityBase Function GetDeityAtListIndex(Int listIndex)
     endIf
 
     return PDV_FLST_AllDeities.GetAt(listIndex) as PDV_DeityBase
+EndFunction
+
+PDV_DeityBase Function GetDeityByName(String deityName)
+    if deityName == "" || !PDV_FLST_AllDeities
+        return None
+    endIf
+
+    Int i = 0
+    Int count = PDV_FLST_AllDeities.GetSize()
+    while i < count
+        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
+        if deity && deity.DeityName == deityName
+            return deity
+        endIf
+        i += 1
+    endWhile
+
+    return None
 EndFunction
 
 Float Function GetPietyByIndex(Int deityIndex)
@@ -2395,6 +2423,7 @@ Function RunDawnApplySpellAndNeglectLayers()
         StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", 0)
         SyncKyneNeglectSpell(False)
         UpdateContextualFavorRuntime()
+        SyncFirstTierRaceRewardRuntime()
         return
     endIf
 
@@ -2404,6 +2433,7 @@ Function RunDawnApplySpellAndNeglectLayers()
         StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", 0)
         SyncKyneNeglectSpell(False)
         UpdateContextualFavorRuntime()
+        SyncFirstTierRaceRewardRuntime()
         return
     endIf
 
@@ -2418,6 +2448,7 @@ Function RunDawnApplySpellAndNeglectLayers()
         SendPrismaEventToast("neglect", _activeDeity, "", "", "")
     endIf
     StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", BoolToInt(patronNeglected))
+    SyncFirstTierRaceRewardRuntime()
 EndFunction
 
 Function RunDawnProcessCommitmentOffers()
@@ -2933,6 +2964,84 @@ Function SyncKyneNeglectSpell(Bool shouldBeActive)
             playerRef.RemoveSpell(PDV_SPEL_Neglect_Kyne)
         endIf
         StorageUtil.SetIntValue(None, "PDV.Neglect.KyneSpellActive", 0)
+    endIf
+EndFunction
+
+Function SyncFirstTierRaceRewardRuntime()
+    Actor playerRef = Game.GetPlayer()
+    Spell activeReward = GetFirstTierRaceRewardSpellForOrigin()
+    Bool shouldBeActive = IsFirstTierRaceRewardEligible() && activeReward
+
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T1, shouldBeActive && activeReward == PDV_Bless_Altmer_Orthodox_T1, "Altmer T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T1, shouldBeActive && activeReward == PDV_Bless_Argonian_Hist_T1, "Argonian T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T1, shouldBeActive && activeReward == PDV_Bless_Bosmer_Yffre_T1, "Bosmer T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T1, shouldBeActive && activeReward == PDV_Bless_Breton_Tradition_T1, "Breton T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T1, shouldBeActive && activeReward == PDV_Bless_Dunmer_Reclamation_T1, "Dunmer T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T1, shouldBeActive && activeReward == PDV_Bless_Imperial_Civic_T1, "Imperial T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Lunar_T1, shouldBeActive && activeReward == PDV_Bless_Khajiit_Lunar_T1, "Khajiit T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T1, shouldBeActive && activeReward == PDV_Bless_Nord_OldWays_T1, "Nord T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T1, shouldBeActive && activeReward == PDV_Bless_Orc_Malacath_T1, "Orc T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T1, shouldBeActive && activeReward == PDV_Bless_Redguard_AncestorSpine_T1, "Redguard T1")
+
+    if shouldBeActive
+        StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Active", 1)
+        StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Origin", GetPlayerOriginRaceIndex())
+    else
+        StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Active", 0)
+        StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Origin", -1)
+    endIf
+EndFunction
+
+Bool Function IsFirstTierRaceRewardEligible()
+    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && GetTier(_activeDeity) >= TIER_SEEKER
+        return True
+    endIf
+
+    return False
+EndFunction
+
+Spell Function GetFirstTierRaceRewardSpellForOrigin()
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_ALTMER
+        return PDV_Bless_Altmer_Orthodox_T1
+    elseIf originRace == ORIGIN_ARGONIAN
+        return PDV_Bless_Argonian_Hist_T1
+    elseIf originRace == ORIGIN_BOSMER
+        return PDV_Bless_Bosmer_Yffre_T1
+    elseIf originRace == ORIGIN_BRETON
+        return PDV_Bless_Breton_Tradition_T1
+    elseIf originRace == ORIGIN_DUNMER
+        return PDV_Bless_Dunmer_Reclamation_T1
+    elseIf originRace == ORIGIN_IMPERIAL
+        return PDV_Bless_Imperial_Civic_T1
+    elseIf originRace == ORIGIN_KHAJIIT
+        return PDV_Bless_Khajiit_Lunar_T1
+    elseIf originRace == ORIGIN_NORD
+        return PDV_Bless_Nord_OldWays_T1
+    elseIf originRace == ORIGIN_ORC
+        return PDV_Bless_Orc_Malacath_T1
+    elseIf originRace == ORIGIN_REDGUARD
+        return PDV_Bless_Redguard_AncestorSpine_T1
+    endIf
+
+    return None
+EndFunction
+
+Function SyncRaceRewardSpell(Actor playerRef, Spell rewardSpell, Bool shouldBeActive, String rewardLabel)
+    if !playerRef || !rewardSpell
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(rewardSpell)
+            playerRef.AddSpell(rewardSpell, False)
+            Trace(2, "Race reward added: " + rewardLabel)
+        endIf
+    else
+        if playerRef.HasSpell(rewardSpell)
+            playerRef.RemoveSpell(rewardSpell)
+            Trace(2, "Race reward removed: " + rewardLabel)
+        endIf
     endIf
 EndFunction
 
@@ -5050,6 +5159,299 @@ Function SendPrismaStartupPayload(Int originRace, Int startupMode, Int defaultOp
     String payload = "{\"mode\":\"startup\",\"startup\":{\"event\":\"" + JsonSafeString(eventName) + "\",\"race_id\":\"" + JsonSafeString(GetStartupRaceId(originRace)) + "\",\"startup_mode\":\"" + modeText + "\",\"options\":[" + optionsJson + "],\"default_option_id\":\"" + JsonSafeString(GetStartupOptionId(originRace, defaultOption)) + "\",\"advisory_line\":\"" + JsonSafeString(STARTUP_ADVISORY_TEXT) + "\",\"confirm_required\":" + BoolToJson(confirmRequired) + ",\"title\":\"" + JsonSafeString(GetOriginRaceLabel(originRace) + " startup") + "\",\"summary\":\"" + JsonSafeString(GetStartupCanonicalSummary(originRace)) + "\"}}"
 
     PDV_PrismaBridge.SendOverlayJson(payload)
+EndFunction
+
+Function SendPrismaMedallionPayload(Int originRace)
+    if !PDV_PrismaBridge.IsAvailable()
+        return
+    endIf
+
+    String sectionsJson = GetMedallionSectionsJson(originRace)
+    String raceLabel = GetOriginRaceLabel(originRace)
+    String payload = "{\"mode\":\"medallion\",\"medallion\":{\"race_id\":\"" + JsonSafeString(GetStartupRaceId(originRace)) + "\""
+    payload = payload + ",\"title\":\"" + JsonSafeString(raceLabel + " Medallion") + "\""
+    payload = payload + ",\"summary\":\"" + JsonSafeString("The medallion shows the native roster. Only live, scorable entries can be chosen.") + "\""
+    payload = payload + ",\"active_option_id\":\"" + JsonSafeString(GetActiveMedallionOptionId()) + "\""
+    payload = payload + ",\"advisory_line\":\"" + JsonSafeString("A selectable entry is already wired into the live devotion roster.") + "\""
+    payload = payload + ",\"sections\":[" + sectionsJson + "]}}"
+
+    PDV_PrismaBridge.SendOverlayJson(payload)
+EndFunction
+
+Bool Function SelectMedallionEntry(String optionId)
+    if !CanSelectMedallionEntry(optionId)
+        Trace(1, "Medallion selection blocked for " + optionId + ".")
+        return False
+    endIf
+
+    PDV_DeityBase deity = GetMedallionDeityForOptionId(optionId)
+    SetActiveDeity(deity)
+    Trace(1, "Medallion selected " + deity.DeityName + ".")
+    return True
+EndFunction
+
+Bool Function CanSelectMedallionEntry(String optionId)
+    if !IsMedallionOptionAvailableForOrigin(optionId, GetPlayerOriginRaceIndex())
+        return False
+    endIf
+
+    return IsMedallionDeitySelectable(GetMedallionDeityForOptionId(optionId))
+EndFunction
+
+String Function GetActiveMedallionOptionId()
+    if !_activeDeity
+        return ""
+    endIf
+
+    return GetMedallionOptionIdForDeity(_activeDeity)
+EndFunction
+
+String Function GetMedallionSectionsJson(Int originRace)
+    if originRace == ORIGIN_NORD
+        return MedallionSection("native", "Native worship", GetNordMedallionEntriesJson())
+    elseIf originRace == ORIGIN_IMPERIAL
+        return MedallionSection("native", "Native worship", GetImperialMedallionEntriesJson())
+    elseIf originRace == ORIGIN_BRETON
+        return MedallionSection("native", "Native worship", GetBretonMedallionEntriesJson())
+    elseIf originRace == ORIGIN_ALTMER
+        return MedallionSection("native", "Native worship", GetAltmerMedallionEntriesJson())
+    elseIf originRace == ORIGIN_BOSMER
+        return MedallionSection("native", "Native worship", GetBosmerNativeMedallionEntriesJson()) + "," + MedallionSection("substrate_focus", "Path focus", GetBosmerFocusMedallionEntriesJson())
+    elseIf originRace == ORIGIN_DUNMER
+        return MedallionSection("native", "Native worship", GetDunmerMedallionEntriesJson())
+    elseIf originRace == ORIGIN_KHAJIIT
+        return MedallionSection("native", "Native worship", GetKhajiitMedallionEntriesJson())
+    elseIf originRace == ORIGIN_ARGONIAN
+        return MedallionSection("native", "Native worship", GetArgonianMedallionEntriesJson())
+    elseIf originRace == ORIGIN_ORC
+        return MedallionSection("native", "Native worship", GetOrcMedallionEntriesJson())
+    elseIf originRace == ORIGIN_REDGUARD
+        return MedallionSection("native", "Native worship", GetRedguardMedallionEntriesJson())
+    endIf
+
+    return MedallionSection("native", "Native worship", MedallionEntry("unknown", "Devotion", "substrate", "journal", None, False, "Your origin is not settled yet.", "Once your origin is known, the medallion can show the roster your people can name.", "Origin readback is pending."))
+EndFunction
+
+String Function GetNordMedallionEntriesJson()
+    String entries = MedallionEntry("kyne", "Kyne", "god", "kyne", PDV_Kyne, True, "Sky, storm, hunt, and warrior-spirit.", "Kyne is live and scorable in the current deity roster.", "")
+    entries = entries + "," + PendingMedallionEntry("kynareth", "Kynareth", "god", "kyne", "The Nine Divines sky road.")
+    entries = entries + "," + MedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, True, "Open defiance and human apotheosis.", "Talos is live and scorable in the current deity roster.", "")
+    entries = entries + "," + PendingMedallionEntry("shor", "Shor", "god", "shor", "The old king and afterlife road.")
+    entries = entries + "," + PendingMedallionEntry("tsun", "Tsun", "god", "tsun", "Trial, honor, and the threshold.")
+    entries = entries + "," + PendingMedallionEntry("stuhn", "Stuhn", "god", "stuhn", "Mercy in war and fair ransom.")
+    entries = entries + "," + PendingMedallionEntry("mara", "Mara", "god", "mara", "Love, hearth, and compassion.")
+    entries = entries + "," + PendingMedallionEntry("akatosh", "Akatosh", "god", "akatosh", "Time, order, and dragon authority.")
+    entries = entries + "," + PendingMedallionEntry("arkay", "Arkay", "god", "arkay", "Death, burial, and proper passage.")
+    entries = entries + "," + PendingMedallionEntry("stendarr", "Stendarr", "god", "stendarr", "Mercy, justice, and protection.")
+    entries = entries + "," + PendingMedallionEntry("julianos", "Julianos", "god", "julianos", "Law, learning, and craft of mind.")
+    entries = entries + "," + PendingMedallionEntry("dibella", "Dibella", "god", "dibella", "Beauty, art, and embodied grace.")
+    entries = entries + "," + PendingMedallionEntry("zenithar", "Zenithar", "god", "zenithar", "Work, trade, and honest craft.")
+    return entries
+EndFunction
+
+String Function GetImperialMedallionEntriesJson()
+    String entries = PendingMedallionEntry("kynareth", "Kynareth", "god", "kyne", "Road, wind, and natural order.")
+    entries = entries + "," + PendingMedallionEntry("mara", "Mara", "god", "mara", "Love, family, and mercy.")
+    entries = entries + "," + PendingMedallionEntry("akatosh", "Akatosh", "god", "akatosh", "Time, covenant, and empire.")
+    entries = entries + "," + PendingMedallionEntry("arkay", "Arkay", "god", "arkay", "Life, death, and lawful burial.")
+    entries = entries + "," + PendingMedallionEntry("stendarr", "Stendarr", "god", "stendarr", "Mercy, protection, and civic virtue.")
+    entries = entries + "," + PendingMedallionEntry("julianos", "Julianos", "god", "julianos", "Law, learning, and reason.")
+    entries = entries + "," + PendingMedallionEntry("dibella", "Dibella", "god", "dibella", "Art, beauty, and human grace.")
+    entries = entries + "," + PendingMedallionEntry("zenithar", "Zenithar", "god", "zenithar", "Work, trade, and prosperity.")
+    return entries
+EndFunction
+
+String Function GetBretonMedallionEntriesJson()
+    String entries = PendingMedallionEntry("kynareth", "Kynareth", "god", "kyne", "Sky, travel, and druidic memory.")
+    entries = entries + "," + MedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, True, "Civic defiance and Septim inheritance.", "Talos is live and scorable in the current deity roster.", "")
+    entries = entries + "," + PendingMedallionEntry("mara", "Mara", "god", "mara", "Household, mercy, and love.")
+    entries = entries + "," + PendingMedallionEntry("akatosh", "Akatosh", "god", "akatosh", "Time, order, and covenant.")
+    entries = entries + "," + PendingMedallionEntry("arkay", "Arkay", "god", "arkay", "Death, burial, and clean endings.")
+    entries = entries + "," + PendingMedallionEntry("stendarr", "Stendarr", "god", "stendarr", "Mercy, protection, and oath.")
+    entries = entries + "," + PendingMedallionEntry("julianos", "Julianos", "god", "julianos", "Learning, law, and formal craft.")
+    entries = entries + "," + PendingMedallionEntry("dibella", "Dibella", "god", "dibella", "Beauty, courtliness, and grace.")
+    entries = entries + "," + PendingMedallionEntry("zenithar", "Zenithar", "god", "zenithar", "Trade, craft, and honest work.")
+    entries = entries + "," + PendingMedallionEntry("magnus", "Magnus", "god", "magnus", "Magic, light, and hidden inheritance.")
+    entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Pilgrimage, endurance, and Elven memory.")
+    entries = entries + "," + MedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, True, "Green memory, story, and law.", "Y'ffre is live and scorable in the current deity roster.", "")
+    return entries
+EndFunction
+
+String Function GetAltmerMedallionEntriesJson()
+    String entries = PendingMedallionEntry("mara", "Mara", "god", "mara", "Kinship, care, and ordered mercy.")
+    entries = entries + "," + PendingMedallionEntry("stendarr", "Stendarr", "god", "stendarr", "Mercy and lawful protection.")
+    entries = entries + "," + PendingMedallionEntry("magnus", "Magnus", "god", "magnus", "Light, magic, and origin memory.")
+    entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Endurance, pilgrimage, and old discipline.")
+    entries = entries + "," + MedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, True, "Story, form, and natural law.", "Y'ffre is live and scorable in the current deity roster.", "")
+    entries = entries + "," + MedallionEntry("auri-el", "Auri-El", "god", "auri-el", GetDeityByName("Auri-El"), True, "The founding light and ancestral ascent.", "Auri-El is live and scorable in the current deity roster.", "")
+    entries = entries + "," + PendingMedallionEntry("syrabane", "Syrabane", "god", "syrabane", "Magic, craft, and survival through wisdom.")
+    entries = entries + "," + PendingMedallionEntry("xarxes", "Xarxes", "god", "xarxes", "Lineage, record, and ordered memory.")
+    entries = entries + "," + PendingMedallionEntry("trinimac", "Trinimac", "god", "trinimac", "Warrior order and unbroken nobility.")
+    return entries
+EndFunction
+
+String Function GetBosmerNativeMedallionEntriesJson()
+    String entries = MedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, True, "The Green, story, and the Old Contract.", "Y'ffre is live and scorable in the current deity roster.", "")
+    entries = entries + "," + MedallionEntry("auri-el", "Auri-El", "god", "auri-el", GetDeityByName("Auri-El"), True, "Elven ancestry and high memory.", "Auri-El is live and scorable in the current deity roster.", "")
+    entries = entries + "," + PendingMedallionEntry("xarxes", "Xarxes", "god", "xarxes", "Record, lineage, and written memory.")
+    entries = entries + "," + MedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", PDV_BaanDar, True, "Trickster road, masks, and survival.", "Baan Dar is live and scorable in the current deity roster.", "")
+    return entries
+EndFunction
+
+String Function GetBosmerFocusMedallionEntriesJson()
+    return MedallionEntry("zen", "Z'en", "god", "zen", PDV_Zen, True, "Debt, toil, exchange, and obligation.", "Z'en is live and scorable as a Bosmer path focus in the current deity roster.", "")
+EndFunction
+
+String Function GetDunmerMedallionEntriesJson()
+    String entries = PendingMedallionEntry("azura", "Azura", "prince", "azura", "Dawn, dusk, prophecy, and fate.")
+    entries = entries + "," + PendingMedallionEntry("boethiah", "Boethiah", "prince", "boethiah", "Trial, overthrow, and hard becoming.")
+    entries = entries + "," + PendingMedallionEntry("mephala", "Mephala", "prince", "mephala", "Web, secrecy, clan, and hidden duty.")
+    return entries
+EndFunction
+
+String Function GetKhajiitMedallionEntriesJson()
+    String entries = PendingMedallionEntry("azura", "Azurah", "prince", "azura", "Dusk, dawn, moon-shadow, and fate.")
+    entries = entries + "," + PendingMedallionEntry("boethiah", "Boethra", "prince", "boethiah", "Trial, edge, and hard lessons.")
+    entries = entries + "," + PendingMedallionEntry("mephala", "Mafala", "prince", "mephala", "Hidden paths, webs, and clan memory.")
+    entries = entries + "," + MedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", PDV_BaanDar, True, "The bandit god, wit, and road survival.", "Baan Dar is live and scorable in the current deity roster.", "")
+    entries = entries + "," + PendingMedallionEntry("rajhin", "Rajhin", "god", "rajhin", "The clever thief and impossible escape.")
+    entries = entries + "," + PendingMedallionEntry("alkosh", "Alkosh", "god", "alkosh", "Dragon order and time in Khajiit memory.")
+    entries = entries + "," + PendingMedallionEntry("khenarthi", "Khenarthi", "god", "khenarthi", "Wind, sky-road, and breath.")
+    entries = entries + "," + PendingMedallionEntry("riddle-thar", "Riddle'Thar", "god", "riddle-thar", "Balance, ja-Kha'jay, and right conduct.")
+    entries = entries + "," + PendingMedallionEntry("jone-jode", "Jone and Jode", "god", "lunar", "The moons, the lattice, and the road home.")
+    return entries
+EndFunction
+
+String Function GetArgonianMedallionEntriesJson()
+    String entries = PendingMedallionEntry("hist", "The Hist", "substrate", "hist", "Root, memory, people, and sap.")
+    entries = entries + "," + PendingMedallionEntry("sithis", "Sithis", "god", "sithis", "Void, change, and dangerous silence.")
+    return entries
+EndFunction
+
+String Function GetOrcMedallionEntriesJson()
+    return PendingMedallionEntry("malacath", "Malacath", "prince", "malacath", "Oath, code, exile, and vengeance.")
+EndFunction
+
+String Function GetRedguardMedallionEntriesJson()
+    String entries = PendingMedallionEntry("satakal", "Satakal", "god", "satakal", "Worldskin, cycle, and cosmic turning.")
+    entries = entries + "," + PendingMedallionEntry("ruptga", "Ruptga", "god", "ruptga", "Tall Papa, ancestry, and guidance.")
+    entries = entries + "," + PendingMedallionEntry("tuwhacca", "Tu'whacca", "god", "tu-whacca", "Death, passage, and the proper road.")
+    entries = entries + "," + PendingMedallionEntry("tava", "Tava", "god", "tava", "Wind, sailors, and safe passage.")
+    entries = entries + "," + PendingMedallionEntry("leki", "Leki", "god", "leki", "Sword-skill, discipline, and grace.")
+    entries = entries + "," + PendingMedallionEntry("onsi", "Onsi", "god", "onsi", "The blade, craft, and warrior making.")
+    entries = entries + "," + PendingMedallionEntry("hoon-ding", "HoonDing", "god", "hoon-ding", "Make-way spirit and impossible survival.")
+    return entries
+EndFunction
+
+String Function MedallionSection(String sectionId, String titleText, String entriesJson)
+    return "{\"section_id\":\"" + JsonSafeString(sectionId) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"entries\":[" + entriesJson + "]}"
+EndFunction
+
+String Function PendingMedallionEntry(String optionId, String titleText, String kindText, String symbolName, String summaryText)
+    String descriptionText = titleText + " belongs in this native roster, but is not yet a live scoring patron."
+    String disabledText = "Awaiting live deity record and scoring path."
+    if kindText == "prince"
+        descriptionText = titleText + " belongs in this native roster, but is not yet a live Prince path."
+        disabledText = "Awaiting live Prince path and scoring route."
+    elseIf kindText == "substrate"
+        descriptionText = titleText + " is live as a cultural substrate, but not yet as a selectable medallion patron."
+        disabledText = "Awaiting medallion-safe substrate selection."
+    endIf
+
+    return MedallionEntry(optionId, titleText, kindText, symbolName, None, False, summaryText, descriptionText, disabledText)
+EndFunction
+
+String Function MedallionEntry(String optionId, String titleText, String kindText, String symbolName, PDV_DeityBase deity, Bool requestedSelectable, String summaryText, String descriptionText, String disabledReason)
+    Bool selectable = requestedSelectable && IsMedallionDeitySelectable(deity)
+    String disabledText = disabledReason
+    if !selectable && disabledText == ""
+        disabledText = "Awaiting live deity record and scoring path."
+    endIf
+
+    String entry = "{\"option_id\":\"" + JsonSafeString(optionId) + "\""
+    entry = entry + ",\"title\":\"" + JsonSafeString(titleText) + "\""
+    entry = entry + ",\"kind\":\"" + JsonSafeString(kindText) + "\""
+    entry = entry + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    entry = entry + ",\"visible\":true"
+    entry = entry + ",\"selectable\":" + BoolToJson(selectable)
+    entry = entry + ",\"summary\":\"" + JsonSafeString(summaryText) + "\""
+    entry = entry + ",\"description\":\"" + JsonSafeString(descriptionText) + "\""
+    if disabledText != ""
+        entry = entry + ",\"disabled_reason\":\"" + JsonSafeString(disabledText) + "\""
+    endIf
+    entry = entry + "}"
+    return entry
+EndFunction
+
+Bool Function IsMedallionDeitySelectable(PDV_DeityBase deity)
+    if !deity || !PDV_FLST_AllDeities
+        return False
+    endIf
+
+    Int i = 0
+    Int count = PDV_FLST_AllDeities.GetSize()
+    while i < count
+        if (PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase) == deity
+            return True
+        endIf
+        i += 1
+    endWhile
+
+    return False
+EndFunction
+
+PDV_DeityBase Function GetMedallionDeityForOptionId(String optionId)
+    if optionId == "kyne"
+        return PDV_Kyne
+    elseIf optionId == "talos"
+        return PDV_Talos
+    elseIf optionId == "auri-el"
+        return GetDeityByName("Auri-El")
+    elseIf optionId == "yffre"
+        return PDV_Yffre
+    elseIf optionId == "zen"
+        return PDV_Zen
+    elseIf optionId == "baan-dar"
+        return PDV_BaanDar
+    endIf
+
+    return None
+EndFunction
+
+String Function GetMedallionOptionIdForDeity(PDV_DeityBase deity)
+    if deity == PDV_Kyne
+        return "kyne"
+    elseIf deity == PDV_Talos
+        return "talos"
+    elseIf deity == PDV_Yffre
+        return "yffre"
+    elseIf deity == PDV_Zen
+        return "zen"
+    elseIf deity == PDV_BaanDar
+        return "baan-dar"
+    elseIf deity && deity.DeityName == "Auri-El"
+        return "auri-el"
+    endIf
+
+    return ""
+EndFunction
+
+Bool Function IsMedallionOptionAvailableForOrigin(String optionId, Int originRace)
+    if optionId == "kyne"
+        return originRace == ORIGIN_NORD
+    elseIf optionId == "talos"
+        return originRace == ORIGIN_NORD || originRace == ORIGIN_BRETON
+    elseIf optionId == "auri-el"
+        return originRace == ORIGIN_ALTMER || originRace == ORIGIN_BOSMER
+    elseIf optionId == "yffre"
+        return originRace == ORIGIN_BRETON || originRace == ORIGIN_ALTMER || originRace == ORIGIN_BOSMER
+    elseIf optionId == "zen"
+        return originRace == ORIGIN_BOSMER
+    elseIf optionId == "baan-dar"
+        return originRace == ORIGIN_BOSMER || originRace == ORIGIN_KHAJIIT
+    endIf
+
+    return False
 EndFunction
 
 String Function BoolToJson(Bool value)

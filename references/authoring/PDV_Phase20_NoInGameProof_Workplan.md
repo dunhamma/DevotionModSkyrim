@@ -171,7 +171,10 @@ Survey/status requirement and debug-only boundary, but no race receives a
 Wave 7 is implemented through the first pilot record/readback proof: CAT-6 now
 records the first Khajiit candidate as a live pilot-provisional framework
 `SPEL` with two night-gated `MGEF` effects, keeps the Bosmer fallback absent,
-and leaves grant wiring plus full race-effect authoring blocked on later review.
+and preserves the pilot under the later all-race reward contract. Reward
+records and first-tier grant ownership now live in
+`PDV_Phase20_RewardRecordContracts.json`; runtime/manual proof is still
+required before treating the reward as felt gameplay.
 
 Wave 8 is now V2-only: recognition/dialogue is deferred out of the V1 content
 tree and will not be pursued until voice files are available.
@@ -253,7 +256,7 @@ Candidate checks:
 - All ten races have Survey/MCM source branches.
 - CAT-6 first candidate and fallback report target-record availability; the
   Khajiit first candidate also proves spell text, magic-effect text, effect
-  shape, night conditions, and no manager grant wiring.
+  shape, night conditions, and reward-contract-owned grant wiring.
 - Final-placement contracts exist separately from QASmoke proof records.
 - P2 packets do not request new reward volume.
 
@@ -374,9 +377,11 @@ Current state:
 Next no-game actions:
 
 1. Keep the first pilot away from Daedric stigma and dialogue.
-2. Keep the pilot grant-unwired until the Khajiit runtime reward pass.
-3. Run the holistic race-by-race effect review before full reward authoring.
-4. Keep runtime/menu display proof deferred.
+2. Treat `PDV_Phase20_RewardRecordContracts.json` as the grant owner for the
+   Khajiit Tier 1 record and all other race Tier 1 rewards.
+3. Run runtime/manual checks before claiming Active Effects display, save/load,
+   Survey clarity, balance feel, or beta readiness.
+4. Keep future Daedric CAT-6 promotion separate from race T1 rewards.
 
 Owner files:
 
@@ -453,8 +458,8 @@ Stop condition:
 4. Wave 5: write P2 stack/ceiling audit packets before any new P2 rewards.
 5. Wave 4: write CK-ready final placement contracts for P0/P1.
 6. Wave 6: prepare Survey/status copy lock notes.
-7. Wave 7: keep the CAT-6 pilot grant-unwired and run holistic race-effect
-   review before broad reward authoring.
+7. Wave 7: keep the CAT-6 pilot preserved under the all-race reward contract
+   and run runtime/manual proof before claiming reward feel.
 8. Wave 9: close the Daedric proof path before any Prince runtime promotion.
 
 ## Parallelization Plan
@@ -499,9 +504,10 @@ Useful now:
   race is enough.
 - Survey/status tone preferences for all ten races, especially the P2 audit
   races where current source can explain state but final copy still needs taste.
-- CAT-6 follow-up: review
-  `references/authoring/PDV_RaceEffectReviewLedger.md` before using the
-  Khajiit pilot mechanics as precedent for full reward authoring.
+- Reward follow-up: use `references/authoring/PDV_RaceEffectReviewLedger.md`
+  and `references/authoring/PDV_Phase20_RewardRecordContracts.json` together
+  when tuning magnitudes or changing grant/removal behavior; current automated
+  proof does not replace runtime/manual reward feel proof.
 - Daedric proof path: first Batch 0 CAT-6 target, readback requirements,
   runtime/display proof route, and stack/Survey interaction with race identity.
 
@@ -515,9 +521,7 @@ Not needed yet:
 
 The remaining Phase 20 work is decision-bound or runtime/manual:
 
-1. Run the holistic race-by-race effect review before scaling beyond the single
-   pilot-provisional CAT-6 Khajiit Tier 1 record.
-2. Fill the manual evidence ledger during in-game checks; do not mark any race
+1. Fill the manual evidence ledger during in-game checks; do not mark any race
    `Conditional` or `Pass` before those slots have proof notes.
-3. Close the next Daedric CAT-6/readback/runtime/display proof packet before
+2. Close the next Daedric CAT-6/readback/runtime/display proof packet before
    any Daedric runtime promotion.

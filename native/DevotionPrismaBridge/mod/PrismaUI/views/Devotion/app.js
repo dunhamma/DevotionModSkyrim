@@ -573,9 +573,14 @@
 
   const renderStartupDetails = (option) => {
     if (!option) return;
+    const detailMark = nodes.startupOptionTitle.parentElement.querySelector(".startup-detail-mark");
+    if (detailMark) {
+      detailMark.remove();
+    }
     nodes.startupOptionTitle.textContent = text(option.title, "Path");
     nodes.startupOptionSummary.textContent = text(option.summary, "");
     nodes.startupOptionDescription.textContent = text(option.description, "");
+    nodes.startupAdvisory.classList.remove("is-disabled");
   };
 
   const renderStartup = (startup = {}) => {
@@ -627,6 +632,118 @@
     });
 
     renderStartupDetails(selectedOption);
+    nodes.startupModal.hidden = false;
+    document.body.classList.add("startup-visible");
+  };
+
+  const medallionOptionStatus = (option = {}) => {
+    if (option.selectable === true) return "Ready to choose";
+    return text(option.disabled_reason || option.disabledReason, "Not ready yet");
+  };
+
+  const renderMedallionDetails = (medallion, option) => {
+    if (!option) return;
+    const detail = nodes.startupOptionTitle.parentElement;
+    let mark = detail.querySelector(".startup-detail-mark");
+    if (!mark) {
+      mark = document.createElement("div");
+      mark.className = "startup-detail-mark";
+      detail.insertBefore(mark, nodes.startupOptionTitle);
+    }
+
+    renderSymbol(mark, text(option.symbol, "journal"));
+    nodes.startupOptionTitle.textContent = text(option.title, "Devotion");
+    nodes.startupOptionSummary.textContent = text(option.summary, "");
+    nodes.startupOptionDescription.textContent = text(option.description, "");
+    nodes.startupAdvisory.textContent = option.selectable === true
+      ? text(medallion.advisory_line, "Choosing is only safe for live, scorable entries.")
+      : medallionOptionStatus(option);
+    nodes.startupAdvisory.classList.toggle("is-disabled", option.selectable !== true);
+    nodes.startupConfirm.textContent = option.selectable === true ? "Selectable" : "Pending";
+  };
+
+  const createMedallionOptionButton = (option, selectedOption, onSelect) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "startup-option has-symbol";
+    button.dataset.optionId = text(option.option_id || option.optionId, "");
+    button.setAttribute("aria-disabled", option.selectable === true ? "false" : "true");
+
+    if (option.selectable !== true) {
+      button.classList.add("is-disabled");
+    }
+
+    const mark = document.createElement("span");
+    mark.className = "list-symbol";
+    renderSymbol(mark, text(option.symbol, "journal"));
+
+    const content = document.createElement("span");
+    const title = document.createElement("strong");
+    title.textContent = text(option.title, "Devotion");
+    const summary = document.createElement("span");
+    summary.textContent = option.selectable === true
+      ? text(option.summary, "")
+      : medallionOptionStatus(option);
+    content.append(title, summary);
+    button.append(mark, content);
+
+    button.addEventListener("click", () => onSelect(option));
+
+    if (text(option.option_id || option.optionId, "") === text(selectedOption.option_id || selectedOption.optionId, "")) {
+      button.classList.add("is-active");
+    }
+
+    return button;
+  };
+
+  const renderMedallion = (medallion = {}) => {
+    if (!nodes.startupModal) return;
+    startupState = medallion;
+
+    const sections = asArray(medallion.sections).filter(Boolean);
+    const options = sections.flatMap((section) => asArray(section.entries || section.options).filter(Boolean));
+    const fallbackOption = options[0] || {
+      option_id: "medallion_context",
+      title: "Devotion",
+      summary: text(medallion.summary, ""),
+      description: text(medallion.summary, ""),
+      symbol: "journal",
+      selectable: false,
+      disabled_reason: "No medallion entries are available yet.",
+    };
+    const activeOptionId = text(medallion.active_option_id || medallion.default_option_id, "");
+    let selectedOption = options.find((option) => text(option.option_id || option.optionId, "") === activeOptionId)
+      || options.find((option) => option.selectable === true)
+      || fallbackOption;
+
+    nodes.startupTitle.textContent = text(medallion.title, "Medallion");
+    nodes.startupSummary.textContent = text(medallion.summary, "Choose from the roster your people can name.");
+    nodes.startupMode.textContent = "Medallion";
+
+    clear(nodes.startupOptions);
+    sections.forEach((section) => {
+      const sectionNode = document.createElement("section");
+      sectionNode.className = "medallion-section";
+
+      const heading = document.createElement("h4");
+      heading.textContent = text(section.title, "Roster");
+      sectionNode.appendChild(heading);
+
+      asArray(section.entries || section.options).filter(Boolean).forEach((option) => {
+        const button = createMedallionOptionButton(option, selectedOption, (nextOption) => {
+          selectedOption = nextOption;
+          renderMedallionDetails(medallion, selectedOption);
+          nodes.startupOptions.querySelectorAll(".startup-option").forEach((candidate) => {
+            candidate.classList.toggle("is-active", candidate.dataset.optionId === text(nextOption.option_id || nextOption.optionId, ""));
+          });
+        });
+        sectionNode.appendChild(button);
+      });
+
+      nodes.startupOptions.appendChild(sectionNode);
+    });
+
+    renderMedallionDetails(medallion, selectedOption);
     nodes.startupModal.hidden = false;
     document.body.classList.add("startup-visible");
   };
@@ -823,11 +940,15 @@
       renderStartup(payload.startup);
     }
 
+    if (payload.medallion) {
+      renderMedallion(payload.medallion);
+    }
+
     if (payload.mode === "toast") {
       return;
     }
 
-    if (payload.mode === "startup") {
+    if (payload.mode === "startup" || payload.mode === "medallion") {
       return;
     }
 
@@ -845,6 +966,10 @@
 
     if (payload.startup) {
       renderStartup(payload.startup);
+    }
+
+    if (payload.medallion) {
+      renderMedallion(payload.medallion);
     }
   };
 
@@ -958,6 +1083,54 @@
     substrate_thin: { event: "substrate", substrate: "ancestor", phase: "thin", symbol: "ancestor", state: "Ancestor layer: quiet" },
   };
 
+  const demoMedallionPayload = {
+    mode: "medallion",
+    medallion: {
+      race_id: "altmer",
+      title: "Altmer Medallion",
+      summary: "The medallion shows the native roster. Only live, scorable entries can be chosen.",
+      active_option_id: "auri-el",
+      advisory_line: "A selectable entry is already wired into the live devotion roster.",
+      sections: [
+        {
+          section_id: "native",
+          title: "Native worship",
+          entries: [
+            {
+              option_id: "auri-el",
+              title: "Auri-El",
+              summary: "The founding light and ancestral ascent.",
+              description: "Auri-El is live and scorable in the current deity roster.",
+              symbol: "auri-el",
+              kind: "god",
+              selectable: true,
+            },
+            {
+              option_id: "syrabane",
+              title: "Syrabane",
+              summary: "Magic, craft, and survival through wisdom.",
+              description: "Syrabane belongs in the Altmer native roster, but is not yet a live scoring patron.",
+              symbol: "syrabane",
+              kind: "god",
+              selectable: false,
+              disabled_reason: "Awaiting live deity record and scoring path.",
+            },
+            {
+              option_id: "trinimac",
+              title: "Trinimac",
+              summary: "Warrior order and unbroken nobility.",
+              description: "Trinimac belongs in the Altmer native roster, but is not yet a live scoring patron.",
+              symbol: "trinimac",
+              kind: "god",
+              selectable: false,
+              disabled_reason: "Awaiting live deity record and scoring path.",
+            },
+          ],
+        },
+      ],
+    },
+  };
+
   window.PDVDemo = () => {
     window.PDVBridge.receiveJson({
       title: "Kyne",
@@ -998,6 +1171,10 @@
     });
   };
 
+  window.PDVDemoMedallion = () => {
+    window.PDVBridge.receiveOverlayJson(demoMedallionPayload);
+  };
+
   render(fallbackState);
 
   if (new URLSearchParams(window.location.search).has("demo")) {
@@ -1006,8 +1183,15 @@
     renderSymbolGallery();
     nodes.demoControls.addEventListener("click", (event) => {
       const button = event.target.closest("[data-demo-toast]");
-      if (!button) return;
-      showToast(demoToasts[button.dataset.demoToast]);
+      if (button) {
+        showToast(demoToasts[button.dataset.demoToast]);
+        return;
+      }
+
+      const medallionButton = event.target.closest("[data-demo-medallion]");
+      if (medallionButton) {
+        window.PDVDemoMedallion();
+      }
     });
     window.setTimeout(() => window.PDVDemo(), 250);
   }

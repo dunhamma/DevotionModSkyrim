@@ -111,6 +111,12 @@ The Prisma side is presentation-only for startup: it renders stylized option
 cards and side descriptions, but Papyrus still owns authoritative commitment
 state changes.
 
+Medallion rosters arrive through overlay payloads with `mode: "medallion"`.
+This path is also presentation-only in Prisma. Papyrus owns the live selection
+gate through `PDV__ManagerQuest.SelectMedallionEntry`, and only entries that
+read back as live members of `PDV_FLST_AllDeities` should become selectable.
+Pending native roster entries stay visible but disabled.
+
 The Devotion view accepts compact event payloads and expands player-facing copy
 client-side. The overlay-toast path is now stable for the five pilot events
 below:
@@ -150,6 +156,17 @@ Stable startup payload fields:
 - `startup.default_option_id`
 - `startup.advisory_line`
 - `startup.confirm_required`
+
+Stable medallion payload fields:
+
+- `mode`: `"medallion"`
+- `medallion.race_id`
+- `medallion.title`
+- `medallion.advisory_line`
+- `medallion.active_option_id`
+- `medallion.sections[]`: `section_id`, `title`, `options[]`
+- `options[]`: `option_id`, `title`, `kind`, `symbol`, `summary`, `description`, `selectable`, optional `disabled_reason`
+
 - `neglect`: `deity`
 - `tier`: `deity`, `tierLabel`
 - `rivalry`: `rival`, optional `rivalSymbol`
@@ -183,5 +200,6 @@ Use these maturity labels when growing the UI contract:
   Papyrus code.
 
 Overlay toasts for `favor`, `dawn`, `neglect`, `tier`, and `rivalry` are now
-`stable` for the current pilot path. Panel payloads and any non-listed toast
+`stable` for the current pilot path. Startup and medallion overlay payloads are
+`stable` as presentation contracts. Panel payloads and any non-listed toast
 event shapes remain `prototype`.
