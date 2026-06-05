@@ -64,9 +64,6 @@ DEFS='''<defs>
 
 def medallion(cx,cy,R,key,matname):
     m=MATS[matname]; o=[]
-    # bail
-    o.append(f'<circle cx="{cx}" cy="{cy-R-8}" r="5.5" fill="none" stroke="{m["ring"]}" stroke-width="3"/>')
-    o.append(f'<rect x="{cx-3.5}" y="{cy-R-6}" width="7" height="9" rx="2.5" fill="url(#{m["rim"]})" stroke="{m["ring"]}" stroke-width="0.6"/>')
     # outer rim
     o.append(f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="url(#{m["rim"]})" stroke="{m["ring"]}" stroke-width="1.6"/>')
     if m["bead"]:

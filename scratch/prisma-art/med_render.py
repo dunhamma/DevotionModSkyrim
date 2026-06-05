@@ -9,11 +9,10 @@ def anatomy():
     p.append(f'<text x="40" y="72" fill="#bcb3a2" font-size="13" font-family="sans-serif">A pendant amulet, ~40mm. Raised metal bezel, recessed field, the deity glyph embossed proud. Material and finish carry the pantheon.</text>')
     bx,by,R=210,300,118
     p.append(medallion(bx,by,R,"auri-el","gold"))
-    calls=[("Suspension bail",bx,by-R-13,470,120),
-           ("Beaded outer rim",bx+R*0.66,by-R*0.66,470,185),
-           ("Raised bezel (polished metal)",bx+R-2,by-6,470,250),
-           ("Recessed field (matte / patina)",bx+R*0.5,by+R*0.55,470,315),
-           ("Embossed glyph (proud, catches light)",bx+6,by+8,470,380)]
+    calls=[("Beaded outer rim",bx+R*0.66,by-R*0.66,470,150),
+           ("Raised bezel (polished metal)",bx+R-2,by-6,470,225),
+           ("Recessed field (matte / patina)",bx+R*0.5,by+R*0.55,470,300),
+           ("Embossed glyph (proud, catches light)",bx+6,by+8,470,375)]
     for label,x1,y1,x2,y2 in calls:
         p.append(f'<line x1="{x1:.0f}" y1="{y1:.0f}" x2="{x2-8:.0f}" y2="{y2-4:.0f}" stroke="#6b6457" stroke-width="1"/>')
         p.append(f'<circle cx="{x1:.0f}" cy="{y1:.0f}" r="2.6" fill="#d8b35a"/>')
