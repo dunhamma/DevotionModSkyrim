@@ -10,9 +10,17 @@ file — Claude has been editing only the `scratch/p2-toast-panel-fix/` repo sna
 reconciled with your live edits; cleaner for you to own the wiring). Track B is **native C++** (`src/main.cpp`
 + `xmake`) — a different toolchain from anything Claude touches.
 
-**Coordination:** Claude owns the **UI/JS** side (`handoff/PrismaInstrument_UIHandoff.md` — the
-`eventLanguage.substrate` block and the instrument renderer registry in `app.js`). The JSON contracts below
-are the fixed interface between your tracks and Claude's. **Add JSON fields freely; never remove/rename.**
+**Coordination (updated):** **Codex now owns all coding, including the JS renderers** (Track C below).
+**Claude owns architecture + art only** — the visual spec, the algorithms, the SVG/glyph data — and will
+iterate the visuals on feedback. Claude has already applied the low-risk `eventLanguage.substrate` block to
+`app.js` (Phase 0). The JSON field names are the fixed interface; **add fields freely, never remove/rename.**
+
+Source art/specs you build from:
+- `handoff/PrismaInstruments_VisualSpec.md` — architecture, per-instrument construction, the verified
+  `moonPhase` algorithm, palette. **This is what you code the renderers from.**
+- `handoff/PrismaGlyph_Substrate_SVGData.md` — the 6 substrate symbol marks (drop into `symbolSpecs`).
+- `handoff/PrismaInstrument_UIHandoff.md` — the registry shape + the already-applied substrate event.
+- Rendered concept art: `scratch/prisma-art/instruments.png`, `moontest.png`, `glyphs.png`.
 
 ---
 
@@ -182,7 +190,25 @@ bundle. Cons: a second HTML/JS app to maintain. Pick Option 1 for v1 unless isol
 
 ---
 
+## Track C — JS instrument renderers (`app.js` + `index.html` + `styles.css`) · Phase 1
+
+Code the instrument hero-slot from `handoff/PrismaInstruments_VisualSpec.md` (the art + algorithms are
+done; you write the JS):
+1. `index.html`: wrap the current piety markup in a `#pdv-instrument` hero-slot container (+ `#pdv-ambient`
+   for Track B later).
+2. `app.js`: the `instrumentRenderers` registry (`piety/lunar/hist/ancestor/forge/sects/branch`), the
+   `render()` dispatch, and each renderer built with `makeSvgElement` from the per-instrument construction
+   in the visual spec. Port the verified `moonPhase()` function verbatim.
+3. Drop the 6 substrate glyphs from `handoff/PrismaGlyph_Substrate_SVGData.md` into `symbolSpecs`.
+4. `styles.css`: the slot layout + the state-pulse animations (act/deepen/thin).
+**Phase-0 guarantee:** `renderPiety` reproduces today's bar → no visual change until substrate kinds light up.
+**Constraint:** add JSON fields freely, never remove/rename; don't touch `PDV_PrismaBridge` or the
+`ReceivePDVJson`/`ReceivePDVOverlayJson` entries.
+
 ## Suggested order
-1. **Track A** first (Phase 0–1) — pure Papyrus, immediate equity win, no native dependency, pairs with
-   Claude's `eventLanguage.substrate` (already specced).
-2. **Track B** (Phase 2) — when ready to make instruments always-on. Pairs with Claude's ambient renderer.
+1. **Track A** (Phase 0–1) — pure Papyrus, immediate equity win, no native dependency; pairs with the
+   already-applied `eventLanguage.substrate`.
+2. **Track C** (Phase 1) — the instrument renderers, from Claude's visual spec. Pair with Track A's
+   `instrument` payload.
+3. **Track B** (Phase 2) — native ambient layer, to make the instruments always-on. Pairs with the ambient
+   entry in the visual spec.
