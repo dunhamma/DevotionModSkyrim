@@ -138,6 +138,15 @@ Crisis one-shot guard key:     PDV.Surfaced.Altmer.Crisis.<beat>
   a placement, but reclassify the crisis entry from `surfaceEditorIdPlan` /
   placement to a **passive quest/SM hook contract** (the ACTI plan was a proof
   shim). Note the backup path in the gate ledger.
+- [ ] **Clear the migration warning.** Once the real passive crisis hook is
+  built (not the proof ACTI), set `realMechanismMigrated: true` on the migrated
+  `triggerSurfaces` entry in
+  `references/authoring/PDV_Phase20AltmerImplementationCosting.manifest.json`.
+- [ ] Re-run `node .\tools\pdv_verify.mjs --strict-phase20-race-costing` and
+  confirm the `Phase 20 Altmer hook migration` WARN count drops (from `3/4`
+  toward `0`). The dawn/study object stays `object-optin` and never needs this
+  flag. A falling Altmer warning is the per-race burndown signal that the real
+  hooks are landing — not just the proof shims.
 
 ---
 
