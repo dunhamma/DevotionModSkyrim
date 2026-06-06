@@ -28,13 +28,35 @@ Distinction this checklist enforces:
 - QASmoke proof references (2026-05-31 placement): `071020`, `07101F`,
   `071021`, `071022`. Confirm live labels with
   `node .\tools\pdv_phase20_runtime_check.mjs --list`.
-- Final-world placement contract (two surfaces required):
-  - `PDV_REFR_AltmerDawnStudyWorldSignal` — **positive**, scholarship / Auri-El
-    practice / dawn-facing study context. Mirrors QASmoke
-    `PDV_REFR_AltmerDawnSteadinessSignal`.
-  - `PDV_REFR_AltmerCrisisPressureWorldSignal` — **pressure-recovery**, authored
-    crisis / Lorkhan / mortal-continuity context. Mirrors QASmoke
-    `PDV_REFR_AltmerLorkhanPressureSignal`.
+- Final-world hooks (two surfaces required, **different mechanisms**):
+  - **Positive** `PDV_REFR_AltmerDawnStudyWorldSignal` — an opt-in study/dawn
+    **object the player chooses to use** (scholarship / Auri-El practice /
+    dawn-facing study). Activation is fine here: it is intentional devotion,
+    not a chore. Mirrors QASmoke `PDV_REFR_AltmerDawnSteadinessSignal` (route
+    `52`).
+  - **Crisis/pressure** — **passive ingress, NOT a placed activator.** The
+    crisis/Lorkhan beat fires from a vanilla **quest stage**, **Story Manager
+    location/quest node**, or **beast-form/marriage milestone**, routed into the
+    existing EventBus crisis signal source. The route-50 ACTI was only ever a
+    QASmoke proof shim (`runtimeIntent: "tagged Lorkhan pressure proof without
+    ambient Skyrim penalties"`); the real beat is something the player never
+    deliberately triggers.
+- Real crisis surfaces already named in the costing manifest `crisisSources`
+  (each is a quest/milestone, all passive, all one-shot):
+  - `dragonborn-declaration` — Main quest / Dragonborn identity (first
+    declaration only).
+  - `sovngarde-tsun-reality` — Sovngarde / Tsun (quest-stage or location only).
+  - `marriage-mortal-continuity` — Marriage / mortal-world continuity (authored
+    marriage beat only; ordinary settlement play rejected).
+  - `companions-wuuthrad-beast-fork` — Companions / Wuuthrad / beast fork
+    (curated fork only).
+- Anti-repeat for crisis beats is a **save-persistent one-shot guard**
+  (`PDV.Surfaced.*` per §16.7 transition-surfacing contract), **not** an
+  activator `oncePerDayKey`.
+- Proven reuse pattern: the Phase 3 `PDV__SM_KillActor` Story Manager receiver
+  and the Phase 7 CK-authored Civil War quest hooks. The crisis beat is the same
+  family — a Story Manager node or quest-stage hook calling the EventBus, not an
+  ACTI.
 - Content-lock guardrail: `MarriageBeat` reads as **Marriage / Mortal
   Continuity** (household, lineage, embodied attachment, continuity inside
   Lorkhan's mortal world), **not** anti-Mara marriage rejection. Talos/Thalmor
@@ -65,44 +87,57 @@ If any gate fails, fix readback first — do not test on a red gate.
 
 ---
 
-## Step A — Decide the two real-world placement objects (design, no CK yet)
+## Step A — Decide the two hooks (design, no CK yet)
 
-The `manualStopCondition` in the gates JSON forbids placing until the exact CK
-object/location is chosen and culturally specific.
+The two surfaces use **different mechanisms** — do not treat the crisis beat as
+a placed object. The `manualStopCondition` in the gates JSON forbids authoring
+until the exact CK object/context is chosen and culturally specific.
 
-- [ ] **Positive surface** — pick the concrete object + cell for
+- [ ] **Positive object** — pick the concrete object + cell for
   `PDV_REFR_AltmerDawnStudyWorldSignal`. Candidate contexts: a College of
   Winterhold study/Arcanaeum surface, an Auri-El / dawn-facing shrine or study
-  object. Must be reachable in ordinary scholar play.
-- [ ] **Pressure surface** — pick the concrete object + cell for
-  `PDV_REFR_AltmerCrisisPressureWorldSignal`. Must come from an authored
-  crisis / Lorkhan / mortal-continuity beat, **not** a generic Skyrim object a
-  non-Altmer would trip.
-- [ ] Confirm neither location turns a rejected generic hook (travel, sleep,
-  generic spellcasting, College membership) into a scoring surface.
+  object. Must be an **opt-in** surface reachable in ordinary scholar play.
+- [ ] **Crisis hook (passive)** — pick the **one** real crisis beat to prove
+  first, and its trigger mechanism. **Recommended: marriage
+  (`RelationshipMarriageFIN`)** — self-contained, fires once, easy to trigger on
+  a test save. Decide the mechanism: quest-stage hook vs Story Manager node,
+  reusing the `PDV__SM_KillActor` / Phase 7 quest-hook pattern. It must route
+  into the existing crisis EventBus signal source, with a save-persistent
+  one-shot guard, and must **not** be a REFR the player activates.
+- [ ] Confirm neither hook turns a rejected generic hook (travel, sleep,
+  generic spellcasting, College membership, ordinary settlement play) into a
+  scoring surface.
 
-Record both chosen object EditorIDs + cells here before authoring:
+Record decisions here before authoring:
 
 ```text
 Positive object/cell:
-Pressure object/cell:
+Crisis beat chosen:            (recommended: marriage / RelationshipMarriageFIN)
+Crisis trigger mechanism:      (quest-stage hook | Story Manager node)
+Crisis one-shot guard key:     PDV.Surfaced.Altmer.Crisis.<beat>
 ```
 
 ---
 
-## Step B — Author the final-world placement (CK/Codex authoring — the real cost)
+## Step B — Author the two hooks (CK/Codex authoring — the real cost)
 
 - [ ] Back up `PlayerDevotion_Framework.esp` (timestamped, per existing helper
   convention).
-- [ ] Create `PDV_REFR_AltmerDawnStudyWorldSignal` pointing at the chosen
-  positive base, in the chosen cell, wired to the same EventBus route as the
-  QASmoke dawn-steadiness proof (`52`).
-- [ ] Create `PDV_REFR_AltmerCrisisPressureWorldSignal` pointing at the chosen
-  pressure base/context, wired to the Lorkhan-pressure route (`50`).
-- [ ] Refresh SEQ after the ESP write.
-- [ ] Re-run Step 0 gates; confirm still green with the two new references.
-- [ ] Update `PDV_Phase20_NoInGameProof_Gates.json` placement entries from
-  `plan` toward authored, and note the backup path in the gate ledger.
+- [ ] **Positive object:** create `PDV_REFR_AltmerDawnStudyWorldSignal` pointing
+  at the chosen study base, in the chosen cell, wired to the dawn-steadiness
+  route (`52`) via the existing `PDV_EventSignalActivator` pattern.
+- [ ] **Crisis hook:** author the passive trigger (quest-stage hook or Story
+  Manager node) that calls the EventBus crisis signal source on the chosen beat.
+  Gate it on Altmer origin and a `PDV.Surfaced.*` one-shot guard so it fires
+  once and never as a faucet. **No placed activator REFR for this beat.**
+- [ ] Compile any touched source (e.g. `PDV__ManagerQuest`, receiver/hook
+  script); refresh SEQ after the ESP write.
+- [ ] Re-run Step 0 gates; confirm still green with the new positive reference
+  and the crisis hook.
+- [ ] Update `PDV_Phase20_NoInGameProof_Gates.json` — keep the positive entry as
+  a placement, but reclassify the crisis entry from `surfaceEditorIdPlan` /
+  placement to a **passive quest/SM hook contract** (the ACTI plan was a proof
+  shim). Note the backup path in the gate ledger.
 
 ---
 
@@ -115,11 +150,15 @@ set PDV_GLO_DebugLevel to 2
 ```
 
 - [ ] Fresh **Altmer** save (expected build: Auri-El/Magnus scholar).
-- [ ] Activate the **real** dawn/study surface in its world location (not
-  QASmoke). Confirm route `52` fires in the log and a dawn-steadiness favor is
-  recorded.
-- [ ] Trigger the **real** crisis/pressure surface. Confirm route `50` fires
-  and crisis/Lorkhan state moves.
+- [ ] **Positive (activation):** use the **real** dawn/study object in its world
+  location (not QASmoke). Confirm route `52` fires in the log and a
+  dawn-steadiness favor is recorded.
+- [ ] **Crisis (passive):** reach the chosen beat naturally — for marriage,
+  complete `RelationshipMarriageFIN`. Confirm the crisis route fires **without
+  any deliberate activation**, crisis/Lorkhan state moves, and the surface
+  message appears once.
+- [ ] **One-shot:** re-enter / re-trigger the same beat and confirm it does
+  **not** re-fire (the `PDV.Surfaced.*` guard holds across save/load).
 - [ ] `node .\tools\pdv_phase20_runtime_check.mjs --race altmer` passes.
 - [ ] `node .\tools\pdv_phase20_runtime_check.mjs --race altmer --strict-manager`
   passes.
@@ -207,8 +246,9 @@ Fill wall-clock minutes per step. This is the data point that converts the
 July / August / September beta-feel spread into a real date.
 
 ```text
-Step A (choose placement):        ____ min
-Step B (author placement, CK):    ____ min
+Step A (choose hooks):            ____ min
+Step B (author object + passive   ____ min
+        crisis hook, CK):
 Step C (positive runtime proof):  ____ min
 Step D (negative sweep):          ____ min
 Step E (Survey legibility):       ____ min
