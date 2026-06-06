@@ -184,8 +184,12 @@ MessageBoxes for real choices always stay; routine notifications default off.
 - **Records:** **MISC** `PDV_DevotionMedallion` (+ icon; may reuse a vanilla amulet mesh).
 - **Papyrus:** `RefreshMedallion()` builds the string from StorageUtil piety and calls DF `SetDescription`. **DF text does not persist** → call from `OnLoad()` and on dawn. Soft-dep on DF; fallback is the existing Survey/status spell.
 
-### 4.6 `bodymark` — RaceMenu / NiOverride (baseline)
-- **Assets:** overlay textures (`scar`, `warpaint`, `ash`).
+### 4.6 `bodymark` — RaceMenu / NiOverride (baseline) — **V2 (deferred; custom art)**
+- **Scope:** the bodymark channel is **deferred to V2** (user 2026-06-05) because its overlay textures are
+  the plan's custom-art (`PDV_DiegeticUX_CustomAssetReview.md` §7). The Director still *calls* `SetBodyMark`
+  on the relevant transitions; at V1 those calls **no-op** (`Has("bodymark-assets")` / texture-missing
+  guard), so the interface is in place and V2 only adds the textures.
+- **Assets (V2):** overlay textures (`scar`, `warpaint`, `ash`).
 - **Papyrus:** `NiOverride.AddOverlay`/`AddNodeOverrideString` + tint; clear on inverse transition. Track in `PDV.Diegetic.Mark.*`; re-assert on `OnLoad()`. Use ≤2 named slots; respect `NiOverride.ini` budget. Soft-guarded even though RaceMenu is a modlist baseline.
 
 ### 4.7 `anim` — bundled OAR submod
@@ -251,8 +255,8 @@ Curse-cure pilot (Khenarthi), verbatim in `PDV_ImmersiveUX_Samples.md` "money sh
 | Phase | Scope | Exit gate |
 |---|---|---|
 | **D0 — inert scaffold** | `PDV_DiegeticDirector` + `PDV_DiegeticDeps` compile-clean; dep probes; MCM verbosity toggle; `Dispatch()` wired into `SurfaceTransition()` but every channel guarded/no-op. | Strict-verifier clean; in-game smoke shows **no behavior change**; save/load sane. |
-| **D1 — pilot (Khajiit/Khenarthi + shared curse)** | medallion (MISC+DF), journal (BOOK+DBF), screen (reverent/dread/release), sound (chime/hollow/rising), curse body scar, the cure MessageBox. | QASmoke counted proof (like the substrate proofs): transitions fire each channel once per direction; one-shot guards hold across reload; deps-absent degrades cleanly. |
-| **D2 — channel completion** | music beds, warpaint/ash marks, prayer-anim OAR submod, remaining tones, verbosity presets fully wired. | Each channel proven on at least one transition; verbosity mask verified. |
+| **D1 — pilot (Khajiit/Khenarthi + Dunmer)** | medallion (MISC+DF), journal (BOOK+DBF), screen (reverent/dread/release), sound (chime/hollow/rising — placeholders ok), the cure MessageBox. **No bodymark/anim (V2).** | QASmoke counted proof (like the substrate proofs): transitions fire each channel once per direction; one-shot guards hold across reload; deps-absent degrades cleanly. |
+| **D2/V2 — channel completion + custom art** | **bodymark channel + overlay textures (scar/ash/warpaint/soot)**, **prayer-anim OAR submod**, bespoke audio/music swaps, remaining tones, verbosity presets fully wired. | Each channel proven on at least one transition; verbosity mask verified. |
 | **D3 — roster fill** | per-race tone overrides + per-deity copy from RaceContent_Manifest; SPID stance `_DISTR.ini`. | Coverage map (like `PDV_TransitionSurfacing_CoverageMap.md`) marks every race×class cell authored or N/A. |
 
 ---
@@ -269,10 +273,11 @@ Curse-cure pilot (Khenarthi), verbatim in `PDV_ImmersiveUX_Samples.md` "money sh
 | SPID | soft | no stance recognition |
 | **New native C++** | **none** | — |
 
-**Asset production sub-track (Claude/art owns specs; production may need real assets):**
-EFSH/IMAD = recolor vanilla (low). Medallion mesh/icon = reuse vanilla amulet (low). Audio cues/beds =
-sourced/licensed (medium). Overlay textures (scar/warpaint/ash) = authored (medium). OAR animation
-clips = retarget/source (high — the one real craft cost; D2, degrades gracefully).
+**Asset production sub-track — V1 ships with NO custom art on the critical path** (user 2026-06-05: bodymark
++ polish art = V2). V1: EFSH/IMAD = recolor vanilla (low); medallion/book = reuse vanilla mesh (low); audio
+= vanilla placeholders. **V2 (batched custom art):** overlay textures (scar/ash/warpaint/soot), OAR
+animation clips, bespoke audio/music, optional bespoke medallion mesh. See
+`references/authoring/PDV_DiegeticUX_CustomAssetReview.md` for the full V1/V2 custom-asset split.
 
 ---
 

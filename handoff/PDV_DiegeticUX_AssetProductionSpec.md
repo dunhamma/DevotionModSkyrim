@@ -95,16 +95,17 @@ near-zero.** (A bespoke medallion mesh is a *nice-to-have*, D3+.)
 
 ---
 
-## 6. Body overlays (RaceMenu / NiOverride) — `bodymark`
-Texture overlays applied to body (and/or face) overlay slots. Mark shapes per
+## 6. Body overlays (RaceMenu / NiOverride) — `bodymark` — **V2 (deferred; user 2026-06-05)**
+**The entire bodymark channel + all overlay textures are V2.** The Director's `SetBodyMark` calls no-op at
+V1. Specs retained for V2. Texture overlays applied to body (and/or face) overlay slots; mark shapes per
 `scratch/prisma-art/ux_samples.py:t_body`.
 
 | Texture | Use | Slot | Look | Phase |
 |---|---|---|---|---|
-| `pdv_scar` | curse onset→cure (shared) | body overlay 0 | red sundered mark, upper chest/arm | D1 |
-| `pdv_ash` | Dunmer ancestor depth ≥3 | body overlay 1 | muted ash dust motes, shoulders | D1 |
-| `pdv_warpaint_<race>` | Champion tier (per race) | face overlay | gold, race-motif (Kyne storm, moon, sun, etc.) | D2 |
-| `pdv_soot` | Orc forge-life | body overlay 1 | dark forge soot, hands/forearms | D2 |
+| `pdv_scar` | curse onset→cure (shared) | body overlay 0 | red sundered mark, upper chest/arm | **V2** |
+| `pdv_ash` | Dunmer ancestor depth ≥3 | body overlay 1 | muted ash dust motes, shoulders | **V2** |
+| `pdv_warpaint_<race>` | Champion tier (per race) | face overlay | gold, race-motif (Kyne storm, moon, sun, etc.) | **V2** |
+| `pdv_soot` | Orc forge-life | body overlay 1 | dark forge soot, hands/forearms | **V2** |
 
 **Format:** `.dds` BC7/DXT5 with alpha, **2048² body** / 1024² face, tileable to the vanilla body UV.
 Apply tint via `AddNodeOverrideInt` (emissive/tint) so one greyscale texture serves multiple colors.
@@ -141,17 +142,18 @@ everything else degrades cleanly, clips land in D2.
 | Sound | yes (stings) | vanilla SOUN placeholder → swap | med |
 | Music | 1–2 loops | filtered vanilla bed | med |
 | Medallion/Book | no | reuse vanilla mesh | ~zero |
-| Body overlays | yes (greyscale + tint) | scar + ash | med |
-| Animation | yes (hkx) | **channel off if absent** | high (D2) |
+| Body overlays | yes (greyscale + tint) | **V2 — channel off at V1** | med (V2) |
+| Animation | yes (hkx) | **V2 — channel off at V1** | high (V2) |
 | Glyphs | (separate doc) | already drawn; wiring scope in GlyphRescope | — |
 
-### Minimum-to-ship-D1 asset set (everything else degrades gracefully)
+### Minimum-to-ship-V1 (D1) asset set — **no custom art on the critical path**
 - [ ] 5 IMAD (recolor) · 4 EFSH+SPEL (recolor) — **low**
-- [ ] 5 SNDR (vanilla placeholders ok) — **low if placeholder**
-- [ ] 1 MUSC `PDV_MUS_CurseBed` (filtered vanilla ok) — **low if placeholder**
+- [ ] 5 SNDR — **vanilla SOUN placeholders** (bespoke is a V2 swap)
+- [ ] 1 MUSC `PDV_MUS_CurseBed` — **filtered vanilla ambience** (bespoke V2)
 - [ ] `PDV_DevotionMedallion` MISC + `PDV_BookOfDays` BOOK (vanilla meshes) — **~zero**
-- [ ] 2 overlays `pdv_scar`, `pdv_ash` — **med**
-- [ ] OAR submod **optional** for D1 (channel no-ops without it)
+- [ ] ~~overlays~~ — **V2** (bodymark channel off at V1)
+- [ ] ~~OAR submod~~ — **V2** (anim channel off at V1)
 
-**Result:** D1 can ship feeling complete with essentially **two real art tasks** (scar + ash overlays) and
-a handful of audio swaps; animation and bespoke audio/music are D2 polish.
+**Result (user 2026-06-05: bodymark + polish art = V2):** V1 ships the whole feature with **zero custom art
+on the critical path** — recolored records + reused meshes + placeholder audio. All custom work (overlay
+textures, OAR clips, bespoke audio/music) batches into V2 and never blocks the release.

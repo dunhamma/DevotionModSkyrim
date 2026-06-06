@@ -45,6 +45,12 @@ sites.* The Director (`Dispatch`) is race-agnostic; **per-race expression is a d
 
 > Tone vocabulary and channel set are the closed lists in Architecture §2.1. "Signature" = where to spend
 > art/audio budget per race; every race still gets the full default profile for each class.
+>
+> **Phasing note (user 2026-06-05): the "Body-mark" column and any `anim` signature are V2** (custom art
+> deferred — `PDV_DiegeticUX_CustomAssetReview.md` §7). At V1 those races' signatures fall back to their
+> *non-art* channels: Dunmer → medallion/journal + the substrate-narrowing curse screen (the ash mark +
+> ash-shrine anim are V2); Bosmer/Orc anim → V2; per-race warpaints → V2. The body-mark/anim columns here
+> describe the **V2 target**, not V1 scope.
 
 ---
 

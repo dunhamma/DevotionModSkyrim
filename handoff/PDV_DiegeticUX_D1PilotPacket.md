@@ -22,12 +22,16 @@
 | screen (IMAD+EFSH) | ✔ reverent/revelation/dread/release | ✔ dread/release/absence |
 | sound (SNDR) | ✔ | ✔ |
 | music (MUSC) | ✔ **moon-night tell** | (curse bed) |
-| bodymark (NiOverride) | ✔ scar | ✔ **scar + ancestor ash** |
-| anim (OAR submod) | (moon-rite, opt) | ✔ **ash-shrine kneel/offer** |
+| bodymark (NiOverride) | **V2** (scar) | **V2** (scar + ancestor ash) |
+| anim (OAR submod) | **V2** (moon-rite) | **V2** (ash-shrine kneel/offer) |
 | substrate act/deepen/thin | ✔ lunar | ✔ ancestor |
 | classes: tier/emergence/curse/neglect | ✔ + **revelation emergence** | ✔ + **substrate-narrowing curse** |
 
-SPID stance is **not** in D1 (it's D3, config-only). Warpaint marks are D2.
+**Scope update (user, 2026-06-05): the bodymark and anim channels are V2** (custom art deferred — see
+`references/authoring/PDV_DiegeticUX_CustomAssetReview.md` §7). D1 still exercises the full *non-art* channel
+set — medallion, journal, screen, sound, music, substrate, and all four classes. The Dunmer curse at D1 still
+proves the **substrate-narrowing curse** via screen + medallion + journal; the *ash/scar body-mark*
+enhancement of those beats lands in V2. SPID stance is D3 (config-only).
 
 ---
 
@@ -99,10 +103,10 @@ messagebox:
 |---|---|---|---|
 | `tier` · Faithful/Remembered | reverent | screen, sound(chime), journal, medallion | Medium |
 | `emergence` · onset (Khenarthi) | revelation | screen(sun), sound(swell), journal, medallion, **MessageBox** | Loud |
-| `curse` · onset | dread | screen(cold, sustained), sound(hollow), music(curse bed ON), journal, medallion(dim), **bodymark scar ON**, **MessageBox** | Loud |
-| `curse` · cure | release | screen(clearing), sound(rising), music(curse bed OFF), journal, medallion(bright), **bodymark scar OFF**, **MessageBox** | Loud |
+| `curse` · onset | dread | screen(cold, sustained), sound(hollow), music(curse bed ON), journal, medallion(dim), **MessageBox** · *(scar = V2)* | Loud |
+| `curse` · cure | release | screen(clearing), sound(rising), music(curse bed OFF), journal, medallion(bright), **MessageBox** · *(scar off = V2)* | Loud |
 | `neglect` · drop | absence | screen(desaturate), sound(distant), journal, medallion(grey) | Medium |
-| substrate `act` (Khajiit lunar / Dunmer ancestor) | — | medallion refresh, journal digest, (Dunmer) **anim**, (Verbose) tiny cue | silent |
+| substrate `act` (Khajiit lunar / Dunmer ancestor) | — | medallion refresh, journal digest, (Verbose) tiny cue · *(Dunmer anim = V2)* | silent |
 | substrate `deepen` | reverent | sound(chime), journal | silent |
 
 ---
@@ -120,16 +124,17 @@ messagebox:
 | MUSC | `PDV_MUS_CurseBed` (D1), `PDV_MUS_MoonNight` (D1-optional) | reversible add/remove |
 
 ### Art/audio specs (Track E — Claude owns specs; production per cost note)
+**D1 ships with zero custom art on the critical path** (user 2026-06-05: bodymark + polish art = V2).
 - **IMAD/EFSH:** recolor vanilla EFSH (heal=green/release, frost=cold/dread, a warm bloom=reverent, a white
-  flash=revelation). Palette per `scratch/prisma-art/instruments.py`. **Low cost.**
-- **Medallion icon:** reuse a vanilla amulet. **Low.**
-- **Body overlays (NiOverride):** `pdv_scar` (shared, red), `pdv_ash` (Dunmer, muted ash dots over the
-  upper body). Mark shapes per `scratch/prisma-art/ux_samples.py` (`t_body`). **Medium.**
-- **SNDR:** 5 short stings sourced/licensed. `PDV_MUS_MoonNight` = one ambient loop. **Medium** (D1 can ship
-  with placeholder vanilla sounds and swap later).
-- **OAR submod** `.../OpenAnimationReplacer/PDV_Devotion/`: `kneel`, `offer` (shared) + `ash_kneel`
-  (Dunmer). Retarget vanilla pray idles. **High — D1 may ship anim channel off (no-op) and land in D2** if
-  clips aren't ready; everything else degrades cleanly.
+  flash=revelation). Palette per `scratch/prisma-art/instruments.py`. **Low cost, V1.**
+- **Medallion icon:** reuse a vanilla amulet. **Low, V1.**
+- **SNDR:** 5 short stings — **ship D1 on vanilla SOUN placeholders**; bespoke is a V2 swap. `PDV_MUS_CurseBed`
+  may start as a filtered vanilla ambience; `PDV_MUS_MoonNight` D1-optional.
+- **Body overlays (NiOverride) — V2.** `pdv_scar` (shared) + `pdv_ash` (Dunmer). The whole bodymark channel
+  is deferred; the Director's `SetBodyMark` calls no-op at V1. Mark shapes (for V2) per
+  `scratch/prisma-art/ux_samples.py` (`t_body`).
+- **OAR submod — V2.** `kneel`/`offer`/`ash_kneel`. Anim channel no-ops at V1; lands in V2 (or V1-late if a
+  cheap retarget is available). Everything else degrades cleanly.
 
 ---
 
@@ -156,17 +161,18 @@ messagebox:
   the next mask — Prisma side, already specced).
 - **Curse (vampire) onset/cure:** hook the **existing** `PDV_CurseState.psc` transition-notification hook
   (do not build a parallel path): `SurfaceTransition("curse","Vampire","onset"|"cure", deityIndex, tone)`
-  with tone `dread`/`release`. Director then: screen + sound + music bed + journal + medallion +
-  `SetBodyMark("scar", true|false)` + the Azura MessageBox. Dunmer curse copy carries the
-  **Good-Daedra-opens** framing (bank above).
-- **Ancestor ash mark:** when ancestor depth ≥ 3, `SetBodyMark("ash", true)`; clear below.
+  with tone `dread`/`release`. Director then (V1): screen + sound + music bed + journal + medallion + the
+  Azura MessageBox. Dunmer curse copy carries the **Good-Daedra-opens** framing (bank above).
+  *(V2 adds `SetBodyMark("scar", true|false)` to this same hook.)*
+- **Ancestor ash mark — V2:** when ancestor depth ≥ 3, `SetBodyMark("ash", true)`; clear below. (The
+  `SetBodyMark` call no-ops at V1.)
 - **tier / neglect:** standard §16.7 sites.
 
 ### Shared (both)
 - `PDV__ManagerQuest.SurfaceTransition()` gets the **one** new line (Architecture §2.4):
   `PDV_DiegeticDirector.Dispatch(eventClass, key, direction, deityIndex, toneOverride)`.
-- `OnPlayerLoadGame` → `PDV_DiegeticDirector.OnLoad()` (re-probe deps, `RefreshMedallion`, re-assert scar/
-  ash marks + any music bed).
+- `OnPlayerLoadGame` → `PDV_DiegeticDirector.OnLoad()` (re-probe deps, `RefreshMedallion`, re-assert any
+  music bed; re-assert scar/ash marks is V2 once bodymark ships).
 - Dawn consolidation → `RefreshMedallion()` + flush the journal digest line.
 
 ---
@@ -177,14 +183,15 @@ messagebox:
       save/reload at each transition.
 - [ ] **Deps-absent run:** force `Has("DF")`, `Has("DBF")`, `Has("NiOverride")`, `Has("OAR")`, `Has("PO3")`
       false in turn → no errors, no missing-function CTD; existing §16.7 surfaces still fire.
-- [ ] Curse `dread` screen + scar are **sustained** through the curse and **clear exactly on cure**; curse
-      music bed reverses; medallion + journal reflect both directions.
+- [ ] Curse `dread` screen is **sustained** through the curse and **clears exactly on cure**; curse music
+      bed reverses; medallion + journal reflect both directions. *(Scar sustain/clear is a V2 assertion.)*
 - [ ] Routine favor never routes through `Dispatch()`; it only refreshes the medallion + accrues the dawn
       digest (no per-act spam).
 - [ ] Verbosity: Silent shows MessageBox-only on transitions; Verbose restores Prisma toasts.
 - [ ] Dunmer ancestor `act` fires on a **non-combat** shrine trigger (closes the audit's Layer-1 silence).
 
 ## 6. Out of D1 (so scope is unambiguous)
-SPID stance (D3) · warpaint/Champion marks (D2) · per-race tone fill beyond the two pilots (D3) · music
-beyond curse bed + moon-night (D2) · the remaining 8 races' content banks (D3) · OAR clips may slip to D2
-(channel no-ops until then).
+**Bodymark channel + all body overlays (scar/ash/warpaint/soot) — V2** · **anim channel + OAR clips — V2**
+(both no-op at V1) · bespoke audio/music swaps — V2 (placeholders at V1) · SPID stance (D3) · per-race tone
+fill beyond the two pilots (D3) · the remaining 8 races' content banks (D3). **Net: D1/V1 ships with no
+custom art on the critical path.**

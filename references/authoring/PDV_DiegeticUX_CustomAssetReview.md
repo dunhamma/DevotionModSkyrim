@@ -28,7 +28,7 @@ Verdict columns: **Reuse** (vanilla/record/code — no custom) · **Recolor** (v
 | **Music beds** (music) | 1–4 MUSC loops | **Custom-med** | D1 (curse bed) / D2 | curse bed can start as filtered vanilla ambience |
 | **Medallion** (MISC) | mesh + icon | **Reuse** | D1 | vanilla amulet; bespoke mesh is D3+ nice-to-have |
 | **Book of Days** (BOOK) | mesh | **Reuse** | D1 | vanilla book/journal; paper, no art |
-| **Body marks** (bodymark) | overlay textures | **Custom-med** | D1 (scar, ash) / D2 (warpaints, soot) | **the main D1 custom-art task** |
+| **Body marks** (bodymark) | overlay textures | **Custom-med** | **V2** (scar, ash, warpaints, soot) | **deferred to V2 (user 2026-06-05)**; channel off at V1 |
 | **Prayer/offer/rite anims** (anim) | OAR `.hkx` clips | **Custom-high** | D2 (channel no-ops until then) | **the biggest craft item — see §3** |
 | **SPID stance** | `_DISTR.ini` | **Reuse** (config) | D3 | no asset |
 | **Prisma instruments** | SVG rendered in JS | **Reuse** (code) | (existing) | no art files — drawn at runtime; PDV's moat |
@@ -38,16 +38,16 @@ Verdict columns: **Reuse** (vanilla/record/code — no custom) · **Recolor** (v
 
 ## 2. The genuinely-custom shortlist (everything else is reuse/recolor/record)
 
-Only **four** classes require authoring that vanilla can't supply:
+Only **four** classes require authoring that vanilla can't supply — **all of them V2** after the 3+4 → V2
+call:
 
-1. **Body-overlay textures** — `pdv_scar`, `pdv_ash` (D1); `pdv_warpaint_<race>` ×~10, `pdv_soot` (D2).
-2. **Audio** — 5–6 sound stings + 1–4 music loops (placeholders bridge D1).
-3. **Animation clips** — the OAR prayer/offer/rite set (D2; degrades gracefully).
-4. **Optional polish art** — ARTO sun-mark, bespoke medallion mesh, glyph refinements (`mehrunes-dagon`,
-   `tsun`, `satakal`).
+1. **Body-overlay textures** — `pdv_scar`, `pdv_ash`, `pdv_warpaint_<race>` ×~10, `pdv_soot` — **V2**.
+2. **Audio** — 5–6 sound stings + 1–4 music loops — **bespoke V2** (vanilla placeholders bridge V1).
+3. **Animation clips** — the OAR prayer/offer/rite set — **V2** (channel no-ops at V1; degrades gracefully).
+4. **Optional polish art** — ARTO sun-mark, bespoke medallion mesh, glyph refinements — **V2**.
 
-**D1 reduces to two real custom-art tasks** (the `pdv_scar` + `pdv_ash` overlays) plus audio swaps —
-because animation is gracefully optional and everything else is reuse/recolor/record.
+**V1 reduces to zero unavoidable custom art** — every V1 surface is reuse/recolor/record + placeholder
+audio; all four custom classes batch into V2.
 
 ---
 
@@ -131,20 +131,37 @@ masks cover every race/state. The D2 warpaints can be **traced from the existing
 ## 7. Decisions this review surfaces (for you)
 
 1. **Animation sourcing** — retarget CC-licensed idle clips (recommended, cheap) vs commission vs in-house?
-   And confirm **idle-style rites, not shrine-aligned** (keeps it cheap + interruptible).
-2. **Audio sourcing** — library / commission / AI-generated-cleared for the ~6 stings + 1–2 D1 loops? Or
-   ship D1 on vanilla placeholders and revisit?
-3. **Body-overlay production** — who paints `pdv_scar` + `pdv_ash` (the only unavoidable D1 art)? Confirm the
-   greyscale+tint approach so we author 2 masks, not 20.
-4. **Polish art priority** — are the D2 per-race warpaints + bespoke medallion mesh wanted for 1.0, or
-   post-1.0? (Traceable from existing glyphs if yes.)
+   And confirm **idle-style rites, not shrine-aligned** (keeps it cheap + interruptible). *(Open. Effectively
+   V2 alongside the other custom art unless retargeted clips are cheap enough to slot into V1 late — the
+   channel no-ops until then, so no decision is forced now.)*
+2. **Audio sourcing** — library / commission / AI-generated-cleared for the ~6 stings + 1–2 loops? *(Open.
+   V1 ships on vanilla placeholders; bespoke audio is a V2 swap.)*
+3. ~~Body-overlay production~~ — **RESOLVED → V2 (user, 2026-06-05).** `pdv_scar` + `pdv_ash` and the whole
+   **bodymark channel** move to V2. The greyscale+tint approach still stands when built.
+4. ~~Polish art priority~~ — **RESOLVED → V2.** Per-race warpaints + bespoke medallion mesh are post-1.0.
 
-## 8. Bottom line
-The plan's custom-asset surface is **small and back-loaded**:
-- **Unavoidable for D1:** ~**2 body-overlay textures** (+ optional audio swaps). Everything else D1 is
-  reuse/recolor/record.
-- **D2 polish:** the OAR animation set (gracefully optional), bespoke audio, per-race warpaints.
+### Consequence of 3 + 4 → V2: **V1 ships with zero custom art on the critical path.**
+With body-marks and polish art deferred, the only custom items left are **animation** (channel no-ops if
+absent) and **bespoke audio** (vanilla placeholders bridge V1). So the **1.0 diegetic layer is entirely
+reuse / recolor / record + placeholder audio** — nothing custom blocks it.
+
+| Custom item | V1 (1.0) | V2 |
+|---|---|---|
+| Body overlays (scar, ash, warpaints, soot) | — (channel deferred) | ✔ all |
+| Bespoke medallion mesh | reuse vanilla amulet | ✔ optional |
+| Animation (OAR clips) | off (graceful no-op) | ✔ (or V1-late if cheap retarget) |
+| Audio stings + beds | vanilla placeholders | ✔ bespoke swap |
+| Imagespace / effect-shader / item meshes / glyphs / instruments | ✔ reuse/recolor/record/code | — |
+
+## 8. Bottom line (updated for 3+4 → V2)
+The plan's custom-asset surface is **small, back-loaded, and now entirely V2**:
+- **Unavoidable for V1 (1.0):** **none.** Every V1 surface is reuse/recolor/record, with audio on vanilla
+  placeholders. The **bodymark channel is deferred to V2** (its transitions still fire every other channel —
+  screen, sound, music, journal, medallion, MessageBox — at V1).
+- **V2 custom work (batched):** body overlays (scar/ash/warpaints/soot), the OAR animation set, bespoke
+  audio, optional bespoke medallion mesh.
 - **Never custom:** instruments (code), most glyphs (drawn), imagespace (records), item meshes (reuse).
 
-So the reuse-first architecture is doing its job: a feature this broad lands with essentially **one real art
-task to ship the pilot**, and the high-craft animation work is decoupled so it can never block a release.
+So the reuse-first architecture fully pays off: **1.0 lands this entire feature with no custom art on the
+critical path**, and all high-craft work (textures + animation + bespoke audio) batches cleanly into V2
+without blocking the release.
