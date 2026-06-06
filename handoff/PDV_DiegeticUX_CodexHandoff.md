@@ -176,7 +176,13 @@ Legend: ✅ done · 📄 specced here, not built · ⛔ blocked/needs decision.
 | Per-asset production specs | Claude | ⛔ next (Track E) |
 | Per-race/-deity copy fill (D3) | Claude | ⛔ from RaceContent_Manifest |
 
-**Open decisions for the user before D1 codes** (also in `PDV_ImmersiveUX_BeyondPrisma_ThinkPiece.md` §7):
-1. Medallion = new MISC alongside the Prisma medallion roster (assumed coexist), or collapse to one?
-2. Confirm the hard-dependency floor stays **SKSE + Prisma bridge + OAR engine only** (all else soft).
-3. Which race leads the D1 pilot — Khajiit/Khenarthi (assumed, exercises lunar + curse), or another?
+**Resolved decisions (user, 2026-06-05) — D1 may code against these:**
+1. **Medallion coexists** with the Prisma medallion roster — new **MISC** for the quick hover read, Prisma
+   panel stays the deep surface. (Architecture §4.5 already assumes coexist.)
+2. **Hard-dependency floor stays SKSE + Prisma bridge + OAR engine only.** Description Framework, Dynamic
+   Book Framework, RaceMenu/NiOverride, po3 PE, and SPID are **all soft** — every emitter no-ops cleanly
+   when its framework is absent (Architecture §7).
+3. **D1 pilot = a race set: Khajiit/Khenarthi (lead) + Dunmer (co-pilot).** Together they exercise the full
+   channel matrix — Khajiit covers lunar substrate + music (moon tell) + revelation emergence + curse +
+   screen/sound/medallion/journal; Dunmer covers the **ancestor-ash body-mark + ash-shrine prayer anim +
+   substrate-narrowing curse**. Content + asset specs for both: `PDV_DiegeticUX_D1PilotPacket.md`.

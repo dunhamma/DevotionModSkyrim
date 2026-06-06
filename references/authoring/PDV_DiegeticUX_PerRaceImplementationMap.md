@@ -134,7 +134,8 @@ diegetic hook differs.
   emergence** is a real `revelation` beat (closes the silent-patron invisibility, `:56,206`).
 - **Curse:** the moons withhold light; scar; moon-warpaint at Champion.
 - **Hook sites (exact):** `HandleKhajiitMoonObservance` (~1331), `RecordRoadHomeCadenceScaled` (~1360) →
-  `lunar`/`act`; substrate tier-up → `deepen`. This is the **D1 pilot race**.
+  `lunar`/`act`; substrate tier-up → `deepen`. This is the **D1 pilot lead race** (with Dunmer co-pilot —
+  see `handoff/PDV_DiegeticUX_D1PilotPacket.md`).
 
 ### Orc — Malacath (forge-quality, stronghold acceptance, oath-breaking) + life-mode
 - **Emphasis:** **performed devotion (forge rite anim)** + **music that banks/cools with life-mode**

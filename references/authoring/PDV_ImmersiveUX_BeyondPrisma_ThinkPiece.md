@@ -308,16 +308,13 @@ mostly base CK records + po3 PE + one light framework. This is the highest ROI i
 
 ## 7. Open questions for you (decisions this doc can't make)
 
-1. ~~Prisma panel vs. a devotion skill tree~~ — **resolved:** no skill tree. The Prisma panel stays as the
-   deep pull surface; the diegetic medallion (B1) becomes the *quick* read. (See remaining fork in #3.)
-2. **How hard a stance on dependencies?** — **partly resolved:** soft deps are accepted and PDV bundles its
-   own assets (animations as a PDV OAR submod; RaceMenu is a baseline given). Open sub-question: confirm the
-   *hard* dependency list stays minimal (ideally just SKSE + the existing Prisma bridge + OAR engine), with
-   everything else soft-guarded.
-3. **Does the medallion concept move off Prisma?** The Description-Framework medallion (B1) and the Prisma
-   medallion roster (`handoff/PrismaMedallionRoster_DesignHandoff.md`) are two answers to the same need. The
-   build-out's working assumption is **they coexist** (MISC item = quick hover read, Prisma = deep panel) —
-   confirm or collapse to one.
+**All three resolved (user, 2026-06-05):**
+1. ~~Prisma panel vs. a devotion skill tree~~ — **no skill tree.** Prisma panel stays the deep pull surface.
+2. **Dependencies — resolved:** hard floor stays **SKSE + Prisma bridge + OAR engine only**; everything else
+   (Description Framework, Dynamic Book Framework, RaceMenu/NiOverride, po3 PE, SPID) is **soft**, no-op when
+   absent. PDV bundles its own animations as an OAR submod.
+3. **Medallion — resolved: coexist.** The Description-Framework **MISC** medallion (B1) is the quick hover
+   read; the Prisma medallion roster (`handoff/PrismaMedallionRoster_DesignHandoff.md`) stays the deep panel.
 
 ---
 
