@@ -3516,6 +3516,45 @@ class Verifier {
         this.phase20RaceCostingGap(`Phase 20 ${raceName} rejected hooks`, `Only ${rejectedHooks.length} rejected hook families are named.`, manifestPath);
       }
 
+      // Hook-mechanism classification: every trigger surface must declare how the
+      // real hook fires (object-optin vs passive event/location/quest/cadence).
+      // The QASmoke ACTI surfaces are proof shims; passive surfaces still wired
+      // only as proof-shim ACTIs are flagged for real-hook migration.
+      const ALLOWED_HOOK_MECHANISMS = new Set([
+        "object-optin", "passive-event", "passive-location", "passive-quest", "passive-cadence", "mixed", "mixed-passive",
+      ]);
+      const triggerSurfaces = manifest.triggerSurfaces || [];
+      let unmigratedShimCount = 0;
+      for (const surface of triggerSurfaces) {
+        const surfaceId = surface.id || surface.editorId || "(unnamed surface)";
+        const mechanism = surface.realMechanism;
+        if (!mechanism || !ALLOWED_HOOK_MECHANISMS.has(mechanism)) {
+          this.phase20RaceCostingGap(
+            `Phase 20 ${raceName} hook mechanism`,
+            `${surfaceId} has invalid or missing realMechanism ${mechanism || "(missing)"}; expected one of ${[...ALLOWED_HOOK_MECHANISMS].join(", ")}.`,
+            manifestPath,
+          );
+          continue;
+        }
+        this.pass(`Phase 20 ${raceName} hook mechanism`, `${surfaceId} declares realMechanism ${mechanism}.`, manifestPath);
+        const needsRealHook = mechanism !== "object-optin";
+        const stillProofShim = surface.proofShim === true && (surface.recordType || "ACTI") === "ACTI";
+        if (needsRealHook && stillProofShim && surface.realMechanismMigrated !== true) {
+          unmigratedShimCount += 1;
+        }
+      }
+      if (triggerSurfaces.length > 0) {
+        if (unmigratedShimCount === 0) {
+          this.pass(`Phase 20 ${raceName} hook migration`, "No passive trigger surfaces are awaiting real-hook migration.", manifestPath);
+        } else {
+          this.warn(
+            `Phase 20 ${raceName} hook migration`,
+            `${unmigratedShimCount} of ${triggerSurfaces.length} trigger surface(s) are passive/mixed but still proof-shim ACTIs; build the real event/location/quest/cadence hook and set realMechanismMigrated:true to clear.`,
+            manifestPath,
+          );
+        }
+      }
+
       this.checkPhase20ImmersionProofContract(
         raceName,
         manifest,
@@ -3696,7 +3735,7 @@ class Verifier {
           this.phase20RaceCostingGap("Phase 20 no-in-game placement contracts", `${race} declares ${finalPlacementContracts.length}; expected at least 2.`, PHASE20_NO_IN_GAME_PROOF_GATES);
         }
         for (const contract of finalPlacementContracts) {
-          const missing = ["surfaceEditorIdPlan", "intendedObjectType", "targetLocationFamily", "culturalReason", "classification", "wrongOriginExpectation", "relatedQASmokeProof", "manualStopCondition"].filter((field) => !(typeof contract[field] === "string" && contract[field].trim().length > 0));
+          const missing = ["surfaceEditorIdPlan", "intendedObjectType", "targetLocationFamily", "culturalReason", "classification", "wrongOriginExpectation", "relatedQASmokeProof", "manualStopCondition", "realMechanism"].filter((field) => !(typeof contract[field] === "string" && contract[field].trim().length > 0));
           if (missing.length === 0) {
             this.pass("Phase 20 no-in-game placement contract", `${race} ${contract.surfaceEditorIdPlan} is CK-ready as a contract.`, PHASE20_NO_IN_GAME_PROOF_GATES);
           } else {
