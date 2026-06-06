@@ -13,6 +13,16 @@ says the best religion feel is *quiet, diegetic, and recoverable*
 surfaces that are **not a custom canvas at all** — item text, screen tints, auras, music, animation,
 recognition. This doc maps that whole space, names the tool for each, and ranks the bets.
 
+> **Decisions made after this doc was first drafted (2026-06-05) — read alongside it:**
+> - **No skill tree.** The Custom Skills Framework "Devotion tree" (Tier A / Tier 3 #8 below) is **dropped** —
+>   it adds in-game progression cost and crosses PDV's experience line. Devotion is felt and reflected, never
+>   spent and leveled. Strikethrough left in place below for the record.
+> - **Soft dependencies are acceptable; PDV bundles its own assets** to shrink the hard-dep surface (require
+>   the *engine*, ship the *content* — esp. animations as a PDV-owned OAR submod).
+> - **RaceMenu / NiOverride is treated as a baseline given** for PDV's modlist targets.
+> - **The detailed build-out of the diegetic surfaces (Tier B) and a soft Tier C now lives in
+>   `PDV_ImmersiveUX_DiegeticSurfaces_Buildout.md`** — that doc supersedes the brief Tier-1/2/3 sketch here.
+
 ---
 
 ## 0. What Prisma actually buys us (so we know what we'd be replacing or keeping)
@@ -92,12 +102,13 @@ has a niche where it's lighter or more native.
 | **TrueHUD widget API** ([nexus](https://www.nexusmods.com/skyrimspecialedition/mods/62775)) | SKSE hub for HUD bars; exposes a "special bar" API other plugins drive | A "divine favor" special bar above health during a Champion/curse moment | Hard SKSE dep; designed for combat bars. Good for **transient** stateful bars (a curse "draining" bar), overkill for steady status. |
 | **Infinity UI** ([nexus](https://www.nexusmods.com/skyrimspecialedition/mods/74483)) | Inject/replace elements in *any* vanilla or modded menu via SWF + an event API | Add a devotion line to the vanilla Magic/Active-Effects menu, or a glyph to the shrine activation prompt | Patches the **vanilla** UI the player already uses (very diegetic-adjacent) instead of a separate canvas. Needs SWF authoring. |
 | **Wheeler / radial-menu pattern** ([Wheeler](https://www.nexusmods.com/skyrimspecialedition/mods/97345), [LamasTinyHUD lineage]) | ImGui radial action wheel; co-save data, no script bloat | A "devotional acts" radial: pray / offer / meditate / dedicate-kill, per active deity | Different *interaction model* from Prisma — an input surface, not a display. Could replace fiddly hotkeys for rites. |
-| **Custom Skills Framework** ([nexus](https://www.nexusmods.com/skyrimspecialedition/mods/41780), [menu](https://www.nexusmods.com/skyrimspecialedition/mods/62423), [source](https://papyrus.bellcube.dev/skyrimse/source/custom-skills/)) | Adds real perk-tree "skill" menus with a Papyrus API; integrates into the vanilla tween menu | **The big one** — model "Devotion" (or per-pantheon devotion) as a constellation skill tree the player levels and spends in. Native-feeling progression UI. | This is a *legitimate structural alternative* to the Prisma panel as the "see and grow my devotion" pull surface. It's vanilla-integrated, controller-friendly, and reads as Skyrim, not as web UI. Cost: a real framework dep + perk-tree authoring. **Strong V2 candidate.** |
+| ~~**Custom Skills Framework**~~ **(DROPPED — see decision box at top)** ([nexus](https://www.nexusmods.com/skyrimspecialedition/mods/41780)) | Adds real perk-tree "skill" menus with a Papyrus API | ~~Devotion as a levelled skill tree~~ — **rejected**: adds player-facing progression cost and crosses the experience line. | Kept in the table only so the rejection is on the record. Devotion is reflected, not spent. |
 
-**Read on Tier A:** the only one that changes the strategy is **Custom Skills Framework** (a different, very
-Skyrim-native answer to "the devotion screen") and **iWant Widgets** (a far lighter way to get a persistent
-HUD meter without our own DLL). The ImGui tools are best confined to **debug UX**, honoring rule #3 of the
-lessons doc ("Debug is not UX").
+**Read on Tier A (post-decision):** with the skill tree rejected, the only Tier-A item still worth carrying is
+**iWant Widgets** (a far lighter way to get an *optional* persistent HUD meter without our own DLL — and even
+that risks the "second hunger meter" feeling, so it stays opt-in; see the build-out's soft Tier C7). The ImGui
+tools are best confined to **debug UX**, honoring rule #3 of the lessons doc ("Debug is not UX"). The real
+energy goes to Tier B below.
 
 ---
 
@@ -274,11 +285,10 @@ mostly base CK records + po3 PE + one light framework. This is the highest ROI i
 7. **SPID stance recognition** — priests/rivals react via disposition (V1-legal, non-voiced).
 
 ### Tier 3 — Structural bets (bigger, revisit at V2)
-8. **Custom Skills Framework "Devotion" tree** — a Skyrim-native pull surface that could *complement or
-   partly succeed* the Prisma panel for "see and grow my faith." Decide whether the panel and the tree
-   coexist or the tree absorbs the panel's role.
-9. **iWant Widgets** persistent meter — if playtesting shows players want an always-on piety read without
-   opening anything (lighter than reviving a Prisma HUD overlay).
+8. ~~Custom Skills Framework "Devotion" tree~~ — **DROPPED** (adds player progression cost; crosses the
+   experience line). Devotion is reflected, never levelled.
+9. **iWant Widgets** persistent meter — *only* if playtesting shows players want an always-on piety read
+   without opening anything; opt-in, off by default (risks the "second hunger meter" feeling).
 10. **Mantella recognition bridge** — explicitly opt-in, V2+, past the voiced-content non-goal; the ceiling
     of "the world knows you," not a core surface.
 
@@ -298,15 +308,16 @@ mostly base CK records + po3 PE + one light framework. This is the highest ROI i
 
 ## 7. Open questions for you (decisions this doc can't make)
 
-1. **Is the Prisma panel staying, or do we want the Custom Skills "Devotion tree" to eventually replace it as
-   the pull surface?** That's the one strategic fork — it changes whether Prisma stays multi-purpose or
-   narrows to *just* the instruments/glyphs/toasts.
-2. **How hard a stance on dependencies?** A pure-diegetic Tier-1 (imagespace/sound/music/po3) adds almost no
-   trust cost. RaceMenu / animation frameworks add soft deps. Mantella adds a heavy optional one. Where's the
-   line for a "religion mod that stays trustworthy in a 1000-mod list"?
+1. ~~Prisma panel vs. a devotion skill tree~~ — **resolved:** no skill tree. The Prisma panel stays as the
+   deep pull surface; the diegetic medallion (B1) becomes the *quick* read. (See remaining fork in #3.)
+2. **How hard a stance on dependencies?** — **partly resolved:** soft deps are accepted and PDV bundles its
+   own assets (animations as a PDV OAR submod; RaceMenu is a baseline given). Open sub-question: confirm the
+   *hard* dependency list stays minimal (ideally just SKSE + the existing Prisma bridge + OAR engine), with
+   everything else soft-guarded.
 3. **Does the medallion concept move off Prisma?** The Description-Framework medallion (B1) and the Prisma
-   medallion roster (`handoff/PrismaMedallionRoster_DesignHandoff.md`) are two answers to the same need. They
-   can coexist (item = quick read, Prisma = deep panel) or we pick one.
+   medallion roster (`handoff/PrismaMedallionRoster_DesignHandoff.md`) are two answers to the same need. The
+   build-out's working assumption is **they coexist** (MISC item = quick hover read, Prisma = deep panel) —
+   confirm or collapse to one.
 
 ---
 
