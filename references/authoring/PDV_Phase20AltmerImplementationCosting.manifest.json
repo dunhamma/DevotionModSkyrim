@@ -281,11 +281,7 @@
       "oncePerDayKey": "PDV.Signal.AltmerDragonbornCrisis.Activator",
       "name": "ALTMER: DRAGONBORN CRISIS SIGNAL",
       "activateText": "CONTEMPLATE THE DRAGONBORN CONTRADICTION",
-      "runtimeIntent": "first authored crisis source proof for Dissonant",
-      "realMechanism": "passive-quest",
-      "realMechanismConfidence": "locked",
-      "realMechanismNote": "first main-quest Dragonborn beat; one-shot guard",
-      "proofShim": true
+      "runtimeIntent": "first authored crisis source proof for Dissonant"
     },
     {
       "id": "altmer-lorkhan-pressure-proof",
@@ -301,11 +297,7 @@
       "oncePerDayKey": "PDV.Signal.AltmerLorkhanPressure.Activator",
       "name": "ALTMER: LORKHAN PRESSURE SIGNAL",
       "activateText": "STUDY THE MORTAL CONTRADICTION",
-      "runtimeIntent": "tagged Lorkhan pressure proof without ambient Skyrim penalties",
-      "realMechanism": "passive-quest",
-      "realMechanismConfidence": "judgment-call",
-      "realMechanismNote": "Sovngarde/marriage/companions beat; not an activator",
-      "proofShim": true
+      "runtimeIntent": "tagged Lorkhan pressure proof without ambient Skyrim penalties"
     },
     {
       "id": "altmer-dawn-steadiness-proof",
@@ -321,11 +313,7 @@
       "oncePerDayKey": "PDV.Signal.AltmerDawnSteadiness.Activator",
       "name": "ALTMER: DAWN STEADINESS SIGNAL",
       "activateText": "KEEP DAWN DISCIPLINE",
-      "runtimeIntent": "daily-life positive loop proof",
-      "realMechanism": "object-optin",
-      "realMechanismConfidence": "locked",
-      "realMechanismNote": "opt-in study/dawn object; activation is intentional devotion",
-      "proofShim": true
+      "runtimeIntent": "daily-life positive loop proof"
     },
     {
       "id": "altmer-orthodox-cost-proof",
@@ -341,11 +329,7 @@
       "oncePerDayKey": "PDV.Signal.AltmerOrthodoxCost.Activator",
       "name": "ALTMER: ORTHODOX COST SIGNAL",
       "activateText": "BEAR THE ORTHODOX COST",
-      "runtimeIntent": "marked orthodox-cost favor proof",
-      "realMechanism": "passive-event",
-      "realMechanismConfidence": "locked",
-      "realMechanismNote": "consequence of orthodox enforcement; contextual",
-      "proofShim": true
+      "runtimeIntent": "marked orthodox-cost favor proof"
     }
   ],
   "curseAndExileRules": [

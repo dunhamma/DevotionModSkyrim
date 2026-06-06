@@ -79,11 +79,7 @@
       "signalSourceId": "redguard_crown_tomb_respect_proof",
       "oncePerDayKey": "PDV.Signal.RedguardCrownTombRespect",
       "name": "PDV REDGUARD CROWN TOMB RESPECT SIGNAL",
-      "activateText": "RECORD CROWN TOMB RESPECT",
-      "realMechanism": "object-optin",
-      "realMechanismConfidence": "judgment-call",
-      "realMechanismNote": "pay-respect surface at ancestral tomb, or passive-location on tomb entry",
-      "proofShim": true
+      "activateText": "RECORD CROWN TOMB RESPECT"
     },
     {
       "id": "redguard-forebear-road-proof",
@@ -98,11 +94,7 @@
       "signalSourceId": "redguard_forebear_road_proof",
       "oncePerDayKey": "PDV.Signal.RedguardForebearRoad",
       "name": "PDV REDGUARD FOREBEAR ROAD SIGNAL",
-      "activateText": "RECORD FOREBEAR ROAD",
-      "realMechanism": "passive-event",
-      "realMechanismConfidence": "locked",
-      "realMechanismNote": "road/contract conduct",
-      "proofShim": true
+      "activateText": "RECORD FOREBEAR ROAD"
     },
     {
       "id": "redguard-ashabah-death-duty-proof",
@@ -117,11 +109,7 @@
       "signalSourceId": "redguard_ashabah_death_duty_proof",
       "oncePerDayKey": "PDV.Signal.RedguardAshAbahDeathDuty",
       "name": "PDV REDGUARD ASH'ABAH DEATH DUTY SIGNAL",
-      "activateText": "RECORD ASH'ABAH DEATH DUTY",
-      "realMechanism": "passive-event",
-      "realMechanismConfidence": "locked",
-      "realMechanismNote": "qualifying death-duty act; spine rejects generic undead spam",
-      "proofShim": true
+      "activateText": "RECORD ASH'ABAH DEATH DUTY"
     },
     {
       "id": "redguard-far-shores-token-proof",
@@ -136,11 +124,7 @@
       "signalSourceId": "redguard_far_shores_token_proof",
       "oncePerDayKey": "PDV.Signal.RedguardFarShoresToken",
       "name": "PDV REDGUARD FAR SHORES TOKEN SIGNAL",
-      "activateText": "RECORD FAR SHORES TOKEN",
-      "realMechanism": "object-optin",
-      "realMechanismConfidence": "locked",
-      "realMechanismNote": "private ritual with a token; activation is fine",
-      "proofShim": true
+      "activateText": "RECORD FAR SHORES TOKEN"
     }
   ],
   "requiredContentRows": [

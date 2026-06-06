@@ -71,11 +71,7 @@
       "signalSourceId": "orc_stronghold_forge_proof",
       "oncePerDayKey": "PDV.Signal.OrcStrongholdForge",
       "name": "PDV ORC STRONGHOLD FORGE SIGNAL",
-      "activateText": "RECORD STRONGHOLD FORGE",
-      "realMechanism": "object-optin",
-      "realMechanismConfidence": "judgment-call",
-      "realMechanismNote": "stronghold forge surface gated to stronghold context; spine rejects raw craft count",
-      "proofShim": true
+      "activateText": "RECORD STRONGHOLD FORGE"
     },
     {
       "id": "orc-city-dignity-proof",
@@ -90,11 +86,7 @@
       "signalSourceId": "orc_city_dignity_proof",
       "oncePerDayKey": "PDV.Signal.OrcCityDignity",
       "name": "PDV ORC CITY DIGNITY SIGNAL",
-      "activateText": "RECORD CITY DIGNITY",
-      "realMechanism": "passive-event",
-      "realMechanismConfidence": "locked",
-      "realMechanismNote": "dignified conduct; spine rejects ordinary city presence",
-      "proofShim": true
+      "activateText": "RECORD CITY DIGNITY"
     },
     {
       "id": "orc-legion-service-proof",
@@ -109,11 +101,7 @@
       "signalSourceId": "orc_legion_service_proof",
       "oncePerDayKey": "PDV.Signal.OrcLegionService",
       "name": "PDV ORC LEGION SERVICE SIGNAL",
-      "activateText": "RECORD LEGION SERVICE",
-      "realMechanism": "passive-quest",
-      "realMechanismConfidence": "judgment-call",
-      "realMechanismNote": "Legion questline service beat; spine rejects Legion membership alone",
-      "proofShim": true
+      "activateText": "RECORD LEGION SERVICE"
     },
     {
       "id": "orc-self-made-community-proof",
@@ -128,11 +116,7 @@
       "signalSourceId": "orc_self_made_community_proof",
       "oncePerDayKey": "PDV.Signal.OrcSelfMadeCommunity",
       "name": "PDV ORC SELF-MADE COMMUNITY SIGNAL",
-      "activateText": "RECORD SELF-MADE COMMUNITY",
-      "realMechanism": "passive-event",
-      "realMechanismConfidence": "locked",
-      "realMechanismNote": "community-building act",
-      "proofShim": true
+      "activateText": "RECORD SELF-MADE COMMUNITY"
     }
   ],
   "requiredContentRows": [
