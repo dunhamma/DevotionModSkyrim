@@ -185,7 +185,11 @@
       "name": "PDV ARGONIAN HIST MAINTENANCE SIGNAL",
       "activateText": "RECORD HIST MAINTENANCE",
       "oncePerDayKey": "PDV.Signal.ArgonianHistMaintenance",
-      "immersionProof": "A safe water/reflection proxy for maintaining a distant Hist connection; not a generic swimming faucet."
+      "immersionProof": "A safe water/reflection proxy for maintaining a distant Hist connection; not a generic swimming faucet.",
+      "realMechanism": "object-optin",
+      "realMechanismConfidence": "judgment-call",
+      "realMechanismNote": "Hist sap/tree ritual may be opt-in; water/rest upkeep is passive - confirm which carries the hook",
+      "proofShim": true
     },
     {
       "id": "people-support-proof",
@@ -201,7 +205,11 @@
       "name": "PDV ARGONIAN PEOPLE SUPPORT SIGNAL",
       "activateText": "RECORD PEOPLE SUPPORT",
       "oncePerDayKey": "PDV.Signal.ArgonianPeopleSupport",
-      "immersionProof": "A chosen-community proxy for Saxhleel mutual aid in Skyrim's sparse Argonian social world."
+      "immersionProof": "A chosen-community proxy for Saxhleel mutual aid in Skyrim's sparse Argonian social world.",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "community recognition; helping Argonian/community NPCs",
+      "proofShim": true
     },
     {
       "id": "void-threshold-proof",
@@ -217,7 +225,11 @@
       "name": "PDV ARGONIAN VOID SIGNAL",
       "activateText": "RECORD VOID SIGNAL",
       "oncePerDayKey": "PDV.Signal.ArgonianVoidSignal",
-      "immersionProof": "A threshold Sithis signal used only to prove repeated significant death-facing events; one signal is not full activation."
+      "immersionProof": "A threshold Sithis signal used only to prove repeated significant death-facing events; one signal is not full activation.",
+      "realMechanism": "passive-quest",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "Sithis crossing; accumulated/stage gated, not one DB join",
+      "proofShim": true
     },
     {
       "id": "bed-of-choice-proof",
@@ -233,7 +245,11 @@
       "name": "PDV ARGONIAN BED OF CHOICE SIGNAL",
       "activateText": "RECORD BED OF CHOICE",
       "oncePerDayKey": "PDV.Signal.ArgonianBedOfChoice",
-      "immersionProof": "A chosen-bed cadence proof for the family the exile chose; repeating any generic inn bed must not count."
+      "immersionProof": "A chosen-bed cadence proof for the family the exile chose; repeating any generic inn bed must not count.",
+      "realMechanism": "passive-cadence",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "OnSleepStop in a player-chosen bed; not an object",
+      "proofShim": true
     }
   ],
   "immersionProof": {

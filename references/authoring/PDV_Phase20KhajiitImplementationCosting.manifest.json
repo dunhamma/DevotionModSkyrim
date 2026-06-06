@@ -109,7 +109,11 @@
       "oncePerDayKey": "PDV.Signal.KhajiitMoonObservance.Activator",
       "name": "PDV KHAJIIT MOON OBSERVANCE SIGNAL",
       "activateText": "RECORD MOON OBSERVANCE",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-cadence",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "lunar cadence in dawn pass; spine rejects required visual moon inspection",
+      "proofShim": true
     },
     {
       "id": "khajiit-road-home-anchor-one-proof",
@@ -124,7 +128,11 @@
       "oncePerDayKey": "PDV.Signal.KhajiitRoadHome.Activator",
       "name": "PDV KHAJIIT ROAD HOME ANCHOR ONE SIGNAL",
       "activateText": "RECORD ROAD HOME",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-location",
+      "realMechanismConfidence": "judgment-call",
+      "realMechanismNote": "arriving at road-home anchor; location/trigger, possibly opt-in rest",
+      "proofShim": true
     },
     {
       "id": "khajiit-road-home-anchor-two-proof",
@@ -139,7 +147,11 @@
       "oncePerDayKey": "PDV.Signal.KhajiitRoadHome.Activator",
       "name": "PDV KHAJIIT ROAD HOME ANCHOR TWO SIGNAL",
       "activateText": "RECORD ROAD HOME",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-location",
+      "realMechanismConfidence": "judgment-call",
+      "realMechanismNote": "second road-home anchor; same mechanism",
+      "proofShim": true
     },
     {
       "id": "khajiit-baandar-road-trick-proof",
@@ -154,7 +166,11 @@
       "oncePerDayKey": "PDV.Signal.KhajiitBaanDarRoadTrick.Activator",
       "name": "PDV KHAJIIT BAAN DAR ROAD TRICK SIGNAL",
       "activateText": "RECORD BAAN DAR ROAD TRICK",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "clever road act; contextual, anti-farm gated",
+      "proofShim": true
     },
     {
       "id": "khajiit-rajhin-elegant-theft-proof",
@@ -169,7 +185,11 @@
       "oncePerDayKey": "PDV.Signal.KhajiitRajhinElegantTheft.Activator",
       "name": "PDV KHAJIIT RAJHIN ELEGANT THEFT SIGNAL",
       "activateText": "RECORD RAJHIN ELEGANT THEFT",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "qualifying theft only; spine rejects generic theft",
+      "proofShim": true
     },
     {
       "id": "khajiit-alkosh-dragon-order-proof",
@@ -184,7 +204,11 @@
       "oncePerDayKey": "PDV.Signal.KhajiitAlkoshDragonOrder.Activator",
       "name": "PDV KHAJIIT ALKOSH DRAGON ORDER SIGNAL",
       "activateText": "RECORD ALKOSH DRAGON ORDER",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "dragon-kill / order act",
+      "proofShim": true
     }
   ],
   "requiredContentRows": [

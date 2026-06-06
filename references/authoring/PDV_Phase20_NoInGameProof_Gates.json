@@ -2,6 +2,7 @@
   "schema": "pdv.phase20.no-in-game-proof-gates.v1",
   "status": "runtime-deferred",
   "owner": "references/authoring/PDV_Phase20_NoInGameProof_Workplan.md",
+  "hookMechanismAudit": "references/authoring/PDV_Phase20_HookMechanism_Audit.md classifies every Phase 20 proof activator as object-optin or passive (event/location/quest/cadence); finalPlacementContracts.realMechanism mirrors that. The QASmoke ACTI surfaces are route-proof shims, not the real hooks.",
   "rules": {
     "allowedStatuses": ["Planning-Ready", "Readback-Ready", "CK-Ready", "Runtime-Deferred"],
     "p0p1MinimumRejectedHooks": 6,
@@ -24,7 +25,10 @@
       "finalPlacementContracts": [
         {
           "surfaceEditorIdPlan": "PDV_REFR_AltmerDawnStudyWorldSignal",
-          "intendedObjectType": "ACTI or MESG-backed study/dawn surface",
+          "intendedObjectType": "ACTI or MESG-backed opt-in study/dawn surface",
+          "realMechanism": "object-optin",
+          "realMechanismNote": "Opt-in study/dawn object; activation is intentional devotion.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "scholarship, Auri-El practice, or dawn-facing study context",
           "culturalReason": "A non-edge Altmer needs positive coherence practice before crisis pressure grows.",
           "classification": "positive",
@@ -34,7 +38,10 @@
         },
         {
           "surfaceEditorIdPlan": "PDV_REFR_AltmerCrisisPressureWorldSignal",
-          "intendedObjectType": "ACTI or quest-context proof surface",
+          "intendedObjectType": "Passive quest-stage / Story Manager hook; NOT a placed activator",
+          "realMechanism": "passive-quest",
+          "realMechanismNote": "Sovngarde/marriage/companions beat, one-shot guard; route-50 ACTI was a proof shim.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "authored crisis, Lorkhan pressure, or mortal-continuity context",
           "culturalReason": "Pressure must come from explicit theology beats, not ordinary Skyrim life.",
           "classification": "pressure-recovery",
@@ -70,7 +77,10 @@
       "finalPlacementContracts": [
         {
           "surfaceEditorIdPlan": "PDV_REFR_KhajiitRoadMoonWorldSignal",
-          "intendedObjectType": "ACTI rest, road, or caravan-adjacent surface",
+          "intendedObjectType": "Passive lunar cadence (dawn pass) + road-home location/trigger; NOT an activator",
+          "realMechanism": "mixed-passive",
+          "realMechanismNote": "Moon is passive-cadence (spine rejects required moon inspection); road-home is passive-location.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "road-home, moon, caravan, or open-sky travel context",
           "culturalReason": "Moon and road should feel like belonging, not calendar homework.",
           "classification": "positive",
@@ -80,7 +90,10 @@
         },
         {
           "surfaceEditorIdPlan": "PDV_REFR_KhajiitFocusWorldSignal",
-          "intendedObjectType": "ACTI or quest-context focus surface",
+          "intendedObjectType": "Passive contextual focus events (Baan Dar/Rajhin/Alkosh); NOT an activator",
+          "realMechanism": "passive-event",
+          "realMechanismNote": "Focus movement from qualifying acts, anti-farm gated.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "Baan Dar road survival, Rajhin elegant theft, or Alkosh order context",
           "culturalReason": "The first contrast race needs behavior-specific focus movement instead of generic crime or combat.",
           "classification": "status-focus",
@@ -116,7 +129,10 @@
       "finalPlacementContracts": [
         {
           "surfaceEditorIdPlan": "PDV_REFR_ArgonianHistWaterWorldSignal",
-          "intendedObjectType": "ACTI water/rest/reflection surface",
+          "intendedObjectType": "Opt-in Hist ritual object and/or passive water/rest/bed cadence",
+          "realMechanism": "mixed",
+          "realMechanismNote": "Hist sap ritual may be an opt-in object; water/rest/bed upkeep is passive-cadence - confirm which carries the hook.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "safe wetland, water refuge, or chosen-rest context",
           "culturalReason": "Hist maintenance must be ordinary and gentle before Void depth expands.",
           "classification": "positive",
@@ -126,7 +142,10 @@
         },
         {
           "surfaceEditorIdPlan": "PDV_REFR_ArgonianPeopleDeathRiteWorldSignal",
-          "intendedObjectType": "ACTI, MESG, or recognition surface",
+          "intendedObjectType": "Passive community/death-rite recognition events; MESG surface, NOT an activator",
+          "realMechanism": "passive-event",
+          "realMechanismNote": "People support and Arkay/death-rite reactions are contextual.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "Windhelm/Riften Argonian community, chosen bed, or death-rite context",
           "culturalReason": "People/community recognition must compete with easier Sithis hooks.",
           "classification": "pressure-recovery",
@@ -162,7 +181,10 @@
       "finalPlacementContracts": [
         {
           "surfaceEditorIdPlan": "PDV_REFR_OrcStrongholdCraftWorldSignal",
-          "intendedObjectType": "ACTI quality craft or stronghold context surface",
+          "intendedObjectType": "Opt-in stronghold forge/quality-craft surface, stronghold-context gated",
+          "realMechanism": "object-optin",
+          "realMechanismNote": "Spine rejects raw craft count; forge surface is opt-in within stronghold context.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "Stronghold forge, Blood-Kin aid, or worthy challenge context",
           "culturalReason": "Stronghold richness must be quality/context-bound, not raw crafting.",
           "classification": "positive",
@@ -172,7 +194,10 @@
         },
         {
           "surfaceEditorIdPlan": "PDV_REFR_OrcCityLegionWorldSignal",
-          "intendedObjectType": "ACTI service, dignity, or self-made community surface",
+          "intendedObjectType": "Passive service/dignity/community events and Legion questline beat; NOT an activator",
+          "realMechanism": "mixed-passive",
+          "realMechanismNote": "City dignity and self-made community are passive-event; Legion service is passive-quest.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "City Orc community, Legion/Exile service, or self-made place context",
           "culturalReason": "City and Legion/Exile must feel like complete devotional lives.",
           "classification": "status-recovery",
@@ -208,7 +233,10 @@
       "finalPlacementContracts": [
         {
           "surfaceEditorIdPlan": "PDV_REFR_RedguardSectWorldSignal",
-          "intendedObjectType": "ACTI tomb, road, or sect practice surface",
+          "intendedObjectType": "Opt-in tomb-respect/sect practice object and/or passive road conduct",
+          "realMechanism": "mixed",
+          "realMechanismNote": "Crown tomb respect may be an opt-in object or passive-location; Forebear road is passive-event.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "Crown tomb respect or Forebear road/contract context",
           "culturalReason": "Crown and Forebear must remain distinct from generic warrior play.",
           "classification": "positive",
@@ -218,7 +246,10 @@
         },
         {
           "surfaceEditorIdPlan": "PDV_REFR_RedguardDeathDutyWorldSignal",
-          "intendedObjectType": "ACTI or MESG death-duty/Far Shores surface",
+          "intendedObjectType": "Opt-in Far Shores token ritual object and/or passive death-duty events",
+          "realMechanism": "mixed",
+          "realMechanismNote": "Far Shores token is an opt-in ritual object; Ash'abah death duty is passive-event.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "Ash'abah burden, Hall of the Dead, tomb, or Tu'whacca private rite context",
           "culturalReason": "Death duty must be Yokudan and visible, not generic Arkay or undead farming.",
           "classification": "pressure-recovery",
@@ -254,7 +285,10 @@
       "finalPlacementContracts": [
         {
           "surfaceEditorIdPlan": "PDV_REFR_BosmerNonHunterWorldSignal",
-          "intendedObjectType": "ACTI Living Story or Exchange surface",
+          "intendedObjectType": "Passive Living Story/Exchange conduct events; NOT an activator",
+          "realMechanism": "passive-event",
+          "realMechanismNote": "Non-hunter favor comes from qualifying community/exchange acts, not activation.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "community memory, nature-site preservation, debt settlement, or proportionate redress context",
           "culturalReason": "Non-hunter paths need emotional payoff before broader Green Pact tag work.",
           "classification": "positive",
@@ -264,7 +298,10 @@
         },
         {
           "surfaceEditorIdPlan": "PDV_REFR_BosmerRoadPactWorldSignal",
-          "intendedObjectType": "ACTI or MESG Bandit Road/Pact pressure surface",
+          "intendedObjectType": "Passive Bandit Road/Pact pressure events; MESG surface, NOT an activator",
+          "realMechanism": "passive-event",
+          "realMechanismNote": "Road-life/reversal is passive-event; reversal already 7-day cooldown gated.",
+          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
           "targetLocationFamily": "Bandit Road reversal, Pact lapse, or Old Contract reckoning context",
           "culturalReason": "Pressure and recovery must be path theology, not generic thief punishment.",
           "classification": "pressure-recovery",

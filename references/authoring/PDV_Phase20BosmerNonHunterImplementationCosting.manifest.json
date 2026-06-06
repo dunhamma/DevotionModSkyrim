@@ -74,7 +74,11 @@
       "oncePerDayKey": "PDV.Signal.BosmerOldContractProperHunt.Activator",
       "name": "BOSMER OLD CONTRACT PROPER HUNT SIGNAL",
       "activateText": "PROVE PROPER HUNT",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "qualifying hunt under Green Pact; kill/use gated",
+      "proofShim": true
     },
     {
       "id": "old-contract-forest-kept",
@@ -89,7 +93,11 @@
       "oncePerDayKey": "PDV.Signal.BosmerOldContractForestKept.Activator",
       "name": "BOSMER OLD CONTRACT FOREST KEPT SIGNAL",
       "activateText": "PROVE FOREST KEPT",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "Green Pact compliance",
+      "proofShim": true
     },
     {
       "id": "living-story-community-kept",
@@ -104,7 +112,11 @@
       "oncePerDayKey": "PDV.Signal.BosmerLivingStoryCommunityKept.Activator",
       "name": "BOSMER LIVING STORY COMMUNITY KEPT SIGNAL",
       "activateText": "PROVE STORY KEPT",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "community act",
+      "proofShim": true
     },
     {
       "id": "living-story-nature-site",
@@ -119,7 +131,11 @@
       "oncePerDayKey": "PDV.Signal.BosmerLivingStoryNatureSite.Activator",
       "name": "BOSMER LIVING STORY NATURE SITE SIGNAL",
       "activateText": "PROVE NATURE STORY",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-location",
+      "realMechanismConfidence": "judgment-call",
+      "realMechanismNote": "nature site entry, or opt-in nature shrine",
+      "proofShim": true
     },
     {
       "id": "exchange-debt-settled",
@@ -134,7 +150,11 @@
       "oncePerDayKey": "PDV.Signal.BosmerExchangeDebtSettled.Activator",
       "name": "BOSMER EXCHANGE DEBT SETTLED SIGNAL",
       "activateText": "PROVE DEBT SETTLED",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "settling a debt",
+      "proofShim": true
     },
     {
       "id": "exchange-proportionate-vengeance",
@@ -149,7 +169,11 @@
       "oncePerDayKey": "PDV.Signal.BosmerExchangeProportionateVengeance.Activator",
       "name": "BOSMER EXCHANGE PROPORTIONATE VENGEANCE SIGNAL",
       "activateText": "PROVE REDRESS",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "redress act",
+      "proofShim": true
     },
     {
       "id": "bandit-road-road-life",
@@ -164,7 +188,11 @@
       "oncePerDayKey": "PDV.Signal.BosmerBanditRoadRoadLife.Activator",
       "name": "BOSMER BANDIT ROAD ROAD LIFE SIGNAL",
       "activateText": "PROVE ROAD LIFE",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "road-life conduct",
+      "proofShim": true
     },
     {
       "id": "bandit-road-reversal",
@@ -179,7 +207,11 @@
       "oncePerDayKey": "PDV.Signal.BosmerBanditRoadReversal.Activator",
       "name": "BOSMER BANDIT ROAD REVERSAL SIGNAL",
       "activateText": "PROVE REVERSAL",
-      "placementStatus": "proof-cell-wired"
+      "placementStatus": "proof-cell-wired",
+      "realMechanism": "passive-event",
+      "realMechanismConfidence": "locked",
+      "realMechanismNote": "luck/reversal moment; already 7-day cooldown gated",
+      "proofShim": true
     }
   ],
   "requiredContentRows": [
