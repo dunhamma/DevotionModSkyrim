@@ -643,10 +643,122 @@ Bool Function PushDevotionPanel()
     j = j + ",\"acts\":[" + GetPanelActsJson() + "]"
     j = j + ",\"rites\":[" + GetPanelRitesJson() + "]"
     j = j + ",\"relations\":[" + GetPanelRelationsJson() + "]"
+    j = j + ",\"instrument\":" + GetPanelInstrumentJson(originRace, _activeDeity != None, tierValue, tierLabel, piety)
     j = j + ",\"debug\":" + GetPanelDebugJson()
     j = j + "}"
 
     return PDV_PrismaBridge.SendJson(j)
+EndFunction
+
+String Function GetPanelInstrumentJson(Int originRace, Bool hasActiveDeity, Int tierValue, String tierLabel, Float piety)
+    String kindText = GetPanelInstrumentKind(originRace, hasActiveDeity)
+    Float primary = 0.0
+    if kindText == "piety"
+        primary = ClampValue(piety / 150.0, 0.0, 1.0)
+    else
+        primary = ClampValue((tierValue as Float) / 3.0, 0.0, 1.0)
+    endIf
+
+    String j = "{\"kind\":\"" + JsonSafeString(kindText) + "\""
+    j = j + ",\"tier\":" + tierValue
+    j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
+    j = j + ",\"primary\":" + FormatTwoDecimals(primary)
+    j = j + ",\"state\":\"" + JsonSafeString(GetPanelInstrumentState(originRace, kindText, tierLabel)) + "\""
+    j = j + ",\"data\":" + GetPanelInstrumentDataJson(originRace, kindText, piety)
+    j = j + "}"
+    return j
+EndFunction
+
+String Function GetPanelInstrumentKind(Int originRace, Bool hasActiveDeity)
+    if hasActiveDeity
+        return "piety"
+    endIf
+    if originRace == ORIGIN_KHAJIIT
+        return "lunar"
+    elseIf originRace == ORIGIN_ARGONIAN
+        return "hist"
+    elseIf originRace == ORIGIN_DUNMER
+        return "ancestor"
+    elseIf originRace == ORIGIN_ORC
+        return "forge"
+    elseIf originRace == ORIGIN_REDGUARD
+        return "sects"
+    elseIf originRace == ORIGIN_BOSMER
+        return "branch"
+    endIf
+    return "piety"
+EndFunction
+
+String Function GetPanelInstrumentState(Int originRace, String kindText, String tierLabel)
+    if kindText == "lunar"
+        return GetPanelQuasiPatronTierLabel(originRace)
+    elseIf kindText == "hist"
+        return GetArgonianHistPostureLabel()
+    elseIf kindText == "ancestor"
+        return GetDunmerAncestorLayerLabel()
+    elseIf kindText == "forge"
+        return GetOrcLifeModeLabel()
+    elseIf kindText == "sects"
+        return GetRedguardSectLabel()
+    elseIf kindText == "branch"
+        return GetBosmerPathLabel()
+    endIf
+    return tierLabel
+EndFunction
+
+String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Float piety)
+    if kindText == "lunar"
+        Int phase = GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime())
+        if PDV_KhajiitLunarSubstrate && PDV_KhajiitLunarSubstrate.GetLastObservedPhase() > 0
+            phase = PDV_KhajiitLunarSubstrate.GetLastObservedPhase()
+        endIf
+        Int focus = GetKhajiitFocusedEmphasis()
+        String lunarTier = "Quiet"
+        if PDV_KhajiitLunarSubstrate
+            lunarTier = GetKhajiitLunarTierLabel(PDV_KhajiitLunarSubstrate.GetSubstrateTier())
+        endIf
+        return "{\"phase\":" + phase + ",\"focus\":\"" + JsonSafeString(GetKhajiitFocusLabel(focus)) + "\",\"lunarTier\":\"" + JsonSafeString(lunarTier) + "\"}"
+    elseIf kindText == "hist"
+        Float hist = 0.0
+        Float people = 0.0
+        Float voidValue = 0.0
+        Bool voidActive = False
+        if PDV_ArgonianHistSubstrate
+            hist = PDV_ArgonianHistSubstrate.GetHistRelation()
+            people = PDV_ArgonianHistSubstrate.GetPeopleRelation()
+            voidValue = PDV_ArgonianHistSubstrate.GetVoidRelation()
+            voidActive = PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+        endIf
+        return "{\"hist\":" + FormatTwoDecimals(hist) + ",\"people\":" + FormatTwoDecimals(people) + ",\"void\":" + FormatTwoDecimals(voidValue) + ",\"voidActive\":" + BoolToJson(voidActive) + "}"
+    elseIf kindText == "ancestor"
+        Int depth = 0
+        Int prayer = 0
+        Int home = 0
+        if PDV_DunmerAncestorSubstrate
+            depth = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
+            prayer = PDV_DunmerAncestorSubstrate.GetPrayerCount()
+            home = PDV_DunmerAncestorSubstrate.GetHomeBonusCount()
+        endIf
+        return "{\"depth\":" + depth + ",\"prayer\":" + prayer + ",\"home\":" + home + ",\"reclamation\":\"" + JsonSafeString(GetDunmerAncestorLayerLabel()) + "\"}"
+    elseIf kindText == "forge"
+        return "{\"lifeMode\":\"" + JsonSafeString(GetOrcLifeModeLabel()) + "\"}"
+    elseIf kindText == "sects"
+        return "{\"sect\":\"" + JsonSafeString(GetRedguardSectLabel()) + "\"}"
+    elseIf kindText == "branch"
+        return "{\"path\":\"" + JsonSafeString(GetBosmerPathLabel()) + "\",\"pactBound\":" + BoolToJson(IsBosmerPactBound()) + ",\"evidenceDays\":" + GetBosmerPathEvidenceDays() + "}"
+    endIf
+    return "{\"piety\":" + FormatTwoDecimals(piety) + ",\"pietyToday\":0.00}"
+EndFunction
+
+Int Function GetBosmerPathEvidenceDays()
+    if !PDV_BosmerPathTrack
+        return 0
+    endIf
+    Int currentPath = PDV_BosmerPathTrack.GetCurrentState()
+    if currentPath <= 0
+        return 0
+    endIf
+    return PDV_BosmerPathTrack.GetRecentEvidenceDayCount(currentPath, 7)
 EndFunction
 
 String Function GetPanelPatronNote()
@@ -827,9 +939,9 @@ String Function GetPanelQuasiPatronSymbol(Int originRace)
     elseIf originRace == ORIGIN_DUNMER
         return "ancestor"
     elseIf originRace == ORIGIN_REDGUARD
-        return "journal"
+        return "sect"
     elseIf originRace == ORIGIN_BOSMER
-        return "yffre"
+        return "branch"
     elseIf originRace == ORIGIN_IMPERIAL
         return "akatosh"
     elseIf originRace == ORIGIN_BRETON
@@ -1333,7 +1445,11 @@ EndFunction
 Function HandleDunmerPortableShrinePrayer(String reason)
     if PDV_DunmerAncestorSubstrate
         Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerPortableShrinePrayer")
+        Int tierBefore = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
         PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)
+        Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
+        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
+        RequestPanelRefresh()
         Trace(2, "Dunmer portable shrine prayer routed with multiplier " + multiplier)
     endIf
 EndFunction
@@ -1341,7 +1457,11 @@ EndFunction
 Function HandleDunmerPlayerHomeBonus(String reason)
     if PDV_DunmerAncestorSubstrate
         Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerHomeBonus")
+        Int tierBefore = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
         PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)
+        Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
+        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "House memory answered.", "ancestor", GetDunmerAncestorLayerLabel())
+        RequestPanelRefresh()
         Trace(2, "Dunmer player-home bonus routed with multiplier " + multiplier)
     endIf
 EndFunction
@@ -1356,11 +1476,15 @@ Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitMoonObservance")
+    Int tierBefore = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     PDV_KhajiitLunarSubstrate.ObserveMoonPhaseScaled(phaseIndex, multiplier, reason)
+    Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_AZURAH, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
     StorageUtil.AdjustIntValue(None, "PDV.Khajiit.LunarSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
     ShowP2BookNotice(reason, "Lunar source noted", "This reading gives the Lunar Lattice a visible source.")
+    SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The moons marked this observance.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+    RequestPanelRefresh()
     Trace(2, "Khajiit moon observance routed for phase " + phaseIndex + " with multiplier " + multiplier)
 EndFunction
 
@@ -1385,8 +1509,12 @@ Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitRoadHome")
+    Int tierBefore = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     PDV_KhajiitLunarSubstrate.RecordRoadHomeCadenceScaled(multiplier, reason)
+    Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
+    SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+    RequestPanelRefresh()
     Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier + " anchor " + anchorId)
 EndFunction
 
@@ -1423,11 +1551,15 @@ Function HandleArgonianHistMaintenance(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianHistMaintenance")
+    Int tierBefore = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     PDV_ArgonianHistSubstrate.RecordHistMaintenanceScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
+    Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistSourceReason", reason)
     ShowP2BookNotice(reason, "Hist memory noted", "This reading gives the Hist memory a visible source.")
+    SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The Hist memory stirred.", "hist", GetArgonianHistPostureLabel())
+    RequestPanelRefresh()
     Trace(2, "Argonian Hist maintenance routed with multiplier " + multiplier)
 EndFunction
 
@@ -1437,8 +1569,12 @@ Function HandleArgonianPeopleSupport(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianPeopleSupport")
+    Int tierBefore = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     PDV_ArgonianHistSubstrate.RecordPeopleSupportScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
+    Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "Your people were supported.", "hist", GetArgonianHistPostureLabel())
+    RequestPanelRefresh()
     Trace(2, "Argonian People support routed with multiplier " + multiplier)
 EndFunction
 
@@ -1448,8 +1584,12 @@ Function HandleArgonianBedOfChoiceReturn(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianBedOfChoice")
+    Int tierBefore = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     PDV_ArgonianHistSubstrate.RecordBedOfChoiceReturnScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
+    Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The chosen rest took root.", "hist", GetArgonianHistPostureLabel())
+    RequestPanelRefresh()
     Trace(2, "Argonian bed-of-choice return routed with multiplier " + multiplier)
 EndFunction
 
@@ -1459,8 +1599,12 @@ Function HandleArgonianVoidSignal(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianVoidSignal")
+    Int tierBefore = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     PDV_ArgonianHistSubstrate.RecordVoidSignalScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
+    Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The Void was noticed.", "hist", GetArgonianHistPostureLabel())
+    RequestPanelRefresh()
     Trace(2, "Argonian Void signal routed with multiplier " + multiplier)
 EndFunction
 
@@ -1581,6 +1725,9 @@ Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
     if multiplier > 0.0 && PDV_OrcLifeModeTrack.GetCurrentState() != modeValue
         PDV_OrcLifeModeTrack.SetState(modeValue, reason)
         SendPrismaShiftToast(GetOrcLifeModeLabel(), "", "malacath")
+        RequestPanelRefresh()
+    elseIf multiplier > 0.0
+        SendPrismaSubstrateToast("stronghold", "act", "The code was marked.", "malacath", GetOrcLifeModeLabel())
         RequestPanelRefresh()
     endIf
 EndFunction
@@ -1723,7 +1870,10 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
 
     if multiplier > 0.0 && PDV_RedguardSectTrack.GetCurrentState() != sectValue
         PDV_RedguardSectTrack.SetState(sectValue, reason)
-        SendPrismaShiftToast(GetRedguardSectLabel(), "", "journal")
+        SendPrismaShiftToast(GetRedguardSectLabel(), "", "sect")
+        RequestPanelRefresh()
+    elseIf multiplier > 0.0
+        SendPrismaSubstrateToast("sect", "act", "The Yokudan path was marked.", "sect", GetRedguardSectLabel())
         RequestPanelRefresh()
     endIf
 EndFunction
@@ -4344,6 +4494,33 @@ Function SendPrismaShiftToast(String shiftMode, String context, String symbolNam
     endIf
     j = j + "}}"
     PDV_PrismaBridge.SendOverlayJson(j)
+EndFunction
+
+; Emit a substrate instrument event without making Prisma the gameplay proof lane.
+Function SendPrismaSubstrateToast(String substrate, String phase, String context, String symbolName, String stateLabel)
+    if !PDV_PrismaBridge.IsAvailable()
+        return
+    endIf
+    String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"substrate\""
+    j = j + ",\"substrate\":\"" + JsonSafeString(substrate) + "\""
+    j = j + ",\"phase\":\"" + JsonSafeString(phase) + "\""
+    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    if context != ""
+        j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
+    endIf
+    if stateLabel != ""
+        j = j + ",\"state\":\"" + JsonSafeString(stateLabel) + "\""
+    endIf
+    j = j + "}}"
+    PDV_PrismaBridge.SendOverlayJson(j)
+EndFunction
+
+Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierAfter, Float multiplier, String context, String symbolName, String stateLabel)
+    if tierAfter > tierBefore
+        SendPrismaSubstrateToast(substrate, "deepen", context, symbolName, stateLabel)
+    elseIf multiplier > 0.0
+        SendPrismaSubstrateToast(substrate, "act", context, symbolName, stateLabel)
+    endIf
 EndFunction
 
 ; Emit a "daedric" event for a Daedric Prince interaction.

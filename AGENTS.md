@@ -209,6 +209,15 @@ Quest scripts (current):
   Prisma consumes manager-owned state through typed payloads for toasts, panels,
   medallion presentation, and eventual always-on HUD work. A clean P2 proof does
   not imply Prisma UI proof, and a good Prisma display does not prove gameplay.
+- **2026-06-06 Prisma instrument pass:** The Prisma panel now accepts a
+  manager-owned `instrument` payload and renders piety, lunar, Hist, ancestor,
+  forge, sect, and branch instruments through the tracked `PrismaUI` view.
+  `PDV__ManagerQuest` emits substrate toasts for current substrate routes while
+  keeping P2 proof independent of Prisma. Repo and live UI/source files matched
+  by hash after sync; `PDV__ManagerQuest` compiled with `0 error(s), 0
+  warning(s)`, content verify passed at `FAIL=0, WARN=0, PASS=1081, INFO=4`,
+  and strict Phase 20 race-costing verify passed at `PASS=2827, WARN=2,
+  INFO=29`.
 - `PDV__MainQuest.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â RunOnce bootstrap quest. **Phase 4 script complete on disk:** verifies PapyrusUtil and defers origin capture to the player-alias ingress instead of forcing `PDV_Origin.InitializeOrigin()` during `OnInit()`.
 - `PDV_Origin.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â **NEW (Phase 4)** One-shot origin helper. Detects and normalizes player origin race, treats vanilla vampire races as their birth race, defers while only a temporary beast-form race is visible, treats the first Nord capture as provisional to avoid placeholder new-game race reads locking too early, writes `PDV_GLO_OriginRace`, and seeds the current proof-slice deity ledgers.
 - `PDV__ManagerQuest.psc` ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â **Phase 20 status/P2 hook surface wired:** stance-aware piety, patron state, dawn consolidation, contextual favors, commitment, curse-state handling, and neglect remain manager-owned. The manager auto-grants `Survey Devotion`, auto-equips it into the voice/power slot only when that slot is empty, exposes thematic player-status APIs, suppresses Nord commitment offers/contextual favors while a Nord vampire rupture is active, preserves a cured-vampire scar note without clearing patron piety, and now owns wrong-origin-guarded Breton/Dunmer/Imperial/Nord immersive hook handlers plus Survey acknowledgements for those P2 route contexts.

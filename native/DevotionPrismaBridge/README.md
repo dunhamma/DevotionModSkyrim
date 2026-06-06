@@ -117,6 +117,12 @@ gate through `PDV__ManagerQuest.SelectMedallionEntry`, and only entries that
 read back as live members of `PDV_FLST_AllDeities` should become selectable.
 Pending native roster entries stay visible but disabled.
 
+Panel instruments arrive through focused panel payloads as an additive
+`instrument` object. The piety instrument preserves the existing meter path for
+single-patron devotion, while substrate races can render lunar, Hist, ancestor,
+forge, sect, or branch instruments without changing the StorageUtil/manager
+state model.
+
 The Devotion view accepts compact event payloads and expands player-facing copy
 client-side. The overlay-toast path is now stable for the five pilot events
 below:
@@ -145,6 +151,7 @@ Stable event-specific fields:
 
 - `favor`: `deity`, optional `context`, optional `amount`
 - `dawn`: no additional fields required
+- `substrate`: `substrate`, `phase`, optional `context`, optional `state`
 
 Stable startup payload fields:
 
@@ -167,6 +174,15 @@ Stable medallion payload fields:
 - `medallion.sections[]`: `section_id`, `title`, `options[]`
 - `options[]`: `option_id`, `title`, `kind`, `symbol`, `summary`, `description`, `selectable`, optional `disabled_reason`
 
+Stable panel instrument fields:
+
+- `instrument.kind`: `piety | lunar | hist | ancestor | forge | sects | branch`
+- `instrument.tier`
+- `instrument.tierLabel`
+- `instrument.primary`
+- `instrument.state`
+- `instrument.data`: kind-specific display data owned by `PDV__ManagerQuest`
+
 - `neglect`: `deity`
 - `tier`: `deity`, `tierLabel`
 - `rivalry`: `rival`, optional `rivalSymbol`
@@ -174,7 +190,8 @@ Stable medallion payload fields:
 Deprecated-but-accepted toast aliases:
 
 - Event aliases: `piety`, `gain`, `piety_gain`, `dawn_settle`,
-  `dawn_settled`, `decay`, `warning`, `tier_up`, `tier_change`, `rival`
+  `dawn_settled`, `decay`, `warning`, `tier_up`, `tier_change`, `rival`,
+  `substrate_act`, `substrate_deepen`, `substrate_thin`
 - Field aliases: `type`, `kind`, `deityName`, `patron`, `mark`, `act`,
   `source`, `label`, `text`, `tierName`, `rivalName`
 
@@ -200,6 +217,7 @@ Use these maturity labels when growing the UI contract:
   Papyrus code.
 
 Overlay toasts for `favor`, `dawn`, `neglect`, `tier`, and `rivalry` are now
-`stable` for the current pilot path. Startup and medallion overlay payloads are
-`stable` as presentation contracts. Panel payloads and any non-listed toast
-event shapes remain `prototype`.
+`stable` for the current pilot path. Substrate overlay toasts and panel
+instrument payloads are stable presentation contracts for the current substrate
+instrument pass. Startup and medallion overlay payloads are `stable` as
+presentation contracts. Any non-listed toast event shapes remain `prototype`.

@@ -9,6 +9,8 @@
     auriel: "auri-el",
     "auri el": "auri-el",
     auriEl: "auri-el",
+    azurah: "azura",
+    "curse-werewolf": "hircine",
     kynareth: "kyne",
     system: "journal",
   };
@@ -26,6 +28,12 @@
     ["yffre", "Y'ffre"],
     ["zen", "Z'en"],
     ["baan-dar", "Baan Dar"],
+    ["lunar", "Lunar"],
+    ["hist", "Hist"],
+    ["ancestor", "Ancestor"],
+    ["malacath", "Malacath"],
+    ["sect", "Sect"],
+    ["branch", "Branch"],
     ["dawn", "Dawn"],
     ["journal", "Journal"],
   ];
@@ -109,6 +117,40 @@
       ["path", { d: "M27 18 C28 17 32 17 33 18", class: "symbol-thin" }],
       ["path", { d: "M18 10 C20 8 28 8 30 10" }],
     ],
+    lunar: [
+      ["path", { d: "M30 10 a14 14 0 1 0 0 28 a10 14 0 1 1 0 -28 Z" }],
+      ["circle", { cx: "19", cy: "24", r: "4", class: "symbol-thin" }],
+    ],
+    hist: [
+      ["path", { d: "M24 40 V22" }],
+      ["path", { d: "M24 40 C18 40 13 38 11 34", class: "symbol-thin" }],
+      ["path", { d: "M24 40 C30 40 35 38 37 34", class: "symbol-thin" }],
+      ["path", { d: "M14 22 A10 10 0 0 1 34 22" }],
+      ["path", { d: "M17 26 A7 7 0 0 1 31 26", class: "symbol-thin" }],
+      ["circle", { cx: "24", cy: "14", r: "2.5" }],
+    ],
+    ancestor: [
+      ["path", { d: "M14 16 Q24 8 34 16 Q34 34 24 40 Q14 34 14 16 Z" }],
+      ["circle", { cx: "19", cy: "22", r: "1.8" }],
+      ["circle", { cx: "29", cy: "22", r: "1.8" }],
+      ["path", { d: "M24 26 V32", class: "symbol-thin" }],
+      ["path", { d: "M18 14 Q24 11 30 14", class: "symbol-thin" }],
+    ],
+    malacath: [
+      ["path", { d: "M16 38 C10 28 14 18 24 16" }],
+      ["path", { d: "M24 16 L24 8 M16 10 H32 V14 H16 Z" }],
+      ["path", { d: "M24 16 V30", class: "symbol-thin" }],
+    ],
+    sect: [
+      ["path", { d: "M12 36 C20 30 30 18 36 12" }],
+      ["path", { d: "M36 36 C28 30 18 18 12 12" }],
+      ["circle", { cx: "24", cy: "24", r: "2.4" }],
+    ],
+    branch: [
+      ["path", { d: "M10 34 C20 30 30 24 38 12" }],
+      ["path", { d: "M22 25 q8 -10 14 -7 q-5 9 -14 7 Z", class: "symbol-thin" }],
+      ["path", { d: "M16 30 q4 5 8 0", class: "symbol-thin" }],
+    ],
   };
 
   const nodes = {
@@ -118,6 +160,8 @@
     summary: document.getElementById("pdv-summary"),
     patron: document.getElementById("pdv-patron"),
     patronNote: document.getElementById("pdv-patron-note"),
+    instrument: document.getElementById("pdv-instrument"),
+    instrumentArt: document.getElementById("pdv-instrument-art"),
     tierLabel: document.getElementById("pdv-tier-label"),
     pietyBar: document.getElementById("pdv-piety-bar"),
     pietyText: document.getElementById("pdv-piety-text"),
@@ -238,6 +282,205 @@
     const rounded = Math.round(numeric * 10) / 10;
     const rendered = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
     return rounded > 0 ? `+${rendered}` : rendered;
+  };
+
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, numberOrZero(value)));
+  const clamp01 = (value) => clamp(value, 0, 1);
+
+  const appendSvg = (parent, tagName, attributes = {}) => {
+    const element = makeSvgElement(tagName, attributes);
+    parent.appendChild(element);
+    return element;
+  };
+
+  const makeInstrumentSvg = () => makeSvgElement("svg", {
+    class: "instrument-svg",
+    viewBox: "0 0 300 150",
+    preserveAspectRatio: "xMidYMid meet",
+    focusable: "false",
+    "aria-hidden": "true",
+  });
+
+  const appendMoonPhase = (svg, cx, cy, r, phase) => {
+    const normalizedPhase = clamp(phase || 1, 1, 8);
+    const f = (normalizedPhase - 1) / 8;
+    const a = f * 2 * Math.PI;
+    const lit = (1 - Math.cos(a)) / 2;
+    const rx = Math.abs(r * Math.cos(a));
+    const top = `${cx},${cy - r}`;
+    const bottom = `${cx},${cy + r}`;
+    appendSvg(svg, "circle", { cx, cy, r, class: "instrument-dark" });
+    if (lit > 0.985) {
+      appendSvg(svg, "circle", { cx, cy, r, class: "instrument-fill" });
+    } else if (lit >= 0.015) {
+      const waxing = f < 0.5;
+      const outer = waxing ? `A ${r} ${r} 0 0 1 ${bottom}` : `A ${r} ${r} 0 0 0 ${bottom}`;
+      const innerSweep = waxing ? (lit < 0.5 ? 0 : 1) : (lit < 0.5 ? 1 : 0);
+      appendSvg(svg, "path", { d: `M ${top} ${outer} A ${rx} ${r} 0 0 ${innerSweep} ${top} Z`, class: "instrument-fill" });
+    }
+    appendSvg(svg, "circle", { cx, cy, r, class: "instrument-outline" });
+  };
+
+  const addInstrumentCaption = (slot, inst = {}, fallbackTitle = "Devotion") => {
+    const caption = document.createElement("div");
+    caption.className = "instrument-caption";
+    const title = document.createElement("strong");
+    title.textContent = text(inst.state || inst.tierLabel, fallbackTitle);
+    const detail = document.createElement("span");
+    detail.textContent = text(inst.kind, "piety");
+    caption.append(title, detail);
+    slot.appendChild(caption);
+  };
+
+  const renderPietyInstrument = (slot, inst = {}) => {
+    const svg = makeInstrumentSvg();
+    const instData = inst.data || {};
+    const piety = clamp(instData.piety !== undefined ? instData.piety : state.piety, 0, 150);
+    const primary = clamp01(inst.primary || piety / 150);
+    const fillWidth = Math.round(190 * primary);
+    appendSvg(svg, "rect", { x: "74", y: "68", width: "190", height: "14", rx: "7", class: "instrument-track" });
+    appendSvg(svg, "rect", { x: "74", y: "68", width: fillWidth, height: "14", rx: "7", class: "instrument-fill" });
+    [1, 2, 3].forEach((tier, index) => {
+      const instrumentTier = inst.tier !== undefined ? inst.tier : state.tier;
+      appendSvg(svg, "circle", {
+        cx: 100 + index * 54,
+        cy: 105,
+        r: "6",
+        class: numberOrZero(instrumentTier) >= tier ? "instrument-fill" : "instrument-muted",
+      });
+    });
+    appendSvg(svg, "circle", { cx: "39", cy: "75", r: "24", class: "instrument-outline" });
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, tierName(state.tier));
+  };
+
+  const renderLunarInstrument = (slot, inst = {}) => {
+    const data = inst.data || {};
+    const phase = clamp(data.phase || 1, 1, 8);
+    const svg = makeInstrumentSvg();
+    appendMoonPhase(svg, 76, 80, 28, phase);
+    appendMoonPhase(svg, 124, 52, 13, phase);
+    appendSvg(svg, "path", { d: "M210 50 L217 70 L238 70 L221 82 L228 103 L210 90 L192 103 L199 82 L182 70 L203 70 Z", class: clamp01(inst.primary) > 0.66 ? "instrument-fill" : "instrument-outline" });
+    for (let i = 1; i <= 8; i += 1) {
+      appendSvg(svg, "circle", { cx: 58 + i * 20, cy: 125, r: "4", class: i === phase ? "instrument-fill" : "instrument-muted" });
+    }
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, text(data.focus, "Lunar Lattice"));
+  };
+
+  const renderHistInstrument = (slot, inst = {}) => {
+    const data = inst.data || {};
+    const hist = clamp(data.hist, 0, 100);
+    const people = clamp(data.people, 0, 100);
+    const voidValue = clamp(data.void, 0, 100);
+    const svg = makeInstrumentSvg();
+    appendSvg(svg, "path", { d: "M150 126 V68", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: "M150 126 C120 125 98 118 82 104", class: "instrument-thin" });
+    appendSvg(svg, "path", { d: "M150 126 C180 125 202 118 218 104", class: "instrument-thin" });
+    const arcs = 1 + Math.round(people / 50);
+    for (let i = 0; i < arcs; i += 1) {
+      const radius = 36 + i * 18;
+      appendSvg(svg, "path", { d: `M${150 - radius} 70 A ${radius} ${radius} 0 0 1 ${150 + radius} 70`, class: i === 0 || hist > 35 ? "instrument-outline" : "instrument-muted" });
+    }
+    appendSvg(svg, "circle", { cx: "150", cy: "48", r: "5", class: data.voidActive || voidValue > 60 ? "instrument-warning" : "instrument-fill" });
+    if (voidValue > 0) {
+      appendSvg(svg, "path", { d: `M238 42 L266 75 L238 108 Z`, class: "instrument-warning-thin" });
+    }
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "The Hist");
+  };
+
+  const renderAncestorInstrument = (slot, inst = {}) => {
+    const data = inst.data || {};
+    const depthValue = data.depth !== undefined ? data.depth : inst.tier;
+    const depth = clamp(depthValue, 0, 3);
+    const svg = makeInstrumentSvg();
+    appendSvg(svg, "path", { d: "M88 124 V54 Q150 18 212 54 V124", class: "instrument-outline" });
+    [0, 1, 2].forEach((index) => {
+      const x = 112 + index * 38;
+      appendSvg(svg, "path", { d: `M${x} 68 Q${x + 16} 54 ${x + 32} 68 Q${x + 32} 104 ${x + 16} 114 Q${x} 104 ${x} 68 Z`, class: depth > index ? "instrument-fill-soft" : "instrument-muted" });
+      appendSvg(svg, "circle", { cx: x + 10, cy: "82", r: "2", class: "instrument-dark" });
+      appendSvg(svg, "circle", { cx: x + 22, cy: "82", r: "2", class: "instrument-dark" });
+    });
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "Ancestor layer");
+  };
+
+  const renderForgeInstrument = (slot, inst = {}) => {
+    const svg = makeInstrumentSvg();
+    const heat = clamp01(inst.primary || 0.5);
+    appendSvg(svg, "path", { d: "M92 110 H208 L226 128 H74 Z", class: "instrument-fill-soft" });
+    appendSvg(svg, "path", { d: "M122 102 H178 L194 112 H106 Z", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: `M150 ${96 - heat * 24} C128 82 136 58 150 44 C164 58 172 82 150 ${96 - heat * 24} Z`, class: heat > 0.7 ? "instrument-fill" : "instrument-outline" });
+    appendSvg(svg, "path", { d: "M92 92 C70 74 72 50 92 34", class: "instrument-thin" });
+    appendSvg(svg, "path", { d: "M208 92 C230 74 228 50 208 34", class: "instrument-thin" });
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "Malacath");
+  };
+
+  const renderSectsInstrument = (slot, inst = {}) => {
+    const data = inst.data || {};
+    const active = text(data.sect || inst.state, "").toLowerCase();
+    const svg = makeInstrumentSvg();
+    ["crown", "forebear", "ash'abah"].forEach((sect, index) => {
+      const x = 82 + index * 68;
+      const selected = active.indexOf(sect.replace("'", "")) >= 0 || (sect === "ash'abah" && active.indexOf("ash") >= 0);
+      appendSvg(svg, "path", { d: `M${x} 40 C${x + 16} 70 ${x + 12} 98 ${x} 122 C${x - 12} 98 ${x - 16} 70 ${x} 40 Z`, class: selected ? "instrument-fill-soft" : "instrument-muted" });
+      appendSvg(svg, "path", { d: `M${x - 18} 120 H${x + 18}`, class: "instrument-thin" });
+      if (selected) appendSvg(svg, "circle", { cx: x, cy: "82", r: "30", class: "instrument-outline" });
+    });
+    appendSvg(svg, "path", { d: "M60 130 C110 112 190 112 240 130", class: "instrument-thin" });
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "Yokudan path");
+  };
+
+  const renderBranchInstrument = (slot, inst = {}) => {
+    const data = inst.data || {};
+    const rings = clamp(data.evidenceDays || inst.tier || 1, 1, 3);
+    const svg = makeInstrumentSvg();
+    appendSvg(svg, "path", { d: "M82 120 C126 100 174 70 220 30", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: "M174 64 q38 -28 56 -12 q-22 30 -56 12 Z", class: "instrument-fill-soft" });
+    for (let i = 0; i < rings; i += 1) {
+      appendSvg(svg, "path", { d: `M${88 - i * 8} 124 A ${28 + i * 8} ${20 + i * 5} 0 0 1 ${134 + i * 8} 124`, class: "instrument-thin" });
+    }
+    if (data.pactBound) {
+      appendSvg(svg, "path", { d: "M122 100 L142 112 M138 88 L158 100 M154 76 L174 88", class: "instrument-warning-thin" });
+    }
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "Green Pact");
+  };
+
+  const instrumentRenderers = {
+    piety: renderPietyInstrument,
+    lunar: renderLunarInstrument,
+    hist: renderHistInstrument,
+    ancestor: renderAncestorInstrument,
+    forge: renderForgeInstrument,
+    sects: renderSectsInstrument,
+    branch: renderBranchInstrument,
+  };
+
+  const pietyInstrumentFromState = () => ({
+    kind: "piety",
+    tier: state.tier,
+    tierLabel: state.tierLabel,
+    primary: clamp(state.piety, 0, 150) / 150,
+    state: text(state.tierLabel, tierName(state.tier)),
+    data: { piety: state.piety, pietyToday: state.pietyToday },
+  });
+
+  const renderInstrument = () => {
+    if (!nodes.instrumentArt) return;
+    clear(nodes.instrumentArt);
+    const inst = state.instrument && typeof state.instrument === "object"
+      ? state.instrument
+      : pietyInstrumentFromState();
+    const kind = text(inst.kind, "piety").toLowerCase();
+    const renderer = instrumentRenderers[kind] || renderPietyInstrument;
+    if (nodes.instrument) {
+      nodes.instrument.setAttribute("data-instrument-kind", instrumentRenderers[kind] ? kind : "piety");
+    }
+    renderer(nodes.instrumentArt, inst);
   };
 
   const eventAliases = {
@@ -884,6 +1127,7 @@
     nodes.driftLabel.textContent = text(state.driftLabel, fallbackState.driftLabel);
     nodes.dawnStatus.textContent = text(state.dawnStatus, fallbackState.dawnStatus);
 
+    renderInstrument();
     renderRelations(state.relations);
     renderList(nodes.acts, state.acts || state.recentActs, "No devotional acts have been recorded today.");
     renderList(nodes.rites, state.rites, "No rites are available yet.");
