@@ -166,6 +166,71 @@ body.startup-visible .startup-modal {
   line-height: 1.35;
 }
 
+.startup-option.has-symbol {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.startup-option.is-disabled {
+  cursor: default;
+  opacity: 0.64;
+}
+
+.startup-option.is-disabled:hover,
+.startup-option.is-disabled:focus-visible {
+  border-color: var(--line);
+  background: rgba(16, 16, 14, 0.74);
+}
+
+.startup-option .list-symbol {
+  width: 34px;
+  height: 34px;
+}
+
+.medallion-section {
+  display: grid;
+  gap: 8px;
+}
+
+.medallion-section + .medallion-section {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.medallion-section h4 {
+  margin: 0;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.startup-detail-mark {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+  border: 1px solid rgba(216, 179, 90, 0.42);
+  border-radius: 50%;
+  color: var(--gold);
+}
+
+.option-status {
+  margin: 10px 0 0;
+  color: var(--blue);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.option-status.is-disabled {
+  color: var(--muted);
+}
+
 .startup-option-summary {
   margin: 0 0 8px;
   color: #fff8e8;
@@ -394,6 +459,102 @@ h1 {
   display: grid;
   align-content: center;
   gap: 12px;
+}
+
+.instrument-art {
+  min-height: 128px;
+  display: grid;
+  gap: 6px;
+  align-content: center;
+  color: var(--gold);
+}
+
+.instrument-svg {
+  width: 100%;
+  height: 128px;
+  display: block;
+  overflow: visible;
+}
+
+.instrument-svg path,
+.instrument-svg circle,
+.instrument-svg rect {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.instrument-svg .instrument-thin {
+  stroke-width: 1.25;
+  opacity: 0.72;
+}
+
+.instrument-svg .instrument-outline {
+  stroke: currentColor;
+}
+
+.instrument-svg .instrument-track {
+  stroke: rgba(216, 179, 90, 0.34);
+  fill: rgba(0, 0, 0, 0.18);
+}
+
+.instrument-svg .instrument-dark {
+  stroke: currentColor;
+  fill: #1b1a16;
+}
+
+.instrument-svg .instrument-fill {
+  stroke: currentColor;
+  fill: #ecdcab;
+}
+
+.instrument-svg .instrument-fill-soft {
+  stroke: currentColor;
+  fill: rgba(216, 179, 90, 0.18);
+}
+
+.instrument-svg .instrument-muted {
+  stroke: rgba(188, 179, 162, 0.58);
+  fill: rgba(188, 179, 162, 0.12);
+}
+
+.instrument-svg .instrument-warning,
+.instrument-svg .instrument-warning-thin {
+  stroke: var(--red);
+}
+
+.instrument-svg .instrument-warning {
+  fill: rgba(201, 121, 104, 0.18);
+}
+
+.instrument-svg .instrument-warning-thin {
+  stroke-width: 1.35;
+  opacity: 0.7;
+}
+
+.instrument-caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.instrument-caption strong {
+  min-width: 0;
+  color: #fff8e8;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+
+.instrument-caption span {
+  flex: 0 0 auto;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .meter-row {

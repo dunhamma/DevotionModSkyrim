@@ -57,11 +57,12 @@ new placement contracts or stronger reward volume.
 ## Race Effect Review Gate
 
 `references/authoring/PDV_RaceEffectReviewLedger.md` owns the effect-level
-lock before broad reward authoring. This budget ledger can say that a race is
-thin, rich, or overstacked; the effect review ledger must still lock the actual
-effect families, magnitudes, conditions, grant/removal behavior, stack cap,
-Survey explanation, anti-farm posture, and curse/Daedric interactions before a
-reward packet moves beyond pilot-provisional status.
+lock for reward tuning and tier expansion. This budget ledger can say that a
+race is thin, rich, or overstacked; the effect review ledger must still lock
+the actual effect families, magnitudes, conditions, grant/removal behavior,
+stack cap, Survey explanation, anti-farm posture, and curse/Daedric
+interactions before changing the all-race T1 reward contract or adding higher
+tiers.
 
 ## Status Vocabulary
 

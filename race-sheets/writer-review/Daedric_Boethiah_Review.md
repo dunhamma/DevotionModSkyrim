@@ -1,8 +1,8 @@
 # Daedric -- Boethiah -- Writer Review
 
 **Source:** `race-sheets/PDV_DaedricContent_Manifest.md` (Boethiah (full pilot))
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 24 drafted
+**Regenerated:** 2026-06-01 via `node tools/pdv_writer_review.mjs`
+**Rows:** 25 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -124,7 +124,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Boethiah (Daedric path): Trial-voiced, sharp, contemptuous of weakness; speaks of strength proven and the unworthy overthrown. The same Prince as the Dunmer-native Reclamation, but on the global path the pact is taken against one's own people: the voice is identical, the social ground is not. | `PDV_Notif_Daedric_Boethiah_NeglectTexture` | HUD corner notification. One per lapse-band crossing. | Player-2nd | 80 / 80 |  | You have stopped proving yourself. Boethiah's edge dulls; only the stigma stays. |  |
+| Boethiah (Daedric path): Trial-voiced, sharp, contemptuous of weakness; speaks of strength proven and the unworthy overthrown. The same Prince as the Dunmer-native Reclamation, but on the global path the pact is taken against one's own people: the voice is identical, the social ground is not. | `PDV_Notif_Daedric_Boethiah_NeglectTexture` | HUD corner notification. One per lapse-band crossing. | Player-2nd | 75 / 80 |  | You stopped proving yourself. Boethiah's edge dulls; only the stigma stays. |  |
 
 ## Renunciation (exit)
 
@@ -136,7 +136,7 @@ _1 row._
 
 ## Per-race response (on commitment)
 
-_8 rows._
+_9 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
@@ -148,3 +148,4 @@ _8 rows._
 | Boethiah (Daedric path): Trial-voiced, sharp, contemptuous of weakness; speaks of strength proven and the unworthy overthrown. The same Prince as the Dunmer-native Reclamation, but on the global path the pact is taken against one's own people: the voice is identical, the social ground is not. | `PDV_Msg_Daedric_Boethiah_Response_Redguard` | MessageBox. One-time on a Redguard committing. | Narrator | 23+190 / 40+500 |  | Title: "Foreign to the Redguard"   Body: "To a Redguard, Boethiah's proving ethos is foreign -- an outsider creed that challenges the Yokudan honor frame rather than fitting inside it. Leaving the path again means hard rededication." |  |
 | Boethiah (Daedric path): Trial-voiced, sharp, contemptuous of weakness; speaks of strength proven and the unworthy overthrown. The same Prince as the Dunmer-native Reclamation, but on the global path the pact is taken against one's own people: the voice is identical, the social ground is not. | `PDV_Msg_Daedric_Boethiah_Response_Orc` | MessageBox. One-time on an Orc committing. | Narrator | 22+200 / 40+500 |  | Title: "Hostile to the Orsimer"   Body: "For an Orc this is the deepest rivalry there is. Boethiah's hand in the betrayal that made Malacath sits against the whole Orc code. To take this pact is hard rupture, and Malacath does not forget it." |  |
 | Boethiah (Daedric path): Trial-voiced, sharp, contemptuous of weakness; speaks of strength proven and the unworthy overthrown. The same Prince as the Dunmer-native Reclamation, but on the global path the pact is taken against one's own people: the voice is identical, the social ground is not. | `PDV_Msg_Daedric_Boethiah_Response_Argonian` | MessageBox. One-time on an Argonian committing. | Narrator | 23+216 / 40+500 |  | Title: "Foreign to the Saxhleel"   Body: "Boethiah has no place in the Hist or the exile community; to an Argonian the path is simply foreign, outside the layered substrate. It can be walked, but it is set down through abandonment or cleansing, not woven in." |  |
+| Boethiah (Daedric path): Trial-voiced, sharp, contemptuous of weakness; speaks of strength proven and the unworthy overthrown. The same Prince as the Dunmer-native Reclamation, but on the global path the pact is taken against one's own people: the voice is identical, the social ground is not. | `PDV_Msg_Daedric_Boethiah_Response_Khajiit` | MessageBox. One-time on a Khajiit committing. | Narrator | 18+310 / 40+500 |  | Title: "Boethra Is Legible"   Body: "A Khajiit may know Boethiah as Boethra, a warrior-name from the old litter-tales -- legible, but not a native lane. Boethra does not run through the Lattice or the moons' worship; the global pact is an outside pull, not the ancestor remembered. Abandonment or native reframing keeps the lunar substrate intact." |  |

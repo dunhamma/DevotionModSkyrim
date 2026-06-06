@@ -1,8 +1,8 @@
 # Daedric -- Mephala -- Writer Review
 
 **Source:** `race-sheets/PDV_DaedricContent_Manifest.md` (Mephala)
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 24 drafted
+**Regenerated:** 2026-06-01 via `node tools/pdv_writer_review.mjs`
+**Rows:** 25 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -136,7 +136,7 @@ _1 row._
 
 ## Per-race response (on commitment)
 
-_8 rows._
+_9 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
@@ -148,3 +148,4 @@ _8 rows._
 | Mephala (Daedric path): Whispering, sidelong, web-voiced; speaks of secrets kept and bonds spun and cut; never raises her voice because she does not need to; offers corruption as intimacy. The web is social and the violence is personal -- not a thief's skill, a spider's patience. | `PDV_Msg_Daedric_Mephala_Response_Redguard` | MessageBox. One-time on a Redguard committing. | Narrator | 19+228 / 40+500 |  | Title: "Alien to Open Honor"   Body: "To a Redguard, the secret-web is alien -- the Yokudan way is open honor and the clean stroke, not the whispered knot. The path is foreign and corrosive to that frame; returning means hard re-entry into the civic trust you spent." |  |
 | Mephala (Daedric path): Whispering, sidelong, web-voiced; speaks of secrets kept and bonds spun and cut; never raises her voice because she does not need to; offers corruption as intimacy. The web is social and the violence is personal -- not a thief's skill, a spider's patience. | `PDV_Msg_Daedric_Mephala_Response_Orc` | MessageBox. One-time on an Orc committing. | Narrator | 15+221 / 40+500 |  | Title: "Rot in the Code"   Body: "For an Orc, Mephala's hidden corruption strains the Malacath code -- the stronghold runs on plain oath, not secret leverage. The path is taboo, and renunciation comes only through proof and real cost paid back to the kin." |  |
 | Mephala (Daedric path): Whispering, sidelong, web-voiced; speaks of secrets kept and bonds spun and cut; never raises her voice because she does not need to; offers corruption as intimacy. The web is social and the violence is personal -- not a thief's skill, a spider's patience. | `PDV_Msg_Daedric_Mephala_Response_Argonian` | MessageBox. One-time on an Argonian committing. | Narrator | 15+226 / 40+500 |  | Title: "Not a Hist Lane"   Body: "To an Argonian, Mephala is foreign -- the Hist does not whisper, and a knack for shadows is not devotion to the web. The path has no root in the substrate; it is simply drifted from, and the Hist neither held it nor misses it." |  |
+| Mephala (Daedric path): Whispering, sidelong, web-voiced; speaks of secrets kept and bonds spun and cut; never raises her voice because she does not need to; offers corruption as intimacy. The web is social and the violence is personal -- not a thief's skill, a spider's patience. | `PDV_Msg_Daedric_Mephala_Response_Khajiit` | MessageBox. One-time on a Khajiit committing. | Narrator | 17+303 / 40+500 |  | Title: "Mafala Is Legible"   Body: "A Khajiit may know Mephala as Mafala, one of the litter-names from the old tales -- legible, but not a native lane. Mafala does not run through the Lattice or the moons' worship; the web is an outside pull, not the clan-mother remembered. Withdrawal or native reframing keeps the lunar substrate intact." |  |

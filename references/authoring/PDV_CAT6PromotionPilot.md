@@ -37,8 +37,9 @@ Current repo evidence:
   native devotion strings.
 - `race-sheets/PDV_DaedricContent_Manifest.md` is the draft source for Daedric
   path strings; all sixteen Skyrim-present Princes now have draft rows, but
-  Daedric promotion still waits on stigma row ratification, Hircine/Molag Bal
-  curse-access template shape, and Prince authoring order.
+  Daedric promotion now waits on proof-path gates against the locked D-15..D-18
+  decisions: per-Prince CAT-6 target selection, record readback, runtime or
+  display proof, and stack/Survey legibility.
 - CK-safe dialogue readback exists for CK-authored dialogue, but generated
   dialogue creation is not a supported promotion path.
 
@@ -260,8 +261,11 @@ Risk:
   pilot-provisional `MGEF` records.
 - Both effect entries are gated by `GetCurrentTime >= 19 OR <= 7`. The source
   row says "At night" so text matches the implemented condition.
-- The pilot remains grant-unwired. It proves record/readback/text promotion, not
-  full Khajiit reward distribution or balance.
+- The standalone grant-unwired boundary was superseded on 2026-06-04 by
+  `PDV_Phase20_RewardRecordContracts.json`, which owns Khajiit Tier 1 grant
+  wiring with the other nine race rewards. This proves record/readback/text
+  and manager wiring, not Active Effects display, save/load behavior, full
+  Khajiit reward feel, or balance.
 
 Implementation helper:
 
@@ -351,9 +355,11 @@ The Bosmer fallback remains valid because Exchange/Z'en debt, proper return,
 and Bandit Road/Baan Dar reversal are source-backed non-dialogue surfaces.
 
 Current implementation status: the Khajiit first candidate now has a live
-pilot-provisional `SPEL` plus two live pilot-provisional `MGEF` records in the
-framework ESP, created by the narrow CAT-6 helper. The Bosmer fallback still has
-a source row but no live target `SPEL`. This state is mirrored in
+`SPEL` plus two live `MGEF` records in the framework ESP. The original records
+were created by the narrow CAT-6 helper; grant ownership now sits with the
+all-race reward contract. The Bosmer Exchange fallback still has a source row
+but no live target `SPEL`; the all-race reward contract instead uses
+`PDV_Bless_Bosmer_Yffre_T1`. This state is mirrored in
 `PDV_Phase20_NoInGameProof_Gates.json`, described by
 `PDV_CAT6PromotionPilot.manifest.json`, and checked by
 `--strict-phase20-race-costing`.
@@ -378,12 +384,8 @@ CAT-4 Daedric expansion should not use this first pilot for broad Prince
 promotion.
 
 The first CAT-6 pilot intentionally avoids Daedric stigma and curse-access
-rows. CAT-4 still needs its own closeout before mass Prince authoring:
-
-- Final stigma band/decay row contract.
-- Hircine/Molag Bal curse-access template.
-- Prince-by-Prince authoring order.
-
-After those are locked, a second CAT-6 pilot can promote one Daedric
-non-dialogue row, preferably a `SPEL` boon or price description before stigma
-band feedback. Only after that should Daedric stigma/status rows move in bulk.
+rows. D-15..D-18 now lock the stigma model, Hircine/Molag Bal curse-access
+templates, Prince authoring order, and per-Prince content-ready bar. A second
+CAT-6 pilot can promote one Daedric non-dialogue row against those locks,
+preferably a `SPEL` boon or price description before stigma band feedback. Only
+after that should Daedric stigma/status rows move in bulk.

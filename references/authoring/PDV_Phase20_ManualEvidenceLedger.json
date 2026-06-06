@@ -1,17 +1,27 @@
 {
-  "schema": "pdv.phase20.manual-evidence-ledger.v1",
+  "schema": "pdv.phase20.manual-evidence-ledger.v2",
   "status": "pending-manual-runtime-proof",
-  "updated": "2026-05-31",
-  "purpose": "Structured intake ledger for Phase 20 manual/runtime evidence after the no-in-game gate is green.",
+  "updated": "2026-06-04",
+  "purpose": "Structured intake ledger for Phase 20 empirical runtime evidence after immersive hook contracts are green.",
   "rules": {
     "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-    "allowedSlotStatuses": ["pending", "not-applicable"],
-    "disallowedCompletionStatuses": ["pass", "conditional", "complete", "done"],
+    "allowedSlotStatuses": [
+      "pending",
+      "not-applicable",
+      "evidence-recorded"
+    ],
+    "disallowedCompletionStatuses": [
+      "pass",
+      "conditional",
+      "complete",
+      "done"
+    ],
     "requiredSlots": [
       "wrongOriginRejection",
       "genericHookRejection",
       "surveyStatusClarity",
-      "finalPlacement",
+      "immersiveHookProof",
+      "assetStatus",
       "stackSnapshot",
       "manualFeelNote"
     ]
@@ -20,66 +30,186 @@
     "Altmer": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race altmer",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
-        "wrongOriginRejection": {"status": "pending", "expected": "Non-Altmer origin cannot move crisis, Lorkhan pressure, dawn steadiness, or orthodox-cost state."},
-        "genericHookRejection": {"status": "pending", "expected": "Ordinary travel, friendship, spellcasting, College membership, generic anti-Thalmor violence, generic Daedric contact, and untracked vampire/werewolf state stay silent."},
-        "surveyStatusClarity": {"status": "pending", "expected": "Survey/MCM explains crisis state, Lorkhan pressure, scar/recovery, active favor, and curse/exile posture without route IDs."},
-        "finalPlacement": {"status": "pending", "expected": "One dawn/study surface and one crisis/Lorkhan pressure surface are placed outside QASmoke and still reject wrong origins."},
-        "stackSnapshot": {"status": "pending", "expected": "Auri-El/Magnus scholar and Exiled vampire or mortal-world pressure edge builds record active boon, favor, scar, curse, and suppressed generic layers."},
-        "manualFeelNote": {"status": "pending", "expected": "Player can tell pressure is authored theological friction, not punishment for ordinary Skyrim life."}
+        "wrongOriginRejection": {
+          "status": "evidence-recorded",
+          "expected": "Non-Altmer origin cannot move crisis, Lorkhan pressure, dawn steadiness, or orthodox-cost state.",
+          "note": "2026-06-01: Manual check 1 passed in-game (non-Altmer remained silent for Altmer proof surfaces)."
+        },
+        "genericHookRejection": {
+          "status": "evidence-recorded",
+          "expected": "Ordinary travel, friendship, spellcasting, College membership, generic anti-Thalmor violence, generic Daedric contact, and untracked vampire/werewolf state stay silent.",
+          "note": "2026-06-01: Manual check 2 passed in-game (generic anti-Thalmor silence plus repeated Dragonborn identity/vampire-power rejection behavior confirmed)."
+        },
+        "surveyStatusClarity": {
+          "status": "evidence-recorded",
+          "expected": "Survey/MCM explains crisis state, Lorkhan pressure, scar/recovery, active favor, and curse/exile posture without route IDs.",
+          "note": "2026-06-01: Manual check 3 passed in-game. Survey text showed crisis state + authored Lorkhan pressure + last favor (Dawn steadiness) in fiction-facing wording. Vampire lane pass is linked as curse-posture evidence when applicable."
+        },
+        "stackSnapshot": {
+          "status": "pending",
+          "expected": "Auri-El/Magnus scholar and Exiled vampire or mortal-world pressure edge builds record active boon, favor, scar, curse, and suppressed generic layers."
+        },
+        "manualFeelNote": {
+          "status": "pending",
+          "expected": "Player can tell pressure is authored theological friction, not punishment for ordinary Skyrim life."
+        },
+        "immersiveHookProof": {
+          "status": "pending",
+          "expected": "Prove dawn/study devotional context plus non-visible crisis/Lorkhan/orthodox pressure hooks outside QASmoke, with wrong-origin rejection and no visible pressure object.",
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Auri-El, Magnus, and Xarxes via strict manager checker. This is accepted-route proof only; prior QASmoke hook proof remains separate, and stack/feel evidence remains pending."
+        },
+        "assetStatus": {
+          "status": "pending",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+        }
       }
     },
     "Khajiit": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race khajiit",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
-        "wrongOriginRejection": {"status": "pending", "expected": "Non-Khajiit origin cannot move lunar, road-home, Baan Dar, Rajhin, or Alkosh proof state."},
-        "genericHookRejection": {"status": "pending", "expected": "Fast travel, generic theft, moon-sugar use, generic dragon kills, generic night stealth, caravan proximity, and repeated same-anchor travel stay silent."},
-        "surveyStatusClarity": {"status": "pending", "expected": "Survey/MCM explains lunar substrate, road-home cadence, focus weight, lunar posture, and active focus in race language."},
-        "finalPlacement": {"status": "pending", "expected": "One road-home/moon/caravan surface and one focus-specific surface are placed outside QASmoke and do not become chores."},
-        "stackSnapshot": {"status": "pending", "expected": "Khenarthi/Azurah road-home build and Rajhin/Baan Dar/Alkosh edge build record lunar substrate, one active focus, phase amplifier, road cadence, and shadow or curse modifier."},
-        "manualFeelNote": {"status": "pending", "expected": "Moon/road behavior feels like cadence and belonging, not mandatory inspection or generic thief scoring."}
+        "wrongOriginRejection": {
+          "status": "pending",
+          "expected": "Non-Khajiit origin cannot move lunar, road-home, Baan Dar, Rajhin, or Alkosh proof state."
+        },
+        "genericHookRejection": {
+          "status": "pending",
+          "expected": "Fast travel, generic theft, moon-sugar use, generic dragon kills, generic night stealth, caravan proximity, and repeated same-anchor travel stay silent."
+        },
+        "surveyStatusClarity": {
+          "status": "pending",
+          "expected": "Survey/MCM explains lunar substrate, road-home cadence, focus weight, lunar posture, and active focus in race language.",
+          "note": "2026-06-04: Accepted lunar book route proof passed in the log, but tester reported no visible change in the Survey Devotion power text. Keep status clarity pending."
+        },
+        "stackSnapshot": {
+          "status": "pending",
+          "expected": "Khenarthi/Azurah road-home build and Rajhin/Baan Dar/Alkosh edge build record lunar substrate, one active focus, phase amplifier, road cadence, and shadow or curse modifier."
+        },
+        "manualFeelNote": {
+          "status": "pending",
+          "expected": "Moon/road behavior feels like cadence and belonging, not mandatory inspection or generic thief scoring."
+        },
+        "immersiveHookProof": {
+          "status": "pending",
+          "expected": "Prove lunar rest/open-sky cadence, road-home anchors, and Baan Dar/Rajhin/Alkosh focus hooks outside QASmoke without fast-travel, moon-sugar, theft, or dragon spam.",
+          "note": "2026-06-04: Accepted P2 lunar book-route log proof recorded via strict manager checker. This is accepted-route proof only; status clarity, wrong-origin, generic-source silence, stack snapshot, and feel remain pending."
+        },
+        "assetStatus": {
+          "status": "pending",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+        }
       }
     },
     "Argonian": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race argonian",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
-        "wrongOriginRejection": {"status": "pending", "expected": "Non-Argonian origin cannot move Hist, People, Void, or bed-of-choice state."},
-        "genericHookRejection": {"status": "pending", "expected": "Swimming loops, same-bed sleep loops, generic murder, generic stealth, one Dark Brotherhood join, generic alchemy, and random swamp travel stay silent."},
-        "surveyStatusClarity": {"status": "pending", "expected": "Survey/MCM labels Hist, People, Void, posture, bed-of-choice, and curse distance fictionally instead of as debug numbers."},
-        "finalPlacement": {"status": "pending", "expected": "One Hist/water/rest surface and one People/community or death-rite surface are placed outside QASmoke."},
-        "stackSnapshot": {"status": "pending", "expected": "Hist/People community build and Void/curse edge build record Hist substrate, People floor, Void threshold, bed-of-choice cadence, and Arkay/death-rite response."},
-        "manualFeelNote": {"status": "pending", "expected": "Hist/People support is visible before Sithis/Void depth becomes attractive."}
+        "wrongOriginRejection": {
+          "status": "pending",
+          "expected": "Non-Argonian origin cannot move Hist, People, Void, or bed-of-choice state."
+        },
+        "genericHookRejection": {
+          "status": "pending",
+          "expected": "Swimming loops, same-bed sleep loops, generic murder, generic stealth, one Dark Brotherhood join, generic alchemy, and random swamp travel stay silent."
+        },
+        "surveyStatusClarity": {
+          "status": "pending",
+          "expected": "Survey/MCM labels Hist, People, Void, posture, bed-of-choice, and curse distance fictionally instead of as debug numbers."
+        },
+        "stackSnapshot": {
+          "status": "pending",
+          "expected": "Hist/People community build and Void/curse edge build record Hist substrate, People floor, Void threshold, bed-of-choice cadence, and Arkay/death-rite response."
+        },
+        "manualFeelNote": {
+          "status": "pending",
+          "expected": "Hist/People support is visible before Sithis/Void depth becomes attractive."
+        },
+        "immersiveHookProof": {
+          "status": "pending",
+          "expected": "Prove Hist water/rest, People community, and thresholded Void/death-change hooks outside QASmoke without swimming, sleep, or murder loops.",
+          "note": "2026-06-04: Accepted P2 Hist book-route log proof recorded via strict manager checker. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
+        },
+        "assetStatus": {
+          "status": "pending",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+        }
       }
     },
     "Orc": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race orc",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
-        "wrongOriginRejection": {"status": "pending", "expected": "Non-Orc origin cannot move Stronghold, City, Legion/Exile, or self-made community state."},
-        "genericHookRejection": {"status": "pending", "expected": "Raw crafting, generic combat, faction joining, ore mining, vendor sales, brawls, and random stronghold proximity stay silent."},
-        "surveyStatusClarity": {"status": "pending", "expected": "Survey/MCM explains life mode, dignity/service posture, craft quality context, and recent mode evidence."},
-        "finalPlacement": {"status": "pending", "expected": "One Stronghold/quality-craft surface and one City dignity or Legion/Exile service surface are placed outside QASmoke."},
-        "stackSnapshot": {"status": "pending", "expected": "Stronghold forge build and City/Legion exile edge build record mode, Malacath layer, craft/context caps, community recognition, and curse modifier."},
-        "manualFeelNote": {"status": "pending", "expected": "City and Legion/Exile dignity can compete with Stronghold craft/combat without becoming generic smithing."}
+        "wrongOriginRejection": {
+          "status": "pending",
+          "expected": "Non-Orc origin cannot move Stronghold, City, Legion/Exile, or self-made community state."
+        },
+        "genericHookRejection": {
+          "status": "pending",
+          "expected": "Raw crafting, generic combat, faction joining, ore mining, vendor sales, brawls, and random stronghold proximity stay silent."
+        },
+        "surveyStatusClarity": {
+          "status": "pending",
+          "expected": "Survey/MCM explains life mode, dignity/service posture, craft quality context, and recent mode evidence.",
+          "note": "2026-06-04: Tester could not read the status because the Prisma startup panel overlapped the CK startup MessageBox. Live manager script was patched and compiled to suppress Prisma startup payloads during CK-backed startup selection."
+        },
+        "stackSnapshot": {
+          "status": "pending",
+          "expected": "Stronghold forge build and City/Legion exile edge build record mode, Malacath layer, craft/context caps, community recognition, and curse modifier."
+        },
+        "manualFeelNote": {
+          "status": "pending",
+          "expected": "City and Legion/Exile dignity can compete with Stronghold craft/combat without becoming generic smithing."
+        },
+        "immersiveHookProof": {
+          "status": "pending",
+          "expected": "Prove Stronghold quality forge, City/self-made dignity, and Legion/Exile service hooks outside QASmoke without raw craft, combat, or faction membership loops.",
+          "note": "2026-06-04: Accepted P2 Malacath book-route log proof recorded via strict manager checker after aligning the checker with the live manager marker. This is accepted-route proof only; status clarity, wrong-origin, generic-source silence, stack snapshot, and feel remain pending."
+        },
+        "assetStatus": {
+          "status": "pending",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+        }
       }
     },
     "Redguard": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race redguard",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --race redguard --strict-manager",
       "manualEvidenceSlots": {
-        "wrongOriginRejection": {"status": "pending", "expected": "Non-Redguard origin cannot move Crown, Forebear, Ash'abah, or Far Shores token state."},
-        "genericHookRejection": {"status": "pending", "expected": "Generic combat, generic undead clearing, fast travel, tomb proximity, faction membership, random sword use, and generic Arkay shrine use stay silent."},
-        "surveyStatusClarity": {"status": "pending", "expected": "Survey/MCM explains sect posture, death-duty state, Far Shores token, HoonDing cap, and stigma/recovery pressure."},
-        "finalPlacement": {"status": "pending", "expected": "One Crown/Forebear sect surface and one Ash'abah/Far Shores death-duty surface are placed outside QASmoke."},
-        "stackSnapshot": {"status": "pending", "expected": "Crown/Forebear expected build and Ash'abah/death-duty edge build record sect layer, death-duty token, HoonDing cap, and curse/Daedric modifier."},
-        "manualFeelNote": {"status": "pending", "expected": "Death-duty and martial signals do not swallow Crown form, Forebear adaptation, or Ash'abah stigma."}
+        "wrongOriginRejection": {
+          "status": "pending",
+          "expected": "Non-Redguard origin cannot move Crown, Forebear, Ash'abah, or Far Shores token state."
+        },
+        "genericHookRejection": {
+          "status": "pending",
+          "expected": "Generic combat, generic undead clearing, fast travel, tomb proximity, faction membership, random sword use, and generic Arkay shrine use stay silent."
+        },
+        "surveyStatusClarity": {
+          "status": "pending",
+          "expected": "Survey/MCM explains sect posture, death-duty state, Far Shores token, HoonDing cap, and stigma/recovery pressure."
+        },
+        "stackSnapshot": {
+          "status": "pending",
+          "expected": "Crown/Forebear expected build and Ash'abah/death-duty edge build record sect layer, death-duty token, HoonDing cap, and curse/Daedric modifier."
+        },
+        "manualFeelNote": {
+          "status": "pending",
+          "expected": "Death-duty and martial signals do not swallow Crown form, Forebear adaptation, or Ash'abah stigma."
+        },
+        "immersiveHookProof": {
+          "status": "pending",
+          "expected": "Prove Crown/Forebear sect, Ash'abah/Far Shores death-duty, and HoonDing cap hooks outside QASmoke without Arkay substitution, fast travel, combat, or undead farming.",
+          "note": "2026-06-04: Accepted P2 ancestor-spine book-route log proof recorded via strict manager checker in Papyrus.0.log after restart/log rotation. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
+        },
+        "assetStatus": {
+          "status": "pending",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+        }
       }
     },
     "Bosmer": {
@@ -87,25 +217,69 @@
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race bosmer",
       "manualEvidenceSlots": {
-        "wrongOriginRejection": {"status": "pending", "expected": "Non-Bosmer origin cannot move Old Contract, Living Story, Exchange, or Bandit Road favor state."},
-        "genericHookRejection": {"status": "pending", "expected": "Generic kindness, generic trade, generic theft, forest travel, hunting, plant harvesting, and random bandit kills stay silent unless path-contexted."},
-        "surveyStatusClarity": {"status": "pending", "expected": "Survey/MCM explains active path, Pact pressure, favor counters, path switch pressure, and non-hunter route meaning."},
-        "finalPlacement": {"status": "pending", "expected": "One Living Story or Exchange non-hunter surface and one Bandit Road or Pact-pressure surface are placed outside QASmoke."},
-        "stackSnapshot": {"status": "pending", "expected": "Living Story/Exchange expected build and Old Contract/Bandit Road edge build record active path, one active favor, Pact pressure, and Baan Dar/Nocturnal/Hircine modifier."},
-        "manualFeelNote": {"status": "pending", "expected": "Non-hunter paths feel equally intentional instead of weaker than Old Contract proof density."}
+        "wrongOriginRejection": {
+          "status": "pending",
+          "expected": "Non-Bosmer origin cannot move Old Contract, Living Story, Exchange, or Bandit Road favor state."
+        },
+        "genericHookRejection": {
+          "status": "pending",
+          "expected": "Generic kindness, generic trade, generic theft, forest travel, hunting, plant harvesting, and random bandit kills stay silent unless path-contexted."
+        },
+        "surveyStatusClarity": {
+          "status": "pending",
+          "expected": "Survey/MCM explains active path, Pact pressure, favor counters, path switch pressure, and non-hunter route meaning."
+        },
+        "stackSnapshot": {
+          "status": "pending",
+          "expected": "Living Story/Exchange expected build and Old Contract/Bandit Road edge build record active path, one active favor, Pact pressure, and Baan Dar/Nocturnal/Hircine modifier."
+        },
+        "manualFeelNote": {
+          "status": "pending",
+          "expected": "Non-hunter paths feel equally intentional instead of weaker than Old Contract proof density."
+        },
+        "immersiveHookProof": {
+          "status": "pending",
+          "expected": "Prove Living Story, Exchange, and Bandit Road/Pact-pressure hooks outside QASmoke without generic kindness, commerce, theft, forest travel, or unproven item punishment."
+        },
+        "assetStatus": {
+          "status": "pending",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+        }
       }
     },
     "Breton": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "No Phase 20 route command yet; audit manually through Survey/status and stack review.",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
-        "wrongOriginRejection": {"status": "pending", "expected": "Non-Breton origin cannot read Breton tradition state as native."},
-        "genericHookRejection": {"status": "pending", "expected": "Generic spellcasting, generic artifact use, generic aid, faction membership, and shrine attendance do not move tradition standing by themselves."},
-        "surveyStatusClarity": {"status": "pending", "expected": "Survey/MCM explains Knight's Road, Hidden Art, or Green Way without enabling three simultaneous reward engines."},
-        "finalPlacement": {"status": "not-applicable", "expected": "P2 audit-only lane; no final placement buildout before ceiling risk is understood."},
-        "stackSnapshot": {"status": "pending", "expected": "Expected tradition build and edge occult/curse build record active tradition, cover/exposure, vow/druidic pressure, and suppressed parallel engines."},
-        "manualFeelNote": {"status": "pending", "expected": "Three traditions read as choice and pressure, not a broad stack of all Breton advantages."}
+        "wrongOriginRejection": {
+          "status": "pending",
+          "expected": "Non-Breton origin cannot read Breton tradition state as native."
+        },
+        "genericHookRejection": {
+          "status": "pending",
+          "expected": "Generic spellcasting, generic artifact use, generic aid, faction membership, and shrine attendance do not move tradition standing by themselves."
+        },
+        "surveyStatusClarity": {
+          "status": "pending",
+          "expected": "Survey/MCM explains Knight's Road, Hidden Art, or Green Way without enabling three simultaneous reward engines."
+        },
+        "stackSnapshot": {
+          "status": "pending",
+          "expected": "Expected tradition build and edge occult/curse build record active tradition, cover/exposure, vow/druidic pressure, and suppressed parallel engines."
+        },
+        "manualFeelNote": {
+          "status": "pending",
+          "expected": "Three traditions read as choice and pressure, not a broad stack of all Breton advantages."
+        },
+        "immersiveHookProof": {
+          "status": "pending",
+          "expected": "Prove Breton tradition choice, Knight's Road, Hidden Art, and Green Way immersive hooks outside QASmoke, with stack audit and rejected generic spell/artifact/help loops."
+        },
+        "assetStatus": {
+          "status": "pending",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+        }
       }
     },
     "Dunmer": {
@@ -113,38 +287,107 @@
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
       "runtimeProofCommand": "No Phase 20 route command yet; audit manually through Survey/status and stack review.",
       "manualEvidenceSlots": {
-        "wrongOriginRejection": {"status": "pending", "expected": "Non-Dunmer origin cannot read ancestor/Reclamation state as native."},
-        "genericHookRejection": {"status": "pending", "expected": "Generic Daedric contact, shrine use, theft, murder, ash proximity, and tomb travel do not move native Dunmer layers by themselves."},
-        "surveyStatusClarity": {"status": "pending", "expected": "Survey/MCM explains ancestor posture, active Reclamation, diaspora burden, private shrine state, and Daedric deviation cost."},
-        "finalPlacement": {"status": "not-applicable", "expected": "P2 audit-only lane; no final placement buildout before substrate/focus ceiling risk is understood."},
-        "stackSnapshot": {"status": "pending", "expected": "Expected Reclamation build and edge deviation/curse build record ancestor substrate, active focus, silence/deviation, and suppressed generic Daedric stacking."},
-        "manualFeelNote": {"status": "pending", "expected": "Ancestor substrate stays interpretive/identity-heavy while the foreground Reclamation remains the loudest reward layer."}
+        "wrongOriginRejection": {
+          "status": "pending",
+          "expected": "Non-Dunmer origin cannot read ancestor/Reclamation state as native."
+        },
+        "genericHookRejection": {
+          "status": "pending",
+          "expected": "Generic Daedric contact, shrine use, theft, murder, ash proximity, and tomb travel do not move native Dunmer layers by themselves."
+        },
+        "surveyStatusClarity": {
+          "status": "pending",
+          "expected": "Survey/MCM explains ancestor posture, active Reclamation, diaspora burden, private shrine state, and Daedric deviation cost."
+        },
+        "stackSnapshot": {
+          "status": "pending",
+          "expected": "Expected Reclamation build and edge deviation/curse build record ancestor substrate, active focus, silence/deviation, and suppressed generic Daedric stacking."
+        },
+        "manualFeelNote": {
+          "status": "pending",
+          "expected": "Ancestor substrate stays interpretive/identity-heavy while the foreground Reclamation remains the loudest reward layer."
+        },
+        "immersiveHookProof": {
+          "status": "pending",
+          "expected": "Prove Dunmer portable ash-prayer/home rite, Reclamation focus, and deviation-price immersive hooks outside QASmoke, with stack audit and rejected generic Daedric behavior.",
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Azura and Boethiah Reclamation focus via strict manager checker. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
+        },
+        "assetStatus": {
+          "status": "pending",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+        }
       }
     },
     "Imperial": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "No Phase 20 route command yet; audit manually through Survey/status and stack review.",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
-        "wrongOriginRejection": {"status": "pending", "expected": "Non-Imperial origin cannot read Concordat/civic state as native."},
-        "genericHookRejection": {"status": "pending", "expected": "Faction rank, shrine attendance, generic mercy, generic lawfulness, generic Talos proximity, and generic trade do not score by themselves."},
-        "surveyStatusClarity": {"status": "pending", "expected": "Survey/MCM explains public/private Talos pressure, civic duty, Nine Divines posture, and concrete act requirements."},
-        "finalPlacement": {"status": "not-applicable", "expected": "P2 audit-only lane; no final placement buildout before civic/Talos ceiling risk is understood."},
-        "stackSnapshot": {"status": "pending", "expected": "Expected lawful civic build and edge private Talos defiance build record ConcordatStanding, active god, public/private pressure, and suppressed faction-only rewards."},
-        "manualFeelNote": {"status": "pending", "expected": "Imperial religion reads as concrete civic practice under public law, not generic faction or morality tracking."}
+        "wrongOriginRejection": {
+          "status": "pending",
+          "expected": "Non-Imperial origin cannot read Concordat/civic state as native."
+        },
+        "genericHookRejection": {
+          "status": "pending",
+          "expected": "Faction rank, shrine attendance, generic mercy, generic lawfulness, generic Talos proximity, and generic trade do not score by themselves."
+        },
+        "surveyStatusClarity": {
+          "status": "pending",
+          "expected": "Survey/MCM explains public/private Talos pressure, civic duty, Nine Divines posture, and concrete act requirements."
+        },
+        "stackSnapshot": {
+          "status": "pending",
+          "expected": "Expected lawful civic build and edge private Talos defiance build record ConcordatStanding, active god, public/private pressure, and suppressed faction-only rewards."
+        },
+        "manualFeelNote": {
+          "status": "pending",
+          "expected": "Imperial religion reads as concrete civic practice under public law, not generic faction or morality tracking."
+        },
+        "immersiveHookProof": {
+          "status": "pending",
+          "expected": "Prove Imperial civic service, public/private Talos pressure, and focused patron civic immersive hooks outside QASmoke, with stack audit and faction/attendance rejection.",
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for public Talos pressure via strict manager checker. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
+        },
+        "assetStatus": {
+          "status": "pending",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+        }
       }
     },
     "Nord": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race all",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
-        "wrongOriginRejection": {"status": "pending", "expected": "Non-Nord origin cannot read Nord broad/focused worship state as native."},
-        "genericHookRejection": {"status": "pending", "expected": "Generic travel, generic kills, generic sleep, generic crafting, and repeated shrine activity do not over-trigger Nord rewards."},
-        "surveyStatusClarity": {"status": "pending", "expected": "Survey/MCM explains broad/focused patron, Talos pressure, Kyne/Hircine interaction, neglect, scar, and contextual favor cap."},
-        "finalPlacement": {"status": "not-applicable", "expected": "P2 audit/control lane; no new final placement buildout in this pass."},
-        "stackSnapshot": {"status": "pending", "expected": "Expected Kyne/Talos control build and Hircine/vampire edge build record broad/focused layers, one active favor, neglect/scar, and suppressed dense-hook faucets."},
-        "manualFeelNote": {"status": "pending", "expected": "Nord remains the fully felt control without becoming noisy or best-supported by hook density alone."}
+        "wrongOriginRejection": {
+          "status": "pending",
+          "expected": "Non-Nord origin cannot read Nord broad/focused worship state as native."
+        },
+        "genericHookRejection": {
+          "status": "pending",
+          "expected": "Generic travel, generic kills, generic sleep, generic crafting, and repeated shrine activity do not over-trigger Nord rewards."
+        },
+        "surveyStatusClarity": {
+          "status": "pending",
+          "expected": "Survey/MCM explains broad/focused patron, Talos pressure, Kyne/Hircine interaction, neglect, scar, and contextual favor cap."
+        },
+        "stackSnapshot": {
+          "status": "pending",
+          "expected": "Expected Kyne/Talos control build and Hircine/vampire edge build record broad/focused layers, one active favor, neglect/scar, and suppressed dense-hook faucets."
+        },
+        "manualFeelNote": {
+          "status": "pending",
+          "expected": "Nord remains the fully felt control without becoming noisy or best-supported by hook density alone."
+        },
+        "immersiveHookProof": {
+          "status": "pending",
+          "expected": "Prove Nord broad/focused Old Ways, Kyne/Talos context, and Hircine/Arkay curse-edge immersive hooks outside QASmoke, with dense-hook and stack audit.",
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Old Ways and Hircine/Arkay via strict manager checker. First Old Ways attempt fired before origin settled and was correctly ignored; second settled-origin source routed. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
+        },
+        "assetStatus": {
+          "status": "pending",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+        }
       }
     }
   }

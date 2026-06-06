@@ -1,15 +1,71 @@
 {
-  "schema": "pdv.phase20.no-in-game-proof-gates.v1",
+  "schema": "pdv.phase20.no-in-game-proof-gates.v2",
   "status": "runtime-deferred",
   "owner": "references/authoring/PDV_Phase20_NoInGameProof_Workplan.md",
-  "hookMechanismAudit": "references/authoring/PDV_Phase20_HookMechanism_Audit.md classifies every Phase 20 proof activator as object-optin or passive (event/location/quest/cadence); finalPlacementContracts.realMechanism mirrors that. The QASmoke ACTI surfaces are route-proof shims, not the real hooks.",
   "rules": {
-    "allowedStatuses": ["Planning-Ready", "Readback-Ready", "CK-Ready", "Runtime-Deferred"],
+    "allowedStatuses": [
+      "Planning-Ready",
+      "Readback-Ready",
+      "CK-Ready",
+      "Runtime-Deferred"
+    ],
     "p0p1MinimumRejectedHooks": 6,
     "p2MinimumRejectedHooks": 4,
     "raceVerdict": "Fail - runtime/manual proof deferred",
-    "externalTestingAllowed": false
+    "externalTestingAllowed": false,
+    "immersiveHookContractRequiredForAllRaces": true,
+    "minimumImmersiveHookContracts": 2,
+    "requiredImmersiveHookContractFields": [
+      "signalId",
+      "playerExperience",
+      "hookClass",
+      "receiverPlan",
+      "vanillaOrPo3Source",
+      "routeTarget",
+      "acceptedContext",
+      "rejectedContext",
+      "antiFarmRule",
+      "proofPath",
+      "assetRequirement",
+      "newMeshRequired",
+      "missingAssetIfRequired"
+    ],
+    "assetPolicy": "Every immersive hook contract must explicitly say whether a new mesh is required. Default is newMeshRequired=false; any true value must name the missing asset.",
+    "scriptRouteScaffoldPolicy": "P2 immersive hooks may be source-scaffolded before CK receiver/FormList wiring; source scaffold must expose EventTypes IDs, EventBus routes, manager handlers, and Survey/status acknowledgement without direct reward-state writes.",
+    "allRaceSourceCurationPolicy": "All ten races now use the same exact-source standard before empirical proof. Do not promote scan-only quest candidates into live FormLists or route sources; read specific quest records, stages, and outcomes first. Existing QASmoke ACTI/REFR routes remain dev proof harnesses, not final empirical hook proof."
   },
+  "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+  "scriptRouteScaffolds": [
+    {
+      "id": "p2-immersive-hook-route-scaffold",
+      "status": "p2-book-fill-live-readback-pass-pending-runtime-proof",
+      "races": [
+        "Breton",
+        "Dunmer",
+        "Imperial",
+        "Nord"
+      ],
+      "sourceFiles": [
+        "PDV_EventTypes.psc",
+        "PDV_EventBus.psc",
+        "PDV__ManagerQuest.psc",
+        "PDV_PlayerEvents.psc"
+      ],
+      "receiverManifest": "references/authoring/PDV_Phase20_P2ImmersiveReceivers.manifest.json",
+      "coverage": [
+        "EventTypes IDs and labels",
+        "EventBus route methods",
+        "manager wrong-origin guarded handlers",
+        "Survey/status text acknowledgement",
+        "player-alias PO3 book, spell, harvest, weather, and quest-stage receiver hooks",
+        "17 empty PDV_FLST_P2_* receiver FormList shells in PlayerDevotion_Framework.esp",
+        "17 PDV_PlayerEvents alias properties wired to matching PDV_FLST_P2_* receiver FormLists",
+        "receiver-side P2 source repeat gates compile-proven before curated source fill",
+        "source-fill tool mode ready for approved exact source entries, with empty-source readback passing until curation is approved"
+      ],
+      "remainingBoundary": "Exact source records must be curated and approved before live fill; then terminal quest-stage registrations must be source-filled, followed by runtime route proof, wrong-origin rejection proof, generic-hook rejection proof, anti-farm repeat proof, stack snapshot, and manual feel evidence."
+    }
+  ],
   "races": {
     "Altmer": {
       "laneType": "P0 active spine",
@@ -18,50 +74,128 @@
       "expectedBuild": "Auri-El or Magnus scholar managing dawn practice and study.",
       "edgeBuild": "Exiled vampire, werewolf halt, or mortal-world pressure run.",
       "normalSessionRoute": "Dawn or study upkeep, one explicit Lorkhan or crisis beat, Survey/MCM readout, and recovery or scar check.",
-      "acceptedHooks": ["dragonborn-crisis", "lorkhan-pressure", "dawn-steadiness", "orthodox-costly-enforcement"],
-      "rejectedHooks": ["ordinary travel", "ordinary friendships", "generic spellcasting", "generic helping", "generic combat", "generic College membership", "generic anti-Thalmor violence", "repeated Dragonborn identity", "vampire power route"],
-      "antiFarmRules": ["explicit authored source only", "repeat crisis rejection", "one active favor family", "curse/exile suppression"],
-      "surveyStatusRequirement": "Explain crisis state, Lorkhan pressure, last favor, alignment, scar/recovery, and curse posture in fiction-facing language.",
-      "finalPlacementContracts": [
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_AltmerDawnStudyWorldSignal",
-          "intendedObjectType": "ACTI or MESG-backed opt-in study/dawn surface",
-          "realMechanism": "object-optin",
-          "realMechanismNote": "Opt-in study/dawn object; activation is intentional devotion.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "scholarship, Auri-El practice, or dawn-facing study context",
-          "culturalReason": "A non-edge Altmer needs positive coherence practice before crisis pressure grows.",
-          "classification": "positive",
-          "wrongOriginExpectation": "Non-Altmer activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_AltmerDawnSteadinessSignal",
-          "manualStopCondition": "Do not place until the exact CK object/location is chosen."
-        },
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_AltmerCrisisPressureWorldSignal",
-          "intendedObjectType": "Passive quest-stage / Story Manager hook; NOT a placed activator",
-          "realMechanism": "passive-quest",
-          "realMechanismNote": "Sovngarde/marriage/companions beat, one-shot guard; route-50 ACTI was a proof shim.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "authored crisis, Lorkhan pressure, or mortal-continuity context",
-          "culturalReason": "Pressure must come from explicit theology beats, not ordinary Skyrim life.",
-          "classification": "pressure-recovery",
-          "wrongOriginExpectation": "Non-Altmer activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_AltmerLorkhanPressureSignal",
-          "manualStopCondition": "Do not place until the crisis source is culturally specific and non-generic."
-        }
+      "acceptedHooks": [
+        "dragonborn-crisis",
+        "lorkhan-pressure",
+        "dawn-steadiness",
+        "orthodox-costly-enforcement"
       ],
+      "rejectedHooks": [
+        "ordinary travel",
+        "ordinary friendships",
+        "generic spellcasting",
+        "generic helping",
+        "generic combat",
+        "generic College membership",
+        "generic anti-Thalmor violence",
+        "repeated Dragonborn identity",
+        "vampire power route"
+      ],
+      "antiFarmRules": [
+        "explicit authored source only",
+        "repeat crisis rejection",
+        "one active favor family",
+        "curse/exile suppression"
+      ],
+      "surveyStatusRequirement": "Explain crisis state, Lorkhan pressure, last favor, alignment, scar/recovery, and curse posture in fiction-facing language.",
       "rewardFloor": "Dawn, study, magic milestones, and coherent conduct remain net-positive before rare crisis rewards.",
       "rewardCeiling": "Auri-El foundation plus one secondary focus plus one active contextual favor; ThalmorAlignment modifies access or pressure only.",
       "stackSnapshot": {
-        "expected": ["Auri-El foundation", "secondary focus", "active contextual favor", "crisis state", "ThalmorAlignment"],
-        "edge": ["vampire exile", "werewolf halt", "cured scar", "Lorkhan pressure count", "Daedric modifiers"],
-        "allowedLoudLayers": ["foundation boon", "one active contextual favor"],
-        "suppressedLayers": ["ordinary-life pressure", "vampire as stronger devotion path", "alignment as third boon engine"],
+        "expected": [
+          "Auri-El foundation",
+          "secondary focus",
+          "active contextual favor",
+          "crisis state",
+          "ThalmorAlignment"
+        ],
+        "edge": [
+          "vampire exile",
+          "werewolf halt",
+          "cured scar",
+          "Lorkhan pressure count",
+          "Daedric modifiers"
+        ],
+        "allowedLoudLayers": [
+          "foundation boon",
+          "one active contextual favor"
+        ],
+        "suppressedLayers": [
+          "ordinary-life pressure",
+          "vampire as stronger devotion path",
+          "alignment as third boon engine"
+        ],
         "contextualFavorCap": "one active favor family",
         "curseDaedricModifierNote": "Curse and Daedric paths remain rupture, price, or exile pressure."
       },
-      "nextAutomatableAction": "Add structured rejected-surface and placement-contract verifier coverage.",
-      "deferredManualProof": "Wrong-origin rejection, ordinary-life rejection, Survey display, Exiled vampire/werewolf status, and final-world placement."
+      "nextAutomatableAction": "Wire and prove immersive dawn/study, Lorkhan/crisis, and orthodox-cost hook contracts with explicit asset-status evidence.",
+      "deferredManualProof": "Wrong-origin rejection, ordinary-life rejection, Survey display, Exiled vampire/werewolf status, and final-world placement.",
+      "devProofContracts": [
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_AltmerDawnStudyWorldSignal",
+          "intendedObjectType": "ACTI or MESG-backed study/dawn surface",
+          "relatedQASmokeProof": "PDV_REFR_AltmerDawnSteadinessSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        },
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_AltmerCrisisPressureWorldSignal",
+          "intendedObjectType": "ACTI or quest-context proof surface",
+          "relatedQASmokeProof": "PDV_REFR_AltmerLorkhanPressureSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        }
+      ],
+      "immersiveHookContracts": [
+        {
+          "signalId": "altmer-dawn-study-coherence",
+          "playerExperience": "Study, dawn practice, or Auri-El/Magnus worship reads as scholarship or worship, not debug activation.",
+          "hookClass": "voluntary-devotional-surface-or-context",
+          "receiverPlan": "Use PDV_EventSignalActivator only for authored study/dawn surfaces; otherwise use player-alias time/location context plus curated study/shrine FormLists.",
+          "vanillaOrPo3Source": "Vanilla book, lectern, shrine-adjacent object, dawn time window, safe study location; optional PO3 BookRead for sacred texts.",
+          "routeTarget": "PDV_EventBus.RouteAltmerDawnSteadiness()",
+          "acceptedContext": "Altmer origin, dawn or curated study/worship context, compatible posture.",
+          "rejectedContext": "Ordinary travel, generic spellcasting, generic College membership, generic helping, non-Altmer origin.",
+          "antiFarmRule": "One accepted dawn/study signal per day or curated source marker.",
+          "proofPath": "Positive dawn/study trigger, wrong-origin silence, generic spell/College silence, Survey wording, repeat rejection.",
+          "assetRequirement": "No new mesh required; use vanilla book, lectern, shrine-adjacent static, idle marker, or stock activator surface.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_AltmerDawnSteadinessSignal"
+        },
+        {
+          "signalId": "altmer-lorkhan-crisis-pressure",
+          "playerExperience": "Mortal-world, Talos, Shor/Sovngarde, Dragonborn, household, Companions, Thalmor, or curse pressure arrives through play; no visible pressure object.",
+          "hookClass": "curated-quest-stage-state-context",
+          "receiverPlan": "Use selective PO3 QuestStageChange or CK script-event/quest-stage fragments to publish authored pressure events into EventBus.",
+          "vanillaOrPo3Source": "Curated Main Quest, Civil War, Sovngarde/Shor, Companions, marriage/adoption/homestead, Talos/Thalmor, and curse milestones.",
+          "routeTarget": "PDV_EventBus.RouteAltmerLorkhanPressure(Int pressureTier, String sourceId) and RouteAltmerCrisisSource(Int crisisSource, String sourceId)",
+          "acceptedContext": "Authored Altmer pressure source with explicit tier/source mapping and one-shot marker.",
+          "rejectedContext": "Ordinary friendships, settlement play, generic anti-Thalmor violence, repeated Dragonborn identity, generic Daedric contact, vampire power route.",
+          "antiFarmRule": "One-shot marker per crisis source plus pressure cap/cooldown.",
+          "proofPath": "Curated pressure stage, rejected generic pressure cases, wrong-origin silence, Survey scar/pressure clarity.",
+          "assetRequirement": "No new mesh required; non-visible quest/state/context wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_AltmerLorkhanPressureSignal"
+        },
+        {
+          "signalId": "altmer-orthodox-costly-enforcement",
+          "playerExperience": "Orthodox alignment is proven by authored social or quest cost, not Thalmor proximity or generic anti-Thalmor play.",
+          "hookClass": "curated-quest-stage-dialogue-or-faction-context",
+          "receiverPlan": "Use curated quest-stage/script-event hooks and faction/alignment state readback; do not parse ambient dialogue.",
+          "vanillaOrPo3Source": "Quest-stage, faction, and explicit authored project-defense contexts; optional PO3 QuestStageChange.",
+          "routeTarget": "PDV_EventBus.RouteAltmerOrthodoxCostlyEnforcement()",
+          "acceptedContext": "Explicit orthodox-cost source tied to Altmer origin and alignment posture.",
+          "rejectedContext": "Generic Thalmor proximity, generic anti-Thalmor violence, generic persuasion, ordinary court or College status.",
+          "antiFarmRule": "One active orthodox-cost family; source markers prevent repeated scoring.",
+          "proofPath": "Accepted orthodox-cost trigger, generic Thalmor/anti-Thalmor silence, Survey last-favor clarity.",
+          "assetRequirement": "No new mesh required; quest/faction/status wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_AltmerOrthodoxCostlyEnforcementSignal"
+        }
+      ],
+      "sourceCurationStatus": "exact-source-curation-pending",
+      "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+      "questCandidatePolicy": "Scan-only quest candidates are discovery prompts only; live route/FormList use requires exact quest record, stage, and outcome readback."
     },
     "Khajiit": {
       "laneType": "P1 first contrast",
@@ -70,50 +204,132 @@
       "expectedBuild": "Road-home Khenarthi/Azurah traveler.",
       "edgeBuild": "Rajhin thief, Alkosh dragon/order run, or ShadowDrift/curse pressure.",
       "normalSessionRoute": "Foot travel between two road-home anchors, rest or moon fallback, one Baan Dar/Rajhin/Alkosh beat, and Survey/MCM readout.",
-      "acceptedHooks": ["moon-observance", "road-home-anchor-one", "road-home-anchor-two", "baan-dar-road-trick", "rajhin-elegant-theft", "alkosh-dragon-order"],
-      "rejectedHooks": ["required visual moon inspection", "moon-sugar use", "manual focus entitlement", "fast travel loop", "one-bed camping", "generic inn sleep", "generic crime/theft", "generic combat", "generic dragon spam", "ordinary night stealth"],
-      "antiFarmRules": ["same-anchor rejection", "same-day diminishing multiplier", "focus threshold and lead", "no moon-sugar scoring", "no generic theft or dragon spam"],
-      "surveyStatusRequirement": "Explain Lunar Lattice, moon practice, road-home cadence, lunar posture, and active focus without counters or chores.",
-      "finalPlacementContracts": [
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_KhajiitRoadMoonWorldSignal",
-          "intendedObjectType": "Passive lunar cadence (dawn pass) + road-home location/trigger; NOT an activator",
-          "realMechanism": "mixed-passive",
-          "realMechanismNote": "Moon is passive-cadence (spine rejects required moon inspection); road-home is passive-location.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "road-home, moon, caravan, or open-sky travel context",
-          "culturalReason": "Moon and road should feel like belonging, not calendar homework.",
-          "classification": "positive",
-          "wrongOriginExpectation": "Non-Khajiit activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_KhajiitRoadHomeAnchorOneSignal",
-          "manualStopCondition": "Do not place until the surface cannot be confused with fast-travel or one-bed farming."
-        },
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_KhajiitFocusWorldSignal",
-          "intendedObjectType": "Passive contextual focus events (Baan Dar/Rajhin/Alkosh); NOT an activator",
-          "realMechanism": "passive-event",
-          "realMechanismNote": "Focus movement from qualifying acts, anti-farm gated.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "Baan Dar road survival, Rajhin elegant theft, or Alkosh order context",
-          "culturalReason": "The first contrast race needs behavior-specific focus movement instead of generic crime or combat.",
-          "classification": "status-focus",
-          "wrongOriginExpectation": "Non-Khajiit activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_KhajiitBaanDarRoadTrickSignal",
-          "manualStopCondition": "Do not place on generic theft, generic stealth, or generic dragon kill surfaces."
-        }
+      "acceptedHooks": [
+        "moon-observance",
+        "road-home-anchor-one",
+        "road-home-anchor-two",
+        "baan-dar-road-trick",
+        "rajhin-elegant-theft",
+        "alkosh-dragon-order"
       ],
+      "rejectedHooks": [
+        "required visual moon inspection",
+        "moon-sugar use",
+        "manual focus entitlement",
+        "fast travel loop",
+        "one-bed camping",
+        "generic inn sleep",
+        "generic crime/theft",
+        "generic combat",
+        "generic dragon spam",
+        "ordinary night stealth"
+      ],
+      "antiFarmRules": [
+        "same-anchor rejection",
+        "same-day diminishing multiplier",
+        "focus threshold and lead",
+        "no moon-sugar scoring",
+        "no generic theft or dragon spam"
+      ],
+      "surveyStatusRequirement": "Explain Lunar Lattice, moon practice, road-home cadence, lunar posture, and active focus without counters or chores.",
       "rewardFloor": "Broad lunar Faithful feels complete through road, sky, rest, and community without phase homework.",
       "rewardCeiling": "Lunar substrate plus one focused emphasis plus one active contextual favor; no third loud steady package.",
       "stackSnapshot": {
-        "expected": ["lunar metric/tier/phase", "road-home count", "focused emphasis", "active favor"],
-        "edge": ["five focus weights", "last road-home anchor", "repeat rejection count", "lunar posture", "ShadowDrift pressure", "Daedric modifiers"],
-        "allowedLoudLayers": ["quiet lunar substrate", "one active focus or favor"],
-        "suppressedLayers": ["moon phase as required scheduling", "ShadowDrift as free stealth reward", "generic theft as Rajhin"],
+        "expected": [
+          "lunar metric/tier/phase",
+          "road-home count",
+          "focused emphasis",
+          "active favor"
+        ],
+        "edge": [
+          "five focus weights",
+          "last road-home anchor",
+          "repeat rejection count",
+          "lunar posture",
+          "ShadowDrift pressure",
+          "Daedric modifiers"
+        ],
+        "allowedLoudLayers": [
+          "quiet lunar substrate",
+          "one active focus or favor"
+        ],
+        "suppressedLayers": [
+          "moon phase as required scheduling",
+          "ShadowDrift as free stealth reward",
+          "generic theft as Rajhin"
+        ],
         "contextualFavorCap": "one active focus/favor family",
         "curseDaedricModifierNote": "Nocturnal/shadow pressure must keep native Lunar Lattice visible."
       },
-      "nextAutomatableAction": "Run the holistic race-effect review before using the pilot-provisional Khajiit lunar Tier 1 mechanics as broader reward precedent.",
-      "deferredManualProof": "Same-anchor rejection, generic theft/dragon/moon-sugar silence, Survey display, and final road/moon placement."
+      "nextAutomatableAction": "No further reward authoring action before runtime proof; Khajiit lunar Tier 1 is owned by the all-race reward contract.",
+      "deferredManualProof": "Same-anchor rejection, generic theft/dragon/moon-sugar silence, Survey display, and final road/moon placement.",
+      "devProofContracts": [
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_KhajiitRoadMoonWorldSignal",
+          "intendedObjectType": "ACTI rest, road, or caravan-adjacent surface",
+          "relatedQASmokeProof": "PDV_REFR_KhajiitRoadHomeAnchorOneSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        },
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_KhajiitFocusWorldSignal",
+          "intendedObjectType": "ACTI or quest-context focus surface",
+          "relatedQASmokeProof": "PDV_REFR_KhajiitBaanDarRoadTrickSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        }
+      ],
+      "immersiveHookContracts": [
+        {
+          "signalId": "khajiit-lunar-observance",
+          "playerExperience": "Moon practice emerges from sleep, waiting, road rest, or open-sky cadence without visual moon inspection.",
+          "hookClass": "player-alias-sleep-load-time-context",
+          "receiverPlan": "Extend player alias sleep/load/time evaluation to compute lunar fallback and route one observance when valid.",
+          "vanillaOrPo3Source": "Vanilla sleep/load/time state, exterior/open-sky or rest context; no PO3 required for fallback.",
+          "routeTarget": "PDV_EventBus.RouteKhajiitMoonObservance(Int phaseIndex)",
+          "acceptedContext": "Khajiit origin, valid rest/travel/open-sky context, lunar phase or fallback selected.",
+          "rejectedContext": "Moon-sugar use, required visual inspection, generic night stealth, one-bed camping loop, non-Khajiit origin.",
+          "antiFarmRule": "One lunar observance per day or rest cycle; same-bed and same-day repeats are silent.",
+          "proofPath": "Sleep/rest observance, moon-sugar and night-stealth silence, wrong-origin silence, Survey lunar wording.",
+          "assetRequirement": "No new mesh required; optional vanilla bedroll, camp, caravan, marker, or sky context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_KhajiitMoonObservanceSignal"
+        },
+        {
+          "signalId": "khajiit-road-home-circuit",
+          "playerExperience": "Belonging builds through real road, caravan, and rest contexts by foot, not fast-travel marker loops.",
+          "hookClass": "player-alias-location-travel-context",
+          "receiverPlan": "Use location-change/travel context with curated road-home anchor families and same-anchor memory.",
+          "vanillaOrPo3Source": "Vanilla Location/Cell change, caravan/road/rest FormLists, travel-time checks.",
+          "routeTarget": "PDV_EventBus.RouteKhajiitRoadHomeAnchor(Int anchorId) and RouteKhajiitRoadHome()",
+          "acceptedContext": "Khajiit origin, normal travel through distinct curated road-home anchors, rest or caravan context.",
+          "rejectedContext": "Fast travel loop, same anchor repeat, generic inn sleep, caravan proximity without travel, ordinary travel without anchor context.",
+          "antiFarmRule": "Distinct-anchor requirement plus same-day diminishing multiplier.",
+          "proofPath": "Anchor one and two, fast-travel and same-anchor rejection, wrong-origin silence, Survey road cadence.",
+          "assetRequirement": "No new mesh required; use existing road, caravan, camp, bedroll, location, or invisible marker context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_KhajiitRoadHomeAnchorOneSignal"
+        },
+        {
+          "signalId": "khajiit-focus-baan-dar-rajhin-alkosh",
+          "playerExperience": "Focus moves from behavior-specific road trick, elegant theft, or dragon/order milestones, not generic crime, stealth, or dragon killing.",
+          "hookClass": "curated-quest-crime-dragon-context",
+          "receiverPlan": "Use curated quest-stage/crime-chain/script-event and dragon-order context hooks; route only named focus families.",
+          "vanillaOrPo3Source": "Selective PO3 QuestStageChange, Story Manager crime chain where meaningful, Dragonborn/dragon-order milestones.",
+          "routeTarget": "RouteKhajiitBaanDarRoadTrick(), RouteKhajiitRajhinElegantTheft(), RouteKhajiitAlkoshDragonOrder()",
+          "acceptedContext": "Named Baan Dar, Rajhin, or Alkosh source with Khajiit origin and focus threshold rules.",
+          "rejectedContext": "Generic theft, generic crime, generic dragon spam, generic combat, ordinary night stealth, manual focus entitlement.",
+          "antiFarmRule": "One marker per curated focus source and focus lead/threshold gate.",
+          "proofPath": "Curated focus trigger plus generic theft, dragon spam, moon-sugar, and wrong-origin rejection.",
+          "assetRequirement": "No new mesh required; quest/crime/dragon context wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_KhajiitBaanDarRoadTrickSignal"
+        }
+      ],
+      "sourceCurationStatus": "exact-source-curation-pending",
+      "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+      "questCandidatePolicy": "Scan-only quest candidates are discovery prompts only; live route/FormList use requires exact quest record, stage, and outcome readback."
     },
     "Argonian": {
       "laneType": "P1 second contrast",
@@ -122,50 +338,127 @@
       "expectedBuild": "Hist/People community survivor.",
       "edgeBuild": "Sithis-threshold assassin, vampire rupture, or werewolf strain.",
       "normalSessionRoute": "Safe water/reflection maintenance, chosen bed return, Windhelm/Riften/community aid, Survey/MCM readout, and only curated Void sampling.",
-      "acceptedHooks": ["hist-maintenance", "people-support", "bed-of-choice", "void-threshold-signal"],
-      "rejectedHooks": ["generic swimming loops", "standing in water forever", "ordinary travel", "generic inn sleep", "same-bed repetition", "generic stealth", "ordinary kills", "generic murder", "one Dark Brotherhood join as full Sithis activation"],
-      "antiFarmRules": ["same-day repeat multiplier", "three-day Hist decay grace", "non-curse Hist floor", "three-signal Void threshold"],
-      "surveyStatusRequirement": "Explain Hist reach, People support, water/rest maintenance, Void pressure, bed of choice, and curse posture without raw values.",
-      "finalPlacementContracts": [
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_ArgonianHistWaterWorldSignal",
-          "intendedObjectType": "Opt-in Hist ritual object and/or passive water/rest/bed cadence",
-          "realMechanism": "mixed",
-          "realMechanismNote": "Hist sap ritual may be an opt-in object; water/rest/bed upkeep is passive-cadence - confirm which carries the hook.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "safe wetland, water refuge, or chosen-rest context",
-          "culturalReason": "Hist maintenance must be ordinary and gentle before Void depth expands.",
-          "classification": "positive",
-          "wrongOriginExpectation": "Non-Argonian activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_ArgonianHistMaintenanceSignal",
-          "manualStopCondition": "Do not place where standing in water can become the loop."
-        },
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_ArgonianPeopleDeathRiteWorldSignal",
-          "intendedObjectType": "Passive community/death-rite recognition events; MESG surface, NOT an activator",
-          "realMechanism": "passive-event",
-          "realMechanismNote": "People support and Arkay/death-rite reactions are contextual.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "Windhelm/Riften Argonian community, chosen bed, or death-rite context",
-          "culturalReason": "People/community recognition must compete with easier Sithis hooks.",
-          "classification": "pressure-recovery",
-          "wrongOriginExpectation": "Non-Argonian activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_ArgonianPeopleSupportSignal",
-          "manualStopCondition": "Do not place until one community/death-rite context is culturally specific."
-        }
+      "acceptedHooks": [
+        "hist-maintenance",
+        "people-support",
+        "bed-of-choice",
+        "void-threshold-signal"
       ],
+      "rejectedHooks": [
+        "generic swimming loops",
+        "standing in water forever",
+        "ordinary travel",
+        "generic inn sleep",
+        "same-bed repetition",
+        "generic stealth",
+        "ordinary kills",
+        "generic murder",
+        "one Dark Brotherhood join as full Sithis activation"
+      ],
+      "antiFarmRules": [
+        "same-day repeat multiplier",
+        "three-day Hist decay grace",
+        "non-curse Hist floor",
+        "three-signal Void threshold"
+      ],
+      "surveyStatusRequirement": "Explain Hist reach, People support, water/rest maintenance, Void pressure, bed of choice, and curse posture without raw values.",
       "rewardFloor": "A non-assassin Argonian can maintain identity through water, rest, reflection, bed of choice, and community aid.",
       "rewardCeiling": "Hist substrate plus one strongest support emphasis: People/community or Void/Sithis; Void never replaces Hist.",
       "stackSnapshot": {
-        "expected": ["Hist", "People", "bed cadence", "posture", "active favor"],
-        "edge": ["Void", "Sithis signal count", "curse state", "Daedric modifiers"],
-        "allowedLoudLayers": ["Hist substrate", "one support emphasis"],
-        "suppressedLayers": ["generic murder as Sithis", "Void replacing Hist", "water as universal stat faucet"],
+        "expected": [
+          "Hist",
+          "People",
+          "bed cadence",
+          "posture",
+          "active favor"
+        ],
+        "edge": [
+          "Void",
+          "Sithis signal count",
+          "curse state",
+          "Daedric modifiers"
+        ],
+        "allowedLoudLayers": [
+          "Hist substrate",
+          "one support emphasis"
+        ],
+        "suppressedLayers": [
+          "generic murder as Sithis",
+          "Void replacing Hist",
+          "water as universal stat faucet"
+        ],
         "contextualFavorCap": "one active support/favor family",
         "curseDaedricModifierNote": "Vampire and werewolf states must read as Hist posture changes, not new clean paths."
       },
       "nextAutomatableAction": "Write Arkay/death-rite and community recognition contracts before deeper Void rewards.",
-      "deferredManualProof": "Hist/People floor, swimming/sleep/murder rejection, Survey display, and final water/community placement."
+      "deferredManualProof": "Hist/People floor, swimming/sleep/murder rejection, Survey display, and final water/community placement.",
+      "devProofContracts": [
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_ArgonianHistWaterWorldSignal",
+          "intendedObjectType": "ACTI water/rest/reflection surface",
+          "relatedQASmokeProof": "PDV_REFR_ArgonianHistMaintenanceSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        },
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_ArgonianPeopleDeathRiteWorldSignal",
+          "intendedObjectType": "ACTI, MESG, or recognition surface",
+          "relatedQASmokeProof": "PDV_REFR_ArgonianPeopleSupportSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        }
+      ],
+      "immersiveHookContracts": [
+        {
+          "signalId": "argonian-hist-water-rest-maintenance",
+          "playerExperience": "Hist maintenance comes from safe water, reflection, and chosen rest patterns, not standing in water forever.",
+          "hookClass": "player-alias-sleep-location-context-or-voluntary-ritual",
+          "receiverPlan": "Use sleep/location context and optional authored ritual surface for safe water/reflection.",
+          "vanillaOrPo3Source": "Vanilla sleep/location/water-adjacent context, safe refuge FormLists, optional vanilla bowl/note/marker ritual surface.",
+          "routeTarget": "PDV_EventBus.RouteArgonianHistMaintenance() and RouteArgonianBedOfChoice()",
+          "acceptedContext": "Argonian origin, safe water/rest/reflection context, chosen-bed cadence, non-curse floor active.",
+          "rejectedContext": "Generic swimming loops, standing in water forever, same-bed repetition, ordinary travel, generic inn sleep, non-Argonian origin.",
+          "antiFarmRule": "Same-day repeat multiplier, chosen-bed memory, and three-day Hist decay grace.",
+          "proofPath": "Accepted water/rest maintenance, swimming and same-bed rejection, wrong-origin silence, Survey Hist/bed clarity.",
+          "assetRequirement": "No new mesh required; use vanilla water/location, bed, bowl, note, shrine-style marker, or no visible object.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_ArgonianHistMaintenanceSignal"
+        },
+        {
+          "signalId": "argonian-people-community-support",
+          "playerExperience": "Community support appears through Windhelm, Riften, dock, refuge, service, or recognition contexts before Void depth.",
+          "hookClass": "curated-location-service-quest-context",
+          "receiverPlan": "Use curated location/service/quest-stage or script-event hooks; do not reward generic Argonian proximity.",
+          "vanillaOrPo3Source": "Windhelm Assemblage, Riften docks, Argonian community/service FormLists, selective PO3 QuestStageChange.",
+          "routeTarget": "PDV_EventBus.RouteArgonianPeopleSupport()",
+          "acceptedContext": "Argonian origin, named community/support context, People floor eligible.",
+          "rejectedContext": "Random Argonian proximity, generic helping, ordinary travel, generic alchemy, non-Argonian origin.",
+          "antiFarmRule": "One accepted community source per day or quest/outcome marker.",
+          "proofPath": "Community support trigger, proximity/generic helping rejection, wrong-origin silence, Survey People clarity.",
+          "assetRequirement": "No new mesh required; existing community locations, NPC/service/quest context, or marker-backed state.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_ArgonianPeopleSupportSignal"
+        },
+        {
+          "signalId": "argonian-void-threshold",
+          "playerExperience": "Void/Sithis pressure appears only after curated death/change/assassin thresholds and never replaces the Hist/People floor.",
+          "hookClass": "curated-quest-stage-kill-or-state-threshold",
+          "receiverPlan": "Use curated quest-stage/script-event and validated kill/death-change contexts; route Void only after threshold.",
+          "vanillaOrPo3Source": "Selective PO3 QuestStageChange for Dark Brotherhood/death-change milestones, thin Story Manager kill receiver for validated special cases.",
+          "routeTarget": "PDV_EventBus.RouteArgonianVoidSignal()",
+          "acceptedContext": "Argonian origin, curated Void source, threshold count, not a single generic murder.",
+          "rejectedContext": "Generic murder, ordinary kills, generic stealth, one Dark Brotherhood join as full Sithis activation, non-Argonian origin.",
+          "antiFarmRule": "Three-signal threshold and one-shot markers per source.",
+          "proofPath": "Threshold behavior, generic murder silence, wrong-origin silence, Survey Void wording, Hist floor preserved.",
+          "assetRequirement": "No new mesh required; quest/kill/state context wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_ArgonianVoidSignal"
+        }
+      ],
+      "sourceCurationStatus": "exact-source-curation-pending",
+      "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+      "questCandidatePolicy": "Scan-only quest candidates are discovery prompts only; live route/FormList use requires exact quest record, stage, and outcome readback."
     },
     "Orc": {
       "laneType": "P1 buildout packet",
@@ -174,50 +467,125 @@
       "expectedBuild": "City or Legion/Exile Orc maintaining Malacath through quality labor or service.",
       "edgeBuild": "Stronghold/Blood-Kin, werewolf, or vampire-cured code pressure.",
       "normalSessionRoute": "Confirmed life mode, Stronghold forge/context beat, City dignity or self-made community beat, Legion/Exile service beat, and Survey/MCM readout.",
-      "acceptedHooks": ["stronghold-forge", "city-dignity", "legion-service", "self-made-community"],
-      "rejectedHooks": ["raw craft count", "generic kill/dungeon clear", "ordinary city presence", "ambient insult parsing", "raw barter", "Legion membership alone", "generic patrol", "MCM-only mode choice"],
-      "antiFarmRules": ["daily repeat multiplier", "quality/value/context filter", "one active life mode", "mode transition evidence required"],
-      "surveyStatusRequirement": "Explain active life mode, standing, last accepted reason, and curse pressure without making City/Legion feel failed-Stronghold.",
-      "finalPlacementContracts": [
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_OrcStrongholdCraftWorldSignal",
-          "intendedObjectType": "Opt-in stronghold forge/quality-craft surface, stronghold-context gated",
-          "realMechanism": "object-optin",
-          "realMechanismNote": "Spine rejects raw craft count; forge surface is opt-in within stronghold context.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "Stronghold forge, Blood-Kin aid, or worthy challenge context",
-          "culturalReason": "Stronghold richness must be quality/context-bound, not raw crafting.",
-          "classification": "positive",
-          "wrongOriginExpectation": "Non-Orc activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_OrcStrongholdForgeSignal",
-          "manualStopCondition": "Do not place on generic forge spam."
-        },
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_OrcCityLegionWorldSignal",
-          "intendedObjectType": "Passive service/dignity/community events and Legion questline beat; NOT an activator",
-          "realMechanism": "mixed-passive",
-          "realMechanismNote": "City dignity and self-made community are passive-event; Legion service is passive-quest.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "City Orc community, Legion/Exile service, or self-made place context",
-          "culturalReason": "City and Legion/Exile must feel like complete devotional lives.",
-          "classification": "status-recovery",
-          "wrongOriginExpectation": "Non-Orc activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_OrcCityDignitySignal",
-          "manualStopCondition": "Do not place on faction membership alone."
-        }
+      "acceptedHooks": [
+        "stronghold-forge",
+        "city-dignity",
+        "legion-service",
+        "self-made-community"
       ],
+      "rejectedHooks": [
+        "raw craft count",
+        "generic kill/dungeon clear",
+        "ordinary city presence",
+        "ambient insult parsing",
+        "raw barter",
+        "Legion membership alone",
+        "generic patrol",
+        "MCM-only mode choice"
+      ],
+      "antiFarmRules": [
+        "daily repeat multiplier",
+        "quality/value/context filter",
+        "one active life mode",
+        "mode transition evidence required"
+      ],
+      "surveyStatusRequirement": "Explain active life mode, standing, last accepted reason, and curse pressure without making City/Legion feel failed-Stronghold.",
       "rewardFloor": "City and Legion/Exile dignity, service, quality labor, and self-made belonging without Blood-Kin.",
       "rewardCeiling": "One active life-mode lane; Stronghold steadier, City and Legion/Exile sharper, no second substrate.",
       "stackSnapshot": {
-        "expected": ["life mode", "mode lockout", "active favor", "craft/service/community proof"],
-        "edge": ["Stronghold eligibility", "Legion/Exile eligibility", "curse state", "Daedric modifiers"],
-        "allowedLoudLayers": ["one life-mode reward lane", "one active favor"],
-        "suppressedLayers": ["raw crafting as piety", "faction membership as service", "ambient insult parser"],
+        "expected": [
+          "life mode",
+          "mode lockout",
+          "active favor",
+          "craft/service/community proof"
+        ],
+        "edge": [
+          "Stronghold eligibility",
+          "Legion/Exile eligibility",
+          "curse state",
+          "Daedric modifiers"
+        ],
+        "allowedLoudLayers": [
+          "one life-mode reward lane",
+          "one active favor"
+        ],
+        "suppressedLayers": [
+          "raw crafting as piety",
+          "faction membership as service",
+          "ambient insult parser"
+        ],
         "contextualFavorCap": "one active mode/favor family",
         "curseDaedricModifierNote": "Malacath remains the spine; curse/Daedric pressure cannot become deity shopping."
       },
       "nextAutomatableAction": "Add quality forge and City/Legion contract rows to the costing backlog.",
-      "deferredManualProof": "Raw craft/combat/faction rejection, Survey display, and final Stronghold/City/Legion placement."
+      "deferredManualProof": "Raw craft/combat/faction rejection, Survey display, and final Stronghold/City/Legion placement.",
+      "devProofContracts": [
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_OrcStrongholdCraftWorldSignal",
+          "intendedObjectType": "ACTI quality craft or stronghold context surface",
+          "relatedQASmokeProof": "PDV_REFR_OrcStrongholdForgeSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        },
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_OrcCityLegionWorldSignal",
+          "intendedObjectType": "ACTI service, dignity, or self-made community surface",
+          "relatedQASmokeProof": "PDV_REFR_OrcCityDignitySignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        }
+      ],
+      "immersiveHookContracts": [
+        {
+          "signalId": "orc-stronghold-quality-forge",
+          "playerExperience": "Stronghold devotion comes from quality labor, Blood-Kin context, and worthy work, not forge spam.",
+          "hookClass": "story-manager-craft-location-context",
+          "receiverPlan": "Use CraftItem/quality/value/context filters plus stronghold/Blood-Kin FormLists.",
+          "vanillaOrPo3Source": "Story Manager CraftItem or equivalent craft context, stronghold locations, forge/crafting stations, Blood-Kin state.",
+          "routeTarget": "PDV_EventBus.RouteOrcStrongholdForge()",
+          "acceptedContext": "Orc origin, Stronghold or Blood-Kin eligible context, quality/value craft threshold, life-mode compatible.",
+          "rejectedContext": "Raw craft count, forge spam, ore mining, vendor sales, random stronghold proximity, non-Orc origin.",
+          "antiFarmRule": "Daily repeat multiplier plus quality/value/context threshold.",
+          "proofPath": "Accepted quality craft, raw craft spam rejection, wrong-origin silence, Survey mode clarity.",
+          "assetRequirement": "No new mesh required; use existing forge/crafting stations and stronghold context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_OrcStrongholdForgeSignal"
+        },
+        {
+          "signalId": "orc-city-dignity-self-made-community",
+          "playerExperience": "City and self-made Orc lives prove dignity, service, and community instead of failed Stronghold play.",
+          "hookClass": "curated-quest-service-location-context",
+          "receiverPlan": "Use curated city Orc, service, aid, and self-made community quest/script-event contexts; avoid ambient insult parsing.",
+          "vanillaOrPo3Source": "Curated quest stages, city Orc/service FormLists, location and relationship context; optional PO3 QuestStageChange.",
+          "routeTarget": "PDV_EventBus.RouteOrcCityDignity() and RouteOrcSelfMadeCommunity()",
+          "acceptedContext": "Orc origin, named city dignity/service/community source, active City or self-made life-mode context.",
+          "rejectedContext": "Ordinary city presence, ambient insults, raw barter, generic helping, faction membership alone, non-Orc origin.",
+          "antiFarmRule": "One accepted source per community/service marker.",
+          "proofPath": "Accepted city/community trigger, city presence/barter rejection, wrong-origin silence, Survey life-mode clarity.",
+          "assetRequirement": "No new mesh required; existing city, NPC, quest, service, and marker context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_OrcCityDignitySignal"
+        },
+        {
+          "signalId": "orc-legion-exile-service",
+          "playerExperience": "Legion/Exile devotion comes from concrete service and discipline, not joining a faction or walking near patrols.",
+          "hookClass": "curated-faction-quest-service-context",
+          "receiverPlan": "Use curated Legion/service quest-stage or script-event milestones with life-mode validation.",
+          "vanillaOrPo3Source": "Civil War/Legion service quest stages, faction state, service FormLists; selective PO3 QuestStageChange.",
+          "routeTarget": "PDV_EventBus.RouteOrcLegionService()",
+          "acceptedContext": "Orc origin, named Legion/Exile service source, life-mode eligible, concrete service completed.",
+          "rejectedContext": "Legion membership alone, generic patrol, generic combat, faction rank, non-Orc origin.",
+          "antiFarmRule": "One-shot marker per service milestone.",
+          "proofPath": "Accepted service milestone, membership/patrol rejection, wrong-origin silence, Survey Legion/Exile wording.",
+          "assetRequirement": "No new mesh required; quest/faction/service context wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_OrcLegionServiceSignal"
+        }
+      ],
+      "sourceCurationStatus": "exact-source-curation-pending",
+      "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+      "questCandidatePolicy": "Scan-only quest candidates are discovery prompts only; live route/FormList use requires exact quest record, stage, and outcome readback."
     },
     "Redguard": {
       "laneType": "P1 buildout packet",
@@ -226,50 +594,125 @@
       "expectedBuild": "Crown or Forebear tomb/road/contract play.",
       "edgeBuild": "Ash'abah burden, vampire cure/Tu'whacca re-entry, or HoonDing make-way stack.",
       "normalSessionRoute": "Crown tomb respect, Forebear road/contract passage, Ash'abah death duty, Far Shores private ritual, and Survey/MCM readout.",
-      "acceptedHooks": ["crown-tomb-respect", "forebear-road-passage", "ashabah-death-duty", "far-shores-token"],
-      "rejectedHooks": ["menu choice without play", "generic combat/body count", "generic undead spam", "Arkay replacement", "generic amulet use", "gold-making", "fast travel", "broad simulated stigma"],
-      "antiFarmRules": ["daily route caps", "undead site/boss limits", "HoonDing cap", "Far Shores daily cap", "no Arkay substitution"],
-      "surveyStatusRequirement": "Explain sect, standing, Far Shores/Tu'whacca duty, Ash'abah burden, and curse-cycle pressure in Yokudan terms.",
-      "finalPlacementContracts": [
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_RedguardSectWorldSignal",
-          "intendedObjectType": "Opt-in tomb-respect/sect practice object and/or passive road conduct",
-          "realMechanism": "mixed",
-          "realMechanismNote": "Crown tomb respect may be an opt-in object or passive-location; Forebear road is passive-event.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "Crown tomb respect or Forebear road/contract context",
-          "culturalReason": "Crown and Forebear must remain distinct from generic warrior play.",
-          "classification": "positive",
-          "wrongOriginExpectation": "Non-Redguard activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_RedguardCrownTombRespectSignal",
-          "manualStopCondition": "Do not place on generic combat or fast-travel surfaces."
-        },
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_RedguardDeathDutyWorldSignal",
-          "intendedObjectType": "Opt-in Far Shores token ritual object and/or passive death-duty events",
-          "realMechanism": "mixed",
-          "realMechanismNote": "Far Shores token is an opt-in ritual object; Ash'abah death duty is passive-event.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "Ash'abah burden, Hall of the Dead, tomb, or Tu'whacca private rite context",
-          "culturalReason": "Death duty must be Yokudan and visible, not generic Arkay or undead farming.",
-          "classification": "pressure-recovery",
-          "wrongOriginExpectation": "Non-Redguard activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_RedguardFarShoresTokenSignal",
-          "manualStopCondition": "Do not place until Arkay-proxy copy keeps Tu'whacca primary."
-        }
+      "acceptedHooks": [
+        "crown-tomb-respect",
+        "forebear-road-passage",
+        "ashabah-death-duty",
+        "far-shores-token"
       ],
+      "rejectedHooks": [
+        "menu choice without play",
+        "generic combat/body count",
+        "generic undead spam",
+        "Arkay replacement",
+        "generic amulet use",
+        "gold-making",
+        "fast travel",
+        "broad simulated stigma"
+      ],
+      "antiFarmRules": [
+        "daily route caps",
+        "undead site/boss limits",
+        "HoonDing cap",
+        "Far Shores daily cap",
+        "no Arkay substitution"
+      ],
+      "surveyStatusRequirement": "Explain sect, standing, Far Shores/Tu'whacca duty, Ash'abah burden, and curse-cycle pressure in Yokudan terms.",
       "rewardFloor": "Crown/Forebear form, road, contract, martial conduct, and recognition without undead farming.",
       "rewardCeiling": "Broad sect worship reaches Faithful; Devoted requires focused primary; Far Shores supports, not a third boon engine.",
       "stackSnapshot": {
-        "expected": ["sect", "active favor", "Far Shores token", "last sect reason"],
-        "edge": ["HoonDing marker", "Ash'abah burden", "curse state", "Daedric modifiers"],
-        "allowedLoudLayers": ["sect foreground", "one active favor"],
-        "suppressedLayers": ["generic undead spam", "generic combat as HoonDing", "Arkay replacement"],
+        "expected": [
+          "sect",
+          "active favor",
+          "Far Shores token",
+          "last sect reason"
+        ],
+        "edge": [
+          "HoonDing marker",
+          "Ash'abah burden",
+          "curse state",
+          "Daedric modifiers"
+        ],
+        "allowedLoudLayers": [
+          "sect foreground",
+          "one active favor"
+        ],
+        "suppressedLayers": [
+          "generic undead spam",
+          "generic combat as HoonDing",
+          "Arkay replacement"
+        ],
         "contextualFavorCap": "one active sect/favor family",
         "curseDaedricModifierNote": "Vampire cure re-entry must go through Tu'whacca; Daedric paths remain foreign/taboo/curse-priced."
       },
       "nextAutomatableAction": "Add HoonDing cap and Ash'abah stigma contracts before reward expansion.",
-      "deferredManualProof": "Fast-travel/undead/combat rejection, Survey display, and final sect/death-duty placement."
+      "deferredManualProof": "Fast-travel/undead/combat rejection, Survey display, and final sect/death-duty placement.",
+      "devProofContracts": [
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_RedguardSectWorldSignal",
+          "intendedObjectType": "ACTI tomb, road, or sect practice surface",
+          "relatedQASmokeProof": "PDV_REFR_RedguardCrownTombRespectSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        },
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_RedguardDeathDutyWorldSignal",
+          "intendedObjectType": "ACTI or MESG death-duty/Far Shores surface",
+          "relatedQASmokeProof": "PDV_REFR_RedguardFarShoresTokenSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        }
+      ],
+      "immersiveHookContracts": [
+        {
+          "signalId": "redguard-crown-forebear-sect",
+          "playerExperience": "Sect identity is expressed through Crown tomb respect, Forebear road/contract adaptation, and locked Saadia/Kematu-style choices.",
+          "hookClass": "curated-quest-stage-location-road-context",
+          "receiverPlan": "Use curated quest-stage outcomes and tomb/road/contract context to route sect-specific signals.",
+          "vanillaOrPo3Source": "MS08 stage 200/201, tomb/road/contract location FormLists, selective PO3 QuestStageChange.",
+          "routeTarget": "PDV_EventBus.RouteRedguardCrownTombRespect() and RouteRedguardForebearRoadPassage()",
+          "acceptedContext": "Redguard origin, named Crown or Forebear source, sect state compatible, one-shot outcome marker.",
+          "rejectedContext": "Menu choice without play, generic combat, fast travel, tomb proximity alone, generic sword use, non-Redguard origin.",
+          "antiFarmRule": "One-shot quest/outcome markers and daily route caps.",
+          "proofPath": "Sect trigger, fast-travel/combat/proximity rejection, wrong-origin silence, Survey sect clarity.",
+          "assetRequirement": "No new mesh required; use existing tomb, road, quest, marker, or contract context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_RedguardCrownTombRespectSignal"
+        },
+        {
+          "signalId": "redguard-ashabah-death-duty",
+          "playerExperience": "Death duty feels Yokudan and socially costly through Ashabah/Tu'whacca/Far Shores context, not Arkay replacement or undead farming.",
+          "hookClass": "curated-death-duty-quest-location-or-voluntary-rite",
+          "receiverPlan": "Use Hall of the Dead/tomb/death-duty quest stages and optional private rite surface.",
+          "vanillaOrPo3Source": "Hall of the Dead quests, tomb and necromancer/undead site caps, selective PO3 QuestStageChange, optional vanilla urn/shrine/book/note ritual surface.",
+          "routeTarget": "PDV_EventBus.RouteRedguardAshAbahDeathDuty() and RouteRedguardFarShoresToken()",
+          "acceptedContext": "Redguard origin, named Ashabah/death-duty/Far Shores source, daily cap available, Tu'whacca remains primary.",
+          "rejectedContext": "Generic undead spam, generic Arkay shrine use, generic amulet use, body count, broad simulated stigma, non-Redguard origin.",
+          "antiFarmRule": "Undead site/boss limits, Far Shores daily cap, and no Arkay substitution.",
+          "proofPath": "Accepted death-duty/private rite trigger, generic undead/Arkay rejection, wrong-origin silence, Survey Far Shores clarity.",
+          "assetRequirement": "No new mesh required; vanilla tomb, urn, Hall of the Dead, book/note, shrine-style object, or marker context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_RedguardFarShoresTokenSignal"
+        },
+        {
+          "signalId": "redguard-hoonding-make-way-cap",
+          "playerExperience": "HoonDing support appears as rare make-way momentum, not a generic combat reward.",
+          "hookClass": "curated-combat-or-quest-threshold-context",
+          "receiverPlan": "Use curated quest or combat-threshold script events only when make-way contract is explicit and capped.",
+          "vanillaOrPo3Source": "Curated quest stages, major battle/objective milestones, validated script events; no raw combat feed.",
+          "routeTarget": "Manager-owned Redguard HoonDing cap handler via EventBus extension when promoted.",
+          "acceptedContext": "Redguard origin, named make-way source, HoonDing cap not consumed.",
+          "rejectedContext": "Generic combat, dungeon clear, body count, generic warrior play, non-Redguard origin.",
+          "antiFarmRule": "Strict cap per quest/site family.",
+          "proofPath": "One make-way source and generic combat rejection before reward promotion.",
+          "assetRequirement": "No new mesh required; quest/combat-context state wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        }
+      ],
+      "sourceCurationStatus": "exact-source-curation-pending",
+      "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+      "questCandidatePolicy": "Scan-only quest candidates are discovery prompts only; live route/FormList use requires exact quest record, stage, and outcome readback."
     },
     "Bosmer": {
       "laneType": "P1 buildout packet",
@@ -278,150 +721,710 @@
       "expectedBuild": "Living Story or Exchange non-hunter Bosmer.",
       "edgeBuild": "Bandit Road reversal, Old Contract Pact lapse/renunciation, or curse pressure.",
       "normalSessionRoute": "Old Contract proper hunt/forest kept, Living Story community/nature proof, Exchange debt/redress, Bandit Road road-life/reversal, and Survey/MCM readout.",
-      "acceptedHooks": ["old-contract-proper-hunt", "old-contract-forest-kept", "living-story-community-kept", "living-story-nature-site", "exchange-debt-settled", "exchange-proportionate-vengeance", "bandit-road-road-life", "bandit-road-reversal"],
-      "rejectedHooks": ["one generic Bosmer favor", "generic kindness", "generic bard activity", "generic forest travel", "generic trade profit", "random vengeance", "raw theft", "generic crime", "repeated theft", "broad plant detection without tag evidence"],
-      "antiFarmRules": ["daily route keys", "Bandit Road reversal seven-day cooldown", "path-specific proof", "no broad Green Pact item punishment before tag coverage"],
-      "surveyStatusRequirement": "Explain path, standing, Pact binding/lapse, recent favor memory, and non-hunter parity without raw favor counters.",
-      "finalPlacementContracts": [
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_BosmerNonHunterWorldSignal",
-          "intendedObjectType": "Passive Living Story/Exchange conduct events; NOT an activator",
-          "realMechanism": "passive-event",
-          "realMechanismNote": "Non-hunter favor comes from qualifying community/exchange acts, not activation.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "community memory, nature-site preservation, debt settlement, or proportionate redress context",
-          "culturalReason": "Non-hunter paths need emotional payoff before broader Green Pact tag work.",
-          "classification": "positive",
-          "wrongOriginExpectation": "Non-Bosmer activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_BosmerLivingStoryCommunityKeptSignal",
-          "manualStopCondition": "Do not place on generic kindness, trade profit, or forest travel."
-        },
-        {
-          "surfaceEditorIdPlan": "PDV_REFR_BosmerRoadPactWorldSignal",
-          "intendedObjectType": "Passive Bandit Road/Pact pressure events; MESG surface, NOT an activator",
-          "realMechanism": "passive-event",
-          "realMechanismNote": "Road-life/reversal is passive-event; reversal already 7-day cooldown gated.",
-          "proofShimNote": "The related QASmoke ACTI is a route-proof shim, not the real surface; realMechanism governs final authoring.",
-          "targetLocationFamily": "Bandit Road reversal, Pact lapse, or Old Contract reckoning context",
-          "culturalReason": "Pressure and recovery must be path theology, not generic thief punishment.",
-          "classification": "pressure-recovery",
-          "wrongOriginExpectation": "Non-Bosmer activation is silent except debug rejection.",
-          "relatedQASmokeProof": "PDV_REFR_BosmerBanditRoadReversalSignal",
-          "manualStopCondition": "Do not place until Bandit Road reversal cannot become a daily faucet."
-        }
+      "acceptedHooks": [
+        "old-contract-proper-hunt",
+        "old-contract-forest-kept",
+        "living-story-community-kept",
+        "living-story-nature-site",
+        "exchange-debt-settled",
+        "exchange-proportionate-vengeance",
+        "bandit-road-road-life",
+        "bandit-road-reversal"
       ],
+      "rejectedHooks": [
+        "one generic Bosmer favor",
+        "generic kindness",
+        "generic bard activity",
+        "generic forest travel",
+        "generic trade profit",
+        "random vengeance",
+        "raw theft",
+        "generic crime",
+        "repeated theft",
+        "broad plant detection without tag evidence"
+      ],
+      "antiFarmRules": [
+        "daily route keys",
+        "Bandit Road reversal seven-day cooldown",
+        "path-specific proof",
+        "no broad Green Pact item punishment before tag coverage"
+      ],
+      "surveyStatusRequirement": "Explain path, standing, Pact binding/lapse, recent favor memory, and non-hunter parity without raw favor counters.",
       "rewardFloor": "Living Story, Exchange, or Bandit Road recognition before item-tag work.",
       "rewardCeiling": "Old Contract can carry the hardest burden/high ceiling, but cannot be the only emotionally rewarding path.",
       "stackSnapshot": {
-        "expected": ["path", "PactBound/compliance/lapse", "active favor counters", "path-switch state"],
-        "edge": ["Bandit Road reversal cooldown", "Old Contract renunciation", "curse state", "Daedric modifiers"],
-        "allowedLoudLayers": ["one active path", "one active favor"],
-        "suppressedLayers": ["generic trade profit", "raw theft", "generic forest travel", "unproven item punishment"],
+        "expected": [
+          "path",
+          "PactBound/compliance/lapse",
+          "active favor counters",
+          "path-switch state"
+        ],
+        "edge": [
+          "Bandit Road reversal cooldown",
+          "Old Contract renunciation",
+          "curse state",
+          "Daedric modifiers"
+        ],
+        "allowedLoudLayers": [
+          "one active path",
+          "one active favor"
+        ],
+        "suppressedLayers": [
+          "generic trade profit",
+          "raw theft",
+          "generic forest travel",
+          "unproven item punishment"
+        ],
         "contextualFavorCap": "one active path/favor family",
         "curseDaedricModifierNote": "Hircine/Baan Dar/Nocturnal pressure must preserve chosen Bosmer path identity."
       },
-      "nextAutomatableAction": "Write Green Pact tag coverage and non-hunter final placement contracts before item expansion.",
-      "deferredManualProof": "Generic commerce/theft/forest/kindness rejection, Survey display, and final non-hunter placement."
+      "nextAutomatableAction": "Curate exact sources and empirically prove all four Bosmer path hook contracts before broad Green Pact item expansion.",
+      "deferredManualProof": "Generic commerce/theft/forest/kindness rejection, Survey display, and final non-hunter placement.",
+      "devProofContracts": [
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_BosmerNonHunterWorldSignal",
+          "intendedObjectType": "ACTI Living Story or Exchange surface",
+          "relatedQASmokeProof": "PDV_REFR_BosmerLivingStoryCommunityKeptSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        },
+        {
+          "surfaceEditorIdPlan": "PDV_REFR_BosmerRoadPactWorldSignal",
+          "intendedObjectType": "ACTI or MESG Bandit Road/Pact pressure surface",
+          "relatedQASmokeProof": "PDV_REFR_BosmerBanditRoadReversalSignal",
+          "note": "Retained as dev/QASmoke route proof contract; not final empirical placement proof."
+        }
+      ],
+      "immersiveHookContracts": [
+        {
+          "signalId": "bosmer-old-contract-proper-hunt-forest-kept",
+          "playerExperience": "Old Contract recognition comes from kept covenant practice: proper hunt, forest kept, and restraint under Pact burden, not generic animal killing or broad plant punishment.",
+          "hookClass": "curated-hunt-forest-state-or-item-tag-context",
+          "receiverPlan": "Use curated hunt, forest-kept, and future tag-backed Pact-context hooks for Old Contract sources; keep broad Green Pact item pressure deferred until tag coverage is proven.",
+          "vanillaOrPo3Source": "Curated hunt/script-event sources, forest/location/context FormLists, selective PO3 QuestStageChange only after exact stage readback; PO3 ItemHarvested only after Green Pact tag coverage.",
+          "routeTarget": "PDV_EventBus.RouteBosmerOldContractProperHunt() and RouteBosmerOldContractForestKept()",
+          "acceptedContext": "Bosmer origin, Old Contract path or PactBound context, named proper-hunt or forest-kept source.",
+          "rejectedContext": "Generic animal killing, generic forest travel, raw harvest, broad plant detection without tag evidence, non-Bosmer origin, non-OldContract path for covenant-only pressure.",
+          "antiFarmRule": "Daily route keys plus exact source markers; no broad item/plant punishment until source tags and rejected-item tests are proven.",
+          "proofPath": "Old Contract proper-hunt and forest-kept trigger, generic animal/forest/harvest rejection, wrong-origin silence, Survey Pact binding/compliance clarity.",
+          "assetRequirement": "No new mesh required; hunt, forest, quest, location, item-tag, or marker context only.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_BosmerOldContractProperHuntSignal"
+        },
+        {
+          "signalId": "bosmer-living-story-community-nature",
+          "playerExperience": "Non-hunter recognition comes from kept community memory, nature-site preservation, and story continuity.",
+          "hookClass": "curated-quest-location-community-context",
+          "receiverPlan": "Use curated quest/location/community script-event hooks for Living Story sources.",
+          "vanillaOrPo3Source": "Curated quest stages, nature-site FormLists, community service/context FormLists, selective PO3 QuestStageChange.",
+          "routeTarget": "PDV_EventBus.RouteBosmerLivingStoryCommunityKept() and RouteBosmerLivingStoryNatureSite()",
+          "acceptedContext": "Bosmer origin, Living Story path context, named community or nature-site source.",
+          "rejectedContext": "Generic kindness, generic bard activity, generic forest travel, random nature proximity, non-Bosmer origin.",
+          "antiFarmRule": "Daily route key plus one-shot markers per community/nature source.",
+          "proofPath": "Living Story trigger, generic kindness/forest rejection, wrong-origin silence, Survey path clarity.",
+          "assetRequirement": "No new mesh required; existing community, nature-site, quest, location, or marker context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_BosmerLivingStoryCommunityKeptSignal"
+        },
+        {
+          "signalId": "bosmer-exchange-debt-redress",
+          "playerExperience": "Exchange rewards proportionate debt, redress, and social accounting rather than trade profit or random vengeance.",
+          "hookClass": "curated-quest-service-crime-context",
+          "receiverPlan": "Use curated quest/service/crime-chain outcomes where debt or redress is explicit.",
+          "vanillaOrPo3Source": "Quest-stage outcomes, crime chain where witnessed/reported meaning matters, service/debt FormLists; selective PO3 QuestStageChange.",
+          "routeTarget": "PDV_EventBus.RouteBosmerExchangeDebtSettled() and RouteBosmerExchangeProportionateVengeance()",
+          "acceptedContext": "Bosmer origin, Exchange path context, named debt/redress source.",
+          "rejectedContext": "Generic trade profit, raw theft, repeated theft, random vengeance, generic crime, non-Bosmer origin.",
+          "antiFarmRule": "One-shot debt/redress source markers and daily cap.",
+          "proofPath": "Exchange trigger, generic trade/theft rejection, wrong-origin silence, Survey favor memory.",
+          "assetRequirement": "No new mesh required; quest/service/crime context wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_BosmerExchangeDebtSettledSignal"
+        },
+        {
+          "signalId": "bosmer-bandit-road-pact-pressure",
+          "playerExperience": "Bandit Road and Pact pressure feel like road-life reversal, lapse, or reckoning, not a thief or plant-punishment faucet.",
+          "hookClass": "curated-road-hardship-state-or-item-tag-context",
+          "receiverPlan": "Use curated road hardship/reversal sources now; defer broad Green Pact item pressure until tag evidence is proven.",
+          "vanillaOrPo3Source": "Road/location/quest script events, selective PO3 QuestStageChange; PO3 ItemHarvested only after Green Pact tag coverage.",
+          "routeTarget": "PDV_EventBus.RouteBosmerBanditRoadRoadLife(), RouteBosmerBanditRoadReversal(), and future Pact pressure handler.",
+          "acceptedContext": "Bosmer origin, Bandit Road path or Pact pressure context, named reversal/lapse source.",
+          "rejectedContext": "Generic theft, generic crime, repeated theft, broad plant detection without tag evidence, non-Bosmer origin.",
+          "antiFarmRule": "Seven-day Bandit Road reversal cooldown and tag-backed Pact pressure only.",
+          "proofPath": "Reversal trigger, generic theft/crime rejection, item-tag deferral, wrong-origin silence, Survey Pact pressure clarity.",
+          "assetRequirement": "No new mesh required; road, quest, location, item-tag, or marker context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none",
+          "relatedQASmokeProof": "PDV_REFR_BosmerBanditRoadReversalSignal"
+        }
+      ],
+      "sourceCurationStatus": "exact-source-curation-pending",
+      "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+      "questCandidatePolicy": "Scan-only quest candidates are discovery prompts only; live route/FormList use requires exact quest record, stage, and outcome readback."
     },
     "Breton": {
-      "laneType": "P2 audit-only",
+      "laneType": "P2 full end-state wiring with stack audit",
       "noInGameStatus": "Planning-Ready",
       "verdict": "Fail - runtime/manual proof deferred",
       "expectedBuild": "One chosen tradition: Knight's Road, Hidden Art, or Green Way.",
       "edgeBuild": "Hidden Art plus Daedric rupture or curse pressure.",
       "normalSessionRoute": "Tradition setup/readback plus one tradition-specific favor family, with no new reward volume.",
-      "acceptedHooks": ["tradition-readback", "knightly-vow", "witchcraft-exposure", "druidic-standing"],
-      "rejectedHooks": ["casual tradition switching", "generic spellcasting", "generic Daedric artifact ownership", "generic help without reward", "ordinary animal kills", "College membership", "private curiosity", "generic shrine visits"],
-      "antiFarmRules": ["one tradition spine", "other tracks pressure/gate/rupture only", "Hidden Art cost visible before stronger occult rewards"],
+      "acceptedHooks": [
+        "tradition-readback",
+        "knightly-vow",
+        "witchcraft-exposure",
+        "druidic-standing"
+      ],
+      "rejectedHooks": [
+        "casual tradition switching",
+        "generic spellcasting",
+        "generic Daedric artifact ownership",
+        "generic help without reward",
+        "ordinary animal kills",
+        "College membership",
+        "private curiosity",
+        "generic shrine visits"
+      ],
+      "antiFarmRules": [
+        "one tradition spine",
+        "other tracks pressure/gate/rupture only",
+        "Hidden Art cost visible before stronger occult rewards"
+      ],
       "surveyStatusRequirement": "Explain tradition, vow, exposure, DruidicStanding, standing, and curse posture without implying all traditions are active.",
-      "finalPlacementContracts": [],
       "rewardFloor": "Chosen tradition has cost/recovery texture and one satisfying early favor route.",
       "rewardCeiling": "One tradition spine plus one focused patron; other tracks modify, gate, rupture, or penalize.",
       "stackSnapshot": {
-        "expected": ["tradition", "patron focus", "one active favor"],
-        "edge": ["WitchcraftExposure", "KnightlyVowIntegrity", "DruidicStanding", "curse fork", "Daedric modifiers"],
-        "allowedLoudLayers": ["one tradition spine", "one focused patron"],
-        "suppressedLayers": ["three tracks as three reward engines", "generic spellcasting as occult devotion"],
+        "expected": [
+          "tradition",
+          "patron focus",
+          "one active favor"
+        ],
+        "edge": [
+          "WitchcraftExposure",
+          "KnightlyVowIntegrity",
+          "DruidicStanding",
+          "curse fork",
+          "Daedric modifiers"
+        ],
+        "allowedLoudLayers": [
+          "one tradition spine",
+          "one focused patron"
+        ],
+        "suppressedLayers": [
+          "three tracks as three reward engines",
+          "generic spellcasting as occult devotion"
+        ],
         "contextualFavorCap": "one active tradition/favor family",
         "curseDaedricModifierNote": "Daedric rupture must carry exposure, stigma, or exit residue."
       },
-      "nextAutomatableAction": "Add tradition readback and Hidden Art cost verifier contracts before any reward volume.",
-      "deferredManualProof": "Tradition Survey display, rejected spell/artifact/help loops, and expected/edge stack audit."
+      "p2AuditContract": {
+        "evidenceMode": "full-end-state-wiring-with-stack-audit",
+        "positiveProbeFamilies": [
+          "tradition setup/readback",
+          "one tradition-specific favor",
+          "Survey/MCM tradition display"
+        ],
+        "rejectedProbeFamilies": [
+          "casual tradition switching",
+          "generic spellcasting",
+          "generic artifact ownership",
+          "generic shrine attendance"
+        ],
+        "requiredStackEvidence": [
+          "active tradition",
+          "patron focus",
+          "active favor",
+          "WitchcraftExposure",
+          "KnightlyVowIntegrity",
+          "DruidicStanding",
+          "curse or Daedric modifier"
+        ],
+        "passBlockers": [
+          "three tracks rewarding simultaneously",
+          "Hidden Art stronger without exposure cost",
+          "generic broad Breton pantheon reward"
+        ],
+        "manualEvidenceTarget": "Record expected and edge stack snapshots before pass or reward expansion."
+      },
+      "nextAutomatableAction": "Run strict immersive-hook verifier coverage, then wire and prove the race-specific end-state hook contracts with stack audit.",
+      "deferredManualProof": "Tradition Survey display, rejected spell/artifact/help loops, and expected/edge stack audit.",
+      "devProofContracts": [],
+      "immersiveHookContracts": [
+        {
+          "signalId": "breton-tradition-choice-readback",
+          "playerExperience": "A Breton chooses one living tradition spine -- Knight's Road, Hidden Art, or Green Way -- rather than passively gaining all three.",
+          "hookClass": "state-readback-voluntary-commitment-context",
+          "receiverPlan": "Use managed tradition setup/readback and curated confirmation; do not route from generic shrine attendance.",
+          "vanillaOrPo3Source": "Vanilla book/standing-stone/shrine-style confirmation surface or quest/script-event setup; optional PO3 BookRead.",
+          "routeTarget": "New Breton tradition setup handler through PDV_EventBus and PDV__ManagerQuest.",
+          "acceptedContext": "Breton origin, no active conflicting tradition, explicit tradition confirmation source.",
+          "rejectedContext": "Casual tradition switching, generic shrine visits, generic faction membership, non-Breton origin.",
+          "antiFarmRule": "One active tradition spine; switching requires explicit rupture/recommitment path.",
+          "proofPath": "Tradition setup/readback, rejected casual switching, wrong-origin silence, Survey tradition clarity, stack snapshot.",
+          "assetRequirement": "No new mesh required; vanilla book, standing stone, shrine-style object, message, or marker-backed state.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        },
+        {
+          "signalId": "breton-knightly-road-vow",
+          "playerExperience": "Knightly devotion rewards concrete vows, mercy, service, and honorable duty, not generic helping or combat.",
+          "hookClass": "curated-quest-service-relationship-context",
+          "receiverPlan": "Use curated quest-stage/service/relationship script events with vow-integrity checks.",
+          "vanillaOrPo3Source": "Quest-stage outcomes, service/favor quests, mercy/protection sources, selective PO3 QuestStageChange.",
+          "routeTarget": "New Breton KnightlyVowIntegrity handler through EventBus.",
+          "acceptedContext": "Breton origin, Knight's Road active, named vow/service/mercy source.",
+          "rejectedContext": "Generic helping, generic combat, faction membership, generic temple attendance, non-Breton origin.",
+          "antiFarmRule": "One-shot markers per vow/source family; vow breach creates pressure.",
+          "proofPath": "Vow/service trigger, generic help/combat rejection, wrong-origin silence, Survey vow integrity.",
+          "assetRequirement": "No new mesh required; quest/service/vow context wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        },
+        {
+          "signalId": "breton-hidden-art-exposure",
+          "playerExperience": "Occult Breton play gains power with visible exposure and cost, not from every spell or artifact.",
+          "hookClass": "po3-book-spell-quest-stage-context",
+          "receiverPlan": "Use curated BookRead, SpellLearned, and quest-stage sources for forbidden/occult learning.",
+          "vanillaOrPo3Source": "Selective PO3 BookRead/SpellLearned/QuestStageChange for curated occult texts, spells, and Daedric/witchcraft milestones.",
+          "routeTarget": "New Breton WitchcraftExposure handler through EventBus.",
+          "acceptedContext": "Breton origin, Hidden Art active or pressure-eligible, whitelisted occult source.",
+          "rejectedContext": "Generic spellcasting, College membership, generic Daedric artifact ownership, private curiosity, non-Breton origin.",
+          "antiFarmRule": "One marker per curated book/spell/source and exposure cap.",
+          "proofPath": "Curated occult trigger, generic spell/artifact rejection, wrong-origin silence, Survey exposure cost.",
+          "assetRequirement": "No new mesh required; existing books, spells, quest stages, and status state.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        },
+        {
+          "signalId": "breton-green-way-standing",
+          "playerExperience": "Green Way devotion comes from specific druidic/nature/standing contexts, not ordinary animal kills or outdoor travel.",
+          "hookClass": "curated-location-book-harvest-or-quest-context",
+          "receiverPlan": "Use curated nature-site/standing-stone/quest/book sources; PO3 ItemHarvested only for tag-backed druidic sources.",
+          "vanillaOrPo3Source": "Standing stones, spriggan/grove/nature locations, curated books/quests, selective PO3 BookRead or ItemHarvested after tag proof.",
+          "routeTarget": "New Breton DruidicStanding handler through EventBus.",
+          "acceptedContext": "Breton origin, Green Way active, named nature/druidic source.",
+          "rejectedContext": "Ordinary animal kills, generic harvests, outdoor travel, generic Kynareth/Kyne shrine visits, non-Breton origin.",
+          "antiFarmRule": "Daily/source family cap and tag-backed harvest whitelist only.",
+          "proofPath": "Druidic trigger, animal/outdoor/generic harvest rejection, wrong-origin silence, Survey DruidicStanding.",
+          "assetRequirement": "No new mesh required; vanilla standing stones, groves, books, locations, or marker context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        }
+      ],
+      "sourceCurationStatus": "exact-source-curation-pending",
+      "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+      "questCandidatePolicy": "Scan-only quest candidates are discovery prompts only; live route/FormList use requires exact quest record, stage, and outcome readback."
     },
     "Dunmer": {
-      "laneType": "P2 audit-only",
+      "laneType": "P2 full end-state wiring with stack audit",
       "noInGameStatus": "Planning-Ready",
       "verdict": "Fail - runtime/manual proof deferred",
       "expectedBuild": "Ash-prayer and ancestor practice into one Reclamation focus.",
       "edgeBuild": "Ancestor substrate plus Reclamation plus Daedric deviation or curse price.",
       "normalSessionRoute": "Ancestor substrate proof plus one focused Reclamation route, with no new reward volume.",
-      "acceptedHooks": ["portable ash-prayer", "private home rite", "ancestor posture", "focused Reclamation route"],
-      "rejectedHooks": ["generic crime as Mephala", "generic cruelty as Boethiah", "generic twilight/magic as Azura", "Tribunal memory as controllable path", "non-Reclamation deviation without price"],
-      "antiFarmRules": ["ancestor substrate stays identity/utility", "one Reclamation foreground", "deviations carry price"],
+      "acceptedHooks": [
+        "portable ash-prayer",
+        "private home rite",
+        "ancestor posture",
+        "focused Reclamation route"
+      ],
+      "rejectedHooks": [
+        "generic crime as Mephala",
+        "generic cruelty as Boethiah",
+        "generic twilight/magic as Azura",
+        "Tribunal memory as controllable path",
+        "non-Reclamation deviation without price"
+      ],
+      "antiFarmRules": [
+        "ancestor substrate stays identity/utility",
+        "one Reclamation foreground",
+        "deviations carry price"
+      ],
       "surveyStatusRequirement": "Explain ancestor layer, portable ash-prayer, private home rite, standing, curse posture, and future deviation price.",
-      "finalPlacementContracts": [],
       "rewardFloor": "Ash-prayer, portable/private shrine, and diaspora/ancestor feedback remain meaningful.",
       "rewardCeiling": "Ancestor substrate is identity/utility; Reclamation focus is the loud foreground; deviations carry visible price.",
       "stackSnapshot": {
-        "expected": ["ancestor substrate", "posture", "Reclamation focus", "active favor"],
-        "edge": ["portable/home bonus", "deviation price", "curse state", "Daedric modifiers"],
-        "allowedLoudLayers": ["ancestor substrate", "one Reclamation foreground"],
-        "suppressedLayers": ["substrate plus focus plus deviation as best generic package"],
+        "expected": [
+          "ancestor substrate",
+          "posture",
+          "Reclamation focus",
+          "active favor"
+        ],
+        "edge": [
+          "portable/home bonus",
+          "deviation price",
+          "curse state",
+          "Daedric modifiers"
+        ],
+        "allowedLoudLayers": [
+          "ancestor substrate",
+          "one Reclamation foreground"
+        ],
+        "suppressedLayers": [
+          "substrate plus focus plus deviation as best generic package"
+        ],
         "contextualFavorCap": "one active Reclamation/favor family",
         "curseDaedricModifierNote": "Deviation, curse, and Daedric contact must carry price, stigma, exit, or residue."
       },
-      "nextAutomatableAction": "Write deviation-price and overstack verifier contracts before new Dunmer rewards.",
-      "deferredManualProof": "Ancestor/Reclamation stack audit, rejected generic Daedric behavior, and Survey display."
+      "p2AuditContract": {
+        "evidenceMode": "full-end-state-wiring-with-stack-audit",
+        "positiveProbeFamilies": [
+          "portable ash-prayer",
+          "private home rite",
+          "one focused Reclamation route",
+          "Survey/MCM ancestor display"
+        ],
+        "rejectedProbeFamilies": [
+          "generic crime",
+          "generic cruelty",
+          "generic magic/twilight",
+          "Tribunal memory as controllable path"
+        ],
+        "requiredStackEvidence": [
+          "ancestor substrate",
+          "ancestor posture",
+          "Reclamation focus",
+          "active favor",
+          "portable/home bonus",
+          "deviation price",
+          "curse or Daedric modifier"
+        ],
+        "passBlockers": [
+          "ancestor substrate plus focus plus deviation becoming a third loud package",
+          "generic Daedric behavior scoring native layers",
+          "deviation without visible price"
+        ],
+        "manualEvidenceTarget": "Record expected and edge stack snapshots before pass or reward expansion."
+      },
+      "nextAutomatableAction": "Run strict immersive-hook verifier coverage, then wire and prove the race-specific end-state hook contracts with stack audit.",
+      "deferredManualProof": "Ancestor/Reclamation stack audit, rejected generic Daedric behavior, and Survey display.",
+      "devProofContracts": [],
+      "immersiveHookContracts": [
+        {
+          "signalId": "dunmer-portable-ash-prayer-home-rite",
+          "playerExperience": "Diaspora practice remains portable and private through ash-prayer and home rites, not generic shrine clicking.",
+          "hookClass": "voluntary-devotional-surface-and-home-context",
+          "receiverPlan": "Keep existing portable ash-prayer/player-home routes; attach only to acceptable token/home context.",
+          "vanillaOrPo3Source": "Existing PDV devotional token pattern, vanilla bowl/urn/incense/book-like stock object, player-home context.",
+          "routeTarget": "PDV_EventBus.RouteDunmerPortableShrinePrayer() and RouteDunmerPlayerHomeBonus()",
+          "acceptedContext": "Dunmer origin, portable ash-prayer or private home rite context, ancestor posture eligible.",
+          "rejectedContext": "Generic shrine use, ash proximity, tomb travel, non-Dunmer origin, repeated same-source spam.",
+          "antiFarmRule": "One accepted prayer/home source per day or marker.",
+          "proofPath": "Portable prayer/home rite, generic shrine/ash rejection, wrong-origin silence, Survey ancestor clarity.",
+          "assetRequirement": "No new mesh required; existing PDV token pattern or vanilla bowl, urn, incense, book, or marker-backed home context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        },
+        {
+          "signalId": "dunmer-reclamation-focus",
+          "playerExperience": "Azura, Boethiah, or Mephala focus comes from curated Reclamation acts and choices, not generic Daedric behavior.",
+          "hookClass": "curated-quest-stage-book-or-state-context",
+          "receiverPlan": "Use selective PO3 QuestStageChange and BookRead for curated Reclamation sources; route one foreground focus at a time.",
+          "vanillaOrPo3Source": "Curated Azura/Boethiah/Mephala quest stages, sacred/ancestral books, diaspora/home context.",
+          "routeTarget": "New Dunmer Reclamation focus handler through EventBus.",
+          "acceptedContext": "Dunmer origin, ancestor substrate eligible, named Reclamation source, focus cap available.",
+          "rejectedContext": "Generic crime as Mephala, generic cruelty as Boethiah, generic twilight/magic as Azura, Tribunal memory as controllable path, non-Dunmer origin.",
+          "antiFarmRule": "One Reclamation foreground focus plus one active favor; one-shot source markers.",
+          "proofPath": "Reclamation trigger, generic crime/cruelty/magic rejection, wrong-origin silence, Survey focus clarity.",
+          "assetRequirement": "No new mesh required; quest, book, home, shrine-context, and status wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        },
+        {
+          "signalId": "dunmer-deviation-price",
+          "playerExperience": "Non-Reclamation Daedric or curse deviation creates visible price, stigma, or residue instead of a clean extra reward path.",
+          "hookClass": "curated-quest-stage-curse-daedric-state-context",
+          "receiverPlan": "Use curated Daedric/curse quest-stage and state hooks to write deviation price through manager-owned state.",
+          "vanillaOrPo3Source": "Selective PO3 QuestStageChange, curse-state events, Daedric artifact/quest outcome FormLists.",
+          "routeTarget": "New Dunmer deviation-price handler through EventBus.",
+          "acceptedContext": "Dunmer origin, deviation/curse source, Reclamation/ancestor stack rules evaluated.",
+          "rejectedContext": "Generic Daedric contact, generic artifact ownership, generic crime, non-Dunmer origin.",
+          "antiFarmRule": "Deviation marks are one-shot/source-capped and cannot become a third loud package.",
+          "proofPath": "Deviation price source, generic Daedric rejection, wrong-origin silence, edge stack snapshot.",
+          "assetRequirement": "No new mesh required; quest/curse/Daedric state wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        }
+      ],
+      "sourceCurationStatus": "exact-source-curation-pending",
+      "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+      "questCandidatePolicy": "Scan-only quest candidates are discovery prompts only; live route/FormList use requires exact quest record, stage, and outcome readback."
     },
     "Imperial": {
-      "laneType": "P2 audit-only",
+      "laneType": "P2 full end-state wiring with stack audit",
       "noInGameStatus": "Planning-Ready",
       "verdict": "Fail - runtime/manual proof deferred",
       "expectedBuild": "Civic Nine Divines broad worship with concrete service.",
       "edgeBuild": "Public/private Talos pressure under ConcordatStanding.",
       "normalSessionRoute": "Whitelisted civic act, public/private Talos pressure check, and Survey/MCM readout, with no new reward volume.",
-      "acceptedHooks": ["civic service", "public/private Talos pressure", "repair gate", "focused primary patron"],
-      "rejectedHooks": ["faction membership", "generic temple attendance", "bounty payment alone", "generic anti-Thalmor violence", "cruelty framed as order"],
-      "antiFarmRules": ["concrete civic act whitelist", "ConcordatStanding modifies access/pressure only", "no faction attendance faucet"],
+      "acceptedHooks": [
+        "civic service",
+        "public/private Talos pressure",
+        "repair gate",
+        "focused primary patron"
+      ],
+      "rejectedHooks": [
+        "faction membership",
+        "generic temple attendance",
+        "bounty payment alone",
+        "generic anti-Thalmor violence",
+        "cruelty framed as order"
+      ],
+      "antiFarmRules": [
+        "concrete civic act whitelist",
+        "ConcordatStanding modifies access/pressure only",
+        "no faction attendance faucet"
+      ],
       "surveyStatusRequirement": "Explain civic faith, ConcordatStanding, Talos pressure tilt, repair gate, standing, and curse posture.",
-      "finalPlacementContracts": [],
       "rewardFloor": "Concrete civic acts and non-combat service feel real before combat or faction play.",
       "rewardCeiling": "Civic acts stay concrete; ConcordatStanding modifies access or pressure, not a buff track.",
       "stackSnapshot": {
-        "expected": ["ConcordatStanding", "primary patron", "active civic favor"],
-        "edge": ["public/private Talos state", "repair/rupture state", "curse state", "Daedric modifiers"],
-        "allowedLoudLayers": ["focused patron", "one active civic favor"],
-        "suppressedLayers": ["faction membership as devotion", "generic attendance as piety", "ConcordatStanding as second buff track"],
+        "expected": [
+          "ConcordatStanding",
+          "primary patron",
+          "active civic favor"
+        ],
+        "edge": [
+          "public/private Talos state",
+          "repair/rupture state",
+          "curse state",
+          "Daedric modifiers"
+        ],
+        "allowedLoudLayers": [
+          "focused patron",
+          "one active civic favor"
+        ],
+        "suppressedLayers": [
+          "faction membership as devotion",
+          "generic attendance as piety",
+          "ConcordatStanding as second buff track"
+        ],
         "contextualFavorCap": "one active civic/favor family",
         "curseDaedricModifierNote": "Daedric and vampire paths should read as civic/theological rupture."
       },
-      "nextAutomatableAction": "Write civic act whitelist and rejected faction/attendance verifier contracts.",
-      "deferredManualProof": "Civic Survey display, faction/attendance rejection, public/private Talos edge stack."
+      "p2AuditContract": {
+        "evidenceMode": "full-end-state-wiring-with-stack-audit",
+        "positiveProbeFamilies": [
+          "whitelisted civic service",
+          "public/private Talos pressure",
+          "focused primary patron",
+          "Survey/MCM civic display"
+        ],
+        "rejectedProbeFamilies": [
+          "faction membership",
+          "generic temple attendance",
+          "bounty payment alone",
+          "generic anti-Thalmor violence"
+        ],
+        "requiredStackEvidence": [
+          "ConcordatStanding",
+          "primary patron",
+          "active civic favor",
+          "public/private Talos state",
+          "repair or rupture state",
+          "curse or Daedric modifier"
+        ],
+        "passBlockers": [
+          "ConcordatStanding acting as a buff track",
+          "faction rank or attendance scoring devotion",
+          "cruelty rewarded as civic order"
+        ],
+        "manualEvidenceTarget": "Record expected and edge stack snapshots before pass or reward expansion."
+      },
+      "nextAutomatableAction": "Run strict immersive-hook verifier coverage, then wire and prove the race-specific end-state hook contracts with stack audit.",
+      "deferredManualProof": "Civic Survey display, faction/attendance rejection, public/private Talos edge stack.",
+      "devProofContracts": [],
+      "immersiveHookContracts": [
+        {
+          "signalId": "imperial-civic-service-whitelist",
+          "playerExperience": "Devotion appears through concrete civic service and repair, not faction rank, attendance, or generic lawfulness.",
+          "hookClass": "curated-quest-stage-crime-chain-service-context",
+          "receiverPlan": "Use curated civic quest-stage/service hooks and crime-chain resolution markers; route only whitelisted civic acts.",
+          "vanillaOrPo3Source": "Selective PO3 QuestStageChange, Story Manager crime chain, civic service/favor quest FormLists.",
+          "routeTarget": "New Imperial civic service handler through EventBus.",
+          "acceptedContext": "Imperial origin, whitelisted civic act, active civic/patron posture, concrete completion marker.",
+          "rejectedContext": "Faction membership, rank, generic temple attendance, bounty payment alone, generic mercy, non-Imperial origin.",
+          "antiFarmRule": "One-shot civic source markers and hold/day crime-chain caps.",
+          "proofPath": "Civic act, faction/attendance/bounty-alone rejection, wrong-origin silence, Survey civic clarity.",
+          "assetRequirement": "No new mesh required; quest, crime-chain, service, faction, shrine-context, or status state.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        },
+        {
+          "signalId": "imperial-public-private-talos-pressure",
+          "playerExperience": "Talos pressure is public law/private worship tension under the Concordat, not generic anti-Thalmor play.",
+          "hookClass": "curated-shrine-faction-quest-stage-or-script-event-context",
+          "receiverPlan": "Use existing Concordat/Talos event pattern plus curated quest/shrine/faction context.",
+          "vanillaOrPo3Source": "Existing civil-war/Talos mod events, shrine context, public/private location/faction state, selective PO3 QuestStageChange.",
+          "routeTarget": "Existing Concordat/Talos pressure handlers plus new Imperial repair/rupture EventBus route if needed.",
+          "acceptedContext": "Imperial origin, public/private Talos source, ConcordatStanding known, repair/rupture cap available.",
+          "rejectedContext": "Generic anti-Thalmor violence, generic Talos proximity, generic shrine attendance, cruelty framed as order, non-Imperial origin.",
+          "antiFarmRule": "One pressure/repair marker per source family; ConcordatStanding is not a buff track.",
+          "proofPath": "Public/private Talos pressure, anti-Thalmor/proximity rejection, wrong-origin silence, Survey Concordat clarity.",
+          "assetRequirement": "No new mesh required; existing shrines, quest/faction state, script events, and status text.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        },
+        {
+          "signalId": "imperial-focused-patron-civic-favor",
+          "playerExperience": "A focused Imperial patron gets one civic favor lane without broad Nine Divines identity becoming universal stack.",
+          "hookClass": "curated-patron-service-or-quest-context",
+          "receiverPlan": "Use patron-specific civic/service FormLists and manager stack caps before routing favor.",
+          "vanillaOrPo3Source": "Curated patron quest/service/shrine-context FormLists, optional PO3 QuestStageChange.",
+          "routeTarget": "New Imperial focused patron civic favor handler through EventBus.",
+          "acceptedContext": "Imperial origin, focused patron state, whitelisted patron civic source.",
+          "rejectedContext": "Generic temple attendance, generic morality, broad civic identity as all-patron reward, non-Imperial origin.",
+          "antiFarmRule": "One active civic/favor family and one focused patron.",
+          "proofPath": "Patron civic favor, broad-attendance rejection, wrong-origin silence, stack snapshot.",
+          "assetRequirement": "No new mesh required; quest/service/shrine-context wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        }
+      ],
+      "sourceCurationStatus": "exact-source-curation-pending",
+      "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+      "questCandidatePolicy": "Scan-only quest candidates are discovery prompts only; live route/FormList use requires exact quest record, stage, and outcome readback."
     },
     "Nord": {
-      "laneType": "P2 audit-only control",
+      "laneType": "P2 full end-state wiring with stack audit control",
       "noInGameStatus": "Readback-Ready",
       "verdict": "Fail - runtime/manual proof deferred",
       "expectedBuild": "Broad Old Ways into Kyne or Talos.",
       "edgeBuild": "Hircine/werewolf stack.",
       "normalSessionRoute": "Broad/focused state readout, Kyne or Talos context, Hircine/werewolf edge audit, and no new reward volume.",
-      "acceptedHooks": ["broad Old Ways", "focused patron", "Kyne/Talos favor", "Hircine price"],
-      "rejectedHooks": ["generic kill", "generic travel", "generic tomb clear", "generic anti-Thalmor violence", "broad worship inheriting every patron boon", "general Nord Daedric menu"],
-      "antiFarmRules": ["broad blended favors softer than focused patron", "Hircine/Kyne/Talos stack ceiling", "generic dense-hook rejection"],
+      "acceptedHooks": [
+        "broad Old Ways",
+        "focused patron",
+        "Kyne/Talos favor",
+        "Hircine price"
+      ],
+      "rejectedHooks": [
+        "generic kill",
+        "generic travel",
+        "generic tomb clear",
+        "generic anti-Thalmor violence",
+        "broad worship inheriting every patron boon",
+        "general Nord Daedric menu"
+      ],
+      "antiFarmRules": [
+        "broad blended favors softer than focused patron",
+        "Hircine/Kyne/Talos stack ceiling",
+        "generic dense-hook rejection"
+      ],
       "surveyStatusRequirement": "Explain broad/focused state, primary patron, Kyne/Talos/Hircine tension, vampire/scar state, and active favor.",
-      "finalPlacementContracts": [],
       "rewardFloor": "Broad Old Ways feels supported without inheriting every focused patron reward.",
       "rewardCeiling": "Broad blended favors stay softer than focused patron rewards; Kyne/Talos/Hircine cannot stack into a universal build.",
       "stackSnapshot": {
-        "expected": ["pantheon baseline", "broad/focused state", "primary patron", "active favor"],
-        "edge": ["Kyne/Talos favor", "Hircine price", "vampire/scar state", "Daedric modifiers"],
-        "allowedLoudLayers": ["focused patron", "one active favor"],
-        "suppressedLayers": ["broad worship as universal boon stack", "generic kills/travel/tombs as faucets"],
+        "expected": [
+          "pantheon baseline",
+          "broad/focused state",
+          "primary patron",
+          "active favor"
+        ],
+        "edge": [
+          "Kyne/Talos favor",
+          "Hircine price",
+          "vampire/scar state",
+          "Daedric modifiers"
+        ],
+        "allowedLoudLayers": [
+          "focused patron",
+          "one active favor"
+        ],
+        "suppressedLayers": [
+          "broad worship as universal boon stack",
+          "generic kills/travel/tombs as faucets"
+        ],
         "contextualFavorCap": "one active patron/favor family",
         "curseDaedricModifierNote": "Hircine/werewolf can be strong but must not stack freely with Kyne/Talos."
       },
-      "nextAutomatableAction": "Add dense-hook rejection and Hircine/Kyne/Talos stack audit contracts.",
-      "deferredManualProof": "Over-trigger audit, generic hook rejection, and expected/edge stack snapshot."
+      "p2AuditContract": {
+        "evidenceMode": "full-end-state-wiring-with-stack-audit",
+        "positiveProbeFamilies": [
+          "broad Old Ways readout",
+          "focused Kyne or Talos readout",
+          "Hircine/werewolf edge audit",
+          "Survey/MCM control display"
+        ],
+        "rejectedProbeFamilies": [
+          "generic kill",
+          "generic travel",
+          "generic tomb clear",
+          "generic anti-Thalmor violence",
+          "broad worship inheriting every patron boon"
+        ],
+        "requiredStackEvidence": [
+          "pantheon baseline",
+          "broad/focused state",
+          "primary patron",
+          "active favor",
+          "Kyne or Talos favor",
+          "Hircine price",
+          "vampire/scar state",
+          "Daedric modifier"
+        ],
+        "passBlockers": [
+          "broad worship becoming universal boon stack",
+          "generic dense hooks becoming faucet",
+          "Hircine/Kyne/Talos stacking into best generic build"
+        ],
+        "manualEvidenceTarget": "Record expected and edge stack snapshots before pass or reward expansion."
+      },
+      "nextAutomatableAction": "Run strict immersive-hook verifier coverage, then wire and prove the race-specific end-state hook contracts with stack audit.",
+      "deferredManualProof": "Over-trigger audit, generic hook rejection, and expected/edge stack snapshot.",
+      "devProofContracts": [],
+      "immersiveHookContracts": [
+        {
+          "signalId": "nord-broad-focused-old-ways-state",
+          "playerExperience": "Nord worship reads as broad Old Ways or focused patron identity with no universal boon inheritance.",
+          "hookClass": "state-readback-and-curated-context",
+          "receiverPlan": "Use existing broad/focused manager state and route only curated patron contexts into one active favor family.",
+          "vanillaOrPo3Source": "Existing Phase 12/13/18 state, shrine/context FormLists, curated quest/stage/script events.",
+          "routeTarget": "Existing Nord broad/focused manager handlers and EventBus routes.",
+          "acceptedContext": "Nord origin, broad/focused state known, one patron/favor context active.",
+          "rejectedContext": "Broad worship inheriting every patron boon, generic dense-hook reward, non-Nord origin.",
+          "antiFarmRule": "Broad blended favors stay softer than focused patron; one active patron/favor family cap.",
+          "proofPath": "Broad and focused readout, non-Nord silence, universal-stack rejection, Survey clarity.",
+          "assetRequirement": "No new mesh required; existing state/context wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        },
+        {
+          "signalId": "nord-kyne-talos-context",
+          "playerExperience": "Kyne and Talos signals come from weather, road, shout, civil, and defiance contexts, not generic travel, kills, or anti-Thalmor violence.",
+          "hookClass": "po3-shout-weather-quest-stage-and-script-event-context",
+          "receiverPlan": "Use existing shout registration, selective PO3 WeatherChange as context-only, and curated quest/script events.",
+          "vanillaOrPo3Source": "Existing PO3 shout hooks, optional PO3 WeatherChange context, Civil War/Talos/Kyne quest stages, hidden shrine defiance.",
+          "routeTarget": "Existing Kyne/Talos EventBus and manager routes.",
+          "acceptedContext": "Nord origin, focused or broad-compatible Kyne/Talos context, cooldown/cap available.",
+          "rejectedContext": "Generic travel, generic kills, generic tomb clear, generic anti-Thalmor violence, repeated shrine activity, non-Nord origin.",
+          "antiFarmRule": "Cooldowns per shout/weather/context family; weather is context only and never scores alone.",
+          "proofPath": "Kyne/Talos context, generic travel/kill/anti-Thalmor rejection, wrong-origin silence, stack cap.",
+          "assetRequirement": "No new mesh required; existing shrines, weather, shout, quest, and route context.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        },
+        {
+          "signalId": "nord-hircine-arkay-curse-edge",
+          "playerExperience": "Hircine/werewolf and Arkay/death-duty edges feel strong but priced, not freely stacked with Kyne/Talos.",
+          "hookClass": "curated-curse-kill-death-duty-quest-context",
+          "receiverPlan": "Use existing curse-state registration plus curated hunt/death-duty/quest context; route through stack audit handlers.",
+          "vanillaOrPo3Source": "Lycanthropy/vampirism events, curated Hircine hunt rite, Hall of the Dead/death-duty quest context, selective QuestStageChange.",
+          "routeTarget": "Existing Hircine/Nord Daedric price and Kyne neglect/stack handlers.",
+          "acceptedContext": "Nord origin, curse or Hircine/Arkay edge context, stack cap evaluated.",
+          "rejectedContext": "Generic kill, generic tomb clear, general Nord Daedric menu, free Hircine/Kyne/Talos stacking, non-Nord origin.",
+          "antiFarmRule": "Hircine/Kyne/Talos cannot stack into a universal build; kill/death contexts are curated and capped.",
+          "proofPath": "Curse/Hircine edge, generic kill/tomb rejection, wrong-origin silence, stack snapshot.",
+          "assetRequirement": "No new mesh required; curse/quest/death-duty context wiring.",
+          "newMeshRequired": false,
+          "missingAssetIfRequired": "none"
+        }
+      ],
+      "sourceCurationStatus": "exact-source-curation-pending",
+      "sourceCurationRunbook": "references/authoring/PDV_Phase20_AllRaceSourceCuration_Runbook.md",
+      "questCandidatePolicy": "Scan-only quest candidates are discovery prompts only; live route/FormList use requires exact quest record, stage, and outcome readback."
     }
   },
   "cat6": {
@@ -431,25 +1434,96 @@
     "sourceRowsExist": true,
     "firstTargetRecordPresent": true,
     "fallbackTargetRecordPresent": false,
-    "ownerDecision": "Create/fill exactly one target SPEL through a named narrow direct-framework helper before text promotion; no grant wiring or broad reward rollout.",
-    "notAllowed": ["dialogue", "Daedric stigma rows", "Hircine/Molag Bal curse-access rows", "broad string promotion"]
+    "ownerDecision": "Preserve the Khajiit pilot target records under PDV_Phase20_RewardRecordContracts.json; keep Bosmer fallback and Daedric CAT-6 promotion separate until explicitly promoted.",
+    "notAllowed": [
+      "dialogue",
+      "Daedric rows without per-Prince D-18/CAT-6 proof packet",
+      "Hircine/Molag Bal curse-access rows that double-fire curse-state transitions",
+      "broad string promotion"
+    ]
   },
   "recognition": {
     "status": "deferred-v2",
     "firstCandidate": "Altmer Auri-El crisis recovery recognition",
     "speakerCandidate": "Runil",
     "fallback": "Survey/status recognition only",
-    "positiveGate": ["Altmer origin", "Auri-El or compatible Altmer focus", "crisis recovery or scar state", "tier gate if needed"],
-    "negativeGates": ["non-Altmer origin", "wrong deity or focus", "unresolved crisis", "wrong tier", "curse halt if applicable"],
-    "recordIdentityPlan": ["PDV_DIAL_Altmer_Runil_AurielRecoveryBranch", "PDV_DIAL_Altmer_Runil_AurielRecoveryTopic", "PDV_INFO_Altmer_Runil_AurielRecovery"],
-    "notAllowed": ["generated dialogue", "roster-wide cloning", "fragile helper state without readback"]
+    "positiveGate": [
+      "Altmer origin",
+      "Auri-El or compatible Altmer focus",
+      "crisis recovery or scar state",
+      "tier gate if needed"
+    ],
+    "negativeGates": [
+      "non-Altmer origin",
+      "wrong deity or focus",
+      "unresolved crisis",
+      "wrong tier",
+      "curse halt if applicable"
+    ],
+    "recordIdentityPlan": [
+      "PDV_DIAL_Altmer_Runil_AurielRecoveryBranch",
+      "PDV_DIAL_Altmer_Runil_AurielRecoveryTopic",
+      "PDV_INFO_Altmer_Runil_AurielRecovery"
+    ],
+    "notAllowed": [
+      "generated dialogue",
+      "roster-wide cloning",
+      "fragile helper state without readback"
+    ]
   },
   "daedricBlockers": {
-    "status": "decision-needed-before-runtime-promotion",
-    "stigmaRowContract": "open",
-    "hircineMolagBalCurseAccessTemplate": "open",
-    "princePromotionOrder": "open",
-    "crossPrinceHostilityExitResidue": "needs Survey/status language",
+    "status": "decisions-locked-proof-needed-before-runtime-promotion",
+    "stigmaRowContract": "locked-D15",
+    "hircineMolagBalCurseAccessTemplate": "locked-D16",
+    "princePromotionOrder": "locked-D17",
+    "contentReadyDefinition": "locked-D18",
+    "readinessLedger": "references/authoring/PDV_AllRaceDaedricBetaReadinessLedger.md",
+    "batch0ProofLedger": "references/authoring/PDV_DaedricBatch0_D18ProofLedger.md",
+    "batch0StaticD18Proof": "complete-no-esp-writes",
+    "crossPrinceHostilityExitResidue": "locked-D14; exit/residue copy must be proven through per-Prince D-18 checklist and Survey/status or display proof",
+    "promotionGatedBy": "CAT-6 ESP promotion, per-Prince D-18/effect review, record readback, runtime or display proof, and stack/Survey legibility",
+    "batch0TemplateProof": [
+      "Azura / Azurah",
+      "Vaermina",
+      "Meridia",
+      "Molag Bal"
+    ],
+    "remainingBatches": {
+      "batch1": [
+        "Mephala / Mafala",
+        "Malacath / Mauloch"
+      ],
+      "batch2": [
+        "Mehrunes Dagon",
+        "Sheogorath",
+        "Namira / Namiira",
+        "Sanguine / Sangiin",
+        "Clavicus Vile",
+        "Hermaeus Mora",
+        "Nocturnal"
+      ],
+      "batch3": [
+        "Peryite",
+        "Hircine"
+      ]
+    },
     "runtimePromotionAllowed": false
+  },
+  "hookImplementation": {
+    "status": "contract-ready-pending-ck-runtime-wiring",
+    "dependencyPosture": "selective PO3 where it is the best-fit vanilla gameplay signal",
+    "receiverRules": [
+      "Voluntary devotional acts may use PDV_EventSignalActivator or PDV_EventSignalEffect.",
+      "Pressure, crisis, civic, travel, social, curse, and quest signals must use context hooks instead of visible pressure objects.",
+      "Receivers validate player relevance and route through PDV_EventBus; receivers never write persistent piety, tier, substrate, focus, or reward state directly.",
+      "QASmoke proof references remain dev route harnesses and are not final empirical proof."
+    ],
+    "requiredReceiverFamilies": [
+      "player-alias sleep/load/location/equip context",
+      "thin Story Manager receivers for curated kill/crime/craft/location/relationship/script-event signals",
+      "selective PO3 service or alias receiver for curated quest stage, book read, spell learned, item harvested, weather, and shout-style signals",
+      "custom activator/effect receivers only for real ritual, shrine, offering, study, or portable devotional surfaces"
+    ],
+    "assetPolicy": "No required new custom meshes in the current end-state contract set; use vanilla or stock meshes where an object is naturally part of the act."
   }
 }

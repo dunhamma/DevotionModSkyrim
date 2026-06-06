@@ -233,7 +233,8 @@ Dunmer neglect is **silence**, not punishment. The ancestors don't curse you for
 | Defeat an Altmer in combat | Boethiah | Per event, cooldown | Rivalry signal; most enemies are not Altmer, so farmability is limited |
 | Join or advance in Thieves Guild | Mephala | Per guild advance | Hidden network signal |
 | Protect Dunmer from discrimination or violence | Layer 1 | Per event | Windhelm-heavy; naturally limited |
-| Read Dunmer lore texts, Tribunal history | All (minor) | Per book, one-time | Cultural maintenance signal |
+| Read Azura texts (*Invocation of Azura*; *Azura and the Box*) | Azura focus | Per book, one-time | Reclamation acknowledgment; notifications: `PDV_Notif_Dunmer_FavorNoted_Azura_BookRead_*` |
+| Read Boethiah texts (*Boethiah's Glory*; *Boethiah's Proving*) | Boethiah focus | Per book, one-time | Reclamation acknowledgment; notifications: `PDV_Notif_Dunmer_FavorNoted_Boethiah_BookRead_*` |
 | Survive a fight you should have lost | Boethiah / Layer 1 | Per event, cooldown | Difficulty-filtered — enemy must be significantly higher level |
 
 ---

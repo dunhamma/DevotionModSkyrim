@@ -1,18 +1,20 @@
 # PDV Race Effect Review Ledger
 
 **Created:** 2026-05-31
-**Status:** Required review gate before broad race reward authoring
+**Status:** Reward contract baseline implemented; runtime/manual review gate remains open
 
 ## Purpose
 
-This ledger keeps the first CAT-6 effect pilot from becoming accidental reward
-policy. `PDV_Bless_Khajiit_Lunar_T1` is allowed as a real, provisional,
-record/readback-proven effect packet. It does not approve full race reward
-authoring, grant timing, magnitudes, or stack behavior for Khajiit or any other
-race.
+This ledger keeps reward effects from drifting beyond their reviewed floor,
+ceiling, and stack budget. The 2026-06-04 all-race reward contract implemented
+first-tier `SPEL`/`MGEF` records and manager grant ownership for all ten races,
+including the earlier `PDV_Bless_Khajiit_Lunar_T1` CAT-6 pilot. That automated
+record/readback/wiring proof does not approve runtime display, save/load,
+balance feel, or future magnitude expansion.
 
-Before broad reward authoring, each race needs a holistic effect review across
-theme, gameplay role, magnitude, conditions, stacking, grant/removal behavior,
+Before changing reward magnitudes, adding higher tiers, or promoting Daedric
+reward interactions, each race needs a holistic effect review across theme,
+gameplay role, magnitude, conditions, stacking, grant/removal behavior,
 Survey/status explanation, anti-farm posture, curse interaction, and Daedric
 interaction.
 
@@ -22,20 +24,21 @@ Use this branch point in the content authoring tree when you want to continue
 without widening reward policy by accident:
 
 ```text
-Broad reward authoring remains blocked until each race row in this ledger names
-the floor effect family, ceiling effect family, magnitude range, cadence,
-grant/removal owner, stack cap, Survey/status copy, rejected generic hooks,
-curse/Daedric interaction, and manual feel note.
+Reward tuning or tier expansion remains blocked until each race row in this
+ledger names the floor effect family, ceiling effect family, magnitude range,
+cadence, grant/removal owner, stack cap, Survey/status copy, rejected generic
+hooks, curse/Daedric interaction, and manual feel note.
 ```
 
-Treat the CAT-6 Khajiit pilot as a narrow exception only. It proves that one
-provisional packet can exist, not that the race is ready for broad reward
-authoring.
+Treat the all-race first-tier contract as the current baseline only. It proves
+records and manager wiring, not that every race reward is manually felt,
+balanced, or ready for higher-tier expansion.
 
 ## Review Rules
 
-- Do not broaden CAT-6 from one passive pilot into race-wide promotion until
-  the affected race has a completed row in this ledger.
+- Do not broaden CAT-6 or reward tiers beyond the current all-race T1 contract
+  until the affected race has a completed row in this ledger and runtime/manual
+  proof in the manual evidence ledger.
 - Treat all magnitudes as provisional until the race row is reviewed.
 - Conditions must match player-facing text. If the effect is night-only, the
   copy must say night-only.
@@ -48,10 +51,10 @@ authoring.
 - Survey/MCM copy must explain the active state in fiction-facing terms without
   turning effect mechanics into debug counters.
 
-## Pilot Exception
+## Khajiit T1 Baseline
 
-`PDV_Bless_Khajiit_Lunar_T1` is the only approved exception before this ledger
-is complete.
+`PDV_Bless_Khajiit_Lunar_T1` began as the CAT-6 pilot and is now governed by
+the all-race reward contract.
 
 Current pilot mechanics:
 
@@ -61,9 +64,10 @@ Current pilot mechanics:
   - `PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen`: `StaminaRateMult +5`.
   - `PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist`: `ResistDisease +10`.
 - Condition: both effects are active from 7PM through 7AM.
-- Grant state: intentionally unwired.
-- Proof state: record/readback/text-match proof only, not Active Effects runtime
-  proof and not reward-distribution proof.
+- Grant state: owned by `PDV_Phase20_RewardRecordContracts.json` and
+  `tools/pdv-phase20-reward-author`.
+- Proof state: record/readback/text/wiring proof only, not Active Effects
+  runtime proof, save/load proof, Survey clarity proof, or balance proof.
 
 ## Race Review Table
 
@@ -162,12 +166,12 @@ focused-patron Devoted value; broad never inherits individual patron boons.
 - Curse/Daedric interaction: ancestor silence posture; vampire cure/restoration scar; Daedric deviations route through the global system as deviation/pact/taboo.
 - Manual feel note: layered, not path-based; broad Dunmer feels complete through ancestors and shrines even before a focus, and Skyrim's missing tombs must not punish.
 
-### Khajiit (lunar baseline - balanced broad worship is valid; CAT-6 Tier 1 pilot lives here)
+### Khajiit (lunar baseline - balanced broad worship is valid; Tier 1 reward lives here)
 - Floor effect family: lunar substrate, an always-active cosmological layer; balanced broad lunar worship is complete at Faithful, with small per-phase amplification. The approved pilot `PDV_Bless_Khajiit_Lunar_T1` (night-only StaminaRateMult +5 / ResistDisease +10) is one provisional instance of this floor.
 - Ceiling effect family: lunar substrate plus one emergent focused emphasis plus the global one-active favor; phase bonuses small and never a third loud package.
 - Magnitude range: phase amplification small; substrate strength from full-cycle consistency; below focused emphasis (pilot magnitudes provisional).
 - Conditions and cadence: substrate continuous; moon phase amplifies (optional, never mandatory scheduling); road-home circuit cadence; dawn focus evaluation. Pilot effects gated 7PM-7AM.
-- Grant and removal/suppression owner: `PDV_Substrate_KhajiitLunar` plus dawn pass; emphasis via `PDV_GLO_KhajiitFocusedEmphasis` (silent, not shared patron state); lunar-posture handlers. Pilot grant intentionally unwired.
+- Grant and removal/suppression owner: `PDV_Substrate_KhajiitLunar` plus dawn pass; emphasis via `PDV_GLO_KhajiitFocusedEmphasis` (silent, not shared patron state); lunar-posture handlers; Tier 1 reward grant owned by `PDV_Phase20_RewardRecordContracts.json`.
 - Stack cap: substrate plus one emphasis plus one active favor.
 - Survey/status explanation: lunar posture plus current emphasis, legible without schedule pressure, no piety numbers.
 - Rejected generic hooks: repeating one convenient camp/bed (road homes need a 2-3 anchor circuit), generic crime/combat for Baan Dar/Rajhin/Alkosh, ordinary night travel for ShadowDrift.

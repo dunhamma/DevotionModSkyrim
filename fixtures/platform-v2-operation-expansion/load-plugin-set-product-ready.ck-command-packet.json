@@ -1,0 +1,49 @@
+{
+  "schema": "creation-authoring.ck-command-packet.v1",
+  "project": "platform-v2-operation-expansion-load-plugin-set-ready",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+  "failClosed": true,
+  "commands": [
+    {
+      "op": "openProject",
+      "profile": "platform-v2-operation-expansion",
+      "game": "SkyrimSE"
+    },
+    {
+      "op": "loadPluginSet",
+      "requiredPlugins": [
+        "Skyrim.esm",
+        "ExampleMod.esp",
+        "ExampleMod_PlatformV2Proof.esp"
+      ],
+      "plugins": [
+        {
+          "name": "Skyrim.esm",
+          "selected": true,
+          "active": false
+        },
+        {
+          "name": "ExampleMod.esp",
+          "selected": true,
+          "active": false
+        },
+        {
+          "name": "ExampleMod_PlatformV2Proof.esp",
+          "selected": true,
+          "active": true
+        }
+      ],
+      "sourcePlugin": "ExampleMod.esp",
+      "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+      "activePlugin": "ExampleMod_PlatformV2Proof.esp",
+      "intendedSaveTarget": "ExampleMod_PlatformV2Proof.esp",
+      "sourcePluginNotActive": true
+    },
+    {
+      "op": "closeSafeStatus"
+    }
+  ],
+  "expectedRuntimeStatus": "PASS"
+}

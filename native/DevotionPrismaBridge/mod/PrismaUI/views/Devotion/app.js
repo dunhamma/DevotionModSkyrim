@@ -9,6 +9,8 @@
     auriel: "auri-el",
     "auri el": "auri-el",
     auriEl: "auri-el",
+    azurah: "azura",
+    "curse-werewolf": "hircine",
     kynareth: "kyne",
     system: "journal",
   };
@@ -23,6 +25,15 @@
     ["mara", "Mara"],
     ["stendarr", "Stendarr"],
     ["zenithar", "Zenithar"],
+    ["yffre", "Y'ffre"],
+    ["zen", "Z'en"],
+    ["baan-dar", "Baan Dar"],
+    ["lunar", "Lunar"],
+    ["hist", "Hist"],
+    ["ancestor", "Ancestor"],
+    ["malacath", "Malacath"],
+    ["sect", "Sect"],
+    ["branch", "Branch"],
     ["dawn", "Dawn"],
     ["journal", "Journal"],
   ];
@@ -82,6 +93,64 @@
       ["path", { d: "M18 19l8 -8 5 5 -8 8" }],
       ["path", { d: "M14 23l8 8" }],
     ],
+    yffre: [
+      ["path", { d: "M24 38 C18 38 12 34 11 28" }],
+      ["path", { d: "M24 38 C30 38 36 34 37 28" }],
+      ["path", { d: "M24 38 V20" }],
+      ["path", { d: "M24 20 C16 20 10 16 10 10 C10 8 12 8 14 10 C16 12 18 14 24 14" }],
+      ["path", { d: "M24 20 C32 20 38 16 38 10 C38 8 36 8 34 10 C32 12 30 14 24 14" }],
+      ["circle", { cx: "24", cy: "14", r: "3", class: "symbol-thin" }],
+    ],
+    zen: [
+      ["path", { d: "M24 12 V32" }],
+      ["path", { d: "M18 32 H30" }],
+      ["path", { d: "M14 20 H34" }],
+      ["path", { d: "M14 20 L12 28 H20 L18 20", class: "symbol-thin" }],
+      ["path", { d: "M34 20 L32 28 H40 L38 20", class: "symbol-thin" }],
+      ["circle", { cx: "24", cy: "12", r: "2" }],
+    ],
+    "baan-dar": [
+      ["path", { d: "M16 14 C12 16 10 20 10 24 C10 34 16 38 24 38 C32 38 38 34 38 24 C38 20 36 16 32 14 Z" }],
+      ["path", { d: "M24 10 V38" }],
+      ["path", { d: "M14 22 C14 20 16 19 18 20", class: "symbol-thin" }],
+      ["circle", { cx: "30", cy: "22", r: "2.5" }],
+      ["path", { d: "M27 18 C28 17 32 17 33 18", class: "symbol-thin" }],
+      ["path", { d: "M18 10 C20 8 28 8 30 10" }],
+    ],
+    lunar: [
+      ["path", { d: "M30 10 a14 14 0 1 0 0 28 a10 14 0 1 1 0 -28 Z" }],
+      ["circle", { cx: "19", cy: "24", r: "4", class: "symbol-thin" }],
+    ],
+    hist: [
+      ["path", { d: "M24 40 V22" }],
+      ["path", { d: "M24 40 C18 40 13 38 11 34", class: "symbol-thin" }],
+      ["path", { d: "M24 40 C30 40 35 38 37 34", class: "symbol-thin" }],
+      ["path", { d: "M14 22 A10 10 0 0 1 34 22" }],
+      ["path", { d: "M17 26 A7 7 0 0 1 31 26", class: "symbol-thin" }],
+      ["circle", { cx: "24", cy: "14", r: "2.5" }],
+    ],
+    ancestor: [
+      ["path", { d: "M14 16 Q24 8 34 16 Q34 34 24 40 Q14 34 14 16 Z" }],
+      ["circle", { cx: "19", cy: "22", r: "1.8" }],
+      ["circle", { cx: "29", cy: "22", r: "1.8" }],
+      ["path", { d: "M24 26 V32", class: "symbol-thin" }],
+      ["path", { d: "M18 14 Q24 11 30 14", class: "symbol-thin" }],
+    ],
+    malacath: [
+      ["path", { d: "M16 38 C10 28 14 18 24 16" }],
+      ["path", { d: "M24 16 L24 8 M16 10 H32 V14 H16 Z" }],
+      ["path", { d: "M24 16 V30", class: "symbol-thin" }],
+    ],
+    sect: [
+      ["path", { d: "M12 36 C20 30 30 18 36 12" }],
+      ["path", { d: "M36 36 C28 30 18 18 12 12" }],
+      ["circle", { cx: "24", cy: "24", r: "2.4" }],
+    ],
+    branch: [
+      ["path", { d: "M10 34 C20 30 30 24 38 12" }],
+      ["path", { d: "M22 25 q8 -10 14 -7 q-5 9 -14 7 Z", class: "symbol-thin" }],
+      ["path", { d: "M16 30 q4 5 8 0", class: "symbol-thin" }],
+    ],
   };
 
   const nodes = {
@@ -91,6 +160,8 @@
     summary: document.getElementById("pdv-summary"),
     patron: document.getElementById("pdv-patron"),
     patronNote: document.getElementById("pdv-patron-note"),
+    instrument: document.getElementById("pdv-instrument"),
+    instrumentArt: document.getElementById("pdv-instrument-art"),
     tierLabel: document.getElementById("pdv-tier-label"),
     pietyBar: document.getElementById("pdv-piety-bar"),
     pietyText: document.getElementById("pdv-piety-text"),
@@ -213,6 +284,205 @@
     return rounded > 0 ? `+${rendered}` : rendered;
   };
 
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, numberOrZero(value)));
+  const clamp01 = (value) => clamp(value, 0, 1);
+
+  const appendSvg = (parent, tagName, attributes = {}) => {
+    const element = makeSvgElement(tagName, attributes);
+    parent.appendChild(element);
+    return element;
+  };
+
+  const makeInstrumentSvg = () => makeSvgElement("svg", {
+    class: "instrument-svg",
+    viewBox: "0 0 300 150",
+    preserveAspectRatio: "xMidYMid meet",
+    focusable: "false",
+    "aria-hidden": "true",
+  });
+
+  const appendMoonPhase = (svg, cx, cy, r, phase) => {
+    const normalizedPhase = clamp(phase || 1, 1, 8);
+    const f = (normalizedPhase - 1) / 8;
+    const a = f * 2 * Math.PI;
+    const lit = (1 - Math.cos(a)) / 2;
+    const rx = Math.abs(r * Math.cos(a));
+    const top = `${cx},${cy - r}`;
+    const bottom = `${cx},${cy + r}`;
+    appendSvg(svg, "circle", { cx, cy, r, class: "instrument-dark" });
+    if (lit > 0.985) {
+      appendSvg(svg, "circle", { cx, cy, r, class: "instrument-fill" });
+    } else if (lit >= 0.015) {
+      const waxing = f < 0.5;
+      const outer = waxing ? `A ${r} ${r} 0 0 1 ${bottom}` : `A ${r} ${r} 0 0 0 ${bottom}`;
+      const innerSweep = waxing ? (lit < 0.5 ? 0 : 1) : (lit < 0.5 ? 1 : 0);
+      appendSvg(svg, "path", { d: `M ${top} ${outer} A ${rx} ${r} 0 0 ${innerSweep} ${top} Z`, class: "instrument-fill" });
+    }
+    appendSvg(svg, "circle", { cx, cy, r, class: "instrument-outline" });
+  };
+
+  const addInstrumentCaption = (slot, inst = {}, fallbackTitle = "Devotion") => {
+    const caption = document.createElement("div");
+    caption.className = "instrument-caption";
+    const title = document.createElement("strong");
+    title.textContent = text(inst.state || inst.tierLabel, fallbackTitle);
+    const detail = document.createElement("span");
+    detail.textContent = text(inst.kind, "piety");
+    caption.append(title, detail);
+    slot.appendChild(caption);
+  };
+
+  const renderPietyInstrument = (slot, inst = {}) => {
+    const svg = makeInstrumentSvg();
+    const instData = inst.data || {};
+    const piety = clamp(instData.piety !== undefined ? instData.piety : state.piety, 0, 150);
+    const primary = clamp01(inst.primary || piety / 150);
+    const fillWidth = Math.round(190 * primary);
+    appendSvg(svg, "rect", { x: "74", y: "68", width: "190", height: "14", rx: "7", class: "instrument-track" });
+    appendSvg(svg, "rect", { x: "74", y: "68", width: fillWidth, height: "14", rx: "7", class: "instrument-fill" });
+    [1, 2, 3].forEach((tier, index) => {
+      const instrumentTier = inst.tier !== undefined ? inst.tier : state.tier;
+      appendSvg(svg, "circle", {
+        cx: 100 + index * 54,
+        cy: 105,
+        r: "6",
+        class: numberOrZero(instrumentTier) >= tier ? "instrument-fill" : "instrument-muted",
+      });
+    });
+    appendSvg(svg, "circle", { cx: "39", cy: "75", r: "24", class: "instrument-outline" });
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, tierName(state.tier));
+  };
+
+  const renderLunarInstrument = (slot, inst = {}) => {
+    const data = inst.data || {};
+    const phase = clamp(data.phase || 1, 1, 8);
+    const svg = makeInstrumentSvg();
+    appendMoonPhase(svg, 76, 80, 28, phase);
+    appendMoonPhase(svg, 124, 52, 13, phase);
+    appendSvg(svg, "path", { d: "M210 50 L217 70 L238 70 L221 82 L228 103 L210 90 L192 103 L199 82 L182 70 L203 70 Z", class: clamp01(inst.primary) > 0.66 ? "instrument-fill" : "instrument-outline" });
+    for (let i = 1; i <= 8; i += 1) {
+      appendSvg(svg, "circle", { cx: 58 + i * 20, cy: 125, r: "4", class: i === phase ? "instrument-fill" : "instrument-muted" });
+    }
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, text(data.focus, "Lunar Lattice"));
+  };
+
+  const renderHistInstrument = (slot, inst = {}) => {
+    const data = inst.data || {};
+    const hist = clamp(data.hist, 0, 100);
+    const people = clamp(data.people, 0, 100);
+    const voidValue = clamp(data.void, 0, 100);
+    const svg = makeInstrumentSvg();
+    appendSvg(svg, "path", { d: "M150 126 V68", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: "M150 126 C120 125 98 118 82 104", class: "instrument-thin" });
+    appendSvg(svg, "path", { d: "M150 126 C180 125 202 118 218 104", class: "instrument-thin" });
+    const arcs = 1 + Math.round(people / 50);
+    for (let i = 0; i < arcs; i += 1) {
+      const radius = 36 + i * 18;
+      appendSvg(svg, "path", { d: `M${150 - radius} 70 A ${radius} ${radius} 0 0 1 ${150 + radius} 70`, class: i === 0 || hist > 35 ? "instrument-outline" : "instrument-muted" });
+    }
+    appendSvg(svg, "circle", { cx: "150", cy: "48", r: "5", class: data.voidActive || voidValue > 60 ? "instrument-warning" : "instrument-fill" });
+    if (voidValue > 0) {
+      appendSvg(svg, "path", { d: `M238 42 L266 75 L238 108 Z`, class: "instrument-warning-thin" });
+    }
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "The Hist");
+  };
+
+  const renderAncestorInstrument = (slot, inst = {}) => {
+    const data = inst.data || {};
+    const depthValue = data.depth !== undefined ? data.depth : inst.tier;
+    const depth = clamp(depthValue, 0, 3);
+    const svg = makeInstrumentSvg();
+    appendSvg(svg, "path", { d: "M88 124 V54 Q150 18 212 54 V124", class: "instrument-outline" });
+    [0, 1, 2].forEach((index) => {
+      const x = 112 + index * 38;
+      appendSvg(svg, "path", { d: `M${x} 68 Q${x + 16} 54 ${x + 32} 68 Q${x + 32} 104 ${x + 16} 114 Q${x} 104 ${x} 68 Z`, class: depth > index ? "instrument-fill-soft" : "instrument-muted" });
+      appendSvg(svg, "circle", { cx: x + 10, cy: "82", r: "2", class: "instrument-dark" });
+      appendSvg(svg, "circle", { cx: x + 22, cy: "82", r: "2", class: "instrument-dark" });
+    });
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "Ancestor layer");
+  };
+
+  const renderForgeInstrument = (slot, inst = {}) => {
+    const svg = makeInstrumentSvg();
+    const heat = clamp01(inst.primary || 0.5);
+    appendSvg(svg, "path", { d: "M92 110 H208 L226 128 H74 Z", class: "instrument-fill-soft" });
+    appendSvg(svg, "path", { d: "M122 102 H178 L194 112 H106 Z", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: `M150 ${96 - heat * 24} C128 82 136 58 150 44 C164 58 172 82 150 ${96 - heat * 24} Z`, class: heat > 0.7 ? "instrument-fill" : "instrument-outline" });
+    appendSvg(svg, "path", { d: "M92 92 C70 74 72 50 92 34", class: "instrument-thin" });
+    appendSvg(svg, "path", { d: "M208 92 C230 74 228 50 208 34", class: "instrument-thin" });
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "Malacath");
+  };
+
+  const renderSectsInstrument = (slot, inst = {}) => {
+    const data = inst.data || {};
+    const active = text(data.sect || inst.state, "").toLowerCase();
+    const svg = makeInstrumentSvg();
+    ["crown", "forebear", "ash'abah"].forEach((sect, index) => {
+      const x = 82 + index * 68;
+      const selected = active.indexOf(sect.replace("'", "")) >= 0 || (sect === "ash'abah" && active.indexOf("ash") >= 0);
+      appendSvg(svg, "path", { d: `M${x} 40 C${x + 16} 70 ${x + 12} 98 ${x} 122 C${x - 12} 98 ${x - 16} 70 ${x} 40 Z`, class: selected ? "instrument-fill-soft" : "instrument-muted" });
+      appendSvg(svg, "path", { d: `M${x - 18} 120 H${x + 18}`, class: "instrument-thin" });
+      if (selected) appendSvg(svg, "circle", { cx: x, cy: "82", r: "30", class: "instrument-outline" });
+    });
+    appendSvg(svg, "path", { d: "M60 130 C110 112 190 112 240 130", class: "instrument-thin" });
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "Yokudan path");
+  };
+
+  const renderBranchInstrument = (slot, inst = {}) => {
+    const data = inst.data || {};
+    const rings = clamp(data.evidenceDays || inst.tier || 1, 1, 3);
+    const svg = makeInstrumentSvg();
+    appendSvg(svg, "path", { d: "M82 120 C126 100 174 70 220 30", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: "M174 64 q38 -28 56 -12 q-22 30 -56 12 Z", class: "instrument-fill-soft" });
+    for (let i = 0; i < rings; i += 1) {
+      appendSvg(svg, "path", { d: `M${88 - i * 8} 124 A ${28 + i * 8} ${20 + i * 5} 0 0 1 ${134 + i * 8} 124`, class: "instrument-thin" });
+    }
+    if (data.pactBound) {
+      appendSvg(svg, "path", { d: "M122 100 L142 112 M138 88 L158 100 M154 76 L174 88", class: "instrument-warning-thin" });
+    }
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "Green Pact");
+  };
+
+  const instrumentRenderers = {
+    piety: renderPietyInstrument,
+    lunar: renderLunarInstrument,
+    hist: renderHistInstrument,
+    ancestor: renderAncestorInstrument,
+    forge: renderForgeInstrument,
+    sects: renderSectsInstrument,
+    branch: renderBranchInstrument,
+  };
+
+  const pietyInstrumentFromState = () => ({
+    kind: "piety",
+    tier: state.tier,
+    tierLabel: state.tierLabel,
+    primary: clamp(state.piety, 0, 150) / 150,
+    state: text(state.tierLabel, tierName(state.tier)),
+    data: { piety: state.piety, pietyToday: state.pietyToday },
+  });
+
+  const renderInstrument = () => {
+    if (!nodes.instrumentArt) return;
+    clear(nodes.instrumentArt);
+    const inst = state.instrument && typeof state.instrument === "object"
+      ? state.instrument
+      : pietyInstrumentFromState();
+    const kind = text(inst.kind, "piety").toLowerCase();
+    const renderer = instrumentRenderers[kind] || renderPietyInstrument;
+    if (nodes.instrument) {
+      nodes.instrument.setAttribute("data-instrument-kind", instrumentRenderers[kind] ? kind : "piety");
+    }
+    renderer(nodes.instrumentArt, inst);
+  };
+
   const eventAliases = {
     piety: "favor",
     gain: "favor",
@@ -224,6 +494,19 @@
     tier_up: "tier",
     tier_change: "tier",
     rival: "rivalry",
+    path_shift: "shift",
+    mode_change: "shift",
+    track_shift: "shift",
+    daedric_boon: "daedric",
+    daedric_price: "daedric",
+    daedric_lapse: "daedric",
+    daedric_residue: "daedric",
+    curse_onset: "curse",
+    curse_cure: "curse",
+    curse_shift: "curse",
+    substrate_act: "substrate",
+    substrate_deepen: "substrate",
+    substrate_thin: "substrate",
   };
 
   const eventName = (payload = {}) => {
@@ -257,6 +540,24 @@
     if (!normalized.rival) {
       normalized.rival = text(payload.rivalName, "");
     }
+    if (!normalized.shiftMode) {
+      normalized.shiftMode = text(payload.shiftMode || payload.mode || payload.state, "");
+    }
+    if (!normalized.prince) {
+      normalized.prince = text(payload.prince || payload.daedra || payload.daedricPrince, "");
+    }
+    if (!normalized.phase) {
+      normalized.phase = text(payload.phase || payload.daedricPhase, "");
+    }
+    if (!normalized.curse) {
+      normalized.curse = text(payload.curse || payload.curseType, "");
+    }
+    if (!normalized.substrate) {
+      normalized.substrate = text(payload.substrate, "");
+    }
+    if (!normalized.state) {
+      normalized.state = text(payload.state, "");
+    }
 
     return normalized;
   };
@@ -269,6 +570,23 @@
   };
 
   const contextName = (payload = {}) => text(payload.context, "");
+
+  const curseLabel = (payload = {}) => {
+    const curse = text(payload.curse, "").toLowerCase();
+    if (curse === "vampire") return "Vampirism";
+    if (curse === "werewolf") return "Lycanthropy";
+    return "The curse";
+  };
+
+  const substrateName = (payload = {}) => {
+    const s = text(payload.substrate, "").toLowerCase();
+    if (s === "lunar") return "The moons";
+    if (s === "hist") return "The Hist";
+    if (s === "ancestor") return "Your ancestors";
+    if (s === "stronghold") return "The stronghold";
+    if (s === "sect") return "Your sect";
+    return "Your path";
+  };
 
   const eventLanguage = {
     favor: {
@@ -314,6 +632,144 @@
       listTitle: () => "Rivalry stirred",
       listText: (payload) => `${text(payload.rival || payload.rivalName, "A rival path")} has taken note.`,
     },
+    shift: {
+      tone: () => "neutral",
+      symbol: (payload) => text(payload.symbol, "journal"),
+      title: (payload) => {
+        const mode = text(payload.shiftMode, "");
+        return mode ? `Path settles: ${mode}` : "Your path shifts";
+      },
+      message: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const mode = text(payload.shiftMode, "");
+        return mode
+          ? `${mode} shapes what comes next.`
+          : "Your practice has found a new shape.";
+      },
+      listTitle: (payload) => text(payload.shiftMode, "Path shift"),
+      listText: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const mode = text(payload.shiftMode, "");
+        return mode
+          ? `${mode} is now the shape of your practice.`
+          : "Your path has settled into a new mode.";
+      },
+    },
+    daedric: {
+      tone: (payload) => {
+        const phase = text(payload.phase, "");
+        if (phase === "boon") return "good";
+        if (phase === "residue") return "neutral";
+        return "warning";
+      },
+      symbol: (payload) => text(payload.symbol, "journal"),
+      title: (payload) => {
+        const prince = text(payload.prince, "A Daedric Prince");
+        const phase = text(payload.phase, "");
+        if (phase === "boon") return `${prince} is satisfied`;
+        if (phase === "price") return `${prince}'s price stirs`;
+        if (phase === "lapse") return `${prince}'s hold breaks`;
+        if (phase === "residue") return "Residue lingers";
+        return `${prince} takes note`;
+      },
+      message: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const phase = text(payload.phase, "");
+        const prince = text(payload.prince, "The Prince");
+        if (phase === "boon") return "The rite was answered.";
+        if (phase === "price") return `${possessive(prince)} cost is rising.`;
+        if (phase === "lapse") return "The path has been released.";
+        if (phase === "residue") return "The mark has not fully faded.";
+        return "Something stirs in that quarter.";
+      },
+      listTitle: (payload) => {
+        const prince = text(payload.prince, "Daedric");
+        const phase = text(payload.phase, "");
+        if (phase === "boon") return `${prince}: boon`;
+        if (phase === "price") return `${prince}: price`;
+        if (phase === "lapse") return `${prince}: lapse`;
+        if (phase === "residue") return `${prince}: residue`;
+        return `${prince}: contact`;
+      },
+      listText: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const phase = text(payload.phase, "");
+        return phase === "boon"
+          ? "The rite was counted."
+          : "The Prince has noticed.";
+      },
+    },
+    curse: {
+      tone: (payload) => (text(payload.phase, "") === "cure" ? "good" : "warning"),
+      symbol: (payload) => text(payload.symbol, "journal"),
+      title: (payload) => {
+        const curse = curseLabel(payload);
+        const phase = text(payload.phase, "");
+        if (phase === "onset") return `${curse} takes hold`;
+        if (phase === "cure") return `${curse} is lifted`;
+        if (phase === "shift") return "The curse changes shape";
+        return "A curse stirs";
+      },
+      message: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const phase = text(payload.phase, "");
+        const curse = curseLabel(payload);
+        if (phase === "onset") return `${curse} has taken root in your blood.`;
+        if (phase === "cure") return `${curse} has been driven out.`;
+        if (phase === "shift") return "One curse gives way to another.";
+        return "Something has changed in your blood.";
+      },
+      listTitle: (payload) => {
+        const curse = curseLabel(payload);
+        const phase = text(payload.phase, "");
+        if (phase === "cure") return `${curse}: lifted`;
+        if (phase === "shift") return "Curse shifted";
+        return `${curse}: onset`;
+      },
+      listText: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        return text(payload.phase, "") === "cure"
+          ? "The mark has been lifted."
+          : "The curse weighs on your devotion.";
+      },
+    },
+    substrate: {
+      tone: (payload) => (text(payload.phase, "") === "thin" ? "warning" : "good"),
+      symbol: (payload) => text(payload.symbol, "journal"),
+      title: (payload) => {
+        const name = substrateName(payload);
+        const phase = text(payload.phase, "");
+        if (phase === "deepen") return `${name} deepen`;
+        if (phase === "thin") return `${name} thin`;
+        return `${name} answer`;
+      },
+      message: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        const name = substrateName(payload);
+        const phase = text(payload.phase, "");
+        if (phase === "deepen") return `${name} hold you more strongly now.`;
+        if (phase === "thin") return `${name} are slipping from you.`;
+        return `${name} marked what you did.`;
+      },
+      listTitle: (payload) => {
+        const state = text(payload.state, "");
+        return state || substrateName(payload);
+      },
+      listText: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        return text(payload.phase, "") === "thin"
+          ? `${substrateName(payload)} need tending.`
+          : `${substrateName(payload)} are with you.`;
+      },
+    },
   };
 
   const resolveEventPayload = (payload = {}) => {
@@ -329,7 +785,8 @@
     }
 
     const resolved = { ...normalized, event: name };
-    resolved.tone = text(normalized.tone, language.tone);
+    const languageTone = typeof language.tone === "function" ? language.tone(normalized) : language.tone;
+    resolved.tone = text(normalized.tone, languageTone);
     resolved.symbol = text(normalized.symbol, language.symbol(normalized));
     resolved.title = text(normalized.title, language.title(normalized));
     resolved.message = text(normalized.message, language.message(normalized));
@@ -359,9 +816,14 @@
 
   const renderStartupDetails = (option) => {
     if (!option) return;
+    const detailMark = nodes.startupOptionTitle.parentElement.querySelector(".startup-detail-mark");
+    if (detailMark) {
+      detailMark.remove();
+    }
     nodes.startupOptionTitle.textContent = text(option.title, "Path");
     nodes.startupOptionSummary.textContent = text(option.summary, "");
     nodes.startupOptionDescription.textContent = text(option.description, "");
+    nodes.startupAdvisory.classList.remove("is-disabled");
   };
 
   const renderStartup = (startup = {}) => {
@@ -413,6 +875,118 @@
     });
 
     renderStartupDetails(selectedOption);
+    nodes.startupModal.hidden = false;
+    document.body.classList.add("startup-visible");
+  };
+
+  const medallionOptionStatus = (option = {}) => {
+    if (option.selectable === true) return "Ready to choose";
+    return text(option.disabled_reason || option.disabledReason, "Not ready yet");
+  };
+
+  const renderMedallionDetails = (medallion, option) => {
+    if (!option) return;
+    const detail = nodes.startupOptionTitle.parentElement;
+    let mark = detail.querySelector(".startup-detail-mark");
+    if (!mark) {
+      mark = document.createElement("div");
+      mark.className = "startup-detail-mark";
+      detail.insertBefore(mark, nodes.startupOptionTitle);
+    }
+
+    renderSymbol(mark, text(option.symbol, "journal"));
+    nodes.startupOptionTitle.textContent = text(option.title, "Devotion");
+    nodes.startupOptionSummary.textContent = text(option.summary, "");
+    nodes.startupOptionDescription.textContent = text(option.description, "");
+    nodes.startupAdvisory.textContent = option.selectable === true
+      ? text(medallion.advisory_line, "Choosing is only safe for live, scorable entries.")
+      : medallionOptionStatus(option);
+    nodes.startupAdvisory.classList.toggle("is-disabled", option.selectable !== true);
+    nodes.startupConfirm.textContent = option.selectable === true ? "Selectable" : "Pending";
+  };
+
+  const createMedallionOptionButton = (option, selectedOption, onSelect) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "startup-option has-symbol";
+    button.dataset.optionId = text(option.option_id || option.optionId, "");
+    button.setAttribute("aria-disabled", option.selectable === true ? "false" : "true");
+
+    if (option.selectable !== true) {
+      button.classList.add("is-disabled");
+    }
+
+    const mark = document.createElement("span");
+    mark.className = "list-symbol";
+    renderSymbol(mark, text(option.symbol, "journal"));
+
+    const content = document.createElement("span");
+    const title = document.createElement("strong");
+    title.textContent = text(option.title, "Devotion");
+    const summary = document.createElement("span");
+    summary.textContent = option.selectable === true
+      ? text(option.summary, "")
+      : medallionOptionStatus(option);
+    content.append(title, summary);
+    button.append(mark, content);
+
+    button.addEventListener("click", () => onSelect(option));
+
+    if (text(option.option_id || option.optionId, "") === text(selectedOption.option_id || selectedOption.optionId, "")) {
+      button.classList.add("is-active");
+    }
+
+    return button;
+  };
+
+  const renderMedallion = (medallion = {}) => {
+    if (!nodes.startupModal) return;
+    startupState = medallion;
+
+    const sections = asArray(medallion.sections).filter(Boolean);
+    const options = sections.flatMap((section) => asArray(section.entries || section.options).filter(Boolean));
+    const fallbackOption = options[0] || {
+      option_id: "medallion_context",
+      title: "Devotion",
+      summary: text(medallion.summary, ""),
+      description: text(medallion.summary, ""),
+      symbol: "journal",
+      selectable: false,
+      disabled_reason: "No medallion entries are available yet.",
+    };
+    const activeOptionId = text(medallion.active_option_id || medallion.default_option_id, "");
+    let selectedOption = options.find((option) => text(option.option_id || option.optionId, "") === activeOptionId)
+      || options.find((option) => option.selectable === true)
+      || fallbackOption;
+
+    nodes.startupTitle.textContent = text(medallion.title, "Medallion");
+    nodes.startupSummary.textContent = text(medallion.summary, "Choose from the roster your people can name.");
+    nodes.startupMode.textContent = "Medallion";
+
+    clear(nodes.startupOptions);
+    sections.forEach((section) => {
+      const sectionNode = document.createElement("section");
+      sectionNode.className = "medallion-section";
+
+      const heading = document.createElement("h4");
+      heading.textContent = text(section.title, "Roster");
+      sectionNode.appendChild(heading);
+
+      asArray(section.entries || section.options).filter(Boolean).forEach((option) => {
+        const button = createMedallionOptionButton(option, selectedOption, (nextOption) => {
+          selectedOption = nextOption;
+          renderMedallionDetails(medallion, selectedOption);
+          nodes.startupOptions.querySelectorAll(".startup-option").forEach((candidate) => {
+            candidate.classList.toggle("is-active", candidate.dataset.optionId === text(nextOption.option_id || nextOption.optionId, ""));
+          });
+        });
+        sectionNode.appendChild(button);
+      });
+
+      nodes.startupOptions.appendChild(sectionNode);
+    });
+
+    renderMedallionDetails(medallion, selectedOption);
     nodes.startupModal.hidden = false;
     document.body.classList.add("startup-visible");
   };
@@ -553,6 +1127,7 @@
     nodes.driftLabel.textContent = text(state.driftLabel, fallbackState.driftLabel);
     nodes.dawnStatus.textContent = text(state.dawnStatus, fallbackState.dawnStatus);
 
+    renderInstrument();
     renderRelations(state.relations);
     renderList(nodes.acts, state.acts || state.recentActs, "No devotional acts have been recorded today.");
     renderList(nodes.rites, state.rites, "No rites are available yet.");
@@ -609,11 +1184,15 @@
       renderStartup(payload.startup);
     }
 
+    if (payload.medallion) {
+      renderMedallion(payload.medallion);
+    }
+
     if (payload.mode === "toast") {
       return;
     }
 
-    if (payload.mode === "startup") {
+    if (payload.mode === "startup" || payload.mode === "medallion") {
       return;
     }
 
@@ -631,6 +1210,10 @@
 
     if (payload.startup) {
       renderStartup(payload.startup);
+    }
+
+    if (payload.medallion) {
+      renderMedallion(payload.medallion);
     }
   };
 
@@ -667,10 +1250,28 @@
     });
   };
 
+  const parsePayload = (payloadText) => {
+    if (typeof payloadText !== "string") {
+      return payloadText || {};
+    }
+
+    const textPayload = payloadText || "{}";
+    try {
+      return JSON.parse(textPayload);
+    } catch (error) {
+      const normalizedPayload = textPayload.replace(/\b(TRUE|FALSE)\b/g, (match) => match.toLowerCase());
+      if (normalizedPayload === textPayload) {
+        throw error;
+      }
+
+      return JSON.parse(normalizedPayload);
+    }
+  };
+
   window.PDVBridge = {
     receiveJson(payloadText) {
       try {
-        const payload = typeof payloadText === "string" ? JSON.parse(payloadText || "{}") : payloadText || {};
+        const payload = parsePayload(payloadText);
         document.body.classList.add("panel-visible");
         handlePayload(payload);
       } catch (error) {
@@ -680,7 +1281,7 @@
     },
     receiveOverlayJson(payloadText) {
       try {
-        const payload = typeof payloadText === "string" ? JSON.parse(payloadText || "{}") : payloadText || {};
+        const payload = parsePayload(payloadText);
         handleOverlayPayload(payload);
       } catch (error) {
         showToast({
@@ -708,6 +1309,70 @@
     neglect: { event: "neglect", deity: "Kyne" },
     tier: { event: "tier", deity: "Kyne", symbol: "kyne", tierLabel: "Devoted" },
     rivalry: { event: "rivalry", rival: "Auri-El", rivalSymbol: "auri-el" },
+    shift_khajiit: { event: "shift", shiftMode: "Khenarthi", symbol: "khenarthi" },
+    shift_argonian: { event: "shift", shiftMode: "Hist Strained", symbol: "hist" },
+    shift_orc: { event: "shift", shiftMode: "Stronghold", symbol: "malacath" },
+    shift_redguard: { event: "shift", shiftMode: "Crown" },
+    shift_bosmer: { event: "shift", shiftMode: "Old Contract", symbol: "yffre" },
+    daedric_boon: { event: "daedric", prince: "Hircine", phase: "boon", symbol: "hircine" },
+    daedric_price: { event: "daedric", prince: "Hircine", phase: "price", symbol: "hircine", context: "Stigma has been rising." },
+    daedric_lapse: { event: "daedric", prince: "Hircine", phase: "lapse", symbol: "hircine" },
+    daedric_residue: { event: "daedric", prince: "Hircine", phase: "residue", symbol: "hircine" },
+    curse_onset_vampire: { event: "curse", phase: "onset", curse: "vampire", symbol: "curse-vampire", context: "Sovngarde is closed while the thirst remains." },
+    curse_cure_vampire: { event: "curse", phase: "cure", curse: "vampire", symbol: "curse-vampire", context: "The road opens again. The scar remains." },
+    curse_onset_werewolf: { event: "curse", phase: "onset", curse: "werewolf", symbol: "curse-werewolf", context: "The hunt pulls against Sovngarde." },
+    curse_shift: { event: "curse", phase: "shift", curse: "vampire", symbol: "curse-vampire" },
+    substrate_lunar: { event: "substrate", substrate: "lunar", phase: "act", symbol: "lunar", state: "Lattice: steady" },
+    substrate_deepen: { event: "substrate", substrate: "hist", phase: "deepen", symbol: "hist", state: "Hist: strong" },
+    substrate_thin: { event: "substrate", substrate: "ancestor", phase: "thin", symbol: "ancestor", state: "Ancestor layer: quiet" },
+  };
+
+  const demoMedallionPayload = {
+    mode: "medallion",
+    medallion: {
+      race_id: "altmer",
+      title: "Altmer Medallion",
+      summary: "The medallion shows the native roster. Only live, scorable entries can be chosen.",
+      active_option_id: "auri-el",
+      advisory_line: "A selectable entry is already wired into the live devotion roster.",
+      sections: [
+        {
+          section_id: "native",
+          title: "Native worship",
+          entries: [
+            {
+              option_id: "auri-el",
+              title: "Auri-El",
+              summary: "The founding light and ancestral ascent.",
+              description: "Auri-El is live and scorable in the current deity roster.",
+              symbol: "auri-el",
+              kind: "god",
+              selectable: true,
+            },
+            {
+              option_id: "syrabane",
+              title: "Syrabane",
+              summary: "Magic, craft, and survival through wisdom.",
+              description: "Syrabane belongs in the Altmer native roster, but is not yet a live scoring patron.",
+              symbol: "syrabane",
+              kind: "god",
+              selectable: false,
+              disabled_reason: "Awaiting live deity record and scoring path.",
+            },
+            {
+              option_id: "trinimac",
+              title: "Trinimac",
+              summary: "Warrior order and unbroken nobility.",
+              description: "Trinimac belongs in the Altmer native roster, but is not yet a live scoring patron.",
+              symbol: "trinimac",
+              kind: "god",
+              selectable: false,
+              disabled_reason: "Awaiting live deity record and scoring path.",
+            },
+          ],
+        },
+      ],
+    },
   };
 
   window.PDVDemo = () => {
@@ -750,6 +1415,10 @@
     });
   };
 
+  window.PDVDemoMedallion = () => {
+    window.PDVBridge.receiveOverlayJson(demoMedallionPayload);
+  };
+
   render(fallbackState);
 
   if (new URLSearchParams(window.location.search).has("demo")) {
@@ -758,8 +1427,15 @@
     renderSymbolGallery();
     nodes.demoControls.addEventListener("click", (event) => {
       const button = event.target.closest("[data-demo-toast]");
-      if (!button) return;
-      showToast(demoToasts[button.dataset.demoToast]);
+      if (button) {
+        showToast(demoToasts[button.dataset.demoToast]);
+        return;
+      }
+
+      const medallionButton = event.target.closest("[data-demo-medallion]");
+      if (medallionButton) {
+        window.PDVDemoMedallion();
+      }
     });
     window.setTimeout(() => window.PDVDemo(), 250);
   }

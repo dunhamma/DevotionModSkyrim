@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "output_path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/ExampleMod_PlatformV2Proof.esp",
+  "records_written": 1,
+  "successful_count": 1,
+  "failed_count": 0,
+  "details": [
+    {
+      "formid": "ExampleMod.esp:000901",
+      "record_type": "SPEL",
+      "op": "override",
+      "source": "ExampleMod.esp",
+      "modifications": {
+        "spells_added": 1
+      }
+    }
+  ],
+  "refresh_status": "complete"
+}

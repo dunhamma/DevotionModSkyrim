@@ -28,10 +28,16 @@ Latest result after all-race Survey source guard: PASS=2003, WARN=1, INFO=28
 Latest result after structured no-in-game gate guard: PASS=2160, WARN=1, INFO=28
 Latest result after structured manual-evidence intake guard: PASS=2322, WARN=1, INFO=28
 Latest result after CAT-6 Khajiit Tier 1 pilot readback: PASS=2342, WARN=1, INFO=28
+Latest result after all-race + Daedric beta-readiness refresh: PASS=2699, WARN=1, INFO=29
+Latest result after manifest-route and all-race reward-record wave: PASS=2814, WARN=1, INFO=29
 
 Runtime marker list:
 node .\tools\pdv_phase20_runtime_check.mjs --list
 Status: route markers list for Altmer, Argonian, Orc, Redguard, Khajiit, and Bosmer
+
+P2 book runtime check:
+node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager
+Latest result on 2026-06-04: FAIL overall; Breton Hidden Art passes, remaining filled P2 book families still need manager-log proof.
 ```
 
 The remaining verifier warning is the existing unnamed CK-authored INFO record
@@ -52,8 +58,16 @@ Structured no-in-game gate:
   ratified, promoted, read back, displayed or explicitly accepted as readback
   proof, synced to the handbook, and checked against the holistic race-effect
   review.
-- No Daedric runtime promotion wave until stigma row contract, Hircine/Molag Bal
-  curse-access template, and Prince promotion order are closed.
+- No Daedric runtime promotion wave until the locked D-18 per-Prince
+  content-ready checklist, CAT-6 target readback, and runtime/display proof are
+  complete for the relevant Prince. D-15 stigma, D-16 curse-access, and D-17
+  authoring order are closed; the remaining blocker is proof, not decision
+  design.
+- No beta-feel readiness claim until all ten races plus all sixteen
+  Skyrim-present Daedric Princes are represented in the readiness evidence.
+- No scan-only quest candidate is a live source. All ten races use
+  `PDV_Phase20_AllRaceSourceCuration_Runbook.md` before route/FormList fill or
+  empirical proof promotion.
 
 ## P0 Active Spine
 
@@ -69,16 +83,16 @@ Edge build: Exiled vampire, werewolf halt, or mortal-world pressure run.
 Normal-session route: dawn/study upkeep -> one explicit Lorkhan or crisis beat -> Survey/MCM readout -> recovery/scar check.
 Accepted hooks: dragonborn declaration route 51, Lorkhan pressure route 50, dawn steadiness route 52, orthodox costly enforcement route 53.
 Rejected hooks: ordinary travel, ordinary friendships, generic spellcasting, generic helping, generic combat, generic College membership, generic anti-Thalmor violence, repeated Dragonborn identity, vampire power route.
-Anti-farm result: source has explicit rejected-surface helper and repeat crisis rejection; still needs normal-play rejection proof outside QASmoke.
-Survey/status result: source now has Altmer-specific Survey/MCM readout for crisis, Lorkhan pressure, last favor, and curse posture; needs runtime display proof.
-Final placement result: QASmoke route proof exists; needs one dawn/study surface and one crisis/pressure surface outside QASmoke.
+Anti-farm result: source has explicit rejected-surface helper and repeat crisis rejection; manual check 2 is now recorded as passed in-game (2026-06-01), including generic anti-Thalmor silence plus repeat Dragonborn identity/vampire-power rejection behavior.
+Survey/status result: source now has Altmer-specific Survey/MCM readout for crisis, Lorkhan pressure, last favor, and curse posture; manual check 3 is now recorded as passed in-game (2026-06-01) with fiction-facing Survey wording.
+Immersive hook result: QASmoke route proof exists; needs dawn/study devotional context plus non-visible crisis/Lorkhan pressure hook proof outside QASmoke.
 Reward floor: coherent dawn/study play must trend net-positive before crisis rewards grow.
 Reward ceiling: Auri-El foundation plus one secondary focus plus one active contextual favor; ThalmorAlignment modifies access/pressure and is not a third boon engine.
 Stack snapshot: Auri-El foundation, secondary focus, active favor, crisis state, pressure count/source, ThalmorAlignment, vampire exile, werewolf halt, scar, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race altmer
 Next automatable action: add structured rejected-surface and placement-contract verifier coverage.
-Deferred manual proof: wrong-origin rejection, ordinary-life rejection, Survey display, Exiled vampire/werewolf status, and final-world placement.
-Blocking follow-up: prove normal-play rejected hooks, Survey display, Exiled vampire/werewolf status, and final placement.
+Deferred manual proof: immersive hook proof outside QASmoke, asset-status confirmation, plus stack snapshot and manual feel notes.
+Blocking follow-up: execute normal-play hook proof outside QASmoke and finish stack snapshot/manual feel evidence for Altmer.
 ```
 
 ### Altmer Content-Lock Reconciliation
@@ -116,14 +130,14 @@ Accepted hooks: moon observance route 10, road-home anchors route 33, Baan Dar r
 Rejected hooks: required visual moon inspection, moon-sugar use, manual focus entitlement, fast travel loop, one-bed camping, generic inn sleep, generic crime/theft, generic combat, generic dragon spam, ordinary night stealth.
 Anti-farm result: source tracks same-anchor road-home rejection and same-day diminishing multiplier; needs runtime proof that same-anchor repeats, generic theft, dragon spam, moon-sugar, and fast travel stay silent.
 Survey/status result: source now has Khajiit-specific Survey/MCM readout for Lunar Lattice, moon practice, road-home cadence, and active focus; needs runtime display proof.
-Final placement result: QASmoke route proof exists; needs one moon/road surface near travel/rest and one behavior-specific focus surface outside QASmoke.
+Immersive hook result: QASmoke route proof exists; needs lunar/rest or road-home context plus behavior-specific Baan Dar/Rajhin/Alkosh focus hook proof outside QASmoke.
 Reward floor: broad lunar Faithful feels complete through road, sky, rest, and community without phase homework.
 Reward ceiling: lunar substrate plus one focused emphasis plus one active contextual favor; no third loud steady package.
 Stack snapshot: lunar metric/tier/phase/observance/road-home count, focused emphasis, five focus weights, last road-home anchor, repeat rejection count, active favor, lunar posture, ShadowDrift/curse pressure, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race khajiit
-Next automatable action: run the holistic race-by-race effect review before using the CAT-6 Khajiit Tier 1 pilot mechanics as broader reward precedent.
-Deferred manual proof: same-anchor rejection, generic theft/dragon/moon-sugar silence, Survey display, and final road/moon placement.
-Blocking follow-up: prove anti-chore behavior; CAT-6 Khajiit Tier 1 now has a live pilot-provisional framework record, but it is grant-unwired and cannot stand in for Khajiit runtime reward proof.
+Next automatable action: none for reward authoring; all-race T1 record and grant wiring is contract-owned and verifier/readback clean.
+Deferred manual proof: same-anchor rejection, generic theft/dragon/moon-sugar silence, Survey display, immersive road/moon/focus hook proof, Active Effects display, save/load behavior, and asset-status confirmation.
+Blocking follow-up: prove anti-chore behavior and Khajiit reward feel in game; the reward is wired, but automated proof does not stand in for runtime display, stack, or balance proof.
 ```
 
 ### Argonian
@@ -140,13 +154,13 @@ Accepted hooks: Hist maintenance route 60, People support route 61, Void signal 
 Rejected hooks: generic swimming loops, standing in water forever, ordinary travel, generic inn sleep, same-bed repetition, generic stealth, ordinary kills, generic murder, one Dark Brotherhood join as full Sithis activation.
 Anti-farm result: source has same-day repeat multiplier, three-day Hist decay grace, non-curse floor, and three-signal Void threshold; needs normal-play proof.
 Survey/status result: source now replaces numeric Hist/People/Void values with fiction-facing layer labels and bed/Sithis notes; needs runtime display proof.
-Final placement result: QASmoke route proof exists; needs one Hist/People maintenance surface and one community/death-rite surface outside QASmoke.
+Immersive hook result: QASmoke route proof exists; needs Hist water/rest, People community, and thresholded Void/death-change hook proof outside QASmoke.
 Reward floor: non-assassin Argonian maintains identity through water, rest, reflection, bed of choice, and community aid.
 Reward ceiling: Hist substrate plus one strongest support emphasis: People/community or Void/Sithis; Void never replaces Hist.
 Stack snapshot: Hist, People, Void, posture, bed cadence, active favor, curse state, Sithis signal count, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race argonian
 Next automatable action: write Arkay/death-rite and community recognition contracts before deeper Void rewards.
-Deferred manual proof: Hist/People floor, swimming/sleep/murder rejection, Survey display, and final water/community placement.
+Deferred manual proof: Hist/People floor, swimming/sleep/murder rejection, Survey display, immersive water/community/Void hook proof, and asset-status confirmation.
 Blocking follow-up: prove Hist/People floor, rejected hooks, Arkay/death-rite reaction, and Survey display.
 ```
 
@@ -164,13 +178,13 @@ Accepted hooks: Stronghold forge route 70, City dignity route 71, Legion service
 Rejected hooks: raw craft count, generic kill/dungeon clear, ordinary city presence, ambient insult parsing, raw barter, Legion membership alone, generic patrol, MCM-only mode choice.
 Anti-farm result: daily repeat multiplier exists; needs quality/value/context proof and generic craft/combat/membership rejection proof.
 Survey/status result: source names mode, standing, and curse pressure; needs last accepted favor/reason clarity before pass.
-Final placement result: QASmoke route proof exists; needs one Stronghold/craft and one City or Legion/Exile surface outside QASmoke.
+Immersive hook result: QASmoke route proof exists; needs Stronghold quality-craft, City/self-made dignity, and Legion/Exile service hook proof outside QASmoke.
 Reward floor: City and Legion/Exile dignity, service, quality labor, and self-made belonging without Blood-Kin.
 Reward ceiling: one active life-mode lane; Stronghold steadier, City and Legion/Exile sharper, no second substrate.
 Stack snapshot: life mode, mode lockout, Stronghold/City/Legion weights, active favor, craft/service/community proof, last mode reason, curse state, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race orc
 Next automatable action: add quality forge and City/Legion contract rows to the costing backlog.
-Deferred manual proof: raw craft/combat/faction rejection, Survey display, and final Stronghold/City/Legion placement.
+Deferred manual proof: raw craft/combat/faction rejection, Survey display, immersive Stronghold/City/Legion hook proof, and asset-status confirmation.
 Blocking follow-up: prove parity routes and raw craft/combat rejection before increasing Malacath rewards.
 ```
 
@@ -188,13 +202,13 @@ Accepted hooks: Crown route 80, Forebear route 81, Ash'abah route 82, Far Shores
 Rejected hooks: menu choice without play, generic combat/body count, generic undead spam, Arkay replacement, generic amulet use, gold-making, fast travel, broad simulated stigma.
 Anti-farm result: daily proof routes exist; needs fast-travel rejection, undead site/boss limits, HoonDing cap, Far Shores daily cap, and no Arkay substitution proof.
 Survey/status result: source now names sect, standing, Far Shores token weight, and curse-cycle pressure without raw numbers; needs runtime display proof.
-Final placement result: QASmoke route proof exists; needs one sect surface and one Far Shores/death-duty surface outside QASmoke.
+Immersive hook result: QASmoke route proof exists; needs Crown/Forebear sect, Ash'abah/Far Shores death-duty, and HoonDing cap hook proof outside QASmoke.
 Reward floor: Crown/Forebear form, road, contract, martial conduct, and recognition without undead farming.
 Reward ceiling: broad sect worship reaches Faithful; Devoted requires focused primary; Far Shores supports, not a third boon engine.
 Stack snapshot: sect, active favor, Far Shores token, HoonDing marker, Ash'abah burden, last sect reason, curse state, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race redguard
 Next automatable action: add HoonDing cap and Ash'abah stigma contracts before reward expansion.
-Deferred manual proof: fast-travel/undead/combat rejection, Survey display, and final sect/death-duty placement.
+Deferred manual proof: fast-travel/undead/combat rejection, Survey display, immersive sect/death-duty/HoonDing hook proof, and asset-status confirmation.
 Blocking follow-up: prove rejected hooks and define HoonDing cap before expanding death-duty rewards.
 ```
 
@@ -212,23 +226,23 @@ Accepted hooks: Old Contract routes 100-101, Living Story routes 102-103, Exchan
 Rejected hooks: one generic Bosmer favor, generic kindness, generic bard activity, generic forest travel, generic trade profit, random vengeance, raw theft, generic crime, repeated theft, broad plant detection without tag evidence.
 Anti-farm result: daily route keys and Bandit Road reversal cooldown exist; needs generic commerce/theft/forest/kindness rejection proof and Green Pact tag coverage before item punishment.
 Survey/status result: source now has Bosmer-specific Survey/MCM readout for path, standing, Pact binding/lapse, and recent favor memory; needs runtime display proof.
-Final placement result: QASmoke route proof exists; needs at least one non-hunter proof surface outside QASmoke before Green Pact tag expansion.
+Immersive hook result: QASmoke route proof exists; needs Living Story, Exchange, and Bandit Road/Pact-pressure hook proof outside QASmoke before Green Pact tag expansion.
 Reward floor: Living Story, Exchange, or Bandit Road recognition before item-tag work.
 Reward ceiling: Old Contract can have the hardest burden/high ceiling, but cannot be the only emotionally rewarding path.
 Stack snapshot: path, PactBound/compliance/lapse, active favor counters, offered/pending state, path-switch state, Bandit Road reversal cooldown, curse state, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race bosmer
-Next automatable action: write Green Pact tag coverage and non-hunter final placement contracts before item expansion.
-Deferred manual proof: generic commerce/theft/forest/kindness rejection, Survey display, and final non-hunter placement.
+Next automatable action: curate exact sources and empirically prove all four Bosmer path contracts, including Old Contract proper hunt/forest kept, before Green Pact item expansion.
+Deferred manual proof: generic commerce/theft/forest/kindness rejection, Survey display, immersive non-hunter/Bandit Road hook proof, and asset-status confirmation.
 Blocking follow-up: prove Bosmer Survey display and generic commerce/theft/forest/kindness rejection before the race can pass pre-beta feel.
 ```
 
-## P2 Audit-Only Lanes
+## P2 Full End-State Wiring With Stack Audit Lanes
 
 ### Breton
 
 ```text
 Race: Breton
-Lane type: P2 audit-only
+Lane type: P2 full end-state wiring with stack audit
 Verdict: Fail - runtime/manual proof deferred
 No-in-game status: Planning-Ready
 Expected build: one chosen tradition: Knight's Road, Hidden Art, or Green Way.
@@ -237,16 +251,16 @@ Rejected hooks: casual tradition switching, generic spellcasting, generic Daedri
 Survey/status result: source now has Breton-specific Survey/MCM readout for tradition, vow, exposure, DruidicStanding, standing, and curse posture; needs runtime display proof and real tradition-track writes before pass.
 Reward ceiling: one tradition spine plus one focused patron; other tracks modify, gate, rupture, or penalize.
 Stack snapshot: tradition, WitchcraftExposure, KnightlyVowIntegrity, DruidicStanding, patron focus, active favor, curse fork, Daedric modifiers.
-Next automatable action: add tradition readback and Hidden Art cost verifier contracts before any reward volume.
-Deferred manual proof: tradition Survey display, rejected spell/artifact/help loops, and expected/edge stack audit.
-Blocking follow-up: no new Breton reward volume until tradition readback, Hidden Art cost, and rejected hooks are proven.
+Next automatable action: run the strict immersive-hook verifier, then wire tradition readback, Knight's Road, Hidden Art, and Green Way hook contracts.
+Deferred manual proof: tradition Survey display, rejected spell/artifact/help loops, immersive hook proof, asset-status confirmation, and expected/edge stack audit.
+Blocking follow-up: no Breton pass or reward expansion until tradition readback, Hidden Art cost, rejected hooks, and stack audit are proven.
 ```
 
 ### Dunmer
 
 ```text
 Race: Dunmer
-Lane type: P2 audit-only
+Lane type: P2 full end-state wiring with stack audit
 Verdict: Fail - runtime/manual proof deferred
 No-in-game status: Planning-Ready
 Expected build: ash-prayer and ancestor practice into one Reclamation focus.
@@ -255,16 +269,16 @@ Rejected hooks: generic crime as Mephala, generic cruelty as Boethiah, generic t
 Survey/status result: source now has Dunmer-specific Survey/MCM readout for ancestor layer, portable ash-prayer, private home rite, standing, and curse posture; needs runtime display proof and future Reclamation/deviation price surfacing before pass.
 Reward ceiling: ancestor substrate is identity/utility; Reclamation focus is the loud foreground; deviations carry visible price.
 Stack snapshot: ancestor substrate, posture, Reclamation focus, active favor, portable/home bonus, deviation price, curse state, Daedric modifiers.
-Next automatable action: write deviation-price and overstack verifier contracts before new Dunmer rewards.
-Deferred manual proof: ancestor/Reclamation stack audit, rejected generic Daedric behavior, and Survey display.
-Blocking follow-up: no new Dunmer reward volume until overstack risk is audited.
+Next automatable action: run the strict immersive-hook verifier, then wire portable ash-prayer/home rite, Reclamation focus, and deviation-price hook contracts.
+Deferred manual proof: ancestor/Reclamation stack audit, rejected generic Daedric behavior, Survey display, immersive hook proof, and asset-status confirmation.
+Blocking follow-up: no Dunmer pass or reward expansion until overstack risk and deviation-price behavior are audited.
 ```
 
 ### Imperial
 
 ```text
 Race: Imperial
-Lane type: P2 audit-only
+Lane type: P2 full end-state wiring with stack audit
 Verdict: Fail - runtime/manual proof deferred
 No-in-game status: Planning-Ready
 Expected build: civic Nine Divines broad worship with concrete service.
@@ -273,16 +287,16 @@ Rejected hooks: faction membership, generic temple attendance, bounty payment al
 Survey/status result: source now has Imperial-specific Survey/MCM readout for civic faith, ConcordatStanding, Talos pressure tilt, repair gate, standing, and curse posture; needs runtime display proof and future civic favor explanation before pass.
 Reward ceiling: civic acts must remain concrete; ConcordatStanding modifies access or pressure, not a buff track.
 Stack snapshot: ConcordatStanding, public/private Talos state, primary patron, active civic favor, repair/rupture state, curse state, Daedric modifiers.
-Next automatable action: write civic act whitelist and rejected faction/attendance verifier contracts.
-Deferred manual proof: civic Survey display, faction/attendance rejection, public/private Talos edge stack.
-Blocking follow-up: no new civic surfaces until whitelisted civic acts and rejected faction/attendance tests are in the ledger.
+Next automatable action: run the strict immersive-hook verifier, then wire civic service, public/private Talos pressure, and focused patron civic hook contracts.
+Deferred manual proof: civic Survey display, faction/attendance rejection, public/private Talos edge stack, immersive hook proof, and asset-status confirmation.
+Blocking follow-up: no Imperial pass or civic reward expansion until whitelisted civic acts and rejected faction/attendance tests are in the ledger.
 ```
 
 ### Nord
 
 ```text
 Race: Nord
-Lane type: P2 audit-only control
+Lane type: P2 full end-state wiring with stack audit control
 Verdict: Fail - runtime/manual proof deferred
 No-in-game status: Readback-Ready
 Expected build: broad Old Ways into Kyne or Talos.
@@ -291,9 +305,9 @@ Rejected hooks: generic kill, generic travel, generic tomb clear, generic anti-T
 Survey/status result: strongest current surface; Nord has dedicated Survey and MCM mode labels. Needs shared stack snapshot and over-trigger evidence.
 Reward ceiling: broad blended favors stay softer than focused patron rewards; Kyne/Talos/Hircine cannot stack into a universal build.
 Stack snapshot: pantheon baseline, broad/focused state, primary patron, Kyne/Talos favor, Hircine price, vampire/scar state, active favor, Daedric modifiers.
-Next automatable action: add dense-hook rejection and Hircine/Kyne/Talos stack audit contracts.
-Deferred manual proof: over-trigger audit, generic hook rejection, and expected/edge stack snapshot.
-Blocking follow-up: no new Nord content volume until dense-hook rejection and Hircine/Kyne/Talos stack checks pass.
+Next automatable action: run the strict immersive-hook verifier, then wire broad/focused Old Ways, Kyne/Talos context, and Hircine/Arkay curse-edge hook contracts.
+Deferred manual proof: over-trigger audit, generic hook rejection, immersive hook proof, asset-status confirmation, and expected/edge stack snapshot.
+Blocking follow-up: no Nord pass or content expansion until dense-hook rejection and Hircine/Kyne/Talos stack checks pass.
 ```
 
 ## Scale-Gate Pilots
@@ -306,8 +320,8 @@ First candidate remains `PDV_Bless_Khajiit_Lunar_T1`.
 Status: Pilot-provisional record/readback-proven
 Source row: race-sheets/PDV_RaceContent_Manifest.md Section 14.3
 Reason: low-risk passive non-dialogue blessing description tied to the Khajiit contrast lane: Lunar Lattice, road-home, moon, and caravan identity
-Readback result: source row exists; PDV_Bless_Khajiit_Lunar_T1 is present in PlayerDevotion_Framework.esp as a pilot-provisional direct-framework CAT-6 record; its two night-gated MGEF effects also read back
-Blocking follow-up: keep the pilot grant-unwired and run holistic race-effect review before full reward authoring
+Readback result: source row exists; PDV_Bless_Khajiit_Lunar_T1 is present in PlayerDevotion_Framework.esp; its two night-gated MGEF effects read back, and manager grant ownership is now under PDV_Phase20_RewardRecordContracts.json with the other race T1 rewards
+Blocking follow-up: runtime/manual proof for Active Effects display, save/load, Survey clarity, stack behavior, and balance feel
 Fallback: PDV_Bless_Bosmer_Exchange_T1 source row exists, but the live target EditorID is absent and still needs a target-record owner decision; fallback copy should stay in Exchange/Z'en debt, proper return, and Bandit Road/Baan Dar reversal space
 Not allowed for first pilot: Daedric stigma rows, Hircine/Molag Bal curse-access rows, dialogue
 ```
@@ -323,4 +337,23 @@ Status: Packet draft only
 Preferred fallback: Survey/status only
 Blocking follow-up: complete one non-Nord manual CK-authored packet with SEQ refresh, readback, runtime positive proof, and wrong-origin/wrong-state negative proof
 Not allowed: generated dialogue creation or roster-wide recognition cloning
+```
+
+### Daedric 20C
+
+Detailed blocker ledger:
+`references/authoring/PDV_AllRaceDaedricBetaReadinessLedger.md`
+
+```text
+Scope: all sixteen Skyrim-present Daedric Princes; Jyggalag excluded unless later explicitly adopted.
+Current state: all sixteen Princes have draft manifest rows, D-15..D-18 are locked, and content verifier is clean.
+Batch 0 static D-18 proof ledger: references/authoring/PDV_DaedricBatch0_D18ProofLedger.md
+Beta-feel blocker: static D-18 proof is not enough. Each Prince still needs CAT-6 promotion/readback where player-facing records are targeted, runtime or display proof, and race-stack legibility.
+Batch 0 static proof: Azura / Azurah, Vaermina, Meridia, Molag Bal.
+Batch 1: Mephala / Mafala, Malacath / Mauloch.
+Batch 2: Mehrunes Dagon, Sheogorath, Namira / Namiira, Sanguine / Sangiin, Clavicus Vile, Hermaeus Mora, Nocturnal.
+Batch 3: Peryite, Hircine.
+Nocturnal rule: treat as Thieves Guild / Nightingale oath surface.
+Curse-access rule: Hircine and Molag Bal coordinate with curse-state rows and must not double-fire curse transitions.
+V1 surface rule: non-voiced only; dialogue recognition remains V2.
 ```

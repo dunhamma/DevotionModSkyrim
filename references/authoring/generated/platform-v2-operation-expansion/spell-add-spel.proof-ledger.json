@@ -1,0 +1,50 @@
+{
+  "schema": "creation-authoring.proof-ledger.v1",
+  "generatedAt": "2026-05-31T11:31:25.927Z",
+  "sourceReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\spell-add-spel.strict.run-report.json",
+  "project": "platform-v2-spell-add-spel",
+  "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+  "discoveryOnly": false,
+  "status": "PASS",
+  "proofs": [
+    {
+      "id": "SPEL:spell.add:EXM_SPEL_Target",
+      "recordFamily": "SPEL",
+      "status": "PASS",
+      "fixture": "fixtures\\platform-v2-operation-expansion\\spell-add-spel.creation-authoring.json",
+      "verifiedAt": "2026-05-31T11:31:25.927Z",
+      "operation": "spell.add",
+      "target": "EXM_SPEL_Target",
+      "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+      "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\spell-add-spel.strict.run-report.json",
+      "reportStatus": "PASS",
+      "backend": "mo2-mcp-patch-request",
+      "verifierStatus": "PASS",
+      "readbackStatus": "PASS",
+      "readbackNormalizer": null,
+      "commandEvidenceStatus": "NOT_REQUIRED",
+      "coverage": {
+        "manifestOperation": true,
+        "backend": true,
+        "ckpeOrWriterHandler": true,
+        "ckCommandEvidence": true,
+        "commandEvidence": true,
+        "readbackNormalizer": true,
+        "verifier": true,
+        "strictReport": true,
+        "proofFixture": true,
+        "supportClaimAllowed": true
+      },
+      "missingCoverage": [],
+      "commandEvidence": [],
+      "discoveryEvidence": [],
+      "discoveryOnly": false
+    }
+  ],
+  "verification": {
+    "schema": "creation-authoring.proof-ledger-verification.v1",
+    "status": "PASS",
+    "generatedAt": "2026-05-31T11:31:25.928Z",
+    "failures": []
+  }
+}

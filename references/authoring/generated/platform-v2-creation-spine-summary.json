@@ -1,0 +1,2235 @@
+{
+  "schema": "creation-authoring.platform-v2-creation-spine-summary.v1",
+  "generatedAt": "2026-06-01T05:17:22.979Z",
+  "game": "SkyrimSE",
+  "sourceMatrix": null,
+  "sourceProofResults": "generated\\proof-results.skyrimse.json",
+  "tranche": "ck-creation-spine",
+  "contract": {
+    "sourceOfTruth": "CKRA",
+    "mirrorTarget": "Devotion",
+    "requiredRecordFamilies": [
+      "MGEF",
+      "SPEL",
+      "ACTI",
+      "NPC_",
+      "REFR",
+      "QUST",
+      "PACK",
+      "FLST",
+      "PERK",
+      "MESG",
+      "SCEN"
+    ],
+    "manualCheckpoints": [
+      "pre_ck_preflight",
+      "bounded_ck_manual_stage",
+      "post_ck_readback_verify"
+    ]
+  },
+  "fullMatrixReleaseReady": false,
+  "notes": [
+    "Creation-spine gate is row-scoped and requires strict operation proof for every declared operation on each required row.",
+    "record.create and record.update promotion remains generated-first with CK-active save-target proof.",
+    "Full-matrix releaseReady may remain false while research_only families stay out of scope."
+  ],
+  "requiredRows": [
+    {
+      "recordFamily": "MGEF",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "MGEF",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MGEF_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mgef-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mgef-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mgef-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "MGEF",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MGEF_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mgef-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mgef-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mgef-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "MGEF",
+          "operation": "vmad.attach_script",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MGEF_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mgef-vmad-attach_script.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mgef-vmad-attach_script.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mgef-vmad-attach_script.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "MGEF",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MGEF_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mgef-condition-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mgef-condition-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mgef-condition-add.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "SPEL",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "SPEL",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SPEL_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\spel-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\spel-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\spel-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "SPEL",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SPEL_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\spel-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\spel-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\spel-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "SPEL",
+          "operation": "spell.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SPEL_Target",
+            "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+            "fixture": "fixtures\\platform-v2-operation-expansion\\spell-add-spel.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-operation-expansion\\spell-add-spel.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\spell-add-spel.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "SPEL",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SPEL_Target",
+            "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+            "fixture": "fixtures\\platform-v2-operation-expansion\\condition-add-spel.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-operation-expansion\\condition-add-spel.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\condition-add-spel.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "ACTI",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "ACTI",
+          "operation": "record.duplicate_create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "DefaultAshPileDUPLICATE005",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\acti-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\acti-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\acti-payload-v1.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "activator.payload.set",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "DefaultAshPileDUPLICATE005",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\acti-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\acti-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\acti-payload-v1.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_ACTI_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\acti-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\acti-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\acti-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_ACTI_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\acti-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\acti-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\acti-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "vmad.attach_script",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_ACTI_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\acti-vmad-attach_script.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\acti-vmad-attach_script.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\acti-vmad-attach_script.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "vmad.set_property",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_ACTI_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\acti-vmad-set_property.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\acti-vmad-set_property.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\acti-vmad-set_property.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "vmad.set_array_property",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_ACTI_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\acti-vmad-set_array_property.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\acti-vmad-set_array_property.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\acti-vmad-set_array_property.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "NPC_",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "NPC_",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_NPC_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\npc_-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\npc_-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\npc_-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_NPC_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\npc_-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\npc_-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\npc_-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "keyword.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "inventory.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "spell.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "perk.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "package.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "artifact.facegen.generate",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_NPC_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\npc_-artifact-facegen-generate.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\npc_-artifact-facegen-generate.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\npc_-artifact-facegen-generate.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "REFR",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "REFR",
+          "operation": "reference.place",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_REFR_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\refr-reference-place.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\refr-reference-place.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\refr-reference-place.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "QUST",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "QUST",
+          "operation": "record.duplicate_create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "PDV__ManagerQuestDUPLICATE002",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures/ckpe/phase72-qust-duplicate-create-product-command.ck-command-packet.json",
+            "proofLedger": "fixtures\\ckpe\\phase74-qust-duplicate-create-proof-ledger.json",
+            "strictReport": "fixtures/ckpe/phase74-qust-duplicate-create-strict-run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_QUST_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\qust-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\qust-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\qust-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_QUST_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\qust-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\qust-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\qust-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "quest.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_QUST_QuestCreate",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\qust-quest-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\qust-quest-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\qust-quest-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "quest.alias.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM__DialogueQuest",
+            "generatedPlugin": "ExampleMod_PlatformV2SubstantialProof.esp",
+            "fixture": "fixtures\\platform-v2-substantial\\qust-alias-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-substantial\\qust-alias-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-substantial\\qust-alias-add.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "quest.stage.fragment",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM__DialogueQuest",
+            "generatedPlugin": "ExampleMod_PlatformV2SubstantialProof.esp",
+            "fixture": "fixtures\\platform-v2-substantial\\qust-stage-fragment.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-substantial\\qust-stage-fragment.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-substantial\\qust-stage-fragment.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM__DialogueQuest",
+            "generatedPlugin": "ExampleMod_PlatformV2SubstantialProof.esp",
+            "fixture": "fixtures\\platform-v2-substantial\\qust-condition-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-substantial\\qust-condition-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-substantial\\qust-condition-add.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "vmad.attach_script",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "PDV_MCM",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "vmad.set_property",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_QUST_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\qust-vmad-set_property.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\qust-vmad-set_property.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\qust-vmad-set_property.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "vmad.set_array_property",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_QUST_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\qust-vmad-set_array_property.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\qust-vmad-set_array_property.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\qust-vmad-set_array_property.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "artifact.seq.generate",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM__DialogueQuest",
+            "generatedPlugin": "ExampleMod_PlatformV2SubstantialProof.esp",
+            "fixture": "fixtures\\platform-v2-substantial\\qust-seq-generate.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-substantial\\qust-seq-generate.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-substantial\\qust-seq-generate.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "PACK",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "PACK",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PACK_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\pack-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\pack-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\pack-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "PACK",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PACK_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\pack-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\pack-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\pack-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "PACK",
+          "operation": "package.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PACK_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\pack-package-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\pack-package-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\pack-package-add.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "PACK",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "DefaultSandboxEditorLocation1024",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "FLST",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "FLST",
+          "operation": "record.duplicate_create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "PDV_FLST_AllDeitiesDUPLICATE002",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures/ckpe/phase63-flst-duplicate-create-product-command.ck-command-packet.json",
+            "proofLedger": "fixtures\\ckpe\\phase65-flst-duplicate-create-proof-ledger.json",
+            "strictReport": "fixtures/ckpe/phase65-flst-duplicate-create-strict-run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "FLST",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_FLST_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\flst-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\flst-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\flst-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "FLST",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_FLST_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\flst-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\flst-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\flst-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "FLST",
+          "operation": "formlist.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "PDV_FLST_AllDeities",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "PERK",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "PERK",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PERK_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\perk-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\perk-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\perk-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "PERK",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PERK_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\perk-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\perk-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\perk-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "PERK",
+          "operation": "perk.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PERK_Target",
+            "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+            "fixture": "fixtures\\platform-v2-operation-expansion\\perk-add-perk.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-operation-expansion\\perk-add-perk.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\perk-add-perk.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "PERK",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PERK_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\perk-condition-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\perk-condition-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\perk-condition-add.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "PERK",
+          "operation": "vmad.attach_script",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PERK_Target",
+            "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+            "fixture": "fixtures\\platform-v2-operation-expansion\\vmad-attach-script-perk.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-operation-expansion\\vmad-attach-script-perk.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\vmad-attach-script-perk.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "MESG",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "MESG",
+          "operation": "record.duplicate_create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "_HelpPipBoyItemsDUPLICATE003",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\mesg-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\mesg-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\mesg-payload-v1.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "MESG",
+          "operation": "message.payload.set",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "_HelpPipBoyItemsDUPLICATE003",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\mesg-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\mesg-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\mesg-payload-v1.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "MESG",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MESG_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mesg-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mesg-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mesg-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "MESG",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MESG_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mesg-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mesg-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mesg-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "SCEN",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "SCEN",
+          "operation": "scene.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SCEN_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\scen-scene-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\scen-scene-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\scen-scene-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "SCEN",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SCEN_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\scen-condition-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\scen-condition-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\scen-condition-add.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    }
+  ],
+  "promotedRows": [
+    {
+      "recordFamily": "MGEF",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "MGEF",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MGEF_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mgef-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mgef-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mgef-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "MGEF",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MGEF_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mgef-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mgef-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mgef-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "MGEF",
+          "operation": "vmad.attach_script",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MGEF_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mgef-vmad-attach_script.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mgef-vmad-attach_script.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mgef-vmad-attach_script.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "MGEF",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MGEF_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mgef-condition-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mgef-condition-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mgef-condition-add.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "SPEL",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "SPEL",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SPEL_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\spel-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\spel-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\spel-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "SPEL",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SPEL_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\spel-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\spel-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\spel-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "SPEL",
+          "operation": "spell.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SPEL_Target",
+            "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+            "fixture": "fixtures\\platform-v2-operation-expansion\\spell-add-spel.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-operation-expansion\\spell-add-spel.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\spell-add-spel.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "SPEL",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SPEL_Target",
+            "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+            "fixture": "fixtures\\platform-v2-operation-expansion\\condition-add-spel.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-operation-expansion\\condition-add-spel.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\condition-add-spel.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "ACTI",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "ACTI",
+          "operation": "record.duplicate_create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "DefaultAshPileDUPLICATE005",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\acti-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\acti-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\acti-payload-v1.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "activator.payload.set",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "DefaultAshPileDUPLICATE005",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\acti-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\acti-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\acti-payload-v1.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_ACTI_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\acti-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\acti-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\acti-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_ACTI_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\acti-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\acti-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\acti-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "vmad.attach_script",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_ACTI_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\acti-vmad-attach_script.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\acti-vmad-attach_script.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\acti-vmad-attach_script.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "vmad.set_property",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_ACTI_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\acti-vmad-set_property.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\acti-vmad-set_property.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\acti-vmad-set_property.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "ACTI",
+          "operation": "vmad.set_array_property",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_ACTI_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\acti-vmad-set_array_property.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\acti-vmad-set_array_property.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\acti-vmad-set_array_property.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "NPC_",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "NPC_",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_NPC_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\npc_-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\npc_-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\npc_-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_NPC_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\npc_-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\npc_-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\npc_-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "keyword.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "inventory.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "spell.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "perk.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "package.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "AelaTheHuntress",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "NPC_",
+          "operation": "artifact.facegen.generate",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_NPC_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\npc_-artifact-facegen-generate.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\npc_-artifact-facegen-generate.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\npc_-artifact-facegen-generate.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "REFR",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "REFR",
+          "operation": "reference.place",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_REFR_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\refr-reference-place.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\refr-reference-place.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\refr-reference-place.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "QUST",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "QUST",
+          "operation": "record.duplicate_create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "PDV__ManagerQuestDUPLICATE002",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures/ckpe/phase72-qust-duplicate-create-product-command.ck-command-packet.json",
+            "proofLedger": "fixtures\\ckpe\\phase74-qust-duplicate-create-proof-ledger.json",
+            "strictReport": "fixtures/ckpe/phase74-qust-duplicate-create-strict-run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_QUST_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\qust-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\qust-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\qust-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_QUST_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\qust-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\qust-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\qust-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "quest.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_QUST_QuestCreate",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\qust-quest-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\qust-quest-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\qust-quest-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "quest.alias.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM__DialogueQuest",
+            "generatedPlugin": "ExampleMod_PlatformV2SubstantialProof.esp",
+            "fixture": "fixtures\\platform-v2-substantial\\qust-alias-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-substantial\\qust-alias-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-substantial\\qust-alias-add.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "quest.stage.fragment",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM__DialogueQuest",
+            "generatedPlugin": "ExampleMod_PlatformV2SubstantialProof.esp",
+            "fixture": "fixtures\\platform-v2-substantial\\qust-stage-fragment.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-substantial\\qust-stage-fragment.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-substantial\\qust-stage-fragment.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM__DialogueQuest",
+            "generatedPlugin": "ExampleMod_PlatformV2SubstantialProof.esp",
+            "fixture": "fixtures\\platform-v2-substantial\\qust-condition-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-substantial\\qust-condition-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-substantial\\qust-condition-add.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "vmad.attach_script",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "PDV_MCM",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "vmad.set_property",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_QUST_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\qust-vmad-set_property.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\qust-vmad-set_property.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\qust-vmad-set_property.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "vmad.set_array_property",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_QUST_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\qust-vmad-set_array_property.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\qust-vmad-set_array_property.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\qust-vmad-set_array_property.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "QUST",
+          "operation": "artifact.seq.generate",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM__DialogueQuest",
+            "generatedPlugin": "ExampleMod_PlatformV2SubstantialProof.esp",
+            "fixture": "fixtures\\platform-v2-substantial\\qust-seq-generate.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-substantial\\qust-seq-generate.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-substantial\\qust-seq-generate.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "PACK",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "PACK",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PACK_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\pack-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\pack-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\pack-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "PACK",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PACK_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\pack-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\pack-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\pack-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "PACK",
+          "operation": "package.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PACK_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\pack-package-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\pack-package-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\pack-package-add.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "PACK",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "DefaultSandboxEditorLocation1024",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "FLST",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "FLST",
+          "operation": "record.duplicate_create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "PDV_FLST_AllDeitiesDUPLICATE002",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures/ckpe/phase63-flst-duplicate-create-product-command.ck-command-packet.json",
+            "proofLedger": "fixtures\\ckpe\\phase65-flst-duplicate-create-proof-ledger.json",
+            "strictReport": "fixtures/ckpe/phase65-flst-duplicate-create-strict-run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "FLST",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_FLST_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\flst-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\flst-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\flst-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "FLST",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_FLST_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\flst-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\flst-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\flst-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "FLST",
+          "operation": "formlist.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "PDV_FLST_AllDeities",
+            "generatedPlugin": "CKRA_PlatformV1SafeWriterProof.esp",
+            "fixture": "reference-packs\\player-devotion\\platform-v1\\platform-v1-live-safe-writer.creation-authoring.json",
+            "proofLedger": "generated\\platform-v1-live-safe-writer.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v1-live-safe-writer.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "PERK",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "PERK",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PERK_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\perk-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\perk-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\perk-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "PERK",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PERK_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\perk-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\perk-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\perk-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "PERK",
+          "operation": "perk.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PERK_Target",
+            "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+            "fixture": "fixtures\\platform-v2-operation-expansion\\perk-add-perk.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-operation-expansion\\perk-add-perk.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\perk-add-perk.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "PERK",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PERK_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\perk-condition-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\perk-condition-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\perk-condition-add.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "PERK",
+          "operation": "vmad.attach_script",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_PERK_Target",
+            "generatedPlugin": "ExampleMod_PlatformV2Proof.esp",
+            "fixture": "fixtures\\platform-v2-operation-expansion\\vmad-attach-script-perk.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-operation-expansion\\vmad-attach-script-perk.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-operation-expansion\\vmad-attach-script-perk.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "MESG",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "MESG",
+          "operation": "record.duplicate_create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "_HelpPipBoyItemsDUPLICATE003",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\mesg-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\mesg-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\mesg-payload-v1.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "MESG",
+          "operation": "message.payload.set",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "_HelpPipBoyItemsDUPLICATE003",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "reference-packs\\player-devotion\\payload-v1\\mesg-payload-v1-live.creation-authoring.json",
+            "proofLedger": "generated\\mesg-payload-v1.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\ckra-native\\reports\\mesg-payload-v1.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        },
+        {
+          "recordFamily": "MESG",
+          "operation": "record.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MESG_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mesg-record-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mesg-record-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mesg-record-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "MESG",
+          "operation": "record.update",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_MESG_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\mesg-record-update.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\mesg-record-update.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\mesg-record-update.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "recordFamily": "SCEN",
+      "rowStatus": "PASS",
+      "matrixStatus": "supported",
+      "reason": "All declared operations are promoted with strict proof evidence.",
+      "operations": [
+        {
+          "recordFamily": "SCEN",
+          "operation": "scene.create",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SCEN_Create",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\scen-scene-create.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\scen-scene-create.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\scen-scene-create.strict.run-report.json",
+            "backend": "ckpe-bridge",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "PASS"
+          }
+        },
+        {
+          "recordFamily": "SCEN",
+          "operation": "condition.add",
+          "status": "PASS",
+          "reason": "Operation row promoted from strict proof evidence.",
+          "proofReferences": {
+            "target": "EXM_SCEN_Update",
+            "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+            "fixture": "fixtures\\platform-v2-creation-spine\\scen-condition-add.creation-authoring.json",
+            "proofLedger": "generated\\platform-v2-creation-spine\\scen-condition-add.proof-ledger.json",
+            "strictReport": "C:\\Users\\Admin\\Documents\\CreationKitRecordAutomation\\reports\\platform-v2-creation-spine\\scen-condition-add.strict.run-report.json",
+            "backend": "mo2-mcp-patch-request",
+            "verifierStatus": "PASS",
+            "readbackStatus": "PASS",
+            "commandEvidenceStatus": "NOT_REQUIRED"
+          }
+        }
+      ]
+    }
+  ],
+  "loadPluginSetEvidence": {
+    "status": "PASS",
+    "fixture": "fixtures\\platform-v2-creation-spine\\load-plugin-set-product-ready.ck-command-packet.json",
+    "expectedActivePlugin": "PDV_Phase9To12_CKProof.esp",
+    "expectedSaveTarget": "PDV_Phase9To12_CKProof.esp",
+    "command": {
+      "op": "loadPluginSet",
+      "requiredPlugins": [
+        "Skyrim.esm",
+        "PlayerDevotion_Framework.esp",
+        "PDV_Phase9To12_CKProof.esp"
+      ],
+      "plugins": [
+        {
+          "name": "Skyrim.esm",
+          "selected": true,
+          "active": false
+        },
+        {
+          "name": "PlayerDevotion_Framework.esp",
+          "selected": true,
+          "active": false
+        },
+        {
+          "name": "PDV_Phase9To12_CKProof.esp",
+          "selected": true,
+          "active": true
+        }
+      ],
+      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
+      "activePlugin": "PDV_Phase9To12_CKProof.esp",
+      "intendedSaveTarget": "PDV_Phase9To12_CKProof.esp",
+      "sourcePluginNotActive": true
+    },
+    "failures": []
+  },
+  "manualLifecycle": {
+    "status": "BLOCKED",
+    "enforce": true,
+    "manualBoundaryPath": "generated\\platform-v2-creation-spine-manual-boundaries.json",
+    "requiredCheckpoints": [
+      "pre_ck_preflight",
+      "bounded_ck_manual_stage",
+      "post_ck_readback_verify"
+    ],
+    "declaredCheckpoints": [
+      "pre_ck_preflight",
+      "bounded_ck_manual_stage",
+      "post_ck_readback_verify"
+    ],
+    "completedCheckpoints": [],
+    "checks": [
+      {
+        "id": "checkpoint:pre_ck_preflight",
+        "status": "FAIL",
+        "detail": "Checkpoint pre_ck_preflight is missing from declared/completed evidence."
+      },
+      {
+        "id": "checkpoint:bounded_ck_manual_stage",
+        "status": "FAIL",
+        "detail": "Checkpoint bounded_ck_manual_stage is missing from declared/completed evidence."
+      },
+      {
+        "id": "checkpoint:post_ck_readback_verify",
+        "status": "FAIL",
+        "detail": "Checkpoint post_ck_readback_verify is missing from declared/completed evidence."
+      },
+      {
+        "id": "manual_boundary_exceeded",
+        "status": "PASS",
+        "detail": "Manual work stayed within declared checkpoints."
+      }
+    ],
+    "blockers": [
+      {
+        "code": "v2_manual_boundary_missing",
+        "message": "Manual checkpoint evidence is incomplete for pre_ck_preflight."
+      },
+      {
+        "code": "v2_manual_boundary_missing",
+        "message": "Manual checkpoint evidence is incomplete for bounded_ck_manual_stage."
+      },
+      {
+        "code": "v2_manual_boundary_missing",
+        "message": "Manual checkpoint evidence is incomplete for post_ck_readback_verify."
+      },
+      {
+        "code": "v2_manual_boundary_missing",
+        "message": "Manual boundary artifact status is BLOCKED."
+      }
+    ]
+  },
+  "devotionParity": {
+    "status": "BLOCKED",
+    "enforce": true,
+    "parityPath": "generated\\platform-v2-creation-spine-devotion-parity.json",
+    "checks": [
+      {
+        "id": "parity_status",
+        "status": "FAIL",
+        "detail": "Devotion mirror parity artifact status is BLOCKED."
+      },
+      {
+        "id": "tooling_sync",
+        "status": "FAIL",
+        "detail": "Tooling sync status is not PASS."
+      },
+      {
+        "id": "tests",
+        "status": "FAIL",
+        "detail": "Mirrored tests status is not PASS."
+      },
+      {
+        "id": "evidence",
+        "status": "FAIL",
+        "detail": "Mirrored V2 evidence artifacts status is not PASS."
+      }
+    ],
+    "blockers": [
+      {
+        "code": "v2_devotion_parity_failed",
+        "message": "Devotion parity artifact did not pass."
+      },
+      {
+        "code": "v2_devotion_parity_failed",
+        "message": "Tooling sync parity check failed."
+      },
+      {
+        "code": "v2_devotion_parity_failed",
+        "message": "Mirrored tests parity check failed."
+      },
+      {
+        "code": "v2_devotion_parity_failed",
+        "message": "Mirrored V2 evidence artifacts parity check failed."
+      }
+    ]
+  },
+  "gate": {
+    "status": "BLOCKED",
+    "blockers": [
+      {
+        "taxonomy": "manual_boundary",
+        "code": "v2_manual_boundary_missing",
+        "message": "Manual checkpoint evidence is incomplete for pre_ck_preflight."
+      },
+      {
+        "taxonomy": "manual_boundary",
+        "code": "v2_manual_boundary_missing",
+        "message": "Manual checkpoint evidence is incomplete for bounded_ck_manual_stage."
+      },
+      {
+        "taxonomy": "manual_boundary",
+        "code": "v2_manual_boundary_missing",
+        "message": "Manual checkpoint evidence is incomplete for post_ck_readback_verify."
+      },
+      {
+        "taxonomy": "manual_boundary",
+        "code": "v2_manual_boundary_missing",
+        "message": "Manual boundary artifact status is BLOCKED."
+      },
+      {
+        "taxonomy": "devotion_parity",
+        "code": "v2_devotion_parity_failed",
+        "message": "Devotion parity artifact did not pass."
+      },
+      {
+        "taxonomy": "devotion_parity",
+        "code": "v2_devotion_parity_failed",
+        "message": "Tooling sync parity check failed."
+      },
+      {
+        "taxonomy": "devotion_parity",
+        "code": "v2_devotion_parity_failed",
+        "message": "Mirrored tests parity check failed."
+      },
+      {
+        "taxonomy": "devotion_parity",
+        "code": "v2_devotion_parity_failed",
+        "message": "Mirrored V2 evidence artifacts parity check failed."
+      }
+    ]
+  }
+}

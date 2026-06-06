@@ -1,5 +1,11 @@
 # Phase 18 Nord Dialogue Drafts
 
+Status: V2/historical dialogue parking. V1 beta-feel readiness does not add new
+voiced NPC dialogue, lip files, scenes, or broad recognition topics; current
+player-facing promotion work stays in non-voiced CAT-6 surfaces. Treat TODO
+rows in this file as optional future dialogue-authoring placeholders, not active
+V1 blockers.
+
 Use this file for authored dialogue text before CK entry. Keep lines ASCII-only
 and preferably under 80 characters. Once a row is final, Codex can mirror it
 into `PDV_Phase18StatusNord.manifest.json` and

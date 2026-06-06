@@ -2,7 +2,7 @@
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 10 (Nord (full pilot))
 **Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 112 drafted
+**Rows:** 116 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -171,6 +171,10 @@ _8 rows._
 | _(no tone match)_ | `PDV_Notif_Nord_FavorNoted_NineDivines_HouseholdMercy` | HUD corner notification. After-act; one per qualifying event. | Player-2nd | 45 / 80 |  | Mara and Stendarr have noted what you spared. |  |
 | _(no tone match)_ | `PDV_Notif_Nord_FavorNoted_NineDivines_ProperDeath` | HUD corner notification. After-act; one per Hall-of-the-Dead or anti-necromancy beat. | Player-2nd | 30 / 80 |  | The order of the dead is kept. |  |
 | _(no tone match)_ | `PDV_Notif_Nord_FavorNoted_NineDivines_TalosPressure` | HUD corner notification. After-act; costly-faithful only. | Player-2nd | 47 / 80 |  | The contradiction holds. Talos hears even here. |  |
+| _(no tone match)_ | `PDV_Notif_Nord_FavorNoted_OldWays_BookRead_NordsArise` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 62 / 80 |  | Old words. They stir something deeper than politics within you. |  |
+| _(no tone match)_ | `PDV_Notif_Nord_FavorNoted_OldWays_BookRead_DreamSovngarde` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 60 / 80 |  | Sovngarde is not a promise. It is a fact. The dream says so. |  |
+| _(no tone match)_ | `PDV_Notif_Nord_FavorNoted_OldWays_BookRead_SovngardeReexam` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 68 / 80 |  | Careful scholarship on what Nords have always known in their hearts. |  |
+| _(no tone match)_ | `PDV_Notif_Nord_FavorNoted_HircineArkay_BookRead_TotemsHircine` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 58 / 80 |  | Hircine names his gifts. Arkay is quiet. You keep reading. |  |
 
 ## Contextual favor (large, Marked)
 

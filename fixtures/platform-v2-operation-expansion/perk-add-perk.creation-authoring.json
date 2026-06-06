@@ -1,0 +1,20 @@
+{
+  "schema": "creation-authoring.v1",
+  "project": "platform-v2-perk-add-perk",
+  "game": "SkyrimSE",
+  "sourcePlugin": "ExampleMod.esp",
+  "output": "ExampleMod_PlatformV2Proof.esp",
+  "operations": [
+    {
+      "id": "perk-add-perk",
+      "kind": "perk.add",
+      "target": "EXM_PERK_Target",
+      "recordFamily": "PERK",
+      "payload": {
+        "perks": [
+          "EXM_PERK_Bonus"
+        ]
+      }
+    }
+  ]
+}

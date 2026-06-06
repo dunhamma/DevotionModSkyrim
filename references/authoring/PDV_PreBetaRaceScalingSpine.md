@@ -40,10 +40,10 @@ Related merged planning/content work:
   Pilgrim's Path / Wayfarer's Path difficulty surface. Experience Mode is not
   runtime-live and should not be used to compensate for missing race hooks
   during this scaling pass.
-- Daedric CAT-4 expansion is a separate 1.0 content gate. Section 11.6 roster,
-  recovery, and cross-Prince hostility defaults are locked; remaining blockers
-  are stigma row ratification, Hircine/Molag Bal curse-access template shape,
-  and Prince authoring order.
+- Daedric CAT-4 expansion is a separate 1.0 content gate. Section 11.6 D-12..D-18
+  decisions are locked; remaining blockers are proof-path gates: per-Prince
+  CAT-6 target selection, record readback, runtime or display proof, and
+  stack/Survey legibility.
 
 ## Ratified Workshop Outcomes
 
@@ -72,9 +72,11 @@ Related merged planning/content work:
   Void/Sithis as pressure or stabilization that never replaces the Hist. Bosmer
   copy reads through Y'ffre/Green Pact, Living Story, Exchange/Z'en, and Bandit
   Road/Baan Dar without exposing raw path counters.
-- `Ratified`: race hook validation can continue before full Daedric lock, but
+- `Ratified`: race hook validation can continue before full Daedric proof, but
   final reward text, Prince prices, stigma, exits, and final Survey/status copy
-  wait for the Daedric blocker decisions above.
+  wait for the Daedric proof path. D-15..D-18 decisions are locked; the active
+  blockers are per-Prince CAT-6 promotion/readback, runtime or display proof,
+  and stack/Survey legibility.
 
 ## Shared Gate
 

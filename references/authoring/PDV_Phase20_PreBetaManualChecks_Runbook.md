@@ -15,10 +15,15 @@ Use this packet for the manual checks that remain before any race can move from
 `PDV_PreBetaRaceGateLedger.md`.
 
 The structured no-game gate packet,
-`PDV_Phase20_NoInGameProof_Gates.json`, owns the current final-world placement
-contracts. This runbook records the eventual manual evidence against those
-contracts; it does not count QASmoke or paper placement plans as final
-placement.
+`PDV_Phase20_NoInGameProof_Gates.json`, owns the current immersive hook
+contracts and asset policy. This runbook records the eventual manual evidence
+against those contracts; it does not count QASmoke, paper placement plans, or
+source-only receiver scaffolds as empirical proof.
+
+Use `PDV_Phase20_AllRaceSourceCuration_Runbook.md` before treating any normal
+gameplay source as final empirical proof. The same exact-source rule applies to
+all ten races: scan-only quest candidates are not live route/FormList sources
+until the specific quest record, stage, and outcome have been read and approved.
 
 Use `PDV_Phase20_ManualEvidenceLedger.json` as the structured intake file when
 manual/runtime evidence starts. It is intentionally checked as `pending` by the
@@ -42,6 +47,44 @@ If source changed, compile first:
 ```powershell
 node .\tools\pdv_compile.mjs --script PDV__ManagerQuest
 ```
+
+## Known Startup Failure: `PDV_MCM` Manager Binding
+
+Symptom seen in live Phase 20 checks:
+
+- `Survey Devotion` can show race text, but the MCM Player page summary still says
+  `PlayerDevotion is still starting up.`
+- `sqv PDV_Origin` may show stopped in affected saves.
+
+This indicates the live `PDV_MCM` quest script instance is missing a valid
+`PDV_Manager` binding in that save, even when other PDV scripts are active.
+
+Runtime recovery sequence:
+
+```text
+startquest PDV_Origin
+startquest PDV__ManagerQuest
+stopquest PDV_MCM
+resetquest PDV_MCM
+startquest PDV_MCM
+set PDV_GLO_OriginRace to 3
+```
+
+Then wait ~10 seconds, re-open MCM, and re-check:
+
+```text
+sqv PDV_Origin
+sqv PDV__ManagerQuest
+sqv PDV_MCM
+```
+
+Expected: MCM summary no longer reports startup-only text.
+
+Durable fix target (source follow-up):
+
+- Harden `PDV_MCM` so it self-heals when `PDV_Manager == None` at runtime
+  (for example, resolve/rebind manager quest reference on page build/select
+  before showing startup fallback text).
 
 ## Universal Manual Checks
 
@@ -76,24 +119,154 @@ Evidence intake:
   remain pending.
 ```
 
-## Final-World Placement Contracts
+## Immersive Hook Contracts
 
-Before placing anything outside QASmoke, read the matching contract in
-`PDV_Phase20_NoInGameProof_Gates.json`. Every P0/P1 race currently needs one
-positive surface and one pressure, recovery, or status surface:
+Before placing or wiring anything outside QASmoke, read the matching
+`immersiveHookContracts` entries in `PDV_Phase20_NoInGameProof_Gates.json`.
+Every race now needs empirical proof from normal-play hook contracts, not just
+debug-route or object placement proof. Visible objects are only acceptable for
+real player-facing devotional acts such as shrines, rites, offerings, study
+surfaces, or portable tokens.
 
 ```text
-Altmer: dawn/study plus crisis/Lorkhan pressure.
-Khajiit: road-home/moon/caravan plus focus-specific Baan Dar/Rajhin/Alkosh.
-Argonian: Hist/water/rest plus People/community or death-rite.
-Orc: Stronghold/quality craft plus City dignity or Legion/Exile service.
-Redguard: Crown/Forebear sect plus Ash'abah/Far Shores death duty.
-Bosmer: Living Story or Exchange non-hunter plus Bandit Road/Pact pressure.
+Altmer: dawn/study devotional context plus non-visible crisis/Lorkhan/orthodox pressure hooks.
+Khajiit: lunar rest/open-sky cadence, road-home anchors, and Baan Dar/Rajhin/Alkosh focus hooks.
+Argonian: Hist water/rest, People community, and thresholded Void hooks.
+Orc: Stronghold quality forge, City/self-made dignity, and Legion/Exile service hooks.
+Redguard: Crown/Forebear sect, Ash'abah/Far Shores death duty, and HoonDing cap hooks.
+Bosmer: Living Story, Exchange, and Bandit Road/Pact pressure hooks.
+Breton: tradition choice, Knight's Road, Hidden Art, and Green Way hooks.
+Dunmer: portable ash-prayer/home rite, Reclamation focus, and deviation-price hooks.
+Imperial: civic service, public/private Talos pressure, and focused patron civic hooks.
+Nord: broad/focused Old Ways, Kyne/Talos context, and Hircine/Arkay curse-edge hooks.
 ```
 
-Stop if the chosen object or location would turn a rejected generic hook into a
-scoring surface, such as generic travel, one-bed sleep, raw craft loops, generic
-theft, generic combat, or generic undead farming.
+For each hook, record:
+- positive normal-play trigger
+- wrong-origin rejection
+- rejected generic-hook silence
+- anti-farm repeat or cooldown behavior
+- Survey/status clarity
+- stack snapshot
+- asset status
+
+Stop if the chosen object, receiver, quest stage, FormList, or location would
+turn a rejected generic hook into a scoring surface, such as generic travel,
+one-bed sleep, raw craft loops, generic theft, generic combat, generic shrine
+attendance, or generic undead farming.
+
+Asset rule: every hook contract must explicitly state `newMeshRequired`. The
+current end-state contract set is designed with `newMeshRequired: false` for
+all races. If implementation discovers a required custom mesh, update the
+contract first with `newMeshRequired: true` and name the missing asset before
+building the hook.
+
+### P2 Receiver Wiring Handoff
+
+`PDV_Phase20_P2ImmersiveReceivers.manifest.json` defines the source-scaffolded
+all-race receiver contract. `PDV_PlayerEvents.psc`
+now compiles with optional PO3 book, spell-learned, harvest, weather, and
+quest-stage receivers. These receivers remain inert until the wired FormLists
+are populated with exact curated source records.
+
+Current automated state:
+- `tools/pdv-phase20-p2-receiver-author` created the 34 empty
+  `PDV_FLST_P2_*` FormList shells in `PlayerDevotion_Framework.esp`.
+- FormList readback command:
+  `dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists`
+- FormList backup:
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\PlayerDevotion_Framework.esp.20260604-094058.bak`
+- `tools/pdv-phase20-p2-receiver-author` wired all 34 `PDV_FLST_P2_*`
+  properties on the existing `PDV_PlayerEvents` script attached to the
+  `PDV_Player` alias.
+- Alias-property readback command:
+  `dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties`
+- Alias-property backup:
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\PlayerDevotion_Framework.esp.20260604-094110.bak`
+- `PDV_PlayerEvents.psc` now compile-proves receiver-side repeat gates before
+  routing P2 sources: book, spell, and quest-stage sources are one-shot per
+  source/form/family; weather and harvest sources are once per in-game day per
+  source/form/family.
+- `tools/pdv-phase20-p2-receiver-author` now has source-fill tooling for the
+  next approved manifest step. `--fill-source-entries` writes only entries
+  declared with `status: approved-for-fill`; `--check-source-fill` readbacks
+  the declared source entries against the live FormLists. The current manifest
+  declares 29 approved P2 book-read entries across 13 groups; quest-stage
+  source fills remain blocked until exact quest/stage entries are approved.
+- Source-fill readback command:
+  `dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill`
+- Exact-stage gate command:
+  `dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates`
+- P2 book runtime checker:
+  `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager`
+  `--strict-manager` requires source-specific manager reasons such as
+  `po3_book_dunmer_azura`, not only generic route-family markers.
+
+Remaining CK/xEdit wiring target:
+- Curate exact source records in
+  `PDV_Phase20_P2ImmersiveReceivers.manifest.json` under `sourceFillEntries`,
+  mark only approved entries as `approved-for-fill`, then fill the existing
+  `PDV_FLST_P2_*` FormLists through the source-fill tool.
+- Register/fill quest-stage sources only after exact quest/stage metadata is
+  approved in the manifest. Whole-quest FormList membership is not enough:
+  `OnQuestStageChange` receives both quest and `aiNewStage`, and the receiver
+  must compare the observed stage against approved stage metadata before
+  routing.
+
+Do not use broad category lists. Each FormList must contain exact curated
+source records only. Quest-stage lists must contain terminal, one-shot, or
+source-marked quests where any observed stage change is acceptable for that
+source family. If a whole questline has many unrelated stages, do not add it to
+the PO3 quest-stage FormList; use a narrower quest fragment, script event, or
+manual receiver instead.
+
+After wiring:
+```powershell
+node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates
+node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --list
+```
+
+Then prove one accepted route from each wired P2 source family, wrong-origin
+silence, generic-source silence, repeat behavior, Survey clarity, and stack
+snapshot before promoting Breton, Dunmer, Imperial, or Nord beyond audit-only.
+
+Current live log status (2026-06-04):
+- `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager`
+  reports `FAIL` on a single current-log full sweep after log rotation, but the
+  approved filled P2 book families are proven across session logs.
+- Accepted book-route proof is recorded for Dunmer Azura, Dunmer Boethiah,
+  Imperial public Talos, Nord Old Ways, Nord Hircine/Arkay, Altmer Auri-El,
+  Altmer Magnus, Altmer Xarxes, Argonian Hist, Khajiit Lunar, Orc Malacath, and
+  Redguard ancestor spine. Breton Hidden Art passed in an earlier log and can be
+  rerun only if a same-log full set is desired.
+- `Papyrus.1.log` contains the non-Redguard 2026-06-04 packet after the first
+  smoke run. `Papyrus.0.log` contains the Redguard proof after restart/log
+  rotation.
+- A post-smoke source audit patched player-facing P2 surfacing after the
+  accepted-route logs. Altmer, Argonian Hist, Khajiit Lunar, Orc Malacath, and
+  Redguard ancestor-spine book routes now have explicit toast hooks; Khajiit,
+  Argonian, Orc, and Redguard also have one-book Survey/status deltas. Rerun
+  these routes for toast + Survey/status proof rather than treating the earlier
+  route logs as player-facing proof.
+- A follow-up Altmer retest showed Survey/status state changing while Prisma
+  swallowed the expected toast and opened the full panel in an unclickable
+  state. The patched proof lane now expects vanilla top-left notifications for
+  P2 book sources and no automatic Prisma panel opening from P2 book-state
+  changes. Prisma is still the intended replacement UI, but it is not the
+  empirical P2 proof surface until its input behavior is proven.
+- Use `PDV_PrismaIntegrationBoundary.md` for the wider split: P2 gameplay proof
+  is manager/log/readback/notification/Survey/manual evidence; Prisma toasts,
+  panels, medallions, and future always-on HUD work are separate UI proof unless
+  readback or logs show the manager state itself is wrong.
+- Khajiit route proof passed before the patch, but the Survey/status text did
+  not visibly change during smoke; keep Survey/status clarity pending until the
+  patched route is rerun.
+- Orc route proof passed, and the startup Prisma/CK MessageBox overlap observed
+  during smoke was patched in the live manager script after compile verification.
+- Remaining failures are runtime/manual evidence gaps, not source-fill or
+  verifier failures.
 
 ## Race Checks
 
@@ -109,8 +282,33 @@ Check:
 - Survey explains crisis state, pressure, last favor, and curse posture.
 - Exiled vampire and werewolf states surface as capped or halted, not stronger
   alternate builds.
-- Final placement needs one dawn/study surface and one crisis/pressure surface
-  outside QASmoke.
+- Immersive hook proof needs dawn/study devotional context plus crisis/pressure
+  context outside QASmoke; pressure must not be a visible click object.
+
+Progress note (2026-06-01):
+- Manual check 1 (`wrong-origin rejection`) is complete for Altmer.
+- Manual check 2 (`generic-hook rejection`) is complete for Altmer.
+- Manual check 3 (`surveyStatusClarity`) is complete for Altmer. Survey shows
+  crisis state, authored Lorkhan pressure, and last favor in fiction-facing
+  wording; curse posture is evidenced by the completed Altmer vampire lane when
+  applicable.
+
+Altmer immersive-hook staging packet:
+- Source ACTIs to reuse:
+  `PDV_ACTI_AltmerDawnSteadinessSignal` and
+  `PDV_ACTI_AltmerLorkhanPressureSignal`
+  remain dev/ritual proof surfaces only.
+- Final pressure wiring should use quest/stage/state context, not a visible
+  crisis object.
+- Asset status:
+  no new mesh required. Use vanilla book, lectern, shrine-adjacent static, idle
+  marker, or non-visible context.
+- Validation contract once wired:
+  Altmer hook routes expected positive/pressure behavior and non-Altmer origin
+  remains silent except debug rejection.
+- Rollback path:
+  if location, object, receiver, or quest context changes, remove only the
+  staged immersive hook wiring and keep QASmoke references unchanged.
 
 ### Khajiit
 
@@ -124,10 +322,10 @@ Check:
 - Same road-home anchor repeat does not become a loop.
 - Survey explains Lunar Lattice, moon practice, road-home cadence, and focus.
 - CAT-6 source row exists and `PDV_Bless_Khajiit_Lunar_T1` is present as a
-  live pilot-provisional framework ESP `SPEL` as of the 2026-05-31 readback
-  check. Its two pilot `MGEF` effects are night-gated and grant-unwired. Treat
-  this as record/readback/text proof only, not as manual feel proof, reward
-  distribution proof, or holistic race-effect approval.
+  live framework ESP `SPEL`. Its two `MGEF` effects are night-gated, and
+  Khajiit T1 grant ownership now comes from the all-race reward contract. Treat
+  the automated readback as record/text/wiring proof only, not as manual feel
+  proof, Active Effects display proof, save/load proof, or balance approval.
 
 ### Argonian
 
@@ -196,6 +394,12 @@ Check:
   posture.
 - Stack snapshot records tradition, KnightlyVowIntegrity, WitchcraftExposure,
   DruidicStanding, patron focus, curse fork, and Daedric modifiers.
+- Audit target: prove one tradition readback plus one tradition-specific favor
+  without letting Knight's Road, Hidden Art, and Green Way reward at the same
+  time.
+- Stop condition: no Breton reward volume or placement expansion until Hidden
+  Art cost, generic spell/artifact silence, and expected/edge stack evidence are
+  recorded.
 
 ### Dunmer
 
@@ -209,6 +413,10 @@ Check:
   and curse posture.
 - Stack snapshot records ancestor substrate, Reclamation focus, active favor,
   deviation price, curse state, and Daedric modifiers.
+- Audit target: prove ancestor substrate plus one focused Reclamation foreground
+  while deviation, curse, and Daedric contact remain priced.
+- Stop condition: no new Dunmer reward volume until generic Daedric behavior is
+  rejected and substrate/focus/deviation overstack risk is recorded.
 
 ### Imperial
 
@@ -222,6 +430,10 @@ Check:
   standing, and curse posture.
 - Stack snapshot records ConcordatStanding, public/private Talos state, primary
   patron, civic favor, repair/rupture, curse state, and Daedric modifiers.
+- Audit target: prove concrete civic service and public/private Talos pressure
+  without rewarding faction rank, temple attendance, or abstract lawfulness.
+- Stop condition: no new civic surface expansion until the civic whitelist and
+  faction/attendance rejection evidence are in the ledger.
 
 ### Nord
 
@@ -234,6 +446,10 @@ Check:
 - Survey remains the control/reference for clear race feel.
 - Stack snapshot proves Kyne, Talos, Hircine, broad favors, vampire/scar, and
   Daedric modifiers do not overstack.
+- Audit target: prove broad/focused Nord remains the control race without dense
+  vanilla hooks turning into a faucet.
+- Stop condition: no new Nord content volume until generic dense-hook rejection
+  and Hircine/Kyne/Talos stack evidence are recorded.
 
 ## Recording Results
 

@@ -229,6 +229,8 @@ Nord neglect should feel like **absence and distance**, not punishment.
 | Side with Stormcloaks (major quest beats) | Talos/Ysmir, Shor | One-time per beat | Civil War questline carries heavy weight |
 | Complete Companions quest arc stages | Shor, Stuhn | Per beat | Werewolf state shifts interpretation — see Curse States |
 | Visit Sovngarde / cross Tsun's bridge | Shor, Tsun | One-time | Maximum weight; these are threshold events |
+| Read Old Ways texts (*Nords Arise!*; *A Dream of Sovngarde*; *Sovngarde: A Reexamination*) | Shor, Kyne | Per book, one-time | Old Ways identity; notifications: `PDV_Notif_Nord_FavorNoted_OldWays_BookRead_*` |
+| Read *The Totems of Hircine* | Hircine / Arkay edge | One-time | Beast-blood theology; notification: `PDV_Notif_Nord_FavorNoted_HircineArkay_BookRead_TotemsHircine` |
 
 ---
 
@@ -237,7 +239,7 @@ Nord neglect should feel like **absence and distance**, not punishment.
 **Vanilla hook surface:** Excellent. Nords have the most hook-dense content in Skyrim. Story Manager kill events, sleep events, shrine interactions, civil war quest stages, Companions quest stages, Greybeards milestones, marriage — all are reliable and well-tested signals.
 
 **Complexity flags:**
-- **The offer system** is the most novel Nord mechanic and needs careful implementation. It fires on sustained domain-aligned piety above a threshold — exact values TBD in balancing. Should feel organic, not like a pop-up the moment you hit 50 Kyne piety.
+- **The offer system** is the most novel Nord mechanic and needs careful implementation. It currently keys from sustained domain-aligned piety around the standard commitment offer threshold (`COMMITMENT_OFFER_THRESHOLD=50`) and the shared deity threshold contract (`25/50/85`). It still needs manual feel tuning so it reads as an organic invitation, not a pop-up the moment you hit 50 Kyne piety.
 - **Honorable kill detection** is the hardest individual signal to implement cleanly. Story Manager kill events give you kill data; distinguishing "fair fight" from sneak attacks requires checking approach state. Flag as medium complexity — worth doing because it's central to Shor and Tsun, but needs anti-farm and edge-case design.
 - **Talos ban defiance** in the Old Ways frame: there's no ConcordatStanding track for Nord (that's Imperial), but similar logic is needed. Nord Talos devotion through defiance acts is curated signals rather than a reputation track.
 - **Pantheon baseline choice** (Old Ways vs Nine Divines) affects which god names and thresholds apply, but the underlying mechanics are shared. Implementation can share scoring logic and vary the deity roster and theological framing.

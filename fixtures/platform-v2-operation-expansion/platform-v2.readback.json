@@ -1,0 +1,35 @@
+{
+  "records": {
+    "EXM_SPEL_Target": {
+      "editorId": "EXM_SPEL_Target",
+      "recordType": "SPEL",
+      "winningPlugin": "ExampleMod_PlatformV2Proof.esp",
+      "spells": [
+        "EXM_SPELL_Buffer"
+      ],
+      "conditions": [
+        {
+          "function": "GetIsID",
+          "operator": "==",
+          "value": "PlayerRef"
+        }
+      ]
+    },
+    "EXM_PERK_Target": {
+      "editorId": "EXM_PERK_Target",
+      "recordType": "PERK",
+      "winningPlugin": "ExampleMod_PlatformV2Proof.esp",
+      "perks": [
+        "EXM_PERK_Bonus"
+      ],
+      "scripts": [
+        {
+          "name": "EXM_PerkAttachScript",
+          "properties": {
+            "Enabled": true
+          }
+        }
+      ]
+    }
+  }
+}

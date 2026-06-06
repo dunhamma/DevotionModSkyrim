@@ -139,14 +139,16 @@
     {
       "id": "20B",
       "name": "Full Aedric/native god content",
-      "exitGate": "Every non-Daedric locked worship target is content-ready and has authored race handling."
+      "exitGate": "Every non-Daedric locked worship target is content-ready and has authored race handling.",
+      "contentAuthoringStatus": "Manifest prose ratified 2026-05-31: the 656-row race manifest is gap-audited (no missing V1 surface), pdv_content_verify clean (FAIL=0, WARN=0), and guardrail-checked. Remaining is CAT-6 ESP promotion (code track) and final editorial read; V2 voiced dialogue excluded per Section 21.3."
     },
     {
       "id": "20C",
       "name": "Full Skyrim-present Daedric content",
       "exitGate": "All sixteen Skyrim-present Prince surfaces are content-ready, including Nocturnal as the Thieves Guild/Nightingale oath surface.",
       "contentReadyDefinition": "Per-Prince content-ready is decision D-18 in PDV_Architecture_v3.md Section 11.6 (rationale: references/authoring/PDV_Daedric_DecisionPacket_CAT4.md): tone, boon/price x3, tier-up + lapse, Champion entry, commitment or curse-onset, stigma (D-15) or curse-driven crossings, neglect + exit with residue, per-race response for non-native races, matrix fidelity against PDV_DaedricRacePrinceMatrix.csv, named hook source, clean pdv_content_verify with no race-manifest slot collision, and a firing-density sanity paragraph. Stigma model is D-15; curse-access template (Hircine, Molag Bal) is D-16; authoring order is D-17.",
-      "voicedContentScope": "Daedric content is non-voiced (MessageBox, notification, Survey, passive SPEL text), so 20C is unaffected by the V1 no-voiced-NPC-dialogue non-goal in PDV_Architecture_v3.md Section 21.3."
+      "voicedContentScope": "Daedric content is non-voiced (MessageBox, notification, Survey, passive SPEL text), so 20C is unaffected by the V1 no-voiced-NPC-dialogue non-goal in PDV_Architecture_v3.md Section 21.3.",
+      "contentAuthoringStatus": "Manifest prose ratified 2026-05-31: all 16 Princes (409 rows) carry the full D-18 row set, align to D-15/D-16/D-17, match the per-race matrix, and pass pdv_content_verify clean. Remaining is CAT-6 ESP promotion (code track) and final editorial read."
     },
     {
       "id": "20D",

@@ -1,8 +1,8 @@
 # Daedric -- Molag Bal -- Writer Review
 
 **Source:** `race-sheets/PDV_DaedricContent_Manifest.md` (Molag Bal)
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 26 drafted
+**Regenerated:** 2026-06-01 via `node tools/pdv_writer_review.mjs`
+**Rows:** 23 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -93,30 +93,6 @@ _1 row._
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | Molag Bal (Daedric path): Crushing, domination-absolute; cold contempt that occasionally warms when you are useful; does not persuade -- he states; the hierarchy is its own argument; speaks to those who understand that power over others is its own purpose; no warmth toward the player themselves, only toward their utility. | `PDV_Msg_Daedric_Molag_Commitment` | MessageBox. Fires once when commitment gate clears; curse-access reframe: player carries vampirism and has signaled three times. | God-voice | 17+274 / 40+500 |  | Title: "Molag Bal's Touch"   Body: "The thirst is in you, and you know what the thing under the hunger is: the hierarchy reflex, the dominance that makes sense now in a way it did not before the curse. That is mine. You chose to keep it three times when the cure was available. That is the commitment I record." |  |
-
-## Stigma -- Suspected
-
-_1 row._
-
-| Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
-|---|---|---|---|---|---|---|---|
-| Molag Bal (Daedric path): Crushing, domination-absolute; cold contempt that occasionally warms when you are useful; does not persuade -- he states; the hierarchy is its own argument; speaks to those who understand that power over others is its own purpose; no warmth toward the player themselves, only toward their utility. | `PDV_Notif_Daedric_Molag_Stigma_Suspected` | HUD corner notification. On entering Suspected. | Narrator | 74 / 80 |  | Your Molag Bal devotion is suspected. The domination-path draws wary eyes. |  |
-
-## Stigma -- Known
-
-_1 row._
-
-| Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
-|---|---|---|---|---|---|---|---|
-| Molag Bal (Daedric path): Crushing, domination-absolute; cold contempt that occasionally warms when you are useful; does not persuade -- he states; the hierarchy is its own argument; speaks to those who understand that power over others is its own purpose; no warmth toward the player themselves, only toward their utility. | `PDV_Notif_Daedric_Molag_Stigma_Known` | HUD corner notification. On entering Known. | Narrator | 74 / 80 |  | Your Molag Bal devotion is known. Domination-cult devotion is not trusted. |  |
-
-## Stigma -- Notorious
-
-_1 row._
-
-| Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
-|---|---|---|---|---|---|---|---|
-| Molag Bal (Daedric path): Crushing, domination-absolute; cold contempt that occasionally warms when you are useful; does not persuade -- he states; the hierarchy is its own argument; speaks to those who understand that power over others is its own purpose; no warmth toward the player themselves, only toward their utility. | `PDV_Notif_Daedric_Molag_Stigma_Notorious` | HUD corner notification. On entering Notorious. | Narrator | 79 / 80 |  | You are openly Molag Bal's. The enslaver's servant is feared wherever you walk. |  |
 
 ## Drifting away (neglect)
 

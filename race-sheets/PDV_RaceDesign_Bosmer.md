@@ -239,6 +239,13 @@ Baan Dar is the Bosmer-native survival trickster. Not the polished criminal myst
 - Forced reckoning: Cost Class C (custom content + timer)
 - Baan Dar luck trigger: Cost Class B (health-threshold event tracking)
 
+### Implementation acceptance criteria (content review, 2026-06-01)
+
+Derived from the LOCKED rules above; these are pass/fail checks for when the Papyrus layer is authored.
+
+- **Path onboarding has a safe default, not a hard block.** First-run setup requires an explicit path choice, but if `PDV_State_BosmerPath` is ever unset or corrupt it must resolve to `LivingStory` (= 1), never to an unset/limbo state. Non-Old-Contract path incoherence drifts to `LivingStory`, not unset. (Source: "Path implementation locks (LOCKED)".)
+- **Green Pact compliance is Old-Contract-only.** The `GreenPactCompliance` meter, plant-consumption penalties, the `PlantConsumed` notification, the Apostate forced-reckoning timer, and Y'ffre exclusivity must fire **only** when `PDV_State_BosmerPath == OldContract` (= 0). On `LivingStory`, `Exchange`, and `BanditRoad`, honoring Bosmer inheritance may give modest positive weighting but plant use carries **zero** penalty. Implementation must read shared Bosmer signals interpreted by the active path — **not** a hidden background Old Contract ledger. (Source: "Shared Green Pact memory (LOCKED)"; Signal Examples friction table.)
+
 ---
 
 ## Curse State Summary

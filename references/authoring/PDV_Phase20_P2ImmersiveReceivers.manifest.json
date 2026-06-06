@@ -1,0 +1,1140 @@
+{
+  "schema": "pdv.phase20.p2-immersive-receivers.v1",
+  "status": "p2-book-fill-live-readback-pass-pending-runtime-proof",
+  "owner": "references/authoring/PDV_Phase20_NoInGameProof_Gates.json#scriptRouteScaffolds",
+  "script": "PDV_PlayerEvents.psc",
+  "receiverQuest": "PDV__ManagerQuest",
+  "receiverAlias": "PDV_Player",
+  "routeOwnership": "PDV_PlayerEvents receives player/PO3 events only; PDV_EventBus routes; PDV__ManagerQuest owns persistent state and Survey/status text.",
+  "po3Events": [
+    "RegisterForBookRead",
+    "RegisterForSpellLearned",
+    "RegisterForItemHarvested",
+    "RegisterForWeatherChange",
+    "RegisterForQuestStage"
+  ],
+  "questStageGate": {
+    "status": "exact-stage-supported-pending-approved-stage-fills",
+    "receiverStatus": "exact-stage-supported",
+    "rule": "Quest-stage source entries may be approved only when PDV_PlayerEvents compares aiNewStage against explicit approvedStages for that source and route family. Whole-quest FormList membership alone is not sufficient.",
+    "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates",
+    "approvedQuestStageEntries": 0
+  },
+  "sourceProperties": [
+    {
+      "property": "PDV_FLST_P2_BretonKnightsRoadSources",
+      "race": "Breton",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteBretonTraditionChoice(0, sourceId)",
+      "acceptedUse": "Knight's Road tradition confirmation from curated vow, mercy, service, protection, or chivalric sources.",
+      "rejectedUse": "Generic helping, generic Daedric artifact ownership, generic spellcasting, or unrelated Breton quests."
+    },
+    {
+      "property": "PDV_FLST_P2_BretonHiddenArtSources",
+      "race": "Breton",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteBretonTraditionChoice(1, sourceId) plus RouteBretonHiddenArtExposure(sourceId)",
+      "acceptedUse": "Curated occult, forbidden-learning, witchcraft, or hidden-knowledge sources.",
+      "rejectedUse": "Generic spell learning, generic College membership, generic enchanting, or ordinary mage loot."
+    },
+    {
+      "property": "PDV_FLST_P2_BretonGreenWaySources",
+      "race": "Breton",
+      "sourceKinds": [
+        "quest-stage",
+        "book",
+        "weather",
+        "harvest"
+      ],
+      "route": "PDV_EventBus.RouteBretonTraditionChoice(2, sourceId) plus RouteBretonGreenWayStanding(sourceId)",
+      "acceptedUse": "Curated druidic, nature-site, standing-stone, landscape, or Green Way sources.",
+      "rejectedUse": "Generic herb picking, generic forest travel, generic animal kindness, or random standing-stone activation."
+    },
+    {
+      "property": "PDV_FLST_P2_BretonVowSources",
+      "race": "Breton",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteBretonKnightlyVow(sourceId)",
+      "acceptedUse": "Curated vow, mercy, protection, service, or courtly-duty sources.",
+      "rejectedUse": "Generic favor quests, bounty loops, or faction rank alone."
+    },
+    {
+      "property": "PDV_FLST_P2_BretonHiddenArtSpells",
+      "race": "Breton",
+      "sourceKinds": [
+        "spell-learned"
+      ],
+      "route": "PDV_EventBus.RouteBretonHiddenArtExposure(sourceId)",
+      "acceptedUse": "Small whitelist of occult or hidden-art spells whose learning is itself meaningful.",
+      "rejectedUse": "Generic spell learning or ordinary school progression."
+    },
+    {
+      "property": "PDV_FLST_P2_BretonGreenWayHarvests",
+      "race": "Breton",
+      "sourceKinds": [
+        "harvest"
+      ],
+      "route": "PDV_EventBus.RouteBretonGreenWayStanding(sourceId)",
+      "acceptedUse": "Small whitelist of druidic/nature-site harvest sources where the item and place are both curated.",
+      "rejectedUse": "Generic harvest loops or ordinary ingredient gathering."
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerAzuraSources",
+      "race": "Dunmer",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteDunmerReclamationFocus(0, sourceId)",
+      "acceptedUse": "Curated Azura/Reclamation source that can steer foreground focus.",
+      "rejectedUse": "Generic Daedric contact, generic shrine use, or ash proximity."
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerBoethiahSources",
+      "race": "Dunmer",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteDunmerReclamationFocus(1, sourceId)",
+      "acceptedUse": "Curated Boethiah/Reclamation source that can steer foreground focus.",
+      "rejectedUse": "Generic murder, generic betrayal, or generic Daedric contact."
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerMephalaSources",
+      "race": "Dunmer",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteDunmerReclamationFocus(2, sourceId)",
+      "acceptedUse": "Curated Mephala/Reclamation source that can steer foreground focus.",
+      "rejectedUse": "Generic stealth, generic poison, or generic Daedric contact."
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerDeviationSources",
+      "race": "Dunmer",
+      "sourceKinds": [
+        "quest-stage",
+        "book",
+        "spell-learned"
+      ],
+      "route": "PDV_EventBus.RouteDunmerDeviationPrice(sourceId)",
+      "acceptedUse": "Curated deviation, curse, or rival-Prince pressure source.",
+      "rejectedUse": "Generic Daedric behavior or ordinary spell/quest progress."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialCivicSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialCivicService(sourceId)",
+      "acceptedUse": "Curated civic service, repair, law, infrastructure, Legion, or public-order sources.",
+      "rejectedUse": "Generic faction attendance, generic commerce, or ordinary city travel."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPrivateTalosSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialTalosPressure(true, sourceId)",
+      "acceptedUse": "Private Talos pressure or repair source where secrecy matters.",
+      "rejectedUse": "Generic shrine use or generic Talos proximity."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPublicTalosSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialTalosPressure(false, sourceId)",
+      "acceptedUse": "Public Talos pressure, Concordat rupture, or explicit public repair source.",
+      "rejectedUse": "Generic Civil War progress, generic Talos proximity, or faction rank alone."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPatronCivicSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialPatronCivicFavor(sourceId)",
+      "acceptedUse": "Curated patron civic source tied to the active Imperial patron lane.",
+      "rejectedUse": "Generic favor quests or ordinary public-service loops."
+    },
+    {
+      "property": "PDV_FLST_P2_NordOldWaysSources",
+      "race": "Nord",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteNordOldWaysState(sourceId)",
+      "acceptedUse": "Curated Old Ways, ancestor, hearth, hold, ordeal, or sky-road source.",
+      "rejectedUse": "Generic combat, generic cave travel, generic bandit killing, or race pride text."
+    },
+    {
+      "property": "PDV_FLST_P2_NordKyneTalosSources",
+      "race": "Nord",
+      "sourceKinds": [
+        "quest-stage",
+        "book",
+        "weather"
+      ],
+      "route": "PDV_EventBus.RouteNordKyneTalosContext(sourceId)",
+      "acceptedUse": "Curated Kyne weather, storm, shout, Talos, or public pressure context.",
+      "rejectedUse": "Generic weather changes, generic shout use, or generic Civil War progress."
+    },
+    {
+      "property": "PDV_FLST_P2_NordHircineArkaySources",
+      "race": "Nord",
+      "sourceKinds": [
+        "quest-stage",
+        "book",
+        "spell-learned"
+      ],
+      "route": "PDV_EventBus.RouteNordHircineArkayEdge(sourceId)",
+      "acceptedUse": "Curated hunt, curse, death-duty, Arkay, or Hircine edge source.",
+      "rejectedUse": "Generic animal killing, generic undead killing, generic disease, or ordinary tomb travel."
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerAurielSources",
+      "race": "Altmer",
+      "sourceKinds": [
+        "book",
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteAltmerAurielFoundation(sourceId)",
+      "acceptedUse": "Curated Auri-El, Aldmeri foundation, and Psijic-adjacent ordered-return sources.",
+      "rejectedUse": "Generic magic, generic College membership, generic anti-Thalmor action, or broad elven identity text."
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerMagnusSources",
+      "race": "Altmer",
+      "sourceKinds": [
+        "book",
+        "quest-stage",
+        "spell-learned"
+      ],
+      "route": "PDV_EventBus.RouteAltmerMagnusScholarship(sourceId)",
+      "acceptedUse": "Curated Magnus, arcane stewardship, and magic-scholarship sources.",
+      "rejectedUse": "Generic spellcasting, ordinary spell learning, generic College rank, or unrelated magical loot."
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerXarxesSources",
+      "race": "Altmer",
+      "sourceKinds": [
+        "book",
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteAltmerXarxesLineage(sourceId)",
+      "acceptedUse": "Curated Xarxes-adjacent lineage, record, and Aldmeri scholarship sources.",
+      "rejectedUse": "Generic history, generic Dwemer scholarship, or non-Altmer civic identity text."
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerLorkhanPenalties",
+      "race": "Altmer",
+      "sourceKinds": [
+        "book",
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteAltmerLorkhanPenalty(tier, sourceId)",
+      "acceptedUse": "Curated Lorkhan, Shor, Talos, Dragonborn, Sovngarde, or Ysgramor-adjacent pressure sources.",
+      "rejectedUse": "Ordinary mortal life, generic friendship, generic anti-Thalmor play, generic Daedric contact, or repeated Dragonborn identity."
+    },
+    {
+      "property": "PDV_FLST_P2_ArgonianHistSources",
+      "race": "Argonian",
+      "sourceKinds": [
+        "book",
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteArgonianHistMaintenance(sourceId)",
+      "acceptedUse": "Curated Saxhleel identity, Hist-adjacent memory, and cultural-maintenance sources.",
+      "rejectedUse": "Generic swamp/water proximity, generic Argonian NPC contact, or broad exile-adventure text."
+    },
+    {
+      "property": "PDV_FLST_P2_ArgonianCommunitySources",
+      "race": "Argonian",
+      "sourceKinds": [
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteArgonianCommunity(sourceId)",
+      "acceptedUse": "Curated Argonian collective, dock, Assemblage, or named Argonian aid milestones.",
+      "rejectedUse": "Generic helping, generic Riften/Windhelm travel, or unrelated favor quests."
+    },
+    {
+      "property": "PDV_FLST_P2_ArgonianSithisSources",
+      "race": "Argonian",
+      "sourceKinds": [
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteArgonianSithisAcknowledgment(sourceId)",
+      "acceptedUse": "Curated Dark Brotherhood or death-facing Sithis threshold milestones.",
+      "rejectedUse": "Generic murder, generic stealth, ordinary assassination contracts, or non-terminal Brotherhood activity."
+    },
+    {
+      "property": "PDV_FLST_P2_BosmerYffreSources",
+      "race": "Bosmer",
+      "sourceKinds": [
+        "book",
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteBosmerYffre(pathState, sourceId)",
+      "acceptedUse": "Curated Yffre, Old Contract, Living Story, proper hunt, and community-memory sources.",
+      "rejectedUse": "Generic Kynareth proxy text, generic hunting, generic forest travel, or unrelated animal kindness."
+    },
+    {
+      "property": "PDV_FLST_P2_BosmerZenSources",
+      "race": "Bosmer",
+      "sourceKinds": [
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteBosmerZenExchange(sourceId)",
+      "acceptedUse": "Curated Z'en exchange, debt-settling, proportional justice, or contract-completion sources.",
+      "rejectedUse": "Generic trade, generic bounty loops, ordinary looting, or unrelated favor quests."
+    },
+    {
+      "property": "PDV_FLST_P2_BosmerBaanDarSources",
+      "race": "Bosmer",
+      "sourceKinds": [
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteBosmerBaanDarRoad(sourceId)",
+      "acceptedUse": "Curated Baan Dar road-life, exile-survival, reversal, and survival-cunning sources.",
+      "rejectedUse": "Generic theft, generic travel, ordinary bandit killing, or repeatable crime loops."
+    },
+    {
+      "property": "PDV_FLST_P2_KhajiitLunarSources",
+      "race": "Khajiit",
+      "sourceKinds": [
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteKhajiitLunarSubstrate(sourceId)",
+      "acceptedUse": "Curated Khajiit lunar theology, ja-Kha'jay, Lattice, and cultural-continuity texts.",
+      "rejectedUse": "Moon-sugar use, generic Khajiit references, ordinary night stealth, or generic inn sleep."
+    },
+    {
+      "property": "PDV_FLST_P2_KhajiitFocusedSources",
+      "race": "Khajiit",
+      "sourceKinds": [
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteKhajiitFocusedEmphasis(deityId, sourceId)",
+      "acceptedUse": "Curated deity-specific Azurah, Alkosh, Baan Dar, Rajhin, or Khenarthi milestones.",
+      "rejectedUse": "Generic theft, generic dragon combat, generic road travel, or manual focus entitlement."
+    },
+    {
+      "property": "PDV_FLST_P2_OrcMalacathSources",
+      "race": "Orc",
+      "sourceKinds": [
+        "book",
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteOrcMalacathConduct(modeId, sourceId)",
+      "acceptedUse": "Curated Malacath theology, Orsimer code, Stronghold, dignity, or completed-service milestones.",
+      "rejectedUse": "Generic smithing, generic combat, generic Orc NPC contact, or Boethiah-positive routing."
+    },
+    {
+      "property": "PDV_FLST_P2_RedguardSpineSources",
+      "race": "Redguard",
+      "sourceKinds": [
+        "book",
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteRedguardAncestorSpine(sourceId)",
+      "acceptedUse": "Curated Yokudan spine, Tu'whacca, ancestor, martial-discipline, or death-duty sources.",
+      "rejectedUse": "Generic combat, generic undead killing, broad Redguard identity text, or ordinary Hall of the Dead travel."
+    },
+    {
+      "property": "PDV_FLST_P2_RedguardCrownSources",
+      "race": "Redguard",
+      "sourceKinds": [
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteRedguardSectSignal(0, sourceId)",
+      "acceptedUse": "Curated Crown, Alik'r, honorable martial, and ancestor-duty quest stages.",
+      "rejectedUse": "Generic Alik'r proximity, ordinary Redguard NPC contact, generic bounty work, or non-terminal MS08 state."
+    },
+    {
+      "property": "PDV_FLST_P2_RedguardForebearSources",
+      "race": "Redguard",
+      "sourceKinds": [
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteRedguardSectSignal(1, sourceId)",
+      "acceptedUse": "Curated Forebear, road-passage, exile-protection, contract, and make-way quest stages.",
+      "rejectedUse": "Generic travel, ordinary mercenary work, repeated caravan contact, or non-terminal MS08 state."
+    },
+    {
+      "property": "PDV_FLST_P2_RedguardAshAbahSources",
+      "race": "Redguard",
+      "sourceKinds": [
+        "quest-stage"
+      ],
+      "route": "PDV_EventBus.RouteRedguardSectSignal(2, sourceId)",
+      "acceptedUse": "Curated Ash'abah, undead-cleansing, death-duty, and major necromancer-operation stages.",
+      "rejectedUse": "Generic undead combat, repeatable dungeon clearing, generic Arkay proxy text, or unrelated necromancer loot."
+    }
+  ],
+  "formListShellReadback": {
+    "status": "record-wired",
+    "authorTool": "tools/pdv-phase20-p2-receiver-author",
+    "command": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260604-094058.bak",
+    "readbackResult": "PASS - all 34 PDV_FLST_P2_* receiver FormLists exist as FLST records"
+  },
+  "aliasPropertyReadback": {
+    "status": "alias-properties-wired",
+    "authorTool": "tools/pdv-phase20-p2-receiver-author",
+    "command": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260604-094110.bak",
+    "readbackResult": "PASS - all 34 PDV_FLST_P2_* properties on PDV_PlayerEvents alias point at their matching FLST records"
+  },
+  "sourceFillPlan": {
+    "status": "p2-book-fill-live-readback-pass-pending-runtime-proof",
+    "fillCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries",
+    "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill",
+    "readbackResult": "PASS - approved P2 book-read source entries filled and read back on 2026-06-04; backup D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260604-094122.bak",
+    "curationRunbook": "references/authoring/PDV_Phase20_P2SourceCuration_Runbook.md",
+    "entryRule": "Only exact source records with status approved-for-fill may be written. This tranche approves book-read entries only; quest-stage source entries stay blocked until exact quest/stage candidates are approved and declared.",
+    "formKeyFormat": "ModName.ext:localHex, for example Skyrim.esm:00000014. Do not use load-order FormIDs.",
+    "fillToolSafety": "The fill tool refuses unapproved entries, rejects sourceKind values not declared on the target receiver property, rejects duplicate property/form/sourceKind entries, rejects approved quest-stage entries unless exact-stage receiver support and approvedStages metadata exist, and writes no ESP changes when sourceFillEntries is empty."
+  },
+  "sourceFillEntries": [
+    {
+      "property": "PDV_FLST_P2_BretonHiddenArtSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0ED60B",
+          "editorId": "Book2CommonHagravens",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Hidden Art context through hagraven/witchcraft reading; rejects generic spell learning and ordinary mage loot."
+        },
+        {
+          "formKey": "Skyrim.esm:07EB03",
+          "editorId": "Book2CommonMadmenoftheReach",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Reach occult context for Breton Hidden Art; rejects generic Reach travel, Forsworn combat, and broad Breton identity text."
+        },
+        {
+          "formKey": "Skyrim.esm:0DDFB6",
+          "editorId": "dunPOIWitchNote",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "Exact witchcraft note source for Hidden Art exposure; rejects generic note reading and unrelated POI discovery."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerAzuraSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01B245",
+          "editorId": "Book4RareInvocationofAzura",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Azura-specific devotional text for Dunmer Reclamation focus; rejects generic Daedric contact."
+        },
+        {
+          "formKey": "Skyrim.esm:01ACE9",
+          "editorId": "Book3ValuableAzuraandtheBox",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Azura-specific lore text for Dunmer Reclamation focus; rejects generic artifact ownership."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerBoethiahSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01B233",
+          "editorId": "Book4RareBoethiahsGlory",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Boethiah-specific Reclamation source; rejects generic betrayal, murder, and Daedric behavior."
+        },
+        {
+          "formKey": "Skyrim.esm:032E72",
+          "editorId": "DA02BookBoethiahsProving",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "Exact Boethiah proving text; uses book-read ownership instead of broad DA02 quest-stage fill."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPublicTalosSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0ED04D",
+          "editorId": "Book2ReligiousTalosWorship",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot public Talos pressure text for Imperial Concordat rupture context; rejects generic shrine proximity or Civil War rank."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_NordOldWaysSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0ED161",
+          "editorId": "Book1CheapNordsArise",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Nord identity and Old Ways context; rejects generic race-pride text loops."
+        },
+        {
+          "formKey": "Skyrim.esm:0ED02F",
+          "editorId": "Book2CommonDreamOfSovngarde",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Sovngarde/afterlife context for Nord Old Ways; rejects generic tomb travel and main-quest progress."
+        },
+        {
+          "formKey": "Skyrim.esm:0E2FC6",
+          "editorId": "Book3ValuableSovngardeReexamination",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot reflective Sovngarde text for Nord Old Ways; rejects duplicate quest-stage ownership."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_NordHircineArkaySources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0F683F",
+          "editorId": "CR12TotemsOfHircine",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Hircine edge text; deliberately excludes duplicate abbreviated Totems book and generic beast/undead hooks."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerAurielSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01AF94",
+          "editorId": "Book4RareAdabala",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Auri-El and Aldmeri ancestral theology text; rejects generic elven identity or ordinary magic scholarship."
+        },
+        {
+          "formKey": "Skyrim.esm:01AD06",
+          "editorId": "Book4RareFragmentOnArtaeum",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Psijic/Artaeum text for Altmer ordered-return context; rejects generic College membership."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerMagnusSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01ACFE",
+          "editorId": "Book4RareArcanaRestored",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot arcane restoration and scholarship text for Magnus practice; rejects generic spellcasting."
+        },
+        {
+          "formKey": "Skyrim.esm:01ACF1",
+          "editorId": "Book3ValuableMagicFromTheSky",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot magical-theory text keyed to sky-origin magic; rejects ordinary spell learning."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerXarxesSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01AD09",
+          "editorId": "Book4RareLastKingOfAyleids",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Aldmeri lineage and heritage text for Xarxes record/lineage context."
+        },
+        {
+          "formKey": "Skyrim.esm:01ADB4",
+          "editorId": "Book4RareNefarivigumLore",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Ayleidic city scholarship for lineage/record context; plausible but curated."
+        },
+        {
+          "formKey": "Skyrim.esm:0ED03A",
+          "editorId": "Book4RareAccountingOfTheElderScrolls",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot hidden-record scholarship for Xarxes-adjacent record keeping; rejects generic Elder Scroll spectacle."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ArgonianHistSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01AFD7",
+          "editorId": "Book0ArgonianAccountBook1",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Saxhleel diaspora text for Hist-distance cultural maintenance; not a primary Hist-restoration surface."
+        },
+        {
+          "formKey": "Skyrim.esm:01ACE7",
+          "editorId": "Book3ValuableArgonianAccountBook2",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot continuation of Saxhleel exile/cultural-maintenance context."
+        },
+        {
+          "formKey": "Skyrim.esm:01AFFC",
+          "editorId": "Book0ArgonianAccountBook3",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot continuation of Saxhleel exile/cultural-maintenance context."
+        },
+        {
+          "formKey": "Skyrim.esm:01ACE8",
+          "editorId": "Book3ValuableArgonianAccountBook4",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot terminal volume for Saxhleel identity and Hist-distance context."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_KhajiitLunarSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01B27D",
+          "editorId": "Book3ValuableWordsofClanMotherAhnissi",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot direct Khajiit lunar theology source: Azurah, ja-Kha'jay, and creation."
+        },
+        {
+          "formKey": "Skyrim.esm:01AFF3",
+          "editorId": "Book0AhzirrTraajijazeri",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Khajiit community and road-life identity manifesto for Lunar Lattice substrate."
+        },
+        {
+          "formKey": "Skyrim.esm:0F03E3",
+          "editorId": "Book3ValuableTaleOfDroZira",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Khajiit folk-story continuity text; plausible Azurah-threshold context without generic cat references."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_OrcMalacathSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:07EBC9",
+          "editorId": "Book1CheapTheCodeofMalacath",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot direct Malacath code text; strongest Orc devotional book source."
+        },
+        {
+          "formKey": "Skyrim.esm:01AD16",
+          "editorId": "Book4RareTrueNatureofOrcs",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Orsimer theology and Malacath identity text; rejects generic Orc racial mention."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_RedguardSpineSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01ACD1",
+          "editorId": "Book2CommonManualMixedUnitTactics",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Redguard martial-discipline context; plausible shared Crown/Forebear spine source while Tu'whacca books are absent."
+        }
+      ]
+    }
+  ],
+  "routeContract": {
+    "status": "static-route-verification-required",
+    "sourceOfTruth": "routeEntries",
+    "script": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_PlayerEvents.psc",
+    "verificationCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-route-entries",
+    "rule": "Every live PDV_PlayerEvents quest-stage branch must be represented here with property, expectedFormId, exact approvedStage, routeKey, dispatch, accepted/rejected context, duplicate guard, and review status. This manifest verifies static Papyrus routing; it does not authorize ESP source fill by itself."
+  },
+  "routeEntries": [
+    {
+      "id": "nord-mq104-old-ways",
+      "race": "Nord",
+      "property": "PDV_FLST_P2_NordOldWaysSources",
+      "sourceKind": "quest-stage",
+      "formKey": "02610C:Skyrim.esm",
+      "expectedFormId": 155916,
+      "approvedStage": 160,
+      "routeKey": "nord_mq104_old_ways",
+      "dispatch": "PDV_EventBusService.RouteNordOldWaysState(\"po3_queststage_nord_mq104\")",
+      "acceptedContext": "Dragonborn identity milestone as a one-shot old-ways pressure source.",
+      "rejectedContext": "Other MQ104 stages, repeated quest progress, or generic main-quest participation.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "mq104-origin-reading",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "nord-mq304-old-ways",
+      "race": "Nord",
+      "property": "PDV_FLST_P2_NordOldWaysSources",
+      "sourceKind": "quest-stage",
+      "formKey": "046EF1:Skyrim.esm",
+      "expectedFormId": 290545,
+      "approvedStage": 200,
+      "routeKey": "nord_mq304_old_ways",
+      "dispatch": "PDV_EventBusService.RouteNordOldWaysState(\"po3_queststage_nord_mq304\")",
+      "acceptedContext": "Late main-quest resolution as a one-shot Nord old-ways marker.",
+      "rejectedContext": "Intermediate Alduin quest stages or repeatable dragon content.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "main-quest-resolution-reading",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "nord-mq105-kyne-talos",
+      "race": "Nord",
+      "property": "PDV_FLST_P2_NordKyneTalosSources",
+      "sourceKind": "quest-stage",
+      "formKey": "0242BA:Skyrim.esm",
+      "expectedFormId": 148154,
+      "approvedStage": 160,
+      "routeKey": "nord_mq105_kyne_talos",
+      "dispatch": "PDV_EventBusService.RouteNordKyneTalosContext(\"po3_queststage_nord_mq105\")",
+      "acceptedContext": "One-shot Greybeard/voice milestone that can carry Kyne/Talos context.",
+      "rejectedContext": "Generic shout use, generic Greybeard proximity, or repeated voice power checks.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "voice-recognition-reading",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "nord-c03-hircine-arkay",
+      "race": "Nord",
+      "property": "PDV_FLST_P2_NordHircineArkaySources",
+      "sourceKind": "quest-stage",
+      "formKey": "01CEF4:Skyrim.esm",
+      "expectedFormId": 118516,
+      "approvedStage": 200,
+      "routeKey": "nord_c03_hircine_arkay",
+      "dispatch": "PDV_EventBusService.RouteNordHircineArkayEdge(\"po3_queststage_nord_c03\")",
+      "acceptedContext": "Companions beast-blood milestone as a one-shot Hircine/Arkay edge.",
+      "rejectedContext": "Generic Companions membership, combat, or radiant jobs.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "companions-beast-edge",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "nord-c06-hircine-arkay",
+      "race": "Nord",
+      "property": "PDV_FLST_P2_NordHircineArkaySources",
+      "sourceKind": "quest-stage",
+      "formKey": "01CEF6:Skyrim.esm",
+      "expectedFormId": 118518,
+      "approvedStage": 200,
+      "routeKey": "nord_c06_hircine_arkay",
+      "dispatch": "PDV_EventBusService.RouteNordHircineArkayEdge(\"po3_queststage_nord_c06\")",
+      "acceptedContext": "Companions cure/end-state milestone as a one-shot Hircine/Arkay edge.",
+      "rejectedContext": "Generic Companions progress or repeated lycanthropy state changes.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "companions-beast-edge",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "nord-da05-hircine-hunt",
+      "race": "Nord",
+      "property": "PDV_FLST_P2_NordHircineArkaySources",
+      "sourceKind": "quest-stage",
+      "formKey": "02A4DA:Skyrim.esm",
+      "expectedFormId": 173210,
+      "approvedStage": 100,
+      "routeKey": "nord_da05_hircine_hunt",
+      "dispatch": "PDV_EventBusService.RouteNordHircineArkayEdge(\"po3_queststage_nord_da05_kill\")",
+      "acceptedContext": "Hircine hunt resolution branch as a one-shot edge marker.",
+      "rejectedContext": "Other Ill Met By Moonlight stages or artifact possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "da05-branch-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "nord-da05-arkay-mercy",
+      "race": "Nord",
+      "property": "PDV_FLST_P2_NordHircineArkaySources",
+      "sourceKind": "quest-stage",
+      "formKey": "02A4DA:Skyrim.esm",
+      "expectedFormId": 173210,
+      "approvedStage": 105,
+      "routeKey": "nord_da05_arkay_mercy",
+      "dispatch": "PDV_EventBusService.RouteNordHircineArkayEdge(\"po3_queststage_nord_da05_mercy\")",
+      "acceptedContext": "Mercy branch from Ill Met By Moonlight as a one-shot Arkay/Hircine edge marker.",
+      "rejectedContext": "Other Ill Met By Moonlight stages or artifact possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "da05-branch-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "dunmer-da01-azura",
+      "race": "Dunmer",
+      "property": "PDV_FLST_P2_DunmerAzuraSources",
+      "sourceKind": "quest-stage",
+      "formKey": "028B0E:Skyrim.esm",
+      "expectedFormId": 166614,
+      "approvedStage": 100,
+      "routeKey": "dunmer_da01_azura",
+      "dispatch": "PDV_EventBusService.RouteDunmerReclamationFocus(0, \"po3_queststage_dunmer_da01_azura\")",
+      "acceptedContext": "Azura branch resolution as a one-shot Reclamation focus marker.",
+      "rejectedContext": "Black Star branch, generic Azura shrine proximity, or artifact possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "da01-branch-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "dunmer-da01-black-star",
+      "race": "Dunmer",
+      "property": "PDV_FLST_P2_DunmerDeviationSources",
+      "sourceKind": "quest-stage",
+      "formKey": "028B0E:Skyrim.esm",
+      "expectedFormId": 166614,
+      "approvedStage": 110,
+      "routeKey": "dunmer_da01_black_star",
+      "dispatch": "PDV_EventBusService.RouteDunmerDeviationPrice(\"po3_queststage_dunmer_da01_black_star\")",
+      "acceptedContext": "Black Star branch resolution as a one-shot deviation marker.",
+      "rejectedContext": "Azura branch, generic soul gem use, or artifact possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "da01-branch-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "dunmer-da02-boethiah",
+      "race": "Dunmer",
+      "property": "PDV_FLST_P2_DunmerBoethiahSources",
+      "sourceKind": "quest-stage",
+      "formKey": "04D936:Skyrim.esm",
+      "expectedFormId": 317654,
+      "approvedStage": 100,
+      "routeKey": "dunmer_da02_boethiah",
+      "dispatch": "PDV_EventBusService.RouteDunmerReclamationFocus(1, \"po3_queststage_dunmer_da02\")",
+      "acceptedContext": "Boethiah quest resolution as a one-shot Reclamation focus marker.",
+      "rejectedContext": "Generic sacrifice, violence, or artifact possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "da02-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "altmer-mg08-magnus",
+      "race": "Altmer",
+      "property": "PDV_FLST_P2_AltmerMagnusSources",
+      "sourceKind": "quest-stage",
+      "formKey": "01F268:Skyrim.esm",
+      "expectedFormId": 127576,
+      "approvedStage": 200,
+      "routeKey": "altmer_mg08_magnus",
+      "dispatch": "PDV_EventBusService.RouteAltmerMagnusScholarship(\"po3_queststage_altmer_mg08\")",
+      "acceptedContext": "College/Magnus terminal milestone as a one-shot Magnus scholarship source.",
+      "rejectedContext": "Generic spell learning, College membership, or staff possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "mg08-scholarship",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "altmer-mq104-lorkhan",
+      "race": "Altmer",
+      "property": "PDV_FLST_P2_AltmerLorkhanPenalties",
+      "sourceKind": "quest-stage",
+      "formKey": "02610C:Skyrim.esm",
+      "expectedFormId": 155916,
+      "approvedStage": 160,
+      "routeKey": "altmer_mq104_lorkhan",
+      "dispatch": "PDV_EventBusService.RouteAltmerLorkhanPenalty(2, \"po3_queststage_altmer_mq104\")",
+      "acceptedContext": "Dragonborn identity milestone as a one-shot Altmer Lorkhan crisis marker.",
+      "rejectedContext": "Repeated Dragonborn actions or generic main-quest progress.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "mq104-origin-reading",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "altmer-mq304-lorkhan",
+      "race": "Altmer",
+      "property": "PDV_FLST_P2_AltmerLorkhanPenalties",
+      "sourceKind": "quest-stage",
+      "formKey": "046EF1:Skyrim.esm",
+      "expectedFormId": 290545,
+      "approvedStage": 200,
+      "routeKey": "altmer_mq304_lorkhan",
+      "dispatch": "PDV_EventBusService.RouteAltmerLorkhanPenalty(1, \"po3_queststage_altmer_mq304\")",
+      "acceptedContext": "Main-quest resolution as a one-shot Altmer Lorkhan crisis marker.",
+      "rejectedContext": "Repeated dragon content or generic main-quest progress.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "main-quest-resolution-reading",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "altmer-c03-lorkhan",
+      "race": "Altmer",
+      "property": "PDV_FLST_P2_AltmerLorkhanPenalties",
+      "sourceKind": "quest-stage",
+      "formKey": "01CEF4:Skyrim.esm",
+      "expectedFormId": 118516,
+      "approvedStage": 200,
+      "routeKey": "altmer_c03_lorkhan",
+      "dispatch": "PDV_EventBusService.RouteAltmerLorkhanPenalty(2, \"po3_queststage_altmer_c03\")",
+      "acceptedContext": "Beast-blood milestone as a one-shot Altmer crisis/rupture marker.",
+      "rejectedContext": "Generic Companions progress or repeated lycanthropy checks.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "companions-beast-edge",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "argonian-db01-sithis",
+      "race": "Argonian",
+      "property": "PDV_FLST_P2_ArgonianSithisSources",
+      "sourceKind": "quest-stage",
+      "formKey": "01EA30:Skyrim.esm",
+      "expectedFormId": 125520,
+      "approvedStage": 200,
+      "routeKey": "argonian_db01_sithis",
+      "dispatch": "PDV_EventBusService.RouteArgonianSithisAcknowledgment(\"po3_queststage_argonian_db01\")",
+      "acceptedContext": "Dark Brotherhood initiation milestone as a one-shot Sithis source.",
+      "rejectedContext": "Generic murder, generic stealth play, or radiant assassination loops.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "db-sithis-path",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "argonian-db11-sithis",
+      "race": "Argonian",
+      "property": "PDV_FLST_P2_ArgonianSithisSources",
+      "sourceKind": "quest-stage",
+      "formKey": "01EA39:Skyrim.esm",
+      "expectedFormId": 125529,
+      "approvedStage": 200,
+      "routeKey": "argonian_db11_sithis",
+      "dispatch": "PDV_EventBusService.RouteArgonianSithisAcknowledgment(\"po3_queststage_argonian_db11\")",
+      "acceptedContext": "Dark Brotherhood end-state as a one-shot Sithis source.",
+      "rejectedContext": "Radiant assassination loops or generic crime.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "db-sithis-path",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "bosmer-da05-yffre-hunt",
+      "race": "Bosmer",
+      "property": "PDV_FLST_P2_BosmerYffreSources",
+      "sourceKind": "quest-stage",
+      "formKey": "02A4DA:Skyrim.esm",
+      "expectedFormId": 173210,
+      "approvedStage": 100,
+      "routeKey": "bosmer_da05_yffre_hunt",
+      "dispatch": "PDV_EventBusService.RouteBosmerYffre(0, \"po3_queststage_bosmer_da05_kill\")",
+      "acceptedContext": "Hircine hunt branch as a one-shot Bosmer/Y'ffre pressure source.",
+      "rejectedContext": "Generic hunting, animal kills, or artifact possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "da05-branch-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "bosmer-da05-yffre-mercy",
+      "race": "Bosmer",
+      "property": "PDV_FLST_P2_BosmerYffreSources",
+      "sourceKind": "quest-stage",
+      "formKey": "02A4DA:Skyrim.esm",
+      "expectedFormId": 173210,
+      "approvedStage": 105,
+      "routeKey": "bosmer_da05_yffre_mercy",
+      "dispatch": "PDV_EventBusService.RouteBosmerYffre(1, \"po3_queststage_bosmer_da05_mercy\")",
+      "acceptedContext": "Mercy branch from Ill Met By Moonlight as a one-shot Bosmer/Y'ffre pressure source.",
+      "rejectedContext": "Generic hunting, animal kills, or artifact possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "da05-branch-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "bosmer-mg08-living-story",
+      "race": "Bosmer",
+      "property": "PDV_FLST_P2_BosmerYffreSources",
+      "sourceKind": "quest-stage",
+      "formKey": "01F268:Skyrim.esm",
+      "expectedFormId": 127576,
+      "approvedStage": 200,
+      "routeKey": "bosmer_mg08_living_story",
+      "dispatch": "PDV_EventBusService.RouteBosmerYffre(1, \"po3_queststage_bosmer_mg08\")",
+      "acceptedContext": "College/Magnus terminal milestone as a one-shot living-story source.",
+      "rejectedContext": "Generic spell learning or College membership alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "mg08-scholarship",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "khajiit-mq104-alkosh",
+      "race": "Khajiit",
+      "property": "PDV_FLST_P2_KhajiitFocusedSources",
+      "sourceKind": "quest-stage",
+      "formKey": "02610C:Skyrim.esm",
+      "expectedFormId": 155916,
+      "approvedStage": 160,
+      "routeKey": "khajiit_mq104_alkosh",
+      "dispatch": "PDV_EventBusService.RouteKhajiitFocusedEmphasis(5, \"po3_queststage_khajiit_mq104\")",
+      "acceptedContext": "Dragonborn identity milestone as a one-shot Alkosh emphasis marker.",
+      "rejectedContext": "Generic dragon kills or repeated main-quest progress.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "mq104-origin-reading",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "khajiit-da01-azurah",
+      "race": "Khajiit",
+      "property": "PDV_FLST_P2_KhajiitFocusedSources",
+      "sourceKind": "quest-stage",
+      "formKey": "028B0E:Skyrim.esm",
+      "expectedFormId": 166614,
+      "approvedStage": 100,
+      "routeKey": "khajiit_da01_azurah",
+      "dispatch": "PDV_EventBusService.RouteKhajiitFocusedEmphasis(2, \"po3_queststage_khajiit_da01\")",
+      "acceptedContext": "Azura branch resolution as a one-shot Azurah emphasis marker.",
+      "rejectedContext": "Black Star branch, generic shrine proximity, or artifact possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "da01-branch-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "orc-da06-malacath",
+      "race": "Orc",
+      "property": "PDV_FLST_P2_OrcMalacathSources",
+      "sourceKind": "quest-stage",
+      "formKey": "03B681:Skyrim.esm",
+      "expectedFormId": 243329,
+      "approvedStage": 200,
+      "routeKey": "orc_da06_malacath",
+      "dispatch": "PDV_EventBusService.RouteOrcMalacathConduct(1, \"po3_queststage_orc_da06\")",
+      "acceptedContext": "Malacath quest resolution as a one-shot Orc conduct marker.",
+      "rejectedContext": "Generic stronghold proximity, generic warhammer use, or artifact possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "da06-malacath-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "redguard-ms08-crown",
+      "race": "Redguard",
+      "property": "PDV_FLST_P2_RedguardCrownSources",
+      "sourceKind": "quest-stage",
+      "formKey": "01CF25:Skyrim.esm",
+      "expectedFormId": 118565,
+      "approvedStage": 201,
+      "routeKey": "redguard_ms08_crown",
+      "dispatch": "PDV_EventBusService.RouteRedguardSectSignal(0, \"po3_queststage_redguard_ms08_crown\")",
+      "acceptedContext": "In My Time of Need branch as a one-shot Redguard Crown-leaning marker.",
+      "rejectedContext": "Generic Redguard NPC interaction or Whiterun travel.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "ms08-branch-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    },
+    {
+      "id": "redguard-ms08-forebear",
+      "race": "Redguard",
+      "property": "PDV_FLST_P2_RedguardForebearSources",
+      "sourceKind": "quest-stage",
+      "formKey": "01CF25:Skyrim.esm",
+      "expectedFormId": 118565,
+      "approvedStage": 200,
+      "routeKey": "redguard_ms08_forebear",
+      "dispatch": "PDV_EventBusService.RouteRedguardSectSignal(1, \"po3_queststage_redguard_ms08_forebear\")",
+      "acceptedContext": "In My Time of Need branch as a one-shot Redguard Forebear-leaning marker.",
+      "rejectedContext": "Generic Redguard NPC interaction or Whiterun travel.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "ms08-branch-outcome",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-pending-source-fill",
+      "reviewStatus": "approved-static-route-only"
+    }
+  ],
+  "antiFarmPolicy": [
+    "FormLists must be small curated whitelists, not broad vanilla category lists.",
+    "Quest-stage sources must be terminal, one-shot, or source-marked; do not use whole questlines where every stage would score.",
+    "Harvest, weather, spell, and book sources must be whitelisted by exact form and then proven against generic loops.",
+    "PDV_PlayerEvents enforces source-level repeat gates before routing: book, spell, and quest-stage sources are one-shot per source/form/family; weather and harvest sources are once per in-game day per source/form/family.",
+    "Receivers remain silent when properties are empty, missing, or mismatched."
+  ],
+  "assetRequirement": "No new mesh required; all six-race receiver sources are non-visible gameplay context, PO3 events, or exact vanilla records.",
+  "newMeshRequired": false,
+  "missingAssetIfRequired": "none",
+  "remainingBoundary": "Curate and approve exact source records, fill the FormLists through the source-fill tool, register any terminal quest-stage sources, then prove accepted trigger, wrong-origin rejection, generic-hook rejection, repeat/anti-farm behavior, Survey/status clarity, stack snapshot, and manual feel evidence in game."
+}

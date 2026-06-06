@@ -41,7 +41,7 @@ spine as an Aedric deity but uses a different contract grammar:
   `Curse-access` -- with race-specific stigma weight and exit difficulty. The
   canonical per-race cells are in `PDV_DaedricRacePrinceMatrix.csv`.
 - **Native-integration override** (Section 11.4). For the races where a Prince
-  is native -- Azura/Boethiah/Mephala for Dunmer, Boethra/Mafala for Khajiit,
+  is native -- Azura/Boethiah/Mephala for Dunmer, Azurah (Azura) for Khajiit,
   Malacath for Orc -- the Daedric contract does not apply: stigma is near-zero
   and the path behaves as an Aedric-style deity. Those treatments are authored
   in the race manifest, not here. This file covers the Prince-first global
@@ -178,7 +178,7 @@ history remains) per `PDV_Architecture_v3.md` Section 11.4 and 11.6.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Notif_Daedric_Boethiah_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You have stopped proving yourself. Boethiah's edge dulls; only the stigma stays. |
+| PDV_Notif_Daedric_Boethiah_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You stopped proving yourself. Boethiah's edge dulls; only the stigma stays. |
 | PDV_Msg_Daedric_Boethiah_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4 (exit route); Section 11.6 (stigma decay) | Fires once on renunciation; residue persists | Title: "Boethiah's Contempt" Body: "You set the pact down. Boethiah expected no better -- the weak always do. The edge is gone. The stigma fades only on its own slow time, and the memory of what you reached for does not fully leave you, or the people who saw it." |
 
 ### 6.8 Per-race response framing (`PDV_Msg_Daedric_Boethiah_Response_*`)
@@ -186,8 +186,9 @@ history remains) per `PDV_Architecture_v3.md` Section 11.4 and 11.6.
 Narrator voice. MessageBox. Body budget 500 hard / 280 target. One-time, on a
 race-X character committing to the Boethiah path. Each row is drawn from the
 matching per-race cell of `PDV_DaedricRacePrinceMatrix.csv` (`<state>; <friction>;
-<exit>`). Eight non-native races are authored; Dunmer and Khajiit are
-native-integrated and route to the race manifest instead.
+<exit>`). Nine non-native races are authored; Dunmer is native-integrated and
+routes to the race manifest, and Khajiit is Legible (Boethra is a known Khajiiti
+name but not a lunar lane), so Khajiit takes a global response below.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -199,13 +200,15 @@ native-integrated and route to the race manifest instead.
 | PDV_Msg_Daedric_Boethiah_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Boethiah" Redguard cell | One-time on a Redguard committing | Title: "Foreign to the Redguard" Body: "To a Redguard, Boethiah's proving ethos is foreign -- an outsider creed that challenges the Yokudan honor frame rather than fitting inside it. Leaving the path again means hard rededication." |
 | PDV_Msg_Daedric_Boethiah_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Boethiah" Orc cell; Notes "Hostility for Altmer and Orc is load-bearing" | One-time on an Orc committing | Title: "Hostile to the Orsimer" Body: "For an Orc this is the deepest rivalry there is. Boethiah's hand in the betrayal that made Malacath sits against the whole Orc code. To take this pact is hard rupture, and Malacath does not forget it." |
 | PDV_Msg_Daedric_Boethiah_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Boethiah" Argonian cell | One-time on an Argonian committing | Title: "Foreign to the Saxhleel" Body: "Boethiah has no place in the Hist or the exile community; to an Argonian the path is simply foreign, outside the layered substrate. It can be walked, but it is set down through abandonment or cleansing, not woven in." |
+| PDV_Msg_Daedric_Boethiah_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Boethiah" Khajiit cell (Legible) | One-time on a Khajiit committing | Title: "Boethra Is Legible" Body: "A Khajiit may know Boethiah as Boethra, a warrior-name from the old litter-tales -- legible, but not a native lane. Boethra does not run through the Lattice or the moons' worship; the global pact is an outside pull, not the ancestor remembered. Abandonment or native reframing keeps the lunar substrate intact." |
 
-**Dunmer and Khajiit (native-integrated, not authored here).** Boethiah is a
-native Dunmer Reclamation and Khajiit-legible as Boethra; per Section 2 and
-`PDV_Architecture_v3.md` Section 11.4 the Daedric contract is overridden for
-them. A Dunmer or Khajiit relating to Boethiah uses the race manifest's
-Dunmer Boethiah section and the Khajiit Azurah/Boethra framing -- there is no
-`PDV_Msg_Daedric_Boethiah_Response_Dunmer` or `_Khajiit` row.
+**Dunmer (native-integrated, not authored here).** Boethiah is a native Dunmer
+Reclamation; per Section 2 and `PDV_Architecture_v3.md` Section 11.4 the Daedric
+contract is overridden for the Dunmer, who use the race manifest's Dunmer
+Boethiah section -- there is no `PDV_Msg_Daedric_Boethiah_Response_Dunmer` row.
+**Khajiit** are Legible (not native): Boethra is a known Khajiiti name but is not
+one of the five lunar focuses, so a Khajiit takes the global
+`PDV_Msg_Daedric_Boethiah_Response_Khajiit` row below.
 
 ### 6.9 Boethiah firing-density sanity
 
@@ -259,9 +262,9 @@ notes for reference until it is authored into a subsection.
 
 | Prince | PrincePathType | Authoring notes |
 |---|---|---|
-| Boethiah / Boethra | Struggle-overthrow-trial | **Drafted** (Section 6). Native-integrated for Dunmer and Khajiit. |
+| Boethiah / Boethra | Struggle-overthrow-trial | **Drafted** (Section 6). Native-integrated for Dunmer; Khajiit Legible (global response). |
 | Azura / Azurah | Fate-dawn-dusk-prophecy | Native-integrated for Dunmer and Khajiit -- Daedric path covers the other eight races. |
-| Mephala / Mafala | Web-secret-murder-clan | Native-integrated for Dunmer and Khajiit. |
+| Mephala / Mafala | Web-secret-murder-clan | Native-integrated for Dunmer; Khajiit Legible (global response). |
 | Malacath / Mauloch | Oath-exile-code-vengeance | Native-integrated for Orc -- Daedric path covers the other nine races. |
 | Meridia | Cleansing-light-anti-undead overlay | Tolerated-access in several cultures; lighter stigma than most. |
 | Hircine | Hunt-lycanthropy-predator | **Curse-access** Prince -- framing differs: entry runs through lycanthropy, not a normal pact. |
@@ -356,7 +359,7 @@ Source: the `Azura / Azurah` row of `PDV_DaedricRacePrinceMatrix.csv` -- PathTyp
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Msg_Daedric_Azura_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Nord cell | One-time on a Nord committing | Title: "A Foreign Star Among Nords" Body: "To a Nord, Azura is a foreign cult -- twilight prophecy sits poorly against a hearth-and-war faith built on what a hand can do. The path can be walked, but it strains the Nord frame, and the way back is to cleanse the star and rededicate to the old gods." |
+| PDV_Msg_Daedric_Azura_Response_Nord | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Nord cell | One-time on a Nord committing | Title: "A Taboo Star Among Nords" Body: "To a Nord, Azura is a foreign cult -- twilight prophecy sits poorly against a hearth-and-war faith built on what a hand can do. The path can be walked, but it strains the Nord frame, and the way back is to cleanse the star and rededicate to the old gods." |
 | PDV_Msg_Daedric_Azura_Response_Imperial | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Imperial cell | One-time on an Imperial committing | Title: "A Cult Outside the Order" Body: "To an Imperial, devotion to Azura reads as a non-civic cult -- a private prophecy outside the Divine public order the Empire keeps. The path strains that order, and return runs through shrine cleansing or rededication to the Nine." |
 | PDV_Msg_Daedric_Azura_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Breton cell | One-time on a Breton committing | Title: "Legible, but Watched" Body: "A Breton can read Azura plainly -- threshold witchcraft and star-prophecy are within the Hidden Art's reach. It is intelligible, but socially risky; keep it covered, or rededicate. The danger here is exposure, not incomprehension." |
 | PDV_Msg_Daedric_Azura_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Altmer cell | One-time on an Altmer committing | Title: "Apostasy from the Dawn" Body: "For an Altmer, turning to Azura is apostasy -- the Auri-El order does not share its dawn with a Daedric star. The path is taboo, and the road back is difficult absolution, not a simple change of heart." |
@@ -365,11 +368,22 @@ Source: the `Azura / Azurah` row of `PDV_DaedricRacePrinceMatrix.csv` -- PathTyp
 | PDV_Msg_Daedric_Azura_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Orc cell | One-time on an Orc committing | Title: "Beside the Code, Not In It" Body: "For an Orc, Azura sits outside the Malacath code -- an outsider's prophecy with no place in stronghold or oath. The path is taboo beside the code, and renouncing it is hard: the stronghold does not easily forget a star-walker." |
 | PDV_Msg_Daedric_Azura_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Azura" Argonian cell | One-time on an Argonian committing | Title: "A Star Outside the Hist" Body: "To an Argonian, Azura has no root in the Hist or the exile community -- she is simply foreign, a star outside the substrate. The path can be walked and then drifted from, or set down by ritual cleansing, and the Hist neither holds nor mourns it." |
 
+**Azura firing-density sanity.** A character on the Azura path in steady play
+(twilight observance, prophecy, artifact alignment, and rare threshold acts):
+
+- Marked: 0 most days. Commitment, Champion entry, per-race response,
+  Notorious stigma, and exit are one-time or rare threshold events. Inside the
+  `<1 per 2h` target.
+- Noted: rare. Seeker/Devoted tier-up, lapse, and early stigma crossings should
+  follow meaningful quest/artifact/twilight thresholds, not ambient dawn/dusk
+  spam. Inside the `<2 per h` target.
+- Quiet: boon and price descriptions are passive SPEL text.
+
 ---
 
 ### 7.2 Mephala
 
-Source: the `Mephala / Mafala` row of the matrix -- PathType `Web-secret-murder-clan`, CommitmentSignal `Whispering Door / Ebony Blade threshold, hidden-loyalty bargains, deliberate web-building`, Boon `Secret-network leverage and hidden-path advantage`, Price `Social corruption and hidden violence`, Hook `The Whispering Door > Ebony Blade > hidden-network choices`. Matrix note: do not flatten Mephala into generic stealth. Native-integrated for Dunmer and Khajiit; the global path covers the other eight races.
+Source: the `Mephala / Mafala` row of the matrix -- PathType `Web-secret-murder-clan`, CommitmentSignal `Whispering Door / Ebony Blade threshold, hidden-loyalty bargains, deliberate web-building`, Boon `Secret-network leverage and hidden-path advantage`, Price `Social corruption and hidden violence`, Hook `The Whispering Door > Ebony Blade > hidden-network choices`. Matrix note: do not flatten Mephala into generic stealth. Native-integrated for Dunmer; Khajiit is Legible (Mafala is a known Khajiiti name but not a lunar lane), so the global path covers nine races.
 
 **Tone profile.**
 
@@ -423,7 +437,7 @@ Source: the `Mephala / Mafala` row of the matrix -- PathType `Web-secret-murder-
 | PDV_Notif_Daedric_Mephala_NeglectTexture | Notification | Noted | Player-2nd | 80/60 | Architecture v3 Section 11.2 | One per lapse-band crossing | You let the threads go slack. Mephala's web dims; the distrust you spun remains. |
 | PDV_Msg_Daedric_Mephala_Exit | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.4; Section 11.6 | Fires once on renunciation; residue persists | Title: "Mephala's Indifference" Body: "You cut yourself free of the web. Mephala does not mind -- a single thread is nothing to her. The leverage is gone, the hidden ways close. But the corruption you carried leaves its mark slowly, and those who learned to distrust you do not relearn trust on your schedule." |
 
-**Per-race responses** (`PDV_Msg_Daedric_Mephala_Response_*`). Narrator, 500/280. Eight non-native races; Dunmer and Khajiit route to the race manifest.
+**Per-race responses** (`PDV_Msg_Daedric_Mephala_Response_*`). Narrator, 500/280. Nine non-native races; Dunmer routes to the race manifest, Khajiit is Legible (global response below).
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
@@ -435,6 +449,7 @@ Source: the `Mephala / Mafala` row of the matrix -- PathType `Web-secret-murder-
 | PDV_Msg_Daedric_Mephala_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Redguard cell | One-time on a Redguard committing | Title: "Alien to Open Honor" Body: "To a Redguard, the secret-web is alien -- the Yokudan way is open honor and the clean stroke, not the whispered knot. The path is foreign and corrosive to that frame; returning means hard re-entry into the civic trust you spent." |
 | PDV_Msg_Daedric_Mephala_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Orc cell | One-time on an Orc committing | Title: "Rot in the Code" Body: "For an Orc, Mephala's hidden corruption strains the Malacath code -- the stronghold runs on plain oath, not secret leverage. The path is taboo, and renunciation comes only through proof and real cost paid back to the kin." |
 | PDV_Msg_Daedric_Mephala_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Argonian cell | One-time on an Argonian committing | Title: "Not a Hist Lane" Body: "To an Argonian, Mephala is foreign -- the Hist does not whisper, and a knack for shadows is not devotion to the web. The path has no root in the substrate; it is simply drifted from, and the Hist neither held it nor misses it." |
+| PDV_Msg_Daedric_Mephala_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Mephala" Khajiit cell (Legible) | One-time on a Khajiit committing | Title: "Mafala Is Legible" Body: "A Khajiit may know Mephala as Mafala, one of the litter-names from the old tales -- legible, but not a native lane. Mafala does not run through the Lattice or the moons' worship; the web is an outside pull, not the clan-mother remembered. Withdrawal or native reframing keeps the lunar substrate intact." |
 
 ---
 
@@ -581,6 +596,19 @@ Source: the `Meridia` row of the matrix -- PathType `Cleansing-light-anti-undead
 | PDV_Msg_Daedric_Meridia_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Orc cell | One-time on an Orc committing | Title: "Useful to the Stronghold" Body: "An Orc sees the value in cleansing -- undead are enemies, and Meridia fights them. But she is not Malacath; she speaks nothing of the code or the exile. The path is foreign utility, and it is renounced the Orc way: prove the oath to the code, and set the light down." |
 | PDV_Msg_Daedric_Meridia_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Meridia" Argonian cell | One-time on an Argonian committing | Title: "Not a Hist Channel" Body: "An Argonian can find use in Meridia's corruption-fighting -- the Hist is not indifferent to rot. But Meridia is not the Hist; her light carries no bond to the community or the memory. The path is foreign, set down when its work is done, with no residue." |
 
+**Meridia firing-density sanity.** A character on the Meridia path in steady
+play (The Break of Dawn, Dawnbreaker service, and curated undead-cleansing
+milestones):
+
+- Marked: 0 most days. Commitment, Champion entry, per-race response,
+  Notorious stigma, and exit are one-time or rare threshold events. Inside the
+  `<1 per 2h` target.
+- Noted: occasional. Undead-cleansing milestones may be more common than other
+  Prince hooks, but tolerated-class stigma keeps Notorious as rare-edge and
+  source curation must prevent generic undead farming. Inside the `<2 per h`
+  target.
+- Quiet: boon and price descriptions are passive SPEL text.
+
 ---
 
 ### 7.5 Nocturnal
@@ -721,7 +749,7 @@ Source: the `Hermaeus Mora` row of the matrix -- PathType `Forbidden-knowledge-a
 | PDV_Msg_Daedric_Mora_Response_Breton | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Breton cell | One-time on a Breton committing | Title: "Dangerous Scholarship" Body: "A Breton reads Hermaeus Mora plainly -- forbidden archives fit the Breton intellectual inheritance, from Mages Guild private libraries to the old conjuration lines. The path is legible but costly; keep it covered, or renounce and rededicate." |
 | PDV_Msg_Daedric_Mora_Response_Dunmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Dunmer cell | One-time on a Dunmer committing | Title: "Not the Inner Circle" Body: "A Dunmer scholar may engage Mora at the margins -- Great House politics have always touched dangerous knowledge. But Mora is not Tribunal revelation or Reclamation anchor; he is an outsider's archive. The path closes by abandonment and careful rededication." |
 | PDV_Msg_Daedric_Mora_Response_Altmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Altmer cell | One-time on an Altmer committing | Title: "Study Is Not Worship" Body: "For an Altmer, the temptation is to read Mora as a superior scholar. That reading is apostasy -- study is not worship, and Mora is not an emanation of the light. Aldmeri orthodoxy treats his archive as corruption of the purity project. Absolution is difficult." |
-| PDV_Msg_Daedric_Mora_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Khajiit cell; Notes "Hermorah legible but not a native lane" | One-time on a Khajiit committing | Title: "Hermorah Is Legible" Body: "A Khajiit finds Hermaeus Mora legible through Hermorah, the Khajiiti shape of the same entity. But legibility is not a native lane; Hermorah does not feed the Lunar Mandate. Quiet withdrawal or native reframing keeps the lunar substrate intact." |
+| PDV_Msg_Daedric_Mora_Response_Khajiit | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Khajiit cell; Notes "Hermorah legible but not a native lane" | One-time on a Khajiit committing | Title: "Hermorah Is Legible" Body: "A Khajiit finds Hermaeus Mora legible through Hermorah, the Khajiiti shape of the same entity. But legibility is not a native lane; Hermorah does not feed the Lattice. Quiet withdrawal or native reframing keeps the lunar substrate intact." |
 | PDV_Msg_Daedric_Mora_Response_Bosmer | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Bosmer cell; Notes "explicit correction keeps Bosmer Herma-Mora separate" | One-time on a Bosmer committing | Title: "Herma-Mora, Kept Separate" Body: "A Bosmer knows Herma-Mora in their own stories -- the old test, the temptation at the boundary. But the Green Pact keeps that distance explicit. Walking into the archive is different from knowing the story. The path is foreign to Bosmer backbone and set down by abandonment." |
 | PDV_Msg_Daedric_Mora_Response_Redguard | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Redguard cell | One-time on a Redguard committing | Title: "Dangerous Scholarship, No Home" Body: "For a Redguard, dangerous scholarship exists -- the Ra Gada have records of what to avoid -- but Mora is not a Redguard frame. The archive is foreign, without Yokudan grounding. The path is set down by abandonment; it leaves no deep mark if sincerely relinquished." |
 | PDV_Msg_Daedric_Mora_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Hermaeus Mora" Orc cell | One-time on an Orc committing | Title: "Knowledge at Oath Cost" Body: "An Orc can be drawn to Mora through the exile's pragmatism -- dangerous knowledge is power. But Malacath's code requires the oath spoken plainly, not the silent debt. The archive is taboo here, and leaving requires renouncing through real cost paid against the code." |
@@ -1019,6 +1047,18 @@ Source: the `Vaermina` row of the matrix -- PathType `Dream-nightmare-memory`, C
 | PDV_Msg_Daedric_Vaermina_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Orc cell | One-time on an Orc committing | Title: "Against Endurance" Body: "For an Orc, Vaermina's nightmare corruption strains the endurance ethic -- endurance requires knowing what you endure, and the nightmare that rewrites what you know is its opposite. The path is foreign; it is abandoned when its course is done." |
 | PDV_Msg_Daedric_Vaermina_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Vaermina" Argonian cell | One-time on an Argonian committing | Title: "Exile Dreams, Outsider Rot" Body: "To an Argonian, Vaermina is foreign -- dreams matter in exile, but Vaermina is not the Hist's dream-channel; she is outsider corruption moving through sleep. The path is set down by abandonment; the Hist does not hold the absence against the one who returns." |
 
+**Vaermina firing-density sanity.** A character on the Vaermina path in steady
+play (Waking Nightmare, Skull of Corruption, nightmare/sleep corruption, and
+curated fear-memory thresholds):
+
+- Marked: 0 most days. Commitment, Champion entry, per-race response,
+  Notorious stigma, and exit are one-time or rare threshold events. Inside the
+  `<1 per 2h` target.
+- Noted: rare. Sleep and nightmare hooks must remain quest-anchored or
+  thresholded; ordinary sleeping should not become a repeatable notification
+  faucet. Inside the `<2 per h` target.
+- Quiet: boon and price descriptions are passive SPEL text.
+
 ---
 
 ### 7.11 Sanguine
@@ -1262,7 +1302,7 @@ Source: the `Hircine` row of the matrix -- PathType `Hunt-lycanthropy-predator`,
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Price_Daedric_Hircine_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the hunt-path: the predator register. The civilized world reads the beast in you and keeps its distance. |
+| PDV_Price_Daedric_Hircine_Seeker | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Seeker boon | The price of the hunt-path: the predator register. The civilized world senses the beast in you and keeps its distance. |
 | PDV_Price_Daedric_Hircine_Devoted | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Devoted boon | The price deepens: the beast shapes the social register. Others read Hircine's claim and do not find it comfortable. |
 | PDV_Price_Daedric_Hircine_Champion | Price description | Quiet | Narrator | 200/140 | DaedricMatrix "Hircine" PrimaryPrice | Passive SPEL; paired with Champion boon | The full price: the Huntsman's isolation. The civilian world is an afterthought to the hunt, and the hunt does not make friends. |
 
@@ -1281,13 +1321,16 @@ Source: the `Hircine` row of the matrix -- PathType `Hunt-lycanthropy-predator`,
 |---|---|---|---|---|---|---|---|
 | PDV_Msg_Daedric_Hircine_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Hircine" CommitmentSignal | Fires once when commitment gate clears; curse-access reframe: player carries lycanthropy and has signaled three times | Title: "Hircine's Claim" Body: "The wolf is in you, and you know what that means now -- not the fear that comes first, but the thing after the fear: the hunting-ground opened, the prey was visible, and the body knew before the mind. That moment is mine. Welcome, Hunter." |
 
-**Stigma band crossings.**
-
-| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
-|---|---|---|---|---|---|---|---|
-| PDV_Notif_Daedric_Hircine_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Your Hircine devotion is suspected. The beast-path draws wary eyes. |
-| PDV_Notif_Daedric_Hircine_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Hircine devotion is known. The hunt-path marks its follower plainly. |
-| PDV_Notif_Daedric_Hircine_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Hircine's. The beast-walker is not welcome in the settled hold. |
+**Stigma band crossings -- curse-state-driven (Model B / D-16).** Hircine is a
+curse-access Prince, so social readability is driven by the Phase 15 curse-state
+overlay (known-werewolf visibility), not an independent per-act Daedric stigma
+counter. No standalone Hircine stigma notifications fire in V1; the per-tier
+**price descriptions** carry the social-register texture ("the civilized world
+senses the beast in you and keeps its distance" -> "the beast shapes the social
+register" -> "the Huntsman's isolation"), and the race `*_CurseState_*` rows own
+the actual NPC reaction. The three drafted independent-stigma lines are pulled to
+the **V2 backlog** (`references/authoring/PDV_V2_Backlog.md`) as ready band copy
+for the planned witnessed-kill notoriety enhancement.
 
 **Neglect texture and exit.**
 
@@ -1354,13 +1397,15 @@ Source: the `Molag Bal` row of the matrix -- PathType `Domination-vampirism-ensl
 |---|---|---|---|---|---|---|---|
 | PDV_Msg_Daedric_Molag_Commitment | MessageBox | Marked | God-voice | 500/280 | Architecture v3 Section 11.3; DaedricMatrix "Molag Bal" CommitmentSignal | Fires once when commitment gate clears; curse-access reframe: player carries vampirism and has signaled three times | Title: "Molag Bal's Touch" Body: "The thirst is in you, and you know what the thing under the hunger is: the hierarchy reflex, the dominance that makes sense now in a way it did not before the curse. That is mine. You chose to keep it three times when the cure was available. That is the commitment I record." |
 
-**Stigma band crossings.**
-
-| Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
-|---|---|---|---|---|---|---|---|
-| PDV_Notif_Daedric_Molag_Stigma_Suspected | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Suspected | Your Molag Bal devotion is suspected. The domination-path draws wary eyes. |
-| PDV_Notif_Daedric_Molag_Stigma_Known | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Known | Your Molag Bal devotion is known. Domination-cult devotion is not trusted. |
-| PDV_Notif_Daedric_Molag_Stigma_Notorious | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.2; Section 5 | On entering Notorious | You are openly Molag Bal's. The enslaver's servant is feared wherever you walk. |
+**Stigma band crossings -- curse-state-driven (Model B / D-16).** Molag Bal is a
+curse-access Prince, so social readability is driven by the Phase 15 curse-state
+overlay (known-vampire visibility), not an independent per-act Daedric stigma
+counter. No standalone Molag Bal stigma notifications fire in V1; the per-tier
+**price descriptions** carry the social-register texture, and the race
+`*_CurseState_*` rows own the actual NPC reaction. The three drafted
+independent-stigma lines are pulled to the **V2 backlog**
+(`references/authoring/PDV_V2_Backlog.md`) as ready band copy for the planned
+witnessed-kill notoriety enhancement.
 
 **Neglect texture and exit.**
 
@@ -1384,6 +1429,18 @@ Source: the `Molag Bal` row of the matrix -- PathType `Domination-vampirism-ensl
 | PDV_Msg_Daedric_Molag_Response_Orc | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Orc cell | One-time on an Orc committing | Title: "Against the Code" Body: "For an Orc, Molag Bal's vampiric claim contradicts Malacath's code entirely -- the code is endurance and provision, and the thirst is dependency. An Orc who feeds on others has placed survival above the kin's code. Malacath does not look away from this. Cure and hard renunciation are the exits; the kin will remember the breach longer than the code does." |
 | PDV_Msg_Daedric_Molag_Response_Argonian | MessageBox | Marked | Narrator | 500/280 | DaedricMatrix "Molag Bal" Argonian cell | One-time on an Argonian committing | Title: "The Hist Grieved" Body: "For an Argonian, Molag Bal's vampiric claim damages the Hist relation deeply and raises Sithis-pressure -- the undead Saxhleel is a soul the Hist cannot receive, and the void reads it as its own. But Sithis's pressure does not justify the curse; it only marks its gravity. Cure first, then slow recovery; the Hist reaches again, but it takes time and grief." |
 
+**Molag Bal firing-density sanity.** A character on the Molag Bal path in
+steady play (vampire state, House of Horrors, Volkihar or domination
+thresholds):
+
+- Marked: 0 most days. Commitment, Champion entry, per-race response,
+  Notorious curse-visibility crossing, and exit are one-time or rare threshold
+  events. Inside the `<1 per 2h` target.
+- Noted: rare but higher-stakes. Vampirism may be persistent, but Molag Bal
+  feedback should fire on curated domination/curse-visibility transitions, not
+  ordinary feeding or every vampire-state poll. Inside the `<2 per h` target.
+- Quiet: boon and price descriptions are passive SPEL text.
+
 ---
 
 ## 8. Coverage
@@ -1404,8 +1461,8 @@ Source: the `Molag Bal` row of the matrix -- PathType `Domination-vampirism-ensl
 | Sanguine | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.11) |
 | Namira | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.12) |
 | Peryite | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.13) |
-| Hircine | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.14) |
-| Molag Bal | drafted | drafted | drafted | drafted | drafted | drafted | drafted | drafted (10 races) | COMPLETE (7.15) |
+| Hircine | drafted | drafted | drafted | drafted | drafted | curse-driven (B) | drafted | drafted (10 races) | COMPLETE (7.14) |
+| Molag Bal | drafted | drafted | drafted | drafted | drafted | curse-driven (B) | drafted | drafted (10 races) | COMPLETE (7.15) |
 
 ## 9. Verification
 

@@ -15,3 +15,24 @@ tools/pdv-phase18-author/obj/
 tools/pdv-phase20-*-author/bin/
 tools/pdv-phase20-*-author/obj/
 native/vendor/Creation-Kit-Platform-Extended/
+
+# Local agent/editor settings
+.claude/settings.local.json
+
+# Local/generated scratch outputs
+generated/_audit_tmp.json
+fixtures/ckpe/heartbeat-only.tmp.json
+fixtures/ckpe/phase60-*-duplicate-replay.ck-command-packet.json
+fixtures/ckpe/phase62-family-duplicate-saved-readback-proof.json
+scratch/PDV_PlayerEvents.psc
+scratch/parked-untracked-*/
+scratch/phase12_live/
+scratch/phase13_16_live/
+scratch/phase20-*.csv
+scratch/phase20-*.json
+
+# .NET build outputs for helper projects
+tools/pdv-balancing-author/bin/
+tools/pdv-balancing-author/obj/
+tools/pdv-startup-author/bin/
+tools/pdv-startup-author/obj/

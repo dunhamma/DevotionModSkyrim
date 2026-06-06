@@ -41,3 +41,12 @@
   - `PDV_MSG_StartupConfirmChoice`
 - Authoring source: `tools/pdv-startup-author/Program.cs`.
 - Copy should mirror the same option meaning and advisory line used by the Prisma payload.
+
+## Runtime Boundary
+
+- 2026-06-04 smoke found that sending the Prisma startup payload while the CK
+  `Message.Show()` choice flow is still active can stack the custom
+  PlayerDevotion panel over the vanilla startup MessageBox and block dismissal.
+- Current runtime uses the CK MessageBox path only for startup choice/info
+  acknowledgement. Re-enable Prisma startup panels only after that path can own
+  input/selection without a simultaneous CK MessageBox.
