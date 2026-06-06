@@ -38,16 +38,30 @@ inaccessible — so there is nothing for a token to substitute for. Conclusion: 
 
 For when you want a more distinct look than vanilla (V2). **Always confirm the per-mod permission tab.**
 
-- **Modder's Resource Pack — Oaristys & Tamira** — the big permissive clutter pack (~386 meshes; SSE version
-  exists). **Explicitly free to use, modify, and convert to SSE without asking** — the safest default.
-  ([nexus](https://www.nexusmods.com/skyrim/mods/16525))
-- **InsanitySorrow's Resources** (clutter) — long-standing free modder resource, widely credited.
+- **Modder's Resource Pack — Oaristys (& Tamira)** — the big permissive clutter pack (~500 meshes: candles,
+  clutter/decoration, dishes, forge ingots, shelves, **paper/scrolls/books**, planters, **pottery glass/
+  glazed/gold/silver**). **Free to use, modify, and convert to SSE without asking** — the safest default.
+  → https://www.nexusmods.com/skyrim/mods/16525 *(LE page; permissions explicitly allow SSE conversion)*
+- **InsanitySorrow's Resources** — long-standing free modder resources (Morrowind Potions, Clutter Stuffs,
+  Dwemer Clutter, Morrowind Soul Gems, **Clocks & Sundials**, Headstones, Static Dragon Claws, Lanterns…).
+  → profile: https://www.nexusmods.com/profile/InsanitySorrow/mods · **Morrowind Potions:**
+  https://www.nexusmods.com/skyrim/mods/65557
+- **ElSopa HD – Realistic Dark Elf Urns SE** — Dunmer urn meshes/retexture, ideal for the ash-shrine token.
+  → https://www.nexusmods.com/skyrimspecialedition/mods/21717
 - **Blary's resources** (containers/clutter) & **Tamira's resources** (dishes/food/static) — free, credited.
-- **ElSopa HD – Dark Elf Urns** — Dunmer urn retexture, ideal for the ash-shrine token.
 - **Super List of Skyrim Modder's Resources** (Winking Skeever) — the master index to browse by type.
-  ([list](https://winkingskeever.com/list-of-skyrim-modders-resources/))
+  → https://winkingskeever.com/list-of-skyrim-modders-resources/
 - **Beyond Skyrim** (Morrowind / Hammerfell / Black Marsh) — lore-perfect cultural items, but **permission-
   gated** (coordinate, don't bundle).
+
+### Concrete picks from the first two packs (for our items)
+| Item | From **Oaristys pack** | From **InsanitySorrow** |
+|---|---|---|
+| **Dunmer ash-shrine token** | a **glazed pottery** urn/jar as the ancestral ash-urn (or a candle/censer from clutter) | Morrowind-themed clutter; **Morrowind Soul Gems**/**Headstones** for an ancestral feel *(ElSopa Dark Elf Urns is the best-looking urn)* |
+| **Argonian Hist-sap token** | a **glass pottery** jar/vial to hold amber sap | **Morrowind Potions** — a Morrowind-style bottle is a near-perfect "Hist sap" vial *(top pick)* |
+| **Redguard Far Shores token** | a **paper scroll** as a star-chart/Walkabout map, or a small **gold pottery** piece (Yokudan) | a **Lantern** (guiding light to the Far Shores) as an alt read |
+| **Bosmer token** (if added) | weak fit (mostly pottery/paper) — use a **scroll** or go to bone resources | **Static Dragon Claws** (bone — Green-Pact-safe material) as a bone charm |
+| **Khajiit charm** (only if V2-optional) | a **candle**/pottery for a home moon-altar | **Clocks & Sundials** → a **sundial/moondial** home focus |
 
 **License rule of thumb:** Oaristys/InsanitySorrow/Blary/Tamira packs = free-to-use with credit; ElSopa =
 check tab (usually permissive with credit); Beyond Skyrim / large team mods = ask first. Default to the
