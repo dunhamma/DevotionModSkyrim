@@ -43,6 +43,36 @@ Papyrus.1.log pass: Dunmer Azura, Dunmer Boethiah, Imperial public Talos, Nord O
 Papyrus.0.log pass: Redguard ancestor spine
 Earlier log pass: Breton Hidden Art
 Current missing runtime proof: none for approved filled P2 book families across session logs; fresh same-log full sweep remains optional only
+
+Daedric CAT-6 author/readback tranche (2026-06-07):
+dotnet run --project .\tools\pdv-daedric-author\PdvDaedricAuthor.csproj -- --check
+Result: PASS for all 16 Skyrim-present Princes
+Compiled scripts: all 15 generated non-Hircine PDV_DaedricPath_<Prince> scripts compile 0 error / 0 warning
+Strict Phase 20 verifier after SEQ refresh: PASS=2841, WARN=2, INFO=30
+Content verifier: FAIL=0, WARN=0, PASS=1081, INFO=4
+Reward readback audit: PASS=1268
+
+Daedric controlled sender surface (2026-06-07):
+Live MCM source: D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\PDV_MCM.psc
+Compiled output: D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\PDV_MCM.pex
+Controlled proof runbook: references\authoring\PDV_DaedricControlledProof_Runbook.md
+PDV_MCM + EventBus live-sender scaffold compile: 0 errors / 0 warnings
+Manager FormList property: PDV__ManagerQuest.PDV_FLST_DaedricPaths_All wired by pdv-daedric-author
+QASmoke proof senders: 16 PDV_REFR_Daedric_<Prince>_LiveSender_QASmoke route-200 refs plus PDV_REFR_Daedric_GenericSilenceProbe_QASmoke route-201 ref, all read back to their ACTI bases
+Fast route sweep: MCM Debug `Route all Princes` routes all 16 EventBus sender cues plus the generic silence probe in one prompt
+QASmoke runtime checker: tools\pdv_daedric_runtime_check.mjs self-test PASS for all 16 plus generic; run --strict-manager --source qasmoke after physical QASmoke activation, --source mcm after MCM sweep activation, and --source organic after exact vanilla quest-stage activation
+Structured evidence intake: references\authoring\PDV_DaedricRuntimeEvidenceLedger.json exists with all 16 Princes pending; update with tools\pdv_daedric_evidence_intake.mjs only after in-game proof
+Daedric beta-display gate: tools\pdv_daedric_beta_gate.mjs currently fails closed at PENDING=16 until all runtime/display slots pass
+Latest ESP backup: D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\PlayerDevotion_Framework.esp.20260607-191318.bak
+Status: MCM controls, EventBus live-sender scaffold, and physical QASmoke proof sender refs are ready for in-game smoke; not yet counted runtime proof
+
+Daedric exact organic live senders (2026-06-07):
+Live source: D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\PDV_PlayerEvents.psc
+Compiled output: D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\PDV_PlayerEvents.pex
+Routes: Boethiah DA02 stage 100, Azura DA01 stage 100, Vaermina DA16 stage 190, Meridia DA09 stage 500, Molag Bal DA10 stage 200, Mephala DA08 stage 60, Malacath DA06 stage 200, Mehrunes Dagon DA07 stage 100, Sheogorath DA15 stage 200, Namira DA11 stage 100, Sanguine DA14 stage 200, Clavicus Vile DA03 stage 200, Hermaeus Mora DA04 stage 100, Nocturnal TG09 stage 200, Peryite DA13 stage 100, Hircine DA05 stage 100
+Readback: all 16 PDV_FLST_Daedric_<Prince>LiveSources FormLists exist, contain their exact Skyrim.esm quest FormKeys, and are wired on the PDV_PlayerEvents alias script
+Latest ESP backup: D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\PlayerDevotion_Framework.esp.20260607-194539.bak
+Status: all exact organic quest-stage senders are placed/readback-clean and ready for in-game proof; none are counted runtime proof yet
 ```
 
 ## Race Runtime And Manual Gap
@@ -94,16 +124,30 @@ The current Daedric state is:
 - `race-sheets/PDV_DaedricContent_Manifest.md` now carries draft rows for all
   sixteen Princes.
 - Draft prose and clean content verification do not equal beta-feel proof.
-- Broad Daedric CAT-6 promotion remains blocked until each Prince has a
-  per-Prince D-18/CAT-6 packet, record readback, and runtime or display proof.
+- Broad Daedric CAT-6 record promotion/readback is authored for all sixteen
+  Princes through `PDV_DaedricPrinceRecordContracts.json` and
+  `tools/pdv-daedric-author`.
+- The MCM Debug page and QASmoke now expose controlled sender paths for all
+  sixteen Princes through `PDV_FLST_DaedricPaths_All`, route-200
+  `PDV_REFR_Daedric_<Prince>_LiveSender_QASmoke` refs, plus a route-201
+  generic-source silence probe; see
+  `PDV_DaedricControlledProof_Runbook.md`.
+- Exact organic vanilla quest-stage senders are wired/readback for all sixteen
+  Princes. The remaining Daedric beta-feel blocker is running
+  controlled/runtime display proof, proving those organic routes in game,
+  wrong/generic source silence, and stack/Survey legibility. Record those
+  results in `PDV_DaedricRuntimeEvidenceLedger.json` with
+  `tools/pdv_daedric_evidence_intake.mjs`; readback alone must leave rows
+  pending. `tools/pdv_daedric_beta_gate.mjs` is the fail-closed promotion gate
+  and currently remains `PENDING=16` by design.
 
 | Batch | Princes | Current status | Beta-feel blocker |
 |---|---|---|---|
-| Pilot already drafted | Boethiah / Boethra | Full pilot draft exists; native Dunmer/Khajiit route to race manifest | Needs per-row CAT-6 promotion/readback/runtime display before beta-feel proof |
-| Batch 0 template proof | Azura / Azurah, Vaermina, Meridia, Molag Bal | Static D-18 draft proof complete in `PDV_DaedricBatch0_D18ProofLedger.md`; no ESP writes | Needs CAT-6 target selection, target-record readback, runtime/display proof, and stack/Survey legibility |
-| Batch 1 native variants | Mephala / Mafala, Malacath / Mauloch | Draft rows exist | Needs native-integration routing proof and CAT-6/readback packet |
-| Batch 2 standard external pacts | Mehrunes Dagon, Sheogorath, Namira / Namiira, Sanguine / Sangiin, Clavicus Vile, Hermaeus Mora, Nocturnal | Draft rows exist | Needs standard-pact D-18 closure; Nocturnal must be Thieves Guild/Nightingale oath surface |
-| Batch 3 tolerated/curse-access tail | Peryite, Hircine | Draft rows exist; Hircine has earlier Nord/curse runtime pattern | Needs Peryite tolerated-class proof and Hircine content-surface proof without double-firing curse-state rows |
+| Pilot already drafted | Boethiah / Boethra | CAT-6 records authored/read back; MCM and QASmoke controlled senders ready; exact `DA02` stage 100 organic sender wired/readback; native Dunmer and Khajiit route through no-native-row behavior | Run controlled display proof, organic sender proof, and stack/Survey legibility |
+| Batch 0 template proof | Azura / Azurah, Vaermina, Meridia, Molag Bal | CAT-6 records authored/read back; MCM and QASmoke controlled senders ready; exact organic senders wired/readback: Azura `DA01` 100, Vaermina `DA16` 190, Meridia `DA09` 500, Molag Bal `DA10` 200; Molag Bal remains curse-access | Run controlled display proof, organic sender proof, and Molag Bal curse-state no-double-fire proof |
+| Batch 1 native variants | Mephala / Mafala, Malacath / Mauloch | CAT-6 records authored/read back; MCM and QASmoke controlled senders ready; exact organic senders wired/readback: Mephala `DA08` 60, Malacath `DA06` 200 | Run native-integration display proof, organic sender proof, and stack/Survey legibility |
+| Batch 2 standard external pacts | Mehrunes Dagon, Sheogorath, Namira / Namiira, Sanguine / Sangiin, Clavicus Vile, Hermaeus Mora, Nocturnal | CAT-6 records authored/read back; MCM and QASmoke controlled senders ready; exact organic senders wired/readback: Dagon `DA07` 100, Sheogorath `DA15` 200, Namira `DA11` 100, Sanguine `DA14` 200, Clavicus Vile `DA03` 200, Hermaeus Mora `DA04` 100, Nocturnal `TG09` 200 | Run standard-pact controlled display proof and organic sender proof; Nocturnal must still prove Thieves Guild/Nightingale oath surface |
+| Batch 3 tolerated/curse-access tail | Peryite, Hircine | CAT-6 records authored/read back; MCM and QASmoke controlled senders ready; exact organic senders wired/readback: Peryite `DA13` 100, Hircine `DA05` 100; Hircine retains earlier Nord/curse runtime pattern | Run Peryite tolerated-class display proof and Hircine content-surface proof without double-firing curse-state rows |
 
 ## Per-Prince Acceptance Checklist
 
@@ -130,9 +174,11 @@ A Prince cannot be called beta-feel ready until all of these are true:
 1. Finish P2 book runtime proof for all filled families that currently fail.
 2. Fill the manual evidence ledger without upgrading any race to pass until
    all rubric slots are proved.
-3. Use `PDV_DaedricBatch0_D18ProofLedger.md` to pick the first narrow Batch 0
-   CAT-6 target.
-4. Promote non-voiced CAT-6 rows only through per-row packets with readback and
-   display proof.
+3. Run `PDV_DaedricControlledProof_Runbook.md` for the all-Prince Daedric
+   packet, including both MCM and QASmoke sender routes plus the generic-silence
+   probe, then record the results in `PDV_DaedricRuntimeEvidenceLedger.json`
+   before claiming any Prince beta-display ready.
+4. Prove the sixteen exact organic live vanilla senders already wired; keep
+   generic behavior from becoming a devotion faucet.
 5. Re-run this ledger's command set after every source-fill, CAT-6, or Daedric
    promotion tranche.

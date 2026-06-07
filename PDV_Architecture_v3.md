@@ -1,7 +1,37 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-06-07 AEST (v3.85 - Phase 2 static all-race reward/receiver gate complete)
+Last revised: 2026-06-07 AEST (v3.90 - Daedric proof-gate handoff ready)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates. Phase 20 now owns the full-roster 1.0 content target: every locked race-architecture god and all sixteen Skyrim-present Daedric Prince surfaces must be content-ready for every race, with `references/authoring/PDV_DeityCoverageMatrix.json` and `--strict-phase20-roster` as the roster authority gate. The first Altmer Phase 20 runtime lane is source-scaffolded, compile-verified, crisis-record-wired, has the first two Altmer favor spell records wired, has four Altmer ACTI trigger proof base records wired for crisis, Lorkhan pressure, dawn steadiness, and orthodox cost, and now has Altmer Exiled vampire / werewolf halt manager source plus three `MESG` records wired to `PDV__ManagerQuest`; its four QASmoke proof references read back cleanly. Argonian, Orc, Redguard, Bosmer, and Khajiit have also crossed into source/record-wired proof slices, and all 30 Phase 20 proof references are now QASmoke-placed with helper/readback proof. Runtime proof and final immersive world placement remain open; `tools/pdv_phase20_runtime_check.mjs` and `references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` define the counted route-log, Survey/status, immersion, negative-hook, and anti-farm proof lane. `references/authoring/PDV_PreBetaRaceScalingSpine.md` and `PDV_PreBetaRaceGateLedger.md` now define the internal pre-beta scaling spine and all-race evidence ledger: Altmer active spine, Khajiit first contrast, Argonian second contrast, Orc / Redguard / Bosmer P1 packets, and Breton / Dunmer / Imperial / Nord P2 audit-only packets. The race gameplay audit now treats immersion as an explicit reward-budget axis, and `--strict-phase20-race-costing` enforces `immersionProof` blocks for all Phase 20 race-costing manifests. The current Phase 20 Altmer/race-costing gate is clean again after content-lock row reconciliation; the remaining warning is the existing unnamed CK-authored INFO record class. Phase 21 is the Authoria-first compatibility package lane because compatibility testing must wait until the mod's full content surface is stable enough to test against modlists.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
+
+Current v3.90 addendum: `references/authoring/PDV_DaedricPrinceRecordContracts.json`
+and `tools/pdv-daedric-author` now own the all-sixteen-Prince Daedric CAT-6
+record/readback gate. The generated contract derives from the Daedric content
+manifest and race/Prince matrix, creates/reads back QUST, SPEL, MGEF, MESG,
+stigma global, state-array, stigma-modifier, exit-difficulty, base/concrete
+path VMAD wiring, and `PDV_FLST_DaedricPaths_All` membership for every
+Skyrim-present Prince. Fifteen non-Hircine concrete `PDV_DaedricPath_<Prince>`
+scripts are generated and compile; Hircine remains the earlier special runtime
+pilot. The same author now also creates/checks route-200 QASmoke sender refs for
+all 16 Princes and route-201 `PDV_REFR_Daedric_GenericSilenceProbe_QASmoke`, so
+the controlled in-game proof surface is physically placed and readback-clean.
+It also creates/checks exact organic quest-stage FormLists for all sixteen
+Princes: Boethiah `DA02` 100, Azura `DA01` 100, Vaermina `DA16` 190,
+Meridia `DA09` 500, Molag Bal `DA10` 200, Mephala `DA08` 60, Malacath `DA06`
+200, Dagon `DA07` 100, Sheogorath `DA15` 200, Namira `DA11` 100, Sanguine
+`DA14` 200, Clavicus Vile `DA03` 200, Hermaeus Mora `DA04` 100, Nocturnal
+`TG09` 200, Peryite `DA13` 100, and Hircine `DA05` 100, all wired on the
+`PDV_PlayerEvents` alias.
+This closes the automated record/readback and controlled-sender placement
+blockers only, plus all organic sender placement/readback blockers. Counted
+in-game display proof, runtime proof for those exact live senders,
+wrong/generic source silence, stack/Survey legibility, and deeper curse-access
+proof for Hircine/Molag Bal remain required before calling any Prince
+beta-display ready. `tools/pdv_daedric_test_readiness.mjs --deep` is the
+preflight gate for launching that proof path; `PDV_DaedricInGameSmokePacket.md`
+is the generated tester packet; `tools/pdv_daedric_evidence_intake.mjs` records
+counted route/display evidence into `PDV_DaedricRuntimeEvidenceLedger.json`; and
+`tools/pdv_daedric_beta_gate.mjs` fails closed until every required Prince proof
+slot passes.
 
 Current v3.71 addendum: `references/authoring/PDV_PreBetaRaceScalingSpine.md`
 now owns the internal scaling gate between QASmoke route proof and external
@@ -33,9 +63,10 @@ non-voiced fallback. The first CAT-6 pilot is
 `PDV_Bless_Khajiit_Lunar_T1`; `PDV_Bless_Bosmer_Exchange_T1` is fallback only
 if the Khajiit target record path is blocked. Daedric content can remain
 drafted while race hook validation continues; D-15..D-18 now lock the stigma,
-curse-access, authoring-order, and content-ready contracts, while final reward
-text, Prince prices, stigma display, exits, and Survey/status copy wait for
-per-Prince proof/readback/runtime/display evidence.
+curse-access, authoring-order, and content-ready contracts. The 2026-06-07
+all-Prince CAT-6 pass closes per-Prince record/readback proof, while final
+beta-display claims still wait for controlled in-game display proof, live
+sender proof, stack/Survey legibility, and curse-access runtime evidence.
 
 Current v3.73 addendum:
 `references/authoring/PDV_PreBetaRaceGateLedger.md` is now the all-race
@@ -128,9 +159,11 @@ Jyggalag excluded. Current automated evidence remains structurally clean
 Altmer/race-costing at `PASS=2699, WARN=1, INFO=29`), but runtime/manual proof
 still blocks beta readiness. The P2 book checker currently passes Breton Hidden
 Art only and fails the remaining filled book families. Daedric D-15..D-18 are
-locked, and Batch 0 static D-18 proof is now complete, so the remaining 20C
-blockers are per-Prince CAT-6 promotion/readback, runtime or display proof,
-and race-stack legibility rather than unresolved design.
+locked, and the all-Prince CAT-6 record/readback gate is now complete, so the
+remaining 20C blockers are runtime/display proof, runtime proof for the
+all-sixteen exact organic senders, wrong/generic-source silence, stack/Survey
+legibility, and deeper Hircine/Molag Bal curse-access checks rather than
+unresolved design, missing records, or missing sender placement.
 
 Current v3.81 addendum:
 `references/authoring/PDV_DaedricBatch0_D18ProofLedger.md` now owns static
@@ -138,8 +171,14 @@ D-18 proof for the first Daedric template batch: Azura / Azurah, Vaermina,
 Meridia, and Molag Bal. The Daedric manifest now includes firing-density
 sanity paragraphs for those four Princes, and Molag Bal's stigma rows are
 clarified as curse-state display text rather than independent per-act stigma.
-This is repo/content proof only: no ESP write, no CAT-6 promotion, and no
-runtime or display proof claim.
+At the time, this was repo/content proof only: no ESP write, no CAT-6
+promotion, and no runtime or display proof claim. The 2026-06-07 all-Prince
+CAT-6 pass supersedes the ESP/readback boundary, but not the runtime/display
+proof boundary. The same tranche now also adds a controlled MCM proof surface
+plus EventBus route `200` for curated Prince senders, route `201` for
+generic-source silence probes, and exact organic quest-stage senders for all
+sixteen Princes; organic placement is now readback-clean, while organic runtime
+proof remains future in-game work.
 
 Current v3.82 addendum:
 `references/authoring/PDV_MedallionRoster.manifest.json` now owns the
@@ -2833,26 +2872,23 @@ Phases:
   the token tables, and the consistency audit (race manifest Sections 24-25).
 - **CAT-3 - Daedric pilot. COMPLETE.** Boethiah authored end to end in the
   Daedric manifest; the boon/price/stigma row template is proven.
-- **CAT-4 - Daedric expansion. NOT STARTED.** Author all sixteen
-  Skyrim-present Prince surfaces to the Phase 20 content-ready target (21.1).
-  The old CAT-4 blocker language was stale: Section 11.6 now locks D-12
-  separate Daedric roster, D-13 mixed recovery, and D-14 reduced
-  cross-Prince hostility. The remaining "decide before broad authoring" risks
-  are narrower and still important: final stigma band/decay content behavior,
-  curse-access template variation for Hircine and Molag Bal, and the
-  Prince-by-Prince authoring order. Boethiah remains the row-shape pilot, but
-  its stigma feedback rows were authored against the provisional three-band
-  model and should not be cloned across fifteen more Princes until the stigma
-  row contract is ratified. This is a 1.0 Daedric-content critical path item;
-  it does not block pre-beta race-scaling hook validation.
+- **CAT-4 - Daedric expansion. COMPLETE FOR STATIC CONTENT.** All sixteen
+  Skyrim-present Prince surfaces are authored in the Daedric content manifest
+  to the Phase 20 content-ready target (21.1), with D-12 separate roster, D-13
+  mixed recovery, D-14 reduced cross-Prince hostility, D-15 stigma handling,
+  D-16 curse-access templates, D-17 authoring order, and D-18 per-Prince bar
+  locked. This is static content/readback readiness only; runtime/display proof
+  and organic sender proof remain separate beta-display gates.
 - **CAT-5 - Gated-slot closure. PARTIAL / ALTMER COMPLETE.** Altmer
   crisis-of-faith, contextual-favor, and Exiled vampire slots are now drafted
   after the 2026-05-30 implementation-spec closeout. Breton Vigilant pressure
   remains optional/slip-able post-1.0 unless promoted by a later content pass.
-- **CAT-6 - Ratification and promotion handoff. NOT STARTED, code-coupled.**
-  Ratify the draft prose, then promote ratified strings into ESP records via
-  the Phase 19 add-a-deity pipeline (17.1) and into the `Race_*.md` player
-  handbooks. A string can only be promoted once its owning subsystem exists.
+- **CAT-6 - Ratification and promotion handoff. PARTIAL.** The all-Prince
+  Daedric tranche has been promoted into live ESP records through
+  `PDV_DaedricPrinceRecordContracts.json` and `tools/pdv-daedric-author`, with
+  readback for QUST/SPEL/MGEF/MESG/GLOB/path wiring, FormList membership,
+  manager property wiring, and QASmoke proof senders. Handbook/player-facing
+  downstream sync and counted runtime/display proof remain open.
   The `PDV_Dlog_*_Recognition` dialogue strings are **excluded from V1
   promotion** (V2, voice-dependent); promote only non-voiced surfaces
   (MessageBox, notification, Survey, blessing/price descriptions) for 1.0.
@@ -2870,6 +2906,20 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.90 - 2026-06-07 AEST - Daedric proof-gate handoff ready
+
+Added the fail-closed Daedric runtime evidence lane after all-Prince CAT-6
+record/readback and sender placement. `tools/pdv_daedric_test_readiness.mjs
+--deep` is green at `PASS=71`; `PDV_DaedricInGameSmokePacket.md` is generated
+from the all-Prince contract; `PDV_DaedricRuntimeEvidenceLedger.json` exists
+with all sixteen Princes pending; and `tools/pdv_daedric_evidence_intake.mjs`
+can auto-record MCM, QASmoke, and exact organic route slots only from matching
+runtime-check log passes. `tools/pdv_daedric_beta_gate.mjs` deliberately fails
+closed at `PENDING=16` until controlled/display evidence, exact organic sender
+proof, generic-source silence, save/load/stack/manual feel, and Molag/Hircine
+curse no-double-fire evidence are recorded. This closes repo-side test
+readiness, not beta-display readiness.
 
 ### v3.85 - 2026-06-07 AEST - Phase 2 static all-race reward/receiver gate complete
 
