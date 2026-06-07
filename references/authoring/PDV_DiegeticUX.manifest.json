@@ -1,8 +1,9 @@
 {
   "schema": "pdv.diegetic_ux.manifest.v1",
   "title": "PDV diegetic UX live-write contract",
-  "status": "repo-scaffold-not-live",
-  "updated": "2026-06-06",
+  "status": "papyrus-promoted-d0-safe-ck-records-pending",
+  "updated": "2026-06-08",
+  "progressNote": "2026-06-08: Papyrus side wired LIVE on main. PDV_DiegeticDeps + PDV_DiegeticDirector promoted to the live Source and added to pdv_compile ACTIVE_SCRIPTS; the diegetic director hooks (property PDV_DiegeticDirectorService, _diegeticLoadHandled flag, HandleDiegeticLoad/RefreshDiegeticMedallion/NotifyDiegeticRoutineFavor/SurfaceTransition/SurfaceCurseTransitionDiegetic + GetCurseSurface*) are merged into the live PDV__ManagerQuest with call sites at OnInit/OnUpdate load, tier reach, neglect drop, curse transition, dawn medallion, and the 4 Dunmer/Khajiit routine favors. All three scripts compile 0/0; pdv_verify 0 FAIL; pdv_diegetic_ux_check all PASS. Every diegetic call self-guards on `if PDV_DiegeticDirectorService`, so with the director quest not yet created the property is None and all calls no-op -- this is effectively D0 with zero behavior change and is safe to load now. REMAINING (CK or a Mutagen author + in-game): create the 17 d1Records from vanillaSourceSelections, create the 2 SGE quests (PDV_DiegeticDeps, PDV_DiegeticDirector) + attach scripts + wire all VMAD properties incl. manager PDV_DiegeticDirectorService -> PDV_DiegeticDirector, SEQ refresh, D0 smoke, then D1Enabled=true counted-transition proof.",
   "liveWritePolicy": {
     "sourceOnlyUntilApproved": true,
     "sourcePromotionRequiresCleanCheck": "node tools/pdv_diegetic_ux_check.mjs",
@@ -107,7 +108,7 @@
         "Bool Property AutoPushPrismaPanel = False Auto",
         "Bool Property AllowPrismaBlockingSurfaces = False Auto",
         "if _panelDirty && AutoPushPrismaPanel && PDV_PrismaBridge.IsAvailable()",
-        "String Function GetPanelInstrumentJson(Int originRace, Bool hasActiveDeity, Int tierValue, String tierLabel, Float piety)",
+        "String Function GetPanelInstrumentJson(",
         "PDV_DeityBase Function GetDeityByName(String deityName)",
         "SendPrismaSubstrateProgress(\"ancestor\", tierBefore, tierAfter, multiplier, \"Ancestor prayer marked.\", \"ancestor\", GetDunmerAncestorLayerLabel())",
         "SendPrismaSubstrateProgress(\"lunar\", tierBefore, tierAfter, multiplier, \"The moons marked this observance.\", \"lunar\", GetKhajiitLunarTierLabel(tierAfter))",

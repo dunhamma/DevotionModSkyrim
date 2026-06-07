@@ -75,6 +75,8 @@ const ACTIVE_SCRIPTS = [
   "PDV_DaedricPath_Nocturnal",
   "PDV_DaedricPath_Peryite",
   "PDV_DaedricPath_Hircine",
+  "PDV_DiegeticDeps",
+  "PDV_DiegeticDirector",
 ];
 
 const OPTIONAL_SCRIPTS = [

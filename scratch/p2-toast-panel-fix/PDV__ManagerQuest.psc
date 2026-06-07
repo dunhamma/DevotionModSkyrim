@@ -33,12 +33,48 @@ GlobalVariable Property PDV_GLO_OriginRace Auto
 GlobalVariable Property PDV_GLO_KhajiitFocusedEmphasis Auto
 
 FormList Property PDV_FLST_AllDeities Auto
+FormList Property PDV_FLST_DaedricPaths_All Auto
 
 PDV_Deity_Kyne Property PDV_Kyne Auto
 PDV_Deity_Talos Property PDV_Talos Auto
 PDV_Deity_Yffre Property PDV_Yffre Auto
 PDV_Deity_Zen Property PDV_Zen Auto
 PDV_Deity_BaanDar Property PDV_BaanDar Auto
+; Khajiit focused-emphasis deities (Azura/BaanDar are shared cross-race; per-race stance).
+PDV_Deity_Azura Property PDV_Azura Auto
+PDV_Deity_Khenarthi Property PDV_Khenarthi Auto
+PDV_Deity_Rajhin Property PDV_Rajhin Auto
+PDV_Deity_Alkosh Property PDV_Alkosh Auto
+; Dunmer-owned Reclamation patrons. Azura is shared with Khajiit and reused above.
+PDV_Deity_Boethiah Property PDV_Boethiah Auto
+PDV_Deity_Mephala Property PDV_Mephala Auto
+; Argonian substrate / no-offer scripted patrons (Hist primary pulse + high-threshold Sithis).
+PDV_Deity_Hist Property PDV_Hist Auto
+PDV_Deity_Sithis Property PDV_Sithis Auto
+; Orc spine and shared Trinimac pressure record.
+PDV_Deity_Malacath Property PDV_Malacath Auto
+PDV_Deity_Trinimac Property PDV_Trinimac Auto
+; Redguard Yokudan patrons.
+PDV_Deity_Tuwhacca Property PDV_Tuwhacca Auto
+PDV_Deity_HoonDing Property PDV_HoonDing Auto
+PDV_Deity_Leki Property PDV_Leki Auto
+; Nord Old Ways patrons. Kyne/Talos are reused above.
+PDV_Deity_Shor Property PDV_Shor Auto
+PDV_Deity_Tsun Property PDV_Tsun Auto
+PDV_Deity_Stuhn Property PDV_Stuhn Auto
+; Imperial-owned shared Divines. Nord/Breton reuse these records by stance.
+PDV_Deity_Akatosh Property PDV_Akatosh Auto
+PDV_Deity_Mara Property PDV_Mara Auto
+PDV_Deity_Arkay Property PDV_Arkay Auto
+PDV_Deity_Stendarr Property PDV_Stendarr Auto
+PDV_Deity_Zenithar Property PDV_Zenithar Auto
+PDV_Deity_Dibella Property PDV_Dibella Auto
+PDV_Deity_Julianos Property PDV_Julianos Auto
+PDV_Deity_Kynareth Property PDV_Kynareth Auto
+; Altmer offer patrons.
+PDV_Deity_AuriEl Property PDV_AuriEl Auto
+PDV_Deity_Magnus Property PDV_Magnus Auto
+PDV_Deity_Xarxes Property PDV_Xarxes Auto
 PDV_ReputationTrack Property PDV_ConcordatStandingTrack Auto
 PDV_StateTrack Property PDV_BosmerPathTrack Auto
 PDV_StateTrack Property PDV_NordPantheonBaselineTrack Auto
@@ -51,7 +87,6 @@ PDV_StateTrack Property PDV_OrcLifeModeTrack Auto
 PDV_StateTrack Property PDV_RedguardSectTrack Auto
 PDV_DaedricPath_Hircine Property PDV_HircinePath Auto
 PDV_CurseState Property PDV_CurseStateService Auto
-PDV_DiegeticDirector Property PDV_DiegeticDirectorService Auto
 Spell Property PDV_SPEL_SurveyDevotion Auto
 Spell Property PDV_SPEL_Neglect_Kyne Auto
 Spell Property PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery Auto
@@ -71,15 +106,181 @@ Spell Property PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine Au
 Spell Property PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness Auto
 Spell Property PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement Auto
 Spell Property PDV_Bless_Altmer_Orthodox_T1 Auto
+Spell Property PDV_Bless_Altmer_Orthodox_T2 Auto
+Spell Property PDV_Bless_Altmer_AuriEl_T1 Auto
+Spell Property PDV_Bless_Altmer_AuriEl_T2 Auto
+Spell Property PDV_Bless_Altmer_AuriEl_T3 Auto
+Spell Property PDV_Bless_Altmer_Magnus_T1 Auto
+Spell Property PDV_Bless_Altmer_Magnus_T2 Auto
+Spell Property PDV_Bless_Altmer_Magnus_T3 Auto
+Spell Property PDV_Bless_Altmer_Xarxes_T1 Auto
+Spell Property PDV_Bless_Altmer_Xarxes_T2 Auto
+Spell Property PDV_Bless_Altmer_Xarxes_T3 Auto
+Spell Property PDV_SPEL_Neglect_Altmer Auto
 Spell Property PDV_Bless_Argonian_Hist_T1 Auto
+; Argonian no-offer reward families (substrate-tier gated, not active-patron gated).
+Spell Property PDV_Bless_Argonian_Hist_T2 Auto
+Spell Property PDV_Bless_Argonian_Hist_Signature Auto
+Spell Property PDV_Bless_Argonian_People_T1 Auto
+Spell Property PDV_Bless_Argonian_People_T2 Auto
+Spell Property PDV_Bless_Argonian_People_T3 Auto
+Spell Property PDV_Bless_Argonian_Sithis_T1 Auto
+Spell Property PDV_Bless_Argonian_Sithis_T2 Auto
+Spell Property PDV_SPEL_Neglect_ArgonianHist Auto
 Spell Property PDV_Bless_Bosmer_Yffre_T1 Auto
+Spell Property PDV_Bless_Bosmer_Yffre_T2 Auto
+Spell Property PDV_Bless_Bosmer_OldContract_T1 Auto
+Spell Property PDV_Bless_Bosmer_OldContract_T2 Auto
+Spell Property PDV_Bless_Bosmer_OldContract_T3 Auto
+Spell Property PDV_Bless_Bosmer_LivingStory_T1 Auto
+Spell Property PDV_Bless_Bosmer_LivingStory_T2 Auto
+Spell Property PDV_Bless_Bosmer_LivingStory_T3 Auto
+Spell Property PDV_Bless_Bosmer_Exchange_T1 Auto
+Spell Property PDV_Bless_Bosmer_Exchange_T2 Auto
+Spell Property PDV_Bless_Bosmer_Exchange_T3 Auto
+Spell Property PDV_Bless_Bosmer_BanditRoad_T1 Auto
+Spell Property PDV_Bless_Bosmer_BanditRoad_T2 Auto
+Spell Property PDV_Bless_Bosmer_BanditRoad_T3 Auto
+Spell Property PDV_SPEL_Neglect_Bosmer Auto
 Spell Property PDV_Bless_Breton_Tradition_T1 Auto
+Spell Property PDV_Bless_Breton_Tradition_T2 Auto
+Spell Property PDV_Bless_Breton_KnightsRoad_T1 Auto
+Spell Property PDV_Bless_Breton_KnightsRoad_T2 Auto
+Spell Property PDV_Bless_Breton_KnightsRoad_T3 Auto
+Spell Property PDV_Bless_Breton_HiddenArt_T1 Auto
+Spell Property PDV_Bless_Breton_HiddenArt_T2 Auto
+Spell Property PDV_Bless_Breton_HiddenArt_T3 Auto
+Spell Property PDV_Bless_Breton_GreenWay_T1 Auto
+Spell Property PDV_Bless_Breton_GreenWay_T2 Auto
+Spell Property PDV_Bless_Breton_GreenWay_T3 Auto
+Spell Property PDV_SPEL_Neglect_Breton Auto
 Spell Property PDV_Bless_Dunmer_Reclamation_T1 Auto
+Spell Property PDV_Bless_Dunmer_Reclamation_T2 Auto
+Spell Property PDV_Bless_Dunmer_Azura_T1 Auto
+Spell Property PDV_Bless_Dunmer_Azura_T2 Auto
+Spell Property PDV_Bless_Dunmer_Azura_T3 Auto
+Spell Property PDV_Bless_Dunmer_Boethiah_T1 Auto
+Spell Property PDV_Bless_Dunmer_Boethiah_T2 Auto
+Spell Property PDV_Bless_Dunmer_Boethiah_T3 Auto
+Spell Property PDV_Bless_Dunmer_Mephala_T1 Auto
+Spell Property PDV_Bless_Dunmer_Mephala_T2 Auto
+Spell Property PDV_Bless_Dunmer_Mephala_T3 Auto
+Spell Property PDV_SPEL_Neglect_Dunmer Auto
 Spell Property PDV_Bless_Imperial_Civic_T1 Auto
+Spell Property PDV_Bless_Imperial_Civic_T2 Auto
+Spell Property PDV_Bless_Imperial_Akatosh_T1 Auto
+Spell Property PDV_Bless_Imperial_Akatosh_T2 Auto
+Spell Property PDV_Bless_Imperial_Akatosh_T3 Auto
+Spell Property PDV_Bless_Imperial_Mara_T1 Auto
+Spell Property PDV_Bless_Imperial_Mara_T2 Auto
+Spell Property PDV_Bless_Imperial_Mara_T3 Auto
+Spell Property PDV_Bless_Imperial_Arkay_T1 Auto
+Spell Property PDV_Bless_Imperial_Arkay_T2 Auto
+Spell Property PDV_Bless_Imperial_Arkay_T3 Auto
+Spell Property PDV_Bless_Imperial_Stendarr_T1 Auto
+Spell Property PDV_Bless_Imperial_Stendarr_T2 Auto
+Spell Property PDV_Bless_Imperial_Stendarr_T3 Auto
+Spell Property PDV_Bless_Imperial_Zenithar_T1 Auto
+Spell Property PDV_Bless_Imperial_Zenithar_T2 Auto
+Spell Property PDV_Bless_Imperial_Zenithar_T3 Auto
+Spell Property PDV_Bless_Imperial_Dibella_T1 Auto
+Spell Property PDV_Bless_Imperial_Dibella_T2 Auto
+Spell Property PDV_Bless_Imperial_Dibella_T3 Auto
+Spell Property PDV_Bless_Imperial_Julianos_T1 Auto
+Spell Property PDV_Bless_Imperial_Julianos_T2 Auto
+Spell Property PDV_Bless_Imperial_Julianos_T3 Auto
+Spell Property PDV_Bless_Imperial_Kynareth_T1 Auto
+Spell Property PDV_Bless_Imperial_Kynareth_T2 Auto
+Spell Property PDV_Bless_Imperial_Kynareth_T3 Auto
+Spell Property PDV_Bless_Imperial_Talos_T1 Auto
+Spell Property PDV_Bless_Imperial_Talos_T2 Auto
+Spell Property PDV_Bless_Imperial_Talos_T3 Auto
+Spell Property PDV_SPEL_Neglect_Imperial Auto
 Spell Property PDV_Bless_Khajiit_Lunar_T1 Auto
+; Khajiit broad lunar reward is re-homed to the substrate boon layer (Substrate_Mid);
+; the per-emphasis 3-tier sets below gate on the emphasis deity's piety tier.
+Spell Property PDV_Bless_Khajiit_Khenarthi_T1 Auto
+Spell Property PDV_Bless_Khajiit_Khenarthi_T2 Auto
+Spell Property PDV_Bless_Khajiit_Khenarthi_T3 Auto
+Spell Property PDV_Bless_Khajiit_Azurah_T1 Auto
+Spell Property PDV_Bless_Khajiit_Azurah_T2 Auto
+Spell Property PDV_Bless_Khajiit_Azurah_T3 Auto
+Spell Property PDV_Bless_Khajiit_BaanDar_T1 Auto
+Spell Property PDV_Bless_Khajiit_BaanDar_T2 Auto
+Spell Property PDV_Bless_Khajiit_BaanDar_T3 Auto
+Spell Property PDV_Bless_Khajiit_Rajhin_T1 Auto
+Spell Property PDV_Bless_Khajiit_Rajhin_T2 Auto
+Spell Property PDV_Bless_Khajiit_Rajhin_T3 Auto
+Spell Property PDV_Bless_Khajiit_Alkosh_T1 Auto
+Spell Property PDV_Bless_Khajiit_Alkosh_T2 Auto
+Spell Property PDV_Bless_Khajiit_Alkosh_T3 Auto
+Spell Property PDV_SPEL_Neglect_KhajiitLunar Auto
 Spell Property PDV_Bless_Nord_OldWays_T1 Auto
+Spell Property PDV_Bless_Nord_OldWays_T2 Auto
+Spell Property PDV_Bless_Nord_Kyne_T1 Auto
+Spell Property PDV_Bless_Nord_Kyne_T2 Auto
+Spell Property PDV_Bless_Nord_Kyne_T3 Auto
+Spell Property PDV_Bless_Nord_Shor_T1 Auto
+Spell Property PDV_Bless_Nord_Shor_T2 Auto
+Spell Property PDV_Bless_Nord_Shor_T3 Auto
+Spell Property PDV_Bless_Nord_Tsun_T1 Auto
+Spell Property PDV_Bless_Nord_Tsun_T2 Auto
+Spell Property PDV_Bless_Nord_Tsun_T3 Auto
+Spell Property PDV_Bless_Nord_Stuhn_T1 Auto
+Spell Property PDV_Bless_Nord_Stuhn_T2 Auto
+Spell Property PDV_Bless_Nord_Stuhn_T3 Auto
+Spell Property PDV_Bless_Nord_Talos_T1 Auto
+Spell Property PDV_Bless_Nord_Talos_T2 Auto
+Spell Property PDV_Bless_Nord_Talos_T3 Auto
+Spell Property PDV_Bless_Nord_Akatosh_T1 Auto
+Spell Property PDV_Bless_Nord_Akatosh_T2 Auto
+Spell Property PDV_Bless_Nord_Akatosh_T3 Auto
+Spell Property PDV_Bless_Nord_Mara_T1 Auto
+Spell Property PDV_Bless_Nord_Mara_T2 Auto
+Spell Property PDV_Bless_Nord_Mara_T3 Auto
+Spell Property PDV_Bless_Nord_Arkay_T1 Auto
+Spell Property PDV_Bless_Nord_Arkay_T2 Auto
+Spell Property PDV_Bless_Nord_Arkay_T3 Auto
+Spell Property PDV_Bless_Nord_Stendarr_T1 Auto
+Spell Property PDV_Bless_Nord_Stendarr_T2 Auto
+Spell Property PDV_Bless_Nord_Stendarr_T3 Auto
+Spell Property PDV_Bless_Nord_Zenithar_T1 Auto
+Spell Property PDV_Bless_Nord_Zenithar_T2 Auto
+Spell Property PDV_Bless_Nord_Zenithar_T3 Auto
+Spell Property PDV_Bless_Nord_Dibella_T1 Auto
+Spell Property PDV_Bless_Nord_Dibella_T2 Auto
+Spell Property PDV_Bless_Nord_Dibella_T3 Auto
+Spell Property PDV_Bless_Nord_Julianos_T1 Auto
+Spell Property PDV_Bless_Nord_Julianos_T2 Auto
+Spell Property PDV_Bless_Nord_Julianos_T3 Auto
+Spell Property PDV_Bless_Nord_Kynareth_T1 Auto
+Spell Property PDV_Bless_Nord_Kynareth_T2 Auto
+Spell Property PDV_Bless_Nord_Kynareth_T3 Auto
 Spell Property PDV_Bless_Orc_Malacath_T1 Auto
+Spell Property PDV_Bless_Orc_Malacath_T2 Auto
+Spell Property PDV_Bless_Orc_Stronghold_T1 Auto
+Spell Property PDV_Bless_Orc_Stronghold_T2 Auto
+Spell Property PDV_Bless_Orc_Stronghold_T3 Auto
+Spell Property PDV_Bless_Orc_City_T1 Auto
+Spell Property PDV_Bless_Orc_City_T2 Auto
+Spell Property PDV_Bless_Orc_City_T3 Auto
+Spell Property PDV_Bless_Orc_LegionExile_T1 Auto
+Spell Property PDV_Bless_Orc_LegionExile_T2 Auto
+Spell Property PDV_Bless_Orc_LegionExile_T3 Auto
+Spell Property PDV_SPEL_Neglect_Orc Auto
 Spell Property PDV_Bless_Redguard_AncestorSpine_T1 Auto
+Spell Property PDV_Bless_Redguard_AncestorSpine_T2 Auto
+Spell Property PDV_Bless_Redguard_Tuwhacca_T1 Auto
+Spell Property PDV_Bless_Redguard_Tuwhacca_T2 Auto
+Spell Property PDV_Bless_Redguard_Tuwhacca_T3 Auto
+Spell Property PDV_Bless_Redguard_HoonDing_T1 Auto
+Spell Property PDV_Bless_Redguard_HoonDing_T2 Auto
+Spell Property PDV_Bless_Redguard_HoonDing_T3 Auto
+Spell Property PDV_Bless_Redguard_Leki_T1 Auto
+Spell Property PDV_Bless_Redguard_Leki_T2 Auto
+Spell Property PDV_Bless_Redguard_Leki_T3 Auto
+Spell Property PDV_Bless_Redguard_FarShoresToken Auto
+Spell Property PDV_SPEL_Neglect_Redguard Auto
 Message Property PDV_MSG_BosmerSetupChoice Auto
 Message Property PDV_MSG_BosmerSuggestLivingStory Auto
 Message Property PDV_MSG_BosmerSuggestExchange Auto
@@ -138,6 +339,15 @@ Int Property ORIGIN_KHAJIIT = 6 AutoReadOnly
 Int Property ORIGIN_ARGONIAN = 7 AutoReadOnly
 Int Property ORIGIN_ORC = 8 AutoReadOnly
 Int Property ORIGIN_REDGUARD = 9 AutoReadOnly
+Int Property IMPERIAL_CIVIC_UNKNOWN = 0 AutoReadOnly
+Int Property IMPERIAL_CIVIC_PUBLIC_SERVICE = 1 AutoReadOnly
+Int Property IMPERIAL_CIVIC_MERCY = 2 AutoReadOnly
+Int Property IMPERIAL_CIVIC_LAWFUL_ORDER = 3 AutoReadOnly
+Int Property IMPERIAL_CIVIC_HONEST_WORK = 4 AutoReadOnly
+Int Property IMPERIAL_CIVIC_DEATH_DUTY = 5 AutoReadOnly
+Int Property BRETON_TRADITION_KNIGHTS_ROAD = 0 AutoReadOnly
+Int Property BRETON_TRADITION_HIDDEN_ART = 1 AutoReadOnly
+Int Property BRETON_TRADITION_GREEN_WAY = 2 AutoReadOnly
 Int Property STARTUP_MODE_INFO_ONLY = 0 AutoReadOnly
 Int Property STARTUP_MODE_EXPLICIT_CHOICE = 1 AutoReadOnly
 String Property STARTUP_ADVISORY_TEXT = "This is only where your road begins. What you revere, neglect, or defy from here will shape the devotion that grows." AutoReadOnly
@@ -149,6 +359,17 @@ Int Property REDGUARD_SECT_FOREBEAR = 1 AutoReadOnly
 Int Property REDGUARD_SECT_ASHABAH = 2 AutoReadOnly
 Int Property NORD_BASELINE_OLD_WAYS = 0 AutoReadOnly
 Int Property NORD_BASELINE_NINE_DIVINES = 1 AutoReadOnly
+Int Property NORD_ROUTE_UNKNOWN = 0 AutoReadOnly
+Int Property NORD_ROUTE_OLD_SKY_ROAD = 1 AutoReadOnly
+Int Property NORD_ROUTE_OLD_ORDEAL = 2 AutoReadOnly
+Int Property NORD_ROUTE_OLD_HEARTH = 3 AutoReadOnly
+Int Property NORD_ROUTE_OLD_ANCESTOR = 4 AutoReadOnly
+Int Property NORD_ROUTE_OLD_TALOS = 5 AutoReadOnly
+Int Property NORD_ROUTE_NINE_ROAD = 6 AutoReadOnly
+Int Property NORD_ROUTE_NINE_MERCY = 7 AutoReadOnly
+Int Property NORD_ROUTE_NINE_DEATH = 8 AutoReadOnly
+Int Property NORD_ROUTE_NINE_WORK = 9 AutoReadOnly
+Int Property NORD_ROUTE_NINE_TALOS = 10 AutoReadOnly
 Int Property FAVOR_LANE_NONE = 0 AutoReadOnly
 Int Property FAVOR_LANE_KYNE = 1 AutoReadOnly
 Int Property FAVOR_LANE_NORD_BROAD_OLD_WAYS = 2 AutoReadOnly
@@ -197,6 +418,16 @@ Int Property KHAJIIT_FOCUS_ALKOSH = 5 AutoReadOnly
 Float Property KHAJIIT_FOCUS_THRESHOLD = 50.0 AutoReadOnly
 Float Property KHAJIIT_FOCUS_LEAD_REQUIRED = 15.0 AutoReadOnly
 Float Property KHAJIIT_FOCUS_SIGNAL_DELTA = 25.0 AutoReadOnly
+Float Property KHAJIIT_LUNAR_NEGLECT_GRACE_DAYS = 3.0 AutoReadOnly
+; Argonian no-offer reward gating (substrate-relation thresholds + Hist-distance neglect grace).
+Float Property ARGONIAN_HIST_NEGLECT_GRACE_DAYS = 3.0 AutoReadOnly
+Float Property ARGONIAN_REWARD_T1_THRESHOLD = 25.0 AutoReadOnly
+Float Property ARGONIAN_REWARD_T2_THRESHOLD = 50.0 AutoReadOnly
+Float Property ARGONIAN_REWARD_SIGNATURE_THRESHOLD = 75.0 AutoReadOnly
+Float Property ARGONIAN_REWARD_T3_THRESHOLD = 85.0 AutoReadOnly
+Int Property ARGONIAN_FOCUS_NONE = 0 AutoReadOnly
+Int Property ARGONIAN_FOCUS_PEOPLE = 1 AutoReadOnly
+Int Property ARGONIAN_FOCUS_VOID = 2 AutoReadOnly
 Float Property FAVOR_DURATION_MOMENTARY_DAYS = 0.001 AutoReadOnly
 Float Property FAVOR_DURATION_AFTER_ACT_DAYS = 0.125 AutoReadOnly
 Float Property FAVOR_DURATION_ENVIRONMENTAL_DAYS = 0.125 AutoReadOnly
@@ -215,7 +446,6 @@ Float Property SHOUT_DUPLICATE_WINDOW_DAYS = 0.00001 AutoReadOnly
 String Property SHOUT_DUPLICATE_KEY = "PDV.ShoutAttack.LastTime" AutoReadOnly
 Int _shoutRefreshTicks = 0
 Bool _panelDirty = False
-Bool _diegeticLoadHandled = False
 Bool Property AutoPushPrismaPanel = False Auto
 Bool Property AllowPrismaBlockingSurfaces = False Auto
 
@@ -234,12 +464,11 @@ Event OnInit()
 EndEvent
 
 Event OnUpdate()
-    EnsurePhase8RuntimeWiring()
-    EnsureBosmerRuntimeWiring()
-    EnsureNordRuntimeWiring()
+    ; Time-sensitive every tick: contextual-favor expiry must clear promptly, and
+    ; the one-time unified startup choice must fire promptly once the origin
+    ; resolves (it self-disables via a StorageUtil flag after it completes).
     EnsureUnifiedStartupChoice()
     UpdateContextualFavorRuntime()
-    EnsureSurveyDevotionPower()
     if !_diegeticLoadHandled
         HandleDiegeticLoad("update")
     endIf
@@ -253,8 +482,17 @@ Event OnUpdate()
         RunDebugCommand()
     endIf
 
+    ; Idempotent identity/track/power reconciliation is self-healing but never
+    ; changes second-to-second (it is also performed once in OnInit). Re-confirm
+    ; it on the slower 10s cadence already used by the shout-signal refresh
+    ; instead of every tick, to cut redundant per-tick cross-script external
+    ; calls (~10x fewer). Favor expiry above stays at the 1s tick.
     _shoutRefreshTicks += 1
     if _shoutRefreshTicks >= 10
+        EnsurePhase8RuntimeWiring()
+        EnsureBosmerRuntimeWiring()
+        EnsureNordRuntimeWiring()
+        EnsureSurveyDevotionPower()
         RegisterManagerShoutSignals()
         _shoutRefreshTicks = 0
     endIf
@@ -590,6 +828,12 @@ Function RequestPanelRefresh()
     _panelDirty = True
 EndFunction
 
+; --- Diegetic UX director hooks (additive). The director's D1Enabled gates all
+; visible output, so these are inert at D0. SurfaceTransition self-guards via a
+; StorageUtil one-shot so a transition surfaces once per direction. ---
+PDV_DiegeticDirector Property PDV_DiegeticDirectorService Auto
+Bool _diegeticLoadHandled = False
+
 Function HandleDiegeticLoad(String reason)
     _diegeticLoadHandled = True
     if PDV_DiegeticDirectorService
@@ -650,6 +894,7 @@ Bool Function PushDevotionPanel()
     Float pietyToday = 0.0
     Int tierValue = TIER_NONE
     String tierLabelOverride = ""
+    Float championThreshold = 85.0
 
     if _activeDeity
         titleText = _activeDeity.DeityName
@@ -657,6 +902,9 @@ Bool Function PushDevotionPanel()
         piety = GetPiety(_activeDeity)
         pietyToday = GetPietyToday(_activeDeity)
         tierValue = GetTier(_activeDeity)
+        if _activeDeity.ThresholdChampion > 0.0
+            championThreshold = _activeDeity.ThresholdChampion
+        endIf
     else
         ; Quasi-patron: surface the race's substrate/state-track as panel identity.
         ; Piety stays 0 for substrate races — there is no single scoring float.
@@ -685,6 +933,7 @@ Bool Function PushDevotionPanel()
     j = j + ",\"summary\":\"" + JsonSafeString(GetSurveyDevotionText()) + "\""
     j = j + ",\"tier\":" + tierValue
     j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
+    j = j + ",\"nextText\":\"" + JsonSafeString(GetPanelNextThresholdText(_activeDeity, piety)) + "\""
     j = j + ",\"piety\":" + piety
     j = j + ",\"pietyToday\":" + pietyToday
     j = j + ",\"todayMood\":\"" + JsonSafeString(GetPanelTodayMood(pietyToday)) + "\""
@@ -694,18 +943,22 @@ Bool Function PushDevotionPanel()
     j = j + ",\"acts\":[" + GetPanelActsJson() + "]"
     j = j + ",\"rites\":[" + GetPanelRitesJson() + "]"
     j = j + ",\"relations\":[" + GetPanelRelationsJson() + "]"
-    j = j + ",\"instrument\":" + GetPanelInstrumentJson(originRace, _activeDeity != None, tierValue, tierLabel, piety)
+    j = j + ",\"instrument\":" + GetPanelInstrumentJson(originRace, _activeDeity != None, tierValue, tierLabel, piety, championThreshold)
     j = j + ",\"debug\":" + GetPanelDebugJson()
     j = j + "}"
 
     return PDV_PrismaBridge.SendJson(j)
 EndFunction
 
-String Function GetPanelInstrumentJson(Int originRace, Bool hasActiveDeity, Int tierValue, String tierLabel, Float piety)
+String Function GetPanelInstrumentJson(Int originRace, Bool hasActiveDeity, Int tierValue, String tierLabel, Float piety, Float championThreshold)
     String kindText = GetPanelInstrumentKind(originRace, hasActiveDeity)
     Float primary = 0.0
     if kindText == "piety"
-        primary = ClampValue(piety / 150.0, 0.0, 1.0)
+        Float pietyDenom = championThreshold
+        if pietyDenom <= 0.0
+            pietyDenom = 85.0
+        endIf
+        primary = ClampValue(piety / pietyDenom, 0.0, 1.0)
     else
         primary = ClampValue((tierValue as Float) / 3.0, 0.0, 1.0)
     endIf
@@ -718,6 +971,20 @@ String Function GetPanelInstrumentJson(Int originRace, Bool hasActiveDeity, Int 
     j = j + ",\"data\":" + GetPanelInstrumentDataJson(originRace, kindText, piety)
     j = j + "}"
     return j
+EndFunction
+
+String Function GetPanelNextThresholdText(PDV_DeityBase deity, Float piety)
+    if !deity
+        return ""
+    endIf
+    if piety < deity.ThresholdSeeker
+        return "Seeker at " + (deity.ThresholdSeeker as Int)
+    elseIf piety < deity.ThresholdDevoted
+        return "Devoted at " + (deity.ThresholdDevoted as Int)
+    elseIf piety < deity.ThresholdChampion
+        return "Champion at " + (deity.ThresholdChampion as Int)
+    endIf
+    return "Champion path"
 EndFunction
 
 String Function GetPanelInstrumentKind(Int originRace, Bool hasActiveDeity)
@@ -1140,6 +1407,52 @@ Function AwardCuratedSignalByIndex(Int deityIndex, Int signalType)
     AwardCuratedSignal(deity, signalType, None)
 EndFunction
 
+Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
+    PDV_DaedricPathBase path = GetDaedricPathAtListIndex(pathIndex)
+    if !path
+        if GetDebugLevel() >= 1
+            Debug.Trace("[PDV] Daedric live signal skipped: no path at index " + pathIndex)
+        endIf
+        return
+    endIf
+
+    if IsBlockedDaedricSourceId(sourceId)
+        if GetDebugLevel() >= 2
+            Debug.Trace("[PDV] Daedric live signal ignored generic source for " + path.DeityName + ": " + sourceId)
+        endIf
+        return
+    endIf
+
+    Int tierBefore = path.GetStoredTier()
+    path.AddCommitmentSignal(sourceId)
+    path.AdjustStoredPiety(10.0, sourceId)
+    Int tierAfter = path.GetStoredTier()
+    Debug.Notification("PDV Daedric live source: " + path.DeityName)
+    SendPrismaDaedricToast(path.DeityName, "commitment", sourceId, "daedric")
+    ; A tier-up grants this Prince's boon and its paired price; surface both so the
+    ; gain/cost beat lands for every Prince organically, not just Hircine's bespoke
+    ; hunt rite. The MCM debug page already surfaces all phases per selected Prince.
+    if tierAfter > tierBefore
+        SendPrismaDaedricToast(path.DeityName, "boon", "", "daedric")
+        SendPrismaDaedricToast(path.DeityName, "price", "", "daedric")
+    endIf
+    RequestPanelRefresh()
+
+    if GetDebugLevel() >= 2
+        Debug.Trace("[PDV] Daedric live signal: " + path.DeityName + " index " + pathIndex + " source " + sourceId)
+    endIf
+EndFunction
+
+Function HandleDaedricGenericSilenceProbe(String sourceId)
+    if GetDebugLevel() >= 2
+        Debug.Trace("[PDV] Daedric generic silence probe ignored: " + sourceId)
+    endIf
+EndFunction
+
+Bool Function IsBlockedDaedricSourceId(String sourceId)
+    return sourceId == "" || sourceId == "generic" || sourceId == "generic_combat" || sourceId == "generic_helping" || sourceId == "generic_spellcasting" || sourceId == "ordinary_travel" || sourceId == "ordinary_friendship" || sourceId == "ordinary_service" || sourceId == "debug_generic" || sourceId == "mcm_generic_probe" || sourceId == "eventbus_201_mcm_generic_probe"
+EndFunction
+
 Float Function GetPiety(PDV_DeityBase deity)
     Form deityForm = GetDeityFormOrNone(deity)
     if !deityForm
@@ -1188,6 +1501,26 @@ PDV_DeityBase Function GetDeityAtListIndex(Int listIndex)
     endIf
 
     return PDV_FLST_AllDeities.GetAt(listIndex) as PDV_DeityBase
+EndFunction
+
+Int Function GetDaedricPathCount()
+    if !PDV_FLST_DaedricPaths_All
+        return 0
+    endIf
+
+    return PDV_FLST_DaedricPaths_All.GetSize()
+EndFunction
+
+PDV_DaedricPathBase Function GetDaedricPathAtListIndex(Int listIndex)
+    if listIndex < 0 || !PDV_FLST_DaedricPaths_All
+        return None
+    endIf
+
+    if listIndex >= PDV_FLST_DaedricPaths_All.GetSize()
+        return None
+    endIf
+
+    return PDV_FLST_DaedricPaths_All.GetAt(listIndex) as PDV_DaedricPathBase
 EndFunction
 
 PDV_DeityBase Function GetDeityByName(String deityName)
@@ -1465,6 +1798,8 @@ Bool Function RecordBosmerFavorSignal(String favorKey, Int pathState, String rea
     StorageUtil.AdjustIntValue(None, baseKey + ".Count", 1)
     StorageUtil.SetIntValue(None, baseKey + ".Path", pathState)
     StorageUtil.SetFloatValue(None, baseKey + ".LastTime", Utility.GetCurrentGameTime())
+    StorageUtil.AdjustIntValue(None, "PDV.Bosmer.Favor.SignalCount", 1)
+    StorageUtil.SetFloatValue(None, "PDV.Bosmer.Favor.LastSignalTime", Utility.GetCurrentGameTime())
     Trace(2, "Bosmer favor " + favorKey + " recorded for path " + pathState + " (" + reason + ")")
     return True
 EndFunction
@@ -1501,6 +1836,7 @@ Function HandleDunmerPortableShrinePrayer(String reason)
         Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
         SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
         NotifyDiegeticRoutineFavor("dunmer_portable_shrine")
+        AwardActiveDunmerReclamationMemorySignal()
         RequestPanelRefresh()
         Trace(2, "Dunmer portable shrine prayer routed with multiplier " + multiplier)
     endIf
@@ -1514,6 +1850,7 @@ Function HandleDunmerPlayerHomeBonus(String reason)
         Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
         SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "House memory answered.", "ancestor", GetDunmerAncestorLayerLabel())
         NotifyDiegeticRoutineFavor("dunmer_home_bonus")
+        AwardActiveDunmerReclamationMemorySignal()
         RequestPanelRefresh()
         Trace(2, "Dunmer player-home bonus routed with multiplier " + multiplier)
     endIf
@@ -1533,8 +1870,14 @@ Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
     PDV_KhajiitLunarSubstrate.ObserveMoonPhaseScaled(phaseIndex, multiplier, reason)
     Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_AZURAH, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
+    ; Double-route: the same observance feeds the lunar substrate (identity) AND a small
+    ; foreground piety pulse to the emphasis deity (Azurah) so piety/decay/neglect stay honest.
+    if PDV_Azura
+        AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None)
+    endIf
     StorageUtil.AdjustIntValue(None, "PDV.Khajiit.LunarSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
     ShowP2BookNotice(reason, "Lunar source noted", "This reading gives the Lunar Lattice a visible source.")
     SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The moons marked this observance.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
     NotifyDiegeticRoutineFavor("khajiit_moon_observance")
@@ -1567,6 +1910,10 @@ Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
     PDV_KhajiitLunarSubstrate.RecordRoadHomeCadenceScaled(multiplier, reason)
     Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
+    if PDV_Khenarthi
+        AwardCuratedSignal(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None)
+    endIf
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
     SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
     NotifyDiegeticRoutineFavor("khajiit_road_home")
     RequestPanelRefresh()
@@ -1592,8 +1939,83 @@ Function RecordKhajiitFocusSignal(Int focusValue, String keyPrefix, String label
 
     Float multiplier = ConsumeDailyRepeatMultiplier(keyPrefix)
     StorageUtil.AdjustIntValue(None, keyPrefix + ".CountAll", 1)
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
     AdjustKhajiitFocusedEmphasis(focusValue, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
+    PulseKhajiitFocusPiety(focusValue)
     Trace(2, "Khajiit " + label + " routed with multiplier " + multiplier)
+EndFunction
+
+; Resolves the scripted deity for a Khajiit focused-emphasis value (None if unwired).
+PDV_DeityBase Function GetKhajiitEmphasisDeity(Int focusValue)
+    if focusValue == KHAJIIT_FOCUS_KHENARTHI
+        return PDV_Khenarthi
+    elseIf focusValue == KHAJIIT_FOCUS_AZURAH
+        return PDV_Azura
+    elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
+        return PDV_BaanDar
+    elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
+        return PDV_Rajhin
+    elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
+        return PDV_Alkosh
+    endIf
+
+    return None
+EndFunction
+
+; Small foreground piety pulse to the emphasis deity (the double-route partner of the
+; substrate/focus-weight signal). Each concrete deity defines its own small pulse signal.
+Function PulseKhajiitFocusPiety(Int focusValue)
+    if focusValue == KHAJIIT_FOCUS_BAANDAR && PDV_BaanDar
+        AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_ROAD_TRICK, None)
+    elseIf focusValue == KHAJIIT_FOCUS_RAJHIN && PDV_Rajhin
+        AwardCuratedSignal(PDV_Rajhin, PDV_Rajhin.SIGNAL_ELEGANT_THEFT, None)
+    elseIf focusValue == KHAJIIT_FOCUS_ALKOSH && PDV_Alkosh
+        AwardCuratedSignal(PDV_Alkosh, PDV_Alkosh.SIGNAL_DRAGON_ORDER, None)
+    endIf
+EndFunction
+
+; --- Khajiit anti-creed handlers: medium/major acts against a patron's creed cost piety with
+; that patron (negative ScoreCuratedSignal delta). Routed only from curated triggers, never
+; ambient behavior.
+Function HandleKhajiitAzurahDesecration(String reason)
+    if !IsKhajiitOrigin() || !PDV_Azura
+        return
+    endIf
+    AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None)
+    Trace(2, "Khajiit Azurah desecration routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitKhenarthiCaravanHarm(String reason)
+    if !IsKhajiitOrigin() || !PDV_Khenarthi
+        return
+    endIf
+    AwardCuratedSignal(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_CARAVAN_HARM, None)
+    Trace(2, "Khajiit Khenarthi caravan-harm routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitRajhinBotchedTheft(String reason)
+    if !IsKhajiitOrigin() || !PDV_Rajhin
+        return
+    endIf
+    AwardCuratedSignal(PDV_Rajhin, PDV_Rajhin.SIGNAL_BOTCHED_THEFT, None)
+    Trace(2, "Khajiit Rajhin botched-theft routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitAlkoshChaosAid(String reason)
+    if !IsKhajiitOrigin() || !PDV_Alkosh
+        return
+    endIf
+    AwardCuratedSignal(PDV_Alkosh, PDV_Alkosh.SIGNAL_CHAOS_AID, None)
+    Trace(2, "Khajiit Alkosh chaos-aid routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitBaanDarBetrayal(String reason)
+    if !IsKhajiitOrigin() || !PDV_BaanDar
+        return
+    endIf
+    AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_BETRAYAL, None)
+    Trace(2, "Khajiit Baan Dar betrayal routed (" + reason + ")")
 EndFunction
 
 Bool Function IsKhajiitOrigin()
@@ -1610,8 +2032,15 @@ Function HandleArgonianHistMaintenance(String reason)
     PDV_ArgonianHistSubstrate.RecordHistMaintenanceScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    ; Double-route: the substrate carries the reward gating; a small honest +1 Hist pulse keeps
+    ; the universal piety layer (decay/neglect/creed-loss) honest. Substrate anti-farm is the
+    ; ConsumeDailyRepeatMultiplier above; the pulse anti-farm is the AwardPiety daily-max path.
+    if PDV_Hist
+        AwardCuratedSignal(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None)
+    endIf
     StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistSourceReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
     ShowP2BookNotice(reason, "Hist memory noted", "This reading gives the Hist memory a visible source.")
     SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The Hist memory stirred.", "hist", GetArgonianHistPostureLabel())
     RequestPanelRefresh()
@@ -1628,6 +2057,11 @@ Function HandleArgonianPeopleSupport(String reason)
     PDV_ArgonianHistSubstrate.RecordPeopleSupportScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    ; Double-route: small honest +1 Hist pulse (the universal layer stays Hist-honest).
+    if PDV_Hist
+        AwardCuratedSignal(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None)
+    endIf
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
     SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "Your people were supported.", "hist", GetArgonianHistPostureLabel())
     RequestPanelRefresh()
     Trace(2, "Argonian People support routed with multiplier " + multiplier)
@@ -1643,6 +2077,11 @@ Function HandleArgonianBedOfChoiceReturn(String reason)
     PDV_ArgonianHistSubstrate.RecordBedOfChoiceReturnScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    ; Double-route: small honest +1 Hist pulse (the universal layer stays Hist-honest).
+    if PDV_Hist
+        AwardCuratedSignal(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None)
+    endIf
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
     SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The chosen rest took root.", "hist", GetArgonianHistPostureLabel())
     RequestPanelRefresh()
     Trace(2, "Argonian bed-of-choice return routed with multiplier " + multiplier)
@@ -1658,6 +2097,15 @@ Function HandleArgonianVoidSignal(String reason)
     PDV_ArgonianHistSubstrate.RecordVoidSignalScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    ; Double-route: the universal layer stays Hist-honest even on the Void route (small +1 Hist
+    ; pulse). The Sithis threshold pulse only lands once the Void is fully active (>=3 signals).
+    if PDV_Hist
+        AwardCuratedSignal(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None)
+    endIf
+    if PDV_Sithis && PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+        AwardCuratedSignal(PDV_Sithis, PDV_Sithis.SIGNAL_VOID_THRESHOLD, None)
+    endIf
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
     SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The Void was noticed.", "hist", GetArgonianHistPostureLabel())
     RequestPanelRefresh()
     Trace(2, "Argonian Void signal routed with multiplier " + multiplier)
@@ -1710,6 +2158,7 @@ Function HandleOrcStrongholdForge(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcStrongholdForge")
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_STRONGHOLD, multiplier, reason)
+    AwardOrcStrongholdForgeSignal()
     Trace(2, "Orc Stronghold forge routed with multiplier " + multiplier)
 EndFunction
 
@@ -1720,6 +2169,7 @@ Function HandleOrcCityDignity(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcCityDignity")
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_CITY, multiplier, reason)
+    AwardOrcCityDignitySignal()
     Trace(2, "Orc City dignity routed with multiplier " + multiplier)
 EndFunction
 
@@ -1730,6 +2180,7 @@ Function HandleOrcLegionService(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcLegionService")
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_LEGION_EXILE, multiplier, reason)
+    AwardOrcLegionServiceSignal()
     Trace(2, "Orc Legion or exile service routed with multiplier " + multiplier)
 EndFunction
 
@@ -1740,6 +2191,7 @@ Function HandleOrcSelfMadeCommunity(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcSelfMadeCommunity")
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_CITY, multiplier, reason)
+    AwardOrcSelfMadeCommunitySignal()
     Trace(2, "Orc self-made community routed with multiplier " + multiplier)
 EndFunction
 
@@ -1755,6 +2207,7 @@ Function HandleOrcMalacathConduct(Int modeValue, String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcMalacathConduct")
     RecordOrcLifeModeSignal(modeValue, multiplier, reason)
+    AwardOrcBroadConductSignal()
     StorageUtil.AdjustFloatValue(None, "PDV.Orc.MalacathConduct", multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Orc.MalacathSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Orc.LastMalacathSourceReason", reason)
@@ -1776,6 +2229,7 @@ Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
     StorageUtil.AdjustFloatValue(None, GetOrcLifeModeWeightKey(modeValue), multiplier)
     StorageUtil.SetIntValue(None, "PDV.Orc.LastLifeModeSignal", modeValue)
     StorageUtil.SetStringValue(None, "PDV.Orc.LastLifeModeReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Orc.LastLifeModeSignalTime", Utility.GetCurrentGameTime())
 
     if multiplier > 0.0 && PDV_OrcLifeModeTrack.GetCurrentState() != modeValue
         PDV_OrcLifeModeTrack.SetState(modeValue, reason)
@@ -1784,6 +2238,36 @@ Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
     elseIf multiplier > 0.0
         SendPrismaSubstrateToast("stronghold", "act", "The code was marked.", "malacath", GetOrcLifeModeLabel())
         RequestPanelRefresh()
+    endIf
+EndFunction
+
+Function AwardOrcStrongholdForgeSignal()
+    if PDV_Malacath
+        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, None)
+    endIf
+EndFunction
+
+Function AwardOrcCityDignitySignal()
+    if PDV_Malacath
+        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_CITY_DIGNITY, None)
+    endIf
+EndFunction
+
+Function AwardOrcLegionServiceSignal()
+    if PDV_Malacath
+        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_LEGION_SERVICE, None)
+    endIf
+EndFunction
+
+Function AwardOrcSelfMadeCommunitySignal()
+    if PDV_Malacath
+        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_SELF_MADE_COMMUNITY, None)
+    endIf
+EndFunction
+
+Function AwardOrcBroadConductSignal()
+    if PDV_Malacath
+        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_BROAD_CONDUCT, None)
     endIf
 EndFunction
 
@@ -1855,6 +2339,7 @@ Function HandleRedguardCrownTombRespect(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardCrownTombRespect")
     RecordRedguardSectSignal(REDGUARD_SECT_CROWN, multiplier, reason)
+    AwardRedguardCrownSignal()
     Trace(2, "Redguard Crown tomb respect routed with multiplier " + multiplier)
 EndFunction
 
@@ -1865,6 +2350,7 @@ Function HandleRedguardForebearRoadPassage(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardForebearRoad")
     RecordRedguardSectSignal(REDGUARD_SECT_FOREBEAR, multiplier, reason)
+    AwardRedguardForebearSignal()
     Trace(2, "Redguard Forebear road passage routed with multiplier " + multiplier)
 EndFunction
 
@@ -1875,6 +2361,7 @@ Function HandleRedguardAshAbahDeathDuty(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAshAbahDeathDuty")
     RecordRedguardSectSignal(REDGUARD_SECT_ASHABAH, multiplier, reason)
+    AwardRedguardAshAbahSignal()
     Trace(2, "Redguard AshAbah death duty routed with multiplier " + multiplier)
 EndFunction
 
@@ -1889,6 +2376,8 @@ Function HandleRedguardFarShoresToken(String reason)
     PDV_RedguardSectTrack.RecordEvidenceDay(currentSect, reason)
     StorageUtil.AdjustFloatValue(None, "PDV.Redguard.FarShoresToken", multiplier)
     StorageUtil.SetStringValue(None, "PDV.Redguard.LastSectReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Redguard.LastSectSignalTime", Utility.GetCurrentGameTime())
+    AwardRedguardFarShoresSignal()
     Trace(2, "Redguard Far Shores token routed with multiplier " + multiplier)
 EndFunction
 
@@ -1922,6 +2411,7 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
     StorageUtil.AdjustFloatValue(None, GetRedguardSectWeightKey(sectValue), multiplier)
     StorageUtil.SetIntValue(None, "PDV.Redguard.LastSectSignal", sectValue)
     StorageUtil.SetStringValue(None, "PDV.Redguard.LastSectReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Redguard.LastSectSignalTime", Utility.GetCurrentGameTime())
 
     if multiplier > 0.0 && PDV_RedguardSectTrack.GetCurrentState() != sectValue
         PDV_RedguardSectTrack.SetState(sectValue, reason)
@@ -1930,6 +2420,32 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
     elseIf multiplier > 0.0
         SendPrismaSubstrateToast("sect", "act", "The Yokudan path was marked.", "sect", GetRedguardSectLabel())
         RequestPanelRefresh()
+    endIf
+EndFunction
+
+Function AwardRedguardCrownSignal()
+    if PDV_Tuwhacca
+        AwardCuratedSignal(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_CROWN_FORM, None)
+    endIf
+EndFunction
+
+Function AwardRedguardForebearSignal()
+    if _activeDeity == PDV_HoonDing && PDV_HoonDing
+        AwardCuratedSignal(PDV_HoonDing, PDV_HoonDing.SIGNAL_MAKE_WAY, None)
+    elseIf _activeDeity == PDV_Leki && PDV_Leki
+        AwardCuratedSignal(PDV_Leki, PDV_Leki.SIGNAL_SWORD_SINGING, None)
+    endIf
+EndFunction
+
+Function AwardRedguardAshAbahSignal()
+    if PDV_Tuwhacca
+        AwardCuratedSignal(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, None)
+    endIf
+EndFunction
+
+Function AwardRedguardFarShoresSignal()
+    if PDV_Tuwhacca
+        AwardCuratedSignal(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_FAR_SHORES_TOKEN, None)
     endIf
 EndFunction
 
@@ -2236,6 +2752,7 @@ Function HandleAltmerDawnSteadiness(String reason)
 
     RecordAltmerSourceFavor(FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
     TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
+    AwardAltmerDawnSignal(reason)
     if reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
         ShowP2BookNotice(reason, "Auri-El noted", "This reading gives Altmer dawn steadiness a visible source.")
     elseIf reason == "eventbus_p2_altmer_magnus_po3_book_altmer_magnus"
@@ -2256,7 +2773,30 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
 
     RecordAltmerSourceFavor(FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
     TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
+    AwardAltmerOrthodoxSignal(reason)
     ShowP2BookNotice(reason, "Xarxes noted", "This reading gives Altmer orthodoxy a visible source.")
+EndFunction
+
+Function AwardAltmerDawnSignal(String reason)
+    if StringContainsToken(reason, "magnus") && PDV_Magnus
+        AwardCuratedSignal(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None)
+        return
+    endIf
+
+    if PDV_AuriEl
+        AwardCuratedSignal(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None)
+    endIf
+EndFunction
+
+Function AwardAltmerOrthodoxSignal(String reason)
+    if StringContainsToken(reason, "xarxes") && PDV_Xarxes
+        AwardCuratedSignal(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None)
+        return
+    endIf
+
+    if PDV_AuriEl
+        AwardCuratedSignal(PDV_AuriEl, PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION, None)
+    endIf
 EndFunction
 
 Function RecordAltmerSourceFavor(Int familyValue, String reason)
@@ -2444,11 +2984,22 @@ Int Function RecomputeTier(PDV_DeityBase deity)
         StorageUtil.SetFloatValue(deityForm, "PDV.Tier", newTier as Float)
         StorageUtil.SetFloatValue(deityForm, "PDV.LastTierChange", Utility.GetCurrentGameTime())
 
+        Bool isFocusedEmphasis = IsKhajiitOrigin() && deity == GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
+
         if deity == _activeDeity
             deity.OnTierChange(oldTier, newTier)
             RefreshPatronMirrors()
             if newTier > oldTier
+                NotifyTierUp(deity, newTier)
                 SendPrismaEventToast("tier", deity, "", GetCurrentStandingLabel(), "")
+            endIf
+        elseIf isFocusedEmphasis
+            ; No-offer races (Khajiit) reach tiers on an emphasis deity that is never _activeDeity;
+            ; still recognize the milestone so the player gets a medium-level notice.
+            deity.OnTierChange(oldTier, newTier)
+            if newTier > oldTier
+                NotifyTierUp(deity, newTier)
+                SendPrismaEventToast("tier", deity, "", GetTierStandingLabel(newTier), "")
                 SurfaceTransition("tier", deity.DeityName, "reach", deity.DeityIndex, "")
             endIf
         endIf
@@ -2459,6 +3010,24 @@ Int Function RecomputeTier(PDV_DeityBase deity)
     endIf
 
     return newTier
+EndFunction
+
+; Concise top-left notice when a tracked deity advances a tier (active patron or focused emphasis).
+Function NotifyTierUp(PDV_DeityBase deity, Int newTier)
+    if deity
+        Debug.Notification(deity.DeityName + " marks you as " + GetTierStandingLabel(newTier) + ".")
+    endIf
+EndFunction
+
+String Function GetTierStandingLabel(Int tier)
+    if tier >= TIER_CHAMPION
+        return "Champion"
+    elseIf tier >= TIER_DEVOTED
+        return "Devoted"
+    elseIf tier >= TIER_SEEKER
+        return "Seeker"
+    endIf
+    return "Unrecognized"
 EndFunction
 
 Function RefreshPatronMirrors()
@@ -2525,7 +3094,6 @@ Function ProcessDawn()
     RunDawnProcessCommitmentOffersNoop()
     RunDawnNotifyNoop()
     RequestPanelRefresh()
-    RefreshDiegeticMedallion("dawn")
 
     if GetDebugLevel() >= 1
         Debug.Trace("[PDV] ProcessDawn complete.")
@@ -2670,6 +3238,7 @@ EndFunction
 
 Function RunDawnNotify()
     SendPrismaEventToast("dawn", None, "", "", "")
+    RefreshDiegeticMedallion("dawn")
     Trace(2, "Pattern summary: " + DebugGetPatternProvingSummary())
 EndFunction
 
@@ -2909,25 +3478,34 @@ String Function DebugGetPietyMapString()
     Int i = 0
     Int count = PDV_FLST_AllDeities.GetSize()
     String output = ""
+    Int shown = 0
 
+    ; Only list deities that have moved (stored piety, scratch piety, or a tier), so the
+    ; message box stays short and readable instead of dumping the whole roster at zero.
     while i < count
         PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
         if deity
-            String entry = deity.DeityName + " p=" + GetPiety(deity) + " t=" + GetPietyToday(deity) + " tier=" + GetTier(deity)
-            if output == ""
-                output = entry
-            else
-                output = output + "; " + entry
+            Float piety = GetPiety(deity)
+            Float today = GetPietyToday(deity)
+            Int tier = GetTier(deity)
+            if piety != 0.0 || today != 0.0 || tier != 0
+                String entry = deity.DeityName + ": tier=" + tier + " piety=" + piety + " scratch=" + today
+                if output == ""
+                    output = entry
+                else
+                    output = output + "\n" + entry
+                endIf
+                shown += 1
             endIf
         endIf
         i += 1
     endWhile
 
-    if output == ""
-        return "No deity entries were found."
+    if shown == 0
+        return "All " + count + " deities are at zero (no piety, scratch, or tier yet)."
     endIf
 
-    return output
+    return "Active deities (" + shown + " of " + count + "):\n" + output
 EndFunction
 
 Function DebugClearActiveDeity()
@@ -3181,7 +3759,8 @@ Function SyncFirstTierRaceRewardRuntime()
     Bool shouldBeActive = IsFirstTierRaceRewardEligible() && activeReward
 
     SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T1, shouldBeActive && activeReward == PDV_Bless_Altmer_Orthodox_T1, "Altmer T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T1, shouldBeActive && activeReward == PDV_Bless_Argonian_Hist_T1, "Argonian T1")
+    ; Argonian Hist_T1 is intentionally absent here: SyncArgonianRewards owns it on the substrate
+    ; tier (no-offer). Managing it in this active-patron path too would fight that grant.
     SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T1, shouldBeActive && activeReward == PDV_Bless_Bosmer_Yffre_T1, "Bosmer T1")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T1, shouldBeActive && activeReward == PDV_Bless_Breton_Tradition_T1, "Breton T1")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T1, shouldBeActive && activeReward == PDV_Bless_Dunmer_Reclamation_T1, "Dunmer T1")
@@ -3198,6 +3777,733 @@ Function SyncFirstTierRaceRewardRuntime()
         StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Active", 0)
         StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Origin", -1)
     endIf
+
+    ; Khajiit is a no-offer race: its emphasis rewards gate on the focused emphasis deity's
+    ; piety tier (not active-patron), and its broad lunar reward is the substrate boon layer.
+    SyncKhajiitEmphasisRewards(playerRef)
+    SyncKhajiitNeglectSpell(IsKhajiitLunarNeglected())
+
+    ; Altmer is an offer race: broad orthodoxy T1 remains on the existing first-tier path while
+    ; focused Auri-El/Magnus/Xarxes families gate on the active patron's tier.
+    SyncAltmerRewards(playerRef)
+    SyncAltmerNeglectSpell(IsAltmerCoherenceNeglected())
+
+    ; Bosmer is path-state gated: Y'ffre broad remains soft/capped, and the active path family
+    ; uses the path scoring deity tier while clearing every other path reward.
+    SyncBosmerRewards(playerRef)
+    SyncBosmerNeglectSpell(IsBosmerPathNeglected())
+
+    ; Breton is tradition-state gated. The chosen tradition selects exactly one focused family;
+    ; the broad tradition reward remains softer and capped at Faithful.
+    SyncBretonRewards(playerRef)
+    SyncBretonNeglectSpell(IsBretonTraditionNeglected())
+
+    ; Dunmer is hybrid: ancestor substrate is always-on identity, while the Reclamation foreground
+    ; remains an active-patron offer lane with one focused patron active at a time.
+    SyncDunmerRewards(playerRef)
+    SyncDunmerNeglectSpell(IsDunmerAncestorNeglected())
+
+    ; Orc is state-enum gated: one life-mode focused family can be active at a time, all under
+    ; Malacath as the single religious spine.
+    SyncOrcRewards(playerRef)
+    SyncOrcNeglectSpell(IsOrcCodeNeglected())
+
+    ; Redguard is state-enum gated: the sect filters the Yokudan lane, then exactly one focused
+    ; patron family can be active at a time.
+    SyncRedguardRewards(playerRef)
+    SyncRedguardNeglectSpell(IsRedguardAncestorDistanceNeglected())
+
+    ; Nord is state-enum gated: the baseline selects Old Ways or Nine Divines, and only a patron
+    ; from that baseline can carry focused rewards. Kyne neglect remains the existing Nord neglect.
+    SyncNordRewards(playerRef)
+
+    ; Argonian is the second no-offer race: rewards gate on the Hist substrate relations + People
+    ; focus + Void-active (not active-patron), so the broad Hist set runs without an offer.
+    SyncArgonianRewards(playerRef)
+    SyncArgonianNeglectSpell(IsArgonianHistNeglected())
+
+    ; Imperial is an offer race: broad civic T1 remains on the existing first-tier path while the
+    ; focused Divine/Talos families gate on the active patron's tier.
+    SyncImperialRewards(playerRef)
+    SyncImperialNeglectSpell(IsImperialCivicNeglected())
+EndFunction
+
+Function SyncAltmerRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Bool isAltmer = GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
+    Bool broadOrthodoxFaithful = isAltmer && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count") >= 6
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T2, broadOrthodoxFaithful, "Altmer Orthodox T2")
+
+    SyncAltmerRewardFamily(playerRef, PDV_AuriEl, PDV_Bless_Altmer_AuriEl_T1, PDV_Bless_Altmer_AuriEl_T2, PDV_Bless_Altmer_AuriEl_T3, "Auri-El")
+    SyncAltmerRewardFamily(playerRef, PDV_Magnus, PDV_Bless_Altmer_Magnus_T1, PDV_Bless_Altmer_Magnus_T2, PDV_Bless_Altmer_Magnus_T3, "Magnus")
+    SyncAltmerRewardFamily(playerRef, PDV_Xarxes, PDV_Bless_Altmer_Xarxes_T1, PDV_Bless_Altmer_Xarxes_T2, PDV_Bless_Altmer_Xarxes_T3, "Xarxes")
+EndFunction
+
+Function SyncAltmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_ALTMER && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
+    Int activeTier = TIER_NONE
+    if isActive && deity
+        activeTier = GetTier(deity)
+    endIf
+
+    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier >= TIER_SEEKER, "Altmer " + label + " T1")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier >= TIER_DEVOTED, "Altmer " + label + " T2")
+    SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Altmer " + label + " T3")
+EndFunction
+
+Bool Function IsAltmerCoherenceNeglected()
+    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER
+        return False
+    endIf
+
+    if IsAltmerFavorSuppressedByCurse()
+        return False
+    endIf
+
+    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Altmer.Favor.LastGameTime")
+    if lastSource <= 0.0
+        return False
+    endIf
+
+    return (Utility.GetCurrentGameTime() - lastSource) > 3.0
+EndFunction
+
+Function SyncAltmerNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_SPEL_Neglect_Altmer
+        StorageUtil.SetIntValue(None, "PDV.Neglect.AltmerSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(PDV_SPEL_Neglect_Altmer)
+            playerRef.AddSpell(PDV_SPEL_Neglect_Altmer, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.AltmerSpellActive", 1)
+    else
+        if playerRef.HasSpell(PDV_SPEL_Neglect_Altmer)
+            playerRef.RemoveSpell(PDV_SPEL_Neglect_Altmer)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.AltmerSpellActive", 0)
+    endIf
+EndFunction
+
+Function SyncBosmerRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Bool isBosmer = GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
+    Int pathState = GetBosmerPathState()
+    Bool broadFaithful = isBosmer && GetPatronState() == PATRON_STATE_BROAD && GetBosmerFavorSignalCount() >= 6
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T2, broadFaithful, "Bosmer Yffre T2")
+
+    SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_OLD_CONTRACT, pathState, PDV_Yffre, PDV_Bless_Bosmer_OldContract_T1, PDV_Bless_Bosmer_OldContract_T2, PDV_Bless_Bosmer_OldContract_T3, "OldContract")
+    SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_LIVING_STORY, pathState, PDV_Yffre, PDV_Bless_Bosmer_LivingStory_T1, PDV_Bless_Bosmer_LivingStory_T2, PDV_Bless_Bosmer_LivingStory_T3, "LivingStory")
+    SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_EXCHANGE, pathState, PDV_Zen, PDV_Bless_Bosmer_Exchange_T1, PDV_Bless_Bosmer_Exchange_T2, PDV_Bless_Bosmer_Exchange_T3, "Exchange")
+    SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_BANDIT_ROAD, pathState, PDV_BaanDar, PDV_Bless_Bosmer_BanditRoad_T1, PDV_Bless_Bosmer_BanditRoad_T2, PDV_Bless_Bosmer_BanditRoad_T3, "BanditRoad")
+EndFunction
+
+Function SyncBosmerPathRewardFamily(Actor playerRef, Int thisPath, Int activePath, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_BOSMER && thisPath == activePath
+    Int activeTier = TIER_NONE
+    if isActive && deity
+        activeTier = GetTier(deity)
+    endIf
+
+    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier >= TIER_SEEKER, "Bosmer " + label + " T1")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier >= TIER_DEVOTED, "Bosmer " + label + " T2")
+    SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Bosmer " + label + " T3")
+EndFunction
+
+Int Function GetBosmerPathState()
+    if PDV_BosmerPathTrack
+        Int pathState = PDV_BosmerPathTrack.GetCurrentState()
+        if pathState >= BOSMER_PATH_OLD_CONTRACT && pathState <= BOSMER_PATH_BANDIT_ROAD
+            return pathState
+        endIf
+    endIf
+
+    return BOSMER_PATH_LIVING_STORY
+EndFunction
+
+Int Function GetBosmerFavorSignalCount()
+    return StorageUtil.GetIntValue(None, "PDV.Bosmer.Favor.SignalCount")
+EndFunction
+
+Bool Function IsBosmerPathNeglected()
+    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
+        return False
+    endIf
+
+    Int pathState = GetBosmerPathState()
+    if pathState == BOSMER_PATH_EXCHANGE
+        return IsNeglectFlagActive(PDV_Zen)
+    elseIf pathState == BOSMER_PATH_BANDIT_ROAD
+        return IsNeglectFlagActive(PDV_BaanDar)
+    endIf
+
+    return IsNeglectFlagActive(PDV_Yffre)
+EndFunction
+
+Function SyncBosmerNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_SPEL_Neglect_Bosmer
+        StorageUtil.SetIntValue(None, "PDV.Neglect.BosmerSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(PDV_SPEL_Neglect_Bosmer)
+            playerRef.AddSpell(PDV_SPEL_Neglect_Bosmer, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.BosmerSpellActive", 1)
+    else
+        if playerRef.HasSpell(PDV_SPEL_Neglect_Bosmer)
+            playerRef.RemoveSpell(PDV_SPEL_Neglect_Bosmer)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.BosmerSpellActive", 0)
+    endIf
+EndFunction
+
+Function SyncBretonRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Bool isBreton = GetPlayerOriginRaceIndex() == ORIGIN_BRETON
+    Int traditionValue = GetBretonTraditionValue()
+    Bool broadFaithful = isBreton && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Breton.TraditionHookCount") >= 6
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T2, broadFaithful, "Breton Tradition T2")
+
+    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_KNIGHTS_ROAD, traditionValue, PDV_Stendarr, PDV_Bless_Breton_KnightsRoad_T1, PDV_Bless_Breton_KnightsRoad_T2, PDV_Bless_Breton_KnightsRoad_T3, "KnightsRoad")
+    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_HIDDEN_ART, traditionValue, PDV_Julianos, PDV_Bless_Breton_HiddenArt_T1, PDV_Bless_Breton_HiddenArt_T2, PDV_Bless_Breton_HiddenArt_T3, "HiddenArt")
+    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_GREEN_WAY, traditionValue, PDV_Kynareth, PDV_Bless_Breton_GreenWay_T1, PDV_Bless_Breton_GreenWay_T2, PDV_Bless_Breton_GreenWay_T3, "GreenWay")
+EndFunction
+
+Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int activeTradition, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_BRETON && thisTradition == activeTradition
+    if thisTradition == BRETON_TRADITION_HIDDEN_ART && StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure") >= 100
+        isActive = False
+    endIf
+
+    Int activeTier = TIER_NONE
+    if isActive && deity
+        activeTier = GetTier(deity)
+    endIf
+
+    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier >= TIER_SEEKER, "Breton " + label + " T1")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier >= TIER_DEVOTED, "Breton " + label + " T2")
+    SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Breton " + label + " T3")
+EndFunction
+
+Int Function GetBretonTraditionValue()
+    Int traditionValue = StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1)
+    if traditionValue >= BRETON_TRADITION_KNIGHTS_ROAD && traditionValue <= BRETON_TRADITION_GREEN_WAY
+        return traditionValue
+    endIf
+
+    return BRETON_TRADITION_KNIGHTS_ROAD
+EndFunction
+
+Bool Function IsBretonTraditionNeglected()
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+        return False
+    endIf
+
+    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Breton.LastTraditionSignalTime")
+    if lastSource <= 0.0
+        return False
+    endIf
+
+    return (Utility.GetCurrentGameTime() - lastSource) > 5.0
+EndFunction
+
+Function SyncBretonNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_SPEL_Neglect_Breton
+        StorageUtil.SetIntValue(None, "PDV.Neglect.BretonSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(PDV_SPEL_Neglect_Breton)
+            playerRef.AddSpell(PDV_SPEL_Neglect_Breton, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.BretonSpellActive", 1)
+    else
+        if playerRef.HasSpell(PDV_SPEL_Neglect_Breton)
+            playerRef.RemoveSpell(PDV_SPEL_Neglect_Breton)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.BretonSpellActive", 0)
+    endIf
+EndFunction
+
+Function SyncDunmerRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Bool isDunmer = GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
+    Bool broadReclamationFaithful = isDunmer && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") >= 6
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T2, broadReclamationFaithful, "Dunmer Reclamation T2")
+
+    SyncDunmerRewardFamily(playerRef, PDV_Azura, PDV_Bless_Dunmer_Azura_T1, PDV_Bless_Dunmer_Azura_T2, PDV_Bless_Dunmer_Azura_T3, "Azura")
+    SyncDunmerRewardFamily(playerRef, PDV_Boethiah, PDV_Bless_Dunmer_Boethiah_T1, PDV_Bless_Dunmer_Boethiah_T2, PDV_Bless_Dunmer_Boethiah_T3, "Boethiah")
+    SyncDunmerRewardFamily(playerRef, PDV_Mephala, PDV_Bless_Dunmer_Mephala_T1, PDV_Bless_Dunmer_Mephala_T2, PDV_Bless_Dunmer_Mephala_T3, "Mephala")
+EndFunction
+
+Function SyncDunmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_DUNMER && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
+    Int activeTier = TIER_NONE
+    if isActive && deity
+        activeTier = GetTier(deity)
+    endIf
+
+    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier >= TIER_SEEKER, "Dunmer " + label + " T1")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier >= TIER_DEVOTED, "Dunmer " + label + " T2")
+    SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Dunmer " + label + " T3")
+EndFunction
+
+Bool Function IsDunmerAncestorNeglected()
+    if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER
+        return False
+    endIf
+
+    return StorageUtil.GetIntValue(None, "PDV.Curse.Dunmer.Posture") == 1
+EndFunction
+
+Function SyncDunmerNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_SPEL_Neglect_Dunmer
+        StorageUtil.SetIntValue(None, "PDV.Neglect.DunmerSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(PDV_SPEL_Neglect_Dunmer)
+            playerRef.AddSpell(PDV_SPEL_Neglect_Dunmer, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.DunmerSpellActive", 1)
+    else
+        if playerRef.HasSpell(PDV_SPEL_Neglect_Dunmer)
+            playerRef.RemoveSpell(PDV_SPEL_Neglect_Dunmer)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.DunmerSpellActive", 0)
+    endIf
+EndFunction
+
+Function SyncOrcRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Bool isOrc = GetPlayerOriginRaceIndex() == ORIGIN_ORC
+    Int activeMode = GetActiveOrcRewardMode()
+    Bool broadFaithful = isOrc && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount") >= 6
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T2, broadFaithful, "Orc Malacath T2")
+
+    Bool focusActive = isOrc && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == PDV_Malacath && PDV_Malacath
+    Int activeTier = TIER_NONE
+    if focusActive
+        activeTier = GetTier(PDV_Malacath)
+    endIf
+
+    SyncOrcRewardFamily(playerRef, ORC_LIFE_MODE_STRONGHOLD, activeMode, activeTier, focusActive, PDV_Bless_Orc_Stronghold_T1, PDV_Bless_Orc_Stronghold_T2, PDV_Bless_Orc_Stronghold_T3, "Stronghold")
+    SyncOrcRewardFamily(playerRef, ORC_LIFE_MODE_CITY, activeMode, activeTier, focusActive, PDV_Bless_Orc_City_T1, PDV_Bless_Orc_City_T2, PDV_Bless_Orc_City_T3, "City")
+    SyncOrcRewardFamily(playerRef, ORC_LIFE_MODE_LEGION_EXILE, activeMode, activeTier, focusActive, PDV_Bless_Orc_LegionExile_T1, PDV_Bless_Orc_LegionExile_T2, PDV_Bless_Orc_LegionExile_T3, "LegionExile")
+EndFunction
+
+Int Function GetActiveOrcRewardMode()
+    if PDV_OrcLifeModeTrack
+        Int modeValue = PDV_OrcLifeModeTrack.GetCurrentState()
+        if modeValue >= ORC_LIFE_MODE_CITY && modeValue <= ORC_LIFE_MODE_LEGION_EXILE
+            return modeValue
+        endIf
+    endIf
+
+    return ORC_LIFE_MODE_CITY
+EndFunction
+
+Function SyncOrcRewardFamily(Actor playerRef, Int thisMode, Int activeMode, Int activeTier, Bool focusActive, Spell t1, Spell t2, Spell t3, String label)
+    Bool isActive = focusActive && thisMode == activeMode
+    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier >= TIER_SEEKER, "Orc " + label + " T1")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier >= TIER_DEVOTED, "Orc " + label + " T2")
+    SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Orc " + label + " T3")
+EndFunction
+
+Bool Function IsOrcCodeNeglected()
+    if GetPlayerOriginRaceIndex() != ORIGIN_ORC
+        return False
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.Curse.Orc.CodePressure") == 1
+        return True
+    endIf
+
+    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Orc.LastLifeModeSignalTime")
+    if lastSource <= 0.0
+        return False
+    endIf
+
+    return (Utility.GetCurrentGameTime() - lastSource) > 5.0
+EndFunction
+
+Function SyncOrcNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_SPEL_Neglect_Orc
+        StorageUtil.SetIntValue(None, "PDV.Neglect.OrcSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(PDV_SPEL_Neglect_Orc)
+            playerRef.AddSpell(PDV_SPEL_Neglect_Orc, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.OrcSpellActive", 1)
+    else
+        if playerRef.HasSpell(PDV_SPEL_Neglect_Orc)
+            playerRef.RemoveSpell(PDV_SPEL_Neglect_Orc)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.OrcSpellActive", 0)
+    endIf
+EndFunction
+
+Function SyncRedguardRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Bool isRedguard = GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
+    Bool broadFaithful = isRedguard && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount") >= 6
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T2, broadFaithful, "Redguard AncestorSpine T2")
+
+    SyncRedguardRewardFamily(playerRef, PDV_Tuwhacca, PDV_Bless_Redguard_Tuwhacca_T1, PDV_Bless_Redguard_Tuwhacca_T2, PDV_Bless_Redguard_Tuwhacca_T3, "Tuwhacca")
+    SyncRedguardRewardFamily(playerRef, PDV_HoonDing, PDV_Bless_Redguard_HoonDing_T1, PDV_Bless_Redguard_HoonDing_T2, PDV_Bless_Redguard_HoonDing_T3, "HoonDing")
+    SyncRedguardRewardFamily(playerRef, PDV_Leki, PDV_Bless_Redguard_Leki_T1, PDV_Bless_Redguard_Leki_T2, PDV_Bless_Redguard_Leki_T3, "Leki")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_FarShoresToken, isRedguard && StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken") > 0.0, "Redguard Far Shores Token")
+EndFunction
+
+Function SyncRedguardRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
+    Int activeTier = TIER_NONE
+    if isActive && deity
+        activeTier = GetTier(deity)
+    endIf
+
+    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier >= TIER_SEEKER, "Redguard " + label + " T1")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier >= TIER_DEVOTED, "Redguard " + label + " T2")
+    SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Redguard " + label + " T3")
+EndFunction
+
+Bool Function IsRedguardAncestorDistanceNeglected()
+    if GetPlayerOriginRaceIndex() != ORIGIN_REDGUARD
+        return False
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.Curse.Redguard.CyclePressure") > 0
+        return True
+    endIf
+
+    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Redguard.LastSectSignalTime")
+    if lastSource <= 0.0
+        return False
+    endIf
+
+    return (Utility.GetCurrentGameTime() - lastSource) > 5.0
+EndFunction
+
+Function SyncRedguardNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_SPEL_Neglect_Redguard
+        StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(PDV_SPEL_Neglect_Redguard)
+            playerRef.AddSpell(PDV_SPEL_Neglect_Redguard, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 1)
+    else
+        if playerRef.HasSpell(PDV_SPEL_Neglect_Redguard)
+            playerRef.RemoveSpell(PDV_SPEL_Neglect_Redguard)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 0)
+    endIf
+EndFunction
+
+Function SyncNordRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Bool isNord = GetPlayerOriginRaceIndex() == ORIGIN_NORD
+    Int baselineState = GetNordPantheonBaselineState()
+    Bool broadOldWaysFaithful = isNord && GetPatronState() == PATRON_STATE_BROAD && baselineState == NORD_BASELINE_OLD_WAYS && StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount") >= 6
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T2, broadOldWaysFaithful, "Nord OldWays T2")
+
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, PDV_Kyne, PDV_Bless_Nord_Kyne_T1, PDV_Bless_Nord_Kyne_T2, PDV_Bless_Nord_Kyne_T3, "Kyne")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, PDV_Shor, PDV_Bless_Nord_Shor_T1, PDV_Bless_Nord_Shor_T2, PDV_Bless_Nord_Shor_T3, "Shor")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, PDV_Tsun, PDV_Bless_Nord_Tsun_T1, PDV_Bless_Nord_Tsun_T2, PDV_Bless_Nord_Tsun_T3, "Tsun")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, PDV_Stuhn, PDV_Bless_Nord_Stuhn_T1, PDV_Bless_Nord_Stuhn_T2, PDV_Bless_Nord_Stuhn_T3, "Stuhn")
+    SyncNordRewardFamily(playerRef, -1, PDV_Talos, PDV_Bless_Nord_Talos_T1, PDV_Bless_Nord_Talos_T2, PDV_Bless_Nord_Talos_T3, "Talos")
+
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Akatosh, PDV_Bless_Nord_Akatosh_T1, PDV_Bless_Nord_Akatosh_T2, PDV_Bless_Nord_Akatosh_T3, "Akatosh")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Mara, PDV_Bless_Nord_Mara_T1, PDV_Bless_Nord_Mara_T2, PDV_Bless_Nord_Mara_T3, "Mara")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Arkay, PDV_Bless_Nord_Arkay_T1, PDV_Bless_Nord_Arkay_T2, PDV_Bless_Nord_Arkay_T3, "Arkay")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Stendarr, PDV_Bless_Nord_Stendarr_T1, PDV_Bless_Nord_Stendarr_T2, PDV_Bless_Nord_Stendarr_T3, "Stendarr")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Zenithar, PDV_Bless_Nord_Zenithar_T1, PDV_Bless_Nord_Zenithar_T2, PDV_Bless_Nord_Zenithar_T3, "Zenithar")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Dibella, PDV_Bless_Nord_Dibella_T1, PDV_Bless_Nord_Dibella_T2, PDV_Bless_Nord_Dibella_T3, "Dibella")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Julianos, PDV_Bless_Nord_Julianos_T1, PDV_Bless_Nord_Julianos_T2, PDV_Bless_Nord_Julianos_T3, "Julianos")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Kynareth, PDV_Bless_Nord_Kynareth_T1, PDV_Bless_Nord_Kynareth_T2, PDV_Bless_Nord_Kynareth_T3, "Kynareth")
+EndFunction
+
+Function SyncNordRewardFamily(Actor playerRef, Int requiredBaseline, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
+    Bool baselineOk = requiredBaseline < 0 || GetNordPantheonBaselineState() == requiredBaseline
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_NORD && baselineOk && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
+    Int activeTier = TIER_NONE
+    if isActive && deity
+        activeTier = GetTier(deity)
+    endIf
+
+    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier >= TIER_SEEKER, "Nord " + label + " T1")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier >= TIER_DEVOTED, "Nord " + label + " T2")
+    SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Nord " + label + " T3")
+EndFunction
+
+; Grants the focused Khajiit emphasis's 3-tier reward set based on that emphasis deity's piety
+; tier; clears every non-focused emphasis set (one active emphasis at a time).
+Function SyncKhajiitEmphasisRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Int activeFocus = KHAJIIT_FOCUS_NONE
+    Int activeTier = TIER_NONE
+    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
+        activeFocus = GetKhajiitFocusedEmphasis()
+        PDV_DeityBase deity = GetKhajiitEmphasisDeity(activeFocus)
+        if deity
+            activeTier = GetTier(deity)
+        endIf
+    endIf
+
+    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_KHENARTHI, activeFocus, activeTier, PDV_Bless_Khajiit_Khenarthi_T1, PDV_Bless_Khajiit_Khenarthi_T2, PDV_Bless_Khajiit_Khenarthi_T3, "Khenarthi")
+    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_AZURAH, activeFocus, activeTier, PDV_Bless_Khajiit_Azurah_T1, PDV_Bless_Khajiit_Azurah_T2, PDV_Bless_Khajiit_Azurah_T3, "Azurah")
+    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_BAANDAR, activeFocus, activeTier, PDV_Bless_Khajiit_BaanDar_T1, PDV_Bless_Khajiit_BaanDar_T2, PDV_Bless_Khajiit_BaanDar_T3, "BaanDar")
+    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_RAJHIN, activeFocus, activeTier, PDV_Bless_Khajiit_Rajhin_T1, PDV_Bless_Khajiit_Rajhin_T2, PDV_Bless_Khajiit_Rajhin_T3, "Rajhin")
+    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_ALKOSH, activeFocus, activeTier, PDV_Bless_Khajiit_Alkosh_T1, PDV_Bless_Khajiit_Alkosh_T2, PDV_Bless_Khajiit_Alkosh_T3, "Alkosh")
+EndFunction
+
+Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFocus, Int activeTier, Spell t1, Spell t2, Spell t3, String label)
+    Bool isActive = (thisFocus == activeFocus)
+    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier >= TIER_SEEKER, "Khajiit " + label + " T1")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier >= TIER_DEVOTED, "Khajiit " + label + " T2")
+    SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Khajiit " + label + " T3")
+EndFunction
+
+; Gentle lunar neglect: the moons/road go quiet when no lunar source has fired within the grace
+; window. Mechanical bite stays reserved for Corrupted/ShadowDrift posture elsewhere.
+Bool Function IsKhajiitLunarNeglected()
+    if GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT
+        return False
+    endIf
+
+    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime")
+    if lastSource <= 0.0
+        return False
+    endIf
+
+    return (Utility.GetCurrentGameTime() - lastSource) > KHAJIIT_LUNAR_NEGLECT_GRACE_DAYS
+EndFunction
+
+Function SyncKhajiitNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_SPEL_Neglect_KhajiitLunar
+        StorageUtil.SetIntValue(None, "PDV.Neglect.KhajiitLunarSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(PDV_SPEL_Neglect_KhajiitLunar)
+            playerRef.AddSpell(PDV_SPEL_Neglect_KhajiitLunar, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.KhajiitLunarSpellActive", 1)
+    else
+        if playerRef.HasSpell(PDV_SPEL_Neglect_KhajiitLunar)
+            playerRef.RemoveSpell(PDV_SPEL_Neglect_KhajiitLunar)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.KhajiitLunarSpellActive", 0)
+    endIf
+EndFunction
+
+; --- Argonian (substrate / no-offer) reward spine. Mirrors the Khajiit no-offer pattern but
+; gates on the PDV_Substrate_ArgonianHist relations rather than an emphasis deity's piety:
+;   * Hist broad set (T1/T2/signature) gates on the Hist relation reaching its threshold.
+;   * People is the single focused 3-tier set (T1/T2/T3 Champion), gated on People-focus state.
+;   * Sithis is the high-threshold tertiary (T1/T2), gated on the Void being fully active.
+; Only ONE foreground support emphasis runs at a time (People OR Void), like the Khajiit
+; one-active-emphasis cap; People is the default and Void only competes once fully active.
+Function SyncArgonianRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Bool isArgonian = GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
+    Float histRelation = 0.0
+    Float peopleRelation = 0.0
+    Float voidRelation = 0.0
+    Bool voidActive = False
+    Int activeFocus = ARGONIAN_FOCUS_NONE
+    if isArgonian && PDV_ArgonianHistSubstrate
+        histRelation = PDV_ArgonianHistSubstrate.GetHistRelation()
+        peopleRelation = PDV_ArgonianHistSubstrate.GetPeopleRelation()
+        voidRelation = PDV_ArgonianHistSubstrate.GetVoidRelation()
+        voidActive = PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+        activeFocus = GetArgonianActiveFocus(peopleRelation, voidRelation, voidActive)
+    endIf
+
+    ; Hist broad set: always-eligible support gated only on the Hist relation tier (no-offer;
+    ; not gated on active-patron). This is what keeps the broad Hist_T1 off the offer gate.
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T1, isArgonian && histRelation >= ARGONIAN_REWARD_T1_THRESHOLD, "Argonian Hist T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T2, isArgonian && histRelation >= ARGONIAN_REWARD_T2_THRESHOLD, "Argonian Hist T2")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_Signature, isArgonian && histRelation >= ARGONIAN_REWARD_SIGNATURE_THRESHOLD, "Argonian Hist Signature")
+
+    ; People focused 3-tier set: only when People is the active foreground emphasis.
+    Bool peopleActive = isArgonian && activeFocus == ARGONIAN_FOCUS_PEOPLE
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T1, peopleActive && peopleRelation >= ARGONIAN_REWARD_T1_THRESHOLD, "Argonian People T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T2, peopleActive && peopleRelation >= ARGONIAN_REWARD_T2_THRESHOLD, "Argonian People T2")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T3, peopleActive && peopleRelation >= ARGONIAN_REWARD_T3_THRESHOLD, "Argonian People T3")
+
+    ; Sithis high-threshold tertiary: only when the Void is fully active AND it is the active
+    ; foreground emphasis. Intentionally weaker than the People focus; never the default route.
+    Bool sithisActive = isArgonian && voidActive && activeFocus == ARGONIAN_FOCUS_VOID
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T1, sithisActive && voidRelation >= ARGONIAN_REWARD_T1_THRESHOLD, "Argonian Sithis T1")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T2, sithisActive && voidRelation >= ARGONIAN_REWARD_T2_THRESHOLD, "Argonian Sithis T2")
+EndFunction
+
+; Resolves the single active foreground support emphasis (People vs Void). People is the default;
+; Void only competes once fully active and only when its relation leads People (one-active cap).
+Int Function GetArgonianActiveFocus(Float peopleRelation, Float voidRelation, Bool voidActive)
+    if voidActive && voidRelation > peopleRelation
+        return ARGONIAN_FOCUS_VOID
+    endIf
+
+    return ARGONIAN_FOCUS_PEOPLE
+EndFunction
+
+; Gentle Hist-distance neglect: the Hist goes quiet when no accepted Hist source has fired within
+; the grace window. Mechanical bite is reserved for posture Silenced/Corrupted (per the spec);
+; this guard keeps the spell from biting outside those postures even past the grace window.
+Bool Function IsArgonianHistNeglected()
+    if GetPlayerOriginRaceIndex() != ORIGIN_ARGONIAN || !PDV_ArgonianHistSubstrate
+        return False
+    endIf
+
+    Int posture = PDV_ArgonianHistSubstrate.GetHistPosture()
+    if posture != PDV_ArgonianHistSubstrate.HIST_POSTURE_SILENCED && posture != PDV_ArgonianHistSubstrate.HIST_POSTURE_CORRUPTED
+        return False
+    endIf
+
+    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Argonian.LastHistSourceTime")
+    if lastSource <= 0.0
+        return True
+    endIf
+
+    return (Utility.GetCurrentGameTime() - lastSource) > ARGONIAN_HIST_NEGLECT_GRACE_DAYS
+EndFunction
+
+Function SyncArgonianNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_SPEL_Neglect_ArgonianHist
+        StorageUtil.SetIntValue(None, "PDV.Neglect.ArgonianHistSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(PDV_SPEL_Neglect_ArgonianHist)
+            playerRef.AddSpell(PDV_SPEL_Neglect_ArgonianHist, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.ArgonianHistSpellActive", 1)
+    else
+        if playerRef.HasSpell(PDV_SPEL_Neglect_ArgonianHist)
+            playerRef.RemoveSpell(PDV_SPEL_Neglect_ArgonianHist)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.ArgonianHistSpellActive", 0)
+    endIf
+EndFunction
+
+Function SyncImperialRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Bool isImperial = GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
+    Bool broadCivicFaithful = isImperial && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") >= 6
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T2, broadCivicFaithful, "Imperial Civic T2")
+
+    SyncImperialRewardFamily(playerRef, PDV_Akatosh, PDV_Bless_Imperial_Akatosh_T1, PDV_Bless_Imperial_Akatosh_T2, PDV_Bless_Imperial_Akatosh_T3, "Akatosh")
+    SyncImperialRewardFamily(playerRef, PDV_Mara, PDV_Bless_Imperial_Mara_T1, PDV_Bless_Imperial_Mara_T2, PDV_Bless_Imperial_Mara_T3, "Mara")
+    SyncImperialRewardFamily(playerRef, PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
+    SyncImperialRewardFamily(playerRef, PDV_Stendarr, PDV_Bless_Imperial_Stendarr_T1, PDV_Bless_Imperial_Stendarr_T2, PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
+    SyncImperialRewardFamily(playerRef, PDV_Zenithar, PDV_Bless_Imperial_Zenithar_T1, PDV_Bless_Imperial_Zenithar_T2, PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
+    SyncImperialRewardFamily(playerRef, PDV_Dibella, PDV_Bless_Imperial_Dibella_T1, PDV_Bless_Imperial_Dibella_T2, PDV_Bless_Imperial_Dibella_T3, "Dibella")
+    SyncImperialRewardFamily(playerRef, PDV_Julianos, PDV_Bless_Imperial_Julianos_T1, PDV_Bless_Imperial_Julianos_T2, PDV_Bless_Imperial_Julianos_T3, "Julianos")
+    SyncImperialRewardFamily(playerRef, PDV_Kynareth, PDV_Bless_Imperial_Kynareth_T1, PDV_Bless_Imperial_Kynareth_T2, PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
+    SyncImperialRewardFamily(playerRef, PDV_Talos, PDV_Bless_Imperial_Talos_T1, PDV_Bless_Imperial_Talos_T2, PDV_Bless_Imperial_Talos_T3, "Talos")
+EndFunction
+
+Function SyncImperialRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
+    Int activeTier = TIER_NONE
+    if isActive && deity
+        activeTier = GetTier(deity)
+    endIf
+
+    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier >= TIER_SEEKER, "Imperial " + label + " T1")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier >= TIER_DEVOTED, "Imperial " + label + " T2")
+    SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Imperial " + label + " T3")
+EndFunction
+
+Bool Function IsImperialCivicNeglected()
+    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
+        return False
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") <= 0
+        return False
+    endIf
+
+    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Imperial.LastCivicServiceTime")
+    if lastSource <= 0.0
+        return False
+    endIf
+
+    return (Utility.GetCurrentGameTime() - lastSource) > 3.0
+EndFunction
+
+Function SyncImperialNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_SPEL_Neglect_Imperial
+        StorageUtil.SetIntValue(None, "PDV.Neglect.ImperialSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(PDV_SPEL_Neglect_Imperial)
+            playerRef.AddSpell(PDV_SPEL_Neglect_Imperial, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.ImperialSpellActive", 1)
+    else
+        if playerRef.HasSpell(PDV_SPEL_Neglect_Imperial)
+            playerRef.RemoveSpell(PDV_SPEL_Neglect_Imperial)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.ImperialSpellActive", 0)
+    endIf
 EndFunction
 
 Bool Function IsFirstTierRaceRewardEligible()
@@ -3212,6 +4518,8 @@ Spell Function GetFirstTierRaceRewardSpellForOrigin()
     Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_ALTMER
         return PDV_Bless_Altmer_Orthodox_T1
+    ; Argonian is a no-offer race: this selector exposes the fixed T1 spell for readback and
+    ; shared reward contracts, while SyncArgonianRewards performs the actual substrate grant.
     elseIf originRace == ORIGIN_ARGONIAN
         return PDV_Bless_Argonian_Hist_T1
     elseIf originRace == ORIGIN_BOSMER
@@ -4444,6 +5752,9 @@ Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
     RequestPanelRefresh()
 EndFunction
 
+; Derive a typed "curse" Prisma event from an old→new curse-state transition.
+; Symbol names (curse-vampire, curse-werewolf) fall back to "journal" until
+; the glyph design pass lands — no rendering breakage in the meantime.
 Function SurfaceCurseTransitionDiegetic(Int oldState, Int newState)
     String direction = GetCurseSurfaceDirection(oldState, newState)
     String surfaceKey = GetCurseSurfaceKey(oldState, newState)
@@ -4485,9 +5796,6 @@ String Function GetCurseSurfaceKey(Int oldState, Int newState)
     return ""
 EndFunction
 
-; Derive a typed "curse" Prisma event from an old→new curse-state transition.
-; Symbol names (curse-vampire, curse-werewolf) fall back to "journal" until
-; the glyph design pass lands — no rendering breakage in the meantime.
 Function SendPrismaCurseToast(Int oldState, Int newState)
     if !PDV_PrismaBridge.IsAvailable()
         return
@@ -5057,6 +6365,7 @@ Function HandleBretonTraditionChoice(Int traditionValue, String reason)
     ApplyBretonInitialChoice(traditionValue, reason)
     StorageUtil.SetIntValue(None, "PDV.Breton.TraditionHookCount", StorageUtil.GetIntValue(None, "PDV.Breton.TraditionHookCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastTraditionHookReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
     Trace(2, "Breton tradition choice routed: " + reason)
 EndFunction
 
@@ -5069,6 +6378,10 @@ Function HandleBretonKnightlyVow(String reason)
     if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) == 0
         StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
         StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowCount", StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowCount") + 1)
+        StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
+        if PDV_Stendarr
+            AwardCuratedSignal(PDV_Stendarr, PDV_Stendarr.SIGNAL_MERCY, None)
+        endIf
     else
         StorageUtil.SetIntValue(None, "PDV.Breton.CrossTraditionPressure", StorageUtil.GetIntValue(None, "PDV.Breton.CrossTraditionPressure") + 1)
     endIf
@@ -5087,6 +6400,10 @@ Function HandleBretonHiddenArtExposure(String reason)
     StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", ClampInt(exposureValue + 25, 0, 100))
     StorageUtil.SetIntValue(None, "PDV.Breton.HiddenArtCount", StorageUtil.GetIntValue(None, "PDV.Breton.HiddenArtCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastHiddenArtReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
+    if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) == BRETON_TRADITION_HIDDEN_ART && PDV_Julianos
+        AwardCuratedSignal(PDV_Julianos, PDV_Julianos.SIGNAL_LAWFUL_ORDER, None)
+    endIf
     ShowP2BookNotice(reason, "Hidden Art noted", "This reading raises your Breton witchcraft exposure.")
     Trace(2, "Breton Hidden Art exposure routed: " + reason)
 EndFunction
@@ -5101,6 +6418,10 @@ Function HandleBretonGreenWayStanding(String reason)
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", ClampInt(standingValue + 25, 0, 100))
     StorageUtil.SetIntValue(None, "PDV.Breton.GreenWayCount", StorageUtil.GetIntValue(None, "PDV.Breton.GreenWayCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastGreenWayReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
+    if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) == BRETON_TRADITION_GREEN_WAY && PDV_Kynareth
+        AwardCuratedSignal(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None)
+    endIf
     Trace(2, "Breton Green Way standing routed: " + reason)
 EndFunction
 
@@ -5113,6 +6434,7 @@ Function HandleDunmerReclamationFocus(Int focusValue, String reason)
     StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocus", ClampInt(focusValue, 0, 2))
     StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocusCount", StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastReclamationReason", reason)
+    AwardDunmerReclamationFocusSignal(focusValue)
     if focusValue == 0
         ShowP2BookNotice(reason, "Azura noted", "This reading shapes your Dunmer Reclamation focus.")
     elseIf focusValue == 1
@@ -5131,7 +6453,150 @@ Function HandleDunmerDeviationPrice(String reason)
 
     StorageUtil.SetIntValue(None, "PDV.Dunmer.DeviationPriceCount", StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastDeviationReason", reason)
+    AwardDunmerDeviationPriceSignal()
     Trace(2, "Dunmer deviation price routed: " + reason)
+EndFunction
+
+Function AwardActiveDunmerReclamationMemorySignal()
+    if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || GetPatronState() != PATRON_STATE_ACTIVE
+        return
+    endIf
+
+    if _activeDeity == PDV_Boethiah && PDV_Boethiah
+        AwardCuratedSignal(PDV_Boethiah, PDV_Boethiah.SIGNAL_SHARED_PACT_MEMORY, None)
+    elseIf _activeDeity == PDV_Mephala && PDV_Mephala
+        AwardCuratedSignal(PDV_Mephala, PDV_Mephala.SIGNAL_SHARED_PACT_MEMORY, None)
+    elseIf _activeDeity == PDV_Azura && PDV_Azura
+        AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None)
+    endIf
+EndFunction
+
+Function AwardDunmerReclamationFocusSignal(Int focusValue)
+    if focusValue == 0 && PDV_Azura
+        AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_THRESHOLD_RITE, None)
+    elseIf focusValue == 1 && PDV_Boethiah
+        AwardCuratedSignal(PDV_Boethiah, PDV_Boethiah.SIGNAL_RIGHTEOUS_STRUGGLE, None)
+    elseIf focusValue == 2 && PDV_Mephala
+        AwardCuratedSignal(PDV_Mephala, PDV_Mephala.SIGNAL_SECRET_KEPT, None)
+    endIf
+EndFunction
+
+Function AwardDunmerDeviationPriceSignal()
+    if _activeDeity == PDV_Boethiah && PDV_Boethiah
+        AwardCuratedSignal(PDV_Boethiah, PDV_Boethiah.SIGNAL_RECLAMATION_ABANDONED, None)
+    elseIf _activeDeity == PDV_Mephala && PDV_Mephala
+        AwardCuratedSignal(PDV_Mephala, PDV_Mephala.SIGNAL_RECLAMATION_ABANDONED, None)
+    elseIf _activeDeity == PDV_Azura && PDV_Azura
+        AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None)
+    endIf
+EndFunction
+
+Bool Function StringContainsToken(String haystackText, String needleText)
+    Int haystackLength = StringUtil.GetLength(haystackText)
+    Int needleLength = StringUtil.GetLength(needleText)
+    if needleLength <= 0 || haystackLength < needleLength
+        return False
+    endIf
+
+    Int startIndex = 0
+    Int lastStart = haystackLength - needleLength
+    while startIndex <= lastStart
+        Int needleIndex = 0
+        Bool matched = True
+        while needleIndex < needleLength && matched
+            if StringUtil.GetNthChar(haystackText, startIndex + needleIndex) != StringUtil.GetNthChar(needleText, needleIndex)
+                matched = False
+            endIf
+            needleIndex = needleIndex + 1
+        endWhile
+
+        if matched
+            return True
+        endIf
+        startIndex = startIndex + 1
+    endWhile
+
+    return False
+EndFunction
+
+Int Function GetImperialCivicFamilyFromSource(String sourceId)
+    if StringContainsToken(sourceId, "public_service") || StringContainsToken(sourceId, "public-service") || StringContainsToken(sourceId, "civic_public")
+        return IMPERIAL_CIVIC_PUBLIC_SERVICE
+    elseIf StringContainsToken(sourceId, "mercy")
+        return IMPERIAL_CIVIC_MERCY
+    elseIf StringContainsToken(sourceId, "lawful_order") || StringContainsToken(sourceId, "lawful-order") || StringContainsToken(sourceId, "law")
+        return IMPERIAL_CIVIC_LAWFUL_ORDER
+    elseIf StringContainsToken(sourceId, "honest_work") || StringContainsToken(sourceId, "honest-work") || StringContainsToken(sourceId, "work")
+        return IMPERIAL_CIVIC_HONEST_WORK
+    elseIf StringContainsToken(sourceId, "death_duty") || StringContainsToken(sourceId, "death-duty") || StringContainsToken(sourceId, "arkay")
+        return IMPERIAL_CIVIC_DEATH_DUTY
+    endIf
+
+    return IMPERIAL_CIVIC_UNKNOWN
+EndFunction
+
+String Function GetImperialCivicFamilyLabel(Int familyId)
+    if familyId == IMPERIAL_CIVIC_PUBLIC_SERVICE
+        return "public_service"
+    elseIf familyId == IMPERIAL_CIVIC_MERCY
+        return "mercy"
+    elseIf familyId == IMPERIAL_CIVIC_LAWFUL_ORDER
+        return "lawful_order"
+    elseIf familyId == IMPERIAL_CIVIC_HONEST_WORK
+        return "honest_work"
+    elseIf familyId == IMPERIAL_CIVIC_DEATH_DUTY
+        return "death_duty"
+    endIf
+
+    return "unknown"
+EndFunction
+
+Function AwardImperialCivicFamilySignal(Int familyId)
+    if familyId == IMPERIAL_CIVIC_PUBLIC_SERVICE
+        if PDV_Akatosh
+            AwardCuratedSignal(PDV_Akatosh, PDV_Akatosh.SIGNAL_CIVIC_SERVICE, None)
+        endIf
+    elseIf familyId == IMPERIAL_CIVIC_MERCY
+        if PDV_Mara
+            AwardCuratedSignal(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None)
+        endIf
+    elseIf familyId == IMPERIAL_CIVIC_LAWFUL_ORDER
+        if PDV_Stendarr
+            AwardCuratedSignal(PDV_Stendarr, PDV_Stendarr.SIGNAL_LAWFUL_ORDER, None)
+        endIf
+    elseIf familyId == IMPERIAL_CIVIC_HONEST_WORK
+        if PDV_Zenithar
+            AwardCuratedSignal(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None)
+        endIf
+    elseIf familyId == IMPERIAL_CIVIC_DEATH_DUTY
+        if PDV_Arkay
+            AwardCuratedSignal(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None)
+        endIf
+    endIf
+EndFunction
+
+Function AwardImperialPatronCivicSignal()
+    if !_activeDeity
+        return
+    endIf
+
+    if _activeDeity == PDV_Akatosh && PDV_Akatosh
+        AwardCuratedSignal(PDV_Akatosh, PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR, None)
+    elseIf _activeDeity == PDV_Mara && PDV_Mara
+        AwardCuratedSignal(PDV_Mara, PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR, None)
+    elseIf _activeDeity == PDV_Arkay && PDV_Arkay
+        AwardCuratedSignal(PDV_Arkay, PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR, None)
+    elseIf _activeDeity == PDV_Stendarr && PDV_Stendarr
+        AwardCuratedSignal(PDV_Stendarr, PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR, None)
+    elseIf _activeDeity == PDV_Zenithar && PDV_Zenithar
+        AwardCuratedSignal(PDV_Zenithar, PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR, None)
+    elseIf _activeDeity == PDV_Dibella && PDV_Dibella
+        AwardCuratedSignal(PDV_Dibella, PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, None)
+    elseIf _activeDeity == PDV_Julianos && PDV_Julianos
+        AwardCuratedSignal(PDV_Julianos, PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None)
+    elseIf _activeDeity == PDV_Kynareth && PDV_Kynareth
+        AwardCuratedSignal(PDV_Kynareth, PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR, None)
+    endIf
 EndFunction
 
 Function HandleImperialCivicService(String reason)
@@ -5140,9 +6605,18 @@ Function HandleImperialCivicService(String reason)
         return
     endIf
 
+    Int civicFamily = GetImperialCivicFamilyFromSource(reason)
+    if civicFamily == IMPERIAL_CIVIC_UNKNOWN
+        Trace(1, "Imperial civic service ignored: missing civic family token in " + reason)
+        return
+    endIf
+
     StorageUtil.SetIntValue(None, "PDV.Imperial.CivicServiceCount", StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicServiceReason", reason)
-    Trace(2, "Imperial civic service routed: " + reason)
+    StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicFamily", GetImperialCivicFamilyLabel(civicFamily))
+    StorageUtil.SetFloatValue(None, "PDV.Imperial.LastCivicServiceTime", Utility.GetCurrentGameTime())
+    AwardImperialCivicFamilySignal(civicFamily)
+    Trace(2, "Imperial civic service routed: " + reason + " family " + GetImperialCivicFamilyLabel(civicFamily))
 EndFunction
 
 Function HandleImperialTalosPressure(Bool isPrivate, String reason)
@@ -5153,8 +6627,14 @@ Function HandleImperialTalosPressure(Bool isPrivate, String reason)
 
     if isPrivate
         StorageUtil.SetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount") + 1)
+        if PDV_Talos
+            AwardCuratedSignal(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None)
+        endIf
     else
         StorageUtil.SetIntValue(None, "PDV.Imperial.PublicTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PublicTalosPressureCount") + 1)
+        if PDV_Talos
+            AwardCuratedSignal(PDV_Talos, PDV_Talos.SIGNAL_DEFIANCE_MILESTONE, None)
+        endIf
     endIf
 
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastTalosPressureReason", reason)
@@ -5170,7 +6650,141 @@ Function HandleImperialPatronCivicFavor(String reason)
 
     StorageUtil.SetIntValue(None, "PDV.Imperial.PatronCivicFavorCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PatronCivicFavorCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastPatronCivicFavorReason", reason)
+    AwardImperialPatronCivicSignal()
     Trace(2, "Imperial patron civic favor routed: " + reason)
+EndFunction
+
+Int Function GetNordRouteFamilyFromSource(String sourceId)
+    if sourceId == ""
+        return NORD_ROUTE_UNKNOWN
+    endIf
+
+    if StringContainsToken(sourceId, "sky_road") || StringContainsToken(sourceId, "sky-road") || StringContainsToken(sourceId, "storm_road") || StringContainsToken(sourceId, "road_grace")
+        if StringContainsToken(sourceId, "nine")
+            return NORD_ROUTE_NINE_ROAD
+        endIf
+        return NORD_ROUTE_OLD_SKY_ROAD
+    elseIf StringContainsToken(sourceId, "ordeal") || StringContainsToken(sourceId, "trial") || StringContainsToken(sourceId, "adversity")
+        return NORD_ROUTE_OLD_ORDEAL
+    elseIf StringContainsToken(sourceId, "hearth") || StringContainsToken(sourceId, "hold") || StringContainsToken(sourceId, "protect_bond")
+        return NORD_ROUTE_OLD_HEARTH
+    elseIf StringContainsToken(sourceId, "ancestor") || StringContainsToken(sourceId, "honored_dead")
+        return NORD_ROUTE_OLD_ANCESTOR
+    elseIf StringContainsToken(sourceId, "hircine") || StringContainsToken(sourceId, "hunt")
+        return NORD_ROUTE_OLD_ORDEAL
+    elseIf StringContainsToken(sourceId, "household") || StringContainsToken(sourceId, "mercy")
+        return NORD_ROUTE_NINE_MERCY
+    elseIf StringContainsToken(sourceId, "proper_death") || StringContainsToken(sourceId, "proper-death") || StringContainsToken(sourceId, "anti_necromancy") || StringContainsToken(sourceId, "arkay")
+        return NORD_ROUTE_NINE_DEATH
+    elseIf StringContainsToken(sourceId, "honest_work") || StringContainsToken(sourceId, "honest-work") || StringContainsToken(sourceId, "learned_craft") || StringContainsToken(sourceId, "zenithar")
+        return NORD_ROUTE_NINE_WORK
+    elseIf StringContainsToken(sourceId, "talos_pressure") || StringContainsToken(sourceId, "talos-pressure")
+        return NORD_ROUTE_NINE_TALOS
+    elseIf StringContainsToken(sourceId, "talos") || StringContainsToken(sourceId, "defiance")
+        return NORD_ROUTE_OLD_TALOS
+    endIf
+
+    return NORD_ROUTE_UNKNOWN
+EndFunction
+
+Int Function GetNordFavorLaneForRouteFamily(Int familyValue)
+    if familyValue >= NORD_ROUTE_NINE_ROAD
+        return FAVOR_LANE_NORD_BROAD_NINE_DIVINES
+    endIf
+
+    if familyValue > NORD_ROUTE_UNKNOWN
+        return FAVOR_LANE_NORD_BROAD_OLD_WAYS
+    endIf
+
+    return FAVOR_LANE_NONE
+EndFunction
+
+Int Function GetNordFavorFamilyForRouteFamily(Int familyValue)
+    if familyValue == NORD_ROUTE_OLD_SKY_ROAD
+        return FAVOR_FAMILY_OLD_WAYS_SKY_ROAD
+    elseIf familyValue == NORD_ROUTE_OLD_ORDEAL
+        return FAVOR_FAMILY_OLD_WAYS_HONORABLE_ORDEAL
+    elseIf familyValue == NORD_ROUTE_OLD_HEARTH
+        return FAVOR_FAMILY_OLD_WAYS_HEARTH_HOLD
+    elseIf familyValue == NORD_ROUTE_OLD_ANCESTOR
+        return FAVOR_FAMILY_OLD_WAYS_ANCESTOR_QUIET
+    elseIf familyValue == NORD_ROUTE_OLD_TALOS
+        return FAVOR_FAMILY_OLD_WAYS_TALOS_DEFIANCE
+    elseIf familyValue == NORD_ROUTE_NINE_ROAD
+        return FAVOR_FAMILY_NINE_ROAD_GRACE
+    elseIf familyValue == NORD_ROUTE_NINE_MERCY
+        return FAVOR_FAMILY_NINE_HOUSEHOLD_MERCY
+    elseIf familyValue == NORD_ROUTE_NINE_DEATH
+        return FAVOR_FAMILY_NINE_PROPER_DEATH
+    elseIf familyValue == NORD_ROUTE_NINE_WORK
+        return FAVOR_FAMILY_NINE_HONEST_WORK
+    elseIf familyValue == NORD_ROUTE_NINE_TALOS
+        return FAVOR_FAMILY_NINE_TALOS_PRESSURE
+    endIf
+
+    return 0
+EndFunction
+
+Function AwardNordRouteFamilySignal(Int familyValue)
+    if familyValue == NORD_ROUTE_OLD_ORDEAL
+        if PDV_Tsun
+            AwardCuratedSignal(PDV_Tsun, PDV_Tsun.SIGNAL_TRIAL_ENDURED, None)
+        endIf
+    elseIf familyValue == NORD_ROUTE_OLD_HEARTH
+        if PDV_Stuhn
+            AwardCuratedSignal(PDV_Stuhn, PDV_Stuhn.SIGNAL_PROTECT_BOND, None)
+        endIf
+    elseIf familyValue == NORD_ROUTE_OLD_ANCESTOR
+        if PDV_Shor
+            AwardCuratedSignal(PDV_Shor, PDV_Shor.SIGNAL_HONORED_DEAD, None)
+        endIf
+    elseIf familyValue == NORD_ROUTE_OLD_TALOS || familyValue == NORD_ROUTE_NINE_TALOS
+        if PDV_Talos
+            AwardCuratedSignal(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None)
+        endIf
+    elseIf familyValue == NORD_ROUTE_NINE_ROAD
+        if PDV_Kynareth
+            AwardCuratedSignal(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None)
+        endIf
+    elseIf familyValue == NORD_ROUTE_NINE_MERCY
+        if PDV_Mara
+            AwardCuratedSignal(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None)
+        endIf
+    elseIf familyValue == NORD_ROUTE_NINE_DEATH
+        if PDV_Arkay
+            AwardCuratedSignal(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None)
+        endIf
+    elseIf familyValue == NORD_ROUTE_NINE_WORK
+        if PDV_Zenithar
+            AwardCuratedSignal(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None)
+        endIf
+    endIf
+EndFunction
+
+Bool Function RouteNordFamily(String reason, String countKey, String lastReasonKey, String lastTimeKey, String traceLabel)
+    if GetPlayerOriginRaceIndex() != ORIGIN_NORD
+        Trace(2, traceLabel + " ignored for non-Nord origin.")
+        return False
+    endIf
+
+    Int routeFamily = GetNordRouteFamilyFromSource(reason)
+    if routeFamily == NORD_ROUTE_UNKNOWN
+        Trace(2, traceLabel + " ignored: unknown source family token in " + reason)
+        return False
+    endIf
+
+    Int laneValue = GetNordFavorLaneForRouteFamily(routeFamily)
+    Int favorFamily = GetNordFavorFamilyForRouteFamily(routeFamily)
+    if laneValue != FAVOR_LANE_NONE && favorFamily > 0
+        TryActivateContextualFavor(laneValue, favorFamily, reason)
+    endIf
+
+    StorageUtil.SetIntValue(None, countKey, StorageUtil.GetIntValue(None, countKey) + 1)
+    StorageUtil.SetStringValue(None, lastReasonKey, reason)
+    StorageUtil.SetFloatValue(None, lastTimeKey, Utility.GetCurrentGameTime())
+    AwardNordRouteFamilySignal(routeFamily)
+    Trace(2, traceLabel + " routed: " + reason)
+    return True
 EndFunction
 
 Function HandleNordOldWaysState(String reason)
@@ -5179,10 +6793,9 @@ Function HandleNordOldWaysState(String reason)
         return
     endIf
 
-    StorageUtil.SetIntValue(None, "PDV.Nord.OldWaysContextCount", StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount") + 1)
-    StorageUtil.SetStringValue(None, "PDV.Nord.LastOldWaysReason", reason)
-    ShowP2BookNotice(reason, "Old Ways noted", "This reading strengthens your Nord old-ways context.")
-    Trace(2, "Nord Old Ways state routed: " + reason)
+    if RouteNordFamily(reason, "PDV.Nord.OldWaysContextCount", "PDV.Nord.LastOldWaysReason", "PDV.Nord.LastOldWaysSignalTime", "Nord Old Ways state")
+        ShowP2BookNotice(reason, "Old Ways noted", "This reading strengthens your Nord old-ways context.")
+    endIf
 EndFunction
 
 Function HandleNordKyneTalosContext(String reason)
@@ -5191,9 +6804,7 @@ Function HandleNordKyneTalosContext(String reason)
         return
     endIf
 
-    StorageUtil.SetIntValue(None, "PDV.Nord.KyneTalosContextCount", StorageUtil.GetIntValue(None, "PDV.Nord.KyneTalosContextCount") + 1)
-    StorageUtil.SetStringValue(None, "PDV.Nord.LastKyneTalosReason", reason)
-    Trace(2, "Nord Kyne/Talos context routed: " + reason)
+    RouteNordFamily(reason, "PDV.Nord.KyneTalosContextCount", "PDV.Nord.LastKyneTalosReason", "PDV.Nord.LastKyneTalosSignalTime", "Nord Kyne/Talos context")
 EndFunction
 
 Function HandleNordHircineArkayEdge(String reason)
@@ -5202,10 +6813,9 @@ Function HandleNordHircineArkayEdge(String reason)
         return
     endIf
 
-    StorageUtil.SetIntValue(None, "PDV.Nord.HircineArkayEdgeCount", StorageUtil.GetIntValue(None, "PDV.Nord.HircineArkayEdgeCount") + 1)
-    StorageUtil.SetStringValue(None, "PDV.Nord.LastHircineArkayReason", reason)
-    ShowP2BookNotice(reason, "Hircine and Arkay noted", "This reading adds Nord hunt-and-death context.")
-    Trace(2, "Nord Hircine/Arkay edge routed: " + reason)
+    if RouteNordFamily(reason, "PDV.Nord.HircineArkayEdgeCount", "PDV.Nord.LastHircineArkayReason", "PDV.Nord.LastHircineArkaySignalTime", "Nord Hircine/Arkay edge")
+        ShowP2BookNotice(reason, "Hircine and Arkay noted", "This reading adds Nord hunt-and-death context.")
+    endIf
 EndFunction
 
 String Function GetStartupCanonicalSummary(Int originRace)
@@ -7517,6 +9127,67 @@ String Function GetPrismaSymbolForDeity(PDV_DeityBase deity)
 
     if deity.DeityName == "Zenithar"
         return "zenithar"
+    endIf
+
+    ; --- Phase 2 all-race roster (Group 1: existing JS glyphs) ---
+    if deity.DeityName == "Azura" || deity.DeityName == "Azurah"
+        return "azura"
+    endIf
+    if deity.DeityName == "Malacath"
+        return "malacath"
+    endIf
+    if deity.DeityName == "The Hist"
+        return "hist"
+    endIf
+
+    ; --- Phase 2 all-race roster (Group 2: glyphs land via prisma-glyphs-phase2-deities) ---
+    if deity.DeityName == "Shor"
+        return "shor"
+    endIf
+    if deity.DeityName == "Tsun"
+        return "tsun"
+    endIf
+    if deity.DeityName == "Stuhn"
+        return "stuhn"
+    endIf
+    if deity.DeityName == "Kynareth"
+        return "kynareth"
+    endIf
+    if deity.DeityName == "Magnus"
+        return "magnus"
+    endIf
+    if deity.DeityName == "Xarxes"
+        return "xarxes"
+    endIf
+    if deity.DeityName == "Trinimac"
+        return "trinimac"
+    endIf
+    if deity.DeityName == "Khenarthi"
+        return "khenarthi"
+    endIf
+    if deity.DeityName == "Rajhin"
+        return "rajhin"
+    endIf
+    if deity.DeityName == "Alkosh"
+        return "alkosh"
+    endIf
+    if deity.DeityName == "Sithis"
+        return "sithis"
+    endIf
+    if deity.DeityName == "Tu'whacca"
+        return "tuwhacca"
+    endIf
+    if deity.DeityName == "HoonDing"
+        return "hoonding"
+    endIf
+    if deity.DeityName == "Leki"
+        return "leki"
+    endIf
+    if deity.DeityName == "Boethiah"
+        return "boethiah"
+    endIf
+    if deity.DeityName == "Mephala"
+        return "mephala"
     endIf
 
     return "journal"
