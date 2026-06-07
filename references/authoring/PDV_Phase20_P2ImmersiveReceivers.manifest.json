@@ -140,8 +140,63 @@
         "book"
       ],
       "route": "PDV_EventBus.RouteImperialCivicService(sourceId)",
-      "acceptedUse": "Curated civic service, repair, law, infrastructure, Legion, or public-order sources.",
+      "acceptedUse": "Legacy curated civic service sources. New source fills should prefer one of the family-specific Imperial civic FormLists below. PlayerEvents appends the public_service fallback token for this legacy receiver.",
       "rejectedUse": "Generic faction attendance, generic commerce, or ordinary city travel."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPublicServiceSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialCivicService(sourceId)",
+      "acceptedUse": "Curated public service, repair, infrastructure, Legion, or civic-duty sources. The sourceId must preserve a public_service family token.",
+      "rejectedUse": "Faction membership, rank, generic city travel, or generic temple attendance."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialMercySources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialCivicService(sourceId)",
+      "acceptedUse": "Curated mercy, protection, restoration, family, or relief sources. The sourceId must preserve a mercy family token.",
+      "rejectedUse": "Generic helping, generic healing, or unbounded charity loops."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialLawfulOrderSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialCivicService(sourceId)",
+      "acceptedUse": "Curated lawful-order, guard, justice, Stendarr-adjacent, or public protection sources. The sourceId must preserve a lawful_order family token.",
+      "rejectedUse": "Bounty payment alone, generic crime, generic combat, or cruelty framed as order."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialHonestWorkSources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialCivicService(sourceId)",
+      "acceptedUse": "Curated honest work, craft, commerce, infrastructure, or fair-dealing sources. The sourceId must preserve an honest_work family token.",
+      "rejectedUse": "Raw barter, generic vendor use, generic crafting loops, or ordinary wealth accumulation."
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialDeathDutySources",
+      "race": "Imperial",
+      "sourceKinds": [
+        "quest-stage",
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteImperialCivicService(sourceId)",
+      "acceptedUse": "Curated Arkay/death-duty, funeral, Hall of the Dead, or anti-necromancy civic sources. The sourceId must preserve a death_duty family token.",
+      "rejectedUse": "Generic undead killing, generic tomb travel, or Arkay shrine proximity alone."
     },
     {
       "property": "PDV_FLST_P2_ImperialPrivateTalosSources",

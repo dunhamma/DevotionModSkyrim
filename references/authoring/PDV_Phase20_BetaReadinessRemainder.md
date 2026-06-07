@@ -4,9 +4,28 @@
 **Status:** Handoff hook after expanded all-race P2 receiver wiring and safe P2 book-source FormList fill; beta-feel readiness now includes all sixteen Skyrim-present Daedric Princes
 **Companions:** `PDV_BetaFeelReleaseGate.md`, `PDV_BetaTestPacket_*.md`, `PDV_AllRaceDaedricBetaReadinessLedger.md`, `PDV_DaedricBatch0_D18ProofLedger.md`, `PDV_Phase20_SourceFillApprovalLedger.json`, `PDV_Phase20_P2ImmersiveReceivers.manifest.json`, `PDV_PreBetaRaceGateLedger.md`, `PDV_Phase20_PreBetaManualChecks_Runbook.md`, `PDV_PrismaIntegrationBoundary.md`
 
+## 2026-06-07 Static Phase 2 Addendum
+
+- Phase 2 all-race reward/deity/neglect records are now authored in the live framework ESP, shared
+  deity reconciliation is complete, and SEQ was refreshed after the writes.
+- P2 receiver scaffolding now has 39 FormList receiver properties after splitting Imperial civic
+  service into explicit public-service, mercy, lawful-order, honest-work, and death-duty families.
+- Nord source IDs now carry parseable family tokens before they enter the manager.
+- Bosmer Green Pact static layer is live: five FLSTs, five KYWDs, `PDV_PlayerEvents` alias properties,
+  event-driven food/equip routing, and a conservative KID placeholder.
+- V1 T3 low-health fallback capstone skeleton is live on the seven approved once-per-race save homes.
+- `tools/pdv_phase2_reward_readback_audit.mjs --json` now checks reward records, MGEF magnitudes,
+  manager properties, FLST membership, SGE/SEQ, capstone script attachments, and Green Pact wiring.
+- Static gates passed after these writes: full Papyrus compile 0/0, strict Phase 20 verifier
+  PASS 2841 / WARN 2 / INFO 30, base wiring audit PASS, Prisma audit PASS, content verifier
+  PASS 1081 / WARN 0, reward readback audit PASS 1268.
+
+This addendum does not convert the project to external beta-ready by itself. The remaining blocker is
+runtime/manual evidence across the race beta packets.
+
 ## What This Tranche Proved
 
-- The P2 receiver network has 34 FormList shells and alias properties covering
+- The P2 receiver network has 39 FormList shells and alias properties covering
   all ten races.
 - A conservative P2 book-read source packet is approved for live fill:
   Breton Hidden Art, Dunmer Azura, Dunmer Boethiah, Imperial public Talos,

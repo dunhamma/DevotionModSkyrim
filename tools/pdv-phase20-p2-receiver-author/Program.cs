@@ -8,6 +8,36 @@ using SkyrimFormList = Mutagen.Bethesda.Skyrim.FormList;
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
 const string defaultManifest = @"references\authoring\PDV_Phase20_P2ImmersiveReceivers.manifest.json";
 const string defaultPlayerEvents = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\PDV_PlayerEvents.psc";
+const string defaultKidPath = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\SKSE\Plugins\KeywordItemDistributor\PDV_GreenPact_KID.ini";
+
+string[] greenPactFormLists =
+[
+    "PDV_FLST_GreenPact_PlantFoods",
+    "PDV_FLST_GreenPact_MeatFoods",
+    "PDV_FLST_GreenPact_FungiFoods",
+    "PDV_FLST_GreenPact_EggFoods",
+    "PDV_FLST_GreenPact_InsectFoods"
+];
+
+string[] greenPactKeywords =
+[
+    "PDV_KW_GreenPact_Plant",
+    "PDV_KW_GreenPact_Meat",
+    "PDV_KW_GreenPact_Fungi",
+    "PDV_KW_GreenPact_Egg",
+    "PDV_KW_GreenPact_Insect"
+];
+
+CapstoneFallback[] capstoneFallbacks =
+[
+    new("PDV_Bless_Imperial_Akatosh_T3", "PDV.Capstone.Imperial.AkatoshSave", 90.0f),
+    new("PDV_Bless_Altmer_AuriEl_T3", "PDV.Capstone.Altmer.AuriElSave", 90.0f),
+    new("PDV_Bless_Nord_Shor_T3", "PDV.Capstone.Nord.ShorLastStand", 85.0f),
+    new("PDV_Bless_Orc_LegionExile_T3", "PDV.Capstone.Orc.LegionHoldLine", 85.0f),
+    new("PDV_Bless_Redguard_Tuwhacca_T3", "PDV.Capstone.Redguard.TuwhaccaSave", 90.0f),
+    new("PDV_Bless_Khajiit_BaanDar_T3", "PDV.Capstone.Khajiit.BaanDarSlip", 75.0f),
+    new("PDV_Bless_Bosmer_BanditRoad_T3", "PDV.Capstone.Bosmer.BaanDarSlip", 75.0f)
+];
 
 var dryRun = args.Contains("--dry-run");
 var createMissing = args.Contains("--create-missing");
@@ -19,9 +49,14 @@ var fillSourceEntries = args.Contains("--fill-source-entries");
 var checkSourceFill = args.Contains("--check-source-fill");
 var checkExactStageGates = args.Contains("--check-exact-stage-gates");
 var checkRouteEntries = args.Contains("--check-route-entries");
+var authorGreenPact = args.Contains("--author-green-pact");
+var checkGreenPact = args.Contains("--check-green-pact");
+var authorCapstones = args.Contains("--author-capstones");
+var checkCapstones = args.Contains("--check-capstones");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var manifestPath = Path.GetFullPath(GetArg(args, "--manifest") ?? defaultManifest);
 var playerEventsPath = Path.GetFullPath(GetArg(args, "--player-events") ?? defaultPlayerEvents);
+var kidPath = Path.GetFullPath(GetArg(args, "--kid") ?? defaultKidPath);
 
 var report = new AuthorReport
 {
@@ -37,6 +72,10 @@ var report = new AuthorReport
     CheckSourceFill = checkSourceFill,
     CheckExactStageGates = checkExactStageGates,
     CheckRouteEntries = checkRouteEntries,
+    AuthorGreenPact = authorGreenPact,
+    CheckGreenPact = checkGreenPact,
+    AuthorCapstones = authorCapstones,
+    CheckCapstones = checkCapstones,
     StartedAt = DateTimeOffset.Now
 };
 
@@ -60,9 +99,13 @@ try
         && !fillSourceEntries
         && !checkSourceFill
         && !checkExactStageGates
-        && !checkRouteEntries)
+        && !checkRouteEntries
+        && !authorGreenPact
+        && !checkGreenPact
+        && !authorCapstones
+        && !checkCapstones)
     {
-        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, --check-exact-stage-gates, or --check-route-entries. Use --dry-run with write modes for planning only.");
+        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, --check-exact-stage-gates, --check-route-entries, --author-green-pact, --check-green-pact, --author-capstones, or --check-capstones. Use --dry-run with write modes for planning only.");
     }
 
     var manifest = LoadManifest(manifestPath);
@@ -73,6 +116,42 @@ try
     if (inspectVmad)
     {
         InspectPlayerAliasVmad(index, report);
+        report.Status = "PASS";
+    }
+    else if (checkCapstones)
+    {
+        CheckCapstoneFallbacks(index, capstoneFallbacks, report);
+        if (report.Errors.Count > 0)
+        {
+            throw new InvalidOperationException("T3 capstone fallback check failed.");
+        }
+
+        report.Status = "PASS";
+    }
+    else if (authorCapstones)
+    {
+        WireCapstoneFallbacks(mod, index, capstoneFallbacks, report);
+        WriteModIfNeeded(mod, espPath, dryRun, report);
+        report.Status = "PASS";
+    }
+    else if (checkGreenPact)
+    {
+        CheckGreenPact(index, playerEventsPath, kidPath, greenPactFormLists, greenPactKeywords, report);
+        if (report.Errors.Count > 0)
+        {
+            throw new InvalidOperationException("Green Pact tag layer check failed.");
+        }
+
+        report.Status = "PASS";
+    }
+    else if (authorGreenPact)
+    {
+        var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
+        EnsureFormLists(mod, index, allocator, greenPactFormLists, report);
+        EnsureKeywords(mod, index, allocator, greenPactKeywords, report);
+        WireGreenPactAliasProperties(mod, index, greenPactFormLists, greenPactKeywords, report);
+        WriteKidIfNeeded(kidPath, dryRun, report);
+        WriteModIfNeeded(mod, espPath, dryRun, report);
         report.Status = "PASS";
     }
     else if (checkFormLists)
@@ -884,6 +963,281 @@ static void EnsureFormLists(
     }
 }
 
+static void EnsureKeywords(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    IEnumerable<string> keywordNames,
+    AuthorReport report)
+{
+    foreach (var keywordName in keywordNames)
+    {
+        if (index.TryGetValue(keywordName, out var existing))
+        {
+            if (existing is not Keyword)
+            {
+                throw new InvalidOperationException($"{keywordName} exists as {existing.GetType().Name}, expected KYWD/Keyword.");
+            }
+
+            report.Actions.Add($"Verified existing Green Pact keyword {keywordName}.");
+            continue;
+        }
+
+        var keyword = new Keyword(allocator.Next(), SkyrimRelease.SkyrimSE)
+        {
+            FormVersion = 44,
+            EditorID = keywordName
+        };
+        mod.Keywords.Add(keyword);
+        index[keywordName] = keyword;
+        report.Actions.Add($"Created Green Pact keyword {keywordName}.");
+    }
+}
+
+static void WireGreenPactAliasProperties(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IEnumerable<string> formListNames,
+    IEnumerable<string> keywordNames,
+    AuthorReport report)
+{
+    _ = mod;
+    var aliasScript = RequirePlayerEventsAliasScript(index);
+    var properties = formListNames.Concat(keywordNames)
+        .Select(propertyName =>
+        {
+            var record = RequireRecord<ISkyrimMajorRecordGetter>(index, propertyName);
+            return ObjectProp(propertyName, record.FormKey);
+        })
+        .ToArray();
+
+    UpsertProperties(aliasScript, properties);
+    report.Actions.Add($"Wired {properties.Length} Green Pact properties on PDV_PlayerEvents alias script.");
+}
+
+static void CheckGreenPact(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    string playerEventsPath,
+    string kidPath,
+    IEnumerable<string> formListNames,
+    IEnumerable<string> keywordNames,
+    AuthorReport report)
+{
+    foreach (var formListName in formListNames)
+    {
+        if (!index.TryGetValue(formListName, out var record))
+        {
+            report.Errors.Add($"Missing Green Pact FormList: {formListName}");
+        }
+        else if (record is not SkyrimFormList)
+        {
+            report.Errors.Add($"{formListName} exists as {record.GetType().Name}, expected FLST/FormList.");
+        }
+        else
+        {
+            report.Actions.Add($"{formListName} exists as FLST.");
+        }
+    }
+
+    foreach (var keywordName in keywordNames)
+    {
+        if (!index.TryGetValue(keywordName, out var record))
+        {
+            report.Errors.Add($"Missing Green Pact keyword: {keywordName}");
+        }
+        else if (record is not Keyword)
+        {
+            report.Errors.Add($"{keywordName} exists as {record.GetType().Name}, expected KYWD/Keyword.");
+        }
+        else
+        {
+            report.Actions.Add($"{keywordName} exists as KYWD.");
+        }
+    }
+
+    CheckAliasProperties(index, formListNames.Concat(keywordNames), report);
+
+    if (!File.Exists(playerEventsPath))
+    {
+        report.Errors.Add($"PDV_PlayerEvents source not found: {playerEventsPath}");
+    }
+    else
+    {
+        var source = File.ReadAllText(playerEventsPath);
+        string[] requiredSnippets =
+        [
+            "Function RouteBosmerGreenPactFood(Form baseObject)",
+            "Potion foodItem = baseObject as Potion",
+            "foodItem.IsFood()",
+            "PDV_EventBusService.RouteGreenPactViolation()",
+            "PDV_EventBusService.RouteBosmerPactPositive()"
+        ];
+
+        foreach (var snippet in requiredSnippets)
+        {
+            if (!source.Contains(snippet, StringComparison.Ordinal))
+            {
+                report.Errors.Add($"PDV_PlayerEvents Green Pact source snippet missing: {snippet}");
+            }
+        }
+    }
+
+    if (!File.Exists(kidPath))
+    {
+        report.Errors.Add($"Green Pact KID ini is missing: {kidPath}");
+    }
+    else
+    {
+        var kid = File.ReadAllText(kidPath);
+        foreach (var keywordName in keywordNames)
+        {
+            if (!kid.Contains(keywordName, StringComparison.OrdinalIgnoreCase))
+            {
+                report.Errors.Add($"Green Pact KID ini does not mention {keywordName}.");
+            }
+        }
+
+        report.Actions.Add($"Green Pact KID ini exists: {kidPath}");
+    }
+}
+
+static void WireCapstoneFallbacks(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IEnumerable<CapstoneFallback> capstones,
+    AuthorReport report)
+{
+    _ = mod;
+    var debugGlobal = RequireRecord<ISkyrimMajorRecordGetter>(index, "PDV_GLO_DebugLevel");
+    foreach (var capstone in capstones)
+    {
+        var effect = RequireFirstMagicEffectForSpell(index, capstone.SpellEditorId);
+        WireMagicEffectScript(effect, "PDV_T3DailyLowHealthSaveEffect", new ScriptProperty[]
+        {
+            StringProp("StorageKey", capstone.StorageKey),
+            FloatProp("TriggerHealthPercent", 0.10f),
+            FloatProp("HealAmount", capstone.HealAmount),
+            FloatProp("WatchIntervalSeconds", 2.0f),
+            ObjectProp("PDV_GLO_DebugLevel", debugGlobal.FormKey)
+        });
+        report.Actions.Add($"Wired PDV_T3DailyLowHealthSaveEffect on {effect.EditorID} for {capstone.SpellEditorId}.");
+    }
+}
+
+static void CheckCapstoneFallbacks(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IEnumerable<CapstoneFallback> capstones,
+    AuthorReport report)
+{
+    foreach (var capstone in capstones)
+    {
+        var effect = RequireFirstMagicEffectForSpell(index, capstone.SpellEditorId);
+        var scripts = effect.VirtualMachineAdapter?.Scripts ?? [];
+        var script = scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, "PDV_T3DailyLowHealthSaveEffect", StringComparison.OrdinalIgnoreCase));
+        if (script is null)
+        {
+            report.Errors.Add($"{effect.EditorID} is missing PDV_T3DailyLowHealthSaveEffect for {capstone.SpellEditorId}.");
+            continue;
+        }
+
+        var props = script.Properties
+            .Where(prop => !string.IsNullOrWhiteSpace(prop.Name))
+            .ToDictionary(prop => prop.Name!, StringComparer.OrdinalIgnoreCase);
+
+        if (!props.TryGetValue("StorageKey", out var storageProp)
+            || storageProp is not ScriptStringProperty stringProp
+            || !string.Equals(stringProp.Data, capstone.StorageKey, StringComparison.Ordinal))
+        {
+            report.Errors.Add($"{effect.EditorID} StorageKey is not {capstone.StorageKey}.");
+        }
+
+        if (!props.ContainsKey("PDV_GLO_DebugLevel"))
+        {
+            report.Errors.Add($"{effect.EditorID} is missing PDV_GLO_DebugLevel property.");
+        }
+
+        report.Actions.Add($"{effect.EditorID} carries PDV_T3DailyLowHealthSaveEffect for {capstone.SpellEditorId}.");
+    }
+}
+
+static MagicEffect RequireFirstMagicEffectForSpell(Dictionary<string, ISkyrimMajorRecordGetter> index, string spellEditorId)
+{
+    var spell = RequireRecord<Spell>(index, spellEditorId);
+    var effectLink = spell.Effects.FirstOrDefault()?.BaseEffect;
+    if (effectLink is null || effectLink.IsNull)
+    {
+        throw new InvalidOperationException($"{spellEditorId} has no first magic effect to carry the capstone script.");
+    }
+
+    var effect = index.Values
+        .OfType<MagicEffect>()
+        .FirstOrDefault(candidate => candidate.FormKey.Equals(effectLink.FormKey));
+    if (effect is null)
+    {
+        throw new InvalidOperationException($"{spellEditorId} first magic effect {effectLink.FormKey} is missing.");
+    }
+
+    return effect;
+}
+
+static void WireMagicEffectScript(MagicEffect effect, string scriptName, IEnumerable<ScriptProperty> properties)
+{
+    effect.VirtualMachineAdapter ??= new VirtualMachineAdapter();
+    effect.VirtualMachineAdapter.Version = 5;
+    effect.VirtualMachineAdapter.ObjectFormat = 2;
+    var script = EnsureScript(effect.VirtualMachineAdapter.Scripts, scriptName);
+    UpsertProperties(script, properties);
+}
+
+static ScriptEntry EnsureScript(IList<ScriptEntry> scripts, string scriptName)
+{
+    var script = scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, scriptName, StringComparison.OrdinalIgnoreCase));
+    if (script is not null)
+    {
+        script.Name = scriptName;
+        return script;
+    }
+
+    script = new ScriptEntry
+    {
+        Name = scriptName,
+        Flags = ScriptEntry.Flag.Local
+    };
+    scripts.Add(script);
+    return script;
+}
+
+static void WriteKidIfNeeded(string kidPath, bool dryRun, AuthorReport report)
+{
+    var content = """
+; PlayerDevotion Green Pact tag layer
+; KID receives mod-added food classifications here after hand curation.
+; Keep broad wildcard rules out of beta unless the food family is reviewed.
+
+; Keyword = PDV_KW_GreenPact_Plant|Potion|<EditorID or FormID filters>
+; Keyword = PDV_KW_GreenPact_Meat|Potion|<EditorID or FormID filters>
+; Keyword = PDV_KW_GreenPact_Fungi|Potion|<EditorID or FormID filters>
+; Keyword = PDV_KW_GreenPact_Egg|Potion|<EditorID or FormID filters>
+; Keyword = PDV_KW_GreenPact_Insect|Potion|<EditorID or FormID filters>
+""";
+
+    if (File.Exists(kidPath) && string.Equals(File.ReadAllText(kidPath), content, StringComparison.Ordinal))
+    {
+        report.Actions.Add($"Green Pact KID ini already current: {kidPath}");
+        return;
+    }
+
+    report.Actions.Add($"Prepared Green Pact KID ini: {kidPath}");
+    if (dryRun)
+    {
+        return;
+    }
+
+    Directory.CreateDirectory(Path.GetDirectoryName(kidPath)!);
+    File.WriteAllText(kidPath, content);
+    report.TouchedFiles.Add(kidPath);
+}
+
 static Dictionary<string, ISkyrimMajorRecordGetter> BuildIndex(SkyrimMod mod)
 {
     return mod.EnumerateMajorRecords()
@@ -929,6 +1283,26 @@ static ScriptObjectProperty ObjectProp(string name, FormKey formKey)
         Flags = ScriptProperty.Flag.Edited,
         Object = formKey.ToLink<ISkyrimMajorRecordGetter>(),
         Alias = -1
+    };
+}
+
+static ScriptStringProperty StringProp(string name, string value)
+{
+    return new ScriptStringProperty
+    {
+        Name = name,
+        Flags = ScriptProperty.Flag.Edited,
+        Data = value
+    };
+}
+
+static ScriptFloatProperty FloatProp(string name, float value)
+{
+    return new ScriptFloatProperty
+    {
+        Name = name,
+        Flags = ScriptProperty.Flag.Edited,
+        Data = value
     };
 }
 
@@ -1079,6 +1453,8 @@ sealed record ValidatedSourceFillGroup(string Property, List<ValidatedSourceFill
 
 sealed record ValidatedSourceFillEntry(FormKey FormKey, string Label, string SourceKind);
 
+sealed record CapstoneFallback(string SpellEditorId, string StorageKey, float HealAmount);
+
 sealed class AuthorReport
 {
     public string Status { get; set; } = "STARTED";
@@ -1094,6 +1470,10 @@ sealed class AuthorReport
     public bool CheckSourceFill { get; set; }
     public bool CheckExactStageGates { get; set; }
     public bool CheckRouteEntries { get; set; }
+    public bool AuthorGreenPact { get; set; }
+    public bool CheckGreenPact { get; set; }
+    public bool AuthorCapstones { get; set; }
+    public bool CheckCapstones { get; set; }
     public DateTimeOffset StartedAt { get; set; }
     public DateTimeOffset FinishedAt { get; set; }
     public string? BackupPath { get; set; }

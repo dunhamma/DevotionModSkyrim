@@ -29,6 +29,7 @@ const MUTAGEN_BRIDGE = path.join(
   "mutagen-bridge",
   "mutagen-bridge.exe",
 );
+const MUTAGEN_BRIDGE_MAX_BUFFER = 128 * 1024 * 1024;
 const MO2_INI = path.join(ANVIL_ROOT, "ModOrganizer.ini");
 const DEV_PROFILE = path.join(ANVIL_ROOT, "profiles", "Devotion Dev");
 const DEV_PROFILE_PLUGINS = path.join(DEV_PROFILE, "plugins.txt");
@@ -1202,6 +1203,7 @@ class Verifier {
       input: JSON.stringify(request),
       encoding: "utf8",
       timeout: timeoutMs,
+      maxBuffer: MUTAGEN_BRIDGE_MAX_BUFFER,
       windowsHide: true,
     });
 

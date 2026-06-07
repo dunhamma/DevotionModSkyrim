@@ -44,6 +44,30 @@ const ACTOR_VALUE_ALIASES = new Map([
   ["Marksman", "Archery"],
   ["ResistPoison", "PoisonResist"],
 ]);
+const CAPSTONE_FALLBACKS = [
+  ["PDV_Bless_Imperial_Akatosh_T3", "PDV.Capstone.Imperial.AkatoshSave"],
+  ["PDV_Bless_Altmer_AuriEl_T3", "PDV.Capstone.Altmer.AuriElSave"],
+  ["PDV_Bless_Nord_Shor_T3", "PDV.Capstone.Nord.ShorLastStand"],
+  ["PDV_Bless_Orc_LegionExile_T3", "PDV.Capstone.Orc.LegionHoldLine"],
+  ["PDV_Bless_Redguard_Tuwhacca_T3", "PDV.Capstone.Redguard.TuwhaccaSave"],
+  ["PDV_Bless_Khajiit_BaanDar_T3", "PDV.Capstone.Khajiit.BaanDarSlip"],
+  ["PDV_Bless_Bosmer_BanditRoad_T3", "PDV.Capstone.Bosmer.BaanDarSlip"],
+];
+const GREEN_PACT_FORM_LISTS = [
+  "PDV_FLST_GreenPact_PlantFoods",
+  "PDV_FLST_GreenPact_MeatFoods",
+  "PDV_FLST_GreenPact_FungiFoods",
+  "PDV_FLST_GreenPact_EggFoods",
+  "PDV_FLST_GreenPact_InsectFoods",
+];
+const GREEN_PACT_KEYWORDS = [
+  "PDV_KW_GreenPact_Plant",
+  "PDV_KW_GreenPact_Meat",
+  "PDV_KW_GreenPact_Fungi",
+  "PDV_KW_GreenPact_Egg",
+  "PDV_KW_GreenPact_Insect",
+];
+const GREEN_PACT_KID = path.join(DEVOTION_MOD, "SKSE", "Plugins", "KeywordItemDistributor", "PDV_GreenPact_KID.ini");
 
 const json = process.argv.includes("--json");
 const findings = [];
@@ -219,6 +243,12 @@ function main() {
       }
     }
   }
+  for (const [spellEditorId] of CAPSTONE_FALLBACKS) {
+    detailEdids.add(spellEditorId);
+  }
+  for (const editorId of [...GREEN_PACT_FORM_LISTS, ...GREEN_PACT_KEYWORDS]) {
+    detailEdids.add(editorId);
+  }
 
   const detailRecords = [...detailEdids]
     .map((edid) => recordsByEdid.get(edid))
@@ -340,6 +370,72 @@ function main() {
         }
       }
     }
+  }
+
+  for (const [spellEditorId, storageKey] of CAPSTONE_FALLBACKS) {
+    const spellDetail = detailsByEdid.get(spellEditorId);
+    const firstEffectFormId = spellDetail?.fields?.Effects?.[0]?.BaseEffect;
+    const effectEdid = firstEffectFormId ? formidToEdid(firstEffectFormId, recordsByEdid) : null;
+    const effectDetail = effectEdid ? detailsByEdid.get(effectEdid) : null;
+    const capstoneScript = findScript(effectDetail?.fields, "PDV_T3DailyLowHealthSaveEffect");
+    const props = propertyMap(capstoneScript);
+    if (capstoneScript) {
+      pass("T3 capstone script", `${effectEdid} carries PDV_T3DailyLowHealthSaveEffect.`);
+    } else {
+      fail("T3 capstone script", `${spellEditorId} first MGEF ${effectEdid || "(missing)"} lacks PDV_T3DailyLowHealthSaveEffect.`);
+      continue;
+    }
+
+    if (props.get("StorageKey")?.Data === storageKey) {
+      pass("T3 capstone StorageKey", `${spellEditorId} uses ${storageKey}.`);
+    } else {
+      fail("T3 capstone StorageKey", `${spellEditorId} StorageKey is ${props.get("StorageKey")?.Data || "(missing)"}, expected ${storageKey}.`);
+    }
+
+    if (props.has("PDV_GLO_DebugLevel")) {
+      pass("T3 capstone debug gate", `${spellEditorId} wires PDV_GLO_DebugLevel.`);
+    } else {
+      fail("T3 capstone debug gate", `${spellEditorId} is missing PDV_GLO_DebugLevel.`);
+    }
+  }
+
+  const playerEventsDetail = detailsByEdid.get("PDV__ManagerQuest");
+  const playerEventsScript = (playerEventsDetail?.fields?.VirtualMachineAdapter?.Aliases || [])
+    .flatMap((alias) => alias.Scripts || [])
+    .find((script) => script.Name === "PDV_PlayerEvents");
+  const playerEventsProps = propertyMap(playerEventsScript);
+  for (const editorId of GREEN_PACT_FORM_LISTS) {
+    const record = recordsByEdid.get(editorId);
+    if (record?.type === "FLST") {
+      pass("Green Pact FormList", `${editorId} exists as FLST.`);
+    } else {
+      fail("Green Pact FormList", `${editorId} is missing as FLST.`);
+    }
+    const targetEdid = formidToEdid(propTarget(playerEventsProps.get(editorId)), recordsByEdid);
+    if (targetEdid === editorId) {
+      pass("Green Pact alias property", `PDV_PlayerEvents.${editorId} resolves.`);
+    } else {
+      fail("Green Pact alias property", `PDV_PlayerEvents.${editorId} resolves to ${targetEdid || "(missing)"}.`);
+    }
+  }
+  for (const editorId of GREEN_PACT_KEYWORDS) {
+    const record = recordsByEdid.get(editorId);
+    if (record?.type === "KYWD") {
+      pass("Green Pact keyword", `${editorId} exists as KYWD.`);
+    } else {
+      fail("Green Pact keyword", `${editorId} is missing as KYWD.`);
+    }
+    const targetEdid = formidToEdid(propTarget(playerEventsProps.get(editorId)), recordsByEdid);
+    if (targetEdid === editorId) {
+      pass("Green Pact alias property", `PDV_PlayerEvents.${editorId} resolves.`);
+    } else {
+      fail("Green Pact alias property", `PDV_PlayerEvents.${editorId} resolves to ${targetEdid || "(missing)"}.`);
+    }
+  }
+  if (fs.existsSync(GREEN_PACT_KID)) {
+    pass("Green Pact KID", "PDV_GreenPact_KID.ini exists.", GREEN_PACT_KID);
+  } else {
+    fail("Green Pact KID", "PDV_GreenPact_KID.ini is missing.", GREEN_PACT_KID);
   }
 
   const summary = counts();

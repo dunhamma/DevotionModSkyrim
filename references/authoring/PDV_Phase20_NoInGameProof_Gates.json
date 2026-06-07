@@ -1433,7 +1433,7 @@
     "fallbackCandidate": "PDV_Bless_Bosmer_Exchange_T1",
     "sourceRowsExist": true,
     "firstTargetRecordPresent": true,
-    "fallbackTargetRecordPresent": false,
+    "fallbackTargetRecordPresent": true,
     "ownerDecision": "Preserve the Khajiit pilot target records under PDV_Phase20_RewardRecordContracts.json; keep Bosmer fallback and Daedric CAT-6 promotion separate until explicitly promoted.",
     "notAllowed": [
       "dialogue",

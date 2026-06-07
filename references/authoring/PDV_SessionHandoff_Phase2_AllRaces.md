@@ -10,6 +10,63 @@ wiring) — Argonian pilot LANDED + compiles 0/0; 9 more races pending.
 
 ---
 
+## 0. Continuation Addendum (2026-06-07)
+
+The header above is preserved as historical context for the original Phase 2 handoff. Current state
+after this continuation: Phase A design is complete; B1 deity scripts are complete; B2/B3 manager
+and receiver wiring is tool-authored and compile-clean for all ten races; reward/neglect records are
+authored in the live framework ESP; SEQ is refreshed; the Green Pact tag layer is record/script-wired;
+and the V1 low-health T3 fallback capstone skeleton is live on the approved once-per-race save homes.
+Remaining beta gate is runtime/manual packet evidence.
+
+Implemented in this continuation:
+- Preserved the Phase A baseline in commit `d9e649f`, then committed the all-race reward/readback
+  tranche in `cd9ed5e`.
+- Edited `tools/pdv_verify.mjs` with the user's explicit approval to raise the Mutagen bridge
+  `spawnSync` buffer for strict JSON runs.
+- Authored all ten race reward/deity/neglect records into
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp` with
+  `tools/pdv-phase20-race-author`, reconciled shared deities, and refreshed SEQ.
+- Finished the Imperial civic discriminator gap with five parseable family receiver FormLists:
+  public-service, mercy, lawful-order, honest-work, death-duty. The legacy broad
+  `PDV_FLST_P2_ImperialCivicSources` now routes as public-service fallback instead of awarding a
+  generic Divine.
+- Applied the same parseable-token approach to Nord static/P2 source IDs so unknown tokens no-op
+  instead of collapsing into an undifferentiated lane.
+- Extended `tools/pdv-phase20-p2-receiver-author` with `--author-green-pact`,
+  `--check-green-pact`, `--author-capstones`, and `--check-capstones`.
+- Implemented the Bosmer Green Pact equip hook in `PDV_PlayerEvents.psc`: Bosmer-only, food-only,
+  event-driven, FormList-first with KID keyword fallback; plant foods route to
+  `RouteGreenPactViolation`, meat/insect foods route to `RouteBosmerPactPositive`, fungi/eggs are
+  ignored pending curation.
+- Authored the five Green Pact FormLists, five Green Pact keywords, alias VMAD properties, and
+  conservative KID placeholder at
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\SKSE\Plugins\KeywordItemDistributor\PDV_GreenPact_KID.ini`.
+- Added `PDV_T3DailyLowHealthSaveEffect.psc`, a shared fallback capstone script using
+  `RegisterForSingleUpdate` with exit cleanup, StorageUtil once-per-day keys, and debug-gated traces.
+  It is wired to the seven V1 save homes: Imperial Akatosh, Altmer Auri-El, Nord Shor, Orc
+  Legion/Exile, Redguard Tu'whacca, Khajiit Baan Dar, and Bosmer Bandit Road.
+- Expanded `tools/pdv_phase2_reward_readback_audit.mjs` to check reward records, MGEF magnitudes,
+  manager properties, FLST membership, SGE/SEQ, T3 capstone script attachments, and Green Pact
+  FLST/KYWD/KID/alias wiring.
+- Synced live source snapshots under `scratch/phase2-live-source/` for:
+  `PDV__ManagerQuest.psc`, `PDV_PlayerEvents.psc`, `PDV_T3DailyLowHealthSaveEffect.psc`, and the
+  Green Pact KID placeholder.
+
+Static verification after this addendum:
+- `node .\tools\pdv_compile.mjs --all` -> all scripts compile 0 errors / 0 warnings.
+- `node .\tools\pdv_verify.mjs --strict-phase20-race-costing --json` -> PASS 2841, WARN 2, INFO 30
+  (WARN is the pre-existing unnamed INFO record set).
+- `node .\tools\pdv_phase20_base_wiring_audit.mjs` -> PASS.
+- `node .\tools\pdv_prisma_ui_audit.mjs` -> PASS, 11 checks.
+- `node .\tools\pdv_content_verify.mjs` -> PASS 1081, WARN 0.
+- `node .\tools\pdv_phase2_reward_readback_audit.mjs --json` -> PASS 1268.
+- Receiver author readbacks for P2 routes/properties, Green Pact, and capstones all PASS.
+
+Runtime/manual status: not proven in this continuation. Each `PDV_BetaTestPacket_{Race}.md` still
+needs the in-game accepted/rejected hook pass, Survey/status clarity, Active Effects reward snapshot,
+save/load sanity, stack snapshot, and manual feel notes before external beta is truthfully shipped.
+
 ## 1. Why this work exists
 
 Phase 1 (Khajiit pilot, prior handoff) proved one race end-to-end on the per-race piety →

@@ -6474,6 +6474,8 @@ Int Function GetNordRouteFamilyFromSource(String sourceId)
         return NORD_ROUTE_OLD_HEARTH
     elseIf StringContainsToken(sourceId, "ancestor") || StringContainsToken(sourceId, "honored_dead")
         return NORD_ROUTE_OLD_ANCESTOR
+    elseIf StringContainsToken(sourceId, "hircine") || StringContainsToken(sourceId, "hunt")
+        return NORD_ROUTE_OLD_ORDEAL
     elseIf StringContainsToken(sourceId, "household") || StringContainsToken(sourceId, "mercy")
         return NORD_ROUTE_NINE_MERCY
     elseIf StringContainsToken(sourceId, "proper_death") || StringContainsToken(sourceId, "proper-death") || StringContainsToken(sourceId, "anti_necromancy") || StringContainsToken(sourceId, "arkay")
