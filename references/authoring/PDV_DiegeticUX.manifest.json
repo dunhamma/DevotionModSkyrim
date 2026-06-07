@@ -1,0 +1,408 @@
+{
+  "schema": "pdv.diegetic_ux.manifest.v1",
+  "title": "PDV diegetic UX live-write contract",
+  "status": "repo-scaffold-not-live",
+  "updated": "2026-06-06",
+  "liveWritePolicy": {
+    "sourceOnlyUntilApproved": true,
+    "sourcePromotionRequiresCleanCheck": "node tools/pdv_diegetic_ux_check.mjs",
+    "liveCompileRequires": "node tools/pdv_compile.mjs --script PDV_DiegeticDeps --script PDV_DiegeticDirector --script PDV__ManagerQuest",
+    "noLiveStepsInThisWorktreePass": [
+      "no live MO2 source copy",
+      "no live PEX compile",
+      "no CK record write",
+      "no ESP VMAD property write",
+      "no SEQ refresh",
+      "no in-game proof claim"
+    ]
+  },
+  "authoringPlanner": {
+    "command": "node tools/pdv_diegetic_ux_author.mjs plan --json",
+    "mode": "dry-run-only",
+    "runbook": "references/authoring/PDV_DiegeticUX_LiveWrite_Runbook.md",
+    "notes": [
+      "The planner emits the intended source, CK quest, VMAD property, D1 record, compile, SEQ, and proof steps.",
+      "It must not write PlayerDevotion_Framework.esp, live source, live PEX, or SEQ."
+    ]
+  },
+  "sourcePromotion": {
+    "scratchRoot": "scratch/p2-toast-panel-fix",
+    "liveSourceRoot": "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source",
+    "scripts": [
+      {
+        "scriptName": "PDV_DiegeticDeps",
+        "scratch": "scratch/p2-toast-panel-fix/PDV_DiegeticDeps.psc",
+        "live": "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV_DiegeticDeps.psc"
+      },
+      {
+        "scriptName": "PDV_DiegeticDirector",
+        "scratch": "scratch/p2-toast-panel-fix/PDV_DiegeticDirector.psc",
+        "live": "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV_DiegeticDirector.psc"
+      },
+      {
+        "scriptName": "PDV__ManagerQuest",
+        "scratch": "scratch/p2-toast-panel-fix/PDV__ManagerQuest.psc",
+        "live": "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV__ManagerQuest.psc",
+        "mode": "merge-additive-diegetic-hooks-only"
+      }
+    ]
+  },
+  "requiredSourceContracts": [
+    {
+      "file": "scratch/p2-toast-panel-fix/PDV_DiegeticDeps.psc",
+      "mustContain": [
+        "Scriptname PDV_DiegeticDeps extends Quest",
+        "Bool Function Has(String depName)",
+        "Function Reprobe()",
+        "String Function NormalizeDepName(String depName)"
+      ],
+      "mustNotContain": [
+        "Game.GetFormFromFile",
+        "Utility.Wait("
+      ]
+    },
+    {
+      "file": "scratch/p2-toast-panel-fix/PDV_DiegeticDirector.psc",
+      "mustContain": [
+        "Scriptname PDV_DiegeticDirector extends Quest",
+        "Bool Property D1Enabled = False Auto",
+        "Function Dispatch(String eventClass, String surfaceKey, String direction, Int deityIndex, String toneOverride = \"\")",
+        "Function OnLoad()",
+        "Function RefreshMedallion()",
+        "Function EmitScreen(String tone)",
+        "Function EmitSound(String tone)",
+        "Function EmitMusicState(String stateKey, Bool enable)",
+        "Function EmitJournal(Int deityIndex, String toneKey)",
+        "Function SetBodyMark(String markKey, Bool enable)",
+        "Function EmitPrayerAnim(String poseKey)",
+        "Function EmitRoutineFavor()"
+      ],
+      "mustNotContain": [
+        "Game.GetFormFromFile",
+        "Utility.Wait("
+      ]
+    },
+    {
+      "file": "scratch/p2-toast-panel-fix/PDV__ManagerQuest.psc",
+      "mustContain": [
+        "PDV_DiegeticDirector Property PDV_DiegeticDirectorService Auto",
+        "Bool _diegeticLoadHandled = False",
+        "Function HandleDiegeticLoad(String reason)",
+        "Function RefreshDiegeticMedallion(String reason)",
+        "Function NotifyDiegeticRoutineFavor(String reason)",
+        "Function SurfaceTransition(String eventClass, String surfaceKey, String direction, Int deityIndex = -1, String toneOverride = \"\")",
+        "Function SurfaceCurseTransitionDiegetic(Int oldState, Int newState)",
+        "PDV_DiegeticDirectorService.Dispatch(eventClass, surfaceKey, direction, deityIndex, toneOverride)",
+        "NotifyDiegeticRoutineFavor(\"dunmer_portable_shrine\")",
+        "NotifyDiegeticRoutineFavor(\"dunmer_home_bonus\")",
+        "NotifyDiegeticRoutineFavor(\"khajiit_moon_observance\")",
+        "NotifyDiegeticRoutineFavor(\"khajiit_road_home\")",
+        "RefreshDiegeticMedallion(\"dawn\")",
+        "SurfaceTransition(\"tier\", deity.DeityName, \"reach\", deity.DeityIndex, \"\")",
+        "SurfaceTransition(\"neglect\", _activeDeity.DeityName, \"drop\", _activeDeity.DeityIndex, \"absence\")",
+        "SurfaceCurseTransitionDiegetic(oldState, newState)"
+      ],
+      "mustAlsoPreserveLiveMarkers": [
+        "Spell Property PDV_Bless_Altmer_Orthodox_T1 Auto",
+        "Bool Property AutoPushPrismaPanel = False Auto",
+        "Bool Property AllowPrismaBlockingSurfaces = False Auto",
+        "if _panelDirty && AutoPushPrismaPanel && PDV_PrismaBridge.IsAvailable()",
+        "String Function GetPanelInstrumentJson(Int originRace, Bool hasActiveDeity, Int tierValue, String tierLabel, Float piety)",
+        "PDV_DeityBase Function GetDeityByName(String deityName)",
+        "SendPrismaSubstrateProgress(\"ancestor\", tierBefore, tierAfter, multiplier, \"Ancestor prayer marked.\", \"ancestor\", GetDunmerAncestorLayerLabel())",
+        "SendPrismaSubstrateProgress(\"lunar\", tierBefore, tierAfter, multiplier, \"The moons marked this observance.\", \"lunar\", GetKhajiitLunarTierLabel(tierAfter))",
+        "SyncFirstTierRaceRewardRuntime()"
+      ]
+    }
+  ],
+  "ckWriteContract": {
+    "quests": [
+      {
+        "editorId": "PDV_DiegeticDeps",
+        "script": "PDV_DiegeticDeps",
+        "startGameEnabled": true,
+        "runOnce": false,
+        "properties": [
+          {
+            "name": "ForceAllDepsAbsent",
+            "type": "Bool",
+            "value": false
+          }
+        ]
+      },
+      {
+        "editorId": "PDV_DiegeticDirector",
+        "script": "PDV_DiegeticDirector",
+        "startGameEnabled": true,
+        "runOnce": false,
+        "properties": [
+          {
+            "name": "PDV_DiegeticDepsService",
+            "type": "Object",
+            "value": "PDV_DiegeticDeps"
+          },
+          {
+            "name": "D1Enabled",
+            "type": "Bool",
+            "value": false
+          },
+          {
+            "name": "TraceDispatch",
+            "type": "Bool",
+            "value": true
+          }
+        ]
+      }
+    ],
+    "managerProperties": [
+      {
+        "record": "PDV__ManagerQuest",
+        "script": "PDV__ManagerQuest",
+        "property": "PDV_DiegeticDirectorService",
+        "type": "Object",
+        "value": "PDV_DiegeticDirector",
+        "requiredForD0Live": true
+      }
+    ],
+    "directorProperties": [
+      {
+        "name": "PDV_DiegeticDepsService",
+        "type": "Object",
+        "value": "PDV_DiegeticDeps",
+        "requiredForD0Live": true
+      },
+      {
+        "name": "PDV_GLO_ActivePiety",
+        "type": "Object",
+        "value": "PDV_GLO_ActivePiety",
+        "requiredForD0Live": true
+      },
+      {
+        "name": "PDV_GLO_ActiveTier",
+        "type": "Object",
+        "value": "PDV_GLO_ActiveTier",
+        "requiredForD0Live": true
+      },
+      {
+        "name": "PDV_GLO_ActiveDeityIndex",
+        "type": "Object",
+        "value": "PDV_GLO_ActiveDeityIndex",
+        "requiredForD0Live": true
+      },
+      {
+        "name": "PDV_GLO_OriginRace",
+        "type": "Object",
+        "value": "PDV_GLO_OriginRace",
+        "requiredForD0Live": true
+      },
+      {
+        "name": "PDV_FLST_AllDeities",
+        "type": "Object",
+        "value": "PDV_FLST_AllDeities",
+        "requiredForD0Live": true
+      },
+      {
+        "name": "D1Enabled",
+        "type": "Bool",
+        "value": false,
+        "requiredForD0Live": true
+      },
+      {
+        "name": "TraceDispatch",
+        "type": "Bool",
+        "value": true,
+        "requiredForD0Live": true
+      },
+      {
+        "name": "PDV_IMAD_Reverent",
+        "type": "Object",
+        "value": "PDV_IMAD_Reverent",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_IMAD_Revelation",
+        "type": "Object",
+        "value": "PDV_IMAD_Revelation",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_IMAD_Dread",
+        "type": "Object",
+        "value": "PDV_IMAD_Dread",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_IMAD_Release",
+        "type": "Object",
+        "value": "PDV_IMAD_Release",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_IMAD_Absence",
+        "type": "Object",
+        "value": "PDV_IMAD_Absence",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_Abil_Shader_Reverent",
+        "type": "Object",
+        "value": "PDV_Abil_Shader_Reverent",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_Abil_Shader_Revelation",
+        "type": "Object",
+        "value": "PDV_Abil_Shader_Revelation",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_Abil_Shader_Dread",
+        "type": "Object",
+        "value": "PDV_Abil_Shader_Dread",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_Abil_Shader_Release",
+        "type": "Object",
+        "value": "PDV_Abil_Shader_Release",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_SND_Chime",
+        "type": "Object",
+        "value": "PDV_SND_Chime",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_SND_Swell",
+        "type": "Object",
+        "value": "PDV_SND_Swell",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_SND_Hollow",
+        "type": "Object",
+        "value": "PDV_SND_Hollow",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_SND_RisingChime",
+        "type": "Object",
+        "value": "PDV_SND_RisingChime",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_SND_Distant",
+        "type": "Object",
+        "value": "PDV_SND_Distant",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_MUS_CurseBed",
+        "type": "Object",
+        "value": "PDV_MUS_CurseBed",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_DevotionMedallion",
+        "type": "Object",
+        "value": "PDV_DevotionMedallion",
+        "requiredForD1Live": true
+      },
+      {
+        "name": "PDV_BookOfDays",
+        "type": "Object",
+        "value": "PDV_BookOfDays",
+        "requiredForD1Live": true
+      }
+    ],
+    "d1Records": [
+      {
+        "type": "IMAD",
+        "editorIds": [
+          "PDV_IMAD_Reverent",
+          "PDV_IMAD_Revelation",
+          "PDV_IMAD_Dread",
+          "PDV_IMAD_Release",
+          "PDV_IMAD_Absence"
+        ]
+      },
+      {
+        "type": "SPEL",
+        "editorIds": [
+          "PDV_Abil_Shader_Reverent",
+          "PDV_Abil_Shader_Revelation",
+          "PDV_Abil_Shader_Dread",
+          "PDV_Abil_Shader_Release"
+        ]
+      },
+      {
+        "type": "SNDR",
+        "editorIds": [
+          "PDV_SND_Chime",
+          "PDV_SND_Swell",
+          "PDV_SND_Hollow",
+          "PDV_SND_RisingChime",
+          "PDV_SND_Distant"
+        ]
+      },
+      {
+        "type": "MUSC",
+        "editorIds": [
+          "PDV_MUS_CurseBed"
+        ]
+      },
+      {
+        "type": "MISC",
+        "editorIds": [
+          "PDV_DevotionMedallion"
+        ]
+      },
+      {
+        "type": "BOOK",
+        "editorIds": [
+          "PDV_BookOfDays"
+        ]
+      }
+    ]
+  },
+  "vanillaSourceSelections": {
+    "note": "Vanilla Skyrim.esm source records selected per diegetic channel for D1 record creation: duplicate-from-vanilla, then recolor IMAD/EFSH per the locked palette. FormIDs are the Skyrim.esm DEFINING records (some are overridden downstream by audio/ENB mods, but the duplicate source is the base). Selected 2026-06-08 via houseCARL load-order query. Entries flagged candidate=true want a final confirm at authoring; the sound + effect channels are pinned to real records.",
+    "SNDR": {
+      "PDV_SND_Chime": { "tone": "reverent", "vanilla": "056622:Skyrim.esm", "vanillaEditorId": "MAGRestorationChargeSD" },
+      "PDV_SND_Swell": { "tone": "revelation", "vanilla": "01702C:Skyrim.esm", "vanillaEditorId": "MAGAltarsBlessingFireA2D" },
+      "PDV_SND_Hollow": { "tone": "dread", "vanilla": "057C63:Skyrim.esm", "vanillaEditorId": "MAGRestorationTurnUndeadProjectileSD", "candidate": true, "note": "low ominous tone; confirm vs a disease/curse SD if a darker sting is wanted" },
+      "PDV_SND_RisingChime": { "tone": "release", "vanilla": "057C65:Skyrim.esm", "vanillaEditorId": "MAGRestorationTurnUndeadFire2DSD" },
+      "PDV_SND_Distant": { "tone": "absence", "vanilla": "03F363:Skyrim.esm", "vanillaEditorId": "MAGRestorationReadyLPSD", "candidate": true, "note": "thin distant loop; confirm vs a faint wind ambience SD" }
+    },
+    "EFSH": {
+      "PDV_Abil_Shader_Reverent": { "tone": "reverent", "vanilla": "04E220:Skyrim.esm", "vanillaEditorId": "HealMysticFXS", "recolor": "gold #d8b35a" },
+      "PDV_Abil_Shader_Revelation": { "tone": "revelation", "vanilla": "10CDC9:Skyrim.esm", "vanillaEditorId": "HealCircleFXS", "recolor": "lit #ecdcab" },
+      "PDV_Abil_Shader_Dread": { "tone": "dread", "vanilla": "0ABEFF:Skyrim.esm", "vanillaEditorId": "AbsorbHealthFXS", "recolor": "cold #7fa8c9", "candidate": true, "note": "dark drain shroud; confirm vs a FrostCloak FXS if a frostier look is wanted" },
+      "PDV_Abil_Shader_Release": { "tone": "release", "vanilla": "0E7557:Skyrim.esm", "vanillaEditorId": "TurnUndeadFlamesFXS", "recolor": "green #8bbf9f" }
+    },
+    "IMAD": {
+      "PDV_IMAD_Reverent": { "tone": "reverent", "vanilla": "084B38:Skyrim.esm", "vanillaEditorId": "MAGShoutKynesPeaceImod", "tune": "warm gold bloom, +brightness" },
+      "PDV_IMAD_Revelation": { "tone": "revelation", "vanilla": "064D69:Skyrim.esm", "vanillaEditorId": "MAGShoutEthereal", "tune": "white bloom, fast in / slow out" },
+      "PDV_IMAD_Dread": { "tone": "dread", "vanilla": "10C445:Skyrim.esm", "vanillaEditorId": "LowHealthImod", "tune": "cold-blue tint + vignette, hold until cure" },
+      "PDV_IMAD_Release": { "tone": "release", "vanilla": "084B38:Skyrim.esm", "vanillaEditorId": "MAGShoutKynesPeaceImod", "tune": "clearing, faint green, brighten then settle", "candidate": true },
+      "PDV_IMAD_Absence": { "tone": "absence", "vanilla": "10C445:Skyrim.esm", "vanillaEditorId": "LowHealthImod", "tune": "slow desaturate, no tint" }
+    },
+    "MUSC": {
+      "PDV_MUS_CurseBed": { "tone": "dread", "vanilla": "02D4C2:Skyrim.esm", "vanillaEditorId": "MUSDungeon", "note": "low dungeon tension bed; applied while curse state active" }
+    },
+    "MISC": {
+      "PDV_DevotionMedallion": { "vanilla": "candidate", "note": "duplicate a vanilla amulet/medallion MISC and rename; pick at authoring (non-audio/visual record)" }
+    },
+    "BOOK": {
+      "PDV_BookOfDays": { "vanilla": "candidate", "note": "duplicate a vanilla journal/note BOOK and rename; pick at authoring (non-audio/visual record)" }
+    }
+  },
+  "openLiveGates": [
+    "Add PDV_DiegeticDeps and PDV_DiegeticDirector to the active live compile list once promoted.",
+    "Create or duplicate the CK records listed in ckWriteContract.d1Records before enabling D1Enabled.",
+    "Wire all director VMAD properties by EditorID, then read back the VMAD properties from PlayerDevotion_Framework.esp.",
+    "Keep D1Enabled false for D0 no-behavior-change live smoke.",
+    "Only after D0 smoke passes, enable D1 with placeholder records and run QASmoke transition proof."
+  ]
+}

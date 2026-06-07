@@ -51,6 +51,7 @@ PDV_StateTrack Property PDV_OrcLifeModeTrack Auto
 PDV_StateTrack Property PDV_RedguardSectTrack Auto
 PDV_DaedricPath_Hircine Property PDV_HircinePath Auto
 PDV_CurseState Property PDV_CurseStateService Auto
+PDV_DiegeticDirector Property PDV_DiegeticDirectorService Auto
 Spell Property PDV_SPEL_SurveyDevotion Auto
 Spell Property PDV_SPEL_Neglect_Kyne Auto
 Spell Property PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery Auto
@@ -214,6 +215,9 @@ Float Property SHOUT_DUPLICATE_WINDOW_DAYS = 0.00001 AutoReadOnly
 String Property SHOUT_DUPLICATE_KEY = "PDV.ShoutAttack.LastTime" AutoReadOnly
 Int _shoutRefreshTicks = 0
 Bool _panelDirty = False
+Bool _diegeticLoadHandled = False
+Bool Property AutoPushPrismaPanel = False Auto
+Bool Property AllowPrismaBlockingSurfaces = False Auto
 
 Event OnInit()
     InitializePreflightState()
@@ -225,6 +229,7 @@ Event OnInit()
     UpdateContextualFavorRuntime()
     EnsureSurveyDevotionPower()
     RequestPanelRefresh()
+    HandleDiegeticLoad("init")
     RegisterForSingleUpdate(1.0)
 EndEvent
 
@@ -235,8 +240,11 @@ Event OnUpdate()
     EnsureUnifiedStartupChoice()
     UpdateContextualFavorRuntime()
     EnsureSurveyDevotionPower()
+    if !_diegeticLoadHandled
+        HandleDiegeticLoad("update")
+    endIf
 
-    if _panelDirty && PDV_PrismaBridge.IsAvailable()
+    if _panelDirty && AutoPushPrismaPanel && PDV_PrismaBridge.IsAvailable()
         PushDevotionPanel()
         _panelDirty = False
     endIf
@@ -575,14 +583,57 @@ Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String
 EndFunction
 
 ; --- Main Prisma panel payload ---
-; The panel has no Papyrus open-hook (open is native/SKSE), so we keep the last
-; SendJson payload current by marking the panel dirty on every devotion-state
-; change and flushing it from OnUpdate once the bridge is available.
+; Full-panel payload pushes are opt-in so gameplay events do not open or keep
+; the Prisma panel visible over live play. RequestPanelRefresh still marks
+; state dirty for deliberate panel debugging/manual refresh flows.
 Function RequestPanelRefresh()
     _panelDirty = True
 EndFunction
 
+Function HandleDiegeticLoad(String reason)
+    _diegeticLoadHandled = True
+    if PDV_DiegeticDirectorService
+        PDV_DiegeticDirectorService.OnLoad()
+        Trace(2, "Diegetic director load hook handled: " + reason)
+    endIf
+EndFunction
+
+Function RefreshDiegeticMedallion(String reason)
+    if PDV_DiegeticDirectorService
+        PDV_DiegeticDirectorService.RefreshMedallion()
+        Trace(2, "Diegetic medallion refresh requested: " + reason)
+    endIf
+EndFunction
+
+Function NotifyDiegeticRoutineFavor(String reason)
+    if PDV_DiegeticDirectorService
+        PDV_DiegeticDirectorService.EmitRoutineFavor()
+        Trace(2, "Diegetic routine favor refresh requested: " + reason)
+    endIf
+EndFunction
+
+Function SurfaceTransition(String eventClass, String surfaceKey, String direction, Int deityIndex = -1, String toneOverride = "")
+    if eventClass == "" || surfaceKey == "" || direction == ""
+        return
+    endIf
+
+    String guard = "PDV.Surfaced." + eventClass + "." + surfaceKey + "." + direction
+    if StorageUtil.GetIntValue(None, guard) == 1
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, guard, 1)
+    StorageUtil.SetStringValue(None, "PDV.Surfaced.Last", guard)
+    if PDV_DiegeticDirectorService
+        PDV_DiegeticDirectorService.Dispatch(eventClass, surfaceKey, direction, deityIndex, toneOverride)
+    endIf
+EndFunction
+
 Bool Function PushDevotionPanel()
+    if !AutoPushPrismaPanel
+        return False
+    endIf
+
     if !PDV_PrismaBridge.IsAvailable()
         return False
     endIf
@@ -1449,6 +1500,7 @@ Function HandleDunmerPortableShrinePrayer(String reason)
         PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)
         Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
         SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
+        NotifyDiegeticRoutineFavor("dunmer_portable_shrine")
         RequestPanelRefresh()
         Trace(2, "Dunmer portable shrine prayer routed with multiplier " + multiplier)
     endIf
@@ -1461,6 +1513,7 @@ Function HandleDunmerPlayerHomeBonus(String reason)
         PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)
         Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
         SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "House memory answered.", "ancestor", GetDunmerAncestorLayerLabel())
+        NotifyDiegeticRoutineFavor("dunmer_home_bonus")
         RequestPanelRefresh()
         Trace(2, "Dunmer player-home bonus routed with multiplier " + multiplier)
     endIf
@@ -1484,6 +1537,7 @@ Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
     StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
     ShowP2BookNotice(reason, "Lunar source noted", "This reading gives the Lunar Lattice a visible source.")
     SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The moons marked this observance.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+    NotifyDiegeticRoutineFavor("khajiit_moon_observance")
     RequestPanelRefresh()
     Trace(2, "Khajiit moon observance routed for phase " + phaseIndex + " with multiplier " + multiplier)
 EndFunction
@@ -1514,6 +1568,7 @@ Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
     Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
     SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+    NotifyDiegeticRoutineFavor("khajiit_road_home")
     RequestPanelRefresh()
     Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier + " anchor " + anchorId)
 EndFunction
@@ -2394,6 +2449,7 @@ Int Function RecomputeTier(PDV_DeityBase deity)
             RefreshPatronMirrors()
             if newTier > oldTier
                 SendPrismaEventToast("tier", deity, "", GetCurrentStandingLabel(), "")
+                SurfaceTransition("tier", deity.DeityName, "reach", deity.DeityIndex, "")
             endIf
         endIf
 
@@ -2469,6 +2525,7 @@ Function ProcessDawn()
     RunDawnProcessCommitmentOffersNoop()
     RunDawnNotifyNoop()
     RequestPanelRefresh()
+    RefreshDiegeticMedallion("dawn")
 
     if GetDebugLevel() >= 1
         Debug.Trace("[PDV] ProcessDawn complete.")
@@ -2596,6 +2653,7 @@ Function RunDawnApplySpellAndNeglectLayers()
     Bool patronNeglected = IsNeglectFlagActive(_activeDeity)
     if patronNeglected && StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState") == 0
         SendPrismaEventToast("neglect", _activeDeity, "", "", "")
+        SurfaceTransition("neglect", _activeDeity.DeityName, "drop", _activeDeity.DeityIndex, "absence")
     endIf
     StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", BoolToInt(patronNeglected))
     SyncFirstTierRaceRewardRuntime()
@@ -4382,7 +4440,49 @@ Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
     ApplyCurseRaceHandlers(oldState, newState, reason)
     Trace(1, "Curse transition " + oldState + " -> " + newState + " (" + reason + ")")
     SendPrismaCurseToast(oldState, newState)
+    SurfaceCurseTransitionDiegetic(oldState, newState)
     RequestPanelRefresh()
+EndFunction
+
+Function SurfaceCurseTransitionDiegetic(Int oldState, Int newState)
+    String direction = GetCurseSurfaceDirection(oldState, newState)
+    String surfaceKey = GetCurseSurfaceKey(oldState, newState)
+    if direction == "" || surfaceKey == ""
+        return
+    endIf
+
+    String tone = "dread"
+    if direction == "cure"
+        tone = "release"
+    endIf
+    SurfaceTransition("curse", surfaceKey, direction, -1, tone)
+EndFunction
+
+String Function GetCurseSurfaceDirection(Int oldState, Int newState)
+    if oldState == 0 && newState != 0
+        return "onset"
+    endIf
+    if oldState != 0 && newState == 0
+        return "cure"
+    endIf
+    if oldState != newState
+        return "shift"
+    endIf
+    return ""
+EndFunction
+
+String Function GetCurseSurfaceKey(Int oldState, Int newState)
+    Int curseRef = newState
+    if newState == 0
+        curseRef = oldState
+    endIf
+    if curseRef == 1
+        return "werewolf"
+    endIf
+    if curseRef == 2
+        return "vampire"
+    endIf
+    return ""
 EndFunction
 
 ; Derive a typed "curse" Prisma event from an old→new curse-state transition.
@@ -5303,6 +5403,10 @@ String Function GetStartupOptionDetailText(Int originRace, Int optionValue)
 EndFunction
 
 Function SendPrismaStartupPayload(Int originRace, Int startupMode, Int defaultOption, Bool confirmRequired, String eventName)
+    if !AllowPrismaBlockingSurfaces
+        return
+    endIf
+
     if !PDV_PrismaBridge.IsAvailable()
         return
     endIf
@@ -5339,6 +5443,10 @@ Function SendPrismaStartupPayload(Int originRace, Int startupMode, Int defaultOp
 EndFunction
 
 Function SendPrismaMedallionPayload(Int originRace)
+    if !AllowPrismaBlockingSurfaces
+        return
+    endIf
+
     if !PDV_PrismaBridge.IsAvailable()
         return
     endIf

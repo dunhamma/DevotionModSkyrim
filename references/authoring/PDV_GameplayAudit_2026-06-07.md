@@ -164,3 +164,49 @@ House-of-Horrors quest, not generic vampirism. Intentional, noted for future.)
 `pdv_daedric_runtime_check --self-test` PASS · all touched scripts compile
 0/0 · beta gate correctly `PENDING=16` (in-game runtime proof unchanged —
 remains the player's session).
+
+---
+
+## 5. Daedric lore + gameplay weighting verdict (2026-06-08)
+
+A lore + gameplay-weighting review of the Daedric Princes (post price-retune).
+Decision: **document only** — no mechanics change this pass.
+
+**Lore appropriateness: strong (≈14–16/16).** Each Prince's boon sphere, price
+axis, and per-race state (Native…Curse) map cleanly to its TES domain and to
+race theology (sources: `references/tamriel-daedric-worship-4e201.html`,
+`references/phase4/PDV_DaedricRacePrinceMatrix.csv`). Boethiah (treachery→combat
+boon, social price), Molag Bal (domination boon, heal-rate price, curse-gated),
+Hircine (hunt boon, hunt's-toll price, werewolf-gated), Azura/Mephala/Malacath
+(race-native) all fit. The 2026-06-07 retune removed the same-axis "toothless"
+prices, improving fit. Thin-but-intentional: Namira, Peryite (quest-anchored
+minors); Nocturnal's fit depends on whether she's modelled as a costly pact
+(she currently is).
+
+**Weighting vs the Aedra — they ARE worthwhile (corrected a prior agent error).**
+A research pass claimed Daedric were "strictly dominated / underpowered." That
+used bad math (Aedra "+20–30"). Verified against `PDV_Phase20_RewardRecordContracts.json`:
+Aedra rewards are **+3/+5/+10** per effect, while Daedric boons are **+5/+8/+12**
+across two axes (≈ +5 on a primary + +20 on a secondary at Champion) — so Daedric
+boons are *comparable-to-stronger*, carried alongside a genuine −3/−5/−8 price on
+a distinct axis plus stigma, a 3-signal commitment gate, and race-scaled exit
+difficulty. That is the intended costly/different-from-Aedra bargain, and the net
+is positive enough to choose a Prince for a build, not just for roleplay.
+
+**The real gap is long-term VARIETY, not power.** Daedric paths lack the dynamic
+**contextual favors** the Aedra get, and the `PIETY_MAX = 200` headroom above the
+Champion threshold (85) is unused — so a Daedric path tops out at Champion and
+goes mechanically flat, where an Aedra patron keeps generating favors over a long
+playthrough. This is the one place Daedric are thinner than the Aedra long-term.
+
+**Best-practice read.** Power/risk-reward: sound (boons ≥ Aedra + real cost).
+Build identity & meaningful choice: strong (sphere-specific boons, quest hooks).
+Progression depth: vertical-only past Champion — the optional enrichment below
+would add horizontal depth.
+
+**Optional future enrichment (NOT a 1.0 blocker, deferred per decision):**
+1. Per-Prince **contextual favors** (2–3 dynamic sphere-moments each, mirroring
+   the Aedra favor system) for long-term variety.
+2. A **Champion+ capstone / 4th tier** using the unused 85→200 piety headroom, so
+   sustained high devotion has a long-game payoff.
+Both preserve the costly/stigmatized identity; neither is needed for 1.0.
