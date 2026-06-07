@@ -225,3 +225,36 @@ focused-patron Devoted value; broad never inherits individual patron boons.
 - Rejected generic hooks: ordinary existence, ordinary friendships, travel, post-first-crisis Dragonborn identity (no hidden Lorkhan debt); generic spellcasting, raw skill gain, generic kindness.
 - Curse/Daedric interaction: vampire terminal/exile-limited; werewolf hard halt; no clean Daedric broad path.
 - Manual feel note: coherence, not breadth; daily Auri-El life stays net-positive and a generic broad lane is omitted by design.
+
+## Daedric Price-Axis Retune (2026-06-07)
+
+Daedric `price` spells must impose a **genuine net cost** (unlike Aedra blessings)
+and read as a **per-Prince** cost (not a shared tax). Source of truth:
+`PRINCE_META[stem].price` in `tools/pdv_generate_daedric_contract.mjs` (single
+axis, −3/−5/−8 across Seeker/Devoted/Champion). Invariants now enforced:
+
+- **No price axis may equal any of that Prince's boon axes at any tier** (else
+  the price is a strictly-smaller boon — netted positive). Audit the contract
+  with: every `prices[].effects[].actorValue` must be disjoint from
+  `boons[].effects[].actorValue`.
+- Spread price axes (cap ~3 per axis) so the cost feels Prince-specific.
+
+Retune applied (fixes four same-axis overlaps + diversifies):
+
+| Prince | old price | new price | reason |
+|---|---|---|---|
+| Azura | MagickaRateMult | StaminaRateMult | same-axis fix; vigil of foresight wearies |
+| Sheogorath | MagickaRateMult | Restoration | same-axis fix; madness erodes self-restoration |
+| Sanguine | StaminaRateMult | MagickaRateMult | same-axis fix; dissipation dulls the mind |
+| Clavicus Vile | Speechcraft | MagickaRateMult | same-axis fix; the bargain drains vital spark |
+| Vaermina | StaminaRateMult | HealRateMult | corrupted sleep → poor recovery |
+| Nocturnal | Speechcraft | Restoration | the Empty Night claims vitality |
+| Hircine | Speechcraft | HealRateMult | the hunt's toll; bites the melee build |
+
+Kept (already distinct + real cost): Boethiah/Mephala/Namira = Speechcraft (social
+stigma), Malacath = SpeedMult, Dagon = DamageResist, Molag Bal = HealRateMult,
+Meridia = Illusion, Hermaeus Mora/Peryite = StaminaRateMult. Price flavor text is
+abstract narrative, so no prose change. Post-retune: Speechcraft 6→3,
+StaminaRateMult 4→3; no price-axis == boon-axis anywhere. Curse double-fire guard
+verified already correct (Hircine `HandleCurseTransition` werewolf-gated; Molag on
+its own quest channel). Full audit: `PDV_GameplayAudit_2026-06-07.md`.
