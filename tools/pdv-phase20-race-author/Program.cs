@@ -303,7 +303,8 @@ static void ReconcileSharedDeities(string espPath, RewardsSpec spec, string refe
 
     if (reconciled == 0)
     {
-        throw new InvalidOperationException("No deityQuests[] entries with a non-empty 'shared' field were found in the spec.");
+        report.Actions.Add("No shared deity entries found; reconciliation no-op.");
+        return;
     }
 
     WriteModIfNeeded(mod, espPath, dryRun, report, "phase20-race-shared-deity");
@@ -737,10 +738,32 @@ static string GenerateMgefId(string spellEditorId, string actorValue)
 
 static ActorValue ParseActorValue(string actorValue)
 {
-    if (Enum.TryParse<ActorValue>(actorValue, ignoreCase: true, out var parsed))
+    var normalized = actorValue.Trim();
+    if (Enum.TryParse<ActorValue>(normalized, ignoreCase: true, out var parsed))
     {
         return parsed;
     }
+
+    var aliases = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Speechcraft"] = new[] { "Speech" },
+        ["BlockSkill"] = new[] { "Block" },
+        ["CriticalChance"] = new[] { "CritChance", "CriticalChance" },
+        ["Marksman"] = new[] { "Archery", "Marksman" },
+        ["ResistPoison"] = new[] { "PoisonResist", "ResistPoison" }
+    };
+
+    if (aliases.TryGetValue(normalized, out var candidates))
+    {
+        foreach (var candidate in candidates)
+        {
+            if (Enum.TryParse<ActorValue>(candidate, ignoreCase: true, out parsed))
+            {
+                return parsed;
+            }
+        }
+    }
+
     throw new InvalidOperationException($"Unknown ActorValue {actorValue}.");
 }
 

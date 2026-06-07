@@ -1,0 +1,366 @@
+#!/usr/bin/env node
+/*
+ * Read-only Phase 2 reward readback audit.
+ *
+ * Compares the per-race reward specs against the live framework ESP without
+ * modifying the ESP, scripts, SEQ, or MO2 profile state.
+ */
+
+import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import process from "node:process";
+
+const ROOT = process.cwd();
+const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
+const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
+const PDV_ESP = path.join(DEVOTION_MOD, "PlayerDevotion_Framework.esp");
+const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "PlayerDevotion_Framework.seq");
+const MUTAGEN_BRIDGE = path.join(
+  ANVIL_ROOT,
+  "plugins",
+  "Anvilmo2_mcp",
+  "tools",
+  "mutagen-bridge",
+  "mutagen-bridge.exe",
+);
+const PLUGIN_NAME = "PlayerDevotion_Framework.esp";
+const START_GAME_ENABLED_FLAG = 0x10;
+const SPEC_FILES = [
+  "PDV_ImperialRewardRecords.spec.json",
+  "PDV_ArgonianRewardRecords.spec.json",
+  "PDV_OrcRewardRecords.spec.json",
+  "PDV_DunmerRewardRecords.spec.json",
+  "PDV_AltmerRewardRecords.spec.json",
+  "PDV_RedguardRewardRecords.spec.json",
+  "PDV_NordRewardRecords.spec.json",
+  "PDV_BosmerRewardRecords.spec.json",
+  "PDV_BretonRewardRecords.spec.json",
+  "PDV_KhajiitRewardRecords.spec.json",
+];
+const ACTOR_VALUE_ALIASES = new Map([
+  ["Speechcraft", "Speech"],
+  ["BlockSkill", "Block"],
+  ["Marksman", "Archery"],
+  ["ResistPoison", "PoisonResist"],
+]);
+
+const json = process.argv.includes("--json");
+const findings = [];
+
+function add(status, check, detail, location = PDV_ESP) {
+  findings.push({ status, check, detail, path: location });
+}
+
+function pass(check, detail, location) {
+  add("PASS", check, detail, location);
+}
+
+function fail(check, detail, location) {
+  add("FAIL", check, detail, location);
+}
+
+function warn(check, detail, location) {
+  add("WARN", check, detail, location);
+}
+
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
+
+function bridge(request, timeoutMs = 60_000) {
+  const result = spawnSync(MUTAGEN_BRIDGE, {
+    input: JSON.stringify(request),
+    encoding: "utf8",
+    timeout: timeoutMs,
+    windowsHide: true,
+  });
+  if (result.error) {
+    throw result.error;
+  }
+  const stdout = (result.stdout || "").trim();
+  if (!stdout) {
+    throw new Error(`mutagen-bridge returned no output: ${(result.stderr || "").trim()}`);
+  }
+  const payload = JSON.parse(stdout);
+  if (!payload.success) {
+    throw new Error(payload.error || payload.message || "bridge call failed");
+  }
+  return payload;
+}
+
+function counts() {
+  const result = {};
+  for (const finding of findings) {
+    result[finding.status] = (result[finding.status] || 0) + 1;
+  }
+  return result;
+}
+
+function normalizeActorValue(actorValue) {
+  return ACTOR_VALUE_ALIASES.get(actorValue) || actorValue;
+}
+
+function generateMgefId(spellEditorId, actorValue) {
+  if (spellEditorId.startsWith("PDV_Bless")) {
+    return `PDV_MGEF${spellEditorId.slice("PDV_Bless".length)}_${actorValue}`;
+  }
+  return `${spellEditorId}_MGEF`;
+}
+
+function localId(formid) {
+  const id = String(formid || "").split(":")[1];
+  return id ? Number.parseInt(id, 16) : null;
+}
+
+function parseQuestFlags(value) {
+  if (typeof value === "number") {
+    return value;
+  }
+  if (typeof value !== "string") {
+    return 0;
+  }
+  if (/^\d+$/.test(value)) {
+    return Number.parseInt(value, 10);
+  }
+  let flags = 0;
+  if (value.includes("StartGameEnabled")) {
+    flags |= START_GAME_ENABLED_FLAG;
+  }
+  return flags;
+}
+
+function readSeqLocalIds() {
+  if (!fs.existsSync(DEVOTION_SEQ)) {
+    return new Set();
+  }
+  const bytes = fs.readFileSync(DEVOTION_SEQ);
+  const ids = new Set();
+  for (let offset = 0; offset + 4 <= bytes.length; offset += 4) {
+    ids.add(bytes.readUInt32LE(offset) & 0x00ffffff);
+  }
+  return ids;
+}
+
+function findScript(fields, name) {
+  const scripts = fields?.VirtualMachineAdapter?.Scripts || [];
+  const matches = scripts.filter((script) => script.Name === name);
+  if (matches.length <= 1) {
+    return matches[0] || null;
+  }
+  return {
+    ...matches.at(-1),
+    Properties: matches.flatMap((script) => script.Properties || []),
+  };
+}
+
+function propertyMap(script) {
+  return new Map((script?.Properties || []).filter((prop) => prop.Name).map((prop) => [prop.Name, prop]));
+}
+
+function propTarget(prop) {
+  return prop?.Object || prop?.Data || null;
+}
+
+function formidToEdid(formid, recordsByEdid) {
+  for (const [edid, record] of recordsByEdid.entries()) {
+    if (record.formid === formid) {
+      return edid;
+    }
+  }
+  return null;
+}
+
+function collectRewardEntries(spec) {
+  const entries = [];
+  for (const boon of spec.substrateBoons?.boons || []) {
+    entries.push({ ...boon, source: "substrateBoons" });
+  }
+  if (spec.neglect?.spellEditorId) {
+    entries.push({ ...spec.neglect, source: "neglect" });
+  }
+  for (const reward of spec.emphasisRewards || []) {
+    entries.push({ ...reward, source: "emphasisRewards" });
+  }
+  return entries;
+}
+
+function expectedMgefId(entry, effect) {
+  return effect.magicEffectEditorId || generateMgefId(entry.spellEditorId, effect.actorValue);
+}
+
+function effectMagnitude(effect) {
+  return Number(effect?.Data?.Magnitude ?? 0);
+}
+
+function almostEqual(left, right) {
+  return Math.abs(Number(left) - Number(right)) < 0.001;
+}
+
+function main() {
+  const specPaths = SPEC_FILES.map((fileName) => path.join(ROOT, "references", "authoring", fileName));
+  const specs = specPaths.map((specPath) => ({ path: specPath, spec: readJson(specPath) }));
+  const scan = bridge({ command: "scan", plugins: [PDV_ESP.replaceAll("\\", "/")] });
+  const plugin = scan.plugins?.[0];
+  if (!plugin) {
+    throw new Error("Mutagen scan returned no plugin payload.");
+  }
+
+  const recordsByEdid = new Map((plugin.records || []).filter((record) => record.edid).map((record) => [record.edid, record]));
+  const detailEdids = new Set(["PDV__ManagerQuest", "PDV_FLST_AllDeities"]);
+  for (const { spec } of specs) {
+    for (const deity of spec.deityQuests || []) {
+      detailEdids.add(deity.editorId);
+    }
+    for (const entry of collectRewardEntries(spec)) {
+      detailEdids.add(entry.spellEditorId);
+      for (const effect of entry.effects || []) {
+        detailEdids.add(expectedMgefId(entry, effect));
+      }
+    }
+  }
+
+  const detailRecords = [...detailEdids]
+    .map((edid) => recordsByEdid.get(edid))
+    .filter(Boolean)
+    .map((record) => ({ plugin_path: PDV_ESP.replaceAll("\\", "/"), formid: record.formid }));
+  const detail = bridge({ command: "read_records", max_depth: 10, records: detailRecords }, 120_000);
+  const detailsByEdid = new Map((detail.records || []).filter((record) => record.success).map((record) => [record.editor_id, record]));
+  const managerScript = findScript(detailsByEdid.get("PDV__ManagerQuest")?.fields, "PDV__ManagerQuest");
+  const managerProps = propertyMap(managerScript);
+  const allDeities = detailsByEdid.get("PDV_FLST_AllDeities");
+  const allDeityEntries = new Set((allDeities?.fields?.Items || allDeities?.fields?.Entries || []).map((entry) => entry.FormKey || entry));
+  const seqLocalIds = readSeqLocalIds();
+
+  if (managerScript) {
+    pass("Manager VMAD", "PDV__ManagerQuest script is attached.");
+  } else {
+    fail("Manager VMAD", "PDV__ManagerQuest script is missing.");
+  }
+
+  for (const { path: specPath, spec } of specs) {
+    for (const deity of spec.deityQuests || []) {
+      const record = recordsByEdid.get(deity.editorId);
+      const detailRecord = detailsByEdid.get(deity.editorId);
+      if (record?.type === "QUST") {
+        pass("Deity QUST", `${deity.editorId} exists as QUST.`, specPath);
+      } else {
+        fail("Deity QUST", `${deity.editorId} is missing as QUST.`, specPath);
+        continue;
+      }
+
+      if (deity.create !== false) {
+        const flags = parseQuestFlags(detailRecord?.fields?.Flags);
+        if ((flags & START_GAME_ENABLED_FLAG) !== 0) {
+          pass("Deity SGE", `${deity.editorId} is Start Game Enabled.`, specPath);
+        } else {
+          fail("Deity SGE", `${deity.editorId} is not Start Game Enabled.`, specPath);
+        }
+        if (seqLocalIds.has(localId(record.formid))) {
+          pass("Deity SEQ", `${deity.editorId} is present in PlayerDevotion_Framework.seq.`, specPath);
+        } else {
+          fail("Deity SEQ", `${deity.editorId} is missing from PlayerDevotion_Framework.seq.`, specPath);
+        }
+      }
+
+      if (deity.addToFormList === "PDV_FLST_AllDeities" || deity.create !== false) {
+        if (allDeityEntries.has(record.formid)) {
+          pass("AllDeities membership", `${deity.editorId} is in PDV_FLST_AllDeities.`, specPath);
+        } else {
+          fail("AllDeities membership", `${deity.editorId} is not in PDV_FLST_AllDeities.`, specPath);
+        }
+      }
+    }
+
+    for (const property of spec.managerDeityProperties || []) {
+      const prop = managerProps.get(property.property);
+      const target = propTarget(prop);
+      const targetEdid = target ? formidToEdid(target, recordsByEdid) : null;
+      if (targetEdid === property.record) {
+        pass("Manager deity property", `${property.property} resolves to ${property.record}.`, specPath);
+      } else {
+        fail("Manager deity property", `${property.property} resolves to ${targetEdid || "(missing)"}, expected ${property.record}.`, specPath);
+      }
+    }
+
+    for (const entry of collectRewardEntries(spec)) {
+      const spell = recordsByEdid.get(entry.spellEditorId);
+      const spellDetail = detailsByEdid.get(entry.spellEditorId);
+      if (spell?.type === "SPEL") {
+        pass("Reward spell", `${entry.spellEditorId} exists as SPEL.`, specPath);
+      } else {
+        fail("Reward spell", `${entry.spellEditorId} is missing as SPEL.`, specPath);
+        continue;
+      }
+
+      const effects = spellDetail?.fields?.Effects || [];
+      for (const expectedEffect of entry.effects || []) {
+        const mgefId = expectedMgefId(entry, expectedEffect);
+        const mgef = recordsByEdid.get(mgefId);
+        const mgefDetail = detailsByEdid.get(mgefId);
+        if (mgef?.type === "MGEF") {
+          pass("Reward MGEF", `${mgefId} exists as MGEF.`, specPath);
+        } else {
+          fail("Reward MGEF", `${mgefId} is missing as MGEF.`, specPath);
+          continue;
+        }
+
+        const actualActorValue = mgefDetail?.fields?.Archetype?.ActorValue;
+        const expectedActorValue = normalizeActorValue(expectedEffect.actorValue);
+        if (actualActorValue === expectedActorValue) {
+          pass("Reward actor value", `${mgefId} uses ${expectedActorValue}.`, specPath);
+        } else {
+          fail("Reward actor value", `${mgefId} uses ${actualActorValue || "(missing)"}, expected ${expectedActorValue}.`, specPath);
+        }
+
+        const spellEffect = effects.find((effect) => effect.BaseEffect === mgef.formid);
+        if (!spellEffect) {
+          fail("Reward spell effect", `${entry.spellEditorId} does not include ${mgefId}.`, specPath);
+        } else if (almostEqual(effectMagnitude(spellEffect), expectedEffect.magnitude)) {
+          pass("Reward magnitude", `${entry.spellEditorId}/${mgefId} magnitude ${expectedEffect.magnitude}.`, specPath);
+        } else {
+          fail(
+            "Reward magnitude",
+            `${entry.spellEditorId}/${mgefId} magnitude ${effectMagnitude(spellEffect)}, expected ${expectedEffect.magnitude}.`,
+            specPath,
+          );
+        }
+      }
+
+      if (entry.wireTo === "PDV__ManagerQuest" || entry.source !== "substrateBoons") {
+        const prop = managerProps.get(entry.spellEditorId);
+        const target = propTarget(prop);
+        const targetEdid = target ? formidToEdid(target, recordsByEdid) : null;
+        if (targetEdid === entry.spellEditorId) {
+          pass("Manager reward property", `${entry.spellEditorId} resolves to its SPEL.`, specPath);
+        } else if (entry.source === "substrateBoons") {
+          warn("Manager reward property", `${entry.spellEditorId} is substrate-wired elsewhere, not on manager.`, specPath);
+        } else {
+          fail("Manager reward property", `${entry.spellEditorId} resolves to ${targetEdid || "(missing)"}.`, specPath);
+        }
+      }
+    }
+  }
+
+  const summary = counts();
+  if (json) {
+    console.log(JSON.stringify({ status: summary.FAIL ? "FAIL" : "PASS", summary, findings }, null, 2));
+  } else {
+    for (const finding of findings) {
+      console.log(`[${finding.status}] ${finding.check}: ${finding.detail}`);
+    }
+    console.log(`SUMMARY PASS=${summary.PASS || 0} WARN=${summary.WARN || 0} FAIL=${summary.FAIL || 0}`);
+  }
+  process.exitCode = summary.FAIL ? 1 : 0;
+}
+
+try {
+  main();
+} catch (error) {
+  if (json) {
+    console.log(JSON.stringify({ status: "FAIL", summary: { FAIL: 1 }, error: error.message }, null, 2));
+  } else {
+    console.error(`[FAIL] Phase 2 reward readback audit: ${error.message}`);
+  }
+  process.exitCode = 1;
+}
