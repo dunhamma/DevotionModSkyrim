@@ -1,6 +1,6 @@
 # PDV Target End States - 1.0 Product Tracker
 **Created:** 2026-05-18
-**Last updated:** 2026-06-07 (Phase 2 all-race propagation - design + B1 deity scripts + Argonian B2 pilot complete; remaining 9 races at "implementation-spec locked, content authored as spec JSON, deity scripts compiled, manager B2 wiring pending")
+**Last updated:** 2026-06-07 (Phase 2 all-race static gate complete; all ten races have authored/deity/reward/manager/readback coverage, while runtime/manual beta packets remain pending)
 **Status:** Living 1.0 product/end-state tracker
 **Purpose:** Track what each race's devotion should feel like at launch, how
 close each race is to implementation-ready acceptance, and where the 1.0
@@ -101,6 +101,13 @@ rejected generic behavior, and normal-session feel. Run
 `node .\tools\pdv_verify.mjs --strict-phase20-race-costing` after changing any
 of those manifests or the race-costing scope.
 
+Phase 2 static closeout (2026-06-07): the all-race reward/deity/neglect manager
+surface, bounded Phase 2 roster, Green Pact static layer, and fallback-floor T3
+capstone records now pass the automated static gate. This is not beta runtime
+proof: the ten `PDV_BetaTestPacket_{Race}.md` walks, Active Effects display,
+save/load sanity, stack snapshots, and manual feel notes still gate external
+beta readiness.
+
 Acceptance:
 
 - All locked race-architecture gods and cultural worship targets are
@@ -127,21 +134,22 @@ Status values:
 - `Locked`: ready to plan implementation; remaining changes are tuning or content.
 - `Partial`: architecture is stable, but named implementation decisions remain.
 - `Pending`: not yet built or proven.
+- `Static`: machine/readback/verifier-covered; runtime/manual proof still pending.
 - `Drafted`: full manifest prose is authored and verifier-clean, pending promotion into shipped ESP records (used in the Content authored column).
 - `Ratified`: manifest prose authored, verifier-clean, gap-audited (no missing V1 surface), and checked against the locked content guardrails; pending final editorial read and CAT-6 promotion (used in the Content authored column).
 
 | Race | Architecture locked | Implementation-spec locked | Hook feasibility checked | Content authored | Verifier-covered | In-game proven |
 |---|---|---|---|---|---|---|
-| Nord | Locked | Locked | Locked | Ratified | Pending | Pending |
-| Imperial | Locked | Locked | Locked | Ratified | Partial | Partial |
-| Breton | Locked | Locked | Locked | Ratified | Pending | Pending |
-| Dunmer | Locked | Locked | Locked | Ratified | Partial | Pending |
-| Altmer | Locked | Partial | Partial | Ratified | Partial | Partial |
-| Khajiit | Locked | Locked | Locked | Ratified | Partial | Partial |
-| Bosmer | Locked | Locked | Partial | Ratified | Pending | Pending |
-| Redguard | Locked | Locked | Locked | Ratified | Pending | Pending |
-| Orc | Locked | Locked | Partial | Ratified | Pending | Pending |
-| Argonian | Locked | Locked | Locked | Ratified | Pending | Pending |
+| Nord | Locked | Locked | Locked | Ratified | Static | Pending |
+| Imperial | Locked | Locked | Locked | Ratified | Static | Partial |
+| Breton | Locked | Locked | Locked | Ratified | Static | Pending |
+| Dunmer | Locked | Locked | Locked | Ratified | Static | Pending |
+| Altmer | Locked | Partial | Partial | Ratified | Static | Partial |
+| Khajiit | Locked | Locked | Locked | Ratified | Static | Partial |
+| Bosmer | Locked | Locked | Partial | Ratified | Static | Pending |
+| Redguard | Locked | Locked | Locked | Ratified | Static | Pending |
+| Orc | Locked | Locked | Partial | Ratified | Static | Pending |
+| Argonian | Locked | Locked | Locked | Ratified | Static | Pending |
 
 Content-authoring ratification audit (2026-05-31): a whole-roster gap audit
 confirmed the V1 manifest prose is content-complete. `pdv_content_verify` is
