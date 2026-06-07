@@ -1,8 +1,8 @@
 (() => {
   const thresholds = [
-    { label: "Seeker", value: 10 },
+    { label: "Seeker", value: 25 },
     { label: "Devoted", value: 50 },
-    { label: "Champion", value: 150 },
+    { label: "Champion", value: 85 },
   ];
   const svgNamespace = "http://www.w3.org/2000/svg";
   const symbolAliases = {
@@ -344,8 +344,8 @@
   const renderPietyInstrument = (slot, inst = {}) => {
     const svg = makeInstrumentSvg();
     const instData = inst.data || {};
-    const piety = clamp(instData.piety !== undefined ? instData.piety : state.piety, 0, 150);
-    const primary = clamp01(inst.primary || piety / 150);
+    const piety = clamp(instData.piety !== undefined ? instData.piety : state.piety, 0, 85);
+    const primary = clamp01(inst.primary || piety / 85);
     const fillWidth = Math.round(190 * primary);
     appendSvg(svg, "rect", { x: "74", y: "68", width: "190", height: "14", rx: "7", class: "instrument-track" });
     appendSvg(svg, "rect", { x: "74", y: "68", width: fillWidth, height: "14", rx: "7", class: "instrument-fill" });
@@ -473,7 +473,7 @@
     kind: "piety",
     tier: state.tier,
     tierLabel: state.tierLabel,
-    primary: clamp(state.piety, 0, 150) / 150,
+    primary: clamp(state.piety, 0, 85) / 85,
     state: text(state.tierLabel, tierName(state.tier)),
     data: { piety: state.piety, pietyToday: state.pietyToday },
   });
@@ -1118,7 +1118,7 @@
   const render = (payload = {}) => {
     state = { ...fallbackState, ...payload };
     const piety = Math.max(0, Math.min(200, numberOrZero(state.piety)));
-    const pietyPercent = Math.min(100, Math.round((piety / 150) * 100));
+    const pietyPercent = Math.min(100, Math.round((piety / 85) * 100));
     const patronName = text(state.patron, "None");
 
     nodes.title.textContent = text(state.title, patronName === "None" ? "Devotion" : patronName);
