@@ -14,21 +14,21 @@ const RACE_ORDER_MATRIX = ["Nord", "Imperial", "Breton", "Dunmer", "Altmer", "Kh
 const RACE_ORDER_PDV = ["Nord", "Imperial", "Breton", "Altmer", "Bosmer", "Dunmer", "Khajiit", "Argonian", "Orc", "Redguard"];
 
 const PRINCE_META = {
-  Azura: { displayName: "Azura", aliases: ["Azura / Azurah"], batch: 0, mechanics: ["ResistMagic", "MagickaRateMult"], price: ["MagickaRateMult"], stigmaClass: "Standard" },
+  Azura: { displayName: "Azura", aliases: ["Azura / Azurah"], batch: 0, mechanics: ["ResistMagic", "MagickaRateMult"], price: ["StaminaRateMult"], stigmaClass: "Standard" },
   Boethiah: { displayName: "Boethiah", aliases: ["Boethiah / Boethra"], batch: "pilot", mechanics: ["OneHanded", "DamageResist"], price: ["Speechcraft"], stigmaClass: "Standard" },
   Mephala: { displayName: "Mephala", aliases: ["Mephala / Mafala"], batch: 1, mechanics: ["Sneak", "Pickpocket"], price: ["Speechcraft"], stigmaClass: "Standard" },
   Malacath: { displayName: "Malacath", aliases: ["Malacath / Mauloch"], batch: 1, mechanics: ["DamageResist", "TwoHanded"], price: ["SpeedMult"], stigmaClass: "Standard" },
   Meridia: { displayName: "Meridia", aliases: ["Meridia"], batch: 0, mechanics: ["Restoration", "ResistDisease"], price: ["Illusion"], stigmaClass: "Tolerated" },
-  Nocturnal: { displayName: "Nocturnal", aliases: ["Nocturnal"], batch: 2, mechanics: ["Sneak", "Lockpicking"], price: ["Speechcraft"], stigmaClass: "Standard" },
+  Nocturnal: { displayName: "Nocturnal", aliases: ["Nocturnal"], batch: 2, mechanics: ["Sneak", "Lockpicking"], price: ["Restoration"], stigmaClass: "Standard" },
   Mora: { displayName: "Hermaeus Mora", aliases: ["Hermaeus Mora"], batch: 2, mechanics: ["Alteration", "MagickaRateMult"], price: ["StaminaRateMult"], stigmaClass: "Standard" },
   Dagon: { displayName: "Mehrunes Dagon", aliases: ["Mehrunes Dagon"], batch: 2, mechanics: ["Destruction", "OneHanded"], price: ["DamageResist"], stigmaClass: "High-rupture" },
-  Sheo: { displayName: "Sheogorath", aliases: ["Sheogorath"], batch: 2, mechanics: ["Illusion", "MagickaRateMult"], price: ["MagickaRateMult"], stigmaClass: "Standard" },
-  Vile: { displayName: "Clavicus Vile", aliases: ["Clavicus Vile"], batch: 2, mechanics: ["Speechcraft", "CarryWeight"], price: ["Speechcraft"], stigmaClass: "Standard" },
-  Vaermina: { displayName: "Vaermina", aliases: ["Vaermina"], batch: 0, mechanics: ["Illusion", "Sneak"], price: ["StaminaRateMult"], stigmaClass: "Standard" },
-  Sanguine: { displayName: "Sanguine", aliases: ["Sanguine / Sangiin"], batch: 2, mechanics: ["StaminaRateMult", "Speechcraft"], price: ["StaminaRateMult"], stigmaClass: "Standard" },
+  Sheo: { displayName: "Sheogorath", aliases: ["Sheogorath"], batch: 2, mechanics: ["Illusion", "MagickaRateMult"], price: ["Restoration"], stigmaClass: "Standard" },
+  Vile: { displayName: "Clavicus Vile", aliases: ["Clavicus Vile"], batch: 2, mechanics: ["Speechcraft", "CarryWeight"], price: ["MagickaRateMult"], stigmaClass: "Standard" },
+  Vaermina: { displayName: "Vaermina", aliases: ["Vaermina"], batch: 0, mechanics: ["Illusion", "Sneak"], price: ["HealRateMult"], stigmaClass: "Standard" },
+  Sanguine: { displayName: "Sanguine", aliases: ["Sanguine / Sangiin"], batch: 2, mechanics: ["StaminaRateMult", "Speechcraft"], price: ["MagickaRateMult"], stigmaClass: "Standard" },
   Namira: { displayName: "Namira", aliases: ["Namira / Namiira"], batch: 2, mechanics: ["Sneak", "HealRateMult"], price: ["Speechcraft"], stigmaClass: "Standard" },
   Peryite: { displayName: "Peryite", aliases: ["Peryite"], batch: 3, mechanics: ["ResistDisease", "HealRateMult"], price: ["StaminaRateMult"], stigmaClass: "Tolerated" },
-  Hircine: { displayName: "Hircine", aliases: ["Hircine"], batch: 3, mechanics: ["StaminaRateMult", "Sneak"], price: ["Speechcraft"], stigmaClass: "Curse-access", existingScript: true },
+  Hircine: { displayName: "Hircine", aliases: ["Hircine"], batch: 3, mechanics: ["StaminaRateMult", "Sneak"], price: ["HealRateMult"], stigmaClass: "Curse-access", existingScript: true },
   Molag: { displayName: "Molag Bal", aliases: ["Molag Bal"], batch: 0, mechanics: ["Speechcraft", "Illusion"], price: ["HealRateMult"], stigmaClass: "Curse-access" },
 };
 

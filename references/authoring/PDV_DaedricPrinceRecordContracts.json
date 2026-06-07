@@ -4,7 +4,7 @@
     "race-sheets/PDV_DaedricContent_Manifest.md",
     "references/phase4/PDV_DaedricRacePrinceMatrix.csv"
   ],
-  "generatedAtLocal": "07/06/2026, 18:16:02",
+  "generatedAtLocal": "07/06/2026, 22:21:23",
   "sourceOfTruth": "Manifest row EditorIDs and text win over work-order shorthand.",
   "operationalFormList": "PDV_FLST_DaedricPaths_All",
   "devFormList": "PDV_FLST_DaedricPaths_DevOnly",
@@ -418,7 +418,7 @@
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
+              "actorValue": "StaminaRateMult",
               "magnitude": -3,
               "area": 0,
               "duration": 0
@@ -433,7 +433,7 @@
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
+              "actorValue": "StaminaRateMult",
               "magnitude": -5,
               "area": 0,
               "duration": 0
@@ -448,7 +448,7 @@
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
+              "actorValue": "StaminaRateMult",
               "magnitude": -8,
               "area": 0,
               "duration": 0
@@ -702,7 +702,7 @@
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
+              "actorValue": "HealRateMult",
               "magnitude": -3,
               "area": 0,
               "duration": 0
@@ -717,7 +717,7 @@
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
+              "actorValue": "HealRateMult",
               "magnitude": -5,
               "area": 0,
               "duration": 0
@@ -732,7 +732,7 @@
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
+              "actorValue": "HealRateMult",
               "magnitude": -8,
               "area": 0,
               "duration": 0
@@ -2455,7 +2455,7 @@
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
+              "actorValue": "Restoration",
               "magnitude": -3,
               "area": 0,
               "duration": 0
@@ -2470,7 +2470,7 @@
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
+              "actorValue": "Restoration",
               "magnitude": -5,
               "area": 0,
               "duration": 0
@@ -2485,7 +2485,7 @@
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
+              "actorValue": "Restoration",
               "magnitude": -8,
               "area": 0,
               "duration": 0
@@ -3051,7 +3051,7 @@
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
+              "actorValue": "MagickaRateMult",
               "magnitude": -3,
               "area": 0,
               "duration": 0
@@ -3066,7 +3066,7 @@
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
+              "actorValue": "MagickaRateMult",
               "magnitude": -5,
               "area": 0,
               "duration": 0
@@ -3081,7 +3081,7 @@
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
+              "actorValue": "MagickaRateMult",
               "magnitude": -8,
               "area": 0,
               "duration": 0
@@ -3349,7 +3349,7 @@
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "Speechcraft",
+              "actorValue": "MagickaRateMult",
               "magnitude": -3,
               "area": 0,
               "duration": 0
@@ -3364,7 +3364,7 @@
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "Speechcraft",
+              "actorValue": "MagickaRateMult",
               "magnitude": -5,
               "area": 0,
               "duration": 0
@@ -3379,7 +3379,7 @@
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "Speechcraft",
+              "actorValue": "MagickaRateMult",
               "magnitude": -8,
               "area": 0,
               "duration": 0
@@ -3945,7 +3945,7 @@
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "Speechcraft",
+              "actorValue": "Restoration",
               "magnitude": -3,
               "area": 0,
               "duration": 0
@@ -3960,7 +3960,7 @@
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "Speechcraft",
+              "actorValue": "Restoration",
               "magnitude": -5,
               "area": 0,
               "duration": 0
@@ -3975,7 +3975,7 @@
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "Speechcraft",
+              "actorValue": "Restoration",
               "magnitude": -8,
               "area": 0,
               "duration": 0
@@ -4541,7 +4541,7 @@
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "Speechcraft",
+              "actorValue": "HealRateMult",
               "magnitude": -3,
               "area": 0,
               "duration": 0
@@ -4556,7 +4556,7 @@
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "Speechcraft",
+              "actorValue": "HealRateMult",
               "magnitude": -5,
               "area": 0,
               "duration": 0
@@ -4571,7 +4571,7 @@
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "Speechcraft",
+              "actorValue": "HealRateMult",
               "magnitude": -8,
               "area": 0,
               "duration": 0
