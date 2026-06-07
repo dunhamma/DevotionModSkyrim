@@ -153,15 +153,17 @@ Status values:
 
 Content-authoring ratification audit (2026-05-31): a whole-roster gap audit
 confirmed the V1 manifest prose is content-complete. `pdv_content_verify` is
-clean (FAIL=0, WARN=0, 1,065 rows); all 10 races and all 16 Skyrim-present
+clean (FAIL=0, WARN=0, 1,081 rows); all 10 races and all 16 Skyrim-present
 Princes carry their full V1 surface set (blessings/boons, prices, tier-ups,
 champion, commitment, stigma, neglect/exit, per-race responses, Survey/status,
 state/band/posture/crisis transitions); no required V1 surface is missing; and
 guardrail spot-checks passed (Altmer MarriageBeat = mortal continuity, no
 moon-sugar/generic-theft framing for Khajiit, Survey copy fiction-facing with no
-route/debug counters, Redguard Tu'whacca-primary). Remaining content work is
-out of scope here: CAT-6 promotion into ESP records (code track) and V2 voiced
-dialogue. Deferred-with-dependency prose stays recorded in the race manifest:
+route/debug counters, Redguard Tu'whacca-primary). Daedric CAT-6 record/readback
+promotion is now complete as a code/readback track, but display readiness still
+requires controlled in-game proof, live sender proof, wrong/generic-source
+silence, stack/Survey legibility, and V2 voiced dialogue remains out of scope.
+Deferred-with-dependency prose stays recorded in the race manifest:
 Bosmer Green Pact per-item feedback (tag layer, Section 17.7a), MCM player-tab
 copy (Section 16.1/16.4), and localization (Section 23). Final editorial
 read-through is the remaining ratification step.
@@ -232,8 +234,13 @@ manifest, route-list, and placement-readback gates pass.
 remaining Phase 20 planning and implementation queue that can proceed before
 additional Skyrim runtime proof: gate-ledger hardening, normal-play hook
 contracts, static verifier expansion, final placement contracts, stack audits,
-Survey/status copy prep, the pilot-provisional CAT-6 target-record proof,
-recognition packet prep, and Daedric blocker closeout.
+Survey/status copy prep, recognition packet prep, and Daedric proof-path
+closeout. As of 2026-06-07, the Daedric CAT-6 record/readback portion is
+complete and the MCM/EventBus plus physical QASmoke proof sender surface exists;
+all sixteen exact organic live sender routes are also wired/readback. The
+remaining Daedric blockers are counted runtime/display proof, runtime proof for
+those exact live senders, wrong/generic-source silence, and stack/Survey
+legibility.
 `PDV_Phase20_NoInGameProof_Gates.json` is the
 structured gate for that work and is checked by the strict Phase 20
 race-costing verifier. It does not permit any race to move to `Pass` without
@@ -245,13 +252,16 @@ immersion proof, and exact effect values remain tuning work for every race until
 implementation and playtesting prove the feel.
 
 Daedric full-content readiness remains a separate 1.0 content gate. All sixteen
-Skyrim-present Princes now have draft rows, but Section 11.6's remaining
-"decide before promotion" work is stigma row ratification, curse-access
-template handling for Hircine and Molag Bal, and the Prince promotion order.
-Those decisions must be closed before broad runtime promotion of the Prince
-drafts, but they do not block the current pre-beta race hook and Survey/status
-scaling work. Final reward text, Prince prices, stigma, exits,
-and final Survey/status copy remain blocked on those Daedric decisions.
+Skyrim-present Princes now have draft rows plus CAT-6 records/readback, with
+manifest-derived per-Prince contracts for QUST, SPEL, MGEF, MESG, stigma
+globals, arrays, path wiring, Daedric FormList membership, and manager FormList
+wiring. This closes the record/readback promotion blocker and creates the
+controlled MCM/EventBus/QASmoke proof surface plus all sixteen exact organic
+quest-stage senders, but it does not prove beta-display behavior.
+Controlled/debug sender proof, runtime proof for the exact organic senders,
+wrong/generic-source silence, stack/Survey legibility, and deeper Hircine/Molag
+Bal curse-access proof remain before broad runtime promotion of the Prince
+paths.
 
 The 2026-05-31 lore cross-review keeps the current workshop defaults. Altmer
 `MarriageBeat` is a Marriage / Mortal Continuity crisis about household,
@@ -263,8 +273,10 @@ Khajiit centers Lunar Lattice, road-home, moon, caravan, and native focus
 movement; Argonian keeps Hist primary with People/community, water, and Void as
 supporting pressures; Bosmer reads through Y'ffre/Green Pact, Living Story,
 Exchange/Z'en, and Bandit Road/Baan Dar without exposing raw counters. Runil is
-now scoped to the planned V2 recognition/dialogue enhancement, not V1. CAT-6
-stays on the Khajiit lunar blessing first, Bosmer Exchange fallback second.
+now scoped to the planned V2 recognition/dialogue enhancement, not V1. The
+Khajiit lunar CAT-6 pilot has been superseded by all-Prince Daedric CAT-6
+record/readback proof; beta-display closeout now depends on runtime/display
+evidence rather than additional target-record promotion.
 
 Experience Mode is design-locked but not implemented. `Pilgrim's Path` remains
 the default authored experience; `Wayfarer's Path` is the future lenient mode.

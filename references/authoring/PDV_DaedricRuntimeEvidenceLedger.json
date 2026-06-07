@@ -1,0 +1,1422 @@
+{
+  "schema": "pdv.daedric-runtime-evidence-ledger.v1",
+  "generatedAtLocal": "07/06/2026, 8:12:26 pm AEST",
+  "sourceContract": "references/authoring/PDV_DaedricPrinceRecordContracts.json",
+  "purpose": "Structured intake ledger for Daedric runtime/display proof after CAT-6 readback is green.",
+  "statusRules": {
+    "pass": "All required slots for a Prince are pass or not_required.",
+    "conditional": "At least one required slot is conditional and no required slot is fail, blocked, or pending.",
+    "fail": "At least one required slot is fail.",
+    "blocked": "At least one required slot is blocked and no required slot is fail.",
+    "pending": "At least one required slot is pending and no required slot is fail or blocked."
+  },
+  "slotDefinitions": {
+    "mcmRoute": "MCM route marker proof",
+    "qasmokeRoute": "Physical QASmoke route marker proof",
+    "organicRoute": "Exact vanilla quest-stage organic route proof",
+    "genericSilence": "Generic source silence proof",
+    "activeEffects": "Seeker/Devoted/Champion/lapse Active Effects proof",
+    "summaryMessage": "Show Prince summary MessageBox proof",
+    "prismaNotification": "Prisma or notification display proof",
+    "saveLoad": "Save/load sanity proof",
+    "stackLegibility": "Race/Daedric stack snapshot legibility",
+    "curseNoDoubleFire": "Curse-access no-double-fire proof",
+    "manualFeel": "Manual feel note"
+  },
+  "princes": [
+    {
+      "stem": "Boethiah",
+      "displayName": "Boethiah",
+      "batch": "pilot",
+      "index": 0,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Azura",
+      "displayName": "Azura",
+      "batch": "",
+      "index": 1,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Vaermina",
+      "displayName": "Vaermina",
+      "batch": "",
+      "index": 2,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Meridia",
+      "displayName": "Meridia",
+      "batch": "",
+      "index": 3,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Molag",
+      "displayName": "Molag Bal",
+      "batch": "",
+      "index": 4,
+      "curseAccess": true,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Mephala",
+      "displayName": "Mephala",
+      "batch": "1",
+      "index": 5,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Malacath",
+      "displayName": "Malacath",
+      "batch": "1",
+      "index": 6,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Dagon",
+      "displayName": "Mehrunes Dagon",
+      "batch": "2",
+      "index": 7,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Sheo",
+      "displayName": "Sheogorath",
+      "batch": "2",
+      "index": 8,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Namira",
+      "displayName": "Namira",
+      "batch": "2",
+      "index": 9,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Sanguine",
+      "displayName": "Sanguine",
+      "batch": "2",
+      "index": 10,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Vile",
+      "displayName": "Clavicus Vile",
+      "batch": "2",
+      "index": 11,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Mora",
+      "displayName": "Hermaeus Mora",
+      "batch": "2",
+      "index": 12,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Nocturnal",
+      "displayName": "Nocturnal",
+      "batch": "2",
+      "index": 13,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Peryite",
+      "displayName": "Peryite",
+      "batch": "3",
+      "index": 14,
+      "curseAccess": false,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "not_required",
+          "updatedAtLocal": "",
+          "note": "Only required for Molag Bal and Hircine curse-access proof.",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    },
+    {
+      "stem": "Hircine",
+      "displayName": "Hircine",
+      "batch": "3",
+      "index": 15,
+      "curseAccess": true,
+      "overall": "pending",
+      "slots": {
+        "mcmRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "qasmokeRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "organicRoute": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "genericSilence": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "activeEffects": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "summaryMessage": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "prismaNotification": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "saveLoad": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "stackLegibility": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "curseNoDoubleFire": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        },
+        "manualFeel": {
+          "status": "pending",
+          "updatedAtLocal": "",
+          "note": "",
+          "command": "",
+          "log": ""
+        }
+      }
+    }
+  ],
+  "observations": [],
+  "updatedAtLocal": "07/06/2026, 8:12:26 pm AEST"
+}
