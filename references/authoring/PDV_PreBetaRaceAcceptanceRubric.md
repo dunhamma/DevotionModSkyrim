@@ -14,6 +14,11 @@ legible, non-farmable, or culturally specific.
 Use this rubric before increasing reward magnitude, asking external testers to
 judge race feel, or calling a race ready for Content-Feel Beta.
 
+`PDV_BetaFeelReleaseGate.md` defines the accepted console-assisted proof model.
+Console commands may set up the situation, but the final PDV trigger,
+player-facing readout, rejection behavior, reward state, or stack behavior must
+still be exercised in game before it counts as beta-feel evidence.
+
 ## Required Verdicts
 
 Each race packet must end with one verdict.

@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-06-05 AEST (v3.82 - Medallion roster intent/readback implementation)
+Last revised: 2026-06-07 AEST (v3.84 - Phase 2 all-race propagation: design + B1 scripts + Argonian B2 pilot complete)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates. Phase 20 now owns the full-roster 1.0 content target: every locked race-architecture god and all sixteen Skyrim-present Daedric Prince surfaces must be content-ready for every race, with `references/authoring/PDV_DeityCoverageMatrix.json` and `--strict-phase20-roster` as the roster authority gate. The first Altmer Phase 20 runtime lane is source-scaffolded, compile-verified, crisis-record-wired, has the first two Altmer favor spell records wired, has four Altmer ACTI trigger proof base records wired for crisis, Lorkhan pressure, dawn steadiness, and orthodox cost, and now has Altmer Exiled vampire / werewolf halt manager source plus three `MESG` records wired to `PDV__ManagerQuest`; its four QASmoke proof references read back cleanly. Argonian, Orc, Redguard, Bosmer, and Khajiit have also crossed into source/record-wired proof slices, and all 30 Phase 20 proof references are now QASmoke-placed with helper/readback proof. Runtime proof and final immersive world placement remain open; `tools/pdv_phase20_runtime_check.mjs` and `references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` define the counted route-log, Survey/status, immersion, negative-hook, and anti-farm proof lane. `references/authoring/PDV_PreBetaRaceScalingSpine.md` and `PDV_PreBetaRaceGateLedger.md` now define the internal pre-beta scaling spine and all-race evidence ledger: Altmer active spine, Khajiit first contrast, Argonian second contrast, Orc / Redguard / Bosmer P1 packets, and Breton / Dunmer / Imperial / Nord P2 audit-only packets. The race gameplay audit now treats immersion as an explicit reward-budget axis, and `--strict-phase20-race-costing` enforces `immersionProof` blocks for all Phase 20 race-costing manifests. The current Phase 20 Altmer/race-costing gate is clean again after content-lock row reconciliation; the remaining warning is the existing unnamed CK-authored INFO record class. Phase 21 is the Authoria-first compatibility package lane because compatibility testing must wait until the mod's full content surface is stable enough to test against modlists.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, decline (`7` day cooldown), refuse (`14` day cooldown with rupture), accept, and accepted-patron persistence. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
 
 Current v3.71 addendum: `references/authoring/PDV_PreBetaRaceScalingSpine.md`
@@ -150,6 +150,88 @@ visible with disabled explanations and journal/glyph fallback. The manager
 source owns fail-closed selection helpers and Prisma payload construction; the
 Prisma UI owns presentation only. Current proof is compile/readback/UI-contract
 proof, not fresh in-game interaction proof.
+
+Current v3.83 addendum: the per-race piety architecture fix is locked and the
+**Khajiit pilot is runtime-proven** (2026-06-07). The structural piety-rate
+skew identified in `references/authoring/PDV_RacePietyRateAudit.md` is closed
+by the generalized contract `references/authoring/PDV_RaceContractTemplate.md`,
+which names every race's foreground patron(s), gate type (offer vs no-offer),
+piety-feeding acts with anti-farm, creed-violation losses, broad + per-patron
+3-tier rewards, substrate/state boons, and per-race neglect spell. The Khajiit
+pilot built and proved the no-offer / substrate variant in-game: double-route
+piety pulses to scripted emphasis deities alongside the substrate metric;
+`SyncKhajiitEmphasisRewards` gating a 15-spell per-emphasis set on emphasis-
+deity piety tier; substrate boons populated; Khajiit neglect spell wired;
+anti-creed routes 110-114; tier-up notice; shared-deity reconciliation for
+Baan Dar (Khajiit+Bosmer) via `PDV_DeityBase.EligibleStateTrackOriginRace` so
+a shared deity does not penalize the other race. Authoritative session detail:
+`references/authoring/PDV_SessionHandoff_KhajiitPilot.md`.
+
+Current v3.84 addendum: **Phase 2 all-race propagation - design + B1 + Argonian
+B2 pilot complete** (2026-06-07, later same day). The proven Khajiit template
+is now ready to propagate to the other 9 races. Coordination authority is
+`references/authoring/PDV_Phase2_DeityRoster_and_ArchitectureRulings.md`
+(binding rulings R1-R8: broad worship is a STATE not a deity; broad-T1
+editorIds match the manager's existing per-race props
+`PDV_Bless_<Race>_<Lane>_T1`; focused 3-tier sets use
+`PDV_Bless_<Race>_<Patron|Path|LifeMode|Sect>_T1/T2/T3`; deities are SHARED
+records keyed by per-race stance, created once by their owner; only focusable
+patrons get records; Daedric forks route through the existing 20C system;
+three gate shapes - substrate/no-offer, active-patron/offer, state-enum-gated;
+<=2 always-on boon families per race, broad < focused, one anti-farm per act).
+T3 capstone signatures are locked in
+`references/authoring/PDV_Phase2_CapstoneSignatures.md`: signature rides on
+top of the T3 stat half; mechanism library M1-M11+; <=1 cheat-death per race,
+all once/day; **fallback-as-floor binding** for every fiddly detection so no
+capstone is ever non-functional. Locked design rails: native-track-as-parity
+piety model (rewards gate on each race's authentic track by default; active-
+patron piety faucet kept only for Nord/Imperial/Altmer); two-tier magnitude
+convention (universal combat <=~12%, narrow resists/regen/utility up to ~15);
+Nord Old Ways gods Shor/Tsun/Stuhn promoted to focusable (3 new deity QUSTs +
+9 new T1/T2/T3 reward records, Nord-owned); Nord Nine Divines lane reuses the
+8 Imperial-owned Divines; Breton tradition is a filter (Knight's Road reuses
+Stendarr/Mara/Arkay/Julianos; Green Way reuses Kynareth; Hidden Art's Daedric
+via 20C); Argonian primal-unarmed lands on Sithis/Void T2 as `UnarmedDamage
+10` (parallel to Khajiit Baan Dar/Rajhin clawed builds, also +10 unarmed each;
+Khajiit Alkosh T3 ResistMagic deliberately raised 8 -> 15 as a capstone
+exception). Tool: new race-agnostic `tools/pdv-phase20-race-author/` builds
+0/0 and its dry-run reproduces the Khajiit ESP idempotently; Khajiit fork
+retained as regression baseline. 9 per-race reward specs + 4 missing P2 audit-
+only costing manifests (Imperial/Breton/Dunmer/Nord, extracted from
+`PDV_Phase20_NoInGameProof_Gates.json`) authored; convergence review clean (0
+deity-ownership collisions, 0 orphans, 22 new deities owned with FLST
+projected 10 -> 32). **B1: 22 new `PDV_Deity_*.psc` authored and compiling
+clean** (`0 error(s), 0 warning(s)` each), with collision-free SIGNAL_* blocks
+1000-3199. **B2: Argonian pilot LANDED and compiles 0/0** - `PDV_Hist`/
+`PDV_Sithis` deity properties + 8 reward Spell properties + Argonian neglect
+property declared; the 4 Argonian handlers double-route the substrate
+`Record*Scaled` call with `AwardCuratedSignal(PDV_Hist, SIGNAL_HIST_PULSE,
+None)` and (on the Void handler) `AwardCuratedSignal(PDV_Sithis, ...)` gated
+on `IsVoidFullyActive()`; new `SyncArgonianRewards` + `SyncArgonianNeglectSpell`
+mirror the Khajiit pattern; no-offer integration completes via
+`GetFirstTierRaceRewardSpellForOrigin` returning `None` for Argonian.
+**Important gap surfaced for the remaining races:** existing
+`HandleImperial*`/`HandleAltmer*`/`HandleOrc*`/`HandleRedguard*`/`HandleNord*`/
+`HandleDunmer*` handlers are TELEMETRY STUBS - they bump StorageUtil counters
+but do NOT call `AwardCuratedSignal`. Bosmer/Yffre + Khajiit substrate are
+the working templates; the Argonian pilot now joins the substrate template
+set. Imperial additionally needs a civic-act-type discriminator on
+`RouteImperialCivicService` before per-Divine scoring works (same shape
+likely for any Nord Nine Divines lane). Remaining work: B2 race-by-race
+(Imperial/Altmer/Dunmer/Orc/Redguard/Nord/Bosmer/Breton + Khajiit capstone
+back-fill), scripted capstone signature MGEFs (fallback-as-floor binding),
+the Bosmer Green Pact tag layer modelled on Biggie's Traits + Requiem FBR,
+B3 real-hook landing against `immersiveHookContracts`, Phase C ESP authoring
+(user-gated: Skyrim closed + housecarl stopped + SEQ refresh after each
+batch; authoring order Imperial+Argonian first -> Orc -> Dunmer/Altmer/
+Redguard -> Nord/Bosmer/Breton), Phase D pace tuning, Phase E static verify
+(new `tools/pdv_phase2_reward_readback_audit.mjs` to author), and user-only
+Phase F runtime walk per race. Open: the 4 drafted P2 manifests still need
+user review before Phase C runs for those races; the prior-handoff note
+about `pdv_verify` expected-data potentially being stale re: the new deities
+remains - resolve at Phase E with explicit user OK before any
+`pdv_verify.mjs`/`pdv_compile.mjs`/`pdv_author.mjs` edit (CLAUDE.md rule 4).
+Authoritative session detail: `references/authoring/PDV_SessionHandoff_Phase2_AllRaces.md`.
 
 ---
 
@@ -2771,6 +2853,50 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.84 - 2026-06-07 AEST - Phase 2 all-race propagation: design + B1 + Argonian B2 pilot
+
+Picked up directly from the runtime-proven Khajiit pilot and propagated its
+template across the rest of the roster. Phase A locked the binding rulings
+(`references/authoring/PDV_Phase2_DeityRoster_and_ArchitectureRulings.md`,
+R1-R8: broad worship is a STATE not a deity; broad-T1 editorIds match the
+manager's existing per-race props; focused 3-tier sets use
+`PDV_Bless_<Race>_<Patron|Path|LifeMode|Sect>_T1/T2/T3`; deities are SHARED
+records keyed by per-race stance, created once by their owner; only focusable
+patrons get records; Daedric forks via 20C; three gate shapes; balance
+invariants), the locked design rails (native-track-as-parity piety model;
+two-tier magnitude convention universal-combat <=~12% / narrow-resist-regen-
+utility up to ~15; T3 capstone signatures ride on top of the stat half with
+<=1 cheat-death per race, all once/day, fallback-as-floor binding; Nord Old
+Ways Shor/Tsun/Stuhn promoted to focusable; Argonian primal-unarmed on
+Sithis/Void T2 parallel to Khajiit clawed builds), and the new race-agnostic
+records author `tools/pdv-phase20-race-author/` (idempotent dry-run reproduces
+the Khajiit ESP). 9 per-race reward specs + 4 missing P2 audit-only costing
+manifests (Imperial/Breton/Dunmer/Nord) authored; convergence review clean (0
+deity-ownership collisions, 0 orphans, 22 new deities owned with FLST
+projected 10 -> 32). B1: 22 new `PDV_Deity_*.psc` authored and compiling clean
+(`0 error(s), 0 warning(s)` each), collision-free SIGNAL_* blocks 1000-3199.
+B2: Argonian PILOT LANDED and compiles 0/0 - declared `PDV_Hist`/`PDV_Sithis`
++ 8 reward Spell properties + neglect property; double-routed the 4 Argonian
+handlers; added `SyncArgonianRewards`/`SyncArgonianNeglectSpell`; no-offer
+integration via `GetFirstTierRaceRewardSpellForOrigin` returning `None` for
+Argonian. Important B2 gap surfaced for every offer race: existing
+`HandleImperial*`/`HandleAltmer*`/`HandleOrc*`/`HandleRedguard*`/`HandleNord*`/
+`HandleDunmer*` handlers are TELEMETRY STUBS that do NOT call
+`AwardCuratedSignal`; Bosmer/Yffre + Khajiit substrate + Argonian pilot are
+the working templates. Imperial additionally needs a civic-act-type
+discriminator on `RouteImperialCivicService` before per-Divine scoring works.
+Doc/spec/script + tooling change; B2 remainder + capstone signature MGEFs
+(fallback-as-floor binding) + Bosmer Green Pact tag layer (modelled on
+Biggie's Traits + Requiem FBR) + B3 real-hook landing + Phase C user-gated
+ESP authoring + Phase D pace tuning + Phase E static verify (new
+`tools/pdv_phase2_reward_readback_audit.mjs` to author) + user-only Phase F
+runtime walk per race remain ahead. Authoritative session detail:
+`references/authoring/PDV_SessionHandoff_Phase2_AllRaces.md`.
+
+### v3.83 - 2026-06-07 AEST - Per-race piety architecture fix; Khajiit pilot complete/runtime-proven
+
+Closed the structural piety-rate gap (`references/authoring/PDV_RacePietyRateAudit.md`): unscripted deities scored no piety and most races' per-race handlers fed state/substrate rather than the piety->tier->reward spine, so 8/10 races' rewards (gated on patron piety Tier>=Seeker) were unreachable. Locked the generalized per-race build contract (`references/authoring/PDV_RaceContractTemplate.md`: foreground patron, offer vs no-offer gate type, piety-feeding acts + anti-farm, creed-violation loss, broad + per-patron 3-tier rewards, substrate/state boons, neglect) and proved it end-to-end on Khajiit. New emphasis deity scripts (Azura/Khenarthi/Rajhin/Alkosh + Baan Dar extension); manager double-route (Khajiit acts now pulse the emphasis deity's piety), per-emphasis 3-tier reward sync, Khajiit neglect, anti-creed routes 110-114, tier-up notice for active patron + focused emphasis; `PDV_DeityBase.EligibleStateTrackOriginRace` adds origin-scoped path eligibility so a shared deity (Baan Dar: Bosmer + Khajiit) does not penalize the other race. ESP authored via `tools/pdv-phase20-khajiit-author --author-rewards` (4 deity quests into `PDV_FLST_AllDeities`=10, 18 `PDV_Bless_Khajiit_*` SPEL/MGEFs, substrate boon wiring, 20 manager props) and `--fix-baandar` (Baan Dar SGE + Stance_Khajiit=NATIVE + EligibleStateTrackOriginRace=Bosmer); SEQ refreshed to 15 via `pdv_refresh_seq`. In-game smoke (Khajiit, QASmoke) confirmed double-route piety, emphasis emergence, Seeker reward grant, anti-creed loss, and Baan Dar parity (0.4/pulse). MCM readouts fixed (scratch column, non-zero piety map, signal-ID cap 299->999). Doc/record/script + runtime change; `tools/pdv_verify.mjs` expected-data still needs the 4 new deities / 18 spells added before strict gates pass. Authoritative detail: `references/authoring/PDV_SessionHandoff_KhajiitPilot.md`. Next: generalize the records author and propagate the template to the other 9 races (Phase 2).
 
 ### v3.81 - 2026-06-02 AEST - P2 audit-only contract gate for Breton/Dunmer/Imperial/Nord
 

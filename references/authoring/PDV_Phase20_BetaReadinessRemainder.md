@@ -2,7 +2,7 @@
 
 **Created:** 2026-06-03
 **Status:** Handoff hook after expanded all-race P2 receiver wiring and safe P2 book-source FormList fill; beta-feel readiness now includes all sixteen Skyrim-present Daedric Princes
-**Companions:** `PDV_AllRaceDaedricBetaReadinessLedger.md`, `PDV_DaedricBatch0_D18ProofLedger.md`, `PDV_Phase20_SourceFillApprovalLedger.json`, `PDV_Phase20_P2ImmersiveReceivers.manifest.json`, `PDV_PreBetaRaceGateLedger.md`, `PDV_Phase20_PreBetaManualChecks_Runbook.md`, `PDV_PrismaIntegrationBoundary.md`
+**Companions:** `PDV_BetaFeelReleaseGate.md`, `PDV_BetaTestPacket_*.md`, `PDV_AllRaceDaedricBetaReadinessLedger.md`, `PDV_DaedricBatch0_D18ProofLedger.md`, `PDV_Phase20_SourceFillApprovalLedger.json`, `PDV_Phase20_P2ImmersiveReceivers.manifest.json`, `PDV_PreBetaRaceGateLedger.md`, `PDV_Phase20_PreBetaManualChecks_Runbook.md`, `PDV_PrismaIntegrationBoundary.md`
 
 ## What This Tranche Proved
 
@@ -38,6 +38,35 @@
 
 ## Remaining Manual And Runtime Work
 
+Use `PDV_BetaFeelReleaseGate.md` as the active release bar. Console-assisted
+proof is acceptable when the console sets up the situation and the final PDV
+trigger, readout, rejection, reward, or stack behavior is still exercised in
+game.
+
+- Restart the race testing pass as complete beta-test packets, not isolated
+  source checks. Each packet should include accepted-source proof,
+  Survey/status clarity, wrong-origin silence, generic-source silence, repeat
+  or anti-farm behavior, reward/Active Effects or state-layer evidence, stack
+  snapshot, expected build, edge build, known issues, and tester stop
+  conditions.
+- Current focused 2026-06-06 evidence to carry forward:
+  - Altmer MQ104 stage 160 live route and manual Survey proof passed. The
+    restarted Altmer packet also passed all Auri-El/Magnus/Xarxes book checks
+    and visuals in game. Remaining Altmer closeout is only the reward/Active
+    Effects or correct patron/tier pending snapshot if it was not part of the
+    visual pass.
+  - Khajiit Words of Clan Mother Ahnissi lunar book route and manual
+    Survey/status proof passed. The restarted wired-lunar packet also passed
+    with Words of Clan Mother Ahnissi and The Tale of Dro'Zira Prisma toasts,
+    wrong-origin rejection, generic-source silence, and correct reward-pending
+    behavior below threshold. Remaining Khajiit closeout is a live edge focus
+    source for Baan Dar, Rajhin, Alkosh, or another approved Khajiit edge route.
+- Restart packets now exist as `PDV_BetaTestPacket_*.md`. Altmer is
+  source/visual/edge conditional-pass; Khajiit is wired-lunar conditional-pass
+  with edge focus pending; Argonian, Orc, Redguard, Breton, Dunmer, Imperial,
+  and Nord are ready for their current approved book-source packet; Bosmer is
+  blocked for beta-feel source proof until an exact live source fill is
+  approved, with only QASmoke route fallback available.
 - Prove accepted trigger behavior in game for each filled source family.
   Current checker command:
   `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager`.
@@ -52,6 +81,13 @@
 
 ## Remaining Beta Blockers
 
+- Race Beta-Feel release can proceed once all ten races record the
+  `PDV_BetaFeelReleaseGate.md` expected-build and edge-build packets at `Pass`
+  or explicitly scoped `Conditional`, with known issues and tester stop
+  conditions written.
+- Full Devotion Beta-Feel release additionally requires all sixteen
+  Skyrim-present Daedric Princes to clear the Daedric 20C/CAT-6 readback plus
+  runtime/display proof bar.
 - All sixteen Skyrim-present Daedric Princes must clear the 20C
   content-ready bar before beta-feel readiness. `PDV_DeityCoverageMatrix.json`
   remains the roster authority, `PDV_Daedric_DecisionPacket_CAT4.md` owns

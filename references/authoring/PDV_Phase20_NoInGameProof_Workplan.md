@@ -73,15 +73,15 @@ Expected current result: FAIL=0, WARN=0, PASS=1079, INFO=4
 
 Strict Phase 20 source/readback gate:
 node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
-Expected current result: PASS=2632, WARN=1, INFO=29
+Expected current result: PASS=2827, WARN=2, INFO=29
 
 P2 source-fill readback:
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill
-Expected current result: Status=PASS, 12 approved P2 book entries across 6 groups.
+Expected current result: Status=PASS, 30 approved P2 source entries across 14 groups, including Altmer MQ104 in `PDV_FLST_P2_AltmerLorkhanPenalties`.
 
 P2 exact-stage quest gate:
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates
-Expected current result: Status=PASS, no approved quest-stage entries while receiverStatus=exact-stage-supported.
+Expected current result: Status=PASS, 1 approved quest-stage source entry with exact-stage metadata.
 
 P2 FormList and alias-property readback:
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists

@@ -1,23 +1,23 @@
 {
   "schema": "pdv.phase20.source-fill-approval-ledger.v1",
   "created": "2026-06-03",
-  "status": "p2-book-fill-live-readback-pass",
+  "status": "p2-book-fill-live-readback-pass-altmer-mq104-live-readback-pass",
   "proofModel": "CKRA-informed: manifest intent is desired state only; accepted state requires structured writer output, live FormList readback, verifier evidence, and a gate summary.",
   "scope": {
     "liveFillIncluded": true,
-    "liveFillScope": "Approved P2 book-read sources only.",
-    "questStageFillScope": "Blocked until exact quest/stage metadata is approved and declared; receiver exact-stage support exists but no quest-stage entries are live-approved.",
+    "liveFillScope": "Approved P2 book-read sources plus the exact Altmer MQ104 stage-160 Lorkhan crisis source.",
+    "questStageFillScope": "Altmer MQ104 stage 160 is approved for live fill; all other quest-stage sources remain blocked until exact quest/stage metadata is approved and declared.",
     "nonP2FillScope": "Audit/design only for source classes outside the all-race P2 receiver/FormList network."
   },
   "liveFillReadback": {
     "status": "PASS",
-    "filledAt": "2026-06-04T09:41:22+10:00",
-    "sourceFillCheckAt": "2026-06-04T09:41:56+10:00",
-    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260604-094122.bak",
-    "seqBackupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Seq\\PlayerDevotion_Framework.seq.20260603-234346.bak",
+    "filledAt": "2026-06-06T11:40:36+10:00",
+    "sourceFillCheckAt": "2026-06-06T11:40:52+10:00",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260606-114036.bak",
+    "seqBackupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Seq\\PlayerDevotion_Framework.seq.20260606-014247.bak",
     "touchedFile": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PlayerDevotion_Framework.esp",
-    "filledEntryCount": 29,
-    "formListGroups": 13
+    "filledEntryCount": 30,
+    "formListGroups": 14
   },
   "runtimeRouteProof": {
     "status": "all-filled-families-pass-across-session-logs",
@@ -189,6 +189,20 @@
       ]
     },
     {
+      "race": "Altmer",
+      "receiver": "PDV_FLST_P2_AltmerLorkhanPenalties",
+      "routeFamily": "Lorkhan pressure / crisis source",
+      "sourceKind": "quest-stage",
+      "semanticVerdict": "strong",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "MQ104 stage 160 Dragonborn identity milestone as a one-shot Altmer Lorkhan crisis marker.",
+      "rejectedContext": "Repeated Dragonborn actions, generic main-quest progress before stage 160, and later dragon content.",
+      "duplicateGuard": "Quest-stage source route uses MarkP2SourceRoute with quest form plus routeKey altmer_mq104_lorkhan.",
+      "sources": [
+        { "formKey": "Skyrim.esm:02610C", "editorId": "MQ104", "approvedStages": [160] }
+      ]
+    },
+    {
       "race": "Argonian",
       "receiver": "PDV_FLST_P2_ArgonianHistSources",
       "routeFamily": "Hist memory",
@@ -265,8 +279,8 @@
       "routeFamily": "Lorkhan pressure / Auri-El / Magnus",
       "source": "MQ104, MQ304, MG08, Dawnguard, HearthFires",
       "receiverDecision": "book receivers are live; Skyrim.esm exact-stage source support exists; Dawnguard/HearthFires rows remain future-review",
-      "fillDecision": "blocked",
-      "blocker": "Only approved book-read entries are filled; no approved quest-stage entries are declared."
+      "fillDecision": "MQ104 stage 160 approved for live fill; remaining quest-stage candidates blocked",
+      "blocker": "MQ304, MG08, Dawnguard, HearthFires, and other Altmer quest-stage candidates remain blocked until separately approved with exact stage metadata."
     },
     {
       "race": "Argonian",

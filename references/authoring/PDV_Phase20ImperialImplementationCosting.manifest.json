@@ -1,0 +1,374 @@
+{
+  "schema": "pdv-race-implementation-costing.v1",
+  "project": "player-devotion-phase20-imperial",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "id": "phase20-imperial-implementation-costing",
+  "title": "PDV Phase 20 Imperial civic Nine Divines, focused patron, and Talos pressure implementation costing",
+  "race": "Imperial",
+  "implementationStatus": "planning-ready",
+  "gateType": "offer-active-patron",
+  "progressionCurrency": "piety-faucet",
+  "paceAssumption": "Imperial keeps a real active-patron piety faucet (one of only three, with Nord and Altmer). Assume ~2 qualifying civic signals per honest-play day, each contributing a small piety delta toward the active patron, yielding roughly 12 days from cold start to Devoted at steady honest civic play. This matches the Nord ~12-day-to-Devoted pace; Talos faithful-defiance acts are deliberately rarer and costlier and do not accelerate the broad faucet.",
+  "decisionSources": [
+    "race-sheets/PDV_RaceDesign_Imperial.md",
+    "race-sheets/PDV_RaceContent_Manifest.md#1-imperial",
+    "references/authoring/PDV_RaceGameplayBalanceAudit.md",
+    "references/authoring/PDV_RaceImplementationCostingBacklog.md",
+    "references/authoring/PDV_RaceRewardBudgetLedger.md#focused-pass-imperial",
+    "references/authoring/PDV_Phase20_NoInGameProof_Gates.json#imperial",
+    "references/authoring/PDV_DeityCoverageMatrix.json",
+    "references/authoring/PDV_BetaTestPacket_Imperial.md"
+  ],
+  "designRules": [
+    "Imperial broad worship is civic and institutional, not Nord mythic breadth; the Nine Divines lane is a single broad family, not a per-patron stack.",
+    "Rewards gate on the IsFirstTierRaceRewardEligible pattern: patron piety Tier >= threshold AND an active patron. There is no substrate track.",
+    "ConcordatStanding is political/theological pressure that modifies access, offer priority, and Talos pressure; it is never a parallel always-on buff track.",
+    "Talos favor comes from faithful defiance only. Compliance may alter standing and civic access, never Talos favor.",
+    "Civic acts must be concrete, whitelisted devotional events; faction membership, rank, generic temple attendance, ordinary bounty payment, and generic anti-Thalmor violence never score.",
+    "Concordat-Enforcer cruelty and civic compromise corrode Arkay/Stendarr through medium/major creed-violation signals only, never raw ambient stat punishment.",
+    "Keep at most two always-on boon families: broad Nine Divines (Layer 1) plus one focused primary patron (Layer 2); broad stays softer than focused."
+  ],
+  "stateSurfaces": [
+    {
+      "editorId": "PDV_RepTrack_ConcordatStanding",
+      "type": "rep-track",
+      "status": "design-contract",
+      "bands": [
+        {
+          "name": "Uncommitted",
+          "value": 0
+        },
+        {
+          "name": "PrivateDefiant",
+          "value": 1
+        },
+        {
+          "name": "OpenDefiant",
+          "value": 2
+        },
+        {
+          "name": "PublicCompliant",
+          "value": 3
+        },
+        {
+          "name": "ConcordatEnforcer",
+          "value": 4
+        }
+      ],
+      "notes": [
+        "Modifies Talos offer access, civic access, and public/private pressure tilt; it is NOT a reward boon track.",
+        "Costly faithful Talos defiance moves a compliant character at least to PrivateDefiant on acceptance.",
+        "ConcordatEnforcer is the cruelty/compliance pole that gates Arkay/Stendarr creed-violation loss until mercy or death-rite repair signals exist.",
+        "Walk-back from ConcordatEnforcer requires sustained counter-behavior and a story-caliber reset, not a single mercy act."
+      ]
+    }
+  ],
+  "requiredContentRows": [
+    "PDV_Msg_Imperial_Concordat_Uncommitted",
+    "PDV_Msg_Imperial_Concordat_PrivateDefiant",
+    "PDV_Msg_Imperial_Concordat_OpenDefiant",
+    "PDV_Msg_Imperial_Concordat_PublicCompliant",
+    "PDV_Msg_Imperial_Concordat_ConcordatEnforcer",
+    "PDV_Notif_Imperial_CivicService_PublicService",
+    "PDV_Notif_Imperial_CivicService_Mercy",
+    "PDV_Notif_Imperial_CivicService_LawfulOrder",
+    "PDV_Notif_Imperial_CivicService_HonestWork",
+    "PDV_Notif_Imperial_CivicService_DeathDuty",
+    "PDV_Notif_Imperial_TalosDefiance_FaithfulPrivate",
+    "PDV_Notif_Imperial_TalosDefiance_FaithfulPublic",
+    "PDV_Notif_Imperial_FocusedPatron_CivicFavor",
+    "PDV_Msg_Imperial_CreedLoss_CivicCompromise",
+    "PDV_Msg_Imperial_CreedLoss_EnforcerCruelty",
+    "PDV_Msg_Imperial_CreedLoss_DeathDutyAbandoned",
+    "PDV_Msg_Imperial_Survey_Civic",
+    "PDV_Msg_Imperial_CurseState_VampireOnset",
+    "PDV_Msg_Imperial_CurseState_VampireCollapse",
+    "PDV_Msg_Imperial_CurseState_VampireCured"
+  ],
+  "favorFamilies": [
+    {
+      "id": "civic-public-service",
+      "row": "PDV_Notif_Imperial_CivicService_PublicService",
+      "mode": "quiet-noted",
+      "deity": "Nine Divines broad (active focused patron credited)",
+      "progressionCurrency": "piety-faucet",
+      "gateType": "offer-active-patron",
+      "realHookSource": "Curated civic service/favor quest FormLists and PO3 QuestStageChange on whitelisted public-service stages.",
+      "antiFarm": "ScoreRepeatableAction daily cap (one public-service signal per day).",
+      "hookSources": [
+        "whitelisted public service quest stage",
+        "concrete completion marker",
+        "daily cap"
+      ],
+      "rewardIntent": "civic devotion through concrete public service, not faction rank"
+    },
+    {
+      "id": "civic-mercy",
+      "row": "PDV_Notif_Imperial_CivicService_Mercy",
+      "mode": "quiet-noted",
+      "deity": "Stendarr / Mara (broad lane; focused patron credited)",
+      "progressionCurrency": "piety-faucet",
+      "gateType": "offer-active-patron",
+      "realHookSource": "Story Manager crime-chain resolution markers (sparing/protecting a yielded or helpless target) plus curated mercy quest stages.",
+      "antiFarm": "ScoreRepeatableAction cooldown per crime-chain source (no repeated mercy on the same target/chain).",
+      "hookSources": [
+        "crime-chain mercy resolution",
+        "protected helpless target",
+        "per-source cooldown"
+      ],
+      "rewardIntent": "mercy as a concrete act, never generic helping"
+    },
+    {
+      "id": "civic-lawful-order",
+      "row": "PDV_Notif_Imperial_CivicService_LawfulOrder",
+      "mode": "quiet-noted",
+      "deity": "Stendarr / Julianos (broad lane; focused patron credited)",
+      "progressionCurrency": "piety-faucet",
+      "gateType": "offer-active-patron",
+      "realHookSource": "Story Manager crime chain plus curated guard/court/Legion lawful-resolution quest stages; whitelisted lawful-order markers only.",
+      "antiFarm": "ScoreRepeatableAction daily cap (one lawful-order signal per day).",
+      "hookSources": [
+        "lawful crime-chain resolution",
+        "curated court/Legion duty stage",
+        "daily cap"
+      ],
+      "rewardIntent": "lawful order as duty; ordinary bounty payment is rejected"
+    },
+    {
+      "id": "civic-honest-work",
+      "row": "PDV_Notif_Imperial_CivicService_HonestWork",
+      "mode": "quiet-noted",
+      "deity": "Zenithar (broad lane; focused patron credited)",
+      "progressionCurrency": "piety-faucet",
+      "gateType": "offer-active-patron",
+      "realHookSource": "Curated honest-trade/labor quest FormLists and service-favor completion markers (delivery, lawful trade, fair-work favors).",
+      "antiFarm": "Diminishing returns per honest-work source family (each repeat of the same labor type pays less).",
+      "hookSources": [
+        "whitelisted honest-work favor",
+        "lawful trade/labor marker",
+        "diminishing returns"
+      ],
+      "rewardIntent": "honest work and trade as Zenithar devotion without grindable crafting loops"
+    },
+    {
+      "id": "civic-death-duty",
+      "row": "PDV_Notif_Imperial_CivicService_DeathDuty",
+      "mode": "quiet-noted",
+      "deity": "Arkay (broad lane; focused patron credited)",
+      "progressionCurrency": "piety-faucet",
+      "gateType": "offer-active-patron",
+      "realHookSource": "Curated Hall of the Dead / burial quest stages and anti-necromancer duty markers via PO3 QuestStageChange and civic service FormLists.",
+      "antiFarm": "ScoreRepeatableAction cooldown per death-duty source (burial/anti-necromancer act cannot be re-farmed at one site).",
+      "hookSources": [
+        "burial or death-rite quest stage",
+        "anti-necromancer duty marker",
+        "per-source cooldown"
+      ],
+      "rewardIntent": "burial and death-duty as concrete Arkay service"
+    },
+    {
+      "id": "talos-faithful-defiance",
+      "row": "PDV_Notif_Imperial_TalosDefiance_FaithfulPublic",
+      "mode": "marked",
+      "deity": "Talos (reuse PDV_Deity_Talos; filtered by ConcordatStanding)",
+      "progressionCurrency": "piety-faucet",
+      "gateType": "offer-active-patron",
+      "realHookSource": "Existing civil-war / Talos-shrine mod events and shrine context, public/private location/faction state, plus selective PO3 QuestStageChange on faithful-defiance stages.",
+      "antiFarm": "ScoreRepeatableAction cooldown per pressure/repair source family; one Talos pressure marker per source family. ConcordatStanding gates eligibility but is not a buff track.",
+      "hookSources": [
+        "public/private Talos source",
+        "ConcordatStanding known and eligible",
+        "faithful defiance only (compliance never scores)"
+      ],
+      "rewardIntent": "costly faithful Talos defiance; never generic anti-Thalmor violence or shrine proximity"
+    },
+    {
+      "id": "focused-patron-civic-favor",
+      "row": "PDV_Notif_Imperial_FocusedPatron_CivicFavor",
+      "mode": "marked",
+      "deity": "active focused primary patron",
+      "progressionCurrency": "piety-faucet",
+      "gateType": "offer-active-patron",
+      "realHookSource": "Patron-specific civic/service/shrine-context FormLists with manager stack caps; optional PO3 QuestStageChange on the focused patron's whitelisted civic source.",
+      "antiFarm": "One active civic/favor family and one focused patron at a time (manager stack cap); ScoreRepeatableAction daily cap on the focused civic favor.",
+      "hookSources": [
+        "focused patron state",
+        "whitelisted patron civic source",
+        "one active civic favor family"
+      ],
+      "rewardIntent": "one focused patron civic lane without broad Nine Divines becoming a universal stack"
+    }
+  ],
+  "creedViolationLoss": [
+    {
+      "id": "civic-compromise",
+      "row": "PDV_Msg_Imperial_CreedLoss_CivicCompromise",
+      "severity": "medium",
+      "deity": "Stendarr / Arkay",
+      "hookSources": [
+        "betraying a sworn civic duty",
+        "abandoning a protected charge for gain"
+      ],
+      "antiRepeat": "authored civic-compromise beat only; ordinary inconvenience or failed-not-betrayed outcomes do not corrode"
+    },
+    {
+      "id": "enforcer-cruelty",
+      "row": "PDV_Msg_Imperial_CreedLoss_EnforcerCruelty",
+      "severity": "major",
+      "deity": "Stendarr",
+      "hookSources": [
+        "ConcordatStanding == ConcordatEnforcer",
+        "cruelty framed as order against a yielded/helpless target"
+      ],
+      "antiRepeat": "curated cruelty beat only; lawful force against an active threat is not cruelty"
+    },
+    {
+      "id": "death-duty-abandoned",
+      "row": "PDV_Msg_Imperial_CreedLoss_DeathDutyAbandoned",
+      "severity": "medium",
+      "deity": "Arkay",
+      "hookSources": [
+        "desecrating or abandoning a death-rite duty",
+        "siding with necromancy after holding the Arkay lane"
+      ],
+      "antiRepeat": "authored desecration/necromancy beat only; ordinary undead combat does not corrode"
+    }
+  ],
+  "rejectedHooks": [
+    "faction membership",
+    "faction rank",
+    "generic temple attendance",
+    "ordinary bounty payment alone",
+    "generic mercy",
+    "generic anti-Thalmor violence",
+    "generic Talos proximity",
+    "generic shrine attendance",
+    "cruelty framed as order",
+    "broad civic identity as all-patron reward",
+    "ConcordatStanding as a second buff track",
+    "generic morality or lawfulness",
+    "vampire power as a clean civic devotion route"
+  ],
+  "triggerSurfaces": [
+    {
+      "id": "imperial-civic-service-proof",
+      "editorId": "PDV_ACTI_ImperialCivicServiceSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planning-ready",
+      "placementStatus": "proof-cell-pending",
+      "placementRefEditorId": "PDV_REFR_ImperialCivicServiceSignal",
+      "routeId": 110,
+      "requiredOriginRace": 1,
+      "signalValue": 0,
+      "signalSourceId": "imperial_civic_service_proof",
+      "name": "PDV IMPERIAL CIVIC SERVICE SIGNAL",
+      "activateText": "RECORD CIVIC SERVICE",
+      "oncePerDayKey": "PDV.Signal.ImperialCivicService",
+      "immersionProof": "A whitelisted civic-act proxy (public service, mercy, lawful order, honest work, death-duty) feeding the active patron; not a faction-attendance faucet."
+    },
+    {
+      "id": "imperial-talos-pressure-proof",
+      "editorId": "PDV_ACTI_ImperialTalosPressureSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planning-ready",
+      "placementStatus": "proof-cell-pending",
+      "placementRefEditorId": "PDV_REFR_ImperialTalosPressureSignal",
+      "routeId": 111,
+      "requiredOriginRace": 1,
+      "signalValue": 0,
+      "signalSourceId": "imperial_talos_pressure_proof",
+      "name": "PDV IMPERIAL TALOS PRESSURE SIGNAL",
+      "activateText": "FACE THE TALOS QUESTION",
+      "oncePerDayKey": "PDV.Signal.ImperialTalosPressure",
+      "immersionProof": "A public/private Talos faithful-defiance proxy filtered by ConcordatStanding; compliance and generic anti-Thalmor violence never score."
+    },
+    {
+      "id": "imperial-focused-patron-proof",
+      "editorId": "PDV_ACTI_ImperialFocusedPatronSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planning-ready",
+      "placementStatus": "proof-cell-pending",
+      "placementRefEditorId": "PDV_REFR_ImperialFocusedPatronSignal",
+      "routeId": 112,
+      "requiredOriginRace": 1,
+      "signalValue": 0,
+      "signalSourceId": "imperial_focused_patron_proof",
+      "name": "PDV IMPERIAL FOCUSED PATRON SIGNAL",
+      "activateText": "RECORD FOCUSED PATRON FAVOR",
+      "oncePerDayKey": "PDV.Signal.ImperialFocusedPatron",
+      "immersionProof": "A focused-patron civic favor proxy proving one loud patron lane without broad Nine Divines inheriting every patron boon."
+    },
+    {
+      "id": "imperial-creed-loss-proof",
+      "editorId": "PDV_ACTI_ImperialCreedLossSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planning-ready",
+      "placementStatus": "proof-cell-pending",
+      "placementRefEditorId": "PDV_REFR_ImperialCreedLossSignal",
+      "routeId": 113,
+      "requiredOriginRace": 1,
+      "signalValue": 0,
+      "signalSourceId": "imperial_creed_loss_proof",
+      "name": "PDV IMPERIAL CREED LOSS SIGNAL",
+      "activateText": "MARK THE CIVIC COMPROMISE",
+      "oncePerDayKey": "PDV.Signal.ImperialCreedLoss",
+      "immersionProof": "A medium/major creed-violation proxy proving civic compromise and Enforcer cruelty corrode Arkay/Stendarr; ordinary inconvenience does not."
+    }
+  ],
+  "immersionProof": {
+    "signaturePromise": "Imperial devotion is civic and institutional: concrete service, mercy, lawful order, honest work, and burial feed a real piety faucet, while Talos faithful defiance and ConcordatStanding shape pressure, not a parallel buff track.",
+    "diegeticTriggerMeaning": [
+      "Civic acts are whitelisted, concrete devotional events feeding the active patron, not faction rank or generic temple attendance.",
+      "Talos favor comes only from costly faithful defiance filtered by ConcordatStanding; compliance and generic anti-Thalmor violence never score."
+    ],
+    "feedbackSurface": [
+      "Concordat band messages and the civic Survey copy explain Uncommitted, Private Defiant, Open Defiant, Public Compliant, and Concordat Enforcer.",
+      "Civic-service and Talos notifications teach which concrete acts scored and why faction/attendance/bounty did not."
+    ],
+    "rejectedGenericBehavior": [
+      "faction membership or rank",
+      "generic temple attendance",
+      "ordinary bounty payment alone",
+      "generic anti-Thalmor violence",
+      "cruelty framed as order"
+    ],
+    "normalSessionFeel": "A non-combat Imperial can feel devotionally noticed through public service, mercy, lawful order, honest work, and burial, reaching Devoted at a Nord-comparable pace without grinding faction attendance.",
+    "runtimePromotionGate": "Before reward expansion, prove one civic-act faucet loop, the public/private Talos pressure edge under ConcordatStanding, focused-patron credit, and rejected cases for faction/attendance/bounty/anti-Thalmor violence."
+  },
+  "verifierExpectations": {
+    "strictFlags": [
+      "--strict-phase20-race-costing"
+    ],
+    "status": "planning-ready",
+    "rules": [
+      "ConcordatStanding band readback is present and treated as access/pressure modifier, not a buff track, before runtime work",
+      "civic-service and focused-patron faucet hooks are costed with exactly one anti-farm mechanism each before deeper reward expansion",
+      "Talos routes reference only faithful-defiance source families filtered by ConcordatStanding; compliance never scores Talos favor",
+      "rejected hook families (faction, attendance, bounty-alone, anti-Thalmor violence, cruelty-as-order) are converted into verifier or runtime negative cases before build completion",
+      "creed-violation loss fires only on medium/major authored civic-compromise, Enforcer-cruelty, and death-duty beats",
+      "at most two always-on boon families exist: broad Nine Divines plus one focused patron; broad stays softer than focused"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "an honest civic Imperial can reach Devoted via concrete public service, mercy, lawful order, honest work, and burial at a Nord-comparable pace",
+      "costly faithful Talos defiance scores and moves a compliant character at least to Private Defiant on acceptance",
+      "a focused patron receives one loud civic favor lane while broad Nine Divines stays softer",
+      "Concordat-Enforcer cruelty and civic compromise corrode Arkay/Stendarr with readable creed-loss messages"
+    ],
+    "negative": [
+      "faction membership, rank, or generic temple attendance does not move civic piety",
+      "ordinary bounty payment, generic mercy, or generic lawfulness does not score civic faith",
+      "generic anti-Thalmor violence, generic Talos proximity, or compliance does not grant Talos favor",
+      "ConcordatStanding does not act as a second always-on buff track, and vampire state does not become a cleaner civic route"
+    ]
+  },
+  "firstImplementationSlice": [
+    "Define the PDV_RepTrack_ConcordatStanding band readback (Uncommitted/PrivateDefiant/OpenDefiant/PublicCompliant/ConcordatEnforcer) before civic reward work.",
+    "Wire the civic-service faucet (public service, mercy, lawful order, honest work, death-duty) with one anti-farm mechanism per act and active-patron offer gating.",
+    "Wire public/private Talos faithful-defiance pressure filtered by ConcordatStanding, reusing PDV_Deity_Talos.",
+    "Add the focused-patron civic-favor lane with a manager stack cap so broad Nine Divines does not inherit every patron boon.",
+    "Add negative tests for faction membership, generic temple attendance, bounty-alone, generic anti-Thalmor violence, and cruelty-as-order."
+  ]
+}

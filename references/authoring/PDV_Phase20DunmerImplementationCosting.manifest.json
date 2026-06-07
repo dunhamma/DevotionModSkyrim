@@ -1,0 +1,371 @@
+{
+  "schema": "pdv-race-implementation-costing.v1",
+  "project": "player-devotion-phase20-dunmer",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "id": "phase20-dunmer-implementation-costing",
+  "title": "PDV Phase 20 Dunmer ancestor substrate and Reclamation foreground implementation costing",
+  "race": "Dunmer",
+  "implementationStatus": "planning-ready",
+  "auditScope": "P2 audit-only. Transcribes the Dunmer hook contracts, anti-farm rules, contexts, and stack snapshot from PDV_Phase20_NoInGameProof_Gates.json into the costing schema. No new reward volume beyond the gate/ledger ceiling (ancestor substrate plus one Reclamation foreground).",
+  "decisionSources": [
+    "references/authoring/PDV_Phase2_DeityRoster_and_ArchitectureRulings.md",
+    "references/authoring/PDV_Phase20_NoInGameProof_Gates.json#Dunmer",
+    "references/authoring/PDV_RaceRewardBudgetLedger.md#focused-pass-dunmer",
+    "references/authoring/PDV_BetaTestPacket_Dunmer.md",
+    "references/authoring/PDV_KhajiitRewardRecords.spec.json",
+    "references/authoring/PDV_ArgonianRewardRecords.spec.json"
+  ],
+  "designRules": [
+    "Dunmer is layered, not path-based: ancestor ash-prayer is always active, the Good Daedra deepen it, one Reclamation focus adds weight on top.",
+    "Do NOT implement PDV_State_DunmerPath; native focus uses shared patron state (one Reclamation foreground at a time).",
+    "Ancestor substrate has NO passive decay; Skyrim lacks proper tombs and House shrines, and that absence must not punish the player.",
+    "Do not let all three Good Daedra plus the ancestor substrate plus deviation paths pay as equal foreground packages.",
+    "Tribunal memory stays flavor-only, never a controllable blessing machine.",
+    "Non-Reclamation Daedric or curse deviation carries visible price, stigma, exit, or residue through the global Daedric system (R6), not a clean third reward path.",
+    "Ancestor substrate stays quiet/identity-heavy; the Reclamation foreground carries most of the power (strong substrate overstack flag)."
+  ],
+  "stateSurfaces": [
+    {
+      "editorId": "PDV_Substrate_DunmerAncestor",
+      "type": "substrate-track",
+      "status": "record-wired",
+      "scriptExtends": "PDV_SubstrateBase",
+      "storageKeyContract": "PDV.Substrate.DunmerAncestor.* (PrayerCount, HomeCount; metric/tier carried by PDV_SubstrateBase).",
+      "notes": [
+        "Tracks ancestor practice (portable ash-prayer, player-home rite) quietly behind the always-active ancestor layer.",
+        "NO passive dawn decay per the ledger; the layer is identity/utility, not a maintenance treadmill.",
+        "Concrete proving helper exposes RecordPortableShrinePrayer/RecordPlayerHomeBonus (PrayerDelta 5.0, HomeBonusDelta 8.0) feeding the SubstrateBase metric."
+      ]
+    },
+    {
+      "editorId": "PDV_State_DunmerAncestorPosture",
+      "type": "state-track",
+      "status": "record-wired",
+      "enum": [
+        {
+          "name": "Normal",
+          "value": 0
+        },
+        {
+          "name": "Strained",
+          "value": 1
+        },
+        {
+          "name": "Silent",
+          "value": 2
+        },
+        {
+          "name": "RestoredScarred",
+          "value": 3
+        }
+      ],
+      "notes": [
+        "Normal is the healthy diaspora ancestor connection; Strained is medium creed drift.",
+        "Silent is the curse/major-deviation posture where neglect bite applies; RestoredScarred is post-curse return that keeps a visible scar without permanent punishment.",
+        "Ancestor silence is the gentle texture at Strained; mechanical bite is reserved for Silent (curse posture)."
+      ]
+    },
+    {
+      "editorId": "PDV_State_DunmerPath",
+      "type": "rejected-state",
+      "status": "do-not-create",
+      "notes": [
+        "Explicitly NOT created (ledger ruling and prompt). The Reclamation foreground uses shared patron state (active-patron offer), not a Dunmer-owned path enum.",
+        "One Reclamation foreground at a time is enforced by the active-patron/offer eligibility, not a state enum."
+      ]
+    }
+  ],
+  "requiredContentRows": [
+    "PDV_Msg_Dunmer_AncestorPosture_Normal",
+    "PDV_Msg_Dunmer_AncestorPosture_Strained",
+    "PDV_Msg_Dunmer_AncestorPosture_Silent",
+    "PDV_Msg_Dunmer_AncestorPosture_RestoredScarred",
+    "PDV_Notif_Dunmer_PortableAshPrayer_Activate",
+    "PDV_Notif_Dunmer_PortableAshPrayer_Effect",
+    "PDV_Notif_Dunmer_PlayerHomeRite_Bonus",
+    "PDV_Notif_Dunmer_ReclamationFocus_Azura",
+    "PDV_Notif_Dunmer_ReclamationFocus_Boethiah",
+    "PDV_Notif_Dunmer_ReclamationFocus_Mephala",
+    "PDV_Notif_Dunmer_DeviationPrice_Onset",
+    "PDV_Notif_Dunmer_DeviationPrice_Residue",
+    "PDV_Msg_Dunmer_Survey_Layered",
+    "PDV_Msg_Dunmer_CurseState_AncestorSilence",
+    "PDV_Msg_Dunmer_CurseState_RestoredScarred"
+  ],
+  "favorFamilies": [
+    {
+      "id": "ancestor-portable-ash-prayer",
+      "row": "PDV_Notif_Dunmer_FavorNoted_Ancestor_PortableAshPrayer",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "portable ash-prayer token",
+        "voluntary devotional surface",
+        "one accepted source per day or marker"
+      ],
+      "rewardIntent": "diaspora practice stays portable and private, not generic shrine clicking"
+    },
+    {
+      "id": "ancestor-home-rite",
+      "row": "PDV_Notif_Dunmer_FavorNoted_Ancestor_HomeRite",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "private home rite context",
+        "player-home context",
+        "one accepted source per day or marker"
+      ],
+      "rewardIntent": "private ancestor rite at home deepens the substrate without decay pressure"
+    },
+    {
+      "id": "reclamation-azura-focus",
+      "row": "PDV_Notif_Dunmer_FavorNoted_Reclamation_Azura",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "curated Azura quest stages",
+        "sacred/ancestral Azura books",
+        "named Reclamation source"
+      ],
+      "rewardIntent": "Azura twilight/foresight focus from curated acts, not generic twilight or magic"
+    },
+    {
+      "id": "reclamation-boethiah-focus",
+      "row": "PDV_Notif_Dunmer_FavorNoted_Reclamation_Boethiah",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "curated Boethiah quest stages",
+        "sacred/ancestral Boethiah books",
+        "named Reclamation source"
+      ],
+      "rewardIntent": "Boethiah struggle/strength focus from curated acts, not generic cruelty or violence"
+    },
+    {
+      "id": "reclamation-mephala-focus",
+      "row": "PDV_Notif_Dunmer_FavorNoted_Reclamation_Mephala",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "curated Mephala quest stages",
+        "sacred/ancestral Mephala books",
+        "named Reclamation source"
+      ],
+      "rewardIntent": "Mephala secrets/cunning focus from curated acts, not generic crime"
+    },
+    {
+      "id": "deviation-price-signal",
+      "row": "PDV_Notif_Dunmer_FavorNoted_Deviation_Price",
+      "mode": "quiet-noted",
+      "hookSources": [
+        "curated non-Reclamation Daedric or curse quest-stage",
+        "Daedric artifact/quest outcome FormList",
+        "one-shot/source-capped"
+      ],
+      "rewardIntent": "non-Reclamation deviation writes a visible price, not a third reward package"
+    }
+  ],
+  "rejectedHooks": [
+    "generic crime as Mephala",
+    "generic cruelty as Boethiah",
+    "generic twilight/magic as Azura",
+    "Tribunal memory as a controllable path",
+    "non-Reclamation deviation without price",
+    "generic shrine use",
+    "ash proximity",
+    "tomb travel",
+    "generic Daedric contact",
+    "generic artifact ownership",
+    "repeated same-source spam",
+    "ancestor substrate plus focus plus deviation as the best generic package"
+  ],
+  "triggerSurfaces": [
+    {
+      "id": "portable-ash-prayer-proof",
+      "editorId": "PDV_ACTI_DunmerPortableAshPrayerSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planned",
+      "placementStatus": "proof-cell-planned",
+      "placementRefEditorId": "PDV_REFR_DunmerPortableAshPrayerSignal",
+      "routeId": 130,
+      "requiredOriginRace": 5,
+      "signalValue": 0,
+      "signalSourceId": "dunmer_portable_ash_prayer_proof",
+      "name": "PDV DUNMER PORTABLE ASH PRAYER SIGNAL",
+      "activateText": "RECORD ASH PRAYER",
+      "oncePerDayKey": "PDV.Signal.DunmerPortableAshPrayer",
+      "immersionProof": "A portable ash-prayer/home-rite proxy for diaspora ancestor practice; not a generic shrine faucet."
+    },
+    {
+      "id": "player-home-rite-proof",
+      "editorId": "PDV_ACTI_DunmerPlayerHomeRiteSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planned",
+      "placementStatus": "proof-cell-planned",
+      "placementRefEditorId": "PDV_REFR_DunmerPlayerHomeRiteSignal",
+      "routeId": 131,
+      "requiredOriginRace": 5,
+      "signalValue": 0,
+      "signalSourceId": "dunmer_player_home_rite_proof",
+      "name": "PDV DUNMER PLAYER HOME RITE SIGNAL",
+      "activateText": "RECORD HOME RITE",
+      "oncePerDayKey": "PDV.Signal.DunmerPlayerHomeRite",
+      "immersionProof": "A private player-home ancestor rite proxy; deepens the substrate without becoming a generic location faucet."
+    },
+    {
+      "id": "reclamation-focus-proof",
+      "editorId": "PDV_ACTI_DunmerReclamationFocusSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planned",
+      "placementStatus": "proof-cell-planned",
+      "placementRefEditorId": "PDV_REFR_DunmerReclamationFocusSignal",
+      "routeId": 132,
+      "requiredOriginRace": 5,
+      "signalValue": 0,
+      "signalSourceId": "dunmer_reclamation_focus_proof",
+      "name": "PDV DUNMER RECLAMATION FOCUS SIGNAL",
+      "activateText": "RECORD RECLAMATION FOCUS",
+      "oncePerDayKey": "PDV.Signal.DunmerReclamationFocus",
+      "immersionProof": "A curated Azura/Boethiah/Mephala focus proxy; one Reclamation foreground at a time, sourced from named acts not generic Daedric behavior. Runtime log marker RouteDunmerReclamationFocus complete: 130 focus N (per PDV_BetaTestPacket_Dunmer.md)."
+    },
+    {
+      "id": "deviation-price-proof",
+      "editorId": "PDV_ACTI_DunmerDeviationPriceSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planned",
+      "placementStatus": "proof-cell-planned",
+      "placementRefEditorId": "PDV_REFR_DunmerDeviationPriceSignal",
+      "routeId": 133,
+      "requiredOriginRace": 5,
+      "signalValue": 0,
+      "signalSourceId": "dunmer_deviation_price_proof",
+      "name": "PDV DUNMER DEVIATION PRICE SIGNAL",
+      "activateText": "RECORD DEVIATION PRICE",
+      "oncePerDayKey": "PDV.Signal.DunmerDeviationPrice",
+      "immersionProof": "A non-Reclamation Daedric/curse deviation-price proxy; writes price/stigma/residue through manager-owned state, one-shot/source-capped, never a third loud package. Routes through the global Daedric system (R6)."
+    }
+  ],
+  "immersiveHookContracts": [
+    {
+      "signalId": "dunmer-portable-ash-prayer-home-rite",
+      "playerExperience": "Diaspora practice remains portable and private through ash-prayer and home rites, not generic shrine clicking.",
+      "hookClass": "voluntary-devotional-surface-and-home-context",
+      "receiverPlan": "Keep existing portable ash-prayer/player-home routes; attach only to acceptable token/home context.",
+      "vanillaOrPo3Source": "Existing PDV devotional token pattern, vanilla bowl/urn/incense/book-like stock object, player-home context.",
+      "routeTarget": "PDV_EventBus.RouteDunmerPortableShrinePrayer() and RouteDunmerPlayerHomeBonus()",
+      "handler": "HandleDunmerPortableShrinePrayer / HandleDunmerPlayerHomeBonus (substrate: PDV_Substrate_DunmerAncestor.RecordPortableShrinePrayerScaled / RecordPlayerHomeBonusScaled)",
+      "acceptedContext": "Dunmer origin, portable ash-prayer or private home rite context, ancestor posture eligible.",
+      "rejectedContext": "Generic shrine use, ash proximity, tomb travel, non-Dunmer origin, repeated same-source spam.",
+      "antiFarmRule": "One accepted prayer/home source per day or marker (substrate ConsumeDailyRepeatMultiplier 0.7^n).",
+      "proofPath": "Portable prayer/home rite, generic shrine/ash rejection, wrong-origin silence, Survey ancestor clarity.",
+      "assetRequirement": "No new mesh required; existing PDV token pattern or vanilla bowl, urn, incense, book, or marker-backed home context.",
+      "newMeshRequired": false,
+      "missingAssetIfRequired": "none"
+    },
+    {
+      "signalId": "dunmer-reclamation-focus",
+      "playerExperience": "Azura, Boethiah, or Mephala focus comes from curated Reclamation acts and choices, not generic Daedric behavior.",
+      "hookClass": "curated-quest-stage-book-or-state-context",
+      "receiverPlan": "Use selective PO3 QuestStageChange and BookRead for curated Reclamation sources; route one foreground focus at a time.",
+      "vanillaOrPo3Source": "Curated Azura/Boethiah/Mephala quest stages, sacred/ancestral books, diaspora/home context.",
+      "routeTarget": "PDV_EventBus.RouteDunmerReclamationFocus() (new Dunmer Reclamation focus handler).",
+      "handler": "HandleDunmerReclamationFocus (one foreground focus at a time via shared active-patron state; small honest piety pulse to the active Reclamation patron)",
+      "acceptedContext": "Dunmer origin, ancestor substrate eligible, named Reclamation source, focus cap available.",
+      "rejectedContext": "Generic crime as Mephala, generic cruelty as Boethiah, generic twilight/magic as Azura, Tribunal memory as controllable path, non-Dunmer origin.",
+      "antiFarmRule": "One Reclamation foreground focus plus one active favor; one-shot source markers (piety pulse ScoreRepeatableAction).",
+      "proofPath": "Reclamation trigger, generic crime/cruelty/magic rejection, wrong-origin silence, Survey focus clarity.",
+      "assetRequirement": "No new mesh required; quest, book, home, shrine-context, and status wiring.",
+      "newMeshRequired": false,
+      "missingAssetIfRequired": "none"
+    },
+    {
+      "signalId": "dunmer-deviation-price",
+      "playerExperience": "Non-Reclamation Daedric or curse deviation creates visible price, stigma, or residue instead of a clean extra reward path.",
+      "hookClass": "curated-quest-stage-curse-daedric-state-context",
+      "receiverPlan": "Use curated Daedric/curse quest-stage and state hooks to write deviation price through manager-owned state.",
+      "vanillaOrPo3Source": "Selective PO3 QuestStageChange, curse-state events, Daedric artifact/quest outcome FormLists (global Daedric system per R6).",
+      "routeTarget": "PDV_EventBus.RouteDunmerDeviationPrice() (new Dunmer deviation-price handler).",
+      "handler": "HandleDunmerDeviationPrice (writes ancestor-silence / Daedric-deviation cost; cannot become a third loud package)",
+      "acceptedContext": "Dunmer origin, deviation/curse source, Reclamation/ancestor stack rules evaluated.",
+      "rejectedContext": "Generic Daedric contact, generic artifact ownership, generic crime, non-Dunmer origin.",
+      "antiFarmRule": "Deviation marks are one-shot/source-capped and cannot become a third loud package.",
+      "proofPath": "Deviation price source, generic Daedric rejection, wrong-origin silence, edge stack snapshot.",
+      "assetRequirement": "No new mesh required; quest/curse/Daedric state wiring.",
+      "newMeshRequired": false,
+      "missingAssetIfRequired": "none"
+    }
+  ],
+  "immersionProof": {
+    "signaturePromise": "Ancestors and the Reclamations follow the Dunmer into diaspora: ash-prayer and home rite are always-active identity, and one Reclamation focus carries the loud foreground.",
+    "diegeticTriggerMeaning": [
+      "Portable ash-prayer and private home rite are diaspora maintenance of an always-active ancestor layer, not stat faucets, and they carry no passive decay.",
+      "Reclamation focus rewards come from curated Azura/Boethiah/Mephala acts; non-Reclamation deviation carries a visible price rather than a third reward path."
+    ],
+    "feedbackSurface": [
+      "Ancestor posture messages and Survey layered copy explain Normal, Strained, Silent, and RestoredScarred states.",
+      "Portable ash-prayer, home-rite, Reclamation focus, and deviation-price notifications teach the layers without constant popups."
+    ],
+    "rejectedGenericBehavior": [
+      "generic crime as Mephala",
+      "generic cruelty as Boethiah",
+      "generic twilight/magic as Azura",
+      "Tribunal memory as a controllable path",
+      "non-Reclamation deviation without price",
+      "generic shrine use, ash proximity, tomb travel"
+    ],
+    "normalSessionFeel": "A broad Dunmer feels complete through ash-prayer, portable shrine, home bonus, diaspora solidarity, and shared Reclamations even before choosing a primary focus.",
+    "runtimePromotionGate": "Before reward expansion, record the expected stack (ancestor substrate, posture, Reclamation focus, active favor) and the edge stack (portable/home bonus, deviation price, curse state, Daedric modifiers) snapshots, plus negative cases for generic crime/cruelty/magic and Tribunal-as-path."
+  },
+  "stackSnapshot": {
+    "expected": [
+      "ancestor substrate",
+      "ancestor posture",
+      "Reclamation focus",
+      "active favor"
+    ],
+    "edge": [
+      "portable/home bonus",
+      "deviation price",
+      "curse state",
+      "Daedric modifiers"
+    ],
+    "allowedLoudLayers": [
+      "ancestor substrate",
+      "one Reclamation foreground"
+    ],
+    "suppressedLayers": [
+      "ancestor substrate plus focus plus deviation as best generic package"
+    ],
+    "contextualFavorCap": "one active Reclamation/favor family",
+    "curseDaedricModifierNote": "Deviation, curse, and Daedric contact must carry price, stigma, exit, or residue."
+  },
+  "verifierExpectations": {
+    "strictFlags": [
+      "--strict-phase20-race-costing"
+    ],
+    "status": "planning-ready",
+    "rules": [
+      "ancestor substrate stays identity/utility with NO passive decay",
+      "exactly two loud layers are allowed (ancestor substrate + one Reclamation foreground); PDV_State_DunmerPath must NOT be created",
+      "Azura is reused (create:false); Boethiah and Mephala are the only Dunmer-owned new deities",
+      "rejected hook families (generic crime/cruelty/twilight/magic, Tribunal-as-path, deviation without price) are converted into verifier or runtime negative cases before build completion",
+      "the substrate ConsumeDailyRepeatMultiplier and the piety pulse ScoreRepeatableAction are never both applied to one magnitude"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "a Dunmer can maintain identity through portable ash-prayer and a private home rite with no decay punishment",
+      "one Reclamation foreground (Azura, Boethiah, or Mephala) can be focused at a time from curated sources, with a small honest piety pulse to the active patron",
+      "Survey explains ancestor layer, active Reclamation focus, private posture, and deviation/curse price",
+      "the curse/Silent posture produces ancestor-silence bite and a RestoredScarred return path"
+    ],
+    "negative": [
+      "generic crime does not score Mephala, generic cruelty does not score Boethiah, generic twilight/magic does not score Azura",
+      "Tribunal memory is flavor-only and cannot be controlled as a blessing path",
+      "ancestor substrate plus focus plus deviation never becomes a third loud reward package",
+      "wrong-origin (non-Dunmer) acts produce no native Dunmer layer movement"
+    ]
+  },
+  "firstImplementationSlice": [
+    "Wire the ancestor substrate slots (Substrate_Always/Mid/High) on PDV_Substrate_DunmerAncestor and the ancestor posture readback before any Reclamation reward expansion.",
+    "Add portable ash-prayer and player-home-rite double-route (substrate record + small honest piety pulse to the active Reclamation patron) with one-source-per-day anti-farm.",
+    "Reconcile the shared PDV_Deity_Azura (create:false, add Stance_Dunmer) and author Dunmer-owned PDV_Deity_Boethiah and PDV_Deity_Mephala; wire the broad Reclamation T1/T2 plus the three patron 3-tier sets.",
+    "Add negative tests for generic crime/cruelty/twilight/magic, Tribunal-as-path, and deviation-without-price; record expected and edge stack snapshots."
+  ]
+}

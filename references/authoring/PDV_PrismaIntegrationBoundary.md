@@ -39,8 +39,8 @@ state, native bridge state, glyph coverage, or UI clickability.
 Prisma owns presentation and final player-facing feel:
 
 - typed event toasts
-- refreshed panel payloads
-- medallion roster presentation
+- on-demand Devotion panel payloads
+- default-off/player-opened medallion roster presentation
 - glyph coverage
 - eventual always-on or persistent HUD concepts
 - final UX polish for status, transitions, choices, and warnings
@@ -76,8 +76,8 @@ An always-on HUD is not implemented and is not required for P2 proof.
 Current landed UI surfaces are:
 
 - transient Prisma event toasts
-- on-demand/refreshed Devotion panel payloads
-- `mode:"medallion"` roster presentation
+- on-demand Devotion panel payloads
+- default-off/player-opened `mode:"medallion"` roster presentation
 
 Future always-on work is a UI feature track. It must be gated by:
 
@@ -102,6 +102,21 @@ Prisma can be tested in parallel as player-facing polish, but a missing Prisma
 toast or panel update is not a P2 route-proof failure unless the manager state
 or log marker is also wrong.
 
+## Full-Panel Safety Default
+
+As of 2026-06-06, `PDV__ManagerQuest` defaults `AutoPushPrismaPanel` and
+`AllowPrismaBlockingSurfaces` to false. Gameplay events can still score devotion
+and mark panel state dirty, but the manager does not automatically push the full
+panel, startup modal, or medallion modal payload during live play. This keeps
+shout, combat, source-fill, and state-transition proof from blocking the
+player's view. Deliberate player-owned panel or modal flows can opt in later
+without making P2 proof depend on the panel.
+
+Run `node .\tools\pdv_prisma_ui_audit.mjs` after touching any
+`PDV_PrismaBridge.*` call. The audit expects gameplay paths to emit transient
+toasts or stay silent unless a blocking UI surface is explicitly default-off and
+player-owned.
+
 ## Final-State Gate
 
 Before beta/final, both tracks must pass:
@@ -125,4 +140,3 @@ presentation is working but gameplay is not proven.
 - `handoff/SESSION_HANDOFF_Prisma_Surfacing.md`
 - `handoff/PrismaMedallionRoster_DesignHandoff.md`
 - `native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/app.js`
-- `scratch/p2-toast-panel-fix/PDV__ManagerQuest.psc`

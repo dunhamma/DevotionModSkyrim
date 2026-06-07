@@ -28,6 +28,7 @@
     ["yffre", "Y'ffre"],
     ["zen", "Z'en"],
     ["baan-dar", "Baan Dar"],
+    ["azura", "Azurah"],
     ["lunar", "Lunar"],
     ["hist", "Hist"],
     ["ancestor", "Ancestor"],
@@ -254,6 +255,14 @@
       return fallback;
     }
     return String(value);
+  };
+
+  const symbolDisplayNames = Object.fromEntries(gallerySymbols);
+
+  const displayName = (value, fallback = "") => {
+    const raw = text(value, fallback);
+    const normalized = normalizeSymbol(raw, "");
+    return symbolDisplayNames[normalized] || raw;
   };
 
   const numberOrZero = (value) => {
@@ -562,7 +571,7 @@
     return normalized;
   };
 
-  const deityName = (payload = {}) => text(payload.deity, text(state.patron, "Devotion"));
+  const deityName = (payload = {}) => displayName(payload.deity, displayName(state.patron, "Devotion"));
 
   const possessive = (value) => {
     const name = text(value, "Devotion");

@@ -14,8 +14,11 @@ const string proofActivatorModel = @"Architecture\HighHrothgar\MQEtchedShrineAct
 var dryRun = args.Contains("--dry-run");
 var createMissing = args.Contains("--create-missing");
 var checkPlacements = args.Contains("--check-placements");
+var authorRewards = args.Contains("--author-rewards");
+var fixBaanDar = args.Contains("--fix-baandar");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var manifestPath = Path.GetFullPath(GetArg(args, "--manifest") ?? defaultManifest);
+var rewardsSpecPath = Path.GetFullPath(GetArg(args, "--rewards-spec") ?? @"references\authoring\PDV_KhajiitRewardRecords.spec.json");
 
 var report = new AuthorReport
 {
@@ -31,6 +34,20 @@ try
     if (!File.Exists(espPath))
     {
         throw new FileNotFoundException("Framework ESP not found.", espPath);
+    }
+
+    if (authorRewards)
+    {
+        AuthorRewards(espPath, rewardsSpecPath, dryRun, report);
+        report.Status = report.Errors.Count == 0 ? "PASS" : "FAIL";
+        return report.Status == "PASS" ? 0 : 1;
+    }
+
+    if (fixBaanDar)
+    {
+        FixBaanDarStartup(espPath, dryRun, report);
+        report.Status = report.Errors.Count == 0 ? "PASS" : "FAIL";
+        return report.Status == "PASS" ? 0 : 1;
     }
 
     if (!File.Exists(manifestPath))
@@ -392,6 +409,314 @@ static string? GetArg(string[] args, string name)
 
 static TranslatedString Tx(string value) => new(Language.English, value);
 
+// =======================================================================
+// REWARD / SUBSTRATE / NEGLECT RECORD AUTHORING (--author-rewards)
+// =======================================================================
+
+static void FixBaanDarStartup(string espPath, bool dryRun, AuthorReport report)
+{
+    var mod = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
+    var index = BuildIndex(mod);
+    var baanDar = RequireRecord<Quest>(index, "PDV_Deity_BaanDar");
+    var template = RequireRecord<Quest>(index, "PDV_Deity_Kyne");
+    baanDar.Flags = template.Flags;
+    baanDar.Priority = template.Priority;
+    report.Actions.Add($"Set PDV_Deity_BaanDar Flags={(int)template.Flags} Priority={template.Priority} (matched PDV_Deity_Kyne). Run pdv_refresh_seq after.");
+
+    // Shared-deity reconciliation: Baan Dar is native to Khajiit too (Stance_Khajiit=NATIVE=0),
+    // and its Bosmer-path eligibility gate must only apply to Bosmer (EligibleStateTrackOriginRace=4),
+    // so the Khajiit emphasis is not foreign-penalized or inactive-path-quartered.
+    WireQuestScript(baanDar, "PDV_Deity_BaanDar", new ScriptProperty[]
+    {
+        IntProp("Stance_Khajiit", 0),
+        IntProp("EligibleStateTrackOriginRace", 4),
+    });
+    report.Actions.Add("Set PDV_Deity_BaanDar Stance_Khajiit=NATIVE(0) and EligibleStateTrackOriginRace=Bosmer(4).");
+
+    WriteModIfNeeded(mod, espPath, dryRun, report, "phase20-baandar-sge");
+}
+
+static void AuthorRewards(string espPath, string specPath, bool dryRun, AuthorReport report)
+{
+    if (!File.Exists(specPath))
+    {
+        throw new FileNotFoundException("Khajiit rewards spec not found.", specPath);
+    }
+
+    var spec = JsonSerializer.Deserialize<RewardsSpec>(File.ReadAllText(specPath), new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+        ?? throw new InvalidOperationException("Khajiit rewards spec did not parse.");
+
+    var mod = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
+    var index = BuildIndex(mod);
+    var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
+
+    var originGlobal = RequireRecord<Global>(index, "PDV_GLO_OriginRace");
+    var debugGlobal = RequireRecord<Global>(index, "PDV_GLO_DebugLevel");
+    var manager = RequireRecord<Quest>(index, "PDV__ManagerQuest");
+    var lunarSubstrate = RequireRecord<Quest>(index, "PDV_Substrate_KhajiitLunar");
+    var allDeities = RequireRecord<FormList>(index, "PDV_FLST_AllDeities");
+    var deityTemplate = RequireRecord<Quest>(index, "PDV_Deity_Kyne");
+
+    var deityIndexMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["PDV_Deity_Azura"] = 40,
+        ["PDV_Deity_Khenarthi"] = 41,
+        ["PDV_Deity_Rajhin"] = 42,
+        ["PDV_Deity_Alkosh"] = 43,
+    };
+
+    var managerProps = new List<ScriptProperty>();
+
+    // 1) Deity quests + FormList membership + manager deity properties.
+    var questByEditorId = new Dictionary<string, Quest>(StringComparer.OrdinalIgnoreCase);
+    foreach (var dq in spec.deityQuests ?? new())
+    {
+        var deityIndex = deityIndexMap.TryGetValue(dq.editorId!, out var mapped) ? mapped : 40;
+        var quest = EnsureDeityQuest(mod, index, allocator, dq, deityTemplate, originGlobal.FormKey, debugGlobal.FormKey, deityIndex, report);
+        questByEditorId[dq.editorId!] = quest;
+        if (!allDeities.Items.Any(item => item.FormKey.Equals(quest.FormKey)))
+        {
+            allDeities.Items.Add(quest.FormKey.ToLink<ISkyrimMajorRecordGetter>());
+            report.Actions.Add($"Added {dq.editorId} to PDV_FLST_AllDeities.");
+        }
+    }
+    foreach (var mp in spec.managerDeityProperties ?? new())
+    {
+        if (questByEditorId.TryGetValue(mp.record!, out var quest))
+        {
+            managerProps.Add(ObjectProp(mp.property!, quest.FormKey));
+        }
+    }
+
+    // 2) Substrate boon slots (broad lunar reward layer) wired onto the substrate quest.
+    var substrateProps = new List<ScriptProperty>();
+    if (spec.substrateBoons?.slots is { } slots)
+    {
+        foreach (var slot in slots)
+        {
+            var spell = BuildSpell(mod, index, allocator, slot.spellEditorId!, slot.displayName!, slot.playerFacingText!, slot.effects ?? new(), report);
+            substrateProps.Add(ObjectProp(slot.slotProperty!, spell.FormKey));
+        }
+        WireQuestScript(lunarSubstrate, "PDV_Substrate_KhajiitLunar", substrateProps);
+    }
+
+    // 3) Neglect spell (manager-owned).
+    if (spec.neglect is { } neglect)
+    {
+        var neglectSpell = BuildSpell(mod, index, allocator, neglect.spellEditorId!, neglect.displayName!, neglect.playerFacingText!, neglect.effects ?? new(), report);
+        managerProps.Add(ObjectProp(neglect.spellProperty ?? "PDV_SPEL_Neglect_KhajiitLunar", neglectSpell.FormKey));
+    }
+
+    // 4) Per-emphasis 3-tier reward spells (manager-owned, gated on emphasis-deity piety tier).
+    foreach (var reward in spec.emphasisRewards ?? new())
+    {
+        var spell = BuildSpell(mod, index, allocator, reward.spellEditorId!, reward.displayName!, reward.playerFacingText!, reward.effects ?? new(), report);
+        managerProps.Add(ObjectProp(reward.spellEditorId!, spell.FormKey));
+    }
+
+    WireQuestScript(manager, "PDV__ManagerQuest", managerProps);
+    report.Actions.Add($"Wired {managerProps.Count} Khajiit deity/reward/neglect properties on PDV__ManagerQuest.");
+
+    WriteModIfNeeded(mod, espPath, dryRun, report, "phase20-khajiit-rewards");
+}
+
+static Quest EnsureDeityQuest(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    RewardsSpecDeityQuest dq,
+    Quest template,
+    FormKey originGlobal,
+    FormKey debugGlobal,
+    int deityIndex,
+    AuthorReport report)
+{
+    Quest quest;
+    if (index.TryGetValue(dq.editorId!, out var existing))
+    {
+        if (existing is not Quest typed)
+        {
+            throw new InvalidOperationException($"{dq.editorId} already exists as {existing.GetType().Name}, expected Quest.");
+        }
+        quest = typed;
+    }
+    else
+    {
+        quest = new Quest(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.Quests.Add(quest);
+        index[dq.editorId!] = quest;
+        report.Actions.Add($"Created deity quest {dq.editorId} (DeityIndex {deityIndex}).");
+    }
+
+    quest.EditorID = dq.editorId;
+    quest.FormVersion = 44;
+    quest.Flags = template.Flags;
+    quest.Priority = template.Priority;
+    quest.Name = Tx(dq.editorId!);
+    WireQuestScript(quest, dq.script!, new ScriptProperty[]
+    {
+        StringProp("DeityName", dq.deityName!),
+        IntProp("DeityIndex", deityIndex),
+        IntProp("Stance_Khajiit", 0),
+        ObjectProp("PDV_GLO_OriginRace", originGlobal),
+        ObjectProp("PDV_GLO_DebugLevel", debugGlobal),
+    });
+    return quest;
+}
+
+static Spell BuildSpell(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    string spellEditorId,
+    string displayName,
+    string playerFacingText,
+    List<RewardsSpecEffect> effects,
+    AuthorReport report)
+{
+    if (playerFacingText.Any(ch => ch > 127))
+    {
+        throw new InvalidOperationException($"{spellEditorId} player-facing text must be ASCII-safe.");
+    }
+
+    var built = new List<(RewardsSpecEffect Effect, MagicEffect Record)>();
+    foreach (var effect in effects)
+    {
+        var mgefId = string.IsNullOrWhiteSpace(effect.magicEffectEditorId)
+            ? GenerateMgefId(spellEditorId, effect.actorValue!)
+            : effect.magicEffectEditorId!;
+        var record = EnsureMgef(mod, index, allocator, mgefId, displayName, playerFacingText, effect, report);
+        built.Add((effect, record));
+    }
+
+    Spell spell;
+    if (index.TryGetValue(spellEditorId, out var existing))
+    {
+        if (existing is not Spell typed)
+        {
+            throw new InvalidOperationException($"{spellEditorId} already exists as {existing.GetType().Name}, expected Spell.");
+        }
+        spell = typed;
+    }
+    else
+    {
+        spell = new Spell(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.Spells.Add(spell);
+        index[spellEditorId] = spell;
+        report.Actions.Add($"Created spell {spellEditorId}.");
+    }
+
+    spell.EditorID = spellEditorId;
+    spell.FormVersion = 44;
+    spell.Name = Tx(displayName);
+    spell.Description = Tx(playerFacingText);
+    spell.BaseCost = 0;
+    spell.Type = SpellType.Ability;
+    spell.CastType = CastType.ConstantEffect;
+    spell.TargetType = TargetType.Self;
+    spell.ChargeTime = 0.0f;
+    spell.CastDuration = 0.0f;
+    spell.Range = 0.0f;
+    spell.Effects.Clear();
+    foreach (var (effect, record) in built)
+    {
+        var spellEffect = new Effect
+        {
+            BaseEffect = record.FormKey.ToNullableLink<IMagicEffectGetter>(),
+            Data = new EffectData { Magnitude = effect.magnitude, Area = 0, Duration = 0 },
+            Conditions = []
+        };
+        if (effect.nightOnly)
+        {
+            AddNightConditions(spellEffect);
+        }
+        spell.Effects.Add(spellEffect);
+    }
+    return spell;
+}
+
+static MagicEffect EnsureMgef(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    string mgefEditorId,
+    string displayName,
+    string description,
+    RewardsSpecEffect effect,
+    AuthorReport report)
+{
+    MagicEffect record;
+    if (index.TryGetValue(mgefEditorId, out var existing))
+    {
+        if (existing is not MagicEffect typed)
+        {
+            throw new InvalidOperationException($"{mgefEditorId} already exists as {existing.GetType().Name}, expected MagicEffect.");
+        }
+        record = typed;
+    }
+    else
+    {
+        record = new MagicEffect(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.MagicEffects.Add(record);
+        index[mgefEditorId] = record;
+        report.Actions.Add($"Created magic effect {mgefEditorId}.");
+    }
+
+    record.EditorID = mgefEditorId;
+    record.FormVersion = 44;
+    record.Name = Tx(displayName);
+    record.Description = Tx(description);
+    record.Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoDuration | MagicEffect.Flag.NoHitEffect;
+    record.BaseCost = 0.0f;
+    record.MagicSkill = ActorValue.None;
+    record.ResistValue = ActorValue.None;
+    record.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.ValueModifier)
+    {
+        ActorValue = ParseActorValue(effect.actorValue!)
+    };
+    record.CastType = CastType.ConstantEffect;
+    record.TargetType = TargetType.Self;
+    record.SkillUsageMultiplier = 0.0f;
+    record.ScriptEffectAIScore = 0.0f;
+    record.ScriptEffectAIDelayTime = 0.0f;
+    return record;
+}
+
+static void AddNightConditions(Effect effect)
+{
+    effect.Conditions.Clear();
+    effect.Conditions.Add(new ConditionFloat
+    {
+        Data = new GetCurrentTimeConditionData(),
+        CompareOperator = CompareOperator.GreaterThanOrEqualTo,
+        ComparisonValue = 19.0f,
+        Flags = Condition.Flag.OR
+    });
+    effect.Conditions.Add(new ConditionFloat
+    {
+        Data = new GetCurrentTimeConditionData(),
+        CompareOperator = CompareOperator.LessThanOrEqualTo,
+        ComparisonValue = 7.0f
+    });
+}
+
+static string GenerateMgefId(string spellEditorId, string actorValue)
+{
+    var stem = spellEditorId.StartsWith("PDV_Bless", StringComparison.OrdinalIgnoreCase)
+        ? "PDV_MGEF" + spellEditorId.Substring("PDV_Bless".Length)
+        : spellEditorId + "_MGEF";
+    return $"{stem}_{actorValue}";
+}
+
+static ActorValue ParseActorValue(string actorValue)
+{
+    if (Enum.TryParse<ActorValue>(actorValue, ignoreCase: true, out var parsed))
+    {
+        return parsed;
+    }
+    throw new InvalidOperationException($"Unknown ActorValue {actorValue}.");
+}
+
 sealed class FormKeyAllocator
 {
     private readonly ModKey modKey;
@@ -475,4 +800,60 @@ sealed class AuthorReport
     public List<string> Actions { get; } = [];
     public List<string> Errors { get; } = [];
     public string? Exception { get; set; }
+}
+
+sealed class RewardsSpec
+{
+    public List<RewardsSpecDeityQuest>? deityQuests { get; set; }
+    public List<RewardsSpecManagerProp>? managerDeityProperties { get; set; }
+    public RewardsSpecSubstrate? substrateBoons { get; set; }
+    public RewardsSpecReward? neglect { get; set; }
+    public List<RewardsSpecReward>? emphasisRewards { get; set; }
+}
+
+sealed class RewardsSpecDeityQuest
+{
+    public string? editorId { get; set; }
+    public string? script { get; set; }
+    public string? deityName { get; set; }
+}
+
+sealed class RewardsSpecManagerProp
+{
+    public string? property { get; set; }
+    public string? record { get; set; }
+}
+
+sealed class RewardsSpecSubstrate
+{
+    public string? wireTo { get; set; }
+    public List<RewardsSpecSlot>? slots { get; set; }
+}
+
+sealed class RewardsSpecSlot
+{
+    public string? slotProperty { get; set; }
+    public string? spellEditorId { get; set; }
+    public string? displayName { get; set; }
+    public List<RewardsSpecEffect>? effects { get; set; }
+    public string? playerFacingText { get; set; }
+}
+
+sealed class RewardsSpecReward
+{
+    public string? emphasis { get; set; }
+    public string? tier { get; set; }
+    public string? spellEditorId { get; set; }
+    public string? spellProperty { get; set; }
+    public string? displayName { get; set; }
+    public List<RewardsSpecEffect>? effects { get; set; }
+    public string? playerFacingText { get; set; }
+}
+
+sealed class RewardsSpecEffect
+{
+    public string? magicEffectEditorId { get; set; }
+    public string? actorValue { get; set; }
+    public float magnitude { get; set; }
+    public bool nightOnly { get; set; }
 }

@@ -1,0 +1,144 @@
+{
+  "schema": "pdv-altmer-records.v1",
+  "status": "design-locked-2026-06-07; conforms to PDV_Phase2_DeityRoster_and_ArchitectureRulings R1-R8; pending authoring run",
+  "notes": "Authoritative record spec for the Altmer race (Phase 2, OFFER / active-patron gate). Modelled structurally on PDV_KhajiitRewardRecords.spec.json. Altmer is an OFFER race: rewards gate on IsFirstTierRaceRewardEligible (active patron tier >= Seeker). Broad worship is the Orthodox STATE (R1), NOT a deity record. Altmer OWNS Magnus and Xarxes (create:true); REUSES Auri-El (create:false). Trinimac is owned by Orc and is orthodoxy PRESSURE via stance, not a reward patron here (R5/R6). Daedric forks route through the existing 20C Daedric system (R6). ThalmorAlignment is pressure/access, NOT a third boon track (R8). T3 recognition is V1 Survey/status text only (non-voiced), per PDV_RecognitionDialogueScalePacket.md.",
+  "gate": {
+    "type": "offer",
+    "eligibility": "IsFirstTierRaceRewardEligible",
+    "rule": "Active patron tier >= Seeker (Seeker 25 / Devoted 50 / Champion 85). The first-tier race reward (broad Orthodox T1) syncs through ProcessDawn()/RunDawnApplySpellAndNeglectLayers() only when the Orthodox patron state is active and the active deity is at least Seeker.",
+    "broadLane": "Orthodox",
+    "broadLaneIsState": "R1: Orthodox is PATRON_STATE_BROAD resolved by GetFirstTierRaceRewardSpellForOrigin(); there is NO PDV_Deity_Orthodox / PDV_Deity_Nine record.",
+    "originRaceIndex": 3
+  },
+  "deityQuests": [
+    { "editorId": "PDV_Deity_AuriEl", "script": "PDV_Deity_AuriEl", "deityName": "Auri-El", "create": false, "stanceAltmer": "NATIVE", "shared": ["existing record 03DE88; Altmer adds/confirms Stance_Altmer NATIVE via --reconcile-shared-deity"], "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "existing" },
+    { "editorId": "PDV_Deity_Magnus", "script": "PDV_Deity_Magnus", "deityName": "Magnus", "create": true, "stanceAltmer": "NATIVE", "owner": "Altmer", "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "next-available" },
+    { "editorId": "PDV_Deity_Xarxes", "script": "PDV_Deity_Xarxes", "deityName": "Xarxes", "create": true, "stanceAltmer": "NATIVE", "owner": "Altmer", "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "next-available" },
+    { "editorId": "PDV_Deity_Trinimac", "script": "PDV_Deity_Trinimac", "deityName": "Trinimac", "create": false, "stanceAltmer": "PRESSURE", "shared": ["owned by Orc spec (create:true). Altmer reuses with Stance_Altmer added as orthodoxy PRESSURE only (R5). NOT a reward patron and NOT a 3-tier set in this spec. Listed only to confirm the shared-deity stance reconciliation; if the Orc spec has not run, Altmer authoring must skip Trinimac reconciliation rather than create the record."], "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "existing-or-orc-owned" }
+  ],
+  "managerDeityProperties": [
+    { "property": "PDV_AuriEl", "record": "PDV_Deity_AuriEl", "note": "existing manager property; confirm only" },
+    { "property": "PDV_Magnus", "record": "PDV_Deity_Magnus" },
+    { "property": "PDV_Xarxes", "record": "PDV_Deity_Xarxes" }
+  ],
+  "broadState": {
+    "lane": "Orthodox",
+    "wireTo": "PDV__ManagerQuest",
+    "broadStateEnum": "PATRON_STATE_BROAD (Orthodox worship state; not a deity)",
+    "rewards": [
+      { "tier": "T1", "spellProperty": "PDV_Bless_Altmer_Orthodox_T1", "spellEditorId": "PDV_Bless_Altmer_Orthodox_T1", "fixedEditorId": "R2: FIXED manager broad-T1 property; do not rename", "create": "wire-existing-property", "displayName": "Altmer Orthodox Steadiness", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Bless_Altmer_Orthodox_T1_Magicka", "actorValue": "MagickaRateMult", "magnitude": 4.0 } ], "playerFacingText": "You keep to the ancestral order. Magicka regenerates 4% faster." },
+      { "tier": "T2", "spellProperty": "PDV_Bless_Altmer_Orthodox_T2", "spellEditorId": "PDV_Bless_Altmer_Orthodox_T2", "newProperty": "R2: broad T2 follows the fixed stem with _T2", "cappedAt": "Faithful (broad-worship ceiling; suppressed when a patron is focused)", "displayName": "Altmer Orthodox Coherence", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Bless_Altmer_Orthodox_T2_Magicka", "actorValue": "MagickaRateMult", "magnitude": 7.0 }, { "magicEffectEditorId": "PDV_MGEF_Bless_Altmer_Orthodox_T2_MagicResist", "actorValue": "ResistMagic", "magnitude": 5.0 } ], "playerFacingText": "Your coherence holds against a divided world. Magicka regenerates 7% faster and magic resistance rises 5%." }
+    ],
+    "stackRule": "Broad < focused. Broad Orthodox caps at T2/Faithful. When an Auri-El/Magnus/Xarxes focus is active, suppress broad Orthodox T2 so the focused set is the loud layer."
+  },
+  "emphasisRewards": [
+    { "emphasis": "AuriEl", "tier": "T1", "spellEditorId": "PDV_Bless_Altmer_AuriEl_T1", "displayName": "Auri-El's Dawn - Seeker", "effects": [ { "actorValue": "MagickaRateMult", "magnitude": 5.0 } ], "playerFacingText": "The Dawn steadies you. Magicka regenerates 5% faster." },
+    { "emphasis": "AuriEl", "tier": "T2", "spellEditorId": "PDV_Bless_Altmer_AuriEl_T2", "displayName": "Auri-El's Dawn - Devoted", "effects": [ { "actorValue": "MagickaRateMult", "magnitude": 8.0 }, { "actorValue": "ResistMagic", "magnitude": 6.0 } ], "playerFacingText": "The ancestor-light wards your mind. Magicka regenerates 8% faster and magic resistance rises 6%." },
+    { "emphasis": "AuriEl", "tier": "T3", "spellEditorId": "PDV_Bless_Altmer_AuriEl_T3", "displayName": "Auri-El's Return - Champion", "effects": [ { "actorValue": "MagickaRateMult", "magnitude": 12.0 }, { "actorValue": "ResistMagic", "magnitude": 10.0 } ], "playerFacingText": "You walk the path of return Auri-El first walked. Magicka regenerates 12% faster and magic resistance rises 10%.", "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player as keeping the Dawn foundation. Voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md." },
+    { "emphasis": "Magnus", "tier": "T1", "spellEditorId": "PDV_Bless_Altmer_Magnus_T1", "displayName": "Magnus's Arts - Seeker", "effects": [ { "actorValue": "Alteration", "magnitude": 5.0 } ], "playerFacingText": "The architect of magic favors disciplined study. Alteration +5." },
+    { "emphasis": "Magnus", "tier": "T2", "spellEditorId": "PDV_Bless_Altmer_Magnus_T2", "displayName": "Magnus's Arts - Devoted", "effects": [ { "actorValue": "Alteration", "magnitude": 8.0 }, { "actorValue": "MagickaRateMult", "magnitude": 6.0 } ], "playerFacingText": "The structure of the arts opens to you. Alteration +8 and magicka regenerates 6% faster." },
+    { "emphasis": "Magnus", "tier": "T3", "spellEditorId": "PDV_Bless_Altmer_Magnus_T3", "displayName": "Magnus's Aperture - Champion", "effects": [ { "actorValue": "Alteration", "magnitude": 12.0 }, { "actorValue": "MagickaRateMult", "magnitude": 9.0 } ], "playerFacingText": "You see through the aperture Magnus left in the world. Alteration +12 and magicka regenerates 9% faster.", "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player a true student of the arts. Voiced NPC recognition is V2." },
+    { "emphasis": "Xarxes", "tier": "T1", "spellEditorId": "PDV_Bless_Altmer_Xarxes_T1", "displayName": "Xarxes's Record - Seeker", "effects": [ { "actorValue": "Restoration", "magnitude": 5.0 } ], "playerFacingText": "The keeper of records steadies your hand at preservation. Restoration +5." },
+    { "emphasis": "Xarxes", "tier": "T2", "spellEditorId": "PDV_Bless_Altmer_Xarxes_T2", "displayName": "Xarxes's Record - Devoted", "effects": [ { "actorValue": "Restoration", "magnitude": 8.0 }, { "actorValue": "MagickaRateMult", "magnitude": 6.0 } ], "playerFacingText": "What is kept is what endures. Restoration +8 and magicka regenerates 6% faster." },
+    { "emphasis": "Xarxes", "tier": "T3", "spellEditorId": "PDV_Bless_Altmer_Xarxes_T3", "displayName": "Xarxes's Ledger - Champion", "effects": [ { "actorValue": "Restoration", "magnitude": 12.0 }, { "actorValue": "MagickaRateMult", "magnitude": 9.0 } ], "playerFacingText": "Your name and works are written into the long ledger. Restoration +12 and magicka regenerates 9% faster.", "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player a keeper of the ancestral record. Voiced NPC recognition is V2." }
+  ],
+  "faucet": {
+    "model": "active-patron (Altmer is one of the three faucet races). Authentic repeatable acts award real piety to Auri-El or the active secondary focus through AwardCuratedSignal/ScoreCuratedSignal, feeding the offer/tier spine so decay/neglect/creed-loss stay honest.",
+    "pace": {
+      "signalsPerDay": "1-2 authentic acts per ordinary day (dawn practice + one study/magic milestone or coherent act).",
+      "deltaPerSignal": "~1.5-2.2 piety after anti-farm scaling.",
+      "dailyCap": "PIETY_DAILY_MAX_DELTA=4.3 (shared engine).",
+      "daysToTier": "~6 days to Seeker (25), ~12 days to Devoted (50) at the stated cadence without perfect play - meets the ledger reward-floor: ordinary Altmer life trends net-positive.",
+      "note": "Lorkhan/crisis PRESSURE is a separate authored-signal pressure, NOT a piety faucet. Ordinary life stays net-positive; rejected ordinary surfaces stay silent (no hidden theological debt)."
+    },
+    "acts": [
+      { "act": "Dawn observance / dawn practice (Auri-El foundation upkeep)", "routeId": 52, "route": "RouteAltmerDawnSteadiness", "handler": "HandleAltmerDawnSteadiness", "deity": "PDV_Deity_AuriEl", "delta": 2.0, "antiFarm": "ScoreRepeatableAction(dailyCap=1, cooldownDays=0) - once-per-day; oncePerDayKey PDV.Signal.AltmerDawnSteadiness", "hookSource": "PDV_ACTI_AltmerDawnSteadinessSignal proof activator; dawn/study world surface (vanilla dawn context + curated dawn objects)" },
+      { "act": "Disciplined study / rare-text or threshold learning (Magnus or Xarxes secondary)", "routeId": "p2-books", "route": "RouteAltmerMagnusScholarship / RouteAltmerXarxesLineage", "handler": "HandleAltmerStudyMilestone", "deity": "PDV_Deity_Magnus (Magnus focus) or PDV_Deity_Xarxes (Xarxes focus)", "delta": 1.8, "antiFarm": "ScoreRepeatableAction(dailyCap=2, cooldownDays=0) on the piety pulse; rare/threshold texts award once via signalSourceId", "hookSource": "Curated Altmer books via PO3 book receivers (The Adabal-a = Auri-El; Arcana Restored = Magnus; Last King of the Ayleids = Xarxes); lecterns/College study lecterns where curated" },
+      { "act": "Magic milestone with restraint (study-framed, not spell-spam)", "routeId": 52, "route": "RouteAltmerMagnusScholarship", "handler": "HandleAltmerMagicMilestone", "deity": "PDV_Deity_Magnus (or PDV_Deity_AuriEl when no secondary focus)", "delta": 1.5, "antiFarm": "ScoreRepeatableAction(dailyCap=1, cooldownDays=0) - milestone, not per-cast; generic spellcasting spam is rejected", "hookSource": "Curated magic-milestone quest stages via PO3 QuestStageChange (College of Winterhold curated stages)" },
+      { "act": "Coherent act / orthodoxy-gated institutional duty (orthodox-cost favor)", "routeId": 53, "route": "RouteAltmerOrthodoxCost", "handler": "HandleAltmerOrthodoxCost", "deity": "PDV_Deity_AuriEl (orthodox steadiness credited to the foundation)", "delta": 2.2, "antiFarm": "ScoreRepeatableAction(dailyCap=1, cooldownDays=1) - marked, gated on ThalmorAlignment >= 70 and an orthodoxy-gated threat/duty", "hookSource": "PDV_ACTI_AltmerOrthodoxCostSignal proof activator; curated MQ/Civil-War institutional-duty quest stages via PO3 QuestStageChange" },
+      { "act": "Marriage / mortal-world continuity coherent resolution (post-crisis reaffirmation)", "routeId": 50, "route": "RouteAltmerLorkhanPressure", "handler": "HandleAltmerCoherenceHeld", "deity": "PDV_Deity_AuriEl", "delta": 1.8, "antiFarm": "ScoreRepeatableAction(dailyCap=1, cooldownDays=0) - authored beat only; ordinary friendships/settlement play rejected", "hookSource": "Curated marriage quest stage via PO3 QuestStageChange (authored continuity beat, framed as reassertion not denial)" }
+    ]
+  },
+  "lorkhanPressure": {
+    "model": "Authored-signal PRESSURE, NOT a piety faucet and NOT a boon track. Fires only on tagged/curated crisis sources; drives PDV_State_AltmerCrisis (None=0/Dissonant=1/Questioning=2/Reasserting=3/ScarredResolved=4). Ordinary existence in Skyrim must never apply Lorkhan pressure.",
+    "crisisSources": [
+      { "id": "dragonborn-declaration", "routeId": 51, "route": "RouteAltmerCrisisSource", "crisisWeight": "major-first-time", "deltaState": "-> Dissonant/Questioning", "antiFarm": "first authored declaration only; later Dragonborn identity is scar/context, not repeated penalty", "hookSource": "PDV_ACTI_AltmerDragonbornCrisisSignal; MQ Dragonborn-identity stage via PO3 QuestStageChange" },
+      { "id": "sovngarde-tsun-reality", "routeId": 50, "route": "RouteAltmerLorkhanPressure", "crisisWeight": "major", "antiFarm": "quest-stage/milestone only", "hookSource": "Sovngarde/Tsun MQ stage via PO3 QuestStageChange" },
+      { "id": "marriage-mortal-continuity", "routeId": 50, "route": "RouteAltmerLorkhanPressure", "crisisWeight": "major", "antiFarm": "authored marriage beat only; ordinary friendships and indoor living rejected", "hookSource": "Marriage quest stage via PO3 QuestStageChange" },
+      { "id": "companions-wuuthrad-beast-fork", "routeId": 50, "route": "RouteAltmerLorkhanPressure", "crisisWeight": "major", "antiFarm": "curated Companions/beast-fork only", "hookSource": "Companions/Wuuthrad MQ stage via PO3 QuestStageChange" }
+    ],
+    "recovery": "Coherent restraint and reassertion move Dissonant/Questioning toward Reasserting/ScarredResolved WITHOUT clearing patron piety. ScarredResolved is memory, not active punishment."
+  },
+  "creedViolationLoss": {
+    "scope": "medium/major only (no petty/ambient penalties)",
+    "acts": [
+      { "act": "Lorkhan-debt accrual: embracing mortal-world embodiment as identity at an authored major beat", "route": "RouteAltmerLorkhanPenalty", "handler": "HandleAltmerCreedRupture", "deity": "PDV_Deity_AuriEl", "delta": -2.5, "antiFarm": "authored beat only; not repeatable, not ambient" },
+      { "act": "Orthodoxy rupture: openly repudiating the ancestral order / Auri-El return at a curated stage", "route": "RouteAltmerLorkhanPenalty", "handler": "HandleAltmerCreedRupture", "deity": "PDV_Deity_AuriEl", "delta": -3.0, "antiFarm": "curated stage only; medium/major signal" }
+    ]
+  },
+  "neglect": {
+    "wireTo": "PDV__ManagerQuest",
+    "spellProperty": "PDV_SPEL_Neglect_Altmer",
+    "spellEditorId": "PDV_SPEL_Neglect_Altmer",
+    "displayName": "The Dawn Withheld",
+    "tone": "gentle by default; real bite only at crisis/curse posture (vampire terminal/exile, werewolf hard halt)",
+    "effects": [ { "magicEffectEditorId": "PDV_MGEF_Neglect_Altmer_Magicka", "actorValue": "MagickaRateMult", "magnitude": -4.0 } ],
+    "playerFacingText": "You have let coherence lapse. Your magicka regenerates 4% more slowly until you return to dawn practice and the ancestral order.",
+    "biteCondition": "Gentle thinning when Auri-El piety is flat/below floor. Real mechanical bite only at curse/exile posture: Exiled vampire caps favor low and blocks full orthodox restoration; werewolf hard-halts advancement (no rival viable Altmer path)."
+  },
+  "curseAndExile": {
+    "note": "Curse/Daedric paths remain rupture/price/exile pressure (R6: Daedric forks route through the existing 20C Daedric system; no new Daedric records here). Records below are already record-wired per the costing manifest.",
+    "messages": [
+      { "row": "PDV_Msg_Altmer_VampireExiledPath_Entry", "messageProperty": "PDV_Msg_Altmer_VampireExiledPath_Entry", "behavior": "block full orthodox restoration while cursed; allow exile-limited flavor only" },
+      { "row": "PDV_Msg_Altmer_VampireExiledPath_Recognition", "messageProperty": "PDV_Msg_Altmer_VampireExiledPath_Recognition", "behavior": "recognition is scarred and conditional, capped low; not a clean replacement path" },
+      { "row": "PDV_Msg_Altmer_CurseState_WerewolfHardHalt", "messageProperty": "PDV_Msg_Altmer_CurseState_WerewolfHardHalt", "behavior": "halt advancement instead of opening a rival viable Altmer path" }
+    ]
+  },
+  "rejectedHooks": [
+    "ordinary existence in Skyrim",
+    "ordinary friendship with Nords or non-Altmer",
+    "ordinary settlement travel",
+    "generic combat",
+    "generic helping",
+    "generic spellcasting spam",
+    "raw skill gain without context",
+    "generic College membership",
+    "generic anti-Thalmor violence",
+    "post-first-crisis Dragonborn identity as repeated penalty",
+    "vampire power as a clean devotion route"
+  ],
+  "v1RecognitionSurface": "Champion Survey/status text only (non-voiced). GetAltmerSummary explains Auri-El foundation, current standing, crisis state, Lorkhan pressure, ThalmorAlignment band, most recent orthodox/dawn favor, and curse posture in fiction-facing terms. Voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md.",
+  "budget": "Two always-on boon families (R8 cap): (1) Auri-El foundation [broad Orthodox state reward + Auri-El focus], (2) ONE secondary focus (Magnus OR Xarxes, one active at a time) plus one active contextual favor family. ThalmorAlignment is pressure/access/interpretation, NOT a third boon track. Lorkhan/crisis is pressure, not a boon. Reward ceiling per ledger = Auri-El foundation + one secondary + one contextual favor family.",
+  "balanceInvariants": {
+    "boonFamilyCap": "2 (Auri-El foundation + one secondary focus). ThalmorAlignment and crisis are NOT counted boon families.",
+    "broadLessThanFocused": "Broad Orthodox caps at T2/Faithful and is suppressed when a patron is focused; focused 3-tier sets reach Champion.",
+    "oneAntiFarmPerAct": "Each faucet act uses exactly ScoreRepeatableAction OR ConsumeDailyRepeatMultiplier, never both. Active-patron piety acts use ScoreRepeatableAction only.",
+    "magnitudeCeiling": "~12% (T3 MagickaRateMult/Restoration/Alteration peaks at 12).",
+    "asciiOnly": "All playerFacingText is ASCII-only (Auri-El written with hyphen-minus).",
+    "actorValuesValid": "MagickaRateMult, ResistMagic, Alteration, Restoration are valid Skyrim ActorValue names.",
+    "deityIndex": "Magnus/Xarxes use next-available (serial author-time assignment, collision-free); Auri-El reuses its existing index; reused deities create:false.",
+    "oneActiveFavorFamily": "Only one contextual favor family is loud at a time (costing-manifest rule)."
+  },
+  "rulingCompliance": {
+    "R1": "Broad Orthodox is a STATE (PATRON_STATE_BROAD), not a deity. No PDV_Deity_Orthodox/Nine record created.",
+    "R2": "Broad T1 editorId is the FIXED manager property PDV_Bless_Altmer_Orthodox_T1; broad T2 = PDV_Bless_Altmer_Orthodox_T2 (same stem).",
+    "R3": "Focused sets named PDV_Bless_Altmer_<Patron>_T1/T2/T3 for AuriEl/Magnus/Xarxes; grant logic mirrors SyncKhajiitEmphasisRewards (one active focus; T1>=Seeker, T2>=Devoted, T3>=Champion).",
+    "R4": "Auri-El is a SHARED record; Altmer references create:false and adds Stance_Altmer via --reconcile-shared-deity. Trinimac shared from Orc owner (create:false, PRESSURE stance only).",
+    "R5": "Only focusable patrons (Auri-El, Magnus, Xarxes) get/keep deity records. Trinimac is orthodoxy pressure, not a focusable reward patron here.",
+    "R6": "Daedric forks route through the existing 20C Daedric system; no new Daedric Prince records authored.",
+    "R7": "Altmer is offer / active-patron: rewards gate on IsFirstTierRaceRewardEligible (patron tier >= Seeker).",
+    "R8": "<=2 boon families; broad<focused; one anti-farm per act; magnitude ceiling ~12%; creed-loss medium/major only; ASCII-only text; Skyrim ActorValue names only; ThalmorAlignment is not a third boon track."
+  },
+  "authoringPlan": {
+    "vehicle": "tools/pdv-baandar-sge-author or the generalized pdv-phase20 author with an --author-rewards mode reading this spec; one backed-up framework-ESP write. Reuse reward-author patterns (EnsureMagicEffect/ConfigureMagicEffect/EnsureSpell/ConfigureSpell/ParseActorValue, --reconcile-shared-deity, stances[]).",
+    "recordCreation": "Create 2 deity QUSTs (Magnus, Xarxes) with Stance_Altmer=NATIVE and deityIndex next-available. REUSE PDV_Deity_AuriEl (03DE88, create:false) and reconcile Stance_Altmer. Create SPEL+MGEF for: broad Orthodox T2 (T1 reward record wired to fixed property), 9 emphasis spells (AuriEl/Magnus/Xarxes x T1/T2/T3), and PDV_SPEL_Neglect_Altmer. Do NOT create Trinimac (Orc-owned) or any Daedric record.",
+    "deityQuestStructure": "Mirror an existing deity quest (read PDV_Deity_AuriEl 03DE88 or PDV_Deity_Kyne 0120B6 fully first): FormVersion 44, Start-Game-Enabled flag, QuestAdapter VMAD hosting PDV_Deity_<Name> script, base properties DeityName(String), DeityIndex(Int, next-available), Stance_Altmer=0(NATIVE), PDV_GLO_OriginRace, PDV_GLO_DebugLevel. Thresholds use script defaults (25/50/85). Per MEMORY: every PDV_Deity_* QUST needs the SGE (Start-Game-Enabled) flag AND a SEQ entry - confirm the author helper sets the SGE flag and emits the SEQ record (this is how BaanDar shipped broken).",
+    "wiring": "Same run: add Magnus/Xarxes to FLST PDV_FLST_AllDeities (017E47); wire deity props (PDV_Magnus/PDV_Xarxes) + broad Orthodox T1/T2 props + 9 emphasis spell props + PDV_SPEL_Neglect_Altmer on PDV__ManagerQuest; confirm existing PDV_AuriEl prop.",
+    "baseline": {
+      "existingDeityQuests": { "PDV_Deity_AuriEl": "03DE88" },
+      "formListAllDeities": "017E47",
+      "khajiitDeityIndices": "40-43 preserved; Magnus/Xarxes assign next-available above the highest existing index at author time"
+    },
+    "verify": "housecarl readback (profile Devotion Dev): Magnus/Xarxes QUSTs exist with SGE flag + SEQ entries, DeityName/DeityIndex/Stance_Altmer set; FLST 017E47 includes Magnus/Xarxes; the 11 new SPEL (broad T2 + 9 emphasis + neglect) exist with correct MGEF actor-values/magnitudes; AuriEl Stance_Altmer reconciled. Then strict verifier (--strict-phase20-race-costing --strict-phase20-altmer) and runtime smoke (p2-books track per PDV_BetaTestPacket_Altmer.md)."
+  }
+}

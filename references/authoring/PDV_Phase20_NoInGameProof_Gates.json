@@ -63,7 +63,7 @@
         "receiver-side P2 source repeat gates compile-proven before curated source fill",
         "source-fill tool mode ready for approved exact source entries, with empty-source readback passing until curation is approved"
       ],
-      "remainingBoundary": "Exact source records must be curated and approved before live fill; then terminal quest-stage registrations must be source-filled, followed by runtime route proof, wrong-origin rejection proof, generic-hook rejection proof, anti-farm repeat proof, stack snapshot, and manual feel evidence."
+      "remainingBoundary": "Altmer MQ104 stage 160 is now live-filled for passive Lorkhan crisis proof; remaining exact source records must be curated and approved before live fill. Runtime route proof, wrong-origin rejection proof, generic-hook rejection proof, anti-farm repeat proof, stack snapshot, and manual feel evidence remain open."
     }
   ],
   "races": {

@@ -38,6 +38,9 @@ Status: route markers list for Altmer, Argonian, Orc, Redguard, Khajiit, and Bos
 P2 book runtime check:
 node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager
 Latest result on 2026-06-04: FAIL overall; Breton Hidden Art passes, remaining filled P2 book families still need manager-log proof.
+Latest focused retests on 2026-06-06: Altmer MQ104 stage 160 route passed in Papyrus.0.log with manual Survey proof; Khajiit Words of Clan Mother Ahnissi lunar book route passed with strict-manager checker and in-game Survey/status confirmation. These are source-packet passes, not whole-race beta-feel passes.
+Latest restart-packet result on 2026-06-06: Altmer passed all Auri-El/Magnus/Xarxes book checks and visuals in game; MQ104 stage 160 edge proof is carried forward from the captured Papyrus.0.log and Survey proof. Reward/Active Effects snapshot remains pending unless tester confirms the `Altmer Orthodox Steadiness` active effect or correct patron/tier pending state.
+Latest Khajiit restart-packet result on 2026-06-06: Words of Clan Mother Ahnissi and The Tale of Dro'Zira both produced Prisma toasts; expected lunar source checks, Survey/status visuals, wrong-origin rejection, generic-source silence, and correct reward-pending behavior all passed. Azurah casing was reported lower-case in the Survey/UI surface and the Prisma display-name map was patched so normalized azura symbols render as Azurah.
 ```
 
 The remaining verifier warning is the existing unnamed CK-authored INFO record
@@ -76,7 +79,7 @@ Structured no-in-game gate:
 ```text
 Race: Altmer
 Lane type: P0 active spine
-Verdict: Fail - runtime/manual proof deferred
+Verdict: Conditional - restarted source/visual/edge packet passed; reward snapshot pending
 No-in-game status: Readback-Ready
 Expected build: Auri-El or Magnus scholar managing dawn practice and study.
 Edge build: Exiled vampire, werewolf halt, or mortal-world pressure run.
@@ -84,15 +87,15 @@ Normal-session route: dawn/study upkeep -> one explicit Lorkhan or crisis beat -
 Accepted hooks: dragonborn declaration route 51, Lorkhan pressure route 50, dawn steadiness route 52, orthodox costly enforcement route 53.
 Rejected hooks: ordinary travel, ordinary friendships, generic spellcasting, generic helping, generic combat, generic College membership, generic anti-Thalmor violence, repeated Dragonborn identity, vampire power route.
 Anti-farm result: source has explicit rejected-surface helper and repeat crisis rejection; manual check 2 is now recorded as passed in-game (2026-06-01), including generic anti-Thalmor silence plus repeat Dragonborn identity/vampire-power rejection behavior.
-Survey/status result: source now has Altmer-specific Survey/MCM readout for crisis, Lorkhan pressure, last favor, and curse posture; manual check 3 is now recorded as passed in-game (2026-06-01) with fiction-facing Survey wording.
-Immersive hook result: QASmoke route proof exists; needs dawn/study devotional context plus non-visible crisis/Lorkhan pressure hook proof outside QASmoke.
+Survey/status result: source now has Altmer-specific Survey/MCM readout for crisis, Lorkhan pressure, last favor, and curse posture; manual check 3 is now recorded as passed in-game (2026-06-01) with fiction-facing Survey wording. 2026-06-06 MQ104 retest also passed by manual Survey Devotion screenshot showing Auri-El foundation, mortal-world pressure, and authored Lorkhan pressure language. 2026-06-06 restart packet book visuals also passed in game with no reported unwanted full Prisma/MCM auto-open.
+Immersive hook result: QASmoke route proof exists; 2026-06-06 MQ104 stage 160 live quest-stage route passed in Papyrus.0.log for tier-2 Lorkhan pressure plus Dragonborn identity crisis source. 2026-06-06 restart packet passed all Auri-El/Magnus/Xarxes book checks and visuals; MQ104 edge proof is carried forward from captured stage-160 evidence.
 Reward floor: coherent dawn/study play must trend net-positive before crisis rewards grow.
 Reward ceiling: Auri-El foundation plus one secondary focus plus one active contextual favor; ThalmorAlignment modifies access/pressure and is not a third boon engine.
 Stack snapshot: Auri-El foundation, secondary focus, active favor, crisis state, pressure count/source, ThalmorAlignment, vampire exile, werewolf halt, scar, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race altmer
 Next automatable action: add structured rejected-surface and placement-contract verifier coverage.
-Deferred manual proof: immersive hook proof outside QASmoke, asset-status confirmation, plus stack snapshot and manual feel notes.
-Blocking follow-up: execute normal-play hook proof outside QASmoke and finish stack snapshot/manual feel evidence for Altmer.
+Deferred manual proof: reward/Active Effects or correct patron/tier pending snapshot, plus final stack snapshot if not already included in the visual pass.
+Blocking follow-up: confirm whether `Altmer Orthodox Steadiness` appeared in Active Effects or was correctly pending behind patron/tier; after that, Altmer can move from Conditional to Pass for the race beta-feel packet.
 ```
 
 ### Altmer Content-Lock Reconciliation
@@ -121,23 +124,23 @@ Old DivineBody/Psijic/focused-deity favor row IDs -> current ThalmorOrthodox, Di
 ```text
 Race: Khajiit
 Lane type: P1 first contrast
-Verdict: Fail - runtime/manual proof deferred
+Verdict: Conditional - wired lunar packet passed; edge focus source pending
 No-in-game status: Readback-Ready
 Expected build: road-home Khenarthi/Azurah traveler.
 Edge build: Rajhin thief, Alkosh dragon/order run, or ShadowDrift/curse pressure.
 Normal-session route: travel by foot between two road-home anchors -> rest/observe moon fallback -> trigger one Baan Dar, Rajhin, or Alkosh behavior-specific beat -> Survey/MCM readout.
 Accepted hooks: moon observance route 10, road-home anchors route 33, Baan Dar route 90, Rajhin route 91, Alkosh route 92.
 Rejected hooks: required visual moon inspection, moon-sugar use, manual focus entitlement, fast travel loop, one-bed camping, generic inn sleep, generic crime/theft, generic combat, generic dragon spam, ordinary night stealth.
-Anti-farm result: source tracks same-anchor road-home rejection and same-day diminishing multiplier; needs runtime proof that same-anchor repeats, generic theft, dragon spam, moon-sugar, and fast travel stay silent.
-Survey/status result: source now has Khajiit-specific Survey/MCM readout for Lunar Lattice, moon practice, road-home cadence, and active focus; needs runtime display proof.
-Immersive hook result: QASmoke route proof exists; needs lunar/rest or road-home context plus behavior-specific Baan Dar/Rajhin/Alkosh focus hook proof outside QASmoke.
+Anti-farm result: source tracks same-anchor road-home rejection and same-day diminishing multiplier; 2026-06-06 restarted packet confirmed generic-source silence for the currently wired lunar book packet. Same-anchor road-home, generic theft, dragon spam, moon-sugar, and fast-travel silence remain edge/future-source breadth checks once those source classes are filled.
+Survey/status result: source now has Khajiit-specific Survey/MCM readout for Lunar Lattice, moon practice, road-home cadence, and active focus; 2026-06-06 Words of Clan Mother Ahnissi retest passed in game for visible Survey/status movement and no unwanted full Prisma/MCM auto-open. Restarted packet also passed with Words of Clan Mother Ahnissi and The Tale of Dro'Zira producing Prisma toasts; Azurah lower-case display was reported and fixed in the Prisma display-name map.
+Immersive hook result: QASmoke route proof exists; 2026-06-06 strict-manager checker passed for Khajiit lunar book route in Papyrus.0.log. Restarted packet passed the currently wired lunar book sources, wrong-origin rejection, generic-source silence, and reward-pending behavior. Still needs behavior-specific Baan Dar/Rajhin/Alkosh or other approved edge focus source proof for full Khajiit Pass.
 Reward floor: broad lunar Faithful feels complete through road, sky, rest, and community without phase homework.
 Reward ceiling: lunar substrate plus one focused emphasis plus one active contextual favor; no third loud steady package.
 Stack snapshot: lunar metric/tier/phase/observance/road-home count, focused emphasis, five focus weights, last road-home anchor, repeat rejection count, active favor, lunar posture, ShadowDrift/curse pressure, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race khajiit
 Next automatable action: none for reward authoring; all-race T1 record and grant wiring is contract-owned and verifier/readback clean.
-Deferred manual proof: same-anchor rejection, generic theft/dragon/moon-sugar silence, Survey display, immersive road/moon/focus hook proof, Active Effects display, save/load behavior, and asset-status confirmation.
-Blocking follow-up: prove anti-chore behavior and Khajiit reward feel in game; the reward is wired, but automated proof does not stand in for runtime display, stack, or balance proof.
+Deferred manual proof: live edge focus source proof for Baan Dar/Rajhin/Alkosh or another approved Khajiit edge route, plus Active Effects display once patron/tier threshold is reached.
+Blocking follow-up: wire or approve one exact Khajiit edge source, then run the edge packet; the currently filled lunar book packet is Conditional-pass.
 ```
 
 ### Argonian

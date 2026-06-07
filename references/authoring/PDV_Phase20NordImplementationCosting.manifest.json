@@ -1,0 +1,375 @@
+{
+  "schema": "pdv-race-implementation-costing.v1",
+  "project": "player-devotion-phase20-nord",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "id": "phase20-nord-implementation-costing",
+  "title": "PDV Phase 20 Nord broad Old Ways, Kyne, and Talos implementation costing",
+  "race": "Nord",
+  "implementationStatus": "record-wired-reference-race",
+  "decisionSources": [
+    "race-sheets/PDV_RaceDesign_Nord.md",
+    "references/authoring/PDV_Phase2_DeityRoster_and_ArchitectureRulings.md",
+    "references/authoring/PDV_RaceGameplayBalanceAudit.md",
+    "references/authoring/PDV_RaceRewardBudgetLedger.md#focused-pass-nord",
+    "references/authoring/PDV_Phase20_NoInGameProof_Gates.json#races.Nord",
+    "references/authoring/PDV_BetaTestPacket_Nord.md"
+  ],
+  "designRules": [
+    "Broad worship is a STATE (PDV_State_NordPantheonBaseline: OldWays|NineDivines), not a deity; broad lane caps at Faithful (T2) and never reaches T3.",
+    "Focused patron devotion must be stronger, sharper, and narrower than broad Old Ways or broad Nine Divines; suppress broad T2 favors when a patron is focused.",
+    "Nord can FOCUS ANY GOD IN ITS CHOSEN PANTHEON (decision 2026-06-07; supersedes the retired 'Nord owns zero new deities / broad-only Shor/Tsun/Stuhn'). Old Ways lane = Kyne(reuse) + Talos(reuse) + Shor/Tsun/Stuhn(NEW, Nord-owned QUSTs, create:true, Stance_Nord NATIVE). Nine Divines lane = the 8 Divines(reuse, Imperial-owned; Nord reconciles Stance_Nord only) + Talos(reuse). Hircine routes through the Phase 20C Daedric system, not a new Aedric record.",
+    "Pantheon baseline and shared patron state stay separate; do not implement Broad/Primary as Nord baseline states.",
+    "Talos pressure requires costly faithful signals, not generic anti-Thalmor violence or ordinary Civil War preference.",
+    "Kyne/Talos/Shor/Tsun/Stuhn/Divines/Hircine/broad must not stack into a universal best build; only one focus is active at a time; broad blended favors at Faithful stay softer than Devoted patron benefits.",
+    "Each new Nord-owned deity QUST (Shor/Tsun/Stuhn) needs the SGE flag + a SEQ entry (the BaanDar lesson).",
+    "Reuse the existing Kyne neglect spell (PDV_SPEL_Neglect_Kyne / SyncKyneNeglectSpell); do not create a new Nord neglect spell."
+  ],
+  "stateSurfaces": [
+    {
+      "editorId": "PDV_State_NordPantheonBaseline",
+      "type": "state-track",
+      "status": "record-wired",
+      "enum": [
+        {
+          "name": "OldWays",
+          "value": 0
+        },
+        {
+          "name": "NineDivines",
+          "value": 1
+        }
+      ],
+      "notes": [
+        "Setup framing only; selects which pantheon's gods are offer-eligible and shifts theological naming/moral framing.",
+        "Broad lane (OldWays default) runs on PATRON_STATE_BROAD and the FIXED broad-T1 manager property PDV_Bless_Nord_OldWays_T1; the new broad-T2 is PDV_Bless_Nord_OldWays_T2 (capped at Faithful).",
+        "Commitment depth is the SHARED patron state (PDV_GLO_PatronState / PDV_GLO_PatronDeity), not a Nord baseline state. Do not implement Broad/Primary here."
+      ]
+    },
+    {
+      "editorId": "PDV_GLO_PatronState",
+      "type": "shared-patron-state",
+      "status": "record-wired",
+      "notes": [
+        "Shared broad-vs-active-patron state; the dawn-only Nord offer gate moves the player from broad worship to an active focused patron (Kyne or Talos in V1).",
+        "Accepting a primary offer sets active primary, stores the deity in PDV_GLO_PatronDeity, clears pending Nord candidates, and applies 70% piety carry-over.",
+        "No competing primary offers fire in 1.0 while an active primary is set; decay below T3 weakens but does not auto-clear."
+      ]
+    },
+    {
+      "editorId": "PDV_GLO_PatronDeity",
+      "type": "shared-patron-pointer",
+      "status": "record-wired",
+      "notes": [
+        "Stores the committed focused patron (PDV_Deity_Kyne or PDV_Deity_Talos in V1).",
+        "Focused-patron rewards gate on this plus the patron's piety tier; suppresses broad T2 favors while focus is active."
+      ]
+    }
+  ],
+  "requiredContentRows": [
+    "PDV_Msg_Nord_PantheonBaseline_OldWays",
+    "PDV_Msg_Nord_PantheonBaseline_NineDivines",
+    "PDV_Notif_Nord_FavorNoted_OldWays_BookRead_NordsArise",
+    "PDV_Notif_Nord_FavorNoted_OldWays_BookRead_DreamOfSovngarde",
+    "PDV_Notif_Nord_FavorNoted_OldWays_BookRead_SovngardeReexamination",
+    "PDV_Notif_Nord_FavorNoted_HircineArkay_BookRead_TotemsHircine",
+    "PDV_Notif_Nord_FavorNoted_Kyne_OpenSkyRest",
+    "PDV_Notif_Nord_FavorNoted_Kyne_GuidedHunt",
+    "PDV_Notif_Nord_FavorNoted_Talos_HiddenShrineDefiance",
+    "PDV_Notif_Nord_PatronOffer_Kyne",
+    "PDV_Notif_Nord_PatronOffer_Talos",
+    "PDV_Msg_Nord_Survey_BroadFocused",
+    "PDV_Msg_Nord_CreedViolation_KyneBeastKill",
+    "PDV_Msg_Nord_CreedViolation_TalosBetrayal",
+    "PDV_Msg_Nord_CurseState_HircineHuntResidue",
+    "PDV_Msg_Nord_CurseState_VampireSovngardeScar"
+  ],
+  "favorFamilies": [
+    {
+      "id": "broad-oldways-sky-road",
+      "row": "PDV_Notif_Nord_FavorNoted_OldWays_SkyRoad",
+      "mode": "noted",
+      "lane": "broad-state",
+      "hookSources": [
+        "outdoor sleep event",
+        "wilderness/outdoor location keyword",
+        "weather or cold-state context",
+        "long on-foot travel evidence"
+      ],
+      "rewardIntent": "Kyne plus Shor sky-road steadiness; softer than focused Kyne, suppressed under focus",
+      "antiFarm": "daily cap; reject fast travel and ordinary walking loops"
+    },
+    {
+      "id": "broad-oldways-honorable-ordeal",
+      "row": "PDV_Notif_Nord_FavorNoted_OldWays_HonorableOrdeal",
+      "mode": "quiet",
+      "lane": "broad-state",
+      "hookSources": [
+        "Story Manager kill event",
+        "no sneak opener where detectable",
+        "no follower assist where detectable",
+        "outnumbered or stronger-enemy context"
+      ],
+      "rewardIntent": "Shor/Tsun/Stuhn honorable-combat overlap; conservative honor checks, not perfect detection",
+      "antiFarm": "daily cap; one anti-farm mechanism (ScoreRepeatableAction); no substrate multiplier"
+    },
+    {
+      "id": "broad-oldways-hearth-hold",
+      "row": "PDV_Notif_Nord_FavorNoted_OldWays_HearthHold",
+      "mode": "noted",
+      "lane": "broad-state",
+      "hookSources": [
+        "rescue/defense quest stages",
+        "freeing prisoners (quest-locked only)",
+        "marriage or home investment milestones",
+        "thane/hold aid stages"
+      ],
+      "rewardIntent": "Mara plus Stuhn protection from meaningful community defense, not generic radiant chores",
+      "antiFarm": "curated one-shot or capped rows; no generic radiant scoring without whitelist"
+    },
+    {
+      "id": "broad-oldways-death-right",
+      "row": "PDV_Notif_Nord_FavorNoted_OldWays_DeathRight",
+      "mode": "noted",
+      "lane": "broad-state",
+      "hookSources": [
+        "Hall of the Dead / burial-adjacent quest stages",
+        "draugr boss or necromancer operation completion"
+      ],
+      "rewardIntent": "Arkay plus Shor/ancestor quiet; per quest/site, avoids repeat tomb farming",
+      "antiFarm": "per quest/site one-shot; reject repeat tomb visits"
+    },
+    {
+      "id": "broad-oldways-talos-defiance",
+      "row": "PDV_Notif_Nord_FavorNoted_OldWays_TalosDefiance",
+      "mode": "noted-marked-if-high-cost",
+      "lane": "broad-state",
+      "hookSources": [
+        "hidden Talos shrine activation",
+        "helping/refusing-to-report a Talos worshipper",
+        "Thalmor/Talos quest stages",
+        "Civil War religious beats"
+      ],
+      "rewardIntent": "Costly faithful defiance only; authored religious defiance/protection, not generic Thalmor violence",
+      "antiFarm": "per-act cooldown; reject generic anti-Thalmor violence and ordinary Civil War preference"
+    },
+    {
+      "id": "focused-kyne-open-sky-rest",
+      "row": "PDV_Notif_Nord_FavorNoted_Kyne_OpenSkyRest",
+      "mode": "noted",
+      "lane": "focused-patron",
+      "hookSources": [
+        "outdoor sleep event",
+        "wilderness/outdoor location keyword",
+        "player alias sleep registration"
+      ],
+      "rewardIntent": "Sharper Kyne open-sky recovery; genuine outdoor rest only, not indoor beds or menu abuse",
+      "antiFarm": "daily cap; reject indoor bed and menu abuse"
+    },
+    {
+      "id": "focused-kyne-guided-hunt",
+      "row": "PDV_Notif_Nord_FavorNoted_Kyne_GuidedHunt",
+      "mode": "quiet",
+      "lane": "focused-patron",
+      "hookSources": [
+        "direct-player animal kill (existing Kyne ScoreAction humanoid/beast model)",
+        "no follower assist where detectable",
+        "no sneak-opener farming where detectable"
+      ],
+      "rewardIntent": "Guided hunt, not generic wildlife slaughter; real hunt posture and anti-farm discipline",
+      "antiFarm": "daily cap; reject sneak-opener and follower-assist farming"
+    },
+    {
+      "id": "focused-talos-defiant-resolve",
+      "row": "PDV_Notif_Nord_FavorNoted_Talos_DefiantResolve",
+      "mode": "noted-marked-if-high-cost",
+      "lane": "focused-patron",
+      "hookSources": [
+        "hidden Talos shrine activation",
+        "existing curated Talos defiance signal (+3 defiance model)",
+        "Thalmor/Talos quest stages",
+        "Stormcloak major quest beats"
+      ],
+      "rewardIntent": "Personal, dangerous defiance; costly faithful signals only, sharper than broad Talos texture",
+      "antiFarm": "per-act cooldown; compliance never scores; reject generic anti-Thalmor violence"
+    }
+  ],
+  "creedViolationLoss": {
+    "policy": "Medium/major only; 2-3 negative deltas. Not the same as neglect drift.",
+    "entries": [
+      {
+        "id": "kyne-beast-kill",
+        "patron": "Kyne",
+        "model": "existing -3.0 beast-kill creed model",
+        "delta": -3.0,
+        "severity": "medium",
+        "trigger": "Killing a tamed/sacred beast or wanton beast slaughter against Kyne's beast-calm domain.",
+        "note": "Reuses the existing Kyne -3.0 beast-kill delta; not a new mechanism."
+      },
+      {
+        "id": "talos-betrayal-compliance",
+        "patron": "Talos",
+        "delta": -2.0,
+        "severity": "medium",
+        "trigger": "Reporting/betraying a Talos worshipper, surrendering a hidden shrine, or public compliance after focused Talos commitment.",
+        "note": "Compliance never grants Talos favor and, after focus, reads as betrayal (medium loss)."
+      },
+      {
+        "id": "talos-major-betrayal",
+        "patron": "Talos",
+        "delta": -3.0,
+        "severity": "major",
+        "trigger": "Aiding the Thalmor against Talos faith in a major authored beat after Talos focus.",
+        "note": "Major creed loss; never fires from ordinary Civil War preference."
+      }
+    ]
+  },
+  "neglect": {
+    "reuse": true,
+    "spellProperty": "PDV_SPEL_Neglect_Kyne",
+    "spellEditorId": "PDV_SPEL_Neglect_Kyne",
+    "syncFunction": "SyncKyneNeglectSpell",
+    "neglectFlagSource": "PDV_Kyne neglect flag (IsNeglectFlagActive(PDV_Kyne))",
+    "note": "Kyne neglect is ALREADY wired on PDV__ManagerQuest. Do NOT create a new Nord neglect spell. Talos neglect texture is fiction-only in V1 (no dedicated spell); broad-worship neglect is gentle drift via the daily consolidation system, not a spell.",
+    "displayName": "The Weather Stops Cooperating",
+    "playerFacingText": "The weather no longer feels on your side. At night your stamina regenerates 5% more slowly until you return to the open sky."
+  },
+  "rejectedHooks": [
+    "generic kill",
+    "generic travel",
+    "generic tomb clear",
+    "generic anti-Thalmor violence",
+    "ordinary Civil War preference",
+    "raw crafting counts",
+    "faction membership without a concrete religiously meaningful act",
+    "broad worship inheriting every patron boon",
+    "general Nord Daedric menu",
+    "repeat tomb/kill farming",
+    "fast travel and ordinary walking loops",
+    "moon-sugar or non-Nord cross-race hooks"
+  ],
+  "triggerSurfaces": [
+    {
+      "id": "nord-broad-focused-state-proof",
+      "editorId": "PDV_ACTI_NordBroadFocusedStateSignal",
+      "recordType": "ACTI",
+      "recordStatus": "reference-race-state-wired",
+      "placementStatus": "proof-cell-wired",
+      "placementRefEditorId": "PDV_REFR_NordBroadFocusedStateSignal",
+      "routeId": 70,
+      "requiredOriginRace": 0,
+      "signalValue": 0,
+      "signalSourceId": "nord_broad_focused_state_proof",
+      "name": "PDV NORD BROAD/FOCUSED STATE SIGNAL",
+      "activateText": "RECORD BROAD/FOCUSED STATE",
+      "oncePerDayKey": "PDV.Signal.NordBroadFocusedState",
+      "immersionProof": "A state-readback proxy proving broad Old Ways vs focused patron identity with no universal boon inheritance; not a generic dense-hook faucet."
+    },
+    {
+      "id": "nord-kyne-talos-context-proof",
+      "editorId": "PDV_ACTI_NordKyneTalosContextSignal",
+      "recordType": "ACTI",
+      "recordStatus": "reference-race-state-wired",
+      "placementStatus": "proof-cell-wired",
+      "placementRefEditorId": "PDV_REFR_NordKyneTalosContextSignal",
+      "routeId": 71,
+      "requiredOriginRace": 0,
+      "signalValue": 0,
+      "signalSourceId": "nord_kyne_talos_context_proof",
+      "name": "PDV NORD KYNE/TALOS CONTEXT SIGNAL",
+      "activateText": "RECORD KYNE/TALOS CONTEXT",
+      "oncePerDayKey": "PDV.Signal.NordKyneTalosContext",
+      "immersionProof": "A curated weather/road/shout/defiance proxy for Kyne/Talos context; weather is context only and never scores alone; not generic travel/kills/anti-Thalmor violence."
+    },
+    {
+      "id": "nord-hircine-arkay-edge-proof",
+      "editorId": "PDV_ACTI_NordHircineArkayEdgeSignal",
+      "recordType": "ACTI",
+      "recordStatus": "reference-race-state-wired",
+      "placementStatus": "proof-cell-wired",
+      "placementRefEditorId": "PDV_REFR_NordHircineArkayEdgeSignal",
+      "routeId": 72,
+      "requiredOriginRace": 0,
+      "signalValue": 0,
+      "signalSourceId": "nord_hircine_arkay_edge_proof",
+      "name": "PDV NORD HIRCINE/ARKAY EDGE SIGNAL",
+      "activateText": "RECORD HIRCINE/ARKAY EDGE",
+      "oncePerDayKey": "PDV.Signal.NordHircineArkayEdge",
+      "immersionProof": "A curated curse/hunt/death-duty proxy; Hircine routes through the 20C Daedric system and must be priced, never freely stacked with Kyne/Talos."
+    },
+    {
+      "id": "nord-oldways-book-proof",
+      "editorId": "PDV_ACTI_NordOldWaysBookSignal",
+      "recordType": "ACTI",
+      "recordStatus": "reference-race-state-wired",
+      "placementStatus": "proof-cell-wired",
+      "placementRefEditorId": "PDV_REFR_NordOldWaysBookSignal",
+      "routeId": 73,
+      "requiredOriginRace": 0,
+      "signalValue": 0,
+      "signalSourceId": "nord_oldways_book_proof",
+      "name": "PDV NORD OLD WAYS BOOK SIGNAL",
+      "activateText": "RECORD OLD WAYS BOOK READ",
+      "oncePerDayKey": "PDV.Signal.NordOldWaysBook",
+      "immersionProof": "Approved Old Ways book-read source family (NordsArise/DreamOfSovngarde/SovngardeReexamination) as one-time Old Ways identity signals; TotemsOfHircine is the Hircine/Arkay edge book."
+    }
+  ],
+  "immersionProof": {
+    "signaturePromise": "Skyrim itself notices old roads, weather, holds, Talos pressure, and chosen patron life; broad Old Ways feels culturally complete at Faithful before any patron commits.",
+    "diegeticTriggerMeaning": [
+      "Broad Old Ways/Nine Divines favors are blended, soft, and culturally normal; the dawn offer turns sustained playstyle into a focused patron without a shrine pilgrimage.",
+      "Kyne signals read as weather/sky/road/hunt; Talos signals read as costly hidden defiance; neither comes from generic travel, kills, or anti-Thalmor violence."
+    ],
+    "feedbackSurface": [
+      "Pantheon baseline and Survey/status copy explain broad/focused state, primary patron, Kyne/Talos/Hircine tension, vampire/scar state, and active favor.",
+      "Top-left notification or proven toast feedback only; no forced full Prisma panel; T3 recognition is V1 Survey text only (voiced lines are V2)."
+    ],
+    "rejectedGenericBehavior": [
+      "generic kill",
+      "generic travel",
+      "generic tomb clear",
+      "generic anti-Thalmor violence",
+      "broad worship inheriting every patron boon",
+      "general Nord Daedric menu"
+    ],
+    "normalSessionFeel": "A broad Nord feels noticed through weather, honor, hearth, death, Talos pressure, and hold identity without needing to accept a patron; ~12 days to Devoted once a patron is focused (the reference pace).",
+    "runtimePromotionGate": "Before any reward expansion, prove broad/focused state readout, one Kyne or Talos focused context, the Hircine/werewolf edge audit, generic dense-hook rejection, and expected/edge stack snapshots."
+  },
+  "verifierExpectations": {
+    "strictFlags": [
+      "--strict-phase20-race-costing"
+    ],
+    "status": "proof-placement-gate-live",
+    "rules": [
+      "broad lane is a STATE (PDV_State_NordPantheonBaseline) using FIXED PDV_Bless_Nord_OldWays_T1 and new PDV_Bless_Nord_OldWays_T2; no PDV_Deity_OldWays/NineDivines record exists",
+      "Nord owns exactly THREE new deity records (Shor/Tsun/Stuhn, create:true, Stance_Nord NATIVE, Old Ways focusable, each with SGE flag + SEQ entry); Kyne and Talos resolve as existing reused records (create:false); the 8 Divines resolve as Imperial-owned reused records with Stance_Nord reconciled (create:false); Hircine is not a new Aedric record",
+      "Nord can focus any god in its chosen pantheon (Old Ways: Kyne/Talos/Shor/Tsun/Stuhn; Nine Divines: 8 Divines + Talos); each focusable god carries a PDV_Bless_Nord_<God>_T1/T2/T3 family; only one focus active at a time",
+      "broad T2 favors are suppressed when a focused patron is active; broad never reaches T3",
+      "Kyne neglect reuses PDV_SPEL_Neglect_Kyne / SyncKyneNeglectSpell; no new Nord neglect spell is created",
+      "rejected hook families (generic kill/travel/tomb/anti-Thalmor, broad-inherits-all, Daedric menu) are converted into verifier or runtime negative cases",
+      "no reward magnitude exceeds ~12%; player text is ASCII-only and uses Skyrim ActorValue names"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "a broad Old Ways (or Nine Divines) Nord reaches Faithful through weather/honor/hearth/death/Talos with blended soft favors",
+      "the dawn offer fires for any god in the active pantheon lane (Old Ways: Kyne/Talos/Shor/Tsun/Stuhn; Nine Divines: a Divine or Talos) from sustained playstyle and applies 70% carry-over on acceptance",
+      "a focused patron (any pantheon god) gets sharper, narrower rewards while broad T2 favors are suppressed",
+      "Hircine/werewolf edge adds priced pressure without freely stacking onto the focused patron"
+    ],
+    "negative": [
+      "generic kills, travel, tomb clears, and anti-Thalmor violence do not score Nord favor",
+      "broad worship does not inherit every individual patron boon and never reaches T3",
+      "compliance never grants Talos favor; ordinary Civil War preference does not trigger defiance favor",
+      "an offer for an out-of-lane god does not fire (Old Ways gods are not offer-eligible under Nine Divines and vice versa)",
+      "more than one focus is never active at once; focused patron + Hircine + broad do not stack into a universal best build"
+    ]
+  },
+  "firstImplementationSlice": [
+    "Create the 3 new Nord-owned deity QUSTs (Shor/Tsun/Stuhn; Stance_Nord NATIVE; SGE flag + SEQ entry each) and reconcile Stance_Nord on the 8 Imperial Divines (create:false).",
+    "Author the new broad-T2 PDV_Bless_Nord_OldWays_T2 capped at Faithful, plus the Old Ways focused T1/T2/T3 sets (Kyne/Shor/Tsun/Stuhn/Talos) and the Nine Divines per-god Nord families (PDV_Bless_Nord_<God>_T1/T2/T3).",
+    "Wire broad-T2 suppression under active focus, lane-eligibility on offers, one-active-focus, and confirm broad never reaches T3.",
+    "Confirm Kyne neglect reuse (PDV_SPEL_Neglect_Kyne) and add the Kyne beast-kill / Talos-betrayal creed-loss deltas (medium/major only).",
+    "Add negative tests for generic kill/travel/tomb/anti-Thalmor, broad-inherits-all-patron-boons, out-of-lane offers, and free focused/Hircine/broad stacking."
+  ]
+}

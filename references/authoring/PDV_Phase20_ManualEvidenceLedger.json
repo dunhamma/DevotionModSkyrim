@@ -1,7 +1,7 @@
 {
   "schema": "pdv.phase20.manual-evidence-ledger.v2",
   "status": "pending-manual-runtime-proof",
-  "updated": "2026-06-04",
+  "updated": "2026-06-06",
   "purpose": "Structured intake ledger for Phase 20 empirical runtime evidence after immersive hook contracts are green.",
   "rules": {
     "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
@@ -30,7 +30,7 @@
     "Altmer": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race altmer",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
           "status": "evidence-recorded",
@@ -45,24 +45,26 @@
         "surveyStatusClarity": {
           "status": "evidence-recorded",
           "expected": "Survey/MCM explains crisis state, Lorkhan pressure, scar/recovery, active favor, and curse/exile posture without route IDs.",
-          "note": "2026-06-01: Manual check 3 passed in-game. Survey text showed crisis state + authored Lorkhan pressure + last favor (Dawn steadiness) in fiction-facing wording. Vampire lane pass is linked as curse-posture evidence when applicable."
+          "note": "2026-06-01: Manual check 3 passed in-game. Survey text showed crisis state + authored Lorkhan pressure + last favor (Dawn steadiness) in fiction-facing wording. Vampire lane pass is linked as curse-posture evidence when applicable. 2026-06-06: MQ104 stage 160 in-game proof passed; manual Survey Devotion screenshot showed Auri-El foundation, Unproven standing, mortal-world pressure, and authored Lorkhan pressure language. 2026-06-06 restart packet: tester confirmed Altmer passed all Auri-El/Magnus/Xarxes book checks and visuals; no unwanted full Prisma/MCM auto-open reported."
         },
         "stackSnapshot": {
           "status": "pending",
           "expected": "Auri-El/Magnus scholar and Exiled vampire or mortal-world pressure edge builds record active boon, favor, scar, curse, and suppressed generic layers."
         },
         "manualFeelNote": {
-          "status": "pending",
-          "expected": "Player can tell pressure is authored theological friction, not punishment for ordinary Skyrim life."
+          "status": "evidence-recorded",
+          "expected": "Player can tell pressure is authored theological friction, not punishment for ordinary Skyrim life.",
+          "note": "2026-06-06 restart packet: tester accepted Altmer book checks and visuals and instructed using the already captured MQ104 edge proof. Treat as source/visual feel evidence for the Altmer packet; reward/Active Effects snapshot remains separately pending unless explicitly confirmed."
         },
         "immersiveHookProof": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Prove dawn/study devotional context plus non-visible crisis/Lorkhan/orthodox pressure hooks outside QASmoke, with wrong-origin rejection and no visible pressure object.",
-          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Auri-El, Magnus, and Xarxes via strict manager checker. This is accepted-route proof only; prior QASmoke hook proof remains separate, and stack/feel evidence remains pending."
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Auri-El, Magnus, and Xarxes via strict manager checker. 2026-06-06: Altmer MQ104 stage 160 live quest-stage route proof passed in Papyrus.0.log: RouteAltmerLorkhanPressure tier 2, RouteAltmerLorkhanPenalty po3_queststage_altmer_mq104, Altmer crisis source accepted Dragonborn identity, and RouteAltmerCrisisSource source 1. 2026-06-06 restart packet: tester confirmed all Altmer book checks and visuals passed; MQ104 edge proof is carried forward from the captured stage-160 evidence."
         },
         "assetStatus": {
-          "status": "pending",
-          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+          "status": "evidence-recorded",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation.",
+          "note": "Altmer restart packet uses vanilla books and non-visible MQ104 quest-stage context; no new custom mesh or placed visible pressure object is required for the accepted packet."
         }
       }
     },
@@ -72,30 +74,34 @@
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
-          "status": "pending",
-          "expected": "Non-Khajiit origin cannot move lunar, road-home, Baan Dar, Rajhin, or Alkosh proof state."
+          "status": "evidence-recorded",
+          "expected": "Non-Khajiit origin cannot move lunar, road-home, Baan Dar, Rajhin, or Alkosh proof state.",
+          "note": "2026-06-06 restarted packet: tester confirmed wrong-origin rejection passed for the currently wired Khajiit lunar book packet."
         },
         "genericHookRejection": {
-          "status": "pending",
-          "expected": "Fast travel, generic theft, moon-sugar use, generic dragon kills, generic night stealth, caravan proximity, and repeated same-anchor travel stay silent."
+          "status": "evidence-recorded",
+          "expected": "Fast travel, generic theft, moon-sugar use, generic dragon kills, generic night stealth, caravan proximity, and repeated same-anchor travel stay silent.",
+          "note": "2026-06-06 restarted packet: tester confirmed generic-source silence passed for the currently wired Khajiit packet."
         },
         "surveyStatusClarity": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Survey/MCM explains lunar substrate, road-home cadence, focus weight, lunar posture, and active focus in race language.",
-          "note": "2026-06-04: Accepted lunar book route proof passed in the log, but tester reported no visible change in the Survey Devotion power text. Keep status clarity pending."
+          "note": "2026-06-04: Accepted lunar book route proof passed in the log, but tester reported no visible change in the Survey Devotion power text. 2026-06-06 retest after surfacing fixes passed in game on all visible parts; tester confirmed Survey/status movement and no unwanted full Prisma/MCM auto-open. 2026-06-06 restarted packet: Words of Clan Mother Ahnissi and The Tale of Dro'Zira both produced Prisma toasts and steps 2-3 passed; tester noted Azurah was lower case in the Survey/UI surface, and the Prisma UI display-name map was patched so normalized azura symbols render as Azurah."
         },
         "stackSnapshot": {
-          "status": "pending",
-          "expected": "Khenarthi/Azurah road-home build and Rajhin/Baan Dar/Alkosh edge build record lunar substrate, one active focus, phase amplifier, road cadence, and shadow or curse modifier."
+          "status": "evidence-recorded",
+          "expected": "Khenarthi/Azurah road-home build and Rajhin/Baan Dar/Alkosh edge build record lunar substrate, one active focus, phase amplifier, road cadence, and shadow or curse modifier.",
+          "note": "2026-06-06 restarted packet: reward threshold was not reached; tester accepted this as correct pending behavior for step 6 rather than a failed reward display."
         },
         "manualFeelNote": {
-          "status": "pending",
-          "expected": "Moon/road behavior feels like cadence and belonging, not mandatory inspection or generic thief scoring."
+          "status": "evidence-recorded",
+          "expected": "Moon/road behavior feels like cadence and belonging, not mandatory inspection or generic thief scoring.",
+          "note": "2026-06-06 restarted packet: tester confirmed the wired lunar book checks and visible feedback passed; edge focus routes remain outside the currently filled live source packet."
         },
         "immersiveHookProof": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Prove lunar rest/open-sky cadence, road-home anchors, and Baan Dar/Rajhin/Alkosh focus hooks outside QASmoke without fast-travel, moon-sugar, theft, or dragon spam.",
-          "note": "2026-06-04: Accepted P2 lunar book-route log proof recorded via strict manager checker. This is accepted-route proof only; status clarity, wrong-origin, generic-source silence, stack snapshot, and feel remain pending."
+          "note": "2026-06-04: Accepted P2 lunar book-route log proof recorded via strict manager checker. 2026-06-06: Words of Clan Mother Ahnissi retest passed in Papyrus.0.log with KhajiitLunar SetMetric 4.0, Khajiit focus Azurah adjusted by 25.0, Khajiit moon observance routed for phase 1, and RouteKhajiitLunarSubstrate complete po3_book_khajiit_lunar. 2026-06-06 restarted packet: Words of Clan Mother Ahnissi and The Tale of Dro'Zira both produced Prisma toasts and expected visual feedback; wrong-origin, generic-source silence, and reward-pending behavior passed. Live edge focus hooks remain pending because only approved lunar book sources are currently filled."
         },
         "assetStatus": {
           "status": "pending",

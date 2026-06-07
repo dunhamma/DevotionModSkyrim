@@ -14,6 +14,8 @@ tools/pdv-phase18-author/bin/
 tools/pdv-phase18-author/obj/
 tools/pdv-phase20-*-author/bin/
 tools/pdv-phase20-*-author/obj/
+tools/pdv-baandar-sge-author/bin/
+tools/pdv-baandar-sge-author/obj/
 native/vendor/Creation-Kit-Platform-Extended/
 
 # Local agent/editor settings

@@ -411,7 +411,7 @@
     "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill",
     "readbackResult": "PASS - approved P2 book-read source entries filled and read back on 2026-06-04; backup D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260604-094122.bak",
     "curationRunbook": "references/authoring/PDV_Phase20_P2SourceCuration_Runbook.md",
-    "entryRule": "Only exact source records with status approved-for-fill may be written. This tranche approves book-read entries only; quest-stage source entries stay blocked until exact quest/stage candidates are approved and declared.",
+    "entryRule": "Only exact source records with status approved-for-fill may be written. This tranche approves the current book-read entries plus the exact Altmer MQ104 stage-160 Lorkhan crisis source; other quest-stage source entries stay blocked until exact quest/stage candidates are approved and declared.",
     "formKeyFormat": "ModName.ext:localHex, for example Skyrim.esm:00000014. Do not use load-order FormIDs.",
     "fillToolSafety": "The fill tool refuses unapproved entries, rejects sourceKind values not declared on the target receiver property, rejects duplicate property/form/sourceKind entries, rejects approved quest-stage entries unless exact-stage receiver support and approvedStages metadata exist, and writes no ESP changes when sourceFillEntries is empty."
   },
@@ -591,6 +591,24 @@
           "sourceKind": "book",
           "status": "approved-for-fill",
           "rationale": "One-shot hidden-record scholarship for Xarxes-adjacent record keeping; rejects generic Elder Scroll spectacle."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerLorkhanPenalties",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:02610C",
+          "editorId": "MQ104",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            160
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Repeated Dragonborn actions, generic main-quest progress before stage 160, and later dragon content do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey altmer_mq104_lorkhan.",
+          "rationale": "Exact MQ104 stage-160 Dragonborn identity milestone for one-shot Altmer Lorkhan crisis pressure; matches the static route entry and rejects generic Dragonborn activity."
         }
       ]
     },
@@ -906,8 +924,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "mq104-origin-reading",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "approved-for-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "altmer-mq304-lorkhan",

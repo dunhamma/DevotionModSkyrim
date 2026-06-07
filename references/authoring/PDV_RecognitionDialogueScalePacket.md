@@ -274,3 +274,22 @@ A recognition packet is closed only when it has three proofs in the same directi
 - Runtime proof: the right player sees the line and the wrong player does not.
 
 If any one of those is missing, the packet remains draft or readback-only and cannot be used as evidence that recognition/dialogue scaling is ready.
+
+## V2 Recognition Beats — Khajiit Focused Emphasis (added 2026-06-06)
+
+The Khajiit pilot ships its T3 (Champion) reward **stat/signature effects in V1**, with the
+"recognized by the god/people" payoff carried only through **non-voiced Survey/status text** at
+Champion. The voiced/curated recognition lines below are **V2** (budget-deferred), documented now
+so the intent is preserved. Each is state-gated on origin=Khajiit + the named focused emphasis at
+Champion. None of these is authored in V1.
+
+| Emphasis | Champion recognition beat (V2) | Likely speaker surface |
+|---|---|---|
+| Khenarthi | Caravans greet the player as one the winds favor; minor welcome/price warmth. | Ri'saad, Ma'dran, Ahkari, Khaara caravan Khajiit |
+| Azurah | Moon-priests / Azurah-touched NPCs note the twilight mark on the player. | Khajiit clan-mothers, Azura shrine context |
+| Baan Dar | Outsiders, the cornered, and tricksters quietly recognize a fellow survivor. | Outlaw/underdog-coded Khajiit and outcasts |
+| Rajhin | Shadow- and guild-adjacent figures acknowledge the elegance of the work. | Thieves Guild / fence-adjacent contacts |
+| Alkosh | Order-keepers and dragon-aware figures mark the player as a keeper of the line. | Greybeard/Alkosh-aware lore figures |
+
+V2 closeout for these follows the three-proof Closeout Rule above. V1 must not add any of these
+lines; the Champion Survey/status text is the only V1 recognition surface.

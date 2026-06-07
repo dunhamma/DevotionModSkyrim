@@ -1,0 +1,482 @@
+{
+  "schema": "pdv-race-implementation-costing.v1",
+  "project": "player-devotion-phase20-breton",
+  "game": "SkyrimSE",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "id": "phase20-breton-implementation-costing",
+  "title": "PDV Phase 20 Breton tradition spine, focused tradition family, and three-track pressure implementation costing",
+  "race": "Breton",
+  "implementationStatus": "planning-ready",
+  "gateType": "state-enum-gated",
+  "progressionCurrency": "piety-faucet-within-active-tradition",
+  "budgetVerdict": "Overstack Risk",
+  "p2Restraint": "P2 audit-only. Transcribe the gate/ledger contracts into this schema; do NOT request new placement contracts or stronger reward volume beyond the gate and budget ledger. Stack audit is the deliverable, not new content.",
+  "paceAssumption": "Breton is STATE-enum-gated by PDV_State_BretonTradition. Only the active tradition's focused family progresses; the focused patron within the active tradition is offer-like (piety Tier >= threshold). Assume ~1-2 qualifying tradition-coded signals per honest-play day within the chosen tradition; cross-track pressure (the three standing tracks) modifies access/penalty and does NOT add a parallel piety faucet. Switching traditions is blocked in V1 except authored forks, so a player banks pace inside one spine.",
+  "decisionSources": [
+    "race-sheets/PDV_RaceDesign_Breton.md",
+    "race-sheets/PDV_RaceContent_Manifest.md#breton",
+    "references/authoring/PDV_RaceGameplayBalanceAudit.md",
+    "references/authoring/PDV_RaceImplementationCostingBacklog.md",
+    "references/authoring/PDV_RaceRewardBudgetLedger.md#focused-pass-breton",
+    "references/authoring/PDV_Phase20_NoInGameProof_Gates.json#breton",
+    "references/authoring/PDV_Phase2_DeityRoster_and_ArchitectureRulings.md",
+    "references/authoring/PDV_DeityCoverageMatrix.json",
+    "references/authoring/PDV_BetaTestPacket_Breton.md"
+  ],
+  "designRules": [
+    "Tradition is the spine (R1/R7): rewards gate on PDV_State_BretonTradition (KnightsRoad | HiddenArt | GreenWay) plus the active tradition's focused patron tier within that state. Gods sit INSIDE the chosen tradition.",
+    "Broad lane is the Tradition state, not a deity: broad T1 is the FIXED manager property PDV_Bless_Breton_Tradition_T1 (R2) granted via PATRON_STATE_BROAD; broad T2 is PDV_Bless_Breton_Tradition_T2 (new). Do NOT create a flat Breton pantheon or generic broad-worship deity (R1, ledger).",
+    "Breton OWNS no Aedric deities (R5). Knight's Road focuses REUSE Imperial-owned Divines (Stendarr/Arkay/Mara/Julianos, plus Akatosh NATIVE) with create:false and a Stance_Breton added NATIVE. Green Way nature focus may reuse Kynareth (create:false). Hidden Art occult-lawful may reference Julianos (reuse).",
+    "Hidden Art Daedric forks and Green Way werewolf/Daedric forks route through the existing Phase 20C Daedric Prince system (R6). NO new Aedric or Daedric records here.",
+    "Exactly ONE tradition's focused reward family pays at a time (Overstack Risk control). The active PDV_State_BretonTradition value selects which of KnightsRoad/HiddenArt/GreenWay focused families is eligible; the other two are suppressed.",
+    "The three standing tracks (KnightlyVowIntegrity, WitchcraftExposure, DruidicStanding) are PRESSURE ONLY: they modify access, gate, penalize, or rupture. They are NEVER a second or third always-on boon family. They must not all pay positive rewards at once for the same character.",
+    "Hidden Art focused rewards may be stronger ONLY because WitchcraftExposure/rupture/Vigilant pressure is the price; the stronger magnitude is conditioned on visible exposure cost, not free.",
+    "Creed-violation loss fires on medium/major beats only (vow-integrity loss, exposure rupture, excommunication, druidic-fork betrayal); never raw ambient stat punishment.",
+    "Keep at most two always-on boon families: broad Tradition (Layer 1) plus the ONE active tradition's focused family (Layer 2). Broad stays softer than focused. No magnitude exceeds ~12%."
+  ],
+  "stateSurfaces": [
+    {
+      "editorId": "PDV_State_BretonTradition",
+      "type": "state-track",
+      "status": "design-contract",
+      "enum": [
+        { "name": "KnightsRoad", "value": 0 },
+        { "name": "HiddenArt", "value": 1 },
+        { "name": "GreenWay", "value": 2 }
+      ],
+      "notes": [
+        "The gate spine. One active tradition selects which focused reward family is eligible; the other two families are suppressed.",
+        "Normal tradition switching is blocked in V1 except authored rupture/fork paths.",
+        "There is no flat Breton pantheon: the broad lane is this state via PATRON_STATE_BROAD, not a deity record."
+      ]
+    },
+    {
+      "editorId": "PDV_State_BretonDruidicFork",
+      "type": "state-track",
+      "status": "design-contract",
+      "enum": [
+        { "name": "None", "value": 0 },
+        { "name": "Druidic", "value": 1 },
+        { "name": "Werewolf", "value": 2 },
+        { "name": "Betrayed", "value": 3 }
+      ],
+      "notes": [
+        "Green Way werewolf is a REAL fork, not a free hybrid with Hircine. The fork is authored, not a casual switch.",
+        "Betrayed is the druidic-fork betrayal creed-loss pole.",
+        "Werewolf-fork access routes any Daedric pressure through the Phase 20C system (R6), not new records."
+      ]
+    },
+    {
+      "editorId": "PDV_RepTrack_KnightlyVowIntegrity",
+      "type": "rep-track",
+      "status": "design-contract",
+      "pressureOnly": true,
+      "bands": [
+        { "name": "Forsworn", "value": 0 },
+        { "name": "Lapsed", "value": 1 },
+        { "name": "Sworn", "value": 2 },
+        { "name": "Exemplary", "value": 3 }
+      ],
+      "notes": [
+        "PRESSURE ONLY. Modifies Knight's Road focused access and creates vow-breach pressure; it is NOT a boon track.",
+        "Vow breach moves integrity down and can trigger medium/major creed-violation loss; it does not pay positive rewards.",
+        "Relevant only while PDV_State_BretonTradition == KnightsRoad."
+      ]
+    },
+    {
+      "editorId": "PDV_RepTrack_WitchcraftExposure",
+      "type": "rep-track",
+      "status": "design-contract",
+      "pressureOnly": true,
+      "bands": [
+        { "name": "Hidden", "value": 0 },
+        { "name": "Suspected", "value": 1 },
+        { "name": "Exposed", "value": 2 },
+        { "name": "Ruptured", "value": 3 }
+      ],
+      "notes": [
+        "PRESSURE ONLY and the PRICE of Hidden Art strength. Higher exposure is the cost that justifies stronger occult rewards; it is NOT a second boon track.",
+        "Exposure/rupture is the gate that conditions Hidden Art focused magnitude; it also drives exposure-rupture creed-loss and Vigilant/social pressure.",
+        "Vigilant encounter chain stays extension scope; exposure bands carry the 1.0 pressure feel.",
+        "Relevant only while PDV_State_BretonTradition == HiddenArt (or Hidden Art pressure-eligible)."
+      ]
+    },
+    {
+      "editorId": "PDV_RepTrack_DruidicStanding",
+      "type": "rep-track",
+      "status": "design-contract",
+      "pressureOnly": true,
+      "bands": [
+        { "name": "Estranged", "value": 0 },
+        { "name": "Tolerated", "value": 1 },
+        { "name": "Kept", "value": 2 },
+        { "name": "Honored", "value": 3 }
+      ],
+      "notes": [
+        "PRESSURE ONLY. Modifies Green Way focused access and gates the druidic fork; it is NOT a boon track.",
+        "Low standing plus the werewolf fork drives druidic-fork betrayal pressure.",
+        "Relevant only while PDV_State_BretonTradition == GreenWay."
+      ]
+    }
+  ],
+  "reusedDeities": [
+    { "editorId": "PDV_Deity_Akatosh", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "KnightsRoad", "note": "Reuse only; add Stance_Breton NATIVE. Breton creates NO Aedric deity." },
+    { "editorId": "PDV_Deity_Stendarr", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "KnightsRoad", "note": "Knight's Road mercy/protection focus; reuse only." },
+    { "editorId": "PDV_Deity_Arkay", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "KnightsRoad", "note": "Knight's Road vigil/death-duty focus; reuse only." },
+    { "editorId": "PDV_Deity_Mara", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "KnightsRoad", "note": "Knight's Road mercy focus; reuse only." },
+    { "editorId": "PDV_Deity_Julianos", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "HiddenArt", "note": "Hidden Art lawful-scholar focus (occult restraint); reuse only." },
+    { "editorId": "PDV_Deity_Kynareth", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "GreenWay", "note": "Green Way nature focus where appropriate; reuse only." }
+  ],
+  "daedricForkPolicy": {
+    "system": "Phase 20C Daedric Prince track (PDV_DeityCoverageMatrix.json slice 20C)",
+    "rule": "Hidden Art Daedric forks and Green Way werewolf/Daedric forks route through the existing 20C Daedric system per R6. This manifest authors NO new Daedric Prince records and NO new Aedric records for forks.",
+    "modifierNote": "Daedric rupture must carry exposure, stigma, or exit residue (gate stackSnapshot.curseDaedricModifierNote)."
+  },
+  "requiredContentRows": [
+    "PDV_Msg_Breton_Tradition_KnightsRoad",
+    "PDV_Msg_Breton_Tradition_HiddenArt",
+    "PDV_Msg_Breton_Tradition_GreenWay",
+    "PDV_Notif_Breton_TraditionChoice_Confirm",
+    "PDV_Notif_Breton_KnightsRoad_VowKept",
+    "PDV_Notif_Breton_KnightsRoad_MercyService",
+    "PDV_Notif_Breton_HiddenArt_OccultLearning",
+    "PDV_Notif_Breton_HiddenArt_CoverDeclaration",
+    "PDV_Notif_Breton_GreenWay_RiteKept",
+    "PDV_Notif_Breton_GreenWay_StandingStone",
+    "PDV_Msg_Breton_Band_VowIntegrity",
+    "PDV_Msg_Breton_Band_WitchcraftExposure",
+    "PDV_Msg_Breton_Band_DruidicStanding",
+    "PDV_Msg_Breton_CreedLoss_VowIntegrity",
+    "PDV_Msg_Breton_CreedLoss_ExposureRupture",
+    "PDV_Msg_Breton_CreedLoss_Excommunication",
+    "PDV_Msg_Breton_CreedLoss_DruidicForkBetrayal",
+    "PDV_Msg_Breton_Survey_Tradition",
+    "PDV_Msg_Breton_CurseState_DruidicWerewolfFork",
+    "PDV_Msg_Breton_CurseState_VampireOnset"
+  ],
+  "favorFamilies": [
+    {
+      "id": "tradition-broad-setup",
+      "row": "PDV_Notif_Breton_TraditionChoice_Confirm",
+      "mode": "quiet-noted",
+      "lane": "broad-state",
+      "deity": "Tradition state (PATRON_STATE_BROAD); not a deity",
+      "progressionCurrency": "piety-faucet-within-active-tradition",
+      "gateType": "state-enum-gated",
+      "realHookSource": "Managed tradition setup/readback and curated confirmation surface (vanilla book/standing-stone/shrine-style object, message, or marker-backed state); optional PO3 BookRead. NOT generic shrine attendance.",
+      "antiFarm": "One active tradition spine; switching requires an explicit rupture/recommitment path (no casual re-confirm farming).",
+      "hookSources": [
+        "explicit tradition confirmation source",
+        "Breton origin, no active conflicting tradition",
+        "one-shot per tradition commitment"
+      ],
+      "rewardIntent": "establish the chosen tradition spine; the broad Tradition reward family is the floor, below focused"
+    },
+    {
+      "id": "knightsroad-vow",
+      "row": "PDV_Notif_Breton_KnightsRoad_VowKept",
+      "mode": "marked",
+      "lane": "focused-tradition",
+      "tradition": "KnightsRoad",
+      "deity": "Stendarr / Mara / Arkay / Akatosh (reuse, create:false)",
+      "progressionCurrency": "piety-faucet-within-active-tradition",
+      "gateType": "state-enum-gated",
+      "realHookSource": "Curated quest-stage outcomes, service/favor quests, and mercy/protection sources with vow-integrity checks; selective PO3 QuestStageChange on whitelisted vow/service stages.",
+      "antiFarm": "One-shot markers per vow/source family; vow breach creates pressure (KnightlyVowIntegrity). No generic-help/generic-combat scoring.",
+      "hookSources": [
+        "Breton origin, Knight's Road active",
+        "named vow/service/mercy source",
+        "one-shot per vow/source family"
+      ],
+      "rewardIntent": "protection, mercy, and vow as concrete Knight's Road devotion; pays only while KnightsRoad is the active tradition"
+    },
+    {
+      "id": "hiddenart-exposure",
+      "row": "PDV_Notif_Breton_HiddenArt_OccultLearning",
+      "mode": "marked",
+      "lane": "focused-tradition",
+      "tradition": "HiddenArt",
+      "deity": "Daedric via Phase 20C (R6); Julianos reuse for lawful-occult restraint",
+      "progressionCurrency": "piety-faucet-within-active-tradition",
+      "gateType": "state-enum-gated",
+      "realHookSource": "Curated PO3 BookRead/SpellLearned/QuestStageChange on whitelisted forbidden/occult texts, spells, and Daedric/witchcraft milestones. NOT generic spellcasting/College membership/artifact ownership/private curiosity.",
+      "antiFarm": "One marker per curated book/spell/source and a WitchcraftExposure cap; stronger reward magnitude is conditioned on visible exposure cost, not free.",
+      "hookSources": [
+        "Breton origin, Hidden Art active or pressure-eligible",
+        "whitelisted occult source",
+        "one marker per curated source, exposure-capped"
+      ],
+      "rewardIntent": "occult cover/conjuration-illusion power priced by WitchcraftExposure/rupture; pays only while HiddenArt is active"
+    },
+    {
+      "id": "greenway-standing",
+      "row": "PDV_Notif_Breton_GreenWay_RiteKept",
+      "mode": "marked",
+      "lane": "focused-tradition",
+      "tradition": "GreenWay",
+      "deity": "Kynareth (reuse, create:false) where appropriate; druidic standing context",
+      "progressionCurrency": "piety-faucet-within-active-tradition",
+      "gateType": "state-enum-gated",
+      "realHookSource": "Curated nature-site/standing-stone/quest/book sources; PO3 ItemHarvested only for tag-backed druidic sources after tag proof. NOT ordinary animal kills/generic harvests/outdoor travel/generic Kynareth-Kyne shrine visits.",
+      "antiFarm": "Daily/source-family cap and tag-backed harvest whitelist only; DruidicStanding gates access (pressure, not boon).",
+      "hookSources": [
+        "Breton origin, Green Way active",
+        "named nature/druidic source",
+        "daily/source-family cap, tag-backed harvest only"
+      ],
+      "rewardIntent": "rites, standing stones, and outdoor covenant as Green Way devotion; pays only while GreenWay is active"
+    }
+  ],
+  "pressureTracks": {
+    "note": "These three tracks are PRESSURE ONLY. They appear in stateSurfaces as rep-tracks with pressureOnly:true. They are listed here to make the overstack-control invariant explicit: none of them is a favorFamily and none pays an always-on boon.",
+    "tracks": [
+      { "editorId": "PDV_RepTrack_KnightlyVowIntegrity", "role": "Knight's Road access modifier + vow-breach pressure", "neverABoon": true },
+      { "editorId": "PDV_RepTrack_WitchcraftExposure", "role": "Hidden Art price; conditions stronger occult magnitude + drives rupture/Vigilant pressure", "neverABoon": true },
+      { "editorId": "PDV_RepTrack_DruidicStanding", "role": "Green Way access modifier + druidic-fork gate", "neverABoon": true }
+    ],
+    "overstackControl": "At most one tradition's focused family pays at a time (selected by PDV_State_BretonTradition); the three pressure tracks modify/gate/penalize but never add a second or third always-on boon family. The three tracks must not all pay positive rewards at once."
+  },
+  "creedViolationLoss": [
+    {
+      "id": "vow-integrity-loss",
+      "row": "PDV_Msg_Breton_CreedLoss_VowIntegrity",
+      "severity": "medium",
+      "tradition": "KnightsRoad",
+      "deity": "Stendarr / Mara",
+      "hookSources": [
+        "breaking a sworn vow or abandoning a protected charge for gain",
+        "KnightlyVowIntegrity falls to Lapsed/Forsworn on an authored breach"
+      ],
+      "antiRepeat": "authored vow-breach beat only; ordinary inconvenience or a failed-not-betrayed outcome does not corrode"
+    },
+    {
+      "id": "exposure-rupture",
+      "row": "PDV_Msg_Breton_CreedLoss_ExposureRupture",
+      "severity": "major",
+      "tradition": "HiddenArt",
+      "deity": "Daedric via 20C / social pressure",
+      "hookSources": [
+        "WitchcraftExposure reaches Ruptured (cover blown)",
+        "authored Vigilant/social rupture beat"
+      ],
+      "antiRepeat": "curated rupture beat only; ordinary spellcasting or carrying an artifact is not exposure"
+    },
+    {
+      "id": "excommunication",
+      "row": "PDV_Msg_Breton_CreedLoss_Excommunication",
+      "severity": "major",
+      "tradition": "any",
+      "deity": "active tradition's patrons",
+      "hookSources": [
+        "a story-caliber betrayal of the active tradition (denouncing the order, desecrating the covenant)"
+      ],
+      "antiRepeat": "authored excommunication beat only; recovery requires sustained counter-behavior and a story-caliber reset"
+    },
+    {
+      "id": "druidic-fork-betrayal",
+      "row": "PDV_Msg_Breton_CreedLoss_DruidicForkBetrayal",
+      "severity": "major",
+      "tradition": "GreenWay",
+      "deity": "DruidicStanding / Hircine via 20C",
+      "hookSources": [
+        "taking the werewolf fork against the druidic covenant (PDV_State_BretonDruidicFork == Werewolf with low DruidicStanding)",
+        "betraying the Druidic Trial outcome"
+      ],
+      "antiRepeat": "authored fork-betrayal beat only; the Green Way werewolf fork itself is a real authored fork, not an ambient kill counter"
+    }
+  ],
+  "neglect": {
+    "editorId": "PDV_SPEL_Neglect_Breton",
+    "wireTo": "PDV__ManagerQuest",
+    "displayName": "The Tradition Grows Distant",
+    "severity": "gentle-baseline",
+    "effects": [ { "actorValue": "HealRateMult", "magnitude": -5.0 } ],
+    "designNote": "Gentle diegetic texture for letting the chosen tradition lapse. The real BITE is reserved for rupture/excommunication/curse fork (exposure Ruptured, druidic-fork betrayal, vampire onset), not ordinary lapse. Neglect is not a creed-violation loss and does not corrode a specific patron."
+  },
+  "rejectedHooks": [
+    "casual tradition switching",
+    "generic spellcasting",
+    "College membership",
+    "generic Daedric artifact ownership",
+    "private curiosity",
+    "generic help without reward",
+    "generic combat",
+    "ordinary animal kills",
+    "generic harvests",
+    "outdoor travel",
+    "generic shrine visits",
+    "generic Kynareth/Kyne shrine attendance",
+    "generic tavern excess",
+    "flat Breton pantheon / generic broad-worship lane",
+    "three standing tracks rewarding simultaneously",
+    "Hidden Art stronger without visible exposure cost",
+    "unproven Vigilant hunter assumptions",
+    "vampire/werewolf fork as a clean reward route that deletes native tradition"
+  ],
+  "triggerSurfaces": [
+    {
+      "id": "breton-tradition-choice-proof",
+      "editorId": "PDV_ACTI_BretonTraditionChoiceSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planning-ready",
+      "placementStatus": "proof-cell-pending",
+      "placementRefEditorId": "PDV_REFR_BretonTraditionChoiceSignal",
+      "routeId": 120,
+      "requiredOriginRace": 2,
+      "signalValue": 0,
+      "signalSourceId": "breton_tradition_choice_proof",
+      "name": "PDV BRETON TRADITION CHOICE SIGNAL",
+      "activateText": "CHOOSE THE TRADITION",
+      "oncePerDayKey": "PDV.Signal.BretonTraditionChoice",
+      "immersionProof": "A managed tradition setup/readback proxy proving one chosen spine (KnightsRoad/HiddenArt/GreenWay); casual switching and generic shrine attendance do not move tradition state."
+    },
+    {
+      "id": "breton-knightly-vow-proof",
+      "editorId": "PDV_ACTI_BretonKnightlyVowSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planning-ready",
+      "placementStatus": "proof-cell-pending",
+      "placementRefEditorId": "PDV_REFR_BretonKnightlyVowSignal",
+      "routeId": 121,
+      "requiredOriginRace": 2,
+      "signalValue": 0,
+      "signalSourceId": "breton_knightly_vow_proof",
+      "name": "PDV BRETON KNIGHTLY VOW SIGNAL",
+      "activateText": "KEEP THE VOW",
+      "oncePerDayKey": "PDV.Signal.BretonKnightlyVow",
+      "immersionProof": "A named vow/service/mercy proxy for Knight's Road; generic helping and generic combat do not score, and it pays only while KnightsRoad is the active tradition."
+    },
+    {
+      "id": "breton-hidden-art-exposure-proof",
+      "editorId": "PDV_ACTI_BretonHiddenArtSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planning-ready",
+      "placementStatus": "proof-cell-pending",
+      "placementRefEditorId": "PDV_REFR_BretonHiddenArtSignal",
+      "routeId": 122,
+      "requiredOriginRace": 2,
+      "signalValue": 0,
+      "signalSourceId": "breton_hidden_art_exposure_proof",
+      "name": "PDV BRETON HIDDEN ART SIGNAL",
+      "activateText": "STUDY THE HIDDEN ART",
+      "oncePerDayKey": "PDV.Signal.BretonHiddenArt",
+      "immersionProof": "A curated occult-learning proxy priced by WitchcraftExposure; generic spellcasting, College membership, and artifact ownership do not score, and stronger reward is conditioned on visible exposure cost."
+    },
+    {
+      "id": "breton-green-way-standing-proof",
+      "editorId": "PDV_ACTI_BretonGreenWaySignal",
+      "recordType": "ACTI",
+      "recordStatus": "planning-ready",
+      "placementStatus": "proof-cell-pending",
+      "placementRefEditorId": "PDV_REFR_BretonGreenWaySignal",
+      "routeId": 123,
+      "requiredOriginRace": 2,
+      "signalValue": 0,
+      "signalSourceId": "breton_green_way_standing_proof",
+      "name": "PDV BRETON GREEN WAY SIGNAL",
+      "activateText": "KEEP THE GREEN RITE",
+      "oncePerDayKey": "PDV.Signal.BretonGreenWay",
+      "immersionProof": "A named nature/druidic/standing-stone proxy for Green Way; ordinary animal kills, generic harvests, and outdoor travel do not score, and it pays only while GreenWay is the active tradition."
+    },
+    {
+      "id": "breton-creed-loss-proof",
+      "editorId": "PDV_ACTI_BretonCreedLossSignal",
+      "recordType": "ACTI",
+      "recordStatus": "planning-ready",
+      "placementStatus": "proof-cell-pending",
+      "placementRefEditorId": "PDV_REFR_BretonCreedLossSignal",
+      "routeId": 124,
+      "requiredOriginRace": 2,
+      "signalValue": 0,
+      "signalSourceId": "breton_creed_loss_proof",
+      "name": "PDV BRETON CREED LOSS SIGNAL",
+      "activateText": "MARK THE BETRAYAL",
+      "oncePerDayKey": "PDV.Signal.BretonCreedLoss",
+      "immersionProof": "A medium/major creed-violation proxy proving vow-integrity loss, exposure rupture, excommunication, and druidic-fork betrayal corrode the active tradition; ordinary lapse does not."
+    }
+  ],
+  "immersionProof": {
+    "signaturePromise": "Breton devotion is a chosen tradition spine -- Knight's Road, Hidden Art, or Green Way -- that shapes identity, risk, and belonging; gods sit inside the tradition, and the three standing tracks are pressure, not three reward engines.",
+    "diegeticTriggerMeaning": [
+      "Tradition is chosen explicitly and only one is active; the active PDV_State_BretonTradition selects which focused family pays.",
+      "Hidden Art gains power only as WitchcraftExposure/rupture/Vigilant pressure is paid; Knight's Road rewards concrete vows/mercy/service; Green Way rewards rites/standing-stones/outdoor covenant.",
+      "KnightlyVowIntegrity, WitchcraftExposure, and DruidicStanding modify access/penalty and rupture; they never become always-on boons."
+    ],
+    "feedbackSurface": [
+      "Tradition messages and the tradition Survey copy explain the active spine and why parallel tradition rewards are not all active.",
+      "Band-crossing messages for vow integrity, witchcraft exposure, and druidic standing teach pressure and price; the Druidic Trial confrontation surfaces the werewolf fork."
+    ],
+    "rejectedGenericBehavior": [
+      "casual tradition switching",
+      "generic spellcasting or College membership",
+      "generic Daedric artifact ownership or private curiosity",
+      "ordinary animal kills, generic harvests, outdoor travel",
+      "generic shrine attendance",
+      "three tracks paying at once"
+    ],
+    "normalSessionFeel": "A Breton who commits to one tradition feels a complete play loop with its own cost/recovery texture, without the other two traditions or the three pressure tracks stacking into a universal best build.",
+    "runtimePromotionGate": "Before reward expansion, prove tradition setup/readback, one tradition-specific favor route, the WitchcraftExposure price gate on Hidden Art, single-active-tradition suppression, and rejected cases for switching/spellcasting/artifact/harvest/shrine and three-track simultaneity."
+  },
+  "stackSnapshot": {
+    "expected": [
+      "tradition",
+      "patron focus",
+      "one active favor"
+    ],
+    "edge": [
+      "WitchcraftExposure",
+      "KnightlyVowIntegrity",
+      "DruidicStanding",
+      "curse fork",
+      "Daedric modifiers"
+    ],
+    "allowedLoudLayers": [
+      "one tradition spine",
+      "one focused patron"
+    ],
+    "suppressedLayers": [
+      "three tracks as three reward engines",
+      "generic spellcasting as occult devotion",
+      "flat Breton pantheon as broad reward"
+    ],
+    "contextualFavorCap": "one active tradition/favor family",
+    "curseDaedricModifierNote": "Daedric rupture must carry exposure, stigma, or exit residue.",
+    "p2NoNewVolume": "P2 audit-only: this snapshot records expected and edge stacks; it does not request new placement contracts or stronger reward volume beyond the gate/ledger."
+  },
+  "verifierExpectations": {
+    "strictFlags": [
+      "--strict-phase20-race-costing"
+    ],
+    "status": "planning-ready",
+    "rules": [
+      "PDV_State_BretonTradition enum (KnightsRoad/HiddenArt/GreenWay) and PDV_State_BretonDruidicFork are present, and only the active tradition's focused family is eligible, before runtime work",
+      "the three standing tracks (KnightlyVowIntegrity/WitchcraftExposure/DruidicStanding) read back as pressure/access/rupture modifiers, never as boon tracks",
+      "each tradition favor act has exactly one anti-farm mechanism; Hidden Art stronger magnitude is conditioned on visible WitchcraftExposure cost",
+      "Breton creates no new Aedric deities (Divines/Kynareth reused create:false) and routes Daedric forks through the Phase 20C system",
+      "rejected hook families (switching, spellcasting, College, artifact, private curiosity, ordinary kills/harvests/travel, generic shrines, three-track simultaneity, flat pantheon) become verifier or runtime negative cases",
+      "creed-violation loss fires only on medium/major vow-integrity, exposure-rupture, excommunication, and druidic-fork-betrayal beats",
+      "at most two always-on boon families exist: broad Tradition plus the one active tradition's focused family; broad stays softer than focused; no magnitude > ~12%"
+    ]
+  },
+  "runtimeProof": {
+    "positive": [
+      "a Breton can choose one tradition and only that tradition's focused family pays",
+      "Knight's Road scores concrete vows/mercy/service; Hidden Art gains stronger occult reward only as exposure cost is paid; Green Way scores rites/standing-stones/outdoor covenant",
+      "vow breach, exposure rupture, excommunication, and druidic-fork betrayal produce readable creed-loss messages",
+      "the Green Way werewolf fork is an authored fork with a Druidic Trial confrontation, not a free Hircine hybrid"
+    ],
+    "negative": [
+      "casual tradition switching, generic shrine attendance, or wrong origin does not move tradition state",
+      "generic spellcasting, College membership, artifact ownership, or private curiosity does not score Hidden Art",
+      "ordinary animal kills, generic harvests, or outdoor travel does not score Green Way",
+      "the three standing tracks do not all pay positive rewards at once, and no flat Breton pantheon reward exists"
+    ]
+  },
+  "firstImplementationSlice": [
+    "Define PDV_State_BretonTradition (KnightsRoad/HiddenArt/GreenWay) and PDV_State_BretonDruidicFork readback, with single-active-tradition suppression of the other focused families.",
+    "Wire the three standing-track readbacks (KnightlyVowIntegrity/WitchcraftExposure/DruidicStanding) as pressure/access/rupture modifiers only.",
+    "Wire each tradition favor lane with exactly one anti-farm mechanism; condition Hidden Art stronger magnitude on visible WitchcraftExposure cost.",
+    "Reuse Divines/Kynareth (create:false, add Stance_Breton) and route Daedric forks through the Phase 20C system; create no new deity records.",
+    "Add negative tests for switching, spellcasting/College/artifact/private curiosity, ordinary kills/harvests/travel, generic shrines, three-track simultaneity, and any flat-pantheon reward."
+  ]
+}
