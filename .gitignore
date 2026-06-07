@@ -18,6 +18,8 @@ tools/pdv-baandar-sge-author/bin/
 tools/pdv-baandar-sge-author/obj/
 tools/pdv-daedric-author/bin/
 tools/pdv-daedric-author/obj/
+tools/pdv-diegetic-author/bin/
+tools/pdv-diegetic-author/obj/
 native/vendor/Creation-Kit-Platform-Extended/
 
 # Local agent/editor settings
