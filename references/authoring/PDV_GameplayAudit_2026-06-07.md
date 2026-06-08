@@ -210,3 +210,42 @@ would add horizontal depth.
 2. A **Champion+ capstone / 4th tier** using the unused 85→200 piety headroom, so
    sustained high devotion has a long-game payoff.
 Both preserve the costly/stigmatized identity; neither is needed for 1.0.
+
+---
+
+## 6. UI string capitalization — cleanup sweep (captured 2026-06-08)
+
+In-game testing surfaced lowercase deity/focus names that look unpolished. Capture
+for a dedicated cleanup sweep (NOT yet fixed):
+
+**Symptoms (screenshots 2026-06-08):**
+- MCM **Status → Deity roster** shows lowercase names for many deities:
+  `kyne`, `auri-el`, `azurah`, `khenarthi`, `rajhin`, `alkosh`, `akatosh` (and
+  likely the other non-runtime-set deities), while `Talos`, `Y'ffre`, `Z'en`,
+  `Baan Dar` render proper-cased.
+- Survey message reads **"Current focus: azurah"** (lowercase).
+
+**Likely roots:**
+1. **Roster name fallback to the symbol key.** The proper-cased deities
+   (Talos/Y'ffre/Z'en/Baan Dar) are exactly the ones the manager *runtime-sets*
+   `DeityName` for (`EnsureBosmer*RuntimeIdentity`, `PDV_Talos.DeityName="Talos"`,
+   etc.). The lowercase names match the `GetPrismaSymbolForDeity` keys — i.e. the
+   roster falls back to the lowercase symbol when `DeityName` reads empty. Almost
+   certainly the **same base-vs-concrete VMAD bug just fixed for the Daedric
+   paths**: Aedra deity quests bake `DeityName` on the base script entry, but
+   `quest as PDV_DeityBase`/the roster read resolves to the concrete instance
+   (empty `DeityName`). Fix: re-author the Aedra deities binding `DeityName`
+   (and any cast-read identity props) onto the **concrete** script entry — mirror
+   the `pdv-daedric-author` `concreteProps.AddRange(baseProps)` fix in whatever
+   authors the Aedra deities (e.g. `pdv-phase20-race-author`). NOTE: this implies
+   non-runtime-set Aedra deities may also be reading empty boon/state via the
+   cast — verify functional impact, not just display.
+2. **Survey "Current focus" uses the symbol, not the label.**
+   `PDV__ManagerQuest.psc` ~line 1254 returns `GetKhajiitFocusSymbol(focus)`
+   (lowercase, e.g. "azurah") where it should return `GetKhajiitFocusLabel(focus)`
+   (proper, e.g. "Azurah"). One-line fix.
+
+**Sweep scope:** (a) fix Aedra deity `DeityName`-on-concrete (re-author);
+(b) swap focus-symbol→focus-label in the Survey text; (c) audit ALL status /
+Survey / notification / MCM strings for symbol-key-as-display vs proper name, so
+no lowercase identifier leaks into player-facing copy.
