@@ -26,11 +26,11 @@ var dupSpecs = new (uint id, string eid, string type)[]
     (0x10C445, "PDV_IMAD_Dread", "IMAD"),
     (0x084B38, "PDV_IMAD_Release", "IMAD"),
     (0x10C445, "PDV_IMAD_Absence", "IMAD"),
-    (0x056622, "PDV_SND_Chime", "SNDR"),
-    (0x01702C, "PDV_SND_Swell", "SNDR"),
-    (0x057C63, "PDV_SND_Hollow", "SNDR"),
-    (0x057C65, "PDV_SND_RisingChime", "SNDR"),
-    (0x03F363, "PDV_SND_Distant", "SNDR"),
+    (0x056622, "PDV_SND_Chime", "SOUN"),
+    (0x01702C, "PDV_SND_Swell", "SOUN"),
+    (0x057C63, "PDV_SND_Hollow", "SOUN"),
+    (0x057C65, "PDV_SND_RisingChime", "SOUN"),
+    (0x03F363, "PDV_SND_Distant", "SOUN"),
     (0x02D4C2, "PDV_MUS_CurseBed", "MUSC"),
 };
 var shaderSpecs = new (string spellEid, string mgefEid, string name, uint efsh)[]
@@ -75,6 +75,22 @@ try
         return;
     }
 
+    if (args.Contains("--dump-daedric"))
+    {
+        var q = mod.Quests.FirstOrDefault(x => x.EditorID == "PDV_DaedricPath_Boethiah");
+        if (q?.VirtualMachineAdapter != null)
+        {
+            foreach (var sc in q.VirtualMachineAdapter.Scripts)
+            {
+                var dn = sc.Properties.FirstOrDefault(p => p.Name == "DeityName") as ScriptStringProperty;
+                actions.Add($"script={sc.Name} props={sc.Properties.Count} DeityName={(dn == null ? "<absent>" : ("'" + dn.Data + "'"))}");
+            }
+        }
+        else actions.Add("PDV_DaedricPath_Boethiah quest or VMAD not found");
+        Report();
+        return;
+    }
+
     var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(r => r.FormKey));
     var src = SkyrimMod.CreateFromBinary(skyrimEsmPath, SkyrimRelease.SkyrimSE);
     var skyrimKey = ModKey.FromNameAndExtension("Skyrim.esm");
@@ -82,7 +98,17 @@ try
     // --- duplications ---
     foreach (var d in dupSpecs)
     {
-        if (index.ContainsKey(d.eid)) { actions.Add("exists " + d.eid); continue; }
+        if (index.TryGetValue(d.eid, out var existingDup))
+        {
+            if (d.type == "SOUN" && existingDup is ISoundDescriptorGetter)
+            {
+                // earlier build created this as a SoundDescriptor (wrong Papyrus type) -- drop it and re-create as a SoundMarker
+                mod.SoundDescriptors.Remove(existingDup.FormKey);
+                index.Remove(d.eid);
+                actions.Add("removed wrong-type SNDR " + d.eid);
+            }
+            else { actions.Add("exists " + d.eid); continue; }
+        }
         var fk = new FormKey(skyrimKey, d.id);
         switch (d.type)
         {
@@ -93,11 +119,16 @@ try
                 dup.DeepCopyIn(s); dup.EditorID = d.eid; mod.ImageSpaceAdapters.Add(dup); index[d.eid] = dup;
                 break;
             }
-            case "SNDR":
+            case "SOUN":
             {
-                var s = src.SoundDescriptors.FirstOrDefault(r => r.FormKey == fk) ?? throw new Exception($"source SNDR {d.id:X6} not found");
-                var dup = new SoundDescriptor(allocator.Next(), SkyrimRelease.SkyrimSE);
-                dup.DeepCopyIn(s); dup.EditorID = d.eid; mod.SoundDescriptors.Add(dup); index[d.eid] = dup;
+                // confirm the vanilla descriptor exists, then wrap it in a SoundMarker (SOUN) so the Papyrus Sound property binds
+                _ = src.SoundDescriptors.FirstOrDefault(r => r.FormKey == fk) ?? throw new Exception($"source SNDR {d.id:X6} not found");
+                var soun = new SoundMarker(allocator.Next(), SkyrimRelease.SkyrimSE)
+                {
+                    EditorID = d.eid,
+                    SoundDescriptor = fk.ToNullableLink<ISoundDescriptorGetter>()
+                };
+                mod.SoundMarkers.Add(soun); index[d.eid] = soun;
                 break;
             }
             case "MUSC":

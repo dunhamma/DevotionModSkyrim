@@ -554,6 +554,11 @@ static void WirePrinceQuest(PrinceContext context, DaedricPrince prince, AuthorR
         concreteProps.Add(ObjectProp(message.property!, context.Messages[message.property!].FormKey));
     }
 
+    // `quest as PDV_DaedricPathBase` resolves to the MOST-DERIVED (concrete) script instance, not the
+    // standalone base entry -- so the identity/boon/price/state properties must live on the concrete
+    // entry too, or every cast-based read (DeityName, Price_Seeker, StateByRace, ...) comes back empty.
+    concreteProps.AddRange(baseProps);
+
     WireQuestScript(context.Quest, prince.scriptName!, concreteProps);
     report.Actions.Add($"Wired {prince.questEditorId} VMAD scripts and properties.");
 }
