@@ -1,0 +1,51 @@
+actor,eventId,eventName,sentiment,tier,baseDelta,dailyCap,cooldownDays,stanceGate,conditionTag,notes
+Daedric:Mehrunes Dagon,2,kill-hostile-humanoid,+,small,0.25,3,0,PathOpen,,cutting down what stands is the work of ruin
+Daedric:Mehrunes Dagon,302,kill-dragon,+,medium,1.0,2,0.5,PathOpen,,breaking the mighty pleases the Prince of Destruction
+Daedric:Mehrunes Dagon,304,murder-defenseless,+,small,0.5,3,0,PathOpen,,ruin draws no line around the helpless
+Daedric:Mehrunes Dagon,368,accept-daedric-artifact,+,large,1.5,1,1.0,PathOpen,ActorTypeDaedra,Mehrunes' Razor claimed
+Daedric:Mehrunes Dagon,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,preservation offends the principle of ruin
+Daedric:Hircine,1,kill-hostile-beast,+,medium,0.75,2,0.5,PathOpen,,the great hunt; COORDINATE with werewolf curse rows - do not double-fire
+Daedric:Hircine,2,kill-hostile-humanoid,+,small,0.25,3,0,PathOpen,,worthy two-legged prey taken in the chase
+Daedric:Hircine,313,rest-under-open-sky,+,small,0.25,3,0,PathOpen,,the hunter's night under the open sky
+Daedric:Hircine,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,Savior's Hide or the Ring of Hircine claimed
+Daedric:Hircine,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,the hunt does not nurse the weak
+Daedric:Meridia,300,kill-undead,+,medium,1.0,2,0.5,PathOpen,ActorTypeUndead,her singular hatred; the undead are an affront to the light
+Daedric:Meridia,365,raise-undead,-,large,-2.0,1,1.0,PathOpen,,the defiling of life-force she most abhors
+Daedric:Meridia,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,Dawnbreaker taken up
+Daedric:Meridia,350,heal-or-cure-npc,+,small,0.25,3,0,PathOpen,,the living light sustained in another
+Daedric:Molag Bal,364,assault-innocent,+,medium,0.75,2,0.5,PathOpen,,domination of the weak is his sacrament
+Daedric:Molag Bal,304,murder-defenseless,+,medium,0.75,2,0.5,PathOpen,,cruelty rendered to the helpless
+Daedric:Molag Bal,366,vampire-feed,+,small,0.5,3,0,PathOpen,,MODERATE detection; COORDINATE with vampire curse rows
+Daedric:Molag Bal,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Mace of Molag Bal claimed
+Daedric:Molag Bal,350,heal-or-cure-npc,-,small,-0.5,3,0,PathOpen,,mercy is the weakness he despises
+Daedric:Hermaeus Mora,342,read-lore-book,+,medium,1.0,2,0.5,PathOpen,,forbidden knowledge gathered into the archive
+Daedric:Hermaeus Mora,341,read-spell-tome,+,small,0.5,3,0,PathOpen,,arcane secrets are his to hoard
+Daedric:Hermaeus Mora,345,discover-location,+,small,0.5,3,0,PathOpen,,all things sought and known
+Daedric:Hermaeus Mora,343,learn-word-of-power,+,small,0.5,3,0,PathOpen,,each Word of Power is one more secret kept
+Daedric:Hermaeus Mora,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Oghma Infinium opened
+Daedric:Namira,300,kill-undead,-,small,-0.5,3,0,PathOpen,ActorTypeUndead,undeath and decay are hers; destroying them displeases
+Daedric:Namira,367,cannibalize-corpse,+,large,2.0,1,1.0,PathOpen,,HARD detection - carried by the Namira faucet (Feed/Eat Human Flesh); reference only
+Daedric:Namira,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Ring of Namira claimed
+Daedric:Namira,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,the clean and cared-for is not her domain
+Daedric:Nocturnal,360,pick-owned-lock,+,small,0.5,3,0,PathOpen,owned,the shadow-thief slips every ward
+Daedric:Nocturnal,362,steal-item,+,small,0.5,3,0,PathOpen,owned,taken from the light into her shadow
+Daedric:Nocturnal,361,trespass,+,small,0.25,3,0,PathOpen,,no door is closed to her servants
+Daedric:Nocturnal,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Skeleton Key carried (the debt that always comes due)
+Daedric:Peryite,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,Spellbreaker taken up
+Daedric:Peryite,344,increase-skill,+,small,0.25,3,0,PathOpen,,patient diligence in the lowest order pleases him
+Daedric:Peryite,330,smith-item,+,small,0.25,3,0,PathOpen,,humble labor kept in its proper place
+Daedric:Peryite,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,curing affliction undoes the order he imposes; bearing disease is the Peryite faucet
+Daedric:Sanguine,333,cook-meal,+,small,0.25,3,0,PathOpen,,the feast and the table he blesses
+Daedric:Sanguine,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Sanguine Rose in hand
+Daedric:Sanguine,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,sober rest cut the revel short; drinking is the Sanguine faucet
+Daedric:Sheogorath,345,discover-location,+,small,0.5,3,0,PathOpen,,novelty delights the Madgod
+Daedric:Sheogorath,343,learn-word-of-power,+,small,0.25,3,0,PathOpen,,a new shiny thing for the collection
+Daedric:Sheogorath,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Wabbajack waved
+Daedric:Sheogorath,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,the predictable bores him; rows kept deliberately eclectic
+Daedric:Vaermina,314,sleep-in-bed,+,small,0.5,3,0,PathOpen,,she visits the sleeper and harvests the dream
+Daedric:Vaermina,342,read-lore-book,+,small,0.5,3,0,PathOpen,,dream-secrets and forbidden lore
+Daedric:Vaermina,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Skull of Corruption claimed
+Daedric:Vaermina,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,she feeds fear, not comfort; harvesting dreams is the Vaermina faucet
+Daedric:Clavicus Vile,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Masque or the Rueful Axe claimed
+Daedric:Clavicus Vile,354,persuade-success,+,small,0.5,3,0,PathOpen,,HARD detection - the won bargain; carried by the Clavicus faucet; reference only
+Daedric:Clavicus Vile,362,steal-item,-,small,-0.25,3,0,PathOpen,,a deal is struck, not stolen; he prefers the bargain to the theft

@@ -110,14 +110,20 @@ Baan Dar,360,pick-owned-lock,+,small,0.25,3,0,,owned,the Bandit God slips every 
 Baan Dar,362,steal-item,+,small,0.5,3,0,,,the exile takes what survival demands
 Baan Dar,361,trespass,+,small,0.25,3,0,,,no door is closed to the trickster
 Baan Dar,304,murder-defenseless,-,medium,-0.75,2,0.5,,,a clever escape beats a clumsy killing
+Baan Dar,345,discover-location,+,small,0.5,3,0,,,the exile-trickster walks every road there is
+Baan Dar,344,increase-skill,+,small,0.25,3,0,,,the survivor adapts or the survivor dies
 khenarthi,345,discover-location,+,small,0.5,3,0,,,winds and the open road
 khenarthi,313,rest-under-open-sky,+,small,0.5,3,0,,,the wind goddess shelters the traveler
 khenarthi,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,free trapped souls so the wind carries them home
 khenarthi,302,kill-dragon,+,medium,0.75,2,0.5,,,guide even a great soul to its final journey
+khenarthi,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,the psychopomp abhors souls chained from the journey home
+khenarthi,350,heal-or-cure-npc,+,small,0.25,3,0,,,mercy eases a soul along the road she keeps
 rajhin,362,steal-item,+,small,0.5,3,0,,,the Purring Liar takes with a smile
 rajhin,360,pick-owned-lock,+,small,0.5,3,0,,owned,the master thief
 rajhin,361,trespass,+,small,0.25,3,0,,,shadows open every threshold for the cat
 rajhin,304,murder-defenseless,-,medium,-0.75,2,0.5,,,artful theft, never crude slaughter
+rajhin,345,discover-location,+,small,0.25,3,0,,,the roaming trickster knows every hidden way
+rajhin,364,assault-innocent,-,small,-0.5,3,0,,,brute violence shames the artful thief
 alkosh,302,kill-dragon,+,large,1.5,1,1.0,,,the Dragon King humbles the beasts that broke from order
 alkosh,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,undeath defies time's lawful order
 alkosh,343,learn-word-of-power,+,medium,0.75,2,0.5,,,master the Thu'um as ordered dominion
@@ -147,6 +153,8 @@ sithis,304,murder-defenseless,+,medium,1.0,2,0.5,,,a death offered to the Void; 
 sithis,2,kill-hostile-humanoid,+,small,0.25,3,0,,,each ending feeds the original chaos
 sithis,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,clinging past death defies the Void's change
 sithis,314,sleep-in-bed,-,small,-0.25,3,0,,,settled comfort resists the formless flux
+sithis,364,assault-innocent,+,small,0.5,3,0,,,each unmaking feeds the Void's hunger for change
+sithis,350,heal-or-cure-npc,-,small,-0.5,3,0,,,preserving the living resists the formless flux
 Malacath,330,smith-item,+,medium,0.75,2,0.5,,,the forge is the Orc's prayer
 Malacath,2,kill-hostile-humanoid,+,small,0.25,3,0,,,strength proven in open fight
 Malacath,1,kill-hostile-beast,+,small,0.25,3,0,,,a strong arm against beasts honors raw strength
