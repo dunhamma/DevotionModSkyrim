@@ -32,6 +32,7 @@ const emitStdout = args.includes("--stdout");
 // Stance-ceiling band caps (M2 / HANDOFF locked): FOREIGN -> Pleased; TABOO/HOSTILE -> Cool.
 const STANCES = new Set(["NATIVE", "TOLERATED", "FOREIGN", "TABOO", "HOSTILE", "CURSE"]);
 const BANDS = new Set(["Wroth", "Cool", "Pleased", "Exalted"]);
+const BAND_INDEX = { Wroth: 0, Cool: 1, Pleased: 2, Exalted: 3 };
 
 function main() {
   const moodRows = readCsv(MOOD_CSV);
@@ -71,7 +72,13 @@ function main() {
     out[`mood.${deity}.bandWrothMax`] = wrothMax;
     out[`mood.${deity}.bandCoolMax`] = coolMax;
     out[`mood.${deity}.bandPleasedMax`] = pleasedMax;
-    out[`mood.${deity}.stanceCeiling`] = parseStanceCeiling(row.stance_ceiling, deity);
+    const ceiling = parseStanceCeiling(row.stance_ceiling, deity);
+    out[`mood.${deity}.stanceCeiling`] = ceiling;
+    // JsonUtil contract: Papyrus reads flat scalar keys only (the proven
+    // quest-matrix pattern) - arrays/objects above are for tooling/self-test.
+    for (const [stance, band] of Object.entries(ceiling)) {
+      out[`mood.${deity}.stanceCeilingBand.${stance}`] = BAND_INDEX[band];
+    }
   }
 
   for (const row of demandRows) {
@@ -85,8 +92,15 @@ function main() {
 
     const key = `${deity}.${type}`;
     out.demandKeys.push(key);
+    // One demand per deity in LD-P1: the runtime looks demands up by deity name.
+    if (out[`demandKey.${deity}`]) {
+      throw new Error(`Multiple demand rows for deity=${deity}; LD-P1 runtime supports one.`);
+    }
+    out[`demandKey.${deity}`] = key;
     out[`demand.${key}.deity`] = deity;
     out[`demand.${key}.type`] = type;
+    // Player-facing label (ASCII; Papyrus has no string replace).
+    out[`demand.${key}.label`] = type.replace(/_/g, " ");
     // Signal binding (M3 Spike 3 fix): no string act-tag exists in the award
     // path, so each demand binds to a concrete signal layer - faucet eventType
     // ints (router -> ScoreAction) and/or a curated quest-matrix tag
@@ -104,6 +118,8 @@ function main() {
         }
         return n;
       });
+    // Flat pipe-joined mirror of eventTypes for the JsonUtil contract.
+    out[`demand.${key}.eventTypesCsv`] = out[`demand.${key}.eventTypes`].join("|");
     out[`demand.${key}.eventFilter`] = (row.event_filter || "").trim();
     out[`demand.${key}.questMatrixTag`] = (row.quest_matrix_tag || "").trim();
     out[`demand.${key}.wiredToday`] = (row.wired_today || "").trim();

@@ -48,7 +48,12 @@ Run from inside the repo. (Or use the VS Code / JetBrains "Claude Code" extensio
 - [x] `tools/pdv_living_deities_compile.mjs` — clone of `pdv_quest_matrix_compile.mjs`; emits `PDV_LivingDeities.json` to `SKSE/Plugins/StorageUtilData/PlayerDevotion/`.
 - [x] `tools/pdv_living_deities_selftest.mjs` — vocab + parallel-array + no-empty-deity + binding-integrity gates; run as the pre-wiring gate.
 
-### B. Papyrus wiring
+### B. Papyrus wiring — ✅ AUTHORED + COMPILE-PROVEN 2026-06-10 (isolated, NOT deployed)
+> The full Block B slice lives in `research/living-deities/src/` on this branch
+> (see `research/living-deities/README.md`): all items below are implemented and
+> compile 0/0 against the live import chain, but the live MO2 tree is untouched.
+> Deployment is an explicit promote step after ratification. The Kyne
+> quest-matrix rows remain open (separate branch).
 - [ ] **PREREQ — close the Kyne fulfillment gap (HALF-closed 2026-06-10):** the
   faucet half is landed — main's `2e665b7` (hybrid faucet wiring, merged into this
   branch) shipped receivers for 313 (`PDV_PlayerEvents` sleep hook) and 343
