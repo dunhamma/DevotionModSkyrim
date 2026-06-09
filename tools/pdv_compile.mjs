@@ -88,6 +88,25 @@ const OPTIONAL_SCRIPTS = [
   "PDV_CurseState",
 ];
 
+// Auto-discover every concrete god script (PDV_Deity_* and PDV_DaedricPath_*) from the
+// source folder so newly-added gods are always compiled by --all/default and never go
+// stale. Prevents the class of bug where a god's .psc is edited but its .pex is never
+// recompiled because the name was missing from ACTIVE_SCRIPTS.
+function discoverGodScripts() {
+  if (!exists(DEVOTION_SOURCE)) {
+    return [];
+  }
+  return fs
+    .readdirSync(DEVOTION_SOURCE)
+    .filter((name) => /^PDV_(Deity|DaedricPath)_.*\.psc$/i.test(name))
+    .map((name) => path.basename(name, ".psc"))
+    .sort();
+}
+
+function knownScripts() {
+  return [...new Set([...ACTIVE_SCRIPTS, ...discoverGodScripts(), ...OPTIONAL_SCRIPTS])];
+}
+
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const environment = checkEnvironment();
@@ -348,7 +367,7 @@ function checkEnvironment() {
 }
 
 function selectTargets(args) {
-  const known = [...ACTIVE_SCRIPTS, ...OPTIONAL_SCRIPTS];
+  const known = knownScripts();
 
   if (args.scripts.length) {
     const scripts = [...new Set(args.scripts.map(normalizeScriptName))];
@@ -516,7 +535,7 @@ function compilerArguments(scriptName) {
 }
 
 function printScriptList(args) {
-  const scripts = [...ACTIVE_SCRIPTS, ...OPTIONAL_SCRIPTS];
+  const scripts = knownScripts();
   const rows = scripts.map((scriptName) => scriptStatus(scriptName));
 
   if (args.json) {

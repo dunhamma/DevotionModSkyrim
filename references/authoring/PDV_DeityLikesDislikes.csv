@@ -1,0 +1,48 @@
+actor,eventId,eventName,sentiment,tier,baseDelta,dailyCap,cooldownDays,stanceGate,conditionTag,notes
+Arkay,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,guardian of the cycle
+Arkay,365,raise-undead,-,medium,-1.0,2,0.5,,,necromancy is the core sin
+Arkay,314,sleep-in-bed,+,small,0.25,1,0,,,rest in the natural order
+Stendarr,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,Vigilant wrath on undeath
+Stendarr,301,kill-daedra,+,small,0.5,3,0,,ActorTypeDaedra,Vigilant theology
+Stendarr,364,assault-innocent,-,medium,-1.0,2,0,,,cruelty to the weak
+Stendarr,368,accept-daedric-artifact,-,medium,-1.0,2,0,,,consorting with Princes
+Mara,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,compassion made act
+Mara,304,murder-defenseless,-,medium,-1.0,2,0,,,violation of love and kinship
+Zenithar,330,smith-item,+,small,0.5,3,0,,,honest labor
+Zenithar,331,enchant-item,+,small,0.25,3,0,,,honest craft
+Zenithar,332,brew-potion,+,small,0.25,3,0,,,honest craft
+Zenithar,333,cook-meal,+,small,0.25,3,0,,,honest craft
+Zenithar,362,steal-item,-,medium,-0.75,3,0,,,theft is the antithesis of fair trade
+Julianos,340,read-skill-book,+,small,0.5,3,0,,,pursuit of knowledge
+Julianos,342,read-lore-book,+,small,0.5,3,0,,,pursuit of knowledge
+Julianos,344,increase-skill,+,small,0.5,3,0,,,mastery as worship
+Akatosh,343,learn-word-of-power,+,medium,0.75,2,0.5,,,dragon-tongue is his domain
+Akatosh,345,discover-location,+,small,0.25,3,0,,,endurance through the world
+Dibella,342,read-lore-book,+,small,0.25,3,0,,,appreciation of created beauty
+Kynareth,313,rest-under-open-sky,+,small,0.5,3,0,,,sky and wilds
+Kynareth,345,discover-location,+,small,0.5,3,0,,,the travelers goddess
+AuriEl,344,increase-skill,+,small,0.5,3,0,,,disciplined self-perfection
+AuriEl,314,sleep-in-bed,+,small,0.25,1,0,,,ordered dawn-to-dusk practice
+Magnus,341,read-spell-tome,+,medium,0.75,2,0.5,,,the architect of magic
+Magnus,331,enchant-item,+,small,0.5,3,0,,,applied magicka
+Xarxes,342,read-lore-book,+,medium,0.75,2,0.5,,,scribe of ages and lineage
+Trinimac,301,kill-daedra,+,medium,0.75,2,0,,ActorTypeDaedra,the unbroken warrior-god
+Trinimac,368,accept-daedric-artifact,-,medium,-1.0,2,0,,,betrayal toward Boethiah path
+Khenarthi,345,discover-location,+,small,0.5,3,0,,,winds and the open road
+Khenarthi,313,rest-under-open-sky,+,small,0.5,3,0,,,road-home cadence
+Rajhin,360,pick-owned-lock,+,small,0.5,3,0,,owned,the trickster-thief
+BaanDar,360,pick-owned-lock,+,small,0.25,3,0,,owned,the Bandit God
+Zen,330,smith-item,+,small,0.5,3,0,,,agriculture labor and exchange
+Azura,313,rest-under-open-sky,+,small,0.5,3,0,,,dawn-dusk observance under the moons (accepted Dunmer/Khajiit patron)
+Boethiah,2,kill-hostile-humanoid,+,small,0.25,3,0,,,victory of the worthy through struggle (accepted Dunmer patron)
+Boethiah,344,increase-skill,+,small,0.25,3,0,,,self-betterment by trial
+Mephala,360,pick-owned-lock,+,small,0.5,3,0,,owned,intrusion into the hidden and secrets
+Malacath,330,smith-item,+,medium,0.75,2,0,,,the forge as devotion (accepted Orc patron)
+Malacath,2,kill-hostile-humanoid,+,small,0.25,3,0,,,strength proven in open fight
+Kyne,1,kill-hostile-beast,-,large,-3.0,0,0,,,Kyne protects beasts; uncapped (MIGRATED to data 2026-06-08)
+Kyne,2,kill-hostile-humanoid,+,small,0.5,0,0,,,uncapped (MIGRATED to data 2026-06-08)
+Kyne,3,kill-event3,+,small,0.25,0,0,,,legacy branch; router does not emit 3 yet
+Kyne,4,kill-event4,+,small,0.5,0,0,,,legacy branch; router does not emit 4 yet
+Kyne,40,shout-attack,+,small,0.35,3,0.0208,,Shout,NOT read - Kyne shout still uses property-based call (Phase 7 invariant); row loaded but unused
+Talos,343,learn-word-of-power,+,medium,1.0,2,0.5,,,PENDING migration (Talos still overrides ScoreAction; not loaded)
+Shor,2,kill-hostile-humanoid,+,small,0.25,3,0,,,PENDING migration (Shor still overrides ScoreAction; not loaded)
