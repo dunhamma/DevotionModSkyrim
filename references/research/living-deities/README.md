@@ -54,10 +54,10 @@ Relationship shape: **layered** — a deep bilateral bond with the active patron
 | **M4** | Living Deities architecture doc | `04_living_deities_architecture.md` + `04_future_buckets_backlog.md` | ✅ DRAFT |
 | ref | Prisma UI reference notes | `prisma-ui-reference.md` | ✅ |
 
-**Owner ratification checkpoint reached (post-M2).** Per "automate until you need
-me," the program continued through M4 on documented sensible defaults. The open
-calls are consolidated in **`DECISIONS_PENDING.md`** — none blocking, all reversible.
-**Nothing has been implemented; this is research only.**
+**All LD-P1 decisions ratified (owner, 2026-06-09).** Mood model, MVP scope, and
+the Kyne + Hircine pilot are locked; see `DECISIONS_PENDING.md`. The design is
+final; **nothing has been implemented — this is research only** until the owner
+greenlights the build.
 
 ## M0 headline result
 
