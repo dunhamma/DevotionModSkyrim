@@ -95,10 +95,22 @@ progression; confirm an *unopened* path scores nothing (deepen-not-initiate); co
 non-native player's ambient act still does not touch the path pre-commit.
 
 ## Coverage
-12 transgressive Princes, ~4-5 ambient rows each (~50 rows): Mehrunes Dagon, Hircine,
-Meridia, Molag Bal, Hermaeus Mora, Namira, Nocturnal, Peryite, Sanguine, Sheogorath,
-Vaermina, Clavicus Vile. The 4 *accepted* Prince faces (Azura/Boethiah/Mephala/Malacath/
-Azurah) stay in the V1 CSV — they are full patrons, not this layer.
+**All 16 Daedric paths now have a V2 ambient table (~99 rows; PRINCE_LD_VERSION=2):**
+- **12 pure-transgressive Princes** (~5-7 rows each): Mehrunes Dagon, Hircine, Meridia,
+  Molag Bal, Hermaeus Mora, Namira, Nocturnal, Peryite, Sanguine, Sheogorath, Vaermina,
+  Clavicus Vile.
+- **4 dual-face Princes' PATH face** (added 2026-06-10): Azura, Boethiah, Mephala,
+  Malacath — for **OFF-RACE committed worship**. Their native races worship the
+  **deity** face (V1: azurah/Boethiah/Mephala/Malacath), so the path table mirrors the
+  prince's theology for everyone else. **No double-dip:** an off-race worshipper fails the
+  V1 race-native gate (deity face scores 0), and a native worshipper uses the deity face
+  and never opens the path (so V2 stays inert). Same-string DeityName across the deity and
+  path forms is fine — they are different forms with separate PDV.LD / PDV.PLD namespaces.
+
+This completes the likes/dislikes matrix for **every committable path + all 32 scorable
+deities** (44 scorable actors, all covered). The roster's substrate-minor gods (Khajiit
+lunar Jone/Jode/Riddle'Thar, Yokudan Satakal/Ruptga/Tava/Onsi, Altmer Phynaster/Syrabane,
+Argonian Sep) have no individual table by design — devotion routes through their substrate.
 
 ## Acceptance (content)
 - ASCII-safe; schema matches the V1 CSV (so a V2 generator can reuse the parser).

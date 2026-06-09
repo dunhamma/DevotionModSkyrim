@@ -73,3 +73,28 @@ Daedric:Vaermina,364,assault-innocent,+,small,0.25,3,0,PathOpen,,terror is the w
 Daedric:Vaermina,343,learn-word-of-power,+,small,0.25,3,0,PathOpen,,a Word seized from the dreaming mind
 Daedric:Clavicus Vile,345,discover-location,+,small,0.25,3,0,PathOpen,,every road leads to another bargain
 Daedric:Clavicus Vile,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,why give freely what you could sell?
+Daedric:Azura,313,rest-under-open-sky,+,small,0.5,3,0,PathOpen,,dawn-dusk observance under her twilight (path face)
+Daedric:Azura,350,heal-or-cure-npc,+,medium,0.75,2,0.5,PathOpen,,mercy shown to the cursed and the outcast
+Daedric:Azura,343,learn-word-of-power,+,medium,0.75,2,0.5,PathOpen,,foresight rewarded; knowing what is to come
+Daedric:Azura,342,read-lore-book,+,small,0.25,3,0,PathOpen,,study of prophecy and the turning of fate
+Daedric:Azura,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,Azura's Star claimed
+Daedric:Azura,304,murder-defenseless,-,medium,-0.75,2,0.5,PathOpen,,cruelty to the helpless betrays her mercy
+Daedric:Boethiah,2,kill-hostile-humanoid,+,small,0.25,3,0,PathOpen,,victory of the worthy through open struggle
+Daedric:Boethiah,344,increase-skill,+,small,0.5,3,0,PathOpen,,strength earned by trial and self-betterment
+Daedric:Boethiah,304,murder-defenseless,+,medium,0.75,2,0.5,PathOpen,,the unworthy culled; rightful murder is her gift
+Daedric:Boethiah,360,pick-owned-lock,+,small,0.25,3,0,PathOpen,owned,deceit and intrusion please the Prince of Plots
+Daedric:Boethiah,368,accept-daedric-artifact,+,large,1.5,1,1.0,PathOpen,ActorTypeDaedra,proof of cunning rewarded by the Prince of Plots
+Daedric:Boethiah,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,coddling the weak denies the test of struggle
+Daedric:Mephala,360,pick-owned-lock,+,small,0.5,3,0,PathOpen,owned,intrusion into the hidden; secrets prised open
+Daedric:Mephala,362,steal-item,+,small,0.5,3,0,PathOpen,owned,the taking by stealth pleases the Webspinner
+Daedric:Mephala,304,murder-defenseless,+,medium,1.0,2,0.5,PathOpen,,murder by stealth woven into her web
+Daedric:Mephala,361,trespass,+,small,0.25,3,0,PathOpen,,crossing into the forbidden pleases the Webspinner
+Daedric:Mephala,342,read-lore-book,+,small,0.25,3,0,PathOpen,,secret lore gathered into the threads
+Daedric:Mephala,368,accept-daedric-artifact,+,large,1.5,1,1.0,PathOpen,ActorTypeDaedra,the Ebony Blade claimed
+Daedric:Malacath,330,smith-item,+,medium,0.75,2,0.5,PathOpen,,the forge is the orc-father's prayer
+Daedric:Malacath,2,kill-hostile-humanoid,+,small,0.25,3,0,PathOpen,,strength proven in open fight
+Daedric:Malacath,1,kill-hostile-beast,+,small,0.25,3,0,PathOpen,,a strong arm against beasts honors raw strength
+Daedric:Malacath,313,rest-under-open-sky,+,small,0.25,3,0,PathOpen,,the exile endures hardship under open sky
+Daedric:Malacath,362,steal-item,-,small,-0.25,3,0,PathOpen,,thieving is the coward's path the honest outcast scorns
+Daedric:Malacath,364,assault-innocent,-,medium,-0.75,2,0.5,PathOpen,,striking the defenseless is the weakness he despises
+Daedric:Malacath,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,Volendrung taken up
