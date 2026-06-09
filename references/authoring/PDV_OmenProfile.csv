@@ -1,0 +1,7 @@
+deity,transition,toast_key,dream_text_key,tone
+Kyne,up,pdv_omen_kyne_up,,positive
+Kyne,down,pdv_omen_kyne_down,,negative
+Kyne,dream,,pdv_dream_kyne_hawk,neutral
+Hircine,down,pdv_omen_hircine_down,,negative
+Hircine,->Wroth,pdv_omen_hircine_wroth,,negative
+Hircine,dream,,pdv_dream_hircine_wolves,neutral

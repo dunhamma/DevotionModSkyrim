@@ -1,0 +1,3 @@
+deity,alpha,band_wroth_max,band_cool_max,band_pleased_max,stance_ceiling,notes
+Kyne,0.12,-40,10,55,FOREIGN:Pleased;TABOO:Cool;HOSTILE:Cool,"Aedra (NATIVE/Nord). Patient alpha ~4-day half-life. Bands asymmetric per M2: Wroth [-100,-40) Cool [-40,+10) Pleased [+10,+55) Exalted [+55,100]. Ceiling: FOREIGN caps at Pleased; TABOO/HOSTILE cap at Cool unless curse/commitment active."
+Hircine,0.22,-40,10,55,FOREIGN:Pleased;TABOO:Cool;HOSTILE:Cool,"Daedra (TABOO / CURSE via werewolf). Impatient alpha, faster reaction. Same asymmetric band thresholds. Same stance-ceiling rule; Hircine's werewolf curse path is the commitment exception that can lift the Cool cap."
