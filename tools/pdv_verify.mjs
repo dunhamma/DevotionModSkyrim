@@ -266,6 +266,13 @@ const BASELINE_RECORDS = {
 const PHASE3_RECORDS = {
   PDV_ActionRouter: "QUST",
   PDV__SM_KillActor: "QUST",
+  PDV__SM_CraftItem: "QUST",
+  PDV__SM_NewVoicePower: "QUST",
+  PDV__SM_IncreaseSkill: "QUST",
+  PDV__SM_ChangeLocation: "QUST",
+  PDV__SM_PickLock: "QUST",
+  PDV__SM_Trespass: "QUST",
+  PDV__SM_AssaultActor: "QUST",
 };
 
 const PREFLIGHT_RECORDS = {
@@ -631,6 +638,13 @@ const COMPILED_SCRIPTS = {
   PDV_DaedricPath_Hircine: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
+  PDV__SM_CraftItem: "phase3",
+  PDV__SM_NewVoicePower: "phase3",
+  PDV__SM_IncreaseSkill: "phase3",
+  PDV__SM_ChangeLocation: "phase3",
+  PDV__SM_PickLock: "phase3",
+  PDV__SM_Trespass: "phase3",
+  PDV__SM_AssaultActor: "phase3",
   PDV_SurveyDevotionEffect: "required",
   PDV_MCM: "required",
 };
@@ -702,6 +716,91 @@ const ROUTER_PROPERTIES = {
   ActorTypeAnimal: null,
   ActorTypeCreature: null,
 };
+
+const ROUTER_GENERIC_FAUCET_PROPERTIES = {
+  ActorTypeUndead: "Skyrim.esm:013796",
+  ActorTypeDaedra: "Skyrim.esm:013797",
+  ActorTypeDragon: "Skyrim.esm:035D59",
+  PDV_FLST_FaucetSkillBooks: "PDV_FLST_FaucetSkillBooks",
+  PDV_FLST_FaucetSpellTomes: "PDV_FLST_FaucetSpellTomes",
+  CraftingSmithingArmorTable: "Skyrim.esm:0ADB78",
+  CraftingSmithingForge: "Skyrim.esm:088105",
+  CraftingSmithingSharpeningWheel: "Skyrim.esm:088108",
+  CraftingSmithingSkyforge: "Skyrim.esm:0F46CE",
+  CraftingCookpot: "Skyrim.esm:0A5CB3",
+  isAlchemy: "Skyrim.esm:02A40B",
+  isEnchanting: "Skyrim.esm:06E2A3",
+};
+
+const PLAYER_EVENTS_GENERIC_FAUCET_PROPERTIES = {
+  PDV_FLST_FaucetSkillBooks: "PDV_FLST_FaucetSkillBooks",
+  PDV_FLST_FaucetSpellTomes: "PDV_FLST_FaucetSpellTomes",
+  PDV_FLST_FaucetDaedricArtifacts: "PDV_FLST_FaucetDaedricArtifacts",
+  PDV_FLST_FaucetRaiseUndeadEffects: "PDV_FLST_FaucetRaiseUndeadEffects",
+};
+
+const STORY_MANAGER_RECEIVER_SCRIPTS = [
+  "PDV__SM_KillActor",
+  "PDV__SM_CraftItem",
+  "PDV__SM_NewVoicePower",
+  "PDV__SM_IncreaseSkill",
+  "PDV__SM_ChangeLocation",
+  "PDV__SM_PickLock",
+  "PDV__SM_Trespass",
+  "PDV__SM_AssaultActor",
+];
+
+const GENERIC_FAUCET_STORY_MANAGER_NODES = [
+  {
+    eventName: "Craft Item",
+    nodeEdid: "PDV__SM_CraftItemNode",
+    receiverQuest: "PDV__SM_CraftItem",
+    parent: "Skyrim.esm:039D86",
+    previousSibling: "Skyrim.esm:04F593",
+  },
+  {
+    eventName: "New Voice Power",
+    nodeEdid: "PDV__SM_NewVoicePowerNode",
+    receiverQuest: "PDV__SM_NewVoicePower",
+    parent: "Skyrim.esm:02D389",
+    previousSibling: "Skyrim.esm:02D38A",
+  },
+  {
+    eventName: "Increase Skill",
+    nodeEdid: "PDV__SM_IncreaseSkillNode",
+    receiverQuest: "PDV__SM_IncreaseSkill",
+    parent: "Skyrim.esm:02D386",
+    previousSibling: "Skyrim.esm:02D387",
+  },
+  {
+    eventName: "Change Location",
+    nodeEdid: "PDV__SM_ChangeLocationNode",
+    receiverQuest: "PDV__SM_ChangeLocation",
+    parent: "Skyrim.esm:01320E",
+    previousSibling: "Skyrim.esm:0A39C6",
+  },
+  {
+    eventName: "Pick Lock",
+    nodeEdid: "PDV__SM_PickLockNode",
+    receiverQuest: "PDV__SM_PickLock",
+    parent: "Skyrim.esm:05BD7B",
+    previousSibling: null,
+  },
+  {
+    eventName: "Trespass",
+    nodeEdid: null,
+    receiverQuest: "PDV__SM_Trespass",
+    parent: null,
+    previousSibling: null,
+  },
+  {
+    eventName: "Assault Actor",
+    nodeEdid: "PDV__SM_AssaultActorNode",
+    receiverQuest: "PDV__SM_AssaultActor",
+    parent: "Skyrim.esm:02C494",
+    previousSibling: "Skyrim.esm:0A39C0",
+  },
+];
 
 const ROUTER_PREFLIGHT_PROPERTIES = {
   PDV_EventBusService: "PDV_EventBus",
@@ -6615,7 +6714,7 @@ class Verifier {
     }
 
     const actualEdid = objectEdid(prop, this.recordsByEdid);
-    if (actualEdid === expectedEdid) {
+    if (actualEdid === expectedEdid || formidsEqual(prop.Object, expectedEdid)) {
       this.pass(checkName, `${propName} points at ${expectedEdid}.`, PDV_ESP);
     } else {
       gapFn(checkName, `${propName} points at ${actualEdid || prop.Object || "unassigned"}, expected ${expectedEdid}.`, PDV_ESP);
@@ -6912,7 +7011,9 @@ class Verifier {
 
   checkPhase3Records() {
     this.checkOptionalQuestScript("PDV_ActionRouter", "PDV_ActionRouter", ROUTER_PROPERTIES);
-    this.checkOptionalQuestScript("PDV__SM_KillActor", "PDV__SM_KillActor", RECEIVER_PROPERTIES);
+    for (const receiverScript of STORY_MANAGER_RECEIVER_SCRIPTS) {
+      this.checkOptionalQuestScript(receiverScript, receiverScript, RECEIVER_PROPERTIES);
+    }
     const hasEventBusRecord = this.recordsByEdid.has("PDV_EventBus");
     const hasEventTypesRecord = this.recordsByEdid.has("PDV_EventTypes");
 
@@ -6925,6 +7026,12 @@ class Verifier {
 
     const routerDetail = this.recordDetails.get("PDV_ActionRouter");
     const routerScript = routerDetail ? findScript(routerDetail.fields || {}, "PDV_ActionRouter") : null;
+    if (routerScript) {
+      const routerProps = propertyMap(routerScript);
+      for (const [propName, expectedEdid] of Object.entries(ROUTER_GENERIC_FAUCET_PROPERTIES)) {
+        this.checkObjectPropertyTarget("Generic faucet router property", routerProps, propName, expectedEdid, this.todo.bind(this));
+      }
+    }
     if (routerScript && hasEventBusRecord && hasEventTypesRecord) {
       this.checkObjectProperties("PDV_ActionRouter preflight property", propertyMap(routerScript), ROUTER_PREFLIGHT_PROPERTIES);
     } else if (routerScript) {
@@ -6932,6 +7039,9 @@ class Verifier {
       this.checkPreflightQuestScript("PDV_ActionRouter", "PDV_EventTypes", {});
       this.info("PDV_ActionRouter preflight property", "EventBus/EventTypes properties are script-ready; CK co-attachment or quest wiring is pending.", PDV_ESP);
     }
+
+    this.checkGenericFaucetPlayerAliasProperties();
+    this.checkGenericFaucetSourceContracts();
 
     const smRecords = [...this.recordsByFormid.values()].filter((record) => String(record.type || "").toUpperCase().startsWith("SM"));
     if (smRecords.length) {
@@ -6947,6 +7057,124 @@ class Verifier {
         PDV_ESP,
       );
     }
+    this.checkGenericFaucetStoryManagerNodes();
+  }
+
+  checkGenericFaucetStoryManagerNodes() {
+    for (const node of GENERIC_FAUCET_STORY_MANAGER_NODES) {
+      if (!node.nodeEdid) {
+        this.todo(
+          "Generic faucet Story Manager node",
+          `${node.eventName} -> ${node.receiverQuest} remains blocked: installed Skyrim.esm readback has no local TrespassActorEvent SMEN root.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      const detail = this.recordDetails.get(node.nodeEdid);
+      if (!detail) {
+        this.todo(
+          "Generic faucet Story Manager node",
+          `${node.eventName} -> ${node.receiverQuest} Shares Event node ${node.nodeEdid} still needs source-ESP readback proof.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      const fields = detail.fields || {};
+      const receiver = this.recordsByEdid.get(node.receiverQuest);
+      if (!receiver?.formid) {
+        this.todo(
+          "Generic faucet Story Manager node",
+          `${node.nodeEdid} cannot verify receiver quest because ${node.receiverQuest} was not read from the ESP.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      const failures = [];
+      if (String(detail.record_type || "").toUpperCase() !== "STORYMANAGERQUESTNODE") {
+        failures.push(`type is ${detail.record_type || "(missing)"}, expected STORYMANAGERQUESTNODE`);
+      }
+      if (fields.Parent !== node.parent) {
+        failures.push(`parent is ${fields.Parent || "(missing)"}, expected ${node.parent}`);
+      }
+      if ((fields.PreviousSibling || null) !== (node.previousSibling || null)) {
+        failures.push(`previous sibling is ${fields.PreviousSibling || "(none)"}, expected ${node.previousSibling || "(none)"}`);
+      }
+      if (!String(fields.QuestFlags || "").split(",").map((part) => part.trim()).includes("SharesEvent")) {
+        failures.push(`QuestFlags are ${fields.QuestFlags || "(missing)"}, expected SharesEvent`);
+      }
+      const quests = Array.isArray(fields.Quests) ? fields.Quests : [];
+      if (!quests.some((quest) => quest?.Quest === receiver.formid)) {
+        failures.push(`quest target does not include ${node.receiverQuest} (${receiver.formid})`);
+      }
+
+      if (failures.length) {
+        this.fail("Generic faucet Story Manager node", `${node.nodeEdid}: ${failures.join("; ")}.`, PDV_ESP);
+      } else {
+        this.pass(
+          "Generic faucet Story Manager node",
+          `${node.nodeEdid} routes ${node.eventName} to ${node.receiverQuest} with Shares Event.`,
+          PDV_ESP,
+        );
+      }
+    }
+  }
+
+  checkGenericFaucetPlayerAliasProperties() {
+    const detail = this.recordDetails.get("PDV__ManagerQuest");
+    const fields = detail?.fields || {};
+    const questAlias = findQuestAlias(fields, "PDV_Player");
+    const aliasScript = questAlias ? findAliasScript(fields, questAlias.ID, "PDV_PlayerEvents") : null;
+    if (!aliasScript) {
+      this.todo("Generic faucet player alias property", "PDV_Player alias is missing PDV_PlayerEvents readback.", PDV_ESP);
+      return;
+    }
+
+    const aliasProps = propertyMap(aliasScript);
+    for (const [propName, expectedEdid] of Object.entries(PLAYER_EVENTS_GENERIC_FAUCET_PROPERTIES)) {
+      this.checkObjectPropertyTarget("Generic faucet player alias property", aliasProps, propName, expectedEdid, this.todo.bind(this));
+    }
+  }
+
+  checkGenericFaucetSourceContracts() {
+    this.checkSourceContains("Generic faucet router source", "PDV_ActionRouter", [
+      "Function HandleStoryCraftItem(ObjectReference akBench, Location akLocation, Form akCreatedItem)",
+      "Function HandleStoryNewVoicePower(ObjectReference akActor, Form akVoicePower)",
+      "Function HandleStoryIncreaseSkill(String asSkill)",
+      "Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocation, Location akNewLocation)",
+      "Function HandleStoryPickLock(ObjectReference akActor, ObjectReference akLock)",
+      "Function HandleStoryTrespass(ObjectReference akVictim, ObjectReference akTrespasser, Location akLocation, Int aiCrime)",
+      "Function HandleStoryAssaultActor(ObjectReference akVictim, ObjectReference akAttacker, Location akLocation, Int aiCrime)",
+      "Function ClassifyNonHostileKillVictim(Actor victimActor, Int aiCrimeStatus)",
+      "Function ClassifyCraftBench(ObjectReference benchRef)",
+      "Function ClassifyBook(Book bookRef)",
+      "EVT_KILL_ANIMAL_NONCOMBAT",
+      "EVT_MURDER_DEFENSELESS",
+      "EVT_SMITH_ITEM",
+      "EVT_ENCHANT_ITEM",
+      "EVT_BREW_POTION",
+      "EVT_COOK_MEAL",
+      "EVT_LEARN_WORD_OF_POWER",
+      "EVT_INCREASE_SKILL",
+      "EVT_DISCOVER_LOCATION",
+      "EVT_PICK_OWNED_LOCK",
+      "EVT_TRESPASS",
+      "EVT_ASSAULT_INNOCENT",
+    ], this.todo.bind(this));
+
+    this.checkSourceContains("Generic faucet PO3 source", "PDV_PlayerEvents", [
+      "RouteGenericBookRead(akBook)",
+      "RouteGenericAction(EVT_HARVEST_INGREDIENT",
+      "RouteGenericAction(EVT_ACCEPT_DAEDRIC_ARTIFACT",
+      "RouteGenericAction(EVT_RAISE_UNDEAD",
+      "RouteGenericAction(EVT_REST_UNDER_OPEN_SKY",
+      "RouteGenericAction(EVT_SLEEP_IN_BED",
+      "Function RegisterGenericEffectList(FormList effectList)",
+      "PO3_Events_Alias.RegisterForBookRead(Self)",
+      "PO3_Events_Alias.RegisterForItemHarvested(Self)",
+    ], this.todo.bind(this));
   }
 
   checkPreflightOverlayPatch() {
@@ -7923,6 +8151,33 @@ function formidToEdid(formid, recordsByEdid) {
     }
   }
   return null;
+}
+
+function formidsEqual(left, right) {
+  const normalizedLeft = normalizeFormidToken(left);
+  const normalizedRight = normalizeFormidToken(right);
+  return Boolean(normalizedLeft && normalizedRight && normalizedLeft === normalizedRight);
+}
+
+function normalizeFormidToken(value) {
+  if (!value || typeof value !== "string" || !value.includes(":")) {
+    return null;
+  }
+
+  const [first, second] = value.split(":");
+  if (!first || !second) {
+    return null;
+  }
+
+  if (/^[0-9a-f]{6}$/i.test(first)) {
+    return `${second.toLowerCase()}:${first.toUpperCase()}`;
+  }
+
+  if (/^[0-9a-f]{6}$/i.test(second)) {
+    return `${first.toLowerCase()}:${second.toUpperCase()}`;
+  }
+
+  return value.toLowerCase();
 }
 
 function extractFormidsFromArrayProperty(prop) {

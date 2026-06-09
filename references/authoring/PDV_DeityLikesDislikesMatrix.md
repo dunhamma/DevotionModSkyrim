@@ -1,9 +1,11 @@
 # PDV Deity Likes/Dislikes Matrix - Day-to-Day Signal Design
 
 **Created:** 2026-06-08
-**Status:** Schema/policy LOCKED + foundation BUILT 2026-06-08 - event IDs (300+), dawn-aligned
-anti-farm, data-driven base `ScoreAction`, and starter CSV all landed/compiled. Remaining: CSV loader,
-Kyne migration, Story Manager receivers, router emit, in-game proof (section10).
+**Status:** Schema/policy LOCKED + source foundation BUILT. Event IDs (300+), dawn-aligned
+anti-farm, data-driven base `ScoreAction`, full CSV loader, Kyne/Talos/Shor migration, hybrid
+PO3/Story Manager routing source, receiver QUST shells, generic faucet FormLists, router/player-alias
+properties, six vanilla-rooted Story Manager `Shares Event` nodes, and verifier coverage are
+compiled/readback-clean. Remaining: Trespass event-root proof plus in-game runtime proof (section10).
 **Owner:** Companion to `PDV_RacePietyRateAudit.md`, `PDV_RaceEffectReviewLedger.md`, and
 `references/phase4/PDV_RaceSignalMatrix.csv`
 **Trigger:** Confirmed 2026-06-08 that the day-to-day "small-signal" approval/disapproval layer is
@@ -340,16 +342,26 @@ Prince rows are **V2 reference only**; the accepted-patron rows are **V1**.
      = -3.0x1.32), exact. Nord test (stance NATIVE x1.0, applied=raw). The loader, `PDV.LD.*` table,
      `ScoreFromTable`, anti-farm, and dawn banking are all proven end-to-end. **The data-driven
      faucet architecture is validated.**
-3. **TODO - CLEAN-detection Story Manager receivers** (CK work): one thin quest each on the
-   `PDV__SM_KillActor` pattern (Book Read, Craft Item, Pick Lock, Trespass, Increase Skill, New Voice
-   Power, Change Location, Assault, Served Time) with nodes flagged **Shares Event**, plus the
-   `OnSleepStart` and artifact-FormList `OnItemAdded` hooks.
-4. **TODO - router classifier:** event IDs are reserved in `PDV_EventTypes` (block 300+, DONE);
-   extend `PDV_ActionRouter` to classify/emit them and fan to `ScoreAction` (+ `EventLabel` entries).
-5. **Author the matrix - starter wave DONE; full fill TODO.** `PDV_DeityLikesDislikes.csv` holds the
-   CLEAN-event starter set (~40 rows). Expand to all 48 actors, then MODERATE, defer HARD.
-6. **TODO - verify + in-game proof:** content verifier/readback, MCM `ProcessDawn` bank to confirm
-   tier movement, then runtime smoke on one non-Nord race (Imperial/Breton - no substrate confound).
+3. **Full likes/dislikes content - DONE 2026-06-09 (compiled).** All 32 deities authored (subagent
+   fan-out, lore-grounded) in `PDV_DeityLikesDislikes.csv` (~173 rows). A generator
+   (`tools/pdv_likesdislikes_gen.mjs`) emits the Papyrus `LoadRowsForDeity` from the CSV (no more
+   hand-transcription). Talos + Shor migrated (non-override events -> `ScoreFromTable`).
+   `LIKES_DISLIKES_VERSION` bumped to 3. Re-run the generator + bump the version whenever the CSV changes.
+4. **Combat-by-victim detection - SOURCE/ESP DONE 2026-06-09 (compiled/readback-clean).**
+   `PDV_ActionRouter.ClassifyKillVictim` emits `kill-undead/daedra/dragon` (300/301/302) by victim
+   keyword. `HandleStoryKillActor` also preserves hostile kills and adds non-hostile direct-player
+   `303/304` routing. Router keyword/FormList/bench properties are filled in the source ESP.
+5. **Hybrid generic receiver source/ESP - DONE 2026-06-09 (compiled/readback-clean except Trespass SM root).** Book/sleep/harvest/artifact/effect
+   cases are PO3-owned in `PDV_PlayerEvents`; Craft Item, New Voice Power, Increase Skill, Change
+   Location, Pick Lock, Trespass, and Assault Actor have thin `PDV__SM_*` receiver scripts plus
+   `PDV_ActionRouter.HandleStory*` handlers. Receiver QUSTs, `PDV_Router`, generic FormLists, and
+   router/player-alias properties are wired in the source ESP. Six vanilla-rooted `Shares Event`
+   Story Manager nodes are readback-clean; Trespass remains blocked because installed `Skyrim.esm`
+   has no local `TrespassActorEvent` SMEN root.
+6. **TODO - Trespass root + in-game proof:** default verifier is `FAIL=0` with one TODO for
+   `PDV__SM_Trespass`. `--strict-phase3` fails only that blocker. After the Trespass event root is
+   proven/wired, run `--strict-phase3`, then runtime smoke every routed event and capture
+   `[PDV] EventBus: <deity> event <id> delta <x>` markers.
 
 ## 11. Settled decisions (LOCKED 2026-06-08)
 
@@ -389,9 +401,16 @@ Prince rows are **V2 reference only**; the accepted-patron rows are **V1**.
    overrides. Verified stance values: Nord->Kyne `stance 0` (NATIVE, scores), Dunmer->Kyne/Shor `stance 1`
    (FOREIGN, zeroed); stance matrix confirms Dunmer->Reclamations = NATIVE. Cross-pantheon worship still
    flows through the Daedric path (stigma) and curated signals, untouched.
+   - **STANCE-WIRING DEPENDENCY found + fixed 2026-06-09:** the gate exposed that the ~26 thin-shell
+     deities shipped with UNWIRED `Stance_<Race>` (all default FOREIGN=1), which also halved native
+     curated signals. Fixed from `references/phase4/PDV_StanceMatrix.csv` via (a) `tools/pdv-stance-author`
+     (C# Mutagen ESP VMAD write, all 32 deities, backed up) for new games, and (b) a runtime migration
+     (`PDV__ManagerQuest.ApplyStancesForDeity`, version-gated) for existing/mid-playthrough saves --
+     needed because VMAD prop values bake into the save at first init and never re-read. Confirmed
+     in-game: Dunmer->Boethiah scores 0.25 at stance 0 (full, not halved); Malacath gated at stance 2
+     (TABOO); Kyne/Shor gated (FOREIGN). See `deity-stance-wiring` memory.
 
-### Remaining inputs before mass authoring (mechanical, not blocking design)
-- Confirm exact per-row deltas for the full 48-actor CSV (the section7 starter is the pattern; the rest is
-  lore-fill against `references/skyrim-deity-reference.jsx` and the daily-worship references).
-- Confirm the new event-ID block (300+) does not collide with any reserved range before the router
-  classifier and Story Manager receivers are authored.
+### Remaining inputs before CK closeout
+- Prove/wire `PDV__SM_Trespass` to a valid Trespass Story Manager event root. Installed
+  `Skyrim.esm` readback does not contain a local `TrespassActorEvent` SMEN root.
+- Run `node .\tools\pdv_verify.mjs --strict-phase3 --json` after Trespass wiring, then perform runtime smoke.
