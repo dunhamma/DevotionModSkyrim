@@ -49,13 +49,17 @@ Run from inside the repo. (Or use the VS Code / JetBrains "Claude Code" extensio
 - [x] `tools/pdv_living_deities_selftest.mjs` — vocab + parallel-array + no-empty-deity + binding-integrity gates; run as the pre-wiring gate.
 
 ### B. Papyrus wiring
-- [ ] **PREREQ — close the Kyne fulfillment gap:** Kyne has zero rows in
+- [ ] **PREREQ — close the Kyne fulfillment gap (HALF-closed 2026-06-10):** the
+  faucet half is landed — main's `2e665b7` (hybrid faucet wiring, merged into this
+  branch) shipped receivers for 313 (`PDV_PlayerEvents` sleep hook) and 343
+  (`PDV__SM_NewVoicePower` SM node), compiled/readback-clean; **runtime proof is
+  still pending** (see `references/authoring/PDV_FaucetDetection_CKChecklist.md`
+  §6). The quest-matrix half is still open: Kyne has zero rows in
   `PDV_QuestReactionMatrix_Full.csv` (the only `the_hunt` rows are Hircine's DA05
-  s100/s105) and her faucet bindings (313/343) are in the unwired 300+ block — as
-  authored, her demand can be offered but never fulfilled. Either author
-  Kyne-positive `the_hunt`/`honor_the_wild` matrix rows or build the 313/343 SM
-  receivers + router first. (Hircine is fine: event 1 is live; only the
-  `great_beast` filter is new.)
+  s100/s105). Remaining before/with Block B: author Kyne-positive
+  `the_hunt`/`honor_the_wild` matrix rows, and carry the 313/343 runtime proof in
+  the Block D smoke. (Hircine is fine: event 1 is live; only the `great_beast`
+  filter is new.)
 - [ ] **NEW — `PDV_Deity_Hircine.psc`** (`extends PDV_DeityBase`, Kyne-shell clone): curse gate (`PDV_CurseState.IsWerewolf()`) in `ScoreAction`, then **must** `return ScoreFromTable(eventType)` (never a `0.0` stub — the masking lesson); mood decay/zero on cure via `HandleCurseTransition`.
 - [ ] `PDV_DeityBase.psc`: add `MoodAlpha`, `Boon_<tier>_<band>` spell props, `ClutchSaveEffect` prop; add `SyncPatronBoonsToBand()` (extend `SyncPatronBoonsToTier`).
 - [ ] `PDV__ManagerQuest.psc`: `RunDawnUpdateMood()` folded into the `RunDawnConsolidateScratch` loop (read `clampedToday` before `PietyToday` is zeroed); `RunDawnProcessDemands()` mirroring `RunDawnProcessCommitmentOffers()`; `OnMoodBandCross()` dispatch; mirror band → `PDV_GLO_PatronMoodBand`; **demand fulfillment at the two real signal points** (router/`ScoreAction` eventType match + `ApplyQuestReaction` matrix-tag match — NOT a new param on `AwardPietyInternal`); demand expiry in dawn.

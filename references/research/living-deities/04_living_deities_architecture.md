@@ -118,11 +118,13 @@ never a literal). Recomputed pacing at sustained max signal: Kyne (α 0.12) reac
 Exalted in ~6 days, ~5.4-day impression half-life; Hircine (α 0.22) reaches Wroth
 in ~2–3 days, ~2.8-day half-life.
 
-**Input-breadth caveat (honest):** the day-to-day faucet feeding `clampedToday` is
-currently proven for **Kyne combat events only**; the non-combat 300+ vocabulary
-has no Story Manager receivers/router yet (likes/dislikes §10 steps 3–4). Mood works
-off live signals from day one but feels livelier as the faucet broadens — a **soft
-dependency**, tracked, not a blocker.
+**Input-breadth caveat (updated 2026-06-10 post-merge):** the day-to-day faucet
+feeding `clampedToday` is runtime-proven for **Kyne combat events only**. The
+non-combat 300+ receivers landed via main `2e665b7` (hybrid faucet wiring:
+compiled/readback-clean, incl. 313/343; only 361 Trespass blocked), but **runtime
+proof is pending** (`PDV_FaucetDetection_CKChecklist.md` §6). Mood works off live
+signals from day one and broadens once the smoke confirms the new receivers — a
+**runtime-proof dependency**, tracked, not a blocker.
 
 ### 3.3 `OnMoodBandCross()` → dispatch (A2 + A4 + A3 arming)
 - Filter: deity ∈ active patron pool (reuse `HasRecentCommitmentSignalDays`, live `:6624`) AND anti-spam gate (`ScoreRepeatableAction`-style cooldown + `Marked` tier + MCM density) AND (for Hircine) the §2.0 curse gate.
@@ -191,12 +193,13 @@ discipline).
 **Kyne (Aedra, NATIVE/Nord)** — `alpha 0.12` (patient). Demand: *honor the wild*
 (binding: quest-matrix `the_hunt` tag + faucet events 313 rest-under-open-sky / 343
 learn-word-of-power; window 4d — Kyne **penalizes** beast kills, so her demand must
-never bind to event 1). **OPEN AUTHORING GAP (Block A grounding, 2026-06-10):** the
+never bind to event 1). **OPEN AUTHORING GAP (Block A grounding, 2026-06-10; HALF-closed post-merge):** the
 `the_hunt` tag exists in `PDV_QuestReactionMatrix_Full.csv` only on two *Hircine*
-rows (DA05 s100/s105); **Kyne has zero curated-matrix rows**, and faucet 313/343 are
-in the unwired 300+ block. As wired today Kyne's demand could be offered but never
-fulfilled. Resolve before Block B: author Kyne-positive `the_hunt`/`honor_the_wild`
-matrix rows, or treat the 313/343 receivers as a Block B prerequisite for Kyne.
+rows (DA05 s100/s105); **Kyne has zero curated-matrix rows**. The faucet half is
+landed: main `2e665b7` shipped 313/343 receivers (readback-clean; runtime proof
+pending). Remaining before/with Block B: author Kyne-positive
+`the_hunt`/`honor_the_wild` matrix rows; carry the 313/343 runtime proof in the
+Block D smoke.
 Omens: up "Kyne's winds favor you" / down "the winds turn cold against you"; dream
 of a circling hawk. Band boons: Pleased = +stamina regen; Exalted = current Kyne T3
 + gust. Clutch-save "Kyne's Breath" = heal + gust knockback. Reuses

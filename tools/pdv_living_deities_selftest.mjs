@@ -32,8 +32,16 @@ const WIRED_TODAY = new Set(["yes", "no", "partial"]);
 // (references/authoring/PDV_DeityLikesDislikesMatrix.md section 4).
 const isKnownEventType = (n) =>
   n === 1 || n === 2 || n === 40 || (n >= 300 && n <= 369);
-// Events 1-4 are live today; the 300+ block has no SM receivers/router yet.
+// Events 1-4 are live + runtime-proven. The hybrid faucet wiring (main 2e665b7,
+// 2026-06-10) landed source/ESP receivers for most of the 300+ block
+// compiled/readback-clean, but runtime proof is pending, so they do not yet
+// count as wired for the wired_today=yes honesty gate. 361 (Trespass) is
+// blocked entirely (no local TrespassActorEvent SMEN root in Skyrim.esm).
 const isWiredEventType = (n) => n >= 1 && n <= 4;
+const RECEIVER_LANDED = new Set([
+  300, 301, 302, 303, 304, 313, 314, 330, 331, 332, 333, 334,
+  340, 341, 342, 343, 344, 345, 360, 364, 365, 368,
+]);
 
 const failures = [];
 const infos = [];
@@ -147,13 +155,19 @@ function checkDemands(out) {
     if (!WIRED_TODAY.has(wired)) {
       fail(`demand ${key}: bad wired_today "${wired}" (expected yes|no|partial)`);
     }
-    // Honesty cross-check: a demand whose faucet events are ALL in the unwired
-    // 300+ block and which has no live quest tag cannot claim wired_today=yes.
+    // Honesty cross-check: a demand whose faucet events are ALL still
+    // runtime-unproven (receiver-landed or unwired) and which has no live
+    // quest tag cannot claim wired_today=yes.
     if (wired === "yes" && hasEvents && !eventTypes.some(isWiredEventType) && !hasQuestTag) {
-      fail(`demand ${key}: wired_today=yes but all bound events are in the unwired 300+ block`);
+      fail(`demand ${key}: wired_today=yes but no bound event is runtime-proven and no quest tag is set`);
     }
-    if (hasEvents && eventTypes.some((n) => !isWiredEventType(n))) {
-      info(`demand ${key}: binds 300+ block event(s) [${eventTypes.filter((n) => !isWiredEventType(n)).join(", ")}] - no SM receivers/router yet`);
+    const receiverPending = eventTypes.filter((n) => !isWiredEventType(n) && RECEIVER_LANDED.has(n));
+    const trulyUnwired = eventTypes.filter((n) => !isWiredEventType(n) && !RECEIVER_LANDED.has(n));
+    if (hasEvents && receiverPending.length) {
+      info(`demand ${key}: binds receiver-landed event(s) [${receiverPending.join(", ")}] - readback-clean, runtime proof pending`);
+    }
+    if (hasEvents && trulyUnwired.length) {
+      info(`demand ${key}: binds unwired event(s) [${trulyUnwired.join(", ")}] - no SM receivers/router yet`);
     }
   }
 }
