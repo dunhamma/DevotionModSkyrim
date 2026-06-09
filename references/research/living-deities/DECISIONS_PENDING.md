@@ -20,6 +20,14 @@ All four accepted as recommended for LD-P1. **LOCKED.**
 ## C. Diegetic-UI dependency — ✅ CONFIRMED (owner)
 8. Engines (Prisma, OAR) = **hard-installed, never bundled**; your content (views, bridge DLL, animations) = **bundled**; the summonable panel = **soft-with-fallback**. ✅ Applies whenever the engine ships (not a V1 requirement).
 
+## D. Hircine pilot substrate — ✅ RULED (owner, 2026-06-10)
+9. The 2026-06-10 in-loop audit found Hircine exists only as `PDV_DaedricPath_Hircine`
+   (no deity-class actor), so the mood/boon/demand machinery had nothing to attach to.
+   Owner ruling: **keep Hircine; build a new curse-gated `PDV_Deity_Hircine`**
+   (`extends PDV_DeityBase`, scores/moods only while `PDV_CurseState.IsWerewolf()`;
+   path actor retained as onboarding/stigma/cure layer). ✅ **LOCKED.** This is the
+   one piece of LD-P1 greenfield; M3/M4 revised accordingly.
+
 ---
 
 **All LD-P1 decisions ratified.** The design is locked; nothing is implemented yet.

@@ -50,14 +50,19 @@ Relationship shape: **layered** — a deep bilateral bond with the active patron
 | **M0** | Substrate Seam Map — what we already have | `00_substrate_seam_map.md` | ✅ COMPLETE |
 | **M1** | Competitor & inspiration teardowns | `01_teardown_dossier.md` + `01_mechanism_bank.md` | ✅ COMPLETE |
 | **M2** | Mechanism shortlist & scoring + mood-model decision | `02_mechanism_shortlist.md` + `02_mood_model.md` | ✅ COMPLETE |
-| **M3** | Feasibility (source-grounded; no CK/runtime here) | `03_feasibility.md` | ✅ COMPLETE |
-| **M4** | Living Deities architecture doc | `04_living_deities_architecture.md` + `04_future_buckets_backlog.md` | ✅ DRAFT |
+| **M3** | Feasibility (source-grounded; no CK/runtime here) | `03_feasibility.md` | ✅ **REVISED in-loop 2026-06-10** (supersedes the 2026-06-09 autonomous draft) |
+| **M4** | Living Deities architecture doc | `04_living_deities_architecture.md` + `04_future_buckets_backlog.md` | ✅ **REVISED in-loop 2026-06-10** |
 | ref | Prisma UI reference notes | `prisma-ui-reference.md` | ✅ |
 
-**All LD-P1 decisions ratified (owner, 2026-06-09).** Mood model, MVP scope, and
-the Kyne + Hircine pilot are locked; see `DECISIONS_PENDING.md`. The design is
-final; **nothing has been implemented — this is research only** until the owner
-greenlights the build.
+**All LD-P1 decisions ratified (owner, 2026-06-09)**, plus the **2026-06-10 owner
+ruling: keep Hircine via a new curse-gated `PDV_Deity_Hircine` actor** (Hircine has
+no deity-class actor in live source — the one piece of LD-P1 greenfield). Mood
+model, MVP scope, and the Kyne + Hircine pilot are locked; see
+`DECISIONS_PENDING.md`. The 2026-06-09 M3/M4 drafts were written autonomously
+overnight and were audited + corrected in-the-loop on 2026-06-10 (constant fix
+4.3, demand signal-binding rewrite, faucet-breadth honesty — see each doc's
+changelog). **Block A (authoring CSVs + compiler + self-test) is built and passing;
+no Papyrus/CK changes yet.**
 
 ## M0 headline result
 
