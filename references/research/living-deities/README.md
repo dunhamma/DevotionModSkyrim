@@ -33,19 +33,31 @@ Relationship shape: **layered** — a deep bilateral bond with the active patron
   dialogue/voice is post-V1 and out of scope here.**
 - Modlist compatibility is *not* a hard non-negotiable (heavier footprints OK
   where payoff justifies).
+- **Not a V1-ship requirement** — the engine is forward research; the mod's
+  release V1 does not depend on it (owner, this session). Engine build phases are
+  labelled **LD-P1 / LD-P2 / Backlog** to avoid collision with the mod's "V1".
+- **Diegetic-UI dependency stance** (settled this session): bundle *your* content
+  (Prisma view files, `DevotionPrismaBridge.dll`, OAR animation files); the Prisma
+  and OAR **engines are hard-installed dependencies, never bundled** (per-runtime
+  breakage, not a license bar — Prisma's license actually permits redistribution).
+  The summonable panel is **soft-with-fallback** (MCM/MessageBox when Prisma absent).
+  See `prisma-ui-reference.md`.
 
 ## Milestone roadmap
 
 | # | Milestone | Artifact | Status |
 |---|---|---|---|
-| **M0** | Substrate Seam Map — what we already have | `00_substrate_seam_map.md` | ✅ **COMPLETE** |
-| **M1** | Competitor & inspiration teardowns | `01_teardown_dossier.md` + `01_mechanism_bank.md` | ☐ next |
-| **M2** | Mechanism shortlist & scoring + mood-model decision | `02_mechanism_shortlist.md` + `02_mood_model.md` | ☐ |
-| **M3** | Feasibility spikes (≤4) | `03_spike_<name>.md` | ☐ |
-| **M4** | Living Deities architecture doc | `04_living_deities_architecture.md` + `04_future_buckets_backlog.md` | ☐ |
+| **M0** | Substrate Seam Map — what we already have | `00_substrate_seam_map.md` | ✅ COMPLETE |
+| **M1** | Competitor & inspiration teardowns | `01_teardown_dossier.md` + `01_mechanism_bank.md` | ✅ COMPLETE |
+| **M2** | Mechanism shortlist & scoring + mood-model decision | `02_mechanism_shortlist.md` + `02_mood_model.md` | ✅ COMPLETE |
+| **M3** | Feasibility (source-grounded; no CK/runtime here) | `03_feasibility.md` | ✅ COMPLETE |
+| **M4** | Living Deities architecture doc | `04_living_deities_architecture.md` + `04_future_buckets_backlog.md` | ✅ DRAFT |
+| ref | Prisma UI reference notes | `prisma-ui-reference.md` | ✅ |
 
-**Natural decision checkpoint:** after **M2** (a scored, sourced shortlist) —
-decide scope / commit budget before the expensive M3/M4 sessions.
+**Owner ratification checkpoint reached (post-M2).** Per "automate until you need
+me," the program continued through M4 on documented sensible defaults. The open
+calls are consolidated in **`DECISIONS_PENDING.md`** — none blocking, all reversible.
+**Nothing has been implemented; this is research only.**
 
 ## M0 headline result
 
