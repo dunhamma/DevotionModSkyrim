@@ -24,6 +24,7 @@ const DAEDRIC_STANCE_CSV = path.join(PROJECT_ROOT, "references", "phase4", "PDV_
 const args = process.argv.slice(2);
 const outputPath = getArg("--output") ?? DEFAULT_OUTPUT;
 const checkOnly = args.includes("--check");
+const emitStdout = args.includes("--stdout");
 
 const VALUE_TABLE = {
   "value.milestone.C": 18.0,
@@ -199,6 +200,13 @@ function main() {
   }
 
   validate(out);
+  if (emitStdout) {
+    // Emit the full compiled object to stdout (no file write). Consumed by
+    // tools/pdv_quest_matrix_selftest.mjs so the runtime JSON can be validated
+    // without touching the Windows StorageUtilData output path.
+    process.stdout.write(`${JSON.stringify(out, null, 2)}\n`);
+    return;
+  }
   if (!checkOnly) {
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, `${JSON.stringify(out, null, 2)}\n`, "utf8");
