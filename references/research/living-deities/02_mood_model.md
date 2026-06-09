@@ -73,8 +73,9 @@ For a diegetic "why" and an audit trail, optionally keep a small ring buffer per
 ## Cost summary
 1 float + 1 int per deity (StorageUtil) · 2 authored properties on `PDV_DeityBase` · 1 new dawn sub-phase (~30 lines) folded into the existing loop · 1 global mirror · **zero new ticks, zero new event hooks.** Verifier impact: extend the readback to assert mood persistence + band-on-cross logging.
 
-## Owner decisions flagged (not blocking — sensible defaults chosen)
-1. `alpha` defaults + per-deity tuning (memory length). Default 0.15; Daedra higher.
-2. Band thresholds (asymmetric set above).
-3. Stance-caps-ceiling rule (recommended yes).
-4. Materialized modifiers in LD-P1 or defer (recommended defer to LD-P2).
+## Owner decisions — ✅ RATIFIED (owner, 2026-06-09) for LD-P1
+All four accepted as recommended:
+1. `alpha` default **0.15**, per-deity tuned (Daedra higher, patient Aedra lower). **LOCKED.**
+2. Band thresholds (asymmetric set above). **LOCKED.**
+3. Stance-caps-ceiling rule (yes). **LOCKED.**
+4. Materialized decaying modifiers **deferred to LD-P2**; LD-P1 ships the scalar EWMA only. **LOCKED.**

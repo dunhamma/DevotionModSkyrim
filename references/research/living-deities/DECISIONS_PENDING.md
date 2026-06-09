@@ -5,11 +5,12 @@ automate). Every fork below was resolved with a **sensible default so work could
 proceed** — none is locked, all are cheap to change since nothing is implemented.
 Skim and override anything you dislike; I'll fold changes into the M2/M4 docs.
 
-## A. Mood model tunables (`02_mood_model.md`)
-1. **EWMA `alpha`** — default **0.15** (~4-day impression half-life). Per-deity: Daedra higher (0.20–0.25, impatient), patient Aedra lower (0.10). *Override the defaults?*
-2. **Band thresholds** (asymmetric, "easier to anger"): Wroth [−100,−40) · Cool [−40,+10) · Pleased [+10,+55) · Exalted [+55,100]. *OK?*
-3. **Stance caps the mood ceiling** (FOREIGN→max Pleased; TABOO/HOSTILE→max Cool unless curse/commitment active). *Adopt this tie to the stance matrix?*
-4. **Materialized decaying modifiers** (the CK3 audit-trail enrichment) — recommended **deferred to LD-P2**; LD-P1 ships the scalar EWMA only. *Agree to defer?*
+## A. Mood model tunables (`02_mood_model.md`) — ✅ RATIFIED (owner, 2026-06-09)
+All four accepted as recommended for LD-P1. **LOCKED.**
+1. **EWMA `alpha`** — default **0.15** (~4-day half-life); Daedra higher (0.20–0.25), patient Aedra lower (0.10). ✅
+2. **Band thresholds** (asymmetric): Wroth [−100,−40) · Cool [−40,+10) · Pleased [+10,+55) · Exalted [+55,100]. ✅
+3. **Stance caps the mood ceiling** (FOREIGN→max Pleased; TABOO/HOSTILE→max Cool unless curse/commitment active). ✅
+4. **Materialized decaying modifiers** deferred to LD-P2; LD-P1 ships the scalar EWMA only. ✅
 
 ## B. Scope & pilot (`02_mechanism_shortlist.md`, `04_living_deities_architecture.md`)
 5. **LD-P1 scope** = mood EWMA + bands · active patron pool · band-cross omens · mood-scaled boon · **one** demand type. *Agree this is the right MVP slice?*
