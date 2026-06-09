@@ -1353,7 +1353,68 @@ static void EnsureGenericFaucetStoryManager(
         report.Actions.Add($"Ensured Story Manager node {nodeSpec.NodeEditorId} -> {nodeSpec.ReceiverQuestEditorId} with SharesEvent.");
     }
 
-    report.Actions.Add("Skipped PDV__SM_TrespassNode: no local vanilla TrespassActorEvent SMEN exists in the installed Skyrim.esm readback.");
+    // Trespass: vanilla Skyrim.esm has ~24 Story Manager event roots but NONE of type
+    // TrespassActorEvent, so there is no parent to share. TrespassActorEvent IS a valid
+    // engine event type (StoryManagerEventNode.Types), so create the event root in the
+    // framework plugin (parented at the SM root 00005B, mirroring AssaultActorEvent), then
+    // attach the PDV__SM_Trespass receiver node under it with Shares Event. The receiver
+    // fragment filters to the player trespasser, so no node-level conditions are needed.
+    var trespassReceiver = RequireRecord<Quest>(index, "PDV__SM_Trespass");
+    var storyManagerRoot = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x00005B);
+
+    StoryManagerEventNode trespassEvent;
+    if (index.TryGetValue("PDV__SM_TrespassEvent", out var existingTrespassEvent))
+    {
+        if (existingTrespassEvent is not StoryManagerEventNode typedTrespassEvent)
+        {
+            throw new InvalidOperationException($"PDV__SM_TrespassEvent exists as {existingTrespassEvent.GetType().Name}, expected SMEN/StoryManagerEventNode.");
+        }
+
+        trespassEvent = typedTrespassEvent;
+    }
+    else
+    {
+        trespassEvent = new StoryManagerEventNode(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.StoryManagerEventNodes.Add(trespassEvent);
+        index["PDV__SM_TrespassEvent"] = trespassEvent;
+    }
+
+    trespassEvent.EditorID = "PDV__SM_TrespassEvent";
+    trespassEvent.FormVersion = 44;
+    trespassEvent.Type = StoryManagerEventNode.Types.TrespassActorEvent;
+    trespassEvent.Parent = storyManagerRoot.ToNullableLink<IAStoryManagerNodeGetter>();
+    trespassEvent.Flags = 0;
+    trespassEvent.MaxConcurrentQuests = 0;
+
+    StoryManagerQuestNode trespassNode;
+    if (index.TryGetValue("PDV__SM_TrespassNode", out var existingTrespassNode))
+    {
+        if (existingTrespassNode is not StoryManagerQuestNode typedTrespassNode)
+        {
+            throw new InvalidOperationException($"PDV__SM_TrespassNode exists as {existingTrespassNode.GetType().Name}, expected SMQN/StoryManagerQuestNode.");
+        }
+
+        trespassNode = typedTrespassNode;
+    }
+    else
+    {
+        trespassNode = new StoryManagerQuestNode(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.StoryManagerQuestNodes.Add(trespassNode);
+        index["PDV__SM_TrespassNode"] = trespassNode;
+    }
+
+    trespassNode.EditorID = "PDV__SM_TrespassNode";
+    trespassNode.FormVersion = 44;
+    trespassNode.Parent = trespassEvent.FormKey.ToNullableLink<IAStoryManagerNodeGetter>();
+    trespassNode.Flags = 0;
+    trespassNode.QuestFlags = StoryManagerQuestNode.QuestFlag.SharesEvent;
+    trespassNode.MaxConcurrentQuests = 0;
+    trespassNode.Quests.Clear();
+    trespassNode.Quests.Add(new StoryManagerQuest
+    {
+        Quest = trespassReceiver.FormKey.ToNullableLink<IQuestGetter>()
+    });
+    report.Actions.Add("Ensured Trespass SMEN root PDV__SM_TrespassEvent (Type=TrespassActorEvent) + node PDV__SM_TrespassNode -> PDV__SM_Trespass with SharesEvent.");
 }
 
 static void CheckGenericFaucetStoryManager(
@@ -1407,7 +1468,26 @@ static void CheckGenericFaucetStoryManager(
         report.Actions.Add($"{nodeSpec.NodeEditorId} points at {nodeSpec.ReceiverQuestEditorId} with SharesEvent.");
     }
 
-    report.Actions.Add("PDV__SM_TrespassNode remains intentionally unchecked here because no local vanilla TrespassActorEvent SMEN exists in installed Skyrim.esm readback.");
+    if (!index.TryGetValue("PDV__SM_TrespassEvent", out var trespassEventRecord) || trespassEventRecord is not StoryManagerEventNode trespassEventTyped)
+    {
+        report.Errors.Add("PDV__SM_TrespassEvent SMEN root is missing.");
+    }
+    else if (trespassEventTyped.Type != StoryManagerEventNode.Types.TrespassActorEvent)
+    {
+        report.Errors.Add($"PDV__SM_TrespassEvent has Type {trespassEventTyped.Type}, expected TrespassActorEvent.");
+    }
+    else if (!index.TryGetValue("PDV__SM_TrespassNode", out var trespassNodeRecord) || trespassNodeRecord is not StoryManagerQuestNode trespassNodeTyped)
+    {
+        report.Errors.Add("PDV__SM_TrespassNode SMQN is missing.");
+    }
+    else if (!trespassNodeTyped.QuestFlags.HasFlag(StoryManagerQuestNode.QuestFlag.SharesEvent))
+    {
+        report.Errors.Add("PDV__SM_TrespassNode is missing SharesEvent.");
+    }
+    else
+    {
+        report.Actions.Add("PDV__SM_TrespassNode points at PDV__SM_Trespass under PDV__SM_TrespassEvent (TrespassActorEvent) with SharesEvent.");
+    }
 }
 
 static void CheckGreenPact(

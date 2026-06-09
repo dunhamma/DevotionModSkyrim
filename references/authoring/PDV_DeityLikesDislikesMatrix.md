@@ -411,6 +411,10 @@ Prince rows are **V2 reference only**; the accepted-patron rows are **V1**.
      (TABOO); Kyne/Shor gated (FOREIGN). See `deity-stance-wiring` memory.
 
 ### Remaining inputs before CK closeout
-- Prove/wire `PDV__SM_Trespass` to a valid Trespass Story Manager event root. Installed
-  `Skyrim.esm` readback does not contain a local `TrespassActorEvent` SMEN root.
-- Run `node .\tools\pdv_verify.mjs --strict-phase3 --json` after Trespass wiring, then perform runtime smoke.
+- **Trespass DONE 2026-06-10:** `TrespassActorEvent` is a valid engine event type, so the
+  framework plugin now owns the SMEN root `PDV__SM_TrespassEvent` (`0714B1`, parent SM root
+  `00005B`) with `PDV__SM_TrespassNode` (`0714B2`) attached via Shares Event. All seven
+  generic-faucet Story Manager events are wired. `pdv_verify --strict-phase3` = **FAIL=0,
+  TODO=0**. Authored via `pdv-phase20-p2-receiver-author --author-generic-faucet-story-manager`.
+- Remaining: **in-game runtime smoke only** (every routed event fires its `[PDV] EventBus:
+  <deity> event <id> delta <x>` marker; trespass = `361`).

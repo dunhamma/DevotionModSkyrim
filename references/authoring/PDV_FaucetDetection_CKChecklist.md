@@ -2,7 +2,7 @@
 
 **Created:** 2026-06-09
 **Updated:** 2026-06-09
-**Status:** Papyrus source/PEX, ESP receiver QUST shells, generic faucet FormLists, router properties, player-alias properties, and six vanilla-rooted Story Manager `Shares Event` nodes are readback-clean. Trespass remains proof-gated because installed `Skyrim.esm` has no local `TrespassActorEvent` SMEN root.
+**Status:** Papyrus source/PEX, ESP receiver QUST shells, generic faucet FormLists, router properties, player-alias properties, and **all seven** Story Manager `Shares Event` nodes are readback-clean. **Trespass RESOLVED 2026-06-10:** `TrespassActorEvent` is a valid engine event type (`StoryManagerEventNode.Types`); vanilla `Skyrim.esm` simply never created a root of that type, so the framework plugin now owns one (`PDV__SM_TrespassEvent` SMEN, `0714B1`, parented at the SM root `00005B`, mirroring `AssaultActorEvent`) with `PDV__SM_TrespassNode` (`0714B2`) attached via Shares Event. `pdv_verify --strict-phase3` = FAIL=0 / TODO=0.
 **Companion:** `PDV_DeityLikesDislikesMatrix.md`, `PDV_DeityLikesDislikes.csv`, `PDV_CodexHandoff_FaucetDetection_Full.md`
 
 The locked rule is **hybrid/no-duplicates**:
@@ -123,14 +123,14 @@ Readback-clean nodes:
 - `PDV__SM_PickLockNode` -> `PDV__SM_PickLock`, parent `Skyrim.esm:05BD7B`, no previous sibling
 - `PDV__SM_AssaultActorNode` -> `PDV__SM_AssaultActor`, parent `Skyrim.esm:02C494`, previous sibling `Skyrim.esm:0A39C0`
 
-Remaining CKPE/CK TODO for `PDV__SM_Trespass`:
+`PDV__SM_Trespass` — DONE 2026-06-10:
 
-1. Prove whether `TrespassActorEvent` can be created safely as a source-plugin SMEN, or use CK/CKPE if it exposes the event root even though `Skyrim.esm` does not.
-2. Add `PDV__SM_Trespass` under that event tree with **Shares Event**.
-3. Add player identity conditions where the event exposes actor/trespasser.
-4. Save/read back the ESP.
+1. `TrespassActorEvent` confirmed a valid `StoryManagerEventNode.Types` enum value (Mutagen reflects the engine library), so the source-plugin SMEN root is safe to create.
+2. `tools/pdv-phase20-p2-receiver-author --author-generic-faucet-story-manager` now creates `PDV__SM_TrespassEvent` (SMEN, Type=`TrespassActorEvent`, Parent=`00005B:Skyrim.esm`) and attaches `PDV__SM_TrespassNode` (SMQN, Parent=`0714B1`, **Shares Event**, Quest=`PDV__SM_Trespass`).
+3. Player-identity filtering stays in the `PDV__SM_Trespass` fragment (matches the other six nodes — no node-level conditions), so the receiver routes `361` only for the player trespasser.
+4. Readback-clean: `0714B1` SMEN + `0714B2` SMQN in `PlayerDevotion_Framework.esp`; `pdv_verify --strict-phase3` FAIL=0. ESP backup under `Backups\trespass\` + the tool's `Backups\phase20-p2-receivers\`.
 
-No SEQ refresh is expected because these quests must not be Start Game Enabled.
+No SEQ refresh is expected because these quests must not be Start Game Enabled. **Runtime proof still pending** (in-game: trespass a marked cell, expect `[PDV] EventBus: <deity> event 361 delta <x>`).
 
 ## 5. Verification Boundary
 
