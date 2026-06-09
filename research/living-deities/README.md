@@ -52,6 +52,35 @@ SKSE sources, PapyrusUtil, PO3 Extender, Stock Game, skyui shim), output to
 4. Block D runtime proof per the revised 03_feasibility.md lists, including
    the 313/343 receiver runtime proof (Kyne demand faucet half).
 
+## Quantified tunables (derived, not guessed)
+- **Demand mood swing = one ideal day of devotion.** From mood 0, a max-signal
+  day moves the EWMA by exactly `alpha * 100` points, so fulfillment/expiry
+  apply `+/- alpha * 100 * DEMAND_MOOD_SWING_IDEAL_DAYS(=1.0)`: Kyne +/-12,
+  Hircine +/-22 at the locked alphas. The deity's temperament knob (alpha)
+  drives both the EWMA and the demand stakes - no second tunable to drift.
+- **Demand offer cooldown 7d** = the commitment-offer first-decline cooldown
+  precedent (`ApplyCommitmentDeclineCooldown`), so demands never re-ask faster
+  than commitments do. Windows stay per-demand in the CSV (Kyne 4d, Hircine 3d).
+- **Dream cadence:** armed only on a band-cross into Wroth/Exalted; 25% per
+  sleep, 2-day floor -> expected <= 1 dream per ~4 sleeps inside an extreme-band
+  episode, none outside. Strictly rarer than the once-per-day cross toast so
+  the rarest channel reads as the most portentous.
+- **`PDV_FLST_DemandGreatBeasts` (Block C contents, verified against the load
+  order via houseCARL):** true-beast set only -
+  `BearBrownRace 0131E7`, `BearBlackRace 0131E8`, `BearSnowRace 0131E9`,
+  `SabreCatRace 013200`, `SabreCatSnowyRace 013202`,
+  `DLC1SabreCatGlowRace 00D0B6:Dawnguard.esm`, `MammothRace 0131FF`,
+  `TrollRace 013205`, `TrollFrostRace 013206`,
+  `DLC1TrollRaceArmored 0117F5:Dawnguard.esm`,
+  `DLC1TrollFrostRaceArmored 0117F4:Dawnguard.esm` (11 races, Skyrim.esm
+  unless noted). **Dragons are deliberately absent:** dragon kills emit
+  eventType 302 (by-victim classifier), never the demand's bound event 1, and
+  Hircine's dragon credit already flows through the existing MQ104/MQ106
+  quest-matrix rows. Werebears (werecreatures) and giants (humanoid-classified)
+  are not prey and are excluded.
+- **Clutch save:** gate = band >= Pleased (2) on `PDV_GLO_PatronMoodBand`;
+  heal stays the shipped `HealAmount` 75 / 10% trigger / once per day.
+
 ## Open dependencies
 - Kyne quest-matrix rows (`the_hunt`/`honor_the_wild`): being authored on a
   separate branch; without them Kyne's demand fulfills only via faucet 313/343.

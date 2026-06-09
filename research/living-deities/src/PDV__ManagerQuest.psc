@@ -352,10 +352,20 @@ Int Property MOOD_BAND_EXALTED = 3 AutoReadOnly
 Float Property MOOD_BAND_WROTH_MAX_DEFAULT = -40.0 AutoReadOnly
 Float Property MOOD_BAND_COOL_MAX_DEFAULT = 10.0 AutoReadOnly
 Float Property MOOD_BAND_PLEASED_MAX_DEFAULT = 55.0 AutoReadOnly
-; LD-P1 tuning placeholders (mood points; revisit in Content-Feel proof).
-Float Property MOOD_DEMAND_FULFILL_DELTA = 12.0 AutoReadOnly
-Float Property MOOD_DEMAND_EXPIRE_PENALTY = 12.0 AutoReadOnly
+; Demand mood swing derivation: from mood 0, one max-signal day moves the EWMA
+; by exactly alpha * (clampedToday/PIETY_DAILY_MAX_DELTA*100) = alpha * 100.
+; A demand answered (or ignored) is defined as worth ONE IDEAL DAY of devotion,
+; so the swing is alpha-scaled per deity rather than flat: Kyne (0.12) +/-12,
+; Hircine (0.22) +/-22. Impatient gods swing harder - the same temperament knob
+; that drives their EWMA, no second tunable to drift out of sync.
+Float Property DEMAND_MOOD_SWING_IDEAL_DAYS = 1.0 AutoReadOnly
+; Offer cooldown matches the commitment-offer decline cooldown precedent (7d
+; first decline, :6566) so demands re-ask no faster than commitments do.
 Float Property DEMAND_OFFER_COOLDOWN_DAYS = 7.0 AutoReadOnly
+; Dream cadence: dreams arm only on a band-cross into Wroth/Exalted, then roll
+; 25% per sleep with a 2-day floor. Expected <= 1 dream per ~4 sleeps during an
+; extreme-band episode, and 0 outside one - rarer than the once-per-day cross
+; toast, so the rarest channel stays the most portentous.
 Float Property DREAM_OMEN_CHANCE = 0.25 AutoReadOnly
 Float Property DREAM_OMEN_COOLDOWN_DAYS = 2.0 AutoReadOnly
 
@@ -10548,7 +10558,7 @@ Function ApplyDemandExpiry(PDV_DeityBase deity)
 
     StorageUtil.SetIntValue(deityForm, "PDV.Demand.Pending", 0)
     StorageUtil.SetFloatValue(deityForm, "PDV.Demand.CooldownUntil", Utility.GetCurrentGameTime() + DEMAND_OFFER_COOLDOWN_DAYS)
-    ApplyMoodDelta(deity, 0.0 - MOOD_DEMAND_EXPIRE_PENALTY, "demand_expired")
+    ApplyMoodDelta(deity, 0.0 - GetDemandMoodSwing(deity), "demand_expired")
 
     ; Daedric displeasure bump: the Hircine face routes the lapse through the
     ; path actor's stigma layer (the path owns displeasure escalation).
@@ -10655,11 +10665,17 @@ Function FulfillDemand(PDV_DeityBase deity)
     StorageUtil.SetIntValue(deityForm, "PDV.Demand.Pending", 0)
     StorageUtil.SetIntValue(deityForm, "PDV.Demand.Fulfilled", 1)
     StorageUtil.SetFloatValue(deityForm, "PDV.Demand.CooldownUntil", Utility.GetCurrentGameTime() + DEMAND_OFFER_COOLDOWN_DAYS)
-    ApplyMoodDelta(deity, MOOD_DEMAND_FULFILL_DELTA, "demand_fulfilled")
+    ApplyMoodDelta(deity, GetDemandMoodSwing(deity), "demand_fulfilled")
 
     SendPrismaEventToast("demand", deity, "fulfilled", "", "")
     Debug.Notification(deity.DeityName + " is answered.")
     Trace(1, "Demand fulfilled: " + demandKey)
+EndFunction
+
+; One ideal day's EWMA step at mood 0: alpha * 100 mood points, scaled by the
+; ideal-day equivalence constant. Kyne +/-12, Hircine +/-22 at locked alphas.
+Float Function GetDemandMoodSwing(PDV_DeityBase deity)
+    return GetMoodAlpha(deity) * 100.0 * DEMAND_MOOD_SWING_IDEAL_DAYS
 EndFunction
 
 ; Direct mood adjustment outside the dawn EWMA (demand fulfillment/expiry).
