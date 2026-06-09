@@ -3,6 +3,7 @@ using Mutagen.Bethesda;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Strings;
 using SkyrimFormList = Mutagen.Bethesda.Skyrim.FormList;
 
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
@@ -27,6 +28,52 @@ string[] greenPactKeywords =
     "PDV_KW_GreenPact_Egg",
     "PDV_KW_GreenPact_Insect"
 ];
+
+string[] genericFaucetFormLists =
+[
+    "PDV_FLST_FaucetSkillBooks",
+    "PDV_FLST_FaucetSpellTomes",
+    "PDV_FLST_FaucetDaedricArtifacts",
+    "PDV_FLST_FaucetRaiseUndeadEffects"
+];
+
+string[] genericFaucetReceiverQuests =
+[
+    "PDV__SM_CraftItem",
+    "PDV__SM_NewVoicePower",
+    "PDV__SM_IncreaseSkill",
+    "PDV__SM_ChangeLocation",
+    "PDV__SM_PickLock",
+    "PDV__SM_Trespass",
+    "PDV__SM_AssaultActor"
+];
+
+var skyrimMaster = ModKey.FromNameAndExtension("Skyrim.esm");
+GenericFaucetStoryManagerNode[] genericFaucetStoryManagerNodes =
+[
+    new("PDV__SM_CraftItemNode", "PDV__SM_CraftItem", new FormKey(skyrimMaster, 0x039D86), new FormKey(skyrimMaster, 0x04F593)),
+    new("PDV__SM_NewVoicePowerNode", "PDV__SM_NewVoicePower", new FormKey(skyrimMaster, 0x02D389), new FormKey(skyrimMaster, 0x02D38A)),
+    new("PDV__SM_IncreaseSkillNode", "PDV__SM_IncreaseSkill", new FormKey(skyrimMaster, 0x02D386), new FormKey(skyrimMaster, 0x02D387)),
+    new("PDV__SM_ChangeLocationNode", "PDV__SM_ChangeLocation", new FormKey(skyrimMaster, 0x01320E), new FormKey(skyrimMaster, 0x0A39C6)),
+    new("PDV__SM_PickLockNode", "PDV__SM_PickLock", new FormKey(skyrimMaster, 0x05BD7B), null),
+    new("PDV__SM_AssaultActorNode", "PDV__SM_AssaultActor", new FormKey(skyrimMaster, 0x02C494), new FormKey(skyrimMaster, 0x0A39C0)),
+];
+
+Dictionary<string, FormKey> genericFaucetRouterPropertyTargets = new(StringComparer.OrdinalIgnoreCase)
+{
+    ["ActorTypeUndead"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x013796),
+    ["ActorTypeDaedra"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x013797),
+    ["ActorTypeDragon"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x035D59),
+    ["PDV_FLST_FaucetSkillBooks"] = FormKey.Null,
+    ["PDV_FLST_FaucetSpellTomes"] = FormKey.Null,
+    ["CraftingSmithingArmorTable"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x0ADB78),
+    ["CraftingSmithingForge"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x088105),
+    ["CraftingSmithingSharpeningWheel"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x088108),
+    ["CraftingSmithingSkyforge"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x0F46CE),
+    ["CraftingCookpot"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x0A5CB3),
+    ["isAlchemy"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x02A40B),
+    ["isEnchanting"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x06E2A3),
+};
 
 CapstoneFallback[] capstoneFallbacks =
 [
@@ -53,6 +100,12 @@ var authorGreenPact = args.Contains("--author-green-pact");
 var checkGreenPact = args.Contains("--check-green-pact");
 var authorCapstones = args.Contains("--author-capstones");
 var checkCapstones = args.Contains("--check-capstones");
+var authorGenericFaucets = args.Contains("--author-generic-faucets");
+var checkGenericFaucets = args.Contains("--check-generic-faucets");
+var authorGenericFaucetReceivers = args.Contains("--author-generic-faucet-receivers");
+var checkGenericFaucetReceivers = args.Contains("--check-generic-faucet-receivers");
+var authorGenericFaucetStoryManager = args.Contains("--author-generic-faucet-story-manager");
+var checkGenericFaucetStoryManager = args.Contains("--check-generic-faucet-story-manager");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var manifestPath = Path.GetFullPath(GetArg(args, "--manifest") ?? defaultManifest);
 var playerEventsPath = Path.GetFullPath(GetArg(args, "--player-events") ?? defaultPlayerEvents);
@@ -103,9 +156,15 @@ try
         && !authorGreenPact
         && !checkGreenPact
         && !authorCapstones
-        && !checkCapstones)
+        && !checkCapstones
+        && !authorGenericFaucets
+        && !checkGenericFaucets
+        && !authorGenericFaucetReceivers
+        && !checkGenericFaucetReceivers
+        && !authorGenericFaucetStoryManager
+        && !checkGenericFaucetStoryManager)
     {
-        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, --check-exact-stage-gates, --check-route-entries, --author-green-pact, --check-green-pact, --author-capstones, or --check-capstones. Use --dry-run with write modes for planning only.");
+        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, --check-exact-stage-gates, --check-route-entries, --author-green-pact, --check-green-pact, --author-capstones, --check-capstones, --author-generic-faucets, --check-generic-faucets, --author-generic-faucet-receivers, --check-generic-faucet-receivers, --author-generic-faucet-story-manager, or --check-generic-faucet-story-manager. Use --dry-run with write modes for planning only.");
     }
 
     var manifest = LoadManifest(manifestPath);
@@ -116,6 +175,58 @@ try
     if (inspectVmad)
     {
         InspectPlayerAliasVmad(index, report);
+        report.Status = "PASS";
+    }
+    else if (checkGenericFaucets)
+    {
+        CheckGenericFaucets(index, genericFaucetFormLists, genericFaucetRouterPropertyTargets, report);
+        if (report.Errors.Count > 0)
+        {
+            throw new InvalidOperationException("Generic faucet FormList/property check failed.");
+        }
+
+        report.Status = "PASS";
+    }
+    else if (authorGenericFaucets)
+    {
+        var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
+        EnsureFormLists(mod, index, allocator, genericFaucetFormLists, report);
+        WireGenericFaucetProperties(index, genericFaucetFormLists, genericFaucetRouterPropertyTargets, report);
+        WriteModIfNeeded(mod, espPath, dryRun, report);
+        report.Status = "PASS";
+    }
+    else if (checkGenericFaucetReceivers)
+    {
+        CheckGenericFaucetReceivers(index, genericFaucetReceiverQuests, report);
+        if (report.Errors.Count > 0)
+        {
+            throw new InvalidOperationException("Generic faucet receiver quest check failed.");
+        }
+
+        report.Status = "PASS";
+    }
+    else if (authorGenericFaucetReceivers)
+    {
+        var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
+        EnsureGenericFaucetReceivers(mod, index, allocator, genericFaucetReceiverQuests, report);
+        WriteModIfNeeded(mod, espPath, dryRun, report);
+        report.Status = "PASS";
+    }
+    else if (checkGenericFaucetStoryManager)
+    {
+        CheckGenericFaucetStoryManager(index, genericFaucetStoryManagerNodes, report);
+        if (report.Errors.Count > 0)
+        {
+            throw new InvalidOperationException("Generic faucet Story Manager node check failed.");
+        }
+
+        report.Status = "PASS";
+    }
+    else if (authorGenericFaucetStoryManager)
+    {
+        var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
+        EnsureGenericFaucetStoryManager(mod, index, allocator, genericFaucetStoryManagerNodes, report);
+        WriteModIfNeeded(mod, espPath, dryRun, report);
         report.Status = "PASS";
     }
     else if (checkCapstones)
@@ -1015,6 +1126,290 @@ static void WireGreenPactAliasProperties(
     report.Actions.Add($"Wired {properties.Length} Green Pact properties on PDV_PlayerEvents alias script.");
 }
 
+static void WireGenericFaucetProperties(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IEnumerable<string> formListNames,
+    Dictionary<string, FormKey> routerPropertyTargets,
+    AuthorReport report)
+{
+    var router = RequireRecord<Quest>(index, "PDV_ActionRouter");
+    WireQuestScript(router, "PDV_ActionRouter", BuildGenericFaucetRouterProperties(index, routerPropertyTargets));
+    report.Actions.Add($"Wired {routerPropertyTargets.Count} generic faucet properties on PDV_ActionRouter.");
+
+    var aliasScript = RequirePlayerEventsAliasScript(index);
+    var aliasProperties = formListNames
+        .Select(propertyName =>
+        {
+            var record = RequireRecord<ISkyrimMajorRecordGetter>(index, propertyName);
+            return ObjectProp(propertyName, record.FormKey);
+        })
+        .ToArray();
+    UpsertProperties(aliasScript, aliasProperties);
+    report.Actions.Add($"Wired {aliasProperties.Length} generic faucet FormList properties on PDV_PlayerEvents alias script.");
+}
+
+static ScriptProperty[] BuildGenericFaucetRouterProperties(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    Dictionary<string, FormKey> routerPropertyTargets)
+{
+    return routerPropertyTargets
+        .Select(pair =>
+        {
+            var formKey = pair.Value;
+            if (formKey.Equals(FormKey.Null))
+            {
+                formKey = RequireRecord<ISkyrimMajorRecordGetter>(index, pair.Key).FormKey;
+            }
+
+            return (ScriptProperty)ObjectProp(pair.Key, formKey);
+        })
+        .ToArray();
+}
+
+static void CheckGenericFaucets(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IEnumerable<string> formListNames,
+    Dictionary<string, FormKey> routerPropertyTargets,
+    AuthorReport report)
+{
+    foreach (var formListName in formListNames)
+    {
+        if (!index.TryGetValue(formListName, out var record))
+        {
+            report.Errors.Add($"Missing generic faucet FormList: {formListName}");
+        }
+        else if (record is not SkyrimFormList)
+        {
+            report.Errors.Add($"{formListName} exists as {record.GetType().Name}, expected FLST/FormList.");
+        }
+        else
+        {
+            report.Actions.Add($"{formListName} exists as FLST.");
+        }
+    }
+
+    var router = RequireRecord<Quest>(index, "PDV_ActionRouter");
+    var routerScript = router.VirtualMachineAdapter?.Scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, "PDV_ActionRouter", StringComparison.OrdinalIgnoreCase));
+    if (routerScript is null)
+    {
+        report.Errors.Add("PDV_ActionRouter is missing its PDV_ActionRouter VMAD script.");
+    }
+    else
+    {
+        foreach (var pair in routerPropertyTargets)
+        {
+            var expected = pair.Value.Equals(FormKey.Null)
+                ? RequireRecord<ISkyrimMajorRecordGetter>(index, pair.Key).FormKey
+                : pair.Value;
+            CheckObjectProperty(routerScript, pair.Key, expected, "PDV_ActionRouter", report);
+        }
+    }
+
+    var aliasScript = RequirePlayerEventsAliasScript(index);
+    foreach (var formListName in formListNames)
+    {
+        var expected = RequireRecord<ISkyrimMajorRecordGetter>(index, formListName);
+        CheckObjectProperty(aliasScript, formListName, expected.FormKey, "PDV_PlayerEvents alias", report);
+    }
+}
+
+static void EnsureGenericFaucetReceivers(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    IEnumerable<string> receiverQuestNames,
+    AuthorReport report)
+{
+    var router = RequireRecord<Quest>(index, "PDV_ActionRouter");
+    foreach (var receiverQuestName in receiverQuestNames)
+    {
+        var receiver = EnsureReceiverQuest(mod, index, allocator, receiverQuestName);
+        WireQuestScript(receiver, receiverQuestName, new ScriptProperty[]
+        {
+            ObjectProp("PDV_Router", router.FormKey)
+        });
+        report.Actions.Add($"Ensured receiver quest {receiverQuestName} with PDV_Router property.");
+    }
+}
+
+static Quest EnsureReceiverQuest(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    string editorId)
+{
+    Quest quest;
+    if (index.TryGetValue(editorId, out var existing))
+    {
+        if (existing is not Quest typed)
+        {
+            throw new InvalidOperationException($"{editorId} exists as {existing.GetType().Name}, expected QUST/Quest.");
+        }
+
+        quest = typed;
+    }
+    else
+    {
+        quest = new Quest(allocator.Next(), SkyrimRelease.SkyrimSE)
+        {
+            EditorID = editorId
+        };
+        mod.Quests.Add(quest);
+        index[editorId] = quest;
+    }
+
+    quest.EditorID = editorId;
+    quest.Name = Tx(editorId);
+    quest.FormVersion = 44;
+    quest.QuestFormVersion = 65;
+    quest.Type = Quest.TypeEnum.None;
+    quest.Priority = 0;
+    quest.Flags &= ~Quest.Flag.StartGameEnabled;
+    return quest;
+}
+
+static void CheckGenericFaucetReceivers(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IEnumerable<string> receiverQuestNames,
+    AuthorReport report)
+{
+    var router = RequireRecord<Quest>(index, "PDV_ActionRouter");
+    foreach (var receiverQuestName in receiverQuestNames)
+    {
+        if (!index.TryGetValue(receiverQuestName, out var record))
+        {
+            report.Errors.Add($"Missing generic faucet receiver quest: {receiverQuestName}");
+            continue;
+        }
+
+        if (record is not Quest quest)
+        {
+            report.Errors.Add($"{receiverQuestName} exists as {record.GetType().Name}, expected QUST/Quest.");
+            continue;
+        }
+
+        if (quest.Flags.HasFlag(Quest.Flag.StartGameEnabled))
+        {
+            report.Errors.Add($"{receiverQuestName} must not be Start Game Enabled.");
+        }
+        else
+        {
+            report.Actions.Add($"{receiverQuestName} is not Start Game Enabled.");
+        }
+
+        var script = quest.VirtualMachineAdapter?.Scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, receiverQuestName, StringComparison.OrdinalIgnoreCase));
+        if (script is null)
+        {
+            report.Errors.Add($"{receiverQuestName} is missing script {receiverQuestName}.");
+            continue;
+        }
+
+        CheckObjectProperty(script, "PDV_Router", router.FormKey, receiverQuestName, report);
+    }
+}
+
+static void EnsureGenericFaucetStoryManager(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    IEnumerable<GenericFaucetStoryManagerNode> nodes,
+    AuthorReport report)
+{
+    foreach (var nodeSpec in nodes)
+    {
+        var receiver = RequireRecord<Quest>(index, nodeSpec.ReceiverQuestEditorId);
+        StoryManagerQuestNode node;
+        if (index.TryGetValue(nodeSpec.NodeEditorId, out var existing))
+        {
+            if (existing is not StoryManagerQuestNode typed)
+            {
+                throw new InvalidOperationException($"{nodeSpec.NodeEditorId} exists as {existing.GetType().Name}, expected SMQN/StoryManagerQuestNode.");
+            }
+
+            node = typed;
+        }
+        else
+        {
+            node = new StoryManagerQuestNode(allocator.Next(), SkyrimRelease.SkyrimSE);
+            mod.StoryManagerQuestNodes.Add(node);
+            index[nodeSpec.NodeEditorId] = node;
+        }
+
+        node.EditorID = nodeSpec.NodeEditorId;
+        node.FormVersion = 44;
+        node.Parent = nodeSpec.Parent.ToNullableLink<IAStoryManagerNodeGetter>();
+        if (nodeSpec.PreviousSibling is { } previousSibling)
+        {
+            node.PreviousSibling = previousSibling.ToNullableLink<IAStoryManagerNodeGetter>();
+        }
+        node.Flags = 0;
+        node.QuestFlags = StoryManagerQuestNode.QuestFlag.SharesEvent;
+        node.MaxConcurrentQuests = 0;
+        node.Quests.Clear();
+        node.Quests.Add(new StoryManagerQuest
+        {
+            Quest = receiver.FormKey.ToNullableLink<IQuestGetter>()
+        });
+        report.Actions.Add($"Ensured Story Manager node {nodeSpec.NodeEditorId} -> {nodeSpec.ReceiverQuestEditorId} with SharesEvent.");
+    }
+
+    report.Actions.Add("Skipped PDV__SM_TrespassNode: no local vanilla TrespassActorEvent SMEN exists in the installed Skyrim.esm readback.");
+}
+
+static void CheckGenericFaucetStoryManager(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IEnumerable<GenericFaucetStoryManagerNode> nodes,
+    AuthorReport report)
+{
+    foreach (var nodeSpec in nodes)
+    {
+        var receiver = RequireRecord<Quest>(index, nodeSpec.ReceiverQuestEditorId);
+        if (!index.TryGetValue(nodeSpec.NodeEditorId, out var record))
+        {
+            report.Errors.Add($"Missing Story Manager quest node: {nodeSpec.NodeEditorId}");
+            continue;
+        }
+
+        if (record is not StoryManagerQuestNode node)
+        {
+            report.Errors.Add($"{nodeSpec.NodeEditorId} exists as {record.GetType().Name}, expected SMQN/StoryManagerQuestNode.");
+            continue;
+        }
+
+        if (!node.Parent.FormKey.Equals(nodeSpec.Parent))
+        {
+            report.Errors.Add($"{nodeSpec.NodeEditorId} parent is {node.Parent.FormKey}, expected {nodeSpec.Parent}.");
+        }
+
+        if (nodeSpec.PreviousSibling is { } previousSibling)
+        {
+            if (node.PreviousSibling is null || !node.PreviousSibling.FormKey.Equals(previousSibling))
+            {
+                report.Errors.Add($"{nodeSpec.NodeEditorId} previous sibling is {node.PreviousSibling?.FormKey.ToString() ?? "(none)"}, expected {previousSibling}.");
+            }
+        }
+        else if (node.PreviousSibling is not null && !node.PreviousSibling.IsNull)
+        {
+            report.Errors.Add($"{nodeSpec.NodeEditorId} previous sibling is {node.PreviousSibling.FormKey}, expected none.");
+        }
+
+        if (!node.QuestFlags.HasFlag(StoryManagerQuestNode.QuestFlag.SharesEvent))
+        {
+            report.Errors.Add($"{nodeSpec.NodeEditorId} is missing SharesEvent.");
+        }
+
+        var questTargets = node.Quests.Select(quest => quest.Quest.FormKey).ToArray();
+        if (!questTargets.Contains(receiver.FormKey))
+        {
+            report.Errors.Add($"{nodeSpec.NodeEditorId} does not point at receiver quest {nodeSpec.ReceiverQuestEditorId} ({receiver.FormKey}).");
+        }
+
+        report.Actions.Add($"{nodeSpec.NodeEditorId} points at {nodeSpec.ReceiverQuestEditorId} with SharesEvent.");
+    }
+
+    report.Actions.Add("PDV__SM_TrespassNode remains intentionally unchecked here because no local vanilla TrespassActorEvent SMEN exists in installed Skyrim.esm readback.");
+}
+
 static void CheckGreenPact(
     Dictionary<string, ISkyrimMajorRecordGetter> index,
     string playerEventsPath,
@@ -1189,6 +1584,15 @@ static void WireMagicEffectScript(MagicEffect effect, string scriptName, IEnumer
     UpsertProperties(script, properties);
 }
 
+static void WireQuestScript(Quest quest, string scriptName, IEnumerable<ScriptProperty> properties)
+{
+    quest.VirtualMachineAdapter ??= new QuestAdapter();
+    quest.VirtualMachineAdapter.Version = 5;
+    quest.VirtualMachineAdapter.ObjectFormat = 2;
+    var script = EnsureScript(quest.VirtualMachineAdapter.Scripts, scriptName);
+    UpsertProperties(script, properties);
+}
+
 static ScriptEntry EnsureScript(IList<ScriptEntry> scripts, string scriptName)
 {
     var script = scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, scriptName, StringComparison.OrdinalIgnoreCase));
@@ -1275,6 +1679,30 @@ static void UpsertProperties(ScriptEntry script, IEnumerable<ScriptProperty> pro
     }
 }
 
+static void CheckObjectProperty(ScriptEntry script, string propertyName, FormKey expected, string ownerLabel, AuthorReport report)
+{
+    var property = script.Properties.FirstOrDefault(candidate => string.Equals(candidate.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+    if (property is null)
+    {
+        report.Errors.Add($"{ownerLabel} property {propertyName} is missing.");
+        return;
+    }
+
+    if (property is not ScriptObjectProperty objectProperty)
+    {
+        report.Errors.Add($"{ownerLabel} property {propertyName} is {property.GetType().Name}, expected ScriptObjectProperty.");
+        return;
+    }
+
+    if (!objectProperty.Object.FormKey.Equals(expected))
+    {
+        report.Errors.Add($"{ownerLabel} property {propertyName} points at {objectProperty.Object.FormKey}, expected {expected}.");
+        return;
+    }
+
+    report.Actions.Add($"{ownerLabel} property {propertyName} points at expected form {expected}.");
+}
+
 static ScriptObjectProperty ObjectProp(string name, FormKey formKey)
 {
     return new ScriptObjectProperty
@@ -1341,6 +1769,8 @@ static string? GetArg(string[] args, string name)
 
     return args[index + 1];
 }
+
+static TranslatedString Tx(string value) => new(Language.English, value);
 
 sealed class FormKeyAllocator
 {
@@ -1454,6 +1884,8 @@ sealed record ValidatedSourceFillGroup(string Property, List<ValidatedSourceFill
 sealed record ValidatedSourceFillEntry(FormKey FormKey, string Label, string SourceKind);
 
 sealed record CapstoneFallback(string SpellEditorId, string StorageKey, float HealAmount);
+
+sealed record GenericFaucetStoryManagerNode(string NodeEditorId, string ReceiverQuestEditorId, FormKey Parent, FormKey? PreviousSibling);
 
 sealed class AuthorReport
 {
