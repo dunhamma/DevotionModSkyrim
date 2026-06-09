@@ -133,7 +133,16 @@ function main() {
     questKeys: [],
     questForms: [],
     questFormIds: [],
+    questPlugins: [],
     questEditorIds: [],
+    "questWatch.formIds": [],
+    "questWatch.plugins": [],
+    "questWatch.editorIds": [],
+    questWatchFormIds: [],
+    questWatchPlugins: [],
+    questWatchEditorIds: [],
+    questWatchFormIdsCsv: "",
+    questWatchPluginsCsv: "",
     faucetKeys: [],
     ...VALUE_TABLE,
   };
@@ -143,6 +152,7 @@ function main() {
   }
 
   const questKeySet = new Set();
+  const questWatchSet = new Set();
   for (const row of matrixRows) {
     const editorId = row.editor_id?.trim();
     const stage = Number.parseInt(row.outcome_stage, 10);
@@ -160,12 +170,22 @@ function main() {
       out.questKeys.push(key);
       out.questForms.push(resolved.papyrusForm);
       out.questFormIds.push(resolved.decimal);
+      out.questPlugins.push(resolved.plugin);
       out.questEditorIds.push(editorId);
       out[`quest.${key}.deities`] = [];
       out[`quest.${key}.valences`] = [];
       out[`quest.${key}.intensities`] = [];
       out[`quest.${key}.magnitudes`] = [];
       out[`quest.${key}.tags`] = [];
+    }
+    if (!questWatchSet.has(resolved.papyrusForm)) {
+      questWatchSet.add(resolved.papyrusForm);
+      out["questWatch.formIds"].push(resolved.decimal);
+      out["questWatch.plugins"].push(resolved.plugin);
+      out["questWatch.editorIds"].push(editorId);
+      out.questWatchFormIds.push(resolved.decimal);
+      out.questWatchPlugins.push(resolved.plugin);
+      out.questWatchEditorIds.push(editorId);
     }
 
     out[`quest.${key}.deities`].push(row.deity.trim());
@@ -192,11 +212,21 @@ function main() {
     out[`faucet.${key}.cap`] = row.anti_farm_cap.trim();
   }
 
+  out.questWatchFormIdsCsv = out.questWatchFormIds.join(",");
+  out.questWatchPluginsCsv = out.questWatchPlugins.join(",");
+  for (const questKey of out.questKeys) {
+    out[`quest.${questKey}.deitiesCsv`] = out[`quest.${questKey}.deities`].join("|");
+    out[`quest.${questKey}.valencesCsv`] = out[`quest.${questKey}.valences`].join("|");
+    out[`quest.${questKey}.intensitiesCsv`] = out[`quest.${questKey}.intensities`].join("|");
+    out[`quest.${questKey}.magnitudesCsv`] = out[`quest.${questKey}.magnitudes`].join("|");
+    out[`quest.${questKey}.tagsCsv`] = out[`quest.${questKey}.tags`].join("|");
+  }
+
   for (const [key, forms] of Object.entries(FAUCET_FORM_LISTS)) {
-    out[key] = forms;
+    attachRuntimeFormList(out, key, forms);
   }
   for (const [key, forms] of Object.entries(FAUCET_EFFECT_LISTS)) {
-    out[key] = forms;
+    attachRuntimeFormList(out, key, forms);
   }
 
   validate(out);
@@ -226,6 +256,42 @@ function validate(out) {
   if (out.questKeys.length === 0) throw new Error("No quest keys emitted.");
   if (out.faucetKeys.length === 0) throw new Error("No faucet keys emitted.");
   if (new Set(out.questKeys).size !== out.questKeys.length) throw new Error("Duplicate quest keys emitted.");
+  if (out.questKeys.length !== out.questFormIds.length || out.questKeys.length !== out.questPlugins.length) {
+    throw new Error("Quest key and FormID/plugin lists are out of sync.");
+  }
+  if (out["questWatch.formIds"].length !== out["questWatch.plugins"].length) {
+    throw new Error("Quest watch FormID/plugin lists are out of sync.");
+  }
+  if (out["questWatch.formIds"].length !== new Set(out.questFormIds).size) {
+    throw new Error("Quest watch list does not match unique watched quest count.");
+  }
+  if (out.questWatchFormIds.length !== out.questWatchPlugins.length) {
+    throw new Error("Runtime quest watch FormID/plugin lists are out of sync.");
+  }
+  if (out.questWatchFormIds.length !== out["questWatch.formIds"].length) {
+    throw new Error("Runtime quest watch list does not match compatibility watch list.");
+  }
+  if (out.questWatchFormIdsCsv.split(",").filter(Boolean).length !== out.questWatchFormIds.length) {
+    throw new Error("Runtime quest watch FormID CSV is out of sync.");
+  }
+  if (out.questWatchPluginsCsv.split(",").filter(Boolean).length !== out.questWatchPlugins.length) {
+    throw new Error("Runtime quest watch plugin CSV is out of sync.");
+  }
+  for (const key of [...Object.keys(FAUCET_FORM_LISTS), ...Object.keys(FAUCET_EFFECT_LISTS)]) {
+    if (out[key].length !== out[`${key}.formIds`].length || out[key].length !== out[`${key}.plugins`].length) {
+      throw new Error(`Faucet FormID/plugin lists are out of sync for ${key}.`);
+    }
+    const runtimeKey = runtimeFormListKey(key);
+    if (out[key].length !== out[`${runtimeKey}FormIds`].length || out[key].length !== out[`${runtimeKey}Plugins`].length) {
+      throw new Error(`Runtime faucet FormID/plugin lists are out of sync for ${key}.`);
+    }
+    if (out[`${runtimeKey}FormIdsCsv`].split(",").filter(Boolean).length !== out[key].length) {
+      throw new Error(`Runtime faucet FormID CSV is out of sync for ${key}.`);
+    }
+    if (out[`${runtimeKey}PluginsCsv`].split(",").filter(Boolean).length !== out[key].length) {
+      throw new Error(`Runtime faucet plugin CSV is out of sync for ${key}.`);
+    }
+  }
 }
 
 function buildQuestIndex(rows) {
@@ -245,6 +311,7 @@ function buildQuestIndex(rows) {
     index.set(editorId, {
       formid,
       decimal,
+      plugin,
       papyrusForm: `0x${localHex}|${plugin}`,
     });
   }
@@ -265,8 +332,45 @@ function resolveQuestForm(formid) {
   return {
     formid,
     decimal: Number.parseInt(localHex, 16),
+    plugin,
     papyrusForm: `0x${localHex}|${plugin}`,
   };
+}
+
+function attachRuntimeFormList(out, key, forms) {
+  out[key] = forms;
+  out[`${key}.formIds`] = [];
+  out[`${key}.plugins`] = [];
+  const runtimeKey = runtimeFormListKey(key);
+  out[`${runtimeKey}FormIds`] = [];
+  out[`${runtimeKey}Plugins`] = [];
+  for (const formRef of forms) {
+    const resolved = resolveRuntimeFormRef(formRef);
+    out[`${key}.formIds`].push(resolved.decimal);
+    out[`${key}.plugins`].push(resolved.plugin);
+    out[`${runtimeKey}FormIds`].push(resolved.decimal);
+    out[`${runtimeKey}Plugins`].push(resolved.plugin);
+  }
+  out[`${runtimeKey}FormIdsCsv`] = out[`${runtimeKey}FormIds`].join(",");
+  out[`${runtimeKey}PluginsCsv`] = out[`${runtimeKey}Plugins`].join(",");
+}
+
+function resolveRuntimeFormRef(formRef) {
+  const [rawHex, plugin] = formRef.split("|");
+  if (!rawHex || !plugin) {
+    throw new Error(`Invalid runtime form reference: ${formRef}`);
+  }
+  const hex = rawHex.toLowerCase().startsWith("0x") ? rawHex.slice(2) : rawHex;
+  return {
+    decimal: Number.parseInt(hex, 16),
+    plugin,
+  };
+}
+
+function runtimeFormListKey(key) {
+  return key
+    .replace(/[^A-Za-z0-9]+(.)/g, (_, ch) => ch.toUpperCase())
+    .replace(/^[^A-Za-z]+/, "");
 }
 
 function compileStance(stanceRows, daedricRows) {
