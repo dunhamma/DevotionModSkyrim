@@ -180,3 +180,11 @@ HoonDing,344,increase-skill,+,small,0.25,3,0,,,martial perseverance toward the h
 HoonDing,345,discover-location,+,small,0.25,3,0,,,pressing into new ground is making way
 HoonDing,343,learn-word-of-power,+,medium,0.75,2,0.5,,,seizing power against the odds
 HoonDing,304,murder-defenseless,-,small,-0.25,3,0,,,slaughter of the helpless is butchery not making way
+Y'ffre,364,assault-innocent,-,small,-0.5,3,0,,,violence against the innocent breaks the Pact's harmony
+Z'en,331,enchant-item,+,small,0.25,3,0,,,skilled craft repays the world its due
+Z'en,360,pick-owned-lock,-,small,-0.25,3,0,,owned,taking without paying the debt offends the ledger
+alkosh,361,trespass,-,small,-0.25,3,0,,,breaking lawful bounds offends the keeper of order
+azurah,368,accept-daedric-artifact,+,small,0.5,3,0,,ActorTypeDaedra,Azurah's Star is a gift rightly borne
+The Hist,314,sleep-in-bed,+,small,0.25,3,0,,,rest near the root and the People restores the sap-bond
+Boethiah,360,pick-owned-lock,+,small,0.25,3,0,,owned,deceit and intrusion please the Prince of Plots
+Mephala,361,trespass,+,small,0.25,3,0,,,intrusion into the hidden pleases the Webspinner

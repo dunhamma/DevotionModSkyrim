@@ -49,3 +49,27 @@ Daedric:Vaermina,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,she feeds fear
 Daedric:Clavicus Vile,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Masque or the Rueful Axe claimed
 Daedric:Clavicus Vile,354,persuade-success,+,small,0.5,3,0,PathOpen,,HARD detection - the won bargain; carried by the Clavicus faucet; reference only
 Daedric:Clavicus Vile,362,steal-item,-,small,-0.25,3,0,PathOpen,,a deal is struck, not stolen; he prefers the bargain to the theft
+Daedric:Mehrunes Dagon,364,assault-innocent,+,small,0.5,3,0,PathOpen,,terror serves the cleansing fire
+Daedric:Mehrunes Dagon,330,smith-item,-,small,-0.25,3,0,PathOpen,,what is built is one more thing to be unbuilt
+Daedric:Hircine,302,kill-dragon,+,small,0.5,3,0,PathOpen,,the greatest prey honors the Huntsman
+Daedric:Hircine,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,the hunter beds rough, not soft
+Daedric:Meridia,364,assault-innocent,-,small,-0.5,3,0,PathOpen,,her light is no license for cruelty
+Daedric:Meridia,313,rest-under-open-sky,+,small,0.25,3,0,PathOpen,,rest beneath the open sun she rules
+Daedric:Molag Bal,362,steal-item,+,small,0.25,3,0,PathOpen,owned,the strong take what they will
+Daedric:Molag Bal,333,cook-meal,-,small,-0.25,3,0,PathOpen,,domestic comfort is the slave's consolation
+Daedric:Hermaeus Mora,340,read-skill-book,+,small,0.5,3,0,PathOpen,,no page is beneath the archive
+Daedric:Hermaeus Mora,344,increase-skill,+,small,0.25,3,0,PathOpen,,mastery is knowledge made flesh
+Daedric:Namira,361,trespass,+,small,0.25,3,0,PathOpen,,the forgotten and forbidden places are hers
+Daedric:Namira,313,rest-under-open-sky,-,small,-0.25,3,0,PathOpen,,she dwells in the dark beneath, not the open sky
+Daedric:Nocturnal,345,discover-location,+,small,0.25,3,0,PathOpen,,the unseen ways open to her servants
+Daedric:Nocturnal,304,murder-defenseless,-,small,-0.25,3,0,PathOpen,,the shadow takes quietly; blood draws the eye
+Daedric:Peryite,314,sleep-in-bed,+,small,0.25,3,0,PathOpen,,the ordered, lowly routine kept in its place
+Daedric:Peryite,364,assault-innocent,-,small,-0.25,3,0,PathOpen,,wanton chaos breaks the order he imposes
+Daedric:Sanguine,332,brew-potion,+,small,0.25,3,0,PathOpen,,a draught distilled for the night's pleasure
+Daedric:Sanguine,304,murder-defenseless,-,small,-0.25,3,0,PathOpen,,the party sours when blood is spilled
+Daedric:Sheogorath,362,steal-item,+,small,0.25,3,0,PathOpen,,whimsy takes what catches its eye
+Daedric:Sheogorath,330,smith-item,-,small,-0.25,3,0,PathOpen,,orderly craft bores the Madgod
+Daedric:Vaermina,364,assault-innocent,+,small,0.25,3,0,PathOpen,,terror is the waking nightmare she savors
+Daedric:Vaermina,343,learn-word-of-power,+,small,0.25,3,0,PathOpen,,a Word seized from the dreaming mind
+Daedric:Clavicus Vile,345,discover-location,+,small,0.25,3,0,PathOpen,,every road leads to another bargain
+Daedric:Clavicus Vile,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,why give freely what you could sell?

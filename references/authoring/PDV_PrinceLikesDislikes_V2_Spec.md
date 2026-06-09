@@ -2,8 +2,9 @@
 
 **Created:** 2026-06-09 (Claude, continuing Codex's likes/dislikes work)
 **Companion data:** `references/authoring/PDV_DeityLikesDislikes_Princes_V2.csv`
-**Status:** CONTENT AUTHORED (reference). **Not wired into runtime** — the V2 path-gated
-loader/routing is the engineering follow-on (below). Authoring this does NOT change V1.
+**Status:** CONTENT AUTHORED + **ENGINE WIRED 2026-06-09** (compiled FAIL=0). The V2
+path-gated loader + fan-out are live in Papyrus (see "Engineering — DONE" below). V1 is
+unchanged. In-game runtime proof still pending (no behaviour change to uncommitted players).
 
 ## Why this is a separate layer (not the V1 CSV)
 
@@ -26,14 +27,16 @@ So this layer is the **V2 face**: the same authoring shape, gated and routed dif
 
 | Aspect | V1 (accepted patrons) | V2 (this layer) |
 |---|---|---|
-| What an act feeds | `Piety` directly | a **commitment signal** (`AddCommitmentSignal`), NOT piety |
+| What an act feeds | the player's ambient `PDV.PietyToday` pool (→ dawn bank) | the **path's OWN piety** (`AdjustStoredPiety` → path tiers/boons/prices), NOT the ambient V1 pool |
 | Can it start the relationship? | yes (build from zero) | **no** — deepen an **already-open path** only |
-| Gate | race-native | **path-open** (the `stanceGate = PathOpen` column) |
-| Cost | none | stigma (race-scaled, existing `GetStigmaModifierForRace`) |
+| Gate | race-native (`IsRaceNativeForPlayer`) | **path-open** (`HasCommitmentSignalGateOpen`, i.e. committed) |
+| Cost | none | stigma stays on the deliberate commitment/quest layer (ambient V2 does not auto-add stigma) |
 
-Every row carries `stanceGate = PathOpen`: the engine applies it **only** when the player
-has already opened/committed that Prince's path. On an open path, the act deepens the
-commitment; off-path, the row is inert.
+Every row carries `stanceGate = PathOpen`. **Implementation note:** the gate is enforced
+in `PDV_DaedricPathBase.ScorePrinceAction` (`if !HasCommitmentSignalGateOpen() return 0.0`);
+an open path's act deepens that path's *own* piety. (We do **not** call `AddCommitmentSignal`
+here — once the gate is open, more signals are moot; the path's piety is the progression
+currency. The lock's "never initiate" is satisfied because an uncommitted path scores 0.)
 
 ## Relationship to the faucet system (do not double-count)
 
@@ -61,20 +64,35 @@ rows):** vampire-feed (366, MODERATE), cannibalize-corpse (367, HARD), persuade-
 (354, HARD). These are authored for completeness; they score nothing until detection +
 the V2 loader exist.
 
-## Engineering follow-on (to wire V2)
+## Engineering — DONE 2026-06-09 (compiled FAIL=0)
 
-1. **Loader variant:** a `LoadPrinceRowsForPath(path)` (or extend the generator with a
-   `--princes` mode reading this CSV) that writes the `PDV.LD.*` keys onto the
-   `PDV_DaedricPath_*` actor when its path is open.
-2. **Routing:** on a scored act for an open Prince path, route the delta to
-   `AddCommitmentSignal(...)` (deepen), **not** `AwardPiety`. Respect the `PathOpen` gate
-   and the per-row `dailyCap`/`cooldown` via the existing `ScoreRepeatableAction` anti-farm.
-3. **Stigma:** apply `GetStigmaModifierForRace` so off-race transgressive worship stays
-   costly.
-4. **Curse guard:** gate Hircine/Molag Bal kill/feed rows behind the curse-state check so
-   they don't double-fire transitions.
-5. **Bump** a `PRINCE_LD_VERSION` (parallel to `LIKES_DISLIKES_VERSION`) when this CSV
-   changes; re-run the loader.
+1. **Generator:** `tools/pdv_princeld_gen.mjs` reads this CSV, strips the `Daedric:` prefix
+   to match `PDV_DaedricPath_*.DeityName` (verified values: Hircine, Namira, Molag Bal,
+   Mehrunes Dagon, Hermaeus Mora, Clavicus Vile, Sheogorath, Meridia, Nocturnal, Peryite,
+   Sanguine, Vaermina), and emits `LoadPrinceRowsForPath` (12 paths / 74 rows).
+2. **Table namespace:** `WritePLD` writes `PDV.PLD.<evt>.{D,C,O}` on the path form —
+   **separate** from the V1 `PDV.LD.*` deity table, so the two never collide and Prince rows
+   never leak into the race-gated V1 `ScoreFromTable`.
+3. **Scorer:** `PDV_DaedricPathBase.ScorePrinceAction(eventType)` — path-open gate
+   (`HasCommitmentSignalGateOpen`) + the shared dawn-aligned `ScoreRepeatableAction`
+   anti-farm (`dailyCap`/`cooldown`).
+4. **Fan-out:** `PDV__ManagerQuest.RouteActionToOpenPaths` iterates
+   `PDV_FLST_DaedricPaths_All`; an open path's act → `path.AdjustStoredPiety(delta)`
+   (deepen the path's own progression). Hooked into `PDV_EventBus.RouteActionWithAttribution`
+   (live) and `PDV_ActionRouter` (fallback), after the deity fan-out.
+5. **Version gate:** `EnsurePrinceLikesDislikesTable` / `PRINCE_LD_VERSION = 1`, called from
+   the same OnInit + slow-tick sites as the V1 `EnsureLikesDislikesTable` (existing saves
+   reload on a bump). Re-run the generator + bump `PRINCE_LD_VERSION` when this CSV changes.
+
+**Curse coordination:** Hircine (kill-beast) / Molag Bal (vampire-feed) deepen *path piety*,
+which is a different channel from the curse-state **transition** system — so there is no
+double-fire of curse transitions to guard against here. (If a future curse-state piety hook
+is added, re-check.) Marked in the CSV `notes` for traceability.
+
+**Remaining:** in-game runtime proof — open a Prince path (≥3 commitment signals), perform a
+liked ambient act, confirm `[PDV] PrinceV2: <Prince> event <id> deepen <x>` and path-piety
+progression; confirm an *unopened* path scores nothing (deepen-not-initiate); confirm a
+non-native player's ambient act still does not touch the path pre-commit.
 
 ## Coverage
 12 transgressive Princes, ~4-5 ambient rows each (~50 rows): Mehrunes Dagon, Hircine,
