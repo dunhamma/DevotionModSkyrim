@@ -1,0 +1,2 @@
+id,reason
+BC-0485,Negative assertion: the requirement is that PDV_SPEL_Neglect_Nord must NOT exist (Nord reuses PDV_SPEL_Neglect_Kyne, confirmed 6 refs in PDV__ManagerQuest). Absence is the correct state, not a gap.

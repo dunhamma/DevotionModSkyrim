@@ -75,6 +75,27 @@ const MUTAGEN_BRIDGE = path.join(ANVIL_ROOT, "plugins", "Anvilmo2_mcp", "tools",
 
 const PIETY_SINKS = /\b(AwardCuratedSignal|AwardPiety|ApplyDeityReaction|ApplyQuestReactionPiety|Record[A-Za-z]+Scaled|AddCommitmentSignal)\b/;
 
+// Record EditorIDs use short Daedric stems; contract rows often carry the full
+// theonym. Normalize so 'PDV_Msg_Daedric_Sheogorath_*' resolves the shipped
+// 'PDV_Msg_Daedric_Sheo_*' (same alias trap that dropped Clavicus cells).
+const DAEDRIC_STEM = [
+  ["Hermaeus_Mora", "Mora"], ["Hermaeus", "Mora"], ["Sheogorath", "Sheo"],
+  ["Mehrunes_Dagon", "Dagon"], ["Mehrunes", "Dagon"], ["Molag_Bal", "Molag"],
+  ["Clavicus_Vile", "Vile"], ["Clavicus", "Vile"],
+];
+// Spec JSONs name state tracks PDV_State_<X>; the shipped ESP/scripts use
+// PDV_StateTrack_<X>. Treat as the same record (drift, not absence).
+function aliasCandidates(id) {
+  const out = new Set([id]);
+  for (const [full, stem] of DAEDRIC_STEM) {
+    if (id.includes(full)) out.add(id.replaceAll(full, stem));
+  }
+  for (const v of [...out]) {
+    if (v.includes("PDV_State_") && !v.includes("PDV_StateTrack_")) out.add(v.replace("PDV_State_", "PDV_StateTrack_"));
+  }
+  return [...out];
+}
+
 const args = process.argv.slice(2);
 const jsonOnly = args.includes("--json");
 const skipEsp = args.includes("--skip-esp");
@@ -269,10 +290,25 @@ function buildRuntimeFacts() {
 // -------------------------------------------------------- row evaluation
 const ID_RE = /\b(PDV_[A-Za-z0-9_*]+|SIGNAL_[A-Z0-9_]+|Handle[A-Z]\w+|Route[A-Z]\w+|Sync[A-Z]\w+|Process[A-Z]\w+|Score[A-Z]\w+)\b/g;
 
+// Basenames of the authoring/spec docs themselves, so an extracted token like
+// 'PDV_Phase20_RewardRecordContracts' (a JSON filename cited in a requirement)
+// is not mistaken for a missing game record.
+const DOC_BASENAMES = (() => {
+  const set = new Set();
+  for (const dir of [path.join(ROOT, "references", "authoring"), path.join(ROOT, "references", "phase4")]) {
+    if (!fs.existsSync(dir)) continue;
+    for (const f of fs.readdirSync(dir)) set.add(f.replace(/\.[^.]+$/, ""));
+  }
+  return set;
+})();
+
 function extractIdentifiers(row) {
   const text = `${row.requirement} ${row.check_hint ?? ""}`;
   const ids = new Set();
-  for (const m of text.matchAll(ID_RE)) ids.add(m[1]);
+  for (const m of text.matchAll(ID_RE)) {
+    if (DOC_BASENAMES.has(m[1])) continue; // doc/spec filename, not a record
+    ids.add(m[1]);
+  }
   return [...ids];
 }
 
@@ -286,15 +322,19 @@ function idExists(id, sourceFacts, espFacts, layer) {
     : layer === "source"
       ? [sourceFacts.identifiers]
       : [sourceFacts.identifiers, espFacts.edids];
-  if (id.includes("*") || id.endsWith("_")) {
-    // explicit wildcard, or a truncated family name like
-    // PDV_Msg_Daedric_Azura_Response_ (the <Race> suffix was not part of
-    // the identifier token) - treat as prefix/pattern match
-    const pattern = id.endsWith("_") && !id.includes("*") ? id + "*" : id;
-    const re = new RegExp("^" + pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*") + "$", "i");
-    return pools.some((p) => [...p].some((x) => re.test(x)));
+  for (const cand of aliasCandidates(id)) {
+    if (cand.includes("*") || cand.endsWith("_")) {
+      // explicit wildcard, or a truncated family name like
+      // PDV_Msg_Daedric_Azura_Response_ (the <Race> suffix was not part of
+      // the identifier token) - treat as prefix/pattern match
+      const pattern = cand.endsWith("_") && !cand.includes("*") ? cand + "*" : cand;
+      const re = new RegExp("^" + pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*") + "$", "i");
+      if (pools.some((p) => [...p].some((x) => re.test(x)))) return true;
+    } else if (pools.some((p) => p.has(cand))) {
+      return true;
+    }
   }
-  return pools.some((p) => p.has(id));
+  return false;
 }
 
 function evaluateRow(row, facts) {

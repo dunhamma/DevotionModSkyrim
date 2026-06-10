@@ -5,56 +5,33 @@ Contract: PDV_BetaContract.csv (765 rows). Gate fails on unwaived GAP only;
 GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, then either
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
-Verdicts: PASS=267 | GAP-REVIEW=130 | NEEDS-MANUAL=276 | FUTURE=59 | GAP=33
+Verdicts: PASS=295 | GAP-REVIEW=103 | NEEDS-MANUAL=293 | FUTURE=59 | GAP=14 | WAIVED=1
 Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 
-## GAP (33)
+## GAP (14)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
-| BC-0193 | stance | ALL | Sheogorath | missing: PDV_Msg_Daedric_Sheogorath_Response_ | PDV_DaedricRacePrinceMatrix.csv Sheogorath Notes 'Keep distinct from Sanguine and Rajhin-s |
 | BC-0201 | stance | Dunmer | Azura | missing: PDV_Msg_Daedric_Azura_Response_Dunmer (NAMING-DRIFT? found PDV_Msg_Daedric_Vaermina_Response_Dunmer) | PDV_DaedricContent_Manifest.md Section 7.1; PDV_DaedricRacePrinceMatrix.csv Azura/Dunmer=' |
 | BC-0202 | stance | Dunmer | Boethiah | missing: PDV_Msg_Daedric_Boethiah_Response_Dunmer (NAMING-DRIFT? found PDV_Msg_Daedric_Vaermina_Response_Dunmer) | PDV_DaedricContent_Manifest.md Section 6.8; PDV_DaedricRacePrinceMatrix.csv Boethiah/Dunme |
 | BC-0204 | stance | Dunmer | Mephala | missing: PDV_Msg_Daedric_Mephala_Response_Dunmer (NAMING-DRIFT? found PDV_Msg_Daedric_Vaermina_Response_Dunmer) | PDV_DaedricContent_Manifest.md Section 7.2; PDV_DaedricRacePrinceMatrix.csv Mephala/Dunmer |
 | BC-0207 | stance | Khajiit | Azura | missing: PDV_Msg_Daedric_Azura_Response_Khajiit (NAMING-DRIFT? found PDV_Msg_Daedric_Mephala_Response_Khajiit) | PDV_DaedricContent_Manifest.md Section 7.1; PDV_DaedricRacePrinceMatrix.csv Azura/Khajiit= |
-| BC-0208 | stance | Khajiit | Hermaeus Mora | missing: PDV_Msg_Daedric_Hermaeus_Response_Khajiit (NAMING-DRIFT? found PDV_Msg_Daedric_Mephala_Response_Khajiit) | PDV_DaedricRacePrinceMatrix.csv Hermaeus Mora Notes 'Khajiit legibility does not mean base |
 | BC-0216 | stance | Orc | Malacath | missing: PDV_Msg_Daedric_Malacath_Response_Orc (NAMING-DRIFT? found PDV_Msg_Daedric_Mephala_Response_Orc) | PDV_DaedricContent_Manifest.md Section 7.3; PDV_DaedricRacePrinceMatrix.csv Malacath/Orc=' |
-| BC-0233 | record_flag | ALL | T1 reward records authored and manager-wired status | missing: PDV_Phase20_RewardRecordContracts | PDV_Phase20_RewardRecordContracts.json — implementationStatus field per race entry |
 | BC-0261 | record_flag | Redguard | PDV_Deity_Arkay Redguard stance reconciliation (infra only) | missing: RouteDunmerAsh, RouteRedguardAshAbahDeathDuty | PDV_RedguardRewardRecords.spec.json § reusedDeities Arkay entry |
 | BC-0289 | reward_tier | Altmer | Altmer Orthodox broad T1/T2 | missing: PDV_Bless_Altmer_Orthodox_T2 | PDV_AltmerRewardRecords.spec.json § broadState rewards |
-| BC-0312 | reward_tier | Bosmer | Bandit Road path 3-tier | missing: PDV_State_BosmerPath | PDV_BosmerRewardRecords.spec.json § emphasisRewards BanditRoad entries |
-| BC-0320 | reward_tier | Bosmer | Exchange path 3-tier | missing: PDV_State_BosmerPath | PDV_BosmerRewardRecords.spec.json § emphasisRewards Exchange entries |
-| BC-0322 | reward_tier | Bosmer | Living Story path 3-tier | missing: PDV_State_BosmerPath | PDV_BosmerRewardRecords.spec.json § emphasisRewards LivingStory entries |
-| BC-0324 | reward_tier | Bosmer | Old Contract path 3-tier | missing: PDV_State_BosmerPath | PDV_BosmerRewardRecords.spec.json § emphasisRewards OldContract entries |
-| BC-0331 | reward_tier | Breton | Green Way focused 3-tier | missing: PDV_State_BretonTradition | PDV_BretonRewardRecords.spec.json § emphasisRewards GreenWay entries |
-| BC-0333 | reward_tier | Breton | Hidden Art focused 3-tier | missing: PDV_State_BretonTradition | PDV_BretonRewardRecords.spec.json § emphasisRewards HiddenArt entries |
-| BC-0335 | reward_tier | Breton | Knight's Road focused 3-tier | missing: PDV_State_BretonTradition | PDV_BretonRewardRecords.spec.json § emphasisRewards KnightsRoad entries |
-| BC-0378 | reward_tier | Khajiit | Khajiit lunar T1 reward — night-gated stamina and disease | missing: PDV_Phase20_RewardRecordContracts | PDV_Phase20_RewardRecordContracts.json — Khajiit entry; PDV_RaceEffectReviewLedger.md — Kh |
-| BC-0404 | reward_tier | Orc | Orc City life-mode 3-tier | missing: PDV_State_OrcLifeMode | PDV_OrcRewardRecords.spec.json § emphasisRewards City entries |
-| BC-0407 | reward_tier | Orc | Orc LegionExile life-mode 3-tier | missing: PDV_State_OrcLifeMode | PDV_OrcRewardRecords.spec.json § emphasisRewards LegionExile entries |
-| BC-0412 | reward_tier | Orc | Orc Stronghold life-mode 3-tier | missing: PDV_State_OrcLifeMode | PDV_OrcRewardRecords.spec.json § emphasisRewards Stronghold entries |
-| BC-0435 | anti_farm | ALL | Hermaeus Mora – Black Books | missing: PDV_Phase20_QuestStageExclusionAudit | PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv – Hermaeus Mora / Read a Black Book |
 | BC-0477 | neglect | Breton | PDV_SPEL_Neglect_Breton + creed-loss spells | missing: PDV_SPEL_CreedLoss_Breton_VowIntegrity, PDV_SPEL_CreedLoss_Breton_ExposureRupture, PDV_SPEL_CreedLoss_Breton_Excommunication, PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal | PDV_BretonRewardRecords.spec.json § neglect; § creedViolationLoss entries |
-| BC-0485 | neglect | Nord | PDV_SPEL_Neglect_Kyne (reused) | missing: PDV_SPEL_Neglect_Nord | PDV_NordRewardRecords.spec.json § neglect designNote |
 | BC-0487 | neglect | Orc | PDV_SPEL_Neglect_Orc | missing: SyncOrcNeglectSpell | PDV_OrcRewardRecords.spec.json § neglect |
 | BC-0488 | neglect | Redguard | PDV_SPEL_Neglect_Redguard | missing: SyncRedguardNeglectSpell | PDV_RedguardRewardRecords.spec.json § neglect |
 | BC-0490 | commitment | ALL | All 16 Daedric Princes | missing: PDV_Msg_Daedric_ (NAMING-DRIFT? found PDV_Msg_Daedric_Mephala_ChampionEntry) | PDV_DaedricPrinceRecordContracts.json, commitmentSignalsRequired field; PDV_DaedricContent |
 | BC-0524 | substrate | Redguard | Far Shores token support spell | missing: PDV_Bless_Redguard_FarShoresToken | PDV_RedguardRewardRecords.spec.json § farShoresToken |
-| BC-0529 | state_track | Bosmer | PDV_State_BosmerPath | missing: PDV_State_BosmerPath | PDV_BosmerRewardRecords.spec.json § stateGate enum; § baseline.stateTrack |
-| BC-0533 | state_track | Breton | PDV_State_BretonTradition + pressure tracks | missing: PDV_State_BretonTradition, PDV_State_BretonDruidicFork | PDV_BretonRewardRecords.spec.json § stateTracks; § overstackControl |
-| BC-0544 | state_track | Orc | PDV_State_OrcLifeMode | missing: PDV_State_OrcLifeMode | PDV_OrcRewardRecords.spec.json § stateSurfaces; § notes mode ceiling rate multipliers LOCK |
-| BC-0545 | state_track | Redguard | PDV_State_RedguardSect | missing: PDV_State_RedguardSect | PDV_RedguardRewardRecords.spec.json § stateTrack |
+| BC-0533 | state_track | Breton | PDV_State_BretonTradition + pressure tracks | missing: PDV_State_BretonDruidicFork | PDV_BretonRewardRecords.spec.json § stateTracks; § overstackControl |
 | BC-0693 | surfacing | Redguard | Redguard required content rows | missing: PDV_Notif_Redguard_Sect_Crown_Entry, PDV_Notif_Redguard_Sect_Forebear_Entry, PDV_Notif_Redguard_Sect_AshAbah_Entry, PDV_Msg_Redguard_Survey_Crown, PDV_Msg_Redguard_ChampionEntry_Crown, PDV_Notif_Redguard_FarShoresToken_Activate, PDV_Notif_Redguard_FarShoresToken_PrivateContext, PDV_Msg_Redguard_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_RedguardRewardRecords.spec.json § requiredContentRows |
 
-## GAP-REVIEW (130)
+## GAP-REVIEW (103)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
 | BC-0003 | signal_channel | ALL | Boethiah | missing: PDV_PlayerEvents | PDV_AllRaceDaedricBetaReadinessLedger.md, Evidence Baseline 'Daedric exact organic live se |
-| BC-0004 | signal_channel | ALL | Clavicus Vile | missing: PDV_FLST_Daedric_ClavicusLiveSources | PDV_AllRaceDaedricBetaReadinessLedger.md, Evidence Baseline 'Daedric exact organic live se |
-| BC-0005 | signal_channel | ALL | Hermaeus Mora | missing: PDV_FLST_Daedric_HermaeusLiveSources | PDV_AllRaceDaedricBetaReadinessLedger.md, Evidence Baseline 'Daedric exact organic live se |
-| BC-0017 | signal_channel | ALL | quest-reaction wiring – race-stance modulation | missing: PDV_StanceMatrix, PDV_DaedricRacePrinceMatrix | PDV_QuestReactionMatrix.md – Part C2 Race-stance modulation (CRITICAL) |
-| BC-0019 | signal_channel | ALL | Sheogorath | missing: PDV_FLST_Daedric_SheogorathLiveSources | PDV_AllRaceDaedricBetaReadinessLedger.md, Evidence Baseline 'Daedric exact organic live se |
 | BC-0024 | signal_channel | Altmer | Auri-El dawn | missing: PDV_ALT_POS_AURIEL_DAWN | PDV_RaceDesign_Altmer.md — Positive income tags and hooks / PDV_ALT_POS_AURIEL_DAWN |
 | BC-0025 | signal_channel | Altmer | College/Psijic milestones | missing: PDV_ALT_POS_COLLEGE_PSIJIC | PDV_RaceDesign_Altmer.md — Positive income tags / PDV_ALT_POS_COLLEGE_PSIJIC |
 | BC-0027 | signal_channel | Altmer | Lorkhan Adjacency Penalty | missing: PDV_ALT_LORKHAN_T1 | PDV_RaceDesign_Altmer.md — Lorkhan Adjacency Penalty System + implementation economy lock |
@@ -67,34 +44,24 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0094 | signal_channel | Nord | Kyne/Kynareth | missing: PDV_ALT_POS_KYNE_ | PDV_RaceDesign_Nord.md — Focused Kyne contextual favor table |
 | BC-0148 | part_b_profile | ALL | Vaermina | No Part B profile block found for 'Vaermina'. | PDV_QuestReactionMatrix.md – Part B-2 Daedric Princes – Vaermina |
 | BC-0150 | part_b_profile | Altmer | Auri-El | No Part B profile block found for 'Auri-El'. | PDV_QuestReactionMatrix.md – Part B Altmer – Auri-El |
-| BC-0161 | part_b_profile | Bosmer | BosmerPath | missing: PDV_State_BosmerPath | PDV_RaceDesign_Bosmer.md — Path implementation locks (LOCKED) + Implementation acceptance  |
 | BC-0178 | part_b_profile | Orc | Malacath | Part B profile for 'Malacath' exists but lacks: keep_oath(C), master_craft_forge(S), kill_honorable_combat(S), defend_kin_home(S), prove_by_struggle(m), break_oath_betray(C), cowardice(S), deceit(m) | PDV_QuestReactionMatrix.md – Part B Orc – Malacath |
-| BC-0191 | stance | ALL | Clavicus Vile | missing: PDV_Price_Daedric_Clavicus_ | PDV_DaedricContent_Manifest.md Section 7.9 'Clavicus Vile must keep the bargain price visi |
 | BC-0197 | stance | Altmer | ThalmorAlignment | missing: PDV_ReputationTrack | PDV_RaceDesign_Altmer.md — ThalmørAlignment Track |
-| BC-0200 | stance | Breton | BretonTradition | missing: PDV_State_BretonTradition | PDV_RaceDesign_Breton.md — Worship Structure / Implementation acceptance criteria |
-| BC-0203 | stance | Dunmer | Dunmer Daedric deviation rule | missing: PDV_DaedricRacePrinceMatrix | PDV_RaceDesign_Dunmer.md — Daedric deviation rule (LOCKED) |
 | BC-0213 | stance | Khajiit | Silent focused patron emergence | missing: PDV_State_KhajiitFocusedEmphasis | PDV_RaceDesign_Khajiit.md — Silent patron emergence (LOCKED) + Focused-emphasis threshold  |
-| BC-0217 | stance | Orc | OrcLifeMode | missing: PDV_State_OrcLifeMode, PDV_GLO_State_OrcLifeMode | PDV_RaceDesign_Orc.md — Life-mode implementation rule (LOCKED) |
-| BC-0221 | stance | Redguard | RedguardSect | missing: PDV_State_RedguardSect | PDV_RaceDesign_Redguard.md — Implementation locks (LOCKED) |
+| BC-0217 | stance | Orc | OrcLifeMode | missing: PDV_GLO_State_OrcLifeMode | PDV_RaceDesign_Orc.md — Life-mode implementation rule (LOCKED) |
 | BC-0224 | record_flag | ALL | All 16 Daedric Princes | missing: PDV_GLO_DaedricExposure | PDV_Daedric_DecisionPacket_CAT4.md D-15.1 'PDV_GLO_DaedricExposure = max(active path stigm |
 | BC-0225 | record_flag | ALL | Broad lane state (PATRON_STATE_BROAD) | missing: PDV_Deity_NineDivines, PDV_Deity_OldWays, PDV_Deity_Orthodox | PDV_Phase2_DeityRoster_and_ArchitectureRulings.md § R1 |
 | BC-0227 | record_flag | ALL | Daedric forks (R6) | missing: PDV_Deity_Hircine | PDV_Phase2_DeityRoster_and_ArchitectureRulings.md § R6 |
-| BC-0276 | reward_tier | ALL | Contextual favor one-active cap | missing: PDV_Phase20_NoInGameProof_Gates | PDV_RaceRewardBudgetLedger.md — Budget Rules section; PDV_RaceEffectReviewLedger.md — Khaj |
 | BC-0279 | reward_tier | ALL | Focused 3-tier reward naming | missing: SyncEmphasisFamily, SyncEmphasisRewards | PDV_Phase2_DeityRoster_and_ArchitectureRulings.md § R3 |
 | BC-0457 | anti_farm | Bosmer | Z'en – Reciprocity family shared cap | missing: PDV_FavorFamily_ZenReciprocity | PDV_TriggerTopups_Exchange_KnightsRoad.md – A. Bosmer – Anti-farm |
 | BC-0458 | anti_farm | Breton | Knight's Road – Justice family shared cap | missing: PDV_FavorFamily_KnightJustice | PDV_TriggerTopups_Exchange_KnightsRoad.md – B. Breton – Anti-farm |
 | BC-0469 | neglect | ALL | Per-race neglect spell requirement | missing: SyncNeglectSpell | PDV_RaceContractTemplate.md § Neglect/regression model para 3; § Per-race contract Neglect |
 | BC-0496 | commitment | Breton | Hidden Art / Daedric no double-count | missing: PDV_State_BretonTradition | PDV_RaceDesign_Breton.md — Implementation acceptance criteria (Hidden Art layers on global |
-| BC-0497 | commitment | Dunmer | Dunmer focus gate | missing: PDV_State_DunmerPath | PDV_RaceDesign_Dunmer.md — Implementation split (LOCKED) + Focus gate (LOCKED) |
-| BC-0509 | pacing | ALL | T1 magnitudes are provisional pending holistic review | missing: PDV_RaceEffectReviewLedger | PDV_RaceEffectReviewLedger.md — Review Rules |
 | BC-0520 | substrate | Dunmer | Ancestor ash-prayer (PDV_Substrate_DunmerAncestor) | missing: PDV_State_DunmerAncestorPosture | PDV_RaceDesign_Dunmer.md — Ancestor substrate implementation (LOCKED) + Ancestor posture e |
-| BC-0528 | state_track | Bosmer | Bosmer path state enum | missing: PDV_State_BosmerPath | PDV_RaceRewardBudgetLedger.md — Focused Pass: Bosmer, Needs verifier/proof |
-| BC-0530 | state_track | Breton | Breton tradition state enum and three standing tracks | missing: PDV_State_BretonTradition, PDV_State_BretonDruidicFork | PDV_RaceRewardBudgetLedger.md — Focused Pass: Breton, Needs verifier/proof |
+| BC-0530 | state_track | Breton | Breton tradition state enum and three standing tracks | missing: PDV_State_BretonDruidicFork | PDV_RaceRewardBudgetLedger.md — Focused Pass: Breton, Needs verifier/proof |
 | BC-0531 | state_track | Breton | DruidicStanding | missing: PDV_State_BretonDruidicFork | PDV_RaceDesign_Breton.md — DruidicStanding + PDV_State_BretonDruidicFork lock |
 | BC-0535 | state_track | Dunmer | Dunmer ancestor substrate and posture state | missing: PDV_State_DunmerAncestorPosture | PDV_RaceRewardBudgetLedger.md — Focused Pass: Dunmer, Needs verifier/proof; PDV_RaceEffect |
 | BC-0542 | state_track | Orc | Malacath – PDV_State_OrcLifeMode | missing: PDV_State_OrcLifeMode, PDV_Player (NAMING-DRIFT? found PDV_PlayerEvents) | PDV_Phase20_ExpandedSignalArchitecture.md – B5 Orc – PDV_FLST_P2_OrcMalacathSources route  |
-| BC-0543 | state_track | Orc | Orc life-mode state enum and global mirror | missing: PDV_State_OrcLifeMode, PDV_GLO_State_OrcLifeMode | PDV_RaceRewardBudgetLedger.md — Focused Pass: Orc, Needs verifier/proof |
-| BC-0546 | state_track | Redguard | Redguard sect state enum | missing: PDV_State_RedguardSect | PDV_RaceRewardBudgetLedger.md — Focused Pass: Redguard, Needs verifier/proof |
+| BC-0543 | state_track | Orc | Orc life-mode state enum and global mirror | missing: PDV_GLO_State_OrcLifeMode | PDV_RaceRewardBudgetLedger.md — Focused Pass: Orc, Needs verifier/proof |
 | BC-0552 | curse_daedric | ALL | Hircine | missing: PDV_Msg_Daedric_Hircine_Exit | PDV_Daedric_DecisionPacket_CAT4.md D-16.1 'Exit (renounce): Cure path (D-13 mixed recovery |
 | BC-0553 | curse_daedric | ALL | Hircine | missing: PDV_Msg_Daedric_Hircine_ (NAMING-DRIFT? found PDV_GLO_Daedric_Hircine_Stigma) | PDV_Daedric_DecisionPacket_CAT4.md D-16.2 'Coordination rule (no double-fire)' |
 | BC-0557 | curse_daedric | ALL | Molag Bal | missing: PDV_Msg_Daedric_Molag_ (NAMING-DRIFT? found PDV_GLO_Daedric_Molag_Stigma) | PDV_DaedricBatch0_D18ProofLedger.md 'Prove no double-fire with race CurseState rows'; PDV_ |
@@ -110,7 +77,6 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0591 | runtime_wiring | ALL | Manager deity property wiring | missing: PDV_Akatosh, PDV_Mara, PDV_Arkay, PDV_Stendarr, PDV_Zenithar, PDV_Dibella, PDV_Julianos, PDV_Kynareth, PDV_Shor, PDV_Tsun, PDV_Stuhn, PDV_Magnus, PDV_Xarxes, PDV_Boethiah, PDV_Mephala, PDV_Malacath, PDV_Trinimac, PDV_Hist, PDV_Sithis, PDV_Tuwhacca, PDV_HoonDing, PDV_Leki | PDV_Phase2_DeityRoster_and_ArchitectureRulings.md § R4; all per-race specs § managerDeityP |
 | BC-0593 | runtime_wiring | ALL | PDV_FavorFamily_KnightJustice – router registration | missing: PDV_FavorFamily_KnightJustice, PDV_PlayerEvents | PDV_TriggerTopups_Exchange_KnightsRoad.md – Integration (per Architecture:287) |
 | BC-0594 | runtime_wiring | ALL | PDV_FavorFamily_ZenReciprocity – router registration | missing: PDV_FavorFamily_ZenReciprocity, PDV_PlayerEvents | PDV_TriggerTopups_Exchange_KnightsRoad.md – Integration (per Architecture:287) |
-| BC-0609 | surfacing | ALL | copy promotion to ESP records | missing: PDV_TransitionSurfacing_CoverageMap | PDV_TransitionSurfacing_CoverageMap.md §What still needs doing — item 3 |
 | BC-0631 | surfacing | ALL | Survey Devotion spell | missing: PDV_SurveyDevotionEffect | PDV_Architecture_v3.md §16.2 In-world feedback — Status spell bullet |
 | BC-0634 | surfacing | ALL | Tier transition notifications | missing: PDV_Notif_*_Tier, PDV_Notif_*_ChampionMoment | Devotion_Races_Overview.md — Reading the Race Sheets / notification shape; PDV_RaceDesign_ |
 | BC-0636 | surfacing | Altmer | curse transition — terminal vampire / werewolf halt | missing: PDV_Msg_Altmer_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md §3 curse table — Altmer row |
@@ -163,25 +129,13 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0710 | other | ALL | D-12 Daedric separate operational roster | missing: PDV_FLST_AllDaedricPaths | PDV_Architecture_v3.md §11.6 D-12 |
 | BC-0713 | other | ALL | D-15 Daedric stigma model | missing: PDV_GLO_DaedricExposure | PDV_Architecture_v3.md §11.6 D-15 |
 | BC-0714 | other | ALL | D-16 Curse-access Daedric template | missing: PDV_DaedricPath_MolagBal | PDV_Architecture_v3.md §11.6 D-16 |
-| BC-0715 | other | ALL | D-17 Daedric authoring order | missing: PDV_DaedricPrinceRecordContracts, PDV_DaedricBatch0_D18ProofLedger | PDV_Architecture_v3.md §11.6 D-17 |
-| BC-0716 | other | ALL | D-18 Per-Prince content-ready definition | missing: PDV_DaedricRacePrinceMatrix, PDV_DaedricPrinceRecordContracts | PDV_Architecture_v3.md §11.6 D-18 |
-| BC-0731 | other | ALL | Lorkhan family | missing: PDV_DeityCoverageMatrix | PDV_Architecture_v3.md §3.3 Contested lore items |
 | BC-0732 | other | ALL | Mara privilege pilot | missing: PDV_Privilege_Mara_ | PDV_Architecture_v3.md §21 forward phase plan table Phase 11 |
 | BC-0735 | other | ALL | Native-track-as-parity piety model | missing: SyncRewards | PDV_Architecture_v3.md §v3.84 addendum locked design rails |
-| BC-0736 | other | ALL | No beta-feel claim until all ten races + sixteen Princes | missing: PDV_AllRaceDaedricBetaReadinessLedger, PDV_PreBetaRaceGateLedger | references/authoring/PDV_PreBetaRaceGateLedger.md Global Stop Conditions |
-| BC-0737 | other | ALL | No broad CAT-6 string promotion without pilot gate | missing: PDV_CAT6PromotionPilot | references/authoring/PDV_PreBetaRaceGateLedger.md Global Stop Conditions (CAT-6) |
-| BC-0738 | other | ALL | No Daedric runtime promotion without D-18 + CAT-6 + runtime proof | missing: PDV_DaedricRuntimeEvidenceLedger | references/authoring/PDV_PreBetaRaceGateLedger.md Global Stop Conditions (Daedric 20C) |
-| BC-0739 | other | ALL | No external beta until race Pass/Conditional | missing: PDV_PreBetaRaceGateLedger | references/authoring/PDV_PreBetaRaceGateLedger.md Global Stop Conditions |
-| BC-0740 | other | ALL | No scan-only quest source promotion | missing: PDV_Phase20_AllRaceSourceCuration_Runbook, PDV_Phase20_SourceFillApprovalLedger | references/authoring/PDV_PreBetaRaceGateLedger.md Global Stop Conditions |
 | BC-0741 | other | ALL | Offer choices Renounce path | missing: ProcessCommitmentOffers (NAMING-DRIFT? found RunDawnProcessCommitmentOffersNoop) | PDV_Architecture_v3.md §12.5 offer choices |
-| BC-0745 | other | ALL | Quest-reaction matrix calibration | missing: PDV_QuestReactionMatrix_Full | AGENTS.md memory/quest-reaction-matrix-calibration.md; PDV_Architecture_v3.md §v3.91 curre |
-| BC-0755 | other | Altmer | Trinimac / Altmer path | missing: PDV_DeityCoverageMatrix | PDV_Architecture_v3.md §3.3 Contested lore items |
 | BC-0760 | other | Khajiit | Khajiit no-offer exception | missing: ProcessCommitmentOffers (NAMING-DRIFT? found RunDawnProcessCommitmentOffersNoop) | PDV_Architecture_v3.md §12.4a Khajiit emergent patron exception (LOCKED); §21.4 |
 | BC-0761 | other | Nord | Broad worship first-class lane for Nord | missing: PDV_State_NordPantheonBaseline | PDV_TargetEndStates_1.0.md Nord section; PDV_Architecture_v3.md §21.4 |
-| BC-0764 | other | Orc | Malacath / Mauloch dual classification | missing: PDV_DaedricRacePrinceMatrix, PDV_DeityCoverageMatrix | PDV_Architecture_v3.md §3.3 Contested lore items |
-| BC-0765 | other | Orc | Trinimac / Orc path | missing: PDV_DeityCoverageMatrix | PDV_Architecture_v3.md §3.3 Contested lore items |
 
-## NEEDS-MANUAL (276)
+## NEEDS-MANUAL (293)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
@@ -271,15 +225,18 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0184 | name_resolution | Khajiit | Azura | No machine-checkable identifier extractable from requirement/check_hint. | PDV_DaedricRacePrinceMatrix.csv Prince column 'Azura / Azurah'; PDV_DaedricContent_Manifes |
 | BC-0189 | name_resolution | Orc | Malacath | No machine-checkable identifier extractable from requirement/check_hint. | PDV_DaedricRacePrinceMatrix.csv Prince column 'Malacath / Mauloch' |
 | BC-0194 | stance | Altmer | Altmer Daedric Consort rule | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Altmer.md — ThalmørAlignment Track action table |
+| BC-0203 | stance | Dunmer | Dunmer Daedric deviation rule | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Dunmer.md — Daedric deviation rule (LOCKED) |
 | BC-0218 | stance | Redguard | Forebear Arkay-parallel overlap | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Redguard.md — Forebear interpretive overlap (LOCKED) |
 | BC-0228 | record_flag | ALL | Focusable-only deity records (R5) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_DeityRoster_and_ArchitectureRulings.md § R5 |
 | BC-0232 | record_flag | ALL | Shared deity records (R4) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_DeityRoster_and_ArchitectureRulings.md § R4 |
+| BC-0233 | record_flag | ALL | T1 reward records authored and manager-wired status | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase20_RewardRecordContracts.json — implementationStatus field per race entry |
 | BC-0241 | record_flag | Breton | Breton reuses Imperial Divines (no new deity QUSTs) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_BretonRewardRecords.spec.json § deityQuests all entries create:false; § authoringPlan  |
 | BC-0255 | record_flag | Nord | Imperial Divine stance reconciliation for Nord | No machine-checkable identifier extractable from requirement/check_hint. | PDV_NordRewardRecords.spec.json § deityReuse; § authoringPlan deityReuse |
 | BC-0265 | reward_tier | ALL | <=2 always-on loud boon families ceiling | No gate-ledger verdict found for this race. | PDV_RaceRewardBudgetLedger.md — Budget Rules section, rules 1 and 3 |
 | BC-0273 | reward_tier | ALL | Capstone cheat-death: once per day StorageUtil key | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md — LOCKED implementation rules, rule 1 |
 | BC-0274 | reward_tier | ALL | Capstone signatures are additive on top of T3 stat lines | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md — Structure (binding) section |
 | BC-0275 | reward_tier | ALL | Capstone stat magnitudes: ~12% ceiling rule | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md — Structure (binding) section; Khajiit LOCKED section sta |
+| BC-0276 | reward_tier | ALL | Contextual favor one-active cap | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceRewardBudgetLedger.md — Budget Rules section; PDV_RaceEffectReviewLedger.md — Khaj |
 | BC-0277 | reward_tier | ALL | Curse/Daedric native architecture visibility rule | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceRewardBudgetLedger.md — Budget Rules section, rule 8; Cross-Race Balance Flags — C |
 | BC-0278 | reward_tier | ALL | Fallback-as-floor binding rule for all fiddly capstone detections | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md — LOCKED implementation rules, rule 3 |
 | BC-0280 | reward_tier | ALL | Global one-active-reward stack rule | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase20_RewardRecordContracts.json — globalStackRule field |
@@ -364,6 +321,7 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0432 | anti_farm | ALL | Dibella – alms | No machine-checkable identifier extractable from requirement/check_hint. | PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv – Dibella / Give alms to a beggar |
 | BC-0433 | anti_farm | ALL | Dibella – marriage | No machine-checkable identifier extractable from requirement/check_hint. | PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv – Dibella / Marry/court |
 | BC-0434 | anti_farm | ALL | Hermaeus Mora | No machine-checkable identifier extractable from requirement/check_hint. | PDV_DaedricRacePrinceMatrix.csv Hermaeus Mora Notes 'Khajiit legibility does not mean base |
+| BC-0435 | anti_farm | ALL | Hermaeus Mora – Black Books | No machine-checkable identifier extractable from requirement/check_hint. | PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv – Hermaeus Mora / Read a Black Book |
 | BC-0436 | anti_farm | ALL | Hermaeus Mora – rare tomes | No machine-checkable identifier extractable from requirement/check_hint. | PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv – Hermaeus Mora / Study rare/forbidden to |
 | BC-0437 | anti_farm | ALL | Mephala | No machine-checkable identifier extractable from requirement/check_hint. | PDV_DaedricRacePrinceMatrix.csv Mephala Notes 'Do not flatten Mephala into generic stealth |
 | BC-0438 | anti_farm | ALL | Meridia | No machine-checkable identifier extractable from requirement/check_hint. | PDV_DaedricBatch0_D18ProofLedger.md 'Prove tolerated stigma behavior and prevent generic u |
@@ -398,6 +356,7 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0504 | pacing | ALL | Broad rewards softer than focused patron rewards at every tier | No gate-ledger verdict found for this race. | PDV_RaceEffectReviewLedger.md — Completed Race Rows intro paragraph, magnitude convention |
 | BC-0505 | pacing | ALL | Daedric paths – rite cadence | No machine-checkable identifier extractable from requirement/check_hint. | PDV_SignalDensityAudit.md – Daedric paths — rite cadence, not daily accrual |
 | BC-0507 | pacing | ALL | Persistent substrates express identity not power | No gate-ledger verdict found for this race. | PDV_RaceRewardBudgetLedger.md — Budget Rules section, rule 2 |
+| BC-0509 | pacing | ALL | T1 magnitudes are provisional pending holistic review | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceEffectReviewLedger.md — Review Rules |
 | BC-0510 | pacing | Argonian | Hist – leaky floor | No machine-checkable identifier extractable from requirement/check_hint. | PDV_SignalDensityAudit.md – Argonian — leaky Hist floor (not a multiplier) |
 | BC-0511 | pacing | Bosmer | Old Contract forced reckoning | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Bosmer.md — GreenPactCompliance State Model (LOCKED) — Forced reckoning |
 | BC-0512 | pacing | Imperial | Talos path | No machine-checkable identifier extractable from requirement/check_hint. | PDV_SignalDensityAudit.md – Verdict table row: Imperial → Talos path |
@@ -434,6 +393,7 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0603 | surfacing | ALL | All 16 Daedric Princes | No gate-ledger verdict found for this race. | PDV_AllRaceDaedricBetaReadinessLedger.md Per-Prince Acceptance Checklist item 12 |
 | BC-0605 | surfacing | ALL | All 16 Daedric Princes | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Daedric_DecisionPacket_CAT4.md D-15.1 band thresholds; PDV_DaedricContent_Manifest.md  |
 | BC-0607 | surfacing | ALL | All 16 Daedric Princes | No gate-ledger verdict found for this race. | PDV_AllRaceDaedricBetaReadinessLedger.md Per-Prince Acceptance Checklist item 12; per-race |
+| BC-0609 | surfacing | ALL | copy promotion to ESP records | No machine-checkable identifier extractable from requirement/check_hint. | PDV_TransitionSurfacing_CoverageMap.md §What still needs doing — item 3 |
 | BC-0610 | surfacing | ALL | curse transition | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §16.7 curse row; §13.7; PDV_TransitionSurfacing_CoverageMap.md §3 |
 | BC-0615 | surfacing | ALL | emergence transition | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §16.7 emergence row; PDV_TransitionSurfacing_CoverageMap.md §2 and  |
 | BC-0616 | surfacing | ALL | High-friction lanes require compensating diegetic support before beta | No gate-ledger verdict found for this race. | PDV_RaceRewardBudgetLedger.md — Immersion Budget Rules, rule 3 |
@@ -459,8 +419,25 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0686 | surfacing | Orc | neglect transition | No machine-checkable identifier extractable from requirement/check_hint. | PDV_TransitionSurfacing_CoverageMap.md §5 neglect table — Orc row |
 | BC-0692 | surfacing | Redguard | neglect transition | No machine-checkable identifier extractable from requirement/check_hint. | PDV_TransitionSurfacing_CoverageMap.md §5 neglect table — Redguard row |
 | BC-0700 | other | ALL | All 16 Daedric Princes | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Daedric_DecisionPacket_CAT4.md 'Recovery: closed by D-13 (mixed recovery default)' |
+| BC-0715 | other | ALL | D-17 Daedric authoring order | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §11.6 D-17 |
+| BC-0716 | other | ALL | D-18 Per-Prince content-ready definition | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §11.6 D-18 |
 | BC-0725 | other | ALL | Fallback-floor T3 capstone binding (Phase 2 static gate) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §v3.85 addendum; references/authoring/PDV_Phase2_CapstoneSignatures |
 | BC-0727 | other | ALL | Framework ESP monolithic through 1.0 | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §4 v3 subsystem map row 18 |
+| BC-0731 | other | ALL | Lorkhan family | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §3.3 Contested lore items |
+| BC-0736 | other | ALL | No beta-feel claim until all ten races + sixteen Princes | No machine-checkable identifier extractable from requirement/check_hint. | references/authoring/PDV_PreBetaRaceGateLedger.md Global Stop Conditions |
+| BC-0738 | other | ALL | No Daedric runtime promotion without D-18 + CAT-6 + runtime proof | No machine-checkable identifier extractable from requirement/check_hint. | references/authoring/PDV_PreBetaRaceGateLedger.md Global Stop Conditions (Daedric 20C) |
+| BC-0739 | other | ALL | No external beta until race Pass/Conditional | No machine-checkable identifier extractable from requirement/check_hint. | references/authoring/PDV_PreBetaRaceGateLedger.md Global Stop Conditions |
+| BC-0740 | other | ALL | No scan-only quest source promotion | No machine-checkable identifier extractable from requirement/check_hint. | references/authoring/PDV_PreBetaRaceGateLedger.md Global Stop Conditions |
+| BC-0745 | other | ALL | Quest-reaction matrix calibration | No machine-checkable identifier extractable from requirement/check_hint. | AGENTS.md memory/quest-reaction-matrix-calibration.md; PDV_Architecture_v3.md §v3.91 curre |
+| BC-0755 | other | Altmer | Trinimac / Altmer path | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §3.3 Contested lore items |
+| BC-0764 | other | Orc | Malacath / Mauloch dual classification | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §3.3 Contested lore items |
+| BC-0765 | other | Orc | Trinimac / Orc path | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §3.3 Contested lore items |
+
+## WAIVED (1)
+
+| ID | Surface | Race | Target | Detail | Authority |
+|---|---|---|---|---|---|
+| BC-0485 | neglect | Nord | PDV_SPEL_Neglect_Kyne (reused) | missing: PDV_SPEL_Neglect_Nord [WAIVED: Negative assertion: the requirement is that PDV_SPEL_Neglect_Nord must NOT exist (Nord reuses PDV_SPEL_Neglect_Kyne] | PDV_NordRewardRecords.spec.json § neglect designNote |
 
 ## FUTURE (59)
 
@@ -526,7 +503,7 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0762 | other | Nord | Froki/Heimskr/Andurs/Aela recognition dialogue | 1.0/V2 tier; tracked, not gated. | PDV_TargetEndStates_1.0.md Phase 18A/B runtime closeout; PDV_Architecture_v3.md §21.3 |
 | BC-0763 | other | Nord | Nord full stack audit (P2 audit-only lane) | 1.0/V2 tier; tracked, not gated. | references/authoring/PDV_PreBetaRaceGateLedger.md Nord; references/authoring/PDV_PreBetaRa |
 
-## PASS (267)
+## PASS (295)
 
 (passing rows listed in the CSV only)
 
