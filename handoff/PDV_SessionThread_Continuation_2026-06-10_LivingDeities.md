@@ -53,6 +53,9 @@ greenfield.
 - 313/343 receiver RUNTIME proof: carry in the same smoke.
 - Four dossiers await owner ratification; each ends with explicit owner
   decisions. LD-P2 charter hard-blocks on the LD-P1 smoke passing.
-- Backlog buckets 1/3/4/6/7/8/10/11 remain un-researched (deliberately held).
+- Backlog buckets 1/3/4/6/7/8/10/11 remain un-researched. OWNER CORRECTION
+  (2026-06-10): bucket RESEARCH is independent of LD-P1 proof - dossiers can
+  be produced any time (same fan-out pattern as today's four); only
+  IMPLEMENTATION chains on the LD-P1 smoke. Do not gate research on it.
 - Cosmetic: test ESP masters written Dawnguard-before-Skyrim (engine-fine,
   xEdit nags; fix at promote).
