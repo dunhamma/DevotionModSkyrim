@@ -100,13 +100,31 @@ Remaining blockers are runtime/manual only: race manual evidence, Bosmer source
 packet approval/fill, Daedric runtime/display evidence, and the corresponding
 release-claim boundaries.
 
+## Bosmer Source Packet Remediation
+
+The 2026-06-10 Bosmer remediation pass approved and filled one exact source
+packet:
+
+- `PDV_FLST_P2_BosmerYffreSources` now contains `DA05`
+  (`Skyrim.esm:02A49A`).
+- Approved stages are `100` and `105`, matching the Ill Met By Moonlight
+  terminal hunt/mercy branches.
+- The source-fill writer created backup
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\PlayerDevotion_Framework.esp.20260610-152411.bak`.
+- `--check-source-fill`, `--check-exact-stage-gates`, and the base wiring audit
+  read back the Bosmer source fill.
+
+This moves Bosmer from source-blocked to runtime/manual pending. It does not
+prove DA05 route delivery, wrong-origin rejection, generic-source silence,
+Survey/status clarity, reward/stack behavior, or feel.
+
 ## Closeout Order
 
 1. Continue per-race beta packets and update
    `PDV_Phase20_ManualEvidenceLedger.json` only with actual manual/runtime
    evidence.
-2. Approve and fill at least one exact Bosmer source before treating Bosmer as a
-   source-packet beta-feel candidate.
+2. Run the Bosmer DA05 source packet and record route, wrong-origin,
+   generic-source, Survey/status, reward/stack, and feel evidence.
 3. Run Daedric controlled, organic, display, generic-silence, save/load, stack,
    and curse no-double-fire proof before any full Devotion beta-feel claim.
 

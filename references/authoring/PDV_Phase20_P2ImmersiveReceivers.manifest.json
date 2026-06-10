@@ -14,12 +14,12 @@
     "RegisterForQuestStage"
   ],
   "questStageGate": {
-    "status": "exact-stage-supported-one-approved-stage-fill-pending-runtime-proof",
+    "status": "exact-stage-supported-two-approved-stage-fills-live-readback-pass-pending-runtime-proof",
     "receiverStatus": "exact-stage-supported",
     "rule": "Quest-stage source entries may be approved only when PDV_PlayerEvents compares aiNewStage against explicit approvedStages for that source and route family. Whole-quest FormList membership alone is not sufficient.",
     "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates",
-    "approvedQuestStageEntries": 1,
-    "approvedQuestStageScope": "Altmer MQ104 stage 160 is approved and live-filled for the Lorkhan crisis route in PDV_Phase20_SourceFillApprovalLedger.json; all other quest-stage sources remain blocked until exact quest/stage metadata is approved and declared.",
+    "approvedQuestStageEntries": 2,
+    "approvedQuestStageScope": "Altmer MQ104 stage 160 and Bosmer DA05 stages 100/105 are approved and live-fill eligible; all other quest-stage sources remain blocked until exact quest/stage metadata is approved and declared.",
     "runtimeProofStatus": "pending-runtime"
   },
   "sourceProperties": [
@@ -463,12 +463,12 @@
     "readbackResult": "PASS - all 34 PDV_FLST_P2_* properties on PDV_PlayerEvents alias point at their matching FLST records"
   },
   "sourceFillPlan": {
-    "status": "p2-book-fill-live-readback-pass-pending-runtime-proof",
+    "status": "p2-book-and-exact-stage-fill-live-readback-pass-pending-runtime-proof",
     "fillCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries",
     "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill",
-    "readbackResult": "PASS - approved P2 book-read source entries filled and read back on 2026-06-04; backup D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260604-094122.bak",
+    "readbackResult": "PASS - approved P2 book-read source entries, Altmer MQ104 stage 160, and Bosmer DA05 stages 100/105 source entry filled/read back on 2026-06-10; backup D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260610-152411.bak",
     "curationRunbook": "references/authoring/PDV_Phase20_P2SourceCuration_Runbook.md",
-    "entryRule": "Only exact source records with status approved-for-fill may be written. This tranche approves the current book-read entries plus the exact Altmer MQ104 stage-160 Lorkhan crisis source; other quest-stage source entries stay blocked until exact quest/stage candidates are approved and declared.",
+    "entryRule": "Only exact source records with status approved-for-fill may be written. This tranche approves the current book-read entries, the exact Altmer MQ104 stage-160 Lorkhan crisis source, and the exact Bosmer DA05 stage-100/105 Yffre hunt-law branch source; other quest-stage source entries stay blocked until exact quest/stage candidates are approved and declared.",
     "formKeyFormat": "ModName.ext:localHex, for example Skyrim.esm:00000014. Do not use load-order FormIDs.",
     "fillToolSafety": "The fill tool refuses unapproved entries, rejects sourceKind values not declared on the target receiver property, rejects duplicate property/form/sourceKind entries, rejects approved quest-stage entries unless exact-stage receiver support and approvedStages metadata exist, and writes no ESP changes when sourceFillEntries is empty."
   },
@@ -666,6 +666,25 @@
           "rejectedStageContext": "Repeated Dragonborn actions, generic main-quest progress before stage 160, and later dragon content do not route this source.",
           "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey altmer_mq104_lorkhan.",
           "rationale": "Exact MQ104 stage-160 Dragonborn identity milestone for one-shot Altmer Lorkhan crisis pressure; matches the static route entry and rejects generic Dragonborn activity."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_BosmerYffreSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:02A49A",
+          "editorId": "DA05",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            100,
+            105
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic hunting, animal kills, artifact possession alone, ordinary Falkreath travel, and non-terminal DA05 progress do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey bosmer_da05_yffre_hunt or bosmer_da05_yffre_mercy; the branch routes share mutualExclusionGroup da05-branch-outcome.",
+          "rationale": "Exact Ill Met By Moonlight terminal branch source for one-shot Bosmer Yffre hunt-law pressure; stages 100 and 105 are route-verified as mutually exclusive hunt/mercy outcomes and reject generic hunting."
         }
       ]
     },
@@ -1061,7 +1080,7 @@
       "race": "Bosmer",
       "property": "PDV_FLST_P2_BosmerYffreSources",
       "sourceKind": "quest-stage",
-      "formKey": "02A4DA:Skyrim.esm",
+      "formKey": "02A49A:Skyrim.esm",
       "expectedFormId": 173210,
       "approvedStage": 100,
       "routeKey": "bosmer_da05_yffre_hunt",
@@ -1071,15 +1090,15 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "da05-branch-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "bosmer-da05-yffre-mercy",
       "race": "Bosmer",
       "property": "PDV_FLST_P2_BosmerYffreSources",
       "sourceKind": "quest-stage",
-      "formKey": "02A4DA:Skyrim.esm",
+      "formKey": "02A49A:Skyrim.esm",
       "expectedFormId": 173210,
       "approvedStage": 105,
       "routeKey": "bosmer_da05_yffre_mercy",
@@ -1089,8 +1108,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "da05-branch-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "bosmer-mg08-living-story",

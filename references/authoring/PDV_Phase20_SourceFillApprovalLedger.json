@@ -1,26 +1,26 @@
 {
   "schema": "pdv.phase20.source-fill-approval-ledger.v1",
   "created": "2026-06-03",
-  "status": "p2-book-fill-live-readback-pass-altmer-mq104-live-readback-pass",
+  "status": "p2-book-fill-live-readback-pass-altmer-and-bosmer-exact-stage-live-readback-pass-pending-runtime-proof",
   "proofModel": "CKRA-informed: manifest intent is desired state only; accepted state requires structured writer output, live FormList readback, verifier evidence, and a gate summary.",
   "scope": {
     "liveFillIncluded": true,
-    "liveFillScope": "Approved P2 book-read sources plus the exact Altmer MQ104 stage-160 Lorkhan crisis source.",
-    "questStageFillScope": "Altmer MQ104 stage 160 is approved for live fill; all other quest-stage sources remain blocked until exact quest/stage metadata is approved and declared.",
+    "liveFillScope": "Approved P2 book-read sources plus the exact Altmer MQ104 stage-160 Lorkhan crisis source and exact Bosmer DA05 stage-100/105 Yffre hunt-law branch source.",
+    "questStageFillScope": "Altmer MQ104 stage 160 and Bosmer DA05 stages 100/105 are approved for live fill; all other quest-stage sources remain blocked until exact quest/stage metadata is approved and declared.",
     "nonP2FillScope": "Audit/design only for source classes outside the all-race P2 receiver/FormList network."
   },
   "liveFillReadback": {
     "status": "PASS",
-    "filledAt": "2026-06-06T11:40:36+10:00",
-    "sourceFillCheckAt": "2026-06-06T11:40:52+10:00",
-    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260606-114036.bak",
+    "filledAt": "2026-06-10T15:24:11+10:00",
+    "sourceFillCheckAt": "2026-06-10T15:24:22+10:00",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260610-152411.bak",
     "seqBackupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Seq\\PlayerDevotion_Framework.seq.20260606-014247.bak",
     "touchedFile": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PlayerDevotion_Framework.esp",
-    "filledEntryCount": 30,
-    "formListGroups": 14
+    "filledEntryCount": 31,
+    "formListGroups": 15
   },
   "runtimeRouteProof": {
-    "status": "all-filled-families-pass-across-session-logs",
+    "status": "p2-filled-families-pass-except-bosmer-da05-pending-runtime-proof",
     "checkedAt": "2026-06-04T14:29:12+10:00",
     "command": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
     "passedFamilies": [
@@ -40,9 +40,11 @@
     "earlierLogPassFamilies": [
       "PDV_FLST_P2_BretonHiddenArtSources"
     ],
-    "remainingFamilies": [],
+    "remainingFamilies": [
+      "PDV_FLST_P2_BosmerYffreSources"
+    ],
     "logBoundary": "Papyrus.1.log proves Dunmer, Imperial, Nord, Altmer, Argonian, Khajiit, and Orc after the first smoke packet. Papyrus.0.log proves Redguard after the restart/log rotation. Breton Hidden Art remains earlier-log proof only unless a same-log full sweep is required.",
-    "boundary": "Accepted-route log proof only. Wrong-origin rejection, generic-source silence, Survey/status clarity, stack snapshots, and true feel remain manual/runtime gates."
+    "boundary": "Accepted-route log proof only. Bosmer DA05 is live-filled/readback-pass but still lacks runtime route proof, wrong-origin rejection, generic-source silence, Survey/status clarity, stack snapshot, and true feel evidence."
   },
   "approvalRules": [
     "Only exact source records with local extracted/readback evidence can be approved.",
@@ -63,9 +65,18 @@
       "rejectedContext": "Generic spell learning, ordinary mage loot, generic Reach travel, or Forsworn combat.",
       "duplicateGuard": "One-shot book-read source route; no quest-stage owner in this tranche.",
       "sources": [
-        { "formKey": "Skyrim.esm:0ED60B", "editorId": "Book2CommonHagravens" },
-        { "formKey": "Skyrim.esm:07EB03", "editorId": "Book2CommonMadmenoftheReach" },
-        { "formKey": "Skyrim.esm:0DDFB6", "editorId": "dunPOIWitchNote" }
+        {
+          "formKey": "Skyrim.esm:0ED60B",
+          "editorId": "Book2CommonHagravens"
+        },
+        {
+          "formKey": "Skyrim.esm:07EB03",
+          "editorId": "Book2CommonMadmenoftheReach"
+        },
+        {
+          "formKey": "Skyrim.esm:0DDFB6",
+          "editorId": "dunPOIWitchNote"
+        }
       ]
     },
     {
@@ -79,8 +90,14 @@
       "rejectedContext": "Generic Daedric contact, artifact ownership, shrine use, or ash proximity.",
       "duplicateGuard": "Book-read owner only; DA01 quest-stage outcomes remain blocked until exact-stage gating exists.",
       "sources": [
-        { "formKey": "Skyrim.esm:01B245", "editorId": "Book4RareInvocationofAzura" },
-        { "formKey": "Skyrim.esm:01ACE9", "editorId": "Book3ValuableAzuraandtheBox" }
+        {
+          "formKey": "Skyrim.esm:01B245",
+          "editorId": "Book4RareInvocationofAzura"
+        },
+        {
+          "formKey": "Skyrim.esm:01ACE9",
+          "editorId": "Book3ValuableAzuraandtheBox"
+        }
       ]
     },
     {
@@ -94,8 +111,14 @@
       "rejectedContext": "Generic betrayal, murder, cruelty, or broad Daedric behavior.",
       "duplicateGuard": "Book-read owner only; DA02 quest-stage and sacrifice outcomes remain blocked.",
       "sources": [
-        { "formKey": "Skyrim.esm:01B233", "editorId": "Book4RareBoethiahsGlory" },
-        { "formKey": "Skyrim.esm:032E72", "editorId": "DA02BookBoethiahsProving" }
+        {
+          "formKey": "Skyrim.esm:01B233",
+          "editorId": "Book4RareBoethiahsGlory"
+        },
+        {
+          "formKey": "Skyrim.esm:032E72",
+          "editorId": "DA02BookBoethiahsProving"
+        }
       ]
     },
     {
@@ -109,7 +132,10 @@
       "rejectedContext": "Generic shrine proximity, Civil War rank, or unsplit public/private Talos context.",
       "duplicateGuard": "Book-read source only; Civil War oath rows remain manual/exact-stage blocked.",
       "sources": [
-        { "formKey": "Skyrim.esm:0ED04D", "editorId": "Book2ReligiousTalosWorship" }
+        {
+          "formKey": "Skyrim.esm:0ED04D",
+          "editorId": "Book2ReligiousTalosWorship"
+        }
       ]
     },
     {
@@ -123,9 +149,18 @@
       "rejectedContext": "Generic combat, cave travel, bandit killing, or broad race-pride loops.",
       "duplicateGuard": "Book-read source only; MQ304 stage 200 remains exact-stage blocked.",
       "sources": [
-        { "formKey": "Skyrim.esm:0ED161", "editorId": "Book1CheapNordsArise" },
-        { "formKey": "Skyrim.esm:0ED02F", "editorId": "Book2CommonDreamOfSovngarde" },
-        { "formKey": "Skyrim.esm:0E2FC6", "editorId": "Book3ValuableSovngardeReexamination" }
+        {
+          "formKey": "Skyrim.esm:0ED161",
+          "editorId": "Book1CheapNordsArise"
+        },
+        {
+          "formKey": "Skyrim.esm:0ED02F",
+          "editorId": "Book2CommonDreamOfSovngarde"
+        },
+        {
+          "formKey": "Skyrim.esm:0E2FC6",
+          "editorId": "Book3ValuableSovngardeReexamination"
+        }
       ]
     },
     {
@@ -139,7 +174,10 @@
       "rejectedContext": "Generic animal killing, werewolf state, undead killing, disease, or tomb travel.",
       "duplicateGuard": "Use only CR12TotemsOfHircine; exclude duplicate abbreviated CR12TotemsOfHircineAbbr.",
       "sources": [
-        { "formKey": "Skyrim.esm:0F683F", "editorId": "CR12TotemsOfHircine" }
+        {
+          "formKey": "Skyrim.esm:0F683F",
+          "editorId": "CR12TotemsOfHircine"
+        }
       ]
     },
     {
@@ -153,8 +191,14 @@
       "rejectedContext": "Generic elf lore, broad magic study, or unrelated ancient-history text.",
       "duplicateGuard": "Book-read source only; no quest-stage owner in this tranche.",
       "sources": [
-        { "formKey": "Skyrim.esm:01AF94", "editorId": "Book4RareAdabala" },
-        { "formKey": "Skyrim.esm:01AD06", "editorId": "Book4RareFragmentOnArtaeum" }
+        {
+          "formKey": "Skyrim.esm:01AF94",
+          "editorId": "Book4RareAdabala"
+        },
+        {
+          "formKey": "Skyrim.esm:01AD06",
+          "editorId": "Book4RareFragmentOnArtaeum"
+        }
       ]
     },
     {
@@ -168,8 +212,14 @@
       "rejectedContext": "Generic spell learning, College rank, or ordinary mage loot.",
       "duplicateGuard": "Book-read source only; MG08 quest-stage remains blocked until approved stage metadata is declared.",
       "sources": [
-        { "formKey": "Skyrim.esm:01ACFE", "editorId": "Book4RareArcanaRestored" },
-        { "formKey": "Skyrim.esm:01ACF1", "editorId": "Book3ValuableMagicFromTheSky" }
+        {
+          "formKey": "Skyrim.esm:01ACFE",
+          "editorId": "Book4RareArcanaRestored"
+        },
+        {
+          "formKey": "Skyrim.esm:01ACF1",
+          "editorId": "Book3ValuableMagicFromTheSky"
+        }
       ]
     },
     {
@@ -183,9 +233,18 @@
       "rejectedContext": "Generic library use or unrelated scholarly text.",
       "duplicateGuard": "Book-read source only; no quest-stage owner in this tranche.",
       "sources": [
-        { "formKey": "Skyrim.esm:01AD09", "editorId": "Book4RareLastKingOfAyleids" },
-        { "formKey": "Skyrim.esm:01ADB4", "editorId": "Book4RareNefarivigumLore" },
-        { "formKey": "Skyrim.esm:0ED03A", "editorId": "Book4RareAccountingOfTheElderScrolls" }
+        {
+          "formKey": "Skyrim.esm:01AD09",
+          "editorId": "Book4RareLastKingOfAyleids"
+        },
+        {
+          "formKey": "Skyrim.esm:01ADB4",
+          "editorId": "Book4RareNefarivigumLore"
+        },
+        {
+          "formKey": "Skyrim.esm:0ED03A",
+          "editorId": "Book4RareAccountingOfTheElderScrolls"
+        }
       ]
     },
     {
@@ -199,7 +258,34 @@
       "rejectedContext": "Repeated Dragonborn actions, generic main-quest progress before stage 160, and later dragon content.",
       "duplicateGuard": "Quest-stage source route uses MarkP2SourceRoute with quest form plus routeKey altmer_mq104_lorkhan.",
       "sources": [
-        { "formKey": "Skyrim.esm:02610C", "editorId": "MQ104", "approvedStages": [160] }
+        {
+          "formKey": "Skyrim.esm:02610C",
+          "editorId": "MQ104",
+          "approvedStages": [
+            160
+          ]
+        }
+      ]
+    },
+    {
+      "race": "Bosmer",
+      "receiver": "PDV_FLST_P2_BosmerYffreSources",
+      "routeFamily": "Yffre hunt law / Hircine pressure",
+      "sourceKind": "quest-stage",
+      "semanticVerdict": "strong",
+      "implementationStatus": "approved-for-fill",
+      "acceptedContext": "Ill Met By Moonlight terminal branch outcomes as one-shot Bosmer Yffre hunt-law pressure: stage 100 hunt/kill branch and stage 105 mercy branch.",
+      "rejectedContext": "Generic hunting, animal kills, artifact possession alone, ordinary Falkreath travel, and non-terminal DA05 progress.",
+      "duplicateGuard": "Quest-stage source route uses MarkP2SourceRoute with quest form plus routeKey bosmer_da05_yffre_hunt or bosmer_da05_yffre_mercy; branches share mutualExclusionGroup da05-branch-outcome.",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:02A49A",
+          "editorId": "DA05",
+          "approvedStages": [
+            100,
+            105
+          ]
+        }
       ]
     },
     {
@@ -213,10 +299,22 @@
       "rejectedContext": "Generic Black Marsh reference, swamp travel, or ordinary Argonian identity text.",
       "duplicateGuard": "Book-read source only; quest-stage Void/Sithis rows remain blocked.",
       "sources": [
-        { "formKey": "Skyrim.esm:01AFD7", "editorId": "Book0ArgonianAccountBook1" },
-        { "formKey": "Skyrim.esm:01ACE7", "editorId": "Book3ValuableArgonianAccountBook2" },
-        { "formKey": "Skyrim.esm:01AFFC", "editorId": "Book0ArgonianAccountBook3" },
-        { "formKey": "Skyrim.esm:01ACE8", "editorId": "Book3ValuableArgonianAccountBook4" }
+        {
+          "formKey": "Skyrim.esm:01AFD7",
+          "editorId": "Book0ArgonianAccountBook1"
+        },
+        {
+          "formKey": "Skyrim.esm:01ACE7",
+          "editorId": "Book3ValuableArgonianAccountBook2"
+        },
+        {
+          "formKey": "Skyrim.esm:01AFFC",
+          "editorId": "Book0ArgonianAccountBook3"
+        },
+        {
+          "formKey": "Skyrim.esm:01ACE8",
+          "editorId": "Book3ValuableArgonianAccountBook4"
+        }
       ]
     },
     {
@@ -230,9 +328,18 @@
       "rejectedContext": "Generic travel, generic thievery, moonless sleep, or broad Khajiit mention.",
       "duplicateGuard": "Book-read source only; Nocturnal/Thieves Guild and MQ quest-stage rows remain blocked.",
       "sources": [
-        { "formKey": "Skyrim.esm:01B27D", "editorId": "Book3ValuableWordsofClanMotherAhnissi" },
-        { "formKey": "Skyrim.esm:01AFF3", "editorId": "Book0AhzirrTraajijazeri" },
-        { "formKey": "Skyrim.esm:0F03E3", "editorId": "Book3ValuableTaleOfDroZira" }
+        {
+          "formKey": "Skyrim.esm:01B27D",
+          "editorId": "Book3ValuableWordsofClanMotherAhnissi"
+        },
+        {
+          "formKey": "Skyrim.esm:01AFF3",
+          "editorId": "Book0AhzirrTraajijazeri"
+        },
+        {
+          "formKey": "Skyrim.esm:0F03E3",
+          "editorId": "Book3ValuableTaleOfDroZira"
+        }
       ]
     },
     {
@@ -246,8 +353,14 @@
       "rejectedContext": "Generic stronghold proximity, generic combat, or unrelated Orc mention.",
       "duplicateGuard": "Book-read source only; DA02 quest-stage rows remain blocked.",
       "sources": [
-        { "formKey": "Skyrim.esm:07EBC9", "editorId": "Book1CheapTheCodeofMalacath" },
-        { "formKey": "Skyrim.esm:01AD16", "editorId": "Book4RareTrueNatureofOrcs" }
+        {
+          "formKey": "Skyrim.esm:07EBC9",
+          "editorId": "Book1CheapTheCodeofMalacath"
+        },
+        {
+          "formKey": "Skyrim.esm:01AD16",
+          "editorId": "Book4RareTrueNatureofOrcs"
+        }
       ]
     },
     {
@@ -261,7 +374,10 @@
       "rejectedContext": "Generic combat, random weapon ownership, faction rank, or broad warrior text.",
       "duplicateGuard": "Book-read source only; MS08 and other quest-stage rows remain blocked.",
       "sources": [
-        { "formKey": "Skyrim.esm:01ACD1", "editorId": "Book2CommonManualMixedUnitTactics" }
+        {
+          "formKey": "Skyrim.esm:01ACD1",
+          "editorId": "Book2CommonManualMixedUnitTactics"
+        }
       ]
     }
   ],
@@ -301,10 +417,10 @@
     {
       "race": "Bosmer",
       "routeFamily": "Hircine / hunt law / Green Pact edge",
-      "source": "DA05, Hircine-adjacent rows",
+      "source": "DA05 stages 100/105; other Hircine-adjacent rows",
       "receiverDecision": "P2 Bosmer receivers are live and DA05 exact-stage source support exists",
-      "fillDecision": "blocked",
-      "blocker": "No approved Bosmer source-fill entries are declared in this book tranche."
+      "fillDecision": "DA05 stages 100/105 approved for live fill; remaining Bosmer quest-stage and book candidates blocked",
+      "blocker": "No blocker for DA05 stage 100/105 fill. Other Bosmer sources still require separate exact source approval."
     },
     {
       "race": "Orc",

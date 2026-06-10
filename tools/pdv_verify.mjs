@@ -4074,6 +4074,7 @@ class Verifier {
     const sourceFillPlanStatuses = new Set([
       "tooling-ready-pending-exact-source-curation",
       "p2-book-fill-live-readback-pass-pending-runtime-proof",
+      "p2-book-and-exact-stage-fill-live-readback-pass-pending-runtime-proof",
     ]);
     if (allowedStatuses.has(manifest.status)) {
       this.pass("Phase 20 P2 immersive receiver status", "Receiver status preserves CK/runtime boundary.", PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST);
