@@ -11,10 +11,10 @@ DA02,Boethiah's Calling,40,Sacrifice by guile,deceit,Mephala,+,m,small,DA02 s10 
 DA02KillObj,Boethiah's Bidding,200,Assassinate the Jarl of Solitude by guile/stealth,"assassination_contract,murder_treacherous,deceit",Boethiah,+,S,small,DA02KillObj s50/s200 "assassinate the Jarl ... using guile, deception, and stealth"
 DA02KillObj,Boethiah's Bidding,200,Assassinate a lawful ruler,assassination_contract,Mephala,+,S,small,DA02KillObj s200
 DA02KillObj,Boethiah's Bidding,200,Regicide of lawful authority,murder_treacherous,Stendarr,-,S,small,DA02KillObj s200
-DA03,A Daedra's Best Friend,200,Reunite Barbas + Vile; Masque,"serve_a_daedra:clavicus,acquire_daedric_artifact:clavicus,keep_oath",Clavicus,+,C,milestone,DA03 s200 "reunite Barbas and Vile and received the Masque"
+DA03,A Daedra's Best Friend,200,Reunite Barbas + Vile; Masque,"serve_a_daedra:clavicus,acquire_daedric_artifact:clavicus,keep_oath",Clavicus Vile,+,C,milestone,DA03 s200 "reunite Barbas and Vile and received the Masque"
 DA03,A Daedra's Best Friend,200,Spare loyal Barbas (reunite him with his master),mercy_spare,Mara,+,S,small,DA03 s200 "reunite Barbas and Vile" (Barbas lives)
 DA03,A Daedra's Best Friend,200,Reunion empowers/serves Clavicus Vile (take his Masque),serve_a_daedra:clavicus,Stendarr,-,m,small,DA03 s200 (reuniting serves the Daedric Prince + claims his artifact)
-DA03,A Daedra's Best Friend,155,Kill loyal Barbas + keep the Rueful Axe,murder_treacherous,Clavicus,+,m,small,DA03 s155 "kill Barbas and keep the Rueful Axe" (Vile good either way)
+DA03,A Daedra's Best Friend,155,Kill loyal Barbas + keep the Rueful Axe,murder_treacherous,Clavicus Vile,+,m,small,DA03 s155 "kill Barbas and keep the Rueful Axe" (Vile good either way)
 DA03,A Daedra's Best Friend,155,Kill the loyal helpless companion,kill_the_helpless,Mara,-,S,small,DA03 s155 (Barbas is a loyal companion-dog)
 DA04,Discerning the Transmundane,100,Open the lockbox; claim the Oghma Infinium,"forbidden_knowledge,serve_a_daedra:hermaeusmora,acquire_daedric_artifact:hermaeusmora",Hermaeus Mora,+,C,milestone,DA04 s100 "a book of great knowledge, the Oghma Infinium"
 DA04,Discerning the Transmundane,100,Recover proscribed lore,forbidden_knowledge,Julianos,+,m,small,DA04 s100 (pursuit of truth, double-edged per profile)

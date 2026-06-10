@@ -1,0 +1,38 @@
+cluster,editor_id,outcome_stage,quest_name,act_tags,credited,missing,waived
+sky_storm_nature,DA05,105,Ill Met By Moonlight,"the_hunt,mercy_spare",Kyne(+m/small),Kynareth,waived
+sky_storm_nature,dunHunterQST,100,Kyne's Sacred Trials,"the_hunt,prove_by_struggle",Kyne(+C/milestone) Y'ffre(+m/small),Kynareth,waived
+sky_storm_nature,MG03,55,Hitting the Books,protect_the_weak,Kynareth(+m/small),Kyne,waived
+sky_storm_nature,MG05,200,Containment,protect_the_weak,Kynareth(+m/small),Kyne,waived
+sky_storm_nature,MQ105,160,The Way of the Voice,prove_by_struggle,Kyne(+S/small),Kynareth,waived
+sky_storm_nature,MQ106,200,A Blade in the Dark,kill_honorable_combat,Kyne(+S/small),Kynareth,waived
+sky_storm_nature,MQ206,220,Alduin's Bane,kill_honorable_combat,Kyne(+S/small),Kynareth,waived
+sky_storm_nature,MQ305,200,Dragonslayer,kill_honorable_combat,Kyne(+S/small),Kynareth,waived
+sky_storm_nature,T01,200,The Heart of Dibella,protect_the_weak,Kynareth(+m/small),Kyne,waived
+time_dragon,CW01A,160/200,Joining the Legion,"serve_empire_order,keep_oath",Akatosh(+S/small) Alkosh(+m/small),Auri-El,waived
+time_dragon,CW01B,160/200,Joining the Stormcloaks,keep_oath,Akatosh(+S/small),Auri-El,waived
+time_dragon,CW01B,160/200,Joining the Stormcloaks,keep_oath,Akatosh(+S/small),Alkosh,waived
+time_dragon,CW02A,30/80,The Jagged Crown,serve_empire_order,Akatosh(+S/small) Alkosh(+m/small),Auri-El,waived
+time_dragon,CW03,50/210,Message to Whiterun,serve_empire_order,Akatosh(+S/small),Auri-El,waived
+time_dragon,CW03,50/210,Message to Whiterun,serve_empire_order,Akatosh(+S/small),Alkosh,waived
+time_dragon,DA07,100,Pieces of the Past,serve_a_daedra:dagon,Akatosh(-m/small) Auri-El(-m/small),Alkosh,waived
+time_dragon,MQ104,160,Dragon Rising,kill_honorable_combat,Alkosh(+S/small) Akatosh(+S/small),Auri-El,waived
+time_dragon,MQ106,200,A Blade in the Dark,kill_honorable_combat,Alkosh(+S/small) Akatosh(+S/small),Auri-El,waived
+death_order,C06,65,Glory of the Dead,cure_undeath,Arkay(+S/small) Tu'whacca(+m/small),Xarxes,waived
+death_order,C06,200,Glory of the Dead,honor_the_dead,Arkay(+C/milestone) Xarxes(+C/milestone) Tu'whacca(+C/milestone),Khenarthi,waived
+death_order,CW02A,72,The Jagged Crown,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived
+death_order,CW02B,72,The Jagged Crown,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived
+death_order,DA01,110,The Black Star,necromancy,Arkay(-m/small) Tu'whacca(-m/small),Xarxes,waived
+death_order,DA09,500,The Break of Dawn,"slay_undead,cure_undeath",Arkay(+S/small) Tu'whacca(+m/small),Xarxes,waived
+death_order,MG07,30,The Staff of Magnus,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived
+death_order,MS14,200,Laid to Rest,slay_undead,Arkay(+C/milestone) Tu'whacca(+S/small),Xarxes,waived
+mercy_war,DA03,200,A Daedra's Best Friend,serve_a_daedra:clavicus,Stendarr(-m/small),Stuhn,waived
+trickster_thief,TG00,200,A Chance Arrangement,"theft_burglary,deceit",Nocturnal(+C/milestone) Rajhin(+C/milestone),Baan Dar,waived
+trickster_thief,TG01,200,Taking Care of Business,theft_burglary,Nocturnal(+C/milestone) Rajhin(+C/milestone),Baan Dar,waived
+trickster_thief,TG02,200,Loud and Clear,theft_burglary,Nocturnal(+C/milestone) Rajhin(+C/milestone),Baan Dar,waived
+trickster_thief,TG06,200,Hard Answers,theft_burglary,Nocturnal(+C/milestone) Rajhin(+C/milestone),Baan Dar,waived
+trickster_thief,TG07,200,The Pursuit,theft_burglary,Nocturnal(+C/milestone) Rajhin(+C/milestone),Baan Dar,waived
+knowledge_scribe,MQ105,160,The Way of the Voice,disciplined_study,Julianos(+C/milestone) Xarxes(+S/small),Magnus,waived
+make_way_war,CW01B,1,Joining the Stormcloaks,"kill_honorable_combat,prove_by_struggle",Talos(+S/small),HoonDing,waived
+hunt_ethics,DA05,100,Ill Met By Moonlight,"the_hunt,serve_a_daedra:hircine,acquire_daedric_artifact:hircine",Hircine(+C/milestone),Kyne,waived
+hunt_ethics,DA05,100,Ill Met By Moonlight,"the_hunt,serve_a_daedra:hircine,acquire_daedric_artifact:hircine",Hircine(+C/milestone),Y'ffre,waived
+hunt_ethics,DA05,105,Ill Met By Moonlight,"the_hunt,mercy_spare,protect_the_weak",Hircine(+S/small) Kyne(+m/small),Y'ffre,waived

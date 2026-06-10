@@ -112,6 +112,7 @@ const FAUCET_EFFECT_LISTS = {
 };
 
 const MANUAL_QUEST_FORMIDS = {
+  dunHunterQST: "Skyrim.esm:018601", // Kyne's Sacred Trials (Froki); s100 terminal blessing. Verified via houseCARL (USSEP-patched record).
   FreeformKolskeggrA: "Skyrim.esm:01FD72",
   MQ105U: "Skyrim.esm:0713DC",
   MS14: "Skyrim.esm:025F3E",
