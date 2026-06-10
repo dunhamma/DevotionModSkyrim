@@ -239,4 +239,3 @@ All 32 record deities have Part B profiles.
 - 'Namira' has no PDV_StanceMatrix/DaedricRacePrinceMatrix row; runtime falls back to the deity record's baked stance ints.
 - 'Sanguine' has no PDV_StanceMatrix/DaedricRacePrinceMatrix row; runtime falls back to the deity record's baked stance ints.
 - 'Z'en' has no PDV_StanceMatrix/DaedricRacePrinceMatrix row; runtime falls back to the deity record's baked stance ints.
-
