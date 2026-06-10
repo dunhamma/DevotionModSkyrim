@@ -5,40 +5,34 @@ Contract: PDV_BetaContract.csv (765 rows). Gate fails on unwaived GAP only;
 GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, then either
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
-Verdicts: PASS=300 | GAP-REVIEW=103 | NEEDS-MANUAL=293 | FUTURE=59 | WAIVED=3 | GAP=7
+Verdicts: PASS=319 | NEEDS-MANUAL=293 | GAP-REVIEW=87 | FUTURE=59 | WAIVED=2 | GAP=5
 Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 
-## GAP (7)
+## GAP (5)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
 | BC-0289 | reward_tier | Altmer | Altmer Orthodox broad T1/T2 | missing: PDV_Bless_Altmer_Orthodox_T2 | PDV_AltmerRewardRecords.spec.json § broadState rewards |
 | BC-0477 | neglect | Breton | PDV_SPEL_Neglect_Breton + creed-loss spells | missing: PDV_SPEL_CreedLoss_Breton_VowIntegrity, PDV_SPEL_CreedLoss_Breton_ExposureRupture, PDV_SPEL_CreedLoss_Breton_Excommunication, PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal | PDV_BretonRewardRecords.spec.json § neglect; § creedViolationLoss entries |
-| BC-0487 | neglect | Orc | PDV_SPEL_Neglect_Orc | missing: SyncOrcNeglectSpell | PDV_OrcRewardRecords.spec.json § neglect |
-| BC-0488 | neglect | Redguard | PDV_SPEL_Neglect_Redguard | missing: SyncRedguardNeglectSpell | PDV_RedguardRewardRecords.spec.json § neglect |
 | BC-0524 | substrate | Redguard | Far Shores token support spell | missing: PDV_Bless_Redguard_FarShoresToken | PDV_RedguardRewardRecords.spec.json § farShoresToken |
 | BC-0533 | state_track | Breton | PDV_State_BretonTradition + pressure tracks | missing: PDV_State_BretonDruidicFork | PDV_BretonRewardRecords.spec.json § stateTracks; § overstackControl |
 | BC-0693 | surfacing | Redguard | Redguard required content rows | missing: PDV_Notif_Redguard_Sect_Crown_Entry, PDV_Notif_Redguard_Sect_Forebear_Entry, PDV_Notif_Redguard_Sect_AshAbah_Entry, PDV_Msg_Redguard_Survey_Crown, PDV_Msg_Redguard_ChampionEntry_Crown, PDV_Notif_Redguard_FarShoresToken_Activate, PDV_Notif_Redguard_FarShoresToken_PrivateContext, PDV_Msg_Redguard_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_RedguardRewardRecords.spec.json § requiredContentRows |
 
-## GAP-REVIEW (103)
+## GAP-REVIEW (87)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
-| BC-0003 | signal_channel | ALL | Boethiah | missing: PDV_PlayerEvents | PDV_AllRaceDaedricBetaReadinessLedger.md, Evidence Baseline 'Daedric exact organic live se |
 | BC-0024 | signal_channel | Altmer | Auri-El dawn | missing: PDV_ALT_POS_AURIEL_DAWN | PDV_RaceDesign_Altmer.md — Positive income tags and hooks / PDV_ALT_POS_AURIEL_DAWN |
 | BC-0025 | signal_channel | Altmer | College/Psijic milestones | missing: PDV_ALT_POS_COLLEGE_PSIJIC | PDV_RaceDesign_Altmer.md — Positive income tags / PDV_ALT_POS_COLLEGE_PSIJIC |
 | BC-0027 | signal_channel | Altmer | Lorkhan Adjacency Penalty | missing: PDV_ALT_LORKHAN_T1 | PDV_RaceDesign_Altmer.md — Lorkhan Adjacency Penalty System + implementation economy lock |
 | BC-0028 | signal_channel | Altmer | Magic school milestones | missing: PDV_ALT_POS_MAGIC_MILESTONE (NAMING-DRIFT? found SIGNAL_MAGIC_MILESTONE) | PDV_RaceDesign_Altmer.md — Positive income tags / PDV_ALT_POS_MAGIC_MILESTONE |
-| BC-0044 | signal_channel | Bosmer | Old Contract (GreenPactCompliance) | missing: PDV_State_BosmerPath | PDV_RaceDesign_Bosmer.md — GreenPactCompliance State Model (LOCKED) + Implementation accep |
 | BC-0048 | signal_channel | Bosmer | Z'en – Exchange Reciprocity family (Z1: transaction) | missing: PDV_FavorFamily_ZenReciprocity | PDV_TriggerTopups_Exchange_KnightsRoad.md – A. Bosmer – The Exchange (Z'en): the Reciproci |
 | BC-0049 | signal_channel | Bosmer | Z'en – Exchange Reciprocity family (Z2: production) | missing: PDV_FavorFamily_ZenReciprocity | PDV_TriggerTopups_Exchange_KnightsRoad.md – A. Bosmer – The Exchange (Z'en): the Reciproci |
 | BC-0052 | signal_channel | Breton | Knight's Road – Justice family (K1: defend the road) | missing: PDV_FavorFamily_KnightJustice | PDV_TriggerTopups_Exchange_KnightsRoad.md – B. Breton – Knight's Road: the Justice family  |
-| BC-0056 | signal_channel | Breton | Standing stones (Green Way) | missing: ScoreAction | PDV_RaceDesign_Breton.md — Green Way: strong 1.0 hooks (Doomstone activator FormIDs) |
 | BC-0094 | signal_channel | Nord | Kyne/Kynareth | missing: PDV_ALT_POS_KYNE_ | PDV_RaceDesign_Nord.md — Focused Kyne contextual favor table |
 | BC-0148 | part_b_profile | ALL | Vaermina | No Part B profile block found for 'Vaermina'. | PDV_QuestReactionMatrix.md – Part B-2 Daedric Princes – Vaermina |
 | BC-0150 | part_b_profile | Altmer | Auri-El | No Part B profile block found for 'Auri-El'. | PDV_QuestReactionMatrix.md – Part B Altmer – Auri-El |
 | BC-0178 | part_b_profile | Orc | Malacath | Part B profile for 'Malacath' exists but lacks: keep_oath(C), master_craft_forge(S), kill_honorable_combat(S), defend_kin_home(S), prove_by_struggle(m), break_oath_betray(C), cowardice(S), deceit(m) | PDV_QuestReactionMatrix.md – Part B Orc – Malacath |
-| BC-0197 | stance | Altmer | ThalmorAlignment | missing: PDV_ReputationTrack | PDV_RaceDesign_Altmer.md — ThalmørAlignment Track |
 | BC-0213 | stance | Khajiit | Silent focused patron emergence | missing: PDV_State_KhajiitFocusedEmphasis | PDV_RaceDesign_Khajiit.md — Silent patron emergence (LOCKED) + Focused-emphasis threshold  |
 | BC-0217 | stance | Orc | OrcLifeMode | missing: PDV_GLO_State_OrcLifeMode | PDV_RaceDesign_Orc.md — Life-mode implementation rule (LOCKED) |
 | BC-0224 | record_flag | ALL | All 16 Daedric Princes | missing: PDV_GLO_DaedricExposure | PDV_Daedric_DecisionPacket_CAT4.md D-15.1 'PDV_GLO_DaedricExposure = max(active path stigm |
@@ -48,29 +42,22 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0457 | anti_farm | Bosmer | Z'en – Reciprocity family shared cap | missing: PDV_FavorFamily_ZenReciprocity | PDV_TriggerTopups_Exchange_KnightsRoad.md – A. Bosmer – Anti-farm |
 | BC-0458 | anti_farm | Breton | Knight's Road – Justice family shared cap | missing: PDV_FavorFamily_KnightJustice | PDV_TriggerTopups_Exchange_KnightsRoad.md – B. Breton – Anti-farm |
 | BC-0469 | neglect | ALL | Per-race neglect spell requirement | missing: SyncNeglectSpell | PDV_RaceContractTemplate.md § Neglect/regression model para 3; § Per-race contract Neglect |
-| BC-0496 | commitment | Breton | Hidden Art / Daedric no double-count | missing: PDV_State_BretonTradition | PDV_RaceDesign_Breton.md — Implementation acceptance criteria (Hidden Art layers on global |
 | BC-0520 | substrate | Dunmer | Ancestor ash-prayer (PDV_Substrate_DunmerAncestor) | missing: PDV_State_DunmerAncestorPosture | PDV_RaceDesign_Dunmer.md — Ancestor substrate implementation (LOCKED) + Ancestor posture e |
 | BC-0530 | state_track | Breton | Breton tradition state enum and three standing tracks | missing: PDV_State_BretonDruidicFork | PDV_RaceRewardBudgetLedger.md — Focused Pass: Breton, Needs verifier/proof |
 | BC-0531 | state_track | Breton | DruidicStanding | missing: PDV_State_BretonDruidicFork | PDV_RaceDesign_Breton.md — DruidicStanding + PDV_State_BretonDruidicFork lock |
 | BC-0535 | state_track | Dunmer | Dunmer ancestor substrate and posture state | missing: PDV_State_DunmerAncestorPosture | PDV_RaceRewardBudgetLedger.md — Focused Pass: Dunmer, Needs verifier/proof; PDV_RaceEffect |
-| BC-0542 | state_track | Orc | Malacath – PDV_State_OrcLifeMode | missing: PDV_State_OrcLifeMode, PDV_Player (NAMING-DRIFT? found PDV_PlayerEvents) | PDV_Phase20_ExpandedSignalArchitecture.md – B5 Orc – PDV_FLST_P2_OrcMalacathSources route  |
+| BC-0542 | state_track | Orc | Malacath – PDV_State_OrcLifeMode | missing: PDV_Player (NAMING-DRIFT? found PDV_PlayerEvents) | PDV_Phase20_ExpandedSignalArchitecture.md – B5 Orc – PDV_FLST_P2_OrcMalacathSources route  |
 | BC-0543 | state_track | Orc | Orc life-mode state enum and global mirror | missing: PDV_GLO_State_OrcLifeMode | PDV_RaceRewardBudgetLedger.md — Focused Pass: Orc, Needs verifier/proof |
-| BC-0552 | curse_daedric | ALL | Hircine | missing: PDV_Msg_Daedric_Hircine_Exit | PDV_Daedric_DecisionPacket_CAT4.md D-16.1 'Exit (renounce): Cure path (D-13 mixed recovery |
-| BC-0553 | curse_daedric | ALL | Hircine | missing: PDV_Msg_Daedric_Hircine_ (NAMING-DRIFT? found PDV_GLO_Daedric_Hircine_Stigma) | PDV_Daedric_DecisionPacket_CAT4.md D-16.2 'Coordination rule (no double-fire)' |
-| BC-0557 | curse_daedric | ALL | Molag Bal | missing: PDV_Msg_Daedric_Molag_ (NAMING-DRIFT? found PDV_GLO_Daedric_Molag_Stigma) | PDV_DaedricBatch0_D18ProofLedger.md 'Prove no double-fire with race CurseState rows'; PDV_ |
 | BC-0562 | curse_daedric | Altmer | Vampire (no restoration) | missing: PDV_State_AltmerVampireTerminal | PDV_RaceDesign_Altmer.md — Curse State Summary / Vampire |
-| BC-0564 | curse_daedric | Argonian | Argonian vampire = deep grief / Corrupted posture | missing: PDV_State_ArgonianHistPosture | PDV_RaceEffectReviewLedger.md — Khajiit section note cross-referencing Argonian; PDV_RaceR |
 | BC-0570 | curse_daedric | Dunmer | Dunmer ancestor silence / RestoredScarred posture on vampire cure | missing: PDV_State_DunmerAncestorPosture | PDV_RaceEffectReviewLedger.md — Dunmer layered baseline row, curse/Daedric; PDV_RaceReward |
 | BC-0573 | curse_daedric | Imperial | Vampire | missing: PDV_State_ImperialVampireHistory | PDV_RaceDesign_Imperial.md — Curse State Summary / Vampire |
 | BC-0574 | curse_daedric | Khajiit | Khajiit ShadowDrift boundary: not triggered by ordinary night behavior | missing: PDV_State_KhajiitLunarPosture | PDV_RaceRewardBudgetLedger.md — Focused Pass: Khajiit, Needs verifier/proof; PDV_RaceEffec |
 | BC-0575 | curse_daedric | Khajiit | Vampire (Corrupted posture) | missing: PDV_State_KhajiitLunarPosture | PDV_RaceDesign_Khajiit.md — Vampire posture (LOCKED) + Curse State Summary |
 | BC-0576 | curse_daedric | Khajiit | Werewolf (Strained posture) | missing: PDV_State_KhajiitLunarPosture | PDV_RaceDesign_Khajiit.md — Werewolf posture (LOCKED) + ShadowDrift boundary (LOCKED) |
 | BC-0577 | curse_daedric | Nord | Hircine | missing: PDV_State_NordCurse | PDV_RaceDesign_Nord.md — Curse State Summary / Phase 13 lock (LOCKED) |
-| BC-0589 | runtime_wiring | ALL | FLST P2 receiver shells – all 34 races | missing: PDV_Player (NAMING-DRIFT? found PDV_PlayerEvents), PDV_PlayerEvents, PDV_Phase20_P2ImmersiveReceivers | PDV_Phase20_ExpandedSignalArchitecture.md – Purpose / status note (34 shells wired) |
-| BC-0591 | runtime_wiring | ALL | Manager deity property wiring | missing: PDV_Akatosh, PDV_Mara, PDV_Arkay, PDV_Stendarr, PDV_Zenithar, PDV_Dibella, PDV_Julianos, PDV_Kynareth, PDV_Shor, PDV_Tsun, PDV_Stuhn, PDV_Magnus, PDV_Xarxes, PDV_Boethiah, PDV_Mephala, PDV_Malacath, PDV_Trinimac, PDV_Hist, PDV_Sithis, PDV_Tuwhacca, PDV_HoonDing, PDV_Leki | PDV_Phase2_DeityRoster_and_ArchitectureRulings.md § R4; all per-race specs § managerDeityP |
-| BC-0593 | runtime_wiring | ALL | PDV_FavorFamily_KnightJustice – router registration | missing: PDV_FavorFamily_KnightJustice, PDV_PlayerEvents | PDV_TriggerTopups_Exchange_KnightsRoad.md – Integration (per Architecture:287) |
-| BC-0594 | runtime_wiring | ALL | PDV_FavorFamily_ZenReciprocity – router registration | missing: PDV_FavorFamily_ZenReciprocity, PDV_PlayerEvents | PDV_TriggerTopups_Exchange_KnightsRoad.md – Integration (per Architecture:287) |
-| BC-0631 | surfacing | ALL | Survey Devotion spell | missing: PDV_SurveyDevotionEffect | PDV_Architecture_v3.md §16.2 In-world feedback — Status spell bullet |
+| BC-0589 | runtime_wiring | ALL | FLST P2 receiver shells – all 34 races | missing: PDV_Player (NAMING-DRIFT? found PDV_PlayerEvents), PDV_Phase20_P2ImmersiveReceivers | PDV_Phase20_ExpandedSignalArchitecture.md – Purpose / status note (34 shells wired) |
+| BC-0593 | runtime_wiring | ALL | PDV_FavorFamily_KnightJustice – router registration | missing: PDV_FavorFamily_KnightJustice | PDV_TriggerTopups_Exchange_KnightsRoad.md – Integration (per Architecture:287) |
+| BC-0594 | runtime_wiring | ALL | PDV_FavorFamily_ZenReciprocity – router registration | missing: PDV_FavorFamily_ZenReciprocity | PDV_TriggerTopups_Exchange_KnightsRoad.md – Integration (per Architecture:287) |
 | BC-0634 | surfacing | ALL | Tier transition notifications | missing: PDV_Notif_*_Tier, PDV_Notif_*_ChampionMoment | Devotion_Races_Overview.md — Reading the Race Sheets / notification shape; PDV_RaceDesign_ |
 | BC-0636 | surfacing | Altmer | curse transition — terminal vampire / werewolf halt | missing: PDV_Msg_Altmer_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md §3 curse table — Altmer row |
 | BC-0637 | surfacing | Altmer | emergence transition — focus devoted | missing: PDV_Notif_Altmer_Focus_DevotedEntry | PDV_TransitionSurfacing_CoverageMap.md §2 emergence table — Altmer row |
@@ -86,7 +73,6 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0653 | surfacing | Breton | curse transition — tradition-differentiated werewolf onset | missing: PDV_Msg_Breton_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md §3 curse table — Breton row |
 | BC-0654 | surfacing | Breton | emergence transition — focus within tradition | missing: PDV_Notif_Breton_FocusEmergence | PDV_TransitionSurfacing_CoverageMap.md §2 emergence table — Breton row |
 | BC-0656 | surfacing | Breton | reorientation transition — druidic standing | missing: PDV_Notif_Breton_DruidicStanding_ | PDV_TransitionSurfacing_CoverageMap.md §4 reorientation table — Breton row |
-| BC-0657 | surfacing | Breton | startup tradition choice — no fallback | missing: PDV_State_BretonTradition | race-sheets/PDV_StartupChoice_Messages.md — PDV_MSG_StartupBretonChoice Fallback note |
 | BC-0658 | surfacing | Breton | tier transition — Observant/Faithful | missing: PDV_Notif_Breton_Observant_Entry, PDV_Notif_Breton_Faithful_Entry | PDV_TransitionSurfacing_CoverageMap.md §1 tier table — Breton row |
 | BC-0659 | surfacing | Dunmer | Book-read signals | missing: PDV_Notif_Dunmer_FavorNoted_Azura_BookRead_, PDV_Notif_Dunmer_FavorNoted_Boethiah_BookRead_ | PDV_RaceDesign_Dunmer.md — Signal Examples (book-read rows) |
 | BC-0660 | surfacing | Dunmer | curse transition | missing: PDV_Msg_Dunmer_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md §3 curse table — Dunmer row |
@@ -104,16 +90,13 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0676 | surfacing | Khajiit | tier transition — Observant/Faithful | missing: PDV_Notif_Khajiit_Lunar_ObservantEntry, PDV_Notif_Khajiit_Lunar_FaithfulEntry | PDV_TransitionSurfacing_CoverageMap.md §1 tier table — Khajiit row |
 | BC-0677 | surfacing | Nord | Book-read signals | missing: PDV_Notif_Nord_FavorNoted_OldWays_BookRead_, PDV_Notif_Nord_FavorNoted_HircineArkay_BookRead_TotemsHircine | PDV_RaceDesign_Nord.md — Signal Examples (book-read rows) |
 | BC-0680 | surfacing | Nord | neglect transition | missing: PDV_Notif_Nord_Observant_Lapse, PDV_Notif_Nord_, PDV_Notif_Nord_General_AncestorsQuiet | PDV_TransitionSurfacing_CoverageMap.md §5 neglect table — Nord row |
-| BC-0682 | surfacing | Nord | tier transition — N/A at Devoted (reorientation N/A) | missing: PDV_State_NordPantheonBaseline | PDV_TransitionSurfacing_CoverageMap.md §4 — Altmer/Dunmer/Nord N/A row |
 | BC-0683 | surfacing | Nord | tier transition — Observant/Faithful | missing: PDV_Notif_Nord_Observant_Entry, PDV_Notif_Nord_Faithful_Entry | PDV_TransitionSurfacing_CoverageMap.md §1 tier table — Nord row |
 | BC-0684 | surfacing | Orc | curse transition | missing: PDV_Msg_Orc_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md §3 curse table — Orc row |
 | BC-0685 | surfacing | Orc | emergence transition — life-mode entry | missing: PDV_Notif_Orc_LifeMode_, PDV_Notif_Orc_LifeMode_Stronghold_Entry | PDV_TransitionSurfacing_CoverageMap.md §2 emergence table — Orc row and §4 reorientation t |
-| BC-0688 | surfacing | Orc | startup life-mode choice — intent not entitlement | missing: PDV_StateTrack_OrcLifeMode | race-sheets/PDV_StartupChoice_Messages.md — PDV_MSG_StartupOrcChoice Intent not entitlemen |
 | BC-0689 | surfacing | Orc | tier transition — Observant/Faithful | missing: PDV_Notif_Orc_Malacath_ObservantEntry, PDV_Notif_Orc_Malacath_FaithfulEntry | PDV_TransitionSurfacing_CoverageMap.md §1 tier table — Orc row |
 | BC-0690 | surfacing | Redguard | curse transition — Tu'whacca vampire cure re-entry | missing: PDV_Msg_Redguard_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md §3 curse table — Redguard row |
 | BC-0691 | surfacing | Redguard | emergence transition — Champion entry | missing: PDV_Msg_Redguard_ | PDV_TransitionSurfacing_CoverageMap.md §2 emergence table — Nord/Imperial/Redguard row |
 | BC-0694 | surfacing | Redguard | reorientation transition — sect switch | missing: PDV_Notif_Redguard_Sect_ (NAMING-DRIFT? found REDGUARD_SECT_CROWN) | PDV_TransitionSurfacing_CoverageMap.md §4 reorientation table — Redguard row |
-| BC-0695 | surfacing | Redguard | startup sect choice — Forebear fallback | missing: PDV_State_RedguardSect | race-sheets/PDV_StartupChoice_Messages.md — PDV_MSG_StartupRedguardChoice Fallback note |
 | BC-0696 | surfacing | Redguard | tier transition — Observant/Faithful | missing: PDV_Notif_Redguard_Observant_Entry, PDV_Notif_Redguard_Faithful_Entry | PDV_TransitionSurfacing_CoverageMap.md §1 tier table — Redguard row |
 | BC-0697 | other | ALL | All 16 Daedric Princes | missing: PDV_Architecture_v3 | PDV_Daedric_DecisionPacket_CAT4.md Ratification checklist; PDV_DaedricContent_Manifest.md  |
 | BC-0698 | other | ALL | All 16 Daedric Princes | missing: PDV_DaedricPath_Jyggalag | PDV_Daedric_DecisionPacket_CAT4.md 'Roster shape: closed by D-12'; PDV_AllRaceDaedricBetaR |
@@ -126,7 +109,6 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0735 | other | ALL | Native-track-as-parity piety model | missing: SyncRewards | PDV_Architecture_v3.md §v3.84 addendum locked design rails |
 | BC-0741 | other | ALL | Offer choices Renounce path | missing: ProcessCommitmentOffers (NAMING-DRIFT? found RunDawnProcessCommitmentOffersNoop) | PDV_Architecture_v3.md §12.5 offer choices |
 | BC-0760 | other | Khajiit | Khajiit no-offer exception | missing: ProcessCommitmentOffers (NAMING-DRIFT? found RunDawnProcessCommitmentOffersNoop) | PDV_Architecture_v3.md §12.4a Khajiit emergent patron exception (LOCKED); §21.4 |
-| BC-0761 | other | Nord | Broad worship first-class lane for Nord | missing: PDV_State_NordPantheonBaseline | PDV_TargetEndStates_1.0.md Nord section; PDV_Architecture_v3.md §21.4 |
 
 ## NEEDS-MANUAL (293)
 
@@ -426,13 +408,12 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0764 | other | Orc | Malacath / Mauloch dual classification | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §3.3 Contested lore items |
 | BC-0765 | other | Orc | Trinimac / Orc path | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §3.3 Contested lore items |
 
-## WAIVED (3)
+## WAIVED (2)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
-| BC-0261 | record_flag | Redguard | PDV_Deity_Arkay Redguard stance reconciliation (infra only) | missing: RouteDunmerAsh, RouteRedguardAshAbahDeathDuty [WAIVED: Contract invented function names (RouteDunmerAsh] | PDV_RedguardRewardRecords.spec.json § reusedDeities Arkay entry |
+| BC-0261 | record_flag | Redguard | PDV_Deity_Arkay Redguard stance reconciliation (infra only) | missing: RouteDunmerAsh / TELEMETRY-STUB (no piety sink within depth 2): RouteRedguardAshAbahDeathDuty [WAIVED: Contract invented function names (RouteDunmerAsh] | PDV_RedguardRewardRecords.spec.json § reusedDeities Arkay entry |
 | BC-0485 | neglect | Nord | PDV_SPEL_Neglect_Kyne (reused) | missing: PDV_SPEL_Neglect_Nord [WAIVED: Negative assertion: the requirement is that PDV_SPEL_Neglect_Nord must NOT exist (Nord reuses PDV_SPEL_Neglect_Kyne] | PDV_NordRewardRecords.spec.json § neglect designNote |
-| BC-0490 | commitment | ALL | All 16 Daedric Princes | missing: PDV_Msg_Daedric_ (NAMING-DRIFT? found PDV_Msg_Daedric_Mephala_ChampionEntry) [WAIVED: Over-broad identifier: the row extracted the bare prefix PDV_Msg_Daedric_ rather than a specific record. Verified all 16 Princes have PDV_Msg_Daedric_<stem>_Commitment messages. Not a gap.] | PDV_DaedricPrinceRecordContracts.json, commitmentSignalsRequired field; PDV_DaedricContent |
 
 ## FUTURE (59)
 
@@ -498,7 +479,7 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0762 | other | Nord | Froki/Heimskr/Andurs/Aela recognition dialogue | 1.0/V2 tier; tracked, not gated. | PDV_TargetEndStates_1.0.md Phase 18A/B runtime closeout; PDV_Architecture_v3.md §21.3 |
 | BC-0763 | other | Nord | Nord full stack audit (P2 audit-only lane) | 1.0/V2 tier; tracked, not gated. | references/authoring/PDV_PreBetaRaceGateLedger.md Nord; references/authoring/PDV_PreBetaRa |
 
-## PASS (300)
+## PASS (319)
 
 (passing rows listed in the CSV only)
 

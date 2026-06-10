@@ -335,12 +335,23 @@ function authorityIsStructured(row) {
   return /\.(json|csv)\b/i.test(row.authority || "");
 }
 
+// PDV_ record-type prefixes: these name ESP records, so presence MUST be
+// proven in the ESP, not by a source property declaration (a manager can
+// declare a Spell Property whose record was never authored - exactly the
+// PDV_Bless_Altmer_Orthodox_T2 case). Everything else CamelCase (Sync*,
+// Handle*, Route*, Is*, ...) is a Papyrus function/symbol, proven in source.
+const RECORD_PREFIX = /^PDV_(SPEL|SPELL|MGEF|Bless|Msg|MESG|Notif|GLO|GLOB|State|StateTrack|RepTrack|Deity|QUST|Quest|ACTI|REFR|FLST|KW|KYWD|Favor|Bless_Daedric|Path)_/i;
+
 function idExists(id, sourceFacts, espFacts, layer) {
-  const pools = layer === "esp"
+  // Route by identifier SHAPE, not the row's single verify_layer label (a row
+  // often mixes an ESP record with its Papyrus wiring). Record-shaped -> ESP;
+  // function/symbol-shaped -> source. PDV_ names that aren't a known record
+  // type fall back to both (e.g. a script/property name).
+  const pools = RECORD_PREFIX.test(id)
     ? [espFacts.edids]
-    : layer === "source"
-      ? [sourceFacts.identifiers]
-      : [sourceFacts.identifiers, espFacts.edids];
+    : id.startsWith("PDV_")
+      ? [espFacts.edids, sourceFacts.identifiers]
+      : [sourceFacts.identifiers];
   for (const cand of aliasCandidates(id)) {
     if (cand.includes("*") || cand.endsWith("_")) {
       // explicit wildcard, or a truncated family name like
