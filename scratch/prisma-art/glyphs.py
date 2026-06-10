@@ -44,16 +44,17 @@ def render(spec):
         out.append(f'<{tag} {at} fill="none" stroke="{G}" stroke-width="{sw}" stroke-linecap="round" stroke-linejoin="round"/>')
     return "".join(out)
 # contact sheet at two sizes (48 and 24) to verify small-size legibility
-keys=list(GLYPHS)
-cell=70; W=len(keys)*cell; H=170
-p=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="{DARK}"/>']
-for i,k in enumerate(keys):
-    x=i*cell
-    p.append(f'<g transform="translate({x+11},14) scale(1.0)"><svg width="48" height="48" viewBox="0 0 48 48">{render(GLYPHS[k])}</svg></g>')
-    p.append(f'<g transform="translate({x+23},74)"><svg width="24" height="24" viewBox="0 0 48 48">{render(GLYPHS[k])}</svg></g>')
-    p.append(f'<text x="{x+35}" y="120" fill="{G}" font-size="11" font-family="sans-serif" text-anchor="middle">{k}</text>')
-    p.append(f'<text x="{x+35}" y="136" fill="{THIN}" font-size="8" font-family="sans-serif" text-anchor="middle">48px / 24px</text>')
-p.append("</svg>")
-svg="".join(p)
-cairosvg.svg2png(bytestring=svg.encode(), write_to="scratch/prisma-art/glyphs.png", scale=3)
-print("ok")
+if __name__=='__main__':
+    keys=list(GLYPHS)
+    cell=70; W=len(keys)*cell; H=170
+    p=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="{DARK}"/>']
+    for i,k in enumerate(keys):
+        x=i*cell
+        p.append(f'<g transform="translate({x+11},14) scale(1.0)"><svg width="48" height="48" viewBox="0 0 48 48">{render(GLYPHS[k])}</svg></g>')
+        p.append(f'<g transform="translate({x+23},74)"><svg width="24" height="24" viewBox="0 0 48 48">{render(GLYPHS[k])}</svg></g>')
+        p.append(f'<text x="{x+35}" y="120" fill="{G}" font-size="11" font-family="sans-serif" text-anchor="middle">{k}</text>')
+        p.append(f'<text x="{x+35}" y="136" fill="{THIN}" font-size="8" font-family="sans-serif" text-anchor="middle">48px / 24px</text>')
+    p.append("</svg>")
+    svg="".join(p)
+    cairosvg.svg2png(bytestring=svg.encode(), write_to="scratch/prisma-art/glyphs.png", scale=3)
+    print("ok")
