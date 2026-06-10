@@ -173,7 +173,9 @@ Add `"mood_up"`/`"mood_down"`/`"demand"` event types to the live toast path
 String tierLabel, String rival)`, live `:1057`). Dream omens ride the live
 `OnSleepStart` hook (`PDV_PlayerEvents.psc`) with a probability roll. Degrade to
 `Debug.Notification` when Prisma absent. (Rich `DiegeticDirector` modalities =
-LD-P2, pending that director being built.)
+LD-P2. CORRECTED 2026-06-10: the director EXISTS live as a `D1Enabled`-gated
+scaffold with `Dispatch`/`SetBodyMark`/`EmitPrayerAnim` — LD-P2 is routing into
+it, not building it; see `05_ld_p2_feasibility.md`.)
 
 ## 4. Verifier expectations (extend `tools/pdv_verify.mjs` / `pdv_content_verify.mjs`)
 - Mood: `PDV.Mood.*` present + bounded after seeded deltas; band matches thresholds; band-cross logs once.

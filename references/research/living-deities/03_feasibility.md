@@ -127,7 +127,7 @@ Hircine's `clampedToday`.
 ## Spike 4 — Omen dispatch (A2) · confidence HIGH (toasts) / DEFERRED (rich director)
 - **Seam (live):** `SendPrismaEventToast(String eventName, PDV_DeityBase deity, String context, String tierLabel, String rival)` (`PDV__ManagerQuest.psc:1057`) already fires for existing event types; the player-event side hooks `OnSleepStart` and `OnWeatherChange` (`PDV_PlayerEvents.psc`).
 - **Cheapest path (LD-P1):** add `"mood_up"`/`"mood_down"`/`"demand"` event types to the **live** toast path, fired on band-cross from `RunDawnUpdateMood()`. Dream omens ride `OnSleepStart` with a probability roll. All gated by pool + `ScoreRepeatableAction`-style cooldown + MCM density.
-- **Honest dependency (unchanged):** the richer `PDV_DiegeticDirector.Dispatch()` (weather/body-marks/anims) is specced but **not built** — those modalities are **LD-P2**. LD-P1 omens ride the live toast + dream channels only.
+- **Honest dependency — CORRECTED 2026-06-10 (LD-P2 research pass, verified against live source):** `PDV_DiegeticDirector.psc` **exists live** (14KB; `Dispatch(eventClass, surfaceKey, direction, deityIndex, toneOverride)`, `SetBodyMark`, `EmitPrayerAnim`), gated by `D1Enabled` and already routed from the manager via `SurfaceTransition`. The earlier "specced but not built" claim was stale. Rich modalities remain **LD-P2 scope**, but as *routing* work, not greenfield — see `05_ld_p2_feasibility.md`. LD-P1 omens still ride the live toast + dream channels only.
 - **In-game proof still required:** toast fires once per band-cross (not per dawn); dream cadence feels right; degrades to `Debug.Notification` when Prisma absent.
 
 ## Spike 5 — Mood-scaled boon (A4) · confidence HIGH (Kyne) / gated-on-Spike-0 (Hircine)
