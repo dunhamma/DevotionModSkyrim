@@ -20,6 +20,9 @@ dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2Receiver
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates
 node .\tools\pdv_phase20_base_wiring_audit.mjs
+node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
+node .\tools\pdv_phase2_reward_readback_audit.mjs --json
+node .\tools\pdv_refresh_seq.mjs --write --json
 node .\tools\pdv_beta_readiness_audit.mjs --strict --json
 ```
 
@@ -27,8 +30,55 @@ Expected before manual testing:
 
 - Route entries: `PASS`, including all 24 manifest route entries.
 - Base wiring audit: `PASS`.
+- Strict Phase 20 verifier and Phase 2 reward readback audit: `PASS`; SEQ
+  refresh has no stale/missing entry warning.
 - Beta readiness audit: still `NOT_BETA_READY` until manual/runtime slots are
   recorded.
+
+Do not use the older
+`dotnet run --project .\tools\pdv-phase20-reward-author\PdvPhase20RewardAuthor.csproj -- --check`
+as the blocking reward gate for this manual queue unless that tool or its
+first-tier contract is intentionally refreshed. It currently reports stale T1
+contract drift across older race records even when the stricter reward readback
+audit passes.
+
+## Current Last-Pass Blocker Snapshot
+
+As of the 2026-06-10 sweep, the active beta-feel blockers are manual/runtime
+evidence only. Readback and verifier gates are necessary preflight, but they do
+not close these rows.
+
+Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
+
+| Race | Pending manual/runtime slots |
+| --- | --- |
+| Altmer | none for current beta packet; final-world placement remains separate |
+| Khajiit | `assetStatus` |
+| Argonian | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Bosmer | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Breton | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Dunmer | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Imperial | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Nord | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Orc | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Redguard | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+
+Daedric ledger blockers from `PDV_DaedricRuntimeEvidenceLedger.json`:
+
+- All sixteen Princes remain `pending`.
+- Every Prince needs `mcmRoute`, `qasmokeRoute`, `organicRoute`,
+  `genericSilence`, `activeEffects`, `summaryMessage`, `prismaNotification`,
+  `saveLoad`, `stackLegibility`, and `manualFeel`.
+- Molag Bal and Hircine also need `curseNoDoubleFire`.
+
+Additional last-pass runtime sweeps before any broad beta-feel claim:
+
+- Day-to-day V1 faucet sweep: finish craft, book, sleep, transgression,
+  trespass `361`, events `1` and `2`, anti-farm, attribution filter, race gate,
+  and dawn bank checks.
+- Prince V2 path-deepening sweep: prove deepen-not-initiate, open-path deepen
+  markers, dual-face Azura behavior, anti-farm, and Hircine curse
+  no-double-fire.
 
 ## Testing Order
 
@@ -36,8 +86,10 @@ Expected before manual testing:
 
 Run these first because they are already mostly proven.
 
-- Altmer: capture the remaining reward/Active Effects or correct patron/tier
-  stack snapshot in `PDV_BetaTestPacket_Altmer.md`.
+- Altmer: current packet closed on 2026-06-10. Survey showed Auri-El
+  foundation, `Current standing: Unproven`, and `Last favor: Dawn steadiness`;
+  Active Effects showed `Altmer: Dawn Steadiness`. Final-world placement
+  remains separate.
 - Khajiit: confirm asset status/no-new-mesh for the wired lunar packet in
   `PDV_BetaTestPacket_Khajiit.md`.
 
@@ -219,4 +271,3 @@ Stop the packet and bring back notes if any of these happen:
 - a reward or price stacks invisibly or cannot be explained from the UI
 - Prisma/MCM opens as a blocking panel when only a toast or notification is expected
 - save/load changes the visible state unexpectedly
-

@@ -1,7 +1,7 @@
 # PDV Beta Test Packet - Altmer
 
 Created: 2026-06-06
-Status: conditional pass - source, visual, and edge proof recorded; reward snapshot pending unless already observed
+Status: pass - source, visual, edge, and reward/stack snapshot proof recorded
 Mode: console-assisted beta-feel packet
 
 This packet restarts Altmer as a full race proof packet, not just a focused
@@ -19,8 +19,17 @@ the first-tier reward display boundary.
   Papyrus.0.log and Survey Devotion evidence.
 - No unwanted full Prisma/MCM auto-open was reported during the book/visual
   pass.
-- Remaining closeout is the reward/Active Effects or correct patron/tier
-  pending snapshot, unless that was part of the tester-observed visual pass.
+
+2026-06-10:
+
+- Tester read the three approved Altmer books in game and confirmed the Survey
+  Devotion surface showed Auri-El foundation, `Current standing: Unproven`, and
+  `Last favor: Dawn steadiness`.
+- Tester captured the Active Effects menu showing the live effect
+  `Altmer: Dawn Steadiness` with source `Altmer: Dawn Steadiness`.
+- Treat this as the accepted reward/stack snapshot for the current Altmer
+  packet. It proves the visible favor/reward layer; it does not prove final
+  world placement.
 
 ## Pass Bar
 
@@ -34,9 +43,10 @@ Altmer is beta-feel ready when this packet shows:
   stronger state.
 - A non-Altmer origin does not gain Altmer manager state from Altmer sources.
 - Generic Altmer-adjacent behavior stays silent.
-- The first-tier race reward is either visible as `Altmer Orthodox Steadiness`
-  when the patron/tier gate is legitimately met, or clearly remains pending
-  because the patron/tier gate is not met.
+- The stack snapshot shows the expected Altmer layer without overstacking. The
+  current accepted proof is the contextual favor `Altmer: Dawn Steadiness`.
+  The separate broad T1 reward contract `Altmer Orthodox Steadiness` remains
+  patron/tier-gated and should only appear when that gate is legitimately met.
 
 Stop and report a failure if the Prisma panel opens by itself, if a book read
 blocks player control with a large panel, if a generic action awards Altmer
@@ -192,14 +202,21 @@ themselves prove the Active Effect. The reward sync runs through
 first-tier race reward when the patron state is active and the active deity is
 at least Seeker tier.
 
-Check Active Effects after the normal dawn/update path. If eligible, expected
-reward:
+Check Active Effects after the normal dawn/update path. For the current book
+packet, accepted visible stack proof is:
+
+```text
+Altmer: Dawn Steadiness
+```
+
+If the separate patron/tier-gated broad T1 reward is eligible, the expected
+reward contract remains:
 
 ```text
 Altmer Orthodox Steadiness
 ```
 
-Expected log marker when eligible:
+Expected log marker when the broad T1 reward is eligible:
 
 ```text
 Race reward added: Altmer T1
@@ -254,11 +271,11 @@ rg -n "RouteAltmer|Altmer source favor|Altmer crisis|Race reward added: Altmer T
 Use this verdict shape when reporting back:
 
 ```text
-Altmer expected build: PASS/FAIL
-Altmer MQ104 edge: PASS/FAIL/using prior proof
-Wrong-origin rejection: PASS/FAIL
-Generic-source silence: PASS/FAIL
-Repeat anti-farm: PASS/FAIL
-Reward/stack snapshot: PASS/PENDING/FAIL
-Blocking notes:
+Altmer expected build: PASS
+Altmer MQ104 edge: using prior proof
+Wrong-origin rejection: PASS
+Generic-source silence: PASS
+Repeat anti-farm: PASS
+Reward/stack snapshot: PASS - Active Effects shows Altmer: Dawn Steadiness
+Blocking notes: no packet blocker; final-world placement remains separate
 ```

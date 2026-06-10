@@ -79,16 +79,16 @@ Status: all exact organic quest-stage senders are placed/readback-clean and read
 
 | Race | Current beta-feel state | P2 book/source runtime state | Manual evidence gap |
 |---|---|---|---|
-| Altmer | Fail - runtime/manual proof deferred | Auri-El, Magnus, and Xarxes book source manager-log proof passed on 2026-06-04; toast/status surfacing patched after that proof and needs rerun | Stack snapshot, manual feel, immersive hook proof, asset status |
-| Khajiit | Fail - runtime/manual proof deferred | Lunar book source manager-log proof passed on 2026-06-04; one-book Survey/status surfacing patched after that proof and needs rerun | Survey/status did not visibly change during pre-fix smoke; wrong-origin, generic-source silence, stack snapshot, and feel remain pending |
-| Argonian | Fail - runtime/manual proof deferred | Hist book source manager-log proof passed on 2026-06-04; source-preserving toast/status surfacing patched after that proof and needs rerun | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
-| Orc | Fail - runtime/manual proof deferred | Malacath book source manager-log proof passed on 2026-06-04; toast/status surfacing patched after that proof and needs rerun | Startup UI overlap was observed and patched in live script; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
-| Redguard | Fail - runtime/manual proof deferred | Ancestor-spine book source manager-log proof passed on 2026-06-04; toast/status surfacing patched after that proof and needs rerun | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
-| Bosmer | Fail - runtime/manual proof deferred | P2 FormList shells exist; Bosmer P2 source shells are currently empty | All manual slots pending |
-| Breton | Fail - runtime/manual proof deferred | Hidden Art book source manager-log proof passed in an earlier log; rerun only if same-log proof is desired | All manual slots pending |
-| Dunmer | Fail - runtime/manual proof deferred | Azura and Boethiah book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
-| Imperial | Fail - runtime/manual proof deferred | Public Talos book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
-| Nord | Fail - runtime/manual proof deferred | Old Ways and Hircine/Arkay book source manager-log proof passed on 2026-06-04 | Wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending |
+| Altmer | Pass for current race beta-feel packet; final-world placement remains separate | Auri-El, Magnus, and Xarxes book source proof plus MQ104 stage-160 route/Survey proof are recorded; 2026-06-10 Active Effects proof showed `Altmer: Dawn Steadiness` | No current packet blocker |
+| Khajiit | Fail - runtime/manual proof deferred | Wired lunar book packet proof, wrong-origin silence, generic-source silence, Survey/status movement, stack behavior below reward threshold, and feel are recorded; ledger has six of seven manual slots recorded | `assetStatus` |
+| Argonian | Fail - runtime/manual proof deferred | Hist book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
+| Orc | Fail - runtime/manual proof deferred | Malacath book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
+| Redguard | Fail - runtime/manual proof deferred | Ancestor-spine book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
+| Bosmer | Fail - runtime/manual proof deferred | DA05 exact source packet is approved, filled, readback-clean, and ready for packet proof | All seven manual slots pending |
+| Breton | Fail - runtime/manual proof deferred | Hidden Art book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
+| Dunmer | Fail - runtime/manual proof deferred | Azura and Boethiah book source families are filled/readback-clean and ready for packet proof | All seven manual slots pending |
+| Imperial | Fail - runtime/manual proof deferred | Public Talos book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
+| Nord | Fail - runtime/manual proof deferred | Old Ways and Hircine/Arkay book source families plus seven repaired exact-stage route entries are ready for packet proof | All seven manual slots pending |
 
 ## P2 FormList Shell State
 

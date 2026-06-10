@@ -2,7 +2,7 @@
 
 **Created:** 2026-06-09
 **Updated:** 2026-06-09
-**Status:** Papyrus source/PEX, ESP receiver QUST shells, generic faucet FormLists, router properties, player-alias properties, and **all seven** Story Manager `Shares Event` nodes are readback-clean. **Trespass RESOLVED 2026-06-10:** `TrespassActorEvent` is a valid engine event type (`StoryManagerEventNode.Types`); vanilla `Skyrim.esm` simply never created a root of that type, so the framework plugin now owns one (`PDV__SM_TrespassEvent` SMEN, `0714B1`, parented at the SM root `00005B`, mirroring `AssaultActorEvent`) with `PDV__SM_TrespassNode` (`0714B2`) attached via Shares Event. `pdv_verify --strict-phase3` = FAIL=0 / TODO=0.
+**Status:** Papyrus source/PEX, ESP receiver QUST shells, generic faucet FormLists, router properties, player-alias properties, FormList content, and **all seven** Story Manager `Shares Event` nodes are readback-clean. **Trespass RESOLVED 2026-06-10:** `TrespassActorEvent` is a valid engine event type (`StoryManagerEventNode.Types`); vanilla `Skyrim.esm` simply never created a root of that type, so the framework plugin now owns one (`PDV__SM_TrespassEvent` SMEN, `0714B1`, parented at the SM root `00005B`, mirroring `AssaultActorEvent`) with `PDV__SM_TrespassNode` (`0714B2`) attached via Shares Event. `pdv_verify --strict-phase3` = FAIL=0 / TODO=0. **Faucet FormList content live 2026-06-10:** `--fill-generic-faucets` / `--check-generic-faucet-fill` populate and fail-closed check the vanilla skill-book, spell-tome, Daedric artifact, and raise-undead effect lists; live readback passes exact counts `90/93/8/19`.
 **Companion:** `PDV_DeityLikesDislikesMatrix.md`, `PDV_DeityLikesDislikes.csv`, `PDV_CodexHandoff_FaucetDetection_Full.md`
 
 The locked rule is **hybrid/no-duplicates**:
@@ -67,7 +67,16 @@ Fill these new generic faucet properties:
 
 ## 3. Player Alias Property Wiring
 
-Readback status: complete. The same `--author-generic-faucets` / `--check-generic-faucets` helper creates the four empty `PDV_FLST_Faucet*` FormLists and wires the alias properties.
+Readback status: shell/property wiring complete. The same `--author-generic-faucets` / `--check-generic-faucets` helper creates the four `PDV_FLST_Faucet*` FormLists and wires the alias properties.
+
+Content fill is automated separately:
+
+```powershell
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --fill-generic-faucets
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-generic-faucet-fill
+```
+
+The fill contract is exact: 90 skill books with the corrected Sneak sequence (`01B276`, `01B01F`, `01B020`, `01B021`, `01AFD5`), 93 vanilla spell tomes, 8 player-castable raise-undead MGEFs, and 19 Daedric artifact entries including Ebony Mail (`0F6D1A:Skyrim.esm`).
 
 Manual CK equivalent: open `PDV__ManagerQuest` -> `PDV_Player` alias -> `PDV_PlayerEvents` properties.
 

@@ -39,7 +39,7 @@ P2 book runtime check:
 node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager
 Latest result on 2026-06-04: FAIL overall; Breton Hidden Art passes, remaining filled P2 book families still need manager-log proof.
 Latest focused retests on 2026-06-06: Altmer MQ104 stage 160 route passed in Papyrus.0.log with manual Survey proof; Khajiit Words of Clan Mother Ahnissi lunar book route passed with strict-manager checker and in-game Survey/status confirmation. These are source-packet passes, not whole-race beta-feel passes.
-Latest restart-packet result on 2026-06-06: Altmer passed all Auri-El/Magnus/Xarxes book checks and visuals in game; MQ104 stage 160 edge proof is carried forward from the captured Papyrus.0.log and Survey proof. Reward/Active Effects snapshot remains pending unless tester confirms the `Altmer Orthodox Steadiness` active effect or correct patron/tier pending state.
+Latest restart-packet result on 2026-06-06: Altmer passed all Auri-El/Magnus/Xarxes book checks and visuals in game; MQ104 stage 160 edge proof is carried forward from the captured Papyrus.0.log and Survey proof. On 2026-06-10, tester confirmed the reward/stack snapshot: Survey showed Auri-El foundation, `Current standing: Unproven`, and `Last favor: Dawn steadiness`; Active Effects showed `Altmer: Dawn Steadiness`.
 Latest Khajiit restart-packet result on 2026-06-06: Words of Clan Mother Ahnissi and The Tale of Dro'Zira both produced Prisma toasts; expected lunar source checks, Survey/status visuals, wrong-origin rejection, generic-source silence, and correct reward-pending behavior all passed. Azurah casing was reported lower-case in the Survey/UI surface and the Prisma display-name map was patched so normalized azura symbols render as Azurah.
 ```
 
@@ -79,7 +79,7 @@ Structured no-in-game gate:
 ```text
 Race: Altmer
 Lane type: P0 active spine
-Verdict: Conditional - restarted source/visual/edge packet passed; reward snapshot pending
+Verdict: Pass - restarted source/visual/edge packet and reward snapshot passed; final-world placement remains separate
 No-in-game status: Readback-Ready
 Expected build: Auri-El or Magnus scholar managing dawn practice and study.
 Edge build: Exiled vampire, werewolf halt, or mortal-world pressure run.
@@ -94,8 +94,8 @@ Reward ceiling: Auri-El foundation plus one secondary focus plus one active cont
 Stack snapshot: Auri-El foundation, secondary focus, active favor, crisis state, pressure count/source, ThalmorAlignment, vampire exile, werewolf halt, scar, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race altmer
 Next automatable action: add structured rejected-surface and placement-contract verifier coverage.
-Deferred manual proof: reward/Active Effects or correct patron/tier pending snapshot, plus final stack snapshot if not already included in the visual pass.
-Blocking follow-up: confirm whether `Altmer Orthodox Steadiness` appeared in Active Effects or was correctly pending behind patron/tier; after that, Altmer can move from Conditional to Pass for the race beta-feel packet.
+Deferred manual proof: none for the current Altmer beta-feel packet; final-world placement remains separate.
+Blocking follow-up: none for the current Altmer beta-feel packet.
 ```
 
 ### Altmer Content-Lock Reconciliation

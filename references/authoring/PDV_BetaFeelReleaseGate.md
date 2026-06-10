@@ -60,8 +60,20 @@ dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2Receiver
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-route-entries
-dotnet run --project .\tools\pdv-phase20-reward-author\PdvPhase20RewardAuthor.csproj -- --check
+node .\tools\pdv_phase2_reward_readback_audit.mjs --json
+node .\tools\pdv_refresh_seq.mjs --write --json
 ```
+
+For the current all-race reward surface, treat
+`pdv_phase2_reward_readback_audit.mjs --json` as the reward/deity/neglect
+readback gate before beta-feel evidence intake. The older
+`pdv-phase20-reward-author --check` contract check still reports stale
+first-tier text/form drift across multiple races and should not block
+Altmer/Breton reward closeout unless that tool or contract is intentionally
+refreshed. On 2026-06-10, after the Altmer and Breton reward writes, the
+current relevant gate was: strict Phase 20 verifier `PASS=2933, WARN=2,
+INFO=34`; Phase 2 reward readback audit `PASS=1268`; SEQ refresh `PASS`,
+`changed=false`, `questCount=39`.
 
 After each in-game proof sweep, run the relevant runtime checker immediately
 before log rotation makes the evidence ambiguous:
@@ -70,6 +82,24 @@ before log rotation makes the evidence ambiguous:
 node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager
 node .\tools\pdv_phase20_runtime_check.mjs --race all
 ```
+
+## Current Last-Pass Scope
+
+The 2026-06-10 sweep leaves the automated/readback side green enough to proceed
+with manual runtime proof, but not green enough to claim beta-feel readiness.
+The fail-closed audit currently blocks on:
+
+- Race manual evidence: Altmer has closed the current beta-packet manual slots;
+  Khajiit only needs `assetStatus`; Argonian, Bosmer, Breton, Dunmer, Imperial, Nord, Orc, and
+  Redguard each still need all seven race manual/runtime slots.
+- Daedric runtime/display evidence: all sixteen Princes remain pending; Molag
+  Bal and Hircine additionally need curse no-double-fire proof.
+- Claim boundaries: Race Beta-Feel and Full Devotion Beta-Feel claims stay
+  blocked until the matching ledgers are updated from in-game evidence.
+
+Use `PDV_InGameTestingNeeded_Runbook.md` as the ordered execution queue for the
+remaining race packets, Daedric proof, V1 faucet sweep, and Prince V2
+path-deepening sweep.
 
 ## Per-Race Beta-Feel Packet
 

@@ -24,7 +24,7 @@ T3 capstone only" — T1/T2 stay plain stat bumps).
 | M3 | Companion-conditional heal-rate passive | `IsPlayerTeammate` poll → HealRateMult while a companion is present | Bosmer Living Story |
 | M4 | Low-health once/day save (ward + heal) + rally allies | health watch ≤10% + daily cooldown; courage area effect on teammates | Bosmer Living Story |
 | M5 | Debt repaid: damage taken remembered and added to next strike vs that foe; + bonus damage vs already-hostile targets | scripted OnHit ledger + perk attack-damage entry | Bosmer Exchange (Z'en) |
-| M6 | Cheat-death → brief invisibility (escape) + attacker stagger + lingering luck (sneak/crit) | scripted OnHit lethal-check + multi-day cooldown; apply Invisibility + stagger | Bosmer Bandit Road (Baan Dar) — REUSED by Khajiit Baan Dar |
+| M6 | Cheat-death → brief invisibility (escape) + attacker stagger + lingering luck (sneak/crit) | scripted OnHit lethal-check + 24-hour cooldown (locked "all cheat-deaths once/day" rule); apply Invisibility + stagger | Bosmer Bandit Road (Baan Dar) — REUSED by Khajiit Baan Dar |
 | M7 | Post-sleep outdoor stealth buff | `OnSleepStop` outdoor check → timed Sneak buff | Bosmer Bandit Road |
 | M8 | Travel momentum: reduced sprint stamina cost + out-of-combat speed ramp | scripted sprint-cost mod + moving/not-in-combat speed poll | Khajiit Khenarthi |
 | M9 | Twilight sight: night magicka surge + detect-life aura + foresight magic-ward proc | night-conditioned regen + Detect Life + scripted ward | Khajiit Azurah |
@@ -58,8 +58,10 @@ T3 capstone only" — T1/T2 stay plain stat bumps).
 
 ### Bandit Road — Baan Dar · "Baan Dar's Luck"
 - **Passive (stat):** Armor +12, HealRateMult +15, Sneak +10 (existing T3).
-- **Signature:** sleeping rough sharpens next-day stealth (M7); every few days a killing blow is
-  survived — you vanish briefly (escape), attacker staggers, with a lingering luck streak (M6).
+- **Signature:** sleeping rough sharpens next-day stealth (M7); once per 24 hours a killing blow is
+  survived — you vanish briefly (escape), attacker staggers, with a lingering luck streak (M6;
+  cadence per the locked "all cheat-deaths once/day" rule -- corrected 2026-06-10 from
+  "every few days" drift).
 
 ---
 
@@ -81,8 +83,9 @@ niche — Baan Dar (survivor brawler) + Rajhin (clawed thief).
 
 ### Baan Dar — "Baan Dar's Luck" (the Pariah)
 - **Passive (stat):** Armor +15, HealRate +15%, **Unarmed +10**.
-- **Signature:** every few days a killing blow is survived — vanish (escape) + attacker stagger +
-  lingering luck (M6; shared with Bosmer Bandit Road).
+- **Signature:** once per 24 hours a killing blow is survived — vanish (escape) + attacker stagger +
+  lingering luck pulse on use (M6; shared with Bosmer Bandit Road; cadence per the locked
+  "all cheat-deaths once/day" rule -- corrected 2026-06-10 from "every few days" drift).
 
 ### Rajhin — "Rajhin's Shadow" (the Purring Liar)
 - **Passive (stat):** Sneak +12, Lockpicking +15, Pickpocket +15, **Unarmed +10**.

@@ -84,18 +84,22 @@ game.
 - Current focused 2026-06-06 evidence to carry forward:
   - Altmer MQ104 stage 160 live route and manual Survey proof passed. The
     restarted Altmer packet also passed all Auri-El/Magnus/Xarxes book checks
-    and visuals in game. Remaining Altmer closeout is only the reward/Active
-    Effects or correct patron/tier pending snapshot if it was not part of the
-    visual pass.
+    and visuals in game. On 2026-06-10, tester confirmed the remaining
+    reward/stack snapshot: Survey showed Auri-El foundation, `Current standing:
+    Unproven`, and `Last favor: Dawn steadiness`; Active Effects showed
+    `Altmer: Dawn Steadiness`. The current Altmer beta packet is closed; final
+    world placement remains separate.
   - Khajiit Words of Clan Mother Ahnissi lunar book route and manual
     Survey/status proof passed. The restarted wired-lunar packet also passed
     with Words of Clan Mother Ahnissi and The Tale of Dro'Zira Prisma toasts,
     wrong-origin rejection, generic-source silence, and correct reward-pending
-    behavior below threshold. Remaining Khajiit closeout is a live edge focus
-    source for Baan Dar, Rajhin, Alkosh, or another approved Khajiit edge route.
+    behavior below threshold. Remaining Khajiit closeout in the structured
+    manual ledger is the `assetStatus` slot. Live edge focus routes for Baan
+    Dar, Rajhin, Alkosh, or another approved Khajiit edge route remain future
+    expansion, not a blocker for the currently filled wired-lunar packet.
 - Restart packets now exist as `PDV_BetaTestPacket_*.md`. Altmer is
   source/visual/edge conditional-pass; Khajiit is wired-lunar conditional-pass
-  with edge focus pending; Argonian, Orc, Redguard, Breton, Dunmer, Imperial,
+  with asset status pending; Argonian, Orc, Redguard, Breton, Dunmer, Imperial,
   and Nord are ready for their current approved book-source packet; Bosmer is
   now ready for its approved DA05 source packet, with QASmoke route proof still
   available only as fallback route evidence.

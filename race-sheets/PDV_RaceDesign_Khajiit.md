@@ -43,9 +43,26 @@ Tier 3 accessible through focused deity commitment
 
 **Substrate namespace (LOCKED):** `PDV_Substrate_KhajiitLunar` is the canonical substrate owner. Use the existing StorageUtil prefix `PDV.Substrate.KhajiitLunar.*`, extending from current keys rather than renaming them: `Metric`, `Tier`, `LastEvent`, `LastPhase`, `ObservanceCount`, and `RoadHomeCount`.
 
-**Moon-cycle model (LOCKED):** 1.0 uses the hybrid moon model. The current phase provides small per-phase activity bonuses, while full-cycle consistency determines overall substrate strength. This prevents moon awareness from becoming a wait-for-the-right-night chore while still rewarding players who live across the full cycle.
+**Moon-cycle model (LOCKED, updated 2026-06-10):** 1.0 uses the merged god-aligned Lattice model. The Lattice runs on the real Skyrim moon cycle, and each phase BELONGS to one of the five moon-path gods as Khajiit cosmology (always defined, always shown as flavor). The presiding god grants small bonuses only once the player has cultivated that god to Faithful; full-cycle consistency still determines overall substrate strength. This prevents moon awareness from becoming a wait-for-the-right-night chore while still rewarding players who live across the full cycle.
 
-**Moon phase source (LOCKED):** Prefer reliable real Skyrim Masser/Secunda state where available. If implementation proof is weak or the hook is brittle, use an abstract 28-day fallback cycle. The locked experience is lunar cadence and consistency; the implementation must not depend on fragile visual/moon API assumptions.
+**Moon phase source (LOCKED, updated 2026-06-10):** The Lattice phase is the REAL visible Skyrim moon: an 8-phase, 24-day cycle computed from GameDaysPassed % 24 with the Creation Kit GetCurrentMoonphase boundaries (full moon on the wrap at days 22-23/0, new moon at days 10-12, midday rollover). No Papyrus moon API exists, so the engine formula is replicated deterministically in `GetKhajiitMoonPhaseFromGameDay`; this matches the rendered sky on vanilla phase-length settings. The earlier abstract 28-day fallback cycle is retired.
+
+**Presiding gods (LOCKED, added 2026-06-10):** Phase-to-god alignment, owned in one place in code (`GetLunarPresidingFocus`):
+
+| Lattice phase | Visible moon | Presiding god |
+|---|---|---|
+| 1 | Full moon | Alkosh (order at its height) |
+| 2 | Waning gibbous | Azurah (twilight descending) |
+| 3 | Last quarter | Khenarthi (the road in balance) |
+| 4 | Waning crescent | Rajhin (fading into shadow) |
+| 5 | New moon | Rajhin (the deepest dark) |
+| 6 | Waxing crescent | Baan Dar (the pariah's edge) |
+| 7 | First quarter | Khenarthi (the road in balance) |
+| 8 | Waxing gibbous | Azurah (twilight ascending) |
+
+Window counts follow the accessibility ordering: Khenarthi/Azurah/Rajhin two phases each, Baan Dar one, Alkosh only the full moon (rare by design).
+
+**Presiding-god bonuses (LOCKED, added 2026-06-10):** While the presiding god is at Faithful (tier 2) or better: (a) +10% piety gain toward that god (`KHAJIIT_LUNAR_ALIGNMENT_BONUS`, applied in the manager gain pipeline), and (b) ONE small phase blessing stat effect capped at +5 or +5% (`PDV_Bless_Khajiit_Phase_*`, granted/removed script-side by `SyncKhajiitPhaseBlessing` at dawn; at most one active at a time; records pending per `references/authoring/PDV_KhajiitPhaseBlessings.spec.json`). Below Faithful the presiding god is pure flavor. Survey always names the presiding god; the MCM moon-paths readout marks `(presiding)` / `(presiding, favored)` and lists each god's standing and piety so silent emergence stays trackable.
 
 **Silent patron emergence (LOCKED):** Khajiit remain the only no-offer race in 1.0. Focused deity emphasis shifts silently at dawn based on weighted behavior. No formal patron offer fires, and the player never "accepts" Azurah, Khenarthi, Baan Dar, Rajhin, or Alkosh through the shared offer UI. The player notices through stronger domain rewards, status readout, and flavor.
 
@@ -111,29 +128,34 @@ Path-specific Tier 2 notes:
 ### Tier 3 — Devoted (focused deity fully committed)
 *The god has learned your face. The Lattice has a name for what you are.*
 
-**Khenarthi Champion:**
-- *Champion moment:* Wind-Caller — the road recognizes you. In open outdoor terrain, sprinting stamina drain -15% cumulative (Tier 1 + Devoted bonus). Approaching caravan camps with Khenarthi devotion gives the caravan merchants a brief recognition response (they know someone the wind recommended). Storms don't penalize you — outdoors in storm or rain: the exposure/cold effect is negated entirely (Survival Mode). Open-sky journeys feel guided.
-- *Specific payoff:* Outdoor sleep (camping, not inn) restores both health and stamina. Open-road travel between holds generates small ambient piety. Khenarthi's mercy domain: helping a stranded or lost NPC generates strong piety.
+**Khenarthi Champion — "Khenarthi's Wind" (LOCKED per capstone signatures 2026-06-07):**
+- *Passive (stat):* Stamina regen +10%, Carry Weight +50, Speed +3 (`PDV_Bless_Khajiit_Khenarthi_T3`, shipped).
+- *Signature (M8):* sprinting costs little/no stamina, plus an out-of-combat travel-speed ramp the longer you move uninterrupted ("the wind at your back"), bleeding off in combat or at rest.
+- *Flavor payoffs:* caravan recognition response; outdoor sleep restores health and stamina; helping a stranded or lost NPC generates strong piety.
 - *Lore rationale:* Khenarthi is wind, weather, and passage — the god of the road Khajiit are forced to live. At Champion, the road itself becomes an ally.
 
-**Azurah Champion:**
-- *Champion moment:* Starwalker — threshold moments have prophetic weight. Entering significant dungeons, completing major quests, making defining choices — these give brief Azurah-voiced flavor text (diegetic, subtle, in keeping with Khajiit naming conventions for her). At dawn and dusk specifically: magic cost -15% for the twilight window. Magic cost reduction -10% baseline at night (star-born favor).
-- *Specific payoff:* Azurah's Star quest gives maximum recognition privilege at Tier 3 — the stone responds differently, and the event generates more piety than any other Khajiit signal. The threshold-awareness works both ways: Azurah Champion can feel when a major transition is coming before it fires (flavor/immersion layer, not mechanical prediction).
+**Azurah Champion — "Azurah's Sight" (LOCKED per capstone signatures 2026-06-07):**
+- *Passive (stat):* Magicka regen +10%, Magic Resist +10% (`PDV_Bless_Khajiit_Azura_T3`, shipped).
+- *Signature (M9):* at night, magicka surges and you sense living things (detect-life aura); once in a while Azurah's foresight turns a spell that would have hit you (magic-ward proc).
+- *Flavor payoffs:* threshold moments (significant dungeons, major quests, defining choices) give brief Azurah-voiced flavor text; Azurah's Star quest gives maximum recognition and the strongest single Khajiit piety event.
 - *Lore rationale:* Azurah shaped the Khajiit and guards their passage through thresholds — including the big ones. At Champion, she's watching your thresholds.
 
-**Baan Dar Champion:**
-- *Champion moment:* Pariah's Fortune — once per in-game week, surviving a near-death combat situation (below 10% health and winning, or escaping an encounter that should have been fatal) gives a 24-hour brief bonus pulse (minor stats across the board, or a specific stamina/health regen). Baan Dar interceded. The timing should feel earned and slightly improbable — like the Trickster's blessing rather than a mechanical safety net.
-- *Specific payoff:* Acts outside city walls continue to generate slightly stronger piety than equivalent acts inside. Exile survival and clever-reversal quest choices generate strong piety. After a successful pickpocket or sneak theft from a notably high-level target, brief sneak enhancement.
+**Baan Dar Champion — "Baan Dar's Luck" (LOCKED per capstone signatures 2026-06-07):**
+- *Passive (stat):* Armor +15, Health regen +15%, Unarmed Damage +10 (`PDV_Bless_Khajiit_BaanDar_T3`, shipped; the survivor-brawler clawed build).
+- *Signature (M6, once per 24 hours per the all-once/day cheat-death rule):* a killing blow is survived — you vanish briefly (escape), the attacker staggers, and a lingering luck streak (sneak/crit) pulses for a while after it fires. The pulse hits only when the save is actually used.
+- *Flavor payoffs:* outside-walls piety edge continues; exile survival and clever-reversal quest choices generate strong piety.
 - *Lore rationale:* Baan Dar is the god of pariahs, clever exiles, and reversals. At Champion, the improbable reversal is your story — and the god of that story occasionally writes a scene on your behalf.
 
-**Rajhin Champion:**
-- *Champion moment:* Rajhin's Touch — elegant theft from notable targets (quest-important characters, named merchants, high-value NPCs) gives a brief near-invisibility window (5-10 seconds of enhanced sneak, not true invisibility). Theft from impossible targets — places where "no one steals from them" — generates maximum Rajhin piety. Performance/bardic acts at Champion generate recognition from certain NPCs who appreciate artistry in craft.
-- *Specific payoff:* Lockpicking is easier at this tier (not faster, but more forgiving on failure). Rajhin Champion sneak attacks deal bonus damage only on first hit per encounter — the signature move, not the sustained advantage. Story-worthy thefts (quest-involved, legendary items) generate very strong piety.
+**Rajhin Champion — "Rajhin's Shadow" (LOCKED per capstone signatures 2026-06-07):**
+- *Passive (stat):* Sneak +12, Lockpicking +15, Pickpocket +15, Unarmed Damage +10 (`PDV_Bless_Khajiit_Rajhin_T3`, shipped; the clawed-thief build).
+- *Signature (M10):* a successful steal or sneak-attack briefly fades you (slip away) and shadows cloak you (sneak muffle); fallback trigger is the sneak attack if pickpocket-success detection is unreliable.
+- *Flavor payoffs:* theft from "impossible" targets generates maximum Rajhin piety; story-worthy/legendary thefts give very strong piety; performance acts earn artistry recognition.
 - *Lore rationale:* Rajhin is the greatest thief who ever lived, who wore Mephala's ring and stole from the Emperor. At Champion, you're a character in a story about theft — and the story has a patron.
 
-**Alkosh Champion:**
-- *Champion moment:* The Rarest Champion — requires the most specific playstyle (dragon-facing, anti-chaos, order-keeping). Dragon combat generates strong Alkosh piety from Tier 1 onward; at Champion, defeating a named dragon (not random encounter) gives a 48-hour blessing pulse (resist fire 15%, minor health regen in combat). The main quest's dragon-facing content is the natural Alkosh Champion arc.
-- *Specific payoff:* Resist fire 15% cumulative at Champion. Named dragon fights generate exceptional piety (truly rare events, no anti-farm needed beyond their natural scarcity). Anti-chaos and order-keeping quest choices (stopping the Thalmor from disrupting a ritual, defending a settlement from organized attack) generate strong piety.
+**Alkosh Champion — "Alkosh's Roar" (LOCKED per capstone signatures 2026-06-07):**
+- *Passive (stat):* Fire Resist +12, Magic Resist +15 (`PDV_Bless_Khajiit_Alkosh_T3`, shipped; the +15 is a documented capstone exception above the ~12 ceiling).
+- *Signature (M11):* bonus damage and breath resistance against dragons and great chaotic foes; once a day, the Roar staggers and slows nearby enemies (order imposed on chaos).
+- *Flavor payoffs:* named-dragon fights generate exceptional piety (their natural scarcity is the anti-farm); anti-chaos and order-keeping quest choices generate strong piety.
 - *Lore rationale:* Alkosh is the dragon-lord of Khajiit cosmology, the checker of Lorkhaj's chaos. At Champion, fighting dragons isn't just adventuring — it's the work of your patron god's domain.
 
 ---
@@ -190,7 +212,7 @@ The lunar substrate weakens when you've been **indoors, urban, and disconnected 
 
 | Experience target | 1.0 hook candidates | Confidence | Implementation posture |
 |---|---|---|---|
-| Lunar observance / moon-phase awareness | `ObserveMoonPhase`, dawn/dusk/night outdoor checks, `LastPhase`, `ObservanceCount`, GameDaysPassed fallback cycle | Strong for fallback; medium for real moon state | Prefer real Masser/Secunda only if proven reliable; otherwise use abstract 28-day cadence. Small phase bonuses only. |
+| Lunar observance / moon-phase awareness | `ObserveMoonPhase`, dawn/dusk/night outdoor checks, `LastPhase`, `ObservanceCount`, real 24-day engine cycle via `GameDaysPassed % 24` | Strong (deterministic engine formula) | Phase replicates the Creation Kit GetCurrentMoonphase boundaries, so it matches the visible sky. Small phase bonuses only. |
 | Open road / Khenarthi | Sleep event, outdoor rest, location-change over time, no-fast-travel validation, open-sky checks | Medium-strong | Good launch lane. Cap daily and present as road-life continuity, not travel grinding. |
 | Road-home circuit | `RoadHomeCount`, 2-3 designated rest anchors, cycling validation, elapsed time/distance between anchors | Medium/custom | Viable as authored state. Repeating one camp or bed never counts as the circuit. |
 | Caravan/community belonging | Named caravan NPC interaction/trade/favor signals (`Ma'dran`, `Ri'saad`, `Ahkari`, `Khaara`), Khajiit aid/protection | Medium | Use cooldown per caravan encounter. Weights lunar substrate plus `Khenarthi` / `Baan Dar`. |

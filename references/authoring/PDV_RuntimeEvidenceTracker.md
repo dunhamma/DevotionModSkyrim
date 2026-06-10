@@ -31,7 +31,7 @@ legible) · **FN** manual feel note. Mark `P` pass / `C` conditional / `F` fail 
 
 | Race | Idx | Verdict | AS | WO | GS | AF | SC | AE | SL | ST | FN | Next action |
 |------|-----|---------|----|----|----|----|----|----|----|----|----|-------------|
-| Altmer | 3 | Conditional | P | P | P | P | P | **-** | - | C | P | Capture `Altmer Orthodox Steadiness` Active-Effects / patron-tier snapshot → Pass |
+| Altmer | 3 | Pass | P | P | P | P | P | P | - | P | P | Current packet closed; final-world placement remains separate |
 | Khajiit | 6 | Conditional | P | P | P | C | P | **-** | - | C | P | Wire/approve one Baan Dar / Rajhin / Alkosh edge source, run edge packet |
 | Nord | 0 | Fail | - | - | - | - | C | - | - | - | - | Dense-hook rejection + Hircine/Kyne/Talos stack; prove Old Ways book source |
 | Imperial | 1 | Fail | - | - | - | - | C | - | - | - | - | Civic whitelist + faction/attendance rejection + public/private Talos edge |

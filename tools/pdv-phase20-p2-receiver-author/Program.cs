@@ -49,6 +49,7 @@ string[] genericFaucetReceiverQuests =
 ];
 
 var skyrimMaster = ModKey.FromNameAndExtension("Skyrim.esm");
+var genericFaucetFillEntries = BuildGenericFaucetFillEntries(skyrimMaster);
 GenericFaucetStoryManagerNode[] genericFaucetStoryManagerNodes =
 [
     new("PDV__SM_CraftItemNode", "PDV__SM_CraftItem", new FormKey(skyrimMaster, 0x039D86), new FormKey(skyrimMaster, 0x04F593)),
@@ -106,6 +107,8 @@ var authorGenericFaucetReceivers = args.Contains("--author-generic-faucet-receiv
 var checkGenericFaucetReceivers = args.Contains("--check-generic-faucet-receivers");
 var authorGenericFaucetStoryManager = args.Contains("--author-generic-faucet-story-manager");
 var checkGenericFaucetStoryManager = args.Contains("--check-generic-faucet-story-manager");
+var fillGenericFaucets = args.Contains("--fill-generic-faucets");
+var checkGenericFaucetFill = args.Contains("--check-generic-faucet-fill");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var manifestPath = Path.GetFullPath(GetArg(args, "--manifest") ?? defaultManifest);
 var playerEventsPath = Path.GetFullPath(GetArg(args, "--player-events") ?? defaultPlayerEvents);
@@ -129,6 +132,8 @@ var report = new AuthorReport
     CheckGreenPact = checkGreenPact,
     AuthorCapstones = authorCapstones,
     CheckCapstones = checkCapstones,
+    FillGenericFaucets = fillGenericFaucets,
+    CheckGenericFaucetFill = checkGenericFaucetFill,
     StartedAt = DateTimeOffset.Now
 };
 
@@ -162,9 +167,11 @@ try
         && !authorGenericFaucetReceivers
         && !checkGenericFaucetReceivers
         && !authorGenericFaucetStoryManager
-        && !checkGenericFaucetStoryManager)
+        && !checkGenericFaucetStoryManager
+        && !fillGenericFaucets
+        && !checkGenericFaucetFill)
     {
-        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, --check-exact-stage-gates, --check-route-entries, --author-green-pact, --check-green-pact, --author-capstones, --check-capstones, --author-generic-faucets, --check-generic-faucets, --author-generic-faucet-receivers, --check-generic-faucet-receivers, --author-generic-faucet-story-manager, or --check-generic-faucet-story-manager. Use --dry-run with write modes for planning only.");
+        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, --check-exact-stage-gates, --check-route-entries, --author-green-pact, --check-green-pact, --author-capstones, --check-capstones, --author-generic-faucets, --check-generic-faucets, --fill-generic-faucets, --check-generic-faucet-fill, --author-generic-faucet-receivers, --check-generic-faucet-receivers, --author-generic-faucet-story-manager, or --check-generic-faucet-story-manager. Use --dry-run with write modes for planning only.");
     }
 
     var manifest = LoadManifest(manifestPath);
@@ -185,6 +192,22 @@ try
             throw new InvalidOperationException("Generic faucet FormList/property check failed.");
         }
 
+        report.Status = "PASS";
+    }
+    else if (checkGenericFaucetFill)
+    {
+        CheckGenericFaucetEntries(index, genericFaucetFillEntries, report);
+        if (report.Errors.Count > 0)
+        {
+            throw new InvalidOperationException("Generic faucet FormList content check failed.");
+        }
+
+        report.Status = "PASS";
+    }
+    else if (fillGenericFaucets)
+    {
+        FillGenericFaucetEntries(index, genericFaucetFillEntries, report);
+        WriteModIfNeeded(mod, espPath, dryRun, report);
         report.Status = "PASS";
     }
     else if (authorGenericFaucets)
@@ -1213,6 +1236,317 @@ static void CheckGenericFaucets(
     }
 }
 
+static void FillGenericFaucetEntries(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IReadOnlyDictionary<string, GenericFaucetEntry[]> entriesByList,
+    AuthorReport report)
+{
+    foreach (var pair in entriesByList)
+    {
+        var formList = RequireRecord<SkyrimFormList>(index, pair.Key);
+        var expected = pair.Value.Select(entry => entry.FormKey).ToHashSet();
+        var existing = formList.Items.Select(item => item.FormKey).ToHashSet();
+
+        foreach (var entry in pair.Value)
+        {
+            if (existing.Contains(entry.FormKey))
+            {
+                report.Actions.Add($"{pair.Key} already contains {entry.EditorId} ({entry.FormKey}).");
+                continue;
+            }
+
+            formList.Items.Add(entry.FormKey.ToLinkGetter<ISkyrimMajorRecordGetter>());
+            existing.Add(entry.FormKey);
+            report.Actions.Add($"Added {entry.EditorId} ({entry.FormKey}) to {pair.Key}.");
+        }
+
+        foreach (var stale in existing.Except(expected).OrderBy(item => item.ToString()).ToArray())
+        {
+            foreach (var staleItem in formList.Items.Where(item => item.FormKey == stale).ToArray())
+            {
+                formList.Items.Remove(staleItem);
+            }
+
+            report.Actions.Add($"Removed unexpected generic faucet entry {stale} from {pair.Key}.");
+        }
+    }
+}
+
+static void CheckGenericFaucetEntries(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IReadOnlyDictionary<string, GenericFaucetEntry[]> entriesByList,
+    AuthorReport report)
+{
+    foreach (var pair in entriesByList)
+    {
+        var formList = RequireRecord<SkyrimFormList>(index, pair.Key);
+        var expected = pair.Value.Select(entry => entry.FormKey).ToArray();
+        var expectedSet = expected.ToHashSet();
+        var actual = formList.Items.Select(item => item.FormKey).ToArray();
+        var actualSet = actual.ToHashSet();
+
+        if (expectedSet.Count != expected.Length)
+        {
+            report.Errors.Add($"{pair.Key} expected contract contains duplicate FormKeys.");
+        }
+
+        foreach (var duplicate in actual.GroupBy(item => item).Where(group => group.Count() > 1).Select(group => group.Key))
+        {
+            report.Errors.Add($"{pair.Key} contains duplicate entry {duplicate}.");
+        }
+
+        foreach (var entry in pair.Value)
+        {
+            if (!actualSet.Contains(entry.FormKey))
+            {
+                report.Errors.Add($"{pair.Key} is missing {entry.EditorId} ({entry.FormKey}).");
+            }
+        }
+
+        foreach (var extra in actualSet.Except(expectedSet).OrderBy(item => item.ToString()))
+        {
+            report.Errors.Add($"{pair.Key} contains unexpected entry {extra}.");
+        }
+
+        if (actualSet.SetEquals(expectedSet) && actual.Length == expected.Length)
+        {
+            report.Actions.Add($"{pair.Key} has exact generic faucet fill: {expected.Length} entries.");
+        }
+    }
+}
+
+static IReadOnlyDictionary<string, GenericFaucetEntry[]> BuildGenericFaucetFillEntries(ModKey skyrimMaster)
+{
+    FormKey F(uint id) => new(skyrimMaster, id);
+    GenericFaucetEntry E(uint id, string editorId) => new(F(id), editorId);
+
+    return new Dictionary<string, GenericFaucetEntry[]>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["PDV_FLST_FaucetSkillBooks"] =
+        [
+            E(0x01AFC4, "SkillAlchemy1"),
+            E(0x01AFC5, "SkillAlchemy2"),
+            E(0x01AFC6, "SkillAlchemy3"),
+            E(0x01AFC7, "SkillAlchemy4"),
+            E(0x01AFC8, "SkillAlchemy5"),
+            E(0x01AFC9, "SkillAlteration1"),
+            E(0x01B236, "SkillAlteration2"),
+            E(0x01AFCB, "SkillAlteration3"),
+            E(0x01AFCC, "SkillAlteration4"),
+            E(0x01AFCD, "SkillAlteration5"),
+            E(0x01AFDD, "SkillBlock1"),
+            E(0x01AFDE, "SkillBlock2"),
+            E(0x01AFDF, "SkillBlock3"),
+            E(0x01AFE0, "SkillBlock4"),
+            E(0x02F83C, "SkillBlock5"),
+            E(0x01AFE7, "SkillConjuration1"),
+            E(0x01AFE8, "SkillConjuration2"),
+            E(0x01AFE9, "SkillConjuration3"),
+            E(0x01AFEA, "SkillConjuration4"),
+            E(0x01AFEB, "SkillConjuration5"),
+            E(0x01AFEC, "SkillDestruction1"),
+            E(0x01AFED, "SkillDestruction2"),
+            E(0x01AFEE, "SkillDestruction3"),
+            E(0x01AFEF, "SkillDestruction4"),
+            E(0x01AFF0, "SkillDestruction5"),
+            E(0x02F837, "SkillEnchanting1"),
+            E(0x02F838, "SkillEnchanting2"),
+            E(0x02F839, "SkillEnchanting3"),
+            E(0x02F83A, "SkillEnchanting4"),
+            E(0x02F83B, "SkillEnchanting5"),
+            E(0x01AFF6, "SkillHeavyArmor1"),
+            E(0x01AFF7, "SkillHeavyArmor2"),
+            E(0x01AFF8, "SkillHeavyArmor3"),
+            E(0x01AFF9, "SkillHeavyArmor4"),
+            E(0x01AFFA, "SkillHeavyArmor5"),
+            E(0x01B00F, "SkillIllusion1"),
+            E(0x01B010, "SkillIllusion2"),
+            E(0x01B011, "SkillIllusion3"),
+            E(0x01B012, "SkillIllusion4"),
+            E(0x01B013, "SkillIllusion5"),
+            E(0x01B000, "SkillLightArmor1"),
+            E(0x01B001, "SkillLightArmor2"),
+            E(0x01B002, "SkillLightArmor3"),
+            E(0x01B003, "SkillLightArmor4"),
+            E(0x01B004, "SkillLightArmor5"),
+            E(0x01B019, "SkillLockpicking1"),
+            E(0x01B01A, "SkillLockpicking2"),
+            E(0x01B01B, "SkillLockpicking3"),
+            E(0x01B01C, "SkillLockpicking4"),
+            E(0x01B01D, "SkillLockpicking5"),
+            E(0x01B005, "SkillMarksman1"),
+            E(0x01B26D, "SkillMarksman2"),
+            E(0x01B007, "SkillMarksman3"),
+            E(0x01B008, "SkillMarksman4"),
+            E(0x01B009, "SkillMarksman5"),
+            E(0x01AFE3, "SkillOneHanded1"),
+            E(0x01AFD9, "SkillOneHanded2"),
+            E(0x01AFDA, "SkillOneHanded3"),
+            E(0x01AFE4, "SkillOneHanded4"),
+            E(0x01AFE6, "SkillOneHanded5"),
+            E(0x01B022, "SkillPickpocket1"),
+            E(0x01AFBF, "SkillPickpocket2"),
+            E(0x01ACE6, "SkillPickpocket3"),
+            E(0x01AFD6, "SkillPickpocket4"),
+            E(0x02F836, "SkillPickpocket5"),
+            E(0x01B014, "SkillRestoration1"),
+            E(0x01B015, "SkillRestoration2"),
+            E(0x01B016, "SkillRestoration3"),
+            E(0x01B017, "SkillRestoration4"),
+            E(0x01B018, "SkillRestoration5"),
+            E(0x01AFCE, "SkillSmithing1"),
+            E(0x01AFCF, "SkillSmithing2"),
+            E(0x01AFD0, "SkillSmithing3"),
+            E(0x01AFD1, "SkillSmithing4"),
+            E(0x01AFD2, "SkillSmithing5"),
+            E(0x01B276, "SkillSneak1"),
+            E(0x01B01F, "SkillSneak2"),
+            E(0x01B020, "SkillSneak3"),
+            E(0x01B021, "SkillSneak4"),
+            E(0x01AFD5, "SkillSneak5"),
+            E(0x01B00D, "SkillSpeechcraft1"),
+            E(0x01B00E, "SkillSpeechcraft2"),
+            E(0x01B025, "SkillSpeechcraft3"),
+            E(0x01B00A, "SkillSpeechcraft4"),
+            E(0x01B023, "SkillSpeechcraft5"),
+            E(0x01AFD8, "SkillTwoHanded1"),
+            E(0x01AFE2, "SkillTwoHanded2"),
+            E(0x01AFE5, "SkillTwoHanded3"),
+            E(0x01AFDB, "SkillTwoHanded4"),
+            E(0x01AFDC, "SkillTwoHanded5"),
+        ],
+        ["PDV_FLST_FaucetSpellTomes"] =
+        [
+            E(0x09CD51, "SpellTomeFlames"),
+            E(0x09CD52, "SpellTomeFrostbite"),
+            E(0x09CD53, "SpellTomeSparks"),
+            E(0x09CD54, "SpellTomeSoulTrap"),
+            E(0x09E2A7, "SpellTomeCandlelight"),
+            E(0x09E2A8, "SpellTomeOakflesh"),
+            E(0x09E2A9, "SpellTomeBoundSword"),
+            E(0x09E2AA, "SpellTomeRaiseZombie"),
+            E(0x09E2AB, "SpellTomeConjureFamiliar"),
+            E(0x09E2AC, "SpellTomeFury"),
+            E(0x09E2AD, "SpellTomeCourage"),
+            E(0x09E2AE, "SpellTomeLesserWard"),
+            E(0x09E2AF, "SpellTomeHealing"),
+            E(0x0A26E2, "SpellTomeMagelight"),
+            E(0x0A26E3, "SpellTomeStoneflesh"),
+            E(0x0A26E4, "SpellTomeIronflesh"),
+            E(0x0A26E5, "SpellTomeTelekinesis"),
+            E(0x0A26E6, "SpellTomeWaterbreathing"),
+            E(0x0A26E7, "SpellTomeDetectLife"),
+            E(0x0A26E8, "SpellTomeParalyze"),
+            E(0x0A26E9, "SpellTomeEbonyflesh"),
+            E(0x0A26EA, "SpellTomeDetectUndead"),
+            E(0x0A26EB, "SpellTomeReanimateCorpse"),
+            E(0x0A26EC, "SpellTomeConjureFlameAtronach"),
+            E(0x0A26ED, "SpellTomeBoundBattleaxe"),
+            E(0x0A26EE, "SpellTomeBanishDaedra"),
+            E(0x0A26EF, "SpellTomeConjureFrostAtronach"),
+            E(0x0A26F0, "SpellTomeConjureStormAtronach"),
+            E(0x0A26F1, "SpellTomeBoundBow"),
+            E(0x0A26F2, "SpellTomeRevenant"),
+            E(0x0A26F6, "SpellTomeCommandDaedra"),
+            E(0x0A26F7, "SpellTomeDreadZombie"),
+            E(0x0A26F8, "SpellTomeExpelDaedra"),
+            E(0x0A26F9, "SpellTomeDeadThrall"),
+            E(0x0A26FA, "SpellTomeFlameThrall"),
+            E(0x0A26FB, "SpellTomeFrostThrall"),
+            E(0x0A26FC, "SpellTomeStormThrall"),
+            E(0x0A26FD, "SpellTomeFirebolt"),
+            E(0x0A26FE, "SpellTomeIceSpike"),
+            E(0x0A26FF, "SpellTomeLightningBolt"),
+            E(0x0A2700, "SpellTomeFireRune"),
+            E(0x0A2701, "SpellTomeFrostRune"),
+            E(0x0A2702, "SpellTomeShockRune"),
+            E(0x0A2703, "SpellTomeFlameCloak"),
+            E(0x0A2704, "SpellTomeFrostCloak"),
+            E(0x0A2705, "SpellTomeLightningCloak"),
+            E(0x0A2706, "SpellTomeFireball"),
+            E(0x0A2707, "SpellTomeIceStorm"),
+            E(0x0A2708, "SpellTomeChainLightning"),
+            E(0x0A2709, "SpellTomeWallOfFlames"),
+            E(0x0A270A, "SpellTomeWallOfFrost"),
+            E(0x0A270B, "SpellTomeWallOfStorms"),
+            E(0x0A270C, "SpellTomeFireStorm"),
+            E(0x0A270D, "SpellTomeBlizzard"),
+            E(0x0A270E, "SpellTomeLightningStorm"),
+            E(0x0A270F, "SpellTomeMuffle"),
+            E(0x0A2711, "SpellTomeCalm"),
+            E(0x0A2712, "SpellTomeFear"),
+            E(0x0A2713, "SpellTomeRally"),
+            E(0x0A2714, "SpellTomeFrenzy"),
+            E(0x0A2715, "SpellTomeInvisibility"),
+            E(0x0A2717, "SpellTomePacify"),
+            E(0x0A2718, "SpellTomeRout"),
+            E(0x0A2719, "SpellTomeMayhem"),
+            E(0x0A271A, "SpellTomeHarmony"),
+            E(0x0A271B, "SpellTomeCallToArms"),
+            E(0x0A271C, "SpellTomeHysteria"),
+            E(0x0A271D, "SpellTomeFastHealing"),
+            E(0x0A271E, "SpellTomeHealingHands"),
+            E(0x0A271F, "SpellTomeTurnLesserUndead"),
+            E(0x0A2720, "SpellTomeSteadfastWard"),
+            E(0x0A2721, "SpellTomeTurnUndead"),
+            E(0x0A2722, "SpellTomeGreaterWard"),
+            E(0x0A2725, "SpellTomeRepelLesserUndead"),
+            E(0x0A2726, "SpellTomeRepelUndead"),
+            E(0x0A2727, "SpellTomeHealOther"),
+            E(0x0A2728, "SpellTomeCircleOfProtection"),
+            E(0x0A2729, "SpellTomeTurnGreaterUndead"),
+            E(0x0D2B4E, "SpellTomeDragonhide"),
+            E(0x0DD643, "SpellTomeGrandHealing"),
+            E(0x0DD646, "SpellTomeMassParalysis"),
+            E(0x0DD647, "SpellTomeBaneOfTheUndead"),
+            E(0x0F4997, "DunLabyrinthianSpellTomeEquilibrium"),
+            E(0x0FDE7B, "SpellTomeGuardianCircle"),
+            E(0x0FF7D1, "SpellTomeClairvoyance"),
+            E(0x109112, "SpellTomeTransmuteOreMineral"),
+            E(0x10F64D, "SpellTomeCloseWounds"),
+            E(0x10F7F3, "SpellTomeIcySpear"),
+            E(0x10F7F4, "SpellTomeIncinerate"),
+            E(0x10F7F5, "SpellTomeThunderbolt"),
+            E(0x10FD60, "SpellTomeConjureDremoraLord"),
+            E(0x0B45F7, "dunHighGateSpellTomeFlamingFamiliar"),
+            E(0x0B3165, "dunTrevasSpellTomeSpectralArrow"),
+        ],
+        ["PDV_FLST_FaucetRaiseUndeadEffects"] =
+        [
+            E(0x016B4B, "ReanimateFFTargetActor0"),
+            E(0x016C0F, "ReanimateFFTargetActor25"),
+            E(0x016C3B, "ReanimateFFTargetActor50"),
+            E(0x016C3D, "ReanimateFFTargetActor75"),
+            E(0x07E8E0, "ReanimateThrallFFAimed"),
+            E(0x096D0B, "ReanimateFFAimed25"),
+            E(0x096D0C, "ReanimateFFAimed50"),
+            E(0x096D0D, "ReanimateFFAimed75"),
+        ],
+        ["PDV_FLST_FaucetDaedricArtifacts"] =
+        [
+            E(0x01A332, "DA04OghmaInfinium"),
+            E(0x02AC60, "DA05HircinesRing"),
+            E(0x02AC61, "DA05SaviorsHide"),
+            E(0x02ACD2, "DA06Volendrung"),
+            E(0x02C37B, "DA11RingofNamira"),
+            E(0x035066, "DA16SkullofCorruption"),
+            E(0x03A070, "TG08SkeletonKey"),
+            E(0x045F96, "DA13Spellbreaker"),
+            E(0x04A38F, "DA08EbonyBlade"),
+            E(0x04E4EE, "DA09Dawnbreaker"),
+            E(0x052794, "DA02Armor"),
+            E(0x063B27, "DA01SoulGemAzurasStar"),
+            E(0x063B29, "DA01SoulGemBlackStar"),
+            E(0x0240D2, "DA07MehrunesRazor"),
+            E(0x0233E3, "DA10MaceofMolagBal"),
+            E(0x01CB36, "DA14SanguineRose"),
+            E(0x02AC6F, "DA15Wabbajack"),
+            E(0x0F82FE, "DA05HircinesRingCursed"),
+            E(0x0F6D1A, "DA02EbonyMail"),
+        ],
+    };
+}
+
 static void EnsureGenericFaucetReceivers(
     SkyrimMod mod,
     Dictionary<string, ISkyrimMajorRecordGetter> index,
@@ -1821,6 +2155,10 @@ static void WriteModIfNeeded(SkyrimMod mod, string espPath, bool dryRun, AuthorR
         return;
     }
 
+    using (File.Open(espPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+    {
+    }
+
     var backupDir = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(espPath))!, "Backups", "phase20-p2-receivers");
     Directory.CreateDirectory(backupDir);
     var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss");
@@ -1965,6 +2303,8 @@ sealed record ValidatedSourceFillEntry(FormKey FormKey, string Label, string Sou
 
 sealed record CapstoneFallback(string SpellEditorId, string StorageKey, float HealAmount);
 
+sealed record GenericFaucetEntry(FormKey FormKey, string EditorId);
+
 sealed record GenericFaucetStoryManagerNode(string NodeEditorId, string ReceiverQuestEditorId, FormKey Parent, FormKey? PreviousSibling);
 
 sealed class AuthorReport
@@ -1986,6 +2326,8 @@ sealed class AuthorReport
     public bool CheckGreenPact { get; set; }
     public bool AuthorCapstones { get; set; }
     public bool CheckCapstones { get; set; }
+    public bool FillGenericFaucets { get; set; }
+    public bool CheckGenericFaucetFill { get; set; }
     public DateTimeOffset StartedAt { get; set; }
     public DateTimeOffset FinishedAt { get; set; }
     public string? BackupPath { get; set; }
