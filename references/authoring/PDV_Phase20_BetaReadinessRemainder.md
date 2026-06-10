@@ -23,6 +23,20 @@
 This addendum does not convert the project to external beta-ready by itself. The remaining blocker is
 runtime/manual evidence across the race beta packets.
 
+## 2026-06-10 Runtime Handoff Addendum
+
+- Bosmer DA05 is now approved, filled, and readback-clean:
+  `PDV_FLST_P2_BosmerYffreSources` contains `DA05` (`Skyrim.esm:02A49A`) for
+  terminal stages `100` and `105`.
+- Nord exact-stage route-entry drift is repaired in
+  `PDV_Phase20_P2ImmersiveReceivers.manifest.json`; the route-entry checker now
+  reports all 24 manifest route entries matching `PDV_PlayerEvents`.
+- `PDV_InGameTestingNeeded_Runbook.md` is the active ordered queue for the
+  remaining in-game race and Daedric testing.
+
+This addendum does not convert Bosmer, Nord, or the all-race packet set to
+beta-ready. It only moves the remaining blockers into runtime/manual proof.
+
 ## What This Tranche Proved
 
 - The P2 receiver network has 39 FormList shells and alias properties covering
@@ -43,9 +57,8 @@ runtime/manual evidence across the race beta packets.
 - Keep the new exact-stage quest gate green before any quest-stage source is
   filled:
   `dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates`.
-  Current state is intentionally blocked for live fill: no approved quest-stage
-  entries are declared, and `questStageGate.receiverStatus` is
-  `exact-stage-supported`.
+  Current state has the approved Bosmer DA05 exact-stage entries filled and
+  still requires this gate before any additional quest-stage source promotion.
 - Keep exact quest/stage metadata explicit before approving any quest-stage
   source entry. Whole-quest FormList membership alone remains insufficient.
 - Design and prove additional non-book source entries for the six newly wired
@@ -84,8 +97,8 @@ game.
   source/visual/edge conditional-pass; Khajiit is wired-lunar conditional-pass
   with edge focus pending; Argonian, Orc, Redguard, Breton, Dunmer, Imperial,
   and Nord are ready for their current approved book-source packet; Bosmer is
-  blocked for beta-feel source proof until an exact live source fill is
-  approved, with only QASmoke route fallback available.
+  now ready for its approved DA05 source packet, with QASmoke route proof still
+  available only as fallback route evidence.
 - Prove accepted trigger behavior in game for each filled source family.
   Current checker command:
   `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager`.

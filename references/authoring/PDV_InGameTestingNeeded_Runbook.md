@@ -1,160 +1,222 @@
 # PDV In-Game Testing Needed Runbook
 
-**Created:** 2026-06-10
-**Purpose:** Drive and record the **V1 day-to-day (generic) faucet sweep** -- the
-pass that proves the broad "ordinary act" faucets (read any lore book, generic
-kills, travel, theft, inn sleep, fast travel) only ever score gods **native to the
-active origin race**, and stay silent for every other race. This is the
-generic-source-silence (GS) / wrong-origin-silence (WO) lane, separate from:
+**Created:** 2026-06-10  
+**Status:** Active manual/runtime handoff after Nord route-entry drift repair and Bosmer DA05 source fill  
+**Companions:** `PDV_BetaTestPacket_*.md`, `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
 
-- the per-race curated beta packets (`PDV_BetaTestPacket_{Race}.md`), and
-- the 5-step accepted-source loop in
-  [PDV_InGameGodTestingPlan.md](PDV_InGameGodTestingPlan.md).
+## Purpose
 
-Verdicts feed the GS/WO columns of
-[PDV_RuntimeEvidenceTracker.md](PDV_RuntimeEvidenceTracker.md).
+This is the current testing queue. It starts after repo-side readback and
+verifier work. Passing these checks requires in-game runtime/manual evidence;
+do not replace them with source review, QASmoke-only route proof, or verifier
+output.
 
----
+## Preflight Before Opening Skyrim
 
-## 1. Setup (every session)
+Run from `C:\Users\Admin\Documents\Devotion Mod Project`:
 
-- Origin-race index map (source `PDV_DeityBase.psc` `RACE_*` / `PDV__ManagerQuest.psc`
-  `ORIGIN_*`): `0 Nord, 1 Imperial, 2 Breton, 3 Altmer, 4 Bosmer, 5 Dunmer,
-  6 Khajiit, 7 Argonian, 8 Orc, 9 Redguard`.
-- `set PDV_GLO_DebugLevel to 2` (so `AwardPiety` and EventBus route lines trace).
-- Set origin with `set PDV_GLO_OriginRace to <idx>`. The day-to-day faucet is
-  race-gated by `PDV_DeityBase.GetStanceForPlayer()` ->
-  `GetStanceForRace(PDV_GLO_OriginRace)`; a god scores a generic faucet only when
-  its per-race `Stance_<Race>` is `NATIVE (0)`.
-
-**Sweep hygiene:** because the sweep flips origin between reads, ALWAYS confirm the
-*current* `PDV_GLO_OriginRace` immediately before attributing a scored line to a
-race. In `Papyrus.0.log`, the authoritative value at any timestamp is the last
-`set PDV_GLO_OriginRace` console line before that timestamp -- not the origin
-implied by a nearby curated route marker, which may have run under a previous
-origin.
-
-## 2. The generic faucet lane (event 342)
-
-Event `342` is the generic "lore book read" day-to-day faucet. It broadcasts to the
-deity roster and is filtered to gods `NATIVE` to the active origin. Curated
-foreground book routes are a *different* lane (e.g. Dunmer Reclamation books route
-on event `130` with `eventbus_130_po3_book_dunmer_*` reasons; Khajiit lunar routes
-on `eventbus_p2_khajiit_lunar_po3_book_khajiit_lunar`). Do not conflate a curated
-route marker with the generic 342 faucet.
-
-## 3. STOP conditions
-
-Halt the sweep and file a finding if any holds:
-
-- **A generic day-to-day act scores a god NOT native to the player's race**
-  (race-gate leak).
-- A wrong-origin re-read of the same source still moves manager state, a reward, or
-  the Survey (wrong-origin-silence failure).
-- A generic act moves a hidden counter with no native god attached.
-
-## 4. Sweep procedure (per origin)
-
-1. `set PDV_GLO_OriginRace to <idx>`; confirm via the console echo / next trace.
-2. Do each ordinary act (read a generic lore book, generic kill, travel, theft, inn
-   sleep, fast travel).
-3. Read `Papyrus.0.log`: every scored god on each `event 342` (and the other
-   generic events) MUST be native to `<idx>`. Anything else is a STOP (Section 3).
-4. Record AS/WO/GS verdicts into
-   [PDV_RuntimeEvidenceTracker.md](PDV_RuntimeEvidenceTracker.md).
-
----
-
-## 5. Day-to-day faucet sweep -- findings log
-
-### 5.1 -- 2026-06-10: "Mephala scores event 342 at Khajiit origin" -> NOT REPRODUCED (log mis-attribution; non-issue)
-
-**Reported observation (Papyrus.0.log, 08:26:03 PM):**
-
-```
-[PDV] EventBus: azurah event 342 delta 0.250000
-[PDV] EventBus: Mephala event 342 delta 0.250000
-[PDV] EventBus: RouteAction complete: event 342, scored deities 2
+```powershell
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-route-entries
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill
+dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates
+node .\tools\pdv_phase20_base_wiring_audit.mjs
+node .\tools\pdv_beta_readiness_audit.mjs --strict --json
 ```
 
-Fired ~8s after a Khajiit lunar book route (`RouteKhajiitLunarSubstrate complete:
-po3_book_khajiit_lunar`). Concern: Mephala is Dunmer-native only, so Mephala scoring
-at Khajiit origin (6) would be a race-gate leak (Section 3 STOP condition).
+Expected before manual testing:
 
-**Verdict: NON-ISSUE.** The active origin at 08:26:03 was almost certainly **5
-(Dunmer)**, not 6 (Khajiit). At Dunmer origin, `{Azurah, Mephala}` is the *correct*
-native scoring, not a leak. Step-1 disposition of the task ("if origin was NOT 6,
-close it") applies.
+- Route entries: `PASS`, including all 24 manifest route entries.
+- Base wiring audit: `PASS`.
+- Beta readiness audit: still `NOT_BETA_READY` until manual/runtime slots are
+  recorded.
 
-**Evidence and reasoning (static analysis; in-game re-run still recommended to
-close, see below):**
+## Testing Order
 
-1. **Mephala is Dunmer-NATIVE only.**
-   `PDV_DunmerRewardRecords.spec.json` authors `PDV_Deity_Mephala` with
-   `stanceDunmer:NATIVE, create:true` as a *separate* Dunmer-owned QUST. It carries
-   no Khajiit stance; `PDV_KhajiitRewardRecords.spec.json` (Azurah / Khenarthi /
-   Rajhin / Alkosh, +Baan Dar tolerated) does not list Mephala. So under a correct
-   gate, `Mephala.GetStanceForRace(6)` returns the default `Stance_Khajiit = 1
-   (FOREIGN)` and Mephala cannot score a generic 342 faucet at origin 6.
+### 1. Close The Smallest Race Evidence Gaps
 
-2. **A correct 342 gate scores Mephala only at origin 5.** Because event 342 is
-   filtered to `STANCE_NATIVE` gods (Section 2), Mephala appearing on a 342 line is
-   itself a positive indicator that origin was Dunmer (5) at that instant.
+Run these first because they are already mostly proven.
 
-3. **The scored set is a Dunmer fingerprint, not a Khajiit one.** At Dunmer origin
-   the Reclamation natives are Azura / Boethiah / Mephala; `{Azurah, Mephala}` is
-   exactly the pair that responds to a *book* read (Azura foresight, Mephala
-   secrets/cunning), with Boethiah (struggle/strength) correctly silent. If origin
-   were 6 with a leaking gate, we would instead expect the Khajiit natives that
-   subscribe to 342 (Khenarthi / Rajhin / Alkosh) to also score, and there is no
-   coherent mechanism by which a single Dunmer-only god (Mephala) leaks while
-   Boethiah does not. The clean two-god Dunmer pair is incompatible with a
-   Khajiit-origin leak.
+- Altmer: capture the remaining reward/Active Effects or correct patron/tier
+  stack snapshot in `PDV_BetaTestPacket_Altmer.md`.
+- Khajiit: confirm asset status/no-new-mesh for the wired lunar packet in
+  `PDV_BetaTestPacket_Khajiit.md`.
 
-4. **`azurah` in the log is the record's stored `DeityName`, not an origin signal.**
-   Azura is a genuinely shared record: Khajiit-NATIVE *and* Dunmer-NATIVE (the Dunmer
-   author reuses it `create:false` and only adds `Stance_Dunmer=0` via
-   `--reconcile-shared-deity`; it was created under the Khajiit pilot, so its name
-   string stayed `Azurah`). The shared-deity reconciliation touches the Azura record
-   only; it does not, and mechanically cannot, write a Khajiit stance onto the
-   separate `PDV_Deity_Mephala` record -- so the hypothesized "Azura -> Mephala
-   Khajiit-stance bleed" has no code path.
+After each pass, update only the matching slot in
+`PDV_Phase20_ManualEvidenceLedger.json`.
 
-5. **Why the "origin 6" attribution slipped.** The Khajiit lunar handler
-   (`HandleKhajiitMoonObservance` / lunar substrate) is hard-gated by
-   `IsKhajiitOrigin()`, so the lunar route 8s earlier legitimately ran at origin 6.
-   The V1 sweep then flips origin between reads (the documented WO/GS method:
-   `set PDV_GLO_OriginRace to <other index>`, re-read). The most parsimonious account
-   is that origin was switched to 5 (Dunmer) for the generic-book read, and the
-   "origin 6" was carried over from the lunar marker rather than re-derived from the
-   `set PDV_GLO_OriginRace` line that actually preceded 20:26:03.
+### 2. Run The New Bosmer DA05 Packet
 
-**One-line confirmation for the tester (do this to close the item):** in
-`Papyrus.0.log`, find the last `set PDV_GLO_OriginRace` (or the MCM origin-selector
-trace) *before* `08:26:03 PM` -- expect `5`. If it reads `5`, this item is closed as
-correct Dunmer-native behavior.
+Use `PDV_BetaTestPacket_Bosmer.md`.
 
-**Fallback -- only if the log shows origin was still 6 at the 342 line** (then it IS
-a leak):
+Required checks:
 
-- Reproduce: `set PDV_GLO_OriginRace to 6`, `set PDV_GLO_DebugLevel to 2`, read any
-  generic lore book; confirm whether Mephala scores `event 342`.
-- Root-cause check (live tree
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source`): the gate itself
-  (`PDV_DeityBase.GetStanceForPlayer` / `GetStanceForRace`) is race-correct; the only
-  way Mephala passes at origin 6 is an authored `Stance_Khajiit = 0` on
-  `PDV_Deity_Mephala`. Housecarl readback of `PDV_Deity_Mephala` should show
-  `Stance_Khajiit = 1 (FOREIGN)`. If it reads `0`, the Dunmer author run mis-wrote a
-  Khajiit stance onto Mephala during the create / `--reconcile-shared-deity` pass;
-  fix by re-running the author to set `PDV_Deity_Mephala.Stance_Khajiit = FOREIGN`
-  (leave `Stance_Dunmer = NATIVE`), then re-run this sweep at origin 6 to confirm
-  Mephala is silent.
+- Bosmer origin, DA05 stage `100`: accepted Y'ffre hunt-law pressure route.
+- Bosmer origin, DA05 stage `105`: accepted mercy-branch edge route.
+- Wrong-origin rejection for the same DA05 route.
+- Generic-source silence for hunting, forest travel, trade, theft, broad plant,
+  kindness, and generic book/source attempts.
+- Survey/status clarity after the accepted branch.
+- Reward/stack snapshot and short feel note.
 
-**Scope note:** this is the V1 generic faucet sweep, separate from the Khajiit lunar
-beta packet (`PDV_BetaTestPacket_Khajiit.md`), which passed (conditional pass; edge
-focus source still pending) and is unaffected by this item.
+After closing Skyrim:
 
-**Environment note:** this finding is a static-evidence determination plus the
-exact in-game confirmation step; it was produced without access to the live
-`Papyrus.0.log` or the live `D:\Wabbajack` script tree. The one-line log check above
-is the authoritative closer.
+```powershell
+node .\tools\pdv_phase20_runtime_check.mjs --race bosmer --strict-manager
+```
+
+### 3. Run The Remaining Race Packets
+
+Use one disposable save per race or a clean reload before each route family.
+
+| Race | Packet | Primary runtime checker |
+| --- | --- | --- |
+| Argonian | `PDV_BetaTestPacket_Argonian.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race argonian --strict-manager` |
+| Orc | `PDV_BetaTestPacket_Orc.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race orc --strict-manager` |
+| Redguard | `PDV_BetaTestPacket_Redguard.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race redguard --strict-manager` |
+| Breton | `PDV_BetaTestPacket_Breton.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race breton --strict-manager` |
+| Dunmer | `PDV_BetaTestPacket_Dunmer.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race dunmer --strict-manager` |
+| Imperial | `PDV_BetaTestPacket_Imperial.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race imperial --strict-manager` |
+| Nord | `PDV_BetaTestPacket_Nord.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race nord --strict-manager` |
+
+For each race, record:
+
+- accepted-source route proof
+- wrong-origin rejection
+- generic-source silence
+- anti-farm or duplicate behavior
+- Survey/status clarity
+- reward/Active Effects or state-layer stack snapshot
+- manual feel note
+- asset status
+
+### 4. Run Daedric Runtime/Display Proof
+
+Use `PDV_DaedricInGameSmokePacket.md` and record results in
+`PDV_DaedricRuntimeEvidenceLedger.json`.
+
+Required per Prince:
+
+- MCM route marker
+- QASmoke route marker
+- organic exact quest-stage route marker
+- generic silence probe
+- Active Effects display
+- summary message
+- Prisma/notification behavior
+- save/load sanity
+- stack legibility
+- manual feel note
+
+After controlled proof:
+
+```powershell
+node .\tools\pdv_daedric_runtime_check.mjs --strict
+node .\tools\pdv_daedric_beta_gate.mjs --strict
+```
+
+### 5. Run The Day-to-Day Likes/Dislikes Signal Sweep (V1)
+
+The generic 300+ action vocabulary (combat-by-victim, craft, knowledge,
+devotional, transgression) routes `PDV_ActionRouter` -> `PDV_EventBus` ->
+`PDV_DeityBase.ScoreFromTable`. It is **race-gated**: a generic act only scores
+deities NATIVE to the player's race. Source of truth for deltas:
+`PDV_DeityLikesDislikes.csv`; detection map: `PDV_FaucetDetection_CKChecklist.md`
+section 6.
+
+One character is enough. Set up:
+
+```
+set PDV_GLO_DebugLevel to 2     ; per-event traces (3 for anti-farm cap checks)
+set PDV_GLO_OriginRace to 1     ; Imperial = broadest native coverage (~22/25 events)
+```
+
+Flip `PDV_GLO_OriginRace` to retest the gate without rerolling:
+`0` Nord `1` Imperial `2` Breton `3` Altmer `4` Bosmer `5` Dunmer `6` Khajiit
+`7` Argonian `8` Orc `9` Redguard.
+
+Positive marker: `[PDV] EventBus: <deity> event <id> delta <x>` (delta must match
+the CSV exactly).
+
+Exercise (DebugLevel 2):
+
+- combat by victim: draugr / Dremora / dragon -> `300/301/302`; non-hostile animal
+  + criminal/non-hostile victim -> `303/304`
+- craft (use the stations): smith / enchant / brew / cook -> `330/331/332/333`
+- knowledge: skill / spell / lore book -> `340/341/342`; word wall / skill-up
+  (`player.incPCS <skill>`) / new location -> `343/344/345`
+- devotional: sleep outside vs inside -> `313/314`
+- transgression: owned lock / **trespass** / steal / assault innocent ->
+  `360/`**`361`**`/362/364`; raise undead -> `365`; daedric artifact -> `368`
+
+Required to record:
+
+- each event fires its EventBus marker with the CSV-exact delta
+- **Trespass `361`** specifically (newest wiring; enter an owned home uninvited and
+  detected) — confirm `event 361` fires
+- race-gate negative: a non-native god scores `0` for the same act
+- attribution filter: environmental/indirect kills log
+  `skipped non-scoring attribution`
+- anti-farm (DebugLevel 3): a capped act stops at its daily cap; `0.7^n` decay
+- dawn bank: `PietyToday -> Piety` at ~06:00 moves standing/tier
+
+**Progress 2026-06-10 (Imperial origin):** `300` (akatosh/Arkay/Stendarr +0.5),
+`301` (Stendarr +0.75), `345` (Kynareth +0.5) confirmed, all CSV-exact; race-gate
+and attribution filter confirmed. Remaining: craft / book / sleep / the full
+transgression set incl. `361`, plus `1`/`2` (set `PDV_GLO_OriginRace to 0`).
+
+### 6. Run The Prince V2 Path-Deepening Proof
+
+The 16 Daedric paths deepen their OWN piety from ambient acts ONLY when the path is
+committed (open). Off an open path, ambient acts must do nothing
+(deepen-not-initiate). Source: `PDV_PrinceLikesDislikes_V2_Spec.md`; data:
+`PDV_DeityLikesDislikes_Princes_V2.csv`.
+
+Positive marker: `[PDV] PrinceV2: <Prince> event <id> deepen <x>`.
+
+Per a transgressive Prince (e.g. Namira):
+
+- deepen-not-initiate negative: BEFORE committing, do a liked act -> **no** PrinceV2
+  marker and no path-piety change
+- open the path: MCM -> Devotion -> Debug -> Daedric, force 3 commitment signals
+- with the path open, repeat the liked act -> PrinceV2 marker fires; the MCM Daedric
+  contract summary `p=` rises
+- anti-farm holds on the path (DebugLevel 3)
+
+Dual-face check (Azura / Boethiah / Mephala / Malacath):
+
+- as an OFF-race origin (`set PDV_GLO_OriginRace to 0`), open the **Azura PATH** ->
+  `PrinceV2: Azura` fires
+- as a native origin (`5` Dunmer / `6` Khajiit), confirm Azura is the **deity** face
+  (a V1 `EventBus` line, not PrinceV2) and the path stays inert (no double-dip)
+
+Curse coordination: with the werewolf curse active (Hircine path open), a beast kill
+deepens Hircine path piety with **no** double-fired curse transition.
+
+Required to record: per-Prince deepen marker, deepen-not-initiate negative, dual-face
+both directions, curse no-double-fire.
+
+## Evidence Intake Rule
+
+Use these statuses in the structured ledgers:
+
+- `pending`: not yet run or not enough evidence
+- `evidence-recorded`: observed in game and described in the note
+- `not-applicable`: only when the packet explicitly does not require the slot
+
+Do not write `pass`, `complete`, or `done` into
+`PDV_Phase20_ManualEvidenceLedger.json`; the beta gate derives pass/conditional
+from evidence plus known-issue scope.
+
+## Stop Conditions
+
+Stop the packet and bring back notes if any of these happen:
+
+- accepted source fires for the wrong race
+- generic gameplay becomes a scoring faucet
+- a generic day-to-day act scores a god NOT native to the player's race (race-gate leak)
+- an UNcommitted transgressive Prince path deepens from an ambient act (deepen-not-initiate violation)
+- Survey/status text shows route IDs instead of player-facing wording
+- a reward or price stacks invisibly or cannot be explained from the UI
+- Prisma/MCM opens as a blocking panel when only a toast or notification is expected
+- save/load changes the visible state unexpectedly
+

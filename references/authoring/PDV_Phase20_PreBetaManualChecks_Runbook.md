@@ -2,7 +2,7 @@
 
 **Created:** 2026-05-31
 **Status:** Manual handoff packet after automated Phase 20 pre-beta gate work
-**Owner:** Companion to `PDV_PreBetaRaceGateLedger.md`, `PDV_PreBetaRaceScalingSpine.md`, `PDV_Phase20_NoInGameProof_Gates.json`, `PDV_Phase20_ManualEvidenceLedger.json`, and `PDV_Phase20_QASmokeRuntimeProof_Runbook.md`
+**Owner:** Companion to `PDV_InGameTestingNeeded_Runbook.md`, `PDV_PreBetaRaceGateLedger.md`, `PDV_PreBetaRaceScalingSpine.md`, `PDV_Phase20_NoInGameProof_Gates.json`, `PDV_Phase20_ManualEvidenceLedger.json`, and `PDV_Phase20_QASmokeRuntimeProof_Runbook.md`
 
 ## Purpose
 
@@ -30,6 +30,10 @@ manual/runtime evidence starts. It is intentionally checked as `pending` by the
 strict verifier until real in-game evidence exists; do not change a slot to
 complete, conditional, or pass without also updating the gate ledger and adding
 the matching proof note.
+
+Use `PDV_InGameTestingNeeded_Runbook.md` for the current ordered queue. As of
+2026-06-10, Nord route-entry drift is repaired and Bosmer DA05 is approved,
+filled, and ready for runtime/manual proof.
 
 ## Before Manual Checks
 
@@ -191,8 +195,9 @@ Current automated state:
   next approved manifest step. `--fill-source-entries` writes only entries
   declared with `status: approved-for-fill`; `--check-source-fill` readbacks
   the declared source entries against the live FormLists. The current manifest
-  declares 29 approved P2 book-read entries across 13 groups; quest-stage
-  source fills remain blocked until exact quest/stage entries are approved.
+  includes the approved P2 book-read entries plus the Bosmer DA05 exact-stage
+  source fill. Additional quest-stage source fills remain blocked until exact
+  quest/stage entries are approved.
 - Source-fill readback command:
   `dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill`
 - Exact-stage gate command:
