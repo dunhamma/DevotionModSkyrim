@@ -6,6 +6,11 @@ the live MO2 tree (`D:\Wabbajack\modlists\Anvil\mods\Devotion`) is untouched
 except for the inert `PDV_LivingDeities.json` data file (no script consumes
 it until this slice is promoted).
 
+> **Test ESP setup:** a complete, disable-able in-game test harness now exists -
+> see `TEST_ESP.md` (mod `Devotion - Living Deities Test`, authored by
+> `tools/pdv-living-deities-author`). Enabling that mod is the ONLY deployment
+> path for this slice; the Devotion mod itself stays untouched.
+
 ## Layout
 - `src/` - the six scripts. `PDV_Deity_Hircine.psc` is new; the other five
   are copies of the 2026-06-10 live source with the LD-P1 edits applied.
