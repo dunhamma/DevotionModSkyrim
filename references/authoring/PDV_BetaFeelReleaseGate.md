@@ -40,8 +40,16 @@ make the race impossible to judge.
 
 ## Required Automated Gate
 
+Run the closure audit before making any race beta-feel or full beta-feel
+readiness claim. It is fail-closed and is expected to return `NOT_BETA_READY`
+while manual/runtime evidence is still pending:
+
+```powershell
+node .\tools\pdv_beta_readiness_audit.mjs --strict
+```
+
 Run these from `C:\Users\Admin\Documents\Devotion Mod Project` before recording
-race beta-feel evidence:
+new race beta-feel evidence:
 
 ```powershell
 node .\tools\pdv_phase20_base_wiring_audit.mjs
