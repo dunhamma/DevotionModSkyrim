@@ -1,0 +1,38 @@
+cluster,editor_id,outcome_stage,deity,reason
+sky_storm_nature,DA05,105,Kynareth,the_hunt/mercy_spare are not in Kynareth's Part B profile (sky/nature/heal); the hunted-mercy beat belongs to Kyne (authored s105) not the Imperial sky-goddess
+sky_storm_nature,dunHunterQST,100,Kynareth,Sacred Trials is Kyne worship; the_hunt/prove_by_struggle are not in Kynareth's profile
+sky_storm_nature,MG03,55,Kyne,protect_the_weak is not in Kyne's profile (she has mercy_spare m only); Kynareth covers the protect_the_weak College-escort beat
+sky_storm_nature,MG05,200,Kyne,protect_the_weak is not in Kyne's profile; Kynareth-only is correct
+sky_storm_nature,T01,200,Kyne,protect_the_weak is not in Kyne's profile; Kynareth-only is correct
+sky_storm_nature,MQ105,160,Kynareth,prove_by_struggle is not in Kynareth's profile; learning the Voice is Kyne's gift (authored Kyne s160) not Kynareth's
+sky_storm_nature,MQ106,200,Kynareth,kill_honorable_combat is not in Kynareth's profile (sky/nature goddess, not battle); dragon kills route to Kyne/Akatosh/Alkosh
+sky_storm_nature,MQ206,220,Kynareth,kill_honorable_combat is not in Kynareth's profile; see MQ106
+sky_storm_nature,MQ305,200,Kynareth,kill_honorable_combat is not in Kynareth's profile; see MQ106
+time_dragon,CW01A,160/200,Auri-El,serve_empire_order/keep_oath are not in Auri-El's profile; mortal Imperial enlistment is not the ascendant elven order
+time_dragon,CW01B,160/200,Auri-El,keep_oath is not in Auri-El's profile; a Stormcloak oath is doubly foreign to the Aldmeri soul-god
+time_dragon,CW01B,160/200,Alkosh,keep_oath is not in Alkosh's profile (cosmic order/anti-chaos, not personal oaths); his rare civic surface is the Imperial-order cells he already holds
+time_dragon,CW02A,30/80,Auri-El,serve_empire_order is not in Auri-El's profile; mortal politics below his ascendant-order concern
+time_dragon,CW03,50/210,Auri-El,serve_empire_order is not in Auri-El's profile
+time_dragon,CW03,50/210,Alkosh,serve_empire_order present in profile but at m for COSMIC order; mortal Skyrim civil-war escalation is below his threshold and his two existing Imperial-side civic cells already cover the rare surface (avoid diluting the dragon-king into a war-politics god)
+time_dragon,DA07,100,Alkosh,serve_a_daedra:dagon is not in Alkosh's profile (only sow_chaos_madness C); Akatosh's serve_a_daedra:* line carries the anti-Dagon reading
+time_dragon,MQ104,160,Auri-El,Auri-El reacts to the time-order CLIMAX (Alduin unmade, authored MQ206/MQ305), not to every wild dragon; Mirmulnir at the Watchtower is mortal dragon-war, peripheral to his ascendant path
+time_dragon,MQ106,200,Auri-El,see MQ104; Sahloknir is a raised wild dragon, not the cosmic time-climax Auri-El answers to
+death_order,C06,65,Xarxes,cure_undeath is not in Xarxes's profile (scribe/ancestry/record, not the vigil against undeath); Arkay/Tu'whacca own the lycanthropy-cure beat
+death_order,CW02A,72,Xarxes,slay_undead is not in Xarxes's profile; he records the dead, he does not fight the risen
+death_order,CW02B,72,Xarxes,slay_undead is not in Xarxes's profile; see CW02A
+death_order,DA01,110,Xarxes,necromancy is not in Xarxes's profile; his disapprovals are desecrate_the_dead (authored DA11) and sow_chaos_madness
+death_order,DA09,500,Xarxes,slay_undead/cure_undeath are not in Xarxes's profile; Meridia's anti-undead crusade is not the scribe's office
+death_order,MG07,30,Xarxes,slay_undead is not in Xarxes's profile; Labyrinthian draugr are Arkay/Tu'whacca's
+death_order,MS14,200,Xarxes,slay_undead is not in Xarxes's profile; the Laid-to-Rest vampire is Arkay/Tu'whacca's (Tu'whacca already credited)
+death_order,C06,200,Khenarthi,Glory of the Dead is a Nord Sovngarde funeral (Kodlak to Ysgramor's hall); Khenarthi's winds-ferry reading fits the t02 lovers' passage (authored) but not a Nord warrior-afterlife rite
+mercy_war,DA03,200,Stuhn,serve_a_daedra:clavicus is not in Stuhn's profile (mercy/ransom/oath); Stendarr's anti-Daedra line carries that disapproval, not the shield-thane
+trickster_thief,TG00,200,Baan Dar,Baan Dar's theft is FROM THE STRONG/UNJUST; framing Brand-Shei (an innocent) for Maven is the opposite of pariah justice; Rajhin (artful theft) already credited
+trickster_thief,TG01,200,Baan Dar,early Guild collection work serves Maven Black-Briar (a tyrant) against ordinary debtors, not theft from the unjust; Rajhin already credited
+trickster_thief,TG02,200,Baan Dar,Goldenglow burglary/arson is Maven's enforcement against a business, not Baan Dar's rob-the-unjust justice; Rajhin already credited
+trickster_thief,TG06,200,Baan Dar,Hard Answers museum break-in serves the Guild's recovery, not pariah justice; Rajhin already credited
+trickster_thief,TG07,200,Baan Dar,The Pursuit continues Mercer's trail under Guild auspices; the justice-on-the-betrayer beat is TG08B (authored), not this setup stage; Rajhin already credited
+knowledge_scribe,MQ105,160,Magnus,the Voice/Thu'um is a separate tradition from magicka-based arcane study (pointedly NOT College magic); disciplined_study here is Kyne's gift and lore-scholarship (Julianos/Xarxes), not Magnus's arcane domain
+make_way_war,CW01B,1,HoonDing,HoonDing manifests only at impossible-odds make-way (weekly-cap designNote); routine faction enlistment at stage 1 is not that; his beat is MQ304 Sovngarde mist (authored)
+hunt_ethics,DA05,100,Kyne,DA05 s100 is Hircine's glory-hunt (kill Sinding, claim Savior's Hide, serve a Daedra) — the opposite of Kyne's respectful Sacred-Trials hunt; she is served by dunHunterQST and the s105 mercy branch instead
+hunt_ethics,DA05,100,Y'ffre,DA05 s100 serves a Daedra and claims his artifact — not the Green Pact hunt; Y'ffre's hunt approval is the respectful-trial reading (dunHunterQST, authored), not Hircine's bloodsport
+hunt_ethics,DA05,105,Y'ffre,sparing the hunted is mercy_spare/protect_the_weak (not in Y'ffre's profile); the hunt here is being REFUSED, so the_hunt does not apply to him; Kyne carries the mercy beat (authored)

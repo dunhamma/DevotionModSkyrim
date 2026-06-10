@@ -197,6 +197,18 @@ to most gods).
 
 ### Nord Old Ways (Sovngarde martial virtue)
 
+**Kyne** — the storm-mother, the sacred hunt, the Voice, widow of Shor.
+- approve: `the_hunt`(C, *the respectful hunt; the Sacred Trials*), `honor_the_wild`(S), `kill_honorable_combat`(S, *dragons and worthy foes under her sky*), `prove_by_struggle`(S, *the Voice is Kyne's gift*), `defend_kin_home`(m), `mercy_spare`(m, *mercy to the hunted*)
+- disapprove: `defile_nature`(C), `kill_the_helpless`(m)
+- indifferent: trade, law, theft, the dead, magic.
+- anchor: Nordic storm-widow of Shor, Mother of Men; breathed the Voice onto
+  mortals (Paarthurnax: the Voice as Kyne's gift); Kyne's Sacred Trials
+  (dunHunterQST). Distinct record from Kynareth (Phase 2 R4: Nord may focus
+  either). (UESP: Kyne / Kyne's Sacred Trials)
+  *(Profile added 2026-06-10 — paired-deity equity fix; Kyne was the only
+  record deity missing from Part B, which is why every tranche pass skipped
+  her. Gate: tools/pdv_paired_equity_audit.mjs check 5.)*
+
 **Shor** — the warrior-king, honored battle, Sovngarde.
 - approve: `kill_honorable_combat`(C), `prove_by_struggle`(S), `honor_the_dead`(m, *honored fallen warriors*), `defend_kin_home`(S)
 - disapprove: `cowardice`(C), `murder_treacherous`(S), `kill_the_helpless`(m)
@@ -259,10 +271,12 @@ to most gods).
 - disapprove: `desecrate_the_dead`(m), `serve_a_daedra:molagbal`(S)
 - anchor: Good Daedra / Mother of the Rose. (UESP: Azura)
 
-**Khenarthi** — the wind, the road, the traveler, mercy on the road.
-- approve: `protect_the_weak`(S, *aid the stranded*), `honor_the_wild`(m)
+**Khenarthi** — the wind, the road, the traveler, mercy on the road, the soul-ferry.
+- approve: `protect_the_weak`(S, *aid the stranded*), `honor_the_wild`(m), `honor_the_dead`(m, *bears worthy dead on the winds to the Sands Behind the Stars*)
 - disapprove: `kill_the_helpless`(m)
-- anchor: Khajiit wind/sky goddess (Kynareth-adjacent). (Imperial Library)
+- anchor: Khajiit wind/sky goddess and death-guide (Kynareth-adjacent; ferries
+  the worthy dead). (Imperial Library). *(honor_the_dead added 2026-06-10 —
+  paired-deity equity: her death-guide aspect was lore-real but unprofiled.)*
 
 **Rajhin** — the master thief, elegant theft, the legend.
 - approve: `theft_burglary`(C, *artful, notable target*), `deceit`(S)

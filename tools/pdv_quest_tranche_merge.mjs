@@ -5,6 +5,7 @@ const files = [
   "references/authoring/PDV_QuestReactionMatrix_Tranche2.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche3_TempleFavor.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche4_ThinPantheon.csv",
+  "references/authoring/PDV_QuestReactionMatrix_Tranche5_AspectParity.csv",
 ];
 let hdr = null;
 const body = [];
