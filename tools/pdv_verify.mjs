@@ -788,9 +788,9 @@ const GENERIC_FAUCET_STORY_MANAGER_NODES = [
   },
   {
     eventName: "Trespass",
-    nodeEdid: null,
+    nodeEdid: "PDV__SM_TrespassNode",
     receiverQuest: "PDV__SM_Trespass",
-    parent: null,
+    parent: "PlayerDevotion_Framework.esp:0714B1",
     previousSibling: null,
   },
   {
