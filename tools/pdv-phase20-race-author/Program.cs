@@ -248,6 +248,33 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
         managerProps.Add(ObjectProp(reward.spellProperty ?? reward.spellEditorId!, spell.FormKey));
     }
 
+    // 5) Broad-state lane rewards (manager-owned broad boon tiers, e.g. Altmer
+    //    Orthodox T1/T2). Same machinery as emphasis rewards; the manager
+    //    already declares + applies these properties (SyncRaceRewardSpell),
+    //    they were just never authored as records.
+    foreach (var reward in spec.broadState?.rewards ?? new())
+    {
+        var spell = BuildSpell(mod, index, allocator, reward.spellEditorId!, reward.displayName!, reward.playerFacingText!, reward.effects ?? new(), report);
+        managerProps.Add(ObjectProp(reward.spellProperty ?? reward.spellEditorId!, spell.FormKey));
+    }
+
+    // 6) Creed-violation loss spells (applied on authored creed-breach beats).
+    //    Only the array (spell-record) shape is authored; the object shape is
+    //    signal-penalty routes with no records. Records only here; the manager
+    //    applies them by the creed system, not a fixed Spell Property.
+    if (spec.creedViolationLoss.ValueKind == JsonValueKind.Array)
+    {
+        foreach (var el in spec.creedViolationLoss.EnumerateArray())
+        {
+            var loss = el.Deserialize<RewardsSpecReward>(new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+            BuildSpell(mod, index, allocator, loss.spellEditorId!, loss.displayName!, loss.playerFacingText!, loss.effects ?? new(), report);
+            if (!string.IsNullOrWhiteSpace(loss.spellProperty))
+            {
+                managerProps.Add(ObjectProp(loss.spellProperty!, index[loss.spellEditorId!].FormKey));
+            }
+        }
+    }
+
     WireQuestScript(manager, "PDV__ManagerQuest", managerProps);
     report.Actions.Add($"Wired {managerProps.Count} deity/reward/neglect properties on PDV__ManagerQuest.");
 
@@ -905,6 +932,11 @@ sealed class RewardsSpec
     public RewardsSpecSubstrate? substrateBoons { get; set; }
     public RewardsSpecReward? neglect { get; set; }
     public List<RewardsSpecReward>? emphasisRewards { get; set; }
+    public RewardsSpecBroadState? broadState { get; set; }
+    // Shape varies by race: Breton uses an ARRAY of spell-record specs;
+    // Altmer uses an OBJECT of signal-penalty routes (no records). Kept as a
+    // raw element and only the array (spell-record) shape is authored.
+    public JsonElement creedViolationLoss { get; set; }
 
     // Optional: default stance field for entries that supply only a stance value.
     public string? stanceField { get; set; }
@@ -963,6 +995,12 @@ sealed class RewardsSpecSlot
     public string? displayName { get; set; }
     public List<RewardsSpecEffect>? effects { get; set; }
     public string? playerFacingText { get; set; }
+}
+
+sealed class RewardsSpecBroadState
+{
+    public string? lane { get; set; }
+    public List<RewardsSpecReward>? rewards { get; set; }
 }
 
 sealed class RewardsSpecReward
