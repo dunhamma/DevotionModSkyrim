@@ -75,20 +75,39 @@ Blocking classes:
 These findings match the intended proof boundary: record/readback scaffolding is
 advanced, but beta-feel release evidence is not complete.
 
+## Row Authority Remediation
+
+The 2026-06-10 remediation pass moved the repo-side authority gaps to pending
+runtime state:
+
+- `PDV_DeityCoverageMatrix.json` now has 610 row-level coverage entries:
+  450 locked worship object x race rows plus 160 Skyrim-present Prince x race
+  rows.
+- Every row carries the required beta-readiness fields and an explicit
+  `runtimeProofStatus` of `pending-runtime`.
+- `PDV_Phase20_P2ImmersiveReceivers.manifest.json` now declares the one approved
+  exact quest-stage fill: Altmer MQ104 stage 160 for the Lorkhan crisis route.
+- The closure audit now checks exact row completeness, not just array presence.
+
+Post-remediation strict run:
+
+```text
+Verdict: NOT_BETA_READY
+Counts: PASS=26 WARN=1 FAIL=6 INFO=3
+```
+
+Remaining blockers are runtime/manual only: race manual evidence, Bosmer source
+packet approval/fill, Daedric runtime/display evidence, and the corresponding
+release-claim boundaries.
+
 ## Closeout Order
 
-1. Add row-level authority rows or a deliberate equivalent to
-   `PDV_DeityCoverageMatrix.json` so every race/deity and race/Prince pairing has
-   machine-checkable response state, hook source, implementation, verifier, and
-   runtime proof fields.
-2. Reconcile the Altmer MQ104 quest-stage source count between the P2 receiver
-   manifest and source-fill approval ledger.
-3. Continue per-race beta packets and update
+1. Continue per-race beta packets and update
    `PDV_Phase20_ManualEvidenceLedger.json` only with actual manual/runtime
    evidence.
-4. Approve and fill at least one exact Bosmer source before treating Bosmer as a
+2. Approve and fill at least one exact Bosmer source before treating Bosmer as a
    source-packet beta-feel candidate.
-5. Run Daedric controlled, organic, display, generic-silence, save/load, stack,
+3. Run Daedric controlled, organic, display, generic-silence, save/load, stack,
    and curse no-double-fire proof before any full Devotion beta-feel claim.
 
 ## Boundary

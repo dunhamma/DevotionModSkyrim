@@ -14,11 +14,13 @@
     "RegisterForQuestStage"
   ],
   "questStageGate": {
-    "status": "exact-stage-supported-pending-approved-stage-fills",
+    "status": "exact-stage-supported-one-approved-stage-fill-pending-runtime-proof",
     "receiverStatus": "exact-stage-supported",
     "rule": "Quest-stage source entries may be approved only when PDV_PlayerEvents compares aiNewStage against explicit approvedStages for that source and route family. Whole-quest FormList membership alone is not sufficient.",
     "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates",
-    "approvedQuestStageEntries": 0
+    "approvedQuestStageEntries": 1,
+    "approvedQuestStageScope": "Altmer MQ104 stage 160 is approved and live-filled for the Lorkhan crisis route in PDV_Phase20_SourceFillApprovalLedger.json; all other quest-stage sources remain blocked until exact quest/stage metadata is approved and declared.",
+    "runtimeProofStatus": "pending-runtime"
   },
   "sourceProperties": [
     {

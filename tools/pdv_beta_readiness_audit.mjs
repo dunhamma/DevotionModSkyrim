@@ -150,6 +150,18 @@ class BetaReadinessAudit {
     }
 
     const rows = rowArrays[0].value;
+    const expectedKeys = [
+      ...(manifest.lockedWorshipObjects || []).flatMap((name) =>
+        PHASE20_EXPECTED_RACES.map((race) => `locked-worship-object|${name}|${race}`),
+      ),
+      ...(manifest.skyrimPresentDaedricPrinces || []).flatMap((name) =>
+        PHASE20_EXPECTED_RACES.map((race) => `skyrim-present-daedric-prince|${name}|${race}`),
+      ),
+    ];
+    const expectedSet = new Set(expectedKeys);
+    const actualSet = new Set();
+    const duplicateKeys = [];
+    const extraKeys = [];
     const missingColumns = [];
     rows.forEach((row, index) => {
       for (const column of PHASE20_REQUIRED_COVERAGE_COLUMNS) {
@@ -157,7 +169,12 @@ class BetaReadinessAudit {
           missingColumns.push(`row ${index + 1}.${column}`);
         }
       }
+      const key = `${row.skyrimPresentStatus}|${row.deityOrPrince}|${row.race}`;
+      if (actualSet.has(key)) duplicateKeys.push(key);
+      actualSet.add(key);
+      if (!expectedSet.has(key)) extraKeys.push(key);
     });
+    const missingKeys = expectedKeys.filter((key) => !actualSet.has(key));
 
     if (missingColumns.length) {
       this.fail(
@@ -171,6 +188,22 @@ class BetaReadinessAudit {
         "authority",
         "Row-level race/deity coverage authority",
         `${rows.length} row-level coverage row(s) include the required beta-readiness columns.`,
+        COVERAGE_MATRIX,
+      );
+    }
+
+    if (missingKeys.length || duplicateKeys.length || extraKeys.length) {
+      this.fail(
+        "authority",
+        "Row-level race/deity coverage completeness",
+        `Missing rows: ${clipList(missingKeys)}; duplicate rows: ${clipList(duplicateKeys) || "none"}; extra rows: ${clipList(extraKeys) || "none"}.`,
+        COVERAGE_MATRIX,
+      );
+    } else {
+      this.pass(
+        "authority",
+        "Row-level race/deity coverage completeness",
+        `${rows.length}/${expectedKeys.length} expected locked-worship and Daedric race rows are present exactly once.`,
         COVERAGE_MATRIX,
       );
     }
