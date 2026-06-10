@@ -5,24 +5,17 @@ Contract: PDV_BetaContract.csv (765 rows). Gate fails on unwaived GAP only;
 GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, then either
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
-Verdicts: PASS=295 | GAP-REVIEW=103 | NEEDS-MANUAL=293 | FUTURE=59 | GAP=14 | WAIVED=1
+Verdicts: PASS=300 | GAP-REVIEW=103 | NEEDS-MANUAL=293 | FUTURE=59 | WAIVED=3 | GAP=7
 Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 
-## GAP (14)
+## GAP (7)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
-| BC-0201 | stance | Dunmer | Azura | missing: PDV_Msg_Daedric_Azura_Response_Dunmer (NAMING-DRIFT? found PDV_Msg_Daedric_Vaermina_Response_Dunmer) | PDV_DaedricContent_Manifest.md Section 7.1; PDV_DaedricRacePrinceMatrix.csv Azura/Dunmer=' |
-| BC-0202 | stance | Dunmer | Boethiah | missing: PDV_Msg_Daedric_Boethiah_Response_Dunmer (NAMING-DRIFT? found PDV_Msg_Daedric_Vaermina_Response_Dunmer) | PDV_DaedricContent_Manifest.md Section 6.8; PDV_DaedricRacePrinceMatrix.csv Boethiah/Dunme |
-| BC-0204 | stance | Dunmer | Mephala | missing: PDV_Msg_Daedric_Mephala_Response_Dunmer (NAMING-DRIFT? found PDV_Msg_Daedric_Vaermina_Response_Dunmer) | PDV_DaedricContent_Manifest.md Section 7.2; PDV_DaedricRacePrinceMatrix.csv Mephala/Dunmer |
-| BC-0207 | stance | Khajiit | Azura | missing: PDV_Msg_Daedric_Azura_Response_Khajiit (NAMING-DRIFT? found PDV_Msg_Daedric_Mephala_Response_Khajiit) | PDV_DaedricContent_Manifest.md Section 7.1; PDV_DaedricRacePrinceMatrix.csv Azura/Khajiit= |
-| BC-0216 | stance | Orc | Malacath | missing: PDV_Msg_Daedric_Malacath_Response_Orc (NAMING-DRIFT? found PDV_Msg_Daedric_Mephala_Response_Orc) | PDV_DaedricContent_Manifest.md Section 7.3; PDV_DaedricRacePrinceMatrix.csv Malacath/Orc=' |
-| BC-0261 | record_flag | Redguard | PDV_Deity_Arkay Redguard stance reconciliation (infra only) | missing: RouteDunmerAsh, RouteRedguardAshAbahDeathDuty | PDV_RedguardRewardRecords.spec.json § reusedDeities Arkay entry |
 | BC-0289 | reward_tier | Altmer | Altmer Orthodox broad T1/T2 | missing: PDV_Bless_Altmer_Orthodox_T2 | PDV_AltmerRewardRecords.spec.json § broadState rewards |
 | BC-0477 | neglect | Breton | PDV_SPEL_Neglect_Breton + creed-loss spells | missing: PDV_SPEL_CreedLoss_Breton_VowIntegrity, PDV_SPEL_CreedLoss_Breton_ExposureRupture, PDV_SPEL_CreedLoss_Breton_Excommunication, PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal | PDV_BretonRewardRecords.spec.json § neglect; § creedViolationLoss entries |
 | BC-0487 | neglect | Orc | PDV_SPEL_Neglect_Orc | missing: SyncOrcNeglectSpell | PDV_OrcRewardRecords.spec.json § neglect |
 | BC-0488 | neglect | Redguard | PDV_SPEL_Neglect_Redguard | missing: SyncRedguardNeglectSpell | PDV_RedguardRewardRecords.spec.json § neglect |
-| BC-0490 | commitment | ALL | All 16 Daedric Princes | missing: PDV_Msg_Daedric_ (NAMING-DRIFT? found PDV_Msg_Daedric_Mephala_ChampionEntry) | PDV_DaedricPrinceRecordContracts.json, commitmentSignalsRequired field; PDV_DaedricContent |
 | BC-0524 | substrate | Redguard | Far Shores token support spell | missing: PDV_Bless_Redguard_FarShoresToken | PDV_RedguardRewardRecords.spec.json § farShoresToken |
 | BC-0533 | state_track | Breton | PDV_State_BretonTradition + pressure tracks | missing: PDV_State_BretonDruidicFork | PDV_BretonRewardRecords.spec.json § stateTracks; § overstackControl |
 | BC-0693 | surfacing | Redguard | Redguard required content rows | missing: PDV_Notif_Redguard_Sect_Crown_Entry, PDV_Notif_Redguard_Sect_Forebear_Entry, PDV_Notif_Redguard_Sect_AshAbah_Entry, PDV_Msg_Redguard_Survey_Crown, PDV_Msg_Redguard_ChampionEntry_Crown, PDV_Notif_Redguard_FarShoresToken_Activate, PDV_Notif_Redguard_FarShoresToken_PrivateContext, PDV_Msg_Redguard_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_RedguardRewardRecords.spec.json § requiredContentRows |
@@ -433,11 +426,13 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0764 | other | Orc | Malacath / Mauloch dual classification | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §3.3 Contested lore items |
 | BC-0765 | other | Orc | Trinimac / Orc path | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Architecture_v3.md §3.3 Contested lore items |
 
-## WAIVED (1)
+## WAIVED (3)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
+| BC-0261 | record_flag | Redguard | PDV_Deity_Arkay Redguard stance reconciliation (infra only) | missing: RouteDunmerAsh, RouteRedguardAshAbahDeathDuty [WAIVED: Contract invented function names (RouteDunmerAsh] | PDV_RedguardRewardRecords.spec.json § reusedDeities Arkay entry |
 | BC-0485 | neglect | Nord | PDV_SPEL_Neglect_Kyne (reused) | missing: PDV_SPEL_Neglect_Nord [WAIVED: Negative assertion: the requirement is that PDV_SPEL_Neglect_Nord must NOT exist (Nord reuses PDV_SPEL_Neglect_Kyne] | PDV_NordRewardRecords.spec.json § neglect designNote |
+| BC-0490 | commitment | ALL | All 16 Daedric Princes | missing: PDV_Msg_Daedric_ (NAMING-DRIFT? found PDV_Msg_Daedric_Mephala_ChampionEntry) [WAIVED: Over-broad identifier: the row extracted the bare prefix PDV_Msg_Daedric_ rather than a specific record. Verified all 16 Princes have PDV_Msg_Daedric_<stem>_Commitment messages. Not a gap.] | PDV_DaedricPrinceRecordContracts.json, commitmentSignalsRequired field; PDV_DaedricContent |
 
 ## FUTURE (59)
 
@@ -503,7 +498,7 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0762 | other | Nord | Froki/Heimskr/Andurs/Aela recognition dialogue | 1.0/V2 tier; tracked, not gated. | PDV_TargetEndStates_1.0.md Phase 18A/B runtime closeout; PDV_Architecture_v3.md §21.3 |
 | BC-0763 | other | Nord | Nord full stack audit (P2 audit-only lane) | 1.0/V2 tier; tracked, not gated. | references/authoring/PDV_PreBetaRaceGateLedger.md Nord; references/authoring/PDV_PreBetaRa |
 
-## PASS (295)
+## PASS (300)
 
 (passing rows listed in the CSV only)
 

@@ -13,7 +13,31 @@ pattern); Breton creed-loss spell set unauthored; Redguard sect/token
 notif set unauthored; Sync{Orc,Redguard}NeglectSpell absent in manager
 (records exist, never synced); spec-vs-ESP naming drift class
 (PDV_State_* vs PDV_StateTrack_*, 26 near-miss annotations).
-Next: Phase 4 - user triage of the gap ledger, then fix slices.
+Phase 4 triage DONE (2026-06-10, with user). 33 hard GAPs -> 7 real after:
+gate hardening (Daedric aliases, PDV_State_->PDV_StateTrack_ drift,
+doc-basename filter), the native-race Daedric-message invariant (every
+missing response message == a Native race; natives worship via the patron
+deity path, NOT the stigma surface - encoded in the gate, reads
+statesByRace from PDV_DaedricPrinceRecordContracts.json), and 3 waivers
+(Nord-neglect-reuse, over-broad commitment prefix, invented Redguard route
+names). The native-message "gap" was the INVERSE of the Kyne pattern -
+auto-fixing would have slapped stigma messages on the Reclamations and
+Malacath (the natives' own gods). Ledger-first + adjudication earned its
+keep.
+
+REAL BUILD QUEUE (7), concentrated in the known-incomplete races
+(Breton/Orc/Redguard - matches PreBetaRaceGateLedger 'Fail/Readback-Ready'):
+  BC-0477  Breton  PDV_SPEL_CreedLoss_Breton_* (4 creed-loss spells) absent
+  BC-0533  Breton  PDV_State_BretonDruidicFork pressure track absent
+  BC-0487  Orc     PDV_SPEL_Neglect_Orc exists, no SyncOrcNeglectSpell (stub)
+  BC-0488  Redguard PDV_SPEL_Neglect_Redguard exists, no SyncRedguardNeglectSpell
+  BC-0524  Redguard PDV_Bless_Redguard_FarShoresToken reward spell absent
+  BC-0693  Redguard 8 sect/token notif+survey MESGs absent
+  BC-0289  Altmer  PDV_Bless_Altmer_Orthodox_T2 absent (REVIEW: is broad lane
+                   T1-only by design, or genuinely missing T2?)
+Next: Phase 5 fix slices. ESP-record authoring -> Codex preferred; Altmer
+T2 is a design call first. 103 GAP-REVIEW + 293 NEEDS-MANUAL remain as the
+behavior/prose lane (overlaps existing smoke runbooks).
 Owner: Claude (shared tooling with Codex per user direction)
 
 ## 1. Problem

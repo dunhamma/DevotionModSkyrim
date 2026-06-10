@@ -1,2 +1,4 @@
 id,reason
 BC-0485,Negative assertion: the requirement is that PDV_SPEL_Neglect_Nord must NOT exist (Nord reuses PDV_SPEL_Neglect_Kyne, confirmed 6 refs in PDV__ManagerQuest). Absence is the correct state, not a gap.
+BC-0490,Over-broad identifier: the row extracted the bare prefix PDV_Msg_Daedric_ rather than a specific record. Verified all 16 Princes have PDV_Msg_Daedric_<stem>_Commitment messages. Not a gap.
+BC-0261,Contract invented function names (RouteDunmerAsh, RouteRedguardAshAbahDeathDuty). Redguard AshAbah death-duty + Far Shores routing is present in PDV__ManagerQuest.psc (lines ~2617-2706) under different names. Infra reconciliation exists.

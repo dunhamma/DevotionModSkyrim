@@ -67,6 +67,7 @@ const MATRIX_DOC = path.join(ROOT, "references", "authoring", "PDV_QuestReaction
 const STANCE_CSV = path.join(ROOT, "references", "phase4", "PDV_StanceMatrix.csv");
 const DAEDRIC_CSV = path.join(ROOT, "references", "phase4", "PDV_DaedricRacePrinceMatrix.csv");
 const GATE_LEDGER = path.join(ROOT, "references", "authoring", "PDV_PreBetaRaceGateLedger.md");
+const DAEDRIC_CONTRACTS = path.join(ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
 
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const SOURCE_DIR = path.join(ANVIL_ROOT, "mods", "Devotion", "Scripts", "Source");
@@ -244,6 +245,24 @@ function buildDataFacts() {
   }
   for (const row of readCsvObjects(STANCE_CSV) ?? []) facts.stanceNames.add(row.WorshipObject);
   for (const row of readCsvObjects(DAEDRIC_CSV) ?? []) facts.stanceNames.add(row.Prince);
+
+  // Native-state map per Prince stem. A Daedric *response* message
+  // (PDV_Msg_Daedric_<stem>_Response_<race>) is the transgression/stigma
+  // surface for NON-native dabblers; a race that is Native to the Prince
+  // worships through the positive patron-deity path (PDV_Deity_<stem>) and
+  // correctly has no Daedric stigma response. So a missing response message
+  // for a Native race is satisfied-by-design, not a gap. Invariant verified
+  // 2026-06-10: across all 16 Princes, missing-message set == Native-race set.
+  facts.princeNative = new Map(); // stem(lowercased) -> Set(native races)
+  if (fs.existsSync(DAEDRIC_CONTRACTS)) {
+    try {
+      const princes = JSON.parse(fs.readFileSync(DAEDRIC_CONTRACTS, "utf8")).princes ?? [];
+      for (const p of princes) {
+        const natives = new Set(Object.entries(p.statesByRace ?? {}).filter(([, s]) => s === "Native").map(([r]) => r));
+        facts.princeNative.set((p.stem || "").toLowerCase(), natives);
+      }
+    } catch { /* leave map empty; rows fall through to normal checks */ }
+  }
   return facts;
 }
 
@@ -351,6 +370,7 @@ function evaluateRow(row, facts) {
   const missing = [];
   const stubs = [];
   const deadSignals = [];
+  const nativeByDesign = [];
 
   // layer-specific structural checks first
   if (row.verify_layer === "data" && row.surface === "part_b_profile") {
@@ -379,6 +399,13 @@ function evaluateRow(row, facts) {
 
   for (const id of ids) {
     if (!idExists(id, sourceFacts, espFacts, row.verify_layer)) {
+      // Native-race Daedric response message: correct-by-absence (natives
+      // worship via the patron path, not the stigma surface).
+      const dm = id.match(/^PDV_Msg_Daedric_([A-Za-z]+)_Response_([A-Za-z]+)$/);
+      if (dm) {
+        const stem = (DAEDRIC_STEM.find(([full]) => full.replace(/_/g, "") === dm[1])?.[1] ?? dm[1]).toLowerCase();
+        if (dataFacts.princeNative.get(stem)?.has(dm[2])) { nativeByDesign.push(id); continue; }
+      }
       const near = nearMiss(id, sourceFacts, espFacts);
       missing.push(near ? `${id} (NAMING-DRIFT? found ${near})` : id);
       continue;
@@ -398,7 +425,8 @@ function evaluateRow(row, facts) {
     if (deadSignals.length) parts.push(`defined-but-never-called: ${deadSignals.join(", ")}`);
     return { verdict: gapKind(row), detail: parts.join(" | ") };
   }
-  return { verdict: "PASS", detail: `All ${ids.length} identifiers present${row.verify_layer === "source" ? " and reachability clean" : ""}.` };
+  const designNote = nativeByDesign.length ? ` (${nativeByDesign.length} native-race Daedric response message(s) correctly absent: natives worship via the patron path)` : "";
+  return { verdict: "PASS", detail: `All checkable identifiers present${row.verify_layer === "source" ? " and reachability clean" : ""}${designNote}.` };
 }
 
 function gapKind(row) {
