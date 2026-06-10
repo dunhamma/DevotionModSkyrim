@@ -1,9 +1,19 @@
 # PDV Contract-Coverage Completeness Audit - Plan
 
-Status: PHASE 1 COMPLETE (2026-06-10). Phase 0 standards rule live
-(PDV_STANDARDS.md 5.1). Contract extracted: `PDV_BetaContract.csv` =
-765 rows (706 BETA / 59 FUTURE / 0 ADJUDICATE), 7-agent workflow fan-out,
-inputs frozen at repo SHA a69bad36. Next: Phase 2 (gate tool).
+Status: PHASES 0-3 SWEEP COMPLETE (2026-06-10). Standards rule live
+(PDV_STANDARDS.md 5.1). Contract: `PDV_BetaContract.csv` = 765 rows
+(706 BETA / 59 FUTURE), inputs frozen at SHA a69bad36. Gate:
+`tools/pdv_completeness_audit.mjs` (data + source-reachability + ESP scan
+via the Mutagen bridge + runtime-status carry). First sweep:
+PASS=267, GAP=33 (hard, structured-authority), GAP-REVIEW=130 (prose
+authority - may be proposed names), NEEDS-MANUAL=276, FUTURE=59.
+Headline finds: Daedric response MESGs missing for each Prince's NATIVE
+race(s) (Azura lacks Dunmer+Khajiit, Malacath lacks Orc - generator
+pattern); Breton creed-loss spell set unauthored; Redguard sect/token
+notif set unauthored; Sync{Orc,Redguard}NeglectSpell absent in manager
+(records exist, never synced); spec-vs-ESP naming drift class
+(PDV_State_* vs PDV_StateTrack_*, 26 near-miss annotations).
+Next: Phase 4 - user triage of the gap ledger, then fix slices.
 Owner: Claude (shared tooling with Codex per user direction)
 
 ## 1. Problem
