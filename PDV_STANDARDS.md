@@ -382,6 +382,22 @@ The rationale is load-bearing. A decision without a "why" looks arbitrary in thr
 
 When a decision affects build steps, dev environment, or variable conventions, mirror it into `PDV_MOD_SETUP.md` in the relevant section.
 
+### 5.1 Completeness claims must cite a gate
+
+A completeness or "scaled out" claim — about a race, a deity, a signal layer,
+a reward set, or the backend as a whole — must cite the machine gate that
+proves it (e.g. `tools/pdv_completeness_audit.mjs`,
+`tools/pdv_paired_equity_audit.mjs`, a strict `pdv_verify` mode, or a named
+`--check` helper run), or it is an opinion, and must be written as one.
+
+Rationale: five separate "fully scaled out" claims later proved to have gaps
+(BaanDar SGE, stance bake, ScoreAction skew, ProcessDawn trigger, Kyne Part B
+profile). Every one was an ABSENCE, and artifact-anchored verification cannot
+flag what was never authored — only a contract-driven gate can. Per-component
+self-assessment shares the author's blind spot; a citation requirement makes
+the blind spot visible instead of fatal. (Ratified 2026-06-10; see
+`references/authoring/PDV_CompletenessAudit_Plan.md`.)
+
 ---
 
 ## 6. Safety Rules
