@@ -1,10 +1,18 @@
 # PDV Session Thread Continuation - Living Deities Build + Research (2026-06-10)
 
-Branch: `claude/zen-allen-xrjqf8` (worktree
-`.claude/worktrees/loving-wilbur-212b77`; pushed through `37df51c`).
+Branch: `claude/zen-allen-xrjqf8` (CURRENT worktree
+`.claude/worktrees/zen-allen-build`; pushed through `15cc8cf`).
 Everything below is ISOLATED investigatory work - the live Devotion mod is
-untouched except inert data (`PDV_LivingDeities.json`) and a NEW, disabled
-MO2 mod folder.
+untouched except inert data (`PDV_LivingDeities.json`) and NEW, disabled
+MO2 mod folders.
+
+> **Worktree note (2026-06-10):** the earlier worktree
+> `.claude/worktrees/loving-wilbur-212b77` was de-registered from git during a
+> planning gap (its `.git` link was pruned; the folder is now harmless orphaned
+> files on disk - safe to delete). Work continued on a fresh worktree
+> `.claude/worktrees/zen-allen-build` on the same branch; nothing was lost
+> (branch local == remote == `15cc8cf`). The live `PDV__ManagerQuest.psc` was
+> verified byte-identical (412314 bytes) throughout - live source never changed.
 
 ## What this session did (commit order)
 1. `ed0da14` merge of main `2e665b7` (hybrid faucet wiring) + `0b8fde3`
@@ -31,6 +39,27 @@ MO2 mod folder.
    (`references/research/divine-debt/`), relic resonance
    (`references/research/relic-resonance/`), holy days
    (`references/research/holy-days/`).
+6. `2b2e0ee` four white-space dossiers (the four areas with zero Skyrim-faith-mod
+   precedent): A3 interventions (`06_*`), B2 world context (`07_*`), B3 deity
+   politics (`08_*`), B4 authored arcs (`09_*`).
+7. `15cc8cf` **V1-candidate slices.** Slice A = the mood EWMA + band-cross toast
+   teaser, BUILT + machine-proven + isolated (`research/living-deities/teaser-src/`
+   compile 0/0; tool `tools/pdv-mood-teaser-author` --author/--check PASS; mod
+   `Devotion - Living Deities - Mood Teaser`; smoke = `MOOD_TEASER.md`). Slice B
+   (rivalry expansion) = BLOCKED by the B0 finding below; no inert wiring written.
+
+## V1-candidate outcomes (2026-06-10)
+- **Mood teaser (Slice A): DONE, awaits rig smoke.** Net-new "the gods notice you"
+  layer; additive, reversible, degrades to silence. V1 merge is an owner call
+  AFTER smoke (adds `PDV.Mood.*` save state).
+- **Rivalry (Slice B): DEFERRED, not dormant.** CORRECTION to an earlier session
+  claim: Talos->Auri-El rivalry is LIVE + in-game-proven (AGENTS.md 775/788).
+  B0 finding (`RIVALRY_B0_FINDING.md`): rivalry fires ONLY via
+  `AwardCuratedSignal -> AwardPietyInternal`; quest-reaction gains
+  (`ApplyQuestReactionPiety` -> `AdjustFloatValue`) bypass it, so wiring
+  `RivalDeities[]` on Boethiah/Molag Bal/Malacath would be inert. Real expansion
+  = per-deity Papyrus+CK (Talos-style curated-signal pipeline; Molag Bal also
+  needs a deity face). Lore decision recorded; defer until that infra exists.
 
 ## Load-bearing finding (verified)
 `PDV_DiegeticDirector.psc` EXISTS in live source (14KB: Dispatch /
@@ -38,14 +67,15 @@ SetBodyMark / EmitPrayerAnim, D1Enabled-gated). The LD-P1 "not built" claims
 were stale and are now corrected in 03/04. LD-P2 mechanism 4 = routing, not
 greenfield.
 
-## Resume point: the in-game smoke (needs the gaming rig)
-1. MO2 (Anvil): F5, enable mod **Devotion - Living Deities Test** (after
-   Devotion), tick `PDV_LivingDeitiesTest.esp`.
-2. **NEW GAME or main-menu `coc qasmoke` only** (VMAD bake: existing saves
-   leave the three new manager props None -> shipped behavior).
-3. `set PDV_GLO_DebugLevel to 2`; run the counted checks in
-   `research/living-deities/TEST_ESP.md` (mood persist, cross-once,
-   demand offer/fulfill/expire once, boon swap no-stack, clutch gate,
+## Resume point: in-game smokes (need the gaming rig) - TWO independent mods
+Both are disable-able and require a NEW GAME / `coc qasmoke` (VMAD props bake at
+first init). `set PDV_GLO_DebugLevel to 2` for `[PDV]` traces.
+1. **Mood teaser (smallest, V1 candidate):** enable **Devotion - Living Deities
+   - Mood Teaser** + tick `PDV_MoodTeaserTest.esp`. Checks in `MOOD_TEASER.md`:
+   mood drifts/persists, band-cross toast once, decay on idle, disable-reverts.
+2. **Full LD-P1 engine:** enable **Devotion - Living Deities Test** + tick
+   `PDV_LivingDeitiesTest.esp`. Counted checks in `TEST_ESP.md` (mood persist,
+   cross-once, demand offer/fulfill/expire once, boon swap no-stack, clutch gate,
    Hircine curse gate, disable-mod reversion).
 
 ## Open threads
