@@ -10422,12 +10422,14 @@ Function OnMoodBandCross(PDV_DeityBase deity, Int oldBand, Int newBand)
     endIf
 
     ; Anti-spam: at most one band-cross surface per deity per devotion day
-    ; (the band state itself always updates above).
-    Int currentDay = (Utility.GetCurrentGameTime() - 0.25) as Int
-    if StorageUtil.GetIntValue(deityForm, "PDV.Mood.LastCrossToastDay") == currentDay
+    ; (the band state itself always updates above). Store the day ENCODED (+1)
+    ; so the uninitialized-zero StorageUtil default never equals day 0 of a fresh
+    ; game -- otherwise the very first cross (on day 0) is wrongly suppressed.
+    Int encodedDay = ((Utility.GetCurrentGameTime() - 0.25) as Int) + 1
+    if StorageUtil.GetIntValue(deityForm, "PDV.Mood.LastCrossToastDay") == encodedDay
         return
     endIf
-    StorageUtil.SetIntValue(deityForm, "PDV.Mood.LastCrossToastDay", currentDay)
+    StorageUtil.SetIntValue(deityForm, "PDV.Mood.LastCrossToastDay", encodedDay)
     StorageUtil.SetIntValue(deityForm, "PDV.Omen.DreamArmed", 1)
 
     if newBand > oldBand
