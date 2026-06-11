@@ -184,12 +184,25 @@ function selectedPrinces(princes, princeKey) {
   return [match];
 }
 
-function genericCheck() {
+function genericMarkerForSource(sourceMode) {
+  const prefix = "Daedric generic silence probe ignored: eventbus_201_";
+  if (sourceMode === "mcm") {
+    return `${prefix}mcm_generic_probe`;
+  }
+  // The physical QASmoke probe activator and the organic path both emit the
+  // "generic" source id; "any" stays a prefix match that accepts either.
+  if (sourceMode === "qasmoke" || sourceMode === "organic") {
+    return `${prefix}generic`;
+  }
+  return prefix;
+}
+
+function genericCheck(sourceMode) {
   return {
     id: "generic-silence",
     reference: "PDV_REFR_Daedric_GenericSilenceProbe_QASmoke",
     required: ["RouteDaedricGenericSilenceProbe complete: 201"],
-    optional: ["Daedric generic silence probe ignored: eventbus_201_generic"],
+    optional: [genericMarkerForSource(sourceMode)],
   };
 }
 
@@ -251,7 +264,7 @@ function checkLog(logText, options, princes) {
     }, options.strictManager)
   );
 
-  const generic = options.includeGeneric ? checkMarkerGroup(lines, genericCheck(), options.strictManager) : null;
+  const generic = options.includeGeneric ? checkMarkerGroup(lines, genericCheck(options.source), options.strictManager) : null;
   const groups = generic ? [...princeGroups, generic] : princeGroups;
 
   return {
@@ -277,9 +290,10 @@ function embeddedLog(princes) {
     lines.push(`[PDV] Manager: ${managerMarkerForPrince(prince, "mcm")}all`);
     lines.push(`[PDV] Manager: ${managerMarkerForPrince(prince, "organic")}`);
   }
-  const generic = genericCheck();
+  const generic = genericCheck("any");
   lines.push(`[PDV] EventBus: ${generic.required[0]}`);
-  lines.push(`[PDV] Manager: ${generic.optional[0]}`);
+  lines.push(`[PDV] Manager: ${genericMarkerForSource("qasmoke")}`);
+  lines.push(`[PDV] Manager: ${genericMarkerForSource("mcm")}`);
   return lines.join(os.EOL);
 }
 
@@ -302,7 +316,7 @@ function listReport(options, princes) {
       required: prince.required,
       optional: [managerMarkerForPrince(prince, options.source)],
     })),
-    generic: options.includeGeneric ? genericCheck() : null,
+    generic: options.includeGeneric ? genericCheck(options.source) : null,
   };
 }
 

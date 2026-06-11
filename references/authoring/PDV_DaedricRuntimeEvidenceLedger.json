@@ -33,11 +33,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Boethiah.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -54,11 +54,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -120,11 +120,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Azura.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -141,11 +141,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -207,11 +207,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Vaermina.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -228,11 +228,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -294,11 +294,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Meridia.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -315,11 +315,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -381,11 +381,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Molag Bal.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -402,11 +402,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -468,11 +468,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Mephala.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -489,11 +489,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -555,11 +555,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Malacath.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -576,11 +576,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -642,11 +642,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Mehrunes Dagon.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -663,11 +663,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -729,11 +729,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Sheogorath.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -750,11 +750,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -816,11 +816,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Namira.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -837,11 +837,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -903,11 +903,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Sanguine.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -924,11 +924,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -990,11 +990,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Clavicus Vile.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -1011,11 +1011,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -1077,11 +1077,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Hermaeus Mora.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -1098,11 +1098,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -1164,11 +1164,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Nocturnal.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -1185,11 +1185,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -1251,11 +1251,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Peryite.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -1272,11 +1272,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -1338,11 +1338,11 @@
       "overall": "pending",
       "slots": {
         "mcmRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm route checker passed for Hircine.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
           "status": "pending",
@@ -1359,11 +1359,11 @@
           "log": ""
         },
         "genericSilence": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "note": "mcm generic silence checker passed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
           "status": "pending",
@@ -1417,6 +1417,295 @@
       }
     }
   ],
-  "observations": [],
-  "updatedAtLocal": "07/06/2026, 8:12:26 pm AEST"
+  "observations": [
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Boethiah",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Boethiah.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Azura",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Azura.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Vaermina",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Vaermina.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Meridia",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Meridia.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Molag",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Molag Bal.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Mephala",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Mephala.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Malacath",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Malacath.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Dagon",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Mehrunes Dagon.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Sheo",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Sheogorath.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Namira",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Namira.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Sanguine",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Sanguine.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Vile",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Clavicus Vile.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Mora",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Hermaeus Mora.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Nocturnal",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Nocturnal.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Peryite",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Peryite.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Hircine",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Hircine.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Boethiah",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Azura",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Vaermina",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Meridia",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Molag",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Mephala",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Malacath",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Dagon",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Sheo",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Namira",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Sanguine",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Vile",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Mora",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Nocturnal",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Peryite",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+      "prince": "Hircine",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    }
+  ],
+  "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST"
 }
