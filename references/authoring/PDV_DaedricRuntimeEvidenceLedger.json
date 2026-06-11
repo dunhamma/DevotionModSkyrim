@@ -47,10 +47,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -134,10 +134,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -221,10 +221,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -308,10 +308,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -395,10 +395,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -482,10 +482,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -569,10 +569,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -656,10 +656,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -743,10 +743,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -830,10 +830,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -917,10 +917,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -1004,10 +1004,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -1091,10 +1091,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -1178,10 +1178,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -1265,10 +1265,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
         "genericSilence": {
@@ -1352,10 +1352,10 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+          "note": "DA05 stage 100 organic route fired to Hircine in-game post-FormList-fix (index 15 -> Hircine), tester-confirmed.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince hircine --strict-manager --source organic",
           "log": ""
         },
         "genericSilence": {
@@ -1849,7 +1849,160 @@
       "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
       "command": "",
       "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Boethiah",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Azura",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Vaermina",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Meridia",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Molag",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Mephala",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Malacath",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Dagon",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Sheo",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Namira",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Sanguine",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Vile",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Mora",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Nocturnal",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Peryite",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Hircine",
+      "slot": "organicRoute",
+      "status": "conditional",
+      "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+      "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
+      "prince": "Hircine",
+      "slot": "organicRoute",
+      "status": "pass",
+      "note": "DA05 stage 100 organic route fired to Hircine in-game post-FormList-fix (index 15 -> Hircine), tester-confirmed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince hircine --strict-manager --source organic",
+      "log": ""
     }
   ],
-  "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST"
+  "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST"
 }
