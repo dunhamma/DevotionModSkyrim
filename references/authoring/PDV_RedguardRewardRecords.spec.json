@@ -515,5 +515,6 @@
     "R6": "No new Daedric Prince records; Daedric forks route through the Phase 20C Daedric system. (Redguard has no native Daedric lane in this spec.)",
     "R7": "Gate type = state-enum-gated: rewards gate on PDV_State_RedguardSect + focused patron tier within the sect; offer-like for the focused patron.",
     "R8": "<=2 always-on families (broad AncestorSpine + one focused Yokudan patron); ancestor reverence + Far Shores token are SUPPORT not a 3rd family; broad < focused (suppressed under focus); HoonDing weekly cap; one anti-farm mechanism per act; per-tier magnitude ceiling ~12% (max used = 12% OneHanded T3 / 15% HealRateMult T3 within ledger ceiling band); creed-violation loss medium/major only (3 entries). ASCII-only text; Skyrim ActorValue names (ResistMagic, DamageResist, HealRateMult, OneHanded, CriticalChance, SpeedMult); deityIndex next-available; Arkay create:false (infra only)."
-  }
+  },
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only consolidation; magnitudes are cumulative totals, do not re-run"
 }

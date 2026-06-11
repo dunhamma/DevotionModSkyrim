@@ -483,5 +483,6 @@
       "khajiitDeityIndices": "40-43 preserved; Magnus/Xarxes assign next-available above the highest existing index at author time"
     },
     "verify": "housecarl readback (profile Devotion Dev): Magnus/Xarxes QUSTs exist with SGE flag + SEQ entries, DeityName/DeityIndex/Stance_Altmer set; FLST 017E47 includes Magnus/Xarxes; the 11 new SPEL (broad T2 + 9 emphasis + neglect) exist with correct MGEF actor-values/magnitudes; AuriEl Stance_Altmer reconciled. Then strict verifier (--strict-phase20-race-costing --strict-phase20-altmer) and runtime smoke (p2-books track per PDV_BetaTestPacket_Altmer.md)."
-  }
+  },
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only consolidation; magnitudes are cumulative totals, do not re-run"
 }

@@ -15,6 +15,14 @@
  * Usage:
  *   node tools/pdv_cumulative_rebalance.mjs --dry    # print per-family result
  *   node tools/pdv_cumulative_rebalance.mjs --write   # rewrite the spec files
+ *
+ * NOT IDEMPOTENT BY NATURE: the rewrite sums per-ActorValue up the tiers, so a
+ * second pass over already-cumulative magnitudes would DOUBLE them (e.g. Orc
+ * City Restoration 5/13/23 re-sums to 18/41). A `cumulativeRebalanceApplied`
+ * marker is stamped into each spec on --write and specs carrying it are
+ * REFUSED on later runs (no --force escape on purpose: if magnitudes must be
+ * retuned, edit the cumulative values in the spec by hand or remove the marker
+ * deliberately with full knowledge).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -53,6 +61,12 @@ const report = [];
 for (const race of RACES) {
   const file = path.join(AUTHORING, `PDV_${race}RewardRecords.spec.json`);
   const spec = JSON.parse(fs.readFileSync(file, "utf8"));
+
+  if (spec.cumulativeRebalanceApplied) {
+    console.log(`  ${race}: SKIPPED -- already cumulative (${spec.cumulativeRebalanceApplied}); a re-run would double magnitudes.`);
+    continue;
+  }
+
   const rewards = spec.emphasisRewards || [];
 
   // Group by emphasis, in first-seen order.
@@ -92,7 +106,10 @@ for (const race of RACES) {
     report.push(lines.join("\n"));
   }
 
-  if (write) fs.writeFileSync(file, JSON.stringify(spec, null, 2) + "\n", "utf8");
+  if (write) {
+    spec.cumulativeRebalanceApplied = "2026-06-11 highest-tier-only consolidation; magnitudes are cumulative totals, do not re-run";
+    fs.writeFileSync(file, JSON.stringify(spec, null, 2) + "\n", "utf8");
+  }
 }
 
 console.log(report.join("\n\n"));

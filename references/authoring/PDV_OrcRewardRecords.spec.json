@@ -488,5 +488,6 @@
     "Trinimac carries NO reward family in V1 (rare ideological pressure per the brief and roster). It is created and wired as a focusable/pressure record so Altmer can reconcile it and future content can use it, but it grants no always-on boon -- keeping the family count at 2.",
     "Neglect is a single gentle DamageResist -5 (code-keeping is the Orc identity stat), distinct from creed loss; it bites only after sustained absence of life-mode-appropriate acts, with curse-code rupture handled in creedViolationLoss, matching 'gentle; bite at code-rupture/curse.'",
     "Broad Malacath uses DamageResist (T1) then DamageResist+HealRateMult (T2) -- code-keeping resilience that holds in any life mode and is intentionally softer than every focused-family T2, so suppression-under-focus is a real downgrade-to-upgrade, not a sidegrade."
-  ]
+  ],
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only consolidation; magnitudes are cumulative totals, do not re-run"
 }
