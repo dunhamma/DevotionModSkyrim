@@ -68,17 +68,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Boethiah 3-signal route -> Seeker fired gameplay SendPrismaDaedricToast (boon/price) named correctly, no panel; tester + log confirmed.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -155,17 +155,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -242,17 +242,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -329,17 +329,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -416,17 +416,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -503,17 +503,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -590,17 +590,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -677,17 +677,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -764,17 +764,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -851,17 +851,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -938,17 +938,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -1025,17 +1025,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -1112,17 +1112,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -1199,17 +1199,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -1286,17 +1286,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -1373,17 +1373,17 @@
           "log": ""
         },
         "summaryMessage": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+          "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+          "command": "MCM Debug -> Daedric -> Force Seeker",
           "log": ""
         },
         "prismaNotification": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "conditional",
+          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
           "log": ""
         },
         "saveLoad": {
@@ -2002,7 +2002,448 @@
       "note": "DA05 stage 100 organic route fired to Hircine in-game post-FormList-fix (index 15 -> Hircine), tester-confirmed.",
       "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince hircine --strict-manager --source organic",
       "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Boethiah",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Azura",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Vaermina",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Meridia",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Molag",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Mephala",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Malacath",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Dagon",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Sheo",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Namira",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Sanguine",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Vile",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Mora",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Nocturnal",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Peryite",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Hircine",
+      "slot": "summaryMessage",
+      "status": "pass",
+      "note": "Authored per-Prince entry line shown (fiction, no route id) for all 16; tester-confirmed Y across roster.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Boethiah",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Azura",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Vaermina",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Meridia",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Molag",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Mephala",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Malacath",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Dagon",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Sheo",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Namira",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Sanguine",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Vile",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Mora",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Nocturnal",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Peryite",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:38:33 pm AEST",
+      "prince": "Hircine",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Prisma toast appeared naming the correct Prince for all 16; no full-panel auto-open.",
+      "command": "MCM Debug -> Daedric -> Force Seeker",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Boethiah",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Azura",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Vaermina",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Meridia",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Molag",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Mephala",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Malacath",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Dagon",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Sheo",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Namira",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Sanguine",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Vile",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Mora",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Nocturnal",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Peryite",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Hircine",
+      "slot": "prismaNotification",
+      "status": "conditional",
+      "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
+      "prince": "Boethiah",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "Boethiah 3-signal route -> Seeker fired gameplay SendPrismaDaedricToast (boon/price) named correctly, no panel; tester + log confirmed.",
+      "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+      "log": ""
     }
   ],
-  "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST"
+  "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST"
 }
