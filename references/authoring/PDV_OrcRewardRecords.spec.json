@@ -251,7 +251,7 @@
           "effectName": "Restoration"
         },
         {
-          "actorValue": "Speech",
+          "actorValue": "Speechcraft",
           "magnitude": 8,
           "effectName": "Speech"
         }
@@ -274,12 +274,12 @@
           "effectName": "Restoration"
         },
         {
-          "actorValue": "Speech",
+          "actorValue": "Speechcraft",
           "magnitude": 20,
           "effectName": "Speech"
         },
         {
-          "actorValue": "BlockSkill",
+          "actorValue": "Block",
           "magnitude": 5,
           "effectName": "Block"
         }
@@ -321,7 +321,7 @@
           "effectName": "One-Handed"
         },
         {
-          "actorValue": "BlockSkill",
+          "actorValue": "Block",
           "magnitude": 8,
           "effectName": "Block"
         }
@@ -344,7 +344,7 @@
           "effectName": "One-Handed"
         },
         {
-          "actorValue": "BlockSkill",
+          "actorValue": "Block",
           "magnitude": 20,
           "effectName": "Block"
         },
@@ -483,8 +483,8 @@
   "judgmentCalls": [
     "R3 focus mapping: the Orc brief makes LIFE MODE the focus (not separate patrons), so the three Khajiit-style focused 3-tier sets are keyed Stronghold/City/LegionExile, all resolving under Malacath. This honors 'Malacath is the ONE religious spine' while still giving R3's three-tier focused structure.",
     "Equal felt value vs. locked pace multipliers: the costing manifest LOCKS slower City (x0.75) and LegionExile (x0.60) dawn rate multipliers and longer calendars. I read this as PACE (time-to-tier), not VALUE -- so terminal per-tier magnitudes are equalized across all three modes (City/LegionExile reach the same ceilings, just later), satisfying 'City/Legion must feel complete not failed.'",
-    "ActorValue 'Block' is authored as BlockSkill (the Skyrim ActorValue id for the Block skill), matching the engine name; displayName/playerFacingText say 'Block'.",
-    "Magnitude shape mirrors the Nord/Khajiit template (T1 single ~5, T2 two effects ~8/8, T3 three effects topping at 10-12) with distinct AV themes per life mode (Stronghold = Smithing/HeavyArmor/DamageResist; City = Restoration/Speech/BlockSkill; LegionExile = OneHanded/BlockSkill/StaminaRateMult). All <=12.0, none exceeding the ~12% ceiling, and roughly equal aggregate felt value per tier across modes.",
+    "ActorValue 'Block' uses the project canonical 'Block' spec string; author tools resolve it to the engine Block ActorValue while displayName/playerFacingText say 'Block'.",
+    "Magnitude shape mirrors the Nord/Khajiit template (T1 single ~5, T2 two effects ~8/8, T3 three effects topping at 10-12) with distinct AV themes per life mode (Stronghold = Smithing/HeavyArmor/DamageResist; City = Restoration/Speechcraft/Block; LegionExile = OneHanded/Block/StaminaRateMult). All <=12.0, none exceeding the ~12% ceiling, and roughly equal aggregate felt value per tier across modes.",
     "Trinimac carries NO reward family in V1 (rare ideological pressure per the brief and roster). It is created and wired as a focusable/pressure record so Altmer can reconcile it and future content can use it, but it grants no always-on boon -- keeping the family count at 2.",
     "Neglect is a single gentle DamageResist -5 (code-keeping is the Orc identity stat), distinct from creed loss; it bites only after sustained absence of life-mode-appropriate acts, with curse-code rupture handled in creedViolationLoss, matching 'gentle; bite at code-rupture/curse.'",
     "Broad Malacath uses DamageResist (T1) then DamageResist+HealRateMult (T2) -- code-keeping resilience that holds in any life mode and is intentionally softer than every focused-family T2, so suppression-under-focus is a real downgrade-to-upgrade, not a sidegrade."

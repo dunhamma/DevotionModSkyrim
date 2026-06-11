@@ -528,16 +528,40 @@ function writeLedger(results, counts, facts) {
     lines.push("| ID | Surface | Race | Target | Detail | Authority |");
     lines.push("|---|---|---|---|---|---|");
     for (const r of rows) {
-      lines.push(`| ${r.id} | ${r.surface} | ${r.race} | ${r.target} | ${r.detail.replace(/\|/g, "/")} | ${r.authority.replace(/\|/g, "/").slice(0, 90)} |`);
+      const detail = asciiSafe(r.detail).replace(/\|/g, "/");
+      const authority = asciiSafe(r.authority).replace(/\|/g, "/").slice(0, 90);
+      lines.push(`| ${asciiSafe(r.id)} | ${asciiSafe(r.surface)} | ${asciiSafe(r.race)} | ${asciiSafe(r.target)} | ${detail} | ${authority} |`);
     }
     lines.push("");
   }
   fs.writeFileSync(OUT_MD, lines.join("\n") + "\n", "utf8");
 
   const cols = ["id", "surface", "race", "target", "tier", "verify_layer", "verdict", "detail", "requirement", "authority"];
-  const esc = (v) => (/[",\n\r]/.test(String(v ?? "")) ? `"${String(v ?? "").replace(/"/g, '""')}"` : String(v ?? ""));
+  const esc = (v) => (/[",\n\r]/.test(asciiSafe(v)) ? `"${asciiSafe(v).replace(/"/g, '""')}"` : asciiSafe(v));
   const csv = [cols.join(","), ...sorted.map((r) => cols.map((c) => esc(r[c])).join(","))];
   fs.writeFileSync(OUT_CSV, csv.join("\r\n") + "\r\n", "utf8");
+}
+
+function asciiSafe(value) {
+  return String(value ?? "")
+    .replace(/\u2014/g, "--")
+    .replace(/[\u2010\u2011\u2012\u2013]/g, "-")
+    .replace(/\u2212/g, "-")
+    .replace(/\u2190/g, "<-")
+    .replace(/\u2192/g, "->")
+    .replace(/\u2265/g, ">=")
+    .replace(/\u2264/g, "<=")
+    .replace(/\u00d7/g, "x")
+    .replace(/\u00a7/g, "Section")
+    .replace(/\u2026/g, "...")
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201c\u201d]/g, "\"")
+    .replace(/[\u2713\u2705]/g, "OK")
+    .replace(/\u26a0\ufe0f?/g, "WARNING")
+    .replace(/\u00f8/g, "o")
+    .replace(/\u00d8/g, "O")
+    .replace(/\u00a0/g, " ")
+    .replace(/[^\x00-\x7F]/g, "?");
 }
 
 main();

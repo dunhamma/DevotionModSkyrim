@@ -2,7 +2,7 @@
 
 **Created:** 2026-06-10  
 **Status:** Active manual/runtime handoff after Nord route-entry drift repair and Bosmer DA05 source fill  
-**Companions:** `PDV_BetaTestPacket_*.md`, `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
+**Companions:** `PDV_BetaTestPacket_*.md`, `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
 
 ## Purpose
 
@@ -10,6 +10,12 @@ This is the current testing queue. It starts after repo-side readback and
 verifier work. Passing these checks requires in-game runtime/manual evidence;
 do not replace them with source review, QASmoke-only route proof, or verifier
 output.
+
+2026-06-12 handoff note: the Hircine source/VMAD display drift is fixed and
+compiled, so Hircine should be tested first in the Daedric proof session. See
+`PDV_SessionHandoff_HircineAuditFixes.md` for the exact route and evidence
+commands. This is still compile/readback proof only until runtime/manual slots
+are recorded.
 
 ## Preflight Before Opening Skyrim
 
@@ -235,7 +241,7 @@ Required to record:
 
 - each event fires its EventBus marker with the CSV-exact delta
 - **Trespass `361`** specifically (newest wiring; enter an owned home uninvited and
-  detected) — confirm `event 361` fires
+  detected) -- confirm `event 361` fires
 - race-gate negative: a non-native god scores `0` for the same act
 - attribution filter: environmental/indirect kills log
   `skipped non-scoring attribution`
