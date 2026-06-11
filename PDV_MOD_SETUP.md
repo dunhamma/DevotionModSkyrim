@@ -956,6 +956,9 @@ Check off as you go. If something at step N breaks, the problem is in step N Ã¢â
 
 ## Common Errors and Fixes
 
+**Author-tool ESP write fails "used by another process" (and Skyrim/xEdit/CK are NOT running):**
+The houseCARL MCP's Mutagen overlay holds an open handle on the Anvil load order, including `PlayerDevotion_Framework.esp`, after any houseCARL read in the session. Pointing houseCARL elsewhere releases it. Workaround (verified 2026-06-11): `housecarl_set_mo2_instance` -> `D:\Wabbajack\modlists\DoD`, run the ESP write(s), then re-point to `D:\Wabbajack\modlists\Anvil`. Always re-point back: the instance choice persists to disk. If `SkyrimSE.exe` IS in the tasklist, that is the lock instead -- the game must quit to desktop first.
+
 **CK crashes on load:**
 Usually a corrupted plugin. Check your load order in MO2. Ensure no plugin has a missing master.
 
@@ -1011,6 +1014,8 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 ---
 
 ## Notes / Decisions Log
+
+**2026-06-11 AEST - Hircine display-surface drift and SEQ/audit hygiene:** `PDV_DaedricPath_Hircine.psc` keeps its Phase 13 hunt/residue path but now declares the standard all-Prince display/control properties and proof helpers already wired in the ESP, including per-race responses, exit/lapse/neglect texture messages, and controlled-signal deltas. Compiled `PDV_DaedricPath_Hircine` with 0 errors/0 warnings; refreshed `PlayerDevotion_Framework.seq` with 39 SGE quests and backup `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\PlayerDevotion_Framework.seq.20260611-094346.bak`; default verifier is `FAIL=0, WARN=2`. The same pass normalized Orc spec ActorValues to `Speechcraft`/`Block`, deleted `generated/_contract_raw.json`, and made completeness-ledger output ASCII-safe. The completeness audit still fails closed on the same adjudication-required Redguard/Breton hard gaps.
 
 **2026-06-10 - Generic faucet FormList content helper:** `tools\pdv-phase20-p2-receiver-author` now owns the exact vanilla content fill for `PDV_FLST_FaucetSkillBooks`, `PDV_FLST_FaucetSpellTomes`, `PDV_FLST_FaucetRaiseUndeadEffects`, and `PDV_FLST_FaucetDaedricArtifacts` through `--fill-generic-faucets` and `--check-generic-faucet-fill`. The fill gates events `340/341/365/368` and uses the corrected Sneak skill-book FormIDs plus Ebony Mail. Live fill completed with backup `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\PlayerDevotion_Framework.esp.20260610-191400.bak`; readback exact counts are `90/93/8/19`. If a future write fails with `PlayerDevotion_Framework.esp` in use, close the external process holding the Devotion mod folder, then rerun fill followed by the check.
 

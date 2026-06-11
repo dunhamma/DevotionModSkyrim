@@ -697,6 +697,25 @@ Build cost grows with deity count, but each deity is independent of every other 
 
 ## 13. Revisions
 
+### v1.12 - 2026-06-11 - Highest-tier-only reward consolidation (all races)
+
+Reward tier sets no longer stack additively. Every race's focused tier family
+(`Sync<Race>RewardFamily`) and every substrate triad
+(`PDV_SubstrateBase.SyncSubstrateBoonsToTier`) now grants ONLY the highest
+qualifying tier/slot, whose record carries the cumulative magnitude of all the
+tiers below it (rebalanced via `tools/pdv_cumulative_rebalance.mjs`, 38
+families; descriptions regenerated via `tools/pdv_reward_desc_regen.mjs`).
+Total power is unchanged; the Active Effects list shows ~3 named bonuses per
+active family instead of the full per-tier stack. Two-tier broad sets remain
+additive by design (already <=3 effects). New invariant for reward authoring:
+**a tier spell's magnitudes are CUMULATIVE totals, not per-tier deltas** - any
+future tier added to a family must carry the summed value. Argonian
+consolidation runtime-validated; other races machine-proven (compile +
+readback), per-race smoke pending. Same session: Argonian gameplay-variety
+tranche (posture dreams, bed-of-choice declaration + Rooted Rest, Shadowscale
+veil, Waters That Remember, permanent Hist Adaptation rite) - see the AGENTS
+Decisions Log 2026-06-11 entries.
+
 ### v1.11 - 2026-05-16 - Origin race normalization
 
 `PDV_Origin` now treats vanilla vampire races as variants of the player's permanent cultural origin, not as separate origins. Temporary beast-form races now defer one-shot origin initialization rather than baking the Imperial fallback while the player is transformed. Compile and verifier passed with `FAIL=0, WARN=0, TODO=0`.
