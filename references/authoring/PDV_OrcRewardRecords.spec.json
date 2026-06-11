@@ -251,6 +251,7 @@
           "effectName": "Restoration"
         },
         {
+          "magicEffectEditorId": "PDV_MGEF_Orc_City_T2_Speech",
           "actorValue": "Speechcraft",
           "magnitude": 8,
           "effectName": "Speech"
@@ -274,11 +275,13 @@
           "effectName": "Restoration"
         },
         {
+          "magicEffectEditorId": "PDV_MGEF_Orc_City_T3_Speech",
           "actorValue": "Speechcraft",
           "magnitude": 20,
           "effectName": "Speech"
         },
         {
+          "magicEffectEditorId": "PDV_MGEF_Orc_City_T3_BlockSkill",
           "actorValue": "Block",
           "magnitude": 5,
           "effectName": "Block"
@@ -321,6 +324,7 @@
           "effectName": "One-Handed"
         },
         {
+          "magicEffectEditorId": "PDV_MGEF_Orc_LegionExile_T2_BlockSkill",
           "actorValue": "Block",
           "magnitude": 8,
           "effectName": "Block"
@@ -344,6 +348,7 @@
           "effectName": "One-Handed"
         },
         {
+          "magicEffectEditorId": "PDV_MGEF_Orc_LegionExile_T3_BlockSkill",
           "actorValue": "Block",
           "magnitude": 20,
           "effectName": "Block"
@@ -489,5 +494,5 @@
     "Neglect is a single gentle DamageResist -5 (code-keeping is the Orc identity stat), distinct from creed loss; it bites only after sustained absence of life-mode-appropriate acts, with curse-code rupture handled in creedViolationLoss, matching 'gentle; bite at code-rupture/curse.'",
     "Broad Malacath uses DamageResist (T1) then DamageResist+HealRateMult (T2) -- code-keeping resilience that holds in any life mode and is intentionally softer than every focused-family T2, so suppression-under-focus is a real downgrade-to-upgrade, not a sidegrade."
   ],
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only consolidation; magnitudes are cumulative totals, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
 }
