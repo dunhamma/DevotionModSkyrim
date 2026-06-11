@@ -92,13 +92,13 @@ try
     var playerRef = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x000014);
     var selectedLiveQuestSources = SelectDaedricLiveQuestSources(daedricLiveQuestSources, selected);
 
+    var manifestOrderedQuestKeys = new List<FormKey>();
     foreach (var prince in selected)
     {
         var princeIndex = PrinceIndexFor(manifest, prince);
         var context = BuildPrinceContext(mod, index, allocator, prince, template, debugGlobal, originGlobal, createMissing, report);
         WirePrinceQuest(context, prince, report);
-        EnsureFormListEntry(operationalList, context.Quest.FormKey, report, prince.questEditorId!, manifest.operationalFormList!);
-        EnsureFormListEntry(devList, context.Quest.FormKey, report, prince.questEditorId!, manifest.devFormList!);
+        manifestOrderedQuestKeys.Add(context.Quest.FormKey);
         if (!checkOnly)
         {
             EnsureDaedricProofActivator(mod, index, allocator, prince, princeIndex, eventBus.FormKey, playerRef, originGlobal.FormKey, debugGlobal.FormKey, report);
@@ -107,8 +107,15 @@ try
         CheckDaedricProofActivator(index, prince, princeIndex, report);
     }
 
-    if (!checkOnly)
+    if (checkOnly)
     {
+        CheckFormListOrder(operationalList, manifestOrderedQuestKeys, report, manifest.operationalFormList!);
+        CheckFormListOrder(devList, manifestOrderedQuestKeys, report, manifest.devFormList!);
+    }
+    else
+    {
+        RebuildFormListInManifestOrder(operationalList, manifestOrderedQuestKeys, report, manifest.operationalFormList!);
+        RebuildFormListInManifestOrder(devList, manifestOrderedQuestKeys, report, manifest.devFormList!);
         WireManagerDaedricList(managerQuest, operationalList, report);
         EnsureDaedricGenericProbeActivator(mod, index, allocator, eventBus.FormKey, playerRef, originGlobal.FormKey, debugGlobal.FormKey, report);
         EnsureDaedricLiveQuestSourceFormLists(mod, index, allocator, selectedLiveQuestSources, report);
@@ -1264,6 +1271,38 @@ static void EnsureFormListEntry(FormList formList, FormKey formKey, AuthorReport
 
     formList.Items.Add(formKey.ToLinkGetter<ISkyrimMajorRecordGetter>());
     report.Actions.Add($"Added {label} to {formListLabel}.");
+}
+
+static void RebuildFormListInManifestOrder(FormList formList, List<FormKey> orderedKeys, AuthorReport report, string formListLabel)
+{
+    var currentOrder = formList.Items.Select(i => i.FormKey).ToList();
+    if (currentOrder.SequenceEqual(orderedKeys))
+    {
+        report.Actions.Add($"{formListLabel}: already in manifest order ({orderedKeys.Count} entries).");
+        return;
+    }
+    formList.Items.Clear();
+    foreach (var key in orderedKeys)
+        formList.Items.Add(key.ToLinkGetter<ISkyrimMajorRecordGetter>());
+    report.Actions.Add($"Rebuilt {formListLabel} in manifest order ({orderedKeys.Count} entries, was out of order).");
+}
+
+static void CheckFormListOrder(FormList formList, List<FormKey> orderedKeys, AuthorReport report, string formListLabel)
+{
+    var currentOrder = formList.Items.Select(i => i.FormKey).ToList();
+    if (currentOrder.SequenceEqual(orderedKeys))
+    {
+        return;
+    }
+
+    report.Errors.Add($"{formListLabel}: entries are not in manifest order. Run --create-missing to rebuild.");
+    for (int slot = 0; slot < Math.Max(currentOrder.Count, orderedKeys.Count); slot++)
+    {
+        var actual = slot < currentOrder.Count ? currentOrder[slot].ToString() : "(none)";
+        var expected = slot < orderedKeys.Count ? orderedKeys[slot].ToString() : "(none)";
+        var flag = string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase) ? "ok" : "MISWIRED";
+        report.Actions.Add($"{formListLabel} slot {slot}: actual={actual} expected={expected} [{flag}]");
+    }
 }
 
 static T RequireRecord<T>(Dictionary<string, ISkyrimMajorRecordGetter> index, string editorId)

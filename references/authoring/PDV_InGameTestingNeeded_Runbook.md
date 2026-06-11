@@ -84,17 +84,15 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
 
 ### 1. Close The Smallest Race Evidence Gaps
 
-Run these first because they are already mostly proven.
+Both Altmer and Khajiit are fully closed.
 
-- Altmer: current packet closed on 2026-06-10. Survey showed Auri-El
-  foundation, `Current standing: Unproven`, and `Last favor: Dawn steadiness`;
-  Active Effects showed `Altmer: Dawn Steadiness`. Final-world placement
-  remains separate.
-- Khajiit: confirm asset status/no-new-mesh for the wired lunar packet in
-  `PDV_BetaTestPacket_Khajiit.md`.
-
-After each pass, update only the matching slot in
-`PDV_Phase20_ManualEvidenceLedger.json`.
+- Altmer: packet closed on 2026-06-10. All seven evidence slots are
+  `evidence-recorded` in `PDV_Phase20_ManualEvidenceLedger.json`.
+- Khajiit: packet closed on 2026-06-10. All seven evidence slots are
+  `evidence-recorded` in `PDV_Phase20_ManualEvidenceLedger.json`, including
+  `assetStatus` (vanilla-only book sources; no new mesh required). The
+  `PDV_BetaTestPacket_Khajiit.md` packet file does not have a dedicated
+  assetStatus section; the evidence lives in the ledger.
 
 ### 2. Run The New Bosmer DA05 Packet
 
@@ -145,6 +143,39 @@ For each race, record:
 
 Use `PDV_DaedricInGameSmokePacket.md` and record results in
 `PDV_DaedricRuntimeEvidenceLedger.json`.
+
+**Console `setstage` gotcha (organic senders).** `setstage <DAxx> <stage>` does
+**nothing** if the quest is not already running -- the stage is never really
+set, so PO3 `OnQuestStageChange` never fires and the organic route stays silent.
+This is a console-test artifact, not a wiring bug. The organic Daedric senders
+only fire naturally because, in real play, the vanilla quest IS running when it
+reaches the routed stage.
+
+There is **no `startquest` console command** (and `saq` starts every quest at
+once -- do not use it), so there is no clean way to force-start one vanilla
+quest from the console. Real, verified commands (see
+`PDV_SkyrimConsoleReference.md`):
+
+```
+sqs DA02               ; list DA02 stages and which are achieved
+getstage DA02          ; current stage number
+setstage DA02 100      ; only takes effect if DA02 is already running
+resetquest DA02        ; reset DA02 to stage 0
+```
+
+For alternate-outcome stages (DA05 100 = killed Sinding vs 105 = spared), the
+two are mutually exclusive on one quest instance: `resetquest DA05` before
+firing the other branch, or the second stage will not change.
+
+Because the organic path is fragile to drive from the console, prefer the
+**QASmoke sender** for route proof (per-Prince activator, or MCM -> Debug ->
+Daedric -> "Route all Princes"): it routes straight through EventBus with the
+baked prince index, needs no vanilla quest running, and avoids `setstage`
+advancing the real quest into handing over its vanilla reward (e.g. DA05 giving
+the Savior's Hide). Confirm any route with the log: `RouteDaedricPrinceSignal
+complete: 200 index <N>` plus `Daedric live signal: <Prince>`. Only the
+`organicRoute` ledger slot requires the real quest-stage path; every other slot
+can ride QASmoke/MCM.
 
 Required per Prince:
 
