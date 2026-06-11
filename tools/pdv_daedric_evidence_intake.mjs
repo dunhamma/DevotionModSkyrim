@@ -35,7 +35,7 @@ const slotDefinitions = [
 ];
 
 const slotKeys = new Set(slotDefinitions.map(([key]) => key));
-const statusValues = new Set(["pending", "pass", "conditional", "fail", "blocked"]);
+const statusValues = new Set(["pending", "pass", "conditional", "fail", "blocked", "not_required"]);
 
 function usage() {
   return [
@@ -48,7 +48,7 @@ function usage() {
     "  --from-runtime-check           Run the Daedric runtime checker and record route evidence if it passes.",
     "  --prince <stem|display|all>     Prince for --record.",
     "  --slot <slot>                   Evidence slot to update.",
-    "  --status <pass|conditional|fail|blocked|pending>",
+    "  --status <pass|conditional|fail|blocked|pending|not_required>",
     "  --note <text>                   Short evidence note.",
     "  --command <text>                Command used for the evidence, if any.",
     "  --log <path>                    Papyrus log or screenshot path, if any.",
@@ -254,7 +254,7 @@ function recordEvidence(ledger, options) {
     throw new Error(`Unknown --slot ${options.slot}. Valid slots: ${[...slotKeys].join(", ")}.`);
   }
   if (!statusValues.has(options.status)) {
-    throw new Error("--status must be one of: pass, conditional, fail, blocked, pending.");
+    throw new Error("--status must be one of: pass, conditional, fail, blocked, pending, not_required.");
   }
   if (!options.note && options.status !== "pending") {
     throw new Error("--note is required unless --status pending.");

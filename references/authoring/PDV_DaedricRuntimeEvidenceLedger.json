@@ -40,9 +40,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -127,9 +127,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -214,9 +214,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -301,9 +301,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -388,9 +388,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -475,9 +475,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -562,9 +562,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -649,9 +649,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -736,9 +736,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -823,9 +823,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -910,9 +910,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -997,9 +997,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -1084,9 +1084,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -1171,9 +1171,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -1258,9 +1258,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -1345,9 +1345,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "not_required",
+          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
           "command": "",
           "log": ""
         },
@@ -1705,7 +1705,151 @@
       "note": "mcm generic silence checker passed.",
       "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
       "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Boethiah",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Azura",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Vaermina",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Meridia",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Molag",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Mephala",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Malacath",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Dagon",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Sheo",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Namira",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Sanguine",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Vile",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Mora",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Nocturnal",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Peryite",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
+      "prince": "Hircine",
+      "slot": "qasmokeRoute",
+      "status": "not_required",
+      "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
+      "command": "",
+      "log": ""
     }
   ],
-  "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST"
+  "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST"
 }
