@@ -4730,7 +4730,7 @@ class Verifier {
       this.phase20RaceCostingGap("Phase 20 CAT-6 source row", `${packet.sourceRow} source row text was not found.`, RACE_CONTENT_MANIFEST);
       return;
     }
-    if (sourceText.includes("At night") && !sourceText.includes("Moving outdoors at night")) {
+    if (/at night/i.test(sourceText) && !/moving outdoors at night/i.test(sourceText)) {
       this.pass("Phase 20 CAT-6 source row", "Khajiit Tier 1 source text matches the night-only pilot wording.", RACE_CONTENT_MANIFEST);
     } else {
       this.phase20RaceCostingGap("Phase 20 CAT-6 source row", "Khajiit Tier 1 source text must describe the pilot as night-only, not outdoor/moving-gated.", RACE_CONTENT_MANIFEST);

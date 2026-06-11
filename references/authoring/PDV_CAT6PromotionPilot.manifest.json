@@ -1,7 +1,7 @@
 {
   "schema": "pdv.cat6.promotion-pilot.v1",
   "status": "pilot-preserved-reward-contract-owned",
-  "updated": "2026-06-04",
+  "updated": "2026-06-12",
   "supersededGrantOwner": "references/authoring/PDV_Phase20_RewardRecordContracts.json",
   "sourceManifest": "race-sheets/PDV_RaceContent_Manifest.md",
   "allowedRows": ["PDV_Bless_Khajiit_Lunar_T1"],
@@ -51,7 +51,7 @@
           "descriptionSource": "manifest-exact",
           "archetype": "ValueModifier",
           "actorValue": "ResistDisease",
-          "magnitude": 10.0,
+          "magnitude": 15.0,
           "duration": 0,
           "area": 0,
           "conditions": "night-only"

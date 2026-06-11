@@ -182,13 +182,13 @@
           "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist",
           "displayName": "Khajiit Lunar Road - Disease",
           "actorValue": "ResistDisease",
-          "magnitude": 10.0,
+          "magnitude": 15.0,
           "area": 0,
           "duration": 0,
           "nightOnly": true
         }
       ],
-      "playerFacingText": "The moons have noticed how you move. At night, your stamina regenerates 5% faster and your resistance to disease rises by 10%.",
+      "playerFacingText": "The moons have noticed how you move. Stamina Regeneration +5% (at night), Disease Resistance +15% (at night).",
       "recordReadbackAssertion": "Pilot-provisional SPEL PDV_Bless_Khajiit_Lunar_T1 exists, carries night-gated stamina/disease MGEFs, preserves CAT-6 source text, and is manager-wired through the all-race reward contract.",
       "grantRemovalOwner": "PDV__ManagerQuest Khajiit lunar substrate at dawn after smoke.",
       "stackCapRule": "No more than one Khajiit lunar T1 active; night-gated subeffects must not bypass manager suppression.",

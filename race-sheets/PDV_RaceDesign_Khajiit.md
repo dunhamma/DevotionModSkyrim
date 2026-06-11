@@ -103,8 +103,8 @@ The substrate is the foundation. It runs before any tier threshold and provides:
 ### Tier 1 — Observant (lunar worship beginning to focus)
 *The moons have noticed how you move through the world.*
 
-- Stamina regen +5% while moving outdoors at night (Khenarthi's road-breath)
-- Resist disease 10% (caravan life's practical grace — Khajiit in Skyrim are resilient)
+- Stamina regen +5% at night (Khenarthi's road-breath)
+- Resist disease 15% (caravan life's practical grace — Khajiit in Skyrim are resilient)
 - First interactions with caravan merchants each in-game day have slightly favorable prices (community recognition)
 - Outdoor rest (not inn, not house) restores stamina fully at Tier 1
 
