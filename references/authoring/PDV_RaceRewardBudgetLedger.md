@@ -263,13 +263,13 @@ Change:
 - Do not reward generic combat as Leki/HoonDing. Martial rewards require conduct, context, or impossible-odds proof.
 - Ash'abah stigma needs visible cost/recognition, even if 1.0 only carries it through light authored reactions and status text.
 Needs custom content:
-- Portable Far Shores token and private/home bonus copied from the Dunmer portable/private shrine pattern.
+- Portable Far Shores token copied from the Dunmer portable/private shrine pattern, with no V1 private/home condition.
 - Light Ash'abah stigma and Redguard recognition dialogue, especially Hall of the Dead / tombkeeper / Alik'r-facing topics.
 - Survey/status readouts that keep Yokudan names primary even when Skyrim institutions are used as proxies.
 Needs verifier/proof:
 - `PDV_State_RedguardSect` with enum values `Crown = 0`, `Forebear = 1`, `AshAbah = 2`, fallback `Forebear`.
 - Sect switching gates: Crown/Forebear require two sect-coded signal days in seven; Ash'abah requires major death, undead, tomb, funerary, or impurity burden.
-- Far Shores token activation, private/home bonus, and Arkay fallback copy that says Tu'whacca, not Arkay.
+- Far Shores token activation and Arkay fallback copy that says Tu'whacca, not Arkay.
 - HoonDing weekly cap and curated major milestone/named-boss proof; combat-odds trigger only if proof-tested.
 - Rejected-hook proof for generic undead spam, generic gold-making, fast travel, generic combat, and broad social-stigma simulation.
 Post-1.0:

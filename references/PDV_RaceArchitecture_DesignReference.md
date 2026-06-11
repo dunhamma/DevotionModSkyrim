@@ -1060,7 +1060,7 @@ The Breton identity is defined by *which tradition you walk*, not which god you 
 - `WitchcraftExposure` is global for all Bretons because occult visibility matters even outside the Hidden Art tradition.
 - `KnightlyVowIntegrity` exists for all Bretons, starts at `100`, and is presented/active only for Knight's Road play. Major dishonor can still write the track while dormant so later attempts to walk the Knight's Road remember what the player has done.
 - `DruidicStanding` exists for all Bretons, starts at `50`, and is presented/active only for Green Way play or explicit Green Way forks. It does not punish non-Green Bretons for ordinary non-druidic life.
-- `PDV_State_BretonDruidicFork` enum values are `Stable = 0`, `Contested = 1`, `GreenAccepted = 2`, `HircineClaimed = 3`, `Excommunicated = 4`, `Penitent = 5`, `Restored = 6`.
+- `PDV_State_BretonDruidicFork` enum values are `None = 0`, `Druidic = 1`, `Werewolf = 2`, `Betrayed = 3`.
 - Cross-lane pressure is asymmetric: Hidden Art can strongly damage KnightlyVowIntegrity and raise WitchcraftExposure; public knightly cover can slowly lower WitchcraftExposure but cannot erase severe occult commitments by itself; Knight's Road and Green Way overlap gently; Hidden Art and Green Way overlap mainly through Hircine/old magic and should create fork pressure.
 - Normal Breton tradition switching is not available in 1.0. The setup tradition is stable; major authored forks may rupture or redirect a path, but casual mid-game reorientation is deferred to a later explicit feature.
 - Breton contextual favors are authored per tradition lane for launch, not per deity: Knight's Road, Hidden Art, and Green Way each receive `3-5` trigger families. Focused deities may tune presentation, but they do not create separate launch favor tables.
@@ -1167,7 +1167,7 @@ Integrity above 75 requires lived conduct: curated mercy, justice, protection, o
 
 **Unique Mechanic 3: Druidic Standing (LOCKED)**
 
-Applies to Green Way players as `PDV_RepTrack_DruidicStanding` (`0..100`) plus `PDV_State_BretonDruidicFork`. Starts at `50`, representing an open but unproven covenant. Decay is cadence-based rather than daily punishment: if no Green Way signal occurred in 5 in-game days, apply `-2` at dawn, with a non-curse floor of `30`.
+Applies to Green Way players as `PDV_RepTrack_DruidicStanding` (`0..100`) plus `PDV_State_BretonDruidicFork`. Starts at `50`, representing an open but unproven covenant. DruidicStanding is pressure-only; the four-state fork is the hard gate for Green Way reward eligibility.
 
 **Vampire interaction:**
 ```
@@ -1185,7 +1185,7 @@ RESTORED: after sustained Pact-aligned behaviour post-ritual
   Permanent piety/tier scar from excommunication period
 ```
 
-Green Way vampire recovery is harder than ordinary neglect recovery: vampire state sets `Excommunicated`, cure moves the player only to `Penitent`, and full restoration requires a curated outdoor rite plus sustained Green Way behavior. Even restored players keep a permanent scar from the rupture.
+Green Way vampire recovery is deferred beyond the four-state V1 fork. In V1, `Betrayed` is the hard creed-loss pole and richer re-entry/restoration states are not separate state values.
 
 **Werewolf interaction (LOCKED — unique fork mechanic):**
 ```
@@ -1233,7 +1233,7 @@ Rationale: The lore explicitly says Druidic Circles are split on werewolfism. Th
 - Public Divine cover is not shrine-spam laundering: no major occult signal for 3 days, `-5` at most once per 7 days.
 - Knightly shrine restoration is capped at 75; Integrity above 75 requires lived mercy, justice, protection, or reparation.
 - DruidicStanding decay is gentle: no Green Way signal for 5 days -> `-2` at dawn, floor `30` unless curse-state rules override.
-- Green Way vampire recovery is stricter than neglect: `Excommunicated` -> `Penitent` -> outdoor rite plus sustained Green Way behavior, with permanent scar.
+- Green Way vampire recovery is stricter than neglect, but V1 represents the hard failure pole as `Betrayed`; richer restoration states are deferred.
 - All three Breton tracks exist for every Breton. `WitchcraftExposure` is always active; `KnightlyVowIntegrity` and `DruidicStanding` can remain dormant/presented only when their tradition matters, but major authored events may write them so future path pressure has memory.
 - Normal Breton tradition switching is unavailable in 1.0. Only major authored forks, such as Green Way -> Hircine through the Druidic Trial, can redirect the active religious frame.
 - Breton contextual favors are tradition-lane authored for launch: Knight's Road, Hidden Art, and Green Way each use `3-5` trigger families, with focused deity flavor layered on top.

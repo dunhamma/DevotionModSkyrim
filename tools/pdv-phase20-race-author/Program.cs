@@ -161,6 +161,56 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
 
     var managerProps = new List<ScriptProperty>();
 
+    // 0) Optional state-track records and global mirrors. This is opt-in so old
+    // planning-only state names do not become records by accident.
+    foreach (var state in spec.stateRecordAuthoring ?? new())
+    {
+        if (string.IsNullOrWhiteSpace(state.editorId))
+        {
+            throw new InvalidOperationException("stateRecordAuthoring[] entry is missing editorId.");
+        }
+
+        var labels = state.labels ?? new();
+        var globalEditorId = string.IsNullOrWhiteSpace(state.globalEditorId)
+            ? $"{state.editorId}_Global"
+            : state.globalEditorId!;
+        var trackName = string.IsNullOrWhiteSpace(state.trackName)
+            ? state.editorId!
+            : state.trackName!;
+
+        var stateGlobal = EnsureGlobal(mod, index, allocator, globalEditorId, state.initialValue ?? 0.0f, report);
+        var stateQuest = EnsureQuest(mod, index, allocator, state.editorId!, report);
+        ConfigureQuestShell(stateQuest, state.editorId!);
+        WireQuestScript(stateQuest, "PDV_StateTrack", new ScriptProperty[]
+        {
+            StringProp("TrackName", trackName),
+            ObjectProp("StateGlobal", stateGlobal.FormKey),
+            ObjectProp("PDV_GLO_DebugLevel", debugGlobal.FormKey),
+            StringListProp("StateLabels", labels.ToArray()),
+        });
+        report.Actions.Add($"Ensured state track {state.editorId} with {labels.Count} labels.");
+
+        foreach (var listEditorId in state.addToFormLists ?? new())
+        {
+            var formList = RequireRecord<FormList>(index, listEditorId);
+            if (!formList.Items.Any(item => item.FormKey.Equals(stateQuest.FormKey)))
+            {
+                formList.Items.Add(stateQuest.FormKey.ToLink<ISkyrimMajorRecordGetter>());
+                report.Actions.Add($"Added {state.editorId} to {listEditorId}.");
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(state.managerGlobalProperty))
+        {
+            managerProps.Add(ObjectProp(state.managerGlobalProperty!, stateGlobal.FormKey));
+        }
+
+        if (!string.IsNullOrWhiteSpace(state.managerTrackProperty))
+        {
+            managerProps.Add(ObjectProp(state.managerTrackProperty!, stateQuest.FormKey));
+        }
+    }
+
     // 1) Deity quests + FormList membership + manager deity properties.
     var questByEditorId = new Dictionary<string, Quest>(StringComparer.OrdinalIgnoreCase);
     foreach (var dq in spec.deityQuests ?? new())
@@ -258,6 +308,20 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
         managerProps.Add(ObjectProp(reward.spellProperty ?? reward.spellEditorId!, spell.FormKey));
     }
 
+    // 5b) Support spells that are not part of the broad/focused reward ladder.
+    //     Redguard Far Shores token uses this path.
+    foreach (var reward in spec.supportSpells ?? new())
+    {
+        var spell = BuildSpell(mod, index, allocator, reward.spellEditorId!, reward.displayName!, reward.playerFacingText!, reward.effects ?? new(), report);
+        managerProps.Add(ObjectProp(reward.spellProperty ?? reward.spellEditorId!, spell.FormKey));
+    }
+
+    if (spec.farShoresToken is { } farShoresToken)
+    {
+        var spell = BuildSpell(mod, index, allocator, farShoresToken.spellEditorId!, farShoresToken.displayName!, farShoresToken.playerFacingText!, farShoresToken.effects ?? new(), report);
+        managerProps.Add(ObjectProp(farShoresToken.spellProperty ?? farShoresToken.spellEditorId!, spell.FormKey));
+    }
+
     // 6) Creed-violation loss spells (applied on authored creed-breach beats).
     //    Only the array (spell-record) shape is authored; the object shape is
     //    signal-penalty routes with no records. Records only here; the manager
@@ -273,6 +337,14 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
                 managerProps.Add(ObjectProp(loss.spellProperty!, index[loss.spellEditorId!].FormKey));
             }
         }
+    }
+
+    // 7) Message/notification records surfaced by the manager.
+    foreach (var messageDefinition in spec.messageRecords ?? new())
+    {
+        var message = EnsureMessage(mod, index, allocator, messageDefinition, report);
+        ConfigureMessage(message, messageDefinition);
+        managerProps.Add(ObjectProp(messageDefinition.property ?? messageDefinition.editorId!, message.FormKey));
     }
 
     WireQuestScript(manager, "PDV__ManagerQuest", managerProps);
@@ -467,6 +539,74 @@ static void WireQuestScript(Quest quest, string scriptName, IEnumerable<ScriptPr
     UpsertProperties(script, properties);
 }
 
+static Quest EnsureQuest(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    string editorId,
+    AuthorReport report)
+{
+    if (index.TryGetValue(editorId, out var existing))
+    {
+        if (existing is not Quest quest)
+        {
+            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected Quest.");
+        }
+
+        return quest;
+    }
+
+    var created = new Quest(allocator.Next(), SkyrimRelease.SkyrimSE);
+    mod.Quests.Add(created);
+    index[editorId] = created;
+    report.Actions.Add($"Created quest {editorId}.");
+    return created;
+}
+
+static void ConfigureQuestShell(Quest quest, string editorId)
+{
+    quest.EditorID = editorId;
+    quest.Name = Tx(editorId);
+    quest.FormVersion = 44;
+    quest.QuestFormVersion = 65;
+    quest.Type = Quest.TypeEnum.None;
+    quest.Priority = 0;
+}
+
+static Global EnsureGlobal(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    string editorId,
+    float value,
+    AuthorReport report)
+{
+    if (index.TryGetValue(editorId, out var existing))
+    {
+        if (existing is not Global global)
+        {
+            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected Global.");
+        }
+
+        ConfigureGlobal(global, editorId, value);
+        return global;
+    }
+
+    var created = new GlobalFloat(allocator.Next(), SkyrimRelease.SkyrimSE);
+    ConfigureGlobal(created, editorId, value);
+    mod.Globals.Add(created);
+    index[editorId] = created;
+    report.Actions.Add($"Created global {editorId}.");
+    return created;
+}
+
+static void ConfigureGlobal(Global global, string editorId, float value)
+{
+    global.EditorID = editorId;
+    global.FormVersion = 44;
+    global.RawFloat = value;
+}
+
 static ScriptEntry EnsureScript(IList<ScriptEntry> scripts, string scriptName)
 {
     var script = scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, scriptName, StringComparison.OrdinalIgnoreCase));
@@ -517,6 +657,81 @@ static ScriptIntProperty IntProp(string name, int value)
         Flags = ScriptProperty.Flag.Edited,
         Data = value
     };
+}
+
+static ScriptStringListProperty StringListProp(string name, params string[] values)
+{
+    var property = new ScriptStringListProperty
+    {
+        Name = name,
+        Flags = ScriptProperty.Flag.Edited
+    };
+
+    foreach (var value in values)
+    {
+        property.Data.Add(value);
+    }
+
+    return property;
+}
+
+static Message EnsureMessage(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    RewardsSpecMessage messageDefinition,
+    AuthorReport report)
+{
+    if (string.IsNullOrWhiteSpace(messageDefinition.editorId))
+    {
+        throw new InvalidOperationException("messageRecords[] entry is missing editorId.");
+    }
+
+    if (index.TryGetValue(messageDefinition.editorId!, out var existing))
+    {
+        if (existing is not Message message)
+        {
+            throw new InvalidOperationException($"{messageDefinition.editorId} already exists as {existing.GetType().Name}, expected Message.");
+        }
+
+        return message;
+    }
+
+    var created = new Message(allocator.Next(), SkyrimRelease.SkyrimSE);
+    mod.Messages.Add(created);
+    index[messageDefinition.editorId!] = created;
+    report.Actions.Add($"Created message {messageDefinition.editorId}.");
+    return created;
+}
+
+static void ConfigureMessage(Message message, RewardsSpecMessage messageDefinition)
+{
+    var text = messageDefinition.text ?? messageDefinition.body ?? "";
+    if (text.Any(ch => ch > 127) || (messageDefinition.title ?? "").Any(ch => ch > 127))
+    {
+        throw new InvalidOperationException($"{messageDefinition.editorId} message text must be ASCII-safe.");
+    }
+
+    var isMessageBox = messageDefinition.messageBox
+        || string.Equals(messageDefinition.kind, "messageBox", StringComparison.OrdinalIgnoreCase);
+
+    message.EditorID = messageDefinition.editorId;
+    message.FormVersion = 44;
+    message.Name = Tx(messageDefinition.title ?? messageDefinition.editorId!);
+    message.Description = Tx(text);
+    message.Flags = isMessageBox ? Message.Flag.MessageBox : 0;
+    message.MenuButtons.Clear();
+
+    var buttons = messageDefinition.buttons ?? new();
+    if (buttons.Count == 0 && isMessageBox)
+    {
+        buttons.Add("Continue");
+    }
+
+    foreach (var button in buttons)
+    {
+        message.MenuButtons.Add(new MessageButton { Text = Tx(button) });
+    }
 }
 
 static void WriteModIfNeeded(SkyrimMod mod, string espPath, bool dryRun, AuthorReport report, string backupSubdir)
@@ -935,6 +1150,10 @@ sealed class RewardsSpec
     public RewardsSpecReward? neglect { get; set; }
     public List<RewardsSpecReward>? emphasisRewards { get; set; }
     public RewardsSpecBroadState? broadState { get; set; }
+    public List<RewardsSpecReward>? supportSpells { get; set; }
+    public RewardsSpecReward? farShoresToken { get; set; }
+    public List<RewardsSpecMessage>? messageRecords { get; set; }
+    public List<RewardsSpecStateRecord>? stateRecordAuthoring { get; set; }
     // Shape varies by race: Breton uses an ARRAY of spell-record specs;
     // Altmer uses an OBJECT of signal-penalty routes (no records). Kept as a
     // raw element and only the array (spell-record) shape is authored.
@@ -1023,4 +1242,28 @@ sealed class RewardsSpecEffect
     public float magnitude { get; set; }
     public bool nightOnly { get; set; }
     public string? effectName { get; set; }
+}
+
+sealed class RewardsSpecMessage
+{
+    public string? editorId { get; set; }
+    public string? property { get; set; }
+    public string? kind { get; set; }
+    public string? title { get; set; }
+    public string? text { get; set; }
+    public string? body { get; set; }
+    public bool messageBox { get; set; }
+    public List<string>? buttons { get; set; }
+}
+
+sealed class RewardsSpecStateRecord
+{
+    public string? editorId { get; set; }
+    public string? trackName { get; set; }
+    public string? globalEditorId { get; set; }
+    public float? initialValue { get; set; }
+    public List<string>? labels { get; set; }
+    public string? managerGlobalProperty { get; set; }
+    public string? managerTrackProperty { get; set; }
+    public List<string>? addToFormLists { get; set; }
 }

@@ -146,9 +146,9 @@ Notorious (76–100): Full social rupture; Daedric prince rewards full commitmen
 
 The Green Way uses `PDV_RepTrack_DruidicStanding` as a numeric 0-100 covenant track, paired with `PDV_State_BretonDruidicFork`. The player-facing readout can feel like a relationship state, but the implementation should use the same reputation-track substrate as the other Breton tension mechanics.
 
-`PDV_State_BretonDruidicFork` values: `Stable = 0`, `Contested = 1`, `GreenAccepted = 2`, `HircineClaimed = 3`, `Excommunicated = 4`, `Penitent = 5`, `Restored = 6`.
+`PDV_State_BretonDruidicFork` values: `None = 0`, `Druidic = 1`, `Werewolf = 2`, `Betrayed = 3`.
 
-`DruidicStanding` starts at `50`, representing an open but unproven covenant. In standard play, DruidicStanding is maintained through outdoor lifestyle signals and degraded by acts antithetical to Y'ffre's covenant. Decay is cadence-based rather than daily punishment: if no Green Way signal occurred in 5 in-game days, apply `-2` at dawn, with a non-curse floor of `30`. Curse states modify the track through the werewolf fork and vampire excommunication/restoration model.
+`DruidicStanding` starts at `50`, representing an open but unproven covenant. In standard play, DruidicStanding is maintained through outdoor lifestyle signals and degraded by acts antithetical to Y'ffre's covenant. The four-state DruidicFork is the hard gate: `Druidic` permits the Green Way reward family, `Werewolf` routes the unresolved beast fork, and `Betrayed` applies creed-loss pressure.
 
 The Old Contract (strict Bosmer Green Pact) gives the full hard-compliance mechanic. The Green Way for Bretons is the **softer analog** — it doesn't require Pact-strict food compliance, but it does require a genuine outdoor lifestyle and nature-aligned conduct.
 
@@ -283,8 +283,8 @@ The Old Contract (strict Bosmer Green Pact) gives the full hard-compliance mecha
 - WitchcraftExposure visible decay can return to `Hidden`, but major act history remains for debug, offer context, and future authored pressure.
 - Public Divine cover is not shrine-spam laundering: no major occult signal for 3 days, `-5` at most once per 7 days.
 - KnightlyVowIntegrity shrine restoration is capped at `75`; returning above `75` requires curated mercy, justice, protection, or reparation.
-- DruidicStanding decay is gentle: no Green Way signal for 5 days -> `-2` at dawn, floor `30` unless curse-state rules override.
-- Green Way vampire recovery is harder than neglect recovery: vampire sets `Excommunicated`, cure moves to `Penitent`, and full restoration requires a curated outdoor rite plus sustained Green Way behavior with a permanent scar.
+- DruidicStanding is pressure-only; it does not pay a boon family by itself.
+- The 1.0 DruidicFork implementation is the four-state enum `None/Druidic/Werewolf/Betrayed`; richer vampire restoration states are deferred.
 - All three Breton tracks exist for every Breton. `WitchcraftExposure` is always active; `KnightlyVowIntegrity` and `DruidicStanding` can stay dormant until their tradition matters, but major authored events may write them so later path pressure has memory.
 - Normal Breton tradition switching is unavailable in 1.0. Only major authored forks, such as Green Way -> Hircine through the Druidic Trial, can redirect the active religious frame.
 - Contextual favors are authored per tradition lane for launch: Knight's Road, Hidden Art, and Green Way each use `3-5` trigger families. Focused deity flavor may tune presentation, but it does not require separate launch favor tables.
@@ -304,7 +304,7 @@ Derived from the LOCKED rules above; these are pass/fail checks for when the Pap
 
 | | Knight's Road | Green Way (Y'ffre) | Hidden Art |
 |--|---------------|--------------------|------------|
-| **Vampire** | Horror — Nine Divines lost, knightly oaths broken; no positive substitute | Absolute Excommunicated state (worst outcome) — Y'ffre devotion halts; ritual re-entry possible post-cure | Partial home in Volkihar court; witch-mother acceptance; Daedric patron (Molag Bal adjacent) may remain accessible |
+| **Vampire** | Horror — Nine Divines lost, knightly oaths broken; no positive substitute | Betrayal-pressure state: Y'ffre devotion halts until an authored re-entry exists; richer restoration is deferred | Partial home in Volkihar court; witch-mother acceptance; Daedric patron (Molag Bal adjacent) may remain accessible |
 | **Werewolf** | Theologically homeless — no framework, social/knightly cost, Integrity degrades on transformation | CONTESTED — Druidic Trial fires immediately; player chooses: "beast serves the Green" (full devotion resumes) or "Hircine's gift" (Y'ffre closes, Hircine path begins, WitchcraftExposure rises) | Natural fit — Glenmoril is family, Hircine already in the Hidden Art frame; no negative consequence |
 
 **Druidic Trial details (Green Way + Werewolf only):**
@@ -315,7 +315,7 @@ Derived from the LOCKED rules above; these are pass/fail checks for when the Pap
    Hircine devotion path unavailable (loyalty declared)
 
 → "Hircine's gift is mine"
-   Druidic tradition rejects — Y'ffre excommunication begins
+   Druidic tradition rejects; the fork moves toward Werewolf or Betrayed
    Y'ffre closes, Hircine drift begins
    WitchcraftExposure increases (beast-pact is visible)
 ```
