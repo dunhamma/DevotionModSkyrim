@@ -12,12 +12,35 @@ console reads -- no waiting for real in-game days. ~5 minutes for the core test.
 ---
 
 ## 0. Before you start (read this)
+
+### !!! CRITICAL: a genuinely FRESH game, or nothing works !!!
+`PDV__ManagerQuest` is a persistent Start-Game-Enabled quest. Its script AND its
+VMAD properties **bake into the save at first init and are never re-read**
+(PDV's hardest-learned lesson -- see the deity-stance-wiring history). The teaser
+swaps that script and adds the `PDV_GLO_PatronMoodBand` property, so on ANY save
+that already initialized Devotion, the game keeps running the OLD script with the
+OLD (property-less) VMAD -- the mood code simply never executes.
+
+You MUST load the new code on a clean instance:
+1. Exit all the way to the **main menu** (alt-tabbing or loading a save
+   mid-session is NOT enough).
+2. With the mod enabled, either **start a brand-new game**, or open console at the
+   main menu and `coc qasmoke`.
+3. **Never use Continue / load an existing character** for this test -- those
+   carry the baked old script and will silently behave like the mod is off.
+
+**Failure signature (= you're on a stale save, not a bug):** "Run dawn pass"
+shows *"Your devotions settle with the dawn."* but **no** "...regard warms toward
+you", and `GetGlobalValue PDV_GLO_PatronMoodBand` is stuck at **1** even with a
+patron set + scratch applied. If you see exactly this, you did not start fresh.
+
+**Decisive proof the new code is live:** at `PDV_GLO_DebugLevel` 2, after a dawn,
+search `...\SKSE\Papyrus.0.log` for **`Mood band cross`** -- that string exists
+ONLY in the teaser script. Present = new code running; absent = old script.
+
+### Other setup notes
 - **One test mod at a time.** Enable EITHER this mood teaser OR the full LD-P1
   engine test -- never both (they override the same scripts and will conflict).
-- **Fresh start each time.** Use a NEW GAME or `coc qasmoke` from the main menu.
-  Do NOT reuse a save between the two test mods (each bakes its own VMAD props +
-  save state). The manager's new `PDV_GLO_PatronMoodBand` property bakes at first
-  init, so an old save won't have it wired.
 - The teaser folder lands **unchecked** in MO2. Enable it: left pane (top of the
   list) tick **Devotion - Living Deities - Mood Teaser**; right pane tick
   **PDV_MoodTeaserTest.esp** (MO2 auto-sorts it after PlayerDevotion_Framework.esp).
@@ -87,15 +110,22 @@ is unused, shipped behavior returns.
 | Reverts | disabling the mod restores shipped behavior (section 5) |
 
 ## Troubleshooting
+- **"Settling" message but never "warms toward you", global stuck at 1 (with Kyne
+  patron + scratch applied):** you are on a **stale save** -- the old script is
+  running. This is the #1 cause. Re-read section 0: exit to main menu, start a
+  brand-new game or `coc qasmoke`, do NOT Continue an existing character. Confirm
+  via the `Mood band cross` log check.
 - **No MCM entry:** wait longer / re-open the Mod Config menu; SkyUI registers a
   beat after load.
-- **Global never changes:** confirm the plugin is actually ticked (right pane)
-  and `PDV_MoodTeaserTest.esp` loads after PlayerDevotion_Framework.esp; confirm
-  you used a NEW game/qasmoke (old saves lack the wired global). `sqv
-  PDV__ManagerQuest` should list the script; `GetGlobalValue PDV_GLO_PatronMoodBand`
-  must return a value (not "not found").
+- **Global reads "not found":** the plugin isn't ticked (right pane) -- the
+  `PDV_GLO_PatronMoodBand` record lives in `PDV_MoodTeaserTest.esp`.
 - **Toast but global stays 1:** you didn't make Kyne the patron (step 2) -- the
   global only mirrors the *active patron's* band.
+- **Verify the right script won the file conflict:** MO2 -> right-click
+  **Devotion - Living Deities - Mood Teaser** -> Information -> Conflicts ->
+  `Scripts\PDV__ManagerQuest.pex` should show it **overwriting** Devotion. (It is
+  already top-priority, so this should hold; check only if a fresh game still
+  fails.)
 
 ---
 
