@@ -52,13 +52,19 @@ without a tier change; MCM force-tier and organic tier crossings are covered by 
 **Curse separation:** the werewolf/vampire curse (Hircine/Molag Bal) is NOT a pact spell,
 so switching pacts does not touch it — the curse persists regardless of the active pact.
 
-## Known follow-up: save migration
+## Save migration (implemented)
 
 The live-spell tracking is new, so saves that already stacked Daedric boon/price spells
-(pre-this-change) keep those untracked spells until cleared. **Test on a fresh save.**
-A version-gated manager sweep (iterate `PDV_FLST_DaedricPaths_All`, strip every path's
-boon+price, then re-activate the highest committed pact) is the durable migration; not yet
-implemented because in-session testing uses disposable saves.
+(pre-this-change) would otherwise keep those untracked spells. `MigrateDaedricPactsIfNeeded()`
+in `PDV__ManagerQuest` handles it, version-gated by `PDV.Daedric.PactVersion`
+(`DAEDRIC_PACT_VERSION = 1`): on first load after the update it iterates
+`PDV_FLST_DaedricPaths_All`, calls `StripPactSpells()` on every path (removes that path's
+boon+price from the player), clears the live-spell list + active-pact pointer, then
+re-establishes a single active pact = the most-advanced committed Prince. Runs from both
+`OnInit` (new game) and the periodic maintenance block (existing saves on load). Curse
+spells are not pact spells and are untouched. Compiled 0/0.
+
+So old saves self-heal to one active pact on load; a fresh save is still the cleanest test.
 
 ## In-game proof plan (closes stackLegibility, reshapes activeEffects)
 
