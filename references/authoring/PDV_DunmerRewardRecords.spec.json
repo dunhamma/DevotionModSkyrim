@@ -3,22 +3,125 @@
   "status": "design-draft-2026-06-07; recognition deferred to V2; pending authoring run",
   "notes": "Authoritative record spec for the Dunmer HYBRID pilot: an ancestor SUBSTRATE (no-offer) plus a focused RECLAMATION foreground (offer via shared active-patron state). Same substrate family as the proven Khajiit pilot and the Argonian draft. The ancestor substrate (PDV_Substrate_DunmerAncestor, StorageUtil keys PDV.Substrate.DunmerAncestor.*) carries the always-active identity layer with NO passive decay (ledger: Skyrim lacks tombs/House shrines and that absence must not punish the player). The Reclamation foreground is the real piety faucet via the offer/active-patron path (one foreground focus at a time). Broad worship is a STATE (R1): broad-lane reward is granted by the broad-worship reward path keyed on the race state, NOT an aggregate deity; broad T1 uses the FIXED manager property PDV_Bless_Dunmer_Reclamation_T1 (R2) and broad T2 is PDV_Bless_Dunmer_Reclamation_T2. The three focusable Reclamation patrons (Azura/Boethiah/Mephala) each get a 3-tier set (R3, Khajiit naming). Azura REUSES the existing PDV_Deity_Azura (create:false, add Stance_Dunmer -- the shared-deity reconciliation); Boethiah and Mephala are Dunmer-owned NEW deities (create:true). Do NOT implement PDV_State_DunmerPath. Double-route mirrors Khajiit/Argonian: each devotional act records on the substrate AND sends a small honest piety pulse to the active Reclamation patron, with separate anti-farm tools. Magnitudes mirror the proven Khajiit/Argonian substrate power level; no magnitude exceeds ~12%. T3 NPC recognition is V1-deferred (PDV_RecognitionDialogueScalePacket.md); V1 T3 ships stat/signature effects with Champion Survey text as the recognition surface. All player-facing text is ASCII-only and uses Skyrim ActorValue names only.",
   "deityQuests": [
-    { "editorId": "PDV_Deity_Azura", "script": "PDV_Deity_Azura", "deityName": "Azura", "stanceDunmer": "NATIVE", "create": false, "reuse": "Existing record PDV_Deity_Azura (Khajiit-added, Phase 1); already on PDV_FLST_AllDeities. SHARED-DEITY RECONCILIATION: reference only and add the Dunmer NATIVE stance (--reconcile-shared-deity adds Stance_Dunmer=0); do NOT recreate and do NOT reassign its deityIndex.", "deityIndex": "existing", "shared": ["Khajiit (NATIVE, Azurah)", "Dunmer (NATIVE, Reclamation)"] },
-    { "editorId": "PDV_Deity_Boethiah", "script": "PDV_Deity_Boethiah", "deityName": "Boethiah", "stanceDunmer": "NATIVE", "create": true, "role": "Dunmer-owned Good Daedra Reclamation foreground patron (struggle/strength). Focusable: one Reclamation foreground at a time via shared active-patron state.", "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "next-available" },
-    { "editorId": "PDV_Deity_Mephala", "script": "PDV_Deity_Mephala", "deityName": "Mephala", "stanceDunmer": "NATIVE", "create": true, "role": "Dunmer-owned Good Daedra Reclamation foreground patron (secrets/cunning). Focusable: one Reclamation foreground at a time via shared active-patron state.", "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "next-available" }
+    {
+      "editorId": "PDV_Deity_Azura",
+      "script": "PDV_Deity_Azura",
+      "deityName": "Azura",
+      "stanceDunmer": "NATIVE",
+      "create": false,
+      "reuse": "Existing record PDV_Deity_Azura (Khajiit-added, Phase 1); already on PDV_FLST_AllDeities. SHARED-DEITY RECONCILIATION: reference only and add the Dunmer NATIVE stance (--reconcile-shared-deity adds Stance_Dunmer=0); do NOT recreate and do NOT reassign its deityIndex.",
+      "deityIndex": "existing",
+      "shared": [
+        "Khajiit (NATIVE, Azurah)",
+        "Dunmer (NATIVE, Reclamation)"
+      ]
+    },
+    {
+      "editorId": "PDV_Deity_Boethiah",
+      "script": "PDV_Deity_Boethiah",
+      "deityName": "Boethiah",
+      "stanceDunmer": "NATIVE",
+      "create": true,
+      "role": "Dunmer-owned Good Daedra Reclamation foreground patron (struggle/strength). Focusable: one Reclamation foreground at a time via shared active-patron state.",
+      "addToFormList": "PDV_FLST_AllDeities",
+      "deityIndex": "next-available"
+    },
+    {
+      "editorId": "PDV_Deity_Mephala",
+      "script": "PDV_Deity_Mephala",
+      "deityName": "Mephala",
+      "stanceDunmer": "NATIVE",
+      "create": true,
+      "role": "Dunmer-owned Good Daedra Reclamation foreground patron (secrets/cunning). Focusable: one Reclamation foreground at a time via shared active-patron state.",
+      "addToFormList": "PDV_FLST_AllDeities",
+      "deityIndex": "next-available"
+    }
   ],
   "managerDeityProperties": [
-    { "property": "PDV_Azura", "record": "PDV_Deity_Azura", "note": "Existing manager property from the Khajiit run; reused, not re-added." },
-    { "property": "PDV_Boethiah", "record": "PDV_Deity_Boethiah" },
-    { "property": "PDV_Mephala", "record": "PDV_Deity_Mephala" }
+    {
+      "property": "PDV_Azura",
+      "record": "PDV_Deity_Azura",
+      "note": "Existing manager property from the Khajiit run; reused, not re-added."
+    },
+    {
+      "property": "PDV_Boethiah",
+      "record": "PDV_Deity_Boethiah"
+    },
+    {
+      "property": "PDV_Mephala",
+      "record": "PDV_Deity_Mephala"
+    }
   ],
   "substrateBoons": {
     "wireTo": "PDV_Substrate_DunmerAncestor",
     "wireToScriptNote": "Substrate quest editorId carrying the slot properties is PDV_Substrate_DunmerAncestor (extends PDV_SubstrateBase). StorageUtil key contract is PDV.Substrate.DunmerAncestor.* (PrayerCount, HomeCount; metric/tier carried by PDV_SubstrateBase). Proving helper deltas: PrayerDelta 5.0, HomeBonusDelta 8.0. Posture enum PDV_State_DunmerAncestorPosture: Normal(0), Strained(1), Silent(2), RestoredScarred(3). NO passive dawn decay (ledger).",
     "slots": [
-      { "slotProperty": "Substrate_Always", "spellEditorId": "PDV_Bless_Dunmer_Substrate_Always", "displayName": "Ancestor Memory", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_Always_Magic", "actorValue": "ResistMagic", "magnitude": 3.0, "homeOrShrineOnly": false } ], "playerFacingText": "The ancestors keep their hand on you across the diaspora. Your resistance to magic rises by 3%." },
-      { "slotProperty": "Substrate_Mid", "spellEditorId": "PDV_Bless_Dunmer_Substrate_Mid", "displayName": "Ancestor Hearth", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_Mid_Magicka", "actorValue": "MagickaRateMult", "magnitude": 6.0, "homeOrShrineOnly": true }, { "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_Mid_Magic", "actorValue": "ResistMagic", "magnitude": 6.0, "homeOrShrineOnly": false } ], "playerFacingText": "The ancestors gather closer at hearth and ash. At home or at a shrine your magicka regenerates 6% faster, and your resistance to magic rises by 6%." },
-      { "slotProperty": "Substrate_High", "spellEditorId": "PDV_Bless_Dunmer_Substrate_High", "displayName": "Ancestor Attunement", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_High_Magicka", "actorValue": "MagickaRateMult", "magnitude": 9.0, "homeOrShrineOnly": true }, { "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_High_Magic", "actorValue": "ResistMagic", "magnitude": 12.0, "homeOrShrineOnly": false }, { "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_High_HealRate", "actorValue": "HealRateMult", "magnitude": 5.0, "homeOrShrineOnly": true } ], "playerFacingText": "The ancestors are deeply with you even far from the ash. At home or shrine your magicka and health mend faster, and magic finds little purchase on you." }
+      {
+        "slotProperty": "Substrate_Always",
+        "spellEditorId": "PDV_Bless_Dunmer_Substrate_Always",
+        "displayName": "Ancestor Memory",
+        "effects": [
+          {
+            "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_Always_Magic",
+            "actorValue": "ResistMagic",
+            "magnitude": 3,
+            "homeOrShrineOnly": false,
+            "effectName": "Magic Resistance"
+          }
+        ],
+        "playerFacingText": "The ancestors keep their hand on you across the diaspora. Magic Resistance +3%."
+      },
+      {
+        "slotProperty": "Substrate_Mid",
+        "spellEditorId": "PDV_Bless_Dunmer_Substrate_Mid",
+        "displayName": "Ancestor Hearth",
+        "effects": [
+          {
+            "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_Mid_Magic",
+            "actorValue": "ResistMagic",
+            "magnitude": 9,
+            "homeOrShrineOnly": false,
+            "effectName": "Magic Resistance"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_Mid_Magicka",
+            "actorValue": "MagickaRateMult",
+            "magnitude": 6,
+            "homeOrShrineOnly": true,
+            "effectName": "Magicka Regeneration"
+          }
+        ],
+        "playerFacingText": "The ancestors gather closer at hearth and ash. Magic Resistance +9%, Magicka Regeneration +6%."
+      },
+      {
+        "slotProperty": "Substrate_High",
+        "spellEditorId": "PDV_Bless_Dunmer_Substrate_High",
+        "displayName": "Ancestor Attunement",
+        "effects": [
+          {
+            "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_High_Magic",
+            "actorValue": "ResistMagic",
+            "magnitude": 21,
+            "homeOrShrineOnly": false,
+            "effectName": "Magic Resistance"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_High_Magicka",
+            "actorValue": "MagickaRateMult",
+            "magnitude": 15,
+            "homeOrShrineOnly": true,
+            "effectName": "Magicka Regeneration"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_High_HealRate",
+            "actorValue": "HealRateMult",
+            "magnitude": 5,
+            "homeOrShrineOnly": true,
+            "effectName": "Health Regeneration"
+          }
+        ],
+        "playerFacingText": "The ancestors are deeply with you even far from the ash. At home or shrine your magicka and health mend faster, and magic finds little purchase on you. Magic Resistance +21%, Magicka Regeneration +15%, Health Regeneration +5%."
+      }
     ],
     "substratePowerNote": "Mirrors the proven Khajiit and Argonian substrate triad shape and power level (Always low + Mid + High climbing). Themed to ancestors/ash: ResistMagic (always-on identity), MagickaRateMult and HealRateMult at home/shrine (the contextual climb). homeOrShrineOnly conditions are the Dunmer analogue of the Khajiit nightOnly / Argonian nearWaterOnly conditions; the always-on identity boon is unconditional, the contextual climb keys off home/private-shrine context. NO passive decay -- the layer never erodes from absence of tombs/House shrines."
   },
@@ -28,30 +131,268 @@
     "spellEditorId": "PDV_SPEL_Neglect_Dunmer",
     "displayName": "The Ancestors Silent",
     "biteCondition": "Gentle ancestor-silence texture only at posture Strained; mechanical bite applies only at posture Silent (curse/major-deviation posture), per PDV_State_DunmerAncestorPosture. RestoredScarred is the post-curse return (scar without ongoing punishment). The ancestor SUBSTRATE itself has NO passive decay; neglect is posture-driven, not a decay faucet.",
-    "effects": [ { "magicEffectEditorId": "PDV_MGEF_Neglect_Dunmer_Magicka", "actorValue": "MagickaRateMult", "magnitude": -5.0, "appliesAtPosture": "Silent" } ],
+    "effects": [
+      {
+        "magicEffectEditorId": "PDV_MGEF_Neglect_Dunmer_Magicka",
+        "actorValue": "MagickaRateMult",
+        "magnitude": -5,
+        "appliesAtPosture": "Silent"
+      }
+    ],
     "playerFacingText": "The ancestors have fallen silent and cannot reach you. Your magicka regenerates 5% more slowly until the connection is restored.",
     "decayRule": "Ancestor substrate has NO passive dawn decay (ledger ruling: Skyrim lacks tombs/House shrines and that absence must not punish the player). Neglect is purely posture-gated: gentle ancestor-silence flavor at Strained, a single -5% MagickaRateMult bite only at the Silent curse posture, lifted on return to Normal or RestoredScarred."
   },
   "emphasisRewards": [
-    { "emphasis": "Reclamation", "layer": "broad-state-reward", "tier": "T1", "thresholdPiety": 25, "fixedManagerProperty": true, "broadGate": "Broad worship is a STATE (R1): granted by the broad-worship reward path keyed on the Dunmer race state, NOT an aggregate deity. R2 fixed editorId.", "spellEditorId": "PDV_Bless_Dunmer_Reclamation_T1", "displayName": "Reclamation Communion - Faithful", "effects": [ { "actorValue": "ResistMagic", "magnitude": 5.0 } ], "playerFacingText": "The Reclamations keep a steadying ward on you. Magic resistance rises 5%." },
-    { "emphasis": "Reclamation", "layer": "broad-state-reward", "tier": "T2", "thresholdPiety": 50, "tierCap": "Devoted", "broadGate": "R2 broad T2 follows the FIXED stem with _T2; stays below the focused patron T3 ceiling.", "spellEditorId": "PDV_Bless_Dunmer_Reclamation_T2", "displayName": "Reclamation Communion - Devoted", "effects": [ { "actorValue": "ResistMagic", "magnitude": 8.0 }, { "actorValue": "MagickaRateMult", "magnitude": 5.0 } ], "playerFacingText": "The Reclamations hold you close even in exile. Magic resistance rises 8% and magicka regenerates 5% faster." },
-    { "emphasis": "Azura", "layer": "focused-emphasis-3tier", "tier": "T1", "thresholdPiety": 25, "tierName": "Seeker", "spellEditorId": "PDV_Bless_Dunmer_Azura_T1", "displayName": "Azura's Twilight - Seeker", "effects": [ { "actorValue": "MagickaRateMult", "magnitude": 4.0 } ], "playerFacingText": "Twilight sharpens your sight. Magicka regenerates 4% faster." },
-    { "emphasis": "Azura", "layer": "focused-emphasis-3tier", "tier": "T2", "thresholdPiety": 50, "tierName": "Devoted", "spellEditorId": "PDV_Bless_Dunmer_Azura_T2", "displayName": "Azura's Foresight - Devoted", "effects": [ { "actorValue": "MagickaRateMult", "magnitude": 7.0 }, { "actorValue": "ResistMagic", "magnitude": 5.0 } ], "playerFacingText": "Azura's foresight wards your mind. Magicka regenerates 7% faster and magic resistance rises 5%." },
-    { "emphasis": "Azura", "layer": "focused-emphasis-3tier", "tier": "T3", "thresholdPiety": 85, "tierName": "Champion", "spellEditorId": "PDV_Bless_Dunmer_Azura_T3", "displayName": "Azura's Star - Champion", "effects": [ { "actorValue": "MagickaRateMult", "magnitude": 10.0 }, { "actorValue": "ResistMagic", "magnitude": 10.0 } ], "playerFacingText": "You see by the twilight Azura keeps. Magicka regenerates 10% faster and magic resistance rises 10%.", "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md" },
-    { "emphasis": "Boethiah", "layer": "focused-emphasis-3tier", "tier": "T1", "thresholdPiety": 25, "tierName": "Seeker", "spellEditorId": "PDV_Bless_Dunmer_Boethiah_T1", "displayName": "Boethiah's Struggle - Seeker", "effects": [ { "actorValue": "OneHanded", "magnitude": 5.0 } ], "playerFacingText": "Struggle tempers your arm. One-handed +5." },
-    { "emphasis": "Boethiah", "layer": "focused-emphasis-3tier", "tier": "T2", "thresholdPiety": 50, "tierName": "Devoted", "spellEditorId": "PDV_Bless_Dunmer_Boethiah_T2", "displayName": "Boethiah's Strength - Devoted", "effects": [ { "actorValue": "OneHanded", "magnitude": 8.0 }, { "actorValue": "DamageResist", "magnitude": 10.0 } ], "playerFacingText": "The strong prevail by Boethiah's measure. One-handed +8 and armor rating +10." },
-    { "emphasis": "Boethiah", "layer": "focused-emphasis-3tier", "tier": "T3", "thresholdPiety": 85, "tierName": "Champion", "spellEditorId": "PDV_Bless_Dunmer_Boethiah_T3", "displayName": "Boethiah's Proving - Champion", "effects": [ { "actorValue": "OneHanded", "magnitude": 12.0 }, { "actorValue": "DamageResist", "magnitude": 15.0 } ], "playerFacingText": "You have proven your strength to the Prince of Plots. One-handed +12 and armor rating +15.", "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md" },
-    { "emphasis": "Mephala", "layer": "focused-emphasis-3tier", "tier": "T1", "thresholdPiety": 25, "tierName": "Seeker", "spellEditorId": "PDV_Bless_Dunmer_Mephala_T1", "displayName": "Mephala's Web - Seeker", "effects": [ { "actorValue": "Sneak", "magnitude": 5.0 } ], "playerFacingText": "You learn to move along the unseen threads. Sneak +5." },
-    { "emphasis": "Mephala", "layer": "focused-emphasis-3tier", "tier": "T2", "thresholdPiety": 50, "tierName": "Devoted", "spellEditorId": "PDV_Bless_Dunmer_Mephala_T2", "displayName": "Mephala's Secrets - Devoted", "effects": [ { "actorValue": "Sneak", "magnitude": 8.0 }, { "actorValue": "Illusion", "magnitude": 10.0 } ], "playerFacingText": "Secrets and shadow answer to you. Sneak +8 and Illusion +10." },
-    { "emphasis": "Mephala", "layer": "focused-emphasis-3tier", "tier": "T3", "thresholdPiety": 85, "tierName": "Champion", "spellEditorId": "PDV_Bless_Dunmer_Mephala_T3", "displayName": "Mephala's Whisper - Champion", "effects": [ { "actorValue": "Sneak", "magnitude": 12.0 }, { "actorValue": "Illusion", "magnitude": 15.0 } ], "playerFacingText": "The Webspinner's whisper guides your hand. Sneak +12 and Illusion +15.", "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md" }
+    {
+      "emphasis": "Reclamation",
+      "layer": "broad-state-reward",
+      "tier": "T1",
+      "thresholdPiety": 25,
+      "fixedManagerProperty": true,
+      "broadGate": "Broad worship is a STATE (R1): granted by the broad-worship reward path keyed on the Dunmer race state, NOT an aggregate deity. R2 fixed editorId.",
+      "spellEditorId": "PDV_Bless_Dunmer_Reclamation_T1",
+      "displayName": "Reclamation Communion - Faithful",
+      "effects": [
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 5
+        }
+      ],
+      "playerFacingText": "The Reclamations keep a steadying ward on you. Magic Resistance +5%."
+    },
+    {
+      "emphasis": "Reclamation",
+      "layer": "broad-state-reward",
+      "tier": "T2",
+      "thresholdPiety": 50,
+      "tierCap": "Devoted",
+      "broadGate": "R2 broad T2 follows the FIXED stem with _T2; stays below the focused patron T3 ceiling.",
+      "spellEditorId": "PDV_Bless_Dunmer_Reclamation_T2",
+      "displayName": "Reclamation Communion - Devoted",
+      "effects": [
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 8
+        },
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 5
+        }
+      ],
+      "playerFacingText": "The Reclamations hold you close even in exile. Magic Resistance +8%, Magicka Regeneration +5%."
+    },
+    {
+      "emphasis": "Azura",
+      "layer": "focused-emphasis-3tier",
+      "tier": "T1",
+      "thresholdPiety": 25,
+      "tierName": "Seeker",
+      "spellEditorId": "PDV_Bless_Dunmer_Azura_T1",
+      "displayName": "Azura's Twilight - Seeker",
+      "effects": [
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 4,
+          "effectName": "Magicka Regeneration"
+        }
+      ],
+      "playerFacingText": "Twilight sharpens your sight. Magicka Regeneration +4%."
+    },
+    {
+      "emphasis": "Azura",
+      "layer": "focused-emphasis-3tier",
+      "tier": "T2",
+      "thresholdPiety": 50,
+      "tierName": "Devoted",
+      "spellEditorId": "PDV_Bless_Dunmer_Azura_T2",
+      "displayName": "Azura's Foresight - Devoted",
+      "effects": [
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 11,
+          "effectName": "Magicka Regeneration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 5,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "Azura's foresight wards your mind. Magicka Regeneration +11%, Magic Resistance +5%."
+    },
+    {
+      "emphasis": "Azura",
+      "layer": "focused-emphasis-3tier",
+      "tier": "T3",
+      "thresholdPiety": 85,
+      "tierName": "Champion",
+      "spellEditorId": "PDV_Bless_Dunmer_Azura_T3",
+      "displayName": "Azura's Star - Champion",
+      "effects": [
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 21,
+          "effectName": "Magicka Regeneration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 15,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "You see by the twilight Azura keeps. Magicka Regeneration +21%, Magic Resistance +15%.",
+      "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md"
+    },
+    {
+      "emphasis": "Boethiah",
+      "layer": "focused-emphasis-3tier",
+      "tier": "T1",
+      "thresholdPiety": 25,
+      "tierName": "Seeker",
+      "spellEditorId": "PDV_Bless_Dunmer_Boethiah_T1",
+      "displayName": "Boethiah's Struggle - Seeker",
+      "effects": [
+        {
+          "actorValue": "OneHanded",
+          "magnitude": 5,
+          "effectName": "One-Handed"
+        }
+      ],
+      "playerFacingText": "Struggle tempers your arm. One-Handed +5."
+    },
+    {
+      "emphasis": "Boethiah",
+      "layer": "focused-emphasis-3tier",
+      "tier": "T2",
+      "thresholdPiety": 50,
+      "tierName": "Devoted",
+      "spellEditorId": "PDV_Bless_Dunmer_Boethiah_T2",
+      "displayName": "Boethiah's Strength - Devoted",
+      "effects": [
+        {
+          "actorValue": "OneHanded",
+          "magnitude": 13,
+          "effectName": "One-Handed"
+        },
+        {
+          "actorValue": "DamageResist",
+          "magnitude": 10,
+          "effectName": "Armor"
+        }
+      ],
+      "playerFacingText": "The strong prevail by Boethiah's measure. One-Handed +13, Armor +10."
+    },
+    {
+      "emphasis": "Boethiah",
+      "layer": "focused-emphasis-3tier",
+      "tier": "T3",
+      "thresholdPiety": 85,
+      "tierName": "Champion",
+      "spellEditorId": "PDV_Bless_Dunmer_Boethiah_T3",
+      "displayName": "Boethiah's Proving - Champion",
+      "effects": [
+        {
+          "actorValue": "OneHanded",
+          "magnitude": 25,
+          "effectName": "One-Handed"
+        },
+        {
+          "actorValue": "DamageResist",
+          "magnitude": 25,
+          "effectName": "Armor"
+        }
+      ],
+      "playerFacingText": "You have proven your strength to the Prince of Plots. One-Handed +25, Armor +25.",
+      "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md"
+    },
+    {
+      "emphasis": "Mephala",
+      "layer": "focused-emphasis-3tier",
+      "tier": "T1",
+      "thresholdPiety": 25,
+      "tierName": "Seeker",
+      "spellEditorId": "PDV_Bless_Dunmer_Mephala_T1",
+      "displayName": "Mephala's Web - Seeker",
+      "effects": [
+        {
+          "actorValue": "Sneak",
+          "magnitude": 5,
+          "effectName": "Sneak"
+        }
+      ],
+      "playerFacingText": "You learn to move along the unseen threads. Sneak +5."
+    },
+    {
+      "emphasis": "Mephala",
+      "layer": "focused-emphasis-3tier",
+      "tier": "T2",
+      "thresholdPiety": 50,
+      "tierName": "Devoted",
+      "spellEditorId": "PDV_Bless_Dunmer_Mephala_T2",
+      "displayName": "Mephala's Secrets - Devoted",
+      "effects": [
+        {
+          "actorValue": "Sneak",
+          "magnitude": 13,
+          "effectName": "Sneak"
+        },
+        {
+          "actorValue": "Illusion",
+          "magnitude": 10,
+          "effectName": "Illusion"
+        }
+      ],
+      "playerFacingText": "Secrets and shadow answer to you. Sneak +13, Illusion +10."
+    },
+    {
+      "emphasis": "Mephala",
+      "layer": "focused-emphasis-3tier",
+      "tier": "T3",
+      "thresholdPiety": 85,
+      "tierName": "Champion",
+      "spellEditorId": "PDV_Bless_Dunmer_Mephala_T3",
+      "displayName": "Mephala's Whisper - Champion",
+      "effects": [
+        {
+          "actorValue": "Sneak",
+          "magnitude": 25,
+          "effectName": "Sneak"
+        },
+        {
+          "actorValue": "Illusion",
+          "magnitude": 25,
+          "effectName": "Illusion"
+        }
+      ],
+      "playerFacingText": "The Webspinner's whisper guides your hand. Sneak +25, Illusion +25.",
+      "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md"
+    }
   ],
   "emphasisLayerDesignNote": "Per the ledger Focused Pass: Dunmer (Overstack Risk) and R8 two-family cap. Family one is the ancestor substrate triad (always-active identity, low-power, NO decay). Family two is the ONE Reclamation foreground the player runs (Azura OR Boethiah OR Mephala -- one focus at a time via shared active-patron state). The broad Reclamation set (PDV_Bless_Dunmer_Reclamation_T1/T2, R1 state-keyed, R2 fixed editorId) is the broad-state lane the player has BEFORE choosing a primary focus; it is intentionally below the focused patron T3 ceiling (broad < focused, R8). The three patron 3-tier sets are NOT three simultaneous packages: only the active focus is granted (mirrors SyncKhajiitEmphasisRewards/SyncKhajiitEmphasisFamily, one active focus). Good Daedra are kept from paying as three equal foreground packages (ledger). Themes are legibly Dunmer: Azura twilight/foresight (MagickaRateMult/ResistMagic), Boethiah struggle/strength (OneHanded/DamageResist), Mephala secrets/cunning (Sneak/Illusion). No magnitude exceeds ~12%.",
   "creedViolation": {
     "scope": "medium/major only (ancestor silence / Daedric deviation cost); no minor-tier loss",
     "deltas": [
-      { "id": "ancestor-neglect-strained", "magnitude": -3.0, "target": "active Reclamation patron piety / ancestor substrate relation", "trigger": "extended ancestor neglect or a creed lapse driving posture toward Strained (medium)", "playerFacingText": "The ancestors have felt your distance. Their voice grows thin." },
-      { "id": "daedric-deviation-non-reclamation", "magnitude": -6.0, "target": "active Reclamation patron piety / ancestor substrate relation", "trigger": "non-Reclamation Daedric deviation against the ancestor/Reclamation stack (major; routed through the global Daedric system per R6, carries price/stigma/residue)", "playerFacingText": "You turned from the Reclamations to a foreign bargain. The ancestors recoil." },
-      { "id": "ancestor-silence-curse", "magnitude": -8.0, "target": "active Reclamation patron piety / ancestor substrate relation", "trigger": "curse pressure driving the ancestor posture to Silent (major; vampirism/Daedric corruption silencing the ancestors)", "playerFacingText": "Something has come between you and the dead. The ancestors have gone silent." }
+      {
+        "id": "ancestor-neglect-strained",
+        "magnitude": -3,
+        "target": "active Reclamation patron piety / ancestor substrate relation",
+        "trigger": "extended ancestor neglect or a creed lapse driving posture toward Strained (medium)",
+        "playerFacingText": "The ancestors have felt your distance. Their voice grows thin."
+      },
+      {
+        "id": "daedric-deviation-non-reclamation",
+        "magnitude": -6,
+        "target": "active Reclamation patron piety / ancestor substrate relation",
+        "trigger": "non-Reclamation Daedric deviation against the ancestor/Reclamation stack (major; routed through the global Daedric system per R6, carries price/stigma/residue)",
+        "playerFacingText": "You turned from the Reclamations to a foreign bargain. The ancestors recoil."
+      },
+      {
+        "id": "ancestor-silence-curse",
+        "magnitude": -8,
+        "target": "active Reclamation patron piety / ancestor substrate relation",
+        "trigger": "curse pressure driving the ancestor posture to Silent (major; vampirism/Daedric corruption silencing the ancestors)",
+        "playerFacingText": "Something has come between you and the dead. The ancestors have gone silent."
+      }
     ]
   },
   "doubleRoute": {
@@ -129,13 +470,24 @@
     "recordCreation": "Create net-new SPEL + MGEFs: 3 substrate slot spells (Substrate_Always/Mid/High on PDV_Substrate_DunmerAncestor), 2 broad Reclamation spells (T1/T2; T1 editorId PDV_Bless_Dunmer_Reclamation_T1 is the FIXED manager property per R2), 9 patron emphasis spells (Azura T1/T2/T3 + Boethiah T1/T2/T3 + Mephala T1/T2/T3), 1 neglect spell (PDV_SPEL_Neglect_Dunmer) = 15 net-new SPEL plus their MGEFs. No substrate-slot record reuse (Dunmer has no pre-existing T1 analogue to rehome). Create 2 deity QUSTs (PDV_Deity_Boethiah, PDV_Deity_Mephala). Azura is REUSED (create:false) -- only add Stance_Dunmer to PDV_Deity_Azura; do not recreate it.",
     "deityQuestStructure": "MUST mirror an existing deity quest (read e.g. PDV_Deity_Kyne 0120B6 fully first): FormVersion 44, Start-Game-Enabled (SGE) flag, SEQ entry (per the deity-quest SGE+SEQ requirement -- every PDV_Deity_* QUST needs the SGE flag AND a SEQ entry; this is how BaanDar shipped broken when the EnsureQuest helper omitted the SGE flag, so VERIFY the author helper sets the SGE flag on PDV_Deity_Boethiah and PDV_Deity_Mephala), QuestAdapter VMAD hosting the PDV_Deity_<Name> script with base properties DeityName(String), DeityIndex(Int, next-available clear of existing indices including Khajiit 40-43), Stance_Dunmer=0(NATIVE), PDV_GLO_OriginRace, PDV_GLO_DebugLevel. Thresholds use script defaults (25/50/85). For Azura, the reconcile pass adds Stance_Dunmer=0 to the existing record without touching its DeityIndex or SGE/SEQ state.",
     "baseline": {
-      "existingDeityQuests": { "PDV_Deity_Kyne": "0120B6", "PDV_Deity_Talos": "03DE87", "PDV_Deity_AuriEl": "03DE88", "PDV_Deity_Yffre": "06CB52", "PDV_Deity_Zen": "06FA1B", "PDV_Deity_BaanDar": "06FA1C" },
+      "existingDeityQuests": {
+        "PDV_Deity_Kyne": "0120B6",
+        "PDV_Deity_Talos": "03DE87",
+        "PDV_Deity_AuriEl": "03DE88",
+        "PDV_Deity_Yffre": "06CB52",
+        "PDV_Deity_Zen": "06FA1B",
+        "PDV_Deity_BaanDar": "06FA1C"
+      },
       "reusedDeity": "PDV_Deity_Azura (Khajiit-added Phase 1; already on PDV_FLST_AllDeities; add Stance_Dunmer only)",
       "formListAllDeities": "017E47 (confirm current item count at author time; add PDV_Deity_Boethiah and PDV_Deity_Mephala only -- Azura is already present)",
       "substrateQuest": "PDV_Substrate_DunmerAncestor (record-wired; extends PDV_SubstrateBase; carries Substrate_Always/Mid/High slot properties to wire; StorageUtil keys PDV.Substrate.DunmerAncestor.*)",
       "indexNote": "Khajiit pilot assigned 40-43; Dunmer-owned Boethiah/Mephala indices are next-available and must be clear of the 6 existing low indices, the Khajiit 40-43, and any Imperial/Argonian/Altmer indices assigned by earlier Phase 2 runs."
     },
-    "assignedDeityIndex": { "PDV_Deity_Azura": "existing", "PDV_Deity_Boethiah": "next-available", "PDV_Deity_Mephala": "next-available" },
+    "assignedDeityIndex": {
+      "PDV_Deity_Azura": "existing",
+      "PDV_Deity_Boethiah": "next-available",
+      "PDV_Deity_Mephala": "next-available"
+    },
     "wiring": "Same run: add PDV_Deity_Boethiah + PDV_Deity_Mephala to FLST 017E47 (Azura already present); add Stance_Dunmer to PDV_Deity_Azura; wire substrate boon slots (Substrate_Always/Mid/High) on PDV_Substrate_DunmerAncestor; wire deity props (reuse PDV_Azura; new PDV_Boethiah/PDV_Mephala) + 11 reward spell props (2 broad Reclamation + 9 patron emphasis) + PDV_SPEL_Neglect_Dunmer on PDV__ManagerQuest. The broad T1 property PDV_Bless_Dunmer_Reclamation_T1 already exists on the manager (R2) -- assign its spell, do not add a new property.",
     "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 includes Boethiah + Mephala (and still Azura); PDV_Deity_Azura carries Stance_Dunmer; the 15 new SPEL exist with correct MGEF actor-values/magnitudes; substrate slots + manager props resolve; PDV_Deity_Boethiah and PDV_Deity_Mephala carry the SGE flag AND have SEQ entries. Then runtime smoke (QASmoke routes 130/131/132/133) and the PDV_BetaTestPacket_Dunmer Azura/Boethiah book track (expect log markers RouteDunmerReclamationFocus complete: 130 focus 0/1)."
   }

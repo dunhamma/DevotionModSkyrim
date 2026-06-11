@@ -5,15 +5,13 @@ Contract: PDV_BetaContract.csv (765 rows). Gate fails on unwaived GAP only;
 GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, then either
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
-Verdicts: PASS=319 | NEEDS-MANUAL=293 | GAP-REVIEW=87 | FUTURE=59 | WAIVED=2 | GAP=5
-Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
+Verdicts: PASS=321 | NEEDS-MANUAL=293 | GAP-REVIEW=87 | FUTURE=59 | WAIVED=2 | GAP=3
+Layers: source=live; esp=1426 EditorIDs; runtime=read-only from gate ledger.
 
-## GAP (5)
+## GAP (3)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
-| BC-0289 | reward_tier | Altmer | Altmer Orthodox broad T1/T2 | missing: PDV_Bless_Altmer_Orthodox_T2 | PDV_AltmerRewardRecords.spec.json § broadState rewards |
-| BC-0477 | neglect | Breton | PDV_SPEL_Neglect_Breton + creed-loss spells | missing: PDV_SPEL_CreedLoss_Breton_VowIntegrity, PDV_SPEL_CreedLoss_Breton_ExposureRupture, PDV_SPEL_CreedLoss_Breton_Excommunication, PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal | PDV_BretonRewardRecords.spec.json § neglect; § creedViolationLoss entries |
 | BC-0524 | substrate | Redguard | Far Shores token support spell | missing: PDV_Bless_Redguard_FarShoresToken | PDV_RedguardRewardRecords.spec.json § farShoresToken |
 | BC-0533 | state_track | Breton | PDV_State_BretonTradition + pressure tracks | missing: PDV_State_BretonDruidicFork | PDV_BretonRewardRecords.spec.json § stateTracks; § overstackControl |
 | BC-0693 | surfacing | Redguard | Redguard required content rows | missing: PDV_Notif_Redguard_Sect_Crown_Entry, PDV_Notif_Redguard_Sect_Forebear_Entry, PDV_Notif_Redguard_Sect_AshAbah_Entry, PDV_Msg_Redguard_Survey_Crown, PDV_Msg_Redguard_ChampionEntry_Crown, PDV_Notif_Redguard_FarShoresToken_Activate, PDV_Notif_Redguard_FarShoresToken_PrivateContext, PDV_Msg_Redguard_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_RedguardRewardRecords.spec.json § requiredContentRows |
@@ -191,7 +189,7 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0143 | part_b_profile | ALL | Survey/status — no exclusive-path ambiguity | No machine-checkable identifier extractable from requirement/check_hint. | PDV_PreBetaRaceAcceptanceRubric.md §4 Survey And Status Legibility — Fail examples (third  |
 | BC-0145 | part_b_profile | ALL | Survey/status legibility — expected and edge builds | No gate-ledger verdict found for this race. | PDV_PreBetaRaceAcceptanceRubric.md §8 Expected And Edge Builds — Pass requires (third bull |
 | BC-0146 | part_b_profile | ALL | Survey/status legibility — fiction language | No machine-checkable identifier extractable from requirement/check_hint. | PDV_PreBetaRaceAcceptanceRubric.md §4 Survey And Status Legibility — Pass requires |
-| BC-0152 | part_b_profile | Altmer | Survey/status — Exiled vampire path legibility | Gate ledger verdict: Conditional (runtime proof is the user's smoke lane). | PDV_Architecture_v3.md §13.5 Altmer vampire micro-path (LOCKED) |
+| BC-0152 | part_b_profile | Altmer | Survey/status — Exiled vampire path legibility | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_Architecture_v3.md §13.5 Altmer vampire micro-path (LOCKED) |
 | BC-0153 | part_b_profile | Altmer | Syrabane focus | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Altmer.md — Tier 3 Devoted / Syrabane focus |
 | BC-0156 | part_b_profile | Altmer | Xarxes focus | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Altmer.md — Tier 3 Devoted / Xarxes focus |
 | BC-0166 | part_b_profile | Dunmer | Tribunal Memory flavor | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Dunmer.md — Tribunal Memory (LOCKED) |
@@ -217,8 +215,8 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0280 | reward_tier | ALL | Global one-active-reward stack rule | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase20_RewardRecordContracts.json — globalStackRule field |
 | BC-0284 | reward_tier | ALL | One active capstone at a time (one-active-emphasis/path/patron rule) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md — Structure (binding) section |
 | BC-0285 | reward_tier | ALL | One save per race rule | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md — LOCKED implementation rules, rule 2 |
-| BC-0290 | reward_tier | Altmer | Altmer reward ceiling: no third steady stack | Gate ledger verdict: Conditional (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md — Focused Pass: Altmer, Reward ceiling; PDV_RaceEffectReview |
-| BC-0291 | reward_tier | Altmer | Altmer reward floor: net-positive without perfect play | Gate ledger verdict: Conditional (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md — Focused Pass: Altmer, Reward floor |
+| BC-0290 | reward_tier | Altmer | Altmer reward ceiling: no third steady stack | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md — Focused Pass: Altmer, Reward ceiling; PDV_RaceEffectReview |
+| BC-0291 | reward_tier | Altmer | Altmer reward floor: net-positive without perfect play | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md — Focused Pass: Altmer, Reward floor |
 | BC-0292 | reward_tier | Altmer | Auri-El Champion | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Altmer.md — Tier 3 Devoted / Auri-El focus |
 | BC-0295 | reward_tier | Altmer | Auri-El T3 capstone signature — Ascendant Light | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md — Altmer section (DRAFT, pending talk-through) |
 | BC-0296 | reward_tier | Altmer | Magnus Champion | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Altmer.md — Tier 3 Devoted / Magnus focus |
@@ -479,7 +477,7 @@ Layers: source=live; esp=1385 EditorIDs; runtime=read-only from gate ledger.
 | BC-0762 | other | Nord | Froki/Heimskr/Andurs/Aela recognition dialogue | 1.0/V2 tier; tracked, not gated. | PDV_TargetEndStates_1.0.md Phase 18A/B runtime closeout; PDV_Architecture_v3.md §21.3 |
 | BC-0763 | other | Nord | Nord full stack audit (P2 audit-only lane) | 1.0/V2 tier; tracked, not gated. | references/authoring/PDV_PreBetaRaceGateLedger.md Nord; references/authoring/PDV_PreBetaRa |
 
-## PASS (319)
+## PASS (321)
 
 (passing rows listed in the CSV only)
 

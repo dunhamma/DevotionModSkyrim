@@ -3,23 +3,133 @@
   "status": "design-locked-2026-06-06; recognition deferred to V2; pending authoring run",
   "notes": "Authoritative record spec for the Khajiit pilot. Feeds the Mutagen authoring run (record creation) plus CKRA promoted ops (formlist.add + vmad.attach_script wiring). Magnitudes follow the Nord template shape (race-sheets/PDV_RaceDesign_Nord.md). T3 NPC recognition is V1-deferred (see PDV_RecognitionDialogueScalePacket.md); V1 T3 ships stat/signature effects only with Champion Survey text as the recognition surface.",
   "deityQuests": [
-    { "editorId": "PDV_Deity_Azura", "script": "PDV_Deity_Azura", "deityName": "Azurah", "stanceKhajiit": "NATIVE", "shared": ["Dunmer (Azura, Phase 2)"], "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "next-available" },
-    { "editorId": "PDV_Deity_Khenarthi", "script": "PDV_Deity_Khenarthi", "deityName": "Khenarthi", "stanceKhajiit": "NATIVE", "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "next-available" },
-    { "editorId": "PDV_Deity_Rajhin", "script": "PDV_Deity_Rajhin", "deityName": "Rajhin", "stanceKhajiit": "NATIVE", "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "next-available" },
-    { "editorId": "PDV_Deity_Alkosh", "script": "PDV_Deity_Alkosh", "deityName": "Alkosh", "stanceKhajiit": "NATIVE", "shared": ["Redguard (Alkosh, Phase 2 - confirm)"], "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "next-available" }
+    {
+      "editorId": "PDV_Deity_Azura",
+      "script": "PDV_Deity_Azura",
+      "deityName": "Azurah",
+      "stanceKhajiit": "NATIVE",
+      "shared": [
+        "Dunmer (Azura, Phase 2)"
+      ],
+      "addToFormList": "PDV_FLST_AllDeities",
+      "deityIndex": "next-available"
+    },
+    {
+      "editorId": "PDV_Deity_Khenarthi",
+      "script": "PDV_Deity_Khenarthi",
+      "deityName": "Khenarthi",
+      "stanceKhajiit": "NATIVE",
+      "addToFormList": "PDV_FLST_AllDeities",
+      "deityIndex": "next-available"
+    },
+    {
+      "editorId": "PDV_Deity_Rajhin",
+      "script": "PDV_Deity_Rajhin",
+      "deityName": "Rajhin",
+      "stanceKhajiit": "NATIVE",
+      "addToFormList": "PDV_FLST_AllDeities",
+      "deityIndex": "next-available"
+    },
+    {
+      "editorId": "PDV_Deity_Alkosh",
+      "script": "PDV_Deity_Alkosh",
+      "deityName": "Alkosh",
+      "stanceKhajiit": "NATIVE",
+      "shared": [
+        "Redguard (Alkosh, Phase 2 - confirm)"
+      ],
+      "addToFormList": "PDV_FLST_AllDeities",
+      "deityIndex": "next-available"
+    }
   ],
   "managerDeityProperties": [
-    { "property": "PDV_Azura", "record": "PDV_Deity_Azura" },
-    { "property": "PDV_Khenarthi", "record": "PDV_Deity_Khenarthi" },
-    { "property": "PDV_Rajhin", "record": "PDV_Deity_Rajhin" },
-    { "property": "PDV_Alkosh", "record": "PDV_Deity_Alkosh" }
+    {
+      "property": "PDV_Azura",
+      "record": "PDV_Deity_Azura"
+    },
+    {
+      "property": "PDV_Khenarthi",
+      "record": "PDV_Deity_Khenarthi"
+    },
+    {
+      "property": "PDV_Rajhin",
+      "record": "PDV_Deity_Rajhin"
+    },
+    {
+      "property": "PDV_Alkosh",
+      "record": "PDV_Deity_Alkosh"
+    }
   ],
   "substrateBoons": {
     "wireTo": "PDV_Substrate_KhajiitLunar",
     "slots": [
-      { "slotProperty": "Substrate_Always", "spellEditorId": "PDV_Bless_Khajiit_Substrate_Always", "displayName": "Lunar Hardiness", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_Always_Disease", "actorValue": "ResistDisease", "magnitude": 5.0, "nightOnly": false } ], "playerFacingText": "The moons keep you hardy. Your resistance to disease rises by 5%." },
-      { "slotProperty": "Substrate_Mid", "spellEditorId": "PDV_Bless_Khajiit_Lunar_T1", "rehomedFrom": "existing manager T1 reward record (CAT-6 pilot)", "displayName": "Khajiit Lunar Road", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen", "actorValue": "StaminaRateMult", "magnitude": 5.0, "nightOnly": true }, { "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist", "actorValue": "ResistDisease", "magnitude": 10.0, "nightOnly": true } ], "playerFacingText": "The moons have noticed how you move. At night, your stamina regenerates 5% faster and your resistance to disease rises by 10%." },
-      { "slotProperty": "Substrate_High", "spellEditorId": "PDV_Bless_Khajiit_Substrate_High", "displayName": "Lunar Attunement", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_High_Stamina", "actorValue": "StaminaRateMult", "magnitude": 8.0, "nightOnly": true }, { "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_High_Disease", "actorValue": "ResistDisease", "magnitude": 15.0, "nightOnly": true }, { "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_High_Magicka", "actorValue": "MagickaRateMult", "magnitude": 5.0, "nightOnly": true } ], "playerFacingText": "You are deeply attuned to the Lunar Lattice. At night your stamina and magicka regenerate faster and disease finds little purchase." }
+      {
+        "slotProperty": "Substrate_Always",
+        "spellEditorId": "PDV_Bless_Khajiit_Substrate_Always",
+        "displayName": "Lunar Hardiness",
+        "effects": [
+          {
+            "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_Always_Disease",
+            "actorValue": "ResistDisease",
+            "magnitude": 5,
+            "nightOnly": false,
+            "effectName": "Disease Resistance"
+          }
+        ],
+        "playerFacingText": "The moons keep you hardy. Disease Resistance +5%."
+      },
+      {
+        "slotProperty": "Substrate_Mid",
+        "spellEditorId": "PDV_Bless_Khajiit_Lunar_T1",
+        "rehomedFrom": "existing manager T1 reward record (CAT-6 pilot)",
+        "displayName": "Khajiit Lunar Road",
+        "effects": [
+          {
+            "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen",
+            "actorValue": "StaminaRateMult",
+            "magnitude": 5,
+            "nightOnly": true,
+            "effectName": "Stamina Regeneration"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist",
+            "actorValue": "ResistDisease",
+            "magnitude": 15,
+            "nightOnly": true,
+            "effectName": "Disease Resistance"
+          }
+        ],
+        "playerFacingText": "The moons have noticed how you move. Stamina Regeneration +5% (at night), Disease Resistance +15% (at night)."
+      },
+      {
+        "slotProperty": "Substrate_High",
+        "spellEditorId": "PDV_Bless_Khajiit_Substrate_High",
+        "displayName": "Lunar Attunement",
+        "effects": [
+          {
+            "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_High_Stamina",
+            "actorValue": "StaminaRateMult",
+            "magnitude": 13,
+            "nightOnly": true,
+            "effectName": "Stamina Regeneration"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_High_Disease",
+            "actorValue": "ResistDisease",
+            "magnitude": 30,
+            "nightOnly": true,
+            "effectName": "Disease Resistance"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_High_Magicka",
+            "actorValue": "MagickaRateMult",
+            "magnitude": 5,
+            "nightOnly": true,
+            "effectName": "Magicka Regeneration"
+          }
+        ],
+        "playerFacingText": "You are deeply attuned to the Lunar Lattice. At night your stamina and magicka regenerate faster and disease finds little purchase. Stamina Regeneration +13% (at night), Disease Resistance +30% (at night), Magicka Regeneration +5% (at night)."
+      }
     ]
   },
   "neglect": {
@@ -27,25 +137,297 @@
     "spellProperty": "PDV_SPEL_Neglect_KhajiitLunar",
     "spellEditorId": "PDV_SPEL_Neglect_KhajiitLunar",
     "displayName": "The Moons Withdrawn",
-    "effects": [ { "magicEffectEditorId": "PDV_MGEF_Neglect_KhajiitLunar_Stamina", "actorValue": "StaminaRateMult", "magnitude": -5.0, "nightOnly": true } ],
+    "effects": [
+      {
+        "magicEffectEditorId": "PDV_MGEF_Neglect_KhajiitLunar_Stamina",
+        "actorValue": "StaminaRateMult",
+        "magnitude": -5,
+        "nightOnly": true
+      }
+    ],
     "playerFacingText": "You have not kept the moons. At night your stamina regenerates 5% more slowly until you return to the road and the lattice."
   },
   "emphasisRewards": [
-    { "emphasis": "Khenarthi", "tier": "T1", "spellEditorId": "PDV_Bless_Khajiit_Khenarthi_T1", "displayName": "Khenarthi's Road - Seeker", "effects": [ { "actorValue": "StaminaRateMult", "magnitude": 4.0 } ], "playerFacingText": "The open road is kinder to you. Stamina regenerates 4% faster." },
-    { "emphasis": "Khenarthi", "tier": "T2", "spellEditorId": "PDV_Bless_Khajiit_Khenarthi_T2", "displayName": "Khenarthi's Road - Devoted", "effects": [ { "actorValue": "StaminaRateMult", "magnitude": 7.0 }, { "actorValue": "CarryWeight", "magnitude": 30.0 } ], "playerFacingText": "The road-walker bears more and tires less. Stamina regenerates 7% faster and you carry 30 more." },
-    { "emphasis": "Khenarthi", "tier": "T3", "spellEditorId": "PDV_Bless_Khajiit_Khenarthi_T3", "displayName": "Khenarthi's Wind - Champion", "effects": [ { "actorValue": "StaminaRateMult", "magnitude": 10.0 }, { "actorValue": "CarryWeight", "magnitude": 50.0 }, { "actorValue": "SpeedMult", "magnitude": 3.0 } ], "playerFacingText": "Khenarthi's wind is at your back. Stamina +10%, carry +50, and you move a little faster." },
-    { "emphasis": "Azurah", "tier": "T1", "spellEditorId": "PDV_Bless_Khajiit_Azurah_T1", "displayName": "Azurah's Twilight - Seeker", "effects": [ { "actorValue": "MagickaRateMult", "magnitude": 4.0 } ], "playerFacingText": "Twilight feeds the mind. Magicka regenerates 4% faster." },
-    { "emphasis": "Azurah", "tier": "T2", "spellEditorId": "PDV_Bless_Khajiit_Azurah_T2", "displayName": "Azurah's Twilight - Devoted", "effects": [ { "actorValue": "MagickaRateMult", "magnitude": 7.0 }, { "actorValue": "ResistMagic", "magnitude": 5.0 } ], "playerFacingText": "The twilight wards you. Magicka regenerates 7% faster and magic resistance rises 5%." },
-    { "emphasis": "Azurah", "tier": "T3", "spellEditorId": "PDV_Bless_Khajiit_Azurah_T3", "displayName": "Azurah's Sight - Champion", "effects": [ { "actorValue": "MagickaRateMult", "magnitude": 10.0 }, { "actorValue": "ResistMagic", "magnitude": 10.0 } ], "playerFacingText": "You see by the twilight Azurah keeps. Magicka +10% and magic resistance +10%." },
-    { "emphasis": "BaanDar", "tier": "T1", "spellEditorId": "PDV_Bless_Khajiit_BaanDar_T1", "displayName": "Baan Dar's Guile - Seeker", "effects": [ { "actorValue": "DamageResist", "magnitude": 5.0 } ], "playerFacingText": "The outsider endures. Your armor rating rises by 5." },
-    { "emphasis": "BaanDar", "tier": "T2", "spellEditorId": "PDV_Bless_Khajiit_BaanDar_T2", "displayName": "Baan Dar's Guile - Devoted", "effects": [ { "actorValue": "DamageResist", "magnitude": 10.0 }, { "actorValue": "HealRateMult", "magnitude": 10.0 } ], "playerFacingText": "The survivor mends quickly. Armor +10 and health regenerates 10% faster." },
-    { "emphasis": "BaanDar", "tier": "T3", "spellEditorId": "PDV_Bless_Khajiit_BaanDar_T3", "displayName": "Baan Dar's Luck - Champion", "effects": [ { "actorValue": "DamageResist", "magnitude": 15.0 }, { "actorValue": "HealRateMult", "magnitude": 15.0 }, { "actorValue": "UnarmedDamage", "magnitude": 10.0 } ], "playerFacingText": "Baan Dar's luck is with you when the odds are not. Armor +15, health regenerates 15% faster, and your claws strike harder (+10 unarmed)." },
-    { "emphasis": "Rajhin", "tier": "T1", "spellEditorId": "PDV_Bless_Khajiit_Rajhin_T1", "displayName": "Rajhin's Shadow - Seeker", "effects": [ { "actorValue": "Sneak", "magnitude": 5.0 } ], "playerFacingText": "You move as the Purring Liar taught. Sneak +5." },
-    { "emphasis": "Rajhin", "tier": "T2", "spellEditorId": "PDV_Bless_Khajiit_Rajhin_T2", "displayName": "Rajhin's Shadow - Devoted", "effects": [ { "actorValue": "Sneak", "magnitude": 8.0 }, { "actorValue": "Lockpicking", "magnitude": 10.0 } ], "playerFacingText": "Shadow and lock yield to you. Sneak +8 and Lockpicking +10." },
-    { "emphasis": "Rajhin", "tier": "T3", "spellEditorId": "PDV_Bless_Khajiit_Rajhin_T3", "displayName": "Rajhin's Grace - Champion", "effects": [ { "actorValue": "Sneak", "magnitude": 12.0 }, { "actorValue": "Lockpicking", "magnitude": 15.0 }, { "actorValue": "Pickpocket", "magnitude": 15.0 }, { "actorValue": "UnarmedDamage", "magnitude": 10.0 } ], "playerFacingText": "The legend works through your hands. Sneak +12, Lockpicking +15, Pickpocket +15, and clawed strikes +10 unarmed." },
-    { "emphasis": "Alkosh", "tier": "T1", "spellEditorId": "PDV_Bless_Khajiit_Alkosh_T1", "displayName": "Alkosh's Order - Seeker", "effects": [ { "actorValue": "ResistFire", "magnitude": 5.0 } ], "playerFacingText": "The Dragon King's order steadies you. Fire resistance +5%." },
-    { "emphasis": "Alkosh", "tier": "T2", "spellEditorId": "PDV_Bless_Khajiit_Alkosh_T2", "displayName": "Alkosh's Order - Devoted", "effects": [ { "actorValue": "ResistFire", "magnitude": 8.0 }, { "actorValue": "ResistMagic", "magnitude": 5.0 } ], "playerFacingText": "You keep the line against chaos. Fire resistance +8% and magic resistance +5%." },
-    { "emphasis": "Alkosh", "tier": "T3", "spellEditorId": "PDV_Bless_Khajiit_Alkosh_T3", "displayName": "Alkosh's Roar - Champion", "effects": [ { "actorValue": "ResistFire", "magnitude": 12.0 }, { "actorValue": "ResistMagic", "magnitude": 15.0 } ], "playerFacingText": "Alkosh's roar is in your blood. Fire resistance +12% and magic resistance +15%." }
+    {
+      "emphasis": "Khenarthi",
+      "tier": "T1",
+      "spellEditorId": "PDV_Bless_Khajiit_Khenarthi_T1",
+      "displayName": "Khenarthi's Road - Seeker",
+      "effects": [
+        {
+          "actorValue": "StaminaRateMult",
+          "magnitude": 4,
+          "effectName": "Stamina Regeneration"
+        }
+      ],
+      "playerFacingText": "The open road is kinder to you. Stamina Regeneration +4%."
+    },
+    {
+      "emphasis": "Khenarthi",
+      "tier": "T2",
+      "spellEditorId": "PDV_Bless_Khajiit_Khenarthi_T2",
+      "displayName": "Khenarthi's Road - Devoted",
+      "effects": [
+        {
+          "actorValue": "StaminaRateMult",
+          "magnitude": 11,
+          "effectName": "Stamina Regeneration"
+        },
+        {
+          "actorValue": "CarryWeight",
+          "magnitude": 30,
+          "effectName": "Carry Weight"
+        }
+      ],
+      "playerFacingText": "The road-walker bears more and tires less. Stamina Regeneration +11%, Carry Weight +30."
+    },
+    {
+      "emphasis": "Khenarthi",
+      "tier": "T3",
+      "spellEditorId": "PDV_Bless_Khajiit_Khenarthi_T3",
+      "displayName": "Khenarthi's Wind - Champion",
+      "effects": [
+        {
+          "actorValue": "StaminaRateMult",
+          "magnitude": 21,
+          "effectName": "Stamina Regeneration"
+        },
+        {
+          "actorValue": "CarryWeight",
+          "magnitude": 80,
+          "effectName": "Carry Weight"
+        },
+        {
+          "actorValue": "SpeedMult",
+          "magnitude": 3,
+          "effectName": "Movement Speed"
+        }
+      ],
+      "playerFacingText": "Khenarthi's wind is at your back. Stamina Regeneration +21%, Carry Weight +80, Movement Speed +3%."
+    },
+    {
+      "emphasis": "Azurah",
+      "tier": "T1",
+      "spellEditorId": "PDV_Bless_Khajiit_Azurah_T1",
+      "displayName": "Azurah's Twilight - Seeker",
+      "effects": [
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 4,
+          "effectName": "Magicka Regeneration"
+        }
+      ],
+      "playerFacingText": "Twilight feeds the mind. Magicka Regeneration +4%."
+    },
+    {
+      "emphasis": "Azurah",
+      "tier": "T2",
+      "spellEditorId": "PDV_Bless_Khajiit_Azurah_T2",
+      "displayName": "Azurah's Twilight - Devoted",
+      "effects": [
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 11,
+          "effectName": "Magicka Regeneration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 5,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "The twilight wards you. Magicka Regeneration +11%, Magic Resistance +5%."
+    },
+    {
+      "emphasis": "Azurah",
+      "tier": "T3",
+      "spellEditorId": "PDV_Bless_Khajiit_Azurah_T3",
+      "displayName": "Azurah's Sight - Champion",
+      "effects": [
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 21,
+          "effectName": "Magicka Regeneration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 15,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "You see by the twilight Azurah keeps. Magicka Regeneration +21%, Magic Resistance +15%."
+    },
+    {
+      "emphasis": "BaanDar",
+      "tier": "T1",
+      "spellEditorId": "PDV_Bless_Khajiit_BaanDar_T1",
+      "displayName": "Baan Dar's Guile - Seeker",
+      "effects": [
+        {
+          "actorValue": "DamageResist",
+          "magnitude": 5,
+          "effectName": "Armor"
+        }
+      ],
+      "playerFacingText": "The outsider endures. Armor +5."
+    },
+    {
+      "emphasis": "BaanDar",
+      "tier": "T2",
+      "spellEditorId": "PDV_Bless_Khajiit_BaanDar_T2",
+      "displayName": "Baan Dar's Guile - Devoted",
+      "effects": [
+        {
+          "actorValue": "DamageResist",
+          "magnitude": 15,
+          "effectName": "Armor"
+        },
+        {
+          "actorValue": "HealRateMult",
+          "magnitude": 10,
+          "effectName": "Health Regeneration"
+        }
+      ],
+      "playerFacingText": "The survivor mends quickly. Armor +15, Health Regeneration +10%."
+    },
+    {
+      "emphasis": "BaanDar",
+      "tier": "T3",
+      "spellEditorId": "PDV_Bless_Khajiit_BaanDar_T3",
+      "displayName": "Baan Dar's Luck - Champion",
+      "effects": [
+        {
+          "actorValue": "DamageResist",
+          "magnitude": 30,
+          "effectName": "Armor"
+        },
+        {
+          "actorValue": "HealRateMult",
+          "magnitude": 25,
+          "effectName": "Health Regeneration"
+        },
+        {
+          "actorValue": "UnarmedDamage",
+          "magnitude": 10,
+          "effectName": "Unarmed Damage"
+        }
+      ],
+      "playerFacingText": "Baan Dar's luck is with you when the odds are not. Armor +30, Health Regeneration +25%, Unarmed Damage +10."
+    },
+    {
+      "emphasis": "Rajhin",
+      "tier": "T1",
+      "spellEditorId": "PDV_Bless_Khajiit_Rajhin_T1",
+      "displayName": "Rajhin's Shadow - Seeker",
+      "effects": [
+        {
+          "actorValue": "Sneak",
+          "magnitude": 5,
+          "effectName": "Sneak"
+        }
+      ],
+      "playerFacingText": "You move as the Purring Liar taught. Sneak +5."
+    },
+    {
+      "emphasis": "Rajhin",
+      "tier": "T2",
+      "spellEditorId": "PDV_Bless_Khajiit_Rajhin_T2",
+      "displayName": "Rajhin's Shadow - Devoted",
+      "effects": [
+        {
+          "actorValue": "Sneak",
+          "magnitude": 13,
+          "effectName": "Sneak"
+        },
+        {
+          "actorValue": "Lockpicking",
+          "magnitude": 10,
+          "effectName": "Lockpicking"
+        }
+      ],
+      "playerFacingText": "Shadow and lock yield to you. Sneak +13, Lockpicking +10."
+    },
+    {
+      "emphasis": "Rajhin",
+      "tier": "T3",
+      "spellEditorId": "PDV_Bless_Khajiit_Rajhin_T3",
+      "displayName": "Rajhin's Grace - Champion",
+      "effects": [
+        {
+          "actorValue": "Sneak",
+          "magnitude": 25,
+          "effectName": "Sneak"
+        },
+        {
+          "actorValue": "Lockpicking",
+          "magnitude": 25,
+          "effectName": "Lockpicking"
+        },
+        {
+          "actorValue": "Pickpocket",
+          "magnitude": 15,
+          "effectName": "Pickpocket"
+        },
+        {
+          "actorValue": "UnarmedDamage",
+          "magnitude": 10,
+          "effectName": "Unarmed Damage"
+        }
+      ],
+      "playerFacingText": "The legend works through your hands. Sneak +25, Lockpicking +25, Pickpocket +15, Unarmed Damage +10."
+    },
+    {
+      "emphasis": "Alkosh",
+      "tier": "T1",
+      "spellEditorId": "PDV_Bless_Khajiit_Alkosh_T1",
+      "displayName": "Alkosh's Order - Seeker",
+      "effects": [
+        {
+          "actorValue": "ResistFire",
+          "magnitude": 5,
+          "effectName": "Fire Resistance"
+        }
+      ],
+      "playerFacingText": "The Dragon King's order steadies you. Fire Resistance +5%."
+    },
+    {
+      "emphasis": "Alkosh",
+      "tier": "T2",
+      "spellEditorId": "PDV_Bless_Khajiit_Alkosh_T2",
+      "displayName": "Alkosh's Order - Devoted",
+      "effects": [
+        {
+          "actorValue": "ResistFire",
+          "magnitude": 13,
+          "effectName": "Fire Resistance"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 5,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "You keep the line against chaos. Fire Resistance +13%, Magic Resistance +5%."
+    },
+    {
+      "emphasis": "Alkosh",
+      "tier": "T3",
+      "spellEditorId": "PDV_Bless_Khajiit_Alkosh_T3",
+      "displayName": "Alkosh's Roar - Champion",
+      "effects": [
+        {
+          "actorValue": "ResistFire",
+          "magnitude": 25,
+          "effectName": "Fire Resistance"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 20,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "Alkosh's roar is in your blood. Fire Resistance +25%, Magic Resistance +20%."
+    }
   ],
   "v1RecognitionSurface": "Champion Survey/status text only (non-voiced). Voiced NPC recognition lines are V2 per PDV_RecognitionDialogueScalePacket.md.",
   "budget": "Two always-on families: lunar substrate boons (Layer 1, broad lunar) + one focused emphasis set (Layer 2). At the PDV_RaceRewardBudgetLedger two-family cap.",
@@ -54,11 +436,23 @@
     "recordCreation": "Create 16 net-new SPEL (15 emphasis + Substrate_Always + Substrate_High + neglect) and their MGEFs; Substrate_Mid REUSES existing PDV_Bless_Khajiit_Lunar_T1 (07103F, do not recreate). Create 4 deity QUSTs (Azura/Khenarthi/Rajhin/Alkosh).",
     "deityQuestStructure": "MUST mirror an existing deity quest (read e.g. PDV_Deity_Kyne 0120B6 fully first): FormVersion 44, Start-Game-Enabled flag, QuestAdapter VMAD hosting the PDV_Deity_<Name> script with base properties DeityName(String), DeityIndex(Int, assign 40/41/42/43 - clear of the 6 existing low indices), Stance_Khajiit=0(NATIVE), PDV_GLO_OriginRace, PDV_GLO_DebugLevel. Thresholds use script defaults (25/50/85).",
     "baseline": {
-      "existingDeityQuests": { "PDV_Deity_Kyne": "0120B6", "PDV_Deity_Talos": "03DE87", "PDV_Deity_AuriEl": "03DE88", "PDV_Deity_Yffre": "06CB52", "PDV_Deity_Zen": "06FA1B", "PDV_Deity_BaanDar": "06FA1C" },
+      "existingDeityQuests": {
+        "PDV_Deity_Kyne": "0120B6",
+        "PDV_Deity_Talos": "03DE87",
+        "PDV_Deity_AuriEl": "03DE88",
+        "PDV_Deity_Yffre": "06CB52",
+        "PDV_Deity_Zen": "06FA1B",
+        "PDV_Deity_BaanDar": "06FA1C"
+      },
       "formListAllDeities": "017E47 (currently 6 items; target 10 after adding Azura/Khenarthi/Rajhin/Alkosh)",
       "existingKhajiitReward": "PDV_Bless_Khajiit_Lunar_T1 = 07103F"
     },
-    "assignedDeityIndex": { "PDV_Deity_Azura": 40, "PDV_Deity_Khenarthi": 41, "PDV_Deity_Rajhin": 42, "PDV_Deity_Alkosh": 43 },
+    "assignedDeityIndex": {
+      "PDV_Deity_Azura": 40,
+      "PDV_Deity_Khenarthi": 41,
+      "PDV_Deity_Rajhin": 42,
+      "PDV_Deity_Alkosh": 43
+    },
     "wiring": "Same run: add 4 deities to FLST 017E47; wire substrate boon slots (Substrate_Always/Mid/High) on PDV_Substrate_KhajiitLunar; wire deity props (PDV_Azura/Khenarthi/Rajhin/Alkosh) + 15 emphasis spell props + PDV_SPEL_Neglect_KhajiitLunar on PDV__ManagerQuest.",
     "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 Items==10; the 16 new SPEL exist with correct MGEF actor-values/magnitudes; substrate slots + manager props resolve. Then runtime smoke (QASmoke routes)."
   }

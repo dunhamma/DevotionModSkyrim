@@ -719,7 +719,9 @@ static MagicEffect EnsureMgef(
 
     record.EditorID = mgefEditorId;
     record.FormVersion = 44;
-    record.Name = Tx(displayName);
+    // Per-effect name keeps the Active Effects list legible (one distinct line
+    // per effect); falls back to the spell display name when not supplied.
+    record.Name = Tx(string.IsNullOrWhiteSpace(effect.effectName) ? displayName : effect.effectName!);
     record.Description = Tx(description);
     record.Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoDuration | MagicEffect.Flag.NoHitEffect;
     record.BaseCost = 0.0f;
@@ -1020,4 +1022,5 @@ sealed class RewardsSpecEffect
     public string? actorValue { get; set; }
     public float magnitude { get; set; }
     public bool nightOnly { get; set; }
+    public string? effectName { get; set; }
 }

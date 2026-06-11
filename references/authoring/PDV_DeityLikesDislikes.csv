@@ -150,9 +150,8 @@ The Hist,333,cook-meal,+,small,0.25,3,0,,,sharing sustenance binds the Saxhleel 
 The Hist,304,murder-defenseless,-,medium,-1.0,2,0.5,,,severing one of the People from the root
 The Hist,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,denying the soul its return to the Hist
 sithis,304,murder-defenseless,+,medium,1.0,2,0.5,,,a death offered to the Void; the unmaking favored
-sithis,2,kill-hostile-humanoid,+,small,0.25,3,0,,,each ending feeds the original chaos
 sithis,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,clinging past death defies the Void's change
-sithis,314,sleep-in-bed,-,small,-0.25,3,0,,,settled comfort resists the formless flux
+sithis,314,sleep-in-bed,-,small,-0.25,1,0,,,settled comfort resists the formless flux
 sithis,364,assault-innocent,+,small,0.5,3,0,,,each unmaking feeds the Void's hunger for change
 sithis,350,heal-or-cure-npc,-,small,-0.5,3,0,,,preserving the living resists the formless flux
 Malacath,330,smith-item,+,medium,0.75,2,0.5,,,the forge is the Orc's prayer
@@ -185,6 +184,6 @@ Z'en,331,enchant-item,+,small,0.25,3,0,,,skilled craft repays the world its due
 Z'en,360,pick-owned-lock,-,small,-0.25,3,0,,owned,taking without paying the debt offends the ledger
 alkosh,361,trespass,-,small,-0.25,3,0,,,breaking lawful bounds offends the keeper of order
 azurah,368,accept-daedric-artifact,+,small,0.5,3,0,,ActorTypeDaedra,Azurah's Star is a gift rightly borne
-The Hist,314,sleep-in-bed,+,small,0.25,3,0,,,rest near the root and the People restores the sap-bond
+The Hist,314,sleep-in-bed,+,small,0.25,1,0,,,rest near the root and the People restores the sap-bond
 Boethiah,360,pick-owned-lock,+,small,0.25,3,0,,owned,deceit and intrusion please the Prince of Plots
 Mephala,361,trespass,+,small,0.25,3,0,,,intrusion into the hidden pleases the Webspinner
