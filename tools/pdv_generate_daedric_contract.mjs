@@ -125,11 +125,27 @@ function stateArrays(row) {
   };
 }
 
+// Skyrim's 18 skills carry point-based magnitudes; everything else here is a
+// rate/resist/percent (or flat) actor value. Daedric pacts run a HIGH-STAKES band
+// (~2x the Aedra god tiers) because only ONE pact is live at a time (hard switch),
+// so a player ever feels exactly one boon + one price. Boon and price both bite.
+const SKILL_AVS = new Set([
+  "OneHanded", "TwoHanded", "Marksman", "Block", "Smithing", "HeavyArmor", "LightArmor",
+  "Pickpocket", "Lockpicking", "Sneak", "Alchemy", "Speechcraft", "Alteration",
+  "Conjuration", "Destruction", "Illusion", "Restoration", "Enchanting",
+]);
+
 function spellPacket(id, text, kind, meta, tierIndex) {
   const tierName = ["Seeker", "Devoted", "Champion"][tierIndex];
   const actorValues = kind === "boon" ? meta.mechanics : meta.price;
-  const magnitudes = kind === "boon" ? [5, 8, 12] : [-3, -5, -8];
   const actorValue = actorValues[Math.min(tierIndex, actorValues.length - 1)];
+  const isSkill = SKILL_AVS.has(actorValue);
+  let magnitudes;
+  if (kind === "boon") {
+    magnitudes = isSkill ? [10, 18, 25] : [15, 25, 35];
+  } else {
+    magnitudes = isSkill ? [-10, -18, -25] : [-10, -20, -30];
+  }
   return {
     spellEditorId: id,
     magicEffectEditorId: id.replace("PDV_Bless_", "PDV_MGEF_Bless_").replace("PDV_Price_", "PDV_MGEF_Price_"),

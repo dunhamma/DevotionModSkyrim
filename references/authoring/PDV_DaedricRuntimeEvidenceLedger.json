@@ -30,7 +30,7 @@
       "batch": "pilot",
       "index": 0,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -89,10 +89,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -117,7 +117,7 @@
       "batch": "",
       "index": 1,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -176,10 +176,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -204,7 +204,7 @@
       "batch": "",
       "index": 2,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -263,10 +263,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -291,7 +291,7 @@
       "batch": "",
       "index": 3,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -350,10 +350,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -378,7 +378,7 @@
       "batch": "",
       "index": 4,
       "curseAccess": true,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -437,10 +437,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -465,7 +465,7 @@
       "batch": "1",
       "index": 5,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -524,10 +524,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -552,7 +552,7 @@
       "batch": "1",
       "index": 6,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -611,10 +611,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -639,7 +639,7 @@
       "batch": "2",
       "index": 7,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -698,10 +698,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -726,7 +726,7 @@
       "batch": "2",
       "index": 8,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -785,10 +785,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -813,7 +813,7 @@
       "batch": "2",
       "index": 9,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -872,10 +872,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -900,7 +900,7 @@
       "batch": "2",
       "index": 10,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -959,10 +959,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -987,7 +987,7 @@
       "batch": "2",
       "index": 11,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1046,10 +1046,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1074,7 +1074,7 @@
       "batch": "2",
       "index": 12,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1133,10 +1133,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1161,7 +1161,7 @@
       "batch": "2",
       "index": 13,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1220,10 +1220,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1248,7 +1248,7 @@
       "batch": "3",
       "index": 14,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1307,10 +1307,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1335,7 +1335,7 @@
       "batch": "3",
       "index": 15,
       "curseAccess": true,
-      "overall": "pending",
+      "overall": "blocked",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1394,10 +1394,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "blocked",
+          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+          "command": "MCM force-Seeker stack snapshot (Active Effects)",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -2443,7 +2443,151 @@
       "note": "Boethiah 3-signal route -> Seeker fired gameplay SendPrismaDaedricToast (boon/price) named correctly, no panel; tester + log confirmed.",
       "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
       "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Boethiah",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Azura",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Vaermina",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Meridia",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Molag",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Mephala",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Malacath",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Dagon",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Sheo",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Namira",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Sanguine",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Vile",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Mora",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Nocturnal",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Peryite",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
+      "prince": "Hircine",
+      "slot": "stackLegibility",
+      "status": "blocked",
+      "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
+      "command": "MCM force-Seeker stack snapshot (Active Effects)",
+      "log": ""
     }
   ],
-  "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST"
+  "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST"
 }
