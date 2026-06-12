@@ -76,9 +76,9 @@
         },
         "prismaNotification": {
           "status": "pass",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Boethiah 3-signal route -> Seeker fired gameplay SendPrismaDaedricToast (boon/price) named correctly, no panel; tester + log confirmed.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -162,10 +162,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -249,10 +249,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -336,10 +336,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -378,7 +378,7 @@
       "batch": "",
       "index": 4,
       "curseAccess": true,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -423,10 +423,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -444,9 +444,9 @@
           "log": ""
         },
         "curseNoDoubleFire": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Vampire curse persisted across a pact switch (Molag active+vampire -> switch to Mehrunes Dagon); curse held at state 2, no transition after onset. Log-confirmed Papyrus.0.log 2026-06-13.",
           "command": "",
           "log": ""
         },
@@ -510,10 +510,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -597,10 +597,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -684,10 +684,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -771,10 +771,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -858,10 +858,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -945,10 +945,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -1032,10 +1032,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -1119,10 +1119,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -1206,10 +1206,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -1293,10 +1293,10 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -1381,9 +1381,9 @@
         },
         "prismaNotification": {
           "status": "pass",
-          "updatedAtLocal": "12/06/2026, 1:02:28 pm AEST",
-          "note": "In-game retest passed: Daedric milestone toast remains immersion flavor only with no Boon/Price stat rows and no panel auto-open.",
-          "command": "Manual in-game Hircine milestone toast retest after Prisma flavor-only update",
+          "updatedAtLocal": "13/06/2026 (in-game test session)",
+          "note": "Route markers PASS for all 16 via pdv_daedric_runtime_check --prince all --strict-manager --source mcm --include-generic; shared Prisma toast mechanism proven (Boethiah Seeker + multiple Champion-force toasts sent=TRUE). Generic silence probe clean.",
+          "command": "MCM Debug: Daedric & Curse -> Route all Princes; node tools/pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
           "log": ""
         },
         "saveLoad": {
@@ -2892,7 +2892,15 @@
     {
       "at": "12/06/2026 (in-game test session)",
       "note": "Champion Accept/Decline dialog: NOT a code or wiring bug. Msg_ChampionEntry and the full per-path message set are correctly wired in the ESP (e.g. Boethiah path Scripts[1].Msg_ChampionEntry -> 071270). The dialog auto-accepted silently because testing used an OLD save where the property baked as None (VMAD never re-reads). Fresh-save test will show the offer. (A pdv-daedric-author re-run was done this session re-applying canonical contract magnitudes; backup .20260612-203620.bak.)"
+    },
+    {
+      "at": "13/06/2026 (in-game test session)",
+      "note": "Part A route proof PASS (16/16 mcm route markers, generic silence clean). Molag Bal vampire curse separation PASS (log). prismaNotification -> pass roster-wide; Molag curseNoDoubleFire -> pass."
+    },
+    {
+      "at": "13/06/2026 (in-game test session)",
+      "note": "Champion Accept/Decline real root cause: a raw Message.Show() cannot display while the MCM config menu is open, so the authored Msg_ChampionEntry auto-returned the default (Accept) silently -- not a save-bake or wiring gap (record/wiring verified correct). FIX (compile 0/0, needs in-game retest): MCM DebugForceSelectedDaedricTier now presents the Accept/Decline via SKI ShowMessage (works in-menu) and applies the gate directly; orphaned DebugForceChampionOffer removed. Authored messagebox still fires on organic tier crossings outside the menu."
     }
   ],
-  "updatedAtLocal": "12/06/2026 (in-game test session)"
+  "updatedAtLocal": "13/06/2026 (in-game test session)"
 }
