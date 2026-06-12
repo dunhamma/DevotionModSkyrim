@@ -160,6 +160,13 @@ Follow the Argonian tranche's proven path per race:
    from `pdv_cumulative_rebalance.mjs` (the tool is one-shot-spent; edits
    are by hand now).
 
+**Build status (2026-06-12):** Bosmer batch step 2 drafted —
+`PDV_BosmerVariety_RecordBatch.manifest.json` + `tools/pdv-bosmer-variety-author`
+(records + fail-closed author tool). Pending before its dry-run: resolve the
+four unverified Songs LCTN FormIDs (the tool refuses a real write until then),
+then the `PDV__ManagerQuest.psc` Bosmer runtime layer (step 3). Orc, Altmer,
+Redguard, and the Khajiit addendum remain design-locked but unbuilt.
+
 Suggested order: **Bosmer → Orc → Altmer → Redguard → Khajiit addendum.**
 Bosmer first because three of its four paths are under-served at once;
 Orc second because the tranche doubles as the unbuilt locked

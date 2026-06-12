@@ -295,9 +295,14 @@ vision text. One-shot forever, anti-farm by design.
 cooldown, "Not yet" does not spend the cooldown. Y'ffre told the Bosmer
 their forms; the diaspora Bosmer retells their own. One-active told-self:
 Hunter (+5 archery), Speaker (+5 speech), Wanderer (+8% stamina regen),
-Keeper (+5% barter); choosing again swaps (clear-before-add). Fades at dawn
-on path-coherence break (path switch, or Apostate band while Old Contract);
-returns automatically at dawn on recovery.
+Keeper (+15 carry weight — the keeper who holds and carries what the people
+need kept); choosing again swaps (clear-before-add). Fades at dawn on
+path-coherence break (path switch, or Apostate band while Old Contract);
+returns automatically at dawn on recovery. (Build note: Keeper was first
+sketched as "+5% barter," but vanilla governs prices through the Speech
+skill already used by Speaker, so Keeper ships as Carry Weight to keep the
+four told-selves mechanically distinct — see
+`PDV_BosmerVariety_RecordBatch.manifest.json`.)
 
 ---
 
