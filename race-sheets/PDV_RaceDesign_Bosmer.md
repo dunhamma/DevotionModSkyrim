@@ -1,5 +1,5 @@
 # PDV Race Design — Bosmer
-**Last updated:** 2026-05-18
+**Last updated:** 2026-06-12
 **Status:** Implementation locked for 1.0 experience shape; hook-costing and reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.7)
 **Extended spec:** See references/PDV_BosmerPactModel_Planning.md for full Old Contract details.
@@ -245,6 +245,59 @@ Derived from the LOCKED rules above; these are pass/fail checks for when the Pap
 
 - **Path onboarding has a safe default, not a hard block.** First-run setup requires an explicit path choice, but if `PDV_State_BosmerPath` is ever unset or corrupt it must resolve to `LivingStory` (= 1), never to an unset/limbo state. Non-Old-Contract path incoherence drifts to `LivingStory`, not unset. (Source: "Path implementation locks (LOCKED)".)
 - **Green Pact compliance is Old-Contract-only.** The `GreenPactCompliance` meter, plant-consumption penalties, the `PlantConsumed` notification, the Apostate forced-reckoning timer, and Y'ffre exclusivity must fire **only** when `PDV_State_BosmerPath == OldContract` (= 0). On `LivingStory`, `Exchange`, and `BanditRoad`, honoring Bosmer inheritance may give modest positive weighting but plant use carries **zero** penalty. Implementation must read shared Bosmer signals interpreted by the active path — **not** a hidden background Old Contract ledger. (Source: "Shared Green Pact memory (LOCKED)"; Signal Examples friction table.)
+
+---
+
+## Variety Tranche — "The Story Goes On" (DESIGN-LOCKED 2026-06-12)
+
+Roadmap source: `references/authoring/PDV_RaceVarietyTranche_Roadmap.md`.
+Purpose: bring Living Story, Exchange, and Bandit Road felt-beat density up to
+the Old Contract baseline. All five mechanics are path-gated by
+`PDV_State_BosmerPath`; none add Old Contract burden to other paths (the
+shared-Pact-memory lock holds). Magnitudes are tunable; shapes, gates, caps,
+and fade rules are locked. Effect families remain blocked behind the race row
+in `PDV_RaceEffectReviewLedger.md` before any record authoring.
+
+**Green Dreams (all paths).** Sleep dreams keyed to the active path; Old
+Contract dreams additionally key to the GPC band. Living Story dreams retell
+recent quests as Story fragments; Exchange dreams weigh unsettled debts;
+Bandit Road dreams are road-fire stories. Argonian dream-roller cadence:
+~8-12% per sleep, 2-day floor, elevated chance the night after a path change
+(or, Old Contract, a band change). Top-left lines only.
+
+**Hearth of the Telling (Living Story only).** Cell-keyed declaration of a
+community hearth (inn or home), prompted at sleep-stop; declining re-prompts
+after 3 in-game days. Sleeping in the declared hearth after discovering 3+
+new locations since the last stay grants `A Tale Carried` (Speech +5,
+10 min) — the story was brought home and told. Anti-farm is the
+location-discovery delta, not sleep count.
+
+**Path signatures (once/day, Quiet surfacing).**
+- Exchange — `Scales at Rest`: completing any favor/bounty/contract quest
+  grants a brief barter pulse.
+- Bandit Road — `Baan Dar Opens the Gap`: dropping below 20% health in
+  combat grants a ~5s movement burst (escape texture; deliberately distinct
+  from the weekly Champion luck moment, which stays rare).
+- Old Contract gets no new signature — it is already the richest path.
+- Cross-race note: Khajiit carries a trigger-distinct Baan Dar signature
+  (`Baan Dar's Improvisation`, survive-outnumbered). Both are intentional;
+  the pairing is documented in the roadmap's resolved decisions.
+
+**Songs of the Green (all paths).** Six curated green sites; first arrival
+each = one vision line + small Y'ffre/path pulse; all six = milestone
+MessageBox. Locked set: the Gildergreen (Whiterun), Kynesgrove's grove,
+Eldergleam Sanctuary, Evergreen Grove, Clearspring Tarn, Autumnshade
+Clearing. Eldergleam is intentionally shared with the Argonian Waters set
+under the shared-site rule: shared LCTNs are allowed with race-distinct
+vision text. One-shot forever, anti-farm by design.
+
+**The Naming (rite).** At the declared hearth or any Songs site, 7-day
+cooldown, "Not yet" does not spend the cooldown. Y'ffre told the Bosmer
+their forms; the diaspora Bosmer retells their own. One-active told-self:
+Hunter (+5 archery), Speaker (+5 speech), Wanderer (+8% stamina regen),
+Keeper (+5% barter); choosing again swaps (clear-before-add). Fades at dawn
+on path-coherence break (path switch, or Apostate band while Old Contract);
+returns automatically at dawn on recovery.
 
 ---
 

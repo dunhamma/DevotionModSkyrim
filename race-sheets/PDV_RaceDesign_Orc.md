@@ -1,5 +1,5 @@
 # PDV Race Design — Orc (Orsimer)
-**Last updated:** 2026-05-19
+**Last updated:** 2026-06-12
 **Status:** Implementation locked for 1.0 experience shape; final hook-costing and reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.9)
 
@@ -229,6 +229,57 @@ Mode switch gates:
 - Mode state transitions: Cost Class B (persistent state management)
 - Oath-breaking detection: Cost Class C (quest tracking + abandonment detection)
 - Mode ceiling in ProcessDawn: Cost Class A (simple daily-rate multiplier)
+
+---
+
+## Variety Tranche — "Witnessed" (DESIGN-LOCKED 2026-06-12)
+
+Roadmap source: `references/authoring/PDV_RaceVarietyTranche_Roadmap.md`.
+Purpose: close the City / Legion-Exile felt-content gap without violating the
+feasibility lock (curated hooks or PDV-authored state only — no broad social
+simulation). Magnitudes are tunable; shapes, gates, caps, and fade rules are
+locked. Effect families remain blocked behind the race row in
+`PDV_RaceEffectReviewLedger.md` before any record authoring.
+
+**The Watcher's regard (all modes).** Not dreams — Malacath observes, he
+does not visit. Rare top-left observation lines after qualifying mode-coded
+conduct ("The work was true. It was seen."), keyed to
+`PDV_State_OrcLifeMode`, cap 1/dawn. Silence remains the neglect texture, so
+lines stay rare by design.
+
+**Self-made community (City + Legion/Exile modes).** This implements the
+locked `PDV_SacredPlace` self-made-community row on the proven Argonian
+cell-keyed declaration mechanic. Declaration of a chosen forge/home/
+workplace cell ("This place is mine to keep"), prompted at sleep-stop;
+declining re-prompts after 3 in-game days. An invested return = sleeping
+there after a day containing a qualifying quality-craft or completed-service
+act; repeated visits alone never qualify (locked). At 3 invested returns the
+wake grants `Hearth-Held` (small health-regen pulse, 10 min). Presentation
+is mode-split per the locked phrasing: City = belonging built; Legion/Exile
+= burden returned from. Forward note: if a true `PDV_SacredPlace` system is
+later built, this mechanic migrates into it (recorded in the roadmap and to
+be carried in the Orc record-batch manifest, Hist-fold style).
+
+**The Code Holds (signature, all modes, once/day).** Surviving a fight
+after dropping below 20% health without leaving the cell grants a brief
+post-combat regen pulse. Quiet surfacing in City/Legion modes, Noted in
+stronghold context. Deliberately small and all-tier — distinct from the
+Stronghold Champion fury, which stays a Champion moment.
+
+**The Four Holds of the Code (pilgrimage).** One-shot first-arrival pulse at
+each of the four strongholds — Dushnikh Yal, Mor Khazgur, Narzulbur,
+Largashbur — all four = milestone MessageBox. For a City or Exile Orc this
+is belonging-across-distance. The arrival pulse fires on the location, not
+on friendly entry (Largashbur is hostile pre-`The Cursed Tribe`). One-shot
+forever, anti-farm by design.
+
+**Trial of Iron (rite).** At a forge inside the declared community place or
+any stronghold, 7-day cooldown, "Not yet" does not spend the cooldown.
+One-active discipline: Hammer (+5 smithing), Shield (+5 armor rating), Tusk
+(+5 unarmed), Yoke (+15 carry weight); choosing again swaps
+(clear-before-add). Fades at dawn if mode standing collapses (e.g. sustained
+oath-breaking); returns automatically at dawn on recovery. Forge-sited so
+the rite stays inside Malacath's devotional language: conduct, not prayer.
 
 ---
 

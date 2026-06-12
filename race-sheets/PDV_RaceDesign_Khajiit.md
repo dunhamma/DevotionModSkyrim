@@ -1,5 +1,5 @@
 # PDV Race Design — Khajiit
-**Last updated:** 2026-05-19
+**Last updated:** 2026-06-12
 **Implementation status:** LOCKED (lunar substrate, focused emphasis, road homes, curse posture, and launch hook scope)
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.6)
@@ -236,6 +236,30 @@ The lunar substrate weakens when you've been **indoors, urban, and disconnected 
 - Moon-phase window: Cost Class B (periodic state check — once per day is sufficient)
 - Silent patron emergence: Cost Class B (dawn pipeline evaluation of piety dominance)
 - Road-travel detection (non-fast-travel): Cost Class C (requires location-change time tracking)
+
+---
+
+## Variety Tranche — Focus Distinctness Addendum (DESIGN-LOCKED 2026-06-12)
+
+Roadmap source: `references/authoring/PDV_RaceVarietyTranche_Roadmap.md`.
+The Lunar Lattice closed the substrate gap; this small addendum answers the
+remaining balance-audit risk ("Khenarthi/Azurah crowd out Baan Dar, Rajhin,
+and Alkosh") with three focus-gated signatures. No new substrate, place,
+pilgrimage, or rite work — road-home cadence already owns those jobs.
+Magnitudes tunable; gates and caps locked. Effect families remain blocked
+behind the race row in `PDV_RaceEffectReviewLedger.md`.
+
+- `Rajhin's Borrowed Moment` (Rajhin focus, once/day): a successful
+  pickpocket of a notable target grants a brief sneak pulse.
+- `Baan Dar's Improvisation` (Baan Dar focus, once/day): surviving combat
+  that started while outnumbered 3+ grants a brief stamina pulse (pariah
+  luck texture). Cross-race note: Bosmer Bandit Road carries a
+  trigger-distinct Baan Dar signature (`Baan Dar Opens the Gap`,
+  escape-below-20%-health); both are intentional and documented in the
+  roadmap's resolved decisions.
+- `Alkosh's Long Breath` (Alkosh focus, rare): dragon kills grant a Marked
+  time-flavor line and a small pulse; naturally scarce, no cap needed
+  beyond the encounter rate.
 
 ---
 

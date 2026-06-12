@@ -1,5 +1,5 @@
 # PDV Race Design — Altmer
-**Last updated:** 2026-05-30
+**Last updated:** 2026-06-12
 **Status:** Implementation-locked for 1.0; reward magnitudes still tune during build/playtest
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.5)
 **Note:** Lorkhan Adjacency Penalty economy, crisis handling, contextual-favor lanes, and focused-deity launch hook posture are implementation-locked at the experience level; exact reward magnitudes can still tune inside the documented ranges.
@@ -353,6 +353,57 @@ The failure mode the mod should make legible: a devout Altmer who fully engaged 
 - Dawn/dusk observation: Cost Class B (time-state check)
 - ThalmørAlignment updates: Cost Class A (specific action detection)
 - Trinimac offer gate: Cost Class B (track-state check in offer evaluation)
+
+---
+
+## Variety Tranche — "The Return Made Daily" (DESIGN-LOCKED 2026-06-12)
+
+Roadmap source: `references/authoring/PDV_RaceVarietyTranche_Roadmap.md`.
+Purpose: the inverse of the other tranches — Altmer is friction-rich and
+texture-poor on the positive side. This tranche adds ordinary-session
+positive surfaces that are coherence-shaped, never volume-shaped, and never
+weaken the locked Lorkhan economy. Magnitudes are tunable; shapes, gates,
+caps, and fade rules are locked. Effect families remain blocked behind the
+race row in `PDV_RaceEffectReviewLedger.md` before any record authoring.
+
+**Contemplations.** Dawn-window lines keyed to `PDV_State_AltmerCrisis` and
+the ThalmorAlignment band. A `Dissonant` Altmer's dawn reads differently
+from a coherent one; the resolution day gets one Marked line. Pure texture
+on the existing dawn rite and crisis state — no new piety, no new records
+beyond MESG/line content.
+
+**Chamber of Study (place anchor).** Cell-keyed declaration of a study
+(home, College quarters, inn room), prompted on the first qualifying read in
+an ownable cell; declining re-prompts after 3 in-game days. Reading a
+qualifying text (the locked `PDV_ALT_POS_STUDY_TEXT` list) inside the
+declared study grants `Ordered Mind` (+5% magicka regen, 10 min). This gives
+self-cultivation a *place*, which Altmer currently lack entirely; the piety
+side stays owned by the existing positive-income tag.
+
+**Syrabane's Hand (signature, once/day).** A ward that fully absorbs a
+hostile spell grants a brief spell-cost pulse ("Syrabane's hand steadies
+yours"). Coherence-gated: suppressed while a crisis is unresolved.
+Protection-shaped per the locked Syrabane boundary — warding someone still
+on the path, never a damage reward.
+
+**Wayshrines of the Chantry (pilgrimage, hybrid eight stations).** Locked as
+the hybrid shape: two base-game stations — the College of Winterhold's Hall
+of the Elements and one authored Auri-El surface — so the lever is felt in
+early play, then the five Forgotten Vale wayshrines (Illumination, Sight,
+Learning, Resolution, Radiance) plus the Inner Sanctum as the deep arc.
+First arrival each = vision line + small Auri-El pulse; milestone
+MessageBox at all eight. The Initiate's Ewer pilgrimage is this mechanic in
+vanilla lore. Dawnguard.esm is already a framework master (Ancestor Glade
+precedent), so the Vale stations add no new dependency. One-shot forever.
+
+**Disciplines of Return (rite).** At the declared study, 7-day cooldown,
+"Not yet" does not spend the cooldown. One-active cultivation discipline:
+four choices covering one school of magic at -5% cost or +5% regen
+(exact school list locked at effect review); choosing again swaps
+(clear-before-add). Fades at dawn while a crisis is unresolved or after an
+alignment-band break; returns automatically at dawn on coherent recovery —
+the existing crisis system becomes something the player *feels* in their
+build, gently, which is the "judged by coherence" core intent.
 
 ---
 

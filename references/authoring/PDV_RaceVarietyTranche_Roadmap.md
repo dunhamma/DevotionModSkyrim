@@ -1,7 +1,7 @@
 # PDV Race Variety Tranche Roadmap
 
 **Created:** 2026-06-12
-**Status:** Design proposal — no records, scripts, or contracts authored yet
+**Status:** DESIGN-LOCKED 2026-06-12 (all five tranches folded into race sheets; magnitudes tunable) — no records, scripts, or contracts authored yet; effect families gated behind `PDV_RaceEffectReviewLedger.md`
 **Owner:** Companion to `references/authoring/PDV_RaceGameplayBalanceAudit.md` and `references/authoring/PDV_RaceRewardBudgetLedger.md`
 **Precedent:** Argonian variety tranche (landed 2026-06-11, `PDV_ArgonianVariety_RecordBatch.manifest.json`) and Khajiit Lunar Lattice (landed 2026-06-11)
 
@@ -71,7 +71,7 @@ to other paths (locked shared-Pact-memory rule).
 | L1 — Green dreams | Sleep dreams keyed to active path + (Old Contract only) GPC band. Living Story dreams retell the player's recent quests as Story fragments; Exchange dreams weigh unsettled debts; Bandit Road dreams are road-fire stories; Old Contract dreams sharpen or sour with the GPC band | Direct reuse of the Argonian dream roller. Path change = elevated dream chance that night, same as posture change |
 | L2 — Hearth of the Telling (Living Story) | Cell-keyed declaration of a community hearth (inn or home). Sleeping there after discovering 3+ new locations since the last stay grants `A Tale Carried` (Speech +5, 10 min) — the story was brought home and told | Reuses bed-of-choice cell tech. Anti-farm: location-discovery delta, not sleep count |
 | L3 — Path signatures | Exchange: `Scales at Rest` — once/day, completing any favor/bounty/contract quest grants a brief barter pulse. Bandit Road: `Baan Dar Opens the Gap` — once/day, dropping below 20% health in combat grants a 5s movement burst (escape texture, distinct from the weekly Champion luck moment, which stays rare per the locked sheet) | Both are once/day, quiet surfacing. Old Contract intentionally gets no new signature — it is already the richest path |
-| L4 — Songs of the Green | Six curated green sites; first arrival each = one vision line + small Y'ffre/path pulse; all six = milestone. Candidates: the Gildergreen (Whiterun), Kynesgrove's grove, Eldergleam Sanctuary, Evergreen Grove, Clearspring Tarn, Autumnshade Clearing | OPEN DECISION: Eldergleam is already in the Argonian Waters set. Either allow shared sites with race-distinct vision text, or swap in a substitute. Kynareth-proxy logic (locked) makes the Gildergreen the anchor site |
+| L4 — Songs of the Green | Six curated green sites; first arrival each = one vision line + small Y'ffre/path pulse; all six = milestone. Locked set: the Gildergreen (Whiterun), Kynesgrove's grove, Eldergleam Sanctuary, Evergreen Grove, Clearspring Tarn, Autumnshade Clearing | RESOLVED 2026-06-12: Eldergleam stays in both sets under the shared-site rule (shared LCTNs allowed with race-distinct vision text). Kynareth-proxy logic (locked) makes the Gildergreen the anchor site |
 | L5 — The Naming | Rite at the declared hearth (or any green site), 7-day cooldown: Y'ffre told the Bosmer their forms, and the diaspora Bosmer retells their own. One-active choice of told-self: Hunter (+5 archery), Speaker (+5 speech), Wanderer (+8% stamina regen), Keeper (+5% barter). Fades at dawn if path coherence breaks (path switch or, for Old Contract, Apostate band); returns at dawn on recovery | Mirrors Hist Adaptations exactly. The "form held by story" frame is the strongest lore fit in the whole roadmap — Bosmer fear losing their form when the Story stops being told |
 
 ## Orc — "Witnessed" Tranche (P1)
@@ -101,7 +101,7 @@ volume-shaped, and never weaken the Lorkhan economy (all locked).
 | L1 — Contemplations | Dawn-window lines keyed to `PDV_State_AltmerCrisis` and ThalmorAlignment band. A `Dissonant` Altmer's dawn reads differently from a coherent one; resolution day gets one Marked line. Makes the crisis arc legible as lived experience, not just Survey state | Texture on the existing dawn rite + crisis state; no new piety |
 | L2 — Chamber of Study | Cell-keyed declaration of a study (home, College quarters, inn room). Reading a qualifying text (the locked `PDV_ALT_POS_STUDY_TEXT` list) inside the declared study grants `Ordered Mind` (+5% magicka regen, 10 min). The declaration prompt fires on first qualifying read in an ownable cell | Bed-of-choice tech keyed to book-read instead of sleep. Gives self-cultivation a *place*, which Altmer currently lack entirely |
 | L3 — Syrabane's Hand | Once/day, a ward that fully absorbs a hostile spell grants a brief spell-cost pulse ("Syrabane's hand steadies yours"). Coherence-gated: suppressed while a crisis is unresolved | Protection-shaped per the locked Syrabane boundary ("favor should feel like warding someone still on the path"); not a damage reward |
-| L4 — Wayshrines of the Chantry | The Forgotten Vale wayshrine circuit (Illumination, Sight, Learning, Resolution, Radiance) + the Inner Sanctum as six one-shot stations; first arrival each = vision line + small Auri-El pulse; all six = milestone. The Initiate's Ewer pilgrimage is literally this mechanic in vanilla lore — the diegetic fit is exact | Adds Dawnguard.esm master — precedent already set by Ancestor Glade in the Argonian set. OPEN DECISION: this is deep late-game content; decide whether a base-game partial set (College Hall of the Elements + authored Auri-El surfaces) should front-run it |
+| L4 — Wayshrines of the Chantry | RESOLVED 2026-06-12 as a hybrid eight-station circuit: two base-game stations (College Hall of the Elements + one authored Auri-El surface) felt in early play, then the five Forgotten Vale wayshrines (Illumination, Sight, Learning, Resolution, Radiance) + the Inner Sanctum as the deep arc; first arrival each = vision line + small Auri-El pulse; milestone at all eight. The Initiate's Ewer pilgrimage is literally this mechanic in vanilla lore | Dawnguard.esm is already a framework master (Ancestor Glade precedent), so the Vale stations add no new dependency |
 | L5 — Disciplines of Return | Rite at the declared study, 7-day cooldown: one-active cultivation discipline — one school of magic gets -5% cost OR +5% regen variants across four choices. Fades at dawn while a crisis is unresolved or after an alignment-band break; returns at dawn on coherent recovery | The fade/return rule turns the existing crisis system into something the player *feels* in their build, gently — which is exactly the "judged by coherence" core design intent |
 
 ## Redguard — "The Far Shores Keep Watch" Tranche (P2)
@@ -141,8 +141,9 @@ Road-home cadence already exists in the locked design; no L2/L4 work here.
 
 Follow the Argonian tranche's proven path per race:
 
-1. **Design lock pass** — fold the chosen tranche into the race sheet and
-   the effect-review ledger; resolve the OPEN DECISIONS flagged above.
+1. **Design lock pass — DONE 2026-06-12** — all five tranches are folded
+   into their race sheets, the effect-review ledger carries the variety
+   tranche gate, and the decisions below are resolved.
 2. **Record batch manifest** — one
    `PDV_<Race>Variety_RecordBatch.manifest.json` per race (MESG/FLST/SPEL/
    MGEF + manager VMAD props), authored by a narrow
@@ -166,21 +167,47 @@ self-made-community row; Altmer third because its tranche is mostly
 texture on already-wired state and de-risks the audit's punitive-feel
 concern before external beta.
 
-## Open Decisions
+## Resolved Decisions (2026-06-12)
 
-1. **Shared pilgrimage sites** — may two races' curated sets include the
-   same LCTN (Eldergleam) with race-distinct visions, or is one-race-one-
-   site the rule?
-2. **Altmer pilgrimage pacing** — Forgotten Vale circuit only (late-game,
-   Dawnguard-gated), or front-run with a base-game partial set?
-3. **Lever-4 master flags** — Argonian set already added Dawnguard.esm;
-   confirm Dawnguard remains an acceptable hard master before the Altmer
-   set deepens the dependency.
-4. **Signature overlap audit** — `Baan Dar Opens the Gap` (Bosmer) vs
-   `Baan Dar's Improvisation` (Khajiit) intentionally share a god across
-   races with different triggers; confirm against the shared-deity stance
-   reconciliation rules before authoring.
-5. **Orc L2 vs future substrate** — if a true `PDV_SacredPlace` system is
-   ever built, the cell-keyed Hearth-Held mechanic should migrate into it;
-   record the forward note in the Orc manifest the way Hist-fold tuning is
-   held in the Argonian manifest.
+All five tranches are design-locked into their race sheets as of this date.
+Magnitudes remain tunable inside the effect-review gate; shapes, gates,
+caps, and fade rules are locked.
+
+1. **Shared pilgrimage sites — RESOLVED: share with distinct visions.**
+   Two races' curated sets may include the same LCTN with race-distinct
+   vision text. Eldergleam Sanctuary stays in both the Argonian Waters set
+   and the Bosmer Songs set; a sacred tree is sacred to both theologies.
+2. **Altmer pilgrimage pacing — RESOLVED: hybrid eight stations.** Two
+   base-game stations (College Hall of the Elements + one authored Auri-El
+   surface) front-run the five Forgotten Vale wayshrines + Inner Sanctum;
+   milestone fires at all eight.
+3. **Lever-4 master flags — RESOLVED: Dawnguard.esm acceptable.** The
+   Argonian Waters set already made Dawnguard.esm a hard framework master
+   (Ancestor Glade), and SSE ships with all DLC, so the dependency cost is
+   already paid; the Vale stations add nothing new.
+4. **Signature overlap — RESOLVED: keep both Baan Dar signatures.**
+   `Baan Dar Opens the Gap` (Bosmer, escape-below-20%-health) and
+   `Baan Dar's Improvisation` (Khajiit, survive-outnumbered-3+) are
+   intentionally trigger-distinct expressions of a canonically shared
+   deity (the stance matrix already reconciles Baan Dar across both
+   races via the shared-deity SGE work). The pairing is documented here
+   and cross-noted in both race sheets.
+   `PDV_PairedEquityWaivers.csv` is NOT the home for this record: that
+   file's schema (`cluster,editor_id,outcome_stage,deity,reason`) is
+   quest-matrix-cell-shaped and consumed by `pdv_paired_equity_audit.mjs`;
+   signatures are not matrix cells. If the equity audit later grows a
+   signature lens, migrate this note into whatever schema it defines.
+5. **Orc L2 vs future substrate — forward note (no decision needed).** If
+   a true `PDV_SacredPlace` system is ever built, the cell-keyed
+   Hearth-Held mechanic migrates into it; carry this note in the Orc
+   record-batch manifest the way Hist-fold tuning is held in the Argonian
+   manifest.
+
+## Post-Lock Doc-Sync Note
+
+The Argonian race sheet predates the tranche pattern and does not carry a
+variety-tranche section (its tranche is documented in
+`PDV_ArgonianVariety_RecordBatch.manifest.json` and the beta packet
+addendum). Backfilling a matching section into
+`race-sheets/PDV_RaceDesign_Argonian.md` for sheet parity is a low-priority
+doc-sync task; the shipped records stay authoritative.
