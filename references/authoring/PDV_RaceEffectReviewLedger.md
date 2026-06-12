@@ -51,6 +51,35 @@ balanced, or ready for higher-tier expansion.
 - Survey/MCM copy must explain the active state in fiction-facing terms without
   turning effect mechanics into debug counters.
 
+## Variety Tranche Gate (2026-06-12)
+
+The five race variety tranches in
+`references/authoring/PDV_RaceVarietyTranche_Roadmap.md` are design-locked
+into their race sheets (Bosmer, Orc, Altmer, Redguard, Khajiit addendum).
+That lock covers shapes, gates, caps, and fade rules only. Before any
+tranche record authoring:
+
+- All tranche magnitudes are provisional and must pass this ledger's race
+  row review like any other effect change.
+- Tranche effects add no new always-on boon families: pilgrimage pulses are
+  one-shot, signatures are once/day 10-minute-class pulses, and rite effects
+  are one-active with dawn fade/restore. Any drift from those shapes is a
+  budget change requiring re-review.
+- Rite effects (Bosmer Naming, Orc Trial of Iron, Altmer Disciplines of
+  Return, Redguard Remembering of Names) follow the Hist Adaptations
+  contract: one active at a time, swap is clear-before-add, "Not yet" does
+  not spend the cooldown, fade at dawn on coherence break, restore at dawn
+  on recovery.
+- Tranche effect families to fold into each race's row review: Bosmer
+  (`A Tale Carried`, `Scales at Rest`, `Baan Dar Opens the Gap`, Songs
+  pulses, four Naming selves), Orc (`Hearth-Held`, `The Code Holds`, Four
+  Holds pulses, four Trial disciplines), Altmer (`Ordered Mind`,
+  `Syrabane's Hand`, Chantry pulses, four Disciplines), Redguard
+  (sword-tending Leki pulse, `Leki's Measure`, `Tava's Departure`,
+  `The Unclean Hour`, Halls pulses, four Remembering observances), Khajiit
+  (`Rajhin's Borrowed Moment`, `Baan Dar's Improvisation`, `Alkosh's Long
+  Breath`).
+
 ## Khajiit T1 Baseline
 
 `PDV_Bless_Khajiit_Lunar_T1` began as the CAT-6 pilot and is now governed by

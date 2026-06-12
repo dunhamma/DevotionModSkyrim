@@ -1,5 +1,5 @@
 # PDV Race Design — Redguard
-**Last updated:** 2026-05-19
+**Last updated:** 2026-06-12
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.8)
 
@@ -252,6 +252,60 @@ All Redguards maintain this layer. It doesn't replace sect scoring — it modula
 - Honorable combat: Cost Class B-C (approach-state check on Story Manager kill events)
 - HoonDing odds-detection: Cost Class B (enemy count + level threshold at combat resolution)
 - Tu'whacca devotional surface: Cost Class A-B (custom object/ritual activation; optional fallback shrine FormID list)
+
+---
+
+## Variety Tranche — "The Far Shores Keep Watch" (DESIGN-LOCKED 2026-06-12)
+
+Roadmap source: `references/authoring/PDV_RaceVarietyTranche_Roadmap.md`.
+Purpose: give sect identity and the ancestor layer non-martial felt
+surfaces, and build the two devotional surfaces this sheet already names but
+does not implement (the sword-tending rite; light Ash'abah texture).
+Magnitudes are tunable; shapes, gates, caps, and fade rules are locked.
+Effect families remain blocked behind the race row in
+`PDV_RaceEffectReviewLedger.md` before any record authoring.
+
+**Far Shores dreams (all sects).** Sleep dreams keyed to sect + ancestor-
+layer posture, on the Argonian dream-roller cadence (~8-12% per sleep, 2-day
+floor, elevated on sect/posture change). Crown dreams are inheritance — the
+line of swords; Forebear dreams are the road and the wind; Ash'abah dreams
+are the dead at rest because of work the dreamer did — or restless because
+it waits. The Ash'abah variant quietly carries the stigma burden that 1.0
+cannot socially simulate.
+
+**Sword-Tending Rite (place/observance anchor).** At the portable Far
+Shores token in a private/player-owned context (the locked Tu'whacca
+surface), tending the blade grants a small Leki pulse and counts as the
+daily Yokudan observance. 24h cooldown. This implements the rite already
+listed in the build-facing hook table as "optional sword-tending rite" — no
+new state; it hangs off the token.
+
+**Sect signatures (once/day, small, Quiet surfacing).** These never touch
+the make-way frame — HoonDing stays rare per the locked Crown make-way rule.
+- Crown — `Leki's Measure`: killing a hostile with a one-handed weapon
+  while at full health grants a brief blade pulse (discipline texture: you
+  were never touched).
+- Forebear — `Tava's Departure`: leaving a walled city on foot at dawn
+  grants a brief stamina-regen road blessing.
+- Ash'abah — `The Unclean Hour`: the first undead destroyed inside a tomb
+  grants a brief undead-resist pulse.
+
+**The Halls of the Dead (pilgrimage).** Six one-shot stations of
+death-duty: the Halls of the Dead in Whiterun, Windhelm, Solitude, Markarth,
+and Riften, plus Falkreath's graveyard. First respectful visit each =
+ancestor-layer pulse + sect-flavored vision line; all six = milestone
+MessageBox. Non-martial by design — visiting and paying respect, not
+clearing. Strongest for Ash'abah, meaningful for all sects via the
+always-active ancestor layer. One-shot forever.
+
+**The Remembering of Names (rite).** At the Far Shores token in private
+context, 7-day cooldown, "Not yet" does not spend the cooldown. One-active
+ancestral observance: Blade (Leki, +5 one-handed), Road (Tava, +8% stamina
+regen), Rest (Tu'whacca, +5% health regen), Harvest (Zeht, +5% barter);
+choosing again swaps (clear-before-add). Fades at dawn if sect coherence
+breaks (mid-switch window); returns automatically at dawn once the sect is
+settled. This gives the "ancestors always present" layer a player-authored
+expression instead of only passive modifiers.
 
 ---
 
