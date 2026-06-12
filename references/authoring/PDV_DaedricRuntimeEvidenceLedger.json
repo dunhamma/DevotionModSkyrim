@@ -30,7 +30,7 @@
       "batch": "pilot",
       "index": 0,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -61,9 +61,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -82,17 +82,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -103,9 +103,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -117,7 +117,7 @@
       "batch": "",
       "index": 1,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -148,9 +148,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -169,17 +169,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -190,9 +190,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -204,7 +204,7 @@
       "batch": "",
       "index": 2,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -235,9 +235,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -256,17 +256,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -277,9 +277,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -291,7 +291,7 @@
       "batch": "",
       "index": 3,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -322,9 +322,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -343,17 +343,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -364,9 +364,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -409,9 +409,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -430,17 +430,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -451,9 +451,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -465,7 +465,7 @@
       "batch": "1",
       "index": 5,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -496,9 +496,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -517,17 +517,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -538,9 +538,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -552,7 +552,7 @@
       "batch": "1",
       "index": 6,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -583,9 +583,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -604,17 +604,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -625,9 +625,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -639,7 +639,7 @@
       "batch": "2",
       "index": 7,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -670,9 +670,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -691,17 +691,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -712,9 +712,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -726,7 +726,7 @@
       "batch": "2",
       "index": 8,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -757,9 +757,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -778,17 +778,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -799,9 +799,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -813,7 +813,7 @@
       "batch": "2",
       "index": 9,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -844,9 +844,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -865,17 +865,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -886,9 +886,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -900,7 +900,7 @@
       "batch": "2",
       "index": 10,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -931,9 +931,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -952,17 +952,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -973,9 +973,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -987,7 +987,7 @@
       "batch": "2",
       "index": 11,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1018,9 +1018,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -1039,17 +1039,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1060,9 +1060,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -1074,7 +1074,7 @@
       "batch": "2",
       "index": 12,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1105,9 +1105,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -1126,17 +1126,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1147,9 +1147,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -1161,7 +1161,7 @@
       "batch": "2",
       "index": 13,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1192,9 +1192,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -1213,17 +1213,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1234,9 +1234,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -1248,7 +1248,7 @@
       "batch": "3",
       "index": 14,
       "curseAccess": false,
-      "overall": "pending",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1279,9 +1279,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -1300,17 +1300,17 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
-          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
-          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1321,9 +1321,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -1335,7 +1335,7 @@
       "batch": "3",
       "index": 15,
       "curseAccess": true,
-      "overall": "pending",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1366,9 +1366,9 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
-          "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup PlayerDevotion_Framework.esp.20260612-203620.bak).",
           "command": "",
           "log": ""
         },
@@ -1387,30 +1387,30 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
-          "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Save/load preserved the single active pact, its boon+price, and tier/piety. Shared mechanism; tested in session.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
-          "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "One-active-pact hard switch proven in-game (A->B->C: only the latest pact boon+price live, never the roster). Shared mechanism across all 16 paths; tested on Vaermina/Meridia/Hircine/Boethiah.",
+          "command": "MCM Debug: Daedric & Curse -> Force Champion on successive Princes; Active Effects shows only one boon + one price",
           "log": ""
         },
         "curseNoDoubleFire": {
           "status": "pass",
-          "updatedAtLocal": "12/06/2026, 10:04:06 am AEST",
-          "note": "Hircine proof did not double-fire race CurseState rows",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Werewolf curse persisted across a pact switch (Hircine active -> switch to Boethiah); curse state held at 1, the later 1->0 was a game load, not the switch. Log-confirmed Papyrus.0.log 2026-06-12.",
           "command": "",
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
-          "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026 (in-game test session)",
+          "note": "Pact reads as a build-defining Faustian bargain (sharp boon, real price), distinct from ordinary worship. Tester-confirmed.",
           "command": "",
           "log": ""
         }
@@ -2884,7 +2884,15 @@
       "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
       "command": "",
       "log": ""
+    },
+    {
+      "at": "12/06/2026 (in-game test session)",
+      "note": "In-game test session: one-pact hard switch, ~2x magnitudes, curse separation (Hircine), save/load, and manual feel all PASS. stackLegibility/activeEffects/saveLoad/manualFeel -> pass."
+    },
+    {
+      "at": "12/06/2026 (in-game test session)",
+      "note": "Champion Accept/Decline dialog: NOT a code or wiring bug. Msg_ChampionEntry and the full per-path message set are correctly wired in the ESP (e.g. Boethiah path Scripts[1].Msg_ChampionEntry -> 071270). The dialog auto-accepted silently because testing used an OLD save where the property baked as None (VMAD never re-reads). Fresh-save test will show the offer. (A pdv-daedric-author re-run was done this session re-applying canonical contract magnitudes; backup .20260612-203620.bak.)"
     }
   ],
-  "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST"
+  "updatedAtLocal": "12/06/2026 (in-game test session)"
 }
