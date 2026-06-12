@@ -777,6 +777,7 @@
     daedric: {
       tone: (payload) => {
         const phase = text(payload.phase, "");
+        if (phase === "milestone") return "good";
         if (phase === "boon") return "good";
         if (phase === "residue") return "neutral";
         return "warning";
@@ -785,6 +786,7 @@
       title: (payload) => {
         const prince = text(payload.prince, "A Daedric Prince");
         const phase = text(payload.phase, "");
+        if (phase === "milestone") return `${prince} names you ${text(payload.tierLabel, "marked")}`;
         if (phase === "boon") return `${prince} is satisfied`;
         if (phase === "price") return `${prince}'s price stirs`;
         if (phase === "lapse") return `${prince}'s hold breaks`;
@@ -796,6 +798,7 @@
         if (context) return context;
         const phase = text(payload.phase, "");
         const prince = text(payload.prince, "The Prince");
+        if (phase === "milestone") return text(payload.flavor, `${prince} marks the pact.`);
         if (phase === "boon") return "The rite was answered.";
         if (phase === "price") return `${possessive(prince)} cost is rising.`;
         if (phase === "lapse") return "The path has been released.";
@@ -805,6 +808,7 @@
       listTitle: (payload) => {
         const prince = text(payload.prince, "Daedric");
         const phase = text(payload.phase, "");
+        if (phase === "milestone") return `${prince}: ${text(payload.tierLabel, "milestone")}`;
         if (phase === "boon") return `${prince}: boon`;
         if (phase === "price") return `${prince}: price`;
         if (phase === "lapse") return `${prince}: lapse`;
@@ -815,6 +819,9 @@
         const context = contextName(payload);
         if (context) return context;
         const phase = text(payload.phase, "");
+        if (phase === "milestone") {
+          return text(payload.flavor, "The pact deepens.");
+        }
         return phase === "boon"
           ? "The rite was counted."
           : "The Prince has noticed.";
@@ -1431,7 +1438,7 @@
     shift_orc: { event: "shift", shiftMode: "Stronghold", symbol: "malacath" },
     shift_redguard: { event: "shift", shiftMode: "Crown" },
     shift_bosmer: { event: "shift", shiftMode: "Old Contract", symbol: "yffre" },
-    daedric_boon: { event: "daedric", prince: "Hircine", phase: "boon", symbol: "hircine" },
+    daedric_boon: { event: "daedric", prince: "Hircine", phase: "milestone", tierLabel: "Seeker", symbol: "hircine", flavor: "Hircine's hunt-sense is in you.", boonText: "+15% Stamina regeneration", priceText: "-10% Health regeneration" },
     daedric_price: { event: "daedric", prince: "Hircine", phase: "price", symbol: "hircine", context: "Stigma has been rising." },
     daedric_lapse: { event: "daedric", prince: "Hircine", phase: "lapse", symbol: "hircine" },
     daedric_residue: { event: "daedric", prince: "Hircine", phase: "residue", symbol: "hircine" },

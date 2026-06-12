@@ -30,7 +30,7 @@
       "batch": "pilot",
       "index": 0,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -89,10 +89,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -117,7 +117,7 @@
       "batch": "",
       "index": 1,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -176,10 +176,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -204,7 +204,7 @@
       "batch": "",
       "index": 2,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -263,10 +263,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -291,7 +291,7 @@
       "batch": "",
       "index": 3,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -350,10 +350,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -378,7 +378,7 @@
       "batch": "",
       "index": 4,
       "curseAccess": true,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -437,10 +437,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -465,7 +465,7 @@
       "batch": "1",
       "index": 5,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -524,10 +524,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -552,7 +552,7 @@
       "batch": "1",
       "index": 6,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -611,10 +611,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -639,7 +639,7 @@
       "batch": "2",
       "index": 7,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -698,10 +698,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -726,7 +726,7 @@
       "batch": "2",
       "index": 8,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -785,10 +785,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -813,7 +813,7 @@
       "batch": "2",
       "index": 9,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -872,10 +872,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -900,7 +900,7 @@
       "batch": "2",
       "index": 10,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -959,10 +959,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -987,7 +987,7 @@
       "batch": "2",
       "index": 11,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1046,10 +1046,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1074,7 +1074,7 @@
       "batch": "2",
       "index": 12,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1133,10 +1133,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1161,7 +1161,7 @@
       "batch": "2",
       "index": 13,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1220,10 +1220,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1248,7 +1248,7 @@
       "batch": "3",
       "index": 14,
       "curseAccess": false,
-      "overall": "blocked",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1307,10 +1307,10 @@
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+          "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+          "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
           "log": ""
         },
         "curseNoDoubleFire": {
@@ -1335,21 +1335,21 @@
       "batch": "3",
       "index": 15,
       "curseAccess": true,
-      "overall": "blocked",
+      "overall": "conditional",
       "slots": {
         "mcmRoute": {
           "status": "pass",
-          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "updatedAtLocal": "12/06/2026, 10:04:54 am AEST",
           "note": "mcm route checker passed for Hircine.",
-          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince Hircine --strict-manager --source mcm --include-generic",
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "qasmokeRoute": {
-          "status": "not_required",
-          "updatedAtLocal": "11/06/2026, 12:56:16 pm AEST",
-          "note": "Route proof covered by mcmRoute (identical EventBus->Manager downstream). Physical QASmoke sender is a test-only scaffold; no Daedric gameplay touch point. EventSignalActivator ingress already proven by Slice-1 ACTI hooks.",
-          "command": "",
-          "log": ""
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026, 10:06:01 am AEST",
+          "note": "qasmoke route checker passed for Hircine.",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince Hircine --strict-manager --source qasmoke --no-generic",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "organicRoute": {
           "status": "pass",
@@ -1360,16 +1360,16 @@
         },
         "genericSilence": {
           "status": "pass",
-          "updatedAtLocal": "11/06/2026, 12:51:30 pm AEST",
+          "updatedAtLocal": "12/06/2026, 10:04:54 am AEST",
           "note": "mcm generic silence checker passed.",
-          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince all --strict-manager --source mcm --include-generic",
+          "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince Hircine --strict-manager --source mcm --include-generic",
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
-          "command": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026, 1:02:27 pm AEST",
+          "note": "In-game retest passed: Hircine boon/price Active Effects descriptions now show explicit Effect clauses while retaining flavor copy.",
+          "command": "Manual in-game Active Effects retest after Daedric description ESP write",
           "log": ""
         },
         "summaryMessage": {
@@ -1380,37 +1380,37 @@
           "log": ""
         },
         "prismaNotification": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 6:43:06 pm AEST",
-          "note": "Per-Prince toast renders correct Prince name + no panel auto-open confirmed x16; gameplay-route toast (SendPrismaDaedricToast on real tier-up) proven on Boethiah; debug proof-toast that the 15 were observed with has been removed. Re-verify per-Prince via real route to upgrade to pass.",
-          "command": "MCM Debug -> Daedric -> Route an EventBus sender x3",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026, 1:02:28 pm AEST",
+          "note": "In-game retest passed: Daedric milestone toast remains immersion flavor only with no Boon/Price stat rows and no panel auto-open.",
+          "command": "Manual in-game Hircine milestone toast retest after Prisma flavor-only update",
           "log": ""
         },
         "saveLoad": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026, 10:43:36 am AEST",
+          "note": "Hircine tier/effects persisted after save, quit, and reload.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "blocked",
-          "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST",
-          "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
-          "command": "MCM force-Seeker stack snapshot (Active Effects)",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026, 1:53:20 pm AEST",
+          "note": "Manual stack proof passed: Hircine Champion active effects were exclusive, forcing Vaermina Champion dropped Hircine boon/price and showed Vaermina boon/price, re-forcing Hircine dropped Vaermina, and save/quit/reload preserved only the final active pact.",
+          "command": "",
           "log": ""
         },
         "curseNoDoubleFire": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "pass",
+          "updatedAtLocal": "12/06/2026, 10:04:06 am AEST",
+          "note": "Hircine proof did not double-fire race CurseState rows",
           "command": "",
           "log": ""
         },
         "manualFeel": {
-          "status": "pending",
-          "updatedAtLocal": "",
-          "note": "",
+          "status": "conditional",
+          "updatedAtLocal": "12/06/2026, 10:49:04 am AEST",
+          "note": "Manual smoke feel is acceptable, but the player-facing Hircine surface still needs explicit boon and price mechanics listed alongside the flavor description; broader feel judgment deferred to beta testing.",
           "command": "",
           "log": ""
         }
@@ -2587,7 +2587,268 @@
       "note": "Each path syncs its own boon/price independently, so committed Princes stack all boons+prices with no one-pact-at-a-time limit (snapshot showed the full roster live). Effects are also pegged to the same magnitude band as Aedra god tiers (boon 5/8/12, price -3/-5/-8), so a pact reads no sharper than ordinary worship. Blocked pending design: limit to one active Daedric pact + sharper boon/price than god tiers.",
       "command": "MCM force-Seeker stack snapshot (Active Effects)",
       "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 10:04:06 am AEST",
+      "prince": "Hircine",
+      "slot": "curseNoDoubleFire",
+      "status": "pass",
+      "note": "Hircine proof did not double-fire race CurseState rows",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 10:04:54 am AEST",
+      "prince": "Hircine",
+      "slot": "mcmRoute",
+      "status": "pass",
+      "note": "mcm route checker passed for Hircine.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince Hircine --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 10:04:54 am AEST",
+      "prince": "Hircine",
+      "slot": "genericSilence",
+      "status": "pass",
+      "note": "mcm generic silence checker passed.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince Hircine --strict-manager --source mcm --include-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 10:06:01 am AEST",
+      "prince": "Hircine",
+      "slot": "qasmokeRoute",
+      "status": "pass",
+      "note": "qasmoke route checker passed for Hircine.",
+      "command": "node .\\tools\\pdv_daedric_runtime_check.mjs --prince Hircine --strict-manager --source qasmoke --no-generic",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 10:43:36 am AEST",
+      "prince": "Hircine",
+      "slot": "activeEffects",
+      "status": "pass",
+      "note": "Hircine boon/price appeared at Seeker and updated cleanly after tier change; screenshot shows Hircine Boon - Seeker and Hircine Price - Seeker.",
+      "command": "",
+      "log": "C:\\Users\\Admin\\AppData\\Local\\Temp\\codex-clipboard-d8880f57-0c08-4a7b-96f9-912058a2f1fd.png"
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 10:43:36 am AEST",
+      "prince": "Hircine",
+      "slot": "saveLoad",
+      "status": "pass",
+      "note": "Hircine tier/effects persisted after save, quit, and reload.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 10:43:36 am AEST",
+      "prince": "Hircine",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "No Prisma notification appeared and no Prisma panel opened during Hircine proof.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 10:48:14 am AEST",
+      "prince": "Hircine",
+      "slot": "manualFeel",
+      "status": "conditional",
+      "note": "Manual smoke feel acceptable for Hircine; broader feel judgment deferred to beta testing.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 10:49:04 am AEST",
+      "prince": "Hircine",
+      "slot": "manualFeel",
+      "status": "conditional",
+      "note": "Manual smoke feel is acceptable, but the player-facing Hircine surface still needs explicit boon and price mechanics listed alongside the flavor description; broader feel judgment deferred to beta testing.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Boethiah",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Azura",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Vaermina",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Meridia",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Molag",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Mephala",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Malacath",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Dagon",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Sheo",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Namira",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Sanguine",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Vile",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Mora",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Nocturnal",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Peryite",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:14 am AEST",
+      "prince": "Hircine",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Active-pact-only sync is implemented and compiled; requires fresh save stack proof before this slot can pass.",
+      "command": "node .\\tools\\pdv_compile.mjs --script PDV_DaedricPathBase; node .\\tools\\pdv_compile.mjs --script PDV__ManagerQuest; node .\\tools\\pdv_compile.mjs --script PDV_MCM",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 11:09:15 am AEST",
+      "prince": "Hircine",
+      "slot": "prismaNotification",
+      "status": "pending",
+      "note": "Milestone toast presentation has been updated to include flavor plus Boon/Price lines; requires fresh Hircine Seeker/Champion UI proof.",
+      "command": "MCM Debug -> Daedric -> force Hircine Seeker/Champion",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 1:02:27 pm AEST",
+      "prince": "Hircine",
+      "slot": "activeEffects",
+      "status": "pass",
+      "note": "In-game retest passed: Hircine boon/price Active Effects descriptions now show explicit Effect clauses while retaining flavor copy.",
+      "command": "Manual in-game Active Effects retest after Daedric description ESP write",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 1:02:28 pm AEST",
+      "prince": "Hircine",
+      "slot": "prismaNotification",
+      "status": "pass",
+      "note": "In-game retest passed: Daedric milestone toast remains immersion flavor only with no Boon/Price stat rows and no panel auto-open.",
+      "command": "Manual in-game Hircine milestone toast retest after Prisma flavor-only update",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 1:53:20 pm AEST",
+      "prince": "Hircine",
+      "slot": "stackLegibility",
+      "status": "pass",
+      "note": "Manual stack proof passed: Hircine Champion active effects were exclusive, forcing Vaermina Champion dropped Hircine boon/price and showed Vaermina boon/price, re-forcing Hircine dropped Vaermina, and save/quit/reload preserved only the final active pact.",
+      "command": "",
+      "log": ""
     }
   ],
-  "updatedAtLocal": "11/06/2026, 6:47:50 pm AEST"
+  "updatedAtLocal": "12/06/2026, 1:53:20 pm AEST"
 }
