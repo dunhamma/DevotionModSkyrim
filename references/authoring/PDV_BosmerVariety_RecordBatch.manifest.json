@@ -35,7 +35,7 @@
   "vmadWiring": {
     "quest": "PDV__ManagerQuest",
     "properties": ["PDV_MESG_BosmerMarkHearth", "PDV_SPEL_BosmerTaleCarried", "PDV_SPEL_BosmerScalesAtRest", "PDV_SPEL_BosmerBaanDarGap", "PDV_MESG_BosmerNaming", "PDV_SPEL_BosmerNaming_Hunter", "PDV_SPEL_BosmerNaming_Speaker", "PDV_SPEL_BosmerNaming_Wanderer", "PDV_SPEL_BosmerNaming_Keeper", "PDV_FLST_BosmerGreenSongs"],
-    "scriptLayerPending": "Unlike the Argonian batch (whose .psc already declared every property), the PDV__ManagerQuest.psc Papyrus runtime layer for Bosmer (dream roller, hearth declaration, signature casts, Songs LCTN router, Naming rite) is NOT yet authored. This tool lands the records and wires the VMAD properties forward-compatibly; the properties stay inert (and harmless) until the .psc declares them and adds the runtime logic. That Papyrus layer is the next build step after this batch dry-runs clean.",
+    "scriptLayerPending": "The PDV__ManagerQuest.psc Papyrus runtime layer (dream roller, hearth declaration, signature casts, Songs LCTN router, Naming rite) is authored as a paste-in handoff at references/authoring/PDV_BosmerVariety_PapyrusHandoff.md (property declarations + exact call-site insertions + full functions, modeled on the shipped Argonian variety code). This tool lands the records and forward-wires the VMAD properties; the properties stay inert (and harmless) until the handoff's Step 1 declarations + Step 3 functions are applied to the canonical .psc and recompiled. The combat signature (Baan Dar Opens the Gap) also needs the handoff's Step 2e OnHit hook in PDV_PlayerEvents.",
     "existingSaveNote": "VMAD props bake at first init; the test path is a new game / coc qasmoke so wiring suffices for beta. For existing saves the features stay silently inert until a lazy GetFormFromFile fallback pass adds the authored FormIDs."
   },
   "scriptKeys": {
@@ -43,7 +43,7 @@
     "dreams": ["PDV.BosDream.LastDay", "PDV.BosDream.LastPath (detect path change for elevated chance)"],
     "hearth": ["PDV.BosHearth.PendingCell (transient)", "PDV.BosHearth.DeclaredCell", "PDV.BosHearth.DeclaredDay", "PDV.BosHearth.DeclineDay", "PDV.BosHearth.LocDiscoveryAtLastStay (location-discovery delta gates A Tale Carried, NOT sleep count)"],
     "signatures": ["PDV.BosSig.ScalesLastDay (Exchange once/day)", "PDV.BosSig.GapLastDay (Bandit Road once/day)"],
-    "songs": ["PDV.BosSongs.Seen.<FormID>", "PDV.BosSongs.Count", "PDV.BosSongs.Milestone"],
+    "songs": ["PDV.BosSongs.Seen.<FormID>", "PDV.BosSongs.Count", "PDV.BosSongs.Milestone", "PDV.BosSongs.EldergleamActive (interior-poll arm; Eldergleam vision fires on the cave cells, not the exterior approach -- mirrors the Argonian Waters set)", "PDV.BosLoc.Seen.<FormID> + PDV.BosLoc.DiscoveryCount (new-location counter feeding the Hearth 3+ discovery delta)"],
     "naming": ["PDV.BosNaming.Active (0=none, 1-4=Hunter/Speaker/Wanderer/Keeper)", "PDV.BosNaming.LastRiteDay"]
   },
   "authoringVehicle": "tools/pdv-bosmer-variety-author (built 2026-06-12 from tools/pdv-argonian-variety-author). Flags: --esp <path>, --dry-run, --check. The tool covers the 2 MESG, 3 timed-buff SPEL+MGEF, 4 ability SPEL+MGEF, the 6-entry FLST (fail-closed on unverified slots), and forward VMAD wiring of the 10 manager properties.",
