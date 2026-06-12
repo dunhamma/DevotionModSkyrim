@@ -28,6 +28,12 @@ Receiver: non-Start-Game-Enabled Story Manager quest.
 Use for: hostile kills, undead/Daedra/beast categories, murder/innocent checks,
 hunt rites after validation.
 
+Multi-consumer note: one shared receiver (`PDV_SM_KillActor`) serves multiple
+race lanes — Khajiit Alkosh named-dragon classification, Khajiit Baan Dar
+combat-session kill counting, and (phase 2) Redguard Ash'abah undead duty. Keep
+the SM node unconditioned and classify in script so new consumers ride the same
+quest.
+
 Build notes:
 
 - Story Manager node must use `Shares Event`.
@@ -246,6 +252,77 @@ Proof path:
 - real hostile target
 - blocked/bash/power/sneak variants if used
 - target dummy or non-hostile rejection
+
+## Player Combat Session Tracker (OnCombatStateChanged + bounded poll)
+
+Receiver: player alias in the persistent events quest (`PDV_PlayerEvents`).
+
+Use for: adversity/reversal beats — outnumbered wins, near-fatal reversals,
+combat-context state that no single event carries (Baan Dar; future
+combat-courage signals).
+
+Build notes:
+
+- `OnCombatStateChanged(Actor akTarget, int aeCombatState)` on the player
+  alias: state 1 = combat enter (clear session keys, start poll), state 0 =
+  combat exit (evaluate, award, stop poll).
+- Poll is a `RegisterForSingleUpdate` chain (~4s) that re-registers ONLY while
+  the player is in combat; self-terminates on combat exit. Never a perpetual
+  `RegisterForUpdate`.
+- Session counters (kills, max victim level delta, low-health/near-fatal
+  flags) live in StorageUtil keys cleared on combat enter; kill attribution is
+  fed by the Story Manager Kill Actor receiver, not by scanning.
+- No hostile-scanning cloaks, no FindAllReferences.
+
+Anti-farm:
+
+- adversity gate: award requires the player's health to have actually dropped
+  (e.g. below 50%) during the session, so steamroll clears stay silent
+- per-day guard on the common award, per-week cap on the rare/marked award
+- shared daily-decay multiplier with the matching proof activator key
+
+Proof path:
+
+- desperate multi-kill fight (health dipped) -> award
+- steamroll multi-kill fight at full health -> silent
+- flee after near-death without a kill -> silent
+- second award same day/week -> guard blocks
+- save/load mid-combat -> session keys behave
+
+## Alias OnItemAdded: Pickpocket Success
+
+Receiver: player alias in the persistent events quest (`PDV_PlayerEvents`).
+
+Use for: successful undetected theft from a living NPC (Rajhin elegant theft;
+future artful-theft families). PO3 has no pickpocket-success event; this is the
+only surface that fires on success with the source identity attached.
+
+Build notes:
+
+- `OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference
+  akItemReference, ObjectReference akSourceContainer)`; FIRST line must be the
+  `akSourceContainer as Actor` cast with early return on `None` so loot
+  containers and barter transfers exit in one cast.
+- Qualify the act: player sneaking, source actor alive (corpse looting is not
+  theft), player undetected by the source (`IsDetectedBy`), source not a
+  teammate/follower.
+- Qualify the target: curated notable-target FormList membership, or a value
+  floor for the generic fallback. Petty grabs from generic NPCs are rejected.
+
+Anti-farm:
+
+- per-target cooldown (StorageUtil key per ActorBase FormID, multi-day)
+- value floor on the generic fallback
+- shared daily-decay multiplier with the matching proof activator key
+
+Proof path:
+
+- undetected pickpocket of a notable/high-value target -> award
+- petty grab from a generic NPC -> silent
+- corpse loot -> silent
+- detected attempt -> silent (botched-theft contrast routes separately if
+  built)
+- same target inside cooldown -> blocked
 
 ## Custom Activator: Shrine / Offering / Ritual
 
