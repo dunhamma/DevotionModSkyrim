@@ -124,7 +124,7 @@ Old DivineBody/Psijic/focused-deity favor row IDs -> current ThalmorOrthodox, Di
 ```text
 Race: Khajiit
 Lane type: P1 first contrast
-Verdict: Conditional - wired lunar packet passed; edge focus source pending
+Verdict: Conditional - wired lunar packet passed; edge focus source FLST filled, in-game proof pending
 No-in-game status: Readback-Ready
 Expected build: road-home Khenarthi/Azurah traveler.
 Edge build: Rajhin thief, Alkosh dragon/order run, or ShadowDrift/curse pressure.
@@ -133,14 +133,14 @@ Accepted hooks: moon observance route 10, road-home anchors route 33, Baan Dar r
 Rejected hooks: required visual moon inspection, moon-sugar use, manual focus entitlement, fast travel loop, one-bed camping, generic inn sleep, generic crime/theft, generic combat, generic dragon spam, ordinary night stealth.
 Anti-farm result: source tracks same-anchor road-home rejection and same-day diminishing multiplier; 2026-06-06 restarted packet confirmed generic-source silence for the currently wired lunar book packet. Same-anchor road-home, generic theft, dragon spam, moon-sugar, and fast-travel silence remain edge/future-source breadth checks once those source classes are filled.
 Survey/status result: source now has Khajiit-specific Survey/MCM readout for Lunar Lattice, moon practice, road-home cadence, and active focus; 2026-06-06 Words of Clan Mother Ahnissi retest passed in game for visible Survey/status movement and no unwanted full Prisma/MCM auto-open. Restarted packet also passed with Words of Clan Mother Ahnissi and The Tale of Dro'Zira producing Prisma toasts; Azurah lower-case display was reported and fixed in the Prisma display-name map.
-Immersive hook result: QASmoke route proof exists; 2026-06-06 strict-manager checker passed for Khajiit lunar book route in Papyrus.0.log. Restarted packet passed the currently wired lunar book sources, wrong-origin rejection, generic-source silence, and reward-pending behavior. Still needs behavior-specific Baan Dar/Rajhin/Alkosh or other approved edge focus source proof for full Khajiit Pass.
+Immersive hook result: QASmoke route proof exists; 2026-06-06 strict-manager checker passed for Khajiit lunar book route in Papyrus.0.log. Restarted packet passed the currently wired lunar book sources, wrong-origin rejection, generic-source silence, and reward-pending behavior. PDV_FLST_P2_KhajiitFocusedSources filled 2026-06-12 with MQ104 stage 160 (Alkosh route 92) and DA01 stage 100 (Azurah route); --check-source-fill PASS. In-game edge packet proof for Alkosh/Azurah focus trigger is the remaining step for full Khajiit Pass.
 Reward floor: broad lunar Faithful feels complete through road, sky, rest, and community without phase homework.
 Reward ceiling: lunar substrate plus one focused emphasis plus one active contextual favor; no third loud steady package.
 Stack snapshot: lunar metric/tier/phase/observance/road-home count, focused emphasis, five focus weights, last road-home anchor, repeat rejection count, active favor, lunar posture, ShadowDrift/curse pressure, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race khajiit
 Next automatable action: none for reward authoring; all-race T1 record and grant wiring is contract-owned and verifier/readback clean.
-Deferred manual proof: live edge focus source proof for Baan Dar/Rajhin/Alkosh or another approved Khajiit edge route, plus Active Effects display once patron/tier threshold is reached.
-Blocking follow-up: wire or approve one exact Khajiit edge source, then run the edge packet; the currently filled lunar book packet is Conditional-pass.
+Deferred manual proof: run in-game edge packet via MQ104 stage 160 or DA01 stage 100 on a Khajiit character; confirm focus weight shifts, Alkosh/Azurah emphasis fires at dawn, Survey reflects focused patron, and Active Effects display once patron/tier threshold is reached.
+Blocking follow-up: run in-game Khajiit edge packet (MQ104 stage 160 or DA01 stage 100) to confirm PDV_FLST_P2_KhajiitFocusedSources routes fire correctly; FLST fill is complete and readback-verified as of 2026-06-12.
 ```
 
 ### Argonian
