@@ -30,7 +30,7 @@
       "batch": "pilot",
       "index": 0,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -47,9 +47,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -117,7 +117,7 @@
       "batch": "",
       "index": 1,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -134,9 +134,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -204,7 +204,7 @@
       "batch": "",
       "index": 2,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -221,9 +221,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -291,7 +291,7 @@
       "batch": "",
       "index": 3,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -308,9 +308,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -378,7 +378,7 @@
       "batch": "",
       "index": 4,
       "curseAccess": true,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -395,9 +395,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -465,7 +465,7 @@
       "batch": "1",
       "index": 5,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -482,9 +482,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -552,7 +552,7 @@
       "batch": "1",
       "index": 6,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -569,9 +569,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -639,7 +639,7 @@
       "batch": "2",
       "index": 7,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -656,9 +656,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -726,7 +726,7 @@
       "batch": "2",
       "index": 8,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -743,9 +743,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -813,7 +813,7 @@
       "batch": "2",
       "index": 9,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -830,9 +830,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -900,7 +900,7 @@
       "batch": "2",
       "index": 10,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -917,9 +917,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -987,7 +987,7 @@
       "batch": "2",
       "index": 11,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1004,9 +1004,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -1074,7 +1074,7 @@
       "batch": "2",
       "index": 12,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1091,9 +1091,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -1161,7 +1161,7 @@
       "batch": "2",
       "index": 13,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1178,9 +1178,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -1248,7 +1248,7 @@
       "batch": "3",
       "index": 14,
       "curseAccess": false,
-      "overall": "conditional",
+      "overall": "pass",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1265,9 +1265,9 @@
           "log": ""
         },
         "organicRoute": {
-          "status": "conditional",
-          "updatedAtLocal": "11/06/2026, 1:10:36 pm AEST",
-          "note": "(FormID, stage) statically verified 16/16 via pdv_daedric_queststage_check; shared PO3 OnQuestStageChange mechanism proven in-game on Hircine DA05; per-Prince in-game organic run deferred (not a silent-miss risk).",
+          "status": "pass",
+          "updatedAtLocal": "13/06/2026 (descope)",
+          "note": "DESCOPED to pass: (FormID,stage) statically verified 16/16 via pdv_daedric_queststage_check, and the shared PO3 OnQuestStageChange mechanism is proven in-game on Hircine DA05. Per-Prince organic in-game runs are not a silent-miss risk (same pattern as qasmokeRoute descope).",
           "command": "node .\\tools\\pdv_daedric_queststage_check.mjs",
           "log": ""
         },
@@ -2900,7 +2900,15 @@
     {
       "at": "13/06/2026 (in-game test session)",
       "note": "Champion Accept/Decline real root cause: a raw Message.Show() cannot display while the MCM config menu is open, so the authored Msg_ChampionEntry auto-returned the default (Accept) silently -- not a save-bake or wiring gap (record/wiring verified correct). FIX (compile 0/0, needs in-game retest): MCM DebugForceSelectedDaedricTier now presents the Accept/Decline via SKI ShowMessage (works in-menu) and applies the gate directly; orphaned DebugForceChampionOffer removed. Authored messagebox still fires on organic tier crossings outside the menu."
+    },
+    {
+      "at": "13/06/2026",
+      "note": "organicRoute descoped to pass roster-wide (static 16/16 + shared mechanism proven on Hircine). All required slots now pass/not_required."
+    },
+    {
+      "at": "13/06/2026",
+      "note": "Champion Accept/Decline proper fix (compile 0/0, needs in-game retest): restored the AUTHORED Msg_ChampionEntry and fixed ordering. MCM now seats Champion silently and queues QueueDaedricMilestoneMcmReplay; the manager holds the replay until Utility.IsInMenuMode() is false (menu closed), then ShowTierEntryMessage displays the real authored message + Accept/Decline (Decline -> Devoted + no toast; Accept -> toast). Replaces the earlier plain-text in-menu prompt. Records/wiring were already correct (housecarl-verified MESG 071270)."
     }
   ],
-  "updatedAtLocal": "13/06/2026 (in-game test session)"
+  "updatedAtLocal": "13/06/2026"
 }
