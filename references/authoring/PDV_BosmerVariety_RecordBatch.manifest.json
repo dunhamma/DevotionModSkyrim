@@ -43,7 +43,7 @@
     "dreams": ["PDV.BosDream.LastDay", "PDV.BosDream.LastPath (detect path change for elevated chance)"],
     "hearth": ["PDV.BosHearth.PendingCell (transient)", "PDV.BosHearth.DeclaredCell", "PDV.BosHearth.DeclaredDay", "PDV.BosHearth.DeclineDay", "PDV.BosHearth.LocDiscoveryAtLastStay (location-discovery delta gates A Tale Carried, NOT sleep count)"],
     "signatures": ["PDV.BosSig.ScalesLastDay (Exchange once/day)", "PDV.BosSig.GapLastDay (Bandit Road once/day)"],
-    "songs": ["PDV.BosSongs.Seen.<FormID>", "PDV.BosSongs.Count", "PDV.BosSongs.Milestone"],
+    "songs": ["PDV.BosSongs.Seen.<FormID>", "PDV.BosSongs.Count", "PDV.BosSongs.Milestone", "PDV.BosSongs.EldergleamActive (interior-poll arm; Eldergleam vision fires on the cave cells, not the exterior approach -- mirrors the Argonian Waters set)", "PDV.BosLoc.Seen.<FormID> + PDV.BosLoc.DiscoveryCount (new-location counter feeding the Hearth 3+ discovery delta)"],
     "naming": ["PDV.BosNaming.Active (0=none, 1-4=Hunter/Speaker/Wanderer/Keeper)", "PDV.BosNaming.LastRiteDay"]
   },
   "authoringVehicle": "tools/pdv-bosmer-variety-author (built 2026-06-12 from tools/pdv-argonian-variety-author). Flags: --esp <path>, --dry-run, --check. The tool covers the 2 MESG, 3 timed-buff SPEL+MGEF, 4 ability SPEL+MGEF, the 6-entry FLST (fail-closed on unverified slots), and forward VMAD wiring of the 10 manager properties.",

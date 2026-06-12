@@ -35,7 +35,7 @@ The manager already has the Bosmer path spine this layer hangs off:
 |---|---|---|---|
 | Green Dreams | sleep (elevated the night after a path change) | top-left dream line, path-keyed | sleep dispatcher + dawn arm |
 | Hearth of the Telling | Living Story: sleep in declared hearth after 3+ new locations discovered since last stay | `PDV_SPEL_BosmerTaleCarried` (Speech +5, 600s) | sleep dispatcher |
-| Songs of the Green | first arrival at each of 6 green LCTNs; milestone at all six | vision line + small path piety; milestone MessageBox | location-change entry |
+| Songs of the Green | first arrival at each of 6 green LCTNs; milestone at all six | vision line + small path piety; milestone MessageBox | location-change entry (+ OnUpdate interior poll for Eldergleam) |
 | Scales at Rest | Exchange: complete a favor/bounty/contract quest (once/day) | `PDV_SPEL_BosmerScalesAtRest` (Speech +10, 120s) | Exchange signal entry |
 | Baan Dar Opens the Gap | Bandit Road: drop below 20% health in combat (once/day) | `PDV_SPEL_BosmerBaanDarGap` (SpeedMult +30, 5s) | **external** OnHit (PDV_PlayerEvents) |
 | The Naming | sleep at hearth or any Songs site, 7+ days since last rite | one-active told-self ability; dawn fade/restore on path-coherence break | sleep dispatcher + dawn sync |
@@ -121,9 +121,23 @@ offers `HandleArgonianSacredWaterDiscovery` to the manager), add a sibling call:
 ```
 
 `HandleBosmerLocationChange` is self-contained in the manager (Step 3), so this is
-the only external line for Songs + Hearth-discovery counting. Bosmer's Eldergleam
-entry fires on location arrival (no interior poll); the Argonian interior-cell
-special case is Argonian-only.
+the only external line for Songs + Hearth-discovery counting. Like the Argonian
+Waters set, Bosmer's Eldergleam vision is held for the cave interior (where the
+water and great tree are) rather than the exterior approach: the location entry
+arms a flag and the OnUpdate poll in Step 2f fires it on the interior cells.
+
+### 2f. OnUpdate interior poll (Eldergleam)
+
+In the 1.0s `OnUpdate` chain, immediately after the existing
+`TryArgonianEldergleamInterior()` call (live snapshot line 593), add:
+
+```papyrus
+    TryBosmerEldergleamInterior()
+```
+
+The function early-returns unless the player is Bosmer and inside the armed
+Eldergleam sanctuary, so the per-tick cost is a single StorageUtil read otherwise
+— the same shape as the Argonian poll it sits beside.
 
 ### 2e. Combat signature (external — PDV_PlayerEvents) — the one piece needing a new hook + test
 
@@ -396,7 +410,8 @@ EndFunction
 
 ; Songs of the Green: one location-change entry. Counts every newly-seen location
 ; (for the Hearth discovery delta) and awards the curated Songs sites once each.
-; Eldergleam fires on arrival for Bosmer (no interior poll).
+; Eldergleam is held for the interior poll (Step 2f) so the vision lands in the
+; cave at the water and the great tree, not at the exterior approach.
 Function HandleBosmerLocationChange(Location loc)
     if !loc || GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
         return
@@ -409,8 +424,46 @@ Function HandleBosmerLocationChange(Location loc)
         StorageUtil.AdjustIntValue(None, "PDV.BosLoc.DiscoveryCount", 1)
     endIf
 
+    ; Eldergleam's water and great tree are inside the cave, but the sanctuary
+    ; LOCATION spans the exterior approach. Arm the interior catch and keep the
+    ; flag in sync so it clears the moment the player leaves; the OnUpdate poll
+    ; awards it on a cave cell. Same shared interior cells as the Argonian set.
+    if loc.GetFormID() == 0x000192AC
+        StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 1)
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
+
     if PDV_FLST_BosmerGreenSongs && PDV_FLST_BosmerGreenSongs.HasForm(loc)
         AwardBosmerSong(loc.GetFormID())
+    endIf
+EndFunction
+
+; Bounded poll (OnUpdate): only while inside the armed Eldergleam sanctuary
+; LOCATION. Fires the green-song vision when the player reaches an Eldergleam
+; interior cave cell -- where the water and great tree are -- not at the exterior
+; approach. Disarms on award, on leaving, or once seen. Awards with the LCTN
+; FormID so the milestone count stays at 6. Mirrors TryArgonianEldergleamInterior
+; (shared interior cells); "Seen.103084" is the decimal render of LCTN 0x000192AC.
+Function TryBosmerEldergleamInterior()
+    if StorageUtil.GetIntValue(None, "PDV.BosSongs.EldergleamActive") != 1
+        return
+    endIf
+
+    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER || StorageUtil.GetIntValue(None, "PDV.BosSongs.Seen.103084") == 1
+        StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
+        return
+    endIf
+
+    Cell parentCell = Game.GetPlayer().GetParentCell()
+    if !parentCell
+        return
+    endIf
+
+    Int cellId = parentCell.GetFormID()
+    if cellId == 0x0003A9EC || cellId == 0x0003A9E0 || cellId == 0x0003A9E3
+        AwardBosmerSong(0x000192AC)
+        StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
     endIf
 EndFunction
 
