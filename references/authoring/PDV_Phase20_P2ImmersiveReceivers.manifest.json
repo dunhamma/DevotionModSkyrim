@@ -18,8 +18,8 @@
     "receiverStatus": "exact-stage-supported",
     "rule": "Quest-stage source entries may be approved only when PDV_PlayerEvents compares aiNewStage against explicit approvedStages for that source and route family. Whole-quest FormList membership alone is not sufficient.",
     "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates",
-    "approvedQuestStageEntries": 2,
-    "approvedQuestStageScope": "Altmer MQ104 stage 160 and Bosmer DA05 stages 100/105 are approved and live-fill eligible; all other quest-stage sources remain blocked until exact quest/stage metadata is approved and declared.",
+    "approvedQuestStageEntries": 4,
+    "approvedQuestStageScope": "Altmer MQ104 stage 160, Bosmer DA05 stages 100/105, Khajiit MQ104 stage 160, and Khajiit DA01 stage 100 are approved and live-fill eligible; all other quest-stage sources remain blocked until exact quest/stage metadata is approved and declared.",
     "runtimeProofStatus": "pending-runtime"
   },
   "sourceProperties": [
@@ -466,9 +466,9 @@
     "status": "p2-book-and-exact-stage-fill-live-readback-pass-pending-runtime-proof",
     "fillCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries",
     "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill",
-    "readbackResult": "PASS - approved P2 book-read source entries, Altmer MQ104 stage 160, and Bosmer DA05 stages 100/105 source entry filled/read back on 2026-06-10; backup D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260610-152411.bak",
+    "readbackResult": "PASS - approved P2 book-read source entries, Altmer MQ104 stage 160, Bosmer DA05 stages 100/105, Khajiit MQ104 stage 160, and Khajiit DA01 stage 100 source entries filled/read back on 2026-06-12; backup D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260612-161427.bak",
     "curationRunbook": "references/authoring/PDV_Phase20_P2SourceCuration_Runbook.md",
-    "entryRule": "Only exact source records with status approved-for-fill may be written. This tranche approves the current book-read entries, the exact Altmer MQ104 stage-160 Lorkhan crisis source, and the exact Bosmer DA05 stage-100/105 Yffre hunt-law branch source; other quest-stage source entries stay blocked until exact quest/stage candidates are approved and declared.",
+    "entryRule": "Only exact source records with status approved-for-fill may be written. This tranche approves the current book-read entries, the exact Altmer MQ104 stage-160 Lorkhan crisis source, the exact Bosmer DA05 stage-100/105 Yffre hunt-law branch source, and the exact Khajiit MQ104 stage-160 (Alkosh) and DA01 stage-100 (Azurah) focused-emphasis sources; other quest-stage source entries stay blocked until exact quest/stage candidates are approved and declared.",
     "formKeyFormat": "ModName.ext:localHex, for example Skyrim.esm:00000014. Do not use load-order FormIDs.",
     "fillToolSafety": "The fill tool refuses unapproved entries, rejects sourceKind values not declared on the target receiver property, rejects duplicate property/form/sourceKind entries, rejects approved quest-stage entries unless exact-stage receiver support and approvedStages metadata exist, and writes no ESP changes when sourceFillEntries is empty."
   },
@@ -744,6 +744,33 @@
           "sourceKind": "book",
           "status": "approved-for-fill",
           "rationale": "One-shot Khajiit folk-story continuity text; plausible Azurah-threshold context without generic cat references."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_KhajiitFocusedSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:02610C",
+          "editorId": "MQ104",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "rationale": "Dragonborn identity milestone as a one-shot Alkosh emphasis marker; MQ104 stage 160 fires when the player absorbs their first dragon soul at the Western Watchtower.",
+          "approvedStages": [160],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic dragon kills or repeated main-quest progress outside stage 160.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey."
+        },
+        {
+          "formKey": "Skyrim.esm:028B0E",
+          "editorId": "DA01",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "rationale": "Azura branch resolution as a one-shot Azurah emphasis marker; DA01 stage 100 fires when the player returns Azura's Star.",
+          "approvedStages": [100],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Black Star branch, generic shrine proximity, or artifact possession alone.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey."
         }
       ]
     },
@@ -1145,7 +1172,7 @@
       "mutualExclusionGroup": "mq104-origin-reading",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
       "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "khajiit-da01-azurah",
@@ -1163,7 +1190,7 @@
       "mutualExclusionGroup": "da01-branch-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
       "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "orc-da06-malacath",
