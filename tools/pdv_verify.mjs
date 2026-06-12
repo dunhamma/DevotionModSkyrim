@@ -2034,8 +2034,8 @@ class Verifier {
 
     this.checkSourceContains("Phase 12 source", "PDV_MCM", [
       "Set Broad worship",
-      "Nord baseline OldWays",
-      "Nord baseline NineDivines",
+      "Nord -> Old Ways",
+      "Nord -> Nine Divines",
       "Cycle favor lane",
       "Cycle favor family",
       "Trigger selected favor",
@@ -2612,10 +2612,10 @@ class Verifier {
     ], this.phase17Gap.bind(this));
 
     this.checkSourceContains("Phase 17 MCM source", "PDV_MCM", [
-      "AddTextOption(\"Prime decay grace\", \"Phase 17 proof\", OPTION_FLAG_NONE)",
-      "AddTextOption(\"Prime decay eligible\", \"Phase 17 proof\", OPTION_FLAG_NONE)",
-      "AddTextOption(\"Run decay pass\", \"Targeted phase 17\", OPTION_FLAG_NONE)",
-      "AddTextOption(\"Run decay proof days\", \"Compressed proof\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Prime decay grace\", \"Proof\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Prime decay eligible\", \"Proof\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Run decay pass\", \"Targeted\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Run decay proof days\", \"Compressed\", OPTION_FLAG_NONE)",
       "AddTextOption(\"Show decay summary\", \"Selected deity\", OPTION_FLAG_NONE)",
       "manager.DebugPrimeDecayGraceByIndex(selectedDeity.DeityIndex)",
       "manager.DebugPrimeDecayEligibleByIndex(selectedDeity.DeityIndex)",
