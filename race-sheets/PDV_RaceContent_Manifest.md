@@ -1341,12 +1341,11 @@ Four trigger families per sect per `RaceDesign_Redguard` "Contextual Favor Pilot
 
 ### 16.10 Tu'whacca portable token (`PDV_Notif_Redguard_FarShoresToken_*`)
 
-Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Redguard` "Tu'whacca devotional surface": a permanent portable Far Shores token, with a private/home bonus context. Player-facing copy addresses Tu'whacca, never Arkay.
+Player-second-person voice. Notifications. Budget 80 hard / 60 target. Per `RaceDesign_Redguard` "Tu'whacca devotional surface": a permanent portable Far Shores token. V1 ships without the previously drafted private/home bonus context; player-facing copy addresses Tu'whacca, never Arkay.
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
 | PDV_Notif_Redguard_FarShoresToken_Activate | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard "Tu'whacca devotional surface" | Per token use; daily cap on the favor it feeds | You tend the Far Shores token and speak to Tu'whacca. |
-| PDV_Notif_Redguard_FarShoresToken_PrivateContext | Notification | Noted | Player-2nd | 80/60 | RaceDesign_Redguard "Tu'whacca devotional surface" | Player-owned property or authored private shrine context | Tended within your own walls, the rite carries further. |
 
 ### 16.11 Curse-state transitions (`PDV_Msg_Redguard_CurseState_*`)
 
@@ -1668,7 +1667,7 @@ The Druidic Trial fires once, on a Green Way Breton's first werewolf transformat
 |---|---|---|---|---|---|---|---|
 | PDV_Msg_Breton_GreenWay_DruidicTrial_Confront | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Druidic Trial details"; TargetEndStates line 280 | One-time, on first werewolf transformation as Green Way | Title: "The Druidic Trial" Body: "The beast is in you now. The druid circles have always been split on this. Decide: the beast serves the Green, and the covenant deepens around the new shape -- or Hircine's gift becomes your own, and the Green closes to you. Choose." |
 | PDV_Msg_Breton_GreenWay_DruidicTrial_BeastServesGreen | MessageBox | Marked | Player-2nd | 60/40 | RaceDesign_Breton "Druidic Trial details" | Y'ffre devotion resumes full; Hircine path locked out | The beast serves the Green. |
-| PDV_Msg_Breton_GreenWay_DruidicTrial_HircineClaimed | MessageBox | Marked | Player-2nd | 60/40 | RaceDesign_Breton "Druidic Trial details" | Y'ffre excommunication begins; Hircine drift begins | Hircine's gift is mine. |
+| PDV_Msg_Breton_GreenWay_DruidicTrial_HircineClaimed | MessageBox | Marked | Player-2nd | 60/40 | RaceDesign_Breton "Druidic Trial details" | Druidic fork betrayal pressure begins; Hircine drift begins | Hircine's gift is mine. |
 
 ### 18.9 Neglect texture (`PDV_Notif_Breton_*_NeglectTexture`)
 
@@ -1713,7 +1712,7 @@ God-voice. MessageBox. Body budget 500 hard / 280 target. Per `RaceDesign_Breton
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
 | PDV_Msg_Breton_CurseState_VampireOnset | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary" | Once on becoming vampire | Title: "The Curse and the Tradition" Body: "You are undead now, and each tradition answers differently. The Knight's Road breaks -- oaths and Divines lost. The Green Way excommunicates -- Y'ffre closes. Only the Hidden Art finds you a partial home, in the Volkihar court and the witch-mother's acceptance." |
-| PDV_Msg_Breton_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary"; "Approved 1.0 lock additions" line 287 | Once on cure | Title: "Re-Entry" Body: "The undeath is lifted. The Knight's Road may be rebuilt through restored Integrity. The Green Way moves from Excommunicated to Penitent; full restoration needs an outdoor rite and sustained covenant, and leaves a permanent scar." |
+| PDV_Msg_Breton_CurseState_VampireCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary"; "Approved 1.0 lock additions" line 287 | Once on cure | Title: "Re-Entry" Body: "The undeath is lifted. The Knight's Road may be rebuilt through restored Integrity. The Green Way remains under betrayal pressure until an authored re-entry exists; richer restoration is deferred." |
 | PDV_Msg_Breton_CurseState_WerewolfOnset_KnightsRoad | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary" | Once on first transformation; Knight's Road | Title: "Homeless in the Vow" Body: "The beast is in you, and the Knight's Road has no frame for it. There is no theological home for the wolf here. Your Integrity degrades on each transformation, and the knightly orders will not understand." |
 | PDV_Msg_Breton_CurseState_WerewolfOnset_HiddenArt | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary" | Once on first transformation; Hidden Art | Title: "The Beast Belongs" Body: "The beast is in you, and the Hidden Art already holds Hircine. Glenmoril is family here. There is no rupture -- the wolf fits the occult frame as though it were always meant to." |
 | PDV_Msg_Breton_CurseState_WerewolfCured | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Breton "Curse State Summary" | Once on werewolf cure; per-tradition resolution | Title: "The Beast Set Down" Body: "The wolf is set down. On the Knight's Road, Integrity may now be rebuilt, the transformations ended, though the orders remember. In the Hidden Art the beast that belonged is given up by choice; Glenmoril marks the loss, and the occult frame holds an empty place." |

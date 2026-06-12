@@ -1,7 +1,7 @@
 {
   "schema": "pdv-redguard-records.v1",
   "status": "design-draft-2026-06-07; recognition V1 Survey/status only; pending authoring run",
-  "notes": "Authoritative record spec for the Redguard state-enum-gated race. GATE TYPE = state-enum-gated (R7): rewards gate on PDV_State_RedguardSect (Crown=0 | Forebear=1 | AshAbah=2, fallback Forebear) plus the focused Yokudan patron's piety tier within that sect; the focused patron is offer-like inside the sect filter (mirror SyncKhajiitEmphasisRewards/Family one-active-focus logic). PROGRESSION CURRENCY = sect-coded signal days (Crown/Forebear: 2 sect-coded signal days in 7; Ash'abah: major death/undead/tomb/funerary/impurity burden). State pace, NOT a raw combat faucet. Broad worship is a STATE on PATRON_STATE_BROAD (R1), NOT a deity -- there is NO PDV_Deity_AncestorSpine. Broad AncestorSpine T1 fills the FIXED manager property PDV_Bless_Redguard_AncestorSpine_T1 (R2); broad AncestorSpine T2 is the new PDV_Bless_Redguard_AncestorSpine_T2, capped at Faithful and SUPPRESSED when a focused patron is active (R8). Redguard = Yokudan pantheon. Alkosh is NOT a Redguard deity (confirmed) and is not referenced. Redguard OWNS three new NATIVE deity QUSTs: PDV_Deity_Tuwhacca (death duty / ward / restoration), PDV_Deity_HoonDing (make-way, RARE, weekly cap), PDV_Deity_Leki (sword-singing / one-handed / critical conduct). PDV_Deity_Arkay is REUSED (create:false) ONLY as fallback death-rite infrastructure -- Tu'whacca uses Arkay-adjacent Skyrim spaces (Hall of the Dead) but the worship and ALL Survey/copy say Tu'whacca, never Arkay. Ruptga/Satakal/Tava/Onsi/Sep stay broad-only Yokudan flavor inside the broad-state lane (R5), no records. Ancestor reverence and the Far Shores token are SUPPORT, not a third always-on family (R8): the Far Shores token is a portable/private Tu'whacca devotional surface modeled on the Dunmer portable shrine (homeOrPrivateOnly conditional), feeding the death-duty lane rather than a separate boon. HoonDing rewards carry a weekly cap and require curated make-way drama, never generic combat. T3 recognition = V1 Survey/status text only. Player-facing text is ASCII-only and uses Skyrim ActorValue names. No magnitude exceeds ~12%.",
+  "notes": "Authoritative record spec for the Redguard state-enum-gated race. GATE TYPE = state-enum-gated (R7): rewards gate on PDV_State_RedguardSect (Crown=0 | Forebear=1 | AshAbah=2, fallback Forebear) plus the focused Yokudan patron's piety tier within that sect; the focused patron is offer-like inside the sect filter (mirror SyncKhajiitEmphasisRewards/Family one-active-focus logic). PROGRESSION CURRENCY = sect-coded signal days (Crown/Forebear: 2 sect-coded signal days in 7; Ash'abah: major death/undead/tomb/funerary/impurity burden). State pace, NOT a raw combat faucet. Broad worship is a STATE on PATRON_STATE_BROAD (R1), NOT a deity -- there is NO PDV_Deity_AncestorSpine. Broad AncestorSpine T1 fills the FIXED manager property PDV_Bless_Redguard_AncestorSpine_T1 (R2); broad AncestorSpine T2 is the new PDV_Bless_Redguard_AncestorSpine_T2, capped at Faithful and SUPPRESSED when a focused patron is active (R8). Redguard = Yokudan pantheon. Alkosh is NOT a Redguard deity (confirmed) and is not referenced. Redguard OWNS three new NATIVE deity QUSTs: PDV_Deity_Tuwhacca (death duty / ward / restoration), PDV_Deity_HoonDing (make-way, RARE, weekly cap), PDV_Deity_Leki (sword-singing / one-handed / critical conduct). PDV_Deity_Arkay is REUSED (create:false) ONLY as fallback death-rite infrastructure -- Tu'whacca uses Arkay-adjacent Skyrim spaces (Hall of the Dead) but the worship and ALL Survey/copy say Tu'whacca, never Arkay. Ruptga/Satakal/Tava/Onsi/Sep stay broad-only Yokudan flavor inside the broad-state lane (R5), no records. Ancestor reverence and the Far Shores token are SUPPORT, not a third always-on family (R8): the Far Shores token is a portable Tu'whacca devotional surface with an unconditional +5% Magic Resistance support spell after token proof; no private/home condition ships in V1. HoonDing rewards carry a weekly cap and require curated make-way drama, never generic combat. T3 recognition = V1 Survey/status text only. Player-facing text is ASCII-only and uses Skyrim ActorValue names. No magnitude exceeds ~12%.",
   "gateType": "state-enum-gated",
   "stateTrack": {
     "editorId": "PDV_State_RedguardSect",
@@ -87,7 +87,7 @@
     "type": "storage-counter",
     "wireTo": "PDV__ManagerQuest",
     "deity": "Tu'whacca",
-    "pattern": "Portable/private Tu'whacca devotional surface modeled on the Dunmer portable shrine (homeOrPrivateOnly conditional). It is SUPPORT for the death-duty lane, NOT a third always-on boon family. Tracked as StorageUtil proof texture (PDV.Redguard.FarShoresToken), not an Arkay shrine replacement.",
+    "pattern": "Portable Tu'whacca devotional surface modeled on the Dunmer portable-shrine practice, but V1 ships without any private/home condition. It is SUPPORT for the death-duty lane, NOT a third always-on boon family. Tracked as StorageUtil proof texture (PDV.Redguard.FarShoresToken), not an Arkay shrine replacement.",
     "spellEditorId": "PDV_Bless_Redguard_FarShoresToken",
     "displayName": "Far Shores Token",
     "antiFarm": "Far Shores daily cap (one activation credit per in-game day; key PDV.Signal.RedguardFarShoresToken).",
@@ -96,11 +96,11 @@
         "magicEffectEditorId": "PDV_MGEF_Redguard_FarShoresToken_Magic",
         "actorValue": "ResistMagic",
         "magnitude": 5,
-        "homeOrPrivateOnly": true
+        "effectName": "Magic Resistance"
       }
     ],
-    "playerFacingText": "You keep a token of the Far Shores close, and pray as Tu'whacca's people do in private. At home or in a private place your resistance to magic rises by 5%.",
-    "designNote": "Private/home bonus only (homeOrPrivateOnly conditional, mirroring Dunmer homeOrShrineOnly). Counts toward the death-duty/Tu'whacca lane support budget, not a standalone family. Copy stays Yokudan -- says Tu'whacca and Far Shores, never Arkay."
+    "playerFacingText": "You keep a token of the Far Shores close, and pray as Tu'whacca's people do. Your Magic Resistance rises by 5%.",
+    "designNote": "Unconditional +5% Magic Resistance support spell after the daily-capped token proof exists. Counts toward the death-duty/Tu'whacca lane support budget, not a standalone family. Copy stays Yokudan -- says Tu'whacca and Far Shores, never Arkay."
   },
   "neglect": {
     "wireTo": "PDV__ManagerQuest",
@@ -424,13 +424,13 @@
       "rejected": "generic undead spam, generic Arkay shrine use, generic amulet use, body count, broad simulated stigma, non-Redguard origin."
     },
     {
-      "act": "Far Shores token private ritual",
+      "act": "Far Shores token rite",
       "routeId": 83,
       "handler": "PDV_EventBus.RouteRedguardFarShoresToken()",
       "targetDeity": "Tu'whacca",
-      "delta": "+Far Shores support credit (home/private bonus)",
+      "delta": "+Far Shores support credit",
       "signalValue": 1,
-      "source": "Portable Far Shores token used at home or in a private/death-duty context (Dunmer portable-shrine pattern).",
+      "source": "Portable Far Shores token used in a death-duty context (Dunmer portable-shrine pattern, without a V1 private/home condition).",
       "antiFarm": "Far Shores daily cap, once-per-day key PDV.Signal.RedguardFarShoresToken.",
       "rejected": "Arkay shrine replacement, generic amulet use, fast travel."
     },
@@ -466,15 +466,97 @@
     "PDV_Msg_Redguard_ChampionEntry_Forebear",
     "PDV_Msg_Redguard_ChampionEntry_AshAbah",
     "PDV_Notif_Redguard_FarShoresToken_Activate",
-    "PDV_Notif_Redguard_FarShoresToken_PrivateContext",
     "PDV_Msg_Redguard_CurseState_VampireOnset",
     "PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry",
-    "PDV_Msg_Redguard_CurseState_WerewolfOnset"
+    "PDV_Msg_Redguard_CurseState_WerewolfOnset",
+    "PDV_Msg_Redguard_CurseState_WerewolfCured"
+  ],
+  "messageRecords": [
+    {
+      "editorId": "PDV_Notif_Redguard_Sect_Crown_Entry",
+      "kind": "notification",
+      "text": "You hold the Crown way: orthodoxy kept, the old inheritance intact."
+    },
+    {
+      "editorId": "PDV_Notif_Redguard_Sect_Forebear_Entry",
+      "kind": "notification",
+      "text": "You hold the Forebear way: Redguard identity carried among outsiders."
+    },
+    {
+      "editorId": "PDV_Notif_Redguard_Sect_AshAbah_Entry",
+      "kind": "notification",
+      "text": "You take up the Ash'abah duty: the unclean work others will not touch."
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_Survey_Crown",
+      "kind": "message",
+      "title": "Crown Standing",
+      "text": "You keep the Crown way: orthodox Yokudan practice carried intact in exile. Standing: %s. The ancestors are strong at your back."
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_Survey_Forebear",
+      "kind": "message",
+      "title": "Forebear Standing",
+      "text": "You keep the Forebear way: Redguard identity lived among outsiders. Standing: %s. The road and the contract are your proving ground."
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_Survey_AshAbah",
+      "kind": "message",
+      "title": "Ash'abah Standing",
+      "text": "You keep the Ash'abah duty: the unclean dead are your charge. Standing: %s. Tu'whacca honors the burden few will."
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_ChampionEntry_Crown",
+      "kind": "messageBox",
+      "title": "The Inheritance Kept",
+      "text": "You carried the old way into exile and did not let it thin -- the blade, the bearing, the rites, all intact. The ancestors who died holding Hammerfell see their orthodoxy alive in you."
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_ChampionEntry_Forebear",
+      "kind": "messageBox",
+      "title": "The Way Made",
+      "text": "You made a life in a province that was never yours, and stayed Redguard doing it. That is the way-making. The god who held the Alik'r line knows the same quality in you."
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_ChampionEntry_AshAbah",
+      "kind": "messageBox",
+      "title": "Burden-Bearer's Grace",
+      "text": "You did the work your own people will not thank you for. You cleansed the unclean dead and bore the stigma. The god of the Far Shores is grateful, even where the living are not."
+    },
+    {
+      "editorId": "PDV_Notif_Redguard_FarShoresToken_Activate",
+      "kind": "notification",
+      "text": "You tend the Far Shores token and speak to Tu'whacca."
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_CurseState_VampireOnset",
+      "kind": "messageBox",
+      "title": "Outside the Cycle",
+      "text": "You are undead now, and undeath is a soul that has left the cycle I guide. The Far Shores cannot receive you while the curse holds. Devotion across all three sects falls quiet. Cure this, and return to me first."
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry",
+      "kind": "messageBox",
+      "title": "Right Re-Entry",
+      "text": "The curse is lifted. Come back through me before any other god -- proper mortality, ancestor order, the right return to the cycle. When that is done, the Far Shores are open, and your sect may have you again."
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_CurseState_WerewolfOnset",
+      "kind": "messageBox",
+      "title": "Strained, Not Severed",
+      "text": "The beast is in you. The Yokudan gods and your sect remain within reach, but strained -- Hircine is an intrusion, not a home. The ancestors do not turn away. They only watch more closely."
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_CurseState_WerewolfCured",
+      "kind": "messageBox",
+      "title": "The Strain Lifts",
+      "text": "The beast is set down. The strain eases, and the Yokudan gods and your sect come back into full reach. Hircine's intrusion is ended. The ancestors, who only watched more closely, ease their gaze. Wholly theirs again."
+    }
   ],
   "v1RecognitionSurface": "Champion Survey/status text only (non-voiced). The Redguard Survey reports active sect (Crown/Forebear/Ash'abah) and why, broad/focused state, primary Yokudan patron and tier, Tu'whacca death-duty / Far Shores token state, Ash'abah impurity burden, HoonDing weekly-cap state, and vampire/werewolf curse-cycle pressure -- all in Yokudan terms (Tu'whacca, never Arkay). Voiced NPC recognition (Hall of the Dead / tombkeeper / Alik'r-facing topics, Ash'abah stigma lines) is V2 per PDV_RecognitionDialogueScalePacket.md.",
   "budget": "Two always-on families only: broad AncestorSpine lane (Layer 1, capped at T2/Faithful) + one active focused Yokudan patron set (Tu'whacca OR HoonDing OR Leki, Layer 2, T1/T2/T3). Broad stays softer than focused and is suppressed under focus. Ancestor reverence and the Far Shores token are SUPPORT for the death-duty/Tu'whacca lane, NOT a third always-on boon family. HoonDing is a rare weekly-capped make-way burst, not a steady combat loop. Sect (Crown/Forebear/Ash'abah) is an eligibility/filter layer, not a boon stack. At the PDV_RaceRewardBudgetLedger Redguard ceiling: 'Broad sect worship reaches Faithful; Devoted requires focused primary; ancestor reverence and Far Shores token should support, not create a third always-on boon family.' No magnitude exceeds ~12%.",
   "authoringPlan": {
-    "vehicle": "Author with a Phase 20 Redguard Mutagen helper (mirror tools/pdv-phase20-khajiit-author with an --author-rewards mode reading this spec); one backed-up framework-ESP write. Reuse reward-author patterns (EnsureMagicEffect/ConfigureMagicEffect/EnsureSpell/ConfigureSpell/ParseActorValue). Use a homeOrPrivateOnly conditional helper for the Far Shores token (mirror the Dunmer homeOrShrineOnly condition).",
+    "vehicle": "Author with tools/pdv-phase20-race-author --author-rewards reading this spec; one backed-up framework-ESP write. Reuse reward-author patterns (EnsureMagicEffect/ConfigureMagicEffect/EnsureSpell/ConfigureSpell/ParseActorValue). Far Shores token is unconditional in V1; do not add a private/home condition.",
     "recordCreation": "Create 12 net-new reward SPEL with their MGEFs: broad AncestorSpine T2 (1; the broad T1 record fills the EXISTING/FIXED manager property PDV_Bless_Redguard_AncestorSpine_T1 per R2, do not recreate it) + focused Tu'whacca T1/T2/T3 (3) + focused HoonDing T1/T2/T3 (3) + focused Leki T1/T2/T3 (3) + Far Shores token spell (1). Create 1 neglect SPEL (PDV_SPEL_Neglect_Redguard) with its MGEF. Create 3 deity QUSTs (Tu'whacca, HoonDing, Leki) at next-available deityIndex. Reconcile PDV_Deity_Arkay with create:false (add Stance_Redguard only; infra fallback).",
     "deityCreate": "Tu'whacca, HoonDing, Leki are NEW NATIVE deity QUSTs (create:true). Mirror an existing deity quest structure (read e.g. PDV_Deity_Kyne fully first): FormVersion 44, Start-Game-Enabled, QuestAdapter VMAD hosting PDV_Deity_<Name> with base properties DeityName(String), DeityIndex(Int, next-available -- scan existing indices, Khajiit 40-43 preserved), Stance_Redguard=0 (NATIVE), PDV_GLO_OriginRace, PDV_GLO_DebugLevel. Thresholds use script defaults (25/50/85).",
     "deityReuse": "PDV_Deity_Arkay reused create:false as fallback death-rite infrastructure only (add Stance_Redguard via --reconcile-shared-deity). Do NOT recreate; do NOT route Redguard worship piety to Arkay; Survey/copy say Tu'whacca.",
@@ -503,8 +585,8 @@
       "deityIndexAssignment": "Tu'whacca/HoonDing/Leki use next-available (scanned at author time; collision-free, serial authoring). Likely 44/45/46+ but the tool assigns; do not hardcode.",
       "authoringOrderNote": "Per the roster, Imperial (creates Arkay) must run before Redguard so the Arkay reconcile (create:false) resolves."
     },
-    "wiring": "Same run: add 3 deities (Tu'whacca/HoonDing/Leki) to PDV_FLST_AllDeities (017E47); wire new manager deity props (PDV_Tuwhacca/PDV_HoonDing/PDV_Leki) + the new broad AncestorSpine T2 property (PDV_Bless_Redguard_AncestorSpine_T2; T1 already exists, granted via PATRON_STATE_BROAD) + 9 focused reward props (Tu'whacca/HoonDing/Leki T1/T2/T3) + Far Shores token spell prop + PDV_SPEL_Neglect_Redguard on PDV__ManagerQuest. Broad T2 grant SUPPRESSED whenever an active focused Yokudan patron is set (broad < focused). Focused grants gate on PDV_State_RedguardSect eligibility + the patron tier (mirror SyncKhajiitEmphasisRewards/Family: one active focus, T1>=Seeker, T2>=Devoted, T3>=Champion). HoonDing reward props additionally require the weekly cap unconsumed; Leki props require sword-singing conduct/context; both reject generic combat. Far Shores token grants only in home/private context (homeOrPrivateOnly).",
-    "verify": "housecarl readback (profile Devotion Dev): the 12 reward SPEL + 1 neglect SPEL exist with correct MGEF actor-values/magnitudes (no magnitude > ~12%); PDV_Bless_Redguard_AncestorSpine_T1 unchanged/reused; FLST 017E47 grows by exactly 3 (Tu'whacca/HoonDing/Leki); PDV_Deity_Arkay carries Stance_Redguard but no new record; PDV_State_RedguardSect enum resolves; broad-T2 suppression, sect gates, HoonDing weekly cap, Leki conduct gate, and Far Shores home/private condition resolve. Then runtime smoke (QASmoke routes 80-83 per PDV_Phase20RedguardImplementationCosting.manifest.json; RouteRedguardAncestorSpine / RouteRedguardCrownTombRespect / RouteRedguardForebearRoadPassage / RouteRedguardAshAbahDeathDuty / RouteRedguardFarShoresToken markers per PDV_BetaTestPacket_Redguard.md)."
+    "wiring": "Same run: add 3 deities (Tu'whacca/HoonDing/Leki) to PDV_FLST_AllDeities (017E47); wire new manager deity props (PDV_Tuwhacca/PDV_HoonDing/PDV_Leki) + the new broad AncestorSpine T2 property (PDV_Bless_Redguard_AncestorSpine_T2; T1 already exists, granted via PATRON_STATE_BROAD) + 9 focused reward props (Tu'whacca/HoonDing/Leki T1/T2/T3) + Far Shores token spell prop + PDV_SPEL_Neglect_Redguard + Redguard surfacing message props on PDV__ManagerQuest. Broad T2 grant SUPPRESSED whenever an active focused Yokudan patron is set (broad < focused). Focused grants gate on PDV_State_RedguardSect eligibility + the patron tier (mirror SyncKhajiitEmphasisRewards/Family: one active focus, T1>=Seeker, T2>=Devoted, T3>=Champion). HoonDing reward props additionally require the weekly cap unconsumed; Leki props require sword-singing conduct/context; both reject generic combat. Far Shores token grants after the daily-capped token proof, with no private/home condition in V1.",
+    "verify": "housecarl readback (profile Devotion Dev): the 12 reward SPEL + 1 neglect SPEL + Far Shores support spell + Redguard message records exist with correct MGEF actor-values/magnitudes (no magnitude > ~12%); PDV_Bless_Redguard_AncestorSpine_T1 unchanged/reused; FLST 017E47 grows by exactly 3 (Tu'whacca/HoonDing/Leki); PDV_Deity_Arkay carries Stance_Redguard but no new record; PDV_State_RedguardSect enum resolves; broad-T2 suppression, sect gates, HoonDing weekly cap, Leki conduct gate, and Far Shores support-grant resolve. Then runtime smoke (QASmoke routes 80-83 per PDV_Phase20RedguardImplementationCosting.manifest.json; RouteRedguardAncestorSpine / RouteRedguardCrownTombRespect / RouteRedguardForebearRoadPassage / RouteRedguardAshAbahDeathDuty / RouteRedguardFarShoresToken markers per PDV_BetaTestPacket_Redguard.md)."
   },
   "ruleCompliance": {
     "R1": "Broad AncestorSpine is a STATE on PATRON_STATE_BROAD gated by PDV_State_RedguardSect; NO PDV_Deity_AncestorSpine record.",
@@ -516,5 +598,5 @@
     "R7": "Gate type = state-enum-gated: rewards gate on PDV_State_RedguardSect + focused patron tier within the sect; offer-like for the focused patron.",
     "R8": "<=2 always-on families (broad AncestorSpine + one focused Yokudan patron); ancestor reverence + Far Shores token are SUPPORT not a 3rd family; broad < focused (suppressed under focus); HoonDing weekly cap; one anti-farm mechanism per act; per-tier magnitude ceiling ~12% (max used = 12% OneHanded T3 / 15% HealRateMult T3 within ledger ceiling band); creed-violation loss medium/major only (3 entries). ASCII-only text; Skyrim ActorValue names (ResistMagic, DamageResist, HealRateMult, OneHanded, CriticalChance, SpeedMult); deityIndex next-available; Arkay create:false (infra only)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only consolidation; magnitudes are cumulative totals, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
 }

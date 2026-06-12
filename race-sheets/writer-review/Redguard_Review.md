@@ -155,7 +155,6 @@ _2 rows._
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Notif_Redguard_FarShoresToken_Activate` | HUD corner notification. Per token use; daily cap on the favor it feeds. | Player-2nd | 53 / 80 |  | You tend the Far Shores token and speak to Tu'whacca. |  |
-| _(no tone match)_ | `PDV_Notif_Redguard_FarShoresToken_PrivateContext` | HUD corner notification. Player-owned property or authored private shrine context. | Player-2nd | 55 / 80 |  | Tended within your own walls, the rite carries further. |  |
 
 ## Other
 

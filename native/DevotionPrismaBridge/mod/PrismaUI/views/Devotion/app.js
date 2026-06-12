@@ -323,6 +323,7 @@
 
   let state = { ...fallbackState };
   let startupState = null;
+  const recentToastKeys = new Map();
 
   const normalizeSymbol = (value, fallback = "journal") => {
     const key = text(value, fallback).trim().toLowerCase();
@@ -777,6 +778,7 @@
     daedric: {
       tone: (payload) => {
         const phase = text(payload.phase, "");
+        if (phase === "milestone") return "good";
         if (phase === "boon") return "good";
         if (phase === "residue") return "neutral";
         return "warning";
@@ -785,6 +787,7 @@
       title: (payload) => {
         const prince = text(payload.prince, "A Daedric Prince");
         const phase = text(payload.phase, "");
+        if (phase === "milestone") return `${prince} names you ${text(payload.tierLabel, "marked")}`;
         if (phase === "boon") return `${prince} is satisfied`;
         if (phase === "price") return `${prince}'s price stirs`;
         if (phase === "lapse") return `${prince}'s hold breaks`;
@@ -796,6 +799,7 @@
         if (context) return context;
         const phase = text(payload.phase, "");
         const prince = text(payload.prince, "The Prince");
+        if (phase === "milestone") return text(payload.flavor, `${prince} marks the pact.`);
         if (phase === "boon") return "The rite was answered.";
         if (phase === "price") return `${possessive(prince)} cost is rising.`;
         if (phase === "lapse") return "The path has been released.";
@@ -805,6 +809,7 @@
       listTitle: (payload) => {
         const prince = text(payload.prince, "Daedric");
         const phase = text(payload.phase, "");
+        if (phase === "milestone") return `${prince}: ${text(payload.tierLabel, "milestone")}`;
         if (phase === "boon") return `${prince}: boon`;
         if (phase === "price") return `${prince}: price`;
         if (phase === "lapse") return `${prince}: lapse`;
@@ -815,6 +820,9 @@
         const context = contextName(payload);
         if (context) return context;
         const phase = text(payload.phase, "");
+        if (phase === "milestone") {
+          return text(payload.flavor, "The pact deepens.");
+        }
         return phase === "boon"
           ? "The rite was counted."
           : "The Prince has noticed.";
@@ -1259,6 +1267,23 @@
 
   const showToast = (toastPayload = {}) => {
     const copy = resolveEventPayload(toastPayload);
+    const toastKey = [
+      text(copy.event, ""),
+      text(copy.symbol || copy.mark, ""),
+      text(copy.title, ""),
+      text(copy.message || copy.text, ""),
+    ].join("|");
+    const now = Date.now();
+    if (toastKey && recentToastKeys.has(toastKey) && now - recentToastKeys.get(toastKey) < 2200) {
+      return;
+    }
+    recentToastKeys.set(toastKey, now);
+    recentToastKeys.forEach((seenAt, key) => {
+      if (now - seenAt > 10000) {
+        recentToastKeys.delete(key);
+      }
+    });
+
     const toast = document.createElement("section");
     const tone = text(copy.tone, "neutral");
     const duration = Math.max(1800, numberOrZero(copy.duration) || 4200);
@@ -1288,13 +1313,19 @@
     window.setTimeout(() => removeToast(toast), duration + 700);
   };
 
+  const scheduleToast = (toastPayload = {}, delay = 0) => {
+    window.setTimeout(() => {
+      window.requestAnimationFrame(() => showToast(toastPayload));
+    }, delay);
+  };
+
   const handlePayload = (payload) => {
     if (payload.toast) {
-      showToast(payload.toast);
+      scheduleToast(payload.toast);
     }
 
     asArray(payload.toasts).forEach((toast, index) => {
-      window.setTimeout(() => showToast(toast), index * 700);
+      scheduleToast(toast, index * 700);
     });
 
     if (payload.startup) {
@@ -1318,11 +1349,11 @@
 
   const handleOverlayPayload = (payload) => {
     if (payload.toast) {
-      showToast(payload.toast);
+      scheduleToast(payload.toast);
     }
 
     asArray(payload.toasts).forEach((toast, index) => {
-      window.setTimeout(() => showToast(toast), index * 700);
+      scheduleToast(toast, index * 700);
     });
 
     if (payload.startup) {
@@ -1431,7 +1462,7 @@
     shift_orc: { event: "shift", shiftMode: "Stronghold", symbol: "malacath" },
     shift_redguard: { event: "shift", shiftMode: "Crown" },
     shift_bosmer: { event: "shift", shiftMode: "Old Contract", symbol: "yffre" },
-    daedric_boon: { event: "daedric", prince: "Hircine", phase: "boon", symbol: "hircine" },
+    daedric_boon: { event: "daedric", prince: "Hircine", phase: "milestone", tierLabel: "Seeker", symbol: "hircine", flavor: "Hircine's hunt-sense is in you.", boonText: "+15% Stamina regeneration", priceText: "-10% Health regeneration" },
     daedric_price: { event: "daedric", prince: "Hircine", phase: "price", symbol: "hircine", context: "Stigma has been rising." },
     daedric_lapse: { event: "daedric", prince: "Hircine", phase: "lapse", symbol: "hircine" },
     daedric_residue: { event: "daedric", prince: "Hircine", phase: "residue", symbol: "hircine" },

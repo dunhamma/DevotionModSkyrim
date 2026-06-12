@@ -320,7 +320,7 @@ magnitude, not a duration. Approve the wording, then re-author the MGEF/SPEL
 | EditorID | Effect clause | Current description |
 | --- | --- | --- |
 | `PDV_Bless_Redguard_AncestorSpine_T2` | +5% Magic Resistance, +8% Armor Rating | The line of ancestors steadies you on the road. Your resistance to magic rises 5% and your armor rating rises by 8. |
-| `PDV_Bless_Redguard_FarShoresToken` | +5% Magic Resistance (at home or in private) | You keep a token of the Far Shores close, and pray as Tu'whacca's people do in private. At home or in a private place your resistance to magic rises by 5%. |
+| `PDV_Bless_Redguard_FarShoresToken` | +5% Magic Resistance | You keep a token of the Far Shores close, and pray as Tu'whacca's people do. Your Magic Resistance rises by 5%. |
 | `PDV_Bless_Redguard_HoonDing_T1` | +5 One-Handed | When the way must be made, the Make-Way God moves through you. One-Handed +5. |
 | `PDV_Bless_Redguard_Leki_T1` | +5 One-Handed | The Lady of Swords steadies your form. One-Handed +5. |
 | `PDV_Bless_Redguard_Leki_T2` | +8 One-Handed, +5% Critical Chance | Leki's ataxia lives in your blade. One-Handed +8 and your critical chance rises 5%. |

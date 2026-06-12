@@ -1,0 +1,330 @@
+﻿{
+    "schema":  "pdv.live-devotion-snapshot.v1",
+    "createdAtLocal":  "2026-06-12 16:05:19 +10:00",
+    "reason":  "Daedric champion accept/decline presentation parity, manager queued milestone toast replay, live ESP message-button write, compiled PEX outputs, and refreshed SEQ.",
+    "sourceRoot":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion",
+    "gitBranch":  "codex/pdv-completeness-testing-session",
+    "gitHead":  "f186338c5b1209d5dad5202a97fe912367c71191",
+    "items":  [
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__ManagerQuest.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV__ManagerQuest.psc",
+                      "sha256":  "7287FE695D567DF15170F6E9114A37F433D9AE63F1A844AD49BECC6DB5F5BF00",
+                      "bytes":  480096,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:22 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV__ManagerQuest.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV__ManagerQuest.pex",
+                      "sha256":  "824DA1A2F8DF6BF61F6392BE4396B5787E8E67ABF6EFBD81993A9863124392E3",
+                      "bytes":  420748,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:11 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_MCM.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_MCM.psc",
+                      "sha256":  "91D00784698CD0D180948673797CC9BDF0FD379FE2CFCD7EE5F08D624F8240D0",
+                      "bytes":  76058,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:36 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_MCM.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_MCM.pex",
+                      "sha256":  "6E303B84A792B5A6FBB1EE947F0B91F6A98EFB1057BE52A40BD4E1ACC8526F12",
+                      "bytes":  68663,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:13 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPathBase.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPathBase.psc",
+                      "sha256":  "A52AB2E70F97A672B98728E1152589EE69DCB1A0DF125E078A70B6E5A7BB6E6A",
+                      "bytes":  15481,
+                      "lastWriteTimeLocal":  "2026-06-12 15:47:51 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPathBase.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPathBase.pex",
+                      "sha256":  "339CB5C6C6625DC84C06A30ED0B297D8CAE1A6AAB3E013282037485C209240BC",
+                      "bytes":  15097,
+                      "lastWriteTimeLocal":  "2026-06-12 15:50:16 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Azura.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Azura.psc",
+                      "sha256":  "2EA29FDEB4E86F5B52DE22A5A9A58B5F02F2E96E43341F59180FB61327BBE22E",
+                      "bytes":  5012,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Azura.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Azura.pex",
+                      "sha256":  "BE335E9B847AA08717E0FF70FB1AD626185FF9DD8093FE7CD943FD0BEFD452FB",
+                      "bytes":  6182,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:14 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Boethiah.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Boethiah.psc",
+                      "sha256":  "79C22CAF3584727DB6937DDA0937FA3E21C870B400C625C8A8DDA0554A319098",
+                      "bytes":  5030,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Boethiah.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Boethiah.pex",
+                      "sha256":  "767FDBF30CFFA9D478ABB77FA7B5BBB4B9E44D4DF6535C7F74A46381EF5B8D22",
+                      "bytes":  6197,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:15 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Dagon.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Dagon.psc",
+                      "sha256":  "18DCA06E5C63BD9992B81430EB75C3396319F1682464C2BB2DBFEBE95D989F58",
+                      "bytes":  5021,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Dagon.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Dagon.pex",
+                      "sha256":  "575B7F441D9D24D71757640D1FEA847919D60032E26B73EF7ADC3E91B21D6237",
+                      "bytes":  6182,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:16 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Hircine.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Hircine.psc",
+                      "sha256":  "22FA6536A1BE9DFDEBA7D5BEC8EEA27BE3AEAE21E4D9FFEE10D091C4C29864C6",
+                      "bytes":  9373,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Hircine.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Hircine.pex",
+                      "sha256":  "3CDB1DFDD9FF424B5FC7E4896D095FD38DBAB8E90A7733D9B10970CD9104A294",
+                      "bytes":  10179,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:17 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Malacath.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Malacath.psc",
+                      "sha256":  "721054681C83FFBDA285B381BD7CD2768E763CB3EC36623F813E9680FF056ABC",
+                      "bytes":  5030,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Malacath.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Malacath.pex",
+                      "sha256":  "D332619248DA87712A362768B548159937B01461BC20FA2CB2375265DD29C2F9",
+                      "bytes":  6197,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:18 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Mephala.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Mephala.psc",
+                      "sha256":  "B41817863F5FBD3E5A6701A6CCBF166D717842A450CF6AAA8F71941E2BF75570",
+                      "bytes":  5024,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Mephala.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Mephala.pex",
+                      "sha256":  "38FBE0B4AB5C4A1DA472C6DFC0AD0F2E3B982290E81CD7FAF99F4D5E24240E58",
+                      "bytes":  6192,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:19 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Meridia.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Meridia.psc",
+                      "sha256":  "E7DA5A643A285DDE3780E51A90D54482B0AB07720C08A96219677F6DCE758807",
+                      "bytes":  5024,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Meridia.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Meridia.pex",
+                      "sha256":  "93E9BB6B33D615DF02AC518149D67E0A82089ACF0EEC236FF0D8D3E2E5040A68",
+                      "bytes":  6192,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:19 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Molag.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Molag.psc",
+                      "sha256":  "3F3C5C0A40D6EB9FF4B11214E47759A1CD73B95006A5BD2B9A7DE3D66A230BAB",
+                      "bytes":  5016,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Molag.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Molag.pex",
+                      "sha256":  "67BB7713CED68CE5EA7952604DEADC9D2DFC0B60DA332A8B23D8E166AC3CBBCC",
+                      "bytes":  6182,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:20 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Mora.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Mora.psc",
+                      "sha256":  "6C56356E703F175E72D536082503B90524C2B8770F5537808DDCB58652B62767",
+                      "bytes":  5015,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Mora.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Mora.pex",
+                      "sha256":  "CC4F18E9CACF31434C5A60975479521AD791581BDBD7E22C311E9640DC51A6FB",
+                      "bytes":  6177,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:21 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Namira.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Namira.psc",
+                      "sha256":  "90E6D310C9ECE40D5DE6D83C5C1954EB6EF2B843D677296D2B675F8BBF6E259F",
+                      "bytes":  5018,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Namira.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Namira.pex",
+                      "sha256":  "9557CA317341B2BDBF73BBD49BB6674570773626725E5FED0F1FC0432379489B",
+                      "bytes":  6187,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:22 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Nocturnal.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Nocturnal.psc",
+                      "sha256":  "54EA7D0C98132ADC223A4E33DBB59F6C55A8005280F48065E62669A9759461F7",
+                      "bytes":  5036,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Nocturnal.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Nocturnal.pex",
+                      "sha256":  "7CDBE74B3BDAC411BB6B64D798AAD813D5D8DA6C9C784CEC9DCDA62E702734CF",
+                      "bytes":  6202,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:23 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Peryite.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Peryite.psc",
+                      "sha256":  "5856ADA6AF5B9156F3B73F71140F85FB9341DDF225799B2A140A8457DF95B59F",
+                      "bytes":  5024,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Peryite.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Peryite.pex",
+                      "sha256":  "1251C1019796DD085564CB62BC070092023B268F320A57670C88FA3EBF188370",
+                      "bytes":  6192,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:24 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Sanguine.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Sanguine.psc",
+                      "sha256":  "F5379C5F3C32C04F8572223E361504548DBCE60B4788C274A044FE0B3EACFA23",
+                      "bytes":  5030,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Sanguine.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Sanguine.pex",
+                      "sha256":  "FEFF794EC45A81BF48F6422FA2F33D90CFD0515ADBDE0A3C85E6857A34E6691E",
+                      "bytes":  6197,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:24 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Sheo.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Sheo.psc",
+                      "sha256":  "BEF1143B74111B37EF6C077D711C01972EB7D231EDCC7E1956E7FCF794A7CED0",
+                      "bytes":  5012,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Sheo.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Sheo.pex",
+                      "sha256":  "6617770330F3A9D73C442737885B3204B9D9F28410FF44748C18028155E827D5",
+                      "bytes":  6177,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:25 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Vaermina.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Vaermina.psc",
+                      "sha256":  "FC7D5ED3841096E694BF0EFDF89D4E6F0E0BEF9F5A99EF62B861CE18A8DF078E",
+                      "bytes":  5030,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Vaermina.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Vaermina.pex",
+                      "sha256":  "0512B4A8FA77309CB22674A560CE15340777536C013D61D99DC9C14C73FF8095",
+                      "bytes":  6197,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:26 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Vile.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/Source/PDV_DaedricPath_Vile.psc",
+                      "sha256":  "865BA6A3E8215D7F592A5A8FDDD0867B9A4A917E550B4B988492F1408F484A22",
+                      "bytes":  5015,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "pex",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\PDV_DaedricPath_Vile.pex",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Scripts/PDV_DaedricPath_Vile.pex",
+                      "sha256":  "89622C76E3F5CDA4AF850B24427AAFC7B05F211A8CA5BC00E37F3841552A85CC",
+                      "bytes":  6177,
+                      "lastWriteTimeLocal":  "2026-06-12 15:51:27 +10:00"
+                  },
+                  {
+                      "kind":  "esp",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PlayerDevotion_Framework.esp",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/PlayerDevotion_Framework.esp",
+                      "sha256":  "17BD8B3B42020EEEE89053DF439FB058B988B3D9F52FD3BBCCEE2D2A475ED1A9",
+                      "bytes":  501695,
+                      "lastWriteTimeLocal":  "2026-06-12 15:53:40 +10:00"
+                  },
+                  {
+                      "kind":  "seq",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Seq\\PlayerDevotion_Framework.seq",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-12-daedric-champion-parity/Seq/PlayerDevotion_Framework.seq",
+                      "sha256":  "A2FCE2141225BA1E60A5A10D38F35056B8FB1529A0319BF4EA53A45EFC7B06B6",
+                      "bytes":  156,
+                      "lastWriteTimeLocal":  "2026-06-12 15:56:43 +10:00"
+                  }
+              ]
+}

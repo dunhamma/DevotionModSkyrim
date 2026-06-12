@@ -1,0 +1,4 @@
+*.esp binary
+*.pex binary
+*.seq binary
+*.psc -text -diff

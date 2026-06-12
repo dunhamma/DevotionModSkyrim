@@ -5494,12 +5494,13 @@ class Verifier {
     this.checkSourceContains("Phase 20 Khajiit EventBus source", "PDV_EventBus", [
       "Function RouteKhajiitMoonObservance(Int phaseIndex)",
       "Function RouteKhajiitRoadHomeAnchor(Int anchorId)",
-      "Function RouteKhajiitBaanDarRoadTrick()",
-      "Function RouteKhajiitRajhinElegantTheft()",
-      "Function RouteKhajiitAlkoshDragonOrder()",
+      "Function RouteKhajiitBaanDarRoadTrick(String asSourceId = \"\")",
+      "Function RouteKhajiitRajhinElegantTheft(String asSourceId = \"\")",
+      "Function RouteKhajiitAlkoshDragonOrder(String asSourceId = \"\")",
       "PDV_Manager.HandleKhajiitRoadHomeAnchor(anchorId, \"eventbus_\" + eventType)",
-      "PDV_Manager.HandleKhajiitBaanDarRoadTrick(\"eventbus_\" + eventType)",
-      "PDV_Manager.HandleKhajiitAlkoshDragonOrder(\"eventbus_\" + eventType)",
+      "PDV_Manager.HandleKhajiitBaanDarRoadTrick(reason)",
+      "PDV_Manager.HandleKhajiitRajhinElegantTheft(reason)",
+      "PDV_Manager.HandleKhajiitAlkoshDragonOrder(reason)",
     ]);
     this.checkSourceContains("Phase 20 Khajiit receiver source", "PDV_EventSignalActivator", [
       "ROUTE_KHAJIIT_MOON_OBSERVANCE = 10",

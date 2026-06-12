@@ -491,5 +491,5 @@
     "wiring": "Same run: add PDV_Deity_Boethiah + PDV_Deity_Mephala to FLST 017E47 (Azura already present); add Stance_Dunmer to PDV_Deity_Azura; wire substrate boon slots (Substrate_Always/Mid/High) on PDV_Substrate_DunmerAncestor; wire deity props (reuse PDV_Azura; new PDV_Boethiah/PDV_Mephala) + 11 reward spell props (2 broad Reclamation + 9 patron emphasis) + PDV_SPEL_Neglect_Dunmer on PDV__ManagerQuest. The broad T1 property PDV_Bless_Dunmer_Reclamation_T1 already exists on the manager (R2) -- assign its spell, do not add a new property.",
     "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 includes Boethiah + Mephala (and still Azura); PDV_Deity_Azura carries Stance_Dunmer; the 15 new SPEL exist with correct MGEF actor-values/magnitudes; substrate slots + manager props resolve; PDV_Deity_Boethiah and PDV_Deity_Mephala carry the SGE flag AND have SEQ entries. Then runtime smoke (QASmoke routes 130/131/132/133) and the PDV_BetaTestPacket_Dunmer Azura/Boethiah book track (expect log markers RouteDunmerReclamationFocus complete: 130 focus 0/1)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only consolidation; magnitudes are cumulative totals, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
 }

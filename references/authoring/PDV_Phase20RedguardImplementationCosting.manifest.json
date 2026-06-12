@@ -60,7 +60,7 @@
       "type": "storage-counter",
       "status": "source-scaffolded",
       "notes": [
-        "Portable/private Tu'whacca devotional surface with a home/private bonus.",
+        "Portable Tu'whacca devotional surface with no V1 private/home condition.",
         "Tracked as StorageUtil proof texture in the first implementation slice, not as an Arkay shrine replacement."
       ]
     }
@@ -138,10 +138,10 @@
     "PDV_Msg_Redguard_ChampionEntry_Forebear",
     "PDV_Msg_Redguard_ChampionEntry_AshAbah",
     "PDV_Notif_Redguard_FarShoresToken_Activate",
-    "PDV_Notif_Redguard_FarShoresToken_PrivateContext",
     "PDV_Msg_Redguard_CurseState_VampireOnset",
     "PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry",
-    "PDV_Msg_Redguard_CurseState_WerewolfOnset"
+    "PDV_Msg_Redguard_CurseState_WerewolfOnset",
+    "PDV_Msg_Redguard_CurseState_WerewolfCured"
   ],
   "favorFamilies": [
     {

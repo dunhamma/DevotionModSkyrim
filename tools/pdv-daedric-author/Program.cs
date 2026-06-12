@@ -47,6 +47,7 @@ var daedricLiveQuestSources = new[]
 var dryRun = args.Contains("--dry-run");
 var createMissing = args.Contains("--create-missing");
 var checkOnly = args.Contains("--check");
+var checkMessagesOnly = args.Contains("--check-messages");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var manifestPath = Path.GetFullPath(GetArg(args, "--manifest") ?? defaultManifest);
 var princeFilter = GetArg(args, "--prince");
@@ -57,7 +58,7 @@ var report = new AuthorReport
     ManifestPath = manifestPath,
     DryRun = dryRun,
     CreateMissing = createMissing,
-    CheckOnly = checkOnly,
+    CheckOnly = checkOnly || checkMessagesOnly,
     Prince = princeFilter,
     StartedAt = DateTimeOffset.Now
 };
@@ -80,6 +81,13 @@ try
 
     var mod = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
     var index = BuildIndex(mod);
+    if (checkMessagesOnly)
+    {
+        CheckMessageRecordsOnly(index, selected, report);
+        report.Status = report.Errors.Count == 0 ? "PASS" : "FAIL";
+        return report.Status == "PASS" ? 0 : 1;
+    }
+
     var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
 
     var template = RequireRecord<Quest>(index, templateQuest);
@@ -523,9 +531,15 @@ static void ConfigureMessage(Message message, DaedricMessage messageDefinition)
     message.Description = Tx(messageDefinition.body!);
     message.Flags = messageDefinition.messageBox ? Message.Flag.MessageBox : 0;
     message.MenuButtons.Clear();
-    if (messageDefinition.messageBox)
+    var buttons = messageDefinition.buttons ?? new List<string>();
+    if (buttons.Count == 0 && messageDefinition.messageBox)
     {
-        message.MenuButtons.Add(new MessageButton { Text = Tx("Continue") });
+        buttons = new List<string> { "Continue" };
+    }
+
+    foreach (var button in buttons)
+    {
+        message.MenuButtons.Add(new MessageButton { Text = Tx(button) });
     }
 }
 
@@ -609,9 +623,52 @@ static void CheckPrince(PrinceContext context, DaedricPrince prince, AuthorRepor
         {
             report.Errors.Add($"{message.editorId} description does not match the Daedric contract.");
         }
+        CheckMessageButtons(record, message, report);
     }
 
     report.Actions.Add($"Checked {prince.questEditorId}.");
+}
+
+static void CheckMessageButtons(Message record, DaedricMessage definition, AuthorReport report)
+{
+    var expectedButtons = definition.buttons ?? new List<string>();
+    if (expectedButtons.Count == 0 && definition.messageBox)
+    {
+        expectedButtons = new List<string> { "Continue" };
+    }
+
+    if (record.MenuButtons.Count != expectedButtons.Count)
+    {
+        report.Errors.Add($"{definition.editorId} has {record.MenuButtons.Count} button(s), expected {expectedButtons.Count}.");
+        return;
+    }
+
+    for (var i = 0; i < expectedButtons.Count; i++)
+    {
+        var actualText = record.MenuButtons[i].Text?.String ?? "";
+        if (!string.Equals(actualText, expectedButtons[i], StringComparison.Ordinal))
+        {
+            report.Errors.Add($"{definition.editorId} button {i} is '{actualText}', expected '{expectedButtons[i]}'.");
+        }
+    }
+}
+
+static void CheckMessageRecordsOnly(Dictionary<string, ISkyrimMajorRecordGetter> index, IEnumerable<DaedricPrince> princes, AuthorReport report)
+{
+    foreach (var prince in princes)
+    {
+        foreach (var messageDefinition in prince.messages ?? [])
+        {
+            var record = RequireRecord<Message>(index, messageDefinition.editorId!);
+            if (!string.Equals(record.Description?.String, messageDefinition.body, StringComparison.Ordinal))
+            {
+                report.Errors.Add($"{messageDefinition.editorId} description does not match the Daedric contract.");
+            }
+            CheckMessageButtons(record, messageDefinition, report);
+            var labels = string.Join(" | ", record.MenuButtons.Select((button, slot) => $"{slot}:{button.Text?.String}"));
+            report.Actions.Add($"{messageDefinition.editorId}: buttons [{labels}]");
+        }
+    }
 }
 
 static void CheckSpellPacket(DaedricSpell definition, Spell spell, AuthorReport report)
@@ -1594,6 +1651,7 @@ sealed class DaedricMessage
     public string? body { get; set; }
     public string? property { get; set; }
     public bool messageBox { get; set; }
+    public List<string>? buttons { get; set; }
 }
 
 sealed class AuthorReport

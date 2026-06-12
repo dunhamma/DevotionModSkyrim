@@ -5,18 +5,10 @@ Contract: PDV_BetaContract.csv (765 rows). Gate fails on unwaived GAP only;
 GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, then either
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
-Verdicts: PASS=321 | NEEDS-MANUAL=293 | GAP-REVIEW=87 | FUTURE=59 | WAIVED=2 | GAP=3
-Layers: source=live; esp=1426 EditorIDs; runtime=read-only from gate ledger.
+Verdicts: PASS=329 | NEEDS-MANUAL=293 | GAP-REVIEW=82 | FUTURE=59 | WAIVED=2
+Layers: source=live; esp=1444 EditorIDs; runtime=read-only from gate ledger.
 
-## GAP (3)
-
-| ID | Surface | Race | Target | Detail | Authority |
-|---|---|---|---|---|---|
-| BC-0524 | substrate | Redguard | Far Shores token support spell | missing: PDV_Bless_Redguard_FarShoresToken | PDV_RedguardRewardRecords.spec.json Section farShoresToken |
-| BC-0533 | state_track | Breton | PDV_State_BretonTradition + pressure tracks | missing: PDV_State_BretonDruidicFork | PDV_BretonRewardRecords.spec.json Section stateTracks; Section overstackControl |
-| BC-0693 | surfacing | Redguard | Redguard required content rows | missing: PDV_Notif_Redguard_Sect_Crown_Entry, PDV_Notif_Redguard_Sect_Forebear_Entry, PDV_Notif_Redguard_Sect_AshAbah_Entry, PDV_Msg_Redguard_Survey_Crown, PDV_Msg_Redguard_ChampionEntry_Crown, PDV_Notif_Redguard_FarShoresToken_Activate, PDV_Notif_Redguard_FarShoresToken_PrivateContext, PDV_Msg_Redguard_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_RedguardRewardRecords.spec.json Section requiredContentRows |
-
-## GAP-REVIEW (87)
+## GAP-REVIEW (82)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
@@ -41,8 +33,6 @@ Layers: source=live; esp=1426 EditorIDs; runtime=read-only from gate ledger.
 | BC-0458 | anti_farm | Breton | Knight's Road - Justice family shared cap | missing: PDV_FavorFamily_KnightJustice | PDV_TriggerTopups_Exchange_KnightsRoad.md - B. Breton - Anti-farm |
 | BC-0469 | neglect | ALL | Per-race neglect spell requirement | missing: SyncNeglectSpell | PDV_RaceContractTemplate.md Section Neglect/regression model para 3; Section Per-race cont |
 | BC-0520 | substrate | Dunmer | Ancestor ash-prayer (PDV_Substrate_DunmerAncestor) | missing: PDV_State_DunmerAncestorPosture | PDV_RaceDesign_Dunmer.md -- Ancestor substrate implementation (LOCKED) + Ancestor posture  |
-| BC-0530 | state_track | Breton | Breton tradition state enum and three standing tracks | missing: PDV_State_BretonDruidicFork | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Breton, Needs verifier/proof |
-| BC-0531 | state_track | Breton | DruidicStanding | missing: PDV_State_BretonDruidicFork | PDV_RaceDesign_Breton.md -- DruidicStanding + PDV_State_BretonDruidicFork lock |
 | BC-0535 | state_track | Dunmer | Dunmer ancestor substrate and posture state | missing: PDV_State_DunmerAncestorPosture | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Dunmer, Needs verifier/proof; PDV_RaceEffec |
 | BC-0542 | state_track | Orc | Malacath - PDV_State_OrcLifeMode | missing: PDV_Player (NAMING-DRIFT? found PDV_PlayerEvents) | PDV_Phase20_ExpandedSignalArchitecture.md - B5 Orc - PDV_FLST_P2_OrcMalacathSources route  |
 | BC-0543 | state_track | Orc | Orc life-mode state enum and global mirror | missing: PDV_GLO_State_OrcLifeMode | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Orc, Needs verifier/proof |
@@ -92,9 +82,6 @@ Layers: source=live; esp=1426 EditorIDs; runtime=read-only from gate ledger.
 | BC-0684 | surfacing | Orc | curse transition | missing: PDV_Msg_Orc_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md Section3 curse table -- Orc row |
 | BC-0685 | surfacing | Orc | emergence transition -- life-mode entry | missing: PDV_Notif_Orc_LifeMode_, PDV_Notif_Orc_LifeMode_Stronghold_Entry | PDV_TransitionSurfacing_CoverageMap.md Section2 emergence table -- Orc row and Section4 re |
 | BC-0689 | surfacing | Orc | tier transition -- Observant/Faithful | missing: PDV_Notif_Orc_Malacath_ObservantEntry, PDV_Notif_Orc_Malacath_FaithfulEntry | PDV_TransitionSurfacing_CoverageMap.md Section1 tier table -- Orc row |
-| BC-0690 | surfacing | Redguard | curse transition -- Tu'whacca vampire cure re-entry | missing: PDV_Msg_Redguard_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md Section3 curse table -- Redguard row |
-| BC-0691 | surfacing | Redguard | emergence transition -- Champion entry | missing: PDV_Msg_Redguard_ | PDV_TransitionSurfacing_CoverageMap.md Section2 emergence table -- Nord/Imperial/Redguard  |
-| BC-0694 | surfacing | Redguard | reorientation transition -- sect switch | missing: PDV_Notif_Redguard_Sect_ (NAMING-DRIFT? found REDGUARD_SECT_CROWN) | PDV_TransitionSurfacing_CoverageMap.md Section4 reorientation table -- Redguard row |
 | BC-0696 | surfacing | Redguard | tier transition -- Observant/Faithful | missing: PDV_Notif_Redguard_Observant_Entry, PDV_Notif_Redguard_Faithful_Entry | PDV_TransitionSurfacing_CoverageMap.md Section1 tier table -- Redguard row |
 | BC-0697 | other | ALL | All 16 Daedric Princes | missing: PDV_Architecture_v3 | PDV_Daedric_DecisionPacket_CAT4.md Ratification checklist; PDV_DaedricContent_Manifest.md  |
 | BC-0698 | other | ALL | All 16 Daedric Princes | missing: PDV_DaedricPath_Jyggalag | PDV_Daedric_DecisionPacket_CAT4.md 'Roster shape: closed by D-12'; PDV_AllRaceDaedricBetaR |
@@ -477,7 +464,7 @@ Layers: source=live; esp=1426 EditorIDs; runtime=read-only from gate ledger.
 | BC-0762 | other | Nord | Froki/Heimskr/Andurs/Aela recognition dialogue | 1.0/V2 tier; tracked, not gated. | PDV_TargetEndStates_1.0.md Phase 18A/B runtime closeout; PDV_Architecture_v3.md Section21. |
 | BC-0763 | other | Nord | Nord full stack audit (P2 audit-only lane) | 1.0/V2 tier; tracked, not gated. | references/authoring/PDV_PreBetaRaceGateLedger.md Nord; references/authoring/PDV_PreBetaRa |
 
-## PASS (321)
+## PASS (329)
 
 (passing rows listed in the CSV only)
 

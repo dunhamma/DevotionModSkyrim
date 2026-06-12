@@ -456,5 +456,5 @@
     "wiring": "Same run: add 4 deities to FLST 017E47; wire substrate boon slots (Substrate_Always/Mid/High) on PDV_Substrate_KhajiitLunar; wire deity props (PDV_Azura/Khenarthi/Rajhin/Alkosh) + 15 emphasis spell props + PDV_SPEL_Neglect_KhajiitLunar on PDV__ManagerQuest.",
     "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 Items==10; the 16 new SPEL exist with correct MGEF actor-values/magnitudes; substrate slots + manager props resolve. Then runtime smoke (QASmoke routes)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only consolidation; magnitudes are cumulative totals, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
 }

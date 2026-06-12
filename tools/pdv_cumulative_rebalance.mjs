@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /*
- * Cumulative rebalance for the highest-tier-only reward consolidation.
+ * Historical cumulative-rebalance helper for the highest-tier-only reward consolidation.
  *
  * For each FOCUSED 3-tier family (emphasisRewards grouped by `emphasis` that has
- * a T3 tier), rewrites each tier spell's effects to the CUMULATIVE total up to
- * that tier (T2 = T1+T2, T3 = T1+T2+T3, summed per ActorValue) and adds a
- * per-effect `effectName` so the Active Effects list reads as named bonuses.
- * Power is preserved: with highest-tier-only sync, whichever single tier is
- * active now grants the accumulated total the additive stack used to give.
+ * a T3 tier), this legacy one-shot rewrite would sum prior tier magnitudes into
+ * each tier and add a per-effect `effectName`. The live stamped specs are now
+ * treated as authoritative absolute tier values. Do not use this helper to retune
+ * those values; edit the stamped specs directly when a future balance pass changes
+ * a magnitude.
  *
  * SKIPS: 2-tier broad sets (already <=3 effects), broadState.rewards, substrate
  * slots (hand-done: explicit MGEF ids), and the Argonian spec (already done).
@@ -17,12 +17,9 @@
  *   node tools/pdv_cumulative_rebalance.mjs --write   # rewrite the spec files
  *
  * NOT IDEMPOTENT BY NATURE: the rewrite sums per-ActorValue up the tiers, so a
- * second pass over already-cumulative magnitudes would DOUBLE them (e.g. Orc
- * City Restoration 5/13/23 re-sums to 18/41). A `cumulativeRebalanceApplied`
- * marker is stamped into each spec on --write and specs carrying it are
- * REFUSED on later runs (no --force escape on purpose: if magnitudes must be
- * retuned, edit the cumulative values in the spec by hand or remove the marker
- * deliberately with full knowledge).
+ * second pass would change the stamped absolute values. A
+ * `cumulativeRebalanceApplied` marker is stamped into each spec on --write and
+ * specs carrying it are REFUSED on later runs (no --force escape on purpose).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -63,7 +60,7 @@ for (const race of RACES) {
   const spec = JSON.parse(fs.readFileSync(file, "utf8"));
 
   if (spec.cumulativeRebalanceApplied) {
-    console.log(`  ${race}: SKIPPED -- already cumulative (${spec.cumulativeRebalanceApplied}); a re-run would double magnitudes.`);
+    console.log(`  ${race}: SKIPPED -- stamped absolute tier values (${spec.cumulativeRebalanceApplied}); no rewrite attempted.`);
     continue;
   }
 
@@ -107,7 +104,7 @@ for (const race of RACES) {
   }
 
   if (write) {
-    spec.cumulativeRebalanceApplied = "2026-06-11 highest-tier-only consolidation; magnitudes are cumulative totals, do not re-run";
+    spec.cumulativeRebalanceApplied = "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run";
     fs.writeFileSync(file, JSON.stringify(spec, null, 2) + "\n", "utf8");
   }
 }
