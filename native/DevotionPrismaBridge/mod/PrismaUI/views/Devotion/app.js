@@ -323,6 +323,7 @@
 
   let state = { ...fallbackState };
   let startupState = null;
+  const recentToastKeys = new Map();
 
   const normalizeSymbol = (value, fallback = "journal") => {
     const key = text(value, fallback).trim().toLowerCase();
@@ -1266,6 +1267,23 @@
 
   const showToast = (toastPayload = {}) => {
     const copy = resolveEventPayload(toastPayload);
+    const toastKey = [
+      text(copy.event, ""),
+      text(copy.symbol || copy.mark, ""),
+      text(copy.title, ""),
+      text(copy.message || copy.text, ""),
+    ].join("|");
+    const now = Date.now();
+    if (toastKey && recentToastKeys.has(toastKey) && now - recentToastKeys.get(toastKey) < 2200) {
+      return;
+    }
+    recentToastKeys.set(toastKey, now);
+    recentToastKeys.forEach((seenAt, key) => {
+      if (now - seenAt > 10000) {
+        recentToastKeys.delete(key);
+      }
+    });
+
     const toast = document.createElement("section");
     const tone = text(copy.tone, "neutral");
     const duration = Math.max(1800, numberOrZero(copy.duration) || 4200);
@@ -1295,13 +1313,19 @@
     window.setTimeout(() => removeToast(toast), duration + 700);
   };
 
+  const scheduleToast = (toastPayload = {}, delay = 0) => {
+    window.setTimeout(() => {
+      window.requestAnimationFrame(() => showToast(toastPayload));
+    }, delay);
+  };
+
   const handlePayload = (payload) => {
     if (payload.toast) {
-      showToast(payload.toast);
+      scheduleToast(payload.toast);
     }
 
     asArray(payload.toasts).forEach((toast, index) => {
-      window.setTimeout(() => showToast(toast), index * 700);
+      scheduleToast(toast, index * 700);
     });
 
     if (payload.startup) {
@@ -1325,11 +1349,11 @@
 
   const handleOverlayPayload = (payload) => {
     if (payload.toast) {
-      showToast(payload.toast);
+      scheduleToast(payload.toast);
     }
 
     asArray(payload.toasts).forEach((toast, index) => {
-      window.setTimeout(() => showToast(toast), index * 700);
+      scheduleToast(toast, index * 700);
     });
 
     if (payload.startup) {

@@ -1335,7 +1335,7 @@
       "batch": "3",
       "index": 15,
       "curseAccess": true,
-      "overall": "conditional",
+      "overall": "pending",
       "slots": {
         "mcmRoute": {
           "status": "pass",
@@ -1366,10 +1366,10 @@
           "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "activeEffects": {
-          "status": "pass",
-          "updatedAtLocal": "12/06/2026, 1:02:27 pm AEST",
-          "note": "In-game retest passed: Hircine boon/price Active Effects descriptions now show explicit Effect clauses while retaining flavor copy.",
-          "command": "Manual in-game Active Effects retest after Daedric description ESP write",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
+          "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
+          "command": "",
           "log": ""
         },
         "summaryMessage": {
@@ -1387,16 +1387,16 @@
           "log": ""
         },
         "saveLoad": {
-          "status": "pass",
-          "updatedAtLocal": "12/06/2026, 10:43:36 am AEST",
-          "note": "Hircine tier/effects persisted after save, quit, and reload.",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
+          "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
           "command": "",
           "log": ""
         },
         "stackLegibility": {
-          "status": "pass",
-          "updatedAtLocal": "12/06/2026, 1:53:20 pm AEST",
-          "note": "Manual stack proof passed: Hircine Champion active effects were exclusive, forcing Vaermina Champion dropped Hircine boon/price and showed Vaermina boon/price, re-forcing Hircine dropped Vaermina, and save/quit/reload preserved only the final active pact.",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
+          "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
           "command": "",
           "log": ""
         },
@@ -1408,9 +1408,9 @@
           "log": ""
         },
         "manualFeel": {
-          "status": "conditional",
-          "updatedAtLocal": "12/06/2026, 10:49:04 am AEST",
-          "note": "Manual smoke feel is acceptable, but the player-facing Hircine surface still needs explicit boon and price mechanics listed alongside the flavor description; broader feel judgment deferred to beta testing.",
+          "status": "pending",
+          "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
+          "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
           "command": "",
           "log": ""
         }
@@ -2848,7 +2848,43 @@
       "note": "Manual stack proof passed: Hircine Champion active effects were exclusive, forcing Vaermina Champion dropped Hircine boon/price and showed Vaermina boon/price, re-forcing Hircine dropped Vaermina, and save/quit/reload preserved only the final active pact.",
       "command": "",
       "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
+      "prince": "Hircine",
+      "slot": "activeEffects",
+      "status": "pending",
+      "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
+      "prince": "Hircine",
+      "slot": "saveLoad",
+      "status": "pending",
+      "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
+      "prince": "Hircine",
+      "slot": "stackLegibility",
+      "status": "pending",
+      "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
+      "command": "",
+      "log": ""
+    },
+    {
+      "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST",
+      "prince": "Hircine",
+      "slot": "manualFeel",
+      "status": "pending",
+      "note": "Retuned Daedric boon/price table on 2026-06-12; prior Hircine proof was collected against old Active Effects values and must be rerun.",
+      "command": "",
+      "log": ""
     }
   ],
-  "updatedAtLocal": "12/06/2026, 1:53:20 pm AEST"
+  "updatedAtLocal": "12/06/2026, 4:57:47 pm AEST"
 }
