@@ -345,19 +345,88 @@
       "Baan Dar, Rajhin, and Alkosh have distinct accepted and rejected surfaces"
     ]
   },
+  "organicTriggerSurfaces": {
+    "status": "record-wired",
+    "wiredOn": "2026-06-12",
+    "authorCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --author-khajiit-organic",
+    "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-khajiit-organic",
+    "receiver": "PDV_PlayerEvents alias (PO3 OnActorKilled, OnCombatStateChanged + 4s in-combat poll, OnItemAdded actor-source filter); no Story Manager quest needed because session state lives on the same alias.",
+    "records": [
+      "PDV_FLST_AlkoshNamedDragons (6 Skyrim.esm named-dragon bases: MQ104Dragon, lvlMQ104Dragon, MQ106Dragon, MQResurrectDragon1/2/3; Alduin excluded as scripted death, DLC dragons excluded to keep masters Skyrim.esm-only)",
+      "PDV_FLST_RajhinNotableTargets (22 Skyrim.esm named bases: 9 jarls, Elenwen, Ondolemar, 6 court wizards, GeneralTullius, Maven, OlfridBattleBorn, Erikur, VittoriaVici)",
+      "alias properties ActorTypeDragon (035D59:Skyrim.esm) and Paarthurnax (03C57C:Skyrim.esm)"
+    ],
+    "hooks": [
+      {
+        "id": "khajiit-baandar-outnumbered-organic",
+        "routeId": 90,
+        "sourceId": "organic_outnumbered_win",
+        "contract": "Combat session with 3+ player-attributed kills OR a victim 5+ levels above the player, AND health dipped below 50% during the session (adversity gate). One award per game-day plus shared daily decay.",
+        "rejected": "Steamroll clears at high health, flee-without-kill survival, follower-carried fights."
+      },
+      {
+        "id": "khajiit-baandar-reversal-organic",
+        "routeId": "RouteKhajiitBaanDarReversal",
+        "sourceId": "organic_near_fatal_reversal",
+        "contract": "Health crossed 10% during the session and the player still won (1+ kill). Once per game-week; double emphasis weight plus the SIGNAL_BANDIT_ROAD marked beat; subsumes the outnumbered award when both qualify.",
+        "rejected": "Fleeing after near-death without a kill."
+      },
+      {
+        "id": "khajiit-rajhin-elegant-theft-organic",
+        "routeId": 91,
+        "sourceId": "organic_elegant_theft",
+        "contract": "OnItemAdded from a living, non-teammate actor while sneaking and undetected; target in PDV_FLST_RajhinNotableTargets (always qualifies) or taken value >= 200 gold. Per-target 7-game-day cooldown plus shared daily decay.",
+        "rejected": "Petty grabs from generic NPCs, corpse looting, detected attempts, teammate inventories."
+      },
+      {
+        "id": "khajiit-alkosh-named-dragon-organic",
+        "routeId": "RouteKhajiitAlkoshNamedDragon",
+        "sourceId": "organic_named_dragon",
+        "contract": "Player-attributed kill of a base in PDV_FLST_AlkoshNamedDragons; one-shot StorageUtil marker per base; awards focus signal plus SIGNAL_NAMED_DRAGON curated beat.",
+        "rejected": "Resurrect-and-rekill of the same base, kills by followers."
+      },
+      {
+        "id": "khajiit-alkosh-generic-dragon-organic",
+        "routeId": "RouteKhajiitAlkoshGenericDragon",
+        "sourceId": "organic_generic_dragon",
+        "contract": "Player-attributed kill of any other ActorTypeDragon actor; emphasis-only nudge at 25% weight, max once per game-week, no piety pulse.",
+        "rejected": "Repeated random-dragon farming inside the same week."
+      },
+      {
+        "id": "khajiit-alkosh-paarthurnax-chaos",
+        "routeId": "RouteKhajiitAlkoshChaosAid",
+        "sourceId": "organic_paarthurnax",
+        "contract": "Killing Paarthurnax routes the existing chaos-aid negative signal: slaying the reformed teacher of order is order-breaking in Alkosh's eyes.",
+        "rejected": "No positive credit path exists for this kill."
+      },
+      {
+        "id": "khajiit-alkosh-word-of-power-drip",
+        "routeId": "ProcessKhajiitAlkoshWordDrip (dawn pass)",
+        "sourceId": "alkosh_word_of_power",
+        "contract": "Dawn delta of the vanilla 'Words Of Power Learned' stat; matrix-scale emphasis nudge per new word, max 3 per dawn with remainder carried, baselined on first run so mid-save installs do not bulk-award.",
+        "rejected": "No award at dawn without newly learned words; backlog from before install never scores."
+      }
+    ],
+    "deferredHooks": [
+      "Khenarthi caravan-aid kill-proximity detection: deferred because Khenarthi is already the easiest focus and more feed would crowd the Baan Dar/Rajhin/Alkosh contrast lanes.",
+      "Rajhin botched-theft Crime Chain contrast (phase 1b): RouteKhajiitRajhinBotchedTheft exists and is unwired."
+    ]
+  },
   "runtimeProof": {
     "positive": [
       "fallback lunar cadence works even without reliable visible moon detection",
       "focused emphasis emerges from play at threshold and can be explained in Survey/status",
       "road-home circuit rewards varied anchors while keeping broad worship intact",
-      "Baan Dar, Rajhin, and Alkosh each have at least one sharp behavior-specific proof route"
+      "Baan Dar, Rajhin, and Alkosh each have at least one sharp behavior-specific proof route",
+      "organic Baan Dar outnumbered/reversal, Rajhin elegant theft, and Alkosh named-dragon/word-drip detection fire in normal play without proof-cell activators"
     ],
     "negative": [
       "moon-sugar use does not drive lunar devotion",
       "fast travel or one-bed camping does not satisfy road-home cadence",
       "generic crime or petty theft does not satisfy Rajhin",
       "generic dragon kills do not repeatedly satisfy Alkosh",
-      "ordinary night stealth does not enter ShadowDrift"
+      "ordinary night stealth does not enter ShadowDrift",
+      "steamroll multi-kill fights at high health do not satisfy the Baan Dar adversity gate"
     ]
   },
   "firstImplementationSlice": [

@@ -76,6 +76,56 @@ Dictionary<string, FormKey> genericFaucetRouterPropertyTargets = new(StringCompa
     ["isEnchanting"] = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x06E2A3),
 };
 
+string[] khajiitOrganicFormLists =
+[
+    "PDV_FLST_AlkoshNamedDragons",
+    "PDV_FLST_RajhinNotableTargets"
+];
+
+Dictionary<string, GenericFaucetEntry[]> khajiitOrganicFillEntries = new(StringComparer.OrdinalIgnoreCase)
+{
+    ["PDV_FLST_AlkoshNamedDragons"] =
+    [
+        new(new FormKey(skyrimMaster, 0x01CA05), "MQ104Dragon"),
+        new(new FormKey(skyrimMaster, 0x0FAE86), "lvlMQ104Dragon"),
+        new(new FormKey(skyrimMaster, 0x032D9B), "MQ106Dragon"),
+        new(new FormKey(skyrimMaster, 0x0FE430), "MQResurrectDragon1"),
+        new(new FormKey(skyrimMaster, 0x0FE431), "MQResurrectDragon2"),
+        new(new FormKey(skyrimMaster, 0x0FE432), "MQResurrectDragon3"),
+    ],
+    ["PDV_FLST_RajhinNotableTargets"] =
+    [
+        new(new FormKey(skyrimMaster, 0x013BBD), "BalgruuftheGreater"),
+        new(new FormKey(skyrimMaster, 0x01326A), "ElisifTheFair"),
+        new(new FormKey(skyrimMaster, 0x01414D), "Ulfric"),
+        new(new FormKey(skyrimMaster, 0x01339F), "Igmund"),
+        new(new FormKey(skyrimMaster, 0x0135EB), "IdgrodRavencrone"),
+        new(new FormKey(skyrimMaster, 0x013653), "Siddgeir"),
+        new(new FormKey(skyrimMaster, 0x013620), "SkaldtheElder"),
+        new(new FormKey(skyrimMaster, 0x01C188), "Korir"),
+        new(new FormKey(skyrimMaster, 0x013366), "Laila"),
+        new(new FormKey(skyrimMaster, 0x013269), "Elenwen"),
+        new(new FormKey(skyrimMaster, 0x0133AF), "Ondolemar"),
+        new(new FormKey(skyrimMaster, 0x013BBB), "FarengarSecretFire"),
+        new(new FormKey(skyrimMaster, 0x014146), "Wuunferth"),
+        new(new FormKey(skyrimMaster, 0x01338E), "Calcelmo"),
+        new(new FormKey(skyrimMaster, 0x0132AA), "SybilleStentor"),
+        new(new FormKey(skyrimMaster, 0x01361D), "Madena"),
+        new(new FormKey(skyrimMaster, 0x0135E9), "Falion"),
+        new(new FormKey(skyrimMaster, 0x01327E), "GeneralTullius"),
+        new(new FormKey(skyrimMaster, 0x01336A), "Maven"),
+        new(new FormKey(skyrimMaster, 0x013BB4), "OlfridBattleBorn"),
+        new(new FormKey(skyrimMaster, 0x013272), "Erikur"),
+        new(new FormKey(skyrimMaster, 0x01327A), "VittoriaVici"),
+    ],
+};
+
+Dictionary<string, FormKey> khajiitOrganicAliasVanillaTargets = new(StringComparer.OrdinalIgnoreCase)
+{
+    ["ActorTypeDragon"] = new FormKey(skyrimMaster, 0x035D59),
+    ["Paarthurnax"] = new FormKey(skyrimMaster, 0x03C57C),
+};
+
 CapstoneFallback[] capstoneFallbacks =
 [
     new("PDV_Bless_Imperial_Akatosh_T3", "PDV.Capstone.Imperial.AkatoshSave", 90.0f),
@@ -109,6 +159,8 @@ var authorGenericFaucetStoryManager = args.Contains("--author-generic-faucet-sto
 var checkGenericFaucetStoryManager = args.Contains("--check-generic-faucet-story-manager");
 var fillGenericFaucets = args.Contains("--fill-generic-faucets");
 var checkGenericFaucetFill = args.Contains("--check-generic-faucet-fill");
+var authorKhajiitOrganic = args.Contains("--author-khajiit-organic");
+var checkKhajiitOrganic = args.Contains("--check-khajiit-organic");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var manifestPath = Path.GetFullPath(GetArg(args, "--manifest") ?? defaultManifest);
 var playerEventsPath = Path.GetFullPath(GetArg(args, "--player-events") ?? defaultPlayerEvents);
@@ -169,9 +221,11 @@ try
         && !authorGenericFaucetStoryManager
         && !checkGenericFaucetStoryManager
         && !fillGenericFaucets
-        && !checkGenericFaucetFill)
+        && !checkGenericFaucetFill
+        && !authorKhajiitOrganic
+        && !checkKhajiitOrganic)
     {
-        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, --check-exact-stage-gates, --check-route-entries, --author-green-pact, --check-green-pact, --author-capstones, --check-capstones, --author-generic-faucets, --check-generic-faucets, --fill-generic-faucets, --check-generic-faucet-fill, --author-generic-faucet-receivers, --check-generic-faucet-receivers, --author-generic-faucet-story-manager, or --check-generic-faucet-story-manager. Use --dry-run with write modes for planning only.");
+        throw new InvalidOperationException("Specify --create-missing, --check-formlists, --inspect-vmad, --wire-alias-properties, --check-alias-properties, --fill-source-entries, --check-source-fill, --check-exact-stage-gates, --check-route-entries, --author-green-pact, --check-green-pact, --author-capstones, --check-capstones, --author-generic-faucets, --check-generic-faucets, --fill-generic-faucets, --check-generic-faucet-fill, --author-generic-faucet-receivers, --check-generic-faucet-receivers, --author-generic-faucet-story-manager, --check-generic-faucet-story-manager, --author-khajiit-organic, or --check-khajiit-organic. Use --dry-run with write modes for planning only.");
     }
 
     var manifest = LoadManifest(manifestPath);
@@ -208,6 +262,25 @@ try
     {
         FillGenericFaucetEntries(index, genericFaucetFillEntries, report);
         WriteModIfNeeded(mod, espPath, dryRun, report);
+        report.Status = "PASS";
+    }
+    else if (authorKhajiitOrganic)
+    {
+        var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
+        EnsureFormLists(mod, index, allocator, khajiitOrganicFormLists, report);
+        FillGenericFaucetEntries(index, khajiitOrganicFillEntries, report);
+        WireKhajiitOrganicAliasProperties(index, khajiitOrganicFormLists, khajiitOrganicAliasVanillaTargets, report);
+        WriteModIfNeeded(mod, espPath, dryRun, report);
+        report.Status = "PASS";
+    }
+    else if (checkKhajiitOrganic)
+    {
+        CheckKhajiitOrganic(index, khajiitOrganicFormLists, khajiitOrganicFillEntries, khajiitOrganicAliasVanillaTargets, report);
+        if (report.Errors.Count > 0)
+        {
+            throw new InvalidOperationException("Khajiit organic-hook record check failed.");
+        }
+
         report.Status = "PASS";
     }
     else if (authorGenericFaucets)
@@ -1147,6 +1220,49 @@ static void WireGreenPactAliasProperties(
 
     UpsertProperties(aliasScript, properties);
     report.Actions.Add($"Wired {properties.Length} Green Pact properties on PDV_PlayerEvents alias script.");
+}
+
+static void WireKhajiitOrganicAliasProperties(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IEnumerable<string> formListNames,
+    Dictionary<string, FormKey> vanillaTargets,
+    AuthorReport report)
+{
+    var aliasScript = RequirePlayerEventsAliasScript(index);
+    var properties = formListNames
+        .Select(propertyName => (ScriptProperty)ObjectProp(propertyName, RequireRecord<ISkyrimMajorRecordGetter>(index, propertyName).FormKey))
+        .Concat(vanillaTargets.OrderBy(pair => pair.Key).Select(pair => (ScriptProperty)ObjectProp(pair.Key, pair.Value)))
+        .ToArray();
+
+    UpsertProperties(aliasScript, properties);
+    report.Actions.Add($"Wired {properties.Length} Khajiit organic-hook properties on PDV_PlayerEvents alias script.");
+}
+
+static void CheckKhajiitOrganic(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IEnumerable<string> formListNames,
+    IReadOnlyDictionary<string, GenericFaucetEntry[]> entriesByList,
+    Dictionary<string, FormKey> vanillaTargets,
+    AuthorReport report)
+{
+    CheckGenericFaucetEntries(index, entriesByList, report);
+
+    var aliasScript = RequirePlayerEventsAliasScript(index);
+    foreach (var formListName in formListNames)
+    {
+        if (!index.TryGetValue(formListName, out var record))
+        {
+            report.Errors.Add($"FormList {formListName} is missing.");
+            continue;
+        }
+
+        CheckObjectProperty(aliasScript, formListName, record.FormKey, "PDV_PlayerEvents alias", report);
+    }
+
+    foreach (var pair in vanillaTargets.OrderBy(item => item.Key))
+    {
+        CheckObjectProperty(aliasScript, pair.Key, pair.Value, "PDV_PlayerEvents alias", report);
+    }
 }
 
 static void WireGenericFaucetProperties(
