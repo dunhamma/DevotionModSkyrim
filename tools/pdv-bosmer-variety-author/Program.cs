@@ -31,20 +31,21 @@ const string greenSongsListEditorId = "PDV_FLST_BosmerGreenSongs";
 
 var skyrimModKey = ModKey.FromNameAndExtension("Skyrim.esm");
 
-// Songs of the Green LCTNs, manifest order. Slots 0-1 are FormID-verified
-// (Eldergleam from the runtime-proven Argonian batch; Kynesgrove from the
-// extracted location-signal CSV parent_location field). Slots 2-5 are PENDING:
-// LocalId is null until resolved, and the FormList stays unbuilt while any are.
+// Songs of the Green LCTNs, manifest order. All six FormID-verified
+// (Eldergleam from the runtime-proven Argonian batch; the rest via houseCARL
+// LCTN query 2026-06-12). Slot 2 was SWAPPED from WhiterunWindDistrictLocation
+// (which does not exist as an LCTN) to WhiterunTempleofKynarethLocation, the
+// tightest real LCTN anchoring the Gildergreen -- see the manifest slot-2 why.
 // Eldergleam is intentionally shared with the Argonian Waters set; the manager
 // script fires race-distinct vision text on a Bosmer arrival.
 var greenSongs = new GreenSong[]
 {
     new("EldergleamSanctuaryLocation", 0x0192AC),
     new("KynesgroveLocation", 0x018A4E),
-    new("WhiterunWindDistrictLocation", null),   // Gildergreen anchor (Temple of Kynareth courtyard) -- CONFIRM exact LCTN
-    new("EvergreenGroveLocation", null),         // CONFIRM
-    new("ClearspringTarnLocation", null),        // CONFIRM (free: swapped out of the Argonian set)
-    new("AutumnshadeClearingLocation", null),    // CONFIRM
+    new("WhiterunTempleofKynarethLocation", 0x01F87D),   // Gildergreen anchor; SWAPPED from non-existent WhiterunWindDistrictLocation (see manifest slot-2 why)
+    new("EvergreenGroveLocation", 0x019174),
+    new("ClearspringTarnLocation", 0x019157),
+    new("AutumnshadeClearingLocation", 0x018EE4),
 };
 
 // Timed self-buffs (FireAndForget, ValueModifier, durationed) -- Rooted Rest family.

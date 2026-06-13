@@ -160,12 +160,19 @@ Follow the Argonian tranche's proven path per race:
    from `pdv_cumulative_rebalance.mjs` (the tool is one-shot-spent; edits
    are by hand now).
 
-**Build status (2026-06-12):** Bosmer batch step 2 drafted —
-`PDV_BosmerVariety_RecordBatch.manifest.json` + `tools/pdv-bosmer-variety-author`
-(records + fail-closed author tool). Pending before its dry-run: resolve the
-four unverified Songs LCTN FormIDs (the tool refuses a real write until then),
-then the `PDV__ManagerQuest.psc` Bosmer runtime layer (step 3). Orc, Altmer,
-Redguard, and the Khajiit addendum remain design-locked but unbuilt.
+**Build status (2026-06-13):** Bosmer batch **records + runtime layer landed,
+machine-verified, in-game smoke PENDING.** The four Songs LCTN FormIDs are
+resolved (slot-2 `WhiterunWindDistrictLocation` swapped to
+`WhiterunTempleofKynarethLocation 01F87D` — the former is not an LCTN); the
+author tool wrote the 2 MESG / 7 SPEL+MGEF / 6-entry FLST / 10 VMAD props
+(`--check` PASS), and the `PDV__ManagerQuest.psc` Bosmer runtime layer (step 3)
+is applied + compiled 0/0 (with the location hook in `PDV_ActionRouter` and the
+Baan Dar Gap routed through `PDV_EventBus.RouteBosmerBaanDarGap` from the existing
+`OnHitEx`). Debug MCM gained Bosmer→LivingStory/Exchange + "Seed Bosmer variety"
+controls. **Remaining gate: the fresh-save smoke** in
+`PDV_BetaTestPacket_Bosmer.md` ("Single-Session Smoke (MCM-driven)") — until it
+returns PASS, Bosmer is **NOT runtime-proven**. Orc, Altmer, Redguard, and the
+Khajiit addendum remain design-locked but unbuilt.
 
 Suggested order: **Bosmer → Orc → Altmer → Redguard → Khajiit addendum.**
 Bosmer first because three of its four paths are under-served at once;
