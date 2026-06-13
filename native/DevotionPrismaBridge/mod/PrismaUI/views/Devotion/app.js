@@ -10,6 +10,8 @@
     "auri el": "auri-el",
     auriEl: "auri-el",
     azurah: "azura",
+    baandar: "baan-dar",
+    "baan dar": "baan-dar",
     "curse-werewolf": "hircine",
     kynareth: "kyne",
     system: "journal",
@@ -754,22 +756,22 @@
       tone: () => "neutral",
       symbol: (payload) => text(payload.symbol, "journal"),
       title: (payload) => {
-        const mode = text(payload.shiftMode, "");
-        return mode ? `Path settles: ${mode}` : "Your path shifts";
+        const mode = displayName(payload.shiftMode, "");
+        return mode ? `The path turns toward ${mode}` : "Your path shifts";
       },
       message: (payload) => {
         const context = contextName(payload);
         if (context) return context;
-        const mode = text(payload.shiftMode, "");
+        const mode = displayName(payload.shiftMode, "");
         return mode
-          ? `${mode} shapes what comes next.`
+          ? `${mode} has begun to shape your practice.`
           : "Your practice has found a new shape.";
       },
-      listTitle: (payload) => text(payload.shiftMode, "Path shift"),
+      listTitle: (payload) => displayName(payload.shiftMode, "Path shift"),
       listText: (payload) => {
         const context = contextName(payload);
         if (context) return context;
-        const mode = text(payload.shiftMode, "");
+        const mode = displayName(payload.shiftMode, "");
         return mode
           ? `${mode} is now the shape of your practice.`
           : "Your path has settled into a new mode.";

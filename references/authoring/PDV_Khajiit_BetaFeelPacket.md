@@ -22,16 +22,16 @@ organic edge hooks + focus emergence + reward-at-threshold are the remaining pro
 
 ## 1. Establish the focus + Champion FIRST (so the routes fire/are observable)
 
-Do this once per focus god you want to test (Baan Dar / Rajhin / Alkosh). All on
+Do this once per focus god you want to test (Khenarthi / Azurah / Baan Dar / Rajhin / Alkosh). All on
 **MCM → Debug: State & Rewards**:
 
-1. [ ] **Race focus & state** → **"Khajiit focus → Baan Dar"** (sets the emergent focus).
-2. [ ] **Target deity** → **"Selected deity"** → cycle to **Baan Dar**.
+1. [ ] **Race focus & state** → **"Khajiit focus → <focus god>"** (sets the emergent focus).
+2. [ ] **Target deity** → **"Selected deity"** → cycle to the same focus god.
 3. [ ] **Debug values** → **Target piety** slider → **85** → **"Apply target piety"**.
 4. [ ] **Actions** → **"Run dawn pass"**.
-5. [ ] **Confirm:** Active Effects shows the **Baan Dar Champion blessing**; Survey shows **Focused: Baan Dar**; log shows `Khajiit focused emphasis … -> BaanDar (lead)`.
+5. [ ] **Confirm:** the Champion notice appears after **"Run dawn pass"** (not after **"Apply target piety"**); Active Effects shows the matching **<focus god> Champion blessing**; Survey shows **Focused: <focus god>**; log shows the focus lead/Champion reward add for that god.
 
-Repeat for **Rajhin** and **Alkosh** when testing those routes.
+For the current shared Champion-presentation regression, sweep all five focus gods. For edge-route behavior, prioritize **Baan Dar**, **Rajhin**, and **Alkosh** below.
 
 ---
 
@@ -39,7 +39,8 @@ Repeat for **Rajhin** and **Alkosh** when testing those routes.
 
 ### Baan Dar (route 90) — desperate combat
 - [ ] ✅ Fight **3+ enemies**, let health dip **below 50%**, win → `Khajiit outnumbered win detected` + `focus Baan Dar adjusted`.
-- [ ] ✅ Drop **below 10%**, win → `near-fatal reversal detected` (the marked beat).
+- [ ] ✅ Drop **below 20%**, win → `near-fatal reversal detected` (the marked beat).
+- [x] PASS 2026-06-13: While the **Baan Dar Champion blessing** is active, a hit that leaves health below **20%** fired the once/day survival capstone. Confirmed log sequence: `start key=PDV.Capstone.Khajiit.BaanDarSlip ... trigger=OnHit`, then `low-health sample ... trigger=Hit percent=0.154396`, then `T3 daily low-health save fired ... day=1 ... restore=healSpell`. No in-game day wait should be needed after a clean regrant/reload; `daily block ... day=1` means the save already fired earlier that same in-game day.
 - [ ] ❌ 3+ kills at **full health** (steamroll) → **silent** (adversity gate).
 - [ ] ❌ Flee with **no kill** → **silent**.
 

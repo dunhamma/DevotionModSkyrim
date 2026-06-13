@@ -133,7 +133,15 @@ CapstoneFallback[] capstoneFallbacks =
     new("PDV_Bless_Nord_Shor_T3", "PDV.Capstone.Nord.ShorLastStand", 85.0f),
     new("PDV_Bless_Orc_LegionExile_T3", "PDV.Capstone.Orc.LegionHoldLine", 85.0f),
     new("PDV_Bless_Redguard_Tuwhacca_T3", "PDV.Capstone.Redguard.TuwhaccaSave", 90.0f),
-    new("PDV_Bless_Khajiit_BaanDar_T3", "PDV.Capstone.Khajiit.BaanDarSlip", 75.0f),
+    new(
+        "PDV_Bless_Khajiit_BaanDar_T3",
+        "PDV.Capstone.Khajiit.BaanDarSlip",
+        0.0f,
+        0.20f,
+        0.1f,
+        "PDV_MGEF_Khajiit_BaanDar_T3_AvoidDeath",
+        "PDV_SPEL_Khajiit_BaanDar_T3_AvoidDeathHeal",
+        10000.0f),
     new("PDV_Bless_Bosmer_BanditRoad_T3", "PDV.Capstone.Bosmer.BaanDarSlip", 75.0f)
 ];
 
@@ -327,7 +335,7 @@ try
     }
     else if (checkCapstones)
     {
-        CheckCapstoneFallbacks(index, capstoneFallbacks, report);
+        CheckCapstoneFallbacks(index, capstoneFallbacks, new FormKey(skyrimMaster, 0x01CEA6), report);
         if (report.Errors.Count > 0)
         {
             throw new InvalidOperationException("T3 capstone fallback check failed.");
@@ -337,7 +345,8 @@ try
     }
     else if (authorCapstones)
     {
-        WireCapstoneFallbacks(mod, index, capstoneFallbacks, report);
+        var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
+        WireCapstoneFallbacks(mod, index, allocator, capstoneFallbacks, new FormKey(skyrimMaster, 0x01CEA6), report);
         WriteModIfNeeded(mod, espPath, dryRun, report);
         report.Status = "PASS";
     }
@@ -2029,33 +2038,173 @@ static void CheckGreenPact(
 static void WireCapstoneFallbacks(
     SkyrimMod mod,
     Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
     IEnumerable<CapstoneFallback> capstones,
+    FormKey restoreHealthEffect,
     AuthorReport report)
 {
     _ = mod;
     var debugGlobal = RequireRecord<ISkyrimMajorRecordGetter>(index, "PDV_GLO_DebugLevel");
     foreach (var capstone in capstones)
     {
+        if (capstone.UsesDedicatedScriptEffect)
+        {
+            WireDedicatedCapstoneFallback(mod, index, allocator, capstone, debugGlobal.FormKey, restoreHealthEffect, report);
+            continue;
+        }
+
         var effect = RequireFirstMagicEffectForSpell(index, capstone.SpellEditorId);
         WireMagicEffectScript(effect, "PDV_T3DailyLowHealthSaveEffect", new ScriptProperty[]
         {
             StringProp("StorageKey", capstone.StorageKey),
-            FloatProp("TriggerHealthPercent", 0.10f),
+            FloatProp("TriggerHealthPercent", capstone.TriggerHealthPercent),
             FloatProp("HealAmount", capstone.HealAmount),
-            FloatProp("WatchIntervalSeconds", 2.0f),
+            FloatProp("WatchIntervalSeconds", capstone.WatchIntervalSeconds),
             ObjectProp("PDV_GLO_DebugLevel", debugGlobal.FormKey)
         });
         report.Actions.Add($"Wired PDV_T3DailyLowHealthSaveEffect on {effect.EditorID} for {capstone.SpellEditorId}.");
     }
 }
 
+static void WireDedicatedCapstoneFallback(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    CapstoneFallback capstone,
+    FormKey debugGlobal,
+    FormKey restoreHealthEffect,
+    AuthorReport report)
+{
+    var visibleEffect = RequireFirstMagicEffectForSpell(index, capstone.SpellEditorId);
+    RemoveMagicEffectScript(visibleEffect, "PDV_T3DailyLowHealthSaveEffect");
+
+    var healSpell = EnsureCapstoneHealSpell(mod, index, allocator, capstone, restoreHealthEffect, report);
+    var scriptEffect = EnsureCapstoneScriptEffect(mod, index, allocator, capstone, debugGlobal, healSpell.FormKey, report);
+    var rewardSpell = RequireRecord<Spell>(index, capstone.SpellEditorId);
+    EnsureSpellCarriesEffect(rewardSpell, scriptEffect.FormKey, 0.0f, report);
+    report.Actions.Add($"Wired vanilla-shaped capstone: {capstone.SpellEditorId} carries hidden {scriptEffect.EditorID} and heal spell {healSpell.EditorID}.");
+}
+
+static Spell EnsureCapstoneHealSpell(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    CapstoneFallback capstone,
+    FormKey restoreHealthEffect,
+    AuthorReport report)
+{
+    var spell = EnsureSpellRecord(mod, index, allocator, capstone.HealSpellEditorId!);
+    spell.EditorID = capstone.HealSpellEditorId;
+    spell.FormVersion = 44;
+    spell.Name = Tx("Baan Dar's Luck");
+    spell.Description = Tx("Baan Dar turns the blow aside and pulls you back from the edge.");
+    spell.BaseCost = 0;
+    spell.Type = SpellType.Spell;
+    spell.CastType = CastType.FireAndForget;
+    spell.TargetType = TargetType.Self;
+    spell.ChargeTime = 0.0f;
+    spell.CastDuration = 0.0f;
+    spell.Range = 0.0f;
+    spell.Effects.Clear();
+    spell.Effects.Add(new Effect
+    {
+        BaseEffect = restoreHealthEffect.ToNullableLink<IMagicEffectGetter>(),
+        Data = new EffectData { Magnitude = capstone.HealMagnitude, Area = 0, Duration = 0 },
+        Conditions = []
+    });
+    report.Actions.Add($"Prepared heal spell {spell.EditorID} using RestoreHealthFFSelf magnitude {capstone.HealMagnitude}.");
+    return spell;
+}
+
+static MagicEffect EnsureCapstoneScriptEffect(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    CapstoneFallback capstone,
+    FormKey debugGlobal,
+    FormKey healSpell,
+    AuthorReport report)
+{
+    var effect = EnsureMagicEffectRecord(mod, index, allocator, capstone.ScriptEffectEditorId!);
+    effect.EditorID = capstone.ScriptEffectEditorId;
+    effect.FormVersion = 44;
+    effect.Name = Tx("Baan Dar Remembers");
+    effect.Description = Tx("");
+    effect.Flags = MagicEffect.Flag.Recover
+        | MagicEffect.Flag.NoDuration
+        | MagicEffect.Flag.NoArea
+        | MagicEffect.Flag.HideInUI
+        | MagicEffect.Flag.PowerAffectsMagnitude;
+    effect.BaseCost = 0.0f;
+    effect.MagicSkill = ActorValue.Restoration;
+    effect.ResistValue = ActorValue.None;
+    effect.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.Script)
+    {
+        ActorValue = ActorValue.None
+    };
+    effect.CastType = CastType.ConstantEffect;
+    effect.TargetType = TargetType.Self;
+    effect.SkillUsageMultiplier = 0.0f;
+    effect.ScriptEffectAIScore = 0.0f;
+    effect.ScriptEffectAIDelayTime = 0.0f;
+    WireMagicEffectScript(effect, "PDV_T3DailyLowHealthSaveEffect", new ScriptProperty[]
+    {
+        StringProp("StorageKey", capstone.StorageKey),
+        FloatProp("TriggerHealthPercent", capstone.TriggerHealthPercent),
+        FloatProp("HealAmount", capstone.HealAmount),
+        FloatProp("WatchIntervalSeconds", capstone.WatchIntervalSeconds),
+        ObjectProp("HealSpell", healSpell),
+        ObjectProp("PDV_GLO_DebugLevel", debugGlobal)
+    });
+    report.Actions.Add($"Prepared hidden script effect {effect.EditorID}.");
+    return effect;
+}
+
+static void EnsureSpellCarriesEffect(Spell spell, FormKey effectFormKey, float magnitude, AuthorReport report)
+{
+    var matching = spell.Effects.Where(effect => effect.BaseEffect.FormKey.Equals(effectFormKey)).ToList();
+    Effect effectEntry;
+    if (matching.Count == 0)
+    {
+        effectEntry = new Effect
+        {
+            BaseEffect = effectFormKey.ToNullableLink<IMagicEffectGetter>(),
+            Data = new EffectData(),
+            Conditions = []
+        };
+        spell.Effects.Add(effectEntry);
+        report.Actions.Add($"Added hidden script effect {effectFormKey} to {spell.EditorID}.");
+    }
+    else
+    {
+        effectEntry = matching[0];
+    }
+
+    foreach (var duplicate in matching.Skip(1))
+    {
+        spell.Effects.Remove(duplicate);
+        report.Actions.Add($"Removed duplicate hidden script effect {effectFormKey} from {spell.EditorID}.");
+    }
+
+    effectEntry.BaseEffect = effectFormKey.ToNullableLink<IMagicEffectGetter>();
+    effectEntry.Data = new EffectData { Magnitude = magnitude, Area = 0, Duration = 0 };
+    effectEntry.Conditions.Clear();
+}
+
 static void CheckCapstoneFallbacks(
     Dictionary<string, ISkyrimMajorRecordGetter> index,
     IEnumerable<CapstoneFallback> capstones,
+    FormKey restoreHealthEffect,
     AuthorReport report)
 {
     foreach (var capstone in capstones)
     {
+        if (capstone.UsesDedicatedScriptEffect)
+        {
+            CheckDedicatedCapstoneFallback(index, capstone, restoreHealthEffect, report);
+            continue;
+        }
+
         var effect = RequireFirstMagicEffectForSpell(index, capstone.SpellEditorId);
         var scripts = effect.VirtualMachineAdapter?.Scripts ?? [];
         var script = scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, "PDV_T3DailyLowHealthSaveEffect", StringComparison.OrdinalIgnoreCase));
@@ -2076,12 +2225,110 @@ static void CheckCapstoneFallbacks(
             report.Errors.Add($"{effect.EditorID} StorageKey is not {capstone.StorageKey}.");
         }
 
+        CheckFloatProperty(props, "TriggerHealthPercent", capstone.TriggerHealthPercent, effect.EditorID ?? "(missing editorid)", report);
+        CheckFloatProperty(props, "HealAmount", capstone.HealAmount, effect.EditorID ?? "(missing editorid)", report);
+        CheckFloatProperty(props, "WatchIntervalSeconds", capstone.WatchIntervalSeconds, effect.EditorID ?? "(missing editorid)", report);
+
         if (!props.ContainsKey("PDV_GLO_DebugLevel"))
         {
             report.Errors.Add($"{effect.EditorID} is missing PDV_GLO_DebugLevel property.");
         }
 
         report.Actions.Add($"{effect.EditorID} carries PDV_T3DailyLowHealthSaveEffect for {capstone.SpellEditorId}.");
+    }
+}
+
+static void CheckDedicatedCapstoneFallback(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    CapstoneFallback capstone,
+    FormKey restoreHealthEffect,
+    AuthorReport report)
+{
+    var rewardSpell = RequireRecord<Spell>(index, capstone.SpellEditorId);
+    var visibleEffect = RequireFirstMagicEffectForSpell(index, capstone.SpellEditorId);
+    if (visibleEffect.VirtualMachineAdapter?.Scripts.Any(candidate => string.Equals(candidate.Name, "PDV_T3DailyLowHealthSaveEffect", StringComparison.OrdinalIgnoreCase)) == true)
+    {
+        report.Errors.Add($"{visibleEffect.EditorID} still carries PDV_T3DailyLowHealthSaveEffect; dedicated vanilla-shaped capstone must own the script.");
+    }
+
+    var healSpell = RequireRecord<Spell>(index, capstone.HealSpellEditorId!);
+    if (healSpell.Type != SpellType.Spell || healSpell.CastType != CastType.FireAndForget || healSpell.TargetType != TargetType.Self)
+    {
+        report.Errors.Add($"{healSpell.EditorID} is not a self FireAndForget Spell.");
+    }
+
+    var healEffect = healSpell.Effects.FirstOrDefault();
+    if (healEffect is null
+        || healEffect.Data is null
+        || !healEffect.BaseEffect.FormKey.Equals(restoreHealthEffect)
+        || Math.Abs(healEffect.Data.Magnitude - capstone.HealMagnitude) > 0.0001f)
+    {
+        report.Errors.Add($"{healSpell.EditorID} does not use RestoreHealthFFSelf at magnitude {capstone.HealMagnitude}.");
+    }
+
+    var scriptEffect = RequireRecord<MagicEffect>(index, capstone.ScriptEffectEditorId!);
+    if (scriptEffect.Archetype is not MagicEffectArchetype archetype || archetype.Type != MagicEffectArchetype.TypeEnum.Script)
+    {
+        report.Errors.Add($"{scriptEffect.EditorID} is not a Script archetype magic effect.");
+    }
+
+    if (scriptEffect.CastType != CastType.ConstantEffect || scriptEffect.TargetType != TargetType.Self)
+    {
+        report.Errors.Add($"{scriptEffect.EditorID} is not a self ConstantEffect magic effect.");
+    }
+
+    if (!scriptEffect.Flags.HasFlag(MagicEffect.Flag.HideInUI)
+        || !scriptEffect.Flags.HasFlag(MagicEffect.Flag.Recover)
+        || !scriptEffect.Flags.HasFlag(MagicEffect.Flag.NoDuration)
+        || !scriptEffect.Flags.HasFlag(MagicEffect.Flag.NoArea))
+    {
+        report.Errors.Add($"{scriptEffect.EditorID} does not carry the expected vanilla Avoid Death-style flags.");
+    }
+
+    var rewardEffectCount = rewardSpell.Effects.Count(effect => effect.BaseEffect.FormKey.Equals(scriptEffect.FormKey));
+    if (rewardEffectCount != 1)
+    {
+        report.Errors.Add($"{rewardSpell.EditorID} carries {rewardEffectCount} instance(s) of {scriptEffect.EditorID}; expected exactly 1.");
+    }
+
+    var scripts = scriptEffect.VirtualMachineAdapter?.Scripts ?? [];
+    var script = scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, "PDV_T3DailyLowHealthSaveEffect", StringComparison.OrdinalIgnoreCase));
+    if (script is null)
+    {
+        report.Errors.Add($"{scriptEffect.EditorID} is missing PDV_T3DailyLowHealthSaveEffect.");
+        return;
+    }
+
+    var props = script.Properties
+        .Where(prop => !string.IsNullOrWhiteSpace(prop.Name))
+        .ToDictionary(prop => prop.Name!, StringComparer.OrdinalIgnoreCase);
+    if (!props.TryGetValue("StorageKey", out var storageProp)
+        || storageProp is not ScriptStringProperty stringProp
+        || !string.Equals(stringProp.Data, capstone.StorageKey, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{scriptEffect.EditorID} StorageKey is not {capstone.StorageKey}.");
+    }
+
+    CheckFloatProperty(props, "TriggerHealthPercent", capstone.TriggerHealthPercent, scriptEffect.EditorID ?? "(missing editorid)", report);
+    CheckFloatProperty(props, "HealAmount", capstone.HealAmount, scriptEffect.EditorID ?? "(missing editorid)", report);
+    CheckFloatProperty(props, "WatchIntervalSeconds", capstone.WatchIntervalSeconds, scriptEffect.EditorID ?? "(missing editorid)", report);
+    CheckObjectProperty(script, "HealSpell", healSpell.FormKey, scriptEffect.EditorID ?? "(missing editorid)", report);
+    CheckObjectProperty(script, "PDV_GLO_DebugLevel", RequireRecord<ISkyrimMajorRecordGetter>(index, "PDV_GLO_DebugLevel").FormKey, scriptEffect.EditorID ?? "(missing editorid)", report);
+    report.Actions.Add($"{scriptEffect.EditorID} carries vanilla-shaped PDV_T3DailyLowHealthSaveEffect for {capstone.SpellEditorId}.");
+}
+
+static void CheckFloatProperty(
+    Dictionary<string, ScriptProperty> props,
+    string propertyName,
+    float expectedValue,
+    string effectEditorId,
+    AuthorReport report)
+{
+    if (!props.TryGetValue(propertyName, out var property)
+        || property is not ScriptFloatProperty floatProperty
+        || Math.Abs(floatProperty.Data - expectedValue) > 0.0001f)
+    {
+        report.Errors.Add($"{effectEditorId} {propertyName} is not {expectedValue}.");
     }
 }
 
@@ -2112,6 +2359,64 @@ static void WireMagicEffectScript(MagicEffect effect, string scriptName, IEnumer
     effect.VirtualMachineAdapter.ObjectFormat = 2;
     var script = EnsureScript(effect.VirtualMachineAdapter.Scripts, scriptName);
     UpsertProperties(script, properties);
+}
+
+static void RemoveMagicEffectScript(MagicEffect effect, string scriptName)
+{
+    var scripts = effect.VirtualMachineAdapter?.Scripts;
+    if (scripts is null)
+    {
+        return;
+    }
+
+    while (scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, scriptName, StringComparison.OrdinalIgnoreCase)) is { } script)
+    {
+        scripts.Remove(script);
+    }
+}
+
+static Spell EnsureSpellRecord(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    string editorId)
+{
+    if (index.TryGetValue(editorId, out var existing))
+    {
+        if (existing is not Spell typed)
+        {
+            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected Spell.");
+        }
+
+        return typed;
+    }
+
+    var created = new Spell(allocator.Next(), SkyrimRelease.SkyrimSE);
+    mod.Spells.Add(created);
+    index[editorId] = created;
+    return created;
+}
+
+static MagicEffect EnsureMagicEffectRecord(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    string editorId)
+{
+    if (index.TryGetValue(editorId, out var existing))
+    {
+        if (existing is not MagicEffect typed)
+        {
+            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected MagicEffect.");
+        }
+
+        return typed;
+    }
+
+    var created = new MagicEffect(allocator.Next(), SkyrimRelease.SkyrimSE);
+    mod.MagicEffects.Add(created);
+    index[editorId] = created;
+    return created;
 }
 
 static void WireQuestScript(Quest quest, string scriptName, IEnumerable<ScriptProperty> properties)
@@ -2417,7 +2722,20 @@ sealed record ValidatedSourceFillGroup(string Property, List<ValidatedSourceFill
 
 sealed record ValidatedSourceFillEntry(FormKey FormKey, string Label, string SourceKind);
 
-sealed record CapstoneFallback(string SpellEditorId, string StorageKey, float HealAmount);
+sealed record CapstoneFallback(
+    string SpellEditorId,
+    string StorageKey,
+    float HealAmount,
+    float TriggerHealthPercent = 0.10f,
+    float WatchIntervalSeconds = 2.0f,
+    string? ScriptEffectEditorId = null,
+    string? HealSpellEditorId = null,
+    float HealMagnitude = 0.0f)
+{
+    public bool UsesDedicatedScriptEffect =>
+        !string.IsNullOrWhiteSpace(ScriptEffectEditorId)
+        && !string.IsNullOrWhiteSpace(HealSpellEditorId);
+}
 
 sealed record GenericFaucetEntry(FormKey FormKey, string EditorId);
 

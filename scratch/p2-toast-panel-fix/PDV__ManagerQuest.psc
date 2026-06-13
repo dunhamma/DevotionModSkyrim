@@ -2577,7 +2577,7 @@ Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
 
     if oldFocus != focusValue
         Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
-        SendPrismaShiftToast(GetKhajiitFocusLabel(focusValue), "", GetKhajiitFocusSymbol(focusValue))
+        SendPrismaShiftToast(GetKhajiitFocusLabel(focusValue), GetKhajiitFocusShiftText(focusValue), GetKhajiitFocusSymbol(focusValue))
         RequestPanelRefresh()
     endIf
 EndFunction
@@ -2591,7 +2591,7 @@ Float Function GetKhajiitFocusWeight(Int focusValue)
 EndFunction
 
 String Function GetKhajiitFocusWeightKey(Int focusValue)
-    return "PDV.Khajiit.Focus." + GetKhajiitFocusLabel(focusValue)
+    return "PDV.Khajiit.Focus." + GetKhajiitFocusStorageLabel(focusValue)
 EndFunction
 
 String Function GetKhajiitFocusLabel(Int focusValue)
@@ -2600,7 +2600,7 @@ String Function GetKhajiitFocusLabel(Int focusValue)
     elseIf focusValue == KHAJIIT_FOCUS_AZURAH
         return "Azurah"
     elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
-        return "BaanDar"
+        return "Baan Dar"
     elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
         return "Rajhin"
     elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
@@ -2608,6 +2608,30 @@ String Function GetKhajiitFocusLabel(Int focusValue)
     endIf
 
     return "None"
+EndFunction
+
+String Function GetKhajiitFocusStorageLabel(Int focusValue)
+    if focusValue == KHAJIIT_FOCUS_BAANDAR
+        return "BaanDar"
+    endIf
+
+    return GetKhajiitFocusLabel(focusValue)
+EndFunction
+
+String Function GetKhajiitFocusShiftText(Int focusValue)
+    if focusValue == KHAJIIT_FOCUS_KHENARTHI
+        return "Khenarthi's wind has found your steps."
+    elseIf focusValue == KHAJIIT_FOCUS_AZURAH
+        return "Azurah's dusk-bright road has found your steps."
+    elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
+        return "Baan Dar's road has found your steps."
+    elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
+        return "Rajhin's clever path has found your steps."
+    elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
+        return "Alkosh's order has found your steps."
+    endIf
+
+    return "The Lunar Lattice has found a new shape in your practice."
 EndFunction
 
 Function HandleHircineHuntRite(String reason)
@@ -2963,7 +2987,7 @@ Bool Function ShouldSuppressDuplicateShoutAttack()
     return False
 EndFunction
 
-Int Function RecomputeTier(PDV_DeityBase deity)
+Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
     Form deityForm = GetDeityFormOrNone(deity)
     if !deityForm
         return TIER_NONE
@@ -2989,16 +3013,14 @@ Int Function RecomputeTier(PDV_DeityBase deity)
         if deity == _activeDeity
             deity.OnTierChange(oldTier, newTier)
             RefreshPatronMirrors()
-            if newTier > oldTier
-                NotifyTierUp(deity, newTier)
+            if surfaceTierUp && newTier > oldTier && NotifyTierUp(deity, newTier)
                 SendPrismaEventToast("tier", deity, "", GetCurrentStandingLabel(), "")
             endIf
         elseIf isFocusedEmphasis
             ; No-offer races (Khajiit) reach tiers on an emphasis deity that is never _activeDeity;
             ; still recognize the milestone so the player gets a medium-level notice.
             deity.OnTierChange(oldTier, newTier)
-            if newTier > oldTier
-                NotifyTierUp(deity, newTier)
+            if surfaceTierUp && newTier > oldTier && NotifyTierUp(deity, newTier)
                 SendPrismaEventToast("tier", deity, "", GetTierStandingLabel(newTier), "")
                 SurfaceTransition("tier", deity.DeityName, "reach", deity.DeityIndex, "")
             endIf
@@ -3013,10 +3035,19 @@ Int Function RecomputeTier(PDV_DeityBase deity)
 EndFunction
 
 ; Concise top-left notice when a tracked deity advances a tier (active patron or focused emphasis).
-Function NotifyTierUp(PDV_DeityBase deity, Int newTier)
-    if deity
-        Debug.Notification(deity.DeityName + " marks you as " + GetTierStandingLabel(newTier) + ".")
+Bool Function NotifyTierUp(PDV_DeityBase deity, Int newTier)
+    if !deity || newTier <= TIER_NONE
+        return False
     endIf
+
+    String shownKey = "PDV.TierNoticeShown." + deity.DeityIndex + "." + newTier
+    if StorageUtil.GetIntValue(None, shownKey) == 1
+        return False
+    endIf
+
+    StorageUtil.SetIntValue(None, shownKey, 1)
+    Debug.Notification(deity.DeityName + " marks you as " + GetTierStandingLabel(newTier) + ".")
+    return True
 EndFunction
 
 String Function GetTierStandingLabel(Int tier)
@@ -3335,7 +3366,7 @@ Function ForceSetPiety(Float amount)
 
     Form deityForm = _activeDeity as Form
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ClampValue(amount, 0.0, PIETY_MAX))
-    RecomputeTier(_activeDeity)
+    RecomputeTier(_activeDeity, False)
 EndFunction
 
 Function ForceSetActiveDeityByIndex(Int deityIndex)
@@ -3372,7 +3403,7 @@ Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)
 
     Form deityForm = deity as Form
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ClampValue(amount, 0.0, PIETY_MAX))
-    RecomputeTier(deity)
+    RecomputeTier(deity, False)
 EndFunction
 
 Function DebugForceSetPietyTodayByIndex(Int deityIndex, Float amount)
@@ -4292,18 +4323,29 @@ Function SyncKhajiitEmphasisRewards(Actor playerRef)
         endIf
     endIf
 
-    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_KHENARTHI, activeFocus, activeTier, PDV_Bless_Khajiit_Khenarthi_T1, PDV_Bless_Khajiit_Khenarthi_T2, PDV_Bless_Khajiit_Khenarthi_T3, "Khenarthi")
-    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_AZURAH, activeFocus, activeTier, PDV_Bless_Khajiit_Azurah_T1, PDV_Bless_Khajiit_Azurah_T2, PDV_Bless_Khajiit_Azurah_T3, "Azurah")
-    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_BAANDAR, activeFocus, activeTier, PDV_Bless_Khajiit_BaanDar_T1, PDV_Bless_Khajiit_BaanDar_T2, PDV_Bless_Khajiit_BaanDar_T3, "BaanDar")
-    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_RAJHIN, activeFocus, activeTier, PDV_Bless_Khajiit_Rajhin_T1, PDV_Bless_Khajiit_Rajhin_T2, PDV_Bless_Khajiit_Rajhin_T3, "Rajhin")
-    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_ALKOSH, activeFocus, activeTier, PDV_Bless_Khajiit_Alkosh_T1, PDV_Bless_Khajiit_Alkosh_T2, PDV_Bless_Khajiit_Alkosh_T3, "Alkosh")
+    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_KHENARTHI, activeFocus, activeTier, PDV_Khenarthi, PDV_Bless_Khajiit_Khenarthi_T1, PDV_Bless_Khajiit_Khenarthi_T2, PDV_Bless_Khajiit_Khenarthi_T3, "Khenarthi")
+    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_AZURAH, activeFocus, activeTier, PDV_Azura, PDV_Bless_Khajiit_Azurah_T1, PDV_Bless_Khajiit_Azurah_T2, PDV_Bless_Khajiit_Azurah_T3, "Azurah")
+    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_BAANDAR, activeFocus, activeTier, PDV_BaanDar, PDV_Bless_Khajiit_BaanDar_T1, PDV_Bless_Khajiit_BaanDar_T2, PDV_Bless_Khajiit_BaanDar_T3, "Baan Dar")
+    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_RAJHIN, activeFocus, activeTier, PDV_Rajhin, PDV_Bless_Khajiit_Rajhin_T1, PDV_Bless_Khajiit_Rajhin_T2, PDV_Bless_Khajiit_Rajhin_T3, "Rajhin")
+    SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_ALKOSH, activeFocus, activeTier, PDV_Alkosh, PDV_Bless_Khajiit_Alkosh_T1, PDV_Bless_Khajiit_Alkosh_T2, PDV_Bless_Khajiit_Alkosh_T3, "Alkosh")
 EndFunction
 
-Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFocus, Int activeTier, Spell t1, Spell t2, Spell t3, String label)
+Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFocus, Int activeTier, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
     Bool isActive = (thisFocus == activeFocus)
+    Bool hadChampionSpell = False
+    if t3
+        hadChampionSpell = playerRef.HasSpell(t3)
+    endIf
+
     SyncRaceRewardSpell(playerRef, t1, isActive && activeTier >= TIER_SEEKER, "Khajiit " + label + " T1")
     SyncRaceRewardSpell(playerRef, t2, isActive && activeTier >= TIER_DEVOTED, "Khajiit " + label + " T2")
     SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Khajiit " + label + " T3")
+
+    if isActive && activeTier >= TIER_CHAMPION && t3 && !hadChampionSpell && playerRef.HasSpell(t3) && deity && NotifyTierUp(deity, TIER_CHAMPION)
+        SendPrismaEventToast("tier", deity, "", GetTierStandingLabel(TIER_CHAMPION), "")
+        SurfaceTransition("tier", deity.DeityName, "reach", deity.DeityIndex, "")
+        Trace(1, "Khajiit Champion reward presentation shown: " + deity.DeityName)
+    endIf
 EndFunction
 
 ; Gentle lunar neglect: the moons/road go quiet when no lunar source has fired within the grace
@@ -8110,14 +8152,14 @@ String Function GetAltmerSurveyText()
 EndFunction
 
 String Function GetKhajiitSurveyText()
-    String text = "The Lunar Lattice holds you. Current standing: " + GetCurrentStandingLabel() + "."
+    String text = "The Lunar Lattice holds you as " + GetCurrentStandingLabel() + "."
     if PDV_KhajiitLunarSubstrate
-        text = text + " Moon practice is " + GetKhajiitLunarTierLabel(PDV_KhajiitLunarSubstrate.GetSubstrateTier()) + "."
+        text = text + " Your moon practice is " + GetKhajiitLunarTierLabel(PDV_KhajiitLunarSubstrate.GetSubstrateTier()) + "."
         if StorageUtil.GetIntValue(None, "PDV.Khajiit.LunarSourceCount") > 0
-            text = text + " A lunar source has been read."
+            text = text + " A lunar source has been read and remembered."
         endIf
         if PDV_KhajiitLunarSubstrate.GetRoadHomeCount() > 0
-            text = text + " The road-home cadence has weight."
+            text = text + " The road-home cadence has begun to carry weight."
         else
             text = text + " No road-home cadence has settled yet."
         endIf
@@ -8127,7 +8169,7 @@ String Function GetKhajiitSurveyText()
 
     Int focusValue = GetKhajiitFocusedEmphasis()
     if focusValue > KHAJIIT_FOCUS_NONE
-        text = text + " Current focus: " + GetKhajiitFocusLabel(focusValue) + "."
+        text = text + " " + GetKhajiitFocusLabel(focusValue) + " walks nearest your road."
     else
         text = text + " No single moon-path has pulled ahead."
     endIf
