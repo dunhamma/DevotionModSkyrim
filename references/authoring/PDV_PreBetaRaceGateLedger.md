@@ -227,16 +227,16 @@ Edge build: Bandit Road reversal, Old Contract Pact lapse/renunciation, or curse
 Normal-session route: Old Contract proper hunt/forest kept -> Living Story community/nature proof -> Exchange debt/redress -> Bandit Road road-life/reversal -> Survey/MCM readout.
 Accepted hooks: Old Contract routes 100-101, Living Story routes 102-103, Exchange routes 104-105, Bandit Road routes 106-107.
 Rejected hooks: one generic Bosmer favor, generic kindness, generic bard activity, generic forest travel, generic trade profit, random vengeance, raw theft, generic crime, repeated theft, broad plant detection without tag evidence.
-Anti-farm result: daily route keys and Bandit Road reversal cooldown exist; needs generic commerce/theft/forest/kindness rejection proof and Green Pact tag coverage before item punishment.
+Anti-farm result: daily route keys and Bandit Road reversal cooldown exist; 2026-06-13 tester reported generic-source silence passed for the current packet. Green Pact tag coverage remains required before item punishment.
 Survey/status result: source now has Bosmer-specific Survey/MCM readout for path, standing, Pact binding/lapse, and recent favor memory. 2026-06-13 DA05 stage 100 visible threshold-crossing test passed: Survey Devotion showed Bosmer OldContract / Seeker after piety-23 preflight, DA05, and dawn pass.
-Immersive hook result: QASmoke route proof exists; 2026-06-13 DA05 stage 100 and separate-save stage 105 both passed as live quest-stage source routes. Wrong-origin DA05 rejection also passed by tester report. Source-layer guard fixes were compiled the same session for shared DA05 branch mutual exclusion and Bosmer-only P2 source routing. Living Story, Exchange, and Bandit Road/Pact-pressure hook proof outside DA05 remains pending before Green Pact tag expansion.
+Immersive hook result: QASmoke route proof exists; 2026-06-13 DA05 stage 100 and separate-save stage 105 both passed as live quest-stage source routes. Wrong-origin DA05 rejection and generic-source silence also passed by tester report. Source-layer guard fixes were compiled the same session for shared DA05 branch mutual exclusion and Bosmer-only P2 source routing. Living Story, Exchange, and Bandit Road/Pact-pressure hook proof outside DA05 remains pending before Green Pact tag expansion.
 Reward floor: Living Story, Exchange, or Bandit Road recognition before item-tag work.
 Reward ceiling: Old Contract can have the hardest burden/high ceiling, but cannot be the only emotionally rewarding path.
 Stack snapshot: 2026-06-13 DA05 stage 100 visible threshold-crossing test showed Old Contract - Seeker and Y'ffre's Weave - Seeker in Active Effects. Remaining broader stack dimensions: path, PactBound/compliance/lapse, active favor counters, offered/pending state, path-switch state, Bandit Road reversal cooldown, curse state, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race bosmer
 Next automatable action: curate exact sources and empirically prove all four Bosmer path contracts, including Old Contract proper hunt/forest kept, before Green Pact item expansion.
-Deferred manual proof: generic commerce/theft/forest/kindness rejection, immersive non-hunter/Bandit Road hook proof, and asset-status confirmation.
-Blocking follow-up: prove Bosmer generic commerce/theft/forest/kindness rejection and the remaining non-hunter/Bandit Road slices before the race can pass pre-beta feel.
+Deferred manual proof: immersive non-hunter/Bandit Road hook proof, broader feel note, and asset-status confirmation.
+Blocking follow-up: prove the remaining Bosmer non-hunter/Bandit Road slices before the race can pass pre-beta feel.
 ```
 
 ## P2 Full End-State Wiring With Stack Audit Lanes

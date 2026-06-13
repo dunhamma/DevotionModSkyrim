@@ -37,7 +37,7 @@ The manager already has the Bosmer path spine this layer hangs off:
 | Hearth of the Telling | Living Story: sleep in declared hearth after 3+ new locations discovered since last stay | `PDV_SPEL_BosmerTaleCarried` (Speech +5, 600s) | sleep dispatcher |
 | Songs of the Green | first arrival at each of 6 green LCTNs; milestone at all six | vision line + small path piety; milestone MessageBox | location-change entry (+ OnUpdate interior poll for Eldergleam) |
 | Scales at Rest | Exchange: complete a favor/bounty/contract quest (once/day) | `PDV_SPEL_BosmerScalesAtRest` (Speech +10, 120s) | Exchange signal entry |
-| Baan Dar Opens the Gap | Bandit Road: drop below 20% health in combat (once/day) | `PDV_SPEL_BosmerBaanDarGap` (SpeedMult +30, 5s) | **external** OnHit (PDV_PlayerEvents) |
+| Baan Dar Opens the Gap | Bandit Road: drop below 20% health in combat (once/day) | `PDV_SPEL_BosmerBaanDarGap` (SpeedMult +30, 5s) | **external** combat-session poll (PDV_PlayerEvents) |
 | The Naming | sleep at hearth or any Songs site, 7+ days since last rite | one-active told-self ability; dawn fade/restore on path-coherence break | sleep dispatcher + dawn sync |
 
 All gates are path-checked; nothing fires for the Old Contract path except Green
@@ -139,27 +139,18 @@ The function early-returns unless the player is Bosmer and inside the armed
 Eldergleam sanctuary, so the per-tick cost is a single StorageUtil read otherwise
 — the same shape as the Argonian poll it sits beside.
 
-### 2e. Combat signature (external — PDV_PlayerEvents) — the one piece needing a new hook + test
+### 2e. Combat signature (external — PDV_PlayerEvents) — shared Khajiit/Bosmer poll
 
 `Baan Dar Opens the Gap` triggers on "below 20% health in combat," and no
-health/OnHit hook exists in the manager today (the Argonian Shadowscale rides a
-kill event routed from the player-alias/action-router scripts). Add an `OnHit`
-hook on the player alias in `PDV_PlayerEvents.psc` and have it offer the moment to
-the manager, which gates it:
+health hook exists in the manager. Do not use the original direct low-health
+`OnHitEx` idea; the Khajiit Baan Dar work already proved that naked combat hit
+hooks are flaky. `PDV_PlayerEvents.psc` now opens the existing Baan Dar combat
+session for Bosmer or Khajiit, samples health on the bounded 4s combat poll, and
+routes Bosmer sub-20% moments through `PDV_EventBus.RouteBosmerBaanDarGap`.
 
-```papyrus
-Event OnHit(ObjectReference akTarget, ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-    Actor selfRef = akTarget as Actor
-    if selfRef && selfRef == Game.GetPlayer() && selfRef.GetActorValuePercentage("Health") < 0.20
-        PDV__ManagerQuest.GetScript().TryBosmerBaanDarGap(selfRef)
-    endIf
-EndEvent
-```
-
-This is the only part of the Bosmer layer that adds a new event registration and
-therefore the only part that genuinely needs an in-game smoke pass to confirm
-cadence/feel (OnHit fires often; the once/day + path gate inside
-`TryBosmerBaanDarGap` is what keeps it quiet). Everything else is manager-internal.
+Expected player-alias markers are `Baan Dar combat session opened for origin 4.`
+and `Bosmer Baan Dar gap detected (combat_poll).` The manager pass marker remains
+`Bosmer Baan Dar Opens the Gap fired.` Everything else is manager-internal.
 
 ---
 
@@ -510,7 +501,8 @@ Function TryBosmerScalesAtRest(Actor playerRef)
 EndFunction
 
 ; Baan Dar Opens the Gap (Bandit Road signature, once/day). Called from the
-; player-alias OnHit hook (Step 2e) when player health drops below 20% in combat.
+; player-alias combat-session poll (Step 2e) when player health drops below 20%
+; in combat.
 Function TryBosmerBaanDarGap(Actor playerRef)
     if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_BOSMER || !PDV_SPEL_BosmerBaanDarGap
         return
@@ -577,7 +569,7 @@ EndFunction
    the `ForceState` setter name (2 above) and confirming `GetActorValuePercentage`
    vs `GetActorValuePercentage("Health")` signature on your SKSE build.
 4. Fresh save / `coc qasmoke` (VMAD props bake at first init).
-5. Smoke per lever; the OnHit combat signature (2e) is the one needing explicit
+5. Smoke per lever; the combat-session signature (2e) is the one needing explicit
    cadence/feel confirmation. Fold results into a new
    `PDV_BetaTestPacket_Bosmer.md` (model on `PDV_BetaTestPacket_Argonian.md`).
 

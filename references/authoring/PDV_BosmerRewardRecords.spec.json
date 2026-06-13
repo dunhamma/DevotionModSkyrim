@@ -89,7 +89,7 @@
       }
     ],
     "playerFacingText": "Your path no longer answers. Stamina regenerates 5% more slowly until you walk it again.",
-    "designNote": "GENTLE by default (R: 'Neglect: gentle'). One shared Bosmer neglect spell, keyed to whichever path is active. Neglect is distinct from creed-violation loss. The neglect BITE is reserved for forced reckoning / Old Contract renunciation, which are handled by the creed-loss + Green Pact systems below, NOT by a larger neglect magnitude. Day-to-day lapse is gentle drift; no item-level Green Pact punishment."
+    "designNote": "GENTLE by default (R: 'Neglect: gentle'). One shared Bosmer neglect spell, keyed to whichever path is active. Runtime investigation 2026-06-13 found the magnitude should stay StaminaRateMult -5 for the intended 5-point regen-mult penalty, but the author must write regen AVs with the vanilla-aligned PeakValueModifier archetype instead of generic ValueModifier. Neglect is distinct from creed-violation loss. The neglect BITE is reserved for forced reckoning / Old Contract renunciation, which are handled by the creed-loss + Green Pact systems below, NOT by a larger neglect magnitude. Day-to-day lapse is gentle drift; no item-level Green Pact punishment."
   },
   "greenPactHandling": {
     "policy": "Green Pact stays MODEST POSITIVE WEIGHTING, NOT a hidden compliance ledger and NOT item-level punishment (tag layer not ready).",
@@ -334,7 +334,7 @@
           "effectName": "Speech"
         }
       ],
-      "playerFacingText": "Debts settled fairly steady your hand in dealing. Speech +5."
+      "playerFacingText": "Z'en steadies fair dealing after a debt is settled. Speech +5."
     },
     {
       "emphasis": "Exchange",
@@ -358,7 +358,7 @@
           "effectName": "Carry Weight"
         }
       ],
-      "playerFacingText": "What is owed is carried and repaid. Speech +13, Carry Weight +30."
+      "playerFacingText": "Z'en weighs what is owed and what is carried. Speech +13, Carry Weight +30."
     },
     {
       "emphasis": "Exchange",

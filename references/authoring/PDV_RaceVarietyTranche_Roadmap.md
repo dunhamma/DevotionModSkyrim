@@ -167,8 +167,9 @@ resolved (slot-2 `WhiterunWindDistrictLocation` swapped to
 author tool wrote the 2 MESG / 7 SPEL+MGEF / 6-entry FLST / 10 VMAD props
 (`--check` PASS), and the `PDV__ManagerQuest.psc` Bosmer runtime layer (step 3)
 is applied + compiled 0/0 (with the location hook in `PDV_ActionRouter` and the
-Baan Dar Gap routed through `PDV_EventBus.RouteBosmerBaanDarGap` from the existing
-`OnHitEx`). Debug MCM gained Bosmer→LivingStory/Exchange + "Seed Bosmer variety"
+Baan Dar Gap routed through `PDV_EventBus.RouteBosmerBaanDarGap` from the shared
+Khajiit/Bosmer combat-session poll, replacing the direct low-health `OnHitEx`
+route). Debug MCM gained Bosmer→LivingStory/Exchange + "Seed Bosmer variety"
 controls. **Remaining gate: the fresh-save smoke** in
 `PDV_BetaTestPacket_Bosmer.md` ("Single-Session Smoke (MCM-driven)") — until it
 returns PASS, Bosmer is **NOT runtime-proven**. Orc, Altmer, Redguard, and the

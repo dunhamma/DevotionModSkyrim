@@ -169,8 +169,8 @@ magnitude, not a duration. Approve the wording, then re-author the MGEF/SPEL
 | `PDV_Bless_Bosmer_BanditRoad_T1` | +5% Armor Rating | The road toughens the pariah. Armor rating rises by 5. |
 | `PDV_Bless_Bosmer_BanditRoad_T2` | +10% Armor Rating, +10% Health Regen | The outsider survives what should have ended them. Armor +10 and health regenerates 10% faster. |
 | `PDV_Bless_Bosmer_BanditRoad_T3` | +12% Armor Rating, +15% Health Regen, +10 Sneak | Baan Dar's luck holds when the odds say it should not. Armor +12, health regenerates 15% faster, and Sneak +10. |
-| `PDV_Bless_Bosmer_Exchange_T1` | +5 Speech | Debts settled fairly steady your hand in dealing. Speech +5. |
-| `PDV_Bless_Bosmer_Exchange_T2` | +8 Speech, +30 Carry Weight | What is owed is carried and repaid. Speech +8 and you carry 30 more. |
+| `PDV_Bless_Bosmer_Exchange_T1` | +5 Speech | Z'en steadies fair dealing after a debt is settled. Speech +5. |
+| `PDV_Bless_Bosmer_Exchange_T2` | +13 Speech, +30 Carry Weight | Z'en weighs what is owed and what is carried. Speech +13, Carry Weight +30. |
 | `PDV_Bless_Bosmer_Exchange_T3` | +12 Speech, +50 Carry Weight, +8% Armor Rating | Z'en keeps the ledger of toil and redress with you. Speech +12, carry +50, and armor +8. |
 | `PDV_Bless_Bosmer_LivingStory_T1` | +5 Speech | The story you carry opens doors. Speech +5. |
 | `PDV_Bless_Bosmer_LivingStory_T2` | +8 Speech, +10% Health Regen | Community and memory keep you whole. Speech +8 and health regenerates 10% faster. |

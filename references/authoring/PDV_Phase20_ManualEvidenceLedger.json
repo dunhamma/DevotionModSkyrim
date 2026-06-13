@@ -231,8 +231,9 @@
           "note": "2026-06-13: Tester confirmed wrong-origin DA05 rejection passed. This is recorded as manual/tester evidence; source/log review also found the live P2 Bosmer DA05 source path was missing a source-layer origin guard, and PDV_PlayerEvents.psc was patched and compiled at 4:43 PM to gate Bosmer P2 source and quest-stage routes on GetOriginRaceValue() == 4 for the durable contract."
         },
         "genericHookRejection": {
-          "status": "pending",
-          "expected": "Generic kindness, generic trade, generic theft, forest travel, hunting, plant harvesting, and random bandit kills stay silent unless path-contexted."
+          "status": "evidence-recorded",
+          "expected": "Generic kindness, generic trade, generic theft, forest travel, hunting, plant harvesting, and random bandit kills stay silent unless path-contexted.",
+          "note": "2026-06-13: Tester reported generic-source silence seems to pass for the current Bosmer packet."
         },
         "surveyStatusClarity": {
           "status": "evidence-recorded",
@@ -242,7 +243,7 @@
         "stackSnapshot": {
           "status": "evidence-recorded",
           "expected": "Living Story/Exchange expected build and Old Contract/Bandit Road edge build record active path, one active favor, Pact pressure, and Baan Dar/Nocturnal/Hircine modifier.",
-          "note": "2026-06-13: Tester confirmed visible Active Effects after DA05 threshold-crossing pass: Old Contract - Seeker and Y'ffre's Weave - Seeker. Papyrus log for the same DA05 accepted branch recorded GreenPactCompliance -> 85, AwardPiety Y'ffre raw/applied 2.0, RouteBosmerPactPositive complete, RouteBosmerYffre complete with source po3_queststage_bosmer_da05_kill, and expected Hircine side route."
+          "note": "2026-06-13: Tester confirmed visible Active Effects after DA05 threshold-crossing pass: Old Contract - Seeker and Y'ffre's Weave - Seeker. Papyrus log for the same DA05 accepted branch recorded GreenPactCompliance -> 85, AwardPiety Y'ffre raw/applied 2.0, RouteBosmerPactPositive complete, RouteBosmerYffre complete with source po3_queststage_bosmer_da05_kill, and expected Hircine side route. Tester later confirmed Old Contract T3/85-piety display matched the authored Keeper of the Pact package: Archery +25, Sneak +22, Poison Resistance +10%. LivingStory T1/T2/T3 reward family also passed; dropping LivingStory below 25 removed the path reward, and the packet was corrected because broad Y'ffre's Weave is suppressed under an active Bosmer path. Exchange mechanics passed, but tester caught that Exchange T1/T2 player-facing copy did not name Z'en while T3 did; source spec/review copy was remediated 2026-06-13 and live ESP record refresh was written after Skyrim closed. Tester also reported The Path Goes Quiet felt like stamina was held at a very low point rather than a light -5% bite; deeper record review found the intended StaminaRateMult -5 magnitude is appropriate for a 5-point regen-mult penalty, but the author must write regen actor values as PeakValueModifier rather than generic ValueModifier. Tool/spec/docs were corrected 2026-06-13; final live ESP write passed with backup PlayerDevotion_Framework.esp.20260613-181508.bak and readback confirmed PeakValueModifier StaminaRateMult -5 on PDV_MGEF_Neglect_Bosmer_Stamina / PDV_SPEL_Neglect_Bosmer plus Z'en Exchange T1/T2 copy."
         },
         "manualFeelNote": {
           "status": "pending",
@@ -251,7 +252,7 @@
         "immersiveHookProof": {
           "status": "pending",
           "expected": "Prove Living Story, Exchange, and Bandit Road/Pact-pressure hooks outside QASmoke without generic kindness, commerce, theft, forest travel, or unproven item punishment.",
-          "note": "2026-06-13: DA05 stage 100 accepted Old Contract quest-stage source passed in-game with visible threshold-crossing proof. On a separate clean save, DA05 stage 105 mercy branch passed with RouteBosmerYffre complete: 1 source po3_queststage_bosmer_da05_mercy and RouteQuestReaction complete: stage 105. Live source was also patched/compiled to make stages 100 and 105 share group key bosmer_da05_yffre_outcome, matching the manifest mutualExclusionGroup contract. Tester also confirmed wrong-origin DA05 rejection passed. This is real source proof for the DA05 Old Contract/Living Story branch slice only; broader Living Story, Exchange, Bandit Road, generic silence, and asset-status slots remain pending."
+          "note": "2026-06-13: DA05 stage 100 accepted Old Contract quest-stage source passed in-game with visible threshold-crossing proof. On a separate clean save, DA05 stage 105 mercy branch passed with RouteBosmerYffre complete: 1 source po3_queststage_bosmer_da05_mercy and RouteQuestReaction complete: stage 105. Live source was also patched/compiled to make stages 100 and 105 share group key bosmer_da05_yffre_outcome, matching the manifest mutualExclusionGroup contract. Tester also confirmed wrong-origin DA05 rejection and generic-source silence passed. Green Dreams passed with Papyrus marker Bosmer path dream fired (eventbus_sleep). Tester then confirmed Naming did not fire; investigation found Bosmer hearth declaration was LivingStory-only, unlike Argonian bed declaration, so ordinary-bed Naming could silently fail on non-LivingStory paths. Live manager source/PEX was patched and compiled 2026-06-13 to make hearth declaration path-neutral while keeping Tale Carried LivingStory-only; retest requires Skyrim restart/new script load. This is real source proof for the DA05 Old Contract/Living Story branch slice and one variety lever; broader Exchange, Bandit Road, remaining variety levers, and asset-status slots remain pending."
         },
         "assetStatus": {
           "status": "pending",

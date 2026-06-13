@@ -18,43 +18,122 @@ or final-world feel.
 
 ## Expected Build - Y'ffre Hunt-Law Pressure
 
-Use a disposable Bosmer save.
+Use a disposable Bosmer save or a clean reload before DA05 has resolved.
+This proves the organic DA05 source path only. It does not cover the eight
+QASmoke proof activators or the variety tranche.
+
+### Setup
 
 ```text
 set PDV_GLO_OriginRace to 4
 set PDV_GLO_DebugLevel to 2
 ```
 
-Run one exact DA05 terminal branch with console assistance:
+This DA05 route gives Y'ffre a small scratch-piety pulse (`+2 today`) and records
+Old Contract path evidence. It is not enough by itself to create or change Magic
+Effects. If this pass is meant to prove visible reward behavior, do this before
+the DA05 branch:
+
+1. MCM -> PlayerDevotion -> Player page -> enable **Developer Options**.
+2. Open the **Debug page**.
+3. Click **Bosmer -> OldContract**.
+4. Click **Show piety map** and confirm the Y'ffre index from the message.
+5. Cycle **Selected deity** to Y'ffre.
+6. Set **Target piety** to `25`.
+7. Click **Apply target piety**.
+8. Click **Run dawn pass**.
+9. Confirm `Magic > Active Effects` shows the Old Contract T1 reward before
+   firing DA05. If it does not, stop and capture that as a reward-sync blocker.
+
+Then run DA05. The DA05 branch should prove route/favor movement; visible Magic
+Effects and Survey text should remain stable because the reward preflight already
+put the player at Old Contract / Seeker. In this `Target piety = 25` route test,
+same pre/post Active Effects and the same Player Devotion message are expected.
+
+If this pass is specifically checking visible threshold crossing, use this
+variant instead:
+
+1. Set Y'ffre **Target piety** to `23`.
+2. Click **Apply target piety**.
+3. Click **Run dawn pass**.
+4. Confirm no Old Contract / Seeker reward is active yet.
+5. Run `setstage DA05 100`.
+6. Click **Run dawn pass** again.
+7. Confirm `Magic > Active Effects` gains the Old Contract / Seeker reward and
+   Survey Devotion now reports OldContract / Seeker.
+
+If this save has already resolved DA05, reload a pre-DA05 save or run
+`resetquest DA05` before testing a branch. DA05 stages `100` and `105` are
+mutually exclusive for evidence purposes; use a separate clean attempt for each
+branch.
+
+### Accepted branch
 
 ```text
 setstage DA05 100
 ```
 
-Expected runtime proof after closing Skyrim:
-
-```powershell
-node .\tools\pdv_phase20_runtime_check.mjs --race bosmer --strict-manager
-```
-
-Expected route marker:
+Wait 5-10 seconds for Papyrus to route the event, then check in game:
 
 ```text
-RouteBosmerYffre complete
+Survey Devotion: should show OldContract / Seeker after the piety-25 preflight
+and should remain the same after DA05.
+Magic > Active Effects: capture the current reward/stack state. If the reward
+preflight above was skipped, no new Magic Effect is expected from DA05 alone.
+If the piety-25 preflight was used, same pre/post Active Effects is expected.
+```
+
+Tell Codex when this is done so it can inspect the current Papyrus log. Until
+`tools/pdv_phase20_runtime_check.mjs` gains a Bosmer DA05 P2 entry, do not use
+the generic Bosmer checker for this DA05 proof. The generic checker validates
+the eight QASmoke activators, not DA05.
+
+Expected DA05 log markers:
+
+```text
+[PDV] EventBus: RouteBosmerYffre complete: 0 source po3_queststage_bosmer_da05_kill
+[PDV] EventBus: RouteBosmerPactPositive complete: 44
+```
+
+The same DA05 stage may also route the Daedric Hircine content surface:
+
+```text
+[PDV] EventBus: RouteDaedricPrinceSignal complete: 200 index 15
+```
+
+That Hircine line is expected side evidence, not a failure of the Bosmer route.
+
+Current manual log check:
+
+```powershell
+Select-String -Path "$env:USERPROFILE\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log" -Pattern "RouteBosmerYffre|po3_queststage_bosmer_da05|RouteBosmerPactPositive|RouteDaedricPrinceSignal" -Context 1,1
 ```
 
 Manual evidence to record:
 
 ```text
 Accepted DA05 stage 100 route: PASS/FAIL
-Survey/status clarity: PASS/FAIL
-Reward/stack snapshot: PASS/FAIL
+Survey/status stable after piety-25 preflight: PASS/PENDING/FAIL
+Reward/stack stable after piety-25 preflight: PASS/PENDING/FAIL
 Feel note:
 ```
 
+### Duplicate / anti-farm check
+
+On the same save after the accepted branch has routed, try the alternate DA05
+branch:
+
+```text
+setstage DA05 105
+```
+
+Expected: no second `RouteBosmerYffre` line for the alternate branch on the same
+quest instance. If a second line appears, record it as a duplicate-guard failure.
+
 ## Edge Build - Mercy Branch
 
-Use a separate disposable Bosmer save or reload before the terminal branch.
+Use a separate disposable Bosmer save or reload/reset before any DA05 terminal
+branch has routed.
 
 ```text
 set PDV_GLO_OriginRace to 4
@@ -62,23 +141,56 @@ set PDV_GLO_DebugLevel to 2
 setstage DA05 105
 ```
 
-Expected runtime proof after closing Skyrim:
+Wait 5-10 seconds, then check Survey Devotion and Active Effects as above.
+
+Expected DA05 log marker:
+
+```text
+[PDV] EventBus: RouteBosmerYffre complete: 1 source po3_queststage_bosmer_da05_mercy
+```
+
+Current manual log check:
 
 ```powershell
-node .\tools\pdv_phase20_runtime_check.mjs --race bosmer --strict-manager
+Select-String -Path "$env:USERPROFILE\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log" -Pattern "RouteBosmerYffre|po3_queststage_bosmer_da05|RouteBosmerLivingStory|RouteDaedricPrinceSignal" -Context 1,1
 ```
 
 Manual evidence to record:
 
 ```text
 Accepted DA05 stage 105 route: PASS/FAIL
-Wrong-origin rejection: PENDING/FAIL
-Generic-source silence: PENDING/FAIL
+Wrong-origin rejection: PASS
+Generic-source silence: PASS
 Repeat/anti-farm result: PENDING/FAIL
 Survey/status clarity: PASS/FAIL
 Reward/stack snapshot: PASS/FAIL
 Feel note:
 ```
+
+## Wrong-Origin Check - DA05
+
+Use a clean reload/reset before DA05 has resolved.
+
+```text
+set PDV_GLO_OriginRace to 6
+set PDV_GLO_DebugLevel to 2
+setstage DA05 100
+```
+
+Expected: no new `RouteBosmerYffre` line after the wrong-origin `setstage`.
+The Daedric Hircine route may still fire; the Bosmer route must not.
+
+Current result: **PASS 2026-06-13** by tester report.
+
+Manual evidence to record:
+
+```text
+Wrong-origin DA05 stage 100 rejection: PASS/FAIL
+Observed non-Bosmer route noise, if any:
+```
+
+Repeat with `setstage DA05 105` from another clean reload/reset if the mercy
+branch also needs wrong-origin coverage.
 
 ## Current Runnable Fallback - QASmoke Route Proof
 
@@ -136,11 +248,11 @@ unless separately approved with exact source metadata and readback.
 
 ```text
 Bosmer QASmoke route fallback: PASS/FAIL
-Bosmer DA05 live source packet: PASS/FAIL
-Wrong-origin rejection: PENDING/FAIL
-Generic-source silence: PENDING/FAIL
-Survey/status clarity: PENDING/FAIL
-Reward/stack snapshot: PENDING/FAIL
+Bosmer DA05 live source packet: PASS
+Wrong-origin rejection: PASS
+Generic-source silence: PASS
+Survey/status clarity: PASS
+Reward/stack snapshot: PASS
 Blocking notes:
 ```
 
@@ -151,14 +263,16 @@ Status: records + Papyrus layer landed and machine-verified (author tool write +
 `--check` PASS, compile 0/0 across PDV__ManagerQuest / PDV_EventBus /
 PDV_PlayerEvents / PDV_ActionRouter, `pdv_verify` FAIL=0). ALL sections below need
 a NEW SAVE or main-menu `coc qasmoke` - new manager VMAD properties and the new
-`OnHitEx` route only take effect on fresh init. Disable `Devotion - Living Deities
-Test` in MO2 first.
+player-alias combat-session route only take effect on fresh init. Disable
+`Devotion - Living Deities Test` in MO2 first.
 
 This addendum proves six new levers: Green Dreams, Hearth of the Telling, Songs
 of the Green, Scales at Rest (Exchange), Baan Dar Opens the Gap (Bandit Road), and
-the Naming rite. The **Baan Dar Gap** is the one new event registration
-(player-alias `OnHitEx` -> `PDV_EventBus.RouteBosmerBaanDarGap`) and the only lever
-with real cadence risk.
+the Naming rite. The **Baan Dar Gap** uses the shared Khajiit/Bosmer combat-session
+poll: player-alias combat state opens a bounded session, a 4s poll samples health
+while combat continues, and sub-20% Bosmer moments route through
+`PDV_EventBus.RouteBosmerBaanDarGap`. This replaced the direct low-health `OnHitEx`
+trigger because that naked hit hook was flaky in runtime smoke.
 
 ### Preflight + debug seeder
 
@@ -171,13 +285,9 @@ Path axis (`PDV_State_BosmerPath`): OldContract=0, LivingStory=1, Exchange=2,
 BanditRoad=3. `DebugSeedBosmer` sets the path, clears the Naming/signature
 once-day cooldowns, and seeds +3 location discoveries:
 
-```text
-cqf PDV__ManagerQuest DebugSeedBosmer 1
-```
-
-A confirming MessageBox reports the applied path. If `cqf` is unreliable in your
-setup, set the path from the MCM dev page (state-axis setter -> BosmerPath), then
-re-run the seeder for the cooldown clear.
+Use the MCM debug page instead of console-calling Papyrus functions: click the
+path button you need, then click **Seed Bosmer variety**. A confirming MessageBox
+reports the applied path and cooldown/discovery seed state.
 
 ### Green Dreams (all paths incl. Old Contract)
 
@@ -223,28 +333,63 @@ arrival.
 
 ### Scales at Rest (Exchange signature, once/day; seed path 2)
 
-- Complete a favor / bounty / contract quest (trips the Exchange signal):
-  `PDV_SPEL_BosmerScalesAtRest` (Speech +10, 120s) + "The account is even." At
-  most once/day; a second settled account the same day is silent.
-- Log marker: `Bosmer Scales at Rest fired.` Off-path (not Exchange): silent.
+- Current live proof route: set path to Exchange, then fire the Exchange signal
+  through the MCM debug page or QASmoke proof object:
+
+  - MCM Debug page: click **Bosmer Exchange** under path evidence.
+  - QASmoke: activate `PDV_REFR_BosmerExchangeDebtSettledSignal`.
+
+  A future curated favor / bounty / contract quest can trip the Exchange signal
+  once an exact source is approved and filled, but arbitrary vanilla favor quest
+  completion is not a safe live proof path for this packet.
+- Expected result: `PDV_SPEL_BosmerScalesAtRest` (Speech +10, 120s) + "The
+  account is even." At most once/day; a second settled account the same day is
+  silent.
+- Log markers: `RouteBosmerExchangeDebtSettled complete: 104`, `Bosmer favor
+  Exchange.DebtSettled`, and `Bosmer Scales at Rest fired.` Off-path (not
+  Exchange): the favor may route, but Scales should stay silent.
 
 ### Baan Dar Opens the Gap (Bandit Road signature, once/day; seed path 3) - CADENCE RISK
 
-- In combat, take hits until health < 20%: `PDV_SPEL_BosmerBaanDarGap` (SpeedMult
-  +30, 5s) + "Baan Dar opens the gap. Run." Once/day.
-- Log marker: `Bosmer Baan Dar Opens the Gap fired.`
+- In combat, drop below 20% health and remain in combat long enough for the next
+  combat-session sample, up to roughly 4 seconds: `PDV_SPEL_BosmerBaanDarGap`
+  (SpeedMult +30, 5s) + "Baan Dar opens the gap. Run." Once/day.
+- Expected player-alias markers:
+  - `Baan Dar combat session opened for origin 4.`
+  - `Bosmer Baan Dar gap detected (combat_poll).`
+- Required manager pass marker: `Bosmer Baan Dar Opens the Gap fired.`
+- EventBus side marker: `RouteBosmerBaanDarGap complete.`
 - **Silence checks (the real risk):**
-  - Ordinary hits above 20% health: NOTHING fires (no notification, no log line).
+  - Ordinary combat above 20% health: NOTHING fires (no notification, no manager
+    fired line).
   - A sub-20% hit while NOT in combat: silent (manager gates on `IsInCombat`).
   - A second sub-20% moment the same day: silent (once/day cap).
-  - Off-path (seed 0/1/2): silent even at sub-20% in combat.
-  - Non-Bosmer origin: the `OnHitEx` pre-gate (`GetOriginRaceValue() == 4`) means
-    the manager is never even called.
+  - Off-path (seed 0/1/2): no spell, notification, or manager fired line even at
+    sub-20% in combat. The EventBus route may still log because the path gate is
+    manager-owned; do not count route-only noise as a pass.
+  - Non-Bosmer origin: the combat session does not open for Bosmer (`origin 4`),
+    so no Bosmer Gap detection or manager fired line should appear.
 
 ### The Naming (rite, any path, 7-day cooldown)
 
-- At the declared hearth OR any Songs site, sleep: a 5-option menu (Hunter /
-  Speaker / Wanderer / Keeper / Not yet). "Not yet" does NOT spend the cooldown.
+- `Seed Bosmer variety` only clears the Naming/signature cooldowns and seeds +3
+  discoveries. It does not declare the current bed/cell as the hearth.
+- Fast hearth route:
+  1. Use a Bosmer-origin save.
+  2. Set the desired Bosmer path with the MCM path button.
+  3. Click **Seed Bosmer variety**.
+  4. Sleep in the target bed/cell and accept the hearth declaration prompt.
+     This first eligible sleep is consumed by the hearth declaration menu. As of
+     the 2026-06-13 script fix, declaration is path-neutral like Argonian bed
+     declaration; Tale Carried remains Living Story-only.
+  5. Sleep again in the same bed/cell. This second eligible sleep should show
+     the Naming menu.
+- Green Songs route: sleep at any Songs location instead of declaring a hearth.
+  Current Songs anchors are Eldergleam Sanctuary, Kynesgrove, Whiterun Temple of
+  Kynareth/Gildergreen, Evergreen Grove, Clearspring Tarn, and Autumnshade
+  Clearing.
+- Expected menu: Hunter / Speaker / Wanderer / Keeper / Not yet. "Not yet" does
+  NOT spend the cooldown.
 - Told-self in Active Effects, one at a time: Hunter = Archery +5; Speaker =
   Speech +5; Wanderer = Stamina Regen +8%; Keeper = Carry Weight +15.
 - Choosing again retells (clear-before-add): the old told-self is removed first.
@@ -268,7 +413,7 @@ Scales, Gap, Naming, or Song movement.
 ### Evidence to bring back (variety addendum)
 
 ```text
-Green Dreams (path-keyed + armed-after-change): PASS/PENDING/FAIL
+Green Dreams (path-keyed + armed-after-change): PASS 2026-06-13
 Hearth declaration + Tale Carried (3-discovery delta): PASS/PENDING/FAIL
 Songs visited (count): N/6 + milestone PASS/PENDING
   - Eldergleam interior-only: PASS/PENDING/FAIL
@@ -278,8 +423,8 @@ Baan Dar Gap fires sub-20% in combat: PASS/PENDING/FAIL
 Baan Dar Gap SILENT on ordinary/off-path/non-combat hits: PASS/FAIL  <- key
 Naming menu + one-active swap: PASS/PENDING/FAIL
 Naming coherence fade + restore at dawn: PASS/PENDING/FAIL
-Wrong-origin rejection: PASS/FAIL
-Generic-source silence: PASS/FAIL
+Wrong-origin rejection: PASS
+Generic-source silence: PASS
 Survey/status clarity: PASS/PENDING/FAIL
 Reward/stack snapshot: PASS/PENDING/FAIL
 Blocking notes:
@@ -314,6 +459,10 @@ the four `Bosmer -> <Path>` buttons, `Seed Bosmer variety`.
 Per path: click its path button -> cycle `Selected deity` to the scoring deity ->
 set `Target piety` -> `Apply target piety` -> **Run dawn pass** -> open
 Magic > Active Effects. Bump piety 25 -> 50 -> 85, Run dawn pass each time.
+If a path button changes the path but Active Effects do not immediately swap in
+an already-running test session, click **Run dawn pass** once; the manager was
+patched 2026-06-13 so fresh loads also force a reward-layer sync directly from
+the path button.
 
 | Path button | Scoring deity | T1 (25) -> T2 (50) -> T3 (85) |
 |---|---|---|
@@ -324,10 +473,16 @@ Magic > Active Effects. Bump piety 25 -> 50 -> 85, Run dawn pass each time.
 
 - Switching the path button must SWAP the family: only ONE path family in Active
   Effects at a time.
-- Broad + neglect: drop the active scoring deity below 25 + Run dawn pass -> path
-  family removes, broad **Y'ffre's Weave** (Stamina Regen) shows; raise a path
-  back to 25 -> broad suppresses. A neglected path shows **The Path Goes Quiet**
-  (Stamina -5%).
+- At 85 piety, Bosmer should show the T3 path reward/presentation only. Do not
+  expect a separate formal Champion offer prompt; Bosmer T3 recognition is
+  Survey/status text in V1, not a commitment-offer flow.
+- Broad + neglect: under an active Bosmer path, broad **Y'ffre's Weave** is
+  suppressed. Drop the active scoring deity below 25 + Run dawn pass -> the path
+  family should remove; do not expect Y'ffre's Weave to appear unless the player
+  is in broad worship state with enough broad favor. A neglected path shows
+  **The Path Goes Quiet** (StaminaRateMult -5, authored as a
+  PeakValueModifier regen effect after the initial ValueModifier shape felt too
+  harsh in runtime smoke).
 
 ### B. Variety levers
 Click **Seed Bosmer variety** first (clears once-day cooldowns + seeds 3
@@ -363,9 +518,9 @@ told-self applied: N`) in `Logs\Script\Papyrus.0.log`.
 ### Consolidated evidence to bring back
 ```text
 -- Path families (rewards) --
-OldContract T1/T2/T3 grant + single-family swap: PASS/PENDING/FAIL
-LivingStory T1/T2/T3: PASS/PENDING/FAIL
-Exchange T1/T2/T3: PASS/PENDING/FAIL
+OldContract T1/T2/T3 grant + single-family swap: T3 PASS 2026-06-13 / lower tiers + swap PENDING
+LivingStory T1/T2/T3: PASS 2026-06-13
+Exchange T1/T2/T3 mechanics: PASS 2026-06-13; T1/T2 copy remediated to name Z'en and written/readback-confirmed in the live ESP
 BanditRoad T1/T2/T3: PASS/PENDING/FAIL
 Broad Y'ffre lane + suppression-under-path: PASS/PENDING/FAIL
 Neglect "The Path Goes Quiet": PASS/PENDING/FAIL
@@ -377,7 +532,7 @@ Naming menu + swap + coherence fade/restore: PASS/PENDING/FAIL
 -- Route signals + negatives --
 8 QASmoke route markers (100-107): PASS/FAIL
 DA05 100/105 organic: PASS/PENDING/FAIL
-Wrong-origin rejection / Generic silence: PASS/FAIL
+Wrong-origin rejection / Generic silence: PASS
 Survey/status clarity: PASS/PENDING/FAIL
 Blocking notes:
 ```

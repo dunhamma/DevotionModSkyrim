@@ -942,16 +942,38 @@ static MagicEffect EnsureMgef(
     record.BaseCost = 0.0f;
     record.MagicSkill = ActorValue.None;
     record.ResistValue = ActorValue.None;
-    record.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.ValueModifier)
+    var actorValue = ParseActorValue(effect.actorValue!);
+    if (UsesPeakValueModifier(actorValue))
     {
-        ActorValue = ParseActorValue(effect.actorValue!)
-    };
+        record.Flags |= MagicEffect.Flag.Recover | MagicEffect.Flag.PowerAffectsMagnitude;
+        record.Archetype = new MagicEffectPeakValueModArchetype
+        {
+            ActorValue = actorValue
+        };
+    }
+    else
+    {
+        record.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.ValueModifier)
+        {
+            ActorValue = actorValue
+        };
+    }
     record.CastType = CastType.ConstantEffect;
     record.TargetType = TargetType.Self;
     record.SkillUsageMultiplier = 0.0f;
     record.ScriptEffectAIScore = 0.0f;
     record.ScriptEffectAIDelayTime = 0.0f;
     return record;
+}
+
+static bool UsesPeakValueModifier(ActorValue actorValue)
+{
+    return actorValue == ActorValue.HealRate
+        || actorValue == ActorValue.MagickaRate
+        || actorValue == ActorValue.StaminaRate
+        || actorValue == ActorValue.HealRateMult
+        || actorValue == ActorValue.MagickaRateMult
+        || actorValue == ActorValue.StaminaRateMult;
 }
 
 static void AddNightConditions(Effect effect)

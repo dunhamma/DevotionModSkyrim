@@ -1,8 +1,8 @@
 # PDV In-Game Testing Needed Runbook
 
 **Created:** 2026-06-10  
-**Status:** Active manual/runtime handoff after Nord route-entry drift repair and Bosmer DA05 source fill  
-**Companions:** `PDV_BetaTestPacket_*.md`, `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
+**Status:** Active manual/runtime handoff after Bosmer DA05 proof intake and Bosmer runtime-fix live write
+**Companions:** `PDV_BetaTestPacket_*.md`, `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_SessionHandoff_BosmerRuntimeFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
 
 ## Purpose
 
@@ -16,6 +16,11 @@ compiled, so Hircine should be tested first in the Daedric proof session. See
 `PDV_SessionHandoff_HircineAuditFixes.md` for the exact route and evidence
 commands. This is still compile/readback proof only until runtime/manual slots
 are recorded.
+
+2026-06-13 handoff note: Bosmer DA05 route/manual proof is partially recorded,
+and the Naming/neglect/reward-copy fixes were written after Skyrim closed. See
+`PDV_SessionHandoff_BosmerRuntimeFixes.md` before continuing Bosmer. Restart
+Skyrim before retesting; the previous live session had old manager script state.
 
 ## Preflight Before Opening Skyrim
 
@@ -41,6 +46,10 @@ Expected before manual testing:
 - Beta readiness audit: still `NOT_BETA_READY` until manual/runtime slots are
   recorded.
 
+Known caveat: `pdv_phase2_reward_readback_audit` currently has one unrelated
+Khajiit Baan Dar T3 capstone script failure. Do not treat that as a Bosmer
+blocker; handle it in a separate Khajiit readback cleanup slice.
+
 Do not use the older
 `dotnet run --project .\tools\pdv-phase20-reward-author\PdvPhase20RewardAuthor.csproj -- --check`
 as the blocking reward gate for this manual queue unless that tool or its
@@ -61,7 +70,7 @@ Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 | Altmer | none for current beta packet; final-world placement remains separate |
 | Khajiit | Baan Dar Champion survival/presentation passed; Rajhin/Alkosh edge breadth remains if full edge packet proof is required |
 | Argonian | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
-| Bosmer | `genericHookRejection`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Bosmer | `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Breton | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Dunmer | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Imperial | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
@@ -125,6 +134,7 @@ Required checks:
   durable contract.
 - Generic-source silence for hunting, forest travel, trade, theft, broad plant,
   kindness, and generic book/source attempts.
+  **Passed 2026-06-13** by tester report.
 - Survey/status clarity after the accepted branch. **Stage 100 slice passed.**
 - Reward/stack snapshot and short feel note. **Stage 100 reward/survey snapshot
   passed; broader Bosmer stack/feel checks remain pending.**
