@@ -19,36 +19,36 @@
       "editorId": "PDV_Bless_Khajiit_Phase_Khenarthi",
       "spellName": "Lattice Phase: Khenarthi",
       "effect": "Sprint stamina cost -5%",
-      "mgef": { "archetype": "ValueModifier", "actorValue": "SpeedMult-alternative-or-StaminaRateMult", "magnitude": 5.0, "note": "Prefer a sprint-cost surrogate consistent with existing Khenarthi tier rewards (sprint stamina drain reduction); pick the same AV the Khenarthi T2 record uses." },
-      "description": "Khenarthi presides over these nights. The road asks a little less of you."
+      "mgef": { "archetype": "ValueModifier", "actorValue": "StaminaRateMult", "magnitude": 5.0, "note": "Resolved 2026-06-13 to StaminaRateMult to match the Khenarthi T2 record (PDV_MGEF_Khajiit_Khenarthi_T2_StaminaRateMult, ValueModifier) -- the established sprint-cost surrogate AV." },
+      "description": "Khenarthi presides over these nights. The road asks a little less of you. Stamina Regeneration +5%."
     },
     {
       "editorId": "PDV_Bless_Khajiit_Phase_Azurah",
       "spellName": "Lattice Phase: Azurah",
       "effect": "Magicka regen +5%",
-      "mgef": { "archetype": "PeakValueModifier", "actorValue": "MagickaRateMult", "magnitude": 5.0 },
-      "description": "Azurah presides over these nights. Twilight gathers a little more readily in you."
+      "mgef": { "archetype": "ValueModifier", "actorValue": "MagickaRateMult", "magnitude": 5.0, "note": "Authored as ValueModifier 2026-06-13 to match the shipped Khajiit rate-mult reward convention (Lunar T1 StaminaRegen + Khenarthi T2 are ValueModifier on *RateMult); not PeakValueModifier." },
+      "description": "Azurah presides over these nights. Twilight gathers a little more readily in you. Magicka Regeneration +5%."
     },
     {
       "editorId": "PDV_Bless_Khajiit_Phase_BaanDar",
       "spellName": "Lattice Phase: Baan Dar",
       "effect": "Stamina regen +5%",
-      "mgef": { "archetype": "PeakValueModifier", "actorValue": "StaminaRateMult", "magnitude": 5.0 },
-      "description": "Baan Dar presides over these nights. The pariah's luck keeps your feet under you."
+      "mgef": { "archetype": "ValueModifier", "actorValue": "StaminaRateMult", "magnitude": 5.0, "note": "Authored as ValueModifier 2026-06-13 to match the shipped Khajiit rate-mult reward convention; not PeakValueModifier." },
+      "description": "Baan Dar presides over these nights. The pariah's luck keeps your feet under you. Stamina Regeneration +5%."
     },
     {
       "editorId": "PDV_Bless_Khajiit_Phase_Rajhin",
       "spellName": "Lattice Phase: Rajhin",
       "effect": "Sneak +5",
       "mgef": { "archetype": "ValueModifier", "actorValue": "Sneak", "magnitude": 5.0 },
-      "description": "Rajhin presides over these nights. Shadow sits a little closer to your shoulder."
+      "description": "Rajhin presides over these nights. Shadow sits a little closer to your shoulder. Sneak +5."
     },
     {
       "editorId": "PDV_Bless_Khajiit_Phase_Alkosh",
       "spellName": "Lattice Phase: Alkosh",
       "effect": "Health +5",
       "mgef": { "archetype": "ValueModifier", "actorValue": "Health", "magnitude": 5.0 },
-      "description": "Alkosh presides over the full moon. Order holds you a little more firmly together."
+      "description": "Alkosh presides over the full moon. Order holds you a little more firmly together. Health +5."
     }
   ],
   "wiring": {

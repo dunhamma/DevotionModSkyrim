@@ -256,6 +256,32 @@ function main() {
     .map((record) => ({ plugin_path: PDV_ESP.replaceAll("\\", "/"), formid: record.formid }));
   const detail = bridge({ command: "read_records", max_depth: 10, records: detailRecords }, 120_000);
   const detailsByEdid = new Map((detail.records || []).filter((record) => record.success).map((record) => [record.editor_id, record]));
+
+  // The dedicated T3 capstone save MGEF (e.g. PDV_MGEF_Khajiit_BaanDar_T3_AvoidDeath) is authored
+  // outside the reward specs, so it was not in the first depth read and its VMAD (the save script)
+  // would be missing. Depth-read every effect MGEF of each capstone spell so the index-agnostic scan
+  // below can find the save script at whatever effect index it lives.
+  const capstoneEffectEdids = new Set();
+  for (const [spellEditorId] of CAPSTONE_FALLBACKS) {
+    const spellDetail = detailsByEdid.get(spellEditorId);
+    for (const effect of spellDetail?.fields?.Effects || []) {
+      const effectEdid = effect?.BaseEffect ? formidToEdid(effect.BaseEffect, recordsByEdid) : null;
+      if (effectEdid && !detailsByEdid.has(effectEdid)) {
+        capstoneEffectEdids.add(effectEdid);
+      }
+    }
+  }
+  if (capstoneEffectEdids.size > 0) {
+    const capstoneEffectRecords = [...capstoneEffectEdids]
+      .map((edid) => recordsByEdid.get(edid))
+      .filter(Boolean)
+      .map((record) => ({ plugin_path: PDV_ESP.replaceAll("\\", "/"), formid: record.formid }));
+    const capstoneDetail = bridge({ command: "read_records", max_depth: 10, records: capstoneEffectRecords }, 120_000);
+    for (const record of (capstoneDetail.records || []).filter((entry) => entry.success)) {
+      detailsByEdid.set(record.editor_id, record);
+    }
+  }
+
   const managerScript = findScript(detailsByEdid.get("PDV__ManagerQuest")?.fields, "PDV__ManagerQuest");
   const managerProps = propertyMap(managerScript);
   const allDeities = detailsByEdid.get("PDV_FLST_AllDeities");
@@ -374,15 +400,25 @@ function main() {
 
   for (const [spellEditorId, storageKey] of CAPSTONE_FALLBACKS) {
     const spellDetail = detailsByEdid.get(spellEditorId);
-    const firstEffectFormId = spellDetail?.fields?.Effects?.[0]?.BaseEffect;
-    const effectEdid = firstEffectFormId ? formidToEdid(firstEffectFormId, recordsByEdid) : null;
-    const effectDetail = effectEdid ? detailsByEdid.get(effectEdid) : null;
-    const capstoneScript = findScript(effectDetail?.fields, "PDV_T3DailyLowHealthSaveEffect");
+    // The capstone save effect can sit at ANY effect index -- Khajiit BaanDar T3 orders its three
+    // stat effects first and carries PDV_T3DailyLowHealthSaveEffect on its last (AvoidDeath) effect.
+    // Scan every effect and match the save script by role rather than assuming Effects[0].
+    let capstoneScript = null;
+    let effectEdid = null;
+    for (const effect of spellDetail?.fields?.Effects || []) {
+      const candidateEdid = effect?.BaseEffect ? formidToEdid(effect.BaseEffect, recordsByEdid) : null;
+      const candidateScript = candidateEdid ? findScript(detailsByEdid.get(candidateEdid)?.fields, "PDV_T3DailyLowHealthSaveEffect") : null;
+      if (candidateScript) {
+        capstoneScript = candidateScript;
+        effectEdid = candidateEdid;
+        break;
+      }
+    }
     const props = propertyMap(capstoneScript);
     if (capstoneScript) {
       pass("T3 capstone script", `${effectEdid} carries PDV_T3DailyLowHealthSaveEffect.`);
     } else {
-      fail("T3 capstone script", `${spellEditorId} first MGEF ${effectEdid || "(missing)"} lacks PDV_T3DailyLowHealthSaveEffect.`);
+      fail("T3 capstone script", `${spellEditorId} has no effect carrying PDV_T3DailyLowHealthSaveEffect.`);
       continue;
     }
 

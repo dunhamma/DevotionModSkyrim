@@ -478,7 +478,7 @@
         "KnightlyVowIntegrity falls to Lapsed/Forsworn on an authored breach"
       ],
       "antiRepeat": "authored vow-breach beat only; ordinary inconvenience or a failed-not-betrayed outcome does not corrode.",
-      "playerFacingText": "You broke the vow. Block and Restoration falter until the vow is repaired."
+      "playerFacingText": "You broke the vow. Block and Restoration falter until the vow is repaired. Block -5, Restoration -5."
     },
     {
       "id": "exposure-rupture",
@@ -503,7 +503,7 @@
         "authored Vigilant/social rupture beat"
       ],
       "antiRepeat": "curated rupture beat only; ordinary spellcasting or carrying an artifact is not exposure.",
-      "playerFacingText": "Your cover is blown. The hidden art turns against you until the rupture is answered."
+      "playerFacingText": "Your cover is blown. The hidden art turns against you until the rupture is answered. Conjuration -8, Illusion -8."
     },
     {
       "id": "excommunication",
@@ -523,7 +523,7 @@
         "a story-caliber betrayal of the active tradition (denouncing the order, desecrating the covenant)"
       ],
       "antiRepeat": "authored excommunication beat only; recovery requires sustained counter-behavior and a story-caliber reset.",
-      "playerFacingText": "The tradition has cast you out. Its keeping is withdrawn until you earn your way back."
+      "playerFacingText": "The tradition has cast you out. Its keeping is withdrawn until you earn your way back. Health Regeneration -8%."
     },
     {
       "id": "druidic-fork-betrayal",
@@ -549,7 +549,7 @@
         "betraying the Druidic Trial outcome"
       ],
       "antiRepeat": "authored fork-betrayal beat only; the Green Way werewolf fork itself is a real authored fork, not an ambient kill counter.",
-      "playerFacingText": "You turned from the covenant. The wild no longer keeps you as it did."
+      "playerFacingText": "You turned from the covenant. The wild no longer keeps you as it did. Stamina Regeneration -8%, Restoration -8."
     }
   ],
   "v1RecognitionSurface": "Champion Survey/status text only (non-voiced). The tradition Survey reports the active PDV_State_BretonTradition spine, KnightlyVowIntegrity/WitchcraftExposure/DruidicStanding bands, PDV_State_BretonDruidicFork, curse posture, and WHY parallel tradition rewards are not all active. Voiced NPC recognition lines are V2 per PDV_RecognitionDialogueScalePacket.md.",

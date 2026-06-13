@@ -2075,12 +2075,20 @@ static void WireDedicatedCapstoneFallback(
     FormKey restoreHealthEffect,
     AuthorReport report)
 {
-    var visibleEffect = RequireFirstMagicEffectForSpell(index, capstone.SpellEditorId);
-    RemoveMagicEffectScript(visibleEffect, "PDV_T3DailyLowHealthSaveEffect");
+    var rewardSpell = RequireRecord<Spell>(index, capstone.SpellEditorId);
+    // Strip the save script from EVERY visible effect (all except the dedicated hidden script
+    // effect), not just Effects[0], so a stale copy on any non-first stat effect cannot persist.
+    foreach (var visible in rewardSpell.Effects)
+    {
+        var visibleMgef = index.Values.OfType<MagicEffect>().FirstOrDefault(candidate => candidate.FormKey.Equals(visible.BaseEffect.FormKey));
+        if (visibleMgef is not null && !string.Equals(visibleMgef.EditorID, capstone.ScriptEffectEditorId, StringComparison.OrdinalIgnoreCase))
+        {
+            RemoveMagicEffectScript(visibleMgef, "PDV_T3DailyLowHealthSaveEffect");
+        }
+    }
 
     var healSpell = EnsureCapstoneHealSpell(mod, index, allocator, capstone, restoreHealthEffect, report);
     var scriptEffect = EnsureCapstoneScriptEffect(mod, index, allocator, capstone, debugGlobal, healSpell.FormKey, report);
-    var rewardSpell = RequireRecord<Spell>(index, capstone.SpellEditorId);
     EnsureSpellCarriesEffect(rewardSpell, scriptEffect.FormKey, 0.0f, report);
     report.Actions.Add($"Wired vanilla-shaped capstone: {capstone.SpellEditorId} carries hidden {scriptEffect.EditorID} and heal spell {healSpell.EditorID}.");
 }
@@ -2205,14 +2213,16 @@ static void CheckCapstoneFallbacks(
             continue;
         }
 
-        var effect = RequireFirstMagicEffectForSpell(index, capstone.SpellEditorId);
-        var scripts = effect.VirtualMachineAdapter?.Scripts ?? [];
-        var script = scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, "PDV_T3DailyLowHealthSaveEffect", StringComparison.OrdinalIgnoreCase));
-        if (script is null)
+        // Locate the save-bearing effect by role (any index), not Effects[0].
+        var effect = FindMagicEffectWithScriptForSpell(index, capstone.SpellEditorId, "PDV_T3DailyLowHealthSaveEffect");
+        if (effect is null)
         {
-            report.Errors.Add($"{effect.EditorID} is missing PDV_T3DailyLowHealthSaveEffect for {capstone.SpellEditorId}.");
+            report.Errors.Add($"{capstone.SpellEditorId} has no effect carrying PDV_T3DailyLowHealthSaveEffect.");
             continue;
         }
+
+        var scripts = effect.VirtualMachineAdapter?.Scripts ?? [];
+        var script = scripts.First(candidate => string.Equals(candidate.Name, "PDV_T3DailyLowHealthSaveEffect", StringComparison.OrdinalIgnoreCase));
 
         var props = script.Properties
             .Where(prop => !string.IsNullOrWhiteSpace(prop.Name))
@@ -2245,10 +2255,16 @@ static void CheckDedicatedCapstoneFallback(
     AuthorReport report)
 {
     var rewardSpell = RequireRecord<Spell>(index, capstone.SpellEditorId);
-    var visibleEffect = RequireFirstMagicEffectForSpell(index, capstone.SpellEditorId);
-    if (visibleEffect.VirtualMachineAdapter?.Scripts.Any(candidate => string.Equals(candidate.Name, "PDV_T3DailyLowHealthSaveEffect", StringComparison.OrdinalIgnoreCase)) == true)
+    var scriptEffect = RequireRecord<MagicEffect>(index, capstone.ScriptEffectEditorId!);
+    // Every VISIBLE effect (all except the dedicated hidden script effect) must be free of the save
+    // script -- scan them all, not just Effects[0], so a stray script on any visible stat effect is caught.
+    foreach (var visible in rewardSpell.Effects.Where(entry => !entry.BaseEffect.FormKey.Equals(scriptEffect.FormKey)))
     {
-        report.Errors.Add($"{visibleEffect.EditorID} still carries PDV_T3DailyLowHealthSaveEffect; dedicated vanilla-shaped capstone must own the script.");
+        var visibleMgef = index.Values.OfType<MagicEffect>().FirstOrDefault(candidate => candidate.FormKey.Equals(visible.BaseEffect.FormKey));
+        if (visibleMgef?.VirtualMachineAdapter?.Scripts.Any(candidate => string.Equals(candidate.Name, "PDV_T3DailyLowHealthSaveEffect", StringComparison.OrdinalIgnoreCase)) == true)
+        {
+            report.Errors.Add($"{visibleMgef.EditorID} still carries PDV_T3DailyLowHealthSaveEffect; dedicated vanilla-shaped capstone must own the script.");
+        }
     }
 
     var healSpell = RequireRecord<Spell>(index, capstone.HealSpellEditorId!);
@@ -2266,7 +2282,6 @@ static void CheckDedicatedCapstoneFallback(
         report.Errors.Add($"{healSpell.EditorID} does not use RestoreHealthFFSelf at magnitude {capstone.HealMagnitude}.");
     }
 
-    var scriptEffect = RequireRecord<MagicEffect>(index, capstone.ScriptEffectEditorId!);
     if (scriptEffect.Archetype is not MagicEffectArchetype archetype || archetype.Type != MagicEffectArchetype.TypeEnum.Script)
     {
         report.Errors.Add($"{scriptEffect.EditorID} is not a Script archetype magic effect.");
@@ -2330,6 +2345,30 @@ static void CheckFloatProperty(
     {
         report.Errors.Add($"{effectEditorId} {propertyName} is not {expectedValue}.");
     }
+}
+
+// Find the magic effect of a spell that carries a given attached script, scanning ALL of the spell's
+// effects rather than assuming Effects[0]. The save script can ride any effect index (e.g. a capstone
+// that orders its stat effects first), so role-based lookup is the safe form. Returns null if none.
+static MagicEffect? FindMagicEffectWithScriptForSpell(Dictionary<string, ISkyrimMajorRecordGetter> index, string spellEditorId, string scriptName)
+{
+    var spell = RequireRecord<Spell>(index, spellEditorId);
+    foreach (var effectEntry in spell.Effects)
+    {
+        var link = effectEntry.BaseEffect;
+        if (link is null || link.IsNull)
+        {
+            continue;
+        }
+
+        var mgef = index.Values.OfType<MagicEffect>().FirstOrDefault(candidate => candidate.FormKey.Equals(link.FormKey));
+        if (mgef?.VirtualMachineAdapter?.Scripts.Any(script => string.Equals(script.Name, scriptName, StringComparison.OrdinalIgnoreCase)) == true)
+        {
+            return mgef;
+        }
+    }
+
+    return null;
 }
 
 static MagicEffect RequireFirstMagicEffectForSpell(Dictionary<string, ISkyrimMajorRecordGetter> index, string spellEditorId)

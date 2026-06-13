@@ -15,10 +15,13 @@ var dryRun = args.Contains("--dry-run");
 var createMissing = args.Contains("--create-missing");
 var checkPlacements = args.Contains("--check-placements");
 var authorRewards = args.Contains("--author-rewards");
+var authorPhaseBlessings = args.Contains("--author-phase-blessings");
+var authorPosture = args.Contains("--author-posture");
 var fixBaanDar = args.Contains("--fix-baandar");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var manifestPath = Path.GetFullPath(GetArg(args, "--manifest") ?? defaultManifest);
 var rewardsSpecPath = Path.GetFullPath(GetArg(args, "--rewards-spec") ?? @"references\authoring\PDV_KhajiitRewardRecords.spec.json");
+var phaseBlessingsSpecPath = Path.GetFullPath(GetArg(args, "--phase-spec") ?? @"references\authoring\PDV_KhajiitPhaseBlessings.spec.json");
 
 var report = new AuthorReport
 {
@@ -39,6 +42,20 @@ try
     if (authorRewards)
     {
         AuthorRewards(espPath, rewardsSpecPath, dryRun, report);
+        report.Status = report.Errors.Count == 0 ? "PASS" : "FAIL";
+        return report.Status == "PASS" ? 0 : 1;
+    }
+
+    if (authorPhaseBlessings)
+    {
+        AuthorPhaseBlessings(espPath, phaseBlessingsSpecPath, dryRun, report);
+        report.Status = report.Errors.Count == 0 ? "PASS" : "FAIL";
+        return report.Status == "PASS" ? 0 : 1;
+    }
+
+    if (authorPosture)
+    {
+        AuthorPosture(espPath, dryRun, report);
         report.Status = report.Errors.Count == 0 ? "PASS" : "FAIL";
         return report.Status == "PASS" ? 0 : 1;
     }
@@ -520,6 +537,205 @@ static void AuthorRewards(string espPath, string specPath, bool dryRun, AuthorRe
     WriteModIfNeeded(mod, espPath, dryRun, report, "phase20-khajiit-rewards");
 }
 
+// Author the five Lattice phase-blessing SPEL+MGEF records (one small stat blessing per presiding
+// moon-god) and fill the already-declared PDV_Bless_Khajiit_Phase_* manager properties. Records are
+// authored as ValueModifier abilities to match the shipped Khajiit rate-mult reward convention
+// (Lunar T1 + Khenarthi T2). Grant/removal is owned by SyncKhajiitPhaseBlessing() at dawn; until
+// these records exist the properties are None and the bonus silently never applies.
+static void AuthorPhaseBlessings(string espPath, string specPath, bool dryRun, AuthorReport report)
+{
+    if (!File.Exists(specPath))
+    {
+        throw new FileNotFoundException("Khajiit phase-blessings spec not found.", specPath);
+    }
+
+    var spec = JsonSerializer.Deserialize<PhaseBlessingsSpec>(File.ReadAllText(specPath), new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+        ?? throw new InvalidOperationException("Khajiit phase-blessings spec did not parse.");
+
+    if (spec.records is null || spec.records.Count == 0)
+    {
+        throw new InvalidOperationException("Khajiit phase-blessings spec has no records.");
+    }
+
+    var mod = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
+    var index = BuildIndex(mod);
+    var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
+    var manager = RequireRecord<Quest>(index, managerRecord);
+
+    var managerProps = new List<ScriptProperty>();
+    foreach (var record in spec.records)
+    {
+        if (string.IsNullOrWhiteSpace(record.editorId) || record.mgef is null || string.IsNullOrWhiteSpace(record.mgef.actorValue))
+        {
+            throw new InvalidOperationException($"Phase-blessing record metadata incomplete for {record.editorId ?? "(unknown)"}.");
+        }
+
+        // Guard the cap rule from the spec (max +5 flat / +5%).
+        if (record.mgef.magnitude > 5.0f)
+        {
+            throw new InvalidOperationException($"{record.editorId} magnitude {record.mgef.magnitude} exceeds the +5 phase-blessing cap.");
+        }
+
+        var effect = new RewardsSpecEffect
+        {
+            actorValue = record.mgef.actorValue,
+            magnitude = record.mgef.magnitude,
+            nightOnly = false
+        };
+
+        var spell = BuildSpell(
+            mod,
+            index,
+            allocator,
+            record.editorId!,
+            record.spellName ?? record.editorId!,
+            record.description ?? string.Empty,
+            new List<RewardsSpecEffect> { effect },
+            report);
+        managerProps.Add(ObjectProp(record.editorId!, spell.FormKey));
+    }
+
+    WireQuestScript(manager, "PDV__ManagerQuest", managerProps);
+    report.Actions.Add($"Wired {managerProps.Count} Khajiit phase-blessing properties on PDV__ManagerQuest.");
+
+    WriteModIfNeeded(mod, espPath, dryRun, report, "phase20-khajiit-phaseblessings");
+}
+
+// Author the Khajiit Lunar Lattice curse-posture surface: the PDV_State_KhajiitLunarPosture
+// StateTrack quest (Normal/Strained/Corrupted/ShadowDrift) and the five god-voice/narrator
+// curse-transition MessageBoxes from RaceContent_Manifest Section 14.11, then wire the matching
+// manager properties. Posture VALUE is owned at runtime by PDV__ManagerQuest.RefreshKhajiitLunarPosture.
+static void AuthorPosture(string espPath, bool dryRun, AuthorReport report)
+{
+    var mod = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
+    var index = BuildIndex(mod);
+    var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
+    var manager = RequireRecord<Quest>(index, managerRecord);
+    var debugGlobal = RequireRecord<Global>(index, "PDV_GLO_DebugLevel");
+
+    var managerProps = new List<ScriptProperty>();
+
+    // 1) StateTrack quest (StorageUtil-backed, no StateGlobal -- mirrors PDV_State_ArgonianHistPosture).
+    var track = EnsureQuestRecord(mod, index, allocator, "PDV_State_KhajiitLunarPosture", report);
+    track.Name = Tx("Khajiit Lunar Posture");
+    WireQuestScript(track, "PDV_StateTrack", new ScriptProperty[]
+    {
+        StringProp("TrackName", "KhajiitLunarPosture"),
+        ObjectProp("PDV_GLO_DebugLevel", debugGlobal.FormKey),
+        StringListProp("StateLabels", new[] { "Normal", "Strained", "Corrupted", "ShadowDrift" }),
+    });
+    managerProps.Add(ObjectProp("PDV_KhajiitLunarPostureTrack", track.FormKey));
+
+    // 2) Five curse-transition MessageBoxes (Section 14.11).
+    foreach (var msg in KhajiitCurseMessages())
+    {
+        var record = EnsureMessageBox(mod, index, allocator, msg.EditorId, msg.Title, msg.Body, report);
+        managerProps.Add(ObjectProp(msg.EditorId, record.FormKey));
+    }
+
+    WireQuestScript(manager, "PDV__ManagerQuest", managerProps);
+    report.Actions.Add($"Wired {managerProps.Count} Khajiit posture/curse-message properties on PDV__ManagerQuest.");
+
+    WriteModIfNeeded(mod, espPath, dryRun, report, "phase20-khajiit-posture");
+}
+
+static (string EditorId, string Title, string Body)[] KhajiitCurseMessages() => new[]
+{
+    ("PDV_Msg_Khajiit_CurseState_VampireOnset", "The Lattice Corrupted",
+        "The thirst has taken you, little moon. The Lattice does not cast you out -- the moons do not disown their own -- but the caravans will fear you, and rightly. I will not look away. Few of the others can say the same."),
+    ("PDV_Msg_Khajiit_CurseState_VampireCured", "The Lattice Clears",
+        "The thirst is gone. The corruption lifts from the Lattice, and the caravans may learn your face again. Walk back into the moonlight. It was always waiting."),
+    ("PDV_Msg_Khajiit_CurseState_WerewolfOnset", "A Competing Shape",
+        "Hircine has given you another shape. The moons are about form, and you carry one too many now. You are still Khajiit -- strained, watched, but not erased. The community will fear the wolf. Hold to the road."),
+    ("PDV_Msg_Khajiit_CurseState_WerewolfCured", "One Shape Again",
+        "The wolf is set down, little moon. The Lattice holds a single shape once more, and the extra form no longer pulls against the moons. The caravans will lose their fear in time. The road is yours again."),
+    ("PDV_Msg_Khajiit_CurseState_ShadowDriftEntry", "The Shadow Between Stars",
+        "You have lived too long in the shadow -- night-only, predatory, drawn to the dark between the moons. The Lattice loosens its hold. Khenarthi's road and Azurah's twilight both feel far away now."),
+};
+
+static Quest EnsureQuestRecord(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    string editorId,
+    AuthorReport report)
+{
+    if (index.TryGetValue(editorId, out var existing))
+    {
+        if (existing is not Quest typed)
+        {
+            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected Quest.");
+        }
+        typed.FormVersion = 44;
+        return typed;
+    }
+
+    var quest = new Quest(allocator.Next(), SkyrimRelease.SkyrimSE)
+    {
+        EditorID = editorId,
+        FormVersion = 44
+    };
+    mod.Quests.Add(quest);
+    index[editorId] = quest;
+    report.Actions.Add($"Created quest {editorId}.");
+    return quest;
+}
+
+static Message EnsureMessageBox(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    string editorId,
+    string title,
+    string body,
+    AuthorReport report)
+{
+    if (title.Any(ch => ch > 127) || body.Any(ch => ch > 127))
+    {
+        throw new InvalidOperationException($"{editorId} message text must be ASCII-safe.");
+    }
+
+    Message record;
+    if (index.TryGetValue(editorId, out var existing))
+    {
+        if (existing is not Message typed)
+        {
+            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected Message.");
+        }
+        record = typed;
+    }
+    else
+    {
+        record = new Message(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.Messages.Add(record);
+        index[editorId] = record;
+        report.Actions.Add($"Created messagebox {editorId}.");
+    }
+
+    record.EditorID = editorId;
+    record.FormVersion = 44;
+    record.Name = Tx(title);
+    record.Description = Tx(body);
+    record.Flags = Message.Flag.MessageBox;
+    record.MenuButtons.Clear();
+    record.MenuButtons.Add(new MessageButton { Text = Tx("OK") });
+    return record;
+}
+
+static ScriptStringListProperty StringListProp(string name, IEnumerable<string> values)
+{
+    var prop = new ScriptStringListProperty
+    {
+        Name = name,
+        Flags = ScriptProperty.Flag.Edited
+    };
+    foreach (var value in values)
+    {
+        prop.Data.Add(value);
+    }
+    return prop;
+}
+
 static Quest EnsureDeityQuest(
     SkyrimMod mod,
     Dictionary<string, ISkyrimMajorRecordGetter> index,
@@ -856,4 +1072,26 @@ sealed class RewardsSpecEffect
     public string? actorValue { get; set; }
     public float magnitude { get; set; }
     public bool nightOnly { get; set; }
+}
+
+sealed class PhaseBlessingsSpec
+{
+    public List<PhaseBlessingRecord>? records { get; set; }
+}
+
+sealed class PhaseBlessingRecord
+{
+    public string? editorId { get; set; }
+    public string? spellName { get; set; }
+    public string? effect { get; set; }
+    public PhaseBlessingMgef? mgef { get; set; }
+    public string? description { get; set; }
+}
+
+sealed class PhaseBlessingMgef
+{
+    public string? archetype { get; set; }
+    public string? actorValue { get; set; }
+    public float magnitude { get; set; }
+    public string? note { get; set; }
 }

@@ -336,24 +336,26 @@ static void CheckRacePacket(
             report.Errors.Add($"{effect.EditorID} is not a value modifier for {definition.actorValue}.");
         }
 
-        if (index < spell.Effects.Count)
+        // Match the on-disk spell effect to the contract effect by BaseEffect (role), not by list
+        // position: a spell's effects can be authored or reordered in any order (e.g. a capstone
+        // whose save effect is appended last), so a positional pairing would compare the wrong effect.
+        var spellEffect = spell.Effects.FirstOrDefault(candidate => candidate.BaseEffect.FormKey.Equals(effect.FormKey));
+        if (spellEffect is null)
         {
-            var spellEffect = spell.Effects[index];
-            if (!spellEffect.BaseEffect.FormKey.Equals(effect.FormKey))
-            {
-                report.Errors.Add($"{race.spellEditorId} effect {index} points at {spellEffect.BaseEffect.FormKey}, expected {effect.FormKey}.");
-            }
-
+            report.Errors.Add($"{race.spellEditorId} is missing an effect with BaseEffect {effect.EditorID} ({effect.FormKey}).");
+        }
+        else
+        {
             if (Math.Abs(spellEffect.Data?.Magnitude - definition.magnitude ?? definition.magnitude) > 0.001f
                 || spellEffect.Data?.Area != definition.area
                 || spellEffect.Data?.Duration != definition.duration)
             {
-                report.Errors.Add($"{race.spellEditorId} effect {index} magnitude/area/duration does not match the reward contract.");
+                report.Errors.Add($"{race.spellEditorId} effect {effect.EditorID} magnitude/area/duration does not match the reward contract.");
             }
 
             if (definition.nightOnly && spellEffect.Conditions.Count < 2)
             {
-                report.Errors.Add($"{race.spellEditorId} effect {index} is marked night-only but is missing time conditions.");
+                report.Errors.Add($"{race.spellEditorId} effect {effect.EditorID} is marked night-only but is missing time conditions.");
             }
         }
     }

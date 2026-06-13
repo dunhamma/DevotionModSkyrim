@@ -326,7 +326,12 @@ function verifyVmadProperty(operation, targetResolution, readbackRecord) {
 
 function verifyArtifact(operation, targetResolution, readbackRecord, kind) {
   const artifacts = readbackRecord.artifacts || [];
-  const match = artifacts.find((artifact) => !artifact.kind || equals(artifact.kind, kind));
+  // Prefer the artifact whose kind matches the requested role; only fall back to an untagged
+  // artifact when the record carries no kinded artifacts at all -- otherwise a stale untagged
+  // entry at index 0 could shadow a fresh kinded one (or mask a missing one).
+  const hasKinded = artifacts.some((artifact) => artifact.kind);
+  const match = artifacts.find((artifact) => equals(artifact.kind, kind))
+    || (hasKinded ? undefined : artifacts.find((artifact) => !artifact.kind));
   if (match && match.exists !== false && match.fresh !== false) {
     return result(operation, "PASS", `${kind.toUpperCase()} artifact is present and fresh.`, { targetResolution, artifact: match });
   }
