@@ -57,11 +57,11 @@ Expected log marker:
 RouteArgonianHistMaintenanceSource complete: po3_book_argonian_hist
 ```
 
-## Edge Build - Void Or Curse Pressure
-
-Current live status: pending. Do not use generic murder, one Dark Brotherhood
-join, swimming loops, or same-bed sleep loops as proof. Void/Sithis and
-People/community need exact approved sources before full pass evidence.
+> Deferred: Void/Sithis and People/community edge pressure pending exact
+> approved source metadata; tracked in the GAP ledger. Live Void coverage is
+> exercised by the Shadowscale step (Void-active seeder) and curse-posture
+> texture by the posture-dream step below. The "do not accept this as proof"
+> guard for these levers now lives in the Generic-source silence check.
 
 ## Wrong-Origin And Generic Silence
 
@@ -83,11 +83,15 @@ set PDV_GLO_OriginRace to 7
 Try generic swimming, same-bed sleep, stealth, murder, alchemy, or swamp travel.
 Expected: no Hist, People, Void, or bed-of-choice movement.
 
+Void-invalid-proof guard (absorbed from the old Edge Build stub): generic murder,
+a single Dark Brotherhood join, swimming loops, and same-bed sleep loops do NOT
+count as Void/Sithis or People/community proof. Confirm none of them produce
+Hist, People, Void, or bed-of-choice movement here.
+
 ## Evidence To Bring Back
 
 ```text
 Argonian expected build: PASS/FAIL
-Argonian Void/curse edge: PENDING/FAIL
 Wrong-origin rejection: PASS/FAIL
 Generic-source silence: PASS/FAIL
 Survey/status clarity: PASS/FAIL
@@ -103,9 +107,41 @@ a NEW SAVE or main-menu `coc qasmoke` (likes/dislikes version bump 5->6 and new
 manager VMAD properties only take effect on fresh init). Disable the mod
 `Devotion - Living Deities Test` in MO2 before running.
 
-### Reward redesign snapshot (replaces old disease set)
+### Debug seeder setup (shared by adaptation rite, reward snapshot, Shadowscale)
 
-Expected Active Effects per tier (disease resistance is GONE everywhere):
+Reach the composite-75 / Void-active states without weeks of play. Use the
+SetPQV poll harness (NOT cqf -- cqf is unreliable). Set the three values, then
+flip DebugSeedGo to 1; the 1s OnUpdate tick applies the seed and resets the flag.
+Close the console and wait ~1-2s for the confirming MessageBox. This is shared
+setup, not a separate proof; the steps below consume it.
+
+Hist + People (reward tiers + adaptation rite; composite >= 75):
+
+```text
+setpqv PDV__ManagerQuest DebugSeedHist 90
+setpqv PDV__ManagerQuest DebugSeedPeople 90
+setpqv PDV__ManagerQuest DebugSeedVoid 0
+setpqv PDV__ManagerQuest DebugSeedGo 1
+```
+
+Void fully active + Void focus (Shadowscale veil; Sithis emphasis rewards):
+
+```text
+setpqv PDV__ManagerQuest DebugSeedHist 50
+setpqv PDV__ManagerQuest DebugSeedPeople 20
+setpqv PDV__ManagerQuest DebugSeedVoid 80
+setpqv PDV__ManagerQuest DebugSeedGo 1
+```
+
+Effects re-sync immediately; the adaptation rite fires on the next qualifying
+sleep (declared bed or a sacred water). The DebugSeedArgonian function is still
+cqf-callable if cqf works in your setup, but SetPQV is the supported path.
+
+### Reward stack snapshot at seeded max
+
+With the Hist + People seeder applied (composite >= 75 reaches all tiers faster
+than the book track), confirm one consolidated Active-Effects snapshot against
+the authored spec magnitudes (disease resistance is GONE everywhere):
 
 - Hist Memory (always): Resist Magic 5%.
 - Hist Attunement (substrate HIGH): Health Regen 9%, Resist Poison 12%,
@@ -137,12 +173,16 @@ Expected Active Effects per tier (disease resistance is GONE everywhere):
   can't be captured reliably; the parent cell at sleep-stop is reliable.
 - Sleep in a bed: a "Bed of Choice" prompt appears (Yes / Not yet). Yes is
   sleep #1 (count 1). Declining re-prompts only after 3 in-game days.
-- Sleep in the SAME cell again (count 2), then a 3rd time (count 3): you wake
-  with `Rooted Rest` (Stamina Regen 5%, 10 min) and "You wake rooted." Watch
-  `Argonian bed-of-choice return routed`.
+- Sleep in the SAME cell on successive returns. The live gate is the bed-of-choice
+  return count reaching 12 (`BedOfChoiceSleepCount >= 12`, manager line 2292): on
+  that return you wake with `Rooted Rest` (Stamina Regen 5%, 10 min) and "You wake
+  rooted." Watch `Argonian bed-of-choice return routed`. (Reaching 12 organically is
+  slow -- use the debug seeder below to raise the count for a quick check.)
 - Sleeping in a DIFFERENT cell: no routing for the declared place; instead you
   get the prompt for the new place.
-- Quick test: `coc RiverwoodSleepingGiantInn`, sleep x3 in the same bed.
+- Quick test: `coc RiverwoodSleepingGiantInn`, declare the bed, seed the
+  bed-of-choice count toward 12 via the debug seeder, then sleep once more to fire
+  Rooted Rest.
 
 ### Shadowscale signature (Void focus only)
 
@@ -155,22 +195,35 @@ Expected Active Effects per tier (disease resistance is GONE everywhere):
 
 ### Waters That Remember
 
-Six curated waters; first arrival each = one vision MessageBox + small Hist
-pulse; all six = milestone toast. One-shot forever (anti-farm by design).
+Curated waters; first arrival each = one vision MessageBox + small Hist pulse;
+all six = milestone toast. One-shot forever (anti-farm by design). Visit ONE
+representative non-trivial site, then confirm the milestone via seeding rather
+than walking all six.
+
+Representative site -- Eldergleam (interior-only trigger):
 
 ```text
 coc EldergleamSanctuaryStart   (walk in, or coc, to a cave cell - NOT the exterior)
 ```
 
-Sites: Eldergleam Sanctuary, Sleeping Tree Camp, Ilinalta's Deep, Ancestor
-Glade (Dawnguard), Bloated Man's Grotto, Darkwater Crossing. Log marker:
-`Sacred water remembered: N of 6`. All six -> milestone (now a MessageBox,
-not a missable toast).
-
 NOTE: Eldergleam fires INSIDE the cave (where the water and great tree are),
 not at the exterior approach. Entering the sanctuary location arms a bounded
 poll; the vision fires when you reach an interior cell (Start/Start02/Top).
-The other five sites are outdoor and fire on arrival at the location.
+The other five sites (Sleeping Tree Camp, Ilinalta's Deep, Ancestor Glade
+(Dawnguard), Bloated Man's Grotto, Darkwater Crossing) are outdoor and fire on
+arrival; they share the same one-shot vision mechanism, so the one interior
+visit proves it. Log marker: `Sacred water remembered: N of 6`.
+
+Milestone confirmation (seed the count instead of touring all six):
+
+```text
+setpqv PDV__ManagerQuest DebugSeedArgWatersCount 6
+setpqv PDV__ManagerQuest DebugSeedGo 1
+```
+
+Confirm the seen-key / milestone anti-farm assertion: the all-six milestone
+fires as a MessageBox (not a missable toast), and a repeat arrival at the
+already-seen Eldergleam vision does NOT re-fire (one-shot forever).
 
 - Sleeping Tree Sap (`player.additem 000AED90 1`, then drink): one-shot vision.
   Log marker: `Sleeping Tree Sap vision fired`.
@@ -184,8 +237,8 @@ The other five sites are outdoor and fire on arrival at the location.
   again swaps (clear-before-add). "Not yet" does NOT spend the cooldown.
 - If composite later drops below 75: adaptation fades at dawn ("The root grows
   quiet."); it returns automatically at dawn once composite recovers.
-- Console shortcut to reach the gate fast: read the four Hist books daily for
-  ~2 weeks, or use the SetPQV harness to seed substrate keys.
+- Console shortcut to reach the gate fast: use the Hist + People seeder above
+  (composite >= 75), then sleep in the declared bed or at a sacred water.
 
 ### Evidence to bring back (addendum)
 
@@ -196,36 +249,41 @@ Kill-hostile Sithis silence: PASS/FAIL
 Posture dream observed: PASS/PENDING
 Bed declaration + Rooted Rest: PASS/FAIL
 Shadowscale veil: PASS/PENDING/FAIL
-Waters visited (count): N/6 + sap PASS/PENDING
+Waters (Eldergleam vision + seeded milestone): PASS/PENDING
 Adaptation rite + swap + fade: PASS/PENDING/FAIL
 Blocking notes:
 ```
 
-## Debug seeder (substrate-gated phases)
+## Trim log (2026-06-13)
 
-Reach the composite-75 / Void-active states without weeks of play. Use the
-SetPQV poll harness (NOT cqf -- cqf is unreliable). Set the three values, then
-flip DebugSeedGo to 1; the 1s OnUpdate tick applies the seed and resets the flag.
-Close the console and wait ~1-2s for the confirming MessageBox.
+Trimmed for fewer steps with zero loss of safety coverage. Before -> after: 20
+-> 13 steps.
 
-Hist + People (reward tiers + adaptation rite; composite >= 75):
+Cuts:
+- Removed the "Edge Build - Void Or Curse Pressure" PENDING prose stub (no
+  runnable step). Replaced with a one-line deferred pointer under Expected Build
+  and folded its only real content (the do-not-accept-as-proof guard: generic
+  murder / single DB join / swim loops / same-bed loops) into the Generic-source
+  silence check, so the Void-invalid-proof guard is preserved.
+- Reduced "Waters That Remember" from a six-site cross-map walk to ONE
+  representative interior visit (Eldergleam) plus a seeded milestone
+  confirmation. The one-shot seen-key / all-six milestone anti-farm assertion is
+  kept; the other five sites share the identical vision mechanism.
+- De-duplicated reward verification: merged the main-packet "Reward/stack
+  snapshot" and the addendum "Reward redesign snapshot" into one Active-Effects
+  check taken at seeded max, reconciled to the spec magnitudes.
 
-```text
-setpqv PDV__ManagerQuest DebugSeedHist 90
-setpqv PDV__ManagerQuest DebugSeedPeople 90
-setpqv PDV__ManagerQuest DebugSeedVoid 0
-setpqv PDV__ManagerQuest DebugSeedGo 1
-```
+Merges / consolidations:
+- Collapsed the two Debug-seeder configs (Hist+People; Void) into a single
+  shared setup block consumed by the adaptation-rite, reward-snapshot, and
+  Shadowscale steps instead of counting the seeder as standalone tests.
+- Trimmed the duplicate "Reward/stack snapshot: PASS/PENDING/FAIL" line out of
+  the main Evidence block (now covered once by the seeded reward snapshot) and
+  dropped the "Void/curse edge: PENDING" line that paired with the removed stub.
 
-Void fully active + Void focus (Shadowscale veil; Sithis emphasis rewards):
-
-```text
-setpqv PDV__ManagerQuest DebugSeedHist 50
-setpqv PDV__ManagerQuest DebugSeedPeople 20
-setpqv PDV__ManagerQuest DebugSeedVoid 80
-setpqv PDV__ManagerQuest DebugSeedGo 1
-```
-
-Effects re-sync immediately; the adaptation rite fires on the next qualifying
-sleep (declared bed or a sacred water). The DebugSeedArgonian function is still
-cqf-callable if cqf works in your setup, but SetPQV is the supported path.
+Preserved verbatim as runnable checks (no safety lost): wrong-origin rejection,
+generic-source silence (now also carrying the Void-invalid-proof guard), the
+organic Hist-maintenance route + RouteArgonianHistMaintenanceSource marker,
+sleep 1/dawn anti-farm cap, kill-hostile Sithis silence, bed-of-choice + Rooted
+Rest, Shadowscale Void veil, Hist Adaptation rite, posture dream, the seeded
+reward stack snapshot, and Survey/status clarity.

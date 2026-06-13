@@ -94,6 +94,26 @@ Expected in game:
 - Manual Survey Devotion shows Auri-El foundation and an Altmer source/favor
   state in fiction-facing wording.
 
+Reward/stack snapshot (folded in): the race reward is dawn-owned. Book reads
+prove source state, not the Active Effect; the reward sync runs through
+`ProcessDawn()` / `RunDawnApplySpellAndNeglectLayers()` and only grants the
+first-tier race reward when the patron state is active and the active deity is
+at least Seeker tier. After the normal dawn/update path, check Active Effects.
+Accepted visible stack proof for the book packet is:
+
+```text
+Altmer: Dawn Steadiness
+```
+
+The separate broad T1 reward contract `Altmer Orthodox Steadiness` remains
+patron/tier-gated. If that gate is not met, record the broad T1 reward as
+correctly pending rather than forcing it with debug commands. The expected log
+marker when the broad T1 reward is legitimately eligible:
+
+```text
+Race reward added: Altmer T1
+```
+
 After closing Skyrim, the expected checker is:
 
 ```powershell
@@ -137,9 +157,8 @@ Altmer crisis source accepted: Dragonborn identity
 RouteAltmerCrisisSource complete: 51 source 1
 ```
 
-## Repeat And Anti-Farm
-
-On the same disposable save, re-open the three books and re-run:
+Anti-farm (folded in): on the same disposable save, immediately re-run the
+stage once more:
 
 ```text
 setstage MQ104 160
@@ -150,8 +169,11 @@ Expected:
 - No stronger Altmer state is created from the repeat.
 - The Survey text does not escalate beyond the already earned source/crisis
   state.
-- If the book event does not fire again because Skyrim already marked the book
-  read, that is acceptable and should be recorded as "no repeat fire".
+
+Note: book-source anti-farm is structurally guaranteed by Skyrim's own "book
+already read" flag. If a re-opened book event does not fire again because Skyrim
+already marked the book read, that is acceptable and should be recorded as
+"no repeat fire".
 
 ## Wrong-Origin Rejection
 
@@ -194,41 +216,13 @@ Expected:
 - No new Survey source state.
 - No automatic Prisma panel.
 
-## Reward And Stack Snapshot
-
-The race reward is dawn-owned. Book reads prove source state, but they do not by
-themselves prove the Active Effect. The reward sync runs through
-`ProcessDawn()` / `RunDawnApplySpellAndNeglectLayers()` and only grants the
-first-tier race reward when the patron state is active and the active deity is
-at least Seeker tier.
-
-Check Active Effects after the normal dawn/update path. For the current book
-packet, accepted visible stack proof is:
-
-```text
-Altmer: Dawn Steadiness
-```
-
-If the separate patron/tier-gated broad T1 reward is eligible, the expected
-reward contract remains:
-
-```text
-Altmer Orthodox Steadiness
-```
-
-Expected log marker when the broad T1 reward is eligible:
-
-```text
-Race reward added: Altmer T1
-```
-
-If the patron/tier gate is not met, record that the reward is correctly pending
-rather than forcing it with debug commands.
-
 ## Optional Curse Edge
 
 Only run this on a disposable save. This checks that curse pressure suppresses
 or caps Altmer favor instead of becoming a stronger alternate build.
+
+Route in-game debug through the MCM dev page (per project MEMORY: this Skyrim
+profile does not use `cqf`). The equivalent debug action is `DebugForceCurseVampire`:
 
 ```text
 cqf PDV__ManagerQuest DebugForceCurseVampire
@@ -240,15 +234,18 @@ Expected:
 
 - Altmer favor is suppressed or capped by curse posture.
 - Survey/status explains the curse posture.
-- Restore on the same disposable save if needed:
+- Restore on the same disposable save if needed (MCM dev page action
+  `DebugForceCurseNone`):
 
 ```text
 cqf PDV__ManagerQuest DebugForceCurseNone
 ```
 
-## Evidence To Bring Back
+## Report This
 
-Minimum evidence:
+Closing report block (evidence + verdict in one place).
+
+Minimum evidence to bring back:
 
 - Screenshot of Survey after the three book sources.
 - Screenshot of Survey after MQ104 stage 160, unless using the already captured
@@ -266,9 +263,7 @@ node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race altmer --stri
 rg -n "RouteAltmer|Altmer source favor|Altmer crisis|Race reward added: Altmer T1|po3_queststage_altmer_mq104" "$env:USERPROFILE\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log"
 ```
 
-## Verdict
-
-Use this verdict shape when reporting back:
+Verdict shape when reporting back:
 
 ```text
 Altmer expected build: PASS
@@ -279,3 +274,27 @@ Repeat anti-farm: PASS
 Reward/stack snapshot: PASS - Active Effects shows Altmer: Dawn Steadiness
 Blocking notes: no packet blocker; final-world placement remains separate
 ```
+
+## Trim log (2026-06-13)
+
+Trimmed per tools/_audit_trims.json (Altmer entry). Before -> after: 10 -> 6
+test steps. Zero loss of safety coverage; all seven keepCritical levers
+preserved.
+
+- CUT "Repeat And Anti-Farm" standalone section. The crisis-repeat anti-farm
+  check (re-run `setstage MQ104 160` once, confirm Survey does not escalate)
+  was folded into Edge Build. The book re-read was dropped as a structural
+  no-op (Skyrim's "book already read" flag), with the "no repeat fire"
+  allowance retained as a note in Edge Build. Anti-farm coverage preserved.
+- CUT "Reward And Stack Snapshot" standalone section. The Active-Effects
+  observation (`Altmer: Dawn Steadiness` visible; broad T1 `Altmer Orthodox
+  Steadiness` correctly pending behind the patron/tier gate) was folded into
+  Expected Build. Reward-record enablement is already machine-proven
+  (1280/0 readback), so this confirms the gate behaves rather than re-proving
+  the record exists. Reward lever preserved.
+- MERGED "Evidence To Bring Back" + "Verdict" into one closing "Report This"
+  block. Pure reporting scaffolding; no coverage lost.
+- Preserved verbatim as runnable steps: Preflight origin gate, Expected Build
+  three-book route + reward snapshot, Edge Build MQ104 crisis + anti-farm,
+  Wrong-Origin Rejection, Generic-Source Silence, Optional Curse Edge, and the
+  post-run runtime_check machine gate.

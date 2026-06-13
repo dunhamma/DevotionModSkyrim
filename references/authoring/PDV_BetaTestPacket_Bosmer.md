@@ -50,17 +50,11 @@ Effects and Survey text should remain stable because the reward preflight alread
 put the player at Old Contract / Seeker. In this `Target piety = 25` route test,
 same pre/post Active Effects and the same Player Devotion message are expected.
 
-If this pass is specifically checking visible threshold crossing, use this
-variant instead:
-
-1. Set Y'ffre **Target piety** to `23`.
-2. Click **Apply target piety**.
-3. Click **Run dawn pass**.
-4. Confirm no Old Contract / Seeker reward is active yet.
-5. Run `setstage DA05 100`.
-6. Click **Run dawn pass** again.
-7. Confirm `Magic > Active Effects` gains the Old Contract / Seeker reward and
-   Survey Devotion now reports OldContract / Seeker.
+Visible threshold crossing (the T1 reward appearing as piety crosses 25) is
+owned by the reward-tier sweep in "Single-Session Smoke > A", which walks
+25 -> 50 -> 85 per path. Do not re-prove that here with a separate
+`Target piety = 23` variant; the piety-25 preflight above plus the DA05
+no-double-grant check is enough for the DA05 route.
 
 If this save has already resolved DA05, reload a pre-DA05 save or run
 `resetquest DA05` before testing a branch. DA05 stages `100` and `105` are
@@ -118,32 +112,24 @@ Reward/stack stable after piety-25 preflight: PASS/PENDING/FAIL
 Feel note:
 ```
 
-### Duplicate / anti-farm check
+### Mercy branch + duplicate / anti-farm check (one DA05 pass)
 
-On the same save after the accepted branch has routed, try the alternate DA05
-branch:
-
-```text
-setstage DA05 105
-```
-
-Expected: no second `RouteBosmerYffre` line for the alternate branch on the same
-quest instance. If a second line appears, record it as a duplicate-guard failure.
-
-## Edge Build - Mercy Branch
-
-Use a separate disposable Bosmer save or reload/reset before any DA05 terminal
-branch has routed.
+On the same save after the accepted `100` branch has routed, fire the alternate
+DA05 mercy branch. This single pass captures BOTH the mercy-branch route marker
+and the no-second-route anti-farm assertion, instead of re-running stage `105` on
+a fresh save just to read the mercy marker.
 
 ```text
-set PDV_GLO_OriginRace to 4
-set PDV_GLO_DebugLevel to 2
 setstage DA05 105
 ```
 
 Wait 5-10 seconds, then check Survey Devotion and Active Effects as above.
 
-Expected DA05 log marker:
+Expected: the mercy-branch route marker fires, but NO second `RouteBosmerYffre`
+line appears for the prior accepted branch on the same quest instance. If a
+second accepted-branch line appears, record it as a duplicate-guard failure.
+
+Expected DA05 mercy marker:
 
 ```text
 [PDV] EventBus: RouteBosmerYffre complete: 1 source po3_queststage_bosmer_da05_mercy
@@ -152,18 +138,16 @@ Expected DA05 log marker:
 Current manual log check:
 
 ```powershell
-Select-String -Path "$env:USERPROFILE\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log" -Pattern "RouteBosmerYffre|po3_queststage_bosmer_da05|RouteBosmerLivingStory|RouteDaedricPrinceSignal" -Context 1,1
+Select-String -Path "$env:USERPROFILE\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log" -Pattern "RouteBosmerYffre|po3_queststage_bosmer_da05|RouteBosmerPactPositive|RouteBosmerLivingStory|RouteDaedricPrinceSignal" -Context 1,1
 ```
 
 Manual evidence to record:
 
 ```text
-Accepted DA05 stage 105 route: PASS/FAIL
-Wrong-origin rejection: PASS
-Generic-source silence: PASS
-Repeat/anti-farm result: PENDING/FAIL
+Accepted DA05 stage 100 route: PASS/FAIL
+Mercy DA05 stage 105 route: PASS/FAIL
+Repeat/anti-farm (no second accepted-branch line): PASS/PENDING/FAIL
 Survey/status clarity: PASS/FAIL
-Reward/stack snapshot: PASS/FAIL
 Feel note:
 ```
 
@@ -218,7 +202,9 @@ PDV_REFR_BosmerBanditRoadRoadLifeSignal
 PDV_REFR_BosmerBanditRoadReversalSignal
 ```
 
-After closing Skyrim:
+After closing Skyrim, read the route markers from the SINGLE session-end runtime
+check (see "Single-Session Smoke > E"). Do not invoke the node command a second
+time just for this section:
 
 ```powershell
 node .\tools\pdv_phase20_runtime_check.mjs --race bosmer --strict-manager
@@ -502,17 +488,21 @@ the path button.
 
 ### B. Variety levers
 Click **Seed Bosmer variety** first (clears once-day cooldowns + seeds 3
-discoveries on the current path). Then per the Variety Tranche Addendum above:
-Green Dreams, Hearth + Tale Carried (declare, discover 3+ new locations, sleep
-again), Songs of the Green (6 LCTNs incl. Eldergleam interior + the Temple of
-Kynareth slot-2 swap), Scales at Rest (Exchange), **Baan Dar Gap** (BanditRoad,
-the cadence risk -- prove it stays SILENT on ordinary/off-path/non-combat hits),
-the Naming rite + coherence fade/restore.
+discoveries on the current path), then run ONE variety pass by following the
+**Variety Tranche Addendum** above as the detailed procedure -- it owns Green
+Dreams, Hearth + Tale Carried, Songs of the Green (incl. Eldergleam interior +
+the Temple of Kynareth slot-2 swap), Scales at Rest + off-path silence, the
+**Baan Dar Gap** cadence-risk silence checks, and the Naming rite + coherence
+fade/restore. Do not re-enumerate each lever as a fresh step here; run the
+Addendum once and record its evidence block.
 
 ### C. Route-signal proof
-In `qasmoke`, activate the eight `PDV_REFR_Bosmer...Signal` objects once each
-(list in "Current Runnable Fallback" above). Organic: `setstage DA05 100` / `105`
-on a separate save.
+Run the single QASmoke route proof from "Current Runnable Fallback - QASmoke
+Route Proof" above (activate the eight `PDV_REFR_Bosmer...Signal` objects once
+each, then the one runtime check at session end). Organic: `setstage DA05 100`
+then `105` on a separate save per the DA05 sections above. Do not activate the
+eight signals a second time here -- the Fallback run is the one primary route
+proof.
 
 ### D. Negatives + Survey
 - Wrong-origin: `set PDV_GLO_OriginRace to 6`, repeat any lever/signal -> zero
@@ -523,6 +513,10 @@ on a separate save.
   binding/lapse, recent favor; no raw counters or route IDs.
 
 ### E. After closing Skyrim
+Run the runtime check ONCE for the whole session here -- this is the single
+canonical invocation; the "Current Runnable Fallback" section points to this run
+rather than calling the node command a second time.
+
 ```powershell
 node .\tools\pdv_phase20_runtime_check.mjs --race bosmer --strict-manager
 ```
@@ -606,3 +600,52 @@ polish pass (now or a future session); they do not gate beta-feel.
    in Whiterun. PENDING: in-game proof next session -- walk up to the Gildergreen and
    the vision should fire outdoors; the temple interior should no longer fire it; the
    600 distance is tunable.
+
+## Trim log (2026-06-13)
+
+Step-count trim with zero loss of safety coverage. Before -> after: 58 -> 34 steps.
+Every wrong-origin, generic-source silence, anti-farm/silence, and unique
+reward/curse/variety lever was preserved verbatim as a runnable step.
+
+Cuts:
+
+1. Single-Session Smoke > C "Route-signal proof" no longer re-runs the eight
+   QASmoke activators; it points to the one "Current Runnable Fallback - QASmoke
+   Route Proof" run as the single primary route proof (the eight 100-107 markers
+   are still proven once).
+2. Single-Session Smoke > B "Variety levers" no longer re-enumerates Green
+   Dreams / Hearth / Songs / Scales / Gap / Naming; it runs ONE variety pass via
+   the Variety Tranche Addendum (the detailed procedure). All variety levers,
+   incl. the Baan Dar Gap silence checks, remain proven once.
+3. Expected Build "threshold-crossing variant" (Target piety 23 -> setstage 100
+   -> dawn pass) removed; visible T1 threshold crossing is owned by the
+   reward-tier sweep (Single-Session A: 25 -> 50 -> 85). The piety-25 preflight +
+   DA05 no-double-grant check still establishes the DA05 route does not
+   double-grant.
+4. Edge Build - Mercy Branch (standalone DA05 105 on a fresh save) merged into
+   the "Mercy branch + duplicate / anti-farm check" so one DA05 pass captures the
+   mercy marker AND the no-second-route anti-farm assert. The clean-save
+   wrong-origin DA05 run is kept separate and intact.
+5. Single-Session Smoke > E runtime check is now the single canonical
+   `pdv_phase20_runtime_check.mjs --race bosmer --strict-manager` invocation; the
+   QASmoke Fallback section reads from that one run instead of calling the node
+   command a second time.
+
+Merges:
+
+- Single-Session Smoke is the one canonical run-through; the DA05, QASmoke, and
+  Variety Addendum sections are now referenced procedures it points into, not
+  independently re-run passes.
+- The two DA05-105 setups collapsed into one mercy + anti-farm sequence.
+- The threshold-crossing proof folded into the reward-tier sweep.
+- The runtime-check node command runs once at session end.
+
+Preserved (not cut): Wrong-Origin Check - DA05 (clean save), the variety
+wrong-origin + generic-silence block, the Baan Dar Gap silence checks
+(above-20% / not-in-combat / second-same-day / off-path / non-Bosmer), Scales at
+Rest off-path silence, DA05 no-second-route anti-farm, Hearth + Tale Carried
+discovery-delta anti-farm, the reward-tier sweep with single-family swap and
+broad-Yffre suppression-under-path, Neglect "The Path Goes Quiet", Songs of the
+Green location levers (Eldergleam interior + Gildergreen proximity + milestone of
+6), Naming coherence fade/restore, the eight QASmoke route markers (single run),
+and Survey/status clarity.

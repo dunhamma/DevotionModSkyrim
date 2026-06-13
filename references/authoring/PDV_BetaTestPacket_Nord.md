@@ -11,7 +11,7 @@ cap by itself.
 
 ## Preflight
 
-Use a disposable save.
+Use a disposable save. Run both set lines as one setup block:
 
 ```text
 set PDV_GLO_OriginRace to 0
@@ -22,19 +22,22 @@ Origin index `0` is Nord.
 
 ## Expected Build - Old Ways
 
-Add the approved Nord Old Ways books:
+Add one approved Nord Old Ways book for the primary route proof:
 
 ```text
 player.additem 000ED161 1
-player.additem 000ED02F 1
-player.additem 000E2FC6 1
 ```
 
-Read each book normally from inventory:
+Read it normally from inventory:
 
 - `000ED161` - `Book1CheapNordsArise`.
-- `000ED02F` - `Book2CommonDreamOfSovngarde`.
-- `000E2FC6` - `Book3ValuableSovngardeReexamination`.
+
+All three approved Old Ways books (`000ED161` NordsArise, `000ED02F`
+DreamOfSovngarde, `000E2FC6` SovngardeReexamination) route through the same
+`eventbus_150_po3_book_nord_old_ways` -> `HandleNordOldWaysState` ->
+`RouteNordOldWaysState` marker, so one representative read proves the route.
+The other two remain valid one-time identity signals for a fuller content pass
+but are not needed for route safety here.
 
 Expected in game:
 
@@ -42,6 +45,10 @@ Expected in game:
 - No forced full Prisma panel.
 - Survey Devotion explains broad/focused Old Ways, Kyne/Talos context, and
   current patron state without turning every Nord hook into a reward faucet.
+  (This single broad-state Survey clarity check covers the broad-vs-focused
+  reward-cap lever; the full focused-patron and pantheon-baseline survey
+  variants are runtime-proven in `PDV_Phase18_StatusNord_Runbook.md` and are
+  not re-walked here.)
 
 After closing Skyrim:
 
@@ -67,7 +74,8 @@ Read normally from inventory:
 
 - `000F683F` - `CR12TotemsOfHircine`.
 
-Expected log marker:
+Expected log marker (the unique curse/hunt-edge lever, route 72; not provable by
+the Old Ways book):
 
 ```text
 RouteNordHircineArkayEdge complete:
@@ -108,3 +116,19 @@ Reward/stack snapshot: PASS/PENDING/FAIL
 Blocking notes:
 ```
 
+## Trim log (2026-06-13)
+
+- CUT: Old Ways "read all three books" reduced to ONE representative read
+  (`000ED161` NordsArise). All three books hit the same
+  `RouteNordOldWaysState` route, so reading three proved the same route three
+  times. Other two books retained as documented optional identity signals.
+- CONSOLIDATED: the two preflight `set` lines presented as a single setup block
+  (cosmetic; no coverage lost).
+- CONSOLIDATED: Survey clarity kept as one broad-state check; focused-patron and
+  pantheon-baseline survey variants deferred to
+  `PDV_Phase18_StatusNord_Runbook.md` (already runtime-proven there) instead of
+  re-walking the full Phase 18 survey matrix.
+- PRESERVED verbatim as runnable steps: wrong-origin rejection, generic-source
+  silence (anti-farm), Old Ways book route + machine route marker, Hircine/Arkay
+  edge route marker, and the broad-vs-focused reward-cap Survey clarity check.
+- Step count: 11 -> 7.
