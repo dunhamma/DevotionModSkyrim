@@ -10,6 +10,9 @@
   "grantOwner": "PDV__ManagerQuest dawn/state logic after record readback",
   "globalStackRule": "One first-tier race reward active per player origin lane; suppress duplicate grants; remove stale first-tier race reward before adding another; never stack with a higher tier of the same race lane.",
   "dialogueBoundary": "V1 remains non-voiced. Reward text may surface through spell/effect descriptions, Survey/status, notifications, message boxes, MCM, books/notes, shrine/service gates, or Prisma after separate UI proof.",
+  "recordSourceOfTruth": "Live PlayerDevotion_Framework.esp reward SPEL/MGEF records (post commit 3d600bc all-races highest-tier consolidation + 2026-06-11 cumulative rebalance + reward_desc_regen). The per-race PDV_*RewardRecords.spec.json files and tools/pdv_phase2_reward_readback_audit.mjs (PASS 1280/0) are the authoritative reward verifier; this contract is reconciled to match those live records.",
+  "reconciledAt": "2026-06-13",
+  "reconciliationNote": "First-tier race reward packets (SPEL/MGEF effect editorIds, ActorValue, magnitude, and descriptions) reconciled from the live records so tools/pdv-phase20-reward-author -- --check matches on-disk state again. During consolidation several T1 reward MGEFs were renamed to PDV_MGEF_<Race>_<Lane>_T1_<ActorValue> and re-themed (e.g. Breton/Imperial -> HealRateMult, Dunmer/Redguard -> ResistMagic); magnitudes and player-facing text were regenerated from the cumulative tier values. Khajiit was already consolidation-correct and is unchanged.",
   "races": [
     {
       "race": "Altmer",
@@ -23,12 +26,12 @@
           "magicEffectEditorId": "PDV_MGEF_Bless_Altmer_Orthodox_T1",
           "displayName": "Altmer Orthodox Steadiness",
           "actorValue": "MagickaRateMult",
-          "magnitude": 3.0,
+          "magnitude": 4,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "Your discipline steadies the old Altmeri path without hiding the cost of the Dragonborn crisis.",
+      "playerFacingText": "You keep to the ancestral order. Magicka Regeneration +4%.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Altmer_Orthodox_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest dawn consolidation only after smoke; no event-time grant.",
       "stackCapRule": "Suppress while Altmer curse/crisis penalty effect is active unless manager explicitly resolves precedence.",
@@ -41,19 +44,19 @@
       "tier": "T1",
       "lane": "Hist maintenance and community posture",
       "spellEditorId": "PDV_Bless_Argonian_Hist_T1",
-      "magicEffectEditorId": "PDV_MGEF_Bless_Argonian_Hist_T1",
-      "displayName": "Argonian Hist Memory",
+      "magicEffectEditorId": "PDV_MGEF_Argonian_Hist_T1_HealRateMult",
+      "displayName": "Hist Communion - Faithful",
       "effects": [
         {
-          "magicEffectEditorId": "PDV_MGEF_Bless_Argonian_Hist_T1",
-          "displayName": "Argonian Hist Memory",
+          "magicEffectEditorId": "PDV_MGEF_Argonian_Hist_T1_HealRateMult",
+          "displayName": "Health Regeneration",
           "actorValue": "HealRateMult",
-          "magnitude": 3.0,
+          "magnitude": 5,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "The Hist path keeps you steady when you act for memory, people, and survival.",
+      "playerFacingText": "The Hist keeps a steadying hand on you. Health regenerates 5% faster.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Argonian_Hist_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest dawn/state logic after Hist posture smoke.",
       "stackCapRule": "Do not stack with Sithis-only edge rewards; manager chooses the active Argonian lane.",
@@ -66,19 +69,19 @@
       "tier": "T1",
       "lane": "Y'ffre living story and exchange parity",
       "spellEditorId": "PDV_Bless_Bosmer_Yffre_T1",
-      "magicEffectEditorId": "PDV_MGEF_Bless_Bosmer_Yffre_T1",
-      "displayName": "Bosmer Living Story",
+      "magicEffectEditorId": "PDV_MGEF_Bosmer_Yffre_T1_StaminaRateMult",
+      "displayName": "Y'ffre's Weave - Seeker",
       "effects": [
         {
-          "magicEffectEditorId": "PDV_MGEF_Bless_Bosmer_Yffre_T1",
-          "displayName": "Bosmer Living Story",
+          "magicEffectEditorId": "PDV_MGEF_Bosmer_Yffre_T1_StaminaRateMult",
+          "displayName": "Y'ffre's Weave - Seeker",
           "actorValue": "StaminaRateMult",
-          "magnitude": 3.0,
+          "magnitude": 4,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "The living story answers when pact, exchange, and road wisdom remain in balance.",
+      "playerFacingText": "The forest's story carries you a little. Stamina Regeneration +4%.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Bosmer_Yffre_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest Bosmer path state at dawn after smoke.",
       "stackCapRule": "Only one Bosmer path reward active; suppress when Baan Dar or Z'en lane is selected.",
@@ -91,19 +94,19 @@
       "tier": "T1",
       "lane": "Knightly vow, hidden art, and Green Way tradition choice",
       "spellEditorId": "PDV_Bless_Breton_Tradition_T1",
-      "magicEffectEditorId": "PDV_MGEF_Bless_Breton_Tradition_T1",
-      "displayName": "Breton Tradition",
+      "magicEffectEditorId": "PDV_MGEF_Breton_Tradition_T1_HealRateMult",
+      "displayName": "Tradition's Footing - Seeker",
       "effects": [
         {
-          "magicEffectEditorId": "PDV_MGEF_Bless_Breton_Tradition_T1",
-          "displayName": "Breton Tradition",
-          "actorValue": "ResistMagic",
-          "magnitude": 3.0,
+          "magicEffectEditorId": "PDV_MGEF_Breton_Tradition_T1_HealRateMult",
+          "displayName": "Tradition's Footing - Seeker",
+          "actorValue": "HealRateMult",
+          "magnitude": 4,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "Your chosen Breton tradition holds shape through vow, hidden art, or the green road.",
+      "playerFacingText": "Your chosen tradition steadies you. Health Regeneration +4%.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Breton_Tradition_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest Breton tradition state at dawn after smoke.",
       "stackCapRule": "Only the current Breton tradition T1 may be active; remove stale tradition effects on state change.",
@@ -116,19 +119,19 @@
       "tier": "T1",
       "lane": "Reclamation focus and ancestor discipline",
       "spellEditorId": "PDV_Bless_Dunmer_Reclamation_T1",
-      "magicEffectEditorId": "PDV_MGEF_Bless_Dunmer_Reclamation_T1",
-      "displayName": "Dunmer Reclamation",
+      "magicEffectEditorId": "PDV_MGEF_Dunmer_Reclamation_T1_ResistMagic",
+      "displayName": "Reclamation Communion - Faithful",
       "effects": [
         {
-          "magicEffectEditorId": "PDV_MGEF_Bless_Dunmer_Reclamation_T1",
-          "displayName": "Dunmer Reclamation",
-          "actorValue": "ResistFire",
-          "magnitude": 3.0,
+          "magicEffectEditorId": "PDV_MGEF_Dunmer_Reclamation_T1_ResistMagic",
+          "displayName": "Reclamation Communion - Faithful",
+          "actorValue": "ResistMagic",
+          "magnitude": 5,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "The Reclamations answer a disciplined path; deviation still carries a price.",
+      "playerFacingText": "The Reclamations keep a steadying ward on you. Magic Resistance +5%.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Dunmer_Reclamation_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest Dunmer focus state at dawn after smoke.",
       "stackCapRule": "Only one Reclamation focus reward active; deviation price suppresses the matching T1 when unresolved.",
@@ -141,19 +144,19 @@
       "tier": "T1",
       "lane": "Civic service, lawful patronage, and private/public Talos pressure",
       "spellEditorId": "PDV_Bless_Imperial_Civic_T1",
-      "magicEffectEditorId": "PDV_MGEF_Bless_Imperial_Civic_T1",
-      "displayName": "Imperial Civic Duty",
+      "magicEffectEditorId": "PDV_MGEF_Imperial_Civic_T1_HealRateMult",
+      "displayName": "Civic Faith - Seeker",
       "effects": [
         {
-          "magicEffectEditorId": "PDV_MGEF_Bless_Imperial_Civic_T1",
-          "displayName": "Imperial Civic Duty",
-          "actorValue": "SpeechcraftModifier",
-          "magnitude": 3.0,
+          "magicEffectEditorId": "PDV_MGEF_Imperial_Civic_T1_HealRateMult",
+          "displayName": "Civic Faith - Seeker",
+          "actorValue": "HealRateMult",
+          "magnitude": 4,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "Civic duty lends order to your worship, even where public and private loyalties diverge.",
+      "playerFacingText": "The Nine note your civic faith. Health Regeneration +4%.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Imperial_Civic_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest Imperial civic state at dawn after smoke.",
       "stackCapRule": "Do not stack civic T1 with an unresolved Talos-pressure penalty or private-Talos privilege.",
@@ -171,18 +174,18 @@
       "effects": [
         {
           "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen",
-          "displayName": "Khajiit Lunar Road - Stamina",
+          "displayName": "Stamina Regeneration",
           "actorValue": "StaminaRateMult",
-          "magnitude": 5.0,
+          "magnitude": 5,
           "area": 0,
           "duration": 0,
           "nightOnly": true
         },
         {
           "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist",
-          "displayName": "Khajiit Lunar Road - Disease",
+          "displayName": "Disease Resistance",
           "actorValue": "ResistDisease",
-          "magnitude": 15.0,
+          "magnitude": 15,
           "area": 0,
           "duration": 0,
           "nightOnly": true
@@ -201,19 +204,19 @@
       "tier": "T1",
       "lane": "Old ways, Kyne/Talos context, and Hircine/Arkay edge",
       "spellEditorId": "PDV_Bless_Nord_OldWays_T1",
-      "magicEffectEditorId": "PDV_MGEF_Bless_Nord_OldWays_T1",
-      "displayName": "Nord Old Ways",
+      "magicEffectEditorId": "PDV_MGEF_Nord_OldWays_T1_StaminaRateMult",
+      "displayName": "Old Ways - Seeker",
       "effects": [
         {
-          "magicEffectEditorId": "PDV_MGEF_Bless_Nord_OldWays_T1",
-          "displayName": "Nord Old Ways",
+          "magicEffectEditorId": "PDV_MGEF_Nord_OldWays_T1_StaminaRateMult",
+          "displayName": "Old Ways - Seeker",
           "actorValue": "StaminaRateMult",
-          "magnitude": 3.0,
+          "magnitude": 4,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "The old ways steady a Nord who keeps voice, kin, and hard choices in view.",
+      "playerFacingText": "The old roads and weather are companionable to you. Stamina Regeneration +4%.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Nord_OldWays_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest Nord broad-lane state at dawn after smoke.",
       "stackCapRule": "Suppress during unresolved Nord vampire rupture and do not stack with Hircine/Arkay edge effects.",
@@ -226,19 +229,19 @@
       "tier": "T1",
       "lane": "Malacath conduct, stronghold/city/legion life mode",
       "spellEditorId": "PDV_Bless_Orc_Malacath_T1",
-      "magicEffectEditorId": "PDV_MGEF_Bless_Orc_Malacath_T1",
-      "displayName": "Orc Malacath Conduct",
+      "magicEffectEditorId": "PDV_MGEF_Orc_Malacath_T1_DamageResist",
+      "displayName": "Malacath's Regard - Seeker",
       "effects": [
         {
-          "magicEffectEditorId": "PDV_MGEF_Bless_Orc_Malacath_T1",
-          "displayName": "Orc Malacath Conduct",
+          "magicEffectEditorId": "PDV_MGEF_Orc_Malacath_T1_DamageResist",
+          "displayName": "Malacath's Regard - Seeker",
           "actorValue": "DamageResist",
-          "magnitude": 3.0,
+          "magnitude": 4,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "Malacath's measure holds when exile, duty, and strength are carried with discipline.",
+      "playerFacingText": "Malacath regards the strong who keep his code. Armor +4.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Orc_Malacath_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest Orc life-mode state at dawn after smoke.",
       "stackCapRule": "Only one Orc life-mode T1 active; city, legion, and stronghold variants cannot stack.",
@@ -251,19 +254,19 @@
       "tier": "T1",
       "lane": "Ancestor spine, Crown/Forebear/Ash'abah/Far Shores sect pressure",
       "spellEditorId": "PDV_Bless_Redguard_AncestorSpine_T1",
-      "magicEffectEditorId": "PDV_MGEF_Bless_Redguard_AncestorSpine_T1",
-      "displayName": "Redguard Ancestor Spine",
+      "magicEffectEditorId": "PDV_MGEF_Redguard_AncestorSpine_T1_ResistMagic",
+      "displayName": "Ancestor Spine - Seeker",
       "effects": [
         {
-          "magicEffectEditorId": "PDV_MGEF_Bless_Redguard_AncestorSpine_T1",
-          "displayName": "Redguard Ancestor Spine",
-          "actorValue": "WeaponSpeedMult",
-          "magnitude": 3.0,
+          "magicEffectEditorId": "PDV_MGEF_Redguard_AncestorSpine_T1_ResistMagic",
+          "displayName": "Ancestor Spine - Seeker",
+          "actorValue": "ResistMagic",
+          "magnitude": 3,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "The ancestor spine steadies your sect path without making every compromise clean.",
+      "playerFacingText": "The ancestors keep their hand on your spine across the road. Magic Resistance +3%.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Redguard_AncestorSpine_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest Redguard sect state at dawn after smoke.",
       "stackCapRule": "Only one Redguard sect T1 active; Crown, Forebear, Ash'abah, and Far Shores variants resolve through manager state.",
