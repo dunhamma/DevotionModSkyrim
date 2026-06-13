@@ -1,6 +1,9 @@
 # Prisma UI handoff — `shift` event type
 
 **For:** a Claude design/code pass on `app.js`.
+**Status:** Superseded by the live `app.js` implementation and
+`native/DevotionPrismaBridge/README.md` stable payload notes. Keep this file as
+handoff context only; do not paste it verbatim without checking the live UI.
 **Context:** `PDV__ManagerQuest.psc` now emits `{"event":"shift",...}` overlay payloads
 when a race's substrate or state-track mode changes. These are the non-deity piety modes:
 Khajiit focus emphasis, Argonian Hist posture, Orc life-mode, Redguard sect, and Bosmer
@@ -68,22 +71,22 @@ shift: {
   tone: () => "neutral",
   symbol: (payload) => text(payload.symbol, "journal"),
   title: (payload) => {
-    const mode = text(payload.shiftMode, "");
-    return mode ? `Path settles: ${mode}` : "Your path shifts";
+    const mode = displayName(payload.shiftMode, "");
+    return mode ? `The path turns toward ${mode}` : "Your path shifts";
   },
   message: (payload) => {
     const context = contextName(payload);
     if (context) return context;
-    const mode = text(payload.shiftMode, "");
+    const mode = displayName(payload.shiftMode, "");
     return mode
-      ? `${mode} shapes what comes next.`
+      ? `${mode} has begun to shape your practice.`
       : "Your practice has found a new shape.";
   },
-  listTitle: (payload) => text(payload.shiftMode, "Path shift"),
+  listTitle: (payload) => displayName(payload.shiftMode, "Path shift"),
   listText: (payload) => {
     const context = contextName(payload);
     if (context) return context;
-    const mode = text(payload.shiftMode, "");
+    const mode = displayName(payload.shiftMode, "");
     return mode
       ? `${mode} is now the shape of your practice.`
       : "Your path has settled into a new mode.";

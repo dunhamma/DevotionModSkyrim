@@ -87,27 +87,27 @@
         "surveyStatusClarity": {
           "status": "evidence-recorded",
           "expected": "Survey/MCM explains lunar substrate, road-home cadence, focus weight, lunar posture, and active focus in race language.",
-          "note": "2026-06-04: Accepted lunar book route proof passed in the log, but tester reported no visible change in the Survey Devotion power text. 2026-06-06 retest after surfacing fixes passed in game on all visible parts; tester confirmed Survey/status movement and no unwanted full Prisma/MCM auto-open. 2026-06-06 restarted packet: Words of Clan Mother Ahnissi and The Tale of Dro'Zira both produced Prisma toasts and steps 2-3 passed; tester noted Azurah was lower case in the Survey/UI surface, and the Prisma UI display-name map was patched so normalized azura symbols render as Azurah. 2026-06-10: tester again saw lower-case 'azurah' in the Survey messagebox; investigation found this is NOT a code bug - GetKhajiitFocusLabel returns 'Azurah' and all DeityName values are authored capitalized, and every deployed PDV__ManagerQuest.pex in the Anvil load order (mods/Devotion 06:54 and mods/Devotion - Living Deities Test 09:53) contains the capitalized 'Azurah' string. The lower-case display is stale runtime: the live Skyrim session had an older PDV__ManagerQuest.pex loaded in memory. Resolution is a clean MO2 relaunch (function bodies are not baked into saves); no source edit made. Confirm 'Devotion - Living Deities Test' is unchecked in the Anvil profile so the real Devotion build wins the override before retest."
+          "note": "2026-06-04: Accepted lunar book route proof passed in the log, but tester reported no visible change in the Survey Devotion power text. 2026-06-06 retest after surfacing fixes passed in game on all visible parts; tester confirmed Survey/status movement and no unwanted full Prisma/MCM auto-open. 2026-06-06 restarted packet: Words of Clan Mother Ahnissi and The Tale of Dro'Zira both produced Prisma toasts and steps 2-3 passed; tester noted Azurah was lower case in the Survey/UI surface, and the Prisma UI display-name map was patched so normalized azura symbols render as Azurah. 2026-06-10: tester again saw lower-case 'azurah' in the Survey messagebox; investigation found this is NOT a code bug - GetKhajiitFocusLabel returns 'Azurah' and all DeityName values are authored capitalized, and every deployed PDV__ManagerQuest.pex in the Anvil load order (mods/Devotion 06:54 and mods/Devotion - Living Deities Test 09:53) contains the capitalized 'Azurah' string. The lower-case display is stale runtime: the live Skyrim session had an older PDV__ManagerQuest.pex loaded in memory. Resolution is a clean MO2 relaunch (function bodies are not baked into saves); no source edit made. Confirm 'Devotion - Living Deities Test' is unchecked in the Anvil profile so the real Devotion build wins the override before retest. 2026-06-13: Baan Dar display cleanup landed; Survey/status now uses the player-facing label and narrator-voice Khajiit phrasing while preserving the old BaanDar StorageUtil key for save continuity."
         },
         "stackSnapshot": {
           "status": "evidence-recorded",
           "expected": "Khenarthi/Azurah road-home build and Rajhin/Baan Dar/Alkosh edge build record lunar substrate, one active focus, phase amplifier, road cadence, and shadow or curse modifier.",
-          "note": "2026-06-06 restarted packet: reward threshold was not reached; tester accepted this as correct pending behavior for step 6 rather than a failed reward display."
+          "note": "2026-06-06 restarted packet: reward threshold was not reached; tester accepted this as correct pending behavior for step 6 rather than a failed reward display. 2026-06-13: Baan Dar Champion was reinstated and the survival capstone passed in game at sub-20% health, restoring to full via the dedicated heal spell."
         },
         "manualFeelNote": {
           "status": "evidence-recorded",
           "expected": "Moon/road behavior feels like cadence and belonging, not mandatory inspection or generic thief scoring.",
-          "note": "2026-06-06 restarted packet: tester confirmed the wired lunar book checks and visible feedback passed; edge focus routes remain outside the currently filled live source packet."
+          "note": "2026-06-06 restarted packet: tester confirmed the wired lunar book checks and visible feedback passed. 2026-06-13: Baan Dar Champion survival and presentation feel passed after the vanilla-shaped capstone rewrite and narrator-voice text cleanup. Rajhin/Alkosh edge breadth remains pending."
         },
         "immersiveHookProof": {
           "status": "evidence-recorded",
           "expected": "Prove lunar rest/open-sky cadence, road-home anchors, and Baan Dar/Rajhin/Alkosh focus hooks outside QASmoke without fast-travel, moon-sugar, theft, or dragon spam.",
-          "note": "2026-06-04: Accepted P2 lunar book-route log proof recorded via strict manager checker. 2026-06-06: Words of Clan Mother Ahnissi retest passed in Papyrus.0.log with KhajiitLunar SetMetric 4.0, Khajiit focus Azurah adjusted by 25.0, Khajiit moon observance routed for phase 1, and RouteKhajiitLunarSubstrate complete po3_book_khajiit_lunar. 2026-06-06 restarted packet: Words of Clan Mother Ahnissi and The Tale of Dro'Zira both produced Prisma toasts and expected visual feedback; wrong-origin, generic-source silence, and reward-pending behavior passed. Live edge focus hooks remain pending because only approved lunar book sources are currently filled."
+          "note": "2026-06-04: Accepted P2 lunar book-route log proof recorded via strict manager checker. 2026-06-06: Words of Clan Mother Ahnissi retest passed in Papyrus.0.log with KhajiitLunar SetMetric 4.0, Khajiit focus Azurah adjusted by 25.0, Khajiit moon observance routed for phase 1, and RouteKhajiitLunarSubstrate complete po3_book_khajiit_lunar. 2026-06-06 restarted packet: Words of Clan Mother Ahnissi and The Tale of Dro'Zira both produced Prisma toasts and expected visual feedback; wrong-origin, generic-source silence, and reward-pending behavior passed. 2026-06-13: Baan Dar Champion survival capstone passed in game through the hidden OnHit effect with threshold 20% and full-heal spell. Rajhin/Alkosh live edge breadth remains pending."
         },
         "assetStatus": {
           "status": "evidence-recorded",
           "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation.",
-          "note": "2026-06-10: tester confirmed the wired lunar book packet uses only vanilla book sources (0001B27D Words of Clan Mother Ahnissi, 0001AFF3 Ahzirr Traajijazeri, 000F03E3 Tale of Dro'Zira) with normal vanilla meshes and toast-only feedback; no new custom mesh or asset required for the currently wired lunar hooks. Edge-focus sources (Baan Dar/Rajhin/Alkosh) remain unfilled and will need their own asset-status confirmation when wired."
+          "note": "2026-06-10: tester confirmed the wired lunar book packet uses only vanilla book sources (0001B27D Words of Clan Mother Ahnissi, 0001AFF3 Ahzirr Traajijazeri, 000F03E3 Tale of Dro'Zira) with normal vanilla meshes and toast-only feedback; no new custom mesh or asset required for the currently wired lunar hooks. 2026-06-13: Baan Dar Champion survival uses existing magic-effect/spell/Prisma/notification surfaces and adds no new art asset. Rajhin/Alkosh edge sources still need asset-status confirmation when their runtime breadth is tested."
         }
       }
     },
@@ -226,20 +226,23 @@
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --race bosmer",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
-          "status": "pending",
-          "expected": "Non-Bosmer origin cannot move Old Contract, Living Story, Exchange, or Bandit Road favor state."
+          "status": "evidence-recorded",
+          "expected": "Non-Bosmer origin cannot move Old Contract, Living Story, Exchange, or Bandit Road favor state.",
+          "note": "2026-06-13: Tester confirmed wrong-origin DA05 rejection passed. This is recorded as manual/tester evidence; source/log review also found the live P2 Bosmer DA05 source path was missing a source-layer origin guard, and PDV_PlayerEvents.psc was patched and compiled at 4:43 PM to gate Bosmer P2 source and quest-stage routes on GetOriginRaceValue() == 4 for the durable contract."
         },
         "genericHookRejection": {
           "status": "pending",
           "expected": "Generic kindness, generic trade, generic theft, forest travel, hunting, plant harvesting, and random bandit kills stay silent unless path-contexted."
         },
         "surveyStatusClarity": {
-          "status": "pending",
-          "expected": "Survey/MCM explains active path, Pact pressure, favor counters, path switch pressure, and non-hunter route meaning."
+          "status": "evidence-recorded",
+          "expected": "Survey/MCM explains active path, Pact pressure, favor counters, path switch pressure, and non-hunter route meaning.",
+          "note": "2026-06-13: Tester confirmed the DA05 stage 100 visible threshold-crossing variant passed after piety-23 preflight, DA05, and dawn pass: Survey Devotion showed Bosmer path OldContract and standing Seeker. Earlier piety-25 preflight route test also correctly remained stable pre/post DA05."
         },
         "stackSnapshot": {
-          "status": "pending",
-          "expected": "Living Story/Exchange expected build and Old Contract/Bandit Road edge build record active path, one active favor, Pact pressure, and Baan Dar/Nocturnal/Hircine modifier."
+          "status": "evidence-recorded",
+          "expected": "Living Story/Exchange expected build and Old Contract/Bandit Road edge build record active path, one active favor, Pact pressure, and Baan Dar/Nocturnal/Hircine modifier.",
+          "note": "2026-06-13: Tester confirmed visible Active Effects after DA05 threshold-crossing pass: Old Contract - Seeker and Y'ffre's Weave - Seeker. Papyrus log for the same DA05 accepted branch recorded GreenPactCompliance -> 85, AwardPiety Y'ffre raw/applied 2.0, RouteBosmerPactPositive complete, RouteBosmerYffre complete with source po3_queststage_bosmer_da05_kill, and expected Hircine side route."
         },
         "manualFeelNote": {
           "status": "pending",
@@ -247,7 +250,8 @@
         },
         "immersiveHookProof": {
           "status": "pending",
-          "expected": "Prove Living Story, Exchange, and Bandit Road/Pact-pressure hooks outside QASmoke without generic kindness, commerce, theft, forest travel, or unproven item punishment."
+          "expected": "Prove Living Story, Exchange, and Bandit Road/Pact-pressure hooks outside QASmoke without generic kindness, commerce, theft, forest travel, or unproven item punishment.",
+          "note": "2026-06-13: DA05 stage 100 accepted Old Contract quest-stage source passed in-game with visible threshold-crossing proof. On a separate clean save, DA05 stage 105 mercy branch passed with RouteBosmerYffre complete: 1 source po3_queststage_bosmer_da05_mercy and RouteQuestReaction complete: stage 105. Live source was also patched/compiled to make stages 100 and 105 share group key bosmer_da05_yffre_outcome, matching the manifest mutualExclusionGroup contract. Tester also confirmed wrong-origin DA05 rejection passed. This is real source proof for the DA05 Old Contract/Living Story branch slice only; broader Living Story, Exchange, Bandit Road, generic silence, and asset-status slots remain pending."
         },
         "assetStatus": {
           "status": "pending",

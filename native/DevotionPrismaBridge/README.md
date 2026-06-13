@@ -124,7 +124,7 @@ forge, sect, or branch instruments without changing the StorageUtil/manager
 state model.
 
 The Devotion view accepts compact event payloads and expands player-facing copy
-client-side. The overlay-toast path is now stable for the five pilot events
+client-side. The overlay-toast path is now stable for the six pilot events
 below:
 
 ```json
@@ -133,6 +133,7 @@ below:
 { "toast": { "event": "neglect", "deity": "Kyne" } }
 { "toast": { "event": "tier", "deity": "Kyne", "symbol": "kyne", "tierLabel": "Devoted" } }
 { "toast": { "event": "rivalry", "rival": "Auri-El", "rivalSymbol": "auri-el" } }
+{ "toast": { "event": "shift", "shiftMode": "Baan Dar", "symbol": "baan-dar", "context": "Baan Dar's road has found your steps." } }
 ```
 
 Explicit `title`, `message`, `tone`, or `symbol` fields still override the
@@ -186,6 +187,7 @@ Stable panel instrument fields:
 - `neglect`: `deity`
 - `tier`: `deity`, `tierLabel`
 - `rivalry`: `rival`, optional `rivalSymbol`
+- `shift`: `shiftMode`, optional `context`, optional `symbol`
 
 Deprecated-but-accepted toast aliases:
 
@@ -216,8 +218,8 @@ Use these maturity labels when growing the UI contract:
 - `deprecated`: still accepted by the UI but should not be emitted by new
   Papyrus code.
 
-Overlay toasts for `favor`, `dawn`, `neglect`, `tier`, and `rivalry` are now
-`stable` for the current pilot path. Substrate overlay toasts and panel
+Overlay toasts for `favor`, `dawn`, `neglect`, `tier`, `rivalry`, and `shift`
+are now `stable` for the current pilot path. Substrate overlay toasts and panel
 instrument payloads are stable presentation contracts for the current substrate
 instrument pass. Startup and medallion overlay payloads are `stable` as
 presentation contracts. Any non-listed toast event shapes remain `prototype`.

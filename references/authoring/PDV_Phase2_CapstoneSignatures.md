@@ -86,6 +86,10 @@ niche — Baan Dar (survivor brawler) + Rajhin (clawed thief).
 - **Signature:** once per 24 hours a killing blow is survived — vanish (escape) + attacker stagger +
   lingering luck pulse on use (M6; shared with Bosmer Bandit Road; cadence per the locked
   "all cheat-deaths once/day" rule -- corrected 2026-06-10 from "every few days" drift).
+- **Implementation note (2026-06-13):** the Khajiit Baan Dar shipped path uses a
+  hidden constant-effect script in the Champion spell, samples `OnHit` at 20%
+  health, and casts a dedicated self-heal spell to restore to full. The old
+  polling route was rejected after in-game misses.
 
 ### Rajhin — "Rajhin's Shadow" (the Purring Liar)
 - **Passive (stat):** Sneak +12, Lockpicking +15, Pickpocket +15, **Unarmed +10**.

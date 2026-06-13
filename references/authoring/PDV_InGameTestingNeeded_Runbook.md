@@ -59,9 +59,9 @@ Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 | Race | Pending manual/runtime slots |
 | --- | --- |
 | Altmer | none for current beta packet; final-world placement remains separate |
-| Khajiit | `assetStatus` |
+| Khajiit | Baan Dar Champion survival/presentation passed; Rajhin/Alkosh edge breadth remains if full edge packet proof is required |
 | Argonian | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
-| Bosmer | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Bosmer | `genericHookRejection`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Breton | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Dunmer | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Imperial | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
@@ -90,15 +90,16 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
 
 ### 1. Close The Smallest Race Evidence Gaps
 
-Both Altmer and Khajiit are fully closed.
+Altmer is closed for the current packet. Khajiit has the lunar packet plus the
+Baan Dar Champion survival/presentation slice closed; Rajhin/Alkosh edge breadth
+remains only if the full Khajiit edge packet is required before broader beta.
 
 - Altmer: packet closed on 2026-06-10. All seven evidence slots are
   `evidence-recorded` in `PDV_Phase20_ManualEvidenceLedger.json`.
-- Khajiit: packet closed on 2026-06-10. All seven evidence slots are
-  `evidence-recorded` in `PDV_Phase20_ManualEvidenceLedger.json`, including
-  `assetStatus` (vanilla-only book sources; no new mesh required). The
-  `PDV_BetaTestPacket_Khajiit.md` packet file does not have a dedicated
-  assetStatus section; the evidence lives in the ledger.
+- Khajiit: lunar packet closed on 2026-06-10. On 2026-06-13, Baan Dar Champion
+  survival passed in game after the vanilla-shaped capstone rewrite, and the
+  Champion/Scratch UI presentation cleanup fixed Baan Dar casing plus narrator
+  voice. Rajhin/Alkosh runtime breadth remains separate from that pass.
 
 ### 2. Run The New Bosmer DA05 Packet
 
@@ -107,17 +108,33 @@ Use `PDV_BetaTestPacket_Bosmer.md`.
 Required checks:
 
 - Bosmer origin, DA05 stage `100`: accepted Y'ffre hunt-law pressure route.
+  **Passed 2026-06-13** with visible threshold crossing after piety-23 preflight:
+  Active Effects showed Old Contract / Seeker and Y'ffre's Weave / Seeker, and
+  Survey Devotion showed Bosmer OldContract / Seeker. The earlier piety-25
+  stable-display pass correctly showed no pre/post visible change.
 - Bosmer origin, DA05 stage `105`: accepted mercy-branch edge route.
+  **Passed 2026-06-13** on a separate clean save with
+  `RouteBosmerYffre complete: 1 source po3_queststage_bosmer_da05_mercy`.
+  The live source was also patched/compiled at 4:43 PM to share
+  `bosmer_da05_yffre_outcome` across stages 100/105 for future same-save
+  mutual-exclusion behavior.
 - Wrong-origin rejection for the same DA05 route.
+  **Passed 2026-06-13** by tester report. Source/log review also found the
+  Bosmer P2 source path lacked a source-layer origin gate, so live source was
+  patched/compiled at 4:43 PM to require `GetOriginRaceValue() == 4` for the
+  durable contract.
 - Generic-source silence for hunting, forest travel, trade, theft, broad plant,
   kindness, and generic book/source attempts.
-- Survey/status clarity after the accepted branch.
-- Reward/stack snapshot and short feel note.
+- Survey/status clarity after the accepted branch. **Stage 100 slice passed.**
+- Reward/stack snapshot and short feel note. **Stage 100 reward/survey snapshot
+  passed; broader Bosmer stack/feel checks remain pending.**
 
-After closing Skyrim:
+After each DA05 branch, use the DA05-specific log check in
+`PDV_BetaTestPacket_Bosmer.md`. The generic Bosmer runtime checker currently
+validates the eight QASmoke proof activators, not DA05.
 
 ```powershell
-node .\tools\pdv_phase20_runtime_check.mjs --race bosmer --strict-manager
+Select-String -Path "$env:USERPROFILE\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log" -Pattern "RouteBosmerYffre|po3_queststage_bosmer_da05|RouteBosmerPactPositive|RouteDaedricPrinceSignal" -Context 1,1
 ```
 
 ### 3. Run The Remaining Race Packets
