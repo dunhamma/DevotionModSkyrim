@@ -329,7 +329,13 @@ all six = milestone MessageBox. One-shot forever (anti-farm by design).
 Log marker: `Bosmer green song remembered: N` (1..6). Eldergleam arms a bounded
 OnUpdate poll on entering the location; the vision fires on an interior cave cell
 (Start/Start02/Top), mirroring the Argonian Waters set. The other five fire on
-arrival.
+arrival via the Story-Manager location-change event matched against
+`PDV_FLST_BosmerGreenSongs`. IMPORTANT: `coc` does NOT reliably fire that
+location-change event, so coc-ing straight into an anchor cell does nothing for
+those five -- enter via a load door or fast-travel instead. As of 2026-06-13 the
+Whiterun anchor was reworked to fire OUTDOORS at the Gildergreen tree via a
+proximity poll (walk up to the tree; the temple interior no longer fires it) -- see
+Polish backlog item 4. Eldergleam is likewise a cell-poll, not the location event.
 
 ### Scales at Rest (Exchange signature, once/day; seed path 2)
 
@@ -393,6 +399,16 @@ arrival.
 - Told-self in Active Effects, one at a time: Hunter = Archery +5; Speaker =
   Speech +5; Wanderer = Stamina Regen +8%; Keeper = Carry Weight +15.
 - Choosing again retells (clear-before-add): the old told-self is removed first.
+  Picking a told-self spends the 7-day Naming cooldown (`PDV.BosNaming.LastRiteTime`),
+  so you cannot just sleep again to retell. To test the retell without waiting 7
+  in-game days, click **Seed Bosmer variety** (it zeroes that key), then sleep
+  again. "Not yet" does not spend the cooldown.
+- Fix scope: the path-neutral declaration fix is only exercised by declaring the
+  hearth on a NON-LivingStory path (OldContract/Exchange/BanditRoad); LivingStory
+  declared+Named even before the fix, so a LivingStory-only run proves the
+  menu/apply/swap mechanics but not the fix. The declared hearth is a single cell
+  with no MCM reset, so prove the fix by declaring on a non-LivingStory path from
+  a fresh save.
 - Log marker: `Bosmer Naming told-self applied: N`.
 - **Coherence fade/restore:** switch off the named path (or fall into Old Contract
   Apostate GPC < 20): at dawn it goes quiet ("The told-self goes quiet...") and the
@@ -414,15 +430,15 @@ Scales, Gap, Naming, or Song movement.
 
 ```text
 Green Dreams (path-keyed + armed-after-change): PASS 2026-06-13
-Hearth declaration + Tale Carried (3-discovery delta): PASS/PENDING/FAIL
+Hearth declaration + Tale Carried (3-discovery delta): PASS 2026-06-13
 Songs visited (count): N/6 + milestone PASS/PENDING
   - Eldergleam interior-only: PASS/PENDING/FAIL
   - Temple of Kynareth (slot-2 swap) fires: PASS/PENDING/FAIL
-Scales at Rest (once/day, on-path): PASS/PENDING/FAIL
+Scales at Rest (once/day, on-path): PASS 2026-06-13 -- effect PDV_SPEL_BosmerScalesAtRest (Speech +10, 120s), notify "The account is even. The bargains fall your way for a while."; off-path silence confirmed via Papyrus.0.log (after switching to OldContract the Exchange signal logged route only, no second "Bosmer Scales at Rest fired." -- gated at TryBosmerScalesAtRest, manager line 2941: GetBosmerPathState() != BOSMER_PATH_EXCHANGE -> return before cast)
 Baan Dar Gap fires sub-20% in combat: PASS/PENDING/FAIL
 Baan Dar Gap SILENT on ordinary/off-path/non-combat hits: PASS/FAIL  <- key
-Naming menu + one-active swap: PASS/PENDING/FAIL
-Naming coherence fade + restore at dawn: PASS/PENDING/FAIL
+Naming menu + one-active swap: PASS 2026-06-13
+Naming coherence fade + restore at dawn: PASS 2026-06-13
 Wrong-origin rejection: PASS
 Generic-source silence: PASS
 Survey/status clarity: PASS/PENDING/FAIL
@@ -518,17 +534,17 @@ told-self applied: N`) in `Logs\Script\Papyrus.0.log`.
 ### Consolidated evidence to bring back
 ```text
 -- Path families (rewards) --
-OldContract T1/T2/T3 grant + single-family swap: T3 PASS 2026-06-13 / lower tiers + swap PENDING
+OldContract T1/T2/T3 grant + single-family swap: PASS (T3 2026-06-13; T1/T2 + single-family swap confirmed in a prior playthrough, recorded 2026-06-13)
 LivingStory T1/T2/T3: PASS 2026-06-13
-Exchange T1/T2/T3 mechanics: PASS 2026-06-13; T1/T2 copy remediated to name Z'en and written/readback-confirmed in the live ESP
-BanditRoad T1/T2/T3: PASS/PENDING/FAIL
-Broad Y'ffre lane + suppression-under-path: PASS/PENDING/FAIL
-Neglect "The Path Goes Quiet": PASS/PENDING/FAIL
+Exchange T1/T2/T3 mechanics: PASS 2026-06-13; T1/T2 Z'en copy remediated + readback-confirmed in the live ESP, but in-game confirm on a fresh load PENDING (the prior playthrough predated the 18:15 ESP refresh and showed the old non-Z'en copy)
+BanditRoad T1/T2/T3: PASS (prior playthrough, recorded 2026-06-13)
+Broad Y'ffre lane + suppression-under-path: suppression-under-path PASS (prior playthrough, recorded 2026-06-13); broad-lane appearance only relevant in broad-worship state
+Neglect "The Path Goes Quiet": PASS 2026-06-13 (fresh load; PeakValueModifier StaminaRateMult -5 confirmed -- stamina regen ~5% slower, not pinned near zero)
 -- Variety levers --
-Green Dreams / Hearth+Tale Carried / Songs (N/6) / Scales: PASS/PENDING/FAIL
+Green Dreams: PASS 2026-06-13. Hearth+Tale Carried: PASS 2026-06-13. Songs (N/6): PENDING. Scales at Rest: PASS 2026-06-13 -- PDV_SPEL_BosmerScalesAtRest (Speech +10, 120s), notify "The account is even. The bargains fall your way for a while."; on-path fire + once/day + off-path silence confirmed (log: single "Bosmer Scales at Rest fired." on Exchange; off-path Exchange signal logged "RouteBosmerExchange complete: 42" route-only, no fire/cast/notify -- path gate at manager line 2941).
 Baan Dar Gap fires sub-20% in combat: PASS/PENDING/FAIL
 Baan Dar Gap SILENT off-trigger: PASS/FAIL  <- key cadence check
-Naming menu + swap + coherence fade/restore: PASS/PENDING/FAIL
+Naming menu + swap + coherence fade/restore: PASS 2026-06-13 (Naming rite + Hearth + Tale Carried + coherence confirmed on a reload; path-neutral declaration fix still needs one non-LivingStory declaration from a fresh save)
 -- Route signals + negatives --
 8 QASmoke route markers (100-107): PASS/FAIL
 DA05 100/105 organic: PASS/PENDING/FAIL
@@ -536,3 +552,57 @@ Wrong-origin rejection / Generic silence: PASS
 Survey/status clarity: PASS/PENDING/FAIL
 Blocking notes:
 ```
+
+## Polish / Follow-up Backlog (recorded 2026-06-13)
+
+Non-blocking copy/polish items captured during Bosmer in-game testing. Defer to a
+polish pass (now or a future session); they do not gate beta-feel.
+
+1. **Variety-effect descriptions lack the magnitude clause.** The Bosmer variety
+   spells carry flavor-only player-facing text with no stated effect, unlike the
+   reward blessings (which append an "(Effect: ...)" clause -- see
+   `PDV_RewardDescriptionClarity_Review_2026-06-09.md`). Add a magnitude + duration
+   clause to each, then re-author from `PDV_BosmerVariety_RecordBatch.manifest.json`:
+   - `PDV_SPEL_BosmerTaleCarried` -- Speech +5, 600s
+   - `PDV_SPEL_BosmerScalesAtRest` -- Speech +10, 120s
+   - `PDV_SPEL_BosmerBaanDarGap` -- SpeedMult +30, 5s
+   - `PDV_SPEL_BosmerNaming_Hunter` -- Archery +5
+   - `PDV_SPEL_BosmerNaming_Speaker` -- Speech +5
+   - `PDV_SPEL_BosmerNaming_Wanderer` -- Stamina Regen +8%
+   - `PDV_SPEL_BosmerNaming_Keeper` -- Carry Weight +15
+
+   AUDIT BLIND SPOT: `tools/pdv_reward_desc_audit.mjs` scans the 12 reward spec
+   files only, NOT the variety manifest, so these will never auto-surface in the
+   clarity review. Either extend the audit to the variety manifest or fix by hand.
+   Timed buffs should state the duration, unlike the constant reward abilities.
+
+2. **Wording brush-up sweep.** Pass over all Bosmer variety / told-self / signature
+   player-facing strings (and consider an all-race sweep) to tighten tone and
+   consistency. A future polish session is fine; not now-blocking.
+
+3. **Songs of the Green vision text is awkward + shared across all 6 anchors.** The
+   per-arrival vision is a hardcoded `Debug.MessageBox` in `PDV__ManagerQuest`
+   (`AwardBosmerSong`, ~line 2927): "The green here remembers an older telling. For
+   a breath the Story leans close, and names you part of it." -- reads as word salad
+   without Y'ffre-Storyteller context, and the SAME line shows for every anchor (no
+   per-site flavor). Reword (proposed, pending pick): A) name Y'ffre's first telling;
+   B) keep the mystery; C) most concrete. Because it is hardcoded in the manager (not
+   a record) the fix needs a manager source edit + recompile and is invisible to
+   `pdv_reward_desc_audit.mjs`.
+
+4. **Whiterun Songs anchor moved to the Gildergreen tree -- IMPLEMENTED 2026-06-13
+   (script-only; awaiting in-game proof).** The Temple of Kynareth interior fired
+   correctly but was the wrong spot -- the anchor is the Gildergreen, OUTDOORS in
+   the Wind District. As-built (NO ESP/FLST edit; manager `.psc` only; compiled 0/0,
+   verifier FAIL=0): `HandleBosmerLocationChange` now intercepts WhiterunLocation
+   `0x00018A56` to arm `PDV.BosSongs.GildergreenActive`, and intercepts the Temple
+   LCTN `0x0001F87D` to suppress its interior award. The Temple LCTN is RETAINED in
+   `PDV_FLST_BosmerGreenSongs` as the song's slot id (keeps the milestone-of-6 count
+   and the Naming-at-songs check intact). A new `TryBosmerGildergreenProximity()`
+   poll on the Eldergleam OnUpdate tick caches Gildergreen ref `0x00023612`
+   (`Game.GetFormFromFile`, resolve-once) and awards slot `0x0001F87D` when
+   `GetDistance < 600` then disarms. The FLST-swap variant was rejected because
+   putting WhiterunLocation in the FLST would also make Naming-at-songs fire anywhere
+   in Whiterun. PENDING: in-game proof next session -- walk up to the Gildergreen and
+   the vision should fire outdoors; the temple interior should no longer fire it; the
+   600 distance is tunable.
