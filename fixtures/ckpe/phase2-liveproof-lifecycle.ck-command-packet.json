@@ -2,7 +2,7 @@
   "schema": "creation-authoring.ck-command-packet.v1",
   "project": "ckra-liveproof-generated-lifecycle",
   "game": "SkyrimSE",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "generatedPlugin": "CKRA_LiveProof_Generated.esp",
   "failClosed": true,
   "commands": [

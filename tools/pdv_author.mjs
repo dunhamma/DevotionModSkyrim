@@ -2,7 +2,7 @@
 /*
  * Safe overlay-patch authoring helper for the PlayerDevotion Anvil/MO2 setup.
  *
- * This tool does not mutate PlayerDevotion_Framework.esp in place. Instead,
+ * This tool does not mutate Devotion.esp in place. Instead,
  * it inspects the live framework ESP through the bundled Mutagen bridge and,
  * when asked to apply, emits a new patch plugin into the Devotion mod folder.
  *
@@ -30,7 +30,7 @@ const STOCK_GAME = path.join(ANVIL_ROOT, "Stock Game");
 const STOCK_GAME_DATA = path.join(STOCK_GAME, "Data");
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
 const DEVOTION_PROFILE = path.join(ANVIL_ROOT, "profiles", "Devotion Dev");
-const PDV_ESP = path.join(DEVOTION_MOD, "PlayerDevotion_Framework.esp");
+const PDV_ESP = path.join(DEVOTION_MOD, "Devotion.esp");
 const MUTAGEN_BRIDGE = path.join(
   ANVIL_ROOT,
   "plugins",
@@ -75,7 +75,7 @@ const PHASE_MANIFESTS = {
   phase4: {
     title: "Phase 4 Kyne overlay wiring",
     unsupported: [
-      "This tool writes an overlay patch plugin. It does not overwrite PlayerDevotion_Framework.esp in place.",
+      "This tool writes an overlay patch plugin. It does not overwrite Devotion.esp in place.",
       "If you want the Phase 4 wiring merged back into the framework ESP itself, finish that merge in CK or xEdit after validating the overlay patch.",
     ],
     operations: [
@@ -267,7 +267,7 @@ const PHASE_MANIFESTS = {
       "Create missing records in CK/xEdit first: PDV_Deity_Talos and PDV_Deity_AuriEl.",
       "Create Talos and Auri-El boon spell records first. This tool can wire boon properties once those spell records exist.",
       "Talos RivalDeities and RivalMultipliers remain manual for now because the current bridge path does not expose VMAD array property writes.",
-      "This tool writes an overlay patch plugin. It does not overwrite PlayerDevotion_Framework.esp in place.",
+      "This tool writes an overlay patch plugin. It does not overwrite Devotion.esp in place.",
     ],
     operations: [
       {
@@ -1016,7 +1016,7 @@ function evaluateOperation(operation, context) {
       return {
         ...operation,
         status: "BLOCKED",
-        detail: `Record ${operation.record} is not present in PlayerDevotion_Framework.esp.`,
+        detail: `Record ${operation.record} is not present in Devotion.esp.`,
       };
     }
 
@@ -1034,7 +1034,7 @@ function evaluateOperation(operation, context) {
       return {
         ...operation,
         status: "BLOCKED",
-        detail: `Record ${operation.record} is not present in PlayerDevotion_Framework.esp.`,
+        detail: `Record ${operation.record} is not present in Devotion.esp.`,
       };
     }
 
@@ -1080,7 +1080,7 @@ function evaluateOperation(operation, context) {
       return {
         ...operation,
         status: "BLOCKED",
-        detail: `FormList ${operation.record} is not present in PlayerDevotion_Framework.esp.`,
+        detail: `FormList ${operation.record} is not present in Devotion.esp.`,
       };
     }
 
@@ -1289,7 +1289,7 @@ function getOrCreateRecordSpec(recordEdid, context, recordSpecs) {
     spec = {
       op: "override",
       formid: record.formid,
-      source_plugin: "PlayerDevotion_Framework.esp",
+      source_plugin: "Devotion.esp",
       source_path: toPosix(PDV_ESP),
     };
     recordSpecs.set(key, spec);

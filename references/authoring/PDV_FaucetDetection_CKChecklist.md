@@ -137,7 +137,7 @@ Readback-clean nodes:
 1. `TrespassActorEvent` confirmed a valid `StoryManagerEventNode.Types` enum value (Mutagen reflects the engine library), so the source-plugin SMEN root is safe to create.
 2. `tools/pdv-phase20-p2-receiver-author --author-generic-faucet-story-manager` now creates `PDV__SM_TrespassEvent` (SMEN, Type=`TrespassActorEvent`, Parent=`00005B:Skyrim.esm`) and attaches `PDV__SM_TrespassNode` (SMQN, Parent=`0714B1`, **Shares Event**, Quest=`PDV__SM_Trespass`).
 3. Player-identity filtering stays in the `PDV__SM_Trespass` fragment (matches the other six nodes — no node-level conditions), so the receiver routes `361` only for the player trespasser.
-4. Readback-clean: `0714B1` SMEN + `0714B2` SMQN in `PlayerDevotion_Framework.esp`; `pdv_verify --strict-phase3` FAIL=0. ESP backup under `Backups\trespass\` + the tool's `Backups\phase20-p2-receivers\`.
+4. Readback-clean: `0714B1` SMEN + `0714B2` SMQN in `Devotion.esp`; `pdv_verify --strict-phase3` FAIL=0. ESP backup under `Backups\trespass\` + the tool's `Backups\phase20-p2-receivers\`.
 
 No SEQ refresh is expected because these quests must not be Start Game Enabled. **Runtime proof still pending** (in-game: trespass a marked cell, expect `[PDV] EventBus: <deity> event 361 delta <x>`).
 

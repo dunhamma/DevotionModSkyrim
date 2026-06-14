@@ -404,7 +404,7 @@ the blind spot visible instead of fatal. (Ratified 2026-06-10; see
 
 ### 6.1 Vanilla ESPs are untouchable
 
-`Skyrim.esm`, `Update.esm`, `Dawnguard.esm`, `HearthFires.esm`, `Dragonborn.esm` — never edit directly. All overrides are made in `PlayerDevotion_Framework.esp` or a race module ESP. This is not a guideline; it's how the mod composes with everyone else's load order.
+`Skyrim.esm`, `Update.esm`, `Dawnguard.esm`, `HearthFires.esm`, `Dragonborn.esm` — never edit directly. All overrides are made in `Devotion.esp` or a race module ESP. This is not a guideline; it's how the mod composes with everyone else's load order.
 
 ### 6.2 Profile discipline
 

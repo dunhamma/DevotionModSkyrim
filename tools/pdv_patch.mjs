@@ -1065,8 +1065,8 @@ function buildSafeOutputPath(output) {
   if (relative.startsWith("..") || path.isAbsolute(relative)) {
     throw new Error(`Generated patch output must stay inside the Devotion mod folder: ${resolved}`);
   }
-  if (path.resolve(resolved).toLowerCase() === path.resolve(path.join(DEVOTION_MOD, "PlayerDevotion_Framework.esp")).toLowerCase()) {
-    throw new Error("Generated patch output must not overwrite PlayerDevotion_Framework.esp.");
+  if (path.resolve(resolved).toLowerCase() === path.resolve(path.join(DEVOTION_MOD, "Devotion.esp")).toLowerCase()) {
+    throw new Error("Generated patch output must not overwrite Devotion.esp.");
   }
   if (!/\.esp$/i.test(resolved)) {
     throw new Error("Generated patch output must be an .esp file.");

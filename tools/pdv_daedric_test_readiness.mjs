@@ -251,17 +251,17 @@ function checkProfile(findings) {
 
   if (exists(pluginsPath)) {
     const plugins = fs.readFileSync(pluginsPath, "utf8");
-    if (plugins.split(/\r?\n/).some((line) => line.trim() === "*PlayerDevotion_Framework.esp")) {
-      add(findings, "PASS", "PlayerDevotion plugin active", "PlayerDevotion_Framework.esp is active in Devotion Dev.", pluginsPath);
+    if (plugins.split(/\r?\n/).some((line) => line.trim() === "*Devotion.esp")) {
+      add(findings, "PASS", "Devotion plugin active", "Devotion.esp is active in Devotion Dev.", pluginsPath);
     } else {
-      add(findings, "FAIL", "PlayerDevotion plugin active", "PlayerDevotion_Framework.esp is not active in Devotion Dev.", pluginsPath);
+      add(findings, "FAIL", "Devotion plugin active", "Devotion.esp is not active in Devotion Dev.", pluginsPath);
     }
   }
 }
 
 function checkRuntimeFiles(findings) {
-  checkFile(findings, "PlayerDevotion framework ESP", path.join(DEVOTION_MOD, "PlayerDevotion_Framework.esp"));
-  checkFile(findings, "PlayerDevotion SEQ", path.join(DEVOTION_MOD, "Seq", "PlayerDevotion_Framework.seq"));
+  checkFile(findings, "Devotion ESP", path.join(DEVOTION_MOD, "Devotion.esp"));
+  checkFile(findings, "Devotion SEQ", path.join(DEVOTION_MOD, "Seq", "Devotion.seq"));
   checkFile(findings, "Daedric runtime checker", RUNTIME_CHECKER);
   checkFile(findings, "Daedric packet generator", PACKET_GENERATOR);
   checkFile(findings, "Daedric beta-display gate", BETA_GATE);

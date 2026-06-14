@@ -38,7 +38,7 @@ Pilot one race end-to-end (Khajiit) → generalize a template → propagate to t
 - **`PDV_EventBus.psc` / `PDV_EventSignalActivator.psc`:** anti-creed routes 110–114.
 - **`PDV_MCM.psc`:** Status roster row now shows scratch `(+X)`; `SIGNAL_TYPE_MAX` raised 299→999.
 
-### ESP (`PlayerDevotion_Framework.esp`) — authored via Mutagen tools, housecarl-verified
+### ESP (`Devotion.esp`) — authored via Mutagen tools, housecarl-verified
 - 4 deity quests added to `PDV_FLST_AllDeities` (now **10 items**).
 - 18 `PDV_Bless_Khajiit_*` spells + MGEFs (2 substrate, 15 emphasis; `Lunar_T1` re-homed to substrate Mid).
 - Substrate boon slots wired on `PDV_Substrate_KhajiitLunar`; **20** manager properties wired.
@@ -66,7 +66,7 @@ Pilot one race end-to-end (Khajiit) → generalize a template → propagate to t
 
 ## 4. Reference data (for resumption)
 
-**Deity quest FormIDs (local, PlayerDevotion_Framework.esp):** Kyne 0120B6 · Talos 03DE87 ·
+**Deity quest FormIDs (local, Devotion.esp):** Kyne 0120B6 · Talos 03DE87 ·
 AuriEl 03DE88 · Yffre 06CB52 · Zen 06FA1B · BaanDar 06FA1C · **Azura 071078 · Khenarthi 071079 ·
 Rajhin 07107A · Alkosh 07107B**. FLST AllDeities **017E47**. New DeityIndex: Azura 40 / Khenarthi 41 / Rajhin 42 / Alkosh 43.
 

@@ -255,7 +255,7 @@ Risk:
 
 - The source row exists in `race-sheets/PDV_RaceContent_Manifest.md`.
 - `PDV_Bless_Khajiit_Lunar_T1` now reads back from
-  `PlayerDevotion_Framework.esp` as a pilot-provisional `SPEL`.
+  `Devotion.esp` as a pilot-provisional `SPEL`.
 - `PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen` and
   `PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist` now read back as
   pilot-provisional `MGEF` records.
@@ -314,7 +314,7 @@ Risk:
 
 - The source row exists in `race-sheets/PDV_RaceContent_Manifest.md`.
 - `PDV_Bless_Bosmer_Exchange_T1` does not currently read back from
-  `PlayerDevotion_Framework.esp` as an EditorID.
+  `Devotion.esp` as an EditorID.
 - This fallback also needs a target-record owner before CAT-6 promotion.
 
 ### Candidate D: `PDV_Bless_Altmer_Magnus_T3`

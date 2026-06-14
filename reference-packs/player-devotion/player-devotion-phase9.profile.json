@@ -2,7 +2,7 @@
   "schema": "creation-profile.v1",
   "game": "SkyrimSE",
   "modId": "player-devotion-phase9",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "outputPolicy": "overlay",
   "defaultOutput": "PDV_Phase9BosmerStateOverlay.esp",
   "referencePack": "player-devotion",
@@ -46,69 +46,69 @@
       "name": "pdv-phase9-reference-records",
       "records": {
         "PDV_MCM": {
-          "formid": "PlayerDevotion_Framework.esp:03AFBE",
+          "formid": "Devotion.esp:03AFBE",
           "recordType": "QUST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV__ManagerQuest": {
-          "formid": "PlayerDevotion_Framework.esp:00C325",
+          "formid": "Devotion.esp:00C325",
           "recordType": "QUST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_FLST_AllDeities": {
-          "formid": "PlayerDevotion_Framework.esp:017E47",
+          "formid": "Devotion.esp:017E47",
           "recordType": "FLST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_ActivePiety": {
-          "formid": "PlayerDevotion_Framework.esp:00945A",
+          "formid": "Devotion.esp:00945A",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_ActiveTier": {
-          "formid": "PlayerDevotion_Framework.esp:00945B",
+          "formid": "Devotion.esp:00945B",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_ActiveDeityIndex": {
-          "formid": "PlayerDevotion_Framework.esp:00945C",
+          "formid": "Devotion.esp:00945C",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_DebugLevel": {
-          "formid": "PlayerDevotion_Framework.esp:01DBD9",
+          "formid": "Devotion.esp:01DBD9",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_PatronDeity": {
-          "formid": "PlayerDevotion_Framework.esp:02C5C7",
+          "formid": "Devotion.esp:02C5C7",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_OriginRace": {
-          "formid": "PlayerDevotion_Framework.esp:02C5C6",
+          "formid": "Devotion.esp:02C5C6",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_BosmerPath": {
-          "formid": "PlayerDevotion_Framework.esp:0499D1",
+          "formid": "Devotion.esp:0499D1",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_EventBus": {
-          "formid": "PlayerDevotion_Framework.esp:046AF7",
+          "formid": "Devotion.esp:046AF7",
           "recordType": "QUST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_StateTrack_BosmerPath": {
-          "formid": "PlayerDevotion_Framework.esp:0499C5",
+          "formid": "Devotion.esp:0499C5",
           "recordType": "QUST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_Deity_Yffre": {
-          "formid": "PlayerDevotion_Framework.esp:06CB52",
+          "formid": "Devotion.esp:06CB52",
           "recordType": "QUST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         }
       }
     }

@@ -24,8 +24,8 @@ target("DevotionPrismaBridge")
 
     add_rules("@commonlibsse-ng/plugin", {
         name = "DevotionPrismaBridge",
-        author = "PlayerDevotion",
-        description = "Papyrus bridge for PlayerDevotion Prisma UI panels"
+        author = "Devotion",
+        description = "Papyrus bridge for Devotion Prisma UI panels"
     })
 
     add_files("src/**.cpp")

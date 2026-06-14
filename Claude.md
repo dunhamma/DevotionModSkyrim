@@ -1,4 +1,4 @@
-# Claude.md - PlayerDevotion (PDV) Mod Project
+# Claude.md - Devotion (PDV) Mod Project
 
 ## How Claude Works In This Repo
 
@@ -41,7 +41,7 @@ decision history. Claude defers to it.
 
 ## Project Snapshot
 
-PlayerDevotion is a Skyrim Special Edition mod that tracks religious devotion
+Devotion is a Skyrim Special Edition mod that tracks religious devotion
 through the player's race, actions, patron commitments, and religious context.
 Per-deity piety lives in StorageUtil; mirror globals exist only for CK
 Condition reads.

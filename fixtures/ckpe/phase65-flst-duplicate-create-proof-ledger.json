@@ -164,7 +164,7 @@
                       "entriesReadable": true,
                       "entries": [
                         {
-                          "fileName": "PlayerDevotion_Framework.esp",
+                          "fileName": "Devotion.esp",
                           "filePath": "Data\\",
                           "loadIndex": 4,
                           "selected": true,
@@ -243,7 +243,7 @@
                       "entriesReadable": true,
                       "entries": [
                         {
-                          "fileName": "PlayerDevotion_Framework.esp",
+                          "fileName": "Devotion.esp",
                           "filePath": "Data\\",
                           "loadIndex": 4,
                           "selected": true,

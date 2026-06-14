@@ -109,7 +109,7 @@ new game OR the version-gated runtime migration pattern -- see `deity-stance-wir
 `PDV_DeityBase`, `PDV_EventTypes`, `PDV__ManagerQuest`, `PDV_Deity_Kyne/Talos/Shor`, all 29 thin-shell
 `PDV_Deity_*` (stub->ScoreFromTable), `PDV_ActionRouter`; `tools/pdv_compile.mjs`,
 new `tools/pdv-stance-author/`, new `tools/pdv_likesdislikes_gen.mjs`; `PDV_DeityLikesDislikes.csv`;
-**`PlayerDevotion_Framework.esp`** (per-race stance VMAD; backup in `mods/Devotion/Backups/stance/`).
+**`Devotion.esp`** (per-race stance VMAD; backup in `mods/Devotion/Backups/stance/`).
 Reference docs: `PDV_DeityLikesDislikesMatrix.md`, `PDV_FaucetDetection_CKChecklist.md`.
 
 Codex added/updated: `PDV_ActionRouter.psc`, `PDV_PlayerEvents.psc`, seven `PDV__SM_*` receiver

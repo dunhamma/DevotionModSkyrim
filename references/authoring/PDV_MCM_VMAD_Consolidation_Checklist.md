@@ -1,7 +1,7 @@
 ## PDV_MCM VMAD Consolidation Checklist
 
 Purpose: remove the duplicate `PDV_MCM` script attachments on the
-`PDV_MCM` quest record in `PlayerDevotion_Framework.esp` so strict verifier
+`PDV_MCM` quest record in `Devotion.esp` so strict verifier
 runs stop carrying the known duplicate-VMAD warning.
 
 This is a manual xEdit/CK cleanup packet. The current live warning shape is:
@@ -43,7 +43,7 @@ framework record itself.
 ### Recommended xEdit Packet
 
 1. Launch xEdit through MO2 on the `Devotion Dev` profile.
-2. Load `PlayerDevotion_Framework.esp`.
+2. Load `Devotion.esp`.
 3. Navigate to:
    - `QUST -> PDV_MCM`
    - `VMAD - Virtual Machine Adapter`
@@ -79,7 +79,7 @@ framework record itself.
    - `PDV_EventBusService -> PDV_EventBus`
 9. Delete the extra duplicate `PDV_MCM` script entries after the canonical
    one has the full property union.
-10. Save `PlayerDevotion_Framework.esp`.
+10. Save `Devotion.esp`.
 
 ### CK Variant
 

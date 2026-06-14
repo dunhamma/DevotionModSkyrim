@@ -7,7 +7,7 @@ using Mutagen.Bethesda.Strings;
 using SkyrimActivator = Mutagen.Bethesda.Skyrim.Activator;
 using SkyrimGlobal = Mutagen.Bethesda.Skyrim.Global;
 
-const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
+const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
 const string proofActivatorModel = @"Architecture\HighHrothgar\MQEtchedShrineActivator.nif";
 
 var espPath = GetArg(args, "--esp") ?? defaultEsp;
@@ -153,7 +153,7 @@ try
         var backupDir = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(espPath))!, "Backups", "phase9");
         Directory.CreateDirectory(backupDir);
         var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss");
-        var backupPath = Path.Combine(backupDir, $"PlayerDevotion_Framework.esp.{stamp}.bak");
+        var backupPath = Path.Combine(backupDir, $"Devotion.esp.{stamp}.bak");
         File.Copy(espPath, backupPath, overwrite: false);
         report.BackupPath = backupPath;
 

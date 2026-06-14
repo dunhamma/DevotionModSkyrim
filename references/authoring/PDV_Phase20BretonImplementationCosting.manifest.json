@@ -2,7 +2,7 @@
   "schema": "pdv-race-implementation-costing.v1",
   "project": "player-devotion-phase20-breton",
   "game": "SkyrimSE",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "id": "phase20-breton-implementation-costing",
   "title": "PDV Phase 20 Breton tradition spine, focused tradition family, and three-track pressure implementation costing",
   "race": "Breton",

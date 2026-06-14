@@ -452,21 +452,21 @@
     "status": "record-wired",
     "authorTool": "tools/pdv-phase20-p2-receiver-author",
     "command": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists",
-    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260604-094058.bak",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\Devotion.esp.20260604-094058.bak",
     "readbackResult": "PASS - all 34 PDV_FLST_P2_* receiver FormLists exist as FLST records"
   },
   "aliasPropertyReadback": {
     "status": "alias-properties-wired",
     "authorTool": "tools/pdv-phase20-p2-receiver-author",
     "command": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties",
-    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260604-094110.bak",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\Devotion.esp.20260604-094110.bak",
     "readbackResult": "PASS - all 34 PDV_FLST_P2_* properties on PDV_PlayerEvents alias point at their matching FLST records"
   },
   "sourceFillPlan": {
     "status": "p2-book-and-exact-stage-fill-live-readback-pass-pending-runtime-proof",
     "fillCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries",
     "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill",
-    "readbackResult": "PASS - approved P2 book-read source entries, Altmer MQ104 stage 160, Bosmer DA05 stages 100/105, Khajiit MQ104 stage 160, and Khajiit DA01 stage 100 source entries filled/read back on 2026-06-12; backup D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260612-161427.bak",
+    "readbackResult": "PASS - approved P2 book-read source entries, Altmer MQ104 stage 160, Bosmer DA05 stages 100/105, Khajiit MQ104 stage 160, and Khajiit DA01 stage 100 source entries filled/read back on 2026-06-12; backup D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\Devotion.esp.20260612-161427.bak",
     "curationRunbook": "references/authoring/PDV_Phase20_P2SourceCuration_Runbook.md",
     "entryRule": "Only exact source records with status approved-for-fill may be written. This tranche approves the current book-read entries, the exact Altmer MQ104 stage-160 Lorkhan crisis source, the exact Bosmer DA05 stage-100/105 Yffre hunt-law branch source, and the exact Khajiit MQ104 stage-160 (Alkosh) and DA01 stage-100 (Azurah) focused-emphasis sources; other quest-stage source entries stay blocked until exact quest/stage candidates are approved and declared.",
     "formKeyFormat": "ModName.ext:localHex, for example Skyrim.esm:00000014. Do not use load-order FormIDs.",

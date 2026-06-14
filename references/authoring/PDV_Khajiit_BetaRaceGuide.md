@@ -1,4 +1,4 @@
-# PlayerDevotion -- Khajiit Beta Race Guide (Tester Edition)
+# Devotion -- Khajiit Beta Race Guide (Tester Edition)
 
 **What this is:** a play-it-and-watch guide for the Khajiit devotion experience. For each thing the
 system does, it tells you **what to do in game -> what fires -> what you should see (and the Papyrus
@@ -12,7 +12,7 @@ walks you through.
 
 **Setup before testing**
 - Character must be **Khajiit origin** (the system reads origin race, not current race form).
-- MCM -> PlayerDevotion -> Player page -> enable **Developer Options**, set **Debug level 2** (turns
+- MCM -> Devotion -> Player page -> enable **Developer Options**, set **Debug level 2** (turns
   on the log traces below; level 1 shows the major beats).
 - Enable Papyrus logging; read `Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`.
 - Quick machine check after a run: `node tools/pdv_phase20_runtime_check.mjs --race khajiit`.

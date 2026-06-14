@@ -2,7 +2,7 @@
   "schema": "pdv-race-implementation-costing.v1",
   "project": "player-devotion-phase20-dunmer",
   "game": "SkyrimSE",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "id": "phase20-dunmer-implementation-costing",
   "title": "PDV Phase 20 Dunmer ancestor substrate and Reclamation foreground implementation costing",
   "race": "Dunmer",

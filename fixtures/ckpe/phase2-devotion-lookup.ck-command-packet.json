@@ -2,8 +2,8 @@
   "schema": "creation-authoring.ck-command-packet.v1",
   "project": "player-devotion-ckpe-lookup",
   "game": "SkyrimSE",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
-  "generatedPlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
+  "generatedPlugin": "Devotion.esp",
   "failClosed": true,
   "commands": [
     { "op": "findRecordByEditorId", "target": "PDV_MCM", "editorId": "PDV_MCM", "recordFamily": "QUST" },

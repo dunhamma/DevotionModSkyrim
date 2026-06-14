@@ -9,7 +9,7 @@ using Mutagen.Bethesda.Skyrim;
 // byte-for-byte instead of hardcoding a flag value. In-place write of the
 // framework ESP via the established Mutagen load -> modify -> backup -> save pattern.
 
-const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
+const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
 
 var espPath = GetArg(args, "--esp") ?? defaultEsp;
 var referenceId = GetArg(args, "--reference") ?? "PDV_Deity_Yffre";
@@ -60,7 +60,7 @@ try
         var backupDir = Path.Combine(espDir, "Backups", "baandar-sge");
         Directory.CreateDirectory(backupDir);
         var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss");
-        var backupPath = Path.Combine(backupDir, $"PlayerDevotion_Framework.esp.{stamp}.bak");
+        var backupPath = Path.Combine(backupDir, $"Devotion.esp.{stamp}.bak");
         File.Copy(espPath, backupPath, overwrite: false);
         report.BackupPath = backupPath;
 

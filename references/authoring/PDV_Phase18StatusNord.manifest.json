@@ -90,7 +90,7 @@
       "Run from a fresh Nord save or a main-menu coc qasmoke path; do not count stale script instances.",
       "Use the Player page and Survey Devotion as the player-facing proof surface.",
       "Use Developer Options only to set up or inspect proof state; numeric piety remains dev-only.",
-      "After CK dialogue authoring, refresh PlayerDevotion_Framework.seq before closeout.",
+      "After CK dialogue authoring, refresh Devotion.seq before closeout.",
       "Every positive dialogue case needs at least one matching negative: wrong race, wrong deity/state, wrong tier, or vampire-blocked as applicable."
     ],
     "systemCases": [

@@ -103,7 +103,7 @@ Expected current result: Status=PASS, 30 proof references mapped.
 ```
 
 The remaining verifier warning is the existing unnamed CK-authored INFO record
-class in `PlayerDevotion_Framework.esp`.
+class in `Devotion.esp`.
 
 ## No-In-Game Definition Of Done
 

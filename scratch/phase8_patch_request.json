@@ -5,9 +5,9 @@
   "records": [
     {
       "op": "override",
-      "formid": "PlayerDevotion_Framework.esp:03DE87",
-      "source_plugin": "PlayerDevotion_Framework.esp",
-      "source_path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/PlayerDevotion_Framework.esp",
+      "formid": "Devotion.esp:03DE87",
+      "source_plugin": "Devotion.esp",
+      "source_path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/Devotion.esp",
       "attach_scripts": [
         {
           "name": "PDV_Deity_Talos",
@@ -15,12 +15,12 @@
             {
               "name": "GainModifyingTrack",
               "type": "Object",
-              "value": "PlayerDevotion_Framework.esp:0499C0"
+              "value": "Devotion.esp:0499C0"
             },
             {
               "name": "DecayModifyingTrack",
               "type": "Object",
-              "value": "PlayerDevotion_Framework.esp:0499C0"
+              "value": "Devotion.esp:0499C0"
             }
           ]
         }
@@ -1797,7 +1797,7 @@
       },
       {
         "mod_key": "playerdevotion_framework.esp",
-        "path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/PlayerDevotion_Framework.esp",
+        "path": "D:/Wabbajack/modlists/Anvil/mods/Devotion/Devotion.esp",
         "enabled": true
       },
       {

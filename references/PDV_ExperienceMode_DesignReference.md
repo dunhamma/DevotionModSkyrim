@@ -1,4 +1,4 @@
-# PlayerDevotion (PDV) — Experience Mode Design Reference
+# Devotion (PDV) — Experience Mode Design Reference
 
 **Started:** May 19, 2026
 **Status:** Locked design for the first user-facing difficulty surface — Wayfarer's Path (easy) vs Pilgrim's Path (hard, default)

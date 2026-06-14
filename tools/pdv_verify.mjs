@@ -3,7 +3,7 @@
  * Read-only verifier for the PlayerDevotion Anvil/MO2 development setup.
  *
  * The verifier checks disk files directly and asks the bundled MO2 MCP
- * Mutagen bridge to read PlayerDevotion_Framework.esp. It does not modify
+ * Mutagen bridge to read Devotion.esp. It does not modify
  * the ESP, MO2 profile files, scripts, or generated output.
  */
 
@@ -20,7 +20,7 @@ const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
 const DEVOTION_SOURCE = path.join(DEVOTION_MOD, "Scripts", "Source");
 const DEVOTION_PEX = path.join(DEVOTION_MOD, "Scripts");
-const PDV_ESP = path.join(DEVOTION_MOD, "PlayerDevotion_Framework.esp");
+const PDV_ESP = path.join(DEVOTION_MOD, "Devotion.esp");
 const MUTAGEN_BRIDGE = path.join(
   ANVIL_ROOT,
   "plugins",
@@ -40,9 +40,9 @@ const XEDIT_SEQ = path.join(
   "mods",
   "Anvil - xEdit Output",
   "Seq",
-  "PlayerDevotion_Framework.seq",
+  "Devotion.seq",
 );
-const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "PlayerDevotion_Framework.seq");
+const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "Devotion.seq");
 const SLICE1_SIGNAL_RECEIVER_MANIFEST = path.join(
   PROJECT_ROOT,
   "references",
@@ -203,8 +203,8 @@ const PHASE19_PROOF_RULE_MANIFEST = path.join(PATCH_RULES_DIR, "PDV_Phase19Proof
 const PHASE19_TEMPLE_RULE_MANIFEST = path.join(PATCH_RULES_DIR, "PDV_Phase19TempleLocationRules.json");
 const PHASE19_PROOF_BOOK_FORMID = "Skyrim.esm:0FBA57";
 const PHASE19_PROOF_BOOK_KEYWORD = "Skyrim.esm:01CD56";
-const PHASE19_PROOF_STATE_LIST_FORMID = "PlayerDevotion_Framework.esp:0499DB";
-const PHASE19_PROOF_STATE_TRACK_FORMID = "PlayerDevotion_Framework.esp:07051C";
+const PHASE19_PROOF_STATE_LIST_FORMID = "Devotion.esp:0499DB";
+const PHASE19_PROOF_STATE_TRACK_FORMID = "Devotion.esp:07051C";
 const SKYRIM_ESM = path.join(ANVIL_ROOT, "Stock Game", "Data", "Skyrim.esm");
 const DAWNGUARD_ESM = path.join(ANVIL_ROOT, "mods", "Cleaned Base Game Masters", "Dawnguard.esm");
 const PHASE19_TEMPLE_KEYWORD = "Skyrim.esm:01CD56";
@@ -566,7 +566,7 @@ const KYNE_NEGLECT_SPELL = "PDV_SPEL_Neglect_Kyne";
 const PHASE11_ARNGEIR_BRANCH = "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch";
 const PHASE11_ARNGEIR_TOPIC = "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic";
 const PHASE11_ARNGEIR_INFO = "PDV_INFO_Phase11ArngeirKyneRecognition";
-const PHASE11_ARNGEIR_INFO_FORMID = "PlayerDevotion_Framework.esp:0704F4";
+const PHASE11_ARNGEIR_INFO_FORMID = "Devotion.esp:0704F4";
 const PHASE11_ARNGEIR_NPC_FORMID = "Skyrim.esm:02C6C7";
 const PHASE11_ARNGEIR_PROMPT = "Has Kyne marked my path?";
 const PHASE11_ARNGEIR_LINE = "The wind has marked you, Dragonborn. Walk with Kyne's breath.";
@@ -800,7 +800,7 @@ const GENERIC_FAUCET_STORY_MANAGER_NODES = [
     eventName: "Trespass",
     nodeEdid: "PDV__SM_TrespassNode",
     receiverQuest: "PDV__SM_Trespass",
-    parent: "PlayerDevotion_Framework.esp:0714B1",
+    parent: "Devotion.esp:0714B1",
     previousSibling: null,
   },
   {
@@ -1350,7 +1350,7 @@ class Verifier {
       "Devotion mod": DEVOTION_MOD,
       "Devotion source": DEVOTION_SOURCE,
       "Devotion compiled scripts": DEVOTION_PEX,
-      "PlayerDevotion ESP": PDV_ESP,
+      "Devotion ESP": PDV_ESP,
       "Mutagen bridge": MUTAGEN_BRIDGE,
       "Devotion Dev profile": DEV_PROFILE,
       "ModOrganizer.ini": MO2_INI,
@@ -3013,9 +3013,9 @@ class Verifier {
     const frameworkIndex = loadorder.findIndex((line) => line.toLowerCase() === "playerdevotion_framework.esp");
     const patchIndex = loadorder.findIndex((line) => line.toLowerCase() === "pdv_classificationpatch.esp");
     if (frameworkIndex >= 0 && patchIndex === frameworkIndex + 1) {
-      this.pass("Phase 19 generated patch load order", "PDV_ClassificationPatch.esp is listed immediately after PlayerDevotion_Framework.esp.", DEV_PROFILE_LOADORDER);
+      this.pass("Phase 19 generated patch load order", "PDV_ClassificationPatch.esp is listed immediately after Devotion.esp.", DEV_PROFILE_LOADORDER);
     } else {
-      this.phase19Gap("Phase 19 generated patch load order", "PDV_ClassificationPatch.esp is not listed immediately after PlayerDevotion_Framework.esp.", DEV_PROFILE_LOADORDER);
+      this.phase19Gap("Phase 19 generated patch load order", "PDV_ClassificationPatch.esp is not listed immediately after Devotion.esp.", DEV_PROFILE_LOADORDER);
     }
 
     for (const location of PHASE19_TEMPLE_LOCATION_RECORDS) {
@@ -3064,9 +3064,9 @@ class Verifier {
     const listSource = this.readPluginRecordDetail(PDV_ESP, PHASE19_PROOF_STATE_LIST_FORMID)?.fields || {};
     const sourceListItems = normalizeStringList(listSource.Items || []);
     if (!sourceListItems.includes(PHASE19_PROOF_STATE_TRACK_FORMID)) {
-      this.pass("Phase 19 source plugin safety", "PlayerDevotion_Framework.esp does not contain the retired proof-only state-track list injection.", PDV_ESP);
+      this.pass("Phase 19 source plugin safety", "Devotion.esp does not contain the retired proof-only state-track list injection.", PDV_ESP);
     } else {
-      this.phase19Gap("Phase 19 source plugin safety", "PlayerDevotion_Framework.esp unexpectedly contains the retired proof-only state-track list injection.", PDV_ESP);
+      this.phase19Gap("Phase 19 source plugin safety", "Devotion.esp unexpectedly contains the retired proof-only state-track list injection.", PDV_ESP);
     }
   }
 
@@ -7355,6 +7355,15 @@ class Verifier {
       overlayPath,
     );
 
+    if (!requireOverlayCanary) {
+      this.info(
+        "V3 Preflight overlay",
+        `${PREFLIGHT_ROUTER_OVERLAY_PATCH} is an inactive historical canary; framework-owned EventBus/EventTypes records exist in Devotion.esp.`,
+        overlayPath,
+      );
+      return;
+    }
+
     let overlayInventory;
     try {
       overlayInventory = this.scanPlugin(overlayPath);
@@ -8188,13 +8197,13 @@ class Verifier {
     }
 
     const pluginsLines = readLines(pluginsTxt);
-    const activeLine = pluginsLines.find((line) => line.replace(/^\*/, "").toLowerCase() === "playerdevotion_framework.esp");
-    if (activeLine === "*PlayerDevotion_Framework.esp") {
-      this.pass("MO2 profile", "PlayerDevotion_Framework.esp is active in Devotion Dev.", pluginsTxt);
+    const activeLine = pluginsLines.find((line) => line.replace(/^\*/, "").toLowerCase() === "devotion.esp");
+    if (activeLine === "*Devotion.esp") {
+      this.pass("MO2 profile", "Devotion.esp is active in Devotion Dev.", pluginsTxt);
     } else if (activeLine) {
-      this.warn("MO2 profile", `PlayerDevotion_Framework.esp is present but not active: ${activeLine}`, pluginsTxt);
+      this.warn("MO2 profile", `Devotion.esp is present but not active: ${activeLine}`, pluginsTxt);
     } else {
-      this.fail("MO2 profile", "PlayerDevotion_Framework.esp is missing from plugins.txt.", pluginsTxt);
+      this.fail("MO2 profile", "Devotion.esp is missing from plugins.txt.", pluginsTxt);
     }
 
     for (const patchName of RETIRED_OVERLAY_PATCHES) {
@@ -8202,7 +8211,7 @@ class Verifier {
       if (patchLine === `*${patchName}`) {
         this.warn(
           "Retired overlay patch",
-          `${patchName} is still active. Its VMAD data has been merged back into PlayerDevotion_Framework.esp, so leave it unticked.`,
+          `${patchName} is still active. Its VMAD data has been merged back into Devotion.esp, so leave it unticked.`,
           pluginsTxt,
         );
       } else if (patchLine) {
@@ -8277,10 +8286,10 @@ class Verifier {
 
     if (exists(loadorderTxt)) {
       const loadorder = readLines(loadorderTxt).filter((line) => line.trim() && !line.startsWith("#"));
-      if (loadorder.at(-1)?.toLowerCase() === "playerdevotion_framework.esp") {
-        this.pass("MO2 load order", "PlayerDevotion_Framework.esp is last in loadorder.txt.", loadorderTxt);
-      } else if (loadorder.some((line) => line.toLowerCase() === "playerdevotion_framework.esp")) {
-        this.info("MO2 load order", "PlayerDevotion_Framework.esp is active but not last in loadorder.txt.", loadorderTxt);
+      if (loadorder.at(-1)?.toLowerCase() === "devotion.esp") {
+        this.pass("MO2 load order", "Devotion.esp is last in loadorder.txt.", loadorderTxt);
+      } else if (loadorder.some((line) => line.toLowerCase() === "devotion.esp")) {
+        this.info("MO2 load order", "Devotion.esp is active but not last in loadorder.txt.", loadorderTxt);
       }
     } else {
       this.warn("MO2 profile", "loadorder.txt missing.", loadorderTxt);

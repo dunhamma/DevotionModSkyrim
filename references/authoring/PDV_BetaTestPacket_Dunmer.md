@@ -168,7 +168,7 @@ once-per-window daily cap (`SIGNAL_DUNMER_TWILIGHT_RITE = 704`).
 - OUTDOOR Good-Daedra shrine -- DLC2 Solstheim Azura/Boethiah/Mephala altars ONLY
   (the Good Daedra have no other vanilla blessing shrine). Built 2026-06-14,
   readback-clean, runtime PENDING. The altar spells `03BCFB`/`03BCFC`/`03BCFD`
-  now use `PDV_MGEF_DunmerShrineCure` (`071554:PlayerDevotion_Framework.esp`),
+  now use `PDV_MGEF_DunmerShrineCure` (`071554:Devotion.esp`),
   whose `PDV_DunmerShrinePrayerEffect` routes the signal on effect start.
   To test:
   - `set PDV_GLO_OriginRace to 5`, `set PDV_GLO_DebugLevel to 2`, `set gamehour to 7`.

@@ -25,7 +25,7 @@ Implemented in this continuation:
 - Edited `tools/pdv_verify.mjs` with the user's explicit approval to raise the Mutagen bridge
   `spawnSync` buffer for strict JSON runs.
 - Authored all ten race reward/deity/neglect records into
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp` with
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp` with
   `tools/pdv-phase20-race-author`, reconciled shared deities, and refreshed SEQ.
 - Finished the Imperial civic discriminator gap with five parseable family receiver FormLists:
   public-service, mercy, lawful-order, honest-work, death-duty. The legacy broad
@@ -254,7 +254,7 @@ Author curated FormLists:
 **Operational protocol (CRITICAL — per the prior handoff and confirmed this session):**
 1. **Skyrim CLOSED** + `Stop-Process -Name housecarl-mcp -Force`. Do NOT call any housecarl tool
    between the stop and the write (it respawns + re-locks).
-2. Run `pdv-phase20-race-author --author-rewards --rewards-spec references/authoring/PDV_{Race}RewardRecords.spec.json --esp "D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp"` per race. Batch races back-to-back in one open window (idempotent + auto-backup).
+2. Run `pdv-phase20-race-author --author-rewards --rewards-spec references/authoring/PDV_{Race}RewardRecords.spec.json --esp "D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp"` per race. Batch races back-to-back in one open window (idempotent + auto-backup).
 3. Authoring order (per the deity-roster doc): Imperial + Argonian first → Orc (before Altmer because Altmer reuses Trinimac) → Dunmer / Altmer / Redguard → Nord / Bosmer / Breton (pure reusers) last.
 4. For shared deities (Azura ↔ Dunmer, Trinimac ↔ Altmer, Divines ↔ Nord/Breton): `--reconcile-shared-deity` after the owner runs.
 5. **Every new `PDV_Deity_*` QUST must have the SGE flag (Flags=17)** — the tool copies it from `PDV_Deity_Kyne`. **Then `node tools/pdv_refresh_seq.mjs --write` after each batch.** Non-skippable: this is how BaanDar shipped broken.

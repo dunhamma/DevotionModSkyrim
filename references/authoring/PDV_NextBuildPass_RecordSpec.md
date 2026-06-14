@@ -160,18 +160,18 @@ do not break the 30-45-day Champion curve. Life-mode multipliers x1.00/0.75/0.60
 `PDV_OrcRewardRecords.spec.json`: Trial of Iron Tusk/Shield/Hammer/Yoke support spells, The Watchers
 mode-split MESG records, and Hearth-Held support spell + declare/return/missed-cadence MESG records
 exist and are wired on `PDV__ManagerQuest`. Backup:
-`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260614-165115.bak`.
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260614-165115.bak`.
 **Route/message update 2026-06-14:** Four Holds now uses the recommended StorageUtil one-shot
 tracker rather than a full state enum. Route 75 is compile/verifier-clean through
 `PDV_EventTypes`, `PDV_EventBus`, `PDV_EventSignalActivator`, `PDV_EventSignalEffect`,
 `PDV_Deity_Malacath`, and `PDV__ManagerQuest.HandleOrcFourHoldsVisit`; the four hold notifications
 plus the all-holds milestone MESG are live/readback-clean through `PDV_OrcRewardRecords.spec.json`.
-Backup: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260614-165810.bak`.
+Backup: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260614-165810.bak`.
 Four added QASmoke ACTI/REFR proof surfaces for Dushnikh Yal, Mor Khazgur, Narzulbur, and
 Largashbur are also readback-clean; proof harness backups:
-`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-orc\PlayerDevotion_Framework.esp.20260614-170457.bak`
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-orc\Devotion.esp.20260614-170457.bak`
 and
-`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-proof-placements\PlayerDevotion_Framework.esp.20260614-170503.bak`.
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-proof-placements\Devotion.esp.20260614-170503.bak`.
 **Open:** final-world `ChangeLocation`/placement emitters for the four strongholds,
 Hearth-Held runtime cell restriction (forges+strongholds only vs any home/inn), and
 Trial-of-Iron/Watchers/Hearth-Held manager behavior remain deferred. Code Holds source/record/readback
@@ -298,7 +298,7 @@ twilight awards cap once per dawn and dusk window.
 **Outdoor shrine emitter (built 2026-06-14, source/compile/readback-clean):** detection is limited to the
 Dragonborn DLC2 Solstheim altars (Azura/Boethiah/Mephala, blessing spells `03BCFB`/`03BCFC`/`03BCFD`) --
 the Good Daedra have no vanilla blessing-giving world shrines. The altar spells now point at
-`PDV_MGEF_DunmerShrineCure` (`071554:PlayerDevotion_Framework.esp`), a CureDisease effect carrying
+`PDV_MGEF_DunmerShrineCure` (`071554:Devotion.esp`), a CureDisease effect carrying
 `PDV_DunmerShrinePrayerEffect`, which routes `RouteDunmerOutdoorGoodDaedraShrine` ->
 `HandleDunmerOutdoorGoodDaedraShrine` -> `TryAwardDunmerTwilightWindowSignal` on effect start. The Azura
 statue (DA01) and the Boethiah/Mephala quest shrines are non-blessing activators (no clean hook).

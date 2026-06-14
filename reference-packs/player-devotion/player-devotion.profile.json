@@ -2,7 +2,7 @@
   "schema": "creation-profile.v1",
   "game": "SkyrimSE",
   "modId": "player-devotion-reference",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "outputPolicy": "overlay",
   "defaultOutput": "PDV_AutoWireReference.esp",
   "referencePack": "player-devotion",
@@ -28,44 +28,44 @@
       "name": "pdv-reference-records",
       "records": {
         "PDV_MCM": {
-          "formid": "PlayerDevotion_Framework.esp:03AFBE",
+          "formid": "Devotion.esp:03AFBE",
           "recordType": "QUST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV__ManagerQuest": {
-          "formid": "PlayerDevotion_Framework.esp:00C325",
+          "formid": "Devotion.esp:00C325",
           "recordType": "QUST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_FLST_AllDeities": {
-          "formid": "PlayerDevotion_Framework.esp:017E47",
+          "formid": "Devotion.esp:017E47",
           "recordType": "FLST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_ActivePiety": {
-          "formid": "PlayerDevotion_Framework.esp:00945A",
+          "formid": "Devotion.esp:00945A",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_ActiveTier": {
-          "formid": "PlayerDevotion_Framework.esp:00945B",
+          "formid": "Devotion.esp:00945B",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_ActiveDeityIndex": {
-          "formid": "PlayerDevotion_Framework.esp:00945C",
+          "formid": "Devotion.esp:00945C",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_DebugLevel": {
-          "formid": "PlayerDevotion_Framework.esp:01DBD9",
+          "formid": "Devotion.esp:01DBD9",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_PatronDeity": {
-          "formid": "PlayerDevotion_Framework.esp:02C5C7",
+          "formid": "Devotion.esp:02C5C7",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         }
       }
     }

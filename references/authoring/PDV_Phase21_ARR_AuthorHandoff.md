@@ -8,9 +8,9 @@ public support claim and not maintainer approval.
 
 ## Package Contents
 
-- Use the current `PlayerDevotion_Framework.esp` from the Devotion mod.
+- Use the current `Devotion.esp` from the Devotion mod.
 - Disable the Archon religion layer listed below.
-- Load `PlayerDevotion_Framework.esp` after Requiem inputs and before
+- Load `Devotion.esp` after Requiem inputs and before
   `Requiem for the Indifferent.esp`.
 - Re-run the Reqtificator after placement. Treat any RFTI output from local
   testing as a reference snapshot only; the list author should regenerate it.
@@ -55,16 +55,16 @@ Local test install:
 
 - `D:\Wabbajack\modlists\ARR\mods\Devotion - PlayerDevotion Local Test`
 - junction target: `D:\Wabbajack\modlists\Anvil\mods\Devotion`
-- `PlayerDevotion_Framework.esp` active before `Requiem for the Indifferent.esp`
+- `Devotion.esp` active before `Requiem for the Indifferent.esp`
 
 houseCARL readback after disabling Archon and activating PDV:
 
-- `PlayerDevotion_Framework.esp` is active.
+- `Devotion.esp` is active.
 - `Archon.esp` and `Archon - Mandra Shrines.esp` are inactive.
 - All 14 shrine blessing spell targets resolve to
-  `PlayerDevotion_Framework.esp`.
+  `Devotion.esp`.
 - The three Dragonborn Good Daedra altar spells resolve to the PDV cure effect
-  `071554:PlayerDevotion_Framework.esp`, carrying
+  `071554:Devotion.esp`, carrying
   `PDV_DunmerShrinePrayerEffect`.
 
 ## Smoke Checklist

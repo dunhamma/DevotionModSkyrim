@@ -2,7 +2,7 @@
   "schema": "creation-authoring.v1",
   "project": "platform-v1-live-safe-writer",
   "game": "SkyrimSE",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "output": "CKRA_PlatformV1SafeWriterProof.esp",
   "operations": [
     {

@@ -107,7 +107,7 @@ That spec is authoritative for architecture; this handoff is orientation + guard
   `node tools/pdv_verify.mjs`.
 - ESP records: author with the existing `tools/pdv_author.mjs` / phase-author helpers.
   **For ESP WRITES, park houseCARL off Anvil** per memory `compat-reference-instances`:
-  point it at `D:\Wabbajack\modlists\DoD`, confirm `PlayerDevotion_Framework.esp` is
+  point it at `D:\Wabbajack\modlists\DoD`, confirm `Devotion.esp` is
   free (Skyrim/CK closed), write, then **restore houseCARL to Anvil (Devotion Dev)**.
   Reads are fine on Anvil.
 - Gates: (1) compile 0/0; (2) `pdv_verify` FAIL=0; (3) JSON load self-test (manager logs

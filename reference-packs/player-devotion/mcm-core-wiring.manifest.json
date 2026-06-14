@@ -2,7 +2,7 @@
   "schema": "creation-authoring.v1",
   "project": "player-devotion-reference",
   "game": "SkyrimSE",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "output": "PDV_AutoWireReference.esp",
   "metadata": {
     "referenceOnly": true,

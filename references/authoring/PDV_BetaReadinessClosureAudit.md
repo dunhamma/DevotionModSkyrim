@@ -110,7 +110,7 @@ packet:
 - Approved stages are `100` and `105`, matching the Ill Met By Moonlight
   terminal hunt/mercy branches.
 - The source-fill writer created backup
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\PlayerDevotion_Framework.esp.20260610-152411.bak`.
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\Devotion.esp.20260610-152411.bak`.
 - `--check-source-fill`, `--check-exact-stage-gates`, and the base wiring audit
   read back the Bosmer source fill.
 

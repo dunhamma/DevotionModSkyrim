@@ -44,16 +44,16 @@ It also now exposes the controlled/live-sender proof helpers and shows the race 
 
 ### SEQ
 
-`PlayerDevotion_Framework.seq` was refreshed after confirming Skyrim/CK were not running:
+`Devotion.seq` was refreshed after confirming Skyrim/CK were not running:
 
 ```text
-D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\PlayerDevotion_Framework.seq
+D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\Devotion.seq
 ```
 
 Backup:
 
 ```text
-D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\PlayerDevotion_Framework.seq.20260611-094346.bak
+D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\Devotion.seq.20260611-094346.bak
 ```
 
 Refresh result: `PASS`, `changed=false`, `questCount=39`.

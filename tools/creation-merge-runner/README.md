@@ -19,7 +19,7 @@ Example:
 ```powershell
 dotnet run --project .\native\CreationMergeRunner\CreationMergeRunner.csproj -- `
   --request .\scratch\structured-merge-request.json `
-  --source-path D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp `
+  --source-path D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp `
   --generated-path D:\Wabbajack\modlists\Anvil\mods\Devotion\PDV_AutoWireReference.esp `
   --output-path .\scratch\PlayerDevotion_Framework.merge-candidate.esp `
   --backup-root .\scratch\merge-backups `

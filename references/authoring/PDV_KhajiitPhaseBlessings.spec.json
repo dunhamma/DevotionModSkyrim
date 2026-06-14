@@ -69,5 +69,5 @@
     "Khenarthi/Azurah get two phase windows each (most reachable gods), Alkosh only the full moon (rare by design), Rajhin two dark windows, Baan Dar one.",
     "Record in PDV_RaceEffectReviewLedger.md as a new Khajiit effect family before beta-feel claims."
   ],
-  "authoringPath": "Author via the established Mutagen race-reward tooling pattern (mirror PDV_Bless_Khajiit_Lunar_T1: SPEL ability + MGEF per record, then wire the five PDV__ManagerQuest properties). Requires Skyrim/CK to release PlayerDevotion_Framework.esp."
+  "authoringPath": "Author via the established Mutagen race-reward tooling pattern (mirror PDV_Bless_Khajiit_Lunar_T1: SPEL ability + MGEF per record, then wire the five PDV__ManagerQuest properties). Requires Skyrim/CK to release Devotion.esp."
 }

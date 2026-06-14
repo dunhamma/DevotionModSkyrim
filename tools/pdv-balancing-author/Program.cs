@@ -3,7 +3,7 @@ using Mutagen.Bethesda;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 
-const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
+const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
 
 var dryRun = args.Contains("--dry-run");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
@@ -146,7 +146,7 @@ static void WriteModIfNeeded(SkyrimMod mod, string espPath, bool dryRun, AuthorR
     var backupDir = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(espPath))!, "Backups", backupSubdir);
     Directory.CreateDirectory(backupDir);
     var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss");
-    var backupPath = Path.Combine(backupDir, $"PlayerDevotion_Framework.esp.{stamp}.bak");
+    var backupPath = Path.Combine(backupDir, $"Devotion.esp.{stamp}.bak");
     File.Copy(espPath, backupPath, overwrite: false);
     report.BackupPath = backupPath;
 

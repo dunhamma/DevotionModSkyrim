@@ -52,7 +52,7 @@ Dialogue authoring is CK-first, readback-second, and V2-only unless a later
 scope decision explicitly reopens no-voice recognition content.
 
 1. Plan the recognition packet in a manifest or runbook.
-2. Author the branch/topic/INFO manually in Creation Kit against `PlayerDevotion_Framework.esp` or the explicitly assigned plugin.
+2. Author the branch/topic/INFO manually in Creation Kit against `Devotion.esp` or the explicitly assigned plugin.
 3. Save in CK.
 4. Refresh SEQ.
 5. Close CK or otherwise restore MO2/MCP availability before readback if the live tooling becomes unavailable while CK is open.

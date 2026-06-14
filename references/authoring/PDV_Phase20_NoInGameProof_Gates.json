@@ -58,7 +58,7 @@
         "manager wrong-origin guarded handlers",
         "Survey/status text acknowledgement",
         "player-alias PO3 book, spell, harvest, weather, and quest-stage receiver hooks",
-        "17 empty PDV_FLST_P2_* receiver FormList shells in PlayerDevotion_Framework.esp",
+        "17 empty PDV_FLST_P2_* receiver FormList shells in Devotion.esp",
         "17 PDV_PlayerEvents alias properties wired to matching PDV_FLST_P2_* receiver FormLists",
         "receiver-side P2 source repeat gates compile-proven before curated source fill",
         "source-fill tool mode ready for approved exact source entries, with empty-source readback passing until curation is approved"

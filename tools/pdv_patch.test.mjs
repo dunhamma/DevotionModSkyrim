@@ -49,7 +49,7 @@ test("keeps tooling examples plan-only even when payloads resolve", () => {
         id: "tooling-formlist",
         operation: "formlist_inject",
         target: {
-          plugins: ["PlayerDevotion_Framework.esp"],
+          plugins: ["Devotion.esp"],
           signatures: ["QUST"],
           editorIds: ["PDV_State_NordPantheonBaseline"],
         },
@@ -97,7 +97,7 @@ test("default dry-run build emits approved rules and skips candidates", () => {
         id: "candidate-formlist",
         operation: "formlist_inject",
         target: {
-          plugins: ["PlayerDevotion_Framework.esp"],
+          plugins: ["Devotion.esp"],
           signatures: ["QUST"],
           editorIds: ["PDV_State_NordPantheonBaseline"],
         },
@@ -129,7 +129,7 @@ test("explicit candidate dry-run emits resolved candidate rules", () => {
         id: "candidate-formlist",
         operation: "formlist_inject",
         target: {
-          plugins: ["PlayerDevotion_Framework.esp"],
+          plugins: ["Devotion.esp"],
           signatures: ["QUST"],
           editorIds: ["PDV_State_NordPantheonBaseline"],
         },
@@ -150,7 +150,7 @@ test("explicit candidate dry-run emits resolved candidate rules", () => {
   assert.equal(payload.build.buildRuleCount, 1);
   assert.equal(payload.build.skippedCandidateRuleCount, 0);
   assert.equal(payload.build.patchRecordCount, 1);
-  assert.equal(payload.build.patchRequest.records[0].formid, "PlayerDevotion_Framework.esp:0499DB");
+  assert.equal(payload.build.patchRequest.records[0].formid, "Devotion.esp:0499DB");
 });
 
 test("dry-run build emits the approved subset when another rule is blocked", () => {

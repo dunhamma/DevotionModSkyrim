@@ -39,14 +39,14 @@ links via Mutagen.
 
 ## Execution options
 
-**A. CK (manual or scripted):** open `PlayerDevotion_Framework.esp`, `PDV_ActionRouter` quest ->
+**A. CK (manual or scripted):** open `Devotion.esp`, `PDV_ActionRouter` quest ->
 Scripts -> `PDV_ActionRouter` -> Properties -> Auto-Fill All (or fill the 3 individually) -> save.
 
 **B. Mutagen (preferred for automation):** model on `tools/pdv-stance-author/Program.cs` -- it already
 opens the ESP, finds `PDV_ActionRouter` by EditorID, upserts `ScriptProperty` entries, and writes
 with a backup. Add `ScriptObjectProperty` entries named `ActorType{Undead,Daedra,Dragon}` whose
 `Object` link is the `Skyrim.esm` keyword of the same EditorID (resolve via the link cache).
-Requires Skyrim/CK to release `PlayerDevotion_Framework.esp` first.
+Requires Skyrim/CK to release `Devotion.esp` first.
 
 ## Verify
 
@@ -59,7 +59,7 @@ Requires Skyrim/CK to release `PlayerDevotion_Framework.esp` first.
 
 - **Claude is actively editing `PDV__ManagerQuest.psc`** (loader, stance migration, version constant
   `LIKES_DISLIKES_VERSION`). If Codex also edits the manager, coordinate to avoid clobbering.
-- `PlayerDevotion_Framework.esp` was just modified by Claude (per-race `Stance_<Race>` VMAD on all 32
+- `Devotion.esp` was just modified by Claude (per-race `Stance_<Race>` VMAD on all 32
   `PDV_Deity_*` quests, from `references/phase4/PDV_StanceMatrix.csv`, via `tools/pdv-stance-author`;
   backup in `mods/Devotion/Backups/stance/`). Any further ESP write should start from the current ESP.
 - Observed (NOT Claude's edits): `PDV_PlayerEvents.psc` (mtime today) and `tools/pdv_quest_matrix_compile.mjs`

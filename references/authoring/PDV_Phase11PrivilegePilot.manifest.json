@@ -2,8 +2,8 @@
   "schema": "creation-authoring.v1",
   "project": "player-devotion-phase11",
   "game": "SkyrimSE",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
-  "output": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
+  "output": "Devotion.esp",
   "id": "phase11-privilege-pilot",
   "title": "PDV Phase 11 privilege pilot contract",
   "implementationStatus": "live-dialogue-authored",
@@ -202,19 +202,19 @@
     {
       "id": "phase11-seq-refresh",
       "kind": "artifact.seq.generate",
-      "target": "PlayerDevotion_Framework.seq",
+      "target": "Devotion.seq",
       "mode": "update",
       "ckSemanticsRequired": true,
       "preferredBackend": "ckpe-bridge",
       "authoringPath": "manual-after-dialogue",
-      "plugin": "PlayerDevotion_Framework.esp",
+      "plugin": "Devotion.esp",
       "requiredAfter": [
         "phase11-arngeir-branch",
         "phase11-arngeir-topic",
         "phase11-arngeir-info"
       ],
       "payload": {
-        "plugin": "PlayerDevotion_Framework.esp"
+        "plugin": "Devotion.esp"
       }
     }
   ]

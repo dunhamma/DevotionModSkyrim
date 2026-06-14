@@ -1,5 +1,5 @@
 Scriptname PDV_PrismaBridge Hidden
-{Native bridge between PlayerDevotion Papyrus scripts and the Prisma UI SKSE API.}
+{Native bridge between Devotion Papyrus scripts and the Prisma UI SKSE API.}
 
 Bool Function IsAvailable() Global Native
 {Returns true when the SKSE bridge has acquired Prisma UI's native API.}

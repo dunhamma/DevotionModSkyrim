@@ -2,7 +2,7 @@
   "schema": "pdv-race-implementation-costing.v1",
   "project": "player-devotion-phase20-bosmer-non-hunter",
   "game": "SkyrimSE",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "id": "phase20-bosmer-non-hunter-implementation-costing",
   "title": "PDV Phase 20 Bosmer non-hunter path parity implementation costing",
   "race": "Bosmer",

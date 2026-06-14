@@ -15,7 +15,7 @@ hooks for Dragonborn, Lorkhan, dawn practice, or orthodox-cost content.
 ## Preconditions
 
 - Active MO2 profile: `Devotion Dev`.
-- Active plugin in CK: `PlayerDevotion_Framework.esp`.
+- Active plugin in CK: `Devotion.esp`.
 - `PDV_EventSignalActivator.pex`, `PDV_EventSignalEffect.pex`, and
   `PDV__ManagerQuest.pex` are current.
 - `node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json`

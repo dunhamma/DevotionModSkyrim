@@ -13,8 +13,8 @@ node .\tools\pdv_daedric_test_readiness.mjs --deep
 
 1. Launch Skyrim through Anvil MO2 with the `Devotion Dev` profile.
 2. Start from a throwaway save or main-menu `coc qasmoke`.
-3. Open `Mod Configuration > PlayerDevotion > Player` and enable `Developer Options`.
-4. Open `Mod Configuration > PlayerDevotion > Debug`.
+3. Open `Mod Configuration > Devotion > Player` and enable `Developer Options`.
+4. Open `Mod Configuration > Devotion > Debug`.
 5. Enable debug traces:
 
 ```text

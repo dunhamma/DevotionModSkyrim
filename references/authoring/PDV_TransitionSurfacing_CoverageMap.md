@@ -148,7 +148,7 @@ The copy is done. The remaining work is **wiring**, on the local CK/tooling mach
 2. For each non-N/A cell above, fire the class with the listed slot at its detected transition,
    honoring the Devoted/emergence reconciliation and the neglect re-arm cadence.
 3. Confirm the per-race manifest rows are promoted to ESP records (Phase 19 / CAT-6) — many are
-   still draft-in-manifest, not yet wired into `PlayerDevotion_Framework.esp`.
+   still draft-in-manifest, not yet wired into `Devotion.esp`.
 4. Daedric per-race curse-access response rows (e.g. Orc Molag Bal) close under the D-18 content
    checklist, separately from this map.
 

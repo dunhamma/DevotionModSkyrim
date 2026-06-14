@@ -10,8 +10,8 @@ Pact item/tag enforcement.
 
 ## Preconditions
 
-- `PlayerDevotion_Framework.esp` is active in the Anvil `Devotion Dev` profile.
-- The following base ACTI records already exist in `PlayerDevotion_Framework.esp`:
+- `Devotion.esp` is active in the Anvil `Devotion Dev` profile.
+- The following base ACTI records already exist in `Devotion.esp`:
   - `PDV_ACTI_BosmerOldContractProperHuntSignal`
   - `PDV_ACTI_BosmerOldContractForestKeptSignal`
   - `PDV_ACTI_BosmerLivingStoryCommunityKeptSignal`

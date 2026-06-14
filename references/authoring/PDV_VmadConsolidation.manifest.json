@@ -5,7 +5,7 @@
   "notes": [
     "This manifest re-emits the full canonical property set for PDV_MCM and PDV__ManagerQuest on single script attachments.",
     "Use it when CK/xEdit merge-back work has split one script's properties across duplicate same-name VMAD entries on the framework record.",
-    "The goal is runtime-safe consolidation in an override plugin without mutating PlayerDevotion_Framework.esp in place."
+    "The goal is runtime-safe consolidation in an override plugin without mutating Devotion.esp in place."
   ],
   "operations": [
     { "kind": "setProperty", "record": "PDV_MCM", "script": "PDV_MCM", "property": "PDV_Manager", "valueType": "Object", "value": "PDV__ManagerQuest" },

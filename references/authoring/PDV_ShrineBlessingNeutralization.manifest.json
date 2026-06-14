@@ -3,7 +3,7 @@
   "status": "records-authored-readback-pass-pending-runtime-proof",
   "policy": "cure-only",
   "output": "main-esp",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "acceptedMasters": [
     "Skyrim.esm",
     "Dawnguard.esm",
@@ -117,7 +117,7 @@
       "spellEditorId": "DLC2AltarAzuraSpell",
       "sourceActivator": "03A484:Dragonborn.esm",
       "sourceActivatorEditorId": "DLC2ShrineAzura",
-      "expectedCureEffect": "071554:PlayerDevotion_Framework.esp",
+      "expectedCureEffect": "071554:Devotion.esp",
       "expectedRemovedEffects": [],
       "pdvCureEffect": true
     },
@@ -127,7 +127,7 @@
       "spellEditorId": "DLC2AltarBoethiahSpell",
       "sourceActivator": "039E34:Dragonborn.esm",
       "sourceActivatorEditorId": "DLC2ShrineBoethiah",
-      "expectedCureEffect": "071554:PlayerDevotion_Framework.esp",
+      "expectedCureEffect": "071554:Devotion.esp",
       "expectedRemovedEffects": [],
       "pdvCureEffect": true
     },
@@ -137,7 +137,7 @@
       "spellEditorId": "DLC2AltarMephalaSpell",
       "sourceActivator": "03A481:Dragonborn.esm",
       "sourceActivatorEditorId": "DLC2ShrineMephala",
-      "expectedCureEffect": "071554:PlayerDevotion_Framework.esp",
+      "expectedCureEffect": "071554:Devotion.esp",
       "expectedRemovedEffects": [],
       "pdvCureEffect": true
     }
@@ -216,7 +216,7 @@
   ],
   "readback": {
     "status": "helper-check-pass",
-    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\shrine-blessing-neutralization\\PlayerDevotion_Framework.esp.20260614-204741.bak",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\shrine-blessing-neutralization\\Devotion.esp.20260614-204741.bak",
     "discoverCommand": "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --discover",
     "dryRunCommand": "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --dry-run",
     "writeCommand": "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --write",

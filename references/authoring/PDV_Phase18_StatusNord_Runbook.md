@@ -5,7 +5,7 @@ Generated dialogue creation remains out of scope for Phase 18. Create these reco
 ## Preconditions
 
 - Active profile: `Devotion Dev`.
-- Active plugin: `PlayerDevotion_Framework.esp`.
+- Active plugin: `Devotion.esp`.
 - Script compile is clean for `PDV_MCM`, `PDV__ManagerQuest`, and `PDV_SurveyDevotionEffect`.
 - Run `dotnet run --project .\tools\pdv-phase18-author -- --dry-run --create-missing` before live helper application.
 
@@ -31,7 +31,7 @@ Use globals/properties already surfaced by the manager where possible. If a cond
 
 ## Current CK Readback
 
-Last direct readback found these saved records in `PlayerDevotion_Framework.esp`:
+Last direct readback found these saved records in `Devotion.esp`:
 
 - Froki branch/topic/INFO exists and matches the Kyne Champion contract.
 - Heimskr branch/topic/INFO exists and matches the Talos Champion contract.

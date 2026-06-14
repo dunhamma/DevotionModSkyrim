@@ -7,11 +7,11 @@
   "esl_flagged": true,
   "masters": [
     "Skyrim.esm",
-    "PlayerDevotion_Framework.esp"
+    "Devotion.esp"
   ],
   "details": [
     {
-      "formid": "PlayerDevotion_Framework.esp:017E47",
+      "formid": "Devotion.esp:017E47",
       "record_type": "FLST",
       "op": "override",
       "source": "PDV_Phase9To12_AutoWire.esp",
@@ -20,7 +20,7 @@
       }
     },
     {
-      "formid": "PlayerDevotion_Framework.esp:03AFBE",
+      "formid": "Devotion.esp:03AFBE",
       "record_type": "QUST",
       "op": "override",
       "source": "PDV_Phase9To12_CKProof.esp",

@@ -1755,7 +1755,7 @@ Phase 18B locks the first Nord review quartet into `references/authoring/PDV_Pha
 - Andurs: Nord origin, broad patron state, not vampire.
 - Aela: Nord origin plus werewolf curse state or active Hircine path.
 
-These topics are CK-authored/live in `PlayerDevotion_Framework.esp`. CK saved the INFO records unnamed; strict readback accepts unnamed Topic Info only when speaker, prompt, response, owning topic, and conditions match. Phase 18 closeout also now carries a runtime matrix covering Player-page behavior, Developer Options persistence, Survey Devotion for broad/focused Nord states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative checks for all four dialogue surfaces. They prove the CK-safe recognition path, but they do not reopen V1 scope for new NPC conversation lines.
+These topics are CK-authored/live in `Devotion.esp`. CK saved the INFO records unnamed; strict readback accepts unnamed Topic Info only when speaker, prompt, response, owning topic, and conditions match. Phase 18 closeout also now carries a runtime matrix covering Player-page behavior, Developer Options persistence, Survey Devotion for broad/focused Nord states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative checks for all four dialogue surfaces. They prove the CK-safe recognition path, but they do not reopen V1 scope for new NPC conversation lines.
 
 ### 16.4 UI defaults
 
@@ -2045,7 +2045,7 @@ remain future content work.
 
 Packaging policy: `PDV_ClassificationPatch.esp` is a temporary generated
 review/dev artifact for core rules. Approved core vanilla/DLC rules may be
-promoted into `PlayerDevotion_Framework.esp` later through a separate
+promoted into `Devotion.esp` later through a separate
 release-packaging merge gate. Mod-list/list-specific compatibility rules remain
 separate generated patches permanently.
 
@@ -2172,7 +2172,7 @@ should not require a stack of generic compatibility ESPs.
 Patch constraints:
 
 - Do not edit list-owned plugins directly.
-- Keep masters minimal: base game files, `PlayerDevotion_Framework.esp`, and
+- Keep masters minimal: base game files, `Devotion.esp`, and
   only the target plugins whose records are touched.
 - List patches win over generic internal templates.
 - No new hard dependencies are added for Phase 21.
@@ -2753,7 +2753,7 @@ Must complete:
 
 Current implementation note (2026-05-16): Preflight gate is closed.
 `PDV_EventTypes`, `PDV_EventBus`, and `PDV_GLO_PatronState` are framework-owned
-records in `PlayerDevotion_Framework.esp`; manager/router/eventbus wiring is
+records in `Devotion.esp`; manager/router/eventbus wiring is
 live; strict preflight verifier runs clean (`FAIL=0`); and the clean-start smoke
 pass validated MCM load, origin seed, patron-state transitions, dawn
 consolidation, direct-hostile vs non-hostile canary behavior, Talos/Auri-El
@@ -3360,7 +3360,7 @@ manifest remains plan-only, and
 `PDV_ClassificationPatch.esp`.
 
 `PDV_ClassificationPatch.esp` is active in Devotion Dev immediately after
-`PlayerDevotion_Framework.esp`. `tools/pdv_verify.mjs --strict-phase19`
+`Devotion.esp`. `tools/pdv_verify.mjs --strict-phase19`
 verifies active profile placement, six Temple LCTN overrides, absence of the
 retired proof overrides, and source-plugin safety. Packaging policy is locked:
 core vanilla/DLC approved rules may later promote into the framework ESP via a
@@ -3395,7 +3395,7 @@ its integration/test flow, with the other six lists at least `patch-packaged`.
 ### v3.48 - 2026-05-30 - Phase 18 Nord dialogue readback closeout
 
 The four Phase 18 Nord recognition topics are now live CK-authored records in
-`PlayerDevotion_Framework.esp`: Froki/Kyne Champion, Heimskr/Talos Champion,
+`Devotion.esp`: Froki/Kyne Champion, Heimskr/Talos Champion,
 Andurs broad death-rite, and Aela werewolf/Hircine tension. CK saved the Topic
 Info records unnamed, so strict readback now resolves them by owning topic,
 speaker, prompt, response line, and condition stack. SEQ was refreshed after
@@ -3507,7 +3507,7 @@ roster, D-13 now uses mixed recovery by default, D-14 now uses reduced
 cross-Prince rivalry math, and D-17 now resolves werewolf detection through a
 combined shared-service seam. The first full Phase 13 pilot is now explicitly
 `Hircine + Nord`. A new `tools/pdv-phase13-author` helper created and wired the
-three Hircine price records into `PlayerDevotion_Framework.esp`, and SEQ was
+three Hircine price records into `Devotion.esp`, and SEQ was
 refreshed after the live write. Phase 14-16 manifests now reflect the generic
 formal-offer engine, live curse detection, and generic neglect selection pass.
 `tools/pdv_verify.mjs` now checks the generic Phase 14 source surface, the live
@@ -3580,7 +3580,7 @@ application, and spell removal after piety recovery. Final strict verifier:
 CrashLogger tied a Skyrim CTD to the generated Phase 11 Arngeir dialogue topic
 and branch (`PDV_DIAL_Phase11ArngeirKyneRecognitionTopic` /
 `PDV_DIAL_Phase11ArngeirKyneRecognitionBranch`). The generated
-`DLBR`/`DIAL`/`INFO` records were removed from `PlayerDevotion_Framework.esp`
+`DLBR`/`DIAL`/`INFO` records were removed from `Devotion.esp`
 with a targeted helper pass, preserving the Khajiit, commitment, and
 neglect/decay packet records. `references/authoring/PDV_Phase11PrivilegePilot.manifest.json`
 is demoted back to `prep-only`, and `--strict-phase11` now checks live dialogue
@@ -3592,7 +3592,7 @@ Superseded by v3.34. The generated dialogue records passed static readback but
 were unsafe at runtime and have been removed.
 
 The next-packet helper now authors the PDV-owned Arngeir/Kynareth recognition
-dialogue records directly into `PlayerDevotion_Framework.esp`:
+dialogue records directly into `Devotion.esp`:
 `PDV_DIAL_Phase11ArngeirKyneRecognitionBranch`,
 `PDV_DIAL_Phase11ArngeirKyneRecognitionTopic`, and
 `PDV_INFO_Phase11ArngeirKyneRecognition`. `--strict-phase11` now reads back the
@@ -4126,7 +4126,7 @@ exception.
 
 Closed the V3 Preflight exit gate. Framework-owned `PDV_GLO_PatronState`,
 `PDV_EventTypes`, and `PDV_EventBus` records are now present and wired in
-`PlayerDevotion_Framework.esp`; `PDV_ActionRouter` points at the framework-owned
+`Devotion.esp`; `PDV_ActionRouter` points at the framework-owned
 EventBus/EventTypes services; strict preflight verification is clean; and the
 clean-start in-game smoke pass is complete (A-F gate checks passed, including
 the direct-vs-non-hostile canary and Talos/Auri-El rivalry validation).

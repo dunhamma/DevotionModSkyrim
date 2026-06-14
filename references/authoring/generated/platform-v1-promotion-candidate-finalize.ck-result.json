@@ -26,7 +26,7 @@
         "implementationRule": "This command proves the requested CK load set and active save target. It does not mutate CK Data dialog state.",
         "requestedActivePlugin": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
         "intendedSaveTarget": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
-        "sourcePlugin": "PlayerDevotion_Framework.esp",
+        "sourcePlugin": "Devotion.esp",
         "generatedOrCandidatePlugin": "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
         "sourcePluginNotActiveRequired": true,
         "activePlugin": {
@@ -40,7 +40,7 @@
           "ownedFormCount": 0
         },
         "sourcePluginState": {
-          "fileName": "PlayerDevotion_Framework.esp",
+          "fileName": "Devotion.esp",
           "filePath": "Data\\",
           "loadIndex": 3,
           "selected": true,
@@ -61,11 +61,11 @@
         },
         "requiredPlugins": [
           {
-            "name": "PlayerDevotion_Framework.esp",
+            "name": "Devotion.esp",
             "loaded": true,
             "selected": true,
             "plugin": {
-              "fileName": "PlayerDevotion_Framework.esp",
+              "fileName": "Devotion.esp",
               "filePath": "Data\\",
               "loadIndex": 3,
               "selected": true,

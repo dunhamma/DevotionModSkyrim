@@ -96,7 +96,7 @@ with 0 errors and 0 warnings.
 also created and read back route-200 QASmoke sender refs for all 16 Princes and
 route-201 `PDV_REFR_Daedric_GenericSilenceProbe_QASmoke`. The latest live ESP
 write backed up to
-`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\PlayerDevotion_Framework.esp.20260607-191318.bak`.
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\Devotion.esp.20260607-191318.bak`.
 `tools/pdv_daedric_runtime_check.mjs --self-test --strict-manager` passes for
 the all-Prince route marker contract and should be run against `Papyrus.0.log`
 after in-game activation.
@@ -117,7 +117,7 @@ Peryite `DA13` stage 100 -> index 14, and Hircine `DA05` stage 100 -> index
 `PDV_FLST_Daedric_<Prince>LiveSources` FormLists, their exact `Skyrim.esm`
 quest entries, and the matching `PDV_PlayerEvents` alias properties. The
 latest live ESP write backed up to
-`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\PlayerDevotion_Framework.esp.20260607-194539.bak`.
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\Devotion.esp.20260607-194539.bak`.
 `tools/pdv_daedric_runtime_check.mjs --strict-manager` still accepts any
 Prince-specific `eventbus_200_*` manager trace by default for broad route
 checks. Counted live-source proof must use `--source organic`, which requires

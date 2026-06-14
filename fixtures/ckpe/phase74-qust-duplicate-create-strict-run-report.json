@@ -7,7 +7,7 @@
   "manifest": {
     "project": "pdv-ckproof",
     "game": "SkyrimSE",
-    "sourcePlugin": "PlayerDevotion_Framework.esp",
+    "sourcePlugin": "Devotion.esp",
     "output": "PDV_Phase9To12_CKProof.esp"
   },
   "profile": {
@@ -217,7 +217,7 @@
                         "entriesReadable": true,
                         "entries": [
                           {
-                            "fileName": "PlayerDevotion_Framework.esp",
+                            "fileName": "Devotion.esp",
                             "filePath": "Data\\",
                             "loadIndex": 4,
                             "selected": true,
@@ -296,7 +296,7 @@
                         "entriesReadable": true,
                         "entries": [
                           {
-                            "fileName": "PlayerDevotion_Framework.esp",
+                            "fileName": "Devotion.esp",
                             "filePath": "Data\\",
                             "loadIndex": 4,
                             "selected": true,
@@ -661,7 +661,7 @@
         "manifest": {
           "project": "pdv-ckproof",
           "game": "SkyrimSE",
-          "sourcePlugin": "PlayerDevotion_Framework.esp",
+          "sourcePlugin": "Devotion.esp",
           "output": "PDV_Phase9To12_CKProof.esp"
         },
         "results": [

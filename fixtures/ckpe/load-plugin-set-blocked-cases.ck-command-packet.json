@@ -23,13 +23,13 @@
     {
       "op": "loadPluginSet",
       "case": "missing-generated-or-candidate-plugin",
-      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "MissingGenerated.esp"],
+      "requiredPlugins": ["Skyrim.esm", "Devotion.esp", "MissingGenerated.esp"],
       "plugins": [
         { "name": "Skyrim.esm", "selected": true, "active": false },
-        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": false },
+        { "name": "Devotion.esp", "selected": true, "active": false },
         { "name": "MissingGenerated.esp", "selected": false, "active": false }
       ],
-      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "sourcePlugin": "Devotion.esp",
       "generatedPlugin": "MissingGenerated.esp",
       "activePlugin": "MissingGenerated.esp",
       "intendedSaveTarget": "MissingGenerated.esp",
@@ -39,13 +39,13 @@
     {
       "op": "loadPluginSet",
       "case": "generated-loaded-but-not-active",
-      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esp"],
+      "requiredPlugins": ["Skyrim.esm", "Devotion.esp", "PDV_Phase9To12_CKProof.esp"],
       "plugins": [
         { "name": "Skyrim.esm", "selected": true, "active": false },
-        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": true },
+        { "name": "Devotion.esp", "selected": true, "active": true },
         { "name": "PDV_Phase9To12_CKProof.esp", "selected": true, "active": false }
       ],
-      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "sourcePlugin": "Devotion.esp",
       "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
       "activePlugin": "PDV_Phase9To12_CKProof.esp",
       "intendedSaveTarget": "PDV_Phase9To12_CKProof.esp",
@@ -55,13 +55,13 @@
     {
       "op": "loadPluginSet",
       "case": "source-plugin-active",
-      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esp"],
+      "requiredPlugins": ["Skyrim.esm", "Devotion.esp", "PDV_Phase9To12_CKProof.esp"],
       "plugins": [
         { "name": "Skyrim.esm", "selected": true, "active": false },
-        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": true },
+        { "name": "Devotion.esp", "selected": true, "active": true },
         { "name": "PDV_Phase9To12_CKProof.esp", "selected": true, "active": false }
       ],
-      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "sourcePlugin": "Devotion.esp",
       "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
       "activePlugin": "PDV_Phase9To12_CKProof.esp",
       "intendedSaveTarget": "PDV_Phase9To12_CKProof.esp",
@@ -71,13 +71,13 @@
     {
       "op": "loadPluginSet",
       "case": "save-target-mismatch",
-      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esp"],
+      "requiredPlugins": ["Skyrim.esm", "Devotion.esp", "PDV_Phase9To12_CKProof.esp"],
       "plugins": [
         { "name": "Skyrim.esm", "selected": true, "active": false },
-        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": false },
+        { "name": "Devotion.esp", "selected": true, "active": false },
         { "name": "PDV_Phase9To12_CKProof.esp", "selected": true, "active": true }
       ],
-      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "sourcePlugin": "Devotion.esp",
       "generatedPlugin": "PDV_Phase9To12_CKProof.esp",
       "activePlugin": "PDV_Phase9To12_CKProof.esp",
       "intendedSaveTarget": "StaleProofName.esp",
@@ -87,13 +87,13 @@
     {
       "op": "loadPluginSet",
       "case": "small-master-active-target",
-      "requiredPlugins": ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esl"],
+      "requiredPlugins": ["Skyrim.esm", "Devotion.esp", "PDV_Phase9To12_CKProof.esl"],
       "plugins": [
         { "name": "Skyrim.esm", "selected": true, "active": false },
-        { "name": "PlayerDevotion_Framework.esp", "selected": true, "active": false },
+        { "name": "Devotion.esp", "selected": true, "active": false },
         { "name": "PDV_Phase9To12_CKProof.esl", "selected": true, "active": true }
       ],
-      "sourcePlugin": "PlayerDevotion_Framework.esp",
+      "sourcePlugin": "Devotion.esp",
       "generatedPlugin": "PDV_Phase9To12_CKProof.esl",
       "activePlugin": "PDV_Phase9To12_CKProof.esl",
       "intendedSaveTarget": "PDV_Phase9To12_CKProof.esl",

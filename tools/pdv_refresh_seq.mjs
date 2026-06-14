@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * Regenerate PlayerDevotion_Framework.seq from live QUST flags.
+ * Regenerate Devotion.seq from live QUST flags.
  *
  * Skyrim SEQ files are a compact little-endian list of start-game-enabled quest
  * FormIDs for one plugin. xEdit can create the same artifact through its UI;
@@ -13,8 +13,8 @@ import path from "node:path";
 
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
-const PDV_ESP = path.join(DEVOTION_MOD, "PlayerDevotion_Framework.esp");
-const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "PlayerDevotion_Framework.seq");
+const PDV_ESP = path.join(DEVOTION_MOD, "Devotion.esp");
+const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "Devotion.seq");
 const MUTAGEN_BRIDGE = path.join(
   ANVIL_ROOT,
   "plugins",
@@ -23,7 +23,7 @@ const MUTAGEN_BRIDGE = path.join(
   "mutagen-bridge",
   "mutagen-bridge.exe",
 );
-const PLUGIN_NAME = "PlayerDevotion_Framework.esp";
+const PLUGIN_NAME = "Devotion.esp";
 const START_GAME_ENABLED_FLAG = 0x10;
 
 const args = new Set(process.argv.slice(2));
@@ -147,7 +147,7 @@ function main() {
     fs.mkdirSync(path.dirname(DEVOTION_SEQ), { recursive: true });
     if (fs.existsSync(DEVOTION_SEQ)) {
       const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "").replace("T", "-");
-      const backupPath = path.join(path.dirname(DEVOTION_SEQ), `PlayerDevotion_Framework.seq.${stamp}.bak`);
+      const backupPath = path.join(path.dirname(DEVOTION_SEQ), `Devotion.seq.${stamp}.bak`);
       fs.copyFileSync(DEVOTION_SEQ, backupPath);
       report.backupPath = backupPath;
     }

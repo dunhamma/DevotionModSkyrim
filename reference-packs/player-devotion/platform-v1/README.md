@@ -6,7 +6,7 @@ profile using a disposable generated plugin:
 `CKRA_PlatformV1SafeWriterProof.esp`
 
 The generated plugin must remain a proof artifact. Do not promote it into
-`PlayerDevotion_Framework.esp`; it intentionally writes synthetic proof entries
+`Devotion.esp`; it intentionally writes synthetic proof entries
 onto live records to verify writer/readback coverage.
 
 Proof command:

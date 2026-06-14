@@ -16,7 +16,7 @@ passed.
 
 Active plugin:
 
-- `PlayerDevotion_Framework.esp`
+- `Devotion.esp`
 
 Owner quest:
 
@@ -58,12 +58,12 @@ Conditions:
 ## CK Steps
 
 1. Launch Anvil, select the Creation Kit executable, and run it.
-2. Load `PlayerDevotion_Framework.esp` as the active file.
+2. Load `Devotion.esp` as the active file.
 3. Open quest `PDV__ManagerQuest`.
 4. Add the dialogue branch, topic, and info above using CK dialogue UI.
 5. Confirm the line remains ASCII-only and under 80 characters.
-6. Save `PlayerDevotion_Framework.esp`.
-7. Refresh `Seq\PlayerDevotion_Framework.seq`.
+6. Save `Devotion.esp`.
+7. Refresh `Seq\Devotion.seq`.
 
 ## Post-CK Readback
 

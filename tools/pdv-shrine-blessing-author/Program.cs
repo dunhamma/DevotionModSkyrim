@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 
-const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
+const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
 const string defaultManifest = @"references\authoring\PDV_ShrineBlessingNeutralization.manifest.json";
 const string anvilRoot = @"D:\Wabbajack\modlists\Anvil";
 const string stockData = @"D:\Wabbajack\modlists\Anvil\Stock Game\Data";
@@ -539,7 +539,7 @@ static void WriteModIfNeeded(SkyrimMod mod, string espPath, bool dryRun, bool wr
     var backupDir = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(espPath))!, "Backups", "shrine-blessing-neutralization");
     Directory.CreateDirectory(backupDir);
     var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss");
-    var backupPath = Path.Combine(backupDir, $"PlayerDevotion_Framework.esp.{stamp}.bak");
+    var backupPath = Path.Combine(backupDir, $"Devotion.esp.{stamp}.bak");
     File.Copy(espPath, backupPath, overwrite: false);
     report.BackupPath = backupPath;
 

@@ -2,10 +2,10 @@
 
 **Created:** 2026-06-06
 **Purpose:** Confirm the Khajiit piety/reward/neglect pilot works at runtime after the
-records were authored into `PlayerDevotion_Framework.esp`. This is the last gate before
+records were authored into `Devotion.esp`. This is the last gate before
 propagating the template to the other 9 races.
 
-## Record reference (housecarl-confirmed FormIDs, local to PlayerDevotion_Framework.esp)
+## Record reference (housecarl-confirmed FormIDs, local to Devotion.esp)
 
 | Thing | EditorID | Local FormID |
 |---|---|---|

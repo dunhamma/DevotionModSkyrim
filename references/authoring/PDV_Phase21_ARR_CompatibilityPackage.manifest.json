@@ -18,7 +18,7 @@
     "backupStamp": "20260614-224145",
     "localTestMod": "D:\\Wabbajack\\modlists\\ARR\\mods\\Devotion - PlayerDevotion Local Test",
     "localTestTarget": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion",
-    "pdvPlugin": "PlayerDevotion_Framework.esp",
+    "pdvPlugin": "Devotion.esp",
     "pdvPlacement": "active before Requiem for the Indifferent.esp"
   },
   "archonRemovalSet": {
@@ -63,10 +63,10 @@
       "03BCFD:Dragonborn.esm"
     ],
     "readback": {
-      "winner": "PlayerDevotion_Framework.esp",
+      "winner": "Devotion.esp",
       "archonState": "inactive",
       "requiemState": "middle-layer input",
-      "goodDaedraCureEffect": "071554:PlayerDevotion_Framework.esp",
+      "goodDaedraCureEffect": "071554:Devotion.esp",
       "goodDaedraRouteScript": "PDV_DunmerShrinePrayerEffect"
     }
   },
@@ -94,7 +94,7 @@
     }
   ],
   "verificationCommands": [
-    "housecarl_load_order_status lookup=PlayerDevotion_Framework.esp",
+    "housecarl_load_order_status lookup=Devotion.esp",
     "housecarl_load_order_status lookup=Archon.esp",
     "housecarl_batch_record_detail shrine spell targets conflict_tree=true",
     "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --check",

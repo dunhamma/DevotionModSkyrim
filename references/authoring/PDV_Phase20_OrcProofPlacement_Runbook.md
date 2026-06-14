@@ -18,7 +18,7 @@ service pressure, or real stronghold first-arrival placement.
 ## Preconditions
 
 - Active MO2 profile: `Devotion Dev`.
-- Active plugin in CK: `PlayerDevotion_Framework.esp`.
+- Active plugin in CK: `Devotion.esp`.
 - `PDV__ManagerQuest.pex`, `PDV_EventTypes.pex`, `PDV_EventBus.pex`, and
   `PDV_EventSignalActivator.pex` are current.
 - `node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json`

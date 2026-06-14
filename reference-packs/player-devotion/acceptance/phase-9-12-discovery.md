@@ -5,7 +5,7 @@ Authority for Phase 9-12 is the live Devotion/MO2 environment plus Devotion scri
 Known live sources:
 
 - MO2 MCP record index: 363 plugins, 354 enabled, no missing masters during discovery.
-- Source plugin: `PlayerDevotion_Framework.esp`.
+- Source plugin: `Devotion.esp`.
 - Existing overlays include VMAD, MCM, structural scaffold, Phase 8, pattern proving, and preflight router overlays.
 - Existing Phase 9 manifest: `PDV_Phase9BosmerState.creation-authoring.json`.
 - Static combined acceptance manifest: `PDV_Phase9To12_Acceptance.creation-authoring.json`.

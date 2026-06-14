@@ -12,9 +12,9 @@ Date: 2026-06-12 AEST
 
 ## Live Writes
 
-- Redguard write backup: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260612-091535.bak`
-- Breton write backup: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260612-091542.bak`
-- SEQ backup: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\PlayerDevotion_Framework.seq.20260611-231749.bak`
+- Redguard write backup: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260612-091535.bak`
+- Breton write backup: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260612-091542.bak`
+- SEQ backup: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\Devotion.seq.20260611-231749.bak`
 
 The live manager source at `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\PDV__ManagerQuest.psc` was edited and compiled. The tracked `scratch/phase2-live-source` snapshot is intentionally not refreshed in this PR because it is already far behind the live source and would pull unrelated drift into the diff.
 

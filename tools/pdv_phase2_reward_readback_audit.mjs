@@ -14,8 +14,8 @@ import process from "node:process";
 const ROOT = process.cwd();
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
-const PDV_ESP = path.join(DEVOTION_MOD, "PlayerDevotion_Framework.esp");
-const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "PlayerDevotion_Framework.seq");
+const PDV_ESP = path.join(DEVOTION_MOD, "Devotion.esp");
+const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "Devotion.seq");
 const MUTAGEN_BRIDGE = path.join(
   ANVIL_ROOT,
   "plugins",
@@ -24,7 +24,7 @@ const MUTAGEN_BRIDGE = path.join(
   "mutagen-bridge",
   "mutagen-bridge.exe",
 );
-const PLUGIN_NAME = "PlayerDevotion_Framework.esp";
+const PLUGIN_NAME = "Devotion.esp";
 const START_GAME_ENABLED_FLAG = 0x10;
 const SPEC_FILES = [
   "PDV_ImperialRewardRecords.spec.json",
@@ -313,9 +313,9 @@ function main() {
           fail("Deity SGE", `${deity.editorId} is not Start Game Enabled.`, specPath);
         }
         if (seqLocalIds.has(localId(record.formid))) {
-          pass("Deity SEQ", `${deity.editorId} is present in PlayerDevotion_Framework.seq.`, specPath);
+          pass("Deity SEQ", `${deity.editorId} is present in Devotion.seq.`, specPath);
         } else {
-          fail("Deity SEQ", `${deity.editorId} is missing from PlayerDevotion_Framework.seq.`, specPath);
+          fail("Deity SEQ", `${deity.editorId} is missing from Devotion.seq.`, specPath);
         }
       }
 

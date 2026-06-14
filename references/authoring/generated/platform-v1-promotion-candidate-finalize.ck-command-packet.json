@@ -2,7 +2,7 @@
     "schema":  "creation-authoring.ck-command-packet.v1",
     "project":  "player-devotion-platform-v1-promotion",
     "game":  "SkyrimSE",
-    "sourcePlugin":  "PlayerDevotion_Framework.esp",
+    "sourcePlugin":  "Devotion.esp",
     "generatedPlugin":  "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
     "failClosed":  true,
     "commands":  [
@@ -15,7 +15,7 @@
                          "op":  "loadPluginSet",
                          "requiredPlugins":  [
                                                  "Skyrim.esm",
-                                                 "PlayerDevotion_Framework.esp",
+                                                 "Devotion.esp",
                                                  "PlayerDevotion_Framework_PlatformV1_Candidate.esp"
                                              ],
                          "selectedPlugins":  [
@@ -25,7 +25,7 @@
                                                      "active":  false
                                                  },
                                                  {
-                                                     "name":  "PlayerDevotion_Framework.esp",
+                                                     "name":  "Devotion.esp",
                                                      "selected":  true,
                                                      "active":  false
                                                  },
@@ -35,7 +35,7 @@
                                                      "active":  true
                                                  }
                                              ],
-                         "sourcePlugin":  "PlayerDevotion_Framework.esp",
+                         "sourcePlugin":  "Devotion.esp",
                          "generatedPlugin":  "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
                          "activePlugin":  "PlayerDevotion_Framework_PlatformV1_Candidate.esp",
                          "intendedSaveTarget":  "PlayerDevotion_Framework_PlatformV1_Candidate.esp",

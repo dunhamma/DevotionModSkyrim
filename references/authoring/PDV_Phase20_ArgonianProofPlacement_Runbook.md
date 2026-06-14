@@ -17,7 +17,7 @@ support, bed choice, or Sithis content.
 ## Preconditions
 
 - Active MO2 profile: `Devotion Dev`.
-- Active plugin in CK: `PlayerDevotion_Framework.esp`.
+- Active plugin in CK: `Devotion.esp`.
 - `PDV_Substrate_ArgonianHist.pex`, `PDV__ManagerQuest.pex`,
   `PDV_EventTypes.pex`, `PDV_EventBus.pex`, and
   `PDV_EventSignalActivator.pex` are current.

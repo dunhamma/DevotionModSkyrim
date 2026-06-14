@@ -10,7 +10,7 @@ fcf7ede complete Platform v1 promotion evidence
 
 Live plugin paths:
 
-- Source ESP: `D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp`
+- Source ESP: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp`
 - Reviewed candidate ESP: `D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework_PlatformV1_Candidate.esp`
 - Generated proof ESP: `D:\Wabbajack\modlists\Anvil\mods\Devotion\CKRA_PlatformV1SafeWriterProof.esp`
 
@@ -25,7 +25,7 @@ Release status:
 
 The generated proof ESP remains release evidence only. Do not merge
 `CKRA_PlatformV1SafeWriterProof.esp` or duplicate shell proof records into
-`PlayerDevotion_Framework.esp` as part of this release tranche.
+`Devotion.esp` as part of this release tranche.
 
 The reviewed candidate ESP is the usable promoted output for Platform v1. A
 separate explicit acceptance/replacement decision is still required before the

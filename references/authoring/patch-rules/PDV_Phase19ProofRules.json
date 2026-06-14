@@ -30,7 +30,7 @@
       "description": "Proof FormList injection override against an existing PDV-owned state-track development list.",
       "operation": "formlist_inject",
       "target": {
-        "plugins": ["PlayerDevotion_Framework.esp"],
+        "plugins": ["Devotion.esp"],
         "signatures": ["QUST"],
         "editorIds": ["PDV_State_NordPantheonBaseline"]
       },

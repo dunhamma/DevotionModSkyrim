@@ -2,7 +2,7 @@
 /*
  * Repo-only diegetic UX authoring planner.
  *
- * This intentionally does not write PlayerDevotion_Framework.esp, live source,
+ * This intentionally does not write Devotion.esp, live source,
  * live PEX, or SEQ. It turns PDV_DiegeticUX.manifest.json into an ordered
  * source/CK/VMAD/record/proof plan for later manual or helper-backed live work.
  */
@@ -70,7 +70,7 @@ function usage(errorMessage = null) {
     "  node .\\tools\\pdv_diegetic_ux_author.mjs status [--json] [--manifest <path>]",
     "Notes:",
     "  - plan/status are read-only.",
-    "  - This tool never writes PlayerDevotion_Framework.esp, live scripts, live PEX, or SEQ.",
+    "  - This tool never writes Devotion.esp, live scripts, live PEX, or SEQ.",
     "  - Use the emitted plan as the CK/helper handoff after pdv_diegetic_ux_check passes."
   ].join("\n"));
   process.exit(errorMessage ? 1 : 0);

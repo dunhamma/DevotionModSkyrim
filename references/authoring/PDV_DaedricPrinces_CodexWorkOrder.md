@@ -74,7 +74,7 @@ precedent is:
 contract JSON built from the manifest rows and writes the SPEL/MESG records + wires
 `PDV_DaedricPath_<Prince>` price/boon properties and `PDV_FLST_AllDaedricPaths`
 membership. Always:
-1. **Back up the ESP first:** copy `PlayerDevotion_Framework.esp` to a dated `.bak`.
+1. **Back up the ESP first:** copy `Devotion.esp` to a dated `.bak`.
 2. **Dry-run first** (`--dry-run`), inspect the planned writes, then run live.
 3. **Refresh SEQ** after authoring Start-Game-Enabled path quests (BaanDar lesson:
    every `PDV_Deity_*`/path QUST needs the SGE flag **and** a SEQ entry).

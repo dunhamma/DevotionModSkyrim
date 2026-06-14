@@ -45,7 +45,7 @@ Action: promote only after a route packet names exact event sources, anti-farm k
 
 ### Favor-Family Top-Up Packet
 
-`BC-0048`, `BC-0049`, `BC-0052`, `BC-0457`, `BC-0458`, `BC-0593`, and `BC-0594` are the Bosmer Z'en Reciprocity / Breton KnightJustice top-up family. houseCARL readback confirms `PDV_FavorFamily_ZenReciprocity` and `PDV_FavorFamily_KnightJustice` are not present in `PlayerDevotion_Framework.esp`; the trigger-top-up runbook still requires detection-probe proof before locking the source routes.
+`BC-0048`, `BC-0049`, `BC-0052`, `BC-0457`, `BC-0458`, `BC-0593`, and `BC-0594` are the Bosmer Z'en Reciprocity / Breton KnightJustice top-up family. houseCARL readback confirms `PDV_FavorFamily_ZenReciprocity` and `PDV_FavorFamily_KnightJustice` are not present in `Devotion.esp`; the trigger-top-up runbook still requires detection-probe proof before locking the source routes.
 
 Action: build as one named packet after probe proof: register the two KYWD records through a narrow PDV helper, add source routing/caps, refresh SEQ if needed, then rerun targeted readback plus the standard gates.
 

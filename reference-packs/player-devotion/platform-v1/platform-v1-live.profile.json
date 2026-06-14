@@ -2,7 +2,7 @@
   "schema": "creation-profile.v1",
   "game": "SkyrimSE",
   "modId": "player-devotion-platform-v1-live",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "outputPolicy": "generated-patch",
   "defaultOutput": "CKRA_PlatformV1SafeWriterProof.esp",
   "referencePack": "player-devotion",
@@ -23,19 +23,19 @@
       "name": "platform-v1-live-records",
       "records": {
         "PDV_MCM": {
-          "formid": "PlayerDevotion_Framework.esp:03AFBE",
+          "formid": "Devotion.esp:03AFBE",
           "recordType": "QUST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_FLST_AllDeities": {
-          "formid": "PlayerDevotion_Framework.esp:017E47",
+          "formid": "Devotion.esp:017E47",
           "recordType": "FLST",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "PDV_GLO_DebugLevel": {
-          "formid": "PlayerDevotion_Framework.esp:01DBD9",
+          "formid": "Devotion.esp:01DBD9",
           "recordType": "GLOB",
-          "plugin": "PlayerDevotion_Framework.esp"
+          "plugin": "Devotion.esp"
         },
         "AelaTheHuntress": {
           "formid": "Skyrim.esm:01A696",

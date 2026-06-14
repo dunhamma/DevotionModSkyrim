@@ -79,7 +79,7 @@ Author one race at a time from its spec, e.g. for Imperial:
 dotnet run --project tools/pdv-phase20-race-author/PdvPhase20RaceAuthor.csproj -c Release -- \
   --author-rewards \
   --rewards-spec references/authoring/PDV_ImperialRewardRecords.spec.json \
-  --esp "D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp"
+  --esp "D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp"
 ```
 
 Run `--dry-run` first to confirm parsing and record resolution, then drop

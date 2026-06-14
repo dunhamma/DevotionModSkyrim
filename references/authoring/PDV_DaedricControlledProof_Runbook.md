@@ -68,7 +68,7 @@ route `201` for generic silence probes. The manager
 `PDV_FLST_DaedricPaths_All` property is wired in the framework ESP by
 `tools/pdv-daedric-author`.
 
-Physical QASmoke proof senders are also live in `PlayerDevotion_Framework.esp`.
+Physical QASmoke proof senders are also live in `Devotion.esp`.
 Each Prince has one route-200 `PDV_REFR_Daedric_<Prince>_LiveSender_QASmoke`
 reference linked to `PDV_ACTI_Daedric_<Prince>_LiveSender`. The generic silence
 negative check is `PDV_REFR_Daedric_GenericSilenceProbe_QASmoke`, linked to
@@ -118,7 +118,7 @@ not consume the race P2 route keys for Dunmer, Nord, Bosmer, Khajiit, or Orc.
 
 1. Launch Skyrim through Anvil MO2 with the `Devotion Dev` profile.
 2. Start from a throwaway save or `coc qasmoke`.
-3. Open `Mod Configuration > PlayerDevotion > Player`.
+3. Open `Mod Configuration > Devotion > Player`.
 4. Enable `Developer Options`.
 5. Open `Debug`.
 
@@ -343,5 +343,5 @@ pdv_daedric_beta_gate: FAIL/PENDING until all runtime/display slots pass
 Latest framework backup from the all-sixteen organic sender authoring pass:
 
 ```text
-D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\PlayerDevotion_Framework.esp.20260607-194539.bak
+D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\Devotion.esp.20260607-194539.bak
 ```

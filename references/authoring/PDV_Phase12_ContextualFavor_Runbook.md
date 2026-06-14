@@ -38,7 +38,7 @@ dotnet run --project .\tools\pdv-phase12-author -- --create-missing
 
 Helper contract:
 
-- takes a timestamped backup of `PlayerDevotion_Framework.esp`
+- takes a timestamped backup of `Devotion.esp`
 - uses `references/authoring/PDV_Phase12ContextualFavorPilot.manifest.json` as the source of truth for the Phase 12 favor record set
 - creates missing Phase 12 `KYWD`, `MGEF`, and `SPEL` records only when `--create-missing` is supplied
 - creates `PDV_State_NordPantheonBaseline` only if it is actually absent

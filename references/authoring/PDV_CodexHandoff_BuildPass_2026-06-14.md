@@ -38,9 +38,9 @@ Built 2026-06-14:
   property wiring, track FormList membership, and a track-backed no-arg
   `GetAltmerLorkhanFactionModifier()` using x0.75/x0.875/x1.0/x1.25/x1.5.
 - Framework backup:
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260614-145010.bak`.
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260614-145010.bak`.
 - SEQ refreshed after the ESP write:
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\PlayerDevotion_Framework.seq.20260614-045101.bak`.
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\Devotion.seq.20260614-045101.bak`.
 - Proof boundary: compile/readback only. `PDV__ManagerQuest` compiled 0/0;
   `dotnet run --project .\tools\pdv-phase20-race-author\PdvPhase20RaceAuthor.csproj -- --check-rewards --rewards-spec .\references\authoring\PDV_ConsolidatedBuildPass_RecordWave.spec.json`
   passes as the durable readback gate for the first record wave and
@@ -55,11 +55,11 @@ Built 2026-06-14:
   Baan Dar T3 uses this so its live capstone extra effect is preserved while the
   spec-owned stat effects are refreshed. All ten `PDV_{Race}RewardRecords.spec.json`
   files now pass tightened readback after a live framework refresh. Representative ESP
-  backups: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260614-151135.bak`
+  backups: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260614-151135.bak`
   and final Khajiit backup
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260614-151753.bak`.
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260614-151753.bak`.
   Final SEQ backup:
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\PlayerDevotion_Framework.seq.20260614-051820.bak`.
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\Devotion.seq.20260614-051820.bak`.
   Default gates remain `pdv_content_verify` `FAIL=0, WARN=0, PASS=1080, INFO=4`
   and `pdv_verify` `FAIL=0, WARN=2, TODO=0, PASS=2929, INFO=43`. Runtime/manual
   proof is still not claimed.
@@ -72,9 +72,9 @@ Built 2026-06-14:
   backup:
   `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\breton-creedloss-routing\PDV__ManagerQuest.psc.20260614-152113.bak`.
   Framework backup:
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260614-152246.bak`.
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260614-152246.bak`.
   SEQ backup:
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\PlayerDevotion_Framework.seq.20260614-052259.bak`.
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\Devotion.seq.20260614-052259.bak`.
   Proof is compile/readback only: `PDV__ManagerQuest` compile 0/0, Breton
   `--check-rewards` PASS, `pdv_content_verify` `FAIL=0, WARN=0, PASS=1080, INFO=4`,
   and `pdv_verify` `FAIL=0, WARN=2, TODO=0, PASS=2929, INFO=43`. Quest-stage
@@ -93,9 +93,9 @@ Built 2026-06-14:
   and still applies `-15`. Manager backup:
   `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\imperial-concordat-modifiers\PDV__ManagerQuest.psc.20260614-152707.bak`.
   Framework backup:
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260614-153052.bak`.
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260614-153052.bak`.
   SEQ backup:
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\PlayerDevotion_Framework.seq.20260614-053101.bak`
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\Devotion.seq.20260614-053101.bak`
   (`changed=false`, `questCount=39`). Proof is compile/readback only: tool build
   0/0, manager compile 0/0, Imperial `--check-rewards` PASS, all ten reward
   specs PASS, `pdv_content_verify` `FAIL=0, WARN=0, PASS=1080, INFO=4`, and
@@ -105,9 +105,9 @@ Built 2026-06-14:
 - Recheck cleanup: the earlier Redguard curse-state MESG body drift in
   `PDV_ConsolidatedBuildPass_RecordWave.spec.json` is closed. Re-authoring that
   spec produced framework backup
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260614-153521.bak`;
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260614-153521.bak`;
   SEQ refresh stayed `changed=false` with backup
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\PlayerDevotion_Framework.seq.20260614-053531.bak`.
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\Devotion.seq.20260614-053531.bak`.
   The consolidated record-wave `--check-rewards` now passes, with
   `pdv_content_verify` `FAIL=0, WARN=0, PASS=1080, INFO=4` and default
   `pdv_verify` `FAIL=0, WARN=2, TODO=0, PASS=2929, INFO=43`.

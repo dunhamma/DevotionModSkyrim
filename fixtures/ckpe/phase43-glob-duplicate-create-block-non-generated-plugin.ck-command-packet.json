@@ -6,12 +6,12 @@
   "failClosed": true,
   "commands": [
     { "op": "openProject" },
-    { "op": "loadPlugin", "plugin": "PlayerDevotion_Framework.esp" },
-    { "op": "setActivePlugin", "plugin": "PlayerDevotion_Framework.esp" },
+    { "op": "loadPlugin", "plugin": "Devotion.esp" },
+    { "op": "setActivePlugin", "plugin": "Devotion.esp" },
     {
       "op": "duplicateCreateGlob",
       "mode": "duplicate-create",
-      "plugin": "PlayerDevotion_Framework.esp",
+      "plugin": "Devotion.esp",
       "recordFamily": "GLOB",
       "sourceEditorId": "PDV_GLO_ActivePiety",
       "targetEditorId": "CKRA_Blocked_NonGenerated_GLOB_Phase43",

@@ -9,8 +9,8 @@ negative-surface proof.
 
 ## Preconditions
 
-- `PlayerDevotion_Framework.esp` is active in the Anvil `Devotion Dev` profile.
-- The following records already exist in `PlayerDevotion_Framework.esp`:
+- `Devotion.esp` is active in the Anvil `Devotion Dev` profile.
+- The following records already exist in `Devotion.esp`:
   - `PDV_StateTrack_RedguardSect`
   - `PDV_GLO_RedguardSect`
   - `PDV_ACTI_RedguardCrownTombRespectSignal`

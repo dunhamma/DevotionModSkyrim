@@ -9,7 +9,7 @@ using Noggog;
 using SkyrimGlobal = Mutagen.Bethesda.Skyrim.Global;
 using SkyrimActivator = Mutagen.Bethesda.Skyrim.Activator;
 
-const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
+const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
 const string defaultManifest = @"references\authoring\PDV_DaedricPrinceRecordContracts.json";
 const string baseScript = "PDV_DaedricPathBase";
 const string templateQuest = "PDV_DaedricPath_Hircine";
@@ -1522,7 +1522,7 @@ static void WriteModIfNeeded(SkyrimMod mod, string espPath, bool dryRun, AuthorR
     var backupDir = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(espPath))!, "Backups", backupSubdir);
     Directory.CreateDirectory(backupDir);
     var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss");
-    var backupPath = Path.Combine(backupDir, $"PlayerDevotion_Framework.esp.{stamp}.bak");
+    var backupPath = Path.Combine(backupDir, $"Devotion.esp.{stamp}.bak");
     File.Copy(espPath, backupPath, overwrite: false);
     report.BackupPath = backupPath;
 

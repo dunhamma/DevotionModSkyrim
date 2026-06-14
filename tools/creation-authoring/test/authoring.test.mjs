@@ -300,12 +300,12 @@ test("loadPluginSet product fixtures cover success and blocked runtime evidence"
 
   assert.equal(readyOps.includes("loadPlugin"), false);
   assert.equal(readyOps.includes("setActivePlugin"), false);
-  assert.equal(readyLoadSet.sourcePlugin, "PlayerDevotion_Framework.esp");
+  assert.equal(readyLoadSet.sourcePlugin, "Devotion.esp");
   assert.equal(readyLoadSet.generatedPlugin, "PDV_Phase9To12_CKProof.esp");
   assert.equal(readyLoadSet.activePlugin, "PDV_Phase9To12_CKProof.esp");
   assert.equal(readyLoadSet.intendedSaveTarget, "PDV_Phase9To12_CKProof.esp");
   assert.equal(readyLoadSet.sourcePluginNotActive, true);
-  assert.deepEqual(readyLoadSet.requiredPlugins, ["Skyrim.esm", "PlayerDevotion_Framework.esp", "PDV_Phase9To12_CKProof.esp"]);
+  assert.deepEqual(readyLoadSet.requiredPlugins, ["Skyrim.esm", "Devotion.esp", "PDV_Phase9To12_CKProof.esp"]);
 
   const blockedFixture = JSON.parse(fs.readFileSync(
     "fixtures/ckpe/load-plugin-set-blocked-cases.ck-command-packet.json",
@@ -1205,7 +1205,7 @@ test("migrates PDV author manifests into generic operations", () => {
   }, {
     modId: "player-devotion-reference",
     game: "SkyrimSE",
-    sourcePlugin: "PlayerDevotion_Framework.esp",
+    sourcePlugin: "Devotion.esp",
     defaultOutput: "PDV_AutoWireReference.esp"
   });
 

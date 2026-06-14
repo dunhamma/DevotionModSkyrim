@@ -58,8 +58,8 @@
         }
       ],
       "acceptance": [
-        "spell exists in PlayerDevotion_Framework.esp",
-        "both magic effects exist in PlayerDevotion_Framework.esp",
+        "spell exists in Devotion.esp",
+        "both magic effects exist in Devotion.esp",
         "spell uses both magic effects",
         "spell and magic effect text matches the source manifest row exactly",
         "both effect entries are night-only from 19:00 through 07:00",

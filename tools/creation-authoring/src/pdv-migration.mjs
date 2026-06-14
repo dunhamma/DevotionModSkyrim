@@ -103,7 +103,7 @@ export function migratePdvAuthorManifest(input, profile = null) {
     schema: "creation-authoring.v1",
     project: profile?.modId || "player-devotion-reference",
     game: profile?.game || "SkyrimSE",
-    sourcePlugin: profile?.sourcePlugin || "PlayerDevotion_Framework.esp",
+    sourcePlugin: profile?.sourcePlugin || "Devotion.esp",
     output: input.defaultOutput || profile?.defaultOutput || null,
     metadata: {
       migratedFrom: "pdv_author",

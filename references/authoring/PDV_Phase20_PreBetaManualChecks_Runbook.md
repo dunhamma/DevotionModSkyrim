@@ -57,7 +57,7 @@ node .\tools\pdv_compile.mjs --script PDV__ManagerQuest
 Symptom seen in live Phase 20 checks:
 
 - `Survey Devotion` can show race text, but the MCM Player page summary still says
-  `PlayerDevotion is still starting up.`
+  `Devotion is still starting up.`
 - `sqv PDV_Origin` may show stopped in affected saves.
 
 This indicates the live `PDV_MCM` quest script instance is missing a valid
@@ -175,18 +175,18 @@ are populated with exact curated source records.
 
 Current automated state:
 - `tools/pdv-phase20-p2-receiver-author` created the 34 empty
-  `PDV_FLST_P2_*` FormList shells in `PlayerDevotion_Framework.esp`.
+  `PDV_FLST_P2_*` FormList shells in `Devotion.esp`.
 - FormList readback command:
   `dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists`
 - FormList backup:
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\PlayerDevotion_Framework.esp.20260604-094058.bak`
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\Devotion.esp.20260604-094058.bak`
 - `tools/pdv-phase20-p2-receiver-author` wired all 34 `PDV_FLST_P2_*`
   properties on the existing `PDV_PlayerEvents` script attached to the
   `PDV_Player` alias.
 - Alias-property readback command:
   `dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties`
 - Alias-property backup:
-  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\PlayerDevotion_Framework.esp.20260604-094110.bak`
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\Devotion.esp.20260604-094110.bak`
 - `PDV_PlayerEvents.psc` now compile-proves receiver-side repeat gates before
   routing P2 sources: book, spell, and quest-stage sources are one-shot per
   source/form/family; weather and harvest sources are once per in-game day per

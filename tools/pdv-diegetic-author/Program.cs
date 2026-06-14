@@ -6,7 +6,7 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 
-const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp";
+const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
 const string skyrimEsmPath = @"D:\Wabbajack\modlists\Anvil\Stock Game\Data\Skyrim.esm";
 
 var dryRun = args.Contains("--dry-run");
@@ -218,7 +218,7 @@ try
         var backupDir = Path.Combine(Path.GetDirectoryName(espPath)!, "Backups", "diegetic");
         Directory.CreateDirectory(backupDir);
         var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss");
-        backupPath = Path.Combine(backupDir, $"PlayerDevotion_Framework.esp.{stamp}.bak");
+        backupPath = Path.Combine(backupDir, $"Devotion.esp.{stamp}.bak");
         File.Copy(espPath, backupPath, overwrite: false);
         var tempPath = espPath + ".diegetic.tmp";
         using (var stream = File.Create(tempPath)) { mod.WriteToBinary(stream); }

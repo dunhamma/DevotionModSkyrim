@@ -8,7 +8,7 @@
     "phase12"
   ],
   "discoverySource": "live-mo2-devotion-environment",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "knownRecordFamilies": [
     "GLOB",
     "MESG",

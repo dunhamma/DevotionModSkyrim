@@ -1,6 +1,6 @@
 # DevotionPrismaBridge
 
-Thin SKSE native bridge between PlayerDevotion Papyrus scripts and Prisma UI.
+Thin SKSE native bridge between Devotion Papyrus scripts and Prisma UI.
 
 This is intentionally small. Prisma exposes a C++ SKSE API, not a Papyrus API,
 so PDV calls these native Papyrus functions and the DLL forwards them to

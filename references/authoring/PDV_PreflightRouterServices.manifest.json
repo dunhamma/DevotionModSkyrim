@@ -4,7 +4,7 @@
   "defaultOutput": "PDV_PreflightRouterServicesOverlay.esp",
   "notes": [
     "This manifest keeps the first EventBus/EventTypes canary reversible by co-attaching the service scripts to PDV_ActionRouter instead of minting new quest records.",
-    "PDV_GLO_PatronState is now framework-owned in PlayerDevotion_Framework.esp; this overlay remains as a historical reversible canary."
+    "PDV_GLO_PatronState is now framework-owned in Devotion.esp; this overlay remains as a historical reversible canary."
   ],
   "operations": [
     {

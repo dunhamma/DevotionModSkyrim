@@ -41,7 +41,7 @@ the structured ledger `PDV_DaedricRuntimeEvidenceLedger.json` (intake tool
 2. `set PDV_GLO_DebugLevel to 2`. (Origin race does not gate pacts; pacts are
    cross-race. Native-integration routing for Dunmer/Khajiit/Orc is exercised in
    Section H.)
-3. MCM -> PlayerDevotion -> Player page -> enable **Developer Options**, open the
+3. MCM -> Devotion -> Player page -> enable **Developer Options**, open the
    **Debug page** (the **Daedric & Curse** controls: `Route all Princes`,
    `Force Seeker` / `Force Devoted` / `Force Champion`, `Curse vampire` /
    `Curse werewolf` / `Curse none`).

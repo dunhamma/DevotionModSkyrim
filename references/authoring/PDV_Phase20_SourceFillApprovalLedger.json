@@ -13,9 +13,9 @@
     "status": "PASS",
     "filledAt": "2026-06-10T15:24:11+10:00",
     "sourceFillCheckAt": "2026-06-10T15:24:22+10:00",
-    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\PlayerDevotion_Framework.esp.20260610-152411.bak",
-    "seqBackupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Seq\\PlayerDevotion_Framework.seq.20260606-014247.bak",
-    "touchedFile": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PlayerDevotion_Framework.esp",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\Devotion.esp.20260610-152411.bak",
+    "seqBackupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Seq\\Devotion.seq.20260606-014247.bak",
+    "touchedFile": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Devotion.esp",
     "filledEntryCount": 31,
     "formListGroups": 15
   },

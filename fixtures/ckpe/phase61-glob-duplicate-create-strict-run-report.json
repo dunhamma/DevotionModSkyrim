@@ -7,7 +7,7 @@
   "manifest": {
     "project": "pdv-ckproof",
     "game": "SkyrimSE",
-    "sourcePlugin": "PlayerDevotion_Framework.esp",
+    "sourcePlugin": "Devotion.esp",
     "output": "PDV_Phase9To12_CKProof.esp"
   },
   "profile": {

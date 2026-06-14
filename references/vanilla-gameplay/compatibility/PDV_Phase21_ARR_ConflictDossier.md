@@ -222,22 +222,22 @@ Follow-up local package work installed PDV into ARR as a local test mod:
 - Backup stamp: `20260614-224145`
 
 The live profile table resolves the Archon removal set to 15 plugin lines, not
-16. All 15 are inactive in the local test profile. `PlayerDevotion_Framework.esp`
+16. All 15 are inactive in the local test profile. `Devotion.esp`
 is active before `Requiem for the Indifferent.esp`.
 
 Two-sided houseCARL shrine readback passes for the current package slice:
 
 - All 14 shrine blessing `SPEL` targets resolve to
-  `PlayerDevotion_Framework.esp` after Archon is disabled.
+  `Devotion.esp` after Archon is disabled.
 - `Requiem.esp` remains the middle-layer input for the core shrine spells.
 - The three Dragonborn Good Daedra altar spells resolve to one remaining PDV
-  cure effect, `071554:PlayerDevotion_Framework.esp`
+  cure effect, `071554:Devotion.esp`
   (`PDV_MGEF_DunmerShrineCure`), carrying `PDV_DunmerShrinePrayerEffect`.
 - No global shrine activator script replacement is introduced.
 
 No standalone `PDV_AuthoriaARR_Compatibility.esp` is emitted for this proven
 slice, because the required record winners already come from
-`PlayerDevotion_Framework.esp`. The plugin name remains reserved for future
+`Devotion.esp`. The plugin name remains reserved for future
 approved ARR-specific route adapters.
 
 Reward consistency follow-up also passes: the Phase 20 reward contract and all

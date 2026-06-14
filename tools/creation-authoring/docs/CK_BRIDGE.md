@@ -70,11 +70,11 @@ CK does not write to "whatever plugin the manifest mentions." It writes to the a
   "loadedPlugins": [
     "Skyrim.esm",
     "Update.esm",
-    "PlayerDevotion_Framework.esp",
+    "Devotion.esp",
     "PDV_Phase9To12_AutoWire.esp"
   ],
   "missingPlugins": [],
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "generatedPlugin": "PDV_Phase9To12_AutoWire.esp",
   "saveTarget": "PDV_Phase9To12_AutoWire.esp",
   "saveTargetMatchesActive": true

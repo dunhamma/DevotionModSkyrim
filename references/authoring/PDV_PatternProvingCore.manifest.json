@@ -4,7 +4,7 @@
   "defaultOutput": "PDV_PatternProvingCoreOverlay.esp",
   "notes": [
     "This manifest wires existing proving records and debug services only. It does not create new records.",
-    "Apply this after the structural scaffold has been merged back into PlayerDevotion_Framework.esp.",
+    "Apply this after the structural scaffold has been merged back into Devotion.esp.",
     "Manual arrays for ConcordatStanding, BosmerPath, and Hircine remain a strict-pattern-proving gate-close requirement."
   ],
   "operations": [

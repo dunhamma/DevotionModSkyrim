@@ -24,7 +24,7 @@ the only console is standard `set` / `coc`.
    ```
    Origins: Nord=0, Imperial=1, Breton=2, Altmer=3, Bosmer=4, Dunmer=5,
    Khajiit=6, Argonian=7, Orc=8, Redguard=9.
-3. MCM -> PlayerDevotion -> Player page -> enable **Developer Options**, open the
+3. MCM -> Devotion -> Player page -> enable **Developer Options**, open the
    **Debug page**. Controls used below: `Selected deity` (cycle), `Target piety`
    + `Apply target piety`, `Run dawn pass`, `Show piety map`, `Curse vampire` /
    `Curse werewolf` / `Curse none`, `Dunmer ancestor prayer`, `Seed commitment signals`.

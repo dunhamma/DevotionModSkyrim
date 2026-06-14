@@ -19,7 +19,7 @@ Both must pass. The planner is dry-run-only; it does not write the framework ESP
 
 D0 exists to prove the scripts and CK wiring can live in the framework without changing player-visible behavior.
 
-1. Back up `D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp`.
+1. Back up `D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp`.
 2. Promote these source files from `scratch/p2-toast-panel-fix\` to `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\`:
    - `PDV_DiegeticDeps.psc`
    - `PDV_DiegeticDirector.psc`

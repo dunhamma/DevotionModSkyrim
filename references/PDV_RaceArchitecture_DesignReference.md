@@ -1,4 +1,4 @@
-# PlayerDevotion (PDV) — Race Architecture Design Reference
+# Devotion (PDV) — Race Architecture Design Reference
 **Started:** May 12, 2026
 **Last updated:** May 26, 2026 (Phase 13-16 closure defaults synced)
 **Status:** Living reference — race architecture and pre-matrix requirements locked as confirmed
@@ -66,7 +66,7 @@ Runtime status update (2026-05-28):
 ### 2.1 Module Structure
 
 ```text
-PlayerDevotion_Framework.esp
+Devotion.esp
 ├── PDV__MainQuest
 │   └── RunOnce bootstrap, calls PDV_Origin.InitializeOrigin()
 ├── PDV_Origin

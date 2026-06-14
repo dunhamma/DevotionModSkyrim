@@ -116,8 +116,8 @@ function renderPacket(princes) {
   lines.push("");
   lines.push("1. Launch Skyrim through Anvil MO2 with the `Devotion Dev` profile.");
   lines.push("2. Start from a throwaway save or main-menu `coc qasmoke`.");
-  lines.push("3. Open `Mod Configuration > PlayerDevotion > Player` and enable `Developer Options`.");
-  lines.push("4. Open `Mod Configuration > PlayerDevotion > Debug`.");
+  lines.push("3. Open `Mod Configuration > Devotion > Player` and enable `Developer Options`.");
+  lines.push("4. Open `Mod Configuration > Devotion > Debug`.");
   lines.push("5. Enable debug traces:");
   lines.push("");
   lines.push("```text");

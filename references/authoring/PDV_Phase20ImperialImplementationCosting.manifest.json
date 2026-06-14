@@ -2,7 +2,7 @@
   "schema": "pdv-race-implementation-costing.v1",
   "project": "player-devotion-phase20-imperial",
   "game": "SkyrimSE",
-  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "sourcePlugin": "Devotion.esp",
   "id": "phase20-imperial-implementation-costing",
   "title": "PDV Phase 20 Imperial civic Nine Divines, focused patron, and Talos pressure implementation costing",
   "race": "Imperial",

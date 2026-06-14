@@ -68,7 +68,7 @@ node .\tools\pdv_phase20_runtime_check.mjs --list
 Author against the three `immersiveHookContracts`, not the proof ACTIs. Keep the
 `devProofContracts` (QASmoke shims) in place as the regression harness.
 
-- [ ] Back up `PlayerDevotion_Framework.esp` (timestamped).
+- [ ] Back up `Devotion.esp` (timestamped).
 - [ ] **Dawn/study (voluntary):** wire the authored study/dawn surface (or
   player-alias dawn/location context + curated FormList) to
   `RouteAltmerDawnSteadiness()`; enforce one-accepted-signal/day.

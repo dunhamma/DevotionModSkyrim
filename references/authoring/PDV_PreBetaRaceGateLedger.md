@@ -44,7 +44,7 @@ Latest Khajiit restart-packet result on 2026-06-06: Words of Clan Mother Ahnissi
 ```
 
 The remaining verifier warning is the existing unnamed CK-authored INFO record
-class in `PlayerDevotion_Framework.esp`.
+class in `Devotion.esp`.
 
 Structured no-in-game gate:
 `references/authoring/PDV_Phase20_NoInGameProof_Gates.json`
@@ -323,7 +323,7 @@ First candidate remains `PDV_Bless_Khajiit_Lunar_T1`.
 Status: Pilot-provisional record/readback-proven
 Source row: race-sheets/PDV_RaceContent_Manifest.md Section 14.3
 Reason: low-risk passive non-dialogue blessing description tied to the Khajiit contrast lane: Lunar Lattice, road-home, moon, and caravan identity
-Readback result: source row exists; PDV_Bless_Khajiit_Lunar_T1 is present in PlayerDevotion_Framework.esp; its two night-gated MGEF effects read back, and manager grant ownership is now under PDV_Phase20_RewardRecordContracts.json with the other race T1 rewards
+Readback result: source row exists; PDV_Bless_Khajiit_Lunar_T1 is present in Devotion.esp; its two night-gated MGEF effects read back, and manager grant ownership is now under PDV_Phase20_RewardRecordContracts.json with the other race T1 rewards
 Blocking follow-up: runtime/manual proof for Active Effects display, save/load, Survey clarity, stack behavior, and balance feel
 Fallback: PDV_Bless_Bosmer_Exchange_T1 source row exists, but the live target EditorID is absent and still needs a target-record owner decision; fallback copy should stay in Exchange/Z'en debt, proper return, and Bandit Road/Baan Dar reversal space
 Not allowed for first pilot: Daedric stigma rows, Hircine/Molag Bal curse-access rows, dialogue

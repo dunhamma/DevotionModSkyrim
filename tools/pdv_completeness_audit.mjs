@@ -17,7 +17,7 @@
  *                    ApplyDeityReaction, or a Record...Scaled call feeds
  *                    nothing)
  *   esp            - EditorID existence via the MO2 Mutagen bridge scan of
- *                    PlayerDevotion_Framework.esp (same bridge pdv_verify
+ *                    Devotion.esp (same bridge pdv_verify
  *                    uses; this tool never edits pdv_verify)
  *   runtime-status - carried READ-ONLY from PDV_PreBetaRaceGateLedger.md;
  *                    never a machine pass/fail here
@@ -71,7 +71,7 @@ const DAEDRIC_CONTRACTS = path.join(ROOT, "references", "authoring", "PDV_Daedri
 
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const SOURCE_DIR = path.join(ANVIL_ROOT, "mods", "Devotion", "Scripts", "Source");
-const PDV_ESP = path.join(ANVIL_ROOT, "mods", "Devotion", "PlayerDevotion_Framework.esp");
+const PDV_ESP = path.join(ANVIL_ROOT, "mods", "Devotion", "Devotion.esp");
 const MUTAGEN_BRIDGE = path.join(ANVIL_ROOT, "plugins", "Anvilmo2_mcp", "tools", "mutagen-bridge", "mutagen-bridge.exe");
 
 const PIETY_SINKS = /\b(AwardCuratedSignal(?:Scaled)?|AwardPiety|ApplyDeityReaction|ApplyQuestReactionPiety|Record[A-Za-z]+Scaled|AddCommitmentSignal)\b/;

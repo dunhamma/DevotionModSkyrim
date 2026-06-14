@@ -11,7 +11,7 @@ Source alignment:
 ## 1) Preconditions (do before launch)
 
 - `Devotion Dev` profile selected in MO2.
-- `PlayerDevotion_Framework.esp` active.
+- `Devotion.esp` active.
 - `PDV_PreflightRouterServicesOverlay.esp` inactive (framework-owned EventBus/EventTypes wiring is now in the framework ESP).
 - Strict verifier is clean:
   - `node .\tools\pdv_verify.mjs --strict-preflight --json`
@@ -28,7 +28,7 @@ Optional but recommended:
 1. Launch game from MO2 `Devotion Dev`.
 2. From main menu, start a new game path for testing (preferred quick path: `coc qasmoke` from main-menu load context if you use that workflow).
 3. Wait for initialization to settle (no rapid menu spam in first few seconds).
-4. Open MCM and confirm `PlayerDevotion` appears.
+4. Open MCM and confirm `Devotion` appears.
 
 Pass criteria:
 - No crash on load/start.

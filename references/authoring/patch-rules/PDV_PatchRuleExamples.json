@@ -30,7 +30,7 @@
       "description": "Example FormList injection pass against the proven Hircine pilot record.",
       "operation": "formlist_inject",
       "target": {
-        "plugins": ["PlayerDevotion_Framework.esp"],
+        "plugins": ["Devotion.esp"],
         "signatures": ["QUST"],
         "editorIds": ["PDV_DaedricPath_Hircine"]
       },

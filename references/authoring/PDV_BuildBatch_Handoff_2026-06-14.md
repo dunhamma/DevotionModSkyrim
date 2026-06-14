@@ -40,7 +40,7 @@ two hex digits are your prefix `XX`. Then `prid XX<refid>` + `activate player` (
 | 9 | Neglect vanilla notice | any | commit a patron, drop its piety (Apply ~5), Run dawn pass until neglect | top-left notice `<Deity>'s regard fades as your devotion goes quiet.` |
 | 10 | Copy spot-checks | 4/0/5/7 | open Survey Devotion | Bosmer `the Old Contract`/etc.; Nord `the Old Ways`; Dunmer `The Reclamations have answered...`; Argonian Normal `The Hist is near, as near as exile allows.` |
 
-Signal RefIDs (all in `PlayerDevotion_Framework.esp`, same XX prefix): Altmer Lorkhan `07101F`,
+Signal RefIDs (all in `Devotion.esp`, same XX prefix): Altmer Lorkhan `07101F`,
 Orc Stronghold `071027` / City `071028` / Legion `071029` / SelfMade `07102A`, Redguard Crown
 `07102B` / Forebear `07102C` / AshAbah `07102D` / FarShores `07102E`, Argonian Hist `071023` /
 People `071024` / Void `071025` / Bed `071026`, Khajiit `07102F`-`071034`, Bosmer

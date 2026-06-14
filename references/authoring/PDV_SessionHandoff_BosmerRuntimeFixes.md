@@ -40,19 +40,19 @@ Key source fixes:
 Live ESP:
 
 ```text
-D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp
+D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp
 ```
 
 Final Bosmer reward write:
 
 ```powershell
-dotnet run --project .\tools\pdv-phase20-race-author\PdvPhase20RaceAuthor.csproj -c Release -- --author-rewards --rewards-spec .\references\authoring\PDV_BosmerRewardRecords.spec.json --esp "D:\Wabbajack\modlists\Anvil\mods\Devotion\PlayerDevotion_Framework.esp"
+dotnet run --project .\tools\pdv-phase20-race-author\PdvPhase20RaceAuthor.csproj -c Release -- --author-rewards --rewards-spec .\references\authoring\PDV_BosmerRewardRecords.spec.json --esp "D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp"
 ```
 
 Backup:
 
 ```text
-D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260613-181508.bak
+D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\Devotion.esp.20260613-181508.bak
 ```
 
 SEQ refreshed:
@@ -64,7 +64,7 @@ node .\tools\pdv_refresh_seq.mjs --write
 SEQ backup:
 
 ```text
-D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\PlayerDevotion_Framework.seq.20260613-081520.bak
+D:\Wabbajack\modlists\Anvil\mods\Devotion\Seq\Devotion.seq.20260613-081520.bak
 ```
 
 ## Readback Proof

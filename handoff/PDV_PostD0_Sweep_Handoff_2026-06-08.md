@@ -6,7 +6,7 @@ Full plan: `C:\Users\Admin\.claude\plans\check-where-codex-s-daedric-serialized-
 ---
 
 ## 0. Current live state (all committed + pushed on `main`)
-- **Diegetic UX is LIVE at D0** (`D1Enabled=false` → zero behavior change). 17 records + 2 SGE quests (`PDV_DiegeticDeps`, `PDV_DiegeticDirector`) + VMAD + SEQ all authored into `PlayerDevotion_Framework.esp`. D0 smoke **passed** (log clean). D1 not yet enabled.
+- **Diegetic UX is LIVE at D0** (`D1Enabled=false` → zero behavior change). 17 records + 2 SGE quests (`PDV_DiegeticDeps`, `PDV_DiegeticDirector`) + VMAD + SEQ all authored into `Devotion.esp`. D0 smoke **passed** (log clean). D1 not yet enabled.
 - **Daedric DeityName fix applied** (the daedric author now binds identity/boon/price/state props onto the *concrete* path script, not just the base entry). Confirmed working **on a new game** (Selected Prince shows "MEPHALA [1]" etc.). Sound records fixed to **SOUN** (SoundMarker wrapping vanilla SNDR).
 - Last commits: `5ed23df` (SOUN + DeityName fix), `860a797` (capitalization capture). Working tree clean except a 0-byte `references/authoring/image.png` stray (ignore/delete).
 - Tools built this session: `tools/pdv-diegetic-author/` (has a `--dump-daedric` read-only mode that dumps `PDV_DaedricPath_Boethiah` VMAD script entries + DeityName), `tools/pdv-daedric-author/` (DeityName-on-concrete fix in `WirePrinceQuest`).

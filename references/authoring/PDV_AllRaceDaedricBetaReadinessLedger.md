@@ -24,8 +24,8 @@ Git fetch: origin/main equals local HEAD on 2026-06-04; no fast-forward was avai
 
 Housecarl load order:
 Profile: Devotion Dev
-PlayerDevotion_Framework.esp: ACTIVE
-P2 FLST shell readback: 34 PDV_FLST_P2_* FormLists, all winning from PlayerDevotion_Framework.esp, override_depth=1
+Devotion.esp: ACTIVE
+P2 FLST shell readback: 34 PDV_FLST_P2_* FormLists, all winning from Devotion.esp, override_depth=1
 
 Content verifier:
 node .\tools\pdv_content_verify.mjs
@@ -34,7 +34,7 @@ Result: FAIL=0, WARN=0, PASS=1079, INFO=4
 Strict Phase 20 verifier:
 node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
 Result: PASS=2699, WARN=1, INFO=29
-Known warning: unnamed CK-authored INFO records in PlayerDevotion_Framework.esp
+Known warning: unnamed CK-authored INFO records in Devotion.esp
 
 P2 book runtime checker:
 node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager
@@ -63,7 +63,7 @@ Fast route sweep: MCM Debug `Route all Princes` routes all 16 EventBus sender cu
 QASmoke runtime checker: tools\pdv_daedric_runtime_check.mjs self-test PASS for all 16 plus generic; run --strict-manager --source qasmoke after physical QASmoke activation, --source mcm after MCM sweep activation, and --source organic after exact vanilla quest-stage activation
 Structured evidence intake: references\authoring\PDV_DaedricRuntimeEvidenceLedger.json exists with all 16 Princes pending; update with tools\pdv_daedric_evidence_intake.mjs only after in-game proof
 Daedric beta-display gate: tools\pdv_daedric_beta_gate.mjs currently fails closed at PENDING=16 until all runtime/display slots pass
-Latest ESP backup: D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\PlayerDevotion_Framework.esp.20260607-191318.bak
+Latest ESP backup: D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\Devotion.esp.20260607-191318.bak
 Status: MCM controls, EventBus live-sender scaffold, and physical QASmoke proof sender refs are ready for in-game smoke; not yet counted runtime proof
 
 Daedric exact organic live senders (2026-06-07):
@@ -71,7 +71,7 @@ Live source: D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\PDV_Player
 Compiled output: D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\PDV_PlayerEvents.pex
 Routes: Boethiah DA02 stage 100, Azura DA01 stage 100, Vaermina DA16 stage 190, Meridia DA09 stage 500, Molag Bal DA10 stage 200, Mephala DA08 stage 60, Malacath DA06 stage 200, Mehrunes Dagon DA07 stage 100, Sheogorath DA15 stage 200, Namira DA11 stage 100, Sanguine DA14 stage 200, Clavicus Vile DA03 stage 200, Hermaeus Mora DA04 stage 100, Nocturnal TG09 stage 200, Peryite DA13 stage 100, Hircine DA05 stage 100
 Readback: all 16 PDV_FLST_Daedric_<Prince>LiveSources FormLists exist, contain their exact Skyrim.esm quest FormKeys, and are wired on the PDV_PlayerEvents alias script
-Latest ESP backup: D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\PlayerDevotion_Framework.esp.20260607-194539.bak
+Latest ESP backup: D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\Devotion.esp.20260607-194539.bak
 Status: all exact organic quest-stage senders are placed/readback-clean and ready for in-game proof; none are counted runtime proof yet
 ```
 
