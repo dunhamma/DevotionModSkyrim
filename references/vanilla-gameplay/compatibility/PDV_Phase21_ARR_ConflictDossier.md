@@ -1,6 +1,7 @@
 # PDV Phase 21 — Authoria / ARR Conflict Dossier
 
-Status: investigation evidence (one-sided study). Date: 2026-06-14.
+Status: local package evidence (two-sided shrine readback pass; runtime pending).
+Date: 2026-06-14.
 Target: **ARR — Authoria - Requiem Reforged** (P0; 1.0 gate = accepted Authoria
 integration/test package). Companion to `phase20-targets.csv` (ARR row) and
 `PDV_Phase20_CompatibilityNotes.md`. This is technical evidence, not a public
@@ -40,7 +41,7 @@ Princes (+ Sithis), priest-vendor factions (`APO_PriestServices*`), amulet
 effects, benevolent/malevolent shrine keywords, a dispel-blessings utility. PDV
 is its functional successor, so removal is conceptually clean.
 
-**Active plugins to remove (16):**
+**Active plugins to remove (15):**
 
 | Line | Plugin | Role |
 |---|---|---|
@@ -207,3 +208,51 @@ The scan temporarily disabled 5 overlay/output plugins in
 state is unchanged. The list's `ModOrganizer.ini` `[General]` keys used
 `key = value` spacing that houseCARL's parser rejects; canonicalized by opening
 MO2 once.
+
+## 10. Local package readback update (2026-06-14)
+
+Follow-up local package work installed PDV into ARR as a local test mod:
+
+- MO2 root: `D:\Wabbajack\modlists\ARR`
+- Profile: `Authoria - Requiem Reforged - Main Profile`
+- Local test mod: `D:\Wabbajack\modlists\ARR\mods\Devotion - PlayerDevotion Local Test`
+- Junction target: `D:\Wabbajack\modlists\Anvil\mods\Devotion`
+- Profile backup directory:
+  `D:\Wabbajack\modlists\ARR\profiles\Authoria - Requiem Reforged - Main Profile\pdv-authoria-backups`
+- Backup stamp: `20260614-224145`
+
+The live profile table resolves the Archon removal set to 15 plugin lines, not
+16. All 15 are inactive in the local test profile. `PlayerDevotion_Framework.esp`
+is active before `Requiem for the Indifferent.esp`.
+
+Two-sided houseCARL shrine readback passes for the current package slice:
+
+- All 14 shrine blessing `SPEL` targets resolve to
+  `PlayerDevotion_Framework.esp` after Archon is disabled.
+- `Requiem.esp` remains the middle-layer input for the core shrine spells.
+- The three Dragonborn Good Daedra altar spells resolve to one remaining PDV
+  cure effect, `071554:PlayerDevotion_Framework.esp`
+  (`PDV_MGEF_DunmerShrineCure`), carrying `PDV_DunmerShrinePrayerEffect`.
+- No global shrine activator script replacement is introduced.
+
+No standalone `PDV_AuthoriaARR_Compatibility.esp` is emitted for this proven
+slice, because the required record winners already come from
+`PlayerDevotion_Framework.esp`. The plugin name remains reserved for future
+approved ARR-specific route adapters.
+
+Reward consistency follow-up also passes: the Phase 20 reward contract and all
+ten `*RewardRecords.spec.json` files match the Requiem retune expectations for
+T1 values, DamageResist `15/30/50`, regen/resist ceilings, and Orc T1 = 15.
+Timed near-death procs remain intentionally outside the broad retune.
+
+Daedric shrine route adapters remain deferred. houseCARL ACTI scans of
+`man_DaedricShrines.esp`, `man_MehrunesDagonShrine.esp`,
+`man_JyggalagShrine.esp`, and `man_sithis.esp` only produced stable Nocturnal
+shrine ACTI records by shrine EditorID; they do not provide a safe all-Prince
+ACTI map.
+
+Papyrus optimization review found no broken script contract in the reviewed
+sources, but it flagged pre-existing suboptimal hot-path patterns in
+`PDV__ManagerQuest.psc`, `PDV_PlayerEvents.psc`, and `PDV_DaedricPathBase.psc`.
+Treat those as release-hardening follow-ups before any ready/public support
+claim; they do not invalidate this local ARR shrine readback package.

@@ -1,0 +1,118 @@
+{
+  "schema": "pdv.phase21.authoria-arr-compat-package.v1",
+  "status": "patch-packaging-local-readback-pass-runtime-pending",
+  "target": {
+    "targetId": "ARR",
+    "listName": "Authoria - Requiem Reforged",
+    "priority": "P0",
+    "mo2Root": "D:\\Wabbajack\\modlists\\ARR",
+    "profile": "Authoria - Requiem Reforged - Main Profile"
+  },
+  "supportBoundary": {
+    "publicSupportClaim": false,
+    "releaseGate": "1.0 gate requires accepted Authoria integration/test package.",
+    "handoff": "references/authoring/PDV_Phase21_ARR_AuthorHandoff.md"
+  },
+  "profileState": {
+    "backupDir": "D:\\Wabbajack\\modlists\\ARR\\profiles\\Authoria - Requiem Reforged - Main Profile\\pdv-authoria-backups",
+    "backupStamp": "20260614-224145",
+    "localTestMod": "D:\\Wabbajack\\modlists\\ARR\\mods\\Devotion - PlayerDevotion Local Test",
+    "localTestTarget": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion",
+    "pdvPlugin": "PlayerDevotion_Framework.esp",
+    "pdvPlacement": "active before Requiem for the Indifferent.esp"
+  },
+  "archonRemovalSet": {
+    "status": "local-profile-disabled",
+    "count": 15,
+    "plugins": [
+      "Archon.esp",
+      "Archon - Vigilant.esp",
+      "Archon - BDS.esp",
+      "Archon - Mandra Shrines.esp",
+      "Archon - Wyrmstooth.esp",
+      "Archon - HOHQE.esp",
+      "Archon - TG Alt Endings.esp",
+      "Archon - TOCQE.esp",
+      "Archon - TWDQE.esp",
+      "Archon - Markarth Entrance and Farm Overhaul.esp",
+      "Archon - Lux Via.esp",
+      "Lux - Archon.esp",
+      "Lux - Archon - Mandra Shrines.esp",
+      "Authoria - Master Patch - Archon.esp",
+      "Authoria - Papyrus - Missing Properties - Archon Fix.esp"
+    ],
+    "note": "The earlier dossier text said 16, but the table and live profile resolve to 15 active Archon-family plugins."
+  },
+  "shrineReplacement": {
+    "status": "local-readback-pass",
+    "policy": "PDV framework owns cure-only shrine SPEL overrides; no global shrine ACTI/script replacement.",
+    "spellTargets": [
+      "0FB988:Skyrim.esm",
+      "0FB994:Skyrim.esm",
+      "0FB995:Skyrim.esm",
+      "0FB996:Skyrim.esm",
+      "0FB997:Skyrim.esm",
+      "0FB998:Skyrim.esm",
+      "10E8AE:Skyrim.esm",
+      "0FB999:Skyrim.esm",
+      "0FB99A:Skyrim.esm",
+      "0FB99B:Skyrim.esm",
+      "011360:Dawnguard.esm",
+      "03BCFB:Dragonborn.esm",
+      "03BCFC:Dragonborn.esm",
+      "03BCFD:Dragonborn.esm"
+    ],
+    "readback": {
+      "winner": "PlayerDevotion_Framework.esp",
+      "archonState": "inactive",
+      "requiemState": "middle-layer input",
+      "goodDaedraCureEffect": "071554:PlayerDevotion_Framework.esp",
+      "goodDaedraRouteScript": "PDV_DunmerShrinePrayerEffect"
+    }
+  },
+  "compatPatchPlugin": {
+    "plannedName": "PDV_AuthoriaARR_Compatibility.esp",
+    "emitted": false,
+    "reason": "No additional ARR-specific record override is required for the proven shrine replacement slice after Archon removal and PDV framework activation. The planned plugin name is reserved for future Daedric shrine ACTI route adapters or other approved ARR-specific records."
+  },
+  "deferredSlices": [
+    {
+      "id": "arr-daedric-shrine-acti-map",
+      "status": "deferred",
+      "reason": "houseCARL ACTI scans of man_DaedricShrines/man_MehrunesDagonShrine/man_JyggalagShrine/man_sithis only exposed Nocturnal shrine ACTI records by stable shrine EditorID; no safe all-Prince map exists yet."
+    },
+    {
+      "id": "author-runtime-smoke",
+      "status": "pending",
+      "reason": "Local readback is not runtime/manual proof or Authoria maintainer acceptance."
+    },
+    {
+      "id": "papyrus-release-hardening",
+      "status": "pending",
+      "evidence": "references/authoring/PDV_Phase21_ARR_PapyrusOptimizationReview.md",
+      "reason": "Optimization review found no broken ARR shrine contract, but pre-existing ManagerQuest/PlayerEvents/DaedricPathBase suboptimal patterns should be fixed or waived before ready/public support."
+    }
+  ],
+  "verificationCommands": [
+    "housecarl_load_order_status lookup=PlayerDevotion_Framework.esp",
+    "housecarl_load_order_status lookup=Archon.esp",
+    "housecarl_batch_record_detail shrine spell targets conflict_tree=true",
+    "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --check",
+    "node .\\tools\\pdv_verify.mjs --json",
+    "node .\\tools\\pdv_patch.mjs validate",
+    "node .\\tools\\pdv_patch.mjs plan --json"
+  ],
+  "smokeRequirement": {
+    "status": "pending",
+    "checks": [
+      "ARR startup",
+      "MCM/status open",
+      "Divine/Talos/Nocturnal/Auriel shrine cure-only behavior",
+      "Azura/Boethiah/Mephala altar route through PDV_DunmerShrinePrayerEffect",
+      "one non-shrine devotion action",
+      "dawn tick",
+      "save/reload",
+      "Papyrus log clean"
+    ]
+  }
+}
