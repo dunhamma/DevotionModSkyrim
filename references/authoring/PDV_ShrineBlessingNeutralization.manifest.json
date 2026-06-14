@@ -1,0 +1,222 @@
+{
+  "schema": "pdv.shrine-blessing-neutralization.v1",
+  "status": "records-authored-readback-pass-pending-runtime-proof",
+  "policy": "cure-only",
+  "output": "main-esp",
+  "sourcePlugin": "PlayerDevotion_Framework.esp",
+  "acceptedMasters": [
+    "Skyrim.esm",
+    "Dawnguard.esm",
+    "Dragonborn.esm"
+  ],
+  "coreCureEffect": "0FBFF5:Skyrim.esm",
+  "baselineSpellTargets": [
+    {
+      "deity": "Akatosh",
+      "spellFormId": "0FB988:Skyrim.esm",
+      "spellEditorId": "AltarAkatoshSpell",
+      "sourceActivator": "0D9883:Skyrim.esm",
+      "sourceActivatorEditorId": "ShrineofAkatosh",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["0FB989:Skyrim.esm"]
+    },
+    {
+      "deity": "Arkay",
+      "spellFormId": "0FB994:Skyrim.esm",
+      "spellEditorId": "AltarArkaySpell",
+      "sourceActivator": "071854:Skyrim.esm",
+      "sourceActivatorEditorId": "ShrineofArkay",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["0FB98D:Skyrim.esm"]
+    },
+    {
+      "deity": "Dibella",
+      "spellFormId": "0FB995:Skyrim.esm",
+      "spellEditorId": "AltarDibellaSpell",
+      "sourceActivator": "0D9881:Skyrim.esm",
+      "sourceActivatorEditorId": "ShrineofDibella",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["0FB98A:Skyrim.esm"]
+    },
+    {
+      "deity": "Julianos",
+      "spellFormId": "0FB996:Skyrim.esm",
+      "spellEditorId": "AltarJulianosSpell",
+      "sourceActivator": "0D9885:Skyrim.esm",
+      "sourceActivatorEditorId": "ShrineofJulianos",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["0FB98E:Skyrim.esm"]
+    },
+    {
+      "deity": "Kynareth",
+      "spellFormId": "0FB997:Skyrim.esm",
+      "spellEditorId": "AltarKynarethSpell",
+      "sourceActivator": "0D987F:Skyrim.esm",
+      "sourceActivatorEditorId": "ShrineOfKynareth",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["0FB98F:Skyrim.esm"]
+    },
+    {
+      "deity": "Mara",
+      "spellFormId": "0FB998:Skyrim.esm",
+      "spellEditorId": "AltarMaraSpell",
+      "sourceActivator": "0D9887:Skyrim.esm",
+      "sourceActivatorEditorId": "ShrineofMara",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["0FB990:Skyrim.esm"]
+    },
+    {
+      "deity": "Nocturnal",
+      "spellFormId": "10E8AE:Skyrim.esm",
+      "spellEditorId": "AltarNocturnalSpell",
+      "sourceActivator": "10E8B0:Skyrim.esm",
+      "sourceActivatorEditorId": "ShrineOfNocturnal",
+      "winnerPlugin": "man_nocturnalShrine.esp",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["10E8AF:Skyrim.esm"]
+    },
+    {
+      "deity": "Stendarr",
+      "spellFormId": "0FB999:Skyrim.esm",
+      "spellEditorId": "AltarStendarrSpell",
+      "sourceActivator": "0D987D:Skyrim.esm",
+      "sourceActivatorEditorId": "ShrineofStendarr",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["0FB991:Skyrim.esm"]
+    },
+    {
+      "deity": "Talos",
+      "spellFormId": "0FB99A:Skyrim.esm",
+      "spellEditorId": "AltarTalosSpell",
+      "sourceActivator": "100780:Skyrim.esm",
+      "sourceActivatorEditorId": "ShrineofTalos",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["0FB992:Skyrim.esm"]
+    },
+    {
+      "deity": "Zenithar",
+      "spellFormId": "0FB99B:Skyrim.esm",
+      "spellEditorId": "AltarZenitharSpell",
+      "sourceActivator": "0D987B:Skyrim.esm",
+      "sourceActivatorEditorId": "ShrineOfZenithar",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["0FB993:Skyrim.esm"]
+    },
+    {
+      "deity": "Auriel",
+      "spellFormId": "011360:Dawnguard.esm",
+      "spellEditorId": "DLC1AltarAurielSpell",
+      "sourceActivator": "00C86B:Dawnguard.esm",
+      "sourceActivatorEditorId": "DLC1ShrineofAuriel",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["011362:Dawnguard.esm"]
+    },
+    {
+      "deity": "Azura",
+      "spellFormId": "03BCFB:Dragonborn.esm",
+      "spellEditorId": "DLC2AltarAzuraSpell",
+      "sourceActivator": "03A484:Dragonborn.esm",
+      "sourceActivatorEditorId": "DLC2ShrineAzura",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["03BD01:Dragonborn.esm"]
+    },
+    {
+      "deity": "Boethiah",
+      "spellFormId": "03BCFC:Dragonborn.esm",
+      "spellEditorId": "DLC2AltarBoethiahSpell",
+      "sourceActivator": "039E34:Dragonborn.esm",
+      "sourceActivatorEditorId": "DLC2ShrineBoethiah",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["03BD02:Dragonborn.esm"]
+    },
+    {
+      "deity": "Mephala",
+      "spellFormId": "03BCFD:Dragonborn.esm",
+      "spellEditorId": "DLC2AltarMephalaSpell",
+      "sourceActivator": "03A481:Dragonborn.esm",
+      "sourceActivatorEditorId": "DLC2ShrineMephala",
+      "expectedCureEffect": "0FBFF5:Skyrim.esm",
+      "expectedRemovedEffects": ["03BD03:Dragonborn.esm"]
+    }
+  ],
+  "activatorTargets": [
+    {
+      "activatorFormId": "100780:Skyrim.esm",
+      "editorId": "ShrineofTalos",
+      "script": "TempleBlessingScript",
+      "templeBlessing": "0FB99A:Skyrim.esm",
+      "status": "covered-by-baseline-spell"
+    },
+    {
+      "activatorFormId": "0D987F:Skyrim.esm",
+      "editorId": "ShrineOfKynareth",
+      "script": "TempleBlessingScript",
+      "templeBlessing": "0FB997:Skyrim.esm",
+      "status": "covered-by-baseline-spell"
+    },
+    {
+      "activatorFormId": "06C9F1:Skyrim.esm",
+      "editorId": "T01DibellasAltarActivator",
+      "script": "TempleBlessingScript",
+      "templeBlessing": "0FB995:Skyrim.esm",
+      "status": "covered-by-baseline-spell"
+    },
+    {
+      "activatorFormId": "10E8B0:Skyrim.esm",
+      "editorId": "ShrineOfNocturnal",
+      "winnerPlugin": "man_nocturnalShrine.esp",
+      "script": "TempleBlessingScript",
+      "templeBlessing": "10E8AE:Skyrim.esm",
+      "status": "covered-by-baseline-spell"
+    },
+    {
+      "activatorFormId": "000E43:Lux Via.esp",
+      "editorId": "LuxVia_ShrineofTalosEmpty",
+      "script": "TempleBlessingScript",
+      "templeBlessing": "0FB99A:Skyrim.esm",
+      "status": "covered-by-baseline-spell"
+    },
+    {
+      "activatorFormId": "0EA98C:Lux Via.esp",
+      "editorId": "LuxVia_ShrineOfKynarethBowl",
+      "script": "TempleBlessingScript",
+      "templeBlessing": "0FB997:Skyrim.esm",
+      "status": "covered-by-baseline-spell"
+    }
+  ],
+  "candidateActivatorTargets": [
+    {
+      "category": "high-hrothgar-tablets",
+      "status": "review-only",
+      "reason": "MQ pilgrimage tablets are quest/tutorial mechanics, not blessing spell activators."
+    },
+    {
+      "category": "dawnguard-wayshrines-and-portals",
+      "status": "review-only",
+      "reason": "Forgotten Vale wayshrines and portal controls use separate travel mechanics, not TempleBlessing spell grants."
+    },
+    {
+      "category": "vampire-shrine-controls",
+      "status": "review-only",
+      "reason": "Castle Volkihar shrine controls are quest or environment controls, not generic shrine blessing surfaces."
+    },
+    {
+      "category": "static-daedric-shrine-objects",
+      "status": "review-only",
+      "reason": "Static or quest-trigger Daedric shrine records do not expose TempleBlessingScript or a TempleBlessing spell property."
+    },
+    {
+      "category": "pdv-dunmer-shrine-signals",
+      "status": "review-only",
+      "reason": "PDV-owned Dunmer shrine signal activators are part of the devotion routing layer and must remain separate from vanilla blessing normalization."
+    }
+  ],
+  "readback": {
+    "status": "helper-check-pass",
+    "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\shrine-blessing-neutralization\\PlayerDevotion_Framework.esp.20260614-163335.bak",
+    "discoverCommand": "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --discover",
+    "dryRunCommand": "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --dry-run",
+    "writeCommand": "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --write",
+    "checkCommand": "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --check"
+  }
+}

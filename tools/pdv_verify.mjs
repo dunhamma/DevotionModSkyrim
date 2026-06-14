@@ -159,6 +159,12 @@ const PHASE20_REWARD_RECORD_CONTRACTS = path.join(
   "authoring",
   "PDV_Phase20_RewardRecordContracts.json",
 );
+const SHRINE_BLESSING_NEUTRALIZATION_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_ShrineBlessingNeutralization.manifest.json",
+);
 const PHASE20_CONTENT_HOOK_CLAUDE_REVIEW_PACKET = path.join(
   PROJECT_ROOT,
   "references",
@@ -1275,6 +1281,9 @@ class Verifier {
       this.checkOfflinePatcherRules();
       this.checkPhase19GeneratedPatch();
       this.checkPhase21RosterCoverage();
+      if (exists(SHRINE_BLESSING_NEUTRALIZATION_MANIFEST)) {
+        this.checkShrineBlessingNeutralization();
+      }
       if (exists(PHASE20_MEDALLION_ROSTER_MANIFEST)) {
         this.checkPhase20MedallionRoster();
       }
@@ -4456,6 +4465,97 @@ class Verifier {
           this.checkObjectPropertyTarget("Phase 20 reward manager property", props, entry.spellEditorId, entry.spellEditorId, this.phase20RaceCostingGap.bind(this));
         }
       }
+    }
+  }
+
+  checkShrineBlessingNeutralization() {
+    let manifest = null;
+    try {
+      manifest = JSON.parse(fs.readFileSync(SHRINE_BLESSING_NEUTRALIZATION_MANIFEST, "utf8"));
+    } catch (error) {
+      this.fail("Shrine blessing neutralization manifest", `Could not parse manifest: ${error.message}`, SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
+      return;
+    }
+
+    if (manifest.schema === "pdv.shrine-blessing-neutralization.v1"
+        && manifest.policy === "cure-only"
+        && manifest.output === "main-esp") {
+      this.pass("Shrine blessing neutralization manifest", "Manifest declares cure-only main-ESP normalization.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
+    } else {
+      this.fail("Shrine blessing neutralization manifest", "Manifest must use schema v1, policy cure-only, and output main-esp.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
+      return;
+    }
+
+    const targets = Array.isArray(manifest.baselineSpellTargets) ? manifest.baselineSpellTargets : [];
+    if (targets.length === 14) {
+      this.pass("Shrine blessing target count", "Manifest contains the fourteen approved baseline shrine blessing spells.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
+    } else {
+      this.fail("Shrine blessing target count", `Manifest contains ${targets.length} baseline targets; expected 14.`, SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
+    }
+
+    const activatorOverrideKeys = new Set();
+    for (const target of targets) {
+      if (target.sourceActivator) {
+        const normalized = normalizeFormidToken(target.sourceActivator);
+        if (normalized) activatorOverrideKeys.add(normalized);
+      }
+    }
+    for (const target of manifest.activatorTargets || []) {
+      if (target.activatorFormId) {
+        const normalized = normalizeFormidToken(target.activatorFormId);
+        if (normalized) activatorOverrideKeys.add(normalized);
+      }
+    }
+
+    const unexpectedActivatorOverrides = [...this.recordsByFormid.values()]
+      .filter((record) => record.type === "ACTI")
+      .filter((record) => activatorOverrideKeys.has(normalizeFormidToken(record.formid)));
+    if (unexpectedActivatorOverrides.length === 0) {
+      this.pass("Shrine activator override boundary", "Main ESP does not replace vanilla/mod-added clickable shrine activators or their scripts.", PDV_ESP);
+    } else {
+      this.fail(
+        "Shrine activator override boundary",
+        `Unexpected shrine ACTI override(s): ${unexpectedActivatorOverrides.map((record) => record.formid).join(", ")}.`,
+        PDV_ESP,
+      );
+    }
+
+    for (const target of targets) {
+      const record = [...this.recordsByFormid.values()]
+        .find((candidate) => formidsEqual(candidate.formid, target.spellFormId));
+      if (record?.type === "SPEL") {
+        this.pass("Shrine blessing spell override", `${target.spellEditorId} is owned by the main ESP as a SPEL override.`, PDV_ESP);
+      } else {
+        this.fail("Shrine blessing spell override", `${target.spellEditorId} (${target.spellFormId}) is missing as a main-ESP SPEL override.`, PDV_ESP);
+        continue;
+      }
+
+      const detail = this.recordDetailsByFormid.get(record.formid) || this.recordDetails.get(target.spellEditorId);
+      const effects = Array.isArray(detail?.fields?.Effects) ? detail.fields.Effects : [];
+      const cureEffects = effects.filter((effect) => formidsEqual(effect.BaseEffect, target.expectedCureEffect));
+      const removedEffects = (target.expectedRemovedEffects || [])
+        .filter((effectFormId) => effects.some((effect) => formidsEqual(effect.BaseEffect, effectFormId)));
+      if (effects.length === 1 && cureEffects.length === 1 && removedEffects.length === 0) {
+        this.pass("Shrine blessing cure-only readback", `${target.spellEditorId} retains only ${target.expectedCureEffect}.`, PDV_ESP);
+      } else {
+        this.fail(
+          "Shrine blessing cure-only readback",
+          `${target.spellEditorId} effects=${effects.length}, cure=${cureEffects.length}, removed-still-present=${removedEffects.join(", ") || "none"}.`,
+          PDV_ESP,
+        );
+      }
+    }
+
+    const coveredActivators = Array.isArray(manifest.activatorTargets)
+      && manifest.activatorTargets.length >= 6
+      && manifest.activatorTargets.every((target) => target.status === "covered-by-baseline-spell");
+    const candidateQueue = Array.isArray(manifest.candidateActivatorTargets)
+      && manifest.candidateActivatorTargets.length >= 5
+      && manifest.candidateActivatorTargets.every((target) => target.status === "review-only");
+    if (coveredActivators && candidateQueue) {
+      this.pass("Shrine activator coverage manifest", "Clickable reused-spell activators are marked covered and non-blessing shrine-like activators stay review-only.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
+    } else {
+      this.fail("Shrine activator coverage manifest", "Manifest must keep covered activators and review-only candidates explicit.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
     }
   }
 
