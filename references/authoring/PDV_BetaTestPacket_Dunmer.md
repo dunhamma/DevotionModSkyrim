@@ -122,3 +122,68 @@ positive Reclamation-focus route proof (Azura + Boethiah -> focus 0/1),
 Survey/status clarity, disposable-save preflight OriginRace=5/DebugLevel=2.
 
 Before -> after step count: 13 -> 7.
+
+## Current-Build Refresh (2026-06-14) -- PART RUNNABLE, PART WAITS ON BUILD PASS
+
+The ancestor-layer curse silence (build-batch test 2) is runnable now. The
+twilight-window outdoor emitter and Layer-2 werewolf scaling are being wired by
+the concurrent build pass; their steps are marked **PENDING build-pass
+confirmation**. Items above stay valid.
+
+Cross-cutting reminders:
+- State inits ONLY on a NEW save / `coc qasmoke`; disable `Devotion - Living
+  Deities Test` in MO2 first.
+- Debug seeding is the MCM Debug page, NOT `cqf`. Standard `set` / `coc` only.
+- An OUTDOOR Good-Daedra shrine that fires on a cell/location change will NOT
+  trip on `coc` -- walk in via load door / fast-travel.
+
+### Ancestor-layer curse silence (build-batch test 2) -- runnable now
+
+Vampire silences the ash-prayer (Layer 1 = 0x) -- the signature consequence.
+
+1. `set PDV_GLO_OriginRace to 5`, `set PDV_GLO_DebugLevel to 2`.
+2. Click `Dunmer ancestor prayer` 2-3x -> Survey "Ancestor practice is ..."
+   rises a tier; note it.
+3. `Curse vampire` -> Survey curse posture reads
+   `silent, the ancestors cannot reach you`.
+4. Click `Dunmer ancestor prayer` again -> NOTHING happens: practice does NOT
+   rise, and the log shows `Dunmer ancestor layer silenced by curse posture`.
+   **This is the key check.**
+5. `Curse werewolf` -> posture `strained, the beast pulls at the ancestors`;
+   the prayer now credits at half (log still shows it routed).
+6. `Curse none` -> posture `restored, but scarred`; prayer credits fully again.
+7. **PASS:** prayer is silent under vampire (0x) + correct 4 posture labels.
+
+### Dawn/dusk twilight window (Azura) -- portable source-clean, outdoor PENDING
+
+Two 3-hour windows (06:00-09:00 dawn, 18:00-21:00 dusk), +0.25 piety each,
+once-per-window daily cap (`SIGNAL_DUNMER_TWILIGHT_RITE = 704`).
+
+- Portable-shrine prayer in-window is source/verifier-clean (runtime PENDING):
+  use `set timescale` + wait to land inside a window, then trigger the portable
+  ash-prayer; watch for the twilight signal. Confirm a second prayer in the same
+  window is silent (once-per-window cap).
+- OUTDOOR Good-Daedra shrine (Azura/Boethiah/Mephala) activation inside a window
+  is the build-pass emitter -- **PENDING build-pass confirmation**. Walk to the
+  shrine (do NOT `coc`), activate it inside the window.
+
+### Layer-2 werewolf scaling (PENDING build-pass runtime)
+
+`GetDunmerCurseLayerWeight(2)` returns 0.75x for Good Daedra
+(Azura/Boethiah/Mephala) piety under werewolf curse (parallels the Layer-1 0.5x
+ancestor scaling). Source/compile-clean; runtime/manual proof PENDING. To probe
+once live: `Curse werewolf`, then trigger a Good-Daedra focus signal and confirm
+the gain is 0.75x of the un-cursed value.
+
+### NOT testable in V1
+
+Grey Quarter solidarity (the curated Windhelm Dunmer NPC whitelist) has no
+hardcoded list wired yet -- no runnable step. The deviation-price edge
+(DA01/DA02) remains deferred per the Edge Build section above.
+
+### Neglect vanilla top-left fallback + Survey recent-events
+
+Neglect line `<Deity>'s regard fades as your devotion goes quiet.` now fires
+top-left. Survey lists recent beats in fiction voice -- Dunmer Survey already
+passed the 2026-06-14 spot check ("The Reclamations have answered a source you
+sought out.").

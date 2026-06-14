@@ -298,3 +298,71 @@ preserved.
   three-book route + reward snapshot, Edge Build MQ104 crisis + anti-farm,
   Wrong-Origin Rejection, Generic-Source Silence, Optional Curse Edge, and the
   post-run runtime_check machine gate.
+
+## Current-Build Refresh (2026-06-14) -- WAITS ON THE BUILD PASS
+
+The Lorkhan-penalty lever (build-batch test 5) is runnable now. The
+ThalmorAlignment actions are being wired by the concurrent build pass; their
+steps below are written but marked **PENDING build-pass confirmation** -- do not
+log a FAIL on them until the build session confirms the vanilla emitters landed.
+Items above stay valid.
+
+Cross-cutting reminders:
+- State inits ONLY on a NEW save / `coc qasmoke`; disable `Devotion - Living
+  Deities Test` in MO2 first.
+- The "Optional Curse Edge" section above still shows `cqf` -- use the MCM Debug
+  page `Curse vampire` / `Curse none` buttons instead (this profile does not use
+  `cqf`).
+- PDV `PDV_REFR_*Signal` objects are INVISIBLE; fire by RefID: prefix XX off
+  `help "HoonDing" 0`, then `prid XX<refid>` + `activate player`.
+
+### Lorkhan adjacency penalty now costs real piety (build-batch test 5)
+
+Lorkhan-adjacent acts now subtract piety (was telemetry-only).
+
+1. `set PDV_GLO_OriginRace to 3`, `set PDV_GLO_DebugLevel to 2`, `coc qasmoke`.
+2. Select Auri-El, `Apply target piety` ~50, `Run dawn pass`, `Show piety map`
+   -> note Auri-El piety.
+3. Fire the Lorkhan-pressure signal: `prid XX07101F` + `activate player` once
+   (organic alt: `setstage MQ104 160`). Log prints
+   `Altmer Lorkhan penalty applied: -<n> to auri-el` (tier-3 source = -5; MQ104
+   observed -7).
+4. `Run dawn pass`, `Show piety map` -> Auri-El piety has DROPPED.
+5. **PASS:** the penalty log fires and piety decreases. No toast is correct
+   (silent penalty).
+
+### ThalmorAlignment track (PENDING build-pass confirmation)
+
+`PDV_ThalmorAlignmentTrack` mirrors the Imperial Concordat: range -100..+100,
+5 states (Open Heterodox / Private Heterodox / Uncommitted / Public Orthodox /
+Thalmor Devout). The band drives `GetAltmerLorkhanFactionModifier` (x0.75 / 1.0 /
+1.5 on the Lorkhan penalty). Survey should name the band.
+
+DELIVERED actions to test (mark PENDING until the build session confirms each
+emitter):
+
+```text
+Read banned texts        -5   read "The Talos Mistake" banned book
+                              (confirm FormID in-game: help "Talos Mistake" 4 BOOK)
+Consort with Daedra      -25  complete a Daedric pact terminal stage
+                              (Azura DA01 / Boethiah DA02 / Hircine DA05)
+Kill a Thalmor agent     -20  land the PLAYER'S OWN killing blow on a
+                              ThalmorFaction member (faction 00039F26)
+```
+
+KILL-CREDIT CAVEAT: the kill beat scores ONLY the player's own killing blow
+(ATTR_DIRECT_PLAYER). An ally or environmental kill is silent by design -- at the
+Thalmor Embassy or any crowd fight a follower can steal the credit, producing a
+false FAIL. Land the final hit yourself.
+
+After each action, `Show Survey` -> ThalmorAlignment should move by the listed
+points and the band/Lorkhan-modifier should shift accordingly.
+
+NOT testable in V1 (no clean vanilla hook -- do not write these as steps):
+arrest-Talos-worshipper (+15), complete-Thalmor-mission (+20),
+help-prisoner-escape (-15).
+
+### Neglect vanilla top-left fallback + Survey recent-events
+
+Neglect line `<Deity>'s regard fades as your devotion goes quiet.` now fires
+top-left. Survey lists recent beats in fiction voice.

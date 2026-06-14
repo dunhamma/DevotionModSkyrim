@@ -132,3 +132,54 @@ Blocking notes:
   silence (anti-farm), Old Ways book route + machine route marker, Hircine/Arkay
   edge route marker, and the broad-vs-focused reward-cap Survey clarity check.
 - Step count: 11 -> 7.
+
+## Current-Build Refresh (2026-06-14)
+
+Ready to run NOW. Adds the consolidated build's Nord-relevant surfaces. Items
+above stay valid.
+
+Cross-cutting reminders:
+- State inits ONLY on a NEW save / `coc qasmoke`; disable `Devotion - Living
+  Deities Test` in MO2 first.
+- Debug seeding is the MCM Debug page, NOT `cqf`. Standard `set` / `coc` only.
+
+### Non-Kyne commitment offers (build-batch test 8) -- the headline new lever
+
+Any pantheon-baseline god (or Talos) can now be offered for commitment, not just
+Kyne (`IsNordOfferEligibleDeity`).
+
+1. `set PDV_GLO_OriginRace to 0`, `set PDV_GLO_DebugLevel to 2`.
+2. MCM Debug page -> `Selected deity` -> a NON-Kyne baseline god:
+   - Old Ways: Shor / Tsun / Stuhn / Talos.
+   - Nine Divines: Mara / Arkay / Akatosh / Stendarr / Zenithar / Dibella /
+     Julianos / Kynareth.
+3. `Apply target piety` -> **55** (above the 50 offer threshold).
+4. Click `Seed commitment signals` (seeds the 2-day window for the selected
+   deity), then `Run dawn pass`.
+5. **PASS:** a commitment offer fires for that non-Kyne god (previously
+   impossible -- only Kyne could offer).
+
+KNOWN COPY GAP (not a fail): the offer prompt + MCM labels are still
+Kyne-worded ("Evaluate the Kyne commitment offer now?"). Per-god offer/accept
+copy and degenericized labels are a deferred editorial item; the offer FIRING
+for a non-Kyne god is the pass criterion.
+
+### Neglect vanilla top-left fallback (build-batch test 9)
+
+A neglected committed patron now prints `<Deity>'s regard fades as your devotion
+goes quiet.` top-left even with the Prisma overlay off. Prove it: commit a
+patron (e.g. Kyne or Talos), drop it to ~5 Target piety, Run dawn pass until it
+crosses neglect.
+
+### Survey "recent events" log
+
+Survey Devotion now lists the last few devotion beats in fiction voice. After
+the Old Ways book read or the commitment offer, confirm the beat appears with no
+route IDs or raw counters. Nord Survey copy already passed the 2026-06-14 spot
+check ("the Old Ways", not "old road").
+
+### Still pending (not in this build)
+
+Dense generic-hook rejection audit and the Hircine/werewolf vs Kyne/Talos stack
+cap audit remain open. The Hircine/Arkay edge book route is the only curse-edge
+lever provable here; werewolf-stack behavior is not yet testable.

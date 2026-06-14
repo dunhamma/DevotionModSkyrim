@@ -112,3 +112,58 @@ Blocking notes:
   3-day lock-in for Crown<->Forebear; Ash'abah only by marked burden reason;
   HoonDing weekly-capped).
 - Step count: 6 -> 4.
+
+## Current-Build Refresh (2026-06-14) -- PART RUNNABLE, PART WAITS ON BUILD PASS
+
+The sect no-flip gate (build-batch test 7) and the Far Shores token are runnable
+now. The Dawnguard-cure -> Ash'abah re-entry stage source is being wired by the
+concurrent build pass; its step is marked **PENDING build-pass confirmation**.
+Items above stay valid.
+
+Cross-cutting reminders:
+- State inits ONLY on a NEW save / `coc qasmoke`; disable `Devotion - Living
+  Deities Test` in MO2 first.
+- Debug seeding is the MCM Debug page, NOT `cqf`. Standard `set` / `coc` only.
+- PDV `PDV_REFR_*Signal` objects are INVISIBLE; fire by RefID: prefix XX off
+  `help "HoonDing" 0`, then `prid XX<refid>` + `activate player`.
+
+Redguard signal RefIDs (framework ESP): Crown `07102B`, Forebear `07102C`,
+AshAbah `07102D`, FarShores `07102E`.
+
+### Sect no longer flips on one act (build-batch test 7) -- runnable now
+
+1. `set PDV_GLO_OriginRace to 9`, `set PDV_GLO_DebugLevel to 2`, `coc qasmoke`.
+2. Survey -> sect is **Forebear** (default).
+3. `prid XX07102B` then `activate player` once (Crown signal) -> sect **stays
+   Forebear**. **PASS = no flip on a single signal.** (Two Crown evidence days
+   in seven would switch it.)
+
+### Far Shores token (unconditional V1) -- runnable now
+
+`PDV_Bless_Redguard_FarShoresToken` is the unconditional V1 support surface
+(ResistMagic 5% anywhere, daily-capped -- NOT a 3rd always-on boon family).
+
+1. `prid XX07102E` then `activate player` once (Far Shores signal) ->
+   `HandleRedguardFarShoresToken` routes (Tu'whacca `SIGNAL_FAR_SHORES_TOKEN`),
+   granting the support spell after daily-capped token proof.
+2. Fire it again the same day -> daily-capped (`ConsumeDailyRepeatMultiplier`),
+   no second full grant. **PASS = grant once + daily cap holds.**
+
+### Vampire-cure -> Ash'abah re-entry
+
+- GENERIC vampire cure already drives re-entry (live): origin 9, `Curse vampire`
+  then `Curse none` -> `ApplyRedguardCurseHandlers` +
+  `PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry`. Runnable now.
+- DAWNGUARD-cure exact stage (DLC1VQ02) -> Ash'abah burden re-entry is the
+  build-pass addition to `PDV_FLST_P2_RedguardAshAbahSources` -- **PENDING
+  build-pass confirmation**. Cure vampirism through the actual Dawnguard cure
+  quest stage and confirm Ash'abah re-entry routes from that specific source.
+
+Ash'abah entry/exit is a category-gate (reason `redguard_ashabah_burden`: major
+death, undead, tomb, funerary duty), not a numeric threshold; the HoonDing
+make-way signal is weekly-capped (see the gated-behavior note above).
+
+### Neglect vanilla top-left fallback + Survey recent-events
+
+Neglect line `<Deity>'s regard fades as your devotion goes quiet.` now fires
+top-left. Survey lists recent beats in fiction voice.

@@ -287,3 +287,65 @@ organic Hist-maintenance route + RouteArgonianHistMaintenanceSource marker,
 sleep 1/dawn anti-farm cap, kill-hostile Sithis silence, bed-of-choice + Rooted
 Rest, Shadowscale Void veil, Hist Adaptation rite, posture dream, the seeded
 reward stack snapshot, and Survey/status clarity.
+
+## Current-Build Refresh (2026-06-14)
+
+Ready to run NOW for the near-water lever; the Sithis T3 burst + Corrupted
+posture are source/readback-clean with runtime PENDING. Items above stay valid.
+
+Cross-cutting reminders:
+- State inits ONLY on a NEW save / `coc qasmoke`; disable `Devotion - Living
+  Deities Test` in MO2 first.
+- Debug seeding is the MCM Debug page, NOT `cqf`. Standard `set` / `coc` only.
+- Argonian "Waters That Remember" anchors use Story location-change; `coc` does
+  NOT fire them -- enter via load door / fast-travel (Eldergleam is the interior
+  cell-poll exception). Already noted above; restated as the top false-FAIL.
+- Bed-of-choice "Rooted Rest" gate is **12** returns (`BedOfChoiceSleepCount >=
+  12`), NOT 3 -- seed the count up via the debug seeder for a quick check or it
+  reads as a false FAIL.
+
+### Near-water Hist maintenance (build-batch test 3) -- new, runnable now
+
+Being in water maintains the Hist, once per in-game day (`IsSwimming` daily
+poll).
+
+1. `set PDV_GLO_OriginRace to 7`, `set PDV_GLO_DebugLevel to 2`.
+2. Go to water and actually SWIM (deep enough to swim): `coc Riverwood` then walk
+   to the river, or any lake/coast.
+3. Within ~1s the log prints `Argonian near-water Hist maintenance routed`; Hist
+   practice nudges up; a "The water remembers you" toast may show.
+4. Swim more the SAME day -> no second fire (day-capped; log stays quiet).
+5. Sleep to advance a day, swim again -> it fires once more.
+6. **PASS:** swimming credits Hist once/day, no per-second spam.
+
+KNOWN COSMETIC QUIRK (not a fail): on a fresh Argonian the first maintenance can
+show a one-time "growing thin" posture toast because the init posture is read
+before the real relation settles. Folded into the editorial sweep.
+
+### Sithis T3 near-death burst (PENDING build-pass runtime confirmation)
+
+`PDV_Bless_Argonian_Sithis_T3` (always-on StaminaRateMult +10%) plus
+`PDV_SPEL_ArgonianSithisNearDeathBurst` (below 20% health -> +50 stamina regen
+for 10s, once/day) are authored, wired, and readback-clean (2026-06-14). The
+below-20% detection uses the shared combat-session poll
+(`RoutePlayerBelowHealthGate`). Runtime/manual proof of the once/day burst is
+PENDING. This is health-based, not kill-based, so the killing-blow caveat does
+not apply.
+
+### DominationPressure -> Corrupted posture (PENDING build-pass runtime)
+
+When Molag Bal path piety >= Seeker AND curse state == vampire, the manager
+writes `PDV.Curse.Argonian.DominationPressure` and escalates the Hist posture to
+**Corrupted (4)**; the neglect texture `PDV_MGEF_Neglect_ArgonianHist_HealRate`
+(HealRateMult -5) applies at Silenced or Corrupted. Molag Bal is
+Argonian-accessible by record (`PDV_DaedricPath_Molag`). To exercise: origin 7,
+MCM Daedric -> force the Molag Bal path to Seeker+, then Curse vampire -> Survey
+Hist posture should read Corrupted. Source/readback-clean; runtime PENDING.
+
+### Neglect vanilla top-left fallback + Survey recent-events
+
+Neglect fallback line `<Deity>'s regard fades as your devotion goes quiet.` now
+fires top-left. Survey Devotion lists the last few beats in fiction voice --
+confirm the near-water maintenance shows there. The Argonian Normal-posture
+opener and the Prisma posture labels are flagged for the editorial sweep (not
+beta-feel blockers).

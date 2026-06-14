@@ -1,7 +1,7 @@
 # PDV Beta Test Packet - Khajiit
 
 Created: 2026-06-06
-Status: conditional pass - wired lunar packet passed; edge focus source pending
+Status: PASS (2026-06-14) -- SUPERSEDED by the gold-standard `PDV_Khajiit_BetaFeelPacket.md`
 Mode: console-assisted beta-feel packet
 
 This packet records the restarted Khajiit lunar proof and keeps the remaining
@@ -108,4 +108,28 @@ Generic-source silence: PASS/FAIL
 Reward/stack snapshot: PASS/PENDING/FAIL
 Blocking notes:
 ```
+
+## Current-Build Refresh (2026-06-14) -- SUPERSEDED
+
+Khajiit is the FIRST race flipped to **Pass** (Global Stop Condition 6). This
+trimmed packet predates that and only covers the lunar book route. Do NOT use it
+as the Khajiit acceptance record.
+
+- **Authoritative packet:** `PDV_Khajiit_BetaFeelPacket.md`. It is the
+  gold-standard format every other race packet in this set follows (Champion
+  setup first, then per-route edge beats with exact log markers, rejection
+  sweep, Survey clarity, stack snapshot, and a closing proof-boundary note). It
+  records the full log-proven pass: Rajhin elegant theft (01:16:16), the
+  per-target cooldown block, Alkosh word-of-power dawn drip (02:14:25 ->
+  02:19:46), the Baan Dar Champion survival capstone, lunar book substrate, and
+  the rejection sweep.
+- **Edge focus is no longer "blocked".** The Baan Dar / Rajhin / Alkosh organic
+  routes (90 / 91 / 92) are wired and proven. The "Edge Build - Focus Pressure"
+  section above is stale.
+- **New surfaces already in the gold packet:** the Rajhin/Alkosh top-left
+  notices + Prisma shift toasts, and the dawn-owned Champion presentation shared
+  by all five focus gods. The Survey "recent events" log applies here too.
+
+Use this file only as a 60-second book-route smoke; use the gold packet for the
+real acceptance run.
 

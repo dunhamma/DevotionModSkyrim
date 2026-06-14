@@ -649,3 +649,71 @@ broad-Yffre suppression-under-path, Neglect "The Path Goes Quiet", Songs of the
 Green location levers (Eldergleam interior + Gildergreen proximity + milestone of
 6), Naming coherence fade/restore, the eight QASmoke route markers (single run),
 and Survey/status clarity.
+
+## Current-Build Refresh (2026-06-14)
+
+Ready to run NOW. Folds the 2026-06-14 consolidated build + new surfaces in.
+Everything above stays valid; the items here are additive corrections.
+
+Cross-cutting reminders:
+- State inits ONLY on a NEW save / main-menu `coc qasmoke`; disable `Devotion -
+  Living Deities Test` in MO2 first.
+- Debug seeding is the MCM Debug page, NOT `cqf`. Standard `set` / `coc` only.
+- `coc` does NOT fire Story location-change triggers -- the Songs of the Green
+  anchors (and Eldergleam) need a load-door entry or fast-travel, never a `coc`
+  straight into the cell (already noted above; restated because it is the #1
+  false-FAIL on this packet).
+- Bosmer neglect gate is piety **<= 10** plus bottom-3-lowest, NOT "below 25".
+  To prove "The Path Goes Quiet", drop the scoring deity to **0** Target piety;
+  seeding it to ~12-24 will read as a false FAIL.
+
+### Invisible QASmoke signals -- fire by RefID (corrects the Fallback section)
+
+The eight `PDV_REFR_Bosmer...Signal` proof objects are INVISIBLE, nameless
+script activators -- you cannot see or click them in `coc qasmoke`. Fire each by
+RefID instead: get your 2-hex plugin prefix XX once off a NAMED blessing
+(`help "HoonDing" 0` -> the `SPEL:` FormID's first two hex digits = XX), then
+for each signal `prid XX<refid>` + `activate player` (NOT bare `activate`).
+
+Bosmer signal RefIDs are `071035`..`07103C`; in the packet's object order they
+map to routes 100..107:
+
+```text
+071035 OldContractProperHunt    -> 100
+071036 OldContractForestKept     -> 101
+071037 LivingStoryCommunityKept  -> 102
+071038 LivingStoryNatureSite     -> 103
+071039 ExchangeDebtSettled       -> 104
+07103A ExchangeProportionateVengeance -> 105
+07103B BanditRoadRoadLife        -> 106
+07103C BanditRoadReversal        -> 107
+```
+
+The session-end `pdv_phase20_runtime_check.mjs --race bosmer --strict-manager`
+run confirms which route each fired (trust the 100..107 markers over the
+object->RefID pairing if they ever disagree).
+
+### Baan Dar Gap now uses the shared below-20% hook
+
+The sub-20% combat detection that drives the Baan Dar Gap is now the
+cross-race combat-session poll (`PDV_PlayerEvents` ->
+`PDV_EventBus.RoutePlayerBelowHealthGate` ->
+`PDV__ManagerQuest.HandlePlayerBelowHealthGate`; the same hook Khajiit / Argonian
+/ Orc use). The player-alias markers and all five silence checks in the Variety
+Tranche Addendum are unchanged. This is health-based, not kill-based, so the
+killing-blow caveat does not apply here.
+
+### Neglect vanilla top-left fallback
+
+Beyond "The Path Goes Quiet", a neglected COMMITTED patron now prints a vanilla
+top-left line `<Deity>'s regard fades as your devotion goes quiet.` even with the
+Prisma overlay off (D0). To prove it: commit a patron, drop it to ~5 Target
+piety, Run dawn pass until it crosses neglect.
+
+### Survey "recent events" log
+
+Survey Devotion now lists the last few devotion beats in fiction voice. After any
+accepted Bosmer lever, confirm it appears there with no route IDs or raw
+counters. (Known editorial gap: `GetBosmerPathLabel()` still leaks the raw enum
+`OldContract` in the path line -- folded into the all-race Survey rewrite, not a
+beta-feel blocker.)

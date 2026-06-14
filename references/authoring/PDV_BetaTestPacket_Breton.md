@@ -113,3 +113,57 @@ Blocking notes:
 - Evidence line "Reward/stack snapshot" dropped from the manual checklist
   (record enablement is machine-proven; not a manual-only lever).
 - Step count: 6 -> 4.
+
+## Current-Build Refresh (2026-06-14)
+
+Ready to run NOW for the WitchcraftExposure decay; the creed-loss persistent
+spells are readback/compile-proven with in-game Active Effects PENDING. Items
+above stay valid.
+
+Cross-cutting reminders:
+- State inits ONLY on a NEW save / `coc qasmoke`; disable `Devotion - Living
+  Deities Test` in MO2 first.
+- Debug seeding is the MCM Debug page, NOT `cqf`. Standard `set` / `coc` only.
+
+### WitchcraftExposure decay (build-batch test 4) -- new, runnable now
+
+Exposure is no longer a one-way ratchet -- it fades 1 per dawn.
+
+1. `set PDV_GLO_OriginRace to 2`, `set PDV_GLO_DebugLevel to 2`.
+2. Read a Hidden Art book to raise exposure: `player.additem 000ED60B 1`, read
+   it (Hagravens) -> Survey `Hidden Art: <band>` rises (exposure +25).
+3. Click `Run dawn pass` several times. Each dawn the log prints
+   `Breton WitchcraftExposure passive decay -> N` and the Survey band steps back
+   down (e.g. known -> suspected -> hidden).
+4. **PASS:** exposure decreases across dawns (it was stuck climbing before).
+
+### Creed-loss persistent spells (PENDING build-pass runtime)
+
+Manager-side persistent application is now live (readback/compile-proven,
+in-game Active Effects PENDING):
+
+- `PDV_SPEL_CreedLoss_Breton_VowIntegrity` (Block -5% + Restoration -5%) -- held
+  while KnightlyVowIntegrity is STRAINED (<70).
+- `PDV_SPEL_CreedLoss_Breton_Excommunication` (HealRateMult -8%) -- held at
+  BROKEN (<30).
+- `PDV_SPEL_CreedLoss_Breton_ExposureRupture` (Conjuration -8% + Illusion -8%)
+  -- held at WitchcraftExposure >= 100.
+- `PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal` (StaminaRateMult -8% +
+  Restoration -8%).
+
+These are persistent-while-in-band (cleared on restoration above the band), and
+a threshold-crossing HUD notice fires when each first becomes active. To reach a
+band: drive exposure to >=100 via repeated Hidden Art reads + low decay, or use
+the MCM debug page if a band setter is exposed.
+
+DEFERRED (NOT testable in V1): the Knight's Road breach hooks that drive
+Integrity DOWN organically -- Thieves Guild / Dark Brotherhood faction-add and
+innocent-kill decrements -- have no live vanilla emitter yet, so Integrity can
+only be moved through debug, not played down. Green Way DruidicStanding
+degradation and tradition-differentiated vampire are likewise deferred.
+
+### Neglect vanilla top-left fallback + Survey recent-events
+
+Neglect line `<Deity>'s regard fades as your devotion goes quiet.` now fires
+top-left. Survey Devotion lists recent beats in fiction voice -- confirm the
+Hidden Art read appears there with no route IDs or raw counters.
