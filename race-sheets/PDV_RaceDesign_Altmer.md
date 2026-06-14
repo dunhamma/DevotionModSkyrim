@@ -1,20 +1,20 @@
-# PDV Race Design — Altmer
+﻿# PDV Race Design â€” Altmer
 **Last updated:** 2026-06-12
 **Status:** Implementation-locked for 1.0; reward magnitudes still tune during build/playtest
-**Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.5)
+**Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md Â§10.5)
 **Note:** Lorkhan Adjacency Penalty economy, crisis handling, contextual-favor lanes, and focused-deity launch hook posture are implementation-locked at the experience level; exact reward magnitudes can still tune inside the documented ranges.
 
 ---
 
 ## Religious Identity
 
-Altmer religion is a project: the Apotheosis project. Auri-El, the god of time and the supreme Aldmeri ancestor, escaped Mundus — the mortal plane, the trap. The Altmer want to follow. Every devotional act is a step toward re-achieving the divine nature their ancestors lost when Lorkhan tricked them into creating the mortal world.
+Altmer religion is a project: the Apotheosis project. Auri-El, the god of time and the supreme Aldmeri ancestor, escaped Mundus â€” the mortal plane, the trap. The Altmer want to follow. Every devotional act is a step toward re-achieving the divine nature their ancestors lost when Lorkhan tricked them into creating the mortal world.
 
-The problem — the beautiful, mechanically rich problem — is that Skyrim is Lorkhan's world. Some comfortable, story-significant acts become concessions to Lorkhan's creation: marriage, homesteading, the Companions, the Dragonborn declaration, the Thu'um, and Sovngarde. Ordinary existence, ordinary travel, ordinary friendships, and unremarkable quests are not penalty surfaces.
+The problem â€” the beautiful, mechanically rich problem â€” is that Skyrim is Lorkhan's world. Some comfortable, story-significant acts become concessions to Lorkhan's creation: marriage, homesteading, the Companions, the Dragonborn declaration, the Thu'um, and Sovngarde. Ordinary existence, ordinary travel, ordinary friendships, and unremarkable quests are not penalty surfaces.
 
 A devout Altmer in Skyrim is often compromising. The theology knows it. The Lorkhan Adjacency Penalty represents authored moments where the player materially validates or touches the thing Altmer theology says broke them.
 
-**Core design intent:** Altmer should feel judged by coherence, rupture, and orthodoxy more than by raw devotion volume. Reaching Champion means you navigated recurring authored Lorkhan pressure, kept devotional upkeep positive, and held faith anyway — that's the statement.
+**Core design intent:** Altmer should feel judged by coherence, rupture, and orthodoxy more than by raw devotion volume. Reaching Champion means you navigated recurring authored Lorkhan pressure, kept devotional upkeep positive, and held faith anyway â€” that's the statement.
 
 ---
 
@@ -22,11 +22,11 @@ A devout Altmer in Skyrim is often compromising. The theology knows it. The Lork
 
 ```
 Step 1: Choose faction alignment at setup
-  → Thalmor Orthodox:  ThalmørAlignment starts at 75 (enforcement as faith)
-  → The Divine Body:   ThalmørAlignment starts at 50 (moderate cultural practice)
-  → Psijic Tradition:  ThalmørAlignment starts at 25 (Old Ways, heterodox)
+  â†’ Thalmor Orthodox:  ThalmÃ¸rAlignment starts at 75 (enforcement as faith)
+  â†’ The Divine Body:   ThalmÃ¸rAlignment starts at 50 (moderate cultural practice)
+  â†’ Psijic Tradition:  ThalmÃ¸rAlignment starts at 25 (Old Ways, heterodox)
 
-Step 2: Layer 1 (Auri-El) is always active — foundation of all Altmer faith
+Step 2: Layer 1 (Auri-El) is always active â€” foundation of all Altmer faith
   Dawn sun acknowledgment generates piety regardless of faction
 
 Step 3: Aldmeri pantheon breadth (Tier 2 cap)
@@ -43,30 +43,34 @@ Altmer uses the shared patron-state model for formal commitment. `ThalmorAlignme
 
 ---
 
-## ThalmørAlignment Track
+## ThalmorAlignment Track
 
 Same `PDV_ReputationTrack` script as Imperial ConcordatStanding and Breton WitchcraftExposure.
 
 ```
-ThalmørAlignment: 0–100
-  Thalmor Orthodox starts: 75
-  The Divine Body starts: 50
-  Psijic Tradition starts: 25
+ThalmorAlignment: -100 to +100
+  Starts at 0 for the V1 record bridge; setup-specific starting offsets remain
+  a follow-up when setup routes write the track.
 
-Low (0–30) = Heterodox
-  Self-cultivation signals x1.5
-  Enforcement/martial signals x0.75
-  Magnus/Syrabane paths MORE accessible
-  Daedra worship risks exposure (breaks oldest Altmer religious law)
+OpenHeterodox (-100 to -76)
+  Self-cultivation signals strongest; enforcement/martial signals weakest.
+  Lorkhan-pressure modifier: x0.75.
 
-Mid (31–69) = Orthodox Moderate
-  All normal signal domains at x1.0
-  Full pantheon equally accessible
+PrivateHeterodox (-75 to -51)
+  Heterodox lean is present but not public identity.
+  Lorkhan-pressure modifier: x0.875.
 
-High (70–100) = Thalmor Devout
-  Enforcement/martial signals x1.5
-  Private self-cultivation signals x0.75
-  Trinimac available as primary god at this range
+Uncommitted (-50 to +50)
+  The middle band: normal signal domains at x1.0.
+  Lorkhan-pressure modifier: x1.0.
+
+PublicOrthodox (+51 to +75)
+  Orthodox acts carry more weight; heterodox self-cultivation carries less.
+  Lorkhan-pressure modifier: x1.25.
+
+ThalmorEnforcer (+76 to +100)
+  Enforcement/martial orthodoxy is strongest; Trinimac access belongs here.
+  Lorkhan-pressure modifier: x1.5.
 ```
 
 | Action | Points |
@@ -83,24 +87,24 @@ High (70–100) = Thalmor Devout
 
 ## Lorkhan Adjacency Penalty System
 
-This is the defining Altmer mechanic. It fires on specific acts and directly reduces piety with or around the affected god(s). It bypasses ordinary domain scoring — it's not "your god disapproves of this." It's "you touched the thing that broke us."
+This is the defining Altmer mechanic. It fires on specific acts and directly reduces piety with or around the affected god(s). It bypasses ordinary domain scoring â€” it's not "your god disapproves of this." It's "you touched the thing that broke us."
 
-**Tier 1 — Direct Lorkhan/Shor/Talos Connection (highest penalty):**
+**Tier 1 â€” Direct Lorkhan/Shor/Talos Connection (highest penalty):**
 - Activating a Talos shrine or carrying Amulet of Talos (Talos = Shezarrine, mortal avatar of Lorkhan)
 - Helping Talos worshippers / hiding them from Thalmor
-- Entering Sovngarde (Shor's Hall — Lorkhan's afterlife domain)
+- Entering Sovngarde (Shor's Hall â€” Lorkhan's afterlife domain)
 - Meeting Tsun at the Whalebone Bridge (Shor's shield-thane)
-- Wielding Keening / Sunder / Wraithguard (Kagrenac's Tools — forged to tap Lorkhan's Heart)
+- Wielding Keening / Sunder / Wraithguard (Kagrenac's Tools â€” forged to tap Lorkhan's Heart)
 
-**Tier 2 — Shor-Adjacent / Nordic Divine Framework (moderate penalty):**
+**Tier 2 â€” Shor-Adjacent / Nordic Divine Framework (moderate penalty):**
 - Learning or using the Thu'um (gifted by Kyne, wife of Shor)
 - Being declared Dragonborn (cultural hero of Mankind, validates mortal experiment)
 - Joining the Stormcloaks (explicitly a Talos-worship movement)
 - Completing the Companions questline (traces to Ysgramor, fought in Shor's name)
 - Visiting the Hall of Valor in Sovngarde
-- Wielding Wuuthrad (Ysgramor's axe, +damage to elves — theological self-harm)
+- Wielding Wuuthrad (Ysgramor's axe, +damage to elves â€” theological self-harm)
 
-**Tier 3 — Mortal-Validation Acts (minor penalty):**
+**Tier 3 â€” Mortal-Validation Acts (minor penalty):**
 - Worshipping at any Nine Divines shrine (framework validates mortal plane)
 - Marriage at Mara's Temple (celebrating mortal bonds)
 - Adopting children (investing in mortal generational continuity)
@@ -108,11 +112,11 @@ This is the defining Altmer mechanic. It fires on specific acts and directly red
 - Helping Nords with religious practices
 - Reading "Shor son of Shor"
 
-**Tier 4 — Contextual (ThalmørAlignment shift only, no automatic piety penalty):**
-- Killing Thalmor unprovoked (-10 ThalmørAlignment)
+**Tier 4 â€” Contextual (ThalmÃ¸rAlignment shift only, no automatic piety penalty):**
+- Killing Thalmor unprovoked (-10 ThalmÃ¸rAlignment)
 - Septimus Signus quest (Lorkhan-adjacent motivation, not direct)
-- Extensive Dwemer ruin exploration (Heart of Lorkhan contamination — minor flag)
-- Joining Dark Brotherhood (Sithis — void from which Lorkhan emerged — indirect)
+- Extensive Dwemer ruin exploration (Heart of Lorkhan contamination â€” minor flag)
+- Joining Dark Brotherhood (Sithis â€” void from which Lorkhan emerged â€” indirect)
 
 **Faction modifier on Lorkhan penalties:**
 - Thalmor Orthodox: penalty x1.5 (stricter theology)
@@ -203,38 +207,38 @@ If the player would not reasonably understand the theological meaning, do not pe
 
 ## Tier Rewards
 
-### Tier 1 — Observant
+### Tier 1 â€” Observant
 *Auri-El is acknowledged. Daily practice is sincere.*
 
 - Spell cost -3% all schools (the Aldmeri magical heritage is a devotional expression)
 - Dawn acknowledgment generates minor piety (Auri-El's sun, observed correctly)
 - Resist magic 5% (the gods protect those who align with spirit over matter)
 
-### Tier 2 — Faithful
+### Tier 2 â€” Faithful
 *The pantheon relationship is stable. Theological coherence is maintained.*
 
-- At dawn: brief spell cost reduction pulse (until noon — Auri-El's morning blessing)
+- At dawn: brief spell cost reduction pulse (until noon â€” Auri-El's morning blessing)
 - After studying or advancing in magical skill: next spell cast of that school is free
-- ThalmørAlignment above 70: enforcement acts generate stronger piety
-- ThalmørAlignment below 30: self-cultivation acts generate stronger piety, scholarship privileges more accessible
+- ThalmÃ¸rAlignment above 70: enforcement acts generate stronger piety
+- ThalmÃ¸rAlignment below 30: self-cultivation acts generate stronger piety, scholarship privileges more accessible
 - College of Winterhold advancement (regardless of faction) generates Julianos/Magnus piety
-- Lorkhan Adjacency Penalty still fires — but ThalmørAlignment modifier applies correctly
+- Lorkhan Adjacency Penalty still fires â€” but ThalmÃ¸rAlignment modifier applies correctly
 
-### Tier 3 — Devoted (primary secondary god committed)
+### Tier 3 â€” Devoted (primary secondary god committed)
 *This ancestral power recognizes your devotional coherence. Auri-El watches.*
 
 **Auri-El focus (available to all factions, always Layer 1):**
-- *Champion moment:* You've maintained Auri-El's foundation through everything. This Champion represents pure theological commitment to return — the Apotheosis project as a daily practice. Dawn acknowledgment at Tier 3 generates larger piety and a brief magic regen burst. The Lorkhan Adjacency Penalty fires normally — but an Altmer who has reached Champion while absorbing those penalties has made their statement clearly.
+- *Champion moment:* You've maintained Auri-El's foundation through everything. This Champion represents pure theological commitment to return â€” the Apotheosis project as a daily practice. Dawn acknowledgment at Tier 3 generates larger piety and a brief magic regen burst. The Lorkhan Adjacency Penalty fires normally â€” but an Altmer who has reached Champion while absorbing those penalties has made their statement clearly.
 - *Specific payoff:* Magic regenerates 25% faster during non-combat periods (contemplation of return). Auri-El shrine interactions give maximum blessing. At dawn specifically: magic cost -15% until midday.
 
 **Magnus focus (Psijic-aligned primary):**
-- *Champion moment:* Scholar's Discipline — the Elder Way made real. Magic regenerates 20% faster in non-combat. College of Winterhold gives maximum recognition privilege (special dialogue, access to restricted texts). After reaching a new magic skill milestone (25/50/75/100), next 24 hours: that school costs 10% less.
-- *Specific payoff:* Alteration and Illusion cost -10% permanently at Champion. Self-cultivation acts (skill books, magical milestones, Psijic-adjacent content like the Order of the Owl questline) generate strong piety. Psijic Tradition players have the most forgiving Lorkhan penalty (0.75x) — this is the Champion arc that most rewards academic coherence without rigid enforcement.
+- *Champion moment:* Scholar's Discipline â€” the Elder Way made real. Magic regenerates 20% faster in non-combat. College of Winterhold gives maximum recognition privilege (special dialogue, access to restricted texts). After reaching a new magic skill milestone (25/50/75/100), next 24 hours: that school costs 10% less.
+- *Specific payoff:* Alteration and Illusion cost -10% permanently at Champion. Self-cultivation acts (skill books, magical milestones, Psijic-adjacent content like the Order of the Owl questline) generate strong piety. Psijic Tradition players have the most forgiving Lorkhan penalty (0.75x) â€” this is the Champion arc that most rewards academic coherence without rigid enforcement.
 
-**Trinimac focus (Thalmor Devout primary — requires ThalmørAlignment 70+):**
-- *Champion moment:* Martial virtue made devotional. Trinimac is the god of civilization's defense — the Champion who reaches this tier has fought in Trinimac's name through the enforcement frame. After completing an enforcement or defense-of-civilization act with ThalmørAlignment above 70, armor rating +15 for one in-game day (Trinimac's martial blessing). Thalmor characters treat you with explicit recognition privilege at this tier.
-- *Specific payoff:* One-handed damage +5% cumulative (Tier 1 + Tier 3). After defeating enemies threatening elven/civilizational interests, brief health regen. Lorkhan penalty at Thalmor Orthodox x1.5 — this Champion suffers the most from Lorkhan-adjacent content. That tension is intentional.
-- *Lore note:* Trinimac is Altmer-native but specialist. Not every Altmer will reach him. He is the god of those who defend the project by force — the most orthodox-aggressive Champion path.
+**Trinimac focus (Thalmor Devout primary â€” requires ThalmÃ¸rAlignment 70+):**
+- *Champion moment:* Martial virtue made devotional. Trinimac is the god of civilization's defense â€” the Champion who reaches this tier has fought in Trinimac's name through the enforcement frame. After completing an enforcement or defense-of-civilization act with ThalmÃ¸rAlignment above 70, armor rating +15 for one in-game day (Trinimac's martial blessing). Thalmor characters treat you with explicit recognition privilege at this tier.
+- *Specific payoff:* One-handed damage +5% cumulative (Tier 1 + Tier 3). After defeating enemies threatening elven/civilizational interests, brief health regen. Lorkhan penalty at Thalmor Orthodox x1.5 â€” this Champion suffers the most from Lorkhan-adjacent content. That tension is intentional.
+- *Lore note:* Trinimac is Altmer-native but specialist. Not every Altmer will reach him. He is the god of those who defend the project by force â€” the most orthodox-aggressive Champion path.
 
 **Xarxes focus (ancestry/scholarship, Psijic or Divine Body primary):**
 - *Champion moment:* The records-keeper acknowledges your genealogical fidelity. After completing a quest with significant ancestry, family duty, or genealogical content, 24-hour magic cost reduction. Reading rare tomes (one-time books, particularly lore-heavy volumes) generates strong Xarxes piety. Knowledge of Altmeri heritage acts generate the strongest scoring.
@@ -297,9 +301,9 @@ they are being recognized for holding a theological shape in a hostile world.
 
 **The Lorkhan Adjacency Penalty is the signature mechanic of Altmer play.** It does not ask permission when an authored trigger fires. Being declared Dragonborn can cost you once. Learning the Thu'um can cost you through curated milestones. Getting married or building a house can cost you because those are explicit mortal-continuity choices. The friction is not that every engagement with Skyrim is taxed; the friction is that certain meaningful engagements have a theological price.
 
-The question the penalty system asks is: **how much of Skyrim are you willing to forgo on Altmer terms?** Some players will turn down questlines for theological reasons. Some will complete them and accept the penalty. Neither approach is wrong — but neither is free.
+The question the penalty system asks is: **how much of Skyrim are you willing to forgo on Altmer terms?** Some players will turn down questlines for theological reasons. Some will complete them and accept the penalty. Neither approach is wrong â€” but neither is free.
 
-**ThalmørAlignment** is the secondary friction: maintaining your faction's coherence requires that your acts match your stated theological position. An Orthodox Altmer who consorts with Daedra and helps Talos worshippers doesn't just lose piety — they become theologically incoherent, and the track registers that.
+**ThalmÃ¸rAlignment** is the secondary friction: maintaining your faction's coherence requires that your acts match your stated theological position. An Orthodox Altmer who consorts with Daedra and helps Talos worshippers doesn't just lose piety â€” they become theologically incoherent, and the track registers that.
 
 ---
 
@@ -307,11 +311,11 @@ The question the penalty system asks is: **how much of Skyrim are you willing to
 
 Altmer neglect is **inconsistency**, not absence.
 
-- **Orthodoxy drift:** An Orthodox Altmer whose ThalmørAlignment drifts from 75 toward the middle because they keep making heterodox choices doesn't feel penalized — they feel increasingly undefined. The enforcement signals that used to generate strong piety stop landing as hard.
-- **Psijic drift:** A Psijic-path player who stops advancing their magical skills, stops reading, stops cultivating themselves — the self-cultivation multiplier that was their advantage fades. They become ordinary.
+- **Orthodoxy drift:** An Orthodox Altmer whose ThalmÃ¸rAlignment drifts from 75 toward the middle because they keep making heterodox choices doesn't feel penalized â€” they feel increasingly undefined. The enforcement signals that used to generate strong piety stop landing as hard.
+- **Psijic drift:** A Psijic-path player who stops advancing their magical skills, stops reading, stops cultivating themselves â€” the self-cultivation multiplier that was their advantage fades. They become ordinary.
 - **Lorkhan accumulation:** Not technically "neglect," but if authored Lorkhan penalties are firing from main-story beats, marriage, homestead, Talos/Shor/Nordic religious support, or other explicit tags and devotion signals are not keeping pace, the piety balance slides. The penalties are capped pressure, not ambient friendship or existence tax, but they have the same mathematical effect if devotion input does not compensate.
 
-The failure mode the mod should make legible: a devout Altmer who fully engaged with Skyrim's content and didn't navigate the theological cost carefully will plateau at Tier 2 and struggle to push into Tier 3. That's not a bug — it's the design. Skyrim is Lorkhan's world.
+The failure mode the mod should make legible: a devout Altmer who fully engaged with Skyrim's content and didn't navigate the theological cost carefully will plateau at Tier 2 and struggle to push into Tier 3. That's not a bug â€” it's the design. Skyrim is Lorkhan's world.
 
 ---
 
@@ -321,9 +325,9 @@ The failure mode the mod should make legible: a devout Altmer who fully engaged 
 |--------|-----------|---------|-------|
 | Advance in any magic skill to next tier (25/50/75/100) | +piety (Magnus, Syrabane, Julianos) | Per milestone | Finite progression |
 | Read a skill book or rare lore tome | +piety (Xarxes, Magnus, Julianos) | Per book, one-time | Rich early-game signal pool |
-| Arrest or report a Talos worshipper | +ThalmørAlignment +15 | Per event | Thalmor cooperation |
-| Help a Thalmor prisoner escape | -ThalmørAlignment -15 | Per event | Defection signal |
-| Consort with Daedra (accept a Daedric quest) | -ThalmørAlignment -25 | Per quest | Breaks oldest Altmer religious law |
+| Arrest or report a Talos worshipper | +ThalmÃ¸rAlignment +15 | Per event | Thalmor cooperation |
+| Help a Thalmor prisoner escape | -ThalmÃ¸rAlignment -15 | Per event | Defection signal |
+| Consort with Daedra (accept a Daedric quest) | -ThalmÃ¸rAlignment -25 | Per quest | Breaks oldest Altmer religious law |
 | Activate Talos shrine | Lorkhan Penalty Tier 1 | Per shrine | Applies at full strength |
 | Learn a new Word of Power | Lorkhan Penalty Tier 2 (Thu'um) | Per word | Main quest and Greybeard content |
 | Become declared Dragonborn (post Bleak Falls Barrow) | Lorkhan Penalty Tier 2 | One-time | Major penalty event |
@@ -332,7 +336,7 @@ The failure mode the mod should make legible: a devout Altmer who fully engaged 
 | Build a homestead | Lorkhan Penalty Tier 3 | One-time | Minor penalty |
 | Dawn observation (shrine interaction or time-window) | +piety (Auri-El Layer 1) | Daily cap | Foundation signal |
 | College of Winterhold advancement | +piety (Magnus, Syrabane, Julianos) | Per guild rank | Structured progression |
-| Complete Thalmor-sanctioned mission | +ThalmørAlignment +20 | Per mission | Reinforces Orthodox path |
+| Complete Thalmor-sanctioned mission | +ThalmÃ¸rAlignment +20 | Per mission | Reinforces Orthodox path |
 
 ---
 
@@ -341,25 +345,25 @@ The failure mode the mod should make legible: a devout Altmer who fully engaged 
 **Vanilla hook surface:** Excellent for penalties (clear trigger events). Moderate for positive signals (magic school advancement is well-structured; enforcement acts require Thalmor faction/dialogue flag checking).
 
 **Complexity flags:**
-- **Lorkhan Adjacency Penalty system:** The most novel Altmer mechanic. Requires a curated list of trigger events mapped to penalty tiers, with ThalmørAlignment multiplier applied at trigger time. This is primarily content/curation work — the framework event system can handle it, but the trigger list needs careful maintenance.
-- **ThalmørAlignment track:** Same architecture as Imperial ConcordatStanding — proven pattern. Key complexity is making sure Thalmor cooperation quests correctly flag their beats (several are Thalmor Embassy content that isn't always faction-flagged).
-- **Trinimac gating on ThalmørAlignment:** The offer for Trinimac as primary focus should only fire when ThalmørAlignment is above 70. Offer system needs to check track state before firing, same as Imperial Talos commitment gate.
-- **Altmer vampire path:** The lack of a cure-and-restore arc (unlike Dunmer, Imperial, Redguard) needs a clear one-time state flag. Once a player has been an Altmer vampire, there is no recovery arc — the theological position is LOCKED at "no recoverable Altmer position." This needs to be surfaced clearly when vampirism activates.
-- **Altmer werewolf:** Complete halt of devotion — not even the Tier 1 heretical cap that vampire gets. The state needs clean detection that doesn't rely on transformation animation (may already be sleeping, could be any time). Use SaxhlMon ActiveEffects or persistent curse flag.
+- **Lorkhan Adjacency Penalty system:** The most novel Altmer mechanic. Requires a curated list of trigger events mapped to penalty tiers, with ThalmÃ¸rAlignment multiplier applied at trigger time. This is primarily content/curation work â€” the framework event system can handle it, but the trigger list needs careful maintenance.
+- **ThalmÃ¸rAlignment track:** Same architecture as Imperial ConcordatStanding â€” proven pattern. Key complexity is making sure Thalmor cooperation quests correctly flag their beats (several are Thalmor Embassy content that isn't always faction-flagged).
+- **Trinimac gating on ThalmÃ¸rAlignment:** The offer for Trinimac as primary focus should only fire when ThalmÃ¸rAlignment is above 70. Offer system needs to check track state before firing, same as Imperial Talos commitment gate.
+- **Altmer vampire path:** The lack of a cure-and-restore arc (unlike Dunmer, Imperial, Redguard) needs a clear one-time state flag. Once a player has been an Altmer vampire, there is no recovery arc â€” the theological position is LOCKED at "no recoverable Altmer position." This needs to be surfaced clearly when vampirism activates.
+- **Altmer werewolf:** Complete halt of devotion â€” not even the Tier 1 heretical cap that vampire gets. The state needs clean detection that doesn't rely on transformation animation (may already be sleeping, could be any time). Use SaxhlMon ActiveEffects or persistent curse flag.
 
 **Cost class profile:**
 - Magic skill advancement: Cost Class A (skill level event)
 - Lorkhan penalty triggers: Cost Class A (most are quest/story events)
 - Dawn/dusk observation: Cost Class B (time-state check)
-- ThalmørAlignment updates: Cost Class A (specific action detection)
+- ThalmÃ¸rAlignment updates: Cost Class A (specific action detection)
 - Trinimac offer gate: Cost Class B (track-state check in offer evaluation)
 
 ---
 
-## Variety Tranche — "The Return Made Daily" (DESIGN-LOCKED 2026-06-12)
+## Variety Tranche â€” "The Return Made Daily" (DESIGN-LOCKED 2026-06-12)
 
 Roadmap source: `references/authoring/PDV_RaceVarietyTranche_Roadmap.md`.
-Purpose: the inverse of the other tranches — Altmer is friction-rich and
+Purpose: the inverse of the other tranches â€” Altmer is friction-rich and
 texture-poor on the positive side. This tranche adds ordinary-session
 positive surfaces that are coherence-shaped, never volume-shaped, and never
 weaken the locked Lorkhan economy. Magnitudes are tunable; shapes, gates,
@@ -369,7 +373,7 @@ race row in `PDV_RaceEffectReviewLedger.md` before any record authoring.
 **Contemplations.** Dawn-window lines keyed to `PDV_State_AltmerCrisis` and
 the ThalmorAlignment band. A `Dissonant` Altmer's dawn reads differently
 from a coherent one; the resolution day gets one Marked line. Pure texture
-on the existing dawn rite and crisis state — no new piety, no new records
+on the existing dawn rite and crisis state â€” no new piety, no new records
 beyond MESG/line content.
 
 **Chamber of Study (place anchor).** Cell-keyed declaration of a study
@@ -383,12 +387,12 @@ side stays owned by the existing positive-income tag.
 **Syrabane's Hand (signature, once/day).** A ward that fully absorbs a
 hostile spell grants a brief spell-cost pulse ("Syrabane's hand steadies
 yours"). Coherence-gated: suppressed while a crisis is unresolved.
-Protection-shaped per the locked Syrabane boundary — warding someone still
+Protection-shaped per the locked Syrabane boundary â€” warding someone still
 on the path, never a damage reward.
 
 **Wayshrines of the Chantry (pilgrimage, hybrid eight stations).** Locked as
-the hybrid shape: two base-game stations — the College of Winterhold's Hall
-of the Elements and one authored Auri-El surface — so the lever is felt in
+the hybrid shape: two base-game stations â€” the College of Winterhold's Hall
+of the Elements and one authored Auri-El surface â€” so the lever is felt in
 early play, then the five Forgotten Vale wayshrines (Illumination, Sight,
 Learning, Resolution, Radiance) plus the Inner Sanctum as the deep arc.
 First arrival each = vision line + small Auri-El pulse; milestone
@@ -401,7 +405,7 @@ precedent), so the Vale stations add no new dependency. One-shot forever.
 four choices covering one school of magic at -5% cost or +5% regen
 (exact school list locked at effect review); choosing again swaps
 (clear-before-add). Fades at dawn while a crisis is unresolved or after an
-alignment-band break; returns automatically at dawn on coherent recovery —
+alignment-band break; returns automatically at dawn on coherent recovery â€”
 the existing crisis system becomes something the player *feels* in their
 build, gently, which is the "judged by coherence" core intent.
 
@@ -410,19 +414,19 @@ build, gently, which is the "judged by coherence" core intent.
 ## Curse State Summary
 
 **Vampire:**
-- Auri-El absolutely closed — sun avoidance = shrinking from the god of return
+- Auri-El absolutely closed â€” sun avoidance = shrinking from the god of return
 - Genealogical records expunge the vampire from bloodline
-- Magic continues but loses religious framing — becomes mere power
-- Thalmor would euthanize on sight (extreme social danger — not a PDV effect, but contextual)
-- Tiny heretical path available (Tier 1 cap only): "Vampirism is at least a path away from mortal limits" — self-justification theology; Molag Bal accessible; piety accumulates at 25% rate; hard ceiling: Tier 1
-- **No restoration path** — unlike Dunmer or Breton, no cure-and-restore arc. The Altmer position is terminal.
+- Magic continues but loses religious framing â€” becomes mere power
+- Thalmor would euthanize on sight (extreme social danger â€” not a PDV effect, but contextual)
+- Tiny heretical path available (Tier 1 cap only): "Vampirism is at least a path away from mortal limits" â€” self-justification theology; Molag Bal accessible; piety accumulates at 25% rate; hard ceiling: Tier 1
+- **No restoration path** â€” unlike Dunmer or Breton, no cure-and-restore arc. The Altmer position is terminal.
 - Lore rationale: "There is no recoverable Altmer position for a vampire." The file is clear.
 
 **Werewolf:**
 - Most theologically annihilating combination in all of Tamriel (confirmed by multiple sources)
 - Beast-state is the precise inverse of the Apotheosis project
-- No heretical theology possible — regression into animality has no framework
-- Devotion halts entirely — not even Tier 1 heretical cap
+- No heretical theology possible â€” regression into animality has no framework
+- Devotion halts entirely â€” not even Tier 1 heretical cap
 - No path forward in any direction
 - If player somehow survives (which they will): Bosmer Valenwood beast-shape practices give minimal ideological cover, but this is flavor/lore only, not a mechanical path
 - Lore rationale: The Altmer project is "become spirit again." Becoming a beast is the maximum possible movement in the opposite direction. There is simply no framework for it.

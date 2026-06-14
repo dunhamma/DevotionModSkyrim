@@ -4,6 +4,10 @@ Status: QASmoke proof references are placed and read back cleanly; all six
 Phase 20 route-marker groups passed runtime proof on 2026-05-31. Final
 immersive world placement and pre-beta gameplay scaling remain open.
 
+Current scope note, 2026-06-14: the Orc Four Holds extension adds four more
+QASmoke refs, bringing the current placement/readback helper scope to 34 refs.
+Those four refs are readback-clean but still need fresh in-game route proof.
+
 This runbook consolidates the Phase 20 race proof slices into one counted
 runtime pass. It proves that the temporary QASmoke proof activators reach the
 intended EventBus and manager routes. It does not prove final world placement,
@@ -103,6 +107,14 @@ prid 071029
 moveto player
 prid 07102A
 moveto player
+prid 071550
+moveto player
+prid 071551
+moveto player
+prid 071552
+moveto player
+prid 071553
+moveto player
 
 ; Redguard
 prid 07102B
@@ -158,7 +170,7 @@ not muddied by another race's earlier temporary signals.
 |------|----------------|------------|---------|
 | Altmer | `set PDV_GLO_OriginRace to 3` | `PDV_REFR_AltmerDragonbornCrisisSignal`, `PDV_REFR_AltmerLorkhanPressureSignal`, `PDV_REFR_AltmerDawnSteadinessSignal`, `PDV_REFR_AltmerOrthodoxCostSignal` | `node .\tools\pdv_phase20_runtime_check.mjs --race altmer` |
 | Argonian | `set PDV_GLO_OriginRace to 7` | `PDV_REFR_ArgonianHistMaintenanceSignal`, `PDV_REFR_ArgonianPeopleSupportSignal`, `PDV_REFR_ArgonianVoidSignal`, `PDV_REFR_ArgonianBedOfChoiceSignal` | `node .\tools\pdv_phase20_runtime_check.mjs --race argonian` |
-| Orc | `set PDV_GLO_OriginRace to 8` | `PDV_REFR_OrcStrongholdForgeSignal`, `PDV_REFR_OrcCityDignitySignal`, `PDV_REFR_OrcLegionServiceSignal`, `PDV_REFR_OrcSelfMadeCommunitySignal` | `node .\tools\pdv_phase20_runtime_check.mjs --race orc` |
+| Orc | `set PDV_GLO_OriginRace to 8` | `PDV_REFR_OrcStrongholdForgeSignal`, `PDV_REFR_OrcCityDignitySignal`, `PDV_REFR_OrcLegionServiceSignal`, `PDV_REFR_OrcSelfMadeCommunitySignal`, `PDV_REFR_OrcFourHolds_DushnikhYalSignal`, `PDV_REFR_OrcFourHolds_MorKhazgurSignal`, `PDV_REFR_OrcFourHolds_NarzulburSignal`, `PDV_REFR_OrcFourHolds_LargashburSignal` | `node .\tools\pdv_phase20_runtime_check.mjs --race orc` |
 | Redguard | `set PDV_GLO_OriginRace to 9` | `PDV_REFR_RedguardCrownTombRespectSignal`, `PDV_REFR_RedguardForebearRoadSignal`, `PDV_REFR_RedguardAshAbahDeathDutySignal`, `PDV_REFR_RedguardFarShoresTokenSignal` | `node .\tools\pdv_phase20_runtime_check.mjs --race redguard` |
 | Khajiit | `set PDV_GLO_OriginRace to 6` | `PDV_REFR_KhajiitMoonObservanceSignal`, `PDV_REFR_KhajiitRoadHomeAnchorOneSignal`, `PDV_REFR_KhajiitRoadHomeAnchorTwoSignal`, `PDV_REFR_KhajiitBaanDarRoadTrickSignal`, `PDV_REFR_KhajiitRajhinElegantTheftSignal`, `PDV_REFR_KhajiitAlkoshDragonOrderSignal` | `node .\tools\pdv_phase20_runtime_check.mjs --race khajiit` |
 | Bosmer | `set PDV_GLO_OriginRace to 4` | `PDV_REFR_BosmerOldContractProperHuntSignal`, `PDV_REFR_BosmerOldContractForestKeptSignal`, `PDV_REFR_BosmerLivingStoryCommunityKeptSignal`, `PDV_REFR_BosmerLivingStoryNatureSiteSignal`, `PDV_REFR_BosmerExchangeDebtSettledSignal`, `PDV_REFR_BosmerExchangeProportionateVengeanceSignal`, `PDV_REFR_BosmerBanditRoadRoadLifeSignal`, `PDV_REFR_BosmerBanditRoadReversalSignal` | `node .\tools\pdv_phase20_runtime_check.mjs --race bosmer` |

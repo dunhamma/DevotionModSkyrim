@@ -303,11 +303,11 @@
         },
         {
           "actorValue": "DamageResist",
-          "magnitude": 10,
+          "magnitude": 50,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "The vow is your bulwark. Block +25, Restoration +18, Armor +10.",
+      "playerFacingText": "The vow is your bulwark. Block +25, Restoration +18, Armor +50.",
       "signature": "Bulwark of the kept vow: strongest guard, mercy, and armor; Champion Survey text is the V1 recognition surface. Vow breach (KnightlyVowIntegrity) revokes access until repair."
     },
     {
@@ -414,7 +414,7 @@
       "effects": [
         {
           "actorValue": "StaminaRateMult",
-          "magnitude": 11,
+          "magnitude": 10,
           "effectName": "Stamina Regeneration"
         },
         {
@@ -423,7 +423,7 @@
           "effectName": "Restoration"
         }
       ],
-      "playerFacingText": "The standing stones and outdoor rites answer you. Stamina Regeneration +11%, Restoration +8."
+      "playerFacingText": "The standing stones and outdoor rites answer you. Stamina Regeneration +10%, Restoration +8."
     },
     {
       "emphasis": "GreenWay",
@@ -436,7 +436,7 @@
       "effects": [
         {
           "actorValue": "StaminaRateMult",
-          "magnitude": 21,
+          "magnitude": 20,
           "effectName": "Stamina Regeneration"
         },
         {
@@ -450,7 +450,7 @@
           "effectName": "Health Regeneration"
         }
       ],
-      "playerFacingText": "The covenant of the wild is kept in you. Stamina Regeneration +21%, Restoration +18, Health Regeneration +10%.",
+      "playerFacingText": "The covenant of the wild is kept in you. Stamina Regeneration +20%, Restoration +18, Health Regeneration +10%.",
       "signature": "Covenant of the wild: strongest outdoor stamina/restoration/recovery; Champion Survey text is the V1 recognition surface. The werewolf fork is a real authored fork (Druidic Trial); betrayal drives major creed-loss and any Hircine pressure routes through the Phase 20C system."
     }
   ],
@@ -458,6 +458,7 @@
     {
       "id": "vow-integrity-loss",
       "spellEditorId": "PDV_SPEL_CreedLoss_Breton_VowIntegrity",
+      "spellProperty": "PDV_SPEL_CreedLoss_Breton_VowIntegrity",
       "displayName": "The Vow Broken",
       "row": "PDV_Msg_Breton_CreedLoss_VowIntegrity",
       "severity": "medium",
@@ -483,6 +484,7 @@
     {
       "id": "exposure-rupture",
       "spellEditorId": "PDV_SPEL_CreedLoss_Breton_ExposureRupture",
+      "spellProperty": "PDV_SPEL_CreedLoss_Breton_ExposureRupture",
       "displayName": "Cover Blown",
       "row": "PDV_Msg_Breton_CreedLoss_ExposureRupture",
       "severity": "major",
@@ -508,6 +510,7 @@
     {
       "id": "excommunication",
       "spellEditorId": "PDV_SPEL_CreedLoss_Breton_Excommunication",
+      "spellProperty": "PDV_SPEL_CreedLoss_Breton_Excommunication",
       "displayName": "Cast Out",
       "row": "PDV_Msg_Breton_CreedLoss_Excommunication",
       "severity": "major",
@@ -575,5 +578,6 @@
     "wiring": "Same run: add Stance_Breton NATIVE to the 6 reused deity QUSTs; do NOT add anything to FLST 017E47 (reused deities already present). The broad Tradition T1 fills the existing PDV_Bless_Breton_Tradition_T1 manager property and is granted via the broad-worship path (PATRON_STATE_BROAD); Tradition T2 is a new broad property. Wire the 9 focused tradition reward props (KnightsRoad/HiddenArt/GreenWay T1/T2/T3) gated on PDV_State_BretonTradition (one active tradition selects the eligible family; suppress the other two) + 4 creed-loss SPEL props + PDV_SPEL_Neglect_Breton. Hidden Art reward props additionally check WitchcraftExposure (magnitude conditioned on exposure cost; rupture revokes). The three standing tracks are wired as access/penalty/rupture modifiers only, never as boon grants.",
     "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 unchanged (no Breton additions); the 6 reused deity QUSTs each carry Stance_Breton NATIVE; the 16 new SPEL exist with correct MGEF actor-values/magnitudes (no magnitude > ~12%; Hidden Art is the strongest focused family but exposure-gated); broad Tradition T1 fills the existing manager property; manager reward + creed-loss + neglect props resolve; PDV_State_BretonTradition selects exactly one eligible focused family with the other two suppressed; the three standing tracks resolve as pressure modifiers, not boon grants. Then runtime smoke (QASmoke routes 120-124 per the costing manifest)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
+  "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."
 }

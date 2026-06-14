@@ -14,8 +14,8 @@
     { "kind": "setProperty", "record": "PDV_RepTrack_WitchcraftExposure", "script": "PDV_ReputationTrack", "property": "ThresholdValues", "valueType": "IntArray", "value": [25, 50, 75] },
     { "kind": "setProperty", "record": "PDV_RepTrack_WitchcraftExposure", "script": "PDV_ReputationTrack", "property": "ThresholdLabels", "valueType": "StringArray", "value": ["Hidden", "Suspected", "Known", "Notorious"] },
 
-    { "kind": "setProperty", "record": "PDV_RepTrack_ThalmorAlignment", "script": "PDV_ReputationTrack", "property": "ThresholdValues", "valueType": "IntArray", "value": [30, 69] },
-    { "kind": "setProperty", "record": "PDV_RepTrack_ThalmorAlignment", "script": "PDV_ReputationTrack", "property": "ThresholdLabels", "valueType": "StringArray", "value": ["Heterodox", "OrthodoxModerate", "ThalmorDevout"] },
+    { "kind": "setProperty", "record": "PDV_RepTrack_ThalmorAlignment", "script": "PDV_ReputationTrack", "property": "ThresholdValues", "valueType": "IntArray", "value": [-76, -51, 50, 75] },
+    { "kind": "setProperty", "record": "PDV_RepTrack_ThalmorAlignment", "script": "PDV_ReputationTrack", "property": "ThresholdLabels", "valueType": "StringArray", "value": ["OpenHeterodox", "PrivateHeterodox", "Uncommitted", "PublicOrthodox", "ThalmorEnforcer"] },
 
     { "kind": "setProperty", "record": "PDV_StateTrack_BosmerPath", "script": "PDV_StateTrack", "property": "StateLabels", "valueType": "StringArray", "value": ["OldContract", "LivingStory", "Exchange", "BanditRoad"] },
     { "kind": "setProperty", "record": "PDV_StateTrack_OrcLifeMode", "script": "PDV_StateTrack", "property": "StateLabels", "valueType": "StringArray", "value": ["Stronghold", "City", "Exile"] },

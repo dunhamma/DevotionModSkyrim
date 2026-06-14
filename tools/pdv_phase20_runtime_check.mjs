@@ -119,6 +119,30 @@ const RACES = [
         required: ["RouteOrcSelfMadeCommunity complete: 73"],
         optional: ["Orc self-made community routed"],
       },
+      {
+        id: "four-holds-dushnikh-yal",
+        reference: "PDV_REFR_OrcFourHolds_DushnikhYalSignal",
+        required: ["RouteOrcFourHoldsVisit complete: 1", "Orc Four Holds routed: hold 1"],
+        optional: ["Dushnikh Yal is counted"],
+      },
+      {
+        id: "four-holds-mor-khazgur",
+        reference: "PDV_REFR_OrcFourHolds_MorKhazgurSignal",
+        required: ["RouteOrcFourHoldsVisit complete: 2", "Orc Four Holds routed: hold 2"],
+        optional: ["Mor Khazgur is counted"],
+      },
+      {
+        id: "four-holds-narzulbur",
+        reference: "PDV_REFR_OrcFourHolds_NarzulburSignal",
+        required: ["RouteOrcFourHoldsVisit complete: 3", "Orc Four Holds routed: hold 3"],
+        optional: ["Narzulbur is counted"],
+      },
+      {
+        id: "four-holds-largashbur",
+        reference: "PDV_REFR_OrcFourHolds_LargashburSignal",
+        required: ["RouteOrcFourHoldsVisit complete: 4", "Orc Four Holds routed: hold 4"],
+        optional: ["Largashbur is counted", "Four Holds Kept"],
+      },
     ],
   },
   {

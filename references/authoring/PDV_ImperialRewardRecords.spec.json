@@ -151,6 +151,32 @@
       "reuse": "existing manager property; do not recreate"
     }
   ],
+  "deityTrackModifiers": [
+    {
+      "deityEditorId": "PDV_Deity_Arkay",
+      "script": "PDV_Deity_Arkay",
+      "gainTrack": "PDV_RepTrack_ConcordatStanding",
+      "gainMultipliers": [
+        1.0,
+        1.0,
+        1.0,
+        0.85,
+        0.85
+      ]
+    },
+    {
+      "deityEditorId": "PDV_Deity_Stendarr",
+      "script": "PDV_Deity_Stendarr",
+      "gainTrack": "PDV_RepTrack_ConcordatStanding",
+      "gainMultipliers": [
+        1.15,
+        1.15,
+        1.0,
+        0.85,
+        0.85
+      ]
+    }
+  ],
   "neglect": {
     "wireTo": "PDV__ManagerQuest",
     "spellProperty": "PDV_SPEL_Neglect_Imperial",
@@ -230,7 +256,7 @@
       "effects": [
         {
           "actorValue": "MagickaRateMult",
-          "magnitude": 11,
+          "magnitude": 10,
           "effectName": "Magicka Regeneration"
         },
         {
@@ -239,7 +265,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "The Covenant holds. Magicka Regeneration +11%, Magic Resistance +5%."
+      "playerFacingText": "The Covenant holds. Magicka Regeneration +10%, Magic Resistance +5%."
     },
     {
       "emphasis": "Akatosh",
@@ -251,7 +277,7 @@
       "effects": [
         {
           "actorValue": "MagickaRateMult",
-          "magnitude": 21,
+          "magnitude": 20,
           "effectName": "Magicka Regeneration"
         },
         {
@@ -260,7 +286,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "You endure as the first Covenant endures. Magicka Regeneration +21%, Magic Resistance +15%.",
+      "playerFacingText": "You endure as the first Covenant endures. Magicka Regeneration +20%, Magic Resistance +15%.",
       "signature": "Endurance of the Covenant: strongest sustained magicka/ward; Champion Survey text is the V1 recognition surface."
     },
     {
@@ -412,11 +438,11 @@
         },
         {
           "actorValue": "DamageResist",
-          "magnitude": 10,
+          "magnitude": 30,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "You stand between the weak and harm. Block +13, Armor +10."
+      "playerFacingText": "You stand between the weak and harm. Block +13, Armor +30."
     },
     {
       "emphasis": "Stendarr",
@@ -433,11 +459,11 @@
         },
         {
           "actorValue": "DamageResist",
-          "magnitude": 25,
+          "magnitude": 50,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "Stendarr's bulwark is yours to hold. Block +25, Armor +25.",
+      "playerFacingText": "Stendarr's bulwark is yours to hold. Block +25, Armor +50.",
       "signature": "Bulwark of mercy: strongest guard and armor; Champion Survey text is the V1 recognition surface."
     },
     {
@@ -584,7 +610,7 @@
       "effects": [
         {
           "actorValue": "MagickaRateMult",
-          "magnitude": 11,
+          "magnitude": 10,
           "effectName": "Magicka Regeneration"
         },
         {
@@ -593,7 +619,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "The God of Wisdom and Logic wards the disciplined mind. Magicka Regeneration +11%, Magic Resistance +5%."
+      "playerFacingText": "The God of Wisdom and Logic wards the disciplined mind. Magicka Regeneration +10%, Magic Resistance +5%."
     },
     {
       "emphasis": "Julianos",
@@ -605,7 +631,7 @@
       "effects": [
         {
           "actorValue": "MagickaRateMult",
-          "magnitude": 21,
+          "magnitude": 20,
           "effectName": "Magicka Regeneration"
         },
         {
@@ -614,7 +640,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "Julianos grants the insight of law and lore. Magicka Regeneration +21%, Magic Resistance +15%.",
+      "playerFacingText": "Julianos grants the insight of law and lore. Magicka Regeneration +20%, Magic Resistance +15%.",
       "signature": "Insight of law and lore: strongest magicka/ward; Champion Survey text is the V1 recognition surface."
     },
     {
@@ -643,7 +669,7 @@
       "effects": [
         {
           "actorValue": "StaminaRateMult",
-          "magnitude": 11,
+          "magnitude": 10,
           "effectName": "Stamina Regeneration"
         },
         {
@@ -652,7 +678,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "The Lady of the heavens sustains you. Stamina Regeneration +11%, Magic Resistance +5%."
+      "playerFacingText": "The Lady of the heavens sustains you. Stamina Regeneration +10%, Magic Resistance +5%."
     },
     {
       "emphasis": "Kynareth",
@@ -664,7 +690,7 @@
       "effects": [
         {
           "actorValue": "StaminaRateMult",
-          "magnitude": 21,
+          "magnitude": 20,
           "effectName": "Stamina Regeneration"
         },
         {
@@ -673,7 +699,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "Kynareth's sky is open to you. Stamina Regeneration +21%, Magic Resistance +13%.",
+      "playerFacingText": "Kynareth's sky is open to you. Stamina Regeneration +20%, Magic Resistance +13%.",
       "signature": "Open sky: strongest stamina and ward; Champion Survey text is the V1 recognition surface."
     },
     {
@@ -687,11 +713,11 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 5,
+          "magnitude": 15,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "Defiance held in secret hardens you. Armor +5."
+      "playerFacingText": "Defiance held in secret hardens you. Armor +15."
     },
     {
       "emphasis": "Talos",
@@ -704,7 +730,7 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 15,
+          "magnitude": 30,
           "effectName": "Armor"
         },
         {
@@ -713,7 +739,7 @@
           "effectName": "One-Handed"
         }
       ],
-      "playerFacingText": "Open faith in the Ninth steels your arm. Armor +15, One-Handed +8."
+      "playerFacingText": "Open faith in the Ninth steels your arm. Armor +30, One-Handed +8."
     },
     {
       "emphasis": "Talos",
@@ -726,7 +752,7 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 27,
+          "magnitude": 50,
           "effectName": "Armor"
         },
         {
@@ -735,7 +761,7 @@
           "effectName": "One-Handed"
         }
       ],
-      "playerFacingText": "The Hero-God of Man stands with the faithful. Armor +27, One-Handed +20.",
+      "playerFacingText": "The Hero-God of Man stands with the faithful. Armor +50, One-Handed +20.",
       "signature": "Triumph of faithful defiance: strongest martial resolve; Champion Survey text is the V1 recognition surface. Talos favor is reached only by faithful defiance, never compliance."
     }
   ],
@@ -770,5 +796,6 @@
     "wiring": "Same run: add the 8 new shared deity QUSTs to FLST 017E47 (Talos already present, skip); wire 8 new deity props + reference existing PDV_Talos prop on PDV__ManagerQuest; the broad Civic T1 fills the existing PDV_Bless_Imperial_Civic_T1 manager property and is granted via the broad-worship path (PATRON_STATE_BROAD), Civic T2 is a new broad property; wire the focused-patron reward props (8 patrons T1/T2/T3, Talos T1/T2/T3) + PDV_SPEL_Neglect_Imperial. Active-patron offer gating uses the IsFirstTierRaceRewardEligible pattern (patron Tier >= threshold AND active patron). Talos reward props additionally check ConcordatStanding eligibility (faithful defiance only).",
     "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 includes the 9 new Imperial deity QUSTs and still includes Talos; the 30 new SPEL exist with correct MGEF actor-values/magnitudes (no magnitude > ~12%); each new deity QUST has the SGE flag and a SEQ entry; manager deity + reward + neglect props resolve. Then runtime smoke (QASmoke routes 110-113 per the costing manifest)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
+  "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."
 }

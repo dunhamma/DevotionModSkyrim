@@ -1,7 +1,7 @@
 # Daedric -- Azura -- Writer Review
 
 **Source:** `race-sheets/PDV_DaedricContent_Manifest.md` (Azura)
-**Regenerated:** 2026-06-01 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-06-14 via `node tools/pdv_writer_review.mjs`
 **Rows:** 24 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.

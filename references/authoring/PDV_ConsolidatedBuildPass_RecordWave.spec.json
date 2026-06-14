@@ -1,0 +1,251 @@
+{
+  "notes": "Consolidated 2026-06-14 build-pass record wave: voice-conformed message records plus Altmer ThalmorAlignment reputation track. Used only with tools/pdv-phase20-race-author --author-rewards.",
+  "reputationRecordAuthoring": [
+    {
+      "editorId": "PDV_RepTrack_ThalmorAlignment",
+      "trackName": "ThalmorAlignment",
+      "globalEditorId": "PDV_GLO_ThalmorAlignment",
+      "initialValue": 0,
+      "thresholdValues": [-76, -51, 50, 75],
+      "thresholdLabels": [
+        "OpenHeterodox",
+        "PrivateHeterodox",
+        "Uncommitted",
+        "PublicOrthodox",
+        "ThalmorEnforcer"
+      ],
+      "managerTrackProperty": "PDV_ThalmorAlignmentTrack",
+      "addToFormLists": [
+        "PDV_FLST_RepTracks_All",
+        "PDV_FLST_RepTracks_DevOnly"
+      ]
+    }
+  ],
+  "messageRecords": [
+    {
+      "editorId": "PDV_Msg_Nord_Kyne_Offer",
+      "kind": "messageBox",
+      "title": "Kyne Reaches Back",
+      "body": "You sleep where I am. You hunt where I watch. Will you carry my name now, or will you stay among the many?",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Shor_Offer",
+      "kind": "messageBox",
+      "title": "Shor Calls You",
+      "body": "Your sword has stayed honest to the last blow, and Tsun has counted every fall. I am keeping a seat at my table for you. Take the name of Shor now and walk to my hall as one who is awaited, or hold to the broad road and prove it further.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Tsun_Offer",
+      "kind": "messageBox",
+      "title": "Tsun Weighs You",
+      "body": "I have watched you stand where lesser men would have run, against odds that should have ended you. The weighing is nearly done. Take the shield-thane's mark now and be known at the crossing, or come to Shor's bridge unweighed and let the trials decide.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Stuhn_Offer",
+      "kind": "messageBox",
+      "title": "Stuhn Sees the Open Hand",
+      "body": "You have spared the beaten and freed the bound when cruelty would have been the easier road. The open hand can be your banner. Carry the ransom-keeper's name now, or wait, and let me test the mercy in you further.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Akatosh_Offer",
+      "kind": "messageBox",
+      "title": "Akatosh Marks the Hour",
+      "body": "Day upon day, unbroken, you have kept faith while others let theirs fray. The line does not slip in your hands. Take the dragon's keeping now and let time hold what you hold, or measure your hours further before you choose.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Mara_Offer",
+      "kind": "messageBox",
+      "title": "Mara Opens the Door",
+      "body": "You have made a hearth where there was none and held families that were breaking. The warmth you gave can be a door that is always open to you. Let me hold that hearth with you now, or stay welcome among the many a while longer.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Arkay_Offer",
+      "kind": "messageBox",
+      "title": "Arkay's Covenant",
+      "body": "You have given the dead their rites when the living would not, and turned back what should not walk. The cycle holds because you hold it. Walk now as keeper of the covenant, or come to the door again when you are ready.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Stendarr_Offer",
+      "kind": "messageBox",
+      "title": "Stendarr Stays the Hand",
+      "body": "You have stayed the killing blow again and again, where wrath was the easy road. Mercy chosen so often becomes a wall no blade passes lightly. Take my mercy as your armor now, or hold the question open and be tested further.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Zenithar_Offer",
+      "kind": "messageBox",
+      "title": "Zenithar Names the Honest Hand",
+      "body": "Every weight you kept true, every trade you made fair, has been counted. The honest hand makes holy work. Carry the trade-god's name now and let your craft mean more than its making, or stay among the broad a while.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Julianos_Offer",
+      "kind": "messageBox",
+      "title": "Julianos Reads You",
+      "body": "You have studied with a patience few keep, until the arts answered as a friend answers. Wisdom in you is used, not stored. Carry the name of the schools now, or read further before you bind yourself to them.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Dibella_Offer",
+      "kind": "messageBox",
+      "title": "Dibella's Recognition",
+      "body": "You have made beauty where you walked and spoken the word that lands. What you give to the world, the world gives back. Carry my craft openly now, or stay among the loved a while longer.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Talos_Offer",
+      "kind": "messageBox",
+      "title": "Talos Marks the Defier",
+      "body": "You would not let them silence me. Carry the old breath openly now, and Tamriel will hear Talos through you. Or hold the secret close and walk the broad road yet, until you are ready to be marked.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    {
+      "editorId": "PDV_Msg_Nord_Kynareth_Offer",
+      "kind": "messageBox",
+      "title": "Kynareth Calls the Traveler",
+      "body": "The road has been good to you because I am good to the road. The open sky already steadies your step. Carry my name now, traveler, and let the wind go with you, or hold to the broad reverence a while longer.",
+      "messageBox": true,
+      "buttons": ["Accept the bond.", "Not yet.", "Refuse the offer."]
+    },
+    { "editorId": "PDV_Msg_Nord_OfferResponse_Accept", "title": "Accept", "body": "Accept the bond." },
+    { "editorId": "PDV_Msg_Nord_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet." },
+    { "editorId": "PDV_Msg_Nord_OfferResponse_Refuse", "title": "Refuse", "body": "Refuse the offer." },
+    {
+      "editorId": "PDV_Msg_Nord_CurseState_VampireOnset",
+      "kind": "messageBox",
+      "title": "Sovngarde Closes",
+      "body": "Molag Bal's shadow has fallen across you. Sovngarde will not name you while you carry his thirst. Cure the curse, and even then the scar remains.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Nord_CurseState_VampireCured",
+      "kind": "messageBox",
+      "title": "The Door Stands Ajar",
+      "body": "The thirst is gone. The bridge is open again. But Tsun has seen what walked into the dark, and that is not forgotten.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Nord_CurseState_WerewolfOnset",
+      "kind": "messageBox",
+      "title": "Hircine's Pull",
+      "body": "The beast is in the Companions' gift, but it stands against Shor's hall. Your seat on the bridge weakens while the hunt holds.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Nord_CurseState_WerewolfCured",
+      "kind": "messageBox",
+      "title": "The Bridge Holds Again",
+      "body": "The hunt is set down. Hircine's hold is broken, and your seat on the bridge holds firm once more. Shor's hall will name you when the day comes. Tsun marks that you ran with the beast, and does not forget.",
+      "messageBox": true
+    },
+    { "editorId": "PDV_Notif_Nord_General_AncestorsQuiet", "title": "Ancestors Quiet", "body": "The ancestors are quiet." },
+    { "editorId": "PDV_Notif_Nord_Kyne_ChampionAmbient_Storm", "title": "Wind", "body": "The wind is blowing your way." },
+    {
+      "editorId": "PDV_Msg_Nord_Kyne_ChampionEntry",
+      "kind": "messageBox",
+      "title": "Kyne's Recognition",
+      "body": "You sleep where the storm sleeps. You walk where the wind walks. Kyne has named her hunter.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Argonian_CurseState_VampireOnset",
+      "kind": "messageBox",
+      "title": "The Hist Falls Silent",
+      "body": "You are undead now. The Hist gives Saxhleel souls and receives them at death -- and yours is no longer going where it was meant to go. The Hist falls silent. The People cannot safely hold you. Only the void stays near. This is the deepest grief.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Argonian_CurseState_VampireCured",
+      "kind": "messageBox",
+      "title": "The Hist Reaches Again",
+      "body": "The undeath is lifted. The Hist's silence breaks slowly -- it must learn to reach you again across both the distance and the memory of what you were. The People can hold you once more. It will take time. It can be done.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Argonian_CurseState_WerewolfOnset",
+      "kind": "messageBox",
+      "title": "A Changed Shape",
+      "body": "The beast is in you. The Hist is accustomed to Saxhleel who change -- the shape strains the relation but does not sever it. The People can still recognize you. This is serious, but it is not the silence. It can be carried.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Argonian_CurseState_WerewolfCured",
+      "kind": "messageBox",
+      "title": "The Shape Settles",
+      "body": "The beast is set down. The strain on the Hist relation eases, and the People recognize you without reservation again. The shape that pulled at the bond is gone. What was carried is set aside; the Hist reaches you clean.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_CurseState_VampireOnset",
+      "kind": "messageBox",
+      "title": "Outside the Cycle",
+      "body": "You are undead now, and undeath is a soul that has stepped out of the cycle I guide. The Far Shores cannot receive you while the curse holds, so devotion across all three sects falls quiet. Cure this, and return to me first.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry",
+      "kind": "messageBox",
+      "title": "Right Re-Entry",
+      "body": "The curse is lifted. Come back through me before any other god -- proper mortality, ancestor order, the right return to the cycle. When that is done the Far Shores are open, and your sect may have you again.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_CurseState_WerewolfOnset",
+      "kind": "messageBox",
+      "title": "Strained, Not Severed",
+      "body": "The beast is in you. The Yokudan gods and your sect stay within reach, but strained -- Hircine is an intrusion, not a home. The ancestors do not turn away. They only watch the closer.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_CurseState_WerewolfCured",
+      "kind": "messageBox",
+      "title": "The Strain Lifts",
+      "body": "The beast is set down. The strain eases, and the Yokudan gods and your sect come back into full reach. Hircine's intrusion is ended. The ancestors, who only watched the closer, ease their gaze. Wholly theirs again.",
+      "messageBox": true
+    },
+    { "editorId": "PDV_Notif_Redguard_AncestorLayer_NeglectTexture", "title": "Far Shores", "body": "You have handled the dead without care, and the Far Shores feel further off." },
+    { "editorId": "PDV_Notif_Redguard_Crown_NeglectTexture", "title": "Crown Neglect", "body": "You let Yokudan practice slide, and the old orthodoxy thins." },
+    { "editorId": "PDV_Notif_Redguard_Forebear_NeglectTexture", "title": "Forebear Neglect", "body": "You have taken only the easy road. HoonDing pays it no mind." },
+    { "editorId": "PDV_Notif_Redguard_AshAbah_NeglectTexture", "title": "Ash'abah Neglect", "body": "The undead duty goes unmet, and the burden is only weight now, unhonored." },
+    {
+      "editorId": "PDV_Msg_Redguard_ChampionEntry_Crown",
+      "kind": "messageBox",
+      "title": "The Inheritance Kept",
+      "body": "You carried the old way into exile and did not let it thin -- the blade, the bearing, the rites, all intact. The ancestors who died holding Hammerfell see their orthodoxy alive in you.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Khajiit_CurseState_VampireOnset",
+      "kind": "messageBox",
+      "title": "The Lattice Corrupted",
+      "body": "The thirst has taken you, little moon. The Lattice does not cast you out -- the moons do not disown their own -- but the caravans will fear you, and rightly. I will not look away. Few of the others can say the same.",
+      "messageBox": true
+    },
+    {
+      "editorId": "PDV_Msg_Khajiit_CurseState_ShadowDriftEntry",
+      "kind": "messageBox",
+      "title": "The Shadow Between Stars",
+      "body": "You have lived too long in the shadow -- night-only, predatory, drawn to the dark between the moons. The Lattice loosens its hold. Khenarthi's road and Azurah's twilight both feel far away now.",
+      "messageBox": true
+    }
+  ]
+}

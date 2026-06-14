@@ -1,7 +1,7 @@
 # Daedric -- Hircine -- Writer Review
 
 **Source:** `race-sheets/PDV_DaedricContent_Manifest.md` (Hircine)
-**Regenerated:** 2026-06-01 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-06-14 via `node tools/pdv_writer_review.mjs`
 **Rows:** 23 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.

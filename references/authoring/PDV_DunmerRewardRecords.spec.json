@@ -101,7 +101,7 @@
           {
             "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_High_Magic",
             "actorValue": "ResistMagic",
-            "magnitude": 21,
+            "magnitude": 20,
             "homeOrShrineOnly": false,
             "effectName": "Magic Resistance"
           },
@@ -120,7 +120,7 @@
             "effectName": "Health Regeneration"
           }
         ],
-        "playerFacingText": "The ancestors are deeply with you even far from the ash. At home or shrine your magicka and health mend faster, and magic finds little purchase on you. Magic Resistance +21%, Magicka Regeneration +15%, Health Regeneration +5%."
+        "playerFacingText": "The ancestors are deeply with you even far from the ash. At home or shrine your magicka and health mend faster, and magic finds little purchase on you. Magic Resistance +20%, Magicka Regeneration +15%, Health Regeneration +5%."
       }
     ],
     "substratePowerNote": "Mirrors the proven Khajiit and Argonian substrate triad shape and power level (Always low + Mid + High climbing). Themed to ancestors/ash: ResistMagic (always-on identity), MagickaRateMult and HealRateMult at home/shrine (the contextual climb). homeOrShrineOnly conditions are the Dunmer analogue of the Khajiit nightOnly / Argonian nearWaterOnly conditions; the always-on identity boon is unconditional, the contextual climb keys off home/private-shrine context. NO passive decay -- the layer never erodes from absence of tombs/House shrines."
@@ -209,7 +209,7 @@
       "effects": [
         {
           "actorValue": "MagickaRateMult",
-          "magnitude": 11,
+          "magnitude": 10,
           "effectName": "Magicka Regeneration"
         },
         {
@@ -218,7 +218,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "Azura's foresight wards your mind. Magicka Regeneration +11%, Magic Resistance +5%."
+      "playerFacingText": "Azura's foresight wards your mind. Magicka Regeneration +10%, Magic Resistance +5%."
     },
     {
       "emphasis": "Azura",
@@ -231,7 +231,7 @@
       "effects": [
         {
           "actorValue": "MagickaRateMult",
-          "magnitude": 21,
+          "magnitude": 20,
           "effectName": "Magicka Regeneration"
         },
         {
@@ -240,7 +240,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "You see by the twilight Azura keeps. Magicka Regeneration +21%, Magic Resistance +15%.",
+      "playerFacingText": "You see by the twilight Azura keeps. Magicka Regeneration +20%, Magic Resistance +15%.",
       "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md"
     },
     {
@@ -276,11 +276,11 @@
         },
         {
           "actorValue": "DamageResist",
-          "magnitude": 10,
+          "magnitude": 30,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "The strong prevail by Boethiah's measure. One-Handed +13, Armor +10."
+      "playerFacingText": "The strong prevail by Boethiah's measure. One-Handed +13, Armor +30."
     },
     {
       "emphasis": "Boethiah",
@@ -298,11 +298,11 @@
         },
         {
           "actorValue": "DamageResist",
-          "magnitude": 25,
+          "magnitude": 50,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "You have proven your strength to the Prince of Plots. One-Handed +25, Armor +25.",
+      "playerFacingText": "You have proven your strength to the Prince of Plots. One-Handed +25, Armor +50.",
       "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md"
     },
     {
@@ -491,5 +491,6 @@
     "wiring": "Same run: add PDV_Deity_Boethiah + PDV_Deity_Mephala to FLST 017E47 (Azura already present); add Stance_Dunmer to PDV_Deity_Azura; wire substrate boon slots (Substrate_Always/Mid/High) on PDV_Substrate_DunmerAncestor; wire deity props (reuse PDV_Azura; new PDV_Boethiah/PDV_Mephala) + 11 reward spell props (2 broad Reclamation + 9 patron emphasis) + PDV_SPEL_Neglect_Dunmer on PDV__ManagerQuest. The broad T1 property PDV_Bless_Dunmer_Reclamation_T1 already exists on the manager (R2) -- assign its spell, do not add a new property.",
     "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 includes Boethiah + Mephala (and still Azura); PDV_Deity_Azura carries Stance_Dunmer; the 15 new SPEL exist with correct MGEF actor-values/magnitudes; substrate slots + manager props resolve; PDV_Deity_Boethiah and PDV_Deity_Mephala carry the SGE flag AND have SEQ entries. Then runtime smoke (QASmoke routes 130/131/132/133) and the PDV_BetaTestPacket_Dunmer Azura/Boethiah book track (expect log markers RouteDunmerReclamationFocus complete: 130 focus 0/1)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
+  "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."
 }

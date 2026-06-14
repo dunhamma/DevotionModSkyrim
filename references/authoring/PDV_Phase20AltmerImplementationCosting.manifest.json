@@ -74,36 +74,38 @@
     {
       "editorId": "PDV_RepTrack_ThalmorAlignment",
       "type": "rep-track",
-      "status": "existing-design-contract",
+      "status": "record-wired",
       "bands": [
         {
-          "name": "Heterodox",
-          "min": 0,
-          "max": 30
+          "name": "OpenHeterodox",
+          "min": -100,
+          "max": -76
         },
         {
-          "name": "OrthodoxModerate",
-          "min": 31,
-          "max": 69
+          "name": "PrivateHeterodox",
+          "min": -75,
+          "max": -51
         },
         {
-          "name": "ThalmorDevout",
-          "min": 70,
+          "name": "Uncommitted",
+          "min": -50,
+          "max": 50
+        },
+        {
+          "name": "PublicOrthodox",
+          "min": 51,
+          "max": 75
+        },
+        {
+          "name": "ThalmorEnforcer",
+          "min": 76,
           "max": 100
         }
       ],
       "startValues": [
         {
-          "setup": "orthodox",
-          "value": 75
-        },
-        {
-          "setup": "moderate",
-          "value": 50
-        },
-        {
-          "setup": "heterodox",
-          "value": 25
+          "setup": "v1-default",
+          "value": 0
         }
       ],
       "notes": [

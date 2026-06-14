@@ -1,8 +1,8 @@
 # Redguard -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 16 (Redguard (full draft))
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 62 drafted
+**Regenerated:** 2026-06-14 via `node tools/pdv_writer_review.mjs`
+**Rows:** 61 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -150,7 +150,7 @@ _3 rows._
 
 ## Far Shores token (Redguard)
 
-_2 rows._
+_1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|

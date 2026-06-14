@@ -3,15 +3,17 @@
 ## Purpose
 
 This runbook is the runtime proof packet for the first Orc life-mode proof
-slice. The source, life-mode state track, manager wiring, EventBus routes,
-proof ACTI base records, and QASmoke proof references are automation-authored
-and verifier-covered. The remaining work is in-game proof: activate the four
-proof surfaces, confirm status/log movement, and record the negative checks.
+slice plus the Four Holds route-proof extension. The source, life-mode state
+track, manager wiring, EventBus routes, proof ACTI base records, and QASmoke
+proof references are automation-authored and verifier-covered. The remaining
+work is in-game proof: activate the proof surfaces, confirm status/log
+movement, and record the negative checks.
 
 These proof activators are a QASmoke test cluster. They prove route wiring,
-life-mode status text, anti-farm behavior, and parity between Stronghold, City,
-and Legion/Exile play. They are not the final immersive world hooks for craft
-quality, Blood-Kin crisis, city dignity, or service pressure.
+life-mode status text, anti-farm behavior, parity between Stronghold, City, and
+Legion/Exile play, and Four Holds route wiring. They are not the final
+immersive world hooks for craft quality, Blood-Kin crisis, city dignity,
+service pressure, or real stronghold first-arrival placement.
 
 ## Preconditions
 
@@ -36,6 +38,10 @@ Place one reference for each already-wired ACTI base record.
 | `PDV_ACTI_OrcCityDignitySignal` | `PDV_REFR_OrcCityDignitySignal` | City dignity route `71` proves City Orc is a complete life, not failed Stronghold play. |
 | `PDV_ACTI_OrcLegionServiceSignal` | `PDV_REFR_OrcLegionServiceSignal` | Legion/Exile route `72` proves pressure-bearing service can carry the code. |
 | `PDV_ACTI_OrcSelfMadeCommunitySignal` | `PDV_REFR_OrcSelfMadeCommunitySignal` | Self-made community route `73` proves chosen belonging outside a stronghold. |
+| `PDV_ACTI_OrcFourHolds_DushnikhYalSignal` | `PDV_REFR_OrcFourHolds_DushnikhYalSignal` | Four Holds route `75`, hold `1`, proves Dushnikh Yal one-shot visit routing. |
+| `PDV_ACTI_OrcFourHolds_MorKhazgurSignal` | `PDV_REFR_OrcFourHolds_MorKhazgurSignal` | Four Holds route `75`, hold `2`, proves Mor Khazgur one-shot visit routing. |
+| `PDV_ACTI_OrcFourHolds_NarzulburSignal` | `PDV_REFR_OrcFourHolds_NarzulburSignal` | Four Holds route `75`, hold `3`, proves Narzulbur one-shot visit routing. |
+| `PDV_ACTI_OrcFourHolds_LargashburSignal` | `PDV_REFR_OrcFourHolds_LargashburSignal` | Four Holds route `75`, hold `4`, proves Largashbur one-shot visit routing and the all-holds milestone after the fourth unique hold. |
 
 The ACTI base records already carry `PDV_EventSignalActivator` with the correct
 route IDs, origin gate, source IDs, and daily keys. The proof references are
@@ -63,6 +69,10 @@ Expected result:
 - `PDV_REFR_OrcCityDignitySignal -> PDV_ACTI_OrcCityDignitySignal`
 - `PDV_REFR_OrcLegionServiceSignal -> PDV_ACTI_OrcLegionServiceSignal`
 - `PDV_REFR_OrcSelfMadeCommunitySignal -> PDV_ACTI_OrcSelfMadeCommunitySignal`
+- `PDV_REFR_OrcFourHolds_DushnikhYalSignal -> PDV_ACTI_OrcFourHolds_DushnikhYalSignal`
+- `PDV_REFR_OrcFourHolds_MorKhazgurSignal -> PDV_ACTI_OrcFourHolds_MorKhazgurSignal`
+- `PDV_REFR_OrcFourHolds_NarzulburSignal -> PDV_ACTI_OrcFourHolds_NarzulburSignal`
+- `PDV_REFR_OrcFourHolds_LargashburSignal -> PDV_ACTI_OrcFourHolds_LargashburSignal`
 
 Then run:
 
@@ -85,7 +95,7 @@ set PDV_GLO_DebugLevel to 2
 coc qasmoke
 ```
 
-Activate the four proof references once each. Expected log and player-facing
+Activate the eight proof references once each. Expected log and player-facing
 surfaces:
 
 | Activation | Expected proof |
@@ -94,6 +104,10 @@ surfaces:
 | City dignity | Papyrus log contains `RouteOrcCityDignity complete: 71` and manager trace `Orc City dignity routed`; Survey/status shows `City` life. |
 | Legion service | Papyrus log contains `RouteOrcLegionService complete: 72` and manager trace `Orc Legion or exile service routed`; Survey/status shows `LegionExile` life. |
 | Self-made community | Papyrus log contains `RouteOrcSelfMadeCommunity complete: 73` and manager trace `Orc self-made community routed`; Survey/status shows City-aligned self-made belonging. |
+| Four Holds - Dushnikh Yal | Papyrus log contains `RouteOrcFourHoldsVisit complete: 1` and manager trace `Orc Four Holds routed: hold 1`; notification says Dushnikh Yal is counted. |
+| Four Holds - Mor Khazgur | Papyrus log contains `RouteOrcFourHoldsVisit complete: 2` and manager trace `Orc Four Holds routed: hold 2`; notification says Mor Khazgur is counted. |
+| Four Holds - Narzulbur | Papyrus log contains `RouteOrcFourHoldsVisit complete: 3` and manager trace `Orc Four Holds routed: hold 3`; notification says Narzulbur is counted. |
+| Four Holds - Largashbur | Papyrus log contains `RouteOrcFourHoldsVisit complete: 4` and manager trace `Orc Four Holds routed: hold 4`; notification says Largashbur is counted, and the all-holds milestone message appears after all four unique holds. |
 
 Negative checks:
 

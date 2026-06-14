@@ -1,8 +1,8 @@
 # Breton -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 18 (Breton (full draft))
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 72 drafted
+**Regenerated:** 2026-06-14 via `node tools/pdv_writer_review.mjs`
+**Rows:** 69 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -33,9 +33,9 @@ _10 rows._
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | Stendarr: Mercy and the protective shield; speaks of the vow, the spared, the defended; stern but warm. | `PDV_Bless_Breton_Stendarr_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 143 / 200 |  | Stendarr's Aegis is yours. Protecting an ally grants 15% damage resistance; Vigilants treat you as a peer; Daedra and undead take heavier hits. |  |
-| Akatosh: Time, order, the unbroken streak; speaks of continuance and the long-kept faith; formal. | `PDV_Bless_Breton_Akatosh_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 149 / 200 |  | Akatosh keeps the order. Unbroken devotion of fourteen days at high Integrity returns 15% skill experience; the Amulet of Akatosh doubles its effect. |  |
+| Akatosh: Time, order, the unbroken streak; speaks of continuance and the long-kept faith; formal. | `PDV_Bless_Breton_Akatosh_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 188 / 200 |  | Akatosh keeps the order. Unbroken devotion of fourteen days at high Integrity returns a growing dawn blessing of magicka and stamina regeneration; the Amulet of Akatosh doubles its effect. |  |
 | Mara: Hearth and community; speaks of the family held and the home restored; warm. | `PDV_Bless_Breton_Mara_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 146 / 200 |  | Mara holds the community. Helping a family restores full health on next rest; her temple grants full recognition; companions heal better near you. |  |
-| _(no tone match)_ | `PDV_Bless_Breton_HermaeusMora_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 149 / 200 |  | Hermaeus Mora prices your scholarship. Alteration, Conjuration, and Illusion gain 10-20% more experience; the deeper you are seen, the more he gives. |  |
+| _(no tone match)_ | `PDV_Bless_Breton_HermaeusMora_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 150 / 200 |  | Hermaeus Mora prices your scholarship. Alteration, Conjuration, and Illusion spells cost 10% less to cast; the deeper you are seen, the more he gives. |  |
 | _(no tone match)_ | `PDV_Bless_Breton_Hircine_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 102 / 200 |  | Hircine bonds the beast. Beast form lasts longer; the hunt scores stronger; the change comes smoother. |  |
 | _(no tone match)_ | `PDV_Bless_Breton_Nocturnal_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 115 / 200 |  | Nocturnal marks the shadow. Sneak attacks deal 15% more; a theft from a notable target opens a brief unseen window. |  |
 | _(no tone match)_ | `PDV_Bless_Breton_Namira_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 108 / 200 |  | Namira's corruption is yours. Squalor and hunger press lighter; she notices the things others will not name. |  |
@@ -85,9 +85,6 @@ _8 rows._
 | _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_GreenWay_StandingStone` | HUD corner notification. Environmental; per stone, first visit. | Player-2nd | 48 / 80 |  | At the standing stone, the old covenant answers. |  |
 | _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_GreenWay_OutdoorLife` | HUD corner notification. Environmental; cadence-based, daily cap. | Player-2nd | 48 / 80 |  | The wild keeps you. Y'ffre's covenant is steady. |  |
 | _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_GreenWay_NatureRestraint` | HUD corner notification. After-act; nature-aligned restraint. | Player-2nd | 53 / 80 |  | You spared the living world where you could. Counted. |  |
-| _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_HiddenArt_BookRead_Hagravens` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 61 / 80 |  | Not beasts. Women who chose the other road. You keep reading. |  |
-| _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_HiddenArt_BookRead_MadmenReach` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 55 / 80 |  | The Reach remembers what High Rock was asked to forget. |  |
-| _(no tone match)_ | `PDV_Notif_Breton_FavorNoted_HiddenArt_BookRead_AniseLetter` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 64 / 80 |  | She hid it carefully. You know exactly how much care that takes. |  |
 
 ## Contextual favor (large, Marked)
 
@@ -104,7 +101,7 @@ _5 rows._
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Breton_CurseState_VampireOnset` | MessageBox. Once on becoming vampire. | God-voice | 27+261 / 40+500 |  | Title: "The Curse and the Tradition"   Body: "You are undead now, and each tradition answers differently. The Knight's Road breaks -- oaths and Divines lost. The Green Way excommunicates -- Y'ffre closes. Only the Hidden Art finds you a partial home, in the Volkihar court and the witch-mother's acceptance." |  |
-| _(no tone match)_ | `PDV_Msg_Breton_CurseState_VampireCured` | MessageBox. Once on cure. | God-voice | 8+228 / 40+500 |  | Title: "Re-Entry"   Body: "The undeath is lifted. The Knight's Road may be rebuilt through restored Integrity. The Green Way moves from Excommunicated to Penitent; full restoration needs an outdoor rite and sustained covenant, and leaves a permanent scar." |  |
+| _(no tone match)_ | `PDV_Msg_Breton_CurseState_VampireCured` | MessageBox. Once on cure. | God-voice | 8+196 / 40+500 |  | Title: "Re-Entry"   Body: "The undeath is lifted. The Knight's Road may be rebuilt through restored Integrity. The Green Way remains under betrayal pressure until an authored re-entry exists; richer restoration is deferred." |  |
 | _(no tone match)_ | `PDV_Msg_Breton_CurseState_WerewolfOnset_KnightsRoad` | MessageBox. Once on first transformation; Knight's Road. | God-voice | 19+204 / 40+500 |  | Title: "Homeless in the Vow"   Body: "The beast is in you, and the Knight's Road has no frame for it. There is no theological home for the wolf here. Your Integrity degrades on each transformation, and the knightly orders will not understand." |  |
 | _(no tone match)_ | `PDV_Msg_Breton_CurseState_WerewolfOnset_HiddenArt` | MessageBox. Once on first transformation; Hidden Art. | God-voice | 17+177 / 40+500 |  | Title: "The Beast Belongs"   Body: "The beast is in you, and the Hidden Art already holds Hircine. Glenmoril is family here. There is no rupture -- the wolf fits the occult frame as though it were always meant to." |  |
 | _(no tone match)_ | `PDV_Msg_Breton_CurseState_WerewolfCured` | MessageBox. Once on werewolf cure; per-tradition resolution. | God-voice | 18+262 / 40+500 |  | Title: "The Beast Set Down"   Body: "The wolf is set down. On the Knight's Road, Integrity may now be rebuilt, the transformations ended, though the orders remember. In the Hidden Art the beast that belonged is given up by choice; Glenmoril marks the loss, and the occult frame holds an empty place." |  |
@@ -137,7 +134,7 @@ _3 rows._
 |---|---|---|---|---|---|---|---|
 | _(no tone match)_ | `PDV_Msg_Breton_GreenWay_DruidicTrial_Confront` | MessageBox. One-time, on first werewolf transformation as Green Way. | God-voice | 17+232 / 40+500 |  | Title: "The Druidic Trial"   Body: "The beast is in you now. The druid circles have always been split on this. Decide: the beast serves the Green, and the covenant deepens around the new shape -- or Hircine's gift becomes your own, and the Green closes to you. Choose." |  |
 | _(no tone match)_ | `PDV_Msg_Breton_GreenWay_DruidicTrial_BeastServesGreen` | MessageBox. Y'ffre devotion resumes full; Hircine path locked out. | Player-2nd | 27 / 60 |  | The beast serves the Green. |  |
-| _(no tone match)_ | `PDV_Msg_Breton_GreenWay_DruidicTrial_HircineClaimed` | MessageBox. Y'ffre excommunication begins; Hircine drift begins. | Player-2nd | 23 / 60 |  | Hircine's gift is mine. |  |
+| _(no tone match)_ | `PDV_Msg_Breton_GreenWay_DruidicTrial_HircineClaimed` | MessageBox. Druidic fork betrayal pressure begins; Hircine drift begins. | Player-2nd | 23 / 60 |  | Hircine's gift is mine. |  |
 
 ## Other
 

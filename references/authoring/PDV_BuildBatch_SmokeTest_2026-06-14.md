@@ -32,6 +32,17 @@ the only console is standard `set` / `coc`.
    `Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log` (debug 2
    prints the `[PDV]` traces called out below). Survey = MCM Player page **Survey
    Devotion**.
+5. **(Tests 6/7 and ANY RefID activation) Read your plugin prefix ONCE.**
+   PDV's signal objects are invisible, **nameless** activators, so
+   `help "OrcStrongholdForge"` returns nothing (this list does not preserve
+   EditorIDs). Read the prefix off a **named** PDV blessing instead:
+   ```
+   help "HoonDing" 0
+   ```
+   Find the `SPEL:` line, e.g. `SPEL: (B30711A0) 'HoonDing's Way - Seeker'`. The
+   first two hex digits (`B3` in this example) are your prefix **XX** -- identical
+   for every PDV record this session. Fire any signal with `prid XX<refid>` then
+   **`activate player`** (NOT bare `activate` -- it needs the activating actor).
 
 ---
 
@@ -106,8 +117,10 @@ Lorkhan-adjacent acts now cost real piety (was telemetry-only).
 - Activate `PDV_REFR_OrcStrongholdForgeSignal` **once**. Log shows the forge routed
   + evidence recorded, but Survey life mode **stays City** (old build flipped to
   Stronghold instantly). **PASS = no flip on a single signal.**
-- (Optional full switch: sleep to a new in-game day, activate it again, **Run dawn
-  pass** -> now it switches to Stronghold = two evidence days in seven.)
+- (Optional full switch: sleep to a new in-game day -- the **auto-dawn fires on the day
+  rollover** by itself -- then activate it again; the **2nd signal itself** switches the mode
+  to Stronghold (two evidence days in seven). No manual **Run dawn pass** needed. Verified
+  in-game 2026-06-14: signal #1 stays City, auto-dawn rolls the day, signal #2 flips to Stronghold.)
 
 ### 7. Redguard sect no longer flips on one act  (origin 9, `coc qasmoke`)
 - Survey -> sect is **Forebear** (default).
@@ -136,6 +149,13 @@ Any pantheon-baseline god can now be offered, not just Kyne.
   appears (before this fix, neglect was silent without the Prisma overlay).
 
 ### 10. Copy-fix spot checks (read-only, any relevant origin)
+> **FOLDED INTO THE EDITORIAL PASS (user direction 2026-06-14).** Nord PASSED; the Bosmer /
+> Dunmer / Argonian spot-checks are subsumed by the all-10-race Survey rewrite below -- no point
+> verifying interim copy that's being rewritten wholesale. In-game evidence: the Bosmer Survey
+> still renders `Your Bosmer path is OldContract. Current standing: Unproven. No Pact binding is
+> active.` -- the raw enum leaks via `GetBosmerPathLabel()` (a SEPARATE string from the already-fixed
+> path-SUGGESTION line), in flat status-readout voice. Same class across races.
+
 Open **Survey Devotion** and confirm the wording reads cleanly:
 - Bosmer (4): path line says `the Old Contract` / `the Living Story` / `the
   Exchange` / `the Bandit Road` (not the run-together `OldContract`).
@@ -151,9 +171,23 @@ Per user direction (2026-06-14): a dedicated narrator-voice editorial pass, NOT 
 1. **Survey Devotion text, all 10 races** -- rewrite every `Get<Race>SurveyText()` in
    `PDV__ManagerQuest.psc` into consistent narrator voice (the way Khajiit's was fixed); kill
    status-token phrasing and any leaked counters/enum tokens. needsRecompile.
+   - Confirmed offenders (2026-06-14 in-game): **enum leaks via label builders** -- `GetBosmerPathLabel()`
+     returns `OldContract` (should read "the Old Contract"); same pattern in `GetOrcLifeModeLabel` /
+     `GetBretonTraditionLabel` / etc. **Dev language** -- Orc opens "Malacath watches **the code**
+     through City life". **Uniform readout voice** -- nearly every race appends "Current standing:
+     <label>." So the pass must rewrite the survey sentences AND humanize the per-race label builders,
+     not just the top-level strings. (Absorbs test-10 Bosmer/Dunmer/Argonian spot-checks.)
 2. **Toasts** -- grammar + voice review of the `SendPrismaShiftToast` / `SendPrismaSubstrateProgress`
    strings and posture labels (Argonian specifically flagged), plus the fresh-Argonian
    "growing thin" first-maintenance posture quirk (init posture from the real relation).
+3. **Commitment-offer copy parity (non-Kyne Nord gods)** -- test 8 opened formal commitment
+   offers to every Nord pantheon-baseline god, but the offer copy + MCM strings are still
+   Kyne-worded (`"Evaluate the Kyne commitment offer now?"`, `"first real ... Kyne commitment
+   offer"`) and no bespoke per-god offer/accept text exists. Author commitment-offer write-ups
+   for each eligible non-Kyne god so they reach Kyne parity: Old Ways = **Shor, Tsun, Stuhn**;
+   Nine Divines = **Akatosh, Mara, Arkay, Stendarr, Zenithar, Dibella, Julianos, Kynareth**;
+   plus **Talos** (always eligible). Degenericize the Kyne-worded MCM labels in the same pass.
+   (Surfacing the offer in-world is the separate deferred D0 diegetic work; this item is text only.)
 
 ## What to report back
 For each test: PASS / FAIL + the key log line (or the before/after piety-map

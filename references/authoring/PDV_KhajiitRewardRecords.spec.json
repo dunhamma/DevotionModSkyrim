@@ -109,7 +109,7 @@
           {
             "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_High_Stamina",
             "actorValue": "StaminaRateMult",
-            "magnitude": 13,
+            "magnitude": 10,
             "nightOnly": true,
             "effectName": "Stamina Regeneration"
           },
@@ -128,7 +128,7 @@
             "effectName": "Magicka Regeneration"
           }
         ],
-        "playerFacingText": "You are deeply attuned to the Lunar Lattice. At night your stamina and magicka regenerate faster and disease finds little purchase. Stamina Regeneration +13% (at night), Disease Resistance +30% (at night), Magicka Regeneration +5% (at night)."
+        "playerFacingText": "You are deeply attuned to the Lunar Lattice. At night your stamina and magicka regenerate faster and disease finds little purchase. Stamina Regeneration +10% (at night), Disease Resistance +30% (at night), Magicka Regeneration +5% (at night)."
       }
     ]
   },
@@ -170,7 +170,7 @@
       "effects": [
         {
           "actorValue": "StaminaRateMult",
-          "magnitude": 11,
+          "magnitude": 10,
           "effectName": "Stamina Regeneration"
         },
         {
@@ -179,7 +179,7 @@
           "effectName": "Carry Weight"
         }
       ],
-      "playerFacingText": "The road-walker bears more and tires less. Stamina Regeneration +11%, Carry Weight +30."
+      "playerFacingText": "The road-walker bears more and tires less. Stamina Regeneration +10%, Carry Weight +30."
     },
     {
       "emphasis": "Khenarthi",
@@ -189,7 +189,7 @@
       "effects": [
         {
           "actorValue": "StaminaRateMult",
-          "magnitude": 21,
+          "magnitude": 20,
           "effectName": "Stamina Regeneration"
         },
         {
@@ -203,7 +203,7 @@
           "effectName": "Movement Speed"
         }
       ],
-      "playerFacingText": "Khenarthi's wind is at your back. Stamina Regeneration +21%, Carry Weight +80, Movement Speed +3%."
+      "playerFacingText": "Khenarthi's wind is at your back. Stamina Regeneration +20%, Carry Weight +80, Movement Speed +3%."
     },
     {
       "emphasis": "Azurah",
@@ -227,7 +227,7 @@
       "effects": [
         {
           "actorValue": "MagickaRateMult",
-          "magnitude": 11,
+          "magnitude": 10,
           "effectName": "Magicka Regeneration"
         },
         {
@@ -236,7 +236,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "The twilight wards you. Magicka Regeneration +11%, Magic Resistance +5%."
+      "playerFacingText": "The twilight wards you. Magicka Regeneration +10%, Magic Resistance +5%."
     },
     {
       "emphasis": "Azurah",
@@ -246,7 +246,7 @@
       "effects": [
         {
           "actorValue": "MagickaRateMult",
-          "magnitude": 21,
+          "magnitude": 20,
           "effectName": "Magicka Regeneration"
         },
         {
@@ -255,7 +255,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "You see by the twilight Azurah keeps. Magicka Regeneration +21%, Magic Resistance +15%."
+      "playerFacingText": "You see by the twilight Azurah keeps. Magicka Regeneration +20%, Magic Resistance +15%."
     },
     {
       "emphasis": "BaanDar",
@@ -265,11 +265,11 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 5,
+          "magnitude": 15,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "The outsider endures. Armor +5."
+      "playerFacingText": "The outsider endures. Armor +15."
     },
     {
       "emphasis": "BaanDar",
@@ -279,7 +279,7 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 15,
+          "magnitude": 30,
           "effectName": "Armor"
         },
         {
@@ -288,17 +288,18 @@
           "effectName": "Health Regeneration"
         }
       ],
-      "playerFacingText": "The survivor mends quickly. Armor +15, Health Regeneration +10%."
+      "playerFacingText": "The survivor mends quickly. Armor +30, Health Regeneration +10%."
     },
     {
       "emphasis": "BaanDar",
       "tier": "T3",
       "spellEditorId": "PDV_Bless_Khajiit_BaanDar_T3",
       "displayName": "Baan Dar's Luck - Champion",
+      "preserveAdditionalEffects": true,
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 30,
+          "magnitude": 50,
           "effectName": "Armor"
         },
         {
@@ -312,7 +313,7 @@
           "effectName": "Unarmed Damage"
         }
       ],
-      "playerFacingText": "Baan Dar's luck is with you when the odds are not. Armor +30, Health Regeneration +25%, Unarmed Damage +10."
+      "playerFacingText": "Baan Dar's luck is with you when the odds are not. Armor +50, Health Regeneration +25%, Unarmed Damage +10."
     },
     {
       "emphasis": "Rajhin",
@@ -456,5 +457,6 @@
     "wiring": "Same run: add 4 deities to FLST 017E47; wire substrate boon slots (Substrate_Always/Mid/High) on PDV_Substrate_KhajiitLunar; wire deity props (PDV_Azura/Khenarthi/Rajhin/Alkosh) + 15 emphasis spell props + PDV_SPEL_Neglect_KhajiitLunar on PDV__ManagerQuest.",
     "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 Items==10; the 16 new SPEL exist with correct MGEF actor-values/magnitudes; substrate slots + manager props resolve. Then runtime smoke (QASmoke routes)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
+  "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."
 }

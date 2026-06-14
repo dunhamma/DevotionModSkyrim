@@ -14,8 +14,11 @@ Resume point for the 9-race beta work. Read this + the smoke-test packet
   1280/0, NOT in git -- lives in `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\
   PDV__ManagerQuest.psc`):** all 9 items below + the neglect vanilla fallback + 13 copy fixes
   + the Argonian bed-count packet fix.
-- **Smoke test (in progress): 5 of 10 PASS.** All Tier-1 curse/recovery/penalty items confirmed
-  in `Papyrus.0.log`.
+- **Smoke test COMPLETE (2026-06-14): tests 1-9 PASS** (all confirmed in `Papyrus.0.log`). Test 10
+  (copy spot-checks) FOLDED into the editorial pass per user direction -- the Bosmer/Dunmer/Argonian
+  Survey lines are subsumed by the all-10-race Survey rewrite; Nord already passed. In-game evidence
+  the rewrite is needed: Bosmer Survey renders `Your Bosmer path is OldContract...` (raw enum via
+  `GetBosmerPathLabel()`), Orc opens "Malacath watches the code through City life" (dev language).
 
 ## RESUME HERE -- remaining smoke tests
 
@@ -23,13 +26,16 @@ Universal: NEW save / fresh state per race; `set PDV_GLO_OriginRace to <n>`; `se
 PDV_GLO_DebugLevel to 2`; click **Curse none** before swapping origin; read
 `Logs\Script\Papyrus.0.log`. **qasmoke has only vanilla items** -- PDV's proof objects are
 invisible script-activators in the (PDV-overridden) QASmoke cell; fire them by RefID from
-anywhere: find the plugin's 2-hex load prefix once via `help "OrcStrongholdForge" 0`, then
-`prid XX<refid>` + `activate`.
+anywhere. The activators are NAMELESS and this list does not preserve EditorIDs, so
+`help "OrcStrongholdForge"` returns nothing -- get the 2-hex prefix once off a NAMED PDV
+blessing instead: `help "HoonDing" 0` -> the `SPEL:` line's FormID `(XX0711A0)` -> the first
+two hex digits are your prefix `XX`. Then `prid XX<refid>` + `activate player` (NOT bare
+`activate`).
 
 | # | Test | Origin | Trigger | PASS = |
 |---|------|:---:|---------|--------|
-| 6 | Orc life-mode no-flip | 8 | `prid XX071027; activate` (Stronghold signal) once | Survey life-mode **stays City** (no instant flip); log `Orc Stronghold forge routed` + evidence recorded |
-| 7 | Redguard sect no-flip | 9 | `prid XX07102B; activate` (Crown signal) once | Survey sect **stays Forebear** (no flip) |
+| 6 | Orc life-mode no-flip | 8 | `prid XX071027` then `activate player` (Stronghold signal) once | Survey life-mode **stays City** (no instant flip); log `Orc Stronghold forge routed` + evidence recorded |
+| 7 | Redguard sect no-flip | 9 | `prid XX07102B` then `activate player` (Crown signal) once | Survey sect **stays Forebear** (no flip) |
 | 8 | Nord non-Kyne offers | 0 | `Selected deity` -> a non-Kyne baseline god; **Apply target piety** 55; **Seed commitment signals**; **Run dawn pass** | a commitment **offer fires for that non-Kyne god** (was Kyne-only) |
 | 9 | Neglect vanilla notice | any | commit a patron, drop its piety (Apply ~5), Run dawn pass until neglect | top-left notice `<Deity>'s regard fades as your devotion goes quiet.` |
 | 10 | Copy spot-checks | 4/0/5/7 | open Survey Devotion | Bosmer `the Old Contract`/etc.; Nord `the Old Ways`; Dunmer `The Reclamations have answered...`; Argonian Normal `The Hist is near, as near as exile allows.` |
@@ -85,6 +91,13 @@ Decide record EditorIDs/magnitudes WITH the user (idempotency-trap territory). I
 Rewrite ALL 10 races' `Get<Race>SurveyText` into narrator voice (Khajiit treatment) + grammar/
 voice review of the Prisma toasts + posture labels (Argonian flagged) + the fresh-Argonian
 "growing thin" init quirk. needsRecompile; fan out per-race.
+
+Also in the copy pass: **commitment-offer copy parity** -- test 8 opened formal offers to all
+Nord pantheon-baseline gods, but offer copy + MCM labels are still Kyne-worded. Write per-god
+offer/accept write-ups for the 11 eligible non-Kyne gods (Old Ways Shor/Tsun/Stuhn; Nine Divines
+Akatosh/Mara/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth; + Talos) to Kyne parity, and
+degenericize the Kyne-worded MCM strings (`IsNordOfferEligibleDeity` is the eligibility source).
+Surfacing the offer in-world stays the separate deferred D0 diegetic work.
 
 ## Gotchas
 - Gate/curse changes only init on a NEW save; old saves keep stale state.

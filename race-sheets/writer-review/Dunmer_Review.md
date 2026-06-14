@@ -1,8 +1,8 @@
 # Dunmer -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 12 (Dunmer (full draft))
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 71 drafted
+**Regenerated:** 2026-06-14 via `node tools/pdv_writer_review.mjs`
+**Rows:** 67 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -30,7 +30,7 @@ _3 rows._
 |---|---|---|---|---|---|---|---|
 | Azura: Twilight-voiced, prophetic, tender about painful truth; speaks of thresholds and of becoming truer, not merely stronger; warns rather than commands. | `PDV_Bless_Dunmer_Azura_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 123 / 200 |  | Azura watches your thresholds. From dawn to noon, fire and magic resistance climb together; by night, magic costs 10% less. |  |
 | Boethiah: Trial-voiced, sharp, strength-testing; speaks of the unworthy cut away and the self authored through struggle; combative, never cruel. | `PDV_Bless_Dunmer_Boethiah_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 170 / 200 |  | Boethiah marks proven strength. After felling a significant foe, you carry 25 more weight and your power attacks grow lighter for a day. The ancestors record the victory. |  |
-| Mephala: Soft, conspiratorial, web-voiced; speaks of the hidden people, the secret kept, the web drawn close; intimate rather than loud. | `PDV_Bless_Dunmer_Mephala_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 153 / 200 |  | Mephala draws the web close. Your resistance to poison rises by 20% and the hidden network returns 5% more gold. Discretion opens doors others never see. |  |
+| Mephala: Soft, conspiratorial, web-voiced; speaks of the hidden people, the secret kept, the web drawn close; intimate rather than loud. | `PDV_Bless_Dunmer_Mephala_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 176 / 200 |  | Mephala draws the web close. Your resistance to poison rises by 20%, and the hidden network brings you secrets before others hear them. Discretion opens doors others never see. |  |
 
 ## Champion recognition (MessageBox)
 
@@ -117,10 +117,6 @@ _17 rows._
 | _(no tone match)_ | `PDV_Notif_Dunmer_FavorNoted_Mephala_SecretKept` | HUD corner notification. Quiet/Noted; only when the secret preserves an obligation. | Player-2nd | 56 / 80 |  | A secret held, and an obligation with it. The web holds. |  |
 | _(no tone match)_ | `PDV_Notif_Dunmer_FavorNoted_Mephala_ObligationWeb` | HUD corner notification. Quiet/Noted; the web tightening helpfully. | Player-2nd | 63 / 80 |  | A favor passed along an unseen thread. The web tightens kindly. |  |
 | _(no tone match)_ | `PDV_Notif_Dunmer_FavorNoted_Mephala_NecessaryLie` | HUD corner notification. After-act; the survival lie, curated hooks, not broad fraud. | Player-2nd | 56 / 80 |  | The lie protected the web. Mephala knows the difference. |  |
-| _(no tone match)_ | `PDV_Notif_Dunmer_FavorNoted_Azura_BookRead_Invocation` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 61 / 80 |  | Her name's spoken in Skyrim's cold. The dawn still finds you. |  |
-| _(no tone match)_ | `PDV_Notif_Dunmer_FavorNoted_Azura_BookRead_AzuraBox` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 70 / 80 |  | She gave them the box they asked for. You know what was really inside. |  |
-| _(no tone match)_ | `PDV_Notif_Dunmer_FavorNoted_Boethiah_BookRead_Glory` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 58 / 80 |  | You read the praise but your blood already knew the words. |  |
-| _(no tone match)_ | `PDV_Notif_Dunmer_FavorNoted_Boethiah_BookRead_Proving` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 76 / 80 |  | The proving is always personal. Boethiah names the ones who understand this. |  |
 
 ## Contextual favor (large, Marked)
 

@@ -179,10 +179,10 @@
         },
         {
           "actorValue": "DamageResist",
-          "magnitude": 8
+          "magnitude": 30
         }
       ],
-      "playerFacingText": "The line of ancestors steadies you on the road. Magic Resistance +5%, Armor +8.",
+      "playerFacingText": "The line of ancestors steadies you on the road. Magic Resistance +5%, Armor +30.",
       "signature": "Blended sect ancestor resilience (form, road, contract, death-duty texture). Capped at Faithful; suppressed when a focused patron is active; below focused-patron benefits.",
       "suppressionRule": "Suppressed (not granted) whenever PDV_GLO_PatronState is active-primary with a focused Yokudan patron set."
     },
@@ -216,7 +216,7 @@
       "effects": [
         {
           "actorValue": "ResistMagic",
-          "magnitude": 13,
+          "magnitude": 10,
           "effectName": "Magic Resistance"
         },
         {
@@ -225,7 +225,7 @@
           "effectName": "Health Regeneration"
         }
       ],
-      "playerFacingText": "Tu'whacca steadies the soul against death's edge. Magic Resistance +13%, Health Regeneration +10%."
+      "playerFacingText": "Tu'whacca steadies the soul against death's edge. Magic Resistance +10%, Health Regeneration +10%."
     },
     {
       "emphasis": "Tuwhacca",
@@ -239,7 +239,7 @@
       "effects": [
         {
           "actorValue": "ResistMagic",
-          "magnitude": 23,
+          "magnitude": 20,
           "effectName": "Magic Resistance"
         },
         {
@@ -248,7 +248,7 @@
           "effectName": "Health Regeneration"
         }
       ],
-      "playerFacingText": "Tu'whacca keeps the way to the Far Shores open for you and yours. Magic Resistance +23%, Health Regeneration +25%.",
+      "playerFacingText": "Tu'whacca keeps the way to the Far Shores open for you and yours. Magic Resistance +20%, Health Regeneration +25%.",
       "signature": "Soul-keeper's recognition: strongest death-duty ward and restoration; reached through kept death duty and Far Shores devotion, never Arkay substitution; Champion Survey text is the V1 recognition surface."
     },
     {
@@ -532,25 +532,25 @@
       "editorId": "PDV_Msg_Redguard_CurseState_VampireOnset",
       "kind": "messageBox",
       "title": "Outside the Cycle",
-      "text": "You are undead now, and undeath is a soul that has left the cycle I guide. The Far Shores cannot receive you while the curse holds. Devotion across all three sects falls quiet. Cure this, and return to me first."
+      "text": "You are undead now, and undeath is a soul that has stepped out of the cycle I guide. The Far Shores cannot receive you while the curse holds, so devotion across all three sects falls quiet. Cure this, and return to me first."
     },
     {
       "editorId": "PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry",
       "kind": "messageBox",
       "title": "Right Re-Entry",
-      "text": "The curse is lifted. Come back through me before any other god -- proper mortality, ancestor order, the right return to the cycle. When that is done, the Far Shores are open, and your sect may have you again."
+      "text": "The curse is lifted. Come back through me before any other god -- proper mortality, ancestor order, the right return to the cycle. When that is done the Far Shores are open, and your sect may have you again."
     },
     {
       "editorId": "PDV_Msg_Redguard_CurseState_WerewolfOnset",
       "kind": "messageBox",
       "title": "Strained, Not Severed",
-      "text": "The beast is in you. The Yokudan gods and your sect remain within reach, but strained -- Hircine is an intrusion, not a home. The ancestors do not turn away. They only watch more closely."
+      "text": "The beast is in you. The Yokudan gods and your sect stay within reach, but strained -- Hircine is an intrusion, not a home. The ancestors do not turn away. They only watch the closer."
     },
     {
       "editorId": "PDV_Msg_Redguard_CurseState_WerewolfCured",
       "kind": "messageBox",
       "title": "The Strain Lifts",
-      "text": "The beast is set down. The strain eases, and the Yokudan gods and your sect come back into full reach. Hircine's intrusion is ended. The ancestors, who only watched more closely, ease their gaze. Wholly theirs again."
+      "text": "The beast is set down. The strain eases, and the Yokudan gods and your sect come back into full reach. Hircine's intrusion is ended. The ancestors, who only watched the closer, ease their gaze. Wholly theirs again."
     }
   ],
   "v1RecognitionSurface": "Champion Survey/status text only (non-voiced). The Redguard Survey reports active sect (Crown/Forebear/Ash'abah) and why, broad/focused state, primary Yokudan patron and tier, Tu'whacca death-duty / Far Shores token state, Ash'abah impurity burden, HoonDing weekly-cap state, and vampire/werewolf curse-cycle pressure -- all in Yokudan terms (Tu'whacca, never Arkay). Voiced NPC recognition (Hall of the Dead / tombkeeper / Alik'r-facing topics, Ash'abah stigma lines) is V2 per PDV_RecognitionDialogueScalePacket.md.",
@@ -598,5 +598,6 @@
     "R7": "Gate type = state-enum-gated: rewards gate on PDV_State_RedguardSect + focused patron tier within the sect; offer-like for the focused patron.",
     "R8": "<=2 always-on families (broad AncestorSpine + one focused Yokudan patron); ancestor reverence + Far Shores token are SUPPORT not a 3rd family; broad < focused (suppressed under focus); HoonDing weekly cap; one anti-farm mechanism per act; per-tier magnitude ceiling ~12% (max used = 12% OneHanded T3 / 15% HealRateMult T3 within ledger ceiling band); creed-violation loss medium/major only (3 entries). ASCII-only text; Skyrim ActorValue names (ResistMagic, DamageResist, HealRateMult, OneHanded, CriticalChance, SpeedMult); deityIndex next-available; Arkay create:false (infra only)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
+  "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."
 }

@@ -1,7 +1,7 @@
 # Orc -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 11 (Orc (full draft))
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-06-14 via `node tools/pdv_writer_review.mjs`
 **Rows:** 50 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
@@ -12,7 +12,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Malacath: Blunt, verdict-toned, exile-coded; never petitioned, never warm; speaks of the code, the forge, the oath, and what he has witnessed; a judgment rendered, not a comfort offered. | `PDV_Bless_Orc_Malacath_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 176 / 200 |  | Malacath has noted your conduct. Your Smithing gains 5% more experience; Orcish armor you wear adds 5 armor; your resistance to disease rises by 10%; your brawls hit 5% harder. |  |
+| Malacath: Blunt, verdict-toned, exile-coded; never petitioned, never warm; speaks of the code, the forge, the oath, and what he has witnessed; a judgment rendered, not a comfort offered. | `PDV_Bless_Orc_Malacath_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 195 / 200 |  | Malacath has noted your conduct. The weapons and armor you temper improve a little further; Orcish armor you wear adds 5 armor; your resistance to disease rises by 10%; your brawls hit 5% harder. |  |
 
 ## Champion ambient line
 
@@ -110,7 +110,7 @@ _15 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Malacath: Blunt, verdict-toned, exile-coded; never petitioned, never warm; speaks of the code, the forge, the oath, and what he has witnessed; a judgment rendered, not a comfort offered. | `PDV_Bless_Orc_Malacath_T2_Stronghold` | Passive blessing description; visible whenever the player views active effects. | Narrator | 143 / 200 |  | Malacath watches the code carried in full. Your forge work tempers higher. Proving strength against a hard foe restores health after the fight. |  |
+| Malacath: Blunt, verdict-toned, exile-coded; never petitioned, never warm; speaks of the code, the forge, the oath, and what he has witnessed; a judgment rendered, not a comfort offered. | `PDV_Bless_Orc_Malacath_T2_Stronghold` | Passive blessing description; visible whenever the player views active effects. | Narrator | 140 / 200 |  | Malacath sees the oath carried in full. Your forge work tempers higher. Proving strength against a hard foe restores health after the fight. |  |
 | Malacath: Blunt, verdict-toned, exile-coded; never petitioned, never warm; speaks of the code, the forge, the oath, and what he has witnessed; a judgment rendered, not a comfort offered. | `PDV_Bless_Orc_Malacath_T2_City` | Passive blessing description; visible whenever the player views active effects. | Narrator | 148 / 200 |  | Malacath sees the code held with no stronghold to hold it for you. Quality work earns his eye. Standing firm against scorn steadies your next words. |  |
 | Malacath: Blunt, verdict-toned, exile-coded; never petitioned, never warm; speaks of the code, the forge, the oath, and what he has witnessed; a judgment rendered, not a comfort offered. | `PDV_Bless_Orc_Malacath_T2_LegionExile` | Passive blessing description; visible whenever the player views active effects. | Narrator | 146 / 200 |  | Malacath weighs the code carried under foreign command. A contract honored under pressure is counted. Endurance through the long march is counted. |  |
 | Malacath: Blunt, verdict-toned, exile-coded; never petitioned, never warm; speaks of the code, the forge, the oath, and what he has witnessed; a judgment rendered, not a comfort offered. | `PDV_Bless_Orc_Malacath_T3_Stronghold` | Passive blessing description; visible whenever the player views active effects. | Narrator | 163 / 200 |  | Malacath's witness is complete. Weapons you forged strike 5% harder in your hands alone. Near death, once a day, his fury restores stamina and lightens your blows. |  |

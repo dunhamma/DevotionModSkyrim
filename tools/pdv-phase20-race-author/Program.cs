@@ -14,6 +14,8 @@ using Mutagen.Bethesda.Strings;
 //
 // MODES
 //   --author-rewards            Create/wire SPEL/MGEF/QUST from --rewards-spec.
+//   --check-rewards             Read-only check of records/properties described
+//                               by --rewards-spec.
 //   --reconcile-shared-deity    Reconcile shared/existing deity QUSTs:
 //                               copy SGE Flags/Priority from a reference deity
 //                               (default PDV_Deity_Kyne) and set the named
@@ -68,6 +70,7 @@ const string defaultReferenceDeity = "PDV_Deity_Kyne";
 
 var dryRun = args.Contains("--dry-run");
 var authorRewards = args.Contains("--author-rewards");
+var checkRewards = args.Contains("--check-rewards");
 var reconcileShared = args.Contains("--reconcile-shared-deity");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var referenceDeity = GetArg(args, "--reference-deity") ?? defaultReferenceDeity;
@@ -100,9 +103,9 @@ try
         throw new FileNotFoundException("Framework ESP not found.", espPath);
     }
 
-    if (!authorRewards && !reconcileShared)
+    if (!authorRewards && !checkRewards && !reconcileShared)
     {
-        throw new InvalidOperationException("Specify --author-rewards or --reconcile-shared-deity.");
+        throw new InvalidOperationException("Specify --author-rewards, --check-rewards, or --reconcile-shared-deity.");
     }
 
     var spec = LoadSpec(rewardsSpecPath);
@@ -110,6 +113,10 @@ try
     if (reconcileShared)
     {
         ReconcileSharedDeities(espPath, spec, referenceDeity, dryRun, report);
+    }
+    else if (checkRewards)
+    {
+        CheckRewards(espPath, spec, report);
     }
     else
     {
@@ -136,6 +143,82 @@ static RewardsSpec LoadSpec(string specPath)
 {
     return JsonSerializer.Deserialize<RewardsSpec>(File.ReadAllText(specPath), new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
         ?? throw new InvalidOperationException("Rewards spec did not parse.");
+}
+
+static void CheckRewards(string espPath, RewardsSpec spec, AuthorReport report)
+{
+    var mod = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
+    var index = BuildIndex(mod);
+    var debugGlobal = RequireRecord<Global>(index, "PDV_GLO_DebugLevel");
+    var manager = RequireRecord<Quest>(index, "PDV__ManagerQuest");
+    var managerScript = RequireScript(manager, "PDV__ManagerQuest");
+
+    foreach (var trackSpec in spec.reputationRecordAuthoring ?? new())
+    {
+        CheckReputationTrack(index, managerScript, debugGlobal.FormKey, trackSpec, report);
+    }
+
+    foreach (var messageDefinition in spec.messageRecords ?? new())
+    {
+        CheckMessageRecord(index, managerScript, messageDefinition, report);
+    }
+
+    foreach (var modifier in spec.deityTrackModifiers ?? new())
+    {
+        CheckDeityTrackModifier(index, modifier, report);
+    }
+
+    if (spec.substrateBoons is { } substrate && substrate.slots is { } slots)
+    {
+        if (string.IsNullOrWhiteSpace(substrate.wireTo))
+        {
+            throw new InvalidOperationException("substrateBoons.wireTo must name the substrate quest editorId.");
+        }
+
+        var substrateQuest = RequireRecord<Quest>(index, substrate.wireTo);
+        var substrateScript = RequireScript(substrateQuest, substrate.wireTo);
+        foreach (var slot in slots)
+        {
+            CheckRewardSlot(index, substrateScript, substrate.wireTo, slot, report);
+        }
+    }
+
+    if (spec.neglect is { } neglect)
+    {
+        CheckRewardSpell(index, managerScript, "PDV__ManagerQuest", neglect, neglect.spellProperty, requireProperty: true, report);
+    }
+
+    foreach (var reward in spec.emphasisRewards ?? new())
+    {
+        CheckRewardSpell(index, managerScript, "PDV__ManagerQuest", reward, reward.spellProperty ?? reward.spellEditorId, requireProperty: true, report);
+    }
+
+    foreach (var reward in spec.broadState?.rewards ?? new())
+    {
+        CheckRewardSpell(index, managerScript, "PDV__ManagerQuest", reward, reward.spellProperty ?? reward.spellEditorId, requireProperty: true, report);
+    }
+
+    foreach (var reward in spec.supportSpells ?? new())
+    {
+        CheckRewardSpell(index, managerScript, "PDV__ManagerQuest", reward, reward.spellProperty ?? reward.spellEditorId, requireProperty: true, report);
+    }
+
+    if (spec.farShoresToken is { } farShoresToken)
+    {
+        CheckRewardSpell(index, managerScript, "PDV__ManagerQuest", farShoresToken, farShoresToken.spellProperty ?? farShoresToken.spellEditorId, requireProperty: true, report);
+    }
+
+    if (spec.creedViolationLoss.ValueKind == JsonValueKind.Array)
+    {
+        foreach (var el in spec.creedViolationLoss.EnumerateArray())
+        {
+            var loss = el.Deserialize<RewardsSpecReward>(new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                ?? throw new InvalidOperationException("creedViolationLoss[] entry did not parse.");
+            CheckRewardSpell(index, managerScript, "PDV__ManagerQuest", loss, loss.spellProperty, requireProperty: false, report);
+        }
+    }
+
+    report.Actions.Add("Read-only reward/spec check complete; ESP not written.");
 }
 
 // =======================================================================
@@ -211,6 +294,63 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
         }
     }
 
+    foreach (var trackSpec in spec.reputationRecordAuthoring ?? new())
+    {
+        if (string.IsNullOrWhiteSpace(trackSpec.editorId))
+        {
+            throw new InvalidOperationException("reputationRecordAuthoring[] entry is missing editorId.");
+        }
+
+        if (string.IsNullOrWhiteSpace(trackSpec.globalEditorId))
+        {
+            throw new InvalidOperationException($"{trackSpec.editorId} is missing globalEditorId.");
+        }
+
+        var thresholdValues = trackSpec.thresholdValues ?? new();
+        var thresholdLabels = trackSpec.thresholdLabels ?? new();
+        if (thresholdLabels.Count != thresholdValues.Count + 1)
+        {
+            throw new InvalidOperationException($"{trackSpec.editorId} thresholdLabels must have exactly one more entry than thresholdValues.");
+        }
+
+        var trackName = string.IsNullOrWhiteSpace(trackSpec.trackName)
+            ? trackSpec.editorId!
+            : trackSpec.trackName!;
+
+        var backingGlobal = EnsureGlobal(mod, index, allocator, trackSpec.globalEditorId!, trackSpec.initialValue ?? 0.0f, report);
+        var trackQuest = EnsureQuest(mod, index, allocator, trackSpec.editorId!, report);
+        ConfigureQuestShell(trackQuest, trackSpec.editorId!);
+        WireQuestScript(trackQuest, "PDV_ReputationTrack", new ScriptProperty[]
+        {
+            StringProp("TrackName", trackName),
+            ObjectProp("StorageBacking", backingGlobal.FormKey),
+            ObjectProp("PDV_GLO_DebugLevel", debugGlobal.FormKey),
+            IntListProp("ThresholdValues", thresholdValues.ToArray()),
+            StringListProp("ThresholdLabels", thresholdLabels.ToArray()),
+        });
+        report.Actions.Add($"Ensured reputation track {trackSpec.editorId} with {thresholdLabels.Count} labels.");
+
+        foreach (var listEditorId in trackSpec.addToFormLists ?? new())
+        {
+            var formList = RequireRecord<FormList>(index, listEditorId);
+            if (!formList.Items.Any(item => item.FormKey.Equals(trackQuest.FormKey)))
+            {
+                formList.Items.Add(trackQuest.FormKey.ToLink<ISkyrimMajorRecordGetter>());
+                report.Actions.Add($"Added {trackSpec.editorId} to {listEditorId}.");
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(trackSpec.managerGlobalProperty))
+        {
+            managerProps.Add(ObjectProp(trackSpec.managerGlobalProperty!, backingGlobal.FormKey));
+        }
+
+        if (!string.IsNullOrWhiteSpace(trackSpec.managerTrackProperty))
+        {
+            managerProps.Add(ObjectProp(trackSpec.managerTrackProperty!, trackQuest.FormKey));
+        }
+    }
+
     // 1) Deity quests + FormList membership + manager deity properties.
     var questByEditorId = new Dictionary<string, Quest>(StringComparer.OrdinalIgnoreCase);
     foreach (var dq in spec.deityQuests ?? new())
@@ -256,6 +396,11 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
         }
     }
 
+    foreach (var modifier in spec.deityTrackModifiers ?? new())
+    {
+        WireDeityTrackModifier(index, modifier, report);
+    }
+
     // 2) Substrate boon slots (broad reward layer) wired onto the substrate
     //    quest. Skipped entirely when the spec omits substrateBoons.
     if (spec.substrateBoons is { } substrate && substrate.slots is { } slots)
@@ -269,7 +414,7 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
         var substrateProps = new List<ScriptProperty>();
         foreach (var slot in slots)
         {
-            var spell = BuildSpell(mod, index, allocator, slot.spellEditorId!, slot.displayName!, slot.playerFacingText!, slot.effects ?? new(), report);
+            var spell = BuildSpell(mod, index, allocator, slot.spellEditorId!, slot.displayName!, slot.playerFacingText!, slot.effects ?? new(), preserveAdditionalEffects: false, report);
             substrateProps.Add(ObjectProp(slot.slotProperty!, spell.FormKey));
         }
         WireQuestScript(substrateQuest, substrate.wireTo, substrateProps);
@@ -283,7 +428,7 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
     // 3) Neglect spell (manager-owned).
     if (spec.neglect is { } neglect)
     {
-        var neglectSpell = BuildSpell(mod, index, allocator, neglect.spellEditorId!, neglect.displayName!, neglect.playerFacingText!, neglect.effects ?? new(), report);
+        var neglectSpell = BuildSpell(mod, index, allocator, neglect.spellEditorId!, neglect.displayName!, neglect.playerFacingText!, neglect.effects ?? new(), neglect.preserveAdditionalEffects, report);
         if (string.IsNullOrWhiteSpace(neglect.spellProperty))
         {
             throw new InvalidOperationException("neglect.spellProperty must name the manager property to wire.");
@@ -294,7 +439,7 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
     // 4) Per-emphasis reward spells (manager-owned, gated on emphasis-deity piety tier).
     foreach (var reward in spec.emphasisRewards ?? new())
     {
-        var spell = BuildSpell(mod, index, allocator, reward.spellEditorId!, reward.displayName!, reward.playerFacingText!, reward.effects ?? new(), report);
+        var spell = BuildSpell(mod, index, allocator, reward.spellEditorId!, reward.displayName!, reward.playerFacingText!, reward.effects ?? new(), reward.preserveAdditionalEffects, report);
         managerProps.Add(ObjectProp(reward.spellProperty ?? reward.spellEditorId!, spell.FormKey));
     }
 
@@ -304,7 +449,7 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
     //    they were just never authored as records.
     foreach (var reward in spec.broadState?.rewards ?? new())
     {
-        var spell = BuildSpell(mod, index, allocator, reward.spellEditorId!, reward.displayName!, reward.playerFacingText!, reward.effects ?? new(), report);
+        var spell = BuildSpell(mod, index, allocator, reward.spellEditorId!, reward.displayName!, reward.playerFacingText!, reward.effects ?? new(), reward.preserveAdditionalEffects, report);
         managerProps.Add(ObjectProp(reward.spellProperty ?? reward.spellEditorId!, spell.FormKey));
     }
 
@@ -312,13 +457,13 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
     //     Redguard Far Shores token uses this path.
     foreach (var reward in spec.supportSpells ?? new())
     {
-        var spell = BuildSpell(mod, index, allocator, reward.spellEditorId!, reward.displayName!, reward.playerFacingText!, reward.effects ?? new(), report);
+        var spell = BuildSpell(mod, index, allocator, reward.spellEditorId!, reward.displayName!, reward.playerFacingText!, reward.effects ?? new(), reward.preserveAdditionalEffects, report);
         managerProps.Add(ObjectProp(reward.spellProperty ?? reward.spellEditorId!, spell.FormKey));
     }
 
     if (spec.farShoresToken is { } farShoresToken)
     {
-        var spell = BuildSpell(mod, index, allocator, farShoresToken.spellEditorId!, farShoresToken.displayName!, farShoresToken.playerFacingText!, farShoresToken.effects ?? new(), report);
+        var spell = BuildSpell(mod, index, allocator, farShoresToken.spellEditorId!, farShoresToken.displayName!, farShoresToken.playerFacingText!, farShoresToken.effects ?? new(), farShoresToken.preserveAdditionalEffects, report);
         managerProps.Add(ObjectProp(farShoresToken.spellProperty ?? farShoresToken.spellEditorId!, spell.FormKey));
     }
 
@@ -331,7 +476,7 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
         foreach (var el in spec.creedViolationLoss.EnumerateArray())
         {
             var loss = el.Deserialize<RewardsSpecReward>(new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
-            BuildSpell(mod, index, allocator, loss.spellEditorId!, loss.displayName!, loss.playerFacingText!, loss.effects ?? new(), report);
+            BuildSpell(mod, index, allocator, loss.spellEditorId!, loss.displayName!, loss.playerFacingText!, loss.effects ?? new(), loss.preserveAdditionalEffects, report);
             if (!string.IsNullOrWhiteSpace(loss.spellProperty))
             {
                 managerProps.Add(ObjectProp(loss.spellProperty!, index[loss.spellEditorId!].FormKey));
@@ -521,6 +666,379 @@ static T RequireRecord<T>(Dictionary<string, ISkyrimMajorRecordGetter> index, st
     return typed;
 }
 
+static ScriptEntry RequireScript(Quest quest, string scriptName)
+{
+    var script = quest.VirtualMachineAdapter?.Scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, scriptName, StringComparison.OrdinalIgnoreCase));
+    if (script is null)
+    {
+        throw new InvalidOperationException($"{quest.EditorID} is missing script {scriptName}.");
+    }
+
+    return script;
+}
+
+static void CheckReputationTrack(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    ScriptEntry managerScript,
+    FormKey debugGlobal,
+    RewardsSpecReputationRecord trackSpec,
+    AuthorReport report)
+{
+    if (string.IsNullOrWhiteSpace(trackSpec.editorId))
+    {
+        throw new InvalidOperationException("reputationRecordAuthoring[] entry is missing editorId.");
+    }
+
+    if (string.IsNullOrWhiteSpace(trackSpec.globalEditorId))
+    {
+        throw new InvalidOperationException($"{trackSpec.editorId} is missing globalEditorId.");
+    }
+
+    var expectedValues = trackSpec.thresholdValues ?? new();
+    var expectedLabels = trackSpec.thresholdLabels ?? new();
+    if (expectedLabels.Count != expectedValues.Count + 1)
+    {
+        throw new InvalidOperationException($"{trackSpec.editorId} thresholdLabels must have exactly one more entry than thresholdValues.");
+    }
+
+    var backingGlobal = RequireRecord<Global>(index, trackSpec.globalEditorId!);
+    var trackQuest = RequireRecord<Quest>(index, trackSpec.editorId!);
+    var trackScript = RequireScript(trackQuest, "PDV_ReputationTrack");
+    var trackName = string.IsNullOrWhiteSpace(trackSpec.trackName) ? trackSpec.editorId! : trackSpec.trackName!;
+
+    CheckStringProperty(trackScript, "TrackName", trackName, trackSpec.editorId!, report);
+    CheckObjectProperty(trackScript, "StorageBacking", backingGlobal.FormKey, trackSpec.editorId!, report);
+    CheckObjectProperty(trackScript, "PDV_GLO_DebugLevel", debugGlobal, trackSpec.editorId!, report);
+    CheckIntListProperty(trackScript, "ThresholdValues", expectedValues, trackSpec.editorId!, report);
+    CheckStringListProperty(trackScript, "ThresholdLabels", expectedLabels, trackSpec.editorId!, report);
+
+    foreach (var listEditorId in trackSpec.addToFormLists ?? new())
+    {
+        var formList = RequireRecord<FormList>(index, listEditorId);
+        if (!formList.Items.Any(item => item.FormKey.Equals(trackQuest.FormKey)))
+        {
+            report.Errors.Add($"{listEditorId} does not contain {trackSpec.editorId}.");
+        }
+    }
+
+    if (!string.IsNullOrWhiteSpace(trackSpec.managerGlobalProperty))
+    {
+        CheckObjectProperty(managerScript, trackSpec.managerGlobalProperty!, backingGlobal.FormKey, "PDV__ManagerQuest", report);
+    }
+
+    if (!string.IsNullOrWhiteSpace(trackSpec.managerTrackProperty))
+    {
+        CheckObjectProperty(managerScript, trackSpec.managerTrackProperty!, trackQuest.FormKey, "PDV__ManagerQuest", report);
+    }
+
+    report.Actions.Add($"Checked reputation track {trackSpec.editorId}.");
+}
+
+static void CheckMessageRecord(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    ScriptEntry managerScript,
+    RewardsSpecMessage messageDefinition,
+    AuthorReport report)
+{
+    if (string.IsNullOrWhiteSpace(messageDefinition.editorId))
+    {
+        throw new InvalidOperationException("messageRecords[] entry is missing editorId.");
+    }
+
+    var message = RequireRecord<Message>(index, messageDefinition.editorId!);
+    var expectedBody = messageDefinition.text ?? messageDefinition.body ?? "";
+    var expectedTitle = messageDefinition.title ?? messageDefinition.editorId!;
+    var expectedMessageBox = messageDefinition.messageBox
+        || string.Equals(messageDefinition.kind, "messageBox", StringComparison.OrdinalIgnoreCase);
+
+    if (!string.Equals(message.Name?.String ?? "", expectedTitle, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{messageDefinition.editorId} title is '{message.Name?.String}', expected '{expectedTitle}'.");
+    }
+
+    if (!string.Equals(message.Description?.String ?? "", expectedBody, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{messageDefinition.editorId} body does not match spec.");
+    }
+
+    var hasMessageBoxFlag = message.Flags.HasFlag(Message.Flag.MessageBox);
+    if (hasMessageBoxFlag != expectedMessageBox)
+    {
+        report.Errors.Add($"{messageDefinition.editorId} MessageBox flag is {hasMessageBoxFlag}, expected {expectedMessageBox}.");
+    }
+
+    var expectedButtons = messageDefinition.buttons ?? new();
+    if (expectedButtons.Count == 0 && expectedMessageBox)
+    {
+        expectedButtons = new List<string> { "Continue" };
+    }
+
+    if (message.MenuButtons.Count != expectedButtons.Count)
+    {
+        report.Errors.Add($"{messageDefinition.editorId} has {message.MenuButtons.Count} button(s), expected {expectedButtons.Count}.");
+    }
+    else
+    {
+        for (var i = 0; i < expectedButtons.Count; i++)
+        {
+            var actualText = message.MenuButtons[i].Text?.String ?? "";
+            if (!string.Equals(actualText, expectedButtons[i], StringComparison.Ordinal))
+            {
+                report.Errors.Add($"{messageDefinition.editorId} button {i} is '{actualText}', expected '{expectedButtons[i]}'.");
+            }
+        }
+    }
+
+    CheckObjectProperty(managerScript, messageDefinition.property ?? messageDefinition.editorId!, message.FormKey, "PDV__ManagerQuest", report);
+    report.Actions.Add($"Checked message {messageDefinition.editorId}.");
+}
+
+static void WireDeityTrackModifier(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    RewardsSpecDeityTrackModifier modifier,
+    AuthorReport report)
+{
+    if (string.IsNullOrWhiteSpace(modifier.deityEditorId))
+    {
+        throw new InvalidOperationException("deityTrackModifiers[] entry is missing deityEditorId.");
+    }
+
+    var deityQuest = RequireRecord<Quest>(index, modifier.deityEditorId!);
+    var scriptName = string.IsNullOrWhiteSpace(modifier.script)
+        ? modifier.deityEditorId!
+        : modifier.script!;
+    var deityScript = RequireScript(deityQuest, scriptName);
+    var props = BuildDeityTrackModifierProperties(index, modifier);
+    WireQuestScript(deityQuest, scriptName, props);
+    report.Actions.Add($"Wired {props.Count} track modifier properties on {modifier.deityEditorId}.");
+}
+
+static void CheckDeityTrackModifier(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    RewardsSpecDeityTrackModifier modifier,
+    AuthorReport report)
+{
+    if (string.IsNullOrWhiteSpace(modifier.deityEditorId))
+    {
+        throw new InvalidOperationException("deityTrackModifiers[] entry is missing deityEditorId.");
+    }
+
+    var deityQuest = RequireRecord<Quest>(index, modifier.deityEditorId!);
+    var scriptName = string.IsNullOrWhiteSpace(modifier.script)
+        ? modifier.deityEditorId!
+        : modifier.script!;
+    var deityScript = RequireScript(deityQuest, scriptName);
+
+    if (!string.IsNullOrWhiteSpace(modifier.gainTrack))
+    {
+        var gainTrack = RequireRecord<Quest>(index, modifier.gainTrack!);
+        CheckObjectProperty(deityScript, "GainModifyingTrack", gainTrack.FormKey, modifier.deityEditorId!, report);
+        CheckFloatListProperty(deityScript, "GainMultiplierPerTrackState", modifier.gainMultipliers ?? new(), modifier.deityEditorId!, report);
+    }
+
+    if (!string.IsNullOrWhiteSpace(modifier.decayTrack))
+    {
+        var decayTrack = RequireRecord<Quest>(index, modifier.decayTrack!);
+        CheckObjectProperty(deityScript, "DecayModifyingTrack", decayTrack.FormKey, modifier.deityEditorId!, report);
+        CheckFloatListProperty(deityScript, "DecayMultiplierPerTrackState", modifier.decayMultipliers ?? new(), modifier.deityEditorId!, report);
+    }
+}
+
+static List<ScriptProperty> BuildDeityTrackModifierProperties(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    RewardsSpecDeityTrackModifier modifier)
+{
+    var props = new List<ScriptProperty>();
+
+    if (!string.IsNullOrWhiteSpace(modifier.gainTrack))
+    {
+        var gainTrack = RequireRecord<Quest>(index, modifier.gainTrack!);
+        props.Add(ObjectProp("GainModifyingTrack", gainTrack.FormKey));
+        props.Add(FloatListProp("GainMultiplierPerTrackState", (modifier.gainMultipliers ?? new()).ToArray()));
+    }
+
+    if (!string.IsNullOrWhiteSpace(modifier.decayTrack))
+    {
+        var decayTrack = RequireRecord<Quest>(index, modifier.decayTrack!);
+        props.Add(ObjectProp("DecayModifyingTrack", decayTrack.FormKey));
+        props.Add(FloatListProp("DecayMultiplierPerTrackState", (modifier.decayMultipliers ?? new()).ToArray()));
+    }
+
+    if (props.Count == 0)
+    {
+        throw new InvalidOperationException($"{modifier.deityEditorId} track modifier must define gainTrack and/or decayTrack.");
+    }
+
+    return props;
+}
+
+static void CheckRewardSlot(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    ScriptEntry ownerScript,
+    string owner,
+    RewardsSpecSlot slot,
+    AuthorReport report)
+{
+    if (string.IsNullOrWhiteSpace(slot.spellEditorId))
+    {
+        throw new InvalidOperationException("substrateBoons.slots[] entry is missing spellEditorId.");
+    }
+
+    var spell = CheckSpellPacket(index, slot.spellEditorId!, slot.displayName!, slot.playerFacingText!, slot.effects ?? new(), allowAdditionalEffects: false, report);
+    if (string.IsNullOrWhiteSpace(slot.slotProperty))
+    {
+        throw new InvalidOperationException($"{slot.spellEditorId} is missing slotProperty.");
+    }
+
+    CheckObjectProperty(ownerScript, slot.slotProperty!, spell.FormKey, owner, report);
+    report.Actions.Add($"Checked substrate reward spell {slot.spellEditorId}.");
+}
+
+static void CheckRewardSpell(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    ScriptEntry managerScript,
+    string owner,
+    RewardsSpecReward reward,
+    string? propertyName,
+    bool requireProperty,
+    AuthorReport report)
+{
+    if (string.IsNullOrWhiteSpace(reward.spellEditorId))
+    {
+        throw new InvalidOperationException("Reward entry is missing spellEditorId.");
+    }
+
+    var spell = CheckSpellPacket(index, reward.spellEditorId!, reward.displayName!, reward.playerFacingText!, reward.effects ?? new(), reward.preserveAdditionalEffects, report);
+    if (!string.IsNullOrWhiteSpace(propertyName))
+    {
+        CheckObjectProperty(managerScript, propertyName!, spell.FormKey, owner, report);
+    }
+    else if (requireProperty)
+    {
+        report.Errors.Add($"{reward.spellEditorId} is missing required manager spell property in spec.");
+    }
+
+    report.Actions.Add($"Checked reward spell {reward.spellEditorId}.");
+}
+
+static Spell CheckSpellPacket(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    string spellEditorId,
+    string displayName,
+    string playerFacingText,
+    List<RewardsSpecEffect> expectedEffects,
+    bool allowAdditionalEffects,
+    AuthorReport report)
+{
+    var spell = RequireRecord<Spell>(index, spellEditorId);
+    if (!string.Equals(spell.Name?.String ?? "", displayName, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{spellEditorId} name is '{spell.Name?.String}', expected '{displayName}'.");
+    }
+
+    if (!string.Equals(spell.Description?.String ?? "", playerFacingText, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{spellEditorId} description does not match spec.");
+    }
+
+    var expectedSpellType = ParseSpellType(expectedEffects);
+    var expectedCastType = ParseCastType(expectedEffects);
+
+    if (spell.Type != expectedSpellType)
+    {
+        report.Errors.Add($"{spellEditorId} type is {spell.Type}, expected {expectedSpellType}.");
+    }
+
+    if (spell.CastType != expectedCastType)
+    {
+        report.Errors.Add($"{spellEditorId} cast type is {spell.CastType}, expected {expectedCastType}.");
+    }
+
+    if (spell.TargetType != TargetType.Self)
+    {
+        report.Errors.Add($"{spellEditorId} target type is {spell.TargetType}, expected Self.");
+    }
+
+    if ((!allowAdditionalEffects && spell.Effects.Count != expectedEffects.Count)
+        || (allowAdditionalEffects && spell.Effects.Count < expectedEffects.Count))
+    {
+        var expectedCount = allowAdditionalEffects
+            ? $"at least {expectedEffects.Count}"
+            : expectedEffects.Count.ToString();
+        report.Errors.Add($"{spellEditorId} has {spell.Effects.Count} effect(s), expected {expectedCount}.");
+        return spell;
+    }
+
+    for (var i = 0; i < expectedEffects.Count; i++)
+    {
+        var expectedEffect = expectedEffects[i];
+        var expectedMgefId = string.IsNullOrWhiteSpace(expectedEffect.magicEffectEditorId)
+            ? GenerateMgefId(spellEditorId, expectedEffect.actorValue!)
+            : expectedEffect.magicEffectEditorId!;
+        var mgef = RequireRecord<MagicEffect>(index, expectedMgefId);
+        var actualEffect = spell.Effects[i];
+
+        if (!actualEffect.BaseEffect.FormKey.Equals(mgef.FormKey))
+        {
+            report.Errors.Add($"{spellEditorId} effect {i} points at {actualEffect.BaseEffect.FormKey}, expected {mgef.FormKey} ({expectedMgefId}).");
+        }
+
+        if (!NearlyEqual(actualEffect.Data?.Magnitude ?? 0.0f, expectedEffect.magnitude))
+        {
+            report.Errors.Add($"{spellEditorId} effect {i} magnitude is {actualEffect.Data?.Magnitude ?? 0.0f}, expected {expectedEffect.magnitude}.");
+        }
+        if ((actualEffect.Data?.Duration ?? 0) != expectedEffect.duration)
+        {
+            report.Errors.Add($"{spellEditorId} effect {i} duration is {actualEffect.Data?.Duration ?? 0}, expected {expectedEffect.duration}.");
+        }
+
+        var expectedConditionCount = expectedEffect.nightOnly ? 2 : 0;
+        if (actualEffect.Conditions.Count != expectedConditionCount)
+        {
+            report.Errors.Add($"{spellEditorId} effect {i} has {actualEffect.Conditions.Count} condition(s), expected {expectedConditionCount}.");
+        }
+
+        CheckMagicEffectPacket(mgef, spellEditorId, displayName, playerFacingText, expectedEffect, report);
+    }
+
+    return spell;
+}
+
+static void CheckMagicEffectPacket(
+    MagicEffect mgef,
+    string spellEditorId,
+    string displayName,
+    string playerFacingText,
+    RewardsSpecEffect expectedEffect,
+    AuthorReport report)
+{
+    var expectedName = string.IsNullOrWhiteSpace(expectedEffect.effectName) ? displayName : expectedEffect.effectName!;
+    if (!string.Equals(mgef.Name?.String ?? "", expectedName, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{mgef.EditorID} name is '{mgef.Name?.String}', expected '{expectedName}'.");
+    }
+
+    if (!string.Equals(mgef.Description?.String ?? "", playerFacingText, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{mgef.EditorID} description does not match {spellEditorId} spec text.");
+    }
+
+    var expectedActorValue = ParseActorValue(expectedEffect.actorValue!);
+    if (UsesPeakValueModifier(expectedActorValue))
+    {
+        if (mgef.Archetype is not MagicEffectPeakValueModArchetype peakValue || peakValue.ActorValue != expectedActorValue)
+        {
+            report.Errors.Add($"{mgef.EditorID} archetype is not PeakValueModifier for {expectedActorValue}.");
+        }
+    }
+    else if (mgef.Archetype is not MagicEffectArchetype valueModifier || valueModifier.ActorValue != expectedActorValue)
+    {
+        report.Errors.Add($"{mgef.EditorID} archetype is not ValueModifier for {expectedActorValue}.");
+    }
+}
+
+static bool NearlyEqual(float actual, float expected) => Math.Abs(actual - expected) < 0.001f;
+
 static Dictionary<string, ISkyrimMajorRecordGetter> BuildIndex(SkyrimMod mod)
 {
     return mod.EnumerateMajorRecords()
@@ -638,6 +1156,94 @@ static void UpsertProperties(ScriptEntry script, IEnumerable<ScriptProperty> pro
     }
 }
 
+static ScriptProperty? FindProperty(ScriptEntry script, string propertyName)
+{
+    return script.Properties.FirstOrDefault(candidate => string.Equals(candidate.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+}
+
+static void CheckObjectProperty(ScriptEntry script, string propertyName, FormKey expectedFormKey, string owner, AuthorReport report)
+{
+    if (FindProperty(script, propertyName) is not ScriptObjectProperty objectProperty)
+    {
+        report.Errors.Add($"{owner}.{script.Name}.{propertyName} is missing or not an object property.");
+        return;
+    }
+
+    if (!objectProperty.Object.FormKey.Equals(expectedFormKey))
+    {
+        report.Errors.Add($"{owner}.{script.Name}.{propertyName} points at {objectProperty.Object.FormKey}, expected {expectedFormKey}.");
+    }
+}
+
+static void CheckStringProperty(ScriptEntry script, string propertyName, string expectedValue, string owner, AuthorReport report)
+{
+    if (FindProperty(script, propertyName) is not ScriptStringProperty stringProperty)
+    {
+        report.Errors.Add($"{owner}.{script.Name}.{propertyName} is missing or not a string property.");
+        return;
+    }
+
+    if (!string.Equals(stringProperty.Data, expectedValue, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{owner}.{script.Name}.{propertyName} is '{stringProperty.Data}', expected '{expectedValue}'.");
+    }
+}
+
+static void CheckIntListProperty(ScriptEntry script, string propertyName, List<int> expectedValues, string owner, AuthorReport report)
+{
+    if (FindProperty(script, propertyName) is not ScriptIntListProperty listProperty)
+    {
+        report.Errors.Add($"{owner}.{script.Name}.{propertyName} is missing or not an int-list property.");
+        return;
+    }
+
+    var actualValues = listProperty.Data.ToList();
+    if (!actualValues.SequenceEqual(expectedValues))
+    {
+        report.Errors.Add($"{owner}.{script.Name}.{propertyName} is [{string.Join(", ", actualValues)}], expected [{string.Join(", ", expectedValues)}].");
+    }
+}
+
+static void CheckStringListProperty(ScriptEntry script, string propertyName, List<string> expectedValues, string owner, AuthorReport report)
+{
+    if (FindProperty(script, propertyName) is not ScriptStringListProperty listProperty)
+    {
+        report.Errors.Add($"{owner}.{script.Name}.{propertyName} is missing or not a string-list property.");
+        return;
+    }
+
+    var actualValues = listProperty.Data.ToList();
+    if (!actualValues.SequenceEqual(expectedValues))
+    {
+        report.Errors.Add($"{owner}.{script.Name}.{propertyName} is [{string.Join(", ", actualValues)}], expected [{string.Join(", ", expectedValues)}].");
+    }
+}
+
+static void CheckFloatListProperty(ScriptEntry script, string propertyName, List<float> expectedValues, string owner, AuthorReport report)
+{
+    if (FindProperty(script, propertyName) is not ScriptFloatListProperty listProperty)
+    {
+        report.Errors.Add($"{owner}.{script.Name}.{propertyName} is missing or not a float-list property.");
+        return;
+    }
+
+    var actualValues = listProperty.Data.ToList();
+    if (actualValues.Count != expectedValues.Count)
+    {
+        report.Errors.Add($"{owner}.{script.Name}.{propertyName} has {actualValues.Count} entries, expected {expectedValues.Count}.");
+        return;
+    }
+
+    for (var i = 0; i < expectedValues.Count; i++)
+    {
+        if (Math.Abs(actualValues[i] - expectedValues[i]) > 0.0001f)
+        {
+            report.Errors.Add($"{owner}.{script.Name}.{propertyName}[{i}] is {actualValues[i]}, expected {expectedValues[i]}.");
+            return;
+        }
+    }
+}
+
 static ScriptObjectProperty ObjectProp(string name, FormKey formKey)
 {
     return new ScriptObjectProperty
@@ -662,6 +1268,38 @@ static ScriptIntProperty IntProp(string name, int value)
 static ScriptStringListProperty StringListProp(string name, params string[] values)
 {
     var property = new ScriptStringListProperty
+    {
+        Name = name,
+        Flags = ScriptProperty.Flag.Edited
+    };
+
+    foreach (var value in values)
+    {
+        property.Data.Add(value);
+    }
+
+    return property;
+}
+
+static ScriptIntListProperty IntListProp(string name, params int[] values)
+{
+    var property = new ScriptIntListProperty
+    {
+        Name = name,
+        Flags = ScriptProperty.Flag.Edited
+    };
+
+    foreach (var value in values)
+    {
+        property.Data.Add(value);
+    }
+
+    return property;
+}
+
+static ScriptFloatListProperty FloatListProp(string name, params float[] values)
+{
+    var property = new ScriptFloatListProperty
     {
         Name = name,
         Flags = ScriptProperty.Flag.Edited
@@ -842,6 +1480,7 @@ static Spell BuildSpell(
     string displayName,
     string playerFacingText,
     List<RewardsSpecEffect> effects,
+    bool preserveAdditionalEffects,
     AuthorReport report)
 {
     if (playerFacingText.Any(ch => ch > 127))
@@ -881,19 +1520,22 @@ static Spell BuildSpell(
     spell.Name = Tx(displayName);
     spell.Description = Tx(playerFacingText);
     spell.BaseCost = 0;
-    spell.Type = SpellType.Ability;
-    spell.CastType = CastType.ConstantEffect;
+    spell.Type = ParseSpellType(effects);
+    spell.CastType = ParseCastType(effects);
     spell.TargetType = TargetType.Self;
     spell.ChargeTime = 0.0f;
     spell.CastDuration = 0.0f;
     spell.Range = 0.0f;
+    var preservedEffects = preserveAdditionalEffects && spell.Effects.Count > built.Count
+        ? spell.Effects.Skip(built.Count).ToList()
+        : new List<Effect>();
     spell.Effects.Clear();
     foreach (var (effect, record) in built)
     {
         var spellEffect = new Effect
         {
             BaseEffect = record.FormKey.ToNullableLink<IMagicEffectGetter>(),
-            Data = new EffectData { Magnitude = effect.magnitude, Area = 0, Duration = 0 },
+            Data = new EffectData { Magnitude = effect.magnitude, Area = 0, Duration = effect.duration },
             Conditions = []
         };
         if (effect.nightOnly)
@@ -901,6 +1543,10 @@ static Spell BuildSpell(
             AddNightConditions(spellEffect);
         }
         spell.Effects.Add(spellEffect);
+    }
+    foreach (var preservedEffect in preservedEffects)
+    {
+        spell.Effects.Add(preservedEffect);
     }
     return spell;
 }
@@ -938,7 +1584,11 @@ static MagicEffect EnsureMgef(
     // per effect); falls back to the spell display name when not supplied.
     record.Name = Tx(string.IsNullOrWhiteSpace(effect.effectName) ? displayName : effect.effectName!);
     record.Description = Tx(description);
-    record.Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoDuration | MagicEffect.Flag.NoHitEffect;
+    record.Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoHitEffect;
+    if (effect.duration <= 0)
+    {
+        record.Flags |= MagicEffect.Flag.NoDuration;
+    }
     record.BaseCost = 0.0f;
     record.MagicSkill = ActorValue.None;
     record.ResistValue = ActorValue.None;
@@ -958,7 +1608,7 @@ static MagicEffect EnsureMgef(
             ActorValue = actorValue
         };
     }
-    record.CastType = CastType.ConstantEffect;
+    record.CastType = ParseEffectCastType(effect);
     record.TargetType = TargetType.Self;
     record.SkillUsageMultiplier = 0.0f;
     record.ScriptEffectAIScore = 0.0f;
@@ -974,6 +1624,52 @@ static bool UsesPeakValueModifier(ActorValue actorValue)
         || actorValue == ActorValue.HealRateMult
         || actorValue == ActorValue.MagickaRateMult
         || actorValue == ActorValue.StaminaRateMult;
+}
+
+static SpellType ParseSpellType(List<RewardsSpecEffect> effects)
+{
+    foreach (var effect in effects)
+    {
+        if (!string.IsNullOrWhiteSpace(effect.spellType))
+        {
+            return ParseEnum<SpellType>(effect.spellType!, "spellType");
+        }
+    }
+
+    return SpellType.Ability;
+}
+
+static CastType ParseCastType(List<RewardsSpecEffect> effects)
+{
+    foreach (var effect in effects)
+    {
+        if (!string.IsNullOrWhiteSpace(effect.castType))
+        {
+            return ParseEnum<CastType>(effect.castType!, "castType");
+        }
+    }
+
+    return CastType.ConstantEffect;
+}
+
+static CastType ParseEffectCastType(RewardsSpecEffect effect)
+{
+    if (!string.IsNullOrWhiteSpace(effect.castType))
+    {
+        return ParseEnum<CastType>(effect.castType!, "castType");
+    }
+
+    return CastType.ConstantEffect;
+}
+
+static TEnum ParseEnum<TEnum>(string value, string fieldName) where TEnum : struct
+{
+    if (Enum.TryParse<TEnum>(value.Trim(), ignoreCase: true, out var parsed))
+    {
+        return parsed;
+    }
+
+    throw new InvalidOperationException($"Unsupported {fieldName} value '{value}'.");
 }
 
 static void AddNightConditions(Effect effect)
@@ -1176,6 +1872,8 @@ sealed class RewardsSpec
     public RewardsSpecReward? farShoresToken { get; set; }
     public List<RewardsSpecMessage>? messageRecords { get; set; }
     public List<RewardsSpecStateRecord>? stateRecordAuthoring { get; set; }
+    public List<RewardsSpecReputationRecord>? reputationRecordAuthoring { get; set; }
+    public List<RewardsSpecDeityTrackModifier>? deityTrackModifiers { get; set; }
     // Shape varies by race: Breton uses an ARRAY of spell-record specs;
     // Altmer uses an OBJECT of signal-penalty routes (no records). Kept as a
     // raw element and only the array (spell-record) shape is authored.
@@ -1255,6 +1953,7 @@ sealed class RewardsSpecReward
     public string? displayName { get; set; }
     public List<RewardsSpecEffect>? effects { get; set; }
     public string? playerFacingText { get; set; }
+    public bool preserveAdditionalEffects { get; set; }
 }
 
 sealed class RewardsSpecEffect
@@ -1262,6 +1961,9 @@ sealed class RewardsSpecEffect
     public string? magicEffectEditorId { get; set; }
     public string? actorValue { get; set; }
     public float magnitude { get; set; }
+    public int duration { get; set; }
+    public string? spellType { get; set; }
+    public string? castType { get; set; }
     public bool nightOnly { get; set; }
     public string? effectName { get; set; }
 }
@@ -1288,4 +1990,27 @@ sealed class RewardsSpecStateRecord
     public string? managerGlobalProperty { get; set; }
     public string? managerTrackProperty { get; set; }
     public List<string>? addToFormLists { get; set; }
+}
+
+sealed class RewardsSpecReputationRecord
+{
+    public string? editorId { get; set; }
+    public string? trackName { get; set; }
+    public string? globalEditorId { get; set; }
+    public float? initialValue { get; set; }
+    public List<int>? thresholdValues { get; set; }
+    public List<string>? thresholdLabels { get; set; }
+    public string? managerGlobalProperty { get; set; }
+    public string? managerTrackProperty { get; set; }
+    public List<string>? addToFormLists { get; set; }
+}
+
+sealed class RewardsSpecDeityTrackModifier
+{
+    public string? deityEditorId { get; set; }
+    public string? script { get; set; }
+    public string? gainTrack { get; set; }
+    public List<float>? gainMultipliers { get; set; }
+    public string? decayTrack { get; set; }
+    public List<float>? decayMultipliers { get; set; }
 }

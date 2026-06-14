@@ -16,6 +16,51 @@ Bosmer now has one approved exact P2 quest-stage source fill:
 delivery, wrong-origin rejection, Survey/status clarity, reward/stack behavior,
 or final-world feel.
 
+## Remaining Run (2026-06-14) -- only the open items
+
+Most of this packet is already PASS (all four path-family reward ladders +
+single-family swap, broad-Y'ffre suppression, Neglect "The Path Goes Quiet",
+Green Dreams, Hearth + Tale Carried, Scales at Rest, the Naming rite, and
+wrong-origin / generic silence). Only the items below are still open; the
+detailed procedures for each live in the sections further down. Tick these and
+the packet closes.
+
+- [ ] **Baan Dar Gap -- PRIORITY (the flagged cadence risk).** Procedure:
+  "Variety Tranche Addendum -> Baan Dar Opens the Gap".
+  - [ ] Fires sub-20% health WHILE IN COMBAT (seed path 3): `PDV_SPEL_BosmerBaanDarGap`
+    (SpeedMult +30, 5s) + "Baan Dar opens the gap. Run." Markers:
+    `Bosmer Baan Dar gap detected (combat_poll).` + `Bosmer Baan Dar Opens the Gap fired.`
+  - [ ] SILENT off-trigger (the KEY check): above-20% in combat, sub-20% NOT in
+    combat, a second sub-20% the same day, off-path (seed 0/1/2), and non-Bosmer
+    origin all produce no spell / notification / manager fired line. Route-only
+    EventBus noise is not a pass.
+- [ ] **Songs of the Green (N/6 + milestone).** Procedure: "Variety Tranche
+  Addendum -> Songs of the Green". Enter anchors via load door / fast-travel
+  (NOT `coc`).
+  - [ ] Eldergleam interior-only vision (cave cell, not the exterior approach).
+  - [ ] Gildergreen OUTDOOR proximity (slot-2 swap, script-only / awaiting proof
+    -- Polish backlog item 4): walk up to the Gildergreen tree, vision fires
+    outdoors; the Temple of Kynareth interior must no longer fire it.
+  - [ ] All-six milestone MessageBox.
+- [ ] **8 QASmoke route markers (100-107).** Procedure: "Current Runnable
+  Fallback - QASmoke Route Proof". The signals are INVISIBLE: fire each by RefID
+  (`prid XX071035`..`XX07103C` + `activate player`; XX from `help "HoonDing" 0`),
+  then the one session-end `node .\tools\pdv_phase20_runtime_check.mjs --race
+  bosmer --strict-manager`.
+- [ ] **DA05 100/105 organic route.** Procedure: "Expected Build" + "Mercy
+  branch" sections. `setstage DA05 100`, then `105` on a separate clean save per
+  branch; confirm the no-second-route anti-farm assertion.
+- [ ] **Exchange T1/T2 Z'en copy -- fresh-load confirm.** Mechanics passed, but
+  the prior run predated the 18:15 ESP refresh and showed the old non-Z'en copy.
+  On a fresh load, re-read the Exchange T1/T2 reward and confirm the Z'en wording
+  (Single-Session Smoke -> A, Exchange row).
+- [ ] **Survey/status clarity -- final read.** Trigger Survey Devotion: names
+  active path, standing, Pact binding/lapse, recent favor; no raw counters or
+  route IDs.
+- [ ] (minor) **Naming path-neutral declaration fix.** Declare the hearth on a
+  NON-LivingStory path (OldContract/Exchange/BanditRoad) from a fresh save, then
+  Name -- the rest of Naming is already proven.
+
 ## Expected Build - Y'ffre Hunt-Law Pressure
 
 Use a disposable Bosmer save or a clean reload before DA05 has resolved.

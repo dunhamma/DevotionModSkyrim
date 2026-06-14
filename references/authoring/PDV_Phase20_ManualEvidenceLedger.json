@@ -72,7 +72,7 @@
     "Khajiit": {
       "status": "pending",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
+      "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --race khajiit",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
           "status": "evidence-recorded",
@@ -82,7 +82,7 @@
         "genericHookRejection": {
           "status": "evidence-recorded",
           "expected": "Fast travel, generic theft, moon-sugar use, generic dragon kills, generic night stealth, caravan proximity, and repeated same-anchor travel stay silent.",
-          "note": "2026-06-06 restarted packet: tester confirmed generic-source silence passed for the currently wired Khajiit packet."
+          "note": "2026-06-06 restarted packet: tester confirmed generic-source silence passed for the currently wired Khajiit packet. 2026-06-14 beta-feel closeout: tester confirmed silence/no unwanted devotion movement for moon-sugar use, manual focus pick, fast-travel loop, one-bed camping, generic inn sleep, generic theft, generic combat, ordinary night stealth, generic dragon spam, Rajhin petty/corpse/detected theft, Baan Dar steamroll/no-kill rejection, and optional Alkosh spam/chaos-aid checks."
         },
         "surveyStatusClarity": {
           "status": "evidence-recorded",
@@ -92,22 +92,22 @@
         "stackSnapshot": {
           "status": "evidence-recorded",
           "expected": "Khenarthi/Azurah road-home build and Rajhin/Baan Dar/Alkosh edge build record lunar substrate, one active focus, phase amplifier, road cadence, and shadow or curse modifier.",
-          "note": "2026-06-06 restarted packet: reward threshold was not reached; tester accepted this as correct pending behavior for step 6 rather than a failed reward display. 2026-06-13: Baan Dar Champion was reinstated and the survival capstone passed in game at sub-20% health, restoring to full via the dedicated heal spell."
+          "note": "2026-06-06 restarted packet: reward threshold was not reached; tester accepted this as correct pending behavior for step 6 rather than a failed reward display. 2026-06-13: Baan Dar Champion was reinstated and the survival capstone passed in game at sub-20% health, restoring to full via the dedicated heal spell. 2026-06-14: pattern summaries captured KhajiitLunar metric/tier/phase/observance/road-home count, active focus, five weights, favor lane, lunar posture, and curse/Daedric state; retained snapshots include focus=Rajhin/rj=100.00 and focus=Alkosh/ak=75.00."
         },
         "manualFeelNote": {
           "status": "evidence-recorded",
           "expected": "Moon/road behavior feels like cadence and belonging, not mandatory inspection or generic thief scoring.",
-          "note": "2026-06-06 restarted packet: tester confirmed the wired lunar book checks and visible feedback passed. 2026-06-13: Baan Dar Champion survival and presentation feel passed after the vanilla-shaped capstone rewrite and narrator-voice text cleanup. Rajhin/Alkosh edge breadth remains pending."
+          "note": "2026-06-06 restarted packet: tester confirmed the wired lunar book checks and visible feedback passed. 2026-06-13: Baan Dar Champion survival and presentation feel passed after the vanilla-shaped capstone rewrite and narrator-voice text cleanup. 2026-06-14: tester completed the remaining Khajiit packet after Rajhin, Alkosh, rejection, Survey, reward-ceiling, stack, and lunar-book checks; per-beat favor toasts remain polish work queued in PDV_Surfacing_Additions_Queue.md, not a packet blocker."
         },
         "immersiveHookProof": {
           "status": "evidence-recorded",
           "expected": "Prove lunar rest/open-sky cadence, road-home anchors, and Baan Dar/Rajhin/Alkosh focus hooks outside QASmoke without fast-travel, moon-sugar, theft, or dragon spam.",
-          "note": "2026-06-04: Accepted P2 lunar book-route log proof recorded via strict manager checker. 2026-06-06: Words of Clan Mother Ahnissi retest passed in Papyrus.0.log with KhajiitLunar SetMetric 4.0, Khajiit focus Azurah adjusted by 25.0, Khajiit moon observance routed for phase 1, and RouteKhajiitLunarSubstrate complete po3_book_khajiit_lunar. 2026-06-06 restarted packet: Words of Clan Mother Ahnissi and The Tale of Dro'Zira both produced Prisma toasts and expected visual feedback; wrong-origin, generic-source silence, and reward-pending behavior passed. 2026-06-13: Baan Dar Champion survival capstone passed in game through the hidden OnHit effect with threshold 20% and full-heal spell. Rajhin/Alkosh live edge breadth remains pending."
+          "note": "2026-06-04: Accepted P2 lunar book-route log proof recorded via strict manager checker. 2026-06-06: Words of Clan Mother Ahnissi retest passed in Papyrus.0.log with KhajiitLunar SetMetric 4.0, Khajiit focus Azurah adjusted by 25.0, Khajiit moon observance routed for phase 1, and RouteKhajiitLunarSubstrate complete po3_book_khajiit_lunar. 2026-06-06 restarted packet: Words of Clan Mother Ahnissi and The Tale of Dro'Zira both produced Prisma toasts and expected visual feedback; wrong-origin, generic-source silence, and reward-pending behavior passed. 2026-06-13: Baan Dar Champion survival capstone passed in game through the hidden OnHit effect with threshold 20% and full-heal spell. 2026-06-14: Rajhin elegant theft passed in the retained log at 01:16:16, including RouteKhajiitRajhinElegantTheft complete, signal 801, focus +25, ShadowDrift evidence, and per-target cooldown at 01:16:19. Alkosh word-of-power dawn drip passed at 02:14:25 -> 02:19:46 with event 343, scaled dawn piety, and Khajiit Alkosh word-of-power drip awarded 2 of 2 new words. Khajiit lunar books passed node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --race khajiit; the older --race khajiit QASmoke checker still expects physical proof-activator marker names and is not the organic/book route gate."
         },
         "assetStatus": {
           "status": "evidence-recorded",
           "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation.",
-          "note": "2026-06-10: tester confirmed the wired lunar book packet uses only vanilla book sources (0001B27D Words of Clan Mother Ahnissi, 0001AFF3 Ahzirr Traajijazeri, 000F03E3 Tale of Dro'Zira) with normal vanilla meshes and toast-only feedback; no new custom mesh or asset required for the currently wired lunar hooks. 2026-06-13: Baan Dar Champion survival uses existing magic-effect/spell/Prisma/notification surfaces and adds no new art asset. Rajhin/Alkosh edge sources still need asset-status confirmation when their runtime breadth is tested."
+          "note": "2026-06-10: tester confirmed the wired lunar book packet uses only vanilla book sources (0001B27D Words of Clan Mother Ahnissi, 0001AFF3 Ahzirr Traajijazeri, 000F03E3 Tale of Dro'Zira) with normal vanilla meshes and toast-only feedback; no new custom mesh or asset required for the currently wired lunar hooks. 2026-06-13: Baan Dar Champion survival uses existing magic-effect/spell/Prisma/notification surfaces and adds no new art asset. 2026-06-14: Rajhin uses existing pickpocket/notable-target runtime data, Alkosh word-drip uses vanilla word stat/dawn processing, and approved lunar-book checks use vanilla books; no custom art asset is required for the current beta-feel packet."
         }
       }
     },

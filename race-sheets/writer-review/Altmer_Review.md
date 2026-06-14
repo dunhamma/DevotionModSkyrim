@@ -1,7 +1,7 @@
 # Altmer -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 13 (Altmer (full draft))
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-06-14 via `node tools/pdv_writer_review.mjs`
 **Rows:** 61 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
@@ -31,7 +31,7 @@ _5 rows._
 | _(no tone match)_ | `PDV_Bless_Altmer_AuriEl_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 115 / 200 |  | Auri-El watches your return. Magic regenerates 25% faster out of combat; from dawn to midday, spells cost 15% less. |  |
 | Magnus: Precise, scholarly, escape-coded; the architect who got out; speaks of the Elder Way and of the arts as the road. | `PDV_Bless_Altmer_Magnus_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 121 / 200 |  | Magnus marks the scholar's discipline. Alteration and Illusion cost 10% less; magic regenerates 20% faster out of combat. |  |
 | Trinimac: Stern, militant, civilizational; speaks of the project defended by force and orthodoxy held; the martial ancestor. | `PDV_Bless_Altmer_Trinimac_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 168 / 200 |  | Trinimac blesses the project defended by force. Your one-handed attacks strike 5% harder, and an enforcement act under high orthodoxy raises your armor by 15 for a day. |  |
-| Xarxes: Dry, archival, lineage-keeping; speaks of what is written, the genealogy, the quiet truth that outlasts enforcement. | `PDV_Bless_Altmer_Xarxes_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 134 / 200 |  | Xarxes keeps your lineage. Your Lockpicking and Alteration improve by 5%, and a quest of real ancestry returns a day of cheaper magic. |  |
+| Xarxes: Dry, archival, lineage-keeping; speaks of what is written, the genealogy, the quiet truth that outlasts enforcement. | `PDV_Bless_Altmer_Xarxes_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 133 / 200 |  | Xarxes keeps your lineage. Your Enchanting and Alteration improve by 5%, and a quest of real ancestry returns a day of cheaper magic. |  |
 | Syrabane: Gentle, guardian-toned, warding; the apprentices' protector; speaks of the magic that shields the one still on the path. | `PDV_Bless_Altmer_Syrabane_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 99 / 200 |  | Syrabane shields the apprentice. Magic-using foes deal 15% less damage; your wards absorb 15% more. |  |
 
 ## Champion recognition (MessageBox)

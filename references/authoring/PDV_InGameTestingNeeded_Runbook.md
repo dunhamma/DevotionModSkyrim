@@ -68,7 +68,7 @@ Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 | Race | Pending manual/runtime slots |
 | --- | --- |
 | Altmer | none for current beta packet; final-world placement remains separate |
-| Khajiit | Baan Dar Champion survival/presentation passed; Rajhin/Alkosh edge breadth remains if full edge packet proof is required |
+| Khajiit | none for current beta packet; final-world placement remains separate |
 | Argonian | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Bosmer | `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Breton | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
@@ -99,16 +99,19 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
 
 ### 1. Close The Smallest Race Evidence Gaps
 
-Altmer is closed for the current packet. Khajiit has the lunar packet plus the
-Baan Dar Champion survival/presentation slice closed; Rajhin/Alkosh edge breadth
-remains only if the full Khajiit edge packet is required before broader beta.
+Altmer is closed for the current packet. Khajiit is now closed for the current
+beta-feel packet; final-world placement remains separate.
 
 - Altmer: packet closed on 2026-06-10. All seven evidence slots are
   `evidence-recorded` in `PDV_Phase20_ManualEvidenceLedger.json`.
 - Khajiit: lunar packet closed on 2026-06-10. On 2026-06-13, Baan Dar Champion
   survival passed in game after the vanilla-shaped capstone rewrite, and the
   Champion/Scratch UI presentation cleanup fixed Baan Dar casing plus narrator
-  voice. Rajhin/Alkosh runtime breadth remains separate from that pass.
+  voice. On 2026-06-14, the remaining Khajiit beta-feel packet closed: Rajhin
+  elegant theft/cooldown and Alkosh word-of-power dawn drip were log-proven,
+  lunar books passed the focused P2 runtime checker, and remaining rejection,
+  Survey, reward-ceiling, stack, and optional checks were tester-attested in
+  `PDV_Khajiit_BetaFeelPacket.md`.
 
 ### 2. Run The New Bosmer DA05 Packet
 

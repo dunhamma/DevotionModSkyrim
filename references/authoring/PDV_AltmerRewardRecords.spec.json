@@ -139,7 +139,7 @@
       "effects": [
         {
           "actorValue": "MagickaRateMult",
-          "magnitude": 13,
+          "magnitude": 10,
           "effectName": "Magicka Regeneration"
         },
         {
@@ -148,7 +148,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "The ancestor-light wards your mind. Magicka Regeneration +13%, Magic Resistance +6%."
+      "playerFacingText": "The ancestor-light wards your mind. Magicka Regeneration +10%, Magic Resistance +6%."
     },
     {
       "emphasis": "AuriEl",
@@ -158,7 +158,7 @@
       "effects": [
         {
           "actorValue": "MagickaRateMult",
-          "magnitude": 25,
+          "magnitude": 20,
           "effectName": "Magicka Regeneration"
         },
         {
@@ -167,7 +167,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "You walk the path of return Auri-El first walked. Magicka Regeneration +25%, Magic Resistance +16%.",
+      "playerFacingText": "You walk the path of return Auri-El first walked. Magicka Regeneration +20%, Magic Resistance +16%.",
       "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player as keeping the Dawn foundation. Voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md."
     },
     {
@@ -484,5 +484,6 @@
     },
     "verify": "housecarl readback (profile Devotion Dev): Magnus/Xarxes QUSTs exist with SGE flag + SEQ entries, DeityName/DeityIndex/Stance_Altmer set; FLST 017E47 includes Magnus/Xarxes; the 11 new SPEL (broad T2 + 9 emphasis + neglect) exist with correct MGEF actor-values/magnitudes; AuriEl Stance_Altmer reconciled. Then strict verifier (--strict-phase20-race-costing --strict-phase20-altmer) and runtime smoke (p2-books track per PDV_BetaTestPacket_Altmer.md)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
+  "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."
 }

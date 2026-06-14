@@ -1,7 +1,7 @@
 {
   "schema": "pdv-orc-records.v1",
-  "status": "design-draft-2026-06-07; recognition V1 Survey/status only; pending authoring run",
-  "notes": "Authoritative record spec for the Orc state-enum-gated race. GATE TYPE = state-enum-gated (R7): rewards gate on PDV_State_OrcLifeMode (City=0 | Stronghold=1 | LegionExile=2) plus Malacath piety tier WITHIN the active life mode; exactly one life-mode lane is active at a time and the focused reward family is offer-like for that mode. MALACATH IS THE ONE RELIGIOUS SPINE (R5): Orc depth comes from life-mode expression, not side gods or deity shopping. The 'focus' is the LIFE MODE itself (R3 maps the focused 3-tier set onto life mode rather than onto separate patrons), so all three life-mode families resolve under Malacath. PROGRESSION CURRENCY = Malacath faucet via life-mode-appropriate acts (quality forge / city dignity-and-quality-labor / Legion service); state pace per PDV_Phase20OrcImplementationCosting.manifest.json (mode ceiling rate multipliers LOCKED in ProcessDawn pre-clamp: Stronghold x1.00, City x0.75, LegionExile x0.60 of base; thresholds 25/50/85 identical across modes; calendars Stronghold 8/15/26, City 10/20/34, LegionExile 13/25/43). EQUAL FELT VALUE across modes: City and LegionExile are complete devotional lives, NOT failed Strongholds -- the slower calendar reflects sparser real-world hooks, but the terminal magnitudes per tier are equalized. Broad worship is a STATE on PATRON_STATE_BROAD (R1), NOT a deity -- there is NO PDV_Deity_BroadMalacath aggregate. Broad Malacath T1 fills the FIXED manager property PDV_Bless_Orc_Malacath_T1 (R2); broad Malacath T2 is the new PDV_Bless_Orc_Malacath_T2, capped at Faithful and SUPPRESSED when a life-mode focused family is active (broad < focused, R8). Orc OWNS two new deity records (R4/R5): PDV_Deity_Malacath (create:true, Stance_Orc NATIVE) is the spine; PDV_Deity_Trinimac (create:true, shared with Altmer -- Stance_Orc + Stance_Altmer added) is RARE ideological pressure, not a steady reward lane and grants no always-on boon family. No other new deities. Community standing stays LIGHT and must NOT become a strong second persistent substrate (R8 / budget ledger). Forge rewards REQUIRE quality/value/context/commission (no raw craft-count loop); Legion/Exile service REQUIRES pressure-bearing completion (no faction-membership trigger). T3 recognition = V1 Survey/status text only (Blood-Kin / city-fidelity / exile-return voiced topics are V2). Player-facing text is ASCII-only and uses Skyrim ActorValue names. No magnitude exceeds ~12%.",
+  "status": "record-wired; recognition V1 Survey/status only; Witnessed first record tranche plus Four Holds route/messages added 2026-06-14",
+  "notes": "Authoritative record spec for the Orc state-enum-gated race. GATE TYPE = state-enum-gated (R7): rewards gate on PDV_State_OrcLifeMode (City=0 | Stronghold=1 | LegionExile=2) plus Malacath piety tier WITHIN the active life mode; exactly one life-mode lane is active at a time and the focused reward family is offer-like for that mode. MALACATH IS THE ONE RELIGIOUS SPINE (R5): Orc depth comes from life-mode expression, not side gods or deity shopping. The 'focus' is the LIFE MODE itself (R3 maps the focused 3-tier set onto life mode rather than onto separate patrons), so all three life-mode families resolve under Malacath. PROGRESSION CURRENCY = Malacath faucet via life-mode-appropriate acts (quality forge / city dignity-and-quality-labor / Legion service); state pace per PDV_Phase20OrcImplementationCosting.manifest.json (mode ceiling rate multipliers LOCKED in ProcessDawn pre-clamp: Stronghold x1.00, City x0.75, LegionExile x0.60 of base; thresholds 25/50/85 identical across modes; calendars Stronghold 8/15/26, City 10/20/34, LegionExile 13/25/43). EQUAL FELT VALUE across modes: City and LegionExile are complete devotional lives, NOT failed Strongholds -- the slower calendar reflects sparser real-world hooks, but the terminal magnitudes per tier are equalized. Broad worship is a STATE on PATRON_STATE_BROAD (R1), NOT a deity -- there is NO PDV_Deity_BroadMalacath aggregate. Broad Malacath T1 fills the FIXED manager property PDV_Bless_Orc_Malacath_T1 (R2); broad Malacath T2 is the new PDV_Bless_Orc_Malacath_T2, capped at Faithful and SUPPRESSED when a life-mode focused family is active (broad < focused, R8). Orc OWNS two new deity records (R4/R5): PDV_Deity_Malacath (create:true, Stance_Orc NATIVE) is the spine; PDV_Deity_Trinimac (create:true, shared with Altmer -- Stance_Orc + Stance_Altmer added) is RARE ideological pressure, not a steady reward lane and grants no always-on boon family. No other new deities. Community standing stays LIGHT and must NOT become a strong second persistent substrate (R8 / budget ledger). Forge rewards REQUIRE quality/value/context/commission (no raw craft-count loop); Legion/Exile service REQUIRES pressure-bearing completion (no faction-membership trigger). T3 recognition = V1 Survey/status text only (Blood-Kin / city-fidelity / exile-return voiced topics are V2). Player-facing text is ASCII-only and uses Skyrim ActorValue names. No PERCENT-based magnitude exceeds ~12%; DamageResist is EXEMPT from the 12 cap (armor points, not a percent) and uses an armor ladder T1 15 / T2 30 / T3 50 per the 2026-06-14 Requiem ceiling review (a flat 12 cap made armor rewards read as trivial: +4 AR is ~0.3% damage reduction in Requiem). The +50 armor capstone lives on every life-mode T3 (Stronghold/City/LegionExile) so all modes reach equal felt armor at Champion; the broad Malacath lane carries the 15/30 floor and stays capped at T2 per R8.",
   "gateType": "state-enum-gated (R7)",
   "stateSurfaces": {
     "stateTrack": "PDV_State_OrcLifeMode",
@@ -120,10 +120,10 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 4
+          "magnitude": 15
         }
       ],
-      "playerFacingText": "Malacath regards the strong who keep his code. Armor +4."
+      "playerFacingText": "Malacath regards the strong who keep his code. Armor +15."
     },
     {
       "emphasis": "Malacath",
@@ -136,14 +136,14 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 6
+          "magnitude": 30
         },
         {
           "actorValue": "HealRateMult",
           "magnitude": 8
         }
       ],
-      "playerFacingText": "The Code-Keeper steadies the faithful. Armor +6, Health Regeneration +8%.",
+      "playerFacingText": "The Code-Keeper steadies the faithful. Armor +30, Health Regeneration +8%.",
       "signature": "Broad code-keeping resilience that holds regardless of life mode. Capped at Faithful; suppressed when a life-mode focused family is active; below focused-family benefits.",
       "suppressionRule": "Suppressed (not granted) whenever a PDV_State_OrcLifeMode focused family is active for the current mode at Seeker+."
     },
@@ -210,11 +210,11 @@
         },
         {
           "actorValue": "DamageResist",
-          "magnitude": 5,
+          "magnitude": 50,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "The stronghold counts you blood-kin and the forge answers. Smithing +23, Heavy Armor +20, Armor +5.",
+      "playerFacingText": "The stronghold counts you blood-kin and the forge answers. Smithing +23, Heavy Armor +20, Armor +50.",
       "signature": "Stronghold belonging at its highest: forge-as-rite plus kin-recognized resilience. Stronghold is the STEADIEST life mode (full code infrastructure: forge, shrine, chief, shaman, Blood-Kin). Champion Survey text is the V1 recognition surface."
     },
     {
@@ -285,9 +285,15 @@
           "actorValue": "Block",
           "magnitude": 5,
           "effectName": "Block"
+        },
+        {
+          "magicEffectEditorId": "PDV_MGEF_Orc_City_T3_Armor",
+          "actorValue": "DamageResist",
+          "magnitude": 50,
+          "effectName": "Armor"
         }
       ],
-      "playerFacingText": "You built belonging outside the hold and kept the code doing it. Restoration +23, Speech +20, Block +5.",
+      "playerFacingText": "You built belonging outside the hold and kept the code doing it. Restoration +23, Speech +20, Block +5, Armor +50.",
       "signature": "City life at its highest: private fidelity, dignity under pressure, and a community built by your own hand outside any stronghold. EQUAL felt value to Stronghold T3 (sharper situational, not a failed Stronghold). Champion Survey text is the V1 recognition surface."
     },
     {
@@ -357,9 +363,15 @@
           "actorValue": "StaminaRateMult",
           "magnitude": 5,
           "effectName": "Stamina Regeneration"
+        },
+        {
+          "magicEffectEditorId": "PDV_MGEF_Orc_LegionExile_T3_Armor",
+          "actorValue": "DamageResist",
+          "magnitude": 50,
+          "effectName": "Armor"
         }
       ],
-      "playerFacingText": "You carried the burden of service and exile and came back unbroken. One-Handed +23, Block +20, Stamina Regeneration +5%.",
+      "playerFacingText": "You carried the burden of service and exile and came back unbroken. One-Handed +23, Block +20, Stamina Regeneration +5%, Armor +50.",
       "signature": "Legion/Exile life at its highest: foreign discipline that kept the code, and a return earned by completed service. EQUAL felt value to Stronghold T3 (sharper situational, not a failed Stronghold). Champion Survey text is the V1 recognition surface."
     }
   ],
@@ -429,6 +441,187 @@
       }
     ]
   },
+  "supportSpells": [
+    {
+      "spellProperty": "PDV_SPEL_Orc_TrialOfIron_Tusk",
+      "spellEditorId": "PDV_SPEL_Orc_TrialOfIron_Tusk",
+      "displayName": "Trial of Iron - Tusk",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Orc_TrialOfIron_Tusk_Unarmed",
+          "actorValue": "UnarmedDamage",
+          "magnitude": 5.0,
+          "effectName": "Unarmed Damage"
+        }
+      ],
+      "playerFacingText": "You chose the tusk in the Trial of Iron. Unarmed damage rises by 5."
+    },
+    {
+      "spellProperty": "PDV_SPEL_Orc_TrialOfIron_Shield",
+      "spellEditorId": "PDV_SPEL_Orc_TrialOfIron_Shield",
+      "displayName": "Trial of Iron - Shield",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Orc_TrialOfIron_Shield_Armor",
+          "actorValue": "DamageResist",
+          "magnitude": 5.0,
+          "effectName": "Armor"
+        }
+      ],
+      "playerFacingText": "You chose the shield in the Trial of Iron. Armor rises by 5."
+    },
+    {
+      "spellProperty": "PDV_SPEL_Orc_TrialOfIron_Hammer",
+      "spellEditorId": "PDV_SPEL_Orc_TrialOfIron_Hammer",
+      "displayName": "Trial of Iron - Hammer",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Orc_TrialOfIron_Hammer_Smithing",
+          "actorValue": "Smithing",
+          "magnitude": 5.0,
+          "effectName": "Smithing"
+        }
+      ],
+      "playerFacingText": "You chose the hammer in the Trial of Iron. Smithing rises by 5."
+    },
+    {
+      "spellProperty": "PDV_SPEL_Orc_TrialOfIron_Yoke",
+      "spellEditorId": "PDV_SPEL_Orc_TrialOfIron_Yoke",
+      "displayName": "Trial of Iron - Yoke",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Orc_TrialOfIron_Yoke_CarryWeight",
+          "actorValue": "CarryWeight",
+          "magnitude": 15.0,
+          "effectName": "Carry Weight"
+        }
+      ],
+      "playerFacingText": "You chose the yoke in the Trial of Iron. Carry weight rises by 15."
+    },
+    {
+      "spellProperty": "PDV_SPEL_OrcCodeHolds",
+      "spellEditorId": "PDV_SPEL_OrcCodeHolds",
+      "displayName": "The Code Holds",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_OrcCodeHolds_HealRate",
+          "actorValue": "HealRate",
+          "magnitude": 2.0,
+          "duration": 10,
+          "spellType": "Spell",
+          "castType": "FireAndForget",
+          "effectName": "Health Regeneration"
+        }
+      ],
+      "playerFacingText": "You dropped near death and held the code. Health returns briefly."
+    },
+    {
+      "spellProperty": "PDV_SPEL_OrcCodeHolds_Devoted",
+      "spellEditorId": "PDV_SPEL_OrcCodeHolds_Devoted",
+      "displayName": "The Code Holds - Devoted",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_OrcCodeHolds_Devoted_HealRate",
+          "actorValue": "HealRate",
+          "magnitude": 3.0,
+          "duration": 10,
+          "spellType": "Spell",
+          "castType": "FireAndForget",
+          "effectName": "Health Regeneration"
+        }
+      ],
+      "playerFacingText": "You dropped near death and held the code. Health returns sharply, and stamina comes back."
+    },
+    {
+      "spellProperty": "PDV_SPEL_OrcHearthHeld",
+      "spellEditorId": "PDV_SPEL_OrcHearthHeld",
+      "displayName": "Hearth-Held",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_OrcHearthHeld_StaminaRate",
+          "actorValue": "StaminaRateMult",
+          "magnitude": 5.0,
+          "duration": 600,
+          "spellType": "Spell",
+          "castType": "FireAndForget",
+          "effectName": "Stamina Regeneration"
+        }
+      ],
+      "playerFacingText": "You return to a place made yours by work and oath. Stamina returns faster for a while."
+    }
+  ],
+  "messageRecords": [
+    {
+      "editorId": "PDV_Notif_Orc_Witnessed_TheWatchers_Stronghold",
+      "kind": "notification",
+      "title": "The Watchers - Stronghold",
+      "body": "The stronghold saw the work. Malacath saw why it mattered."
+    },
+    {
+      "editorId": "PDV_Notif_Orc_Witnessed_TheWatchers_City",
+      "kind": "notification",
+      "title": "The Watchers - City",
+      "body": "No chief named it. Malacath counted it anyway."
+    },
+    {
+      "editorId": "PDV_Notif_Orc_Witnessed_TheWatchers_LegionExile",
+      "kind": "notification",
+      "title": "The Watchers - Legion and Exile",
+      "body": "The road was foreign. The code still crossed it with you."
+    },
+    {
+      "editorId": "PDV_Notif_Orc_HearthHeld_Declare",
+      "kind": "notification",
+      "title": "Hearth-Held",
+      "body": "This place can hold the code if you keep returning to it."
+    },
+    {
+      "editorId": "PDV_Notif_Orc_HearthHeld_Return",
+      "kind": "notification",
+      "title": "Hearth-Held",
+      "body": "You came back to the place you made. The oath has a roof for now."
+    },
+    {
+      "editorId": "PDV_Notif_Orc_HearthHeld_MissedCadence",
+      "kind": "notification",
+      "title": "Hearth-Held",
+      "body": "The place is still there, but the habit has gone thin."
+    },
+    {
+      "editorId": "PDV_Notif_Orc_FourHolds_DushnikhYal",
+      "kind": "notification",
+      "title": "Four Holds - Dushnikh Yal",
+      "body": "Dushnikh Yal is counted. The code has a western hold."
+    },
+    {
+      "editorId": "PDV_Notif_Orc_FourHolds_MorKhazgur",
+      "kind": "notification",
+      "title": "Four Holds - Mor Khazgur",
+      "body": "Mor Khazgur is counted. The code has a northern hold."
+    },
+    {
+      "editorId": "PDV_Notif_Orc_FourHolds_Narzulbur",
+      "kind": "notification",
+      "title": "Four Holds - Narzulbur",
+      "body": "Narzulbur is counted. The code has an eastern hold."
+    },
+    {
+      "editorId": "PDV_Notif_Orc_FourHolds_Largashbur",
+      "kind": "notification",
+      "title": "Four Holds - Largashbur",
+      "body": "Largashbur is counted. Even a troubled hold is still a hold."
+    },
+    {
+      "editorId": "PDV_Msg_Orc_FourHolds_Milestone",
+      "kind": "messageBox",
+      "title": "Four Holds Kept",
+      "body": "You have stood at all four strongholds. The code holds across distance.",
+      "messageBox": true,
+      "buttons": [
+        "Continue"
+      ]
+    }
+  ],
   "rejectedHooks": [
     "raw craft count",
     "forge spam / ore mining / vendor sales as forge piety",
@@ -444,10 +637,10 @@
     "community standing as a strong second persistent substrate"
   ],
   "v1RecognitionSurface": "Champion Survey/status text only (non-voiced). The Orc Survey reports the active life mode (City / Stronghold / LegionExile), Malacath standing within mode, last accepted proof reason (quality labor / kin crisis / service / dignity / self-made community), broad-vs-focused state, and curse-code posture (werewolf judged / vampire exile-until-cured) in race language. Required content rows per the costing manifest: PDV_Msg_Orc_Survey_{Stronghold,City,LegionExile}; PDV_Notif_Orc_LifeMode_*_Entry; PDV_Msg_Orc_Malacath_ChampionEntry_{Stronghold,City,LegionExile}; PDV_Msg_Orc_CurseState_{WerewolfOnset,VampireOnset,VampireCured}. Voiced Blood-Kin / city-fidelity / exile-return recognition lines are V2 per PDV_RecognitionDialogueScalePacket.md.",
-  "budget": "Two always-on families only (R8): broad Malacath lane (Layer 1, capped at T2/Faithful) + ONE active life-mode focused family (Layer 2, T1/T2/T3) for the current PDV_State_OrcLifeMode. Broad stays softer than focused and is suppressed under an active focus. Community standing is LIGHT life-mode standing, NOT a second persistent substrate. Trinimac is rare ideological pressure, NOT a third boon family. Reward ceiling ~12% per tier (no magnitude exceeds 12.0): Stronghold steadier, City/LegionExile sharper situational, all three EQUAL felt value. Matches the PDV_RaceRewardBudgetLedger Orc ceiling: 'One active life-mode lane; Stronghold steadier, City and Legion/Exile sharper, no second substrate.'",
+  "budget": "Two always-on families only (R8): broad Malacath lane (Layer 1, capped at T2/Faithful) + ONE active life-mode focused family (Layer 2, T1/T2/T3) for the current PDV_State_OrcLifeMode. Broad stays softer than focused and is suppressed under an active focus. Community standing is LIGHT life-mode standing, NOT a second persistent substrate. Trinimac is rare ideological pressure, NOT a third boon family. Reward ceiling ~12% per tier for PERCENT-based ActorValues (no %-magnitude exceeds 12.0); DamageResist is EXEMPT (armor points, not %) and uses an armor ladder T1 15 / T2 30 / T3 50 (broad floor 15/30 capped at T2 per R8; +50 armor capstone on every life-mode T3). Rationale: 2026-06-14 Requiem ceiling review (armor points read as trivial under a flat 12 cap). Stronghold steadier, City/LegionExile sharper situational, all three EQUAL felt value (and all three now share the +50 armor capstone). Matches the PDV_RaceRewardBudgetLedger Orc ceiling: 'One active life-mode lane; Stronghold steadier, City and Legion/Exile sharper, no second substrate.'",
   "authoringPlan": {
     "vehicle": "Author with a Phase 20 Orc Mutagen helper (mirror tools/pdv-phase20-khajiit-author with an --author-rewards mode reading this spec); one backed-up framework-ESP write. Reuse reward-author patterns (EnsureMagicEffect/ConfigureMagicEffect/EnsureSpell/ConfigureSpell/ParseActorValue). NO night-condition wiring (Orc has no lunar/substrate layer). Create the two deity QUSTs (Malacath NATIVE, Trinimac shared Orc/Altmer pressure). The state track PDV_State_OrcLifeMode and global mirror PDV_GLO_OrcLifeMode already exist (record-wired skeleton) -- reference only, do not recreate.",
-    "recordCreation": "Create 12 net-new SPEL with their MGEFs: broad Malacath T2 (1; the broad T1 record fills the EXISTING manager property PDV_Bless_Orc_Malacath_T1, do not recreate it) + Stronghold T1/T2/T3 (3) + City T1/T2/T3 (3) + LegionExile T1/T2/T3 (3) + neglect PDV_SPEL_Neglect_Orc (1). Create 2 deity QUSTs: PDV_Deity_Malacath (Stance_Orc NATIVE) and PDV_Deity_Trinimac (Stance_Orc + Stance_Altmer, pressure).",
+    "recordCreation": "Base reward tranche creates 12 SPEL with their MGEFs: broad Malacath T2 (1; the broad T1 record fills the EXISTING manager property PDV_Bless_Orc_Malacath_T1, do not recreate it) + Stronghold T1/T2/T3 (3) + City T1/T2/T3 (3) + LegionExile T1/T2/T3 (3) + neglect PDV_SPEL_Neglect_Orc (1). Creates 2 deity QUSTs: PDV_Deity_Malacath (Stance_Orc NATIVE) and PDV_Deity_Trinimac (Stance_Orc + Stance_Altmer, pressure). Witnessed first record tranche adds 5 support SPEL/MGEF records (Trial of Iron Tusk/Shield/Hammer/Yoke and Hearth-Held) plus 6 MESG notification records (The Watchers x3, Hearth-Held x3), all wired on PDV__ManagerQuest as of 2026-06-14. Four Holds follow-up adds 4 hold notifications plus the all-holds milestone MESG, wires the manager message properties, and compiles route 75 through EventTypes/EventBus/reusable receivers into HandleOrcFourHoldsVisit using StorageUtil one-shot keys; final-world ChangeLocation placement and runtime proof remain deferred.",
     "deityQuestStructure": "MUST mirror an existing deity quest (read e.g. PDV_Deity_Kyne 0120B6 fully first): FormVersion 44, Start-Game-Enabled flag, QuestAdapter VMAD hosting the PDV_Deity_<Name> script with base properties DeityName(String), DeityIndex(Int, next-available -- scan existing 6 low indices + Khajiit 40-43 + any earlier Phase 2 owners), Stance_Orc=0(NATIVE) for Malacath; for Trinimac set Stance_Orc and Stance_Altmer to the pressure stance value, PDV_GLO_OriginRace, PDV_GLO_DebugLevel. Thresholds use script defaults (25/50/85). SGE flag + SEQ entry REQUIRED for every PDV_Deity_* QUST (memory note: EnsureQuest author helper omits the SGE flag; set it explicitly).",
     "sharedDeityReconciliation": "PDV_Deity_Trinimac is shared with Altmer (R4). Orc OWNS it (create:true) and authors it FIRST; the Altmer spec references it create:false and adds Stance_Altmer via --reconcile-shared-deity. Deity creation is idempotent; authoring is serial; Orc must run before the Altmer reuse pass. Per the Phase 2 roster, Altmer owns Magnus/Xarxes and reuses Trinimac from Orc.",
     "baseline": {
@@ -473,7 +666,7 @@
       "deityIndexAllocation": "next-available; the author tool scans existing indices and assigns Malacath then Trinimac sequentially at author time (collision-free because authoring is serial). Existing indices 0-5 and 40-43 are preserved; earlier Phase 2 owners (Imperial Divines, Argonian, etc.) may have consumed 44+ -- scan, do not hardcode."
     },
     "wiring": "Same run: add PDV_Deity_Malacath and PDV_Deity_Trinimac to PDV_FLST_AllDeities (017E47); wire manager deity properties PDV_Malacath + PDV_Trinimac on PDV__ManagerQuest; wire the new broad Malacath T2 property (PDV_Bless_Orc_Malacath_T2; T1 PDV_Bless_Orc_Malacath_T1 already exists and is granted via PATRON_STATE_BROAD) + 9 life-mode focused reward props (Stronghold/City/LegionExile T1/T2/T3) + PDV_SPEL_Neglect_Orc + SyncOrcNeglectSpell on PDV__ManagerQuest. Broad T2 grant is SUPPRESSED whenever an active life-mode focused family is set. Focused grants gate on PDV_State_OrcLifeMode (one active mode) + Malacath tier within mode (mirror SyncKhajiitEmphasisRewards/Family one-active-focus shape: T1>=Seeker, T2>=Devoted, T3>=Champion). Trinimac is wired for pressure/recognition only (no reward family). Anti-farm: forge uses quality/value/context + ConsumeDailyRepeatMultiplier; service uses one-shot markers; no single act gets both ScoreRepeatableAction AND the 0.7^n multiplier (R8).",
-    "verify": "housecarl readback (profile Devotion Dev): the 12 new SPEL exist with correct MGEF actor-values/magnitudes (no magnitude > 12.0); PDV_Bless_Orc_Malacath_T1 unchanged/reused; PDV_FLST_AllDeities (017E47) gains exactly Malacath + Trinimac; PDV_Deity_Malacath and PDV_Deity_Trinimac exist with SGE flag set, SEQ entries present, Stance_Orc=NATIVE (Malacath) / Stance_Orc+Stance_Altmer pressure (Trinimac), next-available indices, and DeityName/DeityIndex base props; PDV_State_OrcLifeMode enum (City=0/Stronghold=1/LegionExile=2) resolves; broad-T2 suppression and per-mode focused gates resolve; PDV_SPEL_Neglect_Orc wired via SyncOrcNeglectSpell. Then runtime smoke (QASmoke routes 70-73 Stronghold/City/Legion/SelfMadeCommunity + RouteOrcMalacathConduct book marker 'RouteOrcMalacathConduct complete: mode 0 source po3_book_orc_malacath' per PDV_BetaTestPacket_Orc.md; wrong-origin OriginRace=7 silence; generic raw-craft/combat/membership silence)."
+    "verify": "housecarl readback (profile Devotion Dev): the 12 new SPEL exist with correct MGEF actor-values/magnitudes (no PERCENT-based magnitude > 12.0; DamageResist armor-points EXEMPT, ladder 15/30/50 with the +50 capstone on Stronghold/City/LegionExile T3 and 15/30 on broad Malacath T1/T2); PDV_Bless_Orc_Malacath_T1 reused but its DamageResist magnitude is now 15 (was 4) — the T1 contract PDV_Phase20_RewardRecordContracts.json must be synced; PDV_FLST_AllDeities (017E47) gains exactly Malacath + Trinimac; PDV_Deity_Malacath and PDV_Deity_Trinimac exist with SGE flag set, SEQ entries present, Stance_Orc=NATIVE (Malacath) / Stance_Orc+Stance_Altmer pressure (Trinimac), next-available indices, and DeityName/DeityIndex base props; PDV_State_OrcLifeMode enum (City=0/Stronghold=1/LegionExile=2) resolves; broad-T2 suppression and per-mode focused gates resolve; PDV_SPEL_Neglect_Orc wired via SyncOrcNeglectSpell. Then runtime smoke (QASmoke routes 70-73 Stronghold/City/Legion/SelfMadeCommunity + RouteOrcMalacathConduct book marker 'RouteOrcMalacathConduct complete: mode 0 source po3_book_orc_malacath' per PDV_BetaTestPacket_Orc.md; wrong-origin OriginRace=7 silence; generic raw-craft/combat/membership silence)."
   },
   "rulingsCompliance": {
     "R1": "Broad Malacath is a STATE on PATRON_STATE_BROAD, not a deity. No PDV_Deity_BroadMalacath aggregate. Broad reward via GetFirstTierRaceRewardSpellForOrigin path.",
@@ -483,13 +676,13 @@
     "R5": "Only focusable patrons get deity records. Orc creates Malacath (focusable spine) and Trinimac (focusable pressure record). No pantheon-flavor or side-god records; Aedra/Daedra-beside-Malacath rejected.",
     "R6": "No new Daedric Prince records here. Malacath is authored as the native Orc spine (an Aedric-track-equivalent native reward spine). Werewolf/Hircine curse pressure routes through curse posture / the Daedric system, not a new record.",
     "R7": "Gate shape = state-enum-gated: rewards gate on PDV_State_OrcLifeMode + Malacath tier within the active mode, treated offer-like for the focused life-mode family with the state enum as the eligibility filter.",
-    "R8": "<=2 always-on families (broad Malacath + one active life-mode family); broad < focused (broad capped at T2/Faithful and suppressed under focus); community standing NOT a strong second substrate; Trinimac not a third family; one anti-farm mechanism per act (quality/context + daily multiplier for forge; one-shot markers for service; no act gets both ScoreRepeatableAction and 0.7^n); per-tier magnitude ceiling ~12% (max 12.0); creed-violation loss medium/major only (2-3 deltas); ASCII player text; Skyrim ActorValue names only; deityIndex next-available."
+    "R8": "<=2 always-on families (broad Malacath + one active life-mode family); broad < focused (broad capped at T2/Faithful and suppressed under focus); community standing NOT a strong second substrate; Trinimac not a third family; one anti-farm mechanism per act (quality/context + daily multiplier for forge; one-shot markers for service; no act gets both ScoreRepeatableAction and 0.7^n); per-tier magnitude ceiling ~12% (max 12.0) for PERCENT-based AVs, DamageResist EXEMPT (armor-points ladder 15/30/50 per 2026-06-14 Requiem ceiling review); creed-violation loss medium/major only (2-3 deltas); ASCII player text; Skyrim ActorValue names only; deityIndex next-available."
   },
   "judgmentCalls": [
     "R3 focus mapping: the Orc brief makes LIFE MODE the focus (not separate patrons), so the three Khajiit-style focused 3-tier sets are keyed Stronghold/City/LegionExile, all resolving under Malacath. This honors 'Malacath is the ONE religious spine' while still giving R3's three-tier focused structure.",
     "Equal felt value vs. locked pace multipliers: the costing manifest LOCKS slower City (x0.75) and LegionExile (x0.60) dawn rate multipliers and longer calendars. I read this as PACE (time-to-tier), not VALUE -- so terminal per-tier magnitudes are equalized across all three modes (City/LegionExile reach the same ceilings, just later), satisfying 'City/Legion must feel complete not failed.'",
     "ActorValue 'Block' uses the project canonical 'Block' spec string; author tools resolve it to the engine Block ActorValue while displayName/playerFacingText say 'Block'.",
-    "Magnitude shape mirrors the Nord/Khajiit template (T1 single ~5, T2 two effects ~8/8, T3 three effects topping at 10-12) with distinct AV themes per life mode (Stronghold = Smithing/HeavyArmor/DamageResist; City = Restoration/Speechcraft/Block; LegionExile = OneHanded/Block/StaminaRateMult). All <=12.0, none exceeding the ~12% ceiling, and roughly equal aggregate felt value per tier across modes.",
+    "Magnitude shape mirrors the Nord/Khajiit template (T1 single ~5, T2 two effects ~8/8, T3 three effects topping at 10-12) with distinct AV themes per life mode (Stronghold = Smithing/HeavyArmor/DamageResist; City = Restoration/Speechcraft/Block; LegionExile = OneHanded/Block/StaminaRateMult). All PERCENT-based AVs <=12.0; DamageResist is the deliberate exception (armor points, not a percent), rescaled to an armor ladder 15/30/50 per the 2026-06-14 Requiem ceiling review since +4 AR reads as trivial (~0.3% DR) under a flat 12 cap. Roughly equal aggregate felt value per tier across modes, and every life-mode Champion now carries the same +50 armor capstone (two new MGEFs: PDV_MGEF_Orc_City_T3_Armor, PDV_MGEF_Orc_LegionExile_T3_Armor).",
     "Trinimac carries NO reward family in V1 (rare ideological pressure per the brief and roster). It is created and wired as a focusable/pressure record so Altmer can reconcile it and future content can use it, but it grants no always-on boon -- keeping the family count at 2.",
     "Neglect is a single gentle DamageResist -5 (code-keeping is the Orc identity stat), distinct from creed loss; it bites only after sustained absence of life-mode-appropriate acts, with curse-code rupture handled in creedViolationLoss, matching 'gentle; bite at code-rupture/curse.'",
     "Broad Malacath uses DamageResist (T1) then DamageResist+HealRateMult (T2) -- code-keeping resilience that holds in any life mode and is intentionally softer than every focused-family T2, so suppression-under-focus is a real downgrade-to-upgrade, not a sidegrade."

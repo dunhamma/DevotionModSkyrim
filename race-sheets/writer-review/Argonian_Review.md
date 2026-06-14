@@ -1,7 +1,7 @@
 # Argonian -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 19 (Argonian (full draft))
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-06-14 via `node tools/pdv_writer_review.mjs`
 **Rows:** 49 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
@@ -28,7 +28,7 @@ _3 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| _(no tone match)_ | `PDV_Bless_Argonian_Hist_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 186 / 200 |  | The Hist reaches you where water reaches. In wetland and water, your damage resistance rises by 10%, your Sneak by 15, and your attack speed by 3%. The swamp gives what dry stone cannot. |  |
+| _(no tone match)_ | `PDV_Bless_Argonian_Hist_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 195 / 200 |  | The Hist reaches you where water reaches. In wetland and water, your damage resistance rises by 10%, your health regenerates steadily, and your Sneak by 15. The swamp gives what dry stone cannot. |  |
 | _(no tone match)_ | `PDV_Bless_Argonian_Community_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 145 / 200 |  | The People are your armor. Helping Saxhleel returns strong piety; a friendly Argonian nearby raises your armor by 8; the exile network knows you. |  |
 | Sithis: The primordial void -- change, death, the dark before and around all things; acknowledged, never worshipped; speaks rarely, and never to comfort. | `PDV_Bless_Argonian_Sithis_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 157 / 200 |  | Sithis holds those who faced the void unflinching. Near death, a burst of stamina regeneration; a Dark Brotherhood contract sharpens speed and stealth after. |  |
 

@@ -141,6 +141,10 @@ const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
   path.join(PROJECT_ROOT, "references", "authoring", "PDV_Phase20BosmerNonHunterImplementationCosting.manifest.json"),
   path.join(PROJECT_ROOT, "references", "authoring", "PDV_Phase20KhajiitImplementationCosting.manifest.json"),
 ];
+const DEITY_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv");
+const PRINCE_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes_Princes_V2.csv");
+const EXPECTED_LIKES_DISLIKES_VERSION = 8;
+const EXPECTED_PRINCE_LD_VERSION = 3;
 const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
   PROJECT_ROOT,
   "references",
@@ -1298,6 +1302,7 @@ class Verifier {
       }
       this.checkPreflightOverlayPatch();
     }
+    this.checkSmallSignalTables();
     this.checkScripts();
     this.checkSeq();
     this.checkProfile();
@@ -3997,11 +4002,13 @@ class Verifier {
       "Function HandleNordKyneTalosContext(String reason)",
       "Function HandleNordHircineArkayEdge(String reason)",
       "Function HandleOrcMalacathConduct(Int modeValue, String reason)",
+      "Function HandleOrcOathBreak(String reason)",
       "Function HandleRedguardAncestorSpine(String reason)",
       "String Function GetNordContextSurveyText()",
       "String Function GetDunmerReclamationFocusLabel(Int focusValue)",
       "PDV.Breton.TraditionHookCount",
       "PDV.Dunmer.ReclamationFocusCount",
+      "PDV.Signal.DunmerTwilight.",
       "PDV.Imperial.CivicServiceCount",
       "PDV.Nord.HircineArkayEdgeCount",
     ], this.phase20RaceCostingGap.bind(this));
@@ -5217,6 +5224,11 @@ class Verifier {
       "Function HandleOrcLegionService(String reason)",
       "Function HandleOrcSelfMadeCommunity(String reason)",
       "Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)",
+      "Function HandleOrcOathBreak(String reason)",
+      "Function AwardOrcOathBreakSignal()",
+      "Function HandleOrcFourHoldsVisit(Int holdId, String reason)",
+      "Function AwardOrcFourHoldsVisitSignal()",
+      "PDV.Orc.FourHolds.",
       "String Function GetOrcSurveyText()",
       "String Function GetOrcSummary()",
       "\"PDV.Curse.Orc.CodePressure\"",
@@ -5226,24 +5238,56 @@ class Verifier {
       "EVT_ORC_CITY_DIGNITY = 71",
       "EVT_ORC_LEGION_SERVICE = 72",
       "EVT_ORC_SELF_MADE_COMMUNITY = 73",
+      "EVT_ORC_OATH_BREAK = 74",
+      "EVT_ORC_FOUR_HOLDS_VISIT = 75",
       "orc-stronghold-forge",
       "orc-self-made-community",
+      "orc-oath-break",
+      "orc-four-holds-visit",
     ]);
     this.checkSourceContains("Phase 20 Orc EventBus source", "PDV_EventBus", [
       "Function RouteOrcStrongholdForge()",
       "Function RouteOrcCityDignity()",
       "Function RouteOrcLegionService()",
       "Function RouteOrcSelfMadeCommunity()",
+      "Function RouteOrcOathBreak(String sourceId)",
+      "Function RouteOrcFourHoldsVisit(Int holdId, String sourceId)",
       "PDV_Manager.HandleOrcStrongholdForge(\"eventbus_\" + eventType)",
       "PDV_Manager.HandleOrcSelfMadeCommunity(\"eventbus_\" + eventType)",
+      "PDV_Manager.HandleOrcOathBreak(\"eventbus_\" + eventType + \"_\" + sourceId)",
+      "PDV_Manager.HandleOrcFourHoldsVisit(holdId, \"eventbus_\" + eventType + \"_\" + sourceId)",
+    ]);
+    this.checkSourceContains("Phase 20 Orc Malacath source", "PDV_Deity_Malacath", [
+      "SIGNAL_FOUR_HOLDS_VISIT = 2208",
+      "DELTA_FOUR_HOLDS_VISIT = 1.0",
+      "return DELTA_FOUR_HOLDS_VISIT",
+      "SIGNAL_OATH_BREAK = 2253",
+      "DELTA_OATH_BREAK = -1.5",
+      "return DELTA_OATH_BREAK",
     ]);
     this.checkSourceContains("Phase 20 Orc receiver source", "PDV_EventSignalActivator", [
       "ROUTE_ORC_STRONGHOLD_FORGE = 70",
       "ROUTE_ORC_CITY_DIGNITY = 71",
       "ROUTE_ORC_LEGION_SERVICE = 72",
       "ROUTE_ORC_SELF_MADE_COMMUNITY = 73",
+      "ROUTE_ORC_OATH_BREAK = 74",
+      "ROUTE_ORC_FOUR_HOLDS_VISIT = 75",
       "PDV_EventBusService.RouteOrcStrongholdForge()",
       "PDV_EventBusService.RouteOrcSelfMadeCommunity()",
+      "PDV_EventBusService.RouteOrcOathBreak(GetSignalSourceId())",
+      "PDV_EventBusService.RouteOrcFourHoldsVisit(SignalValue, GetSignalSourceId())",
+    ]);
+    this.checkSourceContains("Phase 20 Orc receiver source", "PDV_EventSignalEffect", [
+      "ROUTE_ORC_STRONGHOLD_FORGE = 70",
+      "ROUTE_ORC_CITY_DIGNITY = 71",
+      "ROUTE_ORC_LEGION_SERVICE = 72",
+      "ROUTE_ORC_SELF_MADE_COMMUNITY = 73",
+      "ROUTE_ORC_OATH_BREAK = 74",
+      "ROUTE_ORC_FOUR_HOLDS_VISIT = 75",
+      "PDV_EventBusService.RouteOrcStrongholdForge()",
+      "PDV_EventBusService.RouteOrcSelfMadeCommunity()",
+      "PDV_EventBusService.RouteOrcOathBreak(GetSignalSourceId())",
+      "PDV_EventBusService.RouteOrcFourHoldsVisit(SignalValue, GetSignalSourceId())",
     ]);
 
     const triggerSurfaces = manifest.triggerSurfaces || [];
@@ -7896,7 +7940,16 @@ class Verifier {
       "Function HandleDunmerPlayerHomeBonus(String reason)",
       "PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)",
       "PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)",
+      "Function TryAwardDunmerTwilightWindowSignal(String reason)",
+      "Function GetDunmerTwilightWindow(Float gameTime)",
+      "PDV_Azura.SIGNAL_DUNMER_TWILIGHT_RITE",
+      "PDV.Signal.DunmerTwilight.",
       "String Function GetDunmerAncestorSummary()",
+    ], this.phase10Gap.bind(this));
+    this.checkSourceContains("Phase 10 Azura source", "PDV_Deity_Azura", [
+      "SIGNAL_DUNMER_TWILIGHT_RITE = 704",
+      "DELTA_DUNMER_TWILIGHT_RITE = 0.25",
+      "return DELTA_DUNMER_TWILIGHT_RITE",
     ], this.phase10Gap.bind(this));
     this.checkSourceContains("Phase 10 source", "PDV_EventBus", [
       "Function RouteDunmerPortableShrinePrayer()",
@@ -7985,6 +8038,110 @@ class Verifier {
       } else {
         reportGap(checkName, `${scriptName}.psc is missing ${snippet}.`, source);
       }
+    }
+  }
+
+  checkSmallSignalTables() {
+    const managerSource = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
+    if (!exists(managerSource)) {
+      this.fail("Small-signal table source", "PDV__ManagerQuest.psc is missing.", managerSource);
+      return;
+    }
+    if (!exists(DEITY_LIKES_DISLIKES_CSV)) {
+      this.fail("Small-signal table source", "PDV_DeityLikesDislikes.csv is missing.", DEITY_LIKES_DISLIKES_CSV);
+      return;
+    }
+    if (!exists(PRINCE_LIKES_DISLIKES_CSV)) {
+      this.fail("Small-signal table source", "PDV_DeityLikesDislikes_Princes_V2.csv is missing.", PRINCE_LIKES_DISLIKES_CSV);
+      return;
+    }
+
+    const sourceText = fs.readFileSync(managerSource, "utf8");
+    const deityGenerated = buildLikesDislikesFunction(DEITY_LIKES_DISLIKES_CSV, {
+      functionName: "LoadRowsForDeity",
+      argumentType: "PDV_DeityBase",
+      argumentName: "deity",
+      nameSource: "deity.DeityName",
+      writerName: "WriteLD",
+      stripPrefix: null,
+    });
+    const princeGenerated = buildLikesDislikesFunction(PRINCE_LIKES_DISLIKES_CSV, {
+      functionName: "LoadPrinceRowsForPath",
+      argumentType: "PDV_DaedricPathBase",
+      argumentName: "path",
+      nameSource: "path.DeityName",
+      writerName: "WritePLD",
+      stripPrefix: "Daedric:",
+    });
+
+    this.checkSourceContains("Small-signal table versions", "PDV__ManagerQuest", [
+      `Int Property LIKES_DISLIKES_VERSION = ${EXPECTED_LIKES_DISLIKES_VERSION} AutoReadOnly`,
+      `Int Property PRINCE_LD_VERSION = ${EXPECTED_PRINCE_LD_VERSION} AutoReadOnly`,
+    ]);
+    this.checkGeneratedFunction(
+      "Small-signal deity table",
+      sourceText,
+      managerSource,
+      deityGenerated,
+      "LoadRowsForDeity",
+      "WriteLD",
+      "deities",
+    );
+    this.checkGeneratedFunction(
+      "Small-signal Prince table",
+      sourceText,
+      managerSource,
+      princeGenerated,
+      "LoadPrinceRowsForPath",
+      "WritePLD",
+      "paths",
+    );
+    this.checkLikesDislikesClearSuperset(sourceText, managerSource, deityGenerated.eventIds);
+  }
+
+  checkGeneratedFunction(checkName, sourceText, managerSource, generated, functionName, writerName, actorLabel) {
+    const liveFunction = extractPapyrusFunction(sourceText, functionName);
+    if (!liveFunction) {
+      this.fail(checkName, `${functionName} is missing from the deployed manager.`, managerSource);
+      return;
+    }
+
+    const liveRows = countOccurrences(liveFunction, `${writerName}(`);
+    const liveActors = countOccurrences(liveFunction, "ldName ==");
+    if (liveRows === generated.rowCount && liveActors === generated.actorCount) {
+      this.pass(checkName, `${functionName} has ${generated.actorCount} ${actorLabel} and ${generated.rowCount} row(s).`, managerSource);
+    } else {
+      this.fail(
+        checkName,
+        `${functionName} has ${liveActors} ${actorLabel}/${liveRows} row(s), expected ${generated.actorCount}/${generated.rowCount}.`,
+        managerSource,
+      );
+    }
+
+    if (normalizeSourceBlock(liveFunction) === normalizeSourceBlock(generated.source)) {
+      this.pass(checkName, `${functionName} matches the current CSV-generated body exactly.`, managerSource);
+    } else {
+      this.fail(checkName, `${functionName} differs from the current CSV-generated body; rerun the generator onto the deployed manager.`, managerSource);
+    }
+  }
+
+  checkLikesDislikesClearSuperset(sourceText, managerSource, eventIds) {
+    const clearFunction = extractPapyrusFunction(sourceText, "GetLikesDislikesEventTypes");
+    if (!clearFunction) {
+      this.fail("Small-signal deity clear superset", "GetLikesDislikesEventTypes is missing from the deployed manager.", managerSource);
+      return;
+    }
+
+    const clearIds = new Set([...clearFunction.matchAll(/ldEvents\[\d+\]\s*=\s*(\d+)/g)].map((match) => Number(match[1])));
+    const missing = [...eventIds].filter((eventId) => !clearIds.has(eventId)).sort((a, b) => a - b);
+    if (missing.length === 0) {
+      this.pass("Small-signal deity clear superset", `GetLikesDislikesEventTypes covers all ${eventIds.size} CSV event id(s).`, managerSource);
+    } else {
+      this.fail(
+        "Small-signal deity clear superset",
+        `GetLikesDislikesEventTypes is missing CSV event id(s): ${missing.join(", ")}.`,
+        managerSource,
+      );
     }
   }
 
@@ -8412,6 +8569,80 @@ function findStraySkyuiOutputs() {
 
 function readLines(filePath) {
   return fs.readFileSync(filePath, "utf8").split(/\r?\n/);
+}
+
+function buildLikesDislikesFunction(csvPath, options) {
+  const lines = fs.readFileSync(csvPath, "utf8").split(/\r?\n/).filter((line) => line.trim().length > 0);
+  lines.shift();
+
+  const order = [];
+  const byActor = new Map();
+  const eventIds = new Set();
+  for (const line of lines) {
+    const cols = line.split(",");
+    let actor = String(cols[0] || "").trim();
+    if (options.stripPrefix && actor.startsWith(options.stripPrefix)) {
+      actor = actor.slice(options.stripPrefix.length).trim();
+    }
+    const eventId = String(cols[1] || "").trim();
+    const delta = String(cols[5] || "").trim();
+    const dailyCap = String(cols[6] || "").trim();
+    const cooldown = String(cols[7] || "").trim();
+    if (!actor || !eventId) {
+      continue;
+    }
+    if (!byActor.has(actor)) {
+      byActor.set(actor, []);
+      order.push(actor);
+    }
+    byActor.get(actor).push({ eventId, delta, dailyCap, cooldown });
+    eventIds.add(Number(eventId));
+  }
+
+  const out = [];
+  out.push(`Function ${options.functionName}(${options.argumentType} ${options.argumentName})`);
+  out.push(`    String ldName = ${options.nameSource}`);
+  order.forEach((actor, index) => {
+    const keyword = index === 0 ? "if" : "elseIf";
+    out.push(`    ${keyword} ldName == "${actor}"`);
+    for (const row of byActor.get(actor)) {
+      out.push(
+        `        ${options.writerName}(${options.argumentName}, ${row.eventId}, ${papyrusFloat(row.delta)}, ${row.dailyCap}, ${papyrusFloat(row.cooldown)})`,
+      );
+    }
+  });
+  out.push("    endIf");
+  out.push("EndFunction");
+
+  return {
+    source: out.join("\n"),
+    actorCount: order.length,
+    rowCount: lines.length,
+    eventIds,
+  };
+}
+
+function papyrusFloat(value) {
+  const text = String(value).trim();
+  return text.includes(".") ? text : `${text}.0`;
+}
+
+function extractPapyrusFunction(sourceText, functionName) {
+  const pattern = new RegExp(`^(?:[A-Za-z_][A-Za-z0-9_\\[\\]]*[ \\t]+)?Function[ \\t]+${escapeRegex(functionName)}\\([^\\r\\n]*\\)[\\s\\S]*?^EndFunction`, "m");
+  const match = sourceText.match(pattern);
+  return match ? match[0] : null;
+}
+
+function normalizeSourceBlock(text) {
+  return String(text).replace(/\r\n/g, "\n").trim();
+}
+
+function countOccurrences(text, needle) {
+  return String(text).split(needle).length - 1;
+}
+
+function escapeRegex(text) {
+  return String(text).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function toPosix(filePath) {

@@ -383,11 +383,11 @@
         },
         {
           "actorValue": "DamageResist",
-          "magnitude": 8,
+          "magnitude": 50,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "Z'en keeps the ledger of toil and redress with you. Speech +25, Carry Weight +80, Armor +8.",
+      "playerFacingText": "Z'en keeps the ledger of toil and redress with you. Speech +25, Carry Weight +80, Armor +50.",
       "signature": "Z'en's moral economy: debt honored, restitution, proportionate redress -- NOT generic commerce or trade profit. Z'en is the god of toil/debt, distinct from Zenithar. Comparable richness through the accounting of obligation. Champion Survey text is the V1 recognition surface."
     },
     {
@@ -403,11 +403,11 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 5,
+          "magnitude": 15,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "The road toughens the pariah. Armor +5."
+      "playerFacingText": "The road toughens the pariah. Armor +15."
     },
     {
       "emphasis": "BanditRoad",
@@ -422,7 +422,7 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 15,
+          "magnitude": 30,
           "effectName": "Armor"
         },
         {
@@ -431,7 +431,7 @@
           "effectName": "Health Regeneration"
         }
       ],
-      "playerFacingText": "The outsider survives what should have ended them. Armor +15, Health Regeneration +10%."
+      "playerFacingText": "The outsider survives what should have ended them. Armor +30, Health Regeneration +10%."
     },
     {
       "emphasis": "BanditRoad",
@@ -446,7 +446,7 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 27,
+          "magnitude": 50,
           "effectName": "Armor"
         },
         {
@@ -460,7 +460,7 @@
           "effectName": "Sneak"
         }
       ],
-      "playerFacingText": "Baan Dar's luck holds when the odds say it should not. Armor +27, Health Regeneration +25%, Sneak +10.",
+      "playerFacingText": "Baan Dar's luck holds when the odds say it should not. Armor +50, Health Regeneration +25%, Sneak +10.",
       "signature": "Road-survival and pariah luck under Baan Dar (tolerated stance) -- road theology, NOT generic crime or thievery. Comparable richness through survival/reversal resilience. Champion Survey text is the V1 recognition surface."
     }
   ],
@@ -584,5 +584,6 @@
     "wiring": "Same run: wire the new broad Y'ffre T2 property (PDV_Bless_Bosmer_Yffre_T2; T1 already exists, granted via PATRON_STATE_BROAD) + 12 path-family reward props (4 paths x T1/T2/T3) + PDV_SPEL_Neglect_Bosmer on PDV__ManagerQuest. Broad T2 grant is SUPPRESSED whenever a path is committed (broad < path family). Path-family grants gate on PDV_State_BosmerPath (which path) + path-progress tier (mirror SyncKhajiitEmphasisRewards/Family: one active path family, T1>=Seeker, T2>=Devoted, T3>=Champion). DO NOT add deities to FLST 017E47 (Yffre/Zen/BaanDar already present). DO NOT recreate the Green Pact violation model.",
     "verify": "housecarl readback (profile Devotion Dev): the 14 new SPEL exist with correct MGEF actor-values/magnitudes (no magnitude > ~12%); PDV_Bless_Bosmer_Yffre_T1 unchanged/reused; FLST 017E47 unchanged for Yffre/Zen/BaanDar; PDV_Deity_BaanDar carries Stance_Bosmer=TOLERATED; PDV_State_BosmerPath enum resolves; broad-T2 suppression and per-path family gates resolve. Then runtime smoke (QASmoke routes 100-107 per PDV_BetaTestPacket_Bosmer.md: RouteBosmerOldContractProperHunt..RouteBosmerBanditRoadReversal complete markers)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
+  "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."
 }

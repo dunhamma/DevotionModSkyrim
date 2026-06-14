@@ -1,6 +1,6 @@
 # PDV Writer Review -- Index
 
-**Regenerated:** 2026-06-01 via `node tools/pdv_writer_review.mjs`
+**Regenerated:** 2026-06-14 via `node tools/pdv_writer_review.mjs`
 **Sources:** `race-sheets/PDV_RaceContent_Manifest.md` (races) and `race-sheets/PDV_DaedricContent_Manifest.md` (Princes)
 
 Per-race and per-Prince writer-review files. Each `<Name>_Review.md` groups every drafted in-game string by the moment in which the player encounters it, with deity/Prince tone, voice, char count vs hard cap, and an empty `Edit` column for revisions.
@@ -13,9 +13,9 @@ Per-race and per-Prince writer-review files. Each `<Name>_Review.md` groups ever
 | Orc | 50 | - | 10 | [Orc_Review.md](Orc_Review.md) | [Orc_Review.csv](Orc_Review.csv) |
 | Dunmer | 67 | - | 15 | [Dunmer_Review.md](Dunmer_Review.md) | [Dunmer_Review.csv](Dunmer_Review.csv) |
 | Altmer | 61 | - | 16 | [Altmer_Review.md](Altmer_Review.md) | [Altmer_Review.csv](Altmer_Review.csv) |
-| Khajiit | 52 | - | 15 | [Khajiit_Review.md](Khajiit_Review.md) | [Khajiit_Review.csv](Khajiit_Review.csv) |
-| Imperial | 73 | - | 14 | [Imperial_Review.md](Imperial_Review.md) | [Imperial_Review.csv](Imperial_Review.csv) |
-| Redguard | 62 | - | 15 | [Redguard_Review.md](Redguard_Review.md) | [Redguard_Review.csv](Redguard_Review.csv) |
+| Khajiit | 53 | - | 15 | [Khajiit_Review.md](Khajiit_Review.md) | [Khajiit_Review.csv](Khajiit_Review.csv) |
+| Imperial | 78 | - | 14 | [Imperial_Review.md](Imperial_Review.md) | [Imperial_Review.csv](Imperial_Review.csv) |
+| Redguard | 61 | - | 15 | [Redguard_Review.md](Redguard_Review.md) | [Redguard_Review.csv](Redguard_Review.csv) |
 | Bosmer | 61 | - | 13 | [Bosmer_Review.md](Bosmer_Review.md) | [Bosmer_Review.csv](Bosmer_Review.csv) |
 | Breton | 69 | - | 13 | [Breton_Review.md](Breton_Review.md) | [Breton_Review.csv](Breton_Review.csv) |
 | Argonian | 49 | - | 15 | [Argonian_Review.md](Argonian_Review.md) | [Argonian_Review.csv](Argonian_Review.csv) |

@@ -170,6 +170,7 @@ Stack snapshot: Hist, People, Void, posture, bed cadence, active favor, curse st
 Runtime proof command: node .\tools\pdv_phase20_runtime_check.mjs --race argonian
 Manual feel note: The player should understand whether they are maintained, distant, strained, silenced, or corrupted without needing Dark Brotherhood play.
 Content dependency: Current race-facing content is enough for hook validation; god/Daedric content is needed before exact Sithis, Molag Bal, Hircine, and recovery text is final.
+Readback note: DominationPressure now has a compile-clean manager writer as of 2026-06-14: Argonian + vampire + Molag Bal Seeker sets the existing posture-pressure flag and lets the Hist substrate resolve Corrupted(4). Runtime/manual proof of the transition remains pending.
 ```
 
 ### Orc
@@ -196,7 +197,7 @@ Content dependency: Current race-facing content is enough for hook validation; g
 Race: Redguard
 Lane type: P1 buildout packet
 Scaling role: Prepare sect proof so Crown, Forebear, and Ash'abah stay distinct beyond martial or undead content.
-Normal-play hook: Crown tomb respect, Forebear road or contract play, Ash'abah death duty, Far Shores private ritual, HoonDing cap candidate.
+Normal-play hook: Crown tomb respect, Forebear road or contract play, Ash'abah death duty, Far Shores portable token ritual, HoonDing cap candidate.
 Rejected generic hooks: Generic combat, generic body count, generic undead spam, fast travel, generic gold-making, Arkay shrine use as Tu'whacca replacement.
 Survey/status readout: Sect posture and Far Shores/Tu'whacca duty explain why the act mattered in Yokudan terms.
 Final placement: Plan one sect proof surface and one Far Shores/death-duty surface outside QASmoke before increasing death-duty rewards.
@@ -285,6 +286,7 @@ Stack snapshot: ConcordatStanding, public/private Talos state, primary patron, a
 Runtime proof command: node .\tools\pdv_verify.mjs --strict-phase8 --strict-phase20-race-costing
 Manual feel note: The audit fails if the player is rewarded for wearing faction membership instead of doing concrete civic work.
 Content dependency: God/Daedric content is needed before final civic Divines and taboo Prince response copy are locked.
+Readback note: Arkay/Stendarr Concordat secondary gain arrays are live/readback-clean as of 2026-06-14; exact source routing and runtime feel proof remain pending.
 ```
 
 ### Nord
@@ -350,19 +352,45 @@ The locked magnitudes and EditorIDs for the next ESP-record build pass live in
 `PDV_NextBuildPass_RecordSpec.md` (record list + magnitude kept together per ruling). Rulings made
 with the user 2026-06-14. Headline magnitudes recorded there:
 
-- **Altmer ThalmorAlignment** (USER OVERRIDE of the locked Altmer doc): -100..+100 5-state Concordat
-  mirror, dual self-cultivation/enforcement band multipliers (x1.5..x0.5), Lorkhan modifier x0.75..x1.5,
-  point table +15/+20/-15/-20/-5/-25. Altmer race doc needs later reconciliation.
+- **2026-06-14 partial closeout:** the consolidated build pass consumed sec.1
+  for the first tranche. `PDV_RepTrack_ThalmorAlignment` is live/read back as a
+  -100..+100 5-state Concordat mirror, the manager owns
+  `PDV_ThalmorAlignmentTrack`, and Altmer Survey now uses the alignment-path
+  base after track readback. This is readback/compiler proof only; no runtime or
+  manual spot-check claim is made here. Sections 2-8 remain follow-up ESP
+  tranches.
+- **Altmer ThalmorAlignment** (USER OVERRIDE reconciled into the Altmer race
+  doc): -100..+100 5-state Concordat mirror. The live first-tranche Lorkhan
+  modifier is x0.75/x0.875/x1.0/x1.25/x1.5. The separate self-cultivation and
+  enforcement signal multiplier helper, plus point-table routes
+  +15/+20/-15/-20/-5/-25, remain deferred until those signal routes are
+  implemented.
 - **Breton KnightlyVowIntegrity:** breaches TG -30 / DB -40 / innocent-kill -15 / abandon-NPC -10;
-  suppression below-50 x0.75 (Stendarr x0.5) and below-25 x0.5 (Stendarr x0.25); 4 BC-0477 creed-loss spells.
+  suppression below-50 x0.75 (Stendarr x0.5) and below-25 x0.5 (Stendarr x0.25); 4 BC-0477 creed-loss
+  spells. Threshold HUD notices are source/compile/readback-clean as of 2026-06-14; breach-source
+  routing and in-game Active Effects proof remain pending.
 - **Orc Witnessed (5 beats):** Argonian-variety mirror; Trial of Iron 4-choice (+5 each / Yoke +15
   carry), Four Holds +1.0 x4, Code Holds survival +0.5, Hearth-Held bed-of-choice, Watchers notif 1/dawn.
+  Code Holds source/record/readback is live as of 2026-06-14: one shared below-20% combat-session hook
+  marks the dip, then Orc pays out on survived combat exit.
 - **Redguard Far Shores:** DELTA_FAR_SHORES_TOKEN 1.0; token UNCONDITIONAL V1 (BC-0524); Ash'abah category-gate.
 - **Argonian:** Sithis T3 = StaminaRateMult +10% passive + 50-stamina near-death burst (1/day);
-  curse MESGs (BC-0642); DominationPressure at Molag Bal>=25 + vampire; Hist creed-loss -4/-8/-6.
-- **Dunmer:** werewolf Layer-2 0.75x Good Daedra; Grey Quarter +0.75/act + Mephala +2.0 Champion;
-  dawn/dusk 3-hr windows +0.25.
-- **Orc dawn-side:** oath-break DELTA -1.5; forge/strength kept on the likes/dislikes faucet (no new hooks).
+  curse MESGs (BC-0642); DominationPressure at Molag Bal>=25 + vampire is manager-live/readback-clean;
+  Hist creed-loss -4/-8/-6.
+  Sithis T3 source/record/readback is live as of 2026-06-14: passive T3 plus a once/day shared
+  below-20% burst. Runtime/manual proof remains pending.
+- **Dunmer:** werewolf Layer-2 0.75x Good Daedra is manager-source/compile-clean as of 2026-06-14;
+  dawn/dusk 3-hr windows +0.25 are source/compile-clean for portable prayer only. Grey Quarter +0.75/act
+  + Mephala +2.0 Champion and the outdoor Good Daedra shrine emitter remain open.
+- **Orc dawn-side:** oath-break DELTA -1.5 source route and reusable receiver route 74 are
+  compile-clean as of 2026-06-14; exact quest/failure emitters remain deferred. Forge/strength stay
+  on the likes/dislikes faucet.
+- **Orc Witnessed:** first record tranche is live/readback-clean as of 2026-06-14 for Trial of Iron
+  support spells, Watchers notices, Hearth-Held spell/notices, and Four Holds hold/milestone
+  messages. Four Holds route 75 is source/compile/verifier-clean with StorageUtil one-shot keys,
+  and its four added QASmoke ACTI/REFR proof surfaces are readback-clean. Runtime behavior for
+  Trial of Iron/Watchers/Hearth-Held, Four Holds runtime activation, and final-world Four Holds
+  placement/proof remain follow-up work.
 - **Imperial Concordat:** Enforcer Arkay/Stendarr -15% daily, Open Defiant Stendarr +15%; graduated
   point table (+/-5/10/15/20) replacing the flat +/-15.
 

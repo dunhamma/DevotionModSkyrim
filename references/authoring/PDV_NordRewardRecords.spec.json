@@ -333,7 +333,7 @@
       "effects": [
         {
           "actorValue": "StaminaRateMult",
-          "magnitude": 13,
+          "magnitude": 10,
           "effectName": "Stamina Regeneration"
         },
         {
@@ -342,7 +342,7 @@
           "effectName": "Frost Resistance"
         }
       ],
-      "playerFacingText": "The open sky steadies you against the cold. Stamina Regeneration +13%, Frost Resistance +10%."
+      "playerFacingText": "The open sky steadies you against the cold. Stamina Regeneration +10%, Frost Resistance +10%."
     },
     {
       "emphasis": "Kyne",
@@ -356,7 +356,7 @@
       "effects": [
         {
           "actorValue": "StaminaRateMult",
-          "magnitude": 23,
+          "magnitude": 20,
           "effectName": "Stamina Regeneration"
         },
         {
@@ -365,7 +365,7 @@
           "effectName": "Frost Resistance"
         }
       ],
-      "playerFacingText": "Kyne's breath is in the wind at your back. Stamina Regeneration +23%, Frost Resistance +25%.",
+      "playerFacingText": "Kyne's breath is in the wind at your back. Stamina Regeneration +20%, Frost Resistance +25%.",
       "signature": "Carries the scripted T3 signature 'The Storm Answers' (see PDV_Phase2_CapstoneSignatures.md, Nord). Stat half above is the existing capstone; the scripted signature rides on top."
     },
     {
@@ -468,7 +468,7 @@
       "effects": [
         {
           "actorValue": "StaminaRateMult",
-          "magnitude": 13,
+          "magnitude": 10,
           "effectName": "Stamina Regeneration"
         },
         {
@@ -477,7 +477,7 @@
           "effectName": "Block"
         }
       ],
-      "playerFacingText": "You stand the trials Tsun sets. Stamina Regeneration +13%, Block +10."
+      "playerFacingText": "You stand the trials Tsun sets. Stamina Regeneration +10%, Block +10."
     },
     {
       "emphasis": "Tsun",
@@ -491,7 +491,7 @@
       "effects": [
         {
           "actorValue": "StaminaRateMult",
-          "magnitude": 23,
+          "magnitude": 20,
           "effectName": "Stamina Regeneration"
         },
         {
@@ -501,11 +501,11 @@
         },
         {
           "actorValue": "DamageResist",
-          "magnitude": 10,
+          "magnitude": 50,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "Tsun guards the bridge at your back. Stamina Regeneration +23%, Block +22, Armor +10.",
+      "playerFacingText": "Tsun guards the bridge at your back. Stamina Regeneration +20%, Block +22, Armor +50.",
       "signature": "Carries the scripted T3 signature 'The Shield-Thane's Trial' (see PDV_Phase2_CapstoneSignatures.md, Nord). Stat half above is the capstone; the scripted signature rides on top."
     },
     {
@@ -520,11 +520,11 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 5,
+          "magnitude": 15,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "The shield-thane of just spoils guards you. Armor +5."
+      "playerFacingText": "The shield-thane of just spoils guards you. Armor +15."
     },
     {
       "emphasis": "Stuhn",
@@ -538,7 +538,7 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 15,
+          "magnitude": 30,
           "effectName": "Armor"
         },
         {
@@ -547,7 +547,7 @@
           "effectName": "Block"
         }
       ],
-      "playerFacingText": "Honored bonds shield you. Armor +15, Block +8."
+      "playerFacingText": "Honored bonds shield you. Armor +30, Block +8."
     },
     {
       "emphasis": "Stuhn",
@@ -561,7 +561,7 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 27,
+          "magnitude": 50,
           "effectName": "Armor"
         },
         {
@@ -575,7 +575,7 @@
           "effectName": "One-Handed"
         }
       ],
-      "playerFacingText": "Stuhn holds the line for the honorable. Armor +27, Block +18, One-Handed +8.",
+      "playerFacingText": "Stuhn holds the line for the honorable. Armor +50, Block +18, One-Handed +8.",
       "signature": "Carries the scripted T3 signature 'Just Spoils, Honored Bonds' (see PDV_Phase2_CapstoneSignatures.md, Nord). Stat half above is the capstone; the scripted signature rides on top."
     },
     {
@@ -590,11 +590,11 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 5,
+          "magnitude": 15,
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "Defiance held in secret hardens you. Armor +5."
+      "playerFacingText": "Defiance held in secret hardens you. Armor +15."
     },
     {
       "emphasis": "Talos",
@@ -608,7 +608,7 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 15,
+          "magnitude": 30,
           "effectName": "Armor"
         },
         {
@@ -617,7 +617,7 @@
           "effectName": "One-Handed"
         }
       ],
-      "playerFacingText": "The old faith steels your arm. Armor +15, One-Handed +8."
+      "playerFacingText": "The old faith steels your arm. Armor +30, One-Handed +8."
     },
     {
       "emphasis": "Talos",
@@ -631,7 +631,7 @@
       "effects": [
         {
           "actorValue": "DamageResist",
-          "magnitude": 27,
+          "magnitude": 50,
           "effectName": "Armor"
         },
         {
@@ -640,7 +640,7 @@
           "effectName": "One-Handed"
         }
       ],
-      "playerFacingText": "The Hero-God of Man stands with the faithful. Armor +27, One-Handed +20.",
+      "playerFacingText": "The Hero-God of Man stands with the faithful. Armor +50, One-Handed +20.",
       "signature": "Carries the scripted T3 signature 'Triumph of Faithful Defiance' (see PDV_Phase2_CapstoneSignatures.md, Imperial Talos -- REUSED by Nord Talos). Reached only by costly faithful defiance, never compliance. Stat half above is the capstone; the scripted signature rides on top."
     }
   ],
@@ -788,5 +788,6 @@
     "wiring": "Wire the new broad Old Ways T2 property (PDV_Bless_Nord_OldWays_T2; T1 already exists, granted via PATRON_STATE_BROAD) + the focused reward props on PDV__ManagerQuest: Old Ways spine = Kyne T1/T2/T3, Shor T1/T2/T3, Tsun T1/T2/T3, Stuhn T1/T2/T3, Talos T1/T2/T3; Nine Divines = the 8 Divine families (Akatosh/Mara/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth T1/T2/T3 each) + reused Talos family. Also wire the 3 new deity props PDV_Shor/PDV_Tsun/PDV_Stuhn. Broad T2 grant is SUPPRESSED whenever an active focused patron is set (broad < focused). Focused grants gate on PDV_State_NordPantheonBaseline lane eligibility + the patron tier (mirror SyncKhajiitEmphasisRewards/Family: one active focus, T1>=Seeker, T2>=Devoted, T3>=Champion). Talos reward props additionally require faithful-defiance signal eligibility (compliance never scores). Add ONLY Shor/Tsun/Stuhn to FLST 017E47 (Kyne/Talos and the 8 Divines are already present or Imperial-added). DO NOT recreate PDV_SPEL_Neglect_Kyne.",
     "verify": "housecarl readback (profile Devotion Dev): the 3 new deity QUSTs (Shor/Tsun/Stuhn) exist with FormVersion 44, SGE flag, correct VMAD script + DeityName/DeityIndex/Stance_Nord=0, and appear in the SEQ; FLST 017E47 grew by exactly 3 (Shor/Tsun/Stuhn) and Kyne/Talos/Divines are present once each; the Old Ways focused SPEL (Kyne/Shor/Tsun/Stuhn/Talos T1/T2/T3) and broad T2 exist with correct MGEF actor-values/magnitudes (no combat magnitude > 12%); the Nine Divines per-god Nord families resolve once authored; the 8 Divines carry Stance_Nord=NATIVE (reconciled, not recreated); PDV_Bless_Nord_OldWays_T1 and PDV_SPEL_Neglect_Kyne are unchanged/reused; PDV_State_NordPantheonBaseline enum resolves; broad-T2 suppression and focused/lane gates resolve. Then runtime smoke (QASmoke routes 70-73 per the costing manifest; RouteNordOldWaysState / RouteNordHircineArkayEdge markers per PDV_BetaTestPacket_Nord.md)."
   },
-  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run"
+  "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
+  "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."
 }

@@ -5,10 +5,10 @@ Contract: PDV_BetaContract.csv (768 rows). Gate fails on unwaived GAP only;
 GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, then either
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
-Verdicts: PASS=332 | NEEDS-MANUAL=293 | GAP-REVIEW=82 | FUTURE=59 | WAIVED=2
-Layers: source=live; esp=1465 EditorIDs; runtime=read-only from gate ledger.
+Verdicts: PASS=338 | NEEDS-MANUAL=292 | GAP-REVIEW=77 | FUTURE=59 | WAIVED=2
+Layers: source=live; esp=1517 EditorIDs; runtime=read-only from gate ledger.
 
-## GAP-REVIEW (82)
+## GAP-REVIEW (77)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
@@ -39,9 +39,6 @@ Layers: source=live; esp=1465 EditorIDs; runtime=read-only from gate ledger.
 | BC-0562 | curse_daedric | Altmer | Vampire (no restoration) | missing: PDV_State_AltmerVampireTerminal | PDV_RaceDesign_Altmer.md -- Curse State Summary / Vampire |
 | BC-0570 | curse_daedric | Dunmer | Dunmer ancestor silence / RestoredScarred posture on vampire cure | missing: PDV_State_DunmerAncestorPosture | PDV_RaceEffectReviewLedger.md -- Dunmer layered baseline row, curse/Daedric; PDV_RaceRewar |
 | BC-0573 | curse_daedric | Imperial | Vampire | missing: PDV_State_ImperialVampireHistory | PDV_RaceDesign_Imperial.md -- Curse State Summary / Vampire |
-| BC-0574 | curse_daedric | Khajiit | Khajiit ShadowDrift boundary: not triggered by ordinary night behavior | missing: PDV_State_KhajiitLunarPosture | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Khajiit, Needs verifier/proof; PDV_RaceEffe |
-| BC-0575 | curse_daedric | Khajiit | Vampire (Corrupted posture) | missing: PDV_State_KhajiitLunarPosture | PDV_RaceDesign_Khajiit.md -- Vampire posture (LOCKED) + Curse State Summary |
-| BC-0576 | curse_daedric | Khajiit | Werewolf (Strained posture) | missing: PDV_State_KhajiitLunarPosture | PDV_RaceDesign_Khajiit.md -- Werewolf posture (LOCKED) + ShadowDrift boundary (LOCKED) |
 | BC-0577 | curse_daedric | Nord | Hircine | missing: PDV_State_NordCurse | PDV_RaceDesign_Nord.md -- Curse State Summary / Phase 13 lock (LOCKED) |
 | BC-0589 | runtime_wiring | ALL | FLST P2 receiver shells - all 34 races | missing: PDV_Player (NAMING-DRIFT? found PDV_PlayerEvents), PDV_Phase20_P2ImmersiveReceivers | PDV_Phase20_ExpandedSignalArchitecture.md - Purpose / status note (34 shells wired) |
 | BC-0593 | runtime_wiring | ALL | PDV_FavorFamily_KnightJustice - router registration | missing: PDV_FavorFamily_KnightJustice | PDV_TriggerTopups_Exchange_KnightsRoad.md - Integration (per Architecture:287) |
@@ -51,7 +48,6 @@ Layers: source=live; esp=1465 EditorIDs; runtime=read-only from gate ledger.
 | BC-0637 | surfacing | Altmer | emergence transition -- focus devoted | missing: PDV_Notif_Altmer_Focus_DevotedEntry | PDV_TransitionSurfacing_CoverageMap.md Section2 emergence table -- Altmer row |
 | BC-0639 | surfacing | Altmer | neglect transition | missing: PDV_Notif_Altmer_Pantheon_ObservantLapse | PDV_TransitionSurfacing_CoverageMap.md Section5 neglect table -- Altmer row |
 | BC-0641 | surfacing | Altmer | tier transition -- Observant/Faithful | missing: PDV_Notif_Altmer_Pantheon_ObservantEntry, PDV_Notif_Altmer_Pantheon_FaithfulEntry | PDV_TransitionSurfacing_CoverageMap.md Section1 tier table -- Altmer row |
-| BC-0642 | surfacing | Argonian | curse transition | missing: PDV_Msg_Argonian_CurseState_, PDV_Msg_Argonian_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md Section3 curse table -- Argonian row |
 | BC-0644 | surfacing | Argonian | neglect transition | missing: PDV_Notif_Argonian_Observant_Lapse | PDV_TransitionSurfacing_CoverageMap.md Section5 neglect table -- Argonian row |
 | BC-0646 | surfacing | Argonian | tier transition -- Observant/Faithful | missing: PDV_Notif_Argonian_Observant_Entry, PDV_Notif_Argonian_Faithful_Entry | PDV_TransitionSurfacing_CoverageMap.md Section1 tier table -- Argonian row |
 | BC-0647 | surfacing | Bosmer | curse transition | missing: PDV_Msg_Bosmer_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md Section3 curse table -- Bosmer row |
@@ -72,12 +68,12 @@ Layers: source=live; esp=1465 EditorIDs; runtime=read-only from gate ledger.
 | BC-0669 | surfacing | Imperial | neglect transition | missing: PDV_Notif_Imperial_Observant_Lapse | PDV_TransitionSurfacing_CoverageMap.md Section5 neglect table -- Imperial row |
 | BC-0670 | surfacing | Imperial | reorientation transition -- Concordat standing | missing: PDV_Notif_Imperial_Concordat_ | PDV_TransitionSurfacing_CoverageMap.md Section4 reorientation table -- Imperial row; PDV_A |
 | BC-0671 | surfacing | Imperial | tier transition -- Observant/Faithful | missing: PDV_Notif_Imperial_Observant_Entry, PDV_Notif_Imperial_Faithful_Entry | PDV_TransitionSurfacing_CoverageMap.md Section1 tier table -- Imperial row |
-| BC-0672 | surfacing | Khajiit | curse transition -- shadow drift | missing: PDV_Msg_Khajiit_ShadowDriftEntry, PDV_Msg_Khajiit_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md Section3 curse table -- Khajiit row |
+| BC-0672 | surfacing | Khajiit | curse transition -- shadow drift | missing: PDV_Msg_Khajiit_ShadowDriftEntry | PDV_TransitionSurfacing_CoverageMap.md Section3 curse table -- Khajiit row |
 | BC-0673 | surfacing | Khajiit | emergence transition -- silent-patron focus emergence | missing: PDV_Notif_Khajiit_FocusEmergence, PDV_RaceDesign_Khajiit | PDV_TransitionSurfacing_CoverageMap.md Section2 emergence table -- Khajiit row; PDV_Archit |
 | BC-0674 | surfacing | Khajiit | neglect transition | missing: PDV_Notif_Khajiit_Lunar_ObservantLapse | PDV_TransitionSurfacing_CoverageMap.md Section5 neglect table -- Khajiit row |
 | BC-0676 | surfacing | Khajiit | tier transition -- Observant/Faithful | missing: PDV_Notif_Khajiit_Lunar_ObservantEntry, PDV_Notif_Khajiit_Lunar_FaithfulEntry | PDV_TransitionSurfacing_CoverageMap.md Section1 tier table -- Khajiit row |
 | BC-0677 | surfacing | Nord | Book-read signals | missing: PDV_Notif_Nord_FavorNoted_OldWays_BookRead_, PDV_Notif_Nord_FavorNoted_HircineArkay_BookRead_TotemsHircine | PDV_RaceDesign_Nord.md -- Signal Examples (book-read rows) |
-| BC-0680 | surfacing | Nord | neglect transition | missing: PDV_Notif_Nord_Observant_Lapse, PDV_Notif_Nord_, PDV_Notif_Nord_General_AncestorsQuiet | PDV_TransitionSurfacing_CoverageMap.md Section5 neglect table -- Nord row |
+| BC-0680 | surfacing | Nord | neglect transition | missing: PDV_Notif_Nord_Observant_Lapse | PDV_TransitionSurfacing_CoverageMap.md Section5 neglect table -- Nord row |
 | BC-0683 | surfacing | Nord | tier transition -- Observant/Faithful | missing: PDV_Notif_Nord_Observant_Entry, PDV_Notif_Nord_Faithful_Entry | PDV_TransitionSurfacing_CoverageMap.md Section1 tier table -- Nord row |
 | BC-0684 | surfacing | Orc | curse transition | missing: PDV_Msg_Orc_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md Section3 curse table -- Orc row |
 | BC-0685 | surfacing | Orc | emergence transition -- life-mode entry | missing: PDV_Notif_Orc_LifeMode_, PDV_Notif_Orc_LifeMode_Stronghold_Entry | PDV_TransitionSurfacing_CoverageMap.md Section2 emergence table -- Orc row and Section4 re |
@@ -89,13 +85,12 @@ Layers: source=live; esp=1465 EditorIDs; runtime=read-only from gate ledger.
 | BC-0703 | other | ALL | Altmer Lorkhan economy guardrail | missing: PDV_ALT_LORKHAN_T1_DIRECT | PDV_Architecture_v3.md Sectionv3.84/v3.85 Altmer economy guardrail; PDV_TargetEndStates_1. |
 | BC-0710 | other | ALL | D-12 Daedric separate operational roster | missing: PDV_FLST_AllDaedricPaths | PDV_Architecture_v3.md Section11.6 D-12 |
 | BC-0713 | other | ALL | D-15 Daedric stigma model | missing: PDV_GLO_DaedricExposure | PDV_Architecture_v3.md Section11.6 D-15 |
-| BC-0714 | other | ALL | D-16 Curse-access Daedric template | missing: PDV_DaedricPath_MolagBal | PDV_Architecture_v3.md Section11.6 D-16 |
 | BC-0732 | other | ALL | Mara privilege pilot | missing: PDV_Privilege_Mara_ | PDV_Architecture_v3.md Section21 forward phase plan table Phase 11 |
 | BC-0735 | other | ALL | Native-track-as-parity piety model | missing: SyncRewards | PDV_Architecture_v3.md Sectionv3.84 addendum locked design rails |
 | BC-0741 | other | ALL | Offer choices Renounce path | missing: ProcessCommitmentOffers (NAMING-DRIFT? found RunDawnProcessCommitmentOffersNoop) | PDV_Architecture_v3.md Section12.5 offer choices |
 | BC-0760 | other | Khajiit | Khajiit no-offer exception | missing: ProcessCommitmentOffers (NAMING-DRIFT? found RunDawnProcessCommitmentOffersNoop) | PDV_Architecture_v3.md Section12.4a Khajiit emergent patron exception (LOCKED); Section21. |
 
-## NEEDS-MANUAL (293)
+## NEEDS-MANUAL (292)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
@@ -171,7 +166,6 @@ Layers: source=live; esp=1465 EditorIDs; runtime=read-only from gate ledger.
 | BC-0114 | signal_channel | Redguard | HoonDing | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceSignalMatrix.csv - Redguard / HoonDing lane |
 | BC-0116 | signal_channel | Redguard | Leki / Onsi | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceSignalMatrix.csv - Redguard / Leki/Onsi lane |
 | BC-0117 | signal_channel | Redguard | Tu'whacca / ancestor layer | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceSignalMatrix.csv - Redguard / Ancestor layer + Tu'whacca |
-| BC-0118 | signal_channel | Redguard | Tu'whacca devotional surface | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Redguard.md -- Tu'whacca devotional surface (LOCKED FOR 1.0) |
 | BC-0134 | part_b_profile | ALL | Meridia | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Daedric_DecisionPacket_CAT4.md D-15.2 Tolerated class; PDV_DaedricPrinceRecordContract |
 | BC-0143 | part_b_profile | ALL | Survey/status -- no exclusive-path ambiguity | No machine-checkable identifier extractable from requirement/check_hint. | PDV_PreBetaRaceAcceptanceRubric.md Section4 Survey And Status Legibility -- Fail examples  |
 | BC-0145 | part_b_profile | ALL | Survey/status legibility -- expected and edge builds | No gate-ledger verdict found for this race. | PDV_PreBetaRaceAcceptanceRubric.md Section8 Expected And Edge Builds -- Pass requires (thi |
@@ -247,8 +241,8 @@ Layers: source=live; esp=1465 EditorIDs; runtime=read-only from gate ledger.
 | BC-0374 | reward_tier | Khajiit | Khajiit Baan Dar T3 -- Baan Dar's Luck (LOCKED) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Khajiit LOCKED section, Baan Dar |
 | BC-0377 | reward_tier | Khajiit | Khajiit Khenarthi T3 -- Khenarthi's Wind (LOCKED) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Khajiit LOCKED section, Khenarthi |
 | BC-0380 | reward_tier | Khajiit | Khajiit Rajhin T3 -- Rajhin's Shadow (LOCKED) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Khajiit LOCKED section, Rajhin; LOCKED rules rule 3 |
-| BC-0381 | reward_tier | Khajiit | Khajiit reward ceiling: lunar + one emphasis + one favor, no third loud stack | Gate ledger verdict: Conditional (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Khajiit, Reward ceiling; PDV_RaceEffectRevi |
-| BC-0382 | reward_tier | Khajiit | Khajiit reward floor: viable at Faithful without forced focus or phase scheduling | Gate ledger verdict: Conditional (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Khajiit, Reward floor |
+| BC-0381 | reward_tier | Khajiit | Khajiit reward ceiling: lunar + one emphasis + one favor, no third loud stack | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Khajiit, Reward ceiling; PDV_RaceEffectRevi |
+| BC-0382 | reward_tier | Khajiit | Khajiit reward floor: viable at Faithful without forced focus or phase scheduling | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Khajiit, Reward floor |
 | BC-0383 | reward_tier | Khajiit | Khenarthi Champion | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Khajiit.md -- Khenarthi Champion |
 | BC-0385 | reward_tier | Nord | Kyne/Kynareth | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Nord.md -- Tier Rewards (Kyne/Kynareth rows) |
 | BC-0386 | reward_tier | Nord | Nord Kyne T3 -- The Storm Answers | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Nord section (DRAFT); LOCKED rules rule 3 |
@@ -464,7 +458,7 @@ Layers: source=live; esp=1465 EditorIDs; runtime=read-only from gate ledger.
 | BC-0762 | other | Nord | Froki/Heimskr/Andurs/Aela recognition dialogue | 1.0/V2 tier; tracked, not gated. | PDV_TargetEndStates_1.0.md Phase 18A/B runtime closeout; PDV_Architecture_v3.md Section21. |
 | BC-0763 | other | Nord | Nord full stack audit (P2 audit-only lane) | 1.0/V2 tier; tracked, not gated. | references/authoring/PDV_PreBetaRaceGateLedger.md Nord; references/authoring/PDV_PreBetaRa |
 
-## PASS (332)
+## PASS (338)
 
 (passing rows listed in the CSV only)
 

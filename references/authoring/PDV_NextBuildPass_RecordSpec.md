@@ -64,8 +64,24 @@ Include the Concordat extreme-reset gate (`HasExtremeResetGate`/`UnlockExtremeRe
 Points are ABSOLUTE track adjustments (no band multiplier on the points themselves; band multipliers
 apply only to piety gain and Lorkhan penalties).
 
-**Open:** which vanilla quest stages/dialogue emit each of the 6 actions (signal-routing, deferred to
-the build pass). Whether AltmerCrisis state should sync with this track.
+**Emitters (built 2026-06-14, source/compile-clean):** the manager owns
+`ApplyAltmerAlignmentAction(actionKey, reason)` + `GetAltmerThalmorPointsForAction` (the 6-action
+point table) and `HandleAltmerAlignmentSignal` (Altmer-origin gate + per-source one-shot). Three of
+the six actions are live: **read_banned_texts** (-5; The Talos Mistake `000ED04D` via the book-read
+hook), **consort_with_daedra** (-25; any Daedric artifact equip via `PDV_FLST_FaucetDaedricArtifacts`),
+and **kill_thalmor_agent** (-20; player kill of a `ThalmorFaction 039F26` member via
+`PDV_ActionRouter.HandleStoryKillActor`, gated on `aiRelationshipRank > -2` = not a pre-set enemy, so
+open kills and assassinations both count; pre-scripted enemy Thalmor at rank <= -2 are excluded).
+
+**Open / deferred (no clean vanilla hook):** arrest_talos_worshipper (no Talos-arrest crime flag),
+complete_thalmor_mission (radiant loop, no terminal stage), help_thalmor_prisoner_escape (manual
+dialogue). Whether AltmerCrisis state should sync with this track.
+
+**Route-proven 2026-06-14 (Papyrus log):** read_banned_texts -5, consort_with_daedra -25 (x2 distinct
+artifacts, per-artifact one-shot held), and kill_thalmor_agent -20 each moved the track (0 -> -5 ->
+-30 -> -55 -> raw -75). NOTE: the committed band label lags the raw value via the track's lock-in /
+pending-transition grace, so a single signal does NOT flip the Survey state label. Full manual
+beta-feel proof (Survey clarity, stack) remains separate.
 
 ---
 
@@ -74,7 +90,15 @@ the build pass). Whether AltmerCrisis state should sync with this track.
 **Records (all grounded in `PDV_RaceDesign_Breton.md` 52-90):**
 - KnightlyVowIntegrity counter (exists; init 100 on Knight's Road, manager line ~10014). Bands:
   intact >=70, strained 30-69, broken <30 (existing labels, manager ~12032-12041).
-- Creed-loss SPEL set = the 4 BC-0477 spells (confirmed needed; only `PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal` currently exists):
+- Creed-loss SPEL set = the 4 BC-0477 spells. **Readback update 2026-06-14:** all four records now
+  exist and pass tightened `pdv-phase20-race-author --check-rewards` against
+  `PDV_BretonRewardRecords.spec.json`; all ten race reward specs now pass the same
+  tightened spell/effect readback after the 2026-06-14 reward refresh. This closes the
+  record/copy/archetype slice only.
+  **Runtime update 2026-06-14:** manager-side persistent spell application is now live:
+  `VowIntegrity` in the strained band, `Excommunication` in the broken band,
+  `ExposureRupture` at `WitchcraftExposure >= 100`, and Druidic fork betrayal through
+  the shared helper. This is compile/readback-proven, not in-game Active Effects proof.
   - `PDV_SPEL_CreedLoss_Breton_VowIntegrity` (Block -5% + Restoration -5%) -- fires when Integrity enters STRAINED (<70).
   - `PDV_SPEL_CreedLoss_Breton_ExposureRupture` (Conjuration -8% + Illusion -8%).
   - `PDV_SPEL_CreedLoss_Breton_Excommunication` (HealRateMult -8%) -- fires at BROKEN (<30).
@@ -107,7 +131,12 @@ the build pass). Whether AltmerCrisis state should sync with this track.
 Creed-loss spells are **persistent-while-in-band** (matches the band-state suppression model -- the
 spell is held while Integrity sits in its band, cleared on restoration above the band), NOT
 once-per-crossing.
-**Open:** threshold-crossing player notification text (cosmetic, build-pass).
+**Resolved 2026-06-14:** threshold-crossing HUD notification text now fires from the live manager when
+each persistent Breton creed-loss spell first becomes active (`VowIntegrity`, `Excommunication`,
+`ExposureRupture`, `DruidicForkBetrayal`). Backup:
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\breton-threshold-notices\PDV__ManagerQuest.psc.20260614-160858.bak`.
+**Open:** exact breach-source quest routing for the decrements, recovery/restoration routes, and
+in-game Active Effects proof for the persistent creed-loss spells.
 
 ---
 
@@ -121,16 +150,34 @@ Template = the proven Argonian variety set (`PDV_SPEL_ArgonianAdapt_*` 4 adaptat
 | **Trial of Iron** (rite) | `PDV_SPEL_Orc_TrialOfIron_Tusk` / `_Shield` / `_Hammer` / `_Yoke` <- `PDV_SPEL_ArgonianAdapt_*` | 4-choice swap rite (1 active). Tusk +5 unarmed, Shield +5 armor rating, Hammer +5 smithing, Yoke +15 carry weight. +0.5 piety per switch, 1/day, 7-day "not yet" safe. |
 | **Four Holds of the Code** (pilgrimage) | `PDV_State_OrcFourHolds` (or StorageUtil int keys) | First-arrival pulse at the 4 canonical strongholds (Dushnikh Yal, Mor Khazgur, Largashbur, Narzulbur): +1.0 piety each + mode-flavored notif; milestone on all 4. FormID-key anti-farm. |
 | **The Watchers** (observation line) | `PDV_Notif_Orc_Witnessed_TheWatchers_Stronghold` / `_City` / `_LegionExile` | Malacath rare line after qualifying conduct, cap 1/dawn. Mode-split text, unified cadence. Notif only (no piety). |
-| **The Code Holds** (survival beat) | `PDV_SPEL_OrcCodeHolds` <- `PDV_SPEL_ArgonianRootedRest` | On surviving below 20% health: regen pulse, once per combat. Observant/Faithful +2 hp/s 10s; Devoted +3 hp/s 10s + 30 stamina. +0.5 piety/combat. Quiet (effect only). |
+| **The Code Holds** (survival beat) | `PDV_SPEL_OrcCodeHolds` + `PDV_SPEL_OrcCodeHolds_Devoted` <- timed support spell path | **LIVE/readback-clean 2026-06-14.** On surviving combat after dropping below 20% health: regen pulse, once per combat. Observant/Faithful +2 hp/s 10s; Devoted +3 hp/s 10s + 30 stamina restore. +0.5 Malacath piety/combat. Quiet (effect only). |
 | **Hearth-Held** (self-made community) | `PDV_SPEL_OrcHearthHeld` + `PDV_Notif_Orc_HearthHeld_Declare` / `_Return` / `_MissedCadence` <- Argonian `PDV_SacredPlace` bed-of-choice | Declare one cell (forge/home/workplace preferred); 3 invested returns in 30 days; wake pulse. Mirror Argonian magnitudes. |
 
 **Pacing:** Stronghold ~3.3/day base; these beats add modest, anti-farmed piety (~0.5-1.0 each) and
 do not break the 30-45-day Champion curve. Life-mode multipliers x1.00/0.75/0.60 apply post-calc.
 
-**Open:** confirm no existing EditorID reservations for the new `PDV_SPEL_Orc_*`. Four Holds vehicle
-(StorageUtil ints vs full state enum -- recommend StorageUtil ints, simple one-shot tracker). Code
-Holds trigger event (on-first-dip-<20% vs on-combat-end-if-dipped). Hearth-Held cell restriction
-(forges+strongholds only vs any home/inn).
+**Record update 2026-06-14:** the first Witnessed record tranche is live/readback-clean through
+`PDV_OrcRewardRecords.spec.json`: Trial of Iron Tusk/Shield/Hammer/Yoke support spells, The Watchers
+mode-split MESG records, and Hearth-Held support spell + declare/return/missed-cadence MESG records
+exist and are wired on `PDV__ManagerQuest`. Backup:
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260614-165115.bak`.
+**Route/message update 2026-06-14:** Four Holds now uses the recommended StorageUtil one-shot
+tracker rather than a full state enum. Route 75 is compile/verifier-clean through
+`PDV_EventTypes`, `PDV_EventBus`, `PDV_EventSignalActivator`, `PDV_EventSignalEffect`,
+`PDV_Deity_Malacath`, and `PDV__ManagerQuest.HandleOrcFourHoldsVisit`; the four hold notifications
+plus the all-holds milestone MESG are live/readback-clean through `PDV_OrcRewardRecords.spec.json`.
+Backup: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-race-rewards\PlayerDevotion_Framework.esp.20260614-165810.bak`.
+Four added QASmoke ACTI/REFR proof surfaces for Dushnikh Yal, Mor Khazgur, Narzulbur, and
+Largashbur are also readback-clean; proof harness backups:
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-orc\PlayerDevotion_Framework.esp.20260614-170457.bak`
+and
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-proof-placements\PlayerDevotion_Framework.esp.20260614-170503.bak`.
+**Open:** final-world `ChangeLocation`/placement emitters for the four strongholds,
+Hearth-Held runtime cell restriction (forges+strongholds only vs any home/inn), and
+Trial-of-Iron/Watchers/Hearth-Held manager behavior remain deferred. Code Holds source/record/readback
+is closed, but runtime/manual proof of the combat-end survival payout remains pending. Four Holds is
+source/record/QASmoke-placement readback proof only until runtime route evidence and final-world
+stronghold-arrival emitters exist.
 
 ---
 
@@ -153,8 +200,26 @@ Holds trigger event (on-first-dip-<20% vs on-combat-end-if-dipped). Hearth-Held 
   thresholds. Enumerate the burden reasons in a curated table/comment: major death, undead, tomb,
   funerary duty (per the design lock). Exit = light/heavy path requirement stays categorical.
 
-**Open:** exact FormID of the portable Far Shores token *inventory object* (BC-0118; distinct from
-the spell). Whether Dawnguard cure-vampire quests fire Ash'abah burden entry.
+**Resolved/clarified 2026-06-14:** V1 does not ship a separate portable inventory object or
+private/home bonus for Far Shores. The live V1 surface is the `PDV.Redguard.FarShoresToken`
+StorageUtil proof texture, routed by `PDV_ACTI_RedguardFarShoresTokenSignal` /
+`PDV_REFR_RedguardFarShoresTokenSignal` to `HandleRedguardFarShoresToken`, and grants the
+unconditional support spell `PDV_Bless_Redguard_FarShoresToken` after daily-capped token proof.
+
+**Deferred exact-source routing:** generic vampirism cure already drives Redguard re-entry through
+`ApplyRedguardCurseHandlers` and `PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry`.
+Do not also treat Dawnguard cure as Ash'abah burden until an exact Dawnguard quest/stage source is
+read back and added to `PDV_FLST_P2_RedguardAshAbahSources`. A final-world portable inventory object
+remains a post-1.0 expansion option if the devotional token becomes a real item instead of the
+current proof-surface route.
+
+**Dawnguard-cure Ash'abah source -- readback determination (2026-06-14): DEFERRED.** DLC1VQ02
+"Bloodline" was read back (stages 0/5/6/7/8/9/10/15/20/25/30/40/180/190/200) and is the Dawnguard
+intro / side-CHOICE quest, NOT a vampire-cure quest -- there is no cure stage to map to an Ash'abah
+death-duty burden. The generic vampire-cure already drives Redguard Tu'whacca re-entry via
+`OnVampirismStateChanged` -> `ApplyRedguardCurseHandlers`. A dedicated "Dawnguard cure as Ash'abah
+burden" has no clean vanilla source; if pursued later, undead-heavy Dawnguard content (Soul Cairn,
+vampire-hunting) is the design candidate, not Bloodline.
 
 ---
 
@@ -169,6 +234,10 @@ the spell). Whether Dawnguard cure-vampire quests fire Ash'abah burden entry.
 - **Near-death burst:** below 20% health, +50 stamina regen for 10s, once per day. (Doc line 139.)
 - Keep the existing line-139 components: DB max standing + dialogue; post-DB-contract +10% movement /
   +15 sneak for 60s. Respects the ~12% always-on ceiling (passive small, burst is a one-off).
+- **LIVE/readback-clean 2026-06-14:** `PDV_Bless_Argonian_Sithis_T3` and
+  `PDV_SPEL_ArgonianSithisNearDeathBurst` are authored, wired to `PDV__ManagerQuest`, and checked by
+  `tools/pdv-phase20-race-author --check-rewards`. Runtime/manual proof of the below-20% once/day burst
+  remains pending.
 
 **Curse messages (BC-0642; new MESG <- Nord `PDV_Msg_Nord_CurseState_*`, manager lines 295-297):**
 `PDV_Msg_Argonian_CurseState_VampireOnset` / `_VampireCured` / `_WerewolfOnset` / `_WerewolfCured`.
@@ -180,6 +249,8 @@ Posture enum `PDV_State_ArgonianHistPosture`: Normal0/Distant1/Strained2/Silence
 `PDV_ArgonianRewardRecords.spec.json`). Clean Seeker-threshold gate; avoids fragile vanilla-feed
 detection. Neglect texture already exists: `PDV_MGEF_Neglect_ArgonianHist_HealRate` (HealRateMult -5)
 applies at posture Silenced or Corrupted.
+
+**Runtime update 2026-06-14:** Molag Bal is Argonian-accessible by record contract/readback (`statesByRace.Argonian = Curse`, live `PDV_DaedricPath_Molag` in `PDV_FLST_DaedricPaths_All`). The deployed manager now writes `PDV.Curse.Argonian.DominationPressure` from the existing Daedric path tier (`GetStoredTier() >= TIER_SEEKER`) while the player is Argonian + vampire, refreshes the Hist posture after Molag path piety changes, and keeps the legacy `PDV.Curse.Argonian.HistPosture` debug key synced to the substrate posture. The completeness contract row `BC-0714` was corrected from stale proposed `PDV_DaedricPath_MolagBal` to live `PDV_DaedricPath_Molag`; regenerated `pdv_completeness_audit` reports `PASS=337`, `GAP-REVIEW=77`, and `BC-0714` PASS. Proof is compile/readback only: `PDV__ManagerQuest` compile 0/0, Argonian reward-spec readback PASS, `pdv_completeness_audit` PASS, `pdv_content_verify` `FAIL=0 WARN=0 PASS=1080 INFO=4`, and default `pdv_verify` `FAIL=0 WARN=2 TODO=0 PASS=2929 INFO=43`. Runtime/manual proof of the Corrupted posture transition remains open.
 
 **Hist creed-loss dispatch values -- RESOLVED 2026-06-14 (exact, from
 `references/authoring/PDV_ArgonianRewardRecords.spec.json` creedViolation, target = PDV_Deity_Hist
@@ -193,52 +264,73 @@ piety / Hist substrate relation; medium/major only, no minor-tier loss):**
 
 Curse messages are **MESG** records (Nord precedent, manager 295-297), not INFO.
 
-**Open (genuinely build-pass, not doc-answerable):** is below-20%-health detection already hooked, or
-needs a combat poll? Is the Molag Bal path Argonian-accessible (gates the DominationPressure rule --
-confirm by grepping `PDV_DaedricPath_MolagBal` stance for Argonian at build time)?
+**Resolved in source/readback 2026-06-14:** below-20%-health detection is now hooked by the shared
+combat-session poll described in section 9. Runtime/manual proof of the Argonian once/day burst
+remains pending.
 
 ---
 
 ## 6. Dunmer -- werewolf Layer-2, Grey Quarter, dawn/dusk
 
-- **Layer-2 werewolf factor:** new `GetDunmerCurseLayerWeight(2)` returning **0.75x** for Good Daedra
+- **Layer-2 werewolf factor (SOURCE/COMPILE CLEAN 2026-06-14):** `GetDunmerCurseLayerWeight(2)` returns **0.75x** for Good Daedra
   (Azura/Boethiah/Mephala) piety under werewolf curse (parallels the existing Layer-1 0.5x ancestor
-  `GetDunmerCurseLayerWeight(1)`, manager 9516-9526). Applies to portable-shrine prayer, home bonus,
-  and Azura/Boethiah/Mephala focus signals (shrine activations, major quest completions). Locked by
-  `PDV_RaceDesign_Dunmer.md:273`.
+  `GetDunmerCurseLayerWeight(1)`). Applies to the Good Daedra memory pulse from portable-shrine prayer
+  and home bonus, plus Azura/Boethiah/Mephala focus signals (shrine activations, major quest
+  completions). The source path now uses `AwardCuratedSignalScaled(...)` for the affected Layer-2
+  awards while leaving other curated signals unscaled. Locked by `PDV_RaceDesign_Dunmer.md:273`.
+  Runtime/manual proof remains pending.
 - **Grey Quarter solidarity:** Layer-1 small burst **+0.75 piety** per curated act (per-NPC daily
   cooldown), curated whitelist of ~5-8 core Windhelm Dunmer NPCs/quests; plus **Mephala focus +2.0**
   at Champion for protected-secrets/community-aid.
 - **Dawn/dusk twilight window (Azura):** two 3-hour windows (06:00-09:00 dawn, 18:00-21:00 dusk),
   **+0.25 piety** each, once-per-window daily cap, on portable-shrine prayer or outdoor Good-Daedra
-  shrine activation inside the window. Reuses `GetDevotionDayIndex`/dawn alignment.
+  shrine activation inside the window. **SOURCE/COMPILE/VERIFIER CLEAN 2026-06-14 for portable prayer:** Azura now
+  owns `SIGNAL_DUNMER_TWILIGHT_RITE = 704` / `DELTA_DUNMER_TWILIGHT_RITE = 0.25`; the manager checks
+  the game-time fraction in `TryAwardDunmerTwilightWindowSignal(reason)` and calls it from
+  `HandleDunmerPortableShrinePrayer`. Default `pdv_verify` guards the manager/Azura snippets. Outdoor
+  Good Daedra shrine activation still needs an exact emitter.
 
 **Open:** Grey Quarter NPC list hardcoded vs JSON-config; does "Windhelm Dunmer support" include
-Ulfric-opposition or refugee-aid-only; dawn/dusk window bounds as configurable globals vs hardcoded.
+Ulfric-opposition or refugee-aid-only; whether twilight window bounds should be configurable globals vs
+hardcoded; runtime/manual proof that werewolf posture scales Layer-2 Good Daedra gains to 0.75x and that
+twilight awards cap once per dawn and dusk window.
+
+**Outdoor shrine emitter (built 2026-06-14, source/compile-clean):** detection is limited to the
+Dragonborn DLC2 Solstheim altars (Azura/Boethiah/Mephala, blessing spells `03BCFB`/`03BCFC`/`03BCFD`) --
+the Good Daedra have no vanilla blessing-giving world shrines. `OnMagicEffectApplyEx` matches the altar
+blessing spell (the three share one base effect `0FBFF5`, so the source-spell is the discriminator) and
+routes `RouteDunmerOutdoorGoodDaedraShrine` -> `HandleDunmerOutdoorGoodDaedraShrine` ->
+`TryAwardDunmerTwilightWindowSignal`. The Azura statue (DA01) and the Boethiah/Mephala quest shrines
+are non-blessing activators (no clean hook).
 
 ---
 
 ## 7. Orc -- dawn-side everyday hooks
 
-- **Oath-breaking -- RULING (user): `DELTA_OATH_BREAK = -1.5`** (medium-light creed violation). New
-  `SIGNAL_OATH_BREAK` on `PDV_Deity_Malacath` <- `SIGNAL_BROKEN_FAITH_KIN` (-2.0). Below the -2.0
-  betrayal tier and above day-to-day drift; "not large... sustained accumulates" (Orc doc 189).
+- **Oath-breaking -- RULING (user): `DELTA_OATH_BREAK = -1.5`** (medium-light creed violation).
+  **SOURCE/COMPILE/VERIFIER CLEAN 2026-06-14:** `PDV_Deity_Malacath` now owns `SIGNAL_OATH_BREAK = 2253` and
+  `DELTA_OATH_BREAK = -1.5`, with `PDV_EventTypes.EVT_ORC_OATH_BREAK = 74`,
+  `PDV_EventBus.RouteOrcOathBreak(sourceId)`, manager `HandleOrcOathBreak(reason)`, and route 74
+  support in both reusable signal receivers. This sits
+  below the -2.0 betrayal tier and above day-to-day drift; "not large... sustained accumulates"
+  (Orc doc 189). Default `pdv_verify` guards the EventTypes/EventBus/manager/Malacath/receiver snippets.
+  Exact vanilla emitters remain deferred.
 - **Forge / strength everyday hooks -- keep AS-IS (no new manager hooks).** The likes/dislikes faucet
   already scores these: event 330 smith-item +0.75 (2-day cd), event 2 kill-hostile-humanoid +0.25,
   event 1 kill-hostile-beast +0.25, event 301 kill-daedra +0.75. The +0.25 everyday-strength tier is
   intentionally small (combat texture, not a major piety source), forcing engagement with the full
   code (forge + community), not kill-grinding.
 
-**Open:** which vanilla quest-abandonment/failure surface emits `SIGNAL_OATH_BREAK` (feasibility rule
-sec.41 defers the concrete hook). Whether City/Legion Orcs need a top-up if beta shows stalling
-below 3.3/day.
+**Open:** which vanilla quest-abandonment/failure surface emits `RouteOrcOathBreak(...)` (feasibility
+rule sec.41 defers the concrete hook). Whether City/Legion Orcs need a top-up if beta shows stalling
+below 3.3/day. Runtime/manual proof remains pending because no exact emitter is live yet.
 
 ---
 
 ## 8. Imperial -- Concordat secondary modifiers + per-action point table
 
-**Track:** `PDV_ConcordatStandingTrack` (exists; race doc also calls it `PDV_RepTrack_ConcordatStanding`
--- the runtime/manager EditorID `PDV_ConcordatStandingTrack` is authoritative). -100..+100, 5 states
+**Track:** `PDV_ConcordatStandingTrack` manager property points at the live record
+`PDV_RepTrack_ConcordatStanding`. -100..+100, 5 states
 (Open Defiant -100..-76 Talos x1.5; Private Defiant -75..-51 x1.25; Uncommitted -50..+50 x1.0; Public
 Compliant +51..+75 x0.75; Concordat Enforcer +76..+100 x0.5).
 
@@ -253,6 +345,10 @@ Compliant +51..+75 x0.75; Concordat Enforcer +76..+100 x0.5).
   `PDV_Deity_Arkay` and `PDV_Deity_Stendarr` (Khajiit-lunar precedent; parallels the Talos fallback at
   `PDV_DeityBase.psc` ~376-391). Arkay: 1.0 except 0.85 in the two compliant states. Stendarr: 1.0
   except 0.85 in the two compliant states and 1.15 in the two defiant states.
+  **Readback update 2026-06-14:** `PDV_ImperialRewardRecords.spec.json` now carries
+  `deityTrackModifiers` for both deities, and `tools/pdv-phase20-race-author --check-rewards`
+  verifies the `GainModifyingTrack` object plus exact 5-entry float arrays. Live readback passes for
+  Arkay `[1.0,1.0,1.0,0.85,0.85]` and Stendarr `[1.15,1.15,1.0,0.85,0.85]`.
 
 **Per-action Concordat point table (RESOLVED 2026-06-14 from Imperial doc 113-122 -- exact; replaces
 the current flat +/-15). Positive = toward +100 Enforcer/compliance:**
@@ -270,33 +366,70 @@ the current flat +/-15). Positive = toward +100 Enforcer/compliance:**
 
 Values are designed, not placeholders -- do NOT auto-retune; validate in pre-beta and patch in 1.1 if
 swings prove too punishing.
+**Runtime scaffold update 2026-06-14:** the manager now exposes
+`GetImperialConcordatPressureForAction(actionKey)` plus `ApplyImperialConcordatAction(actionKey,
+reason)` with the exact eight-action point table. The existing hidden Talos shrine route now uses the
+named `hidden_talos_shrine` key and preserves the current `-15` behavior.
 
-**Open (genuinely build-pass, not doc-answerable):** how the 8 actions are wired in the manifest
-(reason-string matching vs a points map); signal-handler ownership to avoid double-counting across
-Civil War / Thalmor / Legion domains.
+**Emitter update (2026-06-14):** two of the eight actions now have live emitters.
+**side_with_stormcloaks** (-20): `RouteConcordatPressure`'s defiance branch now sources its magnitude
+from the point table (was a flat -15), so the proven Phase-7 CW01B fragment lands -20 without being
+edited. **kill_thalmor_justiciar_unprovoked** (-10): unprovoked kill of a `ThalmorFaction 039F26`
+member via `PDV_ActionRouter.HandleStoryKillActor` -> `HandleThalmorUnprovokedKill`. NOTE: the Talos
+Mistake book was NOT migrated onto this track -- it routes `RouteImperialTalosPressure` (a separate
+Talos-piety axis), not Concordat Standing.
+
+**Open (no clean vanilla hook / manual-dialogue):** help_talos_worshipper_escape, refuse_report,
+report_talos_worshipper (manual dialogue, no outcome flag); attack_talos_worshipper (greenfield
+assault-whitelist, out of scope); public_observe_talos_ban (no discrete outcome). Signal-handler
+ownership to avoid double-counting across CW/Thalmor/Legion remains a design watch-item.
+
+**Route-proven 2026-06-14:** side_with_stormcloaks via the MCM defiance button ->
+`RouteConcordatPressure complete: 21 adjustment -20` (compliance +15 confirmed unchanged). The
+Altmer/Imperial Thalmor-kill share one hook. **Fix 2026-06-14:** testing showed an OPEN kill of
+Ondolemar did not score -- attacking him makes him hostile, diverting the kill to the wrong
+(hostile) branch -- so the gate was moved before the hostile/non-hostile split and changed to
+`aiRelationshipRank > -2` (not a pre-set enemy), counting open kills and assassinations alike.
+Altmer -20 and Imperial -10 BOTH route-proven (Imperial via an OPEN kill after the rank-gate fix:
+`ConcordatStanding raw=-10 (thalmor_unprovoked_kill)`). The self-defense exclusion is now rank-based,
+not combat-based, so `startcombat`-forced hostility still scores; only a rank <= -2 pre-flagged enemy
+Thalmor is suppressed.
 
 ---
 
 ## 9. Cross-cutting build hook
 
-The **below-20%-health** trigger is shared by two records: Orc **Code Holds** (sec.3,
-`PDV_SPEL_OrcCodeHolds`) and Argonian **Sithis T3** near-death burst (sec.5). Build ONE detection hook
-(an `OnHealthChange`/`OnHit` poll or a combat-end-if-dipped check) and fan it to both, rather than two
-separate polls. Confirm at build whether any such hook already exists in the manager.
+The **below-20%-health** trigger is shared by Bosmer Baan Dar Gap, Orc **Code Holds** (sec.3), and
+Argonian **Sithis T3** near-death burst (sec.5). **LIVE/readback-clean 2026-06-14:** `PDV_PlayerEvents`
+now opens one combat-session poll for Bosmer/Khajiit/Argonian/Orc, routes the first below-20% dip through
+`PDV_EventBus.RoutePlayerBelowHealthGate`, fans to `PDV__ManagerQuest.HandlePlayerBelowHealthGate`, and
+routes Orc's survived-combat payout through `RoutePlayerBelowHealthSurvived` on combat exit. Khajiit
+keeps its existing Baan Dar near-fatal/outnumbered session logic. Runtime/manual proof remains pending.
 
 ## 10. Status / next step
 
-These records are authored into NO ESP and NO manager this session (spec only). The next ESP-record
-build pass (Skyrim closed, after the Voice Conformance Pass lands) authors them by hand per the
-EditorIDs/magnitudes above, then verifies with the relevant `--check` tools. The Altmer track is a
-deliberate user override of the locked Altmer doc and that doc needs later reconciliation.
+This file began as a spec-only packet, but the 2026-06-14 build pass has now promoted selected rows:
+Altmer ThalmorAlignment, the first voice-conformance MESG/NOTI wave, Breton creed-loss spell wiring,
+all-race reward readback hardening, and Imperial Arkay/Stendarr Concordat secondary modifiers are
+live/readback-clean. Remaining rows below stay future ESP/source tranches. The Altmer track is a
+deliberate user override of the locked Altmer doc and that doc still needs future reconciliation if
+not already handled in the current branch.
 
 **Open-question status (resolved 2026-06-14 offline vs genuinely deferred to the build pass):**
 - RESOLVED from docs: Imperial point table (8 actions) + secondary-mod thresholds; Argonian Hist
   creed-loss triple (-4/-8/-6 with triggers + text), posture enum (Corrupted=4), curse = MESG; Breton
   Nightingale/Daedric breaches + persistent-while-in-band creed-loss; Four Holds = the 4 vanilla
   strongholds.
-- GENUINELY DEFERRED (need ESP/code/runtime at build): every "which vanilla quest stage emits signal X"
-  routing (Altmer 6 actions, Imperial 8 actions, Orc oath-break sec.41); FormID of the portable Far
-  Shores token object; below-20%-health detection hook (sec.9); Molag Bal path Argonian-accessibility
-  grep; threshold-crossing notification text.
+- RESOLVED in code/readback 2026-06-14: Molag Bal path Argonian-accessibility plus the manager
+  DominationPressure writer for Argonian + vampire + Molag Seeker; shared below-20% hook plus Argonian
+  Sithis T3 and Orc Code Holds support records/properties; Breton creed-loss threshold HUD notices.
+- EMITTER PASS (2026-06-14, source/compile/verifier-clean): Altmer ThalmorAlignment now has live
+  emitters for read_banned_texts/-5, consort_with_daedra/-25, kill_thalmor_agent/-20; Imperial Concordat
+  side_with_stormcloaks now lands -20 (table-sourced through the proven CW01B path) and
+  kill_thalmor_justiciar_unprovoked/-10 is live; Dunmer outdoor Good Daedra shrine prayer is live (DLC2
+  Solstheim altars only). Runtime/manual proof pending for all.
+- STILL DEFERRED (no clean vanilla hook / manual-dialogue / radiant-loop): Altmer arrest /
+  complete_thalmor_mission / help_thalmor_prisoner_escape; Imperial help-escape / refuse-report /
+  report-worshipper / attack-worshipper / public-observe; Orc oath-break (no clean quest-fail marker,
+  sec.41); Dunmer Grey Quarter NPC whitelist; Redguard Dawnguard-cure-as-Ash'abah (DLC1VQ02 is a choice
+  quest, not a cure -- see sec.4). Runtime/manual proof of the below-20% hook also remains.

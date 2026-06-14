@@ -236,12 +236,12 @@
           "magicEffectEditorId": "PDV_MGEF_Orc_Malacath_T1_DamageResist",
           "displayName": "Malacath's Regard - Seeker",
           "actorValue": "DamageResist",
-          "magnitude": 4,
+          "magnitude": 15,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "Malacath regards the strong who keep his code. Armor +4.",
+      "playerFacingText": "Malacath regards the strong who keep his code. Armor +15.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Orc_Malacath_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest Orc life-mode state at dawn after smoke.",
       "stackCapRule": "Only one Orc life-mode T1 active; city, legion, and stronghold variants cannot stack.",

@@ -1,8 +1,8 @@
 # Imperial -- Writer Review
 
 **Source:** `race-sheets/PDV_RaceContent_Manifest.md` section 15 (Imperial (full draft))
-**Regenerated:** 2026-05-31 via `node tools/pdv_writer_review.mjs`
-**Rows:** 74 drafted
+**Regenerated:** 2026-06-14 via `node tools/pdv_writer_review.mjs`
+**Rows:** 78 drafted
 
 Edit the `Edit` column in place. Accepted edits are merged back into the manifest by hand. Char count is current vs hard cap; over-budget rows are flagged in the `!` column.
 
@@ -12,13 +12,13 @@ _9 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Akatosh: Imperial, institutional, time-and-law; the Empire's own god; speaks of continuity and the unbroken line; formal. | `PDV_Bless_Imperial_Akatosh_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 124 / 200 |  | Akatosh steadies your civic hours. Time-pressure checks are more forgiving and your resistance to dragon breath rises by 5%. |  |
+| Akatosh: Imperial, institutional, time-and-law; the Empire's own god; speaks of continuity and the unbroken line; formal. | `PDV_Bless_Imperial_Akatosh_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 120 / 200 |  | Akatosh steadies your civic hours. Your stamina regenerates 5% faster, and your resistance to dragon breath rises by 5%. |  |
 | Talos: The forbidden god; speaks low and urgent of conscience against law, of the man who made the Empire; defiant, costly, never safe. | `PDV_Bless_Imperial_Talos_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 109 / 200 |  | Talos answers even the quiet faith. Your shouts recharge 5% faster, and civil war service is felt as worship. |  |
 | Kynareth: Temple-framed weather grace; speaks of road and open sky in a civic Divine register; steadier than the Nord's Kyne. | `PDV_Bless_Imperial_Kynareth_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 129 / 200 |  | Kynareth shelters the traveler. Your resistance to cold and storms rises by 10%, and your stamina regenerates 5% faster outdoors. |  |
-| Mara: Civic warmth, the mother of the people; speaks of marriage, household, the bonds that hold a community; kind and public. | `PDV_Bless_Imperial_Mara_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 91 / 200 |  | Mara counts your kindness. Healing magic is 5% more effective; vendors offer better prices. |  |
-| Zenithar: The merchant's god; plainspoken, honest-trade; speaks of fair weight, the honored contract, the day's work. | `PDV_Bless_Imperial_Zenithar_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 102 / 200 |  | Zenithar weighs honest work. You gain 5% more crafting experience; honest commerce is felt as worship. |  |
+| Mara: Civic warmth, the mother of the people; speaks of marriage, household, the bonds that hold a community; kind and public. | `PDV_Bless_Imperial_Mara_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 117 / 200 |  | Mara counts your kindness. Healing magic is 5% more effective, and your followers recover health faster at your side. |  |
+| Zenithar: The merchant's god; plainspoken, honest-trade; speaks of fair weight, the honored contract, the day's work. | `PDV_Bless_Imperial_Zenithar_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 113 / 200 |  | Zenithar weighs honest work. Your honest trades fetch slightly better prices; honest commerce is felt as worship. |  |
 | Arkay: Ceremonial, death-keeping; speaks of the Hall of the Dead, proper burial, the cycle the law must protect; grave and steady. | `PDV_Bless_Imperial_Arkay_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 102 / 200 |  | Arkay marks the keeper of rites. Your resistance to disease rises by 10% and undead deal 5% less harm. |  |
-| Stendarr: Mercy under civic pressure; speaks of restraint where persecution would be easier; the conscience of the Empire. | `PDV_Bless_Imperial_Stendarr_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 101 / 200 |  | Stendarr counts the spared hand. Your brawling strikes 5% harder; Vigilants of Stendarr stay neutral. |  |
+| Stendarr: Mercy under civic pressure; speaks of restraint where persecution would be easier; the conscience of the Empire. | `PDV_Bless_Imperial_Stendarr_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 106 / 200 |  | Stendarr counts the spared hand. Your blocking absorbs 5% more damage; Vigilants of Stendarr stay neutral. |  |
 | Julianos: Law, logic, applied wisdom; speaks of the written code, the studied truth, the just judgment; precise. | `PDV_Bless_Imperial_Julianos_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 87 / 200 |  | Julianos weighs your reasoning. Your Novice and Apprentice spells cost 3% less to cast. |  |
 | Dibella: Civic grace, beauty, the well-made word; speaks of art and persuasion as public virtue; refined and warm. | `PDV_Bless_Imperial_Dibella_T1` | Passive blessing description; visible whenever the player views active effects. | Narrator | 97 / 200 |  | Dibella favors the gracious tongue. Your Speech improves by 5%, and first impressions are warmer. |  |
 
@@ -44,7 +44,7 @@ _9 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Akatosh: Imperial, institutional, time-and-law; the Empire's own god; speaks of continuity and the unbroken line; formal. | `PDV_Bless_Imperial_Akatosh_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 143 / 200 |  | Akatosh keeps the long order. Unbroken devotion of fourteen days returns cumulative skill experience; the Amulet of Akatosh doubles its effect. |  |
+| Akatosh: Imperial, institutional, time-and-law; the Empire's own god; speaks of continuity and the unbroken line; formal. | `PDV_Bless_Imperial_Akatosh_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 175 / 200 |  | Akatosh keeps the long order. Unbroken devotion of fourteen days returns a growing dawn blessing of magicka and stamina regeneration; the Amulet of Akatosh doubles its effect. |  |
 | Talos: The forbidden god; speaks low and urgent of conscience against law, of the man who made the Empire; defiant, costly, never safe. | `PDV_Bless_Imperial_Talos_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 145 / 200 |  | Talos marks faith held against the law. Your shouts recharge 15% faster, and Stormcloak ground and defiance return a surge of stamina and health. |  |
 | Kynareth: Temple-framed weather grace; speaks of road and open sky in a civic Divine register; steadier than the Nord's Kyne. | `PDV_Bless_Imperial_Kynareth_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 124 / 200 |  | Kynareth grants passage. In storm and rain, power attacks cost 10% less stamina; outdoor sleep removes all exposure penalty. |  |
 | Mara: Civic warmth, the mother of the people; speaks of marriage, household, the bonds that hold a community; kind and public. | `PDV_Bless_Imperial_Mara_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 123 / 200 |  | Mara warms the people's house. Helping a family restores full health on next rest; her temple heals you freely once a week. |  |
@@ -56,7 +56,7 @@ _9 rows._
 
 ## Champion recognition (MessageBox)
 
-_4 rows._
+_9 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
@@ -64,6 +64,11 @@ _4 rows._
 | Stendarr: Mercy under civic pressure; speaks of restraint where persecution would be easier; the conscience of the Empire. | `PDV_Msg_Imperial_Stendarr_ChampionEntry` | MessageBox. One-time on first Stendarr Devoted. | God-voice | 17+152 / 40+500 |  | Title: "Mercy in Defiance"   Body: "A merciful hand is easy in peace. You held it merciful in a province built for persecution. That is the Empire I would have. Wear my restraint as armor." |  |
 | Akatosh: Imperial, institutional, time-and-law; the Empire's own god; speaks of continuity and the unbroken line; formal. | `PDV_Msg_Imperial_Akatosh_ChampionEntry` | MessageBox. One-time on first Akatosh Devoted. | God-voice | 17+159 / 40+500 |  | Title: "The Unbroken Line"   Body: "Empires fall when the line breaks. You did not break. Through war and upheaval your devotion held its hour, day on day. The god of time keeps what keeps faith." |  |
 | Arkay: Ceremonial, death-keeping; speaks of the Hall of the Dead, proper burial, the cycle the law must protect; grave and steady. | `PDV_Msg_Imperial_Arkay_ChampionEntry` | MessageBox. One-time on first Arkay Devoted. | God-voice | 18+159 / 40+500 |  | Title: "The Death-Covenant"   Body: "This province is full of the wrongly dead. You gave them their rites when the war would not. The cycle is honored in you. The Hall of the Dead knows your name." |  |
+| Kynareth: Temple-framed weather grace; speaks of road and open sky in a civic Divine register; steadier than the Nord's Kyne. | `PDV_Msg_Imperial_Kynareth_ChampionEntry` | MessageBox. One-time on first Kynareth Devoted. | God-voice | 19+186 / 40+500 |  | Title: "Kynareth's Open Way"   Body: "The Empire is bound together by its roads, and you kept faith on them through every storm the province could raise. The sky knows your step now. Walk on, and the weather is on your side." |  |
+| Mara: Civic warmth, the mother of the people; speaks of marriage, household, the bonds that hold a community; kind and public. | `PDV_Msg_Imperial_Mara_ChampionEntry` | MessageBox. One-time on first Mara Devoted. | God-voice | 19+213 / 40+500 |  | Title: "The People's Mother"   Body: "You mended what the war tore -- households, hearths, the small bonds that hold a province together. Mara is the love that makes a people more than a map. The civic heart is yours to keep, and I keep you within it." |  |
+| Zenithar: The merchant's god; plainspoken, honest-trade; speaks of fair weight, the honored contract, the day's work. | `PDV_Msg_Imperial_Zenithar_ChampionEntry` | MessageBox. One-time on first Zenithar Devoted. | God-voice | 17+207 / 40+500 |  | Title: "The Honest Ledger"   Body: "Coin by coin, deal by deal, you kept your weight true while the Empire's own grew crooked. Zenithar asks no miracle, only the honest day done honestly. You have given it, and the work itself blesses you now." |  |
+| Julianos: Law, logic, applied wisdom; speaks of the written code, the studied truth, the just judgment; precise. | `PDV_Msg_Imperial_Julianos_ChampionEntry` | MessageBox. One-time on first Julianos Devoted. | God-voice | 17+225 / 40+500 |  | Title: "The Measured Mind"   Body: "You weighed before you struck and studied before you judged, in a province that rewards neither. Julianos is the order beneath the law, the reason the codes are written at all. The written truth is open to you now. Read deep." |  |
+| Dibella: Civic grace, beauty, the well-made word; speaks of art and persuasion as public virtue; refined and warm. | `PDV_Msg_Imperial_Dibella_ChampionEntry` | MessageBox. One-time on first Dibella Devoted. | God-voice | 17+232 / 40+500 |  | Title: "The Gracious Word"   Body: "Where others reached for the blade, you found the word that turned the room. Dibella is the grace that makes the Empire worth defending -- beauty, art, the right thing said well. What you give the world, the world gives back to you." |  |
 
 ## Drifting away (neglect)
 
@@ -121,7 +126,6 @@ _4 rows._
 | _(no tone match)_ | `PDV_Notif_Imperial_FavorNoted_BurialDuty` | HUD corner notification. After-act; per Hall-of-the-Dead or anti-necromancy beat. | Player-2nd | 47 / 80 |  | The dead are given their rites. Arkay marks it. |  |
 | _(no tone match)_ | `PDV_Notif_Imperial_FavorNoted_LawfulOrder` | HUD corner notification. After-act; concrete order-preserving act, not faction membership. | Player-2nd | 58 / 80 |  | Order kept, the public served. Akatosh is steady with you. |  |
 | _(no tone match)_ | `PDV_Notif_Imperial_FavorNoted_TalosPressure` | HUD corner notification. After-act; authored faithful defiance only. | Player-2nd | 50 / 80 |  | A faith kept hidden, at real cost. Talos hears it. |  |
-| _(no tone match)_ | `PDV_Notif_Imperial_FavorNoted_TalosPressure_BookRead_TalosMistake` | HUD corner notification. After-act; one-shot book-read signal. | Player-2nd | 76 / 80 |  | The Empire's argument, written cleanly. It does not sit as well as it reads. |  |
 
 ## Contextual favor (large, Marked)
 

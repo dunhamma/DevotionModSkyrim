@@ -117,6 +117,66 @@
       "oncePerDayKey": "PDV.Signal.OrcSelfMadeCommunity",
       "name": "PDV ORC SELF-MADE COMMUNITY SIGNAL",
       "activateText": "RECORD SELF-MADE COMMUNITY"
+    },
+    {
+      "id": "orc-four-holds-dushnikh-yal-proof",
+      "editorId": "PDV_ACTI_OrcFourHolds_DushnikhYalSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_OrcFourHolds_DushnikhYalSignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 75,
+      "requiredOriginRace": 8,
+      "signalValue": 1,
+      "signalSourceId": "orc_four_holds_dushnikh_yal_proof",
+      "oncePerDayKey": "PDV.Signal.OrcFourHolds.DushnikhYal",
+      "name": "PDV ORC FOUR HOLDS DUSHNIKH YAL SIGNAL",
+      "activateText": "RECORD DUSHNIKH YAL"
+    },
+    {
+      "id": "orc-four-holds-mor-khazgur-proof",
+      "editorId": "PDV_ACTI_OrcFourHolds_MorKhazgurSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_OrcFourHolds_MorKhazgurSignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 75,
+      "requiredOriginRace": 8,
+      "signalValue": 2,
+      "signalSourceId": "orc_four_holds_mor_khazgur_proof",
+      "oncePerDayKey": "PDV.Signal.OrcFourHolds.MorKhazgur",
+      "name": "PDV ORC FOUR HOLDS MOR KHAZGUR SIGNAL",
+      "activateText": "RECORD MOR KHAZGUR"
+    },
+    {
+      "id": "orc-four-holds-narzulbur-proof",
+      "editorId": "PDV_ACTI_OrcFourHolds_NarzulburSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_OrcFourHolds_NarzulburSignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 75,
+      "requiredOriginRace": 8,
+      "signalValue": 3,
+      "signalSourceId": "orc_four_holds_narzulbur_proof",
+      "oncePerDayKey": "PDV.Signal.OrcFourHolds.Narzulbur",
+      "name": "PDV ORC FOUR HOLDS NARZULBUR SIGNAL",
+      "activateText": "RECORD NARZULBUR"
+    },
+    {
+      "id": "orc-four-holds-largashbur-proof",
+      "editorId": "PDV_ACTI_OrcFourHolds_LargashburSignal",
+      "recordType": "ACTI",
+      "recordStatus": "record-wired",
+      "placementRefEditorId": "PDV_REFR_OrcFourHolds_LargashburSignal",
+      "placementStatus": "proof-cell-wired",
+      "routeId": 75,
+      "requiredOriginRace": 8,
+      "signalValue": 4,
+      "signalSourceId": "orc_four_holds_largashbur_proof",
+      "oncePerDayKey": "PDV.Signal.OrcFourHolds.Largashbur",
+      "name": "PDV ORC FOUR HOLDS LARGASHBUR SIGNAL",
+      "activateText": "RECORD LARGASHBUR"
     }
   ],
   "requiredContentRows": [
@@ -249,7 +309,7 @@
     "status": "proof-placement-gate-live",
     "rules": [
       "life-mode enum/readback exists and is wired before mode-specific rewards ship",
-      "four Orc proof ACTI records route through EventSignalActivator and EventBus",
+      "eight Orc proof ACTI records route through EventSignalActivator and EventBus",
       "Stronghold, City, and Legion/Exile have at least one proofable favor family each",
       "forge and combat hooks include quality/context filters and caps",
       "runtime proof includes at least one City or Legion/Exile parity beat beside Stronghold"
