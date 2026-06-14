@@ -1,0 +1,706 @@
+{
+    "schema":  "pdv.live-devotion-snapshot.v1",
+    "createdAtLocal":  "2026-06-15 07:45:51 +10:00",
+    "reason":  "Final Polish Look baseline: capture current live Papyrus source plus the renamed Devotion.esp and Devotion.seq so the polish branch has a tracked baseline after the 2026-06-15 rename and the 10-race voice-conformance pass. Source-and-plugin capture; compiled PEX intentionally excluded (regenerable via tools/pdv_compile.mjs).",
+    "sourceRoot":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion",
+    "gitBranch":  "claude/final-polish-look",
+    "gitHead":  "fa214f2e78038eb851092bbbcbb84b03c7fc0c37",
+    "items":  [
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__MainQuest.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV__MainQuest.psc",
+                      "sha256":  "80002681BC02E3C006467869D5EB8E73A8CC4485ED2AB87CFFBFFC02A51C2946",
+                      "bytes":  1883,
+                      "lastWriteTimeLocal":  "2026-06-15 05:37:41 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__ManagerQuest.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV__ManagerQuest.psc",
+                      "sha256":  "41422C199CBD9ECD1675CB79B2B5288F3DB8D67B30E63B28F8F9B3FB1DEB1A8B",
+                      "bytes":  592037,
+                      "lastWriteTimeLocal":  "2026-06-15 05:37:41 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__SM_AssaultActor.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV__SM_AssaultActor.psc",
+                      "sha256":  "353C1BAB146058E13FC1E8FC15F9B243599FF1878CBAE328FE47C9A89D0B577D",
+                      "bytes":  579,
+                      "lastWriteTimeLocal":  "2026-06-09 21:15:22 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__SM_ChangeLocation.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV__SM_ChangeLocation.psc",
+                      "sha256":  "B4D623E811F37859796710AEE18BD027A31085A54267C93748226E835973B7CC",
+                      "bytes":  572,
+                      "lastWriteTimeLocal":  "2026-06-09 21:15:22 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__SM_CraftItem.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV__SM_CraftItem.psc",
+                      "sha256":  "131262139BB4145E309C9DAA94C30BC865A2959A65BAFCDFBB7FEB465992D722",
+                      "bytes":  532,
+                      "lastWriteTimeLocal":  "2026-06-09 21:15:22 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__SM_IncreaseSkill.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV__SM_IncreaseSkill.psc",
+                      "sha256":  "39390760D0A950FD07CFE55DE9861620E584A24C3FCC31E4C739D4B481344DD7",
+                      "bytes":  479,
+                      "lastWriteTimeLocal":  "2026-06-09 21:15:22 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__SM_KillActor.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV__SM_KillActor.psc",
+                      "sha256":  "6572A7368DFF1C0D3EC40D17D8D8548F9A603A008458FFF2F0886A5DF127EAE8",
+                      "bytes":  1243,
+                      "lastWriteTimeLocal":  "2026-05-11 22:36:27 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__SM_NewVoicePower.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV__SM_NewVoicePower.psc",
+                      "sha256":  "CB3A1010867F1526B9B0BD66CD9603CF60E163029DE0280C4CFFD613251D71D1",
+                      "bytes":  522,
+                      "lastWriteTimeLocal":  "2026-06-09 21:15:22 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__SM_PickLock.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV__SM_PickLock.psc",
+                      "sha256":  "4368FDEFF212DCC34F4C596BC2A08CD7C476AD35DAEF08B57EDEEBB78D69C5AA",
+                      "bytes":  490,
+                      "lastWriteTimeLocal":  "2026-06-09 21:15:22 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV__SM_Trespass.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV__SM_Trespass.psc",
+                      "sha256":  "188F7AA2B06BA6D644881D6237CD83205AB0023497E21372253D9BF68142D170",
+                      "bytes":  558,
+                      "lastWriteTimeLocal":  "2026-06-09 21:15:22 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_ActionRouter.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_ActionRouter.psc",
+                      "sha256":  "53FA8DDF03A71720D6E738ACB2F738C76D6B376DE3A6E724DB91D97889C1CBDD",
+                      "bytes":  19546,
+                      "lastWriteTimeLocal":  "2026-06-14 21:35:33 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_ArgonianHistSapToken.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_ArgonianHistSapToken.psc",
+                      "sha256":  "7EE8246F4BFC02DF20200558846EAA2BC9206166D5EFDF7DDBDC753D1C0E044D",
+                      "bytes":  385,
+                      "lastWriteTimeLocal":  "2026-06-15 05:19:29 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_CurseState.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_CurseState.psc",
+                      "sha256":  "0D8C81E5AD432704143A1884F4B8F1B65F69D8909202B8CBFA8C1EFFB9E48151",
+                      "bytes":  6297,
+                      "lastWriteTimeLocal":  "2026-05-26 21:23:15 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Azura.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Azura.psc",
+                      "sha256":  "2EA29FDEB4E86F5B52DE22A5A9A58B5F02F2E96E43341F59180FB61327BBE22E",
+                      "bytes":  5012,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Boethiah.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Boethiah.psc",
+                      "sha256":  "79C22CAF3584727DB6937DDA0937FA3E21C870B400C625C8A8DDA0554A319098",
+                      "bytes":  5030,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Dagon.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Dagon.psc",
+                      "sha256":  "18DCA06E5C63BD9992B81430EB75C3396319F1682464C2BB2DBFEBE95D989F58",
+                      "bytes":  5021,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Hircine.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Hircine.psc",
+                      "sha256":  "22FA6536A1BE9DFDEBA7D5BEC8EEA27BE3AEAE21E4D9FFEE10D091C4C29864C6",
+                      "bytes":  9373,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Malacath.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Malacath.psc",
+                      "sha256":  "721054681C83FFBDA285B381BD7CD2768E763CB3EC36623F813E9680FF056ABC",
+                      "bytes":  5030,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Mephala.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Mephala.psc",
+                      "sha256":  "B41817863F5FBD3E5A6701A6CCBF166D717842A450CF6AAA8F71941E2BF75570",
+                      "bytes":  5024,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Meridia.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Meridia.psc",
+                      "sha256":  "E7DA5A643A285DDE3780E51A90D54482B0AB07720C08A96219677F6DCE758807",
+                      "bytes":  5024,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Molag.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Molag.psc",
+                      "sha256":  "3F3C5C0A40D6EB9FF4B11214E47759A1CD73B95006A5BD2B9A7DE3D66A230BAB",
+                      "bytes":  5016,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Mora.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Mora.psc",
+                      "sha256":  "6C56356E703F175E72D536082503B90524C2B8770F5537808DDCB58652B62767",
+                      "bytes":  5015,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Namira.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Namira.psc",
+                      "sha256":  "90E6D310C9ECE40D5DE6D83C5C1954EB6EF2B843D677296D2B675F8BBF6E259F",
+                      "bytes":  5018,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Nocturnal.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Nocturnal.psc",
+                      "sha256":  "54EA7D0C98132ADC223A4E33DBB59F6C55A8005280F48065E62669A9759461F7",
+                      "bytes":  5036,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Peryite.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Peryite.psc",
+                      "sha256":  "5856ADA6AF5B9156F3B73F71140F85FB9341DDF225799B2A140A8457DF95B59F",
+                      "bytes":  5024,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Sanguine.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Sanguine.psc",
+                      "sha256":  "F5379C5F3C32C04F8572223E361504548DBCE60B4788C274A044FE0B3EACFA23",
+                      "bytes":  5030,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Sheo.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Sheo.psc",
+                      "sha256":  "BEF1143B74111B37EF6C077D711C01972EB7D231EDCC7E1956E7FCF794A7CED0",
+                      "bytes":  5012,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Vaermina.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Vaermina.psc",
+                      "sha256":  "FC7D5ED3841096E694BF0EFDF89D4E6F0E0BEF9F5A99EF62B861CE18A8DF078E",
+                      "bytes":  5030,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPath_Vile.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPath_Vile.psc",
+                      "sha256":  "865BA6A3E8215D7F592A5A8FDDD0867B9A4A917E550B4B988492F1408F484A22",
+                      "bytes":  5015,
+                      "lastWriteTimeLocal":  "2026-06-12 15:48:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DaedricPathBase.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DaedricPathBase.psc",
+                      "sha256":  "5672C6ABD73C4EB39E1BAE022DC4A01F0C3B35A54C27BDFB4D4AFBD0C1EBAF0F",
+                      "bytes":  16417,
+                      "lastWriteTimeLocal":  "2026-06-13 07:59:28 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Akatosh.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Akatosh.psc",
+                      "sha256":  "81F1058F6925719CD5EA51AB6260A6AC0BB435837CAE9DD7B15C8251F6E745EB",
+                      "bytes":  2584,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Alkosh.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Alkosh.psc",
+                      "sha256":  "B682AD4221CE550F06213F91BE6C8E5C648FCEB453E8B70AD5003C8167397FF8",
+                      "bytes":  1676,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Arkay.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Arkay.psc",
+                      "sha256":  "C40FD55B4DF1624F176101C3AA0D6697E3FF1BA4BF0FABCF0FE7D0E91218CF9B",
+                      "bytes":  3200,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_AuriEl.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_AuriEl.psc",
+                      "sha256":  "2CBDB863193704A80B0D48F9D820B4BE682AA5121746B30E11F4BB092C65534B",
+                      "bytes":  2458,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Azura.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Azura.psc",
+                      "sha256":  "B29DD128F69BA6F1E43FE1B622EA91AEF34F877DA443EEBDEC5D33C069E8BC58",
+                      "bytes":  1918,
+                      "lastWriteTimeLocal":  "2026-06-14 16:34:22 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_BaanDar.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_BaanDar.psc",
+                      "sha256":  "BAC05994E8E39FA75F7418CD058A219B5A0125DDCFB743F598AFDBAB09254A27",
+                      "bytes":  1791,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Boethiah.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Boethiah.psc",
+                      "sha256":  "824DC720F5D63DD860A600B09416BF1D0CB07F3B33EA6F8DFD5A787B79C40C7A",
+                      "bytes":  2478,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Dibella.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Dibella.psc",
+                      "sha256":  "BEC69340490CF618EB67CB64C7F745E55672CC05BEBEE1C821BEC1A37F1C9E6A",
+                      "bytes":  2419,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Hist.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Hist.psc",
+                      "sha256":  "4040230374F17EFC055D4DDBC630292586832E0DEBADF61DFA3A452C4C5CD1A0",
+                      "bytes":  2298,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_HoonDing.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_HoonDing.psc",
+                      "sha256":  "D351DD9A8AA504F96AFF677B56E7ABB64156E497F3845C767541B4672FBBD8AF",
+                      "bytes":  2041,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Julianos.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Julianos.psc",
+                      "sha256":  "A5B3133C7A24A7F4A45AEE4310410FD063AFAADA10501A8A64BFE5FBC69C168B",
+                      "bytes":  2550,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Khenarthi.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Khenarthi.psc",
+                      "sha256":  "E9FC509905B39311DF7FDF46CF1461608F88626520340A9CDECDA611AD2338C0",
+                      "bytes":  1544,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Kynareth.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Kynareth.psc",
+                      "sha256":  "2CD811ECB37943B70BAB62A3D89D7DA42D984EDDC4E9DBE250758BB369AEB77C",
+                      "bytes":  2641,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Kyne.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Kyne.psc",
+                      "sha256":  "42F16EE5121A1E944E4082C1C0D332A71DE05AC018D442118CDB2EFF3C606156",
+                      "bytes":  2797,
+                      "lastWriteTimeLocal":  "2026-06-08 21:03:40 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Leki.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Leki.psc",
+                      "sha256":  "E7DCD066CD49F8DB0680041C3B71820279500623C6A132A68B54C277D7CA1B27",
+                      "bytes":  2023,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Magnus.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Magnus.psc",
+                      "sha256":  "CD36BBDD878660A63DD5AD8D1086CAD9C7BAACA7F9D113301B77F1FAEDCD2D57",
+                      "bytes":  2541,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Malacath.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Malacath.psc",
+                      "sha256":  "0F6EE63ABC9D80B3DA6234373EB017BC05092E658054A465D3D7F03DC899810F",
+                      "bytes":  6131,
+                      "lastWriteTimeLocal":  "2026-06-14 16:55:12 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Mara.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Mara.psc",
+                      "sha256":  "3AD6386090470B19A112EEDFA3BCD012A9B93C3CDE893A741CA2264E2D803F52",
+                      "bytes":  2477,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Mephala.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Mephala.psc",
+                      "sha256":  "067E70BB0108CA421456EDDFE541F8506E8C697B2CD90125E6EB5AECE7FD31DC",
+                      "bytes":  2435,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Rajhin.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Rajhin.psc",
+                      "sha256":  "2F2650857DB0ADC84C03B694A950EBC8D2F0F28B934F9BC6EB49FBE42BC9A1D1",
+                      "bytes":  1359,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Shor.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Shor.psc",
+                      "sha256":  "7721D383FA4FAE40AE6A1FF3F366ED21583013AEB40AA355334462427E5DFB17",
+                      "bytes":  4344,
+                      "lastWriteTimeLocal":  "2026-06-09 20:14:34 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Sithis.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Sithis.psc",
+                      "sha256":  "9DF85C143FDE2B68E73C7A4EB390E9459846F837E828DD8E0D38EAEB1BD97B92",
+                      "bytes":  1722,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Stendarr.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Stendarr.psc",
+                      "sha256":  "AD67A493A4CE005330F00C29392D0137C0D48665AD42A92BC90B082C8C209B20",
+                      "bytes":  3353,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Stuhn.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Stuhn.psc",
+                      "sha256":  "E94EEC04687E1104A7479DF75242A1CEAA0295D294BD043DC3EA1C80C60AAEE7",
+                      "bytes":  3300,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Talos.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Talos.psc",
+                      "sha256":  "5A7AAB94964602787B400EA6238491E15E126243DC76A59E8054A4A2574FF826",
+                      "bytes":  3261,
+                      "lastWriteTimeLocal":  "2026-06-09 20:14:23 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Trinimac.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Trinimac.psc",
+                      "sha256":  "3971F2B18EADB313D414C90D1735E00D6DE5FD11BAA6744CA41264937115553C",
+                      "bytes":  2443,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Tsun.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Tsun.psc",
+                      "sha256":  "633AE6B8737D208D6B582D0D22B28D5354D0A4105438D0F8B8A0D48B3BF58B2D",
+                      "bytes":  3319,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Tuwhacca.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Tuwhacca.psc",
+                      "sha256":  "37124C406387E68739BB11BB1447E23DCEA1DA4D3F8C7B516A32AC4F599D4ABC",
+                      "bytes":  3016,
+                      "lastWriteTimeLocal":  "2026-06-14 16:18:02 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Xarxes.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Xarxes.psc",
+                      "sha256":  "1FF756D11C7ECAFE3B303041F479E517537E70ECE9FFA5C71D982D4EDEDD23D2",
+                      "bytes":  2519,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Yffre.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Yffre.psc",
+                      "sha256":  "ADEB14C15681A3B0D1E55E7B943803AEE3E6C3ABFEE5ED2E916679BEA689576F",
+                      "bytes":  1605,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Zen.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Zen.psc",
+                      "sha256":  "B1D37CB50E6B9386A17B2333441CE39148D1964B5A11D0FA81E2B3CD13FA614E",
+                      "bytes":  1214,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Deity_Zenithar.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Deity_Zenithar.psc",
+                      "sha256":  "896084B2676CBD7E2281EDF71B9A135931AB69CA5145FDD971372E58FC1FFACE",
+                      "bytes":  2572,
+                      "lastWriteTimeLocal":  "2026-06-08 20:04:31 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DeityBase.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DeityBase.psc",
+                      "sha256":  "BAF92538A5F0BC7DE8118E9026476F8EFA0D7030EC1737A0A66362CA1EA7F009",
+                      "bytes":  12913,
+                      "lastWriteTimeLocal":  "2026-06-09 19:58:51 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DiegeticDeps.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DiegeticDeps.psc",
+                      "sha256":  "AF9A93AB2D3DC6622B3B4C705D8085C5977615AB6EEC6F390ACD8AEB99A15AE6",
+                      "bytes":  2359,
+                      "lastWriteTimeLocal":  "2026-06-08 08:22:33 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DiegeticDirector.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DiegeticDirector.psc",
+                      "sha256":  "D9D11CDC6B2910DE9F2E28BBA135A06D8D67B6B1E7B8C92E2EA8F75059AC0CAB",
+                      "bytes":  14167,
+                      "lastWriteTimeLocal":  "2026-06-08 08:22:33 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DunmerAncestralUrn.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DunmerAncestralUrn.psc",
+                      "sha256":  "A5B1170F24FA723879623AD919DC78365402CC105D7C0A180FE924A3D1C105A8",
+                      "bytes":  380,
+                      "lastWriteTimeLocal":  "2026-06-15 05:08:42 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_DunmerShrinePrayerEffect.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_DunmerShrinePrayerEffect.psc",
+                      "sha256":  "3EFE790BD7200E0FB53B59D05F4A3BBDD474DEEE571789A207D514A58F34B48F",
+                      "bytes":  854,
+                      "lastWriteTimeLocal":  "2026-06-14 20:33:19 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_EventBus.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_EventBus.psc",
+                      "sha256":  "3521BC604A08F910F0E069C13F5CDB4D30DD0DEC93C0D0F951FAD302E931CA00",
+                      "bytes":  44676,
+                      "lastWriteTimeLocal":  "2026-06-14 18:35:53 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_EventSignalActivator.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_EventSignalActivator.psc",
+                      "sha256":  "80D0F8C6C24612AA7B4FE1971A3F767C67850F613EA23882EF12CF0E308ED07E",
+                      "bytes":  11743,
+                      "lastWriteTimeLocal":  "2026-06-14 16:55:12 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_EventSignalEffect.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_EventSignalEffect.psc",
+                      "sha256":  "9E4A95DBD692614C9304546B6FC6BF833E9C6D5FB2E89BA0F307911FD90DC298",
+                      "bytes":  6761,
+                      "lastWriteTimeLocal":  "2026-06-14 16:55:12 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_EventTypes.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_EventTypes.psc",
+                      "sha256":  "29D3405FA52D38F085243006ED72225EF4D514E401D087CA95D2BBB00E61C8B4",
+                      "bytes":  12962,
+                      "lastWriteTimeLocal":  "2026-06-14 16:55:12 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_FragmentBridge.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_FragmentBridge.psc",
+                      "sha256":  "49F0BEDD50E0470C042884EB1B80E184CFCBFC0B4044441606DB546C87DAE1AC",
+                      "bytes":  1540,
+                      "lastWriteTimeLocal":  "2026-06-15 05:38:16 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_MCM.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_MCM.psc",
+                      "sha256":  "54134E01FCC45E103607D11D67E6B14946BEB7106D0F143FB3630D1CB1527BD4",
+                      "bytes":  88050,
+                      "lastWriteTimeLocal":  "2026-06-15 05:37:41 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Origin.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Origin.psc",
+                      "sha256":  "774EFF8DFFD49299E4C192972D86F541CDA9DAF309836FA18F0E06599197D5E3",
+                      "bytes":  13255,
+                      "lastWriteTimeLocal":  "2026-06-15 07:11:18 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_PlayerEvents.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_PlayerEvents.psc",
+                      "sha256":  "338D14DB4C087E79F06E519A5A854D152B8145940656231BC7A0A2E44DB5652D",
+                      "bytes":  61839,
+                      "lastWriteTimeLocal":  "2026-06-14 20:44:57 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_PrismaBridge.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_PrismaBridge.psc",
+                      "sha256":  "7B94546FAD3950A71092636FF44A226A9465692DD29CF4753EBDE07372675E60",
+                      "bytes":  834,
+                      "lastWriteTimeLocal":  "2026-05-19 12:19:18 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_ReputationTrack.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_ReputationTrack.psc",
+                      "sha256":  "3DB706AF6F21366914F69D9A58E602CAA5EBAF98959DEC266E8705195895E751",
+                      "bytes":  11207,
+                      "lastWriteTimeLocal":  "2026-05-20 17:11:27 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_SacredPlace.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_SacredPlace.psc",
+                      "sha256":  "8D9BFEA50EEBBA859CD23CCAE8A9EF66B3B7A5D39B47B21189751838BB51C581",
+                      "bytes":  5961,
+                      "lastWriteTimeLocal":  "2026-05-17 11:49:09 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_StateTrack.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_StateTrack.psc",
+                      "sha256":  "DAC773116E20544E17ABF3458BB2B433DD933439F20ED630DB2ECAE08BEBE812",
+                      "bytes":  11954,
+                      "lastWriteTimeLocal":  "2026-05-24 12:38:45 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Substrate_ArgonianHist.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Substrate_ArgonianHist.psc",
+                      "sha256":  "B7F1BDA31A00C75AA7BF83948F543D277B8712E1146874DAFF7C03E06E19FCE3",
+                      "bytes":  12090,
+                      "lastWriteTimeLocal":  "2026-06-11 18:54:28 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Substrate_DunmerAncestor.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Substrate_DunmerAncestor.psc",
+                      "sha256":  "D4208C62174D9028313D4A1A6B11785316AA415E69318E3B89E9FF09F6C54D95",
+                      "bytes":  2553,
+                      "lastWriteTimeLocal":  "2026-05-18 10:53:09 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_Substrate_KhajiitLunar.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_Substrate_KhajiitLunar.psc",
+                      "sha256":  "4D496DEA036364793B74A5FDFEB00D67BD7D1B8FD0B97AF7B5B225356942824F",
+                      "bytes":  2985,
+                      "lastWriteTimeLocal":  "2026-05-18 10:53:09 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_SubstrateBase.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_SubstrateBase.psc",
+                      "sha256":  "C2254D3C7B48E344FB7958DD988D8154C6A44323828F6398409665CD01D95953",
+                      "bytes":  5222,
+                      "lastWriteTimeLocal":  "2026-06-11 18:54:49 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_SurveyDevotionEffect.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_SurveyDevotionEffect.psc",
+                      "sha256":  "6A52292F33C0B9FD48CCEDCE4DD49474C7A0B0C22530ECFD2F25F4BA811F8032",
+                      "bytes":  1654,
+                      "lastWriteTimeLocal":  "2026-06-15 05:37:41 +10:00"
+                  },
+                  {
+                      "kind":  "psc",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_T3DailyLowHealthSaveEffect.psc",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Scripts/Source/PDV_T3DailyLowHealthSaveEffect.psc",
+                      "sha256":  "82B92BCDB3D7FD61D99720C7E8DCF07DD8D914B749C82F2BFF7468146C2725B9",
+                      "bytes":  3590,
+                      "lastWriteTimeLocal":  "2026-06-13 12:52:06 +10:00"
+                  },
+                  {
+                      "kind":  "esp",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Devotion.esp",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Devotion.esp",
+                      "sha256":  "B3A4BDBEA9613A27312603E7BA280295307D9A70F7BBE8788CC85A202DA5EE36",
+                      "bytes":  521592,
+                      "lastWriteTimeLocal":  "2026-06-15 05:22:33 +10:00"
+                  },
+                  {
+                      "kind":  "seq",
+                      "sourcePath":  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Seq\\Devotion.seq",
+                      "snapshotPath":  "generated/live-devotion-snapshot/2026-06-15-final-polish/Seq/Devotion.seq",
+                      "sha256":  "A2FCE2141225BA1E60A5A10D38F35056B8FB1529A0319BF4EA53A45EFC7B06B6",
+                      "bytes":  156,
+                      "lastWriteTimeLocal":  "2026-06-15 05:42:50 +10:00"
+                  }
+              ]
+}

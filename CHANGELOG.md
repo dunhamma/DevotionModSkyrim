@@ -1,4 +1,4 @@
-# PlayerDevotion Changelog
+# Devotion Changelog
 
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
@@ -14,7 +14,7 @@ folder; this file records what changed, not the full source.
   Implemented as `PDV__ManagerQuest.ExportDevotionReport()` (writes via
   `MiscUtil.WriteToFile`) wired to the MCM handler in `PDV_MCM`. Pure script;
   no new CK records, properties, or SEQ changes. Save-safe.
-- **Added: beta tester guide** (`PlayerDevotion_BetaTesterGuide.docx`) covering
+- **Added: beta tester guide** (`Devotion_BetaTesterGuide.docx`) covering
   dependencies, what's in the mod, design intent, known limitations/beta status,
   and how to give useful feedback (including the Export Devotion Report flow and
   a copy/paste report template).
