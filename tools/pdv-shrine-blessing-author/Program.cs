@@ -60,17 +60,20 @@ try
 
         var mod = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
         var sourceCache = new Dictionary<string, SkyrimMod>(StringComparer.OrdinalIgnoreCase);
+        var pdvCureKey = ResolvePdvCureEffectKey(mod, manifest!, check, report);
         foreach (var target in manifest!.baselineSpellTargets!)
         {
+            var isPdvCure = target.pdvCureEffect == true;
+            var cureKey = isPdvCure ? pdvCureKey : ParseFormKey(target.expectedCureEffect!);
             var spell = EnsureSpellOverride(mod, sourceCache, target, report, check);
             if (check)
             {
-                CheckCureOnly(spell, target, report);
+                CheckCureOnly(spell, target, cureKey, report);
             }
             else
             {
-                NormalizeSpell(spell, target, report);
-                CheckCureOnly(spell, target, report);
+                NormalizeSpell(spell, target, cureKey, isPdvCure, report);
+                CheckCureOnly(spell, target, cureKey, report);
             }
         }
 
@@ -352,21 +355,97 @@ static SkyrimMod LoadSourceMod(Dictionary<string, SkyrimMod> sourceCache, string
     return mod;
 }
 
-static void NormalizeSpell(Spell spell, ShrineSpellTarget target, ShrineReport report)
+// PDV detection cure effect: a CureDisease MagicEffect that also carries the
+// PDV_DunmerShrinePrayerEffect ActiveMagicEffect script. The three DLC2 Good-Daedra altar
+// spells use this instead of vanilla 0FBFF5 so that activating the shrine (which casts the
+// neutralized cure spell) fires OnEffectStart and routes the Dunmer outdoor-shrine twilight
+// signal, while still curing disease.
+static FormKey ResolvePdvCureEffectKey(SkyrimMod mod, ShrineManifest manifest, bool checkOnly, ShrineReport report)
 {
-    var cureEffect = ParseFormKey(target.expectedCureEffect!);
-    var cureEntries = spell.Effects.Where(effect => effect.BaseEffect.FormKey.Equals(cureEffect)).ToList();
-    if (cureEntries.Count != 1)
+    var needsPdvCure = (manifest.baselineSpellTargets ?? []).Any(t => t.pdvCureEffect == true);
+    if (!needsPdvCure)
     {
-        report.Errors.Add($"{target.spellEditorId}: expected exactly one cure effect {target.expectedCureEffect}, found {cureEntries.Count}.");
+        return default;
+    }
+
+    const string editorId = "PDV_MGEF_DunmerShrineCure";
+    var existing = mod.MagicEffects.Records.FirstOrDefault(effect => string.Equals(effect.EditorID, editorId, StringComparison.OrdinalIgnoreCase));
+    if (existing is not null)
+    {
+        return existing.FormKey;
+    }
+
+    if (checkOnly)
+    {
+        report.Errors.Add($"{editorId}: missing from framework ESP (run --write first).");
+        return default;
+    }
+
+    return AuthorDunmerShrineCureEffect(mod, report);
+}
+
+static FormKey AuthorDunmerShrineCureEffect(SkyrimMod mod, ShrineReport report)
+{
+    var effect = mod.MagicEffects.AddNew();
+    effect.EditorID = "PDV_MGEF_DunmerShrineCure";
+    effect.FormVersion = 44;
+    effect.Name = "Cure Disease";
+    effect.Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoDuration;
+    effect.BaseCost = 0.0f;
+    effect.MagicSkill = ActorValue.None;
+    effect.ResistValue = ActorValue.None;
+    effect.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.CureDisease);
+    effect.CastType = CastType.FireAndForget;
+    effect.TargetType = TargetType.Self;
+    effect.VirtualMachineAdapter = new VirtualMachineAdapter
+    {
+        Version = 5,
+        ObjectFormat = 2
+    };
+    effect.VirtualMachineAdapter.Scripts.Add(new ScriptEntry
+    {
+        Name = "PDV_DunmerShrinePrayerEffect",
+        Flags = ScriptEntry.Flag.Local
+    });
+    report.Actions.Add($"PDV_MGEF_DunmerShrineCure: authored CureDisease + PDV_DunmerShrinePrayerEffect detection effect {ToHousecarl(effect.FormKey)}.");
+    return effect.FormKey;
+}
+
+static void NormalizeSpell(Spell spell, ShrineSpellTarget target, FormKey cureKey, bool isPdvCure, ShrineReport report)
+{
+    var cureEntries = spell.Effects.Where(effect => effect.BaseEffect.FormKey.Equals(cureKey)).ToList();
+    if (cureEntries.Count == 1)
+    {
+        var keepCount = spell.Effects.Count;
+        var preservedCure = CopyEffect(cureEntries[0]);
+        spell.Effects.Clear();
+        spell.Effects.Add(preservedCure);
+        report.Actions.Add($"{target.spellEditorId}: normalized from {keepCount} effect(s) to cure-only.");
         return;
     }
 
-    var originalCount = spell.Effects.Count;
-    var preservedCure = CopyEffect(cureEntries[0]);
-    spell.Effects.Clear();
-    spell.Effects.Add(preservedCure);
-    report.Actions.Add($"{target.spellEditorId}: normalized from {originalCount} effect(s) to cure-only.");
+    if (isPdvCure && !cureKey.IsNull)
+    {
+        var swapCount = spell.Effects.Count;
+        var template = spell.Effects.FirstOrDefault();
+        var swapped = new Effect
+        {
+            BaseEffect = new FormLinkNullable<IMagicEffectGetter>(cureKey),
+            Data = template?.Data is null ? null : new EffectData
+            {
+                Magnitude = template.Data.Magnitude,
+                Area = template.Data.Area,
+                Duration = template.Data.Duration
+            },
+            Conditions = []
+        };
+        spell.Effects.Clear();
+        spell.Effects.Add(swapped);
+        report.Actions.Add($"{target.spellEditorId}: swapped from {swapCount} effect(s) to PDV cure effect {ToHousecarl(cureKey)}.");
+        return;
+    }
+
+    report.Errors.Add($"{target.spellEditorId}: expected exactly one cure effect {target.expectedCureEffect}, found {cureEntries.Count}.");
 }
 
 static Effect CopyEffect(Effect source)
@@ -384,14 +463,13 @@ static Effect CopyEffect(Effect source)
     };
 }
 
-static void CheckCureOnly(Spell spell, ShrineSpellTarget target, ShrineReport report)
+static void CheckCureOnly(Spell spell, ShrineSpellTarget target, FormKey cureKey, ShrineReport report)
 {
     if (spell.FormKey.ModKey.IsNull)
     {
         return;
     }
 
-    var cureEffect = ParseFormKey(target.expectedCureEffect!);
     if (!string.Equals(spell.EditorID, target.spellEditorId, StringComparison.OrdinalIgnoreCase))
     {
         report.Errors.Add($"{target.spellEditorId}: override EditorID is {spell.EditorID ?? "(missing)"}.");
@@ -404,9 +482,9 @@ static void CheckCureOnly(Spell spell, ShrineSpellTarget target, ShrineReport re
     }
 
     var onlyEffect = spell.Effects[0];
-    if (!onlyEffect.BaseEffect.FormKey.Equals(cureEffect))
+    if (!onlyEffect.BaseEffect.FormKey.Equals(cureKey))
     {
-        report.Errors.Add($"{target.spellEditorId}: remaining effect is {ToHousecarl(onlyEffect.BaseEffect.FormKey)}, expected {target.expectedCureEffect}.");
+        report.Errors.Add($"{target.spellEditorId}: remaining effect is {ToHousecarl(onlyEffect.BaseEffect.FormKey)}, expected {ToHousecarl(cureKey)}.");
     }
 }
 
@@ -555,6 +633,7 @@ sealed class ShrineSpellTarget
     public string? winnerPlugin { get; set; }
     public string? expectedCureEffect { get; set; }
     public List<string>? expectedRemovedEffects { get; set; }
+    public bool? pdvCureEffect { get; set; }
 }
 
 sealed class ShrineActivatorTarget
