@@ -162,3 +162,14 @@ CC/QE to core after equity check.
   +Akatosh vs activate = −Akatosh). Unlike Vigilant, lore+structure does NOT pin valence here. Needs a
   BSA-strings extract (or in-game text) before authoring — do NOT guess valence.
 
+## Wave 6 (man_DaedricShrines shrine adapters) — INVESTIGATED, NOT VIABLE as a clean override
+Definitive ACTI scan (2026-06-15): the man_DaedricShrines family is STAT-based (mesh/statue replacers),
+NOT ACTI. Zero of the 16 Princes expose a clean route anchor; the only ACTIs are Nocturnal x2, both
+carrying TempleBlessingScript (PDV must not replace global activator scripts). Jyggalag/Sithis/Kynareth/
+Mara = STAT only; Mehrunes Dagon = worldspace placement only. Vanilla shrine ACTIs (Azura/Mara/Kynareth/
+Divines) carry TempleBlessingScript and are won by skymojibase.esl, not man_. => A shrine-prayer adapter
+would need EITHER (a) PDV-placed invisible marker ACTIs / trigger volumes at the shrine cell positions
+(new ESP + placement + runtime), OR (b) a location-trigger hook (new PDV_FLST_HolySites + manager
+handler; note coc skips location triggers). Both are ESP/runtime + design decisions — HELD for review.
+No clean data-only adapter exists. Wave 6 data-only investigation = DONE.
+

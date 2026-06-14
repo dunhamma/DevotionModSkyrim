@@ -99,8 +99,8 @@
   "deferredSlices": [
     {
       "id": "arr-daedric-shrine-acti-map",
-      "status": "deferred",
-      "reason": "houseCARL ACTI scans of man_DaedricShrines/man_MehrunesDagonShrine/man_JyggalagShrine/man_sithis only exposed Nocturnal shrine ACTI records by stable shrine EditorID; no safe all-Prince map exists yet."
+      "status": "investigated-not-viable",
+      "reason": "Definitive 2026-06-15 scan: the man_DaedricShrines family is STAT-based (mesh/statue replacers), not ACTI. Zero of the 16 Princes have a clean route anchor; the only ACTIs (Nocturnal x2) carry TempleBlessingScript, which PDV must not replace. Jyggalag/Sithis/Kynareth/Mara are STAT-only; Mehrunes Dagon is worldspace-placement only. A shrine-prayer adapter would require PDV to place its own invisible marker ACTIs/trigger volumes at shrine cell positions (new ESP + placement + runtime) OR a location-trigger hook (new PDV_FLST_HolySites + manager handler) - both ESP/runtime design decisions, held for review. No clean data-only adapter exists."
     },
     {
       "id": "author-runtime-smoke",

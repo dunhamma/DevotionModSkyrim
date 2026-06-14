@@ -117,9 +117,13 @@ core matrix is held pending a deity gain/loss balance review.
 
 ## Deferred Follow-Up
 
-- Per-Prince Mandragora/ARR Daedric shrine route adapters are not included.
-  The current ACTI scan only found stable Nocturnal shrine ACTI records in the
-  queried `man_*` plugins.
+- Per-Prince ARR Daedric shrine route adapters are NOT viable as a clean
+  override. A definitive scan found the man_DaedricShrines family is STAT-based
+  (mesh/statue replacers), not ACTI: zero Princes expose a script-free route
+  anchor, and the only ACTIs (Nocturnal) carry `TempleBlessingScript` (not
+  PDV-replaceable). A future adapter would need PDV-placed marker ACTIs / trigger
+  volumes or a location-trigger hook - both deferred design decisions, not a
+  data-only slice.
 - Survival systems remain context-only: SunHelm, Frostfall, and Campfire should
   inform eligibility/caps only, not raw piety gain.
 - Curse theology remains Requiem-native for ARR. Future hooks should key off
