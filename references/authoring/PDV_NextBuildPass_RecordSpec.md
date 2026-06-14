@@ -102,9 +102,12 @@ the build pass). Whether AltmerCrisis state should sync with this track.
 | Below 25 | x0.5 | x0.25 | x0.5 |
 | At 0 | halts until restored >25 | fully withdrawn | fully withdrawn |
 
-**Open:** Nightingale oath (-5) and major Daedric-quest (-10) as explicit 1.0 breaches or deferred
-(doc mentions, not in the core 4). Whether creed-loss spells are persistent-while-in-band or
-once-per-crossing (recommend persistent-while-in-band). Threshold-crossing notifications.
+**Resolved 2026-06-14:** include Nightingale oath **-5** and major Daedric-quest **-10** as explicit
+1.0 breaches (authentic vow-breaches the doc names; small enough not to dominate the core 4).
+Creed-loss spells are **persistent-while-in-band** (matches the band-state suppression model -- the
+spell is held while Integrity sits in its band, cleared on restoration above the band), NOT
+once-per-crossing.
+**Open:** threshold-crossing player notification text (cosmetic, build-pass).
 
 ---
 
@@ -171,16 +174,28 @@ the spell). Whether Dawnguard cure-vampire quests fire Ash'abah burden entry.
 `PDV_Msg_Argonian_CurseState_VampireOnset` / `_VampireCured` / `_WerewolfOnset` / `_WerewolfCured`.
 Nord-structure adapted to Argonian grief (Hist silence / reconnection). Loud MessageBoxes.
 
-**DominationPressure dispatch -- RULING (recommended): set when Molag Bal piety >= 25 (Seeker) AND
-curseState == vampire** -> escalates posture Silenced -> Corrupted (in `ApplyArgonianCurseHandlers`).
-Clean threshold mirroring other races' Seeker gate; avoids fragile vanilla-feed detection.
+**DominationPressure dispatch -- RULING: set when Molag Bal piety >= 25 (Seeker) AND
+curseState == vampire** -> escalates posture to **Corrupted(4)** (in `ApplyArgonianCurseHandlers`).
+Posture enum `PDV_State_ArgonianHistPosture`: Normal0/Distant1/Strained2/Silenced3/Corrupted4 (from
+`PDV_ArgonianRewardRecords.spec.json`). Clean Seeker-threshold gate; avoids fragile vanilla-feed
+detection. Neglect texture already exists: `PDV_MGEF_Neglect_ArgonianHist_HealRate` (HealRateMult -5)
+applies at posture Silenced or Corrupted.
 
-**Hist creed-loss dispatch values -- keep as locked spec.json:** -4.0 (abandonment -> Distant; light,
-soft state via passive decay), -8.0 (corruption -> vampire+Molag; heavy, deepest grief), -6.0
-(intermediate). Confirm the exact triple against the reward spec.json at build time.
+**Hist creed-loss dispatch values -- RESOLVED 2026-06-14 (exact, from
+`references/authoring/PDV_ArgonianRewardRecords.spec.json` creedViolation, target = PDV_Deity_Hist
+piety / Hist substrate relation; medium/major only, no minor-tier loss):**
 
-**Open:** is below-20%-health detection already hooked, or needs combat polling? Is Molag Bal path
-Argonian-accessible (gates the DominationPressure rule)? MESG vs INFO record type (Nord uses MESG).
+| id | magnitude | trigger | player text |
+|---|---|---|---|
+| hist-abandonment-extended | -4.0 | extended Hist neglect past the 3-day grace into posture Distant while still neglecting (medium) | "The Hist has felt your absence. Its memory of you grows thin." |
+| hist-corruption-domination | -8.0 | domination pressure driving posture to Corrupted (vampire grief + domination) (major) | "Something has come between you and the Hist. The connection is fouled." |
+| void-overreach-against-hist | -6.0 | leaning hard into Void/Sithis while Hist maintenance lapsed past grace (major; Void must not replace Hist) | "You reached for the Void and let the Hist slip. The marsh feels further away." |
+
+Curse messages are **MESG** records (Nord precedent, manager 295-297), not INFO.
+
+**Open (genuinely build-pass, not doc-answerable):** is below-20%-health detection already hooked, or
+needs a combat poll? Is the Molag Bal path Argonian-accessible (gates the DominationPressure rule --
+confirm by grepping `PDV_DaedricPath_MolagBal` stance for Argonian at build time)?
 
 ---
 
@@ -227,33 +242,61 @@ below 3.3/day.
 (Open Defiant -100..-76 Talos x1.5; Private Defiant -75..-51 x1.25; Uncommitted -50..+50 x1.0; Public
 Compliant +51..+75 x0.75; Concordat Enforcer +76..+100 x0.5).
 
-**Secondary modifiers on Arkay/Stendarr (doc line 110):**
-- Concordat Enforcer (>+50): **Arkay -15%** daily shift, **Stendarr -15%** daily shift.
-- Open Defiant: **Stendarr +15%** daily shift; Arkay unaffected. (From grounding; confirm the Open
-  Defiant Arkay/Stendarr row against the Imperial doc at build time.)
+**Secondary modifiers on Arkay/Stendarr (RESOLVED 2026-06-14 from Imperial doc 109-111 -- exact):**
+- Compliant side, **>+50** (Public Compliant + Concordat Enforcer): **Arkay -15%** daily shift (mass
+  graves / inadequate death rites enabled), **Stendarr -15%** daily shift (mercy incompatible with
+  active persecution).
+- Defiant side, **<-50** (Private + Open Defiant): **Stendarr +15%** daily shift (active resistance =
+  merciful act); **Arkay unaffected** (death rites transcend politics).
+- Note the doc triggers span BOTH bands per side (>+50 / <-50), not only the extreme state.
 - Wire via explicit per-state `GainMultiplierPerTrackState` / `DecayMultiplierPerTrackState` arrays on
   `PDV_Deity_Arkay` and `PDV_Deity_Stendarr` (Khajiit-lunar precedent; parallels the Talos fallback at
-  `PDV_DeityBase.psc` ~376-391). Default 1.0 in the three middle states.
+  `PDV_DeityBase.psc` ~376-391). Arkay: 1.0 except 0.85 in the two compliant states. Stendarr: 1.0
+  except 0.85 in the two compliant states and 1.15 in the two defiant states.
 
-**Per-action Concordat point table (replace the current flat +/-15):** graduated magnitude bands
-- major civic/Talos pressure: +/-15 (e.g. report a Talos worshipper +15, hidden Talos shrine -15)
-- civil-war commitment: +/-20 (e.g. Stormcloak commitment -20)
-- medium: +/-10
-- minor: +/-5
+**Per-action Concordat point table (RESOLVED 2026-06-14 from Imperial doc 113-122 -- exact; replaces
+the current flat +/-15). Positive = toward +100 Enforcer/compliance:**
 
-The exact per-action assignment should be pulled from the Imperial doc's signal table at build time;
-values are designed (not placeholders) -- do NOT auto-retune; validate in pre-beta and patch in 1.1 if
+| Action | Points |
+|---|---|
+| Find / activate hidden Talos shrine | -15 |
+| Help a Talos worshipper escape the Thalmor | -15 |
+| Kill a Thalmor Justiciar (unprovoked) | -10 |
+| Side with the Stormcloaks | -20 |
+| Refuse to report a Talos worshipper | -5 |
+| Publicly observe the Talos ban | +5 |
+| Report a Talos worshipper to the Thalmor | +15 |
+| Attack a Talos worshipper | +15 |
+
+Values are designed, not placeholders -- do NOT auto-retune; validate in pre-beta and patch in 1.1 if
 swings prove too punishing.
 
-**Open:** the full per-action point mapping (doc signal table); how the 10+ Concordat actions are
-wired in the manifest (reason-string matching vs a points map); signal-handler ownership to avoid
-double-counting across Civil War / Thalmor / Legion domains.
+**Open (genuinely build-pass, not doc-answerable):** how the 8 actions are wired in the manifest
+(reason-string matching vs a points map); signal-handler ownership to avoid double-counting across
+Civil War / Thalmor / Legion domains.
 
 ---
 
-## 9. Status / next step
+## 9. Cross-cutting build hook
+
+The **below-20%-health** trigger is shared by two records: Orc **Code Holds** (sec.3,
+`PDV_SPEL_OrcCodeHolds`) and Argonian **Sithis T3** near-death burst (sec.5). Build ONE detection hook
+(an `OnHealthChange`/`OnHit` poll or a combat-end-if-dipped check) and fan it to both, rather than two
+separate polls. Confirm at build whether any such hook already exists in the manager.
+
+## 10. Status / next step
 
 These records are authored into NO ESP and NO manager this session (spec only). The next ESP-record
-build pass (Skyrim closed) authors them by hand per the EditorIDs/magnitudes above, then verifies with
-the relevant `--check` tools. The Altmer track is a deliberate user override of the locked Altmer doc
-and that doc needs later reconciliation.
+build pass (Skyrim closed, after the Voice Conformance Pass lands) authors them by hand per the
+EditorIDs/magnitudes above, then verifies with the relevant `--check` tools. The Altmer track is a
+deliberate user override of the locked Altmer doc and that doc needs later reconciliation.
+
+**Open-question status (resolved 2026-06-14 offline vs genuinely deferred to the build pass):**
+- RESOLVED from docs: Imperial point table (8 actions) + secondary-mod thresholds; Argonian Hist
+  creed-loss triple (-4/-8/-6 with triggers + text), posture enum (Corrupted=4), curse = MESG; Breton
+  Nightingale/Daedric breaches + persistent-while-in-band creed-loss; Four Holds = the 4 vanilla
+  strongholds.
+- GENUINELY DEFERRED (need ESP/code/runtime at build): every "which vanilla quest stage emits signal X"
+  routing (Altmer 6 actions, Imperial 8 actions, Orc oath-break sec.41); FormID of the portable Far
+  Shores token object; below-20%-health detection hook (sec.9); Molag Bal path Argonian-accessibility
+  grep; threshold-crossing notification text.
