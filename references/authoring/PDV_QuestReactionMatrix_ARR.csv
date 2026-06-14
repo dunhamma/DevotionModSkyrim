@@ -1,0 +1,27 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+zzzAoMMq08,No Mercy,999,Enacted the No Mercy creed against the corrupted,smite_corruption,Stendarr,+,S,milestone,Vigilant zzzAoMMq08 s999 ShutDownStage (No Mercy creed; lore+structure),Vigilant.esm:00EA8A
+zzzAoMMqGoodEnd,Art of Mercy,255,Chose mercy as the Vigilant's higher virtue,show_mercy,Stendarr,+,S,milestone,Vigilant zzzAoMMqGoodEnd s255 ShutDownStage (Art of Mercy; lore+structure),Vigilant.esm:4D0376
+zzzCHMQ00,Coldharbour,999,Entered Coldharbour to oppose Molag Bal,defy_daedra,Molag Bal,-,C,milestone,Vigilant zzzCHMQ00 s999 ShutDownStage (Coldharbour; lore+structure),Vigilant.esm:12F24E
+zzzCHMQ01,Aetherius,255,Reached Aetherius against Coldharbour's dark,honor_divine,Akatosh,+,S,milestone,Vigilant zzzCHMQ01 s255 terminal (no ShutDown flag - RUNTIME-VERIFY),Vigilant.esm:1363DB
+zzzCHSubQuest10,Knight of Arkay,255,Honored the fallen Knight of Arkay in Coldharbour,honor_divine,Arkay,+,m,milestone,Vigilant zzzCHSubQuest10 s255 ShutDownStage,Vigilant.esm:1C31F2
+zzzCHSubQuest12,Knight of Kynareth,255,Honored the fallen Knight of Kynareth in Coldharbour,honor_divine,Kynareth,+,m,milestone,Vigilant zzzCHSubQuest12 s255 ShutDownStage,Vigilant.esm:334C8F
+zzzCHSubQuest02,Archer of Kyne,255,Honored the fallen Archer of Kyne in Coldharbour,honor_divine,Kyne,+,m,milestone,Vigilant zzzCHSubQuest02 s255 terminal (no ShutDown flag - RUNTIME-VERIFY),Vigilant.esm:1279A1
+zzzCHSubQuest07,Knight of Julianos,999,Honored the fallen Knight of Julianos in Coldharbour,honor_divine,Julianos,+,m,milestone,Vigilant zzzCHSubQuest07 s999 terminal (no ShutDown flag - RUNTIME-VERIFY),Vigilant.esm:1265FB
+zzzCHSubQuest08,Knight of Zenithar,999,Honored the fallen Knight of Zenithar in Coldharbour,honor_divine,Zenithar,+,m,milestone,Vigilant zzzCHSubQuest08 s999 terminal (no ShutDown flag - RUNTIME-VERIFY),Vigilant.esm:1306FA
+zzzRevSub03Rush,Rite of Cannibalism,255,Performed the cannibal rite,cannibalism,Namira,+,S,milestone,Glenmoril zzzRevSub03Rush s255 ShutDownStage,Glenmoril.esm:3ABF2B
+zzzRevSub03Rush,Rite of Cannibalism,255,Performed the cannibal rite,cannibalism,Arkay,-,m,small,Glenmoril zzzRevSub03Rush s255 ShutDownStage (cannibalism defiles Arkay),Glenmoril.esm:3ABF2B
+zzzRevDAAzura,Azura,10,Honored Azura at her shrine,honor_daedra,Azura,+,m,small,Glenmoril zzzRevDAAzura s10 sole content stage (token quest - RUNTIME-VERIFY),Glenmoril.esm:355287
+zzzCrbMq09,Loveletter to the Fifth Era,999,Accepted the divine time-contract,accept_fate,Akatosh,+,S,milestone,Unslaad zzzCrbMq09 s999 ShutDownStage,Unslaad.esm:47A32B
+zzzCrbBqStuhnTsun,Trial of the Gods,999,Passed the Nord divine trial,prove_worth,Tsun,+,m,milestone,Unslaad zzzCrbBqStuhnTsun s999 ShutDownStage,Unslaad.esm:3C8752
+zzzCrbBqStuhnTsun,Trial of the Gods,999,Passed the Nord divine trial,prove_worth,Stuhn,+,m,milestone,Unslaad zzzCrbBqStuhnTsun s999 ShutDownStage,Unslaad.esm:3C8752
+OlenveldBOTE,Beginning of the End,80,Cleansed Olenveld of the Ideal Masters' undeath,cleanse_undeath,Arkay,+,S,milestone,Olenveld OlenveldBOTE s80 Complete (cleansed Ideal Masters; text-confirmed),Olenveld.esp:50FC4D
+EC_SS_MQ102,The Roots of Madness,100,Defeated Thoron and served Sheogorath's agents,serve_daedra,Sheogorath,+,S,milestone,SEC EC_SS_MQ102 s100 ShutDownStage (text-confirmed),Skyrim Extended Cut - Saints and Seducers.esp:09EF5F
+DA10QE,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,defy_daedra,Molag Bal,-,S,milestone,HoH QE s210 (helped Tyranus destroy the altar; text-confirmed),Skyrim.esm:022F08
+DA10QE,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,smite_corruption,Stendarr,+,m,small,HoH QE s210 (Tyranus is a Vigilant of Stendarr),Skyrim.esm:022F08
+DA13QErefuse,The Only Cure (QE - refuse),101,Refused Peryite's bargain,refuse_daedra,Peryite,-,m,small,Only Cure QE s101 (refused Peryite; text-confirmed),Skyrim.esm:08998D
+DA13QEdestroy,The Only Cure (QE - destroy altar),102,Killed Orchendor and destroyed Peryite's altar,defy_daedra,Peryite,-,S,milestone,Only Cure QE s102 (destroyed Peryite's altar; text-confirmed),Skyrim.esm:08998D
+DA13QEdestroy,The Only Cure (QE - destroy altar),102,Killed Orchendor and destroyed Peryite's altar,smite_corruption,Stendarr,+,m,small,Only Cure QE s102 (anti-daedric act),Skyrim.esm:08998D
+ccBGSSSE020_Quest,The Gray Cowl of Nocturnal,100,Received the Gray Cowl of Nocturnal,honor_daedra,Nocturnal,+,S,milestone,Gray Cowl CC s100 (received the Cowl; text-confirmed),ccbgssse020-graycowl.esl:00080F
+000FCQuest02,The Forgotten City - Forget-me-not,1500,Refused to murder the suspect for self-interest,show_mercy,Stendarr,+,S,milestone,FC Quest02 s1500 (refused unjust killing; embedded text-confirmed),ForgottenCity.esp:05965B
+000FCQuest01,The Forgotten City,4000,Persuaded the Arbiter to wind back the Dwarves' Law,seek_truth,Julianos,+,S,milestone,FC Quest01 s4000 good ending (truth over blind obedience; embedded text-confirmed),ForgottenCity.esp:012BB9
+000FCQuest01,The Forgotten City,4050,Reunited Altrius with Cassia,show_compassion,Mara,+,m,small,FC Quest01 s4050 CompleteQuest (reunion; embedded text-confirmed),ForgottenCity.esp:012BB9
