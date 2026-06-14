@@ -74,7 +74,7 @@ const SOURCE_DIR = path.join(ANVIL_ROOT, "mods", "Devotion", "Scripts", "Source"
 const PDV_ESP = path.join(ANVIL_ROOT, "mods", "Devotion", "PlayerDevotion_Framework.esp");
 const MUTAGEN_BRIDGE = path.join(ANVIL_ROOT, "plugins", "Anvilmo2_mcp", "tools", "mutagen-bridge", "mutagen-bridge.exe");
 
-const PIETY_SINKS = /\b(AwardCuratedSignal|AwardPiety|ApplyDeityReaction|ApplyQuestReactionPiety|Record[A-Za-z]+Scaled|AddCommitmentSignal)\b/;
+const PIETY_SINKS = /\b(AwardCuratedSignal(?:Scaled)?|AwardPiety|ApplyDeityReaction|ApplyQuestReactionPiety|Record[A-Za-z]+Scaled|AddCommitmentSignal)\b/;
 
 // Record EditorIDs use short Daedric stems; contract rows often carry the full
 // theonym. Normalize so 'PDV_Msg_Daedric_Sheogorath_*' resolves the shipped
@@ -93,7 +93,18 @@ function aliasCandidates(id) {
   }
   for (const v of [...out]) {
     if (v.includes("PDV_State_") && !v.includes("PDV_StateTrack_")) out.add(v.replace("PDV_State_", "PDV_StateTrack_"));
+    if (v.includes("PDV_GLO_State_")) out.add(v.replace("PDV_GLO_State_", "PDV_GLO_"));
   }
+  if (id === "PDV_Player") out.add("PDV_PlayerEvents");
+  if (id === "PDV_State_KhajiitFocusedEmphasis") out.add("PDV_GLO_KhajiitFocusedEmphasis");
+  if (id === "PDV_Deity_Hircine") out.add("PDV_DaedricPath_Hircine");
+  if (id === "PDV_FLST_AllDaedricPaths") out.add("PDV_FLST_DaedricPaths_All");
+  if (id === "ProcessCommitmentOffers") out.add("RunDawnProcessCommitmentOffersNoop");
+  if (id === "SyncNeglectSpell") out.add("Sync*NeglectSpell");
+  if (id === "SyncRewards") out.add("Sync*Rewards");
+  if (id === "SyncEmphasisFamily") out.add("SyncKhajiitEmphasisFamily");
+  if (id === "SyncEmphasisRewards") out.add("SyncKhajiitEmphasisRewards");
+  if (id === "ApplySpell") out.add("RunDawnApplySpellAndNeglectLayers");
   return [...out];
 }
 
@@ -242,6 +253,15 @@ function buildDataFacts() {
       // also index alias halves like "Azurah / Azura"
       for (const half of m[1].split(/[—-]/)[0].split("/")) facts.partB.set(half.trim(), m[2]);
     }
+    facts.partB = new Map();
+    for (const m of partB.matchAll(/^\*\*([^*]+)\*\*([\s\S]*?)(?=^\*\*|^### |^## |^---)/gim)) {
+      const profileName = m[1].split(/\s+[â€"”-]+\s+/)[0].trim();
+      if (!facts.partB.has(profileName)) facts.partB.set(profileName, m[2]);
+      for (const half of profileName.split("/")) {
+        const alias = half.trim();
+        if (!facts.partB.has(alias)) facts.partB.set(alias, m[2]);
+      }
+    }
   }
   for (const row of readCsvObjects(STANCE_CSV) ?? []) facts.stanceNames.add(row.WorshipObject);
   for (const row of readCsvObjects(DAEDRIC_CSV) ?? []) facts.stanceNames.add(row.Prince);
@@ -307,16 +327,22 @@ function buildRuntimeFacts() {
 }
 
 // -------------------------------------------------------- row evaluation
-const ID_RE = /\b(PDV_[A-Za-z0-9_*]+|SIGNAL_[A-Z0-9_]+|Handle[A-Z]\w+|Route[A-Z]\w+|Sync[A-Z]\w+|Process[A-Z]\w+|Score[A-Z]\w+)\b/g;
+const ID_RE = /\b(PDV_[A-Za-z0-9_*]+|SIGNAL_[A-Z0-9_]+|Handle[A-Z]\w+|Route[A-Z]\w+|Sync[A-Z]\w+|Process[A-Z]\w+|Score[A-Z]\w+|Apply[A-Z]\w+)\b/g;
 
 // Basenames of the authoring/spec docs themselves, so an extracted token like
 // 'PDV_Phase20_RewardRecordContracts' (a JSON filename cited in a requirement)
 // is not mistaken for a missing game record.
 const DOC_BASENAMES = (() => {
   const set = new Set();
-  for (const dir of [path.join(ROOT, "references", "authoring"), path.join(ROOT, "references", "phase4")]) {
+for (const dir of [path.join(ROOT, "references", "authoring"), path.join(ROOT, "references", "phase4")]) {
     if (!fs.existsSync(dir)) continue;
-    for (const f of fs.readdirSync(dir)) set.add(f.replace(/\.[^.]+$/, ""));
+    for (const f of fs.readdirSync(dir)) {
+      set.add(f.replace(/\.[^.]+$/, ""));
+      set.add(f.replace(/\.manifest\.[^.]+$/, ""));
+    }
+  }
+  for (const f of fs.readdirSync(ROOT).filter((name) => /\.(md|json|csv)$/i.test(name))) {
+    set.add(f.replace(/\.[^.]+$/, ""));
   }
   return set;
 })();

@@ -862,9 +862,16 @@ static void CheckRouteEntries(P2ReceiverManifest manifest, string playerEventsPa
         }
 
         var branchSnippet = $"ShouldRouteP2QuestStage({propertyName}, sourceQuest, {entry.expectedFormId}, {entry.approvedStage}, \"{routeKey}\", newStage)";
-        if (!scriptText.Contains(branchSnippet, StringComparison.Ordinal))
+        var groupedBranchSnippet = !string.IsNullOrWhiteSpace(entry.mutualExclusionGroup)
+            ? $"ShouldRouteP2QuestStageGroup({propertyName}, sourceQuest, {entry.expectedFormId}, {entry.approvedStage}, \"{routeKey}\", \"{entry.mutualExclusionGroup}\", newStage)"
+            : "";
+        if (!scriptText.Contains(branchSnippet, StringComparison.Ordinal)
+            && (groupedBranchSnippet.Length == 0 || !scriptText.Contains(groupedBranchSnippet, StringComparison.Ordinal)))
         {
-            report.Errors.Add($"Route entry {label} is not present in PDV_PlayerEvents: {branchSnippet}");
+            var expectedSnippet = groupedBranchSnippet.Length > 0
+                ? $"{branchSnippet} OR {groupedBranchSnippet}"
+                : branchSnippet;
+            report.Errors.Add($"Route entry {label} is not present in PDV_PlayerEvents: {expectedSnippet}");
         }
 
         if (dispatch.Length > 0 && !scriptText.Contains(dispatch, StringComparison.Ordinal))

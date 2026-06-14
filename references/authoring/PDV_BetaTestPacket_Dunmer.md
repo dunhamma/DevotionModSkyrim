@@ -123,20 +123,20 @@ Survey/status clarity, disposable-save preflight OriginRace=5/DebugLevel=2.
 
 Before -> after step count: 13 -> 7.
 
-## Current-Build Refresh (2026-06-14) -- PART RUNNABLE, PART WAITS ON BUILD PASS
+## Current-Build Refresh (2026-06-14) -- READBACK CLEAN, RUNTIME PENDING
 
-The ancestor-layer curse silence (build-batch test 2) is runnable now. The
-twilight-window outdoor emitter and Layer-2 werewolf scaling are being wired by
-the concurrent build pass; their steps are marked **PENDING build-pass
-confirmation**. Items above stay valid.
+The ancestor-layer curse silence (build-batch test 2), twilight-window outdoor
+emitter, and Layer-2 werewolf scaling are now source/compile/readback clean.
+Runtime/manual proof is still pending. Items above stay valid.
 
 Cross-cutting reminders:
 - State inits ONLY on a NEW save / `coc qasmoke`; disable `Devotion - Living
   Deities Test` in MO2 first.
 - Debug seeding is the MCM Debug page, NOT `cqf`. Standard `set` / `coc` only.
-- The outdoor Good-Daedra shrine emitter fires on the blessing being APPLIED
-  (`OnMagicEffectApplyEx`), NOT a cell/location change -- so `coc` to the shrine and
-  activating it works fine. It is DLC2 Solstheim altars only (the Good Daedra have
+- The outdoor Good-Daedra shrine emitter fires from `PDV_MGEF_DunmerShrineCure`,
+  the PDV CureDisease magic effect attached to the three DLC2 altar spells, NOT a
+  cell/location change -- so `player.cast` on the altar spell or activating the
+  real shrine works fine. It is DLC2 Solstheim altars only (the Good Daedra have
   no other vanilla blessing shrine).
 
 ### Ancestor-layer curse silence (build-batch test 2) -- runnable now
@@ -156,7 +156,7 @@ Vampire silences the ash-prayer (Layer 1 = 0x) -- the signature consequence.
 6. `Curse none` -> posture `restored, but scarred`; prayer credits fully again.
 7. **PASS:** prayer is silent under vampire (0x) + correct 4 posture labels.
 
-### Dawn/dusk twilight window (Azura) -- portable + outdoor wired (runtime pending)
+### Dawn/dusk twilight window (Azura) -- portable + outdoor readback clean (runtime pending)
 
 Two 3-hour windows (06:00-09:00 dawn, 18:00-21:00 dusk), +0.25 piety each,
 once-per-window daily cap (`SIGNAL_DUNMER_TWILIGHT_RITE = 704`).
@@ -166,19 +166,22 @@ once-per-window daily cap (`SIGNAL_DUNMER_TWILIGHT_RITE = 704`).
   ash-prayer; watch for the twilight signal. Confirm a second prayer in the same
   window is silent (once-per-window cap).
 - OUTDOOR Good-Daedra shrine -- DLC2 Solstheim Azura/Boethiah/Mephala altars ONLY
-  (the Good Daedra have no other vanilla blessing shrine). Built 2026-06-14, runtime
-  PENDING. The emitter matches the altar BLESSING being applied
-  (`OnMagicEffectApplyEx`, altar spells `03BCFB`/`03BCFC`/`03BCFD`), so `coc` is fine.
+  (the Good Daedra have no other vanilla blessing shrine). Built 2026-06-14,
+  readback-clean, runtime PENDING. The altar spells `03BCFB`/`03BCFC`/`03BCFD`
+  now use `PDV_MGEF_DunmerShrineCure` (`071554:PlayerDevotion_Framework.esp`),
+  whose `PDV_DunmerShrinePrayerEffect` routes the signal on effect start.
   To test:
   - `set PDV_GLO_OriginRace to 5`, `set PDV_GLO_DebugLevel to 2`, `set gamehour to 7`.
-  - Console shortcut (no Solstheim trip): the altar spell is `03BCFB` in
+  - Console shortcut (no Solstheim trip): the Azura altar spell is `03BCFB` in
     Dragonborn.esm; prefix it with Dragonborn's load index (`04` in this Anvil
-    order -- loadorder.txt line 6) -> `player.removespell 0403BCFB` then
-    `player.addspell 0403BCFB` (faithfully simulates the altar, whose script does
-    `AddSpell(blessing)`). Boethiah = `0403BCFC`, Mephala = `0403BCFD`.
+    order -- loadorder.txt line 6) -> `player.cast 0403BCFB player`. Boethiah =
+    `player.cast 0403BCFC player`, Mephala = `player.cast 0403BCFD player`.
     NOTE: `help` by EditorID does NOT work -- this list strips EditorIDs and the
     altar spell has no Name. If the load order changes, re-derive the prefix via
     `help "Bend Will" 0` (a NAMED Dragonborn shout) and read its 2-hex prefix.
+  - Real-shrine path: travel or `coc` to the Solstheim altar location, activate
+    the Azura/Boethiah/Mephala shrine, and read the Papyrus log for the same
+    Dunmer twilight route marker.
   - Expect: `RouteDunmerOutdoorGoodDaedraShrine complete: dlc2_good_daedra_shrine`
     + `Dunmer Dawn twilight rite routed`. A second add in the same window/day logs
     `already recorded today`; outside the window (`set gamehour to 12`) -> no line.

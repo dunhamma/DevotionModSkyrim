@@ -288,20 +288,20 @@ remains pending.
   owns `SIGNAL_DUNMER_TWILIGHT_RITE = 704` / `DELTA_DUNMER_TWILIGHT_RITE = 0.25`; the manager checks
   the game-time fraction in `TryAwardDunmerTwilightWindowSignal(reason)` and calls it from
   `HandleDunmerPortableShrinePrayer`. Default `pdv_verify` guards the manager/Azura snippets. Outdoor
-  Good Daedra shrine activation still needs an exact emitter.
+  Good Daedra shrine activation now has a PDV-owned cure-effect emitter and is readback clean.
 
 **Open:** Grey Quarter NPC list hardcoded vs JSON-config; does "Windhelm Dunmer support" include
 Ulfric-opposition or refugee-aid-only; whether twilight window bounds should be configurable globals vs
 hardcoded; runtime/manual proof that werewolf posture scales Layer-2 Good Daedra gains to 0.75x and that
 twilight awards cap once per dawn and dusk window.
 
-**Outdoor shrine emitter (built 2026-06-14, source/compile-clean):** detection is limited to the
+**Outdoor shrine emitter (built 2026-06-14, source/compile/readback-clean):** detection is limited to the
 Dragonborn DLC2 Solstheim altars (Azura/Boethiah/Mephala, blessing spells `03BCFB`/`03BCFC`/`03BCFD`) --
-the Good Daedra have no vanilla blessing-giving world shrines. `OnMagicEffectApplyEx` matches the altar
-blessing spell (the three share one base effect `0FBFF5`, so the source-spell is the discriminator) and
-routes `RouteDunmerOutdoorGoodDaedraShrine` -> `HandleDunmerOutdoorGoodDaedraShrine` ->
-`TryAwardDunmerTwilightWindowSignal`. The Azura statue (DA01) and the Boethiah/Mephala quest shrines
-are non-blessing activators (no clean hook).
+the Good Daedra have no vanilla blessing-giving world shrines. The altar spells now point at
+`PDV_MGEF_DunmerShrineCure` (`071554:PlayerDevotion_Framework.esp`), a CureDisease effect carrying
+`PDV_DunmerShrinePrayerEffect`, which routes `RouteDunmerOutdoorGoodDaedraShrine` ->
+`HandleDunmerOutdoorGoodDaedraShrine` -> `TryAwardDunmerTwilightWindowSignal` on effect start. The Azura
+statue (DA01) and the Boethiah/Mephala quest shrines are non-blessing activators (no clean hook).
 
 ---
 

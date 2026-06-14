@@ -63,6 +63,15 @@ RouteArgonianHistMaintenanceSource complete: po3_book_argonian_hist
 > texture by the posture-dream step below. The "do not accept this as proof"
 > guard for these levers now lives in the Generic-source silence check.
 
+## Edge Build - Void And People Guard
+
+This packet does not approve a new Void/Sithis or People/community quest-stage
+source. Use the generic-source silence procedure below as the edge guard:
+generic murder, a single Dark Brotherhood join, swimming loops, and same-bed
+sleep loops must not move Hist, People, Void, or bed-of-choice state. Shadowscale
+and posture-dream steps later in this packet are seeded feature proofs, not
+source-fill authority for new organic hooks.
+
 ## Wrong-Origin And Generic Silence
 
 Wrong-origin check:

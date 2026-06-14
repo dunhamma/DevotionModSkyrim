@@ -61,6 +61,17 @@ the packet closes.
   NON-LivingStory path (OldContract/Exchange/BanditRoad) from a fresh save, then
   Name -- the rest of Naming is already proven.
 
+## Edge Build - DA05 Mercy And Baan Dar Cadence
+
+The edge build for this packet is split across two existing procedures rather
+than a separate save route. For DA05, run the "Mercy branch + duplicate /
+anti-farm check" on a separate clean save from the stage-100 accepted branch;
+stage `105` must produce only the mercy marker and must not double-score the
+stage-100 route. For the live variety cadence risk, run "Baan Dar Opens the Gap"
+from the Variety Tranche Addendum: sub-20% health while in combat fires once per
+day on the Bandit Road path, while above-20%, out-of-combat, repeat same-day,
+off-path, and non-Bosmer origin attempts stay silent.
+
 ## Expected Build - Y'ffre Hunt-Law Pressure
 
 Use a disposable Bosmer save or a clean reload before DA05 has resolved.
