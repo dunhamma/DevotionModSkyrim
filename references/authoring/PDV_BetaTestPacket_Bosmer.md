@@ -90,7 +90,7 @@ Old Contract path evidence. It is not enough by itself to create or change Magic
 Effects. If this pass is meant to prove visible reward behavior, do this before
 the DA05 branch:
 
-1. MCM -> PlayerDevotion -> Player page -> enable **Developer Options**.
+1. MCM -> Devotion -> Player page -> enable **Developer Options**.
 2. Open the **Debug page**.
 3. Click **Bosmer -> OldContract**.
 4. Click **Show piety map** and confirm the Y'ffre index from the message.
@@ -504,7 +504,7 @@ qasmoke` and disable `Devotion - Living Deities Test` in MO2 first.
 
 ### Setup
 1. `coc qasmoke`, then `set PDV_GLO_OriginRace to 4`, `set PDV_GLO_DebugLevel to 2`.
-2. MCM -> PlayerDevotion -> Player page -> enable **Developer Options**, open the
+2. MCM -> Devotion -> Player page -> enable **Developer Options**, open the
    **Debug page**.
 3. Click **Show piety map** -> confirm **3 = Y'ffre, 4 = Z'en, 5 = Baan Dar**
    (use what the map prints if it disagrees; do not trust hardcoded indices).
