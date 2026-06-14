@@ -98,3 +98,64 @@ Daedric:Malacath,313,rest-under-open-sky,+,small,0.25,3,0,PathOpen,,the exile en
 Daedric:Malacath,362,steal-item,-,small,-0.25,3,0,PathOpen,,thieving is the coward's path the honest outcast scorns
 Daedric:Malacath,364,assault-innocent,-,medium,-0.75,2,0.5,PathOpen,,striking the defenseless is the weakness he despises
 Daedric:Malacath,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,Volendrung taken up
+Daedric:Mehrunes Dagon,300,kill-undead,+,small,0.5,3,0,PathOpen,ActorTypeUndead,what clings past its ending is dragged into the ruin it earned
+Daedric:Mehrunes Dagon,344,increase-skill,+,small,0.25,3,0,PathOpen,,the Prince of ambition rewards the drive to seize ever greater power
+Daedric:Mehrunes Dagon,331,enchant-item,-,small,-0.25,3,0,PathOpen,,binding power to endure in a thing offends the principle of unmaking
+Daedric:Mehrunes Dagon,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,settled comfort in the hearth is the order he means to burn down
+Daedric:Meridia,304,murder-defenseless,-,medium,-0.75,2,0.5,PathOpen,,snuffing out innocent life is the deepest affront to the Lady of Light
+Daedric:Meridia,303,kill-animal-noncombat,-,small,-0.25,3,0,PathOpen,,needless slaughter of the living dims the light she champions
+Daedric:Nocturnal,331,enchant-item,+,small,0.5,3,0,PathOpen,,shadow and luck bound into a thing; the Nightingale's unseen craft
+Daedric:Nocturnal,342,read-lore-book,+,small,0.25,3,0,PathOpen,,the unknowable courts her servants; secrets kept in the dark
+Daedric:Nocturnal,2,kill-hostile-humanoid,-,small,-0.25,3,0,PathOpen,,loud bloodshed draws the eye; the shadow takes quietly; not by the blade
+Daedric:Nocturnal,364,assault-innocent,-,small,-0.5,3,0,PathOpen,,open violence calls the guard and the gaze; the unseen take is her way
+Daedric:Peryite,331,enchant-item,+,small,0.25,3,0,PathOpen,,patient repetitive craft kept in its lowly proper place pleases him
+Daedric:Peryite,333,cook-meal,+,small,0.25,3,0,PathOpen,,the humble daily task done diligently honors the lowest ordered rung
+Daedric:Sanguine,330,smith-item,-,small,-0.25,3,0,PathOpen,,sweating at the forge is the sober grind that has no place at his feast
+Daedric:Sanguine,344,increase-skill,-,small,-0.25,3,0,PathOpen,,patient self-betterment is the restraint that spoils the indulgence
+Daedric:Hircine,303,kill-animal-noncombat,+,medium,0.75,2,0.5,PathOpen,,the stalk and the kill of wild game is the Hunt itself
+Daedric:Hircine,304,murder-defenseless,-,small,-0.5,3,0,PathOpen,,soft prey with no chase dishonors the worthy Hunt
+Daedric:Molag Bal,365,raise-undead,+,medium,0.75,2,0.5,PathOpen,ActorTypeUndead,souls bound into servitude past death; the lord of vampires commands the dead
+Daedric:Molag Bal,2,kill-hostile-humanoid,+,small,0.5,3,0,PathOpen,,the strong crush the two-legged; domination proven by force
+Daedric:Molag Bal,360,pick-owned-lock,+,small,0.25,3,0,PathOpen,owned,no ward holds against the dominator; he forces what another would keep
+Daedric:Molag Bal,361,trespass,+,small,0.25,3,0,PathOpen,,no threshold bars the master; he enters where he wills
+Daedric:Molag Bal,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,soft rest is the slave's consolation; he scorns the comfort of the bed
+Daedric:Hermaeus Mora,331,enchant-item,+,small,0.5,3,0,PathOpen,,arcane secret bound into form -- hoarded knowledge made manifest
+Daedric:Hermaeus Mora,332,brew-potion,+,small,0.25,3,0,PathOpen,,the hidden properties of things distilled -- applied secret-lore
+Daedric:Hermaeus Mora,334,harvest-ingredient,+,small,0.25,3,0,PathOpen,,each gathered specimen is one more thing catalogued and known
+Daedric:Namira,365,raise-undead,+,medium,1.0,1,0.5,PathOpen,ActorTypeUndead,undeath and decay are her domain; the dead made to walk again serve her
+Daedric:Namira,362,steal-item,+,small,0.5,3,0,PathOpen,owned,the cast-out take the leavings of the respectable; their kept things are hers
+Daedric:Namira,360,pick-owned-lock,+,small,0.25,3,0,PathOpen,owned,the shut-away places open to the outcast; no ward keeps the dark out
+Daedric:Namira,333,cook-meal,-,small,-0.25,3,0,PathOpen,,the clean hearth-table is the comfort of the respectable; not her hunger
+Daedric:Namira,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,she belongs in the dark beneath; not the soft kept bed of the cared-for
+Daedric:Sheogorath,331,enchant-item,+,small,0.5,3,0,PathOpen,,one thing made into another -- transformation is the Wabbajack's own joke
+Daedric:Sheogorath,302,kill-dragon,+,small,0.5,3,0,PathOpen,,the magnificently absurd -- nothing predictable about slaying a dragon
+Daedric:Sheogorath,350,heal-or-cure-npc,+,small,0.25,3,0,PathOpen,,mending on a whim -- the Wabbajack heals as gladly as it harms
+Daedric:Sheogorath,344,increase-skill,-,small,-0.25,3,0,PathOpen,,the patient methodical grind is the dullest thing he can imagine
+Daedric:Sheogorath,333,cook-meal,-,small,-0.25,3,0,PathOpen,,the orderly predictable supper bores him -- routine is the enemy
+Daedric:Vaermina,304,murder-defenseless,+,small,0.5,3,0,PathOpen,,the final terror on the helpless -- the waking nightmare made absolute
+Daedric:Vaermina,313,rest-under-open-sky,+,small,0.25,3,0,PathOpen,,the unsheltered sleeper still dreams; and she still harvests
+Daedric:Vaermina,341,read-spell-tome,+,small,0.25,3,0,PathOpen,,arcane secrets drawn from the dreaming mind feed her hoard
+Daedric:Vaermina,333,cook-meal,-,small,-0.25,3,0,PathOpen,,the warm hearth and shared table is the comfort she scorns
+Daedric:Vaermina,332,brew-potion,-,small,-0.25,3,0,PathOpen,,restoratives undo the fear and affliction she sows
+Daedric:Clavicus Vile,331,enchant-item,+,small,0.25,3,0,PathOpen,,a soul bargained into the work; power claimed by terms; not toil
+Daedric:Clavicus Vile,330,smith-item,-,small,-0.25,3,0,PathOpen,,honest toil makes what a deal could have won; the long way round bores him
+Daedric:Clavicus Vile,344,increase-skill,-,small,-0.25,3,0,PathOpen,,earning by sweat what a bargain delivers clean; why work for the outcome?
+Daedric:Clavicus Vile,360,pick-owned-lock,-,small,-0.25,3,0,PathOpen,owned,the pried door skips the deal; take it by terms; not by breaking in
+Daedric:Azura,345,discover-location,+,small,0.5,3,0,PathOpen,,the twilight-traveler crosses each threshold prophecy points toward
+Daedric:Azura,314,sleep-in-bed,+,small,0.25,3,0,PathOpen,,she keeps the dusk-and-dawn watch over the sleeper's threshold
+Daedric:Azura,364,assault-innocent,-,small,-0.5,3,0,PathOpen,,the gentlest Prince -- striking the harmless offends her mercy
+Daedric:Azura,365,raise-undead,-,medium,-0.75,2,0.5,PathOpen,ActorTypeUndead,defiling the soul-cycle her Star was made to keep pure
+Daedric:Boethiah,364,assault-innocent,+,small,0.5,2,0,PathOpen,,the treacherous first strike is the Prince of Plots own art
+Daedric:Boethiah,362,steal-item,+,small,0.25,3,0,PathOpen,owned,theft is cunning made deed -- deceit pleases the Prince of Plots
+Daedric:Boethiah,351,clear-bounty-serve-time,-,medium,-0.75,1,0.5,PathOpen,,bowing to another's law betrays the worthy tyrant who makes her own
+Daedric:Mephala,364,assault-innocent,+,small,0.5,3,0,PathOpen,,discord struck into the unsuspecting feeds the web of intrigue
+Daedric:Mephala,332,brew-potion,+,small,0.25,3,0,PathOpen,,the poison brewed is the unseen blade in a cup
+Daedric:Mephala,2,kill-hostile-humanoid,-,small,-0.25,3,0,PathOpen,,the open charge is honest war; she keeps the unseen blade
+Daedric:Mephala,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,the open hand of trust unweaves the web of manipulation
+Daedric:Mephala,313,rest-under-open-sky,-,small,-0.25,3,0,PathOpen,,the open sky is exposure; the Webspinner keeps to the unseen
+Daedric:Malacath,302,kill-dragon,+,medium,1.0,2,0.5,PathOpen,,felling the mightiest foe is the supreme proof of raw strength
+Daedric:Malacath,344,increase-skill,+,small,0.25,3,0,PathOpen,,the outcast hardens himself by his own toil; strength earned
+Daedric:Malacath,304,murder-defenseless,-,medium,-0.75,2,0.5,PathOpen,,killing the helpless is the coward's act; the strong meet the strong
+Daedric:Malacath,360,pick-owned-lock,-,small,-0.25,3,0,PathOpen,owned,the thief's furtive trick; the honest outcast scorns the sneak's way
+Daedric:Hermaeus Mora,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,oblivious sleep surrenders memory; the keeper of memory gains nothing from lost hours
+Daedric:Hermaeus Mora,351,clear-bounty-serve-time,-,small,-0.25,3,0,PathOpen,,to buy the record clean offends the keeper who lets nothing be unwritten

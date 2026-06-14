@@ -343,3 +343,28 @@ Manual closeout remains per race:
 - Survey Devotion or MCM Player page explains what changed and why.
 - Final placement is tracked separately from QASmoke.
 - Stack snapshot records active boons, favors, prices, privileges, neglect/scar effects, and curse or Daedric modifiers.
+
+## Next Build-Pass Record Spec (magnitudes + EditorIDs)
+
+The locked magnitudes and EditorIDs for the next ESP-record build pass live in
+`PDV_NextBuildPass_RecordSpec.md` (record list + magnitude kept together per ruling). Rulings made
+with the user 2026-06-14. Headline magnitudes recorded there:
+
+- **Altmer ThalmorAlignment** (USER OVERRIDE of the locked Altmer doc): -100..+100 5-state Concordat
+  mirror, dual self-cultivation/enforcement band multipliers (x1.5..x0.5), Lorkhan modifier x0.75..x1.5,
+  point table +15/+20/-15/-20/-5/-25. Altmer race doc needs later reconciliation.
+- **Breton KnightlyVowIntegrity:** breaches TG -30 / DB -40 / innocent-kill -15 / abandon-NPC -10;
+  suppression below-50 x0.75 (Stendarr x0.5) and below-25 x0.5 (Stendarr x0.25); 4 BC-0477 creed-loss spells.
+- **Orc Witnessed (5 beats):** Argonian-variety mirror; Trial of Iron 4-choice (+5 each / Yoke +15
+  carry), Four Holds +1.0 x4, Code Holds survival +0.5, Hearth-Held bed-of-choice, Watchers notif 1/dawn.
+- **Redguard Far Shores:** DELTA_FAR_SHORES_TOKEN 1.0; token UNCONDITIONAL V1 (BC-0524); Ash'abah category-gate.
+- **Argonian:** Sithis T3 = StaminaRateMult +10% passive + 50-stamina near-death burst (1/day);
+  curse MESGs (BC-0642); DominationPressure at Molag Bal>=25 + vampire; Hist creed-loss -4/-8/-6.
+- **Dunmer:** werewolf Layer-2 0.75x Good Daedra; Grey Quarter +0.75/act + Mephala +2.0 Champion;
+  dawn/dusk 3-hr windows +0.25.
+- **Orc dawn-side:** oath-break DELTA -1.5; forge/strength kept on the likes/dislikes faucet (no new hooks).
+- **Imperial Concordat:** Enforcer Arkay/Stendarr -15% daily, Open Defiant Stendarr +15%; graduated
+  point table (+/-5/10/15/20) replacing the flat +/-15.
+
+Idempotency: all magnitudes are entered BY HAND in the build pass; do NOT run a cumulative/additive
+rebalance tool (doubles on a 2nd write).
