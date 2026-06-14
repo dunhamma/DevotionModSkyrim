@@ -134,8 +134,10 @@ Cross-cutting reminders:
 - State inits ONLY on a NEW save / `coc qasmoke`; disable `Devotion - Living
   Deities Test` in MO2 first.
 - Debug seeding is the MCM Debug page, NOT `cqf`. Standard `set` / `coc` only.
-- An OUTDOOR Good-Daedra shrine that fires on a cell/location change will NOT
-  trip on `coc` -- walk in via load door / fast-travel.
+- The outdoor Good-Daedra shrine emitter fires on the blessing being APPLIED
+  (`OnMagicEffectApplyEx`), NOT a cell/location change -- so `coc` to the shrine and
+  activating it works fine. It is DLC2 Solstheim altars only (the Good Daedra have
+  no other vanilla blessing shrine).
 
 ### Ancestor-layer curse silence (build-batch test 2) -- runnable now
 
@@ -154,7 +156,7 @@ Vampire silences the ash-prayer (Layer 1 = 0x) -- the signature consequence.
 6. `Curse none` -> posture `restored, but scarred`; prayer credits fully again.
 7. **PASS:** prayer is silent under vampire (0x) + correct 4 posture labels.
 
-### Dawn/dusk twilight window (Azura) -- portable source-clean, outdoor PENDING
+### Dawn/dusk twilight window (Azura) -- portable + outdoor wired (runtime pending)
 
 Two 3-hour windows (06:00-09:00 dawn, 18:00-21:00 dusk), +0.25 piety each,
 once-per-window daily cap (`SIGNAL_DUNMER_TWILIGHT_RITE = 704`).
@@ -163,9 +165,24 @@ once-per-window daily cap (`SIGNAL_DUNMER_TWILIGHT_RITE = 704`).
   use `set timescale` + wait to land inside a window, then trigger the portable
   ash-prayer; watch for the twilight signal. Confirm a second prayer in the same
   window is silent (once-per-window cap).
-- OUTDOOR Good-Daedra shrine (Azura/Boethiah/Mephala) activation inside a window
-  is the build-pass emitter -- **PENDING build-pass confirmation**. Walk to the
-  shrine (do NOT `coc`), activate it inside the window.
+- OUTDOOR Good-Daedra shrine -- DLC2 Solstheim Azura/Boethiah/Mephala altars ONLY
+  (the Good Daedra have no other vanilla blessing shrine). Built 2026-06-14, runtime
+  PENDING. The emitter matches the altar BLESSING being applied
+  (`OnMagicEffectApplyEx`, altar spells `03BCFB`/`03BCFC`/`03BCFD`), so `coc` is fine.
+  To test:
+  - `set PDV_GLO_OriginRace to 5`, `set PDV_GLO_DebugLevel to 2`, `set gamehour to 7`.
+  - Console shortcut (no Solstheim trip): the altar spell is `03BCFB` in
+    Dragonborn.esm; prefix it with Dragonborn's load index (`04` in this Anvil
+    order -- loadorder.txt line 6) -> `player.removespell 0403BCFB` then
+    `player.addspell 0403BCFB` (faithfully simulates the altar, whose script does
+    `AddSpell(blessing)`). Boethiah = `0403BCFC`, Mephala = `0403BCFD`.
+    NOTE: `help` by EditorID does NOT work -- this list strips EditorIDs and the
+    altar spell has no Name. If the load order changes, re-derive the prefix via
+    `help "Bend Will" 0` (a NAMED Dragonborn shout) and read its 2-hex prefix.
+  - Expect: `RouteDunmerOutdoorGoodDaedraShrine complete: dlc2_good_daedra_shrine`
+    + `Dunmer Dawn twilight rite routed`. A second add in the same window/day logs
+    `already recorded today`; outside the window (`set gamehour to 12`) -> no line.
+  - Real-shrine alt: on Solstheim, activate any Reclamation altar inside the window.
 
 ### Layer-2 werewolf scaling (PENDING build-pass runtime)
 

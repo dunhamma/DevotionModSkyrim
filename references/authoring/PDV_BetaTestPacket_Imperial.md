@@ -124,12 +124,12 @@ Blocking notes:
   Survey clarity, reward/stack snapshot.
 - Step count: 11 -> 7.
 
-## Current-Build Refresh (2026-06-14) -- WAITS ON THE BUILD PASS
+## Current-Build Refresh (2026-06-14)
 
 The vampire-rupture halt (build-batch test 1) is runnable now. The Concordat
-graduated 8-action point table is being wired by the concurrent build pass; its
-steps are written but marked **PENDING build-pass confirmation**. Items above
-stay valid.
+graduated 8-action point table was wired and its two clean-hook emitters
+(Stormcloak-side -20, Thalmor-Justiciar-kill -10) **route-proven by the build pass
+(2026-06-14)**; the PENDING marks are cleared below. Items above stay valid.
 
 Cross-cutting reminders:
 - State inits ONLY on a NEW save / `coc qasmoke`; disable `Devotion - Living
@@ -157,22 +157,28 @@ consolidation, not earn-time -- so earn-while-vampire-then-cure-BEFORE-dawn stil
 grows (correct; moot in normal play because auto-dawn fires while still undead).
 Test the accrual halt ONLY while still vampire.
 
-### Concordat graduated 8-action point table (PENDING build-pass confirmation)
+### Concordat graduated 8-action point table (ROUTE-PROVEN 2026-06-14)
 
-`PDV_ConcordatStandingTrack` (-100..+100, 5 states) now carries the exact
-8-action point map (`ApplyImperialConcordatAction` /
-`GetImperialConcordatPressureForAction`). The manager point map is live; the
-vanilla emitters are being wired this pass. DELIVERED actions to test (mark
-PENDING until the build session confirms each emitter):
+`PDV_ConcordatStandingTrack` (-100..+100, 5 states) carries the exact 8-action
+point map (`ApplyImperialConcordatAction` / `GetImperialConcordatPressureForAction`).
+NOTE: the committed band LABEL lags the raw value via the track's lock-in -- prove
+via the raw value in the trace, not the Survey band. Two emitters are route-proven:
 
 ```text
-Side with the Stormcloaks   -20  join the Stormcloaks (Civil War; CW01B join stage)
-Find/activate hidden Talos shrine -15  existing route (key "hidden_talos_shrine")
-Read the Talos Mistake book   +/-  reading the banned-text book emits a Concordat
-                                   point (confirm direction with the build session)
-Kill a Thalmor Justiciar     -10  PLAYER'S OWN killing blow on a ThalmorFaction
-                                   Justiciar (faction 00039F26)
+Side with the Stormcloaks   -20  CW01B Stormcloak join routes the Concordat defiance
+                                 mod event, now table-sourced to -20 (was flat -15).
+                                 QUICK TEST: MCM Debug -> "Concordat defiance" button
+                                 -> [trace: Concordat pressure -20 ... adjustment -20].
+                                 (Compliance / CW01A Legion join stays +15, unchanged.)
+Kill a Thalmor Justiciar     -10  PLAYER'S OWN killing blow on a ThalmorFaction member
+                                 (00039F26) who is NOT a pre-set enemy (rank > -2);
+                                 open kills count [trace: Concordat pressure -10].
+Find/activate hidden Talos shrine -15  existing route (key "hidden_talos_shrine").
 ```
+
+NOT on the Concordat track: reading "The Talos Mistake" book does NOT emit a Concordat
+point -- it routes the separate Talos-PIETY axis (`RouteImperialTalosPressure`), not
+ConcordatStanding. Do not test it as a Concordat action.
 
 KILL-CREDIT CAVEAT: the Justiciar kill scores ONLY the player's own killing blow
 (ATTR_DIRECT_PLAYER). Ally/environment kills are silent by design -- land the

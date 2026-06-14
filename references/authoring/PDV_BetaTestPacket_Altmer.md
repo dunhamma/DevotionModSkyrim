@@ -299,13 +299,12 @@ preserved.
   Wrong-Origin Rejection, Generic-Source Silence, Optional Curse Edge, and the
   post-run runtime_check machine gate.
 
-## Current-Build Refresh (2026-06-14) -- WAITS ON THE BUILD PASS
+## Current-Build Refresh (2026-06-14)
 
 The Lorkhan-penalty lever (build-batch test 5) is runnable now. The
-ThalmorAlignment actions are being wired by the concurrent build pass; their
-steps below are written but marked **PENDING build-pass confirmation** -- do not
-log a FAIL on them until the build session confirms the vanilla emitters landed.
-Items above stay valid.
+ThalmorAlignment actions were wired and **route-proven by the build pass
+(2026-06-14)** -- the PENDING marks are cleared and the steps below reflect how
+each emitter was actually built. Items above stay valid.
 
 Cross-cutting reminders:
 - State inits ONLY on a NEW save / `coc qasmoke`; disable `Devotion - Living
@@ -331,23 +330,29 @@ Lorkhan-adjacent acts now subtract piety (was telemetry-only).
 5. **PASS:** the penalty log fires and piety decreases. No toast is correct
    (silent penalty).
 
-### ThalmorAlignment track (PENDING build-pass confirmation)
+### ThalmorAlignment track (ROUTE-PROVEN 2026-06-14)
 
 `PDV_ThalmorAlignmentTrack` mirrors the Imperial Concordat: range -100..+100,
 5 states (Open Heterodox / Private Heterodox / Uncommitted / Public Orthodox /
 Thalmor Devout). The band drives `GetAltmerLorkhanFactionModifier` (x0.75 / 1.0 /
-1.5 on the Lorkhan penalty). Survey should name the band.
+1.5 on the Lorkhan penalty). NOTE: the committed band LABEL lags the raw value via
+the track's lock-in, so a single action moves the raw value (visible in the trace)
+but may not flip the Survey band -- prove via the raw value, not the label.
 
-DELIVERED actions to test (mark PENDING until the build session confirms each
-emitter):
+All three emitters are route-proven in Papyrus.0.log (build pass 2026-06-14):
 
 ```text
-Read banned texts        -5   read "The Talos Mistake" banned book
-                              (confirm FormID in-game: help "Talos Mistake" 4 BOOK)
-Consort with Daedra      -25  complete a Daedric pact terminal stage
-                              (Azura DA01 / Boethiah DA02 / Hircine DA05)
-Kill a Thalmor agent     -20  land the PLAYER'S OWN killing blow on a
-                              ThalmorFaction member (faction 00039F26)
+Read banned texts        -5   read "The Talos Mistake" book (000ED04D)
+                              [trace: Altmer ThalmorAlignment read_banned_texts -5]
+Consort with Daedra      -25  EQUIP any Daedric artifact (Savior's Hide, Mace of
+                              Molag Bal, Mehrunes' Razor...). The trigger is
+                              OnObjectEquipped of a Daedric artifact, NOT a quest
+                              stage; one-shot per distinct artifact.
+                              [trace: ... consort_with_daedra -25 ...]
+Kill a Thalmor agent     -20  PLAYER'S OWN killing blow on a ThalmorFaction member
+                              (00039F26) who is NOT a pre-set enemy (relationship
+                              rank > -2); open kills and assassinations both count.
+                              [trace: ... kill_thalmor_agent -20]
 ```
 
 KILL-CREDIT CAVEAT: the kill beat scores ONLY the player's own killing blow
