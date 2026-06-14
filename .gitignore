@@ -22,6 +22,8 @@ tools/pdv-stance-author/bin/
 tools/pdv-stance-author/obj/
 tools/pdv-diegetic-author/bin/
 tools/pdv-diegetic-author/obj/
+tools/pdv-dunmer-urn-author/bin/
+tools/pdv-dunmer-urn-author/obj/
 native/vendor/Creation-Kit-Platform-Extended/
 
 # Local agent/editor settings
