@@ -75,6 +75,27 @@
     "emitted": false,
     "reason": "No additional ARR-specific record override is required for the proven shrine replacement slice after Archon removal and PDV framework activation. The planned plugin name is reserved for future Daedric shrine ACTI route adapters or other approved ARR-specific records."
   },
+  "extensionChannel": {
+    "status": "machine-validated-runtime-pending",
+    "purpose": "Second quest-reaction matrix channel adding devotion hooks from the list's own content (new-lands + CC), separate from and leaving unchanged the core matrix.",
+    "loader": "Generic second-channel loader in PDV_PlayerEvents.psc + PDV__ManagerQuest.psc; loads PDV_QuestReactionMatrix_ARR when present, no-op when absent; both compile 0/0; core matrix and core --check unchanged.",
+    "data": {
+      "source": "references/authoring/PDV_QuestReactionMatrix_ARR.csv",
+      "runtimeJson": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR.json",
+      "cells": 26,
+      "questKeys": 22,
+      "watchedQuests": 20,
+      "content": ["Vigilant", "Glenmoril", "Unslaad", "Olenveld", "ForgottenCity", "SEC Saints & Seducers", "House of Horrors QE", "The Only Cure QE", "Gray Cowl CC"]
+    },
+    "machineProof": "node tools/pdv_quest_matrix_compile.mjs --matrix references/authoring/PDV_QuestReactionMatrix_ARR.csv --output <ARR.json> --check = PASS",
+    "runtimeRunbook": "references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_SmokeRunbook.md",
+    "extensionMap": "references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_ExtensionMap.md",
+    "runtimeVerifyCells": 5,
+    "held": [
+      "Core promotion of the QE (vanilla-FormID) and Gray Cowl (CC) hooks pending a deity gain/loss balance review.",
+      "DAc0da cells pending journal-text recovery (externalized strings) to resolve serve-vs-oppose valence."
+    ]
+  },
   "deferredSlices": [
     {
       "id": "arr-daedric-shrine-acti-map",
