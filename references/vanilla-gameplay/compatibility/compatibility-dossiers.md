@@ -73,6 +73,9 @@ Current shareable artifact:
 - The package includes Devotion runtime files and docs only. It deliberately
   excludes Synthesis, ParallaxGen, TexGen, and DynDOLOD output because those
   must be rebuilt against the edited end-user profile.
+- The package includes a data-only Ohmes-Raht / Half-Khajiit origin map:
+  `0x03322B|HalfKhajiit.esp` and `0x05693A|HalfKhajiit.esp` resolve to Khajiit
+  origin index `6` through `PDV_RaceMap.json`.
 
 Known overlap families from the local pass:
 
@@ -81,7 +84,8 @@ Known overlap families from the local pass:
   `DynDOLOD.esp`, `Lord's Vision - Synthesis Gameplay.esp`, and `PG_1.esp`.
 - Shared Authoria/DoD quest and custom-race surfaces: Heart of Dibella QE,
   Caught Red Handed QE, Talos' Tease, The Only Cure QE, Whispering Door QE,
-  Half-Khajiit / Ohmes-Raht, and M'rissi.
+  Half-Khajiit / Ohmes-Raht, and M'rissi. Ohmes-Raht is the only one shipped in
+  this package as a data-map slice; the quest/social surfaces remain candidates.
 - DoD-specific candidate surfaces: Dibellan Baths Sybil blessing
   `akdAltarSybilSpell`, Ohmes-Raht custom-race origin mapping, Mara's Embrace,
   and Talos' Tease social-location context.

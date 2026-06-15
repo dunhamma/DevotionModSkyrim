@@ -20,6 +20,9 @@ not a public support claim and not maintainer approval.
 - No standalone `PDV_DoD_Compatibility.esp` is emitted for this slice. The
   reserved plugin name is for later DoD-specific route adapters if a stable
   Wintersun asset-reuse map or curated social-location hook set is approved.
+- Ohmes-Raht / Half-Khajiit origin support is included as data-only
+  PapyrusUtil mapping in
+  `SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json`.
 - Authoria reuse audit:
   `references/authoring/PDV_Phase21_DoD_AuthoriaReuseAudit.md`. The reusable
   result is the scan/proof method and candidate backlog, not a direct copy of
@@ -113,9 +116,10 @@ houseCARL readback after disabling Wintersun and activating PDV:
   temple/social route patch was emitted.
 - `JOJ_TalosTeaseLocation` from `Talos' Tease.esp` carries `LocTypeDwelling`
   and `LocTypeInn`; no Talos social route patch was emitted.
-- `HalfKhajiitRace` and `HalfKhajiitRaceVampire` win from
-  `DOD - Ohmes-Raht Fix.esp`; no custom-race origin normalization patch was
-  emitted.
+- `HalfKhajiitRace` (`0x03322B|HalfKhajiit.esp`) and
+  `HalfKhajiitRaceVampire` (`0x05693A|HalfKhajiit.esp`) win from
+  `DOD - Ohmes-Raht Fix.esp`; both are mapped to Khajiit origin index `6` by
+  the shipped `PDV_RaceMap.json`.
 
 ## Extensibility Boundary
 
@@ -137,9 +141,9 @@ Future DoD or shared Bordello patches should use curated authored hooks only:
 4. DoD's custom Sybil blessing is a strong candidate for a future explicit
    design decision: either leave it as list content, neutralize its stat boon,
    or route a curated Dibella/Sybil signal after runtime proof.
-5. Ohmes-Raht / Half-Khajiit needs explicit custom-race origin policy before
-   PDV treats it as Khajiit for worship routing. The current package does not
-   change origin detection.
+5. Ohmes-Raht / Half-Khajiit now uses the explicit DoD data-map policy:
+   normal and vampire HalfKhajiit races route as Khajiit. This still needs
+   disposable-save runtime smoke before a public support claim.
 
 ## Smoke Checklist
 
@@ -147,19 +151,22 @@ Run on a disposable DoD test save:
 
 1. Start game and confirm no missing masters or startup crash.
 2. Open the MCM/status surface.
-3. Activate representative Divine, Talos, Nocturnal, and Auriel shrines.
-4. Confirm disease cure remains and vanilla stat boons do not remain in Active
+3. On an Ohmes-Raht / Half-Khajiit character, confirm `PDV_GLO_OriginRace == 6`
+   and no Imperial custom-race fallback diagnostic appears.
+4. If safely reachable, repeat the origin check for vampire Ohmes-Raht.
+5. Activate representative Divine, Talos, Nocturnal, and Auriel shrines.
+6. Confirm disease cure remains and vanilla stat boons do not remain in Active
    Effects.
-5. As Dunmer, test the Solstheim Azura/Boethiah/Mephala altar route during a
+7. As Dunmer, test the Solstheim Azura/Boethiah/Mephala altar route during a
    dawn or dusk window.
-6. Confirm Papyrus log shows the Dunmer outdoor Good Daedra shrine route once
+8. Confirm Papyrus log shows the Dunmer outdoor Good Daedra shrine route once
    and does not duplicate within the same window/day.
-7. Enter Dibellan Baths and Crimson Corner to confirm the list's location
+9. Enter Dibellan Baths and Crimson Corner to confirm the list's location
    content still loads normally.
-8. Trigger one non-shrine devotion action.
-9. Run a dawn tick.
-10. Save, reload, and recheck status/MCM.
-11. Confirm Papyrus log has no new PDV errors.
+10. Trigger one non-shrine devotion action.
+11. Run a dawn tick.
+12. Save, reload, and recheck status/MCM.
+13. Confirm Papyrus log has no new PDV errors.
 
 ## Deferred Follow-Up
 

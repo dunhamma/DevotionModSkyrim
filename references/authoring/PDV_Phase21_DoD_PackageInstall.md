@@ -27,16 +27,19 @@ The archive is MO2-ready. The game-data files are at archive root:
 
 No `PDV_DoD_Compatibility.esp` is included. Local readback showed the proven
 shrine-replacement slice is already handled by `Devotion.esp` after Wintersun
-is removed.
+is removed. Ohmes-Raht / Half-Khajiit origin support ships as data only in
+`SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json`; it maps
+`0x03322B|HalfKhajiit.esp` and `0x05693A|HalfKhajiit.esp` to Khajiit origin
+index `6` without adding `HalfKhajiit.esp` as a Devotion master.
 
 The package also includes the Authoria reuse audit:
 
 `Docs\PDV_Phase21_DoD_AuthoriaReuseAudit.md`
 
 That audit records candidate future adapters for the Dibellan Baths Sybil
-blessing, Ohmes-Raht / Half-Khajiit origin mapping, Heart of Dibella QE, Caught
-Red Handed QE, and Talos' Tease. None of those candidates are shipped in this
-zip yet.
+blessing, Heart of Dibella QE, Caught Red Handed QE, and Talos' Tease. The
+Ohmes-Raht / Half-Khajiit origin mapping is the first shipped extensibility
+slice in this zip; the other candidates remain unshipped.
 
 ## Install Order
 
@@ -154,21 +157,25 @@ Use a disposable save.
 
 1. Start the game and confirm no missing masters or startup crash.
 2. Open the Devotion MCM/status surface.
-3. Activate representative Divine, Talos, Nocturnal, and Auriel shrines.
-4. Confirm disease cure remains.
-5. Confirm vanilla shrine stat boons do not remain in Active Effects.
-6. As Dunmer, test the Solstheim Azura/Boethiah/Mephala altar route during a
+3. On an Ohmes-Raht / Half-Khajiit character, confirm `PDV_GLO_OriginRace`
+   resolves to `6`, the status surface treats the character as Khajiit, and the
+   custom-race Imperial fallback diagnostic does not appear.
+4. If safely reachable, repeat the origin check for vampire Ohmes-Raht.
+5. Activate representative Divine, Talos, Nocturnal, and Auriel shrines.
+6. Confirm disease cure remains.
+7. Confirm vanilla shrine stat boons do not remain in Active Effects.
+8. As Dunmer, test the Solstheim Azura/Boethiah/Mephala altar route during a
    dawn or dusk window.
-7. Enter Dibellan Baths and Crimson Corner.
-8. In Dibellan Baths, activate the standard Dibella shrine marker and confirm it
+9. Enter Dibellan Baths and Crimson Corner.
+10. In Dibellan Baths, activate the standard Dibella shrine marker and confirm it
    behaves like the normalized Dibella shrine.
-9. Treat the Sybil shrine marker as observation-only for this package: record
+11. Treat the Sybil shrine marker as observation-only for this package: record
    whether its list-authored blessing still appears, but do not count that as a
    package failure until a Sybil adapter is explicitly approved.
-10. Trigger one non-shrine devotion action.
-11. Run a dawn tick.
-12. Save, reload, and recheck status/MCM.
-13. Check `Papyrus.0.log` for new `[PDV]` errors.
+12. Trigger one non-shrine devotion action.
+13. Run a dawn tick.
+14. Save, reload, and recheck status/MCM.
+15. Check `Papyrus.0.log` for new `[PDV]` errors.
 
 ## Support Boundary
 

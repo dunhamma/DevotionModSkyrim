@@ -1,6 +1,6 @@
 {
   "schema": "pdv.phase21.dod-compat-package.v1",
-  "status": "shareable-package-built-generated-output-rerun-required-runtime-pending",
+  "status": "shareable-package-built-ohmes-raht-map-shipped-generated-output-rerun-required-runtime-pending",
   "target": {
     "targetId": "DOD",
     "listName": "Diaries of Dibella",
@@ -168,7 +168,7 @@
       "HalfKhajiit.esp",
       "MrissiTailOfTroubles.esp"
     ],
-    "arrPatchReuseDecision": "Do not copy Authoria Reqtificated patches into DoD. houseCARL readback shows those patches are primarily Requiem/list-balancing overrides, not PDV event adapters.",
+    "arrPatchReuseDecision": "Do not copy Authoria Reqtificated patches into DoD. houseCARL readback shows those patches are primarily Requiem/list-balancing overrides, not PDV event adapters. Ohmes-Raht support ships as a DoD-only PDV_RaceMap.json data entry, not an ARR ESP copy.",
     "pdvPatchToolReadback": {
       "validate": "11 rules loaded, 9 ready, 6 build-ready, 2 blocked tooling examples with symbolic payloads",
       "plan": "same counts; no DoD-specific build rule is approved yet"
@@ -213,9 +213,21 @@
     },
     {
       "id": "dod-ohmes-raht-custom-race",
-      "status": "candidate-not-emitted",
+      "status": "shipped-data-map",
       "evidence": "houseCARL readback: HalfKhajiitRace and HalfKhajiitRaceVampire win from DOD - Ohmes-Raht Fix.esp; normal race has ActorTypeNPC and IsBeastRace, vampire race has ActorTypeNPC, ActorTypeUndead, Vampire, and IsBeastRace.",
-      "reason": "PDV needs an explicit custom-race origin normalization policy before treating Ohmes-Raht as Khajiit for devotion routing."
+      "reason": "The package maps both HalfKhajiit race records to PDV Khajiit origin index 6 through SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_RaceMap.json without adding HalfKhajiit.esp as a Devotion.esp master.",
+      "raceMap": {
+        "file": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_RaceMap.json",
+        "raceForms": [
+          "0x03322B|HalfKhajiit.esp",
+          "0x05693A|HalfKhajiit.esp"
+        ],
+        "raceIndices": [
+          6,
+          6
+        ],
+        "origin": "Khajiit"
+      }
     },
     {
       "id": "dod-wintersun-asset-reuse",
@@ -242,6 +254,7 @@
     "checks": [
       "DoD startup without missing masters",
       "MCM/status open",
+      "Ohmes-Raht / Half-Khajiit origin resolves to Khajiit index 6 and does not show the Imperial fallback diagnostic",
       "Divine/Talos/Nocturnal/Auriel shrine cure-only behavior",
       "Azura/Boethiah/Mephala altar route through PDV_DunmerShrinePrayerEffect",
       "Dibellan Baths and Crimson Corner remain enterable",

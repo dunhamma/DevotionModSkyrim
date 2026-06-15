@@ -71,11 +71,11 @@ DoD active readback:
 - The vampire race carries `ActorTypeNPC`, `ActorTypeUndead`, `Vampire`, and
   `IsBeastRace`.
 
-This is enough to identify the race as beast-race-adjacent, but not enough for
-PDV to promise Khajiit-origin behavior. Current PDV origin detection is designed
-around the ten vanilla birth races with explicit vampire normalization. A future
-custom-race adapter should map Ohmes-Raht deliberately to the Khajiit lane or to
-a player-selected origin fallback, then prove save/load and vampire behavior.
+The DoD package now ships the explicit data-only policy for this race: both
+records are listed in `PDV_RaceMap.json` and resolve to Khajiit origin index
+`6`. This keeps `Devotion.esp` free of a `HalfKhajiit.esp` master and does not
+copy any ARR Requiem/list-balancing patch. Runtime smoke still needs to prove
+normal and vampire Ohmes-Raht save behavior before a public support claim.
 
 ### Dibellan Baths
 
@@ -116,7 +116,7 @@ content. Do not add `LocTypeTemple` to them as a shortcut.
 | Candidate | Tool to reuse | Status | Gate before shipping |
 |---|---|---|---|
 | DoD Sybil blessing neutralization or adapter | `pdv-shrine-blessing-author` pattern plus houseCARL readback | Candidate | Decide whether to remove its stat boon, convert it to cure-only, or route a Dibella/Sybil signal. Then verify spell effect readback and runtime activation. |
-| Ohmes-Raht custom-race mapping | Race readback + future origin normalization verifier | Candidate | Add explicit custom-race policy and prove normal/vampire Ohmes-Raht origin behavior. |
+| Ohmes-Raht custom-race mapping | Race readback + `PDV_RaceMap.json` data map | Shipped data map | Prove normal/vampire Ohmes-Raht origin behavior in runtime smoke before public support. |
 | Heart of Dibella QE exact-stage route | `pdv_extract_quest_stage_readback.mjs`, `pdv_phase20_p2_receiver` pattern | Candidate | Approve exact quest/stage/outcome rows; prove no duplicate with vanilla `T01`/Agent of Dibella handling. |
 | Caught Red Handed QE Dibella/social route | Same quest-stage readback workflow | Candidate | Approve exact non-repeatable branch semantics; reject generic adult/social counters. |
 | Talos' Tease curated Talos route | houseCARL quest/location readback + future receiver | Candidate | Identify a stable quest/stage or activator event; avoid generic inn/shop presence scoring. |
@@ -126,6 +126,7 @@ content. Do not add `LocTypeTemple` to them as a shortcut.
 
 Do not add a `PDV_DoD_Compatibility.esp` yet. The reusable Authoria result is
 the proof boundary and scan workflow, not a portable ESP. The current DoD zip
-remains correct for Wintersun replacement and shrine-spell ownership. The next
-safe expansion would be a separate candidate patch for either the Sybil blessing
+remains correct for Wintersun replacement, shrine-spell ownership, and the
+data-only Ohmes-Raht origin map. The next safe expansion would be a separate
+candidate patch for either the Sybil blessing
 or custom-race mapping after the design gate is explicit.
