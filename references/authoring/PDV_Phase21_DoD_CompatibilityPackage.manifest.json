@@ -1,0 +1,142 @@
+{
+  "schema": "pdv.phase21.dod-compat-package.v1",
+  "status": "patch-packaging-local-readback-pass-runtime-pending",
+  "target": {
+    "targetId": "DOD",
+    "listName": "Diaries of Dibella",
+    "priority": "P1",
+    "mo2Root": "D:\\Wabbajack\\modlists\\DoD",
+    "profile": "Diaries of Dibella - Lord's Vision"
+  },
+  "supportBoundary": {
+    "publicSupportClaim": false,
+    "releaseGate": "DoD must still refresh against current public or author-provided evidence before any public support claim.",
+    "handoff": "references/authoring/PDV_Phase21_DoD_AuthorHandoff.md"
+  },
+  "profileState": {
+    "backupDir": "D:\\Wabbajack\\modlists\\DoD\\profiles\\Diaries of Dibella - Lord's Vision\\pdv-dod-backups",
+    "backupStamp": "20260615-130025",
+    "localTestMod": "D:\\Wabbajack\\modlists\\DoD\\mods\\Devotion - PlayerDevotion Local Test",
+    "localTestTarget": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion",
+    "pdvPlugin": "Devotion.esp",
+    "pdvPlacement": "active at the former Wintersun core slot"
+  },
+  "wintersunRemovalSet": {
+    "status": "local-profile-disabled",
+    "count": 20,
+    "plugins": [
+      "Wintersun - Faiths of Skyrim.esp",
+      "Hearthfires - Wintersun Shrines.esp",
+      "Wintersun - Tweaks and Enhancements.esp",
+      "Wintersun - GotT Lite Patch.esp",
+      "Wintersun - Gallows Hall.esp",
+      "Sacrilege - Wintersun.esp",
+      "DBM_Wintersun_Patch.esp",
+      "LOTD_TCC_Wintersun.esp",
+      "COTN Dawnstar - Wintersun Patch.esp",
+      "JKs Dark Brotherhood Sanctuary - Wintersun patch.esp",
+      "TOCQE - Wintersun patch.esp",
+      "TWDQE - Wintersun patch.esp",
+      "FloatingSword_TCIY_Wintersun_Patch.esp",
+      "SDA Wintersun Patch.esp",
+      "Wintersun - Mrissi Patch.esp",
+      "AX ValSerano-Wintersun.esp",
+      "Mannaz-Freyr-Wintersun-patch.esp",
+      "Lux Orbis - Wintersun patch.esp",
+      "Lux - Wintersun patch.esp",
+      "Northern Roads - Wintersun patch.esp"
+    ],
+    "disabledModFolders": [
+      "Wintersun - Faiths of Skyrim - Settings Loader",
+      "Wintersun - M'rissi's Tails of Troubles Patch",
+      "The Whispering Door - Quest Expansion - Wintersun patch",
+      "The Only Cure - Quest Expansion - Wintersun patch",
+      "Hearthfire - Craftable Wintersun Shrines",
+      "Sacrilege - Wintersun",
+      "Wintersun - Gallows Hall",
+      "Wintersun - Ghosts of the Tribunal",
+      "Wintersun - Tweaks and Enhancements",
+      "Wintersun Textures Reborn",
+      "Wintersun - Faiths of Skyrim",
+      "Patch for Mannaz - Freyr - Wintersun"
+    ]
+  },
+  "shrineReplacement": {
+    "status": "local-readback-pass",
+    "policy": "PDV framework owns cure-only shrine SPEL overrides after Wintersun removal; no global shrine ACTI/script replacement.",
+    "spellTargets": [
+      "0FB988:Skyrim.esm",
+      "0FB994:Skyrim.esm",
+      "0FB995:Skyrim.esm",
+      "0FB996:Skyrim.esm",
+      "0FB997:Skyrim.esm",
+      "0FB998:Skyrim.esm",
+      "10E8AE:Skyrim.esm",
+      "0FB999:Skyrim.esm",
+      "0FB99A:Skyrim.esm",
+      "0FB99B:Skyrim.esm",
+      "011360:Dawnguard.esm",
+      "03BCFB:Dragonborn.esm",
+      "03BCFC:Dragonborn.esm",
+      "03BCFD:Dragonborn.esm"
+    ],
+    "readback": {
+      "winner": "Devotion.esp",
+      "wintersunState": "inactive",
+      "goodDaedraCureEffect": "071554:Devotion.esp",
+      "goodDaedraRouteScript": "PDV_DunmerShrinePrayerEffect"
+    }
+  },
+  "compatPatchPlugin": {
+    "plannedName": "PDV_DoD_Compatibility.esp",
+    "emitted": false,
+    "reason": "No additional DoD-specific record override is required for the proven shrine replacement slice after Wintersun removal and PDV framework activation. The planned plugin name is reserved for future approved route adapters, such as Wintersun asset reuse or curated DoD social-location hooks."
+  },
+  "extensibility": [
+    {
+      "id": "dod-dibellan-baths-location",
+      "status": "already-covered",
+      "evidence": "houseCARL readback: akdDibellanBathsLocation already has LocTypeTemple.",
+      "reason": "No classification patch is needed for this obvious Dibella location."
+    },
+    {
+      "id": "dod-crimson-corner-location",
+      "status": "no-patch-emitted",
+      "evidence": "houseCARL readback: XXTUSolitudeBordello is LocTypeInn.",
+      "reason": "Crimson Corner is social/adult context, not a temple/rite location. PDV needs a curated receiver before any theology hook should be emitted."
+    },
+    {
+      "id": "dod-wintersun-asset-reuse",
+      "status": "deferred",
+      "reason": "Reusing Wintersun shrine assets would require a targeted ACTI adapter over Wintersun prayer/shrine activators. Current package chooses replacement-first removal instead of keeping Wintersun active."
+    },
+    {
+      "id": "dod-survival-curse-context",
+      "status": "future-adapter",
+      "reason": "Last Seed, Frostfall, Campfire, Growl, Sacrilege, and Moonlight Tales are context systems only until explicit PDV adapters read stable state and avoid double-fire."
+    }
+  ],
+  "verificationCommands": [
+    "housecarl_set_mo2_instance path=D:\\Wabbajack\\modlists\\DoD",
+    "housecarl_load_order_status lookup=Devotion.esp",
+    "housecarl_load_order_status lookup=Wintersun - Faiths of Skyrim.esp",
+    "housecarl_batch_record_detail shrine spell targets conflict_tree=true",
+    "housecarl_batch_record_detail 005A99:Dibellan Baths.esp, 000E58:Solitude Bordello.esp fields=EditorID,Name,Keywords,ParentLocation",
+    "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --check",
+    "node .\\tools\\pdv_patch.mjs validate"
+  ],
+  "smokeRequirement": {
+    "status": "pending",
+    "checks": [
+      "DoD startup without missing masters",
+      "MCM/status open",
+      "Divine/Talos/Nocturnal/Auriel shrine cure-only behavior",
+      "Azura/Boethiah/Mephala altar route through PDV_DunmerShrinePrayerEffect",
+      "Dibellan Baths and Crimson Corner remain enterable",
+      "one non-shrine devotion action",
+      "dawn tick",
+      "save/reload",
+      "Papyrus log clean"
+    ]
+  }
+}

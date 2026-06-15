@@ -59,9 +59,10 @@ Likely PDV route:
 
 Phase 21 priority: P1.
 
-Posture: local prototype lane, not release evidence. The installed DoD profile
-is slightly outdated, so use it to exercise the matrix/conflict/smoke process,
-then refresh from current public or author-provided evidence before packaging.
+Posture: local package-evidence lane, not release evidence. The installed DoD
+profile has a readback-backed package for the Wintersun replacement slice, but
+it still needs runtime smoke and a refresh from current public or
+author-provided evidence before public support.
 
 Known overlap families from the local pass:
 
@@ -77,6 +78,9 @@ Likely PDV route:
   concrete conflict appears.
 - Use curated authored hooks for Dibella/Mara/Talos content only where
   high-signal and stable.
+- Current local package disables 20 Wintersun-family plugins, enables the
+  junctioned local Devotion test mod, and emits no standalone DoD ESP because
+  `Devotion.esp` wins the proven shrine spell surface after removal.
 
 ### JOJ, TOT, HOH, MOM, VOV
 
