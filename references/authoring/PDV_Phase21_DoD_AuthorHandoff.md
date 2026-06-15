@@ -20,6 +20,10 @@ not a public support claim and not maintainer approval.
 - No standalone `PDV_DoD_Compatibility.esp` is emitted for this slice. The
   reserved plugin name is for later DoD-specific route adapters if a stable
   Wintersun asset-reuse map or curated social-location hook set is approved.
+- Authoria reuse audit:
+  `references/authoring/PDV_Phase21_DoD_AuthoriaReuseAudit.md`. The reusable
+  result is the scan/proof method and candidate backlog, not a direct copy of
+  Authoria's Requiem/list-balancing ESPs.
 
 ## Wintersun Removal Set
 
@@ -98,7 +102,19 @@ houseCARL readback after disabling Wintersun and activating PDV:
 - The three Dragonborn Good Daedra altar spells resolve to the PDV cure effect
   `071554:Devotion.esp`, carrying `PDV_DunmerShrinePrayerEffect`.
 - `akdDibellanBathsLocation` already carries `LocTypeTemple`.
+- `akdDibellaMarker` uses `TempleBlessingScript` and points at vanilla
+  `AltarDibellaSpell`; the current Devotion shrine override covers it.
+- `akdSybilMarker` uses `TempleBlessingScript` but points at the custom
+  `akdAltarSybilSpell` from `Dibellan Baths.esp`, which still carries list
+  blessing effects and is a future candidate only.
 - `XXTUSolitudeBordello` carries `LocTypeInn`; no temple keyword patch was
+  emitted.
+- `XXTURiftenBrothel` from `Mara's Embrace.esp` carries `LocTypeInn`; no Mara
+  temple/social route patch was emitted.
+- `JOJ_TalosTeaseLocation` from `Talos' Tease.esp` carries `LocTypeDwelling`
+  and `LocTypeInn`; no Talos social route patch was emitted.
+- `HalfKhajiitRace` and `HalfKhajiitRaceVampire` win from
+  `DOD - Ohmes-Raht Fix.esp`; no custom-race origin normalization patch was
   emitted.
 
 ## Extensibility Boundary
@@ -118,6 +134,12 @@ Future DoD or shared Bordello patches should use curated authored hooks only:
 3. Last Seed, Frostfall, Campfire, Growl, Sacrilege, and Moonlight Tales should
    stay context-only until explicit adapters read stable state and prevent
    duplicate curse/survival scoring.
+4. DoD's custom Sybil blessing is a strong candidate for a future explicit
+   design decision: either leave it as list content, neutralize its stat boon,
+   or route a curated Dibella/Sybil signal after runtime proof.
+5. Ohmes-Raht / Half-Khajiit needs explicit custom-race origin policy before
+   PDV treats it as Khajiit for worship routing. The current package does not
+   change origin detection.
 
 ## Smoke Checklist
 

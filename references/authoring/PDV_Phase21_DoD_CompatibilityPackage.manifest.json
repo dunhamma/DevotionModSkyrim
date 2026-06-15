@@ -12,7 +12,8 @@
     "publicSupportClaim": false,
     "releaseGate": "DoD must still refresh against current public or author-provided evidence, rebuild Synthesis/ParallaxGen/DynDOLOD without Wintersun, and pass runtime smoke before any public support claim.",
     "handoff": "references/authoring/PDV_Phase21_DoD_AuthorHandoff.md",
-    "installGuide": "references/authoring/PDV_Phase21_DoD_PackageInstall.md"
+    "installGuide": "references/authoring/PDV_Phase21_DoD_PackageInstall.md",
+    "authoriaReuseAudit": "references/authoring/PDV_Phase21_DoD_AuthoriaReuseAudit.md"
   },
   "packageArtifact": {
     "path": "dist/PDV_DoD_BordelloPatch_v0_20260615.zip",
@@ -147,6 +148,32 @@
     ],
     "policy": "Regenerate these outputs from the edited profile rather than distributing local generated outputs or hand-cleaning master headers."
   },
+  "authoriaReuseComparison": {
+    "status": "readback-comparison-complete-no-direct-esp-reuse",
+    "reusableTools": [
+      "houseCARL load-order status and record readback",
+      "pdv_patch.mjs validate",
+      "pdv_patch.mjs plan",
+      "pdv-shrine-blessing-author pattern for future shrine-spell adapters",
+      "quest-stage readback and P2 receiver pattern for future exact-source hooks"
+    ],
+    "sharedActivePluginCount": 1002,
+    "sharedActiveModCount": 694,
+    "sharedSurfaces": [
+      "The Heart Of Dibella - Quest Expansion.esp",
+      "Caught Red Handed - Quest Expansion.esp",
+      "TheOnlyCureQuestExpansion.esp",
+      "The Whispering Door - Quest Expansion.esp",
+      "Talos' Tease.esp",
+      "HalfKhajiit.esp",
+      "MrissiTailOfTroubles.esp"
+    ],
+    "arrPatchReuseDecision": "Do not copy Authoria Reqtificated patches into DoD. houseCARL readback shows those patches are primarily Requiem/list-balancing overrides, not PDV event adapters.",
+    "pdvPatchToolReadback": {
+      "validate": "11 rules loaded, 9 ready, 6 build-ready, 2 blocked tooling examples with symbolic payloads",
+      "plan": "same counts; no DoD-specific build rule is approved yet"
+    }
+  },
   "extensibility": [
     {
       "id": "dod-dibellan-baths-location",
@@ -155,10 +182,40 @@
       "reason": "No classification patch is needed for this obvious Dibella location."
     },
     {
+      "id": "dod-dibellan-baths-vanilla-marker",
+      "status": "covered-by-current-shrine-override",
+      "evidence": "houseCARL readback: akdDibellaMarker uses TempleBlessingScript and points TempleBlessing at 0FB995:Skyrim.esm AltarDibellaSpell.",
+      "reason": "The current Devotion.esp AltarDibellaSpell override covers this marker after Wintersun removal."
+    },
+    {
+      "id": "dod-dibellan-baths-sybil-blessing",
+      "status": "candidate-not-emitted",
+      "evidence": "houseCARL readback: akdSybilMarker points TempleBlessing at akdAltarSybilSpell 042BF6:Dibellan Baths.esp, which has three vanilla effects including 28800-duration effects.",
+      "reason": "This is a list-authored Sybil blessing, not a Wintersun leftover. It needs an explicit design decision before neutralization or PDV routing."
+    },
+    {
       "id": "dod-crimson-corner-location",
       "status": "no-patch-emitted",
       "evidence": "houseCARL readback: XXTUSolitudeBordello is LocTypeInn.",
       "reason": "Crimson Corner is social/adult context, not a temple/rite location. PDV needs a curated receiver before any theology hook should be emitted."
+    },
+    {
+      "id": "dod-maras-embrace-location",
+      "status": "no-patch-emitted",
+      "evidence": "houseCARL readback: XXTURiftenBrothel is LocTypeInn.",
+      "reason": "Mara's Embrace is social/venue context. Do not add LocTypeTemple or route Mara piety without a curated receiver."
+    },
+    {
+      "id": "dod-talos-tease-location",
+      "status": "no-patch-emitted",
+      "evidence": "houseCARL readback: JOJ_TalosTeaseLocation has LocTypeDwelling and LocTypeInn.",
+      "reason": "Talos' Tease needs a stable quest/stage or activator event before any Talos route; generic inn/shop presence is not worship."
+    },
+    {
+      "id": "dod-ohmes-raht-custom-race",
+      "status": "candidate-not-emitted",
+      "evidence": "houseCARL readback: HalfKhajiitRace and HalfKhajiitRaceVampire win from DOD - Ohmes-Raht Fix.esp; normal race has ActorTypeNPC and IsBeastRace, vampire race has ActorTypeNPC, ActorTypeUndead, Vampire, and IsBeastRace.",
+      "reason": "PDV needs an explicit custom-race origin normalization policy before treating Ohmes-Raht as Khajiit for devotion routing."
     },
     {
       "id": "dod-wintersun-asset-reuse",

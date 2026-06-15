@@ -68,6 +68,8 @@ Current shareable artifact:
 
 - `dist/PDV_DoD_BordelloPatch_v0_20260615.zip`.
 - Install guide: `references/authoring/PDV_Phase21_DoD_PackageInstall.md`.
+- Authoria reuse audit:
+  `references/authoring/PDV_Phase21_DoD_AuthoriaReuseAudit.md`.
 - The package includes Devotion runtime files and docs only. It deliberately
   excludes Synthesis, ParallaxGen, TexGen, and DynDOLOD output because those
   must be rebuilt against the edited end-user profile.
@@ -77,6 +79,12 @@ Known overlap families from the local pass:
 - Wintersun religion layer and dependent Wintersun patches.
 - Stale generated-output masters after Wintersun removal:
   `DynDOLOD.esp`, `Lord's Vision - Synthesis Gameplay.esp`, and `PG_1.esp`.
+- Shared Authoria/DoD quest and custom-race surfaces: Heart of Dibella QE,
+  Caught Red Handed QE, Talos' Tease, The Only Cure QE, Whispering Door QE,
+  Half-Khajiit / Ohmes-Raht, and M'rissi.
+- DoD-specific candidate surfaces: Dibellan Baths Sybil blessing
+  `akdAltarSybilSpell`, Ohmes-Raht custom-race origin mapping, Mara's Embrace,
+  and Talos' Tease social-location context.
 - Growl, Sacrilege, Moonlight Tales Mini, and vampire feeding support.
 - Frostfall, Last Seed, Campfire, and bathing/cleanliness systems.
 - Dibella, Mara, Talos, temple, shrine, and social-location content.
@@ -94,6 +102,12 @@ Likely PDV route:
 - Rebuild Synthesis, ParallaxGen, TexGen if the list workflow requires it, and
   DynDOLOD after Wintersun removal; do not distribute or hand-clean old
   generated outputs that still master Wintersun or `DBM_Wintersun_Patch.esp`.
+- Do not copy Authoria's `Authoria - Reqtificated - *` patches into DoD. The
+  readback evidence shows those are Requiem/list-balancing overrides, not PDV
+  event adapters.
+- Keep the Sybil blessing, Ohmes-Raht custom race, Heart of Dibella QE, Caught
+  Red Handed QE, and Talos' Tease as candidate adapters until exact design and
+  runtime gates are approved.
 
 ### JOJ, TOT, HOH, MOM, VOV
 

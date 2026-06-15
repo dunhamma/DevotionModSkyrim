@@ -29,6 +29,15 @@ No `PDV_DoD_Compatibility.esp` is included. Local readback showed the proven
 shrine-replacement slice is already handled by `Devotion.esp` after Wintersun
 is removed.
 
+The package also includes the Authoria reuse audit:
+
+`Docs\PDV_Phase21_DoD_AuthoriaReuseAudit.md`
+
+That audit records candidate future adapters for the Dibellan Baths Sybil
+blessing, Ohmes-Raht / Half-Khajiit origin mapping, Heart of Dibella QE, Caught
+Red Handed QE, and Talos' Tease. None of those candidates are shipped in this
+zip yet.
+
 ## Install Order
 
 1. Copy the target MO2 profile before editing it.
@@ -151,10 +160,15 @@ Use a disposable save.
 6. As Dunmer, test the Solstheim Azura/Boethiah/Mephala altar route during a
    dawn or dusk window.
 7. Enter Dibellan Baths and Crimson Corner.
-8. Trigger one non-shrine devotion action.
-9. Run a dawn tick.
-10. Save, reload, and recheck status/MCM.
-11. Check `Papyrus.0.log` for new `[PDV]` errors.
+8. In Dibellan Baths, activate the standard Dibella shrine marker and confirm it
+   behaves like the normalized Dibella shrine.
+9. Treat the Sybil shrine marker as observation-only for this package: record
+   whether its list-authored blessing still appears, but do not count that as a
+   package failure until a Sybil adapter is explicitly approved.
+10. Trigger one non-shrine devotion action.
+11. Run a dawn tick.
+12. Save, reload, and recheck status/MCM.
+13. Check `Papyrus.0.log` for new `[PDV]` errors.
 
 ## Support Boundary
 
