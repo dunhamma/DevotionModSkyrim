@@ -1421,6 +1421,11 @@
   };
 
   const handleOverlayPayload = (payload) => {
+    if (payload.journalClose) {
+      hideJournal();
+      return;
+    }
+
     if (payload.toast) {
       scheduleToast(payload.toast);
     }

@@ -78,7 +78,8 @@ try
         allocator,
         "PDV_MSG_StartupConfirmChoice",
         "Startup confirmation",
-        "This sets where your devotion begins. Walk it?",
+        "The road you choose now sets where your devotion begins. Walk it?\n\n" +
+        "Nothing is sealed -- how you live from here shapes the rest.",
         "Walk this path",
         "Choose again");
 
