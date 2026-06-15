@@ -194,9 +194,11 @@ live SEC EC_SS_MQ102 s100 path is hooked; revisit only for a non-SEC list lane).
 1. **LOTD / Daedric-artifact faucet (#1) — MOSTLY ALREADY DONE.** PDV_FLST_FaucetDaedricArtifacts
    (0714A2:Devotion.esp) already lists all 16 Princes' artifacts (exactly what LOTD's relic loop
    collects), firing the GENERIC EVT_ACCEPT_DAEDRIC_ARTIFACT signal (RouteGenericAction ->
-   EventBus.RouteAction). Two CORE hygiene fixes RECORDED for the next core/CK pass (Devotion.esp
-   FormList, binary edit): ADD Masque of Clavicus Vile (0D2846:Skyrim.esm, the one missing artifact);
-   REMOVE the stray non-artifact REFR 0F6D1A:Skyrim.esm (Dwemer Dish - fires a false +signal on a bowl).
+   EventBus.RouteAction). Two CORE hygiene fixes APPLIED 2026-06-15 (in-place Devotion.esp FormList edit via
+   tools/pdv-faucet-fix-author; backup Devotion.esp.bak_faucetfix_20260615; houseCARL-verified):
+   ADDED Masque of Clavicus Vile (0D2846:Skyrim.esm, was the one missing artifact - now slot 18);
+   REMOVED the stray non-artifact REFR 0F6D1A:Skyrim.esm (Dwemer Dish - was an inert dead entry, a REFR
+   that never matched an equipped base object). List now 19 items = all 16 Princes (Hircine x3, Azura x2).
    True per-Prince artifact devotion is the SEPARATE serve_a_daedra faucet (Masque-equip/Spellbreaker-
    block), which is script-heavy per key (PDV_PlayerEvents GetQuestReactionFormIdKey/PluginKey +
    routing dispatch) - not extended.
