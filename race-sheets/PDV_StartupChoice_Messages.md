@@ -99,11 +99,12 @@ state value, not to its on-screen index, so reordering buttons never silently re
 > holds private faith beneath public compromise. The Legion or Exile keeps the code alone,
 > under foreign discipline. Name the life you intend; the world will test it and confirm it.
 
-**Buttons:**
+**Buttons:** on-screen order matches the state value, as with Breton/Redguard — the
+runtime maps `MessageBox` selection by its index, so the listed order **is** the value.
 | Button label | → `PDV_State_OrcLifeMode` (intent) |
 | --- | --- |
-| `Stronghold — strength among kin` | `1` (Stronghold) |
 | `City — fidelity under compromise` | `0` (City) |
+| `Stronghold — strength among kin` | `1` (Stronghold) |
 | `Legion or Exile — the code alone` | `2` (LegionExile) |
 
 ---

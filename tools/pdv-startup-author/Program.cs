@@ -6,7 +6,6 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Strings;
 
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
-const string startupAdvisory = "This begins your journey; your devotion evolves through your choices.";
 
 var espPath = GetArg(args, "--esp") ?? defaultEsp;
 var dryRun = args.Contains("--dry-run");
@@ -37,12 +36,10 @@ try
         allocator,
         "PDV_MSG_StartupBretonChoice",
         "Breton startup tradition",
-        "Breton starts with a declared tradition.\n\n" +
-        "Knight's Road: civic honor and vow-kept justice.\n" +
-        "Hidden Art: occult practice under social risk.\n" +
-        "Green Way: druidic covenant and nature rite cadence.\n\n" +
-        "Select a path, review the side description, then confirm.\n\n" +
-        startupAdvisory,
+        "High Rock raises its children to one of three traditions.\n\n" +
+        "Knight's Road -- mercy, protection, and the public vow.\n" +
+        "Hidden Art -- occult and Daedric power, openly risked.\n" +
+        "Green Way -- the standing stones and the old druid rites.",
         "Knight's Road",
         "Hidden Art",
         "Green Way");
@@ -53,12 +50,10 @@ try
         allocator,
         "PDV_MSG_StartupRedguardChoice",
         "Redguard startup sect",
-        "Redguard starts with a declared sect.\n\n" +
-        "Crown: orthodox Yokudan structure and preserved form.\n" +
-        "Forebear: adaptive public life with Yokudan spine.\n" +
-        "Ash'abah: funerary burden and undead duty at social cost.\n\n" +
-        "Select a path, review the side description, then confirm.\n\n" +
-        startupAdvisory,
+        "A Redguard is raised to one of three sects.\n\n" +
+        "Crown -- the strict old Yokudan orthodoxy.\n" +
+        "Forebear -- Redguard faith carried into mixed life.\n" +
+        "Ash'abah -- funerary duty and the unquiet dead, at a cost.",
         "Crown",
         "Forebear",
         "Ash'abah");
@@ -69,14 +64,12 @@ try
         allocator,
         "PDV_MSG_StartupOrcChoice",
         "Orc startup life mode",
-        "Orc starts with a declared life mode.\n\n" +
-        "Stronghold: full-expression Malacath code in communal life.\n" +
-        "City: private fidelity under public compromise.\n" +
-        "Legion/Exile: honor carried under foreign discipline.\n\n" +
-        "Select a path, review the side description, then confirm.\n\n" +
-        startupAdvisory,
-        "Stronghold",
+        "An Orc keeps Malacath's code one of three ways.\n\n" +
+        "City -- faith held in private among outsiders.\n" +
+        "Stronghold -- the full code, lived in common.\n" +
+        "Legion or exile -- honor under a foreign banner.",
         "City",
+        "Stronghold",
         "Legion/Exile");
 
     var confirmChoice = EnsureMessage(
@@ -85,11 +78,9 @@ try
         allocator,
         "PDV_MSG_StartupConfirmChoice",
         "Startup confirmation",
-        "Confirm this startup path?\n\n" +
-        "This sets your opening state for this save. You can evolve through play afterward.\n\n" +
-        startupAdvisory,
-        "Confirm",
-        "Back");
+        "This sets where your devotion begins. Walk it?",
+        "Walk this path",
+        "Choose again");
 
     WireQuestScript(manager, "PDV__ManagerQuest", new ScriptProperty[]
     {
