@@ -12,6 +12,11 @@ not a public support claim and not maintainer approval.
 - Disable the Wintersun religion layer and direct Wintersun patches listed
   below.
 - Load `Devotion.esp` at the former Wintersun core slot.
+- Installable package artifact:
+  `dist/PDV_DoD_BordelloPatch_v0_20260615.zip`.
+- The package is MO2-ready with `Devotion.esp`, runtime `.pex` files,
+  `Seq\Devotion.seq`, required `SKSE\Plugins` data, and install docs at archive
+  root.
 - No standalone `PDV_DoD_Compatibility.esp` is emitted for this slice. The
   reserved plugin name is for later DoD-specific route adapters if a stable
   Wintersun asset-reuse map or curated social-location hook set is approved.
@@ -45,6 +50,31 @@ Disable these 20 plugins for the PDV test package:
 
 The local profile also disables the matching Wintersun mod folders for
 settings, textures, craftable shrines, and direct Wintersun patch content.
+
+## Required Generated-Output Rebuild
+
+Do not reuse generated output plugins that were built with Wintersun active.
+The local DoD proof profile reported missing-master blockers from these active
+generated plugins after Wintersun was removed:
+
+| Plugin | Stale master evidence |
+|---|---|
+| `DynDOLOD.esp` | still masters `Wintersun - Faiths of Skyrim.esp` |
+| `Lord's Vision - Synthesis Gameplay.esp` | still masters `Wintersun - Faiths of Skyrim.esp` |
+| `PG_1.esp` | still masters `Wintersun - Faiths of Skyrim.esp` and `DBM_Wintersun_Patch.esp` |
+
+For a reusable package, regenerate the outputs rather than hand-cleaning
+masters:
+
+1. Run Synthesis through MO2 with Wintersun disabled and `Devotion.esp`
+   enabled.
+2. Run ParallaxGen through MO2 with the list's existing settings.
+3. Run TexGen if required by the list's normal DynDOLOD workflow.
+4. Run DynDOLOD through MO2 with the list's existing settings.
+5. Enable the regenerated outputs and confirm MO2 reports no missing masters.
+
+For a private smoke test only, those stale generated plugins can be disabled
+temporarily. That avoids the crash but is not a public packaging answer.
 
 ## Local Readback Evidence
 

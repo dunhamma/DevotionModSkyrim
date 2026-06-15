@@ -1,6 +1,6 @@
 {
   "schema": "pdv.phase21.dod-compat-package.v1",
-  "status": "patch-packaging-local-readback-pass-runtime-pending",
+  "status": "shareable-package-built-generated-output-rerun-required-runtime-pending",
   "target": {
     "targetId": "DOD",
     "listName": "Diaries of Dibella",
@@ -10,8 +10,31 @@
   },
   "supportBoundary": {
     "publicSupportClaim": false,
-    "releaseGate": "DoD must still refresh against current public or author-provided evidence before any public support claim.",
-    "handoff": "references/authoring/PDV_Phase21_DoD_AuthorHandoff.md"
+    "releaseGate": "DoD must still refresh against current public or author-provided evidence, rebuild Synthesis/ParallaxGen/DynDOLOD without Wintersun, and pass runtime smoke before any public support claim.",
+    "handoff": "references/authoring/PDV_Phase21_DoD_AuthorHandoff.md",
+    "installGuide": "references/authoring/PDV_Phase21_DoD_PackageInstall.md"
+  },
+  "packageArtifact": {
+    "path": "dist/PDV_DoD_BordelloPatch_v0_20260615.zip",
+    "status": "built",
+    "mo2Ready": true,
+    "containsStandaloneCompatibilityEsp": false,
+    "rootEntries": [
+      "Devotion.esp",
+      "Scripts/",
+      "Seq/Devotion.seq",
+      "SKSE/Plugins/",
+      "Docs/",
+      "README_DoD_BordelloPatch.md"
+    ],
+    "excluded": [
+      "source PSC files",
+      "backup ESPs",
+      "candidate overlays",
+      "generated Synthesis output",
+      "generated ParallaxGen output",
+      "generated DynDOLOD output"
+    ]
   },
   "profileState": {
     "backupDir": "D:\\Wabbajack\\modlists\\DoD\\profiles\\Diaries of Dibella - Lord's Vision\\pdv-dod-backups",
@@ -91,6 +114,38 @@
     "plannedName": "PDV_DoD_Compatibility.esp",
     "emitted": false,
     "reason": "No additional DoD-specific record override is required for the proven shrine replacement slice after Wintersun removal and PDV framework activation. The planned plugin name is reserved for future approved route adapters, such as Wintersun asset reuse or curated DoD social-location hooks."
+  },
+  "generatedOutputRerun": {
+    "status": "required-for-reusable-package",
+    "reason": "Generated outputs built with Wintersun active retained stale master dependencies after Wintersun was removed.",
+    "staleGeneratedPluginsObserved": [
+      {
+        "plugin": "DynDOLOD.esp",
+        "staleMasters": [
+          "Wintersun - Faiths of Skyrim.esp"
+        ]
+      },
+      {
+        "plugin": "Lord's Vision - Synthesis Gameplay.esp",
+        "staleMasters": [
+          "Wintersun - Faiths of Skyrim.esp"
+        ]
+      },
+      {
+        "plugin": "PG_1.esp",
+        "staleMasters": [
+          "Wintersun - Faiths of Skyrim.esp",
+          "DBM_Wintersun_Patch.esp"
+        ]
+      }
+    ],
+    "toolsToRunAfterPlacement": [
+      "Synthesis",
+      "ParallaxGen",
+      "TexGen if required by the list workflow",
+      "DynDOLOD"
+    ],
+    "policy": "Regenerate these outputs from the edited profile rather than distributing local generated outputs or hand-cleaning master headers."
   },
   "extensibility": [
     {

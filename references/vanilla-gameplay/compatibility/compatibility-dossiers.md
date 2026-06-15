@@ -64,9 +64,19 @@ profile has a readback-backed package for the Wintersun replacement slice, but
 it still needs runtime smoke and a refresh from current public or
 author-provided evidence before public support.
 
+Current shareable artifact:
+
+- `dist/PDV_DoD_BordelloPatch_v0_20260615.zip`.
+- Install guide: `references/authoring/PDV_Phase21_DoD_PackageInstall.md`.
+- The package includes Devotion runtime files and docs only. It deliberately
+  excludes Synthesis, ParallaxGen, TexGen, and DynDOLOD output because those
+  must be rebuilt against the edited end-user profile.
+
 Known overlap families from the local pass:
 
 - Wintersun religion layer and dependent Wintersun patches.
+- Stale generated-output masters after Wintersun removal:
+  `DynDOLOD.esp`, `Lord's Vision - Synthesis Gameplay.esp`, and `PG_1.esp`.
 - Growl, Sacrilege, Moonlight Tales Mini, and vampire feeding support.
 - Frostfall, Last Seed, Campfire, and bathing/cleanliness systems.
 - Dibella, Mara, Talos, temple, shrine, and social-location content.
@@ -81,6 +91,9 @@ Likely PDV route:
 - Current local package disables 20 Wintersun-family plugins, enables the
   junctioned local Devotion test mod, and emits no standalone DoD ESP because
   `Devotion.esp` wins the proven shrine spell surface after removal.
+- Rebuild Synthesis, ParallaxGen, TexGen if the list workflow requires it, and
+  DynDOLOD after Wintersun removal; do not distribute or hand-clean old
+  generated outputs that still master Wintersun or `DBM_Wintersun_Patch.esp`.
 
 ### JOJ, TOT, HOH, MOM, VOV
 
