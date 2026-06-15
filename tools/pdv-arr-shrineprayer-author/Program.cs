@@ -1,5 +1,5 @@
 // pdv-arr-shrineprayer-author
-// Creates 9 PDV_ACTI_ShrinePrayer_* Activator records in a NEW compatibility ESP
+// Creates 11 PDV_ACTI_ShrinePrayer_* Activator records in a NEW compatibility ESP
 // (PDV_AuthoriaARR_Compatibility.esp) and emits a Base Object Swapper INI.
 // Does NOT modify Devotion.esp.
 //
@@ -78,7 +78,7 @@ try
         report.Errors.Add("PDV_EventBus quest not found in Devotion.esp — check the ESP path.");
     }
 
-    // Define the 9 shrines from the manifest
+    // Define the 11 shrines from the manifest
     var shrines = new[]
     {
         new ShrineSpec("PDV_ACTI_ShrinePrayer_Azura",         "Shrine of Azura",          @"man_azura\shrineofazura01.nif",              "man_DaedricShrines.esp", 0x00082Cu, 1,  "PDV.ARRShrinePrayer.Azura",         "arr_man_azura_shrine_prayer"),
@@ -90,6 +90,8 @@ try
         new ShrineSpec("PDV_ACTI_ShrinePrayer_Namira",        "Shrine of Namira",         @"man_namira\namira.nif",                      "man_DaedricShrines.esp", 0x000DF4u, 9,  "PDV.ARRShrinePrayer.Namira",        "arr_man_namira_shrine_prayer"),
         new ShrineSpec("PDV_ACTI_ShrinePrayer_Sanguine",      "Shrine of Sanguine",       @"man_sanguine\sanguine.nif",                  "man_DaedricShrines.esp", 0x000852u, 10, "PDV.ARRShrinePrayer.Sanguine",      "arr_man_sanguine_shrine_prayer"),
         new ShrineSpec("PDV_ACTI_ShrinePrayer_HermaeusMora",  "Shrine of Hermaeus Mora",  @"man_mora\mora.nif",                          "man_DaedricShrines.esp", 0x000864u, 12, "PDV.ARRShrinePrayer.HermaeusMora",  "arr_man_hermaeusmora_shrine_prayer"),
+        new ShrineSpec("PDV_ACTI_ShrinePrayer_Hircine",       "Shrine of Hircine",        @"man_Hircine\hircine.nif",                    "man_DaedricShrines.esp", 0x000D61u, 15, "PDV.ARRShrinePrayer.Hircine",       "arr_man_hircine_shrine_prayer"),
+        new ShrineSpec("PDV_ACTI_ShrinePrayer_Peryite",       "Shrine of Peryite",        @"man_peryite\peryite.nif",                    "man_DaedricShrines.esp", 0x000D62u, 14, "PDV.ARRShrinePrayer.Peryite",       "arr_man_peryite_shrine_prayer"),
     };
 
     if (dryRun)
@@ -112,7 +114,7 @@ try
     var compatModKey = ModKey.FromNameAndExtension(compatModName);
     var compatMod    = new SkyrimMod(compatModKey, SkyrimRelease.SkyrimSE);
 
-    // ESL-flag it (tiny mod, 9 records well under ESL limit of 2048)
+    // ESL-flag it (tiny mod, 11 records well under ESL limit of 2048)
     compatMod.ModHeader.Flags |= SkyrimModHeader.HeaderFlag.Small;
 
     var allocator = new SimpleAllocator(compatModKey);
@@ -243,9 +245,9 @@ static void CheckWrittenEsp(string espPath, AuthorReport report)
     var actis = mod.Activators.ToList();
     report.Actions.Add($"Readback: found {actis.Count} Activator record(s) in {espPath}");
 
-    if (actis.Count != 9)
+    if (actis.Count != 11)
     {
-        report.Errors.Add($"Expected 9 Activators, found {actis.Count}");
+        report.Errors.Add($"Expected 11 Activators, found {actis.Count}");
     }
 
     foreach (var acti in actis)

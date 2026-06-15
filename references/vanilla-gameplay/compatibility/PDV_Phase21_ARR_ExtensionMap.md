@@ -175,7 +175,20 @@ Divines) carry TempleBlessingScript and are won by skymojibase.esl, not man_. =>
 would need EITHER (a) PDV-placed invisible marker ACTIs / trigger volumes at the shrine cell positions
 (new ESP + placement + runtime), OR (b) a location-trigger hook (new PDV_FLST_HolySites + manager
 handler; note coc skips location triggers). Both are ESP/runtime + design decisions — HELD for review.
-No clean data-only adapter exists. Wave 6 data-only investigation = DONE.
+No clean data-only adapter exists [SUPERSEDED - see below]. Wave 6 data-only investigation = DONE.
+
+SUPERSEDED (2026-06-15): a Base Object Swapper STAT->ACTI base-swap turned out to be the clean
+"PDV-places its own clickable" path the verdict said would be needed. The shrine-prayer feature
+(PDV_Phase21_ARR_ShrinePrayer.manifest.json + dist/PDV_AuthoriaARR_Compatibility/) makes 11 Daedric
+statues clickable +2/day prayers (Azura, Vaermina, Molag Bal, Mephala, Mehrunes Dagon, Sheogorath,
+Namira, Sanguine, Hermaeus Mora, Hircine, Peryite). So "no clean adapter" is OBSOLETE for the swap
+approach. Still unhooked-by-prayer (with reasons): Jyggalag/Sithis (no PDV deity); Boethiah/Meridia/
+Malacath/Clavicus Vile (no swappable man_ statue - loading-screen art or quest-script activators only;
+covered by quest hooks); Kynareth/Mara (Aedric - need a Divine prayer variant, route 203). Only the
+LOCATION-trigger half (new-land temples) remains genuinely unbuilt.
+SKIP/DEFER recorded: evgSIRENROOT = SKIP (standalone puzzle dungeon, no divine-service beat). Saints &
+Seducers CC-base questline (ccBGSSSE025 QuestA/QuestB) = DEFER (SEC empties its stages in ARR; only the
+live SEC EC_SS_MQ102 s100 path is hooked; revisit only for a non-SEC list lane).
 
 CONFIRMED by a placed-reference trace (2026-06-15, not just base records): only the two Nocturnal
 activators are clickable — man_ShrineOfNocturnal (00090F:man_DaedricShrines.esp) + the TG09 vanilla

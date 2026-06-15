@@ -29,7 +29,7 @@ asymmetrically credited for the SAME act (T03 Gildergreen precedent).
 | Kyne | Nord | 9(1ms) | 1(0ms) | 0 | yes | - | - | OK |
 | Leki | Redguard | 4(0ms) | 3(0ms) | 0 | yes | yes | - | OK |
 | Magnus | Altmer | 8(2ms) | 0(0ms) | 0 | yes | yes | - | OK |
-| Malacath | Orc | 10(3ms) | 1(0ms) | 0 | yes | yes | yes | OK |
+| Malacath | Orc | 11(3ms) | 1(0ms) | 0 | yes | yes | yes | OK |
 | Mara | Imperial/Nord/Breton | 7(1ms) | 10(1ms) | 0 | yes | yes | - | OK |
 | Mephala | Dunmer | 20(6ms) | 0(0ms) | 0 | yes | yes | yes | OK |
 | Rajhin | Khajiit | 10(6ms) | 0(0ms) | 0 | yes | yes | yes | OK |

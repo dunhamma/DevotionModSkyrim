@@ -5,3 +5,4 @@ DA10,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag 
 DA13,The Only Cure (QE - refuse),101,Refused Peryite's bargain,refuse_daedra,Peryite,-,m,small,Only Cure QE s101 (refused Peryite; text-confirmed). Vanilla s100 (serve Peryite) stays owned by the Daedric sender.
 DA13,The Only Cure (QE - destroy altar),102,Killed Orchendor and destroyed Peryite's altar,defy_daedra,Peryite,-,S,milestone,Only Cure QE s102 (destroyed Peryite's altar; text-confirmed)
 DA13,The Only Cure (QE - destroy altar),102,Killed Orchendor and destroyed Peryite's altar,smite_corruption,Stendarr,+,m,small,Only Cure QE s102 (anti-daedric act)
+DA06,The Cursed Tribe (QE - ghost variant),210,Lifted the ghost-curse on Largashbur by magic,aid_kin,Malacath,+,m,small,Cursed Tribe QE s210 (alt ghost-removal resolution; +Malacath indirect; RUNTIME-VERIFY no ShutDownStage). Vanilla s200 Champion stays Daedric-sender-owned.

@@ -1,6 +1,6 @@
 {
   "schema": "pdv.phase21.arr-shrine-prayer.v1",
-  "status": "BUILT: mechanism compiled + 9 ACTI records authored + BOS ini emitted; runtime smoke pending",
+  "status": "BUILT: mechanism compiled + 11 ACTI records authored + BOS ini emitted; runtime smoke pending",
   "intent": "Make the man_DaedricShrines decorative statues clickable: a once/day prayer that grants a flat +2 piety to that Prince. Requested 2026-06-15.",
   "mechanism": {
     "status": "machine-verified (all 3 scripts compile 0 errors / 0 warnings)",
@@ -28,7 +28,9 @@
       {"prince": "Sheogorath",    "editorId": "PDV_ACTI_ShrinePrayer_Sheogorath",    "name": "Shrine of Sheogorath",     "model": "man_sheo\\sheo.nif",             "swapFromStat": "00089B:man_DaedricShrines.esp", "princeIndex": 8,  "oncePerDayKey": "PDV.ARRShrinePrayer.Sheogorath",    "signalSourceId": "arr_man_sheogorath_shrine_prayer"},
       {"prince": "Namira",        "editorId": "PDV_ACTI_ShrinePrayer_Namira",        "name": "Shrine of Namira",         "model": "man_namira\\namira.nif",         "swapFromStat": "000DF4:man_DaedricShrines.esp", "princeIndex": 9,  "oncePerDayKey": "PDV.ARRShrinePrayer.Namira",        "signalSourceId": "arr_man_namira_shrine_prayer", "caveat": "Winner is 'Authoria - Patch - Daedric Shrines - Sexy namira.esp' which may override the model; match the winner's model in CK."},
       {"prince": "Sanguine",      "editorId": "PDV_ACTI_ShrinePrayer_Sanguine",      "name": "Shrine of Sanguine",       "model": "man_sanguine\\sanguine.nif",     "swapFromStat": "000852:man_DaedricShrines.esp", "princeIndex": 10, "oncePerDayKey": "PDV.ARRShrinePrayer.Sanguine",      "signalSourceId": "arr_man_sanguine_shrine_prayer"},
-      {"prince": "Hermaeus Mora", "editorId": "PDV_ACTI_ShrinePrayer_HermaeusMora",  "name": "Shrine of Hermaeus Mora",  "model": "man_mora\\mora.nif",             "swapFromStat": "000864:man_DaedricShrines.esp", "princeIndex": 12, "oncePerDayKey": "PDV.ARRShrinePrayer.HermaeusMora",  "signalSourceId": "arr_man_hermaeusmora_shrine_prayer"}
+      {"prince": "Hermaeus Mora", "editorId": "PDV_ACTI_ShrinePrayer_HermaeusMora",  "name": "Shrine of Hermaeus Mora",  "model": "man_mora\\mora.nif",             "swapFromStat": "000864:man_DaedricShrines.esp", "princeIndex": 12, "oncePerDayKey": "PDV.ARRShrinePrayer.HermaeusMora",  "signalSourceId": "arr_man_hermaeusmora_shrine_prayer"},
+      {"prince": "Hircine",       "editorId": "PDV_ACTI_ShrinePrayer_Hircine",        "name": "Shrine of Hircine",        "model": "man_Hircine\\hircine.nif",       "swapFromStat": "000D61:man_DaedricShrines.esp", "princeIndex": 15, "oncePerDayKey": "PDV.ARRShrinePrayer.Hircine",       "signalSourceId": "arr_man_hircine_shrine_prayer"},
+      {"prince": "Peryite",       "editorId": "PDV_ACTI_ShrinePrayer_Peryite",        "name": "Shrine of Peryite",        "model": "man_peryite\\peryite.nif",       "swapFromStat": "000D62:man_DaedricShrines.esp", "princeIndex": 14, "oncePerDayKey": "PDV.ARRShrinePrayer.Peryite",        "signalSourceId": "arr_man_peryite_shrine_prayer"}
     ]
   },
   "bosSwap": {
@@ -37,7 +39,7 @@
     "note": "BOS is active in ARR (po3_BaseObjectSwapper.dll). Base-swap hits all refs of the statue base; man_ statues are placed only at the curated shrine locations, so this is surgical."
   },
   "scopeNotes": {
-    "built": "9 Prince shrines (Azura, Vaermina, Molag Bal, Mephala, Mehrunes Dagon, Sheogorath, Namira, Sanguine, Hermaeus Mora) - each maps to a PDV Daedric path index.",
+    "built": "11 Prince shrines (Azura, Vaermina, Molag Bal, Mephala, Mehrunes Dagon, Sheogorath, Namira, Sanguine, Hermaeus Mora, Hircine, Peryite) - each maps to a PDV Daedric path index.",
     "skipped_noDeity": "Jyggalag and Sithis are NOT PDV Daedric Princes (no deity record) - their statues get no prayer.",
     "deferred_aedric": "Kynareth + Mara statues are Aedric Divines, not Daedric paths - they need a Divine +2 variant (a HandleShrinePrayerDeity(name) using GetDeityByName + AwardPiety over PDV_FLST_AllDeities), a small follow-up.",
     "alreadyCovered": "Nocturnal: the man_ Nocturnal shrine IS clickable and already routes AltarNocturnalSpell, covered by the existing shrine-blessing manifest."
@@ -45,12 +47,13 @@
   "authored": {
     "tool": "tools/pdv-arr-shrineprayer-author (builds 0/0; modeled on pdv-daedric-author)",
     "esp": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_Compatibility.esp (ESL-flagged; masters Skyrim.esm + Devotion.esp)",
-    "bosIni": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_ShrinePrayer_SWAP.ini (9 STAT->ACTI swaps, [Forms] grammar)",
+    "bosIni": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_ShrinePrayer_SWAP.ini (11 STAT->ACTI swaps, [Forms] grammar)",
     "actiFormIds": {
       "Azura": "000800", "Vaermina": "000801", "MolagBal": "000802", "Mephala": "000803",
-      "MehrunesDagon": "000804", "Sheogorath": "000805", "Namira": "000806", "Sanguine": "000807", "HermaeusMora": "000808"
+      "MehrunesDagon": "000804", "Sheogorath": "000805", "Namira": "000806", "Sanguine": "000807", "HermaeusMora": "000808",
+      "Hircine": "000809", "Peryite": "00080A"
     },
-    "verified": "Readback confirms all 9: RouteId=202, SignalValue=princeIndex, Model set, PDV_EventBusService=046AF7:Devotion.esp, RequiredOriginRace=-1, OncePerDayKey wired, PDV_GLO_OriginRace/DebugLevel resolved."
+    "verified": "Readback confirms all 11: RouteId=202, SignalValue=princeIndex, Model set, PDV_EventBusService=046AF7:Devotion.esp, RequiredOriginRace=-1, OncePerDayKey wired, PDV_GLO_OriginRace/DebugLevel resolved."
   },
   "remaining": [
     "Deploy PDV_AuthoriaARR_Compatibility.esp + the _SWAP.ini into the ARR PDV-test mod, after the recompiled Devotion .pex.",
