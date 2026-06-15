@@ -89,10 +89,11 @@ Run on a disposable ARR test save:
 
 Beyond the shrine-replacement slice, PDV now adds a second quest-reaction channel
 that lights up devotion signals from the list's own content: Vigilant, Glenmoril,
-Unslaad, Olenveld, ForgottenCity, SEC Saints & Seducers, the Daedric quest
-expansions (House of Horrors, The Only Cure), and the Gray Cowl CC. 26 reaction
-cells across 20 quests, keyed by FormID+stage so they no-op cleanly for anyone
-missing that content.
+Unslaad, Olenveld, ForgottenCity, SEC Saints & Seducers, and DAc0da - 22 reaction
+cells across 19 quests, keyed by FormID+stage so they no-op cleanly for anyone
+missing that content. The vanilla-FormID QE stages (House of Horrors, The Only
+Cure) and the Gray Cowl CC were promoted into the CORE matrix (6 cells, Tranche6,
+equity-audit PASS) so all players with that content benefit, not only ARR.
 
 Two deliverables:
 
@@ -105,7 +106,7 @@ Two deliverables:
   `SKSE/Plugins/StorageUtilData/PlayerDevotion/`.
 
 Status: machine-validated (`pdv_quest_matrix_compile.mjs --matrix ... --check`
-PASS, 26 cells / 22 keys / 20 quests). Runtime/author smoke pending - see
+PASS, 22 cells / 20 keys / 19 quests in the ARR channel, +6 promoted to core). Runtime/author smoke pending - see
 `references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_SmokeRunbook.md` and
 the per-cell map in
 `references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_ExtensionMap.md`. Five

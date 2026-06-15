@@ -82,25 +82,29 @@
     "data": {
       "source": "references/authoring/PDV_QuestReactionMatrix_ARR.csv",
       "runtimeJson": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR.json",
-      "cells": 26,
-      "questKeys": 22,
-      "watchedQuests": 20,
-      "content": ["Vigilant", "Glenmoril", "Unslaad", "Olenveld", "ForgottenCity", "SEC Saints & Seducers", "House of Horrors QE", "The Only Cure QE", "Gray Cowl CC"]
+      "cells": 22,
+      "questKeys": 20,
+      "watchedQuests": 19,
+      "content": ["Vigilant", "Glenmoril", "Unslaad", "Olenveld", "ForgottenCity", "SEC Saints & Seducers", "DAc0da"],
+      "promotedToCore": "Gray Cowl CC + House of Horrors QE + The Only Cure QE (6 cells) moved to the core matrix via Tranche6 (equity-audit PASS); no longer in this channel."
     },
     "machineProof": "node tools/pdv_quest_matrix_compile.mjs --matrix references/authoring/PDV_QuestReactionMatrix_ARR.csv --output <ARR.json> --check = PASS",
     "runtimeRunbook": "references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_SmokeRunbook.md",
     "extensionMap": "references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_ExtensionMap.md",
     "runtimeVerifyCells": 5,
     "held": [
-      "Core promotion of the QE (vanilla-FormID) and Gray Cowl (CC) hooks pending a deity gain/loss balance review.",
-      "DAc0da cells pending journal-text recovery (externalized strings) to resolve serve-vs-oppose valence."
+      "DAc0da Pan-Argonia ending (zDcdMqArgoEnd) - ambiguous bad-ending valence + uncertain quest-ID mapping; deferred."
+    ],
+    "done": [
+      "Core promotion of the QE + Gray Cowl hooks to the core matrix via Tranche6 (equity-audit PASS).",
+      "DAc0da Worm Cult (+Arkay) and Numidium (+Akatosh) cells authored to the channel via web research."
     ]
   },
   "deferredSlices": [
     {
       "id": "arr-daedric-shrine-acti-map",
       "status": "investigated-not-viable",
-      "reason": "Definitive 2026-06-15 scan: the man_DaedricShrines family is STAT-based (mesh/statue replacers), not ACTI. Zero of the 16 Princes have a clean route anchor; the only ACTIs (Nocturnal x2) carry TempleBlessingScript, which PDV must not replace. Jyggalag/Sithis/Kynareth/Mara are STAT-only; Mehrunes Dagon is worldspace-placement only. A shrine-prayer adapter would require PDV to place its own invisible marker ACTIs/trigger volumes at shrine cell positions (new ESP + placement + runtime) OR a location-trigger hook (new PDV_FLST_HolySites + manager handler) - both ESP/runtime design decisions, held for review. No clean data-only adapter exists."
+      "reason": "Definitive 2026-06-15 scan: the man_DaedricShrines family is STAT-based (mesh/statue replacers), not ACTI. Zero of the 16 Princes have a clean route anchor; the only ACTIs (Nocturnal x2) carry TempleBlessingScript, which PDV must not replace. Jyggalag/Sithis/Kynareth/Mara are STAT-only; Mehrunes Dagon is worldspace-placement only. A shrine-prayer adapter would require PDV to place its own invisible marker ACTIs/trigger volumes at shrine cell positions (new ESP + placement + runtime) OR a location-trigger hook (new PDV_FLST_HolySites + manager handler) - both ESP/runtime design decisions, held for review. No clean data-only adapter exists. Confirmed by a placed-reference trace: only the two Nocturnal activators are clickable (both TempleBlessingScript->AltarNocturnalSpell 10E8AE, already covered by the shrine-blessing manifest); the other 15 Princes place only decorative STAT meshes with no ACTI/script/spell."
     },
     {
       "id": "author-runtime-smoke",

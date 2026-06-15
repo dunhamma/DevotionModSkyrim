@@ -155,12 +155,16 @@ CC/QE to core after equity check.
   PASS at **26 cells / 22 keys / 20 quests**.
 - "The Cause" / Mehrunes Dagon: CONFIRMED ABSENT (ccBGSSSE059 master not loaded; only an inert
   orphan LOTD stub patch). Permanently dropped — Mehrunes Dagon stays covered by vanilla DA07.
-- DAc0da: DEFERRED (valence-blocked). Terminal stages NOW PINNED (all ShutDownStage-flagged, reliable):
-  Worm Cult parent zDcdSqWorm `0052C2` s9999; Pan-Argonia zDcdMqArgoEnd `00CA5B` s30 (CompleteQuest);
-  main-arc climax zDcdMq05 `00CA1E` s999. BUT journal text is externalized, so the serve-vs-oppose
-  VALENCE is genuinely ambiguous (defeat the Worm Cult = +Arkay vs serve it = −Arkay; stop Numidium =
-  +Akatosh vs activate = −Akatosh). Unlike Vigilant, lore+structure does NOT pin valence here. Needs a
-  BSA-strings extract (or in-game text) before authoring — do NOT guess valence.
+- DAc0da: RESOLVED via web research (Vicn's Numidium prequel). AUTHORED 2 HIGH-confidence cells to the
+  ARR channel: Worm Cult zDcdSqWorm `0052C2` s9999 → +Arkay (defeat Mannimarco; no join path); main arc
+  zDcdMq05 `00CA1E` s999 → +Akatosh (expel the Numidium; no enable path; RUNTIME-VERIFY the stage fires
+  on success, not the Mantella bad-ending). DEFERRED: Pan-Argonia zDcdMqArgoEnd `00CA5B` s30 — a
+  bad-ending trap (Hist overruns Nirn via Numidium activation); valence ambiguous + quest-ID→scene
+  mapping unconfirmed.
+
+CHANNEL COUNTS (current): ARR channel = 22 cells / 20 keys / 19 quests (the original 26 less the 6
+promoted to the core matrix via Tranche6, plus 2 DAc0da). Core matrix = 383 cells (+6). Supersedes the
+"26 cells" figures elsewhere in this doc.
 
 ## Wave 6 (man_DaedricShrines shrine adapters) — INVESTIGATED, NOT VIABLE as a clean override
 Definitive ACTI scan (2026-06-15): the man_DaedricShrines family is STAT-based (mesh/statue replacers),
@@ -172,4 +176,13 @@ would need EITHER (a) PDV-placed invisible marker ACTIs / trigger volumes at the
 (new ESP + placement + runtime), OR (b) a location-trigger hook (new PDV_FLST_HolySites + manager
 handler; note coc skips location triggers). Both are ESP/runtime + design decisions — HELD for review.
 No clean data-only adapter exists. Wave 6 data-only investigation = DONE.
+
+CONFIRMED by a placed-reference trace (2026-06-15, not just base records): only the two Nocturnal
+activators are clickable — man_ShrineOfNocturnal (00090F:man_DaedricShrines.esp) + the TG09 vanilla
+override (10E8B0:Skyrim.esm), BOTH TempleBlessingScript->AltarNocturnalSpell (10E8AE), which is ALREADY
+in PDV's shrine-blessing manifest (so the man_ Nocturnal shrines are already covered). The other 15
+Princes (Mehrunes Dagon/Jyggalag/Sithis/Azura/Namira/Mephala/Sanguine/Herma-Mora/Sheogorath/Vaermina/
+Molag Bal + Kynareth/Mara statues) place only STAT/decor — no ACTI, no script, no blessing spell, no
+clickable. PDV-placed markers or a location-trigger hook remain the only path for those 15 (ESP/runtime/
+design decision).
 
