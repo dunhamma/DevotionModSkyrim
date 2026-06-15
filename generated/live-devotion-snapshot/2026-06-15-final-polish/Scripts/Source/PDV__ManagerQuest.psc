@@ -36,6 +36,9 @@ GlobalVariable Property PDV_GLO_State_BretonDruidicFork Auto
 FormList Property PDV_FLST_AllDeities Auto
 FormList Property PDV_FLST_DaedricPaths_All Auto
 String Property QUEST_REACTION_MATRIX_FILE = "PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
+; List-patch second channel (e.g. Authoria/ARR). Cells are read from whichever
+; channel owns the (form|stage) key; shared stance/value tables stay on core.
+String Property QUEST_REACTION_MATRIX_FILE_ARR = "PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
 
 PDV_Deity_Kyne Property PDV_Kyne Auto
 PDV_Deity_Talos Property PDV_Talos Auto
@@ -469,7 +472,7 @@ Int Property BRETON_DRUIDIC_FORK_WEREWOLF = 2 AutoReadOnly
 Int Property BRETON_DRUIDIC_FORK_BETRAYED = 3 AutoReadOnly
 Int Property STARTUP_MODE_INFO_ONLY = 0 AutoReadOnly
 Int Property STARTUP_MODE_EXPLICIT_CHOICE = 1 AutoReadOnly
-String Property STARTUP_ADVISORY_TEXT = "This is only where your road begins. What you revere, neglect, or defy from here will shape the devotion that grows." AutoReadOnly
+String Property STARTUP_ADVISORY_TEXT = "In Devotion, the gods notice how you live. Your quest choices, the company you keep, your conduct in battle, and the shrines you tend are all weighed, and at each dawn your standing with the divine rises or falls. Worship can be broad, honoring many at once, but to reach the deepest devotion you must let one god become your own - and that is a turn of the heart, not a menu setting. The gods reward meaningful, varied action; repetition alone does not move them. How you live from here will shape your devotion." AutoReadOnly
 Int Property ORC_LIFE_MODE_CITY = 0 AutoReadOnly
 Int Property ORC_LIFE_MODE_STRONGHOLD = 1 AutoReadOnly
 Int Property ORC_LIFE_MODE_LEGION_EXILE = 2 AutoReadOnly
@@ -977,30 +980,36 @@ Function AwardPiety(PDV_DeityBase deity, Float amount)
     AwardPietyInternal(deity, amount, True)
 EndFunction
 
+String Function ResolveQuestReactionCellFile(String cellPrefix)
+    ; Return the matrix channel that owns this (form|stage) cell: core first, then
+    ; any list-patch channel. Returns "" when no channel has the cell.
+    if JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, cellPrefix + "deitiesCsv") != ""
+        return QUEST_REACTION_MATRIX_FILE
+    endIf
+    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR) && JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE_ARR, cellPrefix + "deitiesCsv") != ""
+        return QUEST_REACTION_MATRIX_FILE_ARR
+    endIf
+    return ""
+EndFunction
+
 Function ApplyQuestReaction(Quest sourceQuest, Int stageValue)
     if !sourceQuest
         return
     endIf
 
-    if !JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE)
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] QuestReaction skipped: matrix JSON missing.")
-        endIf
-        return
-    endIf
-
     String reactionKey = sourceQuest.GetFormID() + "|" + stageValue
     String cellPrefix = "quest." + reactionKey + "."
-    String deitiesCsv = JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, cellPrefix + "deitiesCsv")
-    if deitiesCsv == ""
+    String matrixFile = ResolveQuestReactionCellFile(cellPrefix)
+    if matrixFile == ""
         return
     endIf
 
+    String deitiesCsv = JsonUtil.GetStringValue(matrixFile, cellPrefix + "deitiesCsv")
     String[] deityNames = StringUtil.Split(deitiesCsv, "|")
-    String[] valences = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, cellPrefix + "valencesCsv"), "|")
-    String[] intensities = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, cellPrefix + "intensitiesCsv"), "|")
-    String[] magnitudes = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, cellPrefix + "magnitudesCsv"), "|")
-    String[] sourceTags = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, cellPrefix + "tagsCsv"), "|")
+    String[] valences = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "valencesCsv"), "|")
+    String[] intensities = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "intensitiesCsv"), "|")
+    String[] magnitudes = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "magnitudesCsv"), "|")
+    String[] sourceTags = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "tagsCsv"), "|")
     Int cellCount = deityNames.Length
     if cellCount <= 0
         return
@@ -1482,6 +1491,22 @@ Function NotifyDiegeticRoutineFavor(String reason)
     if PDV_DiegeticDirectorService
         PDV_DiegeticDirectorService.EmitRoutineFavor()
         Trace(2, "Diegetic routine favor refresh requested: " + reason)
+    endIf
+EndFunction
+
+; Dev runtime control for the D1 diegetic surfaces. Flips the director's D1Enabled
+; in-session so the visual layer can be previewed/tuned on the current save without an
+; ESP edit; the ESP D1Enabled flag is the separate ship-time bake.
+Bool Function DebugGetDiegeticD1Enabled()
+    if PDV_DiegeticDirectorService
+        return PDV_DiegeticDirectorService.D1Enabled
+    endIf
+    return false
+EndFunction
+
+Function DebugSetDiegeticD1Enabled(Bool enabled)
+    if PDV_DiegeticDirectorService
+        PDV_DiegeticDirectorService.D1Enabled = enabled
     endIf
 EndFunction
 
@@ -2113,6 +2138,66 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
     endIf
 EndFunction
 
+Function HandleDaedricShrinePrayer(Int pathIndex, String sourceId)
+    ; Casual once/day shrine prayer: a flat +2 to the Prince's piety, WITHOUT the
+    ; commitment/tier/active-pact machinery of HandleDaedricPrinceSignal. The
+    ; once-per-day gate lives on the activator (OncePerDayKey).
+    PDV_DaedricPathBase path = GetDaedricPathAtListIndex(pathIndex)
+    if !path
+        if GetDebugLevel() >= 1
+            Debug.Trace("[PDV] Daedric shrine prayer skipped: no path at index " + pathIndex)
+        endIf
+        return
+    endIf
+    path.AdjustStoredPiety(2.0, sourceId)
+    RequestPanelRefresh()
+
+    ; Player-facing confirmation. The shrine prayer is daily-repeatable and a Prince
+    ; can be uncommitted (so it never surfaces in the panel), so without this the
+    ; action is invisible. Top-left line always fires; the diegetic toast lane fires
+    ; when D1 is enabled. We dispatch the toast directly rather than via
+    ; SurfaceTransition because that helper permanently de-dups per surface key and
+    ; this is a once-per-day repeat.
+    Debug.Notification("You offer a prayer at the shrine of " + path.DeityName + ". " + path.DeityName + " hears you.")
+    if PDV_DiegeticDirectorService
+        PDV_DiegeticDirectorService.Dispatch("prayer", path.DeityName, "offer", path.DeityIndex, "")
+    endIf
+
+    if GetDebugLevel() >= 2
+        Debug.Trace("[PDV] Daedric shrine prayer: +2 " + path.DeityName + " index " + pathIndex + " source " + sourceId)
+    endIf
+EndFunction
+
+; Forces a fresh disk re-read of the quest-reaction matrix channel(s) into the
+; JsonUtil in-memory cache. Use after regenerating PDV_QuestReactionMatrix(_ARR)
+; mid-session so already-watched quests pick up newly-authored (form|stage) cells
+; without a full reload. Returns a short summary string for the MCM readout.
+; NOTE: this refreshes CELL DATA only; brand-new watched quests are (re)registered
+; for stage events on the next game load via RefreshP2Hooks.
+String Function DebugReloadQuestMatrix()
+    Int coreCells = 0
+    Int arrCells = 0
+
+    JsonUtil.Unload(QUEST_REACTION_MATRIX_FILE, false)
+    if JsonUtil.Load(QUEST_REACTION_MATRIX_FILE)
+        coreCells = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, "questWatchFormIdsCsv"), ",").Length
+    endIf
+
+    String arrState = "absent"
+    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR)
+        JsonUtil.Unload(QUEST_REACTION_MATRIX_FILE_ARR, false)
+        if JsonUtil.Load(QUEST_REACTION_MATRIX_FILE_ARR)
+            arrCells = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE_ARR, "questWatchFormIdsCsv"), ",").Length
+            arrState = arrCells + " watched"
+        endIf
+    endIf
+
+    if GetDebugLevel() >= 1
+        Debug.Trace("[PDV] Quest matrix reloaded: core " + coreCells + " watched, ARR " + arrState)
+    endIf
+    return "Quest matrix reloaded.\nCore: " + coreCells + " watched quests.\nARR channel: " + arrState + "."
+EndFunction
+
 Function HandleDaedricGenericSilenceProbe(String sourceId)
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] Daedric generic silence probe ignored: " + sourceId)
@@ -2374,7 +2459,7 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
             StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclaredFormID", sleepCellId)
             StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclaredDay", today + 1)
             HandleArgonianBedOfChoiceReturn("declared_" + reason)
-            Debug.Notification("This is your place of rest now. The root will remember it.")
+            Debug.Notification("You have made this your place of rest. The Hist remembers it now.")
         else
             StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", today + 1)
         endIf
@@ -2388,7 +2473,7 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
     HandleArgonianBedOfChoiceReturn("declared_" + reason)
     if PDV_SPEL_ArgonianRootedRest && StorageUtil.GetIntValue(PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount") >= 12
         PDV_SPEL_ArgonianRootedRest.Cast(playerRef, playerRef)
-        Debug.Notification("You wake rooted.")
+        Debug.Notification("You wake feeling rooted.")
     endIf
     return false
 EndFunction
@@ -2444,7 +2529,7 @@ Function ApplyArgonianAdaptation(Actor playerRef, Int adaptationIndex)
 
     playerRef.AddSpell(chosenAdaptation, False)
     StorageUtil.SetIntValue(None, "PDV.Adapt.Active", adaptationIndex + 1)
-    Debug.Notification("The root reshapes you. The change settles into your scales.")
+    Debug.Notification("The Hist reshapes you. The change settles into your scales to stay.")
     Trace(2, "Argonian adaptation applied: " + adaptationIndex)
 EndFunction
 
@@ -2711,8 +2796,8 @@ Function HandleArgonianShadowscaleKill(Actor playerRef)
     endIf
 
     PDV_SPEL_ArgonianShadowscaleVeil.Cast(playerRef, playerRef)
-    Debug.Notification("The shadow takes you back.")
-    SendPrismaSubstrateToast("ArgonianHist", "shadowscale", "The shadow takes you back.", "void", PDV_ArgonianHistSubstrate.GetHistPostureLabel())
+    Debug.Notification("The shadow closes over you. The Void hides its own.")
+    SendPrismaSubstrateToast("ArgonianHist", "shadowscale", "The shadow closes over you. The Void hides its own.", "void", PDV_ArgonianHistSubstrate.GetHistPostureLabel())
     StorageUtil.SetIntValue(None, "PDV.Shadowscale.LastInvisDay", today + 1)
     Trace(2, "Shadowscale veil fired on sneak kill.")
 EndFunction
@@ -11617,6 +11702,139 @@ Function SendPrismaMedallionPayload(Int originRace)
     payload = payload + ",\"sections\":[" + sectionsJson + "]}}"
 
     PDV_PrismaBridge.SendOverlayJson(payload)
+EndFunction
+
+; ---------------------------------------------------------------------------
+; Book of Days journal payload
+; ---------------------------------------------------------------------------
+
+; Map an in-game day integer to a Tamriel fiction date string.
+; Tamriel has 12 months of 30 days each.
+String Function JournalDayToFictionDate(Int gameDay)
+    String[] months = new String[12]
+    months[0] = "Morning Star"
+    months[1] = "Sun's Dawn"
+    months[2] = "First Seed"
+    months[3] = "Rain's Hand"
+    months[4] = "Second Seed"
+    months[5] = "Midyear"
+    months[6] = "Sun's Height"
+    months[7] = "Last Seed"
+    months[8] = "Hearthfire"
+    months[9] = "Frostfall"
+    months[10] = "Sun's Dusk"
+    months[11] = "Evening Star"
+    Int dayOfYear = gameDay - ((gameDay / 360) * 360)
+    if dayOfYear < 0
+        dayOfYear = 0
+    endIf
+    Int monthIndex = dayOfYear / 30
+    if monthIndex >= 12
+        monthIndex = 11
+    endIf
+    Int dayOfMonth = dayOfYear - (monthIndex * 30) + 1
+    return months[monthIndex] + " " + dayOfMonth
+EndFunction
+
+; Build the Book of Days journal JSON payload.
+; Entries are ordered oldest-first (index 0 = oldest, last index = newest).
+String Function BuildJournalPayloadJson()
+    Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
+    String entries = ""
+    Int i = 0
+    while i < count
+        String line = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", i))
+        Int gameDay = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Days", i)
+        String tone = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Tones", i))
+        String symbol = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Symbols", i))
+        String fictionDate = JsonSafeString(JournalDayToFictionDate(gameDay))
+        String entryTitle = JsonSafeString(JournalToneToTitle(tone))
+        String valence = JournalToneToValence(tone)
+        String entry = "{\"date\":\"" + fictionDate + "\""
+        entry = entry + ",\"day\":" + gameDay
+        entry = entry + ",\"symbol\":\"" + symbol + "\""
+        entry = entry + ",\"tone\":\"" + tone + "\""
+        entry = entry + ",\"valence\":\"" + valence + "\""
+        entry = entry + ",\"title\":\"" + entryTitle + "\""
+        entry = entry + ",\"text\":\"" + line + "\"}"
+        if i > 0
+            entries = entries + ","
+        endIf
+        entries = entries + entry
+        i += 1
+    endWhile
+    String j = "{\"mode\":\"journal\",\"journal\":{"
+    j = j + "\"title\":\"Book of Days\""
+    j = j + ",\"summary\":\"A record of devotional acts since the path began.\""
+    j = j + ",\"entries\":[" + entries + "]}}"
+    return j
+EndFunction
+
+; Short title derived from the tone/event key.
+String Function JournalToneToTitle(String toneKey)
+    if toneKey == "tier.reach"
+        return "Favor deepened"
+    endIf
+    if toneKey == "curse.onset"
+        return "A shadow falls"
+    endIf
+    if toneKey == "curse.cure"
+        return "The curse lifts"
+    endIf
+    if toneKey == "neglect.drop"
+        return "Silence grows"
+    endIf
+    if toneKey == "neglect.recover"
+        return "Return to the path"
+    endIf
+    if toneKey == "emergence.onset"
+        return "An emergence"
+    endIf
+    if toneKey == "substrate.act"
+        return "An act of devotion"
+    endIf
+    return "A moment noted"
+EndFunction
+
+; Map the journal tone/event key to an accessible valence the UI renders as a
+; direction mark + tag + color spine: good / warning / neutral. Color is never the
+; only cue (the mark direction and tag word carry it for color-blind readers).
+String Function JournalToneToValence(String toneKey)
+    if toneKey == "tier.reach"
+        return "good"
+    endIf
+    if toneKey == "curse.cure"
+        return "good"
+    endIf
+    if toneKey == "neglect.recover"
+        return "good"
+    endIf
+    if toneKey == "emergence.onset"
+        return "good"
+    endIf
+    if toneKey == "substrate.act"
+        return "good"
+    endIf
+    if toneKey == "curse.onset"
+        return "warning"
+    endIf
+    if toneKey == "neglect.drop"
+        return "warning"
+    endIf
+    return "neutral"
+EndFunction
+
+; Send the Book of Days journal to Prisma as a player-opened modal.
+Function SendPrismaJournalPayload(Bool playerRequested = false)
+    if !PDV_PrismaBridge.IsAvailable()
+        return
+    endIf
+    ; AllowPrismaBlockingSurfaces gates GAMEPLAY auto-push (default off). A player-pressed
+    ; hotkey passes playerRequested=true to bypass that gate -- it is player-owned, not auto-push.
+    if !AllowPrismaBlockingSurfaces && !playerRequested
+        return
+    endIf
+    PDV_PrismaBridge.SendOverlayJson(BuildJournalPayloadJson())
 EndFunction
 
 Bool Function SelectMedallionEntry(String optionId)

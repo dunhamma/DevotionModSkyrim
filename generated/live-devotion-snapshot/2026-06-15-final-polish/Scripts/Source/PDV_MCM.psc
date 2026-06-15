@@ -64,6 +64,8 @@ Int _oidRunDawn = -1
 Int _oidShowPietyMap = -1
 Int _oidShowStructuralMap = -1
 Int _oidRunScaffoldApiSmoke = -1
+Int _oidReloadQuestMatrix = -1
+Int _oidDiegeticD1 = -1
 Int _oidShowPatternSummary = -1
 Int _oidConcordatDefiance = -1
 Int _oidConcordatCompliance = -1
@@ -127,6 +129,7 @@ Int _oidDecayRunProofDays = -1
 Int _oidShowDecaySummary = -1
 Int _oidCompatRaceMapping = -1
 Int _oidCompatSurvival = -1
+Int _oidJournalHotkey = -1
 
 Int _oidKhajiitFocusBaanDar = -1
 Int _oidKhajiitFocusRajhin = -1
@@ -154,11 +157,20 @@ EndEvent
 
 Function OnGameReload()
     InitializePages()
+    RegisterJournalHotkey()
     Parent.OnGameReload()
 EndFunction
 
 Function OnConfigInit()
     InitializePages()
+    RegisterJournalHotkey()
+EndFunction
+
+Function RegisterJournalHotkey()
+    Int savedKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
+    if savedKey >= 0
+        RegisterForKey(savedKey)
+    endIf
 EndFunction
 
 Int Function GetVersion()
@@ -247,6 +259,10 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Shows the current dev-only scaffold inventory across tracks, substrates, sacred places, Daedric paths, and curse state.")
     elseIf a_option == _oidRunScaffoldApiSmoke
         SetInfoText("Exercises one safe set/read/reset path on each scaffold family and writes trace output.")
+    elseIf a_option == _oidReloadQuestMatrix
+        SetInfoText("Forces a fresh disk re-read of the quest-reaction matrix JSON (core + ARR channel) into memory. Use after regenerating the matrix mid-session so already-watched quests pick up newly-authored cells. Brand-new watched quests still need a game reload.")
+    elseIf a_option == _oidDiegeticD1
+        SetInfoText("Runtime toggle for the D1 diegetic surfaces (screen, sound, music). Default off; flip on to preview and tune on the current save, then bake D1Enabled into the ESP to ship.")
     elseIf a_option == _oidShowPatternSummary
         SetInfoText("Shows the integrated Pattern Proving summary across Concordat, Bosmer, substrate, Hircine, favor, commitment, and neglect state.")
     elseIf a_option == _oidConcordatDefiance
@@ -377,6 +393,8 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Forces the Orc life mode so its mode-gated Malacath reward becomes testable. Then force piety and Run Dawn.")
     elseIf a_option == _oidArgonianPeople || a_option == _oidArgonianVoid
         SetInfoText("Forces the Argonian focus by seeding Hist relations (Void also seeds Sithis activation), so its focus-gated reward becomes testable.")
+    elseIf a_option == _oidJournalHotkey
+        SetInfoText("Press the assigned key at any time to open the Book of Days devotion journal. Unbound by default; rebind here.")
     else
         SetInfoText("")
     endIf
@@ -483,6 +501,21 @@ Function OnOptionSelect(Int a_option)
             ShowMessage(RunScaffoldApiSmoke(), False, "$OK", "")
             ForcePageReset()
         endIf
+        return
+    endIf
+
+    if a_option == _oidReloadQuestMatrix
+        if PDV_Manager
+            ShowMessage(PDV_Manager.DebugReloadQuestMatrix(), False, "$OK", "")
+        endIf
+        return
+    endIf
+
+    if a_option == _oidDiegeticD1
+        if PDV_Manager
+            PDV_Manager.DebugSetDiegeticD1Enabled(!PDV_Manager.DebugGetDiegeticD1Enabled())
+        endIf
+        ForcePageReset()
         return
     endIf
 
@@ -848,6 +881,41 @@ Function OnOptionSelect(Int a_option)
     endIf
 EndFunction
 
+Function OnOptionKeyMapChange(Int a_option, Int a_keyCode, String a_conflictControl, String a_conflictName)
+    if a_option == _oidJournalHotkey
+        Int oldKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
+        if oldKey >= 0
+            UnregisterForKey(oldKey)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Hotkey", a_keyCode)
+        if a_keyCode >= 0
+            RegisterForKey(a_keyCode)
+        endIf
+        SetKeyMapOptionValue(_oidJournalHotkey, a_keyCode, False)
+    endIf
+EndFunction
+
+Event OnKeyDown(Int a_keyCode)
+    Int journalKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
+    if a_keyCode != journalKey
+        return
+    endIf
+    if journalKey < 0
+        return
+    endIf
+    if Utility.IsInMenuMode()
+        return
+    endIf
+    if !EnsureManagerBinding("journal_hotkey")
+        return
+    endIf
+    ; Player-pressed: show the journal on the Prisma overlay (SendOverlayJson shows the view).
+    ; The full panel stays bridge-owned (see pdv_prisma_ui_audit); True is the player-owned
+    ; bypass of the gameplay default-off gate. The notice is a temporary open confirmation.
+    Debug.Notification("The Book of Days opens.")
+    PDV_Manager.SendPrismaJournalPayload(True)
+EndEvent
+
 Function OnOptionSliderOpen(Int a_option)
     if a_option == _oidDebugLevel
         SetSliderDialogStartValue(GetDebugLevelValue())
@@ -946,6 +1014,10 @@ Function BuildPlayerPage()
     _oidDeveloperOptions = AddTextOption("Developer Options", GetDeveloperPageStateLabel(), OPTION_FLAG_NONE)
     AddTextOption("Status page", GetDeveloperPageStateLabel(), OPTION_FLAG_DISABLED)
     AddTextOption("Debug page", GetDeveloperPageStateLabel(), OPTION_FLAG_DISABLED)
+
+    AddHeaderOption("Book of Days", OPTION_FLAG_NONE)
+    Int currentJournalKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
+    _oidJournalHotkey = AddKeyMapOption("Open Book of Days", currentJournalKey, OPTION_FLAG_NONE)
 
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
@@ -1086,6 +1158,13 @@ Function BuildStatusPage()
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
 
+String Function DiegeticD1Label()
+    if PDV_Manager && PDV_Manager.DebugGetDiegeticD1Enabled()
+        return "On"
+    endIf
+    return "Off"
+EndFunction
+
 Function BuildStatePage()
     SyncSelection()
     SetCursorFillMode(TOP_TO_BOTTOM)
@@ -1115,6 +1194,8 @@ Function BuildStatePage()
     _oidShowPietyMap = AddTextOption("Show piety map", "Message", OPTION_FLAG_NONE)
     _oidShowStructuralMap = AddTextOption("Show structural map", "Message", OPTION_FLAG_NONE)
     _oidRunScaffoldApiSmoke = AddTextOption("Run scaffold smoke", "API set/read/reset", OPTION_FLAG_NONE)
+    _oidReloadQuestMatrix = AddTextOption("Reload quest matrix", "Re-read JSON", OPTION_FLAG_NONE)
+    _oidDiegeticD1 = AddTextOption("Diegetic surfaces (D1)", DiegeticD1Label(), OPTION_FLAG_NONE)
 
     ; --- Right column: race focus/state setters + favor ---
     SetCursorPosition(1)
