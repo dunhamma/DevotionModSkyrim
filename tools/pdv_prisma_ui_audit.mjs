@@ -94,6 +94,24 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       pass("Medallion modal payload is default-off guarded.", managerPath);
     }
 
+    const journalBlock = functionBlock(manager, "SendPrismaJournalPayload");
+    if (!journalBlock) {
+      fail("SendPrismaJournalPayload function is missing.", managerPath);
+    } else {
+      if (!journalBlock.includes("if !AllowPrismaBlockingSurfaces") || !manager.includes("\\\"mode\\\":\\\"journal\\\"")) {
+        fail("SendPrismaJournalPayload must be guarded as a blocking UI surface.", managerPath);
+      } else {
+        pass("Journal modal payload is default-off guarded.", managerPath);
+      }
+
+      const journalCalls = countMatches(manager, /SendPrismaJournalPayload\(/g);
+      if (journalCalls !== 1) {
+        fail(`SendPrismaJournalPayload should have exactly one definition (no additional callers within manager); found ${journalCalls} occurrences.`, managerPath);
+      } else {
+        pass("Journal modal payload has one definition.", managerPath);
+      }
+    }
+
     const sendJsonCount = countMatches(manager, /PDV_PrismaBridge\.SendJson\(/g);
     if (sendJsonCount !== 1) {
       fail(`Expected exactly one focused SendJson call in the manager; found ${sendJsonCount}.`, managerPath);

@@ -996,3 +996,48 @@ h1 {
     bottom: 14px;
   }
 }
+
+#pdv-journal-entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.journal-date {
+  margin: 14px 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.journal-entry {
+  border-left: 3px solid var(--muted);
+  padding: 8px 0 8px 13px;
+  margin: 0 0 6px;
+}
+.journal-entry.is-good {
+  border-left-color: var(--green);
+}
+.journal-entry.is-warning {
+  border-left-color: var(--red);
+}
+.journal-mark {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.journal-entry.is-good .journal-mark {
+  color: var(--green);
+}
+.journal-entry.is-warning .journal-mark {
+  color: var(--red);
+}
+.journal-entry-title {
+  margin: 2px 0 0;
+  color: #fff8e8;
+  font-weight: 500;
+}
+.journal-entry-text {
+  margin: 3px 0 0;
+  color: #fff8e8;
+  line-height: 1.65;
+}

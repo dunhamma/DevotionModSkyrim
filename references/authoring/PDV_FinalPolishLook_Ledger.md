@@ -49,47 +49,68 @@ for each. The baseline that every diff below is measured against is
 | FP-011 | Survey helpers `GetPublicTierBand` / `GetCurrentStandingBand` / `GetBosmerComplianceBand` | done-on-live | live manager | per `PDV_VoiceConformancePass_Plan.md` |
 | FP-012 | Shared player-tier surfaces routed (tier-up notice + Prisma tier/champion toasts) | done-on-live | live manager | tier-0 = `Distant`; lapse keeps `Wavering` |
 
-### Pending -- the voice-pass "second batch" (ESP MESG wiring wave)
+### RECONCILED 2026-06-15: the ESP "second batch" was ALREADY BUILT on live
+
+Verified this session via houseCARL record reads + `node tools/pdv_verify.mjs`
+(**FAIL=0 / PASS=3028** on live). The records exist in `Devotion.esp`, properties are
+filled (verify would FAIL on an unfilled required property), and the `.psc` wiring is in
+place. **Do NOT re-author these** -- the consolidated 2026-06-14 Codex pass already did,
+via `PDV_ConsolidatedBuildPass_RecordWave.spec.json`. The plan's "REMAINING" list (which
+seeded the original rows here) was stale.
+
+| ID | Item | State | Evidence |
+|----|------|-------|----------|
+| FP-020 | Nord 13 commitment-offer MESG (Kyne + 12) + 3 OfferResponse | done-on-live | records `071513-071522`; props `PDV__ManagerQuest.psc:388-403`; per-god selector `:9144-9168`; Shor body == drafted copy |
+| FP-021 | Curse-state MESG, all 5 races (Nord/Altmer/Redguard/Khajiit/Argonian) | done-on-live | records present (`07150E-07152A`, `070525-070527`, ...); bodies conformed from `RecordCopy.md` |
+| FP-022 | Champion-entry MESG (Redguard Crown/Forebear/AshAbah, Nord Kyne, 16 Daedric) | done-on-live | records `0714E4-0714E6`, `071526`; props `:364-366`/`:407`; shown via `ShowRedguardMessage(prop, fallback)`; verify clean => props filled |
+| FP-023 | Redguard neglect texture MESG | done-on-live | authored in the record-wave spec |
+| FP-024 | Nord cured-vampire-scar `GetNordScarLabel` reword | done-on-live | live `:13450` returns the reworded line verbatim |
+| FP-025 | Khajiit Prisma posture-title display labels | done-on-live | live `:3851-3855` => "Lattice strained/thinned" / "Drifting to shadow" |
+| FP-031 | ThalmorAlignment reputation-track record + global | done-on-live (record) | `PDV_RepTrack_ThalmorAlignment` + `PDV_GLO_ThalmorAlignment` authored in the wave; SIGNAL-FEEDING (functional) is separate + out of scope |
+
+### WS-1 player-text closeout (both done on live 2026-06-15)
 
 | ID | Item | State | Where | Pri | Proof gate |
 |----|------|-------|-------|-----|------------|
-| FP-020 | Nord 11 god-voice commitment-offer MESG records (Shor, Tsun, Stuhn; Akatosh, Mara, Arkay, Stendarr, Zenithar, Dibella, Julianos, Kynareth; + Talos) | pending | `Devotion.esp` MESG + wire | P0 | machine (verify) + manual offer read in-game |
-| FP-021 | Curse-state MESG verify/conform (houseCARL) | pending | `Devotion.esp` MESG | P1 | verify + in-game curse onset/cure read |
-| FP-022 | Champion-entry MESG binding | pending | `Devotion.esp` + manager | P1 | verify + in-game champion-entry read |
-| FP-023 | Redguard neglect tight (<=80-char) texture MESG records | pending | `Devotion.esp` MESG | P2 | content_verify budget + in-game |
-| FP-024 | Nord cured-vampire-scar `GetNordScarLabel` reword | pending | live manager | P2 | compile 0/0 + in-game label read |
-| FP-025 | Khajiit Prisma posture-title display label | pending | live manager / Prisma | P2 | in-game toast read |
-| FP-026 | Reward-description clarity: 1 record `PDV_Bless_Redguard_AncestorSpine_T1` append "(Effect: +3% Attack Speed.)" | pending | `Devotion.esp` MGEF/SPEL desc; spec `PDV_*RewardRecords.spec.json`; review `PDV_RewardDescriptionClarity_Review_2026-06-09.md` | P2 | reward-author --check + readback (257/258 already OK) |
-| FP-027 | Startup copy rewrite (Dunmer blurb flagged) | pending (draft-first) | live `GetStartupCanonicalSummary` ~`:6822`, `STARTUP_ADVISORY_TEXT` ~`:353`; `handoff/PDV_PostD0_Sweep_Handoff_2026-06-08.md` task #18 | P1 | draft -> user review -> port -> compile 0/0 |
-| FP-028 | Argonian toast grammar verify/reword ("the root will remember", "wake rooted", shadowscale ref) | pending (verify) | live manager (~lines 2210/2224/2280/2513) | P1 | confirm conformance-audit state, reword if mechanical; in-game |
+| FP-027 | Startup ADVISORY rewrite (ends "...will shape your devotion") | done (advisory) -- in-game length check pending | live `STARTUP_ADVISORY_TEXT` `:475` ported 2026-06-15; compile 0/0, verify FAIL=0/PASS=3028. Per-race blurbs INTENTIONALLY left as current to avoid the "shape your devotion" double-up (user call). | P1 | machine done; MANUAL: glance the startup MessageBox in-game for overflow (advisory is long) |
+| FP-028 | Argonian substrate toast voice | done (live) -- in-game read pending | live `:2386/2400/2456/2723/2724` reworded 2026-06-15 (bed / rooted-rest / adaptation / shadowscale + Prisma mirror). `:2400` = "You wake feeling rooted." (user wording). compile 0/0, verify FAIL=0. | P1 | machine done; MANUAL in-game read |
 
-### Blocked
+### Closed by verification (were "pending" in error)
+
+| ID | Item | Finding |
+|----|------|---------|
+| FP-026 | Reward-description magnitude clause (Redguard AncestorSpine T1) | ALREADY SATISFIED. The T1 bless's real effect is MGEF `071193` (ResistMagic), whose live desc already reads "...Magic Resistance +3%." (magnitude=3). The 2026-06-09 review was stale twice: wrong record (`071076`, an unused flavor MGEF) and wrong stat ("Attack Speed"). Optional hygiene-only follow-up: confirm `071076` is orphaned (not player-facing; out of "look" scope). |
+
+### Blocked / partially unblocked
 
 | ID | Item | State | Where | Notes |
 |----|------|-------|-------|-------|
-| FP-030 | Altmer Survey final voice (alignment-path base) | blocked | live manager (interim Auri-El anchor) | depends on ThalmorAlignment track = unbuilt FUNCTIONAL work, OUT of this scope; keep interim base, revisit when that track lands |
+| FP-030 | Altmer Survey alignment-path base swap | partially unblocked | live manager (interim Auri-El anchor) | the ThalmorAlignment TRACK record now exists (FP-031), so the Survey base CAN swap -- but it depends on the track being FED by signals (functional, OUT of scope). Keep the interim Auri-El anchor until the functional track is wired. |
 
 ---
 
 ## WS-2 -- Diegetic D1 visual layer (enable + tune)
 
-State today: dispatcher hooks are **already live-wired** in `PDV__ManagerQuest.psc`
-(`SurfaceTransition` -> `PDV_DiegeticDirectorService.Dispatch`, ~`:1488-1501`; call
-sites `:5428` tier, `:6526` neglect, `:7892` tier, `:9536` curse). `PDV_DiegeticDirector.psc`
-+ `PDV_DiegeticDeps.psc` are already in the live source dir (in baseline). This is
-finish-and-prove, not build. Runbook: `references/authoring/PDV_DiegeticUX_LiveWrite_Runbook.md`.
-V1 channels: screen (IMAD), sound (SNDR), music (MUSC), journal (DBF), medallion (DF MISC),
-notify. Bodymark (NiOverride) + OAR anim are V2/excluded.
+**RECONCILED 2026-06-15** (investigation workflow `wf_940b12ea-bda`; full plan in
+`references/authoring/PDV_DiegeticD1_BuildoutPlan_2026-06-15.md`): **D1 is already BUILT on
+live.** All 17 channel records exist (`071484-07149F`), all 23 `PDV_DiegeticDirector` props
+are wired, D0 scaffold complete + PEX compiled, `D1Enabled=false`. "Enable" = flip ONE flag.
+V1 visible channels are really **screen (IMAD+shader) / sound / music / notify**; medallion +
+journal fall back invisibly (DF + DBF NOT installed). Bodymark + OAR = V2/excluded.
 
 | ID | Item | State | Where | Pri | Proof gate |
 |----|------|-------|-------|-----|------------|
-| FP-040 | Verify/complete D0 inert scaffold: `PDV_DiegeticDeps` + `PDV_DiegeticDirector` SGE quests in `Devotion.esp`, read-props wired, `D1Enabled=false`, scaffold compiled to live PEX, SEQ refreshed | pending (verify first) | `Devotion.esp`, runbook D0 section | P0 | `pdv_diegetic_ux_check` + D0 no-behavior-change smoke (no `PDV_Diegetic*` None/missing-prop warnings) |
-| FP-041 | Create D1 channel records: IMAD x5, SPEL shader x4, SNDR x5, MUSC x1, MISC medallion, BOOK; wire each property on director | pending | `Devotion.esp` per `PDV_DiegeticUX.manifest.json` | P0 | records exist + wired (not "done" yet) |
-| FP-042 | Set `D1Enabled = true`; keep soft-dep fallbacks conservative | pending | `PDV_DiegeticDirector` prop | P0 | verify FAIL=0 |
-| FP-043 | Tune surface profiles (tone->channel table, ArchitectureSpec §3): shader bloom/vignette, sound cues, music bed, medallion/journal updates | pending | channel records + profiles | P1 | manual look review per transition |
-| FP-044 | Counted transition proof (MCM dev-page driven) | pending | QASmoke / MCM Debug | P0 | tier x1, neglect x1, curse onset/cure x1 each; save/load guard integrity; deps-absent graceful |
-| FP-045 | V1 exclusions: bodymark + OAR anim stay OFF | decision recorded | runbook Boundaries | -- | n/a (V2) |
-| FP-046 | MCM verbosity preset (Silent default / Transitions-only / Verbose) wired + labeled | pending (verify) | `PDV_MCM.psc` | P1 | MCM toggle works; Silent default preserved |
+| FP-040 | D0 inert scaffold (quests SGE, read-props wired, `D1Enabled=false`, PEX compiled) | done-on-live | Director `07149A`, Deps `071499`; manager service link filled | P0 | verified (5/5 PASS) |
+| FP-041 | D1 channel records (IMAD x5, SPEL x4, SNDR x5, MUSC, MISC, BOOK) + props wired | done-on-live | `071484-07149F` all present; 23 props filled | P0 | verified (17/17 records, 23 props) |
+| FP-042a | Runtime D1 toggle (MCM Debug: State page) | done (live, compile 0/0 verify FAIL=0) | `PDV_MCM.psc` "Diegetic surfaces (D1)" button + manager `DebugGet/SetDiegeticD1Enabled`; flips `07149A.D1Enabled` in-session on the CURRENT save | P0 | machine done; in-game: flip On, fire transitions via existing debug buttons |
+| FP-042b | Ship bake: ESP `D1Enabled = true` (for new players) | pending -- after tuning approved | `PDV_DiegeticDirector` `07149A` VMAD; live ESP write (houseCARL-off-Anvil) | P0 | **NEW-save** counted proof (VMAD bakes); do AFTER feel is signed off |
+| FP-047b | Deploy Anvil -> ARR for Authoria play-test | NOT NEEDED (junction) | ARR `mods\Devotion - PlayerDevotion Local Test` is a JUNCTION -> `Anvil\mods\Devotion` (same files). All Anvil edits auto-appear in ARR; no copy step ever. (Earlier "separate copy" note was wrong -- checked a non-existent unsuffixed path.) | P1 | auto-synced; only a Skyrim restart loads new .pex/UI |
+| FP-043 | Tune by feel + confirm 3 candidate records (dread shader `0ABEFF`, Hollow `057C63`, Distant `03F363`) | pending (post-enable, iterative) | channel records | P1 | in-game look review per tone |
+| FP-044 | Counted transition proof (MCM dev-page, NEW save) | pending (after flip) | MCM Debug | P0 | tier x1, neglect x1, curse onset/cure x1 each; save/load guard; deps-absent graceful |
+| FP-045 | V1 exclusions: bodymark + OAR stay OFF | decision recorded | runbook Boundaries | -- | n/a (V2) |
+| FP-046 | MCM verbosity toggle (GAP-2: spec D0 deliverable, never built) | pending (optional this pass) | `PDV_MCM.psc`; writer for `PDV.Diegetic.Verbosity` (default 0=Silent) | P1 | toggle writes key; Silent default; NOT required to prove visuals |
+| FP-047 | Medallion + journal channels won't surface (DF/DBF absent in Anvil; DF present in ARR, DBF absent) | decided (V1 soft-dep fallback) | medallion-hover works in ARR (DF there); journal falls back | P1 | accepted |
+| FP-049 | Prisma "Book of Days" -- first-party journal (DBF-free, works in all lists incl. Authoria) | BUILT + display-blocker fixed (live) -- re-test pending | Papyrus: director ring buffer (cap 24) + manager `BuildJournalPayloadJson`/`SendPrismaJournalPayload(playerRequested)` + MCM rebindable hotkey (Player page). DISPLAY FIX: hotkey was blocked by `AllowPrismaBlockingSurfaces` (gameplay-gate, default off) -> added a player-owned bypass; README confirms `SendOverlayJson` shows the view. ACCESSIBLE TONE: `JournalToneToValence` -> good/warning/neutral; UI renders direction arrow + tag word + color spine + neutral high-contrast text (color never the only cue). Temp on-screen "The Book of Days opens." confirmation. compile 0/0, verify FAIL=0, audit 13 PASS; live JS synced to repo source. | P1 | machine DONE; re-test: press hotkey -> notice + modal should now show |
 
 ---
 
@@ -97,7 +118,7 @@ notify. Bodymark (NiOverride) + OAR anim are V2/excluded.
 
 | ID | Item | State | Where | Pri | Proof gate |
 |----|------|-------|-------|-----|------------|
-| FP-050 | Track `Devotion Main Banner.png`; decide home (repo root vs `assets/` vs Nexus-only) | decision-needed | repo root (untracked) | P1 | placed + tracked, or deliberately git-ignored |
+| FP-050 | Track `Devotion Main Banner.png`; decide home (repo root vs `assets/` vs Nexus-only) | placed, pending commit | `assets/branding/Devotion Main Banner.png` | P1 | include in closeout commit or deliberately remove before release |
 | FP-051 | Nexus mod-page art (header, featured, gallery) | decision-needed | candidates in `scratch/prisma-art/` | P1 | asset set chosen |
 | FP-052 | MCM splash/header image (if SkyUI MCM is to carry one) | decision-needed | `PDV_MCM.psc` | P2 | decide in/out |
 | FP-053 | FOMOD installer vs single-folder install for 1.0 | decision-needed | none in repo today | P1 | install model chosen |
