@@ -1,6 +1,6 @@
 {
   "schema": "pdv.phase21.arr-shrine-prayer.v1",
-  "status": "mechanism-built-and-compiled; ACTI records + BOS ini pending authoring + runtime smoke",
+  "status": "BUILT: mechanism compiled + 9 ACTI records authored + BOS ini emitted; runtime smoke pending",
   "intent": "Make the man_DaedricShrines decorative statues clickable: a once/day prayer that grants a flat +2 piety to that Prince. Requested 2026-06-15.",
   "mechanism": {
     "status": "machine-verified (all 3 scripts compile 0 errors / 0 warnings)",
@@ -42,9 +42,18 @@
     "deferred_aedric": "Kynareth + Mara statues are Aedric Divines, not Daedric paths - they need a Divine +2 variant (a HandleShrinePrayerDeity(name) using GetDeityByName + AwardPiety over PDV_FLST_AllDeities), a small follow-up.",
     "alreadyCovered": "Nocturnal: the man_ Nocturnal shrine IS clickable and already routes AltarNocturnalSpell, covered by the existing shrine-blessing manifest."
   },
+  "authored": {
+    "tool": "tools/pdv-arr-shrineprayer-author (builds 0/0; modeled on pdv-daedric-author)",
+    "esp": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_Compatibility.esp (ESL-flagged; masters Skyrim.esm + Devotion.esp)",
+    "bosIni": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_ShrinePrayer_SWAP.ini (9 STAT->ACTI swaps, [Forms] grammar)",
+    "actiFormIds": {
+      "Azura": "000800", "Vaermina": "000801", "MolagBal": "000802", "Mephala": "000803",
+      "MehrunesDagon": "000804", "Sheogorath": "000805", "Namira": "000806", "Sanguine": "000807", "HermaeusMora": "000808"
+    },
+    "verified": "Readback confirms all 9: RouteId=202, SignalValue=princeIndex, Model set, PDV_EventBusService=046AF7:Devotion.esp, RequiredOriginRace=-1, OncePerDayKey wired, PDV_GLO_OriginRace/DebugLevel resolved."
+  },
   "remaining": [
-    "Author the 9 ACTI records (model + PDV_EventSignalActivator VMAD with the props above) into PDV_AuthoriaARR_Compatibility.esp - best via a bespoke Mutagen helper or the CK (VMAD record authoring is the project's bespoke-tool domain, not raw houseCARL).",
-    "Emit PDV_AuthoriaARR_ShrinePrayer_SWAP.ini with the created ACTI FormIDs.",
-    "Runtime smoke: BOS swaps the statue, the shrine is clickable, prayer grants +2 to the Prince, once/day gate holds (offsite-unverifiable; do at the Wave 2 smoke)."
+    "Deploy PDV_AuthoriaARR_Compatibility.esp + the _SWAP.ini into the ARR PDV-test mod, after the recompiled Devotion .pex.",
+    "Runtime smoke: BOS swaps the statue -> shrine clickable; prayer grants +2 to the Prince; once/day gate holds. Offsite-unverifiable; do at the Wave 2 smoke."
   ]
 }
