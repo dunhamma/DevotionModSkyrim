@@ -1,0 +1,7 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation
+ccBGSSSE020_Quest,The Gray Cowl of Nocturnal,100,Received the Gray Cowl of Nocturnal,honor_daedra,Nocturnal,+,S,milestone,Gray Cowl CC s100 (received the Cowl; text-confirmed via houseCARL)
+DA10,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,defy_daedra,Molag Bal,-,S,milestone,HoH QE s210 (helped Tyranus destroy the altar; text-confirmed). Vanilla s200 (serve Molag Bal) stays owned by the Daedric sender.
+DA10,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,smite_corruption,Stendarr,+,m,small,HoH QE s210 (Tyranus is a Vigilant of Stendarr)
+DA13,The Only Cure (QE - refuse),101,Refused Peryite's bargain,refuse_daedra,Peryite,-,m,small,Only Cure QE s101 (refused Peryite; text-confirmed). Vanilla s100 (serve Peryite) stays owned by the Daedric sender.
+DA13,The Only Cure (QE - destroy altar),102,Killed Orchendor and destroyed Peryite's altar,defy_daedra,Peryite,-,S,milestone,Only Cure QE s102 (destroyed Peryite's altar; text-confirmed)
+DA13,The Only Cure (QE - destroy altar),102,Killed Orchendor and destroyed Peryite's altar,smite_corruption,Stendarr,+,m,small,Only Cure QE s102 (anti-daedric act)

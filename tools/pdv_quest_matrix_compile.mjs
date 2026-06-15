@@ -115,6 +115,10 @@ const FAUCET_EFFECT_LISTS = {
 };
 
 const MANUAL_QUEST_FORMIDS = {
+  // ARR compat-core promotion (Tranche6): CC + vanilla-FormID QE stages. editor_id fallback.
+  DA10: "Skyrim.esm:022F08", // House of Horrors (QE adds s210 anti-Daedric outcome)
+  DA13: "Skyrim.esm:08998D", // The Only Cure (QE adds s101/s102 refuse/destroy outcomes)
+  ccBGSSSE020_Quest: "ccbgssse020-graycowl.esl:00080F", // Gray Cowl of Nocturnal (CC)
   dunHunterQST: "Skyrim.esm:018601", // Kyne's Sacred Trials (Froki); s100 terminal blessing. Verified via houseCARL (USSEP-patched record).
   FreeformKolskeggrA: "Skyrim.esm:01FD72",
   MQ105U: "Skyrim.esm:0713DC",

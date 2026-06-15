@@ -28,6 +28,7 @@ C06,Glory of the Dead,200,Honored the fallen Harbinger with funeral rites and pa
 C06,Glory of the Dead,200,"Honored the fallen warrior, sped him to Sovngarde",honor_the_dead,Shor,+,m,small,C06 LOG 200: granted Kodlak the glory of Sovngarde (honored fallen warrior)
 C06,Glory of the Dead,200,Honored the fallen with rites,honor_the_dead,Auri-El,+,m,small,C06 OBJ 10: Attend Kodlak's funeral
 C06,Glory of the Dead,65,Defeated the wolf spirit in single combat at the tomb,kill_honorable_combat,Shor,+,S,small,C06 OBJ 65: Defeat the wolf spirit
+ccBGSSSE020_Quest,The Gray Cowl of Nocturnal,100,Received the Gray Cowl of Nocturnal,honor_daedra,Nocturnal,+,S,milestone,Gray Cowl CC s100 (received the Cowl; text-confirmed via houseCARL)
 CW01A,Joining the Legion,160/200,Take the oath to join the Imperial Legion (serve the Empire),"serve_empire_order,keep_oath",Akatosh,+,S,small,s160 Take the oath; completion 200 (joins Imperial Legion to preserve the Empire)
 CW01A,Joining the Legion,160/200,Swear binding oath to the Imperial Legion,keep_oath,Malacath,+,C,milestone,s160 Take the oath (terminal join 200); keep_oath(C) for Malacath. Dropped invented serve_empire_order (not in Malacath profile).
 CW01A,Joining the Legion,160/200,Swear oath / serve Imperial order,serve_empire_order,Alkosh,+,m,small,s160/200 join Imperial Legion; Alkosh approves serve_empire_order(m) cosmic-order
@@ -112,6 +113,8 @@ DA10,The House of Horrors,200,Torture + kill a bound captive; a Vigilant of Sten
 DA10,The House of Horrors,200,Murder of a helpless captive,kill_the_helpless,Mara,-,S,small,DA10 s200
 DA10,The House of Horrors,200,Serve domination; defile the cycle,serve_a_daedra:molagbal,Arkay,-,m,small,DA10 s200
 DA10,The House of Horrors,200,Beat the priest Logrolf to death at Molag Bal's command,"kill_the_helpless,murder_treacherous",Stuhn,-,S,small,"DA10 s200: killed the captive priest in the abandoned house (kill_the_helpless S). A prisoner slain under a god of domination is the anti-ransom. One step below the Stendarr -C milestone -> S/small. UESP: The House of Horrors"
+DA10,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,defy_daedra,Molag Bal,-,S,milestone,HoH QE s210 (helped Tyranus destroy the altar; text-confirmed). Vanilla s200 (serve Molag Bal) stays owned by the Daedric sender.
+DA10,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,smite_corruption,Stendarr,+,m,small,HoH QE s210 (Tyranus is a Vigilant of Stendarr)
 DA11,The Taste of Death,100,Feast on Verulus's corpse; Ring of Namira,"cannibalism,serve_a_daedra:namira,acquire_daedric_artifact:namira,desecrate_the_dead",Namira,+,C,milestone,DA11 s100 "feasted on the body of Brother Verulus ... rewarded with Namira's Ring"
 DA11,The Taste of Death,100,Cannibalism; desecrate the dead,desecrate_the_dead,Arkay,-,S,small,DA11 s100
 DA11,The Taste of Death,100,Murder + cannibalize the priest,"murder_treacherous,kill_the_helpless",Stendarr,-,S,small,DA11 s50/s100
@@ -123,6 +126,9 @@ DA11,The Taste of Death,100,Defiled the dead whose names are written in the ledg
 DA11,The Taste of Death,100,Slew the trusting priest Verulus for the feast,"murder_treacherous,kill_the_helpless",Stuhn,-,m,small,"DA11 s100: led Verulus to the table and killed him helpless (kill_the_helpless m). One step below the Stendarr -S cell -> m/small. UESP: The Taste of Death"
 DA11,The Taste of Death,250,Defended Verulus and refused Namira's feast,"mercy_spare,protect_the_weak",Stuhn,+,m,small,"DA11 s250: turned on the coven and spared the intended victim (mercy_spare m). One step below the Stendarr +S cell -> m/small. UESP: The Taste of Death"
 DA13,The Only Cure,100,Commune with Peryite; kill Orchendor; Spellbreaker,"serve_a_daedra:peryite,acquire_daedric_artifact:peryite,spread_order_pestilence",Peryite,+,C,milestone,DA13 s40/s75/s100 "Peryite has solicited me to kill ... Orchendor ... killed Orchendor, as instructed by Peryite"
+DA13,The Only Cure (QE - refuse),101,Refused Peryite's bargain,refuse_daedra,Peryite,-,m,small,Only Cure QE s101 (refused Peryite; text-confirmed). Vanilla s100 (serve Peryite) stays owned by the Daedric sender.
+DA13,The Only Cure (QE - destroy altar),102,Killed Orchendor and destroyed Peryite's altar,defy_daedra,Peryite,-,S,milestone,Only Cure QE s102 (destroyed Peryite's altar; text-confirmed)
+DA13,The Only Cure (QE - destroy altar),102,Killed Orchendor and destroyed Peryite's altar,smite_corruption,Stendarr,+,m,small,Only Cure QE s102 (anti-daedric act)
 DA14,A Night To Remember,200,Drunken revelry across Skyrim; Sanguine Rose,"revel_indulge,serve_a_daedra:sanguine,acquire_daedric_artifact:sanguine",Sanguine,+,C,milestone,DA14 s200 "'Sam' turned out to be ... Sanguine ... I've acquired the Sanguine Rose"
 DA14,A Night To Remember,10,Trashed the Temple of Dibella in a drunken stupor,"revel_indulge,defile_nature",Dibella,-,m,small,DA14 s10 "a priestess has told me I trashed the Temple"
 DA14,A Night To Remember,30,Clean the Temple + apologize to the priestesses of Dibella,"charity,heal_comfort",Dibella,+,S,small,DA14 s20/s30 "I have cleaned up the Temple ... apologize to the priestess"

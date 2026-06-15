@@ -16,12 +16,6 @@ zzzCrbBqStuhnTsun,Trial of the Gods,999,Passed the Nord divine trial,prove_worth
 zzzCrbBqStuhnTsun,Trial of the Gods,999,Passed the Nord divine trial,prove_worth,Stuhn,+,m,milestone,Unslaad zzzCrbBqStuhnTsun s999 ShutDownStage,Unslaad.esm:3C8752
 OlenveldBOTE,Beginning of the End,80,Cleansed Olenveld of the Ideal Masters' undeath,cleanse_undeath,Arkay,+,S,milestone,Olenveld OlenveldBOTE s80 Complete (cleansed Ideal Masters; text-confirmed),Olenveld.esp:50FC4D
 EC_SS_MQ102,The Roots of Madness,100,Defeated Thoron and served Sheogorath's agents,serve_daedra,Sheogorath,+,S,milestone,SEC EC_SS_MQ102 s100 ShutDownStage (text-confirmed),Skyrim Extended Cut - Saints and Seducers.esp:09EF5F
-DA10QE,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,defy_daedra,Molag Bal,-,S,milestone,HoH QE s210 (helped Tyranus destroy the altar; text-confirmed),Skyrim.esm:022F08
-DA10QE,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,smite_corruption,Stendarr,+,m,small,HoH QE s210 (Tyranus is a Vigilant of Stendarr),Skyrim.esm:022F08
-DA13QErefuse,The Only Cure (QE - refuse),101,Refused Peryite's bargain,refuse_daedra,Peryite,-,m,small,Only Cure QE s101 (refused Peryite; text-confirmed),Skyrim.esm:08998D
-DA13QEdestroy,The Only Cure (QE - destroy altar),102,Killed Orchendor and destroyed Peryite's altar,defy_daedra,Peryite,-,S,milestone,Only Cure QE s102 (destroyed Peryite's altar; text-confirmed),Skyrim.esm:08998D
-DA13QEdestroy,The Only Cure (QE - destroy altar),102,Killed Orchendor and destroyed Peryite's altar,smite_corruption,Stendarr,+,m,small,Only Cure QE s102 (anti-daedric act),Skyrim.esm:08998D
-ccBGSSSE020_Quest,The Gray Cowl of Nocturnal,100,Received the Gray Cowl of Nocturnal,honor_daedra,Nocturnal,+,S,milestone,Gray Cowl CC s100 (received the Cowl; text-confirmed),ccbgssse020-graycowl.esl:00080F
 000FCQuest02,The Forgotten City - Forget-me-not,1500,Refused to murder the suspect for self-interest,show_mercy,Stendarr,+,S,milestone,FC Quest02 s1500 (refused unjust killing; embedded text-confirmed),ForgottenCity.esp:05965B
 000FCQuest01,The Forgotten City,4000,Persuaded the Arbiter to wind back the Dwarves' Law,seek_truth,Julianos,+,S,milestone,FC Quest01 s4000 good ending (truth over blind obedience; embedded text-confirmed),ForgottenCity.esp:012BB9
 000FCQuest01,The Forgotten City,4050,Reunited Altrius with Cassia,show_compassion,Mara,+,m,small,FC Quest01 s4050 CompleteQuest (reunion; embedded text-confirmed),ForgottenCity.esp:012BB9

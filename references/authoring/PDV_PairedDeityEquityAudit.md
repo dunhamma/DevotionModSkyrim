@@ -35,7 +35,7 @@ asymmetrically credited for the SAME act (T03 Gildergreen precedent).
 | Rajhin | Khajiit | 10(6ms) | 0(0ms) | 0 | yes | yes | yes | OK |
 | Shor | Nord | 18(7ms) | 7(0ms) | 0 | yes | yes | - | OK |
 | Sithis | Argonian | 10(6ms) | 0(0ms) | 0 | yes | yes | yes | OK |
-| Stendarr | Imperial/Nord/Breton | 12(3ms) | 18(5ms) | 0 | yes | yes | - | OK |
+| Stendarr | Imperial/Nord/Breton | 14(3ms) | 18(5ms) | 0 | yes | yes | - | OK |
 | Stuhn | Nord | 4(0ms) | 8(3ms) | 0 | yes | yes | - | OK |
 | Talos | Nord/Imperial | 23(4ms) | 0(0ms) | 0 | yes | yes | - | OK |
 | Trinimac | Orc/Altmer | 2(0ms) | 0(0ms) | 0 | yes | yes | - | OK — pressure-only by design (R5); thin coverage intentional |
@@ -188,6 +188,7 @@ Document-only cluster: no cells proposed.
 | Tu'whacca | record (PDV_FLST_AllDeities) |
 | Hircine | daedric path (PDV_FLST_DaedricPaths_All) |
 | Xarxes | record (PDV_FLST_AllDeities) |
+| Nocturnal | daedric path (PDV_FLST_DaedricPaths_All) |
 | Akatosh | record (PDV_FLST_AllDeities) |
 | Alkosh | record (PDV_FLST_AllDeities) |
 | Mehrunes Dagon | daedric path via IsQuestReactionNameMatch (Dagon) |
@@ -210,7 +211,6 @@ Document-only cluster: no cells proposed.
 | Dibella | record (PDV_FLST_AllDeities) |
 | Vaermina | daedric path (PDV_FLST_DaedricPaths_All) |
 | Sithis | record (PDV_FLST_AllDeities) |
-| Nocturnal | daedric path (PDV_FLST_DaedricPaths_All) |
 | Rajhin | record (PDV_FLST_AllDeities) |
 | Baan Dar | record (PDV_FLST_AllDeities) |
 | Zenithar | record (PDV_FLST_AllDeities) |
@@ -239,3 +239,4 @@ All 32 record deities have Part B profiles.
 - 'Namira' has no PDV_StanceMatrix/DaedricRacePrinceMatrix row; runtime falls back to the deity record's baked stance ints.
 - 'Sanguine' has no PDV_StanceMatrix/DaedricRacePrinceMatrix row; runtime falls back to the deity record's baked stance ints.
 - 'Z'en' has no PDV_StanceMatrix/DaedricRacePrinceMatrix row; runtime falls back to the deity record's baked stance ints.
+
