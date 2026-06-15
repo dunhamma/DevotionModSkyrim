@@ -190,6 +190,29 @@ SKIP/DEFER recorded: evgSIRENROOT = SKIP (standalone puzzle dungeon, no divine-s
 Seducers CC-base questline (ccBGSSSE025 QuestA/QuestB) = DEFER (SEC empties its stages in ARR; only the
 live SEC EC_SS_MQ102 s100 path is hooked; revisit only for a non-SEC list lane).
 
+## Post-audit follow-ups (2026-06-15) — the 4 chosen decision items
+1. **LOTD / Daedric-artifact faucet (#1) — MOSTLY ALREADY DONE.** PDV_FLST_FaucetDaedricArtifacts
+   (0714A2:Devotion.esp) already lists all 16 Princes' artifacts (exactly what LOTD's relic loop
+   collects), firing the GENERIC EVT_ACCEPT_DAEDRIC_ARTIFACT signal (RouteGenericAction ->
+   EventBus.RouteAction). Two CORE hygiene fixes RECORDED for the next core/CK pass (Devotion.esp
+   FormList, binary edit): ADD Masque of Clavicus Vile (0D2846:Skyrim.esm, the one missing artifact);
+   REMOVE the stray non-artifact REFR 0F6D1A:Skyrim.esm (Dwemer Dish - fires a false +signal on a bowl).
+   True per-Prince artifact devotion is the SEPARATE serve_a_daedra faucet (Masque-equip/Spellbreaker-
+   block), which is script-heavy per key (PDV_PlayerEvents GetQuestReactionFormIdKey/PluginKey +
+   routing dispatch) - not extended.
+2. **Ebony Blade / Mephala (#2) — BUILT.** 2 ARR cells: DA08MephalaHunt (000807:EbonyBladeCurse.esp) s20
+   keep -> +Mephala, s30 destroy-at-Aetherium-Forge -> -Mephala. (Acquisition +Mephala already covered
+   by the artifact faucet's Ebony Blade slot.) ARR channel now 24 cells.
+3. **Ohmes-Raht / Half-Khajiit (#3) — ALREADY WORKING (audit was wrong).** HalfKhajiitRace
+   (03322B:HalfKhajiit.esp, the playable race) carries RaceCompatibility keyword 001D8C, which
+   PDV_Origin.ResolveViaActorProxy maps to RACE_KHAJIIT (toggle PDV.Compat.CustomRaceMapping default ON).
+   A Half-Khajiit char auto-gets Khajiit theology, NOT FOREIGN. Verify at smoke (new Half-Khajiit char ->
+   Khajiit Survey). Belt-and-suspenders if smoke misses: a PDV_RaceMap.json entry pins the vampire
+   variant 05693A + the NPC-only Project ja-Kha'jay Ohmes. Existing-save origin-bake migration caveat stands.
+4. **Standing stones / Ryn's (#4) — NON-ISSUE.** PDV has NO standing-stone hooks, and Ryn's Standing
+   Stones + I4 preserve the vanilla Doomstone ACTI FormIDs (won by Requiem). Nothing to break. Any
+   standing-stone devotion would be a net-new P2 receiver (deferred; not in scope).
+
 CONFIRMED by a placed-reference trace (2026-06-15, not just base records): only the two Nocturnal
 activators are clickable — man_ShrineOfNocturnal (00090F:man_DaedricShrines.esp) + the TG09 vanilla
 override (10E8B0:Skyrim.esm), BOTH TempleBlessingScript->AltarNocturnalSpell (10E8AE), which is ALREADY
