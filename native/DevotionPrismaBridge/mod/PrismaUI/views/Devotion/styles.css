@@ -55,8 +55,12 @@ body.panel-visible .devotion-shell {
   display: block;
 }
 
-body.startup-visible .startup-modal {
+body.startup-visible .startup-modal:not([hidden]) {
   display: grid;
+}
+
+.startup-modal[hidden] {
+  display: none !important;
 }
 
 .devotion-panel {

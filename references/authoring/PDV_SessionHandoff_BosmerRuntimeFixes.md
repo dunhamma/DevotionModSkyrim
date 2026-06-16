@@ -7,9 +7,9 @@
 
 ## Current State
 
-Bosmer is no longer at "everything unproven." The DA05 organic source packet has real tester evidence, and several reward families have manual Active Effects / Survey proof. The remaining Bosmer blockers are narrower: fresh-load proof for the Naming fix, the corrected neglect stamina record, the combat-session Baan Dar Gap cadence, remaining variety levers, broader Bandit Road/feel checks, and asset status.
+This handoff is now superseded for packet-closeout purposes. The Bosmer DA05 organic source packet, Songs of the Green, Baan Dar Gap, reward/Survey stack, and final Bosmer feel/readback closeout are recorded as passed for the current beta-feel packet. The 2026-06-16 live readback refresh also moved Baan Dar Gap to the current SpeedMult +40 for 15 seconds.
 
-Do not treat this handoff as final Bosmer beta-feel readiness. It is a precise pickup point after source/readback fixes and partial manual proof.
+Do not treat this as final-world placement proof. It remains useful as historical runtime-fix context, but it is no longer the active Bosmer packet blocker sheet.
 
 ## Live Writes Completed
 
@@ -147,14 +147,14 @@ Restart Skyrim before testing. The previous live session had old script state lo
    - Exchange path, piety 25 and 50, run dawn pass.
    - Expected T1/T2 descriptions name `Z'en`; T3 already did.
 
-4. **Finish Bosmer variety smoke.**
+4. **Historical: Bosmer variety smoke that was later closed.**
    - Hearth + Tale Carried.
    - Songs of the Green, including Eldergleam interior-only behavior.
    - Scales at Rest.
    - Baan Dar Gap combat-session cadence: sub-20% in combat fires; ordinary/off-path/non-combat/subsequent same-day moments stay silent.
    - Naming coherence fade/restore at dawn.
 
-5. **Close remaining Bosmer pre-beta slots.**
+5. **Historical: slots that were later closed for the current packet.**
    - Bandit Road T1/T2/T3.
    - Broad Y'ffre lane plus suppression under active path.
    - Manual feel note.

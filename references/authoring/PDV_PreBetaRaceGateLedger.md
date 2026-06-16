@@ -220,7 +220,7 @@ Blocking follow-up: prove rejected hooks and define HoonDing cap before expandin
 ```text
 Race: Bosmer
 Lane type: P1 buildout packet
-Verdict: Fail - runtime/manual proof deferred
+Verdict: Pass - DA05 plus Bosmer variety/reward packet passed; final-world placement remains separate
 No-in-game status: Readback-Ready
 Expected build: Living Story or Exchange non-hunter Bosmer.
 Edge build: Bandit Road reversal, Old Contract Pact lapse/renunciation, or curse pressure.
@@ -229,14 +229,14 @@ Accepted hooks: Old Contract routes 100-101, Living Story routes 102-103, Exchan
 Rejected hooks: one generic Bosmer favor, generic kindness, generic bard activity, generic forest travel, generic trade profit, random vengeance, raw theft, generic crime, repeated theft, broad plant detection without tag evidence.
 Anti-farm result: daily route keys and Bandit Road reversal cooldown exist; 2026-06-13 tester reported generic-source silence passed for the current packet. Green Pact tag coverage remains required before item punishment.
 Survey/status result: source now has Bosmer-specific Survey/MCM readout for path, standing, Pact binding/lapse, and recent favor memory. 2026-06-13 DA05 stage 100 visible threshold-crossing test passed: Survey Devotion showed Bosmer OldContract / Seeker after piety-23 preflight, DA05, and dawn pass.
-Immersive hook result: QASmoke route proof exists; 2026-06-13 DA05 stage 100 and separate-save stage 105 both passed as live quest-stage source routes. Wrong-origin DA05 rejection and generic-source silence also passed by tester report. Source-layer guard fixes were compiled the same session for shared DA05 branch mutual exclusion and Bosmer-only P2 source routing. Living Story, Exchange, and Bandit Road/Pact-pressure hook proof outside DA05 remains pending before Green Pact tag expansion.
+Immersive hook result: QASmoke route proof exists; 2026-06-13 DA05 stage 100 and separate-save stage 105 both passed as live quest-stage source routes. Wrong-origin DA05 rejection and generic-source silence also passed by tester report. Bosmer variety proof later closed the remaining packet slices: Songs of the Green passed, Baan Dar Gap passed in game, and the current Bandit Road cadence/presentation readback was refreshed to the live 15-second SpeedMult +40 version on 2026-06-16. Source-layer guard fixes were compiled the same session for shared DA05 branch mutual exclusion and Bosmer-only P2 source routing. Future Green Pact tag expansion remains separate from this packet pass.
 Reward floor: Living Story, Exchange, or Bandit Road recognition before item-tag work.
 Reward ceiling: Old Contract can have the hardest burden/high ceiling, but cannot be the only emotionally rewarding path.
-Stack snapshot: 2026-06-13 DA05 stage 100 visible threshold-crossing test showed Old Contract - Seeker and Y'ffre's Weave - Seeker in Active Effects. Remaining broader stack dimensions: path, PactBound/compliance/lapse, active favor counters, offered/pending state, path-switch state, Bandit Road reversal cooldown, curse state, Daedric modifiers. Reward-tier sweep additionally confirmed in a prior playthrough (recorded 2026-06-13): OldContract T1/T2 grants, BanditRoad T1/T2/T3 ladder, single-family swap, and broad-Y'ffre suppression under an active path all passed in game; only an in-game confirm of the readback-fixed Exchange T1/T2 Z'en copy on a fresh load remains on the reward side (the prior run predated the 18:15 ESP refresh).
+Stack snapshot: 2026-06-13 DA05 stage 100 visible threshold-crossing test showed Old Contract - Seeker and Y'ffre's Weave - Seeker in Active Effects. Reward-tier sweep additionally confirmed in a prior playthrough (recorded 2026-06-13): OldContract T1/T2 grants, BanditRoad T1/T2/T3 ladder, single-family swap, and broad-Y'ffre suppression under an active path all passed in game. Songs of the Green later passed with no asset requirement, and the user reported the final Bosmer packet felt good. Exchange T1/T2 Z'en copy is readback-correct in the live ESP after the reward refresh; final-world placement remains separate.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race bosmer
-Next automatable action: curate exact sources and empirically prove all four Bosmer path contracts, including Old Contract proper hunt/forest kept, before Green Pact item expansion.
-Deferred manual proof: immersive non-hunter/Bandit Road hook proof, broader feel note, and asset-status confirmation.
-Blocking follow-up: prove the remaining Bosmer non-hunter/Bandit Road slices before the race can pass pre-beta feel.
+Next automatable action: keep the Bosmer packet in regression only; future work is Green Pact/item-expansion and final-world placement, not packet closure.
+Deferred manual proof: final-world placement remains separate from this pass.
+Blocking follow-up: none for the current Bosmer beta-feel packet.
 ```
 
 ## P2 Full End-State Wiring With Stack Audit Lanes

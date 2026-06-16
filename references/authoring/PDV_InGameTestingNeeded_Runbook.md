@@ -70,7 +70,7 @@ Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 | Altmer | none for current beta packet; final-world placement remains separate |
 | Khajiit | none for current beta packet; final-world placement remains separate |
 | Argonian | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
-| Bosmer | `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Bosmer | none for current beta packet; final-world placement remains separate |
 | Breton | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Dunmer | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Imperial | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
@@ -113,7 +113,7 @@ beta-feel packet; final-world placement remains separate.
   Survey, reward-ceiling, stack, and optional checks were tester-attested in
   `PDV_Khajiit_BetaFeelPacket.md`.
 
-### 2. Run The New Bosmer DA05 Packet
+### 2. Bosmer DA05 Packet Closed
 
 Use `PDV_BetaTestPacket_Bosmer.md`.
 
@@ -139,8 +139,11 @@ Required checks:
   kindness, and generic book/source attempts.
   **Passed 2026-06-13** by tester report.
 - Survey/status clarity after the accepted branch. **Stage 100 slice passed.**
-- Reward/stack snapshot and short feel note. **Stage 100 reward/survey snapshot
-  passed; broader Bosmer stack/feel checks remain pending.**
+- Reward/stack snapshot and short feel note. **Bosmer current packet later
+  closed.** Follow-up evidence recorded after the DA05 branch pass includes
+  Songs of the Green pass, Baan Dar Gap pass, no-assets-required confirmation,
+  and a positive final Bosmer feel/readback closeout. Final-world placement
+  remains separate.
 
 After each DA05 branch, use the DA05-specific log check in
 `PDV_BetaTestPacket_Bosmer.md`. The generic Bosmer runtime checker currently

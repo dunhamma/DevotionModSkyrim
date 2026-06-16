@@ -940,16 +940,31 @@
 
   const startupConfirmLabel = (confirmRequired) => (confirmRequired ? "Confirm required" : "No confirm required");
 
+  const syncOverlayVisibility = () => {
+    const overlayVisible = [nodes.startupModal, nodes.journalModal].some((node) => node && !node.hidden);
+    document.body.classList.toggle("startup-visible", overlayVisible);
+  };
+
+  const hideAllOverlays = () => {
+    if (nodes.startupModal) {
+      nodes.startupModal.hidden = true;
+    }
+    if (nodes.journalModal) {
+      nodes.journalModal.hidden = true;
+    }
+    syncOverlayVisibility();
+  };
+
   const hideStartup = () => {
     if (!nodes.startupModal) return;
     nodes.startupModal.hidden = true;
-    document.body.classList.remove("startup-visible");
+    syncOverlayVisibility();
   };
 
   const hideJournal = () => {
     if (!nodes.journalModal) return;
     nodes.journalModal.hidden = true;
-    document.body.classList.remove("startup-visible");
+    syncOverlayVisibility();
   };
 
   const JOURNAL_TONES = {
@@ -980,6 +995,7 @@
 
   const renderJournal = (journal = {}) => {
     if (!nodes.journalModal) return;
+    hideAllOverlays();
 
     nodes.journalTitle.textContent = text(journal.title, "Book of Days");
     nodes.journalSummary.textContent = text(journal.summary, "A record of devotional acts since the path began.");
@@ -1005,7 +1021,7 @@
     }
 
     nodes.journalModal.hidden = false;
-    document.body.classList.add("startup-visible");
+    syncOverlayVisibility();
   };
 
   const renderStartupDetails = (option) => {
@@ -1022,6 +1038,7 @@
 
   const renderStartup = (startup = {}) => {
     if (!nodes.startupModal) return;
+    hideAllOverlays();
     startupState = startup;
 
     const options = asArray(startup.options).filter(Boolean);
@@ -1070,7 +1087,7 @@
 
     renderStartupDetails(selectedOption);
     nodes.startupModal.hidden = false;
-    document.body.classList.add("startup-visible");
+    syncOverlayVisibility();
   };
 
   const medallionOptionStatus = (option = {}) => {
@@ -1135,6 +1152,7 @@
 
   const renderMedallion = (medallion = {}) => {
     if (!nodes.startupModal) return;
+    hideAllOverlays();
     startupState = medallion;
 
     const sections = asArray(medallion.sections).filter(Boolean);
@@ -1182,7 +1200,7 @@
 
     renderMedallionDetails(medallion, selectedOption);
     nodes.startupModal.hidden = false;
-    document.body.classList.add("startup-visible");
+    syncOverlayVisibility();
   };
 
   const clear = (node) => {
