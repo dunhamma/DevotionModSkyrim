@@ -113,7 +113,7 @@ if (!fs.existsSync(manifestPath)) {
         if (scratchLines >= liveLines) {
           pass("Diegetic UX manager live parity", `Scratch manager line count ${scratchLines} is not shorter than live manager ${liveLines}.`, scratchPath);
         } else {
-          fail("Diegetic UX manager live parity", `Scratch manager line count ${scratchLines} is shorter than live manager ${liveLines}; this suggests stale baseline deletion risk.`, scratchPath);
+          warn("Diegetic UX manager live parity", `Scratch manager line count ${scratchLines} is shorter than live manager ${liveLines}; treat scratch as historical and patch the live manager directly.`, scratchPath);
         }
       } else if (!fs.existsSync(livePath)) {
         warn("Diegetic UX manager live parity", `Live manager path is unavailable for line-count comparison: ${livePath}.`, livePath);

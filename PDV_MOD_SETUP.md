@@ -65,6 +65,7 @@
 | `tools/pdv_author.mjs` | Safe overlay-patch authoring helper for supported ESP wiring on existing PDV records |
 | `tools/pdv_patch.mjs` | Offline patcher for classification/distribution manifests and generated patch review/live artifacts |
 | `tools/pdv_content_verify.mjs` | Read-only verifier for the race/Daedric content manifests plus Phase 20 roster coverage (ASCII, budgets, slot IDs, voice, full roster gate) |
+| `tools/pdv_formal_offer_check.mjs` | Read-only verifier for the formal-offer scale-out spec, live manager eligibility/source flow, no-offer race exclusions, quiet-emergence cues, and delegated ESP/property readback |
 | `tools/pdv_generate_daedric_contract.mjs` | Generates the all-Prince Daedric record contract and non-Hircine path scripts from the Daedric content manifest plus race/Prince matrix |
 | `tools/pdv-daedric-author` | Direct-framework helper that creates/checks all-Prince Daedric CAT-6 records, base/concrete path VMAD wiring, stigma globals, arrays, `PDV_FLST_DaedricPaths_All` membership, manager FormList wiring, QASmoke proof sender ACTI/REFR records, and all sixteen exact organic Daedric quest-stage source FormLists |
 | `tools/pdv_prisma_ui_audit.mjs` | Read-only Prisma UI policy audit; blocks gameplay scripts from opening focused/blocking Prisma UI without default-off/player-owned gating |
