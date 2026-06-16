@@ -25,9 +25,9 @@
       "messageBox": true,
       "buttons": ["Accept", "Not yet", "Refuse"]
     },
-    { "editorId": "PDV_Msg_Dunmer_OfferResponse_Accept", "title": "Accept", "body": "Deepen toward this Reclamation." },
-    { "editorId": "PDV_Msg_Dunmer_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet." },
-    { "editorId": "PDV_Msg_Dunmer_OfferResponse_Refuse", "title": "Refuse", "body": "Stay with the shared Reclamations." },
+    { "editorId": "PDV_Msg_Dunmer_OfferResponse_Accept", "title": "Accept", "body": "The ash-prayer has a name now. The Reclamation deepens in you, and the ancestors are not set down." },
+    { "editorId": "PDV_Msg_Dunmer_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet. The ash-prayer holds as it was, and the threshold stays open to you." },
+    { "editorId": "PDV_Msg_Dunmer_OfferResponse_Refuse", "title": "Refuse", "body": "You keep to the shared Reclamations. The deepening is set aside, and will not be offered again soon." },
     {
       "editorId": "PDV_Msg_Altmer_AuriEl_Offer",
       "kind": "messageBox",
@@ -52,9 +52,9 @@
       "messageBox": true,
       "buttons": ["Accept", "Not yet", "Refuse"]
     },
-    { "editorId": "PDV_Msg_Altmer_OfferResponse_Accept", "title": "Accept", "body": "Name this focus." },
-    { "editorId": "PDV_Msg_Altmer_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet." },
-    { "editorId": "PDV_Msg_Altmer_OfferResponse_Refuse", "title": "Refuse", "body": "Keep to the foundation." },
+    { "editorId": "PDV_Msg_Altmer_OfferResponse_Accept", "title": "Accept", "body": "You name this focus. The foundation narrows to a single disciplined road, and the dawn holds in you." },
+    { "editorId": "PDV_Msg_Altmer_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet. The foundation stands as it was, and the path waits for you." },
+    { "editorId": "PDV_Msg_Altmer_OfferResponse_Refuse", "title": "Refuse", "body": "You keep to the foundation alone. The focus is set aside, and the offer will not soon return." },
     {
       "editorId": "PDV_Msg_Imperial_Akatosh_Offer",
       "kind": "messageBox",
@@ -127,9 +127,9 @@
       "messageBox": true,
       "buttons": ["Accept", "Not yet", "Refuse"]
     },
-    { "editorId": "PDV_Msg_Imperial_OfferResponse_Accept", "title": "Accept", "body": "Accept the patron." },
-    { "editorId": "PDV_Msg_Imperial_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet." },
-    { "editorId": "PDV_Msg_Imperial_OfferResponse_Refuse", "title": "Refuse", "body": "Keep to broad worship." },
+    { "editorId": "PDV_Msg_Imperial_OfferResponse_Accept", "title": "Accept", "body": "You take this patron. The broad faith narrows to one, and the order keeps you as its own." },
+    { "editorId": "PDV_Msg_Imperial_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet. Broad worship holds, and the patron waits on your word." },
+    { "editorId": "PDV_Msg_Imperial_OfferResponse_Refuse", "title": "Refuse", "body": "You keep to broad worship. The patronage is declined, and will not be offered again soon." },
     {
       "editorId": "PDV_Msg_Redguard_Tuwhacca_Offer",
       "kind": "messageBox",
@@ -154,8 +154,8 @@
       "messageBox": true,
       "buttons": ["Accept", "Not yet", "Refuse"]
     },
-    { "editorId": "PDV_Msg_Redguard_OfferResponse_Accept", "title": "Accept", "body": "Walk under this god." },
-    { "editorId": "PDV_Msg_Redguard_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet." },
-    { "editorId": "PDV_Msg_Redguard_OfferResponse_Refuse", "title": "Refuse", "body": "Keep to the sect's broad worship." }
+    { "editorId": "PDV_Msg_Redguard_OfferResponse_Accept", "title": "Accept", "body": "You walk under this god now. The sect's broad worship narrows to one charge, carried as your own." },
+    { "editorId": "PDV_Msg_Redguard_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet. The sect's worship holds as it was, and the charge waits for you." },
+    { "editorId": "PDV_Msg_Redguard_OfferResponse_Refuse", "title": "Refuse", "body": "You keep to the sect's broad worship. The charge is set aside, and will not soon be offered again." }
   ]
 }
