@@ -37,9 +37,9 @@ try
         "PDV_MSG_StartupBretonChoice",
         "Breton startup tradition",
         "High Rock raises its children to one of three traditions.\n\n" +
-        "Knight's Road -- mercy, protection, and the public vow.\n" +
-        "Hidden Art -- occult and Daedric power, openly risked.\n" +
-        "Green Way -- the standing stones and the old druid rites.",
+        "Knight's Road: mercy, protection, and the public vow.\n" +
+        "Hidden Art: occult and Daedric power, openly risked.\n" +
+        "Green Way: the standing stones and the old druid rites.",
         "Knight's Road",
         "Hidden Art",
         "Green Way");
@@ -51,9 +51,9 @@ try
         "PDV_MSG_StartupRedguardChoice",
         "Redguard startup sect",
         "A Redguard is raised to one of three sects.\n\n" +
-        "Crown -- the strict old Yokudan orthodoxy.\n" +
-        "Forebear -- Redguard faith carried into mixed life.\n" +
-        "Ash'abah -- funerary duty and the unquiet dead, at a cost.",
+        "Crown: the strict old Yokudan orthodoxy.\n" +
+        "Forebear: Redguard faith carried into mixed life.\n" +
+        "Ash'abah: funerary duty and the unquiet dead, at a cost.",
         "Crown",
         "Forebear",
         "Ash'abah");
@@ -65,12 +65,30 @@ try
         "PDV_MSG_StartupOrcChoice",
         "Orc startup life mode",
         "An Orc keeps Malacath's code one of three ways.\n\n" +
-        "City -- faith held in private among outsiders.\n" +
-        "Stronghold -- the full code, lived in common.\n" +
-        "Legion or exile -- honor under a foreign banner.",
+        "City: faith held in private among outsiders.\n" +
+        "Stronghold: the full code, lived in common.\n" +
+        "Legion or exile: honor under a foreign banner.",
         "City",
         "Stronghold",
         "Legion/Exile");
+
+    // Bosmer select (button index == path state: OldContract=0, LivingStory=1,
+    // Exchange=2, BanditRoad=3 -- must stay in this order).
+    var bosmerChoice = EnsureMessage(
+        mod,
+        index,
+        allocator,
+        "PDV_MSG_BosmerSetupChoice",
+        "Bosmer startup path",
+        "A Bosmer is raised to one of four paths.\n\n" +
+        "Old Contract: the hardest Green Pact burden, and the highest reward.\n" +
+        "Living Story: community kept and stories carried, under Y'ffre.\n" +
+        "Exchange: debt, restitution, and fair redress, under Z'en.\n" +
+        "Bandit Road: survival and reversal on the road, under Baan Dar.",
+        "Old Contract",
+        "Living Story",
+        "Exchange",
+        "Bandit Road");
 
     var confirmChoice = EnsureMessage(
         mod,
@@ -83,12 +101,163 @@ try
         "Walk this path",
         "Choose again");
 
+    // Per-path confirm screens (the merged "second screen": path name + one-paragraph
+    // description + commit question + accept/decline). Removes the old detail pop-up so
+    // the flow is two screens. "Choose again" returns to the selection.
+    var redguardConfirmTail =
+        "The road you choose now sets where your devotion begins. Walk it?\n\n" +
+        "Nothing is sealed; how you live from here shapes the rest.";
+
+    var redguardCrownConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Redguard_Crown",
+        "Redguard - Crown",
+        "Redguard - Crown\n\n" +
+        "The Crown keeps orthodox Yokudan structure, strong ancestor duty, and the old forms preserved against the pressure of exile.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var redguardForebearConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Redguard_Forebear",
+        "Redguard - Forebear",
+        "Redguard - Forebear\n\n" +
+        "The Forebear carries Redguard identity into mixed public life, bridging adaptation without letting the Yokudan spine break.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var redguardAshabahConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Redguard_Ashabah",
+        "Redguard - Ash'abah",
+        "Redguard - Ash'abah\n\n" +
+        "The Ash'abah bear funerary duty and the work of the unquiet dead at real social cost. This path is narrower and heavier by design.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var bretonKnightsConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Breton_KnightsRoad",
+        "Breton - Knight's Road",
+        "Breton - Knight's Road\n\n" +
+        "The Knight's Road asks for mercy, protection, and public duty. Its friction is the pull of your vows against the easier, expedient choice.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var bretonHiddenConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Breton_HiddenArt",
+        "Breton - Hidden Art",
+        "Breton - Hidden Art\n\n" +
+        "The Hidden Art opens occult and Daedric power to you, with social exposure that rises as you go. It rewards risk taken openly, not power kept quiet.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var bretonGreenConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Breton_GreenWay",
+        "Breton - Green Way",
+        "Breton - Green Way\n\n" +
+        "The Green Way centers nature rites, the rhythm of the standing stones, and druidic belonging rather than civic standing.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var orcCityConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Orc_City",
+        "Orc - City",
+        "Orc - City\n\n" +
+        "City life holds dignity and code in mixed society, where Orc faith is never simply given to you.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var orcStrongholdConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Orc_Stronghold",
+        "Orc - Stronghold",
+        "Orc - Stronghold\n\n" +
+        "Stronghold life is the full expression of Malacath: labor, oath, strength, and provision held in common.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var orcLegionConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Orc_LegionExile",
+        "Orc - Legion and Exile",
+        "Orc - Legion and Exile\n\n" +
+        "Legion and exile keep Malacath close in private, while the order around you belongs to others.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var bosmerOldContractConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Bosmer_OldContract",
+        "Bosmer - Old Contract",
+        "Bosmer - Old Contract\n\n" +
+        "The Old Contract holds you to the strict Green Pact and to Y'ffre alone. It carries the highest ceiling and the hardest fall.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var bosmerExchangeConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Bosmer_Exchange",
+        "Bosmer - Exchange",
+        "Bosmer - Exchange\n\n" +
+        "The Exchange weighs debt, return, and proportionate vengeance under Z'en. It is a moral economy, not simple kindness.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var bosmerBanditConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Bosmer_BanditRoad",
+        "Bosmer - Bandit Road",
+        "Bosmer - Bandit Road\n\n" +
+        "The Bandit Road is Baan Dar's theology of the road: reversal, trickery, and survival bought at a price.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var bosmerLivingStoryConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Bosmer_LivingStory",
+        "Bosmer - Living Story",
+        "Bosmer - Living Story\n\n" +
+        "The Living Story keeps community memory and oral continuity alive. It asks for belonging first, not covenant pushed to its limit.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
     WireQuestScript(manager, "PDV__ManagerQuest", new ScriptProperty[]
     {
         ObjectProp("PDV_MSG_StartupBretonChoice", bretonChoice.FormKey),
         ObjectProp("PDV_MSG_StartupRedguardChoice", redguardChoice.FormKey),
         ObjectProp("PDV_MSG_StartupOrcChoice", orcChoice.FormKey),
+        ObjectProp("PDV_MSG_BosmerSetupChoice", bosmerChoice.FormKey),
         ObjectProp("PDV_MSG_StartupConfirmChoice", confirmChoice.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Redguard_Crown", redguardCrownConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Redguard_Forebear", redguardForebearConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Redguard_Ashabah", redguardAshabahConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Breton_KnightsRoad", bretonKnightsConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Breton_HiddenArt", bretonHiddenConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Breton_GreenWay", bretonGreenConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Orc_City", orcCityConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Orc_Stronghold", orcStrongholdConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Orc_LegionExile", orcLegionConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Bosmer_OldContract", bosmerOldContractConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Bosmer_Exchange", bosmerExchangeConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Bosmer_BanditRoad", bosmerBanditConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Bosmer_LivingStory", bosmerLivingStoryConfirm.FormKey),
     });
 
     report.Actions.Add("Created/updated startup MESG records and copy.");

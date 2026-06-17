@@ -240,7 +240,7 @@ try
         ObjProp("PDV_GLO_ActiveDeityIndex", index["PDV_GLO_ActiveDeityIndex"].FormKey),
         ObjProp("PDV_GLO_OriginRace", index["PDV_GLO_OriginRace"].FormKey),
         ObjProp("PDV_FLST_AllDeities", index["PDV_FLST_AllDeities"].FormKey),
-        BoolProp("D1Enabled", false),
+        BoolProp("D1Enabled", true),
         BoolProp("TraceDispatch", true),
     };
     foreach (var eid in recordProps) dirProps.Add(ObjProp(eid, index[eid].FormKey));
