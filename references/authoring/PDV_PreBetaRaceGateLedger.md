@@ -157,13 +157,13 @@ Accepted hooks: Hist maintenance route 60, People support route 61, Void signal 
 Rejected hooks: generic swimming loops, standing in water forever, ordinary travel, generic inn sleep, same-bed repetition, generic stealth, ordinary kills, generic murder, one Dark Brotherhood join as full Sithis activation.
 Anti-farm result: source has same-day repeat multiplier, three-day Hist decay grace, non-curse floor, and three-signal Void threshold; needs normal-play proof.
 Survey/status result: source now replaces numeric Hist/People/Void values with fiction-facing layer labels and bed/Sithis notes; needs runtime display proof.
-Immersive hook result: QASmoke route proof exists; needs Hist water/rest, People community, and thresholded Void/death-change hook proof outside QASmoke.
+Immersive hook result: QASmoke route proof exists; Hist Sap Vial passed in game 2026-06-17 as a potion-style inventory route with visible Hist communication feedback and once-per-day +5 Hist piety. Still needs Hist water/rest, People community, and thresholded Void/death-change hook proof outside QASmoke.
 Reward floor: non-assassin Argonian maintains identity through water, rest, reflection, bed of choice, and community aid.
 Reward ceiling: Hist substrate plus one strongest support emphasis: People/community or Void/Sithis; Void never replaces Hist.
 Stack snapshot: Hist, People, Void, posture, bed cadence, active favor, curse state, Sithis signal count, Daedric modifiers.
 Runtime command: node .\tools\pdv_phase20_runtime_check.mjs --race argonian
 Next automatable action: write Arkay/death-rite and community recognition contracts before deeper Void rewards.
-Deferred manual proof: Hist/People floor, swimming/sleep/murder rejection, Survey display, immersive water/community/Void hook proof, and asset-status confirmation.
+Deferred manual proof: Hist/People floor beyond the passed Hist Sap Vial, swimming/sleep/murder rejection, Survey display, immersive water/community/Void hook proof, and remaining asset-status confirmation.
 Blocking follow-up: prove Hist/People floor, rejected hooks, Arkay/death-rite reaction, and Survey display.
 ```
 

@@ -19,8 +19,8 @@ This is a first-look package, not a public beta claim. The goal is to let one tr
 3. Read or activate `Ancestral Urn` from inventory once.
 4. Check whether the ancestral-prayer response is understandable and whether Survey Devotion reflects the beat.
 5. Start as Argonian.
-6. Confirm the player inventory contains `Hist Sap Token`.
-7. Read or activate `Hist Sap Token` from inventory once.
+6. Confirm the player inventory contains `Hist Sap Vial`.
+7. Use `Hist Sap Vial` from inventory once.
 8. Check whether the Hist-maintenance response is understandable and whether Survey Devotion reflects the beat.
 9. Try any one race packet in `Docs` if there is time.
 
@@ -30,7 +30,7 @@ If you want more structure, open `PDV_TrustedFriend_OptionalTesting.md`. It list
 
 `Ancestral Urn` is a reusable Dunmer inventory book. It should appear automatically for Dunmer characters and route into the existing ancestral-prayer logic when read.
 
-`Hist Sap Token` is a reusable Argonian inventory token. It should appear automatically for Argonian characters and route into the existing Hist-maintenance logic when read.
+`Hist Sap Vial` is a reusable Argonian inventory vial. It should appear automatically for Argonian characters and route into the existing Hist-maintenance logic when used.
 
 ## Useful Feedback
 

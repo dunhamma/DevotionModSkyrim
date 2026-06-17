@@ -44,16 +44,22 @@ text directly in its read view (free immersion, no notification spam), and accep
 fragment that fires the EventBus event. Where a race reads better as a cast rite, a granted
 self-target Lesser Power (SPEL) is the sanctioned alternative — same fragment, same routing.
 
+Argonian Hist sap is the current exception: it ships as a potion-style vial (`ALCH`) with a
+script-only magic effect because the failed book/misc token did not produce the intended
+inventory-use feel. The effect re-adds the vial after use so it behaves as a permanent token.
+Future investigation: find a CK/record setup that lets this behave as a truly persistent,
+non-consumed inventory-use item instead of relying on the current re-add workaround.
+
 Per token, author:
 
-1. **BOOK** record (e.g. `PDV_Book_DunmerAshShrine`, `PDV_Book_RedguardFarShores`,
-   `PDV_Book_ArgonianHistSap`):
+1. **BOOK** record (e.g. `PDV_Book_DunmerAshShrine`, `PDV_Book_RedguardFarShores`):
    - Flags: cannot-be-taken-disabled = false; **non-consumable** (no spell/skill teach that
      removes it); weight `0`, value `0`; quest-item flag optional to prevent drop.
    - Read view holds the prayer copy (authored text, non-voiced — consistent with the
      §21.3 voiced-content non-goal).
    - Script fragment on read → `SendDevotionEvent(EVT_<RACE>_PORTABLE_SHRINE)`.
 2. **MGEF/SPEL alternative** only if the race ships as a Lesser Power instead of a book.
+   Hist sap uses an `ALCH` + script `MGEF` variant for inventory-use reliability.
 3. Granting: the token is granted once on race-confirm (the same first-load hook that runs
    the MCM setup). Living races get it at start; it is **not** re-granted on load if already
    owned (guard on a `PDV.<Race>.TokenGranted` bool).
@@ -109,8 +115,8 @@ On a **valid** (non-cooldown) use, the route must:
 ### Anti-farm / floors
 
 - One scored portable use and one scored home use per in-game day (separate caps).
-- Argonian: the sap **offsets** decay; it does not let `Hist` exceed normal maintenance
-  ceilings, and never restores a curse-suppressed Hist on its own (posture rules still win).
+- Argonian: the sap routes a Hist communication moment and grants `+5` Hist piety once per
+  in-game day. It never restores a curse-suppressed Hist on its own (posture rules still win).
 - No effect while the race's curse posture silences the substrate (vampire Silent/Corrupted
   for Argonian; ash-prayer Silent for Dunmer) — the token logs but scores zero, matching the
   documented "logged but inert" behavior.
@@ -134,7 +140,7 @@ diegetic:
 ## 6. Build checklist
 
 - [ ] Shared `PDV_FLST_PlayerHomeLocations` seeded; cell-ownership fallback wired.
-- [ ] Argonian: BOOK record + `EVT_ARGONIAN_HIST_SAP` / `_HOME` + routes mirroring 30/31 + substrate writes + cooldown keys.
+- [x] Argonian: `ALCH` vial + script `MGEF` + EventBus route + once-per-day `+5` Hist piety; tester passed 2026-06-17. Future work: replace the re-add workaround with a truly persistent/non-consumed inventory-use item if CK record behavior allows it.
 - [ ] Redguard: BOOK record + `EVT_REDGUARD_FARSHORES` / `_HOME` + routes + sect-substrate writes + cooldown keys.
 - [ ] Dunmer: confirm existing route 30/31 still passes after FLST refactor (regression only).
 - [ ] One-time grant guarded per race on race-confirm.

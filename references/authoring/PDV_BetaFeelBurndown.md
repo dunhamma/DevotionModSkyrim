@@ -84,7 +84,7 @@ blocked by manual/runtime evidence for the seven non-passing races.
 | Altmer | Pass | No blocker for current packet; final-world placement separate |
 | Khajiit | Pass | No blocker for current packet; final-world placement separate |
 | Bosmer | Pass | No blocker for current packet; final-world placement separate |
-| Argonian | Fail | Hist/People floor, swimming/sleep/murder rejection, Survey display, immersive water/community/Void hook proof, asset status |
+| Argonian | Fail | Hist Sap Vial passed 2026-06-17; remaining blockers are broader Hist/People floor proof, swimming/sleep/murder rejection, Survey display, immersive water/community/Void hook proof, and remaining asset status |
 | Orc | Fail | Raw craft/combat/faction rejection, Survey display, immersive Stronghold/City/Legion hook proof, asset status |
 | Redguard | Fail | Fast-travel/undead/combat rejection, Survey display, immersive sect/death-duty/HoonDing proof, asset status |
 | Breton | Fail | Tradition Survey display, rejected spell/artifact/help loops, immersive hook proof, expected/edge stack audit, asset status |

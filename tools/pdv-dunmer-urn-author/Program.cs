@@ -7,13 +7,15 @@ using Mutagen.Bethesda.Strings;
 
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
 const string urnEditorId = "PDV_BOOK_DunmerAncestralUrn";
-const string sapEditorId = "PDV_BOOK_ArgonianHistSapToken";
-const string staleSapPotionEditorId = "PDV_ALCH_ArgonianHistSap";
-const string staleSapEffectEditorId = "PDV_MGEF_ArgonianHistSap";
+const string sapManagerPropertyName = "PDV_BOOK_ArgonianHistSapToken";
+const string staleSapBookEditorId = "PDV_BOOK_ArgonianHistSapToken";
+const string sapPotionEditorId = "PDV_ALCH_ArgonianHistSap";
+const string sapEffectEditorId = "PDV_MGEF_ArgonianHistSap";
 const string managerEditorId = "PDV__ManagerQuest";
 const string managerScriptName = "PDV__ManagerQuest";
 const string urnScriptName = "PDV_DunmerAncestralUrn";
 const string sapScriptName = "PDV_ArgonianHistSapToken";
+const string sapModelPath = @"meshes\clutter\potions\potionfortifyhealratelesser.nif";
 
 var dryRun = args.Contains("--dry-run");
 var checkOnly = args.Contains("--check");
@@ -43,10 +45,12 @@ try
     var urn = EnsureUrnBook(mod, index, allocator, actions);
     WireBookScript(urn, urnScriptName);
     actions.Add("wired " + urnEditorId + "." + urnScriptName);
-    RemoveStaleSapPotionRecords(mod, index, actions);
-    var sap = EnsureSapBook(mod, index, allocator, actions);
-    WireBookScript(sap, sapScriptName);
-    actions.Add("wired " + sapEditorId + "." + sapScriptName);
+    RemoveStaleSapBookRecords(mod, index, actions);
+    var sapEffect = EnsureSapMagicEffect(mod, index, allocator, actions);
+    var sap = EnsureSapPotion(mod, index, allocator, sapEffect.FormKey, actions);
+    WireMagicEffectScript(sapEffect, sapScriptName, new[] { ObjectProp(sapPotionEditorId, sap.FormKey) });
+    actions.Add("wired " + sapEffectEditorId + "." + sapScriptName);
+    actions.Add("ensured " + sapPotionEditorId + " ALCH vial");
 
     if (index[managerEditorId] is not Quest manager)
     {
@@ -56,10 +60,10 @@ try
     WireQuestScript(manager, managerScriptName, new[]
     {
         ObjectProp(urnEditorId, urn.FormKey),
-        ObjectProp(sapEditorId, sap.FormKey)
-    }, new[] { staleSapPotionEditorId });
+        ObjectProp(sapManagerPropertyName, sap.FormKey)
+    }, new[] { sapPotionEditorId });
     actions.Add("wired " + managerEditorId + "." + urnEditorId);
-    actions.Add("wired " + managerEditorId + "." + sapEditorId);
+    actions.Add("wired " + managerEditorId + "." + sapManagerPropertyName);
 
     CheckState(index, actions, errors);
     if (errors.Count > 0)
@@ -140,57 +144,99 @@ static Book EnsureUrnBook(SkyrimMod mod, Dictionary<string, ISkyrimMajorRecordGe
     return book;
 }
 
-static Book EnsureSapBook(SkyrimMod mod, Dictionary<string, ISkyrimMajorRecordGetter> index, FormKeyAllocator allocator, List<string> actions)
+static Ingestible EnsureSapPotion(SkyrimMod mod, Dictionary<string, ISkyrimMajorRecordGetter> index, FormKeyAllocator allocator, FormKey effectFormKey, List<string> actions)
 {
-    if (index.TryGetValue(sapEditorId, out var existing))
+    Ingestible potion;
+    if (index.TryGetValue(sapPotionEditorId, out var existing))
     {
-        if (existing is not Book existingBook)
+        if (existing is not Ingestible existingPotion)
         {
-            throw new InvalidOperationException(sapEditorId + " exists as " + existing.GetType().Name + ", expected Book.");
+            throw new InvalidOperationException(sapPotionEditorId + " exists as " + existing.GetType().Name + ", expected Ingestible.");
         }
 
-        actions.Add("exists " + sapEditorId);
-        return existingBook;
+        potion = existingPotion;
+        actions.Add("updated " + sapPotionEditorId + " ALCH");
+    }
+    else
+    {
+        potion = new Ingestible(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.Ingestibles.Add(potion);
+        index[sapPotionEditorId] = potion;
+        actions.Add("created " + sapPotionEditorId);
     }
 
-    var book = new Book(allocator.Next(), SkyrimRelease.SkyrimSE)
+    potion.EditorID = sapPotionEditorId;
+    potion.Name = Tx("Hist Sap Vial");
+    potion.Value = 0;
+    potion.Weight = 0.2f;
+    potion.Model ??= new Model();
+    potion.Model.File = sapModelPath;
+    potion.Effects.Clear();
+    potion.Effects.Add(new Effect
     {
-        EditorID = sapEditorId,
-        Name = Tx("Hist Sap Token"),
-        BookText = Tx("The sap remembers. Touch it to hear the old root-call and return your thoughts to the Hist."),
-        Value = 0,
-        Weight = 0.2f
-    };
-    mod.Books.Add(book);
-    index[sapEditorId] = book;
-    actions.Add("created " + sapEditorId);
-    return book;
+        BaseEffect = effectFormKey.ToNullableLink<IMagicEffectGetter>(),
+        Data = new EffectData { Magnitude = 0.0f, Area = 0, Duration = 0 },
+        Conditions = []
+    });
+    return potion;
 }
 
-static void RemoveStaleSapPotionRecords(SkyrimMod mod, Dictionary<string, ISkyrimMajorRecordGetter> index, List<string> actions)
+static MagicEffect EnsureSapMagicEffect(SkyrimMod mod, Dictionary<string, ISkyrimMajorRecordGetter> index, FormKeyAllocator allocator, List<string> actions)
 {
-    if (index.TryGetValue(staleSapPotionEditorId, out var stalePotion))
+    MagicEffect effect;
+    if (index.TryGetValue(sapEffectEditorId, out var existing))
     {
-        if (stalePotion is not Ingestible)
+        if (existing is not MagicEffect existingEffect)
         {
-            throw new InvalidOperationException(staleSapPotionEditorId + " exists as " + stalePotion.GetType().Name + ", expected Ingestible for cleanup.");
+            throw new InvalidOperationException(sapEffectEditorId + " exists as " + existing.GetType().Name + ", expected MagicEffect.");
         }
 
-        mod.Ingestibles.Remove(stalePotion.FormKey);
-        index.Remove(staleSapPotionEditorId);
-        actions.Add("removed stale " + staleSapPotionEditorId);
+        effect = existingEffect;
+        actions.Add("updated " + sapEffectEditorId + " MGEF");
+    }
+    else
+    {
+        effect = new MagicEffect(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.MagicEffects.Add(effect);
+        index[sapEffectEditorId] = effect;
+        actions.Add("created " + sapEffectEditorId);
     }
 
-    if (index.TryGetValue(staleSapEffectEditorId, out var staleEffect))
-    {
-        if (staleEffect is not MagicEffect)
-        {
-            throw new InvalidOperationException(staleSapEffectEditorId + " exists as " + staleEffect.GetType().Name + ", expected MagicEffect for cleanup.");
-        }
+    effect.EditorID = sapEffectEditorId;
+    effect.Name = Tx("Hist Sap Communion");
+    effect.FormVersion = 44;
+    effect.BaseCost = 0.0f;
+    effect.MagicSkill = ActorValue.None;
+    effect.ResistValue = ActorValue.None;
+    effect.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.Script);
+    effect.CastType = CastType.FireAndForget;
+    effect.TargetType = TargetType.Self;
+    effect.SkillUsageMultiplier = 0.0f;
+    effect.ScriptEffectAIScore = 0.0f;
+    effect.ScriptEffectAIDelayTime = 0.0f;
+    return effect;
+}
 
-        mod.MagicEffects.Remove(staleEffect.FormKey);
-        index.Remove(staleSapEffectEditorId);
-        actions.Add("removed stale " + staleSapEffectEditorId);
+static void RemoveStaleSapBookRecords(SkyrimMod mod, Dictionary<string, ISkyrimMajorRecordGetter> index, List<string> actions)
+{
+    if (index.TryGetValue(staleSapBookEditorId, out var staleBook))
+    {
+        if (staleBook is Book book)
+        {
+            mod.Books.Remove(book.FormKey);
+            index.Remove(staleSapBookEditorId);
+            actions.Add("removed stale " + staleSapBookEditorId + " BOOK");
+        }
+        else if (staleBook is MiscItem misc)
+        {
+            mod.MiscItems.Remove(misc.FormKey);
+            index.Remove(staleSapBookEditorId);
+            actions.Add("removed stale " + staleSapBookEditorId + " MISC");
+        }
+        else
+        {
+            throw new InvalidOperationException(staleSapBookEditorId + " exists as " + staleBook.GetType().Name + ", expected stale Book or MiscItem.");
+        }
     }
 }
 
@@ -213,31 +259,60 @@ static void CheckState(Dictionary<string, ISkyrimMajorRecordGetter> index, List<
         errors.Add("MISSING " + urnEditorId + "." + urnScriptName + " VMAD script.");
     }
 
-    if (index.ContainsKey(staleSapPotionEditorId))
+    if (index.ContainsKey(staleSapBookEditorId))
     {
-        errors.Add("STALE " + staleSapPotionEditorId + " drinkable ALCH still present.");
+        errors.Add("STALE " + staleSapBookEditorId + " BOOK/MISC token still present.");
     }
 
-    if (index.ContainsKey(staleSapEffectEditorId))
+    if (!index.TryGetValue(sapEffectEditorId, out var sapEffectRecord) || sapEffectRecord is not IMagicEffectGetter sapEffect)
     {
-        errors.Add("STALE " + staleSapEffectEditorId + " potion MGEF still present.");
-    }
-
-    if (!index.TryGetValue(sapEditorId, out var sapRecord) || sapRecord is not IBookGetter sapBook)
-    {
-        errors.Add("MISSING " + sapEditorId + " as BOOK.");
+        errors.Add("MISSING " + sapEffectEditorId + " as MGEF.");
         return;
     }
 
-    actions.Add("OK " + sapEditorId + " BOOK");
-
-    if (sapBook.VirtualMachineAdapter?.Scripts.Any(script => string.Equals(script.Name, sapScriptName, StringComparison.OrdinalIgnoreCase)) == true)
+    actions.Add("OK " + sapEffectEditorId + " MGEF");
+    if (sapEffect.Archetype is not MagicEffectArchetype sapArchetype || sapArchetype.Type != MagicEffectArchetype.TypeEnum.Script)
     {
-        actions.Add("OK " + sapEditorId + " has " + sapScriptName);
+        errors.Add("MISMATCH " + sapEffectEditorId + " archetype; expected Script.");
+        return;
+    }
+    actions.Add("OK " + sapEffectEditorId + " script archetype");
+
+    var effectScript = sapEffect.VirtualMachineAdapter?.Scripts.FirstOrDefault(script => string.Equals(script.Name, sapScriptName, StringComparison.OrdinalIgnoreCase));
+    if (effectScript is null)
+    {
+        errors.Add("MISSING " + sapEffectEditorId + "." + sapScriptName + " VMAD script.");
     }
     else
     {
-        errors.Add("MISSING " + sapEditorId + "." + sapScriptName + " VMAD script.");
+        actions.Add("OK " + sapEffectEditorId + " has " + sapScriptName);
+        CheckObjectProperty(effectScript, sapPotionEditorId, index.TryGetValue(sapPotionEditorId, out var potionForProp) ? potionForProp.FormKey : default, sapEffectEditorId, actions, errors);
+    }
+
+    if (!index.TryGetValue(sapPotionEditorId, out var sapRecord) || sapRecord is not IIngestibleGetter sapPotion)
+    {
+        errors.Add("MISSING " + sapPotionEditorId + " as ALCH.");
+        return;
+    }
+
+    actions.Add("OK " + sapPotionEditorId + " ALCH");
+    var sapModel = sapPotion.Model?.File.ToString();
+    if (!string.Equals(sapModel, sapModelPath, StringComparison.OrdinalIgnoreCase))
+    {
+        errors.Add("MISMATCH " + sapPotionEditorId + " model path; expected " + sapModelPath + ".");
+    }
+    else
+    {
+        actions.Add("OK " + sapPotionEditorId + " model " + sapModelPath);
+    }
+
+    if (sapPotion.Effects.Count != 1 || sapPotion.Effects[0].BaseEffect.FormKeyNullable != sapEffectRecord.FormKey)
+    {
+        errors.Add("MISMATCH " + sapPotionEditorId + " effect list; expected single " + sapEffectEditorId + " effect.");
+    }
+    else
+    {
+        actions.Add("OK " + sapPotionEditorId + " effect -> " + sapEffectEditorId);
     }
 
     if (!index.TryGetValue(managerEditorId, out var managerRecord) || managerRecord is not IQuestGetter manager)
@@ -263,19 +338,19 @@ static void CheckState(Dictionary<string, ISkyrimMajorRecordGetter> index, List<
         actions.Add("OK " + managerEditorId + "." + urnEditorId);
     }
 
-    prop = managerScript.Properties.FirstOrDefault(property => string.Equals(property.Name, sapEditorId, StringComparison.OrdinalIgnoreCase));
+    prop = managerScript.Properties.FirstOrDefault(property => string.Equals(property.Name, sapManagerPropertyName, StringComparison.OrdinalIgnoreCase));
     if (prop is not ScriptObjectProperty sapObjectProp || sapObjectProp.Object.FormKeyNullable != sapRecord.FormKey)
     {
-        errors.Add("MISSING " + managerEditorId + "." + sapEditorId + " property -> " + sapEditorId + ".");
+        errors.Add("MISSING " + managerEditorId + "." + sapManagerPropertyName + " property -> " + sapPotionEditorId + ".");
     }
     else
     {
-        actions.Add("OK " + managerEditorId + "." + sapEditorId);
+        actions.Add("OK " + managerEditorId + "." + sapManagerPropertyName);
     }
 
-    if (managerScript.Properties.Any(property => string.Equals(property.Name, staleSapPotionEditorId, StringComparison.OrdinalIgnoreCase)))
+    if (managerScript.Properties.Any(property => string.Equals(property.Name, sapPotionEditorId, StringComparison.OrdinalIgnoreCase)))
     {
-        errors.Add("STALE " + managerEditorId + "." + staleSapPotionEditorId + " property still present.");
+        errors.Add("STALE " + managerEditorId + "." + sapPotionEditorId + " property still present.");
     }
 }
 
@@ -285,6 +360,40 @@ static void WireBookScript(Book book, string scriptName)
     book.VirtualMachineAdapter.Version = 5;
     book.VirtualMachineAdapter.ObjectFormat = 2;
     EnsureScript(book.VirtualMachineAdapter.Scripts, scriptName);
+}
+
+static void WireMagicEffectScript(MagicEffect effect, string scriptName, IEnumerable<ScriptProperty> properties)
+{
+    effect.VirtualMachineAdapter ??= new VirtualMachineAdapter();
+    effect.VirtualMachineAdapter.Version = 5;
+    effect.VirtualMachineAdapter.ObjectFormat = 2;
+    var script = EnsureScript(effect.VirtualMachineAdapter.Scripts, scriptName);
+    foreach (var property in properties)
+    {
+        while (script.Properties.FirstOrDefault(candidate => string.Equals(candidate.Name, property.Name, StringComparison.OrdinalIgnoreCase)) is { } existing)
+        {
+            script.Properties.Remove(existing);
+        }
+        script.Properties.Add(property);
+    }
+}
+
+static void CheckObjectProperty(IScriptEntryGetter script, string propertyName, FormKey expectedFormKey, string owner, List<string> actions, List<string> errors)
+{
+    var property = script.Properties.FirstOrDefault(candidate => string.Equals(candidate.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+    if (property is not ScriptObjectProperty objectProperty)
+    {
+        errors.Add("MISSING " + owner + "." + propertyName + " object property.");
+        return;
+    }
+
+    if (objectProperty.Object.FormKeyNullable != expectedFormKey)
+    {
+        errors.Add("MISMATCH " + owner + "." + propertyName + "; expected " + expectedFormKey + ".");
+        return;
+    }
+
+    actions.Add("OK " + owner + "." + propertyName);
 }
 
 static void WireQuestScript(Quest quest, string scriptName, IEnumerable<ScriptProperty> properties, IEnumerable<string>? stalePropertyNames = null)

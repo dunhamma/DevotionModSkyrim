@@ -20,7 +20,7 @@ Useful evidence, in order:
 ## Quick Optional Pass
 
 1. Dunmer token: start Dunmer, confirm `Ancestral Urn` appears, read it once, then check Survey Devotion.
-2. Argonian token: start Argonian, confirm `Hist Sap Token` appears, read it once, then check Survey Devotion.
+2. Argonian token: start Argonian, confirm `Hist Sap Vial` appears, use it once, then check Survey Devotion.
 3. One race packet: choose any `PDV_BetaTestPacket_<Race>.md` in `Docs` and run only the opening route or first short scenario.
 4. Basic silence check: try the same token or packet action on the wrong race and note whether it stays quiet or rejects cleanly.
 5. Feel note: write whether the religious feedback was understandable, too quiet, too noisy, or unclear.

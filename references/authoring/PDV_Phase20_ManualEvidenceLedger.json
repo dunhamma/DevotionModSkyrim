@@ -134,7 +134,8 @@
         },
         "manualFeelNote": {
           "status": "pending",
-          "expected": "Hist/People support is visible before Sithis/Void depth becomes attractive."
+          "expected": "Hist/People support is visible before Sithis/Void depth becomes attractive.",
+          "note": "2026-06-17: Tester confirmed the Hist Sap Vial pass after the failed book/misc token was reverted to a potion-style ALCH vial. The vial fired a Hist communication moment, routed the Hist-maintenance logic, showed the expected visible feedback, and the once-per-day +5 Hist piety behavior was accepted for now. Future investigation remains open for a truly persistent/non-consumed inventory-use item instead of the current re-add workaround."
         },
         "immersiveHookProof": {
           "status": "pending",
@@ -143,7 +144,8 @@
         },
         "assetStatus": {
           "status": "pending",
-          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation.",
+          "note": "2026-06-17: Hist Sap Vial uses a vanilla potion/vial model and no new custom asset; tester passed the current vial behavior."
         }
       }
     },
