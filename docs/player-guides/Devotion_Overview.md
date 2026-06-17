@@ -1,0 +1,85 @@
+# Devotion
+
+The gods of Tamriel are not vending machines. They do not care which shrine you tap on your way past. They watch how you actually live and fight: the storm you walked into, the burial rite you said over a stranger, the oath you kept when it would have been easier to break it. Devotion is a mod about being noticed by the divine for who you really are.
+
+## What Is Devotion
+
+Devotion is a faith system that grows out of your play, not your menus. Every god in your character's world keeps a quiet account of your deeds. Honor a god through the way you travel, fight, trade, mourn, and worship, and your standing with that god rises on its own. There are no chores to grind and no prayer button to spam. You just play your character, and the right god starts to pay attention.
+
+## How It Works (in a nutshell)
+
+Your standing is tracked separately for every god. Pleasing Kyne does nothing for Mara, and an act that delights one god may mean nothing to another. Your race shapes the whole experience: which gods matter to you, what counts as a faithful deed, and how worship even feels. A Nord earns Kyne's regard out on the storm-lashed roads; a Khajiit answers to the moons.
+
+You earn standing simply by playing in a way your god respects. As that standing grows, you climb through three named tiers:
+
+- **Seeker** - the god has noticed you. The first small blessings arrive.
+- **Devoted** - the relationship is real and steady, with stronger gifts.
+- **Champion** - the god has claimed you. This is recognition, not just a bigger number.
+
+Each tier brings lasting blessings, the occasional fleeting "favor" when you act faithfully in the moment, and a growing sense that something is watching over the way you live.
+
+## What Makes It Different
+
+Most blessing mods hand you a free buff for clicking a statue. Devotion does three things differently.
+
+**The gods react to real behavior.** Standing comes from how you play, judged against what that specific god values. You cannot fake it, and you cannot rush it.
+
+**The theology runs deep and is different for every race.** A Nord's faith feels nothing like a Khajiit's, which feels nothing like a Dunmer's. These are not reskins of the same system. Each race has its own gods, its own idea of a faithful life, and its own way of falling out of grace.
+
+**Faith carries weight, not just upside.** Devotion can cost you. Neglect a god and the small graces fade. Some bargains, especially with the Daedric Princes, come with a real price. Standing is something you earn and keep, not a switch you flip.
+
+## Feature Highlights
+
+- **Per-god standing.** Every god tracks you separately, so your faith reflects your real choices rather than one universal piety score.
+- **Ten fully distinct races.** Altmer, Argonian, Bosmer, Breton, Dunmer, Imperial, Khajiit, Nord, Orc, and Redguard each have their own gods, deeds, and feel.
+- **Three reward tiers.** Seeker, Devoted, and Champion, each opening new blessings and recognition.
+- **Daedric pacts with real prices.** All sixteen Daedric Princes present as temptation, bargain, and stigma, not as free power.
+- **Neglect and curse consequences.** Let a relationship lapse, or fall under a curse like vampirism or lycanthropy, and your faith responds.
+- **An in-game Devotion panel and journal.** Read your standing through the Devotion panel's Patron, Today, and Book of Days views, plus short notification toasts as things change.
+- **MCM options.** Tune your experience and reach developer and debug tools through the standard SkyUI menu.
+
+### A note on the bonuses
+
+Note: these are current beta values and may be tuned before release.
+
+At the Seeker tier, blessings are deliberately gentle. Most are small steadying gifts in the range of a few percent: for example, a faithful Nord on the old roads gains Stamina Regeneration +4%, a Dunmer in good standing with the Reclamations gains Magic Resistance +5%, and an Argonian kept steady by the Hist heals 5% faster. A devoted Khajiit reads the moons, gaining Stamina Regeneration and Disease Resistance that only answer at night. An Orc who keeps Malacath's code earns a flat boost to his armor. Devoted and Champion tiers build on these with stronger and more characterful gifts; where a value is still being tuned, the relevant race guide describes the effect in plain terms rather than a fixed number.
+
+How standing accrues is just as deliberate. Each god can warm to you by only a limited amount per day, so faith grows over a campaign rather than in an afternoon. Repeating the exact same deed earns less and less each time, so variety in how you honor a god matters far more than grinding one trick. Reaching Champion takes roughly 30 to 45 days of normal play, perhaps one or two devotional acts a day, or around 20 days if you focus hard. Only one temporary favor blessing can be active at a time across all your gods. And worshipping broadly, honoring several gods at once, caps you at Devoted: to be claimed as a Champion you must commit to a single god.
+
+## Your Race, Your Gods
+
+Every race plays its own faith. Start with your character's race below, then read its guide for the gods, deeds, and rhythms that shape your path.
+
+- **Altmer** - orthodox devotion to Auri-El, Magnus, and Xarxes, lived under the long shadow of Lorkhan and the Thalmor's demands. See the Altmer race guide.
+- **Argonian** - the Hist comes first, with People and the cold pull of the Void behind it. See the Argonian race guide.
+- **Bosmer** - Y'ffre and the Green Pact, the living story, and the trickster road of Baan Dar. See the Bosmer race guide.
+- **Breton** - a single chosen tradition: knightly vow, hidden art, or the old Green Way. See the Breton race guide.
+- **Dunmer** - the Reclamations of Azura, Boethiah, and Mephala, layered over ancestor reverence. See the Dunmer race guide.
+- **Imperial** - civic faith in the Nine, lawful service, and the private question of Talos. See the Imperial race guide.
+- **Khajiit** - the moons and the Lunar Lattice, the road home, and gods like Azurah, Rajhin, and Alkosh. See the Khajiit race guide.
+- **Nord** - the Old Ways or the Nine Divines, Kyne on the storm and Talos in defiance. See the Nord race guide.
+- **Orc** - Malacath's hard code, lived through the stronghold, the city, or the legion. See the Orc race guide.
+- **Redguard** - the ancestor spine and the death-duty of Tu'whacca, pulled between Crown, Forebear, and Ash'abah. See the Redguard race guide.
+
+## Requirements and Compatibility
+
+Devotion needs the following installed and loaded first:
+
+- **SKSE64**, matched to your Skyrim Special Edition version
+- **SkyUI**, for the MCM menu
+- **Address Library for SKSE Plugins**
+- **powerofthree's Tweaks**
+- **powerofthree's Papyrus Extender**
+- **PapyrusUtil**
+
+The in-game Devotion panel ships with the mod; you do not need to install anything extra for it.
+
+Devotion respects your load order and tries to stay a good neighbor. Compatibility patches exist for major overhauls, including Requiem, so the system fits your game rather than fighting it. If you run a heavy religion or overhaul setup, check the compatibility notes for your list.
+
+## Getting Started
+
+Install the requirements above, add Devotion, and start or continue a game. For setup help and your first steps, see the FAQ and Quick Start article. To understand what the gods are actually watching and how standing grows, read the How Devotion Works primer, then dive into your race's guide.
+
+## A Note on Scope
+
+This build focuses on the systems: per-god standing, race-specific theology, blessings, favors, and consequences that respond to how you play. Some flavor, such as new voiced NPC dialogue, is planned for later rather than promised today. What ships now is meant to make your faith feel earned and alive.
