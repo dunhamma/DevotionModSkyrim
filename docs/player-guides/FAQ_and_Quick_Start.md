@@ -74,7 +74,7 @@ Your faith feels it. Taking on vampirism or lycanthropy strains your bonds with 
 
 ### Does Devotion conflict with other mods, or overhauls like Requiem?
 
-Devotion is built to respect your load order and to sit alongside large overhauls rather than fight them. It is designed with major overhauls like Requiem in mind, and compatibility patches exist for popular ones. As always, place Devotion sensibly in your load order and read the mod page's compatibility notes for your specific setup. If you run a big overhaul, check whether a patch is listed before you start a new save.
+Devotion respects your load order and is designed with major overhauls like Requiem in mind. One important rule: Devotion is a replacement religion system, so run it instead of another deity-worship or religion overhaul (for example, Wintersun), not alongside one. Other kinds of overhauls - combat, survival, world, and so on - are fine. List-specific compatibility patches for big overhaul setups are in development, so if you run a heavy modlist, place Devotion sensibly in your load order and check the mod page's compatibility notes for your setup before starting a new save.
 
 ### How is this different from other religion mods?
 

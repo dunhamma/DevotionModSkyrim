@@ -63,18 +63,25 @@ Every race plays its own faith. Start with your character's race below, then rea
 
 ## Requirements and Compatibility
 
-Devotion needs the following installed and loaded first:
+### Required (install and load these first)
 
-- **SKSE64**, matched to your Skyrim Special Edition version
-- **SkyUI**, for the MCM menu
-- **Address Library for SKSE Plugins**
-- **powerofthree's Tweaks**
-- **powerofthree's Papyrus Extender**
-- **PapyrusUtil**
+- **SKSE64** - the script extender everything is built on; match it to your Skyrim Special Edition version.
+- **PapyrusUtil** - the data library Devotion stores your standing in. Without it, piety cannot be saved.
+- **powerofthree's Papyrus Extender** - the runtime hooks Devotion reads your deeds through.
+- **powerofthree's Tweaks** - a supporting dependency for the Papyrus Extender chain.
+- **Address Library for SKSE Plugins** - lets the SKSE plugins load on your game version.
+- **SkyUI** - provides the in-game MCM, where you set the panel hotkey and reach settings.
 
-The in-game Devotion panel ships with the mod; you do not need to install anything extra for it.
+The in-game Devotion panel ships with the mod; you do not need anything extra for it.
 
-Devotion respects your load order and tries to stay a good neighbor. Compatibility patches exist for major overhauls, including Requiem, so the system fits your game rather than fighting it. If you run a heavy religion or overhaul setup, check the compatibility notes for your list.
+### Recommended (optional)
+
+- **A survival or needs mod** - Skyrim's built-in Survival Mode, Frostfall, or Sunhelm all work. Devotion plays fully without one, but several outdoor, weather, and rest blessings are felt more keenly when cold, exposure, and hunger actually matter, because there is more for your faith to push against. A survival mod only ever shapes how rewards feel; it never changes how piety is earned.
+
+### Compatibility
+
+- **Devotion replaces other religion systems.** Run it instead of another deity-worship or religion overhaul (for example, Wintersun), not alongside one. Stacking two religion systems is not supported.
+- **It respects your load order** and is balanced with Requiem's scale in mind. List-specific compatibility patches for major overhaul setups are in development; if you run a heavy overhaul or modlist, check the compatibility notes for your setup before installing.
 
 ## Getting Started
 
