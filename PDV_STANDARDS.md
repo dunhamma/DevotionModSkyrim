@@ -422,7 +422,21 @@ Treat Papyrus warnings as errors during dev. A `.psc` that compiles with warning
 
 Before removing a Papyrus function, property, magic string, or shared block, recursively search the whole active source tree for every symbol it defines or relies on. Papyrus compile failures from half-removed shared flags often surface far from the actual deletion.
 
-### 6.6 Strip debug before release
+### 6.6 Clean stale record references when retiring surfaces
+
+When removing or retiring script properties, proof activators, placed references,
+helper records, FormList entries, or other CK/ESP surfaces, cleanup is part of
+the closeout. Sweep the live plugin, source scripts, manifests, verifier
+contracts, and setup notes for stale VMAD properties, stale EditorIDs, orphaned
+base records, and helper placements that would still bless or expose the
+retired surface.
+
+If the retired surface was visible in a live worldspace or cell, add a verifier
+or helper check that fails if the record returns. A one-off xEdit/houseCARL
+cleanup is not enough when the same stale record could be recreated by an
+authoring helper or preserved by a manifest.
+
+### 6.7 Strip debug before release
 
 Trace messages and the debug spell are dev tools. Either remove them or gate them behind a `bDebugMode` global in MCM before any public release. A player's `Papyrus.0.log` filling with `[PDV]` traces is a defect, not a feature.
 
