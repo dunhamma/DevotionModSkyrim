@@ -476,3 +476,34 @@ Only use `Pass` when the evidence proves the whole race-level gate. Use
 `Conditional` when the race is coherent enough for scoped internal playfeel but
 has named gaps. Keep `Fail` when the player would still be judging missing
 systems.
+
+## Final-polish manual checks (added 2026-06-17)
+
+The 1.0 look pass added two player-facing systems to verify. Run after a **full
+Skyrim restart** (the MESG records, the D1 `D1Enabled` bake, and the PrismaUI
+journal view all load at game launch, not on a save reload).
+
+### Startup flow (per choice race: Breton, Redguard, Orc, Bosmer)
+
+- New game; pick a path. Expect exactly **two** screens: the select box (colon
+  one-liners) then a per-path confirm with a capitalized `Race - Path` header, a
+  one-paragraph description, the commit question, and **Walk this path / Choose
+  again** (Choose again returns to the select). There must be **no** middle detail
+  pop-up and **no** lowercase header.
+- Info-only races (Nord/Imperial/Dunmer/Altmer/Khajiit/Argonian): one short summary
+  plus the one-line advisory; no wall of text.
+- Confirm each race's button -> path mapping applies the **correct** path. Orc and
+  Bosmer were latent button-order risks (button index == life-mode/path state); Orc
+  was fixed and Bosmer is authored in path-state order — verify in game.
+
+### D1 diegetic layer
+
+- D1 **ships on** for new games. Confirm a tier-up / curse / neglect surfaces without
+  toggling anything in the MCM. Full tooling, the dev-page preview/force buttons, and
+  the real-transition triggers (incl. the curse-cure console method) live in
+  `PDV_DiegeticUX_LiveWrite_Runbook.md`.
+
+### Book of Days journal
+
+- Hotkey (or MCM button) opens the aged-parchment journal; pressing the key again
+  closes it. (Look/asset polish is owned by the design pass, not this gate.)

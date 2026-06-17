@@ -27,6 +27,36 @@ for each. The baseline that every diff below is measured against is
 
 ---
 
+## Closeout status -- 2026-06-17
+
+Final-polish look pass is essentially complete. Net new since the last update:
+
+- **WS-2 D1 diegetic: DONE + proven in game.** Tones tuned and accepted (FP-043),
+  counted real-transition proof passed (FP-044: tier / curse onset / curse cure /
+  neglect all fire their real surfaces), D1 sound fixed (`RebindSounds` self-heals
+  stale `Sound`/SOUN bindings), tier-up dispatch fixed for the active patron, and
+  **`D1Enabled = true` baked so D1 ships ON for new games (FP-042b)**. Dev-page test
+  tools added (per-tone previews, music-bed toggle, Force neglect); documented in
+  `PDV_DiegeticUX_LiveWrite_Runbook.md`.
+- **WS-1 startup copy: DONE.** Advisory + per-race summaries trimmed; the choice flow
+  is now a clean **two-screen select -> per-path confirm** for all four choice races
+  (Breton/Redguard/Orc/Bosmer): capitalized `Race - Path` header, one-paragraph
+  description, semicolon punctuation, Walk this path / Choose again. The old middle
+  detail screen is removed for every race; selects use colons. Orc button->life-mode
+  order fixed; Bosmer select authored in path-state order.
+- **FP-049 Book of Days:** open/close + aged-parchment skin built; the *look* is
+  backlogged to the design pass (PrismaUI caches the view per process -- full restart
+  to see it).
+- **Out-of-scope bug fixes done this session:** Kyne reward stacking (legacy Phase-4
+  boon system decommissioned + one-time save migration `MigrateLegacyBoonsIfNeeded`);
+  the "Kyne champion offer" was a design-understanding question (Formal Commitment
+  Offer, a pre-patron event -- not a bug).
+
+Remaining: WS-3 branding decisions (FP-050 banner, FP-051 Nexus art, FP-052 MCM
+splash, FP-053 FOMOD, FP-054 medallion art) and the FP-049 journal look (design pass).
+
+---
+
 ## WS-0 -- Branch + tracked baseline
 
 | ID | Item | State | Where | Pri | Proof gate |

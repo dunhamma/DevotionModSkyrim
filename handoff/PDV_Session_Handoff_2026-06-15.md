@@ -11,6 +11,12 @@ tools + dated snapshots. Nothing committed this session.
 
 ## ★ MOST IMPORTANT — The Kyne "champion offer" is the Formal Commitment Offer
 
+Terminology correction for session start: **deities do still make formal
+patron/deity offers.** The "only Daedric paths have Champion offers" claim is
+only true for the extra **Champion-tier milestone / replay offer** path used by
+`PDV_DaedricPathBase`. It does **not** mean Kyne, Talos, Shor, Stuhn, Tsun, or
+the other formal-offer deities lack patron offers.
+
 The user asked why a "champion offer from Kyne" didn't fire at dawn. This is a
 **design-understanding** point, not a bug — capture it so it isn't re-litigated.
 
