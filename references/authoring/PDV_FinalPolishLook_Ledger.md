@@ -55,6 +55,11 @@ Final-polish look pass is essentially complete. Net new since the last update:
 Remaining: WS-3 branding decisions (FP-050 banner, FP-051 Nexus art, FP-052 MCM
 splash, FP-053 FOMOD, FP-054 medallion art) and the FP-049 journal look (design pass).
 
+Known inert cleanup debt (dead `GetStartupOptionDetailText` + 9 orphan legacy-boon
+SPEL/MGEF records + their now-unused QUST `Boon_*` props) is captured in
+`handoff/PDV_CleanupDebt_Handoff_2026-06-17.md` -- deferred to a pre-release
+ESP-cleanup pass; all of it is inert (compile 0/0, verifier FAIL=0 as-is).
+
 ---
 
 ## WS-0 -- Branch + tracked baseline
