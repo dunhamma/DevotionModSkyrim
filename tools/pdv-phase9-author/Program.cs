@@ -4,11 +4,9 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Strings;
-using SkyrimActivator = Mutagen.Bethesda.Skyrim.Activator;
 using SkyrimGlobal = Mutagen.Bethesda.Skyrim.Global;
 
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
-const string proofActivatorModel = @"Architecture\HighHrothgar\MQEtchedShrineActivator.nif";
 
 var espPath = GetArg(args, "--esp") ?? defaultEsp;
 var dryRun = args.Contains("--dry-run");
@@ -33,7 +31,7 @@ try
 
     if (checkPlacements)
     {
-        CheckPhase9Placements(index, report);
+        CheckRetiredPhase9PlacementsAbsent(index, report);
         report.Status = report.Errors.Count == 0 ? "PASS" : "FAIL";
         return report.Status == "PASS" ? 0 : 1;
     }
@@ -141,12 +139,7 @@ try
     });
     report.Actions.Add("Wired PDV__ManagerQuest Bosmer Phase 9 properties.");
 
-    EnsureSignalActivator(mod, index, allocator, "PDV_ACTI_BosmerLivingStorySignal", 41, 4, eventBus.FormKey, playerRef, originGlobal.FormKey, debugGlobal.FormKey);
-    EnsureSignalActivator(mod, index, allocator, "PDV_ACTI_BosmerExchangeSignal", 42, 4, eventBus.FormKey, playerRef, originGlobal.FormKey, debugGlobal.FormKey);
-    EnsureSignalActivator(mod, index, allocator, "PDV_ACTI_BosmerBanditRoadSignal", 43, 4, eventBus.FormKey, playerRef, originGlobal.FormKey, debugGlobal.FormKey);
-    EnsureSignalActivator(mod, index, allocator, "PDV_ACTI_BosmerPactPositiveSignal", 44, 4, eventBus.FormKey, playerRef, originGlobal.FormKey, debugGlobal.FormKey);
-    EnsureSignalActivator(mod, index, allocator, "PDV_ACTI_StateTransitionConfirmRite", 45, -1, eventBus.FormKey, playerRef, originGlobal.FormKey, debugGlobal.FormKey);
-    report.Actions.Add("Created/wired Phase 9 ACTI signal receiver records.");
+    report.Actions.Add("Skipped retired Phase 9 Windhelm ACTI signal receiver records.");
 
     if (!dryRun)
     {
@@ -301,73 +294,12 @@ static Message EnsureMessage(SkyrimMod mod, Dictionary<string, ISkyrimMajorRecor
     return message;
 }
 
-static void EnsureSignalActivator(
-    SkyrimMod mod,
-    Dictionary<string, ISkyrimMajorRecordGetter> index,
-    FormKeyAllocator allocator,
-    string editorId,
-    int routeId,
-    int requiredOriginRace,
-    FormKey eventBus,
-    FormKey playerRef,
-    FormKey originGlobal,
-    FormKey debugGlobal)
-{
-    SkyrimActivator activator;
-    if (index.TryGetValue(editorId, out var existing))
-    {
-        if (existing is not SkyrimActivator typed)
-        {
-            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected Activator.");
-        }
-        activator = typed;
-        activator.EditorID = editorId;
-    }
-    else
-    {
-        activator = new SkyrimActivator(allocator.Next(), SkyrimRelease.SkyrimSE)
-        {
-            EditorID = editorId,
-            FormVersion = 44,
-            Name = Tx(editorId),
-            ActivateTextOverride = Tx("Activate")
-        };
-        mod.Activators.Add(activator);
-        index[editorId] = activator;
-    }
-
-    activator.FormVersion = 44;
-    activator.Name = Tx(editorId);
-    activator.ActivateTextOverride = Tx("Activate");
-    activator.Model ??= new Model();
-    activator.Model.File = proofActivatorModel;
-    WireActivatorScript(activator, "PDV_EventSignalActivator", new ScriptProperty[]
-    {
-        ObjectProp("PDV_EventBusService", eventBus),
-        ObjectProp("PlayerREF", playerRef),
-        ObjectProp("PDV_GLO_OriginRace", originGlobal),
-        ObjectProp("PDV_GLO_DebugLevel", debugGlobal),
-        IntProp("RouteId", routeId),
-        IntProp("RequiredOriginRace", requiredOriginRace),
-        StringProp("TraceLabel", editorId),
-    });
-}
-
 static void WireQuestScript(Quest quest, string scriptName, IEnumerable<ScriptProperty> properties)
 {
     quest.VirtualMachineAdapter ??= new QuestAdapter();
     quest.VirtualMachineAdapter.Version = 5;
     quest.VirtualMachineAdapter.ObjectFormat = 2;
     var script = EnsureScript(quest.VirtualMachineAdapter.Scripts, scriptName);
-    UpsertProperties(script, properties);
-}
-
-static void WireActivatorScript(SkyrimActivator activator, string scriptName, IEnumerable<ScriptProperty> properties)
-{
-    activator.VirtualMachineAdapter ??= new VirtualMachineAdapter();
-    activator.VirtualMachineAdapter.Version = 5;
-    activator.VirtualMachineAdapter.ObjectFormat = 2;
-    var script = EnsureScript(activator.VirtualMachineAdapter.Scripts, scriptName);
     UpsertProperties(script, properties);
 }
 
@@ -490,7 +422,7 @@ static void EnsureFormListEntry(FormList formList, FormKey formKey, AuthorReport
     report.Actions.Add($"Added {label} to PDV_FLST_AllDeities.");
 }
 
-static void CheckPhase9Placements(Dictionary<string, ISkyrimMajorRecordGetter> index, AuthorReport report)
+static void CheckRetiredPhase9PlacementsAbsent(Dictionary<string, ISkyrimMajorRecordGetter> index, AuthorReport report)
 {
     var expected = new (string RefEditorId, string BaseEditorId)[]
     {
@@ -503,27 +435,20 @@ static void CheckPhase9Placements(Dictionary<string, ISkyrimMajorRecordGetter> i
 
     foreach (var (refEditorId, baseEditorId) in expected)
     {
-        if (!index.TryGetValue(refEditorId, out var refRecord))
+        if (index.TryGetValue(refEditorId, out var refRecord))
         {
-            report.Errors.Add($"Missing placed reference: {refEditorId}");
-            continue;
+            report.Errors.Add($"Retired placed reference still exists: {refEditorId} ({refRecord.FormKey}).");
         }
-        if (refRecord is not PlacedObject placed)
+
+        if (index.TryGetValue(baseEditorId, out var baseRecord))
         {
-            report.Errors.Add($"{refEditorId} is {refRecord.GetType().Name}, expected PlacedObject/REFR.");
-            continue;
+            report.Errors.Add($"Retired base activator still exists: {baseEditorId} ({baseRecord.FormKey}).");
         }
-        if (!index.TryGetValue(baseEditorId, out var baseRecord))
-        {
-            report.Errors.Add($"Missing base activator for {refEditorId}: {baseEditorId}");
-            continue;
-        }
-        if (placed.Base.FormKey != baseRecord.FormKey)
-        {
-            report.Errors.Add($"{refEditorId} points at {placed.Base.FormKey}, expected {baseEditorId} ({baseRecord.FormKey}).");
-            continue;
-        }
-        report.Actions.Add($"{refEditorId} -> {baseEditorId}");
+    }
+
+    if (report.Errors.Count == 0)
+    {
+        report.Actions.Add("Retired Phase 9 Windhelm proof placements and ACTI bases are absent.");
     }
 }
 

@@ -572,50 +572,44 @@ const PHASE11_ARNGEIR_PROMPT = "Has Kyne marked my path?";
 const PHASE11_ARNGEIR_LINE = "The wind has marked you, Dragonborn. Walk with Kyne's breath.";
 
 const PHASE7_SIGNAL_RECEIVER_DEFINITIONS = [
+];
+
+const PHASE7_RETIRED_SIGNAL_RECEIVER_DEFINITIONS = [
   {
     recordEdid: "PDV_REFR_TalosShrineDefianceSignal",
     recordType: "REFR",
-    scriptName: "PDV_EventSignalActivator",
-    routeId: 35,
-    requiredOriginRace: -1,
+    reason: "retired after 2026-06-16 Windhelm visual cleanup; do not reattach PDV scripts to the visible vanilla shrine reference 10753E:Skyrim.esm",
   },
 ];
 
 const PHASE9_SIGNAL_RECEIVER_DEFINITIONS = [
+];
+
+const PHASE9_RETIRED_SIGNAL_RECEIVER_DEFINITIONS = [
   {
     recordEdid: "PDV_ACTI_BosmerLivingStorySignal",
     recordType: "ACTI",
-    scriptName: "PDV_EventSignalActivator",
-    routeId: 41,
-    requiredOriginRace: 4,
+    reason: "retired after 2026-06-16 Windhelm visual cleanup; Phase 9 proof activators must not be placed in live Windhelm spaces",
   },
   {
     recordEdid: "PDV_ACTI_BosmerExchangeSignal",
     recordType: "ACTI",
-    scriptName: "PDV_EventSignalActivator",
-    routeId: 42,
-    requiredOriginRace: 4,
+    reason: "retired after 2026-06-16 Windhelm visual cleanup; Phase 9 proof activators must not be placed in live Windhelm spaces",
   },
   {
     recordEdid: "PDV_ACTI_BosmerBanditRoadSignal",
     recordType: "ACTI",
-    scriptName: "PDV_EventSignalActivator",
-    routeId: 43,
-    requiredOriginRace: 4,
+    reason: "retired after 2026-06-16 Windhelm visual cleanup; Phase 9 proof activators must not be placed in live Windhelm spaces",
   },
   {
     recordEdid: "PDV_ACTI_BosmerPactPositiveSignal",
     recordType: "ACTI",
-    scriptName: "PDV_EventSignalActivator",
-    routeId: 44,
-    requiredOriginRace: 4,
+    reason: "retired after 2026-06-16 Windhelm visual cleanup; Phase 9 proof activators must not be placed in live Windhelm spaces",
   },
   {
     recordEdid: "PDV_ACTI_StateTransitionConfirmRite",
     recordType: "ACTI",
-    scriptName: "PDV_EventSignalActivator",
-    routeId: 45,
-    requiredOriginRace: -1,
+    reason: "retired after 2026-06-16 Windhelm visual cleanup; Phase 9 proof activators must not be placed in live Windhelm spaces",
   },
 ];
 
@@ -5988,6 +5982,23 @@ class Verifier {
       this.checkScalarProperty("Phase 9 signal receiver property", props, "RouteId", definition.routeId, this.phase9Gap.bind(this));
       this.checkScalarProperty("Phase 9 signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.phase9Gap.bind(this));
     }
+
+    for (const definition of PHASE9_RETIRED_SIGNAL_RECEIVER_DEFINITIONS) {
+      const record = this.recordsByEdid.get(definition.recordEdid);
+      if (record) {
+        this.fail(
+          "Phase 9 retired signal receiver",
+          `${definition.recordEdid} exists as ${record.type}; ${definition.reason}.`,
+          PDV_ESP,
+        );
+      } else {
+        this.pass(
+          "Phase 9 retired signal receiver",
+          `${definition.recordEdid} is absent from the active Devotion record set.`,
+          PDV_ESP,
+        );
+      }
+    }
   }
 
   checkPhase10DunmerSubstrateRecord() {
@@ -6758,11 +6769,28 @@ class Verifier {
       this.checkScalarProperty("Phase 7 signal receiver property", props, "RequiredOriginRace", definition.requiredOriginRace, this.phase7Gap.bind(this));
     }
 
+    for (const definition of PHASE7_RETIRED_SIGNAL_RECEIVER_DEFINITIONS) {
+      const record = this.recordsByEdid.get(definition.recordEdid);
+      if (record) {
+        this.fail(
+          "Phase 7 retired signal receiver",
+          `${definition.recordEdid} exists as ${record.type}; ${definition.reason}.`,
+          PDV_ESP,
+        );
+      } else {
+        this.pass(
+          "Phase 7 retired signal receiver",
+          `${definition.recordEdid} is absent from the active Devotion record set.`,
+          PDV_ESP,
+        );
+      }
+    }
+
     const legacyHelper = this.recordsByEdid.get("PDV_ACTI_TalosShrineDefianceSignal");
     if (legacyHelper) {
-      this.info(
+      this.fail(
         "Phase 7 legacy helper activator",
-        "PDV_ACTI_TalosShrineDefianceSignal still exists. Preferred posture is script co-attachment on the real shrine reference, not a nearby helper ACTI.",
+        "PDV_ACTI_TalosShrineDefianceSignal still exists. The hidden Talos receiver surface is retired until a non-rendered or visually audited replacement contract exists.",
         PDV_ESP,
       );
     }

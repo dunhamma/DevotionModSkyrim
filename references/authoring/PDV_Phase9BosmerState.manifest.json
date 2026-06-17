@@ -4,15 +4,16 @@
   "defaultOutput": "PDV_Phase9BosmerStateOverlay.esp",
   "notes": [
     "This manifest records the CK/xEdit contract for the first live PDV_StateTrack gameplay slice: Bosmer path-state setup, Bosmer-specific path offers, and the shared confirmation-rite route.",
-    "As of 2026-05-24, the framework ESP record packet is live and strict-verifier clean for the Bosmer path deity trio, message boxes, manager properties, FormList membership, and ACTI proof-surface base records. The five expected placed proof references also read back through tools/pdv-phase9-author -- --check-placements.",
+    "As of 2026-05-24, the framework ESP record packet was live and runtime-proven for the Bosmer path deity trio, message boxes, manager properties, FormList membership, and five ACTI proof-surface routes.",
+    "The five Windhelm Phase 9 proof activators and their placed references were retired on 2026-06-16 after visual review found the live-world signal items still placed in WindhelmTempleofTalos. The cleanup removed Devotion.esp's WindhelmTempleofTalos cell override plus PDV_ACTI_BosmerLivingStorySignal, PDV_ACTI_BosmerExchangeSignal, PDV_ACTI_BosmerBanditRoadSignal, PDV_ACTI_BosmerPactPositiveSignal, and PDV_ACTI_StateTransitionConfirmRite.",
     "Runtime proof is complete for all five proof-surface routes, Living Story, Exchange, Bandit Road, Old Contract re-entry, confirmation-rite switching, Old Contract PactBound/compliance separation, forced reckoning Renounce/Recommit, and save/load persistence.",
     "Runtime proof fixed the shared PDV_StateTrack evidence retention contract: tracks now retain LatestDay, PreviousDay, and ThirdDay so three-day destination offers can actually fire.",
-    "Strict-phase9 verifier coverage now checks the Bosmer state-track source contract, manager wiring, deity path-eligibility plumbing, and the Bosmer proof-surface editor IDs documented below.",
+    "Strict-phase9 verifier coverage now checks the Bosmer state-track source contract, manager wiring, deity path-eligibility plumbing, and absence of the retired Windhelm proof-surface editor IDs documented below.",
     "Unlike the Phase 8 Talos overlay exceptions, strict-phase9 reads the framework ESP directly. Generated overlay patches can still help runtime or staging, but they do not satisfy the closeout gate until the underlying framework records are authored in CK/xEdit."
   ],
   "unsupported": [
     "pdv_author still cannot mint new QUST, GLOB, MESG, ACTI, REFR, or MGEF records, and it cannot write VMAD arrays such as EligibleStateValues or StateLabels. The 2026-05-23 framework packet used the narrow tools/pdv-phase9-author helper instead.",
-    "The current strict verifier covers ACTI base records, while tools/pdv-phase9-author -- --check-placements covers the CK-placed Phase 9 REFR proof instances.",
+    "The current strict verifier and tools/pdv-phase9-author -- --check-placements both treat the five Windhelm proof ACTI/REFR records as retired and fail if they return.",
     "Phase 9 runtime proof is complete as of 2026-05-24; future changes to offer thresholds must re-run the relevant in-game evidence-window proof.",
     "Do not treat Zenithar as a stand-in for Z'en in either editor IDs or player-facing text. The internal deity record remains PDV_Deity_Zen while visible strings should say Z'en."
   ],
