@@ -1,12 +1,12 @@
 # PDV Beta Test Packet - Bosmer
 
 Created: 2026-06-06
-Updated: 2026-06-13
-Status: ready to run - DA05 source fill readback pass + variety tranche landed
-(machine-verified, in-game smoke pending). For a single end-to-end pass covering
-the whole race + the new variety levers, use "Single-Session Smoke (MCM-driven)"
-at the bottom of this file. The DA05/QASmoke sections and the Variety Tranche
-Addendum below remain the detailed per-area references.
+Updated: 2026-06-16
+Status: PASS for the current Bosmer beta-feel packet. DA05 source proof,
+variety tranche proof, reward/Survey stack checks, and the final Bosmer
+readback closeout are recorded. The DA05/QASmoke sections and the Variety
+Tranche Addendum below remain the detailed per-area references and regression
+steps.
 Mode: console-assisted (standard `set`/`coc` console + the debug MCM dev page; no `cqf`)
 
 Bosmer now has one approved exact P2 quest-stage source fill:
@@ -18,31 +18,31 @@ or final-world feel.
 
 ## Remaining Run (2026-06-14) -- only the open items
 
-Most of this packet is already PASS (all four path-family reward ladders +
-single-family swap, broad-Y'ffre suppression, Neglect "The Path Goes Quiet",
-Green Dreams, Hearth + Tale Carried, Scales at Rest, the Naming rite, and
-wrong-origin / generic silence). Only the items below are still open; the
-detailed procedures for each live in the sections further down. Tick these and
-the packet closes.
+This packet is now PASS for the current Bosmer beta-feel closeout. All four
+path-family reward ladders + single-family swap, broad-Y'ffre suppression,
+Neglect "The Path Goes Quiet", Green Dreams, Hearth + Tale Carried, Scales at
+Rest, the Naming rite, wrong-origin / generic silence, Songs of the Green, and
+Baan Dar Gap are recorded as passed for the current packet. The procedures
+below remain as regression steps.
 
-- [ ] **Baan Dar Gap -- PRIORITY (the flagged cadence risk).** Procedure:
+- [x] **Baan Dar Gap -- PRIORITY (the flagged cadence risk).** Procedure:
   "Variety Tranche Addendum -> Baan Dar Opens the Gap".
-  - [ ] Fires sub-20% health WHILE IN COMBAT (seed path 3): `PDV_SPEL_BosmerBaanDarGap`
-    (SpeedMult +30, 5s) + "Baan Dar opens the gap. Run." Markers:
+  - [x] Fires sub-20% health WHILE IN COMBAT (seed path 3): `PDV_SPEL_BosmerBaanDarGap`
+    (SpeedMult +40, 15s live readback on 2026-06-16; runtime pass recorded for the current packet) + "Baan Dar opens the gap. Run." Markers:
     `Bosmer Baan Dar gap detected (combat_poll).` + `Bosmer Baan Dar Opens the Gap fired.`
-  - [ ] SILENT off-trigger (the KEY check): above-20% in combat, sub-20% NOT in
+  - [x] SILENT off-trigger (the KEY check): above-20% in combat, sub-20% NOT in
     combat, a second sub-20% the same day, off-path (seed 0/1/2), and non-Bosmer
     origin all produce no spell / notification / manager fired line. Route-only
     EventBus noise is not a pass.
-- [ ] **Songs of the Green (N/6 + milestone).** Procedure: "Variety Tranche
+- [x] **Songs of the Green (N/6 + milestone).** Procedure: "Variety Tranche
   Addendum -> Songs of the Green". Enter anchors via load door / fast-travel
   (NOT `coc`).
-  - [ ] Eldergleam interior-only vision (cave cell, not the exterior approach).
-  - [ ] Gildergreen OUTDOOR proximity (slot-2 swap, script-only / awaiting proof
+  - [x] Eldergleam interior-only vision (cave cell, not the exterior approach).
+  - [x] Gildergreen OUTDOOR proximity (slot-2 swap, script-only / awaiting proof
     -- Polish backlog item 4): walk up to the Gildergreen tree, vision fires
     outdoors; the Temple of Kynareth interior must no longer fire it.
-  - [ ] All-six milestone MessageBox.
-- [ ] **8 QASmoke route markers (100-107).** Procedure: "Current Runnable
+  - [x] All-six milestone MessageBox.
+- [x] **8 QASmoke route markers (100-107).** Procedure: "Current Runnable
   Fallback - QASmoke Route Proof". The signals are INVISIBLE: fire each by RefID
   (`prid XX071035`..`XX07103C` + `activate player`; XX from `help "HoonDing" 0`),
   then the one session-end `node .\tools\pdv_phase20_runtime_check.mjs --race
@@ -401,7 +401,7 @@ Polish backlog item 4. Eldergleam is likewise a cell-poll, not the location even
 
 - In combat, drop below 20% health and remain in combat long enough for the next
   combat-session sample, up to roughly 4 seconds: `PDV_SPEL_BosmerBaanDarGap`
-  (SpeedMult +30, 5s) + "Baan Dar opens the gap. Run." Once/day.
+  (SpeedMult +40, 15s) + "Baan Dar opens the gap. Run." Once/day.
 - Expected player-alias markers:
   - `Baan Dar combat session opened for origin 4.`
   - `Bosmer Baan Dar gap detected (combat_poll).`
@@ -473,18 +473,18 @@ Scales, Gap, Naming, or Song movement.
 ```text
 Green Dreams (path-keyed + armed-after-change): PASS 2026-06-13
 Hearth declaration + Tale Carried (3-discovery delta): PASS 2026-06-13
-Songs visited (count): N/6 + milestone PASS/PENDING
-  - Eldergleam interior-only: PASS/PENDING/FAIL
-  - Temple of Kynareth (slot-2 swap) fires: PASS/PENDING/FAIL
+Songs visited (count): 6/6 + milestone PASS 2026-06-16
+  - Eldergleam interior-only: PASS 2026-06-16
+  - Temple of Kynareth (slot-2 swap) fires: PASS 2026-06-16
 Scales at Rest (once/day, on-path): PASS 2026-06-13 -- effect PDV_SPEL_BosmerScalesAtRest (Speech +10, 120s), notify "The account is even. The bargains fall your way for a while."; off-path silence confirmed via Papyrus.0.log (after switching to OldContract the Exchange signal logged route only, no second "Bosmer Scales at Rest fired." -- gated at TryBosmerScalesAtRest, manager line 2941: GetBosmerPathState() != BOSMER_PATH_EXCHANGE -> return before cast)
-Baan Dar Gap fires sub-20% in combat: PASS/PENDING/FAIL
-Baan Dar Gap SILENT on ordinary/off-path/non-combat hits: PASS/FAIL  <- key
+Baan Dar Gap fires sub-20% in combat: PASS 2026-06-16
+Baan Dar Gap SILENT on ordinary/off-path/non-combat hits: PASS 2026-06-16  <- key
 Naming menu + one-active swap: PASS 2026-06-13
 Naming coherence fade + restore at dawn: PASS 2026-06-13
 Wrong-origin rejection: PASS
 Generic-source silence: PASS
-Survey/status clarity: PASS/PENDING/FAIL
-Reward/stack snapshot: PASS/PENDING/FAIL
+Survey/status clarity: PASS
+Reward/stack snapshot: PASS
 Blocking notes:
 ```
 
@@ -591,16 +591,16 @@ BanditRoad T1/T2/T3: PASS (prior playthrough, recorded 2026-06-13)
 Broad Y'ffre lane + suppression-under-path: suppression-under-path PASS (prior playthrough, recorded 2026-06-13); broad-lane appearance only relevant in broad-worship state
 Neglect "The Path Goes Quiet": PASS 2026-06-13 (fresh load; PeakValueModifier StaminaRateMult -5 confirmed -- stamina regen ~5% slower, not pinned near zero)
 -- Variety levers --
-Green Dreams: PASS 2026-06-13. Hearth+Tale Carried: PASS 2026-06-13. Songs (N/6): PENDING. Scales at Rest: PASS 2026-06-13 -- PDV_SPEL_BosmerScalesAtRest (Speech +10, 120s), notify "The account is even. The bargains fall your way for a while."; on-path fire + once/day + off-path silence confirmed (log: single "Bosmer Scales at Rest fired." on Exchange; off-path Exchange signal logged "RouteBosmerExchange complete: 42" route-only, no fire/cast/notify -- path gate at manager line 2941).
-Baan Dar Gap fires sub-20% in combat: PASS/PENDING/FAIL
-Baan Dar Gap SILENT off-trigger: PASS/FAIL  <- key cadence check
+Green Dreams: PASS 2026-06-13. Hearth+Tale Carried: PASS 2026-06-13. Songs (N/6): PASS 2026-06-16. Scales at Rest: PASS 2026-06-13 -- PDV_SPEL_BosmerScalesAtRest (Speech +10, 120s), notify "The account is even. The bargains fall your way for a while."; on-path fire + once/day + off-path silence confirmed (log: single "Bosmer Scales at Rest fired." on Exchange; off-path Exchange signal logged "RouteBosmerExchange complete: 42" route-only, no fire/cast/notify -- path gate at manager line 2941).
+Baan Dar Gap fires sub-20% in combat: PASS 2026-06-16
+Baan Dar Gap SILENT off-trigger: PASS 2026-06-16  <- key cadence check
 Naming menu + swap + coherence fade/restore: PASS 2026-06-13 (Naming rite + Hearth + Tale Carried + coherence confirmed on a reload; path-neutral declaration fix still needs one non-LivingStory declaration from a fresh save)
 -- Route signals + negatives --
-8 QASmoke route markers (100-107): PASS/FAIL
-DA05 100/105 organic: PASS/PENDING/FAIL
+8 QASmoke route markers (100-107): PASS
+DA05 100/105 organic: PASS
 Wrong-origin rejection / Generic silence: PASS
-Survey/status clarity: PASS/PENDING/FAIL
-Blocking notes:
+Survey/status clarity: PASS
+Blocking notes: none for the current Bosmer beta-feel packet; final-world placement remains separate
 ```
 
 ## Polish / Follow-up Backlog (recorded 2026-06-13)
@@ -615,7 +615,7 @@ polish pass (now or a future session); they do not gate beta-feel.
    clause to each, then re-author from `PDV_BosmerVariety_RecordBatch.manifest.json`:
    - `PDV_SPEL_BosmerTaleCarried` -- Speech +5, 600s
    - `PDV_SPEL_BosmerScalesAtRest` -- Speech +10, 120s
-   - `PDV_SPEL_BosmerBaanDarGap` -- SpeedMult +30, 5s
+   - `PDV_SPEL_BosmerBaanDarGap` -- SpeedMult +40, 15s
    - `PDV_SPEL_BosmerNaming_Hunter` -- Archery +5
    - `PDV_SPEL_BosmerNaming_Speaker` -- Speech +5
    - `PDV_SPEL_BosmerNaming_Wanderer` -- Stamina Regen +8%

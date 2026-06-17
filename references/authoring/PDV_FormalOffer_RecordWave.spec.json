@@ -1,0 +1,161 @@
+{
+  "notes": "Formal deity-offer record wave for the post-Kyne scale-out. Use with tools/pdv-phase20-race-author --author-rewards / --check-rewards. This spec intentionally covers message records and manager VMAD properties only; source eligibility lives in the live PDV__ManagerQuest.psc.",
+  "messageRecords": [
+    {
+      "editorId": "PDV_Msg_Dunmer_Azura_Offer",
+      "kind": "messageBox",
+      "title": "Azura's Twilight",
+      "body": "You have lived toward me without naming it -- the thresholds kept, the hard truths faced. This is not leaving the ancestors. It is the ash-prayer deepening toward dawn. Will you name me your focus?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Dunmer_Boethiah_Offer",
+      "kind": "messageBox",
+      "title": "Boethiah's Trial",
+      "body": "You have proven yourself against the unworthy again and again. The ancestors witnessed it; now I ask for it by name. This deepens the Reclamation; it does not replace the ash. Will you name me your focus?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Dunmer_Mephala_Offer",
+      "kind": "messageBox",
+      "title": "Mephala's Whisper",
+      "body": "You have kept the web whole without being asked. The hidden people are safer for you. Name me your focus, and the ash-prayer deepens into the web -- nothing of the ancestors is set down. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    { "editorId": "PDV_Msg_Dunmer_OfferResponse_Accept", "title": "Accept", "body": "The ash-prayer has a name now. The Reclamation deepens in you, and the ancestors are not set down." },
+    { "editorId": "PDV_Msg_Dunmer_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet. The ash-prayer holds as it was, and the threshold stays open to you." },
+    { "editorId": "PDV_Msg_Dunmer_OfferResponse_Refuse", "title": "Refuse", "body": "You keep to the shared Reclamations. The deepening is set aside, and will not be offered again soon." },
+    {
+      "editorId": "PDV_Msg_Altmer_AuriEl_Offer",
+      "kind": "messageBox",
+      "title": "Auri-El's Path",
+      "body": "You have kept the dawn through every temptation to forget it. Make the return your focus, and the foundation becomes the whole of your faith. Will you name me?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Altmer_Magnus_Offer",
+      "kind": "messageBox",
+      "title": "Magnus and the Elder Way",
+      "body": "You study as escape, not as utility. That is my path. Name me your focus, and the arts become the road back. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Altmer_Xarxes_Offer",
+      "kind": "messageBox",
+      "title": "Xarxes and the Record",
+      "body": "You trust what is written over what is enforced. Name me your focus, and the lineage and the quiet truth become your devotion. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    { "editorId": "PDV_Msg_Altmer_OfferResponse_Accept", "title": "Accept", "body": "You name this focus. The foundation narrows to a single disciplined road, and the dawn holds in you." },
+    { "editorId": "PDV_Msg_Altmer_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet. The foundation stands as it was, and the path waits for you." },
+    { "editorId": "PDV_Msg_Altmer_OfferResponse_Refuse", "title": "Refuse", "body": "You keep to the foundation alone. The focus is set aside, and the offer will not soon return." },
+    {
+      "editorId": "PDV_Msg_Imperial_Akatosh_Offer",
+      "kind": "messageBox",
+      "title": "Akatosh's Order",
+      "body": "Your devotion has not wavered through upheaval. Carry the god of time as your own, and the long order becomes your faith. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Imperial_Talos_Offer",
+      "kind": "messageBox",
+      "title": "Talos Calls the Defier",
+      "body": "You kept faith with me where the law forbade it. Carry the old breath openly, and the Empire's own god answers a treason of conscience. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Imperial_Kynareth_Offer",
+      "kind": "messageBox",
+      "title": "Kynareth's Road",
+      "body": "The open way has been kind to you. Carry Kynareth as your own, and the road and the sky answer. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Imperial_Mara_Offer",
+      "kind": "messageBox",
+      "title": "Mara's House",
+      "body": "You have built and mended where you could. Carry the mother of the people as your own, and the civic heart is yours to keep. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Imperial_Zenithar_Offer",
+      "kind": "messageBox",
+      "title": "Zenithar's Trade",
+      "body": "Your work is honest and your weight is true. Carry the trade-god as your own, and the day's labor becomes worship. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Imperial_Arkay_Offer",
+      "kind": "messageBox",
+      "title": "Arkay's Covenant",
+      "body": "You have kept the rites the war neglected. Carry Arkay as your own, and the death-cycle is your charge. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Imperial_Stendarr_Offer",
+      "kind": "messageBox",
+      "title": "Stendarr's Mercy",
+      "body": "You have stayed the killing hand where the province wanted it loosed. Carry Stendarr as your own. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Imperial_Julianos_Offer",
+      "kind": "messageBox",
+      "title": "Julianos' Code",
+      "body": "You study, you weigh, you judge with care. Carry Julianos as your own, and the written truth is your devotion. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Imperial_Dibella_Offer",
+      "kind": "messageBox",
+      "title": "Dibella's Grace",
+      "body": "You make beauty and speak well where it matters most. Carry Dibella as your own. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    { "editorId": "PDV_Msg_Imperial_OfferResponse_Accept", "title": "Accept", "body": "You take this patron. The broad faith narrows to one, and the order keeps you as its own." },
+    { "editorId": "PDV_Msg_Imperial_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet. Broad worship holds, and the patron waits on your word." },
+    { "editorId": "PDV_Msg_Imperial_OfferResponse_Refuse", "title": "Refuse", "body": "You keep to broad worship. The patronage is declined, and will not be offered again soon." },
+    {
+      "editorId": "PDV_Msg_Redguard_Tuwhacca_Offer",
+      "kind": "messageBox",
+      "title": "Tu'whacca's Charge",
+      "body": "You tend the dead and turn back the undead. Carry Tu'whacca as your own, and the guidance of souls to the Far Shores is your charge. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_Leki_Offer",
+      "kind": "messageBox",
+      "title": "Leki's Blade",
+      "body": "Your sword-work is disciplined and honest. Carry Leki as your own, and the blade becomes devotion made exact. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Redguard_HoonDing_Offer",
+      "kind": "messageBox",
+      "title": "HoonDing's Call",
+      "body": "Again and again you have made a way where there was none. Carry the Make-Way God as your own, and the impossible passage becomes your devotion. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    { "editorId": "PDV_Msg_Redguard_OfferResponse_Accept", "title": "Accept", "body": "You walk under this god now. The sect's broad worship narrows to one charge, carried as your own." },
+    { "editorId": "PDV_Msg_Redguard_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet. The sect's worship holds as it was, and the charge waits for you." },
+    { "editorId": "PDV_Msg_Redguard_OfferResponse_Refuse", "title": "Refuse", "body": "You keep to the sect's broad worship. The charge is set aside, and will not soon be offered again." }
+  ]
+}

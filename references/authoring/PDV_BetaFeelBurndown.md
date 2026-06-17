@@ -31,7 +31,7 @@ As of the 2026-06-14 17:29 AEST local recheck:
 | Area | Current state | Evidence |
 | --- | --- | --- |
 | Daedric Princes | **Pass** for current beta-display gate | `node .\tools\pdv_daedric_beta_gate.mjs` -> `PASS=16` |
-| Race beta-feel packets | **2 pass, 8 still fail/deferred** | `PDV_PreBetaRaceGateLedger.md`: Altmer Pass, Khajiit Pass; Argonian, Orc, Redguard, Bosmer, Breton, Dunmer, Imperial, and Nord remain Fail/deferred |
+| Race beta-feel packets | **3 pass, 7 still fail/deferred** | `PDV_PreBetaRaceGateLedger.md`: Altmer Pass, Khajiit Pass, Bosmer Pass; Argonian, Orc, Redguard, Breton, Dunmer, Imperial, and Nord remain Fail/deferred |
 | Default framework verifier | **Machine-clean with known warnings** | `node .\tools\pdv_verify.mjs` -> `FAIL=0, WARN=2, TODO=0, PASS=3038, INFO=43`; includes small-signal v8/v3 exact-body source gate |
 | Content verifier | **Clean** | `node .\tools\pdv_content_verify.mjs` -> `FAIL=0, WARN=0, PASS=1080, INFO=4` |
 | Khajiit focused P2 route | **Route-proof pass** | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race khajiit` -> PASS |
@@ -55,6 +55,7 @@ These items are no longer counted as open beta-feel blockers.
 | Nord non-Kyne offer eligibility | Runtime smoke | Offers now fire for non-Kyne pantheon gods; record/copy conformance is tracked separately |
 | Khajiit current beta-feel packet | Runtime route + manual/tester evidence | Rajhin edge, Alkosh word-of-power dawn drip, lunar book route, rejection sweep, Survey/status, reward/stack evidence, and optional checks are recorded; final-world placement remains separate |
 | Altmer current beta-feel packet | Manual/runtime packet evidence | Current packet is Pass; final-world placement and future verifier hardening remain separate |
+| Bosmer current beta-feel packet | Manual/runtime packet evidence plus final Bosmer readback refresh | DA05 accepted branches, rejection sweep, Survey/status, reward stack, Songs of the Green, and Baan Dar Gap passed for the current packet; 2026-06-16 live readback refreshed Baan Dar Gap to SpeedMult +40 for 15s; final-world placement remains separate |
 | 16-Prince Daedric beta-display gate | Runtime/manual ledger gate | `pdv_daedric_beta_gate` passes all 16 Princes |
 | Likes/dislikes enrichment/codegen landed and source-gated | Compile/readback clean | `pdv_verify` now asserts v8/v3 constants, exact 315-row deity and 160-row Prince generated bodies, and all 31 CSV event IDs in the clear superset. Runtime/new-save reload proof remains open; pending event rows stay inert until routers exist |
 | Altmer `PDV_RepTrack_ThalmorAlignment` first record bridge | Consolidated record-wave readback passes | Source routing for the six actions and manual/new-save behavior proof remain open |
@@ -76,13 +77,13 @@ These are small but high-priority because they keep the burndown honest.
 ### 1. Manual Race Evidence
 
 This is the long pole. The default machine gates are strong; the release claim is
-blocked by manual/runtime evidence for the eight non-passing races.
+blocked by manual/runtime evidence for the seven non-passing races.
 
 | Race | Current state | Remaining proof |
 | --- | --- | --- |
 | Altmer | Pass | No blocker for current packet; final-world placement separate |
 | Khajiit | Pass | No blocker for current packet; final-world placement separate |
-| Bosmer | Fail/partial | Remaining non-hunter/Bandit Road slices, broader feel note, asset-status confirmation, and fresh-load Exchange copy check if desired |
+| Bosmer | Pass | No blocker for current packet; final-world placement separate |
 | Argonian | Fail | Hist/People floor, swimming/sleep/murder rejection, Survey display, immersive water/community/Void hook proof, asset status |
 | Orc | Fail | Raw craft/combat/faction rejection, Survey display, immersive Stronghold/City/Legion hook proof, asset status |
 | Redguard | Fail | Fast-travel/undead/combat rejection, Survey display, immersive sect/death-duty/HoonDing proof, asset status |

@@ -55,8 +55,12 @@ body.panel-visible .devotion-shell {
   display: block;
 }
 
-body.startup-visible .startup-modal {
+body.startup-visible .startup-modal:not([hidden]) {
   display: grid;
+}
+
+.startup-modal[hidden] {
+  display: none !important;
 }
 
 .devotion-panel {
@@ -995,4 +999,141 @@ h1 {
     left: 14px;
     bottom: 14px;
   }
+}
+
+#pdv-journal-entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.journal-date {
+  margin: 14px 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.journal-entry {
+  border-left: 3px solid var(--muted);
+  padding: 8px 0 8px 13px;
+  margin: 0 0 6px;
+}
+.journal-entry.is-good {
+  border-left-color: var(--green);
+}
+.journal-entry.is-warning {
+  border-left-color: var(--red);
+}
+.journal-mark {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.journal-entry.is-good .journal-mark {
+  color: var(--green);
+}
+.journal-entry.is-warning .journal-mark {
+  color: var(--red);
+}
+.journal-entry-title {
+  margin: 2px 0 0;
+  color: #fff8e8;
+  font-weight: 500;
+}
+.journal-entry-text {
+  margin: 3px 0 0;
+  color: #fff8e8;
+  line-height: 1.65;
+}
+
+/* Book of Days -- aged parchment skin, scoped to the journal modal only.
+   Dark ink on warm parchment for high-contrast, accessible long-form reading.
+   Tone is carried by mark text + arrow as well as colour, so it is never
+   colour-only (colour-blind safe). */
+#pdv-journal-modal .startup-card {
+  width: min(560px, calc(100vw - 48px));
+  border: 1px solid #b8a986;
+  border-radius: 6px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(120, 96, 58, 0.10), transparent 60%),
+    radial-gradient(140% 120% at 50% 100%, rgba(86, 64, 36, 0.16), transparent 55%),
+    #efe6d2;
+  box-shadow: 0 24px 70px rgba(28, 20, 10, 0.55), inset 0 0 60px rgba(150, 120, 70, 0.12);
+  color: #3a2e20;
+  font-family: Georgia, "Times New Roman", serif;
+}
+#pdv-journal-modal .startup-header {
+  border-bottom: 1px solid rgba(120, 96, 58, 0.45);
+  text-align: center;
+}
+#pdv-journal-modal .eyebrow {
+  color: #8a6f45;
+  letter-spacing: 0.22em;
+}
+#pdv-journal-modal .startup-header h2,
+#pdv-journal-modal #pdv-journal-title {
+  color: #2e2418;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+}
+#pdv-journal-modal .summary,
+#pdv-journal-modal #pdv-journal-summary {
+  color: #6b5942;
+}
+#pdv-journal-modal #pdv-journal-body {
+  display: block;
+  padding: 16px 26px 6px;
+}
+#pdv-journal-modal .empty {
+  color: #6b5942;
+  font-style: italic;
+}
+#pdv-journal-modal .journal-date {
+  margin: 18px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(120, 96, 58, 0.35);
+  color: #6b5942;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  font-size: 13px;
+}
+#pdv-journal-modal .journal-entry {
+  border-left: 2px solid rgba(120, 96, 58, 0.45);
+  padding: 6px 0 8px 14px;
+}
+#pdv-journal-modal .journal-entry.is-good {
+  border-left-color: #3f6b3a;
+}
+#pdv-journal-modal .journal-entry.is-warning {
+  border-left-color: #9a2f2a;
+}
+#pdv-journal-modal .journal-mark {
+  color: #6b5942;
+  font-variant: small-caps;
+  font-style: italic;
+}
+#pdv-journal-modal .journal-entry.is-good .journal-mark {
+  color: #3f6b3a;
+}
+#pdv-journal-modal .journal-entry.is-warning .journal-mark {
+  color: #9a2f2a;
+}
+#pdv-journal-modal .journal-entry-title {
+  color: #2e2418;
+  font-weight: 700;
+}
+#pdv-journal-modal .journal-entry-text {
+  color: #473829;
+  line-height: 1.7;
+}
+#pdv-journal-modal .startup-footer {
+  justify-content: center;
+  padding: 12px 22px 18px;
+  border-top: 1px solid rgba(120, 96, 58, 0.45);
+}
+#pdv-journal-modal .journal-hint {
+  margin: 0;
+  color: #8a6f45;
+  font-style: italic;
+  font-size: 13px;
 }

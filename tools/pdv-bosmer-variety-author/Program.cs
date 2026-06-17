@@ -2,7 +2,8 @@
 // One-batch Mutagen author for the Bosmer variety tranche ("The Story Goes On"):
 //   - PDV_SPEL_BosmerTaleCarried (+MGEF, Speech +5, 600s self)        [Living Story hearth]
 //   - PDV_SPEL_BosmerScalesAtRest (+MGEF, Speech +10, 120s self)      [Exchange signature]
-//   - PDV_SPEL_BosmerBaanDarGap (+MGEF, SpeedMult +30, 5s self)       [Bandit Road signature]
+//   - PDV_SPEL_BosmerBaanDarGap (+MGEF, SpeedMult +40, 15s self)      [Bandit Road signature]
+//   - PDV_SPEL_BosmerBaanDarGapWatcher (+MGEF script watcher)          [Bandit Road low-health trigger]
 //   - 4 Naming told-self ability spells (+MGEFs, constant-effect AV mods)
 //   - PDV_MESG_BosmerMarkHearth / PDV_MESG_BosmerNaming (MessageBox, menu buttons)
 //   - PDV_FLST_BosmerGreenSongs (6 vanilla LCTNs, manifest order; FAIL-CLOSED on unverified slots)
@@ -28,6 +29,15 @@ using Noggog;
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
 const string managerScriptName = "PDV__ManagerQuest";
 const string greenSongsListEditorId = "PDV_FLST_BosmerGreenSongs";
+const string gapSpellEditorId = "PDV_SPEL_BosmerBaanDarGap";
+const string gapMgefEditorId = "PDV_MGEF_BosmerBaanDarGap";
+const string gapWatcherSpellEditorId = "PDV_SPEL_BosmerBaanDarGapWatcher";
+const string gapWatcherMgefEditorId = "PDV_MGEF_BosmerBaanDarGapWatcher";
+const string gapWatcherScriptName = "PDV_BosmerBaanDarGapWatchEffect";
+const string gapPresentationMgefEditorId = "PDV_MGEF_BosmerBaanDarGapPresentation";
+const string gapPresentationScriptName = "PDV_BosmerGapPresentationEffect";
+const string gapPresentationSoundEditorId = "PDV_SND_RisingChime";
+const uint gapPresentationShaderLocalId = 0x0E7557; // Matches the diegetic "Release" shader source.
 
 var skyrimModKey = ModKey.FromNameAndExtension("Skyrim.esm");
 
@@ -59,7 +69,7 @@ var timedBuffs = new[]
         ActorValue.Speech, 10.0f, 120),
     new TimedBuffDef("PDV_SPEL_BosmerBaanDarGap", "PDV_MGEF_BosmerBaanDarGap", "Baan Dar Opens the Gap",
         "Baan Dar opens the gap. Run.",
-        ActorValue.SpeedMult, 30.0f, 5),
+        ActorValue.SpeedMult, 40.0f, 15),
 };
 
 // Naming told-self abilities (ConstantEffect, ValueModifier) -- one active at a
@@ -114,20 +124,32 @@ try
 
     if (!checkOnly)
     {
+        var debugGlobal = RequireRecord<ISkyrimMajorRecordGetter>(index, "PDV_GLO_DebugLevel");
+        var gapPresentationSound = RequireRecord<ISkyrimMajorRecordGetter>(index, gapPresentationSoundEditorId);
+
         // 1) Timed self-buffs (Tale Carried, Scales at Rest, Baan Dar Opens the Gap).
         foreach (var buff in timedBuffs)
         {
+            var isGapSpell = string.Equals(buff.SpellEditorId, gapSpellEditorId, StringComparison.OrdinalIgnoreCase);
             var buffMgef = EnsureMagicEffect(mod, index, allocator, buff.MgefEditorId, report, effect =>
             {
                 effect.Name = Tx(buff.DisplayName);
                 effect.Description = Tx(buff.PlayerFacingText);
-                effect.Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoHitEffect | MagicEffect.Flag.Recover;
+                effect.Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.Recover;
+                if (!isGapSpell)
+                {
+                    effect.Flags |= MagicEffect.Flag.NoHitEffect;
+                }
                 effect.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.ValueModifier)
                 {
                     ActorValue = buff.ActorValue
                 };
                 effect.CastType = CastType.FireAndForget;
                 effect.TargetType = TargetType.Self;
+                if (isGapSpell)
+                {
+                    PdvPresentationSurfaceAuthoring.ApplyHitShader(effect, new FormKey(skyrimModKey, gapPresentationShaderLocalId));
+                }
             });
             var buffSpell = EnsureSpell(mod, index, allocator, buff.SpellEditorId, report, spell =>
             {
@@ -136,10 +158,56 @@ try
                 spell.Type = SpellType.Spell;
                 spell.CastType = CastType.FireAndForget;
                 spell.TargetType = TargetType.Self;
-                SetSingleEffect(spell, buffMgef.FormKey, buff.Magnitude, buff.Duration);
+                if (isGapSpell)
+                {
+                    var spec = BosmerGapPresentationSpec(debugGlobal.FormKey, gapPresentationSound.FormKey);
+                    var presentationMgef = PdvPresentationSurfaceAuthoring.EnsureHiddenSoundCueEffect(mod, index, () => allocator.Next(), spec);
+                    report.Actions.Add($"Ensured presentation effect {presentationMgef.EditorID}.");
+                    PdvPresentationSurfaceAuthoring.SetPrimaryAndPresentationEffects(spell, buffMgef.FormKey, buff.Magnitude, buff.Duration, presentationMgef.FormKey);
+                }
+                else
+                {
+                    SetSingleEffect(spell, buffMgef.FormKey, buff.Magnitude, buff.Duration);
+                }
             });
             wiring.Add((buff.SpellEditorId, buffSpell.FormKey));
         }
+
+        // 1b) Hidden Bandit Road low-health watcher. This mirrors the reliable
+        // Khajiit Baan Dar active-effect OnHit shape while preserving the
+        // manager-owned path/day gates and notification payload.
+        var gapWatcherMgef = EnsureMagicEffect(mod, index, allocator, gapWatcherMgefEditorId, report, effect =>
+        {
+            effect.Name = Tx("Baan Dar Watches the Gap");
+            effect.Description = Tx("");
+            effect.Flags = MagicEffect.Flag.Recover
+                | MagicEffect.Flag.NoDuration
+                | MagicEffect.Flag.NoArea
+                | MagicEffect.Flag.HideInUI
+                | MagicEffect.Flag.PowerAffectsMagnitude;
+            effect.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.Script)
+            {
+                ActorValue = ActorValue.None
+            };
+            effect.CastType = CastType.ConstantEffect;
+            effect.TargetType = TargetType.Self;
+            WireMagicEffectScript(effect, gapWatcherScriptName, new ScriptProperty[]
+            {
+                ObjectProp("PDV_Manager", managerQuest.FormKey),
+                ObjectProp("PDV_GLO_DebugLevel", debugGlobal.FormKey),
+                FloatProp("TriggerHealthPercent", 0.20f)
+            });
+        });
+        var gapWatcherSpell = EnsureSpell(mod, index, allocator, gapWatcherSpellEditorId, report, spell =>
+        {
+            spell.Name = Tx("Baan Dar Watches the Gap");
+            spell.Description = Tx("");
+            spell.Type = SpellType.Ability;
+            spell.CastType = CastType.ConstantEffect;
+            spell.TargetType = TargetType.Self;
+            SetSingleEffect(spell, gapWatcherMgef.FormKey, 0.0f, duration: 0);
+        });
+        wiring.Add((gapWatcherSpellEditorId, gapWatcherSpell.FormKey));
 
         // 2) Naming told-self abilities: constant-effect AV mods, one active at a time (script-enforced).
         foreach (var ability in namingAbilities)
@@ -217,7 +285,14 @@ try
     // Checks (always run; --check runs ONLY these).
     foreach (var buff in timedBuffs)
     {
-        CheckSpellEffect(index, buff.SpellEditorId, buff.MgefEditorId, buff.Magnitude, buff.Duration, report);
+        if (string.Equals(buff.SpellEditorId, gapSpellEditorId, StringComparison.OrdinalIgnoreCase))
+        {
+            CheckBosmerGapSpell(index, buff.Magnitude, buff.Duration, report);
+        }
+        else
+        {
+            CheckSpellEffect(index, buff.SpellEditorId, buff.MgefEditorId, buff.Magnitude, buff.Duration, report);
+        }
     }
     foreach (var ability in namingAbilities)
     {
@@ -226,6 +301,7 @@ try
     CheckMessageButtons(index, "PDV_MESG_BosmerMarkHearth", 2, report);
     CheckMessageButtons(index, "PDV_MESG_BosmerNaming", 5, report);
     CheckGreenSongsSlots(index, greenSongsListEditorId, greenSongs, skyrimModKey, report);
+    CheckGapWatcher(index, managerQuest, report);
     CheckManagerWiring(managerQuest, managerScriptName, greenSongsListEditorId, timedBuffs, namingAbilities, allSongsVerified, report);
 
     if (!checkOnly)
@@ -459,6 +535,69 @@ static void CheckSpellEffect(Dictionary<string, ISkyrimMajorRecordGetter> index,
     report.Actions.Add($"{spellEditorId}: effect -> {mgefEditorId} mag={magnitude} dur={duration} [ok]");
 }
 
+static void CheckBosmerGapSpell(Dictionary<string, ISkyrimMajorRecordGetter> index, float magnitude, int duration, AuthorReport report)
+{
+    if (!index.TryGetValue(gapSpellEditorId, out var spellRecord) || spellRecord is not Spell spell)
+    {
+        report.Errors.Add($"{gapSpellEditorId}: missing or not a Spell.");
+        return;
+    }
+
+    if (!index.TryGetValue(gapMgefEditorId, out var gapMgefRecord) || gapMgefRecord is not MagicEffect gapMgef)
+    {
+        report.Errors.Add($"{gapMgefEditorId}: missing or not a MagicEffect.");
+        return;
+    }
+
+    if (!index.TryGetValue(gapPresentationMgefEditorId, out var presentationMgefRecord) || presentationMgefRecord is not MagicEffect presentationMgef)
+    {
+        report.Errors.Add($"{gapPresentationMgefEditorId}: missing or not a MagicEffect.");
+        return;
+    }
+
+    if (spell.Effects.Count != 2)
+    {
+        report.Errors.Add($"{gapSpellEditorId}: expected exactly 2 effects, found {spell.Effects.Count}.");
+        return;
+    }
+
+    var speedEffect = spell.Effects[0];
+    if (speedEffect.BaseEffect.FormKey != gapMgef.FormKey)
+    {
+        report.Errors.Add($"{gapSpellEditorId}: first effect does not reference {gapMgefEditorId}.");
+    }
+    if (Math.Abs((speedEffect.Data?.Magnitude ?? 0.0f) - magnitude) > 0.001f || (speedEffect.Data?.Duration ?? 0) != duration)
+    {
+        report.Errors.Add($"{gapSpellEditorId}: primary magnitude/duration mismatch (expected {magnitude}/{duration}).");
+    }
+
+    var presentationEffect = spell.Effects[1];
+    if (presentationEffect.BaseEffect.FormKey != presentationMgef.FormKey)
+    {
+        report.Errors.Add($"{gapSpellEditorId}: second effect does not reference {gapPresentationMgefEditorId}.");
+    }
+
+    if (gapMgef.CastType != CastType.FireAndForget || gapMgef.TargetType != TargetType.Self)
+    {
+        report.Errors.Add($"{gapMgefEditorId}: expected self FireAndForget magic effect.");
+    }
+    if (gapMgef.Flags.HasFlag(MagicEffect.Flag.NoHitEffect))
+    {
+        report.Errors.Add($"{gapMgefEditorId}: NoHitEffect is still set; the shader will not surface cleanly.");
+    }
+    if (!gapMgef.HitShader.FormKeyNullable?.Equals(new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), gapPresentationShaderLocalId)) ?? true)
+    {
+        report.Errors.Add($"{gapMgefEditorId}: expected Release hit shader {gapPresentationShaderLocalId:X6}:Skyrim.esm.");
+    }
+
+    var spec = BosmerGapPresentationSpec(
+        RequireRecord<ISkyrimMajorRecordGetter>(index, "PDV_GLO_DebugLevel").FormKey,
+        RequireRecord<ISkyrimMajorRecordGetter>(index, gapPresentationSoundEditorId).FormKey);
+    PdvPresentationSurfaceAuthoring.CheckHiddenSoundCueEffect(presentationMgef, spec, report.Errors, report.Actions);
+
+    report.Actions.Add($"{gapSpellEditorId}: speed burst + presentation cue [ok]");
+}
+
 static void CheckMessageButtons(Dictionary<string, ISkyrimMajorRecordGetter> index, string editorId, int expectedButtons, AuthorReport report)
 {
     if (!index.TryGetValue(editorId, out var record) || record is not Message message)
@@ -513,11 +652,76 @@ static void CheckGreenSongsSlots(Dictionary<string, ISkyrimMajorRecordGetter> in
     }
 }
 
+static void CheckGapWatcher(Dictionary<string, ISkyrimMajorRecordGetter> index, Quest managerQuest, AuthorReport report)
+{
+    if (!index.TryGetValue(gapWatcherSpellEditorId, out var spellRecord) || spellRecord is not Spell spell)
+    {
+        report.Errors.Add($"{gapWatcherSpellEditorId}: missing or not a Spell.");
+        return;
+    }
+
+    if (!index.TryGetValue(gapWatcherMgefEditorId, out var mgefRecord) || mgefRecord is not MagicEffect effect)
+    {
+        report.Errors.Add($"{gapWatcherMgefEditorId}: missing or not a MagicEffect.");
+        return;
+    }
+
+    if (spell.Type != SpellType.Ability || spell.CastType != CastType.ConstantEffect || spell.TargetType != TargetType.Self)
+    {
+        report.Errors.Add($"{gapWatcherSpellEditorId}: expected self ConstantEffect Ability.");
+    }
+
+    var spellEffect = spell.Effects.FirstOrDefault();
+    if (spell.Effects.Count != 1 || spellEffect is null || !spellEffect.BaseEffect.FormKey.Equals(effect.FormKey))
+    {
+        report.Errors.Add($"{gapWatcherSpellEditorId}: expected exactly one effect pointing to {gapWatcherMgefEditorId}.");
+    }
+
+    if (effect.Archetype is not MagicEffectArchetype archetype || archetype.Type != MagicEffectArchetype.TypeEnum.Script)
+    {
+        report.Errors.Add($"{gapWatcherMgefEditorId}: expected Script archetype.");
+    }
+
+    if (effect.CastType != CastType.ConstantEffect || effect.TargetType != TargetType.Self)
+    {
+        report.Errors.Add($"{gapWatcherMgefEditorId}: expected self ConstantEffect magic effect.");
+    }
+
+    if (!effect.Flags.HasFlag(MagicEffect.Flag.HideInUI)
+        || !effect.Flags.HasFlag(MagicEffect.Flag.Recover)
+        || !effect.Flags.HasFlag(MagicEffect.Flag.NoDuration)
+        || !effect.Flags.HasFlag(MagicEffect.Flag.NoArea))
+    {
+        report.Errors.Add($"{gapWatcherMgefEditorId}: expected hidden constant-effect flags.");
+    }
+
+    var script = effect.VirtualMachineAdapter?.Scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, gapWatcherScriptName, StringComparison.OrdinalIgnoreCase));
+    if (script is null)
+    {
+        report.Errors.Add($"{gapWatcherMgefEditorId}: missing {gapWatcherScriptName}.");
+        return;
+    }
+
+    CheckObjectProperty(script, "PDV_Manager", managerQuest.FormKey, gapWatcherMgefEditorId, report);
+    CheckObjectProperty(script, "PDV_GLO_DebugLevel", RequireRecord<ISkyrimMajorRecordGetter>(index, "PDV_GLO_DebugLevel").FormKey, gapWatcherMgefEditorId, report);
+    var trigger = script.Properties.FirstOrDefault(candidate => string.Equals(candidate.Name, "TriggerHealthPercent", StringComparison.OrdinalIgnoreCase));
+    if (trigger is not ScriptFloatProperty triggerFloat || Math.Abs(triggerFloat.Data - 0.20f) > 0.0001f)
+    {
+        report.Errors.Add($"{gapWatcherMgefEditorId}: TriggerHealthPercent is not 0.2.");
+    }
+    else
+    {
+        report.Actions.Add($"{gapWatcherMgefEditorId}.TriggerHealthPercent -> 0.2 [ok]");
+    }
+
+    report.Actions.Add($"{gapWatcherSpellEditorId} carries hidden {gapWatcherMgefEditorId} watcher [ok]");
+}
+
 static void CheckManagerWiring(Quest managerQuest, string managerScriptName, string songsListEditorId, TimedBuffDef[] timedBuffs, AbilityDef[] namingAbilities, bool allSongsVerified, AuthorReport report)
 {
     var expectedProperties = new List<string>
     {
-        "PDV_MESG_BosmerMarkHearth", "PDV_MESG_BosmerNaming"
+        "PDV_MESG_BosmerMarkHearth", "PDV_MESG_BosmerNaming", gapWatcherSpellEditorId
     };
     expectedProperties.AddRange(timedBuffs.Select(buff => buff.SpellEditorId));
     expectedProperties.AddRange(namingAbilities.Select(ability => ability.SpellEditorId));
@@ -592,6 +796,33 @@ static void UpsertProperties(ScriptEntry script, IEnumerable<ScriptProperty> pro
     }
 }
 
+static void WireMagicEffectScript(MagicEffect effect, string scriptName, IEnumerable<ScriptProperty> properties)
+{
+    effect.VirtualMachineAdapter ??= new VirtualMachineAdapter();
+    effect.VirtualMachineAdapter.Version = 5;
+    effect.VirtualMachineAdapter.ObjectFormat = 2;
+    var script = EnsureScript(effect.VirtualMachineAdapter.Scripts, scriptName);
+    UpsertProperties(script, properties);
+}
+
+static void CheckObjectProperty(ScriptEntry script, string propertyName, FormKey expected, string ownerLabel, AuthorReport report)
+{
+    var property = script.Properties.FirstOrDefault(candidate => string.Equals(candidate.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+    if (property is not ScriptObjectProperty objectProperty)
+    {
+        report.Errors.Add($"{ownerLabel}.{propertyName}: missing or not an object property.");
+        return;
+    }
+
+    if (!objectProperty.Object.FormKey.Equals(expected))
+    {
+        report.Errors.Add($"{ownerLabel}.{propertyName}: actual={objectProperty.Object.FormKey} expected={expected}.");
+        return;
+    }
+
+    report.Actions.Add($"{ownerLabel}.{propertyName} -> {expected} [ok]");
+}
+
 static ScriptObjectProperty ObjectProp(string name, FormKey formKey)
 {
     return new ScriptObjectProperty
@@ -600,6 +831,16 @@ static ScriptObjectProperty ObjectProp(string name, FormKey formKey)
         Flags = ScriptProperty.Flag.Edited,
         Object = formKey.ToLink<ISkyrimMajorRecordGetter>(),
         Alias = -1
+    };
+}
+
+static ScriptFloatProperty FloatProp(string name, float value)
+{
+    return new ScriptFloatProperty
+    {
+        Name = name,
+        Flags = ScriptProperty.Flag.Edited,
+        Data = value
     };
 }
 
@@ -640,6 +881,19 @@ static string? GetArg(string[] args, string name)
 }
 
 static TranslatedString Tx(string value) => new(Language.English, value);
+
+static PdvPresentationSurfaceSpec BosmerGapPresentationSpec(FormKey debugGlobal, FormKey soundCue)
+{
+    return new PdvPresentationSurfaceSpec(
+        gapPresentationMgefEditorId,
+        "Baan Dar Opens the Gap",
+        gapPresentationScriptName,
+        "Cue",
+        soundCue,
+        "PDV_GLO_DebugLevel",
+        debugGlobal,
+        new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), gapPresentationShaderLocalId));
+}
 
 sealed record TimedBuffDef(string SpellEditorId, string MgefEditorId, string DisplayName, string PlayerFacingText, ActorValue ActorValue, float Magnitude, int Duration);
 

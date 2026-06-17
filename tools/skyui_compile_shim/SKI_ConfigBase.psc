@@ -75,3 +75,19 @@ EndFunction
 
 Function OnOptionSliderAccept(Int a_option, Float a_value)
 EndFunction
+
+Int Function AddKeyMapOption(String a_text, Int a_keyCode, Int a_flags)
+    return -1
+EndFunction
+
+Function SetKeyMapOptionValue(Int a_option, Int a_keyCode, Bool a_noUpdate)
+EndFunction
+
+Function OnOptionKeyMapChange(Int a_option, Int a_keyCode, String a_conflictControl, String a_conflictName)
+EndFunction
+
+Function RegisterForKey(Int a_keyCode)
+EndFunction
+
+Function UnregisterForKey(Int a_keyCode)
+EndFunction

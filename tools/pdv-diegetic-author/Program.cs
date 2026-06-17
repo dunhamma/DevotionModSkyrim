@@ -91,6 +91,46 @@ try
         return;
     }
 
+    if (args.Contains("--dump-sound"))
+    {
+        string[] soundEids = { "PDV_SND_Chime", "PDV_SND_Swell", "PDV_SND_Hollow", "PDV_SND_RisingChime", "PDV_SND_Distant" };
+        foreach (var eid in soundEids)
+        {
+            if (!index.TryGetValue(eid, out var rec)) { actions.Add($"{eid}: MISSING"); continue; }
+            string kind = rec switch
+            {
+                ISoundMarkerGetter => "SOUN(SoundMarker)",
+                ISoundDescriptorGetter => "SNDR(SoundDescriptor)",
+                _ => rec.GetType().Name
+            };
+            string descr = "";
+            if (rec is ISoundMarkerGetter sm)
+                descr = " -> descriptor " + (sm.SoundDescriptor.FormKeyNullable?.ToString() ?? "<null>");
+            actions.Add($"{eid}: {rec.FormKey} {kind}{descr}");
+        }
+        if (index.TryGetValue("PDV_DiegeticDirector", out var dq) && dq is IQuestGetter dirq)
+        {
+            var sc = dirq.VirtualMachineAdapter?.Scripts.FirstOrDefault(s => string.Equals(s.Name, "PDV_DiegeticDirector", StringComparison.OrdinalIgnoreCase));
+            if (sc != null)
+            {
+                foreach (var pn in new[] { "D1Enabled", "TraceDispatch" })
+                {
+                    var bp = sc.Properties.FirstOrDefault(p => p.Name == pn) as IScriptBoolPropertyGetter;
+                    actions.Add($"director.{pn} = {(bp == null ? "<absent>" : bp.Data.ToString())}");
+                }
+                foreach (var eid in soundEids)
+                {
+                    var op = sc.Properties.FirstOrDefault(p => p.Name == eid) as IScriptObjectPropertyGetter;
+                    actions.Add($"director.{eid} prop -> {(op == null ? "<absent>" : op.Object.FormKey.ToString())}");
+                }
+            }
+            else actions.Add("director VMAD script PDV_DiegeticDirector not found");
+        }
+        else actions.Add("PDV_DiegeticDirector quest not found");
+        Report();
+        return;
+    }
+
     var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(r => r.FormKey));
     var src = SkyrimMod.CreateFromBinary(skyrimEsmPath, SkyrimRelease.SkyrimSE);
     var skyrimKey = ModKey.FromNameAndExtension("Skyrim.esm");
@@ -200,7 +240,7 @@ try
         ObjProp("PDV_GLO_ActiveDeityIndex", index["PDV_GLO_ActiveDeityIndex"].FormKey),
         ObjProp("PDV_GLO_OriginRace", index["PDV_GLO_OriginRace"].FormKey),
         ObjProp("PDV_FLST_AllDeities", index["PDV_FLST_AllDeities"].FormKey),
-        BoolProp("D1Enabled", false),
+        BoolProp("D1Enabled", true),
         BoolProp("TraceDispatch", true),
     };
     foreach (var eid in recordProps) dirProps.Add(ObjProp(eid, index[eid].FormKey));

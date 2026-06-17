@@ -300,6 +300,11 @@
     startupMode: document.getElementById("pdv-startup-mode"),
     startupConfirm: document.getElementById("pdv-startup-confirm"),
     startupClose: document.getElementById("pdv-startup-close"),
+    journalModal: document.getElementById("pdv-journal-modal"),
+    journalTitle: document.getElementById("pdv-journal-title"),
+    journalSummary: document.getElementById("pdv-journal-summary"),
+    journalEntries: document.getElementById("pdv-journal-entries"),
+    journalClose: document.getElementById("pdv-journal-close"),
   };
 
   const fallbackState = {
@@ -935,10 +940,88 @@
 
   const startupConfirmLabel = (confirmRequired) => (confirmRequired ? "Confirm required" : "No confirm required");
 
+  const syncOverlayVisibility = () => {
+    const overlayVisible = [nodes.startupModal, nodes.journalModal].some((node) => node && !node.hidden);
+    document.body.classList.toggle("startup-visible", overlayVisible);
+  };
+
+  const hideAllOverlays = () => {
+    if (nodes.startupModal) {
+      nodes.startupModal.hidden = true;
+    }
+    if (nodes.journalModal) {
+      nodes.journalModal.hidden = true;
+    }
+    syncOverlayVisibility();
+  };
+
   const hideStartup = () => {
     if (!nodes.startupModal) return;
     nodes.startupModal.hidden = true;
-    document.body.classList.remove("startup-visible");
+    syncOverlayVisibility();
+  };
+
+  const hideJournal = () => {
+    if (!nodes.journalModal) return;
+    nodes.journalModal.hidden = true;
+    syncOverlayVisibility();
+  };
+
+  const JOURNAL_TONES = {
+    good: { arrow: "↗", tag: "rose" },
+    warning: { arrow: "↘", tag: "strained" },
+    neutral: { arrow: "—", tag: "noted" },
+  };
+
+  const journalEntryNode = (entry) => {
+    const requested = text(entry.valence, "neutral");
+    const valence = JOURNAL_TONES[requested] ? requested : "neutral";
+    const meta = JOURNAL_TONES[valence];
+    const li = document.createElement("li");
+    li.className = `journal-entry is-${valence}`;
+    const mark = document.createElement("span");
+    mark.className = "journal-mark";
+    mark.setAttribute("aria-hidden", "true");
+    mark.textContent = `${meta.arrow} ${meta.tag}`;
+    const titleEl = document.createElement("p");
+    titleEl.className = "journal-entry-title";
+    titleEl.textContent = text(entry.title, "A moment noted");
+    const textEl = document.createElement("p");
+    textEl.className = "journal-entry-text";
+    textEl.textContent = text(entry.text, "");
+    li.append(mark, titleEl, textEl);
+    return li;
+  };
+
+  const renderJournal = (journal = {}) => {
+    if (!nodes.journalModal) return;
+    hideAllOverlays();
+
+    nodes.journalTitle.textContent = text(journal.title, "Book of Days");
+    nodes.journalSummary.textContent = text(journal.summary, "A record of devotional acts since the path began.");
+
+    const entries = asArray(journal.entries).filter(Boolean);
+    clear(nodes.journalEntries);
+
+    if (!entries.length) {
+      appendEmpty(nodes.journalEntries, "No devotional acts have been recorded yet.");
+    } else {
+      let lastDate = null;
+      entries.forEach((entry) => {
+        const dateKey = text(entry.date, "");
+        if (dateKey && dateKey !== lastDate) {
+          const divider = document.createElement("li");
+          divider.className = "journal-date";
+          divider.textContent = dateKey;
+          nodes.journalEntries.appendChild(divider);
+          lastDate = dateKey;
+        }
+        nodes.journalEntries.appendChild(journalEntryNode(entry));
+      });
+    }
+
+    nodes.journalModal.hidden = false;
+    syncOverlayVisibility();
   };
 
   const renderStartupDetails = (option) => {
@@ -955,6 +1038,7 @@
 
   const renderStartup = (startup = {}) => {
     if (!nodes.startupModal) return;
+    hideAllOverlays();
     startupState = startup;
 
     const options = asArray(startup.options).filter(Boolean);
@@ -1003,7 +1087,7 @@
 
     renderStartupDetails(selectedOption);
     nodes.startupModal.hidden = false;
-    document.body.classList.add("startup-visible");
+    syncOverlayVisibility();
   };
 
   const medallionOptionStatus = (option = {}) => {
@@ -1068,6 +1152,7 @@
 
   const renderMedallion = (medallion = {}) => {
     if (!nodes.startupModal) return;
+    hideAllOverlays();
     startupState = medallion;
 
     const sections = asArray(medallion.sections).filter(Boolean);
@@ -1115,7 +1200,7 @@
 
     renderMedallionDetails(medallion, selectedOption);
     nodes.startupModal.hidden = false;
-    document.body.classList.add("startup-visible");
+    syncOverlayVisibility();
   };
 
   const clear = (node) => {
@@ -1338,11 +1423,15 @@
       renderMedallion(payload.medallion);
     }
 
+    if (payload.journal) {
+      renderJournal(payload.journal);
+    }
+
     if (payload.mode === "toast") {
       return;
     }
 
-    if (payload.mode === "startup" || payload.mode === "medallion") {
+    if (payload.mode === "startup" || payload.mode === "medallion" || payload.mode === "journal") {
       return;
     }
 
@@ -1350,6 +1439,11 @@
   };
 
   const handleOverlayPayload = (payload) => {
+    if (payload.journalClose) {
+      hideJournal();
+      return;
+    }
+
     if (payload.toast) {
       scheduleToast(payload.toast);
     }
@@ -1364,6 +1458,10 @@
 
     if (payload.medallion) {
       renderMedallion(payload.medallion);
+    }
+
+    if (payload.journal) {
+      renderJournal(payload.journal);
     }
   };
 
@@ -1451,6 +1549,10 @@
 
   if (nodes.startupClose) {
     nodes.startupClose.addEventListener("click", () => hideStartup());
+  }
+
+  if (nodes.journalClose) {
+    nodes.journalClose.addEventListener("click", () => hideJournal());
   }
 
   const demoToasts = {
