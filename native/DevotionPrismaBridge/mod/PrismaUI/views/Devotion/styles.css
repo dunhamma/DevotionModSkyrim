@@ -538,6 +538,39 @@ h1 {
   opacity: 0.7;
 }
 
+/* Waning (grey) + Daedric star/blood fills — shared by Patron tab & Book */
+.instrument-svg .instrument-fade {
+  stroke: currentColor;
+  fill: #a8a08c;
+}
+
+.instrument-svg .instrument-fade-soft {
+  stroke: currentColor;
+  fill: rgba(176, 170, 152, 0.20);
+}
+
+.instrument-svg .instrument-star {
+  stroke: currentColor;
+  stroke-width: 2.1;
+  fill: #ecdcab;
+}
+
+.instrument-svg .instrument-star-muted {
+  stroke: rgba(176, 170, 152, 0.85);
+  stroke-width: 2.1;
+  fill: #a8a08c;
+}
+
+.instrument-svg .instrument-blood {
+  stroke: var(--red);
+  fill: rgba(201, 121, 104, 0.55);
+}
+
+.instrument-svg .instrument-blood-muted {
+  stroke: rgba(188, 179, 162, 0.55);
+  fill: rgba(188, 179, 162, 0.10);
+}
+
 .instrument-caption {
   display: flex;
   align-items: baseline;
@@ -1046,94 +1079,306 @@ h1 {
   line-height: 1.65;
 }
 
-/* Book of Days -- aged parchment skin, scoped to the journal modal only.
-   Dark ink on warm parchment for high-contrast, accessible long-form reading.
-   Tone is carried by mark text + arrow as well as colour, so it is never
-   colour-only (colour-blind safe). */
-#pdv-journal-modal .startup-card {
-  width: min(560px, calc(100vw - 48px));
-  border: 1px solid #b8a986;
-  border-radius: 6px;
-  background:
-    radial-gradient(120% 90% at 50% 0%, rgba(120, 96, 58, 0.10), transparent 60%),
-    radial-gradient(140% 120% at 50% 100%, rgba(86, 64, 36, 0.16), transparent 55%),
-    #efe6d2;
-  box-shadow: 0 24px 70px rgba(28, 20, 10, 0.55), inset 0 0 60px rgba(150, 120, 70, 0.12);
-  color: #3a2e20;
-  font-family: Georgia, "Times New Roman", serif;
+/* ============================================================
+   Book of Days -- an opened book on aged parchment.
+   Dark ink on warm parchment for accessible long-form reading;
+   tone is carried by rune glyph + label as well as colour. */
+
+@font-face {
+  font-family: "PDV IM Fell English";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IMFellEnglish-Regular.ttf") format("truetype"),
+       url("fonts/IMFellEnglish-Regular.woff2") format("woff2"),
+       url("https://fonts.gstatic.com/s/imfellenglish/v17/Ktk1ALSLW8zDe0rthJysWrnLsAz3F6mZ.woff2") format("woff2");
 }
-#pdv-journal-modal .startup-header {
-  border-bottom: 1px solid rgba(120, 96, 58, 0.45);
+@font-face {
+  font-family: "PDV IM Fell English";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IMFellEnglish-Italic.ttf") format("truetype"),
+       url("fonts/IMFellEnglish-Italic.woff2") format("woff2"),
+       url("https://fonts.gstatic.com/s/imfellenglish/v17/Ktk3ALSLW8zDe0rthJysWrnLsAzHFaOdd4pI.woff2") format("woff2");
+}
+
+#pdv-journal-modal {
+  --bod-serif: "PDV IM Fell English", "IM Fell English", "Constantia", Georgia, "Times New Roman", serif;
+  --bod-ink: #36281a;
+  --bod-ink-soft: #6b5942;
+  --bod-accent: #7a5a2c;
+  --bod-rule: rgba(120, 96, 58, 0.42);
+}
+
+/* JS scales this wrapper to fit any viewport */
+#pdv-journal-modal .bod-scaler {
+  transform-origin: center center;
+}
+
+/* The book: leather cover wrapping two parchment pages */
+#pdv-journal-modal .bod {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 1180px;
+  min-height: 680px;
+  padding: 20px;
+  border-radius: 10px;
+  background:
+    linear-gradient(160deg, #4a3520 0%, #3a2817 55%, #2c1d10 100%);
+  box-shadow:
+    0 40px 110px rgba(10, 6, 2, 0.7),
+    inset 0 0 0 2px rgba(150, 110, 60, 0.35),
+    inset 0 0 0 6px rgba(40, 26, 14, 0.6);
+  color: var(--bod-ink);
+  font-family: var(--bod-serif);
+}
+
+/* Each parchment page */
+#pdv-journal-modal .bod-page {
+  position: relative;
+  padding: 40px 46px 44px;
+  background:
+    radial-gradient(120% 80% at 30% 8%, rgba(120, 96, 58, 0.10), transparent 60%),
+    radial-gradient(90% 90% at 80% 100%, rgba(86, 64, 36, 0.18), transparent 55%),
+    #ece0c2;
+  overflow: hidden;
+}
+#pdv-journal-modal .bod-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+/* page-curl corners — the book indent */
+#pdv-journal-modal .bod-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 26px rgba(120, 92, 52, 0.30),
+    inset 0 0 70px rgba(150, 120, 70, 0.10);
+}
+#pdv-journal-modal .bod-page--left {
+  border-radius: 6px 2px 2px 6px;
+  box-shadow: inset -22px 0 36px -20px rgba(20, 12, 4, 0.6);
+}
+#pdv-journal-modal .bod-page--right {
+  border-radius: 2px 6px 6px 2px;
+  box-shadow: inset 22px 0 36px -20px rgba(20, 12, 4, 0.6);
+}
+
+/* ---- Left page: frontispiece, centred ---- */
+#pdv-journal-modal .bod-front {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
 }
-#pdv-journal-modal .eyebrow {
-  color: #8a6f45;
-  letter-spacing: 0.22em;
+#pdv-journal-modal .bod-eyebrow {
+  margin: 0 0 6px;
+  font-variant: small-caps;
+  letter-spacing: 0.34em;
+  font-size: 15px;
+  color: var(--bod-accent);
 }
-#pdv-journal-modal .startup-header h2,
-#pdv-journal-modal #pdv-journal-title {
-  color: #2e2418;
-  font-family: Georgia, "Times New Roman", serif;
+#pdv-journal-modal .bod-emblem {
+  width: 200px;
+  height: 124px;
+  margin: 2px 0 6px;
+}
+#pdv-journal-modal .bod-title {
+  margin: 0;
+  font-family: var(--bod-serif);
+  font-weight: 400;
+  font-size: 58px;
+  line-height: 1.02;
+  color: #2a1f12;
+}
+#pdv-journal-modal .bod-by {
+  margin: 6px 0 0;
   font-style: italic;
+  font-size: 19px;
+  color: var(--bod-ink-soft);
 }
-#pdv-journal-modal .summary,
-#pdv-journal-modal #pdv-journal-summary {
-  color: #6b5942;
+#pdv-journal-modal .bod-flourish {
+  width: 230px;
+  height: 18px;
+  margin: 16px 0 14px;
+  color: rgba(120, 96, 58, 0.7);
 }
-#pdv-journal-modal #pdv-journal-body {
-  display: block;
-  padding: 16px 26px 6px;
+#pdv-journal-modal .bod-summary {
+  margin: 0;
+  max-width: 38ch;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #4a3a28;
+}
+#pdv-journal-modal .bod-standing {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#pdv-journal-modal .bod-rule {
+  width: 70%;
+  height: 1px;
+  margin: 22px 0 12px;
+  background: var(--bod-rule);
+}
+#pdv-journal-modal .bod-standing-label {
+  margin: 0 0 4px;
+  font-variant: small-caps;
+  letter-spacing: 0.18em;
+  font-size: 15px;
+  color: var(--bod-accent);
+}
+#pdv-journal-modal .bod-instrument {
+  width: 280px;
+  max-width: 100%;
+}
+
+/* ---- Instruments re-tinted for parchment ---- */
+#pdv-journal-modal .instrument-svg {
+  height: 104px;
+  color: var(--bod-ink);
+  overflow: visible;
+}
+#pdv-journal-modal .instrument-track { stroke: rgba(120, 96, 58, 0.5); fill: rgba(120, 96, 58, 0.14); }
+#pdv-journal-modal .instrument-fill { stroke: #3a2c1a; fill: #caa75a; }
+#pdv-journal-modal .instrument-fill-soft { stroke: #3a2c1a; fill: rgba(160, 120, 40, 0.26); }
+#pdv-journal-modal .instrument-muted { stroke: rgba(120, 96, 58, 0.5); fill: rgba(120, 96, 58, 0.12); }
+#pdv-journal-modal .instrument-dark { stroke: #3a2c1a; fill: #2e2214; }
+#pdv-journal-modal .instrument-outline { stroke: #3a2c1a; }
+#pdv-journal-modal .instrument-fade { stroke: #4a4234; fill: #9a9078; }
+#pdv-journal-modal .instrument-fade-soft { stroke: #4a4234; fill: rgba(120, 112, 92, 0.34); }
+#pdv-journal-modal .instrument-star { stroke: #2e2214; fill: #caa75a; }
+#pdv-journal-modal .instrument-star-muted { stroke: #3a342a; fill: #9a9078; }
+#pdv-journal-modal .instrument-blood { stroke: #6f1e16; fill: #9a2f2a; }
+#pdv-journal-modal .instrument-blood-muted { stroke: rgba(120, 96, 58, 0.5); fill: rgba(120, 96, 58, 0.10); }
+#pdv-journal-modal .instrument-caption { justify-content: center; }
+#pdv-journal-modal .instrument-caption span { display: none; }
+#pdv-journal-modal .instrument-caption strong { color: #2a1f12; font-size: 19px; }
+
+/* ---- Right page: the ledger ---- */
+#pdv-journal-modal .bod-page--right { display: flex; }
+#pdv-journal-modal .bod-ledger {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+#pdv-journal-modal .bod-ledgerhead {
+  text-align: center;
+  font-variant: small-caps;
+  letter-spacing: 0.2em;
+  font-size: 19px;
+  color: var(--bod-accent);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--bod-rule);
+}
+#pdv-journal-modal .bod-scroll {
+  list-style: none;
+  margin: 0;
+  padding: 12px 4px 4px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  max-height: 540px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 96, 58, 0.5) transparent;
+}
+#pdv-journal-modal .bod-scroll::-webkit-scrollbar { width: 8px; }
+#pdv-journal-modal .bod-scroll::-webkit-scrollbar-thumb {
+  background: rgba(120, 96, 58, 0.5);
+  border-radius: 4px;
+}
+#pdv-journal-modal .bod-date {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 10px;
+  color: var(--bod-ink-soft);
+  font-variant: small-caps;
+  letter-spacing: 0.1em;
+  font-size: 15px;
+}
+#pdv-journal-modal .bod-date:first-child { margin-top: 2px; }
+#pdv-journal-modal .bod-date__ln { flex: 1; height: 1px; background: var(--bod-rule); }
+#pdv-journal-modal .bod-leaf {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 9px 4px 11px;
+}
+#pdv-journal-modal .bod-leaf + .bod-leaf {
+  border-top: 1px dotted rgba(120, 96, 58, 0.3);
+}
+#pdv-journal-modal .bod-leaf__mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+#pdv-journal-modal .bod-leaf__symbol {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  color: #826336;
+}
+#pdv-journal-modal .bod-leaf__symbol .symbol {
+  width: 100%;
+  height: 100%;
+  stroke-width: 2.4;
+}
+#pdv-journal-modal .bod-leaf__signal {
+  display: grid;
+  place-items: center;
+}
+#pdv-journal-modal .bod-mark-label {
+  font-variant: small-caps;
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--bod-ink-soft);
+}
+#pdv-journal-modal .bod-leaf.v-good .bod-mark-label { color: #3f6b3a; }
+#pdv-journal-modal .bod-leaf.v-warning .bod-mark-label { color: #9a2f2a; }
+#pdv-journal-modal .bod-leaf__title {
+  margin: 0 0 2px;
+  font-size: 19px;
+  color: #2a1f12;
+}
+#pdv-journal-modal .bod-leaf__text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.66;
+  color: #4a3a28;
+}
+#pdv-journal-modal .bod-foot {
+  margin: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--bod-rule);
+  text-align: center;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--bod-accent);
 }
 #pdv-journal-modal .empty {
-  color: #6b5942;
+  color: var(--bod-ink-soft);
   font-style: italic;
-}
-#pdv-journal-modal .journal-date {
-  margin: 18px 0 8px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(120, 96, 58, 0.35);
-  color: #6b5942;
-  font-variant: small-caps;
-  letter-spacing: 0.08em;
-  font-size: 13px;
-}
-#pdv-journal-modal .journal-entry {
-  border-left: 2px solid rgba(120, 96, 58, 0.45);
-  padding: 6px 0 8px 14px;
-}
-#pdv-journal-modal .journal-entry.is-good {
-  border-left-color: #3f6b3a;
-}
-#pdv-journal-modal .journal-entry.is-warning {
-  border-left-color: #9a2f2a;
-}
-#pdv-journal-modal .journal-mark {
-  color: #6b5942;
-  font-variant: small-caps;
-  font-style: italic;
-}
-#pdv-journal-modal .journal-entry.is-good .journal-mark {
-  color: #3f6b3a;
-}
-#pdv-journal-modal .journal-entry.is-warning .journal-mark {
-  color: #9a2f2a;
-}
-#pdv-journal-modal .journal-entry-title {
-  color: #2e2418;
-  font-weight: 700;
-}
-#pdv-journal-modal .journal-entry-text {
-  color: #473829;
-  line-height: 1.7;
-}
-#pdv-journal-modal .startup-footer {
-  justify-content: center;
-  padding: 12px 22px 18px;
-  border-top: 1px solid rgba(120, 96, 58, 0.45);
-}
-#pdv-journal-modal .journal-hint {
-  margin: 0;
-  color: #8a6f45;
-  font-style: italic;
-  font-size: 13px;
+  text-align: center;
+  padding: 30px 0;
 }

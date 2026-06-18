@@ -1,0 +1,234 @@
+#!/usr/bin/env node
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const TOOLS_DIR = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(TOOLS_DIR, "..");
+const REPO_VIEW = path.join(ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion");
+const LIVE_VIEW = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion";
+const SOURCE = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
+const MANAGER = path.join(SOURCE, "PDV__ManagerQuest.psc");
+const DIRECTOR = path.join(SOURCE, "PDV_DiegeticDirector.psc");
+const MCM = path.join(SOURCE, "PDV_MCM.psc");
+
+const results = [];
+const add = (level, message, source = "") => results.push({ level, message, source });
+const read = (filePath) => fs.readFileSync(filePath, "utf8");
+const hash = (filePath) => crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+
+function mustExist(filePath) {
+  if (!fs.existsSync(filePath)) {
+    add("FAIL", "Missing required file.", filePath);
+    return false;
+  }
+  return true;
+}
+
+function requireText(filePath, needles, label) {
+  if (!mustExist(filePath)) return;
+  const source = read(filePath);
+  for (const needle of needles) {
+    if (source.includes(needle)) {
+      add("PASS", `${label} contains ${needle}.`, filePath);
+    } else {
+      add("FAIL", `${label} is missing ${needle}.`, filePath);
+    }
+  }
+}
+
+function forbidText(filePath, needles, label) {
+  if (!mustExist(filePath)) return;
+  const source = read(filePath);
+  for (const needle of needles) {
+    if (source.includes(needle)) {
+      add("FAIL", `${label} still contains stale marker ${needle}.`, filePath);
+    } else {
+      add("PASS", `${label} omits stale marker ${needle}.`, filePath);
+    }
+  }
+}
+
+function functionBlock(source, name) {
+  const match = source.match(new RegExp(`(?:String\\s+)?Function\\s+${name}\\b[\\s\\S]*?EndFunction`, "i"));
+  return match ? match[0] : "";
+}
+
+const FORM_NAME_ALIASES = { PDV_Kyne: "Kyne", PDV_Talos: "Talos" };
+
+function parseNameSymbolMap(block) {
+  const out = new Map();
+  for (const segment of block.split(/endIf/i)) {
+    const symbolMatch = segment.match(/return\s+"([^"]+)"/);
+    if (!symbolMatch) continue;
+    const symbol = symbolMatch[1];
+    for (const m of segment.matchAll(/(?:deity\.)?DeityName\s*==\s*"([^"]+)"/g)) {
+      out.set(m[1], symbol);
+    }
+    for (const m of segment.matchAll(/name\s*==\s*"([^"]+)"/g)) {
+      out.set(m[1], symbol);
+    }
+    for (const m of segment.matchAll(/deity\s*==\s*(PDV_\w+)/g)) {
+      const alias = FORM_NAME_ALIASES[m[1]];
+      if (alias) out.set(alias, symbol);
+    }
+  }
+  return out;
+}
+
+for (const name of ["index.html", "styles.css", "app.js"]) {
+  const repoPath = path.join(REPO_VIEW, name);
+  const livePath = path.join(LIVE_VIEW, name);
+  if (!mustExist(repoPath) || !mustExist(livePath)) continue;
+  const repoHash = hash(repoPath);
+  const liveHash = hash(livePath);
+  if (repoHash === liveHash) {
+    add("PASS", `${name} repo/live hashes match (${repoHash.slice(0, 12)}).`, repoPath);
+  } else {
+    add("FAIL", `${name} repo/live hashes differ (${repoHash.slice(0, 12)} != ${liveHash.slice(0, 12)}).`, livePath);
+  }
+}
+
+for (const name of [
+  "IMFellEnglish-Regular.woff2",
+  "IMFellEnglish-Italic.woff2",
+  "IMFellEnglish-Regular.ttf",
+  "IMFellEnglish-Italic.ttf",
+]) {
+  const repoPath = path.join(REPO_VIEW, "fonts", name);
+  const livePath = path.join(LIVE_VIEW, "fonts", name);
+  if (mustExist(repoPath) && mustExist(livePath)) {
+    add(hash(repoPath) === hash(livePath) ? "PASS" : "FAIL", `${name} repo/live font hashes match.`, repoPath);
+  }
+}
+
+requireText(path.join(REPO_VIEW, "index.html"), [
+  "bod-scaler",
+  "class=\"bod\"",
+  "pdv-journal-by",
+  "pdv-journal-emblem",
+  "pdv-journal-instrument",
+  "pdv-journal-foot",
+  "bod-standing-label",
+  "bod-instrument",
+  "bod-flourish",
+  "bod-ledgerhead",
+], "repo index");
+
+requireText(path.join(REPO_VIEW, "styles.css"), [
+  "@font-face",
+  "PDV IM Fell English",
+  "IMFellEnglish-Regular.ttf",
+  "IMFellEnglish-Italic.ttf",
+  ".bod-scaler",
+  ".bod",
+  ".bod-emblem",
+  ".bod-ledgerhead",
+  ".bod-standing-label",
+  ".bod-instrument",
+  ".bod-leaf",
+  ".bod-leaf__symbol",
+  ".instrument-fade",
+  ".instrument-star",
+  ".instrument-blood",
+], "repo styles");
+
+requireText(path.join(REPO_VIEW, "app.js"), [
+  "journalMagnitude",
+  "entry.magnitude",
+  "entry.valence",
+  "entry.symbol",
+  "journal.by",
+  "journal.foot",
+  "journal.instrument",
+  "journalClose",
+  "buildJournalSun",
+  "renderJournalStanding",
+  "journalEmblem",
+  "journalInstrument",
+  "journalRune",
+  "bod-leaf__symbol",
+  "replace(/\\b(true|false)\\b/gi",
+], "repo app");
+
+forbidText(path.join(REPO_VIEW, "app.js"), [
+  "bod-sun-ray-fill",
+  "bod-standing-diamond",
+  "journal-rune-mark",
+], "repo app");
+
+forbidText(path.join(REPO_VIEW, "styles.css"), [
+  ".bod-sun-ray-fill",
+  ".bod-standing-diamond",
+  ".journal-rune-mark",
+], "repo styles");
+
+requireText(MANAGER, [
+  "PDV.Diegetic.Journal.Magnitudes",
+  "PDV.Diegetic.Journal.Titles",
+  "BuildJournalPayloadJson",
+  "\\\"by\\\"",
+  "\\\"foot\\\"",
+  "\\\"instrument\\\"",
+  "\\\"magnitude\\\"",
+  "\\\"symbol\\\"",
+  "BuildJournalEventTitle",
+  "AppendDiegeticTransitionJournal",
+  "ShouldRecordDiegeticTransitionJournal",
+  "ShowP2BookNotice",
+  'AppendBookOfDaysEntry(BuildJournalToastLine(titleText, messageText), "favor.act", "journal", 1, titleText)',
+  "GetJournalMagnitudeForTone",
+  "RefreshOpenBookOfDays",
+  "PDV.Diegetic.Journal.Open",
+], "manager source");
+
+requireText(DIRECTOR, [
+  "Function EmitJournal(Int deityIndex, String toneKey)",
+  "Book of Days storage and live refresh are manager-owned",
+  "ResolveJournalSymbol",
+], "director source");
+
+requireText(MCM, [
+  "_oidOpenJournalNow = AddTextOption(\"Open Book of Days\", \"Open now\", OPTION_FLAG_NONE)",
+  "_oidJournalHotkey = AddKeyMapOption(\"Book of Days key\", currentJournalKey, OPTION_FLAG_NONE)",
+  "Function OpenBookOfDaysFromMcm()",
+  "PDV_Manager.SendPrismaJournalPayload(True)",
+  "ResetBookOfDaysOptionIds()",
+], "mcm source");
+
+forbidText(DIRECTOR, [
+  'StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Lines"',
+  'StorageUtil.IntListAdd(None, "PDV.Diegetic.Journal.Days"',
+  'StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Tones"',
+  'StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Symbols"',
+  'StorageUtil.IntListAdd(None, "PDV.Diegetic.Journal.Magnitudes"',
+  'StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Titles"',
+], "director source");
+
+if (mustExist(MANAGER) && mustExist(DIRECTOR)) {
+  const manager = read(MANAGER);
+  const director = read(DIRECTOR);
+  const managerMap = parseNameSymbolMap(functionBlock(manager, "GetPrismaSymbolForDeity"));
+  const directorMap = parseNameSymbolMap(functionBlock(director, "ResolveJournalSymbol"));
+  for (const [name, symbol] of [...managerMap.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+    if (symbol === "journal") continue;
+    const directorSymbol = directorMap.get(name);
+    if (!directorSymbol) {
+      add("FAIL", `Director has no journal symbol branch for ${name} (manager=${symbol}).`, DIRECTOR);
+    } else if (directorSymbol !== symbol) {
+      add("FAIL", `Director symbol mismatch for ${name}: ${directorSymbol} != ${symbol}.`, DIRECTOR);
+    } else {
+      add("PASS", `Director symbol parity for ${name} -> ${symbol}.`, DIRECTOR);
+    }
+  }
+}
+
+const counts = { PASS: 0, WARN: 0, FAIL: 0 };
+for (const result of results) counts[result.level] += 1;
+for (const result of results) {
+  const stream = result.level === "FAIL" ? console.error : console.log;
+  stream(`[${result.level}] ${result.message}${result.source ? ` [${result.source}]` : ""}`);
+}
+console.log(`Book of Days audit: PASS=${counts.PASS}, WARN=${counts.WARN}, FAIL=${counts.FAIL}.`);
+process.exit(counts.FAIL > 0 ? 1 : 0);

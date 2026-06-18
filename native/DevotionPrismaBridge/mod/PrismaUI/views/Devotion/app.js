@@ -303,6 +303,10 @@
     journalModal: document.getElementById("pdv-journal-modal"),
     journalTitle: document.getElementById("pdv-journal-title"),
     journalSummary: document.getElementById("pdv-journal-summary"),
+    journalBy: document.getElementById("pdv-journal-by"),
+    journalEmblem: document.getElementById("pdv-journal-emblem"),
+    journalInstrument: document.getElementById("pdv-journal-instrument"),
+    journalFoot: document.getElementById("pdv-journal-foot"),
     journalEntries: document.getElementById("pdv-journal-entries"),
     journalClose: document.getElementById("pdv-journal-close"),
   };
@@ -426,7 +430,7 @@
     "aria-hidden": "true",
   });
 
-  const appendMoonPhase = (svg, cx, cy, r, phase) => {
+  const appendMoonPhase = (svg, cx, cy, r, phase, fillCls = "instrument-fill") => {
     const normalizedPhase = clamp(phase || 1, 1, 8);
     const f = (normalizedPhase - 1) / 8;
     const a = f * 2 * Math.PI;
@@ -436,12 +440,12 @@
     const bottom = `${cx},${cy + r}`;
     appendSvg(svg, "circle", { cx, cy, r, class: "instrument-dark" });
     if (lit > 0.985) {
-      appendSvg(svg, "circle", { cx, cy, r, class: "instrument-fill" });
+      appendSvg(svg, "circle", { cx, cy, r, class: fillCls });
     } else if (lit >= 0.015) {
       const waxing = f < 0.5;
       const outer = waxing ? `A ${r} ${r} 0 0 1 ${bottom}` : `A ${r} ${r} 0 0 0 ${bottom}`;
       const innerSweep = waxing ? (lit < 0.5 ? 0 : 1) : (lit < 0.5 ? 1 : 0);
-      appendSvg(svg, "path", { d: `M ${top} ${outer} A ${rx} ${r} 0 0 ${innerSweep} ${top} Z`, class: "instrument-fill" });
+      appendSvg(svg, "path", { d: `M ${top} ${outer} A ${rx} ${r} 0 0 ${innerSweep} ${top} Z`, class: fillCls });
     }
     appendSvg(svg, "circle", { cx, cy, r, class: "instrument-outline" });
   };
@@ -457,21 +461,41 @@
     slot.appendChild(caption);
   };
 
+  // Trend → fill family. gold = rising or holding at full; grey = waning.
+  const isWaning = (inst = {}) => text(inst.trend, "").toLowerCase() === "down";
+  const fillClass = (inst) => (isWaning(inst) ? "instrument-fade" : "instrument-fill");
+  const fillSoftClass = (inst) => (isWaning(inst) ? "instrument-fade-soft" : "instrument-fill-soft");
+
+  // 6-pointed medieval star + fat-bottomed blood-drop path helpers (Daedric).
+  const starSixPath = (cx, cy, r) => {
+    let d = "";
+    const inner = r * 0.4;
+    for (let i = 0; i < 12; i += 1) {
+      const rad = i % 2 === 0 ? r : inner;
+      const a = -Math.PI / 2 + (i * Math.PI) / 6;
+      d += (i === 0 ? "M" : "L") + (cx + rad * Math.cos(a)).toFixed(1) + " " + (cy + rad * Math.sin(a)).toFixed(1);
+    }
+    return d + "Z";
+  };
+  const bloodDropPath = (cx, cy, r) =>
+    `M${cx} ${(cy - r * 1.8).toFixed(1)} C${cx + r * 1.15} ${cy - r * 0.2} ${cx + r * 1.05} ${cy + r * 0.9} ${cx} ${cy + r} C${cx - r * 1.05} ${cy + r * 0.9} ${cx - r * 1.15} ${cy - r * 0.2} ${cx} ${(cy - r * 1.8).toFixed(1)} Z`;
+
   const renderPietyInstrument = (slot, inst = {}) => {
     const svg = makeInstrumentSvg();
     const instData = inst.data || {};
     const piety = clamp(instData.piety !== undefined ? instData.piety : state.piety, 0, 85);
     const primary = clamp01(inst.primary || piety / 85);
+    const fill = fillClass(inst);
     const fillWidth = Math.round(190 * primary);
     appendSvg(svg, "rect", { x: "74", y: "68", width: "190", height: "14", rx: "7", class: "instrument-track" });
-    appendSvg(svg, "rect", { x: "74", y: "68", width: fillWidth, height: "14", rx: "7", class: "instrument-fill" });
+    appendSvg(svg, "rect", { x: "74", y: "68", width: fillWidth, height: "14", rx: "7", class: fill });
     [1, 2, 3].forEach((tier, index) => {
       const instrumentTier = inst.tier !== undefined ? inst.tier : state.tier;
       appendSvg(svg, "circle", {
         cx: 100 + index * 54,
         cy: 105,
         r: "6",
-        class: numberOrZero(instrumentTier) >= tier ? "instrument-fill" : "instrument-muted",
+        class: numberOrZero(instrumentTier) >= tier ? fill : "instrument-muted",
       });
     });
     appendSvg(svg, "circle", { cx: "39", cy: "75", r: "24", class: "instrument-outline" });
@@ -483,12 +507,9 @@
     const data = inst.data || {};
     const phase = clamp(data.phase || 1, 1, 8);
     const svg = makeInstrumentSvg();
-    appendMoonPhase(svg, 76, 80, 28, phase);
-    appendMoonPhase(svg, 124, 52, 13, phase);
-    appendSvg(svg, "path", { d: "M210 50 L217 70 L238 70 L221 82 L228 103 L210 90 L192 103 L199 82 L182 70 L203 70 Z", class: clamp01(inst.primary) > 0.66 ? "instrument-fill" : "instrument-outline" });
-    for (let i = 1; i <= 8; i += 1) {
-      appendSvg(svg, "circle", { cx: 58 + i * 20, cy: 125, r: "4", class: i === phase ? "instrument-fill" : "instrument-muted" });
-    }
+    const fill = fillClass(inst);
+    appendMoonPhase(svg, 118, 80, 30, phase, fill);
+    appendMoonPhase(svg, 178, 50, 14, phase, fill);
     slot.appendChild(svg);
     addInstrumentCaption(slot, inst, text(data.focus, "Lunar Lattice"));
   };
@@ -520,12 +541,14 @@
     const depthValue = data.depth !== undefined ? data.depth : inst.tier;
     const depth = clamp(depthValue, 0, 3);
     const svg = makeInstrumentSvg();
-    appendSvg(svg, "path", { d: "M88 124 V54 Q150 18 212 54 V124", class: "instrument-outline" });
+    const fillSoft = fillSoftClass(inst);
+    appendSvg(svg, "path", { d: "M96 124 V56 Q150 22 204 56 V124", class: "instrument-outline" });
+    const xs = [120, 150, 180];
     [0, 1, 2].forEach((index) => {
-      const x = 112 + index * 38;
-      appendSvg(svg, "path", { d: `M${x} 68 Q${x + 16} 54 ${x + 32} 68 Q${x + 32} 104 ${x + 16} 114 Q${x} 104 ${x} 68 Z`, class: depth > index ? "instrument-fill-soft" : "instrument-muted" });
-      appendSvg(svg, "circle", { cx: x + 10, cy: "82", r: "2", class: "instrument-dark" });
-      appendSvg(svg, "circle", { cx: x + 22, cy: "82", r: "2", class: "instrument-dark" });
+      const x = xs[index] - 15;
+      appendSvg(svg, "path", { d: `M${x} 72 Q${x + 15} 58 ${x + 30} 72 Q${x + 30} 104 ${x + 15} 113 Q${x} 104 ${x} 72 Z`, class: depth > index ? fillSoft : "instrument-muted" });
+      appendSvg(svg, "circle", { cx: x + 9, cy: "84", r: "2", class: "instrument-dark" });
+      appendSvg(svg, "circle", { cx: x + 21, cy: "84", r: "2", class: "instrument-dark" });
     });
     slot.appendChild(svg);
     addInstrumentCaption(slot, inst, "Ancestor layer");
@@ -575,14 +598,33 @@
     addInstrumentCaption(slot, inst, "Green Pact");
   };
 
+  const renderDaedricInstrument = (slot, inst = {}) => {
+    const level = clamp01(inst.primary !== undefined ? inst.primary : clamp(state.piety, 0, 85) / 85);
+    const lit = Math.round(level * 5);
+    const waning = isWaning(inst);
+    const svg = makeInstrumentSvg();
+    for (let i = 0; i < 5; i += 1) {
+      const x = 70 + i * 40;
+      appendSvg(svg, "path", { d: starSixPath(x, 52, 13), class: i < lit ? (waning ? "instrument-star-muted" : "instrument-star") : "instrument-muted" });
+    }
+    for (let i = 0; i < 5; i += 1) {
+      const x = 70 + i * 40;
+      appendSvg(svg, "path", { d: bloodDropPath(x, 104, 9), class: i < lit ? (waning ? "instrument-fade" : "instrument-blood") : "instrument-blood-muted" });
+    }
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, "Daedric pact");
+  };
+
   const instrumentRenderers = {
     piety: renderPietyInstrument,
     lunar: renderLunarInstrument,
-    hist: renderHistInstrument,
     ancestor: renderAncestorInstrument,
-    forge: renderForgeInstrument,
-    sects: renderSectsInstrument,
-    branch: renderBranchInstrument,
+    daedric: renderDaedricInstrument,
+    // These paths now share the Nord pattern (bar + pips) per the locked design.
+    hist: renderPietyInstrument,
+    forge: renderPietyInstrument,
+    sects: renderPietyInstrument,
+    branch: renderPietyInstrument,
   };
 
   const pietyInstrumentFromState = () => ({
@@ -967,38 +1009,162 @@
     syncOverlayVisibility();
   };
 
-  const JOURNAL_TONES = {
-    good: { arrow: "↗", tag: "rose" },
-    warning: { arrow: "↘", tag: "strained" },
-    neutral: { arrow: "—", tag: "noted" },
+  const JOURNAL_LABELS = { good: "Waxes", warning: "Wanes", neutral: "Holds" };
+
+  // Frontispiece half-sun (medieval sun-in-splendour rising from the horizon).
+  const buildJournalSun = () => {
+    const cx = 120, cy = 128, ink = "#3a2c1a";
+    const P = (a, r) => [(cx + r * Math.cos(a * Math.PI / 180)).toFixed(1), (cy - r * Math.sin(a * Math.PI / 180)).toFixed(1)];
+    let straights = "", flames = "", longRays = "", spokeDots = "", spokes = "";
+    const angles = [];
+    for (let a = 6; a <= 174; a += 14) angles.push(a);
+    angles.forEach((a, i) => {
+      const [rx1, ry1] = P(a, 36), [rx2, ry2] = P(a, i % 2 === 0 ? 83 : 72);
+      longRays += `<line x1="${rx1}" y1="${ry1}" x2="${rx2}" y2="${ry2}"/>`;
+      if (i % 2 === 0) {
+        const hw = 2.3, rb = 33, rt = 74;
+        const [x1, y1] = P(a - hw, rb), [x2, y2] = P(a, rt), [x3, y3] = P(a + hw, rb);
+        straights += `M${x1} ${y1}L${x2} ${y2}L${x3} ${y3}Z`;
+      } else {
+        const rb = 33, rt = 60, w = 4.2;
+        const [blx, bly] = P(a - w, rb), [brx, bry] = P(a + w, rb), [tx, ty] = P(a, rt);
+        const [clx, cly] = P(a - 3, rb + (rt - rb) * 0.62), [crx, cry] = P(a + 6, rb + (rt - rb) * 0.48);
+        flames += `M${blx} ${bly}Q${clx} ${cly} ${tx} ${ty}Q${crx} ${cry} ${brx} ${bry}Z`;
+        [39, 45, 51].forEach((r) => {
+          const [dx, dy] = P(a, r);
+          spokeDots += `<circle cx="${dx}" cy="${dy}" r="1.35"/>`;
+        });
+      }
+    });
+    [30, 60, 90, 120, 150].forEach((a) => {
+      const [sx, sy] = P(a, 28);
+      spokes += `<line x1="${cx}" y1="${cy}" x2="${sx}" y2="${sy}"/>`;
+    });
+    const disc = `M${cx - 30} ${cy} A30 30 0 0 1 ${cx + 30} ${cy} Z`;
+    const innerArc = `M${cx - 21} ${cy} A21 21 0 0 1 ${cx + 21} ${cy}`;
+    const outerArc = `M${cx - 30} ${cy} A30 30 0 0 1 ${cx + 30} ${cy}`;
+    return `<svg viewBox="0 0 240 150" width="100%" height="100%" aria-hidden="true">`
+      + `<defs><linearGradient id="pdv-bod-sun" x1="0" y1="0" x2="0" y2="1">`
+      + `<stop offset="0" stop-color="#ecc869"/><stop offset="0.55" stop-color="#cda33f"/><stop offset="1" stop-color="#a87f27"/></linearGradient></defs>`
+      + `<g stroke="${ink}" stroke-width="2.2" stroke-linecap="round" opacity="0.9">${longRays}</g>`
+      + `<g stroke="${ink}" stroke-width="1.4" stroke-linejoin="round">`
+      + `<path d="${flames}" fill="url(#pdv-bod-sun)"/><path d="${straights}" fill="url(#pdv-bod-sun)"/><path d="${disc}" fill="url(#pdv-bod-sun)"/></g>`
+      + `<g stroke="${ink}" stroke-width="1" stroke-linecap="round" opacity="0.45">${spokes}</g>`
+      + `<g fill="${ink}" opacity="0.82">${spokeDots}</g>`
+      + `<path d="${outerArc}" fill="none" stroke="${ink}" stroke-width="1.15" opacity="0.62"/>`
+      + `<path d="${innerArc}" fill="none" stroke="${ink}" stroke-width="1" opacity="0.52"/>`
+      + `<line x1="${cx - 88}" y1="${cy}" x2="${cx + 88}" y2="${cy}" stroke="${ink}" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+  };
+
+  // Carved Elder Futhark rune per entry: Tiwaz (waxing) / merkstave (waning) /
+  // Isa (holds), with rank-notches for magnitude. Tone carried by glyph + label.
+  const journalRune = (valence, magnitude) => {
+    const stone = "#d3c39a", edge = "#9c8a62";
+    const tone = valence === "good" ? "#3f6b3a" : valence === "warning" ? "#9a2f2a" : "#6b5942";
+    let rune = valence === "good"
+      ? "M24 11V40 M24 11L12 23 M24 11L36 23"
+      : valence === "warning"
+      ? "M24 11V40 M24 40L12 28 M24 40L36 28"
+      : "M24 9V42";
+    if (valence !== "neutral" && magnitude > 0) {
+      const ys = valence === "good" ? [37, 31, 25] : [15, 20, 25];
+      for (let i = 0; i < Math.min(magnitude, 3); i += 1) rune += ` M15 ${ys[i]}L33 ${ys[i]}`;
+    }
+    const box = "M5 7c0-2 1-3 3-3l32 0c2 0 3 1 3 3l0 37c0 2-1 3-3 3l-32 0c-2 0-3-1-3-3Z";
+    return `<svg width="42" height="46" viewBox="0 0 51 54" aria-hidden="true">`
+      + `<path d="${box}" fill="${stone}" stroke="${edge}" stroke-width="1.4"/>`
+      + `<path d="${rune}" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="4.6" stroke-linecap="square"/>`
+      + `<path d="${rune}" fill="none" stroke="${tone}" stroke-width="2.7" stroke-linecap="square"/></svg>`;
+  };
+
+  // 1–3 weight from an explicit field, else bucketed from the favour amount.
+  const journalMagnitude = (entry) => {
+    const explicit = entry.m !== undefined ? entry.m : entry.magnitude !== undefined ? entry.magnitude : entry.weight;
+    if (explicit !== undefined && explicit !== null && explicit !== "") {
+      return Math.max(1, Math.min(3, Math.round(numberOrZero(explicit))));
+    }
+    const amount = Math.abs(numberOrZero(entry.amount));
+    if (amount >= 4) return 3;
+    if (amount >= 2) return 2;
+    return 1;
+  };
+
+  // Byline adapts to the active path when no single patron applies.
+  const journalByline = () => {
+    const patron = text(state.patron, "");
+    if (patron && patron !== "None") return `kept for ${patron}`;
+    const kind = text(state.instrument && state.instrument.kind, "").toLowerCase();
+    if (kind === "lunar") return "kept beneath the moons";
+    if (kind === "hist") return "kept within the Hist";
+    if (kind === "ancestor") return "kept among the ancestors";
+    if (kind === "daedric") return "kept by the terms of the pact";
+    return "a record kept since the path began";
+  };
+
+  // Standing reuses the SAME per-path instrument the Patron tab renders.
+  const renderJournalStanding = (instOverride) => {
+    if (!nodes.journalInstrument) return;
+    clear(nodes.journalInstrument);
+    const fromOverride = instOverride && typeof instOverride === "object" ? instOverride : null;
+    const fromState = state.instrument && typeof state.instrument === "object" ? state.instrument : null;
+    const inst = fromOverride || fromState || pietyInstrumentFromState();
+    const kind = text(inst.kind, "piety").toLowerCase();
+    const renderer = instrumentRenderers[kind] || renderPietyInstrument;
+    renderer(nodes.journalInstrument, inst);
   };
 
   const journalEntryNode = (entry) => {
     const requested = text(entry.valence, "neutral");
-    const valence = JOURNAL_TONES[requested] ? requested : "neutral";
-    const meta = JOURNAL_TONES[valence];
+    const valence = JOURNAL_LABELS[requested] ? requested : "neutral";
+    const magnitude = valence === "neutral" ? 0 : journalMagnitude(entry);
     const li = document.createElement("li");
-    li.className = `journal-entry is-${valence}`;
-    const mark = document.createElement("span");
-    mark.className = "journal-mark";
+    li.className = `bod-leaf v-${valence}`;
+    const mark = document.createElement("div");
+    mark.className = "bod-leaf__mark";
     mark.setAttribute("aria-hidden", "true");
-    mark.textContent = `${meta.arrow} ${meta.tag}`;
+    const symbolMark = document.createElement("div");
+    symbolMark.className = "bod-leaf__symbol";
+    renderSymbol(symbolMark, text(entry.symbol, "journal"));
+    const signal = document.createElement("div");
+    signal.className = "bod-leaf__signal";
+    signal.innerHTML = journalRune(valence, magnitude);
+    const label = document.createElement("span");
+    label.className = "bod-mark-label";
+    label.textContent = JOURNAL_LABELS[valence];
+    mark.append(symbolMark, signal, label);
+    const body = document.createElement("div");
+    body.className = "bod-leaf__body";
     const titleEl = document.createElement("p");
-    titleEl.className = "journal-entry-title";
+    titleEl.className = "bod-leaf__title";
     titleEl.textContent = text(entry.title, "A moment noted");
     const textEl = document.createElement("p");
-    textEl.className = "journal-entry-text";
+    textEl.className = "bod-leaf__text";
     textEl.textContent = text(entry.text, "");
-    li.append(mark, titleEl, textEl);
+    body.append(titleEl, textEl);
+    li.append(mark, body);
     return li;
   };
+
+  const fitJournalBook = () => {
+    const scaler = document.getElementById("pdv-journal-scaler");
+    if (!scaler) return;
+    const s = Math.min(1, (window.innerWidth - 40) / 1180, (window.innerHeight - 40) / 760);
+    scaler.style.transform = `scale(${s})`;
+  };
+  window.addEventListener("resize", () => {
+    if (nodes.journalModal && !nodes.journalModal.hidden) fitJournalBook();
+  });
 
   const renderJournal = (journal = {}) => {
     if (!nodes.journalModal) return;
     hideAllOverlays();
 
-    nodes.journalTitle.textContent = text(journal.title, "Book of Days");
-    nodes.journalSummary.textContent = text(journal.summary, "A record of devotional acts since the path began.");
+    if (nodes.journalTitle) nodes.journalTitle.textContent = text(journal.title, "Book of Days");
+    if (nodes.journalBy) nodes.journalBy.textContent = text(journal.by, journalByline());
+    if (nodes.journalSummary) nodes.journalSummary.textContent = text(journal.summary, "A record of devotional acts since the path began.");
+    if (nodes.journalFoot) nodes.journalFoot.textContent = text(journal.foot, "Press your Book of Days key again to close.");
+    if (nodes.journalEmblem) nodes.journalEmblem.innerHTML = buildJournalSun();
+    renderJournalStanding(journal.instrument || journal.standing);
 
     const entries = asArray(journal.entries).filter(Boolean);
     clear(nodes.journalEntries);
@@ -1011,8 +1177,9 @@
         const dateKey = text(entry.date, "");
         if (dateKey && dateKey !== lastDate) {
           const divider = document.createElement("li");
-          divider.className = "journal-date";
-          divider.textContent = dateKey;
+          divider.className = "bod-date";
+          divider.innerHTML = `<span class="bod-date__ln"></span><span class="bod-date__dt"></span><span class="bod-date__ln"></span>`;
+          divider.querySelector(".bod-date__dt").textContent = dateKey;
           nodes.journalEntries.appendChild(divider);
           lastDate = dateKey;
         }
@@ -1022,6 +1189,7 @@
 
     nodes.journalModal.hidden = false;
     syncOverlayVisibility();
+    fitJournalBook();
   };
 
   const renderStartupDetails = (option) => {
@@ -1507,7 +1675,7 @@
     try {
       return JSON.parse(textPayload);
     } catch (error) {
-      const normalizedPayload = textPayload.replace(/\b(TRUE|FALSE)\b/g, (match) => match.toLowerCase());
+      const normalizedPayload = textPayload.replace(/\b(true|false)\b/gi, (match) => match.toLowerCase());
       if (normalizedPayload === textPayload) {
         throw error;
       }
