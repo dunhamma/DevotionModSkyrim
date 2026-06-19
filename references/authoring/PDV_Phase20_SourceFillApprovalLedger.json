@@ -439,6 +439,105 @@
       "blocker": "No quest-stage source entry may be filled until the manifest declares exact approvedStages metadata for that receiver/property."
     }
   ],
+  "orcLifeModeOrganicSources": {
+    "system": "Orc life-mode state track (PDV_StateTrack_OrcLifeMode) -- a distinct hook class from the P2 receiver/FormList network. Sources route to the already-built Handle* life-mode handlers, not to FormList receivers.",
+    "wiredVia": "Pure-Papyrus FormID/LCTN hooks (NO ESP write): PlayerEvents.OnQuestStageChange + ActionRouter.HandleStoryChangeLocation -> EventBus Route* -> manager Handle* handlers. Quests registered directly by FormID in RegisterOrcLifeModeQuestSources.",
+    "approvedBy": "maintainer 2026-06-19: three design forks (curated City labor attempt, CW milestones + capstone proxy, arrival=evidence/Blood-Kin=instant) plus the concrete readback-backed list (City dignity corrected to all nine holds; home-purchase as the thaneship reward).",
+    "originGuard": "Orc origin only (GetOriginRaceValue()==8 / ORIGIN_ORC) on every hook.",
+    "antiFarm": "Once/dawn ConsumeDailyRepeatMultiplier on every life-mode piety pulse; quest-stage sources one-shot per source via MarkP2SourceRoute.",
+    "readbackType": "houseCARL direct record readback (LCTN/QUST/FACT) + curated vanilla-quest-stage-readback.csv, 2026-06-19.",
+    "compileVerifyState": "PDV__ManagerQuest, PDV_EventBus, PDV_ActionRouter, PDV_PlayerEvents all compiled 0 error/0 warning; default verify FAIL=0; --strict-phase20-race-costing introduced 0 new FAILs (14 pre-existing strict items: 9 Survey-text pattern drift, 1 Khajiit CAT-6 MGEF archetype, 4 manual-evidence ledger states -- none reference this wiring).",
+    "runtimeProof": "PENDING in-game. runtimePromotionGate (manifest): prove >=1 Stronghold beat AND >=1 City or Legion/Exile parity beat. coc skips OnStoryChangeLocation -- enter strongholds via load door / fast-travel.",
+    "sources": [
+      {
+        "id": "orc-stronghold-presence",
+        "mode": "Stronghold",
+        "favorFamily": "stronghold (forge-presence)",
+        "sourceKind": "location",
+        "lctnFormKeys": ["019171:Skyrim.esm", "01927C:Skyrim.esm", "019282:Skyrim.esm", "019263:Skyrim.esm"],
+        "lctnEditorIds": ["DushnikhYalLocation", "MorKhazgurLocation", "NarzulburLocation", "LargashburLocation"],
+        "route": "ActionRouter.HandleStoryChangeLocation -> Manager.HandleOrcLocationChange -> HandleOrcStrongholdPresence",
+        "switchSemantics": "Stronghold EVIDENCE day (feeds 2-in-7 soft switch); NOT a major gate. No forge reward for mere presence. Also drives the one-shot Four Holds milestone.",
+        "acceptedContext": "Arriving at / living in one of the four Orc strongholds.",
+        "rejectedContext": "Ordinary city presence; any non-stronghold location.",
+        "duplicateGuard": "Once/dawn via PDV.Signal.OrcStrongholdPresence; Four Holds milestone one-shot per hold."
+      },
+      {
+        "id": "orc-stronghold-bloodkin",
+        "mode": "Stronghold",
+        "favorFamily": "stronghold-bloodkin-crisis",
+        "sourceKind": "quest-stage",
+        "questFormKey": "03B681:Skyrim.esm",
+        "editorId": "DA06",
+        "approvedStage": 200,
+        "route": "PlayerEvents.OnQuestStageChange -> EventBus.RouteOrcBloodKinCrisis -> Manager.HandleOrcBloodKinCrisis",
+        "switchSemantics": "INSTANT major-gate switch to Stronghold (reason orc_cursed_tribe_resolved). Life-mode side only; broad Malacath piety for DA06 is handled by the existing RouteOrcMalacathConduct on the same stage (no double-award).",
+        "acceptedContext": "The Cursed Tribe resolved at Largashbur -- Malacath's favor / Blood-Kin communal proof.",
+        "rejectedContext": "Generic stronghold proximity; non-terminal DA06 progress.",
+        "duplicateGuard": "One-shot lifetime (orc_da06_bloodkin)."
+      },
+      {
+        "id": "orc-city-dignity-thane",
+        "mode": "City",
+        "favorFamily": "city-dignity",
+        "sourceKind": "quest-stage",
+        "questFormKeys": ["0A2C86:Skyrim.esm", "0A2C9B:Skyrim.esm", "0A2C9E:Skyrim.esm", "0A2CA6:Skyrim.esm", "0A34CE:Skyrim.esm", "0A34D4:Skyrim.esm", "0A34D7:Skyrim.esm", "0A34DE:Skyrim.esm", "065BDF:Skyrim.esm"],
+        "editorIds": ["Favor250", "Favor252", "Favor253", "Favor254", "Favor255", "Favor256", "Favor257", "Favor258", "FreeformRiftenThane"],
+        "approvedStage": 200,
+        "route": "PlayerEvents.OnQuestStageChange -> EventBus.RouteOrcCityDignity -> Manager.HandleOrcCityDignity",
+        "switchSemantics": "City evidence day. All nine holds use the uniform Favor25X/Freeform Thane completion at stage 200 = named Thane.",
+        "acceptedContext": "Named Thane of any hold -- civic recognition / dignity under a foreign system.",
+        "rejectedContext": "Ordinary city presence; favors/quests short of thaneship.",
+        "duplicateGuard": "One-shot per quest form (orc_city_thane_stage_200)."
+      },
+      {
+        "id": "orc-city-self-made-community",
+        "mode": "City",
+        "favorFamily": "city-self-made-community",
+        "sourceKind": "quest-stage",
+        "questFormKey": "0A7B33:Skyrim.esm",
+        "editorId": "HousePurchase",
+        "approvedStage": 10,
+        "route": "PlayerEvents.OnQuestStageChange -> EventBus.RouteOrcSelfMadeCommunity -> Manager.HandleOrcSelfMadeCommunity",
+        "switchSemantics": "City evidence day. HousePurchase (AllowRepeatedStages) sets stage 10 on buying any of the five city homes; the home is the thaneship reward, a non-stronghold anchor.",
+        "acceptedContext": "Buying a city home (Breezehome/Proudspire/Honeyside/Vlindrel/Hjerim).",
+        "rejectedContext": "Hearthfire land/plot building; non-home purchases.",
+        "duplicateGuard": "One-shot lifetime (orc_city_home) -- first city home is the anchor beat."
+      },
+      {
+        "id": "orc-legion-contract-pressure",
+        "mode": "LegionExile",
+        "favorFamily": "legion-contract-pressure",
+        "sourceKind": "quest-stage",
+        "questFormKey": "02D75C:Skyrim.esm",
+        "editorId": "CW02A",
+        "approvedStage": 200,
+        "route": "PlayerEvents.OnQuestStageChange -> EventBus.RouteOrcLegionService -> Manager.HandleOrcLegionService",
+        "switchSemantics": "LegionExile evidence day. CW02A is the Imperial A-variant (Stormcloak CW02B excluded); the membership join CW01A is excluded.",
+        "acceptedContext": "The Jagged Crown recovered for the Empire -- pressure-bearing service completion.",
+        "rejectedContext": "Joining the Legion (CW01A membership); Stormcloak CW02B; generic patrol.",
+        "duplicateGuard": "One-shot lifetime (orc_cw02a_jagged_crown)."
+      },
+      {
+        "id": "orc-legion-exile-burden",
+        "mode": "LegionExile",
+        "favorFamily": "legion-exile-burden",
+        "sourceKind": "quest-stage",
+        "questFormKey": "0D1444:Skyrim.esm",
+        "editorId": "CWFinale",
+        "approvedStage": 500,
+        "guard": "IsInFaction(CWImperialFaction 02BF9A:Skyrim.esm)",
+        "route": "PlayerEvents.OnQuestStageChange -> EventBus.RouteOrcLegionService -> Manager.HandleOrcLegionService",
+        "switchSemantics": "LegionExile capstone (marked) on the war's end, gated to the Imperial side so a Stormcloak finale cannot false-fire. Membership is a disambiguating GUARD on a genuine service-completion, not a trigger.",
+        "acceptedContext": "Civil War won on the Imperial side (CWFinale shutdown stage).",
+        "rejectedContext": "Stormcloak victory; Legion membership alone.",
+        "duplicateGuard": "One-shot lifetime (orc_cwfinale_imperial_stage_500)."
+      }
+    ],
+    "honestGaps": [
+      "city-quality-labor: no clean vanilla named-commission / quality-labor quest stage exists (hunted per maintainer 2026-06-19; closest candidates collapse into the rejected raw-craft family). Left unwired; City covered by dignity (thane x9) + self-made-community (home x5)."
+    ]
+  },
   "verificationCommands": [
     "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries --dry-run",
     "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries",
