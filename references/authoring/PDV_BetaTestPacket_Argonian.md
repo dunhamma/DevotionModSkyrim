@@ -180,18 +180,25 @@ the authored spec magnitudes (disease resistance is GONE everywhere):
 - Identity is the CELL you sleep in (your room/home), NOT the bed furniture
   object -- GetFurnitureReference() is None at OnSleepStart, so the bed object
   can't be captured reliably; the parent cell at sleep-stop is reliable.
-- Sleep in a bed: a "Bed of Choice" prompt appears (Yes / Not yet). Yes is
-  sleep #1 (count 1). Declining re-prompts only after 3 in-game days.
+- **Settling intent (2026-06-18):** the "Bed of Choice" prompt only appears after
+  you sleep in the SAME not-home cell **3 nights running** (any night elsewhere
+  restarts the streak). This covers first home AND moving home, so a one-night inn
+  stay never becomes your home. Decline quiets the prompt for 3 days.
 - Sleep in the SAME cell on successive returns. The live gate is the bed-of-choice
-  return count reaching 12 (`BedOfChoiceSleepCount >= 12`, manager line 2292): on
-  that return you wake with `Rooted Rest` (Stamina Regen 5%, 10 min) and "You wake
-  rooted." Watch `Argonian bed-of-choice return routed`. (Reaching 12 organically is
-  slow -- use the debug seeder below to raise the count for a quick check.)
-- Sleeping in a DIFFERENT cell: no routing for the declared place; instead you
-  get the prompt for the new place.
-- Quick test: `coc RiverwoodSleepingGiantInn`, declare the bed, seed the
-  bed-of-choice count toward 12 via the debug seeder, then sleep once more to fire
-  Rooted Rest.
+  return count reaching 12 (`BedOfChoiceSleepCount >= 12`): on that return you wake
+  with `Rooted Rest` (Stamina Regen 5%, 10 min) and "You wake feeling rooted."
+  (Reaching 12 organically is slow -- use the debug seeder below.)
+- **Moving home:** after 3 consecutive nights in a new place you are offered to make
+  it home; accepting clears the old home's adaptation, resets the return count, and
+  re-rolls the 10-14 day adaptation clock.
+- Quick test (skip the 3-sleep settle): `coc RiverwoodSleepingGiantInn`, then declare
+  the current cell as home directly, seed the return count to 11, and sleep once in
+  that cell to fire Rooted Rest (the return makes it 12):
+  ```text
+  setpqv PDV__ManagerQuest DebugSeedDeclareHomeNow 1
+  setpqv PDV__ManagerQuest DebugSeedBedCount 11
+  setpqv PDV__ManagerQuest DebugSeedGo 1
+  ```
 
 ### Shadowscale signature (Void focus only)
 
@@ -223,31 +230,53 @@ The other five sites (Sleeping Tree Camp, Ilinalta's Deep, Ancestor Glade
 arrival; they share the same one-shot vision mechanism, so the one interior
 visit proves it. Log marker: `Sacred water remembered: N of 6`.
 
-Milestone confirmation (seed the count instead of touring all six):
+Milestone confirmation (seed the count to size-1 instead of touring all six):
+seed to 5, then make ONE unseen-water arrival (Eldergleam interior) so the live
+visit increments to 6 and fires the milestone MessageBox alongside that site's
+vision. Seed BEFORE the Eldergleam visit (a seed of 6 sets only the count and
+will not fire the milestone, which only triggers on the crossing arrival).
 
 ```text
-setpqv PDV__ManagerQuest DebugSeedArgWatersCount 6
+setpqv PDV__ManagerQuest DebugSeedArgWatersCount 5
 setpqv PDV__ManagerQuest DebugSeedGo 1
 ```
 
 Confirm the seen-key / milestone anti-farm assertion: the all-six milestone
-fires as a MessageBox (not a missable toast), and a repeat arrival at the
-already-seen Eldergleam vision does NOT re-fire (one-shot forever).
+fires as a MessageBox (not a missable toast) on the 6th arrival, and a repeat
+arrival at the already-seen Eldergleam vision does NOT re-fire (one-shot forever).
 
 - Sleeping Tree Sap (`player.additem 000AED90 1`, then drink): one-shot vision.
   Log marker: `Sleeping Tree Sap vision fired`.
 
-### Hist Adaptations (dreaming root rite)
+### Hist Adaptations (dreaming root rite) -- "grow into your home" model (2026-06-18)
 
-- Gate: substrate composite >= 75 AND sleeping in the declared bed (or at a
-  sacred water) AND 7+ days since last rite.
+- Gate: substrate composite >= 75 AND sleeping in your declared home (or at a
+  sacred water) AND the randomized **10-14 day clock** rolled when you declared
+  that home has elapsed. The rite no longer fires on the 2nd sleep.
 - Rite menu offers Claws (+5 unarmed) / Skin (+5 sneak) / Sap (+5% magicka
-  regen) / Marsh (+8% stamina regen) / Not yet. One active at a time; choosing
-  again swaps (clear-before-add). "Not yet" does NOT spend the cooldown.
+  regen) / Marsh (+8% stamina regen) / Not yet. The choice is **permanent for
+  that home -- no swap**. "Not yet" leaves the rite available next qualifying sleep.
+- **Moving home:** sleeping somewhere that is not your current home offers "make
+  this your place of rest?" Accepting clears the old home's adaptation, resets the
+  Rooted Rest return count, and rolls a fresh 10-14 day clock so you re-adapt to
+  the new home. A decline quiets the prompt for 3 days.
 - If composite later drops below 75: adaptation fades at dawn ("The root grows
-  quiet."); it returns automatically at dawn once composite recovers.
-- Console shortcut to reach the gate fast: use the Hist + People seeder above
-  (composite >= 75), then sleep in the declared bed or at a sacred water.
+  quiet. The change fades from your scales."); it returns at dawn once composite
+  recovers (the home/choice is remembered).
+- Console shortcut: seed composite >= 75 (Hist + People seeder above), then stand
+  in a bedroom cell and declare it home -- `DebugSeedDeclareHomeNow` declares the
+  home, RESETS any already-taken adaptation (Adapt.Active persists even when
+  faded, so the rite is otherwise one-per-home), AND matures the 10-14 day clock,
+  so one flip leaves the home immediately and repeatably testable:
+  ```text
+  setpqv PDV__ManagerQuest DebugSeedDeclareHomeNow 1
+  setpqv PDV__ManagerQuest DebugSeedGo 1
+  ```
+  then sleep in that cell to fire the rite. For an ORGANICALLY declared home (real
+  3-sleep settle, not the shortcut), mature its clock separately with
+  `setpqv ... DebugSeedAdaptDueNow 1` + `DebugSeedGo 1`, flipped ALONE. To test
+  re-adapting, move home (3 consecutive sleeps in a new cell, accept), then mature
+  the clock again and sleep.
 
 ### Evidence to bring back (addendum)
 

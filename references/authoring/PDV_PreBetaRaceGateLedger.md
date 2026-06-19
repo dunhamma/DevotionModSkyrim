@@ -148,7 +148,8 @@ Blocking follow-up: none for the current Khajiit beta-feel packet. Future polish
 ```text
 Race: Argonian
 Lane type: P1 second contrast
-Verdict: Fail - runtime/manual proof deferred
+Verdict: Pass - manual/runtime packet 2026-06-18; final-world placement separate
+Packet evidence (2026-06-18): wrong-origin rejection + generic-source silence + sleep 1/dawn cap + kill-hostile Sithis silence PASS (Group A); Hist book route + Sap Vial + near-water maintenance proven; reward stack applies at composite max but is heavy (~51% health regen / 40% poison resist) and live magnitudes drifted from spec -> holistic rebalance tracked (task #9, NOT a fail); Survey clarity acceptable, per-race rewrite/purpose-vs-BookOfDays tracked (task #10); Hist Adaptation rite redesigned this session to a "grow into your home" model (randomized 10-14 day clock from home declaration, composite>=75, permanent-per-home, 3-consecutive-sleep settle, moving home re-adapts) and PASS (firing proven; settle+move-home deferred to broader beta); Shadowscale veil PASS (4s by design, bumped to 15s per tester -> ESP batch task #11); Rooted Rest PASS (return #12 -> "You wake feeling rooted" + Stamina Regen); Waters That Remember PASS (Eldergleam vision + all-six milestone via seeded count). Non-blocking follow-ups: reward rebalance #9, Survey rewrite #10, ESP cosmetics (veil 15s + rite-menu label/prompt trim #11, offer-popup naming #8), post-beta Prisma 2-row rite menu #12.
 No-in-game status: Readback-Ready
 Expected build: Hist/People community survivor.
 Edge build: Sithis-threshold assassin, vampire rupture, or werewolf strain.
@@ -172,7 +173,8 @@ Blocking follow-up: prove Hist/People floor, rejected hooks, Arkay/death-rite re
 ```text
 Race: Orc
 Lane type: P1 buildout packet
-Verdict: Fail - runtime/manual proof deferred
+Verdict: Pass - manual/runtime packet 2026-06-18; final-world placement separate
+Packet evidence (2026-06-18): Malacath book route PASS; life-mode no-flip gate PASS (single Stronghold signal does NOT flip mode off City; 2-evidence-days-in-7 + 3-day lock-in respected); wrong-origin rejection PASS; generic-source silence PASS (raw craft/combat/Legion-join); Survey clarity PASS with known editorial gap (dev-language opener + raw life-mode enum -> all-race Survey rewrite task #10, non-blocking); reward/stack acceptable. Deferred-by-design (NOT failures, no V1 hook): life-mode edge pressure organic sources, Code Holds survival pulse, Four Holds pilgrimage (QASmoke-only), Witnessed tranche, oath-break (emitter-less). Reward-magnitude rebalance shared with task #9.
 No-in-game status: Readback-Ready
 Expected build: City or Legion/Exile Orc maintaining Malacath through quality labor or service.
 Edge build: Stronghold/Blood-Kin, werewolf, or vampire-cured code pressure.
@@ -246,7 +248,8 @@ Blocking follow-up: none for the current Bosmer beta-feel packet.
 ```text
 Race: Breton
 Lane type: P2 full end-state wiring with stack audit
-Verdict: Fail - runtime/manual proof deferred
+Verdict: Pass - manual/runtime packet 2026-06-19; final-world placement separate
+Packet evidence (2026-06-19): Hidden Art book route PASS (RouteBretonHiddenArtExposure complete x3; notice fires on first read, missed among rapid identical reads -> per-book distinct notices added this session); WitchcraftExposure decay PASS (-1/dawn confirmed in log 24->23->22->21, no longer a one-way ratchet; bands notorious>=75/known>=50/suspected>=25/hidden<25); wrong-origin rejection PASS; generic-source silence PASS (no movement from generic spellcasting/artifact/faction-join). Note: "Standing: distant" is the devotional piety tier (GetPublicTierBand), separate from the exposure axis. Optional creed-loss ExposureRupture spell needs exposure>=100 (unreachable via the 3 one-shot books, max 75) -> needs an MCM band setter, PENDING. Deferred-by-design (NOT failures, no V1 emitter): Knight's Road breach hooks (Thieves Guild/DB/innocent-kill), Green Way DruidicStanding degradation, tradition-differentiated vampire. Reward-magnitude rebalance shared with task #9.
 No-in-game status: Planning-Ready
 Expected build: one chosen tradition: Knight's Road, Hidden Art, or Green Way.
 Edge build: Hidden Art plus Daedric rupture or curse pressure.
@@ -300,7 +303,8 @@ Blocking follow-up: no Imperial pass or civic reward expansion until whitelisted
 ```text
 Race: Nord
 Lane type: P2 full end-state wiring with stack audit control
-Verdict: Fail - runtime/manual proof deferred
+Verdict: Pass - manual/runtime packet 2026-06-18 (all 7 steps); final-world placement separate
+Packet evidence (2026-06-18): Old Ways + Hircine/Arkay book routes PASS (route markers + top-left surfacing, after the IsP2BookNoticeReason po3_book-substring fix this session); non-Kyne commitment offer fires PASS (deity-name copy gap tracked as offer-popup follow-up); neglect fallback PASS (log-confirmed neglect.Talos.drop + absence sound + Debug.Notification, tester missed the visual); wrong-origin rejection PASS; generic-source silence PASS (beta reconfirm); Survey clarity PASS-conditional (editorial polish folds into the all-race narrator-voice sweep, FP-020/FP-028). Reward/stack snapshot: Active patron=Talos confirmed in Pattern summary.
 No-in-game status: Readback-Ready
 Expected build: broad Old Ways into Kyne or Talos.
 Edge build: Hircine/werewolf stack.

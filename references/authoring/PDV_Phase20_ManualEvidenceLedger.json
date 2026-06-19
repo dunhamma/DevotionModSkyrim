@@ -112,7 +112,8 @@
       }
     },
     "Argonian": {
-      "status": "pending",
+      "status": "pass",
+      "passSummary": "Manual/runtime packet PASS 2026-06-18: Group A (wrong-origin, generic silence, sleep 1/dawn cap, kill-hostile Sithis silence); Hist book+SapVial+near-water proven; reward stack applies (heavy -> rebalance task #9); Survey clarity ok (rewrite task #10); adaptation rite redesigned to grow-into-home 10-14d model + PASS; Shadowscale PASS (4s->15s ESP batch #11); Rooted Rest PASS; Waters milestone PASS. Settle+move-home deferred to broader beta; ESP cosmetics #11/#8, Prisma menu #12.",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
@@ -148,7 +149,8 @@
       }
     },
     "Orc": {
-      "status": "pending",
+      "status": "pass",
+      "passSummary": "Manual/runtime packet PASS 2026-06-18: Malacath book route, life-mode no-flip gate (single signal does not flip off City; 2-of-7-days + 3-day lock), wrong-origin rejection, generic-source silence, Survey clarity (known editorial dev-language/enum gap -> task #10), reward/stack acceptable. Deferred-by-design (not failures): life-mode edge organic sources, Code Holds, Four Holds, Witnessed tranche, oath-break. Reward rebalance shared with task #9.",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
@@ -263,7 +265,8 @@
       }
     },
     "Breton": {
-      "status": "pending",
+      "status": "pass",
+      "passSummary": "Manual/runtime packet PASS 2026-06-19: Hidden Art book route + surfacing (per-book distinct notices added this session), WitchcraftExposure decay (-1/dawn, log-confirmed), wrong-origin rejection, generic-source silence (no movement). Optional ExposureRupture creed-loss needs exposure>=100 (unreachable via 3 one-shot books) -> PENDING via MCM band setter. Deferred-by-design (not failures): Knight's Road breach hooks, Green Way degradation, tradition-differentiated vampire. Reward rebalance shared with task #9.",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
