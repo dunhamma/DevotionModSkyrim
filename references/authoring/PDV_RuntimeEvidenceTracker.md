@@ -33,14 +33,14 @@ legible) · **FN** manual feel note. Mark `P` pass / `C` conditional / `F` fail 
 |------|-----|---------|----|----|----|----|----|----|----|----|----|-------------|
 | Altmer | 3 | Pass | P | P | P | P | P | P | - | P | P | Current packet closed; final-world placement remains separate |
 | Khajiit | 6 | Conditional | P | P | P | C | P | **-** | - | C | P | Wire/approve one Baan Dar / Rajhin / Alkosh edge source, run edge packet |
-| Nord | 0 | Fail | - | - | - | - | C | - | - | - | - | Dense-hook rejection + Hircine/Kyne/Talos stack; prove Old Ways book source |
+| Nord | 0 | Pass | - | - | - | - | C | - | - | - | - | Gate-ledger manual/runtime packet PASS (see PDV_PreBetaRaceGateLedger.md); runtime-marker detail per gate ledger |
 | Imperial | 1 | Fail | - | - | - | - | C | - | - | - | - | Civic whitelist + faction/attendance rejection + public/private Talos edge |
-| Breton | 2 | Fail | C | - | - | - | C | - | - | - | - | Tradition-track writes; Hidden Art cost; rejected spell/artifact loops |
-| Bosmer | 4 | Fail | - | - | - | - | C | - | - | - | - | Prove 4 path contracts + generic commerce/theft/forest/kindness silence |
+| Breton | 2 | Pass | C | - | - | - | C | - | - | - | - | Gate-ledger manual/runtime packet PASS 2026-06-18 (see gate ledger) |
+| Bosmer | 4 | Pass | - | - | - | - | C | - | - | - | - | Gate-ledger DA05 + variety/reward packet PASS (see gate ledger) |
 | Dunmer | 5 | Fail | - | - | - | - | C | - | - | - | - | Ancestor/Reclamation stack audit; deviation-price behavior; Survey display |
-| Argonian | 7 | Fail | - | - | - | - | C | - | - | - | - | Hist/People floor; swim/sleep/murder rejection; Arkay death-rite; Survey |
-| Orc | 8 | Fail | - | - | - | - | C | - | - | - | - | Stronghold/City/Legion parity; raw craft/combat/membership rejection |
-| Redguard | 9 | Fail | - | - | - | - | C | - | - | - | - | Crown/Forebear/Ash'abah/Far Shores; fast-travel/undead rejection; HoonDing cap |
+| Argonian | 7 | Pass | - | - | - | - | C | - | - | - | - | Gate-ledger manual/runtime packet PASS 2026-06-18 (see gate ledger) |
+| Orc | 8 | Pass | - | - | - | - | C | - | - | - | - | Gate-ledger manual/runtime packet PASS 2026-06-18 (see gate ledger) |
+| Redguard | 9 | Pass | - | - | - | - | C | - | - | - | - | Manual pkt 2026-06-19 PASS (8/8 dims; gate-ledger verdict carries it); runtime-MARKER re-capture pending -- current Papyrus log rotated, no route 80-83 markers present (manual-acceptance proof != route-marker proof); HoonDing/Leki day-to-day leak fix APPLIED 2026-06-19 (CSV rows removed + LoadRowsForDeity regen + VERSION 8->9 + compile 0/0 + verifier FAIL=0), awaiting in-game reconfirm |
 
 Per-race runtime marker check: `node .\tools\pdv_phase20_runtime_check.mjs --race <race>`.
 

@@ -1,6 +1,6 @@
 {
   "schema": "pdv.shrine-blessing-neutralization.v1",
-  "status": "records-authored-readback-pass-pending-runtime-proof",
+  "status": "records-authored-readback-pass-runtime-proven-20260619-stat-suppressed; residual: shrine script still prints 'Blessing of <deity> added' + grants cure-only ability (TempleBlessingScript out of scope) -- polish option = blank overridden SPEL Name to drop the misleading toast, KEEP cure",
   "policy": "cure-only",
   "output": "main-esp",
   "sourcePlugin": "Devotion.esp",

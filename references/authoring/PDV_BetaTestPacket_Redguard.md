@@ -1,7 +1,7 @@
 # PDV Beta Test Packet - Redguard
 
 Created: 2026-06-06
-Status: ready to run - ancestor-spine book packet; sect/death-duty edge proof pending
+Status: PASS 2026-06-19 - all 8 beta-feel dimensions (manual/runtime packet); gate-ledger verdict flipped Fail->Pass. Non-blocking follow-ups A/B/C tracked (see 'Session corrections & findings'). Still genuinely deferred: Dawnguard exact-stage (DLC1VQ02) -> Ash'abah re-entry source-fill (blocked); runtime-MARKER re-capture (current log rotated)
 Mode: console-assisted beta-feel packet
 
 This packet starts Redguard beta-feel proof from the approved ancestor-spine
@@ -88,13 +88,14 @@ origin 9 + generic acts = generic-source silence.
 ## Evidence To Bring Back
 
 ```text
-Redguard expected build: PASS/FAIL
-Redguard sect/death-duty edge: PENDING/FAIL
-Wrong-origin rejection: PASS/FAIL
-Generic-source silence: PASS/FAIL
-Survey/status clarity: PASS/FAIL
-Reward/stack snapshot: PASS/PENDING/FAIL
-Blocking notes:
+Redguard expected build: PASS (ancestor-spine book 0001ACD1; top-left notice + Survey)
+Redguard sect/death-duty edge: PASS (sect no-flip held; vampire 0<->2 / werewolf 0<->1 curse cycle + Tu'whacca re-entry log-confirmed). Dawnguard exact-stage (DLC1VQ02) source-fill still deferred (blocked).
+Wrong-origin rejection: PASS (origin 8 book read -> no Redguard movement)
+Generic-source silence: PASS for Arkay sub-check (zero Tu'whacca/PDV movement; cure-only guard holds). HoonDing/Leki day-to-day leak found (Finding B) -> fix APPLIED 2026-06-19 (CSV rows removed + LoadRowsForDeity regen + VERSION 8->9 + compile 0/0 + verifier FAIL=0); awaiting in-game reconfirm.
+Survey/status clarity: PASS (sect/patron/tier/Far Shores/curse-cycle in Yokudan voice)
+Reward/stack snapshot: PASS (focused Tu'whacca Champion T3 + Far Shores token + AncestorSpine-Seeker baseline; broad T2 'Faithful' suppressed under focus)
+Far Shores token + daily cap: PASS (Resist Magic +5% after dawn pass; soft 0.7x cap)
+Blocking notes: none beta-blocking. Tracked non-blocking: A (vampire earn-halt specced-not-built), B (HoonDing/Leki leak fix inert until regen), C (Arkay shrine cosmetic toast).
 ```
 
 ## Trim log (2026-06-13)
@@ -167,3 +168,115 @@ make-way signal is weekly-capped (see the gated-behavior note above).
 
 Neglect line `<Deity>'s regard fades as your devotion goes quiet.` now fires
 top-left. Survey lists recent beats in fiction voice.
+
+## Session corrections & findings (2026-06-19, live-run pass)
+
+Corrections to this packet's wording and one specced-not-built gap surfaced
+while running the R4/R5 blocks in game. Source-of-truth is the live
+`PDV__ManagerQuest.psc` (line refs below are from the 2026-06-19 build).
+
+- **Far Shores token grant is dawn-synced, not instant.** Firing the signal
+  (`HandleRedguardFarShoresToken`) sets the `PDV.Redguard.FarShoresToken` credit
+  and shows the top-left notice, but the ResistMagic-5% ability is only added
+  on the next dawn consolidation (`ProcessDawn -> SyncFirstTierRaceRewardRuntime
+  -> SyncRedguardRewards`). After firing, run **MCM -> Debug -> "Run dawn pass"**,
+  then check **Magic -> Active Effects**. The "daily cap" is a soft 0.7x decay
+  on the credit (`ConsumeDailyRepeatMultiplier`), trace-only -- not a visible
+  "second grant blocked." Confirmed PASS.
+
+- **R4 stack: broad Ancestor Spine T1 is the active-patron BASELINE and is
+  supposed to remain under focus.** Earlier runsheet wording ("broad layer is
+  gone under focus") was wrong. `IsFirstTierRaceRewardEligible` (line 8678)
+  grants the first-tier reward (`PDV_Bless_Redguard_AncestorSpine_T1`,
+  "Ancestor Spine - Seeker") whenever a focused patron is active at Seeker+.
+  Only the broad **T2 "Ancestor Spine - Faithful"** (line 8315, requires
+  `PATRON_STATE_BROAD`) suppresses under focus. Expected focused stack =
+  focused family at its tier + Far Shores token + Ancestor Spine - Seeker
+  baseline; "Faithful" absent. Proving T2 suppression requires building broad
+  worship to Faithful (>=6 ancestor-spine sources, no patron) first, then
+  committing a patron and watching "Faithful" drop. Confirmed PASS.
+
+- **R5 via MCM curse-force surfaces as a top-left FALLBACK notice, not the
+  authored modal.** `ShouldSuppressRedguardCurseModal` (line 11247) returns true
+  for `mcm_force_none/_werewolf/_vampire`, so `ShowRedguardMessage` calls
+  `Debug.Notification(fallbackText)`. The authored "Outside the Cycle" /
+  "Right Re-Entry" message boxes only appear via REAL in-game vampirism + cure
+  (non-debug reason). Earlier "expect the modal" wording for the MCM path was
+  wrong.
+
+- **Forced curse state is volatile; refresh events revert it.** Any curse
+  refresh -- dawn pass, sleep, in-game day rollover -- calls
+  `HandleCurseStateRefresh -> RefreshFromPlayerState` (line 10203) and snaps the
+  forced state back to the player's REAL (non-curse) state. That refresh-driven
+  cure fires with reason `player_state`, so it shows the full MODAL (not a
+  top-left) and trips the show-once guard (`VampireCureFeedbackShown`). Test
+  onset->cure **back-to-back with nothing in between**. The curse transition is
+  also surfaced THREE ways: per-race top-left notice
+  (`ApplyRedguardCurseHandlers`, not logged), `SendPrismaCurseToast` (right-side
+  Prisma toast), and `SurfaceCurseTransitionDiegetic` + `EmitSound` (D1, logged
+  as `Diegetic dispatch CURSE.*`). The right-side toast is the Prisma/diegetic
+  surface; the small top-left race notice is easy to miss next to it. R5
+  transitions all confirmed in log (vampire 0<->2, werewolf 0<->1); PASS on
+  substance.
+
+- **GAP (specced, not built): Redguard vampire earn-halt.** The costing manifest
+  ("vampire breaks the cycle until Tu'whacca re-entry") and the
+  `PDV_Msg_Redguard_CurseState_VampireOnset` copy ("devotion across all three
+  sects falls quiet") both promise an earn-halt while undead. Only the narrative
+  half shipped: `ApplyRedguardCurseHandlers` sets `CyclePressure` /
+  `VampireReentryNeeded` / `VampireScar` and flips on the neglect debuff
+  (`IsRedguardAncestorDistanceNeglected`, line 8344). There is NO gain-halt:
+  `GetCurseGainMultiplier` (line 7644) returns 1.0 for all Yokudan deities
+  (only Hircine is special-cased); the working halt is Imperial-only
+  (`GetImperialCurseGainMultiplier -> 0.0` at dawn, line 6963). Proof: Papyrus
+  log 2026-06-19, `AwardPiety: HoonDing/Leki` accrued during the vampire window
+  09:20:27->09:25:29. The onset copy overpromises relative to the mechanics.
+  Fix when prioritized: add a `GetRedguardCurseGainMultiplier(deity) -> 0.0` for
+  Yokudan deities, applied at dawn next to the Imperial one; gate on
+  `VampireReentryNeeded == 1` (persists post-cure -- stricter than Imperial's
+  cure-lifts; clear on the Tu'whacca re-entry act). Werewolf is specced as
+  "strains," not "breaks" -- keep it neglect-debuff-only or a soft <1.0x, never
+  0.0. Related: the Imperial halt's own dawn-vs-earn-time strictness gap. Not an
+  R5 blocker (re-entry routing itself works); log to the completeness GAP ledger
+  for the content pass.
+
+- **Shrine-blessing neutralization residual (Arkay, R7).** Clicking the Arkay
+  shrine still prints "Blessing of Arkay added" and grants the cure-only ability,
+  even though the stat boon is correctly suppressed. This is the `cure-only`
+  policy working: the SPEL override (`AltarArkaySpell` 0FB994 -> keep cure 0FBFF5,
+  strip stat 0FB98D) is winning, so the user's 2026-06-19 run is the runtime proof
+  that closes `PDV_ShrineBlessingNeutralization.manifest.json`'s
+  `pending-runtime-proof` status (stat suppressed). NOT a piety leak -- no
+  Tu'whacca/PDV movement (substitution guard holds). The residual "added" toast +
+  empty blessing entry is because the tool deliberately leaves the shrine
+  `TempleBlessingScript` untouched. "More robust" without crossing into script
+  scope = blank the overridden SPEL's Name so the toast stops implying a boon,
+  KEEP the cure (Requiem disease matters); don't empty the cure. Update the
+  neutralization manifest status to runtime-proven + note the message-residual.
+
+- **HoonDing/Leki generic-combat day-to-day (R7 finding + resolution APPLIED).**
+  R7 surfaced generic kills (events 1/2) and location discovery (event 345 =
+  `EVT_DISCOVER_LOCATION`) feeding HoonDing and Leki via the universal
+  likes/dislikes day-to-day layer, contradicting the spec ("Generic combat...
+  never satisfy HoonDing"; Leki rejects body count). The anti-farm daily cap (3/day)
+  works; the issue is curation, not farm. Parity check: the curated make-way route
+  IS wired (`PDV__ManagerQuest` line ~5108) but is **weekly-capped** (max 1 per 7
+  days), so it can never carry leveling -- the day-to-day likes are load-bearing
+  for Champion-pace parity. Resolution (user-approved 2026-06-19): exempt generic
+  COMBAT only, keep the on-theme make-way/discipline likes. **APPLIED to
+  `PDV_DeityLikesDislikes.csv`:** removed `HoonDing,2,kill-hostile-humanoid`,
+  `Leki,2,kill-hostile-humanoid`, `Leki,1,kill-hostile-beast` (3 rows). KEPT
+  HoonDing's make-way set (discover-location / trespass / pick-owned-lock /
+  rest-under-open-sky / increase-skill) + kill-dragon + learn-word; KEPT Leki's
+  smith-item / read-skill-book / increase-skill / learn-word + kill-dragon. Those
+  give ~1-2 piety/day for a traveling/training player -- comparable to peer deities
+  -- so parity holds (exploration-skewed, which is on-theme for the Make-Way God).
+  **UPDATE 2026-06-19 -- REGEN APPLIED (code-closed, awaiting in-game reconfirm):**
+  ran `pdv_likesdislikes_gen` -> replaced live `LoadRowsForDeity` (351->348 lines, 3
+  kill rows dropped), bumped `LIKES_DISLIKES_VERSION` 8->9 (the version-gated reload
+  runs `ClearRowsForDeity`, whose `GetLikesDislikesEventTypes()` superset already
+  includes events 1/2, so the removed rows clear on existing saves too), recompiled
+  `PDV__ManagerQuest` (0 errors / 0 warnings), and `pdv_verify.mjs` FAIL=0 (verifier
+  `EXPECTED_LIKES_DISLIKES_VERSION` synced 8->9). Remaining: in-game reconfirm that
+  generic kills/discovery produce zero HoonDing/Leki movement on a save that loads
+  version 9.

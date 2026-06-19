@@ -80,15 +80,15 @@ Status: all exact organic quest-stage senders are placed/readback-clean and read
 | Race | Current beta-feel state | P2 book/source runtime state | Manual evidence gap |
 |---|---|---|---|
 | Altmer | Pass for current race beta-feel packet; final-world placement remains separate | Auri-El, Magnus, and Xarxes book source proof plus MQ104 stage-160 route/Survey proof are recorded; 2026-06-10 Active Effects proof showed `Altmer: Dawn Steadiness` | No current packet blocker |
-| Khajiit | Fail - runtime/manual proof deferred | Wired lunar book packet proof, wrong-origin silence, generic-source silence, Survey/status movement, stack behavior below reward threshold, and feel are recorded; ledger has six of seven manual slots recorded | `assetStatus` |
-| Argonian | Fail - runtime/manual proof deferred | Hist book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
-| Orc | Fail - runtime/manual proof deferred | Malacath book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
-| Redguard | Fail - runtime/manual proof deferred | Ancestor-spine book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
-| Bosmer | Fail - runtime/manual proof deferred | DA05 exact source packet is approved, filled, readback-clean, and ready for packet proof | All seven manual slots pending |
-| Breton | Fail - runtime/manual proof deferred | Hidden Art book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
+| Khajiit | Pass - per gate-ledger manual/runtime packet | See PDV_PreBetaRaceGateLedger.md; manual-evidence slots tracked in PDV_Phase20_ManualEvidenceLedger.json | `assetStatus` |
+| Argonian | Pass - per gate-ledger manual/runtime packet 2026-06-18 | See PDV_PreBetaRaceGateLedger.md; manual-evidence slots tracked in PDV_Phase20_ManualEvidenceLedger.json | Slots in manual-evidence ledger |
+| Orc | Pass - per gate-ledger manual/runtime packet 2026-06-18 | See PDV_PreBetaRaceGateLedger.md; manual-evidence slots tracked in PDV_Phase20_ManualEvidenceLedger.json | Slots in manual-evidence ledger |
+| Redguard | Pass - manual/runtime packet 2026-06-19 | Ancestor-spine book route packet-proven; 8/8 beta-feel dimensions | Manual slots evidence-recorded; non-blocking follow-ups A/B/C tracked (B: HoonDing/Leki day-to-day leak fix APPLIED 2026-06-19 -- regen+compile+verifier clean, awaiting in-game reconfirm) |
+| Bosmer | Pass - per gate-ledger DA05 + variety/reward packet | See PDV_PreBetaRaceGateLedger.md; manual-evidence slots tracked in PDV_Phase20_ManualEvidenceLedger.json | Slots in manual-evidence ledger |
+| Breton | Pass - per gate-ledger manual/runtime packet 2026-06-19 | See PDV_PreBetaRaceGateLedger.md; manual-evidence slots tracked in PDV_Phase20_ManualEvidenceLedger.json | Slots in manual-evidence ledger |
 | Dunmer | Fail - runtime/manual proof deferred | Azura and Boethiah book source families are filled/readback-clean and ready for packet proof | All seven manual slots pending |
 | Imperial | Fail - runtime/manual proof deferred | Public Talos book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
-| Nord | Fail - runtime/manual proof deferred | Old Ways and Hircine/Arkay book source families plus seven repaired exact-stage route entries are ready for packet proof | All seven manual slots pending |
+| Nord | Pass - per gate-ledger manual/runtime packet 2026-06-18 | See PDV_PreBetaRaceGateLedger.md; manual-evidence slots tracked in PDV_Phase20_ManualEvidenceLedger.json | Slots in manual-evidence ledger |
 
 ## P2 FormList Shell State
 

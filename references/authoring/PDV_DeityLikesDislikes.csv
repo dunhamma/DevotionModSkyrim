@@ -167,13 +167,11 @@ Tu'whacca,342,read-lore-book,+,small,0.25,3,0,,,study of the dead and the Far Sh
 Tu'whacca,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,sparing a soul its early passage honors the soul-keeper
 Tu'whacca,365,raise-undead,-,large,-1.5,1,1.0,,,raising the dead chains souls from the Far Shores
 Tu'whacca,304,murder-defenseless,-,medium,-0.75,2,0.5,,,a soul sent unready and unguided offends the keeper
-Leki,2,kill-hostile-humanoid,+,small,0.25,3,0,,,the blade tested against a worthy foe
 Leki,344,increase-skill,+,small,0.25,3,0,,,martial discipline sharpened day by day
 Leki,330,smith-item,+,medium,0.75,2,0.5,,,forging a true blade honors the Spirit Sword
 Leki,343,learn-word-of-power,+,medium,0.75,2,0.5,,,mastering a new edge of power
 Leki,304,murder-defenseless,-,medium,-0.75,2,0.5,,,a killing without honor shames the goddess of the duel
 Leki,362,steal-item,-,small,-0.25,3,0,,,the thief's hand has no place in Leki's discipline
-HoonDing,2,kill-hostile-humanoid,+,small,0.25,3,0,,,cutting through those who bar the way
 HoonDing,302,kill-dragon,+,large,1.5,1,1.0,,,breaking an impossible foe is the breakthrough he embodies
 HoonDing,344,increase-skill,+,small,0.25,3,0,,,martial perseverance toward the homeland
 HoonDing,345,discover-location,+,small,0.25,3,0,,,pressing into new ground is making way
@@ -302,7 +300,6 @@ Malacath,314,sleep-in-bed,-,small,-0.25,3,0,,,soft comfort softens the warrior; 
 Tu'whacca,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,banishing Daedra that prey on souls bound for the Far Shores
 Tu'whacca,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,a Daedric bargain binds a soul from its proper passage to the Far Shores
 Leki,302,kill-dragon,+,medium,1.0,1,0.5,,,the impossible foe is the truest test of the perfect cut
-Leki,1,kill-hostile-beast,+,small,0.25,3,0,,,a clean kill of a dangerous beast proves the edge
 Leki,340,read-skill-book,+,small,0.25,3,0,,,the sword-singer trains the mind as keenly as the hand
 Leki,364,assault-innocent,-,medium,-0.75,2,0.5,,,striking one who cannot answer in kind mocks the duel
 HoonDing,313,rest-under-open-sky,+,small,0.25,3,0,,,the traveler's rest on the road; still bound onward with the dawn

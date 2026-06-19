@@ -24,7 +24,7 @@ packets were refreshed to the 2026-06-14 consolidated build.
 | Altmer | `PDV_BetaTestPacket_Altmer.md` | part-runnable | partial -- see below |
 | Imperial | `PDV_BetaTestPacket_Imperial.md` | part-runnable | partial -- see below |
 | Dunmer | `PDV_BetaTestPacket_Dunmer.md` | part-runnable | partial -- see below |
-| Redguard | `PDV_BetaTestPacket_Redguard.md` | part-runnable | partial -- see below |
+| Redguard | `PDV_BetaTestPacket_Redguard.md` | done | packet PASS 2026-06-19 (8/8 dims) |
 
 ### Ready to run NOW (no dependency on the concurrent build pass)
 
@@ -40,17 +40,20 @@ pact model).
 
 ### Waits on the concurrent build pass (steps written, marked PENDING)
 
-Altmer, Imperial, Dunmer, Redguard. Each packet's refresh section has a runnable
+Altmer, Imperial, Dunmer. Each packet's refresh section has a runnable
 NOW part (the pure-script build-batch lever) plus a PENDING part whose vanilla
 emitters the concurrent build session is wiring this pass. Do NOT log a FAIL on a
 PENDING step until the build session confirms the emitter landed.
+(Redguard's beta-feel packet now PASSED 2026-06-19 -- 8/8 dimensions; only its
+Dawnguard exact-stage Ash'abah source remains a deferred build item, tracked in
+the table below, NOT a beta-feel blocker.)
 
 | Race | Runnable NOW | PENDING build-pass confirmation |
 |---|---|---|
 | Altmer | Lorkhan adjacency penalty (test 5) | ThalmorAlignment actions: read-banned-texts -5, consort-with-Daedra -25, kill-Thalmor-agent -20 |
 | Imperial | Vampire-rupture halt (test 1) | Concordat 8-action table: Stormcloak join -20 (CW01B), Talos Mistake book, hidden Talos shrine, kill-Thalmor-justiciar -10 |
 | Dunmer | Ancestor-layer curse silence (test 2) | Outdoor Good-Daedra shrine -> twilight window; Layer-2 werewolf 0.75x runtime |
-| Redguard | Sect no-flip (test 7) + Far Shores token | Dawnguard-cure stage (DLC1VQ02) -> Ash'abah re-entry |
+| Redguard | PACKET PASS 2026-06-19 (8/8 dims: sect no-flip, Far Shores token, vampire/werewolf curse cycle all proven) | Dawnguard-cure stage (DLC1VQ02) -> Ash'abah re-entry: source-fill still blocked (deferred build item, NOT a beta-feel blocker) |
 
 ### Explicitly NOT testable in V1 (no clean vanilla hook -- do not write steps)
 

@@ -31,7 +31,7 @@ As of the 2026-06-14 17:29 AEST local recheck:
 | Area | Current state | Evidence |
 | --- | --- | --- |
 | Daedric Princes | **Pass** for current beta-display gate | `node .\tools\pdv_daedric_beta_gate.mjs` -> `PASS=16` |
-| Race beta-feel packets | **3 pass, 7 still fail/deferred** | `PDV_PreBetaRaceGateLedger.md`: Altmer Pass, Khajiit Pass, Bosmer Pass; Argonian, Orc, Redguard, Breton, Dunmer, Imperial, and Nord remain Fail/deferred |
+| Race beta-feel packets | **8 pass, 2 still fail/deferred** | `PDV_PreBetaRaceGateLedger.md`: Altmer, Khajiit, Bosmer, Nord, Argonian, Orc, Breton, and Redguard Pass; Dunmer and Imperial remain Fail/deferred (count reconciled 2026-06-19) |
 | Default framework verifier | **Machine-clean with known warnings** | `node .\tools\pdv_verify.mjs` -> `FAIL=0, WARN=2, TODO=0, PASS=3038, INFO=43`; includes small-signal v8/v3 exact-body source gate |
 | Content verifier | **Clean** | `node .\tools\pdv_content_verify.mjs` -> `FAIL=0, WARN=0, PASS=1080, INFO=4` |
 | Khajiit focused P2 route | **Route-proof pass** | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race khajiit` -> PASS |
@@ -84,13 +84,13 @@ blocked by manual/runtime evidence for the seven non-passing races.
 | Altmer | Pass | No blocker for current packet; final-world placement separate |
 | Khajiit | Pass | No blocker for current packet; final-world placement separate |
 | Bosmer | Pass | No blocker for current packet; final-world placement separate |
-| Argonian | Fail | Hist/People floor, swimming/sleep/murder rejection, Survey display, immersive water/community/Void hook proof, asset status |
-| Orc | Fail | Raw craft/combat/faction rejection, Survey display, immersive Stronghold/City/Legion hook proof, asset status |
-| Redguard | Fail | Fast-travel/undead/combat rejection, Survey display, immersive sect/death-duty/HoonDing proof, asset status |
-| Breton | Fail | Tradition Survey display, rejected spell/artifact/help loops, immersive hook proof, expected/edge stack audit, asset status |
+| Argonian | Pass | No blocker for current packet; final-world placement separate |
+| Orc | Pass | No blocker for current packet; final-world placement separate |
+| Redguard | Pass | manual/runtime packet 2026-06-19 (8/8 dims); non-blocking follow-ups: vampire earn-halt (content), HoonDing/Leki day-to-day leak fix APPLIED 2026-06-19 (regen+compile+verifier clean; awaiting in-game reconfirm), Arkay shrine cosmetic; final-world placement separate |
+| Breton | Pass | No blocker for current packet; final-world placement separate |
 | Dunmer | Fail | Ancestor/Reclamation stack audit, rejected generic Daedric behavior, Survey display, immersive hook proof, asset status |
 | Imperial | Fail | Civic Survey display, faction/attendance rejection, public/private Talos stack, immersive hook proof, asset status |
-| Nord | Fail | Over-trigger audit, generic hook rejection, immersive hook proof, expected/edge stack snapshot, asset status |
+| Nord | Pass | No blocker for current packet; final-world placement separate |
 
 ### 2. Build/Depth Work Still On The Feel Path
 
