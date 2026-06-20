@@ -158,6 +158,9 @@ EndEvent
 Function OnGameReload()
     InitializePages()
     RegisterJournalHotkey()
+    ; A load recreates the Prisma view closed, so the journal-open toggle must start
+    ; closed or the first hotkey press would "close" an already-closed book.
+    StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
     Parent.OnGameReload()
 EndFunction
 
@@ -909,9 +912,19 @@ Event OnKeyDown(Int a_keyCode)
     if !EnsureManagerBinding("journal_hotkey")
         return
     endIf
-    ; Player-pressed: show the journal on the Prisma overlay (SendOverlayJson shows the view).
-    ; The full panel stays bridge-owned (see pdv_prisma_ui_audit); True is the player-owned
-    ; bypass of the gameplay default-off gate. The notice is a temporary open confirmation.
+    ; Player-pressed TOGGLE: first press opens the journal overlay, a second press
+    ; closes it (the foot text tells the player to press the key again to close).
+    ; The view is a NON-FOCUSED overlay (SendOverlayJson), so the close is driven by
+    ; this hotkey, not an in-view button. True is the player-owned bypass of the
+    ; gameplay default-off gate (see pdv_prisma_ui_audit). The open flag is reset in
+    ; OnGameReload so a load (which closes the overlay) cannot leave it stuck "open".
+    if StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Open") != 0
+        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
+        Debug.Notification("The Book of Days closes.")
+        PDV_Manager.ClosePrismaJournal()
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
     Debug.Notification("The Book of Days opens.")
     PDV_Manager.SendPrismaJournalPayload(True)
 EndEvent

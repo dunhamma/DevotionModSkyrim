@@ -203,11 +203,12 @@
       "displayName": "Civic Faith - Seeker",
       "effects": [
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 4
+          "actorValue": "Health",
+          "magnitude": 10,
+          "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "The Nine note your civic faith. Health Regeneration +4%."
+      "playerFacingText": "The Nine note your civic faith. Maximum Health +10."
     },
     {
       "emphasis": "Civic",
@@ -219,15 +220,16 @@
       "displayName": "Civic Faith - Faithful",
       "effects": [
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 7
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Fortify Health"
         },
         {
           "actorValue": "ResistDisease",
           "magnitude": 10
         }
       ],
-      "playerFacingText": "A faithful citizen of the Empire is well-kept. Health Regeneration +7%, Disease Resistance +10%.",
+      "playerFacingText": "A faithful citizen of the Empire is well-kept. Maximum Health +20, Disease Resistance +10%.",
       "signature": "Broad civic resilience: faster recovery and disease ward; broad lane stops here, below focused patron benefits."
     },
     {
@@ -317,14 +319,10 @@
           "actorValue": "Restoration",
           "magnitude": 13,
           "effectName": "Restoration"
-        },
-        {
-          "actorValue": "HealRateMult",
-          "magnitude": 7,
-          "effectName": "Health Regeneration"
         }
       ],
-      "playerFacingText": "The Mother's mercy mends. Restoration +13, Health Regeneration +7%."
+      "playerFacingText": "The Mother's mercy mends. Restoration +13; you wake mended after rest.",
+      "designNote": "HealRateMult removed 2026-06-20 (Requiem-swallowed); the heal is now an event-driven flat RestoreActorValue on rest (HandleImperialMaraSleepMercy, Devoted 25 HP), Requiem-proof."
     },
     {
       "emphasis": "Mara",
@@ -338,15 +336,10 @@
           "actorValue": "Restoration",
           "magnitude": 23,
           "effectName": "Restoration"
-        },
-        {
-          "actorValue": "HealRateMult",
-          "magnitude": 19,
-          "effectName": "Health Regeneration"
         }
       ],
-      "playerFacingText": "Mara's compassion works through you. Restoration +23, Health Regeneration +19%.",
-      "signature": "Compassion of the Mother: strongest healing-rate and Restoration; Champion Survey text is the V1 recognition surface."
+      "playerFacingText": "Mara's compassion works through you. Restoration +23; you wake fully mended after rest.",
+      "signature": "Compassion of the Mother: strongest Restoration; the mercy-on-rest heal (40 HP, Requiem-proof flat RestoreActorValue via HandleImperialMaraSleepMercy) is the Champion healing surface; Champion Survey text is the V1 recognition surface."
     },
     {
       "emphasis": "Arkay",
@@ -378,12 +371,12 @@
           "effectName": "Disease Resistance"
         },
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 7,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "You keep the vigil between life and death. Disease Resistance +15%, Health Regeneration +7%."
+      "playerFacingText": "You keep the vigil between life and death. Disease Resistance +15%, Maximum Health +20."
     },
     {
       "emphasis": "Arkay",
@@ -399,12 +392,12 @@
           "effectName": "Disease Resistance"
         },
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 17,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 30,
+          "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "Arkay's ward stands between you and the grave. Disease Resistance +27%, Health Regeneration +17%.",
+      "playerFacingText": "Arkay's ward stands between you and the grave. Disease Resistance +27%, Maximum Health +30.",
       "signature": "Ward of the cycle: strongest disease ward and recovery; Champion Survey text is the V1 recognition surface."
     },
     {

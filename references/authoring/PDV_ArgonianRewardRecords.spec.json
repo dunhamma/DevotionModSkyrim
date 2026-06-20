@@ -3,20 +3,122 @@
   "status": "design-draft-2026-06-07; recognition deferred to V2; pending authoring run",
   "notes": "Authoritative record spec for the Argonian pilot, the second substrate / no-offer reward gate (same family as the proven Khajiit pilot). Gate type is NO-OFFER: rewards branch on the PDV_Substrate_ArgonianHist tier + Hist posture + layer state, NOT on an active-patron offer. Hist is also the scripted patron target (PDV_Deity_Hist) so a small honest piety pulse keeps decay/neglect/creed-loss honest (double-route, exactly like the Khajiit pulse to its emphasis deity). Budget verdict is THIN (PDV_RaceRewardBudgetLedger.md, Focused Pass: Argonian 2026-05-30): Hist primary, People practical buffer, Void/Sithis high-threshold tertiary; strengthen Hist/People reward wealth BEFORE Void depth. Magnitudes follow the proven Khajiit substrate power level. T3 NPC recognition is V1-deferred (PDV_RecognitionDialogueScalePacket.md); V1 T3 ships stat/signature effects only with Champion Survey text as the recognition surface. All player-facing text is ASCII-only and uses Skyrim ActorValue names only.",
   "deityQuests": [
-    { "editorId": "PDV_Deity_Hist", "script": "PDV_Deity_Hist", "deityName": "The Hist", "stanceArgonian": "NATIVE", "create": true, "role": "scripted patron target for the small honest Hist piety pulse; the substrate (PDV_Substrate_ArgonianHist) carries the actual reward gating", "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "next-available" },
-    { "editorId": "PDV_Deity_Sithis", "script": "PDV_Deity_Sithis", "deityName": "Sithis", "stanceArgonian": "NATIVE", "create": true, "role": "high-threshold tertiary Void patron; only scored after >=3 significant Void signals across separate beats (PDV_Substrate_ArgonianHist.VoidActivationSignalsRequired=3). Must NOT become the obvious Argonian route.", "addToFormList": "PDV_FLST_AllDeities", "deityIndex": "next-available" }
+    {
+      "editorId": "PDV_Deity_Hist",
+      "script": "PDV_Deity_Hist",
+      "deityName": "The Hist",
+      "stanceArgonian": "NATIVE",
+      "create": true,
+      "role": "scripted patron target for the small honest Hist piety pulse; the substrate (PDV_Substrate_ArgonianHist) carries the actual reward gating",
+      "addToFormList": "PDV_FLST_AllDeities",
+      "deityIndex": "next-available"
+    },
+    {
+      "editorId": "PDV_Deity_Sithis",
+      "script": "PDV_Deity_Sithis",
+      "deityName": "Sithis",
+      "stanceArgonian": "NATIVE",
+      "create": true,
+      "role": "high-threshold tertiary Void patron; only scored after >=3 significant Void signals across separate beats (PDV_Substrate_ArgonianHist.VoidActivationSignalsRequired=3). Must NOT become the obvious Argonian route.",
+      "addToFormList": "PDV_FLST_AllDeities",
+      "deityIndex": "next-available"
+    }
   ],
   "managerDeityProperties": [
-    { "property": "PDV_Hist", "record": "PDV_Deity_Hist" },
-    { "property": "PDV_Sithis", "record": "PDV_Deity_Sithis" }
+    {
+      "property": "PDV_Hist",
+      "record": "PDV_Deity_Hist"
+    },
+    {
+      "property": "PDV_Sithis",
+      "record": "PDV_Deity_Sithis"
+    }
   ],
   "substrateBoons": {
     "wireTo": "PDV_Substrate_ArgonianHist",
     "wireToScriptNote": "Substrate quest editorId carrying the slot properties is PDV_Substrate_ArgonianHist (extends PDV_SubstrateBase). StorageUtil key contract is PDV.Substrate.ArgonianHist.* (Hist/People/Void/Posture/SithisSignalCount/BedOfChoiceSleepCount/LastMaintenanceDay/LastDecayDay). Posture enum PDV_State_ArgonianHistPosture: Normal(0), Distant(1), Strained(2), Silenced(3), Corrupted(4).",
     "slots": [
-      { "slotProperty": "Substrate_Always", "spellEditorId": "PDV_Bless_Argonian_Substrate_Always", "displayName": "Hist Memory", "consolidation": "highest-slot-only; each slot carries the cumulative total", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Always_Magic", "actorValue": "ResistMagic", "magnitude": 5.0, "nearWaterOnly": false, "effectName": "Magic Resistance" } ], "playerFacingText": "The Hist remembers you across the distance. Your resistance to magic rises by 5%." },
-      { "slotProperty": "Substrate_Mid", "spellEditorId": "PDV_Bless_Argonian_Substrate_Mid", "displayName": "Hist Reach", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Mid_Magic", "actorValue": "ResistMagic", "magnitude": 5.0, "nearWaterOnly": false, "effectName": "Magic Resistance" }, { "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Mid_HealRate", "actorValue": "HealRateMult", "magnitude": 6.0, "nearWaterOnly": true, "effectName": "Health Regeneration" }, { "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Mid_Poison", "actorValue": "ResistPoison", "magnitude": 10.0, "nearWaterOnly": false, "effectName": "Poison Resistance" } ], "playerFacingText": "The Hist reaches a little closer. Magic finds less purchase (5%), your health regenerates 6% faster, and your resistance to poison rises 10%." },
-      { "slotProperty": "Substrate_High", "spellEditorId": "PDV_Bless_Argonian_Substrate_High", "displayName": "Hist Attunement", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_Magic", "actorValue": "ResistMagic", "magnitude": 5.0, "nearWaterOnly": false, "effectName": "Magic Resistance" }, { "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_HealRate", "actorValue": "HealRateMult", "magnitude": 15.0, "nearWaterOnly": true, "effectName": "Health Regeneration" }, { "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_Poison", "actorValue": "ResistPoison", "magnitude": 22.0, "nearWaterOnly": false, "effectName": "Poison Resistance" }, { "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_Claws", "actorValue": "UnarmedDamage", "magnitude": 12.0, "nearWaterOnly": false, "effectName": "Unarmed Damage" } ], "playerFacingText": "You are deeply attuned to the Hist even far from the marsh. Magic finds little purchase (5%), your health mends quickly (15%), poison fails (22%), and your claws carry the marsh's strength (+12 unarmed)." }
+      {
+        "slotProperty": "Substrate_Always",
+        "spellEditorId": "PDV_Bless_Argonian_Substrate_Always",
+        "displayName": "Hist Memory",
+        "consolidation": "highest-slot-only; each slot carries the cumulative total",
+        "effects": [
+          {
+            "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Always_Magic",
+            "actorValue": "ResistMagic",
+            "magnitude": 5,
+            "nearWaterOnly": false,
+            "effectName": "Magic Resistance"
+          }
+        ],
+        "playerFacingText": "The Hist remembers you across the distance. Your resistance to magic rises by 5%."
+      },
+      {
+        "slotProperty": "Substrate_Mid",
+        "spellEditorId": "PDV_Bless_Argonian_Substrate_Mid",
+        "displayName": "Hist Reach",
+        "effects": [
+          {
+            "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Mid_Magic",
+            "actorValue": "ResistMagic",
+            "magnitude": 5,
+            "nearWaterOnly": false,
+            "effectName": "Magic Resistance"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Mid_HealRate",
+            "actorValue": "Health",
+            "magnitude": 20,
+            "nearWaterOnly": true,
+            "effectName": "Fortify Health"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Mid_Poison",
+            "actorValue": "ResistPoison",
+            "magnitude": 10,
+            "nearWaterOnly": false,
+            "effectName": "Poison Resistance"
+          }
+        ],
+        "playerFacingText": "The Hist reaches a little closer. Magic finds less purchase (5%), Maximum Health +20, and your resistance to poison rises 10%."
+      },
+      {
+        "slotProperty": "Substrate_High",
+        "spellEditorId": "PDV_Bless_Argonian_Substrate_High",
+        "displayName": "Hist Attunement",
+        "effects": [
+          {
+            "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_Magic",
+            "actorValue": "ResistMagic",
+            "magnitude": 5,
+            "nearWaterOnly": false,
+            "effectName": "Magic Resistance"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_HealRate",
+            "actorValue": "Health",
+            "magnitude": 30,
+            "nearWaterOnly": true,
+            "effectName": "Fortify Health"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_Poison",
+            "actorValue": "ResistPoison",
+            "magnitude": 22,
+            "nearWaterOnly": false,
+            "effectName": "Poison Resistance"
+          },
+          {
+            "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_Claws",
+            "actorValue": "UnarmedDamage",
+            "magnitude": 12,
+            "nearWaterOnly": false,
+            "effectName": "Unarmed Damage"
+          }
+        ],
+        "playerFacingText": "You are deeply attuned to the Hist even far from the marsh. Magic finds little purchase (5%), Maximum Health +30, poison fails (22%), and your claws carry the marsh's strength (+12 unarmed)."
+      }
     ],
     "substratePowerNote": "Mirrors the proven Khajiit substrate triad shape and power level (Always low + Mid + High climbing). Water-breathing is omitted because it is already Argonian racial; boons are themed to Hist/water identity (ResistDisease, HealRateMult near water/rest, ResistPoison). nearWaterOnly conditions are the Argonian analogue of the Khajiit nightOnly conditions; the always-on identity boon is unconditional, the contextual climb keys off near-water/rest context."
   },
@@ -26,31 +128,267 @@
     "spellEditorId": "PDV_SPEL_Neglect_ArgonianHist",
     "displayName": "The Hist Distant",
     "biteCondition": "Gentle diegetic texture only at posture Distant; mechanical bite applies only at posture Silenced or Corrupted (vampire grief / domination), per PDV_Substrate_ArgonianHist.RefreshHistPosture and the ledger curse posture.",
-    "effects": [ { "magicEffectEditorId": "PDV_MGEF_Neglect_ArgonianHist_HealRate", "actorValue": "HealRateMult", "magnitude": -5.0, "appliesAtPosture": "Silenced or Corrupted" } ],
+    "effects": [
+      {
+        "magicEffectEditorId": "PDV_MGEF_Neglect_ArgonianHist_HealRate",
+        "actorValue": "HealRateMult",
+        "magnitude": -5,
+        "appliesAtPosture": "Silenced or Corrupted"
+      }
+    ],
     "playerFacingText": "The Hist has grown distant and cannot reach you. Your health regenerates 5% more slowly until the connection is restored.",
     "decayRule": "Dawn Hist decay only after 3 days without valid maintenance (HistDawnGraceDays=3), then -1 per dawn (HistDawnDecay=1.0), non-curse floor 20 (HistNonCurseFloor=20.0); curse-active floor is MetricMin. This is the gentle diegetic Hist-distance texture, not a punishment faucet."
   },
   "emphasisRewards": [
-    { "emphasis": "Hist", "layer": "broad-substrate-support", "tier": "T1", "thresholdPiety": 25, "consolidation": "highest-tier-only; each tier carries the cumulative total", "spellEditorId": "PDV_Bless_Argonian_Hist_T1", "displayName": "Hist Communion - Faithful", "effects": [ { "actorValue": "HealRateMult", "magnitude": 5.0, "effectName": "Health Regeneration" } ], "playerFacingText": "The Hist keeps a steadying hand on you. Health regenerates 5% faster." },
-    { "emphasis": "Hist", "layer": "broad-substrate-support", "tier": "T2", "thresholdPiety": 50, "tierCap": "Faithful", "spellEditorId": "PDV_Bless_Argonian_Hist_T2", "displayName": "Hist Communion - Devoted", "effects": [ { "actorValue": "HealRateMult", "magnitude": 13.0, "effectName": "Health Regeneration" }, { "actorValue": "StaminaRateMult", "magnitude": 10.0, "effectName": "Stamina Regeneration" } ], "playerFacingText": "The Hist holds you close even in exile. Health regenerates 13% faster and stamina returns 10% faster." },
-    { "emphasis": "Hist", "layer": "broad-substrate-support", "tier": "signature", "thresholdPiety": 75, "spellEditorId": "PDV_Bless_Argonian_Hist_Signature", "displayName": "Hist-Sworn", "effects": [ { "actorValue": "HealRateMult", "magnitude": 23.0, "effectName": "Health Regeneration" }, { "actorValue": "StaminaRateMult", "magnitude": 10.0, "effectName": "Stamina Regeneration" }, { "actorValue": "ResistPoison", "magnitude": 10.0, "effectName": "Poison Resistance" } ], "playerFacingText": "You carry the marsh within you. Health regenerates 23% faster, stamina returns 10% faster, and your resistance to poison rises 10%." },
-    { "emphasis": "People", "layer": "practical-support-modest", "tier": "T1", "thresholdPiety": 25, "spellEditorId": "PDV_Bless_Argonian_People_T1", "displayName": "Chosen People - Kin", "effects": [ { "actorValue": "CarryWeight", "magnitude": 25.0, "effectName": "Carry Weight" } ], "playerFacingText": "The people you chose look out for you. You can carry 25 more weight." },
-    { "emphasis": "People", "layer": "practical-support-modest", "tier": "T2", "thresholdPiety": 50, "spellEditorId": "PDV_Bless_Argonian_People_T2", "displayName": "Chosen People - Family", "effects": [ { "actorValue": "CarryWeight", "magnitude": 25.0, "effectName": "Carry Weight" }, { "actorValue": "ResistPoison", "magnitude": 8.0, "effectName": "Poison Resistance" }, { "actorValue": "HealRateMult", "magnitude": 5.0, "effectName": "Health Regeneration" } ], "playerFacingText": "Your chosen family steadies you. You carry 25 more weight, poison resistance rises 8%, and health regenerates 5% faster." },
-    { "emphasis": "People", "layer": "focused-emphasis-3tier", "tier": "T3", "thresholdPiety": 85, "tierName": "Champion", "spellEditorId": "PDV_Bless_Argonian_People_T3", "displayName": "Chosen People - Pillar", "effects": [ { "actorValue": "CarryWeight", "magnitude": 50.0, "effectName": "Carry Weight" }, { "actorValue": "ResistPoison", "magnitude": 8.0, "effectName": "Poison Resistance" }, { "actorValue": "HealRateMult", "magnitude": 13.0, "effectName": "Health Regeneration" }, { "actorValue": "ResistMagic", "magnitude": 5.0, "effectName": "Magic Resistance" } ], "playerFacingText": "You are a pillar of the people you gathered. You carry 50 more weight, poison resistance rises 8%, health regenerates 13% faster, and magic finds less purchase (5%).", "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md" },
-    { "emphasis": "Sithis", "layer": "high-threshold-tertiary", "tier": "T1", "thresholdPiety": 25, "voidGate": "scored only after PDV_Substrate_ArgonianHist.IsVoidFullyActive() (>=3 Void signals across separate beats)", "spellEditorId": "PDV_Bless_Argonian_Sithis_T1", "displayName": "Void Distance - Faced", "effects": [ { "actorValue": "Sneak", "magnitude": 4.0, "effectName": "Sneak" } ], "playerFacingText": "Having faced the Void, you move a little quieter. Sneak +4." },
-    { "emphasis": "Sithis", "layer": "high-threshold-tertiary", "tier": "T2", "thresholdPiety": 50, "voidGate": "scored only after PDV_Substrate_ArgonianHist.IsVoidFullyActive()", "spellEditorId": "PDV_Bless_Argonian_Sithis_T2", "displayName": "Void Distance - Marked", "effects": [ { "actorValue": "Sneak", "magnitude": 10.0, "effectName": "Sneak" }, { "actorValue": "ResistPoison", "magnitude": 5.0, "effectName": "Poison Resistance" }, { "actorValue": "UnarmedDamage", "magnitude": 10.0, "effectName": "Unarmed Damage" } ], "playerFacingText": "The Void has marked your passing. Sneak +10, poison resistance rises 5%, and your bare strikes carry the Void's weight (+10 unarmed).", "ceilingNote": "Deliberately weaker than the People T3 ceiling and below the Hist signature; Void must not become the best generic stealth path." },
-    { "emphasis": "Sithis", "layer": "high-threshold-tertiary", "tier": "T3", "thresholdPiety": 85, "voidGate": "scored only after PDV_Substrate_ArgonianHist.IsVoidFullyActive()", "spellEditorId": "PDV_Bless_Argonian_Sithis_T3", "displayName": "Void-Held", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Argonian_Sithis_T3_StaminaRate", "actorValue": "StaminaRateMult", "magnitude": 10.0, "effectName": "Stamina Regeneration" } ], "playerFacingText": "Sithis holds those who faced the Void unflinching. Stamina returns 10% faster, and near death the Void can lend a brief surge.", "ceilingNote": "User-locked 2026-06-14: Sithis T3 is a two-part capstone, passive +10% stamina regeneration plus a once/day below-20%-health burst." }
+    {
+      "emphasis": "Hist",
+      "layer": "broad-substrate-support",
+      "tier": "T1",
+      "thresholdPiety": 25,
+      "consolidation": "highest-tier-only; each tier carries the cumulative total",
+      "spellEditorId": "PDV_Bless_Argonian_Hist_T1",
+      "displayName": "Hist Communion - Faithful",
+      "effects": [
+        {
+          "actorValue": "Health",
+          "magnitude": 10,
+          "effectName": "Fortify Health"
+        }
+      ],
+      "playerFacingText": "The Hist keeps a steadying hand on you. Maximum Health +10."
+    },
+    {
+      "emphasis": "Hist",
+      "layer": "broad-substrate-support",
+      "tier": "T2",
+      "thresholdPiety": 50,
+      "tierCap": "Faithful",
+      "spellEditorId": "PDV_Bless_Argonian_Hist_T2",
+      "displayName": "Hist Communion - Devoted",
+      "effects": [
+        {
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Fortify Health"
+        },
+        {
+          "actorValue": "StaminaRateMult",
+          "magnitude": 10,
+          "effectName": "Stamina Regeneration"
+        }
+      ],
+      "playerFacingText": "The Hist holds you close even in exile. Maximum Health +20 and stamina returns 10% faster."
+    },
+    {
+      "emphasis": "Hist",
+      "layer": "broad-substrate-support",
+      "tier": "signature",
+      "thresholdPiety": 75,
+      "spellEditorId": "PDV_Bless_Argonian_Hist_Signature",
+      "displayName": "Hist-Sworn",
+      "effects": [
+        {
+          "actorValue": "Health",
+          "magnitude": 30,
+          "effectName": "Fortify Health"
+        },
+        {
+          "actorValue": "StaminaRateMult",
+          "magnitude": 10,
+          "effectName": "Stamina Regeneration"
+        },
+        {
+          "actorValue": "ResistPoison",
+          "magnitude": 10,
+          "effectName": "Poison Resistance"
+        }
+      ],
+      "playerFacingText": "You carry the marsh within you. Maximum Health +30, stamina returns 10% faster, and your resistance to poison rises 10%."
+    },
+    {
+      "emphasis": "People",
+      "layer": "practical-support-modest",
+      "tier": "T1",
+      "thresholdPiety": 25,
+      "spellEditorId": "PDV_Bless_Argonian_People_T1",
+      "displayName": "Chosen People - Kin",
+      "effects": [
+        {
+          "actorValue": "CarryWeight",
+          "magnitude": 25,
+          "effectName": "Carry Weight"
+        }
+      ],
+      "playerFacingText": "The people you chose look out for you. You can carry 25 more weight."
+    },
+    {
+      "emphasis": "People",
+      "layer": "practical-support-modest",
+      "tier": "T2",
+      "thresholdPiety": 50,
+      "spellEditorId": "PDV_Bless_Argonian_People_T2",
+      "displayName": "Chosen People - Family",
+      "effects": [
+        {
+          "actorValue": "CarryWeight",
+          "magnitude": 25,
+          "effectName": "Carry Weight"
+        },
+        {
+          "actorValue": "ResistPoison",
+          "magnitude": 8,
+          "effectName": "Poison Resistance"
+        },
+        {
+          "actorValue": "Health",
+          "magnitude": 10,
+          "effectName": "Fortify Health"
+        }
+      ],
+      "playerFacingText": "Your chosen family steadies you. You carry 25 more weight, poison resistance rises 8%, and Maximum Health +10."
+    },
+    {
+      "emphasis": "People",
+      "layer": "focused-emphasis-3tier",
+      "tier": "T3",
+      "thresholdPiety": 85,
+      "tierName": "Champion",
+      "spellEditorId": "PDV_Bless_Argonian_People_T3",
+      "displayName": "Chosen People - Pillar",
+      "effects": [
+        {
+          "actorValue": "CarryWeight",
+          "magnitude": 50,
+          "effectName": "Carry Weight"
+        },
+        {
+          "actorValue": "ResistPoison",
+          "magnitude": 8,
+          "effectName": "Poison Resistance"
+        },
+        {
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Fortify Health"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 5,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "You are a pillar of the people you gathered. You carry 50 more weight, poison resistance rises 8%, Maximum Health +20, and magic finds less purchase (5%).",
+      "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md"
+    },
+    {
+      "emphasis": "Sithis",
+      "layer": "high-threshold-tertiary",
+      "tier": "T1",
+      "thresholdPiety": 25,
+      "voidGate": "scored only after PDV_Substrate_ArgonianHist.IsVoidFullyActive() (>=3 Void signals across separate beats)",
+      "spellEditorId": "PDV_Bless_Argonian_Sithis_T1",
+      "displayName": "Void Distance - Faced",
+      "effects": [
+        {
+          "actorValue": "Sneak",
+          "magnitude": 4,
+          "effectName": "Sneak"
+        }
+      ],
+      "playerFacingText": "Having faced the Void, you move a little quieter. Sneak +4."
+    },
+    {
+      "emphasis": "Sithis",
+      "layer": "high-threshold-tertiary",
+      "tier": "T2",
+      "thresholdPiety": 50,
+      "voidGate": "scored only after PDV_Substrate_ArgonianHist.IsVoidFullyActive()",
+      "spellEditorId": "PDV_Bless_Argonian_Sithis_T2",
+      "displayName": "Void Distance - Marked",
+      "effects": [
+        {
+          "actorValue": "Sneak",
+          "magnitude": 10,
+          "effectName": "Sneak"
+        },
+        {
+          "actorValue": "ResistPoison",
+          "magnitude": 5,
+          "effectName": "Poison Resistance"
+        },
+        {
+          "actorValue": "UnarmedDamage",
+          "magnitude": 10,
+          "effectName": "Unarmed Damage"
+        }
+      ],
+      "playerFacingText": "The Void has marked your passing. Sneak +10, poison resistance rises 5%, and your bare strikes carry the Void's weight (+10 unarmed).",
+      "ceilingNote": "Deliberately weaker than the People T3 ceiling and below the Hist signature; Void must not become the best generic stealth path."
+    },
+    {
+      "emphasis": "Sithis",
+      "layer": "high-threshold-tertiary",
+      "tier": "T3",
+      "thresholdPiety": 85,
+      "voidGate": "scored only after PDV_Substrate_ArgonianHist.IsVoidFullyActive()",
+      "spellEditorId": "PDV_Bless_Argonian_Sithis_T3",
+      "displayName": "Void-Held",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Argonian_Sithis_T3_StaminaRate",
+          "actorValue": "StaminaRateMult",
+          "magnitude": 10,
+          "effectName": "Stamina Regeneration"
+        }
+      ],
+      "playerFacingText": "Sithis holds those who faced the Void unflinching. Stamina returns 10% faster, and near death the Void can lend a brief surge.",
+      "ceilingNote": "User-locked 2026-06-14: Sithis T3 is a two-part capstone, passive +10% stamina regeneration plus a once/day below-20%-health burst."
+    }
   ],
   "supportSpells": [
-    { "spellProperty": "PDV_SPEL_ArgonianSithisNearDeathBurst", "spellEditorId": "PDV_SPEL_ArgonianSithisNearDeathBurst", "displayName": "Void-Held Surge", "effects": [ { "magicEffectEditorId": "PDV_MGEF_Argonian_Sithis_T3_StaminaBurst", "actorValue": "StaminaRateMult", "magnitude": 50.0, "duration": 10, "spellType": "Spell", "castType": "FireAndForget", "effectName": "Stamina Regeneration" } ], "playerFacingText": "Near death, the Void lends a brief surge. Stamina returns 50% faster for 10 seconds." }
+    {
+      "spellProperty": "PDV_SPEL_ArgonianSithisNearDeathBurst",
+      "spellEditorId": "PDV_SPEL_ArgonianSithisNearDeathBurst",
+      "displayName": "Void-Held Surge",
+      "effects": [
+        {
+          "magicEffectEditorId": "PDV_MGEF_Argonian_Sithis_T3_StaminaBurst",
+          "actorValue": "StaminaRateMult",
+          "magnitude": 50,
+          "duration": 10,
+          "spellType": "Spell",
+          "castType": "FireAndForget",
+          "effectName": "Stamina Regeneration"
+        }
+      ],
+      "playerFacingText": "Near death, the Void lends a brief surge. Stamina returns 50% faster for 10 seconds."
+    }
   ],
   "emphasisLayerDesignNote": "Per the THIN budget and reward ceiling (Hist substrate plus ONE strongest active support emphasis, People OR Void): Hist is the broad set T1(25 ~5%)/T2(50, capped Faithful, ~7-8%) plus a signature at 75. People is the modest practical-support set AND the ONE focused 3-tier emphasis (T1/T2/T3 Champion at 85). Sithis is intentionally only a 2-tier high-threshold tertiary, gated behind the 3-signal Void activation, with magnitudes below the People focus so it stabilizes rather than replaces Hist and never becomes the best generic stealth/combat route. No magnitude exceeds ~12%. <=2 always-on boon families (the Hist substrate triad is family one; the single foreground emphasis the player runs is family two). Broad sets (Hist, People modest) stay below the focused People T3 / Hist signature ceiling.",
   "creedViolation": {
     "scope": "medium/major only (Hist abandonment / corruption signals); no minor-tier loss",
     "deltas": [
-      { "id": "hist-abandonment-extended", "magnitude": -4.0, "target": "PDV_Deity_Hist piety / Hist substrate relation", "trigger": "extended Hist neglect carried past the 3-day grace into posture Distant while still neglecting (medium)", "playerFacingText": "The Hist has felt your absence. Its memory of you grows thin." },
-      { "id": "hist-corruption-domination", "magnitude": -8.0, "target": "PDV_Deity_Hist piety / Hist substrate relation", "trigger": "domination pressure driving posture to Corrupted (vampire grief plus domination per RefreshHistPosture) (major)", "playerFacingText": "Something has come between you and the Hist. The connection is fouled." },
-      { "id": "void-overreach-against-hist", "magnitude": -6.0, "target": "PDV_Deity_Hist piety / Hist substrate relation", "trigger": "leaning hard into Void/Sithis signals while Hist maintenance has lapsed past grace (major; Void must not replace Hist)", "playerFacingText": "You reached for the Void and let the Hist slip. The marsh feels further away." }
+      {
+        "id": "hist-abandonment-extended",
+        "magnitude": -4,
+        "target": "PDV_Deity_Hist piety / Hist substrate relation",
+        "trigger": "extended Hist neglect carried past the 3-day grace into posture Distant while still neglecting (medium)",
+        "playerFacingText": "The Hist has felt your absence. Its memory of you grows thin."
+      },
+      {
+        "id": "hist-corruption-domination",
+        "magnitude": -8,
+        "target": "PDV_Deity_Hist piety / Hist substrate relation",
+        "trigger": "domination pressure driving posture to Corrupted (vampire grief plus domination per RefreshHistPosture) (major)",
+        "playerFacingText": "Something has come between you and the Hist. The connection is fouled."
+      },
+      {
+        "id": "void-overreach-against-hist",
+        "magnitude": -6,
+        "target": "PDV_Deity_Hist piety / Hist substrate relation",
+        "trigger": "leaning hard into Void/Sithis signals while Hist maintenance has lapsed past grace (major; Void must not replace Hist)",
+        "playerFacingText": "You reached for the Void and let the Hist slip. The marsh feels further away."
+      }
     ]
   },
   "doubleRoute": {
@@ -128,12 +466,22 @@
     "recordCreation": "Create net-new SPEL + MGEFs: 3 substrate slot spells (Substrate_Always/Mid/High on PDV_Substrate_ArgonianHist), 3 Hist emphasis spells (T1/T2/signature), 3 People emphasis spells (T1/T2/T3), 2 Sithis emphasis spells (T1/T2), 1 neglect spell (PDV_SPEL_Neglect_ArgonianHist) = 12 net-new SPEL plus their MGEFs. Create 2 deity QUSTs (PDV_Deity_Hist, PDV_Deity_Sithis). No record reuse for substrate slots (Argonian has no pre-existing Lunar_T1 analogue to rehome).",
     "deityQuestStructure": "MUST mirror an existing deity quest (read e.g. PDV_Deity_Kyne 0120B6 fully first): FormVersion 44, Start-Game-Enabled flag, SEQ entry (per deity-quest-SGE+SEQ requirement in memory -- every PDV_Deity_* QUST needs the SGE flag AND a SEQ entry; verify the author helper sets the SGE flag), QuestAdapter VMAD hosting the PDV_Deity_<Name> script with base properties DeityName(String), DeityIndex(Int, next-available clear of existing indices), Stance_Argonian=0(NATIVE), PDV_GLO_OriginRace, PDV_GLO_DebugLevel. Thresholds use script defaults (25/50/85).",
     "baseline": {
-      "existingDeityQuests": { "PDV_Deity_Kyne": "0120B6", "PDV_Deity_Talos": "03DE87", "PDV_Deity_AuriEl": "03DE88", "PDV_Deity_Yffre": "06CB52", "PDV_Deity_Zen": "06FA1B", "PDV_Deity_BaanDar": "06FA1C" },
+      "existingDeityQuests": {
+        "PDV_Deity_Kyne": "0120B6",
+        "PDV_Deity_Talos": "03DE87",
+        "PDV_Deity_AuriEl": "03DE88",
+        "PDV_Deity_Yffre": "06CB52",
+        "PDV_Deity_Zen": "06FA1B",
+        "PDV_Deity_BaanDar": "06FA1C"
+      },
       "formListAllDeities": "017E47 (confirm current item count at author time; add PDV_Deity_Hist and PDV_Deity_Sithis)",
       "substrateQuest": "PDV_Substrate_ArgonianHist (record-wired per PDV_Phase20ArgonianImplementationCosting.manifest.json; carries Substrate_Always/Mid/High slot properties to wire)",
       "indexNote": "Khajiit pilot assigned 40-43; Argonian deity indices are next-available and must be clear of the 6 existing low indices AND of any Khajiit-assigned 40-43 if that run has landed."
     },
-    "assignedDeityIndex": { "PDV_Deity_Hist": "next-available", "PDV_Deity_Sithis": "next-available" },
+    "assignedDeityIndex": {
+      "PDV_Deity_Hist": "next-available",
+      "PDV_Deity_Sithis": "next-available"
+    },
     "wiring": "Same run: add PDV_Deity_Hist + PDV_Deity_Sithis to FLST 017E47; wire substrate boon slots (Substrate_Always/Mid/High) on PDV_Substrate_ArgonianHist; wire deity props (PDV_Hist/PDV_Sithis) + 8 emphasis spell props (3 Hist + 3 People + 2 Sithis) + PDV_SPEL_Neglect_ArgonianHist on PDV__ManagerQuest.",
     "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 includes the 2 new deities; the 12 new SPEL exist with correct MGEF actor-values/magnitudes; substrate slots + manager props resolve; both PDV_Deity_* QUSTs carry the SGE flag and have SEQ entries. Then runtime smoke (QASmoke routes 60/61/62/63) and the PDV_BetaTestPacket_Argonian Hist book track."
   }

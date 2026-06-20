@@ -11,6 +11,7 @@ const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.e
 var espPath = GetArg(args, "--esp") ?? defaultEsp;
 var dryRun = args.Contains("--dry-run");
 var checkPlacements = args.Contains("--check-placements");
+var retireWindhelmProofRecords = args.Contains("--retire-windhelm-proof-records");
 var report = new AuthorReport
 {
     EspPath = espPath,
@@ -28,6 +29,17 @@ try
     var mod = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
     var index = BuildIndex(mod);
     var allocator = new FormKeyAllocator(mod, index.Values.Select(r => r.FormKey));
+
+    if (retireWindhelmProofRecords)
+    {
+        RemoveRetiredWindhelmProofRecords(mod, index, report);
+        if (!dryRun && report.Errors.Count == 0 && report.Actions.Count > 0)
+        {
+            WriteModWithBackup(mod, espPath, "retired-windhelm-proof", report);
+        }
+        report.Status = report.Errors.Count == 0 ? "PASS" : "FAIL";
+        return report.Status == "PASS" ? 0 : 1;
+    }
 
     if (checkPlacements)
     {
@@ -143,22 +155,7 @@ try
 
     if (!dryRun)
     {
-        var backupDir = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(espPath))!, "Backups", "phase9");
-        Directory.CreateDirectory(backupDir);
-        var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss");
-        var backupPath = Path.Combine(backupDir, $"Devotion.esp.{stamp}.bak");
-        File.Copy(espPath, backupPath, overwrite: false);
-        report.BackupPath = backupPath;
-
-        var tempPath = $"{espPath}.phase9.tmp";
-        using (var stream = File.Create(tempPath))
-        {
-            mod.WriteToBinary(stream);
-        }
-
-        File.Copy(tempPath, espPath, overwrite: true);
-        File.Delete(tempPath);
-        report.TouchedFiles.Add(espPath);
+        WriteModWithBackup(mod, espPath, "phase9", report);
     }
 
     report.Status = "PASS";
@@ -450,6 +447,131 @@ static void CheckRetiredPhase9PlacementsAbsent(Dictionary<string, ISkyrimMajorRe
     {
         report.Actions.Add("Retired Phase 9 Windhelm proof placements and ACTI bases are absent.");
     }
+}
+
+static void RemoveRetiredWindhelmProofRecords(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    AuthorReport report)
+{
+    var placedRefs = new[]
+    {
+        "PDV_REFR_TalosShrineDefianceSignal",
+        "PDV_REFR_BosmerLivingStorySignal",
+        "PDV_REFR_BosmerExchangeSignal",
+        "PDV_REFR_BosmerBanditRoadSignal",
+        "PDV_REFR_BosmerPactPositiveSignal",
+        "PDV_REFR_StateTransitionConfirmRite",
+    };
+
+    var baseActivators = new[]
+    {
+        "PDV_ACTI_TalosShrineDefianceSignal",
+        "PDV_ACTI_BosmerLivingStorySignal",
+        "PDV_ACTI_BosmerExchangeSignal",
+        "PDV_ACTI_BosmerBanditRoadSignal",
+        "PDV_ACTI_BosmerPactPositiveSignal",
+        "PDV_ACTI_StateTransitionConfirmRite",
+    };
+
+    foreach (var editorId in placedRefs)
+    {
+        if (!index.TryGetValue(editorId, out var record))
+        {
+            continue;
+        }
+
+        if (record is not PlacedObject)
+        {
+            report.Errors.Add($"{editorId} exists as {record.GetType().Name}, expected PlacedObject/REFR for retirement.");
+            continue;
+        }
+
+        var removed = RemovePlacedObjectByFormKey(mod, record.FormKey);
+        if (!removed)
+        {
+            report.Errors.Add($"{editorId} ({record.FormKey}) was indexed but not found in any CELL temporary/persistent group.");
+            continue;
+        }
+
+        index.Remove(editorId);
+        report.Actions.Add($"Removed retired placed reference {editorId}.");
+    }
+
+    foreach (var editorId in baseActivators)
+    {
+        if (!index.TryGetValue(editorId, out var record))
+        {
+            continue;
+        }
+
+        if (record is not Mutagen.Bethesda.Skyrim.Activator)
+        {
+            report.Errors.Add($"{editorId} exists as {record.GetType().Name}, expected Activator/ACTI for retirement.");
+            continue;
+        }
+
+        mod.Activators.Remove(record.FormKey);
+        index.Remove(editorId);
+        report.Actions.Add($"Removed retired activator base {editorId}.");
+    }
+
+    if (report.Actions.Count == 0 && report.Errors.Count == 0)
+    {
+        report.Actions.Add("No retired Windhelm proof records were present.");
+    }
+}
+
+static bool RemovePlacedObjectByFormKey(SkyrimMod mod, FormKey formKey)
+{
+    foreach (var block in mod.Cells.Records)
+    {
+        foreach (var subBlock in block.SubBlocks)
+        {
+            foreach (var cell in subBlock.Cells)
+            {
+                for (var i = cell.Temporary.Count - 1; i >= 0; i--)
+                {
+                    if (cell.Temporary[i].FormKey == formKey)
+                    {
+                        cell.Temporary.RemoveAt(i);
+                        return true;
+                    }
+                }
+
+                for (var i = cell.Persistent.Count - 1; i >= 0; i--)
+                {
+                    if (cell.Persistent[i].FormKey == formKey)
+                    {
+                        cell.Persistent.RemoveAt(i);
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+static void WriteModWithBackup(SkyrimMod mod, string espPath, string backupScope, AuthorReport report)
+{
+    var backupDir = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(espPath))!, "Backups", backupScope);
+    Directory.CreateDirectory(backupDir);
+    var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss");
+    var backupPath = Path.Combine(backupDir, $"Devotion.esp.{stamp}.bak");
+    File.Copy(espPath, backupPath, overwrite: false);
+    report.BackupPath = backupPath;
+
+    var tempPath = $"{espPath}.{backupScope}.tmp";
+    using (var stream = File.Create(tempPath))
+    {
+        mod.WriteToBinary(stream);
+    }
+
+    File.Copy(tempPath, espPath, overwrite: true);
+    File.Delete(tempPath);
+    report.TouchedFiles.Add(espPath);
 }
 
 static TranslatedString Tx(string value) => new(Language.English, value);

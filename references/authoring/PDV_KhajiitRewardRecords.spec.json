@@ -283,12 +283,12 @@
           "effectName": "Armor"
         },
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 10,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "The survivor mends quickly. Armor +30, Health Regeneration +10%."
+      "playerFacingText": "The survivor mends quickly. Armor +30, Maximum Health +20."
     },
     {
       "emphasis": "BaanDar",
@@ -303,9 +303,9 @@
           "effectName": "Armor"
         },
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 25,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 30,
+          "effectName": "Fortify Health"
         },
         {
           "actorValue": "UnarmedDamage",
@@ -313,7 +313,7 @@
           "effectName": "Unarmed Damage"
         }
       ],
-      "playerFacingText": "Baan Dar's luck is with you when the odds are not. Armor +50, Health Regeneration +25%, Unarmed Damage +10."
+      "playerFacingText": "Baan Dar's luck is with you when the odds are not. Armor +50, Maximum Health +30, Unarmed Damage +10."
     },
     {
       "emphasis": "Rajhin",

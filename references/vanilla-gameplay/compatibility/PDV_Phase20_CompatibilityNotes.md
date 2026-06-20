@@ -72,6 +72,55 @@ System-family rules:
 - Compatibility patches may tune mechanics, route signals, and classify
   records, but must not change PDV theology.
 
+## Custom Race Support
+
+Custom races opt into one of PDV's ten existing race profiles; V1 does not add
+bespoke custom-race deity rosters. The supported profile indices are:
+
+| Index | Profile |
+|---|---|
+| 0 | Nord |
+| 1 | Imperial |
+| 2 | Breton |
+| 3 | Altmer |
+| 4 | Bosmer |
+| 5 | Dunmer |
+| 6 | Khajiit |
+| 7 | Argonian |
+| 8 | Orc |
+| 9 | Redguard |
+
+Preferred integration order:
+
+1. RaceCompatibility ActorProxy keywords, when the race plugin provides them.
+2. Race Blood Test `Treat` / `Morph` rules, when the list uses that framework.
+3. Explicit PapyrusUtil entries in `PDV_RaceMap.json`.
+
+Ohmes-Raht / Half-Khajiit ships as Khajiit profile `6` by default:
+
+```text
+0x03322B|HalfKhajiit.esp -> 6
+0x05693A|HalfKhajiit.esp -> 6
+```
+
+The confirmed DoD Race Blood Test pattern is:
+
+```text
+Treat "HalfKhajiitRace" As "KhajiitRace";
+Treat "HalfKhajiitRaceVampire" As "KhajiitRaceVampire";
+Morph "HalfKhajiitRaceVampire" Is "HalfKhajiitRace";
+```
+
+Temporary beast forms are not cultural origins. Werewolf, Vampire Lord, or other
+short-lived transformation RACE records belong in `PDV_TemporaryRaceMap.json`
+under `temporaryRaceForms`, which makes PDV defer origin capture until the
+player reverts. Do not map those forms in `PDV_RaceMap.json`.
+
+Readback boundary: ARR and DoD local Half-Khajiit plugins currently contain only
+`HalfKhajiitRace` and `HalfKhajiitRaceVampire`; no `HalfKhajiitWerewolf` RACE
+record was present in the checked plugins on 2026-06-20. Runtime/manual custom
+race smoke remains a separate proof bucket.
+
 ## Evidence And Smoke
 
 Static analysis is names-plus-conflicts: scan plugin/mod names, then inspect

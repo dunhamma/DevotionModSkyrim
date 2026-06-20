@@ -64,6 +64,7 @@ String Property NORD_PROVISIONAL_KEY = "PDV.OriginNordProvisional" AutoReadOnly
 ; profile so all downstream stance/UI/seeding logic works unchanged). See
 ; references/vanilla-gameplay/compatibility/PDV_CompatInvestigation_Findings.md.
 String Property RACEMAP_FILE = "PlayerDevotion/PDV_RaceMap" AutoReadOnly
+String Property TEMPORARY_RACEMAP_FILE = "PlayerDevotion/PDV_TemporaryRaceMap" AutoReadOnly
 String Property RACECOMPAT_PLUGIN = "RaceCompatibility.esm" AutoReadOnly
 
 Function InitializeOrigin()
@@ -207,7 +208,32 @@ Bool Function IsTemporaryTransformationRace(Race playerRace)
         return true
     elseIf MatchesRaceForm(playerRace, 0x0000283A, "Dawnguard.esm")
         return true
+    elseIf IsCustomTemporaryRace(playerRace)
+        return true
     endIf
+
+    return false
+EndFunction
+
+Bool Function IsCustomTemporaryRace(Race playerRace)
+    if !playerRace
+        return false
+    endIf
+
+    if !JsonUtil.JsonExists(TEMPORARY_RACEMAP_FILE)
+        return false
+    endIf
+
+    Int entryCount = JsonUtil.FormListCount(TEMPORARY_RACEMAP_FILE, "temporaryRaceForms")
+    Int entryIndex = 0
+    while entryIndex < entryCount
+        Race temporaryRace = JsonUtil.FormListGet(TEMPORARY_RACEMAP_FILE, "temporaryRaceForms", entryIndex) as Race
+        if temporaryRace && temporaryRace == playerRace
+            Trace(1, "Custom temporary race matched; deferring origin capture.")
+            return true
+        endIf
+        entryIndex += 1
+    endWhile
 
     return false
 EndFunction

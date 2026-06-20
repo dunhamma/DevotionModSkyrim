@@ -31,6 +31,7 @@ native/vendor/Creation-Kit-Platform-Extended/
 
 # Local/generated scratch outputs
 generated/_audit_tmp.json
+generated/live-devotion-backups/
 fixtures/ckpe/heartbeat-only.tmp.json
 fixtures/ckpe/phase60-*-duplicate-replay.ck-command-packet.json
 fixtures/ckpe/phase62-family-duplicate-saved-readback-proof.json

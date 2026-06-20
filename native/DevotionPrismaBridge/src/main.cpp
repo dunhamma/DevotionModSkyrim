@@ -8,11 +8,31 @@ namespace
     constexpr auto kViewPath = "Devotion/index.html"sv;
     constexpr auto kReceiveFunction = "ReceivePDVJson"sv;
     constexpr auto kReceiveOverlayFunction = "ReceivePDVOverlayJson"sv;
+    // Phase 0 choice-panel round trip: C++ -> JS sends the option grid through
+    // kReceiveChoiceFunction; JS -> C++ returns the pick by calling the
+    // kChoiceResultListener global (registered via RegisterJSListener).
+    constexpr auto kReceiveChoiceFunction = "ReceivePDVChoice"sv;
+    constexpr auto kChoiceResultListener = "PDVChoiceResult"sv;
 
     PRISMA_UI_API::IVPrismaUI2* g_prisma = nullptr;
     PrismaView g_view = 0;
     std::string g_lastPayload;
     std::string g_pendingOverlayPayload;
+
+    // Choice-panel return-channel state. Status codes match the Papyrus contract:
+    //   -3 = no choice active, -2 = pending (focused, awaiting a pick),
+    //   -1 = cancelled (ESC / cancel), >=0 = chosen option index.
+    // Phase 0 keeps these plain (single choice at a time); Phase 1 adds a mutex.
+    std::string g_choicePendingMenu;
+    std::string g_choiceResultMenu;
+    int g_choiceStatus = -3;
+    // First ShowChoice on a cold view must NOT focus before the DOM is ready and
+    // window.ReceivePDVChoice exists, or the grid never renders and the player is
+    // focused/paused on an empty view (an unrecoverable trap). Defer to OnDomReady.
+    std::string g_pendingChoicePayload;
+    bool g_choiceFocusPending = false;
+    bool g_choicePause = false;
+    bool g_domReady = false;
 
     std::filesystem::path LogPath()
     {
@@ -66,6 +86,41 @@ namespace
         logs::info("Prisma view {} [{}]: {}", a_view, ConsoleLevelName(a_level), a_message ? a_message : "");
     }
 
+    // JS -> C++ return channel. The view calls window.PDVChoiceResult("<menu>|<token>")
+    // where <token> is the chosen index or "cancel". We store the result and
+    // immediately release focus so the player is never trapped on the panel.
+    void OnChoiceResult(const char* a_argument) noexcept
+    {
+        const std::string arg = a_argument ? a_argument : "";
+        const auto bar = arg.find_last_of('|');
+        const std::string menu = (bar == std::string::npos) ? std::string() : arg.substr(0, bar);
+        const std::string token = (bar == std::string::npos) ? arg : arg.substr(bar + 1);
+
+        int status = -1;  // default to cancel on empty/garbage
+        if (!token.empty() && token != "cancel") {
+            int parsed = 0;
+            bool digits = true;
+            for (const char c : token) {
+                if (c < '0' || c > '9') {
+                    digits = false;
+                    break;
+                }
+                parsed = (parsed * 10) + (c - '0');
+            }
+            if (digits) {
+                status = parsed;
+            }
+        }
+
+        g_choiceResultMenu = menu;
+        g_choiceStatus = status;
+        logs::info("Prisma choice result: menu='{}' status={}", menu, status);
+
+        if (g_prisma && g_view && g_prisma->IsValid(g_view)) {
+            g_prisma->Unfocus(g_view);
+        }
+    }
+
     bool SendLastPayload()
     {
         if (!g_prisma || !g_view || !g_prisma->IsValid(g_view)) {
@@ -91,12 +146,22 @@ namespace
     void OnDomReady(PrismaView a_view) noexcept
     {
         logs::info("Prisma DOM ready for view {}", a_view);
+        g_domReady = true;
         if (!g_lastPayload.empty()) {
             SendLastPayload();
         }
         if (!g_pendingOverlayPayload.empty()) {
             SendOverlayPayload(g_pendingOverlayPayload);
             g_pendingOverlayPayload.clear();
+        }
+        // Deferred choice: render the grid on the now-ready DOM, THEN focus.
+        if (g_choiceFocusPending && g_prisma && g_view && g_prisma->IsValid(g_view)) {
+            g_prisma->InteropCall(g_view, kReceiveChoiceFunction.data(), g_pendingChoicePayload.c_str());
+            g_prisma->Show(g_view);
+            g_prisma->Focus(g_view, g_choicePause, false);
+            logs::info("Prisma deferred choice sent + focused (pause={})", g_choicePause);
+            g_choiceFocusPending = false;
+            g_pendingChoicePayload.clear();
         }
     }
 
@@ -126,6 +191,7 @@ namespace
             return true;
         }
 
+        g_domReady = false;  // new view: DOM not loaded until OnDomReady fires
         g_view = g_prisma->CreateView(kViewPath.data(), OnDomReady);
         if (!g_view || !g_prisma->IsValid(g_view)) {
             logs::error("Failed to create Prisma view from {}", kViewPath);
@@ -135,6 +201,7 @@ namespace
 
         g_prisma->SetOrder(g_view, 900);
         g_prisma->RegisterConsoleCallback(g_view, OnConsoleMessage);
+        g_prisma->RegisterJSListener(g_view, kChoiceResultListener.data(), OnChoiceResult);
         g_prisma->Hide(g_view);
         logs::info("Created Prisma view {} from {}", g_view, kViewPath);
         return true;
@@ -227,6 +294,92 @@ namespace
         return true;
     }
 
+    bool ShowChoiceImpl(const std::string& a_menuId, const std::string& a_payload, bool a_pauseGame)
+    {
+        if (!EnsureView()) {
+            return false;
+        }
+
+        g_choicePendingMenu = a_menuId;
+        g_choiceResultMenu.clear();
+        g_choiceStatus = -2;  // pending until JS reports a pick or cancel
+        g_choicePause = a_pauseGame;
+
+        if (!g_domReady) {
+            // View still loading: defer the grid + focus to OnDomReady so we never
+            // focus/pause an empty view. Returns true (the choice IS in flight).
+            g_pendingChoicePayload = a_payload;
+            g_choiceFocusPending = true;
+            logs::info("Prisma choice deferred until DOM ready (menu='{}')", a_menuId);
+            return true;
+        }
+
+        g_prisma->InteropCall(g_view, kReceiveChoiceFunction.data(), a_payload.c_str());
+        g_prisma->Show(g_view);
+        // disableFocusMenu = false keeps PrismaUI's own focus-menu escape on top of
+        // the JS ESC/cancel handler.
+        g_prisma->Focus(g_view, a_pauseGame, false);
+        return true;
+    }
+
+    bool CancelChoiceImpl()
+    {
+        // Watchdog / external cancel: release focus and post a cancel result the
+        // manager's poll consumes. Safe to call with nothing pending.
+        if (g_prisma && g_view && g_prisma->IsValid(g_view)) {
+            g_prisma->Unfocus(g_view);
+            g_prisma->Hide(g_view);
+        }
+        g_choiceFocusPending = false;
+        g_pendingChoicePayload.clear();
+        if (!g_choicePendingMenu.empty()) {
+            g_choiceResultMenu = g_choicePendingMenu;
+        }
+        g_choiceStatus = -1;  // cancelled
+        return true;
+    }
+
+    bool PapyrusSupportsChoice(RE::StaticFunctionTag*)
+    {
+        AcquirePrisma();
+        return g_prisma != nullptr;
+    }
+
+    bool PapyrusShowChoice(RE::StaticFunctionTag*, RE::BSFixedString a_menuId, RE::BSFixedString a_payload, bool a_pauseGame)
+    {
+        const auto* menu = a_menuId.data();
+        const auto* payload = a_payload.data();
+        return ShowChoiceImpl(menu && menu[0] ? menu : "choice", payload && payload[0] ? payload : "{}", a_pauseGame);
+    }
+
+    bool PapyrusCancelChoice(RE::StaticFunctionTag*)
+    {
+        return CancelChoiceImpl();
+    }
+
+    std::int32_t PapyrusConsumePendingChoice(RE::StaticFunctionTag*, RE::BSFixedString a_menuId)
+    {
+        const std::string menu = a_menuId.data() ? a_menuId.data() : "";
+        const int status = g_choiceStatus;
+
+        if (status == -2) {
+            // Still awaiting a pick; only report pending for the live menu.
+            return (menu == g_choicePendingMenu) ? -2 : -3;
+        }
+        if (status == -3) {
+            return -3;
+        }
+
+        // Final result (-1 cancel or >=0 index): deliver once to the matching menu.
+        if (menu == g_choiceResultMenu) {
+            g_choiceStatus = -3;
+            g_choicePendingMenu.clear();
+            g_choiceResultMenu.clear();
+            return status;
+        }
+        return -3;
+    }
+
     bool RegisterPapyrus(RE::BSScript::IVirtualMachine* a_vm)
     {
         a_vm->RegisterFunction("IsAvailable", kPapyrusScript.data(), PapyrusIsAvailable);
@@ -235,6 +388,10 @@ namespace
         a_vm->RegisterFunction("ToggleDevotionPanel", kPapyrusScript.data(), PapyrusToggleDevotionPanel);
         a_vm->RegisterFunction("SendJson", kPapyrusScript.data(), PapyrusSendJson);
         a_vm->RegisterFunction("SendOverlayJson", kPapyrusScript.data(), PapyrusSendOverlayJson);
+        a_vm->RegisterFunction("SupportsChoice", kPapyrusScript.data(), PapyrusSupportsChoice);
+        a_vm->RegisterFunction("ShowChoice", kPapyrusScript.data(), PapyrusShowChoice);
+        a_vm->RegisterFunction("ConsumePendingChoice", kPapyrusScript.data(), PapyrusConsumePendingChoice);
+        a_vm->RegisterFunction("CancelChoice", kPapyrusScript.data(), PapyrusCancelChoice);
         logs::info("Registered Papyrus functions for {}", kPapyrusScript);
         return true;
     }
