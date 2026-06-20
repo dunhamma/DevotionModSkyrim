@@ -67,10 +67,22 @@ bundled with the Nord Shor re-attach. V1 make-way = dragon kills only. B2 lives 
 `generated/live-devotion-snapshot/2026-06-20-requiem-b2/`. Compile 0/0 (3 scripts),
 verify FAIL=0.
 
-### Deferred — Nord conversion (own session)
-| Item | Status |
-|---|---|
-| Shor T1/T2/T3 → Fortify Health + capstone re-attach | DEFERRED (own capstone session) |
+### Ash'abah mid-game entry — DONE (concurrent, commit 7f90f49)
+The gap flagged this session (mid-game Ash'abah sect unreachable) is FIXED:
+`HandleRedguardAshAbahMajorBurden` (a UNIQUE/named-undead kill routes reason
+`redguard_deathduty_major` → sect entry); shared `ApplyRedguardAshAbahDutyRewards`;
+gate hardened to `StringContainsToken`. Compile 0/0, verify FAIL=0, pushed.
+
+### Deferred → dedicated houseCARL CK session — plan: `PDV_houseCARL_CKSession_Plan.md`
+The CK-blocked tail is doable **headless via houseCARL** (Mutagen VMAD attach /
+FormList create into a review patch), NOT interactive CK. Sequenced in the plan:
+| Item | Approach | Status |
+|---|---|---|
+| 1. Nord Shor convert + Sovngarde save re-attach | spec (extra-effect) + author + houseCARL VMAD attach | PLANNED |
+| 2. HoonDing Champion cheat-death save | spec extra-effect + houseCARL VMAD attach | PLANNED |
+| 3. HoonDing named-boss FormList (beyond dragons) | houseCARL FLST + manager qualify | PLANNED |
+| 4. Ash'abah named-necromancer detection (beyond unique undead) | faction/FLST + manager qualify | PLANNED |
+| 5. Namira boon contract cleanup | houseCARL targeted MGEF/text edits (NO full Daedric re-author) | PLANNED |
 
 ---
 
