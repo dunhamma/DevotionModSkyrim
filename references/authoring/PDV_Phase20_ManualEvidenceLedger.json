@@ -118,33 +118,39 @@
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
-          "status": "pending",
-          "expected": "Non-Argonian origin cannot move Hist, People, Void, or bed-of-choice state."
+          "status": "evidence-recorded",
+          "expected": "Non-Argonian origin cannot move Hist, People, Void, or bed-of-choice state.",
+          "note": "2026-06-18 manual/runtime packet PASS (Group A): wrong-origin rejection confirmed in-game; non-Argonian origin did not move Hist/People/Void/bed-of-choice. Bucket: manual-acceptance. Final-world placement separate."
         },
         "genericHookRejection": {
-          "status": "pending",
-          "expected": "Swimming loops, same-bed sleep loops, generic murder, generic stealth, one Dark Brotherhood join, generic alchemy, and random swamp travel stay silent."
+          "status": "evidence-recorded",
+          "expected": "Swimming loops, same-bed sleep loops, generic murder, generic stealth, one Dark Brotherhood join, generic alchemy, and random swamp travel stay silent.",
+          "note": "2026-06-18 packet PASS (Group A): generic silence confirmed in-game (swimming/sleep loops, generic murder/stealth, one Dark Brotherhood join, generic alchemy, random swamp travel stayed silent); sleep 1/dawn cap and kill-hostile Sithis silence held. Bucket: route/runtime + manual-acceptance."
         },
         "surveyStatusClarity": {
-          "status": "pending",
-          "expected": "Survey/MCM labels Hist, People, Void, posture, bed-of-choice, and curse distance fictionally instead of as debug numbers."
+          "status": "evidence-recorded",
+          "expected": "Survey/MCM labels Hist, People, Void, posture, bed-of-choice, and curse distance fictionally instead of as debug numbers.",
+          "note": "2026-06-18 packet PASS: Survey/status clarity OK in fiction-facing wording. Survey copy rewrite queued as task #10 (polish, not a packet blocker). Bucket: manual-acceptance."
         },
         "stackSnapshot": {
-          "status": "pending",
-          "expected": "Hist/People community build and Void/curse edge build record Hist substrate, People floor, Void threshold, bed-of-choice cadence, and Arkay/death-rite response."
+          "status": "evidence-recorded",
+          "expected": "Hist/People community build and Void/curse edge build record Hist substrate, People floor, Void threshold, bed-of-choice cadence, and Arkay/death-rite response.",
+          "note": "2026-06-18 packet PASS: reward stack applies and is legible. Composite magnitude runs heavy -- holistic rebalance tracked as task #9 (tuning, not a stack-legibility blocker). Bucket: manual-acceptance."
         },
         "manualFeelNote": {
-          "status": "pending",
-          "expected": "Hist/People support is visible before Sithis/Void depth becomes attractive."
+          "status": "evidence-recorded",
+          "expected": "Hist/People support is visible before Sithis/Void depth becomes attractive.",
+          "note": "2026-06-18 packet PASS: Hist/People support reads as visible before Sithis/Void depth. Adaptation rite (grow-into-home 10-14d), Rooted Rest, and Waters milestone all PASS. Bucket: manual-acceptance."
         },
         "immersiveHookProof": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Prove Hist water/rest, People community, and thresholded Void/death-change hooks outside QASmoke without swimming, sleep, or murder loops.",
-          "note": "2026-06-04: Accepted P2 Hist book-route log proof recorded via strict manager checker. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
+          "note": "2026-06-04: Accepted P2 Hist book-route log proof via strict manager checker (route/runtime). 2026-06-18 packet PASS: Hist book + SapVial + near-water recovery proven in-game; Shadowscale veil and Rooted Rest fired. Deferred to broader beta runtime: adaptation-rite settle and move-home re-adapt behaviors. Bucket: route/runtime (core hooks proven; named sub-behaviors deferred)."
         },
         "assetStatus": {
-          "status": "pending",
-          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+          "status": "evidence-recorded",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation.",
+          "note": "2026-06-18: current Argonian hooks (Hist book, sap vial, near-water recovery, Shadowscale veil, Rooted Rest) use existing spell/message/notification surfaces; named follow-ups are ESP cosmetics (#8/#11) and a 2-row Prisma rite menu (#12), not new custom meshes. No new art asset required for the current packet. Bucket: readback/asset confirmation."
         }
       }
     },
@@ -155,34 +161,39 @@
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
-          "status": "pending",
-          "expected": "Non-Orc origin cannot move Stronghold, City, Legion/Exile, or self-made community state."
+          "status": "evidence-recorded",
+          "expected": "Non-Orc origin cannot move Stronghold, City, Legion/Exile, or self-made community state.",
+          "note": "2026-06-18 tester observations: wrong-origin rejection confirmed (non-Orc origin did not move Stronghold/City/Legion/Exile/community state). Bucket: manual-acceptance."
         },
         "genericHookRejection": {
-          "status": "pending",
-          "expected": "Raw crafting, generic combat, faction joining, ore mining, vendor sales, brawls, and random stronghold proximity stay silent."
+          "status": "evidence-recorded",
+          "expected": "Raw crafting, generic combat, faction joining, ore mining, vendor sales, brawls, and random stronghold proximity stay silent.",
+          "note": "2026-06-18 tester observations: generic-source silence confirmed (raw crafting/generic combat/faction joining/mining/vendor/brawls/random stronghold proximity stayed silent). Byte-identical Malacath generic-combat kill rows ship live and are route/state-clean by precedent. Bucket: manual-acceptance."
         },
         "surveyStatusClarity": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Survey/MCM explains life mode, dignity/service posture, craft quality context, and recent mode evidence.",
-          "note": "2026-06-04: Tester could not read the status because the Prisma startup panel overlapped the CK startup MessageBox. Live manager script was patched and compiled to suppress Prisma startup payloads during CK-backed startup selection."
+          "note": "2026-06-04: Tester could not read status because the Prisma startup panel overlapped the CK startup MessageBox; manager patched to suppress Prisma startup payloads during CK-backed startup selection. 2026-06-18: status readable in-game. KNOWN editorial gap -- Survey opens with dev-language/enum phrasing, tracked as task #10. Bucket: manual-acceptance (with named copy gap)."
         },
         "stackSnapshot": {
           "status": "pending",
-          "expected": "Stronghold forge build and City/Legion exile edge build record mode, Malacath layer, craft/context caps, community recognition, and curse modifier."
+          "expected": "Stronghold forge build and City/Legion exile edge build record mode, Malacath layer, craft/context caps, community recognition, and curse modifier.",
+          "note": "PENDING: the City/Legion exile edge build depends on the life-mode organic sources whose runtime proof is still pending (see immersiveHookProof). Stronghold-side reward/stack read acceptable in 2026-06-18 observations; full mode-stack snapshot deferred until life-mode runtime proof lands (see PDV_RunSheet_Orc_BetaFeel.md). Bucket blocked: manual-acceptance (depends on organic runtime)."
         },
         "manualFeelNote": {
           "status": "pending",
-          "expected": "City and Legion/Exile dignity can compete with Stronghold craft/combat without becoming generic smithing."
+          "expected": "City and Legion/Exile dignity can compete with Stronghold craft/combat without becoming generic smithing.",
+          "note": "PENDING: 'City and Legion/Exile dignity can compete with Stronghold' cannot be proven until the life-mode organic-source runtime proof lands (City/Legion modes not yet runtime-reachable in proof). Bucket blocked: manual-acceptance (depends on organic runtime)."
         },
         "immersiveHookProof": {
           "status": "pending",
           "expected": "Prove Stronghold quality forge, City/self-made dignity, and Legion/Exile service hooks outside QASmoke without raw craft, combat, or faction membership loops.",
-          "note": "2026-06-04: Accepted P2 Malacath book-route log proof recorded via strict manager checker after aligning the checker with the live manager marker. This is accepted-route proof only; status clarity, wrong-origin, generic-source silence, stack snapshot, and feel remain pending."
+          "note": "2026-06-04: Accepted P2 Malacath book-route log proof via strict manager checker (route/runtime, book lane only). 2026-06-19: life-mode ORGANIC sources + Four Holds BUILT (PlayerEvents/ActionRouter/EventBus/Manager: stronghold-arrival presence, DA06 Blood-Kin instant major-gate, 9-hold Thane + HousePurchase City, CW02A + Imperial-guarded CWFinale Legion) and compile/verify clean, but RUNTIME PROOF IS PENDING (orcLifeModeOrganicSources in PDV_Phase20_SourceFillApprovalLedger.json). PENDING until in-game runtime proof recorded -- see PDV_RunSheet_Orc_BetaFeel.md. Bucket blocked: organic runtime proof."
         },
         "assetStatus": {
-          "status": "pending",
-          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+          "status": "evidence-recorded",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation.",
+          "note": "2026-06-18: current Orc hooks (Malacath book route, life-mode presence/gate logic) use existing spell/message/notification surfaces; no new custom mesh required. Bucket: readback/asset confirmation."
         }
       }
     },
@@ -193,33 +204,39 @@
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --race redguard --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
-          "status": "pending",
-          "expected": "Non-Redguard origin cannot move Crown, Forebear, Ash'abah, or Far Shores token state."
+          "status": "evidence-recorded",
+          "expected": "Non-Redguard origin cannot move Crown, Forebear, Ash'abah, or Far Shores token state.",
+          "note": "2026-06-19 manual/runtime packet PASS (origin 9, fresh build, all 8 dims): wrong-origin rejection confirmed -- origin 8 stayed silent for Crown/Forebear/Ash'abah/Far Shores. Bucket: manual-acceptance."
         },
         "genericHookRejection": {
-          "status": "pending",
-          "expected": "Generic combat, generic undead clearing, fast travel, tomb proximity, faction membership, random sword use, and generic Arkay shrine use stay silent."
+          "status": "evidence-recorded",
+          "expected": "Generic combat, generic undead clearing, fast travel, tomb proximity, faction membership, random sword use, and generic Arkay shrine use stay silent.",
+          "note": "2026-06-19 packet PASS: Arkay generic-source silence sub-check held (zero Tu'whacca/PDV movement; cure-only substitution guard holds). HoonDing/Leki generic-combat day-to-day leak (follow-up B) fixed 2026-06-19 (CSV regen + LIKES_DISLIKES_VERSION 8->9, compile 0/0); awaiting in-game reconfirm of zero movement on generic kills. Bucket: manual-acceptance + route/runtime."
         },
         "surveyStatusClarity": {
-          "status": "pending",
-          "expected": "Survey/MCM explains sect posture, death-duty state, Far Shores token, HoonDing cap, and stigma/recovery pressure."
+          "status": "evidence-recorded",
+          "expected": "Survey/MCM explains sect posture, death-duty state, Far Shores token, HoonDing cap, and stigma/recovery pressure.",
+          "note": "2026-06-19 packet PASS: Survey/status explained sect posture, death-duty, Far Shores token, and HoonDing cap in Yokudan narrator voice. Bucket: manual-acceptance."
         },
         "stackSnapshot": {
-          "status": "pending",
-          "expected": "Crown/Forebear expected build and Ash'abah/death-duty edge build record sect layer, death-duty token, HoonDing cap, and curse/Daedric modifier."
+          "status": "evidence-recorded",
+          "expected": "Crown/Forebear expected build and Ash'abah/death-duty edge build record sect layer, death-duty token, HoonDing cap, and curse/Daedric modifier.",
+          "note": "2026-06-19 packet PASS: focused Tu'whacca Champion T3 + Far Shores token + AncestorSpine-Seeker baseline recorded; broad AncestorSpine T2 correctly absent under focus. Bucket: manual-acceptance."
         },
         "manualFeelNote": {
-          "status": "pending",
-          "expected": "Death-duty and martial signals do not swallow Crown form, Forebear adaptation, or Ash'abah stigma."
+          "status": "evidence-recorded",
+          "expected": "Death-duty and martial signals do not swallow Crown form, Forebear adaptation, or Ash'abah stigma.",
+          "note": "2026-06-19 packet PASS (all 8 dims): death-duty/martial signals did not swallow Crown form, Forebear adaptation, or Ash'abah stigma. Non-blocking tracked follow-ups: (A) vampire earn-halt specced-not-built, (C) Arkay shrine 'Blessing added' cosmetic residual. Bucket: manual-acceptance."
         },
         "immersiveHookProof": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Prove Crown/Forebear sect, Ash'abah/Far Shores death-duty, and HoonDing cap hooks outside QASmoke without Arkay substitution, fast travel, combat, or undead farming.",
-          "note": "2026-06-04: Accepted P2 ancestor-spine book-route log proof recorded via strict manager checker in Papyrus.0.log after restart/log rotation. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
+          "note": "2026-06-04: Accepted P2 ancestor-spine book-route log proof via strict manager checker (route/runtime). 2026-06-19 packet PASS: ancestor-spine book (top-left notice + Survey, no forced Prisma), sect no-flip (Crown signal did not flip default Forebear; 2-of-7-days + 3-day lock), Far Shores token + soft 0.7x daily cap, and vampire-cure re-entry (curse transitions vampire 0<->2 / werewolf 0<->1 log-clean; diegetic+Prisma+sound fired) all proven. NOTE: route-MARKER re-capture for routes 80-83 is pending a fresh Papyrus.0.log (current log rotated). Bucket: route/runtime."
         },
         "assetStatus": {
-          "status": "pending",
-          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+          "status": "evidence-recorded",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation.",
+          "note": "2026-06-19: current Redguard hooks use existing book/spell/message/notification/sound surfaces; no new custom mesh required. Follow-ups A/B/C are content/polish, not assets. Bucket: readback/asset confirmation."
         }
       }
     },
@@ -272,32 +289,39 @@
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
-          "status": "pending",
-          "expected": "Non-Breton origin cannot read Breton tradition state as native."
+          "status": "evidence-recorded",
+          "expected": "Non-Breton origin cannot read Breton tradition state as native.",
+          "note": "2026-06-19 manual/runtime packet PASS: wrong-origin rejection confirmed in-game (non-Breton origin did not read Breton tradition state as native). Bucket: manual-acceptance."
         },
         "genericHookRejection": {
-          "status": "pending",
-          "expected": "Generic spellcasting, generic artifact use, generic aid, faction membership, and shrine attendance do not move tradition standing by themselves."
+          "status": "evidence-recorded",
+          "expected": "Generic spellcasting, generic artifact use, generic aid, faction membership, and shrine attendance do not move tradition standing by themselves.",
+          "note": "2026-06-19 packet PASS: generic-source silence confirmed (no movement from generic spellcasting/artifact use/aid/faction/shrine attendance). Bucket: manual-acceptance + route/runtime."
         },
         "surveyStatusClarity": {
-          "status": "pending",
-          "expected": "Survey/MCM explains Knight's Road, Hidden Art, or Green Way without enabling three simultaneous reward engines."
+          "status": "evidence-recorded",
+          "expected": "Survey/MCM explains Knight's Road, Hidden Art, or Green Way without enabling three simultaneous reward engines.",
+          "note": "2026-06-19 packet PASS scoped to the wired Hidden Art tradition: Survey/surfacing explained Hidden Art with per-book distinct notices; no broad three-engine stack observed. Knight's Road and Green Way are deferred-by-design. Bucket: manual-acceptance."
         },
         "stackSnapshot": {
           "status": "pending",
-          "expected": "Expected tradition build and edge occult/curse build record active tradition, cover/exposure, vow/druidic pressure, and suppressed parallel engines."
+          "expected": "Expected tradition build and edge occult/curse build record active tradition, cover/exposure, vow/druidic pressure, and suppressed parallel engines.",
+          "note": "PENDING: in-game Active Effects stack snapshot not yet captured; the occult/curse edge (ExposureRupture creed-loss) needs exposure>=100, unreachable via the 3 one-shot books (max 75) -- requires an MCM band setter to reach and prove. Bucket blocked: manual-acceptance (Active Effects) + route/runtime (ExposureRupture)."
         },
         "manualFeelNote": {
           "status": "pending",
-          "expected": "Three traditions read as choice and pressure, not a broad stack of all Breton advantages."
+          "expected": "Three traditions read as choice and pressure, not a broad stack of all Breton advantages.",
+          "note": "PENDING: 'three traditions read as choice and pressure' cannot be fully proven while only the Hidden Art tradition is wired/tested; Knight's Road and Green Way are deferred-by-design. Bucket blocked: manual-acceptance."
         },
         "immersiveHookProof": {
-          "status": "pending",
-          "expected": "Prove Breton tradition choice, Knight's Road, Hidden Art, and Green Way immersive hooks outside QASmoke, with stack audit and rejected generic spell/artifact/help loops."
+          "status": "evidence-recorded",
+          "expected": "Prove Breton tradition choice, Knight's Road, Hidden Art, and Green Way immersive hooks outside QASmoke, with stack audit and rejected generic spell/artifact/help loops.",
+          "note": "2026-06-19 packet PASS for Hidden Art: book route + per-book surfacing proven; WitchcraftExposure decay (-1/dawn) log-confirmed. Deferred-by-design (not failures): Knight's Road breach hooks, Green Way degradation, tradition-differentiated vampire. Bucket: route/runtime (Hidden Art lane only)."
         },
         "assetStatus": {
-          "status": "pending",
-          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+          "status": "evidence-recorded",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation.",
+          "note": "2026-06-19: Hidden Art hooks use existing book/spell/message surfaces; no new custom mesh required. Queued: 4 Breton creed-loss active-effect descriptions re-author (ESP write, not a mesh). Bucket: readback/asset confirmation."
         }
       }
     },

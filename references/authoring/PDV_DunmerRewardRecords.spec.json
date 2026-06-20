@@ -82,16 +82,10 @@
             "magnitude": 9,
             "homeOrShrineOnly": false,
             "effectName": "Magic Resistance"
-          },
-          {
-            "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_Mid_Magicka",
-            "actorValue": "MagickaRateMult",
-            "magnitude": 6,
-            "homeOrShrineOnly": true,
-            "effectName": "Magicka Regeneration"
           }
         ],
-        "playerFacingText": "The ancestors gather closer at hearth and ash. Magic Resistance +9%, Magicka Regeneration +6%."
+        "playerFacingText": "The ancestors gather closer at hearth and ash. Magic Resistance +9%.",
+        "designNote": "homeOrShrineOnly MagickaRegen removed 2026-06-20; the home/hearth benefit is now the event-driven flat Health pulse at the declared ancestor-home (HandleDunmerPlayerHomeBonus, 11a)."
       },
       {
         "slotProperty": "Substrate_High",
@@ -104,23 +98,10 @@
             "magnitude": 20,
             "homeOrShrineOnly": false,
             "effectName": "Magic Resistance"
-          },
-          {
-            "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_High_Magicka",
-            "actorValue": "MagickaRateMult",
-            "magnitude": 15,
-            "homeOrShrineOnly": true,
-            "effectName": "Magicka Regeneration"
-          },
-          {
-            "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_High_HealRate",
-            "actorValue": "HealRateMult",
-            "magnitude": 5,
-            "homeOrShrineOnly": true,
-            "effectName": "Health Regeneration"
           }
         ],
-        "playerFacingText": "The ancestors are deeply with you even far from the ash. At home or shrine your magicka and health mend faster, and magic finds little purchase on you. Magic Resistance +20%, Magicka Regeneration +15%, Health Regeneration +5%."
+        "playerFacingText": "The ancestors are deeply with you even far from the ash, and magic finds little purchase on you. Magic Resistance +20%. At your declared ancestor-home, prayer mends your blood.",
+        "designNote": "homeOrShrineOnly MagickaRegen + HealRegen removed 2026-06-20; the home/hearth benefit is now the event-driven flat Health pulse at the declared ancestor-home (HandleDunmerPlayerHomeBonus, 11a, Requiem-proof)."
       }
     ],
     "substratePowerNote": "Mirrors the proven Khajiit and Argonian substrate triad shape and power level (Always low + Mid + High climbing). Themed to ancestors/ash: ResistMagic (always-on identity), MagickaRateMult and HealRateMult at home/shrine (the contextual climb). homeOrShrineOnly conditions are the Dunmer analogue of the Khajiit nightOnly / Argonian nearWaterOnly conditions; the always-on identity boon is unconditional, the contextual climb keys off home/private-shrine context. NO passive decay -- the layer never erodes from absence of tombs/House shrines."

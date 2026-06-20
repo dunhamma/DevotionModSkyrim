@@ -210,11 +210,12 @@
       "displayName": "Tradition's Footing - Seeker",
       "effects": [
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 4
+          "actorValue": "Health",
+          "magnitude": 10,
+          "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "Your chosen tradition steadies you. Health Regeneration +4%."
+      "playerFacingText": "Your chosen tradition steadies you. Maximum Health +10."
     },
     {
       "emphasis": "Tradition",
@@ -226,15 +227,16 @@
       "displayName": "Tradition's Footing - Faithful",
       "effects": [
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 6
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Fortify Health"
         },
         {
           "actorValue": "ResistMagic",
           "magnitude": 5
         }
       ],
-      "playerFacingText": "A Breton kept by tradition is well-warded. Health Regeneration +6%, Magic Resistance +5%.",
+      "playerFacingText": "A Breton kept by tradition is well-warded. Maximum Health +20, Magic Resistance +5%.",
       "signature": "Broad tradition resilience: faster recovery and a small ward; capped below every focused tradition family."
     },
     {
@@ -445,12 +447,12 @@
           "effectName": "Restoration"
         },
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 10,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "The covenant of the wild is kept in you. Stamina Regeneration +20%, Restoration +18, Health Regeneration +10%.",
+      "playerFacingText": "The covenant of the wild is kept in you. Stamina Regeneration +20%, Restoration +18, Maximum Health +20.",
       "signature": "Covenant of the wild: strongest outdoor stamina/restoration/recovery; Champion Survey text is the V1 recognition surface. The werewolf fork is a real authored fork (Druidic Trial); betrayal drives major creed-loss and any Hircine pressure routes through the Phase 20C system."
     }
   ],

@@ -317,6 +317,15 @@ Risk:
   `Devotion.esp` as an EditorID.
 - This fallback also needs a target-record owner before CAT-6 promotion.
 
+2026-06-20 update (RESOLVED -- DROPPED as a CAT-6 fallback candidate): the
+2026-05-31 readback check above is STALE. `PDV_Bless_Bosmer_Exchange_T1` is now a
+live reward in `PDV_BosmerRewardRecords.spec.json` (The Exchange - Seeker, Z'en,
+Speech +5) and was readback-confirmed + tested in-game in the 2026-06-13 Bosmer
+packet (Z'en Exchange T1/T2 copy). It is owned by the all-race reward contract,
+not a CAT-6 promotion artifact. Per the 2026-06-20 ruling, Candidate C is dropped
+as a CAT-6 fallback: the Khajiit Lunar T1 pilot is ratified and proven, so no
+fallback candidate is needed.
+
 ### Candidate D: `PDV_Bless_Altmer_Magnus_T3`
 
 Source: `race-sheets/PDV_RaceContent_Manifest.md`, Altmer blessing
@@ -348,18 +357,22 @@ road-home, moon, and caravan identity are the Khajiit contrast lane's strongest
 source-backed surface. Do not broaden this pilot into moon-sugar, generic
 theft, generic night-stealth, or generic dragon-kill copy.
 
-Ratified fallback: if the Khajiit spell record does not exist or cannot be
-safely filled in a narrow pass, fall back to `PDV_Bless_Bosmer_Exchange_T1`.
-Do not fall forward into dialogue or Daedric stigma rows just to keep momentum.
-The Bosmer fallback remains valid because Exchange/Z'en debt, proper return,
-and Bandit Road/Baan Dar reversal are source-backed non-dialogue surfaces.
+Ratified fallback (DROPPED 2026-06-20): no CAT-6 fallback candidate is needed --
+the Khajiit Lunar T1 pilot is ratified and proven (live `SPEL` + `MGEF`s). The
+former fallback `PDV_Bless_Bosmer_Exchange_T1` is now a normal live reward owned
+by the all-race reward contract (not a CAT-6 promotion artifact), so it is no
+longer carried here as a pilot candidate. Do not fall forward into dialogue or
+Daedric stigma rows.
 
 Current implementation status: the Khajiit first candidate now has a live
 `SPEL` plus two live `MGEF` records in the framework ESP. The original records
 were created by the narrow CAT-6 helper; grant ownership now sits with the
-all-race reward contract. The Bosmer Exchange fallback still has a source row
-but no live target `SPEL`; the all-race reward contract instead uses
-`PDV_Bless_Bosmer_Yffre_T1`. This state is mirrored in
+all-race reward contract. The Bosmer Exchange reward
+`PDV_Bless_Bosmer_Exchange_T1` is now a LIVE `SPEL` in the framework ESP
+(readback-confirmed + in-game tested in the 2026-06-13 Bosmer packet, Z'en
+Exchange T1/T2 copy); the all-race reward contract owns both it and
+`PDV_Bless_Bosmer_Yffre_T1` (the Old Contract / Yffre path T1). The 2026-05-31
+"no live target SPEL" note above is stale. This state is mirrored in
 `PDV_Phase20_NoInGameProof_Gates.json`, described by
 `PDV_CAT6PromotionPilot.manifest.json`, and checked by
 `--strict-phase20-race-costing`.

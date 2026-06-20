@@ -139,11 +139,12 @@
           "magnitude": 30
         },
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 8
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "The Code-Keeper steadies the faithful. Armor +30, Health Regeneration +8%.",
+      "playerFacingText": "The Code-Keeper steadies the faithful. Armor +30, Maximum Health +20.",
       "signature": "Broad code-keeping resilience that holds regardless of life mode. Capped at Faithful; suppressed when a life-mode focused family is active; below focused-family benefits.",
       "suppressionRule": "Suppressed (not granted) whenever a PDV_State_OrcLifeMode focused family is active for the current mode at Seeker+."
     },
@@ -450,7 +451,7 @@
         {
           "magicEffectEditorId": "PDV_MGEF_Orc_TrialOfIron_Tusk_Unarmed",
           "actorValue": "UnarmedDamage",
-          "magnitude": 5.0,
+          "magnitude": 5,
           "effectName": "Unarmed Damage"
         }
       ],
@@ -464,7 +465,7 @@
         {
           "magicEffectEditorId": "PDV_MGEF_Orc_TrialOfIron_Shield_Armor",
           "actorValue": "DamageResist",
-          "magnitude": 5.0,
+          "magnitude": 5,
           "effectName": "Armor"
         }
       ],
@@ -478,7 +479,7 @@
         {
           "magicEffectEditorId": "PDV_MGEF_Orc_TrialOfIron_Hammer_Smithing",
           "actorValue": "Smithing",
-          "magnitude": 5.0,
+          "magnitude": 5,
           "effectName": "Smithing"
         }
       ],
@@ -492,7 +493,7 @@
         {
           "magicEffectEditorId": "PDV_MGEF_Orc_TrialOfIron_Yoke_CarryWeight",
           "actorValue": "CarryWeight",
-          "magnitude": 15.0,
+          "magnitude": 15,
           "effectName": "Carry Weight"
         }
       ],
@@ -506,7 +507,7 @@
         {
           "magicEffectEditorId": "PDV_MGEF_OrcCodeHolds_HealRate",
           "actorValue": "HealRate",
-          "magnitude": 2.0,
+          "magnitude": 2,
           "duration": 10,
           "spellType": "Spell",
           "castType": "FireAndForget",
@@ -523,7 +524,7 @@
         {
           "magicEffectEditorId": "PDV_MGEF_OrcCodeHolds_Devoted_HealRate",
           "actorValue": "HealRate",
-          "magnitude": 3.0,
+          "magnitude": 3,
           "duration": 10,
           "spellType": "Spell",
           "castType": "FireAndForget",
@@ -540,7 +541,7 @@
         {
           "magicEffectEditorId": "PDV_MGEF_OrcHearthHeld_StaminaRate",
           "actorValue": "StaminaRateMult",
-          "magnitude": 5.0,
+          "magnitude": 5,
           "duration": 600,
           "spellType": "Spell",
           "castType": "FireAndForget",

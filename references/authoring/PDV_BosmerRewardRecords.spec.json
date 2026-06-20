@@ -280,12 +280,12 @@
           "effectName": "Speech"
         },
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 10,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "Community and memory keep you whole. Speech +13, Health Regeneration +10%."
+      "playerFacingText": "Community and memory keep you whole. Speech +13, Maximum Health +20."
     },
     {
       "emphasis": "LivingStory",
@@ -304,9 +304,9 @@
           "effectName": "Speech"
         },
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 25,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 30,
+          "effectName": "Fortify Health"
         },
         {
           "actorValue": "MagickaRateMult",
@@ -314,7 +314,7 @@
           "effectName": "Magicka Regeneration"
         }
       ],
-      "playerFacingText": "You are a story Y'ffre still tells. Speech +25, Health Regeneration +25%, Magicka Regeneration +5%.",
+      "playerFacingText": "You are a story Y'ffre still tells. Speech +25, Maximum Health +30, Magicka Regeneration +5%.",
       "signature": "Diaspora Y'ffre through memory, community, and storytelling -- NOT failed orthodoxy. Comparable richness to Old Contract through social/preservation/nature value rather than hunter sharpness. Champion Survey text is the V1 recognition surface."
     },
     {
@@ -426,12 +426,12 @@
           "effectName": "Armor"
         },
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 10,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "The outsider survives what should have ended them. Armor +30, Health Regeneration +10%."
+      "playerFacingText": "The outsider survives what should have ended them. Armor +30, Maximum Health +20."
     },
     {
       "emphasis": "BanditRoad",
@@ -450,9 +450,9 @@
           "effectName": "Armor"
         },
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 25,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 30,
+          "effectName": "Fortify Health"
         },
         {
           "actorValue": "Sneak",
@@ -460,7 +460,7 @@
           "effectName": "Sneak"
         }
       ],
-      "playerFacingText": "Baan Dar's luck holds when the odds say it should not. Armor +50, Health Regeneration +25%, Sneak +10.",
+      "playerFacingText": "Baan Dar's luck holds when the odds say it should not. Armor +50, Maximum Health +30, Sneak +10.",
       "signature": "Road-survival and pariah luck under Baan Dar (tolerated stance) -- road theology, NOT generic crime or thievery. Comparable richness through survival/reversal resilience. Champion Survey text is the V1 recognition surface."
     }
   ],
