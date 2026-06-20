@@ -10346,6 +10346,14 @@ Function RunDawnUpdateMoodForDeity(PDV_DeityBase deity, Float clampedToday)
         newBand = ceilingBand
     endIf
 
+    ; Per-deity mood detail (debug level 2; same granularity as the dawn piety
+    ; trace above). Disambiguates the two runsheet false-FAILs: no line at all =
+    ; stale pex (mood code never ran); a line with mood barely moving = scratch
+    ; set too low, not a bug.
+    if clampedToday != 0.0
+        Trace(2, "Mood: " + deity.DeityName + " clamped=" + clampedToday + " alpha=" + alphaValue + " mood " + oldMood + " -> " + newMood + " band " + oldBand + " -> " + newBand + " ceil " + ceilingBand)
+    endIf
+
     if newBand != oldBand
         StorageUtil.SetIntValue(deityForm, "PDV.Mood.Band", newBand)
         OnMoodBandCross(deity, oldBand, newBand)
