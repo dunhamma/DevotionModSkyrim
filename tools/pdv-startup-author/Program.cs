@@ -72,6 +72,18 @@ try
         "Stronghold",
         "Legion/Exile");
 
+    var nordChoice = EnsureMessage(
+        mod,
+        index,
+        allocator,
+        "PDV_MSG_StartupNordChoice",
+        "Nord startup pantheon",
+        "A Nord begins from one of two pantheon baselines.\n\n" +
+        "Old Ways: Kyne, Shor, Tsun, Stuhn, and Talos kept as the old Nord spine.\n" +
+        "Nine Divines: Skyrim's public shrine tradition, with Talos still central.",
+        "Old Ways",
+        "Nine Divines");
+
     // Bosmer select (button index == path state: OldContract=0, LivingStory=1,
     // Exchange=2, BanditRoad=3 -- must stay in this order).
     var bosmerChoice = EnsureMessage(
@@ -198,6 +210,26 @@ try
         "Walk this path",
         "Choose again");
 
+    var nordOldWaysConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Nord_OldWays",
+        "Nord - Old Ways",
+        "Nord - Old Ways\n\n" +
+        "The Old Ways keep Kyne, Shor, Tsun, Stuhn, and Talos as your native pantheon baseline.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
+    var nordNineDivinesConfirm = EnsureMessage(
+        mod, index, allocator,
+        "PDV_MSG_Confirm_Nord_NineDivines",
+        "Nord - Nine Divines",
+        "Nord - Nine Divines\n\n" +
+        "The Nine Divines lane keeps Nord devotion inside Skyrim's public shrines and Imperial names, with Talos still central to the road ahead.\n\n" +
+        redguardConfirmTail,
+        "Walk this path",
+        "Choose again");
+
     var bosmerOldContractConfirm = EnsureMessage(
         mod, index, allocator,
         "PDV_MSG_Confirm_Bosmer_OldContract",
@@ -243,6 +275,7 @@ try
         ObjectProp("PDV_MSG_StartupBretonChoice", bretonChoice.FormKey),
         ObjectProp("PDV_MSG_StartupRedguardChoice", redguardChoice.FormKey),
         ObjectProp("PDV_MSG_StartupOrcChoice", orcChoice.FormKey),
+        ObjectProp("PDV_MSG_StartupNordChoice", nordChoice.FormKey),
         ObjectProp("PDV_MSG_BosmerSetupChoice", bosmerChoice.FormKey),
         ObjectProp("PDV_MSG_StartupConfirmChoice", confirmChoice.FormKey),
         ObjectProp("PDV_MSG_Confirm_Redguard_Crown", redguardCrownConfirm.FormKey),
@@ -254,6 +287,8 @@ try
         ObjectProp("PDV_MSG_Confirm_Orc_City", orcCityConfirm.FormKey),
         ObjectProp("PDV_MSG_Confirm_Orc_Stronghold", orcStrongholdConfirm.FormKey),
         ObjectProp("PDV_MSG_Confirm_Orc_LegionExile", orcLegionConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Nord_OldWays", nordOldWaysConfirm.FormKey),
+        ObjectProp("PDV_MSG_Confirm_Nord_NineDivines", nordNineDivinesConfirm.FormKey),
         ObjectProp("PDV_MSG_Confirm_Bosmer_OldContract", bosmerOldContractConfirm.FormKey),
         ObjectProp("PDV_MSG_Confirm_Bosmer_Exchange", bosmerExchangeConfirm.FormKey),
         ObjectProp("PDV_MSG_Confirm_Bosmer_BanditRoad", bosmerBanditConfirm.FormKey),

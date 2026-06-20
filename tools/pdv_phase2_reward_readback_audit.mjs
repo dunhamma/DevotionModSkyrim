@@ -47,7 +47,7 @@ const ACTOR_VALUE_ALIASES = new Map([
 const CAPSTONE_FALLBACKS = [
   ["PDV_Bless_Imperial_Akatosh_T3", "PDV.Capstone.Imperial.AkatoshSave"],
   ["PDV_Bless_Altmer_AuriEl_T3", "PDV.Capstone.Altmer.AuriElSave"],
-  ["PDV_Bless_Nord_Shor_T3", "PDV.Capstone.Nord.ShorLastStand"],
+  ["PDV_Bless_Nord_Shor_T3", "PDV.Capstone.LowHealthSave.Nord"],
   ["PDV_Bless_Orc_LegionExile_T3", "PDV.Capstone.Orc.LegionHoldLine"],
   ["PDV_Bless_Redguard_Tuwhacca_T3", "PDV.Capstone.Redguard.TuwhaccaSave"],
   ["PDV_Bless_Khajiit_BaanDar_T3", "PDV.Capstone.Khajiit.BaanDarSlip"],

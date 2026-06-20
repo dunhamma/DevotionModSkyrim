@@ -1,7 +1,7 @@
 # PDV Beta Test Packet - Redguard
 
 Created: 2026-06-06
-Status: PASS 2026-06-19 - all 8 beta-feel dimensions (manual/runtime packet); gate-ledger verdict flipped Fail->Pass. Non-blocking follow-ups A/B/C tracked (see 'Session corrections & findings'). Still genuinely deferred: Dawnguard exact-stage (DLC1VQ02) -> Ash'abah re-entry source-fill (blocked); runtime-MARKER re-capture (current log rotated)
+Status: BASELINE PASS 2026-06-19 for the ancestor-spine beta-feel packet; 2026-06-20 Requiem-tail addendum is built/readback-clean but runtime/manual proof is pending in `PDV_RunSheet_Redguard_BetaFeel.md`. Non-blocking follow-ups A/B/C tracked (see 'Session corrections & findings'). Still genuinely deferred: Dawnguard exact-stage (DLC1VQ02) -> Ash'abah re-entry source-fill (blocked); runtime-MARKER re-capture (current log rotated)
 Mode: console-assisted beta-feel packet
 
 This packet starts Redguard beta-feel proof from the approved ancestor-spine
@@ -11,9 +11,10 @@ duty, Far Shores token, or HoonDing cap by itself.
 Gated behavior note (2026-06-13): the Redguard sect no longer flips on the first
 signal. Crown<->Forebear now needs two sect-coded evidence days within seven plus
 a 3-day lock-in; Ash'abah is entered only by a marked burden reason
-(redguard_ashabah_burden / redguard_deathduty_major), not casual undead; and the
-HoonDing make-way signal is weekly-capped. Score sect/HoonDing expectations
-against this gated behavior, not first-signal flips.
+(redguard_ashabah_burden / redguard_deathduty_major / approved cleared undead
+site), not casual undead; and HoonDing make-way is a curated breakthrough route
+for dragons plus the V1 listed-boss FormList, with daily soft decay. Score
+sect/HoonDing expectations against this gated behavior, not first-signal flips.
 
 Use a disposable save for every block below. Origin index `9` is Redguard.
 
@@ -53,9 +54,11 @@ RouteRedguardAncestorSpine complete: po3_book_redguard_spine
 
 ## Edge Build - Ash'abah Or HoonDing Pressure
 
-> Deferred: Ash'abah / HoonDing / Crown-Forebear / Far Shores reward and cap
-> levers pending exact approved source metadata (MS08, undead, vampire-cure);
-> tracked in the GAP ledger. No runnable step this pass.
+Use `PDV_RunSheet_Redguard_BetaFeel.md` for the current Requiem-tail edge pass:
+Tu'whacca event heal, Ash'abah stigma, HoonDing dragon/listed-boss make-way,
+HoonDing Champion low-health save, unique undead/necromancer/warlock Ash'abah
+entry, and approved cleared-undead-site burden. These are built/readback-clean
+but not yet runtime/manual proven.
 
 ## Silence Checks
 
@@ -78,9 +81,11 @@ needed here):
 set PDV_GLO_OriginRace to 9
 ```
 
-Try generic combat, undead clearing, fast travel, tomb proximity, random sword
-use, faction membership, or Arkay shrine use. Expected: no Redguard state
-movement (this also confirms the Arkay-not-Tu'whacca substitution guard).
+Try generic combat, non-listed dungeon clearing, fast travel, tomb proximity,
+random sword use, faction membership, or Arkay shrine use. Expected: no Redguard
+state movement (this also confirms the Arkay-not-Tu'whacca substitution guard).
+Approved undead locations in `PDV_FLST_RedguardAshAbahUndeadClearSites` are no
+longer part of the generic-silence class once visited uncleared and then cleared.
 
 Observe once and report both assertions: origin 8 = wrong-origin rejection;
 origin 9 + generic acts = generic-source silence.

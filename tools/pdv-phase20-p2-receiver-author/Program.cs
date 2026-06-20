@@ -130,7 +130,15 @@ CapstoneFallback[] capstoneFallbacks =
 [
     new("PDV_Bless_Imperial_Akatosh_T3", "PDV.Capstone.Imperial.AkatoshSave", 90.0f),
     new("PDV_Bless_Altmer_AuriEl_T3", "PDV.Capstone.Altmer.AuriElSave", 90.0f),
-    new("PDV_Bless_Nord_Shor_T3", "PDV.Capstone.Nord.ShorLastStand", 85.0f),
+    new(
+        "PDV_Bless_Nord_Shor_T3",
+        "PDV.Capstone.LowHealthSave.Nord",
+        0.0f,
+        0.20f,
+        0.1f,
+        "PDV_MGEF_Nord_Shor_T3_AvoidDeath",
+        "PDV_SPEL_Nord_Shor_T3_AvoidDeathHeal",
+        10000.0f),
     new("PDV_Bless_Orc_LegionExile_T3", "PDV.Capstone.Orc.LegionHoldLine", 85.0f),
     new("PDV_Bless_Redguard_Tuwhacca_T3", "PDV.Capstone.Redguard.TuwhaccaSave", 90.0f),
     new(

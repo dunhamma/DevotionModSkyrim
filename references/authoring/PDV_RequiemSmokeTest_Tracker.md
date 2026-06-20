@@ -13,7 +13,19 @@ they are FELT. The smoke sweep doubles as the magnitude-tuning pass (magnitudes 
 PROVISIONAL).
 
 Decisions ruled 2026-06-20: conversions-first (HoonDing its own slice); Namira =
-heal-on-feed lifesteal; Nord = deferred to a dedicated capstone-re-attach session.
+heal-on-feed lifesteal; Nord startup and Requiem-tail records are folded into
+`Devotion.esp`, with runtime/manual proof still pending.
+
+2026-06-20 closeout update: the Nord startup gate and the former Requiem-tail
+record work are now built and folded directly into `Devotion.esp`; no persistent
+houseCARL patch plugin ships. This supersedes the older "deferred/planned" Track
+A rows below for Nord Shor, HoonDing Champion save, HoonDing named bosses,
+Ash'abah necromancer/warlock detection, and Namira contract cleanup. The same
+helper also added the Ash'abah clearable-undead-site burden hook. Machine proof
+is compile/readback only: `PDV__ManagerQuest` and `PDV_ActionRouter` compile
+0/0, `pdv-requiem-tail-author --check --all` passes, `pdv_verify` is `FAIL=0`,
+reward readback is `FAIL=0`, and houseCARL readback confirms the folded records.
+Runtime/manual rows remain PENDING until tested in Skyrim.
 
 ---
 
@@ -46,9 +58,8 @@ PDV__ManagerQuest` = 0/0) · **Snap** (live manager snapshotted) · **Commit**.
 | B1.5 B1 deploy: compile + readback + snapshot + commit | — | — | ✅ | — | ✅ | ✅ | · |
 
 B1.3 ⏸ = Namira scripted lifesteal is built + felt; the Daedric CONTRACT cleanup
-(remove inert HealRateMult boon + fix text) + ESP re-author are deferred to the
-Daedric batch (Track A "Daedric batch" / task #10) so the proven 16-Prince gate
-stays untouched in this build. B1 lives in
+(remove inert HealRateMult boon + fix text) + targeted ESP edits are now complete
+in the Requiem-tail closeout, without a broad Daedric re-author. B1 lives in
 `generated/live-devotion-snapshot/2026-06-20-requiem-b1/`.
 
 ### Build B2 — HoonDing make-way rebuild (Papyrus core BUILT + verified; commit pending)
@@ -63,7 +74,9 @@ stays untouched in this build. B1 lives in
 
 B2e/B2f ⏸ = creation-authoring/CKPE work (attach the save MGEF as an extra effect;
 build the curated boss FormList) — split to the capstone session (task #11),
-bundled with the Nord Shor re-attach. V1 make-way = dragon kills only. B2 lives in
+bundled with the Nord Shor re-attach. Superseded 2026-06-20: the helper now
+folds these records into `Devotion.esp`; V1 make-way = dragons plus the listed
+boss FormList. B2 lives in
 `generated/live-devotion-snapshot/2026-06-20-requiem-b2/`. Compile 0/0 (3 scripts),
 verify FAIL=0.
 
@@ -73,16 +86,17 @@ The gap flagged this session (mid-game Ash'abah sect unreachable) is FIXED:
 `redguard_deathduty_major` → sect entry); shared `ApplyRedguardAshAbahDutyRewards`;
 gate hardened to `StringContainsToken`. Compile 0/0, verify FAIL=0, pushed.
 
-### Deferred → dedicated houseCARL CK session — plan: `PDV_houseCARL_CKSession_Plan.md`; Codex handoff: `PDV_houseCARL_CKSession_Handoff_Codex.md`
-The CK-blocked tail is doable **headless via houseCARL** (Mutagen VMAD attach /
-FormList create into a review patch), NOT interactive CK. Sequenced in the plan:
+### Requiem-tail record closeout - folded into `Devotion.esp`
+The former CK-blocked tail is now complete through direct Mutagen helpers plus
+houseCARL readback. No persistent patch plugin ships.
 | Item | Approach | Status |
 |---|---|---|
-| 1. Nord Shor convert + Sovngarde save re-attach | spec (extra-effect) + author + houseCARL VMAD attach | PLANNED |
-| 2. HoonDing Champion cheat-death save | spec extra-effect + houseCARL VMAD attach | PLANNED |
-| 3. HoonDing named-boss FormList (beyond dragons) | houseCARL FLST + manager qualify | PLANNED |
-| 4. Ash'abah named-necromancer detection (beyond unique undead) | faction/FLST + manager qualify | PLANNED |
-| 5. Namira boon contract cleanup | houseCARL targeted MGEF/text edits (NO full Daedric re-author) | PLANNED |
+| 1. Nord Shor convert + Sovngarde save re-attach | spec (extra-effect) + direct helper VMAD attach | BUILT/readback PASS |
+| 2. HoonDing Champion cheat-death save | spec extra-effect + direct helper VMAD attach | BUILT/readback PASS; runtime PENDING |
+| 3. HoonDing named-boss FormList (beyond dragons) | FLST + manager qualify | BUILT/readback PASS; runtime PENDING |
+| 4. Ash'abah named-necromancer detection (beyond unique undead) | faction properties + manager qualify | BUILT/readback PASS; runtime PENDING |
+| 5. Namira boon contract cleanup | targeted MGEF/text edits (NO full Daedric re-author) | BUILT/readback PASS; runtime PENDING |
+| 6. Ash'abah clearable-undead-site hook | 43-entry FLST + armed clear hook | BUILT/readback PASS; runtime PENDING |
 
 ---
 
@@ -139,6 +153,11 @@ before/after and watch the HP bar.
 ---
 
 ## Notes / parking
+- Current extra Redguard/HoonDing runtime rows after the Requiem-tail closeout:
+  test a listed HoonDing boss in addition to a dragon; test the HoonDing
+  Champion low-health save once/day; test one approved Ash'abah clearable undead
+  site from `PDV_FLST_RedguardAshAbahUndeadClearSites`; and confirm a non-listed
+  clearable site stays silent. These are runtime/manual PENDING until recorded.
 - Evidence sink: `PDV_Phase20_ManualEvidenceLedger.json` (Redguard + Daedric/Namira
   blocks). Route proof checker: `node ./tools/pdv_phase20_runtime_check.mjs`.
 - Final gate after all slices (+ Nord whenever done): `node ./tools/pdv_verify.mjs`

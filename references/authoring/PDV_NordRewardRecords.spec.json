@@ -379,12 +379,12 @@
       "displayName": "Shor's Favor - Seeker",
       "effects": [
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 5,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 10,
+          "effectName": "Maximum Health"
         }
       ],
-      "playerFacingText": "The hero-god of Sovngarde marks your valor. Health Regeneration +5%."
+      "playerFacingText": "The hero-god of Sovngarde marks your valor. Maximum Health +10."
     },
     {
       "emphasis": "Shor",
@@ -397,9 +397,9 @@
       "displayName": "Shor's Favor - Devoted",
       "effects": [
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 15,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 20,
+          "effectName": "Maximum Health"
         },
         {
           "actorValue": "OneHanded",
@@ -407,7 +407,7 @@
           "effectName": "One-Handed"
         }
       ],
-      "playerFacingText": "Shor's hall remembers the brave. Health Regeneration +15%, One-Handed +8."
+      "playerFacingText": "Shor's hall remembers the brave. Maximum Health +20, One-Handed +8."
     },
     {
       "emphasis": "Shor",
@@ -418,11 +418,12 @@
       "reuseDeity": "PDV_Deity_Shor (new Nord-owned)",
       "spellEditorId": "PDV_Bless_Nord_Shor_T3",
       "displayName": "Shor's Hall - Champion",
+      "preserveAdditionalEffects": true,
       "effects": [
         {
-          "actorValue": "HealRateMult",
-          "magnitude": 27,
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 30,
+          "effectName": "Maximum Health"
         },
         {
           "actorValue": "OneHanded",
@@ -435,7 +436,7 @@
           "effectName": "Two-Handed"
         }
       ],
-      "playerFacingText": "Sovngarde looks back on you. Health Regeneration +27%, One-Handed +18, Two-Handed +10.",
+      "playerFacingText": "Sovngarde looks back on you. Maximum Health +30, One-Handed +18, Two-Handed +10. Once per day, Shor pulls you back from the edge.",
       "signature": "Carries the scripted T3 signature 'Sovngarde Looks Back' (see PDV_Phase2_CapstoneSignatures.md, Nord). This capstone holds Nord's single allowed cheat-death/last-stand save (LOCKED rule: one save per race). Stat half above is the capstone; the scripted signature rides on top."
     },
     {

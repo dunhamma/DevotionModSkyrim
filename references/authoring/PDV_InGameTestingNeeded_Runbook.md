@@ -1,7 +1,7 @@
 # PDV In-Game Testing Needed Runbook
 
 **Created:** 2026-06-10  
-**Status:** Active manual/runtime handoff after Bosmer DA05 proof intake and Bosmer runtime-fix live write
+**Status:** Active manual/runtime handoff after Nord startup/Requiem-tail readback closeout and Ash'abah cleared-site hook
 **Companions:** `PDV_BetaTestPacket_*.md`, `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_SessionHandoff_BosmerRuntimeFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
 
 ## Purpose
@@ -21,6 +21,12 @@ are recorded.
 and the Naming/neglect/reward-copy fixes were written after Skyrim closed. See
 `PDV_SessionHandoff_BosmerRuntimeFixes.md` before continuing Bosmer. Restart
 Skyrim before retesting; the previous live session had old manager script state.
+
+2026-06-20 handoff note: Nord startup, Shor/HoonDing capstone saves, HoonDing
+listed bosses, Redguard Ash'abah necromancer/warlock and clearable-undead-site
+burdens, and Namira passive-zero/Health+Stamina feed copy are built/readback-clean.
+This is still compile/readback proof only. Fold runtime/manual checks into the
+Nord, Redguard/Requiem, and Daedric/Namira packets before making a beta-feel claim.
 
 ## Preflight Before Opening Skyrim
 
@@ -46,9 +52,10 @@ Expected before manual testing:
 - Beta readiness audit: still `NOT_BETA_READY` until manual/runtime slots are
   recorded.
 
-Known caveat: `pdv_phase2_reward_readback_audit` currently has one unrelated
-Khajiit Baan Dar T3 capstone script failure. Do not treat that as a Bosmer
-blocker; handle it in a separate Khajiit readback cleanup slice.
+Current reward-readback expectation after the 2026-06-20 Requiem-tail closeout:
+`pdv_phase2_reward_readback_audit` should pass with `FAIL=0`. The old Khajiit
+Baan Dar T3 capstone-script caveat is no longer the expected blocking state for
+this manual queue.
 
 Do not use the older
 `dotnet run --project .\tools\pdv-phase20-reward-author\PdvPhase20RewardAuthor.csproj -- --check`

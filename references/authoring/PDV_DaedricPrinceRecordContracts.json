@@ -2738,12 +2738,12 @@
           "spellEditorId": "PDV_Bless_Daedric_Namira_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Seeker",
           "displayName": "Namira Boon - Seeker",
-          "playerFacingText": "Namira's reviled hunger sustains you. Boon: Health regeneration +10%.",
+          "playerFacingText": "Namira's reviled hunger sustains you. Feeding on the dead restores Health and Stamina.",
           "property": "Boon_Seeker",
           "effects": [
             {
               "actorValue": "HealRateMult",
-              "magnitude": 10,
+              "magnitude": 0,
               "area": 0,
               "duration": 0
             }
@@ -2753,12 +2753,12 @@
           "spellEditorId": "PDV_Bless_Daedric_Namira_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Devoted",
           "displayName": "Namira Boon - Devoted",
-          "playerFacingText": "Namira's reviled hunger sustains you. Boon: Health regeneration +15%.",
+          "playerFacingText": "Namira's reviled hunger sustains you. Feeding on the dead restores Health and Stamina.",
           "property": "Boon_Devoted",
           "effects": [
             {
               "actorValue": "HealRateMult",
-              "magnitude": 15,
+              "magnitude": 0,
               "area": 0,
               "duration": 0
             }
@@ -2768,12 +2768,12 @@
           "spellEditorId": "PDV_Bless_Daedric_Namira_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Champion",
           "displayName": "Namira Boon - Champion",
-          "playerFacingText": "Namira's reviled hunger sustains you. Boon: Health regeneration +20%.",
+          "playerFacingText": "Namira's reviled hunger sustains you. Feeding on the dead restores Health and Stamina.",
           "property": "Boon_Champion",
           "effects": [
             {
               "actorValue": "HealRateMult",
-              "magnitude": 20,
+              "magnitude": 0,
               "area": 0,
               "duration": 0
             }

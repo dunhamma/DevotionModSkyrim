@@ -291,6 +291,7 @@
       "deity": "PDV_Deity_HoonDing",
       "spellEditorId": "PDV_Bless_Redguard_HoonDing_T3",
       "displayName": "HoonDing's Way Made - Champion",
+      "preserveAdditionalEffects": true,
       "effects": [
         {
           "actorValue": "OneHanded",
@@ -303,7 +304,7 @@
           "effectName": "Movement Speed"
         }
       ],
-      "playerFacingText": "Against impossible odds the Make-Way God is with you and the way is made. One-Handed +25, Movement Speed +6%.",
+      "playerFacingText": "The Make-Way God opens the road. One-Handed +25, Movement Speed +6%. Once per day, HoonDing pulls you back from the edge.",
       "signature": "Make-Way recognition: rare, dramatic one-handed burst reached only through curated make-way / impossible-odds milestones under the weekly cap, never generic combat; Champion Survey text is the V1 recognition surface."
     },
     {
