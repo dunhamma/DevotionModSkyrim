@@ -73,7 +73,7 @@ The gap flagged this session (mid-game Ash'abah sect unreachable) is FIXED:
 `redguard_deathduty_major` → sect entry); shared `ApplyRedguardAshAbahDutyRewards`;
 gate hardened to `StringContainsToken`. Compile 0/0, verify FAIL=0, pushed.
 
-### Deferred → dedicated houseCARL CK session — plan: `PDV_houseCARL_CKSession_Plan.md`
+### Deferred → dedicated houseCARL CK session — plan: `PDV_houseCARL_CKSession_Plan.md`; Codex handoff: `PDV_houseCARL_CKSession_Handoff_Codex.md`
 The CK-blocked tail is doable **headless via houseCARL** (Mutagen VMAD attach /
 FormList create into a review patch), NOT interactive CK. Sequenced in the plan:
 | Item | Approach | Status |
