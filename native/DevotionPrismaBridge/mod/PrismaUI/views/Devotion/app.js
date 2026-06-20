@@ -1715,6 +1715,113 @@
   window.ReceivePDVJson = (payloadText) => window.PDVBridge.receiveJson(payloadText);
   window.ReceivePDVOverlayJson = (payloadText) => window.PDVBridge.receiveOverlayJson(payloadText);
 
+  // --- Phase 0 choice panel (round-trip plumbing proof) ---------------------
+  // Renders a blocking choice grid and returns the pick to C++ by calling the
+  // PDVChoiceResult listener the bridge registers via RegisterJSListener. The
+  // result string is "<menu>|<index>" or "<menu>|cancel". ESC, the Cancel
+  // button, and any bad payload all resolve to cancel so the player is never
+  // trapped. Inline styles keep this self-contained (no index.html/css edits).
+  const renderChoicePanel = (choice) => {
+    const menu = text(choice.menu, "choice");
+    const options = Array.isArray(choice.options) ? choice.options : [];
+    console.log("PDV choice render: menu=" + menu + " options=" + options.length);
+
+    const stale = document.getElementById("pdv-choice-overlay");
+    if (stale) stale.remove();
+
+    let done = false;
+    const onKey = (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        finish("cancel");
+      }
+    };
+    function finish(token) {
+      if (done) return;
+      done = true;
+      document.removeEventListener("keydown", onKey, true);
+      const node = document.getElementById("pdv-choice-overlay");
+      if (node) node.remove();
+      if (typeof window.PDVChoiceResult === "function") {
+        window.PDVChoiceResult(menu + "|" + token);
+      }
+    }
+
+    const overlay = document.createElement("div");
+    overlay.id = "pdv-choice-overlay";
+    overlay.setAttribute("style", [
+      "position:fixed", "top:0", "left:0", "right:0", "bottom:0", "z-index:99999",
+      "display:flex", "align-items:center", "justify-content:center",
+      "background:rgba(0,0,0,0.55)", "font-family:'IM Fell English',serif",
+      "color:#f3e9d2"
+    ].join(";"));
+
+    const card = document.createElement("div");
+    card.setAttribute("style", [
+      "max-width:760px", "width:80%", "padding:28px 32px",
+      "background:rgba(20,16,10,0.96)", "border:1px solid #6b5836",
+      "border-radius:10px", "box-shadow:0 8px 40px rgba(0,0,0,0.6)",
+      "text-align:center"
+    ].join(";"));
+
+    const heading = document.createElement("h2");
+    heading.textContent = text(choice.title, "Choose");
+    heading.setAttribute("style", "margin:0 0 8px;font-size:26px;");
+    const prompt = document.createElement("p");
+    prompt.textContent = text(choice.prompt, "");
+    prompt.setAttribute("style", "margin:0 0 20px;opacity:0.85;");
+    card.append(heading, prompt);
+
+    const grid = document.createElement("div");
+    // 3-up grid; 5 options wrap to a 3+2 layout automatically.
+    grid.setAttribute("style", [
+      "display:grid", "grid-template-columns:repeat(3,1fr)",
+      "gap:12px", "margin-bottom:18px"
+    ].join(";"));
+    options.forEach((option, position) => {
+      const index = Number.isInteger(option.index) ? option.index : position;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = text(option.label, "Option " + index);
+      button.setAttribute("style", [
+        "padding:14px 12px", "background:rgba(60,48,28,0.9)",
+        "border:1px solid #8a7038", "border-radius:8px", "color:#f3e9d2",
+        "font-family:inherit", "font-size:16px", "cursor:pointer"
+      ].join(";"));
+      button.addEventListener("click", () => finish(String(index)));
+      grid.appendChild(button);
+    });
+    card.appendChild(grid);
+
+    const cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.textContent = text(choice.cancelLabel, "Not yet (Esc)");
+    cancel.setAttribute("style", [
+      "padding:10px 18px", "background:transparent", "border:1px solid #6b5836",
+      "border-radius:8px", "color:#cdbb95", "font-family:inherit",
+      "font-size:14px", "cursor:pointer"
+    ].join(";"));
+    cancel.addEventListener("click", () => finish("cancel"));
+    card.appendChild(cancel);
+
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+    document.addEventListener("keydown", onKey, true);
+  };
+
+  window.ReceivePDVChoice = (payloadText) => {
+    try {
+      const payload = parsePayload(payloadText);
+      const choice = (payload && payload.choice) ? payload.choice : payload;
+      renderChoicePanel(choice || {});
+    } catch (error) {
+      console.error("PDV choice payload error: " + (error && error.message));
+      if (typeof window.PDVChoiceResult === "function") {
+        window.PDVChoiceResult("choice|cancel");
+      }
+    }
+  };
+
   if (nodes.startupClose) {
     nodes.startupClose.addEventListener("click", () => hideStartup());
   }
