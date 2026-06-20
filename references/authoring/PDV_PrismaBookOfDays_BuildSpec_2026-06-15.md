@@ -26,6 +26,17 @@ surfaces state" -- the manager stays authoritative; Prisma only renders.
 - **Surface posture:** default-off, player-owned modal (mirrors the medallion roster);
   never auto-pushed by a gameplay event (boundary + audit requirement).
 
+## Current layout stance (2026-06-20)
+
+- Keep the left-page paragraph spot as the factual race/path orientation line for now
+  (`Race | Path` from the manager, rendered as `Race · Path` in Prisma).
+- Do not promote a manager-sent `journal.by` byline or replace the paragraph with
+  richer devotional prose until the user drafts the copy. The UI-side fallback such as
+  `kept for Kyne` can remain incidental, but it is not the authored contract.
+- **Drafting backlog:** revisit Book of Days left-page copy after gameplay recovery work:
+  decide whether the race/path line stays visible, moves elsewhere, or becomes a more
+  diegetic race/path blurb. Treat this as wording/layout polish, not a manager-state fix.
+
 ## Existing leverage (what is already there -- ~80% built)
 
 UI app: `native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/` (`app.js`, `index.html`, css)
