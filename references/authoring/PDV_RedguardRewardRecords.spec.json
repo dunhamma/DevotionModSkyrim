@@ -218,14 +218,9 @@
           "actorValue": "ResistMagic",
           "magnitude": 10,
           "effectName": "Magic Resistance"
-        },
-        {
-          "actorValue": "HealRateMult",
-          "magnitude": 10,
-          "effectName": "Health Regeneration"
         }
       ],
-      "playerFacingText": "Tu'whacca steadies the soul against death's edge. Magic Resistance +10%, Health Regeneration +10%."
+      "playerFacingText": "Tu'whacca steadies the soul against death's edge. Magic Resistance +10%, and the kept death-rite restores your health (event-driven, flat restore -- felt under Requiem)."
     },
     {
       "emphasis": "Tuwhacca",
@@ -241,14 +236,9 @@
           "actorValue": "ResistMagic",
           "magnitude": 20,
           "effectName": "Magic Resistance"
-        },
-        {
-          "actorValue": "HealRateMult",
-          "magnitude": 25,
-          "effectName": "Health Regeneration"
         }
       ],
-      "playerFacingText": "Tu'whacca keeps the way to the Far Shores open for you and yours. Magic Resistance +20%, Health Regeneration +25%.",
+      "playerFacingText": "Tu'whacca keeps the way to the Far Shores open for you and yours. Magic Resistance +20%, and the kept death-rite restores your health in full measure (event-driven, flat restore -- felt under Requiem).",
       "signature": "Soul-keeper's recognition: strongest death-duty ward and restoration; reached through kept death duty and Far Shores devotion, never Arkay substitution; Champion Survey text is the V1 recognition surface."
     },
     {
