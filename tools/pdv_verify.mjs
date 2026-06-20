@@ -3921,6 +3921,7 @@ class Verifier {
 
     this.checkPhase20PreBetaSurveySourceScaffold();
     this.checkPhase20ImmersiveHookSourceScaffold();
+    this.checkRestoreBoundaryRecoverySourceScaffold();
     this.checkPhase20P2ImmersiveReceiverManifest();
     this.checkPhase20NoInGameProofGates();
     this.checkPhase20Cat6PromotionPilot();
@@ -4042,6 +4043,92 @@ class Verifier {
       "PDV_FLST_P2_KhajiitLunarSources",
       "PDV_FLST_P2_OrcMalacathSources",
       "PDV_FLST_P2_RedguardSpineSources",
+    ], this.phase20RaceCostingGap.bind(this));
+  }
+
+  checkRestoreBoundaryRecoverySourceScaffold() {
+    this.checkSourceContains("Restore boundary book notice source", "PDV__ManagerQuest", [
+      "Bool Function IsP2BookNoticeReason(String reason)",
+      "return StringContainsToken(reason, \"po3_book\")",
+    ], this.phase20RaceCostingGap.bind(this));
+
+    this.checkSourceContains("Restore boundary startup confirm source", "PDV__ManagerQuest", [
+      "Message Property PDV_MSG_Confirm_Redguard_Crown Auto",
+      "Message Property PDV_MSG_Confirm_Breton_HiddenArt Auto",
+      "Message Property PDV_MSG_Confirm_Orc_LegionExile Auto",
+      "Message Property PDV_MSG_Confirm_Bosmer_BanditRoad Auto",
+      "Bool Function ConfirmStartupSelection(Int originRace, Message choiceMessage, Int expectedSelection)",
+      "Message Function GetStartupConfirmMessage(Int originRace, Int optionValue)",
+      "confirmMessage.Show()",
+    ], this.phase20RaceCostingGap.bind(this));
+    this.checkSourceNotContains("Restore boundary startup confirm source", "PDV__ManagerQuest", [
+      "Debug.MessageBox(GetStartupOptionDetailText",
+    ], this.phase20RaceCostingGap.bind(this));
+
+    this.checkSourceContains("Restore boundary Orc organic source", "PDV__ManagerQuest", [
+      "Function HandleOrcLocationChange(Location newLocation)",
+      "Function HandleOrcStrongholdPresence(Int holdId, String reason)",
+      "Function HandleOrcBloodKinCrisis(String reason)",
+      "Int Function GetOrcStrongholdHoldId(Location newLocation)",
+      "return StringContainsToken(reason, \"orc_bloodkin_crisis\") || StringContainsToken(reason, \"orc_cursed_tribe_resolved\") || StringContainsToken(reason, \"orc_major_gate\")",
+    ], this.phase20RaceCostingGap.bind(this));
+    this.checkSourceContains("Restore boundary Orc organic router source", "PDV_ActionRouter", [
+      "PDV_Manager.HandleOrcLocationChange(akNewLocation)",
+    ], this.phase20RaceCostingGap.bind(this));
+    this.checkSourceContains("Restore boundary Orc organic EventBus source", "PDV_EventBus", [
+      "Function RouteOrcStrongholdPresence(Int holdId, String sourceId = \"\")",
+      "Function RouteOrcBloodKinCrisis(String sourceId = \"orc_cursed_tribe_resolved\")",
+      "Function RouteOrcCityDignity(String sourceId = \"\")",
+      "Function RouteOrcLegionService(String sourceId = \"\")",
+      "Function RouteOrcSelfMadeCommunity(String sourceId = \"\")",
+    ], this.phase20RaceCostingGap.bind(this));
+    this.checkSourceContains("Restore boundary Orc organic PO3 source", "PDV_PlayerEvents", [
+      "Function RegisterOrcLifeModeQuestSources()",
+      "Function RouteOrcLifeModeQuestStage(Quest sourceQuest, Int newStage)",
+      "RouteOrcBloodKinCrisis(\"orc_cursed_tribe_resolved\")",
+      "RouteOrcCityDignity(\"po3_queststage_orc_city_thane\")",
+      "RouteOrcLegionService(\"po3_queststage_orc_cw02a\")",
+    ], this.phase20RaceCostingGap.bind(this));
+
+    this.checkSourceContains("Restore boundary Breton Hidden Art notice source", "PDV__ManagerQuest", [
+      "ShowP2BookNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))",
+      "String Function GetBretonHiddenArtNoticeTitle(String reason)",
+      "String Function GetBretonHiddenArtNoticeText(String reason)",
+    ], this.phase20RaceCostingGap.bind(this));
+    this.checkSourceContains("Restore boundary Breton Hidden Art PO3 source", "PDV_PlayerEvents", [
+      "Function GetBretonHiddenArtSourceToken(Form sourceForm)",
+      "RouteBretonHiddenArtExposure(sourceKind + \"_breton_hidden_art_\" + GetBretonHiddenArtSourceToken(sourceForm))",
+    ], this.phase20RaceCostingGap.bind(this));
+
+    this.checkSourceContains("Restore boundary Argonian move-home source", "PDV__ManagerQuest", [
+      "Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, String reason)",
+      "StorageUtil.SetIntValue(None, \"PDV.ArgBed.CandidateFormID\", sleepCellId)",
+      "SetArgonianHome(playerRef, sleepCellId, today, reason)",
+      "Function SetArgonianHome(Actor playerRef, Int sleepCellId, Int today, String reason)",
+      "Function ClearArgonianAdaptation(Actor playerRef)",
+      "StorageUtil.SetIntValue(None, \"PDV.Adapt.DueDay\", today + Utility.RandomInt(10, 14) + 1)",
+    ], this.phase20RaceCostingGap.bind(this));
+
+    this.checkSourceContains("Restore boundary Book of Days payload source", "PDV__ManagerQuest", [
+      "String Function BuildJournalPayloadJson()",
+      "String pathInfo = GetOriginRaceLabel(GetPlayerOriginRaceIndex())",
+      "pathInfo = pathInfo + \" | \" + GetPlayerMcmModeLine()",
+      "j = j + \",\\\"survey\\\":\\\"\" + JsonSafeString(pathInfo) + \"\\\"\"",
+      "String Function GetPlayerMcmModeLine()",
+      "return GetRedguardSectLabel()",
+    ], this.phase20RaceCostingGap.bind(this));
+    this.checkSourceNotContains("Restore boundary Book of Days payload source", "PDV__ManagerQuest", [
+      "pathInfo = pathInfo + \" | \" + GetPlayerMcmSummaryLine()",
+      "pathInfo = pathInfo + \" | \" + GetCurrentStandingLabel()",
+    ], this.phase20RaceCostingGap.bind(this));
+
+    this.checkSourceContains("Restore boundary Book of Days MCM source", "PDV_MCM", [
+      "Function RegisterJournalHotkey()",
+      "Event OnKeyDown(Int a_keyCode)",
+      "StorageUtil.SetIntValue(None, \"PDV.Diegetic.Journal.Open\", 0)",
+      "PDV_Manager.ClosePrismaJournal()",
+      "PDV_Manager.SendPrismaJournalPayload(True)",
+      "_oidJournalHotkey = AddKeyMapOption(\"Open Book of Days\", currentJournalKey, OPTION_FLAG_NONE)",
     ], this.phase20RaceCostingGap.bind(this));
   }
 
@@ -5247,13 +5334,17 @@ class Verifier {
     ]);
     this.checkSourceContains("Phase 20 Orc EventBus source", "PDV_EventBus", [
       "Function RouteOrcStrongholdForge()",
-      "Function RouteOrcCityDignity()",
-      "Function RouteOrcLegionService()",
-      "Function RouteOrcSelfMadeCommunity()",
+      "Function RouteOrcStrongholdPresence(Int holdId, String sourceId = \"\")",
+      "Function RouteOrcBloodKinCrisis(String sourceId = \"orc_cursed_tribe_resolved\")",
+      "Function RouteOrcCityDignity(String sourceId = \"\")",
+      "Function RouteOrcLegionService(String sourceId = \"\")",
+      "Function RouteOrcSelfMadeCommunity(String sourceId = \"\")",
       "Function RouteOrcOathBreak(String sourceId)",
       "Function RouteOrcFourHoldsVisit(Int holdId, String sourceId)",
       "PDV_Manager.HandleOrcStrongholdForge(\"eventbus_\" + eventType)",
-      "PDV_Manager.HandleOrcSelfMadeCommunity(\"eventbus_\" + eventType)",
+      "PDV_Manager.HandleOrcStrongholdPresence(holdId, \"eventbus_\" + eventType + \"_\" + sourceId)",
+      "PDV_Manager.HandleOrcBloodKinCrisis(\"eventbus_\" + eventType + \"_\" + sourceId)",
+      "PDV_Manager.HandleOrcSelfMadeCommunity(reason)",
       "PDV_Manager.HandleOrcOathBreak(\"eventbus_\" + eventType + \"_\" + sourceId)",
       "PDV_Manager.HandleOrcFourHoldsVisit(holdId, \"eventbus_\" + eventType + \"_\" + sourceId)",
     ]);
@@ -8210,6 +8301,24 @@ class Verifier {
         this.pass(checkName, `${scriptName}.psc contains ${snippet}.`, source);
       } else {
         reportGap(checkName, `${scriptName}.psc is missing ${snippet}.`, source);
+      }
+    }
+  }
+
+  checkSourceNotContains(checkName, scriptName, snippets, gapFn = null) {
+    const reportGap = gapFn || this.fail.bind(this);
+    const source = path.join(DEVOTION_SOURCE, `${scriptName}.psc`);
+    if (!exists(source)) {
+      reportGap(checkName, `${scriptName}.psc is missing.`, source);
+      return;
+    }
+
+    const text = fs.readFileSync(source, "utf8");
+    for (const snippet of snippets) {
+      if (text.includes(snippet)) {
+        reportGap(checkName, `${scriptName}.psc still contains ${snippet}.`, source);
+      } else {
+        this.pass(checkName, `${scriptName}.psc does not contain ${snippet}.`, source);
       }
     }
   }

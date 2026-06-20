@@ -1113,7 +1113,14 @@ h1 {
 
 /* JS scales this wrapper to fit any viewport */
 #pdv-journal-modal .bod-scaler {
-  transform-origin: center center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1180px;
+  height: 720px;
+  display: grid;
+  place-items: center;
+  transform-origin: top left;
 }
 
 /* The book: leather cover wrapping two parchment pages */

@@ -12,11 +12,22 @@ restore is a documented re-apply, not a from-memory reconstruction.
 Pairs with: native bridge commit `019c740` ("Harden Phase 0 Prisma choice channel")
 and `references/authoring/PDV_PrismaChoicePanel_CapabilityPlan.md`.
 
-Two independent blocks live here:
+Recovery blocks now live here and in the tracked 2026-06-20 source snapshot:
 - **A. Phase 0 Prisma choice channel** (the throwaway round-trip proof).
-- **B. Extended Argonian debug seeds** (re-authored 2026-06-20 against the CURRENT
-  manager's keys; the 06-19 originals + their helpers were lost and are NOT in any
-  snapshot).
+- **B. Extended Argonian debug seeds** (re-authored 2026-06-20 against the current
+  manager's keys).
+- **C. Argonian adaptation 10-14 day maturation clock**.
+- **D. P2 book notice suffix gate**.
+- **E. Startup per-path confirm selector**.
+- **F. Orc life-mode organic wiring**.
+- **G. Breton per-book Hidden Art notices**.
+- **H. Argonian move-home / re-adapt bed-of-choice path**.
+- **I. Book of Days Prisma journal hotkey + race/path line**.
+
+Exact current source snapshot:
+`generated/live-devotion-snapshot/2026-06-20-restore-recovery/Scripts/Source/`
+contains the restored `PDV__ManagerQuest.psc`, `PDV_PlayerEvents.psc`,
+`PDV_ActionRouter.psc`, `PDV_EventBus.psc`, and `PDV_MCM.psc`.
 
 ---
 
@@ -98,10 +109,11 @@ EndFunction
 
 ## B. Extended Argonian debug seeds
 
-Re-authored 2026-06-20 against the CURRENT manager keys (verified by an audit +
-adversarial pass + a clean `pdv_compile`). The 06-19 originals called helpers that
-no longer exist (`SetArgonianHome`, `ClearArgonianAdaptation`,
-`DebugSeedArgonianBedCount/WatersCount`) -- this version inlines everything.
+Re-authored 2026-06-20 against the current manager keys (verified by audit +
+targeted Papyrus compile). The first recovery inlined the reset work because the
+home helpers had been lost. The later restore-boundary pass reintroduced
+`SetArgonianHome` / `ClearArgonianAdaptation`; current live source and the snapshot
+therefore use the helper form.
 
 ### B1. Properties (after `Int Property DebugSeedGo Auto Hidden`)
 
@@ -112,64 +124,17 @@ Int Property DebugSeedArgWatersCount Auto Hidden
 Int Property DebugSeedAdaptDueNow Auto Hidden
 ```
 
-### B2. Replace the `if DebugSeedGo != 0` block in `Event OnUpdate()` with:
+### B2. Current `OnUpdate()` block
+
+Use the exact block from the 2026-06-20 restore-recovery snapshot. The current
+`DebugSeedDeclareHomeNow` path calls:
 
 ```papyrus
-    if DebugSeedGo != 0
-        DebugSeedGo = 0
-        DebugSeedArgonian(DebugSeedHist, DebugSeedPeople, DebugSeedVoid)
-
-        ; (1) Declare current cell as Argonian home + clear adaptation.
-        if DebugSeedDeclareHomeNow != 0
-            DebugSeedDeclareHomeNow = 0
-            Actor seedPlayer = Game.GetPlayer()
-            Int seedCellId = 0
-            Cell seedCell = seedPlayer.GetParentCell()
-            if seedCell
-                seedCellId = seedCell.GetFormID()
-            endIf
-            if seedCellId != 0
-                Int seedToday = Utility.GetCurrentGameTime() as Int
-                StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclaredFormID", seedCellId)
-                StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclaredDay", seedToday + 1)
-                StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", 0)
-                RemoveArgonianAdaptationSpells(seedPlayer)
-                StorageUtil.SetIntValue(None, "PDV.Adapt.Active", 0)
-                StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", 0)
-                Debug.Notification("PDV seed: this cell is now your Argonian home; adaptation cleared, rite clock re-armed.")
-            else
-                Debug.Notification("PDV seed: no parent cell; home not declared.")
-            endIf
-        endIf
-
-        ; (2) Rooted-rest sleep count (>=12 arms Rooted Rest). MUST be on the substrate form.
-        if DebugSeedBedCount != 0
-            Int seedBed = DebugSeedBedCount
-            DebugSeedBedCount = 0
-            if PDV_ArgonianHistSubstrate
-                StorageUtil.SetIntValue(PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount", seedBed)
-                Debug.Notification("PDV seed: bed-of-choice sleep count set to " + seedBed + ".")
-            else
-                Debug.Notification("PDV seed: Argonian substrate not wired; bed count unchanged.")
-            endIf
-        endIf
-
-        ; (3) Sacred-waters count (on None). size-1 arms the all-six milestone on the next NEW site.
-        if DebugSeedArgWatersCount != 0
-            Int seedWaters = DebugSeedArgWatersCount
-            DebugSeedArgWatersCount = 0
-            StorageUtil.SetIntValue(None, "PDV.ArgWaters.Count", seedWaters)
-            Debug.Notification("PDV seed: sacred-waters count set to " + seedWaters + ".")
-        endIf
-
-        ; (4) Mature the 10-14 day adaptation rite clock to "due now".
-        if DebugSeedAdaptDueNow != 0
-            DebugSeedAdaptDueNow = 0
-            StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", (Utility.GetCurrentGameTime() as Int) + 1)
-            Debug.Notification("PDV seed: adaptation rite clock matured (due now); fires next sleep at home or a sacred water if composite>=75 and no active adaptation.")
-        endIf
-    endIf
+SetArgonianHome(seedPlayer, seedCellId, Utility.GetCurrentGameTime() as Int, "debug_seed")
 ```
+
+That helper clears any active adaptation, resets the rooted-rest count, and rolls
+the next adaptation due day.
 
 ### B3. Seed usage (SetPQV, then flip DebugSeedGo)
 
@@ -206,12 +171,16 @@ setpqv PDV__ManagerQuest DebugSeedGo 1                 ; applies all set seeds t
      `set PDV_MOD_PATH=D:\Wabbajack\modlists\Anvil\mods\Devotion`, then
      `xmake f -y -m releasedbg` + `xmake -y` (xmake at
      `C:\Users\Admin\Documents\xmake-v3.0.8-win64\xmake\xmake.exe`).
-2. **Manager** (NOT in repo -- re-apply from this file): blocks A1/A2/A3 + B1/B2 at
-   the anchors above.
+2. **Manager/scripts**: restore from
+   `generated/live-devotion-snapshot/2026-06-20-restore-recovery/Scripts/Source/`
+   or re-apply the blocks in this file at the anchors above.
 3. **Recompile**: `node tools/pdv_compile.mjs --script PDV_PrismaBridge` then
-   `node tools/pdv_compile.mjs --script PDV__ManagerQuest` (both must be `0 error(s)`).
-4. **Verify**: `node tools/pdv_prisma_ui_audit.mjs` (13/13); grep the live `.pex`
-   for `DebugPrismaChoiceGo` / `Phase0PrismaChoiceTick` / the 4 seed properties.
+   `node tools/pdv_compile.mjs --script PDV__ManagerQuest --script PDV_MCM --script PDV_PlayerEvents --script PDV_ActionRouter --script PDV_EventBus`
+   (all must be `0 error(s), 0 warning(s)`).
+4. **Verify**: `node tools/pdv_prisma_ui_audit.mjs` (13/13) and
+   `node tools/pdv_verify.mjs`; grep the live `.pex` for `DebugPrismaChoiceGo`,
+   `Phase0PrismaChoiceTick`, and the 4 seed properties if the failure was a live
+   file disappearance.
 
 ---
 
@@ -245,11 +214,96 @@ Also update the rite header comment to describe the 10-14 day clock (not the sta
 "7-day cooldown swap" wording the instant version carried). DebugSeedDeclareHomeNow
 zeroes `PDV.Adapt.DueDay` to re-arm; DebugSeedAdaptDueNow sets it to today+1 to mature.
 
-NOT restored (still part of the separate whole-mod audit): the 06-19 bed-of-choice
-rework -- `SetArgonianHome`/`ClearArgonianAdaptation` extracted helpers + the
-settle-streak/move-home path. The current `TryArgonianBedOfChoiceSleep` is
-declare-once (no move-home), so "moving home re-arms the clock" is N/A in this build;
-the clock is global (`PDV.Adapt.DueDay` on None) and re-arms only via the seed.
+The restore-boundary pass later reintroduced the bed-of-choice move-home helpers.
+Moving home now clears adaptation, resets the rooted-rest count, and re-rolls the
+10-14 day adaptation clock.
+
+---
+
+## D. P2 book notice suffix gate (RESTORED 2026-06-20)
+
+`IsP2BookNoticeReason` must token-match `po3_book`, not exact-match suffixless
+tokens:
+
+```papyrus
+return StringContainsToken(reason, "po3_book")
+```
+
+This protects all suffixed PO3 book routes, including Dunmer Mephala and per-book
+variant reasons.
+
+---
+
+## E. Startup per-path confirm selector (RESTORED 2026-06-20)
+
+The live manager now declares the 13 `PDV_MSG_Confirm_*` properties and routes
+startup choices through:
+
+```papyrus
+Bool Function ConfirmStartupSelection(Int originRace, Message choiceMessage, Int expectedSelection)
+Message Function GetStartupConfirmMessage(Int originRace, Int optionValue)
+```
+
+The old `Debug.MessageBox(GetStartupOptionDetailText(...))` middle detail box must
+remain absent.
+
+---
+
+## F. Orc life-mode organic wiring (RESTORED 2026-06-20)
+
+Recovered source coverage:
+
+- `PDV_ActionRouter.HandleStoryChangeLocation` calls `HandleOrcLocationChange`.
+- `PDV__ManagerQuest` maps exact stronghold `LCTN` FormIDs and handles stronghold
+  presence plus Blood-Kin crisis.
+- `PDV_PlayerEvents` registers the approved Orc quest-stage sources and routes
+  DA06, city Thane, house purchase, Civil War service, and Imperial finale cases.
+- `PDV_EventBus` accepts optional organic source IDs for City, Legion, and
+  Self-Made routes.
+
+Runtime proof is still separate; this restores reachability and compile-readiness.
+
+---
+
+## G. Breton per-book Hidden Art notices (RESTORED 2026-06-20)
+
+`HandleBretonHiddenArtExposure` now calls per-source title/text helpers. Current
+tokens are `hagravens`, `madmen_reach`, and `witch_note`, with a generic fallback.
+
+---
+
+## H. Argonian move-home / re-adapt bed-of-choice path (RESTORED 2026-06-20)
+
+`TryArgonianBedOfChoiceSleep` now requires a three-sleep settle streak before
+prompting for a new home. Accepting calls `SetArgonianHome`; declining records a
+short cooldown and clears the candidate state. `SetArgonianHome` clears current
+adaptation, resets rooted-rest progress, and rolls a new adaptation due day.
+
+---
+
+## I. Book of Days Prisma journal hotkey + race/path line (RESTORED 2026-06-20)
+
+`PDV_MCM.psc` owns the player-facing hotkey:
+
+- `OnGameReload()` resets `PDV.Diegetic.Journal.Open` to `0`.
+- `RegisterJournalHotkey()` registers the saved key map value.
+- `OnKeyDown()` toggles the Book of Days overlay open/closed outside menu mode.
+- The player page exposes `Open Book of Days` as a key map option.
+
+`PDV__ManagerQuest.psc` owns the journal payload:
+
+- `BuildJournalPayloadJson()` includes a `survey` field for the book's left page.
+- The `survey` value is race plus path only: `Race | Path`.
+- Standing is intentionally excluded from that line because the Book of Days
+  standing meter carries standing state.
+- Startup-pending saves emit `Race | path not yet chosen`.
+
+The Prisma view renders that payload as `Race · Path` in
+`native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/app.js` and places it in
+`#pdv-journal-path` from `index.html`.
+
+Do not rebuild this from `GetPlayerMcmSummaryLine()`: that line intentionally
+includes standing for MCM/status surfaces.
 
 ## Still open (cosmetic): `meta.ini`
 

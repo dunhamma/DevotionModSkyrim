@@ -303,6 +303,7 @@
     journalModal: document.getElementById("pdv-journal-modal"),
     journalTitle: document.getElementById("pdv-journal-title"),
     journalSummary: document.getElementById("pdv-journal-summary"),
+    journalPath: document.getElementById("pdv-journal-path"),
     journalBy: document.getElementById("pdv-journal-by"),
     journalEmblem: document.getElementById("pdv-journal-emblem"),
     journalInstrument: document.getElementById("pdv-journal-instrument"),
@@ -1148,8 +1149,13 @@
   const fitJournalBook = () => {
     const scaler = document.getElementById("pdv-journal-scaler");
     if (!scaler) return;
-    const s = Math.min(1, (window.innerWidth - 40) / 1180, (window.innerHeight - 40) / 760);
-    scaler.style.transform = `scale(${s})`;
+    const designWidth = 1180;
+    const designHeight = 720;
+    const margin = 20;
+    const s = Math.min(1, (window.innerWidth - margin * 2) / designWidth, (window.innerHeight - margin * 2) / designHeight);
+    const x = Math.max(margin, (window.innerWidth - designWidth * s) / 2);
+    const y = Math.max(margin, (window.innerHeight - designHeight * s) / 2);
+    scaler.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
   };
   window.addEventListener("resize", () => {
     if (nodes.journalModal && !nodes.journalModal.hidden) fitJournalBook();
@@ -1162,6 +1168,12 @@
     if (nodes.journalTitle) nodes.journalTitle.textContent = text(journal.title, "Book of Days");
     if (nodes.journalBy) nodes.journalBy.textContent = text(journal.by, journalByline());
     if (nodes.journalSummary) nodes.journalSummary.textContent = text(journal.summary, "A record of devotional acts since the path began.");
+    if (nodes.journalPath) {
+      // Race/path info point. Standing lives in the meter below.
+      const survey = text(journal.survey, "").replace(/\s*\|\s*/g, "  \u00b7  ");
+      nodes.journalPath.textContent = survey;
+      nodes.journalPath.hidden = !survey;
+    }
     if (nodes.journalFoot) nodes.journalFoot.textContent = text(journal.foot, "Press your Book of Days key again to close.");
     if (nodes.journalEmblem) nodes.journalEmblem.innerHTML = buildJournalSun();
     renderJournalStanding(journal.instrument || journal.standing);
