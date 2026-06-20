@@ -53,8 +53,12 @@ Do not mix them when filling the ledger; do not mark a race-level `pass` from th
 - PASS: no Redguard B1/B2 hook needs a new asset.
 
 ### Slot 2 -- surveyStatusClarity ([M])
-- Seed (MCM): select Tu'whacca, `Apply target piety` ~85 (Champion); set sect/posture
-  to Ash'abah (do a death-duty act, Slot 4) so the sect line reads Ash'abah.
+- Seed: choose the **Ash'abah sect at the Redguard startup choice** (a new save as
+  origin 9 prompts it) so the Survey sect line reads Ash'abah. NOTE: mid-game switching
+  INTO Ash'abah is NOT wired organically (the sect-switch gate `IsRedguardAshAbahBurden`
+  is never satisfied by the live `eventbus_<N>` death-duty reason -- a pre-existing gap,
+  see gotchas), so start as Ash'abah rather than trying to convert. Then select Tu'whacca,
+  `Apply target piety` ~85 (Champion).
 - Open Survey Devotion. Watch the Redguard sect line:
   - Ash'abah branch reads the duty fiction ("the unclean dead are your charge...").
   - After death-duty acts, the **stigma line** appends: at stigma >=1 "You are
@@ -159,7 +163,14 @@ Do not mix them when filling the ledger; do not mark a race-level `pass` from th
 - **V1 make-way = dragons only.** Named bosses / quest milestones / final bosses need the
   deferred curated FormList (task #11) -- do NOT FAIL a non-dragon kill for "no make-way".
 - **Stigma is per death-duty act** (caps at 5), notice only on band crossing. It does NOT
-  decay and applies NO piety penalty.
+  decay and applies NO piety penalty. The marked-moment NOTICE fires on any Ash'abah-coded
+  death-duty regardless of sect; the Survey STIGMA LINE only shows for an Ash'abah-sect
+  player -- so start as Ash'abah to see both.
+- **Mid-game Ash'abah entry is not wired (pre-existing gap, NOT this build).** The
+  sect-switch to Ash'abah gates on `IsRedguardAshAbahBurden(reason)`, but the live
+  death-duty reason is always `eventbus_<N>`, so the condition is never met. Only the
+  startup choice (`ApplyRedguardInitialChoice`) sets Ash'abah today. Flag for a follow-up;
+  it does not block this build's stigma/heal (start as Ash'abah).
 - **`coc` skips location triggers.** Walk/fast-travel into cells for any location-anchored
   Redguard act; do not `coc` straight in.
 - **MCM only, not cqf.**
