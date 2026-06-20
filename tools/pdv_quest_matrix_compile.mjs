@@ -15,7 +15,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const DEFAULT_OUTPUT = "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json";
 
-const MATRIX_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_Full.csv");
+const DEFAULT_MATRIX_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_Full.csv");
 const FAUCET_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv");
 const QUEST_READBACK_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv");
 const STANCE_CSV = path.join(PROJECT_ROOT, "references", "phase4", "PDV_StanceMatrix.csv");
@@ -25,6 +25,9 @@ const args = process.argv.slice(2);
 const outputPath = getArg("--output") ?? DEFAULT_OUTPUT;
 const checkOnly = args.includes("--check");
 const emitStdout = args.includes("--stdout");
+// Resolved after `args` exists (getArg reads it). Defaults to the core Full.csv;
+// list-patch channels (e.g. ARR) pass --matrix <their.csv> + --output <their.json>.
+const MATRIX_CSV = getArg("--matrix") ?? DEFAULT_MATRIX_CSV;
 
 const VALUE_TABLE = {
   "value.milestone.C": 18.0,
@@ -112,6 +115,11 @@ const FAUCET_EFFECT_LISTS = {
 };
 
 const MANUAL_QUEST_FORMIDS = {
+  // ARR compat-core promotion (Tranche6): CC + vanilla-FormID QE stages. editor_id fallback.
+  DA10: "Skyrim.esm:022F08", // House of Horrors (QE adds s210 anti-Daedric outcome)
+  DA13: "Skyrim.esm:08998D", // The Only Cure (QE adds s101/s102 refuse/destroy outcomes)
+  DA06: "Skyrim.esm:03B681", // The Cursed Tribe (QE adds s210 ghost-variant)
+  ccBGSSSE020_Quest: "ccbgssse020-graycowl.esl:00080F", // Gray Cowl of Nocturnal (CC)
   dunHunterQST: "Skyrim.esm:018601", // Kyne's Sacred Trials (Froki); s100 terminal blessing. Verified via houseCARL (USSEP-patched record).
   FreeformKolskeggrA: "Skyrim.esm:01FD72",
   MQ105U: "Skyrim.esm:0713DC",
@@ -157,7 +165,11 @@ function main() {
   for (const row of matrixRows) {
     const editorId = row.editor_id?.trim();
     const stage = Number.parseInt(row.outcome_stage, 10);
-    const resolved = questIndex.get(editorId);
+    // ARR/list-patch rows may carry an explicit PLUGIN:HEX formid (modded quests
+    // absent from the vanilla readback). When present it resolves directly,
+    // keeping third-party FormIDs out of MANUAL_QUEST_FORMIDS / the readback CSV.
+    const inlineFormId = row.formid?.trim();
+    const resolved = inlineFormId ? resolveQuestForm(inlineFormId) : questIndex.get(editorId);
     if (!resolved) {
       throw new Error(`No quest readback FormID for editor_id=${editorId}`);
     }

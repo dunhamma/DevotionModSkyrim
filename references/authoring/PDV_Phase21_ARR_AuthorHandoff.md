@@ -85,11 +85,46 @@ Run on a disposable ARR test save:
 9. Save, reload, and recheck status/MCM.
 10. Confirm Papyrus log has no new PDV errors.
 
+## Devotion Extension Channel (new - machine-validated, runtime-pending)
+
+Beyond the shrine-replacement slice, PDV now adds a second quest-reaction channel
+that lights up devotion signals from the list's own content: Vigilant, Glenmoril,
+Unslaad, Olenveld, ForgottenCity, SEC Saints & Seducers, and DAc0da - 22 reaction
+cells across 19 quests, keyed by FormID+stage so they no-op cleanly for anyone
+missing that content. The vanilla-FormID QE stages (House of Horrors, The Only
+Cure) and the Gray Cowl CC were promoted into the CORE matrix (6 cells, Tranche6,
+equity-audit PASS) so all players with that content benefit, not only ARR.
+
+Two deliverables:
+
+- A Devotion build whose `PDV_PlayerEvents`/`PDV__ManagerQuest` carry a generic
+  second-channel loader: it loads `PDV_QuestReactionMatrix_ARR` when present and
+  behaves identically to base Devotion when absent. Both compile 0 errors / 0
+  warnings; the core matrix and core `--check` are unchanged.
+- `PDV_QuestReactionMatrix_ARR.json`, compiled from
+  `references/authoring/PDV_QuestReactionMatrix_ARR.csv`, deployed under
+  `SKSE/Plugins/StorageUtilData/PlayerDevotion/`.
+
+Status: machine-validated (`pdv_quest_matrix_compile.mjs --matrix ... --check`
+PASS, 22 cells / 20 keys / 19 quests in the ARR channel, +6 promoted to core). Runtime/author smoke pending - see
+`references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_SmokeRunbook.md` and
+the per-cell map in
+`references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_ExtensionMap.md`. Five
+cells are flagged RUNTIME-VERIFY (terminal stage lacks a ShutDownStage flag).
+
+Theology is unchanged: every hook maps to a deity/Prince PDV already covers; no
+new gods. Promotion of the vanilla-FormID (QE) and CC (Gray Cowl) hooks into the
+core matrix is held pending a deity gain/loss balance review.
+
 ## Deferred Follow-Up
 
-- Per-Prince Mandragora/ARR Daedric shrine route adapters are not included.
-  The current ACTI scan only found stable Nocturnal shrine ACTI records in the
-  queried `man_*` plugins.
+- Per-Prince ARR Daedric shrine route adapters are NOT viable as a clean
+  override. A definitive scan found the man_DaedricShrines family is STAT-based
+  (mesh/statue replacers), not ACTI: zero Princes expose a script-free route
+  anchor, and the only ACTIs (Nocturnal) carry `TempleBlessingScript` (not
+  PDV-replaceable). A future adapter would need PDV-placed marker ACTIs / trigger
+  volumes or a location-trigger hook - both deferred design decisions, not a
+  data-only slice.
 - Survival systems remain context-only: SunHelm, Frostfall, and Campfire should
   inform eligibility/caps only, not raw piety gain.
 - Curse theology remains Requiem-native for ARR. Future hooks should key off

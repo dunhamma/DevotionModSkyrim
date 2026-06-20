@@ -75,11 +75,36 @@
     "emitted": false,
     "reason": "No additional ARR-specific record override is required for the proven shrine replacement slice after Archon removal and PDV framework activation. The planned plugin name is reserved for future Daedric shrine ACTI route adapters or other approved ARR-specific records."
   },
+  "extensionChannel": {
+    "status": "machine-validated-runtime-pending",
+    "purpose": "Second quest-reaction matrix channel adding devotion hooks from the list's own content (new-lands + CC), separate from and leaving unchanged the core matrix.",
+    "loader": "Generic second-channel loader in PDV_PlayerEvents.psc + PDV__ManagerQuest.psc; loads PDV_QuestReactionMatrix_ARR when present, no-op when absent; both compile 0/0; core matrix and core --check unchanged.",
+    "data": {
+      "source": "references/authoring/PDV_QuestReactionMatrix_ARR.csv",
+      "runtimeJson": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR.json",
+      "cells": 22,
+      "questKeys": 20,
+      "watchedQuests": 19,
+      "content": ["Vigilant", "Glenmoril", "Unslaad", "Olenveld", "ForgottenCity", "SEC Saints & Seducers", "DAc0da"],
+      "promotedToCore": "Gray Cowl CC + House of Horrors QE + The Only Cure QE (6 cells) moved to the core matrix via Tranche6 (equity-audit PASS); no longer in this channel."
+    },
+    "machineProof": "node tools/pdv_quest_matrix_compile.mjs --matrix references/authoring/PDV_QuestReactionMatrix_ARR.csv --output <ARR.json> --check = PASS",
+    "runtimeRunbook": "references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_SmokeRunbook.md",
+    "extensionMap": "references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_ExtensionMap.md",
+    "runtimeVerifyCells": 5,
+    "held": [
+      "DAc0da Pan-Argonia ending (zDcdMqArgoEnd) - ambiguous bad-ending valence + uncertain quest-ID mapping; deferred."
+    ],
+    "done": [
+      "Core promotion of the QE + Gray Cowl hooks to the core matrix via Tranche6 (equity-audit PASS).",
+      "DAc0da Worm Cult (+Arkay) and Numidium (+Akatosh) cells authored to the channel via web research."
+    ]
+  },
   "deferredSlices": [
     {
       "id": "arr-daedric-shrine-acti-map",
-      "status": "deferred",
-      "reason": "houseCARL ACTI scans of man_DaedricShrines/man_MehrunesDagonShrine/man_JyggalagShrine/man_sithis only exposed Nocturnal shrine ACTI records by stable shrine EditorID; no safe all-Prince map exists yet."
+      "status": "superseded-by-shrineprayer-bos-swap",
+      "reason": "Definitive 2026-06-15 scan: the man_DaedricShrines family is STAT-based (mesh/statue replacers), not ACTI. Zero of the 16 Princes have a clean route anchor; the only ACTIs (Nocturnal x2) carry TempleBlessingScript, which PDV must not replace. Jyggalag/Sithis/Kynareth/Mara are STAT-only; Mehrunes Dagon is worldspace-placement only. A shrine-prayer adapter would require PDV to place its own invisible marker ACTIs/trigger volumes at shrine cell positions (new ESP + placement + runtime) OR a location-trigger hook (new PDV_FLST_HolySites + manager handler) - both ESP/runtime design decisions, held for review. No clean data-only adapter exists. Confirmed by a placed-reference trace: only the two Nocturnal activators are clickable (both TempleBlessingScript->AltarNocturnalSpell 10E8AE, already covered by the shrine-blessing manifest); the other 15 Princes place only decorative STAT meshes with no ACTI/script/spell. SUPERSEDED 2026-06-15: a Base Object Swapper STAT->ACTI base-swap (PDV_Phase21_ARR_ShrinePrayer) makes the statues clickable WITHOUT a native ACTI - 11 Prince prayer Activators built in dist/PDV_AuthoriaARR_Compatibility. The 'no clean adapter' conclusion applied only to overriding the man_ records in place; the swap sidesteps it. Remaining: Kynareth/Mara Aedric prayer variant + the location-trigger half for new-land temples."
     },
     {
       "id": "author-runtime-smoke",
