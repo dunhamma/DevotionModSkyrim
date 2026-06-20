@@ -135,7 +135,8 @@ Int Property DebugSeedAdaptDueNow Auto Hidden
                 StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", 0)
                 RemoveArgonianAdaptationSpells(seedPlayer)
                 StorageUtil.SetIntValue(None, "PDV.Adapt.Active", 0)
-                Debug.Notification("PDV seed: this cell is now your Argonian home; adaptation cleared.")
+                StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", 0)
+                Debug.Notification("PDV seed: this cell is now your Argonian home; adaptation cleared, rite clock re-armed.")
             else
                 Debug.Notification("PDV seed: no parent cell; home not declared.")
             endIf
@@ -161,17 +162,11 @@ Int Property DebugSeedAdaptDueNow Auto Hidden
             Debug.Notification("PDV seed: sacred-waters count set to " + seedWaters + ".")
         endIf
 
-        ; (4) Arm the (INSTANT) rite now: clear the slot + push Hist composite >=75.
+        ; (4) Mature the 10-14 day adaptation rite clock to "due now".
         if DebugSeedAdaptDueNow != 0
             DebugSeedAdaptDueNow = 0
-            if PDV_ArgonianHistSubstrate
-                StorageUtil.SetIntValue(None, "PDV.Adapt.Active", 0)
-                PDV_ArgonianHistSubstrate.SetHistRelation(95.0, "debug_adapt_due_now")
-                PDV_ArgonianHistSubstrate.RefreshCompositeMetric("debug_adapt_due_now")
-                Debug.Notification("PDV seed: adaptation rite armed (composite " + PDV_ArgonianHistSubstrate.GetMetric() + ", slot cleared); fires next sleep at home or a sacred water.")
-            else
-                Debug.Notification("PDV seed: Argonian substrate not wired; rite not armed.")
-            endIf
+            StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", (Utility.GetCurrentGameTime() as Int) + 1)
+            Debug.Notification("PDV seed: adaptation rite clock matured (due now); fires next sleep at home or a sacred water if composite>=75 and no active adaptation.")
         endIf
     endIf
 ```
@@ -220,15 +215,43 @@ setpqv PDV__ManagerQuest DebugSeedGo 1                 ; applies all set seeds t
 
 ---
 
-## OPEN FINDING (not yet acted on) -- adaptation rite reverted
+## C. Adaptation rite 10-14 day maturation clock (RESTORED 2026-06-20)
 
-The 2026-06-20 restore did NOT only drop Phase 0 + the debug seeds. It reverted the
-**Argonian adaptation rite itself** to an older lineage. The current
-`TryArgonianAdaptationRite` (live ~L2549) is INSTANT once composite>=75 + rooted +
-`PDV.Adapt.Active==0`. The 06-19 version had a **randomized 10-14 in-game-day
-maturation clock** (`PDV.Adapt.DueDay` + `Utility.RandomInt(10,14)`) and an extracted
-home-declaration helper (`SetArgonianHome`) + `ClearArgonianAdaptation`. Those are
-absent from BOTH the current live manager and the 2026-06-15 repo snapshot, so the
-snapshot cannot supply them -- the 06-19 rework would need re-authoring from the
-06-19 reads / the original design intent. This is pending a product decision (restore
-the clock-based rite, or accept the instant rite as current).
+The 2026-06-20 restore had reverted `TryArgonianAdaptationRite` to an INSTANT version
+(fires the moment composite>=75 + rooted + `PDV.Adapt.Active==0`). The 06-19
+randomized 10-14 in-game-day maturation clock was re-authored back in -- compiled
+0/0 and adversarially verified (arms on the first qualifying sleep, fires exactly
+10-14 days later, no off-by-one; the gate's `-1` cancels the `+1` storage convention).
+
+Insert this block in `TryArgonianAdaptationRite` AFTER the `PDV.Adapt.Active != 0`
+gate and BEFORE `Utility.Wait(0.5)`:
+
+```papyrus
+    ; Grow into the home over time: wait out the randomized 10-14 day clock rolled
+    ; on the first qualifying sleep at this home. DueDay is stored as targetDay + 1
+    ; so 0 unambiguously means "never armed" (StorageUtil ints default to 0).
+    Int dueDay = StorageUtil.GetIntValue(None, "PDV.Adapt.DueDay")
+    Int todayDay = Utility.GetCurrentGameTime() as Int
+    if dueDay <= 0
+        StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", todayDay + Utility.RandomInt(10, 14) + 1)
+        return false
+    endIf
+    if todayDay < (dueDay - 1)
+        return false
+    endIf
+```
+
+Also update the rite header comment to describe the 10-14 day clock (not the stale
+"7-day cooldown swap" wording the instant version carried). DebugSeedDeclareHomeNow
+zeroes `PDV.Adapt.DueDay` to re-arm; DebugSeedAdaptDueNow sets it to today+1 to mature.
+
+NOT restored (still part of the separate whole-mod audit): the 06-19 bed-of-choice
+rework -- `SetArgonianHome`/`ClearArgonianAdaptation` extracted helpers + the
+settle-streak/move-home path. The current `TryArgonianBedOfChoiceSleep` is
+declare-once (no move-home), so "moving home re-arms the clock" is N/A in this build;
+the clock is global (`PDV.Adapt.DueDay` on None) and re-arms only via the seed.
+
+## Still open (cosmetic): `meta.ini`
+
+`meta.ini` remains missing from the live mod folder (MO2 metadata only; regenerated
+by MO2). Not behavioral.
