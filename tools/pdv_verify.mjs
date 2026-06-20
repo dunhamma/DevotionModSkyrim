@@ -20,6 +20,11 @@ const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
 const DEVOTION_SOURCE = path.join(DEVOTION_MOD, "Scripts", "Source");
 const DEVOTION_PEX = path.join(DEVOTION_MOD, "Scripts");
+const CUSTOM_RACE_DATA_DIR = path.join(DEVOTION_MOD, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion");
+const REPO_CUSTOM_RACE_DATA_DIR = path.join(PROJECT_ROOT, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion");
+const CUSTOM_RACE_MAP = path.join(REPO_CUSTOM_RACE_DATA_DIR, "PDV_RaceMap.json");
+const CUSTOM_TEMPORARY_RACE_MAP = path.join(REPO_CUSTOM_RACE_DATA_DIR, "PDV_TemporaryRaceMap.json");
+const CUSTOM_RACE_README = path.join(REPO_CUSTOM_RACE_DATA_DIR, "PDV_RaceMap_README.txt");
 const PDV_ESP = path.join(DEVOTION_MOD, "Devotion.esp");
 const MUTAGEN_BRIDGE = path.join(
   ANVIL_ROOT,
@@ -1297,6 +1302,7 @@ class Verifier {
       this.checkPreflightOverlayPatch();
     }
     this.checkSmallSignalTables();
+    this.checkCustomRaceCompatibility();
     this.checkScripts();
     this.checkSeq();
     this.checkProfile();
@@ -7605,6 +7611,136 @@ class Verifier {
       this.pass(checkName, `${propName} points at ${expectedEdid}.`, PDV_ESP);
     } else {
       this.warn(checkName, `${propName} is missing or points elsewhere.`, PDV_ESP);
+    }
+  }
+
+  checkCustomRaceCompatibility() {
+    this.checkCustomRaceMapFiles();
+    this.checkSourceContains("Custom race origin source", "PDV_Origin", [
+      "String Property RACEMAP_FILE = \"PlayerDevotion/PDV_RaceMap\" AutoReadOnly",
+      "String Property TEMPORARY_RACEMAP_FILE = \"PlayerDevotion/PDV_TemporaryRaceMap\" AutoReadOnly",
+      "Function IsCustomTemporaryRace",
+      "temporaryRaceForms",
+      "ResolveViaActorProxy",
+      "PDV.Compat.CustomRaceMapping",
+    ]);
+    this.checkSourceContains("Custom race MCM source", "PDV_MCM", [
+      "Custom race mapping",
+      "Defer origin capture",
+      "temporary-race defer list",
+    ]);
+  }
+
+  checkCustomRaceMapFiles() {
+    const raceMap = this.readJsonForCheck("Custom race map", CUSTOM_RACE_MAP);
+    const temporaryMap = this.readJsonForCheck("Custom temporary race map", CUSTOM_TEMPORARY_RACE_MAP);
+
+    if (exists(CUSTOM_RACE_README)) {
+      const readme = fs.readFileSync(CUSTOM_RACE_README, "utf8");
+      const requiredReadmeSnippets = [
+        "0 Nord",
+        "6 Khajiit",
+        "RaceCompatibility",
+        "Race Blood Test",
+        "temporaryRaceForms",
+        "Do not put temporary transformation races in",
+      ];
+      for (const snippet of requiredReadmeSnippets) {
+        if (readme.includes(snippet)) {
+          this.pass("Custom race README", `README mentions ${snippet}.`, CUSTOM_RACE_README);
+        } else {
+          this.fail("Custom race README", `README is missing ${snippet}.`, CUSTOM_RACE_README);
+        }
+      }
+    } else {
+      this.fail("Custom race README", "PDV_RaceMap_README.txt is missing.", CUSTOM_RACE_README);
+    }
+
+    if (!raceMap || !temporaryMap) {
+      return;
+    }
+
+    const raceForms = Array.isArray(raceMap.raceForms) ? raceMap.raceForms : null;
+    const raceIndices = Array.isArray(raceMap.raceIndices) ? raceMap.raceIndices : null;
+    if (!raceForms || !raceIndices) {
+      this.fail("Custom race map", "raceForms and raceIndices must both be arrays.", CUSTOM_RACE_MAP);
+      return;
+    }
+
+    if (raceForms.length === raceIndices.length) {
+      this.pass("Custom race map", `${raceForms.length} race mapping entries have matching indices.`, CUSTOM_RACE_MAP);
+    } else {
+      this.fail("Custom race map", `raceForms length ${raceForms.length} does not match raceIndices length ${raceIndices.length}.`, CUSTOM_RACE_MAP);
+    }
+
+    const expectedEntries = new Map([
+      ["0x03322B|HalfKhajiit.esp", 6],
+      ["0x05693A|HalfKhajiit.esp", 6],
+    ]);
+    const normalizedMappings = new Map();
+    for (let entryIndex = 0; entryIndex < raceForms.length; entryIndex += 1) {
+      const raceForm = raceForms[entryIndex];
+      const raceIndex = raceIndices[entryIndex];
+      if (typeof raceForm !== "string" || !/^0x[0-9a-f]{6}\|[^|]+\.es[mlp]$/i.test(raceForm)) {
+        this.fail("Custom race map", `raceForms[${entryIndex}] is not a PapyrusUtil form token: ${JSON.stringify(raceForm)}.`, CUSTOM_RACE_MAP);
+        continue;
+      }
+      if (!Number.isInteger(raceIndex) || raceIndex < 0 || raceIndex > 9) {
+        this.fail("Custom race map", `raceIndices[${entryIndex}] must be an integer 0..9, got ${JSON.stringify(raceIndex)}.`, CUSTOM_RACE_MAP);
+        continue;
+      }
+      normalizedMappings.set(raceForm.toLowerCase(), raceIndex);
+    }
+
+    for (const [raceForm, expectedIndex] of expectedEntries.entries()) {
+      const actualIndex = normalizedMappings.get(raceForm.toLowerCase());
+      if (actualIndex === expectedIndex) {
+        this.pass("Ohmes-Raht custom race map", `${raceForm} maps to race index ${expectedIndex}.`, CUSTOM_RACE_MAP);
+      } else {
+        this.fail("Ohmes-Raht custom race map", `${raceForm} must map to race index ${expectedIndex}.`, CUSTOM_RACE_MAP);
+      }
+    }
+
+    const temporaryRaceForms = Array.isArray(temporaryMap.temporaryRaceForms) ? temporaryMap.temporaryRaceForms : null;
+    if (!temporaryRaceForms) {
+      this.fail("Custom temporary race map", "temporaryRaceForms must be an array.", CUSTOM_TEMPORARY_RACE_MAP);
+      return;
+    }
+
+    const normalizedTemporaryForms = new Set();
+    for (let entryIndex = 0; entryIndex < temporaryRaceForms.length; entryIndex += 1) {
+      const raceForm = temporaryRaceForms[entryIndex];
+      if (typeof raceForm !== "string" || !/^0x[0-9a-f]{6}\|[^|]+\.es[mlp]$/i.test(raceForm)) {
+        this.fail("Custom temporary race map", `temporaryRaceForms[${entryIndex}] is not a PapyrusUtil form token: ${JSON.stringify(raceForm)}.`, CUSTOM_TEMPORARY_RACE_MAP);
+        continue;
+      }
+      normalizedTemporaryForms.add(raceForm.toLowerCase());
+    }
+
+    let overlapCount = 0;
+    for (const raceForm of normalizedTemporaryForms) {
+      if (normalizedMappings.has(raceForm)) {
+        overlapCount += 1;
+        this.fail("Custom race map overlap", `${raceForm} is both a permanent race map entry and a temporary race entry.`, CUSTOM_TEMPORARY_RACE_MAP);
+      }
+    }
+    if (overlapCount === 0) {
+      this.pass("Custom race map overlap", "No permanent custom-race entries are also temporary transformation entries.", CUSTOM_TEMPORARY_RACE_MAP);
+    }
+  }
+
+  readJsonForCheck(checkName, filePath) {
+    if (!exists(filePath)) {
+      this.fail(checkName, "JSON file is missing.", filePath);
+      return null;
+    }
+    try {
+      const parsed = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      this.pass(checkName, "JSON parses.", filePath);
+      return parsed;
+    } catch (error) {
+      this.fail(checkName, `JSON parse failed: ${error.message}`, filePath);
+      return null;
     }
   }
 

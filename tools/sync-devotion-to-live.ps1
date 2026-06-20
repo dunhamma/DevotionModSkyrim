@@ -37,7 +37,10 @@ $Map = @(
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\app.js";     Dst = "PrismaUI\views\Devotion\app.js" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\index.html"; Dst = "PrismaUI\views\Devotion\index.html" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\styles.css"; Dst = "PrismaUI\views\Devotion\styles.css" },
-    @{ Src = "scratch\p2-toast-panel-fix\PDV__ManagerQuest.psc";                   Dst = "Scripts\Source\PDV__ManagerQuest.psc" }
+    @{ Src = "scratch\p2-toast-panel-fix\PDV__ManagerQuest.psc";                   Dst = "Scripts\Source\PDV__ManagerQuest.psc" },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json";       Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json" },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json" },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt" }
 )
 
 Write-Host "Repo root   : $RepoRoot"

@@ -224,7 +224,7 @@ Function OnOptionHighlight(Int a_option)
     elseIf a_option == _oidExportReport
         SetInfoText("Writes a full devotion snapshot to a text file you can attach to a bug report. No log digging needed.")
     elseIf a_option == _oidCompatRaceMapping
-        SetInfoText("Map modded races to the closest vanilla devotion profile. Applies when a race is first read.")
+        SetInfoText("Maps normal or vampire custom races to a vanilla devotion profile. Beast forms should use the temporary-race defer list.")
     elseIf a_option == _oidCompatSurvival
         SetInfoText("Let an installed survival mod's hardship gently modulate devotion. It never creates piety alone.")
     elseIf a_option == _oidDeveloperOptions
@@ -1050,6 +1050,7 @@ Function BuildCompatPage()
     AddHeaderOption("Custom Race", OPTION_FLAG_NONE)
     _oidCompatRaceMapping = AddTextOption("Custom race mapping", OnOffLabel(CustomRaceMappingEnabled()), OPTION_FLAG_NONE)
     AddTextOption("Detected", GetCompatRaceReadout(), OPTION_FLAG_DISABLED)
+    AddTextOption("Temporary forms", "Defer origin capture", OPTION_FLAG_DISABLED)
 
     SetCursorPosition(1)
     AddHeaderOption("Survival Context", OPTION_FLAG_NONE)

@@ -50,11 +50,32 @@ An **SKSE DLL that spoofs/translates a custom race to its vanilla equivalent**
 - Settings show `enable_race_spoofing` / `track_race_change` / `track_vampire_effect`. Whether
   the spoof reaches Papyrus `Actor.GetRace()` is the **one runtime unknown** (verify in-game).
 
+### Ohmes-Raht / Half-Khajiit V1 evidence (ARR + DoD)
+
+Record readback on 2026-06-20 checked the installed ARR and DoD `HalfKhajiit.esp`
+copies plus DoD's `PATCH - Half-Khajiit\HalfKhajiit.esp` copy through the
+Mutagen bridge. All three expose exactly two `RACE` records:
+
+| Source | RACE records |
+|---|---|
+| ARR `Half-Khajiit-Race (Ohmes-Raht)\HalfKhajiit.esp` | `HalfKhajiitRace` `03322B`, `HalfKhajiitRaceVampire` `05693A` |
+| DoD `Half-Khajiit-Race (Ohmes-Raht)\HalfKhajiit.esp` | `HalfKhajiitRace` `03322B`, `HalfKhajiitRaceVampire` `05693A` |
+| DoD `PATCH - Half-Khajiit\HalfKhajiit.esp` | `HalfKhajiitRace` `03322B`, `HalfKhajiitRaceVampire` `05693A` |
+
+No `HalfKhajiitWerewolf` RACE record is present in those current local plugins.
+PDV therefore ships only the normal/vampire entries in `PDV_RaceMap.json`, both
+mapped to Khajiit index `6`. If a future Half-Khajiit werewolf or beast-form
+race appears, it belongs in `PDV_TemporaryRaceMap.json` under
+`temporaryRaceForms` so origin capture defers while transformed; it should not
+be mapped as a permanent Khajiit cultural origin.
+
 **Implication for PDV (P-A):**
 - Primary heuristic backend = **RaceCompatibility ActorProxy keywords** (clean, all 10 races).
 - UBE handled by **self-describing EditorID / FormID** — seed `PDV_RaceMap.json` with the
   `00UBE_*` races (or EditorID-suffix match). po3 `GetFormEditorID` would enable suffix-match
   without seeding, but is **not required** (FormID seeding works without it).
+- Ohmes-Raht / Half-Khajiit ships as an explicit fallback map:
+  `0x03322B|HalfKhajiit.esp -> 6` and `0x05693A|HalfKhajiit.esp -> 6`.
 - If Race Blood Test's spoof DOES reach `GetRace()`, PDV's existing matcher already resolves
   UBE → vanilla with zero work; the resolver is the safety net for when it doesn't. Verify once.
 - Note: UBE's *races* plugin is optional (in DoD, UBE is used as a body only; the player is a

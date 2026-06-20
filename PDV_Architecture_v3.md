@@ -2216,7 +2216,28 @@ Compatibility patches may tune mechanics, route signals, and classify records,
 but they must not change PDV theology, race/deity topology, patron logic, or
 player-facing doctrine.
 
-### 20.4 Handoff and smoke
+### 20.4 Custom race support
+
+Custom races resolve into one of PDV's ten existing race profiles. V1 does not
+add bespoke custom-race deity rosters or eleventh race paths.
+
+Supported integration routes:
+
+- RaceCompatibility ActorProxy keywords.
+- Race Blood Test `Treat` / `Morph` rules.
+- Explicit PapyrusUtil fallback entries in `PDV_RaceMap.json`.
+
+Ohmes-Raht / Half-Khajiit maps to Khajiit profile `6` by default through
+`0x03322B|HalfKhajiit.esp` and `0x05693A|HalfKhajiit.esp`. Temporary beast-form
+race records use `PDV_TemporaryRaceMap.json` so origin capture defers while the
+player is transformed; they are not permanent cultural-origin mappings.
+
+Readback proof and support claims stay separate. Current ARR/DoD local
+Half-Khajiit plugins expose only `HalfKhajiitRace` and
+`HalfKhajiitRaceVampire`, with no `HalfKhajiitWerewolf`; runtime/manual custom
+race smoke remains a separate gate.
+
+### 20.5 Handoff and smoke
 
 Each maintainer brief must include the exact removal set, exact load-order
 placement block, required patcher reruns, known non-blocking issues, and a
@@ -2633,7 +2654,7 @@ internals into the target tracker.
 | Werewolf/Vampire detection edge cases (Dawnguard VL race, vanilla beast race, modded curse states) | Medium | Defer-on-unknown rather than baking false state; Section 13.1 already specifies this for transient races |
 | `pdv_author.mjs` writes a patch that violates "Skyrim.esm first master" | Low (mitigated) | Tool already warns; document the manual remap path; verifier flags violations |
 | Religion-overhaul replacement messaging is mistaken for public list endorsement | Medium | Keep internal target/evidence docs explicit, but public support claims wait for `list-included`/`public-supported` status |
-| Custom-race players see "Imperial fallback" without context | Low | Surface in MCM diagnostic; consider a player-visible "your race is treated as Imperial for devotion purposes - this can be overridden by a custom race patch" notification at first load |
+| Custom-race players see "Imperial fallback" without context | Low | Compatibility MCM reports mapped/fallback state; `PDV_RaceMap.json` and RaceCompatibility/Race Blood Test instructions provide the override path |
 
 ---
 
@@ -2646,7 +2667,6 @@ post-1.0 work, including the deferred voiced-dialogue lane (Section 21.3), is
 - **Per-race ESP split.** Stays monolithic through 1.0; revisit only on need (Section 18.2).
 - **JContainers escalation.** StorageUtil is enough through 1.0. If post-1.0 features require nested structures (e.g. a complex stigma history per Daedric path with timestamp arrays), revisit. JContainers stays out of the v1.0 dependency tree.
 - **SPID adoption.** Deferred. Revisit if future NPC distribution needs runtime actor-load behavior, outfit lifecycle handling, or broad dynamic injection that cannot be safely represented by the offline patcher.
-- **Custom race authoring support.** A custom-race patch shape ("here's how a custom race plugin tells PDV which devotional identity it should be") is plausible post-1.0.
 - **Multi-character cross-save patron memory.** Each save is independent; cross-save persistence is not architecturally interesting.
 - **Localization.** All player-facing strings are ASCII English. A second-pass localization effort post-1.0 is in scope; the architecture supports it via string-table externalization, which would be a minor refactor.
 
@@ -3306,6 +3326,16 @@ was refreshed, and `node .\tools\pdv_verify.mjs --strict-phase20-altmer
 --strict-phase20-race-costing --json` returned `PASS=1762, WARN=1, INFO=28`;
 the only warning is the existing unnamed CK-authored INFO record class. Direct
 automation still stops before CK placement and in-game proof.
+
+### v3.80 - 2026-06-20 - V1 custom-race compatibility contract
+
+Phase 21 now includes V1 custom-race support as an existing-profile mapping
+contract. Custom races resolve to one of the ten race profiles through
+RaceCompatibility, Race Blood Test, or `PDV_RaceMap.json`; Ohmes-Raht /
+Half-Khajiit maps to Khajiit profile `6`. Temporary beast-form races use
+`PDV_TemporaryRaceMap.json` to defer origin capture while transformed rather
+than becoming permanent cultural origins. This is a readback/source/package
+contract; runtime/manual custom-race smoke remains a separate gate.
 
 ### v3.64 - 2026-05-30 - Phase 20 Orc life-mode proof slice
 
