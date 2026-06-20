@@ -51,13 +51,21 @@ Daedric batch (Track A "Daedric batch" / task #10) so the proven 16-Prince gate
 stays untouched in this build. B1 lives in
 `generated/live-devotion-snapshot/2026-06-20-requiem-b1/`.
 
-### Build B2 — HoonDing make-way rebuild (own slice, after B1)
-| Item | Papyrus | Comp | Route-proof | Snap | Commit |
+### Build B2 — HoonDing make-way rebuild (Papyrus core BUILT + verified; commit pending)
+| Item | Papyrus | Comp | Route-proof (in-game) | Snap | Commit |
 |---|---|---|---|---|---|
-| B2a make-way 2501 → curated breakthrough kills | · | · | · | · | · |
-| B2b road-passage → Forebear/Leki lane (off HoonDing) | · | · | · | · | · |
-| B2c drop weekly cap → per-source dedup + dragon daily decay | · | · | · | · | · |
-| B2d retire 2502 → HoonDing Champion cheat-death save | · | · | · | · | · |
+| B2a make-way 2501 → breakthrough kills (V1 dragons) | ✅ | ✅ | PENDING | ✅ | · |
+| B2b road-passage → Forebear/Leki lane (off HoonDing) | ✅ | ✅ | PENDING | ✅ | · |
+| B2c drop weekly cap → dragon daily soft-decay | ✅ | ✅ | PENDING | ✅ | · |
+| B2d retire dead signal 2502 | ✅ | ✅ | n/a | ✅ | · |
+| B2e HoonDing Champion cheat-death save | ⏸ | — | — | — | — |
+| B2f named-boss/milestone/final-boss FormList qualify | ⏸ | — | — | — | — |
+
+B2e/B2f ⏸ = creation-authoring/CKPE work (attach the save MGEF as an extra effect;
+build the curated boss FormList) — split to the capstone session (task #11),
+bundled with the Nord Shor re-attach. V1 make-way = dragon kills only. B2 lives in
+`generated/live-devotion-snapshot/2026-06-20-requiem-b2/`. Compile 0/0 (3 scripts),
+verify FAIL=0.
 
 ### Deferred — Nord conversion (own session)
 | Item | Status |
