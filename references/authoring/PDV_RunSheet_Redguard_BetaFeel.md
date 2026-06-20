@@ -55,9 +55,9 @@ Do not mix them when filling the ledger; do not mark a race-level `pass` from th
 ### Slot 2 -- surveyStatusClarity ([M])
 - Seed: choose the **Ash'abah sect at the Redguard startup choice** (a new save as
   origin 9 prompts it) so the Survey sect line reads Ash'abah. NOTE: mid-game switching
-  INTO Ash'abah is NOT wired organically (the sect-switch gate `IsRedguardAshAbahBurden`
-  is never satisfied by the live `eventbus_<N>` death-duty reason -- a pre-existing gap,
-  see gotchas), so start as Ash'abah rather than trying to convert. Then select Tu'whacca,
+  INTO Ash'abah is now wired (2026-06-20) -- a UNIQUE/named-undead defeat routes a marked
+  burden that flips the sect (see Slot 6b + gotchas) -- but starting as Ash'abah is still
+  the quickest seed for the stigma/heal tests below. Then select Tu'whacca,
   `Apply target piety` ~85 (Champion).
 - Open Survey Devotion. Watch the Redguard sect line:
   - Ash'abah branch reads the duty fiction ("the unclean dead are your charge...").
@@ -142,6 +142,20 @@ Do not mix them when filling the ledger; do not mark a race-level `pass` from th
 - PASS: generic combat, generic dungeon clears, and faction/bounty do NOT move
   Redguard-native state or fire make-way.
 
+### Slot 6b -- Ash'abah mid-game entry ([R] + [M])
+- Seed: a **Crown or Forebear** Redguard (origin 9; do NOT start as Ash'abah for this one).
+  Confirm the Survey sect line reads Crown/Forebear.
+- POSITIVE: land the **player's own killing blow on a UNIQUE/named undead** -- e.g.
+  `player.placeatme` a Dragon Priest base (Krosis/Morokei) or a named lich, then kill it
+  (or fight one in its barrow). Watch: `Redguard Ash'abah major burden fired: unique undead
+  defeat marks sect entry` + the Ash'abah **sect-entry notice**, and the Survey sect line
+  now reads Ash'abah. The death-rite heal + stigma also fire (shared rewards).
+- NEGATIVE: kill a **routine draugr/skeleton** (not Unique). Watch: NO major-burden marker,
+  NO sect switch (it stays Crown/Forebear) -- casual undead fighting is not a marked burden.
+  A second same-day named-undead kill soft-decays (`...major burden decayed out for today`).
+- PASS: a named-undead defeat flips the sect to Ash'abah once; routine undead do not; the
+  switch carries the entry notice + heal + stigma.
+
 ### Slot 7 -- manualFeelNote ([M])
 - Across the session, judge: does the Tu'whacca reward now FEEL real (HP visibly restored
   at the death-rite) where before it was an invisible regen %? Does the Ash'abah stigma
@@ -166,11 +180,17 @@ Do not mix them when filling the ledger; do not mark a race-level `pass` from th
   decay and applies NO piety penalty. The marked-moment NOTICE fires on any Ash'abah-coded
   death-duty regardless of sect; the Survey STIGMA LINE only shows for an Ash'abah-sect
   player -- so start as Ash'abah to see both.
-- **Mid-game Ash'abah entry is not wired (pre-existing gap, NOT this build).** The
-  sect-switch to Ash'abah gates on `IsRedguardAshAbahBurden(reason)`, but the live
-  death-duty reason is always `eventbus_<N>`, so the condition is never met. Only the
-  startup choice (`ApplyRedguardInitialChoice`) sets Ash'abah today. Flag for a follow-up;
-  it does not block this build's stigma/heal (start as Ash'abah).
+- **Mid-game Ash'abah entry is now wired (2026-06-20 fix).** Previously the sect-switch
+  gated on `IsRedguardAshAbahBurden(reason)` but no caller ever produced the marked token
+  (the live death-duty reason is always `eventbus_<N>`), so only the startup choice set
+  Ash'abah. Now `PDV_Manager.HandleRedguardAshAbahMajorBurden` (hooked off
+  `PDV_ActionRouter.HandleStoryKillActor`) fires on the player's killing blow against a
+  **UNIQUE/named undead** (lich, Dragon Priest, named draugr overlord -- `ActorBase.IsUnique`),
+  routing a death-duty with reason `"redguard_deathduty_major"`, which the gate accepts and
+  flips the sect to Ash'abah. Routine draugr/skeletons are NOT Unique, so casual undead
+  fighting still cannot switch sect. DEFERRED (curated FormList / faction detection, task
+  #11 class): major tombs, named **necromancer** leaders (living humanoids), costly impurity
+  choices.
 - **`coc` skips location triggers.** Walk/fast-travel into cells for any location-anchored
   Redguard act; do not `coc` straight in.
 - **MCM only, not cqf.**
@@ -191,6 +211,7 @@ Allowed: PASS / FAIL / PENDING / N-A. Label the proof class achieved.
 | 4d Namira feed-heal (Daedric packet) | HP pulse on feed; daily decay | [R]+[M] | | |
 | 5 wrongOriginRejection | Nord origin: zero Redguard movement | [R] | | |
 | 6 genericHookRejection | generic kills/clears/bounty do not score | [R] | | |
+| 6b Ash'abah mid-game entry | named-undead defeat flips sect; routine undead do not | [R]+[M] | | |
 | 7 manualFeelNote | reads as earned; record tuning magnitudes | [M] | | |
 
 After the run: capture the Papyrus log before rotation, fill
