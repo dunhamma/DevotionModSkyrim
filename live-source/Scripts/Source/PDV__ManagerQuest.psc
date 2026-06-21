@@ -4112,7 +4112,7 @@ Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
     ; Double-route: the same observance feeds the lunar substrate (identity) AND a small
     ; foreground piety pulse to the emphasis deity (Azurah) so piety/decay/neglect stay honest.
     if PDV_Azura
-        AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None)
+        AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, multiplier)
     endIf
     StorageUtil.AdjustIntValue(None, "PDV.Khajiit.LunarSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
@@ -4150,7 +4150,7 @@ Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
     Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
     if PDV_Khenarthi
-        AwardCuratedSignal(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None)
+        AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
     endIf
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
     SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
@@ -4183,9 +4183,9 @@ Function HandleKhajiitAlkoshNamedDragon(String reason)
         return
     endIf
 
-    RecordKhajiitFocusSignal(KHAJIIT_FOCUS_ALKOSH, "PDV.Signal.KhajiitAlkoshDragonOrder", "Alkosh named dragon", reason)
+    Float multiplier = RecordKhajiitFocusSignal(KHAJIIT_FOCUS_ALKOSH, "PDV.Signal.KhajiitAlkoshDragonOrder", "Alkosh named dragon", reason)
     if PDV_Alkosh
-        AwardCuratedSignal(PDV_Alkosh, PDV_Alkosh.SIGNAL_NAMED_DRAGON, None)
+        AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_NAMED_DRAGON, None, multiplier)
     endIf
     Trace(1, "Khajiit Alkosh named-dragon beat routed (" + reason + ")")
 EndFunction
@@ -4221,14 +4221,14 @@ Function HandleKhajiitBaanDarReversal(String reason)
     StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_BAANDAR, KHAJIIT_FOCUS_SIGNAL_DELTA * 2.0 * multiplier, reason)
     if PDV_BaanDar
-        AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None)
+        AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
     endIf
     Trace(1, "Khajiit Baan Dar near-fatal reversal routed (" + reason + ")")
 EndFunction
 
-Function RecordKhajiitFocusSignal(Int focusValue, String keyPrefix, String label, String reason)
+Float Function RecordKhajiitFocusSignal(Int focusValue, String keyPrefix, String label, String reason)
     if !IsKhajiitOrigin()
-        return
+        return 0.0
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier(keyPrefix)
@@ -4236,8 +4236,9 @@ Function RecordKhajiitFocusSignal(Int focusValue, String keyPrefix, String label
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
     StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
     AdjustKhajiitFocusedEmphasis(focusValue, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
-    PulseKhajiitFocusPiety(focusValue)
+    PulseKhajiitFocusPiety(focusValue, multiplier)
     Trace(2, "Khajiit " + label + " routed with multiplier " + multiplier)
+    return multiplier
 EndFunction
 
 ; Resolves the scripted deity for a Khajiit focused-emphasis value (None if unwired).
@@ -4259,13 +4260,13 @@ EndFunction
 
 ; Small foreground piety pulse to the emphasis deity (the double-route partner of the
 ; substrate/focus-weight signal). Each concrete deity defines its own small pulse signal.
-Function PulseKhajiitFocusPiety(Int focusValue)
+Function PulseKhajiitFocusPiety(Int focusValue, Float multiplier)
     if focusValue == KHAJIIT_FOCUS_BAANDAR && PDV_BaanDar
-        AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_ROAD_TRICK, None)
+        AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_ROAD_TRICK, None, multiplier)
     elseIf focusValue == KHAJIIT_FOCUS_RAJHIN && PDV_Rajhin
-        AwardCuratedSignal(PDV_Rajhin, PDV_Rajhin.SIGNAL_ELEGANT_THEFT, None)
+        AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_ELEGANT_THEFT, None, multiplier)
     elseIf focusValue == KHAJIIT_FOCUS_ALKOSH && PDV_Alkosh
-        AwardCuratedSignal(PDV_Alkosh, PDV_Alkosh.SIGNAL_DRAGON_ORDER, None)
+        AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_DRAGON_ORDER, None, multiplier)
     endIf
 EndFunction
 
