@@ -3,6 +3,7 @@ using Mutagen.Bethesda;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Strings;
 
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
 const string defaultManifest = @"references\authoring\PDV_ShrineBlessingNeutralization.manifest.json";
@@ -69,11 +70,16 @@ try
             if (check)
             {
                 CheckCureOnly(spell, target, cureKey, report);
+                var message = EnsureBlessingMessageOverride(mod, sourceCache, target, report, check);
+                CheckPrayerMessage(message, target, report);
             }
             else
             {
                 NormalizeSpell(spell, target, cureKey, isPdvCure, report);
                 CheckCureOnly(spell, target, cureKey, report);
+                var message = EnsureBlessingMessageOverride(mod, sourceCache, target, report, check);
+                NormalizePrayerMessage(message, target, report);
+                CheckPrayerMessage(message, target, report);
             }
         }
 
@@ -114,7 +120,7 @@ static ShrineManifest LoadManifest(string manifestPath)
 
 static void ValidateManifest(ShrineManifest manifest)
 {
-    if (manifest.schema != "pdv.shrine-blessing-neutralization.v1")
+    if (manifest.schema != "pdv.shrine-blessing-neutralization.v2")
     {
         throw new InvalidOperationException($"Unexpected shrine manifest schema {manifest.schema ?? "(missing)"}.");
     }
@@ -127,6 +133,11 @@ static void ValidateManifest(ShrineManifest manifest)
     if (manifest.output != "main-esp")
     {
         throw new InvalidOperationException($"Unsupported shrine normalization output {manifest.output ?? "(missing)"}.");
+    }
+
+    if (manifest.presentationPolicy != "override-temple-blessing-message")
+    {
+        throw new InvalidOperationException($"Unsupported shrine presentation policy {manifest.presentationPolicy ?? "(missing)"}.");
     }
 
     if (manifest.baselineSpellTargets is null || manifest.baselineSpellTargets.Count != 14)
@@ -145,10 +156,32 @@ static void ValidateManifest(ShrineManifest manifest)
             throw new InvalidOperationException("A shrine baseline spell target is incomplete.");
         }
 
+        if (string.IsNullOrWhiteSpace(target.expectedBlessingMessage)
+            || string.IsNullOrWhiteSpace(target.expectedPrayerText))
+        {
+            throw new InvalidOperationException($"{target.spellEditorId}: shrine presentation message contract is incomplete.");
+        }
+
+        if (target.expectedPrayerText!.Any(c => c > 0x7F))
+        {
+            throw new InvalidOperationException($"{target.spellEditorId}: expected prayer text must be ASCII-only.");
+        }
+
+        if (!".!?".Contains(target.expectedPrayerText![^1]))
+        {
+            throw new InvalidOperationException($"{target.spellEditorId}: expected prayer text must end with terminal punctuation.");
+        }
+
         var key = ParseFormKey(target.spellFormId!);
         if (!acceptedMasters.Contains(key.ModKey.FileName.String))
         {
             throw new InvalidOperationException($"{target.spellEditorId} belongs to unaccepted master {key.ModKey.FileName}.");
+        }
+
+        var messageKey = ParseFormKey(target.expectedBlessingMessage!);
+        if (!acceptedMasters.Contains(messageKey.ModKey.FileName.String))
+        {
+            throw new InvalidOperationException($"{target.spellEditorId} message belongs to unaccepted master {messageKey.ModKey.FileName}.");
         }
     }
 }
@@ -199,14 +232,14 @@ static List<DiscoveredActivator> DiscoverBlessingActivators()
                 continue;
             }
 
-            var templeBlessing = script.Properties
-                .OfType<ScriptObjectProperty>()
-                .FirstOrDefault(property => string.Equals(property.Name, "TempleBlessing", StringComparison.OrdinalIgnoreCase))
-                ?.Object.FormKeyNullable;
+            var templeBlessing = GetObjectProperty(script, "TempleBlessing");
             if (templeBlessing is null)
             {
                 continue;
             }
+
+            var blessingMessage = GetObjectProperty(script, "BlessingMessage");
+            var altarRemoveMsg = GetObjectProperty(script, "AltarRemoveMsg");
 
             winners[activator.FormKey] = new DiscoveredActivator
             {
@@ -214,7 +247,9 @@ static List<DiscoveredActivator> DiscoverBlessingActivators()
                 EditorId = activator.EditorID,
                 WinnerPlugin = pluginName,
                 Script = script.Name,
-                TempleBlessing = ToHousecarl(templeBlessing.Value)
+                TempleBlessing = ToHousecarl(templeBlessing.Value),
+                BlessingMessage = blessingMessage is null ? null : ToHousecarl(blessingMessage.Value),
+                AltarRemoveMsg = altarRemoveMsg is null ? null : ToHousecarl(altarRemoveMsg.Value)
             };
         }
     }
@@ -223,6 +258,14 @@ static List<DiscoveredActivator> DiscoverBlessingActivators()
         .OrderBy(entry => entry.TempleBlessing, StringComparer.OrdinalIgnoreCase)
         .ThenBy(entry => entry.EditorId, StringComparer.OrdinalIgnoreCase)
         .ToList();
+}
+
+static FormKey? GetObjectProperty(ScriptEntry script, string propertyName)
+{
+    return script.Properties
+        .OfType<ScriptObjectProperty>()
+        .FirstOrDefault(property => string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+        ?.Object.FormKeyNullable;
 }
 
 static Dictionary<string, string> BuildPluginPathMap()
@@ -334,6 +377,78 @@ static void CopySpellSurface(Spell source, Spell target)
     foreach (var effect in source.Effects)
     {
         target.Effects.Add(CopyEffect(effect));
+    }
+}
+
+static Message EnsureBlessingMessageOverride(
+    SkyrimMod mod,
+    Dictionary<string, SkyrimMod> sourceCache,
+    ShrineSpellTarget target,
+    ShrineReport report,
+    bool checkOnly)
+{
+    var formKey = ParseFormKey(target.expectedBlessingMessage!);
+    var existing = mod.Messages.Records.FirstOrDefault(message => message.FormKey.Equals(formKey));
+    if (existing is not null)
+    {
+        report.Actions.Add($"{target.spellEditorId}: using existing prayer-message override {target.expectedBlessingMessage}.");
+        return existing;
+    }
+
+    if (checkOnly)
+    {
+        report.Errors.Add($"{target.spellEditorId}: missing main-ESP message override for {target.expectedBlessingMessage}.");
+        return new Message(formKey, SkyrimRelease.SkyrimSE);
+    }
+
+    var sourceMod = LoadSourceMod(sourceCache, formKey.ModKey.FileName.String);
+    var source = sourceMod.Messages.Records.FirstOrDefault(message => message.FormKey.Equals(formKey))
+        ?? throw new InvalidOperationException($"{target.spellEditorId}: source message {target.expectedBlessingMessage} not found in {formKey.ModKey.FileName}.");
+    var copy = new Message(formKey, SkyrimRelease.SkyrimSE);
+    CopyMessageSurface(source, copy);
+    mod.Messages.Add(copy);
+    report.Actions.Add($"{target.spellEditorId}: created main-ESP prayer-message override from {formKey.ModKey.FileName}.");
+    return copy;
+}
+
+static void CopyMessageSurface(Message source, Message target)
+{
+    target.EditorID = source.EditorID;
+    target.FormVersion = source.FormVersion;
+    target.Name = source.Name;
+    target.Description = source.Description;
+    target.DisplayTime = source.DisplayTime;
+    target.Flags = source.Flags;
+    target.Quest = source.Quest;
+    target.MenuButtons.Clear();
+    foreach (var button in source.MenuButtons)
+    {
+        target.MenuButtons.Add(new MessageButton { Text = button.Text });
+    }
+}
+
+static void NormalizePrayerMessage(Message message, ShrineSpellTarget target, ShrineReport report)
+{
+    if (message.FormKey.ModKey.IsNull)
+    {
+        return;
+    }
+
+    message.Description = Tx(target.expectedPrayerText!);
+    report.Actions.Add($"{target.spellEditorId}: set prayer message {target.expectedBlessingMessage} to \"{target.expectedPrayerText}\".");
+}
+
+static void CheckPrayerMessage(Message message, ShrineSpellTarget target, ShrineReport report)
+{
+    if (message.FormKey.ModKey.IsNull)
+    {
+        return;
+    }
+
+    var actualText = message.Description?.String ?? "";
+    if (!string.Equals(actualText, target.expectedPrayerText, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{target.spellEditorId}: prayer message text is \"{actualText}\", expected \"{target.expectedPrayerText}\".");
     }
 }
 
@@ -493,6 +608,12 @@ static void CheckDiscoveryCoverage(ShrineManifest manifest, ShrineReport report)
     var normalizedSpells = (manifest.baselineSpellTargets ?? [])
         .Select(target => NormalizeManifestFormId(target.spellFormId!))
         .ToHashSet(StringComparer.OrdinalIgnoreCase);
+    var expectedMessagesBySpell = (manifest.baselineSpellTargets ?? [])
+        .Where(target => !string.IsNullOrWhiteSpace(target.expectedBlessingMessage))
+        .ToDictionary(
+            target => NormalizeManifestFormId(target.spellFormId!),
+            target => NormalizeManifestFormId(target.expectedBlessingMessage!),
+            StringComparer.OrdinalIgnoreCase);
     var reviewedActivators = (manifest.activatorTargets ?? [])
         .Select(target => NormalizeManifestFormId(target.activatorFormId!))
         .ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -503,6 +624,13 @@ static void CheckDiscoveryCoverage(ShrineManifest manifest, ShrineReport report)
         var activatorKey = NormalizeManifestFormId(activator.ActivatorFormId!);
         if (normalizedSpells.Contains(blessing))
         {
+            if (!string.IsNullOrWhiteSpace(activator.BlessingMessage)
+                && expectedMessagesBySpell.TryGetValue(blessing, out var expectedMessage)
+                && NormalizeManifestFormId(activator.BlessingMessage!) != expectedMessage)
+            {
+                report.Errors.Add($"{activator.EditorId} ({activator.ActivatorFormId}) uses blessing message {activator.BlessingMessage}; expected {expectedMessage} for {activator.TempleBlessing}.");
+            }
+
             continue;
         }
 
@@ -599,6 +727,8 @@ static string NormalizeManifestFormId(string value)
 
 static string ToHousecarl(FormKey key) => $"{key.IDString().ToUpperInvariant()}:{key.ModKey.FileName}";
 
+static TranslatedString Tx(string value) => new(Language.English, value);
+
 static string? GetArg(string[] args, string name)
 {
     var index = Array.IndexOf(args, name);
@@ -615,6 +745,8 @@ sealed class ShrineManifest
     public string? schema { get; set; }
     public string? status { get; set; }
     public string? policy { get; set; }
+    public string? presentationPolicy { get; set; }
+    public string? presentationSurface { get; set; }
     public string? output { get; set; }
     public string? sourcePlugin { get; set; }
     public List<string>? acceptedMasters { get; set; }
@@ -633,6 +765,8 @@ sealed class ShrineSpellTarget
     public string? winnerPlugin { get; set; }
     public string? expectedCureEffect { get; set; }
     public List<string>? expectedRemovedEffects { get; set; }
+    public string? expectedBlessingMessage { get; set; }
+    public string? expectedPrayerText { get; set; }
     public bool? pdvCureEffect { get; set; }
 }
 
@@ -653,6 +787,8 @@ sealed class DiscoveredActivator
     public string? WinnerPlugin { get; set; }
     public string? Script { get; set; }
     public string? TempleBlessing { get; set; }
+    public string? BlessingMessage { get; set; }
+    public string? AltarRemoveMsg { get; set; }
 }
 
 sealed class ShrineReport

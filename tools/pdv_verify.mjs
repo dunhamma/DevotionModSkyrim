@@ -4571,12 +4571,13 @@ class Verifier {
       return;
     }
 
-    if (manifest.schema === "pdv.shrine-blessing-neutralization.v1"
+    if (manifest.schema === "pdv.shrine-blessing-neutralization.v2"
         && manifest.policy === "cure-only"
+        && manifest.presentationPolicy === "override-temple-blessing-message"
         && manifest.output === "main-esp") {
-      this.pass("Shrine blessing neutralization manifest", "Manifest declares cure-only main-ESP normalization.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
+      this.pass("Shrine blessing neutralization manifest", "Manifest declares cure-only main-ESP normalization plus BlessingMessage prayer text overrides.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
     } else {
-      this.fail("Shrine blessing neutralization manifest", "Manifest must use schema v1, policy cure-only, and output main-esp.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
+      this.fail("Shrine blessing neutralization manifest", "Manifest must use schema v2, policy cure-only, presentationPolicy override-temple-blessing-message, and output main-esp.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
       return;
     }
 
@@ -4635,6 +4636,29 @@ class Verifier {
         this.fail(
           "Shrine blessing cure-only readback",
           `${target.spellEditorId} effects=${effects.length}, cure=${cureEffects.length}, removed-still-present=${removedEffects.join(", ") || "none"}.`,
+          PDV_ESP,
+        );
+      }
+
+      const messageRecord = [...this.recordsByFormid.values()]
+        .find((candidate) => formidsEqual(candidate.formid, target.expectedBlessingMessage));
+      if (messageRecord && (messageRecord.type === "MESG" || messageRecord.type === "MESSAGE")) {
+        this.pass("Shrine prayer message override", `${target.expectedBlessingMessage} is owned by the main ESP for ${target.spellEditorId}.`, PDV_ESP);
+      } else {
+        this.fail("Shrine prayer message override", `${target.spellEditorId} is missing main-ESP MESG override ${target.expectedBlessingMessage}.`, PDV_ESP);
+        continue;
+      }
+
+      const messageDetail = this.recordDetailsByFormid.get(messageRecord.formid) || this.recordDetails.get(messageRecord.edid);
+      const actualPrayerText = messageDetail?.fields?.Description || "";
+      const textIsAscii = !/[\u0080-\uffff]/.test(actualPrayerText);
+      const hasVanillaBlessingLanguage = /\bBlessing of\b/i.test(actualPrayerText) || /\badded\b/i.test(actualPrayerText);
+      if (actualPrayerText === target.expectedPrayerText && textIsAscii && !hasVanillaBlessingLanguage) {
+        this.pass("Shrine prayer message text", `${target.spellEditorId} shows "${target.expectedPrayerText}".`, PDV_ESP);
+      } else {
+        this.fail(
+          "Shrine prayer message text",
+          `${target.spellEditorId} message text is "${actualPrayerText}", expected "${target.expectedPrayerText}" with no vanilla blessing-added language.`,
           PDV_ESP,
         );
       }

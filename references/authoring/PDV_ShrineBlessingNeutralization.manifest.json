@@ -1,7 +1,9 @@
 {
-  "schema": "pdv.shrine-blessing-neutralization.v1",
-  "status": "records-authored-readback-pass-runtime-proven-20260619-stat-suppressed; residual: shrine script still prints 'Blessing of <deity> added' + grants cure-only ability (TempleBlessingScript out of scope) -- polish option = blank overridden SPEL Name to drop the misleading toast, KEEP cure",
+  "schema": "pdv.shrine-blessing-neutralization.v2",
+  "status": "records-authored-readback-pass-runtime-proven-20260619-stat-suppressed; presentation v2 replaces TempleBlessingScript/DLC2TempleShrineScript BlessingMessage text with PDV prayer language while keeping shrine spell effects cure-only",
   "policy": "cure-only",
+  "presentationPolicy": "override-temple-blessing-message",
+  "presentationSurface": "TempleBlessingScript/DLC2TempleShrineScript BlessingMessage.Show()",
   "output": "main-esp",
   "sourcePlugin": "Devotion.esp",
   "acceptedMasters": [
@@ -18,7 +20,9 @@
       "sourceActivator": "0D9883:Skyrim.esm",
       "sourceActivatorEditorId": "ShrineofAkatosh",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["0FB989:Skyrim.esm"]
+      "expectedRemovedEffects": ["0FB989:Skyrim.esm"],
+      "expectedBlessingMessage": "10A287:Skyrim.esm",
+      "expectedPrayerText": "You pray at Akatosh's shrine."
     },
     {
       "deity": "Arkay",
@@ -27,7 +31,9 @@
       "sourceActivator": "071854:Skyrim.esm",
       "sourceActivatorEditorId": "ShrineofArkay",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["0FB98D:Skyrim.esm"]
+      "expectedRemovedEffects": ["0FB98D:Skyrim.esm"],
+      "expectedBlessingMessage": "10A288:Skyrim.esm",
+      "expectedPrayerText": "You pray at Arkay's shrine."
     },
     {
       "deity": "Dibella",
@@ -36,7 +42,9 @@
       "sourceActivator": "0D9881:Skyrim.esm",
       "sourceActivatorEditorId": "ShrineofDibella",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["0FB98A:Skyrim.esm"]
+      "expectedRemovedEffects": ["0FB98A:Skyrim.esm"],
+      "expectedBlessingMessage": "10A289:Skyrim.esm",
+      "expectedPrayerText": "You pray at Dibella's shrine."
     },
     {
       "deity": "Julianos",
@@ -45,7 +53,9 @@
       "sourceActivator": "0D9885:Skyrim.esm",
       "sourceActivatorEditorId": "ShrineofJulianos",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["0FB98E:Skyrim.esm"]
+      "expectedRemovedEffects": ["0FB98E:Skyrim.esm"],
+      "expectedBlessingMessage": "10A28A:Skyrim.esm",
+      "expectedPrayerText": "You pray at Julianos' shrine."
     },
     {
       "deity": "Kynareth",
@@ -54,7 +64,9 @@
       "sourceActivator": "0D987F:Skyrim.esm",
       "sourceActivatorEditorId": "ShrineOfKynareth",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["0FB98F:Skyrim.esm"]
+      "expectedRemovedEffects": ["0FB98F:Skyrim.esm"],
+      "expectedBlessingMessage": "10A28B:Skyrim.esm",
+      "expectedPrayerText": "You pray at Kynareth's shrine."
     },
     {
       "deity": "Mara",
@@ -63,7 +75,9 @@
       "sourceActivator": "0D9887:Skyrim.esm",
       "sourceActivatorEditorId": "ShrineofMara",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["0FB990:Skyrim.esm"]
+      "expectedRemovedEffects": ["0FB990:Skyrim.esm"],
+      "expectedBlessingMessage": "10A28C:Skyrim.esm",
+      "expectedPrayerText": "You pray at Mara's shrine."
     },
     {
       "deity": "Nocturnal",
@@ -73,7 +87,9 @@
       "sourceActivatorEditorId": "ShrineOfNocturnal",
       "winnerPlugin": "man_nocturnalShrine.esp",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["10E8AF:Skyrim.esm"]
+      "expectedRemovedEffects": ["10E8AF:Skyrim.esm"],
+      "expectedBlessingMessage": "10E8B1:Skyrim.esm",
+      "expectedPrayerText": "You pray at Nocturnal's shrine."
     },
     {
       "deity": "Stendarr",
@@ -82,7 +98,9 @@
       "sourceActivator": "0D987D:Skyrim.esm",
       "sourceActivatorEditorId": "ShrineofStendarr",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["0FB991:Skyrim.esm"]
+      "expectedRemovedEffects": ["0FB991:Skyrim.esm"],
+      "expectedBlessingMessage": "10A28D:Skyrim.esm",
+      "expectedPrayerText": "You pray at Stendarr's shrine."
     },
     {
       "deity": "Talos",
@@ -91,7 +109,9 @@
       "sourceActivator": "100780:Skyrim.esm",
       "sourceActivatorEditorId": "ShrineofTalos",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["0FB992:Skyrim.esm"]
+      "expectedRemovedEffects": ["0FB992:Skyrim.esm"],
+      "expectedBlessingMessage": "10A28E:Skyrim.esm",
+      "expectedPrayerText": "You pray at Talos' shrine."
     },
     {
       "deity": "Zenithar",
@@ -100,7 +120,9 @@
       "sourceActivator": "0D987B:Skyrim.esm",
       "sourceActivatorEditorId": "ShrineOfZenithar",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["0FB993:Skyrim.esm"]
+      "expectedRemovedEffects": ["0FB993:Skyrim.esm"],
+      "expectedBlessingMessage": "10A28F:Skyrim.esm",
+      "expectedPrayerText": "You pray at Zenithar's shrine."
     },
     {
       "deity": "Auriel",
@@ -109,7 +131,9 @@
       "sourceActivator": "00C86B:Dawnguard.esm",
       "sourceActivatorEditorId": "DLC1ShrineofAuriel",
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
-      "expectedRemovedEffects": ["011362:Dawnguard.esm"]
+      "expectedRemovedEffects": ["011362:Dawnguard.esm"],
+      "expectedBlessingMessage": "01139D:Dawnguard.esm",
+      "expectedPrayerText": "You pray at Auriel's shrine."
     },
     {
       "deity": "Azura",
@@ -119,6 +143,8 @@
       "sourceActivatorEditorId": "DLC2ShrineAzura",
       "expectedCureEffect": "071554:Devotion.esp",
       "expectedRemovedEffects": [],
+      "expectedBlessingMessage": "03BCFE:Dragonborn.esm",
+      "expectedPrayerText": "You pray at Azura's shrine.",
       "pdvCureEffect": true
     },
     {
@@ -129,6 +155,8 @@
       "sourceActivatorEditorId": "DLC2ShrineBoethiah",
       "expectedCureEffect": "071554:Devotion.esp",
       "expectedRemovedEffects": [],
+      "expectedBlessingMessage": "03BCFF:Dragonborn.esm",
+      "expectedPrayerText": "You pray at Boethiah's shrine.",
       "pdvCureEffect": true
     },
     {
@@ -139,6 +167,8 @@
       "sourceActivatorEditorId": "DLC2ShrineMephala",
       "expectedCureEffect": "071554:Devotion.esp",
       "expectedRemovedEffects": [],
+      "expectedBlessingMessage": "03BD00:Dragonborn.esm",
+      "expectedPrayerText": "You pray at Mephala's shrine.",
       "pdvCureEffect": true
     }
   ],
