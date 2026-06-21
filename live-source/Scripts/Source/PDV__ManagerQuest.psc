@@ -3148,7 +3148,7 @@ Function TryArgonianNearWaterMaintenance()
     RefreshArgonianHistPosture("near_water")
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     if PDV_Hist
-        AwardCuratedSignal(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None)
+        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
     endIf
     SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The water remembers you.", "hist", GetArgonianHistPostureLabel())
     RequestPanelRefresh()
@@ -4536,10 +4536,9 @@ Function HandleArgonianHistMaintenance(String reason)
     RefreshArgonianHistPosture(reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     ; Double-route: the substrate carries the reward gating; a small honest +1 Hist pulse keeps
-    ; the universal piety layer (decay/neglect/creed-loss) honest. Substrate anti-farm is the
-    ; ConsumeDailyRepeatMultiplier above; the pulse anti-farm is the AwardPiety daily-max path.
+    ; the universal piety layer (decay/neglect/creed-loss) honest.
     if PDV_Hist
-        AwardCuratedSignal(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None)
+        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
     endIf
     StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistSourceReason", reason)
@@ -4562,7 +4561,7 @@ Function HandleArgonianPeopleSupport(String reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     ; Double-route: small honest +1 Hist pulse (the universal layer stays Hist-honest).
     if PDV_Hist
-        AwardCuratedSignal(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None)
+        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
     endIf
     StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
     SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "Your people were supported.", "hist", GetArgonianHistPostureLabel())
@@ -4582,7 +4581,7 @@ Function HandleArgonianBedOfChoiceReturn(String reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     ; Double-route: small honest +1 Hist pulse (the universal layer stays Hist-honest).
     if PDV_Hist
-        AwardCuratedSignal(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None)
+        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
     endIf
     StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
     SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The chosen rest took root.", "hist", GetArgonianHistPostureLabel())
@@ -4603,10 +4602,10 @@ Function HandleArgonianVoidSignal(String reason)
     ; Double-route: the universal layer stays Hist-honest even on the Void route (small +1 Hist
     ; pulse). The Sithis threshold pulse only lands once the Void is fully active (>=3 signals).
     if PDV_Hist
-        AwardCuratedSignal(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None)
+        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
     endIf
     if PDV_Sithis && PDV_ArgonianHistSubstrate.IsVoidFullyActive()
-        AwardCuratedSignal(PDV_Sithis, PDV_Sithis.SIGNAL_VOID_THRESHOLD, None)
+        AwardCuratedSignalScaled(PDV_Sithis, PDV_Sithis.SIGNAL_VOID_THRESHOLD, None, multiplier)
     endIf
     StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
     SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The Void was noticed.", "hist", GetArgonianHistPostureLabel())
