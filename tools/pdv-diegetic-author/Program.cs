@@ -202,7 +202,7 @@ try
         {
             EditorID = s.mgefEid,
             Name = Tx($"Devotion {s.name} Aura"),
-            Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoDuration,
+            Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoDuration | MagicEffect.Flag.HideInUI,
             BaseCost = 0f,
             MagicSkill = ActorValue.None,
             ResistValue = ActorValue.None,

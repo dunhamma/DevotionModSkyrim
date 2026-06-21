@@ -1493,6 +1493,10 @@ h1 {
   width: 100%;
   height: 100%;
 }
+/* The explicit display:flex above overrides the [hidden] attribute, which made the
+   Chronicle and Ledger pages render side-by-side (a phantom "second column"). Restore
+   hiding for the inactive page so the hotkey cleanly turns between them. */
+#pdv-journal-modal .bod-ledger[hidden] { display: none; }
 #pdv-journal-modal .bod-ledgerhead {
   text-align: center;
   font-variant: small-caps;
