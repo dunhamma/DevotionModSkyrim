@@ -284,11 +284,33 @@ body.startup-visible .startup-modal:not([hidden]) {
 
 .panel-header {
   display: grid;
-  grid-template-columns: 72px minmax(0, 1fr) auto;
+  grid-template-columns: 72px minmax(0, 1fr) auto auto;
   gap: 18px;
   align-items: center;
   padding: 22px 24px 16px;
   border-bottom: 1px solid var(--line);
+}
+
+.panel-close {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  align-self: start;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.panel-close:hover,
+.panel-close:focus-visible {
+  color: var(--gold);
+  border-color: var(--gold);
+  outline: none;
 }
 
 .patron-mark {

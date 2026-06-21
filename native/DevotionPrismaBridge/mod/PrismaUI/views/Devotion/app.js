@@ -1905,11 +1905,41 @@
     }
   };
 
+  // --- Focused panel close: the in-view X button + ESC route to the bridge's
+  // PDVPanelClose listener (C++ Unfocus + Hide). The main panel is a FOCUSED view, so
+  // unlike the non-focused Book of Days these in-view affordances actually work.
+  // closeDevotionPanel also hides the shell locally so the panel disappears immediately.
+  const onPanelEsc = (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeDevotionPanel();
+    }
+  };
+  function closeDevotionPanel() {
+    document.removeEventListener("keydown", onPanelEsc, true);
+    document.body.classList.remove("panel-visible");
+    if (typeof window.PDVPanelClose === "function") {
+      window.PDVPanelClose("main|close");
+    }
+  }
+  let panelCloseButtonWired = false;
+  const bindPanelClose = () => {
+    // Re-adding the same listener+capture is idempotent; removed again on close.
+    document.addEventListener("keydown", onPanelEsc, true);
+    if (panelCloseButtonWired) return;
+    const closeButton = document.getElementById("pdv-panel-close");
+    if (closeButton) {
+      panelCloseButtonWired = true;
+      closeButton.addEventListener("click", () => closeDevotionPanel());
+    }
+  };
+
   window.PDVBridge = {
     receiveJson(payloadText) {
       try {
         const payload = parsePayload(payloadText);
         document.body.classList.add("panel-visible");
+        bindPanelClose();
         handlePayload(payload);
       } catch (error) {
         nodes.status.textContent = "Bad JSON";

@@ -13,6 +13,10 @@ namespace
     // kChoiceResultListener global (registered via RegisterJSListener).
     constexpr auto kReceiveChoiceFunction = "ReceivePDVChoice"sv;
     constexpr auto kChoiceResultListener = "PDVChoiceResult"sv;
+    // Main-panel close channel: the focused dashboard panel calls
+    // window.PDVPanelClose("main|close") (ESC or the in-view X button); C++ releases
+    // focus AND hides the view, so the player is never trapped or left a lingering panel.
+    constexpr auto kPanelCloseListener = "PDVPanelClose"sv;
 
     PRISMA_UI_API::IVPrismaUI2* g_prisma = nullptr;
     PrismaView g_view = 0;
@@ -121,6 +125,19 @@ namespace
         }
     }
 
+    // JS -> C++ close channel for the focused main panel. The view calls
+    // window.PDVPanelClose(...) from its ESC handler / in-view close button. Unlike the
+    // choice channel we also Hide the view, so closing fully dismisses the panel (Unfocus
+    // alone only releases input/pause and would leave the panel on screen).
+    void OnPanelClose(const char*) noexcept
+    {
+        logs::info("Prisma panel close requested");
+        if (g_prisma && g_view && g_prisma->IsValid(g_view)) {
+            g_prisma->Unfocus(g_view);
+            g_prisma->Hide(g_view);
+        }
+    }
+
     bool SendLastPayload()
     {
         if (!g_prisma || !g_view || !g_prisma->IsValid(g_view)) {
@@ -202,6 +219,7 @@ namespace
         g_prisma->SetOrder(g_view, 900);
         g_prisma->RegisterConsoleCallback(g_view, OnConsoleMessage);
         g_prisma->RegisterJSListener(g_view, kChoiceResultListener.data(), OnChoiceResult);
+        g_prisma->RegisterJSListener(g_view, kPanelCloseListener.data(), OnPanelClose);
         g_prisma->Hide(g_view);
         logs::info("Created Prisma view {} from {}", g_view, kViewPath);
         return true;

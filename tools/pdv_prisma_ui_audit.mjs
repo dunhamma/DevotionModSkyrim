@@ -42,7 +42,10 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     const filePath = path.join(DEVOTION_SOURCE, name);
     const source = read(filePath);
 
-    if (name !== "PDV_PrismaBridge.psc") {
+    // PDV_PrismaBridge.psc declares the natives; PDV_MCM.psc is the sanctioned player-owned
+    // UI entry point (the rebindable "Open Devotion panel" hotkey) that focuses the full
+    // panel. Every other source is gameplay and must not open the focused panel.
+    if (name !== "PDV_PrismaBridge.psc" && name !== "PDV_MCM.psc") {
       for (const forbidden of ["OpenDevotionPanel", "ToggleDevotionPanel"]) {
         if (source.includes(`PDV_PrismaBridge.${forbidden}(`)) {
           fail(`Gameplay source calls ${forbidden}; only player-owned UI entry points may open the full panel.`, filePath);
