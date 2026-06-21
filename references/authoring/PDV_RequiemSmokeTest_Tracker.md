@@ -66,6 +66,27 @@ spell *records* were rewired at the ESP level.
 **Net:** the Requiem conversion is ~complete; the load-bearing remainder is the
 in-game HP-bar PROOF (Sweeps A/B, Session C) + magnitude tuning — **not** a Nord build.
 
+### 1B penalty re-author — READY (fold into the Session-C ESP tuning pass)
+
+Scoped 2026-06-21. The 4 ACTIVE swallowed `HealRateMult` penalties → felt negative
+Fortify-Health, mirroring the positive conversion (new `_Health` MGEF, rewire the
+spell, orphan the `_HealRateMult`). Edit the reward-spec entry, then
+`dotnet run --project tools\pdv-phase20-reward-author\PdvPhase20RewardAuthor.csproj -- --author-rewards <race>`
+(confirm flag at run), then `pdv_reward_desc_regen` + reward readback + snapshot + commit.
+Magnitudes PROVISIONAL — tune on the HP bar in Session C with the positives.
+
+| Penalty | Spec file / entry | New: editorId / actorValue / magnitude (provisional) |
+|---|---|---|
+| Argonian "Hist Distant" | `PDV_ArgonianRewardRecords.spec.json` → `neglect.effects[0]` | `PDV_MGEF_Neglect_ArgonianHist_Health` / `Health` / `-10` (bites only at Silenced/Corrupted) |
+| Imperial "Divines Grow Distant" | `PDV_ImperialRewardRecords.spec.json` → neglect | `PDV_MGEF_Neglect_Imperial_Health` / `Health` / `-10` |
+| Breton "Tradition Grows Distant" | `PDV_BretonRewardRecords.spec.json` → neglect | `PDV_MGEF_Neglect_Breton_Health` / `Health` / `-10` |
+| Breton "Cast Out" (excommunication) | `PDV_BretonRewardRecords.spec.json` → creedLoss `excommunication.effects[0]` | `..._Excommunication_MGEF_Health` / `Health` / `-15` (major) |
+
+Update each `playerFacingText` from "Health Regeneration −X%" to a felt
+"Maximum Health −Y" line. NOT touched (partly-felt under Requiem, optional review):
+the Stamina/Magicka-regen neglect effects (Kyne, Khajiit, Bosmer, Dunmer, Altmer);
+already-felt DamageResist/ResistMagic neglect (Orc, Redguard) stay.
+
 ---
 
 ## Track A — build checklist
