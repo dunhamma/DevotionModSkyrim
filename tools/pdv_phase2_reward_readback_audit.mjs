@@ -45,13 +45,70 @@ const ACTOR_VALUE_ALIASES = new Map([
   ["ResistPoison", "PoisonResist"],
 ]);
 const CAPSTONE_FALLBACKS = [
-  ["PDV_Bless_Imperial_Akatosh_T3", "PDV.Capstone.Imperial.AkatoshSave"],
-  ["PDV_Bless_Altmer_AuriEl_T3", "PDV.Capstone.Altmer.AuriElSave"],
-  ["PDV_Bless_Nord_Shor_T3", "PDV.Capstone.LowHealthSave.Nord"],
-  ["PDV_Bless_Orc_LegionExile_T3", "PDV.Capstone.Orc.LegionHoldLine"],
-  ["PDV_Bless_Redguard_Tuwhacca_T3", "PDV.Capstone.Redguard.TuwhaccaSave"],
-  ["PDV_Bless_Khajiit_BaanDar_T3", "PDV.Capstone.Khajiit.BaanDarSlip"],
-  ["PDV_Bless_Bosmer_BanditRoad_T3", "PDV.Capstone.Bosmer.BaanDarSlip"],
+  {
+    spellEditorId: "PDV_Bless_Imperial_Akatosh_T3",
+    storageKey: "PDV.Capstone.Imperial.AkatoshSave",
+    notificationText: "Akatosh turns your end aside.",
+    prismaTitle: "Akatosh's Covenant",
+    prismaText: "Akatosh turns your end aside.",
+    prismaSymbol: "akatosh",
+  },
+  {
+    spellEditorId: "PDV_Bless_Altmer_AuriEl_T3",
+    storageKey: "PDV.Capstone.Altmer.AuriElSave",
+    notificationText: "Auri-El's light holds you from death.",
+    prismaTitle: "Auri-El's Light",
+    prismaText: "Auri-El's light holds you from death.",
+    prismaSymbol: "auriel",
+  },
+  {
+    spellEditorId: "PDV_Bless_Nord_Shor_T3",
+    storageKey: "PDV.Capstone.LowHealthSave.Nord",
+    notificationText: "Shor pulls you back from the edge.",
+    prismaTitle: "Shor's Last Stand",
+    prismaText: "Shor pulls you back from the edge.",
+    prismaSymbol: "shor",
+  },
+  {
+    spellEditorId: "PDV_Bless_Orc_LegionExile_T3",
+    storageKey: "PDV.Capstone.Orc.LegionHoldLine",
+    notificationText: "The line holds. You stay standing.",
+    prismaTitle: "The Line Holds",
+    prismaText: "The line holds. You stay standing.",
+    prismaSymbol: "malacath",
+  },
+  {
+    spellEditorId: "PDV_Bless_Redguard_Tuwhacca_T3",
+    storageKey: "PDV.Capstone.Redguard.TuwhaccaSave",
+    notificationText: "Tu'whacca turns you back from the Far Shores.",
+    prismaTitle: "Tu'whacca's Ward",
+    prismaText: "Tu'whacca turns you back from the Far Shores.",
+    prismaSymbol: "tuwhacca",
+  },
+  {
+    spellEditorId: "PDV_Bless_Redguard_HoonDing_T3",
+    storageKey: "PDV.Capstone.LowHealthSave.HoonDing",
+    notificationText: "HoonDing opens the road back from the edge.",
+    prismaTitle: "HoonDing's Edge",
+    prismaText: "HoonDing opens the road back from the edge.",
+    prismaSymbol: "journal",
+  },
+  {
+    spellEditorId: "PDV_Bless_Khajiit_BaanDar_T3",
+    storageKey: "PDV.Capstone.Khajiit.BaanDarSlip",
+    notificationText: "Baan Dar slips you out of death's hand.",
+    prismaTitle: "Baan Dar's Luck",
+    prismaText: "Baan Dar slips you out of death's hand.",
+    prismaSymbol: "baandar",
+  },
+  {
+    spellEditorId: "PDV_Bless_Bosmer_BanditRoad_T3",
+    storageKey: "PDV.Capstone.Bosmer.BaanDarSlip",
+    notificationText: "Baan Dar's road bends away from death.",
+    prismaTitle: "The Road Bends",
+    prismaText: "Baan Dar's road bends away from death.",
+    prismaSymbol: "baandar",
+  },
 ];
 const GREEN_PACT_FORM_LISTS = [
   "PDV_FLST_GreenPact_PlantFoods",
@@ -243,8 +300,8 @@ function main() {
       }
     }
   }
-  for (const [spellEditorId] of CAPSTONE_FALLBACKS) {
-    detailEdids.add(spellEditorId);
+  for (const capstone of CAPSTONE_FALLBACKS) {
+    detailEdids.add(capstone.spellEditorId);
   }
   for (const editorId of [...GREEN_PACT_FORM_LISTS, ...GREEN_PACT_KEYWORDS]) {
     detailEdids.add(editorId);
@@ -262,8 +319,8 @@ function main() {
   // would be missing. Depth-read every effect MGEF of each capstone spell so the index-agnostic scan
   // below can find the save script at whatever effect index it lives.
   const capstoneEffectEdids = new Set();
-  for (const [spellEditorId] of CAPSTONE_FALLBACKS) {
-    const spellDetail = detailsByEdid.get(spellEditorId);
+  for (const capstone of CAPSTONE_FALLBACKS) {
+    const spellDetail = detailsByEdid.get(capstone.spellEditorId);
     for (const effect of spellDetail?.fields?.Effects || []) {
       const effectEdid = effect?.BaseEffect ? formidToEdid(effect.BaseEffect, recordsByEdid) : null;
       if (effectEdid && !detailsByEdid.has(effectEdid)) {
@@ -398,7 +455,8 @@ function main() {
     }
   }
 
-  for (const [spellEditorId, storageKey] of CAPSTONE_FALLBACKS) {
+  for (const capstone of CAPSTONE_FALLBACKS) {
+    const { spellEditorId, storageKey } = capstone;
     const spellDetail = detailsByEdid.get(spellEditorId);
     // The capstone save effect can sit at ANY effect index -- Khajiit BaanDar T3 orders its three
     // stat effects first and carries PDV_T3DailyLowHealthSaveEffect on its last (AvoidDeath) effect.
@@ -432,6 +490,20 @@ function main() {
       pass("T3 capstone debug gate", `${spellEditorId} wires PDV_GLO_DebugLevel.`);
     } else {
       fail("T3 capstone debug gate", `${spellEditorId} is missing PDV_GLO_DebugLevel.`);
+    }
+
+    for (const [propName, expected] of [
+      ["NotificationText", capstone.notificationText],
+      ["PrismaTitle", capstone.prismaTitle],
+      ["PrismaText", capstone.prismaText],
+      ["PrismaSymbol", capstone.prismaSymbol],
+      ["PrismaTone", "good"],
+    ]) {
+      if (props.get(propName)?.Data === expected) {
+        pass("T3 capstone player notice", `${spellEditorId} ${propName} is wired.`);
+      } else {
+        fail("T3 capstone player notice", `${spellEditorId} ${propName} is ${props.get(propName)?.Data || "(missing)"}, expected ${expected}.`);
+      }
     }
   }
 

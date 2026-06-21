@@ -128,8 +128,22 @@ Dictionary<string, FormKey> khajiitOrganicAliasVanillaTargets = new(StringCompar
 
 CapstoneFallback[] capstoneFallbacks =
 [
-    new("PDV_Bless_Imperial_Akatosh_T3", "PDV.Capstone.Imperial.AkatoshSave", 90.0f),
-    new("PDV_Bless_Altmer_AuriEl_T3", "PDV.Capstone.Altmer.AuriElSave", 90.0f),
+    new(
+        "PDV_Bless_Imperial_Akatosh_T3",
+        "PDV.Capstone.Imperial.AkatoshSave",
+        90.0f,
+        NotificationText: "Akatosh turns your end aside.",
+        PrismaTitle: "Akatosh's Covenant",
+        PrismaText: "Akatosh turns your end aside.",
+        PrismaSymbol: "akatosh"),
+    new(
+        "PDV_Bless_Altmer_AuriEl_T3",
+        "PDV.Capstone.Altmer.AuriElSave",
+        90.0f,
+        NotificationText: "Auri-El's light holds you from death.",
+        PrismaTitle: "Auri-El's Light",
+        PrismaText: "Auri-El's light holds you from death.",
+        PrismaSymbol: "auriel"),
     new(
         "PDV_Bless_Nord_Shor_T3",
         "PDV.Capstone.LowHealthSave.Nord",
@@ -138,9 +152,31 @@ CapstoneFallback[] capstoneFallbacks =
         0.1f,
         "PDV_MGEF_Nord_Shor_T3_AvoidDeath",
         "PDV_SPEL_Nord_Shor_T3_AvoidDeathHeal",
-        10000.0f),
-    new("PDV_Bless_Orc_LegionExile_T3", "PDV.Capstone.Orc.LegionHoldLine", 85.0f),
-    new("PDV_Bless_Redguard_Tuwhacca_T3", "PDV.Capstone.Redguard.TuwhaccaSave", 90.0f),
+        10000.0f,
+        NotificationText: "Shor pulls you back from the edge.",
+        PrismaTitle: "Shor's Last Stand",
+        PrismaText: "Shor pulls you back from the edge.",
+        PrismaSymbol: "shor",
+        ScriptEffectName: "Shor Remembers",
+        ScriptEffectDescription: "Shor pulls you back from the edge.",
+        HealSpellName: "Shor's Last Stand",
+        HealSpellDescription: "Shor pulls you back from the edge."),
+    new(
+        "PDV_Bless_Orc_LegionExile_T3",
+        "PDV.Capstone.Orc.LegionHoldLine",
+        85.0f,
+        NotificationText: "The line holds. You stay standing.",
+        PrismaTitle: "The Line Holds",
+        PrismaText: "The line holds. You stay standing.",
+        PrismaSymbol: "malacath"),
+    new(
+        "PDV_Bless_Redguard_Tuwhacca_T3",
+        "PDV.Capstone.Redguard.TuwhaccaSave",
+        90.0f,
+        NotificationText: "Tu'whacca turns you back from the Far Shores.",
+        PrismaTitle: "Tu'whacca's Ward",
+        PrismaText: "Tu'whacca turns you back from the Far Shores.",
+        PrismaSymbol: "tuwhacca"),
     new(
         "PDV_Bless_Khajiit_BaanDar_T3",
         "PDV.Capstone.Khajiit.BaanDarSlip",
@@ -149,8 +185,23 @@ CapstoneFallback[] capstoneFallbacks =
         0.1f,
         "PDV_MGEF_Khajiit_BaanDar_T3_AvoidDeath",
         "PDV_SPEL_Khajiit_BaanDar_T3_AvoidDeathHeal",
-        10000.0f),
-    new("PDV_Bless_Bosmer_BanditRoad_T3", "PDV.Capstone.Bosmer.BaanDarSlip", 75.0f)
+        10000.0f,
+        NotificationText: "Baan Dar slips you out of death's hand.",
+        PrismaTitle: "Baan Dar's Luck",
+        PrismaText: "Baan Dar slips you out of death's hand.",
+        PrismaSymbol: "baandar",
+        ScriptEffectName: "Baan Dar Remembers",
+        ScriptEffectDescription: "Baan Dar slips you out of death's hand.",
+        HealSpellName: "Baan Dar's Luck",
+        HealSpellDescription: "Baan Dar slips you out of death's hand."),
+    new(
+        "PDV_Bless_Bosmer_BanditRoad_T3",
+        "PDV.Capstone.Bosmer.BaanDarSlip",
+        75.0f,
+        NotificationText: "Baan Dar's road bends away from death.",
+        PrismaTitle: "The Road Bends",
+        PrismaText: "Baan Dar's road bends away from death.",
+        PrismaSymbol: "baandar")
 ];
 
 var dryRun = args.Contains("--dry-run");
@@ -2072,6 +2123,11 @@ static void WireCapstoneFallbacks(
         WireMagicEffectScript(effect, "PDV_T3DailyLowHealthSaveEffect", new ScriptProperty[]
         {
             StringProp("StorageKey", capstone.StorageKey),
+            StringProp("NotificationText", capstone.NotificationText),
+            StringProp("PrismaTitle", capstone.PrismaTitle),
+            StringProp("PrismaText", capstone.PrismaBodyText),
+            StringProp("PrismaSymbol", capstone.PrismaSymbol),
+            StringProp("PrismaTone", capstone.PrismaTone),
             FloatProp("TriggerHealthPercent", capstone.TriggerHealthPercent),
             FloatProp("HealAmount", capstone.HealAmount),
             FloatProp("WatchIntervalSeconds", capstone.WatchIntervalSeconds),
@@ -2119,8 +2175,8 @@ static Spell EnsureCapstoneHealSpell(
     var spell = EnsureSpellRecord(mod, index, allocator, capstone.HealSpellEditorId!);
     spell.EditorID = capstone.HealSpellEditorId;
     spell.FormVersion = 44;
-    spell.Name = Tx("Baan Dar's Luck");
-    spell.Description = Tx("Baan Dar turns the blow aside and pulls you back from the edge.");
+    spell.Name = Tx(capstone.HealSpellName);
+    spell.Description = Tx(capstone.HealSpellDescription);
     spell.BaseCost = 0;
     spell.Type = SpellType.Spell;
     spell.CastType = CastType.FireAndForget;
@@ -2151,8 +2207,8 @@ static MagicEffect EnsureCapstoneScriptEffect(
     var effect = EnsureMagicEffectRecord(mod, index, allocator, capstone.ScriptEffectEditorId!);
     effect.EditorID = capstone.ScriptEffectEditorId;
     effect.FormVersion = 44;
-    effect.Name = Tx("Baan Dar Remembers");
-    effect.Description = Tx("");
+    effect.Name = Tx(capstone.ScriptEffectName);
+    effect.Description = Tx(capstone.ScriptEffectDescription);
     effect.Flags = MagicEffect.Flag.Recover
         | MagicEffect.Flag.NoDuration
         | MagicEffect.Flag.NoArea
@@ -2173,6 +2229,11 @@ static MagicEffect EnsureCapstoneScriptEffect(
     WireMagicEffectScript(effect, "PDV_T3DailyLowHealthSaveEffect", new ScriptProperty[]
     {
         StringProp("StorageKey", capstone.StorageKey),
+        StringProp("NotificationText", capstone.NotificationText),
+        StringProp("PrismaTitle", capstone.PrismaTitle),
+        StringProp("PrismaText", capstone.PrismaBodyText),
+        StringProp("PrismaSymbol", capstone.PrismaSymbol),
+        StringProp("PrismaTone", capstone.PrismaTone),
         FloatProp("TriggerHealthPercent", capstone.TriggerHealthPercent),
         FloatProp("HealAmount", capstone.HealAmount),
         FloatProp("WatchIntervalSeconds", capstone.WatchIntervalSeconds),
@@ -2250,6 +2311,7 @@ static void CheckCapstoneFallbacks(
             report.Errors.Add($"{effect.EditorID} StorageKey is not {capstone.StorageKey}.");
         }
 
+        CheckCapstoneMessageProperties(props, capstone, effect.EditorID ?? "(missing editorid)", report);
         CheckFloatProperty(props, "TriggerHealthPercent", capstone.TriggerHealthPercent, effect.EditorID ?? "(missing editorid)", report);
         CheckFloatProperty(props, "HealAmount", capstone.HealAmount, effect.EditorID ?? "(missing editorid)", report);
         CheckFloatProperty(props, "WatchIntervalSeconds", capstone.WatchIntervalSeconds, effect.EditorID ?? "(missing editorid)", report);
@@ -2339,6 +2401,7 @@ static void CheckDedicatedCapstoneFallback(
         report.Errors.Add($"{scriptEffect.EditorID} StorageKey is not {capstone.StorageKey}.");
     }
 
+    CheckCapstoneMessageProperties(props, capstone, scriptEffect.EditorID ?? "(missing editorid)", report);
     CheckFloatProperty(props, "TriggerHealthPercent", capstone.TriggerHealthPercent, scriptEffect.EditorID ?? "(missing editorid)", report);
     CheckFloatProperty(props, "HealAmount", capstone.HealAmount, scriptEffect.EditorID ?? "(missing editorid)", report);
     CheckFloatProperty(props, "WatchIntervalSeconds", capstone.WatchIntervalSeconds, scriptEffect.EditorID ?? "(missing editorid)", report);
@@ -2357,6 +2420,34 @@ static void CheckFloatProperty(
     if (!props.TryGetValue(propertyName, out var property)
         || property is not ScriptFloatProperty floatProperty
         || Math.Abs(floatProperty.Data - expectedValue) > 0.0001f)
+    {
+        report.Errors.Add($"{effectEditorId} {propertyName} is not {expectedValue}.");
+    }
+}
+
+static void CheckCapstoneMessageProperties(
+    Dictionary<string, ScriptProperty> props,
+    CapstoneFallback capstone,
+    string effectEditorId,
+    AuthorReport report)
+{
+    CheckStringProperty(props, "NotificationText", capstone.NotificationText, effectEditorId, report);
+    CheckStringProperty(props, "PrismaTitle", capstone.PrismaTitle, effectEditorId, report);
+    CheckStringProperty(props, "PrismaText", capstone.PrismaBodyText, effectEditorId, report);
+    CheckStringProperty(props, "PrismaSymbol", capstone.PrismaSymbol, effectEditorId, report);
+    CheckStringProperty(props, "PrismaTone", capstone.PrismaTone, effectEditorId, report);
+}
+
+static void CheckStringProperty(
+    Dictionary<string, ScriptProperty> props,
+    string propertyName,
+    string expectedValue,
+    string effectEditorId,
+    AuthorReport report)
+{
+    if (!props.TryGetValue(propertyName, out var property)
+        || property is not ScriptStringProperty stringProperty
+        || !string.Equals(stringProperty.Data, expectedValue, StringComparison.Ordinal))
     {
         report.Errors.Add($"{effectEditorId} {propertyName} is not {expectedValue}.");
     }
@@ -2784,11 +2875,22 @@ sealed record CapstoneFallback(
     float WatchIntervalSeconds = 2.0f,
     string? ScriptEffectEditorId = null,
     string? HealSpellEditorId = null,
-    float HealMagnitude = 0.0f)
+    float HealMagnitude = 0.0f,
+    string NotificationText = "Devotion pulls you back from the edge.",
+    string PrismaTitle = "Devotion",
+    string PrismaText = "",
+    string PrismaSymbol = "journal",
+    string PrismaTone = "good",
+    string ScriptEffectName = "Devotion Remembers",
+    string ScriptEffectDescription = "",
+    string HealSpellName = "Devotion's Mercy",
+    string HealSpellDescription = "Devotion pulls you back from the edge.")
 {
     public bool UsesDedicatedScriptEffect =>
         !string.IsNullOrWhiteSpace(ScriptEffectEditorId)
         && !string.IsNullOrWhiteSpace(HealSpellEditorId);
+
+    public string PrismaBodyText => string.IsNullOrWhiteSpace(PrismaText) ? NotificationText : PrismaText;
 }
 
 sealed record GenericFaucetEntry(FormKey FormKey, string EditorId);

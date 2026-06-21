@@ -11,6 +11,12 @@ Float Property HealAmount = 0.0 Auto ; <= 0 restores to current max health.
 Float Property WatchIntervalSeconds = 0.1 Auto ; Retained for old VMAD compatibility; OnHit drives the save.
 Spell Property HealSpell Auto ; Optional vanilla-style heal spell. Falls back to RestoreActorValue when unset.
 GlobalVariable Property PDV_GLO_DebugLevel Auto
+String Property NotificationText = "Devotion pulls you back from the edge." Auto
+String Property PrismaTitle = "Devotion" Auto
+String Property PrismaText = "" Auto
+String Property PrismaSymbol = "journal" Auto
+String Property PrismaTone = "good" Auto
+Bool Property SendPrismaToast = true Auto
 
 Actor watchedActor
 Bool watching = false
@@ -65,6 +71,7 @@ Function TryApplyDailySave(String triggerReason)
     if HealSpell != None
         HealSpell.Cast(watchedActor)
         StorageUtil.SetIntValue(watchedActor, StorageKey, currentDay)
+        ShowCapstoneNotice(triggerReason)
         Trace(1, "T3 daily low-health save fired key=" + StorageKey + " trigger=" + triggerReason + " day=" + currentDay + " restore=healSpell")
         return
     endIf
@@ -87,7 +94,66 @@ Function TryApplyDailySave(String triggerReason)
 
     watchedActor.RestoreActorValue("Health", restoreAmount)
     StorageUtil.SetIntValue(watchedActor, StorageKey, currentDay)
+    ShowCapstoneNotice(triggerReason)
     Trace(1, "T3 daily low-health save fired key=" + StorageKey + " trigger=" + triggerReason + " day=" + currentDay + " current=" + currentHealth + " percent=" + healthPercent + " restore=" + restoreAmount)
+EndFunction
+
+Function ShowCapstoneNotice(String triggerReason)
+    String noticeText = NotificationText
+    if noticeText == ""
+        noticeText = "Devotion pulls you back from the edge."
+    endIf
+
+    Debug.Notification(noticeText)
+
+    if SendPrismaToast && PDV_PrismaBridge.IsAvailable()
+        String titleText = PrismaTitle
+        if titleText == ""
+            titleText = "Devotion"
+        endIf
+
+        String messageText = PrismaText
+        if messageText == ""
+            messageText = noticeText
+        endIf
+
+        String symbolName = PrismaSymbol
+        if symbolName == ""
+            symbolName = "journal"
+        endIf
+
+        String toneName = PrismaTone
+        if toneName == ""
+            toneName = "good"
+        endIf
+
+        String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(toneName) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\"}}"
+        Bool sent = PDV_PrismaBridge.SendOverlayJson(payload)
+        if !sent
+            Trace(2, "Prisma capstone toast failed key=" + StorageKey + " trigger=" + triggerReason)
+        endIf
+    endIf
+EndFunction
+
+String Function JsonSafeString(String rawText)
+    if rawText == ""
+        return ""
+    endIf
+
+    String safeText = ""
+    Int i = 0
+    Int count = StringUtil.GetLength(rawText)
+    while i < count
+        String currentChar = StringUtil.GetNthChar(rawText, i)
+        if currentChar == "\"" || currentChar == "\\"
+            safeText = safeText + "'"
+        else
+            safeText = safeText + currentChar
+        endIf
+        i += 1
+    endWhile
+
+    return safeText
 EndFunction
 
 Function Trace(Int level, String traceText)

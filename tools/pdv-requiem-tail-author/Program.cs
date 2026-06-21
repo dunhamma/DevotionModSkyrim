@@ -317,6 +317,11 @@ static MagicEffect EnsureCapstoneScriptEffect(
     WireMagicEffectScript(effect, "PDV_T3DailyLowHealthSaveEffect", new ScriptProperty[]
     {
         StringProp("StorageKey", capstone.StorageKey),
+        StringProp("NotificationText", capstone.NotificationText),
+        StringProp("PrismaTitle", capstone.PrismaTitle),
+        StringProp("PrismaText", capstone.PrismaText),
+        StringProp("PrismaSymbol", capstone.PrismaSymbol),
+        StringProp("PrismaTone", capstone.PrismaTone),
         FloatProp("TriggerHealthPercent", capstone.TriggerHealthPercent),
         FloatProp("HealAmount", capstone.HealAmount),
         FloatProp("WatchIntervalSeconds", capstone.WatchIntervalSeconds),
@@ -430,6 +435,11 @@ static void CheckCapstones(
             .Where(prop => !string.IsNullOrWhiteSpace(prop.Name))
             .ToDictionary(prop => prop.Name!, StringComparer.OrdinalIgnoreCase);
         CheckStringProperty(props, "StorageKey", capstone.StorageKey, scriptEffect.EditorID ?? "(missing editorid)", report);
+        CheckStringProperty(props, "NotificationText", capstone.NotificationText, scriptEffect.EditorID ?? "(missing editorid)", report);
+        CheckStringProperty(props, "PrismaTitle", capstone.PrismaTitle, scriptEffect.EditorID ?? "(missing editorid)", report);
+        CheckStringProperty(props, "PrismaText", capstone.PrismaText, scriptEffect.EditorID ?? "(missing editorid)", report);
+        CheckStringProperty(props, "PrismaSymbol", capstone.PrismaSymbol, scriptEffect.EditorID ?? "(missing editorid)", report);
+        CheckStringProperty(props, "PrismaTone", capstone.PrismaTone, scriptEffect.EditorID ?? "(missing editorid)", report);
         CheckFloatProperty(props, "TriggerHealthPercent", capstone.TriggerHealthPercent, scriptEffect.EditorID ?? "(missing editorid)", report);
         CheckFloatProperty(props, "HealAmount", capstone.HealAmount, scriptEffect.EditorID ?? "(missing editorid)", report);
         CheckFloatProperty(props, "WatchIntervalSeconds", capstone.WatchIntervalSeconds, scriptEffect.EditorID ?? "(missing editorid)", report);
@@ -999,6 +1009,11 @@ sealed record CapstoneConfig(
     public float TriggerHealthPercent { get; } = 0.20f;
     public float WatchIntervalSeconds { get; } = 0.1f;
     public float HealMagnitude { get; } = 10000.0f;
+    public string NotificationText => ScriptEffectDescription;
+    public string PrismaTitle => HealSpellName;
+    public string PrismaText => ScriptEffectDescription;
+    public string PrismaSymbol => RewardSpellEditorId.Contains("Shor", StringComparison.OrdinalIgnoreCase) ? "shor" : "journal";
+    public string PrismaTone { get; } = "good";
 }
 
 sealed record BossEntry(FormKey FormKey, string Label);

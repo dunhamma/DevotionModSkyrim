@@ -1526,8 +1526,13 @@ static Spell BuildSpell(
     spell.ChargeTime = 0.0f;
     spell.CastDuration = 0.0f;
     spell.Range = 0.0f;
-    var preservedEffects = preserveAdditionalEffects && spell.Effects.Count > built.Count
-        ? spell.Effects.Skip(built.Count).ToList()
+    var builtEffectKeys = built
+        .Select(item => item.Record.FormKey)
+        .ToHashSet();
+    var preservedEffects = preserveAdditionalEffects
+        ? spell.Effects
+            .Where(effect => !effect.BaseEffect.FormKeyNullable.HasValue || !builtEffectKeys.Contains(effect.BaseEffect.FormKeyNullable.Value))
+            .ToList()
         : new List<Effect>();
     spell.Effects.Clear();
     foreach (var (effect, record) in built)
@@ -1618,7 +1623,10 @@ static MagicEffect EnsureMgef(
 
 static bool UsesPeakValueModifier(ActorValue actorValue)
 {
-    return actorValue == ActorValue.HealRate
+    return actorValue == ActorValue.Health
+        || actorValue == ActorValue.Magicka
+        || actorValue == ActorValue.Stamina
+        || actorValue == ActorValue.HealRate
         || actorValue == ActorValue.MagickaRate
         || actorValue == ActorValue.StaminaRate
         || actorValue == ActorValue.HealRateMult
