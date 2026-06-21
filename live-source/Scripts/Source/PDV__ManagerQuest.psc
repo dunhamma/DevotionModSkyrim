@@ -3758,15 +3758,13 @@ Function TryOrcCodeHolds(Actor playerRef)
         return
     endIf
 
-    ; The Code Holds is a near-death survival pulse. Its HealRate MGEF is swallowed
-    ; under Requiem (rate-mult on a ~0 base), so the actual health save is a flat
-    ; RestoreActorValue -- mirroring the stamina half that already lands. Requiem-proof.
+    ; The Code Holds is a near-death survival pulse. Its old HealRate spell is not
+    ; cast because Requiem swallows rate-mult healing on a near-zero base; the
+    ; actual health save is a flat RestoreActorValue. Requiem-proof.
     if malacathTier >= TIER_DEVOTED && PDV_SPEL_OrcCodeHolds_Devoted
-        PDV_SPEL_OrcCodeHolds_Devoted.Cast(playerRef, playerRef)
         playerRef.RestoreActorValue("Stamina", 30.0)
         playerRef.RestoreActorValue("Health", 60.0)
     elseIf PDV_SPEL_OrcCodeHolds
-        PDV_SPEL_OrcCodeHolds.Cast(playerRef, playerRef)
         playerRef.RestoreActorValue("Health", 40.0)
     endIf
 
@@ -3913,26 +3911,25 @@ Function HandleBosmerPactPositiveSignal(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerPactPositive")
-    if multiplier <= 0.0
-        return
-    endIf
 
     PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_OLD_CONTRACT, reason)
     if IsBosmerPactBound()
         AdjustBosmerGreenPactCompliance(5, reason)
-        if PDV_Yffre
+        if PDV_Yffre && multiplier > 0.0
             AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_POSITIVE, None, multiplier)
         endIf
         return
     endIf
 
-    Int currentPath = PDV_BosmerPathTrack.GetCurrentState()
-    if currentPath == BOSMER_PATH_LIVING_STORY && PDV_Yffre
-        AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
-    elseIf currentPath == BOSMER_PATH_EXCHANGE && PDV_Zen
-        AwardCuratedSignalScaled(PDV_Zen, PDV_Zen.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
-    elseIf currentPath == BOSMER_PATH_BANDIT_ROAD && PDV_BaanDar
-        AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
+    if multiplier > 0.0
+        Int currentPath = PDV_BosmerPathTrack.GetCurrentState()
+        if currentPath == BOSMER_PATH_LIVING_STORY && PDV_Yffre
+            AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
+        elseIf currentPath == BOSMER_PATH_EXCHANGE && PDV_Zen
+            AwardCuratedSignalScaled(PDV_Zen, PDV_Zen.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
+        elseIf currentPath == BOSMER_PATH_BANDIT_ROAD && PDV_BaanDar
+            AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
+        endIf
     endIf
 EndFunction
 
@@ -6054,13 +6051,12 @@ Function HandleAltmerDawnSteadiness(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerDawnSteadiness")
-    if multiplier <= 0.0
-        return
-    endIf
 
     RecordAltmerSourceFavor(FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
     TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
-    AwardAltmerDawnSignal(reason, multiplier)
+    if multiplier > 0.0
+        AwardAltmerDawnSignal(reason, multiplier)
+    endIf
     if reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
         ShowP2BookNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
     elseIf reason == "eventbus_p2_altmer_magnus_po3_book_altmer_magnus"
@@ -6080,13 +6076,12 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerOrthodoxCostlyEnforcement")
-    if multiplier <= 0.0
-        return
-    endIf
 
     RecordAltmerSourceFavor(FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
     TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
-    AwardAltmerOrthodoxSignal(reason, multiplier)
+    if multiplier > 0.0
+        AwardAltmerOrthodoxSignal(reason, multiplier)
+    endIf
     ShowP2BookNotice(reason, "The scribe Xarxes", "The old orthodoxy asks more of you.")
 EndFunction
 
@@ -12602,9 +12597,6 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.NordRouteFamily." + routeFamily)
-    if multiplier <= 0.0
-        return False
-    endIf
 
     Int laneValue = GetNordFavorLaneForRouteFamily(routeFamily)
     Int favorFamily = GetNordFavorFamilyForRouteFamily(routeFamily)
@@ -12615,7 +12607,9 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
     StorageUtil.SetIntValue(None, countKey, StorageUtil.GetIntValue(None, countKey) + 1)
     StorageUtil.SetStringValue(None, lastReasonKey, reason)
     StorageUtil.SetFloatValue(None, lastTimeKey, Utility.GetCurrentGameTime())
-    AwardNordRouteFamilySignal(routeFamily, multiplier)
+    if multiplier > 0.0
+        AwardNordRouteFamilySignal(routeFamily, multiplier)
+    endIf
     Trace(2, traceLabel + " routed: " + reason)
     return True
 EndFunction
