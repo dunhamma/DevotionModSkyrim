@@ -35,6 +35,9 @@ namespace
     // focused/paused on an empty view (an unrecoverable trap). Defer to OnDomReady.
     std::string g_pendingChoicePayload;
     bool g_choiceFocusPending = false;
+    // Main panel: same cold-view hazard -- defer the focus to OnDomReady so we never
+    // focus an empty, not-yet-interactive view (ESC/close cannot release that).
+    bool g_panelFocusPending = false;
     bool g_choicePause = false;
     bool g_domReady = false;
 
@@ -167,6 +170,14 @@ namespace
         if (!g_lastPayload.empty()) {
             SendLastPayload();
         }
+        // Deferred cold-view panel open: data is now rendered and the ESC/X close is
+        // bound, so focusing is safe and the player can dismiss the panel.
+        if (g_panelFocusPending && g_prisma && g_view && g_prisma->IsValid(g_view)) {
+            g_prisma->Show(g_view);
+            g_prisma->Focus(g_view, true, false);
+            logs::info("Prisma deferred panel focus (cold-view open)");
+            g_panelFocusPending = false;
+        }
         if (!g_pendingOverlayPayload.empty()) {
             SendOverlayPayload(g_pendingOverlayPayload);
             g_pendingOverlayPayload.clear();
@@ -232,13 +243,22 @@ namespace
         }
 
         g_prisma->Show(g_view);
-        g_prisma->Focus(g_view, true, false);
-        SendLastPayload();
+        if (g_domReady) {
+            g_prisma->Focus(g_view, true, false);
+            SendLastPayload();
+        } else {
+            // Cold view: focusing before OnDomReady traps the player on an empty,
+            // not-yet-interactive view (the same hazard guarded for the choice grid).
+            // Defer the focus -- OnDomReady re-sends g_lastPayload (rendering the panel
+            // and binding its ESC/X close) and then focuses cleanly.
+            g_panelFocusPending = true;
+        }
         return true;
     }
 
     bool ClosePanel()
     {
+        g_panelFocusPending = false;  // cancel any deferred cold-view focus
         if (!g_prisma || !g_view || !g_prisma->IsValid(g_view)) {
             return true;
         }
