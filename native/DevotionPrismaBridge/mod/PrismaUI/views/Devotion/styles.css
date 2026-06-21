@@ -874,6 +874,70 @@ h1 {
 .dash-driver.is-loss .dash-driver__mark { color: var(--red); }
 .dash-driver__label { color: #d8cdb6; }
 
+/* --- Book of Days: Ledger page ("what feeds your gods", parchment-themed) --- */
+#pdv-journal-feedback .bod-scroll {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.bod-feed {
+  border-left: 3px solid #9c8a62;
+  padding: 4px 0 8px 12px;
+}
+
+.bod-feed.v-good { border-left-color: #3f6b3a; }
+.bod-feed.v-warning { border-left-color: #9a2f2a; }
+
+.bod-feed__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bod-feed__symbol { width: 22px; height: 22px; color: #826336; flex: none; }
+.bod-feed__name { font-size: 18px; color: #2a1f12; }
+
+.bod-feed__state {
+  margin-left: auto;
+  font-variant: small-caps;
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color: #6b5942;
+}
+
+.bod-feed.v-good .bod-feed__state { color: #3f6b3a; }
+.bod-feed.v-warning .bod-feed__state { color: #9a2f2a; }
+
+.bod-feed__drivers {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0 0 0 32px;
+  display: grid;
+  gap: 2px;
+}
+
+.bod-feed__driver {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 15px;
+  color: #4a3a28;
+}
+
+.bod-feed__driver.is-empty { font-style: italic; color: #6b5942; }
+
+.bod-feed__mark {
+  font-weight: 700;
+  width: 12px;
+  flex: none;
+  text-align: center;
+}
+
+.bod-feed__driver.is-gain .bod-feed__mark { color: #3f6b3a; }
+.bod-feed__driver.is-loss .bod-feed__mark { color: #9a2f2a; }
+
 .today-stat {
   border: 1px solid var(--line);
   border-radius: 8px;
