@@ -5111,7 +5111,7 @@ Function HandleRedguardCrownTombRespect(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardCrownTombRespect")
     RecordRedguardSectSignal(REDGUARD_SECT_CROWN, multiplier, reason)
-    AwardRedguardCrownSignal()
+    AwardRedguardCrownSignal(multiplier)
     Trace(2, "Redguard Crown tomb respect routed with multiplier " + multiplier)
 EndFunction
 
@@ -5122,7 +5122,7 @@ Function HandleRedguardForebearRoadPassage(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardForebearRoad")
     RecordRedguardSectSignal(REDGUARD_SECT_FOREBEAR, multiplier, reason)
-    AwardRedguardForebearSignal()
+    AwardRedguardForebearSignal(multiplier)
     Trace(2, "Redguard Forebear road passage routed with multiplier " + multiplier)
 EndFunction
 
@@ -5133,7 +5133,7 @@ Function HandleRedguardAshAbahDeathDuty(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAshAbahDeathDuty")
     RecordRedguardSectSignal(REDGUARD_SECT_ASHABAH, multiplier, reason)
-    ApplyRedguardAshAbahDutyRewards(reason)
+    ApplyRedguardAshAbahDutyRewards(reason, multiplier)
     Trace(2, "Redguard AshAbah death duty routed with multiplier " + multiplier)
 EndFunction
 
@@ -5188,7 +5188,7 @@ Function HandleRedguardAshAbahMajorBurden(Form victimForm, Int eventType)
     endIf
 
     RecordRedguardSectSignal(REDGUARD_SECT_ASHABAH, multiplier, burdenReason)
-    ApplyRedguardAshAbahDutyRewards(burdenReason)
+    ApplyRedguardAshAbahDutyRewards(burdenReason, multiplier)
     Trace(2, "Redguard Ash'abah major burden fired: " + burdenReason + " marks sect entry (eventType=" + eventType + ").")
 EndFunction
 
@@ -5244,7 +5244,7 @@ Function HandleRedguardAshAbahUndeadSiteClear(Location clearedLocation)
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAshAbahUndeadSiteClear")
     String burdenReason = "redguard_ashabah_burden_undead_site_clear"
     RecordRedguardSectSignal(REDGUARD_SECT_ASHABAH, multiplier, burdenReason)
-    ApplyRedguardAshAbahDutyRewards(burdenReason)
+    ApplyRedguardAshAbahDutyRewards(burdenReason, multiplier)
     Trace(2, "Redguard Ash'abah undead-site clear fired for location " + clearedLocation.GetFormID() + " multiplier=" + multiplier)
 EndFunction
 
@@ -5267,8 +5267,8 @@ EndFunction
 ; Shared Ash'abah death-duty rewards (Tu'whacca death-rite signal + flat heal + social
 ; stigma), fired by both the routine duty and the marked major burden so the two paths
 ; cannot drift.
-Function ApplyRedguardAshAbahDutyRewards(String reason)
-    AwardRedguardAshAbahSignal()
+Function ApplyRedguardAshAbahDutyRewards(String reason, Float multiplier)
+    AwardRedguardAshAbahSignal(multiplier)
     TryRedguardTuwhaccaDeathRiteHeal(reason)
     MarkRedguardAshAbahStigma(reason)
 EndFunction
@@ -5354,7 +5354,7 @@ Function HandleRedguardFarShoresToken(String reason)
     StorageUtil.AdjustFloatValue(None, "PDV.Redguard.FarShoresToken", multiplier)
     StorageUtil.SetStringValue(None, "PDV.Redguard.LastSectReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Redguard.LastSectSignalTime", Utility.GetCurrentGameTime())
-    AwardRedguardFarShoresSignal()
+    AwardRedguardFarShoresSignal(multiplier)
     TryRedguardTuwhaccaDeathRiteHeal(reason)
     ShowRedguardNotification(PDV_Notif_Redguard_FarShoresToken_Activate, "You tend the Far Shores token and speak to Tu'whacca.")
     Trace(2, "Redguard Far Shores token routed with multiplier " + multiplier)
@@ -5432,20 +5432,20 @@ Bool Function IsRedguardAshAbahBurden(String reason)
     return StringContainsToken(reason, "redguard_deathduty_major") || StringContainsToken(reason, "redguard_ashabah_burden")
 EndFunction
 
-Function AwardRedguardCrownSignal()
+Function AwardRedguardCrownSignal(Float multiplier)
     if PDV_Tuwhacca
-        AwardCuratedSignal(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_CROWN_FORM, None)
+        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_CROWN_FORM, None, multiplier)
     endIf
 EndFunction
 
-Function AwardRedguardForebearSignal()
+Function AwardRedguardForebearSignal(Float multiplier)
     ; Road-passage is the Forebear lane's own beat: the Forebear sect substrate credit
     ; is recorded by the caller (RecordRedguardSectSignal). HoonDing's make-way no
     ; longer rides road-passage -- it now fires on curated BREAKTHROUGH kills
     ; (HandleHoonDingBreakthroughKill), so the old blunt weekly cap is retired. Leki's
     ; sword-singing remains the focused-patron beat on the road.
     if _activeDeity == PDV_Leki && PDV_Leki
-        AwardCuratedSignal(PDV_Leki, PDV_Leki.SIGNAL_SWORD_SINGING, None)
+        AwardCuratedSignalScaled(PDV_Leki, PDV_Leki.SIGNAL_SWORD_SINGING, None, multiplier)
     endIf
 EndFunction
 
@@ -5500,15 +5500,15 @@ Function HandleHoonDingBreakthroughKill(Form victimForm, Int eventType)
     Trace(2, "HoonDing make-way fired: breakthrough " + traceLabel + " kill multiplier=" + multiplier)
 EndFunction
 
-Function AwardRedguardAshAbahSignal()
+Function AwardRedguardAshAbahSignal(Float multiplier)
     if PDV_Tuwhacca
-        AwardCuratedSignal(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, None)
+        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, None, multiplier)
     endIf
 EndFunction
 
-Function AwardRedguardFarShoresSignal()
+Function AwardRedguardFarShoresSignal(Float multiplier)
     if PDV_Tuwhacca
-        AwardCuratedSignal(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_FAR_SHORES_TOKEN, None)
+        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_FAR_SHORES_TOKEN, None, multiplier)
     endIf
 EndFunction
 
