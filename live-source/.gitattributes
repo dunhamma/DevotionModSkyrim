@@ -1,0 +1,4 @@
+# Live Papyrus source mirror — keep LF to match the live deploy dir exactly,
+# so re-copies from D:\...\Devotion\Scripts\Source produce faithful diffs
+# (no spurious CRLF churn) for per-handback tracking.
+*.psc text eol=lf
