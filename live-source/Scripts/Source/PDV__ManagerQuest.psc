@@ -3860,9 +3860,14 @@ Function HandleBosmerLivingStorySignal(String reason)
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerLivingStory")
+    if multiplier <= 0.0
+        return
+    endIf
+
     PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_LIVING_STORY, reason)
     if PDV_BosmerPathTrack.GetCurrentState() == BOSMER_PATH_LIVING_STORY && PDV_Yffre
-        AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None)
+        AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None, multiplier)
     endIf
 EndFunction
 
@@ -3871,9 +3876,14 @@ Function HandleBosmerExchangeSignal(String reason)
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerExchange")
+    if multiplier <= 0.0
+        return
+    endIf
+
     PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_EXCHANGE, reason)
     if PDV_BosmerPathTrack.GetCurrentState() == BOSMER_PATH_EXCHANGE && PDV_Zen
-        AwardCuratedSignal(PDV_Zen, PDV_Zen.SIGNAL_EXCHANGE, None)
+        AwardCuratedSignalScaled(PDV_Zen, PDV_Zen.SIGNAL_EXCHANGE, None, multiplier)
     endIf
 
     TryBosmerScalesAtRest(Game.GetPlayer())
@@ -3884,9 +3894,14 @@ Function HandleBosmerBanditRoadSignal(String reason)
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerBanditRoad")
+    if multiplier <= 0.0
+        return
+    endIf
+
     PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_BANDIT_ROAD, reason)
     if PDV_BosmerPathTrack.GetCurrentState() == BOSMER_PATH_BANDIT_ROAD && PDV_BaanDar
-        AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None)
+        AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
     endIf
 EndFunction
 
@@ -3895,22 +3910,27 @@ Function HandleBosmerPactPositiveSignal(String reason)
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerPactPositive")
+    if multiplier <= 0.0
+        return
+    endIf
+
     PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_OLD_CONTRACT, reason)
     if IsBosmerPactBound()
         AdjustBosmerGreenPactCompliance(5, reason)
         if PDV_Yffre
-            AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_POSITIVE, None)
+            AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_POSITIVE, None, multiplier)
         endIf
         return
     endIf
 
     Int currentPath = PDV_BosmerPathTrack.GetCurrentState()
     if currentPath == BOSMER_PATH_LIVING_STORY && PDV_Yffre
-        AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY, None)
+        AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
     elseIf currentPath == BOSMER_PATH_EXCHANGE && PDV_Zen
-        AwardCuratedSignal(PDV_Zen, PDV_Zen.SIGNAL_SHARED_PACT_MEMORY, None)
+        AwardCuratedSignalScaled(PDV_Zen, PDV_Zen.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
     elseIf currentPath == BOSMER_PATH_BANDIT_ROAD && PDV_BaanDar
-        AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY, None)
+        AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
     endIf
 EndFunction
 
@@ -5789,8 +5809,9 @@ Function MaybeEmitHircineStigmaPrice(Float stigmaBefore, Float stigmaAfter)
 EndFunction
 
 Function HandleTalosShrineDefiance(String reason)
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.TalosShrineDefiance")
     if PDV_Talos
-        AwardCuratedSignal(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None)
+        AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
     else
         Trace(1, "Talos shrine defiance skipped: PDV_Talos missing.")
     endIf
@@ -6030,9 +6051,14 @@ Function HandleAltmerDawnSteadiness(String reason)
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerDawnSteadiness")
+    if multiplier <= 0.0
+        return
+    endIf
+
     RecordAltmerSourceFavor(FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
     TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
-    AwardAltmerDawnSignal(reason)
+    AwardAltmerDawnSignal(reason, multiplier)
     if reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
         ShowP2BookNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
     elseIf reason == "eventbus_p2_altmer_magnus_po3_book_altmer_magnus"
@@ -6051,31 +6077,36 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerOrthodoxCostlyEnforcement")
+    if multiplier <= 0.0
+        return
+    endIf
+
     RecordAltmerSourceFavor(FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
     TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
-    AwardAltmerOrthodoxSignal(reason)
+    AwardAltmerOrthodoxSignal(reason, multiplier)
     ShowP2BookNotice(reason, "The scribe Xarxes", "The old orthodoxy asks more of you.")
 EndFunction
 
-Function AwardAltmerDawnSignal(String reason)
+Function AwardAltmerDawnSignal(String reason, Float multiplier)
     if StringContainsToken(reason, "magnus") && PDV_Magnus
-        AwardCuratedSignal(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None)
+        AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
         return
     endIf
 
     if PDV_AuriEl
-        AwardCuratedSignal(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None)
+        AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, multiplier)
     endIf
 EndFunction
 
-Function AwardAltmerOrthodoxSignal(String reason)
+Function AwardAltmerOrthodoxSignal(String reason, Float multiplier)
     if StringContainsToken(reason, "xarxes") && PDV_Xarxes
-        AwardCuratedSignal(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None)
+        AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None, multiplier)
         return
     endIf
 
     if PDV_AuriEl
-        AwardCuratedSignal(PDV_AuriEl, PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION, None)
+        AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION, None, multiplier)
     endIf
 EndFunction
 
@@ -6253,6 +6284,12 @@ Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, Stri
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ShoutAttack")
+    if multiplier <= 0.0
+        Trace(2, "Shout attack decayed out for today; no piety award.")
+        return
+    endIf
+
     Int i = 0
     Int count = PDV_FLST_AllDeities.GetSize()
     Int scoredCount = 0
@@ -6262,7 +6299,7 @@ Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, Stri
         if deity
             Float delta = deity.ScoreAction(eventType, playerRef as Form, shoutUsed as Form)
             if delta != 0.0
-                AwardPiety(deity, delta, reason)
+                AwardPiety(deity, delta * multiplier, reason)
                 scoredCount += 1
             endIf
         endIf
@@ -12041,11 +12078,16 @@ Function HandleBretonKnightlyVow(String reason)
     endIf
 
     if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) == 0
+        Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonKnightlyVow")
+        if multiplier <= 0.0
+            return
+        endIf
+
         StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
         StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowCount", StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowCount") + 1)
         StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
         if PDV_Stendarr
-            AwardCuratedSignal(PDV_Stendarr, PDV_Stendarr.SIGNAL_MERCY, None)
+            AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_MERCY, None, multiplier)
         endIf
     else
         StorageUtil.SetIntValue(None, "PDV.Breton.CrossTraditionPressure", StorageUtil.GetIntValue(None, "PDV.Breton.CrossTraditionPressure") + 1)
@@ -12067,7 +12109,10 @@ Function HandleBretonHiddenArtExposure(String reason)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastHiddenArtReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
     if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) == BRETON_TRADITION_HIDDEN_ART && PDV_Julianos
-        AwardCuratedSignal(PDV_Julianos, PDV_Julianos.SIGNAL_LAWFUL_ORDER, None)
+        Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonHiddenArtExposure")
+        if multiplier > 0.0
+            AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_LAWFUL_ORDER, None, multiplier)
+        endIf
     endIf
     ShowP2BookNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))
     Trace(2, "Breton Hidden Art exposure routed: " + reason)
@@ -12110,7 +12155,10 @@ Function HandleBretonGreenWayStanding(String reason)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastGreenWayReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
     if IsBretonGreenWayForkEligible() && PDV_Kynareth
-        AwardCuratedSignal(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None)
+        Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonGreenWayStanding")
+        if multiplier > 0.0
+            AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None, multiplier)
+        endIf
     endIf
     Trace(2, "Breton Green Way standing routed: " + reason)
 EndFunction
@@ -12309,51 +12357,51 @@ String Function GetImperialCivicFamilyLabel(Int familyId)
     return "unknown"
 EndFunction
 
-Function AwardImperialCivicFamilySignal(Int familyId)
+Function AwardImperialCivicFamilySignal(Int familyId, Float multiplier)
     if familyId == IMPERIAL_CIVIC_PUBLIC_SERVICE
         if PDV_Akatosh
-            AwardCuratedSignal(PDV_Akatosh, PDV_Akatosh.SIGNAL_CIVIC_SERVICE, None)
+            AwardCuratedSignalScaled(PDV_Akatosh, PDV_Akatosh.SIGNAL_CIVIC_SERVICE, None, multiplier)
         endIf
     elseIf familyId == IMPERIAL_CIVIC_MERCY
         if PDV_Mara
-            AwardCuratedSignal(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None)
+            AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
         endIf
     elseIf familyId == IMPERIAL_CIVIC_LAWFUL_ORDER
         if PDV_Stendarr
-            AwardCuratedSignal(PDV_Stendarr, PDV_Stendarr.SIGNAL_LAWFUL_ORDER, None)
+            AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_LAWFUL_ORDER, None, multiplier)
         endIf
     elseIf familyId == IMPERIAL_CIVIC_HONEST_WORK
         if PDV_Zenithar
-            AwardCuratedSignal(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None)
+            AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
         endIf
     elseIf familyId == IMPERIAL_CIVIC_DEATH_DUTY
         if PDV_Arkay
-            AwardCuratedSignal(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None)
+            AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
         endIf
     endIf
 EndFunction
 
-Function AwardImperialPatronCivicSignal()
+Function AwardImperialPatronCivicSignal(Float multiplier)
     if !_activeDeity
         return
     endIf
 
     if _activeDeity == PDV_Akatosh && PDV_Akatosh
-        AwardCuratedSignal(PDV_Akatosh, PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR, None)
+        AwardCuratedSignalScaled(PDV_Akatosh, PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     elseIf _activeDeity == PDV_Mara && PDV_Mara
-        AwardCuratedSignal(PDV_Mara, PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR, None)
+        AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     elseIf _activeDeity == PDV_Arkay && PDV_Arkay
-        AwardCuratedSignal(PDV_Arkay, PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR, None)
+        AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     elseIf _activeDeity == PDV_Stendarr && PDV_Stendarr
-        AwardCuratedSignal(PDV_Stendarr, PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR, None)
+        AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     elseIf _activeDeity == PDV_Zenithar && PDV_Zenithar
-        AwardCuratedSignal(PDV_Zenithar, PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR, None)
+        AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     elseIf _activeDeity == PDV_Dibella && PDV_Dibella
-        AwardCuratedSignal(PDV_Dibella, PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, None)
+        AwardCuratedSignalScaled(PDV_Dibella, PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     elseIf _activeDeity == PDV_Julianos && PDV_Julianos
-        AwardCuratedSignal(PDV_Julianos, PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None)
+        AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     elseIf _activeDeity == PDV_Kynareth && PDV_Kynareth
-        AwardCuratedSignal(PDV_Kynareth, PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR, None)
+        AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     endIf
 EndFunction
 
@@ -12369,11 +12417,16 @@ Function HandleImperialCivicService(String reason)
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ImperialCivicService." + GetImperialCivicFamilyLabel(civicFamily))
+    if multiplier <= 0.0
+        return
+    endIf
+
     StorageUtil.SetIntValue(None, "PDV.Imperial.CivicServiceCount", StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicServiceReason", reason)
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicFamily", GetImperialCivicFamilyLabel(civicFamily))
     StorageUtil.SetFloatValue(None, "PDV.Imperial.LastCivicServiceTime", Utility.GetCurrentGameTime())
-    AwardImperialCivicFamilySignal(civicFamily)
+    AwardImperialCivicFamilySignal(civicFamily, multiplier)
     Trace(2, "Imperial civic service routed: " + reason + " family " + GetImperialCivicFamilyLabel(civicFamily))
 EndFunction
 
@@ -12383,15 +12436,25 @@ Function HandleImperialTalosPressure(Bool isPrivate, String reason)
         return
     endIf
 
+    String repeatKey = "PDV.Signal.ImperialPublicTalosPressure"
+    if isPrivate
+        repeatKey = "PDV.Signal.ImperialPrivateTalosPressure"
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier(repeatKey)
+    if multiplier <= 0.0
+        return
+    endIf
+
     if isPrivate
         StorageUtil.SetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount") + 1)
         if PDV_Talos
-            AwardCuratedSignal(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None)
+            AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
         endIf
     else
         StorageUtil.SetIntValue(None, "PDV.Imperial.PublicTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PublicTalosPressureCount") + 1)
         if PDV_Talos
-            AwardCuratedSignal(PDV_Talos, PDV_Talos.SIGNAL_DEFIANCE_MILESTONE, None)
+            AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_DEFIANCE_MILESTONE, None, multiplier)
         endIf
     endIf
 
@@ -12406,9 +12469,14 @@ Function HandleImperialPatronCivicFavor(String reason)
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ImperialPatronCivicFavor")
+    if multiplier <= 0.0
+        return
+    endIf
+
     StorageUtil.SetIntValue(None, "PDV.Imperial.PatronCivicFavorCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PatronCivicFavorCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastPatronCivicFavorReason", reason)
-    AwardImperialPatronCivicSignal()
+    AwardImperialPatronCivicSignal(multiplier)
     Trace(2, "Imperial patron civic favor routed: " + reason)
 EndFunction
 
@@ -12483,38 +12551,38 @@ Int Function GetNordFavorFamilyForRouteFamily(Int familyValue)
     return 0
 EndFunction
 
-Function AwardNordRouteFamilySignal(Int familyValue)
+Function AwardNordRouteFamilySignal(Int familyValue, Float multiplier)
     if familyValue == NORD_ROUTE_OLD_ORDEAL
         if PDV_Tsun
-            AwardCuratedSignal(PDV_Tsun, PDV_Tsun.SIGNAL_TRIAL_ENDURED, None)
+            AwardCuratedSignalScaled(PDV_Tsun, PDV_Tsun.SIGNAL_TRIAL_ENDURED, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_OLD_HEARTH
         if PDV_Stuhn
-            AwardCuratedSignal(PDV_Stuhn, PDV_Stuhn.SIGNAL_PROTECT_BOND, None)
+            AwardCuratedSignalScaled(PDV_Stuhn, PDV_Stuhn.SIGNAL_PROTECT_BOND, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_OLD_ANCESTOR
         if PDV_Shor
-            AwardCuratedSignal(PDV_Shor, PDV_Shor.SIGNAL_HONORED_DEAD, None)
+            AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_HONORED_DEAD, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_OLD_TALOS || familyValue == NORD_ROUTE_NINE_TALOS
         if PDV_Talos
-            AwardCuratedSignal(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None)
+            AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_NINE_ROAD
         if PDV_Kynareth
-            AwardCuratedSignal(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None)
+            AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_NINE_MERCY
         if PDV_Mara
-            AwardCuratedSignal(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None)
+            AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_NINE_DEATH
         if PDV_Arkay
-            AwardCuratedSignal(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None)
+            AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_NINE_WORK
         if PDV_Zenithar
-            AwardCuratedSignal(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None)
+            AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
         endIf
     endIf
 EndFunction
@@ -12531,6 +12599,11 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
         return False
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.NordRouteFamily." + routeFamily)
+    if multiplier <= 0.0
+        return False
+    endIf
+
     Int laneValue = GetNordFavorLaneForRouteFamily(routeFamily)
     Int favorFamily = GetNordFavorFamilyForRouteFamily(routeFamily)
     if laneValue != FAVOR_LANE_NONE && favorFamily > 0
@@ -12540,7 +12613,7 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
     StorageUtil.SetIntValue(None, countKey, StorageUtil.GetIntValue(None, countKey) + 1)
     StorageUtil.SetStringValue(None, lastReasonKey, reason)
     StorageUtil.SetFloatValue(None, lastTimeKey, Utility.GetCurrentGameTime())
-    AwardNordRouteFamilySignal(routeFamily)
+    AwardNordRouteFamilySignal(routeFamily, multiplier)
     Trace(2, traceLabel + " routed: " + reason)
     return True
 EndFunction
