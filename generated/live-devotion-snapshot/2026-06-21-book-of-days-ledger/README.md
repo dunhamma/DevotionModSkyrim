@@ -21,10 +21,13 @@ Adds since the 2026-06-21-book-of-days snapshot:
 - LIVE-REFRESH: AppendBookOfDaysEntry re-pushes the open book so new entries appear
   live without reopening.
 
+Capstone logging (added in this snapshot):
+- PDV_T3DailyLowHealthSaveEffect.ShowCapstoneNotice now appends a Book of Days entry
+  (tone substrate.act) when the low-health save fires. Written DIRECTLY to the global
+  journal ring (no manager reference / MGEF property wiring needed); manager prunes it
+  at dawn / next append. Does not live-refresh an open book (fires mid-combat).
+
 Deferred / next:
-- Capstone & headline-act logging: hook ShowCapstoneNotice (PDV_T3DailyLowHealthSaveEffect,
-  confirmed low-health-save) to append a Book of Days entry -- needs a manager reference
-  on the effect MGEF.
 - Interactive filtered dashboard in a focused panel (the Today-tab dashboard + filters
   exist in app.js but the panel has no open/close door yet).
 
