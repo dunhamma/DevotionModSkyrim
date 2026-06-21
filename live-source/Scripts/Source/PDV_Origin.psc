@@ -73,13 +73,15 @@ Function InitializeOrigin()
         return
     endIf
 
-    if PDV_GLO_OriginRace.GetValueInt() >= 0
-        Trace(2, "InitializeOrigin skipped: origin already set to " + PDV_GLO_OriginRace.GetValueInt())
-        return
-    endIf
-
     Actor playerActor = GetPlayerActor()
-    if !playerActor
+    if PDV_GLO_OriginRace.GetValueInt() >= 0
+        if playerActor && ShouldRetryOriginCapture()
+            Trace(1, "InitializeOrigin retrying: prior result was a custom-race fallback or a manual reset was requested.")
+        else
+            Trace(2, "InitializeOrigin skipped: origin already set to " + PDV_GLO_OriginRace.GetValueInt())
+            return
+        endIf
+    elseIf !playerActor
         Trace(1, "InitializeOrigin skipped: player unavailable.")
         return
     endIf
@@ -95,11 +97,24 @@ Function InitializeOrigin()
     endIf
 
     PDV_GLO_OriginRace.SetValue(raceIndex as Float)
+    StorageUtil.SetIntValue(None, "PDV.Origin.ForceRedetect", 0)
     ClearProvisionalNordCapture()
     Trace(1, "Origin race set to " + raceIndex)
 
     SeedProofSliceDeities(raceIndex)
     EnsureOriginInventoryTokens()
+EndFunction
+
+Bool Function ShouldRetryOriginCapture()
+    if StorageUtil.GetIntValue(None, "PDV.Origin.ForceRedetect", 0) == 1
+        return true
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.CustomRaceFallback", 0) == 1
+        return true
+    endIf
+
+    return false
 EndFunction
 
 Function EnsureOriginInventoryTokens()
@@ -382,7 +397,7 @@ Function SeedDeity(PDV_DeityBase deity, Float startPiety)
     StorageUtil.SetFloatValue(deityForm, "PDV.LastTierChange", 0.0)
 
     if PDV_Manager
-        PDV_Manager.RecomputeTier(deity)
+        PDV_Manager.RecomputeTier(deity, False)
     endIf
 
     Trace(1, deity.DeityName + " seeded to " + startPiety + " piety.")

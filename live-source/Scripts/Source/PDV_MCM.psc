@@ -129,7 +129,9 @@ Int _oidDecayRunProofDays = -1
 Int _oidShowDecaySummary = -1
 Int _oidCompatRaceMapping = -1
 Int _oidCompatSurvival = -1
+Int _oidReDetectOrigin = -1
 Int _oidJournalHotkey = -1
+Int _oidPanelHotkey = -1
 
 Int _oidKhajiitFocusBaanDar = -1
 Int _oidKhajiitFocusRajhin = -1
@@ -173,6 +175,10 @@ Function RegisterJournalHotkey()
     Int savedKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
     if savedKey >= 0
         RegisterForKey(savedKey)
+    endIf
+    Int savedPanelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
+    if savedPanelKey >= 0
+        RegisterForKey(savedPanelKey)
     endIf
 EndFunction
 
@@ -228,6 +234,8 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Writes a full devotion snapshot to a text file you can attach to a bug report. No log digging needed.")
     elseIf a_option == _oidCompatRaceMapping
         SetInfoText("Maps normal or vampire custom races to a vanilla devotion profile. Beast forms should use the temporary-race defer list.")
+    elseIf a_option == _oidReDetectOrigin
+        SetInfoText("Runs origin detection again for this save. Use after adding a custom-race map or fixing a fallback.")
     elseIf a_option == _oidCompatSurvival
         SetInfoText("Let an installed survival mod's hardship gently modulate devotion. It never creates piety alone.")
     elseIf a_option == _oidDeveloperOptions
@@ -436,6 +444,11 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidCompatRaceMapping
         ToggleCustomRaceMapping()
         ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidReDetectOrigin
+        ReDetectOrigin()
         return
     endIf
 
@@ -895,10 +908,39 @@ Function OnOptionKeyMapChange(Int a_option, Int a_keyCode, String a_conflictCont
             RegisterForKey(a_keyCode)
         endIf
         SetKeyMapOptionValue(_oidJournalHotkey, a_keyCode, False)
+    elseIf a_option == _oidPanelHotkey
+        Int oldPanelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
+        if oldPanelKey >= 0
+            UnregisterForKey(oldPanelKey)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Panel.Hotkey", a_keyCode)
+        if a_keyCode >= 0
+            RegisterForKey(a_keyCode)
+        endIf
+        SetKeyMapOptionValue(_oidPanelHotkey, a_keyCode, False)
     endIf
 EndFunction
 
 Event OnKeyDown(Int a_keyCode)
+    Int panelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
+    if panelKey >= 0 && a_keyCode == panelKey
+        ; Open the focused interactive dashboard panel. A focused panel can't receive the
+        ; hotkey to toggle closed (it puts the game in menu mode), so this is OPEN ONLY --
+        ; the in-view X button / ESC close it via the bridge's PDVPanelClose listener.
+        if Utility.IsInMenuMode()
+            return
+        endIf
+        if !EnsureManagerBinding("panel_hotkey")
+            return
+        endIf
+        Debug.Notification("The Devotion panel opens.")
+        ; Player-owned UI entry point: push fresh panel data, then focus the view so the
+        ; dashboard filter buttons are clickable. Close is in-view (X button / ESC ->
+        ; the bridge's PDVPanelClose listener: Unfocus + Hide).
+        PDV_Manager.PushDevotionPanel(True)
+        PDV_PrismaBridge.OpenDevotionPanel()
+        return
+    endIf
     Int journalKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
     if a_keyCode != journalKey
         return
@@ -1038,6 +1080,8 @@ Function BuildPlayerPage()
     AddHeaderOption("Book of Days", OPTION_FLAG_NONE)
     Int currentJournalKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
     _oidJournalHotkey = AddKeyMapOption("Open Book of Days", currentJournalKey, OPTION_FLAG_NONE)
+    Int currentPanelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
+    _oidPanelHotkey = AddKeyMapOption("Open Devotion panel", currentPanelKey, OPTION_FLAG_NONE)
 
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
@@ -1070,6 +1114,7 @@ Function BuildCompatPage()
     AddHeaderOption("Custom Race", OPTION_FLAG_NONE)
     _oidCompatRaceMapping = AddTextOption("Custom race mapping", OnOffLabel(CustomRaceMappingEnabled()), OPTION_FLAG_NONE)
     AddTextOption("Detected", GetCompatRaceReadout(), OPTION_FLAG_DISABLED)
+    _oidReDetectOrigin = AddTextOption("Re-detect origin", "Run now", OPTION_FLAG_NONE)
     AddTextOption("Temporary forms", "Defer origin capture", OPTION_FLAG_DISABLED)
 
     SetCursorPosition(1)
@@ -1097,6 +1142,24 @@ Function ToggleCustomRaceMapping()
     else
         StorageUtil.SetIntValue(None, "PDV.Compat.CustomRaceMapping", 1)
     endIf
+EndFunction
+
+Function ReDetectOrigin()
+    if !ShowMessage("Re-detect your origin now?", True, "$Yes", "$No")
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Origin.ForceRedetect", 1)
+    PDV_Origin originService = GetOriginService()
+    if originService
+        originService.InitializeOrigin()
+        Debug.Notification("Devotion origin: " + GetCompatRaceReadout())
+    else
+        TraceMcm(1, "Origin re-detect failed: PDV_Origin service unavailable.")
+        Debug.Notification("Devotion origin re-detect could not start.")
+    endIf
+
+    ForcePageReset()
 EndFunction
 
 Bool Function SurvivalContextEnabled()
@@ -2237,6 +2300,15 @@ PDV__ManagerQuest Function GetManagerService()
     PDV__ManagerQuest pluginManager = Game.GetFormFromFile(0x00C325, "Devotion.esp") as PDV__ManagerQuest
     if pluginManager
         return pluginManager
+    endIf
+
+    return None
+EndFunction
+
+PDV_Origin Function GetOriginService()
+    PDV_Origin pluginOrigin = Game.GetFormFromFile(0x02F490, "Devotion.esp") as PDV_Origin
+    if pluginOrigin
+        return pluginOrigin
     endIf
 
     return None

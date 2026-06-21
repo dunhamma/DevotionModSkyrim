@@ -116,8 +116,10 @@ Int PDV_CombatMaxLevelDelta = 0
 Bool PDV_CombatLowHealthFlag = false
 Bool PDV_CombatNearFatalFlag = false
 Bool PDV_CombatBelowHealthRouted = false
+Bool PDV_OriginQueuedThisLoad = false
 
 Event OnInit()
+    PDV_OriginQueuedThisLoad = false
     RegisterForPlayerEvents()
     QueueOriginInitialization()
     RouteCurseRefresh("alias_init")
@@ -125,6 +127,7 @@ Event OnInit()
 EndEvent
 
 Event OnPlayerLoadGame()
+    PDV_OriginQueuedThisLoad = false
     RegisterForPlayerEvents()
     QueueOriginInitialization()
     RouteCurseRefresh("load")
@@ -139,11 +142,19 @@ Event OnUpdate()
         CombatPollTick()
     endIf
 
-    if GetOriginRaceValue() >= 0
+    Bool originQueued = PDV_OriginQueuedThisLoad
+    if originQueued
+        PDV_OriginQueuedThisLoad = false
+    endIf
+
+    if GetOriginRaceValue() >= 0 && !originQueued
         return
     endIf
 
     if !IsOriginCaptureSafe()
+        if originQueued
+            PDV_OriginQueuedThisLoad = true
+        endIf
         RegisterForSingleUpdate(2.0)
         Trace(2, "Origin capture waiting for playable controls.")
         return
@@ -154,6 +165,8 @@ Event OnUpdate()
     if GetOriginRaceValue() < 0
         RegisterForSingleUpdate(2.0)
         Trace(2, "Origin still unresolved; retry queued.")
+    elseIf originQueued
+        Trace(2, "Origin re-check completed.")
     else
         Trace(2, "Origin initialization completed.")
     endIf
@@ -1463,12 +1476,29 @@ Bool Function HasListedForm(FormList sourceList, Form sourceForm)
 EndFunction
 
 Function QueueOriginInitialization()
-    if GetOriginRaceValue() >= 0
+    if GetOriginRaceValue() >= 0 && !ShouldQueueOriginRecheck()
         return
     endIf
 
+    if PDV_OriginQueuedThisLoad
+        return
+    endIf
+
+    PDV_OriginQueuedThisLoad = true
     RegisterForSingleUpdate(2.0)
     Trace(2, "Origin initialization queued after player load.")
+EndFunction
+
+Bool Function ShouldQueueOriginRecheck()
+    if StorageUtil.GetIntValue(None, "PDV.Origin.ForceRedetect", 0) == 1
+        return true
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.CustomRaceFallback", 0) == 1
+        return true
+    endIf
+
+    return false
 EndFunction
 
 Function EnsureOriginInitialized()
