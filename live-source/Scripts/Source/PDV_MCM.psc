@@ -1003,7 +1003,7 @@ Function BuildPlayerPage()
     SetCursorPosition(0)
     AddHeaderOption("Devotion", OPTION_FLAG_NONE)
 
-    if PDV_Manager
+    if EnsureManagerBinding("player_page")
         AddTextOption("Summary", PDV_Manager.GetPlayerMcmSummaryLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Startup", PDV_Manager.GetStartupMcmLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Mode", PDV_Manager.GetPlayerMcmModeLine(), OPTION_FLAG_DISABLED)
@@ -2228,6 +2228,15 @@ PDV__ManagerQuest Function GetManagerService()
 
     if PDV_EventBusService && PDV_EventBusService.PDV_Manager
         return PDV_EventBusService.PDV_Manager
+    endIf
+
+    ; Plugin-level last resort: resolve the manager quest directly from
+    ; Devotion.esp so the MCM self-heals even when both baked manager
+    ; references are unbound on an existing save. 00C325 is the
+    ; PDV__ManagerQuest local FormID in Devotion.esp.
+    PDV__ManagerQuest pluginManager = Game.GetFormFromFile(0x00C325, "Devotion.esp") as PDV__ManagerQuest
+    if pluginManager
+        return pluginManager
     endIf
 
     return None

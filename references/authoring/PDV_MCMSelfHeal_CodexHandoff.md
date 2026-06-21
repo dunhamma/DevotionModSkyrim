@@ -78,6 +78,24 @@ node .\tools\pdv_verify.mjs
 Expect `1 succeeded, 0 failed` and `FAIL=0` (SEQ-freshness WARN ok). Snapshot +
 commit, then hand back to Claude to pull→mirror.
 
+## Codex closeout (2026-06-21 AEST)
+
+Applied to the live MO2 source and the tracked `live-source` mirror:
+
+- `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\PDV_MCM.psc`
+- `C:\Users\Admin\Documents\Devotion Mod Project\live-source\Scripts\Source\PDV_MCM.psc`
+
+Machine gates:
+
+- `node .\tools\pdv_compile.mjs --script PDV_MCM`: `1 succeeded, 0 failed`,
+  `0 error(s), 0 warning(s)`.
+- `node .\tools\pdv_verify.mjs`: `FAIL=0, WARN=3, TODO=0, PASS=3083,
+  INFO=35`.
+
+Warnings observed: four unnamed INFO records, medallion glyph fallback, and SEQ
+mtime freshness. Runtime/manual proof remains the Session A MCM Player-page
+check below.
+
 ## In-game proof (User — Session A)
 
 On a save that previously showed "Devotion is still starting up" (or force it:
