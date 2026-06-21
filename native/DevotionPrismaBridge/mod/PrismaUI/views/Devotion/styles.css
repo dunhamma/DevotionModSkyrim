@@ -752,6 +752,128 @@ h1 {
   min-height: 228px;
 }
 
+/* --- Devotion dashboard (Today tab) --- */
+.dashboard {
+  margin-top: 18px;
+  padding: 16px 18px 18px;
+  border-top: 1px solid var(--line);
+}
+
+.dashboard-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 14px;
+}
+
+.dashboard-filters__sep {
+  width: 1px;
+  align-self: stretch;
+  background: var(--line);
+  margin: 2px 4px;
+}
+
+.dash-filter {
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 11px;
+  cursor: pointer;
+}
+
+.dash-filter:hover {
+  border-color: var(--line-strong);
+  color: #ece0c2;
+}
+
+.dash-filter.is-active {
+  color: #1a1812;
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.dashboard-gods {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.dash-god {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--muted);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: rgba(20, 20, 18, 0.5);
+}
+
+.dash-god.v-good { border-left-color: var(--green); }
+.dash-god.v-warning { border-left-color: var(--red); }
+.dash-god.is-focused { border-color: var(--line-strong); background: var(--gold-soft); }
+
+.dash-god__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dash-god__symbol { width: 22px; height: 22px; color: var(--gold); flex: none; }
+.dash-god__name { font-size: 15px; color: #ece0c2; flex: none; }
+
+.dash-god__state {
+  margin-left: auto;
+  font-size: 12px;
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+}
+
+.dash-god.v-good .dash-god__state { color: var(--green); }
+.dash-god.v-warning .dash-god__state { color: var(--red); }
+
+.dash-god__drivers {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0 0 0 32px;
+  display: grid;
+  gap: 3px;
+}
+
+.dash-driver {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.dash-driver.is-empty { font-style: italic; opacity: 0.8; }
+
+.dash-driver__mark {
+  font-weight: 700;
+  width: 12px;
+  flex: none;
+  text-align: center;
+}
+
+.dash-driver.is-gain .dash-driver__mark { color: var(--green); }
+.dash-driver.is-loss .dash-driver__mark { color: var(--red); }
+.dash-driver__label { color: #d8cdb6; }
+
 .today-stat {
   border: 1px solid var(--line);
   border-radius: 8px;

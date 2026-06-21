@@ -79,6 +79,20 @@
             <ul class="rite-list" id="pdv-rites"></ul>
           </article>
         </div>
+        <div class="dashboard" aria-label="What feeds your gods">
+          <span class="label">What feeds your gods</span>
+          <div class="dashboard-filters" id="pdv-dashboard-filters" role="group" aria-label="Devotion filters">
+            <button type="button" class="dash-filter is-active" data-filter-group="dir" data-filter="all">All</button>
+            <button type="button" class="dash-filter" data-filter-group="dir" data-filter="gain">Gaining</button>
+            <button type="button" class="dash-filter" data-filter-group="dir" data-filter="loss">Losing</button>
+            <span class="dashboard-filters__sep" aria-hidden="true"></span>
+            <button type="button" class="dash-filter is-active" data-filter-group="sys" data-filter="all">Any</button>
+            <button type="button" class="dash-filter" data-filter-group="sys" data-filter="patron">Patron</button>
+            <button type="button" class="dash-filter" data-filter-group="sys" data-filter="pantheon">Pantheon</button>
+            <button type="button" class="dash-filter" data-filter-group="sys" data-filter="neglected">Needs attention</button>
+          </div>
+          <ul class="dashboard-gods" id="pdv-dashboard-gods"></ul>
+        </div>
       </section>
 
       <section class="tab-panel" id="tab-debug" data-panel="debug">

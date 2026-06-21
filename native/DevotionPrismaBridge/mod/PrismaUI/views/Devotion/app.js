@@ -1498,6 +1498,133 @@
     });
   };
 
+  // --- Devotion dashboard (Today tab): per-god feedback + filters ---
+  // Filters are client-side only over the cached payload; never a Papyrus round-trip.
+  const dashboardFilter = { dir: "all", sys: "all", god: null };
+
+  const setupDashboardFilters = () => {
+    const bar = document.getElementById("pdv-dashboard-filters");
+    if (!bar || bar.dataset.wired === "1") return;
+    bar.dataset.wired = "1";
+    bar.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-filter-group]");
+      if (!button) return;
+      const group = button.dataset.filterGroup;
+      dashboardFilter[group] = button.dataset.filter;
+      bar.querySelectorAll(`[data-filter-group="${group}"]`).forEach((other) => {
+        other.classList.toggle("is-active", other === button);
+      });
+      renderDashboard(state.dashboard);
+    });
+  };
+
+  const DASH_STATE_LABELS = { gaining: "Gaining", steady: "Steady", starving: "Starving", neglected: "Needs attention" };
+  const DASH_STATE_VALENCE = { gaining: "good", steady: "neutral", starving: "warning", neglected: "warning" };
+
+  const dashboardGodMatches = (god) => {
+    const stateKey = text(god.state, "steady");
+    if (dashboardFilter.god && text(god.god) !== dashboardFilter.god) return false;
+    if (dashboardFilter.sys === "patron" && text(god.system) !== "patron") return false;
+    if (dashboardFilter.sys === "pantheon" && text(god.system) !== "pantheon") return false;
+    if (dashboardFilter.sys === "neglected" && stateKey !== "neglected") return false;
+    if (dashboardFilter.dir === "gain" && !(numberOrZero(god.pietyToday) > 0)) return false;
+    if (dashboardFilter.dir === "loss" && !(numberOrZero(god.pietyToday) < 0 || stateKey === "starving" || stateKey === "neglected")) return false;
+    return true;
+  };
+
+  const aggregateDrivers = (drivers) => {
+    const agg = {};
+    asArray(drivers).filter(Boolean).forEach((driver) => {
+      const reason = text(driver.reason, "an act of devotion");
+      if (!agg[reason]) agg[reason] = { reason, count: 0, net: 0 };
+      agg[reason].count += numberOrZero(driver.count) || 1;
+      agg[reason].net += numberOrZero(driver.net);
+    });
+    return Object.keys(agg).map((key) => agg[key]).filter((driver) => {
+      if (dashboardFilter.dir === "gain") return driver.net > 0;
+      if (dashboardFilter.dir === "loss") return driver.net < 0;
+      return true;
+    });
+  };
+
+  const renderDashboard = (dashboard = {}) => {
+    const host = document.getElementById("pdv-dashboard-gods");
+    if (!host) return;
+    clear(host);
+
+    const gods = asArray(dashboard.gods).filter(Boolean);
+    if (!gods.length) {
+      appendEmpty(host, "No god has answered yet. Act, pray, and this will fill.");
+      return;
+    }
+
+    const filtered = gods.filter(dashboardGodMatches);
+    if (!filtered.length) {
+      appendEmpty(host, "Nothing matches this filter.");
+      return;
+    }
+
+    filtered.forEach((god) => {
+      const stateKey = text(god.state, "steady");
+      const valence = DASH_STATE_VALENCE[stateKey] || "neutral";
+      const li = document.createElement("li");
+      li.className = `dash-god v-${valence}${dashboardFilter.god === text(god.god) ? " is-focused" : ""}`;
+
+      const head = document.createElement("button");
+      head.type = "button";
+      head.className = "dash-god__head";
+      head.addEventListener("click", () => {
+        const key = text(god.god);
+        dashboardFilter.god = dashboardFilter.god === key ? null : key;
+        renderDashboard(state.dashboard);
+      });
+
+      const symbol = document.createElement("div");
+      symbol.className = "dash-god__symbol";
+      renderSymbol(symbol, text(god.symbol, "journal"));
+      head.appendChild(symbol);
+
+      const name = document.createElement("strong");
+      name.className = "dash-god__name";
+      name.textContent = displayName(god.god, text(god.god, "A god"));
+      head.appendChild(name);
+
+      const chip = document.createElement("span");
+      chip.className = "dash-god__state";
+      chip.textContent = `${DASH_STATE_LABELS[stateKey] || "Steady"} (${signedText(god.pietyToday)} today)`;
+      head.appendChild(chip);
+
+      li.appendChild(head);
+
+      const driverRows = aggregateDrivers(god.drivers);
+      const list = document.createElement("ul");
+      list.className = "dash-god__drivers";
+      if (!driverRows.length) {
+        const empty = document.createElement("li");
+        empty.className = "dash-driver is-empty";
+        empty.textContent = (stateKey === "neglected" || stateKey === "starving")
+          ? "Nothing has fed this god lately."
+          : "Recent acts will show here.";
+        list.appendChild(empty);
+      } else {
+        driverRows.forEach((driver) => {
+          const row = document.createElement("li");
+          row.className = `dash-driver ${driver.net >= 0 ? "is-gain" : "is-loss"}`;
+          const mark = document.createElement("span");
+          mark.className = "dash-driver__mark";
+          mark.textContent = driver.net >= 0 ? "+" : "−";
+          const label = document.createElement("span");
+          label.className = "dash-driver__label";
+          label.textContent = driver.count > 1 ? `${driver.reason} (x${driver.count})` : driver.reason;
+          row.append(mark, label);
+          list.appendChild(row);
+        });
+      }
+      li.appendChild(list);
+      host.appendChild(li);
+    });
+  };
+
   const render = (payload = {}) => {
     state = { ...fallbackState, ...payload };
     const piety = Math.max(0, Math.min(200, numberOrZero(state.piety)));
@@ -1523,6 +1650,8 @@
     renderRelations(state.relations);
     renderList(nodes.acts, state.acts || state.recentActs, "No devotional acts have been recorded today.");
     renderList(nodes.rites, state.rites, "No rites are available yet.");
+    setupDashboardFilters();
+    renderDashboard(state.dashboard);
     renderDebug(state);
   };
 
