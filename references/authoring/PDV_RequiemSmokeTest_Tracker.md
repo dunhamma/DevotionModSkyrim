@@ -27,6 +27,45 @@ is compile/readback only: `PDV__ManagerQuest` and `PDV_ActionRouter` compile
 reward readback is `FAIL=0`, and houseCARL readback confirms the folded records.
 Runtime/manual rows remain PENDING until tested in Skyrim.
 
+## 2026-06-21 ESP-verified reconciliation (authoritative)
+
+The 2026-06-20 closeout above is **CONFIRMED** by houseCARL readback against the
+live `Devotion.esp`. Earlier "Nord Shor deferred" / "HoonDing Champion save not
+wired" reads (from the handoff/regen-plan rows and a Papyrus-only scan) are
+**STALE/WRONG**: those scans saw the unchanged manager spell *properties*, but the
+spell *records* were rewired at the ESP level.
+
+**Verified live state:**
+- **Positive-reward Requiem conversion is COMPLETE across all 10 races, incl. Nord.**
+  Nord Shor T1 → `PDV_MGEF_Nord_Shor_T1_Health` (07157E), T3 → `_T3_Health`
+  (071580) + the two combat buffs + `_T3_AvoidDeath` (071582 — the "Sovngarde
+  Looks Back" cheat-death save, wired into the T3 spell). The old `_HealRateMult`
+  MGEFs (0711BF/C1/C4) are ORPHANED (0 spell refs).
+- **27 `HealRateMult` MGEFs remain in the ESP but are ORPHANED leftovers** for the
+  positive families (spot-checked 0 spell refs: Khajiit BaanDar T2 `071098`,
+  Imperial Civic T1 `0710B8`). Harmless; optional cleanup, not beta-blocking.
+- **HoonDing Champion cheat-death save EXISTS** as
+  `PDV_MGEF_Redguard_HoonDing_T3_AvoidDeath` (071584); the boss FormList
+  `PDV_FLST_HoonDing_BreakthroughBosses` (071585) is POPULATED with **19**
+  dragon/boss FormIDs (Skyrim/Dragonborn/Dawnguard). B2e/B2f are DONE at the ESP layer.
+- **Dunmer home-prayer** is built (flat `RestoreActorValue` 15/30, declare-on-sleep);
+  the Dunmer run-sheet "build queued" note is STALE.
+
+**Genuinely-remaining ESP work (1B):**
+- **Penalties → re-author as felt** (2026-06-21 ruling): the only ACTIVE
+  `HealRateMult` left are penalties — Breton Excommunication "Cast Out" (MGEF
+  `0714BC`, wired to spell `PDV_SPEL_CreedLoss_Breton_Excommunication` `0714BD`) +
+  the neglect-"distant" effects (Argonian Hist-Distant, Imperial Divines-Distant,
+  Breton Tradition-Distant; named `_HealRate`). Convert to felt negatives (negative
+  Fortify-Health), magnitudes PROVISIONAL.
+- **Orc Code Holds** MGEFs (`PDV_MGEF_OrcCodeHolds_HealRate` / `_Devoted_HealRate`)
+  still read "Health Regeneration +X%" in Active Effects though the actual heal is
+  the Papyrus flat `RestoreActorValue` — convert/hide for display honesty.
+- **Optional:** prune the ~24 orphaned positive `_HealRateMult` MGEFs for ESP tidiness.
+
+**Net:** the Requiem conversion is ~complete; the load-bearing remainder is the
+in-game HP-bar PROOF (Sweeps A/B, Session C) + magnitude tuning — **not** a Nord build.
+
 ---
 
 ## Track A — build checklist
