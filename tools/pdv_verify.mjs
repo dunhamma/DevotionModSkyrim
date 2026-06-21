@@ -8088,7 +8088,7 @@ class Verifier {
       "Function HandleTalosShrineDefiance(String reason)",
       "Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, String reason)",
       "ApplyConcordatPressure(-15, \"talos_shrine_\" + reason)",
-      "AwardCuratedSignal(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None)",
+      "AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)",
     ]);
     this.checkSourceContains("Phase 7 source", "PDV_EventSignalActivator", [
       "Int Property ROUTE_TALOS_SHRINE_DEFIANCE = 35 AutoReadOnly",
