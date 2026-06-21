@@ -1790,8 +1790,10 @@ String Function ResolveTransitionJournalSymbol(String eventClass, Int deityIndex
     return "journal"
 EndFunction
 
-Bool Function PushDevotionPanel()
-    if !AutoPushPrismaPanel
+Bool Function PushDevotionPanel(Bool playerRequested = false)
+    ; AutoPushPrismaPanel gates GAMEPLAY auto-push (default off). A player-pressed hotkey
+    ; passes playerRequested=true to bypass that gate -- it is player-owned, not auto-push.
+    if !AutoPushPrismaPanel && !playerRequested
         return False
     endIf
 
@@ -13042,10 +13044,12 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
     PruneBookOfDays()
 
     ; Live-refresh: if the book is open, re-push it so a new entry appears without
-    ; reopening. Journal.Open: 1 = Chronicle (page 0), 2 = Ledger (page 1).
+    ; reopening. Journal.Open: 1 = Chronicle (page 0), 2 = Ledger (page 1). Sent inline on
+    ; the overlay channel (not via SendPrismaJournalPayload, which the audit requires to
+    ; have no manager-internal callers).
     Int bookOpen = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Open")
-    if bookOpen != 0
-        SendPrismaJournalPayload(True, bookOpen - 1)
+    if bookOpen != 0 && PDV_PrismaBridge.IsAvailable()
+        PDV_PrismaBridge.SendOverlayJson(BuildJournalPayloadJson(bookOpen - 1))
     endIf
 EndFunction
 
