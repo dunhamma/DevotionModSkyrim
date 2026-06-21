@@ -3768,7 +3768,10 @@ Function TryOrcCodeHolds(Actor playerRef)
         playerRef.RestoreActorValue("Health", 40.0)
     endIf
 
-    AwardPiety(PDV_Malacath, 0.5)
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcCodeHolds")
+    if multiplier > 0.0
+        AwardPiety(PDV_Malacath, 0.5 * multiplier)
+    endIf
     StorageUtil.AdjustIntValue(None, "PDV.Orc.CodeHolds.Count", 1)
     Trace(2, "Orc Code Holds fired.")
 EndFunction
@@ -4702,7 +4705,7 @@ Function HandleOrcStrongholdForge(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcStrongholdForge")
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_STRONGHOLD, multiplier, reason)
-    AwardOrcStrongholdForgeSignal()
+    AwardOrcStrongholdForgeSignal(multiplier)
     Trace(2, "Orc Stronghold forge routed with multiplier " + multiplier)
 EndFunction
 
@@ -4748,7 +4751,7 @@ Function HandleOrcCityDignity(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcCityDignity")
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_CITY, multiplier, reason)
-    AwardOrcCityDignitySignal()
+    AwardOrcCityDignitySignal(multiplier)
     Trace(2, "Orc City dignity routed with multiplier " + multiplier)
 EndFunction
 
@@ -4759,7 +4762,7 @@ Function HandleOrcLegionService(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcLegionService")
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_LEGION_EXILE, multiplier, reason)
-    AwardOrcLegionServiceSignal()
+    AwardOrcLegionServiceSignal(multiplier)
     Trace(2, "Orc Legion or exile service routed with multiplier " + multiplier)
 EndFunction
 
@@ -4770,7 +4773,7 @@ Function HandleOrcSelfMadeCommunity(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcSelfMadeCommunity")
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_CITY, multiplier, reason)
-    AwardOrcSelfMadeCommunitySignal()
+    AwardOrcSelfMadeCommunitySignal(multiplier)
     Trace(2, "Orc self-made community routed with multiplier " + multiplier)
 EndFunction
 
@@ -4786,7 +4789,7 @@ Function HandleOrcMalacathConduct(Int modeValue, String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcMalacathConduct")
     RecordOrcLifeModeSignal(modeValue, multiplier, reason)
-    AwardOrcBroadConductSignal()
+    AwardOrcBroadConductSignal(multiplier)
     StorageUtil.AdjustFloatValue(None, "PDV.Orc.MalacathConduct", multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Orc.MalacathSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Orc.LastMalacathSourceReason", reason)
@@ -4934,33 +4937,33 @@ Function EvaluateOrcLifeModeAtDawn()
     endIf
 EndFunction
 
-Function AwardOrcStrongholdForgeSignal()
+Function AwardOrcStrongholdForgeSignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, None)
+        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, None, multiplier)
     endIf
 EndFunction
 
-Function AwardOrcCityDignitySignal()
+Function AwardOrcCityDignitySignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_CITY_DIGNITY, None)
+        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CITY_DIGNITY, None, multiplier)
     endIf
 EndFunction
 
-Function AwardOrcLegionServiceSignal()
+Function AwardOrcLegionServiceSignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_LEGION_SERVICE, None)
+        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_LEGION_SERVICE, None, multiplier)
     endIf
 EndFunction
 
-Function AwardOrcSelfMadeCommunitySignal()
+Function AwardOrcSelfMadeCommunitySignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_SELF_MADE_COMMUNITY, None)
+        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_SELF_MADE_COMMUNITY, None, multiplier)
     endIf
 EndFunction
 
-Function AwardOrcBroadConductSignal()
+Function AwardOrcBroadConductSignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_BROAD_CONDUCT, None)
+        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROAD_CONDUCT, None, multiplier)
     endIf
 EndFunction
 
