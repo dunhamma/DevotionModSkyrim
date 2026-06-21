@@ -922,6 +922,16 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 **Regression & verification discipline**
 - When CK/xEdit/MO2 work could regress silently, add or tighten verifier
   coverage before trusting memory or a one-off smoke.
+- For Skyrim plugin work, before finalizing any created, edited, merged,
+  repacked, or installed ESP/ESL, explicitly check plugin master/header order.
+  Confirm vanilla game masters are first in proper order, all required masters
+  are present, and binary validation does not report "game master is not first",
+  "misordered masters", "extended master", or similar header warnings. If master
+  order is wrong, fix or rebuild the plugin header and rerun validation before
+  interpreting downstream record warnings as real. Use houseCARL for resolved
+  load-order/winner checks, but use SSEDump, xEdit, or Mutagen-style binary
+  validation for the plugin file itself when checking master/header order.
+  Final responses for ESP/ESL work must report the master-order result.
 - Smoke-test standard is "full phase closeout unless explicitly narrowed."
   (Phase 4/6 closeout, 2026-05-16)
 - When Papyrus compile errors appear, triage in this order: import chain,
