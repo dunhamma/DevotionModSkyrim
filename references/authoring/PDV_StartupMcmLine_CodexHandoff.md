@@ -50,9 +50,17 @@ endIf
 — which is why **Mode** flips to the canonical summary post-confirm while
 **Startup** does not.
 
-## Fix
+## Fix (v2 — applied 2026-06-22)
 
-Replace `GetStartupMcmLine` with the gated version:
+> **v1 note:** the first attempt fell through to `GetStartupCanonicalSummary(originRace)`
+> post-confirm. That was WRONG: `GetStartupCanonicalSummary` returns the long
+> *pre-choice* description (e.g. Breton → *"You begin by choosing your tradition:
+> the Knight's Road of vow and mercy, the Hidden Art of forbidden power, or the
+> Green Way of the old druids."*). In-game retest showed the Startup row just
+> swapped one prompt for a longer one. v2 below is the shipped fix.
+
+Replace `GetStartupMcmLine` with the gated version that, post-confirm, reports
+the **chosen** path label (mirroring what the Mode row already shows):
 
 ```papyrus
 String Function GetStartupMcmLine()
@@ -62,17 +70,21 @@ String Function GetStartupMcmLine()
         if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
             return "Choose a starting path, then confirm."
         endIf
+        return "Set: " + GetPlayerMcmModeLine()
     endIf
 
     return GetStartupCanonicalSummary(originRace)
 EndFunction
 ```
 
-Post-confirm, the function falls through to `GetStartupCanonicalSummary(originRace)`
-— the same source `GetPlayerMcmModeLine` already trusts.
+Post-confirm, explicit-choice races return `"Set: " + GetPlayerMcmModeLine()`
+(e.g. Breton → `"Set: Green Way"`). No recursion: we only reach that line when
+`UnifiedChoiceComplete == 1`, so `GetPlayerMcmModeLine` resolves to the per-race
+label directly instead of delegating back to `GetStartupMcmLine`.
 
-No other callers need changing. `GetPlayerMcmModeLine` keeps its existing
-"if not complete, delegate" pattern and gets the right answer either way.
+Non-choice races (Imperial/Dunmer/Altmer/Khajiit/Argonian, broad Nord) keep the
+existing `GetStartupCanonicalSummary` behavior — they have no confirm step, so
+the canonical descriptor is the intended one-time Startup-row text for them.
 
 ## Side effect: cosmetic label/value collision auto-fixes
 

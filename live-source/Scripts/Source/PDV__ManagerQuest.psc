@@ -14120,6 +14120,7 @@ String Function GetStartupMcmLine()
         if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
             return "Choose a starting path, then confirm."
         endIf
+        return "Set: " + GetPlayerMcmModeLine()
     endIf
 
     return GetStartupCanonicalSummary(originRace)
