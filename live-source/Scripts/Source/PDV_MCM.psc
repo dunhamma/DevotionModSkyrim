@@ -58,6 +58,7 @@ Int _oidPendingPiety = -1
 Int _oidApplyPiety = -1
 Int _oidPendingPietyToday = -1
 Int _oidApplyPietyToday = -1
+Int _oidSeedBroadLane = -1
 Int _oidPendingSignalType = -1
 Int _oidApplyCuratedSignal = -1
 Int _oidRunDawn = -1
@@ -491,6 +492,14 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidApplyCuratedSignal
         DebugApplyCuratedSignal()
+        return
+    endIf
+
+    if a_option == _oidSeedBroadLane
+        if ShowMessage("Seed the current race's broad-worship lane to Faithful (sets broad worship + the broad accumulator so the broad Fortify-Health applies)?", True, "$Yes", "$No")
+            PDV_Manager.DebugSeedBroadLane()
+            ForcePageReset()
+        endIf
         return
     endIf
 
@@ -1266,6 +1275,7 @@ Function BuildStatePage()
     _oidDebugLevel = AddSliderOption("Debug level", GetDebugLevelValue(), "{0}", OPTION_FLAG_NONE)
     _oidPendingPiety = AddSliderOption("Target piety", _pendingPiety, "{0}", OPTION_FLAG_NONE)
     _oidApplyPiety = AddTextOption("Apply target piety", FormatFloat(_pendingPiety), OPTION_FLAG_NONE)
+    _oidSeedBroadLane = AddTextOption("Seed broad lane (origin)", "Broad + 6 acts", OPTION_FLAG_NONE)
     _oidPendingPietyToday = AddSliderOption("Target scratch", _pendingPietyToday, "{1}", OPTION_FLAG_NONE)
     _oidApplyPietyToday = AddTextOption("Apply target scratch", FormatFloat(_pendingPietyToday), OPTION_FLAG_NONE)
     _oidPendingSignalType = AddSliderOption("Curated signal ID", _pendingSignalType as Float, "{0}", OPTION_FLAG_NONE)

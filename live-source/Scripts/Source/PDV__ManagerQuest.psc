@@ -8059,6 +8059,31 @@ Function DebugSetBroadWorship()
     SetBroadWorship()
 EndFunction
 
+; Debug: seed the player's race broad-worship lane to its Faithful (T2) reward so the
+; broad Fortify-Health is testable. The broad lanes gate on PATRON_STATE_BROAD + a >=6
+; COUNT accumulator (NOT deity piety), so "Apply target piety" cannot reach them. This
+; sets broad worship + the origin race's accumulator to its threshold + refreshes the
+; reward spells.
+Function DebugSeedBroadLane()
+    SetBroadWorship()
+    Int origin = GetPlayerOriginRaceIndex()
+    if origin == ORIGIN_IMPERIAL
+        StorageUtil.SetIntValue(None, "PDV.Imperial.CivicServiceCount", 6)
+    elseIf origin == ORIGIN_BRETON
+        StorageUtil.SetIntValue(None, "PDV.Breton.TraditionHookCount", 6)
+    elseIf origin == ORIGIN_ORC
+        StorageUtil.SetIntValue(None, "PDV.Orc.MalacathSourceCount", 6)
+    elseIf origin == ORIGIN_ALTMER
+        StorageUtil.SetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count", 6)
+        StorageUtil.SetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count", 6)
+    else
+        Trace(1, "DebugSeedBroadLane: origin " + origin + " has no broad-lane accumulator wired here (Nord/others not yet covered).")
+    endIf
+    SyncFirstTierRaceRewardRuntime()
+    RequestPanelRefresh()
+    Trace(1, "DebugSeedBroadLane seeded broad lane for origin " + origin + ".")
+EndFunction
+
 String Function DebugGetOriginDiagnostic()
     if StorageUtil.GetIntValue(None, "PDV.CustomRaceFallback") == 1
         return "Custom race fallback: Imperial"
