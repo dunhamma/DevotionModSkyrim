@@ -58,9 +58,12 @@ spell *records* were rewired at the ESP level.
   the neglect-"distant" effects (Argonian Hist-Distant, Imperial Divines-Distant,
   Breton Tradition-Distant; named `_HealRate`). Convert to felt negatives (negative
   Fortify-Health), magnitudes PROVISIONAL.
-- **Orc Code Holds** MGEFs (`PDV_MGEF_OrcCodeHolds_HealRate` / `_Devoted_HealRate`)
-  still read "Health Regeneration +X%" in Active Effects though the actual heal is
-  the Papyrus flat `RestoreActorValue` — convert/hide for display honesty.
+- **Orc Code Holds** display honesty — RESOLVED 2026-06-23: `TryOrcCodeHolds` no
+  longer casts `PDV_SPEL_OrcCodeHolds` / `_Devoted`, so the `HealRate`
+  "Health Regeneration +X%" MGEFs never surface as Active Effects. The only heal
+  is the Papyrus flat `RestoreActorValue` (Seeker Health 40; Devoted/Champion
+  Health 60 + Stamina 30). The two `_HealRate` MGEF records are now orphaned
+  (authored but never cast) — fold into the optional ESP-tidiness prune below.
 - **Optional:** prune the ~24 orphaned positive `_HealRateMult` MGEFs for ESP tidiness.
 
 **Net:** the Requiem conversion is ~complete; the load-bearing remainder is the

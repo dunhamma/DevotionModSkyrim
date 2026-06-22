@@ -222,7 +222,9 @@ draft handoff assuming otherwise -- expect the same for Orc Four Holds emitters)
      is canonical before runtime wiring.
    - Code Holds Devoted: race sheet / RecordSpec promise "+30 stamina restore" on
      the Devoted tier; the shipped `PDV_MGEF_OrcCodeHolds_Devoted_HealRate` has
-     only the HealRate +3 effect. Decide whether to add the stamina effect.
+     only the HealRate +3 effect. RESOLVED 2026-06-23: delivered in Papyrus, not
+     the MGEF -- `TryOrcCodeHolds` does a flat `RestoreActorValue("Stamina", 30)`
+     (plus Health 60) at Devoted/Champion; the HealRate MGEF is no longer cast.
 3. **Life-mode enum value order.** Gates must use City=0 / Stronghold=1 /
    LegionExile=2 (spec enum), NOT the prose display order in the race sheet. A
    wrong index silently misroutes mode-split text and the City/Exile gate (the

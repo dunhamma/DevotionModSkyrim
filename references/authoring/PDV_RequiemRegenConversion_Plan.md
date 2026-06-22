@@ -109,8 +109,17 @@ deferred passed-race batch).
   tools/creation-authoring/) to re-attach `PDV_T3DailyLowHealthSaveEffect` to a
   surviving Shor T3 MGEF. Low cost to defer: Nord's real heal IS the save (works);
   only the sole-effect Shor T1 (+5% dead regen) loses a felt conversion.
-- **Still PENDING (Papyrus feature-builds + cross-race):** Orc Code Holds health
-  half (scripted RestoreActorValue mirroring the live stamina line); Redguard
+- **Orc Code Holds health half: DONE in live source (spec synced 2026-06-23).**
+  `TryOrcCodeHolds` (live `PDV__ManagerQuest.psc` ~3932) does a flat scripted
+  `RestoreActorValue("Health", ...)` near-death pulse: Seeker Health 40 (health
+  only); Devoted/Champion Health 60 + Stamina 30. The old `HealRate` regen MGEF
+  (`PDV_MGEF_OrcCodeHolds_HealRate` 2 / `_Devoted_HealRate` 3, 10s) is NOT cast;
+  the two spell records are gating-presence flags only. NOTE: the health half is
+  its OWN ladder (40/60), not a 1:1 mirror of the stamina 30, and Seeker is
+  health-only. `PDV_OrcRewardRecords.spec.json` updated to match (effect shape =
+  scripted flat restore; dead regen magnitudes removed). Magnitudes PROVISIONAL
+  (in-game HP-bar proof pending). Doc/spec sync only -- no `.psc` change this pass.
+- **Still PENDING (Papyrus feature-builds + cross-race):** Redguard
   Tu'whacca T2/T3 event-driven heals; HoonDing make-way rebuild (6a); Ash'abah
   stigma (6b); Breton "Vigilant attention" nod (7); Daedric Namira boon.
 
@@ -170,7 +179,7 @@ Priority order: sole-effect tiers -> capstones -> mid tiers.
 | Breton | Tradition_T2 / GreenWay_T3 | HealRateMult +6 / +10 | co-effects kept |
 | Nord | Shor_T2 | HealRateMult +15 | OneHanded +8 kept |
 | Orc | Malacath_T2 | HealRateMult +8 | DamageResist +30 (Requiem-exempt) kept |
-| **Orc** | **Code Holds + Code Holds Devoted** | **HealRate 2.0 / 3.0, 10s near-death pulse** | **LIVE + swallowed TODAY (not just spec). Health half does nothing; the paired flat `RestoreActorValue("Stamina",30)` at ManagerQuest.psc:3317 already lands -- mirror it for the health half.** |
+| **Orc** | **Code Holds + Code Holds Devoted** | **was HealRate 2.0 / 3.0, 10s near-death pulse** | **DONE (live source + spec, 2026-06-23). Flat scripted `RestoreActorValue` in `TryOrcCodeHolds`: Seeker Health 40 (health only); Devoted/Champion Health 60 + Stamina 30. Old HealRate MGEF not cast; spells are gating flags. In-game HP-bar proof pending.** |
 
 ### Daedric -- sequence with the Daedric batch
 
@@ -196,7 +205,11 @@ Priority order: sole-effect tiers -> capstones -> mid tiers.
 - **Stamina pulses that read like heals (do not mis-convert):** Argonian Sithis
   "Void-Held Surge" near-death capstone and the Code Holds Stamina half are
   STAMINA regen, not HP restores. If a survival HEAL was the intent that is a
-  SEPARATE design gap (would need a flat Health HoT), not a conversion.
+  SEPARATE design gap (would need a flat Health HoT), not a conversion. (Update
+  2026-06-23: for Code Holds that gap is now filled -- a flat `RestoreActorValue`
+  Health pulse exists in `TryOrcCodeHolds` alongside the stamina half; see Build
+  progress. The stamina half itself is still stamina and still must not be
+  converted. Argonian Sithis remains stamina-only.)
 - **Orc HearthHeld mismatch:** race sheet says "small health-regen pulse" but the
   shipped record is StaminaRateMult +5. If row review restores the HEALTH intent,
   it becomes a swallowed-health case needing flat-restore; as shipped (Stamina),

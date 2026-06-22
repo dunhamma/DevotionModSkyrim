@@ -503,35 +503,39 @@
       "spellProperty": "PDV_SPEL_OrcCodeHolds",
       "spellEditorId": "PDV_SPEL_OrcCodeHolds",
       "displayName": "The Code Holds",
+      "delivery": "scriptedFlatRestore",
+      "note": "Gating-presence flag only; the spell record is NOT cast. PDV__ManagerQuest.TryOrcCodeHolds performs a flat scripted RestoreActorValue at Seeker tier. The old HealRate regen MGEF (PDV_MGEF_OrcCodeHolds_HealRate) was RETIRED because Requiem swallows rate-mult healing on a near-zero base; the heal is now a Requiem-proof flat restore.",
       "effects": [
         {
-          "magicEffectEditorId": "PDV_MGEF_OrcCodeHolds_HealRate",
-          "actorValue": "HealRate",
-          "magnitude": 2,
-          "duration": 10,
-          "spellType": "Spell",
-          "castType": "FireAndForget",
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 40,
+          "effectName": "Restore Health",
+          "delivery": "scriptedFlatRestore"
         }
       ],
-      "playerFacingText": "You dropped near death and held the code. Health returns briefly."
+      "playerFacingText": "You dropped near death and held the code. Health floods back."
     },
     {
       "spellProperty": "PDV_SPEL_OrcCodeHolds_Devoted",
       "spellEditorId": "PDV_SPEL_OrcCodeHolds_Devoted",
       "displayName": "The Code Holds - Devoted",
+      "delivery": "scriptedFlatRestore",
+      "note": "Gating-presence flag only; the spell record is NOT cast. PDV__ManagerQuest.TryOrcCodeHolds performs flat scripted RestoreActorValue calls at Devoted+ tier. The old HealRate regen MGEF (PDV_MGEF_OrcCodeHolds_Devoted_HealRate) was RETIRED because Requiem swallows rate-mult healing on a near-zero base; the heal is now a Requiem-proof flat restore.",
       "effects": [
         {
-          "magicEffectEditorId": "PDV_MGEF_OrcCodeHolds_Devoted_HealRate",
-          "actorValue": "HealRate",
-          "magnitude": 3,
-          "duration": 10,
-          "spellType": "Spell",
-          "castType": "FireAndForget",
-          "effectName": "Health Regeneration"
+          "actorValue": "Health",
+          "magnitude": 60,
+          "effectName": "Restore Health",
+          "delivery": "scriptedFlatRestore"
+        },
+        {
+          "actorValue": "Stamina",
+          "magnitude": 30,
+          "effectName": "Restore Stamina",
+          "delivery": "scriptedFlatRestore"
         }
       ],
-      "playerFacingText": "You dropped near death and held the code. Health returns sharply, and stamina comes back."
+      "playerFacingText": "You dropped near death and held the code. Health and stamina come back."
     },
     {
       "spellProperty": "PDV_SPEL_OrcHearthHeld",

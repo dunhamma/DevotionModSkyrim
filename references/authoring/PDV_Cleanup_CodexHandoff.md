@@ -44,6 +44,14 @@ No magnitudes change; this is purely moving where the `<= 0` gate sits.
 
 ## Part B — Orc Code Holds: drop the vestigial spell cast (display honesty)
 
+> RESOLVED 2026-06-23 (verified against live `PDV__ManagerQuest.psc`, both C:
+> `live-source` and D: Anvil): the two `.Cast()` lines below are ALREADY gone from
+> `TryOrcCodeHolds` (now ~3932-3966). The function does only the flat
+> `RestoreActorValue` (Seeker Health 40; Devoted/Champion Health 60 + Stamina 30)
+> and the spell records are gating-presence flags only. `PDV_OrcRewardRecords.spec.json`
+> was synced to match the same day. No further Papyrus action needed; the original
+> proposal is kept below for history.
+
 `TryOrcCodeHolds` (lines ~3764–3771) casts a HealRate "Health Regeneration" MGEF
 for flavor, then does the real flat `RestoreActorValue`. Under Requiem the cast
 shows a "+X% Health Regeneration" Active Effect that does ~0 (misleading); under

@@ -164,11 +164,14 @@ Orc signal RefIDs (framework ESP): Stronghold `071027`, City `071028`, Legion
 ### Code Holds survival beat (PENDING build-pass runtime)
 
 `PDV_SPEL_OrcCodeHolds` / `_Devoted` are live/readback-clean (2026-06-14): on
-surviving combat after dropping below 20% health, a regen pulse fires once per
-combat (Observant/Faithful +2 hp/s 10s; Devoted +3 hp/s 10s + 30 stamina) plus
-+0.5 Malacath piety. Detection is the shared below-20% combat-session poll
-(`RoutePlayerBelowHealthSurvived` on combat exit). Runtime/manual proof PENDING.
-Health-based, so the killing-blow caveat does not apply.
+surviving combat after dropping below 20% health, a flat survival restore fires
+once per combat (Seeker +40 Health; Devoted/Champion +60 Health + 30 Stamina)
+plus +0.5 Malacath piety. The heal is a scripted flat `RestoreActorValue` in
+`TryOrcCodeHolds`, NOT the old HealRate regen pulse it once was (Requiem swallows
+rate healing on a near-zero base); the two spell records are now gating-presence
+flags only and are not cast. Detection is the shared below-20% combat-session
+poll (`RoutePlayerBelowHealthSurvived` on combat exit). Runtime/manual proof
+PENDING. Health-based, so the killing-blow caveat does not apply.
 
 ### Four Holds pilgrimage (route 75; QASmoke-readback only, organic DEFERRED)
 

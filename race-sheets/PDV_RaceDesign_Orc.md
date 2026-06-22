@@ -262,7 +262,8 @@ be carried in the Orc record-batch manifest, Hist-fold style).
 
 **The Code Holds (signature, all modes, once/day).** Surviving a fight
 after dropping below 20% health without leaving the cell grants a brief
-post-combat regen pulse. Quiet surfacing in City/Legion modes, Noted in
+post-combat survival restore (a flat Health restore in the live build, not a
+rate-regen pulse -- Requiem-proof). Quiet surfacing in City/Legion modes, Noted in
 stronghold context. Deliberately small and all-tier — distinct from the
 Stronghold Champion fury, which stays a Champion moment.
 
