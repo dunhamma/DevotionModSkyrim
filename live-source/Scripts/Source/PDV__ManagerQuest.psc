@@ -14127,7 +14127,14 @@ String Function GetStartupMcmLine()
 EndFunction
 
 String Function GetPlayerMcmCurseLine()
-    return GetPlayerCursePublicLabel()
+    ; The Anvil MCM font renders a bare "None" value as effectively blank, so map
+    ; the no-curse state to an explicit phrase. Surgical to the MCM display only;
+    ; GetPlayerCursePublicLabel keeps returning "None" for its other callers.
+    String curseLabel = GetPlayerCursePublicLabel()
+    if curseLabel == "None"
+        return "No curse"
+    endIf
+    return curseLabel
 EndFunction
 
 String Function GetPlayerMcmFavorLine()
@@ -14159,7 +14166,8 @@ String Function GetPlayerMcmNeglectLine()
         return "Steady"
     endIf
 
-    return "None"
+    ; "No neglect" not bare "None": the Anvil MCM font renders a lone "None" blank.
+    return "No neglect"
 EndFunction
 
 String Function GetNordSurveyBaseText()
