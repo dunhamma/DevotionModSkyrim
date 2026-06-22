@@ -54,7 +54,10 @@ consolidation without touching existing stored piety.
 - Per-event daily ceiling is multiplied by `1.5` (where ceilings exist).
 - Decay step (when the v3 decay slot is live) is multiplied by `0.5`.
 - Neglect grace window is multiplied by `2.0`.
-- Cheap-repeatable signal sources are **admitted** at `0.5x` weight.
+- One curated cheap-repeatable signal route is **admitted** at `0.5x` weight:
+  the Akatosh skill-milestone pulse on player level-up (V1 scope; see §5.3).
+  Broader cheap-signal admission (per-skill deity attribution, generic
+  combat-kill widening, radiant-quest admission) is deferred to Wayfarer V2.
 
 ### 2.3 Mode preset table
 
@@ -64,8 +67,8 @@ consolidation without touching existing stored piety.
 | Daily-cap scalar (per-event ceilings) | 1.0 | 1.5 | per-deity / ActionRouter cap reads |
 | Decay step scalar | 1.0 | 0.5 | `PDV__ManagerQuest.ProcessDawn` decay slot |
 | Grace-period scalar | 1.0 | 2.0 | per-deity grace constant |
-| Allow cheap-repeatable signals | false | true | `PDV_ActionRouter` signal-shape gate |
-| Cheap-repeatable signal weight | 0.0 | 0.5 | same gate, when admitted |
+| Allow cheap-repeatable signals (V1: Akatosh level-up only) | false | true | `PDV__ManagerQuest.HandleWayfarerAkatoshLevel`, dispatched from `PDV_PlayerEvents` level-up hook |
+| Cheap-repeatable signal weight | 0.0 | 0.5 | same handler, when admitted |
 
 All other v3 levers — stance multipliers, tier thresholds, contextual-favor
 trigger thresholds, race substrate behavior, rivalry weights — are **invariant
@@ -235,6 +238,19 @@ if amount > 0.0
 endIf
 ```
 
+#### Composition with Survival Context damp (chosen 2026-06-22)
+
+The live `RunGainPipeline` already runs `GetSurvivalContextGainMultiplier`
+(the bounded ≤10% downward damp when a detected survival mod reports unmet
+needs). Wayfarer's `GainMultiplier()` composes **multiplicatively as the
+trailing factor**, so worst case Wayfarer + severity-3 survival hardship is
+`1.25 × 0.9 = 1.125`. Rationale: the damp is small, conditional on player
+state, and represents a diegetic "neglect-your-needs" punish that Survival
+users opted into via a separate MCM toggle (`PDV.Compat.SurvivalContextEnabled`).
+Wayfarer eases the *floor*; Survival damp models *current* neglect; they do
+different jobs and compose without contradiction. Players who want pure
+Wayfarer gain can flip the Survival Context compat toggle off.
+
 ### 5.2 PDV__ManagerQuest.ProcessDawn
 
 When the v3 decay slot is live (currently scaffold; see `PDV_Architecture_v3.md`
@@ -260,27 +276,64 @@ endIf
 Float clampedToday = ClampValue(pietyToday, -cap, cap)
 ```
 
-### 5.3 PDV_ActionRouter cheap-signal gate
+### 5.3 Cheap-repeatable signals — V1 scope (Akatosh level-up only)
 
-`PDV_ActionRouter` is where the v3 "rejection list" for raw skill XP, raw
-crafting counts, and generic radiant repetition lives. The current shape is a
-hard reject. Gate the rejection on the mode and, when admitted, apply
-`CheapRepeatableWeight()` before dispatching to `PDV_EventBus`:
+**Scope decision (2026-06-22).** v3 §5.3 frames cheap-repeatable rejection as
+two distinct things: (a) "rejected source shapes" (raw skill XP, raw crafting
+counts, generic radiant repetition) which are rejected by *absence of any
+handler*, not by a code gate; and (b) "diminishing returns" for curated
+repeats (shrine use, sleep, observances), implemented by
+`ConsumeDailyRepeatMultiplier` (0.7ⁿ per same-key-per-day). There is no
+`IsCheapRepeatableSignal()` gate in `PDV_ActionRouter` to wire — the original
+§5.3 snippet assumed one that does not exist.
+
+Rather than build a full cheap-signal taxonomy in V1 (out of scope for the
+beta timeline) or drop the axis entirely (which would leave Wayfarer
+mathematically inert for the power-gamer persona who skips immersive rites),
+V1 ships **one curated cheap-signal route**:
+
+> **Akatosh skill-milestone route (Wayfarer-only).** Player level-up = small
+> Akatosh piety pulse, gated on `AllowCheapRepeatables()`, weighted by
+> `CheapRepeatableWeight()` (0.5×), and capped via the existing
+> `ConsumeDailyRepeatMultiplier` anti-farm primitive.
+
+Rationale: Akatosh's domain ("Time" — growth, the passage of one's life)
+diegetically fits "the gods note your everyday work of becoming." Skill
+milestones are exactly the v3 "raw skill XP" shape that Pilgrim rejects;
+admitting them only under Wayfarer at 0.5× weight preserves Pilgrim's
+"only acts of true cost catch the gods' eye" identity while giving Wayfarer
+power-gamers a passive devotion stream they actually generate. One deity,
+one hook, one anti-farm key — small surface, easy to revert, easy to extend.
+
+**Integration sketch.** A new handler in `PDV__ManagerQuest` (e.g.,
+`HandleWayfarerAkatoshLevel`) is dispatched from a player-alias level-up
+hook (`PDV_PlayerEvents.OnPlayerLevelUp` via PO3 Papyrus Extender, or a
+vanilla `OnLevelIncrease` equivalent — Codex's choice). The handler:
 
 ```papyrus
-PDV_ModePreset Property PDV_ModePresetRef Auto
-
-; ... inside the cheap-repeatable rejection branch:
-if IsCheapRepeatableSignal(eventType)
+Function HandleWayfarerAkatoshLevel()
     if !PDV_ModePresetRef || !PDV_ModePresetRef.AllowCheapRepeatables()
-        return ; existing reject path
+        return ; Pilgrim default — no Akatosh pulse for raw level-up
     endIf
-    Float weight = PDV_ModePresetRef.CheapRepeatableWeight()
-    ; dispatch with multiplied amount, preserving existing attribution
-    DispatchToEventBus(eventType, actorRef, targetRef, weight)
-    return
-endIf
+    Float baseAmount = 1.0
+    Float weight = PDV_ModePresetRef.CheapRepeatableWeight() ; 0.5
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.WayfarerAkatoshLevel")
+    Float amount = baseAmount * weight * multiplier
+    if amount > 0.0
+        AwardPietyInternal(PDV_Akatosh, amount, STANCE_NEUTRAL, "wayfarer_akatosh_level")
+    endIf
+EndFunction
 ```
+
+`AwardPietyInternal` then applies the trailing Wayfarer `GainMultiplier()`
+inside `RunGainPipeline` (§5.1), so the net first-fire-of-day value is
+`1.0 × 0.5 × 1.0 × 1.25 ≈ 0.625`. Subsequent same-day fires decay by 0.7ⁿ
+via the existing anti-farm.
+
+**What this is NOT.** Not a general cheap-signal taxonomy. Not per-skill
+attribution (no Smithing → Zenithar mapping, etc.). Not radiant-quest
+admission, not generic combat-kill widening. Those are intentionally
+deferred to Wayfarer V2 (see §7).
 
 ### 5.4 PDV_MCM additions
 
@@ -304,7 +357,7 @@ Function BuildModePage()
     AddTextOption("Piety gain rate", GetGainLabel(), OPTION_FLAG_DISABLED)
     AddTextOption("Daily ceilings", GetCeilingLabel(), OPTION_FLAG_DISABLED)
     AddTextOption("Neglect decay", GetDecayLabel(), OPTION_FLAG_DISABLED)
-    AddTextOption("Casual signals", GetCheapLabel(), OPTION_FLAG_DISABLED)
+    AddTextOption("Everyday work (Akatosh)", GetCheapLabel(), OPTION_FLAG_DISABLED)
 EndFunction
 
 Function OnOptionSelect_Mode(Int a_option)
@@ -363,10 +416,14 @@ End-to-end smoke after the integration lands:
 4. **Daily ceiling raised.** Force `PDV.PietyToday` near `PIETY_DAILY_MAX_DELTA`
    and run dawn. Confirm Wayfarer's Path consolidates at `1.5x` the
    Pilgrim-Path ceiling.
-5. **Cheap-repeatable gate.** With router cheap-signal integration in place,
-   trigger a previously-rejected signal source. Confirm Pilgrim's Path emits
-   the existing reject trace, Wayfarer's Path emits a dispatch at `0.5x`
-   weight.
+5. **Cheap-repeatable gate (Akatosh level-up route, V1 scope).** On
+   Pilgrim's Path, level the player and confirm Akatosh receives no piety
+   pulse from the level-up itself (only authored Akatosh signals fire). Flip
+   to Wayfarer's Path and level the player; confirm a small Akatosh pulse
+   tagged `wayfarer_akatosh_level` lands at `~0.625` first-fire-of-day
+   (`1.0 base × 0.5 weight × 1.25 gain`). Level multiple times within one
+   day and confirm subsequent fires decay by 0.7ⁿ via
+   `ConsumeDailyRepeatMultiplier("PDV.Signal.WayfarerAkatoshLevel")`.
 6. **Decay scaling.** When the v3 decay slot is live, skip patron interaction
    past the grace window. Confirm the per-dawn decay step on Wayfarer's Path
    is half the Pilgrim-Path value.
@@ -391,6 +448,8 @@ truth for the required CK records.
 
 ## SECTION 7: Out of scope (intentional)
 
+### 7.1 Permanently out of scope
+
 - Per-axis sliders in MCM. The whole point of this toggle is to keep the
   configuration surface to one big switch.
 - A third or middle mode. Two presets, no in-between. If finer tuning is ever
@@ -402,6 +461,38 @@ truth for the required CK records.
 - Save-only locking. The user explicitly chose changeable-any-time.
 - Diegetic gating behind a setup quest. The first-time setup quest may
   mention the toggle exists, but the toggle is not gated by quest stage.
+
+### 7.2 Deferred to Wayfarer V2 (considered, not rejected)
+
+These were evaluated during the 2026-06-22 scope discussion and deliberately
+held back from V1 to keep the beta surface small. They become candidates once
+V1 ships and tuned magnitudes are proven in-game.
+
+- **Softer anti-farm base under Wayfarer.** `ConsumeDailyRepeatMultiplier`'s
+  0.7 base decays repeated same-day signals aggressively (3rd fire = 0.34×).
+  A Wayfarer-only base of ~0.85 would let casual immersive players who DO
+  spam shrines/prayers stay productive longer. Held because it touches a
+  primitive used in ~30+ manager sites and changes pacing math during the
+  same window in which V1 magnitudes are being tuned. Best added as a V2
+  follow-up once the magnitude floor is settled — at that point we can
+  measure whether the 0.7 floor actually punishes casual immersive play.
+- **Broader cheap-signal taxonomy.** V1 ships one cheap route (Akatosh
+  level-up). V2 candidates, in roughly decreasing confidence:
+  - Per-skill deity attribution: Zenithar ← Smithing/Speech/Enchanting;
+    Julianos ← Destruction/Restoration/Alteration/Conjuration/Alchemy/
+    Enchanting; Stendarr ← Restoration/Block; Talos/HoonDing ←
+    One-Handed/Two-Handed/Heavy Armor; Auri-El ← Marksman/Light Armor.
+    Mara/Dibella/Kynareth/Arkay deferred until clear mappings exist.
+  - Combat-kill widening: any humanoid kill → tiny HoonDing pulse, any
+    beast kill → tiny Hircine pulse, Wayfarer-only, anti-farm capped.
+    Power gamers fight constantly; this is background piety flow.
+  - Radiant-quest admission at 0.5× weight for the broadly-aligned
+    radiants (bandit-camp clears → Stendarr; misc-fetches → no good
+    attribution, likely permanently rejected).
+- **Notification-first reward-loop signals.** Listed in v3 §5.3 as a
+  rejected source shape. Likely stays permanently rejected even in
+  Wayfarer V2 — those loops are exactly the kind of grind Wayfarer should
+  NOT amplify.
 
 ---
 
@@ -417,3 +508,19 @@ truth for the required CK records.
   and `PDV_MCM` Experience Mode page.
 - Paired authoring manifest at
   `references/authoring/PDV_ExperienceMode.manifest.json`.
+
+### v1.1 — 2026-06-22 — V1 scope tightening
+
+- §5.1: documented composition-with-Survival-Context-damp choice (stack
+  multiplicatively; Wayfarer's `GainMultiplier()` trails the existing
+  `GetSurvivalContextGainMultiplier`; worst case = 1.125×).
+- §5.3 rewritten: the original "cheap-signal reject branch" in
+  `PDV_ActionRouter` does not exist; rejection is by absence of handler.
+  V1 ships ONE curated cheap route — Akatosh skill-milestone pulse on
+  player level-up, gated on `AllowCheapRepeatables()`, weighted 0.5×,
+  capped via `ConsumeDailyRepeatMultiplier("PDV.Signal.WayfarerAkatoshLevel")`.
+  Targets the casual power-gamer persona who skips immersive rites.
+- §2.2 / §2.3 / §5.4 narrowed to match V1 scope.
+- §6 verification: step 5 rewritten for the Akatosh route smoke.
+- §7.2 added: deferred Wayfarer V2 work (softer anti-farm base, broader
+  cheap-signal taxonomy) recorded as considered-not-rejected.

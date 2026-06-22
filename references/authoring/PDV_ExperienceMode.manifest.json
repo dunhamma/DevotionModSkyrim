@@ -4,7 +4,7 @@
   "defaultOutput": "PDV_ExperienceModeOverlay.esp",
   "notes": [
     "This manifest records the CK/xEdit contract for the user-facing experience-mode toggle. Design lock lives in references/PDV_ExperienceMode_DesignReference.md.",
-    "pdv_author cannot mint new GlobalVariable or Quest records, so the records below remain manual CK/xEdit work. Once the records exist, this manifest's operations apply the script attachments and property wiring as a reversible overlay.",
+    "pdv_author cannot mint new GlobalVariable or Quest records. The record-minting plan that closes that gap is at references/authoring/PDV_ExperienceMode_RecordSpec.md (a small Mutagen-based tool modelled on tools/pdv-stance-author/, recommended). Once the records exist, this manifest's operations[] apply the script attachments and property wiring as a reversible overlay.",
     "The PDV_ModePreset script is the single owner of the preset scalars. Other scripts (PDV__ManagerQuest, PDV_ActionRouter, PDV_MCM) consume those scalars at the integration slots named in the design reference.",
     "Default PDV.Mode value is 0 (Pilgrim's Path) so authored behavior is preserved on first read."
   ],

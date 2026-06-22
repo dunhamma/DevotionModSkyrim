@@ -49,9 +49,10 @@ other quest-ref properties:
 PDV_ModePreset Property PDV_ModePresetRef Auto
 ```
 
-**2b. Gain multiplier** — `RunGainPipeline` (live **lines 7970–7981**). Append
-the mode multiplier as the LAST factor so stance/curse/etc. still dominate the
-shape. Insert after the Khajiit-lunar line (**7977**), before `endIf`:
+**2b. Gain multiplier** — `RunGainPipeline` (live **lines 8008–8019**). Append
+the mode multiplier as the LAST factor so stance/curse/Survival-damp/etc. still
+dominate the shape. Insert after the Khajiit-lunar line (**8014**), before
+`endIf`:
 ```papyrus
         appliedAmount = appliedAmount * GetKhajiitLunarAlignmentMultiplier(deity)
         if PDV_ModePresetRef
@@ -60,8 +61,15 @@ shape. Insert after the Khajiit-lunar line (**7977**), before `endIf`:
     endIf
 ```
 
+**Composition with `GetSurvivalContextGainMultiplier` (decided 2026-06-22 — A).**
+Wayfarer composes multiplicatively as the trailing factor. Worst case
+Wayfarer + severity-3 survival hardship = `1.25 × 0.9 = 1.125`. Do NOT
+short-circuit the Survival damp when Wayfarer is on; the damp is small,
+conditional, and a deliberate diegetic feature gated behind its own MCM
+toggle (`PDV.Compat.SurvivalContextEnabled`). See DesignReference §5.1.
+
 **2c. Daily-cap scalar** — `RunDawnConsolidateScratch`, the clamp at live
-**line 7386**. Per DesignReference §5.2, scale the cap BOUND (not the clamped
+**line 7423**. Per DesignReference §5.2, scale the cap BOUND (not the clamped
 value) so Wayfarer raises the ceiling proportionally. Replace:
 ```papyrus
             Float clampedToday = ClampValue(scaledToday, -PIETY_DAILY_MAX_DELTA, PIETY_DAILY_MAX_DELTA)
@@ -74,14 +82,41 @@ with:
             endIf
             Float clampedToday = ClampValue(scaledToday, -dailyCap, dailyCap)
 ```
-Leave the existing post-clamp Orc/Imperial multipliers (lines 7388–7389)
-untouched.
+Leave any existing post-clamp per-race multipliers untouched.
 
-**2d. (Optional, only if v3 decay slot is live)** `DecayScalar()`/`GraceScalar()`
-hooks in `RunDawnApplyDecay`/`ApplyDecayToDeity`. The current decay path
-(`ApplyDecayToDeity`, see `PDV.LastDecayAppliedDay` gate) is live, so apply
-`DecayScalar()` to the per-deity decay step there. Confirm the exact decay-step
-line with Claude before editing — flag if you can't find a single clean step.
+**2d. Decay-step scalar (live; anchor pinned).** The decay path is live —
+`ApplyDecayToDeity` at line **7575**, with the single-line decay step at
+line **7610**:
+```papyrus
+    Float newPiety = currentPiety - (DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetCurseGainMultiplier(deity) * GetDaedricStigmaGainMultiplier(deity))
+```
+Add `DecayScalar()` as a trailing factor on the subtrahend so Wayfarer halves
+the per-day decay (and Pilgrim is unchanged):
+```papyrus
+    Float decayStepScalar = 1.0
+    if PDV_ModePresetRef
+        decayStepScalar = PDV_ModePresetRef.DecayScalar()
+    endIf
+    Float newPiety = currentPiety - (DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetCurseGainMultiplier(deity) * GetDaedricStigmaGainMultiplier(deity) * decayStepScalar)
+```
+
+**2e. Grace-window scalar (gate-only).** `DECAY_GRACE_DAYS` is referenced at
+five live sites: the actual decay gate (**7591**), two reset-events
+(**7756**, **7784**), and the dashboard "starving" detection (**8001**).
+Scale ONLY the decay gate at line 7591:
+```papyrus
+    Float graceWindow = DECAY_GRACE_DAYS
+    if PDV_ModePresetRef
+        graceWindow = graceWindow * PDV_ModePresetRef.GraceScalar()
+    endIf
+    if (nowTime - lastEventTime) < graceWindow
+        return
+    endIf
+```
+Do NOT scale the reset-event sites (those write a one-shot timestamp; mode-
+dependent scaling there would create save-divergent state) and do NOT scale
+the dashboard "starving" gate (UI flavor, not pacing). If you find another
+caller that genuinely needs grace scaling, flag rather than scale.
 
 ## Step 3 — `PDV_GLO_Mode` mirror (follow the DebugLevel idiom)
 
@@ -93,17 +128,65 @@ script needs mode for a CK condition, add a parallel `PDV_GLO_Mode` sync. If no
 track reads mode (likely true for V1), skip this — the mirror is only for future
 CK-condition dialogue. Note in your commit whether you added syncs.
 
-## Step 4 — `PDV_ActionRouter.psc` cheap-signal gate
+## Step 4 — Wayfarer Akatosh skill-milestone route (replaces former cheap-signal gate)
 
-DesignReference §5.3 assumes a cheap-repeatable reject branch. **Locate it
-first** (search the router for the raw-skill-XP / raw-craft-count / generic-
-radiant rejection). Two cases:
-- If a clean `IsCheapRepeatableSignal(...) → return` reject exists: gate it on
-  `PDV_ModePresetRef.AllowCheapRepeatables()` and, when admitted, dispatch with
-  `CheapRepeatableWeight()` (§5.3 snippet).
-- If there is NO single reject branch (rejections are implicit/scattered):
-  **stop and report to Claude** — we'll decide whether Wayfarer's cheap-signal
-  admission ships in beta or is deferred. Do not invent a gate.
+**Scope decision (2026-06-22, see DesignReference §5.3).** The original §5.3
+plan to gate an `IsCheapRepeatableSignal` reject branch in `PDV_ActionRouter`
+is dropped: that branch does not exist (rejection is by absence of handler).
+V1 ships ONE curated cheap-signal route instead — a small Akatosh pulse on
+player level-up, Wayfarer-only. `PDV_ActionRouter` requires NO edits in this
+batch.
+
+**4a. Player-alias level-up hook** — in
+`live-source/Scripts/Source/PDV_PlayerEvents.psc`. The script already uses
+PO3 Papyrus Extender events (e.g., `OnSpellLearned`, `OnObjectEquipped`,
+`OnMagicEffectApplyEx`). Add a new event handler that fires on player
+level-up. Preferred path: PO3's `Event OnPlayerLevelUp(...)`. If PO3's signature
+doesn't match the player-alias context, fall back to vanilla
+`Event OnLevelIncrease(Actor akSelf)` on the alias — either is acceptable.
+The handler delegates straight to the manager (no inline logic, no per-event
+gating in PlayerEvents):
+```papyrus
+Event OnPlayerLevelUp(...)
+    if PDV_Manager
+        PDV_Manager.HandleWayfarerAkatoshLevel()
+    endIf
+EndEvent
+```
+
+**4b. New manager handler** — in `PDV__ManagerQuest.psc`, alongside other
+`Handle*` functions. Mode-gate + anti-farm + dispatch via
+`AwardPietyInternal`:
+```papyrus
+Function HandleWayfarerAkatoshLevel()
+    if !PDV_ModePresetRef || !PDV_ModePresetRef.AllowCheapRepeatables()
+        return ; Pilgrim default — no Akatosh pulse for raw level-up
+    endIf
+    if !PDV_Akatosh
+        return
+    endIf
+    Float baseAmount = 1.0
+    Float weight = PDV_ModePresetRef.CheapRepeatableWeight() ; 0.5
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.WayfarerAkatoshLevel")
+    Float amount = baseAmount * weight * multiplier
+    if amount > 0.0
+        AwardPietyInternal(PDV_Akatosh, amount, STANCE_NEUTRAL, "wayfarer_akatosh_level")
+    endIf
+EndFunction
+```
+Net first-fire-of-day = `1.0 × 0.5 × 1.0 × 1.25 (Wayfarer GainMultiplier in
+RunGainPipeline) = 0.625` Akatosh piety. Subsequent same-day fires decay by
+0.7ⁿ via the existing anti-farm primitive. Pilgrim returns at the gate, so
+zero behaviour change on default mode.
+
+**4c. No record minting needed.** This route reuses the existing
+`PDV_Akatosh` deity reference and `PDV_ModePresetRef` property the manager
+already gets from Claude's records pass. No new QUST/GLOB.
+
+**4d. Survey/trace surfacing (nice-to-have).** Reason tag `wayfarer_akatosh_level`
+will route through the existing Survey/recent-events surfacing. If
+`HumanizeDriverReason` needs an entry, add `"wayfarer_akatosh_level" →
+"the everyday work of becoming"` (or similar; defer to player-copy review).
 
 ## Step 5 — `PDV_MCM.psc` Experience Mode page
 
@@ -117,9 +200,11 @@ becomes the path display or stays the existing content, to avoid a duplicate.
 
 ## Records Claude provides before you wire properties
 
+Minting plan + execution path: `references/authoring/PDV_ExperienceMode_RecordSpec.md`.
+
 | Record | Type | Note |
 |--------|------|------|
-| `PDV_ModePreset` | QUST | hidden, start-game-enabled, no aliases, script `PDV_ModePreset`; props `PDV_Manager`→`PDV__ManagerQuest`, `PDV_GLO_Mode`→`PDV_GLO_Mode` |
+| `PDV_ModePreset` | QUST | hidden, start-game-enabled, priority 60, no aliases, script `PDV_ModePreset`; props `PDV_Manager`→`PDV__ManagerQuest`, `PDV_GLO_Mode`→`PDV_GLO_Mode` |
 | `PDV_GLO_Mode` | GLOB | Short, InitialValue 0 |
 | `PDV_ModePresetRef` | property | on `PDV_MCM`, `PDV__ManagerQuest`, `PDV_ActionRouter` → `PDV_ModePreset` |
 
@@ -136,12 +221,22 @@ WARN is acceptable). Snapshot + commit.
 
 DesignReference §6 smoke: (1) existing save defaults to Pilgrim; (2) MCM toggle
 round-trips `PDV.Mode` + `PDV_GLO_Mode`; (3) Wayfarer gain = 1.25× a known
-curated signal; (4) Wayfarer dawn cap = 1.5×; (5) cheap-signal gate (if shipped);
-(7) mid-save flip changes nothing stored. Record in the manual evidence ledger.
+curated signal; (4) Wayfarer dawn cap = 1.5×; (5) Akatosh level-up route —
+Pilgrim emits nothing, Wayfarer emits ~0.625 first-fire-of-day to Akatosh and
+0.7ⁿ-damps subsequent same-day fires; (6) decay halved on Wayfarer; (7) mid-
+save flip changes nothing stored. Record in the manual evidence ledger.
 
 ## Open items for Claude (flag, don't guess)
 
-1. Step 2d decay-step exact anchor.
-2. Step 4 — whether a clean cheap-repeatable reject branch exists in
-   `PDV_ActionRouter`; if not, escalate the beta-scope decision.
-3. Step 5 — the `GetPlayerMcmModeLine()` duplicate-vs-repurpose call.
+1. ~~Step 2d decay-step exact anchor.~~ **Resolved 2026-06-22** — pinned to
+   line 7610; spec inlined at Step 2d/2e.
+2. ~~Step 4 — whether a clean cheap-repeatable reject branch exists in
+   `PDV_ActionRouter`.~~ **Resolved 2026-06-22** — branch does not exist;
+   scope reframed to one curated Akatosh level-up route (Step 4 a–d). No
+   `PDV_ActionRouter` edits.
+3. Step 5 — the `GetPlayerMcmModeLine()` duplicate-vs-repurpose call. The
+   existing helper means "player's per-race life-mode" (Hunter/Stalker etc.)
+   and is read in ~6 places (Survey, dashboard, journal, etc.). **Do NOT
+   repurpose it.** Add the Experience Mode row as a NEW line on the
+   Status/Player page (e.g., "Path: Pilgrim's Path") above or below the
+   existing "Mode:" line; both rows coexist.
