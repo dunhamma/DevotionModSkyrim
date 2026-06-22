@@ -7916,6 +7916,11 @@ Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)
     ; Book of Days entry). Only fires on an UP-crossing from a lower tier -- if the deity
     ; is already at/above the target, reset it first, or use the piety-today + dawn path.
     RecomputeTier(deity, True)
+    ; Resync the race reward family so a focused/emphasis reward (Khajiit emphasis, an
+    ; Imperial/Altmer focused patron, etc.) actually grants on the seed. RecomputeTier only
+    ; fires OnTierChange (Boon slots), not SyncFirstTierRaceRewardRuntime -- without this a
+    ; debug piety seed reads a false 0 on the HP bar until a dawn pass.
+    SyncFirstTierRaceRewardRuntime()
 EndFunction
 
 Function DebugForceSetPietyTodayByIndex(Int deityIndex, Float amount)
@@ -8562,7 +8567,10 @@ EndFunction
 Function SyncFirstTierRaceRewardRuntime()
     Actor playerRef = Game.GetPlayer()
     Spell activeReward = GetFirstTierRaceRewardSpellForOrigin()
-    Bool shouldBeActive = IsFirstTierRaceRewardEligible() && activeReward
+    ; The origin's first-tier "+10" Health floor grants to an active patron (>= Seeker) OR a
+    ; broad worshipper with accumulated service (IsBroadFloorEligible) -- without the broad arm
+    ; a broad worshipper got nothing until the count-gated Faithful (T2) reward, a 0 -> +20 cliff.
+    Bool shouldBeActive = (IsFirstTierRaceRewardEligible() || IsBroadFloorEligible()) && activeReward
 
     SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T1, shouldBeActive && activeReward == PDV_Bless_Altmer_Orthodox_T1, "Altmer T1")
     ; Argonian Hist_T1 is intentionally absent here: SyncArgonianRewards owns it on the substrate
@@ -9486,6 +9494,37 @@ Bool Function IsFirstTierRaceRewardEligible()
     endIf
 
     return False
+EndFunction
+
+; Broad-worship floor eligibility: the origin's first-tier reward (the "+10" Health floor --
+; Civic/Tradition/Malacath/Orthodox T1) also grants to a BROAD worshipper, not only an active
+; patron. Mirrors the active path's "earned Seeker before the floor" by gating on the same
+; accumulated-service count the Faithful (T2) reward uses; Seeker-equivalent = 3 acts (half the
+; Faithful gate of 6). Only the four offer/broad-lane origins have a broad lane here.
+Bool Function IsBroadFloorEligible()
+    if GetPatronState() != PATRON_STATE_BROAD
+        return False
+    endIf
+    Int origin = GetPlayerOriginRaceIndex()
+    if origin != ORIGIN_IMPERIAL && origin != ORIGIN_BRETON && origin != ORIGIN_ORC && origin != ORIGIN_ALTMER
+        return False
+    endIf
+    return GetBroadFloorServiceCount(origin) >= 3
+EndFunction
+
+; Accumulated broad-worship service count for the origin's broad lane -- the same accumulator
+; the Faithful/T2 reward gates on at >= 6. Altmer sums its two favor counters.
+Int Function GetBroadFloorServiceCount(Int origin)
+    if origin == ORIGIN_IMPERIAL
+        return StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount")
+    elseIf origin == ORIGIN_BRETON
+        return StorageUtil.GetIntValue(None, "PDV.Breton.TraditionHookCount")
+    elseIf origin == ORIGIN_ORC
+        return StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount")
+    elseIf origin == ORIGIN_ALTMER
+        return StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count")
+    endIf
+    return 0
 EndFunction
 
 Spell Function GetFirstTierRaceRewardSpellForOrigin()
