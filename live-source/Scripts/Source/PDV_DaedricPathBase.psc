@@ -46,6 +46,11 @@ Function OnTierChange(Int oldTier, Int newTier)
         ; The active pact lapsed to nothing; drop its effects and the pointer.
         ClearLiveDaedricPactSpells()
         StorageUtil.SetFormValue(None, DAEDRIC_ACTIVE_PACT_KEY, None)
+        ; Leave a breadcrumb: this base script has no manager handle, so the manager's
+        ; 1s tick (ProcessPendingDaedricLapse) reads this key and surfaces the lapse.
+        ; Switch/migration severs clear the pointer directly and never reach here, so
+        ; they cannot false-fire a lapse.
+        StorageUtil.SetFormValue(None, "PDV.Daedric.PendingLapse", GetDeityForm())
     endIf
 
     if GetDebugLevel() >= 1
@@ -63,12 +68,22 @@ EndFunction
 ; live (this Prince's or another's), grant this Prince's boon+price for its tier,
 ; and record them for the next switch. Idempotent.
 Function MakeActiveDaedricPact()
+    Form priorPact = StorageUtil.GetFormValue(None, DAEDRIC_ACTIVE_PACT_KEY)
     ClearLiveDaedricPactSpells()
     StorageUtil.SetFormValue(None, DAEDRIC_ACTIVE_PACT_KEY, GetDeityForm())
     Int tierValue = GetStoredTier()
     SyncPatronBoonsToTier(tierValue)
     SyncDaedricContractToTier(tierValue)
     TrackLiveDaedricPactSpells(tierValue)
+    ; THE exclusivity seam. Every NEW pact activation funnels through here -- the
+    ; live commitment funnel, an ambient/shrine tier-up (OnTierChange auto-calls this),
+    ; and switch-back. On a genuine new activation (not a same-pact re-grant) leave a
+    ; breadcrumb; the manager tick (ProcessPendingDaedricActivation) reads it and severs
+    ; any active patron + surfaces the switch. The base has no manager handle, so it
+    ; cannot check/sever the patron itself -- hence the breadcrumb, mirroring PendingLapse.
+    if priorPact != GetDeityForm()
+        StorageUtil.SetFormValue(None, "PDV.Daedric.PendingActivation", GetDeityForm())
+    endIf
 EndFunction
 
 Function ClearLiveDaedricPactSpells()

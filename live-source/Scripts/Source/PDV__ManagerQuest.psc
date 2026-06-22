@@ -467,8 +467,9 @@ Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 Int Property LIKES_DISLIKES_VERSION = 9 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 3 AutoReadOnly
 ; Bump when the Daedric pact model changes so existing saves re-run the migration
-; (v2: active-pact-only sync + milestone presentation refresh).
-Int Property DAEDRIC_PACT_VERSION = 2 AutoReadOnly
+; (v2: active-pact-only sync + milestone presentation refresh; v3: collapse a
+; co-held patron+Prince, keep higher tier, tie -> Prince).
+Int Property DAEDRIC_PACT_VERSION = 3 AutoReadOnly
 Float Property TIER_DOWN_HYSTERESIS = 5.0 AutoReadOnly
 Float Property ORC_RATE_MULT_STRONGHOLD = 1.0 AutoReadOnly
 Float Property ORC_RATE_MULT_CITY = 0.75 AutoReadOnly
@@ -669,6 +670,8 @@ Event OnUpdate()
         HandleDiegeticLoad("update")
     endIf
     ProcessQueuedDaedricMilestonePresentation()
+    ProcessPendingDaedricActivation()
+    ProcessPendingDaedricLapse()
     ProcessQueuedPrismaToastRetry()
 
     if _panelDirty && AutoPushPrismaPanel && PDV_PrismaBridge.IsAvailable()
@@ -1815,7 +1818,24 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     String tierLabelOverride = ""
     Float championThreshold = 85.0
 
-    if _activeDeity
+    PDV_DaedricPathBase panelPact = GetActiveDaedricPactPath()
+    if panelPact
+        ; Prince-wins: the active pact is the single commitment, so the WHOLE panel
+        ; identity (not just the text fields) reflects it. _activeDeity is None here
+        ; (severed under exclusivity), so without this the header/bar would fall to the
+        ; race substrate at piety 0.
+        titleText = panelPact.DeityName
+        symbolName = GetPrismaSymbolForDeity(panelPact)
+        if symbolName == "journal"
+            symbolName = "daedric"
+        endIf
+        piety = panelPact.GetStoredPiety()
+        pietyToday = GetPietyToday(panelPact)
+        tierValue = panelPact.GetStoredTier()
+        if panelPact.ThresholdChampion > 0.0
+            championThreshold = panelPact.ThresholdChampion
+        endIf
+    elseIf _activeDeity
         titleText = _activeDeity.DeityName
         symbolName = GetPrismaSymbolForDeity(_activeDeity)
         piety = GetPiety(_activeDeity)
@@ -1839,6 +1859,12 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         endIf
     endIf
 
+    ; The single active commitment (pact-wins, else patron) for the threshold + instrument.
+    PDV_DeityBase panelCommitment = _activeDeity
+    if panelPact
+        panelCommitment = panelPact
+    endIf
+
     String tierLabel = tierLabelOverride
     if tierLabel == ""
         tierLabel = GetCurrentStandingLabel()
@@ -1852,7 +1878,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     j = j + ",\"summary\":\"" + JsonSafeString(GetSurveyDevotionText()) + "\""
     j = j + ",\"tier\":" + tierValue
     j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
-    j = j + ",\"nextText\":\"" + JsonSafeString(GetPanelNextThresholdText(_activeDeity, piety)) + "\""
+    j = j + ",\"nextText\":\"" + JsonSafeString(GetPanelNextThresholdText(panelCommitment, piety)) + "\""
     j = j + ",\"piety\":" + piety
     j = j + ",\"pietyToday\":" + pietyToday
     j = j + ",\"todayMood\":\"" + JsonSafeString(GetPanelTodayMood(pietyToday)) + "\""
@@ -1862,7 +1888,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     j = j + ",\"acts\":[" + GetPanelActsJson() + "]"
     j = j + ",\"rites\":[" + GetPanelRitesJson() + "]"
     j = j + ",\"relations\":[" + GetPanelRelationsJson() + "]"
-    j = j + ",\"instrument\":" + GetPanelInstrumentJson(originRace, _activeDeity != None, tierValue, tierLabel, piety, championThreshold)
+    j = j + ",\"instrument\":" + GetPanelInstrumentJson(originRace, panelCommitment != None, tierValue, tierLabel, piety, championThreshold)
     j = j + ",\"dashboard\":" + GetDashboardJson()
     j = j + ",\"debug\":" + GetPanelDebugJson()
     j = j + "}"
@@ -1880,6 +1906,14 @@ String Function GetDashboardJson()
     Int shown = 0
 
     PDV_DeityBase tracked = _activeDeity
+    if !tracked
+        ; An active Prince pact is the tracked commitment (it's not in PDV_FLST_AllDeities,
+        ; so the pantheon loop below won't double-list it).
+        PDV_DaedricPathBase dashPact = GetActiveDaedricPactPath()
+        if dashPact
+            tracked = dashPact
+        endIf
+    endIf
     if !tracked && IsKhajiitOrigin()
         tracked = GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
     endIf
@@ -2089,6 +2123,10 @@ String Function GetPanelPatronNote()
     if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
         return "Choose a path through play, prayer, and consequence."
     endIf
+    PDV_DaedricPathBase pactPath = GetActiveDaedricPactPath()
+    if pactPath
+        return "A pact binds you; lesser devotions fall quiet."
+    endIf
     if IsBroadWorshipActive()
         return "You keep the broad rites of your people, with no single patron yet named."
     endIf
@@ -2110,6 +2148,9 @@ String Function GetPanelDriftLabel()
     if StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount") > 0
         return "Thinning"
     endIf
+    if GetActiveDaedricPactPath()
+        return "Steady"
+    endIf
     if GetPatronState() == PATRON_STATE_ACTIVE
         return "Steady"
     endIf
@@ -2118,7 +2159,10 @@ EndFunction
 
 String Function GetPanelActsJson()
     String items = ""
-    if _activeDeity
+    PDV_DaedricPathBase actsPact = GetActiveDaedricPactPath()
+    if actsPact
+        items = AppendJsonItem(items, PanelPlainObject("daedric", "neutral", "Keep the pact", "Act in keeping with " + actsPact.DeityName + " to hold this pact."))
+    elseIf _activeDeity
         Float today = GetPietyToday(_activeDeity)
         if today != 0.0
             String tone = "good"
@@ -2137,7 +2181,7 @@ String Function GetPanelActsJson()
 
     ; Quasi-patron: show current substrate/state-track mode as the headline act
     ; when there is no scoring patron ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â gives the player their mode at a glance.
-    if !_activeDeity
+    if !_activeDeity && !actsPact
         Int originRace = GetPlayerOriginRaceIndex()
         String quasiLabel = GetPanelQuasiPatronTierLabel(originRace)
         if quasiLabel != ""
@@ -2150,7 +2194,10 @@ EndFunction
 
 String Function GetPanelRitesJson()
     String items = PanelPlainObject("journal", "", "Survey your devotion", "Call on the Survey Devotion power to read where your path stands.")
-    if _activeDeity
+    PDV_DaedricPathBase ritesPact = GetActiveDaedricPactPath()
+    if ritesPact
+        items = AppendJsonItem(items, PanelPlainObject("daedric", "", "Keep " + ritesPact.DeityName + "'s pact", "Act in keeping with " + ritesPact.DeityName + " to hold this pact."))
+    elseIf _activeDeity
         items = AppendJsonItem(items, PanelPlainObject(GetPrismaSymbolForDeity(_activeDeity), "", "Keep " + _activeDeity.DeityName + "'s rites", "Act in keeping with " + _activeDeity.DeityName + " to deepen this bond."))
     else
         ; Quasi-patron: tell the player what kind of acts build their path.
@@ -2166,7 +2213,17 @@ EndFunction
 
 String Function GetPanelRelationsJson()
     String items = ""
-    if _activeDeity
+    PDV_DaedricPathBase relsPact = GetActiveDaedricPactPath()
+    if relsPact
+        Int dstate = relsPact.GetDaedricStateForPlayer()
+        String dstateTone = "neutral"
+        if dstate == relsPact.DAEDRIC_STATE_NATIVE
+            dstateTone = "good"
+        elseIf dstate >= relsPact.DAEDRIC_STATE_TABOO
+            dstateTone = "warning"
+        endIf
+        items = AppendJsonItem(items, PanelPlainObject("", dstateTone, "", relsPact.DeityName + "'s pact stands " + relsPact.GetDaedricStateLabel(dstate) + " among your people."))
+    elseIf _activeDeity
         Int stance = _activeDeity.GetStanceForPlayer()
         String stanceText = ""
         String stanceTone = ""
@@ -2473,6 +2530,14 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
     ; first-commit and tier-ups; this covers switch-back. A sub-threshold (tier 0)
     ; Prince never steals the active pact from a committed one.
     if tierAfter > 0 && !path.IsActiveDaedricPact()
+        ; Activation itself is the exclusivity seam (handled in MakeActiveDaedricPact ->
+        ; PendingActivation -> ProcessPendingDaedricActivation), so this funnel does not
+        ; sever the patron directly: a tier-up already auto-activated via OnTierChange
+        ; before this line. By design, a deliberately-abandoned (dormant, tier>0, not
+        ; active) Prince re-seats ONLY via a tier crossing or this curated signal --
+        ; same-tier ambient acts / shrine prayer do NOT re-seat it (RecomputeStoredTier's
+        ; no-change branch strips, not activates). Every route that DOES re-activate
+        ; passes through MakeActiveDaedricPact, which enforces exclusivity.
         path.MakeActiveDaedricPact()
     endIf
     ; Player-facing fiction is owned by the path's authored MESG records, fired from
@@ -2630,6 +2695,118 @@ PDV_DaedricPathBase Function GetDaedricPathAtListIndex(Int listIndex)
     return PDV_FLST_DaedricPaths_All.GetAt(listIndex) as PDV_DaedricPathBase
 EndFunction
 
+; Resolve the single live Daedric pact to its path. Requires tier > NONE so a stale
+; ActivePact pointer left at tier 0 reads as "no pact" (Survey/panel never render a
+; ghost pact). Pure read; safe to call from Survey/panel/commit paths.
+PDV_DaedricPathBase Function GetActiveDaedricPactPath()
+    Form activeForm = StorageUtil.GetFormValue(None, "PDV.Daedric.ActivePact")
+    if !activeForm
+        return None
+    endIf
+    Int i = 0
+    Int count = GetDaedricPathCount()
+    while i < count
+        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
+        if path && path.GetDeityForm() == activeForm && path.GetStoredTier() > TIER_NONE
+            return path
+        endIf
+        i += 1
+    endWhile
+    return None
+EndFunction
+
+; Look up a Daedric path by its deity Form regardless of tier (used for lapse
+; surfacing, where the lapsed path is at tier 0).
+PDV_DaedricPathBase Function GetDaedricPathByForm(Form deityForm)
+    if !deityForm
+        return None
+    endIf
+    Int i = 0
+    Int count = GetDaedricPathCount()
+    while i < count
+        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
+        if path && path.GetDeityForm() == deityForm
+            return path
+        endIf
+        i += 1
+    endWhile
+    return None
+EndFunction
+
+; Survey block for an active pact. Uses GetPublicTierBand so the Prince band reads
+; identically to a patron band. PLACEHOLDER copy (user rewrites post-beta).
+String Function GetDaedricSurveyText(PDV_DaedricPathBase path)
+    return path.DeityName + " holds your pact. Standing: " + GetPublicTierBand(path.GetStoredTier()) + "."
+EndFunction
+
+; Switch-severance surface (patron<->Prince). Top-left notification + Book of Days
+; entry + best-effort Prisma toast. PLACEHOLDER copy.
+Function SurfaceSwitchSeverance(String mode, String severedName)
+    String line = "You forsake the pact with " + severedName + ". A new devotion takes its place."
+    if mode == "patron_to_prince"
+        line = "You turn from your former patron to " + severedName + ". The old bond is severed."
+    endIf
+    SendPrismaEventToast("shift", None, line, "", "")
+    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "reorientation", "journal", true)
+    Debug.Notification(line)
+EndFunction
+
+; Lapse surface (a Prince pact fell to none). PLACEHOLDER copy.
+Function SurfaceDaedricLapse(PDV_DaedricPathBase path)
+    if !path
+        return
+    endIf
+    String line = "Your pact with " + path.DeityName + " has lapsed into silence."
+    SendPrismaEventToast("neglect", path, line, "", "")
+    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "neglect.drop", "daedric", false)
+    Debug.Notification(line)
+EndFunction
+
+; Drain the deferred-lapse flag the base script sets in OnTierChange when a pact
+; lapses to none (the base has no manager handle, so it leaves a breadcrumb the
+; manager tick picks up). Switch/migration severs clear the pointer directly and
+; never set this flag, so they cannot false-fire a lapse here.
+Function ProcessPendingDaedricLapse()
+    Form pending = StorageUtil.GetFormValue(None, "PDV.Daedric.PendingLapse")
+    if !pending
+        return
+    endIf
+    StorageUtil.SetFormValue(None, "PDV.Daedric.PendingLapse", None)
+    ; If the same Prince was re-committed within the tick, the pointer is back to it,
+    ; so it did not actually lapse -- skip.
+    if StorageUtil.GetFormValue(None, "PDV.Daedric.ActivePact") == pending
+        return
+    endIf
+    SurfaceDaedricLapse(GetDaedricPathByForm(pending))
+EndFunction
+
+; Drain the deferred-activation flag the base sets in MakeActiveDaedricPact on a NEW
+; pact activation (from ANY path: live funnel, ambient tier-up, shrine prayer, switch-
+; back). This is where patron<->Prince exclusivity is enforced: if a single patron is
+; still active when a Prince pact becomes the live commitment, sever the patron and
+; surface the switch. (Broad worship has no competing single-patron boons and is left
+; as a documented design decision.) Switch/migration severs clear the pointer directly
+; and never set this flag, so they don't interfere.
+Function ProcessPendingDaedricActivation()
+    Form pending = StorageUtil.GetFormValue(None, "PDV.Daedric.PendingActivation")
+    if !pending
+        return
+    endIf
+    StorageUtil.SetFormValue(None, "PDV.Daedric.PendingActivation", None)
+    ; Act only if this pact is still the live active pact (it may have lapsed/switched
+    ; away in the interim).
+    if StorageUtil.GetFormValue(None, "PDV.Daedric.ActivePact") != pending
+        return
+    endIf
+    if GetPatronState() == PATRON_STATE_ACTIVE
+        PDV_DaedricPathBase path = GetDaedricPathByForm(pending)
+        SetActiveDeity(None)
+        if path
+            SurfaceSwitchSeverance("patron_to_prince", path.DeityName)
+        endIf
+    endIf
+EndFunction
+
 PDV_DeityBase Function GetDeityByName(String deityName)
     if deityName == "" || !PDV_FLST_AllDeities
         return None
@@ -2669,6 +2846,18 @@ EndFunction
 Function SetActiveDeity(PDV_DeityBase newDeity)
     if newDeity == _activeDeity
         return
+    endIf
+
+    ; Exclusivity (data-layer): committing a patron severs an active Prince pact.
+    ; Guarded on newDeity != None so SetActiveDeity(None) (the patron-teardown path,
+    ; incl. the Prince-commit sever above) cannot re-enter this and double-clear.
+    if newDeity != None
+        PDV_DaedricPathBase priorPact = GetActiveDaedricPactPath()
+        if priorPact
+            priorPact.ClearLiveDaedricPactSpells()
+            StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
+            SurfaceSwitchSeverance("prince_to_patron", priorPact.DeityName)
+        endIf
     endIf
 
     if _activeDeity
@@ -6605,6 +6794,27 @@ Function MigrateDaedricPactsIfNeeded()
     StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
     if topPath && topTier > 0
         topPath.MakeActiveDaedricPact()
+    endIf
+
+    ; v3: enforce patron<->Prince exclusivity on legacy saves holding BOTH. Keep the
+    ; higher tier (tie -> Prince, matching the live Prince-wins surface), sever the
+    ; loser, and surface a one-time resolution note. The StripPactSpells loop above
+    ; already cleaned stacked spells, so the sever fights nothing. SetActiveDeity(None)
+    ; has newDeity==None, so it does not re-enter the patron-commit Prince-sever.
+    Bool hasPatron = (GetPatronState() == PATRON_STATE_ACTIVE) && _activeDeity
+    if hasPatron && topPath && topTier > 0
+        Int patronTier = GetTier(_activeDeity)
+        String resolvedName = ""
+        if topTier >= patronTier
+            resolvedName = topPath.DeityName
+            SetActiveDeity(None)
+        else
+            resolvedName = _activeDeity.DeityName
+            topPath.ClearLiveDaedricPactSpells()
+            StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
+        endIf
+        Debug.Notification("Your devotion has resolved to " + resolvedName + ".")
+        AppendBookOfDaysEntry("Your devotion has resolved to " + resolvedName + ".", Utility.GetCurrentGameTime() as Int, "reorientation", "journal", true)
     endIf
 
     StorageUtil.SetIntValue(None, "PDV.Daedric.PactVersion", DAEDRIC_PACT_VERSION)
@@ -10748,10 +10958,34 @@ Function SendPrismaCurseToast(Int oldState, Int newState)
     ; Race-aware context so the toast reads right for each theology.
     String context = GetCurseContextForRace(phase, curseType)
 
+    ; Send explicit phase-correct title/message so app.js never falls to its no-phase
+    ; "A curse stirs" default (it prefers an explicit title/message when present, like
+    ; the working milestone toast). PLACEHOLDER copy.
+    String curseLabel = "The curse"
+    if curseType == "werewolf"
+        curseLabel = "Lycanthropy"
+    elseIf curseType == "vampire"
+        curseLabel = "Vampirism"
+    endIf
+    String curseTitle = curseLabel + " stirs"
+    String curseMessage = "Something has changed in your blood."
+    if phase == "onset"
+        curseTitle = curseLabel + " takes hold"
+        curseMessage = curseLabel + " has taken root in your blood."
+    elseIf phase == "cure"
+        curseTitle = curseLabel + " is lifted"
+        curseMessage = curseLabel + " has been driven out."
+    elseIf phase == "shift"
+        curseTitle = "The curse changes shape"
+        curseMessage = "One curse gives way to another."
+    endIf
+
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"curse\""
     j = j + ",\"phase\":\"" + JsonSafeString(phase) + "\""
     j = j + ",\"curse\":\"" + JsonSafeString(curseType) + "\""
     j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    j = j + ",\"title\":\"" + JsonSafeString(curseTitle) + "\""
+    j = j + ",\"message\":\"" + JsonSafeString(curseMessage) + "\""
     if context != ""
         j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
     endIf
@@ -10991,6 +11225,10 @@ Function ShowDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier,
         Debug.Trace("[PDV] Daedric milestone presentation: " + princeName + " " + tierLabel + " prisma=" + prismaSent)
     endIf
     Debug.Notification(princeName + " names you " + tierLabel + ".")
+    ; Surface the Daedric tier gain in the Book of Days like a patron tier-up
+    ; (tone tier.reach -> "Favor deepened"/good; Champion pinned). The toast already
+    ; fired above; this adds the persistent journal entry. PLACEHOLDER copy.
+    AppendBookOfDaysEntry(princeName + " names you " + tierLabel + ".", Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, newTier >= TIER_CHAMPION)
 EndFunction
 
 Bool Function SendPrismaDaedricMilestoneToast(String princeName, String tierLabel, String flavorText, String boonText, String priceText, String symbolName)
@@ -13971,6 +14209,14 @@ String Function GetSurveyDevotionText()
         return AppendRecentDevotionEvents("Devotion has not settled yet. Wait a moment, then survey again.")
     endIf
 
+    ; Prince-wins: an active Daedric pact is the single commitment, surfaced for ALL
+    ; races (exclusivity means the patron is severed, so this never co-renders). The
+    ; tier>0 guard inside GetActiveDaedricPactPath prevents a stale-pointer ghost pact.
+    PDV_DaedricPathBase pactPath = GetActiveDaedricPactPath()
+    if pactPath
+        return AppendRecentDevotionEvents(GetDaedricSurveyText(pactPath))
+    endIf
+
     if originRace != ORIGIN_NORD
         if originRace == ORIGIN_ALTMER
             return AppendRecentDevotionEvents(GetAltmerSurveyText())
@@ -14046,6 +14292,13 @@ String Function GetPlayerMcmSummaryLine()
         return "Startup pending | " + GetStartupMcmLine()
     endIf
 
+    ; Prince-wins: an active pact is the single commitment (patron severed under
+    ; exclusivity), surfaced for all races.
+    PDV_DaedricPathBase summaryPact = GetActiveDaedricPactPath()
+    if summaryPact
+        return summaryPact.DeityName + " | Pact | " + GetCurrentStandingLabel()
+    endIf
+
     if GetPlayerOriginRaceIndex() == ORIGIN_NORD
         return GetNordDevotionModeLabel() + " | " + GetCurrentStandingLabel() + " | " + GetPlayerCursePublicLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
@@ -14072,6 +14325,13 @@ String Function GetPlayerMcmSummaryLine()
 EndFunction
 
 String Function GetPlayerMcmPatronLine()
+    ; An active Prince pact is the single commitment (patron severed under exclusivity);
+    ; surface it here so the Prisma panel "patron" field matches the Survey.
+    PDV_DaedricPathBase pactPath = GetActiveDaedricPactPath()
+    if pactPath
+        return pactPath.DeityName
+    endIf
+
     if _activeDeity
         return _activeDeity.DeityName
     endIf
@@ -14243,7 +14503,10 @@ EndFunction
 
 String Function GetCurrentStandingLabel()
     Int tierValue = TIER_NONE
-    if _activeDeity
+    PDV_DaedricPathBase standingPact = GetActiveDaedricPactPath()
+    if standingPact
+        tierValue = standingPact.GetStoredTier()
+    elseIf _activeDeity
         tierValue = GetTier(_activeDeity)
     elseIf PDV_GLO_ActiveTier
         tierValue = PDV_GLO_ActiveTier.GetValueInt()
@@ -14265,7 +14528,10 @@ EndFunction
 ; GetCurrentStandingLabel keeps the internal Seeker/Champion words for dev/MCM only.
 String Function GetCurrentStandingBand()
     Int tierValue = TIER_NONE
-    if _activeDeity
+    PDV_DaedricPathBase standingPact = GetActiveDaedricPactPath()
+    if standingPact
+        tierValue = standingPact.GetStoredTier()
+    elseIf _activeDeity
         tierValue = GetTier(_activeDeity)
     elseIf PDV_GLO_ActiveTier
         tierValue = PDV_GLO_ActiveTier.GetValueInt()
