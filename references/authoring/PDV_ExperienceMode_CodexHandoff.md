@@ -13,21 +13,24 @@ collision/record rules so it's executable as-is.
 
 A user-facing two-mode toggle that scales the piety **economy** (not reward
 magnitudes): **Pilgrim's Path** (default, all 1.0 — current behavior) vs
-**Wayfarer's Path** (easy: 1.25× gain, 1.5× daily cap, admits cheap-repeatable
-signals at 0.5×). Default 0 (Pilgrim) preserves authored behavior on existing
-saves.
+**Wayfarer's Path** (easy: 1.25× gain, 1.5× daily cap, 0.5× decay, 2× grace
+window, and one curated cheap-repeatable route — Akatosh skill-milestone
+pulse on player level-up at 0.5× weight; V1 scope, see Step 4). Default 0
+(Pilgrim) preserves authored behavior on existing saves.
 
 ## Ownership / collision rules
 
 - **You (Codex):** all `.psc` edits below.
 - **Claude (me):** mints the records and hands you their EditorIDs BEFORE you
-  wire properties — `PDV_ModePreset` (QUST, hidden start-game-enabled),
-  `PDV_GLO_Mode` (GLOB, Short, init 0), and the `PDV_ModePresetRef` property on
-  `PDV_MCM`, `PDV__ManagerQuest`, `PDV_ActionRouter`. **Do not** try to create
-  QUST/GLOB records — that's the CK-bridge step. If a property is unwired at
-  compile time it compiles fine (Auto property = None); the integration helpers
-  below all null-guard `PDV_ModePresetRef`, so partial wiring never breaks the
-  build.
+  wire properties — `PDV_ModePreset` (QUST, hidden start-game-enabled,
+  priority 60), `PDV_GLO_Mode` (GLOB, Short, init 0), and the
+  `PDV_ModePresetRef` property on `PDV_MCM`, `PDV__ManagerQuest`,
+  `PDV_ActionRouter`. Mint plan + recommended execution path (small Mutagen
+  tool modelled on `pdv-stance-author`) lives at
+  `references/authoring/PDV_ExperienceMode_RecordSpec.md`. **Do not** try to
+  create QUST/GLOB records yourself. If a property is unwired at compile time
+  it compiles fine (Auto property = None); the integration helpers below all
+  null-guard `PDV_ModePresetRef`, so partial wiring never breaks the build.
 - Compile only via `node .\tools\pdv_compile.mjs`; snapshot + commit each step.
 
 ## Step 1 — New script `PDV_ModePreset.psc`
@@ -192,11 +195,16 @@ will route through the existing Survey/recent-events surfacing. If
 
 Per DesignReference §5.4: add property `PDV_ModePresetRef`, a third page
 `"Experience Mode"`, `BuildModePage()` (current path + read-only "what changes"
-labels), and `OnOptionSelect_Mode` (flip 0↔1 with a `ShowMessage` confirm). Also
-add the single read-only mode row to the **Status/Player page** — note the
-player page already shows a `"Mode"` line at **line 1009**
-(`PDV_Manager.GetPlayerMcmModeLine()`); decide with Claude whether that line
-becomes the path display or stays the existing content, to avoid a duplicate.
+labels), and `OnOptionSelect_Mode` (flip 0↔1 with a `ShowMessage` confirm). The
+fourth read-only label on the page is `"Everyday work (Akatosh)"` (the V1
+cheap-route surface; DesignReference §5.4 has the label vocabulary).
+
+**Status/Player page row (decided 2026-06-22).** The existing `"Mode"` line at
+**line 1009** (`PDV_Manager.GetPlayerMcmModeLine()`) means the player's
+per-race **life-mode** (Hunter/Stalker/etc.) and is read in ~6 places (Survey,
+dashboard, journal). **Do NOT repurpose it.** Add the Experience Mode row as a
+NEW line — e.g., `"Path: Pilgrim's Path"` — above or below the existing
+`"Mode:"` line; both rows coexist.
 
 ## Records Claude provides before you wire properties
 
@@ -234,9 +242,10 @@ save flip changes nothing stored. Record in the manual evidence ledger.
    `PDV_ActionRouter`.~~ **Resolved 2026-06-22** — branch does not exist;
    scope reframed to one curated Akatosh level-up route (Step 4 a–d). No
    `PDV_ActionRouter` edits.
-3. Step 5 — the `GetPlayerMcmModeLine()` duplicate-vs-repurpose call. The
-   existing helper means "player's per-race life-mode" (Hunter/Stalker etc.)
-   and is read in ~6 places (Survey, dashboard, journal, etc.). **Do NOT
-   repurpose it.** Add the Experience Mode row as a NEW line on the
-   Status/Player page (e.g., "Path: Pilgrim's Path") above or below the
-   existing "Mode:" line; both rows coexist.
+3. ~~Step 5 — the `GetPlayerMcmModeLine()` duplicate-vs-repurpose call.~~
+   **Resolved 2026-06-22** — do NOT repurpose; add a new "Path:" row that
+   coexists with the existing "Mode:" line. Spec inlined at Step 5.
+
+All open items closed. Handoff is build-ready except for the "tuning frozen"
+signal Claude will send once Sessions B/C/D in-game proofs + the 1B penalty
+re-author land.
