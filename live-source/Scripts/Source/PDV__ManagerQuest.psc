@@ -14117,7 +14117,9 @@ String Function GetStartupMcmLine()
     Int originRace = GetPlayerOriginRaceIndex()
     Int startupMode = GetStartupModeForOrigin(originRace)
     if startupMode == STARTUP_MODE_EXPLICIT_CHOICE
-        return "Choose a starting path, then confirm."
+        if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
+            return "Choose a starting path, then confirm."
+        endIf
     endIf
 
     return GetStartupCanonicalSummary(originRace)
