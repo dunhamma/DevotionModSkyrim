@@ -6,7 +6,7 @@ GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, 
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
 Verdicts: PASS=360 | NEEDS-MANUAL=293 | GAP-REVIEW=54 | FUTURE=59 | WAIVED=2
-Layers: source=live; esp=1563 EditorIDs; runtime=read-only from gate ledger.
+Layers: source=live; esp=1614 EditorIDs; runtime=read-only from gate ledger.
 
 ## GAP-REVIEW (54)
 
@@ -152,7 +152,7 @@ Layers: source=live; esp=1563 EditorIDs; runtime=read-only from gate ledger.
 | BC-0156 | part_b_profile | Altmer | Xarxes focus | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Altmer.md -- Tier 3 Devoted / Xarxes focus |
 | BC-0166 | part_b_profile | Dunmer | Tribunal Memory flavor | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Dunmer.md -- Tribunal Memory (LOCKED) |
 | BC-0171 | part_b_profile | Khajiit | Moon phase fallback | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Khajiit.md -- Moon phase source (LOCKED) |
-| BC-0176 | part_b_profile | Nord | Survey/status -- Nord vampire scar note | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_Architecture_v3.md Section16.2 Phase 18B Nord-specific rule |
+| BC-0176 | part_b_profile | Nord | Survey/status -- Nord vampire scar note | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_Architecture_v3.md Section16.2 Phase 18B Nord-specific rule |
 | BC-0184 | name_resolution | Khajiit | Azura | No machine-checkable identifier extractable from requirement/check_hint. | PDV_DaedricRacePrinceMatrix.csv Prince column 'Azura / Azurah'; PDV_DaedricContent_Manifes |
 | BC-0189 | name_resolution | Orc | Malacath | No machine-checkable identifier extractable from requirement/check_hint. | PDV_DaedricRacePrinceMatrix.csv Prince column 'Malacath / Mauloch' |
 | BC-0194 | stance | Altmer | Altmer Daedric Consort rule | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Altmer.md -- ThalmorAlignment Track action table |
@@ -181,8 +181,8 @@ Layers: source=live; esp=1563 EditorIDs; runtime=read-only from gate ledger.
 | BC-0298 | reward_tier | Altmer | Magnus T3 capstone -- The Architect's Aperture | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Altmer section (DRAFT) |
 | BC-0300 | reward_tier | Altmer | Xarxes T3 capstone -- The Long Ledger | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Altmer section (DRAFT) |
 | BC-0301 | reward_tier | Argonian | Argonian People T3 capstone -- Pillar of the Saxhleel | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Argonian section (DRAFT) |
-| BC-0302 | reward_tier | Argonian | Argonian reward ceiling: Hist + one emphasis, Sithis not default | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Argonian, Reward ceiling |
-| BC-0303 | reward_tier | Argonian | Argonian reward floor: non-assassin Hist/People viability | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Argonian, Reward floor; Immediate Work Queu |
+| BC-0302 | reward_tier | Argonian | Argonian reward ceiling: Hist + one emphasis, Sithis not default | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Argonian, Reward ceiling |
+| BC-0303 | reward_tier | Argonian | Argonian reward floor: non-assassin Hist/People viability | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Argonian, Reward floor; Immediate Work Queu |
 | BC-0304 | reward_tier | Argonian | Argonian Sithis/Void T3 capstone -- The Fearless Nothing + primal unarmed | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Argonian section (DRAFT) |
 | BC-0307 | reward_tier | Argonian | Hist Champion | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Argonian.md -- Tier 3 / Hist Champion |
 | BC-0310 | reward_tier | Argonian | Sithis Champion | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Argonian.md -- Tier 3 / Sithis Champion |
@@ -194,7 +194,7 @@ Layers: source=live; esp=1563 EditorIDs; runtime=read-only from gate ledger.
 | BC-0318 | reward_tier | Bosmer | Bosmer one-save-per-race rule: Bandit Road holds the save | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- LOCKED implementation rules, rule 2 |
 | BC-0325 | reward_tier | Bosmer | Old Contract Tier 3 | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Bosmer.md -- Old Contract Tier 3 |
 | BC-0327 | reward_tier | Breton | Breton capstone signatures reused from Nine Divines/Kynareth pool | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Breton section |
-| BC-0328 | reward_tier | Breton | Breton reward ceiling: one tradition spine + one focused patron | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Breton, Reward ceiling |
+| BC-0328 | reward_tier | Breton | Breton reward ceiling: one tradition spine + one focused patron | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Breton, Reward ceiling |
 | BC-0332 | reward_tier | Breton | Green Way Tier 3 | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Breton.md -- Tier 3 Devoted / Green Way |
 | BC-0334 | reward_tier | Breton | Hidden Art Tier 3 | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Breton.md -- Tier 3 Devoted / Hidden Art |
 | BC-0336 | reward_tier | Breton | Knight's Road Tier 3 | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Breton.md -- Tier 3 Devoted / Knight's Road |
@@ -223,7 +223,7 @@ Layers: source=live; esp=1563 EditorIDs; runtime=read-only from gate ledger.
 | BC-0383 | reward_tier | Khajiit | Khenarthi Champion | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Khajiit.md -- Khenarthi Champion |
 | BC-0385 | reward_tier | Nord | Kyne/Kynareth | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Nord.md -- Tier Rewards (Kyne/Kynareth rows) |
 | BC-0386 | reward_tier | Nord | Nord Kyne T3 -- The Storm Answers | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Nord section (DRAFT); LOCKED rules rule 3 |
-| BC-0390 | reward_tier | Nord | Nord reward ceiling: broad stays below focused patron | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Nord, Reward ceiling |
+| BC-0390 | reward_tier | Nord | Nord reward ceiling: broad stays below focused patron | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Nord, Reward ceiling |
 | BC-0391 | reward_tier | Nord | Nord Shor T3 -- Sovngarde Looks Back | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Nord section (DRAFT); LOCKED rules rules 2-3 |
 | BC-0393 | reward_tier | Nord | Nord Stuhn T3 -- Just Spoils, Honored Bonds | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Nord section (DRAFT); LOCKED rules rule 3 |
 | BC-0394 | reward_tier | Nord | Nord Talos T3 reused from Imperial | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Imperial section note (Talos reused by Nord) |
@@ -234,16 +234,16 @@ Layers: source=live; esp=1563 EditorIDs; runtime=read-only from gate ledger.
 | BC-0403 | reward_tier | Orc | Legion/Exile Champion | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Orc.md -- Tier 3 / Legion/Exile Orc Champion |
 | BC-0405 | reward_tier | Orc | Orc City T3 -- Unbroken Alone | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Orc section (DRAFT), City |
 | BC-0406 | reward_tier | Orc | Orc Legion/Exile T3 -- Hold the Line | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Orc section (DRAFT), Legion/Exile; LOCKED rules rule 2 |
-| BC-0410 | reward_tier | Orc | Orc reward ceiling: Stronghold highest; City/Legion no second substrate | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Orc, Reward ceiling; PDV_RaceEffectReviewLe |
-| BC-0411 | reward_tier | Orc | Orc reward floor: City/Legion viable without Blood-Kin | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Orc, Reward floor |
+| BC-0410 | reward_tier | Orc | Orc reward ceiling: Stronghold highest; City/Legion no second substrate | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Orc, Reward ceiling; PDV_RaceEffectReviewLe |
+| BC-0411 | reward_tier | Orc | Orc reward floor: City/Legion viable without Blood-Kin | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Orc, Reward floor |
 | BC-0413 | reward_tier | Orc | Orc Stronghold T3 -- Blood-Kin of the Forge | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Orc section (DRAFT), Stronghold |
 | BC-0414 | reward_tier | Orc | Stronghold Champion | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Orc.md -- Tier 3 / Stronghold Orc Champion |
 | BC-0416 | reward_tier | Redguard | Crown Tier 3 | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Redguard.md -- Tier 3 Crown / Satakal/Tu'whacca/Ruptga/Leki |
 | BC-0417 | reward_tier | Redguard | Forebear Tier 3 | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Redguard.md -- Tier 3 Forebear / Tava/HoonDing/Leki |
 | BC-0422 | reward_tier | Redguard | Redguard HoonDing T3 -- The Way Is Made | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Redguard section (DRAFT); LOCKED rules rule 3 |
 | BC-0423 | reward_tier | Redguard | Redguard Leki T3 -- The Ephemeral Feint | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Redguard section (DRAFT); LOCKED rules rule 3 |
-| BC-0424 | reward_tier | Redguard | Redguard reward ceiling: sect Faithful + Devoted requires focused primary | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Redguard, Reward ceiling |
-| BC-0425 | reward_tier | Redguard | Redguard reward floor: non-Ash'abah viable without undead farming | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Redguard, Reward floor |
+| BC-0424 | reward_tier | Redguard | Redguard reward ceiling: sect Faithful + Devoted requires focused primary | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Redguard, Reward ceiling |
+| BC-0425 | reward_tier | Redguard | Redguard reward floor: non-Ash'abah viable without undead farming | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Redguard, Reward floor |
 | BC-0426 | reward_tier | Redguard | Redguard Tu'whacca T3 -- Keeper of the Far Shores | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Redguard section (DRAFT); LOCKED rules rules 1-2 |
 | BC-0428 | anti_farm | ALL | Clavicus Vile - favorable bargain | No machine-checkable identifier extractable from requirement/check_hint. | PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv - Clavicus Vile / Win a favorable bargain |
 | BC-0429 | anti_farm | ALL | Clavicus Vile - Masque | No machine-checkable identifier extractable from requirement/check_hint. | PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv - Clavicus Vile / Wear the Masque |
