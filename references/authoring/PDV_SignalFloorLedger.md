@@ -4,129 +4,166 @@
 
 Per-PATH signal-type floor across 35 race-forked paths + 16 Daedric Princes. A path's _types_ are the DISTINCT signal-types it can surface; _renewable_ are the distinct renewable types (`harvest`, `weather`, `day-to-day`, `faucet`). One-shot types are `book`, `quest-stage`, `quest-reaction`, `spell-learned`.
 
-**Floor:** race-path = 5 types / 2 renewable; prince = 4 types / 2 renewable. PASS iff `distinct_types >= min_types AND distinct_renewable >= min_renewable`.
+**Floor:** race-path = 5 types / 2 renewable; prince = 4 types / 2 renewable. PASS iff `wired_end_to_end >= min_types AND wired_renewable >= min_renewable`.
+
+**Designed vs wired:** `designed` counts manifest-declared P2 sourceKinds plus the existing data-backed non-P2 source families. `wired_end_to_end` counts P2 sourceKinds only from GREEN `PDV_SignalE2EGateLedger.csv` surfaces; non-P2 `day-to-day`, `quest-reaction`, and `faucet` remain data-backed from their source tables. Verdicts use `wired_end_to_end`; `designed` is informational.
 
 ## Summary
 
 - Paths audited: **51** (35 race-paths, 16 princes)
 - PASS: **0** | UNDER-FLOOR: **51** (35 race-paths, 16 princes)
-- Critical (deficit >= 4): 15 | High (>= 2): 35 | Low (1): 1
+- Critical (deficit >= 4): 27 | High (>= 2): 24 | Low (1): 0
+- Truth status: e2e-ledger=51
 
 ## UNDER-FLOOR roster (worst first)
 
-| Severity | path_id | class | types | renew | present | missing dimension(s) |
-|---|---|---|---|---|---|---|
-| CRITICAL | `prince_hircine` | prince | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
-| CRITICAL | `prince_mehrunes_dagon` | prince | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
-| CRITICAL | `prince_meridia` | prince | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
-| CRITICAL | `prince_molag_bal` | prince | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
-| CRITICAL | `prince_nocturnal` | prince | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
-| CRITICAL | `prince_sheogorath` | prince | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
-| CRITICAL | `argonian_people` | race-path | 1/5 | 1/2 | day-to-day | types 1/5 (short 4); renewable 1/2 (short 1) |
-| CRITICAL | `argonian_hist` | race-path | 2/5 | 1/2 | book, day-to-day | types 2/5 (short 3); renewable 1/2 (short 1) |
-| CRITICAL | `argonian_void` | race-path | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
-| CRITICAL | `bosmer_bandit_road` | race-path | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
-| CRITICAL | `bosmer_exchange` | race-path | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
-| CRITICAL | `breton_green_way` | race-path | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
-| CRITICAL | `dunmer_deviation` | race-path | 2/5 | 1/2 | faucet, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
-| CRITICAL | `dunmer_mephala` | race-path | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
-| CRITICAL | `imperial_private_talos` | race-path | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
-| HIGH | `prince_azura` | prince | 2/4 | 1/2 | day-to-day, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
-| HIGH | `prince_boethiah` | prince | 2/4 | 1/2 | day-to-day, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
-| HIGH | `prince_clavicus_vile` | prince | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
-| HIGH | `prince_hermaeus_mora` | prince | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
-| HIGH | `prince_malacath` | prince | 2/4 | 1/2 | day-to-day, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
-| HIGH | `prince_mephala` | prince | 2/4 | 1/2 | day-to-day, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
-| HIGH | `prince_namira` | prince | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
-| HIGH | `prince_peryite` | prince | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
-| HIGH | `prince_sanguine` | prince | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
-| HIGH | `prince_vaermina` | prince | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
-| HIGH | `altmer_magnus` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `altmer_xarxes` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `bosmer_living_story` | race-path | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `bosmer_old_contract` | race-path | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `breton_hidden_art` | race-path | 3/5 | 1/2 | book, faucet, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `dunmer_azura` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `dunmer_boethiah` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `imperial_public_talos` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `khajiit_alkosh` | race-path | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `khajiit_azurah` | race-path | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `khajiit_baandar` | race-path | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `khajiit_khenarthi` | race-path | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `khajiit_lunar` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `khajiit_rajhin` | race-path | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `nord_old_ways` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `orc_city` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `orc_legion_exile` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `orc_stronghold` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `redguard_ashabah` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `redguard_crown` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `redguard_forebear` | race-path | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
-| HIGH | `breton_knights_road` | race-path | 3/5 | 2/2 | day-to-day, faucet, quest-reaction | types 3/5 (short 2) |
-| HIGH | `imperial_civic` | race-path | 3/5 | 2/2 | day-to-day, faucet, quest-reaction | types 3/5 (short 2) |
-| HIGH | `imperial_patron_civic` | race-path | 3/5 | 2/2 | day-to-day, faucet, quest-reaction | types 3/5 (short 2) |
-| HIGH | `altmer_auriel` | race-path | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
-| LOW | `nord_nine_divines` | race-path | 4/5 | 2/2 | book, day-to-day, faucet, quest-reaction | types 4/5 (short 1) |
+| Severity | path_id | class | designed | wired_end_to_end | wired renew | wired types | missing dimension(s) |
+|---|---|---|---|---|---|---|---|
+| CRITICAL | `prince_hircine` | prince | 1 | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
+| CRITICAL | `prince_mehrunes_dagon` | prince | 1 | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
+| CRITICAL | `prince_meridia` | prince | 1 | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
+| CRITICAL | `prince_molag_bal` | prince | 1 | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
+| CRITICAL | `prince_nocturnal` | prince | 1 | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
+| CRITICAL | `prince_sheogorath` | prince | 1 | 1/4 | 0/2 | quest-reaction | types 1/4 (short 3); renewable 0/2 (short 2) |
+| CRITICAL | `argonian_hist` | race-path | 3 | 1/5 | 1/2 | day-to-day | types 1/5 (short 4); renewable 1/2 (short 1) |
+| CRITICAL | `argonian_people` | race-path | 2 | 1/5 | 1/2 | day-to-day | types 1/5 (short 4); renewable 1/2 (short 1) |
+| CRITICAL | `altmer_magnus` | race-path | 5 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `argonian_void` | race-path | 3 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `bosmer_bandit_road` | race-path | 3 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `bosmer_exchange` | race-path | 3 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `bosmer_living_story` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `bosmer_old_contract` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `breton_green_way` | race-path | 6 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `dunmer_azura` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `dunmer_boethiah` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `dunmer_deviation` | race-path | 5 | 2/5 | 1/2 | faucet, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `dunmer_mephala` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `imperial_private_talos` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `nord_old_ways` | race-path | 5 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `orc_city` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `orc_legion_exile` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `orc_stronghold` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `redguard_ashabah` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `redguard_crown` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| CRITICAL | `redguard_forebear` | race-path | 4 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
+| HIGH | `prince_azura` | prince | 2 | 2/4 | 1/2 | day-to-day, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
+| HIGH | `prince_boethiah` | prince | 2 | 2/4 | 1/2 | day-to-day, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
+| HIGH | `prince_clavicus_vile` | prince | 2 | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
+| HIGH | `prince_hermaeus_mora` | prince | 2 | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
+| HIGH | `prince_malacath` | prince | 2 | 2/4 | 1/2 | day-to-day, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
+| HIGH | `prince_mephala` | prince | 2 | 2/4 | 1/2 | day-to-day, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
+| HIGH | `prince_namira` | prince | 2 | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
+| HIGH | `prince_peryite` | prince | 2 | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
+| HIGH | `prince_sanguine` | prince | 2 | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
+| HIGH | `prince_vaermina` | prince | 2 | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
+| HIGH | `khajiit_alkosh` | race-path | 3 | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
+| HIGH | `khajiit_azurah` | race-path | 3 | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
+| HIGH | `khajiit_baandar` | race-path | 3 | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
+| HIGH | `khajiit_khenarthi` | race-path | 3 | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
+| HIGH | `khajiit_lunar` | race-path | 3 | 3/5 | 1/2 | book, day-to-day, quest-reaction | types 3/5 (short 2); renewable 1/2 (short 1) |
+| HIGH | `khajiit_rajhin` | race-path | 3 | 3/5 | 1/2 | day-to-day, quest-reaction, quest-stage | types 3/5 (short 2); renewable 1/2 (short 1) |
+| HIGH | `breton_knights_road` | race-path | 5 | 3/5 | 2/2 | day-to-day, faucet, quest-reaction | types 3/5 (short 2) |
+| HIGH | `imperial_civic` | race-path | 5 | 3/5 | 2/2 | day-to-day, faucet, quest-reaction | types 3/5 (short 2) |
+| HIGH | `imperial_patron_civic` | race-path | 5 | 3/5 | 2/2 | day-to-day, faucet, quest-reaction | types 3/5 (short 2) |
+| HIGH | `nord_nine_divines` | race-path | 7 | 3/5 | 2/2 | day-to-day, faucet, quest-reaction | types 3/5 (short 2) |
+| HIGH | `altmer_auriel` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
+| HIGH | `altmer_xarxes` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
+| HIGH | `breton_hidden_art` | race-path | 5 | 4/5 | 1/2 | book, faucet, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
+| HIGH | `imperial_public_talos` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
 
 ## Full per-path table
 
-| path_id | class | race | fork | types | renew | verdict | types_present | evidence |
-|---|---|---|---|---|---|---|---|---|
-| `breton_knights_road` | race-path | Breton | Knight's Road | 3/5 | 2/2 | UNDER-FLOOR | day-to-day, faucet, quest-reaction | likes-dislikes:81rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:100cells / faucet:4rows |
-| `breton_hidden_art` | race-path | Breton | Hidden Art | 3/5 | 1/2 | UNDER-FLOOR | book, faucet, quest-reaction | manifest-populated:[book] / quest-reaction:23cells / faucet:4rows |
-| `breton_green_way` | race-path | Breton | Green Way | 2/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | likes-dislikes:26rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:18cells |
-| `redguard_crown` | race-path | Redguard | Crown | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:26rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:27cells |
-| `redguard_forebear` | race-path | Redguard | Forebear | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:18rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:20cells |
-| `redguard_ashabah` | race-path | Redguard | Ash'abah | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:18rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:20cells |
-| `orc_city` | race-path | Orc | City | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:11rows env[313:rest-under-open-sky,314:sleep-in-bed] / quest-reaction:12cells |
-| `orc_stronghold` | race-path | Orc | Stronghold | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:11rows env[313:rest-under-open-sky,314:sleep-in-bed] / quest-reaction:12cells |
-| `orc_legion_exile` | race-path | Orc | Legion-Exile | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:11rows env[313:rest-under-open-sky,314:sleep-in-bed] / quest-reaction:12cells |
-| `nord_old_ways` | race-path | Nord | Old Ways | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:57rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:100cells |
-| `nord_nine_divines` | race-path | Nord | Nine Divines | 4/5 | 2/2 | UNDER-FLOOR | book, day-to-day, faucet, quest-reaction | manifest-populated:[book] / likes-dislikes:101rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:133cells / faucet:4rows |
-| `bosmer_old_contract` | race-path | Bosmer | Old Contract | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | manifest-populated:[quest-stage] / likes-dislikes:47rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:75cells |
-| `bosmer_living_story` | race-path | Bosmer | Living Story | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | manifest-populated:[quest-stage] / likes-dislikes:47rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:75cells |
-| `bosmer_exchange` | race-path | Bosmer | Exchange | 2/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | likes-dislikes:49rows env[314:sleep-in-bed,345:discover-location] / quest-reaction:79cells |
-| `bosmer_bandit_road` | race-path | Bosmer | Bandit Road | 2/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | likes-dislikes:47rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:77cells |
-| `argonian_hist` | race-path | Argonian | Hist | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day | manifest-populated:[book] / likes-dislikes:10rows env[313:rest-under-open-sky,314:sleep-in-bed] |
-| `argonian_people` | race-path | Argonian | People | 1/5 | 1/2 | UNDER-FLOOR | day-to-day | likes-dislikes:10rows env[313:rest-under-open-sky,314:sleep-in-bed] |
-| `argonian_void` | race-path | Argonian | Void | 2/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | likes-dislikes:10rows env[314:sleep-in-bed] / quest-reaction:10cells |
-| `khajiit_lunar` | race-path | Khajiit | Lunar | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:46rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:25cells |
-| `khajiit_khenarthi` | race-path | Khajiit | Khenarthi | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | manifest-populated:[quest-stage] / likes-dislikes:8rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:2cells |
-| `khajiit_azurah` | race-path | Khajiit | Azurah | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | manifest-populated:[quest-stage] / likes-dislikes:11rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:2cells |
-| `khajiit_baandar` | race-path | Khajiit | Baan Dar | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | manifest-populated:[quest-stage] / likes-dislikes:9rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:5cells |
-| `khajiit_rajhin` | race-path | Khajiit | Rajhin | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | manifest-populated:[quest-stage] / likes-dislikes:8rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:10cells |
-| `khajiit_alkosh` | race-path | Khajiit | Alkosh | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | manifest-populated:[quest-stage] / likes-dislikes:10rows / quest-reaction:6cells |
-| `altmer_auriel` | race-path | Altmer | Auri-El | 4/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | manifest-populated:[book,quest-stage] / likes-dislikes:10rows env[313:rest-under-open-sky] / quest-reaction:7cells |
-| `altmer_magnus` | race-path | Altmer | Magnus | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:7rows / quest-reaction:8cells |
-| `altmer_xarxes` | race-path | Altmer | Xarxes | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:11rows env[345:discover-location] / quest-reaction:11cells |
-| `dunmer_azura` | race-path | Dunmer | Azura | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:11rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:2cells |
-| `dunmer_boethiah` | race-path | Dunmer | Boethiah | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:11rows env[314:sleep-in-bed] / quest-reaction:17cells |
-| `dunmer_mephala` | race-path | Dunmer | Mephala | 2/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | likes-dislikes:10rows env[313:rest-under-open-sky] / quest-reaction:20cells |
-| `dunmer_deviation` | race-path | Dunmer | Deviation | 2/5 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | quest-reaction:25cells / faucet:2rows |
-| `imperial_civic` | race-path | Imperial | Civic | 3/5 | 2/2 | UNDER-FLOOR | day-to-day, faucet, quest-reaction | likes-dislikes:81rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:100cells / faucet:4rows |
-| `imperial_public_talos` | race-path | Imperial | Public-Talos | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | manifest-populated:[book] / likes-dislikes:8rows env[345:discover-location] / quest-reaction:23cells |
-| `imperial_private_talos` | race-path | Imperial | Private-Talos | 2/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | likes-dislikes:8rows env[345:discover-location] / quest-reaction:23cells |
-| `imperial_patron_civic` | race-path | Imperial | Patron-Civic | 3/5 | 2/2 | UNDER-FLOOR | day-to-day, faucet, quest-reaction | likes-dislikes:81rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:100cells / faucet:4rows |
-| `prince_mehrunes_dagon` | prince | Daedric | Mehrunes Dagon | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction:5cells |
-| `prince_boethiah` | prince | Daedric | Boethiah | 2/4 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | likes-dislikes:11rows env[314:sleep-in-bed] / quest-reaction:17cells |
-| `prince_mephala` | prince | Daedric | Mephala | 2/4 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | likes-dislikes:10rows env[313:rest-under-open-sky] / quest-reaction:20cells |
-| `prince_nocturnal` | prince | Daedric | Nocturnal | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction:13cells |
-| `prince_hircine` | prince | Daedric | Hircine | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction:7cells |
-| `prince_hermaeus_mora` | prince | Daedric | Hermaeus Mora | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | quest-reaction:1cell / faucet:2rows |
-| `prince_azura` | prince | Daedric | Azura | 2/4 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | likes-dislikes:11rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:2cells |
-| `prince_namira` | prince | Daedric | Namira | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | quest-reaction:2cells / faucet:2rows |
-| `prince_sanguine` | prince | Daedric | Sanguine | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | quest-reaction:1cell / faucet:2rows |
-| `prince_vaermina` | prince | Daedric | Vaermina | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | quest-reaction:2cells / faucet:1row |
-| `prince_peryite` | prince | Daedric | Peryite | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | quest-reaction:3cells / faucet:2rows |
-| `prince_malacath` | prince | Daedric | Malacath | 2/4 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | likes-dislikes:11rows env[313:rest-under-open-sky,314:sleep-in-bed] / quest-reaction:12cells |
-| `prince_clavicus_vile` | prince | Daedric | Clavicus Vile | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | quest-reaction:2cells / faucet:2rows |
-| `prince_meridia` | prince | Daedric | Meridia | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction:7cells |
-| `prince_molag_bal` | prince | Daedric | Molag Bal | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction:6cells |
-| `prince_sheogorath` | prince | Daedric | Sheogorath | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction:3cells |
+| path_id | class | race | fork | designed | wired_end_to_end | wired renew | verdict | designed types | wired types | truth | wired evidence |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `breton_knights_road` | race-path | Breton | Knight's Road | 5 | 3/5 | 2/2 | UNDER-FLOOR | book, day-to-day, faucet, quest-reaction, quest-stage | day-to-day, faucet, quest-reaction | e2e-ledger | likes-dislikes:81rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:100cells / faucet:4rows |
+| `breton_hidden_art` | race-path | Breton | Hidden Art | 5 | 4/5 | 1/2 | UNDER-FLOOR | book, faucet, quest-reaction, quest-stage, spell-learned | book, faucet, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_BretonHiddenArtSources[book,quest-stage] / quest-reaction:23cells / faucet:4rows |
+| `breton_green_way` | race-path | Breton | Green Way | 6 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, harvest, quest-reaction, quest-stage, weather | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:26rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:18cells |
+| `redguard_crown` | race-path | Redguard | Crown | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:26rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:27cells |
+| `redguard_forebear` | race-path | Redguard | Forebear | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:18rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:20cells |
+| `redguard_ashabah` | race-path | Redguard | Ash'abah | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:18rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:20cells |
+| `orc_city` | race-path | Orc | City | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:11rows env[313:rest-under-open-sky,314:sleep-in-bed] / quest-reaction:12cells |
+| `orc_stronghold` | race-path | Orc | Stronghold | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:11rows env[313:rest-under-open-sky,314:sleep-in-bed] / quest-reaction:12cells |
+| `orc_legion_exile` | race-path | Orc | Legion-Exile | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:11rows env[313:rest-under-open-sky,314:sleep-in-bed] / quest-reaction:12cells |
+| `nord_old_ways` | race-path | Nord | Old Ways | 5 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage, weather | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:57rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:100cells |
+| `nord_nine_divines` | race-path | Nord | Nine Divines | 7 | 3/5 | 2/2 | UNDER-FLOOR | book, day-to-day, faucet, quest-reaction, quest-stage, spell-learned, weather | day-to-day, faucet, quest-reaction | e2e-ledger | likes-dislikes:101rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:133cells / faucet:4rows |
+| `bosmer_old_contract` | race-path | Bosmer | Old Contract | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:47rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:75cells |
+| `bosmer_living_story` | race-path | Bosmer | Living Story | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:47rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:75cells |
+| `bosmer_exchange` | race-path | Bosmer | Exchange | 3 | 2/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:49rows env[314:sleep-in-bed,345:discover-location] / quest-reaction:79cells |
+| `bosmer_bandit_road` | race-path | Bosmer | Bandit Road | 3 | 2/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:47rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:77cells |
+| `argonian_hist` | race-path | Argonian | Hist | 3 | 1/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-stage | day-to-day | e2e-ledger | likes-dislikes:10rows env[313:rest-under-open-sky,314:sleep-in-bed] |
+| `argonian_people` | race-path | Argonian | People | 2 | 1/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-stage | day-to-day | e2e-ledger | likes-dislikes:10rows env[313:rest-under-open-sky,314:sleep-in-bed] |
+| `argonian_void` | race-path | Argonian | Void | 3 | 2/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:10rows env[314:sleep-in-bed] / quest-reaction:10cells |
+| `khajiit_lunar` | race-path | Khajiit | Lunar | 3 | 3/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction | book, day-to-day, quest-reaction | e2e-ledger | p2-e2e-green:PDV_FLST_P2_KhajiitLunarSources[book] / likes-dislikes:46rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:25cells |
+| `khajiit_khenarthi` | race-path | Khajiit | Khenarthi | 3 | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_KhajiitFocusedSources[quest-stage] / likes-dislikes:8rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:2cells |
+| `khajiit_azurah` | race-path | Khajiit | Azurah | 3 | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_KhajiitFocusedSources[quest-stage] / likes-dislikes:11rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:2cells |
+| `khajiit_baandar` | race-path | Khajiit | Baan Dar | 3 | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_KhajiitFocusedSources[quest-stage] / likes-dislikes:9rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:5cells |
+| `khajiit_rajhin` | race-path | Khajiit | Rajhin | 3 | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_KhajiitFocusedSources[quest-stage] / likes-dislikes:8rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:10cells |
+| `khajiit_alkosh` | race-path | Khajiit | Alkosh | 3 | 3/5 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_KhajiitFocusedSources[quest-stage] / likes-dislikes:10rows / quest-reaction:6cells |
+| `altmer_auriel` | race-path | Altmer | Auri-El | 4 | 4/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | book, day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_AltmerAurielSources[book,quest-stage] / likes-dislikes:10rows env[313:rest-under-open-sky] / quest-reaction:7cells |
+| `altmer_magnus` | race-path | Altmer | Magnus | 5 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage, spell-learned | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:7rows / quest-reaction:8cells |
+| `altmer_xarxes` | race-path | Altmer | Xarxes | 4 | 4/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | book, day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_AltmerXarxesSources[book,quest-stage] / likes-dislikes:11rows env[345:discover-location] / quest-reaction:11cells |
+| `dunmer_azura` | race-path | Dunmer | Azura | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:11rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:2cells |
+| `dunmer_boethiah` | race-path | Dunmer | Boethiah | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:11rows env[314:sleep-in-bed] / quest-reaction:17cells |
+| `dunmer_mephala` | race-path | Dunmer | Mephala | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:10rows env[313:rest-under-open-sky] / quest-reaction:20cells |
+| `dunmer_deviation` | race-path | Dunmer | Deviation | 5 | 2/5 | 1/2 | UNDER-FLOOR | book, faucet, quest-reaction, quest-stage, spell-learned | faucet, quest-reaction | e2e-ledger | quest-reaction:25cells / faucet:2rows |
+| `imperial_civic` | race-path | Imperial | Civic | 5 | 3/5 | 2/2 | UNDER-FLOOR | book, day-to-day, faucet, quest-reaction, quest-stage | day-to-day, faucet, quest-reaction | e2e-ledger | likes-dislikes:81rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:100cells / faucet:4rows |
+| `imperial_public_talos` | race-path | Imperial | Public-Talos | 4 | 4/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | book, day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_ImperialPublicTalosSources[book,quest-stage] / likes-dislikes:8rows env[345:discover-location] / quest-reaction:23cells |
+| `imperial_private_talos` | race-path | Imperial | Private-Talos | 4 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:8rows env[345:discover-location] / quest-reaction:23cells |
+| `imperial_patron_civic` | race-path | Imperial | Patron-Civic | 5 | 3/5 | 2/2 | UNDER-FLOOR | book, day-to-day, faucet, quest-reaction, quest-stage | day-to-day, faucet, quest-reaction | e2e-ledger | likes-dislikes:81rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:100cells / faucet:4rows |
+| `prince_mehrunes_dagon` | prince | Daedric | Mehrunes Dagon | 1 | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction | e2e-ledger | quest-reaction:5cells |
+| `prince_boethiah` | prince | Daedric | Boethiah | 2 | 2/4 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:11rows env[314:sleep-in-bed] / quest-reaction:17cells |
+| `prince_mephala` | prince | Daedric | Mephala | 2 | 2/4 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:10rows env[313:rest-under-open-sky] / quest-reaction:20cells |
+| `prince_nocturnal` | prince | Daedric | Nocturnal | 1 | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction | e2e-ledger | quest-reaction:13cells |
+| `prince_hircine` | prince | Daedric | Hircine | 1 | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction | e2e-ledger | quest-reaction:7cells |
+| `prince_hermaeus_mora` | prince | Daedric | Hermaeus Mora | 2 | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | faucet, quest-reaction | e2e-ledger | quest-reaction:1cell / faucet:2rows |
+| `prince_azura` | prince | Daedric | Azura | 2 | 2/4 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:11rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:2cells |
+| `prince_namira` | prince | Daedric | Namira | 2 | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | faucet, quest-reaction | e2e-ledger | quest-reaction:2cells / faucet:2rows |
+| `prince_sanguine` | prince | Daedric | Sanguine | 2 | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | faucet, quest-reaction | e2e-ledger | quest-reaction:1cell / faucet:2rows |
+| `prince_vaermina` | prince | Daedric | Vaermina | 2 | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | faucet, quest-reaction | e2e-ledger | quest-reaction:2cells / faucet:1row |
+| `prince_peryite` | prince | Daedric | Peryite | 2 | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | faucet, quest-reaction | e2e-ledger | quest-reaction:3cells / faucet:2rows |
+| `prince_malacath` | prince | Daedric | Malacath | 2 | 2/4 | 1/2 | UNDER-FLOOR | day-to-day, quest-reaction | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:11rows env[313:rest-under-open-sky,314:sleep-in-bed] / quest-reaction:12cells |
+| `prince_clavicus_vile` | prince | Daedric | Clavicus Vile | 2 | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | faucet, quest-reaction | e2e-ledger | quest-reaction:2cells / faucet:2rows |
+| `prince_meridia` | prince | Daedric | Meridia | 1 | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction | e2e-ledger | quest-reaction:7cells |
+| `prince_molag_bal` | prince | Daedric | Molag Bal | 1 | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction | e2e-ledger | quest-reaction:6cells |
+| `prince_sheogorath` | prince | Daedric | Sheogorath | 1 | 1/4 | 0/2 | UNDER-FLOOR | quest-reaction | quest-reaction | e2e-ledger | quest-reaction:3cells |
+
+## P2 surfaces not wired end-to-end
+
+These FormLists are declared for the path but are not GREEN in `PDV_SignalE2EGateLedger.csv`, so their sourceKinds do not count toward `wired_end_to_end`.
+
+| path_id | blocked P2 surfaces |
+|---|---|
+| `breton_knights_road` | PDV_FLST_P2_BretonKnightsRoadSources:RED/handler_piety_sink, PDV_FLST_P2_BretonVowSources:RED/live_fill |
+| `breton_hidden_art` | PDV_FLST_P2_BretonHiddenArtSpells:RED/live_fill |
+| `breton_green_way` | PDV_FLST_P2_BretonGreenWaySources:RED/live_fill, PDV_FLST_P2_BretonGreenWayHarvests:RED/live_fill |
+| `redguard_crown` | PDV_FLST_P2_RedguardSpineSources:RED/handler_piety_sink, PDV_FLST_P2_RedguardCrownSources:RED/route_review_status |
+| `redguard_forebear` | PDV_FLST_P2_RedguardSpineSources:RED/handler_piety_sink, PDV_FLST_P2_RedguardForebearSources:RED/route_review_status |
+| `redguard_ashabah` | PDV_FLST_P2_RedguardSpineSources:RED/handler_piety_sink, PDV_FLST_P2_RedguardAshAbahSources:RED/route_branch |
+| `orc_city` | PDV_FLST_P2_OrcMalacathSources:RED/route_review_status |
+| `orc_stronghold` | PDV_FLST_P2_OrcMalacathSources:RED/route_review_status |
+| `orc_legion_exile` | PDV_FLST_P2_OrcMalacathSources:RED/route_review_status |
+| `nord_old_ways` | PDV_FLST_P2_NordOldWaysSources:RED/handler_piety_sink, PDV_FLST_P2_NordKyneTalosSources:RED/handler_piety_sink |
+| `nord_nine_divines` | PDV_FLST_P2_NordKyneTalosSources:RED/handler_piety_sink, PDV_FLST_P2_NordHircineArkaySources:RED/handler_piety_sink |
+| `bosmer_old_contract` | PDV_FLST_P2_BosmerYffreSources:RED/route_review_status |
+| `bosmer_living_story` | PDV_FLST_P2_BosmerYffreSources:RED/route_review_status |
+| `bosmer_exchange` | PDV_FLST_P2_BosmerZenSources:RED/route_branch |
+| `bosmer_bandit_road` | PDV_FLST_P2_BosmerBaanDarSources:RED/route_branch |
+| `argonian_hist` | PDV_FLST_P2_ArgonianHistSources:RED/route_branch |
+| `argonian_people` | PDV_FLST_P2_ArgonianCommunitySources:RED/route_branch |
+| `argonian_void` | PDV_FLST_P2_ArgonianSithisSources:RED/route_review_status |
+| `altmer_auriel` | PDV_FLST_P2_AltmerLorkhanPenalties:RED/route_review_status |
+| `altmer_magnus` | PDV_FLST_P2_AltmerMagnusSources:RED/route_review_status |
+| `dunmer_azura` | PDV_FLST_P2_DunmerAzuraSources:RED/route_review_status |
+| `dunmer_boethiah` | PDV_FLST_P2_DunmerBoethiahSources:RED/route_review_status |
+| `dunmer_mephala` | PDV_FLST_P2_DunmerMephalaSources:RED/live_fill |
+| `dunmer_deviation` | PDV_FLST_P2_DunmerDeviationSources:RED/route_review_status |
+| `imperial_civic` | PDV_FLST_P2_ImperialCivicSources:RED/live_fill, PDV_FLST_P2_ImperialPublicServiceSources:RED/registration, PDV_FLST_P2_ImperialMercySources:RED/registration, PDV_FLST_P2_ImperialLawfulOrderSources:RED/registration, PDV_FLST_P2_ImperialHonestWorkSources:RED/registration, PDV_FLST_P2_ImperialDeathDutySources:RED/registration |
+| `imperial_private_talos` | PDV_FLST_P2_ImperialPrivateTalosSources:RED/live_fill |
+| `imperial_patron_civic` | PDV_FLST_P2_ImperialPatronCivicSources:RED/live_fill |
 
 ## Empty P2 FormList shells (declared, not populated)
 
-These FormLists are routed to a path but appear in neither `sourceFillEntries` nor an `approved-live-source-fill` route, so their declared sourceKinds do NOT count toward the floor.
+These FormLists are routed to a path but appear in neither `sourceFillEntries` nor an `approved-live-source-fill` route in the manifest fallback map. They also do not count toward `wired_end_to_end` unless the E2E gate row is GREEN.
 
 | path_id | empty shell FormLists |
 |---|---|
@@ -150,8 +187,8 @@ These FormLists are routed to a path but appear in neither `sourceFillEntries` n
 
 ## Data-quality caveats
 
-- **No `weather`, `harvest`, or `spell-learned` curated source is populated anywhere in the live manifest.** Several FormLists *declare* these `sourceKinds` (e.g. `BretonGreenWaySources` weather/harvest, `NordKyneTalosSources` weather, `BretonHiddenArtSpells` spell-learned), but none appear in `sourceFillEntries` or an `approved-live-source-fill` route, so they are empty shells and do not count. Never-populated curated kinds: `harvest`, `spell-learned`, `weather`. The likes-dislikes CSV also carries no weather event-id (only env ids 313/314/345). Net effect: `weather` and `harvest` are currently unreachable as distinct types for EVERY path, which caps most race-paths at 3 types and is the dominant reason for the UNDER-FLOOR sweep.
-- **Most Nord/Redguard/Khajiit quest-stage routes are `approved-static-route-only`, not live-fill.** Only Altmer (`AltmerLorkhanPenalties`), Bosmer (`BosmerYffreSources`), and Khajiit (`KhajiitFocusedSources`) routes carry `approved-live-source-fill`, so only those paths score the `quest-stage` type. Nord Old Ways' MQ104/MQ304 routes and Redguard's MS08 routes are present but static-only.
+- **No `weather`, `harvest`, or `spell-learned` P2 source is GREEN in the E2E gate.** Several FormLists *declare* these `sourceKinds` (e.g. `BretonGreenWaySources` weather/harvest, `NordKyneTalosSources` weather, `BretonHiddenArtSpells` spell-learned), but none are wired end-to-end. Never-GREEN P2 kinds: `harvest`, `spell-learned`, `weather`. Never-populated manifest fallback kinds: `harvest`, `spell-learned`, `weather`. The likes-dislikes CSV also carries no weather event-id (only env ids 313/314/345). Net effect: `weather` and `harvest` are currently unreachable as wired distinct types for every path.
+- **Only GREEN E2E surfaces contribute P2 `book` or `quest-stage` breadth.** Current GREEN surfaces: `PDV_FLST_P2_AltmerAurielSources`, `PDV_FLST_P2_AltmerXarxesSources`, `PDV_FLST_P2_BretonHiddenArtSources`, `PDV_FLST_P2_ImperialPublicTalosSources`, `PDV_FLST_P2_KhajiitFocusedSources`, `PDV_FLST_P2_KhajiitLunarSources`. Nord Old Ways' MQ104/MQ304 routes and Redguard's MS08 routes remain blocked by static-only route review, so those `quest-stage` declarations do not count as wired.
 - **Prince quest-reaction is NOT zero.** A literal application of the rule (any matrix cell whose `deity` equals the path's name) gives Molag Bal 6, Peryite 3, Namira 2, Vaermina 2 quest-reaction cells (many are negative/reject branches, e.g. *destroy altar*, but the `deity` column still attributes them). Every one of the 16 Princes has at least 1 quest-reaction cell. This contradicts an a-priori expectation that Namira/Vaermina/Peryite/Molag Bal have none; the tool reports the ground-truth count.
 - **Deity-name aliasing applied** (case-insensitive, apostrophe/dot/hyphen-stripped): `Azura`=`azurah`, `Hermaeus Mora`=`Mora`, `Clavicus Vile`=`Vile`, `Boethiah`=`Boethra`, `Mephala`=`Mafala`. `Auri-El`->`auriel`, `Y'ffre`->`yffre`, `Z'en`->`zen` fold by the same normalizer.
 - **Several registry deities never appear in any data source** and therefore contribute nothing: Redguard `Onsi`/`Ruptga`/`Tava`/`Zeht`/`Satakal`, Breton `Phynaster`, Altmer/others absent from likes-dislikes, quest-matrix, and Part D. Redguard Crown/Forebear day-to-day comes only from `HoonDing`/`Leki`/`Tu'whacca`, which are the sole sect deities present in the sources.
