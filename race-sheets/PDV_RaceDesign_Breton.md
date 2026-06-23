@@ -49,7 +49,7 @@ Normal Breton tradition switching is not available in 1.0. The setup choice is s
 
 ### Available deities: Stendarr, Akatosh, Mara, Arkay, Julianos, Zenithar, Kynareth, Dibella
 
-### KnightlyVowIntegrity Track (0–100, starts at 100 for Knight's Road)
+### KnightlyVowIntegrity Track (0-100, starts at 100 for Knight's Road)
 
 KnightlyVowIntegrity belongs to the whole Knight's Road tradition. Stendarr and Akatosh read it most strongly, but low Integrity should suppress all Knight's Road gains before it becomes a two-god-specific penalty.
 
@@ -96,15 +96,15 @@ Integrity above 75 requires lived conduct: curated mercy, justice, protection, o
 
 Hircine is Breton-legible but not Breton-native. He should not appear as a normal Breton baseline deity. He opens through Hidden Art commitment signals or through the Green Way werewolf fork, not through ordinary Breton tradition practice.
 
-### WitchcraftExposure Track (0–100, starts at 0)
+### WitchcraftExposure Track (0-100, starts at 0)
 
 These bands and modifiers are locked for 1.0. The `Notorious` x1.25 modifier applies only to Daedric / Hidden Art commitment, not to all Breton religion.
 
 ```
-Hidden   (0–25):   Private practice — fully functional, socially invisible
-Suspected (26–50): Vigilants may take notice through authored/contextual reactions; some Bretons uncomfortable; daily shift x0.9
-Known    (51–75):  Vigilants become a credible danger when occult state is manifest or PDV-authored pressure fires; most Bretons distance; daily shift x0.75
-Notorious (76–100): Full social rupture; Daedric prince rewards full commitment; daily shift x1.25
+Hidden   (0-24):   Private practice -- fully functional, socially invisible
+Suspected (25-49): Vigilants may take notice through authored/contextual reactions; some Bretons uncomfortable; daily shift x0.9
+Known    (50-74):  Vigilants become a credible danger when occult state is manifest or PDV-authored pressure fires; most Bretons distance; daily shift x0.75
+Notorious (75-100): Full social rupture; Daedric prince rewards full commitment; daily shift x1.25
 ```
 
 **What raises Exposure:**
