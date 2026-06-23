@@ -1,0 +1,52 @@
+path_id,class,race,fork,deities,formlists,min_types,min_renewable,notes
+breton_knights_road,race-path,Breton,Knight's Road,Stendarr|Akatosh|Mara|Arkay|Julianos|Zenithar|Kynareth|Dibella,PDV_FLST_P2_BretonKnightsRoadSources|PDV_FLST_P2_BretonVowSources,5,2,Civic/chivalric Aedric pool; routes RouteBretonTraditionChoice(0)+RouteBretonKnightlyVow.
+breton_hidden_art,race-path,Breton,Hidden Art,Hircine|Hermaeus Mora|Namira|Nocturnal,PDV_FLST_P2_BretonHiddenArtSources|PDV_FLST_P2_BretonHiddenArtSpells,5,2,Daedric-via-global pool; routes RouteBretonTraditionChoice(1)+RouteBretonHiddenArtExposure.
+breton_green_way,race-path,Breton,Green Way,Y'ffre|Magnus|Phynaster|Kynareth,PDV_FLST_P2_BretonGreenWaySources|PDV_FLST_P2_BretonGreenWayHarvests,5,2,Druidic pool (Kynareth-adjacent); routes RouteBretonTraditionChoice(2)+RouteBretonGreenWayStanding.
+redguard_crown,race-path,Redguard,Crown,Leki|Onsi|HoonDing|Ruptga|Tu'whacca,PDV_FLST_P2_RedguardSpineSources|PDV_FLST_P2_RedguardCrownSources,5,2,Crown martial-orthodox + shared ancestor spine; route RouteRedguardSectSignal(0). Onsi/Ruptga absent from data sources.
+redguard_forebear,race-path,Redguard,Forebear,Tava|Zeht|HoonDing|Tu'whacca,PDV_FLST_P2_RedguardSpineSources|PDV_FLST_P2_RedguardForebearSources,5,2,Forebear road/exchange + shared spine; route RouteRedguardSectSignal(1). Tava/Zeht absent from data sources.
+redguard_ashabah,race-path,Redguard,Ash'abah,Tu'whacca|Satakal|HoonDing,PDV_FLST_P2_RedguardSpineSources|PDV_FLST_P2_RedguardAshAbahSources,5,2,Ash'abah death-duty + shared spine; route RouteRedguardSectSignal(2). Satakal absent from data sources.
+orc_city,race-path,Orc,City,Malacath,PDV_FLST_P2_OrcMalacathSources,5,2,City life-mode (default bridge); single-deity Malacath always; RouteOrcMalacathConduct.
+orc_stronghold,race-path,Orc,Stronghold,Malacath,PDV_FLST_P2_OrcMalacathSources,5,2,Stronghold life-mode (highest ceiling); single-deity Malacath always; RouteOrcMalacathConduct.
+orc_legion_exile,race-path,Orc,Legion-Exile,Malacath,PDV_FLST_P2_OrcMalacathSources,5,2,Legion/Exile life-mode; single-deity Malacath always; RouteOrcMalacathConduct.
+nord_old_ways,race-path,Nord,Old Ways,Shor|Kyne|Tsun|Stuhn|Mara|Talos,PDV_FLST_P2_NordOldWaysSources|PDV_FLST_P2_NordKyneTalosSources,5,2,Old Ways pantheon baseline (Kyne/Talos shared with Nine Divines); routes RouteNordOldWaysState+RouteNordKyneTalosContext. KyneTalos list declares weather but is book-only populated.
+nord_nine_divines,race-path,Nord,Nine Divines,Akatosh|Talos|Kynareth|Mara|Zenithar|Arkay|Stendarr|Julianos|Dibella|Kyne,PDV_FLST_P2_NordKyneTalosSources|PDV_FLST_P2_NordHircineArkaySources,5,2,Nine Divines baseline; Kyne/Talos weather + Hircine/Arkay edge lists; routes RouteNordKyneTalosContext+RouteNordHircineArkayEdge.
+bosmer_old_contract,race-path,Bosmer,Old Contract,Y'ffre|Arkay|Xarxes|Mara|Stendarr,PDV_FLST_P2_BosmerYffreSources,5,2,Y'ffre Orthodox (Green Pact) + secondary Bosmer layer; route RouteBosmerYffre(pathState).
+bosmer_living_story,race-path,Bosmer,Living Story,Y'ffre|Arkay|Xarxes|Mara|Stendarr,PDV_FLST_P2_BosmerYffreSources,5,2,Y'ffre Moderate (community/story) + secondary layer; route RouteBosmerYffre(pathState).
+bosmer_exchange,race-path,Bosmer,Exchange,Z'en|Arkay|Xarxes|Mara|Stendarr,PDV_FLST_P2_BosmerZenSources,5,2,Z'en reciprocal justice + secondary layer; route RouteBosmerZenExchange.
+bosmer_bandit_road,race-path,Bosmer,Bandit Road,Baan Dar|Arkay|Xarxes|Mara|Stendarr,PDV_FLST_P2_BosmerBaanDarSources,5,2,Baan Dar exile/trickster + secondary layer; route RouteBosmerBaanDarRoad.
+argonian_hist,race-path,Argonian,Hist,The Hist,PDV_FLST_P2_ArgonianHistSources,5,2,Hist layer of single Saxhleel substrate; route RouteArgonianHistMaintenance.
+argonian_people,race-path,Argonian,People,The Hist,PDV_FLST_P2_ArgonianCommunitySources,5,2,People/community layer of substrate (buffers Hist; no separate deity); route RouteArgonianCommunity.
+argonian_void,race-path,Argonian,Void,Sithis,PDV_FLST_P2_ArgonianSithisSources,5,2,Void/Sithis layer of substrate; route RouteArgonianSithisAcknowledgment.
+khajiit_lunar,race-path,Khajiit,Lunar,Azurah|Khenarthi|Baan Dar|Rajhin|Alkosh,PDV_FLST_P2_KhajiitLunarSources,5,2,Always-active lunar substrate (Lattice); pool = all five focused gods; route RouteKhajiitLunarSubstrate.
+khajiit_khenarthi,race-path,Khajiit,Khenarthi,Khenarthi,PDV_FLST_P2_KhajiitFocusedSources,5,2,Focused emphasis (silent emergence); shared focused FormList; route RouteKhajiitFocusedEmphasis.
+khajiit_azurah,race-path,Khajiit,Azurah,Azurah,PDV_FLST_P2_KhajiitFocusedSources,5,2,Focused emphasis; shared focused FormList; route RouteKhajiitFocusedEmphasis.
+khajiit_baandar,race-path,Khajiit,Baan Dar,Baan Dar,PDV_FLST_P2_KhajiitFocusedSources,5,2,Focused emphasis; shared focused FormList; route RouteKhajiitFocusedEmphasis.
+khajiit_rajhin,race-path,Khajiit,Rajhin,Rajhin,PDV_FLST_P2_KhajiitFocusedSources,5,2,Focused emphasis; shared focused FormList; route RouteKhajiitFocusedEmphasis.
+khajiit_alkosh,race-path,Khajiit,Alkosh,Alkosh,PDV_FLST_P2_KhajiitFocusedSources,5,2,Focused emphasis (rare/high-threshold); shared focused FormList; route RouteKhajiitFocusedEmphasis.
+altmer_auriel,race-path,Altmer,Auri-El,Auri-El,PDV_FLST_P2_AltmerAurielSources|PDV_FLST_P2_AltmerLorkhanPenalties,5,2,Always-active Layer 1 foundation; Lorkhan penalties also route here; route RouteAltmerAurielFoundation.
+altmer_magnus,race-path,Altmer,Magnus,Magnus,PDV_FLST_P2_AltmerMagnusSources,5,2,Psijic-aligned magic scholarship focus; route RouteAltmerMagnusScholarship.
+altmer_xarxes,race-path,Altmer,Xarxes,Xarxes,PDV_FLST_P2_AltmerXarxesSources,5,2,Ancestry/record scholarship focus; route RouteAltmerXarxesLineage.
+dunmer_azura,race-path,Dunmer,Azura,Azura,PDV_FLST_P2_DunmerAzuraSources,5,2,Reclamation focus (mage/threshold); route RouteDunmerReclamationFocus(0).
+dunmer_boethiah,race-path,Dunmer,Boethiah,Boethiah,PDV_FLST_P2_DunmerBoethiahSources,5,2,Reclamation focus (warrior/revolution); route RouteDunmerReclamationFocus(1).
+dunmer_mephala,race-path,Dunmer,Mephala,Mephala,PDV_FLST_P2_DunmerMephalaSources,5,2,Reclamation focus (stealth/network); route RouteDunmerReclamationFocus(2).
+dunmer_deviation,race-path,Dunmer,Deviation,Mehrunes Dagon|Molag Bal|Hermaeus Mora|Nocturnal,PDV_FLST_P2_DunmerDeviationSources,5,2,Non-Reclamation Daedric deviation/curse pressure (open pool); route RouteDunmerDeviationPrice.
+imperial_civic,race-path,Imperial,Civic,Stendarr|Arkay|Akatosh|Zenithar|Mara|Julianos|Dibella|Kynareth,PDV_FLST_P2_ImperialCivicSources|PDV_FLST_P2_ImperialPublicServiceSources|PDV_FLST_P2_ImperialMercySources|PDV_FLST_P2_ImperialLawfulOrderSources|PDV_FLST_P2_ImperialHonestWorkSources|PDV_FLST_P2_ImperialDeathDutySources,5,2,Broad Nine Divines civic lane (Talos excluded); route RouteImperialCivicService.
+imperial_public_talos,race-path,Imperial,Public-Talos,Talos,PDV_FLST_P2_ImperialPublicTalosSources,5,2,Public Talos pressure / Concordat rupture; route RouteImperialTalosPressure(false).
+imperial_private_talos,race-path,Imperial,Private-Talos,Talos,PDV_FLST_P2_ImperialPrivateTalosSources,5,2,Private Talos pressure (secrecy); route RouteImperialTalosPressure(true).
+imperial_patron_civic,race-path,Imperial,Patron-Civic,Stendarr|Arkay|Akatosh|Zenithar|Mara|Julianos|Dibella|Kynareth,PDV_FLST_P2_ImperialPatronCivicSources,5,2,Patron civic favor tied to active Imperial Nine-Divines patron lane; route RouteImperialPatronCivicFavor.
+prince_mehrunes_dagon,prince,Daedric,Mehrunes Dagon,Mehrunes Dagon,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_boethiah,prince,Daedric,Boethiah,Boethiah,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_mephala,prince,Daedric,Mephala,Mephala,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_nocturnal,prince,Daedric,Nocturnal,Nocturnal,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_hircine,prince,Daedric,Hircine,Hircine,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_hermaeus_mora,prince,Daedric,Hermaeus Mora,Hermaeus Mora,,4,2,Daedric Prince; deities=own name (alias Mora); no P2 FormLists.
+prince_azura,prince,Daedric,Azura,Azura,,4,2,Daedric Prince; deities=own name (alias Azurah); no P2 FormLists.
+prince_namira,prince,Daedric,Namira,Namira,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_sanguine,prince,Daedric,Sanguine,Sanguine,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_vaermina,prince,Daedric,Vaermina,Vaermina,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_peryite,prince,Daedric,Peryite,Peryite,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_malacath,prince,Daedric,Malacath,Malacath,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_clavicus_vile,prince,Daedric,Clavicus Vile,Clavicus Vile,,4,2,Daedric Prince; deities=own name (alias Vile); no P2 FormLists.
+prince_meridia,prince,Daedric,Meridia,Meridia,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_molag_bal,prince,Daedric,Molag Bal,Molag Bal,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_sheogorath,prince,Daedric,Sheogorath,Sheogorath,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
