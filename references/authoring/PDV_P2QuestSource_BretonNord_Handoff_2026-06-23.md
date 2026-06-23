@@ -44,33 +44,26 @@ Step 5 — EventBus → handler → piety increment:
 - **RouteBretonKnightlyVow (PDV_EventBus.psc:1154–1168)** → `PDV_Manager.HandleBretonKnightlyVow` (`PDV__ManagerQuest.psc:12432`). When `PDV.Breton.Tradition == 0` (Knight's Road): `ConsumeDailyRepeatMultiplier("PDV.Signal.BretonKnightlyVow")` guards repeats; then `AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_MERCY, None, multiplier)`. Piety increment confirmed.
 - **RouteNordKyneTalosContext (PDV_EventBus.psc:1298–1312)** → `PDV_Manager.HandleNordKyneTalosContext` (`PDV__ManagerQuest.psc:12989`) → `RouteNordFamily(reason, …)` (`12948`). `RouteNordFamily` calls `GetNordRouteFamilyFromSource(reason)`, then `AwardNordRouteFamilySignal(routeFamily, multiplier)`.
 
-### ⚠ GAP — NordKyneTalos sky_road piety not awarded
+### ✅ RESOLVED (2026-06-23, Claude) — NordKyneTalos sky_road now awards Kyne piety
 
-`GetNordRouteFamilyFromSource` maps tokens "sky_road", "storm_road", "road_grace" (without "nine") to `NORD_ROUTE_OLD_SKY_ROAD` (const = 1).
-`AwardNordRouteFamilySignal` (`PDV__ManagerQuest.psc:12912`) has branches for `OLD_ORDEAL`, `OLD_HEARTH`, `OLD_ANCESTOR`, `OLD_TALOS`, `NINE_ROAD`, `NINE_MERCY`, `NINE_DEATH`, `NINE_WORK` — **but no branch for `NORD_ROUTE_OLD_SKY_ROAD`**.
+**Was:** `GetNordRouteFamilyFromSource` maps "sky_road"/"storm_road"/"road_grace" (without "nine") to
+`NORD_ROUTE_OLD_SKY_ROAD`, but `AwardNordRouteFamilySignal` had no branch for it — so curated
+NordKyneTalos sources fired the favor buff but awarded **no curated Kyne piety**, for both broad
+Old Ways worship and a focused Kyne patron. (The original draft's `PDV_Kyne.SIGNAL_OPEN_SKY`
+one-liner was wrong — that constant belongs to Kynareth; Kyne had no curated-signal infra at all.)
 
-Result: the membership route (`"quest-stage_nord_kyne_talos_sky_road"`) and the exact-stage MQ105 route (`"po3_queststage_nord_mq105_sky_road"`) both reach `AwardNordRouteFamilySignal` with family=1 and silently do nothing. The contextual favor fires, but no `AwardCuratedSignalScaled` call is made. **Kyne/Talos piety is not awarded for any NordKyneTalosSources source today, even if the list were populated.**
+**Fixed (Option A — services both player choices):** added a curated milestone signal to Kyne,
+mirroring Tsun. `PDV_Deity_Kyne` now declares `SIGNAL_SKY_ROAD = 1710` + `DELTA_SKY_ROAD = 1.5` and
+overrides `ScoreCuratedSignal`; `AwardNordRouteFamilySignal` (`PDV__ManagerQuest.psc`) now has the
+`NORD_ROUTE_OLD_SKY_ROAD` branch calling `AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_SKY_ROAD,
+None, multiplier)`. A direct deity award is patron-agnostic, so broad worship (builds Kyne's standing
++ steers patron emergence) and a focused Kyne patron (builds the bond) are **both** serviced. Compile
+0/0, verify FAIL=0. `DELTA_SKY_ROAD` (1.5) is conservative because it stacks on Kyne's rich day-to-day
+table — tune if it over/under-feeds.
 
-**CORRECTION (Claude review, 2026-06-23):** the one-liner originally proposed here
-(`AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_OPEN_SKY, …)`) is **WRONG and will NOT
-compile.** Verified against live source: `PDV_Deity_Kyne` defines **no** `SIGNAL_*` constants,
-`PDV_DeityBase` defines none, and `AwardCuratedSignalScaled(PDV_Kyne, …)` is called **nowhere** —
-Kyne has no curated-signal infrastructure, so `PDV_Kyne.SIGNAL_OPEN_SKY` does not exist
-(`SIGNAL_OPEN_SKY = 1701` belongs to `PDV_Deity_Kynareth`). This is a **design decision**, not a
-mechanical patch. Two valid resolutions for the owner to choose:
-
-1. **Add curated-signal support to Kyne:** define a `SIGNAL_*` constant on `PDV_Deity_Kyne` (mirror
-   how `PDV_Tsun.SIGNAL_TRIAL_ENDURED` / `PDV_Stuhn.SIGNAL_PROTECT_BOND` are declared on their deity
-   scripts) + its curated delta, THEN add the `elseIf familyValue == NORD_ROUTE_OLD_SKY_ROAD` branch
-   awarding it. This is real deity-architecture work, not a one-liner.
-2. **Accept the existing channels:** Kyne's day-to-day likes-dislikes already scores event 313
-   `rest-under-open-sky` + 345 `discover-location`, and the favor system maps sky-road to
-   `FAVOR_FAMILY_OLD_WAYS_SKY_ROAD`. Under this reading the curated quest-source branch is
-   intentionally absent; route NordKyneTalos sky-road quest sources to an already-supported
-   deity/signal (e.g. `PDV_Talos.SIGNAL_SHRINE_DEFIANCE`, already in the switch) or omit the bump.
-
-The GAP (favor fires, no curated piety) is real either way; the resolution is owner's-choice. **Do
-NOT apply `PDV_Kyne.SIGNAL_OPEN_SKY`.**
+**Codex:** the branch is DONE. Your remaining NordKyneTalos work is only the FormList fill (curate
+Kyne/Talos sky-road milestone + book sources at houseCARL-verified stages). Once populated, a
+sky_road source fires the favor buff AND the Kyne piety spike.
 
 Recompile `PDV__ManagerQuest.psc` and confirm `--check-route-entries` and e2e gate after the fix.
 

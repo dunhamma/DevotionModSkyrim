@@ -25,6 +25,16 @@ Float Property DELTA_SHOUT_ATTACK = 0.35 Auto
 Int Property SHOUT_DAILY_CAP = 3 Auto
 Float Property SHOUT_COOLDOWN_DAYS = 0.0208 Auto
 
+; Curated sky-road milestone signal. Kyne is otherwise data-table-scored (her
+; ambient acts already feed her), but curated NordKyneTalos sources -- one-shot
+; sky-road MILESTONES like Way of the Voice or Children of the Sky -- are not
+; day-to-day acts and earn a piety spike here. Awarded directly to Kyne, so it
+; services both broad Old Ways worship and a focused Kyne patron. Anti-farmed
+; upstream in RouteNordFamily; conservative delta because it stacks on her rich
+; day-to-day table (tune DELTA_SKY_ROAD if it over/under-feeds).
+Int Property SIGNAL_SKY_ROAD = 1710 AutoReadOnly
+Float Property DELTA_SKY_ROAD = 1.5 Auto
+
 Event OnInit()
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] Kyne deity initialized.")
@@ -49,6 +59,14 @@ Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
     ; Flat victim-type scoring (events 1-4) is now data-driven from PDV.LD.* keys
     ; (regression gate: must score identically to the prior hand-written ladder).
     return ScoreFromTable(eventType)
+EndFunction
+
+Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
+    if signalType == SIGNAL_SKY_ROAD
+        return DELTA_SKY_ROAD
+    endIf
+
+    return 0.0
 EndFunction
 
 Function OnTierChange(Int oldTier, Int newTier)

@@ -12910,7 +12910,13 @@ Int Function GetNordFavorFamilyForRouteFamily(Int familyValue)
 EndFunction
 
 Function AwardNordRouteFamilySignal(Int familyValue, Float multiplier)
-    if familyValue == NORD_ROUTE_OLD_ORDEAL
+    if familyValue == NORD_ROUTE_OLD_SKY_ROAD
+        ; Kyne's curated sky-road milestone bump. Services broad Old Ways worship
+        ; and a focused Kyne patron alike (direct deity award, patron-agnostic).
+        if PDV_Kyne
+            AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_SKY_ROAD, None, multiplier)
+        endIf
+    elseIf familyValue == NORD_ROUTE_OLD_ORDEAL
         if PDV_Tsun
             AwardCuratedSignalScaled(PDV_Tsun, PDV_Tsun.SIGNAL_TRIAL_ENDURED, None, multiplier)
         endIf
