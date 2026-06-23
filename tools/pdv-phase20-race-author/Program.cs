@@ -237,6 +237,11 @@ static void AuthorRewards(string espPath, RewardsSpec spec, string referenceDeit
     var allDeities = RequireRecord<FormList>(index, "PDV_FLST_AllDeities");
     var deityTemplate = RequireRecord<Quest>(index, referenceDeityEdid);
 
+    // Ensure the near-water context FormList exists BEFORE any reward spell resolves its
+    // GetInCurrentLocFormList condition (nearWaterOnly effects). Idempotent: rebuilds
+    // membership from the spec each run.
+    EnsureNearWaterFormList(mod, index, allocator, spec, report);
+
     // Scan existing deity QUSTs for their DeityIndex script values so we can
     // allocate the next-available index(es) for any NEW deity.
     var indexAllocator = new DeityIndexAllocator(mod);
@@ -992,7 +997,7 @@ static Spell CheckSpellPacket(
             report.Errors.Add($"{spellEditorId} effect {i} duration is {actualEffect.Data?.Duration ?? 0}, expected {expectedEffect.duration}.");
         }
 
-        var expectedConditionCount = expectedEffect.nightOnly ? 2 : 0;
+        var expectedConditionCount = CountEffectConditions(expectedEffect);
         if (actualEffect.Conditions.Count != expectedConditionCount)
         {
             report.Errors.Add($"{spellEditorId} effect {i} has {actualEffect.Conditions.Count} condition(s), expected {expectedConditionCount}.");
@@ -1543,9 +1548,9 @@ static Spell BuildSpell(
             Data = new EffectData { Magnitude = effect.magnitude, Area = 0, Duration = effect.duration },
             Conditions = []
         };
-        if (effect.nightOnly)
+        foreach (var condition in BuildEffectConditions(effect, index))
         {
-            AddNightConditions(spellEffect);
+            spellEffect.Conditions.Add(condition);
         }
         spell.Effects.Add(spellEffect);
     }
@@ -1680,22 +1685,143 @@ static TEnum ParseEnum<TEnum>(string value, string fieldName) where TEnum : stru
     throw new InvalidOperationException($"Unsupported {fieldName} value '{value}'.");
 }
 
-static void AddNightConditions(Effect effect)
+// Single source of truth for an effect's runtime conditions, consumed by BOTH the
+// author (BuildSpell) and the --check-rewards verify (via CountEffectConditions) so a
+// specced contextual gate can never silently no-op the way nearWaterOnly did before it
+// was a recognized field. nightOnly / nearWaterOnly are SUGAR that expand to canonical
+// conditions; the generic conditions[] array covers any future gate as data.
+static List<Condition> BuildEffectConditions(RewardsSpecEffect effect, Dictionary<string, ISkyrimMajorRecordGetter> index)
 {
-    effect.Conditions.Clear();
-    effect.Conditions.Add(new ConditionFloat
+    var conditions = new List<Condition>();
+    if (effect.nightOnly)
     {
-        Data = new GetCurrentTimeConditionData(),
-        CompareOperator = CompareOperator.GreaterThanOrEqualTo,
-        ComparisonValue = 19.0f,
-        Flags = Condition.Flag.OR
-    });
-    effect.Conditions.Add(new ConditionFloat
+        // Khajiit baseline, byte-for-byte: GetCurrentTime >= 19 OR <= 7.
+        conditions.Add(new ConditionFloat
+        {
+            Data = new GetCurrentTimeConditionData(),
+            CompareOperator = CompareOperator.GreaterThanOrEqualTo,
+            ComparisonValue = 19.0f,
+            Flags = Condition.Flag.OR
+        });
+        conditions.Add(new ConditionFloat
+        {
+            Data = new GetCurrentTimeConditionData(),
+            CompareOperator = CompareOperator.LessThanOrEqualTo,
+            ComparisonValue = 7.0f
+        });
+    }
+    if (effect.nearWaterOnly)
     {
-        Data = new GetCurrentTimeConditionData(),
-        CompareOperator = CompareOperator.LessThanOrEqualTo,
-        ComparisonValue = 7.0f
-    });
+        conditions.Add(NearWaterCondition(index));
+    }
+    foreach (var spec in effect.conditions ?? new())
+    {
+        conditions.Add(BuildGenericCondition(spec, index));
+    }
+    return conditions;
+}
+
+// Condition count without resolving FormKeys, so the verify never throws on a missing
+// FormList while checking that a specced gate actually authored conditions. Must mirror
+// BuildEffectConditions' shape (night = 2, nearWater = 1, each generic = 1).
+static int CountEffectConditions(RewardsSpecEffect effect)
+{
+    var count = 0;
+    if (effect.nightOnly) count += 2;
+    if (effect.nearWaterOnly) count += 1;
+    count += effect.conditions?.Count ?? 0;
+    return count;
+}
+
+// Near-water = the player's current location (GetInCurrentLocFormList walks the location
+// parent chain, so a hold-level entry covers everywhere in it) is in the generous
+// water-context FormList. There is NO IsInWater CONDITION function in Skyrim (only the
+// Papyrus method), so location membership is the mechanism; breadth lives in the list.
+static Condition NearWaterCondition(Dictionary<string, ISkyrimMajorRecordGetter> index)
+{
+    var data = new GetInCurrentLocFormListConditionData();
+    data.FormList.Link.SetTo(ResolveConditionFormList(index, "PDV_FLST_WaterContextLocations"));
+    return new ConditionFloat
+    {
+        Data = data,
+        CompareOperator = CompareOperator.EqualTo,
+        ComparisonValue = 1.0f
+    };
+}
+
+static Condition BuildGenericCondition(RewardsSpecCondition spec, Dictionary<string, ISkyrimMajorRecordGetter> index)
+{
+    var op = string.IsNullOrWhiteSpace(spec.compareOperator)
+        ? CompareOperator.EqualTo
+        : ParseEnum<CompareOperator>(spec.compareOperator!, "compareOperator");
+    ConditionData data;
+    switch ((spec.function ?? "").Trim())
+    {
+        case "GetCurrentTime":
+            data = new GetCurrentTimeConditionData();
+            break;
+        case "GetInCurrentLocFormList":
+            var locData = new GetInCurrentLocFormListConditionData();
+            locData.FormList.Link.SetTo(ResolveConditionFormList(index, spec.formList!));
+            data = locData;
+            break;
+        case "GetInWorldspace":
+            data = new GetInWorldspaceConditionData();
+            break;
+        default:
+            throw new InvalidOperationException($"Unsupported condition function '{spec.function}'. Add it to BuildGenericCondition's dispatch table.");
+    }
+    return new ConditionFloat
+    {
+        Data = data,
+        CompareOperator = op,
+        ComparisonValue = spec.comparisonValue,
+        Flags = spec.or ? Condition.Flag.OR : default
+    };
+}
+
+static FormKey ResolveConditionFormList(Dictionary<string, ISkyrimMajorRecordGetter> index, string editorId)
+{
+    if (string.IsNullOrWhiteSpace(editorId))
+    {
+        throw new InvalidOperationException("A GetInCurrentLocFormList condition is missing its formList editorId.");
+    }
+    if (!index.TryGetValue(editorId, out var rec) || rec is not IFormListGetter)
+    {
+        throw new InvalidOperationException($"Location condition needs FormList '{editorId}' but it is missing from the ESP. Author the FormList first.");
+    }
+    return rec.FormKey;
+}
+
+// Creates/refreshes the near-water context FormList from the spec's nearWaterContext block.
+// Membership is rebuilt each run (idempotent) from the listed location FormIDs ('XXXXXX:Plugin.esp').
+// GetInCurrentLocFormList walks the location parent chain, so hold-level entries blanket their holds.
+static void EnsureNearWaterFormList(SkyrimMod mod, Dictionary<string, ISkyrimMajorRecordGetter> index, FormKeyAllocator allocator, RewardsSpec spec, AuthorReport report)
+{
+    if (spec.nearWaterContext is not { } ctx || string.IsNullOrWhiteSpace(ctx.formListEditorId))
+    {
+        return;
+    }
+
+    FormList formList;
+    if (index.TryGetValue(ctx.formListEditorId!, out var existing))
+    {
+        formList = existing as FormList ?? throw new InvalidOperationException($"{ctx.formListEditorId} already exists as {existing.GetType().Name}, expected FormList.");
+    }
+    else
+    {
+        formList = new FormList(allocator.Next(), SkyrimRelease.SkyrimSE) { EditorID = ctx.formListEditorId };
+        mod.FormLists.Add(formList);
+        index[ctx.formListEditorId!] = formList;
+        report.Actions.Add($"Created FormList {ctx.formListEditorId}.");
+    }
+
+    formList.Items.Clear();
+    foreach (var location in ctx.locations ?? new())
+    {
+        formList.Items.Add(FormKey.Factory(location).ToLink<ISkyrimMajorRecordGetter>());
+    }
+    report.Actions.Add($"Wired {formList.Items.Count} location(s) into {ctx.formListEditorId}.");
 }
 
 static string GenerateMgefId(string spellEditorId, string actorValue)
@@ -1873,6 +1999,7 @@ sealed class RewardsSpec
     public List<RewardsSpecDeityQuest>? deityQuests { get; set; }
     public List<RewardsSpecManagerProp>? managerDeityProperties { get; set; }
     public RewardsSpecSubstrate? substrateBoons { get; set; }
+    public RewardsSpecNearWaterContext? nearWaterContext { get; set; }
     public RewardsSpecReward? neglect { get; set; }
     public List<RewardsSpecReward>? emphasisRewards { get; set; }
     public RewardsSpecBroadState? broadState { get; set; }
@@ -1937,6 +2064,12 @@ sealed class RewardsSpecSubstrate
     public List<RewardsSpecSlot>? slots { get; set; }
 }
 
+sealed class RewardsSpecNearWaterContext
+{
+    public string? formListEditorId { get; set; }
+    public List<string>? locations { get; set; }
+}
+
 sealed class RewardsSpecSlot
 {
     public string? slotProperty { get; set; }
@@ -1964,6 +2097,12 @@ sealed class RewardsSpecReward
     public bool preserveAdditionalEffects { get; set; }
 }
 
+// Fail-closed: an unknown key at the effect level THROWS at author time instead of being
+// silently dropped. This closes the bug class that hid nearWaterOnly (a real gate that
+// deserialized to nothing, deployed an always-on reward, and passed the verifier blind ->
+// the Argonian +80 over-stack). Scoped to RewardsSpecEffect only (NOT global) so the
+// doc-metadata keys on the other spec types are unaffected.
+[System.Text.Json.Serialization.JsonUnmappedMemberHandling(System.Text.Json.Serialization.JsonUnmappedMemberHandling.Disallow)]
 sealed class RewardsSpecEffect
 {
     public string? magicEffectEditorId { get; set; }
@@ -1973,7 +2112,25 @@ sealed class RewardsSpecEffect
     public string? spellType { get; set; }
     public string? castType { get; set; }
     public bool nightOnly { get; set; }
+    public bool nearWaterOnly { get; set; }
+    public List<RewardsSpecCondition>? conditions { get; set; }
     public string? effectName { get; set; }
+    // Recognized-but-unused doc annotations: the real gating for these is scripted in the
+    // manager (curse/posture, flat scripted restore), not an MGEF condition. Modeled so the
+    // Disallow guard above passes every current spec; the author never reads them.
+    public string? appliesAtPosture { get; set; }
+    public string? delivery { get; set; }
+    public bool existing { get; set; }
+    public bool homeOrShrineOnly { get; set; }
+}
+
+sealed class RewardsSpecCondition
+{
+    public string? function { get; set; }
+    public string? formList { get; set; }
+    public string? compareOperator { get; set; }
+    public float comparisonValue { get; set; }
+    public bool or { get; set; }
 }
 
 sealed class RewardsSpecMessage

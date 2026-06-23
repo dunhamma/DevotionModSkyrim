@@ -110,7 +110,7 @@
     "wireTo": "PDV__ManagerQuest",
     "spellProperty": "PDV_SPEL_Neglect_Dunmer",
     "spellEditorId": "PDV_SPEL_Neglect_Dunmer",
-    "displayName": "The Ancestors Silent",
+    "displayName": "The Ancestors' Silence",
     "biteCondition": "Gentle ancestor-silence texture only at posture Strained; mechanical bite applies only at posture Silent (curse/major-deviation posture), per PDV_State_DunmerAncestorPosture. RestoredScarred is the post-curse return (scar without ongoing punishment). The ancestor SUBSTRATE itself has NO passive decay; neglect is posture-driven, not a decay faucet.",
     "effects": [
       {
