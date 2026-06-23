@@ -756,18 +756,22 @@
           "sourceKind": "quest-stage",
           "status": "approved-for-fill",
           "rationale": "Dragonborn identity milestone as a one-shot Alkosh emphasis marker; MQ104 stage 160 fires when the player absorbs their first dragon soul at the Western Watchtower.",
-          "approvedStages": [160],
+          "approvedStages": [
+            160
+          ],
           "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
           "rejectedStageContext": "Generic dragon kills or repeated main-quest progress outside stage 160.",
           "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey."
         },
         {
-          "formKey": "Skyrim.esm:028B0E",
+          "formKey": "Skyrim.esm:028AD6",
           "editorId": "DA01",
           "sourceKind": "quest-stage",
           "status": "approved-for-fill",
           "rationale": "Azura branch resolution as a one-shot Azurah emphasis marker; DA01 stage 100 fires when the player returns Azura's Star.",
-          "approvedStages": [100],
+          "approvedStages": [
+            100
+          ],
           "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
           "rejectedStageContext": "Black Star branch, generic shrine proximity, or artifact possession alone.",
           "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey."
@@ -802,6 +806,395 @@
           "sourceKind": "book",
           "status": "approved-for-fill",
           "rationale": "One-shot Redguard martial-discipline context; plausible shared Crown/Forebear spine source while Tu'whacca books are absent."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ArgonianCommunitySources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:076B4A",
+          "editorId": "DarkwaterCrossingDerkeethusRescueQuest",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic Argonian NPC contact, ordinary mine travel, and non-terminal rescue progress do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey argonian_derkeethus_community.",
+          "rationale": "Exact Derkeethus rescue completion restores an Argonian community member; rejects generic Argonian proximity or ordinary cave clearing."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ArgonianSithisSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01EA50",
+          "editorId": "DB01",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic murder, generic stealth play, and radiant assassination loops do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey argonian_db01_sithis.",
+          "rationale": "Exact Innocence Lost completion is a one-shot Sithis/Dark Brotherhood threshold; rejects generic murder and radiant assassination loops."
+        },
+        {
+          "formKey": "Skyrim.esm:01EA59",
+          "editorId": "DB11",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Radiant assassination loops, ordinary crime, and non-terminal Dark Brotherhood stages do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey argonian_db11_sithis.",
+          "rationale": "Exact Hail Sithis completion is a one-shot Sithis end-state source; rejects generic assassination loops."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_RedguardCrownSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01CF25",
+          "editorId": "MS08",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            201
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic Redguard NPC interaction, Whiterun travel, and the opposite MS08 branch do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey redguard_ms08_crown.",
+          "rationale": "Exact In My Time of Need Alik'r/Saadia branch completion gives a one-shot Crown-leaning justice marker; rejects generic Redguard contact."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_RedguardForebearSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01CF25",
+          "editorId": "MS08",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic Redguard NPC interaction, Whiterun travel, and the opposite MS08 branch do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey redguard_ms08_forebear.",
+          "rationale": "Exact In My Time of Need Saadia-aid branch completion gives a one-shot Forebear-leaning mercy marker; rejects generic Redguard contact."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_RedguardAshAbahSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:07D949",
+          "editorId": "DA11Intro",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            20
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Namira main-quest cannibalism branches, generic Markarth travel, and generic undead killing do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey redguard_da11intro_ashabah_duty.",
+          "rationale": "Exact Hall of the Dead safety confirmation is a conservative Ash'abah death-duty source; rejects Namira main-quest cannibalism and generic Markarth travel."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_BosmerZenSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:039645",
+          "editorId": "MS13",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            100,
+            110
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Keeping the claw, lost-reward failure, generic dungeon clearing, and ordinary trading do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey bosmer_ms13_zen_lucan or bosmer_ms13_zen_camilla.",
+          "rationale": "Exact Golden Claw return outcomes restore stolen property to its owner; this is a Z'en exchange/debt-settling source, not generic trade or loot."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_BosmerBaanDarSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:040A5E",
+          "editorId": "MS02",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            100,
+            250
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Ordinary Forsworn combat, Markarth travel, imprisonment without escape, and generic theft do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey bosmer_ms02_baandar_madanach or bosmer_ms02_baandar_pardon.",
+          "rationale": "Exact Cidhna Mine escape outcomes are Baan Dar exile-survival and cunning-reversal sources; rejects generic theft, ordinary bandit killing, and non-terminal imprisonment."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerDeviationSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:028AD6",
+          "editorId": "DA01",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            110
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Azura branch, generic soul gem use, shrine proximity, and artifact possession alone do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey dunmer_da01_black_star.",
+          "rationale": "Exact Black Star branch completion is a one-shot Dunmer deviation source; rejects the Azura branch and generic soul-gem use."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_DunmerMephalaSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:04A37B",
+          "editorId": "DA08",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            60
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic Daedric contact, Dragonreach travel, and artifact possession alone do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey dunmer_da08_mephala.",
+          "rationale": "Exact Whispering Door Mephala threshold gives the missing Dunmer Mephala Reclamation source; rejects generic Daedric contact and artifact possession alone."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialCivicSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0D0800",
+          "editorId": "MQ103",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            190
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic main-quest progress, dungeon clearing, and dragonborn identity alone do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey imperial_mq103_civic.",
+          "rationale": "Exact Bleak Falls Barrow completion is a commissioned public-safety civic milestone, not generic adventuring."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPublicServiceSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:02D75C",
+          "editorId": "CW02A",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic Legion membership, Civil War rank, patrols, and the Stormcloak branch do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey imperial_cw02a_public_service.",
+          "rationale": "Exact Imperial Jagged Crown completion is a one-shot public-service milestone; rejects generic Legion membership and patrol loops."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialMercySources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01CF25",
+          "editorId": "MS08",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Opposite MS08 branch, generic helping, and generic Redguard contact do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey imperial_ms08_mercy.",
+          "rationale": "Exact Saadia-aid branch is a mercy/protection civic source for Mara; rejects generic helping and the opposite branch."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialLawfulOrderSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01CF25",
+          "editorId": "MS08",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            201
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Opposite MS08 branch, generic bounty payment, ordinary crime, and generic Redguard contact do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey imperial_ms08_lawful_order.",
+          "rationale": "Exact Alik'r justice branch is a lawful-order civic source for Stendarr; rejects generic bounty payment or cruelty as order."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialHonestWorkSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:039645",
+          "editorId": "MS13",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            100,
+            110
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Keeping the claw, lost-reward failure, generic dungeon clearing, and raw barter do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey imperial_ms13_honest_work_lucan or imperial_ms13_honest_work_camilla.",
+          "rationale": "Exact Golden Claw return outcomes are fair-dealing/contract-completion sources for Zenithar; rejects raw barter, crafting loops, and generic loot."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialDeathDutySources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:025F3E",
+          "editorId": "MS14",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic undead killing, tomb travel, and non-terminal Morthal investigation stages do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey imperial_ms14_death_duty.",
+          "rationale": "Exact Laid to Rest completion is an Arkay-coded death-duty/anti-undead civic milestone; rejects generic undead killing."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPrivateTalosSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:035D5F",
+          "editorId": "MQ201",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            250
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic main-quest progress, Embassy entry alone, and public Talos book/shrine use do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey imperial_mq201_private_talos.",
+          "rationale": "Exact Diplomatic Immunity completion is a private anti-Thalmor pressure source for the Talos lane; rejects generic Embassy proximity and public shrine/book signals."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_ImperialPatronCivicSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0211D5",
+          "editorId": "t02",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic favor quests, ordinary marriage, and public-service loops already covered by family lists do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey imperial_t02_patron_civic.",
+          "rationale": "Exact Book of Love completion is a patron-lane civic restoration milestone; rejects generic favor quests and ordinary marriage."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_BretonKnightsRoadSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0211D5",
+          "editorId": "t02",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic helping, ordinary marriage, and unrelated Breton identity content do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey breton_t02_knights_road.",
+          "rationale": "Exact Book of Love completion is a mercy/service source that can lock the Knight's Road tradition once; rejects generic helping and ordinary marriage."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_BretonVowSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0211D5",
+          "editorId": "t02",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic favor quests, ordinary marriage, and unrelated Breton identity content do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey breton_t02_vow.",
+          "rationale": "Exact Book of Love completion is a mercy/service vow source for Knight's Road; rejects generic favors and ordinary marriage."
+        },
+        {
+          "formKey": "Skyrim.esm:025F3E",
+          "editorId": "MS14",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            200
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic undead killing, tomb travel, and ordinary Morthal travel do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey breton_ms14_vow.",
+          "rationale": "Exact Laid to Rest completion is a community-protection vow source; rejects generic undead killing and ordinary Morthal travel."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_NordKyneTalosSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:0242BA",
+          "editorId": "MQ105",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            160
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic shout use, Greybeard proximity, and non-terminal MQ105 progress do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey nord_mq105_kyne_talos.",
+          "rationale": "Exact Way of the Voice sky-road milestone is the anchoring Kyne/Talos quest source; rejects generic shout use and Greybeard proximity."
         }
       ]
     }
@@ -865,8 +1258,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "voice-recognition-reading",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "nord-c03-hircine-arkay",
@@ -945,7 +1338,7 @@
       "race": "Dunmer",
       "property": "PDV_FLST_P2_DunmerAzuraSources",
       "sourceKind": "quest-stage",
-      "formKey": "028B0E:Skyrim.esm",
+      "formKey": "028AD6:Skyrim.esm",
       "expectedFormId": 166614,
       "approvedStage": 100,
       "routeKey": "dunmer_da01_azura",
@@ -963,7 +1356,7 @@
       "race": "Dunmer",
       "property": "PDV_FLST_P2_DunmerDeviationSources",
       "sourceKind": "quest-stage",
-      "formKey": "028B0E:Skyrim.esm",
+      "formKey": "028AD6:Skyrim.esm",
       "expectedFormId": 166614,
       "approvedStage": 110,
       "routeKey": "dunmer_da01_black_star",
@@ -973,8 +1366,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "da01-branch-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "dunmer-da02-boethiah",
@@ -1071,7 +1464,7 @@
       "race": "Argonian",
       "property": "PDV_FLST_P2_ArgonianSithisSources",
       "sourceKind": "quest-stage",
-      "formKey": "01EA30:Skyrim.esm",
+      "formKey": "01EA50:Skyrim.esm",
       "expectedFormId": 125520,
       "approvedStage": 200,
       "routeKey": "argonian_db01_sithis",
@@ -1081,15 +1474,15 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "db-sithis-path",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "argonian-db11-sithis",
       "race": "Argonian",
       "property": "PDV_FLST_P2_ArgonianSithisSources",
       "sourceKind": "quest-stage",
-      "formKey": "01EA39:Skyrim.esm",
+      "formKey": "01EA59:Skyrim.esm",
       "expectedFormId": 125529,
       "approvedStage": 200,
       "routeKey": "argonian_db11_sithis",
@@ -1099,8 +1492,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "db-sithis-path",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "bosmer-da05-yffre-hunt",
@@ -1179,7 +1572,7 @@
       "race": "Khajiit",
       "property": "PDV_FLST_P2_KhajiitFocusedSources",
       "sourceKind": "quest-stage",
-      "formKey": "028B0E:Skyrim.esm",
+      "formKey": "028AD6:Skyrim.esm",
       "expectedFormId": 166614,
       "approvedStage": 100,
       "routeKey": "khajiit_da01_azurah",
@@ -1225,8 +1618,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "ms08-branch-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "redguard-ms08-forebear",
@@ -1243,8 +1636,337 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "ms08-branch-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "argonian-derkeethus-community",
+      "race": "Argonian",
+      "property": "PDV_FLST_P2_ArgonianCommunitySources",
+      "sourceKind": "quest-stage",
+      "formKey": "076B4A:Skyrim.esm",
+      "expectedFormId": 486218,
+      "approvedStage": 200,
+      "routeKey": "argonian_derkeethus_community",
+      "dispatch": "PDV_EventBusService.RouteArgonianCommunity(\"po3_queststage_argonian_derkeethus\")",
+      "acceptedContext": "Derkeethus rescue completion as a one-shot Argonian community support source.",
+      "rejectedContext": "Generic Argonian NPC contact, ordinary mine travel, and non-terminal rescue progress do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "redguard-da11intro-ashabah-duty",
+      "race": "Redguard",
+      "property": "PDV_FLST_P2_RedguardAshAbahSources",
+      "sourceKind": "quest-stage",
+      "formKey": "07D949:Skyrim.esm",
+      "expectedFormId": 514377,
+      "approvedStage": 20,
+      "routeKey": "redguard_da11intro_ashabah_duty",
+      "dispatch": "PDV_EventBusService.RouteRedguardSectSignal(2, \"po3_queststage_redguard_da11intro_ashabah\")",
+      "acceptedContext": "Hall of the Dead safety confirmation as a one-shot Ash'abah/death-duty marker.",
+      "rejectedContext": "Namira main-quest cannibalism branches, generic Markarth travel, and generic undead killing do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "bosmer-ms13-zen-lucan",
+      "race": "Bosmer",
+      "property": "PDV_FLST_P2_BosmerZenSources",
+      "sourceKind": "quest-stage",
+      "formKey": "039645:Skyrim.esm",
+      "expectedFormId": 235077,
+      "approvedStage": 100,
+      "routeKey": "bosmer_ms13_zen_lucan",
+      "dispatch": "PDV_EventBusService.RouteBosmerZenExchange(\"po3_queststage_bosmer_ms13_lucan\")",
+      "acceptedContext": "Golden Claw returned to Lucan as one-shot debt-restoration/exchange source.",
+      "rejectedContext": "Keeping the claw, lost-reward failure, generic dungeon clearing, and ordinary trading do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill",
+      "mutualExclusionGroup": "bosmer_ms13_zen_return"
+    },
+    {
+      "id": "bosmer-ms13-zen-camilla",
+      "race": "Bosmer",
+      "property": "PDV_FLST_P2_BosmerZenSources",
+      "sourceKind": "quest-stage",
+      "formKey": "039645:Skyrim.esm",
+      "expectedFormId": 235077,
+      "approvedStage": 110,
+      "routeKey": "bosmer_ms13_zen_camilla",
+      "dispatch": "PDV_EventBusService.RouteBosmerZenExchange(\"po3_queststage_bosmer_ms13_camilla\")",
+      "acceptedContext": "Golden Claw returned to Camilla as one-shot debt-restoration/exchange source.",
+      "rejectedContext": "Keeping the claw, lost-reward failure, generic dungeon clearing, and ordinary trading do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill",
+      "mutualExclusionGroup": "bosmer_ms13_zen_return"
+    },
+    {
+      "id": "bosmer-ms02-baandar-madanach",
+      "race": "Bosmer",
+      "property": "PDV_FLST_P2_BosmerBaanDarSources",
+      "sourceKind": "quest-stage",
+      "formKey": "040A5E:Skyrim.esm",
+      "expectedFormId": 264798,
+      "approvedStage": 100,
+      "routeKey": "bosmer_ms02_baandar_madanach",
+      "dispatch": "PDV_EventBusService.RouteBosmerBaanDarRoad(\"po3_queststage_bosmer_ms02_madanach\")",
+      "acceptedContext": "Cidhna Mine escape with Madanach as one-shot exile-survival/road reversal source.",
+      "rejectedContext": "Ordinary Forsworn combat, Markarth travel, imprisonment without escape, and generic theft do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill",
+      "mutualExclusionGroup": "bosmer_ms02_baandar_escape"
+    },
+    {
+      "id": "bosmer-ms02-baandar-pardon",
+      "race": "Bosmer",
+      "property": "PDV_FLST_P2_BosmerBaanDarSources",
+      "sourceKind": "quest-stage",
+      "formKey": "040A5E:Skyrim.esm",
+      "expectedFormId": 264798,
+      "approvedStage": 250,
+      "routeKey": "bosmer_ms02_baandar_pardon",
+      "dispatch": "PDV_EventBusService.RouteBosmerBaanDarRoad(\"po3_queststage_bosmer_ms02_pardon\")",
+      "acceptedContext": "Cidhna Mine pardon/escape branch as one-shot exile-survival/road reversal source.",
+      "rejectedContext": "Ordinary Forsworn combat, Markarth travel, imprisonment without escape, and generic theft do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill",
+      "mutualExclusionGroup": "bosmer_ms02_baandar_escape"
+    },
+    {
+      "id": "dunmer-da08-mephala",
+      "race": "Dunmer",
+      "property": "PDV_FLST_P2_DunmerMephalaSources",
+      "sourceKind": "quest-stage",
+      "formKey": "04A37B:Skyrim.esm",
+      "expectedFormId": 303995,
+      "approvedStage": 60,
+      "routeKey": "dunmer_da08_mephala",
+      "dispatch": "PDV_EventBusService.RouteDunmerReclamationFocus(2, \"po3_queststage_dunmer_da08_mephala\")",
+      "acceptedContext": "Whispering Door Mephala threshold as one-shot Reclamation focus source.",
+      "rejectedContext": "Generic Daedric contact, Dragonreach travel, and artifact possession alone do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "imperial-mq103-civic",
+      "race": "Imperial",
+      "property": "PDV_FLST_P2_ImperialCivicSources",
+      "sourceKind": "quest-stage",
+      "formKey": "0D0800:Skyrim.esm",
+      "expectedFormId": 854016,
+      "approvedStage": 190,
+      "routeKey": "imperial_mq103_civic",
+      "dispatch": "PDV_EventBusService.RouteImperialCivicService(\"po3_queststage_imperial_mq103_civic_public_service\")",
+      "acceptedContext": "Bleak Falls Barrow commissioned public-safety completion as legacy civic source.",
+      "rejectedContext": "Generic main-quest progress, dungeon clearing, and dragonborn identity alone do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "imperial-cw02a-public-service",
+      "race": "Imperial",
+      "property": "PDV_FLST_P2_ImperialPublicServiceSources",
+      "sourceKind": "quest-stage",
+      "formKey": "02D75C:Skyrim.esm",
+      "expectedFormId": 186204,
+      "approvedStage": 200,
+      "routeKey": "imperial_cw02a_public_service",
+      "dispatch": "PDV_EventBusService.RouteImperialCivicService(\"po3_queststage_imperial_cw02a_public_service\")",
+      "acceptedContext": "Imperial Jagged Crown completion as one-shot public-service milestone.",
+      "rejectedContext": "Generic Legion membership, Civil War rank, patrols, and the Stormcloak branch do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "imperial-ms08-mercy",
+      "race": "Imperial",
+      "property": "PDV_FLST_P2_ImperialMercySources",
+      "sourceKind": "quest-stage",
+      "formKey": "01CF25:Skyrim.esm",
+      "expectedFormId": 118565,
+      "approvedStage": 200,
+      "routeKey": "imperial_ms08_mercy",
+      "dispatch": "PDV_EventBusService.RouteImperialCivicService(\"po3_queststage_imperial_ms08_mercy\")",
+      "acceptedContext": "Saadia-aid branch as one-shot mercy/protection source.",
+      "rejectedContext": "Opposite MS08 branch, generic helping, and generic Redguard contact do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "imperial-ms08-lawful-order",
+      "race": "Imperial",
+      "property": "PDV_FLST_P2_ImperialLawfulOrderSources",
+      "sourceKind": "quest-stage",
+      "formKey": "01CF25:Skyrim.esm",
+      "expectedFormId": 118565,
+      "approvedStage": 201,
+      "routeKey": "imperial_ms08_lawful_order",
+      "dispatch": "PDV_EventBusService.RouteImperialCivicService(\"po3_queststage_imperial_ms08_lawful_order\")",
+      "acceptedContext": "Alik'r justice branch as one-shot lawful-order source.",
+      "rejectedContext": "Opposite MS08 branch, generic bounty payment, ordinary crime, and generic Redguard contact do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "imperial-ms13-honest-work-lucan",
+      "race": "Imperial",
+      "property": "PDV_FLST_P2_ImperialHonestWorkSources",
+      "sourceKind": "quest-stage",
+      "formKey": "039645:Skyrim.esm",
+      "expectedFormId": 235077,
+      "approvedStage": 100,
+      "routeKey": "imperial_ms13_honest_work_lucan",
+      "dispatch": "PDV_EventBusService.RouteImperialCivicService(\"po3_queststage_imperial_ms13_honest_work_lucan\")",
+      "acceptedContext": "Golden Claw returned to Lucan as fair-dealing/contract completion source.",
+      "rejectedContext": "Keeping the claw, lost-reward failure, generic dungeon clearing, and raw barter do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill",
+      "mutualExclusionGroup": "imperial_ms13_honest_work"
+    },
+    {
+      "id": "imperial-ms13-honest-work-camilla",
+      "race": "Imperial",
+      "property": "PDV_FLST_P2_ImperialHonestWorkSources",
+      "sourceKind": "quest-stage",
+      "formKey": "039645:Skyrim.esm",
+      "expectedFormId": 235077,
+      "approvedStage": 110,
+      "routeKey": "imperial_ms13_honest_work_camilla",
+      "dispatch": "PDV_EventBusService.RouteImperialCivicService(\"po3_queststage_imperial_ms13_honest_work_camilla\")",
+      "acceptedContext": "Golden Claw returned to Camilla as fair-dealing/contract completion source.",
+      "rejectedContext": "Keeping the claw, lost-reward failure, generic dungeon clearing, and raw barter do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill",
+      "mutualExclusionGroup": "imperial_ms13_honest_work"
+    },
+    {
+      "id": "imperial-ms14-death-duty",
+      "race": "Imperial",
+      "property": "PDV_FLST_P2_ImperialDeathDutySources",
+      "sourceKind": "quest-stage",
+      "formKey": "025F3E:Skyrim.esm",
+      "expectedFormId": 155454,
+      "approvedStage": 200,
+      "routeKey": "imperial_ms14_death_duty",
+      "dispatch": "PDV_EventBusService.RouteImperialCivicService(\"po3_queststage_imperial_ms14_death_duty\")",
+      "acceptedContext": "Laid to Rest completion as one-shot anti-undead/death-duty civic source.",
+      "rejectedContext": "Generic undead killing, tomb travel, and non-terminal Morthal investigation stages do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "imperial-mq201-private-talos",
+      "race": "Imperial",
+      "property": "PDV_FLST_P2_ImperialPrivateTalosSources",
+      "sourceKind": "quest-stage",
+      "formKey": "035D5F:Skyrim.esm",
+      "expectedFormId": 220511,
+      "approvedStage": 250,
+      "routeKey": "imperial_mq201_private_talos",
+      "dispatch": "PDV_EventBusService.RouteImperialTalosPressure(true, \"po3_queststage_imperial_mq201_private_talos\")",
+      "acceptedContext": "Diplomatic Immunity completion as one-shot private anti-Thalmor/Talos-pressure source.",
+      "rejectedContext": "Generic main-quest progress, Embassy entry alone, and public Talos book/shrine use do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "imperial-t02-patron-civic",
+      "race": "Imperial",
+      "property": "PDV_FLST_P2_ImperialPatronCivicSources",
+      "sourceKind": "quest-stage",
+      "formKey": "0211D5:Skyrim.esm",
+      "expectedFormId": 135637,
+      "approvedStage": 200,
+      "routeKey": "imperial_t02_patron_civic",
+      "dispatch": "PDV_EventBusService.RouteImperialPatronCivicFavor(\"po3_queststage_imperial_t02_patron_civic\")",
+      "acceptedContext": "Book of Love completion as one-shot patron-civic service milestone.",
+      "rejectedContext": "Generic favor quests, ordinary marriage, and public-service loops already covered by family lists do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "breton-t02-knights-road",
+      "race": "Breton",
+      "property": "PDV_FLST_P2_BretonKnightsRoadSources",
+      "sourceKind": "quest-stage",
+      "formKey": "0211D5:Skyrim.esm",
+      "expectedFormId": 135637,
+      "approvedStage": 200,
+      "routeKey": "breton_t02_knights_road",
+      "dispatch": "PDV_EventBusService.RouteBretonTraditionChoice(0, \"po3_queststage_breton_t02_knights_road\")",
+      "acceptedContext": "Book of Love completion as Knight's Road tradition-lock source.",
+      "rejectedContext": "Generic helping, ordinary marriage, and unrelated Breton identity content do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "breton-t02-vow",
+      "race": "Breton",
+      "property": "PDV_FLST_P2_BretonVowSources",
+      "sourceKind": "quest-stage",
+      "formKey": "0211D5:Skyrim.esm",
+      "expectedFormId": 135637,
+      "approvedStage": 200,
+      "routeKey": "breton_t02_vow",
+      "dispatch": "PDV_EventBusService.RouteBretonKnightlyVow(\"po3_queststage_breton_t02_vow\")",
+      "acceptedContext": "Book of Love completion as one-shot mercy/service vow source.",
+      "rejectedContext": "Generic favor quests, ordinary marriage, and unrelated Breton identity content do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "breton-ms14-vow",
+      "race": "Breton",
+      "property": "PDV_FLST_P2_BretonVowSources",
+      "sourceKind": "quest-stage",
+      "formKey": "025F3E:Skyrim.esm",
+      "expectedFormId": 155454,
+      "approvedStage": 200,
+      "routeKey": "breton_ms14_vow",
+      "dispatch": "PDV_EventBusService.RouteBretonKnightlyVow(\"po3_queststage_breton_ms14_vow\")",
+      "acceptedContext": "Laid to Rest completion as community-protection vow source.",
+      "rejectedContext": "Generic undead killing, tomb travel, and ordinary Morthal travel do not route this source.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     }
   ],
   "antiFarmPolicy": [

@@ -1003,6 +1003,15 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
     if ShouldRouteP2QuestStage(PDV_FLST_P2_NordKyneTalosSources, sourceQuest, 148154, 160, "nord_mq105_kyne_talos", newStage)
         PDV_EventBusService.RouteNordKyneTalosContext("po3_queststage_nord_mq105_sky_road")
     endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_BretonKnightsRoadSources, sourceQuest, 135637, 200, "breton_t02_knights_road", newStage)
+        PDV_EventBusService.RouteBretonTraditionChoice(0, "po3_queststage_breton_t02_knights_road")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_BretonVowSources, sourceQuest, 135637, 200, "breton_t02_vow", newStage)
+        PDV_EventBusService.RouteBretonKnightlyVow("po3_queststage_breton_t02_vow")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_BretonVowSources, sourceQuest, 155454, 200, "breton_ms14_vow", newStage)
+        PDV_EventBusService.RouteBretonKnightlyVow("po3_queststage_breton_ms14_vow")
+    endIf
     if ShouldRouteP2QuestStage(PDV_FLST_P2_NordHircineArkaySources, sourceQuest, 118516, 200, "nord_c03_hircine_arkay", newStage)
         PDV_EventBusService.RouteNordHircineArkayEdge("po3_queststage_nord_c03_hircine")
     endIf
@@ -1021,6 +1030,9 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_P2_DunmerDeviationSources, sourceQuest, 166614, 110, "dunmer_da01_black_star", newStage)
         PDV_EventBusService.RouteDunmerDeviationPrice("po3_queststage_dunmer_da01_black_star")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_DunmerMephalaSources, sourceQuest, 303995, 60, "dunmer_da08_mephala", newStage)
+        PDV_EventBusService.RouteDunmerReclamationFocus(2, "po3_queststage_dunmer_da08_mephala")
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_P2_DunmerBoethiahSources, sourceQuest, 317654, 100, "dunmer_da02_boethiah", newStage)
         PDV_EventBusService.RouteDunmerReclamationFocus(1, "po3_queststage_dunmer_da02")
@@ -1048,6 +1060,9 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
     if ShouldRouteP2QuestStage(PDV_FLST_P2_ArgonianSithisSources, sourceQuest, 125529, 200, "argonian_db11_sithis", newStage)
         PDV_EventBusService.RouteArgonianSithisAcknowledgment("po3_queststage_argonian_db11")
     endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_ArgonianCommunitySources, sourceQuest, 486218, 200, "argonian_derkeethus_community", newStage)
+        PDV_EventBusService.RouteArgonianCommunity("po3_queststage_argonian_derkeethus")
+    endIf
 
     if GetOriginRaceValue() == 4
         if ShouldRouteP2QuestStageGroup(PDV_FLST_P2_BosmerYffreSources, sourceQuest, 173210, 100, "bosmer_da05_yffre_hunt", "bosmer_da05_yffre_outcome", newStage)
@@ -1058,6 +1073,18 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
         endIf
         if ShouldRouteP2QuestStage(PDV_FLST_P2_BosmerYffreSources, sourceQuest, 127576, 200, "bosmer_mg08_living_story", newStage)
             PDV_EventBusService.RouteBosmerYffre(1, "po3_queststage_bosmer_mg08")
+        endIf
+        if ShouldRouteP2QuestStageGroup(PDV_FLST_P2_BosmerZenSources, sourceQuest, 235077, 100, "bosmer_ms13_zen_lucan", "bosmer_ms13_zen_return", newStage)
+            PDV_EventBusService.RouteBosmerZenExchange("po3_queststage_bosmer_ms13_lucan")
+        endIf
+        if ShouldRouteP2QuestStageGroup(PDV_FLST_P2_BosmerZenSources, sourceQuest, 235077, 110, "bosmer_ms13_zen_camilla", "bosmer_ms13_zen_return", newStage)
+            PDV_EventBusService.RouteBosmerZenExchange("po3_queststage_bosmer_ms13_camilla")
+        endIf
+        if ShouldRouteP2QuestStageGroup(PDV_FLST_P2_BosmerBaanDarSources, sourceQuest, 264798, 100, "bosmer_ms02_baandar_madanach", "bosmer_ms02_baandar_escape", newStage)
+            PDV_EventBusService.RouteBosmerBaanDarRoad("po3_queststage_bosmer_ms02_madanach")
+        endIf
+        if ShouldRouteP2QuestStageGroup(PDV_FLST_P2_BosmerBaanDarSources, sourceQuest, 264798, 250, "bosmer_ms02_baandar_pardon", "bosmer_ms02_baandar_escape", newStage)
+            PDV_EventBusService.RouteBosmerBaanDarRoad("po3_queststage_bosmer_ms02_pardon")
         endIf
     endIf
 
@@ -1078,6 +1105,37 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_P2_RedguardForebearSources, sourceQuest, 118565, 200, "redguard_ms08_forebear", newStage)
         PDV_EventBusService.RouteRedguardSectSignal(1, "po3_queststage_redguard_ms08_forebear")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_RedguardAshAbahSources, sourceQuest, 514377, 20, "redguard_da11intro_ashabah_duty", newStage)
+        PDV_EventBusService.RouteRedguardSectSignal(2, "po3_queststage_redguard_da11intro_ashabah")
+    endIf
+
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_ImperialCivicSources, sourceQuest, 854016, 190, "imperial_mq103_civic", newStage)
+        PDV_EventBusService.RouteImperialCivicService("po3_queststage_imperial_mq103_civic_public_service")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_ImperialPublicServiceSources, sourceQuest, 186204, 200, "imperial_cw02a_public_service", newStage)
+        PDV_EventBusService.RouteImperialCivicService("po3_queststage_imperial_cw02a_public_service")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_ImperialMercySources, sourceQuest, 118565, 200, "imperial_ms08_mercy", newStage)
+        PDV_EventBusService.RouteImperialCivicService("po3_queststage_imperial_ms08_mercy")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_ImperialLawfulOrderSources, sourceQuest, 118565, 201, "imperial_ms08_lawful_order", newStage)
+        PDV_EventBusService.RouteImperialCivicService("po3_queststage_imperial_ms08_lawful_order")
+    endIf
+    if ShouldRouteP2QuestStageGroup(PDV_FLST_P2_ImperialHonestWorkSources, sourceQuest, 235077, 100, "imperial_ms13_honest_work_lucan", "imperial_ms13_honest_work", newStage)
+        PDV_EventBusService.RouteImperialCivicService("po3_queststage_imperial_ms13_honest_work_lucan")
+    endIf
+    if ShouldRouteP2QuestStageGroup(PDV_FLST_P2_ImperialHonestWorkSources, sourceQuest, 235077, 110, "imperial_ms13_honest_work_camilla", "imperial_ms13_honest_work", newStage)
+        PDV_EventBusService.RouteImperialCivicService("po3_queststage_imperial_ms13_honest_work_camilla")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_ImperialDeathDutySources, sourceQuest, 155454, 200, "imperial_ms14_death_duty", newStage)
+        PDV_EventBusService.RouteImperialCivicService("po3_queststage_imperial_ms14_death_duty")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_ImperialPrivateTalosSources, sourceQuest, 220511, 250, "imperial_mq201_private_talos", newStage)
+        PDV_EventBusService.RouteImperialTalosPressure(true, "po3_queststage_imperial_mq201_private_talos")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_ImperialPatronCivicSources, sourceQuest, 135637, 200, "imperial_t02_patron_civic", newStage)
+        PDV_EventBusService.RouteImperialPatronCivicFavor("po3_queststage_imperial_t02_patron_civic")
     endIf
 
     if ShouldRouteP2QuestStage(PDV_FLST_Daedric_AzuraLiveSources, sourceQuest, 166614, 100, "daedric_azura_da01", newStage)

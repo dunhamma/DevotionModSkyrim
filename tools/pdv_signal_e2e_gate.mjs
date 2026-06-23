@@ -27,8 +27,9 @@ const P2_AUTHOR_PROJECT = `${ROOT}/tools/pdv-phase20-p2-receiver-author/PdvPhase
 const MCP_CHECK = `${ROOT}/tools/pdv_mcp_check.mjs`;
 const COMPLETENESS_AUDIT = `${ROOT}/tools/pdv_completeness_audit.mjs`;
 
-const PIETY_SINK_RE = /\b(AwardCuratedSignal(?:Scaled)?|AwardPiety|ApplyDeityReaction|ApplyQuestReactionPiety|Record[A-Za-z]+Scaled|AddCommitmentSignal)\b/;
+const PIETY_SINK_RE = /\b(AwardCuratedSignal(?:Scaled)?|AwardPiety|ApplyDeityReaction|ApplyQuestReactionPiety|Record[A-Za-z]+Scaled|AddCommitmentSignal|ApplyBretonInitialChoice)\b/;
 const ANTI_FARM_RE = /\bConsumeDailyRepeatMultiplier\b|\.Day\b|GetCurrentGameTime\s*\(|MarkP2SourceRoute\s*\(/;
+const MAX_HANDLER_SINK_DEPTH = 3;
 
 function main() {
   assertFile(MANIFEST_PATH);
@@ -546,28 +547,55 @@ function analyzeHandler(handler, managerFunctions) {
   if (!body) {
     return { reachesSink: false, hasAntiFarm: false, detail: "missing manager handler" };
   }
-  if (PIETY_SINK_RE.test(body)) {
+
+  const result = findHandlerSinkPath(handler, managerFunctions, MAX_HANDLER_SINK_DEPTH, new Set(), [], false);
+  if (result.reachesSink) {
+    const sinkPath = result.path.slice(1).join("->");
+    const via = sinkPath.length ? ` via ${sinkPath}` : "";
     return {
       reachesSink: true,
-      hasAntiFarm: ANTI_FARM_RE.test(body),
-      detail: ANTI_FARM_RE.test(body) ? "direct sink with handler anti-farm" : "direct sink without handler anti-farm",
+      hasAntiFarm: result.hasAntiFarm,
+      detail: result.hasAntiFarm ? `sink${via} with anti-farm` : `sink${via} without anti-farm`,
     };
   }
 
+  return {
+    reachesSink: false,
+    hasAntiFarm: result.hasAntiFarm,
+    detail: `no sink within depth ${MAX_HANDLER_SINK_DEPTH}`,
+  };
+}
+
+function findHandlerSinkPath(functionName, managerFunctions, remainingDepth, seen, path, inheritedAntiFarm) {
+  if (seen.has(functionName)) {
+    return { reachesSink: false, hasAntiFarm: inheritedAntiFarm, path };
+  }
+  const body = managerFunctions.get(functionName);
+  if (!body) {
+    return { reachesSink: false, hasAntiFarm: inheritedAntiFarm, path };
+  }
+
+  const nextPath = [...path, functionName];
+  const hasAntiFarm = inheritedAntiFarm || ANTI_FARM_RE.test(body);
+  if (PIETY_SINK_RE.test(body)) {
+    return { reachesSink: true, hasAntiFarm, path: nextPath };
+  }
+  if (remainingDepth <= 0) {
+    return { reachesSink: false, hasAntiFarm, path: nextPath };
+  }
+
+  const nextSeen = new Set(seen);
+  nextSeen.add(functionName);
   const calls = unique([...body.matchAll(/\b([A-Za-z_][A-Za-z0-9_]*)\s*\(/g)].map((match) => match[1]))
-    .filter((name) => name !== handler);
+    .filter((name) => name !== functionName && managerFunctions.has(name));
   for (const call of calls) {
-    const calleeBody = managerFunctions.get(call);
-    if (calleeBody && PIETY_SINK_RE.test(calleeBody)) {
-      const hasAntiFarm = ANTI_FARM_RE.test(body) || ANTI_FARM_RE.test(calleeBody);
-      return {
-        reachesSink: true,
-        hasAntiFarm,
-        detail: hasAntiFarm ? `sink via ${call} with anti-farm` : `sink via ${call} without anti-farm`,
-      };
+    const result = findHandlerSinkPath(call, managerFunctions, remainingDepth - 1, nextSeen, nextPath, hasAntiFarm);
+    if (result.reachesSink) {
+      return result;
     }
   }
-  return { reachesSink: false, hasAntiFarm: ANTI_FARM_RE.test(body), detail: "no sink within depth 2" };
+
+  return { reachesSink: false, hasAntiFarm, path: nextPath };
 }
 
 function evaluateRouteReview(routeEntries) {
