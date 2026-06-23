@@ -371,7 +371,7 @@
   "vanillaSourceSelections": {
     "note": "Vanilla Skyrim.esm source records selected per diegetic channel for D1 record creation: duplicate-from-vanilla, then recolor IMAD/EFSH per the locked palette. FormIDs are the Skyrim.esm DEFINING records (some are overridden downstream by audio/ENB mods, but the duplicate source is the base). Selected 2026-06-08 via houseCARL load-order query. Entries flagged candidate=true want a final confirm at authoring; the sound + effect channels are pinned to real records.",
     "SNDR": {
-      "PDV_SND_Chime": { "tone": "reverent", "vanilla": "056622:Skyrim.esm", "vanillaEditorId": "MAGRestorationChargeSD" },
+      "PDV_SND_Chime": { "tone": "reverent", "vanilla": "01702E:Skyrim.esm", "vanillaEditorId": "MAGAltarsBlessingFireC2D", "note": "Retargeted 2026-06-23 from MAGRestorationChargeSD (056622): the charge hum is a soft 3D spell sound, inaudible as a tier-up cue (tester maxed volume, couldn't hear it). This is a 2D blessing flourish (full volume, no distance falloff), distinct from PDV_SND_Swell's A2D. Applied in-place via pdv-diegetic-author --retarget-chime to preserve the SOUN FormKey + DiegeticDirector binding." },
       "PDV_SND_Swell": { "tone": "revelation", "vanilla": "01702C:Skyrim.esm", "vanillaEditorId": "MAGAltarsBlessingFireA2D" },
       "PDV_SND_Hollow": { "tone": "dread", "vanilla": "057C63:Skyrim.esm", "vanillaEditorId": "MAGRestorationTurnUndeadProjectileSD", "candidate": true, "note": "low ominous tone; confirm vs a disease/curse SD if a darker sting is wanted" },
       "PDV_SND_RisingChime": { "tone": "release", "vanilla": "057C65:Skyrim.esm", "vanillaEditorId": "MAGRestorationTurnUndeadFire2DSD" },

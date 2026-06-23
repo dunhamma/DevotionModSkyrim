@@ -26,7 +26,7 @@ var dupSpecs = new (uint id, string eid, string type)[]
     (0x10C445, "PDV_IMAD_Dread", "IMAD"),
     (0x084B38, "PDV_IMAD_Release", "IMAD"),
     (0x10C445, "PDV_IMAD_Absence", "IMAD"),
-    (0x056622, "PDV_SND_Chime", "SOUN"),
+    (0x01702E, "PDV_SND_Chime", "SOUN"),  // MAGAltarsBlessingFireC2D (2D blessing flourish); retargeted 2026-06-23 from the inaudible 3D MAGRestorationChargeSD (056622) so the tier-up cue is heard. Existing esps keep the SOUN FormKey; use --retarget-chime to repoint in place.
     (0x01702C, "PDV_SND_Swell", "SOUN"),
     (0x057C63, "PDV_SND_Hollow", "SOUN"),
     (0x057C65, "PDV_SND_RisingChime", "SOUN"),
@@ -55,6 +55,38 @@ try
     foreach (var rec in mod.EnumerateMajorRecords().OfType<ISkyrimMajorRecordGetter>())
     {
         if (!string.IsNullOrEmpty(rec.EditorID)) index[rec.EditorID!] = rec;
+    }
+
+    // --- surgical in-place repoint of the tier-up cue ---
+    // Repoints the existing PDV_SND_Chime SoundMarker's descriptor to a louder, 2D blessing
+    // flourish (MAGAltarsBlessingFireC2D, 01702E:Skyrim.esm) so the milestone is actually audible
+    // (the old MAGRestorationChargeSD is a soft 3D spell-charge hum). PRESERVES the SoundMarker
+    // FormKey -- we mutate the existing record, never re-create it, so the DiegeticDirector VMAD
+    // binding stays intact (re-creating re-allocates a FormKey and orphans the binding, which is
+    // the original D1 silence bug). Skyrim.esm is already a master, so no new dependency.
+    if (args.Contains("--retarget-chime"))
+    {
+        var soun = mod.SoundMarkers.FirstOrDefault(s => string.Equals(s.EditorID, "PDV_SND_Chime", StringComparison.OrdinalIgnoreCase));
+        if (soun is null) { errors.Add("PDV_SND_Chime SoundMarker not found"); status = "FAIL"; Report(); Environment.Exit(1); return; }
+        var oldDescr = soun.SoundDescriptor.FormKeyNullable?.ToString() ?? "<null>";
+        soun.SoundDescriptor.SetTo(FormKey.Factory("01702E:Skyrim.esm"));
+        actions.Add($"retarget PDV_SND_Chime ({soun.FormKey}) descriptor {oldDescr} -> 01702E:Skyrim.esm (MAGAltarsBlessingFireC2D, 2D blessing flourish)");
+        if (!dryRun)
+        {
+            var backupDir = Path.Combine(Path.GetDirectoryName(espPath)!, "Backups", "diegetic");
+            Directory.CreateDirectory(backupDir);
+            var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss");
+            backupPath = Path.Combine(backupDir, $"Devotion.esp.{stamp}.bak");
+            File.Copy(espPath, backupPath, overwrite: false);
+            var tempPath = espPath + ".diegetic.tmp";
+            using (var stream = File.Create(tempPath)) { mod.WriteToBinary(stream); }
+            File.Copy(tempPath, espPath, overwrite: true);
+            File.Delete(tempPath);
+            actions.Add("wrote " + espPath);
+        }
+        else { actions.Add("dry-run: no write"); }
+        Report();
+        return;
     }
 
     var checkList = new List<string>(recordProps) { "PDV_DiegeticDeps", "PDV_DiegeticDirector" };
