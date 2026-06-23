@@ -1,7 +1,7 @@
 // pdv-bosmer-variety-author
 // One-batch Mutagen author for the Bosmer variety tranche ("The Story Goes On"):
 //   - PDV_SPEL_BosmerTaleCarried (+MGEF, Speech +5, 600s self)        [Living Story hearth]
-//   - PDV_SPEL_BosmerScalesAtRest (+MGEF, Speech +10, 120s self)      [Exchange signature]
+//   - PDV_SPEL_BosmerScalesAtRest (+MGEF, Speech +10, 600s self)      [Exchange signature]
 //   - PDV_SPEL_BosmerBaanDarGap (+MGEF, SpeedMult +40, 15s self)      [Bandit Road signature]
 //   - PDV_SPEL_BosmerBaanDarGapWatcher (+MGEF script watcher)          [Bandit Road low-health trigger]
 //   - 4 Naming told-self ability spells (+MGEFs, constant-effect AV mods)
@@ -62,13 +62,13 @@ var greenSongs = new GreenSong[]
 var timedBuffs = new[]
 {
     new TimedBuffDef("PDV_SPEL_BosmerTaleCarried", "PDV_MGEF_BosmerTaleCarried", "A Tale Carried",
-        "You told the tale, and the telling settled. Your words carry further for a while.",
+        "You told the tale, and others listened. (Effect: +5 Speech for 10 minutes.)",
         ActorValue.Speech, 5.0f, 600),
     new TimedBuffDef("PDV_SPEL_BosmerScalesAtRest", "PDV_MGEF_BosmerScalesAtRest", "Scales at Rest",
-        "The account is even. For a while, every bargain falls a little your way.",
-        ActorValue.Speech, 10.0f, 120),
+        "The account is even. For a while, every bargain falls a little your way. (Effect: +10 Speech for 10 minutes.)",
+        ActorValue.Speech, 10.0f, 600),
     new TimedBuffDef("PDV_SPEL_BosmerBaanDarGap", "PDV_MGEF_BosmerBaanDarGap", "Baan Dar Opens the Gap",
-        "Baan Dar opens the gap. Run.",
+        "Baan Dar opens a gap. Run. (Effect: +40% Movement Speed for 15 seconds.)",
         ActorValue.SpeedMult, 40.0f, 15),
 };
 
@@ -79,13 +79,13 @@ var timedBuffs = new[]
 var namingAbilities = new[]
 {
     new AbilityDef("PDV_SPEL_BosmerNaming_Hunter", "PDV_MGEF_BosmerNaming_Hunter", "The Hunter",
-        "You told yourself the Hunter. Your aim runs truer.", ActorValue.Archery, 5.0f),
+        "You told yourself to become the Hunter. Your aim runs truer. (Effect: +5 Archery.)", ActorValue.Archery, 5.0f),
     new AbilityDef("PDV_SPEL_BosmerNaming_Speaker", "PDV_MGEF_BosmerNaming_Speaker", "The Speaker",
-        "You told yourself the Speaker. People lean in to listen.", ActorValue.Speech, 5.0f),
+        "You told yourself to become the Speaker. People lean in to listen. (Effect: +5 Speech.)", ActorValue.Speech, 5.0f),
     new AbilityDef("PDV_SPEL_BosmerNaming_Wanderer", "PDV_MGEF_BosmerNaming_Wanderer", "The Wanderer",
-        "You told yourself the Wanderer. The road tires you less.", ActorValue.StaminaRateMult, 8.0f),
+        "You told yourself to become the Wanderer. The road tires you less. (Effect: +8% Stamina Regeneration.)", ActorValue.StaminaRateMult, 8.0f),
     new AbilityDef("PDV_SPEL_BosmerNaming_Keeper", "PDV_MGEF_BosmerNaming_Keeper", "The Keeper",
-        "You told yourself the Keeper. You carry more of what the people need kept.", ActorValue.CarryWeight, 15.0f),
+        "You told yourself to become the Keeper. You carry more of what the people need kept. (Effect: +15 Carry Weight.)", ActorValue.CarryWeight, 15.0f),
 };
 
 var dryRun = args.Contains("--dry-run");
