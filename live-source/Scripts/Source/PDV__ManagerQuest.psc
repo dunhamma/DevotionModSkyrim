@@ -3825,11 +3825,11 @@ Function AwardBosmerSong(Int siteFormId)
 
     ; Small path-keyed piety: route through the active path's living-world signal.
     HandleBosmerPactPositiveSignal("green_song")
-    Debug.MessageBox("This green place still holds one of Y'ffre's old tellings. For a breath the Story leans close, and names you a part of it.")
+    Debug.MessageBox("For a breath, the Story enfolds you and names you a part of it. This place still holds the blessings of Y'ffre.")
 
     if PDV_FLST_BosmerGreenSongs && seenCount >= PDV_FLST_BosmerGreenSongs.GetSize()
         StorageUtil.SetIntValue(None, "PDV.BosSongs.Milestone", 1)
-        Debug.MessageBox("Every green song has known you now. Wherever the road runs, the Story runs with you.")
+        Debug.MessageBox("Every Green Song is known to you now. Wherever the road goes, the Story travels with you.")
     endIf
     Trace(2, "Bosmer green song remembered: " + seenCount)
 EndFunction

@@ -93,3 +93,22 @@ Needs the original audit author's note on which 3 strings and what is wrong befo
   Fire a Bosmer path suggestion -> "toward the <Path>". Confirm Dunmer neglect reads "The
   Ancestors' Silence".
 - `node tools/pdv_verify.mjs` FAIL=0 if any reward-readback rows reference these.
+
+---
+
+## IN-GAME CLOSEOUT CHECKLIST (put the writing-polish pass into game)
+
+The remaining steps to get the 2026-06-23 writing-polish pass live + proven in game. Source edits
+are committed to git; the in-game proof + the ESP bake are what is left.
+
+- [ ] **R2 -- deployed, needs in-game proof.** The Songs-of-the-Green vision rewrite is compiled
+  (0err/0warn) and the `.pex` is already in the live `Devotion/Scripts` folder, and the `.psc` is
+  committed to git. To prove: load a save as a Bosmer, walk into a Songs site via a **load door or
+  fast-travel** (NOT `coc` -- `coc` skips OnStoryChangeLocation), confirm the reworded per-site
+  vision line (`mgr:3828`); reach all 6 sites for the milestone line (`mgr:3832`).
+- [ ] **A1 / A2 / A3 -- NOT yet in game.** Bake the ESP edits in this doc into Devotion.esp
+  (Codex / author-tool, Skyrim + CK closed), then prove per "Verify after bake" above.
+- [ ] **docOnly (D3/D4/D5) -- DONE, no in-game step** (design-doc text only; committed).
+- [ ] **A4 -- deferred.** Identify the 3 Imperial strings before actioning (see A4 above).
+- [ ] **R6 -- separate build, not part of this pass.** Breton DruidicStanding fraying loss-path
+  (task_82882dcb).
