@@ -7684,6 +7684,7 @@ Function RunDawnRefreshTrackStates()
 
     if GetPlayerOriginRaceIndex() == ORIGIN_BRETON
         DecayBretonWitchcraftExposureAtDawn()
+        DecayBretonDruidicStandingAtDawn()
     endIf
 
     if IsBosmerOrigin() && PDV_BosmerPathTrack
@@ -10267,6 +10268,19 @@ Function DebugSetBretonTradition(Int traditionValue)
     Trace(1, "Breton tradition debug-set to " + normalized)
 EndFunction
 
+; MCM fray-test seed: forces a Green Way / Druidic-fork Breton with DruidicStanding
+; one point above the fraying band and the decay day-key cleared, so the next one
+; or two ProcessDawn passes drop it past <30 and the Survey/label read "frayed".
+Function DebugSeedBretonDruidicFrayTest()
+    StorageUtil.SetIntValue(None, "PDV.Breton.Tradition", BRETON_TRADITION_GREEN_WAY)
+    StorageUtil.SetIntValue(None, "PDV.Breton.SetupComplete", 1)
+    SetBretonDruidicFork(BRETON_DRUIDIC_FORK_DRUIDIC, "mcm_fray_test")
+    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicForkInitialized", 1)
+    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", 31)
+    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicDecayDay", 0)
+    Trace(1, "Breton Druidic fray test seeded: GreenWay/Druidic, standing=31")
+EndFunction
+
 ; Forces the Orc life mode (City / Stronghold / Legion-Exile).
 Function DebugSetOrcLifeMode(Int modeValue)
     Int normalized = ClampInt(modeValue, ORC_LIFE_MODE_CITY, ORC_LIFE_MODE_LEGION_EXILE)
@@ -12295,6 +12309,12 @@ Function ApplyBretonInitialChoice(Int traditionValue, String reason)
     StorageUtil.SetStringValue(None, "PDV.Breton.StartupReason", reason)
     if normalized == BRETON_TRADITION_GREEN_WAY
         SetBretonDruidicFork(BRETON_DRUIDIC_FORK_DRUIDIC, reason)
+        ; Seed the covenant at its open midpoint so a fresh Green Way Breton reads
+        ; "open" (50), not the rebanded fraying band (<30). Never lowers an
+        ; existing value.
+        if StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 0) < 50
+            StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", 50)
+        endIf
     else
         SetBretonDruidicFork(BRETON_DRUIDIC_FORK_NONE, reason)
     endIf
@@ -12368,6 +12388,45 @@ Function DecayBretonWitchcraftExposureAtDawn()
     exposure -= 1
     StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", exposure)
     Trace(2, "Breton WitchcraftExposure passive decay -> " + exposure)
+EndFunction
+
+; The Green Way is an outdoor covenant. Skyrim keeps pulling a Breton into cities
+; and dungeons, so a live druidic covenant quietly frays without recent outdoor
+; observance -- a small per-dawn drop mirroring the WitchcraftExposure fade.
+; Pressure-only: no boon is withdrawn (DruidicStanding gates no reward).
+Function DecayBretonDruidicStandingAtDawn()
+    if !ShouldBretonDruidicStandingFray()
+        return
+    endIf
+
+    ; Once-per-dawn guard, day+1 encoding to dodge the day-0 self-suppression trap.
+    Int today = (Utility.GetCurrentGameTime() as Int) + 1
+    if StorageUtil.GetIntValue(None, "PDV.Breton.DruidicDecayDay") == today
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicDecayDay", today)
+
+    Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
+    if standingValue <= 0
+        return
+    endIf
+    standingValue = ClampInt(standingValue - 1, 0, 100)
+    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", standingValue)
+    Trace(2, "Breton DruidicStanding neglect decay -> " + standingValue)
+EndFunction
+
+; Green Way fraying applies to a live or contested druidic covenant only: the
+; Druidic fork and the unresolved Werewolf fork. Excludes Betrayed (already under
+; SyncBretonDruidicForkBetrayalSpell -- no double pressure) and any non-Green
+; Breton (DruidicStanding is pressure-only and must not punish ordinary life).
+Bool Function ShouldBretonDruidicStandingFray()
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+        return False
+    endIf
+    if GetBretonTraditionValue() != BRETON_TRADITION_GREEN_WAY
+        return False
+    endIf
+    return GetBretonDruidicForkValue() != BRETON_DRUIDIC_FORK_BETRAYED
 EndFunction
 
 Function HandleBretonKnightlyVow(String reason)
@@ -12448,7 +12507,7 @@ Function HandleBretonGreenWayStanding(String reason)
     endIf
 
     EnsureBretonDruidicForkInitialized()
-    Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding")
+    Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", ClampInt(standingValue + 25, 0, 100))
     StorageUtil.SetIntValue(None, "PDV.Breton.GreenWayCount", StorageUtil.GetIntValue(None, "PDV.Breton.GreenWayCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastGreenWayReason", reason)
@@ -15052,10 +15111,10 @@ String Function GetBretonSurveyText()
         endIf
     else
         text = "You walk the Green Way: the old druidic covenant. Standing: " + band + "."
-        Int druidic = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 0)
+        Int druidic = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
         if druidic >= 70
             text = text + " The druidic covenant is acknowledged, and Y'ffre answers you steadily."
-        elseIf druidic < 0
+        elseIf druidic < 30
             text = text + " The druidic covenant is fraying, and the forest is beginning to forget you."
         else
             text = text + " The druidic covenant is open but unproven, and Y'ffre is waiting."
@@ -15123,10 +15182,10 @@ String Function GetBretonWitchcraftExposureLabel()
 EndFunction
 
 String Function GetBretonDruidicStandingLabel()
-    Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 0)
+    Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
     if standingValue >= 70
         return "acknowledged"
-    elseIf standingValue < 0
+    elseIf standingValue < 30
         return "frayed"
     endIf
 

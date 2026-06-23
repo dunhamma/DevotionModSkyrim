@@ -140,6 +140,7 @@ Int _oidKhajiitFocusAlkosh = -1
 Int _oidBretonKnightsRoad = -1
 Int _oidBretonHiddenArt = -1
 Int _oidBretonGreenWay = -1
+Int _oidBretonDruidicFrayTest = -1
 Int _oidOrcCity = -1
 Int _oidOrcStronghold = -1
 Int _oidOrcLegionExile = -1
@@ -401,6 +402,8 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Forces the Khajiit emergent focus to this moon-path so its tier reward becomes testable. Then force piety and Run Dawn to light the Champion blessing.")
     elseIf a_option == _oidBretonKnightsRoad || a_option == _oidBretonHiddenArt || a_option == _oidBretonGreenWay
         SetInfoText("Forces the Breton tradition so its tradition-gated reward family becomes testable. Then force piety and Run Dawn.")
+    elseIf a_option == _oidBretonDruidicFrayTest
+        SetInfoText("Seeds a Green Way / Druidic-fork Breton at DruidicStanding 31 (just above the fraying band). Then Run Dawn across two in-game days and the Survey/label should read 'frayed' (<30).")
     elseIf a_option == _oidOrcCity || a_option == _oidOrcStronghold || a_option == _oidOrcLegionExile
         SetInfoText("Forces the Orc life mode so its mode-gated Malacath reward becomes testable. Then force piety and Run Dawn.")
     elseIf a_option == _oidArgonianPeople || a_option == _oidArgonianVoid
@@ -691,6 +694,11 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidBretonGreenWay
         RunPatternAction("Set the Breton tradition to Green Way?", 48)
+        return
+    endIf
+
+    if a_option == _oidBretonDruidicFrayTest
+        RunPatternAction("Seed a Green Way / Druidic Breton at DruidicStanding 31 (just above fraying) for the decay proof?", 58)
         return
     endIf
 
@@ -1308,6 +1316,7 @@ Function BuildStatePage()
     _oidBretonKnightsRoad = AddTextOption("Breton -> Knights Road", "Tradition", OPTION_FLAG_NONE)
     _oidBretonHiddenArt = AddTextOption("Breton -> Hidden Art", "Tradition", OPTION_FLAG_NONE)
     _oidBretonGreenWay = AddTextOption("Breton -> Green Way", "Tradition", OPTION_FLAG_NONE)
+    _oidBretonDruidicFrayTest = AddTextOption("Breton -> Green Way Fray Test", "Fraying", OPTION_FLAG_NONE)
     _oidOrcCity = AddTextOption("Orc -> City", "Life mode", OPTION_FLAG_NONE)
     _oidOrcStronghold = AddTextOption("Orc -> Stronghold", "Life mode", OPTION_FLAG_NONE)
     _oidOrcLegionExile = AddTextOption("Orc -> Legion-Exile", "Life mode", OPTION_FLAG_NONE)
@@ -2171,6 +2180,8 @@ Function RunPatternAction(String promptText, Int actionId)
         manager.DebugSeedBosmerVariety()
     elseIf actionId == 57
         manager.DebugCycleKhajiitLunarPosture()
+    elseIf actionId == 58
+        manager.DebugSeedBretonDruidicFrayTest()
     endIf
 
     ShowPatternSummaryBrief()
