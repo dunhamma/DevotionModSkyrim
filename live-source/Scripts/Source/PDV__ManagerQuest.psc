@@ -354,6 +354,7 @@ Spell Property PDV_SPEL_Orc_TrialOfIron_Tusk Auto
 Spell Property PDV_SPEL_Orc_TrialOfIron_Shield Auto
 Spell Property PDV_SPEL_Orc_TrialOfIron_Hammer Auto
 Spell Property PDV_SPEL_Orc_TrialOfIron_Yoke Auto
+Message Property PDV_MESG_Orc_TrialOfIron Auto
 Spell Property PDV_SPEL_OrcCodeHolds Auto
 Spell Property PDV_SPEL_OrcCodeHolds_Devoted Auto
 Spell Property PDV_SPEL_OrcHearthHeld Auto
@@ -3170,6 +3171,10 @@ Function HandleOrcSleepEvents(Actor playerRef, String reason)
         return
     endIf
 
+    if TryOrcTrialOfIron(playerRef, sleepCellId, reason)
+        return                          ; Trial menu shown; suppress the rest-notice this wake
+    endIf
+
     if !ConsumeOncePerDaySignal("PDV.Signal.OrcAncestralRest")
         return
     endIf
@@ -3178,6 +3183,118 @@ Function HandleOrcSleepEvents(Actor playerRef, String reason)
     RecordOrcLifeModeSignal(modeValue, 1.0, "sleep_hearth_rest_" + reason)
     MaybeShowOrcHearthHeldNotice("sleep_hearth_rest_" + reason)
     Trace(2, "Orc ancestral rest routed: " + reason)
+EndFunction
+
+; The Trial of Iron: at the declared community place (the Orc hearth-rest cell), with a
+; 7-day cooldown, the player takes up one discipline of the Code. One-active discipline,
+; swap via re-rite (clear-before-add). "Not yet" does not spend the cooldown. Returns true
+; when the menu was shown so the wake-notice is suppressed that night.
+Bool Function TryOrcTrialOfIron(Actor playerRef, Int sleepCellId, String reason)
+    if !playerRef || !PDV_MESG_Orc_TrialOfIron || GetPlayerOriginRaceIndex() != ORIGIN_ORC
+        return false
+    endIf
+
+    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.OrcTrial.LastRiteTime")
+    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
+        return false
+    endIf
+
+    Utility.Wait(0.5)
+    Int pressed = PDV_MESG_Orc_TrialOfIron.Show()
+    if pressed < 0 || pressed > 3
+        return true                 ; "Not yet" -- cooldown not spent
+    endIf
+
+    ApplyOrcTrialOfIron(playerRef, pressed)
+    return true
+EndFunction
+
+; Clear-before-add: never two disciplines at once. Records the life-mode standing the player
+; swore it under so SyncOrcTrialOfIron can fade/restore on a standing collapse.
+Function ApplyOrcTrialOfIron(Actor playerRef, Int index)
+    RemoveOrcTrialSpells(playerRef)
+    Spell chosen = GetOrcTrialSpell(index)
+    if !chosen
+        return
+    endIf
+
+    Int modeNow = 0
+    if PDV_OrcLifeModeTrack
+        modeNow = PDV_OrcLifeModeTrack.GetCurrentState()
+    endIf
+
+    playerRef.AddSpell(chosen, False)
+    StorageUtil.SetIntValue(None, "PDV.OrcTrial.Active", index + 1)
+    StorageUtil.SetIntValue(None, "PDV.OrcTrial.ModeAtRite", modeNow)
+    StorageUtil.SetFloatValue(None, "PDV.OrcTrial.LastRiteTime", Utility.GetCurrentGameTime())
+    Debug.Notification("You take up a discipline of the Code. The Trial of Iron holds you to it.")
+    Trace(2, "Orc Trial of Iron discipline applied: " + index)
+EndFunction
+
+Function RemoveOrcTrialSpells(Actor playerRef)
+    Int i = 0
+    while i < 4
+        Spell disc = GetOrcTrialSpell(i)
+        if disc && playerRef.HasSpell(disc)
+            playerRef.RemoveSpell(disc)
+        endIf
+        i += 1
+    endWhile
+EndFunction
+
+Spell Function GetOrcTrialSpell(Int index)
+    if index == 0
+        return PDV_SPEL_Orc_TrialOfIron_Tusk
+    elseIf index == 1
+        return PDV_SPEL_Orc_TrialOfIron_Shield
+    elseIf index == 2
+        return PDV_SPEL_Orc_TrialOfIron_Hammer
+    elseIf index == 3
+        return PDV_SPEL_Orc_TrialOfIron_Yoke
+    endIf
+    return None
+EndFunction
+
+; The discipline holds while the life-mode standing it was sworn under is intact. If that
+; standing collapses (a confirmed mode change -- exile, or a different hold), the discipline
+; goes quiet at dawn and returns at dawn when the standing is recovered.
+; PDV.OrcTrial.Active stays set while quiet so no re-rite is needed.
+Function SyncOrcTrialOfIron(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+    Int active = StorageUtil.GetIntValue(None, "PDV.OrcTrial.Active")
+    if active <= 0
+        return
+    endIf
+    Spell disc = GetOrcTrialSpell(active - 1)
+    if !disc
+        return
+    endIf
+
+    Int modeAtRite = StorageUtil.GetIntValue(None, "PDV.OrcTrial.ModeAtRite")
+    Bool eligible = (GetPlayerOriginRaceIndex() == ORIGIN_ORC) && IsOrcTrialCoherent(modeAtRite)
+    if eligible
+        if !playerRef.HasSpell(disc)
+            playerRef.AddSpell(disc, False)
+            Debug.Notification("The Code holds again. Your discipline returns.")
+        endIf
+    else
+        if playerRef.HasSpell(disc)
+            playerRef.RemoveSpell(disc)
+            Debug.Notification("The discipline goes quiet. The standing you swore it under has broken.")
+        endIf
+    endIf
+EndFunction
+
+Bool Function IsOrcTrialCoherent(Int modeAtRite)
+    if !PDV_OrcLifeModeTrack
+        return false
+    endIf
+    if PDV_OrcLifeModeTrack.GetCurrentState() != modeAtRite
+        return false
+    endIf
+    return true
 EndFunction
 
 Function HandleRedguardSleepEvents(Actor playerRef, String reason)
@@ -8359,6 +8476,7 @@ Function RunDawnRefreshTrackStates()
 
     if IsOrcOrigin()
         EvaluateOrcLifeModeAtDawn()
+        SyncOrcTrialOfIron(Game.GetPlayer())
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_BRETON
