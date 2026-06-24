@@ -657,6 +657,32 @@ design decisions that were only updated in one place.
 
 Editor-only: syntax highlighting, hover info, intellisense, debug attach. Not the build path.
 
+### Integrity & signal verifier suite (2026-06-24)
+
+One-command roll-up: `node tools/pdv_integrity_harness.mjs` (gate + curated-parity + floor +
+spine-score + specced-minus + completeness; `--skip-slow` omits the dotnet-backed checks).
+Individual tools (all read-only except their own generated ledgers):
+- `node tools/pdv_signal_e2e_gate.mjs` -> `PDV_SignalE2EGateLedger.{md,csv}` (P2 surface
+  wiring + the **curated-signal parity** check; exit 1 on RED or a parity gap)
+- `node tools/pdv_signal_floor_audit.mjs` -> `PDV_SignalFloorLedger.{md,csv}` (per-path floor)
+- `node tools/pdv_spine_stack_score.mjs` -> `PDV_SpineStackScoreLedger.{md,csv}` (ancestral-spine
+  parity, Argonian=100%, <70%=target; reads `PDV_SpineStackRegistry.csv`)
+- `node tools/pdv_specced_minus_audit.mjs` -> `PDV_SpeccedMinusLedger.{md,csv}` (minus signals
+  defined+handled but never emitted)
+- self-test env flags: `PDV_SIGNAL_E2E_PARITY_SELFTEST=1`, `PDV_SPINE_SELFTEST=1`, `PDV_SPECCED_MINUS_SELFTEST=1`
+
+**Gotchas:**
+- **MCP-down:** the e2e gate's live-ESP columns + houseCARL are SKIP-not-PASS when the Anvil MCP
+  server is down (a RED there is a liveness artifact, not an authored RED). `pdv_verify` reads
+  `Devotion.esp` **directly** (no MCP), so it covers the ESP layer even when MCP is down. Start it
+  via Anvil.exe -> MO2 Tools -> Start MCP Server.
+- **Workflow `args` don't inject:** passing `args` to the Workflow tool gave `race=UNKNOWN` twice
+  (string, and object-via-scriptPath). HARDCODE race-specific values into acceptance-workflow
+  scripts (the hardcoded Dunmer/Orc scripts worked; the parameterized Altmer/Breton ones failed).
+- **Repo-source drift:** `live-source/` is a junction to the canonical untracked live dir; the
+  Grep/Glob editor index can surface a more-advanced worktree than bash sees on disk. Trust
+  `pdv_compile`/`pdv_verify` (they read the live deploy dir) + git for ground truth.
+
 ### Papyrus authoring gotchas
 
 Keep these in mind before blaming CKPE or MO2 for compile weirdness:
