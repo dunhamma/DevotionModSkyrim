@@ -39,6 +39,7 @@ FormList Property PDV_FLST_HoonDing_BreakthroughBosses Auto
 FormList Property PDV_FLST_RedguardAshAbahUndeadClearSites Auto
 Faction Property NecromancerFaction Auto
 Faction Property WarlockFaction Auto
+Faction Property PDV_Faction_Hunted_Vigilant Auto
 String Property QUEST_REACTION_MATRIX_FILE = "PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
 ; List-patch second channel (e.g. Authoria/ARR). Cells are read from whichever
 ; channel owns the (form|stage) key; shared stance/value tables stay on core.
@@ -654,6 +655,8 @@ Int _pendingDaedricMilestoneDelayTicks = 0
 String _pendingPrismaToastRetryPayload = ""
 String _pendingPrismaToastRetryLabel = ""
 Int _pendingPrismaToastRetryDelayTicks = 0
+Bool _pdvVigilantWorldStateCached = False
+Quest _pdvDLC1VQ01
 
 Event OnInit()
     InitializePreflightState()
@@ -669,6 +672,7 @@ Event OnInit()
     EnsureSurveyDevotionPower()
     EnsureDunmerAncestralUrn()
     EnsureArgonianHistSapToken()
+    ReconcileVigilantHunt("init")
     RequestPanelRefresh()
     HandleDiegeticLoad("init")
     RegisterForSingleUpdate(1.0)
@@ -711,6 +715,7 @@ Event OnUpdate()
         EnsureSurveyDevotionPower()
         EnsureDunmerAncestralUrn()
         EnsureArgonianHistSapToken()
+        ReconcileVigilantHunt("maintenance")
         InitCCContent()
         RegisterManagerShoutSignals()
         EnsureLikesDislikesTable()
@@ -1786,6 +1791,10 @@ String Function ResolveTransitionJournalLine(String eventClass, String surfaceKe
         return "A curse changes the shape of devotion."
     elseIf eventClass == "curse" && direction == "cure"
         return "The curse lifts, and devotion may answer again."
+    elseIf eventClass == "reorientation" && surfaceKey == "hunted_vigilant" && direction == "onset"
+        return "The Vigilants have marked your practice as a danger."
+    elseIf eventClass == "reorientation" && surfaceKey == "hunted_vigilant" && direction == "cure"
+        return "The Vigilants' hunt loses its hold on you."
     elseIf eventClass == "neglect" && direction == "drop"
         return "A rite has grown quiet and needs attention."
     elseIf eventClass == "neglect" && direction == "recover"
@@ -1804,6 +1813,72 @@ String Function ResolveTransitionJournalSymbol(String eventClass, Int deityIndex
         endIf
     endIf
     return "journal"
+EndFunction
+
+Bool Function PDVVigilantsAlive()
+    if !_pdvVigilantWorldStateCached
+        _pdvDLC1VQ01 = Game.GetFormFromFile(0x00352A, "Dawnguard.esm") as Quest
+        _pdvVigilantWorldStateCached = True
+    endIf
+
+    if !_pdvDLC1VQ01
+        return True
+    endIf
+
+    return _pdvDLC1VQ01.GetStage() == 0
+EndFunction
+
+Bool Function ShouldBeHuntedByVigilantsHeretic()
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+        return False
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) != BRETON_TRADITION_HIDDEN_ART
+        return False
+    endIf
+
+    return StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure", 0) >= 75
+EndFunction
+
+Bool Function ShouldBeHuntedByVigilantsWerewolfProxy()
+    if !PDV_CurseStateService
+        return False
+    endIf
+
+    if PDV_CurseStateService.IsVampire()
+        return False
+    endIf
+
+    return PDV_CurseStateService.IsWerewolf()
+EndFunction
+
+Function ReconcileVigilantHunt(String reason)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_Faction_Hunted_Vigilant
+        return
+    endIf
+
+    Bool hereticHunt = ShouldBeHuntedByVigilantsHeretic()
+    Bool werewolfHunt = ShouldBeHuntedByVigilantsWerewolfProxy()
+    Bool worldGateOpen = PDVVigilantsAlive()
+    Bool desired = worldGateOpen && (hereticHunt || werewolfHunt)
+    Bool active = playerRef.IsInFaction(PDV_Faction_Hunted_Vigilant)
+
+    StorageUtil.SetIntValue(None, "PDV.Hunted.Vigilant.Heretic", BoolToInt(hereticHunt))
+    StorageUtil.SetIntValue(None, "PDV.Hunted.Vigilant.WerewolfProxy", BoolToInt(werewolfHunt))
+    StorageUtil.SetIntValue(None, "PDV.Hunted.Vigilant.WorldGateOpen", BoolToInt(worldGateOpen))
+    StorageUtil.SetIntValue(None, "PDV.Hunted.Vigilant.Desired", BoolToInt(desired))
+    StorageUtil.SetStringValue(None, "PDV.Hunted.Vigilant.LastReason", reason)
+
+    if desired && !active
+        playerRef.AddToFaction(PDV_Faction_Hunted_Vigilant)
+        SurfaceTransition("reorientation", "hunted_vigilant", "onset", -1, "dread")
+        Trace(1, "Vigilant hunt active: heretic=" + hereticHunt + " werewolfProxy=" + werewolfHunt + " reason=" + reason)
+    elseIf !desired && active
+        playerRef.RemoveFromFaction(PDV_Faction_Hunted_Vigilant)
+        SurfaceTransition("reorientation", "hunted_vigilant", "cure", -1, "release")
+        Trace(1, "Vigilant hunt cleared: heretic=" + hereticHunt + " werewolfProxy=" + werewolfHunt + " worldGateOpen=" + worldGateOpen + " reason=" + reason)
+    endIf
 EndFunction
 
 Bool Function PushDevotionPanel(Bool playerRequested = false)
@@ -11975,6 +12050,7 @@ Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
     Trace(1, "Curse transition " + oldState + " -> " + newState + " (" + reason + ")")
     SendPrismaCurseToast(oldState, newState)
     SurfaceCurseTransitionDiegetic(oldState, newState)
+    ReconcileVigilantHunt("curse_" + reason)
     RequestPanelRefresh()
 EndFunction
 
@@ -13430,6 +13506,7 @@ Function DecayBretonWitchcraftExposureAtDawn()
     endIf
     exposure -= 1
     StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", exposure)
+    ReconcileVigilantHunt("breton_witchcraft_decay")
     Trace(2, "Breton WitchcraftExposure passive decay -> " + exposure)
 EndFunction
 
@@ -13539,7 +13616,8 @@ Function HandleBretonHiddenArtExposure(String reason)
     endIf
 
     Int exposureValue = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure")
-    StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", ClampInt(exposureValue + 25, 0, 100))
+    Int newExposureValue = ClampInt(exposureValue + 25, 0, 100)
+    StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", newExposureValue)
     StorageUtil.SetIntValue(None, "PDV.Breton.HiddenArtCount", StorageUtil.GetIntValue(None, "PDV.Breton.HiddenArtCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastHiddenArtReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
@@ -13551,6 +13629,7 @@ Function HandleBretonHiddenArtExposure(String reason)
     endIf
     AwardBretonAncestorSpinePulse(multiplier, reason)
     ShowP2BookNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))
+    ReconcileVigilantHunt("breton_hidden_art_" + reason)
     Trace(2, "Breton Hidden Art exposure routed: " + reason)
 EndFunction
 
