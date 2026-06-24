@@ -78,10 +78,10 @@ IN-FLIGHT = a design Workflow is producing the spec this session. Sources: `PDV_
 **Phase 1 — Build (assistant/Codex grind; both specs already in hand):**
 1. Apply **under-floor enrichment** (B1) — 23 paths, dominant fix +1 env/behavioural renewable. Spec = Workflow `w9ywkug8q` (canonical recipe: manager `Handle<Race><Signal>` + anti-farm key + substrate/deity double-route; sleep/location/faucet seams identified).
 2. Apply **6f variety tranches** (B3) — Altmer/Redguard mostly missing, **Orc already PARTIAL**. Spec = Workflow `w24lhsscd` (Bosmer Naming rite is the template; one-active/clear-before-add/dawn-fade-restore contract).
-3. **Daedric surfacing** into Survey + Book-of-Days (B8/D2) — also hosts CC Prince surfacing.
+3. **Daedric surfacing** (B8/D2) — **MOSTLY DONE** (shipped `ab193cb`: `GetDaedricSurveyText` + tier-up `AppendBookOfDaysEntry`); only 2 residuals, Seam-1 needs an owner ruling. Also hosts CC Prince surfacing.
    - **Creation Club coverage (B13.5):** soft-dep framework + S&S→Sheogorath + light Fishing→Kyne; Tribunal/Dagon post-1.0. Full detail in the approved plan addendum.
 4. **Notoriety hostile-on-sight** (D8) — PDV faction + AddToFaction toggle gated on Vigilants-alive.
-5. **DamageResist rescale** all races (D4).
+5. ~~DamageResist rescale~~ — **DONE** (all 5 races already on the 15/30/50 ladder + the 2026-06-14 idempotency stamp; HO documents the no-op).
 6. **Best-effort uninstall cleanup** path (D9).
 7. **Anti-farm sweep** (B4) + **Molag Bal / thin-Prince Part D faucets** (B9).
 8. **Release prep build actions:** disable V1 voiced-dialogue records (B18); narrator-voice polish tail (B10).
