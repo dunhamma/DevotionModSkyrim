@@ -91,11 +91,11 @@ surfaces:
    Add a branch: if a top Daedric path has stored piety > 0 but no active pact,
    append it via `AppendDashboardGod` with a new system tag (e.g. "watching") so it
    shows in the Ledger, sortable by god + reaction. Its `GetDeityDriversJson`
-   drivers then explain "what feeds" the watching Prince -- which REQUIRES that
-   pre-pact Daedric acts record a driver on the PATH form (confirm the Prince
-   scoring path `AdjustStoredPiety` writes `PDV.Driver.Reasons`/`PDV.Driver.Deltas`
-   the way `AwardPiety` does for deities; if it does not, add it -- this is the
-   load-bearing fix).
+   drivers then explain "what feeds" the watching Prince -- which DEPENDS ON the
+   Daedric driver fix. `SetStoredPiety` records NO driver today (confirmed by
+   `pdv_ledger_coverage_audit` -- 18 bypass sites), so do **`HO_GateFindings_2026-06-25.md`
+   Fix 1** (record a driver in `SetStoredPiety`) FIRST -- then this watching-Prince
+   Ledger branch works and the new system tag has drivers to show.
 
 **STANDING RULE (owner, 2026-06-25): the Ledger MUST monitor ALL data points.**
 Every piety/signal award -- patron, pantheon, Prince, pre-pact, substrate, curated,
