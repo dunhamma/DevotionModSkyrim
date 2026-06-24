@@ -1,10 +1,26 @@
 # PDV Session Handoff -- 6f Rite Build (overnight 2026-06-25 -> for next session)
 
-## TL;DR
-All three **6f variety RITE systems are built in Papyrus, committed, and compiling 0/0** --
-inert until their ESP records are authored (the `None`-guard pattern). The remaining work is
-a **supervised ESP-record authoring pass** (turnkey spec written) plus two env/owner-gated
-tracks. Gate state is fully GREEN. Nothing is half-broken; every increment is committed.
+## TL;DR (UPDATED 2026-06-25 -- the session continued and finished the build)
+All three **6f variety RITES are FULLY BUILT and FUNCTIONAL** -- Papyrus + ESP records
+authored into `Devotion.esp` (via the new `tools/pdv-6f-rite-author` Mutagen tool, with
+backup) + VMAD-wired + recompiled 0/0. Each rite-take now **surfaces in BOTH Prisma spaces**
+(a deity driver in the sortable Ledger via `AwardPiety`; a Book of Days beat in the Chronicle
+via `AppendBookOfDaysEntry`). The **Prisma bridge was rebuilt + redeployed** (focus-trap fix
+`5301ec0` now live), end-to-end tracking was verified + made runnable (`PDVDemoLedger()` /
+`PDVDemoChronicle()`), and a **reduced-motion** a11y pass landed. Gate state fully GREEN
+throughout. The only open links are **owner-gated**: in-game new-save proof of each rite, and
+the remaining Prisma visual/contrast hardening stages (need eyes on screen). **Nord offers
+(B10)** are the one remaining unstarted build -- now trivially authorable via the same
+`pdv-6f-rite-author` MESG pattern.
+
+### Session commits (newest first)
+`b068228` reduced-motion a11y · `bdfb9f7` Prisma tracking demo · `7862299` rites surface in
+both spaces · `4a134bf` rite records authored · `2c3e26e`/`9b73bf2`/`14d9ac3` rite Papyrus ·
+`5885cfc` gate-spec+ledger+bridge · `215348f` Queue-B closeout.
+
+---
+
+## (Original handoff below -- the ESP-authoring "remaining work" is now DONE; kept for the record)
 
 ## What landed this session (committed to main)
 | Commit | What |
