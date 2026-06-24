@@ -103,6 +103,46 @@ const FAUCET_FORM_LISTS = {
   "faucetForms.Peryite.serve_a_daedra:peryite": [
     "0x045F96|Skyrim.esm", // Spellbreaker
   ],
+  "faucetForms.Molag Bal.serve_a_daedra:molag_bal": [
+    "0x0233E3|Skyrim.esm", // Mace of Molag Bal
+  ],
+  "faucetForms.Hircine.serve_a_daedra:hircine": [
+    "0x02AC61|Skyrim.esm", // Savior's Hide
+    "0x02AC60|Skyrim.esm", // Ring of Hircine
+  ],
+  "faucetForms.Meridia.serve_a_daedra:meridia": [
+    "0x04E4EE|Skyrim.esm", // Dawnbreaker
+  ],
+  "faucetForms.Sheogorath.serve_a_daedra:sheogorath": [
+    "0x02AC6F|Skyrim.esm", // Wabbajack
+  ],
+  "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon": [
+    "0x0240D2|Skyrim.esm", // Mehrunes' Razor
+  ],
+  "faucetForms.Nocturnal.serve_a_daedra:nocturnal": [
+    "0x07A917|Skyrim.esm", // Nightingale Blade 01
+    "0x0F6524|Skyrim.esm", // Nightingale Blade 02
+    "0x0F6525|Skyrim.esm", // Nightingale Blade 03
+    "0x0F6526|Skyrim.esm", // Nightingale Blade 04
+    "0x0F6527|Skyrim.esm", // Nightingale Blade 05
+    "0x07E5C3|Skyrim.esm", // Nightingale Bow 01
+    "0x0F6529|Skyrim.esm", // Nightingale Bow 02
+    "0x0F652A|Skyrim.esm", // Nightingale Bow 03
+    "0x0F652B|Skyrim.esm", // Nightingale Bow 04
+    "0x0F652C|Skyrim.esm", // Nightingale Bow 05
+    "0x05DB86|Skyrim.esm", // Nightingale Armor 01
+    "0x0FCC0E|Skyrim.esm", // Nightingale Armor 02
+    "0x0FCC0F|Skyrim.esm", // Nightingale Armor 03
+    "0x0FCC0C|Skyrim.esm", // Nightingale Boots 01
+    "0x05DB85|Skyrim.esm", // Nightingale Boots 02
+    "0x0FCC0D|Skyrim.esm", // Nightingale Boots 03
+    "0x05DB87|Skyrim.esm", // Nightingale Gloves 01
+    "0x0FCC10|Skyrim.esm", // Nightingale Gloves 02
+    "0x0FCC11|Skyrim.esm", // Nightingale Gloves 03
+    "0x05DB88|Skyrim.esm", // Nightingale Hood 01
+    "0x0FCC13|Skyrim.esm", // Nightingale Hood 02
+    "0x0FCC12|Skyrim.esm", // Nightingale Hood 03
+  ],
 };
 
 const FAUCET_EFFECT_LISTS = {

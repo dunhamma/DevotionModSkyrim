@@ -5577,6 +5577,9 @@ Function HandleRedguardAncestorSpine(String reason)
     EnsureRedguardSectInitialized()
     Int currentSect = PDV_RedguardSectTrack.GetCurrentState()
     RecordRedguardSectSignal(currentSect, multiplier, reason)
+    if PDV_Tuwhacca
+        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    endIf
     StorageUtil.AdjustFloatValue(None, "PDV.Redguard.AncestorSpine", multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Redguard.AncestorSpineSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Redguard.LastAncestorSpineSourceReason", reason)

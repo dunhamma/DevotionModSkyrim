@@ -1278,6 +1278,24 @@ Function RouteQuestReactionObjectFaucet(Form sourceForm)
     if ShouldRouteQuestReactionFaucet("Clavicus Vile.serve_a_daedra:clavicus", "faucetForms.Clavicus Vile.serve_a_daedra:clavicus", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Clavicus Vile.serve_a_daedra:clavicus", sourceForm)
     endIf
+    if ShouldRouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molag_bal", "faucetForms.Molag Bal.serve_a_daedra:molag_bal", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molag_bal", sourceForm)
+    endIf
+    if ShouldRouteQuestReactionFaucet("Hircine.serve_a_daedra:hircine", "faucetForms.Hircine.serve_a_daedra:hircine", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Hircine.serve_a_daedra:hircine", sourceForm)
+    endIf
+    if ShouldRouteQuestReactionFaucet("Meridia.serve_a_daedra:meridia", "faucetForms.Meridia.serve_a_daedra:meridia", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Meridia.serve_a_daedra:meridia", sourceForm)
+    endIf
+    if ShouldRouteQuestReactionFaucet("Sheogorath.serve_a_daedra:sheogorath", "faucetForms.Sheogorath.serve_a_daedra:sheogorath", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Sheogorath.serve_a_daedra:sheogorath", sourceForm)
+    endIf
+    if ShouldRouteQuestReactionFaucet("Mehrunes Dagon.serve_a_daedra:mehrunes_dagon", "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Mehrunes Dagon.serve_a_daedra:mehrunes_dagon", sourceForm)
+    endIf
+    if ShouldRouteQuestReactionFaucet("Nocturnal.serve_a_daedra:nocturnal", "faucetForms.Nocturnal.serve_a_daedra:nocturnal", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Nocturnal.serve_a_daedra:nocturnal", sourceForm)
+    endIf
     if ShouldRouteQuestReactionFaucet("Dibella.aesthetic_devotion", "faucetForms.Dibella.aesthetic_devotion", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Dibella.aesthetic_devotion", sourceForm)
     endIf
@@ -1394,6 +1412,18 @@ String Function GetQuestReactionFormIdKey(String listKey)
         return "faucetFormsClavicusVileServeADaedraClavicusFormIds"
     elseIf listKey == "faucetForms.Peryite.serve_a_daedra:peryite"
         return "faucetFormsPeryiteServeADaedraPeryiteFormIds"
+    elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molag_bal"
+        return "faucetFormsMolagBalServeADaedraMolagBalFormIds"
+    elseIf listKey == "faucetForms.Hircine.serve_a_daedra:hircine"
+        return "faucetFormsHircineServeADaedraHircineFormIds"
+    elseIf listKey == "faucetForms.Meridia.serve_a_daedra:meridia"
+        return "faucetFormsMeridiaServeADaedraMeridiaFormIds"
+    elseIf listKey == "faucetForms.Sheogorath.serve_a_daedra:sheogorath"
+        return "faucetFormsSheogorathServeADaedraSheogorathFormIds"
+    elseIf listKey == "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon"
+        return "faucetFormsMehrunesDagonServeADaedraMehrunesDagonFormIds"
+    elseIf listKey == "faucetForms.Nocturnal.serve_a_daedra:nocturnal"
+        return "faucetFormsNocturnalServeADaedraNocturnalFormIds"
     elseIf listKey == "faucetEffectForms.Namira.cannibalism"
         return "faucetEffectFormsNamiraCannibalismFormIds"
     elseIf listKey == "faucetEffectForms.Dibella.charity"
@@ -1420,6 +1450,18 @@ String Function GetQuestReactionPluginKey(String listKey)
         return "faucetFormsClavicusVileServeADaedraClavicusPlugins"
     elseIf listKey == "faucetForms.Peryite.serve_a_daedra:peryite"
         return "faucetFormsPeryiteServeADaedraPeryitePlugins"
+    elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molag_bal"
+        return "faucetFormsMolagBalServeADaedraMolagBalPlugins"
+    elseIf listKey == "faucetForms.Hircine.serve_a_daedra:hircine"
+        return "faucetFormsHircineServeADaedraHircinePlugins"
+    elseIf listKey == "faucetForms.Meridia.serve_a_daedra:meridia"
+        return "faucetFormsMeridiaServeADaedraMeridiaPlugins"
+    elseIf listKey == "faucetForms.Sheogorath.serve_a_daedra:sheogorath"
+        return "faucetFormsSheogorathServeADaedraSheogorathPlugins"
+    elseIf listKey == "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon"
+        return "faucetFormsMehrunesDagonServeADaedraMehrunesDagonPlugins"
+    elseIf listKey == "faucetForms.Nocturnal.serve_a_daedra:nocturnal"
+        return "faucetFormsNocturnalServeADaedraNocturnalPlugins"
     elseIf listKey == "faucetEffectForms.Namira.cannibalism"
         return "faucetEffectFormsNamiraCannibalismPlugins"
     elseIf listKey == "faucetEffectForms.Dibella.charity"

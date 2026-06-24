@@ -30,12 +30,14 @@ Int Property SIGNAL_CROWN_FORM = 2402 AutoReadOnly       ; Crown: tomb respect /
 Int Property SIGNAL_FAR_SHORES_TOKEN = 2403 AutoReadOnly ; Far Shores ritual support credit
 Int Property SIGNAL_VAMPIRE_REENTRY = 2404 AutoReadOnly  ; cured vampire returns to the cycle (milestone)
 Int Property SIGNAL_DEATH_DUTY_ABANDONMENT = 2405 AutoReadOnly ; anti-creed (major): dead left unkept / desecrated
+Int Property SIGNAL_ANCESTOR_SPINE = 2406 AutoReadOnly ; Yokudan ancestor-spine: small honest pulse for any accepted spine act
 
 Float Property DELTA_DEATH_DUTY = 2.0 Auto
 Float Property DELTA_CROWN_FORM = 1.5 Auto
 Float Property DELTA_FAR_SHORES_TOKEN = 1.0 Auto
 Float Property DELTA_VAMPIRE_REENTRY = 4.0 Auto
 Float Property DELTA_DEATH_DUTY_ABANDONMENT = -3.0 Auto
+Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 
 Event OnInit()
     if GetDebugLevel() >= 2
@@ -58,6 +60,8 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_VAMPIRE_REENTRY
     elseIf signalType == SIGNAL_DEATH_DUTY_ABANDONMENT
         return DELTA_DEATH_DUTY_ABANDONMENT
+    elseIf signalType == SIGNAL_ANCESTOR_SPINE
+        return DELTA_ANCESTOR_SPINE
     endIf
 
     return 0.0
