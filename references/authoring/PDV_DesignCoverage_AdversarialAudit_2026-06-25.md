@@ -23,7 +23,7 @@ IN-FLIGHT = a design Workflow is producing the spec this session. Sources: `PDV_
 | 10 | UI / copy / surfacing / diegetic | **PARTIAL** | Survey rewritten 10-race; D1 ON; Book-of-Days bespoke voice (Khajiit/Dunmer/Imperial/Altmer) | **B10** remaining narrator-voice polish (Argonian toast grammar, non-Kyne Nord offer copy, FP ledger); **B8** (Daedric surfacing) |
 | 11 | Localization / text encoding | **DEFERRED + COVERED(encoding)** | ASCII/mojibake guard enforced (hook); localization = English-only, deferred (TES §23) | **B11** confirm English-only for 1.0 (OPEN DECISION D5); keep strings localizable |
 | 12 | Performance / script health | **LIKELY-OK, UNAUDITED** | only 9 OnUpdate/RegisterForUpdate total; dawn 1s tick is the main loop | **B12** perf + save-bloat audit before external beta (papyrus-optimization pass) |
-| 13 | Compatibility (Requiem + 7 lists) | **PARTIAL** | Authoria/ARR = HARD 1.0 gate (integration package); Survival/SunHelm toggle built; Requiem positive-conversion done | **B13** Requiem penalty re-author as felt + HP-bar sweep; **B14** Authoria/ARR integration package; 6 lists → patch-packaged |
+| 13 | Compatibility (Requiem + 7 lists + Creation Club) | **PARTIAL** | Authoria/ARR = HARD 1.0 gate; Survival/SunHelm toggle built; Requiem positive-conversion done; CC soft-dep pattern proven (InitSurvivalContext) | **B13** Requiem penalty re-author + HP-bar sweep; **B14** Authoria/ARR package; **B13.5** CC soft-dep integration (1.0: framework + S&S→Sheo + Fishing→Kyne; post-1.0: Tribunal→Dunmer-deviation, The Cause→Dagon) |
 | 14 | Proof / verification ladder | **PARTIAL / PROOF-GATED** | machine✓, route/QASmoke✓ (6 packets), runtime/manual mostly Pending | **B15** run-sheets Dunmer/Imperial + RE-VERIFY 8 proven races on new spine/signal dims; Active Effects / save-load / feel notes |
 | 15 | Accessibility | **PARTIAL** | font-blank/casing handled; notification readability | **B16** colorblind/notification-legibility pass (low priority) |
 | 16 | Distribution / support / release prep | **GAP** | compat-package + player-copy skills exist; no shipped Nexus page/install/changelog | **B17** release prep: Nexus writeup, install steps, support boundary, changelog/versioning — OPEN DECISION D6 |
@@ -69,12 +69,17 @@ IN-FLIGHT = a design Workflow is producing the spec this session. Sources: `PDV_
 | D7 | BROKEN_FAITH_KIN | **KEEP** the Legion-Exile-desertion hook (player-driven, anti-farmed, reversible) |
 | D8 | Notoriety hostile-on-sight | **BUILD for 1.0** (owner override of the shelve rec) |
 | D9 | Uninstall | **BUILD best-effort cleanup** (strip spells/effects + halt loops + faction removal + best-effort StorageUtil clear) + keep the "save-first" warning |
+| D10 | CC coverage scope | **HYBRID** — author present religious CC (S&S→Sheo) now + soft-dep framework extensible to the AE catalog later |
+| D11 | Ghosts of the Tribunal | **TENSION/DEVIATION** — route via existing `HandleDunmerDeviationPrice`, NOT a new worship lane |
+| D12 | CC integration depth | **TIERED** — hook CC beats into existing Prince paths; heavier new-record work only for genuinely new targets (Tribunal) |
+| D13 | CC timing | **Framework + Authoria-present CC in 1.0** (S&S, light Fishing); AE religious catalog (Tribunal, The Cause) post-1.0 |
 
 ## D. Ordered 1.0 plan (build-then-prove)
 **Phase 1 — Build (assistant/Codex grind; both specs already in hand):**
 1. Apply **under-floor enrichment** (B1) — 23 paths, dominant fix +1 env/behavioural renewable. Spec = Workflow `w9ywkug8q` (canonical recipe: manager `Handle<Race><Signal>` + anti-farm key + substrate/deity double-route; sleep/location/faucet seams identified).
 2. Apply **6f variety tranches** (B3) — Altmer/Redguard mostly missing, **Orc already PARTIAL**. Spec = Workflow `w24lhsscd` (Bosmer Naming rite is the template; one-active/clear-before-add/dawn-fade-restore contract).
-3. **Daedric surfacing** into Survey + Book-of-Days (B8/D2).
+3. **Daedric surfacing** into Survey + Book-of-Days (B8/D2) — also hosts CC Prince surfacing.
+   - **Creation Club coverage (B13.5):** soft-dep framework + S&S→Sheogorath + light Fishing→Kyne; Tribunal/Dagon post-1.0. Full detail in the approved plan addendum.
 4. **Notoriety hostile-on-sight** (D8) — PDV faction + AddToFaction toggle gated on Vigilants-alive.
 5. **DamageResist rescale** all races (D4).
 6. **Best-effort uninstall cleanup** path (D9).
