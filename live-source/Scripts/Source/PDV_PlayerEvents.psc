@@ -1003,6 +1003,9 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
     if ShouldRouteP2QuestStage(PDV_FLST_P2_NordKyneTalosSources, sourceQuest, 148154, 160, "nord_mq105_kyne_talos", newStage)
         PDV_EventBusService.RouteNordKyneTalosContext("po3_queststage_nord_mq105_sky_road")
     endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_BretonGreenWaySources, sourceQuest, 89282, 100, "breton_eldergleam_blessings", newStage)
+        PDV_EventBusService.RouteBretonGreenWayStanding("po3_queststage_breton_eldergleam_blessings")
+    endIf
     if ShouldRouteP2QuestStage(PDV_FLST_P2_BretonKnightsRoadSources, sourceQuest, 135637, 200, "breton_t02_knights_road", newStage)
         PDV_EventBusService.RouteBretonTraditionChoice(0, "po3_queststage_breton_t02_knights_road")
     endIf
@@ -1256,6 +1259,9 @@ Function RouteQuestReactionBookFaucet(Form sourceForm)
         return
     endIf
 
+    if ShouldRouteQuestReactionFaucet("Azura.fate_threshold", "faucetForms.Azura.fate_threshold", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Azura.fate_threshold", sourceForm)
+    endIf
     if ShouldRouteQuestReactionFaucet("Hermaeus Mora.forbidden_knowledge", "faucetForms.Hermaeus Mora.forbidden_knowledge", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Hermaeus Mora.forbidden_knowledge", sourceForm)
     endIf
@@ -1277,6 +1283,18 @@ Function RouteQuestReactionObjectFaucet(Form sourceForm)
     endIf
     if ShouldRouteQuestReactionFaucet("Clavicus Vile.serve_a_daedra:clavicus", "faucetForms.Clavicus Vile.serve_a_daedra:clavicus", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Clavicus Vile.serve_a_daedra:clavicus", sourceForm)
+    endIf
+    if ShouldRouteQuestReactionFaucet("Vaermina.serve_a_daedra:vaermina", "faucetForms.Vaermina.serve_a_daedra:vaermina", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Vaermina.serve_a_daedra:vaermina", sourceForm)
+    endIf
+    if ShouldRouteQuestReactionFaucet("Boethiah.serve_a_daedra:boethiah", "faucetForms.Boethiah.serve_a_daedra:boethiah", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Boethiah.serve_a_daedra:boethiah", sourceForm)
+    endIf
+    if ShouldRouteQuestReactionFaucet("Mephala.serve_a_daedra:mephala", "faucetForms.Mephala.serve_a_daedra:mephala", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Mephala.serve_a_daedra:mephala", sourceForm)
+    endIf
+    if ShouldRouteQuestReactionFaucet("Malacath.serve_a_daedra:malacath", "faucetForms.Malacath.serve_a_daedra:malacath", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Malacath.serve_a_daedra:malacath", sourceForm)
     endIf
     if ShouldRouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molag_bal", "faucetForms.Molag Bal.serve_a_daedra:molag_bal", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molag_bal", sourceForm)
@@ -1406,12 +1424,22 @@ String Function GetQuestReactionFormIdKey(String listKey)
         return "faucetFormsHermaeusMoraForbiddenKnowledgeFormIds"
     elseIf listKey == "faucetForms.Hermaeus Mora.disciplined_study"
         return "faucetFormsHermaeusMoraDisciplinedStudyFormIds"
+    elseIf listKey == "faucetForms.Azura.fate_threshold"
+        return "faucetFormsAzuraFateThresholdFormIds"
     elseIf listKey == "faucetForms.Dibella.aesthetic_devotion"
         return "faucetFormsDibellaAestheticDevotionFormIds"
     elseIf listKey == "faucetForms.Clavicus Vile.serve_a_daedra:clavicus"
         return "faucetFormsClavicusVileServeADaedraClavicusFormIds"
     elseIf listKey == "faucetForms.Peryite.serve_a_daedra:peryite"
         return "faucetFormsPeryiteServeADaedraPeryiteFormIds"
+    elseIf listKey == "faucetForms.Vaermina.serve_a_daedra:vaermina"
+        return "faucetFormsVaerminaServeADaedraVaerminaFormIds"
+    elseIf listKey == "faucetForms.Boethiah.serve_a_daedra:boethiah"
+        return "faucetFormsBoethiahServeADaedraBoethiahFormIds"
+    elseIf listKey == "faucetForms.Mephala.serve_a_daedra:mephala"
+        return "faucetFormsMephalaServeADaedraMephalaFormIds"
+    elseIf listKey == "faucetForms.Malacath.serve_a_daedra:malacath"
+        return "faucetFormsMalacathServeADaedraMalacathFormIds"
     elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molag_bal"
         return "faucetFormsMolagBalServeADaedraMolagBalFormIds"
     elseIf listKey == "faucetForms.Hircine.serve_a_daedra:hircine"
@@ -1444,12 +1472,22 @@ String Function GetQuestReactionPluginKey(String listKey)
         return "faucetFormsHermaeusMoraForbiddenKnowledgePlugins"
     elseIf listKey == "faucetForms.Hermaeus Mora.disciplined_study"
         return "faucetFormsHermaeusMoraDisciplinedStudyPlugins"
+    elseIf listKey == "faucetForms.Azura.fate_threshold"
+        return "faucetFormsAzuraFateThresholdPlugins"
     elseIf listKey == "faucetForms.Dibella.aesthetic_devotion"
         return "faucetFormsDibellaAestheticDevotionPlugins"
     elseIf listKey == "faucetForms.Clavicus Vile.serve_a_daedra:clavicus"
         return "faucetFormsClavicusVileServeADaedraClavicusPlugins"
     elseIf listKey == "faucetForms.Peryite.serve_a_daedra:peryite"
         return "faucetFormsPeryiteServeADaedraPeryitePlugins"
+    elseIf listKey == "faucetForms.Vaermina.serve_a_daedra:vaermina"
+        return "faucetFormsVaerminaServeADaedraVaerminaPlugins"
+    elseIf listKey == "faucetForms.Boethiah.serve_a_daedra:boethiah"
+        return "faucetFormsBoethiahServeADaedraBoethiahPlugins"
+    elseIf listKey == "faucetForms.Mephala.serve_a_daedra:mephala"
+        return "faucetFormsMephalaServeADaedraMephalaPlugins"
+    elseIf listKey == "faucetForms.Malacath.serve_a_daedra:malacath"
+        return "faucetFormsMalacathServeADaedraMalacathPlugins"
     elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molag_bal"
         return "faucetFormsMolagBalServeADaedraMolagBalPlugins"
     elseIf listKey == "faucetForms.Hircine.serve_a_daedra:hircine"

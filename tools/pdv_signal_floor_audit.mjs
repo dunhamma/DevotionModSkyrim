@@ -9,8 +9,10 @@
 //   2. references/authoring/PDV_Phase20_P2ImmersiveReceivers.manifest.json (designed curated source-types per formlist)
 //   3. references/authoring/PDV_SignalE2EGateLedger.csv            (GREEN curated P2 source-types wired end-to-end)
 //   4. references/authoring/PDV_DeityLikesDislikes.csv               (day-to-day + env renewable signals)
-//   5. references/authoring/PDV_QuestReactionMatrix_Full.csv         (one-shot quest-reaction cells)
-//   6. references/authoring/PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv (renewable faucet rows)
+//   5. references/authoring/PDV_DeityLikesDislikes_Princes_V2.csv    (Prince day-to-day renewable signals)
+//   6. references/authoring/PDV_QuestReactionMatrix_Full.csv         (one-shot quest-reaction cells)
+//   7. references/authoring/PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv (routed renewable faucet rows)
+//   8. live-source/Scripts/Source/PDV_PlayerEvents.psc               (non-P2 Daedric quest-stage + faucet branch proof)
 //
 // Verdict per path: PASS if wired_end_to_end >= min_types AND wired_renewable >= min_renewable, else UNDER-FLOOR.
 //
@@ -33,8 +35,10 @@ const PATHS = {
   manifest: join(AUTH, "PDV_Phase20_P2ImmersiveReceivers.manifest.json"),
   e2eLedger: join(AUTH, "PDV_SignalE2EGateLedger.csv"),
   likes: join(AUTH, "PDV_DeityLikesDislikes.csv"),
+  princeLikes: join(AUTH, "PDV_DeityLikesDislikes_Princes_V2.csv"),
   quest: join(AUTH, "PDV_QuestReactionMatrix_Full.csv"),
   partd: join(AUTH, "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv"),
+  playerEvents: join(REPO, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc"),
   outCsv: join(AUTH, "PDV_SignalFloorLedger.csv"),
   outMd: join(AUTH, "PDV_SignalFloorLedger.md"),
 };
@@ -111,6 +115,14 @@ function normDeity(name) {
   return k;
 }
 
+function normActor(name) {
+  let actor = (name || "").trim();
+  if (actor.toLowerCase().startsWith("daedric:")) {
+    actor = actor.slice("daedric:".length).trim();
+  }
+  return normDeity(actor);
+}
+
 // Build the canonical alias-fold once for a set of registry deity keys so that
 // e.g. an "azurah" actor row matches a registry "Azura" deity and vice versa.
 function deityMatchSet(registryDeities) {
@@ -135,8 +147,18 @@ const registry = csvToObjects(readFileSync(PATHS.registry, "utf8"));
 const manifest = JSON.parse(readFileSync(PATHS.manifest, "utf8"));
 const e2eRows = existsSync(PATHS.e2eLedger) ? csvToObjects(readFileSync(PATHS.e2eLedger, "utf8")) : [];
 const likesRows = csvToObjects(readFileSync(PATHS.likes, "utf8"));
+const princeLikesRows = existsSync(PATHS.princeLikes) ? csvToObjects(readFileSync(PATHS.princeLikes, "utf8")) : [];
 const questRows = csvToObjects(readFileSync(PATHS.quest, "utf8"));
 const partdRows = csvToObjects(readFileSync(PATHS.partd, "utf8"));
+const playerEventsText = existsSync(PATHS.playerEvents) ? readFileSync(PATHS.playerEvents, "utf8") : "";
+
+const routedFaucetKeys = new Set();
+for (const match of playerEventsText.matchAll(/RouteQuestReactionFaucet\("([^"]+)"/g)) {
+  routedFaucetKeys.add(match[1]);
+}
+for (const match of playerEventsText.matchAll(/ShouldRouteQuestReactionFaucet\("([^"]+)"/g)) {
+  routedFaucetKeys.add(match[1]);
+}
 
 // ---------------------------------------------------------------------------
 // Manifest: derive declared and legacy-populated curated source-types per
@@ -207,6 +229,22 @@ function addTypes(target, kinds) {
   }
 }
 
+function isDaedricLiveSource(prop) {
+  return String(prop || "").startsWith("PDV_FLST_Daedric_");
+}
+
+function daedricSourceBranchStatus(prop) {
+  const hasRegistration = playerEventsText.includes(`RegisterQuestStageList(${prop})`);
+  const hasBranch = playerEventsText.includes(`ShouldRouteP2QuestStage(${prop},`);
+  return { hasRegistration, hasBranch, ok: hasRegistration && hasBranch };
+}
+
+function faucetKey(row) {
+  const deity = (row.deity || "").trim();
+  const tag = (row.act_tag || "").trim();
+  return deity && tag ? `${deity}.${tag}` : "";
+}
+
 function sortedTypes(types) {
   return [...types].sort();
 }
@@ -256,6 +294,26 @@ for (const row of registry) {
   let truthStatus = e2eRows.length ? "e2e-ledger" : "designed-only-no-e2e-ledger";
 
   for (const prop of formlists) {
+    if (isDaedricLiveSource(prop)) {
+      designedTypes.add("quest-stage");
+      designedEvidence.push(`daedric-live-source-designed:${prop}[quest-stage]`);
+
+      const daedricStatus = daedricSourceBranchStatus(prop);
+      if (daedricStatus.ok) {
+        wiredTypes.add("quest-stage");
+        wiredEvidence.push(`daedric-live-source-branch:${prop}[quest-stage]`);
+        if (cls === "prince") truthStatus = "non-p2-daedric-source";
+      } else {
+        const missing = [
+          daedricStatus.hasRegistration ? "" : "registration",
+          daedricStatus.hasBranch ? "" : "route_branch",
+        ].filter(Boolean).join("+");
+        blockedP2Surfaces.push(`${prop}:missing-daedric-${missing || "proof"}`);
+        truthStatus = "daedric-source-incomplete";
+      }
+      continue;
+    }
+
     const decl = declaredKinds.get(prop);
     if (decl) {
       addTypes(designedTypes, decl);
@@ -294,8 +352,9 @@ for (const row of registry) {
 
   // ----- (2) Likes/dislikes -> renewable "day-to-day" + env event surfacing
   let likesHits = 0;
-  for (const lr of likesRows) {
-    if (deitySet.has(normDeity(lr.actor))) {
+  const activeLikesRows = cls === "prince" ? princeLikesRows : likesRows;
+  for (const lr of activeLikesRows) {
+    if (deitySet.has(normActor(lr.actor))) {
       likesHits++;
       const eid = parseInt(lr.eventId, 10);
       if (ENV_EVENT_NAMES[eid]) envEventsSeen.add(eid);
@@ -326,15 +385,23 @@ for (const row of registry) {
   }
 
   // ----- (4) Part D faucets -> renewable "faucet"
+  let faucetDesignedHits = 0;
   let faucetHits = 0;
   for (const pr of partdRows) {
-    if (deitySet.has(normDeity(pr.deity))) faucetHits++;
+    if ((pr.buildability || "").toUpperCase() === "DEFERRED") continue;
+    if (!deitySet.has(normDeity(pr.deity))) continue;
+
+    faucetDesignedHits++;
+    if (routedFaucetKeys.has(faucetKey(pr))) faucetHits++;
+  }
+  if (faucetDesignedHits > 0) {
+    designedTypes.add("faucet");
+    const note = `faucet-designed:${faucetDesignedHits}row${faucetDesignedHits === 1 ? "" : "s"}`;
+    designedEvidence.push(note);
   }
   if (faucetHits > 0) {
-    designedTypes.add("faucet");
     wiredTypes.add("faucet");
-    const note = `faucet:${faucetHits}row${faucetHits === 1 ? "" : "s"}`;
-    designedEvidence.push(note);
+    const note = `faucet-routed:${faucetHits}row${faucetHits === 1 ? "" : "s"}`;
     wiredEvidence.push(note);
   }
 
@@ -350,7 +417,7 @@ for (const row of registry) {
 
   const passTypes = wiredDistinctTypes >= minTypes;
   const passRenew = wiredDistinctRenew >= minRenew;
-  const proofLimited = !["e2e-ledger", "non-p2-data"].includes(truthStatus);
+  const proofLimited = !["e2e-ledger", "non-p2-data", "non-p2-daedric-source"].includes(truthStatus);
   const verdict = (passTypes && passRenew && !proofLimited) ? "PASS" : "UNDER-FLOOR";
 
   const missing = [];
@@ -475,8 +542,10 @@ md.push("**Floor:** race-path = 5 types / 2 renewable; prince = 4 types / 2 rene
 md.push("");
 md.push("**Designed vs wired:** `designed` counts manifest-declared P2 sourceKinds plus the existing " +
   "data-backed non-P2 source families. `wired_end_to_end` counts P2 sourceKinds only from GREEN " +
-  "`PDV_SignalE2EGateLedger.csv` surfaces; non-P2 `day-to-day`, `quest-reaction`, and `faucet` " +
-  "remain data-backed from their source tables. Verdicts use `wired_end_to_end`; `designed` is informational.");
+  "`PDV_SignalE2EGateLedger.csv` surfaces; non-P2 Prince Daedric quest-stage counts only when " +
+  "`PDV_PlayerEvents.psc` has both registration and a route branch. Non-P2 `day-to-day`, " +
+  "`quest-reaction`, and routed `faucet` remain data-backed from their source tables and " +
+  "runtime branches. Verdicts use `wired_end_to_end`; `designed` is informational.");
 md.push("");
 md.push("## Summary");
 md.push("");
@@ -585,6 +654,12 @@ md.push("- **Prince quest-reaction is NOT zero.** A literal application of the r
   "(many are negative/reject branches, e.g. *destroy altar*, but the `deity` column still attributes them). " +
   "Every one of the 16 Princes has at least 1 quest-reaction cell. This contradicts an a-priori expectation " +
   "that Namira/Vaermina/Peryite/Molag Bal have none; the tool reports the ground-truth count.");
+md.push("- **Prince day-to-day rows come from the Prince V2 table.** Race-path rows still use " +
+  "`PDV_DeityLikesDislikes.csv`; Prince rows use `PDV_DeityLikesDislikes_Princes_V2.csv`, " +
+  "which is the runtime table loaded by `PDV__ManagerQuest.psc` for `PDV_DaedricPath_*` actors.");
+md.push("- **Part D faucet rows count only when routed in `PDV_PlayerEvents.psc`.** Designed rows " +
+  "remain visible in `designed`, but `wired_end_to_end` requires a matching `RouteQuestReactionFaucet` " +
+  "or `ShouldRouteQuestReactionFaucet` branch so silent candidate faucets do not pass the floor.");
 md.push("- **Deity-name aliasing applied** (case-insensitive, apostrophe/dot/hyphen-stripped): " +
   "`Azura`=`azurah`, `Hermaeus Mora`=`Mora`, `Clavicus Vile`=`Vile`, `Boethiah`=`Boethra`, `Mephala`=`Mafala`. " +
   "`Auri-El`->`auriel`, `Y'ffre`->`yffre`, `Z'en`->`zen` fold by the same normalizer.");

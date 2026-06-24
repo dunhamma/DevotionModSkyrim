@@ -89,6 +89,10 @@ const FAUCET_FORM_LISTS = {
     "0x01AD0E|Skyrim.esm", // N'Gasta! Kvata! Kvakis!
     "0x01AD0C|Skyrim.esm", // Souls, Black and White
   ],
+  "faucetForms.Azura.fate_threshold": [
+    "0x01ACE9|Skyrim.esm", // Azura and the Box
+    "0x01B245|Skyrim.esm", // Invocation of Azura
+  ],
   "faucetForms.Dibella.aesthetic_devotion": [
     "0x088952|Skyrim.esm", // Fine Clothes
     "0x088953|Skyrim.esm", // Fine Clothes
@@ -102,6 +106,18 @@ const FAUCET_FORM_LISTS = {
   ],
   "faucetForms.Peryite.serve_a_daedra:peryite": [
     "0x045F96|Skyrim.esm", // Spellbreaker
+  ],
+  "faucetForms.Vaermina.serve_a_daedra:vaermina": [
+    "0x035066|Skyrim.esm", // Skull of Corruption
+  ],
+  "faucetForms.Boethiah.serve_a_daedra:boethiah": [
+    "0x052794|Skyrim.esm", // Ebony Mail
+  ],
+  "faucetForms.Mephala.serve_a_daedra:mephala": [
+    "0x04A38F|Skyrim.esm", // Ebony Blade
+  ],
+  "faucetForms.Malacath.serve_a_daedra:malacath": [
+    "0x02ACD2|Skyrim.esm", // Volendrung
   ],
   "faucetForms.Molag Bal.serve_a_daedra:molag_bal": [
     "0x0233E3|Skyrim.esm", // Mace of Molag Bal

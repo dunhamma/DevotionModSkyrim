@@ -34,19 +34,19 @@ imperial_civic,race-path,Imperial,Civic,Stendarr|Arkay|Akatosh|Zenithar|Mara|Jul
 imperial_public_talos,race-path,Imperial,Public-Talos,Talos,PDV_FLST_P2_ImperialPublicTalosSources,5,2,Public Talos pressure / Concordat rupture; route RouteImperialTalosPressure(false).
 imperial_private_talos,race-path,Imperial,Private-Talos,Talos,PDV_FLST_P2_ImperialPrivateTalosSources,5,2,Private Talos pressure (secrecy); route RouteImperialTalosPressure(true).
 imperial_patron_civic,race-path,Imperial,Patron-Civic,Stendarr|Arkay|Akatosh|Zenithar|Mara|Julianos|Dibella|Kynareth,PDV_FLST_P2_ImperialPatronCivicSources,5,2,Patron civic favor tied to active Imperial Nine-Divines patron lane; route RouteImperialPatronCivicFavor.
-prince_mehrunes_dagon,prince,Daedric,Mehrunes Dagon,Mehrunes Dagon,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_boethiah,prince,Daedric,Boethiah,Boethiah,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_mephala,prince,Daedric,Mephala,Mephala,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_nocturnal,prince,Daedric,Nocturnal,Nocturnal,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_hircine,prince,Daedric,Hircine,Hircine,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_hermaeus_mora,prince,Daedric,Hermaeus Mora,Hermaeus Mora,,4,2,Daedric Prince; deities=own name (alias Mora); no P2 FormLists.
-prince_azura,prince,Daedric,Azura,Azura,,4,2,Daedric Prince; deities=own name (alias Azurah); no P2 FormLists.
-prince_namira,prince,Daedric,Namira,Namira,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_sanguine,prince,Daedric,Sanguine,Sanguine,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_vaermina,prince,Daedric,Vaermina,Vaermina,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_peryite,prince,Daedric,Peryite,Peryite,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_malacath,prince,Daedric,Malacath,Malacath,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_clavicus_vile,prince,Daedric,Clavicus Vile,Clavicus Vile,,4,2,Daedric Prince; deities=own name (alias Vile); no P2 FormLists.
-prince_meridia,prince,Daedric,Meridia,Meridia,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_molag_bal,prince,Daedric,Molag Bal,Molag Bal,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
-prince_sheogorath,prince,Daedric,Sheogorath,Sheogorath,,4,2,Daedric Prince; deities=own name; no P2 FormLists.
+prince_mehrunes_dagon,prince,Daedric,Mehrunes Dagon,Mehrunes Dagon,PDV_FLST_Daedric_DagonLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_boethiah,prince,Daedric,Boethiah,Boethiah,PDV_FLST_Daedric_BoethiahLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_mephala,prince,Daedric,Mephala,Mephala,PDV_FLST_Daedric_MephalaLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_nocturnal,prince,Daedric,Nocturnal,Nocturnal,PDV_FLST_Daedric_NocturnalLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_hircine,prince,Daedric,Hircine,Hircine,PDV_FLST_Daedric_HircineLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_hermaeus_mora,prince,Daedric,Hermaeus Mora,Hermaeus Mora,PDV_FLST_Daedric_MoraLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; alias Mora; non-P2 branch proof.
+prince_azura,prince,Daedric,Azura,Azura,PDV_FLST_Daedric_AzuraLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; alias Azurah; non-P2 branch proof.
+prince_namira,prince,Daedric,Namira,Namira,PDV_FLST_Daedric_NamiraLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_sanguine,prince,Daedric,Sanguine,Sanguine,PDV_FLST_Daedric_SanguineLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_vaermina,prince,Daedric,Vaermina,Vaermina,PDV_FLST_Daedric_VaerminaLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_peryite,prince,Daedric,Peryite,Peryite,PDV_FLST_Daedric_PeryiteLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_malacath,prince,Daedric,Malacath,Malacath,PDV_FLST_Daedric_MalacathLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_clavicus_vile,prince,Daedric,Clavicus Vile,Clavicus Vile,PDV_FLST_Daedric_VileLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; alias Vile; non-P2 branch proof.
+prince_meridia,prince,Daedric,Meridia,Meridia,PDV_FLST_Daedric_MeridiaLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_molag_bal,prince,Daedric,Molag Bal,Molag Bal,PDV_FLST_Daedric_MolagLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
+prince_sheogorath,prince,Daedric,Sheogorath,Sheogorath,PDV_FLST_Daedric_SheoLiveSources,4,2,Daedric Prince; own exact Daedric live-source quest FormList; non-P2 branch proof.
