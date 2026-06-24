@@ -3237,6 +3237,10 @@ Function ApplyOrcTrialOfIron(Actor playerRef, Int index)
     StorageUtil.SetIntValue(None, "PDV.OrcTrial.Active", index + 1)
     StorageUtil.SetIntValue(None, "PDV.OrcTrial.ModeAtRite", modeNow)
     StorageUtil.SetFloatValue(None, "PDV.OrcTrial.LastRiteTime", Utility.GetCurrentGameTime())
+    ; Surface in both Prisma spaces: a small Malacath pulse (Ledger driver; the 7-day
+    ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
+    AwardPiety(PDV_Malacath, 0.5, "Took up the Trial of Iron")
+    AppendBookOfDaysEntry("You took up a discipline in the Trial of Iron. The Code is held in iron.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
     Debug.Notification("You take up a discipline of the Code. The Trial of Iron holds you to it.")
     Trace(2, "Orc Trial of Iron discipline applied: " + index)
 EndFunction
@@ -3383,6 +3387,10 @@ Function ApplyRedguardRemembering(Actor playerRef, Int index)
     StorageUtil.SetIntValue(None, "PDV.RedRemember.Active", index + 1)
     StorageUtil.SetIntValue(None, "PDV.RedRemember.SectAtRite", sectNow)
     StorageUtil.SetFloatValue(None, "PDV.RedRemember.LastRiteTime", Utility.GetCurrentGameTime())
+    ; Surface in both Prisma spaces: a small Tu'whacca pulse (Ledger driver; the 7-day
+    ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
+    AwardPiety(PDV_Tuwhacca, 0.5, "Took up the Remembering of Names")
+    AppendBookOfDaysEntry("You remembered a name of the old line. The dead are kept in the telling.", Utility.GetCurrentGameTime() as Int, "substrate.act", "tu-whacca", False)
     Debug.Notification("You remember a name of the old line. The observance settles into you.")
     Trace(2, "Redguard Remembering observance applied: " + index)
 EndFunction
@@ -3488,6 +3496,10 @@ Function ApplyAltmerDiscipline(Actor playerRef, Int index)
     playerRef.AddSpell(chosen, False)
     StorageUtil.SetIntValue(None, "PDV.Alt.Disc.Active", index + 1)
     StorageUtil.SetFloatValue(None, "PDV.Alt.Disc.LastRiteTime", Utility.GetCurrentGameTime())
+    ; Surface in both Prisma spaces: a small Auri-El pulse (Ledger driver; the 7-day
+    ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
+    AwardPiety(PDV_AuriEl, 0.5, "Set a Discipline of Return")
+    AppendBookOfDaysEntry("You set a discipline of the Return. The road back is walked daily.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False)
     Debug.Notification("You set the discipline. It holds while you hold to the path.")
     Trace(2, "Altmer Discipline of Return applied: " + index)
 EndFunction
