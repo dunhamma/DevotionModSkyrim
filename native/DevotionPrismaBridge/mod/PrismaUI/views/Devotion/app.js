@@ -2197,6 +2197,53 @@
     window.PDVBridge.receiveOverlayJson(demoMedallionPayload);
   };
 
+  // End-to-end tracking demo: proves ALL new work renders in BOTH Prisma spaces.
+  // Uses the exact manager payload contract (GetDashboardJson gods/drivers +
+  // BuildJournalPayloadJson entries). PDVDemoLedger() -> the interactive sortable
+  // panel (Today tab) with the new 6f rite drivers + a watching Prince + a
+  // neglected god. PDVDemoChronicle() -> the Book of Days (Chronicle entries +
+  // the read-only Ledger page; toggle the page in-view).
+  const demoTrackingGods = [
+    { god: "Kyne", symbol: "kyne", system: "patron", state: "gaining", pietyToday: 6, piety: 72, tier: 2,
+      drivers: [ { reason: "Clean hunt", count: 2, net: 4, dir: "gain" }, { reason: "Rested beneath open sky", count: 1, net: 3, dir: "gain" } ] },
+    { god: "Malacath", symbol: "malacath", system: "pantheon", state: "gaining", pietyToday: 0.5, piety: 14, tier: 1,
+      drivers: [ { reason: "Took up the Trial of Iron", count: 1, net: 0.5, dir: "gain" } ] },
+    { god: "Auri-El", symbol: "auri-el", system: "pantheon", state: "gaining", pietyToday: 0.5, piety: 22, tier: 1,
+      drivers: [ { reason: "Set a Discipline of Return", count: 1, net: 0.5, dir: "gain" } ] },
+    { god: "Tu'whacca", symbol: "tu-whacca", system: "pantheon", state: "gaining", pietyToday: 0.5, piety: 9, tier: 0,
+      drivers: [ { reason: "Took up the Remembering of Names", count: 1, net: 0.5, dir: "gain" } ] },
+    { god: "Mephala", symbol: "daedric", system: "watching", state: "steady", pietyToday: 0, piety: 6, tier: 0,
+      drivers: [ { reason: "A Prince takes notice", count: 1, net: 0, dir: "gain" } ] },
+    { god: "Stendarr", symbol: "journal", system: "pantheon", state: "neglected", pietyToday: -2, piety: 3, tier: 0,
+      drivers: [ { reason: "The path goes quiet", count: 1, net: -2, dir: "loss" } ] }
+  ];
+
+  window.PDVDemoLedger = () => {
+    window.PDVBridge.receiveJson({
+      title: "Kyne", status: "Live", symbol: "kyne", patron: "Kyne", originRace: "Nord",
+      patronState: "Active patron", tier: 2, tierLabel: "Devoted", piety: 72, pietyToday: 6,
+      dashboard: { gods: demoTrackingGods, systems: ["patron", "pantheon", "watching", "neglected"] }
+    });
+  };
+
+  window.PDVDemoChronicle = () => {
+    window.PDVBridge.receiveJson({
+      mode: "journal",
+      journal: {
+        title: "Book of Days", page: 0,
+        summary: "A record of devotional acts since the path began.",
+        dashboard: { gods: demoTrackingGods },
+        entries: [
+          { date: "17th of Last Seed", title: "The Trial of Iron", text: "You took up a discipline in the Trial of Iron. The Code is held in iron.", symbol: "malacath", valence: "good", magnitude: 1 },
+          { date: "17th of Last Seed", title: "The Remembering of Names", text: "You remembered a name of the old line. The dead are kept in the telling.", symbol: "tu-whacca", valence: "good", magnitude: 1 },
+          { date: "16th of Last Seed", title: "The Disciplines of Return", text: "You set a discipline of the Return. The road back is walked daily.", symbol: "auri-el", valence: "good", magnitude: 1 },
+          { date: "15th of Last Seed", title: "A Prince Takes Notice", text: "Mephala's attention has gathered around you.", symbol: "daedric", valence: "neutral", magnitude: 1 },
+          { date: "14th of Last Seed", title: "The Path Goes Quiet", text: "Stendarr has gone unanswered. The favor wanes.", symbol: "journal", valence: "warning", magnitude: 2 }
+        ]
+      }
+    });
+  };
+
   render(fallbackState);
 
   if (new URLSearchParams(window.location.search).has("demo")) {
