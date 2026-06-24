@@ -63,6 +63,7 @@ This repo should be treated as a single-context project; skills should read the 
 | `tools/pdv-orc-spine-author` | Narrow Orc ancestor-spine parity author | Creating/checking Orc life-mode keyed DamageResist/Health spine `SPEL`/`MGEF` packets, manager property wiring, and `Backups\orc-spine\` framework backups |
 | `tools/pdv-balancing-author` | Narrow balancing retune helper | Updating live deity scalar VMAD properties for the 25/50/85 threshold contract and `IsAedric` flags with a framework ESP backup |
 | `tools/pdv-shrine-blessing-author` | Narrow shrine blessing normalization helper | Discovering active clickable shrine blessing activators, creating/checking cure-only main-ESP `SPEL` overrides and `BlessingMessage` prayer-text `MESG` overrides from `PDV_ShrineBlessingNeutralization.manifest.json`, while keeping activator/script replacements out of scope |
+| `tools/pdv-release-prep-author` | Narrow V1 release-prep cleanup helper | Checking/removing the parked CK-authored V1 spoken-dialogue `DLBR`/`DIAL`/`INFO` records from `Devotion.esp` with backup/readback, without touching non-voiced recognition surfaces |
 | `tools/pdv_phase20_base_wiring_audit.mjs` | Read-only all-race Phase 20 base wiring audit | Checking all ten races for P2 receiver contracts, live source-fill coverage counts, static quest-stage routes, and T1 reward manager script references against the live Devotion source |
 | `tools/pdv_beta_readiness_audit.mjs` | Read-only beta-readiness closure audit | Failing closed on broad "scaled out" or beta-feel claims until authority, readback, runtime-route, manual, and release-claim proof buckets all line up |
 | `tools/pdv_phase2_reward_readback_audit.mjs` | Read-only Phase 2 static reward/capstone readback audit | Checking Phase 2 reward records, manager deity/reward/neglect properties, FLST membership, SGE/SEQ state, Green Pact static layer, fallback capstone records, and real-hook classification |
@@ -992,6 +993,11 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   `references/authoring/PDV_V2_Backlog.md`. (Voiced-content non-goal,
   2026-05-31 - full entry in Decisions Log; rule in `PDV_Architecture_v3.md`
   Section 21.3)
+- Release-prep cleanup completed 2026-06-24: `tools/pdv-release-prep-author`
+  removed the parked Phase 11 Arngeir/Kyne and Phase 18 Nord spoken-dialogue
+  `DLBR`/`DIAL`/`INFO` records from the live V1 `Devotion.esp`; `--check`
+  now readbacks them absent. This is machine/readback proof only; V2 can rebuild
+  curated dialogue from the backlog/specification later.
 
 **Authoring boundaries**
 - Schema-first / text-first ESP authoring stays research-only. Until a proven

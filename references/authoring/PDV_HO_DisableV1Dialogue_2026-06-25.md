@@ -1,5 +1,13 @@
 # Disable V1 Voiced Dialogue (Codex Handoff, 2026-06-25) -- queue B / release-prep B18
 
+## Closeout status (2026-06-24)
+
+DONE at machine/readback level. `tools/pdv-release-prep-author` physically removed the
+15 parked V1 spoken-dialogue records from the live Anvil `Devotion.esp` with backup
+`Backups\release-prep\Devotion.esp.20260624-210355.bak`; `--check` now readbacks all
+15 records absent. `pdv_verify.mjs --json` is `FAIL=0`, with only the unrelated
+Phase 20 medallion glyph fallback warning remaining. No Papyrus source was changed.
+
 ## Goal
 
 V1 ships NO voiced NPC dialogue (`PDV_Architecture_v3.md` Section 21.3 voiced-content

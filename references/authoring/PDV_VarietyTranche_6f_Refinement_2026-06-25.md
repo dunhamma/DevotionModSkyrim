@@ -9,6 +9,17 @@ Stop 6f authoring from re-building Orc families that already ship. Author only t
 missing Altmer / Redguard / Orc-tail variety rites, mirroring the shipped Bosmer Naming and
 Orc Code-Holds records.
 
+## Closeout check (2026-06-24)
+
+Verified-current-state before authoring. Orc is more complete than the initial queue note:
+`Hearth-Held`, `The Code Holds`, `Four Holds`, and the four `TrialOfIron` spell properties
+are present in the live manager and sync cleanup path. Altmer and Redguard remain mostly
+missing at runtime, but their underlying draft manifests still carry a hard effect-review
+gate, and `PDV_RaceEffectReviewLedger.md` still marks Altmer, Orc, and Redguard as
+`Pending`. No new 6f records or Papyrus signals were authored in this pass; authoring stays
+blocked until the row review ratifies magnitudes/effect axes and resolves the open
+private-context / form-ID / AV decisions.
+
 ## Verify-current-state FIRST (mandatory -- multiple items already-built this session)
 The authoring-spec workflow (w24lhsscd) found Orc PARTIAL. Before authoring ANY family,
 grep the live manager for each named family below and mark its status ALREADY-PRESENT /

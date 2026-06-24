@@ -438,10 +438,12 @@ Phase 18A/B runtime closeout (2026-05-30):
   recognition topics were CK-authored/live as branch/topic/unnamed INFO chains
   with positive/negative in-game dialogue proof, but as spoken NPC dialogue they
   are **deferred to V2** per `PDV_Architecture_v3.md` Section 21.3 (no voiced
-  content in 1.0). Build action: disable/remove these records from the V1
-  release ESP. The proven pattern is retained as the V2 specification; future
-  V1 race clarity should prefer non-voiced status, message, notification,
-  spell/effect, book/note, shrine, service-gate, or Prisma surfaces.
+  content in 1.0). Release-prep cleanup (2026-06-24) removed the parked Phase
+  18 Nord spoken-dialogue records from the V1 release ESP; the
+  `pdv-release-prep-author --check` gate readbacks them absent. The proven
+  pattern is retained as the V2 specification; future V1 race clarity should
+  prefer non-voiced status, message, notification, spell/effect, book/note,
+  shrine, service-gate, or Prisma surfaces.
 - **Runtime matrix:** Phase 18 requires Player page, Developer Options
   persistence, Survey Devotion for broad/focused Nord states, Hircine/werewolf
   tension, vampire suppression, vampire cure scar, and save/load persistence for

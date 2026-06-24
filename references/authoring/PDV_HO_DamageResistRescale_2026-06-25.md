@@ -9,6 +9,11 @@ already-built this session). This is one of them. The grep below shows all five
 not a build. If the grep still matches what is recorded here, write nothing and
 mark the item closed; the stale input was the MEMORY note, not the specs.
 
+Closeout check (2026-06-24): verified again. Bosmer, Imperial, Nord, Khajiit, and
+Dunmer remain on the 15/30/50 armor-points ladder where those specs actually use
+DamageResist; Dunmer still correctly has only the T2/T3 secondary DamageResist
+entries. No spec or ESP write was performed.
+
 ## Goal
 
 DamageResist rewards are armor POINTS, not a percent. PDV's old flat ~12
