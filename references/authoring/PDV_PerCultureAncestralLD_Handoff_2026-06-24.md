@@ -40,3 +40,22 @@ Recommend (a): land the `originGate` mechanism once, then author rows incrementa
   foreign worshipper does not (origin-gate works).
 - No Score dim directly measures this yet; it deepens `text_voice`/felt-culture — note for a
   future Score dim if desired.
+
+## STATUS 2026-06-25 — mechanism DONE; content = deliberate authoring
+- **Mechanism is fully built + committed (`ec36725`)** — the handoff was stale. `originGate` column
+  + culture aliases (saxhleel/yokudan/orsimer) in `pdv_likesdislikes_gen.mjs`; `WriteLD` writes
+  origin-prefixed `.O<n>` keys; `ClearRowsForDeity` clears them; `PDV_DeityBase.ScoreFromTable`
+  overlays the origin row gated on `IsRaceNativeForPlayer()` with a DISTINCT anti-farm key
+  (`GetOriginGatedEventType` = eventType+10000+origin); `LIKES_DISLIKES_VERSION` = 10, verifier
+  `EXPECTED_LIKES_DISLIKES_VERSION` synced. Verified harness-PASS this session.
+- **3 cultural rows live:** Hist `tend-the-hist` (334 harvest, Argonian), Malacath `uphold-the-code`
+  (330 smith, Orc), Tu'whacca `keep-the-death-duty` (300 kill-undead + ActorTypeUndead, Redguard).
+- **Remaining cultural rows = deliberate content (NOT shipped speculatively).** The clean pattern,
+  from the 3 examples: pick an ALREADY-EMITTED generic `EVT_*` whose act expresses that culture's
+  ancestor devotion, then add a CSV row keyed on it with `originGate` = the native culture +
+  `dailyCap` (anti-farm) + an optional `conditionTag`. This is never inert (the event already
+  fires) but IS a theme/balance judgment — choose acts that are on-theme and not farmy, and prove
+  on a NEW save. Held back from blind authoring because: (a) several races have no clean single
+  native-deity + generic-event mapping (multi-focus Dunmer/Bosmer; Green-Pact harvest ban; civic
+  acts aren't generic EVT_), and (b) the native-gate proof is play-gated. Recommend a deliberate
+  per-race design pass (theme + event + cap + conditionTag) before authoring.
