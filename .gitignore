@@ -55,3 +55,35 @@ tools/pdv-faucet-fix-author/bin/
 tools/pdv-faucet-fix-author/obj/
 tools/pdv-requiem-tail-author/bin/
 tools/pdv-requiem-tail-author/obj/
+
+# === Consolidated build/scratch ignores (added 2026-06-24) ===
+# All .NET helper-tool build outputs (blanket; supersedes the per-tool bin/obj lines above)
+**/bin/
+**/obj/
+
+# C/C++ (xmake) build outputs
+.xmake/
+build/
+
+# Log files (none are tracked)
+*.log
+
+# Generated runtime log snapshots
+generated/runtime-log-snapshots/
+
+# Release packaging artifacts (tracked dist/ content is unaffected)
+dist/Rynfri_JoJ_Package/
+dist/Rynfri_JoJ_Package.zip
+
+# Untracked scratch output folders (tracked scratch/ files are unaffected)
+scratch/mcm-anomaly-bsa/
+scratch/mcm-casing/
+scratch/daedric-unify-review/
+scratch/restore-audit-20260620/
+scratch/book-of-days-proof/
+scratch/prisma-book-preview/
+
+# Untracked loose scratch files
+scratch/apply_ld_regen.mjs
+scratch/new_loadrows.txt
+scratch/promote_static_routes.mjs
