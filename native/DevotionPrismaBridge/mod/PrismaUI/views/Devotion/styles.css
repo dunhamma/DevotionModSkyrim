@@ -1287,6 +1287,22 @@ h1 {
   line-height: 1.65;
 }
 
+/* Accessibility: honor a player's reduced-motion preference. Overrides animation
+   and transition DURATIONS only (not delays), so the toast lifecycle is preserved
+   -- a toast still appears, holds for its full --toast-life (~4.2s), and clears,
+   just without the slide/fade motion. Additive: active only when the platform
+   requests reduced motion; default rendering is untouched. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ============================================================
    Book of Days -- an opened book on aged parchment.
    Dark ink on warm parchment for accessible long-form reading;
