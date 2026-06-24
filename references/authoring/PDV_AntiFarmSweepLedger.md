@@ -6,7 +6,7 @@ Anti-farm doctrine: every signal handler that awards POSITIVE (gain) PIETY needs
 
 Scope: PDV__ManagerQuest.psc handler-shaped functions (Handle<X> / Record<X>Scaled / Try<X> / Award<X>Signal) that transitively reach AwardPiety / AwardCuratedSignal[Scaled]. Substrate AdjustMetric (the favor/buff channel, not the piety pulse) is intentionally out of scope. The audit is caller-aware (a thin emit-wrapper reads CAPPED when every caller is capped) and sign-aware: only POSITIVE-delta (gain) handlers are a farm exploit and fail the build; PENALTY-only handlers (negative delta -- anti-creed, oath-break, Lorkhan-pressure) cannot be farmed for gain and are reported as friction-pacing review only.
 
-Summary: 120 piety-awarding handlers | 111 CAPPED | 0 allowlisted one-shot | 0 UNCAPPED-GAIN (findings) | 9 uncapped-penalty-only (review)
+Summary: 124 piety-awarding handlers | 115 CAPPED | 0 allowlisted one-shot | 0 UNCAPPED-GAIN (findings) | 9 uncapped-penalty-only (review)
 Self-test: off
 
 ## UNCAPPED GAIN -- genuine anti-farm gaps (the doctrine target)
@@ -140,6 +140,7 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleShoutAttack | own-handler-gate |
 | HandleStateTransitionConfirmationRite | called-fn-gate |
 | HandleTalosShrineDefiance | own-handler-gate |
+| TryAltmerDisciplinesRite | caller-gate (thin emit-wrapper; every caller capped) |
 | TryArgonianBedOfChoiceSleep | called-fn-gate |
 | TryArgonianNearWaterMaintenance | own-handler-gate |
 | TryArgonianSithisNearDeathBurst | own-handler-gate |
@@ -149,5 +150,8 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | TryBosmerEldergleamInterior | called-fn-gate |
 | TryBosmerGildergreenProximity | called-fn-gate |
 | TryBosmerHearthSleep | called-fn-gate |
+| TryCCFishingDevotion | own-handler-gate |
 | TryOrcCodeHolds | own-handler-gate |
+| TryOrcTrialOfIron | caller-gate (thin emit-wrapper; every caller capped) |
+| TryRedguardRemembering | caller-gate (thin emit-wrapper; every caller capped) |
 

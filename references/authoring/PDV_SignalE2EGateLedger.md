@@ -16,7 +16,7 @@ MCP: PASS - Server live, profile Devotion Dev.
 - formLists: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists - PASS
 - aliasProperties: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties - PASS
 - sourceFill: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill - PASS
-- completenessAudit: PASS (exit 0) - node tools/pdv_completeness_audit.mjs --json - Completeness audit PASS; source indexed 1525 functions, 96 signal consts.
+- completenessAudit: PASS (exit 0) - node tools/pdv_completeness_audit.mjs --json - Completeness audit PASS; source indexed 1543 functions, 96 signal consts.
 
 ## Column Counts
 
