@@ -1,0 +1,11 @@
+race,boon_floor,piety_sink,minus_stack,renewable,diegetic,text_voice,richness,score_basis
+Argonian,3,3,3,3,3,3,RICH,"Canonical reference (=100%). Substrate_ArgonianHist: unconditional boon pile + composite metric + double-route Hist pulse + graduated minus + deepest wired diegetic (posture dreams, sap visions)."
+Khajiit,3,3,2,2,2,3,RICH,"Lunar Lattice substrate (PDV_SubstrateBase): metric-tiered unconditional boon, patron-independent sink; rich text; minus/diegetic slightly under Argonian."
+Bosmer,2,2,2,2,3,3,RICH,"Rich by BREADTH not substrate (Naming, dreams, Songs of the Green); no unconditional substrate boon so boon_floor partial; broad wired diegetic + voice."
+Dunmer,2,2,2,2,1,2,MODERATE,"Strongest MODERATE / cheapest to parity: PDV_Substrate_DunmerAncestor (ResistMagic +3/+9/+20 unconditional, ONE tier); prayer/home channel; thin diegetic."
+Redguard,2,2,1,1,1,2,MODERATE,"Spine-owned Tu'whacca pulse ADDED 2026-06-24 (SIGNAL_ANCESTOR_SPINE) -> piety_sink improved; minus penalized (SIGNAL_DEATH_DUTY_ABANDONMENT specced-but-unemitted); sect-track texture."
+Breton,1,1,1,1,1,2,MODERATE,"Patron-gated framework (Green Way / Hidden Art / Vow traditions); no unconditional boon; Green Way standing channel; decent voice."
+Orc,1,1,1,1,1,2,MODERATE,"Patron-gated accumulator (stronghold/city/exile); Watchers diegetic DECLARED-DEAD; some voice."
+Imperial,1,1,1,0,1,1,MODERATE,"Reputation-track (Concordat) patron-gated; no unconditional boon; no sleep/home channel; Book-of-Days on generic fallback."
+Altmer,1,1,1,0,1,1,MODERATE,"Reputation-track (ThalmorAlignment) patron-gated; variety tranche effect-review-blocked; Book-of-Days generic fallback."
+Nord,0,1,1,0,1,1,THIN,"Lone THIN outlier: no substrate, PantheonBaseline framing only, acts route to inactive Shor ledger, no sleep/neglect sync; AncestorsQuiet + ChampionAmbient_Storm diegetic DECLARED-DEAD."
