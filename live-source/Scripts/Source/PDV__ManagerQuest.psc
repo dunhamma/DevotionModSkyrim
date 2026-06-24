@@ -85,6 +85,7 @@ PDV_Deity_AuriEl Property PDV_AuriEl Auto
 PDV_Deity_Magnus Property PDV_Magnus Auto
 PDV_Deity_Xarxes Property PDV_Xarxes Auto
 PDV_ReputationTrack Property PDV_ConcordatStandingTrack Auto
+PDV_Substrate_ImperialAncestor Property PDV_ImperialAncestorSubstrate Auto
 PDV_ReputationTrack Property PDV_ThalmorAlignmentTrack Auto
 PDV_StateTrack Property PDV_BosmerPathTrack Auto
 PDV_StateTrack Property PDV_NordPantheonBaselineTrack Auto
@@ -2954,6 +2955,7 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reas
 
     if GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
         HandleImperialMaraSleepMercy(playerRef)
+        HandleImperialSleepEvents(playerRef, reason)
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
@@ -2977,6 +2979,19 @@ Function HandleAltmerSleepEvents(Actor playerRef, String reason)
 
     AwardAltmerAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
     ShowP2BookNotice("po3_book_altmer_sleep_dream", "Aldmeri dream", "The old line keeps its shape through rest.")
+EndFunction
+
+Function HandleImperialSleepEvents(Actor playerRef, String reason)
+    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ImperialCivicRest")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AwardImperialAncestorSpinePulse(multiplier, "sleep_rest_" + reason)
 EndFunction
 
 ; Mara's Mercy heal-on-rest. Imperial event-driven heal authored as a flat
@@ -7777,6 +7792,8 @@ String Function BuildModeChangeLine(String modeLabel)
         return "The moons mark a turning in your road: " + modeLabel + "."
     elseIf originRace == ORIGIN_ALTMER
         return "The old line records a turn in your discipline: " + modeLabel + "."
+    elseIf originRace == ORIGIN_IMPERIAL
+        return "The civic road turns under the old oaths: " + modeLabel + "."
     endIf
     return "Your path turns. You walk now as: " + modeLabel + "."
 EndFunction
@@ -7888,6 +7905,10 @@ Function RunDawnRefreshTrackStates()
 
     if PDV_ConcordatStandingTrack
         PDV_ConcordatStandingTrack.RefreshState()
+    endIf
+
+    if GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
+        RunDawnRefreshImperialAncestor()
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
@@ -9691,6 +9712,7 @@ Function SyncImperialRewards(Actor playerRef)
     endIf
 
     Bool isImperial = GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
+    SyncImperialAncestorSubstrate(playerRef, isImperial)
     Bool broadCivicFaithful = isImperial && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") >= 6
     SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T2, broadCivicFaithful, "Imperial Civic T2")
 
@@ -9703,6 +9725,18 @@ Function SyncImperialRewards(Actor playerRef)
     SyncImperialRewardFamily(playerRef, PDV_Julianos, PDV_Bless_Imperial_Julianos_T1, PDV_Bless_Imperial_Julianos_T2, PDV_Bless_Imperial_Julianos_T3, "Julianos")
     SyncImperialRewardFamily(playerRef, PDV_Kynareth, PDV_Bless_Imperial_Kynareth_T1, PDV_Bless_Imperial_Kynareth_T2, PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
     SyncImperialRewardFamily(playerRef, PDV_Talos, PDV_Bless_Imperial_Talos_T1, PDV_Bless_Imperial_Talos_T2, PDV_Bless_Imperial_Talos_T3, "Talos")
+EndFunction
+
+Function SyncImperialAncestorSubstrate(Actor playerRef, Bool isImperial)
+    if !playerRef || !PDV_ImperialAncestorSubstrate
+        return
+    endIf
+
+    if isImperial
+        PDV_ImperialAncestorSubstrate.RecomputeSubstrateTier()
+    else
+        PDV_ImperialAncestorSubstrate.ClearSubstrateBoons()
+    endIf
 EndFunction
 
 Function SyncImperialRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
@@ -13055,6 +13089,38 @@ Function AwardImperialPatronCivicSignal(Float multiplier)
     endIf
 EndFunction
 
+Function AwardImperialAncestorSpinePulse(Float multiplier, String reason)
+    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL || multiplier <= 0.0
+        return
+    endIf
+
+    Int tierBefore = 0
+    if PDV_ImperialAncestorSubstrate
+        tierBefore = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
+        PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(multiplier, reason)
+        Int tierAfter = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
+        SendPrismaSubstrateProgress("imperial-civic", tierBefore, tierAfter, multiplier, "The old civic spine steadies.", "talos", GetImperialCivicLayerLabel())
+    endIf
+
+    if PDV_Talos
+        AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    endIf
+
+    StorageUtil.AdjustFloatValue(None, "PDV.Imperial.AncestralStanding", multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Imperial.AncestorSpineSourceCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Imperial.LastAncestorSpineReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Imperial.LastAncestorSpineTime", Utility.GetCurrentGameTime())
+    Trace(2, "Imperial ancestor spine routed with multiplier " + multiplier)
+EndFunction
+
+Function RunDawnRefreshImperialAncestor()
+    if !PDV_ImperialAncestorSubstrate
+        return
+    endIf
+
+    PDV_ImperialAncestorSubstrate.ProcessCivicDawn(False, "dawn")
+EndFunction
+
 Function HandleImperialCivicService(String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
         Trace(2, "Imperial civic service ignored for non-Imperial origin.")
@@ -13077,6 +13143,7 @@ Function HandleImperialCivicService(String reason)
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicFamily", GetImperialCivicFamilyLabel(civicFamily))
     StorageUtil.SetFloatValue(None, "PDV.Imperial.LastCivicServiceTime", Utility.GetCurrentGameTime())
     AwardImperialCivicFamilySignal(civicFamily, multiplier)
+    AwardImperialAncestorSpinePulse(multiplier, reason)
     Trace(2, "Imperial civic service routed: " + reason + " family " + GetImperialCivicFamilyLabel(civicFamily))
 EndFunction
 
@@ -13109,6 +13176,7 @@ Function HandleImperialTalosPressure(Bool isPrivate, String reason)
     endIf
 
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastTalosPressureReason", reason)
+    AwardImperialAncestorSpinePulse(multiplier, reason)
     ShowP2BookNotice(reason, "The name of Talos", "The question of the Ninth presses harder.")
     Trace(2, "Imperial Talos pressure routed: " + reason)
 EndFunction
@@ -13127,6 +13195,7 @@ Function HandleImperialPatronCivicFavor(String reason)
     StorageUtil.SetIntValue(None, "PDV.Imperial.PatronCivicFavorCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PatronCivicFavorCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastPatronCivicFavorReason", reason)
     AwardImperialPatronCivicSignal(multiplier)
+    AwardImperialAncestorSpinePulse(multiplier, reason)
     Trace(2, "Imperial patron civic favor routed: " + reason)
 EndFunction
 
@@ -15643,6 +15712,9 @@ String Function GetImperialSurveyText()
     if StorageUtil.GetIntValue(None, "PDV.Imperial.PatronCivicFavorCount") > 0
         text = text + " Your patron has taken note of the civic good you have done in their name."
     endIf
+    if PDV_ImperialAncestorSubstrate
+        text = text + " Your civic inheritance is " + GetImperialCivicLayerLabel() + "."
+    endIf
 
     if PDV_Talos
         Float talosMultiplier = GetTalosEffectiveGainMultiplier()
@@ -15676,6 +15748,14 @@ String Function GetImperialConcordatLabel()
     endIf
 
     return "Uncommitted"
+EndFunction
+
+String Function GetImperialCivicLayerLabel()
+    if !PDV_ImperialAncestorSubstrate
+        return "quiet"
+    endIf
+
+    return PDV_ImperialAncestorSubstrate.GetCivicPostureLabel()
 EndFunction
 
 String Function GetImperialCursePostureLabel()

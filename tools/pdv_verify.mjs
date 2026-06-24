@@ -489,6 +489,12 @@ const SKELETON_SUBSTRATE_DEFINITIONS = [
     substrateName: "AltmerAncestor",
     requiredOriginRace: 3,
   },
+  {
+    questEdid: "PDV_Substrate_ImperialAncestor",
+    scriptName: "PDV_SubstrateBase",
+    substrateName: "ImperialAncestor",
+    requiredOriginRace: 1,
+  },
 ];
 
 const SKELETON_SACRED_PLACE_DEFINITIONS = [
@@ -658,6 +664,7 @@ const COMPILED_SCRIPTS = {
   PDV_Substrate_ArgonianHist: "required",
   PDV_Substrate_NordAncestor: "required",
   PDV_Substrate_AltmerAncestor: "required",
+  PDV_Substrate_ImperialAncestor: "required",
   PDV_DaedricPath_Hircine: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
@@ -920,6 +927,7 @@ const MANAGER_PATTERN_PROPERTIES = {
   PDV_KhajiitLunarSubstrate: "PDV_Substrate_KhajiitLunar",
   PDV_NordAncestorSubstrate: "PDV_Substrate_NordAncestor",
   PDV_AltmerAncestorSubstrate: "PDV_Substrate_AltmerAncestor",
+  PDV_ImperialAncestorSubstrate: "PDV_Substrate_ImperialAncestor",
   PDV_HircinePath: "PDV_DaedricPath_Hircine",
   PDV_CurseStateService: "PDV_CurseState",
 };
@@ -1291,6 +1299,7 @@ class Verifier {
       this.checkDunmerSpineParityBuild();
       this.checkOrcSpineParityBuild();
       this.checkAltmerSpineParityBuild();
+      this.checkImperialSpineParityBuild();
       this.checkCommitment();
       this.checkNeglectDecay();
       this.checkPhase11();
@@ -6342,11 +6351,12 @@ class Verifier {
   }
 
   checkAltmerSpineSpellPacket(spec) {
+    const label = spec.raceLabel || "Altmer";
     const record = this.recordsByEdid.get(spec.spell);
     if (record?.type === "SPEL") {
-      this.pass("Altmer spine boon spell", `${spec.spell} exists as SPEL.`, PDV_ESP);
+      this.pass(`${label} spine boon spell`, `${spec.spell} exists as SPEL.`, PDV_ESP);
     } else {
-      this.phase20RaceCostingGap("Altmer spine boon spell", `${spec.spell} is missing or not a SPEL.`, PDV_ESP);
+      this.phase20RaceCostingGap(`${label} spine boon spell`, `${spec.spell} is missing or not a SPEL.`, PDV_ESP);
       return;
     }
 
@@ -6355,31 +6365,116 @@ class Verifier {
     for (const expected of spec.effects) {
       const effectRecord = this.recordsByEdid.get(expected.effect);
       if (effectRecord?.type === "MGEF") {
-        this.pass("Altmer spine boon effect", `${expected.effect} exists as MGEF.`, PDV_ESP);
+        this.pass(`${label} spine boon effect`, `${expected.effect} exists as MGEF.`, PDV_ESP);
       } else {
-        this.phase20RaceCostingGap("Altmer spine boon effect", `${expected.effect} is missing or not a MGEF.`, PDV_ESP);
+        this.phase20RaceCostingGap(`${label} spine boon effect`, `${expected.effect} is missing or not a MGEF.`, PDV_ESP);
         continue;
       }
 
       const spellEffect = effects.find((effect) => effect.BaseEffect === effectRecord.formid);
       if (!spellEffect) {
-        this.phase20RaceCostingGap("Altmer spine boon spell effect", `${spec.spell} is missing ${expected.effect}.`, PDV_ESP);
+        this.phase20RaceCostingGap(`${label} spine boon spell effect`, `${spec.spell} is missing ${expected.effect}.`, PDV_ESP);
         continue;
       }
       const data = spellEffect.Data || {};
       if (Math.abs((data.Magnitude || 0) - expected.magnitude) < 0.001 && (data.Duration || 0) === 0) {
-        this.pass("Altmer spine boon spell effect", `${spec.spell}.${expected.effect} magnitude is ${expected.magnitude}.`, PDV_ESP);
+        this.pass(`${label} spine boon spell effect`, `${spec.spell}.${expected.effect} magnitude is ${expected.magnitude}.`, PDV_ESP);
       } else {
-        this.phase20RaceCostingGap("Altmer spine boon spell effect", `${spec.spell}.${expected.effect} data is ${JSON.stringify(data)}, expected magnitude ${expected.magnitude} duration 0.`, PDV_ESP);
+        this.phase20RaceCostingGap(`${label} spine boon spell effect`, `${spec.spell}.${expected.effect} data is ${JSON.stringify(data)}, expected magnitude ${expected.magnitude} duration 0.`, PDV_ESP);
       }
 
       const effectDetail = this.recordDetails.get(expected.effect);
       const actorValue = String(effectDetail?.fields?.Archetype?.ActorValue || effectDetail?.fields?.ActorValue || "");
       if (!actorValue || actorValue.toLowerCase() === expected.actorValue.toLowerCase()) {
-        this.pass("Altmer spine boon effect actor value", `${expected.effect} actor value is ${expected.actorValue}.`, PDV_ESP);
+        this.pass(`${label} spine boon effect actor value`, `${expected.effect} actor value is ${expected.actorValue}.`, PDV_ESP);
       } else {
-        this.phase20RaceCostingGap("Altmer spine boon effect actor value", `${expected.effect} actor value is ${actorValue}, expected ${expected.actorValue}.`, PDV_ESP);
+        this.phase20RaceCostingGap(`${label} spine boon effect actor value`, `${expected.effect} actor value is ${actorValue}, expected ${expected.actorValue}.`, PDV_ESP);
       }
+    }
+  }
+
+  checkImperialSpineParityBuild() {
+    this.checkSourceContains("Imperial spine Talos source", "PDV_Deity_Talos", [
+      "SIGNAL_ANCESTOR_SPINE = 104",
+      "DELTA_ANCESTOR_SPINE = 1.0",
+      "signalType == SIGNAL_ANCESTOR_SPINE",
+      "return DELTA_ANCESTOR_SPINE",
+    ]);
+    this.checkSourceContains("Imperial spine substrate source", "PDV_Substrate_ImperialAncestor", [
+      "Scriptname PDV_Substrate_ImperialAncestor extends PDV_SubstrateBase",
+      "Function RecordCivicStandingScaled(Float multiplier, String reason)",
+      "Function ProcessCivicDawn(Bool curseActive, String reason)",
+      "\"PDV.Substrate.ImperialAncestor.SourceCount\"",
+      "String Function GetPilotSummary()",
+    ]);
+    this.checkSourceContains("Imperial spine manager source", "PDV__ManagerQuest", [
+      "PDV_Substrate_ImperialAncestor Property PDV_ImperialAncestorSubstrate Auto",
+      "Function AwardImperialAncestorSpinePulse(Float multiplier, String reason)",
+      "PDV_Talos.SIGNAL_ANCESTOR_SPINE",
+      "\"PDV.Imperial.AncestralStanding\"",
+      "AwardImperialAncestorSpinePulse(multiplier, reason)",
+      "Function SyncImperialAncestorSubstrate(Actor playerRef, Bool isImperial)",
+      "Function HandleImperialSleepEvents(Actor playerRef, String reason)",
+      "String Function GetImperialCivicLayerLabel()",
+    ]);
+
+    const substrateRecord = this.recordsByEdid.get("PDV_Substrate_ImperialAncestor");
+    if (substrateRecord?.type === "QUST") {
+      this.pass("Imperial spine substrate record", "PDV_Substrate_ImperialAncestor exists as QUST.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Imperial spine substrate record", "PDV_Substrate_ImperialAncestor is missing or not a QUST.", PDV_ESP);
+    }
+
+    const substrateDetail = this.recordDetails.get("PDV_Substrate_ImperialAncestor");
+    const concreteScript = substrateDetail ? findScript(substrateDetail.fields || {}, "PDV_Substrate_ImperialAncestor") : null;
+    if (concreteScript) {
+      this.pass("Imperial spine substrate script", "PDV_Substrate_ImperialAncestor is attached.", PDV_ESP);
+      const props = propertyMap(concreteScript);
+      this.checkScalarProperty("Imperial spine substrate property", props, "SubstrateName", "ImperialAncestor", this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Imperial spine substrate property", props, "RequiredOriginRace", 1, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Imperial spine substrate property", props, "Substrate_Always", "PDV_Bless_Imperial_Spine_Always", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Imperial spine substrate property", props, "Substrate_Mid", "PDV_Bless_Imperial_Spine_Mid", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Imperial spine substrate property", props, "Substrate_High", "PDV_Bless_Imperial_Spine_High", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Imperial spine substrate script", "PDV_Substrate_ImperialAncestor is not attached.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      this.checkObjectPropertyTarget("Imperial spine manager property", propertyMap(managerScript), "PDV_ImperialAncestorSubstrate", "PDV_Substrate_ImperialAncestor", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Imperial spine manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_All", ["PDV_Substrate_ImperialAncestor"]);
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_DevOnly", ["PDV_Substrate_ImperialAncestor"]);
+
+    const spellSpecs = [
+      {
+        spell: "PDV_Bless_Imperial_Spine_Always",
+        effects: [
+          { effect: "PDV_MGEF_Imperial_Spine_Always_Health", magnitude: 5, actorValue: "Health" },
+          { effect: "PDV_MGEF_Imperial_Spine_Always_Stamina", magnitude: 5, actorValue: "Stamina" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Imperial_Spine_Mid",
+        effects: [
+          { effect: "PDV_MGEF_Imperial_Spine_Mid_Health", magnitude: 10, actorValue: "Health" },
+          { effect: "PDV_MGEF_Imperial_Spine_Mid_Stamina", magnitude: 10, actorValue: "Stamina" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Imperial_Spine_High",
+        effects: [
+          { effect: "PDV_MGEF_Imperial_Spine_High_Health", magnitude: 15, actorValue: "Health" },
+          { effect: "PDV_MGEF_Imperial_Spine_High_Stamina", magnitude: 15, actorValue: "Stamina" },
+        ],
+      },
+    ];
+    for (const spec of spellSpecs) {
+      this.checkAltmerSpineSpellPacket({ ...spec, raceLabel: "Imperial" });
     }
   }
 
