@@ -21,6 +21,17 @@ checkpoint, or run the full gate cadence after each path — that is what stalle
   `altmer_magnus` — add a row per path as you go (it's how the audit credits the direct-manager
   renewable type).
 
+## SAVE-SAFE (REQUIRED — owner preference, confirmed achievable)
+This batch MUST apply to an EXISTING save (no new game). It is save-safe BY CONSTRUCTION if you keep
+the recipe shape — `altmer_magnus` already is:
+- **New StorageUtil keys** (day-keys, counts) default to 0/empty on an existing save — inherently safe.
+- **New `Handle<Race><Signal>` functions** load with the recompiled `.pex` and fire on existing saves.
+- **Reuse EXISTING manager properties** (substrate/track/deity already declared) + `AwardCuratedSignalScaled`.
+- **Do NOT add a new VMAD/`Auto` property** for a renewable channel — a new property is `None` on an
+  existing save. If a new FORM is genuinely needed (e.g. a location FormList), resolve it with
+  `Game.GetFormFromFile(...)` (cached at init, the Survival/CC pattern ~8865) OR fold it into the
+  version-gated migration (`FRAMEWORK_SCHEMA_VERSION` 469 / the re-run guard ~7139), never a raw Auto property.
+
 ## Goal
 Bring the **23 under-floor race-paths** to floor (min 5 source TYPES + min 2 RENEWABLE per path).
 `node tools/pdv_signal_floor_audit.mjs` → the UNDER-FLOOR roster. The dominant shortfall is **+1
