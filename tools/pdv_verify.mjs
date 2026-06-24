@@ -1280,6 +1280,7 @@ class Verifier {
       this.checkPhase10();
       this.checkKhajiit();
       this.checkNordSpineParityBuild();
+      this.checkDunmerSpineParityBuild();
       this.checkCommitment();
       this.checkNeglectDecay();
       this.checkPhase11();
@@ -6008,6 +6009,127 @@ class Verifier {
     }
   }
 
+  checkDunmerSpineParityBuild() {
+    this.checkSourceContains("Dunmer spine Azura source", "PDV_Deity_Azura", [
+      "SIGNAL_ANCESTOR_SPINE = 705",
+      "DELTA_ANCESTOR_SPINE = 1.0",
+      "signalType == SIGNAL_ANCESTOR_SPINE",
+      "return DELTA_ANCESTOR_SPINE",
+    ]);
+    this.checkSourceContains("Dunmer spine manager source", "PDV__ManagerQuest", [
+      "Function AwardDunmerAncestorSpinePulse(Float multiplier, String reason)",
+      "PDV_Azura.SIGNAL_ANCESTOR_SPINE",
+      "\"PDV.Dunmer.AncestorSpine\"",
+      "AwardDunmerAncestorSpinePulse(multiplier, reason)",
+    ]);
+
+    const substrateDetail = this.recordDetails.get("PDV_Substrate_DunmerAncestor");
+    const baseScript = substrateDetail ? findScript(substrateDetail.fields || {}, "PDV_SubstrateBase") : null;
+    if (baseScript) {
+      this.pass("Dunmer spine substrate base script", "PDV_SubstrateBase is attached.", PDV_ESP);
+      const baseProps = propertyMap(baseScript);
+      this.checkScalarProperty("Dunmer spine substrate property", baseProps, "SubstrateName", "DunmerAncestor", this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Dunmer spine substrate property", baseProps, "RequiredOriginRace", 5, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Dunmer spine substrate property", baseProps, "Substrate_Always", "PDV_Bless_Dunmer_Substrate_Always", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Dunmer spine substrate property", baseProps, "Substrate_Mid", "PDV_Bless_Dunmer_Substrate_Mid", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Dunmer spine substrate property", baseProps, "Substrate_High", "PDV_Bless_Dunmer_Substrate_High", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Dunmer spine substrate base script", "PDV_SubstrateBase is not attached to PDV_Substrate_DunmerAncestor.", PDV_ESP);
+    }
+
+    const concreteScript = substrateDetail ? findScript(substrateDetail.fields || {}, "PDV_Substrate_DunmerAncestor") : null;
+    if (concreteScript) {
+      this.pass("Dunmer spine substrate script", "PDV_Substrate_DunmerAncestor is attached.", PDV_ESP);
+      const props = propertyMap(concreteScript);
+      this.checkScalarProperty("Dunmer spine substrate property", props, "SubstrateName", "DunmerAncestor", this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Dunmer spine substrate property", props, "RequiredOriginRace", 5, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Dunmer spine substrate property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Dunmer spine substrate property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Dunmer spine substrate property", props, "Substrate_Always", "PDV_Bless_Dunmer_Substrate_Always", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Dunmer spine substrate property", props, "Substrate_Mid", "PDV_Bless_Dunmer_Substrate_Mid", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Dunmer spine substrate property", props, "Substrate_High", "PDV_Bless_Dunmer_Substrate_High", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Dunmer spine substrate script", "PDV_Substrate_DunmerAncestor is not attached.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      this.checkObjectPropertyTarget("Dunmer spine manager property", propertyMap(managerScript), "PDV_DunmerAncestorSubstrate", "PDV_Substrate_DunmerAncestor", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Dunmer spine manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_All", ["PDV_Substrate_DunmerAncestor"]);
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_DevOnly", ["PDV_Substrate_DunmerAncestor"]);
+
+    const spellSpecs = [
+      {
+        spell: "PDV_Bless_Dunmer_Substrate_Always",
+        effects: [
+          { effect: "PDV_MGEF_Dunmer_Substrate_Always_Magic", magnitude: 3, actorValue: "ResistMagic" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Dunmer_Substrate_Mid",
+        effects: [
+          { effect: "PDV_MGEF_Dunmer_Substrate_Mid_Magic", magnitude: 9, actorValue: "ResistMagic" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Dunmer_Substrate_High",
+        effects: [
+          { effect: "PDV_MGEF_Dunmer_Substrate_High_Magic", magnitude: 20, actorValue: "ResistMagic" },
+        ],
+      },
+    ];
+    for (const spec of spellSpecs) {
+      this.checkDunmerSpineSpellPacket(spec);
+    }
+  }
+
+  checkDunmerSpineSpellPacket(spec) {
+    const record = this.recordsByEdid.get(spec.spell);
+    if (record?.type === "SPEL") {
+      this.pass("Dunmer spine boon spell", `${spec.spell} exists as SPEL.`, PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Dunmer spine boon spell", `${spec.spell} is missing or not a SPEL.`, PDV_ESP);
+      return;
+    }
+
+    const detail = this.recordDetails.get(spec.spell);
+    const effects = Array.isArray(detail?.fields?.Effects) ? detail.fields.Effects : [];
+    for (const expected of spec.effects) {
+      const effectRecord = this.recordsByEdid.get(expected.effect);
+      if (effectRecord?.type === "MGEF") {
+        this.pass("Dunmer spine boon effect", `${expected.effect} exists as MGEF.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Dunmer spine boon effect", `${expected.effect} is missing or not a MGEF.`, PDV_ESP);
+        continue;
+      }
+
+      const spellEffect = effects.find((effect) => effect.BaseEffect === effectRecord.formid);
+      if (!spellEffect) {
+        this.phase20RaceCostingGap("Dunmer spine boon spell effect", `${spec.spell} is missing ${expected.effect}.`, PDV_ESP);
+        continue;
+      }
+      const data = spellEffect.Data || {};
+      if (Math.abs((data.Magnitude || 0) - expected.magnitude) < 0.001 && (data.Duration || 0) === 0) {
+        this.pass("Dunmer spine boon spell effect", `${spec.spell}.${expected.effect} magnitude is ${expected.magnitude}.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Dunmer spine boon spell effect", `${spec.spell}.${expected.effect} data is ${JSON.stringify(data)}, expected magnitude ${expected.magnitude} duration 0.`, PDV_ESP);
+      }
+
+      const effectDetail = this.recordDetails.get(expected.effect);
+      const actorValue = String(effectDetail?.fields?.Archetype?.ActorValue || effectDetail?.fields?.ActorValue || "");
+      if (!actorValue || actorValue.toLowerCase() === expected.actorValue.toLowerCase()) {
+        this.pass("Dunmer spine boon effect actor value", `${expected.effect} actor value is ${expected.actorValue}.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Dunmer spine boon effect actor value", `${expected.effect} actor value is ${actorValue}, expected ${expected.actorValue}.`, PDV_ESP);
+      }
+    }
+  }
+
   checkPatternProvingManifest() {
     if (exists(PATTERN_PROVING_MANIFEST)) {
       this.pass("V3 Pattern Proving manifest", "Pattern proving manifest exists.", PATTERN_PROVING_MANIFEST);
@@ -8376,6 +8498,8 @@ class Verifier {
       "Function HandleDunmerPlayerHomeBonus(String reason)",
       "PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)",
       "PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)",
+      "Function AwardDunmerAncestorSpinePulse(Float multiplier, String reason)",
+      "PDV_Azura.SIGNAL_ANCESTOR_SPINE",
       "Function TryAwardDunmerTwilightWindowSignal(String reason)",
       "Function GetDunmerTwilightWindow(Float gameTime)",
       "PDV_Azura.SIGNAL_DUNMER_TWILIGHT_RITE",
@@ -8386,6 +8510,9 @@ class Verifier {
       "SIGNAL_DUNMER_TWILIGHT_RITE = 704",
       "DELTA_DUNMER_TWILIGHT_RITE = 0.25",
       "return DELTA_DUNMER_TWILIGHT_RITE",
+      "SIGNAL_ANCESTOR_SPINE = 705",
+      "DELTA_ANCESTOR_SPINE = 1.0",
+      "return DELTA_ANCESTOR_SPINE",
     ], this.phase10Gap.bind(this));
     this.checkSourceContains("Phase 10 source", "PDV_EventBus", [
       "Function RouteDunmerPortableShrinePrayer()",

@@ -4223,6 +4223,7 @@ Function HandleDunmerPortableShrinePrayer(String reason)
             Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerPortableShrinePrayer") * layerWeight
             Int tierBefore = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)
+            AwardDunmerAncestorSpinePulse(multiplier, reason)
             Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
         else
@@ -4249,6 +4250,7 @@ Function HandleDunmerPlayerHomeBonus(String reason)
             Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerHomeBonus") * layerWeight
             Int tierBefore = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)
+            AwardDunmerAncestorSpinePulse(multiplier, reason)
             Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "House memory answered.", "ancestor", GetDunmerAncestorLayerLabel())
             ; Requiem-proof event-driven heal: a flat RestoreActorValue (NOT a
@@ -12714,6 +12716,18 @@ Function AwardActiveDunmerReclamationMemorySignal()
     elseIf _activeDeity == PDV_Azura && PDV_Azura
         AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, layerWeight)
     endIf
+EndFunction
+
+Function AwardDunmerAncestorSpinePulse(Float multiplier, String reason)
+    if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || !PDV_Azura || multiplier <= 0.0
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    StorageUtil.AdjustFloatValue(None, "PDV.Dunmer.AncestorSpine", multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Dunmer.AncestorSpineSourceCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Dunmer.LastAncestorSpineReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Dunmer.LastAncestorSpineTime", Utility.GetCurrentGameTime())
 EndFunction
 
 Function AwardDunmerReclamationFocusSignal(Int focusValue, Float layerWeight)

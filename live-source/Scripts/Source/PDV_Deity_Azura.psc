@@ -19,11 +19,13 @@ Int Property SIGNAL_MOON_OBSERVANCE = 701 AutoReadOnly  ; small repeatable lunar
 Int Property SIGNAL_THRESHOLD_RITE = 702 AutoReadOnly    ; dawn/dusk / major transition, curated
 Int Property SIGNAL_DESECRATION = 703 AutoReadOnly       ; anti-creed: shadow-drift / desecration
 Int Property SIGNAL_DUNMER_TWILIGHT_RITE = 704 AutoReadOnly ; Dunmer dawn/dusk shared Reclamation observance
+Int Property SIGNAL_ANCESTOR_SPINE = 705 AutoReadOnly    ; Dunmer ancestor-spine prayer/home piety pulse
 
 Float Property DELTA_MOON_OBSERVANCE = 0.4 Auto
 Float Property DELTA_THRESHOLD_RITE = 1.5 Auto
 Float Property DELTA_DESECRATION = -2.5 Auto
 Float Property DELTA_DUNMER_TWILIGHT_RITE = 0.25 Auto
+Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 
 Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
     return ScoreFromTable(eventType)
@@ -38,6 +40,8 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_DESECRATION
     elseIf signalType == SIGNAL_DUNMER_TWILIGHT_RITE
         return DELTA_DUNMER_TWILIGHT_RITE
+    elseIf signalType == SIGNAL_ANCESTOR_SPINE
+        return DELTA_ANCESTOR_SPINE
     endIf
 
     return 0.0

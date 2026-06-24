@@ -13,9 +13,9 @@ Mechanism-agnostic parity score for each race's always-active ancestral spine (p
 | Breton | 36.7% | 11 | **YES** | 1 | 1 | 1 | 1 | 1 | 2 | MODERATE |
 | Orc | 36.7% | 11 | **YES** | 1 | 1 | 1 | 1 | 1 | 2 | MODERATE |
 | Redguard | 53.3% | 16 | **YES** | 2 | 2 | 1 | 1 | 1 | 2 | MODERATE |
-| Dunmer | 63.3% | 19 | **YES** | 2 | 2 | 2 | 2 | 1 | 2 | MODERATE |
 | Bosmer | 73.3% | 22 | - | 2 | 2 | 2 | 2 | 3 | 3 | RICH |
 | Nord | 76.7% | 23 | - | 3 | 3 | 1 | 0 | 3 | 3 | MODERATE |
+| Dunmer | 80% | 24 | - | 3 | 3 | 2 | 2 | 1 | 2 | MODERATE |
 | Khajiit | 86.7% | 26 | - | 3 | 3 | 2 | 2 | 2 | 3 | RICH |
 | Argonian | 100% | 30 | - | 3 | 3 | 3 | 3 | 3 | 3 | RICH |
 
@@ -26,7 +26,6 @@ Mechanism-agnostic parity score for each race's always-active ancestral spine (p
 - **Breton** 36.7% - Patron-gated framework (Green Way / Hidden Art / Vow traditions); no unconditional boon; Green Way standing channel; decent voice.
 - **Orc** 36.7% - Patron-gated accumulator (stronghold/city/exile); Watchers diegetic DECLARED-DEAD; some voice.
 - **Redguard** 53.3% - Spine-owned Tu'whacca pulse ADDED 2026-06-24 (SIGNAL_ANCESTOR_SPINE) -> piety_sink improved; minus penalized (SIGNAL_DEATH_DUTY_ABANDONMENT specced-but-unemitted); sect-track texture.
-- **Dunmer** 63.3% - Strongest MODERATE / cheapest to parity: PDV_Substrate_DunmerAncestor (ResistMagic +3/+9/+20 unconditional, ONE tier); prayer/home channel; thin diegetic.
 
 ## Diegetic dead-declaration drift-check (deterministic, live source)
 
