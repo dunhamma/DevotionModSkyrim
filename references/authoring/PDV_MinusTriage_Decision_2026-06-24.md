@@ -64,3 +64,20 @@ forecloses that — it just stops shipping a penalty that provably cannot fire.
 Removal handed to Codex: `PDV_MinusRemoval_PantheonCreed_Handoff_2026-06-24.md`. Parallel-safe
 (these 5 deities are not touched by the spine builds). After: `pdv_specced_minus_audit` drops
 18 → 9 unemitted; `pdv_signal_e2e_gate` parity stays PASS.
+
+## Implementation outcome (2026-06-25, commit 4fd2b68) — specced_minus 18 → 0, DONE
+All three classes executed in one pass (Claude solo, Codex out): removed the 9 pantheon-creed
+(A: Arkay/Magnus/Stendarr/Trinimac/Xarxes) + the 2 no-trigger Daedric (Boethiah TREACHERY,
+Malacath SELF_ERASURE); wired the 3 Daedric (Malacath CURSE_CODE_RUPTURE on werewolf onset via
+`ApplyOrcCurseHandlers`; Mephala SECRET_BETRAYED on caught crime via ActionRouter trespass/assault,
+Dunmer+Mephala-focus gated; Malacath BROKEN_FAITH_KIN on Legion-Exile desertion via
+`ApplyOrcLifeModeSwitch`) + the 3 Hist (HIST_ABANDONMENT/CORRUPTION/VOID_OVERREACH on the Argonian
+posture model); Tu'whacca DEATH_DUTY_ABANDONMENT was already wired by the 6e Redguard build. Final:
+`pdv_specced_minus_audit` CLEAN 16/16 wired, harness PASS.
+
+**FLAGGED FOR REVIEW — `BROKEN_FAITH_KIN` hook choice.** The handoff specified "follower-abandon /
+faction-leave, else HOLD." No clean vanilla event exists for that, so it was wired to a deliberate
+player switch AWAY from Legion-Exile (the Orc sworn-service life mode), excluding the passive 14-day
+dawn lapse-to-City (which bypasses `ApplyOrcLifeModeSwitch`). This is a defensible reading of
+"deserted sworn service" but is BEYOND the handoff's literal trigger — owner/Codex should confirm it
+stands or retune. Reversible: drop the one call site in `ApplyOrcLifeModeSwitch` to HOLD it instead.
