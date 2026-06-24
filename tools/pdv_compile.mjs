@@ -66,6 +66,7 @@ const ACTIVE_SCRIPTS = [
   "PDV_Substrate_DunmerAncestor",
   "PDV_Substrate_KhajiitLunar",
   "PDV_Substrate_ArgonianHist",
+  "PDV_Substrate_NordAncestor",
   "PDV_DaedricPath_Boethiah",
   "PDV_DaedricPath_Azura",
   "PDV_DaedricPath_Vaermina",

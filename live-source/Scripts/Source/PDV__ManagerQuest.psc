@@ -89,6 +89,7 @@ PDV_ReputationTrack Property PDV_ThalmorAlignmentTrack Auto
 PDV_StateTrack Property PDV_BosmerPathTrack Auto
 PDV_StateTrack Property PDV_NordPantheonBaselineTrack Auto
 PDV_StateTrack Property PDV_AltmerCrisisTrack Auto
+PDV_Substrate_NordAncestor Property PDV_NordAncestorSubstrate Auto
 PDV_Substrate_DunmerAncestor Property PDV_DunmerAncestorSubstrate Auto
 Book Property PDV_BOOK_DunmerAncestralUrn Auto
 PDV_Substrate_KhajiitLunar Property PDV_KhajiitLunarSubstrate Auto
@@ -5723,6 +5724,54 @@ Function AwardRedguardFarShoresSignal(Float multiplier)
     endIf
 EndFunction
 
+Function HandleNordAncestorSpine(String reason)
+    if GetPlayerOriginRaceIndex() != ORIGIN_NORD
+        Trace(2, "Nord ancestor spine ignored for non-Nord origin.")
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.NordAncestorSpine")
+    RecordNordAncestorSpine(reason, multiplier)
+EndFunction
+
+Function RecordNordAncestorSpine(String reason, Float multiplier)
+    if GetPlayerOriginRaceIndex() != ORIGIN_NORD
+        return
+    endIf
+
+    Int tierBefore = 0
+    if PDV_NordAncestorSubstrate
+        tierBefore = PDV_NordAncestorSubstrate.GetSubstrateTier()
+        PDV_NordAncestorSubstrate.RecordAncestorStandingScaled(multiplier, reason)
+        Int tierAfter = PDV_NordAncestorSubstrate.GetSubstrateTier()
+        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "The old line remembered.", "shor", GetNordAncestorLayerLabel())
+    endIf
+
+    if PDV_Shor
+        AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    endIf
+
+    StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Nord.AncestorSpineSourceCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Nord.LastAncestorSpineReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Nord.LastAncestorSpineTime", Utility.GetCurrentGameTime())
+    Trace(2, "Nord ancestor spine routed with multiplier " + multiplier)
+EndFunction
+
+Function RunDawnRefreshNordAncestor()
+    if !PDV_NordAncestorSubstrate
+        return
+    endIf
+
+    Int postureBefore = PDV_NordAncestorSubstrate.GetAncestorPosture()
+    Bool curseActive = IsNordVampireSuppressed()
+    PDV_NordAncestorSubstrate.ProcessAncestorDawn(curseActive, "dawn")
+    Int postureAfter = PDV_NordAncestorSubstrate.GetAncestorPosture()
+    if postureBefore > PDV_NordAncestorSubstrate.POSTURE_FORGOTTEN && postureAfter == PDV_NordAncestorSubstrate.POSTURE_FORGOTTEN
+        ShowNordNotification(PDV_Notif_Nord_General_AncestorsQuiet, "The ancestors are quiet.")
+    endIf
+EndFunction
+
 Function EnsureRedguardSectInitialized()
     if !PDV_RedguardSectTrack
         return
@@ -7681,6 +7730,10 @@ Function RunDawnRefreshTrackStates()
         RunDawnRefreshArgonianHist()
     endIf
 
+    if GetPlayerOriginRaceIndex() == ORIGIN_NORD
+        RunDawnRefreshNordAncestor()
+    endIf
+
     if IsOrcOrigin()
         EvaluateOrcLifeModeAtDawn()
     endIf
@@ -9192,6 +9245,7 @@ Function SyncNordRewards(Actor playerRef)
 
     Bool isNord = GetPlayerOriginRaceIndex() == ORIGIN_NORD
     Int baselineState = GetNordPantheonBaselineState()
+    SyncNordAncestorSubstrate(playerRef, isNord)
     Bool broadOldWaysFaithful = isNord && GetPatronState() == PATRON_STATE_BROAD && baselineState == NORD_BASELINE_OLD_WAYS && StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount") >= 6
     SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T2, broadOldWaysFaithful, "Nord OldWays T2")
 
@@ -9209,6 +9263,18 @@ Function SyncNordRewards(Actor playerRef)
     SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Dibella, PDV_Bless_Nord_Dibella_T1, PDV_Bless_Nord_Dibella_T2, PDV_Bless_Nord_Dibella_T3, "Dibella")
     SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Julianos, PDV_Bless_Nord_Julianos_T1, PDV_Bless_Nord_Julianos_T2, PDV_Bless_Nord_Julianos_T3, "Julianos")
     SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Kynareth, PDV_Bless_Nord_Kynareth_T1, PDV_Bless_Nord_Kynareth_T2, PDV_Bless_Nord_Kynareth_T3, "Kynareth")
+EndFunction
+
+Function SyncNordAncestorSubstrate(Actor playerRef, Bool isNord)
+    if !playerRef || !PDV_NordAncestorSubstrate
+        return
+    endIf
+
+    if isNord
+        PDV_NordAncestorSubstrate.RecomputeSubstrateTier()
+    else
+        PDV_NordAncestorSubstrate.ClearSubstrateBoons()
+    endIf
 EndFunction
 
 Function SyncNordRewardFamily(Actor playerRef, Int requiredBaseline, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
@@ -9594,6 +9660,9 @@ Function MaybeShowChampionRewardPresentation(Actor playerRef, Spell championSpel
     if NotifyTierUp(deity, TIER_CHAMPION)
         SendPrismaEventToast("tier", deity, "", GetPublicTierBand(TIER_CHAMPION), "")
         SurfaceTransition("tier", deity.DeityName + " " + GetPublicTierBand(TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
+        if deity == PDV_Kyne
+            ShowNordNotification(PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
+        endIf
         Trace(1, "Champion reward presentation shown: " + rewardLabel + " / " + deity.DeityName)
     endIf
 EndFunction
@@ -12010,6 +12079,15 @@ Function ShowNordMessage(Message messageRecord, String fallbackText, Bool suppre
     Debug.MessageBox(fallbackText)
 EndFunction
 
+Function ShowNordNotification(Message messageRecord, String fallbackText)
+    if messageRecord
+        messageRecord.Show()
+        return
+    endIf
+
+    Debug.Notification(fallbackText)
+EndFunction
+
 Function ShowRedguardNotification(Message messageRecord, String fallbackText)
     if messageRecord
         messageRecord.Show()
@@ -12978,6 +13056,7 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
     StorageUtil.SetStringValue(None, lastReasonKey, reason)
     StorageUtil.SetFloatValue(None, lastTimeKey, Utility.GetCurrentGameTime())
     if multiplier > 0.0
+        RecordNordAncestorSpine(reason, multiplier)
         AwardNordRouteFamilySignal(routeFamily, multiplier)
     endIf
     Trace(2, traceLabel + " routed: " + reason)
@@ -14610,7 +14689,18 @@ String Function GetNordContextSurveyText()
     if edgeCount > 0
         text = text + " Hunt and death-duty press at the edges."
     endIf
+    if PDV_NordAncestorSubstrate
+        text = text + " The ancestor-line is " + GetNordAncestorLayerLabel() + "."
+    endIf
     return text
+EndFunction
+
+String Function GetNordAncestorLayerLabel()
+    if !PDV_NordAncestorSubstrate
+        return "quiet"
+    endIf
+
+    return PDV_NordAncestorSubstrate.GetAncestorPostureLabel()
 EndFunction
 
 String Function GetNordDevotionModeLabel()
@@ -15619,6 +15709,14 @@ String Function GetArgonianHistSummary()
     return PDV_ArgonianHistSubstrate.GetPilotSummary()
 EndFunction
 
+String Function GetNordAncestorSummary()
+    if !PDV_NordAncestorSubstrate
+        return "missing"
+    endIf
+
+    return PDV_NordAncestorSubstrate.GetPilotSummary()
+EndFunction
+
 String Function GetOrcSummary()
     if !PDV_OrcLifeModeTrack
         return "missing"
@@ -16229,6 +16327,3 @@ Int Function ClampInt(Int value, Int minValue, Int maxValue)
     endIf
     return value
 EndFunction
-
-
-

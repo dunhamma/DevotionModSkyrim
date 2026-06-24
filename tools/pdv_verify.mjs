@@ -477,6 +477,12 @@ const SKELETON_SUBSTRATE_DEFINITIONS = [
     substrateName: "ArgonianHist",
     requiredOriginRace: 7,
   },
+  {
+    questEdid: "PDV_Substrate_NordAncestor",
+    scriptName: "PDV_SubstrateBase",
+    substrateName: "NordAncestor",
+    requiredOriginRace: 0,
+  },
 ];
 
 const SKELETON_SACRED_PLACE_DEFINITIONS = [
@@ -644,6 +650,7 @@ const COMPILED_SCRIPTS = {
   PDV_Substrate_DunmerAncestor: "required",
   PDV_Substrate_KhajiitLunar: "required",
   PDV_Substrate_ArgonianHist: "required",
+  PDV_Substrate_NordAncestor: "required",
   PDV_DaedricPath_Hircine: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
@@ -904,6 +911,7 @@ const MANAGER_PATTERN_PROPERTIES = {
   PDV_BosmerPathTrack: "PDV_StateTrack_BosmerPath",
   PDV_DunmerAncestorSubstrate: "PDV_Substrate_DunmerAncestor",
   PDV_KhajiitLunarSubstrate: "PDV_Substrate_KhajiitLunar",
+  PDV_NordAncestorSubstrate: "PDV_Substrate_NordAncestor",
   PDV_HircinePath: "PDV_DaedricPath_Hircine",
   PDV_CurseStateService: "PDV_CurseState",
 };
@@ -1271,6 +1279,7 @@ class Verifier {
       this.checkPhase9();
       this.checkPhase10();
       this.checkKhajiit();
+      this.checkNordSpineParityBuild();
       this.checkCommitment();
       this.checkNeglectDecay();
       this.checkPhase11();
@@ -5857,6 +5866,145 @@ class Verifier {
       this.checkObjectPropertyTarget("Phase 20 Khajiit trigger property", props, "PDV_EventBusService", "PDV_EventBus", this.phase20RaceCostingGap.bind(this));
       this.checkObjectPropertyTarget("Phase 20 Khajiit trigger property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20RaceCostingGap.bind(this));
       this.checkPhase20RaceTriggerPlacement("Phase 20 Khajiit trigger placement", trigger, manifestPath);
+    }
+  }
+
+  checkNordSpineParityBuild() {
+    this.checkSourceContains("Nord spine substrate source", "PDV_Substrate_NordAncestor", [
+      "Scriptname PDV_Substrate_NordAncestor extends PDV_SubstrateBase",
+      "Function RecordAncestorStandingScaled(Float multiplier, String reason)",
+      "Function ProcessAncestorDawn(Bool curseActive, String reason)",
+      "\"PDV.Substrate.NordAncestor.SourceCount\"",
+      "String Function GetPilotSummary()",
+    ]);
+    this.checkSourceContains("Nord spine Shor source", "PDV_Deity_Shor", [
+      "SIGNAL_ANCESTOR_SPINE = 2903",
+      "DELTA_ANCESTOR_SPINE = 1.0",
+      "signalType == SIGNAL_ANCESTOR_SPINE",
+      "return DELTA_ANCESTOR_SPINE",
+    ]);
+    this.checkSourceContains("Nord spine manager source", "PDV__ManagerQuest", [
+      "PDV_Substrate_NordAncestor Property PDV_NordAncestorSubstrate Auto",
+      "Function HandleNordAncestorSpine(String reason)",
+      "Function RecordNordAncestorSpine(String reason, Float multiplier)",
+      "PDV_NordAncestorSubstrate.RecordAncestorStandingScaled(multiplier, reason)",
+      "PDV_Shor.SIGNAL_ANCESTOR_SPINE",
+      "\"PDV.Nord.AncestralStanding\"",
+      "Function RunDawnRefreshNordAncestor()",
+      "PDV_Notif_Nord_General_AncestorsQuiet",
+      "PDV_Notif_Nord_Kyne_ChampionAmbient_Storm",
+      "Function SyncNordAncestorSubstrate(Actor playerRef, Bool isNord)",
+      "String Function GetNordAncestorSummary()",
+    ]);
+
+    const substrateRecord = this.recordsByEdid.get("PDV_Substrate_NordAncestor");
+    if (substrateRecord?.type === "QUST") {
+      this.pass("Nord spine substrate record", "PDV_Substrate_NordAncestor exists as QUST.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Nord spine substrate record", "PDV_Substrate_NordAncestor is missing or not a QUST.", PDV_ESP);
+    }
+
+    const substrateDetail = this.recordDetails.get("PDV_Substrate_NordAncestor");
+    const baseScript = substrateDetail ? findScript(substrateDetail.fields || {}, "PDV_SubstrateBase") : null;
+    if (baseScript) {
+      this.pass("Nord spine substrate base script", "PDV_SubstrateBase is attached.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Nord spine substrate base script", "PDV_SubstrateBase is not attached.", PDV_ESP);
+    }
+
+    const concreteScript = substrateDetail ? findScript(substrateDetail.fields || {}, "PDV_Substrate_NordAncestor") : null;
+    if (concreteScript) {
+      this.pass("Nord spine substrate script", "PDV_Substrate_NordAncestor is attached.", PDV_ESP);
+      const props = propertyMap(concreteScript);
+      this.checkScalarProperty("Nord spine substrate property", props, "SubstrateName", "NordAncestor", this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Nord spine substrate property", props, "RequiredOriginRace", 0, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Nord spine substrate property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Nord spine substrate property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Nord spine substrate property", props, "Substrate_Always", "PDV_Bless_Nord_Substrate_Always", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Nord spine substrate property", props, "Substrate_Mid", "PDV_Bless_Nord_Substrate_Mid", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Nord spine substrate property", props, "Substrate_High", "PDV_Bless_Nord_Substrate_High", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Nord spine substrate script", "PDV_Substrate_NordAncestor is not attached.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      this.checkObjectPropertyTarget("Nord spine manager property", propertyMap(managerScript), "PDV_NordAncestorSubstrate", "PDV_Substrate_NordAncestor", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Nord spine manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_All", ["PDV_Substrate_NordAncestor"]);
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_DevOnly", ["PDV_Substrate_NordAncestor"]);
+
+    const spellSpecs = [
+      {
+        spell: "PDV_Bless_Nord_Substrate_Always",
+        effects: [
+          { effect: "PDV_MGEF_Nord_Substrate_Always_Frost", magnitude: 5, actorValue: "ResistFrost" },
+          { effect: "PDV_MGEF_Nord_Substrate_Always_Health", magnitude: 10, actorValue: "Health" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Nord_Substrate_Mid",
+        effects: [
+          { effect: "PDV_MGEF_Nord_Substrate_Mid_Frost", magnitude: 15, actorValue: "ResistFrost" },
+          { effect: "PDV_MGEF_Nord_Substrate_Mid_Health", magnitude: 25, actorValue: "Health" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Nord_Substrate_High",
+        effects: [
+          { effect: "PDV_MGEF_Nord_Substrate_High_Frost", magnitude: 30, actorValue: "ResistFrost" },
+          { effect: "PDV_MGEF_Nord_Substrate_High_Health", magnitude: 50, actorValue: "Health" },
+        ],
+      },
+    ];
+    for (const spec of spellSpecs) {
+      this.checkNordSpineSpellPacket(spec);
+    }
+  }
+
+  checkNordSpineSpellPacket(spec) {
+    const record = this.recordsByEdid.get(spec.spell);
+    if (record?.type === "SPEL") {
+      this.pass("Nord spine boon spell", `${spec.spell} exists as SPEL.`, PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Nord spine boon spell", `${spec.spell} is missing or not a SPEL.`, PDV_ESP);
+      return;
+    }
+
+    const detail = this.recordDetails.get(spec.spell);
+    const effects = Array.isArray(detail?.fields?.Effects) ? detail.fields.Effects : [];
+    for (const expected of spec.effects) {
+      const effectRecord = this.recordsByEdid.get(expected.effect);
+      if (effectRecord?.type === "MGEF") {
+        this.pass("Nord spine boon effect", `${expected.effect} exists as MGEF.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Nord spine boon effect", `${expected.effect} is missing or not a MGEF.`, PDV_ESP);
+        continue;
+      }
+
+      const spellEffect = effects.find((effect) => effect.BaseEffect === effectRecord.formid);
+      if (!spellEffect) {
+        this.phase20RaceCostingGap("Nord spine boon spell effect", `${spec.spell} is missing ${expected.effect}.`, PDV_ESP);
+        continue;
+      }
+      const data = spellEffect.Data || {};
+      if (Math.abs((data.Magnitude || 0) - expected.magnitude) < 0.001 && (data.Duration || 0) === 0) {
+        this.pass("Nord spine boon spell effect", `${spec.spell}.${expected.effect} magnitude is ${expected.magnitude}.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Nord spine boon spell effect", `${spec.spell}.${expected.effect} data is ${JSON.stringify(data)}, expected magnitude ${expected.magnitude} duration 0.`, PDV_ESP);
+      }
+
+      const effectDetail = this.recordDetails.get(expected.effect);
+      const actorValue = String(effectDetail?.fields?.Archetype?.ActorValue || effectDetail?.fields?.ActorValue || "");
+      if (!actorValue || actorValue.toLowerCase() === expected.actorValue.toLowerCase()) {
+        this.pass("Nord spine boon effect actor value", `${expected.effect} actor value is ${expected.actorValue}.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Nord spine boon effect actor value", `${expected.effect} actor value is ${actorValue}, expected ${expected.actorValue}.`, PDV_ESP);
+      }
     }
   }
 

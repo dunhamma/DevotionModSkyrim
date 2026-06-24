@@ -8,7 +8,6 @@ Mechanism-agnostic parity score for each race's always-active ancestral spine (p
 
 | Race | % | Raw | Target? | Boon x3 | Sink x2 | Minus x2 | Renew x1 | Dieg x1 | Text x1 | Richness |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Nord | 20% | 6 | **YES** | 0 | 1 | 1 | 0 | 1 | 1 | THIN |
 | Imperial | 30% | 9 | **YES** | 1 | 1 | 1 | 0 | 1 | 1 | MODERATE |
 | Altmer | 30% | 9 | **YES** | 1 | 1 | 1 | 0 | 1 | 1 | MODERATE |
 | Breton | 36.7% | 11 | **YES** | 1 | 1 | 1 | 1 | 1 | 2 | MODERATE |
@@ -16,12 +15,12 @@ Mechanism-agnostic parity score for each race's always-active ancestral spine (p
 | Redguard | 53.3% | 16 | **YES** | 2 | 2 | 1 | 1 | 1 | 2 | MODERATE |
 | Dunmer | 63.3% | 19 | **YES** | 2 | 2 | 2 | 2 | 1 | 2 | MODERATE |
 | Bosmer | 73.3% | 22 | - | 2 | 2 | 2 | 2 | 3 | 3 | RICH |
+| Nord | 76.7% | 23 | - | 3 | 3 | 1 | 0 | 3 | 3 | MODERATE |
 | Khajiit | 86.7% | 26 | - | 3 | 3 | 2 | 2 | 2 | 3 | RICH |
 | Argonian | 100% | 30 | - | 3 | 3 | 3 | 3 | 3 | 3 | RICH |
 
 ## Parity build targets (<70%, worst-first)
 
-- **Nord** 20% - Lone THIN outlier: no substrate, PantheonBaseline framing only, acts route to inactive Shor ledger, no sleep/neglect sync; AncestorsQuiet + ChampionAmbient_Storm diegetic DECLARED-DEAD.
 - **Imperial** 30% - Reputation-track (Concordat) patron-gated; no unconditional boon; no sleep/home channel; Book-of-Days on generic fallback.
 - **Altmer** 30% - Reputation-track (ThalmorAlignment) patron-gated; variety tranche effect-review-blocked; Book-of-Days generic fallback.
 - **Breton** 36.7% - Patron-gated framework (Green Way / Hidden Art / Vow traditions); no unconditional boon; Green Way standing channel; decent voice.
@@ -38,6 +37,4 @@ Declared once with no dispatch site (dispatch-or-delete per the spine build):
 - PDV_Notif_Orc_HearthHeld_Declare (Orc)
 - PDV_Notif_Orc_HearthHeld_Return (Orc)
 - PDV_Notif_Orc_HearthHeld_MissedCadence (Orc)
-- PDV_Notif_Nord_General_AncestorsQuiet (Nord)
-- PDV_Notif_Nord_Kyne_ChampionAmbient_Storm (Nord)
 

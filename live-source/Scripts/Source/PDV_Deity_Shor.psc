@@ -35,11 +35,13 @@ Scriptname PDV_Deity_Shor extends PDV_DeityBase
 Int Property SIGNAL_HONORABLE_BATTLE = 2900 AutoReadOnly
 Int Property SIGNAL_HONORED_DEAD = 2901 AutoReadOnly
 Int Property SIGNAL_SOVNGARDE_VALOR = 2902 AutoReadOnly
+Int Property SIGNAL_ANCESTOR_SPINE = 2903 AutoReadOnly
 Int Property EVT_KILLED_HOSTILE_HUMANOID_IN_COMBAT = 2 AutoReadOnly
 
 Float Property DELTA_HONORABLE_BATTLE = 2.0 Auto
 Float Property DELTA_HONORED_DEAD = 1.5 Auto
 Float Property DELTA_SOVNGARDE_VALOR = 4.0 Auto
+Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 
 Float Property DELTA_HONORABLE_KILL = 0.5 Auto
 Int Property HONORABLE_KILL_DAILY_CAP = 4 Auto
@@ -71,6 +73,8 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_HONORED_DEAD
     elseIf signalType == SIGNAL_SOVNGARDE_VALOR
         return DELTA_SOVNGARDE_VALOR
+    elseIf signalType == SIGNAL_ANCESTOR_SPINE
+        return DELTA_ANCESTOR_SPINE
     endIf
 
     return 0.0
