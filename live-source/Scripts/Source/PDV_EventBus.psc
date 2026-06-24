@@ -375,15 +375,29 @@ EndFunction
 
 Function RouteKhajiitFocusedEmphasis(Int deityId, String sourceId)
     if deityId == 2
-        RouteKhajiitMoonObservance(0)
+        if PDV_Manager
+            PDV_Manager.HandleKhajiitFocusedSourceForFocus(2, "eventbus_p2_khajiit_focused_" + sourceId)
+        else
+            RouteKhajiitMoonObservance(0)
+        endIf
+    elseIf deityId == 1
+        if !PDV_Manager
+            Trace(1, "RouteKhajiitFocusedEmphasis skipped: PDV_Manager not assigned.")
+            return
+        endIf
+        PDV_Manager.HandleKhajiitFocusedSourceForFocus(1, "eventbus_p2_khajiit_focused_" + sourceId)
     elseIf deityId == 3
-        RouteKhajiitBaanDarRoadTrick()
+        RouteKhajiitBaanDarRoadTrick(sourceId)
     elseIf deityId == 4
-        RouteKhajiitRajhinElegantTheft()
+        RouteKhajiitRajhinElegantTheft(sourceId)
     elseIf deityId == 5
-        RouteKhajiitAlkoshDragonOrder()
+        RouteKhajiitAlkoshDragonOrder(sourceId)
     else
-        RouteKhajiitMoonObservance(0)
+        if !PDV_Manager
+            Trace(1, "RouteKhajiitFocusedEmphasis skipped: PDV_Manager not assigned.")
+            return
+        endIf
+        PDV_Manager.HandleKhajiitFocusedSource("eventbus_p2_khajiit_focused_" + sourceId)
     endIf
 
     Trace(2, "RouteKhajiitFocusedEmphasis complete: " + deityId + " source " + sourceId)
@@ -585,7 +599,12 @@ Function RouteArgonianBedOfChoice()
 EndFunction
 
 Function RouteArgonianCommunity(String sourceId)
-    RouteArgonianPeopleSupport()
+    if !PDV_Manager
+        Trace(1, "RouteArgonianCommunity skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    PDV_Manager.HandleArgonianPeopleSupport("eventbus_p2_argonian_community_" + sourceId)
     Trace(2, "RouteArgonianCommunity complete: " + sourceId)
 EndFunction
 
@@ -610,7 +629,12 @@ Function RouteArgonianHistMaintenanceSource(String sourceId)
 EndFunction
 
 Function RouteArgonianSithisAcknowledgment(String sourceId)
-    RouteArgonianVoidSignal()
+    if !PDV_Manager
+        Trace(1, "RouteArgonianSithisAcknowledgment skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    PDV_Manager.HandleArgonianVoidSignal("eventbus_p2_argonian_sithis_" + sourceId)
     Trace(2, "RouteArgonianSithisAcknowledgment complete: " + sourceId)
 EndFunction
 
@@ -1100,22 +1124,37 @@ Function RouteBosmerBanditRoadReversal()
 EndFunction
 
 Function RouteBosmerYffre(Int pathState, String sourceId)
+    if !PDV_Manager
+        Trace(1, "RouteBosmerYffre skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
     if pathState == 1
-        RouteBosmerLivingStoryCommunityKept()
+        PDV_Manager.HandleBosmerLivingStoryCommunityKept("eventbus_p2_bosmer_yffre_" + sourceId)
     else
-        RouteBosmerPactPositive()
+        PDV_Manager.HandleBosmerPactPositiveSignal("eventbus_p2_bosmer_yffre_" + sourceId)
     endIf
 
     Trace(2, "RouteBosmerYffre complete: " + pathState + " source " + sourceId)
 EndFunction
 
 Function RouteBosmerZenExchange(String sourceId)
-    RouteBosmerExchange()
+    if !PDV_Manager
+        Trace(1, "RouteBosmerZenExchange skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    PDV_Manager.HandleBosmerExchangeSignal("eventbus_p2_bosmer_zen_" + sourceId)
     Trace(2, "RouteBosmerZenExchange complete: " + sourceId)
 EndFunction
 
 Function RouteBosmerBaanDarRoad(String sourceId)
-    RouteBosmerBanditRoad()
+    if !PDV_Manager
+        Trace(1, "RouteBosmerBaanDarRoad skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    PDV_Manager.HandleBosmerBanditRoadSignal("eventbus_p2_bosmer_baandar_" + sourceId)
     Trace(2, "RouteBosmerBaanDarRoad complete: " + sourceId)
 EndFunction
 

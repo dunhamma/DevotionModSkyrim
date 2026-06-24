@@ -273,6 +273,7 @@
       "race": "Altmer",
       "sourceKinds": [
         "book",
+        "harvest",
         "quest-stage"
       ],
       "route": "PDV_EventBus.RouteAltmerAurielFoundation(sourceId)",
@@ -318,6 +319,7 @@
       "race": "Argonian",
       "sourceKinds": [
         "book",
+        "harvest",
         "quest-stage"
       ],
       "route": "PDV_EventBus.RouteArgonianHistMaintenanceSource(sourceId)",
@@ -328,6 +330,8 @@
       "property": "PDV_FLST_P2_ArgonianCommunitySources",
       "race": "Argonian",
       "sourceKinds": [
+        "book",
+        "harvest",
         "quest-stage"
       ],
       "route": "PDV_EventBus.RouteArgonianCommunity(sourceId)",
@@ -338,6 +342,7 @@
       "property": "PDV_FLST_P2_ArgonianSithisSources",
       "race": "Argonian",
       "sourceKinds": [
+        "book",
         "quest-stage"
       ],
       "route": "PDV_EventBus.RouteArgonianSithisAcknowledgment(sourceId)",
@@ -359,6 +364,7 @@
       "property": "PDV_FLST_P2_BosmerZenSources",
       "race": "Bosmer",
       "sourceKinds": [
+        "book",
         "quest-stage"
       ],
       "route": "PDV_EventBus.RouteBosmerZenExchange(sourceId)",
@@ -369,6 +375,7 @@
       "property": "PDV_FLST_P2_BosmerBaanDarSources",
       "race": "Bosmer",
       "sourceKinds": [
+        "book",
         "quest-stage"
       ],
       "route": "PDV_EventBus.RouteBosmerBaanDarRoad(sourceId)",
@@ -379,7 +386,8 @@
       "property": "PDV_FLST_P2_KhajiitLunarSources",
       "race": "Khajiit",
       "sourceKinds": [
-        "book"
+        "book",
+        "quest-stage"
       ],
       "route": "PDV_EventBus.RouteKhajiitLunarSubstrate(sourceId)",
       "acceptedUse": "Curated Khajiit lunar theology, ja-Kha'jay, Lattice, and cultural-continuity texts.",
@@ -389,6 +397,7 @@
       "property": "PDV_FLST_P2_KhajiitFocusedSources",
       "race": "Khajiit",
       "sourceKinds": [
+        "book",
         "quest-stage"
       ],
       "route": "PDV_EventBus.RouteKhajiitFocusedEmphasis(deityId, sourceId)",
@@ -718,6 +727,13 @@
           "sourceKind": "book",
           "status": "approved-for-fill",
           "rationale": "One-shot terminal volume for Saxhleel identity and Hist-distance context."
+        },
+        {
+          "formKey": "Skyrim.esm:106E18",
+          "editorId": "CritterPondFish05Ingredient",
+          "sourceKind": "harvest",
+          "status": "approved-for-fill",
+          "rationale": "Renewable PO3 harvest source for Histcarp; direct Saxhleel/Hist-adjacent food signal, not generic water proximity."
         }
       ]
     },
@@ -744,6 +760,32 @@
           "sourceKind": "book",
           "status": "approved-for-fill",
           "rationale": "One-shot Khajiit folk-story continuity text; plausible Azurah-threshold context without generic cat references."
+        },
+        {
+          "formKey": "Skyrim.esm:02610C",
+          "editorId": "MQ104",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "rationale": "Dragonborn identity milestone also marks the Lunar Lattice as a Khajiit mythic-order source; MQ104 stage 160 is exact-stage gated.",
+          "approvedStages": [
+            160
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Generic dragon kills or repeated main-quest progress outside stage 160.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey khajiit_mq104_lunar."
+        },
+        {
+          "formKey": "Skyrim.esm:028AD6",
+          "editorId": "DA01",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "rationale": "Azura branch resolution is an exact-stage Lunar Lattice threshold for a Khajiit reader, separate from the focused Azurah pulse.",
+          "approvedStages": [
+            100
+          ],
+          "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+          "rejectedStageContext": "Black Star branch, generic shrine proximity, or artifact possession alone.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey khajiit_da01_lunar."
         }
       ]
     },
@@ -775,6 +817,13 @@
           "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
           "rejectedStageContext": "Black Star branch, generic shrine proximity, or artifact possession alone.",
           "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey."
+        },
+        {
+          "formKey": "Skyrim.esm:01AFF3",
+          "editorId": "Book0AhzirrTraajijazeri",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Khajiit road-life and community-identity text for the active focused emphasis; generic Khajiit references still reject."
         }
       ]
     },
@@ -813,6 +862,20 @@
       "property": "PDV_FLST_P2_ArgonianCommunitySources",
       "sources": [
         {
+          "formKey": "Skyrim.esm:0F68A8",
+          "editorId": "LetterRiftenTempleOfMara01",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "Argonian Ceremony is a named Saxhleel community practice text; not a generic Mara or temple source."
+        },
+        {
+          "formKey": "Skyrim.esm:106E18",
+          "editorId": "CritterPondFish05Ingredient",
+          "sourceKind": "harvest",
+          "status": "approved-for-fill",
+          "rationale": "Renewable Histcarp harvest joins the People layer as shared Saxhleel food/community continuity, distinct from generic water proximity."
+        },
+        {
           "formKey": "Skyrim.esm:076B4A",
           "editorId": "DarkwaterCrossingDerkeethusRescueQuest",
           "sourceKind": "quest-stage",
@@ -830,6 +893,20 @@
     {
       "property": "PDV_FLST_P2_ArgonianSithisSources",
       "sources": [
+        {
+          "formKey": "Skyrim.esm:0A0322",
+          "editorId": "Book2ReligiousAKissSweetMother",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Dark Brotherhood/Sithis threshold text; rejects generic murder, stealth, and radiant assassination loops."
+        },
+        {
+          "formKey": "Skyrim.esm:0E0D67",
+          "editorId": "Book4RareNightMother",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Night Mother/Sithis theology source for the Void layer; not a generic Brotherhood proximity source."
+        },
         {
           "formKey": "Skyrim.esm:01EA50",
           "editorId": "DB01",
@@ -916,6 +993,13 @@
       "property": "PDV_FLST_P2_BosmerZenSources",
       "sources": [
         {
+          "formKey": "Skyrim.esm:01ACDD",
+          "editorId": "Book2CommonThiefOfVirtue",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot Exchange-path moral-debt text: a narrow virtue/theft/accounting source, not generic theft or generic trade."
+        },
+        {
           "formKey": "Skyrim.esm:039645",
           "editorId": "MS13",
           "sourceKind": "quest-stage",
@@ -934,6 +1018,13 @@
     {
       "property": "PDV_FLST_P2_BosmerBaanDarSources",
       "sources": [
+        {
+          "formKey": "Skyrim.esm:01AFF3",
+          "editorId": "Book0AhzirrTraajijazeri",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "One-shot road-life, outsider-survival, and trickster-cunning source for the Baan Dar road; not generic theft or travel."
+        },
         {
           "formKey": "Skyrim.esm:040A5E",
           "editorId": "MS02",
@@ -1609,6 +1700,42 @@
       "rejectedContext": "Generic spell learning or College membership alone.",
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "mg08-scholarship",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "khajiit-mq104-lunar",
+      "race": "Khajiit",
+      "property": "PDV_FLST_P2_KhajiitLunarSources",
+      "sourceKind": "quest-stage",
+      "formKey": "02610C:Skyrim.esm",
+      "expectedFormId": 155916,
+      "approvedStage": 160,
+      "routeKey": "khajiit_mq104_lunar",
+      "dispatch": "PDV_EventBusService.RouteKhajiitLunarSubstrate(\"po3_queststage_khajiit_mq104_lunar\")",
+      "acceptedContext": "Dragonborn identity milestone as a one-shot Khajiit Lunar Lattice source.",
+      "rejectedContext": "Generic dragon kills or repeated main-quest progress.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "mq104-origin-reading",
+      "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "khajiit-da01-lunar",
+      "race": "Khajiit",
+      "property": "PDV_FLST_P2_KhajiitLunarSources",
+      "sourceKind": "quest-stage",
+      "formKey": "028AD6:Skyrim.esm",
+      "expectedFormId": 166614,
+      "approvedStage": 100,
+      "routeKey": "khajiit_da01_lunar",
+      "dispatch": "PDV_EventBusService.RouteKhajiitLunarSubstrate(\"po3_queststage_khajiit_da01_lunar\")",
+      "acceptedContext": "Azura branch resolution as a one-shot Khajiit Lunar Lattice threshold source.",
+      "rejectedContext": "Black Star branch, generic shrine proximity, or artifact possession alone.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "da01-branch-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
       "implementationStatus": "route-verified-approved-for-source-fill",
       "reviewStatus": "approved-live-source-fill"

@@ -1091,6 +1091,12 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
         endIf
     endIf
 
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_KhajiitLunarSources, sourceQuest, 155916, 160, "khajiit_mq104_lunar", newStage)
+        PDV_EventBusService.RouteKhajiitLunarSubstrate("po3_queststage_khajiit_mq104_lunar")
+    endIf
+    if ShouldRouteP2QuestStage(PDV_FLST_P2_KhajiitLunarSources, sourceQuest, 166614, 100, "khajiit_da01_lunar", newStage)
+        PDV_EventBusService.RouteKhajiitLunarSubstrate("po3_queststage_khajiit_da01_lunar")
+    endIf
     if ShouldRouteP2QuestStage(PDV_FLST_P2_KhajiitFocusedSources, sourceQuest, 155916, 160, "khajiit_mq104_alkosh", newStage)
         PDV_EventBusService.RouteKhajiitFocusedEmphasis(5, "po3_queststage_khajiit_mq104")
     endIf

@@ -13,9 +13,10 @@ Classification:
 - UNTRACKED = earn-time piety/standing mutation that bypasses it (FINDING).
 - LIFECYCLE = non-earn machinery (dawn/decay/init/seed/debug/reset); no driver expected.
 
-Summary: 114 TRACKED | 22 UNTRACKED | 20 LIFECYCLE | 14 substrate Record*Scaled writers
+Summary: 138 TRACKED | 0 UNTRACKED | 20 LIFECYCLE | 14 substrate Record*Scaled writers
 
-Known target gap (AdjustStoredPiety / Daedric bypass) caught: YES
+Daedric stored-piety driver hook present: YES
+Historical AdjustStoredPiety bypass caught: NO
 
 ## UNTRACKED (bypass the Ledger) -- FINDINGS
 
@@ -24,189 +25,148 @@ the act never appears in the player's "what feeds your gods" Ledger. Triage: rou
 the earn through AwardPiety, or extend the driver-recording funnel to cover this
 piety channel (e.g. record a driver inside SetStoredPiety for Daedric paths).
 
-- **PDV_DaedricPathBase.psc:171** in `DeclineChampionOffer` [direct StorageUtil piety write]
-  - `StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Piety", fallbackPiety)`
-  - Earn-time direct write to "PDV.Piety" outside the AwardPiety funnel; no driver recorded.
-- **PDV_DaedricPath_Azura.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Boethiah.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Dagon.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Hircine.psc:55** in `RecordHuntRiteScaled` [AdjustStoredPiety]
-  - `AdjustStoredPiety(HuntRitePietyDelta * appliedMultiplier, "hunt_rite_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Hircine.psc:66** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Malacath.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Mephala.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Meridia.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Molag.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Mora.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Namira.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Nocturnal.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Peryite.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Sanguine.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Sheo.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Vaermina.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV_DaedricPath_Vile.psc:38** in `RecordControlledSignal` [AdjustStoredPiety]
-  - `AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV__ManagerQuest.psc:1593** in `ApplyQuestReactionPiety` [direct StorageUtil piety write]
-  - `StorageUtil.AdjustFloatValue(deityForm, "PDV.PietyToday", amount)`
-  - Earn-time direct write to "PDV.PietyToday" outside the AwardPiety funnel; no driver recorded.
-- **PDV__ManagerQuest.psc:2539** in `HandleDaedricPrinceSignal` [AdjustStoredPiety]
-  - `path.AdjustStoredPiety(10.0, sourceId)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV__ManagerQuest.psc:2583** in `HandleDaedricShrinePrayer` [AdjustStoredPiety]
-  - `path.AdjustStoredPiety(2.0, sourceId)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
-- **PDV__ManagerQuest.psc:7402** in `RouteActionToOpenPaths` [AdjustStoredPiety]
-  - `ropPath.AdjustStoredPiety(ropDelta, "v2_" + eventType)`
-  - Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger.
+- none
 
 ## TRACKED (funnel through AwardPiety -> records a driver)
 
 - PDV_ActionRouter.psc:11 `(top-level)` [AwardPiety] -- - Runtime events write only through PDV__ManagerQuest.AwardPiety().
 - PDV_ActionRouter.psc:378 `RouteActionWithAttribution` [AwardPiety] -- PDV_Manager.AwardPiety(deity, delta)
-- PDV_EventBus.psc:1391 `RouteActionWithAttribution` [AwardPiety] -- PDV_Manager.AwardPiety(deity, delta)
-- PDV__ManagerQuest.psc:2468 `AwardCuratedSignal` [AwardPiety] -- AwardPiety(deity, delta, "a devotional rite")
-- PDV__ManagerQuest.psc:2481 `AwardCuratedSignalScaled` [AwardCuratedSignal] -- AwardCuratedSignal(deity, signalType, contextRef)
-- PDV__ManagerQuest.psc:2502 `AwardCuratedSignalScaled` [AwardPiety] -- AwardPiety(deity, scaledDelta)
-- PDV__ManagerQuest.psc:2518 `AwardCuratedSignalByIndex` [AwardCuratedSignal] -- AwardCuratedSignal(deity, signalType, None)
-- PDV__ManagerQuest.psc:3578 `TryArgonianNearWaterMaintenance` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
-- PDV__ManagerQuest.psc:4198 `TryOrcCodeHolds` [AwardPiety] -- AwardPiety(PDV_Malacath, 0.5 * multiplier)
-- PDV__ManagerQuest.psc:4277 `HandleGreenPactViolation` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_VIOLATION, None)
-- PDV__ManagerQuest.psc:4295 `HandleBosmerLivingStorySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None, multiplier)
-- PDV__ManagerQuest.psc:4311 `HandleBosmerExchangeSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Zen, PDV_Zen.SIGNAL_EXCHANGE, None, multiplier)
-- PDV__ManagerQuest.psc:4329 `HandleBosmerBanditRoadSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
-- PDV__ManagerQuest.psc:4344 `HandleBosmerPactPositiveSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_POSITIVE, None, multiplier)
-- PDV__ManagerQuest.psc:4352 `HandleBosmerPactPositiveSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
-- PDV__ManagerQuest.psc:4354 `HandleBosmerPactPositiveSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Zen, PDV_Zen.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
-- PDV__ManagerQuest.psc:4356 `HandleBosmerPactPositiveSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
-- PDV__ManagerQuest.psc:4564 `HandleKhajiitMoonObservance` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, multiplier)
-- PDV__ManagerQuest.psc:4602 `HandleKhajiitRoadHomeAnchor` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
-- PDV__ManagerQuest.psc:4637 `HandleKhajiitAlkoshNamedDragon` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_NAMED_DRAGON, None, multiplier)
-- PDV__ManagerQuest.psc:4673 `HandleKhajiitBaanDarReversal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
-- PDV__ManagerQuest.psc:4714 `PulseKhajiitFocusPiety` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_ROAD_TRICK, None, multiplier)
-- PDV__ManagerQuest.psc:4716 `PulseKhajiitFocusPiety` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_ELEGANT_THEFT, None, multiplier)
-- PDV__ManagerQuest.psc:4718 `PulseKhajiitFocusPiety` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_DRAGON_ORDER, None, multiplier)
-- PDV__ManagerQuest.psc:4729 `HandleKhajiitAzurahDesecration` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None)
-- PDV__ManagerQuest.psc:4737 `HandleKhajiitKhenarthiCaravanHarm` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_CARAVAN_HARM, None)
-- PDV__ManagerQuest.psc:4745 `HandleKhajiitRajhinBotchedTheft` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Rajhin, PDV_Rajhin.SIGNAL_BOTCHED_THEFT, None)
-- PDV__ManagerQuest.psc:4753 `HandleKhajiitAlkoshChaosAid` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Alkosh, PDV_Alkosh.SIGNAL_CHAOS_AID, None)
-- PDV__ManagerQuest.psc:4761 `HandleKhajiitBaanDarBetrayal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_BETRAYAL, None)
-- PDV__ManagerQuest.psc:4991 `HandleArgonianHistMaintenance` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
-- PDV__ManagerQuest.psc:5014 `HandleArgonianPeopleSupport` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
-- PDV__ManagerQuest.psc:5034 `HandleArgonianBedOfChoiceReturn` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
-- PDV__ManagerQuest.psc:5055 `HandleArgonianVoidSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
-- PDV__ManagerQuest.psc:5058 `HandleArgonianVoidSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Sithis, PDV_Sithis.SIGNAL_VOID_THRESHOLD, None, multiplier)
-- PDV__ManagerQuest.psc:5425 `AwardOrcStrongholdForgeSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, None, multiplier)
-- PDV__ManagerQuest.psc:5431 `AwardOrcCityDignitySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CITY_DIGNITY, None, multiplier)
-- PDV__ManagerQuest.psc:5437 `AwardOrcLegionServiceSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_LEGION_SERVICE, None, multiplier)
-- PDV__ManagerQuest.psc:5443 `AwardOrcSelfMadeCommunitySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_SELF_MADE_COMMUNITY, None, multiplier)
-- PDV__ManagerQuest.psc:5449 `AwardOrcBroadConductSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROAD_CONDUCT, None, multiplier)
-- PDV__ManagerQuest.psc:5455 `AwardOrcOathBreakSignal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_OATH_BREAK, None)
-- PDV__ManagerQuest.psc:5461 `AwardOrcFourHoldsVisitSignal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_FOUR_HOLDS_VISIT, None)
-- PDV__ManagerQuest.psc:5470 `AwardOrcAncestorSpineSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-- PDV__ManagerQuest.psc:6009 `AwardRedguardCrownSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_CROWN_FORM, None, multiplier)
-- PDV__ManagerQuest.psc:6021 `AwardRedguardForebearSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Leki, PDV_Leki.SIGNAL_SWORD_SINGING, None, multiplier)
-- PDV__ManagerQuest.psc:6072 `HandleHoonDingBreakthroughKill` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_HoonDing, PDV_HoonDing.SIGNAL_MAKE_WAY, victimForm, multiplier)
-- PDV__ManagerQuest.psc:6078 `AwardRedguardAshAbahSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, None, multiplier)
-- PDV__ManagerQuest.psc:6085 `AwardRedguardFarShoresSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_FAR_SHORES_TOKEN, None, multiplier)
-- PDV__ManagerQuest.psc:6096 `AwardRedguardAncestorSpinePietyPulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-- PDV__ManagerQuest.psc:6128 `RecordNordAncestorSpine` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-- PDV__ManagerQuest.psc:6152 `RecordNordAncestralRest` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-- PDV__ManagerQuest.psc:6177 `RecordNordHearthReturn` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-- PDV__ManagerQuest.psc:6481 `HandleTalosShrineDefiance` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
-- PDV__ManagerQuest.psc:6544 `HandleAltmerLorkhanPressure` [AwardPiety] -- AwardPiety(lorkhanDeity, -lorkhanPenalty)
-- PDV__ManagerQuest.psc:6760 `AwardAltmerDawnSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
-- PDV__ManagerQuest.psc:6765 `AwardAltmerDawnSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, multiplier)
-- PDV__ManagerQuest.psc:6771 `AwardAltmerOrthodoxSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None, multiplier)
-- PDV__ManagerQuest.psc:6776 `AwardAltmerOrthodoxSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION, None, multiplier)
-- PDV__ManagerQuest.psc:6821 `AwardAltmerAncestorSpinePulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-- PDV__ManagerQuest.psc:6852 `TryAwardAltmerMagicMilestone` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_MAGIC_MILESTONE, None, 4.0)
-- PDV__ManagerQuest.psc:7003 `HandleShoutAttack` [AwardPiety] -- AwardPiety(deity, delta * multiplier, reason)
-- PDV__ManagerQuest.psc:8158 `RunDawnAwardAltmerAuriElDawn` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 2.0)
-- PDV__ManagerQuest.psc:8576 `DebugAwardCuratedSignalByIndex` [AwardCuratedSignalByIndex] -- AwardCuratedSignalByIndex(deityIndex, signalType)
-- PDV__ManagerQuest.psc:9819 `EmitRedguardDeathDutyAbandonmentMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY_ABANDONMENT, None, multiplier)
-- PDV__ManagerQuest.psc:9839 `EmitMalacathCurseCodeRuptureMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CURSE_CODE_RUPTURE, None, multiplier)
-- PDV__ManagerQuest.psc:9860 `EmitMalacathBrokenFaithKinMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROKEN_FAITH_KIN, None, multiplier)
-- PDV__ManagerQuest.psc:9885 `HandleDunmerClumsyCrime` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SECRET_BETRAYED, None, multiplier)
-- PDV__ManagerQuest.psc:9906 `EmitHistAbandonmentMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_ABANDONMENT, None, multiplier)
-- PDV__ManagerQuest.psc:9923 `EmitHistCorruptionMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_CORRUPTION, None, multiplier)
-- PDV__ManagerQuest.psc:9940 `EmitHistVoidOverreachMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_VOID_OVERREACH, None, multiplier)
-- PDV__ManagerQuest.psc:13247 `AwardBretonAncestorSpinePulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-- PDV__ManagerQuest.psc:13282 `HandleBretonKnightlyVow` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_MERCY, None, multiplier)
-- PDV__ManagerQuest.psc:13307 `HandleBretonHiddenArtExposure` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_LAWFUL_ORDER, None, multiplier)
-- PDV__ManagerQuest.psc:13354 `HandleBretonGreenWayStanding` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None, multiplier)
-- PDV__ManagerQuest.psc:13418 `TryAwardDunmerTwilightWindowSignal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DUNMER_TWILIGHT_RITE, None)
-- PDV__ManagerQuest.psc:13467 `AwardActiveDunmerReclamationMemorySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_SHARED_PACT_MEMORY, None, layerWeight)
-- PDV__ManagerQuest.psc:13469 `AwardActiveDunmerReclamationMemorySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SHARED_PACT_MEMORY, None, layerWeight)
-- PDV__ManagerQuest.psc:13471 `AwardActiveDunmerReclamationMemorySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, layerWeight)
-- PDV__ManagerQuest.psc:13480 `AwardDunmerAncestorSpinePulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-- PDV__ManagerQuest.psc:13489 `AwardDunmerReclamationFocusSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_THRESHOLD_RITE, None, layerWeight)
-- PDV__ManagerQuest.psc:13491 `AwardDunmerReclamationFocusSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_RIGHTEOUS_STRUGGLE, None, layerWeight)
-- PDV__ManagerQuest.psc:13493 `AwardDunmerReclamationFocusSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SECRET_KEPT, None, layerWeight)
-- PDV__ManagerQuest.psc:13499 `AwardDunmerDeviationPriceSignal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Boethiah, PDV_Boethiah.SIGNAL_RECLAMATION_ABANDONED, None)
-- PDV__ManagerQuest.psc:13501 `AwardDunmerDeviationPriceSignal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Mephala, PDV_Mephala.SIGNAL_RECLAMATION_ABANDONED, None)
-- PDV__ManagerQuest.psc:13503 `AwardDunmerDeviationPriceSignal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None)
-- PDV__ManagerQuest.psc:13570 `AwardImperialCivicFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Akatosh, PDV_Akatosh.SIGNAL_CIVIC_SERVICE, None, multiplier)
-- PDV__ManagerQuest.psc:13574 `AwardImperialCivicFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
-- PDV__ManagerQuest.psc:13578 `AwardImperialCivicFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_LAWFUL_ORDER, None, multiplier)
-- PDV__ManagerQuest.psc:13582 `AwardImperialCivicFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
-- PDV__ManagerQuest.psc:13586 `AwardImperialCivicFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
-- PDV__ManagerQuest.psc:13597 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Akatosh, PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-- PDV__ManagerQuest.psc:13599 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-- PDV__ManagerQuest.psc:13601 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-- PDV__ManagerQuest.psc:13603 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-- PDV__ManagerQuest.psc:13605 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-- PDV__ManagerQuest.psc:13607 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Dibella, PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-- PDV__ManagerQuest.psc:13609 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-- PDV__ManagerQuest.psc:13611 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-- PDV__ManagerQuest.psc:13629 `AwardImperialAncestorSpinePulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-- PDV__ManagerQuest.psc:13692 `HandleImperialTalosPressure` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
-- PDV__ManagerQuest.psc:13697 `HandleImperialTalosPressure` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_DEFIANCE_MILESTONE, None, multiplier)
-- PDV__ManagerQuest.psc:13801 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_SKY_ROAD, None, multiplier)
-- PDV__ManagerQuest.psc:13805 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tsun, PDV_Tsun.SIGNAL_TRIAL_ENDURED, None, multiplier)
-- PDV__ManagerQuest.psc:13809 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Stuhn, PDV_Stuhn.SIGNAL_PROTECT_BOND, None, multiplier)
-- PDV__ManagerQuest.psc:13813 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_HONORED_DEAD, None, multiplier)
-- PDV__ManagerQuest.psc:13817 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
-- PDV__ManagerQuest.psc:13821 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None, multiplier)
-- PDV__ManagerQuest.psc:13825 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
-- PDV__ManagerQuest.psc:13829 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
-- PDV__ManagerQuest.psc:13833 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
-- PDV__ManagerQuest.psc:14840 `EnterBosmerOldContract` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_RECOMMITMENT, None)
-- PDV__ManagerQuest.psc:14923 `EvaluateBosmerForcedReckoning` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_RECOMMITMENT, None)
-- PDV__ManagerQuest.psc:15054 `ConfirmBosmerPendingTransition` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None)
-- PDV__ManagerQuest.psc:15056 `ConfirmBosmerPendingTransition` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Zen, PDV_Zen.SIGNAL_CONFIRMATION, None)
-- PDV__ManagerQuest.psc:15058 `ConfirmBosmerPendingTransition` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_CONFIRMATION, None)
+- PDV_DaedricPath_Azura.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Boethiah.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Dagon.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Hircine.psc:55 `RecordHuntRiteScaled` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(HuntRitePietyDelta * appliedMultiplier, "hunt_rite_" + reason)
+- PDV_DaedricPath_Hircine.psc:66 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Malacath.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Mephala.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Meridia.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Molag.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Mora.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Namira.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Nocturnal.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Peryite.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Sanguine.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Sheo.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Vaermina.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_DaedricPath_Vile.psc:38 `RecordControlledSignal` [AdjustStoredPiety->SetStoredPiety driver] -- AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
+- PDV_EventBus.psc:1430 `RouteActionWithAttribution` [AwardPiety] -- PDV_Manager.AwardPiety(deity, delta)
+- PDV__ManagerQuest.psc:1593 `ApplyQuestReactionPiety` [AwardPiety] -- AwardPiety(deity, amount, reason)
+- PDV__ManagerQuest.psc:2470 `AwardCuratedSignal` [AwardPiety] -- AwardPiety(deity, delta, "a devotional rite")
+- PDV__ManagerQuest.psc:2483 `AwardCuratedSignalScaled` [AwardCuratedSignal] -- AwardCuratedSignal(deity, signalType, contextRef)
+- PDV__ManagerQuest.psc:2504 `AwardCuratedSignalScaled` [AwardPiety] -- AwardPiety(deity, scaledDelta)
+- PDV__ManagerQuest.psc:2520 `AwardCuratedSignalByIndex` [AwardCuratedSignal] -- AwardCuratedSignal(deity, signalType, None)
+- PDV__ManagerQuest.psc:2541 `HandleDaedricPrinceSignal` [AdjustStoredPiety->SetStoredPiety driver] -- path.AdjustStoredPiety(10.0, sourceId)
+- PDV__ManagerQuest.psc:2585 `HandleDaedricShrinePrayer` [AdjustStoredPiety->SetStoredPiety driver] -- path.AdjustStoredPiety(2.0, sourceId)
+- PDV__ManagerQuest.psc:3252 `HandleBretonSleepEvents` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_LAWFUL_ORDER, None, multiplier)
+- PDV__ManagerQuest.psc:3643 `TryArgonianNearWaterMaintenance` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
+- PDV__ManagerQuest.psc:4270 `TryOrcCodeHolds` [AwardPiety] -- AwardPiety(PDV_Malacath, 0.5 * multiplier)
+- PDV__ManagerQuest.psc:4349 `HandleGreenPactViolation` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_VIOLATION, None)
+- PDV__ManagerQuest.psc:4367 `HandleBosmerLivingStorySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None, multiplier)
+- PDV__ManagerQuest.psc:4383 `HandleBosmerExchangeSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Zen, PDV_Zen.SIGNAL_EXCHANGE, None, multiplier)
+- PDV__ManagerQuest.psc:4401 `HandleBosmerBanditRoadSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
+- PDV__ManagerQuest.psc:4416 `HandleBosmerPactPositiveSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_POSITIVE, None, multiplier)
+- PDV__ManagerQuest.psc:4424 `HandleBosmerPactPositiveSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
+- PDV__ManagerQuest.psc:4426 `HandleBosmerPactPositiveSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Zen, PDV_Zen.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
+- PDV__ManagerQuest.psc:4428 `HandleBosmerPactPositiveSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
+- PDV__ManagerQuest.psc:4639 `HandleKhajiitMoonObservance` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, multiplier)
+- PDV__ManagerQuest.psc:4677 `HandleKhajiitRoadHomeAnchor` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
+- PDV__ManagerQuest.psc:4753 `HandleKhajiitAlkoshNamedDragon` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_NAMED_DRAGON, None, multiplier)
+- PDV__ManagerQuest.psc:4789 `HandleKhajiitBaanDarReversal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
+- PDV__ManagerQuest.psc:4830 `PulseKhajiitFocusPiety` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
+- PDV__ManagerQuest.psc:4832 `PulseKhajiitFocusPiety` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, multiplier)
+- PDV__ManagerQuest.psc:4834 `PulseKhajiitFocusPiety` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_ROAD_TRICK, None, multiplier)
+- PDV__ManagerQuest.psc:4836 `PulseKhajiitFocusPiety` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_ELEGANT_THEFT, None, multiplier)
+- PDV__ManagerQuest.psc:4838 `PulseKhajiitFocusPiety` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_DRAGON_ORDER, None, multiplier)
+- PDV__ManagerQuest.psc:4849 `HandleKhajiitAzurahDesecration` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None)
+- PDV__ManagerQuest.psc:4857 `HandleKhajiitKhenarthiCaravanHarm` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_CARAVAN_HARM, None)
+- PDV__ManagerQuest.psc:4865 `HandleKhajiitRajhinBotchedTheft` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Rajhin, PDV_Rajhin.SIGNAL_BOTCHED_THEFT, None)
+- PDV__ManagerQuest.psc:4873 `HandleKhajiitAlkoshChaosAid` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Alkosh, PDV_Alkosh.SIGNAL_CHAOS_AID, None)
+- PDV__ManagerQuest.psc:4881 `HandleKhajiitBaanDarBetrayal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_BETRAYAL, None)
+- PDV__ManagerQuest.psc:5111 `HandleArgonianHistMaintenance` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
+- PDV__ManagerQuest.psc:5134 `HandleArgonianPeopleSupport` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
+- PDV__ManagerQuest.psc:5154 `HandleArgonianBedOfChoiceReturn` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
+- PDV__ManagerQuest.psc:5175 `HandleArgonianVoidSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
+- PDV__ManagerQuest.psc:5178 `HandleArgonianVoidSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Sithis, PDV_Sithis.SIGNAL_VOID_THRESHOLD, None, multiplier)
+- PDV__ManagerQuest.psc:5545 `AwardOrcStrongholdForgeSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, None, multiplier)
+- PDV__ManagerQuest.psc:5551 `AwardOrcCityDignitySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CITY_DIGNITY, None, multiplier)
+- PDV__ManagerQuest.psc:5557 `AwardOrcLegionServiceSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_LEGION_SERVICE, None, multiplier)
+- PDV__ManagerQuest.psc:5563 `AwardOrcSelfMadeCommunitySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_SELF_MADE_COMMUNITY, None, multiplier)
+- PDV__ManagerQuest.psc:5569 `AwardOrcBroadConductSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROAD_CONDUCT, None, multiplier)
+- PDV__ManagerQuest.psc:5575 `AwardOrcOathBreakSignal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_OATH_BREAK, None)
+- PDV__ManagerQuest.psc:5581 `AwardOrcFourHoldsVisitSignal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_FOUR_HOLDS_VISIT, None)
+- PDV__ManagerQuest.psc:5590 `AwardOrcAncestorSpineSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+- PDV__ManagerQuest.psc:6129 `AwardRedguardCrownSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_CROWN_FORM, None, multiplier)
+- PDV__ManagerQuest.psc:6141 `AwardRedguardForebearSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Leki, PDV_Leki.SIGNAL_SWORD_SINGING, None, multiplier)
+- PDV__ManagerQuest.psc:6192 `HandleHoonDingBreakthroughKill` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_HoonDing, PDV_HoonDing.SIGNAL_MAKE_WAY, victimForm, multiplier)
+- PDV__ManagerQuest.psc:6198 `AwardRedguardAshAbahSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, None, multiplier)
+- PDV__ManagerQuest.psc:6205 `AwardRedguardFarShoresSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_FAR_SHORES_TOKEN, None, multiplier)
+- PDV__ManagerQuest.psc:6216 `AwardRedguardAncestorSpinePietyPulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+- PDV__ManagerQuest.psc:6248 `RecordNordAncestorSpine` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+- PDV__ManagerQuest.psc:6272 `RecordNordAncestralRest` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+- PDV__ManagerQuest.psc:6297 `RecordNordHearthReturn` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+- PDV__ManagerQuest.psc:6601 `HandleTalosShrineDefiance` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
+- PDV__ManagerQuest.psc:6664 `HandleAltmerLorkhanPressure` [AwardPiety] -- AwardPiety(lorkhanDeity, -lorkhanPenalty)
+- PDV__ManagerQuest.psc:6880 `AwardAltmerDawnSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
+- PDV__ManagerQuest.psc:6885 `AwardAltmerDawnSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, multiplier)
+- PDV__ManagerQuest.psc:6891 `AwardAltmerOrthodoxSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None, multiplier)
+- PDV__ManagerQuest.psc:6896 `AwardAltmerOrthodoxSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION, None, multiplier)
+- PDV__ManagerQuest.psc:6941 `AwardAltmerAncestorSpinePulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+- PDV__ManagerQuest.psc:6972 `TryAwardAltmerMagicMilestone` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_MAGIC_MILESTONE, None, 4.0)
+- PDV__ManagerQuest.psc:7123 `HandleShoutAttack` [AwardPiety] -- AwardPiety(deity, delta * multiplier, reason)
+- PDV__ManagerQuest.psc:7522 `RouteActionToOpenPaths` [AdjustStoredPiety->SetStoredPiety driver] -- ropPath.AdjustStoredPiety(ropDelta, "v2_" + eventType)
+- PDV__ManagerQuest.psc:8278 `RunDawnAwardAltmerAuriElDawn` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 2.0)
+- PDV__ManagerQuest.psc:8696 `DebugAwardCuratedSignalByIndex` [AwardCuratedSignalByIndex] -- AwardCuratedSignalByIndex(deityIndex, signalType)
+- PDV__ManagerQuest.psc:9939 `EmitRedguardDeathDutyAbandonmentMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY_ABANDONMENT, None, multiplier)
+- PDV__ManagerQuest.psc:9959 `EmitMalacathCurseCodeRuptureMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CURSE_CODE_RUPTURE, None, multiplier)
+- PDV__ManagerQuest.psc:9980 `EmitMalacathBrokenFaithKinMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROKEN_FAITH_KIN, None, multiplier)
+- PDV__ManagerQuest.psc:10005 `HandleDunmerClumsyCrime` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SECRET_BETRAYED, None, multiplier)
+- PDV__ManagerQuest.psc:10026 `EmitHistAbandonmentMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_ABANDONMENT, None, multiplier)
+- PDV__ManagerQuest.psc:10043 `EmitHistCorruptionMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_CORRUPTION, None, multiplier)
+- PDV__ManagerQuest.psc:10060 `EmitHistVoidOverreachMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_VOID_OVERREACH, None, multiplier)
+- PDV__ManagerQuest.psc:13380 `AwardBretonAncestorSpinePulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+- PDV__ManagerQuest.psc:13415 `HandleBretonKnightlyVow` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_MERCY, None, multiplier)
+- PDV__ManagerQuest.psc:13440 `HandleBretonHiddenArtExposure` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_LAWFUL_ORDER, None, multiplier)
+- PDV__ManagerQuest.psc:13487 `HandleBretonGreenWayStanding` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None, multiplier)
+- PDV__ManagerQuest.psc:13561 `TryAwardDunmerTwilightWindowSignal` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DUNMER_TWILIGHT_RITE, None)
+- PDV__ManagerQuest.psc:13610 `AwardActiveDunmerReclamationMemorySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_SHARED_PACT_MEMORY, None, layerWeight)
+- PDV__ManagerQuest.psc:13612 `AwardActiveDunmerReclamationMemorySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SHARED_PACT_MEMORY, None, layerWeight)
+- PDV__ManagerQuest.psc:13614 `AwardActiveDunmerReclamationMemorySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, layerWeight)
+- PDV__ManagerQuest.psc:13623 `AwardDunmerAncestorSpinePulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+- PDV__ManagerQuest.psc:13632 `AwardDunmerReclamationFocusSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_THRESHOLD_RITE, None, layerWeight)
+- PDV__ManagerQuest.psc:13634 `AwardDunmerReclamationFocusSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_RIGHTEOUS_STRUGGLE, None, layerWeight)
+- PDV__ManagerQuest.psc:13636 `AwardDunmerReclamationFocusSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SECRET_KEPT, None, layerWeight)
+- PDV__ManagerQuest.psc:13642 `AwardDunmerDeviationPriceSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_RECLAMATION_ABANDONED, None, multiplier)
+- PDV__ManagerQuest.psc:13644 `AwardDunmerDeviationPriceSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_RECLAMATION_ABANDONED, None, multiplier)
+- PDV__ManagerQuest.psc:13646 `AwardDunmerDeviationPriceSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None, multiplier)
+- PDV__ManagerQuest.psc:13713 `AwardImperialCivicFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Akatosh, PDV_Akatosh.SIGNAL_CIVIC_SERVICE, None, multiplier)
+- PDV__ManagerQuest.psc:13717 `AwardImperialCivicFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
+- PDV__ManagerQuest.psc:13721 `AwardImperialCivicFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_LAWFUL_ORDER, None, multiplier)
+- PDV__ManagerQuest.psc:13725 `AwardImperialCivicFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
+- PDV__ManagerQuest.psc:13729 `AwardImperialCivicFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
+- PDV__ManagerQuest.psc:13740 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Akatosh, PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+- PDV__ManagerQuest.psc:13742 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+- PDV__ManagerQuest.psc:13744 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+- PDV__ManagerQuest.psc:13746 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+- PDV__ManagerQuest.psc:13748 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+- PDV__ManagerQuest.psc:13750 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Dibella, PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+- PDV__ManagerQuest.psc:13752 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+- PDV__ManagerQuest.psc:13754 `AwardImperialPatronCivicSignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+- PDV__ManagerQuest.psc:13772 `AwardImperialAncestorSpinePulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+- PDV__ManagerQuest.psc:13835 `HandleImperialTalosPressure` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
+- PDV__ManagerQuest.psc:13840 `HandleImperialTalosPressure` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_DEFIANCE_MILESTONE, None, multiplier)
+- PDV__ManagerQuest.psc:13944 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_SKY_ROAD, None, multiplier)
+- PDV__ManagerQuest.psc:13948 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Tsun, PDV_Tsun.SIGNAL_TRIAL_ENDURED, None, multiplier)
+- PDV__ManagerQuest.psc:13952 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Stuhn, PDV_Stuhn.SIGNAL_PROTECT_BOND, None, multiplier)
+- PDV__ManagerQuest.psc:13956 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_HONORED_DEAD, None, multiplier)
+- PDV__ManagerQuest.psc:13960 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
+- PDV__ManagerQuest.psc:13964 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None, multiplier)
+- PDV__ManagerQuest.psc:13968 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
+- PDV__ManagerQuest.psc:13972 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
+- PDV__ManagerQuest.psc:13976 `AwardNordRouteFamilySignal` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
+- PDV__ManagerQuest.psc:14989 `EnterBosmerOldContract` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_RECOMMITMENT, None)
+- PDV__ManagerQuest.psc:15072 `EvaluateBosmerForcedReckoning` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_RECOMMITMENT, None)
+- PDV__ManagerQuest.psc:15203 `ConfirmBosmerPendingTransition` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None)
+- PDV__ManagerQuest.psc:15205 `ConfirmBosmerPendingTransition` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_Zen, PDV_Zen.SIGNAL_CONFIRMATION, None)
+- PDV__ManagerQuest.psc:15207 `ConfirmBosmerPendingTransition` [AwardCuratedSignal] -- AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_CONFIRMATION, None)
 
 ## LIFECYCLE (non-earn piety writes -- no driver expected)
 
@@ -215,25 +175,25 @@ SetStoredPiety primitive. These are deterministic machinery, not organic acts; t
 Ledger intentionally does not attribute them to a recent-driver.
 
 - PDV_DaedricPathBase.psc:191 `DebugSeatChampionSilently` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ThresholdChampion + 1.0)
-- PDV_DaedricPathBase.psc:344 `SetStoredPiety` -- StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Piety", normalizedPiety)
+- PDV_DaedricPathBase.psc:346 `SetStoredPiety` -- StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Piety", normalizedPiety)
 - PDV_Origin.psc:394 `SeedDeity` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", startPiety)
 - PDV_Origin.psc:395 `SeedDeity` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
-- PDV__ManagerQuest.psc:8187 `RunDawnConsolidateScratch` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", newPiety)
-- PDV__ManagerQuest.psc:8188 `RunDawnConsolidateScratch` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
-- PDV__ManagerQuest.psc:8387 `ApplyDecayToDeity` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", newPiety)
-- PDV__ManagerQuest.psc:8435 `ForceSetPiety` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ClampValue(amount, 0.0, PIETY_MAX))
-- PDV__ManagerQuest.psc:8459 `ForceSetPietyToday` -- StorageUtil.SetFloatValue(_activeDeity as Form, "PDV.PietyToday", amount)
-- PDV__ManagerQuest.psc:8472 `DebugForceSetPietyByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ClampValue(amount, 0.0, PIETY_MAX))
-- PDV__ManagerQuest.psc:8493 `DebugForceSetPietyTodayByIndex` -- StorageUtil.SetFloatValue(deity as Form, "PDV.PietyToday", amount)
-- PDV__ManagerQuest.psc:8507 `DebugPrimeDecayGraceByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
-- PDV__ManagerQuest.psc:8508 `DebugPrimeDecayGraceByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
-- PDV__ManagerQuest.psc:8527 `DebugPrimeDecayEligibleByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
-- PDV__ManagerQuest.psc:8528 `DebugPrimeDecayEligibleByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
-- PDV__ManagerQuest.psc:8554 `DebugRunDecayProofDaysByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
-- PDV__ManagerQuest.psc:8556 `DebugRunDecayProofDaysByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
-- PDV__ManagerQuest.psc:8670 `DebugResetDeityByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 0.0)
-- PDV__ManagerQuest.psc:8671 `DebugResetDeityByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
-- PDV__ManagerQuest.psc:8696 `AwardPietyInternal` -- StorageUtil.AdjustFloatValue(deityForm, "PDV.PietyToday", appliedAmount)
+- PDV__ManagerQuest.psc:8307 `RunDawnConsolidateScratch` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", newPiety)
+- PDV__ManagerQuest.psc:8308 `RunDawnConsolidateScratch` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
+- PDV__ManagerQuest.psc:8507 `ApplyDecayToDeity` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", newPiety)
+- PDV__ManagerQuest.psc:8555 `ForceSetPiety` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ClampValue(amount, 0.0, PIETY_MAX))
+- PDV__ManagerQuest.psc:8579 `ForceSetPietyToday` -- StorageUtil.SetFloatValue(_activeDeity as Form, "PDV.PietyToday", amount)
+- PDV__ManagerQuest.psc:8592 `DebugForceSetPietyByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ClampValue(amount, 0.0, PIETY_MAX))
+- PDV__ManagerQuest.psc:8613 `DebugForceSetPietyTodayByIndex` -- StorageUtil.SetFloatValue(deity as Form, "PDV.PietyToday", amount)
+- PDV__ManagerQuest.psc:8627 `DebugPrimeDecayGraceByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
+- PDV__ManagerQuest.psc:8628 `DebugPrimeDecayGraceByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
+- PDV__ManagerQuest.psc:8647 `DebugPrimeDecayEligibleByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
+- PDV__ManagerQuest.psc:8648 `DebugPrimeDecayEligibleByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
+- PDV__ManagerQuest.psc:8674 `DebugRunDecayProofDaysByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
+- PDV__ManagerQuest.psc:8676 `DebugRunDecayProofDaysByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
+- PDV__ManagerQuest.psc:8790 `DebugResetDeityByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 0.0)
+- PDV__ManagerQuest.psc:8791 `DebugResetDeityByIndex` -- StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
+- PDV__ManagerQuest.psc:8816 `AwardPietyInternal` -- StorageUtil.AdjustFloatValue(deityForm, "PDV.PietyToday", appliedAmount)
 
 ## Substrate Record*Scaled writers (parallel metric channel)
 

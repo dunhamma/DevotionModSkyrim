@@ -686,6 +686,7 @@ Event OnUpdate()
     ProcessQueuedDaedricMilestonePresentation()
     ProcessPendingDaedricActivation()
     ProcessPendingDaedricLapse()
+    ProcessPendingDaedricPrePactNotices()
     ProcessQueuedPrismaToastRetry()
 
     if _panelDirty && AutoPushPrismaPanel && PDV_PrismaBridge.IsAvailable()
@@ -1589,12 +1590,7 @@ Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reaso
         return
     endIf
 
-    EnsureDeityState(deity)
-    StorageUtil.AdjustFloatValue(deityForm, "PDV.PietyToday", amount)
-    StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", Utility.GetCurrentGameTime())
-    if amount > 0.0
-        RecordCommitmentSignalDay(deity)
-    endIf
+    AwardPiety(deity, amount, reason)
     StorageUtil.SetStringValue(deityForm, "PDV.QuestReaction.LastReason", reason)
     RequestPanelRefresh()
 
@@ -1936,6 +1932,12 @@ String Function GetDashboardJson()
         shown += 1
     endIf
 
+    PDV_DaedricPathBase watchingPath = GetTopPrePactDaedricPath()
+    if watchingPath && watchingPath != tracked && shown < 8
+        gods = AppendDashboardGod(gods, watchingPath, "watching")
+        shown += 1
+    endIf
+
     if PDV_FLST_AllDeities
         Int i = 0
         Int count = PDV_FLST_AllDeities.GetSize()
@@ -1955,7 +1957,7 @@ String Function GetDashboardJson()
     endIf
 
     String j = "{\"gods\":[" + gods + "]"
-    j = j + ",\"systems\":[\"patron\",\"pantheon\",\"neglected\"]}"
+    j = j + ",\"systems\":[\"patron\",\"pantheon\",\"watching\",\"neglected\"]}"
     return j
 EndFunction
 
@@ -2729,6 +2731,30 @@ PDV_DaedricPathBase Function GetActiveDaedricPactPath()
     return None
 EndFunction
 
+PDV_DaedricPathBase Function GetTopPrePactDaedricPath()
+    if GetActiveDaedricPactPath()
+        return None
+    endIf
+
+    PDV_DaedricPathBase topPath = None
+    Float topPiety = 0.0
+    Int i = 0
+    Int count = GetDaedricPathCount()
+    while i < count
+        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
+        if path && path.GetStoredTier() == TIER_NONE
+            Float piety = path.GetStoredPiety()
+            if piety > topPiety
+                topPiety = piety
+                topPath = path
+            endIf
+        endIf
+        i += 1
+    endWhile
+
+    return topPath
+EndFunction
+
 ; Look up a Daedric path by its deity Form regardless of tier (used for lapse
 ; surfacing, where the lapsed path is at tier 0).
 PDV_DaedricPathBase Function GetDaedricPathByForm(Form deityForm)
@@ -2794,6 +2820,40 @@ Function ProcessPendingDaedricLapse()
     SurfaceDaedricLapse(GetDaedricPathByForm(pending))
 EndFunction
 
+Function ProcessPendingDaedricPrePactNotices()
+    Int count = StorageUtil.FormListCount(None, "PDV.Daedric.PendingPrePactNotices")
+    if count <= 0
+        return
+    endIf
+
+    PDV_DaedricPathBase topPath = GetTopPrePactDaedricPath()
+    Form topForm = None
+    if topPath
+        topForm = topPath.GetDeityForm()
+    endIf
+
+    Bool topWasQueued = False
+    while count > 0
+        count -= 1
+        Form queuedForm = StorageUtil.FormListGet(None, "PDV.Daedric.PendingPrePactNotices", count)
+        if topForm && queuedForm == topForm
+            topWasQueued = True
+        endIf
+        StorageUtil.FormListRemoveAt(None, "PDV.Daedric.PendingPrePactNotices", count)
+    endWhile
+
+    if !topPath || !topWasQueued || StorageUtil.GetIntValue(topForm, "PDV.Daedric.PrePactNoticeShown") == 1
+        return
+    endIf
+
+    if topPath.GetStoredTier() != TIER_NONE || topPath.GetStoredPiety() <= 0.0
+        return
+    endIf
+
+    AppendBookOfDaysEntry("The world tilts toward " + topPath.DeityName + ".", Utility.GetCurrentGameTime() as Int, "daedric.pressure", "daedric", false)
+    StorageUtil.SetIntValue(topForm, "PDV.Daedric.PrePactNoticeShown", 1)
+EndFunction
+
 ; Drain the deferred-activation flag the base sets in MakeActiveDaedricPact on a NEW
 ; pact activation (from ANY path: live funnel, ambient tier-up, shrine prayer, switch-
 ; back). This is where patron<->Prince exclusivity is enforced: if a single patron is
@@ -2812,12 +2872,14 @@ Function ProcessPendingDaedricActivation()
     if StorageUtil.GetFormValue(None, "PDV.Daedric.ActivePact") != pending
         return
     endIf
+    PDV_DaedricPathBase path = GetDaedricPathByForm(pending)
     if GetPatronState() == PATRON_STATE_ACTIVE
-        PDV_DaedricPathBase path = GetDaedricPathByForm(pending)
         SetActiveDeity(None)
         if path
             SurfaceSwitchSeverance("patron_to_prince", path.DeityName)
         endIf
+    elseIf path && !HasRecentDaedricMilestoneJournal(path)
+        AppendBookOfDaysEntry(path.DeityName + " claims your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "daedric", true)
     endIf
 EndFunction
 
@@ -3156,6 +3218,9 @@ Function HandleAltmerSleepEvents(Actor playerRef, String reason)
     endIf
 
     AwardAltmerAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
+    if _activeDeity == PDV_Magnus && PDV_Magnus
+        AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier)
+    endIf
     ShowP2BookNotice("po3_book_altmer_sleep_dream", "Aldmeri dream", "The old line keeps its shape through rest.")
 EndFunction
 
@@ -3183,6 +3248,9 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
     endIf
 
     AwardBretonAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
+    if GetBretonTraditionValue() == BRETON_TRADITION_HIDDEN_ART && PDV_Julianos
+        AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_LAWFUL_ORDER, None, multiplier)
+    endIf
     ShowP2BookNotice("po3_book_breton_sleep_dream", "Inherited dream", "The old mixed blood wards itself in sleep.")
 EndFunction
 
@@ -3573,6 +3641,11 @@ Function TryArgonianNearWaterMaintenance()
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     if PDV_Hist
         AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
+    endIf
+    Float peopleRelation = PDV_ArgonianHistSubstrate.GetPeopleRelation()
+    Float voidRelation = PDV_ArgonianHistSubstrate.GetVoidRelation()
+    if GetArgonianActiveFocus(peopleRelation, voidRelation, True) == ARGONIAN_FOCUS_PEOPLE
+        HandleArgonianPeopleSupport("near_water_people")
     endIf
     SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The water remembers you.", "hist", GetArgonianHistPostureLabel())
     RequestPanelRefresh()
@@ -4119,6 +4192,7 @@ Function TryBosmerBaanDarGap(Actor playerRef)
 
     PDV_SPEL_BosmerBaanDarGap.Cast(playerRef, playerRef)
     StorageUtil.SetIntValue(None, "PDV.BosSig.GapLastDay", today + 1)
+    HandleBosmerBanditRoadReversal("baandar_gap_low_health")
     Debug.Notification("Baan Dar opens the gap. Run.")
     Trace(2, "Bosmer Baan Dar Opens the Gap fired.")
 EndFunction
@@ -4147,6 +4221,7 @@ Function TryArgonianSithisNearDeathBurst(Actor playerRef)
 
     PDV_SPEL_ArgonianSithisNearDeathBurst.Cast(playerRef, playerRef)
     StorageUtil.SetIntValue(None, "PDV.Argonian.SithisNearDeathLastDay", today + 1)
+    HandleArgonianVoidSignal("near_death_burst")
     Trace(2, "Argonian Sithis near-death burst fired.")
 EndFunction
 
@@ -4515,6 +4590,9 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
         return
     endIf
     if StorageUtil.GetIntValue(None, "PDV.DunHome.DeclaredFormID") != 0
+        if IsPlayerAtDunmerDeclaredHome(playerRef) && StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") > 0
+            HandleDunmerDeviationPrice("sleep_deviation_" + reason)
+        endIf
         return
     endIf
     Cell sleepCell = playerRef.GetParentCell()
@@ -4606,10 +4684,18 @@ Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
 EndFunction
 
 Function HandleKhajiitBaanDarRoadTrick(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
     RecordKhajiitFocusSignal(KHAJIIT_FOCUS_BAANDAR, "PDV.Signal.KhajiitBaanDarRoadTrick", "Baan Dar road trick", reason)
 EndFunction
 
 Function HandleKhajiitRajhinElegantTheft(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
     RecordKhajiitFocusSignal(KHAJIIT_FOCUS_RAJHIN, "PDV.Signal.KhajiitRajhinElegantTheft", "Rajhin elegant theft", reason)
     ; Night theft is shadow-coded behavior; it accrues toward the ShadowDrift boundary.
     RecordKhajiitShadowEvidence("rajhin_night_theft_" + reason)
@@ -4619,7 +4705,40 @@ Function HandleKhajiitRajhinElegantTheft(String reason)
 EndFunction
 
 Function HandleKhajiitAlkoshDragonOrder(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
     RecordKhajiitFocusSignal(KHAJIIT_FOCUS_ALKOSH, "PDV.Signal.KhajiitAlkoshDragonOrder", "Alkosh dragon order", reason)
+EndFunction
+
+Function HandleKhajiitFocusedSource(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    Int focusValue = GetKhajiitFocusedEmphasis()
+    if focusValue == KHAJIIT_FOCUS_NONE
+        focusValue = GetActiveLunarFavoredFocus()
+    endIf
+    if focusValue == KHAJIIT_FOCUS_NONE
+        focusValue = KHAJIIT_FOCUS_AZURAH
+    endIf
+
+    RecordKhajiitFocusSignal(focusValue, "PDV.Signal.KhajiitFocusedSource", "Khajiit focused source", reason)
+EndFunction
+
+Function HandleKhajiitFocusedSourceForFocus(Int focusValue, String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    if focusValue < KHAJIIT_FOCUS_KHENARTHI || focusValue > KHAJIIT_FOCUS_ALKOSH
+        HandleKhajiitFocusedSource(reason)
+        return
+    endIf
+
+    RecordKhajiitFocusSignal(focusValue, "PDV.Signal.KhajiitFocusedSource", "Khajiit focused source", reason)
 EndFunction
 
 ; Named-dragon kill: the focus signal plus the curated named-dragon beat. The
@@ -4707,7 +4826,11 @@ EndFunction
 ; Small foreground piety pulse to the emphasis deity (the double-route partner of the
 ; substrate/focus-weight signal). Each concrete deity defines its own small pulse signal.
 Function PulseKhajiitFocusPiety(Int focusValue, Float multiplier)
-    if focusValue == KHAJIIT_FOCUS_BAANDAR && PDV_BaanDar
+    if focusValue == KHAJIIT_FOCUS_KHENARTHI && PDV_Khenarthi
+        AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
+    elseIf focusValue == KHAJIIT_FOCUS_AZURAH && PDV_Azura
+        AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, multiplier)
+    elseIf focusValue == KHAJIIT_FOCUS_BAANDAR && PDV_BaanDar
         AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_ROAD_TRICK, None, multiplier)
     elseIf focusValue == KHAJIIT_FOCUS_RAJHIN && PDV_Rajhin
         AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_ELEGANT_THEFT, None, multiplier)
@@ -12095,6 +12218,19 @@ Function ShowDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier,
     ; (tone tier.reach -> "Favor deepened"/good; Champion pinned). The toast already
     ; fired above; this adds the persistent journal entry. PLACEHOLDER copy.
     AppendBookOfDaysEntry(princeName + " names you " + tierLabel + ".", Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, newTier >= TIER_CHAMPION)
+    StorageUtil.SetFormValue(None, "PDV.Daedric.LastMilestoneJournalPath", path.GetDeityForm())
+    StorageUtil.SetFloatValue(None, "PDV.Daedric.LastMilestoneJournalTime", Utility.GetCurrentGameTime())
+EndFunction
+
+Bool Function HasRecentDaedricMilestoneJournal(PDV_DaedricPathBase path)
+    if !path
+        return false
+    endIf
+    if StorageUtil.GetFormValue(None, "PDV.Daedric.LastMilestoneJournalPath") != path.GetDeityForm()
+        return false
+    endIf
+    Float lastTime = StorageUtil.GetFloatValue(None, "PDV.Daedric.LastMilestoneJournalTime")
+    return lastTime > 0.0 && (Utility.GetCurrentGameTime() - lastTime) <= 0.0001
 EndFunction
 
 Bool Function SendPrismaDaedricMilestoneToast(String princeName, String tierLabel, String flavorText, String boonText, String priceText, String symbolName)
@@ -13361,7 +13497,12 @@ Function HandleDunmerReclamationFocus(Int focusValue, String reason)
         return
     endIf
 
-    Float layerWeight = GetDunmerCurseLayerWeight(2)
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerReclamationFocus")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    Float layerWeight = GetDunmerCurseLayerWeight(2) * multiplier
     StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocus", ClampInt(focusValue, 0, 2))
     StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocusCount", StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastReclamationReason", reason)
@@ -13382,9 +13523,14 @@ Function HandleDunmerDeviationPrice(String reason)
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerDeviationPrice")
+    if multiplier <= 0.0
+        return
+    endIf
+
     StorageUtil.SetIntValue(None, "PDV.Dunmer.DeviationPriceCount", StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastDeviationReason", reason)
-    AwardDunmerDeviationPriceSignal()
+    AwardDunmerDeviationPriceSignal(multiplier)
     Trace(2, "Dunmer deviation price routed: " + reason)
 EndFunction
 
@@ -13491,13 +13637,13 @@ Function AwardDunmerReclamationFocusSignal(Int focusValue, Float layerWeight)
     endIf
 EndFunction
 
-Function AwardDunmerDeviationPriceSignal()
+Function AwardDunmerDeviationPriceSignal(Float multiplier)
     if _activeDeity == PDV_Boethiah && PDV_Boethiah
-        AwardCuratedSignal(PDV_Boethiah, PDV_Boethiah.SIGNAL_RECLAMATION_ABANDONED, None)
+        AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_RECLAMATION_ABANDONED, None, multiplier)
     elseIf _activeDeity == PDV_Mephala && PDV_Mephala
-        AwardCuratedSignal(PDV_Mephala, PDV_Mephala.SIGNAL_RECLAMATION_ABANDONED, None)
+        AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_RECLAMATION_ABANDONED, None, multiplier)
     elseIf _activeDeity == PDV_Azura && PDV_Azura
-        AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None)
+        AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None, multiplier)
     endIf
 EndFunction
 
@@ -14362,6 +14508,9 @@ String Function JournalToneToTitle(String toneKey)
     if toneKey == "drift.warn"
         return "The path strains"
     endIf
+    if toneKey == "daedric.pressure"
+        return "A Prince watches"
+    endIf
     return "A moment noted"
 EndFunction
 
@@ -14391,6 +14540,9 @@ String Function JournalToneToValence(String toneKey)
         return "warning"
     endIf
     if toneKey == "drift.warn"
+        return "warning"
+    endIf
+    if toneKey == "daedric.pressure"
         return "warning"
     endIf
     return "neutral"

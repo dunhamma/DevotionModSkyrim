@@ -37,6 +37,8 @@ Int Property DAEDRIC_STATE_CURSE = 6 AutoReadOnly
 ; from the pact favor and is untouched here.
 String Property DAEDRIC_ACTIVE_PACT_KEY = "PDV.Daedric.ActivePact" AutoReadOnly
 String Property DAEDRIC_LIVE_SPELLS_KEY = "PDV.Daedric.LivePactSpells" AutoReadOnly
+String Property DAEDRIC_PREPACT_NOTICE_QUEUE_KEY = "PDV.Daedric.PendingPrePactNotices" AutoReadOnly
+String Property DAEDRIC_PREPACT_NOTICE_SHOWN_KEY = "PDV.Daedric.PrePactNoticeShown" AutoReadOnly
 
 Function OnTierChange(Int oldTier, Int newTier)
     if newTier > 0
@@ -168,9 +170,7 @@ Function DeclineChampionOffer(String reason)
         fallbackPiety = ThresholdDevoted
     endIf
 
-    StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Piety", fallbackPiety)
-    StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Tier", TIER_DEVOTED as Float)
-    StorageUtil.SetFloatValue(GetDeityForm(), "PDV.LastTierChange", Utility.GetCurrentGameTime())
+    SetStoredPiety(fallbackPiety, "champion_decline_" + reason)
     if IsActiveDaedricPact()
         MakeActiveDaedricPact()
     else
@@ -340,15 +340,66 @@ Float Function GetStoredPiety()
 EndFunction
 
 Function SetStoredPiety(Float amount, String reason)
+    Float priorPiety = GetStoredPiety()
     Float normalizedPiety = ClampPiety(amount)
+    Float delta = normalizedPiety - priorPiety
     StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Piety", normalizedPiety)
     StorageUtil.SetFloatValue(GetDeityForm(), "PDV.LastEventGameTime", Utility.GetCurrentGameTime())
-    RecomputeStoredTier(reason)
+    if reason != "" && delta != 0.0
+        RecordDaedricPathDriver(reason, delta)
+    endIf
+    Int newTier = RecomputeStoredTier(reason)
+    UpdatePrePactNoticeState(priorPiety, normalizedPiety, newTier)
     TraceDaedric(2, "SetStoredPiety " + normalizedPiety + " (" + reason + ")")
 EndFunction
 
 Function AdjustStoredPiety(Float amount, String reason)
     SetStoredPiety(GetStoredPiety() + amount, reason)
+EndFunction
+
+Function UpdatePrePactNoticeState(Float priorPiety, Float normalizedPiety, Int tierValue)
+    Float noticeThreshold = ThresholdSeeker * 0.5
+    Form deityForm = GetDeityForm()
+
+    if tierValue > TIER_NONE || normalizedPiety < noticeThreshold
+        StorageUtil.SetIntValue(deityForm, DAEDRIC_PREPACT_NOTICE_SHOWN_KEY, 0)
+        return
+    endIf
+
+    if priorPiety < noticeThreshold && normalizedPiety >= noticeThreshold && StorageUtil.GetIntValue(deityForm, DAEDRIC_PREPACT_NOTICE_SHOWN_KEY) != 1
+        StorageUtil.FormListAdd(None, DAEDRIC_PREPACT_NOTICE_QUEUE_KEY, deityForm, False)
+    endIf
+EndFunction
+
+Function RecordDaedricPathDriver(String reason, Float delta)
+    Form deityForm = GetDeityForm()
+    String humanized = HumanizeDaedricDriverReason(reason)
+    while StorageUtil.StringListCount(deityForm, "PDV.Driver.Reasons") >= 6
+        StorageUtil.StringListRemoveAt(deityForm, "PDV.Driver.Reasons", 0)
+        StorageUtil.FloatListRemoveAt(deityForm, "PDV.Driver.Deltas", 0)
+        StorageUtil.IntListRemoveAt(deityForm, "PDV.Driver.Days", 0)
+    endWhile
+    StorageUtil.StringListAdd(deityForm, "PDV.Driver.Reasons", humanized, True)
+    StorageUtil.FloatListAdd(deityForm, "PDV.Driver.Deltas", delta, True)
+    StorageUtil.IntListAdd(deityForm, "PDV.Driver.Days", Utility.GetCurrentGameTime() as Int, True)
+EndFunction
+
+String Function HumanizeDaedricDriverReason(String raw)
+    if raw == ""
+        return "a Daedric act"
+    endIf
+    if StringUtil.Find(raw, "shrine") >= 0 || StringUtil.Find(raw, "prayer") >= 0
+        return "Daedric prayer"
+    elseIf StringUtil.Find(raw, "hunt") >= 0
+        return "the hunt"
+    elseIf StringUtil.Find(raw, "controlled") >= 0
+        return "a controlled proof act"
+    elseIf StringUtil.Find(raw, "v2_") >= 0
+        return "a Daedric path act"
+    elseIf StringUtil.Find(raw, "renounce") >= 0
+        return "renouncing a pact"
+    endIf
+    return "a Daedric sign"
 EndFunction
 
 Int Function RecomputeStoredTier(String reason)

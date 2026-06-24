@@ -20,11 +20,9 @@
  *               seed, debug, reset). Deterministic, not an organic act; no driver is
  *               expected. Reported for completeness, not a finding.
  *
- * KNOWN TARGET GAP (proves the tool catches the class): PDV_DaedricPathBase.
- * AdjustStoredPiety (~350) — every Daedric Prince signal (HandleDaedricPrinceSignal,
- * HandleDaedricShrinePrayer, PrinceV2 deepen, per-path controlled/hunt rites) adds
- * piety through AdjustStoredPiety, which records NO driver. Pre-pact Princes are
- * therefore invisible in the Ledger.
+ * DAEDRIC STORED-PIETY PATH. AdjustStoredPiety is tracked only while the shared
+ * PDV_DaedricPathBase.SetStoredPiety primitive records PDV.Driver.* entries. If
+ * that hook is removed, every AdjustStoredPiety call site becomes UNTRACKED again.
  *
  * Pure static analysis; read-only except its own generated ledger. Exit non-zero on
  * FINDINGS. Self-test: PDV_LEDGER_COVERAGE_SELFTEST=1 injects a guaranteed bypass
@@ -41,6 +39,7 @@ const OUT_MD = `${ROOT}/references/authoring/PDV_LedgerCoverageLedger.md`;
 // dawn into PDV.Piety. A direct write to either, outside the AwardPiety funnel, is a
 // bypass candidate.
 const PIETY_KEY_RE = /"PDV\.Piety"|"PDV\.PietyToday"/;
+const DAEDRIC_BASE_FILE = "PDV_DaedricPathBase.psc";
 
 // Names whose call SITE means the change is funneled through AwardPietyInternal and so
 // records a driver. (AwardPiety -> AwardPietyInternal; AwardCuratedSignal[Scaled] ->
@@ -67,6 +66,7 @@ function main() {
   const untracked = []; // earn-time bypasses -> FINDINGS
   const lifecycle = []; // non-earn writes -> reported only
   const substrate = []; // substrate metric writes that feed a deity indirectly -> noted
+  const daedricStoredPietyTracked = hasDaedricStoredPietyDriverHook();
 
   for (const file of files) {
     const text = fs.readFileSync(`${SOURCE_DIR}/${file}`, "utf8");
@@ -90,12 +90,17 @@ function main() {
         continue;
       }
 
-      // --- BYPASS: AdjustStoredPiety / SetStoredPiety call site (Daedric path piety). ---
-      // AdjustStoredPiety -> SetStoredPiety -> raw StorageUtil write, NO driver.
+      // --- Daedric stored-piety path. ---
+      // AdjustStoredPiety is tracked only while the shared SetStoredPiety primitive
+      // writes the same PDV.Driver ring the dashboard reads.
       const isAdjustStored = /\bAdjustStoredPiety\s*\(/.test(code) && !/Function\s+AdjustStoredPiety\b/.test(code);
       if (isAdjustStored) {
-        untracked.push({ file, line: lineNo, fn, kind: "AdjustStoredPiety", snippet,
-          why: "Daedric path piety via AdjustStoredPiety -> SetStoredPiety; records no PDV.Driver entry, so the Prince is invisible in the Ledger." });
+        if (daedricStoredPietyTracked) {
+          tracked.push({ file, line: lineNo, fn, kind: "AdjustStoredPiety->SetStoredPiety driver", snippet });
+        } else {
+          untracked.push({ file, line: lineNo, fn, kind: "AdjustStoredPiety", snippet,
+            why: "Daedric path piety via AdjustStoredPiety -> SetStoredPiety without a PDV.Driver hook; records no driver, so the Prince is invisible in the Ledger." });
+        }
         continue;
       }
 
@@ -131,7 +136,7 @@ function main() {
       ? "PASS (caught injected AdjustStoredPiety bypass)" : "FAIL";
   }
 
-  // Confirm the KNOWN target gap is present (real, not just the synthetic one).
+  // Confirm whether the historical Daedric target gap is still present.
   const caughtRealAdjustStored = untracked.some(
     (u) => u.file !== "(selftest)" && u.kind === "AdjustStoredPiety"
   );
@@ -144,10 +149,11 @@ function main() {
     untrackedSites: untracked.length,
     lifecycleSites: lifecycle.length,
     substrateScaledWriters: substrate.length,
+    daedricStoredPietyDriverHook: daedricStoredPietyTracked ? "YES" : "NO",
     untracked: untracked.map((u) => `${u.file}:${u.line} ${u.fn} [${u.kind}]`),
-    knownTargetGapCaught: caughtRealAdjustStored
+    historicalDaedricBypassCaught: caughtRealAdjustStored
       ? "YES (AdjustStoredPiety bypass present in UNTRACKED -> pre-pact Princes invisible in Ledger)"
-      : "NO (expected at least one real AdjustStoredPiety bypass)",
+      : "NO (Daedric stored-piety path is tracked or no AdjustStoredPiety call sites were found)",
     selfTest,
     ledger: "references/authoring/PDV_LedgerCoverageLedger.md",
   };
@@ -182,6 +188,24 @@ function stripComment(line) {
   return before;
 }
 
+function functionBody(text, name) {
+  const re = new RegExp(`(?:^|\\n)\\s*(?:[A-Za-z_][\\w\\[\\]]*\\s+)?Function\\s+${name}\\s*\\([^)]*\\)([\\s\\S]*?)\\n\\s*EndFunction`, "i");
+  const m = text.match(re);
+  return m ? m[1] : null;
+}
+
+function hasDaedricStoredPietyDriverHook() {
+  const path = `${SOURCE_DIR}/${DAEDRIC_BASE_FILE}`;
+  if (!fs.existsSync(path)) return false;
+  const text = fs.readFileSync(path, "utf8");
+  const body = functionBody(text, "SetStoredPiety");
+  if (!body) return false;
+  return /RecordDaedricPathDriver\s*\(/.test(body) &&
+         /"PDV\.Driver\.Reasons"/.test(text) &&
+         /"PDV\.Driver\.Deltas"/.test(text) &&
+         /"PDV\.Driver\.Days"/.test(text);
+}
+
 function writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjustStored }) {
   const md = [];
   md.push("# PDV Ledger Coverage Ledger");
@@ -201,7 +225,8 @@ function writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjus
   md.push("");
   md.push(`Summary: ${tracked.length} TRACKED | ${untracked.length} UNTRACKED | ${lifecycle.length} LIFECYCLE | ${substrate.length} substrate Record*Scaled writers`);
   md.push("");
-  md.push(`Known target gap (AdjustStoredPiety / Daedric bypass) caught: ${caughtRealAdjustStored ? "YES" : "NO"}`);
+  md.push(`Daedric stored-piety driver hook present: ${hasDaedricStoredPietyDriverHook() ? "YES" : "NO"}`);
+  md.push(`Historical AdjustStoredPiety bypass caught: ${caughtRealAdjustStored ? "YES" : "NO"}`);
   md.push("");
 
   md.push("## UNTRACKED (bypass the Ledger) -- FINDINGS");

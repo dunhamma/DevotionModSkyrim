@@ -6,18 +6,14 @@ Anti-farm doctrine: every signal handler that awards POSITIVE (gain) PIETY needs
 
 Scope: PDV__ManagerQuest.psc handler-shaped functions (Handle<X> / Record<X>Scaled / Try<X> / Award<X>Signal) that transitively reach AwardPiety / AwardCuratedSignal[Scaled]. Substrate AdjustMetric (the favor/buff channel, not the piety pulse) is intentionally out of scope. The audit is caller-aware (a thin emit-wrapper reads CAPPED when every caller is capped) and sign-aware: only POSITIVE-delta (gain) handlers are a farm exploit and fail the build; PENALTY-only handlers (negative delta -- anti-creed, oath-break, Lorkhan-pressure) cannot be farmed for gain and are reported as friction-pacing review only.
 
-Summary: 115 piety-awarding handlers | 101 CAPPED | 0 allowlisted one-shot | 3 UNCAPPED-GAIN (findings) | 11 uncapped-penalty-only (review)
-Self-test: PASS (caught injected uncapped GAIN; HandleNordSleepEvents reads CAPPED)
+Summary: 120 piety-awarding handlers | 111 CAPPED | 0 allowlisted one-shot | 0 UNCAPPED-GAIN (findings) | 9 uncapped-penalty-only (review)
+Self-test: off
 
 ## UNCAPPED GAIN -- genuine anti-farm gaps (the doctrine target)
 
 Each awards POSITIVE piety with neither an own-tree cap nor full caller coverage. Add a Consume*/day-key gate on the pulse, or (if inherently single-fire) add to ONESHOT_ALLOWLIST with justification.
 
-| handler | callers |
-|---|---|
-| AwardDunmerReclamationFocusSignal | HandleDunmerReclamationFocus |
-| HandleDunmerReclamationFocus | (top-level / event-driven) |
-| HandleSelftestUncappedGain | (top-level / event-driven) |
+- none
 
 ## Uncapped PENALTY-only -- friction-pacing review (not a farm exploit)
 
@@ -25,10 +21,8 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 
 | handler | callers |
 |---|---|
-| AwardDunmerDeviationPriceSignal | HandleDunmerDeviationPrice |
 | AwardOrcOathBreakSignal | HandleOrcOathBreak |
 | HandleAltmerLorkhanPressure | DebugRecordAltmerLorkhanPressure |
-| HandleDunmerDeviationPrice | (top-level / event-driven) |
 | HandleGreenPactViolation | DebugTriggerGreenPactViolation |
 | HandleKhajiitAlkoshChaosAid | (top-level / event-driven) |
 | HandleKhajiitAzurahDesecration | (top-level / event-driven) |
@@ -48,6 +42,8 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | AwardActiveDunmerReclamationMemorySignal | own-handler-gate |
 | AwardAltmerDawnSignal | caller-gate (thin emit-wrapper; every caller capped) |
 | AwardAltmerOrthodoxSignal | caller-gate (thin emit-wrapper; every caller capped) |
+| AwardDunmerDeviationPriceSignal | caller-gate (thin emit-wrapper; every caller capped) |
+| AwardDunmerReclamationFocusSignal | caller-gate (thin emit-wrapper; every caller capped) |
 | AwardImperialCivicFamilySignal | caller-gate (thin emit-wrapper; every caller capped) |
 | AwardImperialPatronCivicSignal | caller-gate (thin emit-wrapper; every caller capped) |
 | AwardNordRouteFamilySignal | caller-gate (thin emit-wrapper; every caller capped) |
@@ -93,9 +89,12 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleCurseStateTransition | called-fn-gate |
 | HandleDaedricPrinceSignal | called-fn-gate |
 | HandleDunmerClumsyCrime | own-handler-gate |
+| HandleDunmerDeviationPrice | own-handler-gate |
 | HandleDunmerOutdoorGoodDaedraShrine | called-fn-gate |
 | HandleDunmerPlayerHomeBonus | own-handler-gate |
 | HandleDunmerPortableShrinePrayer | own-handler-gate |
+| HandleDunmerReclamationFocus | own-handler-gate |
+| HandleDunmerSleepEvents | called-fn-gate |
 | HandleHoonDingBreakthroughKill | own-handler-gate |
 | HandleImperialCivicService | own-handler-gate |
 | HandleImperialPatronCivicFavor | own-handler-gate |
@@ -105,6 +104,8 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleKhajiitAlkoshNamedDragon | called-fn-gate |
 | HandleKhajiitBaanDarReversal | own-handler-gate |
 | HandleKhajiitBaanDarRoadTrick | called-fn-gate |
+| HandleKhajiitFocusedSource | called-fn-gate |
+| HandleKhajiitFocusedSourceForFocus | called-fn-gate |
 | HandleKhajiitMoonObservance | own-handler-gate |
 | HandleKhajiitRajhinElegantTheft | called-fn-gate |
 | HandleKhajiitRoadHome | called-fn-gate |
@@ -125,6 +126,7 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleOrcSleepEvents | own-handler-gate |
 | HandleOrcStrongholdForge | own-handler-gate |
 | HandleOrcStrongholdPresence | own-handler-gate |
+| HandlePlayerBelowHealthGate | called-fn-gate |
 | HandlePlayerBelowHealthSurvived | called-fn-gate |
 | HandlePlayerSleepStop | called-fn-gate |
 | HandleRedguardAncestorSpine | own-handler-gate |
@@ -140,8 +142,10 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleTalosShrineDefiance | own-handler-gate |
 | TryArgonianBedOfChoiceSleep | called-fn-gate |
 | TryArgonianNearWaterMaintenance | own-handler-gate |
+| TryArgonianSithisNearDeathBurst | own-handler-gate |
 | TryAwardAltmerMagicMilestone | own-handler-gate |
 | TryAwardDunmerTwilightWindowSignal | own-handler-gate |
+| TryBosmerBaanDarGap | own-handler-gate |
 | TryBosmerEldergleamInterior | called-fn-gate |
 | TryBosmerGildergreenProximity | called-fn-gate |
 | TryBosmerHearthSleep | called-fn-gate |

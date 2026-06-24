@@ -13,6 +13,8 @@
 //   6. references/authoring/PDV_QuestReactionMatrix_Full.csv         (one-shot quest-reaction cells)
 //   7. references/authoring/PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv (routed renewable faucet rows)
 //   8. live-source/Scripts/Source/PDV_PlayerEvents.psc               (non-P2 Daedric quest-stage + faucet branch proof)
+//   9. references/authoring/PDV_SignalFloorDirectRenewables.csv      (code-backed direct manager renewables)
+//  10. live-source/Scripts/Source/PDV__ManagerQuest.psc              (direct manager renewable evidence)
 //
 // Verdict per path: PASS if wired_end_to_end >= min_types AND wired_renewable >= min_renewable, else UNDER-FLOOR.
 //
@@ -38,7 +40,9 @@ const PATHS = {
   princeLikes: join(AUTH, "PDV_DeityLikesDislikes_Princes_V2.csv"),
   quest: join(AUTH, "PDV_QuestReactionMatrix_Full.csv"),
   partd: join(AUTH, "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv"),
+  directRenewables: join(AUTH, "PDV_SignalFloorDirectRenewables.csv"),
   playerEvents: join(REPO, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc"),
+  managerQuest: join(REPO, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc"),
   outCsv: join(AUTH, "PDV_SignalFloorLedger.csv"),
   outMd: join(AUTH, "PDV_SignalFloorLedger.md"),
 };
@@ -150,7 +154,9 @@ const likesRows = csvToObjects(readFileSync(PATHS.likes, "utf8"));
 const princeLikesRows = existsSync(PATHS.princeLikes) ? csvToObjects(readFileSync(PATHS.princeLikes, "utf8")) : [];
 const questRows = csvToObjects(readFileSync(PATHS.quest, "utf8"));
 const partdRows = csvToObjects(readFileSync(PATHS.partd, "utf8"));
+const directRenewableRows = existsSync(PATHS.directRenewables) ? csvToObjects(readFileSync(PATHS.directRenewables, "utf8")) : [];
 const playerEventsText = existsSync(PATHS.playerEvents) ? readFileSync(PATHS.playerEvents, "utf8") : "";
+const managerQuestText = existsSync(PATHS.managerQuest) ? readFileSync(PATHS.managerQuest, "utf8") : "";
 
 const routedFaucetKeys = new Set();
 for (const match of playerEventsText.matchAll(/RouteQuestReactionFaucet\("([^"]+)"/g)) {
@@ -257,6 +263,72 @@ function e2eHasSkip(row) {
   return E2E_PROOF_COLUMNS.some(col => String(row?.[col] || "").toUpperCase() === "SKIP");
 }
 
+function escapeRegExp(s) {
+  return String(s || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function extractPapyrusFunction(text, name) {
+  if (!text || !name) return "";
+  const lines = text.split(/\r?\n/);
+  const startRe = new RegExp("^\\s*(?:[A-Za-z0-9_\\[\\]]+\\s+)?Function\\s+" + escapeRegExp(name) + "\\s*\\(", "i");
+  let start = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (startRe.test(lines[i])) {
+      start = i;
+      break;
+    }
+  }
+  if (start < 0) return "";
+
+  for (let i = start + 1; i < lines.length; i++) {
+    if (/^\s*EndFunction\b/i.test(lines[i])) {
+      return lines.slice(start, i + 1).join("\n");
+    }
+  }
+  return lines.slice(start).join("\n");
+}
+
+function missingTokens(text, tokens) {
+  return tokens.filter(t => !text.includes(t));
+}
+
+const directRenewablesByPath = new Map();
+for (const row of directRenewableRows) {
+  if (!row.path_id) continue;
+  if (!directRenewablesByPath.has(row.path_id)) directRenewablesByPath.set(row.path_id, []);
+  directRenewablesByPath.get(row.path_id).push(row);
+}
+
+const directFunctionBodies = new Map();
+function getDirectFunctionBody(name) {
+  if (!directFunctionBodies.has(name)) {
+    directFunctionBodies.set(name, extractPapyrusFunction(managerQuestText, name));
+  }
+  return directFunctionBodies.get(name);
+}
+
+function directRenewableCheck(row) {
+  const kind = (row.type || "").trim();
+  const fn = (row.manager_function || "").trim();
+  if (!ALL_TYPES.has(kind)) return { ok: false, reason: `unknown-type:${kind || "(blank)"}` };
+  if (!isRenewable(kind)) return { ok: false, reason: `not-renewable:${kind}` };
+  if (!fn) return { ok: false, reason: "missing-manager-function" };
+
+  const body = getDirectFunctionBody(fn);
+  if (!body) return { ok: false, reason: `missing-function:${fn}` };
+
+  const bodyMissing = [
+    ...missingTokens(body, splitSemis(row.guard_evidence)).map(t => `guard:${t}`),
+    ...missingTokens(body, splitSemis(row.anti_farm_evidence)).map(t => `anti-farm:${t}`),
+    ...missingTokens(body, splitSemis(row.sink_evidence)).map(t => `sink:${t}`),
+  ];
+  const globalMissing = missingTokens(managerQuestText, splitSemis(row.global_evidence)).map(t => `global:${t}`);
+  const hookMissing = missingTokens(managerQuestText, splitSemis(row.hook_evidence)).map(t => `hook:${t}`);
+  const missing = [...bodyMissing, ...globalMissing, ...hookMissing];
+  if (missing.length) return { ok: false, reason: `missing-evidence:${missing.join("+")}` };
+  return { ok: true, reason: "code-backed" };
+}
+
 // ===========================================================================
 // Per-path computation
 // ===========================================================================
@@ -291,6 +363,7 @@ for (const row of registry) {
   const blockedP2Surfaces = [];
   const designedOnlyFormlists = [];
   const emptyShells = [];
+  const blockedDirectRenewables = [];
   let truthStatus = e2eRows.length ? "e2e-ledger" : "designed-only-no-e2e-ledger";
 
   for (const prop of formlists) {
@@ -405,6 +478,27 @@ for (const row of registry) {
     wiredEvidence.push(note);
   }
 
+  // ----- (5) Direct manager renewables -> code-backed renewable types.
+  // These rows are allowed to count only when the named manager function exists
+  // and the declared origin/active-path guard, anti-farm gate, hook seam, and
+  // piety/substrate sink evidence are present in the live-source mirror.
+  for (const dr of directRenewablesByPath.get(pathId) || []) {
+    const kind = (dr.type || "").trim();
+    const fn = (dr.manager_function || "").trim();
+    if (ALL_TYPES.has(kind)) {
+      designedTypes.add(kind);
+      designedEvidence.push(`direct-manager-designed:${fn || "(missing)"}[${kind}]`);
+    }
+
+    const status = directRenewableCheck(dr);
+    if (status.ok) {
+      wiredTypes.add(kind);
+      wiredEvidence.push(`direct-manager:${fn}[${kind}]`);
+    } else {
+      blockedDirectRenewables.push(`${fn || "(missing-function)"}[${kind || "(missing-type)"}]:${status.reason}`);
+    }
+  }
+
   // ----- Tally
   const designedTypesPresent = sortedTypes(designedTypes);
   const wiredTypesPresent = sortedTypes(wiredTypes);
@@ -444,6 +538,7 @@ for (const row of registry) {
     evidence: wiredEvidence,
     emptyShells,
     blockedP2Surfaces,
+    blockedDirectRenewables,
     designedOnlyFormlists,
     truthStatus,
     envEventsSeen: [...envEventsSeen].sort((a, b) => a - b),
@@ -479,6 +574,7 @@ const csvHeader = [
   "missing",
   "truth_status",
   "blocked_p2_surfaces",
+  "blocked_direct_renewables",
   "designed_only_formlists",
 ];
 const csvLines = [csvHeader.join(",")];
@@ -498,6 +594,7 @@ for (const r of results) {
     r.missing.join("; "),
     r.truthStatus,
     r.blockedP2Surfaces.join("|"),
+    r.blockedDirectRenewables.join("|"),
     r.designedOnlyFormlists.join("|"),
   ].map(csvCell).join(","));
 }
@@ -545,7 +642,9 @@ md.push("**Designed vs wired:** `designed` counts manifest-declared P2 sourceKin
   "`PDV_SignalE2EGateLedger.csv` surfaces; non-P2 Prince Daedric quest-stage counts only when " +
   "`PDV_PlayerEvents.psc` has both registration and a route branch. Non-P2 `day-to-day`, " +
   "`quest-reaction`, and routed `faucet` remain data-backed from their source tables and " +
-  "runtime branches. Verdicts use `wired_end_to_end`; `designed` is informational.");
+  "runtime branches. Direct manager renewables count only when `PDV_SignalFloorDirectRenewables.csv` " +
+  "has a row whose named manager function contains the declared guard, anti-farm, and sink evidence. " +
+  "Verdicts use `wired_end_to_end`; `designed` is informational.");
 md.push("");
 md.push("## Summary");
 md.push("");
@@ -593,6 +692,22 @@ if (withBlockedP2.length) {
   md.push("|---|---|");
   for (const r of withBlockedP2) {
     md.push(`| \`${r.pathId}\` | ${r.blockedP2Surfaces.join(", ")} |`);
+  }
+  md.push("");
+}
+
+// Direct manager renewable transparency section
+const withBlockedDirect = results.filter(r => r.blockedDirectRenewables.length);
+if (withBlockedDirect.length) {
+  md.push("## Direct manager renewables not code-backed");
+  md.push("");
+  md.push("These rows are declared in `PDV_SignalFloorDirectRenewables.csv` but do not yet have all " +
+    "declared manager function, guard, anti-farm, sink, and hook evidence in `PDV__ManagerQuest.psc`.");
+  md.push("");
+  md.push("| path_id | blocked direct renewables |");
+  md.push("|---|---|");
+  for (const r of withBlockedDirect) {
+    md.push(`| \`${r.pathId}\` | ${r.blockedDirectRenewables.join(", ")} |`);
   }
   md.push("");
 }

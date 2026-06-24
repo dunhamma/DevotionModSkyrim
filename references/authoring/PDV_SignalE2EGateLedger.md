@@ -16,7 +16,7 @@ MCP: PASS - Server live, profile Devotion Dev.
 - formLists: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists - PASS
 - aliasProperties: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties - PASS
 - sourceFill: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill - PASS
-- completenessAudit: PASS (exit 0) - node tools/pdv_completeness_audit.mjs --json - Completeness audit PASS; source indexed 1500 functions, 96 signal consts.
+- completenessAudit: PASS (exit 0) - node tools/pdv_completeness_audit.mjs --json - Completeness audit PASS; source indexed 1514 functions, 96 signal consts.
 
 ## Column Counts
 
@@ -33,7 +33,7 @@ MCP: PASS - Server live, profile Devotion Dev.
 ## Curated-Signal Parity
 
 Every AwardCuratedSignal[Scaled](deity, deity.SIGNAL_X) must resolve to a deity script that DEFINES and HANDLES SIGNAL_X in ScoreCuratedSignal, else the curated piety silently scores 0.0 (the Kyne class). Pure static source check -- no server.
-Status: PASS | references=103 | ok=103 | gaps=0 | cross-deity=0 | by-index=0
+Status: PASS | references=106 | ok=106 | gaps=0 | cross-deity=0 | by-index=0
 
 ## RED / INCOMPLETE By Failing Step
 
@@ -41,16 +41,16 @@ Status: PASS | references=103 | ok=103 | gaps=0 | cross-deity=0 | by-index=0
 
 | Property | Race | Kinds | Manifest | Shell | Alias | Registration | Route Branch | Handler Sink | Route Review | Live Fill | Reconcile | Verdict | Detail |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| PDV_FLST_P2_AltmerAurielSources | Altmer | book;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
+| PDV_FLST_P2_AltmerAurielSources | Altmer | book;harvest;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_AltmerLorkhanPenalties | Altmer | book;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_AltmerMagnusSources | Altmer | book;quest-stage;spell-learned | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_AltmerXarxesSources | Altmer | book;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
-| PDV_FLST_P2_ArgonianCommunitySources | Argonian | quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
-| PDV_FLST_P2_ArgonianHistSources | Argonian | book;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
-| PDV_FLST_P2_ArgonianSithisSources | Argonian | quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
-| PDV_FLST_P2_BosmerBaanDarSources | Bosmer | quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
+| PDV_FLST_P2_ArgonianCommunitySources | Argonian | book;harvest;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
+| PDV_FLST_P2_ArgonianHistSources | Argonian | book;harvest;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
+| PDV_FLST_P2_ArgonianSithisSources | Argonian | book;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
+| PDV_FLST_P2_BosmerBaanDarSources | Bosmer | book;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_BosmerYffreSources | Bosmer | book;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
-| PDV_FLST_P2_BosmerZenSources | Bosmer | quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
+| PDV_FLST_P2_BosmerZenSources | Bosmer | book;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_BretonGreenWayHarvests | Breton | harvest | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_BretonGreenWaySources | Breton | quest-stage;book;weather;harvest | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_BretonHiddenArtSources | Breton | quest-stage;book | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
@@ -70,8 +70,8 @@ Status: PASS | references=103 | ok=103 | gaps=0 | cross-deity=0 | by-index=0
 | PDV_FLST_P2_ImperialPrivateTalosSources | Imperial | quest-stage;book | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_ImperialPublicServiceSources | Imperial | quest-stage;book | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_ImperialPublicTalosSources | Imperial | quest-stage;book | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
-| PDV_FLST_P2_KhajiitFocusedSources | Khajiit | quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
-| PDV_FLST_P2_KhajiitLunarSources | Khajiit | book | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
+| PDV_FLST_P2_KhajiitFocusedSources | Khajiit | book;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
+| PDV_FLST_P2_KhajiitLunarSources | Khajiit | book;quest-stage | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_NordHircineArkaySources | Nord | quest-stage;book;spell-learned | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_NordKyneTalosSources | Nord | quest-stage;book;weather | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
 | PDV_FLST_P2_NordOldWaysSources | Nord | quest-stage;book | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | GREEN | All proof columns passed. |
