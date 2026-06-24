@@ -18,9 +18,11 @@ Scriptname PDV_Deity_AuriEl extends PDV_DeityBase
 
 Int Property SIGNAL_DAWN_ACKNOWLEDGMENT = 201 AutoReadOnly
 Int Property SIGNAL_ORTHODOXY_AFFIRMATION = 202 AutoReadOnly
+Int Property SIGNAL_ANCESTOR_SPINE = 203 AutoReadOnly
 
 Float Property DELTA_DAWN_ACKNOWLEDGMENT = 1.0 Auto
 Float Property DELTA_ORTHODOXY_AFFIRMATION = 3.0 Auto
+Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 
 Event OnInit()
     if GetDebugLevel() >= 2
@@ -37,6 +39,8 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_DAWN_ACKNOWLEDGMENT
     elseIf signalType == SIGNAL_ORTHODOXY_AFFIRMATION
         return DELTA_ORTHODOXY_AFFIRMATION
+    elseIf signalType == SIGNAL_ANCESTOR_SPINE
+        return DELTA_ANCESTOR_SPINE
     endIf
 
     return 0.0

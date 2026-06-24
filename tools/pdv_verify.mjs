@@ -483,6 +483,12 @@ const SKELETON_SUBSTRATE_DEFINITIONS = [
     substrateName: "NordAncestor",
     requiredOriginRace: 0,
   },
+  {
+    questEdid: "PDV_Substrate_AltmerAncestor",
+    scriptName: "PDV_SubstrateBase",
+    substrateName: "AltmerAncestor",
+    requiredOriginRace: 3,
+  },
 ];
 
 const SKELETON_SACRED_PLACE_DEFINITIONS = [
@@ -651,6 +657,7 @@ const COMPILED_SCRIPTS = {
   PDV_Substrate_KhajiitLunar: "required",
   PDV_Substrate_ArgonianHist: "required",
   PDV_Substrate_NordAncestor: "required",
+  PDV_Substrate_AltmerAncestor: "required",
   PDV_DaedricPath_Hircine: "required",
   PDV_ActionRouter: "phase3",
   PDV__SM_KillActor: "phase3",
@@ -912,6 +919,7 @@ const MANAGER_PATTERN_PROPERTIES = {
   PDV_DunmerAncestorSubstrate: "PDV_Substrate_DunmerAncestor",
   PDV_KhajiitLunarSubstrate: "PDV_Substrate_KhajiitLunar",
   PDV_NordAncestorSubstrate: "PDV_Substrate_NordAncestor",
+  PDV_AltmerAncestorSubstrate: "PDV_Substrate_AltmerAncestor",
   PDV_HircinePath: "PDV_DaedricPath_Hircine",
   PDV_CurseStateService: "PDV_CurseState",
 };
@@ -1282,6 +1290,7 @@ class Verifier {
       this.checkNordSpineParityBuild();
       this.checkDunmerSpineParityBuild();
       this.checkOrcSpineParityBuild();
+      this.checkAltmerSpineParityBuild();
       this.checkCommitment();
       this.checkNeglectDecay();
       this.checkPhase11();
@@ -6237,6 +6246,139 @@ class Verifier {
         this.pass("Orc spine boon effect actor value", `${expected.effect} actor value is ${expected.actorValue}.`, PDV_ESP);
       } else {
         this.phase20RaceCostingGap("Orc spine boon effect actor value", `${expected.effect} actor value is ${actorValue}, expected ${expected.actorValue}.`, PDV_ESP);
+      }
+    }
+  }
+
+  checkAltmerSpineParityBuild() {
+    this.checkSourceContains("Altmer spine Auri-El source", "PDV_Deity_AuriEl", [
+      "SIGNAL_ANCESTOR_SPINE = 203",
+      "DELTA_ANCESTOR_SPINE = 1.0",
+      "signalType == SIGNAL_ANCESTOR_SPINE",
+      "return DELTA_ANCESTOR_SPINE",
+    ]);
+    this.checkSourceContains("Altmer spine substrate source", "PDV_Substrate_AltmerAncestor", [
+      "Scriptname PDV_Substrate_AltmerAncestor extends PDV_SubstrateBase",
+      "Function RecordHeritageStandingScaled(Float multiplier, String reason)",
+      "Function ProcessHeritageDawn(Bool curseActive, String reason)",
+      "\"PDV.Substrate.AltmerAncestor.SourceCount\"",
+      "String Function GetPilotSummary()",
+    ]);
+    this.checkSourceContains("Altmer spine manager source", "PDV__ManagerQuest", [
+      "PDV_Substrate_AltmerAncestor Property PDV_AltmerAncestorSubstrate Auto",
+      "Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)",
+      "PDV_AuriEl.SIGNAL_ANCESTOR_SPINE",
+      "\"PDV.Altmer.AncestralStanding\"",
+      "AwardAltmerAncestorSpinePulse(multiplier, reason)",
+      "Function SyncAltmerAncestorSubstrate(Actor playerRef, Bool isAltmer)",
+      "Function HandleAltmerSleepEvents(Actor playerRef, String reason)",
+      "String Function GetAltmerHeritageLayerLabel()",
+    ]);
+
+    const substrateRecord = this.recordsByEdid.get("PDV_Substrate_AltmerAncestor");
+    if (substrateRecord?.type === "QUST") {
+      this.pass("Altmer spine substrate record", "PDV_Substrate_AltmerAncestor exists as QUST.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Altmer spine substrate record", "PDV_Substrate_AltmerAncestor is missing or not a QUST.", PDV_ESP);
+    }
+
+    const substrateDetail = this.recordDetails.get("PDV_Substrate_AltmerAncestor");
+    const baseScript = substrateDetail ? findScript(substrateDetail.fields || {}, "PDV_SubstrateBase") : null;
+    if (baseScript) {
+      this.pass("Altmer spine substrate base script", "PDV_SubstrateBase is attached.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Altmer spine substrate base script", "PDV_SubstrateBase is not attached.", PDV_ESP);
+    }
+
+    const concreteScript = substrateDetail ? findScript(substrateDetail.fields || {}, "PDV_Substrate_AltmerAncestor") : null;
+    if (concreteScript) {
+      this.pass("Altmer spine substrate script", "PDV_Substrate_AltmerAncestor is attached.", PDV_ESP);
+      const props = propertyMap(concreteScript);
+      this.checkScalarProperty("Altmer spine substrate property", props, "SubstrateName", "AltmerAncestor", this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Altmer spine substrate property", props, "RequiredOriginRace", 3, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Altmer spine substrate property", props, "PDV_GLO_OriginRace", "PDV_GLO_OriginRace", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Altmer spine substrate property", props, "PDV_GLO_DebugLevel", "PDV_GLO_DebugLevel", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Altmer spine substrate property", props, "Substrate_Always", "PDV_Bless_Altmer_Spine_Always", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Altmer spine substrate property", props, "Substrate_Mid", "PDV_Bless_Altmer_Spine_Mid", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Altmer spine substrate property", props, "Substrate_High", "PDV_Bless_Altmer_Spine_High", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Altmer spine substrate script", "PDV_Substrate_AltmerAncestor is not attached.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      this.checkObjectPropertyTarget("Altmer spine manager property", propertyMap(managerScript), "PDV_AltmerAncestorSubstrate", "PDV_Substrate_AltmerAncestor", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Altmer spine manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_All", ["PDV_Substrate_AltmerAncestor"]);
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_DevOnly", ["PDV_Substrate_AltmerAncestor"]);
+
+    const spellSpecs = [
+      {
+        spell: "PDV_Bless_Altmer_Spine_Always",
+        effects: [
+          { effect: "PDV_MGEF_Altmer_Spine_Always_Magicka", magnitude: 10, actorValue: "Magicka" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Altmer_Spine_Mid",
+        effects: [
+          { effect: "PDV_MGEF_Altmer_Spine_Mid_Magicka", magnitude: 20, actorValue: "Magicka" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Altmer_Spine_High",
+        effects: [
+          { effect: "PDV_MGEF_Altmer_Spine_High_Magicka", magnitude: 30, actorValue: "Magicka" },
+        ],
+      },
+    ];
+    for (const spec of spellSpecs) {
+      this.checkAltmerSpineSpellPacket(spec);
+    }
+  }
+
+  checkAltmerSpineSpellPacket(spec) {
+    const record = this.recordsByEdid.get(spec.spell);
+    if (record?.type === "SPEL") {
+      this.pass("Altmer spine boon spell", `${spec.spell} exists as SPEL.`, PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Altmer spine boon spell", `${spec.spell} is missing or not a SPEL.`, PDV_ESP);
+      return;
+    }
+
+    const detail = this.recordDetails.get(spec.spell);
+    const effects = Array.isArray(detail?.fields?.Effects) ? detail.fields.Effects : [];
+    for (const expected of spec.effects) {
+      const effectRecord = this.recordsByEdid.get(expected.effect);
+      if (effectRecord?.type === "MGEF") {
+        this.pass("Altmer spine boon effect", `${expected.effect} exists as MGEF.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Altmer spine boon effect", `${expected.effect} is missing or not a MGEF.`, PDV_ESP);
+        continue;
+      }
+
+      const spellEffect = effects.find((effect) => effect.BaseEffect === effectRecord.formid);
+      if (!spellEffect) {
+        this.phase20RaceCostingGap("Altmer spine boon spell effect", `${spec.spell} is missing ${expected.effect}.`, PDV_ESP);
+        continue;
+      }
+      const data = spellEffect.Data || {};
+      if (Math.abs((data.Magnitude || 0) - expected.magnitude) < 0.001 && (data.Duration || 0) === 0) {
+        this.pass("Altmer spine boon spell effect", `${spec.spell}.${expected.effect} magnitude is ${expected.magnitude}.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Altmer spine boon spell effect", `${spec.spell}.${expected.effect} data is ${JSON.stringify(data)}, expected magnitude ${expected.magnitude} duration 0.`, PDV_ESP);
+      }
+
+      const effectDetail = this.recordDetails.get(expected.effect);
+      const actorValue = String(effectDetail?.fields?.Archetype?.ActorValue || effectDetail?.fields?.ActorValue || "");
+      if (!actorValue || actorValue.toLowerCase() === expected.actorValue.toLowerCase()) {
+        this.pass("Altmer spine boon effect actor value", `${expected.effect} actor value is ${expected.actorValue}.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Altmer spine boon effect actor value", `${expected.effect} actor value is ${actorValue}, expected ${expected.actorValue}.`, PDV_ESP);
       }
     }
   }

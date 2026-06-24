@@ -89,6 +89,7 @@ PDV_ReputationTrack Property PDV_ThalmorAlignmentTrack Auto
 PDV_StateTrack Property PDV_BosmerPathTrack Auto
 PDV_StateTrack Property PDV_NordPantheonBaselineTrack Auto
 PDV_StateTrack Property PDV_AltmerCrisisTrack Auto
+PDV_Substrate_AltmerAncestor Property PDV_AltmerAncestorSubstrate Auto
 PDV_Substrate_NordAncestor Property PDV_NordAncestorSubstrate Auto
 PDV_Substrate_DunmerAncestor Property PDV_DunmerAncestorSubstrate Auto
 Book Property PDV_BOOK_DunmerAncestralUrn Auto
@@ -130,6 +131,9 @@ Spell Property PDV_Bless_Altmer_Magnus_T3 Auto
 Spell Property PDV_Bless_Altmer_Xarxes_T1 Auto
 Spell Property PDV_Bless_Altmer_Xarxes_T2 Auto
 Spell Property PDV_Bless_Altmer_Xarxes_T3 Auto
+Spell Property PDV_Bless_Altmer_Spine_Always Auto
+Spell Property PDV_Bless_Altmer_Spine_Mid Auto
+Spell Property PDV_Bless_Altmer_Spine_High Auto
 Spell Property PDV_SPEL_Neglect_Altmer Auto
 Spell Property PDV_Bless_Argonian_Hist_T1 Auto
 ; Argonian no-offer reward families (substrate-tier gated, not active-patron gated).
@@ -2955,6 +2959,24 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reas
     if GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
         HandleDunmerSleepEvents(playerRef, reason)
     endIf
+
+    if GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
+        HandleAltmerSleepEvents(playerRef, reason)
+    endIf
+EndFunction
+
+Function HandleAltmerSleepEvents(Actor playerRef, String reason)
+    if !playerRef || !IsAltmerOrigin() || IsAltmerFavorSuppressedByCurse()
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerAncestralDream")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AwardAltmerAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
+    ShowP2BookNotice("po3_book_altmer_sleep_dream", "Aldmeri dream", "The old line keeps its shape through rest.")
 EndFunction
 
 ; Mara's Mercy heal-on-rest. Imperial event-driven heal authored as a flat
@@ -6385,6 +6407,7 @@ Function HandleAltmerDawnSteadiness(String reason)
     TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
     if multiplier > 0.0
         AwardAltmerDawnSignal(reason, multiplier)
+        AwardAltmerAncestorSpinePulse(multiplier, reason)
     endIf
     if reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
         ShowP2BookNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
@@ -6410,6 +6433,7 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
     TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
     if multiplier > 0.0
         AwardAltmerOrthodoxSignal(reason, multiplier)
+        AwardAltmerAncestorSpinePulse(multiplier, reason)
     endIf
     ShowP2BookNotice(reason, "The scribe Xarxes", "The old orthodoxy asks more of you.")
 EndFunction
@@ -6458,8 +6482,42 @@ Function HandleAltmerMagicSkillIncrease(String skillName)
         StorageUtil.SetStringValue(None, "PDV.Altmer.LastMagicMilestoneSkill", skillName)
         StorageUtil.SetIntValue(None, "PDV.Altmer.LastMagicMilestoneCount", awardedCount)
         StorageUtil.SetFloatValue(None, "PDV.Altmer.LastMagicMilestoneTime", Utility.GetCurrentGameTime())
+        AwardAltmerAncestorSpinePulse(awardedCount as Float, "magic_milestone_" + skillName)
         Trace(2, "Altmer magic milestone routed: " + skillName + " x" + awardedCount)
     endIf
+EndFunction
+
+Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
+    if !IsAltmerOrigin() || multiplier <= 0.0
+        return
+    endIf
+
+    Int tierBefore = 0
+    if PDV_AltmerAncestorSubstrate
+        tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+        PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(multiplier, reason)
+        Int tierAfter = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, multiplier, "The old line holds its shape.", "auriel", GetAltmerHeritageLayerLabel())
+    endIf
+
+    if PDV_AuriEl
+        AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    endIf
+
+    StorageUtil.AdjustFloatValue(None, "PDV.Altmer.AncestralStanding", multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Altmer.AncestorSpineSourceCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Altmer.LastAncestorSpineReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Altmer.LastAncestorSpineTime", Utility.GetCurrentGameTime())
+    Trace(2, "Altmer ancestor spine routed with multiplier " + multiplier)
+EndFunction
+
+Function RunDawnRefreshAltmerAncestor()
+    if !PDV_AltmerAncestorSubstrate
+        return
+    endIf
+
+    Bool curseActive = IsAltmerFavorSuppressedByCurse()
+    PDV_AltmerAncestorSubstrate.ProcessHeritageDawn(curseActive, "dawn")
 EndFunction
 
 Int Function TryAwardAltmerMagicMilestone(String skillName, Float skillValue, Int threshold)
@@ -7717,6 +7775,8 @@ String Function BuildModeChangeLine(String modeLabel)
         return "The ash shifts, and your place among the dead settles anew: " + modeLabel + "."
     elseIf originRace == ORIGIN_KHAJIIT
         return "The moons mark a turning in your road: " + modeLabel + "."
+    elseIf originRace == ORIGIN_ALTMER
+        return "The old line records a turn in your discipline: " + modeLabel + "."
     endIf
     return "Your path turns. You walk now as: " + modeLabel + "."
 EndFunction
@@ -7837,6 +7897,10 @@ Function RunDawnRefreshTrackStates()
 
     if IsArgonianOrigin()
         RunDawnRefreshArgonianHist()
+    endIf
+
+    if IsAltmerOrigin()
+        RunDawnRefreshAltmerAncestor()
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_NORD
@@ -8814,12 +8878,25 @@ Function SyncAltmerRewards(Actor playerRef)
     endIf
 
     Bool isAltmer = GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
+    SyncAltmerAncestorSubstrate(playerRef, isAltmer)
     Bool broadOrthodoxFaithful = isAltmer && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count") >= 6
     SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T2, broadOrthodoxFaithful, "Altmer Orthodox T2")
 
     SyncAltmerRewardFamily(playerRef, PDV_AuriEl, PDV_Bless_Altmer_AuriEl_T1, PDV_Bless_Altmer_AuriEl_T2, PDV_Bless_Altmer_AuriEl_T3, "Auri-El")
     SyncAltmerRewardFamily(playerRef, PDV_Magnus, PDV_Bless_Altmer_Magnus_T1, PDV_Bless_Altmer_Magnus_T2, PDV_Bless_Altmer_Magnus_T3, "Magnus")
     SyncAltmerRewardFamily(playerRef, PDV_Xarxes, PDV_Bless_Altmer_Xarxes_T1, PDV_Bless_Altmer_Xarxes_T2, PDV_Bless_Altmer_Xarxes_T3, "Xarxes")
+EndFunction
+
+Function SyncAltmerAncestorSubstrate(Actor playerRef, Bool isAltmer)
+    if !playerRef || !PDV_AltmerAncestorSubstrate
+        return
+    endIf
+
+    if isAltmer
+        PDV_AltmerAncestorSubstrate.RecomputeSubstrateTier()
+    else
+        PDV_AltmerAncestorSubstrate.ClearSubstrateBoons()
+    endIf
 EndFunction
 
 Function SyncAltmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
@@ -14973,7 +15050,19 @@ String Function GetAltmerSurveyText()
         text = text + " Last favor: " + favor + "."
     endIf
 
+    if PDV_AltmerAncestorSubstrate
+        text = text + " Your Aldmeri heritage is " + GetAltmerHeritageLayerLabel() + "."
+    endIf
+
     return text
+EndFunction
+
+String Function GetAltmerHeritageLayerLabel()
+    if !PDV_AltmerAncestorSubstrate
+        return "quiet"
+    endIf
+
+    return PDV_AltmerAncestorSubstrate.GetHeritagePostureLabel()
 EndFunction
 
 String Function GetAltmerAlignmentSurveyBaseText()
