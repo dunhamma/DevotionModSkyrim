@@ -86,6 +86,7 @@ PDV_Deity_Magnus Property PDV_Magnus Auto
 PDV_Deity_Xarxes Property PDV_Xarxes Auto
 PDV_ReputationTrack Property PDV_ConcordatStandingTrack Auto
 PDV_Substrate_ImperialAncestor Property PDV_ImperialAncestorSubstrate Auto
+PDV_Substrate_BretonAncestor Property PDV_BretonAncestorSubstrate Auto
 PDV_ReputationTrack Property PDV_ThalmorAlignmentTrack Auto
 PDV_StateTrack Property PDV_BosmerPathTrack Auto
 PDV_StateTrack Property PDV_NordPantheonBaselineTrack Auto
@@ -2958,6 +2959,10 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reas
         HandleImperialSleepEvents(playerRef, reason)
     endIf
 
+    if GetPlayerOriginRaceIndex() == ORIGIN_BRETON
+        HandleBretonSleepEvents(playerRef, reason)
+    endIf
+
     if GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
         HandleDunmerSleepEvents(playerRef, reason)
     endIf
@@ -2992,6 +2997,20 @@ Function HandleImperialSleepEvents(Actor playerRef, String reason)
     endIf
 
     AwardImperialAncestorSpinePulse(multiplier, "sleep_rest_" + reason)
+EndFunction
+
+Function HandleBretonSleepEvents(Actor playerRef, String reason)
+    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonAncestralDream")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AwardBretonAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
+    ShowP2BookNotice("po3_book_breton_sleep_dream", "Inherited dream", "The old mixed blood wards itself in sleep.")
 EndFunction
 
 ; Mara's Mercy heal-on-rest. Imperial event-driven heal authored as a flat
@@ -7794,6 +7813,8 @@ String Function BuildModeChangeLine(String modeLabel)
         return "The old line records a turn in your discipline: " + modeLabel + "."
     elseIf originRace == ORIGIN_IMPERIAL
         return "The civic road turns under the old oaths: " + modeLabel + "."
+    elseIf originRace == ORIGIN_BRETON
+        return "The old mixed inheritance turns under your chosen road: " + modeLabel + "."
     endIf
     return "Your path turns. You walk now as: " + modeLabel + "."
 EndFunction
@@ -7933,6 +7954,7 @@ Function RunDawnRefreshTrackStates()
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_BRETON
+        RunDawnRefreshBretonAncestor()
         DecayBretonWitchcraftExposureAtDawn()
         DecayBretonDruidicStandingAtDawn()
     endIf
@@ -9059,6 +9081,7 @@ Function SyncBretonRewards(Actor playerRef)
     endIf
 
     Bool isBreton = GetPlayerOriginRaceIndex() == ORIGIN_BRETON
+    SyncBretonAncestorSubstrate(playerRef, isBreton)
     if isBreton
         EnsureBretonDruidicForkInitialized()
     endIf
@@ -9073,6 +9096,18 @@ Function SyncBretonRewards(Actor playerRef)
     SyncBretonKnightlyVowCreedLossSpells(isBreton && traditionValue == BRETON_TRADITION_KNIGHTS_ROAD)
     SyncBretonWitchcraftExposureRuptureSpell(isBreton)
     SyncBretonDruidicForkBetrayalSpell(isBreton && GetBretonDruidicForkValue() == BRETON_DRUIDIC_FORK_BETRAYED)
+EndFunction
+
+Function SyncBretonAncestorSubstrate(Actor playerRef, Bool isBreton)
+    if !playerRef || !PDV_BretonAncestorSubstrate
+        return
+    endIf
+
+    if isBreton
+        PDV_BretonAncestorSubstrate.RecomputeSubstrateTier()
+    else
+        PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
+    endIf
 EndFunction
 
 Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int activeTradition, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
@@ -12743,14 +12778,47 @@ Bool Function ShouldBretonDruidicStandingFray()
     return GetBretonDruidicForkValue() != BRETON_DRUIDIC_FORK_BETRAYED
 EndFunction
 
+Function AwardBretonAncestorSpinePulse(Float multiplier, String reason)
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON || multiplier <= 0.0
+        return
+    endIf
+
+    Int tierBefore = 0
+    if PDV_BretonAncestorSubstrate
+        tierBefore = PDV_BretonAncestorSubstrate.GetSubstrateTier()
+        PDV_BretonAncestorSubstrate.RecordAncestralResistanceScaled(multiplier, reason)
+        Int tierAfter = PDV_BretonAncestorSubstrate.GetSubstrateTier()
+        SendPrismaSubstrateProgress("breton-ancestor", tierBefore, tierAfter, multiplier, "The mixed inheritance answers.", "magnus", GetBretonAncestorLayerLabel())
+    endIf
+
+    if PDV_Magnus
+        AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    endIf
+
+    StorageUtil.AdjustFloatValue(None, "PDV.Breton.AncestralStanding", multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Breton.AncestorSpineSourceCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Breton.LastAncestorSpineReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Breton.LastAncestorSpineTime", Utility.GetCurrentGameTime())
+    Trace(2, "Breton ancestor spine routed with multiplier " + multiplier)
+EndFunction
+
+Function RunDawnRefreshBretonAncestor()
+    if !PDV_BretonAncestorSubstrate
+        return
+    endIf
+
+    Bool curseActive = StorageUtil.GetIntValue(None, "PDV.Curse.Breton.RestorationState") > 0
+    PDV_BretonAncestorSubstrate.ProcessAncestralDawn(curseActive, "dawn")
+EndFunction
+
 Function HandleBretonKnightlyVow(String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         Trace(2, "Breton Knightly Vow ignored for non-Breton origin.")
         return
     endIf
 
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonKnightlyVow")
     if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) == 0
-        Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonKnightlyVow")
         if multiplier <= 0.0
             return
         endIf
@@ -12765,6 +12833,7 @@ Function HandleBretonKnightlyVow(String reason)
         StorageUtil.SetIntValue(None, "PDV.Breton.CrossTraditionPressure", StorageUtil.GetIntValue(None, "PDV.Breton.CrossTraditionPressure") + 1)
     endIf
 
+    AwardBretonAncestorSpinePulse(multiplier, reason)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastKnightlyVowReason", reason)
     Trace(2, "Breton Knightly Vow routed: " + reason)
 EndFunction
@@ -12780,12 +12849,13 @@ Function HandleBretonHiddenArtExposure(String reason)
     StorageUtil.SetIntValue(None, "PDV.Breton.HiddenArtCount", StorageUtil.GetIntValue(None, "PDV.Breton.HiddenArtCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastHiddenArtReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonHiddenArtExposure")
     if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) == BRETON_TRADITION_HIDDEN_ART && PDV_Julianos
-        Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonHiddenArtExposure")
         if multiplier > 0.0
             AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_LAWFUL_ORDER, None, multiplier)
         endIf
     endIf
+    AwardBretonAncestorSpinePulse(multiplier, reason)
     ShowP2BookNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))
     Trace(2, "Breton Hidden Art exposure routed: " + reason)
 EndFunction
@@ -12826,12 +12896,13 @@ Function HandleBretonGreenWayStanding(String reason)
     StorageUtil.SetIntValue(None, "PDV.Breton.GreenWayCount", StorageUtil.GetIntValue(None, "PDV.Breton.GreenWayCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastGreenWayReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonGreenWayStanding")
     if IsBretonGreenWayForkEligible() && PDV_Kynareth
-        Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonGreenWayStanding")
         if multiplier > 0.0
             AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None, multiplier)
         endIf
     endIf
+    AwardBretonAncestorSpinePulse(multiplier, reason)
     Trace(2, "Breton Green Way standing routed: " + reason)
 EndFunction
 
@@ -15474,7 +15545,11 @@ String Function GetBretonSurveyText()
     String band = GetCurrentStandingBand()
     Int tradition = StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1)
     if tradition < 0
-        return "You have not yet chosen a tradition. Breton faith takes its shape once you walk the Knight's Road, the Hidden Art, or the Green Way. Standing: " + band + "."
+        String unchosenText = "You have not yet chosen a tradition. Breton faith takes its shape once you walk the Knight's Road, the Hidden Art, or the Green Way. Standing: " + band + "."
+        if PDV_BretonAncestorSubstrate
+            unchosenText = unchosenText + " Your mixed inheritance is " + GetBretonAncestorLayerLabel() + "."
+        endIf
+        return unchosenText
     endIf
 
     String text = ""
@@ -15532,6 +15607,10 @@ String Function GetBretonSurveyText()
         text = text + " A curse sits on you, and your tradition will not hold until it is restored."
     endIf
 
+    if PDV_BretonAncestorSubstrate
+        text = text + " Your mixed inheritance is " + GetBretonAncestorLayerLabel() + "."
+    endIf
+
     return text
 EndFunction
 
@@ -15581,6 +15660,14 @@ String Function GetBretonDruidicStandingLabel()
     endIf
 
     return "open"
+EndFunction
+
+String Function GetBretonAncestorLayerLabel()
+    if !PDV_BretonAncestorSubstrate
+        return "latent"
+    endIf
+
+    return PDV_BretonAncestorSubstrate.GetAncestralPostureLabel()
 EndFunction
 
 String Function GetBretonCursePostureLabel()
@@ -16018,6 +16105,14 @@ String Function GetNordAncestorSummary()
     endIf
 
     return PDV_NordAncestorSubstrate.GetPilotSummary()
+EndFunction
+
+String Function GetBretonAncestorSummary()
+    if !PDV_BretonAncestorSubstrate
+        return "missing"
+    endIf
+
+    return PDV_BretonAncestorSubstrate.GetPilotSummary()
 EndFunction
 
 String Function GetOrcSummary()

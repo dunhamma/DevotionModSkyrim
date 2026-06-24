@@ -490,6 +490,12 @@ const SKELETON_SUBSTRATE_DEFINITIONS = [
     requiredOriginRace: 3,
   },
   {
+    questEdid: "PDV_Substrate_BretonAncestor",
+    scriptName: "PDV_SubstrateBase",
+    substrateName: "BretonAncestor",
+    requiredOriginRace: 2,
+  },
+  {
     questEdid: "PDV_Substrate_ImperialAncestor",
     scriptName: "PDV_SubstrateBase",
     substrateName: "ImperialAncestor",
@@ -664,6 +670,7 @@ const COMPILED_SCRIPTS = {
   PDV_Substrate_ArgonianHist: "required",
   PDV_Substrate_NordAncestor: "required",
   PDV_Substrate_AltmerAncestor: "required",
+  PDV_Substrate_BretonAncestor: "required",
   PDV_Substrate_ImperialAncestor: "required",
   PDV_DaedricPath_Hircine: "required",
   PDV_ActionRouter: "phase3",
@@ -927,6 +934,7 @@ const MANAGER_PATTERN_PROPERTIES = {
   PDV_KhajiitLunarSubstrate: "PDV_Substrate_KhajiitLunar",
   PDV_NordAncestorSubstrate: "PDV_Substrate_NordAncestor",
   PDV_AltmerAncestorSubstrate: "PDV_Substrate_AltmerAncestor",
+  PDV_BretonAncestorSubstrate: "PDV_Substrate_BretonAncestor",
   PDV_ImperialAncestorSubstrate: "PDV_Substrate_ImperialAncestor",
   PDV_HircinePath: "PDV_DaedricPath_Hircine",
   PDV_CurseStateService: "PDV_CurseState",
@@ -1299,6 +1307,7 @@ class Verifier {
       this.checkDunmerSpineParityBuild();
       this.checkOrcSpineParityBuild();
       this.checkAltmerSpineParityBuild();
+      this.checkBretonSpineParityBuild();
       this.checkImperialSpineParityBuild();
       this.checkCommitment();
       this.checkNeglectDecay();
@@ -6390,6 +6399,88 @@ class Verifier {
       } else {
         this.phase20RaceCostingGap(`${label} spine boon effect actor value`, `${expected.effect} actor value is ${actorValue}, expected ${expected.actorValue}.`, PDV_ESP);
       }
+    }
+  }
+
+  checkBretonSpineParityBuild() {
+    this.checkSourceContains("Breton spine Magnus source", "PDV_Deity_Magnus", [
+      "SIGNAL_ANCESTOR_SPINE = 1807",
+      "DELTA_ANCESTOR_SPINE = 1.0",
+      "signalType == SIGNAL_ANCESTOR_SPINE",
+      "return DELTA_ANCESTOR_SPINE",
+    ]);
+    this.checkSourceContains("Breton spine substrate source", "PDV_Substrate_BretonAncestor", [
+      "Scriptname PDV_Substrate_BretonAncestor extends PDV_SubstrateBase",
+      "Function RecordAncestralResistanceScaled(Float multiplier, String reason)",
+      "Function ProcessAncestralDawn(Bool curseActive, String reason)",
+      "\"PDV.Substrate.BretonAncestor.SourceCount\"",
+      "String Function GetPilotSummary()",
+    ]);
+    this.checkSourceContains("Breton spine manager source", "PDV__ManagerQuest", [
+      "PDV_Substrate_BretonAncestor Property PDV_BretonAncestorSubstrate Auto",
+      "Function AwardBretonAncestorSpinePulse(Float multiplier, String reason)",
+      "PDV_Magnus.SIGNAL_ANCESTOR_SPINE",
+      "\"PDV.Breton.AncestralStanding\"",
+      "AwardBretonAncestorSpinePulse(multiplier, reason)",
+      "Function SyncBretonAncestorSubstrate(Actor playerRef, Bool isBreton)",
+      "Function HandleBretonSleepEvents(Actor playerRef, String reason)",
+      "String Function GetBretonAncestorLayerLabel()",
+    ]);
+
+    const substrateRecord = this.recordsByEdid.get("PDV_Substrate_BretonAncestor");
+    if (substrateRecord?.type === "QUST") {
+      this.pass("Breton spine substrate record", "PDV_Substrate_BretonAncestor exists as QUST.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Breton spine substrate record", "PDV_Substrate_BretonAncestor is missing or not a QUST.", PDV_ESP);
+    }
+
+    const substrateDetail = this.recordDetails.get("PDV_Substrate_BretonAncestor");
+    const concreteScript = substrateDetail ? findScript(substrateDetail.fields || {}, "PDV_Substrate_BretonAncestor") : null;
+    if (concreteScript) {
+      this.pass("Breton spine substrate script", "PDV_Substrate_BretonAncestor is attached.", PDV_ESP);
+      const props = propertyMap(concreteScript);
+      this.checkScalarProperty("Breton spine substrate property", props, "SubstrateName", "BretonAncestor", this.phase20RaceCostingGap.bind(this));
+      this.checkScalarProperty("Breton spine substrate property", props, "RequiredOriginRace", 2, this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Breton spine substrate property", props, "Substrate_Always", "PDV_Bless_Breton_Spine_Always", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Breton spine substrate property", props, "Substrate_Mid", "PDV_Bless_Breton_Spine_Mid", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Breton spine substrate property", props, "Substrate_High", "PDV_Bless_Breton_Spine_High", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Breton spine substrate script", "PDV_Substrate_BretonAncestor is not attached.", PDV_ESP);
+    }
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      this.checkObjectPropertyTarget("Breton spine manager property", propertyMap(managerScript), "PDV_BretonAncestorSubstrate", "PDV_Substrate_BretonAncestor", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Breton spine manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_All", ["PDV_Substrate_BretonAncestor"]);
+    this.checkRequiredFormListMembers("PDV_FLST_Substrates_DevOnly", ["PDV_Substrate_BretonAncestor"]);
+
+    const spellSpecs = [
+      {
+        spell: "PDV_Bless_Breton_Spine_Always",
+        effects: [
+          { effect: "PDV_MGEF_Breton_Spine_Always_ResistMagic", magnitude: 3, actorValue: "ResistMagic" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Breton_Spine_Mid",
+        effects: [
+          { effect: "PDV_MGEF_Breton_Spine_Mid_ResistMagic", magnitude: 7, actorValue: "ResistMagic" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Breton_Spine_High",
+        effects: [
+          { effect: "PDV_MGEF_Breton_Spine_High_ResistMagic", magnitude: 12, actorValue: "ResistMagic" },
+        ],
+      },
+    ];
+    for (const spec of spellSpecs) {
+      this.checkAltmerSpineSpellPacket({ ...spec, raceLabel: "Breton" });
     }
   }
 
