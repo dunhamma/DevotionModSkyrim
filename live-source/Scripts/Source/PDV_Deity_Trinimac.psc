@@ -29,11 +29,9 @@ Scriptname PDV_Deity_Trinimac extends PDV_DeityBase
 ; --- Rare ideological-pressure signals (no steady faucet) ---
 Int Property SIGNAL_FALLEN_GOD_ORTHODOXY = 2301 AutoReadOnly  ; fallen-god / Trinimac-as-Malacath orthodoxy beat
 Int Property SIGNAL_ALTMER_ORTHODOX_PRESSURE = 2302 AutoReadOnly ; orthodox-elven pressure beat (Altmer shared use)
-Int Property SIGNAL_APOSTASY = 2303 AutoReadOnly              ; rejecting the orthodox pressure (loss)
 
 Float Property DELTA_FALLEN_GOD_ORTHODOXY = 1.5 Auto
 Float Property DELTA_ALTMER_ORTHODOX_PRESSURE = 1.5 Auto
-Float Property DELTA_APOSTASY = -2.0 Auto
 
 Event OnInit()
     if GetDebugLevel() >= 2
@@ -50,8 +48,6 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_FALLEN_GOD_ORTHODOXY
     elseIf signalType == SIGNAL_ALTMER_ORTHODOX_PRESSURE
         return DELTA_ALTMER_ORTHODOX_PRESSURE
-    elseIf signalType == SIGNAL_APOSTASY
-        return DELTA_APOSTASY
     endIf
 
     return 0.0

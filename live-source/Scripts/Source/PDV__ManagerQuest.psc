@@ -5054,6 +5054,11 @@ Function HandleArgonianVoidSignal(String reason)
     if PDV_Sithis && PDV_ArgonianHistSubstrate.IsVoidFullyActive()
         AwardCuratedSignalScaled(PDV_Sithis, PDV_Sithis.SIGNAL_VOID_THRESHOLD, None, multiplier)
     endIf
+    ; Void overreach: leaning deep into the Void (fully active) while Hist maintenance has
+    ; lapsed below its non-curse floor is the curated major loss for the Hist.
+    if PDV_ArgonianHistSubstrate.IsVoidFullyActive() && PDV_ArgonianHistSubstrate.GetHistRelation() <= PDV_ArgonianHistSubstrate.HistNonCurseFloor
+        EmitHistVoidOverreachMinus(reason)
+    endIf
     StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
     SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The Void was noticed.", "hist", GetArgonianHistPostureLabel())
     RequestPanelRefresh()
@@ -5099,6 +5104,12 @@ Function RefreshArgonianHistPosture(String reason)
         if PDV_ArgonianHistPostureTrack.GetCurrentState() != oldPosture
             SendPrismaShiftToast(GetArgonianHistPostureLabel(), "", "hist")
             RequestPanelRefresh()
+            Int newPosture = PDV_ArgonianHistSubstrate.GetHistPosture()
+            if newPosture == PDV_ArgonianHistSubstrate.HIST_POSTURE_CORRUPTED
+                EmitHistCorruptionMinus(reason)
+            elseIf newPosture == PDV_ArgonianHistSubstrate.HIST_POSTURE_DISTANT
+                EmitHistAbandonmentMinus(reason)
+            endIf
         endIf
     endIf
 EndFunction
@@ -5345,6 +5356,9 @@ Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
 EndFunction
 
 Function ApplyOrcLifeModeSwitch(Int modeValue, String reason)
+    if PDV_OrcLifeModeTrack.GetCurrentState() == ORC_LIFE_MODE_LEGION_EXILE && modeValue != ORC_LIFE_MODE_LEGION_EXILE
+        EmitMalacathBrokenFaithKinMinus("desert_legion_exile_" + reason)
+    endIf
     PDV_OrcLifeModeTrack.SetState(modeValue, reason)
     PDV_OrcLifeModeTrack.SetTransitionLockout(3.0, reason)
     SendPrismaShiftToast(GetOrcLifeModeLabel(), "", "malacath")
@@ -9804,6 +9818,127 @@ Function EmitRedguardDeathDutyAbandonmentMinus(String reason)
     Trace(2, "Redguard death-duty abandonment routed: " + reason + " multiplier=" + multiplier)
 EndFunction
 
+; Malacath creed-violation minus: werewolf onset is a Code rupture (the beast-blood
+; cools Malacath's regard). Hooked from ApplyOrcCurseHandlers on a transition INTO the
+; werewolf state; Orc-gated and anti-farmed (curse flicker cannot stack the penalty).
+Function EmitMalacathCurseCodeRuptureMinus(String reason)
+    if !IsOrcOrigin() || !PDV_Malacath
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.MalacathCurseCodeRupture")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CURSE_CODE_RUPTURE, None, multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Orc.CurseCodeRuptureCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Orc.LastCurseCodeRuptureReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Orc.LastCurseCodeRuptureTime", Utility.GetCurrentGameTime())
+    Trace(2, "Malacath curse-code rupture routed: " + reason + " multiplier=" + multiplier)
+EndFunction
+
+; Malacath creed-violation minus: deserting sworn service. Hooked from
+; ApplyOrcLifeModeSwitch on a PLAYER-DRIVEN switch away from Legion-Exile (the sworn-
+; service life mode). The passive 14-day dawn lapse-to-City routes through SetState
+; directly, NOT this switch path, so neglect-drift does not trip the betrayal penalty.
+Function EmitMalacathBrokenFaithKinMinus(String reason)
+    if !IsOrcOrigin() || !PDV_Malacath
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.MalacathBrokenFaithKin")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROKEN_FAITH_KIN, None, multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Orc.BrokenFaithKinCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Orc.LastBrokenFaithKinReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Orc.LastBrokenFaithKinTime", Utility.GetCurrentGameTime())
+    Trace(2, "Malacath broken-faith-kin routed: " + reason + " multiplier=" + multiplier)
+EndFunction
+
+; Mephala creed-violation minus: a clumsy crime (caught trespassing / assaulting an
+; innocent) is the opposite of Mephala's subtlety -- a kept secret carelessly exposed.
+; Dunmer-gated and only while the active Reclamation focus is Mephala (focus 2);
+; anti-farmed so a string of same-day crimes does not stack the loss linearly.
+Function HandleDunmerClumsyCrime(String reason)
+    if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || !PDV_Mephala
+        return
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocus", -1) != 2
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.MephalaSecretBetrayed")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SECRET_BETRAYED, None, multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Dunmer.SecretBetrayedCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Dunmer.LastSecretBetrayedReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Dunmer.LastSecretBetrayedTime", Utility.GetCurrentGameTime())
+    Trace(2, "Mephala secret-betrayed routed: " + reason + " multiplier=" + multiplier)
+EndFunction
+
+; Hist creed-violation minuses (curated medium/major only, per PDV_Deity_Hist), keyed to
+; the substrate posture model: drifting Distant past grace is abandonment; domination-
+; driven Corrupted posture is corruption; deep Void leaning (>=3 signals) while Hist has
+; lapsed below the non-curse floor is Void overreach. Argonian-gated, anti-farmed.
+Function EmitHistAbandonmentMinus(String reason)
+    if !IsArgonianOrigin() || !PDV_Hist
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.HistAbandonment")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_ABANDONMENT, None, multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistAbandonmentCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistAbandonmentReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistAbandonmentTime", Utility.GetCurrentGameTime())
+    Trace(2, "Hist abandonment routed: " + reason + " multiplier=" + multiplier)
+EndFunction
+
+Function EmitHistCorruptionMinus(String reason)
+    if !IsArgonianOrigin() || !PDV_Hist
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.HistCorruption")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_CORRUPTION, None, multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistCorruptionCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistCorruptionReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistCorruptionTime", Utility.GetCurrentGameTime())
+    Trace(2, "Hist corruption routed: " + reason + " multiplier=" + multiplier)
+EndFunction
+
+Function EmitHistVoidOverreachMinus(String reason)
+    if !IsArgonianOrigin() || !PDV_Hist
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.HistVoidOverreach")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_VOID_OVERREACH, None, multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Argonian.VoidOverreachCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Argonian.LastVoidOverreachReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastVoidOverreachTime", Utility.GetCurrentGameTime())
+    Trace(2, "Hist void overreach routed: " + reason + " multiplier=" + multiplier)
+EndFunction
+
 Function SyncNordRewards(Actor playerRef)
     if !playerRef
         return
@@ -12553,6 +12688,7 @@ Function ApplyOrcCurseHandlers(Int oldState, Int newState, String reason)
         StorageUtil.SetIntValue(None, "PDV.Curse.Orc.VampireScar", 1)
     elseIf newState == 1
         StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 1)
+        EmitMalacathCurseCodeRuptureMinus("werewolf_onset_" + reason)
     elseIf oldState != 0
         StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 0)
     else

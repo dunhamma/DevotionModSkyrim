@@ -33,7 +33,7 @@ MCP: PASS - Server live, profile Devotion Dev.
 ## Curated-Signal Parity
 
 Every AwardCuratedSignal[Scaled](deity, deity.SIGNAL_X) must resolve to a deity script that DEFINES and HANDLES SIGNAL_X in ScoreCuratedSignal, else the curated piety silently scores 0.0 (the Kyne class). Pure static source check -- no server.
-Status: PASS | references=97 | ok=97 | gaps=0 | cross-deity=0 | by-index=0
+Status: PASS | references=103 | ok=103 | gaps=0 | cross-deity=0 | by-index=0
 
 ## RED / INCOMPLETE By Failing Step
 
