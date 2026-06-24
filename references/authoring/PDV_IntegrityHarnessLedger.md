@@ -9,7 +9,7 @@ Overall: **PASS** (FAIL iff the signal E2E gate fails or a check errors; finding
 | mcp_liveness | proof | OK | live |
 | signal_e2e_gate | gate | PASS | 39 GREEN / 0 RED; parity PASS |
 | signal_floor | findings | OK | see PDV_SignalFloorLedger |
-| spine_stack_score | findings | OK | worst Nord 20%; 7 targets; 6 dead-decls |
-| specced_minus | findings | OK | 18 unemitted minuses |
+| spine_stack_score | findings | OK | worst Redguard 70%; 0 targets; 0 dead-decls |
+| specced_minus | findings | OK | 17 unemitted minuses |
 | completeness | findings | OK | PASS; PASS=360 NEEDS-MANUAL=293 GAP-REVIEW=54 FUTURE=59 WAIVED=2 |
 

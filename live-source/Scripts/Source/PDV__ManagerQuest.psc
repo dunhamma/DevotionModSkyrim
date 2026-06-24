@@ -359,6 +359,9 @@ Spell Property PDV_SPEL_OrcCodeHolds_Devoted Auto
 Spell Property PDV_SPEL_OrcHearthHeld Auto
 Spell Property PDV_Bless_Redguard_AncestorSpine_T1 Auto
 Spell Property PDV_Bless_Redguard_AncestorSpine_T2 Auto
+Spell Property PDV_Bless_Redguard_Spine_Crown Auto
+Spell Property PDV_Bless_Redguard_Spine_Forebear Auto
+Spell Property PDV_Bless_Redguard_Spine_AshAbah Auto
 Spell Property PDV_Bless_Redguard_Tuwhacca_T1 Auto
 Spell Property PDV_Bless_Redguard_Tuwhacca_T2 Auto
 Spell Property PDV_Bless_Redguard_Tuwhacca_T3 Auto
@@ -9429,6 +9432,8 @@ Function SyncRedguardRewards(Actor playerRef)
     endIf
 
     Bool isRedguard = GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
+    Int sectValue = GetActiveRedguardSpineSect()
+    SyncRedguardSpineBoon(playerRef, isRedguard, sectValue)
     Bool broadFaithful = isRedguard && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount") >= 6
     SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T2, broadFaithful, "Redguard AncestorSpine T2")
 
@@ -9439,6 +9444,28 @@ Function SyncRedguardRewards(Actor playerRef)
     if isRedguard && PDV_RedguardSectTrack
         MaybeShowRedguardChampionEntry(PDV_RedguardSectTrack.GetCurrentState())
     endIf
+EndFunction
+
+Function SyncRedguardSpineBoon(Actor playerRef, Bool isRedguard, Int sectValue)
+    if !playerRef
+        return
+    endIf
+
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Crown, isRedguard && sectValue == REDGUARD_SECT_CROWN, "Redguard Spine Crown")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Forebear, isRedguard && sectValue == REDGUARD_SECT_FOREBEAR, "Redguard Spine Forebear")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_AshAbah, isRedguard && sectValue == REDGUARD_SECT_ASHABAH, "Redguard Spine AshAbah")
+EndFunction
+
+Int Function GetActiveRedguardSpineSect()
+    if PDV_RedguardSectTrack
+        EnsureRedguardSectInitialized()
+        Int sectValue = PDV_RedguardSectTrack.GetCurrentState()
+        if sectValue >= REDGUARD_SECT_CROWN && sectValue <= REDGUARD_SECT_ASHABAH
+            return sectValue
+        endIf
+    endIf
+
+    return REDGUARD_SECT_FOREBEAR
 EndFunction
 
 Function SyncRedguardRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
@@ -9481,8 +9508,12 @@ Function SyncRedguardNeglectSpell(Bool shouldBeActive)
     endIf
 
     if shouldBeActive
+        Bool wasActive = playerRef.HasSpell(PDV_SPEL_Neglect_Redguard)
         if !playerRef.HasSpell(PDV_SPEL_Neglect_Redguard)
             playerRef.AddSpell(PDV_SPEL_Neglect_Redguard, False)
+        endIf
+        if !wasActive
+            EmitRedguardDeathDutyAbandonmentMinus("redguard_ancestor_distance_neglect")
         endIf
         StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 1)
     else
@@ -9491,6 +9522,23 @@ Function SyncRedguardNeglectSpell(Bool shouldBeActive)
         endIf
         StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 0)
     endIf
+EndFunction
+
+Function EmitRedguardDeathDutyAbandonmentMinus(String reason)
+    if !IsRedguardOrigin() || !PDV_Tuwhacca
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardDeathDutyAbandonment")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY_ABANDONMENT, None, multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Redguard.DeathDutyAbandonmentCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Redguard.LastDeathDutyAbandonmentReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Redguard.LastDeathDutyAbandonmentTime", Utility.GetCurrentGameTime())
+    Trace(2, "Redguard death-duty abandonment routed: " + reason + " multiplier=" + multiplier)
 EndFunction
 
 Function SyncNordRewards(Actor playerRef)

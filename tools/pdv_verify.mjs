@@ -1306,6 +1306,7 @@ class Verifier {
       this.checkNordSpineParityBuild();
       this.checkDunmerSpineParityBuild();
       this.checkOrcSpineParityBuild();
+      this.checkRedguardSpineParityBuild();
       this.checkAltmerSpineParityBuild();
       this.checkBretonSpineParityBuild();
       this.checkImperialSpineParityBuild();
@@ -6265,6 +6266,68 @@ class Verifier {
       } else {
         this.phase20RaceCostingGap("Orc spine boon effect actor value", `${expected.effect} actor value is ${actorValue}, expected ${expected.actorValue}.`, PDV_ESP);
       }
+    }
+  }
+
+  checkRedguardSpineParityBuild() {
+    this.checkSourceContains("Redguard spine Tuwhacca source", "PDV_Deity_Tuwhacca", [
+      "SIGNAL_ANCESTOR_SPINE = 2406",
+      "DELTA_ANCESTOR_SPINE = 1.0",
+      "SIGNAL_DEATH_DUTY_ABANDONMENT = 2405",
+      "signalType == SIGNAL_ANCESTOR_SPINE",
+      "return DELTA_ANCESTOR_SPINE",
+      "signalType == SIGNAL_DEATH_DUTY_ABANDONMENT",
+      "return DELTA_DEATH_DUTY_ABANDONMENT",
+    ]);
+    this.checkSourceContains("Redguard spine manager source", "PDV__ManagerQuest", [
+      "Spell Property PDV_Bless_Redguard_Spine_Crown Auto",
+      "Spell Property PDV_Bless_Redguard_Spine_Forebear Auto",
+      "Spell Property PDV_Bless_Redguard_Spine_AshAbah Auto",
+      "Function SyncRedguardSpineBoon(Actor playerRef, Bool isRedguard, Int sectValue)",
+      "Function GetActiveRedguardSpineSect()",
+      "PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE",
+      "Function EmitRedguardDeathDutyAbandonmentMinus(String reason)",
+      "PDV_Tuwhacca.SIGNAL_DEATH_DUTY_ABANDONMENT",
+      "\"PDV.Redguard.DeathDutyAbandonmentCount\"",
+      "EmitRedguardDeathDutyAbandonmentMinus(\"redguard_ancestor_distance_neglect\")",
+    ]);
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      const props = propertyMap(managerScript);
+      this.checkObjectPropertyTarget("Redguard spine manager property", props, "PDV_Bless_Redguard_Spine_Crown", "PDV_Bless_Redguard_Spine_Crown", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Redguard spine manager property", props, "PDV_Bless_Redguard_Spine_Forebear", "PDV_Bless_Redguard_Spine_Forebear", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Redguard spine manager property", props, "PDV_Bless_Redguard_Spine_AshAbah", "PDV_Bless_Redguard_Spine_AshAbah", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Redguard spine manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    const spellSpecs = [
+      {
+        spell: "PDV_Bless_Redguard_Spine_Crown",
+        effects: [
+          { effect: "PDV_MGEF_Redguard_Spine_Crown_Health", magnitude: 10, actorValue: "Health" },
+          { effect: "PDV_MGEF_Redguard_Spine_Crown_OneHanded", magnitude: 4, actorValue: "OneHanded" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Redguard_Spine_Forebear",
+        effects: [
+          { effect: "PDV_MGEF_Redguard_Spine_Forebear_Health", magnitude: 8, actorValue: "Health" },
+          { effect: "PDV_MGEF_Redguard_Spine_Forebear_OneHanded", magnitude: 5, actorValue: "OneHanded" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Redguard_Spine_AshAbah",
+        effects: [
+          { effect: "PDV_MGEF_Redguard_Spine_AshAbah_Health", magnitude: 12, actorValue: "Health" },
+          { effect: "PDV_MGEF_Redguard_Spine_AshAbah_OneHanded", magnitude: 3, actorValue: "OneHanded" },
+        ],
+      },
+    ];
+    for (const spec of spellSpecs) {
+      this.checkAltmerSpineSpellPacket({ ...spec, raceLabel: "Redguard" });
     }
   }
 
