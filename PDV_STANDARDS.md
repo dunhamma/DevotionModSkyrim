@@ -440,6 +440,20 @@ authoring helper or preserved by a manifest.
 
 Trace messages and the debug spell are dev tools. Either remove them or gate them behind a `bDebugMode` global in MCM before any public release. A player's `Papyrus.0.log` filling with `[PDV]` traces is a defect, not a feature.
 
+### 6.8 Keep script source pure ASCII
+
+`.psc` source -- code and comments alike -- must be pure ASCII (every code point `<= 0x7F`). Smart punctuation (em/en dashes, curly quotes, ellipsis, arrows) and stray UTF-8 BOMs are the root cause of the mojibake the coding agent keeps finding: each is valid UTF-8 until a Windows-1252-assuming tool round-trips it into garbled lead-byte sequences. Author comments with straight quotes, `--`, `...`, and `->` instead.
+
+Enforce before committing script work:
+
+- `node tools/pdv_ascii_guard.mjs` -- scans the live deployed `.psc` source; exits 1 on any non-ASCII. This is the pre-commit gate.
+- `node tools/pdv_ascii_guard.mjs --fix [paths]` -- auto-replaces the known offenders and strips BOMs (idempotent; unmapped characters are flagged for manual review, never silently mangled).
+- Claude sessions also run a `PostToolUse` hook that blocks any `.psc` write containing non-ASCII before it can reach a handoff.
+
+Wider docs and manifests Codex reads can be swept advisory-only -- design docs legitimately carry box-drawing, section signs, and status emoji, so this is a report, not a hard gate:
+
+`node tools/pdv_ascii_guard.mjs --summary --ext .md,.json,.csv handoff references race-sheets`
+
 ---
 
 ## 7. Agent Invocation (Optional)
