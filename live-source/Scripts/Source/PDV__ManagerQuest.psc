@@ -711,6 +711,7 @@ Event OnUpdate()
         EnsureSurveyDevotionPower()
         EnsureDunmerAncestralUrn()
         EnsureArgonianHistSapToken()
+        InitCCContent()
         RegisterManagerShoutSignals()
         EnsureLikesDislikesTable()
         EnsurePrinceLikesDislikesTable()
@@ -741,6 +742,8 @@ Event OnUpdate()
     TryArgonianNearWaterMaintenance()
     TryBosmerEldergleamInterior()
     TryBosmerGildergreenProximity()
+    TryCCSaintsRecognition()
+    TryCCFishingDevotion()
 
     if DebugSeedGo != 0
         DebugSeedGo = 0
@@ -9086,6 +9089,112 @@ String Function GetSurvivalContextStatusLine()
     endIf
 
     return detected + " | " + SeverityLabel(GetSurvivalContextSeverity())
+EndFunction
+
+;/ =====================================================================
+    Creation Club / AE compatibility (SOFT OPTIONAL)
+    ---------------------------------------------------------------------
+    Optional, encouraged-not-required integration for supported Creation Club
+    content. Detection is by filename, optional forms are cached once, and no
+    Devotion.esp record takes a hard dependency on the CC masters.
+    Form evidence: references/authoring/PDV_CCIntegration_Findings.md
+   ===================================================================== /;
+Bool _pdvCCContentInit = False
+Bool _pdvCCSaintsPresent = False
+Bool _pdvCCFishingPresent = False
+Quest _pdvCCSaintsRestoringOrder
+GlobalVariable _pdvCCFishingIsFishing
+Int _pdvCCFishingLastFlag = 0
+
+String Property COMPAT_CC_TOGGLE_KEY = "PDV.Compat.CCContentEnabled" AutoReadOnly
+
+Function InitCCContent()
+    if _pdvCCContentInit
+        return
+    endIf
+    _pdvCCContentInit = True
+
+    if Game.GetModByName("ccbgssse025-advdsgs.esm") != 255
+        _pdvCCSaintsPresent = True
+        _pdvCCSaintsRestoringOrder = Game.GetFormFromFile(0x000913, "ccbgssse025-advdsgs.esm") as Quest
+    endIf
+
+    if Game.GetModByName("ccbgssse001-fish.esm") != 255
+        _pdvCCFishingPresent = True
+        _pdvCCFishingIsFishing = Game.GetFormFromFile(0x000B26, "ccbgssse001-fish.esm") as GlobalVariable
+    endIf
+EndFunction
+
+Bool Function IsCCContentEnabled()
+    return StorageUtil.GetIntValue(None, COMPAT_CC_TOGGLE_KEY, 1) != 0
+EndFunction
+
+Function TryCCSaintsRecognition()
+    if !IsCCContentEnabled()
+        return
+    endIf
+
+    InitCCContent()
+    if !_pdvCCSaintsPresent || !_pdvCCSaintsRestoringOrder
+        return
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.CC.SaintsRecognized") != 0
+        return
+    endIf
+
+    if _pdvCCSaintsRestoringOrder.GetStageDone(200)
+        PDV_DaedricPath_Sheo sheoPath = GetQuestReactionDeity("Sheogorath") as PDV_DaedricPath_Sheo
+        if sheoPath
+            sheoPath.RecordControlledSignal("cc_saints_restoring_order")
+            StorageUtil.SetIntValue(None, "PDV.CC.SaintsRecognized", 1)
+        endIf
+    endIf
+EndFunction
+
+Function TryCCFishingDevotion()
+    if !IsCCContentEnabled()
+        return
+    endIf
+
+    InitCCContent()
+    if !_pdvCCFishingPresent || !_pdvCCFishingIsFishing
+        return
+    endIf
+
+    Int nowFlag = _pdvCCFishingIsFishing.GetValueInt()
+    if nowFlag != 0 && _pdvCCFishingLastFlag == 0
+        Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.CCFishingKyne")
+        if multiplier > 0.0 && PDV_Kyne
+            AwardPiety(PDV_Kyne, 0.5 * multiplier, "cc_fishing")
+        endIf
+    endIf
+    _pdvCCFishingLastFlag = nowFlag
+EndFunction
+
+String Function GetCCContentStatusLine()
+    InitCCContent()
+
+    String detected = ""
+    if _pdvCCSaintsPresent
+        detected = "Saints & Seducers"
+    endIf
+    if _pdvCCFishingPresent
+        if detected != ""
+            detected = detected + ", "
+        endIf
+        detected = detected + "Fishing"
+    endIf
+
+    if detected == ""
+        return "No supported CC content detected"
+    endIf
+
+    if !IsCCContentEnabled()
+        return detected + " | integration off"
+    endIf
+
+    return detected + " | integration on"
 EndFunction
 
 String Function SeverityLabel(Int severity)

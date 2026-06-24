@@ -130,6 +130,7 @@ Int _oidDecayRunProofDays = -1
 Int _oidShowDecaySummary = -1
 Int _oidCompatRaceMapping = -1
 Int _oidCompatSurvival = -1
+Int _oidCompatCC = -1
 Int _oidReDetectOrigin = -1
 Int _oidJournalHotkey = -1
 Int _oidPanelHotkey = -1
@@ -240,6 +241,8 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Runs origin detection again for this save. Use after adding a custom-race map or fixing a fallback.")
     elseIf a_option == _oidCompatSurvival
         SetInfoText("Let an installed survival mod's hardship gently modulate devotion. It never creates piety alone.")
+    elseIf a_option == _oidCompatCC
+        SetInfoText("Let supported AE and Creation Club content add small optional devotion signals. No CC plugin is required.")
     elseIf a_option == _oidDeveloperOptions
         SetInfoText("Shows the development Status and Debug pages for testing.")
     elseIf a_option == _oidSelectedDeity
@@ -458,6 +461,12 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidCompatSurvival
         ToggleSurvivalContext()
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidCompatCC
+        ToggleCCContent()
         ForcePageReset()
         return
     endIf
@@ -1138,6 +1147,10 @@ Function BuildCompatPage()
     AddHeaderOption("Survival Context", OPTION_FLAG_NONE)
     _oidCompatSurvival = AddTextOption("Survival integration", OnOffLabel(SurvivalContextEnabled()), OPTION_FLAG_NONE)
     AddTextOption("Status", GetCompatSurvivalReadout(), OPTION_FLAG_DISABLED)
+    AddHeaderOption("AE / Creation Club", OPTION_FLAG_NONE)
+    AddTextOption("AE/CC content", "Encouraged optional", OPTION_FLAG_DISABLED)
+    _oidCompatCC = AddTextOption("CC integration", OnOffLabel(CCContentEnabled()), OPTION_FLAG_NONE)
+    AddTextOption("Detected", GetCompatCCReadout(), OPTION_FLAG_DISABLED)
 
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
@@ -1191,6 +1204,18 @@ Function ToggleSurvivalContext()
     endIf
 EndFunction
 
+Bool Function CCContentEnabled()
+    return StorageUtil.GetIntValue(None, "PDV.Compat.CCContentEnabled", 1) != 0
+EndFunction
+
+Function ToggleCCContent()
+    if CCContentEnabled()
+        StorageUtil.SetIntValue(None, "PDV.Compat.CCContentEnabled", 0)
+    else
+        StorageUtil.SetIntValue(None, "PDV.Compat.CCContentEnabled", 1)
+    endIf
+EndFunction
+
 String Function GetCompatRaceReadout()
     if StorageUtil.GetIntValue(None, "PDV.CustomRaceResolved") == 1
         Int resolvedIndex = StorageUtil.GetIntValue(None, "PDV.CustomRaceResolvedIndex")
@@ -1208,6 +1233,14 @@ EndFunction
 String Function GetCompatSurvivalReadout()
     if PDV_Manager
         return PDV_Manager.GetSurvivalContextStatusLine()
+    endIf
+
+    return "Unknown"
+EndFunction
+
+String Function GetCompatCCReadout()
+    if PDV_Manager
+        return PDV_Manager.GetCCContentStatusLine()
     endIf
 
     return "Unknown"
