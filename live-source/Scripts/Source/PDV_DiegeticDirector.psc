@@ -334,6 +334,12 @@ String Function ResolveJournalLine(Int deityIndex, String toneKey)
     if originRace == 5
         return ResolveDunmerJournalLine(toneKey)
     endIf
+    if originRace == 1
+        return ResolveImperialJournalLine(toneKey)
+    endIf
+    if originRace == 3
+        return ResolveAltmerJournalLine(toneKey)
+    endIf
     if toneKey == "curse.onset"
         return "A curse changes the shape of devotion."
     endIf
@@ -383,6 +389,44 @@ String Function ResolveDunmerJournalLine(String toneKey)
     endIf
     if toneKey == "neglect.drop"
         return "The shrine has gone cold; the ancestors' voices thin."
+    endIf
+    return ""
+EndFunction
+
+String Function ResolveImperialJournalLine(String toneKey)
+    if toneKey == "substrate.act"
+        return "You kept the civic vigil today; the old oaths take note."
+    endIf
+    if toneKey == "tier.reach"
+        return "The Divines acknowledge you under law. The covenant holds."
+    endIf
+    if toneKey == "curse.onset"
+        return "The communion falters; the curse sets you outside the lawful rites."
+    endIf
+    if toneKey == "curse.cure"
+        return "The rites reopen to you. The Divines answer the lawful again."
+    endIf
+    if toneKey == "neglect.drop"
+        return "The temples grow distant, and the oaths go unspoken."
+    endIf
+    return ""
+EndFunction
+
+String Function ResolveAltmerJournalLine(String toneKey)
+    if toneKey == "substrate.act"
+        return "The dawn-line steadies. Auri-El keeps your discipline today."
+    endIf
+    if toneKey == "tier.reach"
+        return "Coherence holds. The old line names you among the disciplined."
+    endIf
+    if toneKey == "curse.onset"
+        return "The line frays. The dawn turns its face from a divided self."
+    endIf
+    if toneKey == "curse.cure"
+        return "The discipline reasserts, and Auri-El's dawn finds you whole again."
+    endIf
+    if toneKey == "neglect.drop"
+        return "The dawn-practice lapses; the line dims and waits."
     endIf
     return ""
 EndFunction

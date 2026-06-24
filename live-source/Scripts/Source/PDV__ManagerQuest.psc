@@ -8079,8 +8079,10 @@ Function EmitBookOfDaysStateChange(Int today)
     StorageUtil.SetStringValue(None, "PDV.BookOfDays.LastModeSnapshot", current)
 EndFunction
 
-; Flagship races (Nord/Dunmer/Khajiit) get a bespoke turn-of-the-path line now; the
-; rest use a clean templated line. (Backlog: bespoke voice for the remaining races.)
+; Mode-change line: Nord/Dunmer/Khajiit/Altmer/Imperial/Breton carry a bespoke
+; turn-of-the-path line; the rest use a clean templated line. (Per-transition journal
+; voice lives in PDV_DiegeticDirector.ResolveJournalLine -- bespoke for Khajiit/Dunmer/
+; Imperial/Altmer as of 6g; remaining races use the generic journal fallback.)
 String Function BuildModeChangeLine(String modeLabel)
     Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_NORD
