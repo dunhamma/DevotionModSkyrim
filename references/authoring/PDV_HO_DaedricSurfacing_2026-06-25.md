@@ -62,30 +62,47 @@ The surfacing above is gated on an ACTIVE PACT with tier > TIER_NONE. See
 `GetActiveDaedricPactPath` (~line 2724): `path.GetStoredTier() > TIER_NONE`.
 Two real seams remain:
 
-### Seam 1 -- pre-pact "dabbler" has no Survey/Book-of-Days surface
+### Seam 1 -- pre-pact "dabbler" surfacing -- OWNER RULING 2026-06-25 (RESOLVED)
 
-A player building Daedric piety who has NOT yet crossed into a tier>0 pact
-(no `PDV.Daedric.ActivePact` form, or tier still 0) gets the normal per-race
-Survey line with ZERO Daedric reference, even though piety is accruing. The
-per-race getters themselves carry no Daedric ref (confirm: `GetNordSurveyBaseText`
-~15444, `GetAltmerSurveyText` ~15618, `GetKhajiitSurveyText` ~15677 -- none
-mention Daedric). This is consistent with the inverse-Kyne "native default has
-no off-pantheon refs" pattern, so it may be CORRECT-BY-DESIGN. Adjudicate with
-the user before building: does a sub-tier-1 Daedric dabbler deserve a Survey
-hint, or is silence-until-pact intended?
+A player building Daedric piety who has NOT yet crossed into a tier>0 pact gets
+ZERO Daedric reference on most surfaces today. Ruling resolves three DISTINCT
+surfaces:
 
-If a surface IS wanted: add a fallback AFTER the active-pact short-circuit and
-BEFORE the per-race switch in `GetSurveyDevotionText` (insert just after the
-`if pactPath ... endIf` block, ~line 15229). Reuse the existing top-path
-helper rather than re-deriving:
-- `GetTopDaedricPath()` family lives near ~line 7307 (`GetDaedricPathCount`,
-  loop over `GetDaedricPathAtListIndex`, pick max `GetStoredPiety`). Grep for
-  the existing top-path accumulator at ~7307-7330 and REUSE it; do not write a
-  second scan.
-- Fallback line (PLACEHOLDER): if a top Daedric path exists with piety > 0 but
-  tier == TIER_NONE, append e.g. `"<Prince> stirs at the edge of your devotion."`
-  Keep it additive (do not replace the race line) so a dabbler still sees their
-  native standing.
+1. **Survey: NO Daedric reference -- BY DESIGN. Nothing to build here.** Do NOT
+   add a dabbler line to the per-race Survey getters; silence-until-pact is
+   intended (inverse-Kyne "native default has no off-pantheon refs"). The per-race
+   getters stay Daedric-free pre-pact. (Drop the earlier "if a surface is wanted"
+   Survey-fallback idea -- it is explicitly NOT wanted.)
+
+2. **Book of Days (Chronicle, page 0): ADD a "a Prince takes notice" entry.** When
+   a pre-pact Prince's accruing attention crosses a threshold, write ONE
+   `AppendBookOfDaysEntry` -- a fun "the world tilts toward <Prince>" beat.
+   Threshold: a top Daedric path (`GetTopDaedricPath()` ~7307; max `GetStoredPiety`,
+   tier == TIER_NONE) whose stored piety crosses a tunable bar (e.g. >= half the
+   tier-1 pact threshold). ONCE-fire per Prince per accrual window (a StorageUtil
+   per-path "noticed" flag, reset on pact OR on decay back below the bar) so it
+   does not restate every dawn. Tone = a Daedric pressure/temptation key;
+   PLACEHOLDER copy ok.
+
+3. **Ledger (page 1, "what feeds your gods" = `GetDashboardJson` ~1918): TRACK the
+   pre-pact Prince.** This is "the bigger tracker that monitors all data points."
+   Today `GetDashboardJson` lists ONLY the active pact (~1926) + pantheon deities
+   with piety>0, so a pre-pact Prince accruing stored piety is INVISIBLE there.
+   Add a branch: if a top Daedric path has stored piety > 0 but no active pact,
+   append it via `AppendDashboardGod` with a new system tag (e.g. "watching") so it
+   shows in the Ledger, sortable by god + reaction. Its `GetDeityDriversJson`
+   drivers then explain "what feeds" the watching Prince -- which REQUIRES that
+   pre-pact Daedric acts record a driver on the PATH form (confirm the Prince
+   scoring path `AdjustStoredPiety` writes `PDV.Driver.Reasons`/`PDV.Driver.Deltas`
+   the way `AwardPiety` does for deities; if it does not, add it -- this is the
+   load-bearing fix).
+
+**STANDING RULE (owner, 2026-06-25): the Ledger MUST monitor ALL data points.**
+Every piety/signal award -- patron, pantheon, Prince, pre-pact, substrate, curated,
+LD -- must record a driver (`PDV.Driver.Reasons`/`PDV.Driver.Deltas`) on its target
+form so it appears, sortable by god + reaction, in the Ledger. Treat "did this
+signal land in the Ledger?" as a wiring-acceptance check for EVERY new signal
+(applies to all Phase-1 handoffs: under-floor, 6f, CC, Notoriety).
 
 ### Seam 2 -- no Book-of-Days entry on first pact ACTIVATION
 
