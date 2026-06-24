@@ -19,9 +19,16 @@ So removing a dead curated spec only zeroes a deity's downside if it ALSO has no
 - `PDV_Deity_Hist`: HIST_ABANDONMENT (−4), HIST_CORRUPTION (−8), VOID_OVERREACH (−6) → Argonian spine.
 - `PDV_Deity_Tuwhacca`: DEATH_DUTY_ABANDONMENT (−3) → Redguard spine (pulse already landed; wire the minus on the abandonment act).
 
-### B. Daedric minuses → triage with the Daedric / Orc pass (NOT removed)
-- `PDV_Deity_Boethiah` TREACHERY (−3), `PDV_Deity_Mephala` SECRET_BETRAYED (−3),
-  `PDV_Deity_Malacath` SELF_ERASURE/BROKEN_FAITH_KIN/CURSE_CODE_RUPTURE (−3/−2/−2) → Orc spine + Daedric pass.
+### B. Daedric minuses → RESOLVED 2026-06-24 (wire 3, remove 2)
+All 3 deities have working LD dislikes (Boethiah 3, Mephala 3, Malacath 4) -- none goes
+penalty-free either way. Unlike the pantheon-creed class, several of these DO have a real
+in-game trigger. Handoff: `PDV_DaedricMinus_Wire_Handoff_2026-06-24.md`.
+- **WIRE** (real trigger exists; fold into the Orc/Daedric builds):
+  - `PDV_Deity_Malacath` `CURSE_CODE_RUPTURE` (-2) -> on **werewolf onset** (lycanthropy is a Code violation; clean, lore-perfect trigger).
+  - `PDV_Deity_Mephala` `SECRET_BETRAYED` (-3) -> on a **clumsy crime / bounty-gain / caught-in-the-act** (the opposite of Mephala's subtlety).
+  - `PDV_Deity_Malacath` `BROKEN_FAITH_KIN` (-2) -> on **deserting sworn service / betraying the kin-faction** (if a clean hook exists, else hold).
+- **REMOVE** (no clean event; the deity keeps its working LD dislikes):
+  - `PDV_Deity_Boethiah` `TREACHERY` (-3 = cowardice/fleeing the test); `PDV_Deity_Malacath` `SELF_ERASURE` (-3 = swallowing an insult).
 
 ### C. Pantheon-creed minuses → **REMOVE the dead specs** (the decision)
 9 signals on Arkay/Magnus/Stendarr/Trinimac/Xarxes. **None has any EMITTED curated minus.**
