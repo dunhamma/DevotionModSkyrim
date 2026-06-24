@@ -136,6 +136,11 @@ Spell Property PDV_Bless_Altmer_Xarxes_T3 Auto
 Spell Property PDV_Bless_Altmer_Spine_Always Auto
 Spell Property PDV_Bless_Altmer_Spine_Mid Auto
 Spell Property PDV_Bless_Altmer_Spine_High Auto
+Spell Property PDV_SPEL_AltmerDiscipline_Alteration Auto
+Spell Property PDV_SPEL_AltmerDiscipline_Destruction Auto
+Spell Property PDV_SPEL_AltmerDiscipline_Illusion Auto
+Spell Property PDV_SPEL_AltmerDiscipline_Restoration Auto
+Message Property PDV_MESG_AltmerDisciplines Auto
 Spell Property PDV_SPEL_Neglect_Altmer Auto
 Spell Property PDV_Bless_Argonian_Hist_T1 Auto
 ; Argonian no-offer reward families (substrate-tier gated, not active-patron gated).
@@ -3447,9 +3452,118 @@ Bool Function IsRedguardRememberingCoherent(Int sectAtRite)
     return true
 EndFunction
 
+; The Disciplines of Return: at rest, with a 7-day cooldown, the player sets one cultivation
+; discipline of magic. One-active, swap via re-rite (clear-before-add). "Not yet" does not
+; spend the cooldown. Returns true when the menu was shown so the dream is suppressed that
+; night. The handler guard already blocks this while curse-suppressed.
+Bool Function TryAltmerDisciplinesRite(Actor playerRef, String reason)
+    if !playerRef || !PDV_MESG_AltmerDisciplines || !IsAltmerOrigin()
+        return false
+    endIf
+
+    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.Alt.Disc.LastRiteTime")
+    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
+        return false
+    endIf
+
+    Utility.Wait(0.5)
+    Int pressed = PDV_MESG_AltmerDisciplines.Show()
+    if pressed < 0 || pressed > 3
+        return true                 ; "Not yet" -- cooldown not spent
+    endIf
+
+    ApplyAltmerDiscipline(playerRef, pressed)
+    return true
+EndFunction
+
+; Clear-before-add: never two disciplines at once. Coherence reads current crisis state at
+; dawn (no snapshot needed), so SyncAltmerDisciplines fades/restores on a crisis break.
+Function ApplyAltmerDiscipline(Actor playerRef, Int index)
+    RemoveAltmerDisciplineSpells(playerRef)
+    Spell chosen = GetAltmerDisciplineSpell(index)
+    if !chosen
+        return
+    endIf
+
+    playerRef.AddSpell(chosen, False)
+    StorageUtil.SetIntValue(None, "PDV.Alt.Disc.Active", index + 1)
+    StorageUtil.SetFloatValue(None, "PDV.Alt.Disc.LastRiteTime", Utility.GetCurrentGameTime())
+    Debug.Notification("You set the discipline. It holds while you hold to the path.")
+    Trace(2, "Altmer Discipline of Return applied: " + index)
+EndFunction
+
+Function RemoveAltmerDisciplineSpells(Actor playerRef)
+    Int i = 0
+    while i < 4
+        Spell disc = GetAltmerDisciplineSpell(i)
+        if disc && playerRef.HasSpell(disc)
+            playerRef.RemoveSpell(disc)
+        endIf
+        i += 1
+    endWhile
+EndFunction
+
+Spell Function GetAltmerDisciplineSpell(Int index)
+    if index == 0
+        return PDV_SPEL_AltmerDiscipline_Alteration
+    elseIf index == 1
+        return PDV_SPEL_AltmerDiscipline_Destruction
+    elseIf index == 2
+        return PDV_SPEL_AltmerDiscipline_Illusion
+    elseIf index == 3
+        return PDV_SPEL_AltmerDiscipline_Restoration
+    endIf
+    return None
+EndFunction
+
+; The discipline holds while the player is coherent (no unresolved crisis and not curse-
+; suppressed). On a crisis break it goes quiet at dawn and returns at dawn on resolution.
+; PDV.Alt.Disc.Active stays set while quiet so no re-rite is needed.
+Function SyncAltmerDisciplines(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+    Int active = StorageUtil.GetIntValue(None, "PDV.Alt.Disc.Active")
+    if active <= 0
+        return
+    endIf
+    Spell disc = GetAltmerDisciplineSpell(active - 1)
+    if !disc
+        return
+    endIf
+
+    Bool eligible = IsAltmerOrigin() && IsAltmerDisciplineCoherent()
+    if eligible
+        if !playerRef.HasSpell(disc)
+            playerRef.AddSpell(disc, False)
+            Debug.Notification("You return to coherence. The discipline holds again.")
+        endIf
+    else
+        if playerRef.HasSpell(disc)
+            playerRef.RemoveSpell(disc)
+            Debug.Notification("The discipline goes quiet -- you have wandered from coherence.")
+        endIf
+    endIf
+EndFunction
+
+Bool Function IsAltmerDisciplineCoherent()
+    if IsAltmerFavorSuppressedByCurse()
+        return false
+    endIf
+    Int crisis = GetAltmerCrisisState()
+    if crisis == ALTMER_CRISIS_NONE || crisis == ALTMER_CRISIS_SCARRED_RESOLVED
+        return true
+    endIf
+    return false
+EndFunction
+
 Function HandleAltmerSleepEvents(Actor playerRef, String reason)
     if !playerRef || !IsAltmerOrigin() || IsAltmerFavorSuppressedByCurse()
         return
+    endIf
+
+    if TryAltmerDisciplinesRite(playerRef, reason)
+        return                          ; Disciplines menu shown; suppress the dream this wake
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerAncestralDream")
@@ -8588,6 +8702,7 @@ Function RunDawnRefreshTrackStates()
 
     if IsAltmerOrigin()
         RunDawnRefreshAltmerAncestor()
+        SyncAltmerDisciplines(Game.GetPlayer())
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_NORD
