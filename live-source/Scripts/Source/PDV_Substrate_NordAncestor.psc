@@ -10,6 +10,8 @@
 Scriptname PDV_Substrate_NordAncestor extends PDV_SubstrateBase
 
 Float Property AncestorStandingDelta = 5.0 Auto
+Float Property AncestralRestDelta = 3.0 Auto
+Float Property HearthReturnDelta = 2.0 Auto
 Float Property DawnDecay = 1.0 Auto
 Float Property DawnGraceDays = 3.0 Auto
 Float Property NonCurseFloor = 20.0 Auto
@@ -30,6 +32,34 @@ Function RecordAncestorStandingScaled(Float multiplier, String reason)
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastMaintenanceDay", Utility.GetCurrentGameTime() as Int)
     AdjustMetric(delta, "ancestor_spine_" + reason)
     Trace(2, "Ancestor standing recorded with delta " + delta)
+EndFunction
+
+Function RecordAncestralRest(String reason)
+    RecordAncestralRestScaled(1.0, reason)
+EndFunction
+
+Function RecordAncestralRestScaled(Float multiplier, String reason)
+    Float delta = AncestralRestDelta * ClampSignalMultiplier(multiplier)
+    StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.RestCount", 1)
+    StorageUtil.SetStringValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastRestReason", reason)
+    StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastRestEvent", Utility.GetCurrentGameTime())
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastMaintenanceDay", Utility.GetCurrentGameTime() as Int)
+    AdjustMetric(delta, "ancestral_rest_" + reason)
+    Trace(2, "Ancestral rest recorded with delta " + delta)
+EndFunction
+
+Function RecordHearthReturn(String reason)
+    RecordHearthReturnScaled(1.0, reason)
+EndFunction
+
+Function RecordHearthReturnScaled(Float multiplier, String reason)
+    Float delta = HearthReturnDelta * ClampSignalMultiplier(multiplier)
+    StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.HearthReturnCount", 1)
+    StorageUtil.SetStringValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastHearthReturnReason", reason)
+    StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastHearthReturnEvent", Utility.GetCurrentGameTime())
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastMaintenanceDay", Utility.GetCurrentGameTime() as Int)
+    AdjustMetric(delta, "hearth_return_" + reason)
+    Trace(2, "Hearth return recorded with delta " + delta)
 EndFunction
 
 Function ProcessAncestorDawn(Bool curseActive, String reason)
@@ -106,15 +136,29 @@ Int Function GetSourceCount()
     return StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.SourceCount")
 EndFunction
 
+Int Function GetRestCount()
+    return StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.RestCount")
+EndFunction
+
+Int Function GetHearthReturnCount()
+    return StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.HearthReturnCount")
+EndFunction
+
 String Function GetPilotSummary()
-    return "metric=" + GetAncestorStanding() + "; tier=" + GetSubstrateTier() + "; posture=" + GetAncestorPostureLabel() + "; sources=" + GetSourceCount() + "; last=" + StorageUtil.GetStringValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastReason")
+    return "metric=" + GetAncestorStanding() + "; tier=" + GetSubstrateTier() + "; posture=" + GetAncestorPostureLabel() + "; sources=" + GetSourceCount() + "; rests=" + GetRestCount() + "; hearths=" + GetHearthReturnCount() + "; last=" + StorageUtil.GetStringValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastReason")
 EndFunction
 
 Function ResetPilotForDebug()
     ResetForDebug()
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.SourceCount", 0)
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.RestCount", 0)
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.HearthReturnCount", 0)
     StorageUtil.SetStringValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastReason", "")
+    StorageUtil.SetStringValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastRestReason", "")
+    StorageUtil.SetStringValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastHearthReturnReason", "")
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastEvent", 0.0)
+    StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastRestEvent", 0.0)
+    StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastHearthReturnEvent", 0.0)
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastMaintenanceDay", 0)
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.NordAncestor.LastDecayDay", 0)
     Trace(2, "ResetPilotForDebug")

@@ -415,6 +415,7 @@ Message Property PDV_Msg_Redguard_ChampionEntry_Crown Auto
 Message Property PDV_Msg_Redguard_ChampionEntry_Forebear Auto
 Message Property PDV_Msg_Redguard_ChampionEntry_AshAbah Auto
 Message Property PDV_Notif_Redguard_FarShoresToken_Activate Auto
+Message Property PDV_Notif_Redguard_AncestorSpine_Rest Auto
 Message Property PDV_Notif_Orc_Witnessed_TheWatchers_Stronghold Auto
 Message Property PDV_Notif_Orc_Witnessed_TheWatchers_City Auto
 Message Property PDV_Notif_Orc_Witnessed_TheWatchers_LegionExile Auto
@@ -2973,6 +2974,175 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reas
     if GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
         HandleAltmerSleepEvents(playerRef, reason)
     endIf
+
+    if GetPlayerOriginRaceIndex() == ORIGIN_NORD
+        HandleNordSleepEvents(playerRef, reason)
+    endIf
+
+    if GetPlayerOriginRaceIndex() == ORIGIN_ORC
+        HandleOrcSleepEvents(playerRef, reason)
+    endIf
+
+    if GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
+        HandleRedguardSleepEvents(playerRef, reason)
+    endIf
+EndFunction
+
+Int Function GetInteriorSleepCellId(Actor playerRef)
+    if !playerRef
+        return 0
+    endIf
+
+    Cell sleepCell = playerRef.GetParentCell()
+    if !sleepCell || !sleepCell.IsInterior()
+        return 0
+    endIf
+
+    return sleepCell.GetFormID()
+EndFunction
+
+Bool Function IsPlayerAtDeclaredRestCell(Actor playerRef, String declaredKey)
+    if !playerRef
+        return false
+    endIf
+
+    Int declaredId = StorageUtil.GetIntValue(None, declaredKey)
+    if declaredId == 0
+        return false
+    endIf
+
+    Cell currentCell = playerRef.GetParentCell()
+    if !currentCell
+        return false
+    endIf
+
+    return currentCell.GetFormID() == declaredId
+EndFunction
+
+Bool Function TryDeclareRestCell(String keyPrefix, Int sleepCellId)
+    if sleepCellId == 0 || StorageUtil.GetIntValue(None, keyPrefix + ".DeclaredFormID") != 0
+        return false
+    endIf
+
+    Int today = Utility.GetCurrentGameTime() as Int
+    Int candidateId = StorageUtil.GetIntValue(None, keyPrefix + ".CandidateFormID")
+    Int candidateDay = StorageUtil.GetIntValue(None, keyPrefix + ".CandidateDay")
+    Int candidateCount = StorageUtil.GetIntValue(None, keyPrefix + ".CandidateCount")
+
+    if candidateId != sleepCellId
+        candidateCount = 0
+    elseIf candidateDay == today
+        return false
+    endIf
+
+    candidateCount += 1
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateFormID", sleepCellId)
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateDay", today)
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateCount", candidateCount)
+
+    if candidateCount < 3
+        return false
+    endIf
+
+    StorageUtil.SetIntValue(None, keyPrefix + ".DeclaredFormID", sleepCellId)
+    StorageUtil.SetIntValue(None, keyPrefix + ".DeclaredDay", today)
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateFormID", 0)
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateDay", 0)
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateCount", 0)
+    return true
+EndFunction
+
+Function HandleNordSleepEvents(Actor playerRef, String reason)
+    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_NORD || !PDV_NordAncestorSubstrate
+        return
+    endIf
+
+    Int sleepCellId = GetInteriorSleepCellId(playerRef)
+    if sleepCellId == 0
+        return
+    endIf
+
+    String declaredKey = "PDV.Nord.HearthRest.DeclaredFormID"
+    if StorageUtil.GetIntValue(None, declaredKey) == 0
+        if TryDeclareRestCell("PDV.Nord.HearthRest", sleepCellId)
+            ShowNordNotification(None, "This hearth becomes a remembered place of rest.")
+            Trace(2, "Nord hearth-rest cell declared: " + reason)
+        endIf
+        return
+    endIf
+
+    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
+        return
+    endIf
+
+    if !ConsumeOncePerDaySignal("PDV.Signal.NordAncestralRest")
+        return
+    endIf
+
+    RecordNordAncestralRest("sleep_rest_" + reason, 1.0)
+EndFunction
+
+Function HandleOrcSleepEvents(Actor playerRef, String reason)
+    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_ORC || !PDV_OrcLifeModeTrack
+        return
+    endIf
+
+    Int sleepCellId = GetInteriorSleepCellId(playerRef)
+    if sleepCellId == 0
+        return
+    endIf
+
+    String declaredKey = "PDV.Orc.HearthRest.DeclaredFormID"
+    if StorageUtil.GetIntValue(None, declaredKey) == 0
+        if TryDeclareRestCell("PDV.Orc.HearthRest", sleepCellId)
+            MaybeShowOrcHearthHeldNotice("sleep_rest_declare_" + reason)
+            Trace(2, "Orc hearth-rest cell declared: " + reason)
+        endIf
+        return
+    endIf
+
+    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
+        return
+    endIf
+
+    if !ConsumeOncePerDaySignal("PDV.Signal.OrcAncestralRest")
+        return
+    endIf
+
+    Int modeValue = GetActiveOrcRewardMode()
+    RecordOrcLifeModeSignal(modeValue, 1.0, "sleep_hearth_rest_" + reason)
+    MaybeShowOrcHearthHeldNotice("sleep_hearth_rest_" + reason)
+    Trace(2, "Orc ancestral rest routed: " + reason)
+EndFunction
+
+Function HandleRedguardSleepEvents(Actor playerRef, String reason)
+    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_REDGUARD || !PDV_RedguardSectTrack
+        return
+    endIf
+
+    Int sleepCellId = GetInteriorSleepCellId(playerRef)
+    if sleepCellId == 0
+        return
+    endIf
+
+    String declaredKey = "PDV.Redguard.AncestralRest.DeclaredFormID"
+    if StorageUtil.GetIntValue(None, declaredKey) == 0
+        if TryDeclareRestCell("PDV.Redguard.AncestralRest", sleepCellId)
+            ShowRedguardNotification(None, "This resting place remembers the old line.")
+            Trace(2, "Redguard ancestral-rest cell declared: " + reason)
+        endIf
+        return
+    endIf
+
+    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
+        return
+    endIf
+
+    if !ConsumeOncePerDaySignal("PDV.Signal.RedguardAncestralRest")
+        return
+    endIf
+
+    RecordRedguardAncestralRest(1.0, "sleep_ancestor_rest_" + reason)
 EndFunction
 
 Function HandleAltmerSleepEvents(Actor playerRef, String reason)
@@ -4995,6 +5165,22 @@ Function HandleOrcLocationChange(Location newLocation)
     HandleOrcStrongholdPresence(holdId, "location_stronghold")
 EndFunction
 
+Function HandleNordLocationChange(Location newLocation)
+    if !newLocation || GetPlayerOriginRaceIndex() != ORIGIN_NORD || !PDV_NordAncestorSubstrate
+        return
+    endIf
+
+    if !IsPlayerAtDeclaredRestCell(Game.GetPlayer(), "PDV.Nord.HearthRest.DeclaredFormID")
+        return
+    endIf
+
+    if !ConsumeOncePerDaySignal("PDV.Signal.NordHearthReturn")
+        return
+    endIf
+
+    RecordNordHearthReturn("location_hearth_return", 1.0)
+EndFunction
+
 Function HandleOrcStrongholdPresence(Int holdId, String reason)
     if !IsOrcOrigin() || !PDV_OrcLifeModeTrack
         return
@@ -5467,7 +5653,7 @@ Function HandleRedguardCrownTombRespect(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardCrownTombRespect")
     RecordRedguardSectSignal(REDGUARD_SECT_CROWN, multiplier, reason)
-    AwardRedguardCrownSignal(multiplier)
+    AwardRedguardCrownSignal(multiplier, reason)
     Trace(2, "Redguard Crown tomb respect routed with multiplier " + multiplier)
 EndFunction
 
@@ -5624,7 +5810,7 @@ EndFunction
 ; stigma), fired by both the routine duty and the marked major burden so the two paths
 ; cannot drift.
 Function ApplyRedguardAshAbahDutyRewards(String reason, Float multiplier)
-    AwardRedguardAshAbahSignal(multiplier)
+    AwardRedguardAshAbahSignal(multiplier, reason)
     TryRedguardTuwhaccaDeathRiteHeal(reason)
     MarkRedguardAshAbahStigma(reason)
 EndFunction
@@ -5710,7 +5896,7 @@ Function HandleRedguardFarShoresToken(String reason)
     StorageUtil.AdjustFloatValue(None, "PDV.Redguard.FarShoresToken", multiplier)
     StorageUtil.SetStringValue(None, "PDV.Redguard.LastSectReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Redguard.LastSectSignalTime", Utility.GetCurrentGameTime())
-    AwardRedguardFarShoresSignal(multiplier)
+    AwardRedguardFarShoresSignal(multiplier, reason)
     TryRedguardTuwhaccaDeathRiteHeal(reason)
     ShowRedguardNotification(PDV_Notif_Redguard_FarShoresToken_Activate, "You tend the Far Shores token and speak to Tu'whacca.")
     Trace(2, "Redguard Far Shores token routed with multiplier " + multiplier)
@@ -5722,17 +5908,27 @@ Function HandleRedguardAncestorSpine(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAncestorSpine")
+    RecordRedguardAncestorSpinePulse(multiplier, reason)
+    ShowP2BookNotice(reason, "The Yokudan dead", "The ancestor-line stands straighter in you.")
+    Trace(2, "Redguard ancestor spine routed with multiplier " + multiplier)
+EndFunction
+
+Function RecordRedguardAncestralRest(Float multiplier, String reason)
+    RecordRedguardAncestorSpinePulse(multiplier, reason)
+    Trace(2, "Redguard ancestral rest routed with multiplier " + multiplier)
+EndFunction
+
+Function RecordRedguardAncestorSpinePulse(Float multiplier, String reason)
+    if !IsRedguardOrigin() || !PDV_RedguardSectTrack || multiplier <= 0.0
+        return
+    endIf
+
     EnsureRedguardSectInitialized()
     Int currentSect = PDV_RedguardSectTrack.GetCurrentState()
     RecordRedguardSectSignal(currentSect, multiplier, reason)
-    if PDV_Tuwhacca
-        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-    endIf
-    StorageUtil.AdjustFloatValue(None, "PDV.Redguard.AncestorSpine", multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Redguard.AncestorSpineSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Redguard.LastAncestorSpineSourceReason", reason)
-    ShowP2BookNotice(reason, "The Yokudan dead", "The ancestor-line stands straighter in you.")
-    Trace(2, "Redguard ancestor spine routed with multiplier " + multiplier)
+    AwardRedguardAncestorSpinePietyPulse(multiplier, reason)
+    ShowRedguardNotification(PDV_Notif_Redguard_AncestorSpine_Rest, "The ancestor-line steadies behind you.")
+    RequestPanelRefresh()
 EndFunction
 
 Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason)
@@ -5791,10 +5987,11 @@ Bool Function IsRedguardAshAbahBurden(String reason)
     return StringContainsToken(reason, "redguard_deathduty_major") || StringContainsToken(reason, "redguard_ashabah_burden")
 EndFunction
 
-Function AwardRedguardCrownSignal(Float multiplier)
+Function AwardRedguardCrownSignal(Float multiplier, String reason)
     if PDV_Tuwhacca
         AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_CROWN_FORM, None, multiplier)
     endIf
+    AwardRedguardAncestorSpinePietyPulse(multiplier, "crown_tomb_" + reason)
 EndFunction
 
 Function AwardRedguardForebearSignal(Float multiplier)
@@ -5859,16 +6056,32 @@ Function HandleHoonDingBreakthroughKill(Form victimForm, Int eventType)
     Trace(2, "HoonDing make-way fired: breakthrough " + traceLabel + " kill multiplier=" + multiplier)
 EndFunction
 
-Function AwardRedguardAshAbahSignal(Float multiplier)
+Function AwardRedguardAshAbahSignal(Float multiplier, String reason)
     if PDV_Tuwhacca
         AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, None, multiplier)
     endIf
+    AwardRedguardAncestorSpinePietyPulse(multiplier, "ashabah_death_duty_" + reason)
 EndFunction
 
-Function AwardRedguardFarShoresSignal(Float multiplier)
+Function AwardRedguardFarShoresSignal(Float multiplier, String reason)
     if PDV_Tuwhacca
         AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_FAR_SHORES_TOKEN, None, multiplier)
     endIf
+    AwardRedguardAncestorSpinePietyPulse(multiplier, "far_shores_" + reason)
+EndFunction
+
+Function AwardRedguardAncestorSpinePietyPulse(Float multiplier, String reason)
+    if !IsRedguardOrigin() || multiplier <= 0.0
+        return
+    endIf
+
+    if PDV_Tuwhacca
+        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    endIf
+    StorageUtil.AdjustFloatValue(None, "PDV.Redguard.AncestorSpine", multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Redguard.AncestorSpineSourceCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Redguard.LastAncestorSpineSourceReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Redguard.LastAncestorSpineSourceTime", Utility.GetCurrentGameTime())
 EndFunction
 
 Function HandleNordAncestorSpine(String reason)
@@ -5903,6 +6116,56 @@ Function RecordNordAncestorSpine(String reason, Float multiplier)
     StorageUtil.SetStringValue(None, "PDV.Nord.LastAncestorSpineReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Nord.LastAncestorSpineTime", Utility.GetCurrentGameTime())
     Trace(2, "Nord ancestor spine routed with multiplier " + multiplier)
+EndFunction
+
+Function RecordNordAncestralRest(String reason, Float multiplier)
+    if GetPlayerOriginRaceIndex() != ORIGIN_NORD || multiplier <= 0.0
+        return
+    endIf
+
+    Int tierBefore = 0
+    if PDV_NordAncestorSubstrate
+        tierBefore = PDV_NordAncestorSubstrate.GetSubstrateTier()
+        PDV_NordAncestorSubstrate.RecordAncestralRestScaled(multiplier, reason)
+        Int tierAfter = PDV_NordAncestorSubstrate.GetSubstrateTier()
+        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "The old line rested near.", "shor", GetNordAncestorLayerLabel())
+    endIf
+
+    if PDV_Shor
+        AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    endIf
+
+    StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Nord.AncestralRestCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Nord.LastAncestralRestReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Nord.LastAncestralRestTime", Utility.GetCurrentGameTime())
+    ShowNordNotification(None, "You wake with the old line nearer.")
+    Trace(2, "Nord ancestral rest routed with multiplier " + multiplier)
+EndFunction
+
+Function RecordNordHearthReturn(String reason, Float multiplier)
+    if GetPlayerOriginRaceIndex() != ORIGIN_NORD || multiplier <= 0.0
+        return
+    endIf
+
+    Int tierBefore = 0
+    if PDV_NordAncestorSubstrate
+        tierBefore = PDV_NordAncestorSubstrate.GetSubstrateTier()
+        PDV_NordAncestorSubstrate.RecordHearthReturnScaled(multiplier, reason)
+        Int tierAfter = PDV_NordAncestorSubstrate.GetSubstrateTier()
+        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "The hearth remembered your return.", "shor", GetNordAncestorLayerLabel())
+    endIf
+
+    if PDV_Shor
+        AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    endIf
+
+    StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Nord.HearthReturnCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Nord.LastHearthReturnReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Nord.LastHearthReturnTime", Utility.GetCurrentGameTime())
+    ShowNordNotification(None, "The hearth remembers your return.")
+    Trace(2, "Nord hearth return routed with multiplier " + multiplier)
 EndFunction
 
 Function RunDawnRefreshNordAncestor()
@@ -16369,6 +16632,18 @@ Float Function ConsumeDailyRepeatMultiplier(String keyPrefix)
 
     StorageUtil.SetIntValue(None, countKey, repeatCount + 1)
     return multiplier
+EndFunction
+
+Bool Function ConsumeOncePerDaySignal(String keyPrefix)
+    Int currentDay = Utility.GetCurrentGameTime() as Int
+    String dayKey = keyPrefix + ".Day"
+    if StorageUtil.GetIntValue(None, dayKey, -1) == currentDay
+        StorageUtil.AdjustIntValue(None, keyPrefix + ".RejectCount", 1)
+        return False
+    endIf
+
+    StorageUtil.SetIntValue(None, dayKey, currentDay)
+    return True
 EndFunction
 
 Int Function CountSetBits(Int maskValue)

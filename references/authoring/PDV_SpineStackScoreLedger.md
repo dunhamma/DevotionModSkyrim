@@ -8,14 +8,14 @@ Mechanism-agnostic parity score for each race's always-active ancestral spine (p
 
 | Race | % | Raw | Target? | Boon x3 | Sink x2 | Minus x2 | Renew x1 | Dieg x1 | Text x1 | Richness |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Redguard | 70% | 21 | - | 3 | 2 | 2 | 1 | 1 | 2 | MODERATE |
 | Bosmer | 73.3% | 22 | - | 2 | 2 | 2 | 2 | 3 | 3 | RICH |
 | Breton | 76.7% | 23 | - | 3 | 3 | 1 | 2 | 2 | 2 | MODERATE |
-| Orc | 76.7% | 23 | - | 3 | 3 | 1 | 1 | 3 | 2 | MODERATE |
 | Imperial | 76.7% | 23 | - | 3 | 3 | 1 | 2 | 2 | 2 | MODERATE |
 | Altmer | 76.7% | 23 | - | 3 | 3 | 1 | 2 | 2 | 2 | MODERATE |
-| Nord | 76.7% | 23 | - | 3 | 3 | 1 | 0 | 3 | 3 | MODERATE |
 | Dunmer | 80% | 24 | - | 3 | 3 | 2 | 2 | 1 | 2 | MODERATE |
+| Orc | 80% | 24 | - | 3 | 3 | 1 | 2 | 3 | 2 | MODERATE |
+| Redguard | 83.3% | 25 | - | 3 | 3 | 2 | 2 | 2 | 2 | MODERATE |
+| Nord | 83.3% | 25 | - | 3 | 3 | 1 | 2 | 3 | 3 | MODERATE |
 | Khajiit | 86.7% | 26 | - | 3 | 3 | 2 | 2 | 2 | 3 | RICH |
 | Argonian | 100% | 30 | - | 3 | 3 | 3 | 3 | 3 | 3 | RICH |
 

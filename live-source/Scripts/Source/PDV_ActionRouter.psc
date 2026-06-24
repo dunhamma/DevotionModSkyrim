@@ -236,6 +236,7 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
         ; (own per-FormID seen keys + Eldergleam arm/disarm), so it rides every
         ; change here rather than the one-shot MarkLocationSeen gate below.
         PDV_Manager.HandleBosmerLocationChange(akNewLocation)
+        PDV_Manager.HandleNordLocationChange(akNewLocation)
         PDV_Manager.HandleOrcLocationChange(akNewLocation)
         PDV_Manager.TrackRedguardAshAbahUndeadSiteVisit(akNewLocation)
         PDV_Manager.HandleRedguardAshAbahUndeadSiteClear(akOldLocation)

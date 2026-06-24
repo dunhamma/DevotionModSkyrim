@@ -5906,8 +5906,12 @@ class Verifier {
     this.checkSourceContains("Nord spine substrate source", "PDV_Substrate_NordAncestor", [
       "Scriptname PDV_Substrate_NordAncestor extends PDV_SubstrateBase",
       "Function RecordAncestorStandingScaled(Float multiplier, String reason)",
+      "Function RecordAncestralRestScaled(Float multiplier, String reason)",
+      "Function RecordHearthReturnScaled(Float multiplier, String reason)",
       "Function ProcessAncestorDawn(Bool curseActive, String reason)",
       "\"PDV.Substrate.NordAncestor.SourceCount\"",
+      "\"PDV.Substrate.NordAncestor.RestCount\"",
+      "\"PDV.Substrate.NordAncestor.HearthReturnCount\"",
       "String Function GetPilotSummary()",
     ]);
     this.checkSourceContains("Nord spine Shor source", "PDV_Deity_Shor", [
@@ -5918,16 +5922,29 @@ class Verifier {
     ]);
     this.checkSourceContains("Nord spine manager source", "PDV__ManagerQuest", [
       "PDV_Substrate_NordAncestor Property PDV_NordAncestorSubstrate Auto",
+      "Function TryDeclareRestCell(String keyPrefix, Int sleepCellId)",
+      "\".CandidateCount\"",
       "Function HandleNordAncestorSpine(String reason)",
+      "Function HandleNordSleepEvents(Actor playerRef, String reason)",
+      "Function HandleNordLocationChange(Location newLocation)",
       "Function RecordNordAncestorSpine(String reason, Float multiplier)",
+      "Function RecordNordAncestralRest(String reason, Float multiplier)",
+      "Function RecordNordHearthReturn(String reason, Float multiplier)",
       "PDV_NordAncestorSubstrate.RecordAncestorStandingScaled(multiplier, reason)",
+      "PDV_NordAncestorSubstrate.RecordAncestralRestScaled(multiplier, reason)",
+      "PDV_NordAncestorSubstrate.RecordHearthReturnScaled(multiplier, reason)",
       "PDV_Shor.SIGNAL_ANCESTOR_SPINE",
       "\"PDV.Nord.AncestralStanding\"",
+      "\"PDV.Nord.AncestralRestCount\"",
+      "\"PDV.Nord.HearthReturnCount\"",
       "Function RunDawnRefreshNordAncestor()",
       "PDV_Notif_Nord_General_AncestorsQuiet",
       "PDV_Notif_Nord_Kyne_ChampionAmbient_Storm",
       "Function SyncNordAncestorSubstrate(Actor playerRef, Bool isNord)",
       "String Function GetNordAncestorSummary()",
+    ]);
+    this.checkSourceContains("Nord spine location router source", "PDV_ActionRouter", [
+      "PDV_Manager.HandleNordLocationChange(akNewLocation)",
     ]);
 
     const substrateRecord = this.recordsByEdid.get("PDV_Substrate_NordAncestor");
@@ -6178,6 +6195,9 @@ class Verifier {
       "\"PDV.Orc.AncestorSpine\"",
       "AwardOrcAncestorSpineSignal(multiplier, reason)",
       "Function SyncOrcSpineBoon(Actor playerRef, Bool isOrc, Int activeMode)",
+      "Function HandleOrcSleepEvents(Actor playerRef, String reason)",
+      "\"PDV.Orc.HearthRest.DeclaredFormID\"",
+      "\"sleep_hearth_rest_\"",
       "Function MaybeShowOrcWatchersNotice(Int modeValue, String reason)",
       "PDV_Notif_Orc_Witnessed_TheWatchers_Stronghold",
       "PDV_Notif_Orc_Witnessed_TheWatchers_City",
@@ -6285,7 +6305,18 @@ class Verifier {
       "Spell Property PDV_Bless_Redguard_Spine_AshAbah Auto",
       "Function SyncRedguardSpineBoon(Actor playerRef, Bool isRedguard, Int sectValue)",
       "Function GetActiveRedguardSpineSect()",
+      "Function HandleRedguardSleepEvents(Actor playerRef, String reason)",
+      "Function RecordRedguardAncestralRest(Float multiplier, String reason)",
+      "Function RecordRedguardAncestorSpinePulse(Float multiplier, String reason)",
+      "Function AwardRedguardAncestorSpinePietyPulse(Float multiplier, String reason)",
+      "AwardRedguardAncestorSpinePietyPulse(multiplier, \"crown_tomb_\" + reason)",
+      "AwardRedguardAncestorSpinePietyPulse(multiplier, \"ashabah_death_duty_\" + reason)",
+      "AwardRedguardAncestorSpinePietyPulse(multiplier, \"far_shores_\" + reason)",
       "PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE",
+      "PDV_Notif_Redguard_AncestorSpine_Rest",
+      "\"PDV.Redguard.AncestralRest.DeclaredFormID\"",
+      "\"PDV.Redguard.AncestorSpine\"",
+      "\"PDV.Redguard.LastAncestorSpineSourceTime\"",
       "Function EmitRedguardDeathDutyAbandonmentMinus(String reason)",
       "PDV_Tuwhacca.SIGNAL_DEATH_DUTY_ABANDONMENT",
       "\"PDV.Redguard.DeathDutyAbandonmentCount\"",
@@ -6299,8 +6330,16 @@ class Verifier {
       this.checkObjectPropertyTarget("Redguard spine manager property", props, "PDV_Bless_Redguard_Spine_Crown", "PDV_Bless_Redguard_Spine_Crown", this.phase20RaceCostingGap.bind(this));
       this.checkObjectPropertyTarget("Redguard spine manager property", props, "PDV_Bless_Redguard_Spine_Forebear", "PDV_Bless_Redguard_Spine_Forebear", this.phase20RaceCostingGap.bind(this));
       this.checkObjectPropertyTarget("Redguard spine manager property", props, "PDV_Bless_Redguard_Spine_AshAbah", "PDV_Bless_Redguard_Spine_AshAbah", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Redguard spine manager property", props, "PDV_Notif_Redguard_AncestorSpine_Rest", "PDV_Notif_Redguard_AncestorSpine_Rest", this.phase20RaceCostingGap.bind(this));
     } else {
       this.phase20RaceCostingGap("Redguard spine manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    const restMessage = this.recordsByEdid.get("PDV_Notif_Redguard_AncestorSpine_Rest");
+    if (restMessage?.type === "MESG") {
+      this.pass("Redguard spine ancestor message", "PDV_Notif_Redguard_AncestorSpine_Rest exists as MESG.", PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Redguard spine ancestor message", "PDV_Notif_Redguard_AncestorSpine_Rest is missing or not a MESG.", PDV_ESP);
     }
 
     const spellSpecs = [

@@ -1,11 +1,11 @@
 race,pct,raw,target,boon_floor,piety_sink,minus_stack,renewable,diegetic,text_voice,richness,diegetic_dead,diegetic_wired
-Redguard,70,21,,3,2,2,1,1,2,MODERATE,0,4
 Bosmer,73.3,22,,2,2,2,2,3,3,RICH,0,0
 Breton,76.7,23,,3,3,1,2,2,2,MODERATE,0,0
-Orc,76.7,23,,3,3,1,1,3,2,MODERATE,0,10
 Imperial,76.7,23,,3,3,1,2,2,2,MODERATE,0,0
 Altmer,76.7,23,,3,3,1,2,2,2,MODERATE,0,0
-Nord,76.7,23,,3,3,1,0,3,3,MODERATE,0,2
 Dunmer,80,24,,3,3,2,2,1,2,MODERATE,0,0
+Orc,80,24,,3,3,1,2,3,2,MODERATE,0,10
+Redguard,83.3,25,,3,3,2,2,2,2,MODERATE,0,5
+Nord,83.3,25,,3,3,1,2,3,3,MODERATE,0,2
 Khajiit,86.7,26,,3,3,2,2,2,3,RICH,0,0
 Argonian,100,30,,3,3,3,3,3,3,RICH,0,0

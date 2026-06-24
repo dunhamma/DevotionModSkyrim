@@ -13,6 +13,7 @@ var write = args.Contains("--write");
 var check = args.Contains("--check");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 var spellSpecs = BuildSpellSpecs();
+var messageSpecs = BuildMessageSpecs();
 
 var report = new AuthorReport
 {
@@ -38,17 +39,17 @@ try
 
     if (check)
     {
-        CheckRedguardSpine(index, spellSpecs, report);
+        CheckRedguardSpine(index, spellSpecs, messageSpecs, report);
     }
     else
     {
         var allocator = new FormKeyAllocator(mod, mod.EnumerateMajorRecords().OfType<IMajorRecordGetter>().Select(record => record.FormKey));
-        AuthorRedguardSpine(mod, index, allocator, spellSpecs, report);
+        AuthorRedguardSpine(mod, index, allocator, spellSpecs, messageSpecs, report);
         if (write)
         {
             WriteMod(mod, espPath, report);
             var readback = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
-            CheckRedguardSpine(BuildIndex(readback), spellSpecs, report);
+            CheckRedguardSpine(BuildIndex(readback), spellSpecs, messageSpecs, report);
         }
         else
         {
@@ -76,11 +77,17 @@ static void AuthorRedguardSpine(
     Dictionary<string, ISkyrimMajorRecordGetter> index,
     FormKeyAllocator allocator,
     IReadOnlyList<SpellSpec> spellSpecs,
+    IReadOnlyList<MessageSpec> messageSpecs,
     AuthorReport report)
 {
     foreach (var spec in spellSpecs)
     {
         BuildSpell(mod, index, allocator, spec, report);
+    }
+
+    foreach (var spec in messageSpecs)
+    {
+        EnsureMessage(mod, index, allocator, spec, report);
     }
 
     var manager = RequireRecord<Quest>(index, managerEdid);
@@ -89,8 +96,47 @@ static void AuthorRedguardSpine(
         ObjectProp("PDV_Bless_Redguard_Spine_Crown", RequireRecord<Spell>(index, "PDV_Bless_Redguard_Spine_Crown").FormKey),
         ObjectProp("PDV_Bless_Redguard_Spine_Forebear", RequireRecord<Spell>(index, "PDV_Bless_Redguard_Spine_Forebear").FormKey),
         ObjectProp("PDV_Bless_Redguard_Spine_AshAbah", RequireRecord<Spell>(index, "PDV_Bless_Redguard_Spine_AshAbah").FormKey),
+        ObjectProp("PDV_Notif_Redguard_AncestorSpine_Rest", RequireRecord<Message>(index, "PDV_Notif_Redguard_AncestorSpine_Rest").FormKey),
     });
     report.Actions.Add("Wired Redguard spine boon properties on PDV__ManagerQuest.");
+}
+
+static Message EnsureMessage(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    MessageSpec spec,
+    AuthorReport report)
+{
+    if (spec.Title.Any(ch => ch > 127) || spec.Body.Any(ch => ch > 127))
+    {
+        throw new InvalidOperationException($"{spec.EditorId} text must be ASCII-safe.");
+    }
+
+    Message message;
+    if (index.TryGetValue(spec.EditorId, out var existing))
+    {
+        if (existing is not Message typed)
+        {
+            throw new InvalidOperationException($"{spec.EditorId} already exists as {existing.GetType().Name}, expected Message.");
+        }
+        message = typed;
+    }
+    else
+    {
+        message = new Message(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.Messages.Add(message);
+        index[spec.EditorId] = message;
+        report.Actions.Add($"Created message {spec.EditorId}.");
+    }
+
+    message.EditorID = spec.EditorId;
+    message.FormVersion = 44;
+    message.Name = Tx(spec.Title);
+    message.Description = Tx(spec.Body);
+    message.Flags = 0;
+    message.MenuButtons.Clear();
+    return message;
 }
 static Spell BuildSpell(
     SkyrimMod mod,
@@ -213,11 +259,17 @@ static MagicEffect EnsureMgef(
 static void CheckRedguardSpine(
     Dictionary<string, ISkyrimMajorRecordGetter> index,
     IReadOnlyList<SpellSpec> spellSpecs,
+    IReadOnlyList<MessageSpec> messageSpecs,
     AuthorReport report)
 {
     foreach (var spec in spellSpecs)
     {
         CheckSpell(index, spec, report);
+    }
+
+    foreach (var spec in messageSpecs)
+    {
+        CheckMessage(index, spec, report);
     }
 
     var manager = CheckRecord<Quest>(index, managerEdid, report);
@@ -229,7 +281,30 @@ static void CheckRedguardSpine(
             CheckObjectProperty(script, "PDV_Bless_Redguard_Spine_Crown", RequireRecord<Spell>(index, "PDV_Bless_Redguard_Spine_Crown").FormKey, managerEdid, report);
             CheckObjectProperty(script, "PDV_Bless_Redguard_Spine_Forebear", RequireRecord<Spell>(index, "PDV_Bless_Redguard_Spine_Forebear").FormKey, managerEdid, report);
             CheckObjectProperty(script, "PDV_Bless_Redguard_Spine_AshAbah", RequireRecord<Spell>(index, "PDV_Bless_Redguard_Spine_AshAbah").FormKey, managerEdid, report);
+            CheckObjectProperty(script, "PDV_Notif_Redguard_AncestorSpine_Rest", RequireRecord<Message>(index, "PDV_Notif_Redguard_AncestorSpine_Rest").FormKey, managerEdid, report);
         }
+    }
+}
+
+static void CheckMessage(Dictionary<string, ISkyrimMajorRecordGetter> index, MessageSpec spec, AuthorReport report)
+{
+    var message = CheckRecord<Message>(index, spec.EditorId, report);
+    if (message is null)
+    {
+        return;
+    }
+
+    if (!string.Equals(message.Name?.String ?? "", spec.Title, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{spec.EditorId} title is '{message.Name?.String}', expected '{spec.Title}'.");
+    }
+    if (!string.Equals(message.Description?.String ?? "", spec.Body, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{spec.EditorId} body does not match the Redguard ancestor-spine contract.");
+    }
+    if (message.Flags.HasFlag(Message.Flag.MessageBox))
+    {
+        report.Errors.Add($"{spec.EditorId} should be a notification, not a MessageBox.");
     }
 }
 static void CheckSpell(Dictionary<string, ISkyrimMajorRecordGetter> index, SpellSpec spec, AuthorReport report)
@@ -517,8 +592,17 @@ static SpellSpec[] BuildSpellSpecs() =>
         ]),
 ];
 
+static MessageSpec[] BuildMessageSpecs() =>
+[
+    new(
+        "PDV_Notif_Redguard_AncestorSpine_Rest",
+        "Ancestor Rest",
+        "The ancestor-line steadies behind you."),
+];
+
 sealed record SpellSpec(string SpellEditorId, string DisplayName, string Description, EffectSpec[] Effects);
 sealed record EffectSpec(string EffectEditorId, string DisplayName, string ActorValue, float Magnitude);
+sealed record MessageSpec(string EditorId, string Title, string Body);
 
 sealed class AuthorReport
 {
