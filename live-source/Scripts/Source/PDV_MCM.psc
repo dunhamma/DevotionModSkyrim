@@ -59,6 +59,7 @@ Int _oidApplyPiety = -1
 Int _oidPendingPietyToday = -1
 Int _oidApplyPietyToday = -1
 Int _oidSeedBroadLane = -1
+Int _oidPrepareUninstall = -1
 Int _oidPendingSignalType = -1
 Int _oidApplyCuratedSignal = -1
 Int _oidRunDawn = -1
@@ -141,7 +142,6 @@ Int _oidKhajiitFocusAlkosh = -1
 Int _oidBretonKnightsRoad = -1
 Int _oidBretonHiddenArt = -1
 Int _oidBretonGreenWay = -1
-Int _oidBretonDruidicFrayTest = -1
 Int _oidOrcCity = -1
 Int _oidOrcStronghold = -1
 Int _oidOrcLegionExile = -1
@@ -401,12 +401,12 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Runs a compressed multi-day decay proof on the selected deity.")
     elseIf a_option == _oidShowDecaySummary
         SetInfoText("Shows the selected deity's decay state, rate, floor, and last decay day.")
+    elseIf a_option == _oidPrepareUninstall
+        SetInfoText("Best-effort cleanup for a throwaway uninstall save. Save first. A pre-install save is the only fully clean removal.")
     elseIf a_option == _oidKhajiitFocusBaanDar || a_option == _oidKhajiitFocusRajhin || a_option == _oidKhajiitFocusAlkosh
         SetInfoText("Forces the Khajiit emergent focus to this moon-path so its tier reward becomes testable. Then force piety and Run Dawn to light the Champion blessing.")
     elseIf a_option == _oidBretonKnightsRoad || a_option == _oidBretonHiddenArt || a_option == _oidBretonGreenWay
         SetInfoText("Forces the Breton tradition so its tradition-gated reward family becomes testable. Then force piety and Run Dawn.")
-    elseIf a_option == _oidBretonDruidicFrayTest
-        SetInfoText("Seeds a Green Way / Druidic-fork Breton at DruidicStanding 31 (just above the fraying band). Then Run Dawn across two in-game days and the Survey/label should read 'frayed' (<30).")
     elseIf a_option == _oidOrcCity || a_option == _oidOrcStronghold || a_option == _oidOrcLegionExile
         SetInfoText("Forces the Orc life mode so its mode-gated Malacath reward becomes testable. Then force piety and Run Dawn.")
     elseIf a_option == _oidArgonianPeople || a_option == _oidArgonianVoid
@@ -511,6 +511,17 @@ Function OnOptionSelect(Int a_option)
         if ShowMessage("Seed the current race's broad-worship lane to Faithful (sets broad worship + the broad accumulator so the broad Fortify-Health applies)?", True, "$Yes", "$No")
             PDV_Manager.DebugSeedBroadLane()
             ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidPrepareUninstall
+        if ShowMessage("Prepare Devotion for uninstall? SAVE FIRST. This strips Devotion spells, removes its factions, clears most of its saved data, and STOPS the mod. It is best-effort, NOT a guaranteed clean save. The only fully clean removal is a save made before Devotion was installed. Continue?", True, "$Yes", "$No")
+            if EnsureManagerBinding("prepare_uninstall")
+                PDV_Manager.PrepareForUninstall()
+            else
+                ShowMessage("Devotion is still starting up. Try again in a moment.", False, "$OK", "")
+            endIf
         endIf
         return
     endIf
@@ -703,11 +714,6 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidBretonGreenWay
         RunPatternAction("Set the Breton tradition to Green Way?", 48)
-        return
-    endIf
-
-    if a_option == _oidBretonDruidicFrayTest
-        RunPatternAction("Seed a Green Way / Druidic Breton at DruidicStanding 31 (just above fraying) for the decay proof?", 58)
         return
     endIf
 
@@ -1324,6 +1330,7 @@ Function BuildStatePage()
 
     AddEmptyOption()
     AddHeaderOption("Actions", OPTION_FLAG_NONE)
+    _oidPrepareUninstall = AddTextOption("Prepare for uninstall", "Strip + stop", OPTION_FLAG_NONE)
     _oidRunDawn = AddTextOption("Run dawn pass", "Consolidate scratch", OPTION_FLAG_NONE)
     _oidShowPatternSummary = AddTextOption("Show pattern summary", "Paged readout", OPTION_FLAG_NONE)
     _oidShowPietyMap = AddTextOption("Show piety map", "Message", OPTION_FLAG_NONE)
@@ -1349,7 +1356,6 @@ Function BuildStatePage()
     _oidBretonKnightsRoad = AddTextOption("Breton -> Knights Road", "Tradition", OPTION_FLAG_NONE)
     _oidBretonHiddenArt = AddTextOption("Breton -> Hidden Art", "Tradition", OPTION_FLAG_NONE)
     _oidBretonGreenWay = AddTextOption("Breton -> Green Way", "Tradition", OPTION_FLAG_NONE)
-    _oidBretonDruidicFrayTest = AddTextOption("Breton -> Green Way Fray Test", "Fraying", OPTION_FLAG_NONE)
     _oidOrcCity = AddTextOption("Orc -> City", "Life mode", OPTION_FLAG_NONE)
     _oidOrcStronghold = AddTextOption("Orc -> Stronghold", "Life mode", OPTION_FLAG_NONE)
     _oidOrcLegionExile = AddTextOption("Orc -> Legion-Exile", "Life mode", OPTION_FLAG_NONE)
@@ -2213,8 +2219,6 @@ Function RunPatternAction(String promptText, Int actionId)
         manager.DebugSeedBosmerVariety()
     elseIf actionId == 57
         manager.DebugCycleKhajiitLunarPosture()
-    elseIf actionId == 58
-        manager.DebugSeedBretonDruidicFrayTest()
     endIf
 
     ShowPatternSummaryBrief()
