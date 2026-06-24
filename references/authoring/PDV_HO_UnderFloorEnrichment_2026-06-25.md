@@ -1,13 +1,43 @@
 # HO_UnderFloorEnrichment — close the 23 under-floor paths (Codex Handoff, 2026-06-25)
 
-**Queue A1 (dispatch-first, serialized on `PDV__ManagerQuest.psc`).** Full per-path design spec:
-Workflow `w9ywkug8q` output (this session). This handoff carries the canonical recipe + roster;
-read the Workflow output for any per-path specifics you want.
+**Queue A1 (dispatch-first, serialized on `PDV__ManagerQuest.psc`).** This handoff is SELF-CONTAINED:
+the canonical recipe + a per-path checklist are inline below — author all 22 remaining paths in ONE
+batch, no Workflow-output lookup needed (deeper per-path spec, if ever wanted: Workflow `w9ywkug8q`).
+
+## ⚡ EXECUTION MODE — ONE continuous batch (do NOT stop after each path)
+**This is a single 23-path deliverable, not 23 deliverables.** Author the renewable channel for
+EVERY remaining path in the checklist below in one continuous pass. Do **NOT** stop, hand back,
+checkpoint, or run the full gate cadence after each path — that is what stalled it after
+`altmer_magnus`.
+- **Verify per RACE-CLUSTER, not per path:** finish a whole cluster (e.g. all 4 Bosmer), then run
+  `pdv_compile --script PDV__ManagerQuest` (0/0) once. Run the full cadence (`pdv_verify` →
+  `pdv_signal_e2e_gate` → `pdv_signal_floor_audit` → `pdv_integrity_harness`) **once at the very end**
+  (and optionally once mid-way), NOT 22 times.
+- **One commit at the end** (or one per cluster) — not one per path.
+- **Hand back ONCE**, when the floor audit shows all 23 paths PASS (UNDER-FLOOR → 0), with the final
+  cadence green. Only stop early if you hit a genuine blocker (compile error you can't resolve, or a
+  path with no clean theme-fit hook) — name it and continue with the rest.
+- Keep using the `PDV_SignalFloorDirectRenewables.csv` code-evidence registry you established for
+  `altmer_magnus` — add a row per path as you go (it's how the audit credits the direct-manager
+  renewable type).
 
 ## Goal
 Bring the **23 under-floor race-paths** to floor (min 5 source TYPES + min 2 RENEWABLE per path).
 `node tools/pdv_signal_floor_audit.mjs` → the UNDER-FLOOR roster. The dominant shortfall is **+1
 RENEWABLE** (21/23 sit at renew 1/2); a few also need +1-2 types.
+
+## Kickoff progress (2026-06-24 AEST)
+First narrow enrichment landed for `altmer_magnus`: active Magnus now gets a daily sleep-dream
+renewable through `HandleAltmerSleepEvents`, gated by the existing `PDV.Signal.AltmerAncestralDream`
+anti-farm cap and routed through the existing dawn scholarship helper. The floor audit now counts this
+only through `PDV_SignalFloorDirectRenewables.csv`, which requires code evidence for the manager
+function, guard, anti-farm gate, hook seam, and sink before granting the direct-manager renewable type.
+
+Current verified baseline after kickoff:
+- `pdv_compile --script PDV__ManagerQuest`: 0 errors / 0 warnings; verifier `FAIL=0`
+- `pdv_signal_e2e_gate`: PASS, 39 GREEN / 0 RED, curated parity PASS
+- `pdv_signal_floor_audit`: 29 PASS / 22 UNDER-FLOOR; `altmer_magnus` is PASS at 6/5 types and 2/2 renewable
+- `pdv_integrity_harness`: PASS
 
 ## Canonical +1-renewable recipe (MIRROR the 6e channels / near-water faucet)
 For each path, add ONE renewable env/behavioural channel:
@@ -47,6 +77,38 @@ For each path, add ONE renewable env/behavioural channel:
 - **Redguard** (ashabah/crown/forebear +1t/+1r) — sword-tending / Halls / road-passage per sect.
 - **Misc** — `breton_hidden_art` +1r (Hidden Art exposure cadence), `dunmer_deviation` +1r
   (deviation-price recurring).
+
+## Per-path checklist (23 total — work top-to-bottom, check off as you go)
+`(+Nt/+Mr)` = needs +N source types / +M renewable. Most are just **+1 renewable**; the marked ones
+also need +types (add a book or an approved quest-stage source alongside the renewable channel).
+- [x] **altmer_magnus** — sleep-dream → Auri-El/Magnus (DONE, the kickoff)
+- [ ] **argonian_hist** (+2t/+1r) — 2nd env channel (marsh-weather OR rooted-sleep) → Hist substrate; mirror `TryArgonianNearWaterMaintenance`, own day-key. NO quest-reaction.
+- [ ] **argonian_people** (+3t/+1r) — community/rooted-sleep env → People→Hist substrate. NO quest-reaction. Needs the most types.
+- [ ] **argonian_void** (+2t/+1r) — Void-acknowledgment env → Sithis.
+- [ ] **bosmer_old_contract** (+1t/+1r) — Songs-of-the-Green location env → Y'ffre/path (no plant-harvest).
+- [ ] **bosmer_living_story** (+1t/+1r) — location env → path.
+- [ ] **bosmer_bandit_road** (+2t/+1r) — road location env → Baan Dar.
+- [ ] **bosmer_exchange** (+2t/+1r) — trade-location env → Z'en.
+- [ ] **khajiit_alkosh** (+2t/+1r) — moon-phase poll-faucet → Alkosh (coc-immune).
+- [ ] **khajiit_baandar** (+2t/+1r) — road-home circuit → Baan Dar.
+- [ ] **khajiit_khenarthi** (+2t/+1r) — road/wind env → Khenarthi.
+- [ ] **khajiit_rajhin** (+2t/+1r) — night/shadow env → Rajhin.
+- [ ] **khajiit_azurah** (+1t, renew OK) — **+1 type only** → Azurah (no renewable needed).
+- [ ] **khajiit_lunar** (+1t, renew OK) — **+1 type only** → lunar substrate.
+- [ ] **altmer_auriel** (+1t/+1r) — dawn-practice renewable → Auri-El.
+- [ ] **altmer_xarxes** (+1t/+1r) — record/study env → Xarxes.
+- [ ] **imperial_private_talos** (+1t/+1r) — private shrine-cadence → Talos.
+- [ ] **imperial_public_talos** (+1t/+1r) — civic-rite cadence → Talos.
+- [ ] **redguard_crown** (+1t/+1r) — Halls-of-the-Dead / sword-tending → Crown/Tu'whacca.
+- [ ] **redguard_forebear** (+1t/+1r) — sword-tending Leki → Forebear.
+- [ ] **redguard_ashabah** (+1t/+1r) — road-passage / death-duty cadence → Ash'abah/Tu'whacca.
+- [ ] **breton_hidden_art** (+1r) — Hidden Art exposure cadence renewable.
+- [ ] **dunmer_deviation** (+1r) — deviation-price recurring renewable.
+
+**Standing rule (owner 2026-06-25):** each new renewable signal must record a driver
+(`PDV.Driver.Reasons`/`PDV.Driver.Deltas` on its target deity form, the way `AwardPiety` does) so it
+lands in the in-game Ledger ("what feeds your gods"). The double-route's `AwardCuratedSignalScaled`
+path already does this — just don't bypass it with a raw StorageUtil piety write.
 
 ## ⚠️ Serialize on the manager. Verify (standing cadence)
 `pdv_compile` 0/0 → `pdv_verify` FAIL=0 → `pdv_signal_e2e_gate` 0 RED + parity PASS →
