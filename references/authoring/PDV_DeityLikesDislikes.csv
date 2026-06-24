@@ -1,313 +1,317 @@
-actor,eventId,eventName,sentiment,tier,baseDelta,dailyCap,cooldownDays,stanceGate,conditionTag,notes
-kyne,1,kill-hostile-beast,-,large,-3.0,0,0,,,Kyne protects beasts; uncapped (combat migration)
-kyne,2,kill-hostile-humanoid,+,small,0.5,0,0,,,uncapped (combat migration)
-kyne,3,kill-event3,+,small,0.25,0,0,,,legacy branch; router does not emit 3 yet
-kyne,4,kill-event4,+,small,0.5,0,0,,,legacy branch; router does not emit 4 yet
-kyne,40,shout-attack,+,small,0.35,3,0.0208,,Shout,NOT read - Kyne shout uses property-based call
-kyne,343,learn-word-of-power,+,medium,1.0,2,0.5,,,Kyne gifted the Voice to mankind
-kyne,313,rest-under-open-sky,+,small,0.5,3,0,,,the Kiss of Kyne is wind and open sky
-kyne,345,discover-location,+,small,0.25,3,0,,,the wild places are meant to be walked
-kyne,350,heal-or-cure-npc,+,small,0.25,3,0,,,the kind mother shelters the weak
-akatosh,302,kill-dragon,-,medium,-0.75,2,0.5,,,the dragon is his aspect; slaying it is fraught reverence not glory
-akatosh,343,learn-word-of-power,+,medium,0.75,2,0.5,,,the Thu'um is the dragon's own voice
-akatosh,313,rest-under-open-sky,+,small,0.25,3,0,,,endurance under the open march of time
-akatosh,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,undeath defies the proper span of life
-akatosh,365,raise-undead,-,medium,-1.0,2,0.5,,,necromancy cheats the orderly passage of time
-akatosh,344,increase-skill,+,small,0.25,3,0,,,patient discipline honors the dragon
-Arkay,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,guardian of the cycle puts the restless dead to rest
-Arkay,365,raise-undead,-,large,-1.5,1,1.0,,,necromancy is the core sin against the life-death cycle
-Arkay,304,murder-defenseless,-,medium,-1.0,2,0.5,,,unnatural death tears the rightful order
-Arkay,350,heal-or-cure-npc,+,small,0.5,3,0,,,sustaining the living honors the natural span
-Arkay,342,read-lore-book,+,small,0.25,3,0,,,studying burial rites and the mysteries of death
-Mara,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,compassion made manifest in tending the suffering
-Mara,333,cook-meal,+,small,0.5,3,0,,,the warmth of the hearth and feeding others
-Mara,304,murder-defenseless,-,large,-1.5,1,1.0,,,cruelty to the helpless offends the goddess of love
-Mara,314,sleep-in-bed,+,small,0.25,3,0,,,rest within the hearth and home she blesses
-Mara,364,assault-innocent,-,medium,-1.0,2,0.5,,,violence against the innocent betrays compassion
-Stendarr,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,the Vigil stands against the Daedra
-Stendarr,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,righteous mercy frees the dead from undeath
-Stendarr,350,heal-or-cure-npc,+,small,0.5,3,0,,,mercy and aid to the weary
-Stendarr,304,murder-defenseless,-,large,-1.5,1,1.0,,,the god of restraint abhors merciless slaughter
-Stendarr,364,assault-innocent,-,medium,-1.0,2,0.5,,,justice forbids preying on the innocent
-Stendarr,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,,consorting with Daedra betrays the Vigil
-Zenithar,330,smith-item,+,small,0.5,3,0,,,honest labor at the forge
-Zenithar,331,enchant-item,+,small,0.5,3,0,,,skilled craft adds worth through honest work
-Zenithar,332,brew-potion,+,small,0.25,3,0,,,diligent apothecary trade craft
-Zenithar,362,steal-item,-,medium,-1.0,2,0.5,,owned,theft mocks honest commerce
-Zenithar,360,pick-owned-lock,-,small,-0.5,3,0,,owned,breaking into property scorns lawful trade
-Zenithar,361,trespass,-,small,-0.25,3,0,,,respecting boundaries is the merchant's creed
-Julianos,340,read-skill-book,+,small,0.5,3,0,,,the god of wisdom rewards diligent study
-Julianos,341,read-spell-tome,+,small,0.5,3,0,,,magic mastered as disciplined logic
-Julianos,342,read-lore-book,+,small,0.5,3,0,,,contemplation of lore and understanding
-Julianos,343,learn-word-of-power,+,medium,0.75,2,0.5,,,the deep logic of the Thu'um is sacred knowledge
-Julianos,344,increase-skill,+,small,0.25,3,0,,,patient mastery through reasoned practice
-Julianos,331,enchant-item,+,small,0.25,3,0,,,applied arcane knowledge in disciplined craft
-Dibella,331,enchant-item,+,small,0.5,3,0,,,beauty wrought into a created thing
-Dibella,330,smith-item,+,small,0.25,3,0,,,artistry of the maker's hand
-Dibella,342,read-lore-book,+,small,0.25,3,0,,,appreciation of art and created beauty
-Dibella,350,heal-or-cure-npc,+,small,0.25,3,0,,,tenderness shown toward another
-Dibella,304,murder-defenseless,-,medium,-1.0,2,0.5,,,wanton cruelty defiles beauty and love
-Dibella,333,cook-meal,+,small,0.25,3,0,,,the gentle art of a well made meal
-Kynareth,313,rest-under-open-sky,+,medium,0.75,2,0.5,,,communion with sky and open air
-Kynareth,345,discover-location,+,small,0.5,3,0,,,the goddess of travel blesses the wanderer
-Kynareth,332,brew-potion,+,small,0.25,3,0,,,gathering nature's gifts into healing draughts
-Kynareth,365,raise-undead,-,medium,-1.0,2,0.5,,,raising the dead profanes the natural order
-Kynareth,350,heal-or-cure-npc,+,small,0.5,3,0,,,restoring life with nature's bounty
-Talos,343,learn-word-of-power,+,medium,1.0,2,0.5,,,Tiber Septim mastered the Thu'um as warrior-god of man
-Talos,345,discover-location,+,small,0.5,3,0,,,the conqueror's path is to claim new ground
-Talos,2,kill-hostile-humanoid,+,small,0.5,3,0,,,valor in battle honors the Hero-God of Man
-Talos,344,increase-skill,+,small,0.25,3,0,,,mortal striving toward greatness
-Talos,304,murder-defenseless,-,medium,-0.75,2,0.5,,,empire is built on valor not slaughter of the helpless
-Shor,343,learn-word-of-power,+,small,0.5,3,0,,,the king of old Atmora prized the warrior's Voice
-Shor,313,rest-under-open-sky,+,small,0.25,3,0,,,the old Nord king kept the rough camps of his host
-Shor,304,murder-defenseless,-,large,-1.5,1,1.0,,,honorless killing bars the door to Sovngarde
-Shor,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,the restless dead deny the honored hall
-Shor,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,binding the dead mocks the hall of valor
-Tsun,2,kill-hostile-humanoid,+,medium,0.75,2,0.5,,,the shield-thane proves the warrior at honorable arms
-Tsun,343,learn-word-of-power,+,small,0.25,3,0,,,Tsun stands where trials are met
-Tsun,304,murder-defenseless,-,large,-1.5,1,1.0,,,the guardian of trials despises a coward's kill
-Tsun,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,no true trial is won by raising the dead
-Tsun,350,heal-or-cure-npc,+,small,0.25,3,0,,,a shield-thane guards his comrades
-Stuhn,2,kill-hostile-humanoid,+,small,0.5,3,0,,,fair combat against an armed foe honors the shield-god
-Stuhn,304,murder-defenseless,-,large,-2.0,1,1.0,,,Stuhn ransoms prisoners and abhors slaughter of the helpless
-Stuhn,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,sparing and mending a foe reflects mercy in war
-Stuhn,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,the dead deserve rest not conscription
-Stuhn,300,kill-undead,+,small,0.25,3,0,,ActorTypeUndead,laying the bound dead to rest restores fair order
-auri-el,344,increase-skill,+,small,0.5,3,0,,,disciplined self-perfection toward ascension
-auri-el,342,read-lore-book,+,small,0.25,3,0,,,study of the ages befits the supreme ancestor
-auri-el,313,rest-under-open-sky,+,small,0.25,3,0,,,ascetic restraint under the bare dawn sky
-auri-el,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,the soul's elevation served by mending others
-auri-el,304,murder-defenseless,-,large,-1.5,1,1.0,,,base slaughter drags the soul down from its ascent
-auri-el,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,the Daedra are lesser et'Ada beneath the light
-magnus,341,read-spell-tome,+,medium,0.75,2,0.5,,,the architect of magic rewards the arcane art
-magnus,331,enchant-item,+,small,0.5,3,0,,,binding magicka into form honors the builder
-magnus,344,increase-skill,+,small,0.25,3,0,,,steady mastery of higher study
-magnus,342,read-lore-book,+,small,0.25,3,0,,,the fled architect left his plans for scholars
-magnus,332,brew-potion,+,small,0.25,3,0,,,the alchemical art is one more craft of the design
-xarxes,342,read-lore-book,+,medium,0.75,2,0.5,,,the scribe of Auri-El hoards the lore of every age
-xarxes,340,read-skill-book,+,small,0.5,3,0,,,Xarxes records all knowledge
-xarxes,341,read-spell-tome,+,small,0.5,3,0,,,the keeper of mysteries favors arcane secrets
-xarxes,331,enchant-item,+,small,0.25,3,0,,,inscribing power mirrors the ageless scribe
-xarxes,343,learn-word-of-power,+,small,0.25,3,0,,,each Word is another secret for his ledger
-xarxes,368,accept-daedric-artifact,-,small,-0.5,3,0,,ActorTypeDaedra,the scribe keeps no truck with Daedric bargains
-trinimac,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,the unbroken warrior stands against the Daedra
-trinimac,2,kill-hostile-humanoid,+,small,0.5,3,0,,,martial virtue against an armed foe
-trinimac,344,increase-skill,+,small,0.25,3,0,,,the disciplined honing of strength
-trinimac,368,accept-daedric-artifact,-,large,-2.0,1,1.0,,ActorTypeDaedra,a Daedric prize is the betrayal that unmade him into Malacath
-trinimac,304,murder-defenseless,-,medium,-1.0,2,0.5,,,honor forbids killing the helpless
-trinimac,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,the honored dead are not to be enslaved
-Y'ffre,313,rest-under-open-sky,+,small,0.5,3,0,,,sleep beneath the green as the first folk did
-Y'ffre,342,read-lore-book,+,small,0.25,3,0,,,the first story and the singing of the world
-Y'ffre,350,heal-or-cure-npc,+,small,0.5,3,0,,,mend living things as nature's law intends
-Y'ffre,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,raising the dead defiles the natural cycle
-Y'ffre,330,smith-item,-,small,-0.25,3,0,,,shaping dead matter offends the Green Pact restraint
-Z'en,333,cook-meal,+,small,0.5,3,0,,,the harvest honored, labor turned to nourishment
-Z'en,330,smith-item,+,small,0.5,3,0,,,honest craft is a debt repaid in skill
-Z'en,332,brew-potion,+,small,0.25,3,0,,,patient labor distilled, value made fair
-Z'en,340,read-skill-book,+,small,0.25,3,0,,,study a trade to repay the world its due
-Z'en,362,steal-item,-,medium,-0.75,2,0.5,,,theft is a debt taken and never paid
-Baan Dar,360,pick-owned-lock,+,small,0.25,3,0,,owned,the Bandit God slips every ward
-Baan Dar,362,steal-item,+,small,0.5,3,0,,,the exile takes what survival demands
-Baan Dar,361,trespass,+,small,0.25,3,0,,,no door is closed to the trickster
-Baan Dar,304,murder-defenseless,-,medium,-0.75,2,0.5,,,a clever escape beats a clumsy killing
-Baan Dar,345,discover-location,+,small,0.5,3,0,,,the exile-trickster walks every road there is
-Baan Dar,344,increase-skill,+,small,0.25,3,0,,,the survivor adapts or the survivor dies
-khenarthi,345,discover-location,+,small,0.5,3,0,,,winds and the open road
-khenarthi,313,rest-under-open-sky,+,small,0.5,3,0,,,the wind goddess shelters the traveler
-khenarthi,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,free trapped souls so the wind carries them home
-khenarthi,302,kill-dragon,+,medium,0.75,2,0.5,,,guide even a great soul to its final journey
-khenarthi,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,the psychopomp abhors souls chained from the journey home
-khenarthi,350,heal-or-cure-npc,+,small,0.25,3,0,,,mercy eases a soul along the road she keeps
-rajhin,362,steal-item,+,small,0.5,3,0,,,the Purring Liar takes with a smile
-rajhin,360,pick-owned-lock,+,small,0.5,3,0,,owned,the master thief
-rajhin,361,trespass,+,small,0.25,3,0,,,shadows open every threshold for the cat
-rajhin,304,murder-defenseless,-,medium,-0.75,2,0.5,,,artful theft, never crude slaughter
-rajhin,345,discover-location,+,small,0.25,3,0,,,the roaming trickster knows every hidden way
-rajhin,364,assault-innocent,-,small,-0.5,3,0,,,brute violence shames the artful thief
-alkosh,302,kill-dragon,+,large,1.5,1,1.0,,,the Dragon King humbles the beasts that broke from order
-alkosh,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,undeath defies time's lawful order
-alkosh,343,learn-word-of-power,+,medium,0.75,2,0.5,,,master the Thu'um as ordered dominion
-alkosh,304,murder-defenseless,-,medium,-1.0,2,0.5,,,lawless slaughter shatters cosmic order
-alkosh,364,assault-innocent,-,small,-0.5,3,0,,,chaos against the innocent offends the keeper of order
-azurah,313,rest-under-open-sky,+,small,0.5,3,0,,,dawn-dusk observance beneath the twin moons
-azurah,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,mercy shown to the cursed and outcast
-azurah,342,read-lore-book,+,small,0.25,3,0,,,study of prophecy and the turning of fate
-azurah,343,learn-word-of-power,+,medium,0.75,2,0.5,,,foresight rewarded; knowing what is to come
-azurah,304,murder-defenseless,-,medium,-0.75,2,0.5,,,cruelty to the helpless betrays her mercy
-Boethiah,2,kill-hostile-humanoid,+,small,0.25,3,0,,,victory of the worthy through open struggle
-Boethiah,344,increase-skill,+,small,0.5,3,0,,,strength earned by trial and self-betterment
-Boethiah,304,murder-defenseless,+,medium,0.75,2,0.5,,,the unworthy culled; rightful murder is her gift
-Boethiah,368,accept-daedric-artifact,+,large,1.5,1,1.0,,ActorTypeDaedra,proof of cunning rewarded by the Prince of Plots
-Boethiah,350,heal-or-cure-npc,-,small,-0.25,3,0,,,coddling the weak denies the test of struggle
-Mephala,360,pick-owned-lock,+,small,0.5,3,0,,owned,intrusion into the hidden; secrets prised open
-Mephala,362,steal-item,+,small,0.5,3,0,,owned,the taking by stealth pleases the Webspinner
-Mephala,304,murder-defenseless,+,medium,1.0,2,0.5,,,murder by stealth woven into her web
-Mephala,342,read-lore-book,+,small,0.25,3,0,,,secret lore gathered into the spider's threads
-Mephala,368,accept-daedric-artifact,+,large,1.5,1,1.0,,ActorTypeDaedra,the Ebony Blade claimed; betrayal made sacred
-The Hist,313,rest-under-open-sky,+,small,0.5,3,0,,,rootedness under open sky near the marsh People
-The Hist,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,tending the People as the sap tends its kin
-The Hist,333,cook-meal,+,small,0.25,3,0,,,sharing sustenance binds the Saxhleel community
-The Hist,304,murder-defenseless,-,medium,-1.0,2,0.5,,,severing one of the People from the root
-The Hist,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,denying the soul its return to the Hist
-sithis,304,murder-defenseless,+,medium,1.0,2,0.5,,,a death offered to the Void; the unmaking favored
-sithis,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,clinging past death defies the Void's change
-sithis,314,sleep-in-bed,-,small,-0.25,1,0,,,settled comfort resists the formless flux
-sithis,364,assault-innocent,+,small,0.5,3,0,,,each unmaking feeds the Void's hunger for change
-sithis,350,heal-or-cure-npc,-,small,-0.5,3,0,,,preserving the living resists the formless flux
-Malacath,330,smith-item,+,medium,0.75,2,0.5,,,the forge is the Orc's prayer
-Malacath,2,kill-hostile-humanoid,+,small,0.25,3,0,,,strength proven in open fight
-Malacath,1,kill-hostile-beast,+,small,0.25,3,0,,,a strong arm against beasts honors raw strength
-Malacath,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,Malacath stands apart and respects the Daedra's bane
-Malacath,313,rest-under-open-sky,+,small,0.25,3,0,,,the exile endures hardship under open sky
-Malacath,362,steal-item,-,small,-0.25,3,0,,,thieving is the coward's path the honest outcast scorns
-Malacath,364,assault-innocent,-,medium,-0.75,2,0.5,,,striking the defenseless is weakness he despises
-Tu'whacca,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,ending the restless dead so they reach the Far Shores
-Tu'whacca,314,sleep-in-bed,+,small,0.25,3,0,,,proper rest honors the order of passage
-Tu'whacca,342,read-lore-book,+,small,0.25,3,0,,,study of the dead and the Far Shores
-Tu'whacca,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,sparing a soul its early passage honors the soul-keeper
-Tu'whacca,365,raise-undead,-,large,-1.5,1,1.0,,,raising the dead chains souls from the Far Shores
-Tu'whacca,304,murder-defenseless,-,medium,-0.75,2,0.5,,,a soul sent unready and unguided offends the keeper
-Leki,344,increase-skill,+,small,0.25,3,0,,,martial discipline sharpened day by day
-Leki,330,smith-item,+,medium,0.75,2,0.5,,,forging a true blade honors the Spirit Sword
-Leki,343,learn-word-of-power,+,medium,0.75,2,0.5,,,mastering a new edge of power
-Leki,304,murder-defenseless,-,medium,-0.75,2,0.5,,,a killing without honor shames the goddess of the duel
-Leki,362,steal-item,-,small,-0.25,3,0,,,the thief's hand has no place in Leki's discipline
-HoonDing,302,kill-dragon,+,large,1.5,1,1.0,,,breaking an impossible foe is the breakthrough he embodies
-HoonDing,344,increase-skill,+,small,0.25,3,0,,,martial perseverance toward the homeland
-HoonDing,345,discover-location,+,small,0.25,3,0,,,pressing into new ground is making way
-HoonDing,343,learn-word-of-power,+,medium,0.75,2,0.5,,,seizing power against the odds
-HoonDing,304,murder-defenseless,-,small,-0.25,3,0,,,slaughter of the helpless is butchery not making way
-Y'ffre,364,assault-innocent,-,small,-0.5,3,0,,,violence against the innocent breaks the Pact's harmony
-Z'en,331,enchant-item,+,small,0.25,3,0,,,skilled craft repays the world its due
-Z'en,360,pick-owned-lock,-,small,-0.25,3,0,,owned,taking without paying the debt offends the ledger
-alkosh,361,trespass,-,small,-0.25,3,0,,,breaking lawful bounds offends the keeper of order
-azurah,368,accept-daedric-artifact,+,small,0.5,3,0,,ActorTypeDaedra,Azurah's Star is a gift rightly borne
-The Hist,314,sleep-in-bed,+,small,0.25,1,0,,,rest near the root and the People restores the sap-bond
-Boethiah,360,pick-owned-lock,+,small,0.25,3,0,,owned,deceit and intrusion please the Prince of Plots
-Mephala,361,trespass,+,small,0.25,3,0,,,intrusion into the hidden pleases the Webspinner
-kyne,302,kill-dragon,+,medium,1.0,1,0.5,,,the Voice was her gift to Men to end the dragons' tyranny
-kyne,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,the unquiet dead are denied the last breath; lay them to rest
-kyne,304,murder-defenseless,-,medium,-1.0,2,0.5,,,Kyne honors the clean death of battle; not the helpless slain
-akatosh,342,read-lore-book,+,small,0.25,3,0,,,to keep the long record is to revere Time itself
-akatosh,350,heal-or-cure-npc,+,small,0.25,3,0,,,mending preserves a life to its proper allotted span
-akatosh,301,kill-daedra,+,small,0.5,3,0,,ActorTypeDaedra,timeless outsiders break the covenant; their banishment guards Mundus
-akatosh,304,murder-defenseless,-,medium,-0.75,2,0.5,,,to cut a life short of its hours defies lawful order and duty
-akatosh,368,accept-daedric-artifact,-,medium,-0.75,2,0.5,,ActorTypeDaedra,to take a timeless gift betrays the Divine covenant and legitimacy
-Arkay,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,Daedra stand outside the mortal life-death cycle Arkay keeps
-Arkay,364,assault-innocent,-,medium,-1.0,2,0.5,,,harm forced on the innocent tears the rightful order of life
-Arkay,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,Daedric bargains traffic in souls and undeath against the cycle
-Mara,332,brew-potion,+,small,0.25,3,0,,,restoratives brewed to ease the suffering of others
-Mara,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,denying the dead their rest mocks the love left to grieve them
-Mara,362,steal-item,-,small,-0.5,3,0,,owned,robbing another household violates the hearth she shelters
-Mara,351,clear-bounty-serve-time,+,small,0.5,2,0,,,the merciful goddess blesses atonement and a debt made right
-Stendarr,365,raise-undead,-,large,-1.5,1,1.0,,ActorTypeUndead,necromancy is the very evil the Vigil was raised to hunt down
-Stendarr,362,steal-item,-,medium,-0.75,2,0.5,,owned,the god of just rule abhors taking what is not lawfully yours
-Stendarr,361,trespass,-,small,-0.25,3,0,,,just rule honors lawful bounds and the peace of another's home
-Stendarr,351,clear-bounty-serve-time,+,medium,0.75,1,0.5,,,answering for one's crimes is the just mercy Stendarr asks of all
-Zenithar,335,mine-ore-or-chop-wood,+,small,0.5,3,0,,,honest toil at the vein and the woodpile; the root of all trade
-Zenithar,333,cook-meal,+,small,0.25,3,0,,,the victualler's craft; value made from honest provisioning
-Zenithar,344,increase-skill,+,small,0.25,3,0,,,mastery earned by labor is the merchant-warrior's wealth
-Zenithar,351,clear-bounty-serve-time,+,small,0.5,3,0,,,a debt paid in full honors the god of fair dealing
-Zenithar,304,murder-defenseless,-,medium,-1.0,2,0.5,,,plunder of the helpless is the spoils he forbids; win by labor
-Zenithar,368,accept-daedric-artifact,-,medium,-0.75,2,0.5,,ActorTypeDaedra,unearned power is plunder; not wealth won by honest work
-Julianos,332,brew-potion,+,small,0.25,3,0,,,alchemy is applied logic -- contradictions resolved into one true effect
-Julianos,304,murder-defenseless,-,large,-1.5,1,1.0,,,the gravest breach of law; reasoned justice abhors killing the helpless
-Julianos,362,steal-item,-,small,-0.5,3,0,,owned,theft is a crime against the lawful order Julianos upholds
-Julianos,364,assault-innocent,-,medium,-0.75,2,0.5,,,lawless violence on the innocent contradicts reasoned justice
-Julianos,361,trespass,-,small,-0.25,3,0,,,a breach of lawful boundary and proper conduct
-Dibella,332,brew-potion,+,small,0.25,3,0,,,the alchemist's art -- beauty distilled from the world
-Dibella,344,increase-skill,+,small,0.25,3,0,,,cultivating one's gifts; as the Temple teaches
-Dibella,364,assault-innocent,-,small,-0.5,3,0,,,violence against the gentle profanes love
-Dibella,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,animating the dead mocks the living beauty of the world
-Kynareth,343,learn-word-of-power,+,medium,1.0,2,0.5,,,the Voice is wind given form; the Thu'um is her own breath in mortal throats
-Kynareth,301,kill-daedra,+,small,0.5,3,0,,ActorTypeDaedra,casting out Oblivion's intruders defends Nirn's living nature
-Kynareth,304,murder-defenseless,-,medium,-1.0,2,0.5,,,the wanton taking of a helpless life wounds the protector of all living things
-Kynareth,368,accept-daedric-artifact,-,medium,-1.0,1,0.5,,ActorTypeDaedra,binding to an alien relic of Oblivion entangles the soul with the unnatural
-Kynareth,334,harvest-ingredient,+,small,0.25,3,0,,,gathering what the wild freely offers honors the goddess of nature's bounty
-Talos,302,kill-dragon,+,large,1.5,1,1.0,,,the Dragonborn felled dragons; mastery over the Voice's own kin is supreme glory
-Talos,362,steal-item,-,small,-0.5,3,0,,owned,the thief's hand undercuts the lawful order the god of governance upholds
-Talos,364,assault-innocent,-,medium,-0.75,2,0.5,,,preying on the defenseless of the realm is misrule; not the conqueror's valor
-Shor,2,kill-hostile-humanoid,+,small,0.5,3,0,,,honorable battle against worthy foes is the road to Sovngarde
-Shor,302,kill-dragon,+,medium,1.0,1,0.5,,,felling the worthiest foe is the deed that wins a seat in the hall
-Shor,344,increase-skill,+,small,0.25,3,0,,,the warrior who hones his worth earns the king's regard
-Shor,364,assault-innocent,-,medium,-1.0,2,0.5,,,striking the helpless is a coward's deed that shames the hall
-Shor,362,steal-item,-,small,-0.5,3,0,,owned,the furtive thief's hand is unworthy of the warrior's hall
-Tsun,302,kill-dragon,+,medium,0.75,1,0.5,,,the dragon is the worthiest trial; felling it proves the warrior
-Tsun,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,the bridge-warden returns the restless dead to their rightful rest
-Tsun,301,kill-daedra,+,small,0.5,3,0,,ActorTypeDaedra,to stand against a Daedra is a hard trial honorably met
-Tsun,313,rest-under-open-sky,+,small,0.25,3,0,,,the warrior who endures the hard road sleeps beneath open sky
-Tsun,364,assault-innocent,-,medium,-1.0,2,0.5,,,striking the undeserving is no trial of arms but a coward's blow
-Tsun,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,a shield-thane is proven by trial; not by a bargained Daedric prize
-Stuhn,362,steal-item,-,medium,-0.75,2,0.5,,owned,plunder taken by stealth mocks the just division of spoils he governs
-Stuhn,360,pick-owned-lock,-,small,-0.5,3,0,,owned,breaking a ward to seize what was never fairly shared offends the spoils-god
-auri-el,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,undeath chains the soul into rotting flesh; ending it restores its proper ascent
-auri-el,343,learn-word-of-power,+,medium,0.75,2,0.5,,,disciplined mastery of power is a step on the long road back to the dawn
-auri-el,365,raise-undead,-,large,-1.5,1,1.0,,ActorTypeUndead,chaining a soul back into flesh is the exact inversion of ascension
-auri-el,364,assault-innocent,-,small,-0.5,3,0,,,preying on the helpless drags the soul down from its climb toward the light
-magnus,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,necromancy perverts soul and magicka against the lawful design
-magnus,368,accept-daedric-artifact,-,medium,-0.75,1,0.5,,ActorTypeDaedra,Daedric power is foreign to the architect's structured magicka
-xarxes,344,increase-skill,+,small,0.5,3,0,,,mastery earned is knowledge made permanent; the scribe records each gain
-xarxes,345,discover-location,+,small,0.25,3,0,,,every forgotten place uncovered is a new entry for his endless ledger
-xarxes,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,the keeper of lineage cleanses what defiles honored ancestral dead
-xarxes,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,necromancy desecrates the ancestors whose names he keeps in his record
-xarxes,304,murder-defenseless,-,medium,-0.75,2,0.5,,,murder cuts a name from the lineage before its line was fully writ
-trinimac,302,kill-dragon,+,medium,1.0,1,0.5,,,the strongest warrior meets the greatest foe and does not yield
-trinimac,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,the restless dead put down by an honest blade
-trinimac,330,smith-item,+,small,0.25,3,0,,,forging arms and armor is the warrior-god's own craft
-trinimac,362,steal-item,-,small,-0.5,3,0,,owned,the thief's hand has no honor in it
-trinimac,364,assault-innocent,-,medium,-0.75,2,0.5,,,to strike the harmless is the coward's disgrace honor forbids
-Y'ffre,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,putting down the unliving restores the natural cycle the Pact keeps
-Y'ffre,333,cook-meal,+,small,0.5,3,0,,,the Green Pact wastes no kill; the slain are eaten; never squandered
-Y'ffre,331,enchant-item,-,small,-0.25,3,0,,,binding power into worked dead matter offends Green Pact restraint
-Baan Dar,313,rest-under-open-sky,+,small,0.5,3,0,,,the road-survivor sleeps rough under open sky; never beholden to a roof
-Baan Dar,364,assault-innocent,+,small,0.5,2,0,,,the Bandit God smiles on the ambush; the road owes its travelers nothing
-Baan Dar,330,smith-item,-,small,-0.25,3,0,,,the pariah takes what he needs; the settled smith's honest trade is not his way
-khenarthi,343,learn-word-of-power,+,medium,0.75,2,0.5,,,the Voice is wind given shape; the Thu'um is her own breath
-khenarthi,304,murder-defenseless,-,medium,-1.0,2,0.5,,,a soul sent unready and unguided offends the psychopomp
-rajhin,313,rest-under-open-sky,+,small,0.25,3,0,,,the roaming cat beds where the road leaves him; never paying for an inn
-rajhin,314,sleep-in-bed,-,small,-0.25,3,0,,,soft comfort dulls the prowling cat; the Purring Liar scorns the warm bed
-alkosh,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,necromancy chains a soul outside time's lawful span
-alkosh,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,the order-dragon drives back the chaos that lies outside time
-alkosh,368,accept-daedric-artifact,-,medium,-0.75,2,0.5,,ActorTypeDaedra,bearing a chaos-lord's gift betrays the keeper of cosmic order
-alkosh,342,read-lore-book,+,small,0.25,3,0,,,study the chronicles of the ages and the turning of proper time
-azurah,345,discover-location,+,small,0.5,3,0,,,the Star-Gazer guides the lost and outcast to their path
-azurah,331,enchant-item,+,small,0.5,3,0,,,soul-work honors her; Azura's Star is the eternal vessel
-azurah,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,the dawn drives back undeath; mercy frees the cursed dead
-azurah,365,raise-undead,-,large,-1.5,1,1.0,,ActorTypeUndead,necromancy defiles the soul; the gravest sin against Azura
-azurah,364,assault-innocent,-,medium,-1.0,2,0.5,,,preying on the helpless betrays her mercy to the outcast
-Boethiah,1,kill-hostile-beast,+,small,0.25,3,0,,,trial by tooth and claw; strength proven against the wild
-Boethiah,343,learn-word-of-power,+,small,0.5,3,0,,,power seized through trial; self-betterment is her doctrine
-Boethiah,362,steal-item,+,small,0.25,3,0,,owned,the plot rewarded; taking by cunning pleases the Prince of Plots
-Boethiah,314,sleep-in-bed,-,small,-0.25,3,0,,,soft comfort denies the test; the worthy do not slumber easy
-Boethiah,333,cook-meal,-,small,-0.25,3,0,,,domestic ease is the solace of the unworthy; not of strength
-Mephala,364,assault-innocent,+,medium,1.0,2,0.5,,,the unseen blade laid against the trusting -- her favored violence
-Mephala,2,kill-hostile-humanoid,-,small,-0.25,3,0,,,the open charge declared -- beneath the web; she keeps no count of it
-Mephala,350,heal-or-cure-npc,-,small,-0.5,2,0,,,open mending repairs the trust her corruption is meant to fray
-Mephala,313,rest-under-open-sky,-,small,-0.25,2,0,,,a life lived in the open keeps nothing hidden -- the web needs cover
-The Hist,332,brew-potion,+,small,0.5,3,0,,,distilling the marsh's living gifts into healing draughts honors the sap
-The Hist,334,harvest-ingredient,+,small,0.5,3,0,,,gathering the land's living growth honors the sap that gives the People life
-The Hist,364,assault-innocent,-,small,-0.5,3,0,,,raising a hand to the harmless wounds the shared root of the People
-The Hist,331,enchant-item,-,small,-0.25,3,0,,,binding trapped souls into dead things; souls belong to the Hist alone
-sithis,302,kill-dragon,+,medium,1.0,1,0.5,,,a dragon is order made flesh; its unmaking unbinds aedric time
-sithis,360,pick-owned-lock,+,small,0.5,3,0,,owned,a lock is imposed order; breaking it is a small unmaking
-sithis,361,trespass,+,small,0.25,3,0,,,boundaries are bindings; transgression frays the order around them
-sithis,330,smith-item,-,small,-0.5,3,0,,,forging makes lasting order; creation is the opposite of unmaking
-sithis,331,enchant-item,-,small,-0.5,3,0,,,binding power to endure in a made thing cements permanence
-Malacath,302,kill-dragon,+,medium,0.75,1,0.5,,,felling the mightiest beast is strength's truest proof
-Malacath,344,increase-skill,+,small,0.25,3,0,,,the outcast hardens himself; strength earned through hardship
-Malacath,304,murder-defenseless,-,medium,-0.75,2,0.5,,,killing the helpless is the coward's act the strong-god scorns
-Malacath,314,sleep-in-bed,-,small,-0.25,3,0,,,soft comfort softens the warrior; the exile scorns the warm bed
-Tu'whacca,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,banishing Daedra that prey on souls bound for the Far Shores
-Tu'whacca,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,a Daedric bargain binds a soul from its proper passage to the Far Shores
-Leki,302,kill-dragon,+,medium,1.0,1,0.5,,,the impossible foe is the truest test of the perfect cut
-Leki,340,read-skill-book,+,small,0.25,3,0,,,the sword-singer trains the mind as keenly as the hand
-Leki,364,assault-innocent,-,medium,-0.75,2,0.5,,,striking one who cannot answer in kind mocks the duel
-HoonDing,313,rest-under-open-sky,+,small,0.25,3,0,,,the traveler's rest on the road; still bound onward with the dawn
-HoonDing,360,pick-owned-lock,+,small,0.25,3,0,,owned,a lock is a barred way; and no barred way stops the Make Way God
-HoonDing,361,trespass,+,small,0.25,3,0,,,crossing a threshold meant to bar passage is making way itself
-HoonDing,314,sleep-in-bed,-,small,-0.25,3,0,,,to settle soft in a bed is to halt; the foe of perseverance onward
-HoonDing,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,chaining the dead back blocks the way onward they were owed
-Z'en,350,heal-or-cure-npc,+,small,0.5,3,0,,,tending the hurt repays a debt of care; the ledger set right
-Z'en,344,increase-skill,+,small,0.25,3,0,,,toil compounds; the laborer repays the world in earned skill
-Z'en,304,murder-defenseless,-,medium,-1.0,2,0.5,,,slaying one who owes no debt is a ledger flung past all balance
-Z'en,364,assault-innocent,-,small,-0.5,3,0,,,violence where no debt is owed throws the exchange out of true
+actor,eventId,eventName,sentiment,tier,baseDelta,dailyCap,cooldownDays,stanceGate,conditionTag,originGate,notes
+kyne,1,kill-hostile-beast,-,large,-3.0,0,0,,,,Kyne protects beasts; uncapped (combat migration)
+kyne,2,kill-hostile-humanoid,+,small,0.5,0,0,,,,uncapped (combat migration)
+kyne,3,kill-event3,+,small,0.25,0,0,,,,legacy branch; router does not emit 3 yet
+kyne,4,kill-event4,+,small,0.5,0,0,,,,legacy branch; router does not emit 4 yet
+kyne,40,shout-attack,+,small,0.35,3,0.0208,,Shout,,NOT read - Kyne shout uses property-based call
+kyne,343,learn-word-of-power,+,medium,1.0,2,0.5,,,,Kyne gifted the Voice to mankind
+kyne,313,rest-under-open-sky,+,small,0.5,3,0,,,,the Kiss of Kyne is wind and open sky
+kyne,345,discover-location,+,small,0.25,3,0,,,,the wild places are meant to be walked
+kyne,350,heal-or-cure-npc,+,small,0.25,3,0,,,,the kind mother shelters the weak
+akatosh,302,kill-dragon,-,medium,-0.75,2,0.5,,,,the dragon is his aspect; slaying it is fraught reverence not glory
+akatosh,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,the Thu'um is the dragon's own voice
+akatosh,313,rest-under-open-sky,+,small,0.25,3,0,,,,endurance under the open march of time
+akatosh,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,undeath defies the proper span of life
+akatosh,365,raise-undead,-,medium,-1.0,2,0.5,,,,necromancy cheats the orderly passage of time
+akatosh,344,increase-skill,+,small,0.25,3,0,,,,patient discipline honors the dragon
+Arkay,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,guardian of the cycle puts the restless dead to rest
+Arkay,365,raise-undead,-,large,-1.5,1,1.0,,,,necromancy is the core sin against the life-death cycle
+Arkay,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,unnatural death tears the rightful order
+Arkay,350,heal-or-cure-npc,+,small,0.5,3,0,,,,sustaining the living honors the natural span
+Arkay,342,read-lore-book,+,small,0.25,3,0,,,,studying burial rites and the mysteries of death
+Mara,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,,compassion made manifest in tending the suffering
+Mara,333,cook-meal,+,small,0.5,3,0,,,,the warmth of the hearth and feeding others
+Mara,304,murder-defenseless,-,large,-1.5,1,1.0,,,,cruelty to the helpless offends the goddess of love
+Mara,314,sleep-in-bed,+,small,0.25,3,0,,,,rest within the hearth and home she blesses
+Mara,364,assault-innocent,-,medium,-1.0,2,0.5,,,,violence against the innocent betrays compassion
+Stendarr,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,,the Vigil stands against the Daedra
+Stendarr,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,righteous mercy frees the dead from undeath
+Stendarr,350,heal-or-cure-npc,+,small,0.5,3,0,,,,mercy and aid to the weary
+Stendarr,304,murder-defenseless,-,large,-1.5,1,1.0,,,,the god of restraint abhors merciless slaughter
+Stendarr,364,assault-innocent,-,medium,-1.0,2,0.5,,,,justice forbids preying on the innocent
+Stendarr,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,,,consorting with Daedra betrays the Vigil
+Zenithar,330,smith-item,+,small,0.5,3,0,,,,honest labor at the forge
+Zenithar,331,enchant-item,+,small,0.5,3,0,,,,skilled craft adds worth through honest work
+Zenithar,332,brew-potion,+,small,0.25,3,0,,,,diligent apothecary trade craft
+Zenithar,362,steal-item,-,medium,-1.0,2,0.5,,owned,,theft mocks honest commerce
+Zenithar,360,pick-owned-lock,-,small,-0.5,3,0,,owned,,breaking into property scorns lawful trade
+Zenithar,361,trespass,-,small,-0.25,3,0,,,,respecting boundaries is the merchant's creed
+Julianos,340,read-skill-book,+,small,0.5,3,0,,,,the god of wisdom rewards diligent study
+Julianos,341,read-spell-tome,+,small,0.5,3,0,,,,magic mastered as disciplined logic
+Julianos,342,read-lore-book,+,small,0.5,3,0,,,,contemplation of lore and understanding
+Julianos,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,the deep logic of the Thu'um is sacred knowledge
+Julianos,344,increase-skill,+,small,0.25,3,0,,,,patient mastery through reasoned practice
+Julianos,331,enchant-item,+,small,0.25,3,0,,,,applied arcane knowledge in disciplined craft
+Dibella,331,enchant-item,+,small,0.5,3,0,,,,beauty wrought into a created thing
+Dibella,330,smith-item,+,small,0.25,3,0,,,,artistry of the maker's hand
+Dibella,342,read-lore-book,+,small,0.25,3,0,,,,appreciation of art and created beauty
+Dibella,350,heal-or-cure-npc,+,small,0.25,3,0,,,,tenderness shown toward another
+Dibella,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,wanton cruelty defiles beauty and love
+Dibella,333,cook-meal,+,small,0.25,3,0,,,,the gentle art of a well made meal
+Kynareth,313,rest-under-open-sky,+,medium,0.75,2,0.5,,,,communion with sky and open air
+Kynareth,345,discover-location,+,small,0.5,3,0,,,,the goddess of travel blesses the wanderer
+Kynareth,332,brew-potion,+,small,0.25,3,0,,,,gathering nature's gifts into healing draughts
+Kynareth,365,raise-undead,-,medium,-1.0,2,0.5,,,,raising the dead profanes the natural order
+Kynareth,350,heal-or-cure-npc,+,small,0.5,3,0,,,,restoring life with nature's bounty
+Talos,343,learn-word-of-power,+,medium,1.0,2,0.5,,,,Tiber Septim mastered the Thu'um as warrior-god of man
+Talos,345,discover-location,+,small,0.5,3,0,,,,the conqueror's path is to claim new ground
+Talos,2,kill-hostile-humanoid,+,small,0.5,3,0,,,,valor in battle honors the Hero-God of Man
+Talos,344,increase-skill,+,small,0.25,3,0,,,,mortal striving toward greatness
+Talos,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,empire is built on valor not slaughter of the helpless
+Shor,343,learn-word-of-power,+,small,0.5,3,0,,,,the king of old Atmora prized the warrior's Voice
+Shor,313,rest-under-open-sky,+,small,0.25,3,0,,,,the old Nord king kept the rough camps of his host
+Shor,304,murder-defenseless,-,large,-1.5,1,1.0,,,,honorless killing bars the door to Sovngarde
+Shor,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,the restless dead deny the honored hall
+Shor,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,binding the dead mocks the hall of valor
+Shor,342,honor-the-ancestor-cairn,+,small,0.25,3,0,,,Nord,keeping the old names and cairn-stories in memory is Nord ancestor duty
+Tsun,2,kill-hostile-humanoid,+,medium,0.75,2,0.5,,,,the shield-thane proves the warrior at honorable arms
+Tsun,343,learn-word-of-power,+,small,0.25,3,0,,,,Tsun stands where trials are met
+Tsun,304,murder-defenseless,-,large,-1.5,1,1.0,,,,the guardian of trials despises a coward's kill
+Tsun,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,no true trial is won by raising the dead
+Tsun,350,heal-or-cure-npc,+,small,0.25,3,0,,,,a shield-thane guards his comrades
+Stuhn,2,kill-hostile-humanoid,+,small,0.5,3,0,,,,fair combat against an armed foe honors the shield-god
+Stuhn,304,murder-defenseless,-,large,-2.0,1,1.0,,,,Stuhn ransoms prisoners and abhors slaughter of the helpless
+Stuhn,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,,sparing and mending a foe reflects mercy in war
+Stuhn,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,the dead deserve rest not conscription
+Stuhn,300,kill-undead,+,small,0.25,3,0,,ActorTypeUndead,,laying the bound dead to rest restores fair order
+auri-el,344,increase-skill,+,small,0.5,3,0,,,,disciplined self-perfection toward ascension
+auri-el,342,read-lore-book,+,small,0.25,3,0,,,,study of the ages befits the supreme ancestor
+auri-el,313,rest-under-open-sky,+,small,0.25,3,0,,,,ascetic restraint under the bare dawn sky
+auri-el,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,,the soul's elevation served by mending others
+auri-el,304,murder-defenseless,-,large,-1.5,1,1.0,,,,base slaughter drags the soul down from its ascent
+auri-el,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,,the Daedra are lesser et'Ada beneath the light
+magnus,341,read-spell-tome,+,medium,0.75,2,0.5,,,,the architect of magic rewards the arcane art
+magnus,331,enchant-item,+,small,0.5,3,0,,,,binding magicka into form honors the builder
+magnus,344,increase-skill,+,small,0.25,3,0,,,,steady mastery of higher study
+magnus,342,read-lore-book,+,small,0.25,3,0,,,,the fled architect left his plans for scholars
+magnus,332,brew-potion,+,small,0.25,3,0,,,,the alchemical art is one more craft of the design
+xarxes,342,read-lore-book,+,medium,0.75,2,0.5,,,,the scribe of Auri-El hoards the lore of every age
+xarxes,340,read-skill-book,+,small,0.5,3,0,,,,Xarxes records all knowledge
+xarxes,341,read-spell-tome,+,small,0.5,3,0,,,,the keeper of mysteries favors arcane secrets
+xarxes,331,enchant-item,+,small,0.25,3,0,,,,inscribing power mirrors the ageless scribe
+xarxes,343,learn-word-of-power,+,small,0.25,3,0,,,,each Word is another secret for his ledger
+xarxes,368,accept-daedric-artifact,-,small,-0.5,3,0,,ActorTypeDaedra,,the scribe keeps no truck with Daedric bargains
+trinimac,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,,the unbroken warrior stands against the Daedra
+trinimac,2,kill-hostile-humanoid,+,small,0.5,3,0,,,,martial virtue against an armed foe
+trinimac,344,increase-skill,+,small,0.25,3,0,,,,the disciplined honing of strength
+trinimac,368,accept-daedric-artifact,-,large,-2.0,1,1.0,,ActorTypeDaedra,,a Daedric prize is the betrayal that unmade him into Malacath
+trinimac,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,honor forbids killing the helpless
+trinimac,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,,the honored dead are not to be enslaved
+Y'ffre,313,rest-under-open-sky,+,small,0.5,3,0,,,,sleep beneath the green as the first folk did
+Y'ffre,342,read-lore-book,+,small,0.25,3,0,,,,the first story and the singing of the world
+Y'ffre,350,heal-or-cure-npc,+,small,0.5,3,0,,,,mend living things as nature's law intends
+Y'ffre,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,raising the dead defiles the natural cycle
+Y'ffre,330,smith-item,-,small,-0.25,3,0,,,,shaping dead matter offends the Green Pact restraint
+Z'en,333,cook-meal,+,small,0.5,3,0,,,,the harvest honored, labor turned to nourishment
+Z'en,330,smith-item,+,small,0.5,3,0,,,,honest craft is a debt repaid in skill
+Z'en,332,brew-potion,+,small,0.25,3,0,,,,patient labor distilled, value made fair
+Z'en,340,read-skill-book,+,small,0.25,3,0,,,,study a trade to repay the world its due
+Z'en,362,steal-item,-,medium,-0.75,2,0.5,,,,theft is a debt taken and never paid
+Baan Dar,360,pick-owned-lock,+,small,0.25,3,0,,owned,,the Bandit God slips every ward
+Baan Dar,362,steal-item,+,small,0.5,3,0,,,,the exile takes what survival demands
+Baan Dar,361,trespass,+,small,0.25,3,0,,,,no door is closed to the trickster
+Baan Dar,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,a clever escape beats a clumsy killing
+Baan Dar,345,discover-location,+,small,0.5,3,0,,,,the exile-trickster walks every road there is
+Baan Dar,344,increase-skill,+,small,0.25,3,0,,,,the survivor adapts or the survivor dies
+khenarthi,345,discover-location,+,small,0.5,3,0,,,,winds and the open road
+khenarthi,313,rest-under-open-sky,+,small,0.5,3,0,,,,the wind goddess shelters the traveler
+khenarthi,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,free trapped souls so the wind carries them home
+khenarthi,302,kill-dragon,+,medium,0.75,2,0.5,,,,guide even a great soul to its final journey
+khenarthi,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,,the psychopomp abhors souls chained from the journey home
+khenarthi,350,heal-or-cure-npc,+,small,0.25,3,0,,,,mercy eases a soul along the road she keeps
+rajhin,362,steal-item,+,small,0.5,3,0,,,,the Purring Liar takes with a smile
+rajhin,360,pick-owned-lock,+,small,0.5,3,0,,owned,,the master thief
+rajhin,361,trespass,+,small,0.25,3,0,,,,shadows open every threshold for the cat
+rajhin,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,artful theft, never crude slaughter
+rajhin,345,discover-location,+,small,0.25,3,0,,,,the roaming trickster knows every hidden way
+rajhin,364,assault-innocent,-,small,-0.5,3,0,,,,brute violence shames the artful thief
+alkosh,302,kill-dragon,+,large,1.5,1,1.0,,,,the Dragon King humbles the beasts that broke from order
+alkosh,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,undeath defies time's lawful order
+alkosh,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,master the Thu'um as ordered dominion
+alkosh,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,lawless slaughter shatters cosmic order
+alkosh,364,assault-innocent,-,small,-0.5,3,0,,,,chaos against the innocent offends the keeper of order
+azurah,313,rest-under-open-sky,+,small,0.5,3,0,,,,dawn-dusk observance beneath the twin moons
+azurah,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,,mercy shown to the cursed and outcast
+azurah,342,read-lore-book,+,small,0.25,3,0,,,,study of prophecy and the turning of fate
+azurah,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,foresight rewarded; knowing what is to come
+azurah,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,cruelty to the helpless betrays her mercy
+Boethiah,2,kill-hostile-humanoid,+,small,0.25,3,0,,,,victory of the worthy through open struggle
+Boethiah,344,increase-skill,+,small,0.5,3,0,,,,strength earned by trial and self-betterment
+Boethiah,304,murder-defenseless,+,medium,0.75,2,0.5,,,,the unworthy culled; rightful murder is her gift
+Boethiah,368,accept-daedric-artifact,+,large,1.5,1,1.0,,ActorTypeDaedra,,proof of cunning rewarded by the Prince of Plots
+Boethiah,350,heal-or-cure-npc,-,small,-0.25,3,0,,,,coddling the weak denies the test of struggle
+Mephala,360,pick-owned-lock,+,small,0.5,3,0,,owned,,intrusion into the hidden; secrets prised open
+Mephala,362,steal-item,+,small,0.5,3,0,,owned,,the taking by stealth pleases the Webspinner
+Mephala,304,murder-defenseless,+,medium,1.0,2,0.5,,,,murder by stealth woven into her web
+Mephala,342,read-lore-book,+,small,0.25,3,0,,,,secret lore gathered into the spider's threads
+Mephala,368,accept-daedric-artifact,+,large,1.5,1,1.0,,ActorTypeDaedra,,the Ebony Blade claimed; betrayal made sacred
+The Hist,313,rest-under-open-sky,+,small,0.5,3,0,,,,rootedness under open sky near the marsh People
+The Hist,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,,tending the People as the sap tends its kin
+The Hist,333,cook-meal,+,small,0.25,3,0,,,,sharing sustenance binds the Saxhleel community
+The Hist,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,severing one of the People from the root
+The Hist,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,,denying the soul its return to the Hist
+The Hist,334,tend-the-hist,+,small,0.25,3,0,,,Argonian,gathering living growth with care keeps Saxhleel memory close to the root
+sithis,304,murder-defenseless,+,medium,1.0,2,0.5,,,,a death offered to the Void; the unmaking favored
+sithis,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,,clinging past death defies the Void's change
+sithis,314,sleep-in-bed,-,small,-0.25,1,0,,,,settled comfort resists the formless flux
+sithis,364,assault-innocent,+,small,0.5,3,0,,,,each unmaking feeds the Void's hunger for change
+sithis,350,heal-or-cure-npc,-,small,-0.5,3,0,,,,preserving the living resists the formless flux
+Malacath,330,smith-item,+,medium,0.75,2,0.5,,,,the forge is the Orc's prayer
+Malacath,330,uphold-the-code,+,small,0.25,3,0,,,Orc,work at the forge keeps the Code alive as Orsimer ancestral duty
+Malacath,2,kill-hostile-humanoid,+,small,0.25,3,0,,,,strength proven in open fight
+Malacath,1,kill-hostile-beast,+,small,0.25,3,0,,,,a strong arm against beasts honors raw strength
+Malacath,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,,Malacath stands apart and respects the Daedra's bane
+Malacath,313,rest-under-open-sky,+,small,0.25,3,0,,,,the exile endures hardship under open sky
+Malacath,362,steal-item,-,small,-0.25,3,0,,,,thieving is the coward's path the honest outcast scorns
+Malacath,364,assault-innocent,-,medium,-0.75,2,0.5,,,,striking the defenseless is weakness he despises
+Tu'whacca,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,ending the restless dead so they reach the Far Shores
+Tu'whacca,300,keep-the-death-duty,+,small,0.25,3,0,,ActorTypeUndead,Redguard,putting the restless dead back on the road is Yokudan death duty
+Tu'whacca,314,sleep-in-bed,+,small,0.25,3,0,,,,proper rest honors the order of passage
+Tu'whacca,342,read-lore-book,+,small,0.25,3,0,,,,study of the dead and the Far Shores
+Tu'whacca,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,,sparing a soul its early passage honors the soul-keeper
+Tu'whacca,365,raise-undead,-,large,-1.5,1,1.0,,,,raising the dead chains souls from the Far Shores
+Tu'whacca,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,a soul sent unready and unguided offends the keeper
+Leki,344,increase-skill,+,small,0.25,3,0,,,,martial discipline sharpened day by day
+Leki,330,smith-item,+,medium,0.75,2,0.5,,,,forging a true blade honors the Spirit Sword
+Leki,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,mastering a new edge of power
+Leki,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,a killing without honor shames the goddess of the duel
+Leki,362,steal-item,-,small,-0.25,3,0,,,,the thief's hand has no place in Leki's discipline
+HoonDing,302,kill-dragon,+,large,1.5,1,1.0,,,,breaking an impossible foe is the breakthrough he embodies
+HoonDing,344,increase-skill,+,small,0.25,3,0,,,,martial perseverance toward the homeland
+HoonDing,345,discover-location,+,small,0.25,3,0,,,,pressing into new ground is making way
+HoonDing,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,seizing power against the odds
+HoonDing,304,murder-defenseless,-,small,-0.25,3,0,,,,slaughter of the helpless is butchery not making way
+Y'ffre,364,assault-innocent,-,small,-0.5,3,0,,,,violence against the innocent breaks the Pact's harmony
+Z'en,331,enchant-item,+,small,0.25,3,0,,,,skilled craft repays the world its due
+Z'en,360,pick-owned-lock,-,small,-0.25,3,0,,owned,,taking without paying the debt offends the ledger
+alkosh,361,trespass,-,small,-0.25,3,0,,,,breaking lawful bounds offends the keeper of order
+azurah,368,accept-daedric-artifact,+,small,0.5,3,0,,ActorTypeDaedra,,Azurah's Star is a gift rightly borne
+The Hist,314,sleep-in-bed,+,small,0.25,1,0,,,,rest near the root and the People restores the sap-bond
+Boethiah,360,pick-owned-lock,+,small,0.25,3,0,,owned,,deceit and intrusion please the Prince of Plots
+Mephala,361,trespass,+,small,0.25,3,0,,,,intrusion into the hidden pleases the Webspinner
+kyne,302,kill-dragon,+,medium,1.0,1,0.5,,,,the Voice was her gift to Men to end the dragons' tyranny
+kyne,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,the unquiet dead are denied the last breath; lay them to rest
+kyne,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,Kyne honors the clean death of battle; not the helpless slain
+akatosh,342,read-lore-book,+,small,0.25,3,0,,,,to keep the long record is to revere Time itself
+akatosh,350,heal-or-cure-npc,+,small,0.25,3,0,,,,mending preserves a life to its proper allotted span
+akatosh,301,kill-daedra,+,small,0.5,3,0,,ActorTypeDaedra,,timeless outsiders break the covenant; their banishment guards Mundus
+akatosh,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,to cut a life short of its hours defies lawful order and duty
+akatosh,368,accept-daedric-artifact,-,medium,-0.75,2,0.5,,ActorTypeDaedra,,to take a timeless gift betrays the Divine covenant and legitimacy
+Arkay,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,,Daedra stand outside the mortal life-death cycle Arkay keeps
+Arkay,364,assault-innocent,-,medium,-1.0,2,0.5,,,,harm forced on the innocent tears the rightful order of life
+Arkay,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,,Daedric bargains traffic in souls and undeath against the cycle
+Mara,332,brew-potion,+,small,0.25,3,0,,,,restoratives brewed to ease the suffering of others
+Mara,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,denying the dead their rest mocks the love left to grieve them
+Mara,362,steal-item,-,small,-0.5,3,0,,owned,,robbing another household violates the hearth she shelters
+Mara,351,clear-bounty-serve-time,+,small,0.5,2,0,,,,the merciful goddess blesses atonement and a debt made right
+Stendarr,365,raise-undead,-,large,-1.5,1,1.0,,ActorTypeUndead,,necromancy is the very evil the Vigil was raised to hunt down
+Stendarr,362,steal-item,-,medium,-0.75,2,0.5,,owned,,the god of just rule abhors taking what is not lawfully yours
+Stendarr,361,trespass,-,small,-0.25,3,0,,,,just rule honors lawful bounds and the peace of another's home
+Stendarr,351,clear-bounty-serve-time,+,medium,0.75,1,0.5,,,,answering for one's crimes is the just mercy Stendarr asks of all
+Zenithar,335,mine-ore-or-chop-wood,+,small,0.5,3,0,,,,honest toil at the vein and the woodpile; the root of all trade
+Zenithar,333,cook-meal,+,small,0.25,3,0,,,,the victualler's craft; value made from honest provisioning
+Zenithar,344,increase-skill,+,small,0.25,3,0,,,,mastery earned by labor is the merchant-warrior's wealth
+Zenithar,351,clear-bounty-serve-time,+,small,0.5,3,0,,,,a debt paid in full honors the god of fair dealing
+Zenithar,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,plunder of the helpless is the spoils he forbids; win by labor
+Zenithar,368,accept-daedric-artifact,-,medium,-0.75,2,0.5,,ActorTypeDaedra,,unearned power is plunder; not wealth won by honest work
+Julianos,332,brew-potion,+,small,0.25,3,0,,,,alchemy is applied logic -- contradictions resolved into one true effect
+Julianos,304,murder-defenseless,-,large,-1.5,1,1.0,,,,the gravest breach of law; reasoned justice abhors killing the helpless
+Julianos,362,steal-item,-,small,-0.5,3,0,,owned,,theft is a crime against the lawful order Julianos upholds
+Julianos,364,assault-innocent,-,medium,-0.75,2,0.5,,,,lawless violence on the innocent contradicts reasoned justice
+Julianos,361,trespass,-,small,-0.25,3,0,,,,a breach of lawful boundary and proper conduct
+Dibella,332,brew-potion,+,small,0.25,3,0,,,,the alchemist's art -- beauty distilled from the world
+Dibella,344,increase-skill,+,small,0.25,3,0,,,,cultivating one's gifts; as the Temple teaches
+Dibella,364,assault-innocent,-,small,-0.5,3,0,,,,violence against the gentle profanes love
+Dibella,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,,animating the dead mocks the living beauty of the world
+Kynareth,343,learn-word-of-power,+,medium,1.0,2,0.5,,,,the Voice is wind given form; the Thu'um is her own breath in mortal throats
+Kynareth,301,kill-daedra,+,small,0.5,3,0,,ActorTypeDaedra,,casting out Oblivion's intruders defends Nirn's living nature
+Kynareth,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,the wanton taking of a helpless life wounds the protector of all living things
+Kynareth,368,accept-daedric-artifact,-,medium,-1.0,1,0.5,,ActorTypeDaedra,,binding to an alien relic of Oblivion entangles the soul with the unnatural
+Kynareth,334,harvest-ingredient,+,small,0.25,3,0,,,,gathering what the wild freely offers honors the goddess of nature's bounty
+Talos,302,kill-dragon,+,large,1.5,1,1.0,,,,the Dragonborn felled dragons; mastery over the Voice's own kin is supreme glory
+Talos,362,steal-item,-,small,-0.5,3,0,,owned,,the thief's hand undercuts the lawful order the god of governance upholds
+Talos,364,assault-innocent,-,medium,-0.75,2,0.5,,,,preying on the defenseless of the realm is misrule; not the conqueror's valor
+Shor,2,kill-hostile-humanoid,+,small,0.5,3,0,,,,honorable battle against worthy foes is the road to Sovngarde
+Shor,302,kill-dragon,+,medium,1.0,1,0.5,,,,felling the worthiest foe is the deed that wins a seat in the hall
+Shor,344,increase-skill,+,small,0.25,3,0,,,,the warrior who hones his worth earns the king's regard
+Shor,364,assault-innocent,-,medium,-1.0,2,0.5,,,,striking the helpless is a coward's deed that shames the hall
+Shor,362,steal-item,-,small,-0.5,3,0,,owned,,the furtive thief's hand is unworthy of the warrior's hall
+Tsun,302,kill-dragon,+,medium,0.75,1,0.5,,,,the dragon is the worthiest trial; felling it proves the warrior
+Tsun,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,the bridge-warden returns the restless dead to their rightful rest
+Tsun,301,kill-daedra,+,small,0.5,3,0,,ActorTypeDaedra,,to stand against a Daedra is a hard trial honorably met
+Tsun,313,rest-under-open-sky,+,small,0.25,3,0,,,,the warrior who endures the hard road sleeps beneath open sky
+Tsun,364,assault-innocent,-,medium,-1.0,2,0.5,,,,striking the undeserving is no trial of arms but a coward's blow
+Tsun,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,,a shield-thane is proven by trial; not by a bargained Daedric prize
+Stuhn,362,steal-item,-,medium,-0.75,2,0.5,,owned,,plunder taken by stealth mocks the just division of spoils he governs
+Stuhn,360,pick-owned-lock,-,small,-0.5,3,0,,owned,,breaking a ward to seize what was never fairly shared offends the spoils-god
+auri-el,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,undeath chains the soul into rotting flesh; ending it restores its proper ascent
+auri-el,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,disciplined mastery of power is a step on the long road back to the dawn
+auri-el,365,raise-undead,-,large,-1.5,1,1.0,,ActorTypeUndead,,chaining a soul back into flesh is the exact inversion of ascension
+auri-el,364,assault-innocent,-,small,-0.5,3,0,,,,preying on the helpless drags the soul down from its climb toward the light
+magnus,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,,necromancy perverts soul and magicka against the lawful design
+magnus,368,accept-daedric-artifact,-,medium,-0.75,1,0.5,,ActorTypeDaedra,,Daedric power is foreign to the architect's structured magicka
+xarxes,344,increase-skill,+,small,0.5,3,0,,,,mastery earned is knowledge made permanent; the scribe records each gain
+xarxes,345,discover-location,+,small,0.25,3,0,,,,every forgotten place uncovered is a new entry for his endless ledger
+xarxes,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,the keeper of lineage cleanses what defiles honored ancestral dead
+xarxes,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,necromancy desecrates the ancestors whose names he keeps in his record
+xarxes,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,murder cuts a name from the lineage before its line was fully writ
+trinimac,302,kill-dragon,+,medium,1.0,1,0.5,,,,the strongest warrior meets the greatest foe and does not yield
+trinimac,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,the restless dead put down by an honest blade
+trinimac,330,smith-item,+,small,0.25,3,0,,,,forging arms and armor is the warrior-god's own craft
+trinimac,362,steal-item,-,small,-0.5,3,0,,owned,,the thief's hand has no honor in it
+trinimac,364,assault-innocent,-,medium,-0.75,2,0.5,,,,to strike the harmless is the coward's disgrace honor forbids
+Y'ffre,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,putting down the unliving restores the natural cycle the Pact keeps
+Y'ffre,333,cook-meal,+,small,0.5,3,0,,,,the Green Pact wastes no kill; the slain are eaten; never squandered
+Y'ffre,331,enchant-item,-,small,-0.25,3,0,,,,binding power into worked dead matter offends Green Pact restraint
+Baan Dar,313,rest-under-open-sky,+,small,0.5,3,0,,,,the road-survivor sleeps rough under open sky; never beholden to a roof
+Baan Dar,364,assault-innocent,+,small,0.5,2,0,,,,the Bandit God smiles on the ambush; the road owes its travelers nothing
+Baan Dar,330,smith-item,-,small,-0.25,3,0,,,,the pariah takes what he needs; the settled smith's honest trade is not his way
+khenarthi,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,the Voice is wind given shape; the Thu'um is her own breath
+khenarthi,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,a soul sent unready and unguided offends the psychopomp
+rajhin,313,rest-under-open-sky,+,small,0.25,3,0,,,,the roaming cat beds where the road leaves him; never paying for an inn
+rajhin,314,sleep-in-bed,-,small,-0.25,3,0,,,,soft comfort dulls the prowling cat; the Purring Liar scorns the warm bed
+alkosh,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,necromancy chains a soul outside time's lawful span
+alkosh,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,,the order-dragon drives back the chaos that lies outside time
+alkosh,368,accept-daedric-artifact,-,medium,-0.75,2,0.5,,ActorTypeDaedra,,bearing a chaos-lord's gift betrays the keeper of cosmic order
+alkosh,342,read-lore-book,+,small,0.25,3,0,,,,study the chronicles of the ages and the turning of proper time
+azurah,345,discover-location,+,small,0.5,3,0,,,,the Star-Gazer guides the lost and outcast to their path
+azurah,331,enchant-item,+,small,0.5,3,0,,,,soul-work honors her; Azura's Star is the eternal vessel
+azurah,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,the dawn drives back undeath; mercy frees the cursed dead
+azurah,365,raise-undead,-,large,-1.5,1,1.0,,ActorTypeUndead,,necromancy defiles the soul; the gravest sin against Azura
+azurah,364,assault-innocent,-,medium,-1.0,2,0.5,,,,preying on the helpless betrays her mercy to the outcast
+Boethiah,1,kill-hostile-beast,+,small,0.25,3,0,,,,trial by tooth and claw; strength proven against the wild
+Boethiah,343,learn-word-of-power,+,small,0.5,3,0,,,,power seized through trial; self-betterment is her doctrine
+Boethiah,362,steal-item,+,small,0.25,3,0,,owned,,the plot rewarded; taking by cunning pleases the Prince of Plots
+Boethiah,314,sleep-in-bed,-,small,-0.25,3,0,,,,soft comfort denies the test; the worthy do not slumber easy
+Boethiah,333,cook-meal,-,small,-0.25,3,0,,,,domestic ease is the solace of the unworthy; not of strength
+Mephala,364,assault-innocent,+,medium,1.0,2,0.5,,,,the unseen blade laid against the trusting -- her favored violence
+Mephala,2,kill-hostile-humanoid,-,small,-0.25,3,0,,,,the open charge declared -- beneath the web; she keeps no count of it
+Mephala,350,heal-or-cure-npc,-,small,-0.5,2,0,,,,open mending repairs the trust her corruption is meant to fray
+Mephala,313,rest-under-open-sky,-,small,-0.25,2,0,,,,a life lived in the open keeps nothing hidden -- the web needs cover
+The Hist,332,brew-potion,+,small,0.5,3,0,,,,distilling the marsh's living gifts into healing draughts honors the sap
+The Hist,334,harvest-ingredient,+,small,0.5,3,0,,,,gathering the land's living growth honors the sap that gives the People life
+The Hist,364,assault-innocent,-,small,-0.5,3,0,,,,raising a hand to the harmless wounds the shared root of the People
+The Hist,331,enchant-item,-,small,-0.25,3,0,,,,binding trapped souls into dead things; souls belong to the Hist alone
+sithis,302,kill-dragon,+,medium,1.0,1,0.5,,,,a dragon is order made flesh; its unmaking unbinds aedric time
+sithis,360,pick-owned-lock,+,small,0.5,3,0,,owned,,a lock is imposed order; breaking it is a small unmaking
+sithis,361,trespass,+,small,0.25,3,0,,,,boundaries are bindings; transgression frays the order around them
+sithis,330,smith-item,-,small,-0.5,3,0,,,,forging makes lasting order; creation is the opposite of unmaking
+sithis,331,enchant-item,-,small,-0.5,3,0,,,,binding power to endure in a made thing cements permanence
+Malacath,302,kill-dragon,+,medium,0.75,1,0.5,,,,felling the mightiest beast is strength's truest proof
+Malacath,344,increase-skill,+,small,0.25,3,0,,,,the outcast hardens himself; strength earned through hardship
+Malacath,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,killing the helpless is the coward's act the strong-god scorns
+Malacath,314,sleep-in-bed,-,small,-0.25,3,0,,,,soft comfort softens the warrior; the exile scorns the warm bed
+Tu'whacca,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,,banishing Daedra that prey on souls bound for the Far Shores
+Tu'whacca,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,,a Daedric bargain binds a soul from its proper passage to the Far Shores
+Leki,302,kill-dragon,+,medium,1.0,1,0.5,,,,the impossible foe is the truest test of the perfect cut
+Leki,340,read-skill-book,+,small,0.25,3,0,,,,the sword-singer trains the mind as keenly as the hand
+Leki,364,assault-innocent,-,medium,-0.75,2,0.5,,,,striking one who cannot answer in kind mocks the duel
+HoonDing,313,rest-under-open-sky,+,small,0.25,3,0,,,,the traveler's rest on the road; still bound onward with the dawn
+HoonDing,360,pick-owned-lock,+,small,0.25,3,0,,owned,,a lock is a barred way; and no barred way stops the Make Way God
+HoonDing,361,trespass,+,small,0.25,3,0,,,,crossing a threshold meant to bar passage is making way itself
+HoonDing,314,sleep-in-bed,-,small,-0.25,3,0,,,,to settle soft in a bed is to halt; the foe of perseverance onward
+HoonDing,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,,chaining the dead back blocks the way onward they were owed
+Z'en,350,heal-or-cure-npc,+,small,0.5,3,0,,,,tending the hurt repays a debt of care; the ledger set right
+Z'en,344,increase-skill,+,small,0.25,3,0,,,,toil compounds; the laborer repays the world in earned skill
+Z'en,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,slaying one who owes no debt is a ledger flung past all balance
+Z'en,364,assault-innocent,-,small,-0.5,3,0,,,,violence where no debt is owed throws the exchange out of true

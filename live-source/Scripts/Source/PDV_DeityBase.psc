@@ -96,9 +96,10 @@ Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
     return ScoreFromTable(eventType)
 EndFunction
 
-; Like/dislike table lookup. Keys on the deity form: "PDV.LD.<eventType>.D" delta,
-; ".C" daily cap, ".O" cooldown days. A nonzero delta means a row exists; anti-farm
-; runs through the shared dawn-aligned ScoreRepeatableAction path.
+; Like/dislike table lookup. Base rows key on the deity form as
+; "PDV.LD.<eventType>.D", ".C", ".O". Origin-gated overlay rows key as
+; "PDV.LD.<eventType>.O<origin>.D", ".C", ".O". Nonzero delta means a row exists;
+; anti-farm runs through the shared dawn-aligned ScoreRepeatableAction path.
 ; Generic day-to-day acts only score deities NATIVE to the player's race (race-eligible),
 ; matching the curated-signal layer's race-scoping (achieved there by targeted dispatch).
 ; FOREIGN/TABOO/HOSTILE deities score 0 for generic acts; cross-pantheon worship goes
@@ -110,17 +111,35 @@ EndFunction
 Float Function ScoreFromTable(Int eventType)
     Form tableDeityForm = GetDeityForm()
     String tableKeyPrefix = "PDV.LD." + eventType
-    Float tableDelta = StorageUtil.GetFloatValue(tableDeityForm, tableKeyPrefix + ".D")
-    if tableDelta == 0.0
-        return 0.0
-    endIf
     ; Race-eligibility gate: only deities NATIVE to the player's race score generic acts.
     if !IsRaceNativeForPlayer()
         return 0.0
     endIf
-    Int tableDailyCap = StorageUtil.GetIntValue(tableDeityForm, tableKeyPrefix + ".C")
-    Float tableCooldownDays = StorageUtil.GetFloatValue(tableDeityForm, tableKeyPrefix + ".O")
-    return ScoreRepeatableAction(eventType, tableDelta, tableDailyCap, tableCooldownDays)
+
+    Float score = 0.0
+    Float tableDelta = StorageUtil.GetFloatValue(tableDeityForm, tableKeyPrefix + ".D")
+    if tableDelta != 0.0
+        Int tableDailyCap = StorageUtil.GetIntValue(tableDeityForm, tableKeyPrefix + ".C")
+        Float tableCooldownDays = StorageUtil.GetFloatValue(tableDeityForm, tableKeyPrefix + ".O")
+        score += ScoreRepeatableAction(eventType, tableDelta, tableDailyCap, tableCooldownDays)
+    endIf
+
+    Int originRace = GetCurrentOriginRaceIndex()
+    if originRace >= 0
+        String originPrefix = tableKeyPrefix + ".O" + originRace
+        Float originDelta = StorageUtil.GetFloatValue(tableDeityForm, originPrefix + ".D")
+        if originDelta != 0.0
+            Int originDailyCap = StorageUtil.GetIntValue(tableDeityForm, originPrefix + ".C")
+            Float originCooldownDays = StorageUtil.GetFloatValue(tableDeityForm, originPrefix + ".O")
+            score += ScoreRepeatableAction(GetOriginGatedEventType(eventType, originRace), originDelta, originDailyCap, originCooldownDays)
+        endIf
+    endIf
+
+    return score
+EndFunction
+
+Int Function GetOriginGatedEventType(Int eventType, Int originRace)
+    return eventType + 10000 + originRace
 EndFunction
 
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)

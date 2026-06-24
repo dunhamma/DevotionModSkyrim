@@ -148,7 +148,7 @@ const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
 ];
 const DEITY_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv");
 const PRINCE_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes_Princes_V2.csv");
-const EXPECTED_LIKES_DISLIKES_VERSION = 9;
+const EXPECTED_LIKES_DISLIKES_VERSION = 10;
 const EXPECTED_PRINCE_LD_VERSION = 3;
 const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
   PROJECT_ROOT,
@@ -8756,6 +8756,7 @@ class Verifier {
       nameSource: "deity.DeityName",
       writerName: "WriteLD",
       stripPrefix: null,
+      originGate: true,
     });
     const princeGenerated = buildLikesDislikesFunction(PRINCE_LIKES_DISLIKES_CSV, {
       functionName: "LoadPrinceRowsForPath",
@@ -9265,31 +9266,38 @@ function readLines(filePath) {
 
 function buildLikesDislikesFunction(csvPath, options) {
   const lines = fs.readFileSync(csvPath, "utf8").split(/\r?\n/).filter((line) => line.trim().length > 0);
-  lines.shift();
+  const header = lines.shift().split(",").map((col) => col.trim());
+  const actorIndex = requiredCsvColumn(header, "actor", csvPath);
+  const eventIdIndex = requiredCsvColumn(header, "eventId", csvPath);
+  const deltaIndex = requiredCsvColumn(header, "baseDelta", csvPath);
+  const dailyCapIndex = requiredCsvColumn(header, "dailyCap", csvPath);
+  const cooldownIndex = requiredCsvColumn(header, "cooldownDays", csvPath);
+  const originGateIndex = options.originGate ? requiredCsvColumn(header, "originGate", csvPath) : -1;
 
   const order = [];
   const byActor = new Map();
   const eventIds = new Set();
-  for (const line of lines) {
+  lines.forEach((line, lineIndex) => {
     const cols = line.split(",");
-    let actor = String(cols[0] || "").trim();
+    let actor = String(cols[actorIndex] || "").trim();
     if (options.stripPrefix && actor.startsWith(options.stripPrefix)) {
       actor = actor.slice(options.stripPrefix.length).trim();
     }
-    const eventId = String(cols[1] || "").trim();
-    const delta = String(cols[5] || "").trim();
-    const dailyCap = String(cols[6] || "").trim();
-    const cooldown = String(cols[7] || "").trim();
+    const eventId = String(cols[eventIdIndex] || "").trim();
+    const delta = String(cols[deltaIndex] || "").trim();
+    const dailyCap = String(cols[dailyCapIndex] || "").trim();
+    const cooldown = String(cols[cooldownIndex] || "").trim();
+    const originGate = options.originGate ? originGateValue(cols[originGateIndex], lineIndex + 2, csvPath) : -1;
     if (!actor || !eventId) {
-      continue;
+      return;
     }
     if (!byActor.has(actor)) {
       byActor.set(actor, []);
       order.push(actor);
     }
-    byActor.get(actor).push({ eventId, delta, dailyCap, cooldown });
+    byActor.get(actor).push({ eventId, delta, dailyCap, cooldown, originGate });
     eventIds.add(Number(eventId));
-  }
+  });
 
   const out = [];
   out.push(`Function ${options.functionName}(${options.argumentType} ${options.argumentName})`);
@@ -9298,9 +9306,15 @@ function buildLikesDislikesFunction(csvPath, options) {
     const keyword = index === 0 ? "if" : "elseIf";
     out.push(`    ${keyword} ldName == "${actor}"`);
     for (const row of byActor.get(actor)) {
-      out.push(
-        `        ${options.writerName}(${options.argumentName}, ${row.eventId}, ${papyrusFloat(row.delta)}, ${row.dailyCap}, ${papyrusFloat(row.cooldown)})`,
-      );
+      if (options.originGate) {
+        out.push(
+          `        ${options.writerName}(${options.argumentName}, ${row.eventId}, ${papyrusFloat(row.delta)}, ${row.dailyCap}, ${papyrusFloat(row.cooldown)}, ${row.originGate})`,
+        );
+      } else {
+        out.push(
+          `        ${options.writerName}(${options.argumentName}, ${row.eventId}, ${papyrusFloat(row.delta)}, ${row.dailyCap}, ${papyrusFloat(row.cooldown)})`,
+        );
+      }
     }
   });
   out.push("    endIf");
@@ -9312,6 +9326,38 @@ function buildLikesDislikesFunction(csvPath, options) {
     rowCount: lines.length,
     eventIds,
   };
+}
+
+function requiredCsvColumn(header, name, csvPath) {
+  const index = header.indexOf(name);
+  if (index < 0) {
+    throw new Error(`${csvPath} missing required column ${name}`);
+  }
+  return index;
+}
+
+function originGateValue(rawValue, lineNumber, csvPath) {
+  const token = String(rawValue || "").trim().toLowerCase();
+  const origins = new Map([
+    ["", -1],
+    ["nord", 0],
+    ["imperial", 1],
+    ["breton", 2],
+    ["altmer", 3],
+    ["bosmer", 4],
+    ["dunmer", 5],
+    ["khajiit", 6],
+    ["argonian", 7],
+    ["saxhleel", 7],
+    ["orc", 8],
+    ["orsimer", 8],
+    ["redguard", 9],
+    ["yokudan", 9],
+  ]);
+  if (!origins.has(token)) {
+    throw new Error(`${csvPath}:${lineNumber} unknown originGate ${rawValue}`);
+  }
+  return origins.get(token);
 }
 
 function papyrusFloat(value) {

@@ -160,6 +160,7 @@ One row per **(actor x event)**. This is the authoring unit. The base class does
 | `cooldownDays` | float (0 = none) |
 | `stanceGate` | optional - e.g. NATIVE-only, or apply TABOO mult |
 | `conditionTag` | optional - victim keyword, location type, owned-flag |
+| `originGate` | optional native-origin overlay; blank = generic row, race token = score only for that origin |
 | `notes` | lore rationale / review flag |
 
 ## 6. Magnitude & anti-farm policy defaults
