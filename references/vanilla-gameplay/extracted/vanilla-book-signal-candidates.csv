@@ -694,10 +694,10 @@ Skyrim.esm,Skyrim.esm:0AD8DE,NoteFreeformMorthalB,Gorm's Letter,BookOrTome,RawCo
 Skyrim.esm,Skyrim.esm:0D1246,POIFallForestRyanTreasureNote,Note,BookOrTome,RawContent:,VendorItemBook (Skyrim.esm:0937A2),0,spell-learned/book-read candidate,candidate-extracted
 Skyrim.esm,Skyrim.esm:0D120C,POIFallForestRyanTrollNote,Note,BookOrTome,RawContent:,VendorItemBook (Skyrim.esm:0937A2),0,spell-learned/book-read candidate,candidate-extracted
 Skyrim.esm,Skyrim.esm:0B7736,QABook,123 Abc Def Ghijklmnop Qrstu VWXYZ 123456789,BookOrTome,RawContent:4294967295,VendorItemBook (Skyrim.esm:0937A2),10,spell-learned/book-read candidate,candidate-extracted
-Skyrim.esm,Skyrim.esm:0ED08F,QAbookFrench,Ã  Ã¢ Ã© Ã¨ Ãª Ã« Ã¹ Ã» Ã¼ Ã® Ã¯ Ã´ Ã§,BookOrTome,RawContent:,,0,spell-learned/book-read candidate,candidate-extracted
-Skyrim.esm,Skyrim.esm:0ED091,QAbookgerman,Ã¤ Ã¶ Ã¼ ÃŸ Ã„ Ã– Ãœ,BookOrTome,RawContent:,,0,spell-learned/book-read candidate,candidate-extracted
-Skyrim.esm,Skyrim.esm:0ED090,QABookItalian,Ã  Ã© Ã¨ Ã¨ Ã¬ Ã³ Ã² Ã¹ Ã‰ Ãˆ ÃŒ Ã“ Ã’ Ã Ã™,BookOrTome,RawContent:,,0,spell-learned/book-read candidate,candidate-extracted
-Skyrim.esm,Skyrim.esm:0ED092,QABookSpanish,Ã¡ Ã© Ã­ Ã³ Ãº Ã± Ã¼ Ã§ Â¿ Â¡ Âª Âº Ã Ã‰ Ã Ã“ Ãš Ã‘ Ãœ Ã‡,BookOrTome,RawContent:,,0,spell-learned/book-read candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:0ED08F,QAbookFrench,à â é è ê ë ù û ü î ï ô ç,BookOrTome,RawContent:,,0,spell-learned/book-read candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:0ED091,QAbookgerman,ä ö ü ß Ä Ö Ü,BookOrTome,RawContent:,,0,spell-learned/book-read candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:0ED090,QABookItalian,à é è è ì ó ò ù É È Ì Ó Ò À Ù,BookOrTome,RawContent:,,0,spell-learned/book-read candidate,candidate-extracted
+Skyrim.esm,Skyrim.esm:0ED092,QABookSpanish,á é í ó ú ñ ü ç ¿ ¡ ª º Á É Í Ó Ú Ñ Ü Ç,BookOrTome,RawContent:,,0,spell-learned/book-read candidate,candidate-extracted
 Skyrim.esm,Skyrim.esm:0DD647,SpellTomeBaneOfTheUndead,Spell Tome: Bane of the Undead,BookOrTome,Spell:BaneoftheUndead (Skyrim.esm:08C1AB),VendorItemBook (Skyrim.esm:0937A2); VendorItemSpellTome (Skyrim.esm:0937A5),1200,spell-learned/book-read candidate,candidate-extracted
 Skyrim.esm,Skyrim.esm:0A26EE,SpellTomeBanishDaedra,Spell Tome: Banish Daedra,BookOrTome,Spell:BanishDaedra (Skyrim.esm:06D22C),VendorItemBook (Skyrim.esm:0937A2); VendorItemSpellTome (Skyrim.esm:0937A5),346,spell-learned/book-read candidate,candidate-extracted
 Skyrim.esm,Skyrim.esm:0A270D,SpellTomeBlizzard,Spell Tome: Blizzard,BookOrTome,Spell:Blizzard (Skyrim.esm:07E8E4),VendorItemBook (Skyrim.esm:0937A2); VendorItemSpellTome (Skyrim.esm:0937A5),1350,spell-learned/book-read candidate,candidate-extracted
