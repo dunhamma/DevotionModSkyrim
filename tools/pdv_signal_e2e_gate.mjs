@@ -61,7 +61,7 @@ function main() {
     formLists: mcp.ok ? runP2Mode("--check-formlists") : skippedHelper("UNKNOWN-server-down"),
     aliasProperties: mcp.ok ? runP2Mode("--check-alias-properties") : skippedHelper("UNKNOWN-server-down"),
     sourceFill: mcp.ok ? runP2Mode("--check-source-fill") : skippedHelper("UNKNOWN-server-down"),
-    completenessAudit: runCompletenessAudit(),
+    completenessAudit: runCompletenessAudit(mcp),
   };
 
   const helperFacts = buildHelperFacts(helpers);
@@ -79,13 +79,24 @@ function main() {
     })
   );
 
-  writeLedgers(rows, helpers);
+  const curatedParity = evaluateCuratedSignalParity(managerText);
+
+  writeLedgers(rows, helpers, curatedParity);
 
   const counts = countBy(rows, (row) => row.verdict);
+  const surfacesPass = !rows.some((row) => row.verdict !== "GREEN");
   const summary = {
-    status: rows.some((row) => row.verdict !== "GREEN") ? "FAIL" : "PASS",
+    status: surfacesPass && curatedParity.ok ? "PASS" : "FAIL",
     surfaces: rows.length,
     counts,
+    curatedSignalParity: {
+      status: curatedParity.ok ? "PASS" : "FAIL",
+      references: curatedParity.total,
+      ok: curatedParity.okCount,
+      gaps: curatedParity.gaps.length,
+      cross: curatedParity.cross.length,
+      byIndex: curatedParity.byIndex.length,
+    },
     mcp: mcp.ok ? "PASS" : "SKIP",
     ledger: "references/authoring/PDV_SignalE2EGateLedger.md",
   };
@@ -159,6 +170,14 @@ function buildManifestIssues(manifest, surfaces) {
     if (!known.has(property)) add(property, `Route entry ${id} targets undeclared source property.`);
     if (!String(entry.reviewStatus ?? "").trim()) add(property, `Route entry ${id} is missing reviewStatus.`);
     if (!String(entry.dispatch ?? "").trim()) add(property, `Route entry ${id} is missing dispatch.`);
+    // formKey metadata must agree with the runtime expectedFormId (the gate validates the
+    // latter against the ESP, so a drifted formKey silently points at the wrong record --
+    // the class that mis-keyed DA05/DA02/MG08 to PlacedObjects).
+    const fk = String(entry.formKey ?? "").split(":")[0].toUpperCase();
+    const efid = entry.expectedFormId != null ? Number(entry.expectedFormId).toString(16).toUpperCase().padStart(6, "0") : "";
+    if (fk && efid && fk !== efid) {
+      add(property, `Route entry ${id} formKey ${fk} != expectedFormId 0x${efid} (metadata drift).`);
+    }
   }
 
   return issues;
@@ -259,7 +278,7 @@ function skippedHelper(reason) {
   };
 }
 
-function runCompletenessAudit() {
+function runCompletenessAudit(mcp) {
   const preload = `
 import fs from "node:fs";
 const originalWriteFileSync = fs.writeFileSync.bind(fs);
@@ -272,13 +291,18 @@ fs.writeFileSync = function(file, data, options) {
   return originalWriteFileSync(file, data, options);
 };
 `;
-  const result = spawnSync(process.execPath, [
+  // With houseCARL up, run the full ESP-backed audit (it resolves EditorIDs the
+  // source-only --skip-esp view flags as gaps, and PASSes). Fall back to --skip-esp
+  // only when the Anvil MCP probe is down, so the gate never blocks on a missing server.
+  const skipEsp = !mcp.ok;
+  const auditArgs = [
     "--import",
     `data:text/javascript,${encodeURIComponent(preload)}`,
     COMPLETENESS_AUDIT,
     "--json",
-    "--skip-esp",
-  ], {
+  ];
+  if (skipEsp) auditArgs.push("--skip-esp");
+  const result = spawnSync(process.execPath, auditArgs, {
     cwd: ROOT,
     encoding: "utf8",
     timeout: 60_000,
@@ -290,7 +314,7 @@ fs.writeFileSync = function(file, data, options) {
     ok: result.status === 0,
     skipped: false,
     status: result.status === 0 ? "PASS" : "FAIL",
-    command: "node tools/pdv_completeness_audit.mjs --json --skip-esp",
+    command: `node tools/pdv_completeness_audit.mjs --json${skipEsp ? " --skip-esp" : ""}`,
     exitCode: result.status,
     report: parsed,
     stdout: result.stdout,
@@ -660,6 +684,102 @@ function firstProblem(checks) {
   return "";
 }
 
+// Curated-signal parity: the Kyne silent-zero class. Every
+// AwardCuratedSignal[Scaled](deity, deity.SIGNAL_X, ...) routes the award through
+// deity.ScoreCuratedSignal(SIGNAL_X); if the awarded deity script does not BOTH define
+// the SIGNAL_X const AND have a `== SIGNAL_X` branch in ScoreCuratedSignal, the award
+// silently scores 0.0 -- the call site looks wired but banks nothing. Pure static
+// analysis over the live .psc tree; no server, always runs.
+function evaluateCuratedSignalParity(managerText) {
+  // Manager property name -> declared deity script type (e.g. PDV_Tuwhacca -> PDV_Deity_Tuwhacca).
+  const propType = new Map();
+  for (const m of managerText.matchAll(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s+Property\s+(PDV_[A-Za-z0-9_]+)\s+Auto\b/gim)) {
+    propType.set(m[2], m[1]);
+  }
+
+  const scriptCache = new Map();
+  const readScript = (type) => {
+    if (scriptCache.has(type)) return scriptCache.get(type);
+    const path = `${SOURCE_DIR}/${type}.psc`;
+    const entry = fs.existsSync(path)
+      ? (() => { const text = fs.readFileSync(path, "utf8"); return { text, fns: buildFunctionMap(text) }; })()
+      : null;
+    scriptCache.set(type, entry);
+    return entry;
+  };
+  const resolveType = (prop) => {
+    const declared = propType.get(prop);
+    if (declared && fs.existsSync(`${SOURCE_DIR}/${declared}.psc`)) return declared;
+    const fallback = `PDV_Deity_${prop.replace(/^PDV_/, "")}`;
+    if (fs.existsSync(`${SOURCE_DIR}/${fallback}.psc`)) return fallback;
+    return declared || fallback; // best-guess name for the message even when missing
+  };
+
+  const files = fs.readdirSync(SOURCE_DIR).filter((f) => /\.psc$/i.test(f));
+  const refs = [];
+  const byIndex = [];
+  const awardRe = /\bAwardCuratedSignal(?:Scaled)?\s*\(\s*(PDV_[A-Za-z0-9_]+)\s*,\s*(PDV_[A-Za-z0-9_]+)\.(SIGNAL_[A-Za-z0-9_]+)/g;
+  const byIndexRe = /\bAwardCuratedSignalByIndex\s*\(/g;
+  for (const file of files) {
+    const text = fs.readFileSync(`${SOURCE_DIR}/${file}`, "utf8");
+    if (!text.includes("AwardCuratedSignal")) continue;
+    for (const m of text.matchAll(awardRe)) {
+      refs.push({ file, awarded: m[1], owner: m[2], signal: m[3] });
+    }
+    for (const m of text.matchAll(byIndexRe)) {
+      const lineStart = text.lastIndexOf("\n", m.index) + 1;
+      const lineHead = text.slice(lineStart, m.index);
+      // Skip the helper's own definition line ("...Function AwardCuratedSignalByIndex(").
+      if (/\bFunction\s+$/.test(lineHead)) continue;
+      // Enclosing function: the by-index path is debug/MCM-only seeding, so a Debug* caller
+      // is allowed; only a non-debug (production dynamic-dispatch) call site is manual-review.
+      let enclosing = "";
+      for (const fm of text.slice(0, m.index).matchAll(/(?:^|\n)\s*(?:[A-Za-z_][\w\[\]]*\s+)?Function\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(/g)) {
+        enclosing = fm[1];
+      }
+      if (/Debug/i.test(enclosing)) continue;
+      const lineEndRaw = text.indexOf("\n", m.index);
+      const line = text.slice(lineStart, lineEndRaw < 0 ? text.length : lineEndRaw).trim();
+      byIndex.push({ file, context: `${enclosing || "?"}: ${line}` });
+    }
+  }
+
+  const gaps = [];
+  const cross = [];
+  let okCount = 0;
+  for (const ref of refs) {
+    if (ref.awarded !== ref.owner) {
+      cross.push(ref); // signal const read from a different deity than the one scoring it
+      continue;
+    }
+    const type = resolveType(ref.awarded);
+    const script = readScript(type);
+    if (!script) {
+      gaps.push({ ...ref, reason: `missing deity script ${type}.psc` });
+      continue;
+    }
+    const defines = new RegExp(`Property\\s+${ref.signal}\\b`).test(script.text);
+    const scoreBody = script.fns.get("ScoreCuratedSignal") || "";
+    const handles = new RegExp(`==\\s*${ref.signal}\\b`).test(scoreBody);
+    if (defines && handles) {
+      okCount += 1;
+    } else if (!defines) {
+      gaps.push({ ...ref, reason: `${type} does not define ${ref.signal}` });
+    } else {
+      gaps.push({ ...ref, reason: `${type}.ScoreCuratedSignal has no '== ${ref.signal}' branch (silent zero)` });
+    }
+  }
+
+  if (process.env.PDV_SIGNAL_E2E_PARITY_SELFTEST === "1") {
+    // Deterministic FAIL-direction self-test: inject a guaranteed silent-zero ref so the
+    // checker is provably not a can-only-say-PASS no-op.
+    gaps.push({ file: "(selftest)", awarded: "PDV_Hist", owner: "PDV_Hist", signal: "SIGNAL_SELFTEST_NONEXISTENT", reason: "selftest injected gap" });
+  }
+
+  const ok = gaps.length === 0 && cross.length === 0 && byIndex.length === 0;
+  return { total: refs.length, okCount, gaps, cross, byIndex, ok };
+}
+
 function buildFunctionMap(text) {
   const functions = new Map();
   const re = /^\s*(?:[A-Za-z_][\w\[\]]*\s+)?Function\s+([A-Za-z_][A-Za-z0-9_]*)\s*\([^)]*\)[\s\S]*?^\s*EndFunction/gim;
@@ -705,7 +825,7 @@ function unique(items) {
   return [...new Set(items.filter(Boolean))];
 }
 
-function writeLedgers(rows, helpers) {
+function writeLedgers(rows, helpers, curatedParity) {
   const counts = countBy(rows, (row) => row.verdict);
   const statusCounts = {};
   for (const row of rows) {
@@ -737,6 +857,34 @@ function writeLedgers(rows, helpers) {
     md.push(`- ${key}: ${value}`);
   }
   md.push("");
+  if (curatedParity) {
+    md.push("## Curated-Signal Parity");
+    md.push("");
+    md.push("Every AwardCuratedSignal[Scaled](deity, deity.SIGNAL_X) must resolve to a deity script that DEFINES and HANDLES SIGNAL_X in ScoreCuratedSignal, else the curated piety silently scores 0.0 (the Kyne class). Pure static source check -- no server.");
+    md.push(`Status: ${curatedParity.ok ? "PASS" : "FAIL"} | references=${curatedParity.total} | ok=${curatedParity.okCount} | gaps=${curatedParity.gaps.length} | cross-deity=${curatedParity.cross.length} | by-index=${curatedParity.byIndex.length}`);
+    md.push("");
+    if (curatedParity.gaps.length) {
+      md.push("### Gaps (silent-zero / missing script)");
+      for (const g of curatedParity.gaps) {
+        md.push(`- ${asciiSafe(g.awarded)}.${asciiSafe(g.signal)} (${asciiSafe(g.file)}): ${asciiSafe(g.reason)}`);
+      }
+      md.push("");
+    }
+    if (curatedParity.cross.length) {
+      md.push("### Cross-deity (award deity != signal owner -- manual review)");
+      for (const c of curatedParity.cross) {
+        md.push(`- award ${asciiSafe(c.awarded)} using ${asciiSafe(c.owner)}.${asciiSafe(c.signal)} (${asciiSafe(c.file)})`);
+      }
+      md.push("");
+    }
+    if (curatedParity.byIndex.length) {
+      md.push("### By-index call sites (manual review)");
+      for (const b of curatedParity.byIndex) {
+        md.push(`- ${asciiSafe(b.file)}: ${asciiSafe(b.context)}`);
+      }
+      md.push("");
+    }
+  }
   md.push("## RED / INCOMPLETE By Failing Step");
   md.push("");
   const problemRows = rows.filter((row) => row.verdict !== "GREEN");

@@ -320,7 +320,7 @@
         "book",
         "quest-stage"
       ],
-      "route": "PDV_EventBus.RouteArgonianHistMaintenance(sourceId)",
+      "route": "PDV_EventBus.RouteArgonianHistMaintenanceSource(sourceId)",
       "acceptedUse": "Curated Saxhleel identity, Hist-adjacent memory, and cultural-maintenance sources.",
       "rejectedUse": "Generic swamp/water proximity, generic Argonian NPC contact, or broad exile-adventure text."
     },
@@ -1197,6 +1197,70 @@
           "rationale": "Exact Way of the Voice sky-road milestone is the anchoring Kyne/Talos quest source; rejects generic shout use and Greybeard proximity."
         }
       ]
+    },
+    {
+      "property": "PDV_FLST_P2_BretonGreenWayHarvests",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:063B5F",
+          "editorId": "SprigganSap",
+          "sourceKind": "harvest",
+          "status": "approved-for-fill",
+          "rationale": "Spriggan sap -- harvest from a nature-guardian spirit, peak druidic Green Way act; rejects generic plant gathering and ordinary ingredient loops."
+        },
+        {
+          "formKey": "Skyrim.esm:03AD71",
+          "editorId": "Taproot",
+          "sourceKind": "harvest",
+          "status": "approved-for-fill",
+          "rationale": "Spriggan taproot -- a nature-guardian harvest honoring the Green Way; not generic ingredient farming."
+        },
+        {
+          "formKey": "Skyrim.esm:059B86",
+          "editorId": "Nirnroot",
+          "sourceKind": "harvest",
+          "status": "approved-for-fill",
+          "rationale": "The rare luminescent Nirnroot -- a curated sacred-flora harvest; rejects generic herb-picking and broad forest travel."
+        },
+        {
+          "formKey": "Skyrim.esm:0B701A",
+          "editorId": "NirnrootRed",
+          "sourceKind": "harvest",
+          "status": "approved-for-fill",
+          "rationale": "Crimson Nirnroot (Blackreach) -- a rare sacred-flora harvest, not generic gathering."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_BretonGreenWaySources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:083B3B",
+          "editorId": "Book2CommonTheWispmother",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "PLACEHOLDER (best available; Green Way book pool is barren): wild-nature-spirit lore read as a deliberate Green Way source; rejects generic forest travel and ordinary loot. Swap for a stronger druidic book if one is added."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_BretonHiddenArtSpells",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:07E8DF",
+          "editorId": "DeadThrall",
+          "sourceKind": "spell-learned",
+          "status": "approved-for-fill",
+          "rationale": "Master-tier necromancy (permanent reanimation) -- a forbidden occult art whose learning marks Hidden Art exposure; not ordinary school progression."
+        },
+        {
+          "formKey": "Skyrim.esm:10DDEC",
+          "editorId": "ConjureDremoraLord",
+          "sourceKind": "spell-learned",
+          "status": "approved-for-fill",
+          "rationale": "Master-tier daedra-binding -- an occult/forbidden art whose mastery is meaningful Hidden Art exposure; rejects generic spell learning. (Forbidden-arts approximation of the Reach-witch Hidden Art; vanilla has no player-learnable hagraven spells.)"
+        }
+      ]
     }
   ],
   "routeContract": {
@@ -1222,8 +1286,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "mq104-origin-reading",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "nord-mq304-old-ways",
@@ -1240,8 +1304,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "main-quest-resolution-reading",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "nord-mq105-kyne-talos",
@@ -1276,8 +1340,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "companions-beast-edge",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "nord-c06-hircine-arkay",
@@ -1294,15 +1358,15 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "companions-beast-edge",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "nord-da05-hircine-hunt",
       "race": "Nord",
       "property": "PDV_FLST_P2_NordHircineArkaySources",
       "sourceKind": "quest-stage",
-      "formKey": "02A4DA:Skyrim.esm",
+      "formKey": "02A49A:Skyrim.esm",
       "expectedFormId": 173210,
       "approvedStage": 100,
       "routeKey": "nord_da05_hircine_hunt",
@@ -1312,15 +1376,15 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "da05-branch-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "nord-da05-arkay-mercy",
       "race": "Nord",
       "property": "PDV_FLST_P2_NordHircineArkaySources",
       "sourceKind": "quest-stage",
-      "formKey": "02A4DA:Skyrim.esm",
+      "formKey": "02A49A:Skyrim.esm",
       "expectedFormId": 173210,
       "approvedStage": 105,
       "routeKey": "nord_da05_arkay_mercy",
@@ -1330,8 +1394,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "da05-branch-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "dunmer-da01-azura",
@@ -1348,8 +1412,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "da01-branch-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "dunmer-da01-black-star",
@@ -1374,7 +1438,7 @@
       "race": "Dunmer",
       "property": "PDV_FLST_P2_DunmerBoethiahSources",
       "sourceKind": "quest-stage",
-      "formKey": "04D936:Skyrim.esm",
+      "formKey": "04D8D6:Skyrim.esm",
       "expectedFormId": 317654,
       "approvedStage": 100,
       "routeKey": "dunmer_da02_boethiah",
@@ -1384,15 +1448,15 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "da02-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "altmer-mg08-magnus",
       "race": "Altmer",
       "property": "PDV_FLST_P2_AltmerMagnusSources",
       "sourceKind": "quest-stage",
-      "formKey": "01F268:Skyrim.esm",
+      "formKey": "01F258:Skyrim.esm",
       "expectedFormId": 127576,
       "approvedStage": 200,
       "routeKey": "altmer_mg08_magnus",
@@ -1402,8 +1466,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "mg08-scholarship",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "altmer-mq104-lorkhan",
@@ -1438,8 +1502,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "main-quest-resolution-reading",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "altmer-c03-lorkhan",
@@ -1456,8 +1520,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "companions-beast-edge",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "argonian-db01-sithis",
@@ -1536,7 +1600,7 @@
       "race": "Bosmer",
       "property": "PDV_FLST_P2_BosmerYffreSources",
       "sourceKind": "quest-stage",
-      "formKey": "01F268:Skyrim.esm",
+      "formKey": "01F258:Skyrim.esm",
       "expectedFormId": 127576,
       "approvedStage": 200,
       "routeKey": "bosmer_mg08_living_story",
@@ -1546,8 +1610,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "mg08-scholarship",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "khajiit-mq104-alkosh",
@@ -1600,8 +1664,8 @@
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "da06-malacath-outcome",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
-      "implementationStatus": "route-verified-pending-source-fill",
-      "reviewStatus": "approved-static-route-only"
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
     },
     {
       "id": "redguard-ms08-crown",
@@ -1965,6 +2029,24 @@
       "rejectedContext": "Generic undead killing, tomb travel, and ordinary Morthal travel do not route this source.",
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
+      "implementationStatus": "route-verified-approved-for-source-fill",
+      "reviewStatus": "approved-live-source-fill"
+    },
+    {
+      "id": "breton-eldergleam-blessings",
+      "race": "Breton",
+      "property": "PDV_FLST_P2_BretonGreenWaySources",
+      "sourceKind": "quest-stage",
+      "formKey": "015CC2:Skyrim.esm",
+      "expectedFormId": 89282,
+      "approvedStage": 100,
+      "routeKey": "breton_eldergleam_blessings",
+      "dispatch": "PDV_EventBusService.RouteBretonGreenWayStanding(\"po3_queststage_breton_eldergleam_blessings\")",
+      "acceptedContext": "Completing The Blessings of Nature (restoring the Gildergreen via Eldergleam sap) as a one-shot nature-site Green Way milestone.",
+      "rejectedContext": "Intermediate quest stages, generic Whiterun temple errands, or repeated visits.",
+      "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
+      "mutualExclusionGroup": "breton-eldergleam-blessings",
+      "stageReadbackEvidence": "houseCARL dunEldergleamT03 (015CC2) live read 2026-06-24: stages [0,10,20,30,40,50,51,52,100]; 100 = final.",
       "implementationStatus": "route-verified-approved-for-source-fill",
       "reviewStatus": "approved-live-source-fill"
     }

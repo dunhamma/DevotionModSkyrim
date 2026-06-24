@@ -11,8 +11,8 @@ Per-PATH signal-type floor across 35 race-forked paths + 16 Daedric Princes. A p
 ## Summary
 
 - Paths audited: **51** (35 race-paths, 16 princes)
-- PASS: **5** | UNDER-FLOOR: **46** (30 race-paths, 16 princes)
-- Critical (deficit >= 4): 2 | High (>= 2): 42 | Low (1): 2
+- PASS: **6** | UNDER-FLOOR: **45** (29 race-paths, 16 princes)
+- Critical (deficit >= 4): 1 | High (>= 2): 41 | Low (1): 3
 - Truth status: e2e-ledger=51
 
 ## UNDER-FLOOR roster (worst first)
@@ -20,7 +20,6 @@ Per-PATH signal-type floor across 35 race-forked paths + 16 Daedric Princes. A p
 | Severity | path_id | class | designed | wired_end_to_end | wired renew | wired types | missing dimension(s) |
 |---|---|---|---|---|---|---|---|
 | CRITICAL | `argonian_people` | race-path | 2 | 2/5 | 1/2 | day-to-day, quest-stage | types 2/5 (short 3); renewable 1/2 (short 1) |
-| CRITICAL | `breton_green_way` | race-path | 6 | 2/5 | 1/2 | day-to-day, quest-reaction | types 2/5 (short 3); renewable 1/2 (short 1) |
 | HIGH | `prince_azura` | prince | 2 | 2/4 | 1/2 | day-to-day, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
 | HIGH | `prince_boethiah` | prince | 2 | 2/4 | 1/2 | day-to-day, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
 | HIGH | `prince_clavicus_vile` | prince | 2 | 2/4 | 1/2 | faucet, quest-reaction | types 2/4 (short 2); renewable 1/2 (short 1) |
@@ -51,7 +50,6 @@ Per-PATH signal-type floor across 35 race-forked paths + 16 Daedric Princes. A p
 | HIGH | `altmer_xarxes` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
 | HIGH | `bosmer_living_story` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
 | HIGH | `bosmer_old_contract` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
-| HIGH | `breton_hidden_art` | race-path | 5 | 4/5 | 1/2 | book, faucet, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
 | HIGH | `dunmer_azura` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
 | HIGH | `dunmer_boethiah` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
 | HIGH | `dunmer_mephala` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
@@ -64,6 +62,7 @@ Per-PATH signal-type floor across 35 race-forked paths + 16 Daedric Princes. A p
 | HIGH | `redguard_crown` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
 | HIGH | `redguard_forebear` | race-path | 4 | 4/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage | types 4/5 (short 1); renewable 1/2 (short 1) |
 | LOW | `altmer_magnus` | race-path | 5 | 5/5 | 1/2 | book, day-to-day, quest-reaction, quest-stage, spell-learned | renewable 1/2 (short 1) |
+| LOW | `breton_hidden_art` | race-path | 5 | 5/5 | 1/2 | book, faucet, quest-reaction, quest-stage, spell-learned | renewable 1/2 (short 1) |
 | LOW | `dunmer_deviation` | race-path | 5 | 5/5 | 1/2 | book, faucet, quest-reaction, quest-stage, spell-learned | renewable 1/2 (short 1) |
 
 ## Full per-path table
@@ -71,8 +70,8 @@ Per-PATH signal-type floor across 35 race-forked paths + 16 Daedric Princes. A p
 | path_id | class | race | fork | designed | wired_end_to_end | wired renew | verdict | designed types | wired types | truth | wired evidence |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | `breton_knights_road` | race-path | Breton | Knight's Road | 5 | 5/5 | 2/2 | PASS | book, day-to-day, faucet, quest-reaction, quest-stage | book, day-to-day, faucet, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_BretonKnightsRoadSources[book,quest-stage] / p2-e2e-green:PDV_FLST_P2_BretonVowSources[book,quest-stage] / likes-dislikes:81rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:100cells / faucet:4rows |
-| `breton_hidden_art` | race-path | Breton | Hidden Art | 5 | 4/5 | 1/2 | UNDER-FLOOR | book, faucet, quest-reaction, quest-stage, spell-learned | book, faucet, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_BretonHiddenArtSources[book,quest-stage] / quest-reaction:23cells / faucet:6rows |
-| `breton_green_way` | race-path | Breton | Green Way | 6 | 2/5 | 1/2 | UNDER-FLOOR | book, day-to-day, harvest, quest-reaction, quest-stage, weather | day-to-day, quest-reaction | e2e-ledger | likes-dislikes:26rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:18cells |
+| `breton_hidden_art` | race-path | Breton | Hidden Art | 5 | 5/5 | 1/2 | UNDER-FLOOR | book, faucet, quest-reaction, quest-stage, spell-learned | book, faucet, quest-reaction, quest-stage, spell-learned | e2e-ledger | p2-e2e-green:PDV_FLST_P2_BretonHiddenArtSources[book,quest-stage] / p2-e2e-green:PDV_FLST_P2_BretonHiddenArtSpells[spell-learned] / quest-reaction:23cells / faucet:6rows |
+| `breton_green_way` | race-path | Breton | Green Way | 6 | 6/5 | 3/2 | PASS | book, day-to-day, harvest, quest-reaction, quest-stage, weather | book, day-to-day, harvest, quest-reaction, quest-stage, weather | e2e-ledger | p2-e2e-green:PDV_FLST_P2_BretonGreenWaySources[book,harvest,quest-stage,weather] / p2-e2e-green:PDV_FLST_P2_BretonGreenWayHarvests[harvest] / likes-dislikes:26rows env[313:rest-under-open-sky,345:discover-location] / quest-reaction:18cells |
 | `redguard_crown` | race-path | Redguard | Crown | 4 | 4/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | book, day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_RedguardSpineSources[book,quest-stage] / p2-e2e-green:PDV_FLST_P2_RedguardCrownSources[quest-stage] / likes-dislikes:26rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:27cells |
 | `redguard_forebear` | race-path | Redguard | Forebear | 4 | 4/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | book, day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_RedguardSpineSources[book,quest-stage] / p2-e2e-green:PDV_FLST_P2_RedguardForebearSources[quest-stage] / likes-dislikes:18rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:20cells |
 | `redguard_ashabah` | race-path | Redguard | Ash'abah | 4 | 4/5 | 1/2 | UNDER-FLOOR | book, day-to-day, quest-reaction, quest-stage | book, day-to-day, quest-reaction, quest-stage | e2e-ledger | p2-e2e-green:PDV_FLST_P2_RedguardSpineSources[book,quest-stage] / p2-e2e-green:PDV_FLST_P2_RedguardAshAbahSources[quest-stage] / likes-dislikes:18rows env[313:rest-under-open-sky,314:sleep-in-bed,345:discover-location] / quest-reaction:20cells |
@@ -122,28 +121,10 @@ Per-PATH signal-type floor across 35 race-forked paths + 16 Daedric Princes. A p
 | `prince_molag_bal` | prince | Daedric | Molag Bal | 2 | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | faucet, quest-reaction | e2e-ledger | quest-reaction:6cells / faucet:1row |
 | `prince_sheogorath` | prince | Daedric | Sheogorath | 2 | 2/4 | 1/2 | UNDER-FLOOR | faucet, quest-reaction | faucet, quest-reaction | e2e-ledger | quest-reaction:3cells / faucet:1row |
 
-## P2 surfaces not wired end-to-end
-
-These FormLists are declared for the path but are not GREEN in `PDV_SignalE2EGateLedger.csv`, so their sourceKinds do not count toward `wired_end_to_end`.
-
-| path_id | blocked P2 surfaces |
-|---|---|
-| `breton_hidden_art` | PDV_FLST_P2_BretonHiddenArtSpells:RED/live_fill |
-| `breton_green_way` | PDV_FLST_P2_BretonGreenWaySources:RED/live_fill, PDV_FLST_P2_BretonGreenWayHarvests:RED/live_fill |
-
-## Empty P2 FormList shells (declared, not populated)
-
-These FormLists are routed to a path but appear in neither `sourceFillEntries` nor an `approved-live-source-fill` route in the manifest fallback map. They also do not count toward `wired_end_to_end` unless the E2E gate row is GREEN.
-
-| path_id | empty shell FormLists |
-|---|---|
-| `breton_hidden_art` | PDV_FLST_P2_BretonHiddenArtSpells |
-| `breton_green_way` | PDV_FLST_P2_BretonGreenWaySources, PDV_FLST_P2_BretonGreenWayHarvests |
-
 ## Data-quality caveats
 
-- **No `weather`, `harvest`, or `spell-learned` P2 source is GREEN in the E2E gate.** Several FormLists *declare* these `sourceKinds` (e.g. `BretonGreenWaySources` weather/harvest, `NordKyneTalosSources` weather, `BretonHiddenArtSpells` spell-learned), but none are wired end-to-end. Never-GREEN P2 kinds: `harvest`. Never-populated manifest fallback kinds: `harvest`, `spell-learned`, `weather`. The likes-dislikes CSV also carries no weather event-id (only env ids 313/314/345). Net effect: `weather` and `harvest` are currently unreachable as wired distinct types for every path.
-- **Only GREEN E2E surfaces contribute P2 `book` or `quest-stage` breadth.** Current GREEN surfaces: `PDV_FLST_P2_AltmerAurielSources`, `PDV_FLST_P2_AltmerLorkhanPenalties`, `PDV_FLST_P2_AltmerMagnusSources`, `PDV_FLST_P2_AltmerXarxesSources`, `PDV_FLST_P2_ArgonianCommunitySources`, `PDV_FLST_P2_ArgonianHistSources`, `PDV_FLST_P2_ArgonianSithisSources`, `PDV_FLST_P2_BosmerBaanDarSources`, `PDV_FLST_P2_BosmerYffreSources`, `PDV_FLST_P2_BosmerZenSources`, `PDV_FLST_P2_BretonHiddenArtSources`, `PDV_FLST_P2_BretonKnightsRoadSources`, `PDV_FLST_P2_BretonVowSources`, `PDV_FLST_P2_DunmerAzuraSources`, `PDV_FLST_P2_DunmerBoethiahSources`, `PDV_FLST_P2_DunmerDeviationSources`, `PDV_FLST_P2_DunmerMephalaSources`, `PDV_FLST_P2_ImperialCivicSources`, `PDV_FLST_P2_ImperialDeathDutySources`, `PDV_FLST_P2_ImperialHonestWorkSources`, `PDV_FLST_P2_ImperialLawfulOrderSources`, `PDV_FLST_P2_ImperialMercySources`, `PDV_FLST_P2_ImperialPatronCivicSources`, `PDV_FLST_P2_ImperialPrivateTalosSources`, `PDV_FLST_P2_ImperialPublicServiceSources`, `PDV_FLST_P2_ImperialPublicTalosSources`, `PDV_FLST_P2_KhajiitFocusedSources`, `PDV_FLST_P2_KhajiitLunarSources`, `PDV_FLST_P2_NordHircineArkaySources`, `PDV_FLST_P2_NordKyneTalosSources`, `PDV_FLST_P2_NordOldWaysSources`, `PDV_FLST_P2_OrcMalacathSources`, `PDV_FLST_P2_RedguardAshAbahSources`, `PDV_FLST_P2_RedguardCrownSources`, `PDV_FLST_P2_RedguardForebearSources`, `PDV_FLST_P2_RedguardSpineSources`. Nord Old Ways' MQ104/MQ304 routes and Redguard's MS08 routes remain blocked by static-only route review, so those `quest-stage` declarations do not count as wired.
+- **No `weather`, `harvest`, or `spell-learned` P2 source is GREEN in the E2E gate.** Several FormLists *declare* these `sourceKinds` (e.g. `BretonGreenWaySources` weather/harvest, `NordKyneTalosSources` weather, `BretonHiddenArtSpells` spell-learned), but none are wired end-to-end. Never-populated manifest fallback kinds: `weather`. The likes-dislikes CSV also carries no weather event-id (only env ids 313/314/345). Net effect: `weather` and `harvest` are currently unreachable as wired distinct types for every path.
+- **Only GREEN E2E surfaces contribute P2 `book` or `quest-stage` breadth.** Current GREEN surfaces: `PDV_FLST_P2_AltmerAurielSources`, `PDV_FLST_P2_AltmerLorkhanPenalties`, `PDV_FLST_P2_AltmerMagnusSources`, `PDV_FLST_P2_AltmerXarxesSources`, `PDV_FLST_P2_ArgonianCommunitySources`, `PDV_FLST_P2_ArgonianHistSources`, `PDV_FLST_P2_ArgonianSithisSources`, `PDV_FLST_P2_BosmerBaanDarSources`, `PDV_FLST_P2_BosmerYffreSources`, `PDV_FLST_P2_BosmerZenSources`, `PDV_FLST_P2_BretonGreenWayHarvests`, `PDV_FLST_P2_BretonGreenWaySources`, `PDV_FLST_P2_BretonHiddenArtSources`, `PDV_FLST_P2_BretonHiddenArtSpells`, `PDV_FLST_P2_BretonKnightsRoadSources`, `PDV_FLST_P2_BretonVowSources`, `PDV_FLST_P2_DunmerAzuraSources`, `PDV_FLST_P2_DunmerBoethiahSources`, `PDV_FLST_P2_DunmerDeviationSources`, `PDV_FLST_P2_DunmerMephalaSources`, `PDV_FLST_P2_ImperialCivicSources`, `PDV_FLST_P2_ImperialDeathDutySources`, `PDV_FLST_P2_ImperialHonestWorkSources`, `PDV_FLST_P2_ImperialLawfulOrderSources`, `PDV_FLST_P2_ImperialMercySources`, `PDV_FLST_P2_ImperialPatronCivicSources`, `PDV_FLST_P2_ImperialPrivateTalosSources`, `PDV_FLST_P2_ImperialPublicServiceSources`, `PDV_FLST_P2_ImperialPublicTalosSources`, `PDV_FLST_P2_KhajiitFocusedSources`, `PDV_FLST_P2_KhajiitLunarSources`, `PDV_FLST_P2_NordHircineArkaySources`, `PDV_FLST_P2_NordKyneTalosSources`, `PDV_FLST_P2_NordOldWaysSources`, `PDV_FLST_P2_OrcMalacathSources`, `PDV_FLST_P2_RedguardAshAbahSources`, `PDV_FLST_P2_RedguardCrownSources`, `PDV_FLST_P2_RedguardForebearSources`, `PDV_FLST_P2_RedguardSpineSources`. Nord Old Ways' MQ104/MQ304 routes and Redguard's MS08 routes remain blocked by static-only route review, so those `quest-stage` declarations do not count as wired.
 - **Prince quest-reaction is NOT zero.** A literal application of the rule (any matrix cell whose `deity` equals the path's name) gives Molag Bal 6, Peryite 3, Namira 2, Vaermina 2 quest-reaction cells (many are negative/reject branches, e.g. *destroy altar*, but the `deity` column still attributes them). Every one of the 16 Princes has at least 1 quest-reaction cell. This contradicts an a-priori expectation that Namira/Vaermina/Peryite/Molag Bal have none; the tool reports the ground-truth count.
 - **Deity-name aliasing applied** (case-insensitive, apostrophe/dot/hyphen-stripped): `Azura`=`azurah`, `Hermaeus Mora`=`Mora`, `Clavicus Vile`=`Vile`, `Boethiah`=`Boethra`, `Mephala`=`Mafala`. `Auri-El`->`auriel`, `Y'ffre`->`yffre`, `Z'en`->`zen` fold by the same normalizer.
 - **Several registry deities never appear in any data source** and therefore contribute nothing: Redguard `Onsi`/`Ruptga`/`Tava`/`Zeht`/`Satakal`, Breton `Phynaster`, Altmer/others absent from likes-dislikes, quest-matrix, and Part D. Redguard Crown/Forebear day-to-day comes only from `HoonDing`/`Leki`/`Tu'whacca`, which are the sole sect deities present in the sources.
