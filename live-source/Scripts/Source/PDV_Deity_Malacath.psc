@@ -39,6 +39,7 @@ Int Property SIGNAL_LEGION_SERVICE = 2205 AutoReadOnly        ; pressure-bearing
 Int Property SIGNAL_EXILE_RETURN = 2206 AutoReadOnly          ; burden carried home (Legion-Exile T3 proof)
 Int Property SIGNAL_BROAD_CONDUCT = 2207 AutoReadOnly         ; broad code-keeping (book/text), below focused
 Int Property SIGNAL_FOUR_HOLDS_VISIT = 2208 AutoReadOnly      ; first arrival at one of the four Orc strongholds
+Int Property SIGNAL_ANCESTOR_SPINE = 2209 AutoReadOnly        ; origin-spine pulse for Orc code/life-mode acts
 
 ; --- Creed-violation losses (medium/major dishonor only) ---
 Int Property SIGNAL_SELF_ERASURE = 2250 AutoReadOnly          ; swallowed an insult the code says must be answered (major)
@@ -55,6 +56,7 @@ Float Property DELTA_LEGION_SERVICE = 2.5 Auto
 Float Property DELTA_EXILE_RETURN = 3.0 Auto
 Float Property DELTA_BROAD_CONDUCT = 1.0 Auto
 Float Property DELTA_FOUR_HOLDS_VISIT = 1.0 Auto
+Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 
 ; --- Negative deltas (creed violations) ---
 Float Property DELTA_SELF_ERASURE = -3.0 Auto
@@ -89,6 +91,8 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_BROAD_CONDUCT
     elseIf signalType == SIGNAL_FOUR_HOLDS_VISIT
         return DELTA_FOUR_HOLDS_VISIT
+    elseIf signalType == SIGNAL_ANCESTOR_SPINE
+        return DELTA_ANCESTOR_SPINE
     elseIf signalType == SIGNAL_SELF_ERASURE
         return DELTA_SELF_ERASURE
     elseIf signalType == SIGNAL_BROKEN_FAITH_KIN

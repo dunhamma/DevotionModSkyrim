@@ -1281,6 +1281,7 @@ class Verifier {
       this.checkKhajiit();
       this.checkNordSpineParityBuild();
       this.checkDunmerSpineParityBuild();
+      this.checkOrcSpineParityBuild();
       this.checkCommitment();
       this.checkNeglectDecay();
       this.checkPhase11();
@@ -5386,6 +5387,9 @@ class Verifier {
       "SIGNAL_FOUR_HOLDS_VISIT = 2208",
       "DELTA_FOUR_HOLDS_VISIT = 1.0",
       "return DELTA_FOUR_HOLDS_VISIT",
+      "SIGNAL_ANCESTOR_SPINE = 2209",
+      "DELTA_ANCESTOR_SPINE = 1.0",
+      "return DELTA_ANCESTOR_SPINE",
       "SIGNAL_OATH_BREAK = 2253",
       "DELTA_OATH_BREAK = -1.5",
       "return DELTA_OATH_BREAK",
@@ -6126,6 +6130,113 @@ class Verifier {
         this.pass("Dunmer spine boon effect actor value", `${expected.effect} actor value is ${expected.actorValue}.`, PDV_ESP);
       } else {
         this.phase20RaceCostingGap("Dunmer spine boon effect actor value", `${expected.effect} actor value is ${actorValue}, expected ${expected.actorValue}.`, PDV_ESP);
+      }
+    }
+  }
+
+  checkOrcSpineParityBuild() {
+    this.checkSourceContains("Orc spine Malacath source", "PDV_Deity_Malacath", [
+      "SIGNAL_ANCESTOR_SPINE = 2209",
+      "DELTA_ANCESTOR_SPINE = 1.0",
+      "signalType == SIGNAL_ANCESTOR_SPINE",
+      "return DELTA_ANCESTOR_SPINE",
+    ]);
+    this.checkSourceContains("Orc spine manager source", "PDV__ManagerQuest", [
+      "Spell Property PDV_Bless_Orc_Spine_City Auto",
+      "Spell Property PDV_Bless_Orc_Spine_Stronghold Auto",
+      "Spell Property PDV_Bless_Orc_Spine_LegionExile Auto",
+      "Function AwardOrcAncestorSpineSignal(Float multiplier, String reason)",
+      "PDV_Malacath.SIGNAL_ANCESTOR_SPINE",
+      "\"PDV.Orc.AncestorSpine\"",
+      "AwardOrcAncestorSpineSignal(multiplier, reason)",
+      "Function SyncOrcSpineBoon(Actor playerRef, Bool isOrc, Int activeMode)",
+      "Function MaybeShowOrcWatchersNotice(Int modeValue, String reason)",
+      "PDV_Notif_Orc_Witnessed_TheWatchers_Stronghold",
+      "PDV_Notif_Orc_Witnessed_TheWatchers_City",
+      "PDV_Notif_Orc_Witnessed_TheWatchers_LegionExile",
+      "Function MaybeShowOrcHearthHeldNotice(String reason)",
+      "PDV_Notif_Orc_HearthHeld_Declare",
+      "PDV_Notif_Orc_HearthHeld_Return",
+      "PDV_Notif_Orc_HearthHeld_MissedCadence",
+    ]);
+
+    const managerDetail = this.recordDetails.get("PDV__ManagerQuest");
+    const managerScript = managerDetail ? findScript(managerDetail.fields || {}, "PDV__ManagerQuest") : null;
+    if (managerScript) {
+      const props = propertyMap(managerScript);
+      this.checkObjectPropertyTarget("Orc spine manager property", props, "PDV_Bless_Orc_Spine_City", "PDV_Bless_Orc_Spine_City", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Orc spine manager property", props, "PDV_Bless_Orc_Spine_Stronghold", "PDV_Bless_Orc_Spine_Stronghold", this.phase20RaceCostingGap.bind(this));
+      this.checkObjectPropertyTarget("Orc spine manager property", props, "PDV_Bless_Orc_Spine_LegionExile", "PDV_Bless_Orc_Spine_LegionExile", this.phase20RaceCostingGap.bind(this));
+    } else {
+      this.phase20RaceCostingGap("Orc spine manager property", "PDV__ManagerQuest script readback failed.", PDV_ESP);
+    }
+
+    const spellSpecs = [
+      {
+        spell: "PDV_Bless_Orc_Spine_City",
+        effects: [
+          { effect: "PDV_MGEF_Orc_Spine_City_Armor", magnitude: 5, actorValue: "DamageResist" },
+          { effect: "PDV_MGEF_Orc_Spine_City_Health", magnitude: 10, actorValue: "Health" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Orc_Spine_Stronghold",
+        effects: [
+          { effect: "PDV_MGEF_Orc_Spine_Stronghold_Armor", magnitude: 8, actorValue: "DamageResist" },
+          { effect: "PDV_MGEF_Orc_Spine_Stronghold_Health", magnitude: 10, actorValue: "Health" },
+        ],
+      },
+      {
+        spell: "PDV_Bless_Orc_Spine_LegionExile",
+        effects: [
+          { effect: "PDV_MGEF_Orc_Spine_LegionExile_Armor", magnitude: 5, actorValue: "DamageResist" },
+          { effect: "PDV_MGEF_Orc_Spine_LegionExile_Health", magnitude: 15, actorValue: "Health" },
+        ],
+      },
+    ];
+    for (const spec of spellSpecs) {
+      this.checkOrcSpineSpellPacket(spec);
+    }
+  }
+
+  checkOrcSpineSpellPacket(spec) {
+    const record = this.recordsByEdid.get(spec.spell);
+    if (record?.type === "SPEL") {
+      this.pass("Orc spine boon spell", `${spec.spell} exists as SPEL.`, PDV_ESP);
+    } else {
+      this.phase20RaceCostingGap("Orc spine boon spell", `${spec.spell} is missing or not a SPEL.`, PDV_ESP);
+      return;
+    }
+
+    const detail = this.recordDetails.get(spec.spell);
+    const effects = Array.isArray(detail?.fields?.Effects) ? detail.fields.Effects : [];
+    for (const expected of spec.effects) {
+      const effectRecord = this.recordsByEdid.get(expected.effect);
+      if (effectRecord?.type === "MGEF") {
+        this.pass("Orc spine boon effect", `${expected.effect} exists as MGEF.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Orc spine boon effect", `${expected.effect} is missing or not a MGEF.`, PDV_ESP);
+        continue;
+      }
+
+      const spellEffect = effects.find((effect) => effect.BaseEffect === effectRecord.formid);
+      if (!spellEffect) {
+        this.phase20RaceCostingGap("Orc spine boon spell effect", `${spec.spell} is missing ${expected.effect}.`, PDV_ESP);
+        continue;
+      }
+      const data = spellEffect.Data || {};
+      if (Math.abs((data.Magnitude || 0) - expected.magnitude) < 0.001 && (data.Duration || 0) === 0) {
+        this.pass("Orc spine boon spell effect", `${spec.spell}.${expected.effect} magnitude is ${expected.magnitude}.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Orc spine boon spell effect", `${spec.spell}.${expected.effect} data is ${JSON.stringify(data)}, expected magnitude ${expected.magnitude} duration 0.`, PDV_ESP);
+      }
+
+      const effectDetail = this.recordDetails.get(expected.effect);
+      const actorValue = String(effectDetail?.fields?.Archetype?.ActorValue || effectDetail?.fields?.ActorValue || "");
+      if (!actorValue || actorValue.toLowerCase() === expected.actorValue.toLowerCase()) {
+        this.pass("Orc spine boon effect actor value", `${expected.effect} actor value is ${expected.actorValue}.`, PDV_ESP);
+      } else {
+        this.phase20RaceCostingGap("Orc spine boon effect actor value", `${expected.effect} actor value is ${actorValue}, expected ${expected.actorValue}.`, PDV_ESP);
       }
     }
   }

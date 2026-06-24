@@ -11,9 +11,9 @@ Mechanism-agnostic parity score for each race's always-active ancestral spine (p
 | Imperial | 30% | 9 | **YES** | 1 | 1 | 1 | 0 | 1 | 1 | MODERATE |
 | Altmer | 30% | 9 | **YES** | 1 | 1 | 1 | 0 | 1 | 1 | MODERATE |
 | Breton | 36.7% | 11 | **YES** | 1 | 1 | 1 | 1 | 1 | 2 | MODERATE |
-| Orc | 36.7% | 11 | **YES** | 1 | 1 | 1 | 1 | 1 | 2 | MODERATE |
 | Redguard | 53.3% | 16 | **YES** | 2 | 2 | 1 | 1 | 1 | 2 | MODERATE |
 | Bosmer | 73.3% | 22 | - | 2 | 2 | 2 | 2 | 3 | 3 | RICH |
+| Orc | 76.7% | 23 | - | 3 | 3 | 1 | 1 | 3 | 2 | MODERATE |
 | Nord | 76.7% | 23 | - | 3 | 3 | 1 | 0 | 3 | 3 | MODERATE |
 | Dunmer | 80% | 24 | - | 3 | 3 | 2 | 2 | 1 | 2 | MODERATE |
 | Khajiit | 86.7% | 26 | - | 3 | 3 | 2 | 2 | 2 | 3 | RICH |
@@ -24,16 +24,9 @@ Mechanism-agnostic parity score for each race's always-active ancestral spine (p
 - **Imperial** 30% - Reputation-track (Concordat) patron-gated; no unconditional boon; no sleep/home channel; Book-of-Days on generic fallback.
 - **Altmer** 30% - Reputation-track (ThalmorAlignment) patron-gated; variety tranche effect-review-blocked; Book-of-Days generic fallback.
 - **Breton** 36.7% - Patron-gated framework (Green Way / Hidden Art / Vow traditions); no unconditional boon; Green Way standing channel; decent voice.
-- **Orc** 36.7% - Patron-gated accumulator (stronghold/city/exile); Watchers diegetic DECLARED-DEAD; some voice.
 - **Redguard** 53.3% - Spine-owned Tu'whacca pulse ADDED 2026-06-24 (SIGNAL_ANCESTOR_SPINE) -> piety_sink improved; minus penalized (SIGNAL_DEATH_DUTY_ABANDONMENT specced-but-unemitted); sect-track texture.
 
 ## Diegetic dead-declaration drift-check (deterministic, live source)
 
-Declared once with no dispatch site (dispatch-or-delete per the spine build):
-- PDV_Notif_Orc_Witnessed_TheWatchers_Stronghold (Orc)
-- PDV_Notif_Orc_Witnessed_TheWatchers_City (Orc)
-- PDV_Notif_Orc_Witnessed_TheWatchers_LegionExile (Orc)
-- PDV_Notif_Orc_HearthHeld_Declare (Orc)
-- PDV_Notif_Orc_HearthHeld_Return (Orc)
-- PDV_Notif_Orc_HearthHeld_MissedCadence (Orc)
+- no PDV_Notif_* declared-but-never-dispatched identifiers found.
 

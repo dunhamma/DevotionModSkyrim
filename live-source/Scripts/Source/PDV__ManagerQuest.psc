@@ -340,6 +340,9 @@ Spell Property PDV_Bless_Orc_City_T3 Auto
 Spell Property PDV_Bless_Orc_LegionExile_T1 Auto
 Spell Property PDV_Bless_Orc_LegionExile_T2 Auto
 Spell Property PDV_Bless_Orc_LegionExile_T3 Auto
+Spell Property PDV_Bless_Orc_Spine_City Auto
+Spell Property PDV_Bless_Orc_Spine_Stronghold Auto
+Spell Property PDV_Bless_Orc_Spine_LegionExile Auto
 Spell Property PDV_SPEL_Neglect_Orc Auto
 Spell Property PDV_SPEL_Orc_TrialOfIron_Tusk Auto
 Spell Property PDV_SPEL_Orc_TrialOfIron_Shield Auto
@@ -4985,6 +4988,9 @@ Function HandleOrcSelfMadeCommunity(String reason)
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcSelfMadeCommunity")
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_CITY, multiplier, reason)
     AwardOrcSelfMadeCommunitySignal(multiplier)
+    if multiplier > 0.0
+        MaybeShowOrcHearthHeldNotice(reason)
+    endIf
     Trace(2, "Orc self-made community routed with multiplier " + multiplier)
 EndFunction
 
@@ -5040,6 +5046,7 @@ Function HandleOrcFourHoldsVisit(Int holdId, String reason)
     StorageUtil.SetIntValue(None, "PDV.Orc.LastFourHoldsVisit", holdId)
     StorageUtil.SetFloatValue(None, "PDV.Orc.LastFourHoldsVisitTime", Utility.GetCurrentGameTime())
     AwardOrcFourHoldsVisitSignal()
+    AwardOrcAncestorSpineSignal(1.0, reason)
 
     Int count = GetOrcFourHoldsVisitCount()
     StorageUtil.SetIntValue(None, "PDV.Orc.FourHolds.Count", count)
@@ -5071,6 +5078,9 @@ Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
     if multiplier <= 0.0
         return
     endIf
+
+    AwardOrcAncestorSpineSignal(multiplier, reason)
+    MaybeShowOrcWatchersNotice(modeValue, reason)
 
     if PDV_OrcLifeModeTrack.GetCurrentState() == modeValue
         SendPrismaSubstrateToast(GetOrcLifeModeSubstrateToken(modeValue), "act", "The code was marked.", "malacath", GetOrcLifeModeLabel())
@@ -5190,6 +5200,18 @@ Function AwardOrcFourHoldsVisitSignal()
     endIf
 EndFunction
 
+Function AwardOrcAncestorSpineSignal(Float multiplier, String reason)
+    if GetPlayerOriginRaceIndex() != ORIGIN_ORC || !PDV_Malacath || multiplier <= 0.0
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    StorageUtil.AdjustFloatValue(None, "PDV.Orc.AncestorSpine", multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Orc.AncestorSpineSourceCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Orc.LastAncestorSpineReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Orc.LastAncestorSpineTime", Utility.GetCurrentGameTime())
+EndFunction
+
 Int Function GetOrcFourHoldsVisitCount()
     Int count = 0
     if StorageUtil.GetIntValue(None, "PDV.Orc.FourHolds." + ORC_FOUR_HOLDS_DUSHNIKH_YAL) > 0
@@ -5233,6 +5255,70 @@ String Function GetOrcFourHoldsFallback(Int holdId)
     endIf
 
     return "The stronghold is counted. The code holds across distance."
+EndFunction
+
+Bool Function ConsumeDailyOrcNotice(String noticeKey)
+    Int dayIndex = Utility.GetCurrentGameTime() as Int
+    String storageKey = "PDV.Orc.Notice." + noticeKey + ".Day"
+    if StorageUtil.GetIntValue(None, storageKey, -1) == dayIndex
+        return False
+    endIf
+
+    StorageUtil.SetIntValue(None, storageKey, dayIndex)
+    return True
+EndFunction
+
+Function MaybeShowOrcWatchersNotice(Int modeValue, String reason)
+    if !ConsumeDailyOrcNotice("Watchers")
+        return
+    endIf
+
+    StorageUtil.SetStringValue(None, "PDV.Orc.LastWatchersNoticeReason", reason)
+    ShowOrcNotification(GetOrcWatchersNotice(modeValue), GetOrcWatchersFallback(modeValue))
+EndFunction
+
+Message Function GetOrcWatchersNotice(Int modeValue)
+    if modeValue == ORC_LIFE_MODE_STRONGHOLD
+        return PDV_Notif_Orc_Witnessed_TheWatchers_Stronghold
+    elseIf modeValue == ORC_LIFE_MODE_LEGION_EXILE
+        return PDV_Notif_Orc_Witnessed_TheWatchers_LegionExile
+    endIf
+
+    return PDV_Notif_Orc_Witnessed_TheWatchers_City
+EndFunction
+
+String Function GetOrcWatchersFallback(Int modeValue)
+    if modeValue == ORC_LIFE_MODE_STRONGHOLD
+        return "The Watchers see the stronghold work. The code has witnesses."
+    elseIf modeValue == ORC_LIFE_MODE_LEGION_EXILE
+        return "The Watchers see the burden carried away from the hold. The code has witnesses."
+    endIf
+
+    return "The Watchers see the code kept under city stone. The code has witnesses."
+EndFunction
+
+Function MaybeShowOrcHearthHeldNotice(String reason)
+    if StorageUtil.GetIntValue(None, "PDV.Orc.HearthHeldDeclared") == 0
+        StorageUtil.SetIntValue(None, "PDV.Orc.HearthHeldDeclared", 1)
+        StorageUtil.SetStringValue(None, "PDV.Orc.LastHearthHeldDeclareReason", reason)
+        ShowOrcNotification(PDV_Notif_Orc_HearthHeld_Declare, "A hearth held by choice is declared. The code has a place to stand.")
+        return
+    endIf
+
+    if !ConsumeDailyOrcNotice("HearthHeldReturn")
+        return
+    endIf
+
+    StorageUtil.SetStringValue(None, "PDV.Orc.LastHearthHeldReturnReason", reason)
+    ShowOrcNotification(PDV_Notif_Orc_HearthHeld_Return, "You return to the hearth you hold. The code remembers the place.")
+EndFunction
+
+Function MaybeShowOrcHearthHeldMissedCadenceNotice()
+    if !ConsumeDailyOrcNotice("HearthHeldMissed")
+        return
+    endIf
+
+    ShowOrcNotification(PDV_Notif_Orc_HearthHeld_MissedCadence, "The held hearth has gone quiet. The code presses for proof.")
 EndFunction
 
 Function EnsureOrcLifeModeInitialized()
@@ -9098,6 +9184,8 @@ Function SyncOrcRewards(Actor playerRef)
 
     Bool isOrc = GetPlayerOriginRaceIndex() == ORIGIN_ORC
     Int activeMode = GetActiveOrcRewardMode()
+    SyncOrcSpineBoon(playerRef, isOrc, activeMode)
+
     Bool broadFaithful = isOrc && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount") >= 6
     SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T2, broadFaithful, "Orc Malacath T2")
 
@@ -9110,6 +9198,16 @@ Function SyncOrcRewards(Actor playerRef)
     SyncOrcRewardFamily(playerRef, ORC_LIFE_MODE_STRONGHOLD, activeMode, activeTier, focusActive, PDV_Bless_Orc_Stronghold_T1, PDV_Bless_Orc_Stronghold_T2, PDV_Bless_Orc_Stronghold_T3, "Stronghold")
     SyncOrcRewardFamily(playerRef, ORC_LIFE_MODE_CITY, activeMode, activeTier, focusActive, PDV_Bless_Orc_City_T1, PDV_Bless_Orc_City_T2, PDV_Bless_Orc_City_T3, "City")
     SyncOrcRewardFamily(playerRef, ORC_LIFE_MODE_LEGION_EXILE, activeMode, activeTier, focusActive, PDV_Bless_Orc_LegionExile_T1, PDV_Bless_Orc_LegionExile_T2, PDV_Bless_Orc_LegionExile_T3, "LegionExile")
+EndFunction
+
+Function SyncOrcSpineBoon(Actor playerRef, Bool isOrc, Int activeMode)
+    if !playerRef
+        return
+    endIf
+
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_City, isOrc && activeMode == ORC_LIFE_MODE_CITY, "Orc Spine City")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_Stronghold, isOrc && activeMode == ORC_LIFE_MODE_STRONGHOLD, "Orc Spine Stronghold")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_LegionExile, isOrc && activeMode == ORC_LIFE_MODE_LEGION_EXILE, "Orc Spine LegionExile")
 EndFunction
 
 Int Function GetActiveOrcRewardMode()
@@ -9160,6 +9258,7 @@ Function SyncOrcNeglectSpell(Bool shouldBeActive)
     if shouldBeActive
         if !playerRef.HasSpell(PDV_SPEL_Neglect_Orc)
             playerRef.AddSpell(PDV_SPEL_Neglect_Orc, False)
+            MaybeShowOrcHearthHeldMissedCadenceNotice()
         endIf
         StorageUtil.SetIntValue(None, "PDV.Neglect.OrcSpellActive", 1)
     else
