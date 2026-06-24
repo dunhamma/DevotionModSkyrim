@@ -362,6 +362,11 @@ Spell Property PDV_Bless_Redguard_AncestorSpine_T1 Auto
 Spell Property PDV_Bless_Redguard_AncestorSpine_T2 Auto
 Spell Property PDV_Bless_Redguard_Spine_Crown Auto
 Spell Property PDV_Bless_Redguard_Spine_Forebear Auto
+Spell Property PDV_SPEL_RedguardRemember_Blade Auto
+Spell Property PDV_SPEL_RedguardRemember_Road Auto
+Spell Property PDV_SPEL_RedguardRemember_Rest Auto
+Spell Property PDV_SPEL_RedguardRemember_Harvest Auto
+Message Property PDV_MSG_RedguardRemembering Auto
 Spell Property PDV_Bless_Redguard_Spine_AshAbah Auto
 Spell Property PDV_Bless_Redguard_Tuwhacca_T1 Auto
 Spell Property PDV_Bless_Redguard_Tuwhacca_T2 Auto
@@ -3320,11 +3325,126 @@ Function HandleRedguardSleepEvents(Actor playerRef, String reason)
         return
     endIf
 
+    if TryRedguardRemembering(playerRef, sleepCellId, reason)
+        return                          ; Remembering menu shown; suppress the rest-notice this wake
+    endIf
+
     if !ConsumeOncePerDaySignal("PDV.Signal.RedguardAncestralRest")
         return
     endIf
 
     RecordRedguardAncestralRest(1.0, "sleep_ancestor_rest_" + reason)
+EndFunction
+
+; The Remembering of Names: an ancestral observance taken at the declared rest cell, with a
+; 7-day cooldown. One-active observance, swap via re-rite (clear-before-add). "Not yet" does
+; not spend the cooldown. Returns true when the menu was shown so the rest-notice is
+; suppressed that night.
+Bool Function TryRedguardRemembering(Actor playerRef, Int sleepCellId, String reason)
+    if !playerRef || !PDV_MSG_RedguardRemembering || GetPlayerOriginRaceIndex() != ORIGIN_REDGUARD
+        return false
+    endIf
+
+    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.RedRemember.LastRiteTime")
+    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
+        return false
+    endIf
+
+    Utility.Wait(0.5)
+    Int pressed = PDV_MSG_RedguardRemembering.Show()
+    if pressed < 0 || pressed > 3
+        return true                 ; "Not yet" -- cooldown not spent
+    endIf
+
+    ApplyRedguardRemembering(playerRef, pressed)
+    return true
+EndFunction
+
+; Clear-before-add: never two observances at once. Records the sect named-on so
+; SyncRedguardRemembering can fade/restore on a sect shift.
+Function ApplyRedguardRemembering(Actor playerRef, Int index)
+    RemoveRedguardRememberSpells(playerRef)
+    Spell chosen = GetRedguardRememberSpell(index)
+    if !chosen
+        return
+    endIf
+
+    Int sectNow = 0
+    if PDV_RedguardSectTrack
+        sectNow = PDV_RedguardSectTrack.GetCurrentState()
+    endIf
+
+    playerRef.AddSpell(chosen, False)
+    StorageUtil.SetIntValue(None, "PDV.RedRemember.Active", index + 1)
+    StorageUtil.SetIntValue(None, "PDV.RedRemember.SectAtRite", sectNow)
+    StorageUtil.SetFloatValue(None, "PDV.RedRemember.LastRiteTime", Utility.GetCurrentGameTime())
+    Debug.Notification("You remember a name of the old line. The observance settles into you.")
+    Trace(2, "Redguard Remembering observance applied: " + index)
+EndFunction
+
+Function RemoveRedguardRememberSpells(Actor playerRef)
+    Int i = 0
+    while i < 4
+        Spell obs = GetRedguardRememberSpell(i)
+        if obs && playerRef.HasSpell(obs)
+            playerRef.RemoveSpell(obs)
+        endIf
+        i += 1
+    endWhile
+EndFunction
+
+Spell Function GetRedguardRememberSpell(Int index)
+    if index == 0
+        return PDV_SPEL_RedguardRemember_Blade
+    elseIf index == 1
+        return PDV_SPEL_RedguardRemember_Road
+    elseIf index == 2
+        return PDV_SPEL_RedguardRemember_Rest
+    elseIf index == 3
+        return PDV_SPEL_RedguardRemember_Harvest
+    endIf
+    return None
+EndFunction
+
+; The observance holds while the sect it was named under is settled. During a sect switch
+; (committed sect differs from the one named at rite) it goes quiet at dawn and returns at
+; dawn once the sect settles. PDV.RedRemember.Active stays set while quiet.
+Function SyncRedguardRemembering(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+    Int active = StorageUtil.GetIntValue(None, "PDV.RedRemember.Active")
+    if active <= 0
+        return
+    endIf
+    Spell obs = GetRedguardRememberSpell(active - 1)
+    if !obs
+        return
+    endIf
+
+    Int sectAtRite = StorageUtil.GetIntValue(None, "PDV.RedRemember.SectAtRite")
+    Bool eligible = (GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD) && IsRedguardRememberingCoherent(sectAtRite)
+    if eligible
+        if !playerRef.HasSpell(obs)
+            playerRef.AddSpell(obs, False)
+            Debug.Notification("The old line is settled again. Your observance returns.")
+        endIf
+    else
+        if playerRef.HasSpell(obs)
+            playerRef.RemoveSpell(obs)
+            Debug.Notification("The observance goes quiet. The line you named it under has shifted.")
+        endIf
+    endIf
+EndFunction
+
+Bool Function IsRedguardRememberingCoherent(Int sectAtRite)
+    if !PDV_RedguardSectTrack
+        return false
+    endIf
+    if PDV_RedguardSectTrack.GetCurrentState() != sectAtRite
+        return false
+    endIf
+    return true
 EndFunction
 
 Function HandleAltmerSleepEvents(Actor playerRef, String reason)
@@ -8490,6 +8610,10 @@ Function RunDawnRefreshTrackStates()
         EvaluateBosmerForcedReckoning()
         SyncBosmerNaming(Game.GetPlayer())
         ArmBosmerDreamOnPathChange()
+    endIf
+
+    if IsRedguardOrigin() && PDV_RedguardSectTrack
+        SyncRedguardRemembering(Game.GetPlayer())
     endIf
 EndFunction
 
