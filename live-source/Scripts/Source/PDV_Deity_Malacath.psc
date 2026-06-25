@@ -42,6 +42,7 @@ Int Property SIGNAL_FOUR_HOLDS_VISIT = 2208 AutoReadOnly      ; first arrival at
 Int Property SIGNAL_ANCESTOR_SPINE = 2209 AutoReadOnly        ; origin-spine pulse for Orc code/life-mode acts
 
 ; --- Creed-violation losses (medium/major dishonor only) ---
+Int Property SIGNAL_SELF_ERASURE = 2250 AutoReadOnly          ; swallowed an insult the code says must be answered (major)
 Int Property SIGNAL_BROKEN_FAITH_KIN = 2251 AutoReadOnly      ; betrayed Blood-Kin / deserted sworn service (medium)
 Int Property SIGNAL_CURSE_CODE_RUPTURE = 2252 AutoReadOnly    ; werewolf onset judged against the code (medium)
 Int Property SIGNAL_OATH_BREAK = 2253 AutoReadOnly            ; smaller oath break / lesser sworn-code breach (medium-light)
@@ -58,6 +59,7 @@ Float Property DELTA_FOUR_HOLDS_VISIT = 1.0 Auto
 Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 
 ; --- Negative deltas (creed violations) ---
+Float Property DELTA_SELF_ERASURE = -3.0 Auto
 Float Property DELTA_BROKEN_FAITH_KIN = -2.0 Auto
 Float Property DELTA_CURSE_CODE_RUPTURE = -2.0 Auto
 Float Property DELTA_OATH_BREAK = -1.5 Auto
@@ -91,6 +93,8 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_FOUR_HOLDS_VISIT
     elseIf signalType == SIGNAL_ANCESTOR_SPINE
         return DELTA_ANCESTOR_SPINE
+    elseIf signalType == SIGNAL_SELF_ERASURE
+        return DELTA_SELF_ERASURE
     elseIf signalType == SIGNAL_BROKEN_FAITH_KIN
         return DELTA_BROKEN_FAITH_KIN
     elseIf signalType == SIGNAL_CURSE_CODE_RUPTURE

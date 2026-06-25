@@ -92,6 +92,7 @@ Keyword Property ActorTypeDragon Auto
 ActorBase Property Paarthurnax Auto
 
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
+String Property QUEST_REACTION_MATRIX_FILE_ARR = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
 
 String Property MOD_EVENT_CONCORDAT_COMPLIANCE = "PDV.ConcordatCompliance" AutoReadOnly
 String Property MOD_EVENT_CONCORDAT_DEFIANCE = "PDV.ConcordatDefiance" AutoReadOnly
@@ -769,16 +770,27 @@ Function RegisterQuestReactionEffectList(String listKey)
 EndFunction
 
 Function RegisterQuestReactionMatrix()
-    if !JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE)
-        Trace(1, "Quest reaction matrix JSON missing: " + QUEST_REACTION_MATRIX_FILE)
+    RegisterQuestReactionMatrixFile(QUEST_REACTION_MATRIX_FILE, "core")
+    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR)
+        RegisterQuestReactionMatrixFile(QUEST_REACTION_MATRIX_FILE_ARR, "ARR")
+    endIf
+EndFunction
+
+Function RegisterQuestReactionMatrixFile(String matrixFile, String label)
+    if !JsonUtil.JsonExists(matrixFile)
+        Trace(1, "Quest reaction matrix JSON missing: " + matrixFile)
         return
     endIf
 
-    ReloadQuestReactionMatrixJson()
+    ReloadQuestReactionMatrixJsonFile(matrixFile)
 
     Int sourceIndex = 0
-    String[] formIds = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, "questWatchFormIdsCsv"), ",")
-    String[] plugins = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, "questWatchPluginsCsv"), ",")
+    String[] formIds = JsonUtil.StringListToArray(matrixFile, "questWatchFormIds")
+    String[] plugins = JsonUtil.StringListToArray(matrixFile, "questWatchPlugins")
+    if formIds.Length <= 0
+        formIds = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, "questWatchFormIdsCsv"), ",")
+        plugins = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, "questWatchPluginsCsv"), ",")
+    endIf
     Int sourceCount = formIds.Length
     while sourceIndex < sourceCount
         Quest sourceQuest = GetQuestReactionRuntimeFormFromCsv(formIds, plugins, sourceIndex) as Quest
@@ -789,7 +801,7 @@ Function RegisterQuestReactionMatrix()
         sourceIndex += 1
     endWhile
 
-    Trace(2, "Quest reaction matrix hooks refreshed: " + sourceCount + " quest entries.")
+    Trace(2, "Quest reaction matrix hooks refreshed (" + label + "): " + sourceCount + " quest entries.")
 EndFunction
 
 Function RegisterQuestStageList(FormList sourceList)
@@ -1412,11 +1424,15 @@ Bool Function HasQuestReactionRuntimeForm(String listKey, Form sourceForm)
 EndFunction
 
 Function ReloadQuestReactionMatrixJson()
-    JsonUtil.Unload(QUEST_REACTION_MATRIX_FILE, false)
-    if !JsonUtil.Load(QUEST_REACTION_MATRIX_FILE)
-        Trace(1, "Quest reaction matrix JSON load failed: " + JsonUtil.GetErrors(QUEST_REACTION_MATRIX_FILE))
-    elseIf !JsonUtil.IsGood(QUEST_REACTION_MATRIX_FILE)
-        Trace(1, "Quest reaction matrix JSON parse failed: " + JsonUtil.GetErrors(QUEST_REACTION_MATRIX_FILE))
+    ReloadQuestReactionMatrixJsonFile(QUEST_REACTION_MATRIX_FILE)
+EndFunction
+
+Function ReloadQuestReactionMatrixJsonFile(String matrixFile)
+    JsonUtil.Unload(matrixFile, false)
+    if !JsonUtil.Load(matrixFile)
+        Trace(1, "Quest reaction matrix JSON load failed: " + JsonUtil.GetErrors(matrixFile))
+    elseIf !JsonUtil.IsGood(matrixFile)
+        Trace(1, "Quest reaction matrix JSON parse failed: " + JsonUtil.GetErrors(matrixFile))
     endIf
 EndFunction
 

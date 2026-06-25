@@ -10,6 +10,6 @@ Overall: **PASS** (FAIL iff the signal E2E gate fails or a check errors; finding
 | signal_e2e_gate | gate | PASS | 39 GREEN / 0 RED; parity PASS |
 | signal_floor | findings | OK | see PDV_SignalFloorLedger |
 | spine_stack_score | findings | OK | worst Bosmer 73.3%; 0 targets; 0 dead-decls |
-| specced_minus | findings | OK | 0 unemitted minuses |
+| specced_minus | findings | OK | 11 unemitted minuses |
 | completeness | findings | OK | PASS; PASS=361 NEEDS-MANUAL=293 GAP-REVIEW=53 FUTURE=59 WAIVED=2 |
 

@@ -279,9 +279,6 @@ Function HandleStoryTrespass(ObjectReference akVictim, ObjectReference akTrespas
     endIf
 
     RouteActionWithAttribution(EVT_TRESPASS, ATTR_DIRECT_PLAYER, akTrespasser as Form, akVictim as Form)
-    if PDV_Manager
-        PDV_Manager.HandleDunmerClumsyCrime("trespass")
-    endIf
 EndFunction
 
 Function HandleStoryAssaultActor(ObjectReference akVictim, ObjectReference akAttacker, Location akLocation, Int aiCrime)
@@ -303,9 +300,6 @@ Function HandleStoryAssaultActor(ObjectReference akVictim, ObjectReference akAtt
     endIf
 
     RouteActionWithAttribution(EVT_ASSAULT_INNOCENT, ATTR_DIRECT_PLAYER, akAttacker as Form, victimActor as Form)
-    if PDV_Manager
-        PDV_Manager.HandleDunmerClumsyCrime("assault")
-    endIf
 EndFunction
 
 Function RouteBookRead(Book akBook)

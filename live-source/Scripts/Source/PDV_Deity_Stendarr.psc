@@ -23,11 +23,15 @@ Int Property SIGNAL_CIVIC_SERVICE = 1300 AutoReadOnly
 Int Property SIGNAL_MERCY = 1301 AutoReadOnly
 Int Property SIGNAL_LAWFUL_ORDER = 1302 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1303 AutoReadOnly
+Int Property SIGNAL_CREED_CIVIC_COMPROMISE = 1310 AutoReadOnly
+Int Property SIGNAL_CREED_ENFORCER_CRUELTY = 1311 AutoReadOnly
 
 Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
 Float Property DELTA_MERCY = 3.0 Auto
 Float Property DELTA_LAWFUL_ORDER = 2.5 Auto
 Float Property DELTA_PATRON_CIVIC_FAVOR = 3.0 Auto
+Float Property DELTA_CREED_CIVIC_COMPROMISE = -2.0 Auto
+Float Property DELTA_CREED_ENFORCER_CRUELTY = -3.5 Auto
 
 Event OnInit()
     if GetDebugLevel() >= 2
@@ -48,6 +52,10 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_LAWFUL_ORDER
     elseIf signalType == SIGNAL_PATRON_CIVIC_FAVOR
         return DELTA_PATRON_CIVIC_FAVOR
+    elseIf signalType == SIGNAL_CREED_CIVIC_COMPROMISE
+        return DELTA_CREED_CIVIC_COMPROMISE
+    elseIf signalType == SIGNAL_CREED_ENFORCER_CRUELTY
+        return DELTA_CREED_ENFORCER_CRUELTY
     endIf
 
     return 0.0

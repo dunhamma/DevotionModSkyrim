@@ -1,4 +1,4 @@
-﻿;/
+;/
     PDV_ReputationTrack.psc
     PlayerDevotion - V3 Structural Skeleton reputation track base
     -----------------------------------------------------------------------

@@ -25,19 +25,20 @@ parallel; Claude's authoring runs in parallel and merges as D. Sync live-source 
 All wiring; display text is renderer-side or mechanical. Edits `PDV__ManagerQuest.psc` (+ one Hircine
 path file). Run the items in this order; they are independent edits to the same file.
 
-1. **[P0] reason through `AwardCuratedSignalScaled`** -- `:2518`. Pass a `signalType`-derived non-empty
-   reason to `AwardPiety`; extend `HumanizeDriverReason` cases as needed. (Clears 11 rows.)
-2. **[P1] rivalry reason** -- `:17721` `AwardPietyInternal(...)` -> add `"rivalry with " + sourceDeity.DeityName`.
-3. **[P1] substrate.thin branch** -- `SendPrismaSubstrateProgress` (~`:12808`): emit `phase="thin"` when `tierAfter < tierBefore`.
-4. **[P2] Khajiit Champion pin** -- `:10637`: add `headline=true` + ` " " + GetPublicTierBand(TIER_CHAMPION)` to the surfaceKey.
-5. **[P2] Orc lapse-to-City toast** -- `:5904`: route through `ApplyOrcLifeModeSwitch(ORC_LIFE_MODE_CITY, ...)`.
-6. **[P2] new-pact Daedric toast** -- `:2896`: `SendPrismaEventToast("shift", path, path.DeityName + " claims your devotion.", "", "")`.
-7. **[P2] Hircine residue** -- `PDV_DaedricPath_Hircine.psc:168` onset toast + `~:161` fade-clear (renderer built).
-8. **[P2] Daedric boon** -- `SendPrismaDaedricToast(princeName,"boon",...)` at Daedric rite-completion (renderer built).
-9. **[cleanup] drift.warn deletion** -- remove `:1773-1774` branch + `:15249` + `:15283` tone entries.
+Closed before this cleanup: `AwardCuratedSignalScaled` already passes `HumanizeCuratedSignalReason(...)`
+into `AwardPiety`.
+
+1. **[P1] rivalry reason** -- `:17721` `AwardPietyInternal(...)` -> add `"rivalry with " + sourceDeity.DeityName`.
+2. **[P1] substrate.thin branch** -- `SendPrismaSubstrateProgress` (~`:12808`): emit `phase="thin"` when `tierAfter < tierBefore`.
+3. **[P2] Khajiit Champion pin** -- `:10637`: add `headline=true` + ` " " + GetPublicTierBand(TIER_CHAMPION)` to the surfaceKey.
+4. **[P2] Orc lapse-to-City toast** -- `:5904`: route through `ApplyOrcLifeModeSwitch(ORC_LIFE_MODE_CITY, ...)`.
+5. **[P2] new-pact Daedric toast** -- `:2896`: `SendPrismaEventToast("shift", path, path.DeityName + " claims your devotion.", "", "")`.
+6. **[P2] Hircine residue** -- `PDV_DaedricPath_Hircine.psc:168` onset toast + `~:161` fade-clear (renderer built).
+7. **[P2] Daedric boon** -- `SendPrismaDaedricToast(princeName,"boon",...)` at Daedric rite-completion (renderer built).
+8. **[cleanup] drift.warn deletion** -- remove `:1773-1774` branch + `:15249` + `:15283` tone entries.
 
 **Acceptance (no stop):** `pdv_compile` 0/0 -> `pdv_verify` FAIL=0 -> `pdv_ledger_coverage_audit` clean
-(and a scaled-curated award now records a driver) -> `pdv_integrity_harness` PASS.
+-> `pdv_integrity_harness` PASS.
 
 ---
 

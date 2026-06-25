@@ -31,15 +31,14 @@ authoritative split for execution: **Codex owns coding; Claude + owner own autho
   the offer build RED until the Khajiit/Breton emergence callsites exist.
 
 ## Codex code-fix queue (priority order)
-1. **[P0] Thread a non-empty reason through `AwardCuratedSignalScaled` (`PDV__ManagerQuest.psc:2518`)**
-   so `RecordDeityDriver` fires. Clears 11 rows (dominant curated path + creed-violation
-   `Emit*Minus` losers + the scaled substrate-act rows). Derive a `signalType`-specific reason
-   (not the bare "a devotional rite") so drivers are distinguishable.
-2. **[P1] Rivalry drain reason** -- pass a reason to `AwardPietyInternal` at `:17721` (residual
+Closed before this cleanup: `AwardCuratedSignalScaled` now passes `HumanizeCuratedSignalReason(...)`
+into `AwardPiety`; see registry row `signal.curated-scaled`.
+
+1. **[P1] Rivalry drain reason** -- pass a reason to `AwardPietyInternal` at `:17721` (residual
    `IsDashboardTrackedDeity` gate is acceptable).
-3. **[P1] Khajiit lunar-posture chronicle** (R2) -- direct `AppendBookOfDaysEntry` at `:5342` for
+2. **[P1] Khajiit lunar-posture chronicle** (R2) -- direct `AppendBookOfDaysEntry` at `:5342` for
    Corrupted/ShadowDrift (dawn-diff structurally can't catch posture).
-4. **[Phase B / blocking] emergence.onset wire** (R11) -- add `GetKhajiitFocusDeity` +
+3. **[Phase B / blocking] emergence.onset wire** (R11) -- add `GetKhajiitFocusDeity` +
    `GetBretonTraditionDeity` helpers and the two `SurfaceTransition("emergence", ...)` callsites
    required by `quietEmergenceSnippets`. **DIRECTION-TOKEN RECONCILIATION:** the gate snippet
    uses direction `"reach"` -> key `emergence.reach`, which misses the authored `emergence.onset`
@@ -47,18 +46,18 @@ authoritative split for execution: **Codex owns coding; Claude + owner own autho
    `JournalToneToTitle`/`JournalToneToValence` + the Khajiit/Breton `ResolveJournalLine`. If the
    gate's `"reach"` snippet is wrong, fix the gate to `"onset"`. Verify the journal line renders
    non-empty after wiring.
-5. **[P2] substrate.thin** (R10) -- add a `phase="thin"` branch to `SendPrismaSubstrateProgress`
+4. **[P2] substrate.thin** (R10) -- add a `phase="thin"` branch to `SendPrismaSubstrateProgress`
    when `tierAfter < tierBefore`; covers all substrate races' erosion.
-6. **[P2] Hircine residue** (R7) -- `SendPrismaDaedricToast("Hircine","residue",...)` at onset
+5. **[P2] Hircine residue** (R7) -- `SendPrismaDaedricToast("Hircine","residue",...)` at onset
    (`PDV_DaedricPath_Hircine.psc:168`) + fade-clear in `UpdateResidueRecovery`.
-7. **[P2] Daedric boon** (R8) -- `SendPrismaDaedricToast(prince,"boon",...)` at Daedric
+6. **[P2] Daedric boon** (R8) -- `SendPrismaDaedricToast(prince,"boon",...)` at Daedric
    rite-completion (analogous to substrate "deepen").
-8. **[P2] Khajiit champion-pin** -- pass `headline=true` + band suffix at `:10637`.
-9. **[P2] Orc lapse-to-City toast** -- route `:5904` through `ApplyOrcLifeModeSwitch`.
-10. **[P2] New-pact Daedric toast** -- add `SendPrismaEventToast("shift",...)` at `:2896`.
-11. **[P2] Altmer crisis-state toast** (R3) -- `SendPrismaShiftToast` at `:7417`.
-12. **[P2] 6f overlay toast** -- DECLINED per R1 (keep `Debug.Notification`). No action.
-13. **[cleanup] drift.warn deletion** (R9) -- remove the `drift` branch (`:1773-1774`) + tone
+7. **[P2] Khajiit champion-pin** -- pass `headline=true` + band suffix at `:10637`.
+8. **[P2] Orc lapse-to-City toast** -- route `:5904` through `ApplyOrcLifeModeSwitch`.
+9. **[P2] New-pact Daedric toast** -- add `SendPrismaEventToast("shift",...)` at `:2896`.
+10. **[P2] Altmer crisis-state toast** (R3) -- `SendPrismaShiftToast` at `:7417`.
+11. **[P2] 6f overlay toast** -- DECLINED per R1 (keep `Debug.Notification`). No action.
+12. **[cleanup] drift.warn deletion** (R9) -- remove the `drift` branch (`:1773-1774`) + tone
     entries (`:15249`, `:15283`).
 
 ## Authoring queue (Claude drafts -> owner approves)

@@ -12,22 +12,20 @@ for verdicts: `PDV_PrismaParity_DecidedWorklist.md`. Owner rulings R1-R11 are ra
 ## BATCH 1 -- Ready now (pure wiring, no copy dependency)
 Display text is either renderer-side (app.js) or mechanical; safe to start immediately.
 
-1. **[P0] Thread a reason through `AwardCuratedSignalScaled`** -- `PDV__ManagerQuest.psc:2518` calls
-   `AwardPiety(deity, scaledDelta)` with no reason, so the `:9198` driver guard short-circuits and
-   the Ledger records nothing for the dominant curated path. Derive a `signalType`-specific reason
-   (add cases to `HumanizeDriverReason` as needed). Clears 11 rows. **Gate:** `pdv_ledger_coverage_audit`
-   stays clean AND a new check that scaled curated awards now record a driver.
-2. **[P1] Rivalry-drain reason** -- `:17721` `AwardPietyInternal(rivalDeity, rivalAmount, False)` -> pass
+Closed before this cleanup: `AwardCuratedSignalScaled` already routes through
+`HumanizeCuratedSignalReason(...)`; keep `pdv_ledger_coverage_audit` green while landing the remaining paths.
+
+1. **[P1] Rivalry-drain reason** -- `:17721` `AwardPietyInternal(rivalDeity, rivalAmount, False)` -> pass
    a reason (e.g. `"rivalry with " + sourceDeity.DeityName`). Residual `IsDashboardTrackedDeity` gate is acceptable.
-3. **[P1] substrate.thin** -- add a `phase="thin"` branch to `SendPrismaSubstrateProgress` (~`:12808`)
+2. **[P1] substrate.thin** -- add a `phase="thin"` branch to `SendPrismaSubstrateProgress` (~`:12808`)
    when `tierAfter < tierBefore`. Renderer already handles `substrate_thin`. Covers all substrate races.
-4. **[P2] Khajiit Champion chronicle pin** -- `:10637` `SurfaceTransition(...)` passes only 5 args; add
+3. **[P2] Khajiit Champion chronicle pin** -- `:10637` `SurfaceTransition(...)` passes only 5 args; add
    `headline=true` + append `" " + GetPublicTierBand(TIER_CHAMPION)` to the surfaceKey so it pins like every other race.
-5. **[P2] Orc lapse-to-City toast** -- route the 14-day lapse at `:5904` through `ApplyOrcLifeModeSwitch(ORC_LIFE_MODE_CITY, ...)` instead of `SetState` direct, so it toasts.
-6. **[P2] New-pact Daedric toast** -- at `:2896` add `SendPrismaEventToast("shift", path, path.DeityName + " claims your devotion.", "", "")` beside the existing pinned chronicle.
-7. **[P2] Hircine residue** -- `PDV_DaedricPath_Hircine.psc:168` `BeginNordResidueRecovery` -> `SendPrismaDaedricToast("Hircine","residue",...,"hircine")` at onset; fade-clear in `UpdateResidueRecovery` (~`:161`). Renderer is built.
-8. **[P2] Daedric boon** -- add `SendPrismaDaedricToast(princeName,"boon",...)` at Daedric rite-completion (e.g. `RecordHuntRiteScaled` / `HandleDaedricPrinceSignal` rite path). Renderer is built.
-9. **[cleanup] drift.warn deletion** (R9) -- remove the dead `drift` branch in `TransitionToneKey`
+4. **[P2] Orc lapse-to-City toast** -- route the 14-day lapse at `:5904` through `ApplyOrcLifeModeSwitch(ORC_LIFE_MODE_CITY, ...)` instead of `SetState` direct, so it toasts.
+5. **[P2] New-pact Daedric toast** -- at `:2896` add `SendPrismaEventToast("shift", path, path.DeityName + " claims your devotion.", "", "")` beside the existing pinned chronicle.
+6. **[P2] Hircine residue** -- `PDV_DaedricPath_Hircine.psc:168` `BeginNordResidueRecovery` -> `SendPrismaDaedricToast("Hircine","residue",...,"hircine")` at onset; fade-clear in `UpdateResidueRecovery` (~`:161`). Renderer is built.
+7. **[P2] Daedric boon** -- add `SendPrismaDaedricToast(princeName,"boon",...)` at Daedric rite-completion (e.g. `RecordHuntRiteScaled` / `HandleDaedricPrinceSignal` rite path). Renderer is built.
+8. **[cleanup] drift.warn deletion** (R9) -- remove the dead `drift` branch in `TransitionToneKey`
    (`:1773-1774`) + the orphaned entries in `JournalToneToTitle` (`:15249`) and `JournalToneToValence` (`:15283`).
 
 ---
@@ -107,7 +105,7 @@ ESC always escapes; `DevotionPrismaBridge.log` clean.
 ---
 
 ## Cross-cutting notes
-- The empty-reason root cause (Batch 1.1) is the single highest-impact fix -- it un-blinds the Ledger.
+- The scaled-curated empty-reason root cause is already closed; keep the ledger coverage audit green while working on the remaining reason-bearing paths.
 - New save required for the offer records (VMAD props bake at first init).
 - Declined: 6f overlay toast (R1 -- keep `Debug.Notification`).
 - `coc` skips location triggers; the in-game proof is owner-gated (Anvil fresh save).

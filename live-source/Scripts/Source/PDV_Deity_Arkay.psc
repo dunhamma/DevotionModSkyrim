@@ -22,10 +22,14 @@ Scriptname PDV_Deity_Arkay extends PDV_DeityBase
 Int Property SIGNAL_CIVIC_SERVICE = 1200 AutoReadOnly
 Int Property SIGNAL_DEATH_DUTY = 1201 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1202 AutoReadOnly
+Int Property SIGNAL_CREED_CIVIC_COMPROMISE = 1210 AutoReadOnly
+Int Property SIGNAL_CREED_DEATH_DUTY_ABANDONED = 1211 AutoReadOnly
 
 Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
 Float Property DELTA_DEATH_DUTY = 3.0 Auto
 Float Property DELTA_PATRON_CIVIC_FAVOR = 3.0 Auto
+Float Property DELTA_CREED_CIVIC_COMPROMISE = -2.0 Auto
+Float Property DELTA_CREED_DEATH_DUTY_ABANDONED = -2.0 Auto
 
 Event OnInit()
     if GetDebugLevel() >= 2
@@ -44,6 +48,10 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_DEATH_DUTY
     elseIf signalType == SIGNAL_PATRON_CIVIC_FAVOR
         return DELTA_PATRON_CIVIC_FAVOR
+    elseIf signalType == SIGNAL_CREED_CIVIC_COMPROMISE
+        return DELTA_CREED_CIVIC_COMPROMISE
+    elseIf signalType == SIGNAL_CREED_DEATH_DUTY_ABANDONED
+        return DELTA_CREED_DEATH_DUTY_ABANDONED
     endIf
 
     return 0.0
