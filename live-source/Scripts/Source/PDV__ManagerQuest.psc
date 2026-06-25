@@ -98,6 +98,7 @@ Book Property PDV_BOOK_DunmerAncestralUrn Auto
 PDV_Substrate_KhajiitLunar Property PDV_KhajiitLunarSubstrate Auto
 PDV_Substrate_ArgonianHist Property PDV_ArgonianHistSubstrate Auto
 Book Property PDV_BOOK_ArgonianHistSapToken Auto
+Potion Property PDV_ALCH_ArgonianHistSap Auto
 PDV_StateTrack Property PDV_ArgonianHistPostureTrack Auto
 PDV_StateTrack Property PDV_OrcLifeModeTrack Auto
 PDV_StateTrack Property PDV_RedguardSectTrack Auto
@@ -16692,7 +16693,10 @@ Function EnsureDunmerAncestralUrn()
 EndFunction
 
 Function EnsureArgonianHistSapToken()
-    if GetPlayerOriginRaceIndex() != ORIGIN_ARGONIAN || !PDV_BOOK_ArgonianHistSapToken
+    ; V1: grant the self-replenishing Hist Sap POTION (PDV_ALCH_ArgonianHistSap) rather than the old read
+    ; BOOK. Drinking it routes Hist maintenance (see PDV_PotionArgonianHistSapEffect) and re-adds itself, so
+    ; the player keeps one ritual vial. The book property stays declared but is no longer granted.
+    if GetPlayerOriginRaceIndex() != ORIGIN_ARGONIAN || !PDV_ALCH_ArgonianHistSap
         return
     endIf
 
@@ -16701,10 +16705,10 @@ Function EnsureArgonianHistSapToken()
         return
     endIf
 
-    if playerRef.GetItemCount(PDV_BOOK_ArgonianHistSapToken) <= 0
-        playerRef.AddItem(PDV_BOOK_ArgonianHistSapToken, 1, True)
+    if playerRef.GetItemCount(PDV_ALCH_ArgonianHistSap) <= 0
+        playerRef.AddItem(PDV_ALCH_ArgonianHistSap, 1, True)
         StorageUtil.SetIntValue(None, "PDV.Token.ArgonianHistSap.Granted", 1)
-        Trace(2, "Argonian Hist sap token granted.")
+        Trace(2, "Argonian Hist sap potion granted.")
     endIf
 EndFunction
 
