@@ -1341,6 +1341,7 @@ class Verifier {
       this.checkPreflightOverlayPatch();
     }
     this.checkSmallSignalTables();
+    this.checkQuestMatrixPapyrusUtilPaths();
     this.checkCustomRaceCompatibility();
     this.checkScripts();
     this.checkSeq();
@@ -8557,6 +8558,30 @@ class Verifier {
     ]);
   }
 
+  checkQuestMatrixPapyrusUtilPaths() {
+    const expectedCore = "String Property QUEST_REACTION_MATRIX_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
+    const expectedArr = "String Property QUEST_REACTION_MATRIX_FILE_ARR = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR\" AutoReadOnly";
+    const unsafeCore = "String Property QUEST_REACTION_MATRIX_FILE = \"PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
+    const unsafeArr = "String Property QUEST_REACTION_MATRIX_FILE_ARR = \"PlayerDevotion/PDV_QuestReactionMatrix_ARR\" AutoReadOnly";
+
+    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV__ManagerQuest", [
+      expectedCore,
+      expectedArr,
+    ]);
+    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_PlayerEvents", [
+      expectedCore,
+      expectedArr,
+    ]);
+    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV__ManagerQuest", [
+      unsafeCore,
+      unsafeArr,
+    ]);
+    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_PlayerEvents", [
+      unsafeCore,
+      unsafeArr,
+    ]);
+  }
+
   checkCustomRaceMapFiles() {
     const raceMap = this.readJsonForCheck("Custom race map", CUSTOM_RACE_MAP);
     const temporaryMap = this.readJsonForCheck("Custom temporary race map", CUSTOM_TEMPORARY_RACE_MAP);
@@ -8742,6 +8767,7 @@ class Verifier {
       "Function ApplyConcordatPressure",
       "Function RunDawnApplyDecay()",
       "Function EvaluateKyneCommitmentOffer()",
+      "Function HandleDaedricShrinePrayer",
       "Function DebugGetPatternProvingSummary()",
     ]);
     this.checkSourceContains("V3 Pattern Proving source", "PDV_MCM", [
@@ -8758,6 +8784,7 @@ class Verifier {
       "Function RouteGreenPactViolation",
       "Function RouteHircineHuntRite",
       "Function RouteKhajiitMoonObservance",
+      "Function RouteDaedricShrinePrayer",
     ]);
     this.checkSourceContains("V3 Pattern Proving source", "PDV_EventTypes", [
       "EVT_CONCORDAT_COMPLIANCE",
@@ -8789,6 +8816,8 @@ class Verifier {
       "RouteDunmerPlayerHomeBonus",
       "RouteGreenPactViolation",
       "RouteHircineHuntRite",
+      "ROUTE_DAEDRIC_SHRINE_PRAYER",
+      "RouteDaedricShrinePrayer",
     ]);
     this.checkSourceContains("V3 Pattern Proving source", "PDV_EventSignalEffect", [
       "Scriptname PDV_EventSignalEffect extends ActiveMagicEffect",

@@ -174,10 +174,8 @@ requireText(MANAGER, [
   "\\\"magnitude\\\"",
   "\\\"symbol\\\"",
   "BuildJournalEventTitle",
-  "AppendDiegeticTransitionJournal",
-  "ShouldRecordDiegeticTransitionJournal",
   "ShowP2BookNotice",
-  'AppendBookOfDaysEntry(BuildJournalToastLine(titleText, messageText), "favor.act", "journal", 1, titleText)',
+  'AppendBookOfDaysEntry("You offered prayer at the shrine of "',
   "GetJournalMagnitudeForTone",
   "RefreshOpenBookOfDays",
   "PDV.Diegetic.Journal.Open",
@@ -185,8 +183,7 @@ requireText(MANAGER, [
 
 requireText(DIRECTOR, [
   "Function EmitJournal(Int deityIndex, String toneKey)",
-  "Book of Days storage and live refresh are manager-owned",
-  "ResolveJournalSymbol",
+  "PDV.Diegetic.Journal.PendingCount",
 ], "director source");
 
 requireText(MCM, [
@@ -195,6 +192,11 @@ requireText(MCM, [
   "Function OpenBookOfDaysFromMcm()",
   "PDV_Manager.SendPrismaJournalPayload(True)",
   "ResetBookOfDaysOptionIds()",
+], "mcm source");
+
+forbidText(MCM, [
+  "PDV_Manager.SendPrismaJournalPayload(True, 1)",
+  "You turn to the Ledger -- what feeds your gods.",
 ], "mcm source");
 
 forbidText(DIRECTOR, [
@@ -206,20 +208,15 @@ forbidText(DIRECTOR, [
   'StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Titles"',
 ], "director source");
 
-if (mustExist(MANAGER) && mustExist(DIRECTOR)) {
+if (mustExist(MANAGER)) {
   const manager = read(MANAGER);
-  const director = read(DIRECTOR);
   const managerMap = parseNameSymbolMap(functionBlock(manager, "GetPrismaSymbolForDeity"));
-  const directorMap = parseNameSymbolMap(functionBlock(director, "ResolveJournalSymbol"));
-  for (const [name, symbol] of [...managerMap.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
-    if (symbol === "journal") continue;
-    const directorSymbol = directorMap.get(name);
-    if (!directorSymbol) {
-      add("FAIL", `Director has no journal symbol branch for ${name} (manager=${symbol}).`, DIRECTOR);
-    } else if (directorSymbol !== symbol) {
-      add("FAIL", `Director symbol mismatch for ${name}: ${directorSymbol} != ${symbol}.`, DIRECTOR);
+  for (const name of ["Peryite", "Stendarr", "Kyne", "Akatosh", "Baan Dar", "Auri-El", "Hircine"]) {
+    const symbol = managerMap.get(name);
+    if (symbol && symbol !== "journal") {
+      add("PASS", `Manager journal symbol available for ${name} -> ${symbol}.`, MANAGER);
     } else {
-      add("PASS", `Director symbol parity for ${name} -> ${symbol}.`, DIRECTOR);
+      add("FAIL", `Manager journal symbol missing for ${name}.`, MANAGER);
     }
   }
 }

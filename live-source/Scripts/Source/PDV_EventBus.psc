@@ -1382,6 +1382,16 @@ Function RouteDaedricPrinceSignal(Int pathIndex, String sourceId)
     Trace(2, "RouteDaedricPrinceSignal complete: " + eventType + " index " + pathIndex)
 EndFunction
 
+Function RouteDaedricShrinePrayer(Int pathIndex, String sourceId)
+    if !PDV_Manager
+        Trace(1, "RouteDaedricShrinePrayer skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    PDV_Manager.HandleDaedricShrinePrayer(pathIndex, "eventbus_" + sourceId)
+    Trace(2, "RouteDaedricShrinePrayer complete: index " + pathIndex)
+EndFunction
+
 Function RouteDaedricGenericSilenceProbe(String sourceId)
     PDV_EventTypes eventTypes = GetEventTypes()
     if !PDV_Manager

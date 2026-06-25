@@ -1,4 +1,4 @@
-# PDV Session Wrap + Handoff -- 2026-06-25 (6f rites · Prisma · offers audit)
+# PDV Session Wrap + Handoff -- 2026-06-25 (6f rites - Prisma - offers audit)
 
 ## TL;DR
 A large autonomous build session. **All 6f variety rites are fully built + functional**
@@ -18,15 +18,15 @@ scale-out build.
 | `bdfb9f7` | Prisma end-to-end tracking demo (Ledger + Chronicle) |
 | `7862299` | 6f rites surface in both Prisma spaces |
 | `4a134bf` | 6f rite records: 8 SPEL/MGEF + 3 MESG -> Devotion.esp |
-| `2c3e26e` · `9b73bf2` · `14d9ac3` | Altmer / Redguard / Orc rite Papyrus |
+| `2c3e26e` - `9b73bf2` - `14d9ac3` | Altmer / Redguard / Orc rite Papyrus |
 | `5885cfc` | 6f gate-spec + ratified ledger rows + Prisma bridge rebuilt |
 | `215348f` | Queue-B release-prep closeout |
 (Queue A A1-A5 was committed by Codex earlier: `fb1c585`..`3153d8e`.)
 
 ## Current state -- all GREEN
-`pdv_compile` 0/0 · `pdv_verify` FAIL=0 · `pdv_signal_e2e_gate` 39 GREEN / 0 RED, parity PASS ·
-`pdv_signal_floor_audit` 51 PASS / 0 UNDER-FLOOR · `pdv_specced_minus_audit` 0 ·
-`pdv_ledger_coverage_audit` untracked [] · `pdv_antifarm_sweep_audit` uncappedGain [] ·
+`pdv_compile` 0/0 - `pdv_verify` FAIL=0 - `pdv_signal_e2e_gate` 39 GREEN / 0 RED, parity PASS -
+`pdv_signal_floor_audit` 51 PASS / 0 UNDER-FLOOR - `pdv_specced_minus_audit` 0 -
+`pdv_ledger_coverage_audit` untracked [] - `pdv_antifarm_sweep_audit` uncappedGain [] -
 `pdv_integrity_harness` PASS. **live-source <-> MO2 manager copies SYNCED.** New ESP records
 backed up under `Backups/{6f-rite,nord-offer}/`. Prisma bridge DLL redeployed (`.bak-20260624`).
 
@@ -115,6 +115,10 @@ parity. This is the natural next "cross-cutting integrity" gate (see memory
 - Dimension B/C (Chronicle/toast): GAPS for the formal-offer scale-out events + the 5 by-design
   races' quiet-emergence (the same items the formal-offer gate flags) + possibly some tier-ups /
   curse beats that toast but don't journal (or vice-versa).
+- 2026-06-25 ARR smoke added a concrete Prisma-toast gap: Daedric shrine prayer now passes the
+  top-left prayer line and Book of Days Chronicle entry, but the Prisma overlay toast did not appear
+  despite the `SendPrismaDaedricToast(..., "prayer", ...)` callsite. Keep this in the parity backlog
+  and do not block the ARR route/backend handoff on it.
 - Dimension F: the formal-offer scale-out is the big per-race gap; building it (open item #1) closes
   most of B/C/F at once.
 - Sequence suggestion: do the **formal-offer scale-out build first**, THEN the parity audit (so the

@@ -1,7 +1,7 @@
 # PDV Phase 21 - Authoria / ARR Compatibility Handoff
 
-Status: local package evidence; runtime and author acceptance pending.
-Date: 2026-06-14.
+Status: trusted-tester package evidence; ARR quest backend runtime pass; shrine-prayer route/top-left/Book of Days pass; Prisma overlay toast deferred; author acceptance pending.
+Date: 2026-06-25 refresh of the 2026-06-14 handoff.
 
 This is a technical handoff for Authoria / ARR integration testing. It is not a
 public support claim and not maintainer approval.
@@ -14,9 +14,14 @@ public support claim and not maintainer approval.
   `Requiem for the Indifferent.esp`.
 - Re-run the Reqtificator after placement. Treat any RFTI output from local
   testing as a reference snapshot only; the list author should regenerate it.
-- No standalone `PDV_AuthoriaARR_Compatibility.esp` is emitted for this slice.
-  The reserved plugin name is for later ARR-specific route adapters if a stable
-  Daedric shrine ACTI map is approved.
+- The shrine-replacement slice itself still lives in `Devotion.esp`: after the
+  Archon removal set is disabled, Devotion owns the cure-only shrine spell
+  overrides.
+- The current trusted-tester add-on does ship
+  `PDV_AuthoriaARR_Compatibility.esp` for the separate shrine-prayer feature:
+  11 Daedric shrine-prayer ACTIs plus a Base Object Swapper file that makes the
+  decorative `man_DaedricShrines` statues clickable. This plugin is loaded after
+  `Devotion.esp` and is not a replacement for the core shrine spell overrides.
 
 ## Archon Removal Set
 
@@ -85,15 +90,16 @@ Run on a disposable ARR test save:
 9. Save, reload, and recheck status/MCM.
 10. Confirm Papyrus log has no new PDV errors.
 
-## Devotion Extension Channel (new - machine-validated, runtime-pending)
+## Devotion Extension Channel (new - machine-validated, partial runtime pass)
 
 Beyond the shrine-replacement slice, PDV now adds a second quest-reaction channel
 that lights up devotion signals from the list's own content: Vigilant, Glenmoril,
-Unslaad, Olenveld, ForgottenCity, SEC Saints & Seducers, and DAc0da - 22 reaction
-cells across 19 quests, keyed by FormID+stage so they no-op cleanly for anyone
-missing that content. The vanilla-FormID QE stages (House of Horrors, The Only
-Cure) and the Gray Cowl CC were promoted into the CORE matrix (6 cells, Tranche6,
-equity-audit PASS) so all players with that content benefit, not only ARR.
+Unslaad, Olenveld, ForgottenCity, SEC Saints & Seducers, DAc0da, and the Ebony
+Blade curse - 24 reaction cells / 22 quest keys / 20 watched quests / 24 faucet
+acts, keyed by FormID+stage so they no-op cleanly for anyone missing that
+content. The vanilla-FormID QE stages (House of Horrors, The Only Cure) and the
+Gray Cowl CC were promoted into the CORE matrix (6 cells, Tranche6, equity-audit
+PASS) so all players with that content benefit, not only ARR.
 
 Two deliverables:
 
@@ -106,7 +112,17 @@ Two deliverables:
   `SKSE/Plugins/StorageUtilData/PlayerDevotion/`.
 
 Status: machine-validated (`pdv_quest_matrix_compile.mjs --matrix ... --check`
-PASS, 22 cells / 20 keys / 19 quests in the ARR channel, +6 promoted to core). Runtime/author smoke pending - see
+PASS, 24 cells / 22 keys / 20 quests / 24 faucet acts in the ARR channel, +6
+promoted to core). On 2026-06-25, ARR `PDV Test` backend runtime smoke passed
+for the `zzzAoMMqGoodEnd` stage-255 hook: matrix reload showed core 73 watched
+quests and ARR channel 20 watched, then Papyrus logged Stendarr +12 and
+`[PDV] QuestReaction: 5047158|255 applied 1 cells.` No front-end toast was
+observed or required for that backend quest-reaction check; MCM/status/manual
+visibility remains a separate acceptance bucket. Shrine-prayer runtime smoke on
+2026-06-25 passed the clickable shrine route, top-left prayer line, and Book of
+Days Chronicle entry. The Prisma overlay toast did not appear and is deferred to
+the broader Prisma parity backlog; do not treat this handoff as full Prisma
+surface parity. Author acceptance remains pending - see
 `references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_SmokeRunbook.md` and
 the per-cell map in
 `references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_ExtensionMap.md`. Five
@@ -118,13 +134,10 @@ core matrix is held pending a deity gain/loss balance review.
 
 ## Deferred Follow-Up
 
-- Per-Prince ARR Daedric shrine route adapters are NOT viable as a clean
-  override. A definitive scan found the man_DaedricShrines family is STAT-based
-  (mesh/statue replacers), not ACTI: zero Princes expose a script-free route
-  anchor, and the only ACTIs (Nocturnal) carry `TempleBlessingScript` (not
-  PDV-replaceable). A future adapter would need PDV-placed marker ACTIs / trigger
-  volumes or a location-trigger hook - both deferred design decisions, not a
-  data-only slice.
+- The direct per-Prince ARR Daedric shrine override scan remains superseded by
+  the BOS-based add-on. The `man_DaedricShrines` family is STAT-based, so the
+  current package ships a separate ACTI plugin plus BOS swaps instead of trying
+  to replace those records in place.
 - Survival systems remain context-only: SunHelm, Frostfall, and Campfire should
   inform eligibility/caps only, not raw piety gain.
 - Curse theology remains Requiem-native for ARR. Future hooks should key off

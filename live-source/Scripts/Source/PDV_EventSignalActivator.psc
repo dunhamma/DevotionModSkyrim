@@ -71,6 +71,7 @@ Int Property ROUTE_KHAJIIT_ALKOSH_CHAOS_AID = 113 AutoReadOnly
 Int Property ROUTE_KHAJIIT_BAANDAR_BETRAYAL = 114 AutoReadOnly
 Int Property ROUTE_DAEDRIC_PRINCE_SIGNAL = 200 AutoReadOnly
 Int Property ROUTE_DAEDRIC_GENERIC_SILENCE = 201 AutoReadOnly
+Int Property ROUTE_DAEDRIC_SHRINE_PRAYER = 202 AutoReadOnly
 
 Event OnActivate(ObjectReference akActionRef)
     Actor playerActor = GetPlayerActor()
@@ -222,6 +223,8 @@ Function RouteSignal()
         PDV_EventBusService.RouteDaedricPrinceSignal(SignalValue, GetSignalSourceId())
     elseIf RouteId == ROUTE_DAEDRIC_GENERIC_SILENCE
         PDV_EventBusService.RouteDaedricGenericSilenceProbe(GetSignalSourceId())
+    elseIf RouteId == ROUTE_DAEDRIC_SHRINE_PRAYER || RouteId == 202
+        PDV_EventBusService.RouteDaedricShrinePrayer(SignalValue, GetSignalSourceId())
     else
         Trace(1, "Activator skipped: unsupported RouteId " + RouteId)
         return

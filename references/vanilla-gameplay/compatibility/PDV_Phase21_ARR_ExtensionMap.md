@@ -118,11 +118,12 @@ Julianos/Kynareth/Zenithar (zzzCHSubQuest07/08/10/12, Archer of Kyne 1279A1). Ch
 
 ---
 
-## AUTHORED (2026-06-15) — ARR channel, machine-validated
+## AUTHORED (2026-06-15; refreshed 2026-06-25) -- ARR channel, machine-validated
 
 `references/authoring/PDV_QuestReactionMatrix_ARR.csv` → compiles via
-`pdv_quest_matrix_compile.mjs --matrix <csv> --output <ARR.json> --check` = **PASS (23 cells / 19
-keys / 18 quests)**. All target deities confirmed as established matrix deities (no silent-drop).
+`pdv_quest_matrix_compile.mjs --matrix <csv> --output <ARR.json> --check` = **PASS (24 cells / 22
+keys / 20 quests / 24 faucet acts)**. All target deities confirmed as established matrix deities
+(no silent-drop).
 Tool gotcha fixed: inline `formid` column uses **PLUGIN:HEX** order (not houseCARL's HEX:Plugin).
 
 Authored cells (all in the ARR channel for a self-contained patch; core matrix left FROZEN):
@@ -162,9 +163,9 @@ CC/QE to core after equity check.
   bad-ending trap (Hist overruns Nirn via Numidium activation); valence ambiguous + quest-ID→scene
   mapping unconfirmed.
 
-CHANNEL COUNTS (current): ARR channel = 22 cells / 20 keys / 19 quests (the original 26 less the 6
-promoted to the core matrix via Tranche6, plus 2 DAc0da). Core matrix = 383 cells (+6). Supersedes the
-"26 cells" figures elsewhere in this doc.
+CHANNEL COUNTS (current 2026-06-25): ARR channel = 24 cells / 22 keys / 20 quests / 24 faucet acts.
+Core matrix still carries the six promoted Tranche6 compatibility cells. This supersedes the older
+22/20/19 and 26-cell figures elsewhere in this doc.
 
 ## Wave 6 (man_DaedricShrines shrine adapters) — INVESTIGATED, NOT VIABLE as a clean override
 Definitive ACTI scan (2026-06-15): the man_DaedricShrines family is STAT-based (mesh/statue replacers),

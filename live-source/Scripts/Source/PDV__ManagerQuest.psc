@@ -39,10 +39,10 @@ FormList Property PDV_FLST_HoonDing_BreakthroughBosses Auto
 FormList Property PDV_FLST_RedguardAshAbahUndeadClearSites Auto
 Faction Property NecromancerFaction Auto
 Faction Property WarlockFaction Auto
-String Property QUEST_REACTION_MATRIX_FILE = "PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
+String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
 ; List-patch second channel (e.g. Authoria/ARR). Cells are read from whichever
 ; channel owns the (form|stage) key; shared stance/value tables stay on core.
-String Property QUEST_REACTION_MATRIX_FILE_ARR = "PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
+String Property QUEST_REACTION_MATRIX_FILE_ARR = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
 
 PDV_Deity_Kyne Property PDV_Kyne Auto
 PDV_Deity_Talos Property PDV_Talos Auto
@@ -1209,7 +1209,9 @@ Function ApplyQuestReaction(Quest sourceQuest, Int stageValue)
         return
     endIf
 
-    String reactionKey = sourceQuest.GetFormID() + "|" + stageValue
+    Int runtimeFormId = sourceQuest.GetFormID()
+    Int matrixFormId = StorageUtil.GetIntValue(None, "PDV.QuestReaction.LocalFormId." + runtimeFormId, runtimeFormId)
+    String reactionKey = matrixFormId + "|" + stageValue
     String cellPrefix = "quest." + reactionKey + "."
     String matrixFile = ResolveQuestReactionCellFile(cellPrefix)
     if matrixFile == ""

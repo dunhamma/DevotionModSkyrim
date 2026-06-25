@@ -5,10 +5,10 @@ Contract: PDV_BetaContract.csv (768 rows). Gate fails on unwaived GAP only;
 GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, then either
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
-Verdicts: PASS=360 | NEEDS-MANUAL=293 | GAP-REVIEW=54 | FUTURE=59 | WAIVED=2
-Layers: source=live; esp=1687 EditorIDs; runtime=read-only from gate ledger.
+Verdicts: PASS=361 | NEEDS-MANUAL=293 | GAP-REVIEW=53 | FUTURE=59 | WAIVED=2
+Layers: source=live; esp=1717 EditorIDs; runtime=read-only from gate ledger.
 
-## GAP-REVIEW (54)
+## GAP-REVIEW (53)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
@@ -48,7 +48,6 @@ Layers: source=live; esp=1687 EditorIDs; runtime=read-only from gate ledger.
 | BC-0664 | surfacing | Dunmer | tier transition -- Observant/Faithful | missing: PDV_Notif_Dunmer_GoodDaedra_ObservantEntry, PDV_Notif_Dunmer_GoodDaedra_FaithfulEntry | PDV_TransitionSurfacing_CoverageMap.md Section1 tier table -- Dunmer row |
 | BC-0665 | surfacing | Imperial | Book-read signals | missing: PDV_Notif_Imperial_FavorNoted_TalosPressure_BookRead_TalosMistake | PDV_RaceDesign_Imperial.md -- Signal Examples (book-read row) |
 | BC-0666 | surfacing | Imperial | curse transition -- vampire/werewolf | missing: PDV_Msg_Imperial_CurseState_VampireOnset (NAMING-DRIFT? found PDV_Msg_Nord_CurseState_VampireOnset) | PDV_TransitionSurfacing_CoverageMap.md Section3 curse table -- Imperial row |
-| BC-0667 | surfacing | Imperial | emergence transition -- Champion entry | missing: PDV_Msg_Imperial_ | PDV_TransitionSurfacing_CoverageMap.md Section2 emergence table -- Nord/Imperial/Redguard  |
 | BC-0669 | surfacing | Imperial | neglect transition | missing: PDV_Notif_Imperial_Observant_Lapse | PDV_TransitionSurfacing_CoverageMap.md Section5 neglect table -- Imperial row |
 | BC-0670 | surfacing | Imperial | reorientation transition -- Concordat standing | missing: PDV_Notif_Imperial_Concordat_ | PDV_TransitionSurfacing_CoverageMap.md Section4 reorientation table -- Imperial row; PDV_A |
 | BC-0671 | surfacing | Imperial | tier transition -- Observant/Faithful | missing: PDV_Notif_Imperial_Observant_Entry, PDV_Notif_Imperial_Faithful_Entry | PDV_TransitionSurfacing_CoverageMap.md Section1 tier table -- Imperial row |
@@ -436,7 +435,7 @@ Layers: source=live; esp=1687 EditorIDs; runtime=read-only from gate ledger.
 | BC-0762 | other | Nord | Froki/Heimskr/Andurs/Aela recognition dialogue | 1.0/V2 tier; tracked, not gated. | PDV_TargetEndStates_1.0.md Phase 18A/B runtime closeout; PDV_Architecture_v3.md Section21. |
 | BC-0763 | other | Nord | Nord full stack audit (P2 audit-only lane) | 1.0/V2 tier; tracked, not gated. | references/authoring/PDV_PreBetaRaceGateLedger.md Nord; references/authoring/PDV_PreBetaRa |
 
-## PASS (360)
+## PASS (361)
 
 (passing rows listed in the CSV only)
 

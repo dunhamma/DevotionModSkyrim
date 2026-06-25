@@ -91,7 +91,7 @@ FormList Property PDV_FLST_RajhinNotableTargets Auto
 Keyword Property ActorTypeDragon Auto
 ActorBase Property Paarthurnax Auto
 
-String Property QUEST_REACTION_MATRIX_FILE = "PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
+String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
 
 String Property MOD_EVENT_CONCORDAT_COMPLIANCE = "PDV.ConcordatCompliance" AutoReadOnly
 String Property MOD_EVENT_CONCORDAT_DEFIANCE = "PDV.ConcordatDefiance" AutoReadOnly
@@ -784,6 +784,7 @@ Function RegisterQuestReactionMatrix()
         Quest sourceQuest = GetQuestReactionRuntimeFormFromCsv(formIds, plugins, sourceIndex) as Quest
         if sourceQuest
             PO3_Events_Alias.RegisterForQuestStage(Self, sourceQuest)
+            StorageUtil.SetIntValue(None, "PDV.QuestReaction.LocalFormId." + sourceQuest.GetFormID(), formIds[sourceIndex] as Int)
         endIf
         sourceIndex += 1
     endWhile

@@ -20,8 +20,8 @@ using SkyrimActivator = Mutagen.Bethesda.Skyrim.Activator;
 // Paths and constants
 // ---------------------------------------------------------------------------
 const string devotionEspPath   = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
-const string outputEspPath     = @"C:\Users\Admin\Documents\pdv-arr-extension\dist\PDV_AuthoriaARR_Compatibility\PDV_AuthoriaARR_Compatibility.esp";
-const string outputBosIniPath  = @"C:\Users\Admin\Documents\pdv-arr-extension\dist\PDV_AuthoriaARR_Compatibility\PDV_AuthoriaARR_ShrinePrayer_SWAP.ini";
+const string outputEspPath     = @"C:\Users\Admin\Documents\Devotion Mod Project\dist\PDV_AuthoriaARR_Compatibility\PDV_AuthoriaARR_Compatibility.esp";
+const string outputBosIniPath  = @"C:\Users\Admin\Documents\Devotion Mod Project\dist\PDV_AuthoriaARR_Compatibility\PDV_AuthoriaARR_ShrinePrayer_SWAP.ini";
 const string compatModName     = "PDV_AuthoriaARR_Compatibility.esp";
 
 // Devotion.esp EventBus FormKey (046AF7)

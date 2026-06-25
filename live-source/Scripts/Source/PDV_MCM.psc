@@ -133,6 +133,7 @@ Int _oidCompatRaceMapping = -1
 Int _oidCompatSurvival = -1
 Int _oidCompatCC = -1
 Int _oidReDetectOrigin = -1
+Int _oidOpenJournalNow = -1
 Int _oidJournalHotkey = -1
 Int _oidPanelHotkey = -1
 
@@ -411,6 +412,8 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Forces the Orc life mode so its mode-gated Malacath reward becomes testable. Then force piety and Run Dawn.")
     elseIf a_option == _oidArgonianPeople || a_option == _oidArgonianVoid
         SetInfoText("Forces the Argonian focus by seeding Hist relations (Void also seeds Sithis activation), so its focus-gated reward becomes testable.")
+    elseIf a_option == _oidOpenJournalNow
+        SetInfoText("Opens the Book of Days rolling devotion journal.")
     elseIf a_option == _oidJournalHotkey
         SetInfoText("Press the assigned key at any time to open the Book of Days devotion journal. Unbound by default; rebind here.")
     else
@@ -445,6 +448,11 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidDeveloperOptions
         ToggleDeveloperOptions()
         ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidOpenJournalNow
+        OpenBookOfDaysFromMcm()
         return
     endIf
 
@@ -986,29 +994,33 @@ Event OnKeyDown(Int a_keyCode)
     if !EnsureManagerBinding("journal_hotkey")
         return
     endIf
-    ; Player-pressed TOGGLE: first press opens the journal overlay, a second press
-    ; closes it (the foot text tells the player to press the key again to close).
+    ; Player-pressed toggle: first press opens the rolling Chronicle, second press
+    ; closes it. The analytical Ledger lives in the focused panel, not as the next
+    ; hotkey state, so the Book stays a rolling log.
     ; The view is a NON-FOCUSED overlay (SendOverlayJson), so the close is driven by
     ; this hotkey, not an in-view button. True is the player-owned bypass of the
     ; gameplay default-off gate (see pdv_prisma_ui_audit). The open flag is reset in
     ; OnGameReload so a load (which closes the overlay) cannot leave it stuck "open".
-    ; Cycle: closed -> Chronicle (page 0) -> Ledger (page 1) -> closed. A non-focused
-    ; overlay cannot take an in-view click, so the hotkey itself turns the pages.
     Int journalState = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Open")
     if journalState == 0
         StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
         Debug.Notification("The Book of Days opens.")
-        PDV_Manager.SendPrismaJournalPayload(True, 0)
-    elseIf journalState == 1
-        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 2)
-        Debug.Notification("You turn to the Ledger -- what feeds your gods.")
-        PDV_Manager.SendPrismaJournalPayload(True, 1)
+        PDV_Manager.SendPrismaJournalPayload(True)
     else
         StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
         Debug.Notification("The Book of Days closes.")
         PDV_Manager.ClosePrismaJournal()
     endIf
 EndEvent
+
+Function OpenBookOfDaysFromMcm()
+    if !EnsureManagerBinding("journal_mcm_open")
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
+    Debug.Notification("The Book of Days opens.")
+    PDV_Manager.SendPrismaJournalPayload(True)
+EndFunction
 
 Function OnOptionSliderOpen(Int a_option)
     if a_option == _oidDebugLevel
@@ -1072,6 +1084,7 @@ Function OnOptionSliderAccept(Int a_option, Float a_value)
 EndFunction
 
 Function BuildPlayerPage()
+    ResetBookOfDaysOptionIds()
     EnsureManagerBinding("build_player_page")
     SetCursorFillMode(TOP_TO_BOTTOM)
     SetCursorPosition(0)
@@ -1110,12 +1123,18 @@ Function BuildPlayerPage()
     AddTextOption("Debug page", GetDeveloperPageStateLabel(), OPTION_FLAG_DISABLED)
 
     AddHeaderOption("Book of Days", OPTION_FLAG_NONE)
+    _oidOpenJournalNow = AddTextOption("Open Book of Days", "Open now", OPTION_FLAG_NONE)
     Int currentJournalKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
-    _oidJournalHotkey = AddKeyMapOption("Open Book of Days", currentJournalKey, OPTION_FLAG_NONE)
+    _oidJournalHotkey = AddKeyMapOption("Book of Days key", currentJournalKey, OPTION_FLAG_NONE)
     Int currentPanelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
     _oidPanelHotkey = AddKeyMapOption("Open Devotion panel", currentPanelKey, OPTION_FLAG_NONE)
 
     SetCursorFillMode(LEFT_TO_RIGHT)
+EndFunction
+
+Function ResetBookOfDaysOptionIds()
+    _oidOpenJournalNow = -1
+    _oidJournalHotkey = -1
 EndFunction
 
 Function BuildDeveloperLockedPage(String pageName)

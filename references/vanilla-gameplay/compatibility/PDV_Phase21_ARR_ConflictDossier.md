@@ -235,10 +235,12 @@ Two-sided houseCARL shrine readback passes for the current package slice:
   (`PDV_MGEF_DunmerShrineCure`), carrying `PDV_DunmerShrinePrayerEffect`.
 - No global shrine activator script replacement is introduced.
 
-No standalone `PDV_AuthoriaARR_Compatibility.esp` is emitted for this proven
-slice, because the required record winners already come from
-`Devotion.esp`. The plugin name remains reserved for future
-approved ARR-specific route adapters.
+For this proven cure-only shrine replacement slice, no standalone override is
+needed because the required record winners already come from `Devotion.esp`.
+The current trusted-tester add-on now separately ships
+`PDV_AuthoriaARR_Compatibility.esp` for 11 Daedric shrine-prayer ACTIs plus a
+Base Object Swapper file. That plugin is an add-on route surface, not the owner
+of the core shrine spell replacement.
 
 Reward consistency follow-up also passes: the Phase 20 reward contract and all
 ten `*RewardRecords.spec.json` files match the Requiem retune expectations for

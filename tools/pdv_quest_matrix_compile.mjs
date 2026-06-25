@@ -25,6 +25,7 @@ const args = process.argv.slice(2);
 const outputPath = getArg("--output") ?? DEFAULT_OUTPUT;
 const checkOnly = args.includes("--check");
 const emitStdout = args.includes("--stdout");
+const papyrusUtilCheck = args.includes("--papyrusutil-check");
 // Resolved after `args` exists (getArg reads it). Defaults to the core Full.csv;
 // list-patch channels (e.g. ARR) pass --matrix <their.csv> + --output <their.json>.
 const MATRIX_CSV = getArg("--matrix") ?? DEFAULT_MATRIX_CSV;
@@ -299,6 +300,14 @@ function main() {
   }
 
   validate(out);
+  const papyrusUtilJson = toPapyrusUtilJson(out);
+  validatePapyrusUtilJson(papyrusUtilJson, out);
+  let papyrusUtilFileCheck = "generated";
+  if (papyrusUtilCheck && checkOnly && exists(outputPath)) {
+    validatePapyrusUtilJson(readJson(outputPath), out, outputPath);
+    papyrusUtilFileCheck = "file";
+  }
+
   if (emitStdout) {
     // Emit the full compiled object to stdout (no file write). Consumed by
     // tools/pdv_quest_matrix_selftest.mjs so the runtime JSON can be validated
@@ -308,12 +317,18 @@ function main() {
   }
   if (!checkOnly) {
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-    fs.writeFileSync(outputPath, `${JSON.stringify(out, null, 2)}\n`, "utf8");
+    fs.writeFileSync(outputPath, `${JSON.stringify(papyrusUtilJson, null, 2)}\n`, "utf8");
+    if (papyrusUtilCheck) {
+      validatePapyrusUtilJson(readJson(outputPath), out, outputPath);
+      papyrusUtilFileCheck = "file";
+    }
   }
 
   console.log(JSON.stringify({
     status: "PASS",
     outputPath: checkOnly ? null : path.resolve(outputPath),
+    papyrusUtilContract: "PASS",
+    papyrusUtilFileCheck,
     questCells: matrixRows.length,
     questKeys: out.questKeys.length,
     watchedQuests: new Set(out.questFormIds).size,
@@ -360,6 +375,98 @@ function validate(out) {
     if (out[`${runtimeKey}PluginsCsv`].split(",").filter(Boolean).length !== out[key].length) {
       throw new Error(`Runtime faucet plugin CSV is out of sync for ${key}.`);
     }
+  }
+}
+
+function validatePapyrusUtilJson(runtime, flat, filePath = "generated runtime JSON") {
+  if (!runtime || typeof runtime !== "object") {
+    throw new Error(`PapyrusUtil JSON ${filePath} is not an object.`);
+  }
+  for (const bucket of ["string", "float", "int", "stringList"]) {
+    if (!runtime[bucket] || typeof runtime[bucket] !== "object" || Array.isArray(runtime[bucket])) {
+      throw new Error(`PapyrusUtil JSON ${filePath} is missing ${bucket} bucket.`);
+    }
+  }
+  if (Object.hasOwn(runtime, "questWatchFormIdsCsv") || Object.hasOwn(runtime, "questWatchFormIds")) {
+    throw new Error(`PapyrusUtil JSON ${filePath} has flat matrix keys outside typed buckets.`);
+  }
+
+  const expectedWatchCount = flat.questWatchFormIds.length;
+  const formIdsCsv = runtime.string.questWatchFormIdsCsv ?? "";
+  const pluginsCsv = runtime.string.questWatchPluginsCsv ?? "";
+  const formIdCsvCount = formIdsCsv.split(",").filter(Boolean).length;
+  const pluginCsvCount = pluginsCsv.split(",").filter(Boolean).length;
+  if (formIdCsvCount !== expectedWatchCount) {
+    throw new Error(`PapyrusUtil JSON ${filePath} questWatchFormIdsCsv count ${formIdCsvCount}, expected ${expectedWatchCount}.`);
+  }
+  if (pluginCsvCount !== expectedWatchCount) {
+    throw new Error(`PapyrusUtil JSON ${filePath} questWatchPluginsCsv count ${pluginCsvCount}, expected ${expectedWatchCount}.`);
+  }
+  if (!Array.isArray(runtime.stringList.questWatchFormIds) || runtime.stringList.questWatchFormIds.length !== expectedWatchCount) {
+    throw new Error(`PapyrusUtil JSON ${filePath} stringList.questWatchFormIds is missing or wrong length.`);
+  }
+  if (!Array.isArray(runtime.stringList.questWatchPlugins) || runtime.stringList.questWatchPlugins.length !== expectedWatchCount) {
+    throw new Error(`PapyrusUtil JSON ${filePath} stringList.questWatchPlugins is missing or wrong length.`);
+  }
+  if (typeof runtime.string.questwatchformidscsv !== "string" || runtime.string.questwatchformidscsv === "") {
+    throw new Error(`PapyrusUtil JSON ${filePath} is missing lowercase questwatchformidscsv alias.`);
+  }
+  if (!Array.isArray(runtime.stringList.questwatchformids) || runtime.stringList.questwatchformids.length !== expectedWatchCount) {
+    throw new Error(`PapyrusUtil JSON ${filePath} is missing lowercase questwatchformids alias.`);
+  }
+
+  const questKey = flat.questKeys[0];
+  for (const suffix of ["deitiesCsv", "valencesCsv", "intensitiesCsv", "magnitudesCsv", "tagsCsv"]) {
+    const key = `quest.${questKey}.${suffix}`;
+    if (typeof runtime.string[key] !== "string" || runtime.string[key] === "") {
+      throw new Error(`PapyrusUtil JSON ${filePath} is missing populated ${key}.`);
+    }
+  }
+  if (typeof runtime.string["stance.Nord.Kyne"] !== "string") {
+    throw new Error(`PapyrusUtil JSON ${filePath} is missing stance.Nord.Kyne.`);
+  }
+  if (runtime.float["value.small.m"] !== 2.0) {
+    throw new Error(`PapyrusUtil JSON ${filePath} is missing value.small.m in float bucket.`);
+  }
+  if (runtime.float["stanceMult.FOREIGN"] !== 0.4) {
+    throw new Error(`PapyrusUtil JSON ${filePath} is missing stanceMult.FOREIGN in float bucket.`);
+  }
+}
+
+function toPapyrusUtilJson(out) {
+  const runtime = {
+    string: {},
+    float: {},
+    int: {},
+    stringList: {},
+  };
+
+  for (const [key, value] of Object.entries(out)) {
+    if (Array.isArray(value)) {
+      setRuntimeValue(runtime.stringList, key, value.map((entry) => String(entry)));
+    } else if (typeof value === "number") {
+      if (key.startsWith("value.") || key.startsWith("stanceMult.")) {
+        setRuntimeValue(runtime.float, key, value);
+      } else if (Number.isInteger(value)) {
+        setRuntimeValue(runtime.int, key, value);
+      } else {
+        setRuntimeValue(runtime.float, key, value);
+      }
+    } else if (typeof value === "string") {
+      setRuntimeValue(runtime.string, key, value);
+    } else if (typeof value === "boolean") {
+      setRuntimeValue(runtime.int, key, value ? 1 : 0);
+    }
+  }
+
+  return runtime;
+}
+
+function setRuntimeValue(bucket, key, value) {
+  bucket[key] = value;
+  const lowercaseKey = key.toLowerCase();
+  if (lowercaseKey !== key) {
+    bucket[lowercaseKey] = value;
   }
 }
 
@@ -440,6 +547,14 @@ function runtimeFormListKey(key) {
   return key
     .replace(/[^A-Za-z0-9]+(.)/g, (_, ch) => ch.toUpperCase())
     .replace(/^[^A-Za-z]+/, "");
+}
+
+function exists(filePath) {
+  return fs.existsSync(filePath);
+}
+
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
 function compileStance(stanceRows, daedricRows) {
