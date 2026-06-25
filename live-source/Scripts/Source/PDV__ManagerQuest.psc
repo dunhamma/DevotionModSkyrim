@@ -8867,7 +8867,24 @@ Function RunDawnProcessCommitmentOffers()
         return
     endIf
 
+    RefreshCommitmentOfferQualificationGuards()
     EvaluateFormalCommitmentOffer()
+EndFunction
+
+Function RefreshCommitmentOfferQualificationGuards()
+    if !PDV_FLST_AllDeities
+        return
+    endIf
+
+    Int i = 0
+    Int count = PDV_FLST_AllDeities.GetSize()
+    while i < count
+        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
+        if UsesFormalCommitmentOffersForDeity(deity) && GetPiety(deity) < COMMITMENT_OFFER_THRESHOLD
+            StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 0)
+        endIf
+        i += 1
+    endWhile
 EndFunction
 
 Function RunDawnNotify()
@@ -12456,8 +12473,8 @@ Function DebugResetCommitmentStateByIndex(Int deityIndex)
         StorageUtil.SetIntValue(deityForm, "PDV.Commitment.SignalPreviousDay", 0)
         StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DebugSeedActive", 0)
         StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DebugSeedDay", 0)
-        StorageUtil.SetFloatValue(deityForm, "PDV.Commitment.OfferCooldownUntil", 0.0)
-        StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DeclineCount", 0)
+        StorageUtil.SetIntValue(deityForm, "PDV.Commitment.Offered", 0)
+        StorageUtil.SetIntValue(deityForm, "PDV.Commitment.Refused", 0)
         if GetPendingCommitmentDeityIndex() == deity.DeityIndex
             ClearPendingCommitment()
         endIf
@@ -12503,6 +12520,7 @@ Function ShowFormalCommitmentOffer(PDV_DeityBase deity)
     endIf
 
     DispatchDiegeticCue("offer", deity.DeityName, "present", deity, "revelation")
+    StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 1)
     Int choice = offerMessage.Show()
     if choice == 0
         DebugAcceptPendingCommitment()
@@ -12649,7 +12667,8 @@ Function DebugAcceptPendingCommitment()
         DebugForceSetPietyByIndex(pendingDeity.DeityIndex, ClampValue(GetPiety(pendingDeity) + carryAmount, 0.0, PIETY_MAX))
     endIf
 
-    ClearCommitmentOfferCooldown(pendingDeity)
+    StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Offered", 0)
+    StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 0)
     SetActiveDeity(pendingDeity)
     ClearPendingCommitment()
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 0)
@@ -12689,7 +12708,11 @@ Bool Function IsEligibleForFormalCommitmentOffer(PDV_DeityBase deity)
         return False
     endIf
 
-    if IsCommitmentOfferOnCooldown(deity)
+    if IsCommitmentRefused(deity)
+        return False
+    endIf
+
+    if IsCommitmentOffered(deity)
         return False
     endIf
 
@@ -12723,7 +12746,7 @@ EndFunction
 ; Nord's defining mechanic: deeds reveal which god noticed you. Any deity in the
 ; chosen pantheon baseline (plus Talos/Ysmir, always) is offer-eligible -- not only
 ; Kyne. Their T1/T2/T3 reward spells are authored; this opens the organic path to
-; them. The eligibility/weight/cooldown/signal-day machinery is already generic.
+; them. The eligibility/weight/signal-day machinery is already generic.
 Bool Function IsNordOfferEligibleDeity(PDV_DeityBase deity)
     if !deity
         return False
@@ -12827,7 +12850,6 @@ Function DebugDeclinePendingCommitment()
         return
     endIf
 
-    ApplyCommitmentDeclineCooldown(pendingDeity)
     ClearPendingCommitment()
     Trace(1, "Commitment declined/postponed.")
 EndFunction
@@ -12838,7 +12860,7 @@ Function DebugRefusePendingCommitment()
         return
     endIf
 
-    ApplyCommitmentRefuseCooldown(pendingDeity)
+    StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 1)
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 1)
     ClearPendingCommitment()
     Trace(1, "Commitment refused.")
@@ -12866,68 +12888,20 @@ PDV_DeityBase Function GetPendingCommitmentDeity()
     return GetDeityByIndex(deityIndex)
 EndFunction
 
-Bool Function IsCommitmentOfferOnCooldown(PDV_DeityBase deity)
-    return Utility.GetCurrentGameTime() < GetCommitmentOfferCooldownUntil(deity)
-EndFunction
-
-Float Function GetCommitmentOfferCooldownUntil(PDV_DeityBase deity)
+Bool Function IsCommitmentOffered(PDV_DeityBase deity)
     if !deity
-        return 0.0
+        return False
     endIf
 
-    return StorageUtil.GetFloatValue(deity as Form, "PDV.Commitment.OfferCooldownUntil")
+    return StorageUtil.GetIntValue(deity as Form, "PDV.Commitment.Offered") == 1
 EndFunction
 
-Float Function GetCommitmentOfferCooldownRemaining(PDV_DeityBase deity)
-    Float remaining = GetCommitmentOfferCooldownUntil(deity) - Utility.GetCurrentGameTime()
-    if remaining <= 0.0
-        return 0.0
-    endIf
-
-    return remaining
-EndFunction
-
-Int Function GetCommitmentDeclineCount(PDV_DeityBase deity)
+Bool Function IsCommitmentRefused(PDV_DeityBase deity)
     if !deity
-        return 0
+        return False
     endIf
 
-    return StorageUtil.GetIntValue(deity as Form, "PDV.Commitment.DeclineCount")
-EndFunction
-
-Function ApplyCommitmentDeclineCooldown(PDV_DeityBase deity)
-    if !deity
-        return
-    endIf
-
-    Form deityForm = deity as Form
-    Int declineCount = StorageUtil.GetIntValue(deityForm, "PDV.Commitment.DeclineCount")
-    Float cooldownDays = 7.0
-    if declineCount >= 1
-        cooldownDays = 14.0
-    endIf
-
-    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DeclineCount", declineCount + 1)
-    StorageUtil.SetFloatValue(deityForm, "PDV.Commitment.OfferCooldownUntil", Utility.GetCurrentGameTime() + cooldownDays)
-EndFunction
-
-Function ApplyCommitmentRefuseCooldown(PDV_DeityBase deity)
-    if !deity
-        return
-    endIf
-
-    Form deityForm = deity as Form
-    StorageUtil.SetFloatValue(deityForm, "PDV.Commitment.OfferCooldownUntil", Utility.GetCurrentGameTime() + 14.0)
-EndFunction
-
-Function ClearCommitmentOfferCooldown(PDV_DeityBase deity)
-    if !deity
-        return
-    endIf
-
-    Form deityForm = deity as Form
-    StorageUtil.SetFloatValue(deityForm, "PDV.Commitment.OfferCooldownUntil", 0.0)
-    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DeclineCount", 0)
+    return StorageUtil.GetIntValue(deity as Form, "PDV.Commitment.Refused") == 1
 EndFunction
 
 Function RecordCommitmentSignalDay(PDV_DeityBase deity)
@@ -18053,9 +18027,9 @@ String Function GetCommitmentSummary()
     PDV_DeityBase pending = GetPendingCommitmentDeity()
     String summary = "state=" + GetPatronStateLabel() + ";active=" + GetDeitySummaryLabel(_activeDeity) + ";pending=" + GetPendingCommitmentDeityIndex() + ";label=" + GetDeitySummaryLabel(pending) + ";carry=" + StorageUtil.GetFloatValue(None, "PDV.Commitment.LastCarryover") + ";rupture=" + StorageUtil.GetIntValue(None, "PDV.Commitment.Rupture")
     if pending
-        summary = summary + ";days=" + GetRecentCommitmentSignalDayCount(pending, 7) + ";cooldown=" + FormatTwoDecimals(GetCommitmentOfferCooldownRemaining(pending))
+        summary = summary + ";days=" + GetRecentCommitmentSignalDayCount(pending, 7) + ";offered=" + BoolToInt(IsCommitmentOffered(pending)) + ";refused=" + BoolToInt(IsCommitmentRefused(pending))
     elseIf PDV_Kyne
-        summary = summary + ";days=" + GetRecentCommitmentSignalDayCount(PDV_Kyne, 7) + ";cooldown=" + FormatTwoDecimals(GetCommitmentOfferCooldownRemaining(PDV_Kyne))
+        summary = summary + ";days=" + GetRecentCommitmentSignalDayCount(PDV_Kyne, 7) + ";offered=" + BoolToInt(IsCommitmentOffered(PDV_Kyne)) + ";refused=" + BoolToInt(IsCommitmentRefused(PDV_Kyne))
     endIf
 
     return summary

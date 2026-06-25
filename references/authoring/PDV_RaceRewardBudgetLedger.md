@@ -476,7 +476,7 @@ Needs custom content:
 - Privilege dialogue surfaces like Greybeard/Kyne and Nord status topics should remain rare and earned.
 Needs verifier/proof:
 - `PDV_State_NordPantheonBaseline` enum values: OldWays and NineDivines.
-- Dawn-only offer gate: piety threshold, two signal days in seven, pantheon eligibility, cooldown, one offer max.
+- Dawn-only offer gate: piety threshold, two signal days in seven, pantheon eligibility, one offer per qualification, lapse-and-rebuild reoffer, and terminal per-deity refusal.
 - Broad/focused suppression rules: broad worship below focused patron rewards, accepted patron suppresses competing offers.
 - Rejected-hook proof for generic anti-Thalmor violence, ordinary travel, raw crafting, faction membership alone, and repeat tomb/kill farming.
 Post-1.0:

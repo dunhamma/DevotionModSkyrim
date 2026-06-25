@@ -20,9 +20,10 @@ record-wave spec above; this document is the human-readable review table plus th
   rows by design. No per-deity response records were created (that would be record authoring,
   outside this pass's scope).
 - Runtime maps MessageBox button index 0/1/2 -> Accept / Not yet / Refuse
-  (`PDV__ManagerQuest.psc` `ShowFormalCommitmentOffer()`). Refuse sets the rupture flag + 14-day
-  cooldown; Not yet = escalating 7/14-day cooldown (no rupture); Accept = focus assignment. The
-  Accept / Not yet / Refuse copy is written to match those stakes.
+  (`PDV__ManagerQuest.psc` `ShowFormalCommitmentOffer()`). Refuse sets the rupture flag and a
+  permanent per-deity refusal guard; Not yet leaves the one-shot offer guard set until piety lapses
+  below threshold and later re-qualifies; Accept = focus assignment. The Accept / Not yet / Refuse
+  copy is written to match those stakes.
 - Offer buttons use the handoff baseline labels `Accept` / `Not yet` / `Refuse` (short, one
   horizontal MessageBox row).
 

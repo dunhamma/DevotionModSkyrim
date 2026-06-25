@@ -2358,7 +2358,17 @@ String Function GetSelectedCommitmentSummary(PDV__ManagerQuest manager)
         ready = 1
     endIf
 
-    return "selected=" + selectedDeity.DeityName + "[" + selectedDeity.DeityIndex + "]" + ";formal=" + usesFormal + ";ready=" + ready + ";days=" + manager.GetRecentCommitmentSignalDayCount(selectedDeity, 7) + ";piety=" + FormatFloat(manager.GetPiety(selectedDeity)) + ";cooldown=" + FormatFloat(manager.GetCommitmentOfferCooldownRemaining(selectedDeity))
+    Int offered = 0
+    if manager.IsCommitmentOffered(selectedDeity)
+        offered = 1
+    endIf
+
+    Int refused = 0
+    if manager.IsCommitmentRefused(selectedDeity)
+        refused = 1
+    endIf
+
+    return "selected=" + selectedDeity.DeityName + "[" + selectedDeity.DeityIndex + "]" + ";formal=" + usesFormal + ";ready=" + ready + ";days=" + manager.GetRecentCommitmentSignalDayCount(selectedDeity, 7) + ";piety=" + FormatFloat(manager.GetPiety(selectedDeity)) + ";offered=" + offered + ";refused=" + refused
 EndFunction
 
 PDV__ManagerQuest Function GetManagerService()

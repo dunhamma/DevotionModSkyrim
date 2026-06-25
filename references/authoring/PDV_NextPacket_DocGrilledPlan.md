@@ -39,8 +39,8 @@ Completed on 2026-05-25:
 - Khajiit Slice 5: road-home cadence proved Khenarthi focus at `KhajiitLunar=metric=13.139999; tier=1; roadhome=3; focus=Khenarthi; kh=54.75; az=0.00`.
 - Khajiit Slice 5: moon observance proved Azurah focus switch at `KhajiitLunar=metric=24.904676; tier=1; phase=1; observance=6; roadhome=3; focus=Azurah; kh=54.75; az=73.52`.
 - Khajiit Slice 5: save/load persistence passed with `metric=24.904699`, `focus=Azurah`, `kh=54.75`, and `az=73.52`.
-- Commitment Slice 6: two positive Kyne signal days produced `Commitment=pending=0; days=2; cooldown=0.00`.
-- Commitment Slice 6: `Not Yet` cleared pending with `rupture=0` and about 7 days cooldown; `Refuse` cleared pending with `rupture=1` and 14 days cooldown; `Accept` set Kyne as active patron.
+- Commitment Slice 6: two positive Kyne signal days produced a pending Kyne offer under the original proof cadence. The 2026-06-25 source now reports offer state as `offered` / `refused`, not cooldown remaining.
+- Commitment Slice 6: `Not Yet`, `Refuse`, and `Accept` were proven under the original cooldown model; current source supersedes that model with one offer per qualification, lapse-and-rebuild reoffer, and per-deity terminal refusal.
 - Commitment Slice 6: accepted Kyne persisted across reload with `Active patron=KYNE [0]`, `Patron state=ACTIVE PATRON`, `Active piety=51.000000`, `Active tier=DEVOTED`, and `Active deity index=0`.
 - Neglect/decay Slice 7: no decay inside 3-day grace, one decay tick after grace, no second same-day decay, Kyne neglect spell applied at low accepted-patron piety, and the spell removed after piety recovery.
 - Final full strict gate after runtime proof: `PASS=898, INFO=29`, with no `FAIL`, `WARN`, or `TODO`.
@@ -96,8 +96,8 @@ node .\tools\pdv_verify.mjs --strict-phase10 --strict-phase9 --strict-phase8 --s
 
 - Reach Kyne piety threshold and two recent Kyne signal days.
 - Dawn creates one pending commitment offer.
-- Branch-save and prove `Not Yet` cooldown.
-- Branch-save and prove `Refuse` rupture/cooldown.
+- Branch-save and prove `Not Yet` leaves the offered guard set until lapse-and-rebuild requalification.
+- Branch-save and prove `Refuse` sets rupture plus the terminal per-deity refusal guard.
 - Main branch accepts and proves active patron, carry-over, and save/load.
 
 ### 4. Neglect/Decay Continuation
