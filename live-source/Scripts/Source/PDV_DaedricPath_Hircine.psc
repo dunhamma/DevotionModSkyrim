@@ -131,6 +131,8 @@ Function ResetPilotForDebug()
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.Renounced", 0)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueActive", 0)
     StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueUntil", 0.0)
+    StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueToastPending", 0)
+    StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueClearToastPending", 0)
     Trace(2, "ResetPilotForDebug")
 EndFunction
 
@@ -161,6 +163,7 @@ Function UpdateResidueRecovery()
     if Utility.GetCurrentGameTime() >= StorageUtil.GetFloatValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueUntil")
         StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueActive", 0)
         StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueUntil", 0.0)
+        StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueClearToastPending", 1)
         Trace(1, "Nord Hircine residue has faded.")
     endIf
 EndFunction
@@ -169,6 +172,8 @@ Function BeginNordResidueRecovery(String reason)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueActive", 1)
     StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueUntil", Utility.GetCurrentGameTime() + CureResidueDays)
     StorageUtil.SetStringValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueReason", reason)
+    StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueToastPending", 1)
+    StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueClearToastPending", 0)
 EndFunction
 
 String Function GetResidueSummary()

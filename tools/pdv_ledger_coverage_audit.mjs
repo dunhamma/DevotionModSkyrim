@@ -141,7 +141,8 @@ function main() {
     (u) => u.file !== "(selftest)" && u.kind === "AdjustStoredPiety"
   );
 
-  writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjustStored });
+  const scaledCuratedDriverReason = hasReasonBearingScaledCuratedAward();
+  writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjustStored, scaledCuratedDriverReason });
 
   const summary = {
     status: untracked.length ? "FINDINGS" : "CLEAN",
@@ -154,12 +155,13 @@ function main() {
     historicalDaedricBypassCaught: caughtRealAdjustStored
       ? "YES (AdjustStoredPiety bypass present in UNTRACKED -> pre-pact Princes invisible in Ledger)"
       : "NO (Daedric stored-piety path is tracked or no AdjustStoredPiety call sites were found)",
+    scaledCuratedDriverReason: scaledCuratedDriverReason ? "YES" : "NO",
     selfTest,
     ledger: "references/authoring/PDV_LedgerCoverageLedger.md",
   };
   console.log(JSON.stringify(summary, null, 2));
 
-  if (untracked.filter((u) => u.file !== "(selftest)").length > 0) process.exitCode = 1;
+  if (untracked.filter((u) => u.file !== "(selftest)").length > 0 || !scaledCuratedDriverReason) process.exitCode = 1;
 }
 
 // Map each line index -> enclosing Function/Event name.
@@ -206,7 +208,16 @@ function hasDaedricStoredPietyDriverHook() {
          /"PDV\.Driver\.Days"/.test(text);
 }
 
-function writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjustStored }) {
+function hasReasonBearingScaledCuratedAward() {
+  const path = `${SOURCE_DIR}/PDV__ManagerQuest.psc`;
+  if (!fs.existsSync(path)) return false;
+  const text = fs.readFileSync(path, "utf8");
+  const body = functionBody(text, "AwardCuratedSignalScaled");
+  if (!body) return false;
+  return /AwardPiety\s*\(\s*deity\s*,\s*scaledDelta\s*,/.test(body);
+}
+
+function writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjustStored, scaledCuratedDriverReason }) {
   const md = [];
   md.push("# PDV Ledger Coverage Ledger");
   md.push("");
@@ -227,6 +238,7 @@ function writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjus
   md.push("");
   md.push(`Daedric stored-piety driver hook present: ${hasDaedricStoredPietyDriverHook() ? "YES" : "NO"}`);
   md.push(`Historical AdjustStoredPiety bypass caught: ${caughtRealAdjustStored ? "YES" : "NO"}`);
+  md.push(`Scaled curated AwardPiety call records a driver reason: ${scaledCuratedDriverReason ? "YES" : "NO"}`);
   md.push("");
 
   md.push("## UNTRACKED (bypass the Ledger) -- FINDINGS");

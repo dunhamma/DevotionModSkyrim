@@ -362,9 +362,9 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
   }
 
   const quietEmergenceSnippets = [
-    "SurfaceTransition(\"emergence\", focusDeity.DeityName, \"reach\", focusDeity.DeityIndex, \"revelation\")",
+    "SurfaceTransition(\"emergence\", focusDeity.DeityName, \"onset\", focusDeity.DeityIndex, \"revelation\")",
     "PDV_DeityBase Function GetKhajiitFocusDeity(Int focusValue)",
-    "SurfaceTransition(\"emergence\", traditionDeity.DeityName, \"reach\", traditionDeity.DeityIndex, \"revelation\")",
+    "SurfaceTransition(\"emergence\", traditionDeity.DeityName, \"onset\", traditionDeity.DeityIndex, \"revelation\")",
     "PDV_DeityBase Function GetBretonTraditionDeity(Int traditionValue)",
     "SurfaceTransition(\"reorientation\", GetOrcLifeModeLabel(), \"shift\", deityIndex, \"turning\")",
     "SurfaceTransition(\"reorientation\", GetBosmerPathLabel(), \"shift\", deity.DeityIndex, \"turning\")",
