@@ -1,159 +1,157 @@
 # PDV In-Game Run-Sheet -- Argonian (V1)
 
 Status: V1 (Unit D Prisma live `5e9e502`; Hist potion = NEW build item this pass). Created 2026-06-25.
-Provenance: `PDV_PreBetaRaceGateLedger.md` (Argonian deferred: Hist/People/Void hook proof outside QASmoke,
-Survey display), `PDV_PrismaParityRegistry.csv` + `PDV_PrismaParity_AuthoringDraft.md` (Prisma beats),
-the run-sheet format of `PDV_RunSheet_Redguard_BetaFeel.md`. Pair with `PDV_RunSheet_Universal_Prisma_V1.md`.
+Pair with `PDV_RunSheet_Universal_Prisma_V1.md`. Sources: `PDV_PreBetaRaceGateLedger.md`,
+`PDV_PrismaParityRegistry.csv`, `PDV_PrismaParity_AuthoringDraft.md`.
 
-Tests the Argonian closed cosmology -- **Hist** relation, **People/community**, **Sithis/Void** -- plus the
-new Prisma surfacing: the **Hist-Adaptation milestone** beat, **Hist-posture** shifts, the **shadowscale /
-posture-dream** flavor toasts, and substrate acts landing **Ledger drivers** (the scaled-curated P0 fix).
-The headline new item is the **Hist sap potion**: consumed to receive Hist piety, it re-adds itself to
-inventory immediately so the player always keeps it.
+**How to read this sheet.** Each test is **Do** (the exact in-game actions -- MCM clicks or normal play),
+**See** (what should happen on screen), and **Record** (PASS / FAIL / PENDING / N-A). Tags: **[Tester]** =
+anyone can run it by playing/clicking; **[Dev]** = needs the console or a Papyrus-log check (owner runs
+those). The `[R]`/`[M]` tag is just the proof class -- `[R]` objective (log/number/rendered), `[M]` your judgment.
 
 ---
-
-## Proof-boundary key
-- **[R] ROUTE/RUNTIME** -- Papyrus log marker / numeric move / a beat rendered on screen. Objective.
-- **[M] MANUAL-ACCEPTANCE** -- tester judgment (reads as earned; legible; potion-loop feels right).
-Do not mix them in the ledger; do not mark a race-level `pass` from this sheet.
 
 ## Preflight (do once)
-- New disposable save (or `coc qasmoke`). Argonian state inits only on a NEW save. **Anvil** instance.
-- MO2: DISABLE `Devotion - Living Deities Test`.
-- Console seed:
-  ```text
-  set PDV_GLO_OriginRace to 7
-  set PDV_GLO_DebugLevel to 2
-  ```
-  Origin index `7` is Argonian.
-- Debug seeding is the **MCM Debug page** (Player -> Developer Options), NOT `cqf`. Substrate seed action:
-  `DebugSeedArgonian(hist, people, void)` (e.g. hist 90 / people 90 / void 0 for a strong Hist build).
-- Papyrus log: `...\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`.
-- Hist posture labels: Normal / Distant / Strained / Silenced / Corrupted (`GetArgonianHistPostureLabel`).
+1. Start a **new save** as an Argonian (or from the main menu console: `coc qasmoke`). State only inits on a new save.
+2. In MO2 (**Anvil** instance), make sure `Devotion - Living Deities Test` is **disabled**.
+3. Open the console (`~`) and type:
+   ```text
+   set PDV_GLO_OriginRace to 7
+   set PDV_GLO_DebugLevel to 2
+   ```
+   (`7` = Argonian. DebugLevel 2 turns on the log markers the owner checks.)
+4. The **Debug page**: open the MCM (the mod-config menu), go to **Devotion -> Developer Options**. Every
+   "seed" below is a labelled control there -- NOT a console `cqf`.
+5. Owner only: Papyrus log is at `...\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`.
+
+## Running in Authoria (Requiem) -- same steps, swap the preflight
+**Yes -- the test steps and expected surfaces are identical** (the devotion/Prisma logic is the same
+regardless of load order). Only the preflight changes:
+- Use the **Authoria** MO2 instance, not Anvil. Requiem + ARR are active.
+- `Devotion - Living Deities Test` isn't in that list -- **skip the disable step**. Everything else (new
+  save, `set PDV_GLO_OriginRace to 7`, DebugLevel, the MCM Debug page) is the same.
+- **Authoria is the right place to judge reward FEEL.** Requiem zeroes regen-rate buffs, so any HP-bar heal
+  must be proven *here* -- watch the bar actually move. Daedric shrine prayers + quest reactions use the ARR
+  variant under Requiem (same beats, different shrine records).
 
 ---
 
-## Ordered evidence checklist
+## Tests
 
-### Slot 1 -- assetStatus ([M], desk check)
-- **NEW this V1:** the Hist sap potion is a new `ALCH` record (`PDV_Potion_ArgonianHistSap`) + its
-  magic-effect/script; it replaces the old reusable BOOK token. Confirm the potion record exists and is
-  granted on Argonian race-confirm (`EnsureArgonianHistSapToken` rework). No new mesh required (reuses a
-  vanilla potion model). All other Argonian hooks are script + existing-record.
-- PASS: the Hist potion record + grant exist; no other Argonian hook needs a new asset.
+### Slot 1 -- new records present  [Dev] [M]
+- **Do:** Confirm (desk check / Active Effects / inventory) the **Hist Sap potion** exists as a new `ALCH`
+  record (`PDV_Potion_ArgonianHistSap`) and is in your inventory after race-confirm. It replaces the old book token.
+- **See:** the potion is in inventory; no other Argonian hook needs a new mesh.
+- **Record:** ___
 
-### Slot 2 -- surveyStatusClarity ([M])
-- Seed: origin 7; `DebugSeedArgonian 90 60 0`; select Hist as primary, `Apply target piety` ~85 (Champion).
-- Open Survey Devotion. The Argonian lines read the closed cosmology in narrator voice: Hist relation depth,
-  People/community standing, Sithis/Void state, and the **Hist posture** readout when not Normal.
-- PASS: Hist/People/Void + posture read in plain narrator voice; no raw enum/counter leaks; posture line
-  appears only when posture != Normal.
+### Slot 2 -- Survey reads clean  [Tester] [M]
+- **Do:** MCM Debug -> seed `DebugSeedArgonian 90 60 0`; set Hist as primary and Force Piety to **85**. Then
+  open **Survey Devotion** (in the panel / MCM status).
+- **See:** the Argonian lines read like narration -- Hist relation depth, People/community, Sithis/Void, and a
+  **Hist posture** line only when posture isn't Normal. No raw numbers/enum codes leaking.
+- **Record:** ___
 
-### Slot 3 -- stackSnapshot ([R] numeric + [M] read)
-- Hist Champion build. Active Effects shows the Hist reward layer; no rogue/duplicate auras; no cross-mode
-  bleed. `player.getav Health`/relevant AV is the baseline (note for any Requiem HP-bar reward check).
-- PASS: Hist stack is the expected reward layer only; no rogue aura; magnitudes within the costing ceiling.
+### Slot 3 -- effect stack is clean  [Tester] [M] + [Dev] [R]
+- **Do:** With Hist at Champion, open the **magic menu -> Active Effects**.
+- **See:** the Hist reward effect(s) present, no duplicate/rogue auras, nothing bleeding from another race/mode.
+- **Record:** ___
 
-### Slot 4 -- immersiveHookProof (Argonian core)
+### Slot 4a -- Hist Sap potion loop (the new item)  [Tester] [R]+[M]
+- **Do:**
+  1. Open inventory, **drink the Hist Sap**.
+  2. Open the Devotion panel -> **Ledger** page.
+  3. Drink the Hist Sap **again the same day**.
+- **See:** your **Hist piety goes up**; the **Hist Sap is still in your inventory** (count did not drop -- it
+  refills itself); the **Ledger shows a new driver row** for the Hist act. The 2nd same-day drink **returns the
+  vial but adds no extra piety** (daily cap).
+- **[Dev] log:** a Hist award marker in Papyrus.0.log.
+- **Record:** ___
 
-**4a. Hist sap potion -- the new ritual loop ([R] + [M]):**
-- Seed: origin 7; confirm the **Hist sap potion** is in inventory (granted on race-confirm).
-- Consume the potion (Inventory -> drink). Watch: Hist substrate **piety rises** (Ledger driver + log
-  marker for the Hist award), and the **potion re-appears in inventory immediately** (count stays >= 1) --
-  it is infinite-use. A substrate toast may fire ("act"/"deepen").
-- Anti-farm: consume again the same day -> the Hist award is capped (once/day or soft-decay per the
-  substrate cap); the potion still re-adds itself, but the piety does not re-award uncapped.
-- PASS: consuming awards Hist piety AND the potion returns to inventory; the award respects its daily cap.
+### Slot 4b -- Hist hooks in normal play (the "outside QASmoke" proof)  [Tester] [R]
+- **Do (play normally, no debug):** spend time **near/in water**, **sleep/rest**, and do a **community/people**
+  act. Use a **load door or fast-travel** to reach water -- `coc` skips these. Open the **Ledger** after.
+- **See:** each act lands a **Hist / People / Void driver row** in the Ledger during ordinary play (this is the
+  proof the hooks fire in the real world, not just the test cell).
+- **Record:** ___
 
-**4b. Hist substrate maintenance -- hook proof OUTSIDE QASmoke ([R]):**
-- Organic (the deferred-placement proof): near-water maintenance, rest cadence, people/community acts in
-  NORMAL play (walk/fast-travel to water, sleep, etc. -- `coc` skips location hooks). Watch the substrate
-  log markers + the Ledger drivers. This is the "Hist/People/Void hook proof outside QASmoke" the gate needs.
-- PASS: Hist water/rest, People/community, and a Void/death-change act each fire their marker + Ledger
-  driver in normal play (not just via the QASmoke sender).
+### Slot 4c -- Hist-Adaptation milestone (new Prisma beat)  [Tester] [R]+[M]
+- **Do:** trigger the **Hist Adaptation** rite (the permanent body-change choice; MCM Debug can force the gate).
+- **See:** a **toast** -- *"The Hist has reshaped you."* -- and a **pinned Book of Days entry** -- *"You took the
+  Hist's adaptation into your body. The change is permanent -- the root has answered, and you are remade in its
+  image."* Fires once (it's permanent; use a fresh save to re-test).
+- **Check the Book of Days line is NOT blank** (a blank line = a wiring bug -> FAIL).
+- **Record:** ___
 
-**4c. Hist-Adaptation milestone -- NEW Prisma beat ([R] + [M]):**
-- Seed: meet the adaptation gate (`TryArgonianAdaptationRite`) and take the permanent body-reshaping choice
-  (`ApplyArgonianAdaptation`).
-- Watch: a **toast** `The Hist has reshaped you.` + a **pinned Book of Days** entry `You took the Hist's
-  adaptation into your body. The change is permanent -- the root has answered, and you are remade in its
-  image.` (Before Unit D this was Debug.Notification-only.) The guard makes it once/permanent.
-- PASS: the adaptation fires the toast + the pinned BoD beat once; the BoD line is non-empty.
+### Slot 4d -- Hist posture shift  [Tester] [R]+[M]
+- **Do:** drive a posture change toward **Distant / Strained / Corrupted** (MCM Debug seed lower Hist, or take
+  the curse). Then **sleep to the next dawn**.
+- **See:** an **immediate shift toast** naming the new posture; at the **next dawn** the **Book of Days** records
+  the change. Corrupted/Distant also **drain a little piety** (a separate Ledger row).
+- **Record:** ___
 
-**4d. Hist-posture shift ([R] + [M]):**
-- Seed: drive a posture change (piety-loss / curse / `DebugSeedArgonian` toward Distant/Strained/Corrupted),
-  `RefreshArgonianHistPosture`.
-- Watch: a **shift toast** with the new posture label; at next dawn the **Book of Days** captures the posture
-  change (mode-snapshot). Corrupted/Distant additionally emit a piety-loss signal (separate Ledger driver).
-- PASS: posture shift toasts immediately; the dawn Chronicle records it; Corrupted/Distant also drain piety.
+### Slot 4e -- shadowscale / dream flavor  [Tester] [M]
+- **Do:** reach the Void+people thresholds (Shadowscale Veil) and/or roll a strong posture (posture dream).
+- **See:** a **flavor toast** (shadowscale activation / a posture-keyed dream). Pure flavor -- **no piety change,
+  no Ledger row.**
+- **Record:** ___
 
-**4e. Shadowscale / posture-dream flavor ([M]):**
-- Shadowscale Veil: meet the Void+people thresholds (`HandleArgonianShadowscaleVeilActivation`) -> a
-  `shadowscale` flavor toast, no piety. Posture dream: on a strong posture roll
-  (`EmitArgonianPostureDream`) -> a posture-keyed `dream` flavor toast, no piety.
-- PASS: both fire as pure flavor toasts (no piety move, no Ledger driver) and read in-voice.
+### Slot 5 -- wrong-origin rejection  [Dev] [R]
+- **Do:** console `set PDV_GLO_OriginRace to 0` (Nord), then fire an Argonian substrate seed/act. Reset with
+  `set PDV_GLO_OriginRace to 7` after.
+- **See:** **nothing Argonian moves** -- no Hist/People/Void, no markers. A non-Argonian can't drive Argonian state.
+- **Record:** ___
 
-### Slot 5 -- wrongOriginRejection ([R])
-- `set PDV_GLO_OriginRace to 0` (Nord). Fire an Argonian substrate seed/act. Watch: NO Hist/People/Void
-  movement; no Argonian markers. Reset `set PDV_GLO_OriginRace to 7`.
+### Slot 6 -- generic acts stay silent  [Tester] [R]
+- **Do:** as an Argonian, do ordinary things that are NOT the coded hooks: swim in circles, stand in water doing
+  nothing, sleep at a random inn repeatedly, generic kills, one Dark Brotherhood join.
+- **See:** **none of these score** Hist/People/Void (only the real coded acts do).
+- **Record:** ___
 
-### Slot 6 -- genericHookRejection ([R], negative class)
-- Origin 7. Spot-check the rejected-hook list: generic swimming loops, standing in water forever, ordinary
-  travel, generic inn sleep, same-bed repetition, generic stealth, ordinary kills, one Dark Brotherhood join
-  as full Sithis activation -> NONE score Hist/People/Void.
-- PASS: generic acts stay silent; only the coded Hist/People/Void hooks score.
-
-### Slot 7 -- manualFeelNote ([M])
-- 1-2 sentences: does the Hist potion ritual loop feel good (drink -> Hist answers -> you keep the vial)?
-  Does the Hist-Adaptation read as a permanent, earned remaking? Do posture shifts read as the Hist drawing
-  near/away rather than a debuff counter? Record any magnitudes that felt right.
+### Slot 7 -- how it felt  [Tester] [M]
+- **Do/Write:** 1-2 sentences. Does the **Hist Sap loop** feel good (drink -> the Hist answers -> you keep the
+  vial)? Does the **Adaptation** read as a permanent, earned remaking? Do **posture shifts** read as the Hist
+  drawing near/away rather than a debuff counter? Note any magnitudes that felt off.
+- **Record:** ___
 
 ---
 
-## Prisma surfaces (Argonian beats -- verify each renders)
-| Beat | Toast | Book of Days | Ledger | Trigger | Expected line / note |
-|---|---|---|---|---|---|
-| tier.seeker/devoted/champion | Y | Y (pinned Champion) | N | force Hist piety + dawn | universal tier copy |
-| substrate.act.hist (Hist potion / water / rest / people) | Y | N | **Y** (driver) | consume potion / organic maintenance | P0 fix: scaled-curated now records a Ledger driver |
-| rite.argonian.hist-adaptation | **Y** | **Y (pinned)** | N | ApplyArgonianAdaptation | "The Hist has reshaped you." / "...remade in its image." |
-| reorientation.argonian.hist-posture | Y | Y (dawn) | N | RefreshArgonianHistPosture | posture label; Corrupted/Distant also drain (separate driver) |
-| substrate.shadowscale | Y | N | N | Void+people thresholds | flavor only, no piety |
-| substrate.posture-dream | Y | N | N | strong posture roll | flavor only, no piety |
-| neglect.drop / dawn digest / curse | Y | Y | (per universal) | see Universal sheet | run the Universal Prisma sheet alongside |
+## Prisma surfaces (Argonian beats -- confirm each renders)
+| Beat | Toast | Book of Days | Ledger | How to trigger |
+|---|---|---|---|---|
+| tier Seeker/Devoted/Champion | Y | Y (pinned Champion) | N | Force Hist piety + Run Dawn |
+| Hist substrate act (potion / water / rest / people) | Y | N | **Y (driver)** | drink potion / organic maintenance |
+| Hist-Adaptation | **Y** | **Y (pinned)** | N | the adaptation rite |
+| Hist-posture shift | Y | Y (next dawn) | N | lower Hist / curse |
+| shadowscale / posture-dream | Y | N | N | Void+people thresholds / strong roll |
+| neglect / dawn digest / curse | Y | Y | per universal | see the Universal Prisma sheet |
 
 ---
 
 ## Known gotchas
-- **Hist potion must self-replenish.** The load-bearing check is that the vial returns to inventory on
-  consume (infinite-use). If the count drops to 0, the build is wrong -- FAIL.
-- **Substrate Ledger driver is the P0 regression.** Argonian substrate routes through
-  `AwardCuratedSignalScaled`; pre-fix it recorded NO driver. Confirm the Ledger now shows the substrate driver.
-- **Hist-Adaptation is permanent + once.** `TryArgonianAdaptationRite` gates it; you cannot re-run it on the
-  same character to re-test -- use a fresh save.
-- **`coc` skips location triggers.** Walk/fast-travel to water/rest sites for the organic Hist hook proof.
-- **Posture chronicle is dawn-snapshot.** The toast is immediate; the Book of Days entry lands at the next dawn.
-- **MCM only, not cqf.**
+- **The Hist Sap MUST refill itself.** If the count drops to 0 after drinking, the potion build is wrong -> FAIL.
+- **Substrate Ledger driver is the key regression.** Argonian substrate used to record NO Ledger driver
+  (the scaled-curated bug); it now should -- if the Ledger stays empty after a substrate act, FAIL.
+- **Hist-Adaptation is once + permanent.** Re-test on a fresh save.
+- **`coc` skips location triggers** -- walk/fast-travel to water/rest sites for Slot 4b.
+- **Posture's Book-of-Days line lands at the NEXT dawn** (the toast is immediate).
+- **MCM Debug page, not `cqf`.**
 
 ---
 
 ## Record results here
-Allowed: PASS / FAIL / PENDING / N-A. Label the proof class.
+| Slot | What it proves | Status | Note |
+|---|---|---|---|
+| 1 new records | Hist potion record + grant exist | | |
+| 2 Survey | Hist/People/Void + posture legible | | |
+| 3 stack | Hist reward layer, no rogue aura | | |
+| 4a Hist potion loop | drink -> piety + vial returns; daily cap | | |
+| 4b Hist hooks (organic) | water/rest/people/void drivers in normal play | | |
+| 4c Hist-Adaptation | toast + pinned BoD, non-empty, once | | |
+| 4d Hist posture | shift toast + next-dawn chronicle; Corrupted drains | | |
+| 4e shadowscale/dream | flavor toasts, no piety | | |
+| 5 wrong-origin | Nord origin: zero Argonian movement | | |
+| 6 generic silence | swim/sleep/kill do not score | | |
+| 7 felt | potion + adaptation feel earned | | |
 
-| Slot | Surface | Proof | Status | Note |
-|---|---|---|---|---|
-| 1 assetStatus | Hist potion record + grant exist | [M] | | |
-| 2 surveyStatusClarity | Hist/People/Void + posture legible | [M] | | |
-| 3 stackSnapshot | Hist reward layer; no rogue aura | [R]+[M] | | |
-| 4a Hist potion loop | consume awards Hist piety + vial returns; daily cap | [R]+[M] | | |
-| 4b Hist maintenance hook proof | water/rest/people/void markers + drivers in normal play | [R] | | |
-| 4c Hist-Adaptation beat | toast + pinned BoD, non-empty, once | [R]+[M] | | |
-| 4d Hist-posture shift | shift toast + dawn chronicle; Corrupted drains | [R]+[M] | | |
-| 4e shadowscale / dream | flavor toasts, no piety | [M] | | |
-| 5 wrongOriginRejection | Nord origin: zero Argonian movement | [R] | | |
-| 6 genericHookRejection | generic swim/sleep/kill do not score | [R] | | |
-| 7 manualFeelNote | potion loop + adaptation feel earned | [M] | | |
-| Prisma surfaces table | all Argonian beats render on expected surfaces | [R]+[M] | | |
-
-After the run: capture the Papyrus + `DevotionPrismaBridge` logs, record into `PDV_V1_BetaReadinessGate.md`
-honoring the proof boundary. Do NOT mark Argonian `pass` from this sheet alone.
+Owner, after the run: capture the Papyrus + `DevotionPrismaBridge` logs and record into
+`PDV_V1_BetaReadinessGate.md`. Don't mark Argonian `pass` until every row is filled.
