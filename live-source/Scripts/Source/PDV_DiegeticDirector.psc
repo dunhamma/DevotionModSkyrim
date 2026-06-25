@@ -329,7 +329,7 @@ EndFunction
 String Function ResolveJournalLine(Int deityIndex, String toneKey)
     Int originRace = GetOriginRace()
     if originRace == 6
-        return ResolveKhajiitJournalLine(toneKey)
+        return ResolveKhajiitJournalLine(toneKey, deityIndex)
     endIf
     if originRace == 5
         return ResolveDunmerJournalLine(toneKey)
@@ -352,7 +352,7 @@ String Function ResolveJournalLine(Int deityIndex, String toneKey)
     return ""
 EndFunction
 
-String Function ResolveKhajiitJournalLine(String toneKey)
+String Function ResolveKhajiitJournalLine(String toneKey, Int deityIndex)
     if toneKey == "substrate.act"
         return "The moons marked your road-rest."
     endIf
@@ -360,7 +360,7 @@ String Function ResolveKhajiitJournalLine(String toneKey)
         return "You reached Faithful. The pantheon turns to look."
     endIf
     if toneKey == "emergence.onset"
-        return "Khenarthi claims your road. The wind is yours to walk."
+        return "Under the moons your road turned toward " + GetDeityNameByIndex(deityIndex) + ", and stayed there."
     endIf
     if toneKey == "curse.onset"
         return "Cold takes you. The moons close their eyes."
@@ -372,6 +372,21 @@ String Function ResolveKhajiitJournalLine(String toneKey)
         return "Khenarthi's wind has stilled around you."
     endIf
     return ""
+EndFunction
+
+String Function GetDeityNameByIndex(Int deityIndex)
+    if deityIndex >= 0 && PDV_FLST_AllDeities
+        Int i = 0
+        Int count = PDV_FLST_AllDeities.GetSize()
+        while i < count
+            PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
+            if deity && deity.DeityIndex == deityIndex
+                return deity.DeityName
+            endIf
+            i += 1
+        endWhile
+    endIf
+    return "the road"
 EndFunction
 
 String Function ResolveDunmerJournalLine(String toneKey)

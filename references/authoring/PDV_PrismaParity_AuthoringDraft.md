@@ -1,21 +1,18 @@
-# PDV Prisma Parity -- Authoring Draft (for owner redline)
+# PDV Prisma Parity -- Authoring Draft (LOCKED 2026-06-25)
 
-DRAFT copy for the parity worklist's authoring beats. Voice authorities used:
-`PDV_FormalOfferWriting_Copy.md` (per-race offer + response-mirror register),
-`PDV_BookOfDaysVoice_6g_Handoff_2026-06-25.md` (per-race `ResolveJournalLine` register),
-`BuildModeChangeLine` (per-race mode voice), `GetDaedricMilestoneFlavor` (Prince voice).
-ASCII-only; toasts short for the notification lane; chronicle = 1-2 sentences, past-tense reflective.
-`{patron}` / `{focus}` / `{band}` etc. = runtime name slots. **Provisional** flags mark names to
-confirm against live track labels before wiring.
+Copy for the parity worklist's authoring beats. Voice authorities: `PDV_FormalOfferWriting_Copy.md`
+(per-race offer + response-mirror register), `PDV_BookOfDaysVoice_6g_Handoff_2026-06-25.md`
+(per-race `ResolveJournalLine` register), `BuildModeChangeLine`, `GetDaedricMilestoneFlavor`.
+ASCII-only; toasts short for the notification lane; "chronicle" = the Book of Days (page 0).
+`{patron}` / `{focus}` / `{band}` / `{tradition}` / `{path}` / `{crisis}` = runtime name slots.
 
-Wiring model (for Codex): the chronicle lines route through new per-race `ResolveJournalLine` tone
-keys (mirroring the Khajiit/Dunmer/Imperial/Altmer bespoke functions); toasts via the existing
-toast channel at the named fire site.
+Wiring model (for Codex): chronicle lines route through new per-race `ResolveJournalLine` tone keys
+(mirroring the Khajiit/Dunmer/Imperial/Altmer bespoke functions); toasts via the named fire site.
 
 ---
 
-## 1. Commitment offer ACCEPT  (tone key `offer.accept`; toast + pinned chronicle; fires `DebugAcceptPendingCommitment` :12256)
-LOCKED 2026-06-25. Consequence-first; god-agent for Nord/Imperial, player-agent for the rest. Nord+Imperial share.
+## 1. Commitment offer ACCEPT  (tone key `offer.accept`; toast + pinned chronicle; fires `DebugAcceptPendingCommitment`)
+Consequence-first; god-agent for Nord/Imperial, player-agent for the rest. Nord+Imperial share.
 
 - **Nord / Imperial** -- toast: `{patron} has named you their own.`
   chronicle: `The broad faith narrows to one; {patron} has named you their own.`
@@ -27,8 +24,8 @@ LOCKED 2026-06-25. Consequence-first; god-agent for Nord/Imperial, player-agent 
   chronicle: `The sect's broad worship narrows to one charge. You took {patron} as your own.`
 
 ## 2. Commitment offer REFUSE  (tone key `offer.refuse`; toast + pinned chronicle; fires `DebugRefusePendingCommitment`)
-LOCKED 2026-06-25. Per-deity TERMINAL (R5 + offer-cadence ruling): a refused god never offers again -- even
-after a deep lapse-and-rebuild. Consequence-first; ends on the definitive "will not ask again". Nord+Imperial share.
+Per-deity TERMINAL (verified against the cadence code: refuse sets `Refused`, eligibility reads it, the dawn
+pass never clears it). Consequence-first; ends on the definitive "will not ask again". Nord+Imperial share.
 
 - **Nord / Imperial** -- toast: `You turned {patron} away.`
   chronicle: `The broad faith stays whole; you turned {patron} away, and {patron} will not ask again.`
@@ -40,37 +37,37 @@ after a deep lapse-and-rebuild. Consequence-first; ends on the definitive "will 
   chronicle: `The sect's broad worship holds as it was. You set {patron}'s charge aside; {patron} will not ask again.`
 
 ## 3. Quiet-emergence cues  (tone key `emergence.onset`; toast + pinned chronicle)
-The by-design races' silent commitment -- no popup. Backs the un-built `quietEmergenceSnippets`.
-**Codex note:** emit direction `onset` (not `reach`) so the key resolves to the authored
-`emergence.onset` arms -- see the decided-worklist direction-token reconciliation.
+The by-design races' silent commitment -- no popup. Emit direction `onset` (resolves to the existing authored arms).
 
 - **Khajiit focus** (`GetKhajiitFocusDeity`) -- toast: `Your road turns toward {focus}.`
-  chronicle: `Under the moons your road turned toward {focus}, and stayed there. No vow, no shrine -- only the way you walk.`
-- **Breton tradition** (`GetBretonTraditionDeity`) -- see beat 5 (the tradition-choice beat IS the Breton quiet-emergence; use the same line).
+  chronicle: `Under the moons your road turned toward {focus}, and stayed there.`
+- **Breton tradition** (`GetBretonTraditionDeity`) -- see beat 5 (the tradition-choice beat IS the Breton quiet-emergence).
 
 ---
 
-## 4. Altmer Thalmor-alignment band  (reorientation; toast + chronicle; fires on band change)
-**Provisional:** confirm the 5 band labels from `PDV_ThalmorAlignmentTrack` (Concordat -100..+100 mirror with a rebel pole) before wiring.
+## 4. Altmer Thalmor-alignment band  (reorientation; toast + chronicle; fires on the COMMITTED band change)
+Bands (heterodox <-> Thalmor pole, from `GetAltmerAlignmentSurveyBaseText`): **Open Heterodoxy** (<=-76) /
+**Private Heterodoxy** (-51..-75) / **Uncommitted** (-50..+50) / **Public Orthodoxy** (+51..+75) / **Thalmor-Devout** (>=+76).
+Fire on the committed band-label change (lock-in grace lags the raw value).
 
-- toast: `Your standing with the Dominion shifts: {band}.`
-- chronicle: `The old line marks where you stand with the Dominion now: {band}.`
+- toast: `The Thalmor question turns in you: {band}.`
+- chronicle: `Your soul records where you stand in the Thalmor question: {band}.`
 
-## 5. Breton tradition choice  (reorientation; toast + pinned chronicle; irreversible startup choice)
-Tradition labels: `Knight's Road` / `Hidden Art` / `Green Way`.
+## 5. Breton tradition choice  (reorientation; toast + pinned chronicle)
+Tradition labels: `Knight's Road` / `Hidden Art` / `Green Way`. Start-locked in 1.0; off-tradition acts build
+`CrossTraditionPressure` (surfaced in Survey) but never rewrite the tradition -- so "not easily swayed" is
+forward-compatible with the deferred pressure-switch and honest for 1.0 (verified `:14474-14483`).
 
-- toast: `You set your road: {tradition}.`
-- chronicle: `You chose your road today, and it will not be unchosen: the {tradition}. The mixed inheritance settles into one shape.`
+- toast: `You set your tradition: {tradition}.`
+- chronicle: `You chose your tradition today, and it will not be easily swayed: {tradition}.`
 
 ## 6. Hircine werewolf-onset (curse-entry)  (curse.onset, Hircine-specific; chronicle; toast already via race-response MESG)
-- chronicle: `The beast-blood took you, and Hircine was watching. The Hunt is in you now.`
+- chronicle: `The beast-blood took you and stirred Hircine. The Hunt is in you now.`
 
 ## 7. Hircine renunciation  (chronicle; toast + ledger already present)
-- chronicle: `You set the Hunt down. Hircine's mark fades from your blood, and the pack is no longer yours.`
+- chronicle: `Hircine's mark fades from your blood, and the pack is no longer yours.`
 
 ## 8. Redguard sect Champion-entry  (chronicle; toast already via the sect-entry MESG)
-Echoes the existing `ShowRedguardMessage` lines, as persistent journal entries.
-
 - **Crown** -- chronicle: `The Crown way is more than memory in you now. It has become a public shape of your devotion.`
 - **Forebear** -- chronicle: `The Forebear way is more than adaptation in you now. It has become a public shape of your devotion.`
 - **Ash'abah** -- chronicle: `The Ash'abah duty is more than necessity in you now. It has become a public shape of your devotion.`
@@ -88,12 +85,12 @@ Echoes the existing `ShowRedguardMessage` lines, as persistent journal entries.
 ## 11. Bosmer path-confirm  (chronicle; toast + ledger already present)
 Path labels: `Living Story` / `Exchange` / `Bandit Road` / `Old Contract`.
 
-- chronicle: `You confirmed your road through the Green: the {path}. Y'ffre's song settles into one shape in you.`
+- chronicle: `Y'ffre's song settles within you. Your road through the Green is the {path}.`
 
 ---
 
 ## 12. Daedric offer titles  (16; ruling R3 -- name the Prince in the TITLE; bodies unchanged)
-Epithet titles matching `GetDaedricMilestoneFlavor` voice + the racial-offer title style (`{Prince}'s {epithet}`).
+LOCKED -- epithet style (`{Prince}'s {epithet}`).
 
 | Prince | Title |
 |---|---|
@@ -117,21 +114,19 @@ Epithet titles matching `GetDaedricMilestoneFlavor` voice + the racial-offer tit
 ---
 
 ## 13. Khajiit lunar-posture chronicle  (P1, R2; severe transitions only; direct AppendBookOfDaysEntry at :5342)
-- **Corrupted** -- chronicle: `The moons curdled over your road. A corruption is on you now.`
-- **ShadowDrift** -- chronicle: `You slipped into the moons' shadow. The dark road has you.`
+- **Corrupted** -- chronicle: `The moonlight scatters from your path. Corruption is upon you.`
+- **ShadowDrift** -- chronicle: `You slipped into the moons' shadow. Darkness is upon you.`
 
 ## 14. Altmer crisis-state toast  (P2, R3; SendPrismaShiftToast at :7417)
-**Provisional:** confirm crisis labels (None/Dissonant/Questioning/Reasserting/Scarred-Resolved).
-- toast: `The old line strains: {crisis}.`
+Labels (from `GetAltmerCrisisStateLabelForValue`): **Dissonant / Questioning / Reasserting / Scarred resolved**
+(None = no crisis). Fire on a transition INTO a crisis state; the clear-to-None can stay silent or use a resolved line.
+Verb is `turns` (state-neutral shift), since "strains" only fit the worsening states, not Reasserting/Scarred-resolved.
+
+- toast: `The old line turns: {crisis}.`
 
 ---
 
-## Status
-- **Beats 1-2 (offer accept/refuse) -- LOCKED 2026-06-25** (per-race templated, Nord+Imperial shared, refuse terminal).
-  The offer-cadence ruling (one offer per qualification, refuse permanent, re-offer only on lapse+rebuild) is
-  in `PDV_PrismaParity_SerializedHandoffs.md` Handoff B.
-- **Beats 3-14 + Daedric titles -- drafted, accepted-as-is for now** (redline later if desired).
-
-## Open items (non-blocking)
-- **Altmer band labels (beat 4)** -- provisional; confirm against `PDV_ThalmorAlignmentTrack` before wiring.
-- **Daedric titles (beat 12)** -- epithet style (`{Prince}'s {epithet}`); flip to bare Prince name if preferred.
+## Status -- ALL LOCKED 2026-06-25
+- Beats 1-14 + the 16 Daedric titles (epithet) locked; beats 8/9/10 accepted as drafted.
+- Offer-cadence ruling: `PDV_PrismaParity_HandoffB_OfferCadence.md` (built + committed `f97b7db`).
+- Ready for Unit D wiring.

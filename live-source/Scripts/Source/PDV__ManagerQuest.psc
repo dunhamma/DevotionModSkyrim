@@ -1822,7 +1822,13 @@ String Function ResolveTransitionJournalLine(String eventClass, String surfaceKe
         endIf
     endIf
 
-    if eventClass == "tier" && direction == "reach"
+    if eventClass == "offer" && direction == "accept"
+        return BuildCommitmentOfferAcceptJournalLine(deityIndex)
+    elseIf eventClass == "offer" && direction == "refuse"
+        return BuildCommitmentOfferRefuseJournalLine(deityIndex)
+    elseIf eventClass == "reorientation" && direction == "shift"
+        return BuildReorientationJournalLine(surfaceKey)
+    elseIf eventClass == "tier" && direction == "reach"
         return "Your devotion has deepened."
     elseIf eventClass == "curse" && direction == "onset"
         return "A curse changes the shape of devotion."
@@ -1834,6 +1840,50 @@ String Function ResolveTransitionJournalLine(String eventClass, String surfaceKe
         return "You return to a rite you had let fall silent."
     endIf
     return ""
+EndFunction
+
+String Function BuildCommitmentOfferAcceptJournalLine(Int deityIndex)
+    String patron = GetJournalDeityName(deityIndex)
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_DUNMER
+        return "The Reclamation deepens in you. You named " + patron + " as your focus."
+    elseIf originRace == ORIGIN_ALTMER
+        return "The foundation narrows to a single disciplined road. You named " + patron + " your focus."
+    elseIf originRace == ORIGIN_REDGUARD
+        return "The sect's broad worship narrows to one charge. You took " + patron + " as your own."
+    endIf
+    return "The broad faith narrows to one; " + patron + " has named you their own."
+EndFunction
+
+String Function BuildCommitmentOfferRefuseJournalLine(Int deityIndex)
+    String patron = GetJournalDeityName(deityIndex)
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_DUNMER
+        return "The Reclamation holds as it was. You set " + patron + " aside, and " + patron + " will not ask again."
+    elseIf originRace == ORIGIN_ALTMER
+        return "The foundation stands as it was. You kept to it alone, and " + patron + " will not ask again."
+    elseIf originRace == ORIGIN_REDGUARD
+        return "The sect's broad worship holds as it was. You set " + patron + "'s charge aside; " + patron + " will not ask again."
+    endIf
+    return "The broad faith stays whole; you turned " + patron + " away, and " + patron + " will not ask again."
+EndFunction
+
+String Function BuildReorientationJournalLine(String surfaceKey)
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_ALTMER
+        return "Your soul records where you stand in the Thalmor question: " + surfaceKey + "."
+    elseIf originRace == ORIGIN_BRETON
+        return "You chose your tradition today, and it will not be easily swayed: " + surfaceKey + "."
+    endIf
+    return ""
+EndFunction
+
+String Function GetJournalDeityName(Int deityIndex)
+    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    if deity
+        return deity.DeityName
+    endIf
+    return "the patron"
 EndFunction
 
 ; Symbol for a journal entry: the deity's glyph when the transition belongs to a
@@ -3867,6 +3917,8 @@ Function ApplyArgonianAdaptation(Actor playerRef, Int adaptationIndex)
     playerRef.AddSpell(chosenAdaptation, False)
     StorageUtil.SetIntValue(None, "PDV.Adapt.Active", adaptationIndex + 1)
     Debug.Notification("The Hist reshapes you. The change settles into your scales to stay.")
+    SendPrismaShiftToast("The Hist has reshaped you.", "", "hist")
+    AppendBookOfDaysEntry("You took the Hist's adaptation into your body. The change is permanent -- the root has answered, and you are remade in its image.", Utility.GetCurrentGameTime() as Int, "reorientation", "hist", True, 3)
     Trace(2, "Argonian adaptation applied: " + adaptationIndex)
 EndFunction
 
@@ -5374,6 +5426,12 @@ Function RefreshKhajiitLunarPosture(String reason)
         ShowKhajiitMessage(PDV_Msg_Khajiit_CurseState_ShadowDriftEntry, "You have drifted into shadow. The moons grow distant; the Lattice loosens toward the dark between the stars.", False)
     endIf
 
+    if newPosture == KHAJIIT_LUNAR_POSTURE_CORRUPTED
+        AppendBookOfDaysEntry("The moonlight scatters from your path. Corruption is upon you.", Utility.GetCurrentGameTime() as Int, "curse.onset", "lunar", False, 3)
+    elseIf newPosture == KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
+        AppendBookOfDaysEntry("You slipped into the moons' shadow. Darkness is upon you.", Utility.GetCurrentGameTime() as Int, "curse.onset", "lunar", False, 3)
+    endIf
+
     SendPrismaShiftToast(GetKhajiitLunarPostureDisplayLabelAt(newPosture), GetKhajiitLunarPostureReadout(newPosture), "lunar")
     RequestPanelRefresh()
 EndFunction
@@ -6801,16 +6859,19 @@ Function MaybeShowRedguardChampionEntry(Int sectValue)
     if sectValue == REDGUARD_SECT_CROWN
         if PDV_Tuwhacca && GetTier(PDV_Tuwhacca) >= TIER_DEVOTED
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_Crown, "The Crown way has become more than memory. It is a public shape of your devotion.", False)
+            AppendBookOfDaysEntry("The Crown way is more than memory in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == REDGUARD_SECT_FOREBEAR
         if PDV_HoonDing && GetTier(PDV_HoonDing) >= TIER_DEVOTED
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_Forebear, "The Forebear way has become more than adaptation. It is a public shape of your devotion.", False)
+            AppendBookOfDaysEntry("The Forebear way is more than adaptation in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == REDGUARD_SECT_ASHABAH
         if PDV_Tuwhacca && GetTier(PDV_Tuwhacca) >= TIER_DEVOTED
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_AshAbah, "The Ash'abah duty has become more than necessity. It is a public shape of your devotion.", False)
+            AppendBookOfDaysEntry("The Ash'abah duty is more than necessity in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     endIf
@@ -6919,7 +6980,7 @@ Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
 
     if oldFocus != focusValue
         Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
-        SendPrismaShiftToast(GetKhajiitFocusLabel(focusValue), GetKhajiitFocusShiftText(focusValue), GetKhajiitFocusSymbol(focusValue))
+        SendPrismaShiftToast("Your road turns toward " + GetKhajiitFocusLabel(focusValue) + ".", "", GetKhajiitFocusSymbol(focusValue))
         PDV_DeityBase focusDeity = GetKhajiitFocusDeity(focusValue)
         if focusDeity
             SurfaceTransition("emergence", focusDeity.DeityName, "onset", focusDeity.DeityIndex, "revelation")
@@ -7143,8 +7204,45 @@ Function ApplyAltmerAlignmentAction(String actionKey, String reason)
         return
     endIf
 
+    String oldBand = GetAltmerCommittedAlignmentJournalBand()
     PDV_ThalmorAlignmentTrack.Adjust(adjustment, reason)
+    MaybeSurfaceAltmerAlignmentBandChange(oldBand, "alignment_" + actionKey)
     Trace(2, "Altmer ThalmorAlignment " + actionKey + " " + adjustment + " -> " + PDV_ThalmorAlignmentTrack.GetValue())
+EndFunction
+
+Function MaybeSurfaceAltmerAlignmentBandChange(String oldBand, String reason)
+    if !IsAltmerOrigin() || !PDV_ThalmorAlignmentTrack
+        return
+    endIf
+
+    String newBand = GetAltmerCommittedAlignmentJournalBand()
+    if oldBand == "" || newBand == "" || oldBand == newBand
+        StorageUtil.SetStringValue(None, "PDV.Altmer.Alignment.LastCommittedBand", newBand)
+        return
+    endIf
+
+    SendPrismaShiftToast("The Thalmor question turns in you: " + newBand + ".", "", "auri-el")
+    SurfaceTransition("reorientation", newBand, "shift", -1, "turning", True, False)
+    StorageUtil.SetStringValue(None, "PDV.Altmer.Alignment.LastCommittedBand", newBand)
+    Trace(1, "Altmer committed alignment band " + oldBand + " -> " + newBand + " (" + reason + ")")
+EndFunction
+
+String Function GetAltmerCommittedAlignmentJournalBand()
+    if !PDV_ThalmorAlignmentTrack
+        return ""
+    endIf
+
+    String label = PDV_ThalmorAlignmentTrack.GetStateLabelAt(PDV_ThalmorAlignmentTrack.GetCommittedStateIndex())
+    if label == "OpenHeterodox"
+        return "Open Heterodoxy"
+    elseIf label == "PrivateHeterodox"
+        return "Private Heterodoxy"
+    elseIf label == "PublicOrthodox"
+        return "Public Orthodoxy"
+    elseIf label == "ThalmorEnforcer"
+        return "Thalmor-Devout"
+    endIf
+    return "Uncommitted"
 EndFunction
 
 Int Function GetAltmerThalmorPointsForAction(String actionKey)
@@ -7465,6 +7563,9 @@ Function SetAltmerCrisisState(Int stateValue, String reason)
     endIf
     if oldState != stateValue
         Trace(1, "Altmer crisis state " + GetAltmerCrisisStateLabelForValue(oldState) + " -> " + GetAltmerCrisisStateLabelForValue(stateValue) + " (" + reason + ")")
+        if stateValue != ALTMER_CRISIS_NONE
+            SendPrismaShiftToast("The old line turns: " + GetAltmerCrisisStateLabelForValue(stateValue) + ".", "", "auri-el")
+        endIf
     endIf
 EndFunction
 
@@ -8762,6 +8863,11 @@ Function RunDawnRefreshTrackStates()
     endIf
 
     if IsAltmerOrigin()
+        String oldAltmerBand = GetAltmerCommittedAlignmentJournalBand()
+        if PDV_ThalmorAlignmentTrack
+            PDV_ThalmorAlignmentTrack.RefreshState()
+            MaybeSurfaceAltmerAlignmentBandChange(oldAltmerBand, "dawn")
+        endIf
         RunDawnRefreshAltmerAncestor()
         SyncAltmerDisciplines(Game.GetPlayer())
     endIf
@@ -10340,11 +10446,25 @@ Int Function GetBretonDruidicForkValue()
 EndFunction
 
 Function SetBretonDruidicFork(Int forkValue, String reason)
+    Int oldFork = GetBretonDruidicForkValue()
     Int normalized = ClampInt(forkValue, BRETON_DRUIDIC_FORK_NONE, BRETON_DRUIDIC_FORK_BETRAYED)
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicFork", normalized)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastDruidicForkReason", reason)
     if PDV_GLO_State_BretonDruidicFork
         PDV_GLO_State_BretonDruidicFork.SetValue(normalized as Float)
+    endIf
+    if GetPlayerOriginRaceIndex() == ORIGIN_BRETON && oldFork != normalized
+        SurfaceBretonDruidicForkChange(normalized)
+    endIf
+EndFunction
+
+Function SurfaceBretonDruidicForkChange(Int forkValue)
+    if forkValue == BRETON_DRUIDIC_FORK_WEREWOLF
+        SendPrismaShiftToast("The Green Way turns wild in you.", "", "kynareth")
+        AppendBookOfDaysEntry("The beast-blood took your Green Way down a wilder road. The Werewolf path is yours now.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
+    elseIf forkValue == BRETON_DRUIDIC_FORK_BETRAYED
+        SendPrismaShiftToast("You broke faith with the Green.", "", "kynareth")
+        AppendBookOfDaysEntry("You turned from the Green Way's trust. The path remembers the betrayal.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
     endIf
 EndFunction
 
@@ -12393,6 +12513,7 @@ EndFunction
 Function DebugRenounceHircinePath()
     if PDV_HircinePath
         PDV_HircinePath.RenouncePath("mcm")
+        AppendBookOfDaysEntry("Hircine's mark fades from your blood, and the pack is no longer yours.", Utility.GetCurrentGameTime() as Int, "reorientation", "hircine", False, 3)
         DrainHircineResiduePrismaToasts()
         SendPrismaDaedricToast("Hircine", "lapse", "", "hircine")
         RequestPanelRefresh()
@@ -12555,7 +12676,8 @@ Function DispatchDiegeticCue(String eventClass, String surfaceKey, String direct
         deityIndex = deity.DeityIndex
     endIf
 
-    SurfaceTransition(eventClass, surfaceKey, direction, deityIndex, toneOverride)
+    Bool headline = eventClass == "offer" && (direction == "accept" || direction == "refuse")
+    SurfaceTransition(eventClass, surfaceKey, direction, deityIndex, toneOverride, False, headline)
 EndFunction
 
 Message Function GetNordFormalCommitmentOfferMessage(PDV_DeityBase deity)
@@ -12663,13 +12785,13 @@ Function DebugAcceptPendingCommitment()
 
     Float carryAmount = carrySource * COMMITMENT_CARRYOVER_MULTIPLIER
     StorageUtil.SetFloatValue(None, "PDV.Commitment.LastCarryover", carryAmount)
-    if carryAmount > 0.0
-        DebugForceSetPietyByIndex(pendingDeity.DeityIndex, ClampValue(GetPiety(pendingDeity) + carryAmount, 0.0, PIETY_MAX))
-    endIf
 
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Offered", 0)
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 0)
     SetActiveDeity(pendingDeity)
+    if carryAmount > 0.0
+        AwardPiety(pendingDeity, carryAmount, "commitment_carryover")
+    endIf
     ClearPendingCommitment()
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 0)
     Trace(1, "Commitment accepted for " + pendingDeity.DeityName + ".")
@@ -12860,6 +12982,7 @@ Function DebugRefusePendingCommitment()
         return
     endIf
 
+    DispatchDiegeticCue("offer", pendingDeity.DeityName, "refuse", pendingDeity, "absence")
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 1)
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 1)
     ClearPendingCommitment()
@@ -13826,6 +13949,9 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
         ApplyNordCurseHandlers(oldState, newState, reason)
         if PDV_HircinePath
             PDV_HircinePath.HandleCurseTransition(oldState, newState, reason)
+            if oldState != 1 && newState == 1
+                AppendBookOfDaysEntry("The beast-blood took you and stirred Hircine. The Hunt is in you now.", Utility.GetCurrentGameTime() as Int, "curse.onset", "hircine", False, 3)
+            endIf
             PDV_HircinePath.UpdateResidueRecovery()
             DrainHircineResiduePrismaToasts()
         endIf
@@ -14430,6 +14556,9 @@ Function ApplyBretonInitialChoice(Int traditionValue, String reason)
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicForkInitialized", 1)
     PDV_DeityBase traditionDeity = GetBretonTraditionDeity(normalized)
     if traditionDeity
+        String traditionLabel = GetBretonTraditionLabel()
+        SendPrismaShiftToast("You set your tradition: " + traditionLabel + ".", "", GetPrismaSymbolForDeity(traditionDeity))
+        AppendBookOfDaysEntry("You chose your tradition today, and it will not be easily swayed: " + traditionLabel + ".", Utility.GetCurrentGameTime() as Int, "reorientation", GetPrismaSymbolForDeity(traditionDeity), True, 3)
         SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")
     endIf
 EndFunction
@@ -15732,6 +15861,9 @@ Int Function GetJournalMagnitudeForTone(String toneKey)
     if toneKey == "reorientation"
         return 3
     endIf
+    if toneKey == "offer.accept" || toneKey == "offer.refuse"
+        return 3
+    endIf
     if toneKey == "neglect.drop" || toneKey == "neglect.recover"
         return 2
     endIf
@@ -15768,6 +15900,12 @@ String Function JournalToneToTitle(String toneKey)
     if toneKey == "emergence.onset"
         return "An emergence"
     endIf
+    if toneKey == "offer.accept"
+        return "Patron accepted"
+    endIf
+    if toneKey == "offer.refuse"
+        return "Offer refused"
+    endIf
     if toneKey == "substrate.act"
         return "An act of devotion"
     endIf
@@ -15802,6 +15940,9 @@ String Function JournalToneToValence(String toneKey)
     if toneKey == "emergence.onset"
         return "good"
     endIf
+    if toneKey == "offer.accept"
+        return "good"
+    endIf
     if toneKey == "substrate.act"
         return "good"
     endIf
@@ -15812,6 +15953,9 @@ String Function JournalToneToValence(String toneKey)
         return "warning"
     endIf
     if toneKey == "daedric.pressure"
+        return "warning"
+    endIf
+    if toneKey == "offer.refuse"
         return "warning"
     endIf
     return "neutral"
@@ -16479,6 +16623,7 @@ Function ConfirmBosmerPendingTransition(String reason)
     endIf
 
     SendPrismaShiftToast(GetBosmerPathLabel(), "", GetPrismaSymbolForDeity(_activeDeity))
+    AppendBookOfDaysEntry("Y'ffre's song settles within you. Your road through the Green is the " + GetBosmerPathLabel() + ".", Utility.GetCurrentGameTime() as Int, "reorientation", GetPrismaSymbolForDeity(_activeDeity), False, 3)
     RequestPanelRefresh()
 EndFunction
 
