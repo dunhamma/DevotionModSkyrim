@@ -72,6 +72,8 @@ Int _oidShowPatternSummary = -1
 Int _oidConcordatDefiance = -1
 Int _oidConcordatCompliance = -1
 Int _oidTalosShrineDefiance = -1
+Int _oidTalosBetrayalCompliance = -1
+Int _oidTalosBetrayalMajor = -1
 Int _oidConcordatUnlockGate = -1
 Int _oidBosmerOldContract = -1
 Int _oidBosmerBanditRoad = -1
@@ -288,6 +290,10 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Routes one non-kill Concordat compliance event through EventBus and the ConcordatStanding track.")
     elseIf a_option == _oidTalosShrineDefiance
         SetInfoText("Routes the hidden Talos shrine defiance signal through EventBus and Talos/Concordat handling.")
+    elseIf a_option == _oidTalosBetrayalCompliance
+        SetInfoText("Applies the medium Talos betrayal creed loss when the current run is focused on Talos.")
+    elseIf a_option == _oidTalosBetrayalMajor
+        SetInfoText("Applies the major Talos betrayal creed loss when the current run is focused on Talos.")
     elseIf a_option == _oidConcordatUnlockGate
         SetInfoText("Unlocks the extreme Concordat walk-back gate so Open Defiant or Concordat Enforcer can be left.")
     elseIf a_option == _oidBosmerOldContract
@@ -592,6 +598,16 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidTalosShrineDefiance
         RunPatternAction("Route one Talos shrine defiance signal?", 18)
+        return
+    endIf
+
+    if a_option == _oidTalosBetrayalCompliance
+        RunPatternAction("Apply medium Talos betrayal creed loss?", 58)
+        return
+    endIf
+
+    if a_option == _oidTalosBetrayalMajor
+        RunPatternAction("Apply major Talos betrayal creed loss?", 59)
         return
     endIf
 
@@ -1432,6 +1448,8 @@ Function BuildDaedricPage()
     _oidConcordatDefiance = AddTextOption("Concordat defiance", "EventBus route", OPTION_FLAG_NONE)
     _oidConcordatCompliance = AddTextOption("Concordat compliance", "EventBus route", OPTION_FLAG_NONE)
     _oidTalosShrineDefiance = AddTextOption("Talos shrine defiance", "Shrine route", OPTION_FLAG_NONE)
+    _oidTalosBetrayalCompliance = AddTextOption("Talos betrayal -2", "Creed loss", OPTION_FLAG_NONE)
+    _oidTalosBetrayalMajor = AddTextOption("Talos betrayal -3", "Creed loss", OPTION_FLAG_NONE)
     _oidConcordatUnlockGate = AddTextOption("Unlock Concordat gate", "Extreme walk-back", OPTION_FLAG_NONE)
     _oidBosmerGreenPactViolation = AddTextOption("Green Pact violation", "OldContract only", OPTION_FLAG_NONE)
     _oidBosmerLivingStorySignal = AddTextOption("Bosmer Living Story", "Path evidence", OPTION_FLAG_NONE)
@@ -2155,6 +2173,10 @@ Function RunPatternAction(String promptText, Int actionId)
         else
             manager.DebugRecordTalosShrineDefiance()
         endIf
+    elseIf actionId == 58
+        manager.DebugApplyTalosBetrayalCompliance()
+    elseIf actionId == 59
+        manager.DebugApplyTalosBetrayalMajor()
     elseIf actionId == 24
         manager.DebugSetNordPantheonBaseline(manager.NORD_BASELINE_OLD_WAYS)
     elseIf actionId == 25

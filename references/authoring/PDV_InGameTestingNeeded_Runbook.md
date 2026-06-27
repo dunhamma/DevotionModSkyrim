@@ -28,6 +28,18 @@ burdens, and Namira passive-zero/Health+Stamina feed copy are built/readback-cle
 This is still compile/readback proof only. Fold runtime/manual checks into the
 Nord, Redguard/Requiem, and Daedric/Namira packets before making a beta-feel claim.
 
+2026-06-27 handoff note: the Nord/Imperial felt-neglect ESP batch is
+machine/readback clean. Kyne neglect is `ResistFrost -8`, Imperial civic neglect
+is `ResistDisease -5`, and Nord Shor/Tsun/Stuhn/Talos per-patron neglect spells
+exist and are wired. This is not runtime proof; fold Active Effects/stack checks
+into the next Nord and Imperial smoke pass.
+
+2026-06-27 handoff note: the Imperial/Nord Talos betrayal creed runtime is also
+compile-clean. Use MCM Debug -> `Talos betrayal -2` / `Talos betrayal -3` on a
+focused Talos path to prove piety loss, surfacing, anti-repeat, and Imperial
+Concordat raw movement. Organic quest/dialogue detection for betrayal beats is
+not implemented yet and must stay a follow-on, not a smoke-test blocker.
+
 ## Preflight Before Opening Skyrim
 
 Run from `C:\Users\Admin\Documents\Devotion Mod Project`:
@@ -36,9 +48,14 @@ Run from `C:\Users\Admin\Documents\Devotion Mod Project`:
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-route-entries
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates
+dotnet run --project .\tools\pdv-neglect-esp-author\PdvNeglectEspAuthor.csproj -- --check
 node .\tools\pdv_phase20_base_wiring_audit.mjs
+node .\tools\pdv_compile.mjs --script PDV__ManagerQuest
+node .\tools\pdv_compile.mjs --script PDV_MCM
 node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
+node .\tools\pdv_verify.mjs --strict-neglect-decay --json
 node .\tools\pdv_phase2_reward_readback_audit.mjs --json
+node .\tools\pdv_integrity_harness.mjs
 node .\tools\pdv_refresh_seq.mjs --write --json
 node .\tools\pdv_beta_readiness_audit.mjs --strict --json
 ```
@@ -49,6 +66,9 @@ Expected before manual testing:
 - Base wiring audit: `PASS`.
 - Strict Phase 20 verifier and Phase 2 reward readback audit: `PASS`; SEQ
   refresh has no stale/missing entry warning.
+- Integrity harness: `PASS`, including `eligibility_reward_coverage`.
+- Neglect ESP author check and strict neglect verifier: `PASS`.
+- Manager and MCM compile: `PASS`, including the Talos betrayal debug buttons.
 - Beta readiness audit: still `NOT_BETA_READY` until manual/runtime slots are
   recorded.
 

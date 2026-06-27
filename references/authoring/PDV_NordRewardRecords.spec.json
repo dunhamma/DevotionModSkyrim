@@ -213,7 +213,7 @@
       "reuse": "Imperial-owned manager property; Nord references only."
     }
   ],
-  "deityOwnership": "Nord OWNS THREE NEW deity QUSTs: Shor, Tsun, Stuhn (create:true, Stance_Nord NATIVE, Old Ways focusable). Supersedes the retired R5 'Nord owns zero new deities'. Kyne and Talos are reused existing NATIVE records (create:false). The 8 Divines (Akatosh/Mara/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth) are Imperial-owned records reused by the Nine Divines lane (create:false; Nord reconciles Stance_Nord=NATIVE only). Hircine is the first Nord Daedric path and routes through the Phase 20C Daedric system (R6), NOT a new Aedric record here. 2026-06-27 UPDATE: Mara is now ALSO an Old Ways focusable patron (Old Ways roster = Kyne/Shor/Tsun/Stuhn/Mara/Talos); she has no Nord-specific reward SPELs and reuses the Imperial Mara spells (PDV_Bless_Imperial_Mara_T1/T2/T3). GAP: the other Nine Divines Nord gods (Akatosh/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth) have NO Nord reward SPELs in Devotion.esp, so their tier reward families are unauthored no-ops -- reuse-Imperial (like Mara) or author Nord-specific is a pending decision.",
+  "deityOwnership": "Nord OWNS THREE NEW deity QUSTs: Shor, Tsun, Stuhn (create:true, Stance_Nord NATIVE, Old Ways focusable). Supersedes the retired R5 'Nord owns zero new deities'. Kyne and Talos are reused existing NATIVE records (create:false). The 8 Divines (Akatosh/Mara/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth) are Imperial-owned records reused by the Nine Divines lane (create:false; Nord reconciles Stance_Nord=NATIVE only). Hircine is the first Nord Daedric path and routes through the Phase 20C Daedric system (R6), NOT a new Aedric record here. 2026-06-27 UPDATE: Mara is now ALSO an Old Ways focusable patron (Old Ways roster = Kyne/Shor/Tsun/Stuhn/Mara/Talos). The Nord Nine Divines reward lane is intentionally closed by reusing the existing Imperial Divine reward SPELs for all 8 Divines (PDV_Bless_Imperial_<God>_T1/T2/T3), matching the Mara ruling; do not author Nord-specific Nine Divines SPELs in this cycle.",
   "neglect": {
     "reuse": true,
     "wireTo": "PDV__ManagerQuest",
@@ -225,13 +225,13 @@
     "effects": [
       {
         "magicEffectEditorId": "PDV_MGEF_Neglect_Kyne_Stamina",
-        "actorValue": "StaminaRateMult",
-        "magnitude": -5,
+        "actorValue": "ResistFrost",
+        "magnitude": -8,
         "existing": true
       }
     ],
-    "playerFacingText": "The weather no longer feels on your side. At night your stamina regenerates 5% more slowly until you return to the open sky.",
-    "designNote": "REUSES the existing wired Kyne neglect spell (PDV_SPEL_Neglect_Kyne) and SyncKyneNeglectSpell on PDV__ManagerQuest. DO NOT create a new Nord neglect spell -- not for Shor/Tsun/Stuhn, not for the Nine Divines lane. Talos / Shor / Tsun / Stuhn neglect is fiction-only texture in V1 (no dedicated spell); general broad-worship neglect (either pantheon lane) is gentle drift through the daily consolidation system, not a spell. Neglect is distinct from creed-violation loss."
+    "playerFacingText": "The weather no longer feels on your side and the cold bites deeper. Frost Resistance -8% until you return to the open sky and keep Kyne's regard.",
+    "designNote": "REUSES the existing wired Kyne neglect spell (PDV_SPEL_Neglect_Kyne) and SyncKyneNeglectSpell on PDV__ManagerQuest. 2026-06-27 owner ruling (Requiem-felt neglect rework): converted from the Requiem-muted StaminaRateMult -5 to a felt flat ResistFrost -8. Keep PDV_MGEF_Neglect_Kyne_Stamina in place to preserve the SPEL->MGEF FormID link; the _Stamina suffix is a benign internal misnomer. Shor/Tsun/Stuhn/Talos now have separate Nord-scoped per-patron neglect SPEL/MGEF records wired through SyncNordPatronNeglectSpells. Broad Nord lapse reuses the Kyne weather spell for now. Neglect is distinct from creed-violation loss."
   },
   "creedViolationLoss": {
     "policy": "Medium/major only; 2-3 negative deltas. Distinct from gentle neglect drift.",
@@ -646,16 +646,16 @@
     }
   ],
   "nineDivinesLane": {
-    "summary": "Nine Divines lane (PDV_State_NordPantheonBaseline=NineDivines). Nord can focus ANY of the 8 Divines + Talos. The 8 Divine deity QUSTs are Imperial-owned (create:false; Nord reconciles Stance_Nord=NATIVE only). Talos is reused from the existing record and shares the Talos reward family above (lane=OldWays|NineDivines). Each focused Divine needs its own Nord-keyed 3-tier reward family: PDV_Bless_Nord_<God>_T1/T2/T3 -- same gods, Nord-flavored copy, distinct from the Imperial-keyed PDV_Bless_Imperial_<God>_* records (separate manager spell properties; do not reuse the Imperial spells).",
-    "design": "Per-god reward record editorIds declared as a compact contract (full 24-entry stat authoring deferred to the Nine Divines authoring slice; theme + magnitude shape locked here). Each family is state-gated on NineDivines + the focused god's piety tier (T1>=Seeker, T2>=Devoted, T3>=Champion), offer-like, one active focus at a time (mirror SyncKhajiitEmphasisFamily). Broad < focused; broad Nine Divines T2 suppressed under focus. All combat magnitudes <=12%; T3 carries the matching scripted signature from PDV_Phase2_CapstoneSignatures.md (Imperial Nine Divines block: Akatosh 'Endurance of the Covenant', Mara 'Compassion of the Mother', Arkay 'Ward of the Cycle', Stendarr 'Bulwark of Mercy', Zenithar 'Prosperity of Fair Dealing', Dibella 'Inspiration of Beauty', Julianos 'Insight of Law and Lore', Kynareth 'Open Sky').",
+    "summary": "Nine Divines lane (PDV_State_NordPantheonBaseline=NineDivines). Nord can focus ANY of the 8 Divines + Talos. The 8 Divine deity QUSTs are Imperial-owned (create:false; Nord reconciles Stance_Nord=NATIVE only). Talos is reused from the existing record and shares the Talos reward family above (lane=OldWays|NineDivines). The 8 focused Divine reward families intentionally reuse the Imperial-keyed PDV_Bless_Imperial_<God>_T1/T2/T3 SPELs; the stale PDV_Bless_Nord_<God>_* property declarations remain save-safe dead declarations and are not the active reward contract.",
+    "design": "Each reused Imperial Divine family is state-gated on NineDivines + the focused god's piety tier (T1>=Seeker, T2>=Devoted, T3>=Champion), offer-like, one active focus at a time (mirror SyncKhajiitEmphasisFamily). Broad < focused; broad Nine Divines T2 suppressed under focus. Reuse keeps Nord Nine Divines mechanically identical to the existing Nine Divines rewards and avoids a mid-cycle 24-record content/magnitude pass. Future Nord-flavored Divine records would require a separate design and migration decision.",
     "perGodRewardFamilies": [
       {
         "god": "Akatosh",
         "reuseDeity": "PDV_Deity_Akatosh (Imperial-owned)",
         "spellEditorIds": [
-          "PDV_Bless_Nord_Akatosh_T1",
-          "PDV_Bless_Nord_Akatosh_T2",
-          "PDV_Bless_Nord_Akatosh_T3"
+          "PDV_Bless_Imperial_Akatosh_T1",
+          "PDV_Bless_Imperial_Akatosh_T2",
+          "PDV_Bless_Imperial_Akatosh_T3"
         ],
         "theme": "Time/dragonblood endurance; MagickaRateMult + a martial/resist line; T3 'Endurance of the Covenant' signature."
       },
@@ -663,9 +663,9 @@
         "god": "Mara",
         "reuseDeity": "PDV_Deity_Mara (Imperial-owned)",
         "spellEditorIds": [
-          "PDV_Bless_Nord_Mara_T1",
-          "PDV_Bless_Nord_Mara_T2",
-          "PDV_Bless_Nord_Mara_T3"
+          "PDV_Bless_Imperial_Mara_T1",
+          "PDV_Bless_Imperial_Mara_T2",
+          "PDV_Bless_Imperial_Mara_T3"
         ],
         "theme": "Compassion/hearth; HealRateMult + ResistMagic; T3 'Compassion of the Mother' signature."
       },
@@ -673,9 +673,9 @@
         "god": "Arkay",
         "reuseDeity": "PDV_Deity_Arkay (Imperial-owned)",
         "spellEditorIds": [
-          "PDV_Bless_Nord_Arkay_T1",
-          "PDV_Bless_Nord_Arkay_T2",
-          "PDV_Bless_Nord_Arkay_T3"
+          "PDV_Bless_Imperial_Arkay_T1",
+          "PDV_Bless_Imperial_Arkay_T2",
+          "PDV_Bless_Imperial_Arkay_T3"
         ],
         "theme": "Life/death cycle, vs-undead; HealRateMult + DamageResist; T3 'Ward of the Cycle' signature."
       },
@@ -683,9 +683,9 @@
         "god": "Stendarr",
         "reuseDeity": "PDV_Deity_Stendarr (Imperial-owned)",
         "spellEditorIds": [
-          "PDV_Bless_Nord_Stendarr_T1",
-          "PDV_Bless_Nord_Stendarr_T2",
-          "PDV_Bless_Nord_Stendarr_T3"
+          "PDV_Bless_Imperial_Stendarr_T1",
+          "PDV_Bless_Imperial_Stendarr_T2",
+          "PDV_Bless_Imperial_Stendarr_T3"
         ],
         "theme": "Mercy/bulwark, vs-daedra/undead; Block + DamageResist; T3 'Bulwark of Mercy' signature."
       },
@@ -693,9 +693,9 @@
         "god": "Zenithar",
         "reuseDeity": "PDV_Deity_Zenithar (Imperial-owned)",
         "spellEditorIds": [
-          "PDV_Bless_Nord_Zenithar_T1",
-          "PDV_Bless_Nord_Zenithar_T2",
-          "PDV_Bless_Nord_Zenithar_T3"
+          "PDV_Bless_Imperial_Zenithar_T1",
+          "PDV_Bless_Imperial_Zenithar_T2",
+          "PDV_Bless_Imperial_Zenithar_T3"
         ],
         "theme": "Fair dealing/labor; CarryWeight + a Smithing or resist line; T3 'Prosperity of Fair Dealing' signature."
       },
@@ -703,9 +703,9 @@
         "god": "Dibella",
         "reuseDeity": "PDV_Deity_Dibella (Imperial-owned)",
         "spellEditorIds": [
-          "PDV_Bless_Nord_Dibella_T1",
-          "PDV_Bless_Nord_Dibella_T2",
-          "PDV_Bless_Nord_Dibella_T3"
+          "PDV_Bless_Imperial_Dibella_T1",
+          "PDV_Bless_Imperial_Dibella_T2",
+          "PDV_Bless_Imperial_Dibella_T3"
         ],
         "theme": "Beauty/inspiration; Speechcraft + ResistMagic; T3 'Inspiration of Beauty' signature."
       },
@@ -713,9 +713,9 @@
         "god": "Julianos",
         "reuseDeity": "PDV_Deity_Julianos (Imperial-owned)",
         "spellEditorIds": [
-          "PDV_Bless_Nord_Julianos_T1",
-          "PDV_Bless_Nord_Julianos_T2",
-          "PDV_Bless_Nord_Julianos_T3"
+          "PDV_Bless_Imperial_Julianos_T1",
+          "PDV_Bless_Imperial_Julianos_T2",
+          "PDV_Bless_Imperial_Julianos_T3"
         ],
         "theme": "Law/lore; MagickaRateMult + ResistMagic; T3 'Insight of Law and Lore' signature."
       },
@@ -723,9 +723,9 @@
         "god": "Kynareth",
         "reuseDeity": "PDV_Deity_Kynareth (Imperial-owned)",
         "spellEditorIds": [
-          "PDV_Bless_Nord_Kynareth_T1",
-          "PDV_Bless_Nord_Kynareth_T2",
-          "PDV_Bless_Nord_Kynareth_T3"
+          "PDV_Bless_Imperial_Kynareth_T1",
+          "PDV_Bless_Imperial_Kynareth_T2",
+          "PDV_Bless_Imperial_Kynareth_T3"
         ],
         "theme": "Open sky/wind (distinct from Kyne); StaminaRateMult + ResistFrost; T3 'Open Sky' signature."
       },
@@ -786,8 +786,8 @@
       },
       "stateTrack": "PDV_State_NordPantheonBaseline enum OldWays=0 / NineDivines=1 (setup framing; selects which pantheon's gods are offer-eligible). Commitment uses the SHARED PDV_GLO_PatronState / PDV_GLO_PatronDeity, not a Nord baseline state. Dawn-only offer gate: piety threshold (50), two signal days in seven, pantheon eligibility (the focused god must belong to the active baseline lane), cooldown, one offer max. See PDV_Phase20NordImplementationCosting.manifest.json."
     },
-    "wiring": "Wire the new broad Old Ways T2 property (PDV_Bless_Nord_OldWays_T2; T1 already exists, granted via PATRON_STATE_BROAD) + the focused reward props on PDV__ManagerQuest: Old Ways spine = Kyne T1/T2/T3, Shor T1/T2/T3, Tsun T1/T2/T3, Stuhn T1/T2/T3, Talos T1/T2/T3; Nine Divines = the 8 Divine families (Akatosh/Mara/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth T1/T2/T3 each) + reused Talos family. Also wire the 3 new deity props PDV_Shor/PDV_Tsun/PDV_Stuhn. Broad T2 grant is SUPPRESSED whenever an active focused patron is set (broad < focused). Focused grants gate on PDV_State_NordPantheonBaseline lane eligibility + the patron tier (mirror SyncKhajiitEmphasisRewards/Family: one active focus, T1>=Seeker, T2>=Devoted, T3>=Champion). Talos reward props additionally require faithful-defiance signal eligibility (compliance never scores). Add ONLY Shor/Tsun/Stuhn to FLST 017E47 (Kyne/Talos and the 8 Divines are already present or Imperial-added). DO NOT recreate PDV_SPEL_Neglect_Kyne.",
-    "verify": "housecarl readback (profile Devotion Dev): the 3 new deity QUSTs (Shor/Tsun/Stuhn) exist with FormVersion 44, SGE flag, correct VMAD script + DeityName/DeityIndex/Stance_Nord=0, and appear in the SEQ; FLST 017E47 grew by exactly 3 (Shor/Tsun/Stuhn) and Kyne/Talos/Divines are present once each; the Old Ways focused SPEL (Kyne/Shor/Tsun/Stuhn/Talos T1/T2/T3) and broad T2 exist with correct MGEF actor-values/magnitudes (no combat magnitude > 12%); the Nine Divines per-god Nord families resolve once authored; the 8 Divines carry Stance_Nord=NATIVE (reconciled, not recreated); PDV_Bless_Nord_OldWays_T1 and PDV_SPEL_Neglect_Kyne are unchanged/reused; PDV_State_NordPantheonBaseline enum resolves; broad-T2 suppression and focused/lane gates resolve. Then runtime smoke (QASmoke routes 70-73 per the costing manifest; RouteNordOldWaysState / RouteNordHircineArkayEdge markers per PDV_BetaTestPacket_Nord.md)."
+    "wiring": "Wire the new broad Old Ways T2 property (PDV_Bless_Nord_OldWays_T2; T1 already exists, granted via PATRON_STATE_BROAD) + the focused reward props on PDV__ManagerQuest: Old Ways spine = Kyne T1/T2/T3, Shor T1/T2/T3, Tsun T1/T2/T3, Stuhn T1/T2/T3, Talos T1/T2/T3; Nine Divines = the 8 Divine families reuse PDV_Bless_Imperial_Akatosh/Mara/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth_T1/T2/T3 + reused Talos family. Also wire the 3 new deity props PDV_Shor/PDV_Tsun/PDV_Stuhn. Broad T2 grant is SUPPRESSED whenever an active focused patron is set (broad < focused). Focused grants gate on PDV_State_NordPantheonBaseline lane eligibility + the patron tier (mirror SyncKhajiitEmphasisRewards/Family: one active focus, T1>=Seeker, T2>=Devoted, T3>=Champion). Talos reward props additionally require faithful-defiance signal eligibility (compliance never scores). Add ONLY Shor/Tsun/Stuhn to FLST 017E47 (Kyne/Talos and the 8 Divines are already present or Imperial-added). DO NOT recreate PDV_SPEL_Neglect_Kyne.",
+    "verify": "housecarl/readback (profile Devotion Dev): the 3 new deity QUSTs (Shor/Tsun/Stuhn) exist with FormVersion 44, SGE flag, correct VMAD script + DeityName/DeityIndex/Stance_Nord=0, and appear in the SEQ; FLST 017E47 grew by exactly 3 (Shor/Tsun/Stuhn) and Kyne/Talos/Divines are present once each; the Old Ways focused SPEL (Kyne/Shor/Tsun/Stuhn/Talos T1/T2/T3) and broad T2 exist with correct MGEF actor-values/magnitudes (no combat magnitude > 12%); the Nine Divines focused Divine lane resolves to the existing Imperial reward SPELs with manager VMAD properties filled; the 8 Divines carry Stance_Nord=NATIVE (reconciled, not recreated); PDV_Bless_Nord_OldWays_T1 and PDV_SPEL_Neglect_Kyne are unchanged/reused; PDV_State_NordPantheonBaseline enum resolves; broad-T2 suppression and focused/lane gates resolve. Then runtime smoke (QASmoke routes 70-73 per the costing manifest; RouteNordOldWaysState / RouteNordHircineArkayEdge markers per PDV_BetaTestPacket_Nord.md)."
   },
   "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
   "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."

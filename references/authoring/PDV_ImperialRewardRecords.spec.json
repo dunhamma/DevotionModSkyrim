@@ -185,12 +185,35 @@
     "effects": [
       {
         "magicEffectEditorId": "PDV_MGEF_Neglect_Imperial_Restoration",
-        "actorValue": "HealRateMult",
+        "actorValue": "ResistDisease",
         "magnitude": -5
       }
     ],
-    "playerFacingText": "You have let civic faith lapse. Your health regenerates 5% more slowly until you return to public service and the Divines. The real bite comes only at rupture or curse.",
-    "designNote": "Gentle diegetic texture only; real bite is reserved for rupture/curse (vampire collapse). Neglect is not a creed-violation loss and does not corrode a specific patron."
+    "playerFacingText": "You have let civic faith lapse. The Divines' ward against sickness thins -- Disease Resistance -5% until you return to public service. The real bite comes only at rupture or curse.",
+    "designNote": "Gentle diegetic texture; real bite is reserved for rupture/curse (vampire collapse). 2026-06-27 owner ruling (Requiem-felt neglect rework): converted from HealRateMult -5 to a felt flat ResistDisease -5. Keep PDV_MGEF_Neglect_Imperial_Restoration in place to preserve the SPEL->MGEF FormID link; the _Restoration suffix is a benign internal misnomer. This patron-agnostic civic-lapse spell is the broad-lane neglect reference model. Neglect is distinct from creed-violation loss."
+  },
+  "creedViolationLoss": {
+    "policy": "Medium/major only; 2 negative deltas. Distinct from gentle civic neglect drift. Imperial's only creed-violation vector is focused-Talos betrayal under the Concordat; concrete authored beats only, no ambient civic-betrayal parser. Mirrors the Nord Talos model.",
+    "entries": [
+      {
+        "id": "imperial-talos-betrayal-compliance",
+        "patron": "Talos",
+        "delta": -2,
+        "severity": "medium",
+        "trigger": "Reporting/betraying a Talos worshipper, surrendering a hidden shrine, or public compliance after a focused-Talos commitment (ConcordatStanding-gated). Concrete authored beat only.",
+        "playerFacingText": "You bent the knee where you once stood firm. The old faith feels distant."
+      },
+      {
+        "id": "imperial-talos-major-betrayal",
+        "patron": "Talos",
+        "delta": -3,
+        "severity": "major",
+        "trigger": "Aiding the Thalmor against the Talos faith in a major authored beat after a focused-Talos commitment.",
+        "playerFacingText": "You turned on the Ninth in the open. The defiance that was faith is gone."
+      }
+    ],
+    "runtime": "2026-06-27: wired through shared PDV__ManagerQuest.HandleTalosBetrayal and MCM debug buttons. Organic quest/dialogue detection remains a follow-on; debug smoke proves gate, piety loss, surfacing, anti-repeat, and Concordat raw movement.",
+    "designNote": "Scoped to active focused Talos. Imperial uses the raw ConcordatStanding Talos-eligible gate (<=50) and pushes the raw track toward compliance on application. Nord reuses the same handler without Concordat pressure. Distinct from the gentle ResistDisease civic neglect."
   },
   "emphasisRewards": [
     {

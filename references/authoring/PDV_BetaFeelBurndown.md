@@ -26,18 +26,21 @@ readiness evidence.
 
 ## Current Snapshot
 
-As of the 2026-06-14 17:29 AEST local recheck:
+As of the 2026-06-27 AEST local recheck:
 
 | Area | Current state | Evidence |
 | --- | --- | --- |
 | Daedric Princes | **Pass** for current beta-display gate | `node .\tools\pdv_daedric_beta_gate.mjs` -> `PASS=16` |
 | Race beta-feel packets | **8 pass, 2 still fail/deferred** | `PDV_PreBetaRaceGateLedger.md`: Altmer, Khajiit, Bosmer, Nord, Argonian, Orc, Breton, and Redguard Pass; Dunmer and Imperial remain Fail/deferred (count reconciled 2026-06-19) |
-| Default framework verifier | **Machine-clean with known warnings** | `node .\tools\pdv_verify.mjs` -> `FAIL=0, WARN=2, TODO=0, PASS=3038, INFO=43`; includes small-signal v8/v3 exact-body source gate |
+| Default framework verifier | **Machine-clean with known warning** | `node .\tools\pdv_verify.mjs --strict-neglect-decay --json` -> `FAIL=0, WARN=1, PASS=3495, INFO=62`; warning is medallion glyph fallback only |
 | Content verifier | **Clean** | `node .\tools\pdv_content_verify.mjs` -> `FAIL=0, WARN=0, PASS=1080, INFO=4` |
 | Khajiit focused P2 route | **Route-proof pass** | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race khajiit` -> PASS |
 | Live manager compile | **Clean** | `node .\tools\pdv_compile.mjs --script PDV__ManagerQuest` -> `1 succeeded, 0 failed`; bundled verifier stayed `FAIL=0, WARN=2, TODO=0, PASS=3038, INFO=43` |
 | Consolidated record-wave readback | **Clean** | `--check-rewards --rewards-spec PDV_ConsolidatedBuildPass_RecordWave.spec.json` -> PASS; Redguard curse-state message-body drift is closed |
 | Per-race reward-spec readback | **10/10 pass** | All ten `PDV_*RewardRecords.spec.json` files pass `tools\pdv-phase20-race-author --check-rewards`, including Imperial Concordat track modifiers |
+| Nord/Imperial felt-neglect ESP batch | **Machine/readback pass; runtime smoke pending** | `tools\pdv-neglect-esp-author --check` verifies Kyne/Imperial MGEF conversions, four Nord patron neglect spells, and manager VMAD properties; `pdv_verify --strict-neglect-decay` source-gates the lapse-aware runtime |
+| Imperial/Nord Talos creed runtime | **Compile pass; debug smoke pending** | Shared `PDV__ManagerQuest.HandleTalosBetrayal` applies focused-Talos `-2/-3` losses with MCM Debug buttons; Imperial also moves raw Concordat standing toward compliance. Organic betrayal detection remains follow-on |
+| Integrity harness | **Pass** | `node .\tools\pdv_integrity_harness.mjs` -> `signal_e2e_gate`, `deity_chain`, and `eligibility_reward_coverage` all PASS |
 
 The earlier recheck debt for Redguard curse-state message bodies and Imperial
 Concordat track naming is closed. This does not promote any runtime/manual race
@@ -58,6 +61,8 @@ These items are no longer counted as open beta-feel blockers.
 | Bosmer current beta-feel packet | Manual/runtime packet evidence plus final Bosmer readback refresh | DA05 accepted branches, rejection sweep, Survey/status, reward stack, Songs of the Green, and Baan Dar Gap passed for the current packet; 2026-06-16 live readback refreshed Baan Dar Gap to SpeedMult +40 for 15s; final-world placement remains separate |
 | 16-Prince Daedric beta-display gate | Runtime/manual ledger gate | `pdv_daedric_beta_gate` passes all 16 Princes |
 | Likes/dislikes enrichment/codegen landed and source-gated | Compile/readback clean | `pdv_verify` now asserts v8/v3 constants, exact 315-row deity and 160-row Prince generated bodies, and all 31 CSV event IDs in the clear superset. Runtime/new-save reload proof remains open; pending event rows stay inert until routers exist |
+| Nord/Imperial felt-neglect ESP batch | Machine/readback clean | Kyne neglect now uses `ResistFrost -8`, Imperial civic neglect uses `ResistDisease -5`, and Nord Shor/Tsun/Stuhn/Talos per-patron neglect spells exist and are wired. Runtime Active Effects/stack proof remains part of the upcoming smoke pass |
+| Imperial/Nord Talos betrayal debug path | Compile clean | `PDV_MCM` exposes `Talos betrayal -2/-3`; manager gates on focused Talos, origin, anti-repeat, and Imperial raw Concordat eligibility. Runtime smoke and organic detection are still separate |
 | Altmer `PDV_RepTrack_ThalmorAlignment` first record bridge | Consolidated record-wave readback passes | Source routing for the six actions and manual/new-save behavior proof remain open |
 | Breton creed-loss spell records and persistent band routing | Breton reward-spec readback passes; handoff claims manager compile/readback | Breach-source quest routing, threshold notifications, recovery routes, and in-game Active Effects proof remain open |
 | Altmer/Imperial/Dunmer track emitters wired (2026-06-14) | Compile/readback clean | Altmer ThalmorAlignment now live (banned-texts -5, consort -25, Thalmor-kill -20); Imperial Stormcloak-defiance now lands -20 via the point table + Thalmor-Justiciar-kill -10; Dunmer DLC2 outdoor-shrine twilight prayer. ~6 no-clean-hook actions (arrest/report/help-escape/Thalmor-mission/Orc-oath-break/Redguard-Dawnguard-cure) documented as deferred in `PDV_NextBuildPass_RecordSpec.md` sec.10. **Route-proven 2026-06-14** (Papyrus log): Altmer banned-texts/consort/kill -> raw -75; Imperial defiance -20; Imperial Thalmor-kill -10 (open kill, after a rank-gate fix). Only the Dunmer DLC2 Solstheim shrine remains unobserved (needs Solstheim); full manual beta-feel separate |
@@ -140,11 +145,17 @@ Use this bundle after any cleanup that could affect the burn:
 
 ```powershell
 node .\tools\pdv_compile.mjs --script PDV__ManagerQuest
+node .\tools\pdv_compile.mjs --script PDV_MCM
+dotnet run --project .\tools\pdv-neglect-esp-author\PdvNeglectEspAuthor.csproj -- --check
 dotnet run --project .\tools\pdv-phase20-race-author\PdvPhase20RaceAuthor.csproj -- --check-rewards --rewards-spec .\references\authoring\PDV_ConsolidatedBuildPass_RecordWave.spec.json
 Get-ChildItem .\references\authoring -Filter 'PDV_*RewardRecords.spec.json' | Sort-Object Name | ForEach-Object {
   dotnet run --project .\tools\pdv-phase20-race-author\PdvPhase20RaceAuthor.csproj -- --check-rewards --rewards-spec $_.FullName
 }
 node .\tools\pdv_verify.mjs
+node .\tools\pdv_verify.mjs --strict-neglect-decay
+node .\tools\pdv_deity_chain_audit.mjs --json
+node .\tools\pdv_eligibility_reward_coverage_audit.mjs --json
+node .\tools\pdv_integrity_harness.mjs
 node .\tools\pdv_content_verify.mjs
 node .\tools\pdv_daedric_beta_gate.mjs
 ```

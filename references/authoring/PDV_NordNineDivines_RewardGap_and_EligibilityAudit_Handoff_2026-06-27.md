@@ -102,6 +102,47 @@ Machine/readback only at handoff time. After the 7-god fix: compile 0/0 + verify
 coverage audit PASS. In-game proof = a Nine Divines Nord commits to (e.g.) Akatosh and sees the tier
 reward apply -- separate manual step.
 
+## Implementation closeout update
+Implemented 2026-06-27:
+
+- Nord Nine Divines reward sync reuses the Imperial Divine reward SPELs for Akatosh, Arkay, Stendarr,
+  Zenithar, Dibella, Julianos, and Kynareth, matching the Mara pattern. No new Nord Divine reward
+  records were authored.
+- `PDV_NordRewardRecords.spec.json` now treats the Imperial-reuse model as the closed contract.
+- `tools/pdv_eligibility_reward_coverage_audit.mjs` joins live Papyrus reward eligibility/mapping to
+  live `Devotion.esp` SPEL existence and `PDV__ManagerQuest` VMAD property fill, writing
+  `PDV_EligibilityRewardCoverageLedger.md/.csv`.
+- `tools/pdv_integrity_harness.mjs` runs the new audit as a blocking gate.
+- Medallion roster builders now use non-selectable live roster entries where a deity record exists,
+  and `SelectMedallionEntry` always returns false so medallion display cannot bypass the offer flow.
+
+Verification run 2026-06-27:
+
+| Gate | Result | Notes |
+|---|---|---|
+| `node .\tools\pdv_compile.mjs --script PDV__ManagerQuest` | PASS | 0 errors, 0 warnings; wrapper verifier FAIL=0 |
+| `node .\tools\pdv_verify.mjs --strict-neglect-decay --json` | PASS | FAIL=0, WARN=1, PASS=3495; warning is medallion glyph fallback only |
+| `node .\tools\pdv_phase2_reward_readback_audit.mjs --json` | PASS | PASS=1325 |
+| `node .\tools\pdv_deity_chain_audit.mjs --json` | PASS | blockers=0, resolutionGaps=0, reachabilityGaps=0 |
+| `node .\tools\pdv_deity_chain_audit.mjs --self-test` | PASS | Synthetic fixture catches missing reward/offer/reachability failures |
+| `node .\tools\pdv_eligibility_reward_coverage_audit.mjs --json` | PASS | 147 rows, 0 failures |
+| `node .\tools\pdv_eligibility_reward_coverage_audit.mjs --self-test` | PASS | Catches missing SPEL, unfilled manager property, and ignores pending roster entries |
+| `node .\tools\pdv_integrity_harness.mjs` | PASS | New `eligibility_reward_coverage` gate is blocking and clean with the Anvil MO2 MCP available |
+
+Integrity-harness stop condition for smoke prep: `node .\tools\pdv_integrity_harness.mjs` must stay
+PASS. If it later reports live-ESP columns as SKIP, that is an MCP/readback availability boundary and
+must be cleared before smoke testing.
+
+### Smoke-test checklist
+
+This is runtime/manual proof, not a replacement for the machine gates:
+
+1. Start a fresh Nord path and choose the Nine Divines baseline.
+2. Raise or force a non-Mara Divine such as Akatosh to Seeker, Devoted, then Champion.
+3. Confirm commitment happens through the offer flow, not by selecting the medallion entry.
+4. Confirm the expected Imperial reward spell appears in Active Effects at each tier.
+5. Confirm the medallion shows live roster entries as non-selectable display entries.
+
 ## Deliverable 3 -- medallion roster honesty (cross-race rollout; Nord DONE)
 Owner ruling 2026-06-27: the **medallion is a roster DISPLAY; commitment is the OFFER flow**, not a
 direct medallion-pick. Today the medallion's `SelectMedallionEntry(optionId)` calls
@@ -118,15 +159,12 @@ DONE this session (Nord, both authoritative + mirror sources, compiled 0/0):
   to non-selectable (was selectable), so the Nord medallion is internally consistent and never offers a
   direct-commit button.
 
-TODO (cross-race rollout): apply the same `RosterMedallionEntry` swap to the other roster builders --
-`GetImperialMedallionEntriesJson` (~L16067), Breton, Altmer, Dunmer, Khajiit, Argonian, Orc, Bosmer,
-Redguard. Pass each god's manager deity property (PDV_Akatosh, PDV_Mara, ...). Gods with no live
-deity record (e.g. Redguard Satakal/Ruptga/Tava/Onsi -- not on `PDV_FLST_AllDeities`) auto-fall-back
-to the pending message (pass the property if one exists, else `None`).
+DONE (cross-race rollout): the other roster builders now call `RosterMedallionEntry` for live deity
+properties and keep no-record gods pending. Redguard Satakal/Ruptga/Tava/Onsi, Breton/Altmer Phynaster,
+Altmer Syrabane, and Khajiit Riddle'Thar/Jone-Jode remain pending because no live manager property is
+available.
 
-TODO (retire the vestigial backend): since commitment is offer-only, the direct-pick path is now
-dead weight and a latent offer-bypass. Either make `SelectMedallionEntry` always return false, or
-remove the 6 reference-deity arms from `GetMedallionDeityForOptionId` / `GetMedallionOptionIdForDeity`
-/ `IsMedallionOptionAvailableForOrigin`. NOTE auri-el/yffre/zen/baan-dar are cross-race (Altmer/Bosmer/
-Khajiit) -- coordinate so no race silently keeps a direct-commit button. Acceptance: no medallion entry
-anywhere is `selectable:true`; `SelectMedallionEntry` cannot commit a patron; offer flow unchanged.
+DONE (retire the vestigial backend): `SelectMedallionEntry` and `CanSelectMedallionEntry` now always
+return false. The old option-id maps can remain as inert read helpers, but they no longer provide a
+commitment path. Acceptance: no medallion entry should be `selectable:true`; `SelectMedallionEntry`
+cannot commit a patron; offer flow remains the only commitment path.

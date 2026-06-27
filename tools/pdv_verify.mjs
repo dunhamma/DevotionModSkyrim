@@ -590,8 +590,16 @@ const PHASE10_DUNMER_SIGNAL_RECEIVER_DEFINITIONS = SLICE1_SIGNAL_RECEIVER_DEFINI
 }));
 
 const KHAJIIT_FOCUSED_EMPHASIS_GLOBAL = "PDV_GLO_KhajiitFocusedEmphasis";
-const KYNE_NEGLECT_MAGIC_EFFECT = "PDV_MGEF_Neglect_Kyne";
+const KYNE_NEGLECT_MAGIC_EFFECT = "PDV_MGEF_Neglect_Kyne_Stamina";
 const KYNE_NEGLECT_SPELL = "PDV_SPEL_Neglect_Kyne";
+const NEGLECT_DECAY_SPELL_PROPERTIES = [
+  ["PDV_SPEL_Neglect_Kyne", "PDV_SPEL_Neglect_Kyne"],
+  ["PDV_SPEL_Neglect_Shor", "PDV_SPEL_Neglect_Shor"],
+  ["PDV_SPEL_Neglect_Tsun", "PDV_SPEL_Neglect_Tsun"],
+  ["PDV_SPEL_Neglect_Stuhn", "PDV_SPEL_Neglect_Stuhn"],
+  ["PDV_SPEL_Neglect_Talos", "PDV_SPEL_Neglect_Talos"],
+  ["PDV_SPEL_Neglect_Imperial", "PDV_SPEL_Neglect_Imperial"],
+];
 const PHASE11_ARNGEIR_BRANCH = "PDV_DIAL_Phase11ArngeirKyneRecognitionBranch";
 const PHASE11_ARNGEIR_TOPIC = "PDV_DIAL_Phase11ArngeirKyneRecognitionTopic";
 const PHASE11_ARNGEIR_INFO = "PDV_INFO_Phase11ArngeirKyneRecognition";
@@ -2630,7 +2638,8 @@ class Verifier {
       "Int activeCount = ApplyGenericNeglectFlags()",
       "Int Function ApplyGenericNeglectFlags()",
       "Bool Function IsEligibleForNeglectSelection(PDV_DeityBase deity)",
-      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne))",
+      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne)",
+      "SyncNordPatronNeglectSpells()",
     ], this.phase16Gap.bind(this));
   }
 
@@ -3144,10 +3153,10 @@ class Verifier {
     if (
       manifest.schema === "pdv-medallion-roster.v1"
       && manifest.id === "phase20-medallion-native-roster"
-      && manifest.runtimePolicy?.selectablePolicy === "requires-live-scorable-deity"
+      && manifest.runtimePolicy?.selectablePolicy === "offer-only-no-direct-selection"
       && manifest.runtimePolicy?.unwiredEntryPolicy === "visible-disabled"
     ) {
-      this.pass("Phase 20 medallion roster manifest", "Manifest owns native roster intent with live-readback selectability policy.", PHASE20_MEDALLION_ROSTER_MANIFEST);
+      this.pass("Phase 20 medallion roster manifest", "Manifest owns native roster intent with offer-only medallion policy.", PHASE20_MEDALLION_ROSTER_MANIFEST);
     } else {
       this.phase20RosterGap(
         "Phase 20 medallion roster manifest",
@@ -3178,7 +3187,7 @@ class Verifier {
     if (allDeities) {
       this.pass("Phase 20 medallion readback", `Read PDV_FLST_AllDeities with ${allDeityItems.size} live scorable member(s).`, PDV_ESP);
     } else {
-      this.phase20RosterGap("Phase 20 medallion readback", "PDV_FLST_AllDeities readback is missing; selectable medallion entries cannot be proven.", PDV_ESP);
+      this.phase20RosterGap("Phase 20 medallion readback", "PDV_FLST_AllDeities readback is missing; live medallion roster entries cannot be proven.", PDV_ESP);
     }
 
     const missingSymbols = new Set();
@@ -3216,7 +3225,7 @@ class Verifier {
         }
 
         liveSelectableRecords.add(entry.deityRecord);
-      } else if (!entry.disabledReason) {
+      } else if (!entry.disabledReason && !entry.deityRecord) {
         this.phase20RosterGap("Phase 20 medallion disabled entry", `${label} is not selectable and lacks disabledReason.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
       }
     }
@@ -3233,9 +3242,9 @@ class Verifier {
       .filter((edid) => edid.startsWith("PDV_Deity_"));
     const unrepresentedLive = liveDeityEdids.filter((edid) => !liveSelectableRecords.has(edid));
     if (unrepresentedLive.length) {
-      this.info("Phase 20 medallion live roster", `Live scorable deity record(s) not selectable in the medallion manifest: ${unrepresentedLive.join(", ")}.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
+      this.pass("Phase 20 medallion live roster", `Live scorable deity record(s) stay offer-owned rather than medallion-selectable: ${unrepresentedLive.join(", ")}.`, PHASE20_MEDALLION_ROSTER_MANIFEST);
     } else {
-      this.pass("Phase 20 medallion live roster", "Every live scorable deity record is represented by at least one selectable medallion entry.", PHASE20_MEDALLION_ROSTER_MANIFEST);
+      this.info("Phase 20 medallion live roster", "Manifest still contains selectable live entries; offer-only runtime source must block direct medallion commitment.", PHASE20_MEDALLION_ROSTER_MANIFEST);
     }
 
     this.checkSourceContains("Phase 20 medallion manager source", "PDV__ManagerQuest", [
@@ -3244,6 +3253,7 @@ class Verifier {
       "Bool Function CanSelectMedallionEntry(String optionId)",
       "String Function GetMedallionSectionsJson(Int originRace)",
       "Bool Function IsMedallionDeitySelectable(PDV_DeityBase deity)",
+      "Medallion selection blocked",
     ], this.phase20RosterGap.bind(this));
 
     const livePrismaApp = path.join(DEVOTION_MOD, "PrismaUI", "views", "Devotion", "app.js");
@@ -7132,7 +7142,9 @@ class Verifier {
     }
 
     const props = propertyMap(script);
-    this.checkObjectPropertyTarget("Neglect/decay manager property", props, "PDV_SPEL_Neglect_Kyne", KYNE_NEGLECT_SPELL, this.neglectDecayGap.bind(this));
+    for (const [propName, expectedEdid] of NEGLECT_DECAY_SPELL_PROPERTIES) {
+      this.checkObjectPropertyTarget("Neglect/decay manager property", props, propName, expectedEdid, this.neglectDecayGap.bind(this));
+    }
   }
 
   checkPhase11PrivilegePilotManifest() {
@@ -9142,16 +9154,32 @@ class Verifier {
   checkNeglectDecaySourceContracts() {
     this.checkSourceContains("Neglect/decay source", "PDV__ManagerQuest", [
       "Spell Property PDV_SPEL_Neglect_Kyne Auto",
+      "Spell Property PDV_SPEL_Neglect_Shor Auto",
+      "Spell Property PDV_SPEL_Neglect_Tsun Auto",
+      "Spell Property PDV_SPEL_Neglect_Stuhn Auto",
+      "Spell Property PDV_SPEL_Neglect_Talos Auto",
+      "Float Property NEGLECT_LAPSE_GRACE_DAYS = 3.0 AutoReadOnly",
       "Function RunDawnApplyDecay()",
       "Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)",
       "StorageUtil.GetIntValue(deityForm, \"PDV.LastDecayAppliedDay\") == currentDay",
       "BROAD_WORSHIP_DECAY_MULTIPLIER",
+      "StorageUtil.SetFloatValue(None, \"PDV.Devotion.LastActTime\", Utility.GetCurrentGameTime())",
       "Function RunDawnApplySpellAndNeglectLayers()",
       "GetPatronState() != PATRON_STATE_ACTIVE",
+      "Bool nordBroadLapsed = IsBroadLaneLapsed() && GetPlayerOriginRaceIndex() == ORIGIN_NORD",
+      "SyncKyneNeglectSpell(nordBroadLapsed)",
+      "SyncNordPatronNeglectSpells()",
+      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne)",
       "Function SyncKyneNeglectSpell(Bool shouldBeActive)",
       "playerRef.AddSpell(PDV_SPEL_Neglect_Kyne, False)",
       "playerRef.RemoveSpell(PDV_SPEL_Neglect_Kyne)",
       "PDV.Neglect.KyneSpellActive",
+      "Bool Function IsPatronLapsed(PDV_DeityBase deity)",
+      "Bool Function IsBroadLaneLapsed()",
+      "Function SyncOnePatronNeglectSpell(Actor playerRef, Spell neglectSpell, Bool shouldBeActive)",
+      "playerRef.AddSpell(neglectSpell, False)",
+      "playerRef.RemoveSpell(neglectSpell)",
+      "Function SyncNordPatronNeglectSpells()",
       "String Function GetNeglectSummary()",
     ], this.neglectDecayGap.bind(this));
   }

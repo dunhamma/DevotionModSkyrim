@@ -2,11 +2,11 @@
   "schema": "pdv-medallion-roster.v1",
   "id": "phase20-medallion-native-roster",
   "status": "intent-plus-readback",
-  "description": "Visible native medallion roster intent. Live selectability is proven from PDV_FLST_AllDeities readback; this manifest is not generated into runtime tables.",
+  "description": "Visible native medallion roster intent. Live deity records are proven from PDV_FLST_AllDeities readback, but commitment remains offer-only and no medallion entry directly selects a patron.",
   "runtimePolicy": {
     "mode": "medallion",
     "visiblePolicy": "show-full-native-roster",
-    "selectablePolicy": "requires-live-scorable-deity",
+    "selectablePolicy": "offer-only-no-direct-selection",
     "missingGlyphPolicy": "fallback-to-journal",
     "unwiredEntryPolicy": "visible-disabled"
   },
@@ -27,7 +27,7 @@
       "PDV_Deity_BaanDar"
     ],
     "verifiedOn": "2026-06-05",
-    "note": "Readback proves the current scorable set. The verifier rechecks this from the live ESP before treating any medallion entry as selectable."
+    "note": "Readback proves the current scorable set for honest roster display. The verifier rechecks this from the live ESP while the runtime keeps medallion commitment offer-only."
   },
   "races": [
     {
@@ -38,9 +38,9 @@
           "sectionId": "native",
           "title": "Native worship",
           "entries": [
-            { "optionId": "kyne", "title": "Kyne", "kind": "god", "symbol": "kyne", "deityRecord": "PDV_Deity_Kyne", "visible": true, "selectable": true, "summary": "Sky, storm, hunt, and warrior-spirit.", "description": "Kyne is live and scorable in the current deity roster." },
+            { "optionId": "kyne", "title": "Kyne", "kind": "god", "symbol": "kyne", "deityRecord": "PDV_Deity_Kyne", "visible": true, "selectable": false, "summary": "Sky, storm, hunt, and warrior-spirit.", "description": "Kyne is live and scorable in the current deity roster." },
             { "optionId": "kynareth", "title": "Kynareth", "kind": "god", "symbol": "kyne", "visible": true, "selectable": false, "summary": "The Nine Divines sky road.", "description": "Kynareth is native in the roster intent, but is not yet a separate live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
-            { "optionId": "talos", "title": "Talos", "kind": "god", "symbol": "talos", "deityRecord": "PDV_Deity_Talos", "visible": true, "selectable": true, "summary": "Open defiance and human apotheosis.", "description": "Talos is live and scorable in the current deity roster." },
+            { "optionId": "talos", "title": "Talos", "kind": "god", "symbol": "talos", "deityRecord": "PDV_Deity_Talos", "visible": true, "selectable": false, "summary": "Open defiance and human apotheosis.", "description": "Talos is live and scorable in the current deity roster." },
             { "optionId": "shor", "title": "Shor", "kind": "god", "symbol": "shor", "visible": true, "selectable": false, "summary": "The old king and afterlife road.", "description": "Shor belongs in the Nord native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "tsun", "title": "Tsun", "kind": "god", "symbol": "tsun", "visible": true, "selectable": false, "summary": "Trial, honor, and the threshold.", "description": "Tsun belongs in the Nord native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "stuhn", "title": "Stuhn", "kind": "god", "symbol": "stuhn", "visible": true, "selectable": false, "summary": "Mercy in war and fair ransom.", "description": "Stuhn belongs in the Nord native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
@@ -84,7 +84,7 @@
           "title": "Native worship",
           "entries": [
             { "optionId": "kynareth", "title": "Kynareth", "kind": "god", "symbol": "kyne", "visible": true, "selectable": false, "summary": "Sky, travel, and druidic memory.", "description": "Kynareth is native in the roster intent, but is not yet a separate live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
-            { "optionId": "talos", "title": "Talos", "kind": "god", "symbol": "talos", "deityRecord": "PDV_Deity_Talos", "visible": true, "selectable": true, "summary": "Civic defiance and Septim inheritance.", "description": "Talos is live and scorable in the current deity roster." },
+            { "optionId": "talos", "title": "Talos", "kind": "god", "symbol": "talos", "deityRecord": "PDV_Deity_Talos", "visible": true, "selectable": false, "summary": "Civic defiance and Septim inheritance.", "description": "Talos is live and scorable in the current deity roster." },
             { "optionId": "mara", "title": "Mara", "kind": "god", "symbol": "mara", "visible": true, "selectable": false, "summary": "Household, mercy, and love.", "description": "Mara is native in the roster intent, but is not yet a separate live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "akatosh", "title": "Akatosh", "kind": "god", "symbol": "akatosh", "visible": true, "selectable": false, "summary": "Time, order, and covenant.", "description": "Akatosh is native in the roster intent, but is not yet a separate live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "arkay", "title": "Arkay", "kind": "god", "symbol": "arkay", "visible": true, "selectable": false, "summary": "Death, burial, and clean endings.", "description": "Arkay is native in the roster intent, but is not yet a separate live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
@@ -94,7 +94,7 @@
             { "optionId": "zenithar", "title": "Zenithar", "kind": "god", "symbol": "zenithar", "visible": true, "selectable": false, "summary": "Trade, craft, and honest work.", "description": "Zenithar is native in the roster intent, but is not yet a separate live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "magnus", "title": "Magnus", "kind": "god", "symbol": "magnus", "visible": true, "selectable": false, "summary": "Magic, light, and hidden inheritance.", "description": "Magnus belongs in the Breton native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "phynaster", "title": "Phynaster", "kind": "god", "symbol": "phynaster", "visible": true, "selectable": false, "summary": "Pilgrimage, endurance, and Elven memory.", "description": "Phynaster belongs in the Breton native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
-            { "optionId": "yffre", "title": "Y'ffre", "kind": "god", "symbol": "yffre", "deityRecord": "PDV_Deity_Yffre", "visible": true, "selectable": true, "summary": "Green memory, story, and law.", "description": "Y'ffre is live and scorable in the current deity roster." }
+            { "optionId": "yffre", "title": "Y'ffre", "kind": "god", "symbol": "yffre", "deityRecord": "PDV_Deity_Yffre", "visible": true, "selectable": false, "summary": "Green memory, story, and law.", "description": "Y'ffre is live and scorable in the current deity roster." }
           ]
         }
       ]
@@ -111,8 +111,8 @@
             { "optionId": "stendarr", "title": "Stendarr", "kind": "god", "symbol": "stendarr", "visible": true, "selectable": false, "summary": "Mercy and lawful protection.", "description": "Stendarr is native in the roster intent, but is not yet a separate live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "magnus", "title": "Magnus", "kind": "god", "symbol": "magnus", "visible": true, "selectable": false, "summary": "Light, magic, and origin memory.", "description": "Magnus belongs in the Altmer native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "phynaster", "title": "Phynaster", "kind": "god", "symbol": "phynaster", "visible": true, "selectable": false, "summary": "Endurance, pilgrimage, and old discipline.", "description": "Phynaster belongs in the Altmer native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
-            { "optionId": "yffre", "title": "Y'ffre", "kind": "god", "symbol": "yffre", "deityRecord": "PDV_Deity_Yffre", "visible": true, "selectable": true, "summary": "Story, form, and natural law.", "description": "Y'ffre is live and scorable in the current deity roster." },
-            { "optionId": "auri-el", "title": "Auri-El", "kind": "god", "symbol": "auri-el", "deityRecord": "PDV_Deity_AuriEl", "visible": true, "selectable": true, "summary": "The founding light and ancestral ascent.", "description": "Auri-El is live and scorable in the current deity roster." },
+            { "optionId": "yffre", "title": "Y'ffre", "kind": "god", "symbol": "yffre", "deityRecord": "PDV_Deity_Yffre", "visible": true, "selectable": false, "summary": "Story, form, and natural law.", "description": "Y'ffre is live and scorable in the current deity roster." },
+            { "optionId": "auri-el", "title": "Auri-El", "kind": "god", "symbol": "auri-el", "deityRecord": "PDV_Deity_AuriEl", "visible": true, "selectable": false, "summary": "The founding light and ancestral ascent.", "description": "Auri-El is live and scorable in the current deity roster." },
             { "optionId": "syrabane", "title": "Syrabane", "kind": "god", "symbol": "syrabane", "visible": true, "selectable": false, "summary": "Magic, craft, and survival through wisdom.", "description": "Syrabane belongs in the Altmer native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "xarxes", "title": "Xarxes", "kind": "god", "symbol": "xarxes", "visible": true, "selectable": false, "summary": "Lineage, record, and ordered memory.", "description": "Xarxes belongs in the Altmer native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "trinimac", "title": "Trinimac", "kind": "god", "symbol": "trinimac", "visible": true, "selectable": false, "summary": "Warrior order and unbroken nobility.", "description": "Trinimac belongs in the Altmer native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." }
@@ -128,17 +128,17 @@
           "sectionId": "native",
           "title": "Native worship",
           "entries": [
-            { "optionId": "yffre", "title": "Y'ffre", "kind": "god", "symbol": "yffre", "deityRecord": "PDV_Deity_Yffre", "visible": true, "selectable": true, "summary": "The Green, story, and the Old Contract.", "description": "Y'ffre is live and scorable in the current deity roster." },
-            { "optionId": "auri-el", "title": "Auri-El", "kind": "god", "symbol": "auri-el", "deityRecord": "PDV_Deity_AuriEl", "visible": true, "selectable": true, "summary": "Elven ancestry and high memory.", "description": "Auri-El is live and scorable in the current deity roster." },
+            { "optionId": "yffre", "title": "Y'ffre", "kind": "god", "symbol": "yffre", "deityRecord": "PDV_Deity_Yffre", "visible": true, "selectable": false, "summary": "The Green, story, and the Old Contract.", "description": "Y'ffre is live and scorable in the current deity roster." },
+            { "optionId": "auri-el", "title": "Auri-El", "kind": "god", "symbol": "auri-el", "deityRecord": "PDV_Deity_AuriEl", "visible": true, "selectable": false, "summary": "Elven ancestry and high memory.", "description": "Auri-El is live and scorable in the current deity roster." },
             { "optionId": "xarxes", "title": "Xarxes", "kind": "god", "symbol": "xarxes", "visible": true, "selectable": false, "summary": "Record, lineage, and written memory.", "description": "Xarxes belongs in the Bosmer native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
-            { "optionId": "baan-dar", "title": "Baan Dar", "kind": "god", "symbol": "baan-dar", "deityRecord": "PDV_Deity_BaanDar", "visible": true, "selectable": true, "summary": "Trickster road, masks, and survival.", "description": "Baan Dar is live and scorable in the current deity roster." }
+            { "optionId": "baan-dar", "title": "Baan Dar", "kind": "god", "symbol": "baan-dar", "deityRecord": "PDV_Deity_BaanDar", "visible": true, "selectable": false, "summary": "Trickster road, masks, and survival.", "description": "Baan Dar is live and scorable in the current deity roster." }
           ]
         },
         {
           "sectionId": "substrate_focus",
           "title": "Path focus",
           "entries": [
-            { "optionId": "zen", "title": "Z'en", "kind": "god", "symbol": "zen", "deityRecord": "PDV_Deity_Zen", "visible": true, "selectable": true, "summary": "Debt, toil, exchange, and obligation.", "description": "Z'en is live and scorable as a Bosmer path focus in the current deity roster." }
+            { "optionId": "zen", "title": "Z'en", "kind": "god", "symbol": "zen", "deityRecord": "PDV_Deity_Zen", "visible": true, "selectable": false, "summary": "Debt, toil, exchange, and obligation.", "description": "Z'en is live and scorable as a Bosmer path focus in the current deity roster." }
           ]
         }
       ]
@@ -169,7 +169,7 @@
             { "optionId": "azura", "title": "Azurah", "kind": "prince", "symbol": "azura", "visible": true, "selectable": false, "summary": "Dusk, dawn, moon-shadow, and fate.", "description": "Azurah is native to the Khajiit roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live Prince path and scoring route." },
             { "optionId": "boethiah", "title": "Boethra", "kind": "prince", "symbol": "boethiah", "visible": true, "selectable": false, "summary": "Trial, edge, and hard lessons.", "description": "Boethra is native to the Khajiit roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live Prince path and scoring route." },
             { "optionId": "mephala", "title": "Mafala", "kind": "prince", "symbol": "mephala", "visible": true, "selectable": false, "summary": "Hidden paths, webs, and clan memory.", "description": "Mafala is native to the Khajiit roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live Prince path and scoring route." },
-            { "optionId": "baan-dar", "title": "Baan Dar", "kind": "god", "symbol": "baan-dar", "deityRecord": "PDV_Deity_BaanDar", "visible": true, "selectable": true, "summary": "The bandit god, wit, and road survival.", "description": "Baan Dar is live and scorable in the current deity roster." },
+            { "optionId": "baan-dar", "title": "Baan Dar", "kind": "god", "symbol": "baan-dar", "deityRecord": "PDV_Deity_BaanDar", "visible": true, "selectable": false, "summary": "The bandit god, wit, and road survival.", "description": "Baan Dar is live and scorable in the current deity roster." },
             { "optionId": "rajhin", "title": "Rajhin", "kind": "god", "symbol": "rajhin", "visible": true, "selectable": false, "summary": "The clever thief and impossible escape.", "description": "Rajhin belongs in the Khajiit native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "alkosh", "title": "Alkosh", "kind": "god", "symbol": "alkosh", "visible": true, "selectable": false, "summary": "Dragon order and time in Khajiit memory.", "description": "Alkosh belongs in the Khajiit native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },
             { "optionId": "khenarthi", "title": "Khenarthi", "kind": "god", "symbol": "khenarthi", "visible": true, "selectable": false, "summary": "Wind, sky-road, and breath.", "description": "Khenarthi belongs in the Khajiit native roster, but is not yet a live scoring patron.", "disabledReason": "Awaiting live deity record and scoring path." },

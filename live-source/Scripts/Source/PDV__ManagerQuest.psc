@@ -107,6 +107,12 @@ PDV_DaedricPath_Hircine Property PDV_HircinePath Auto
 PDV_CurseState Property PDV_CurseStateService Auto
 Spell Property PDV_SPEL_SurveyDevotion Auto
 Spell Property PDV_SPEL_Neglect_Kyne Auto
+; Per-patron Nord neglect (follow-on): one gentle flat neglect spell per focusable non-Kyne Nord
+; patron. None until the ESP batch authors them; SyncNordPatronNeglectSpells no-ops until then.
+Spell Property PDV_SPEL_Neglect_Shor Auto
+Spell Property PDV_SPEL_Neglect_Tsun Auto
+Spell Property PDV_SPEL_Neglect_Stuhn Auto
+Spell Property PDV_SPEL_Neglect_Talos Auto
 Spell Property PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery Auto
 Spell Property PDV_SPEL_Favor_Kyne_StormRoadGrace Auto
 Spell Property PDV_SPEL_Favor_Kyne_GuidedHunt Auto
@@ -532,6 +538,10 @@ Float Property ORC_RATE_MULT_CITY = 0.75 AutoReadOnly
 Float Property ORC_RATE_MULT_LEGIONEXILE = 0.6 AutoReadOnly
 Float Property NEGLECT_ACTIVE_PIETY_MAX = 10.0 AutoReadOnly
 Int Property NEGLECT_ACTIVE_CAP = 3 AutoReadOnly
+; Recency-lapse grace (owner ruling 2026-06-27): neglect bites after this many days of no
+; devotional act, regardless of piety -- the active patron is decay-shielded so the piety<=10
+; floor almost never triggers from mere absence. Sits just past DECAY_GRACE_DAYS (2.0).
+Float Property NEGLECT_LAPSE_GRACE_DAYS = 3.0 AutoReadOnly
 Float Property COMMITMENT_OFFER_THRESHOLD = 50.0 AutoReadOnly
 Float Property COMMITMENT_DECLINE_DELAY_DAYS = 1.0 AutoReadOnly
 Float Property COMMITMENT_REFUSE_COOLDOWN_DAYS = 3.0 AutoReadOnly
@@ -8933,8 +8943,17 @@ Function RunDawnApplySpellAndNeglectLayers()
     if IsBroadWorshipActive()
         ClearAllNeglectFlags()
         StorageUtil.SetIntValue(None, "PDV.Neglect.ActiveCount", 0)
-        StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", 0)
-        SyncKyneNeglectSpell(False)
+        ; Broad-lane lapse neglect (owner ruling 2026-06-27): a broad / full-pantheon worshipper who
+        ; goes quiet for a few days feels gentle neglect too, not just focused patrons. Nord broad
+        ; (Old Ways / Nine Divines) reuses the Kyne weather spell as its broad-lane neglect for now;
+        ; per-race broad-lane neglect spells are a follow-on. Other races: no broad spell yet.
+        Bool nordBroadLapsed = IsBroadLaneLapsed() && GetPlayerOriginRaceIndex() == ORIGIN_NORD
+        SyncKyneNeglectSpell(nordBroadLapsed)
+        SyncNordPatronNeglectSpells()
+        if nordBroadLapsed && StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState") == 0
+            Debug.Notification("The gods feel distant as your devotion goes quiet.")
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", BoolToInt(nordBroadLapsed))
         UpdateContextualFavorRuntime()
         SyncFirstTierRaceRewardRuntime()
         return
@@ -8945,6 +8964,7 @@ Function RunDawnApplySpellAndNeglectLayers()
         StorageUtil.SetIntValue(None, "PDV.Neglect.ActiveCount", 0)
         StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", 0)
         SyncKyneNeglectSpell(False)
+        SyncNordPatronNeglectSpells()
         UpdateContextualFavorRuntime()
         SyncFirstTierRaceRewardRuntime()
         return
@@ -8952,11 +8972,20 @@ Function RunDawnApplySpellAndNeglectLayers()
 
     ClearAllNeglectFlags()
     Int activeCount = ApplyGenericNeglectFlags()
+    ; Recency lapse (owner ruling 2026-06-27): the active patron bites after a few quiet days even
+    ; though it is decay-shielded and rarely reaches the piety<=10 floor from absence. Force-flag it
+    ; on lapse so the existing patron-spell (Kyne) + toast logic below fires. Non-Kyne patrons get
+    ; the toast now; their own flat neglect spell is a follow-on (per-patron Nord neglect).
+    if IsPatronLapsed(_activeDeity) && !IsNeglectFlagActive(_activeDeity)
+        SetNeglectFlag(_activeDeity, True)
+        activeCount += 1
+    endIf
     StorageUtil.SetIntValue(None, "PDV.Neglect.ActiveCount", activeCount)
     ; Owner ruling 2026-06-26: committing to a patron fades other gods' neglect. Kyne's
     ; weather-neglect now fires only when Kyne is the player's own active patron; any
     ; non-Kyne focus (any tier) suppresses it. Broad worship already had no Kyne penalty.
     SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne)
+    SyncNordPatronNeglectSpells()
     UpdateContextualFavorRuntime()
 
     Bool patronNeglected = IsNeglectFlagActive(_activeDeity)
@@ -9367,6 +9396,9 @@ Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry
     endIf
     if appliedAmount > 0.0
         RecordCommitmentSignalDay(deity)
+        ; Global "last devotional act" stamp for broad-lane lapse neglect (IsBroadLaneLapsed);
+        ; the broad lane has no single patron, so it tracks any positive pantheon act.
+        StorageUtil.SetFloatValue(None, "PDV.Devotion.LastActTime", Utility.GetCurrentGameTime())
     endIf
 
     ; Attribution: record the act that moved a TRACKED god (active patron / Khajiit
@@ -10122,6 +10154,71 @@ Function SyncKyneNeglectSpell(Bool shouldBeActive)
         endIf
         StorageUtil.SetIntValue(None, "PDV.Neglect.KyneSpellActive", 0)
     endIf
+EndFunction
+
+Bool Function IsPatronLapsed(PDV_DeityBase deity)
+    ; Recency lapse: the active patron is "neglected" after NEGLECT_LAPSE_GRACE_DAYS of no
+    ; devotional act, regardless of piety. The active patron is decay-shielded (ApplyDecayToDeity
+    ; returns early for _activeDeity), so the piety<=10 floor almost never fires from mere absence.
+    ; Mirrors the Imperial civic-lapse model (IsImperialCivicNeglected). Reuses the per-deity
+    ; PDV.LastEventGameTime stamp that decay already consumes.
+    if !deity
+        return False
+    endIf
+    Float lastAct = StorageUtil.GetFloatValue(deity as Form, "PDV.LastEventGameTime")
+    if lastAct <= 0.0
+        return False
+    endIf
+    return (Utility.GetCurrentGameTime() - lastAct) > NEGLECT_LAPSE_GRACE_DAYS
+EndFunction
+
+Bool Function IsBroadLaneLapsed()
+    ; Broad-lane recency lapse: a full-pantheon (broad) worshipper who has practiced at least once
+    ; and then goes quiet for NEGLECT_LAPSE_GRACE_DAYS feels gentle neglect too. Generalizes the
+    ; Imperial civic-lapse model to the broad lane, keyed off the global PDV.Devotion.LastActTime.
+    if !IsBroadWorshipActive()
+        return False
+    endIf
+    Float lastAct = StorageUtil.GetFloatValue(None, "PDV.Devotion.LastActTime")
+    if lastAct <= 0.0
+        return False
+    endIf
+    return (Utility.GetCurrentGameTime() - lastAct) > NEGLECT_LAPSE_GRACE_DAYS
+EndFunction
+
+Function SyncOnePatronNeglectSpell(Actor playerRef, Spell neglectSpell, Bool shouldBeActive)
+    ; None-safe add/remove for one per-patron neglect spell. Guards on the spell so it no-ops while
+    ; the record is unauthored (property still None until the ESP batch fills it).
+    if !playerRef || !neglectSpell
+        return
+    endIf
+    if shouldBeActive
+        if !playerRef.HasSpell(neglectSpell)
+            playerRef.AddSpell(neglectSpell, False)
+        endIf
+    else
+        if playerRef.HasSpell(neglectSpell)
+            playerRef.RemoveSpell(neglectSpell)
+        endIf
+    endIf
+EndFunction
+
+Function SyncNordPatronNeglectSpells()
+    ; Per-patron Nord neglect (follow-on, owner ruling 2026-06-27): each focusable NON-Kyne Nord
+    ; patron gets its own gentle flat neglect spell, applied only when it is the player's active
+    ; patron AND flagged neglected (recency lapse). Kyne keeps its dedicated spell
+    ; (SyncKyneNeglectSpell). Idempotent and self-clearing: each spell is set to its exact correct
+    ; state, so calling this from any branch (focused / broad / uncommitted / Prince) removes a stale
+    ; spell after a patron switch. No-ops entirely until the ESP batch authors the four records.
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+    Bool isNord = GetPlayerOriginRaceIndex() == ORIGIN_NORD
+    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Shor,  isNord && _activeDeity == PDV_Shor  && IsNeglectFlagActive(PDV_Shor))
+    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Tsun,  isNord && _activeDeity == PDV_Tsun  && IsNeglectFlagActive(PDV_Tsun))
+    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Stuhn, isNord && _activeDeity == PDV_Stuhn && IsNeglectFlagActive(PDV_Stuhn))
+    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Talos, isNord && _activeDeity == PDV_Talos && IsNeglectFlagActive(PDV_Talos))
 EndFunction
 
 Function SyncFirstTierRaceRewardRuntime()
@@ -12204,6 +12301,91 @@ Int Function GetImperialConcordatPressureForAction(String actionKey)
     endIf
 
     return 0
+EndFunction
+
+Bool Function HandleTalosBetrayal(Int severity, String sourceReason)
+    if !PDV_Talos
+        Trace(1, "Talos betrayal skipped: PDV_Talos missing.")
+        return False
+    endIf
+
+    if GetPatronState() != PATRON_STATE_ACTIVE || _activeDeity != PDV_Talos
+        Trace(2, "Talos betrayal skipped: active patron is not Talos.")
+        return False
+    endIf
+
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace != ORIGIN_IMPERIAL && originRace != ORIGIN_NORD
+        Trace(2, "Talos betrayal skipped: origin is not Imperial or Nord.")
+        return False
+    endIf
+
+    if originRace == ORIGIN_IMPERIAL
+        if !PDV_ConcordatStandingTrack
+            Trace(1, "Imperial Talos betrayal skipped: ConcordatStanding track missing.")
+            return False
+        endIf
+        if PDV_ConcordatStandingTrack.GetValue() > 50
+            Trace(2, "Imperial Talos betrayal skipped: raw ConcordatStanding is already compliant.")
+            return False
+        endIf
+    endIf
+
+    Int normalizedSeverity = 2
+    if severity >= 3
+        normalizedSeverity = 3
+    endIf
+
+    String reason = "talos_betrayal_compliance"
+    String surfaceText = "You bent the knee where you once stood firm. The old faith feels distant."
+    Float pietyLoss = -2.0
+    Int concordatPressure = 15
+    if normalizedSeverity >= 3
+        reason = "talos_betrayal_major"
+        surfaceText = "You turned on the Ninth in the open. The defiance that was faith is gone."
+        pietyLoss = -3.0
+        concordatPressure = 25
+    endIf
+
+    if originRace == ORIGIN_IMPERIAL
+        reason = "imperial_" + reason
+    else
+        reason = "nord_" + reason
+    endIf
+
+    Int currentDay = (Utility.GetCurrentGameTime() as Int) + 1
+    String dayKey = "PDV.Creed." + reason + ".Day"
+    if StorageUtil.GetIntValue(None, dayKey, 0) == currentDay
+        Trace(2, "Talos betrayal suppressed for " + reason + ": already applied today.")
+        return False
+    endIf
+
+    StorageUtil.SetIntValue(None, dayKey, currentDay)
+    StorageUtil.SetStringValue(None, "PDV.Creed.LastTalosBetrayalReason", reason)
+    StorageUtil.SetStringValue(None, "PDV.Creed.LastTalosBetrayalSource", sourceReason)
+
+    AwardPiety(PDV_Talos, pietyLoss, reason)
+    if originRace == ORIGIN_IMPERIAL
+        ApplyConcordatPressure(concordatPressure, reason)
+    endIf
+
+    SendPrismaEventToast("creed", PDV_Talos, surfaceText, "", "")
+    SurfaceTransition("creed", "Talos betrayal", "drop", PDV_Talos.DeityIndex, "betrayal")
+    Debug.Notification(surfaceText)
+    Trace(2, "Talos betrayal applied: " + reason + " piety=" + pietyLoss + " source=" + sourceReason)
+    return True
+EndFunction
+
+Function DebugApplyTalosBetrayalCompliance()
+    if !HandleTalosBetrayal(2, "mcm")
+        Debug.Notification("Talos betrayal did not apply; check origin, active Talos, Concordat, or repeat state.")
+    endIf
+EndFunction
+
+Function DebugApplyTalosBetrayalMajor()
+    if !HandleTalosBetrayal(3, "mcm")
+        Debug.Notification("Talos betrayal did not apply; check origin, active Talos, Concordat, or repeat state.")
+    endIf
 EndFunction
 
 Function DebugUnlockConcordatWalkback()
@@ -15637,7 +15819,7 @@ Function SendPrismaMedallionPayload(Int originRace)
     payload = payload + ",\"title\":\"" + JsonSafeString(raceLabel + " Medallion") + "\""
     payload = payload + ",\"summary\":\"" + JsonSafeString("The medallion shows the native roster. Only live, scorable entries can be chosen.") + "\""
     payload = payload + ",\"active_option_id\":\"" + JsonSafeString(GetActiveMedallionOptionId()) + "\""
-    payload = payload + ",\"advisory_line\":\"" + JsonSafeString("A selectable entry is already wired into the live devotion roster.") + "\""
+    payload = payload + ",\"advisory_line\":\"" + JsonSafeString("The medallion shows the roster; commitment comes through an offer.") + "\""
     payload = payload + ",\"sections\":[" + sectionsJson + "]}}"
 
     PDV_PrismaBridge.SendOverlayJson(payload)
@@ -16007,23 +16189,12 @@ Function ClosePrismaJournal()
 EndFunction
 
 Bool Function SelectMedallionEntry(String optionId)
-    if !CanSelectMedallionEntry(optionId)
-        Trace(1, "Medallion selection blocked for " + optionId + ".")
-        return False
-    endIf
-
-    PDV_DeityBase deity = GetMedallionDeityForOptionId(optionId)
-    SetActiveDeity(deity)
-    Trace(1, "Medallion selected " + deity.DeityName + ".")
-    return True
+    Trace(1, "Medallion selection blocked for " + optionId + "; roster display is offer-only.")
+    return False
 EndFunction
 
 Bool Function CanSelectMedallionEntry(String optionId)
-    if !IsMedallionOptionAvailableForOrigin(optionId, GetPlayerOriginRaceIndex())
-        return False
-    endIf
-
-    return IsMedallionDeitySelectable(GetMedallionDeityForOptionId(optionId))
+    return False
 EndFunction
 
 String Function GetActiveMedallionOptionId()
@@ -16078,96 +16249,96 @@ String Function GetNordMedallionEntriesJson()
 EndFunction
 
 String Function GetImperialMedallionEntriesJson()
-    String entries = PendingMedallionEntry("kynareth", "Kynareth", "god", "kyne", "Road, wind, and natural order.")
-    entries = entries + "," + PendingMedallionEntry("mara", "Mara", "god", "mara", "Love, family, and mercy.")
-    entries = entries + "," + PendingMedallionEntry("akatosh", "Akatosh", "god", "akatosh", "Time, covenant, and empire.")
-    entries = entries + "," + PendingMedallionEntry("arkay", "Arkay", "god", "arkay", "Life, death, and lawful burial.")
-    entries = entries + "," + PendingMedallionEntry("stendarr", "Stendarr", "god", "stendarr", "Mercy, protection, and civic virtue.")
-    entries = entries + "," + PendingMedallionEntry("julianos", "Julianos", "god", "julianos", "Law, learning, and reason.")
-    entries = entries + "," + PendingMedallionEntry("dibella", "Dibella", "god", "dibella", "Art, beauty, and human grace.")
-    entries = entries + "," + PendingMedallionEntry("zenithar", "Zenithar", "god", "zenithar", "Work, trade, and prosperity.")
+    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kyne", PDV_Kynareth, "Road, wind, and natural order.")
+    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Love, family, and mercy.")
+    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", PDV_Akatosh, "Time, covenant, and empire.")
+    entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", PDV_Arkay, "Life, death, and lawful burial.")
+    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy, protection, and civic virtue.")
+    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", PDV_Julianos, "Law, learning, and reason.")
+    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", PDV_Dibella, "Art, beauty, and human grace.")
+    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", PDV_Zenithar, "Work, trade, and prosperity.")
     return entries
 EndFunction
 
 String Function GetBretonMedallionEntriesJson()
-    String entries = PendingMedallionEntry("kynareth", "Kynareth", "god", "kyne", "Sky, travel, and druidic memory.")
-    entries = entries + "," + MedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, True, "Civic defiance and Septim inheritance.", "Talos is live and scorable in the current deity roster.", "")
-    entries = entries + "," + PendingMedallionEntry("mara", "Mara", "god", "mara", "Household, mercy, and love.")
-    entries = entries + "," + PendingMedallionEntry("akatosh", "Akatosh", "god", "akatosh", "Time, order, and covenant.")
-    entries = entries + "," + PendingMedallionEntry("arkay", "Arkay", "god", "arkay", "Death, burial, and clean endings.")
-    entries = entries + "," + PendingMedallionEntry("stendarr", "Stendarr", "god", "stendarr", "Mercy, protection, and oath.")
-    entries = entries + "," + PendingMedallionEntry("julianos", "Julianos", "god", "julianos", "Learning, law, and formal craft.")
-    entries = entries + "," + PendingMedallionEntry("dibella", "Dibella", "god", "dibella", "Beauty, courtliness, and grace.")
-    entries = entries + "," + PendingMedallionEntry("zenithar", "Zenithar", "god", "zenithar", "Trade, craft, and honest work.")
-    entries = entries + "," + PendingMedallionEntry("magnus", "Magnus", "god", "magnus", "Magic, light, and hidden inheritance.")
+    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kyne", PDV_Kynareth, "Sky, travel, and druidic memory.")
+    entries = entries + "," + RosterMedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, "Civic defiance and Septim inheritance.")
+    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Household, mercy, and love.")
+    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", PDV_Akatosh, "Time, order, and covenant.")
+    entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", PDV_Arkay, "Death, burial, and clean endings.")
+    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy, protection, and oath.")
+    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", PDV_Julianos, "Learning, law, and formal craft.")
+    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", PDV_Dibella, "Beauty, courtliness, and grace.")
+    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", PDV_Zenithar, "Trade, craft, and honest work.")
+    entries = entries + "," + RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Magic, light, and hidden inheritance.")
     entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Pilgrimage, endurance, and Elven memory.")
-    entries = entries + "," + MedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, True, "Green memory, story, and law.", "Y'ffre is live and scorable in the current deity roster.", "")
+    entries = entries + "," + RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, "Green memory, story, and law.")
     return entries
 EndFunction
 
 String Function GetAltmerMedallionEntriesJson()
-    String entries = PendingMedallionEntry("mara", "Mara", "god", "mara", "Kinship, care, and ordered mercy.")
-    entries = entries + "," + PendingMedallionEntry("stendarr", "Stendarr", "god", "stendarr", "Mercy and lawful protection.")
-    entries = entries + "," + PendingMedallionEntry("magnus", "Magnus", "god", "magnus", "Light, magic, and origin memory.")
+    String entries = RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Kinship, care, and ordered mercy.")
+    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy and lawful protection.")
+    entries = entries + "," + RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Light, magic, and origin memory.")
     entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Endurance, pilgrimage, and old discipline.")
-    entries = entries + "," + MedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, True, "Story, form, and natural law.", "Y'ffre is live and scorable in the current deity roster.", "")
-    entries = entries + "," + MedallionEntry("auri-el", "Auri-El", "god", "auri-el", GetDeityByName("Auri-El"), True, "The founding light and ancestral ascent.", "Auri-El is live and scorable in the current deity roster.", "")
+    entries = entries + "," + RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, "Story, form, and natural law.")
+    entries = entries + "," + RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", PDV_AuriEl, "The founding light and ancestral ascent.")
     entries = entries + "," + PendingMedallionEntry("syrabane", "Syrabane", "god", "syrabane", "Magic, craft, and survival through wisdom.")
-    entries = entries + "," + PendingMedallionEntry("xarxes", "Xarxes", "god", "xarxes", "Lineage, record, and ordered memory.")
-    entries = entries + "," + PendingMedallionEntry("trinimac", "Trinimac", "god", "trinimac", "Warrior order and unbroken nobility.")
+    entries = entries + "," + RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", PDV_Xarxes, "Lineage, record, and ordered memory.")
+    entries = entries + "," + RosterMedallionEntry("trinimac", "Trinimac", "god", "trinimac", PDV_Trinimac, "Warrior order and unbroken nobility.")
     return entries
 EndFunction
 
 String Function GetBosmerNativeMedallionEntriesJson()
-    String entries = MedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, True, "The Green, story, and the Old Contract.", "Y'ffre is live and scorable in the current deity roster.", "")
-    entries = entries + "," + MedallionEntry("auri-el", "Auri-El", "god", "auri-el", GetDeityByName("Auri-El"), True, "Elven ancestry and high memory.", "Auri-El is live and scorable in the current deity roster.", "")
-    entries = entries + "," + PendingMedallionEntry("xarxes", "Xarxes", "god", "xarxes", "Record, lineage, and written memory.")
-    entries = entries + "," + MedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", PDV_BaanDar, True, "Trickster road, masks, and survival.", "Baan Dar is live and scorable in the current deity roster.", "")
+    String entries = RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, "The Green, story, and the Old Contract.")
+    entries = entries + "," + RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", PDV_AuriEl, "Elven ancestry and high memory.")
+    entries = entries + "," + RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", PDV_Xarxes, "Record, lineage, and written memory.")
+    entries = entries + "," + RosterMedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", PDV_BaanDar, "Trickster road, masks, and survival.")
     return entries
 EndFunction
 
 String Function GetBosmerFocusMedallionEntriesJson()
-    return MedallionEntry("zen", "Z'en", "god", "zen", PDV_Zen, True, "Debt, toil, exchange, and obligation.", "Z'en is live and scorable as a Bosmer path focus in the current deity roster.", "")
+    return RosterMedallionEntry("zen", "Z'en", "god", "zen", PDV_Zen, "Debt, toil, exchange, and obligation.")
 EndFunction
 
 String Function GetDunmerMedallionEntriesJson()
-    String entries = PendingMedallionEntry("azura", "Azura", "prince", "azura", "Dawn, dusk, prophecy, and fate.")
-    entries = entries + "," + PendingMedallionEntry("boethiah", "Boethiah", "prince", "boethiah", "Trial, overthrow, and hard becoming.")
-    entries = entries + "," + PendingMedallionEntry("mephala", "Mephala", "prince", "mephala", "Web, secrecy, clan, and hidden duty.")
+    String entries = RosterMedallionEntry("azura", "Azura", "prince", "azura", PDV_Azura, "Dawn, dusk, prophecy, and fate.")
+    entries = entries + "," + RosterMedallionEntry("boethiah", "Boethiah", "prince", "boethiah", PDV_Boethiah, "Trial, overthrow, and hard becoming.")
+    entries = entries + "," + RosterMedallionEntry("mephala", "Mephala", "prince", "mephala", PDV_Mephala, "Web, secrecy, clan, and hidden duty.")
     return entries
 EndFunction
 
 String Function GetKhajiitMedallionEntriesJson()
-    String entries = PendingMedallionEntry("azura", "Azurah", "prince", "azura", "Dusk, dawn, moon-shadow, and fate.")
-    entries = entries + "," + PendingMedallionEntry("boethiah", "Boethra", "prince", "boethiah", "Trial, edge, and hard lessons.")
-    entries = entries + "," + PendingMedallionEntry("mephala", "Mafala", "prince", "mephala", "Hidden paths, webs, and clan memory.")
-    entries = entries + "," + MedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", PDV_BaanDar, True, "The bandit god, wit, and road survival.", "Baan Dar is live and scorable in the current deity roster.", "")
-    entries = entries + "," + PendingMedallionEntry("rajhin", "Rajhin", "god", "rajhin", "The clever thief and impossible escape.")
-    entries = entries + "," + PendingMedallionEntry("alkosh", "Alkosh", "god", "alkosh", "Dragon order and time in Khajiit memory.")
-    entries = entries + "," + PendingMedallionEntry("khenarthi", "Khenarthi", "god", "khenarthi", "Wind, sky-road, and breath.")
+    String entries = RosterMedallionEntry("azura", "Azurah", "prince", "azura", PDV_Azura, "Dusk, dawn, moon-shadow, and fate.")
+    entries = entries + "," + RosterMedallionEntry("boethiah", "Boethra", "prince", "boethiah", PDV_Boethiah, "Trial, edge, and hard lessons.")
+    entries = entries + "," + RosterMedallionEntry("mephala", "Mafala", "prince", "mephala", PDV_Mephala, "Hidden paths, webs, and clan memory.")
+    entries = entries + "," + RosterMedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", PDV_BaanDar, "The bandit god, wit, and road survival.")
+    entries = entries + "," + RosterMedallionEntry("rajhin", "Rajhin", "god", "rajhin", PDV_Rajhin, "The clever thief and impossible escape.")
+    entries = entries + "," + RosterMedallionEntry("alkosh", "Alkosh", "god", "alkosh", PDV_Alkosh, "Dragon order and time in Khajiit memory.")
+    entries = entries + "," + RosterMedallionEntry("khenarthi", "Khenarthi", "god", "khenarthi", PDV_Khenarthi, "Wind, sky-road, and breath.")
     entries = entries + "," + PendingMedallionEntry("riddle-thar", "Riddle'Thar", "god", "riddle-thar", "Balance, ja-Kha'jay, and right conduct.")
     entries = entries + "," + PendingMedallionEntry("jone-jode", "Jone and Jode", "god", "lunar", "The moons, the lattice, and the road home.")
     return entries
 EndFunction
 
 String Function GetArgonianMedallionEntriesJson()
-    String entries = PendingMedallionEntry("hist", "The Hist", "substrate", "hist", "Root, memory, people, and sap.")
-    entries = entries + "," + PendingMedallionEntry("sithis", "Sithis", "god", "sithis", "Void, change, and dangerous silence.")
+    String entries = RosterMedallionEntry("hist", "The Hist", "substrate", "hist", PDV_Hist, "Root, memory, people, and sap.")
+    entries = entries + "," + RosterMedallionEntry("sithis", "Sithis", "god", "sithis", PDV_Sithis, "Void, change, and dangerous silence.")
     return entries
 EndFunction
 
 String Function GetOrcMedallionEntriesJson()
-    return PendingMedallionEntry("malacath", "Malacath", "prince", "malacath", "Oath, code, exile, and vengeance.")
+    return RosterMedallionEntry("malacath", "Malacath", "prince", "malacath", PDV_Malacath, "Oath, code, exile, and vengeance.")
 EndFunction
 
 String Function GetRedguardMedallionEntriesJson()
     String entries = PendingMedallionEntry("satakal", "Satakal", "god", "satakal", "Worldskin, cycle, and cosmic turning.")
     entries = entries + "," + PendingMedallionEntry("ruptga", "Ruptga", "god", "ruptga", "Tall Papa, ancestry, and guidance.")
-    entries = entries + "," + PendingMedallionEntry("tuwhacca", "Tu'whacca", "god", "tu-whacca", "Death, passage, and the proper road.")
+    entries = entries + "," + RosterMedallionEntry("tuwhacca", "Tu'whacca", "god", "tu-whacca", PDV_Tuwhacca, "Death, passage, and the proper road.")
     entries = entries + "," + PendingMedallionEntry("tava", "Tava", "god", "tava", "Wind, sailors, and safe passage.")
-    entries = entries + "," + PendingMedallionEntry("leki", "Leki", "god", "leki", "Sword-skill, discipline, and grace.")
+    entries = entries + "," + RosterMedallionEntry("leki", "Leki", "god", "leki", PDV_Leki, "Sword-skill, discipline, and grace.")
     entries = entries + "," + PendingMedallionEntry("onsi", "Onsi", "god", "onsi", "The blade, craft, and warrior making.")
-    entries = entries + "," + PendingMedallionEntry("hoon-ding", "HoonDing", "god", "hoon-ding", "Make-way spirit and impossible survival.")
+    entries = entries + "," + RosterMedallionEntry("hoon-ding", "HoonDing", "god", "hoon-ding", PDV_HoonDing, "Make-way spirit and impossible survival.")
     return entries
 EndFunction
 

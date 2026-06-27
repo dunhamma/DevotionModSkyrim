@@ -16,7 +16,9 @@ MCM/status and clean-log tester smoke are still required on the recipient setup.
 - `PDV_AuthoriaARR_Compatibility_20260625.zip` - Authoria/ARR add-on with the
   shrine-prayer ESP, BOS swap file, ARR quest matrix JSON, and docs.
 - `PDV_AuthoriaARR_TrustedTester_20260625.zip` - outer handoff bundle containing
-  both archives and this readme.
+  both archives, this readme, and the `BetaTesterPack` run-sheets.
+- `BetaTesterPack\PDV_BetaTester_Pack_V1.md` - tester-facing index for the
+  universal Prisma checklist, per-race run-sheets, and Daedric path sheet.
 
 ## Install Order
 
@@ -63,8 +65,17 @@ Authoria - Papyrus - Missing Properties - Archon Fix.esp
 Passed locally:
 
 - `node .\tools\pdv_compile.mjs` found no stale active scripts.
-- `node .\tools\pdv_refresh_seq.mjs --write --json` passed with 39 SEQ quests.
-- `node .\tools\pdv_verify.mjs --json` passed with no FAILs.
+- `node .\tools\pdv_refresh_seq.mjs --check --json` passed with 39 SEQ quests
+  and no pending change.
+- `node .\tools\pdv_refresh_seq.mjs --write --json` refreshed the live
+  `Devotion.seq` after the Hist Sap ESP write; quest count stayed 39.
+- `node .\tools\pdv_verify.mjs --json` passed with 3471 PASS / 1 WARN / 0 FAIL
+  and 1719 major records.
+- `dotnet run --project .\tools\pdv-argonian-histpotion-author -- --check`
+  passed: `PDV_MGEF_ArgonianHistSap` and `PDV_ALCH_ArgonianHistSap` are present.
+- `node .\tools\pdv_integrity_harness.mjs` passed with 39 GREEN / 0 RED.
+- `node .\tools\pdv_formal_offer_check.mjs` passed with PASS=189 / FAIL=0.
+- `node .\tools\pdv_prisma_parity_unitd_check.mjs` passed with PASS=39 / FAIL=0.
 - ARR matrix compile/check passed at 24 cells / 22 keys / 20 quests / 24 faucet acts.
 - Shrine-prayer readback passed for all 11 ACTIs, route 202, once/day keys, and
   EventBus wiring.
@@ -81,6 +92,8 @@ Passed locally:
 
 Still required from the tester:
 
+- Run `BetaTesterPack\PDV_BetaTester_Pack_V1.md` first, then the universal
+  Prisma checklist and the relevant race/Daedric run-sheets.
 - Reconfirm the `_ARR` matrix channel loads in the tester's Papyrus log.
 - Reconfirm one ARR quest hook applies the expected piety in the tester's setup.
 - Confirm one Daedric shrine statue is clickable, grants +2 once per day, and

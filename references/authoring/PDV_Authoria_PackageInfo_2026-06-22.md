@@ -24,6 +24,10 @@ The outer handoff bundle is:
 
 `dist\PDV_AuthoriaARR_TrustedTester_20260625.zip`
 
+That outer bundle also includes `BetaTesterPack\PDV_BetaTester_Pack_V1.md`
+and the V1 universal, per-race, and Daedric run-sheets for tester-facing
+verification.
+
 You also need po3 Base Object Swapper for the clickable Daedric shrines. If you
 have Authoria's normal install, you already have it.
 
@@ -87,6 +91,8 @@ Disable the matching mod folders too where MO2 has them listed under Archon.
 
 ## What To Check In Game
 
+- Start with `BetaTesterPack\PDV_BetaTester_Pack_V1.md`, then run the
+  universal Prisma checklist plus the relevant race/Daedric run-sheets.
 - Devotion MCM/status opens.
 - The `_ARR` quest matrix channel reports as loaded in Papyrus log.
 - One ARR quest hook applies the expected piety. Local backend proof passed on
