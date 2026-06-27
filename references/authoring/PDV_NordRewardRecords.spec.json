@@ -72,8 +72,8 @@
       "stanceNord": "NATIVE",
       "create": false,
       "owner": "Imperial",
-      "lane": "NineDivines",
-      "reuse": "Imperial-owned; Nord reconciles stance only. Do NOT recreate. Nine Divines lane focusable patron.",
+      "lane": "NineDivines+OldWays",
+      "reuse": "Imperial-owned; Nord reconciles stance only. Do NOT recreate. Focusable patron in BOTH Nord lanes (Nine Divines AND Old Ways, per 2026-06-27 owner ruling; Old Ways roster = Kyne/Shor/Tsun/Stuhn/Mara/Talos). No Nord-specific Mara reward SPELs exist; the Nord Mara reward family reuses the existing Imperial Mara spells (PDV_Bless_Imperial_Mara_T1/T2/T3) via SyncNordRewardFamily baseline -1. Offer/accept reuse the existing PDV_Msg_Nord_Mara_* messages.",
       "deityIndex": "existing"
     },
     {
@@ -213,7 +213,7 @@
       "reuse": "Imperial-owned manager property; Nord references only."
     }
   ],
-  "deityOwnership": "Nord OWNS THREE NEW deity QUSTs: Shor, Tsun, Stuhn (create:true, Stance_Nord NATIVE, Old Ways focusable). Supersedes the retired R5 'Nord owns zero new deities'. Kyne and Talos are reused existing NATIVE records (create:false). The 8 Divines (Akatosh/Mara/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth) are Imperial-owned records reused by the Nine Divines lane (create:false; Nord reconciles Stance_Nord=NATIVE only). Hircine is the first Nord Daedric path and routes through the Phase 20C Daedric system (R6), NOT a new Aedric record here.",
+  "deityOwnership": "Nord OWNS THREE NEW deity QUSTs: Shor, Tsun, Stuhn (create:true, Stance_Nord NATIVE, Old Ways focusable). Supersedes the retired R5 'Nord owns zero new deities'. Kyne and Talos are reused existing NATIVE records (create:false). The 8 Divines (Akatosh/Mara/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth) are Imperial-owned records reused by the Nine Divines lane (create:false; Nord reconciles Stance_Nord=NATIVE only). Hircine is the first Nord Daedric path and routes through the Phase 20C Daedric system (R6), NOT a new Aedric record here. 2026-06-27 UPDATE: Mara is now ALSO an Old Ways focusable patron (Old Ways roster = Kyne/Shor/Tsun/Stuhn/Mara/Talos); she has no Nord-specific reward SPELs and reuses the Imperial Mara spells (PDV_Bless_Imperial_Mara_T1/T2/T3). GAP: the other Nine Divines Nord gods (Akatosh/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth) have NO Nord reward SPELs in Devotion.esp, so their tier reward families are unauthored no-ops -- reuse-Imperial (like Mara) or author Nord-specific is a pending decision.",
   "neglect": {
     "reuse": true,
     "wireTo": "PDV__ManagerQuest",

@@ -8953,7 +8953,10 @@ Function RunDawnApplySpellAndNeglectLayers()
     ClearAllNeglectFlags()
     Int activeCount = ApplyGenericNeglectFlags()
     StorageUtil.SetIntValue(None, "PDV.Neglect.ActiveCount", activeCount)
-    SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne))
+    ; Owner ruling 2026-06-26: committing to a patron fades other gods' neglect. Kyne's
+    ; weather-neglect now fires only when Kyne is the player's own active patron; any
+    ; non-Kyne focus (any tier) suppresses it. Broad worship already had no Kyne penalty.
+    SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne)
     UpdateContextualFavorRuntime()
 
     Bool patronNeglected = IsNeglectFlagActive(_activeDeity)
@@ -10986,14 +10989,21 @@ Function SyncNordRewards(Actor playerRef)
     SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, PDV_Stuhn, PDV_Bless_Nord_Stuhn_T1, PDV_Bless_Nord_Stuhn_T2, PDV_Bless_Nord_Stuhn_T3, "Stuhn")
     SyncNordRewardFamily(playerRef, -1, PDV_Talos, PDV_Bless_Nord_Talos_T1, PDV_Bless_Nord_Talos_T2, PDV_Bless_Nord_Talos_T3, "Talos")
 
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Akatosh, PDV_Bless_Nord_Akatosh_T1, PDV_Bless_Nord_Akatosh_T2, PDV_Bless_Nord_Akatosh_T3, "Akatosh")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Mara, PDV_Bless_Nord_Mara_T1, PDV_Bless_Nord_Mara_T2, PDV_Bless_Nord_Mara_T3, "Mara")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Arkay, PDV_Bless_Nord_Arkay_T1, PDV_Bless_Nord_Arkay_T2, PDV_Bless_Nord_Arkay_T3, "Arkay")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Stendarr, PDV_Bless_Nord_Stendarr_T1, PDV_Bless_Nord_Stendarr_T2, PDV_Bless_Nord_Stendarr_T3, "Stendarr")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Zenithar, PDV_Bless_Nord_Zenithar_T1, PDV_Bless_Nord_Zenithar_T2, PDV_Bless_Nord_Zenithar_T3, "Zenithar")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Dibella, PDV_Bless_Nord_Dibella_T1, PDV_Bless_Nord_Dibella_T2, PDV_Bless_Nord_Dibella_T3, "Dibella")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Julianos, PDV_Bless_Nord_Julianos_T1, PDV_Bless_Nord_Julianos_T2, PDV_Bless_Nord_Julianos_T3, "Julianos")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Kynareth, PDV_Bless_Nord_Kynareth_T1, PDV_Bless_Nord_Kynareth_T2, PDV_Bless_Nord_Kynareth_T3, "Kynareth")
+    ; Nord Nine Divines gods have no Nord-specific reward records (never authored); reuse the
+    ; existing Imperial Divine reward spells (the canonical Nine Divines rewards), identical to
+    ; the Mara fix. Owner ruling 2026-06-27. NOTE: Akatosh/Julianos/Kynareth Imperial rewards are
+    ; regen-rate (~0 under Requiem) -- a pre-existing Imperial reward-feel gap to convert later.
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Akatosh, PDV_Bless_Imperial_Akatosh_T1, PDV_Bless_Imperial_Akatosh_T2, PDV_Bless_Imperial_Akatosh_T3, "Akatosh")
+    ; Mara is focusable in BOTH lanes (Old Ways + Nine Divines), like Talos -- baseline -1.
+    ; No Nord-specific Mara reward records exist, so reuse the Imperial Mara spells -- this IS
+    ; the Nine Divines Mara reward (Restoration +5/+13/+23 + wake-mended), identical across lanes.
+    SyncNordRewardFamily(playerRef, -1, PDV_Mara, PDV_Bless_Imperial_Mara_T1, PDV_Bless_Imperial_Mara_T2, PDV_Bless_Imperial_Mara_T3, "Mara")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Stendarr, PDV_Bless_Imperial_Stendarr_T1, PDV_Bless_Imperial_Stendarr_T2, PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Zenithar, PDV_Bless_Imperial_Zenithar_T1, PDV_Bless_Imperial_Zenithar_T2, PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Dibella, PDV_Bless_Imperial_Dibella_T1, PDV_Bless_Imperial_Dibella_T2, PDV_Bless_Imperial_Dibella_T3, "Dibella")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Julianos, PDV_Bless_Imperial_Julianos_T1, PDV_Bless_Imperial_Julianos_T2, PDV_Bless_Imperial_Julianos_T3, "Julianos")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Kynareth, PDV_Bless_Imperial_Kynareth_T1, PDV_Bless_Imperial_Kynareth_T2, PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
 EndFunction
 
 Function SyncNordAncestorSubstrate(Actor playerRef, Bool isNord)
@@ -12885,7 +12895,7 @@ Bool Function IsNordOfferEligibleDeity(PDV_DeityBase deity)
 
     Int baselineState = GetNordPantheonBaselineState()
     if baselineState == NORD_BASELINE_OLD_WAYS
-        return deity == PDV_Kyne || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn
+        return deity == PDV_Kyne || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn || deity == PDV_Mara
     elseIf baselineState == NORD_BASELINE_NINE_DIVINES
         return deity == PDV_Akatosh || deity == PDV_Mara || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Zenithar || deity == PDV_Dibella || deity == PDV_Julianos || deity == PDV_Kynareth
     endIf
@@ -13913,7 +13923,7 @@ String Function GetKhajiitFocusSymbol(Int focusValue)
     if focusValue == KHAJIIT_FOCUS_KHENARTHI
         return "khenarthi"
     elseIf focusValue == KHAJIIT_FOCUS_AZURAH
-        return "azurah"
+        return "azura"
     elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
         return "baan-dar"
     elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
@@ -15371,7 +15381,7 @@ String Function GetStartupCanonicalSummary(Int originRace)
     elseIf originRace == ORIGIN_ORC
         return "You begin by choosing your life-mode: the full Stronghold code of Malacath, dignity kept in the City, or honor carried into Legion and exile."
     elseIf originRace == ORIGIN_NORD
-        return "You begin by choosing your pantheon baseline: the Old Ways of Kyne, Shor, Tsun, Stuhn, and Talos, or the Nine Divines as Skyrim now names them."
+        return "You begin by choosing your pantheon baseline: the Old Ways of Kyne, Shor, Tsun, Stuhn, Mara, and Talos, or the Nine Divines as Skyrim now names them."
     endIf
 
     return "Your starting devotion is set by the traditions of your people."
@@ -15508,7 +15518,7 @@ String Function GetStartupOptionSummary(Int originRace, Int optionValue)
         if optionValue == NORD_BASELINE_NINE_DIVINES
             return "Skyrim's gods carried through the Imperial names and the public shrines."
         endIf
-        return "Kyne, Shor, Tsun, Stuhn, and Talos kept as the old Nord spine."
+        return "Kyne, Shor, Tsun, Stuhn, Mara, and Talos kept as the old Nord spine."
     endIf
 
     return GetStartupCanonicalSummary(originRace)
@@ -15549,7 +15559,7 @@ String Function GetStartupOptionDescription(Int originRace, Int optionValue)
         if optionValue == NORD_BASELINE_NINE_DIVINES
             return "The Nine Divines lane keeps Nord devotion inside Skyrim's public shrines and Imperial names, with Talos still central to the road ahead."
         endIf
-        return "The Old Ways lane keeps Kyne, Shor, Tsun, Stuhn, and Talos as your native pantheon baseline."
+        return "The Old Ways lane keeps Kyne, Shor, Tsun, Stuhn, Mara, and Talos as your native pantheon baseline."
     endIf
 
     return GetStartupCanonicalSummary(originRace)
@@ -16042,19 +16052,19 @@ String Function GetMedallionSectionsJson(Int originRace)
 EndFunction
 
 String Function GetNordMedallionEntriesJson()
-    String entries = MedallionEntry("kyne", "Kyne", "god", "kyne", PDV_Kyne, True, "Sky, storm, hunt, and warrior-spirit.", "Kyne is live and scorable in the current deity roster.", "")
-    entries = entries + "," + PendingMedallionEntry("kynareth", "Kynareth", "god", "kyne", "The Nine Divines sky road.")
-    entries = entries + "," + MedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, True, "Open defiance and human apotheosis.", "Talos is live and scorable in the current deity roster.", "")
-    entries = entries + "," + PendingMedallionEntry("shor", "Shor", "god", "shor", "The old king and afterlife road.")
-    entries = entries + "," + PendingMedallionEntry("tsun", "Tsun", "god", "tsun", "Trial, honor, and the threshold.")
-    entries = entries + "," + PendingMedallionEntry("stuhn", "Stuhn", "god", "stuhn", "Mercy in war and fair ransom.")
-    entries = entries + "," + PendingMedallionEntry("mara", "Mara", "god", "mara", "Love, hearth, and compassion.")
-    entries = entries + "," + PendingMedallionEntry("akatosh", "Akatosh", "god", "akatosh", "Time, order, and dragon authority.")
-    entries = entries + "," + PendingMedallionEntry("arkay", "Arkay", "god", "arkay", "Death, burial, and proper passage.")
-    entries = entries + "," + PendingMedallionEntry("stendarr", "Stendarr", "god", "stendarr", "Mercy, justice, and protection.")
-    entries = entries + "," + PendingMedallionEntry("julianos", "Julianos", "god", "julianos", "Law, learning, and craft of mind.")
-    entries = entries + "," + PendingMedallionEntry("dibella", "Dibella", "god", "dibella", "Beauty, art, and embodied grace.")
-    entries = entries + "," + PendingMedallionEntry("zenithar", "Zenithar", "god", "zenithar", "Work, trade, and honest craft.")
+    String entries = RosterMedallionEntry("kyne", "Kyne", "god", "kyne", PDV_Kyne, "Sky, storm, hunt, and warrior-spirit.")
+    entries = entries + "," + RosterMedallionEntry("kynareth", "Kynareth", "god", "kyne", PDV_Kynareth, "The Nine Divines sky road.")
+    entries = entries + "," + RosterMedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, "Open defiance and human apotheosis.")
+    entries = entries + "," + RosterMedallionEntry("shor", "Shor", "god", "shor", PDV_Shor, "The old king and afterlife road.")
+    entries = entries + "," + RosterMedallionEntry("tsun", "Tsun", "god", "tsun", PDV_Tsun, "Trial, honor, and the threshold.")
+    entries = entries + "," + RosterMedallionEntry("stuhn", "Stuhn", "god", "stuhn", PDV_Stuhn, "Mercy in war and fair ransom.")
+    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Love, hearth, and compassion.")
+    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", PDV_Akatosh, "Time, order, and dragon authority.")
+    entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", PDV_Arkay, "Death, burial, and proper passage.")
+    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy, justice, and protection.")
+    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", PDV_Julianos, "Law, learning, and craft of mind.")
+    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", PDV_Dibella, "Beauty, art, and embodied grace.")
+    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", PDV_Zenithar, "Work, trade, and honest craft.")
     return entries
 EndFunction
 
@@ -16168,6 +16178,19 @@ String Function PendingMedallionEntry(String optionId, String titleText, String 
     endIf
 
     return MedallionEntry(optionId, titleText, kindText, symbolName, None, False, summaryText, descriptionText, disabledText)
+EndFunction
+
+; Roster-display entry for a LIVE native patron: shows the god as real and worshippable, but NOT
+; directly selectable -- commitment happens through the organic offer, not a medallion pick (owner
+; ruling 2026-06-27: medallion is a roster display, the offer is the commit path). Falls back to the
+; pending "awaiting a record" message only when the deity record is not actually live.
+String Function RosterMedallionEntry(String optionId, String titleText, String kindText, String symbolName, PDV_DeityBase deity, String summaryText)
+    if deity && IsMedallionDeitySelectable(deity)
+        String liveDesc = titleText + " is a living patron your people can name."
+        String liveHint = "Build devotion and this god offers to take you as their own."
+        return MedallionEntry(optionId, titleText, kindText, symbolName, deity, False, summaryText, liveDesc, liveHint)
+    endIf
+    return PendingMedallionEntry(optionId, titleText, kindText, symbolName, summaryText)
 EndFunction
 
 String Function MedallionEntry(String optionId, String titleText, String kindText, String symbolName, PDV_DeityBase deity, Bool requestedSelectable, String summaryText, String descriptionText, String disabledReason)

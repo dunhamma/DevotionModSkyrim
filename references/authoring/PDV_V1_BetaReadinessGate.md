@@ -34,8 +34,8 @@ Allowed verdicts: GREEN / RED / PENDING. Do not mark GREEN until every row of th
 ## Small-build items (Codex; gate-blocking)
 | Item | Owner | Status |
 |---|---|---|
-| Hist sap -> self-replenishing ALCH potion (consume -> Hist piety, returns to inventory) | Codex | PENDING (`PDV_PrismaParity_HistPotion_TitleRun_Handoff.md`) |
-| Daedric 16 epithet title author-run against `Devotion.esp` | Codex | PENDING (same handoff) |
+| Hist sap -> self-replenishing ALCH potion (consume -> Hist piety, returns to inventory) | Codex | DONE (verified 2026-06-26: `PDV_ALCH_ArgonianHistSap` 0715FB + `PDV_MGEF_ArgonianHistSap` 0715FA present in `Devotion.esp`) |
+| Daedric 16 epithet title author-run against `Devotion.esp` | Codex | DONE (verified 2026-06-26: all 16 `PDV_Msg_Daedric_*_Commitment` epithet titles present) |
 
 ## Authoria pass
 Each runsheet carries a "Running in Authoria (Requiem)" block: same steps, swap the preflight. Run the
