@@ -2,7 +2,7 @@
 
 **Created:** 2026-06-10  
 **Status:** Active manual/runtime handoff after Nord startup/Requiem-tail readback closeout and Ash'abah cleared-site hook
-**Companions:** `PDV_BetaTestPacket_*.md`, `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_SessionHandoff_BosmerRuntimeFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
+**Companions:** `PDV_RunSheet_*_BetaFeel.md`, `PDV_BetaTestPacket_*.md` (historical/source notes), `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_SessionHandoff_BosmerRuntimeFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
 
 ## Purpose
 
@@ -10,6 +10,12 @@ This is the current testing queue. It starts after repo-side readback and
 verifier work. Passing these checks requires in-game runtime/manual evidence;
 do not replace them with source review, QASmoke-only route proof, or verifier
 output.
+
+2026-06-27 routing note: the final race-testing entrypoints are now the
+`PDV_RunSheet_<Race>_BetaFeel.md` files. The older `PDV_BetaTestPacket_*` docs
+remain useful provenance and source notes, but do not use them as the primary
+step-by-step runthrough unless a current run-sheet points back to a specific
+section.
 
 2026-06-12 handoff note: the Hircine source/VMAD display drift is fixed and
 compiled, so Hircine should be tested first in the Daedric proof session. See
@@ -180,19 +186,24 @@ validates the eight QASmoke proof activators, not DA05.
 Select-String -Path "$env:USERPROFILE\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log" -Pattern "RouteBosmerYffre|po3_queststage_bosmer_da05|RouteBosmerPactPositive|RouteDaedricPrinceSignal" -Context 1,1
 ```
 
-### 3. Run The Remaining Race Packets
+### 3. Run The Race Run-Sheets
 
-Use one disposable save per race or a clean reload before each route family.
+Use one disposable save per race or a clean reload before each route family. The
+full gap sheets should run first; compact sheets are regression passes for races
+with prior packet evidence.
 
-| Race | Packet | Primary runtime checker |
+| Race | Current sheet | Primary runtime checker |
 | --- | --- | --- |
-| Argonian | `PDV_BetaTestPacket_Argonian.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race argonian --strict-manager` |
-| Orc | `PDV_BetaTestPacket_Orc.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race orc --strict-manager` |
-| Redguard | `PDV_BetaTestPacket_Redguard.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race redguard --strict-manager` |
-| Breton | `PDV_BetaTestPacket_Breton.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race breton --strict-manager` |
-| Dunmer | `PDV_BetaTestPacket_Dunmer.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race dunmer --strict-manager` |
-| Imperial | `PDV_BetaTestPacket_Imperial.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race imperial --strict-manager` |
-| Nord | `PDV_BetaTestPacket_Nord.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race nord --strict-manager` |
+| Orc | `PDV_RunSheet_Orc_BetaFeel.md` | organic/source-specific markers plus `node .\tools\pdv_phase20_runtime_check.mjs --race orc --strict-manager` for QASmoke-only cross-checks |
+| Breton | `PDV_RunSheet_Breton_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race breton --strict-manager` |
+| Dunmer | `PDV_RunSheet_Dunmer_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race dunmer --strict-manager`; remaining slots are manual/log assembled |
+| Imperial | `PDV_RunSheet_Imperial_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race imperial --strict-manager` |
+| Nord | `PDV_RunSheet_Nord_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race nord --strict-manager` |
+| Altmer | `PDV_RunSheet_Altmer_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race altmer --strict-manager` |
+| Argonian | `PDV_RunSheet_Argonian_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race argonian --strict-manager` |
+| Bosmer | `PDV_RunSheet_Bosmer_BetaFeel.md` | DA05 uses `Select-String` log proof; `node .\tools\pdv_phase20_runtime_check.mjs --race bosmer --strict-manager` is QASmoke-only |
+| Khajiit | `PDV_RunSheet_Khajiit_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race khajiit --strict-manager` |
+| Redguard | `PDV_RunSheet_Redguard_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race redguard --strict-manager` |
 
 For each race, record:
 

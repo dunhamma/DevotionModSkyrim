@@ -10,50 +10,41 @@ remains the last gate to a beta-feel release (Global Stop Condition 6: all 10
 races + all 16 Skyrim-present Daedric Princes must carry runtime evidence). All
 packets were refreshed to the 2026-06-14 consolidated build.
 
-## Run-readiness at a glance
+## Current tester entrypoints
 
-| Packet | File | State | Run now? |
+Use the `PDV_RunSheet_<Race>_BetaFeel.md` files for the final pre-beta pass. The older
+`PDV_BetaTestPacket_*` docs remain provenance/history and longer source notes, not the
+primary walk-throughs.
+
+| Race | Current sheet | State | Use now? |
 |---|---|---|---|
-| Khajiit | `PDV_Khajiit_BetaFeelPacket.md` (gold) | **Pass** | done -- acceptance recorded |
-| Bosmer | `PDV_BetaTestPacket_Bosmer.md` | ready | **YES** |
-| Nord | `PDV_BetaTestPacket_Nord.md` | ready | **YES** |
-| Argonian | `PDV_BetaTestPacket_Argonian.md` | ready | **YES** |
-| Orc | `PDV_BetaTestPacket_Orc.md` | ready | **YES** |
-| Breton | `PDV_BetaTestPacket_Breton.md` | ready (exposure lever) | **YES** |
-| Daedric (16 Princes) | `PDV_DaedricBetaFeelPacket.md` | ready | **YES** |
-| Altmer | `PDV_BetaTestPacket_Altmer.md` | part-runnable | partial -- see below |
-| Imperial | `PDV_BetaTestPacket_Imperial.md` | part-runnable | partial -- see below |
-| Dunmer | `PDV_BetaTestPacket_Dunmer.md` | part-runnable | partial -- see below |
-| Redguard | `PDV_BetaTestPacket_Redguard.md` | done | packet PASS 2026-06-19 (8/8 dims) |
+| Altmer | `PDV_RunSheet_Altmer_BetaFeel.md` | compact regression; prior packet evidence recorded | yes, regression only |
+| Argonian | `PDV_RunSheet_Argonian_BetaFeel.md` | compact regression; prior packet evidence recorded | yes, regression only |
+| Bosmer | `PDV_RunSheet_Bosmer_BetaFeel.md` | compact regression; DA05 proof separated from QASmoke checker | yes, regression only |
+| Breton | `PDV_RunSheet_Breton_BetaFeel.md` | full gap sheet; stack/feel and exposure edge remain important | yes |
+| Dunmer | `PDV_RunSheet_Dunmer_BetaFeel.md` | full gap sheet; hand-assembled route/Survey/stack proof | yes |
+| Imperial | `PDV_RunSheet_Imperial_BetaFeel.md` | full gap sheet; civic/Talos/Concordat plus Prisma | yes |
+| Khajiit | `PDV_RunSheet_Khajiit_BetaFeel.md` | compact regression; gold packet evidence recorded | yes, regression only |
+| Nord | `PDV_RunSheet_Nord_BetaFeel.md` | full gap sheet; includes neglect and Talos betrayal checks | yes |
+| Orc | `PDV_RunSheet_Orc_BetaFeel.md` | full gap sheet; life-mode organic proof still open | yes |
+| Redguard | `PDV_RunSheet_Redguard_BetaFeel.md` | detailed regression and Requiem-tail sheet | yes, regression/tuning |
+| Daedric (16 Princes) | `PDV_DaedricInGameSmokePacket.md` | separate Prince runtime/display gate | yes, separate pass |
 
-### Ready to run NOW (no dependency on the concurrent build pass)
+### How to read the sheet split
 
-Bosmer, Nord, Argonian, Orc, Breton, and the Daedric 16-Prince packet. These were
-the user's priority -- they prove the consolidated pure-script build that already
-landed (build-batch tests 2/3/4/6/7/8/9, the variety tranches, and the Daedric
-pact model).
+- **Full gap sheets:** Breton, Dunmer, Imperial, Nord, and Orc. These are the
+  highest-value final runthroughs because one or more runtime/manual evidence
+  slots are open, newly changed, or historically easy to confuse.
+- **Compact regression sheets:** Altmer, Argonian, Bosmer, Khajiit, and Redguard.
+  These do not reopen closed packet evidence; they prove that late changes did not
+  regress route, Survey, stack, save/load, or Prisma behavior.
+- **Daedric sheet:** keep separate. Race proof does not close Prince display proof.
 
-- **Khajiit is already Pass.** Use the gold-standard `PDV_Khajiit_BetaFeelPacket.md`
-  as the acceptance record AND as the format template for everything else. The
-  trimmed `PDV_BetaTestPacket_Khajiit.md` is now a 60-second book-route smoke
-  only.
+### Pending and deferred route discipline
 
-### Waits on the concurrent build pass (steps written, marked PENDING)
-
-Altmer, Imperial, Dunmer. Each packet's refresh section has a runnable
-NOW part (the pure-script build-batch lever) plus a PENDING part whose vanilla
-emitters the concurrent build session is wiring this pass. Do NOT log a FAIL on a
-PENDING step until the build session confirms the emitter landed.
-(Redguard's beta-feel packet now PASSED 2026-06-19 -- 8/8 dimensions; only its
-Dawnguard exact-stage Ash'abah source remains a deferred build item, tracked in
-the table below, NOT a beta-feel blocker.)
-
-| Race | Runnable NOW | PENDING build-pass confirmation |
-|---|---|---|
-| Altmer | Lorkhan adjacency penalty (test 5) | ThalmorAlignment actions: read-banned-texts -5, consort-with-Daedra -25, kill-Thalmor-agent -20 |
-| Imperial | Vampire-rupture halt (test 1) | Concordat 8-action table: Stormcloak join -20 (CW01B), Talos Mistake book, hidden Talos shrine, kill-Thalmor-justiciar -10 |
-| Dunmer | Ancestor-layer curse silence (test 2) | Outdoor Good-Daedra shrine -> twilight window; Layer-2 werewolf 0.75x runtime |
-| Redguard | PACKET PASS 2026-06-19 (8/8 dims: sect no-flip, Far Shores token, vampire/werewolf curse cycle all proven) | Dawnguard-cure stage (DLC1VQ02) -> Ash'abah re-entry: source-fill still blocked (deferred build item, NOT a beta-feel blocker) |
+If a sheet labels a route `PENDING` or `DEFERRED`, do not turn that into an in-game
+failure. It means the current repo does not expose a valid route surface for that
+arm. Record the runnable evidence and bring back the missing-arm note.
 
 ### Explicitly NOT testable in V1 (no clean vanilla hook -- do not write steps)
 
@@ -71,7 +62,7 @@ each packet's "Current-Build Refresh" section.
 - **State inits ONLY on a NEW save / `coc qasmoke`.** Old saves keep stale
   gate/curse/life-mode state. Disable `Devotion - Living Deities Test` in MO2
   first.
-- **Debug seeding is MCM-driven, NOT `cqf`.** MCM Player page -> Developer
+- **Debug seeding is MCM-driven, not CallQuestFunction.** MCM Player page -> Developer
   Options -> Debug page. Standard `set` / `coc` are fine.
 - **`coc` skips Story location-change triggers.** Bosmer Songs of the Green,
   Argonian Waters, and Dunmer outdoor Good-Daedra shrine need a load-door entry
@@ -107,12 +98,11 @@ each packet's "Current-Build Refresh" section.
 
 ## Suggested run order
 
-1. The four NOW races (Bosmer, Nord, Argonian, Orc) + Breton -- highest value,
-   no build-pass dependency.
-2. The Daedric 16-Prince packet -- one MCM `Route all Princes` sweep + per-batch
-   display proof closes the Daedric half of the gate fast.
-3. The four in-flight races once the build session signals its emitters landed --
-   run the NOW part anytime, the PENDING part after confirmation.
+1. Run full gap sheets first: Orc, Breton, Dunmer, Imperial, Nord.
+2. Run compact regression sheets: Altmer, Argonian, Bosmer, Khajiit, Redguard.
+3. Run Daedric controlled/display proof from `PDV_DaedricInGameSmokePacket.md`.
+4. After each race, capture the Papyrus log before rotation, then update the
+   evidence ledger only from observed evidence.
 
 After each sweep, run the relevant runtime checker before log rotation, fill the
 matching ledger (`PDV_Phase20_ManualEvidenceLedger.json` for races,

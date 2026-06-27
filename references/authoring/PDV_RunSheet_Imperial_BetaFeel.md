@@ -14,7 +14,7 @@ live Concordat / Survey / MCM logic in the `2026-06-15-final-polish` snapshot of
 This is a DRAFT prep artifact. Nothing here deploys or changes the live build. It
 orders the seven required manual-evidence slots into a single in-game session so the
 tester collects all of them in one disposable-save run. No FAIL should be logged on a
-PENDING step until the concurrent build pass confirms the underlying emitter landed.
+PENDING step unless current repo evidence confirms the underlying emitter is runnable.
 
 ---
 
@@ -59,7 +59,7 @@ A slot can require both. Where it does, the run-sheet calls out which step is wh
   `coc qasmoke` -- old saves keep stale Concordat / curse / gate state.
 - In MO2, DISABLE `Devotion - Living Deities Test` before launch (it is an isolated
   test mod and pollutes state).
-- Debug seeding is the MCM Debug page, NOT `cqf`. The user does not run `cqf`. Open
+- Debug seeding is the MCM Debug page, not CallQuestFunction. Open
   MCM Player page -> Developer Options -> Debug page. Standard `set` / `coc` are fine.
 - Seed origin and debug level from the console:
 
@@ -310,8 +310,23 @@ only the public Talos book route is runtime-wired today.
   `PDV_REFR_TalosShrineDefianceSignal` to the visible Windhelm shrine. Use the MCM
   `Talos shrine defiance` button for the -15 route proof until a new audited receiver
   is placed.
-- MCM only, not cqf. All debug seeding is MCM Player page -> Developer Options ->
-  Debug. Standard `set` / `coc` are fine; `cqf` is not used.
+- MCM only, not CallQuestFunction. All debug seeding is MCM Player page -> Developer Options ->
+  Debug. Standard `set` / `coc` are fine.
+
+---
+
+## Embedded Prisma Checks
+
+Run these during slots 2-7:
+
+- Talos book and Concordat actions may emit a toast or top-left notice; they must not force-open the full Prisma panel.
+- Manually open the Devotion panel after the Talos book read and after a Concordat raw-value move. It should open populated and close with ESC or X.
+- Chronicle / Book of Days should not create blank entries for civic/Talos beats or dawn digest.
+- Ledger should show the Talos-pressure or civic driver row after an accepted route, and no row after wrong-origin or generic-source probes.
+- If the panel shows Concordat or Talos posture, it must agree with MCM Debug `Raw value`/Survey in meaning, even if the committed band label lags.
+- Save/load after the private-defiance stack snapshot, reopen the panel, and confirm no stale or doubled UI state.
+
+Prisma failures are UI/presentation failures unless Concordat raw value, Survey, or route logs also fail.
 
 ---
 
@@ -319,7 +334,7 @@ only the public Talos book route is runtime-wired today.
 
 Fill one status per slot. Allowed values: PASS / FAIL / PENDING / N-A. Label the
 proof class actually achieved (ROUTE-RUNTIME or MANUAL-ACCEPTANCE) so the ledger
-intake stays boundary-clean. Do NOT log FAIL on a PENDING build-pass step.
+intake stays boundary-clean. Do NOT log FAIL on a PENDING route step.
 
 | Slot | Surface | Proof class | Status | Note |
 |---|---|---|---|---|
@@ -332,6 +347,7 @@ intake stays boundary-clean. Do NOT log FAIL on a PENDING build-pass step.
 | 5 wrongOriginRejection | Non-Imperial origin: zero native movement | ROUTE-RUNTIME | | |
 | 6 genericHookRejection | Faction/attendance/bounty/lawfulness do not score | ROUTE-RUNTIME | | |
 | 7 manualFeelNote | Reads as concrete civic practice under law | MANUAL-ACCEPTANCE | | |
+| 8 Prisma surfaces | Toast/panel/Chronicle/Ledger agree with manager state | MANUAL-ACCEPTANCE | | |
 
 Blocking notes:
 
@@ -340,5 +356,5 @@ After the run, before log rotation, run the backstop checker
 --strict-manager`), then fill `PDV_Phase20_ManualEvidenceLedger.json` (Imperial
 block) and only then update the verdict in `PDV_PreBetaRaceGateLedger.md`. Per ledger
 convention, do NOT mark the Imperial race-level `status` as `pass` from this sheet --
-keep it `pending` until the in-game evidence is recorded and the pending proof cells
-(routes 110-113) are placed and proven.
+keep it `pending` until the in-game evidence is recorded and any pending proof cells
+are placed and proven.

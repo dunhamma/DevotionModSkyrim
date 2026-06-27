@@ -31,7 +31,7 @@ Do not mix them when filling the ledger; do not mark a race-level `pass` from th
   set PDV_GLO_DebugLevel to 2
   ```
   Origin index `9` is Redguard.
-- Debug seeding is the MCM Debug page, NOT `cqf`. Use MCM Player -> Developer Options.
+- Debug seeding is the MCM Debug page, not CallQuestFunction. Use MCM Player -> Developer Options.
 - Papyrus log: `...\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`.
 - Signal RefID prefix (for QASmoke proof REFRs): read the 2-hex plugin prefix `XX`
   once from a NAMED blessing, then reuse it:
@@ -233,7 +233,22 @@ Do not mix them when filling the ledger; do not mark a race-level `pass` from th
   retroactive credit for already-cleared dungeons.
 - **`coc` skips location triggers.** Walk/fast-travel into cells for any location-anchored
   Redguard act; do not `coc` straight in.
-- **MCM only, not cqf.**
+- **MCM only, not CallQuestFunction.**
+
+---
+
+## Embedded Prisma Checks
+
+Run these during the Redguard evidence pass:
+
+- Ancestor-spine book, Ash'abah duty, Far Shores token, HoonDing make-way, curse transitions, and neglect may emit toasts or top-left notices; none should force-open the full Prisma panel.
+- Manually open the Devotion panel after one accepted Redguard route and after one curse transition. It should open populated and close with ESC or X.
+- Chronicle / Book of Days should not create blank entries for sect, duty, or dawn digest beats.
+- Ledger should show accepted Redguard driver rows and stay unchanged after wrong-origin or generic-source probes.
+- Curse-cycle Prisma/toast state must agree with Survey and MCM state; if a right-side toast is missed but the log and manager state are correct, record it as UI evidence missing, not route failure.
+- Save/load after an Ash'abah or Tu'whacca stack snapshot and confirm Survey, Active Effects, and Prisma remain consistent.
+
+Prisma failures are UI failures unless route logs, manager state, or Active Effects also fail.
 
 ---
 
@@ -255,6 +270,7 @@ Allowed: PASS / FAIL / PENDING / N-A. Label the proof class achieved.
 | 6b Ash'abah mid-game entry | named undead or unique hostile necromancer/warlock flips sect; routine undead do not | [R]+[M] | | |
 | 6c Ash'abah cleared-undead site | approved newly-cleared site pays once; non-listed stays silent | [R]+[M] | | |
 | 7 manualFeelNote | reads as earned; record tuning magnitudes | [M] | | |
+| 8 Prisma surfaces | toast/panel/Chronicle/Ledger agree with manager state | [M] | | |
 
 After the run: capture the Papyrus log before rotation, fill
 `PDV_Phase20_ManualEvidenceLedger.json` (Redguard + Daedric/Namira blocks) honoring the

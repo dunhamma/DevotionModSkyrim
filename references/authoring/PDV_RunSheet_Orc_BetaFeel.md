@@ -42,7 +42,7 @@ Promotion gate (from the manifest `runtimePromotionGate`): prove at least one St
 5. Know the MCM Debug dev page controls you will use (all SEEDING-ONLY, never proof):
    - "Orc -> City" / "Orc -> Stronghold" / "Orc -> Legion-Exile" -- these call `DebugSetOrcLifeMode(ORC_LIFE_MODE_CITY / _STRONGHOLD / _LEGION_EXILE)`. The MCM's own info text says: "Forces the Orc life mode so its mode-gated Malacath reward becomes testable. Then force piety and Run Dawn." Forcing a mode is a SEED, it is NOT evidence that an organic source fired.
    - "Run dawn pass" -- consolidates scratch (`EvaluateOrcLifeModeAtDawn` runs at dawn). Use this to settle accumulated evidence days when you do not want to sleep a full in-game day. Auto-dawn also fires on a natural day rollover.
-   - Debug seeding is MCM-driven. The user does NOT use `cqf`. Standard `set` / `coc` are allowed; in-game debug/seeding goes through the MCM Debug dev page.
+   - Debug seeding is MCM-driven. Do not use CallQuestFunction. Standard `set` / `coc` are allowed; in-game debug/seeding goes through the MCM Debug dev page.
 6. Papyrus log path for markers: `Logs\Script\Papyrus.0.log`. A fresh Skyrim launch rotates the log; capture the excerpt before relaunching.
 
 Console signal-fire reference (only needed for the optional QASmoke cross-checks, NOT for the organic proofs in this sheet): PDV `PDV_REFR_*Signal` objects are invisible in `coc qasmoke`; fire by RefID with `prid XX<refid>` then `activate player`, where XX is the 2-hex plugin prefix taken from `help "HoonDing" 0` (a NAMED blessing -- `help` on the nameless activators fails). Orc signal RefIDs (framework ESP): Stronghold `071027`, City `071028`, Legion `071029`, SelfMade `07102A`. These are QASmoke route-wiring surfaces and are OUT OF SCOPE for the organic-source proof below; listed only so a tester does not confuse them with the organic hooks.
@@ -146,6 +146,17 @@ SLOT 1 PASS criterion (the promotion gate): at least one Stronghold beat (1A or 
 - Watch: the three modes read as authored SOCIAL CIRCUMSTANCE, not as a different theology; DA06 Blood-Kin feels like a MAJOR beat (instant gate); soft signals (arrival, Thane, home, CW milestone) feel like they ACCUMULATE toward a switch rather than flipping instantly; City and Legion/Exile dignity can compete with Stronghold craft/combat without becoming generic smithing.
 - PASS criterion (acceptance): the mode feel matches Race_Orc.md ("how fully can you live inside the code?"). This stays pending until City/Legion modes are runtime-reachable via slot 1.
 
+### Slot 8 -- Prisma Embedded Checks  [manual-acceptance]
+
+- Stronghold, City, and Legion evidence may emit a toast or top-left notice; they must not force-open the full Prisma panel.
+- Manually open the Devotion panel after one Stronghold beat and one City or Legion beat. It should open populated, show the current Orc life-mode posture, and close with ESC or X.
+- Chronicle / Book of Days should not create blank entries for evidence days or dawn settlement.
+- Ledger should show accepted life-mode driver rows after real organic sources and no rows after wrong-origin or rejected generic probes.
+- If the committed mode does not flip on one soft signal, Prisma should not present it as flipped. It may show evidence/pressure, but manager state remains authoritative.
+- Save/load after one mode evidence day and confirm Survey, MCM summary, Active Effects, and Prisma still agree.
+
+Prisma failures are UI failures unless the manager life-mode state, route marker, or Active Effects stack also fails.
+
 ---
 
 ## 4. Record results here
@@ -166,5 +177,6 @@ Tester fills STATUS only as: pending / evidence-recorded / not-applicable. There
 | 5 | stackSnapshot | manual-acceptance | one life-mode reward family active; layers match committed mode (magnitudes = task #9) | pending |
 | 6 | assetStatus | manual-acceptance / readback | pure-Papyrus, no ESP write, existing surfaces, no new mesh | evidence-recorded |
 | 7 | manualFeelNote | manual-acceptance | modes read as social circumstance; DA06 major; soft signals accumulate | pending |
+| 8 | Prisma surfaces | manual-acceptance | toast/panel/Chronicle/Ledger agree with manager state | pending |
 
 No-deploy note: this run-sheet only sequences the pending proof. Nothing here deploys. The Orc race verdict remains "Fail - runtime/manual proof deferred" until the runtime/manual evidence above is recorded in-game and the maintainer promotes it.

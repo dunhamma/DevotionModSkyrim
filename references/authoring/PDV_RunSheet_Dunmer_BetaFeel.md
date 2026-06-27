@@ -42,8 +42,8 @@ Each check below is tagged:
   judges it; subjective, recorded as the tester's acceptance.
 
 Do not upgrade a MANUAL-ACCEPTANCE read into machine proof, and do not log a
-FAIL on a PENDING build-pass arm (outdoor shrine, Layer-2 werewolf 0.75x) until
-the build session confirms the emitter landed.
+FAIL on a PENDING route arm (outdoor shrine, Layer-2 werewolf 0.75x) unless
+current repo evidence confirms the emitter is runnable.
 
 ---
 
@@ -67,8 +67,8 @@ the build session confirms the emitter landed.
    Origin index `5` is Dunmer. DebugLevel 2 makes the route/runtime log markers
    below appear in `...\Logs\Script\Papyrus.0.log`.
 
-5. Confirm seeding is MCM-driven. **Do NOT use `cqf`** -- this user's Skyrim
-   does not run it. Every "seed" step below is an MCM button press. Standard
+5. Confirm seeding is MCM-driven. Do not use the CallQuestFunction console
+   shortcut -- this user's Skyrim does not run it. Every "seed" step below is an MCM button press. Standard
    `set` / `coc` console is fine.
 
 Plugin-prefix note (only needed if you fire a signal RefID by hand): read the
@@ -350,6 +350,19 @@ FAIL, in slots 5/6.
 
 ---
 
+### Slot 8 -- Prisma Embedded Checks  [MANUAL-ACCEPTANCE]
+
+- Accepted Reclamation book reads may produce a toast or top-left notice; they must not force the full Prisma panel.
+- Manually open the Devotion panel after the Azura/Boethiah reads. It should be populated, focused, and close cleanly with ESC or the X.
+- Chronicle / Book of Days should show readable source or dawn-digest text if that UI path emits for the beat; no blank entries.
+- Ledger should show the Reclamation source row and any ancestor/substrate driver row created by the prayer test.
+- Under `Curse vampire`, Prisma may surface a posture/curse toast, but the manager state remains the proof source; do not count Prisma display as route proof.
+- Save/load after snapshot A, reopen the panel, and confirm Survey/Active Effects/Prisma agree on the same focus and posture.
+
+Prisma failures are UI failures unless the log marker, Survey state, or Active Effects stack is also wrong.
+
+---
+
 ## Known gotchas
 
 - **No route command for Dunmer.** The verdict is assembled by hand from
@@ -359,7 +372,7 @@ FAIL, in slots 5/6.
 - **State inits ONLY on a new save / `coc qasmoke`.** Disable
   `Devotion - Living Deities Test` first; old saves carry stale curse/gate
   state and will false-FAIL.
-- **Seeding is MCM-driven, not `cqf`.** Use the `Debug: State & Rewards` and
+- **Seeding is MCM-driven, not CallQuestFunction.** Use the `Debug: State & Rewards` and
   `Debug: Daedric & Curse` pages. The Dunmer buttons are
   `Dunmer ancestor prayer`, `Dunmer home bonus`; curse buttons are
   `Curse none`, `Curse werewolf`, `Curse vampire` (and `Cycle curse origin` /
@@ -403,6 +416,7 @@ yet landed) / DEFERRED (no runnable step) / N/A.
 | 5. surveyStatusClarity | manual-acceptance | all 5 facets legible + counter-free? | |
 | 6. stackSnapshot | manual-acceptance | snapshots A + B match, no generic leak? | |
 | 7. manualFeelNote | manual-acceptance | feel note recorded | |
+| 8. Prisma surfaces | manual-acceptance | toast/panel/Chronicle/Ledger safe and populated? | |
 
 Blocking notes:
 
