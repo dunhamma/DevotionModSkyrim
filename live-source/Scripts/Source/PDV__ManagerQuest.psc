@@ -14587,7 +14587,16 @@ Function ApplyOrcInitialChoice(Int modeValue, String reason)
     if PDV_OrcLifeModeTrack
         PDV_OrcLifeModeTrack.SetState(ClampInt(modeValue, ORC_LIFE_MODE_CITY, ORC_LIFE_MODE_LEGION_EXILE), reason)
     endIf
+    ; Malacath is the single innate Orc spine (not chosen, not offered) -- activate him as the
+    ; patron at origin so the life-mode reward ladder (gated on _activeDeity==PDV_Malacath) is
+    ; reachable in normal play; without this the whole Malacath progression was a dead no-op.
+    ; Owner ruling 2026-06-27.
+    if PDV_Malacath
+        SetActiveDeity(PDV_Malacath)
+    endIf
     StorageUtil.SetIntValue(None, "PDV.Orc.SetupComplete", 1)
+    SyncFirstTierRaceRewardRuntime()
+    RequestPanelRefresh()
 EndFunction
 
 Function ApplyNordInitialChoice(Int baselineValue, String reason)

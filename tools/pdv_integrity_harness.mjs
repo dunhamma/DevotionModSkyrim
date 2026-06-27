@@ -28,6 +28,7 @@ const CHECKS = [
   { id: "spine_stack_score", role: "findings", cmd: ["tools/pdv_spine_stack_score.mjs"], read: (j) => j ? `worst ${j.worstFirst?.[0] ?? "?"}; ${j.parityTargets?.length ?? "?"} targets; ${j.diegeticDeadDeclarations?.length ?? 0} dead-decls` : null },
   { id: "specced_minus", role: "findings", cmd: ["tools/pdv_specced_minus_audit.mjs"], read: (j) => j ? `${j.unemitted?.length ?? "?"} unemitted minuses` : null },
   { id: "completeness", role: "findings", slow: true, cmd: ["tools/pdv_completeness_audit.mjs", "--json"], read: (j) => j ? `${j.status}; ${j.counts ? Object.entries(j.counts).map(([k, v]) => `${k}=${v}`).join(" ") : ""}` : null },
+  { id: "deity_chain", role: "gate", cmd: ["tools/pdv_deity_chain_audit.mjs", "--json"], read: (j) => j ? `${j.blockers} blockers (${j.resolutionGaps} resolution / ${j.reachabilityGaps} reachability)` : null },
 ];
 
 function main() {
@@ -46,16 +47,16 @@ function main() {
     });
   }
 
-  const gate = results.find((x) => x.role === "gate");
+  const gates = results.filter((x) => x.role === "gate");
   const errored = results.filter((x) => x.status === "ERROR");
-  const blocked = (gate && !SKIP_SLOW && gate.status === "FAIL") || errored.length > 0;
+  const blocked = gates.some((g) => g.status === "FAIL") || errored.length > 0;
   const overall = blocked ? "FAIL" : "PASS";
 
   writeLedger(results, overall);
 
   console.log(JSON.stringify({
     status: overall,
-    gate: gate ? gate.detail : "skipped",
+    gate: gates.length ? gates.map((g) => `${g.id}: ${g.status}${g.detail ? ` (${g.detail})` : ""}`).join("; ") : "skipped",
     checks: results.map((x) => `${x.id}: ${x.status}${x.detail ? ` (${x.detail})` : ""}`),
     ledger: "references/authoring/PDV_IntegrityHarnessLedger.md",
   }, null, 2));
