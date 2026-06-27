@@ -1365,6 +1365,31 @@ h1 {
   font-family: var(--bod-serif);
 }
 
+#pdv-journal-modal .bod-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 4;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(74, 52, 23, 0.34);
+  border-radius: 6px;
+  background: rgba(238, 218, 167, 0.78);
+  color: #3a2b16;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#pdv-journal-modal .bod-close:hover,
+#pdv-journal-modal .bod-close:focus-visible {
+  border-color: #6f4d1b;
+  background: rgba(245, 226, 176, 0.94);
+  outline: none;
+}
+
 /* Each parchment page */
 #pdv-journal-modal .bod-page {
   position: relative;

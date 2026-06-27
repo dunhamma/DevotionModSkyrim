@@ -160,6 +160,12 @@ namespace
 
         g_prisma->Show(g_view);
         g_prisma->InteropCall(g_view, kReceiveOverlayFunction.data(), a_payload.c_str());
+        if (a_payload.find("\"journalClose\"") != std::string::npos) {
+            g_prisma->Unfocus(g_view);
+            g_prisma->Hide(g_view);
+        } else if (a_payload.find("\"journal\"") != std::string::npos || a_payload.find("\"mode\":\"journal\"") != std::string::npos) {
+            g_prisma->Focus(g_view, true, false);
+        }
         return true;
     }
 

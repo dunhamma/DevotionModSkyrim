@@ -1010,6 +1010,13 @@
     syncOverlayVisibility();
   };
 
+  const closeJournalFromView = () => {
+    hideJournal();
+    if (typeof window.PDVPanelClose === "function") {
+      window.PDVPanelClose("journal|close");
+    }
+  };
+
   const JOURNAL_LABELS = { good: "Waxes", warning: "Wanes", neutral: "Holds" };
 
   // Frontispiece half-sun (medieval sun-in-splendour rising from the horizon).
@@ -1245,7 +1252,10 @@
       nodes.journalPath.textContent = survey;
       nodes.journalPath.hidden = !survey;
     }
-    if (nodes.journalFoot) nodes.journalFoot.textContent = text(journal.foot, "Press your Book of Days key again to close.");
+    if (nodes.journalFoot) {
+      const foot = text(journal.foot, "Press Esc or the close button to close.");
+      nodes.journalFoot.textContent = foot.includes("Book of Days key") ? "Press Esc or the close button to close." : foot;
+    }
     if (nodes.journalEmblem) nodes.journalEmblem.innerHTML = buildJournalSun();
     renderJournalStanding(journal.instrument || journal.standing);
 
@@ -2078,8 +2088,15 @@
   }
 
   if (nodes.journalClose) {
-    nodes.journalClose.addEventListener("click", () => hideJournal());
+    nodes.journalClose.addEventListener("click", () => closeJournalFromView());
   }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    if (!nodes.journalModal || nodes.journalModal.hidden) return;
+    event.preventDefault();
+    closeJournalFromView();
+  }, true);
 
   const demoToasts = {
     favor: { event: "favor", deity: "Kyne", symbol: "kyne", context: "The clean hunt" },

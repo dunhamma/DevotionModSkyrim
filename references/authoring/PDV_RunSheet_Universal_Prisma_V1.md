@@ -26,11 +26,12 @@ zeroes regen buffs, so flat heals must show the bar move here).
 
 ## Tests
 
-### U1 -- panel opens, focuses, and ESC always works  [Tester] [R]+[M]
+### U1 -- panel and Book of Days open, focus, and close  [Tester] [R]+[M]
 - **Do:** the **first** time this session, open the Devotion panel (hotkey/MCM). Try **ESC** and the in-panel
-  **X**. Re-open; switch **Chronicle <-> Ledger**; ESC again.
-- **See:** it opens **already filled in and focused** (not a blank frozen screen), and **ESC always gives you
-  control back**. You never get stuck.
+  **X**. Re-open; switch **Chronicle <-> Ledger**; ESC again. Then open **Book of Days** and close it with
+  **ESC** and with the in-book close button.
+- **See:** each surface opens **already filled in and focused** (not a blank frozen screen), and **ESC always
+  gives you control back**. The Book of Days has a visible close button. You never get stuck.
 - **Record:** ___
 
 ### U2 -- tier-ups (Seeker / Devoted / Champion)  [Tester] [R]+[M]
@@ -74,7 +75,7 @@ zeroes regen buffs, so flat heals must show the bar move here).
 ## Record results here
 | Test | What it proves | Status | Note |
 |---|---|---|---|
-| U1 panel/ESC | cold open focuses; ESC always releases | | |
+| U1 panel/Book close | cold open focuses; ESC/X always release | | |
 | U2 tier-ups | toast + BoD each tier; Champion pinned | | |
 | U3 favor + digest | patron favor toasts; dawn names the gods | | |
 | U4 Ledger + substrate fix | driver rows incl. substrate; watching row | | |
