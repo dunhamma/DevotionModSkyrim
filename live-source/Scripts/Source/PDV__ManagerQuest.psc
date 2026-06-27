@@ -17852,8 +17852,10 @@ String Function GetBretonSurveyText()
     elseIf tradition == 1
         text = "You walk the Hidden Art: occult practice and the double life. Standing: " + band + "."
         Int exposure = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure", 0)
-        if exposure >= 75
+        if exposure >= 100
             text = text + " Your practice is notorious, openly named, and your patron rewards the full commitment."
+        elseIf exposure >= 75
+            text = text + " Your practice is known, and your cover is close to rupture."
         elseIf exposure >= 50
             text = text + " Your practice is known, and the Vigilants are a real danger now."
         elseIf exposure >= 25
@@ -17926,7 +17928,7 @@ EndFunction
 
 String Function GetBretonWitchcraftExposureLabel()
     Int exposureValue = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure", 0)
-    if exposureValue >= 75
+    if exposureValue >= 100
         return "notorious"
     elseIf exposureValue >= 50
         return "known"

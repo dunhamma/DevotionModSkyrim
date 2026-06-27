@@ -53,7 +53,9 @@ Watch:
 
 - Top-left notification or Prisma toast only.
 - No forced full Prisma panel.
-- Survey Devotion names the Hidden Art tradition and exposure band.
+- Survey Devotion names the Hidden Art tradition and exposure band. After the
+  three one-shot books, exposure should be high/known and close to rupture; it
+  should not say `notorious` or `full commitment` until exposure reaches 100.
 - Survey recent-events text names the beat in fiction voice, with no route IDs.
 
 After closing Skyrim or before log rotation:
@@ -170,4 +172,3 @@ Record ledger statuses only as `pending`, `evidence-recorded`, or `not-applicabl
 | Survey/status clarity | MANUAL | | |
 | Prisma toast/panel/Chronicle/Ledger | MANUAL | | |
 | Manual feel note | MANUAL | | |
-
