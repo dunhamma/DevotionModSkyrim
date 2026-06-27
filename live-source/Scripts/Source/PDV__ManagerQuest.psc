@@ -1688,6 +1688,9 @@ Bool Function MarkQuestReactionFaucet(String deityName, String sourceTag, Form s
 EndFunction
 
 Bool Function SendPrismaToast(String symbolName, String tone, String titleText, String messageText)
+    if IsRaceSetupQuietPresentationActive()
+        return False
+    endIf
     if !PDV_PrismaBridge.IsAvailable()
         return False
     endIf
@@ -1697,6 +1700,9 @@ Bool Function SendPrismaToast(String symbolName, String tone, String titleText, 
 EndFunction
 
 Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String context, String tierLabel, String rival)
+    if IsRaceSetupQuietPresentationActive()
+        return False
+    endIf
     if !PDV_PrismaBridge.IsAvailable()
         return False
     endIf
@@ -1728,6 +1734,25 @@ EndFunction
 ; state dirty for deliberate panel debugging/manual refresh flows.
 Function RequestPanelRefresh()
     _panelDirty = True
+EndFunction
+
+Function BeginRaceSetupQuietPresentation(String reason)
+    Int depth = StorageUtil.GetIntValue(None, "PDV.RaceSetup.QuietPresentationDepth")
+    StorageUtil.SetIntValue(None, "PDV.RaceSetup.QuietPresentationDepth", depth + 1)
+    StorageUtil.SetStringValue(None, "PDV.RaceSetup.QuietPresentationReason", reason)
+EndFunction
+
+Function EndRaceSetupQuietPresentation()
+    Int depth = StorageUtil.GetIntValue(None, "PDV.RaceSetup.QuietPresentationDepth")
+    if depth <= 1
+        StorageUtil.SetIntValue(None, "PDV.RaceSetup.QuietPresentationDepth", 0)
+    else
+        StorageUtil.SetIntValue(None, "PDV.RaceSetup.QuietPresentationDepth", depth - 1)
+    endIf
+EndFunction
+
+Bool Function IsRaceSetupQuietPresentationActive()
+    return StorageUtil.GetIntValue(None, "PDV.RaceSetup.QuietPresentationDepth") > 0
 EndFunction
 
 ; --- Diegetic UX director hooks (additive). The director's D1Enabled gates all
@@ -1776,6 +1801,9 @@ EndFunction
 
 Function SurfaceTransition(String eventClass, String surfaceKey, String direction, Int deityIndex = -1, String toneOverride = "", Bool repeatable = false, Bool headline = false)
     if eventClass == "" || surfaceKey == "" || direction == ""
+        return
+    endIf
+    if IsRaceSetupQuietPresentationActive()
         return
     endIf
 
@@ -2889,6 +2917,9 @@ EndFunction
 ; Switch-severance surface (patron<->Prince). Top-left notification + Book of Days
 ; entry + best-effort Prisma toast. PLACEHOLDER copy.
 Function SurfaceSwitchSeverance(String mode, String severedName)
+    if IsRaceSetupQuietPresentationActive()
+        return
+    endIf
     String line = "You forsake the pact with " + severedName + ". A new devotion takes its place."
     if mode == "patron_to_prince"
         line = "You turn from your former patron to " + severedName + ". The old bond is severed."
@@ -6833,6 +6864,9 @@ String Function GetRedguardSectLabel()
 EndFunction
 
 Function ShowRedguardSectEntry(Int sectValue)
+    if IsRaceSetupQuietPresentationActive()
+        return
+    endIf
     String shownKey = GetRedguardSectEntryShownKey(sectValue)
     if shownKey == "" || StorageUtil.GetIntValue(None, shownKey) == 1
         return
@@ -6862,6 +6896,9 @@ String Function GetRedguardSectEntryShownKey(Int sectValue)
 EndFunction
 
 Function MaybeShowRedguardChampionEntry(Int sectValue)
+    if IsRaceSetupQuietPresentationActive()
+        return
+    endIf
     String shownKey = GetRedguardChampionEntryShownKey(sectValue)
     if shownKey == "" || StorageUtil.GetIntValue(None, shownKey) == 1
         return
@@ -11767,6 +11804,9 @@ Function StripAllPdvSpells(Actor playerRef)
 EndFunction
 
 Function MaybeShowChampionRewardPresentation(Actor playerRef, Spell championSpell, Bool hadChampionSpell, Bool wantsChampionSpell, PDV_DeityBase deity, String rewardLabel)
+    if IsRaceSetupQuietPresentationActive()
+        return
+    endIf
     if !playerRef || !championSpell || !wantsChampionSpell || hadChampionSpell || !playerRef.HasSpell(championSpell) || !deity
         return
     endIf
@@ -12399,6 +12439,7 @@ Function DebugSetBosmerPathState(Int stateValue)
         return
     endIf
 
+    BeginRaceSetupQuietPresentation("mcm_bosmer_path")
     InitializeBosmerStorage()
     PDV_BosmerPathTrack.SetState(stateValue, "mcm_pattern")
     StorageUtil.SetIntValue(None, "PDV.Bosmer.SetupComplete", 1)
@@ -12417,6 +12458,7 @@ Function DebugSetBosmerPathState(Int stateValue)
 
     ApplyBosmerPathPatron(stateValue, "mcm_pattern")
     RunDawnApplySpellAndNeglectLayers()
+    EndRaceSetupQuietPresentation()
 EndFunction
 
 Function DebugTriggerGreenPactViolation()
@@ -12521,6 +12563,7 @@ Function DebugSetKhajiitFocus(Int focusValue)
         return
     endIf
 
+    BeginRaceSetupQuietPresentation("mcm_khajiit_focus")
     Int f = KHAJIIT_FOCUS_KHENARTHI
     while f <= KHAJIIT_FOCUS_ALKOSH
         StorageUtil.SetFloatValue(None, GetKhajiitFocusWeightKey(f), 0.0)
@@ -12529,6 +12572,7 @@ Function DebugSetKhajiitFocus(Int focusValue)
 
     StorageUtil.SetFloatValue(None, GetKhajiitFocusWeightKey(focusValue), KHAJIIT_FOCUS_THRESHOLD + KHAJIIT_FOCUS_LEAD_REQUIRED + 10.0)
     EvaluateKhajiitFocusedEmphasis()
+    EndRaceSetupQuietPresentation()
     Trace(1, "Khajiit focus debug-set to " + GetKhajiitFocusLabel(focusValue))
 EndFunction
 
@@ -13500,6 +13544,9 @@ EndFunction
 ; context   = optional short phrase (empty is fine; UI templates the rest)
 ; symbolName = Prisma symbol key; falls back to journal until glyphs land
 Function SendPrismaShiftToast(String shiftMode, String context, String symbolName)
+    if IsRaceSetupQuietPresentationActive()
+        return
+    endIf
     if !PDV_PrismaBridge.IsAvailable()
         return
     endIf
@@ -13518,6 +13565,9 @@ EndFunction
 
 ; Emit a substrate instrument event without making Prisma the gameplay proof lane.
 Function SendPrismaSubstrateToast(String substrate, String phase, String context, String symbolName, String stateLabel)
+    if IsRaceSetupQuietPresentationActive()
+        return
+    endIf
     if !PDV_PrismaBridge.IsAvailable()
         return
     endIf
@@ -14732,6 +14782,7 @@ EndFunction
 
 Function ApplyBretonInitialChoice(Int traditionValue, String reason)
     Int normalized = ClampInt(traditionValue, 0, 2)
+    BeginRaceSetupQuietPresentation(reason)
     StorageUtil.SetIntValue(None, "PDV.Breton.Tradition", normalized)
     StorageUtil.SetIntValue(None, "PDV.Breton.SetupComplete", 1)
     StorageUtil.SetStringValue(None, "PDV.Breton.StartupReason", reason)
@@ -14754,18 +14805,22 @@ Function ApplyBretonInitialChoice(Int traditionValue, String reason)
         AppendBookOfDaysEntry("You chose your tradition today, and it will not be easily swayed: " + traditionLabel + ".", Utility.GetCurrentGameTime() as Int, "reorientation", GetPrismaSymbolForDeity(traditionDeity), True, 3)
         SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")
     endIf
+    EndRaceSetupQuietPresentation()
 EndFunction
 
 Function ApplyRedguardInitialChoice(Int sectValue, String reason)
+    BeginRaceSetupQuietPresentation(reason)
     if PDV_RedguardSectTrack
         Int normalized = ClampInt(sectValue, REDGUARD_SECT_CROWN, REDGUARD_SECT_ASHABAH)
         PDV_RedguardSectTrack.SetState(normalized, reason)
         ShowRedguardSectEntry(normalized)
     endIf
     StorageUtil.SetIntValue(None, "PDV.Redguard.SetupComplete", 1)
+    EndRaceSetupQuietPresentation()
 EndFunction
 
 Function ApplyOrcInitialChoice(Int modeValue, String reason)
+    BeginRaceSetupQuietPresentation(reason)
     if PDV_OrcLifeModeTrack
         PDV_OrcLifeModeTrack.SetState(ClampInt(modeValue, ORC_LIFE_MODE_CITY, ORC_LIFE_MODE_LEGION_EXILE), reason)
     endIf
@@ -14779,9 +14834,11 @@ Function ApplyOrcInitialChoice(Int modeValue, String reason)
     StorageUtil.SetIntValue(None, "PDV.Orc.SetupComplete", 1)
     SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
+    EndRaceSetupQuietPresentation()
 EndFunction
 
 Function ApplyNordInitialChoice(Int baselineValue, String reason)
+    BeginRaceSetupQuietPresentation(reason)
     Int normalized = ClampInt(baselineValue, NORD_BASELINE_OLD_WAYS, NORD_BASELINE_NINE_DIVINES)
     if PDV_NordPantheonBaselineTrack
         PDV_NordPantheonBaselineTrack.SetState(normalized, reason)
@@ -14794,6 +14851,7 @@ Function ApplyNordInitialChoice(Int baselineValue, String reason)
     StorageUtil.SetStringValue(None, "PDV.Nord.StartupReason", reason)
     SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
+    EndRaceSetupQuietPresentation()
 EndFunction
 
 Function HandleBretonTraditionChoice(Int traditionValue, String reason)
@@ -15950,6 +16008,9 @@ EndFunction
 ; recognize, or the entry renders without a title/valence. headlinePinned entries
 ; are exempt from the day-window prune so curse/Champion/major-switch beats persist.
 Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String symbol, Bool headlinePinned, Int magnitude = 1, String titleText = "")
+    if IsRaceSetupQuietPresentationActive()
+        return
+    endIf
     if line == ""
         return
     endIf
@@ -16509,6 +16570,7 @@ Function ApplyBosmerInitialChoice(Int pathState, String reason)
         return
     endIf
 
+    BeginRaceSetupQuietPresentation(reason)
     InitializeBosmerStorage()
     PDV_BosmerPathTrack.SetState(pathState, reason)
     StorageUtil.SetIntValue(None, "PDV.Bosmer.SetupComplete", 1)
@@ -16520,6 +16582,7 @@ Function ApplyBosmerInitialChoice(Int pathState, String reason)
         SetBosmerGreenPactCompliance(0, reason)
         ApplyBosmerPathPatron(pathState, reason)
     endIf
+    EndRaceSetupQuietPresentation()
 EndFunction
 
 Function InitializeBosmerStorage()
