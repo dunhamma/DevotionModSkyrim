@@ -98,6 +98,41 @@ try
             if (index.ContainsKey(eid)) actions.Add("OK " + eid);
             else { errors.Add("MISSING " + eid); status = "FAIL"; }
         }
+        foreach (var s in shaderSpecs)
+        {
+            if (!index.TryGetValue(s.mgefEid, out var mgefRecord) || mgefRecord is not IMagicEffectGetter mgef)
+            {
+                errors.Add($"MISSING or wrong-type {s.mgefEid}");
+                status = "FAIL";
+                continue;
+            }
+            if (!mgef.Flags.HasFlag(MagicEffect.Flag.HideInUI))
+            {
+                errors.Add($"{s.mgefEid}: missing HideInUI");
+                status = "FAIL";
+            }
+            else actions.Add($"OK {s.mgefEid} HideInUI");
+
+            if (!mgef.Flags.HasFlag(MagicEffect.Flag.NoArea) || !mgef.Flags.HasFlag(MagicEffect.Flag.NoDuration))
+            {
+                errors.Add($"{s.mgefEid}: missing NoArea/NoDuration helper flags");
+                status = "FAIL";
+            }
+
+            if (!index.TryGetValue(s.spellEid, out var spellRecord) || spellRecord is not ISpellGetter spell)
+            {
+                errors.Add($"MISSING or wrong-type {s.spellEid}");
+                status = "FAIL";
+                continue;
+            }
+            var effect = spell.Effects.FirstOrDefault();
+            if (!effect?.BaseEffect.FormKeyNullable?.Equals(mgef.FormKey) ?? true)
+            {
+                errors.Add($"{s.spellEid}: first effect does not point to {s.mgefEid}");
+                status = "FAIL";
+            }
+            else actions.Add($"OK {s.spellEid} -> {s.mgefEid}");
+        }
         // manager service property
         if (index.TryGetValue("PDV__ManagerQuest", out var mgrGet) && mgrGet is IQuestGetter mq
             && mq.VirtualMachineAdapter?.Scripts.Any(s => s.Properties.Any(p => p.Name == "PDV_DiegeticDirectorService")) == true)
@@ -229,34 +264,40 @@ try
     // --- shader SPEL + MGEF (EFSH aura, added as ability by the director) ---
     foreach (var s in shaderSpecs)
     {
-        if (index.ContainsKey(s.spellEid)) { actions.Add("exists " + s.spellEid); continue; }
-        var mgef = new MagicEffect(allocator.Next(), SkyrimRelease.SkyrimSE)
+        MagicEffect mgef;
+        if (index.TryGetValue(s.mgefEid, out var existingMgef))
         {
-            EditorID = s.mgefEid,
-            Name = Tx($"Devotion {s.name} Aura"),
-            Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoDuration | MagicEffect.Flag.HideInUI,
-            BaseCost = 0f,
-            MagicSkill = ActorValue.None,
-            ResistValue = ActorValue.None,
-            Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.ValueModifier) { ActorValue = ActorValue.None },
-            CastType = CastType.ConstantEffect,
-            TargetType = TargetType.Self,
-            HitShader = new FormKey(skyrimKey, s.efsh).ToNullableLink<IEffectShaderGetter>(),
-        };
-        mod.MagicEffects.Add(mgef); index[s.mgefEid] = mgef;
+            if (existingMgef is not MagicEffect writableMgef)
+                throw new Exception($"{s.mgefEid} exists as {existingMgef.GetType().Name}, expected MagicEffect.");
+            mgef = writableMgef;
+            actions.Add("exists " + s.mgefEid);
+        }
+        else
+        {
+            mgef = new MagicEffect(allocator.Next(), SkyrimRelease.SkyrimSE) { EditorID = s.mgefEid };
+            mod.MagicEffects.Add(mgef);
+            index[s.mgefEid] = mgef;
+            actions.Add("created " + s.mgefEid);
+        }
+        ConfigureShaderMagicEffect(mgef, s.name, s.efsh, skyrimKey);
 
-        var spell = new Spell(allocator.Next(), SkyrimRelease.SkyrimSE)
+        Spell spell;
+        if (index.TryGetValue(s.spellEid, out var existingSpell))
         {
-            EditorID = s.spellEid,
-            Name = Tx($"Devotion {s.name}"),
-            BaseCost = 0,
-            Type = SpellType.Ability,
-            CastType = CastType.ConstantEffect,
-            TargetType = TargetType.Self,
-        };
-        spell.Effects.Add(new Effect { BaseEffect = mgef.FormKey.ToNullableLink<IMagicEffectGetter>(), Data = new EffectData { Magnitude = 0f, Area = 0, Duration = 0 }, Conditions = [] });
-        mod.Spells.Add(spell); index[s.spellEid] = spell;
-        actions.Add($"created {s.spellEid} + {s.mgefEid}");
+            if (existingSpell is not Spell writableSpell)
+                throw new Exception($"{s.spellEid} exists as {existingSpell.GetType().Name}, expected Spell.");
+            spell = writableSpell;
+            actions.Add("exists " + s.spellEid);
+        }
+        else
+        {
+            spell = new Spell(allocator.Next(), SkyrimRelease.SkyrimSE) { EditorID = s.spellEid };
+            mod.Spells.Add(spell);
+            index[s.spellEid] = spell;
+            actions.Add("created " + s.spellEid);
+        }
+        ConfigureShaderSpell(spell, s.name, mgef.FormKey);
+        actions.Add($"configured hidden shader carrier {s.spellEid} + {s.mgefEid}");
     }
 
     // --- 2 SGE quests + VMAD ---
@@ -319,6 +360,30 @@ void Report()
 }
 
 static TranslatedString Tx(string value) => new(Language.English, value);
+
+static void ConfigureShaderMagicEffect(MagicEffect mgef, string toneName, uint efshLocalId, ModKey skyrimKey)
+{
+    mgef.Name = Tx($"Devotion {toneName} Aura");
+    mgef.Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoDuration | MagicEffect.Flag.HideInUI;
+    mgef.BaseCost = 0f;
+    mgef.MagicSkill = ActorValue.None;
+    mgef.ResistValue = ActorValue.None;
+    mgef.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.ValueModifier) { ActorValue = ActorValue.None };
+    mgef.CastType = CastType.ConstantEffect;
+    mgef.TargetType = TargetType.Self;
+    mgef.HitShader = new FormKey(skyrimKey, efshLocalId).ToNullableLink<IEffectShaderGetter>();
+}
+
+static void ConfigureShaderSpell(Spell spell, string toneName, FormKey mgefKey)
+{
+    spell.Name = Tx($"Devotion {toneName}");
+    spell.BaseCost = 0;
+    spell.Type = SpellType.Ability;
+    spell.CastType = CastType.ConstantEffect;
+    spell.TargetType = TargetType.Self;
+    spell.Effects.Clear();
+    spell.Effects.Add(new Effect { BaseEffect = mgefKey.ToNullableLink<IMagicEffectGetter>(), Data = new EffectData { Magnitude = 0f, Area = 0, Duration = 0 }, Conditions = [] });
+}
 
 static ScriptObjectProperty ObjProp(string name, FormKey fk) => new()
 {

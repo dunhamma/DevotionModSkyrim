@@ -710,6 +710,7 @@ Int _pendingPrismaToastRetryDelayTicks = 0
 Event OnInit()
     InitializePreflightState()
     EnsurePhase8RuntimeWiring()
+    EnsureAkatoshRuntimeIdentity()
     EnsureBosmerRuntimeWiring()
     EnsureNordRuntimeWiring()
     RegisterManagerShoutSignals()
@@ -758,6 +759,7 @@ Event OnUpdate()
     _shoutRefreshTicks += 1
     if _shoutRefreshTicks >= 10
         EnsurePhase8RuntimeWiring()
+        EnsureAkatoshRuntimeIdentity()
         EnsureBosmerRuntimeWiring()
         EnsureNordRuntimeWiring()
         EnsureSurveyDevotionPower()
@@ -931,6 +933,33 @@ Function EnsurePhase8RuntimeWiring()
 
     if PDV_Talos.DecayModifyingTrack != PDV_ConcordatStandingTrack
         PDV_Talos.DecayModifyingTrack = PDV_ConcordatStandingTrack
+    endIf
+EndFunction
+
+Function EnsureAkatoshRuntimeIdentity()
+    if !PDV_Akatosh
+        return
+    endIf
+
+    Bool repaired = False
+
+    if PDV_Akatosh.DeityName != "Akatosh"
+        PDV_Akatosh.DeityName = "Akatosh"
+        repaired = True
+    endIf
+
+    if PDV_Akatosh.PDV_GLO_DebugLevel != PDV_GLO_DebugLevel
+        PDV_Akatosh.PDV_GLO_DebugLevel = PDV_GLO_DebugLevel
+        repaired = True
+    endIf
+
+    if PDV_Akatosh.PDV_GLO_OriginRace != PDV_GLO_OriginRace
+        PDV_Akatosh.PDV_GLO_OriginRace = PDV_GLO_OriginRace
+        repaired = True
+    endIf
+
+    if repaired && GetDebugLevel() >= 1
+        Debug.Trace("[PDV] Akatosh runtime identity repaired.")
     endIf
 EndFunction
 
