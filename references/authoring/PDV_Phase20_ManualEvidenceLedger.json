@@ -284,7 +284,7 @@
     },
     "Breton": {
       "status": "pending",
-      "evidenceSummary": "Manual/runtime packet PASS 2026-06-19: Hidden Art book route + surfacing (per-book distinct notices added this session), WitchcraftExposure decay (-1/dawn, log-confirmed), wrong-origin rejection, generic-source silence (no movement). 2026-06-28 Survey retest PASS after the Hidden Art band fix: at the three-book 75-exposure cap, Survey showed known/close-to-rupture wording, not notorious/full commitment. Optional ExposureRupture creed-loss needs exposure>=100 (unreachable via 3 one-shot books) -> PENDING via MCM band setter. Deferred-by-design (not failures): Knight's Road breach hooks, Green Way degradation, tradition-differentiated vampire. Reward rebalance shared with task #9.",
+      "evidenceSummary": "Manual/runtime packet PASS 2026-06-19: Hidden Art book route + surfacing (per-book distinct notices added this session), WitchcraftExposure decay (-1/dawn, log-confirmed), wrong-origin rejection, generic-source silence (no movement). 2026-06-28 Survey retest PASS after the Hidden Art band fix: at the three-book 75-exposure cap, Survey showed known/close-to-rupture wording, not notorious/full commitment. 2026-06-28 dawn-decay retest PASS: Papyrus.0.log recorded Breton WitchcraftExposure passive decay -> 74, -> 73, -> 72 across three MCM Run dawn pass clicks; Survey then stepped to the known/Vigilants line, and Book of Days produced one dawn digest rather than one passive-decay milestone per tick. Optional ExposureRupture creed-loss needs exposure>=100 (unreachable via 3 one-shot books) -> PENDING via MCM band setter. Deferred-by-design (not failures): Knight's Road breach hooks, Green Way degradation, tradition-differentiated vampire. Reward rebalance shared with task #9.",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
@@ -301,12 +301,12 @@
         "surveyStatusClarity": {
           "status": "evidence-recorded",
           "expected": "Survey/MCM explains Knight's Road, Hidden Art, or Green Way without enabling three simultaneous reward engines.",
-          "note": "2026-06-19 packet PASS scoped to the wired Hidden Art tradition: Survey/surfacing explained Hidden Art with per-book distinct notices; no broad three-engine stack observed. 2026-06-28 retest after the survey-band hotfix PASS: screenshot confirmed the three-book 75-exposure state reads as known/close to rupture and does not claim notorious/full commitment. Prisma panel summary/history is expected to follow the corrected live Survey/label functions on new panel opens; old session history before the hotfix is stale. Knight's Road and Green Way are deferred-by-design. Bucket: manual-acceptance."
+          "note": "2026-06-19 packet PASS scoped to the wired Hidden Art tradition: Survey/surfacing explained Hidden Art with per-book distinct notices; no broad three-engine stack observed. 2026-06-28 retest after the survey-band hotfix PASS: screenshot confirmed the three-book 75-exposure state reads as known/close to rupture and does not claim notorious/full commitment. 2026-06-28 dawn-decay retest PASS: after three Run dawn pass clicks, Survey showed the known/Vigilants line at exposure 72. Book of Days showed a single dawn digest rather than passive-decay spam; screenshot also exposed a separate lowercase Akatosh digest-name polish issue. Prisma panel summary/history is expected to follow the corrected live Survey/label functions on new panel opens; old session history before the hotfix is stale. Knight's Road and Green Way are deferred-by-design. Bucket: manual-acceptance."
         },
         "stackSnapshot": {
           "status": "pending",
           "expected": "Expected tradition build and edge occult/curse build record active tradition, cover/exposure, vow/druidic pressure, and suppressed parallel engines.",
-          "note": "PENDING: in-game Active Effects stack snapshot not yet captured; the occult/curse edge (ExposureRupture creed-loss) needs exposure>=100, unreachable via the 3 one-shot books (max 75) -- requires an MCM band setter to reach and prove. Bucket blocked: manual-acceptance (Active Effects) + route/runtime (ExposureRupture)."
+          "note": "PENDING: 2026-06-28 Active Effects snapshot showed the expected Breton inherited ward/resist-magic stack and no ExposureRupture at sub-100 exposure, but also revealed Devotion Revelation Aura in Active Effects. That aura is a diegetic shader helper and should be hidden for every tone; stackSnapshot remains open until the HideInUI ESP fix is applied and retested. The occult/curse edge (ExposureRupture creed-loss) needs exposure>=100, unreachable via the 3 one-shot books (max 75) -- requires an MCM band setter to reach and prove. Bucket blocked: manual-acceptance (Active Effects) + route/runtime (ExposureRupture)."
         },
         "manualFeelNote": {
           "status": "pending",
@@ -316,7 +316,7 @@
         "immersiveHookProof": {
           "status": "evidence-recorded",
           "expected": "Prove Breton tradition choice, Knight's Road, Hidden Art, and Green Way immersive hooks outside QASmoke, with stack audit and rejected generic spell/artifact/help loops.",
-          "note": "2026-06-19 packet PASS for Hidden Art: book route + per-book surfacing proven; WitchcraftExposure decay (-1/dawn) log-confirmed. Deferred-by-design (not failures): Knight's Road breach hooks, Green Way degradation, tradition-differentiated vampire. Bucket: route/runtime (Hidden Art lane only)."
+          "note": "2026-06-19 packet PASS for Hidden Art: book route + per-book surfacing proven; WitchcraftExposure decay (-1/dawn) log-confirmed. 2026-06-28 retest confirmed three additional decay markers in Papyrus.0.log: Breton WitchcraftExposure passive decay -> 74, -> 73, -> 72. Deferred-by-design (not failures): Knight's Road breach hooks, Green Way degradation, tradition-differentiated vampire. Bucket: route/runtime (Hidden Art lane only)."
         },
         "assetStatus": {
           "status": "evidence-recorded",
