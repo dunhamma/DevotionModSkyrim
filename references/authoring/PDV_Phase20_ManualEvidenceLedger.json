@@ -284,7 +284,7 @@
     },
     "Breton": {
       "status": "pending",
-      "evidenceSummary": "Manual/runtime packet PASS 2026-06-19: Hidden Art book route + surfacing (per-book distinct notices added this session), WitchcraftExposure decay (-1/dawn, log-confirmed), wrong-origin rejection, generic-source silence (no movement). Optional ExposureRupture creed-loss needs exposure>=100 (unreachable via 3 one-shot books) -> PENDING via MCM band setter. Deferred-by-design (not failures): Knight's Road breach hooks, Green Way degradation, tradition-differentiated vampire. Reward rebalance shared with task #9.",
+      "evidenceSummary": "Manual/runtime packet PASS 2026-06-19: Hidden Art book route + surfacing (per-book distinct notices added this session), WitchcraftExposure decay (-1/dawn, log-confirmed), wrong-origin rejection, generic-source silence (no movement). 2026-06-28 Survey retest PASS after the Hidden Art band fix: at the three-book 75-exposure cap, Survey showed known/close-to-rupture wording, not notorious/full commitment. Optional ExposureRupture creed-loss needs exposure>=100 (unreachable via 3 one-shot books) -> PENDING via MCM band setter. Deferred-by-design (not failures): Knight's Road breach hooks, Green Way degradation, tradition-differentiated vampire. Reward rebalance shared with task #9.",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
@@ -301,7 +301,7 @@
         "surveyStatusClarity": {
           "status": "evidence-recorded",
           "expected": "Survey/MCM explains Knight's Road, Hidden Art, or Green Way without enabling three simultaneous reward engines.",
-          "note": "2026-06-19 packet PASS scoped to the wired Hidden Art tradition: Survey/surfacing explained Hidden Art with per-book distinct notices; no broad three-engine stack observed. Knight's Road and Green Way are deferred-by-design. Bucket: manual-acceptance."
+          "note": "2026-06-19 packet PASS scoped to the wired Hidden Art tradition: Survey/surfacing explained Hidden Art with per-book distinct notices; no broad three-engine stack observed. 2026-06-28 retest after the survey-band hotfix PASS: screenshot confirmed the three-book 75-exposure state reads as known/close to rupture and does not claim notorious/full commitment. Prisma panel summary/history is expected to follow the corrected live Survey/label functions on new panel opens; old session history before the hotfix is stale. Knight's Road and Green Way are deferred-by-design. Bucket: manual-acceptance."
         },
         "stackSnapshot": {
           "status": "pending",
