@@ -227,6 +227,23 @@ if (!fs.existsSync(NATIVE_BRIDGE_SOURCE)) {
   } else {
     pass("Book of Days keeps Prisma's cursor-friendly focus mode.", NATIVE_BRIDGE_SOURCE);
   }
+
+  if (nativeBridge.includes("g_prisma->Focus(g_view, true, true);")) {
+    fail("Book of Days must not disable Prisma's focus menu; that breaks cursor/X close behavior.", NATIVE_BRIDGE_SOURCE);
+  } else {
+    pass("Book of Days does not use the cursor-breaking focus mode.", NATIVE_BRIDGE_SOURCE);
+  }
+
+  if (
+    !nativeBridge.includes("void CloseJournalSurface(") ||
+    !nativeBridge.includes('CloseJournalSurface("js_panel_close")') ||
+    !nativeBridge.includes('CloseJournalSurface("keyboard_escape", true)') ||
+    !nativeBridge.includes('CloseJournalSurface("papyrus_journal_close")')
+  ) {
+    fail("Book of Days close routes must converge on CloseJournalSurface.", NATIVE_BRIDGE_SOURCE);
+  } else {
+    pass("Book of Days close routes converge on CloseJournalSurface.", NATIVE_BRIDGE_SOURCE);
+  }
 }
 
 if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {

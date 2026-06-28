@@ -130,34 +130,36 @@ namespace
         }
     }
 
-    // JS -> C++ close channel for the focused main panel. The view calls
-    // window.PDVPanelClose(...) from its ESC handler / in-view close button. Unlike the
-    // choice channel we also Hide the view, so closing fully dismisses the panel (Unfocus
-    // alone only releases input/pause and would leave the panel on screen).
-    void OnPanelClose(const char* a_argument) noexcept
+    void HidePrismaView() noexcept
     {
-        const std::string arg = a_argument ? a_argument : "";
-        if (arg.find("journal") != std::string::npos) {
-            g_journalVisible = false;
-        }
-        logs::info("Prisma panel close requested: {}", arg);
         if (g_prisma && g_view && g_prisma->IsValid(g_view)) {
             g_prisma->Unfocus(g_view);
             g_prisma->Hide(g_view);
         }
     }
 
-    void CloseJournalFromNative(const char* a_source) noexcept
+    void CloseJournalSurface(std::string_view a_source, bool a_requireVisible = false) noexcept
     {
-        if (!g_journalVisible) {
+        if (a_requireVisible && !g_journalVisible) {
             return;
         }
         g_journalVisible = false;
-        logs::info("Prisma journal close requested by {}", a_source ? a_source : "native");
-        if (g_prisma && g_view && g_prisma->IsValid(g_view)) {
-            g_prisma->Unfocus(g_view);
-            g_prisma->Hide(g_view);
+        logs::info("Prisma journal close requested by {}", a_source);
+        HidePrismaView();
+    }
+
+    // JS -> C++ close channel for the focused main panel and Book of Days X button.
+    // Journal close uses the same native module as hotkey and ESC close so state,
+    // focus, cursor, and view visibility cannot drift by close route.
+    void OnPanelClose(const char* a_argument) noexcept
+    {
+        const std::string arg = a_argument ? a_argument : "";
+        if (arg.find("journal") != std::string::npos) {
+            CloseJournalSurface("js_panel_close");
+            return;
         }
+        logs::info("Prisma panel close requested: {}", arg);
+        HidePrismaView();
     }
 
     class JournalEscapeSink final : public RE::BSTEventSink<RE::InputEvent*>
@@ -187,7 +189,7 @@ namespace
                     button->GetDevice() == RE::INPUT_DEVICES::kKeyboard &&
                     button->GetIDCode() == 1;  // DIK_ESCAPE
                 if (keyboardEscape) {
-                    CloseJournalFromNative("keyboard_escape");
+                    CloseJournalSurface("keyboard_escape", true);
                     return RE::BSEventNotifyControl::kStop;
                 }
             }
@@ -231,9 +233,7 @@ namespace
         g_prisma->Show(g_view);
         g_prisma->InteropCall(g_view, kReceiveOverlayFunction.data(), a_payload.c_str());
         if (a_payload.find("\"journalClose\"") != std::string::npos) {
-            g_journalVisible = false;
-            g_prisma->Unfocus(g_view);
-            g_prisma->Hide(g_view);
+            CloseJournalSurface("papyrus_journal_close");
         } else if (a_payload.find("\"journal\"") != std::string::npos || a_payload.find("\"mode\":\"journal\"") != std::string::npos) {
             g_journalVisible = true;
             g_prisma->Focus(g_view, true, false);
@@ -342,8 +342,7 @@ namespace
             return true;
         }
 
-        g_prisma->Unfocus(g_view);
-        g_prisma->Hide(g_view);
+        HidePrismaView();
         return true;
     }
 

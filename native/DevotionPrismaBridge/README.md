@@ -106,6 +106,31 @@ The bridge calls those functions through Prisma `InteropCall`.
 the view without focusing or pausing the panel path and sends the payload to the
 overlay receiver, which is currently used for transient devotion toasts.
 
+## Prisma Close Contract
+
+Book of Days is a focused Prisma surface, but it has three player dismissal
+routes: the Book key, the in-view X button, and keyboard Esc. Those routes must
+all converge in the native bridge on `CloseJournalSurface`. Do not make JS,
+Papyrus, and native code each own their own partial close behavior.
+
+Required invariants:
+
+- The in-view X calls `window.PDVPanelClose("journal|close")`; the native
+  `OnPanelClose` listener routes that to `CloseJournalSurface`.
+- The Book key asks `PDV_PrismaBridge.IsJournalVisible()` and closes through
+  `PDV__ManagerQuest.ClosePrismaJournal()`, which sends the `journalClose`
+  overlay payload; the native bridge routes that to `CloseJournalSurface`.
+- Keyboard Esc is consumed by the native `JournalEscapeSink` while Book of Days
+  is visible, then routed to `CloseJournalSurface` before Skyrim can open the
+  pause menu.
+- Book of Days must keep Prisma's cursor-friendly focus mode:
+  `Focus(g_view, true, false)`. Do not switch the journal to
+  `Focus(g_view, true, true)`; that can let Esc reach JS, but it breaks the
+  mouse/X route.
+
+`node .\tools\pdv_prisma_ui_audit.mjs` is the static test surface for this
+contract. Fresh in-game U1 smoke is still required after bridge or UI changes.
+
 Startup popups now also arrive through overlay payloads with `mode: "startup"`.
 The Prisma side is presentation-only for startup: it renders stylized option
 cards and side descriptions, but Papyrus still owns authoritative commitment

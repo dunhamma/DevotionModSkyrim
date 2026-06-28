@@ -28,6 +28,13 @@ Verification evidence read from the active resolved mod environment, including t
 
 The structured statement of what automation is expected to create, update, verify, and explain.
 
+## Prisma Close Contract
+
+The invariant for dismissing focused Prisma surfaces. For Book of Days, the native
+bridge owns the close surface: key toggle, in-view X, Papyrus `journalClose`, and
+keyboard Esc must converge on the same native close implementation so state,
+focus, cursor behavior, and view visibility cannot drift by route.
+
 ## Promotion
 
 The reviewed movement of generated plugin content into accepted source plugin state.
