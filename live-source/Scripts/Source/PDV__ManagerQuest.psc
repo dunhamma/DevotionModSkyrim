@@ -711,6 +711,7 @@ Event OnInit()
     InitializePreflightState()
     EnsurePhase8RuntimeWiring()
     EnsureAkatoshRuntimeIdentity()
+    RepairBookOfDaysJournalText()
     EnsureBosmerRuntimeWiring()
     EnsureNordRuntimeWiring()
     RegisterManagerShoutSignals()
@@ -760,6 +761,7 @@ Event OnUpdate()
     if _shoutRefreshTicks >= 10
         EnsurePhase8RuntimeWiring()
         EnsureAkatoshRuntimeIdentity()
+        RepairBookOfDaysJournalText()
         EnsureBosmerRuntimeWiring()
         EnsureNordRuntimeWiring()
         EnsureSurveyDevotionPower()
@@ -8749,6 +8751,7 @@ Function ProcessDawn()
         return
     endIf
 
+    EnsureAkatoshRuntimeIdentity()
     RunDawnAwardAltmerAuriElDawn()
     RunDawnConsolidateScratch()
     RunDawnRefreshTrackStates()
@@ -8892,7 +8895,7 @@ Function RunDawnConsolidateScratch()
                 clampedToday = clampedToday * GetOrcLifeModeGainMultiplier(deity)
                 clampedToday = clampedToday * GetImperialCurseGainMultiplier(deity)
                 ; Record the gods fed today so the dawn digest can name them.
-                StorageUtil.StringListAdd(None, "PDV.BookOfDays.TodayFed", deity.DeityName, False)
+                StorageUtil.StringListAdd(None, "PDV.BookOfDays.TodayFed", GetPublicDeityDisplayName(deity), False)
             endIf
             Float oldPiety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
             Float newPiety = ClampValue(oldPiety + clampedToday, 0.0, PIETY_MAX)
@@ -15947,6 +15950,7 @@ EndFunction
 ; Build the Book of Days journal JSON payload.
 ; Entries are ordered oldest-first (index 0 = oldest, last index = newest).
 String Function BuildJournalPayloadJson(Int page = 0)
+    RepairBookOfDaysJournalText()
     Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
     Int titleCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
     Int magnitudeCount = StorageUtil.IntListCount(None, "PDV.Diegetic.Journal.Magnitudes")
@@ -16043,6 +16047,7 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
     if line == ""
         return
     endIf
+    line = NormalizePublicDeityDisplayText(line)
     if tone == ""
         tone = "substrate.act"
     endIf
@@ -16075,6 +16080,88 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
     PruneBookOfDays()
 
     RefreshOpenBookOfDays()
+EndFunction
+
+Function RepairBookOfDaysJournalText()
+    Int repairVersion = 1
+    if StorageUtil.GetIntValue(None, "PDV.BookOfDays.TextRepairVersion") >= repairVersion
+        return
+    endIf
+
+    Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
+    Int i = 0
+    Int repaired = 0
+    while i < count
+        String oldLine = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", i)
+        String newLine = NormalizePublicDeityDisplayText(oldLine)
+        if newLine != oldLine
+            StorageUtil.StringListSet(None, "PDV.Diegetic.Journal.Lines", i, newLine)
+            repaired += 1
+        endIf
+        i += 1
+    endWhile
+
+    StorageUtil.SetIntValue(None, "PDV.BookOfDays.TextRepairVersion", repairVersion)
+    if repaired > 0 && GetDebugLevel() >= 1
+        Debug.Trace("[PDV] Book of Days deity display text repaired: " + repaired)
+    endIf
+EndFunction
+
+String Function GetPublicDeityDisplayName(PDV_DeityBase deity)
+    if !deity
+        return ""
+    endIf
+    return NormalizePublicDeityDisplayText(deity.DeityName)
+EndFunction
+
+String Function NormalizePublicDeityDisplayText(String sourceText)
+    String result = sourceText
+    result = ReplaceText(result, "akatosh", "Akatosh")
+    result = ReplaceText(result, "kyne", "Kyne")
+    result = ReplaceText(result, "sithis", "Sithis")
+    result = ReplaceText(result, "trinimac", "Trinimac")
+    return result
+EndFunction
+
+String Function ReplaceText(String sourceText, String needleText, String replacementText)
+    Int sourceLength = StringUtil.GetLength(sourceText)
+    Int needleLength = StringUtil.GetLength(needleText)
+    if sourceLength <= 0 || needleLength <= 0 || sourceLength < needleLength
+        return sourceText
+    endIf
+
+    String result = ""
+    Int sourceIndex = 0
+    Int lastStart = sourceLength - needleLength
+    while sourceIndex < sourceLength
+        Bool matched = False
+        if sourceIndex <= lastStart
+            matched = StringMatchesAt(sourceText, needleText, sourceIndex)
+        endIf
+
+        if matched
+            result = result + replacementText
+            sourceIndex = sourceIndex + needleLength
+        else
+            result = result + StringUtil.GetNthChar(sourceText, sourceIndex)
+            sourceIndex = sourceIndex + 1
+        endIf
+    endWhile
+
+    return result
+EndFunction
+
+Bool Function StringMatchesAt(String sourceText, String needleText, Int startIndex)
+    Int needleLength = StringUtil.GetLength(needleText)
+    Int needleIndex = 0
+    while needleIndex < needleLength
+        if StringUtil.GetNthChar(sourceText, startIndex + needleIndex) != StringUtil.GetNthChar(needleText, needleIndex)
+            return False
+        endIf
+        needleIndex += 1
+    endWhile
+
+    return True
 EndFunction
 
 ; Day-window prune: unpinned entries older than the window are removed; pinned
