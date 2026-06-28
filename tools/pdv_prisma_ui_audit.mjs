@@ -210,10 +210,22 @@ if (!fs.existsSync(NATIVE_BRIDGE_SOURCE)) {
     pass("Native Prisma bridge updates Book of Days visible state on open and close.", NATIVE_BRIDGE_SOURCE);
   }
 
-  if (!nativeBridge.includes("g_prisma->Focus(g_view, true, true);")) {
-    fail("Native Prisma bridge must disable Prisma focus-menu ESC handling for Book of Days so JS receives ESC.", NATIVE_BRIDGE_SOURCE);
+  if (!nativeBridge.includes("class JournalEscapeSink") || !nativeBridge.includes("RegisterInputSink()")) {
+    fail("Native Prisma bridge must register a Book of Days ESC input sink.", NATIVE_BRIDGE_SOURCE);
   } else {
-    pass("Native Prisma bridge gives Book of Days ESC handling to the page.", NATIVE_BRIDGE_SOURCE);
+    pass("Native Prisma bridge registers a Book of Days ESC input sink.", NATIVE_BRIDGE_SOURCE);
+  }
+
+  if (!nativeBridge.includes("button->GetIDCode() == 1") || !nativeBridge.includes("RE::BSEventNotifyControl::kStop")) {
+    fail("Native Book of Days ESC input sink must consume keyboard ESC before Skyrim opens the pause menu.", NATIVE_BRIDGE_SOURCE);
+  } else {
+    pass("Native Book of Days ESC input sink consumes keyboard ESC.", NATIVE_BRIDGE_SOURCE);
+  }
+
+  if (!nativeBridge.includes("g_prisma->Focus(g_view, true, false);")) {
+    fail("Book of Days must keep Prisma's cursor-friendly focus mode for the in-view X button.", NATIVE_BRIDGE_SOURCE);
+  } else {
+    pass("Book of Days keeps Prisma's cursor-friendly focus mode.", NATIVE_BRIDGE_SOURCE);
   }
 }
 

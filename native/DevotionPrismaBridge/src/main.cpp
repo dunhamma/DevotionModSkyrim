@@ -41,6 +41,7 @@ namespace
     bool g_choicePause = false;
     bool g_domReady = false;
     bool g_journalVisible = false;
+    bool g_inputSinkRegistered = false;
 
     std::filesystem::path LogPath()
     {
@@ -146,6 +147,70 @@ namespace
         }
     }
 
+    void CloseJournalFromNative(const char* a_source) noexcept
+    {
+        if (!g_journalVisible) {
+            return;
+        }
+        g_journalVisible = false;
+        logs::info("Prisma journal close requested by {}", a_source ? a_source : "native");
+        if (g_prisma && g_view && g_prisma->IsValid(g_view)) {
+            g_prisma->Unfocus(g_view);
+            g_prisma->Hide(g_view);
+        }
+    }
+
+    class JournalEscapeSink final : public RE::BSTEventSink<RE::InputEvent*>
+    {
+    public:
+        static JournalEscapeSink* GetSingleton()
+        {
+            static JournalEscapeSink singleton;
+            return std::addressof(singleton);
+        }
+
+        RE::BSEventNotifyControl ProcessEvent(
+            RE::InputEvent* const* a_event,
+            RE::BSTEventSource<RE::InputEvent*>*) override
+        {
+            if (!g_journalVisible || !a_event) {
+                return RE::BSEventNotifyControl::kContinue;
+            }
+
+            for (auto* event = *a_event; event; event = event->next) {
+                const auto* button = event->AsButtonEvent();
+                if (!button || !button->IsDown()) {
+                    continue;
+                }
+
+                const bool keyboardEscape =
+                    button->GetDevice() == RE::INPUT_DEVICES::kKeyboard &&
+                    button->GetIDCode() == 1;  // DIK_ESCAPE
+                if (keyboardEscape) {
+                    CloseJournalFromNative("keyboard_escape");
+                    return RE::BSEventNotifyControl::kStop;
+                }
+            }
+
+            return RE::BSEventNotifyControl::kContinue;
+        }
+    };
+
+    void RegisterInputSink()
+    {
+        if (g_inputSinkRegistered) {
+            return;
+        }
+        auto* inputManager = RE::BSInputDeviceManager::GetSingleton();
+        if (!inputManager) {
+            logs::warn("Input sink registration skipped: BSInputDeviceManager unavailable");
+            return;
+        }
+        inputManager->AddEventSink(JournalEscapeSink::GetSingleton());
+        g_inputSinkRegistered = true;
+        logs::info("Registered Book of Days ESC input sink");
+    }
+
     bool SendLastPayload()
     {
         if (!g_prisma || !g_view || !g_prisma->IsValid(g_view)) {
@@ -171,9 +236,7 @@ namespace
             g_prisma->Hide(g_view);
         } else if (a_payload.find("\"journal\"") != std::string::npos || a_payload.find("\"mode\":\"journal\"") != std::string::npos) {
             g_journalVisible = true;
-            // Book of Days owns its own ESC close route through JS -> PDVPanelClose.
-            // Disable Prisma's focus-menu ESC handling here so the page receives it.
-            g_prisma->Focus(g_view, true, true);
+            g_prisma->Focus(g_view, true, false);
         }
         return true;
     }
@@ -467,6 +530,8 @@ namespace
 
         if (a_message->type == SKSE::MessagingInterface::kPostLoad) {
             AcquirePrisma();
+        } else if (a_message->type == SKSE::MessagingInterface::kInputLoaded) {
+            RegisterInputSink();
         }
     }
 
