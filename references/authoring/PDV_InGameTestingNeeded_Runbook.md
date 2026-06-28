@@ -104,7 +104,7 @@ Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 | Khajiit | none for current beta packet; final-world placement remains separate |
 | Argonian | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Bosmer | none for current beta packet; final-world placement remains separate |
-| Breton | `stackSnapshot`, `manualFeelNote`; optional `ExposureRupture` edge once an MCM band setter exists |
+| Breton | none for current Hidden Art packet; optional `ExposureRupture` edge once an MCM band setter exists; Knight's Road/Green Way remain deferred V1 arms |
 | Dunmer | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Imperial | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Nord | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
