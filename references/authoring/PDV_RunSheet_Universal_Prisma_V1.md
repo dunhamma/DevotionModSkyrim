@@ -29,9 +29,12 @@ zeroes regen buffs, so flat heals must show the bar move here).
 ### U1 -- panel and Book of Days open, focus, and close  [Tester] [R]+[M]
 - **Do:** the **first** time this session, open the Devotion panel (hotkey/MCM). Try **ESC** and the in-panel
   **X**. Re-open; switch **Chronicle <-> Ledger**; ESC again. Then open **Book of Days** and close it with
-  **ESC** and with the in-book close button.
+  the **same Book of Days key**. Re-open with the key, close with the in-book close button, then press the key
+  again and confirm it **opens**. Re-open once more, close with **ESC**, then press the key again and confirm it
+  **opens**.
 - **See:** each surface opens **already filled in and focused** (not a blank frozen screen), and **ESC always
-  gives you control back**. The Book of Days has a visible close button. You never get stuck.
+  gives you control back**. The Book of Days has a visible close button. Closing by key, X, or ESC never leaves
+  the key stuck in a stale "close" state; the next key press opens the book.
 - **Record:** ___
 
 ### U2 -- tier-ups (Seeker / Devoted / Champion)  [Tester] [R]+[M]

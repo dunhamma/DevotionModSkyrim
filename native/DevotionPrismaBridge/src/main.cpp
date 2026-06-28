@@ -40,6 +40,7 @@ namespace
     bool g_panelFocusPending = false;
     bool g_choicePause = false;
     bool g_domReady = false;
+    bool g_journalVisible = false;
 
     std::filesystem::path LogPath()
     {
@@ -132,9 +133,13 @@ namespace
     // window.PDVPanelClose(...) from its ESC handler / in-view close button. Unlike the
     // choice channel we also Hide the view, so closing fully dismisses the panel (Unfocus
     // alone only releases input/pause and would leave the panel on screen).
-    void OnPanelClose(const char*) noexcept
+    void OnPanelClose(const char* a_argument) noexcept
     {
-        logs::info("Prisma panel close requested");
+        const std::string arg = a_argument ? a_argument : "";
+        if (arg.find("journal") != std::string::npos) {
+            g_journalVisible = false;
+        }
+        logs::info("Prisma panel close requested: {}", arg);
         if (g_prisma && g_view && g_prisma->IsValid(g_view)) {
             g_prisma->Unfocus(g_view);
             g_prisma->Hide(g_view);
@@ -161,9 +166,11 @@ namespace
         g_prisma->Show(g_view);
         g_prisma->InteropCall(g_view, kReceiveOverlayFunction.data(), a_payload.c_str());
         if (a_payload.find("\"journalClose\"") != std::string::npos) {
+            g_journalVisible = false;
             g_prisma->Unfocus(g_view);
             g_prisma->Hide(g_view);
         } else if (a_payload.find("\"journal\"") != std::string::npos || a_payload.find("\"mode\":\"journal\"") != std::string::npos) {
+            g_journalVisible = true;
             g_prisma->Focus(g_view, true, false);
         }
         return true;
@@ -265,6 +272,7 @@ namespace
     bool ClosePanel()
     {
         g_panelFocusPending = false;  // cancel any deferred cold-view focus
+        g_journalVisible = false;
         if (!g_prisma || !g_view || !g_prisma->IsValid(g_view)) {
             return true;
         }
@@ -306,6 +314,14 @@ namespace
     bool PapyrusToggleDevotionPanel(RE::StaticFunctionTag*)
     {
         return TogglePanel();
+    }
+
+    bool PapyrusIsJournalVisible(RE::StaticFunctionTag*)
+    {
+        if (!g_prisma || !g_view || !g_prisma->IsValid(g_view) || g_prisma->IsHidden(g_view)) {
+            g_journalVisible = false;
+        }
+        return g_journalVisible;
     }
 
     bool PapyrusSendJson(RE::StaticFunctionTag*, RE::BSFixedString a_payload)
@@ -430,6 +446,7 @@ namespace
         a_vm->RegisterFunction("OpenDevotionPanel", kPapyrusScript.data(), PapyrusOpenDevotionPanel);
         a_vm->RegisterFunction("CloseDevotionPanel", kPapyrusScript.data(), PapyrusCloseDevotionPanel);
         a_vm->RegisterFunction("ToggleDevotionPanel", kPapyrusScript.data(), PapyrusToggleDevotionPanel);
+        a_vm->RegisterFunction("IsJournalVisible", kPapyrusScript.data(), PapyrusIsJournalVisible);
         a_vm->RegisterFunction("SendJson", kPapyrusScript.data(), PapyrusSendJson);
         a_vm->RegisterFunction("SendOverlayJson", kPapyrusScript.data(), PapyrusSendOverlayJson);
         a_vm->RegisterFunction("SupportsChoice", kPapyrusScript.data(), PapyrusSupportsChoice);

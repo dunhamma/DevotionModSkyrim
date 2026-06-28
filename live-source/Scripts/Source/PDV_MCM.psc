@@ -1004,29 +1004,33 @@ Event OnKeyDown(Int a_keyCode)
     if journalKey < 0
         return
     endIf
-    if Utility.IsInMenuMode()
-        return
-    endIf
     if !EnsureManagerBinding("journal_hotkey")
         return
     endIf
     ; Player-pressed toggle: first press opens the rolling Chronicle, second press
-    ; closes it. The analytical Ledger lives in the focused panel, not as the next
-    ; hotkey state, so the Book stays a rolling log.
-    ; The view is a NON-FOCUSED overlay (SendOverlayJson), so the close is driven by
-    ; this hotkey, not an in-view button. True is the player-owned bypass of the
-    ; gameplay default-off gate (see pdv_prisma_ui_audit). The open flag is reset in
-    ; OnGameReload so a load (which closes the overlay) cannot leave it stuck "open".
+    ; closes it. Query the bridge-visible state as the source of truth, then reconcile
+    ; the StorageUtil mirror. This keeps the key reliable after either key-close or
+    ; X/ESC close from the Prisma view.
     Int journalState = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Open")
-    if journalState == 0
-        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
-        Debug.Notification("The Book of Days opens.")
-        PDV_Manager.SendPrismaJournalPayload(True)
-    else
+    Bool journalVisible = PDV_PrismaBridge.IsJournalVisible()
+    if journalVisible
         StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
         Debug.Notification("The Book of Days closes.")
         PDV_Manager.ClosePrismaJournal()
+        return
     endIf
+
+    if journalState != 0
+        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
+    endIf
+
+    if Utility.IsInMenuMode()
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
+    Debug.Notification("The Book of Days opens.")
+    PDV_Manager.SendPrismaJournalPayload(True)
 EndEvent
 
 Function OpenBookOfDaysFromMcm()

@@ -13,6 +13,9 @@ Bool Function CloseDevotionPanel() Global Native
 Bool Function ToggleDevotionPanel() Global Native
 {Shows the panel when hidden, or hides it when visible.}
 
+Bool Function IsJournalVisible() Global Native
+{Returns true when the Book of Days journal overlay is currently visible in the Prisma view.}
+
 Bool Function SendJson(String payload) Global Native
 {Sends a JSON string to the Devotion Prisma panel.}
 

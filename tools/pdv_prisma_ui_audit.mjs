@@ -4,6 +4,8 @@ import path from "node:path";
 
 const DEVOTION_SOURCE = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
 const DEVOTION_PRISMA_VIEW = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion\\app.js";
+const REPO_ROOT = process.cwd();
+const NATIVE_BRIDGE_SOURCE = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "src", "main.cpp");
 
 function fail(message, source = "") {
   failures.push({ message, source });
@@ -19,6 +21,12 @@ function read(filePath) {
 
 function functionBlock(source, functionName) {
   const pattern = new RegExp(`(?:Bool\\s+)?Function\\s+${functionName}\\b[\\s\\S]*?EndFunction`, "i");
+  const match = source.match(pattern);
+  return match ? match[0] : "";
+}
+
+function eventBlock(source, eventName) {
+  const pattern = new RegExp(`Event\\s+${eventName}\\b[\\s\\S]*?EndEvent`, "i");
   const match = source.match(pattern);
   return match ? match[0] : "";
 }
@@ -134,6 +142,72 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     } else {
       pass("Medallion modal payload has no live callers.", managerPath);
     }
+  }
+
+  const bridgePath = path.join(DEVOTION_SOURCE, "PDV_PrismaBridge.psc");
+  if (!fs.existsSync(bridgePath)) {
+    fail("Prisma bridge Papyrus source is missing.", bridgePath);
+  } else {
+    const bridge = read(bridgePath);
+    if (!bridge.includes("Bool Function IsJournalVisible() Global Native")) {
+      fail("Prisma bridge Papyrus source must expose IsJournalVisible for Book of Days key-close state.", bridgePath);
+    } else {
+      pass("Prisma bridge Papyrus source exposes IsJournalVisible.", bridgePath);
+    }
+  }
+
+  const mcmPath = path.join(DEVOTION_SOURCE, "PDV_MCM.psc");
+  if (!fs.existsSync(mcmPath)) {
+    fail("MCM source is missing.", mcmPath);
+  } else {
+    const mcm = read(mcmPath);
+    const onKeyDown = eventBlock(mcm, "OnKeyDown");
+    const journalStart = onKeyDown.indexOf("Int journalState = StorageUtil.GetIntValue(None, \"PDV.Diegetic.Journal.Open\")");
+    const journalSlice = journalStart >= 0 ? onKeyDown.slice(journalStart) : "";
+    const visibleIndex = journalSlice.indexOf("PDV_PrismaBridge.IsJournalVisible()");
+    const menuIndex = journalSlice.indexOf("Utility.IsInMenuMode()");
+    const closeIndex = journalSlice.indexOf("PDV_Manager.ClosePrismaJournal()");
+
+    if (!onKeyDown) {
+      fail("MCM OnKeyDown event is missing.", mcmPath);
+    } else if (visibleIndex < 0) {
+      fail("Book of Days hotkey must query native bridge journal visibility before deciding close/open state.", mcmPath);
+    } else {
+      pass("Book of Days hotkey queries bridge journal visibility.", mcmPath);
+    }
+
+    if (!journalSlice || visibleIndex < 0 || menuIndex < 0 || visibleIndex > menuIndex || closeIndex < 0 || closeIndex > menuIndex) {
+      fail("Book of Days close path must run before the menu-mode open guard.", mcmPath);
+    } else {
+      pass("Book of Days close path is not blocked by the menu-mode open guard.", mcmPath);
+    }
+
+    if (!journalSlice.includes("StorageUtil.SetIntValue(None, \"PDV.Diegetic.Journal.Open\", 0)")) {
+      fail("Book of Days hotkey must clear stale Papyrus open state when native UI is not visible.", mcmPath);
+    } else {
+      pass("Book of Days hotkey reconciles stale Papyrus open state.", mcmPath);
+    }
+  }
+}
+
+if (!fs.existsSync(NATIVE_BRIDGE_SOURCE)) {
+  fail("Native Prisma bridge source is missing.", NATIVE_BRIDGE_SOURCE);
+} else {
+  const nativeBridge = read(NATIVE_BRIDGE_SOURCE);
+  if (
+    !nativeBridge.includes("g_journalVisible") ||
+    !nativeBridge.includes("PapyrusIsJournalVisible") ||
+    !nativeBridge.includes('RegisterFunction("IsJournalVisible"')
+  ) {
+    fail("Native Prisma bridge must track and expose Book of Days visible state.", NATIVE_BRIDGE_SOURCE);
+  } else {
+    pass("Native Prisma bridge tracks and exposes Book of Days visible state.", NATIVE_BRIDGE_SOURCE);
+  }
+
+  if (!nativeBridge.includes("g_journalVisible = false") || !nativeBridge.includes("g_journalVisible = true")) {
+    fail("Native Prisma bridge must update Book of Days visible state on open and close.", NATIVE_BRIDGE_SOURCE);
+  } else {
+    pass("Native Prisma bridge updates Book of Days visible state on open and close.", NATIVE_BRIDGE_SOURCE);
   }
 }
 
