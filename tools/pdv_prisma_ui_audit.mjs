@@ -209,6 +209,12 @@ if (!fs.existsSync(NATIVE_BRIDGE_SOURCE)) {
   } else {
     pass("Native Prisma bridge updates Book of Days visible state on open and close.", NATIVE_BRIDGE_SOURCE);
   }
+
+  if (!nativeBridge.includes("g_prisma->Focus(g_view, true, true);")) {
+    fail("Native Prisma bridge must disable Prisma focus-menu ESC handling for Book of Days so JS receives ESC.", NATIVE_BRIDGE_SOURCE);
+  } else {
+    pass("Native Prisma bridge gives Book of Days ESC handling to the page.", NATIVE_BRIDGE_SOURCE);
+  }
 }
 
 if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
@@ -231,6 +237,23 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     fail("Prisma UI is missing the Azurah display-name mapping for the normalized azura symbol key.", DEVOTION_PRISMA_VIEW);
   } else {
     pass("Prisma UI maps normalized azura symbols to Azurah display text.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (!app.includes("const isEscapeKey = (event)") || !app.includes("const onJournalEsc = (event)")) {
+    fail("Book of Days UI must use a dedicated robust ESC handler.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Book of Days UI has a dedicated robust ESC handler.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (
+    !app.includes('window.addEventListener("keydown", onJournalEsc, true)') ||
+    !app.includes('document.addEventListener("keydown", onJournalEsc, true)') ||
+    !app.includes('window.addEventListener("keyup", onJournalEsc, true)') ||
+    !app.includes('document.addEventListener("keyup", onJournalEsc, true)')
+  ) {
+    fail("Book of Days ESC handler must bind at window/document capture on keydown and keyup.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Book of Days ESC handler binds at window/document capture on keydown and keyup.", DEVOTION_PRISMA_VIEW);
   }
 }
 

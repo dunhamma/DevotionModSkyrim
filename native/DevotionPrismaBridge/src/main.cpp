@@ -171,7 +171,9 @@ namespace
             g_prisma->Hide(g_view);
         } else if (a_payload.find("\"journal\"") != std::string::npos || a_payload.find("\"mode\":\"journal\"") != std::string::npos) {
             g_journalVisible = true;
-            g_prisma->Focus(g_view, true, false);
+            // Book of Days owns its own ESC close route through JS -> PDVPanelClose.
+            // Disable Prisma's focus-menu ESC handling here so the page receives it.
+            g_prisma->Focus(g_view, true, true);
         }
         return true;
     }

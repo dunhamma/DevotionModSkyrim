@@ -1017,6 +1017,22 @@
     }
   };
 
+  const isEscapeKey = (event) => (
+    event.key === "Escape" ||
+    event.key === "Esc" ||
+    event.code === "Escape" ||
+    event.keyCode === 27 ||
+    event.which === 27
+  );
+
+  const onJournalEsc = (event) => {
+    if (!isEscapeKey(event)) return;
+    if (!nodes.journalModal || nodes.journalModal.hidden) return;
+    event.preventDefault();
+    event.stopPropagation();
+    closeJournalFromView();
+  };
+
   const JOURNAL_LABELS = { good: "Waxes", warning: "Wanes", neutral: "Holds" };
 
   // Frontispiece half-sun (medieval sun-in-splendour rising from the horizon).
@@ -2091,12 +2107,10 @@
     nodes.journalClose.addEventListener("click", () => closeJournalFromView());
   }
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-    if (!nodes.journalModal || nodes.journalModal.hidden) return;
-    event.preventDefault();
-    closeJournalFromView();
-  }, true);
+  window.addEventListener("keydown", onJournalEsc, true);
+  document.addEventListener("keydown", onJournalEsc, true);
+  window.addEventListener("keyup", onJournalEsc, true);
+  document.addEventListener("keyup", onJournalEsc, true);
 
   const demoToasts = {
     favor: { event: "favor", deity: "Kyne", symbol: "kyne", context: "The clean hunt" },
