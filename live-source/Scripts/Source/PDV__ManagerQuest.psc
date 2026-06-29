@@ -2233,7 +2233,8 @@ String Function AppendDashboardGod(String acc, PDV_DeityBase deity, String syste
     entry = entry + ",\"pietyToday\":" + pietyToday
     entry = entry + ",\"piety\":" + piety
     entry = entry + ",\"tier\":" + tier
-    entry = entry + ",\"drivers\":[" + GetDeityDriversJson(deity) + "]}"
+    entry = entry + ",\"drivers\":[" + GetDeityDriversJson(deity) + "]"
+    entry = entry + ",\"week\":[" + BuildWeekNetJson(deityForm) + "]}"
 
     if acc != ""
         acc = acc + ","
@@ -2263,6 +2264,36 @@ String Function GetDeityDriversJson(PDV_DeityBase deity)
         i += 1
     endWhile
     return out
+EndFunction
+
+; Dedicated 7-slot daily-net ring for the Weekly tab. Kept separate from the driver
+; ring (which caps at 6 FIFO entries and can't reliably span 7 days). One write per
+; surfaced form per dawn.
+Function PushWeekNet(Form deityForm, Float dayNet)
+    while StorageUtil.FloatListCount(deityForm, "PDV.Week.Net") >= 7
+        StorageUtil.FloatListRemoveAt(deityForm, "PDV.Week.Net", 0)
+    endWhile
+    StorageUtil.FloatListAdd(deityForm, "PDV.Week.Net", dayNet, True)
+EndFunction
+
+; week[] for the Weekly tab: stored daily nets (oldest->newest) plus the live,
+; not-yet-folded day appended as the newest point. The UI keeps only the last 7.
+String Function BuildWeekNetJson(Form deityForm)
+    String out = ""
+    Int n = StorageUtil.FloatListCount(deityForm, "PDV.Week.Net")
+    Int i = 0
+    while i < n
+        if out != ""
+            out = out + ","
+        endIf
+        out = out + StorageUtil.FloatListGet(deityForm, "PDV.Week.Net", i)
+        i += 1
+    endWhile
+    Float todayNet = StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
+    if out != ""
+        out = out + ","
+    endIf
+    return out + todayNet
 EndFunction
 
 String Function GetPanelInstrumentJson(Int originRace, Bool hasActiveDeity, Int tierValue, String tierLabel, Float piety, Float championThreshold)
@@ -8844,6 +8875,7 @@ Function ProcessDawn()
     EnsureAkatoshRuntimeIdentity()
     RunDawnAwardAltmerAuriElDawn()
     RunDawnConsolidateScratch()
+    RunDawnConsolidateDaedricWeek()
     RunDawnRefreshTrackStates()
     RunDawnApplyDecayNoop()
     RunDawnApplySpellAndNeglectLayersNoop()
@@ -8991,6 +9023,8 @@ Function RunDawnConsolidateScratch()
             Float newPiety = ClampValue(oldPiety + clampedToday, 0.0, PIETY_MAX)
 
             StorageUtil.SetFloatValue(deityForm, "PDV.Piety", newPiety)
+            ; Feed the Weekly tab's 7-day ring with this day's net before clearing it.
+            PushWeekNet(deityForm, pietyToday)
             StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
             if clampedToday != 0.0
                 StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", Utility.GetCurrentGameTime())
@@ -9004,6 +9038,26 @@ Function RunDawnConsolidateScratch()
             endIf
         endIf
 
+        i += 1
+    endWhile
+EndFunction
+
+; Daedric Princes apply piety immediately (no per-day fold into PDV.Piety), so this
+; only rolls the day's tally into the Weekly ring and clears it -- it must NOT touch
+; PDV.Piety. PietyToday for paths is accumulated in PDV_DaedricPathBase.SetStoredPiety.
+Function RunDawnConsolidateDaedricWeek()
+    if !PDV_FLST_DaedricPaths_All
+        return
+    endIf
+    Int i = 0
+    Int count = PDV_FLST_DaedricPaths_All.GetSize()
+    while i < count
+        Form pathForm = PDV_FLST_DaedricPaths_All.GetAt(i)
+        if pathForm
+            Float dayNet = StorageUtil.GetFloatValue(pathForm, "PDV.PietyToday")
+            PushWeekNet(pathForm, dayNet)
+            StorageUtil.SetFloatValue(pathForm, "PDV.PietyToday", 0.0)
+        endIf
         i += 1
     endWhile
 EndFunction

@@ -500,6 +500,17 @@
       });
     });
     appendSvg(svg, "circle", { cx: "39", cy: "75", r: "24", class: "instrument-outline" });
+    // a little sun within the standing ring
+    appendSvg(svg, "circle", { cx: "39", cy: "75", r: "7", class: fill });
+    for (let ray = 0; ray < 8; ray += 1) {
+      const angle = (Math.PI / 4) * ray;
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+      appendSvg(svg, "path", {
+        d: `M${(39 + 11 * cos).toFixed(1)} ${(75 + 11 * sin).toFixed(1)} L${(39 + 16 * cos).toFixed(1)} ${(75 + 16 * sin).toFixed(1)}`,
+        class: "instrument-thin",
+      });
+    }
     slot.appendChild(svg);
     addInstrumentCaption(slot, inst, tierName(state.tier));
   };
@@ -783,6 +794,22 @@
       message: (payload) => `${possessive(deityName(payload))} rites have grown quiet.`,
       listTitle: () => "Rites thinning",
       listText: (payload) => `${possessive(deityName(payload))} path needs attention.`,
+    },
+    creed: {
+      tone: "warning",
+      symbol: (payload) => payload.symbol || payload.mark || deityName(payload),
+      title: () => "Creed broken",
+      message: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        return `${deityName(payload)} marks a breach of faith.`;
+      },
+      listTitle: (payload) => contextName(payload) || "Creed broken",
+      listText: (payload) => {
+        const context = contextName(payload);
+        if (context) return context;
+        return `${possessive(deityName(payload))} path was crossed.`;
+      },
     },
     tier: {
       tone: "good",
@@ -1646,97 +1673,321 @@
     return true;
   };
 
-  const aggregateDrivers = (drivers) => {
+  const DASH_DIR_GLYPH = { gain: "\u25B2", loss: "\u25BC", neutral: "\u25AC" };
+
+  // Roll a god's raw recent-driver ring up by reason: one row per action, with a
+  // summed count and signed net. (Papyrus sends count:1 entries; we aggregate here.)
+  const groupDrivers = (drivers) => {
     const agg = {};
+    const order = [];
     asArray(drivers).filter(Boolean).forEach((driver) => {
       const reason = text(driver.reason, "an act of devotion");
-      if (!agg[reason]) agg[reason] = { reason, count: 0, net: 0 };
+      if (!agg[reason]) { agg[reason] = { reason, count: 0, net: 0 }; order.push(reason); }
       agg[reason].count += numberOrZero(driver.count) || 1;
       agg[reason].net += numberOrZero(driver.net);
     });
-    return Object.keys(agg).map((key) => agg[key]).filter((driver) => {
-      if (dashboardFilter.dir === "gain") return driver.net > 0;
-      if (dashboardFilter.dir === "loss") return driver.net < 0;
-      return true;
+    return order.map((key) => agg[key]);
+  };
+
+  const driverPassesDir = (net) => {
+    if (dashboardFilter.dir === "gain") return net > 0;
+    if (dashboardFilter.dir === "loss") return net < 0;
+    return true;
+  };
+
+  const driverValence = (net) => (net > 0 ? "gain" : net < 0 ? "loss" : "neutral");
+
+  // One ledger row: trend glyph + action + xcount + diverging net bar + signed net.
+  // Gain/loss is carried four ways (glyph, bar side, sign, colour) -- never colour alone.
+  const renderDriverRow = (driver, scale) => {
+    const dir = driverValence(driver.net);
+    const row = document.createElement("li");
+    row.className = `driver is-${dir}`;
+
+    const trend = document.createElement("span");
+    trend.className = "driver__trend";
+    trend.setAttribute("aria-hidden", "true");
+    trend.textContent = DASH_DIR_GLYPH[dir];
+    row.appendChild(trend);
+
+    const label = document.createElement("span");
+    label.className = "driver__label";
+    label.textContent = driver.reason;
+    row.appendChild(label);
+
+    const count = document.createElement("span");
+    count.className = "driver__count";
+    count.textContent = `\u00D7${driver.count}`;
+    row.appendChild(count);
+
+    const bar = document.createElement("span");
+    bar.className = "driver__bar";
+    const width = scale > 0 ? Math.max(6, Math.round((Math.abs(driver.net) / scale) * 100)) : 0;
+    const neg = document.createElement("span");
+    neg.className = "driver__bar-neg";
+    neg.style.width = dir === "loss" ? `${width}%` : "0%";
+    const pos = document.createElement("span");
+    pos.className = "driver__bar-pos";
+    pos.style.width = dir === "gain" ? `${width}%` : "0%";
+    bar.append(neg, pos);
+    row.appendChild(bar);
+
+    const net = document.createElement("span");
+    net.className = "driver__net";
+    net.textContent = dir === "neutral" ? "0" : signedText(driver.net);
+    const sr = document.createElement("span");
+    sr.className = "sr-only";
+    sr.textContent = dir === "gain" ? " gained" : dir === "loss" ? " lost" : " neutral";
+    net.appendChild(sr);
+    row.appendChild(net);
+    return row;
+  };
+
+  const renderGodBlock = (god, allDrivers, visibleDrivers, scale) => {
+    const stateKey = text(god.state, "steady");
+    const valence = DASH_STATE_VALENCE[stateKey] || "neutral";
+    const focused = dashboardFilter.god === text(god.god);
+
+    const block = document.createElement("article");
+    block.className = `god v-${valence}${focused ? " is-focused" : ""}`;
+
+    const head = document.createElement("button");
+    head.type = "button";
+    head.className = "god__head";
+    head.setAttribute("aria-pressed", focused ? "true" : "false");
+    head.addEventListener("click", () => {
+      const key = text(god.god);
+      dashboardFilter.god = dashboardFilter.god === key ? null : key;
+      renderDashboard(state.dashboard);
     });
+
+    const mark = document.createElement("span");
+    mark.className = "god__mark";
+    renderSymbol(mark, text(god.symbol, "journal"));
+    head.appendChild(mark);
+
+    const identity = document.createElement("span");
+    identity.className = "god__identity";
+    const name = document.createElement("strong");
+    name.className = "god__name";
+    name.textContent = displayName(god.god, text(god.god, "A god"));
+    identity.appendChild(name);
+
+    const meta = document.createElement("span");
+    meta.className = "god__meta";
+    const acts = allDrivers.reduce((s, d) => s + d.count, 0);
+    const metaState = document.createElement("span");
+    metaState.className = `god__meta-state is-${valence}`;
+    metaState.textContent = DASH_STATE_LABELS[stateKey] || "Steady";
+    const metaStanding = document.createElement("span");
+    metaStanding.textContent = `${tierName(god.tier)} \u00B7 ${numberOrZero(god.piety)} piety`;
+    const metaActs = document.createElement("span");
+    metaActs.textContent = `${acts} driver${acts === 1 ? "" : "s"}`;
+    meta.append(metaState, metaStanding, metaActs);
+    identity.appendChild(meta);
+    head.appendChild(identity);
+
+    const netToday = numberOrZero(god.pietyToday);
+    const total = document.createElement("span");
+    total.className = `god__net is-${driverValence(netToday)}`;
+    const totalValue = document.createElement("strong");
+    totalValue.textContent = netToday === 0 ? "0" : signedText(netToday);
+    const totalLabel = document.createElement("span");
+    totalLabel.textContent = "net today";
+    total.append(totalValue, totalLabel);
+    head.appendChild(total);
+
+    block.appendChild(head);
+
+    const list = document.createElement("ul");
+    list.className = "god__drivers";
+    if (!visibleDrivers.length) {
+      const empty = document.createElement("li");
+      empty.className = "driver is-empty";
+      empty.textContent = (stateKey === "neglected" || stateKey === "starving")
+        ? "Nothing has fed this god lately."
+        : (dashboardFilter.dir === "all" ? "Recent acts will show here." : "No matching drivers.");
+      list.appendChild(empty);
+    } else {
+      visibleDrivers.forEach((driver) => list.appendChild(renderDriverRow(driver, scale)));
+    }
+    block.appendChild(list);
+    return block;
   };
 
   const renderDashboard = (dashboard = {}) => {
     const host = document.getElementById("pdv-dashboard-gods");
+    const countNode = document.getElementById("pdv-dashboard-count");
+    const setCount = (txt) => { if (countNode) countNode.textContent = txt; };
     if (!host) return;
     clear(host);
 
     const gods = asArray(dashboard.gods).filter(Boolean);
     if (!gods.length) {
-      appendEmpty(host, "No god has answered yet. Act, pray, and this will fill.");
+      const empty = document.createElement("p");
+      empty.className = "dashboard__empty";
+      empty.textContent = "No god has answered yet. Act, pray, and this will fill.";
+      host.appendChild(empty);
+      setCount("");
       return;
     }
 
     const filtered = gods.filter(dashboardGodMatches);
     if (!filtered.length) {
-      appendEmpty(host, "Nothing matches this filter.");
+      const empty = document.createElement("p");
+      empty.className = "dashboard__empty";
+      empty.textContent = "Nothing matches this filter.";
+      host.appendChild(empty);
+      setCount(`0 of ${gods.length} gods`);
       return;
     }
 
-    filtered.forEach((god) => {
-      const stateKey = text(god.state, "steady");
-      const valence = DASH_STATE_VALENCE[stateKey] || "neutral";
-      const li = document.createElement("li");
-      li.className = `dash-god v-${valence}${dashboardFilter.god === text(god.god) ? " is-focused" : ""}`;
-
-      const head = document.createElement("button");
-      head.type = "button";
-      head.className = "dash-god__head";
-      head.addEventListener("click", () => {
-        const key = text(god.god);
-        dashboardFilter.god = dashboardFilter.god === key ? null : key;
-        renderDashboard(state.dashboard);
-      });
-
-      const symbol = document.createElement("div");
-      symbol.className = "dash-god__symbol";
-      renderSymbol(symbol, text(god.symbol, "journal"));
-      head.appendChild(symbol);
-
-      const name = document.createElement("strong");
-      name.className = "dash-god__name";
-      name.textContent = displayName(god.god, text(god.god, "A god"));
-      head.appendChild(name);
-
-      const chip = document.createElement("span");
-      chip.className = "dash-god__state";
-      chip.textContent = `${DASH_STATE_LABELS[stateKey] || "Steady"} (${signedText(god.pietyToday)} today)`;
-      head.appendChild(chip);
-
-      li.appendChild(head);
-
-      const driverRows = aggregateDrivers(god.drivers);
-      const list = document.createElement("ul");
-      list.className = "dash-god__drivers";
-      if (!driverRows.length) {
-        const empty = document.createElement("li");
-        empty.className = "dash-driver is-empty";
-        empty.textContent = (stateKey === "neglected" || stateKey === "starving")
-          ? "Nothing has fed this god lately."
-          : "Recent acts will show here.";
-        list.appendChild(empty);
-      } else {
-        driverRows.forEach((driver) => {
-          const row = document.createElement("li");
-          row.className = `dash-driver ${driver.net >= 0 ? "is-gain" : "is-loss"}`;
-          const mark = document.createElement("span");
-          mark.className = "dash-driver__mark";
-          mark.textContent = driver.net >= 0 ? "+" : "−";
-          const label = document.createElement("span");
-          label.className = "dash-driver__label";
-          label.textContent = driver.count > 1 ? `${driver.reason} (x${driver.count})` : driver.reason;
-          row.append(mark, label);
-          list.appendChild(row);
-        });
-      }
-      li.appendChild(list);
-      host.appendChild(li);
+    const prepared = filtered.map((god) => {
+      const all = groupDrivers(god.drivers);
+      const visible = all
+        .filter((d) => driverPassesDir(d.net))
+        .sort((a, b) => Math.abs(b.net) - Math.abs(a.net));
+      return { god, all, visible };
     });
+    const scale = prepared.reduce((max, { visible }) =>
+      visible.reduce((m, d) => Math.max(m, Math.abs(d.net)), max), 0);
+
+    let shownDrivers = 0;
+    prepared.forEach(({ god, all, visible }) => {
+      shownDrivers += visible.length;
+      host.appendChild(renderGodBlock(god, all, visible, scale));
+    });
+
+    setCount(filtered.length === gods.length
+      ? `${gods.length} god${gods.length === 1 ? "" : "s"} \u00B7 ${shownDrivers} driver${shownDrivers === 1 ? "" : "s"}`
+      : `${filtered.length} of ${gods.length} gods`);
+  };
+
+  // --- Weekly tab: seven-day rollup per god ---
+  // Reads dashboard.gods[].week (array of daily net piety, oldest->newest, up to 7).
+  // Degrades gracefully to "recent" when the bridge has not sent week data yet.
+  const WEEK_DAY_LABELS = ["6d", "5d", "4d", "3d", "2d", "Yest", "Today"];
+
+  const weeklyNet = (god) => {
+    const week = asArray(god.week).map(numberOrZero);
+    if (week.length) return week.reduce((s, n) => s + n, 0);
+    return numberOrZero(god.pietyToday);
+  };
+
+  const renderWeekly = (dashboard = {}) => {
+    const host = document.getElementById("pdv-weekly");
+    const countNode = document.getElementById("pdv-weekly-count");
+    if (!host) return;
+    clear(host);
+
+    const gods = asArray(dashboard.gods).filter(Boolean);
+    if (!gods.length) {
+      const empty = document.createElement("p");
+      empty.className = "dashboard__empty";
+      empty.textContent = "The week's record will gather here as you act.";
+      host.appendChild(empty);
+      if (countNode) countNode.textContent = "";
+      return;
+    }
+
+    const sorted = gods.slice().sort((a, b) => Math.abs(weeklyNet(b)) - Math.abs(weeklyNet(a)));
+    const scale = sorted.reduce((m, g) =>
+      asArray(g.week).map(numberOrZero).reduce((mm, n) => Math.max(mm, Math.abs(n)), m), 0);
+
+    sorted.forEach((god) => {
+      const net = weeklyNet(god);
+      const valence = net > 0 ? "good" : net < 0 ? "warning" : "neutral";
+      const card = document.createElement("article");
+      card.className = `god wk-god v-${valence}`;
+
+      const head = document.createElement("div");
+      head.className = "god__head wk-god__head";
+
+      const mark = document.createElement("span");
+      mark.className = "god__mark";
+      renderSymbol(mark, text(god.symbol, "journal"));
+      head.appendChild(mark);
+
+      const identity = document.createElement("span");
+      identity.className = "god__identity";
+      const name = document.createElement("strong");
+      name.className = "god__name";
+      name.textContent = displayName(god.god, text(god.god, "A god"));
+      identity.appendChild(name);
+      const meta = document.createElement("span");
+      meta.className = "god__meta";
+      meta.textContent = `${tierName(god.tier)} \u00B7 ${numberOrZero(god.piety)} piety`;
+      identity.appendChild(meta);
+      head.appendChild(identity);
+
+      const total = document.createElement("span");
+      total.className = `god__net is-${driverValence(net)}`;
+      const tv = document.createElement("strong");
+      tv.textContent = net === 0 ? "0" : signedText(net);
+      const tl = document.createElement("span");
+      tl.textContent = "net / 7 days";
+      total.append(tv, tl);
+      head.appendChild(total);
+      card.appendChild(head);
+
+      const week = asArray(god.week).map(numberOrZero).slice(-7);
+      if (week.length) {
+        const labels = WEEK_DAY_LABELS.slice(WEEK_DAY_LABELS.length - week.length);
+        const spark = document.createElement("div");
+        spark.className = "wk-spark";
+        spark.setAttribute("aria-hidden", "true");
+        week.forEach((n, idx) => {
+          const dir = driverValence(n);
+          const col = document.createElement("div");
+          col.className = `wk-spark__col is-${dir}`;
+          col.title = `${labels[idx] || ""}: ${signedText(n)}`;
+          const track = document.createElement("div");
+          track.className = "wk-spark__track";
+          const fill = document.createElement("div");
+          fill.className = "wk-spark__fill";
+          fill.style.height = scale > 0 ? `${Math.max(n === 0 ? 0 : 8, Math.round((Math.abs(n) / scale) * 46))}%` : "0%";
+          track.appendChild(fill);
+          const lab = document.createElement("span");
+          lab.className = "wk-spark__day";
+          lab.textContent = labels[idx] || "";
+          col.append(track, lab);
+          spark.appendChild(col);
+        });
+        card.appendChild(spark);
+      }
+
+      const drivers = groupDrivers(god.drivers)
+        .sort((a, b) => Math.abs(b.net) - Math.abs(a.net))
+        .slice(0, 4);
+      if (drivers.length) {
+        const list = document.createElement("ul");
+        list.className = "god__drivers wk-god__drivers";
+        drivers.forEach((d) => {
+          const dir = driverValence(d.net);
+          const li = document.createElement("li");
+          li.className = `driver is-${dir}`;
+          const g = document.createElement("span");
+          g.className = "driver__trend";
+          g.setAttribute("aria-hidden", "true");
+          g.textContent = DASH_DIR_GLYPH[dir];
+          const lbl = document.createElement("span");
+          lbl.className = "driver__label";
+          lbl.textContent = d.count > 1 ? `${d.reason} \u00D7${d.count}` : d.reason;
+          const v = document.createElement("span");
+          v.className = "driver__net";
+          v.textContent = dir === "neutral" ? "0" : signedText(d.net);
+          li.append(g, lbl, v);
+          list.appendChild(li);
+        });
+        card.appendChild(list);
+      }
+      host.appendChild(card);
+    });
+
+    if (countNode) {
+      const hasWeek = sorted.some((g) => asArray(g.week).length);
+      countNode.textContent = `${sorted.length} god${sorted.length === 1 ? "" : "s"} \u00B7 ${hasWeek ? "last 7 days" : "recent"}`;
+    }
   };
 
   const render = (payload = {}) => {
@@ -1766,6 +2017,7 @@
     renderList(nodes.rites, state.rites, "No rites are available yet.");
     setupDashboardFilters();
     renderDashboard(state.dashboard);
+    renderWeekly(state.dashboard);
     renderDebug(state);
   };
 
@@ -1968,8 +2220,11 @@
     }
   };
 
+  let bridgeReceived = false;
+
   window.PDVBridge = {
     receiveJson(payloadText) {
+      bridgeReceived = true;
       try {
         const payload = parsePayload(payloadText);
         document.body.classList.add("panel-visible");
@@ -1981,6 +2236,7 @@
       }
     },
     receiveOverlayJson(payloadText) {
+      bridgeReceived = true;
       try {
         const payload = parsePayload(payloadText);
         handleOverlayPayload(payload);
@@ -2228,6 +2484,7 @@
         "Origin Global": 1,
         "Last Event": "SleepOutside"
       },
+      dashboard: { gods: demoTrackingGods, systems: ["patron", "pantheon", "watching", "neglected"] },
       toasts: [demoToasts.favor, demoToasts.dawn, demoToasts.neglect, demoToasts.tier, demoToasts.rivalry]
     });
   };
@@ -2244,16 +2501,22 @@
   // the read-only Ledger page; toggle the page in-view).
   const demoTrackingGods = [
     { god: "Kyne", symbol: "kyne", system: "patron", state: "gaining", pietyToday: 6, piety: 72, tier: 2,
+      week: [3, -1, 4, 0, 2, 1, 6],
       drivers: [ { reason: "Clean hunt", count: 2, net: 4, dir: "gain" }, { reason: "Rested beneath open sky", count: 1, net: 3, dir: "gain" } ] },
     { god: "Malacath", symbol: "malacath", system: "pantheon", state: "gaining", pietyToday: 0.5, piety: 14, tier: 1,
+      week: [0, 0, 1, 2, 0, 1, 0.5],
       drivers: [ { reason: "Took up the Trial of Iron", count: 1, net: 0.5, dir: "gain" } ] },
     { god: "Auri-El", symbol: "auri-el", system: "pantheon", state: "gaining", pietyToday: 0.5, piety: 22, tier: 1,
+      week: [1, 0, 0, 2, 0, 1, 0.5],
       drivers: [ { reason: "Set a Discipline of Return", count: 1, net: 0.5, dir: "gain" } ] },
     { god: "Tu'whacca", symbol: "tu-whacca", system: "pantheon", state: "gaining", pietyToday: 0.5, piety: 9, tier: 0,
+      week: [0, 0, 0, 1, 0, 0, 0.5],
       drivers: [ { reason: "Took up the Remembering of Names", count: 1, net: 0.5, dir: "gain" } ] },
     { god: "Mephala", symbol: "daedric", system: "watching", state: "steady", pietyToday: 0, piety: 6, tier: 0,
+      week: [0, 0, 1, 0, 0, 1, 0],
       drivers: [ { reason: "A Prince takes notice", count: 1, net: 0, dir: "gain" } ] },
     { god: "Stendarr", symbol: "journal", system: "pantheon", state: "neglected", pietyToday: -2, piety: 3, tier: 0,
+      week: [1, 0, -1, 0, -2, -1, -2],
       drivers: [ { reason: "The path goes quiet", count: 1, net: -2, dir: "loss" } ] }
   ];
 
@@ -2285,7 +2548,9 @@
 
   render(fallbackState);
 
-  if (new URLSearchParams(window.location.search).has("demo")) {
+  const enableDemo = () => {
+    if (enableDemo.done) return;
+    enableDemo.done = true;
     nodes.demoControls.hidden = false;
     nodes.symbolGallery.hidden = false;
     renderSymbolGallery();
@@ -2301,6 +2566,19 @@
         window.PDVDemoMedallion();
       }
     });
-    window.setTimeout(() => window.PDVDemo(), 250);
+    window.setTimeout(() => window.PDVDemo(), 60);
+  };
+
+  // ?demo (any form the host preserves) shows the demo immediately. Otherwise, if the
+  // in-game bridge never calls ReceivePDVJson, we're in a browser preview, not the
+  // game -- fall back to the demo so the panel is never blank. In-game the bridge
+  // fires first and this guard short-circuits, leaving real data untouched.
+  const demoRequested = window.location.search.toLowerCase().includes("demo")
+    || window.location.hash.toLowerCase().includes("demo")
+    || /[?&#]demo\b/i.test(window.location.href);
+  if (demoRequested) {
+    enableDemo();
+  } else {
+    window.setTimeout(() => { if (!bridgeReceived) enableDemo(); }, 700);
   }
 })();

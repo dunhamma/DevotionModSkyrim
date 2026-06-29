@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Devotion</title>
-  <link rel="stylesheet" href="styles.css?v=bod-design-20260618-fonts">
+  <link rel="stylesheet" href="styles.css?v=weekly-20260629">
 </head>
 <body>
   <main class="devotion-shell" aria-label="Devotion status">
@@ -25,10 +25,10 @@
       <nav class="tabs" aria-label="Devotion views">
         <button class="tab is-active" type="button" data-tab="patron" aria-selected="true">Patron</button>
         <button class="tab" type="button" data-tab="today" aria-selected="false">Today</button>
-        <button class="tab" type="button" data-tab="debug" aria-selected="false">Debug</button>
+        <button class="tab" type="button" data-tab="weekly" aria-selected="false">Weekly</button>
       </nav>
 
-      <section class="tab-panel is-active" id="tab-patron" data-panel="patron">
+      <section class="tab-panel is-active" id="tab-patron" data-panel="patron" data-screen-label="Patron">
         <div class="patron-layout">
           <article class="deity-block">
             <span class="label">Current patron</span>
@@ -57,7 +57,7 @@
         </div>
       </section>
 
-      <section class="tab-panel" id="tab-today" data-panel="today">
+      <section class="tab-panel" id="tab-today" data-panel="today" data-screen-label="Today">
         <div class="today-overview" aria-label="Today summary">
           <article class="today-stat">
             <span class="label">Today remembered</span>
@@ -70,6 +70,37 @@
             <p id="pdv-dawn-status">Nothing is waiting for dawn.</p>
           </article>
         </div>
+
+        <section class="dashboard" id="pdv-dashboard" aria-labelledby="pdv-dashboard-title">
+          <header class="dashboard__head">
+            <div class="dashboard__title">
+              <span class="label">The ledger of favor</span>
+              <h2 id="pdv-dashboard-title">What feeds your gods</h2>
+            </div>
+            <p class="dashboard__count" id="pdv-dashboard-count" aria-live="polite"></p>
+          </header>
+          <div class="dashboard-filters" id="pdv-dashboard-filters" role="group" aria-label="Devotion filters">
+            <div class="filterbar">
+              <span class="filterbar__legend">Show</span>
+              <div class="filter-set">
+                <button type="button" class="dash-filter is-active" data-filter-group="dir" data-filter="all">All</button>
+                <button type="button" class="dash-filter dash-filter--gain" data-filter-group="dir" data-filter="gain">Gaining</button>
+                <button type="button" class="dash-filter dash-filter--loss" data-filter-group="dir" data-filter="loss">Losing</button>
+              </div>
+            </div>
+            <div class="filterbar">
+              <span class="filterbar__legend">From</span>
+              <div class="filter-set">
+                <button type="button" class="dash-filter is-active" data-filter-group="sys" data-filter="all">Any</button>
+                <button type="button" class="dash-filter" data-filter-group="sys" data-filter="patron">Patron</button>
+                <button type="button" class="dash-filter" data-filter-group="sys" data-filter="pantheon">Pantheon</button>
+                <button type="button" class="dash-filter" data-filter-group="sys" data-filter="neglected">Needs attention</button>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard__gods" id="pdv-dashboard-gods"></div>
+        </section>
+
         <div class="today-grid">
           <article>
             <span class="label">Recent signs</span>
@@ -80,29 +111,26 @@
             <ul class="rite-list" id="pdv-rites"></ul>
           </article>
         </div>
-        <div class="dashboard" aria-label="What feeds your gods">
-          <span class="label">What feeds your gods</span>
-          <div class="dashboard-filters" id="pdv-dashboard-filters" role="group" aria-label="Devotion filters">
-            <button type="button" class="dash-filter is-active" data-filter-group="dir" data-filter="all">All</button>
-            <button type="button" class="dash-filter" data-filter-group="dir" data-filter="gain">Gaining</button>
-            <button type="button" class="dash-filter" data-filter-group="dir" data-filter="loss">Losing</button>
-            <span class="dashboard-filters__sep" aria-hidden="true"></span>
-            <button type="button" class="dash-filter is-active" data-filter-group="sys" data-filter="all">Any</button>
-            <button type="button" class="dash-filter" data-filter-group="sys" data-filter="patron">Patron</button>
-            <button type="button" class="dash-filter" data-filter-group="sys" data-filter="pantheon">Pantheon</button>
-            <button type="button" class="dash-filter" data-filter-group="sys" data-filter="neglected">Needs attention</button>
-          </div>
-          <ul class="dashboard-gods" id="pdv-dashboard-gods"></ul>
-        </div>
       </section>
 
-      <section class="tab-panel" id="tab-debug" data-panel="debug">
+      <section class="tab-panel" id="tab-weekly" data-panel="weekly" data-screen-label="Weekly">
+        <header class="dashboard__head">
+          <div class="dashboard__title">
+            <span class="label">Seven days of devotion</span>
+            <h2 id="pdv-weekly-title">The week in faith</h2>
+          </div>
+          <p class="dashboard__count" id="pdv-weekly-count" aria-live="polite"></p>
+        </header>
+        <div class="weekly" id="pdv-weekly"></div>
+      </section>
+
+      <div class="debug-store" id="pdv-debug-store" hidden>
         <div class="debug-grid" id="pdv-debug"></div>
         <div class="symbol-gallery" id="pdv-symbol-gallery" hidden>
           <span class="label">Symbol set</span>
           <div class="symbol-gallery__grid" id="pdv-symbol-grid"></div>
         </div>
-      </section>
+      </div>
     </section>
   </main>
 
@@ -201,6 +229,6 @@
     <button type="button" data-demo-toast="substrate_thin">Substrate (thin)</button>
   </aside>
 
-  <script src="app.js?v=bod-design-20260618-fonts"></script>
+  <script src="app.js?v=weekly-20260629"></script>
 </body>
 </html>

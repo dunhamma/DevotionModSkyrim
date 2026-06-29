@@ -345,6 +345,11 @@ Function SetStoredPiety(Float amount, String reason)
     Float delta = normalizedPiety - priorPiety
     StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Piety", normalizedPiety)
     StorageUtil.SetFloatValue(GetDeityForm(), "PDV.LastEventGameTime", Utility.GetCurrentGameTime())
+    if delta != 0.0
+        ; Tally the day's net so the dashboard "net today" and the Weekly tab's 7-day
+        ; ring see Princes too (folded + cleared at dawn in RunDawnConsolidateDaedricWeek).
+        StorageUtil.AdjustFloatValue(GetDeityForm(), "PDV.PietyToday", delta)
+    endIf
     if reason != "" && delta != 0.0
         RecordDaedricPathDriver(reason, delta)
     endIf
