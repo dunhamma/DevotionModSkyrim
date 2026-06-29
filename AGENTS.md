@@ -1015,6 +1015,15 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   privilege, full Daedric price/stigma, or curse-state work. (Overnight enabler
   rule, 2026-05-20)
 
+**Tester-bundle distribution**
+- Tester bundles ship as **GitHub Releases** (`gh release create prebeta-X.Y <zip> --title "Devotion PreBeta .Y" --notes-file <notes> --prerelease`)
+  on the PUBLIC `dunhamma/DevotionModSkyrim`, NOT as new `dist/` commits (legacy FirstLook/Authoria
+  zips already in `dist/` stay). The bundle is the clean MO2 deployable of the live `mods/Devotion`
+  folder MINUS `Backups/`, `Scripts/Source/`, `*.pdb`, `*.bak*`, packaged with a top-level
+  `Devotion\` folder plus an INSTALL & NOTES readme; verify completeness + `.pex` freshness and keep
+  wording reviewer-safe before cutting. First release: `prebeta-0.8` (2026-06-30). (Tester-bundle
+  release convention, 2026-06-30; memory [[tester-bundle-via-github-releases]])
+
 ---
 
 ## Decisions Log
