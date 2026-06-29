@@ -68,11 +68,11 @@ regardless of load order). Only the preflight changes:
   build (focused rewards beat broad).
 - **Record:** ___
 
-### Slot 4 -- broad-faith book routes + top-left notices  [Tester] [R]
+### Slot 4 -- broad-faith book routes + Prisma-first notices  [Tester] [R]
 - **Do (play normally, no debug):** read an **Old Ways** lore book and a **Hircine / Arkay** book. (If forcing,
   MCM Debug can fire the route.)
-- **See:** a **top-left notice** on the first read of each (the `po3_book` surfacing). Re-reading the same book
-  does not re-fire the notice.
+- **See:** a **Prisma overlay toast** on the first read of each (the `po3_book` surfacing), or a vanilla
+  top-left fallback only if Prisma is unavailable. Re-reading the same book does not re-fire the notice.
 - **[Dev] log:** the `RouteNord*` book route markers in Papyrus.0.log.
 - **Record:** ___
 

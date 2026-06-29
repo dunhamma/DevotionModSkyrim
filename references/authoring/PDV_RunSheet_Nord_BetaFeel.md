@@ -39,7 +39,7 @@ player.additem 000ED161 1
 
 Watch:
 
-- Top-left notice or Prisma toast only.
+- Prisma overlay toast preferred; vanilla top-left only if Prisma is unavailable or the toast send fails.
 - No forced full Prisma panel.
 - Survey Devotion explains broad/focused Old Ways, patron state, and recent event.
 
@@ -152,7 +152,7 @@ Expected: no dense-hook over-trigger and no universal Nord reward stack.
 
 ### 8. Prisma Embedded Checks
 
-- Toast: Old Ways, edge, commitment, neglect, and betrayal events may toast or use top-left fallback; none should force a full panel.
+- Toast: Old Ways, edge, commitment, neglect, and betrayal events should use Prisma overlay toasts first, with top-left fallback only if Prisma is unavailable; none should force a full panel.
 - Panel: manually open Devotion panel; ESC and X close it.
 - Chronicle: tier-up, commitment, neglect, and betrayal/dawn digest entries are readable if emitted; no blank line.
 - Ledger: Old Ways and edge source rows appear; generic-source silence does not add rows.
@@ -183,4 +183,3 @@ Capture Active Effects after:
 | Generic-source silence | ROUTE/RUNTIME | | |
 | Prisma surfaces | MANUAL | | |
 | Save/load sanity | MANUAL | | |
-

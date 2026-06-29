@@ -711,6 +711,7 @@ Event OnInit()
     InitializePreflightState()
     EnsurePhase8RuntimeWiring()
     EnsureAkatoshRuntimeIdentity()
+    EnsureCanonicalDeityDisplayNames()
     RepairBookOfDaysJournalText()
     EnsureBosmerRuntimeWiring()
     EnsureNordRuntimeWiring()
@@ -761,6 +762,7 @@ Event OnUpdate()
     if _shoutRefreshTicks >= 10
         EnsurePhase8RuntimeWiring()
         EnsureAkatoshRuntimeIdentity()
+        EnsureCanonicalDeityDisplayNames()
         RepairBookOfDaysJournalText()
         EnsureBosmerRuntimeWiring()
         EnsureNordRuntimeWiring()
@@ -963,6 +965,53 @@ Function EnsureAkatoshRuntimeIdentity()
     if repaired && GetDebugLevel() >= 1
         Debug.Trace("[PDV] Akatosh runtime identity repaired.")
     endIf
+EndFunction
+
+Function EnsureCanonicalDeityDisplayNames()
+    Int repaired = 0
+    repaired += RepairDeityRuntimeName(PDV_Kyne, "Kyne")
+    repaired += RepairDeityRuntimeName(PDV_Talos, "Talos")
+    repaired += RepairDeityRuntimeName(PDV_Yffre, "Y'ffre")
+    repaired += RepairDeityRuntimeName(PDV_Zen, "Z'en")
+    repaired += RepairDeityRuntimeName(PDV_BaanDar, "Baan Dar")
+    repaired += RepairDeityRuntimeName(PDV_Azura, "Azura")
+    repaired += RepairDeityRuntimeName(PDV_Khenarthi, "Khenarthi")
+    repaired += RepairDeityRuntimeName(PDV_Rajhin, "Rajhin")
+    repaired += RepairDeityRuntimeName(PDV_Alkosh, "Alkosh")
+    repaired += RepairDeityRuntimeName(PDV_Boethiah, "Boethiah")
+    repaired += RepairDeityRuntimeName(PDV_Mephala, "Mephala")
+    repaired += RepairDeityRuntimeName(PDV_Hist, "The Hist")
+    repaired += RepairDeityRuntimeName(PDV_Sithis, "Sithis")
+    repaired += RepairDeityRuntimeName(PDV_Malacath, "Malacath")
+    repaired += RepairDeityRuntimeName(PDV_Trinimac, "Trinimac")
+    repaired += RepairDeityRuntimeName(PDV_Tuwhacca, "Tu'whacca")
+    repaired += RepairDeityRuntimeName(PDV_HoonDing, "HoonDing")
+    repaired += RepairDeityRuntimeName(PDV_Leki, "Leki")
+    repaired += RepairDeityRuntimeName(PDV_Shor, "Shor")
+    repaired += RepairDeityRuntimeName(PDV_Tsun, "Tsun")
+    repaired += RepairDeityRuntimeName(PDV_Stuhn, "Stuhn")
+    repaired += RepairDeityRuntimeName(PDV_Akatosh, "Akatosh")
+    repaired += RepairDeityRuntimeName(PDV_Mara, "Mara")
+    repaired += RepairDeityRuntimeName(PDV_Arkay, "Arkay")
+    repaired += RepairDeityRuntimeName(PDV_Stendarr, "Stendarr")
+    repaired += RepairDeityRuntimeName(PDV_Zenithar, "Zenithar")
+    repaired += RepairDeityRuntimeName(PDV_Dibella, "Dibella")
+    repaired += RepairDeityRuntimeName(PDV_Julianos, "Julianos")
+    repaired += RepairDeityRuntimeName(PDV_Kynareth, "Kynareth")
+    repaired += RepairDeityRuntimeName(PDV_AuriEl, "Auri-El")
+    repaired += RepairDeityRuntimeName(PDV_Magnus, "Magnus")
+    repaired += RepairDeityRuntimeName(PDV_Xarxes, "Xarxes")
+    if repaired > 0 && GetDebugLevel() >= 1
+        Debug.Trace("[PDV] Canonical deity display names repaired: " + repaired)
+    endIf
+EndFunction
+
+Int Function RepairDeityRuntimeName(PDV_DeityBase deity, String canonicalName)
+    if !deity || deity.DeityName == canonicalName
+        return 0
+    endIf
+    deity.DeityName = canonicalName
+    return 1
 EndFunction
 
 Function EnsureBosmerRuntimeWiring()
@@ -1589,7 +1638,6 @@ Function ProcessKhajiitAlkoshWordDrip()
 
     StorageUtil.SetIntValue(None, "PDV.Khajiit.AlkoshWordsSeen", wordsSeen + awarded)
     Trace(2, "Khajiit Alkosh word-of-power drip awarded " + awarded + " of " + newWords + " new words")
-    Debug.Notification("Alkosh marks the words you have learned.")
     SendPrismaShiftToast("Words marked", "Alkosh orders new words.", GetKhajiitFocusSymbol(KHAJIIT_FOCUS_ALKOSH))
     RecordRecentDevotionEvent("Alkosh: " + awarded + " words marked")
 EndFunction
@@ -1718,31 +1766,76 @@ Bool Function MarkQuestReactionFaucet(String deityName, String sourceTag, Form s
     return True
 EndFunction
 
-Bool Function SendPrismaToast(String symbolName, String tone, String titleText, String messageText)
-    if IsRaceSetupQuietPresentationActive()
-        return False
+String Function BuildToastFallbackText(String titleText, String messageText)
+    if titleText != "" && messageText != ""
+        return titleText + ": " + messageText
     endIf
-    if !PDV_PrismaBridge.IsAvailable()
-        return False
+    if messageText != ""
+        return messageText
     endIf
-
-    String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\"}}"
-    return PDV_PrismaBridge.SendOverlayJson(payload)
+    return titleText
 EndFunction
 
-Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String context, String tierLabel, String rival)
+Function ShowToastFallbackNotification(String titleText, String messageText)
+    String fallbackText = BuildToastFallbackText(titleText, messageText)
+    if fallbackText != ""
+        Debug.Notification(fallbackText)
+    endIf
+EndFunction
+
+Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTitle, String fallbackMessage, Bool allowFallback = True)
     if IsRaceSetupQuietPresentationActive()
         return False
     endIf
-    if !PDV_PrismaBridge.IsAvailable()
-        return False
+
+    Bool sent = False
+    if PDV_PrismaBridge.IsAvailable()
+        sent = PDV_PrismaBridge.SendOverlayJson(payload)
     endIf
+
+    if !sent && allowFallback
+        ShowToastFallbackNotification(fallbackTitle, fallbackMessage)
+    endIf
+    return sent
+EndFunction
+
+String Function BuildPrismaEventFallbackText(String eventName, String deityName, String context, String tierLabel, String rival)
+    context = NormalizePublicDeityDisplayText(context)
+    deityName = NormalizePublicDeityDisplayText(deityName)
+    rival = NormalizePublicDeityDisplayText(rival)
+    if context != ""
+        return context
+    endIf
+    if eventName == "tier" && deityName != "" && tierLabel != ""
+        return deityName + " marks you as " + tierLabel + "."
+    elseIf eventName == "neglect" && deityName != ""
+        return deityName + "'s regard fades as your devotion goes quiet."
+    elseIf eventName == "dawn"
+        return "Your devotions settle with the dawn."
+    elseIf eventName == "favor" && deityName != ""
+        return deityName + " marks the act."
+    elseIf eventName == "shift" && deityName != ""
+        return deityName + " marks the change."
+    elseIf eventName == "rivalry" && rival != ""
+        return rival + " pulls against your path."
+    endIf
+    return ""
+EndFunction
+
+Bool Function SendPrismaToast(String symbolName, String tone, String titleText, String messageText, Bool allowFallback = True)
+    String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\"}}"
+    return SendPrismaToastPayloadOrFallback(payload, titleText, messageText, allowFallback)
+EndFunction
+
+Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String context, String tierLabel, String rival, Bool allowFallback = True)
     String deityName = ""
     String symbolName = "journal"
     if deity
-        deityName = deity.DeityName
+        deityName = GetPublicDeityDisplayName(deity)
         symbolName = GetPrismaSymbolForDeity(deity)
     endIf
+    context = NormalizePublicDeityDisplayText(context)
+    rival = NormalizePublicDeityDisplayText(rival)
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"" + JsonSafeString(eventName) + "\""
     j = j + ",\"deity\":\"" + JsonSafeString(deityName) + "\""
     j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
@@ -1756,7 +1849,7 @@ Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String
         j = j + ",\"rival\":\"" + JsonSafeString(rival) + "\""
     endIf
     j = j + "}}"
-    return PDV_PrismaBridge.SendOverlayJson(j)
+    return SendPrismaToastPayloadOrFallback(j, "", BuildPrismaEventFallbackText(eventName, deityName, context, tierLabel, rival), allowFallback)
 EndFunction
 
 ; --- Main Prisma panel payload ---
@@ -1834,6 +1927,7 @@ Function SurfaceTransition(String eventClass, String surfaceKey, String directio
     if eventClass == "" || surfaceKey == "" || direction == ""
         return
     endIf
+    surfaceKey = NormalizePublicDeityDisplayText(surfaceKey)
     if IsRaceSetupQuietPresentationActive()
         return
     endIf
@@ -1951,7 +2045,7 @@ EndFunction
 String Function GetJournalDeityName(Int deityIndex)
     PDV_DeityBase deity = GetDeityByIndex(deityIndex)
     if deity
-        return deity.DeityName
+        return GetPublicDeityDisplayName(deity)
     endIf
     return "the patron"
 EndFunction
@@ -1999,7 +2093,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         ; identity (not just the text fields) reflects it. _activeDeity is None here
         ; (severed under exclusivity), so without this the header/bar would fall to the
         ; race substrate at piety 0.
-        titleText = panelPact.DeityName
+        titleText = NormalizePublicDeityDisplayText(panelPact.DeityName)
         symbolName = GetPrismaSymbolForDeity(panelPact)
         if symbolName == "journal"
             symbolName = "daedric"
@@ -2011,7 +2105,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
             championThreshold = panelPact.ThresholdChampion
         endIf
     elseIf _activeDeity
-        titleText = _activeDeity.DeityName
+        titleText = GetPublicDeityDisplayName(_activeDeity)
         symbolName = GetPrismaSymbolForDeity(_activeDeity)
         piety = GetPiety(_activeDeity)
         pietyToday = GetPietyToday(_activeDeity)
@@ -2377,9 +2471,11 @@ String Function GetPanelRitesJson()
     String items = PanelPlainObject("journal", "", "Survey your devotion", "Call on the Survey Devotion power to read where your path stands.")
     PDV_DaedricPathBase ritesPact = GetActiveDaedricPactPath()
     if ritesPact
-        items = AppendJsonItem(items, PanelPlainObject("daedric", "", "Keep " + ritesPact.DeityName + "'s pact", "Act in keeping with " + ritesPact.DeityName + " to hold this pact."))
+        String pactName = NormalizePublicDeityDisplayText(ritesPact.DeityName)
+        items = AppendJsonItem(items, PanelPlainObject("daedric", "", "Keep " + pactName + "'s pact", "Act in keeping with " + pactName + " to hold this pact."))
     elseIf _activeDeity
-        items = AppendJsonItem(items, PanelPlainObject(GetPrismaSymbolForDeity(_activeDeity), "", "Keep " + _activeDeity.DeityName + "'s rites", "Act in keeping with " + _activeDeity.DeityName + " to deepen this bond."))
+        String activeName = GetPublicDeityDisplayName(_activeDeity)
+        items = AppendJsonItem(items, PanelPlainObject(GetPrismaSymbolForDeity(_activeDeity), "", "Keep " + activeName + "'s rites", "Act in keeping with " + activeName + " to deepen this bond."))
     else
         ; Quasi-patron: tell the player what kind of acts build their path.
         Int originRace = GetPlayerOriginRaceIndex()
@@ -2403,22 +2499,23 @@ String Function GetPanelRelationsJson()
         elseIf dstate >= relsPact.DAEDRIC_STATE_TABOO
             dstateTone = "warning"
         endIf
-        items = AppendJsonItem(items, PanelPlainObject("", dstateTone, "", relsPact.DeityName + "'s pact stands " + relsPact.GetDaedricStateLabel(dstate) + " among your people."))
+        items = AppendJsonItem(items, PanelPlainObject("", dstateTone, "", NormalizePublicDeityDisplayText(relsPact.DeityName) + "'s pact stands " + relsPact.GetDaedricStateLabel(dstate) + " among your people."))
     elseIf _activeDeity
         Int stance = _activeDeity.GetStanceForPlayer()
         String stanceText = ""
         String stanceTone = ""
+        String activeName = GetPublicDeityDisplayName(_activeDeity)
         if stance == _activeDeity.STANCE_NATIVE
-            stanceText = "Native practice: " + _activeDeity.DeityName + "'s rites answer you clearly."
+            stanceText = "Native practice: " + activeName + "'s rites answer you clearly."
             stanceTone = "good"
         elseIf stance == _activeDeity.STANCE_FOREIGN
-            stanceText = "Foreign devotion: " + _activeDeity.DeityName + " answers, but as an outsider's god."
+            stanceText = "Foreign devotion: " + activeName + " answers, but as an outsider's god."
             stanceTone = "neutral"
         elseIf stance == _activeDeity.STANCE_TABOO
-            stanceText = "Forbidden devotion: " + _activeDeity.DeityName + " is taboo to your people."
+            stanceText = "Forbidden devotion: " + activeName + " is taboo to your people."
             stanceTone = "warning"
         elseIf stance == _activeDeity.STANCE_HOSTILE
-            stanceText = "Hostile devotion: " + _activeDeity.DeityName + " stands against your people."
+            stanceText = "Hostile devotion: " + activeName + " stands against your people."
             stanceTone = "warning"
         endIf
         if stanceText != ""
@@ -2551,9 +2648,12 @@ String Function PanelEventObject(String eventName, PDV_DeityBase deity, String c
     String deityName = ""
     String symbolName = "journal"
     if deity
-        deityName = deity.DeityName
+        deityName = GetPublicDeityDisplayName(deity)
         symbolName = GetPrismaSymbolForDeity(deity)
     endIf
+    context = NormalizePublicDeityDisplayText(context)
+    itemText = NormalizePublicDeityDisplayText(itemText)
+    rival = NormalizePublicDeityDisplayText(rival)
     String j = "{\"event\":\"" + JsonSafeString(eventName) + "\""
     if deityName != ""
         j = j + ",\"deity\":\"" + JsonSafeString(deityName) + "\""
@@ -2606,9 +2706,7 @@ Function ShowP2BookNotice(String reason, String titleText, String messageText)
         return
     endIf
 
-    ; P2 book proof uses the vanilla notification lane until Prisma can own
-    ; input without opening or trapping the full panel.
-    Debug.Notification(titleText + ": " + messageText)
+    SendPrismaToast("journal", "good", titleText, messageText)
 EndFunction
 
 Bool Function IsP2BookNoticeReason(String reason)
@@ -2755,7 +2853,6 @@ Function HandleDaedricShrinePrayer(Int pathIndex, String sourceId)
     ; action is invisible. Top-left line always fires; Prisma gets an explicit
     ; repeatable Daedric toast. The diegetic D1 dispatch remains separate for
     ; screen/sound/journal work and can stay disabled without hiding the toast.
-    Debug.Notification("You offer a prayer at the shrine of " + path.DeityName + ". " + path.DeityName + " hears you.")
     SendPrismaDaedricToast(path.DeityName, "prayer", "Shrine prayer answered.", GetPrismaSymbolForDeity(path))
     AppendBookOfDaysEntry("You offered prayer at the shrine of " + path.DeityName + ".", Utility.GetCurrentGameTime() as Int, "favor.act", GetPrismaSymbolForDeity(path), False, 1, "Shrine prayer answered")
     if PDV_DiegeticDirectorService
@@ -2957,7 +3054,6 @@ Function SurfaceSwitchSeverance(String mode, String severedName)
     endIf
     SendPrismaEventToast("shift", None, line, "", "")
     AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "reorientation", "journal", true)
-    Debug.Notification(line)
 EndFunction
 
 ; Lapse surface (a Prince pact fell to none). PLACEHOLDER copy.
@@ -2968,7 +3064,6 @@ Function SurfaceDaedricLapse(PDV_DaedricPathBase path)
     String line = "Your pact with " + path.DeityName + " has lapsed into silence."
     SendPrismaEventToast("neglect", path, line, "", "")
     AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "neglect.drop", "daedric", false)
-    Debug.Notification(line)
 EndFunction
 
 ; Drain the deferred-lapse flag the base script sets in OnTierChange when a pact
@@ -3399,7 +3494,7 @@ Function ApplyOrcTrialOfIron(Actor playerRef, Int index)
     ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
     AwardPiety(PDV_Malacath, 0.5, "Took up the Trial of Iron")
     AppendBookOfDaysEntry("You took up a discipline in the Trial of Iron. The Code is held in iron.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
-    Debug.Notification("You take up a discipline of the Code. The Trial of Iron holds you to it.")
+    SendPrismaToast("malacath", "good", "Trial of Iron", "You take up a discipline of the Code. The Trial of Iron holds you to it.")
     Trace(2, "Orc Trial of Iron discipline applied: " + index)
 EndFunction
 
@@ -3449,12 +3544,12 @@ Function SyncOrcTrialOfIron(Actor playerRef)
     if eligible
         if !playerRef.HasSpell(disc)
             playerRef.AddSpell(disc, False)
-            Debug.Notification("The Code holds again. Your discipline returns.")
+            SendPrismaToast("malacath", "good", "The Code holds", "Your discipline returns.")
         endIf
     else
         if playerRef.HasSpell(disc)
             playerRef.RemoveSpell(disc)
-            Debug.Notification("The discipline goes quiet. The standing you swore it under has broken.")
+            SendPrismaToast("malacath", "warning", "The discipline goes quiet", "The standing you swore it under has broken.")
         endIf
     endIf
 EndFunction
@@ -3549,7 +3644,7 @@ Function ApplyRedguardRemembering(Actor playerRef, Int index)
     ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
     AwardPiety(PDV_Tuwhacca, 0.5, "Took up the Remembering of Names")
     AppendBookOfDaysEntry("You remembered a name of the old line. The dead are kept in the telling.", Utility.GetCurrentGameTime() as Int, "substrate.act", "tu-whacca", False)
-    Debug.Notification("You remember a name of the old line. The observance settles into you.")
+    SendPrismaToast("tuwhacca", "good", "Remembering of Names", "The observance settles into you.")
     Trace(2, "Redguard Remembering observance applied: " + index)
 EndFunction
 
@@ -3598,12 +3693,12 @@ Function SyncRedguardRemembering(Actor playerRef)
     if eligible
         if !playerRef.HasSpell(obs)
             playerRef.AddSpell(obs, False)
-            Debug.Notification("The old line is settled again. Your observance returns.")
+            SendPrismaToast("tuwhacca", "good", "The old line settles", "Your observance returns.")
         endIf
     else
         if playerRef.HasSpell(obs)
             playerRef.RemoveSpell(obs)
-            Debug.Notification("The observance goes quiet. The line you named it under has shifted.")
+            SendPrismaToast("tuwhacca", "warning", "The observance goes quiet", "The line you named it under has shifted.")
         endIf
     endIf
 EndFunction
@@ -3658,7 +3753,7 @@ Function ApplyAltmerDiscipline(Actor playerRef, Int index)
     ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
     AwardPiety(PDV_AuriEl, 0.5, "Set a Discipline of Return")
     AppendBookOfDaysEntry("You set a discipline of the Return. The road back is walked daily.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False)
-    Debug.Notification("You set the discipline. It holds while you hold to the path.")
+    SendPrismaToast("auriel", "good", "Discipline of Return", "It holds while you hold to the path.")
     Trace(2, "Altmer Discipline of Return applied: " + index)
 EndFunction
 
@@ -3706,12 +3801,12 @@ Function SyncAltmerDisciplines(Actor playerRef)
     if eligible
         if !playerRef.HasSpell(disc)
             playerRef.AddSpell(disc, False)
-            Debug.Notification("You return to coherence. The discipline holds again.")
+            SendPrismaToast("auriel", "good", "Coherence restored", "The discipline holds again.")
         endIf
     else
         if playerRef.HasSpell(disc)
             playerRef.RemoveSpell(disc)
-            Debug.Notification("The discipline goes quiet -- you have wandered from coherence.")
+            SendPrismaToast("auriel", "warning", "The discipline goes quiet", "You have wandered from coherence.")
         endIf
     endIf
 EndFunction
@@ -3804,7 +3899,7 @@ Function HandleImperialMaraSleepMercy(Actor playerRef)
         healAmount = 40.0
     endIf
     playerRef.RestoreActorValue("Health", healAmount)
-    Debug.Notification("You wake mended. Mara's mercy works through your rest.")
+    SendPrismaToast("mara", "good", "Mara's mercy", "You wake mended through your rest.")
 EndFunction
 
 ; Argonian sleep-exit dispatcher. Dreams fire here now; the bed-of-choice
@@ -3853,7 +3948,7 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
         HandleArgonianBedOfChoiceReturn("declared_" + reason)
         if PDV_SPEL_ArgonianRootedRest && StorageUtil.GetIntValue(PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount") >= 12
             PDV_SPEL_ArgonianRootedRest.Cast(playerRef, playerRef)
-            Debug.Notification("You wake feeling rooted.")
+            SendPrismaToast("hist", "good", "Rooted rest", "You wake feeling rooted.")
         endIf
         return false
     endIf
@@ -3887,7 +3982,7 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
     Int pressed = PDV_MESG_ArgonianMarkBed.Show()
     if pressed == 0
         SetArgonianHome(playerRef, sleepCellId, today, reason)
-        Debug.Notification("You have made this your place of rest. The Hist remembers it now.")
+        SendPrismaToast("hist", "good", "Place of rest", "The Hist remembers it now.")
     else
         StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", today + 1)
         StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
@@ -3989,7 +4084,6 @@ Function ApplyArgonianAdaptation(Actor playerRef, Int adaptationIndex)
 
     playerRef.AddSpell(chosenAdaptation, False)
     StorageUtil.SetIntValue(None, "PDV.Adapt.Active", adaptationIndex + 1)
-    Debug.Notification("The Hist reshapes you. The change settles into your scales to stay.")
     SendPrismaShiftToast("The Hist has reshaped you.", "", "hist")
     AppendBookOfDaysEntry("You took the Hist's adaptation into your body. The change is permanent -- the root has answered, and you are remade in its image.", Utility.GetCurrentGameTime() as Int, "reorientation", "hist", True, 3)
     Trace(2, "Argonian adaptation applied: " + adaptationIndex)
@@ -4043,7 +4137,7 @@ Function SyncArgonianAdaptation(Actor playerRef, Bool isArgonian)
     else
         if playerRef.HasSpell(activeSpell)
             playerRef.RemoveSpell(activeSpell)
-            Debug.Notification("The root grows quiet. The change fades from your scales.")
+            SendPrismaToast("hist", "warning", "The root grows quiet", "The change fades from your scales.")
         endIf
     endIf
 EndFunction
@@ -4263,7 +4357,6 @@ Function HandleArgonianShadowscaleKill(Actor playerRef)
     endIf
 
     PDV_SPEL_ArgonianShadowscaleVeil.Cast(playerRef, playerRef)
-    Debug.Notification("The shadow closes over you. The Void hides its own.")
     SendPrismaSubstrateToast("ArgonianHist", "shadowscale", "The shadow closes over you. The Void hides its own.", "void", PDV_ArgonianHistSubstrate.GetHistPostureLabel())
     StorageUtil.SetIntValue(None, "PDV.Shadowscale.LastInvisDay", today + 1)
     Trace(2, "Shadowscale veil fired on sneak kill.")
@@ -4291,7 +4384,6 @@ Function TryArgonianPostureDream(String reason)
     endIf
 
     String dreamText = PDV_ArgonianHistSubstrate.GetDreamTextForPosture(posture)
-    Debug.Notification(dreamText)
     SendPrismaSubstrateToast("ArgonianHist", "dream", dreamText, "hist", PDV_ArgonianHistSubstrate.GetHistPostureLabel())
     StorageUtil.SetIntValue(None, "PDV.ArgDream.Armed", 0)
     StorageUtil.SetIntValue(None, "PDV.ArgDream.LastDay", today)
@@ -4348,7 +4440,7 @@ Bool Function TryBosmerHearthSleep(Actor playerRef, Int sleepCellId, String reas
         if pressed == 0
             StorageUtil.SetIntValue(None, "PDV.BosHearth.DeclaredCell", sleepCellId)
             StorageUtil.SetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay", StorageUtil.GetIntValue(None, "PDV.BosLoc.DiscoveryCount"))
-            Debug.Notification("This hearth is where your stories come home now.")
+            SendPrismaToast("yffre", "good", "Hearth declared", "This is where your stories come home now.")
         else
             StorageUtil.SetIntValue(None, "PDV.BosHearth.DeclineDay", today + 1)
         endIf
@@ -4371,7 +4463,7 @@ Bool Function TryBosmerHearthSleep(Actor playerRef, Int sleepCellId, String reas
         StorageUtil.SetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay", discoveryNow)
         if PDV_SPEL_BosmerTaleCarried
             PDV_SPEL_BosmerTaleCarried.Cast(playerRef, playerRef)
-            Debug.Notification("You told the tale, and the telling settled.")
+            SendPrismaToast("yffre", "good", "Tale carried", "You told the tale, and the telling settled.")
             HandleBosmerLivingStoryCommunityKept(reason + "_tale_carried")
         endIf
     endIf
@@ -4426,7 +4518,7 @@ Function ApplyBosmerNaming(Actor playerRef, Int index)
     StorageUtil.SetIntValue(None, "PDV.BosNaming.Active", index + 1)
     StorageUtil.SetIntValue(None, "PDV.BosNaming.PathAtRite", GetBosmerPathState())
     StorageUtil.SetFloatValue(None, "PDV.BosNaming.LastRiteTime", Utility.GetCurrentGameTime())
-    Debug.Notification("You tell yourself anew. The shape settles into you.")
+    SendPrismaToast("yffre", "good", "Naming", "You tell yourself anew. The shape settles into you.")
     Trace(2, "Bosmer Naming told-self applied: " + index)
 EndFunction
 
@@ -4476,12 +4568,12 @@ Function SyncBosmerNaming(Actor playerRef)
     if eligible
         if !playerRef.HasSpell(told)
             playerRef.AddSpell(told, False)
-            Debug.Notification("You are yourself again. The told-self returns.")
+            SendPrismaToast("yffre", "good", "Told-self restored", "You are yourself again.")
         endIf
     else
         if playerRef.HasSpell(told)
             playerRef.RemoveSpell(told)
-            Debug.Notification("The told-self goes quiet. You have wandered from its path.")
+            SendPrismaToast("yffre", "warning", "The told-self goes quiet", "You have wandered from its path.")
         endIf
     endIf
 EndFunction
@@ -4515,7 +4607,7 @@ Function TryBosmerPathDream(String reason)
         return
     endIf
 
-    Debug.Notification(GetBosmerDreamText(GetBosmerPathState()))
+    SendPrismaToast("yffre", "neutral", "Green dream", GetBosmerDreamText(GetBosmerPathState()))
     StorageUtil.SetIntValue(None, "PDV.BosDream.Armed", 0)
     StorageUtil.SetIntValue(None, "PDV.BosDream.LastDay", today)
     Trace(2, "Bosmer path dream fired (" + reason + ")")
@@ -4682,7 +4774,7 @@ Function TryBosmerScalesAtRest(Actor playerRef)
 
     PDV_SPEL_BosmerScalesAtRest.Cast(playerRef, playerRef)
     StorageUtil.SetIntValue(None, "PDV.BosSig.ScalesLastDay", today + 1)
-    Debug.Notification("The account is even. The bargains fall your way for a while.")
+    SendPrismaToast("zenithar", "good", "Scales at rest", "The bargains fall your way for a while.")
     Trace(2, "Bosmer Scales at Rest fired.")
 EndFunction
 
@@ -4719,7 +4811,7 @@ Function TryBosmerBaanDarGap(Actor playerRef)
     PDV_SPEL_BosmerBaanDarGap.Cast(playerRef, playerRef)
     StorageUtil.SetIntValue(None, "PDV.BosSig.GapLastDay", today + 1)
     HandleBosmerBanditRoadReversal("baandar_gap_low_health")
-    Debug.Notification("Baan Dar opens the gap. Run.")
+    SendPrismaToast("baandar", "good", "Baan Dar opens the gap", "Run.")
     Trace(2, "Bosmer Baan Dar Opens the Gap fired.")
 EndFunction
 
@@ -5127,7 +5219,7 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
     endIf
     StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredFormID", sleepCell.GetFormID())
     StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredDay", (Utility.GetCurrentGameTime() as Int) + 1)
-    Debug.Notification("You lay your rest here. This becomes your ancestor-space; the ancestors gather where you sleep.")
+    SendPrismaToast("ancestor", "good", "Ancestor-space", "The ancestors gather where you sleep.")
 EndFunction
 
 Bool Function IsPlayerAtDunmerDeclaredHome(Actor playerRef)
@@ -5225,7 +5317,6 @@ Function HandleKhajiitRajhinElegantTheft(String reason)
     RecordKhajiitFocusSignal(KHAJIIT_FOCUS_RAJHIN, "PDV.Signal.KhajiitRajhinElegantTheft", "Rajhin elegant theft", reason)
     ; Night theft is shadow-coded behavior; it accrues toward the ShadowDrift boundary.
     RecordKhajiitShadowEvidence("rajhin_night_theft_" + reason)
-    Debug.Notification("Rajhin purrs. That theft had style.")
     SendPrismaShiftToast("Elegant theft", "Rajhin purrs.", GetKhajiitFocusSymbol(KHAJIIT_FOCUS_RAJHIN))
     RecordRecentDevotionEvent("Rajhin: theft with style")
 EndFunction
@@ -5551,7 +5642,7 @@ EndFunction
 
 Function ShowKhajiitMessage(Message messageRecord, String fallbackText, Bool suppressModal)
     if suppressModal
-        Debug.Notification(fallbackText)
+        SendPrismaToast("lunar", "warning", "", fallbackText)
         return
     endIf
 
@@ -7792,7 +7883,7 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
     return newTier
 EndFunction
 
-; Concise top-left notice when a tracked deity advances a tier (active patron or focused emphasis).
+; One-shot guard when a tracked deity advances a tier.
 Bool Function NotifyTierUp(PDV_DeityBase deity, Int newTier)
     if !deity || newTier <= TIER_NONE
         return False
@@ -7804,7 +7895,6 @@ Bool Function NotifyTierUp(PDV_DeityBase deity, Int newTier)
     endIf
 
     StorageUtil.SetIntValue(None, shownKey, 1)
-    Debug.Notification(deity.DeityName + " marks you as " + GetPublicTierBand(newTier) + ".")
     return True
 EndFunction
 
@@ -8060,7 +8150,7 @@ Function MigrateDaedricPactsIfNeeded()
             topPath.ClearLiveDaedricPactSpells()
             StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
         endIf
-        Debug.Notification("Your devotion has resolved to " + resolvedName + ".")
+        SendPrismaEventToast("shift", None, "Your devotion has resolved to " + resolvedName + ".", "", "")
         AppendBookOfDaysEntry("Your devotion has resolved to " + resolvedName + ".", Utility.GetCurrentGameTime() as Int, "reorientation", "journal", true)
     endIf
 
@@ -9020,7 +9110,7 @@ Function RunDawnApplySpellAndNeglectLayers()
         SyncKyneNeglectSpell(nordBroadLapsed)
         SyncNordPatronNeglectSpells()
         if nordBroadLapsed && StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState") == 0
-            Debug.Notification("The gods feel distant as your devotion goes quiet.")
+            SendPrismaToast("journal", "warning", "Devotion quiet", "The gods feel distant as your devotion goes quiet.")
         endIf
         StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", BoolToInt(nordBroadLapsed))
         UpdateContextualFavorRuntime()
@@ -9061,9 +9151,6 @@ Function RunDawnApplySpellAndNeglectLayers()
     if patronNeglected && StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState") == 0
         SendPrismaEventToast("neglect", _activeDeity, "", "", "")
         SurfaceTransition("neglect", _activeDeity.DeityName, "drop", _activeDeity.DeityIndex, "absence")
-        ; Prisma toast is overlay-only; give a reliable vanilla top-left notice when
-        ; a patron's regard first lapses, so neglect is not silent without the overlay.
-        Debug.Notification(_activeDeity.DeityName + "'s regard fades as your devotion goes quiet.")
     endIf
     StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", BoolToInt(patronNeglected))
     SyncFirstTierRaceRewardRuntime()
@@ -9096,12 +9183,7 @@ Function RefreshCommitmentOfferQualificationGuards()
 EndFunction
 
 Function RunDawnNotify()
-    SendPrismaEventToast("dawn", None, "", "", "")
-    ; Prisma toast is overlay-only and no-ops without the bridge; give a reliable
-    ; vanilla top-left notice when the dawn actually consolidated devotion this cycle.
-    if _dawnHadActivity
-        Debug.Notification("Your devotions settle with the dawn.")
-    endIf
+    SendPrismaEventToast("dawn", None, "", "", "", _dawnHadActivity)
     RefreshDiegeticMedallion("dawn")
     Trace(2, "Pattern summary: " + DebugGetPatternProvingSummary())
 EndFunction
@@ -10737,7 +10819,7 @@ Function SyncBretonCreedLossSpell(Spell creedLossSpell, Bool shouldBeActive, Str
             playerRef.AddSpell(creedLossSpell, False)
         endIf
         if !wasActive && noticeText != ""
-            Debug.Notification(noticeText)
+            SendPrismaToast("journal", "warning", "Creed strained", noticeText)
         endIf
         StorageUtil.SetIntValue(None, stateKey, 1)
     else
@@ -12443,7 +12525,6 @@ Bool Function HandleTalosBetrayal(Int severity, String sourceReason)
 
     SendPrismaEventToast("creed", PDV_Talos, surfaceText, "", "")
     SurfaceTransition("creed", "Talos betrayal", "drop", PDV_Talos.DeityIndex, "betrayal")
-    Debug.Notification(surfaceText)
     Trace(2, "Talos betrayal applied: " + reason + " piety=" + pietyLoss + " source=" + sourceReason)
     return True
 EndFunction
@@ -13575,13 +13656,7 @@ EndFunction
 ; shiftMode = human-readable new state label (e.g. "Khenarthi", "Stronghold")
 ; context   = optional short phrase (empty is fine; UI templates the rest)
 ; symbolName = Prisma symbol key; falls back to journal until glyphs land
-Function SendPrismaShiftToast(String shiftMode, String context, String symbolName)
-    if IsRaceSetupQuietPresentationActive()
-        return
-    endIf
-    if !PDV_PrismaBridge.IsAvailable()
-        return
-    endIf
+Bool Function SendPrismaShiftToast(String shiftMode, String context, String symbolName, Bool allowFallback = True)
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"shift\""
     j = j + ",\"shiftMode\":\"" + JsonSafeString(shiftMode) + "\""
     j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
@@ -13592,17 +13667,11 @@ Function SendPrismaShiftToast(String shiftMode, String context, String symbolNam
         j = j + ",\"deity\":\"" + JsonSafeString(_activeDeity.DeityName) + "\""
     endIf
     j = j + "}}"
-    PDV_PrismaBridge.SendOverlayJson(j)
+    return SendPrismaToastPayloadOrFallback(j, shiftMode, context, allowFallback)
 EndFunction
 
 ; Emit a substrate instrument event without making Prisma the gameplay proof lane.
-Function SendPrismaSubstrateToast(String substrate, String phase, String context, String symbolName, String stateLabel)
-    if IsRaceSetupQuietPresentationActive()
-        return
-    endIf
-    if !PDV_PrismaBridge.IsAvailable()
-        return
-    endIf
+Bool Function SendPrismaSubstrateToast(String substrate, String phase, String context, String symbolName, String stateLabel, Bool allowFallback = True)
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"substrate\""
     j = j + ",\"substrate\":\"" + JsonSafeString(substrate) + "\""
     j = j + ",\"phase\":\"" + JsonSafeString(phase) + "\""
@@ -13614,7 +13683,11 @@ Function SendPrismaSubstrateToast(String substrate, String phase, String context
         j = j + ",\"state\":\"" + JsonSafeString(stateLabel) + "\""
     endIf
     j = j + "}}"
-    PDV_PrismaBridge.SendOverlayJson(j)
+    String fallbackTitle = stateLabel
+    if fallbackTitle == ""
+        fallbackTitle = substrate
+    endIf
+    return SendPrismaToastPayloadOrFallback(j, fallbackTitle, context, allowFallback)
 EndFunction
 
 Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierAfter, Float multiplier, String context, String symbolName, String stateLabel)
@@ -13632,10 +13705,7 @@ EndFunction
 ; phase      = "boon" | "price" | "lapse" | "residue" | "prayer"
 ; context    = optional short phrase
 ; symbolName = Prisma symbol key; falls back to journal until glyphs land
-Function SendPrismaDaedricToast(String princeName, String phase, String context, String symbolName)
-    if !PDV_PrismaBridge.IsAvailable()
-        return
-    endIf
+Bool Function SendPrismaDaedricToast(String princeName, String phase, String context, String symbolName, Bool allowFallback = True)
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"daedric\""
     j = j + ",\"prince\":\"" + JsonSafeString(princeName) + "\""
     j = j + ",\"phase\":\"" + JsonSafeString(phase) + "\""
@@ -13644,7 +13714,7 @@ Function SendPrismaDaedricToast(String princeName, String phase, String context,
         j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
     endIf
     j = j + "}}"
-    PDV_PrismaBridge.SendOverlayJson(j)
+    return SendPrismaToastPayloadOrFallback(j, princeName, context, allowFallback)
 EndFunction
 
 Function DrainHircineResiduePrismaToasts()
@@ -13785,7 +13855,6 @@ Function ShowDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier,
     if GetDebugLevel() >= 1
         Debug.Trace("[PDV] Daedric milestone presentation: " + princeName + " " + tierLabel + " prisma=" + prismaSent)
     endIf
-    Debug.Notification(princeName + " names you " + tierLabel + ".")
     ; Surface the Daedric tier gain in the Book of Days like a patron tier-up
     ; (tone tier.reach -> "Favor deepened"/good; Champion pinned). The toast already
     ; fired above; this adds the persistent journal entry. PLACEHOLDER copy.
@@ -13805,14 +13874,7 @@ Bool Function HasRecentDaedricMilestoneJournal(PDV_DaedricPathBase path)
     return lastTime > 0.0 && (Utility.GetCurrentGameTime() - lastTime) <= 0.0001
 EndFunction
 
-Bool Function SendPrismaDaedricMilestoneToast(String princeName, String tierLabel, String flavorText, String boonText, String priceText, String symbolName)
-    if !PDV_PrismaBridge.IsAvailable()
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] Daedric milestone Prisma skipped: bridge unavailable.")
-        endIf
-        return False
-    endIf
-
+Bool Function SendPrismaDaedricMilestoneToast(String princeName, String tierLabel, String flavorText, String boonText, String priceText, String symbolName, Bool allowFallback = True)
     String titleText = princeName + " names you " + tierLabel
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"daedric\""
     j = j + ",\"phase\":\"milestone\""
@@ -13823,8 +13885,10 @@ Bool Function SendPrismaDaedricMilestoneToast(String princeName, String tierLabe
     j = j + ",\"message\":\"" + JsonSafeString(flavorText) + "\""
     j = j + ",\"duration\":9000"
     j = j + "}}"
-    Bool sent = PDV_PrismaBridge.SendOverlayJson(j)
-    QueuePrismaToastRetry(j, princeName + " " + tierLabel)
+    Bool sent = SendPrismaToastPayloadOrFallback(j, titleText, flavorText, allowFallback)
+    if sent
+        QueuePrismaToastRetry(j, princeName + " " + tierLabel)
+    endIf
     if GetDebugLevel() >= 1
         Debug.Trace("[PDV] Daedric milestone Prisma payload sent=" + sent + " prince=" + princeName + " tier=" + tierLabel)
     endIf
@@ -14357,7 +14421,7 @@ EndFunction
 
 Function ShowArgonianMessage(Message messageRecord, String fallback, Bool suppressModal)
     if suppressModal || !messageRecord
-        Debug.Notification(fallback)
+        SendPrismaToast("hist", "warning", "", fallback)
         return
     endIf
 
@@ -14496,7 +14560,7 @@ EndFunction
 
 Function ShowNordMessage(Message messageRecord, String fallbackText, Bool suppressModal)
     if suppressModal
-        Debug.Notification(fallbackText)
+        SendPrismaToast("kyne", "warning", "", fallbackText)
         return
     endIf
 
@@ -14514,7 +14578,7 @@ Function ShowNordNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Debug.Notification(fallbackText)
+    SendPrismaToast("kyne", "neutral", "", fallbackText)
 EndFunction
 
 Function ShowRedguardNotification(Message messageRecord, String fallbackText)
@@ -14523,7 +14587,7 @@ Function ShowRedguardNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Debug.Notification(fallbackText)
+    SendPrismaToast("tuwhacca", "neutral", "", fallbackText)
 EndFunction
 
 Function ShowOrcNotification(Message messageRecord, String fallbackText)
@@ -14532,12 +14596,12 @@ Function ShowOrcNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Debug.Notification(fallbackText)
+    SendPrismaToast("malacath", "neutral", "", fallbackText)
 EndFunction
 
 Function ShowOrcMessage(Message messageRecord, String fallbackText, Bool suppressModal)
     if suppressModal
-        Debug.Notification(fallbackText)
+        SendPrismaToast("malacath", "warning", "", fallbackText)
         return
     endIf
 
@@ -14551,7 +14615,7 @@ EndFunction
 
 Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool suppressModal)
     if suppressModal
-        Debug.Notification(fallbackText)
+        SendPrismaToast("tuwhacca", "warning", "", fallbackText)
         return
     endIf
 
@@ -14565,7 +14629,7 @@ EndFunction
 
 Function ShowAltmerMessage(Message messageRecord, String fallbackText, Bool suppressModal)
     if suppressModal
-        Debug.Notification(fallbackText)
+        SendPrismaToast("auriel", "warning", "", fallbackText)
         return
     endIf
 
@@ -16130,10 +16194,49 @@ EndFunction
 
 String Function NormalizePublicDeityDisplayText(String sourceText)
     String result = sourceText
+    result = ReplaceText(result, "auri-el", "Auri-El")
     result = ReplaceText(result, "akatosh", "Akatosh")
+    result = ReplaceText(result, "arkay", "Arkay")
+    result = ReplaceText(result, "dibella", "Dibella")
+    result = ReplaceText(result, "julianos", "Julianos")
+    result = ReplaceText(result, "mara", "Mara")
+    result = ReplaceText(result, "stendarr", "Stendarr")
+    result = ReplaceText(result, "zenithar", "Zenithar")
+    result = ReplaceText(result, "talos", "Talos")
     result = ReplaceText(result, "kyne", "Kyne")
+    result = ReplaceText(result, "kynareth", "Kynareth")
+    result = ReplaceText(result, "magnus", "Magnus")
+    result = ReplaceText(result, "xarxes", "Xarxes")
+    result = ReplaceText(result, "y'ffre", "Y'ffre")
+    result = ReplaceText(result, "z'en", "Z'en")
+    result = ReplaceText(result, "baan dar", "Baan Dar")
+    result = ReplaceText(result, "azura", "Azura")
+    result = ReplaceText(result, "khenarthi", "Khenarthi")
+    result = ReplaceText(result, "rajhin", "Rajhin")
+    result = ReplaceText(result, "alkosh", "Alkosh")
+    result = ReplaceText(result, "boethiah", "Boethiah")
+    result = ReplaceText(result, "mephala", "Mephala")
+    result = ReplaceText(result, "the hist", "The Hist")
     result = ReplaceText(result, "sithis", "Sithis")
+    result = ReplaceText(result, "malacath", "Malacath")
     result = ReplaceText(result, "trinimac", "Trinimac")
+    result = ReplaceText(result, "tu'whacca", "Tu'whacca")
+    result = ReplaceText(result, "hoonding", "HoonDing")
+    result = ReplaceText(result, "leki", "Leki")
+    result = ReplaceText(result, "shor", "Shor")
+    result = ReplaceText(result, "tsun", "Tsun")
+    result = ReplaceText(result, "stuhn", "Stuhn")
+    result = ReplaceText(result, "mehrunes dagon", "Mehrunes Dagon")
+    result = ReplaceText(result, "molag bal", "Molag Bal")
+    result = ReplaceText(result, "sheogorath", "Sheogorath")
+    result = ReplaceText(result, "clavicus vile", "Clavicus Vile")
+    result = ReplaceText(result, "hermaeus mora", "Hermaeus Mora")
+    result = ReplaceText(result, "meridia", "Meridia")
+    result = ReplaceText(result, "vaermina", "Vaermina")
+    result = ReplaceText(result, "namira", "Namira")
+    result = ReplaceText(result, "sanguine", "Sanguine")
+    result = ReplaceText(result, "nocturnal", "Nocturnal")
+    result = ReplaceText(result, "peryite", "Peryite")
     return result
 EndFunction
 
@@ -17285,7 +17388,7 @@ String Function GetPlayerMcmSummaryLine()
     ; exclusivity), surfaced for all races.
     PDV_DaedricPathBase summaryPact = GetActiveDaedricPactPath()
     if summaryPact
-        return summaryPact.DeityName + " | Pact | " + GetCurrentStandingLabel()
+        return NormalizePublicDeityDisplayText(summaryPact.DeityName) + " | Pact | " + GetCurrentStandingLabel()
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_NORD
@@ -17318,11 +17421,11 @@ String Function GetPlayerMcmPatronLine()
     ; surface it here so the Prisma panel "patron" field matches the Survey.
     PDV_DaedricPathBase pactPath = GetActiveDaedricPactPath()
     if pactPath
-        return pactPath.DeityName
+        return NormalizePublicDeityDisplayText(pactPath.DeityName)
     endIf
 
     if _activeDeity
-        return _activeDeity.DeityName
+        return GetPublicDeityDisplayName(_activeDeity)
     endIf
 
     return GetPatronStateLabel()
@@ -17427,7 +17530,7 @@ String Function GetNordSurveyBaseText()
 
     String contextText = GetNordContextSurveyText()
     if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
-        String focusedText = _activeDeity.DeityName + " names you. Standing: " + band + "."
+        String focusedText = "Standing: " + band + ". " + GetPublicDeityDisplayName(_activeDeity) + " names you."
         if StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount") > 0
             return focusedText + " The bond is thinning and needs attention." + contextText
         endIf
@@ -17440,7 +17543,7 @@ String Function GetNordSurveyBaseText()
             return "You walk the Nine Divines as a Nord walks them: weather, hearth, hold, and the old breath underneath. Standing: " + band + "." + contextText
         endIf
 
-        return "You honor the Old Ways broadly. The pantheon has noted you. Standing: " + band + "." + contextText
+        return "You honor the Old Ways broadly. Standing: " + band + "." + contextText
     endIf
 
     if PDV_HircinePath
@@ -17459,16 +17562,16 @@ String Function GetNordContextSurveyText()
     Int kyneTalosCount = StorageUtil.GetIntValue(None, "PDV.Nord.KyneTalosContextCount")
     Int edgeCount = StorageUtil.GetIntValue(None, "PDV.Nord.HircineArkayEdgeCount")
     if oldWaysCount > 0
-        text = text + " The Old Ways have noticed how you live."
+        text = text + " Recent acts confirm the old road."
     endIf
     if kyneTalosCount > 0
         text = text + " Kyne and Talos weigh on your road."
     endIf
     if edgeCount > 0
-        text = text + " Hunt and death-duty press at the edges."
+        text = text + " Hunt and death-duty are present, but remain edge pressures."
     endIf
     if PDV_NordAncestorSubstrate
-        text = text + " The ancestor-line is " + GetNordAncestorLayerLabel() + "."
+        text = text + " The ancestor-line remains " + GetNordAncestorLayerLabel() + "."
     endIf
     return text
 EndFunction
@@ -17487,7 +17590,7 @@ String Function GetNordDevotionModeLabel()
     endIf
 
     if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
-        return "Focused " + _activeDeity.DeityName
+        return "Focused " + GetPublicDeityDisplayName(_activeDeity)
     endIf
 
     if GetPatronState() == PATRON_STATE_BROAD
@@ -18211,7 +18314,7 @@ String Function GetImperialSurveyText()
     String concordat = GetImperialConcordatLabel()
     String text = ""
     if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
-        text = _activeDeity.DeityName + " holds your focus among the Nine. Standing: " + band + ". On the Talos question you stand " + concordat + "."
+        text = GetPublicDeityDisplayName(_activeDeity) + " holds your focus among the Nine. Standing: " + band + ". On the Talos question you stand " + concordat + "."
     else
         text = "You worship the Nine Divines broadly, civic and public. Standing: " + band + ". On the Talos question you stand " + concordat + "."
     endIf

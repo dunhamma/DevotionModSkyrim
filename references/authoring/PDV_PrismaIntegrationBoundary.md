@@ -88,19 +88,22 @@ Future always-on work is a UI feature track. It must be gated by:
 
 ## P2 Proof Feedback Policy
 
-For current P2 empirical proof, use surfaces that do not depend on the Prisma
-overlay:
+For current P2 empirical proof, keep route/readback/manual proof independent of
+Prisma overlay availability:
 
 - Papyrus log markers
 - verifier/readback output
-- top-left `Debug.Notification`
+- Prisma-first transient toasts, with vanilla top-left `Debug.Notification`
+  only as fallback when Prisma is unavailable or the toast send fails
 - Survey/status readout
 - Active Effects display checks for rewards
 - manual evidence ledger notes
 
-Prisma can be tested in parallel as player-facing polish, but a missing Prisma
-toast or panel update is not a P2 route-proof failure unless the manager state
-or log marker is also wrong.
+Prisma display should be tested in parallel as player-facing polish, but a
+missing Prisma toast is not a P2 route-proof failure if the manager state/log
+marker and fallback behavior are correct. `tools\pdv_prisma_toast_fallback_audit.mjs`
+is the static guard that new transient gameplay notices use the shared
+Prisma-first fallback helper and that P2 book routes reach `ShowP2BookNotice`.
 
 ## Full-Panel Safety Default
 

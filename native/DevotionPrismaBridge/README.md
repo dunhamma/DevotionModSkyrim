@@ -106,6 +106,20 @@ The bridge calls those functions through Prisma `InteropCall`.
 the view without focusing or pausing the panel path and sends the payload to the
 overlay receiver, which is currently used for transient devotion toasts.
 
+## Toast Fallback Policy
+
+Transient gameplay acknowledgements are Prisma-first. Papyrus should send them
+through `PDV__ManagerQuest.SendPrismaToastPayloadOrFallback(...)`, which tries
+`PDV_PrismaBridge.SendOverlayJson(...)` and emits a vanilla top-left
+`Debug.Notification(...)` only if Prisma is unavailable or the overlay send
+fails. The shared fallback must not open the focused Devotion panel, Book of
+Days, or any blocking surface.
+
+Raw `Debug.Notification(...)` calls are limited to explicit debug/seed
+diagnostics and the shared fallback helper. `tools/pdv_prisma_toast_fallback_audit.mjs`
+is the static guard for this policy, including the P2 book-read route from
+`OnBookRead` to `ShowP2BookNotice`.
+
 ## Prisma Close Contract
 
 Book of Days is a focused Prisma surface, but it has three player dismissal

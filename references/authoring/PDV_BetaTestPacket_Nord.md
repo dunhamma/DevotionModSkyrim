@@ -41,7 +41,7 @@ but are not needed for route safety here.
 
 Expected in game:
 
-- Top-left notification or proven toast feedback only.
+- Prisma overlay toast preferred; vanilla top-left notification only if Prisma is unavailable or the toast send fails.
 - No forced full Prisma panel.
 - Survey Devotion explains broad/focused Old Ways, Kyne/Talos context, and
   current patron state without turning every Nord hook into a reward faucet.
@@ -164,12 +164,12 @@ Kyne-worded ("Evaluate the Kyne commitment offer now?"). Per-god offer/accept
 copy and degenericized labels are a deferred editorial item; the offer FIRING
 for a non-Kyne god is the pass criterion.
 
-### Neglect vanilla top-left fallback (build-batch test 9)
+### Neglect Prisma-first fallback (build-batch test 9)
 
-A neglected committed patron now prints `<Deity>'s regard fades as your devotion
-goes quiet.` top-left even with the Prisma overlay off. Prove it: commit a
-patron (e.g. Kyne or Talos), drop it to ~5 Target piety, Run dawn pass until it
-crosses neglect.
+A neglected committed patron now prefers a Prisma overlay toast and falls back
+to vanilla top-left if Prisma is unavailable or the toast send fails. Prove it:
+commit a patron (e.g. Kyne or Talos), drop it to ~5 Target piety, run dawn pass
+until it crosses neglect.
 
 ### Survey "recent events" log
 
