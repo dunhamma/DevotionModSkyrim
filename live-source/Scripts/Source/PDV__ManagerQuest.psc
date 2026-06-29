@@ -526,7 +526,7 @@ Float Property DECAY_PER_DAY = 0.5 AutoReadOnly
 Float Property BROAD_WORSHIP_DECAY_MULTIPLIER = 0.2 AutoReadOnly
 Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; Bump when PDV_DeityLikesDislikes.csv OR the stance matrix changes so existing saves reload.
-Int Property LIKES_DISLIKES_VERSION = 10 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 12 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 3 AutoReadOnly
 ; Bump when the Daedric pact model changes so existing saves re-run the migration
 ; (v2: active-pact-only sync + milestone presentation refresh; v3: collapse a
@@ -8190,7 +8190,7 @@ Function ClearRowsForDeity(PDV_DeityBase deity)
 EndFunction
 
 Int[] Function GetLikesDislikesEventTypes()
-    Int[] ldEvents = new Int[31]
+    Int[] ldEvents = new Int[32]
     ldEvents[0] = 1
     ldEvents[1] = 2
     ldEvents[2] = 3
@@ -8222,6 +8222,7 @@ Int[] Function GetLikesDislikesEventTypes()
     ldEvents[28] = 364
     ldEvents[29] = 365
     ldEvents[30] = 368
+    ldEvents[31] = 315
     return ldEvents
 EndFunction
 
@@ -8536,7 +8537,7 @@ EndFunction
 Function LoadRowsForDeity(PDV_DeityBase deity)
     String ldName = deity.DeityName
     if ldName == "kyne"
-        WriteLD(deity, 1, -3.0, 0, 0.0, -1)
+        WriteLD(deity, 1, -0.5, 2, 0.0, -1)
         WriteLD(deity, 2, 0.5, 0, 0.0, -1)
         WriteLD(deity, 3, 0.25, 0, 0.0, -1)
         WriteLD(deity, 4, 0.5, 0, 0.0, -1)
@@ -8770,7 +8771,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 345, 0.25, 3, 0.0, -1)
         WriteLD(deity, 364, -0.5, 3, 0.0, -1)
         WriteLD(deity, 313, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 314, -0.25, 3, 0.0, -1)
+        WriteLD(deity, 315, -0.25, 3, 0.0, -1)
     elseIf ldName == "alkosh"
         WriteLD(deity, 302, 1.5, 1, 1.0, -1)
         WriteLD(deity, 300, 0.5, 3, 0.0, -1)
@@ -8804,7 +8805,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 1, 0.25, 3, 0.0, -1)
         WriteLD(deity, 343, 0.5, 3, 0.0, -1)
         WriteLD(deity, 362, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 314, -0.25, 3, 0.0, -1)
+        WriteLD(deity, 315, -0.25, 3, 0.0, -1)
         WriteLD(deity, 333, -0.25, 3, 0.0, -1)
     elseIf ldName == "Mephala"
         WriteLD(deity, 360, 0.5, 3, 0.0, -1)
@@ -8832,7 +8833,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
     elseIf ldName == "sithis"
         WriteLD(deity, 304, 1.0, 2, 0.5, -1)
         WriteLD(deity, 365, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 314, -0.25, 1, 0.0, -1)
+        WriteLD(deity, 315, -0.25, 1, 0.0, -1)
         WriteLD(deity, 364, 0.5, 3, 0.0, -1)
         WriteLD(deity, 350, -0.5, 3, 0.0, -1)
         WriteLD(deity, 302, 1.0, 1, 0.5, -1)
@@ -8852,7 +8853,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 302, 0.75, 1, 0.5, -1)
         WriteLD(deity, 344, 0.25, 3, 0.0, -1)
         WriteLD(deity, 304, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 314, -0.25, 3, 0.0, -1)
+        WriteLD(deity, 315, -0.25, 3, 0.0, -1)
     elseIf ldName == "Tu'whacca"
         WriteLD(deity, 300, 0.5, 3, 0.0, -1)
         WriteLD(deity, 300, 0.25, 3, 0.0, 9)
@@ -8881,7 +8882,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 313, 0.25, 3, 0.0, -1)
         WriteLD(deity, 360, 0.25, 3, 0.0, -1)
         WriteLD(deity, 361, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 314, -0.25, 3, 0.0, -1)
+        WriteLD(deity, 315, -0.25, 3, 0.0, -1)
         WriteLD(deity, 365, -0.75, 2, 0.5, -1)
     endIf
 EndFunction

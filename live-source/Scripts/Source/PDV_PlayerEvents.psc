@@ -99,6 +99,7 @@ String Property MOD_EVENT_CONCORDAT_DEFIANCE = "PDV.ConcordatDefiance" AutoReadO
 
 Int Property EVT_REST_UNDER_OPEN_SKY = 313 AutoReadOnly
 Int Property EVT_SLEEP_IN_BED = 314 AutoReadOnly
+Int Property EVT_SLEEP_IN_INN = 315 AutoReadOnly
 Int Property EVT_HARVEST_INGREDIENT = 334 AutoReadOnly
 Int Property EVT_READ_SKILL_BOOK = 340 AutoReadOnly
 Int Property EVT_READ_SPELL_TOME = 341 AutoReadOnly
@@ -107,6 +108,8 @@ Int Property EVT_RAISE_UNDEAD = 365 AutoReadOnly
 Int Property EVT_ACCEPT_DAEDRIC_ARTIFACT = 368 AutoReadOnly
 
 Bool PDV_LastSleepStartedOutside = false
+Bool PDV_LastSleptInInn = false
+Keyword PDV_KW_LocTypeInn
 
 ; Organic combat-session state. Session counters are script variables:
 ; combat-state, PO3 kill events, and the combat poll all land on this alias, so
@@ -177,8 +180,10 @@ Event OnSleepStart(Float afSleepStartTime, Float afDesiredSleepEndTime)
     Actor playerActor = GetActorRef()
     if playerActor
         PDV_LastSleepStartedOutside = !playerActor.IsInInterior()
+        PDV_LastSleptInInn = IsPlayerInInn(playerActor)
     else
         PDV_LastSleepStartedOutside = false
+        PDV_LastSleptInInn = false
     endIf
 
     Trace(3, "Player sleep start observed.")
@@ -201,9 +206,35 @@ Event OnSleepStop(Bool abInterrupted)
             RouteGenericAction(EVT_REST_UNDER_OPEN_SKY, GetActorRef() as Form, None)
         else
             RouteGenericAction(EVT_SLEEP_IN_BED, GetActorRef() as Form, None)
+            ; The ascetic-creed sleep penalty bites only on paid inn comfort ("slumbering
+            ; easy"), not your own bed or a bedroll. Inn sleep also fires EVT_SLEEP_IN_INN so
+            ; only the inn-keyed dislike rows score; positive sleep credit stays on EVT_SLEEP_IN_BED.
+            if PDV_LastSleptInInn
+                RouteGenericAction(EVT_SLEEP_IN_INN, GetActorRef() as Form, None)
+            endIf
         endIf
     endIf
 EndEvent
+
+; Inn detection for the ascetic sleep-creed penalty. An inn is the player's current
+; Location carrying the vanilla LocTypeInn keyword (Skyrim.esm 0x0001CB87), resolved by
+; FormID so no new CK property wiring is needed. Cached after first resolve.
+Bool Function IsPlayerInInn(Actor playerActor)
+    if !playerActor
+        return false
+    endIf
+    Location currentLoc = playerActor.GetCurrentLocation()
+    if !currentLoc
+        return false
+    endIf
+    if !PDV_KW_LocTypeInn
+        PDV_KW_LocTypeInn = Game.GetFormFromFile(0x0001CB87, "Skyrim.esm") as Keyword
+    endIf
+    if !PDV_KW_LocTypeInn
+        return false
+    endIf
+    return currentLoc.HasKeyword(PDV_KW_LocTypeInn)
+EndFunction
 
 Event OnLycanthropyStateChanged(Bool abIsWerewolf)
     if abIsWerewolf

@@ -1,5 +1,5 @@
 actor,eventId,eventName,sentiment,tier,baseDelta,dailyCap,cooldownDays,stanceGate,conditionTag,originGate,notes
-kyne,1,kill-hostile-beast,-,large,-3.0,0,0,,,,Kyne protects beasts; uncapped (combat migration)
+kyne,1,kill-hostile-beast,-,small,-0.5,2,0,,,,Kyne protects beasts; softened to -0.5 + cap 2/day for self-defense fairness (combat migration)
 kyne,2,kill-hostile-humanoid,+,small,0.5,0,0,,,,uncapped (combat migration)
 kyne,3,kill-event3,+,small,0.25,0,0,,,,legacy branch; router does not emit 3 yet
 kyne,4,kill-event4,+,small,0.5,0,0,,,,legacy branch; router does not emit 4 yet
@@ -153,7 +153,7 @@ The Hist,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,,denying the sou
 The Hist,334,tend-the-hist,+,small,0.25,3,0,,,Argonian,gathering living growth with care keeps Saxhleel memory close to the root
 sithis,304,murder-defenseless,+,medium,1.0,2,0.5,,,,a death offered to the Void; the unmaking favored
 sithis,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,,clinging past death defies the Void's change
-sithis,314,sleep-in-bed,-,small,-0.25,1,0,,,,settled comfort resists the formless flux
+sithis,315,sleep-in-inn,-,small,-0.25,1,0,,,,paid inn comfort resists the formless flux; own bed or bedroll is fine
 sithis,364,assault-innocent,+,small,0.5,3,0,,,,each unmaking feeds the Void's hunger for change
 sithis,350,heal-or-cure-npc,-,small,-0.5,3,0,,,,preserving the living resists the formless flux
 Malacath,330,smith-item,+,medium,0.75,2,0.5,,,,the forge is the Orc's prayer
@@ -269,7 +269,7 @@ Baan Dar,330,smith-item,-,small,-0.25,3,0,,,,the pariah takes what he needs; the
 khenarthi,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,the Voice is wind given shape; the Thu'um is her own breath
 khenarthi,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,a soul sent unready and unguided offends the psychopomp
 rajhin,313,rest-under-open-sky,+,small,0.25,3,0,,,,the roaming cat beds where the road leaves him; never paying for an inn
-rajhin,314,sleep-in-bed,-,small,-0.25,3,0,,,,soft comfort dulls the prowling cat; the Purring Liar scorns the warm bed
+rajhin,315,sleep-in-inn,-,small,-0.25,3,0,,,,a rented inn bed dulls the prowling cat; the Purring Liar scorns bought comfort
 alkosh,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,necromancy chains a soul outside time's lawful span
 alkosh,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,,the order-dragon drives back the chaos that lies outside time
 alkosh,368,accept-daedric-artifact,-,medium,-0.75,2,0.5,,ActorTypeDaedra,,bearing a chaos-lord's gift betrays the keeper of cosmic order
@@ -282,7 +282,7 @@ azurah,364,assault-innocent,-,medium,-1.0,2,0.5,,,,preying on the helpless betra
 Boethiah,1,kill-hostile-beast,+,small,0.25,3,0,,,,trial by tooth and claw; strength proven against the wild
 Boethiah,343,learn-word-of-power,+,small,0.5,3,0,,,,power seized through trial; self-betterment is her doctrine
 Boethiah,362,steal-item,+,small,0.25,3,0,,owned,,the plot rewarded; taking by cunning pleases the Prince of Plots
-Boethiah,314,sleep-in-bed,-,small,-0.25,3,0,,,,soft comfort denies the test; the worthy do not slumber easy
+Boethiah,315,sleep-in-inn,-,small,-0.25,3,0,,,,paid inn comfort denies the test; the worthy do not slumber easy
 Boethiah,333,cook-meal,-,small,-0.25,3,0,,,,domestic ease is the solace of the unworthy; not of strength
 Mephala,364,assault-innocent,+,medium,1.0,2,0.5,,,,the unseen blade laid against the trusting -- her favored violence
 Mephala,2,kill-hostile-humanoid,-,small,-0.25,3,0,,,,the open charge declared -- beneath the web; she keeps no count of it
@@ -300,7 +300,7 @@ sithis,331,enchant-item,-,small,-0.5,3,0,,,,binding power to endure in a made th
 Malacath,302,kill-dragon,+,medium,0.75,1,0.5,,,,felling the mightiest beast is strength's truest proof
 Malacath,344,increase-skill,+,small,0.25,3,0,,,,the outcast hardens himself; strength earned through hardship
 Malacath,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,killing the helpless is the coward's act the strong-god scorns
-Malacath,314,sleep-in-bed,-,small,-0.25,3,0,,,,soft comfort softens the warrior; the exile scorns the warm bed
+Malacath,315,sleep-in-inn,-,small,-0.25,3,0,,,,a soft inn bed softens the warrior; the exile scorns bought comfort
 Tu'whacca,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,,banishing Daedra that prey on souls bound for the Far Shores
 Tu'whacca,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,,a Daedric bargain binds a soul from its proper passage to the Far Shores
 Leki,302,kill-dragon,+,medium,1.0,1,0.5,,,,the impossible foe is the truest test of the perfect cut
@@ -309,7 +309,7 @@ Leki,364,assault-innocent,-,medium,-0.75,2,0.5,,,,striking one who cannot answer
 HoonDing,313,rest-under-open-sky,+,small,0.25,3,0,,,,the traveler's rest on the road; still bound onward with the dawn
 HoonDing,360,pick-owned-lock,+,small,0.25,3,0,,owned,,a lock is a barred way; and no barred way stops the Make Way God
 HoonDing,361,trespass,+,small,0.25,3,0,,,,crossing a threshold meant to bar passage is making way itself
-HoonDing,314,sleep-in-bed,-,small,-0.25,3,0,,,,to settle soft in a bed is to halt; the foe of perseverance onward
+HoonDing,315,sleep-in-inn,-,small,-0.25,3,0,,,,to settle soft in a paid inn bed is to halt; the foe of perseverance onward
 HoonDing,365,raise-undead,-,medium,-0.75,2,0.5,,ActorTypeUndead,,chaining the dead back blocks the way onward they were owed
 Z'en,350,heal-or-cure-npc,+,small,0.5,3,0,,,,tending the hurt repays a debt of care; the ledger set right
 Z'en,344,increase-skill,+,small,0.25,3,0,,,,toil compounds; the laborer repays the world in earned skill
