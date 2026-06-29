@@ -81,3 +81,16 @@ player switch AWAY from Legion-Exile (the Orc sworn-service life mode), excludin
 dawn lapse-to-City (which bypasses `ApplyOrcLifeModeSwitch`). This is a defensible reading of
 "deserted sworn service" but is BEYOND the handoff's literal trigger — owner/Codex should confirm it
 stands or retune. Reversible: drop the one call site in `ApplyOrcLifeModeSwitch` to HOLD it instead.
+
+## REGRESSION caught + reverting (2026-06-29) -- specced_minus 0 -> 11, re-delete handoff issued
+Commit `d6e9f43f` "Close Papyrus cleanup parity gaps" (2026-06-25) **re-added the exact 11 specs this
+decision removed** -- a pure-additive parity sweep (7 deity files, 44 insertions, 0 deletions, still no
+emit sites). `pdv_specced_minus_audit` is back to 11 UNEMITTED (the 9 pantheon-creed + Boethiah
+`TREACHERY` + Malacath `SELF_ERASURE`). This is a regression of a closed item, NOT new content.
+
+Coverage re-verified 2026-06-29 against the live CSVs: every affected deity still carries act-based
+LD dislikes (Arkay 4, Stendarr 6, Magnus 2, Trinimac 5, Xarxes 3, Boethiah 3+2, Malacath 4+4) plus
+decay/neglect -- so re-deletion stays penalty-safe. Correction to section C above: Magnus/Trinimac/Xarxes are
+**no longer pure-positive** (a later LD-enrichment pass gave them 2/5/3 dislikes); the removal is even
+safer than originally assessed. Disposition: **re-delete the 11** (not wire) -- they remain dead specs
+with no in-game trigger. Handoff: `PDV_MinusReDelete_Regression_Handoff_2026-06-29.md`.
