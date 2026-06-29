@@ -1943,7 +1943,7 @@ String Function BuildReorientationJournalLine(String surfaceKey)
     if originRace == ORIGIN_ALTMER
         return "Your soul records where you stand in the Thalmor question: " + surfaceKey + "."
     elseIf originRace == ORIGIN_BRETON
-        return "You chose your tradition today, and it will not be easily swayed: " + surfaceKey + "."
+        return BuildStartupRoadJournalLine(surfaceKey)
     endIf
     return ""
 EndFunction
@@ -14812,6 +14812,13 @@ Function ApplyStartupChoice(Int originRace, Int optionValue, String reason)
     endIf
 EndFunction
 
+String Function BuildStartupRoadJournalLine(String pathLabel)
+    if pathLabel == ""
+        return "You've chosen your road."
+    endIf
+    return "You've chosen your road: " + pathLabel + "."
+EndFunction
+
 Function ApplyBretonInitialChoice(Int traditionValue, String reason)
     Int normalized = ClampInt(traditionValue, 0, 2)
     BeginRaceSetupQuietPresentation(reason)
@@ -14834,7 +14841,7 @@ Function ApplyBretonInitialChoice(Int traditionValue, String reason)
     if traditionDeity
         String traditionLabel = GetBretonTraditionLabel()
         SendPrismaShiftToast("You set your tradition: " + traditionLabel + ".", "", GetPrismaSymbolForDeity(traditionDeity))
-        AppendBookOfDaysEntry("You chose your tradition today, and it will not be easily swayed: " + traditionLabel + ".", Utility.GetCurrentGameTime() as Int, "reorientation", GetPrismaSymbolForDeity(traditionDeity), True, 3)
+        AppendBookOfDaysEntry(BuildStartupRoadJournalLine(traditionLabel), Utility.GetCurrentGameTime() as Int, "reorientation", GetPrismaSymbolForDeity(traditionDeity), True, 3, "", True)
         SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")
     endIf
     EndRaceSetupQuietPresentation()
@@ -14845,6 +14852,7 @@ Function ApplyRedguardInitialChoice(Int sectValue, String reason)
     if PDV_RedguardSectTrack
         Int normalized = ClampInt(sectValue, REDGUARD_SECT_CROWN, REDGUARD_SECT_ASHABAH)
         PDV_RedguardSectTrack.SetState(normalized, reason)
+        AppendBookOfDaysEntry(BuildStartupRoadJournalLine(GetRedguardSectLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "sect", True, 3, "", True)
         ShowRedguardSectEntry(normalized)
     endIf
     StorageUtil.SetIntValue(None, "PDV.Redguard.SetupComplete", 1)
@@ -14855,6 +14863,7 @@ Function ApplyOrcInitialChoice(Int modeValue, String reason)
     BeginRaceSetupQuietPresentation(reason)
     if PDV_OrcLifeModeTrack
         PDV_OrcLifeModeTrack.SetState(ClampInt(modeValue, ORC_LIFE_MODE_CITY, ORC_LIFE_MODE_LEGION_EXILE), reason)
+        AppendBookOfDaysEntry(BuildStartupRoadJournalLine(GetOrcLifeModeLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "malacath", True, 3, "", True)
     endIf
     ; Malacath is the single innate Orc spine (not chosen, not offered) -- activate him as the
     ; patron at origin so the life-mode reward ladder (gated on _activeDeity==PDV_Malacath) is
@@ -14879,6 +14888,11 @@ Function ApplyNordInitialChoice(Int baselineValue, String reason)
     endIf
 
     SetBroadWorship()
+    String baselineLabel = "Old Ways"
+    if normalized == NORD_BASELINE_NINE_DIVINES
+        baselineLabel = "Nine Divines"
+    endIf
+    AppendBookOfDaysEntry(BuildStartupRoadJournalLine(baselineLabel), Utility.GetCurrentGameTime() as Int, "reorientation", "journal", True, 3, "", True)
     StorageUtil.SetIntValue(None, "PDV.Nord.SetupComplete", 1)
     StorageUtil.SetStringValue(None, "PDV.Nord.StartupReason", reason)
     SyncFirstTierRaceRewardRuntime()
@@ -16040,8 +16054,8 @@ EndFunction
 ; (oldest-first). Tone MUST be a key JournalToneToTitle/JournalToneToValence
 ; recognize, or the entry renders without a title/valence. headlinePinned entries
 ; are exempt from the day-window prune so curse/Champion/major-switch beats persist.
-Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String symbol, Bool headlinePinned, Int magnitude = 1, String titleText = "")
-    if IsRaceSetupQuietPresentationActive()
+Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String symbol, Bool headlinePinned, Int magnitude = 1, String titleText = "", Bool allowDuringRaceSetup = False)
+    if IsRaceSetupQuietPresentationActive() && !allowDuringRaceSetup
         return
     endIf
     if line == ""
@@ -16254,7 +16268,16 @@ EndFunction
 
 Function RefreshOpenBookOfDays()
     Int bookOpen = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Open")
-    if bookOpen != 0 && PDV_PrismaBridge.IsAvailable()
+    if bookOpen == 0 || !PDV_PrismaBridge.IsAvailable()
+        return
+    endIf
+
+    if !PDV_PrismaBridge.IsJournalVisible()
+        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
+        return
+    endIf
+
+    if bookOpen != 0
         PDV_PrismaBridge.SendOverlayJson(BuildJournalPayloadJson(0))
     endIf
 EndFunction
@@ -16359,6 +16382,7 @@ EndFunction
 ; app.js handleOverlayPayload already consumes (hides the journal modal). Uses the
 ; unfocused overlay channel, never the focused panel, so no input trap.
 Function ClosePrismaJournal()
+    StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
     if !PDV_PrismaBridge.IsAvailable()
         return
     endIf
@@ -16698,6 +16722,7 @@ Function ApplyBosmerInitialChoice(Int pathState, String reason)
         SetBosmerGreenPactCompliance(0, reason)
         ApplyBosmerPathPatron(pathState, reason)
     endIf
+    AppendBookOfDaysEntry(BuildStartupRoadJournalLine(GetBosmerPathLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", GetBosmerPathSymbol(pathState), True, 3, "", True)
     EndRaceSetupQuietPresentation()
 EndFunction
 

@@ -67,7 +67,7 @@ regardless of load order). Only the preflight changes:
 - **Do:** On a fresh Breton save, take the **startup tradition choice** (or MCM `DebugSetBretonTradition` on a
   fresh state). Then open the panel -> **Chronicle**.
 - **See:** a **toast** -- *"You set your tradition: {tradition}."* -- and a **pinned Book of Days entry** --
-  *"You chose your tradition today, and it will not be easily swayed: {tradition}."* where `{tradition}` is
+  *"You've chosen your road: {tradition}."* where `{tradition}` is
   Knight's Road / Hidden Art / Green Way.
 - **Check the Book of Days line is NOT blank** (a blank line = a wiring bug -> FAIL).
 - **Record:** ___
@@ -76,8 +76,8 @@ regardless of load order). Only the preflight changes:
 - **Do:** After the tradition is set, do an act that belongs to a **different** tradition (e.g. an occult/Hidden
   Art signal while on Knight's Road). Re-open **Survey Devotion**.
 - **See:** the **tradition does NOT switch** (start-locked in 1.0); instead a **cross-tradition pull** line
-  appears in the Survey (*"You are being pulled toward another tradition..."*). The "will not be easily swayed"
-  wording is honest -- pressure accrues but never silently rewrites the tradition. No mid-game switch.
+  appears in the Survey (*"You are being pulled toward another tradition..."*). Pressure accrues but never
+  silently rewrites the tradition. No mid-game switch.
 - **[Dev] log:** a `cross-tradition pressure` trace marker in Papyrus.0.log.
 - **Record:** ___
 
@@ -155,8 +155,7 @@ regardless of load order). Only the preflight changes:
   surfaced in Survey) but do NOT switch the tradition -- a mid-game pressure-switch is deferred. If an
   off-tradition act flips the tradition, that's a regression -> FAIL.
 - **Tradition is NOT a formal-offer race.** It's the startup choice + quiet pressure scaffolding -- there is no
-  accept/refuse offer popup. The "will not be easily swayed" wording is honest because of the
-  cross-tradition-pressure layer.
+  accept/refuse offer popup. Off-tradition acts feed the cross-tradition-pressure layer.
 - **Only Werewolf and Betrayed forks surface.** None and Druidic (the default Green Way fork) are silent by
   design -- no missing toast there.
 - **Substrate lands in the Ledger, not the Book of Days.** If the substrate act leaves the Ledger empty, FAIL

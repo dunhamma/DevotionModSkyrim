@@ -106,7 +106,7 @@ function verifyManager(text, filePath, pass, fail) {
     ["Altmer alignment chronicle", "Your soul records where you stand in the Thalmor question: ", "Altmer committed-band chronicle is present."],
     ["Altmer committed band source", "GetStateLabelAt(PDV_ThalmorAlignmentTrack.GetCommittedStateIndex())", "Altmer band uses committed state rather than raw value."],
     ["Breton tradition toast", "You set your tradition: ", "Breton tradition toast is present."],
-    ["Breton tradition chronicle", "You chose your tradition today, and it will not be easily swayed: ", "Breton tradition chronicle is present."],
+    ["Breton tradition chronicle", "You've chosen your road: ", "Breton tradition chronicle is present."],
     ["Hircine onset chronicle", "The beast-blood took you and stirred Hircine. The Hunt is in you now.", "Hircine werewolf-onset chronicle is present."],
     ["Hircine renunciation chronicle", "Hircine's mark fades from your blood, and the pack is no longer yours.", "Hircine renunciation chronicle is present."],
     ["Redguard Crown chronicle", "The Crown way is more than memory in you now. It has become a public shape of your devotion.", "Redguard Crown Champion-entry chronicle is present."],

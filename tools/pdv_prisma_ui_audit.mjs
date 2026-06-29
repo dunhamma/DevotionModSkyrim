@@ -64,6 +64,17 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     if (name !== "PDV__ManagerQuest.psc" && source.includes("PDV_PrismaBridge.SendJson(")) {
       fail("Non-manager source sends focused panel JSON.", filePath);
     }
+
+    if (
+      name !== "PDV_MCM.psc" &&
+      source.includes('StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)')
+    ) {
+      fail("Only the player-owned MCM/hotkey surface may mark Book of Days open.", filePath);
+    }
+
+    if (name !== "PDV_MCM.psc" && source.includes("SendPrismaJournalPayload(True")) {
+      fail("Only the player-owned MCM/hotkey surface may request the Book of Days modal.", filePath);
+    }
   }
 
   const managerPath = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
@@ -106,6 +117,7 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     }
 
     const journalBlock = functionBlock(manager, "SendPrismaJournalPayload");
+    const refreshJournalBlock = functionBlock(manager, "RefreshOpenBookOfDays");
     if (!journalBlock) {
       fail("SendPrismaJournalPayload function is missing.", managerPath);
     } else {
@@ -141,6 +153,15 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       fail(`SendPrismaMedallionPayload should have no callers; found ${medallionCalls - 1}.`, managerPath);
     } else {
       pass("Medallion modal payload has no live callers.", managerPath);
+    }
+
+    if (
+      !refreshJournalBlock.includes("PDV_PrismaBridge.IsJournalVisible()") ||
+      !refreshJournalBlock.includes('StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)')
+    ) {
+      fail("Book of Days refresh must reconcile stale Papyrus open state against native journal visibility.", managerPath);
+    } else {
+      pass("Book of Days refresh reconciles stale Papyrus open state against native visibility.", managerPath);
     }
   }
 
@@ -194,6 +215,7 @@ if (!fs.existsSync(NATIVE_BRIDGE_SOURCE)) {
   fail("Native Prisma bridge source is missing.", NATIVE_BRIDGE_SOURCE);
 } else {
   const nativeBridge = read(NATIVE_BRIDGE_SOURCE);
+  const journalPayloadDetection = nativeBridge.match(/const bool isJournalPayload[\s\S]*?;/)?.[0] ?? "";
   if (
     !nativeBridge.includes("g_journalVisible") ||
     !nativeBridge.includes("PapyrusIsJournalVisible") ||
@@ -244,6 +266,19 @@ if (!fs.existsSync(NATIVE_BRIDGE_SOURCE)) {
   } else {
     pass("Book of Days close routes converge on CloseJournalSurface.", NATIVE_BRIDGE_SOURCE);
   }
+
+  if (
+    !journalPayloadDetection ||
+    !journalPayloadDetection.includes('a_payload.find("\\"mode\\":\\"journal\\"")') ||
+    !journalPayloadDetection.includes('a_payload.find("\\"journal\\":")') ||
+    !journalPayloadDetection.includes("&&") ||
+    journalPayloadDetection.includes("||") ||
+    nativeBridge.includes('a_payload.find("\\"journal\\"")')
+  ) {
+    fail("Native bridge must require explicit journal mode plus a journal object, not any payload containing a journal key or symbol value.", NATIVE_BRIDGE_SOURCE);
+  } else {
+    pass("Native bridge only marks explicit journal-mode payloads with journal objects as Book of Days visible.", NATIVE_BRIDGE_SOURCE);
+  }
 }
 
 if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
@@ -283,6 +318,18 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     fail("Book of Days ESC handler must bind at window/document capture on keydown and keyup.", DEVOTION_PRISMA_VIEW);
   } else {
     pass("Book of Days ESC handler binds at window/document capture on keydown and keyup.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (
+    !app.includes("const isJournalPayload = (payload)") ||
+    !app.includes('payload.mode === "journal"') ||
+    !app.includes('typeof payload.journal === "object"') ||
+    !app.includes("!Array.isArray(payload.journal)") ||
+    countMatches(app, /if \(isJournalPayload\(payload\)\)/g) < 2
+  ) {
+    fail("Prisma UI must render Book of Days only for explicit journal-mode payloads with journal objects.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Prisma UI renders Book of Days only for explicit journal-mode payloads with journal objects.", DEVOTION_PRISMA_VIEW);
   }
 }
 

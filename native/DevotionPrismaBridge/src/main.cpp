@@ -232,9 +232,12 @@ namespace
 
         g_prisma->Show(g_view);
         g_prisma->InteropCall(g_view, kReceiveOverlayFunction.data(), a_payload.c_str());
+        const bool isJournalPayload =
+            a_payload.find("\"mode\":\"journal\"") != std::string::npos &&
+            a_payload.find("\"journal\":") != std::string::npos;
         if (a_payload.find("\"journalClose\"") != std::string::npos) {
             CloseJournalSurface("papyrus_journal_close");
-        } else if (a_payload.find("\"journal\"") != std::string::npos || a_payload.find("\"mode\":\"journal\"") != std::string::npos) {
+        } else if (isJournalPayload) {
             g_journalVisible = true;
             g_prisma->Focus(g_view, true, false);
         }

@@ -8,8 +8,8 @@
 
 ## Startup Modes
 
-- `explicit_choice`: Breton, Bosmer, Redguard, Orc.
-- `info_only`: Nord, Imperial, Dunmer, Altmer, Khajiit, Argonian.
+- `explicit_choice`: Breton, Bosmer, Redguard, Orc, Nord.
+- `info_only`: Imperial, Dunmer, Altmer, Khajiit, Argonian.
 
 ## Payload Contract
 
@@ -50,3 +50,15 @@
 - Current runtime uses the CK MessageBox path only for startup choice/info
   acknowledgement. Re-enable Prisma startup panels only after that path can own
   input/selection without a simultaneous CK MessageBox.
+
+## Book of Days Rule
+
+- Explicit startup choices write one quiet, pinned Book of Days entry after the
+  player confirms the choice.
+- Canonical startup entry copy is `You've chosen your road: <Path>.`
+- Startup Book of Days entries must not force-open the Prisma panel and must not
+  emit an immediate sound, visual effect, Prisma toast, or intrusive top-left
+  notification.
+- Race setup quiet presentation remains active for setup-time Prisma toasts,
+  transition surfaces, and panel refreshes; only the intentional Book of Days
+  startup entry bypasses that quiet guard.

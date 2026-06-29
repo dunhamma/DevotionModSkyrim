@@ -975,6 +975,14 @@
     return Array.isArray(value) ? value : [value];
   };
 
+  const isJournalPayload = (payload) => (
+    payload &&
+    payload.mode === "journal" &&
+    payload.journal &&
+    typeof payload.journal === "object" &&
+    !Array.isArray(payload.journal)
+  );
+
   const startupModeLabel = (mode) => {
     const normalized = text(mode, "").toLowerCase();
     if (normalized === "explicit_choice") return "Explicit choice";
@@ -1838,7 +1846,7 @@
       renderMedallion(payload.medallion);
     }
 
-    if (payload.journal) {
+    if (isJournalPayload(payload)) {
       renderJournal(payload.journal);
     }
 
@@ -1875,7 +1883,7 @@
       renderMedallion(payload.medallion);
     }
 
-    if (payload.journal) {
+    if (isJournalPayload(payload)) {
       renderJournal(payload.journal);
     }
   };

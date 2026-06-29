@@ -59,7 +59,7 @@ Tradition labels: `Knight's Road` / `Hidden Art` / `Green Way`. Start-locked in 
 forward-compatible with the deferred pressure-switch and honest for 1.0 (verified `:14474-14483`).
 
 - toast: `You set your tradition: {tradition}.`
-- chronicle: `You chose your tradition today, and it will not be easily swayed: {tradition}.`
+- chronicle: `You've chosen your road: {tradition}.`
 
 ## 6. Hircine werewolf-onset (curse-entry)  (curse.onset, Hircine-specific; chronicle; toast already via race-response MESG)
 - chronicle: `The beast-blood took you and stirred Hircine. The Hunt is in you now.`
