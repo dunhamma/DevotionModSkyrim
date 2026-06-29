@@ -1,5 +1,19 @@
 # HO: Daedric Surfacing -- Survey + Book of Days (Codex Handoff, 2026-06-25)
 
+> **D2 CLOSED 2026-06-29 (verify-first pass).** All residual seams are built in
+> the live manager and machine-accepted (commit `3153d8e`, adversarial pass R1-R5
+> PASS): Seam 1.2 pre-pact notice (`ProcessPendingDaedricPrePactNotices`, "The
+> world tilts toward <Prince>", once-fire guard), Seam 1.3 Ledger `watching` tag
+> (`AppendDashboardGod(watchingPath, "watching")` + systems list), Seam 2
+> first-pact activation journal (`ProcessPendingDaedricActivation`, "<Prince>
+> claims your devotion"), and the Fix-1 driver hook (`pdv_ledger_coverage_audit`
+> CLEAN, 0 untracked, daedric driver hook YES). Per this handoff's own rule, no
+> authoring was performed. Remaining work is RUNTIME/MANUAL proof only
+> (play-gated): observe the pre-pact Book-of-Days entry, the Ledger `watching`
+> branch, Survey staying silent pre-pact (by design), and no double-log on
+> first-pact activation. Placeholder copy -> final narrator-voice is the separate
+> post-beta writing pass.
+
 Queue: A2. Decision: D2 (per-race Survey + Book-of-Days must surface Daedric worship like patrons).
 
 ## VERIFY-CURRENT-STATE FIRST (do this before authoring anything)
