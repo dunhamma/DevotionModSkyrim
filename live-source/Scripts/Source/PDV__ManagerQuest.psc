@@ -744,11 +744,6 @@ Event OnUpdate()
     ProcessPendingDaedricPrePactNotices()
     ProcessQueuedPrismaToastRetry()
 
-    if _panelDirty && AutoPushPrismaPanel && PDV_PrismaBridge.IsAvailable()
-        PushDevotionPanel()
-        _panelDirty = False
-    endIf
-
     if DebugCommand != 0
         RunDebugCommand()
     endIf
@@ -1853,9 +1848,8 @@ Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String
 EndFunction
 
 ; --- Main Prisma panel payload ---
-; Full-panel payload pushes are opt-in so gameplay events do not open or keep
-; the Prisma panel visible over live play. RequestPanelRefresh still marks
-; state dirty for deliberate panel debugging/manual refresh flows.
+; The focused Prisma panel is player-owned only. Runtime/gameplay refreshes can
+; mark data dirty, but only an explicit player request may open or focus it.
 Function RequestPanelRefresh()
     _panelDirty = True
 EndFunction
@@ -2002,6 +1996,8 @@ String Function ResolveTransitionJournalLine(String eventClass, String surfaceKe
         return "A rite has grown quiet and needs attention."
     elseIf eventClass == "neglect" && direction == "recover"
         return "You return to a rite you had let fall silent."
+    elseIf eventClass == "creed" && direction == "drop"
+        return "You crossed " + GetJournalDeityName(deityIndex) + "'s creed, and the path recoils."
     endIf
     return ""
 EndFunction
@@ -2063,9 +2059,7 @@ String Function ResolveTransitionJournalSymbol(String eventClass, Int deityIndex
 EndFunction
 
 Bool Function PushDevotionPanel(Bool playerRequested = false)
-    ; AutoPushPrismaPanel gates GAMEPLAY auto-push (default off). A player-pressed hotkey
-    ; passes playerRequested=true to bypass that gate -- it is player-owned, not auto-push.
-    if !AutoPushPrismaPanel && !playerRequested
+    if !playerRequested
         return False
     endIf
 
@@ -2738,6 +2732,7 @@ Function ShowP2BookNotice(String reason, String titleText, String messageText)
     endIf
 
     SendPrismaToast("journal", "good", titleText, messageText)
+    AppendBookOfDaysEntry(messageText, Utility.GetCurrentGameTime() as Int, "favor.act", "journal", False, 1, titleText)
 EndFunction
 
 Bool Function IsP2BookNoticeReason(String reason)
@@ -3201,6 +3196,117 @@ EndFunction
 
 Float Function GetPietyByIndex(Int deityIndex)
     return GetPiety(GetDeityByIndex(deityIndex))
+EndFunction
+
+PDV_DeityBase Function GetShrinePrayerDeityByName(String deityName)
+    if deityName == ""
+        return None
+    endIf
+
+    if deityName == "Kyne"
+        return PDV_Kyne
+    elseIf deityName == "Kynareth"
+        return PDV_Kynareth
+    elseIf deityName == "Khenarthi"
+        return PDV_Khenarthi
+    elseIf deityName == "Akatosh"
+        return PDV_Akatosh
+    elseIf deityName == "Auri-El" || deityName == "Auriel"
+        return PDV_AuriEl
+    elseIf deityName == "Alkosh"
+        return PDV_Alkosh
+    elseIf deityName == "Arkay"
+        return PDV_Arkay
+    elseIf deityName == "Tu'whacca" || deityName == "Tuwhacca"
+        return PDV_Tuwhacca
+    elseIf deityName == "Zenithar"
+        return PDV_Zenithar
+    elseIf deityName == "Z'en" || deityName == "Zen"
+        return PDV_Zen
+    elseIf deityName == "Mara"
+        return PDV_Mara
+    elseIf deityName == "Dibella"
+        return PDV_Dibella
+    elseIf deityName == "Julianos"
+        return PDV_Julianos
+    elseIf deityName == "Stendarr"
+        return PDV_Stendarr
+    elseIf deityName == "Talos"
+        return PDV_Talos
+    endIf
+
+    return GetDeityByName(deityName)
+EndFunction
+
+Function HandleShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String shrineLabel, String sourceId)
+    Bool awarded = False
+    awarded = AwardShrinePrayerToDeityName(primaryDeityName, shrineLabel, sourceId) || awarded
+    awarded = AwardShrinePrayerToDeityName(secondaryDeityName, shrineLabel, sourceId) || awarded
+    awarded = AwardShrinePrayerToDeityName(tertiaryDeityName, shrineLabel, sourceId) || awarded
+
+    if awarded
+        String label = ResolveShrinePrayerJournalLabel(primaryDeityName, secondaryDeityName, tertiaryDeityName, shrineLabel)
+        AppendBookOfDaysEntry("You offered prayer at " + label + "'s shrine.", Utility.GetCurrentGameTime() as Int, "favor.act", "journal", False, 1, "Shrine prayer answered")
+    endIf
+EndFunction
+
+String Function ResolveShrinePrayerJournalLabel(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String shrineLabel)
+    Int originRace = GetPlayerOriginRaceIndex()
+
+    if originRace == ORIGIN_NORD && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Kyne")
+        return "Kyne"
+    endIf
+
+    if originRace == ORIGIN_KHAJIIT
+        if ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Khenarthi")
+            return "Khenarthi"
+        endIf
+        if ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Alkosh")
+            return "Alkosh"
+        endIf
+    endIf
+
+    if originRace == ORIGIN_ALTMER && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Auri-El")
+        return "Auri-El"
+    endIf
+
+    if originRace == ORIGIN_BOSMER
+        if ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Auri-El")
+            return "Auri-El"
+        endIf
+        if ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Z'en")
+            return "Z'en"
+        endIf
+    endIf
+
+    if originRace == ORIGIN_REDGUARD && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Tu'whacca")
+        return "Tu'whacca"
+    endIf
+
+    if shrineLabel != ""
+        return NormalizePublicDeityDisplayText(shrineLabel)
+    endIf
+    return NormalizePublicDeityDisplayText(primaryDeityName)
+EndFunction
+
+Bool Function ShrinePrayerHasAlias(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String aliasName)
+    return primaryDeityName == aliasName || secondaryDeityName == aliasName || tertiaryDeityName == aliasName
+EndFunction
+
+Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel, String sourceId)
+    PDV_DeityBase deity = GetShrinePrayerDeityByName(deityName)
+    if !deity
+        if deityName != "" && GetDebugLevel() >= 1
+            Debug.Trace("[PDV] Shrine prayer skipped unknown deity alias " + deityName + " source " + sourceId)
+        endIf
+        return False
+    endIf
+
+    AwardPiety(deity, 2.0, "shrine_prayer_" + sourceId)
+    if GetDebugLevel() >= 2
+        Debug.Trace("[PDV] Shrine prayer awarded " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
+    endIf
+    return True
 EndFunction
 
 Float Function GetPietyTodayByIndex(Int deityIndex)
@@ -9318,11 +9424,35 @@ Function RunDebugCommand()
         ForceSetPiety(amount)
     elseIf commandId == 7
         DebugAwardCuratedSignalByIndex(deityIndex, DebugSignalType)
+    elseIf commandId == 8
+        DebugClosePrismaSurfaces()
+    elseIf commandId == 9
+        DebugSyncRewardsOnly()
     elseIf GetDebugLevel() >= 1
         Debug.Trace("[PDV] RunDebugCommand ignored unknown command " + commandId)
     endIf
 
     DebugCommand = 0
+EndFunction
+
+Function DebugClosePrismaSurfaces()
+    _panelDirty = False
+    StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
+    if !PDV_PrismaBridge.IsAvailable()
+        return
+    endIf
+    PDV_PrismaBridge.SendOverlayJson("{\"journalClose\":true}")
+    PDV_PrismaBridge.CancelChoice()
+    PDV_PrismaBridge.CloseDevotionPanel()
+EndFunction
+
+Function DebugSyncRewardsOnly()
+    RunDawnApplySpellAndNeglectLayers()
+    _panelDirty = False
+    DebugClosePrismaSurfaces()
+    if GetDebugLevel() >= 1
+        Debug.Trace("[PDV] Debug reward sync complete.")
+    endIf
 EndFunction
 
 Function ForceSetPiety(Float amount)
@@ -9606,9 +9736,10 @@ Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry
         StorageUtil.SetFloatValue(None, "PDV.Devotion.LastActTime", Utility.GetCurrentGameTime())
     endIf
 
-    ; Attribution: record the act that moved a TRACKED god (active patron / Khajiit
-    ; emphasis) into its recent-driver ring for the Devotion dashboard.
-    if reason != "" && appliedAmount != 0.0 && IsDashboardTrackedDeity(deity)
+    ; Attribution: any deity with visible piety movement must carry the reason into
+    ; its recent-driver ring. The dashboard shows every deity with PietyToday, so
+    ; gating this to the active patron leaves broad-pantheon gains unexplained.
+    if appliedAmount != 0.0
         RecordDeityDriver(deity, reason, appliedAmount)
     endIf
 
@@ -9627,21 +9758,6 @@ Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry
     if appliedAmount != 0.0
         RequestPanelRefresh()
     endIf
-EndFunction
-
-; A deity the Devotion dashboard surfaces: the active patron, or (no-offer Khajiit)
-; the focused-emphasis deity. Gates attribution capture so the driver rings stay small.
-Bool Function IsDashboardTrackedDeity(PDV_DeityBase deity)
-    if !deity
-        return false
-    endIf
-    if deity == _activeDeity
-        return true
-    endIf
-    if IsKhajiitOrigin() && deity == GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
-        return true
-    endIf
-    return false
 EndFunction
 
 ; Per-deity recent-driver ring (the acts that recently moved this god), keyed on the
@@ -11622,24 +11738,26 @@ Bool Function IsFirstTierRaceRewardEligible()
     return False
 EndFunction
 
-; Broad-worship floor eligibility: the origin's first-tier reward (the "+10" Health floor --
-; Civic/Tradition/Malacath/Orthodox T1) also grants to a BROAD worshipper, not only an active
-; patron. Mirrors the active path's "earned Seeker before the floor" by gating on the same
-; accumulated-service count the Faithful (T2) reward uses; Seeker-equivalent = 3 acts (half the
-; Faithful gate of 6). Only the four offer/broad-lane origins have a broad lane here.
+; Broad-worship floor eligibility: the origin's first-tier reward also grants to a BROAD
+; worshipper, not only an active patron. Mirrors the active path's "earned Seeker before the
+; floor" by gating on the same accumulated-service count the Faithful (T2) reward uses;
+; Seeker-equivalent = 3 acts (half the Faithful gate of 6). Nord's broad T1 is part of this
+; shared floor helper too; the old runtime excluded it by mistake even though the reward spec
+; and manager property already expose PDV_Bless_Nord_OldWays_T1 as the broad first tier.
 Bool Function IsBroadFloorEligible()
     if GetPatronState() != PATRON_STATE_BROAD
         return False
     endIf
     Int origin = GetPlayerOriginRaceIndex()
-    if origin != ORIGIN_IMPERIAL && origin != ORIGIN_BRETON && origin != ORIGIN_ORC && origin != ORIGIN_ALTMER
+    if origin != ORIGIN_IMPERIAL && origin != ORIGIN_BRETON && origin != ORIGIN_ORC && origin != ORIGIN_ALTMER && origin != ORIGIN_NORD
         return False
     endIf
     return GetBroadFloorServiceCount(origin) >= 3
 EndFunction
 
 ; Accumulated broad-worship service count for the origin's broad lane -- the same accumulator
-; the Faithful/T2 reward gates on at >= 6. Altmer sums its two favor counters.
+; the Faithful/T2 reward gates on at >= 6. Altmer sums its two favor counters; Nord uses the
+; Old Ways broad-state counter that already drives the broad-T2 lane.
 Int Function GetBroadFloorServiceCount(Int origin)
     if origin == ORIGIN_IMPERIAL
         return StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount")
@@ -11649,6 +11767,8 @@ Int Function GetBroadFloorServiceCount(Int origin)
         return StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount")
     elseIf origin == ORIGIN_ALTMER
         return StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count")
+    elseIf origin == ORIGIN_NORD
+        return StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount")
     endIf
     return 0
 EndFunction
@@ -13661,7 +13781,7 @@ Function SendPrismaCurseToast(Int oldState, Int newState)
         j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
     endIf
     if _activeDeity
-        j = j + ",\"deity\":\"" + JsonSafeString(_activeDeity.DeityName) + "\""
+        j = j + ",\"deity\":\"" + JsonSafeString(GetPublicDeityDisplayName(_activeDeity)) + "\""
     endIf
     j = j + "}}"
     PDV_PrismaBridge.SendOverlayJson(j)
@@ -13718,7 +13838,7 @@ Bool Function SendPrismaShiftToast(String shiftMode, String context, String symb
         j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
     endIf
     if _activeDeity
-        j = j + ",\"deity\":\"" + JsonSafeString(_activeDeity.DeityName) + "\""
+        j = j + ",\"deity\":\"" + JsonSafeString(GetPublicDeityDisplayName(_activeDeity)) + "\""
     endIf
     j = j + "}}"
     return SendPrismaToastPayloadOrFallback(j, shiftMode, context, allowFallback)
@@ -15737,6 +15857,11 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
         RecordNordAncestorSpine(reason, multiplier)
         AwardNordRouteFamilySignal(routeFamily, multiplier)
     endIf
+    ; Nord broad/focused survey + reward state should react on the accepted source itself, not wait
+    ; for the next dawn pass. This is especially visible on broad Old Ways T1, which otherwise does
+    ; not appear until ProcessDawn even after the third accepted source has already been read.
+    SyncFirstTierRaceRewardRuntime()
+    RequestPanelRefresh()
     Trace(2, traceLabel + " routed: " + reason)
     return True
 EndFunction
@@ -16211,7 +16336,6 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
 
     PruneBookOfDays()
 
-    RefreshOpenBookOfDays()
 EndFunction
 
 Function RepairBookOfDaysJournalText()
@@ -16381,7 +16505,7 @@ String Function GetJournalByline()
         return "kept by the terms of the pact"
     endIf
     if _activeDeity
-        return "kept for " + _activeDeity.DeityName
+        return "kept for " + GetPublicDeityDisplayName(_activeDeity)
     endIf
     Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_KHAJIIT
@@ -16417,6 +16541,9 @@ Int Function GetJournalMagnitudeForTone(String toneKey)
     if toneKey == "neglect.drop" || toneKey == "neglect.recover"
         return 2
     endIf
+    if toneKey == "creed.drop"
+        return 2
+    endIf
     if toneKey == "dawn.digest"
         return 2
     endIf
@@ -16431,11 +16558,6 @@ Function RefreshOpenBookOfDays()
 
     if !PDV_PrismaBridge.IsJournalVisible()
         StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
-        return
-    endIf
-
-    if bookOpen != 0
-        PDV_PrismaBridge.SendOverlayJson(BuildJournalPayloadJson(0))
     endIf
 EndFunction
 
@@ -16455,6 +16577,9 @@ String Function JournalToneToTitle(String toneKey)
     endIf
     if toneKey == "neglect.recover"
         return "Return to the path"
+    endIf
+    if toneKey == "creed.drop"
+        return "Creed broken"
     endIf
     if toneKey == "emergence.onset"
         return "An emergence"
@@ -16509,6 +16634,9 @@ String Function JournalToneToValence(String toneKey)
         return "warning"
     endIf
     if toneKey == "neglect.drop"
+        return "warning"
+    endIf
+    if toneKey == "creed.drop"
         return "warning"
     endIf
     if toneKey == "daedric.pressure"
@@ -17579,7 +17707,7 @@ EndFunction
 String Function GetNordSurveyBaseText()
     String band = GetCurrentStandingBand()
     if IsNordVampireSuppressed()
-        return "Sovngarde is closed while the thirst remains. Standing: " + band + ". Cure the curse to reopen the road."
+        return "Standing: " + band + ". Sovngarde is closed while the thirst remains. Cure the curse to reopen the road."
     endIf
 
     String contextText = GetNordContextSurveyText()
@@ -17594,20 +17722,20 @@ String Function GetNordSurveyBaseText()
     if GetPatronState() == PATRON_STATE_BROAD
         Int baselineState = GetNordPantheonBaselineState()
         if baselineState == NORD_BASELINE_NINE_DIVINES
-            return "You walk the Nine Divines as a Nord walks them: weather, hearth, hold, and the old breath underneath. Standing: " + band + "." + contextText
+            return "Standing: " + band + ". You walk the Nine Divines as a Nord walks them: weather, hearth, hold, and the old breath underneath." + contextText
         endIf
 
-        return "You honor the Old Ways broadly. Standing: " + band + "." + contextText
+        return "Standing: " + band + ". You honor the Old Ways broadly." + contextText
     endIf
 
     if PDV_HircinePath
         String hircineSummary = PDV_HircinePath.GetPilotSummary()
         if hircineSummary != "missing"
-            return "The hunt pulls at the edge of the Old Ways. Standing: " + band + ". No patron has claimed you, but the beast is listening." + contextText
+            return "Standing: " + band + ". The hunt pulls at the edge of the Old Ways. No patron has claimed you, but the beast is listening." + contextText
         endIf
     endIf
 
-    return "No Nord patron has answered yet. Standing: " + band + ". Keep the rites, and the road will grow clearer." + contextText
+    return "Standing: " + band + ". No Nord patron has answered yet. Keep the rites, and the road will grow clearer." + contextText
 EndFunction
 
 String Function GetNordContextSurveyText()

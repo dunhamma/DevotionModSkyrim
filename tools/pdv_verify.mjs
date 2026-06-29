@@ -4621,13 +4621,13 @@ class Verifier {
       return;
     }
 
-    if (manifest.schema === "pdv.shrine-blessing-neutralization.v2"
-        && manifest.policy === "cure-only"
+    if (manifest.schema === "pdv.shrine-blessing-neutralization.v4"
+        && manifest.policy === "no-vanilla-effect"
         && manifest.presentationPolicy === "override-temple-blessing-message"
         && manifest.output === "main-esp") {
-      this.pass("Shrine blessing neutralization manifest", "Manifest declares cure-only main-ESP normalization plus BlessingMessage prayer text overrides.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
+      this.pass("Shrine blessing neutralization manifest", "Manifest declares no-vanilla-effect main-ESP normalization, BlessingMessage prayer text overrides, shared altar-remove message suppression, and hidden PDV shrine-prayer signals.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
     } else {
-      this.fail("Shrine blessing neutralization manifest", "Manifest must use schema v2, policy cure-only, presentationPolicy override-temple-blessing-message, and output main-esp.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
+      this.fail("Shrine blessing neutralization manifest", "Manifest must use schema v4, policy no-vanilla-effect, presentationPolicy override-temple-blessing-message, and output main-esp.", SHRINE_BLESSING_NEUTRALIZATION_MANIFEST);
       return;
     }
 
@@ -4677,15 +4677,39 @@ class Verifier {
 
       const detail = this.recordDetailsByFormid.get(record.formid) || this.recordDetails.get(target.spellEditorId);
       const effects = Array.isArray(detail?.fields?.Effects) ? detail.fields.Effects : [];
-      const cureEffects = effects.filter((effect) => formidsEqual(effect.BaseEffect, target.expectedCureEffect));
+      const isPdvSignal = target.pdvCureEffect === true;
+      const isPrayerSignal = target.pdvPrayerEffect === true;
+      const prayerEffectEditorId = `PDV_MGEF_ShrinePrayer_${String(target.deity || target.spellEditorId || "Unknown").replace(/[^A-Za-z0-9]/g, "")}`;
+      const prayerRecord = isPrayerSignal
+        ? [...this.recordsByFormid.values()].find((candidate) => candidate.type === "MGEF" && candidate.edid === prayerEffectEditorId)
+        : null;
+      const pdvSignalEffects = effects.filter((effect) => formidsEqual(effect.BaseEffect, target.expectedCureEffect));
+      const prayerSignalEffects = prayerRecord
+        ? effects.filter((effect) => formidsEqual(effect.BaseEffect, prayerRecord.formid))
+        : [];
       const removedEffects = (target.expectedRemovedEffects || [])
         .filter((effectFormId) => effects.some((effect) => formidsEqual(effect.BaseEffect, effectFormId)));
-      if (effects.length === 1 && cureEffects.length === 1 && removedEffects.length === 0) {
-        this.pass("Shrine blessing cure-only readback", `${target.spellEditorId} retains only ${target.expectedCureEffect}.`, PDV_ESP);
+      const expectedEffectCount = (isPdvSignal ? 1 : 0) + (isPrayerSignal ? 1 : 0);
+      const prayerOk = !isPrayerSignal || (prayerRecord && prayerSignalEffects.length === 1);
+      const dunmerSignalOk = !isPdvSignal || pdvSignalEffects.length === 1;
+      if (effects.length === expectedEffectCount && removedEffects.length === 0 && prayerOk && dunmerSignalOk) {
+        if (isPrayerSignal) {
+          this.pass("Shrine prayer signal readback", `${target.spellEditorId} includes hidden once-per-day PDV prayer signal ${prayerEffectEditorId}.`, PDV_ESP);
+        } else {
+          this.pass("Shrine blessing no-effect readback", `${target.spellEditorId} has no vanilla gameplay effects.`, PDV_ESP);
+        }
+      } else if (isPdvSignal && effects.length === expectedEffectCount && pdvSignalEffects.length === 1 && removedEffects.length === 0) {
+        const signalRecord = [...this.recordsByFormid.values()]
+          .find((candidate) => formidsEqual(candidate.formid, target.expectedCureEffect));
+        if (signalRecord?.type === "MGEF") {
+          this.pass("Shrine blessing signal-only readback", `${target.spellEditorId} retains only hidden PDV signal ${target.expectedCureEffect}.`, PDV_ESP);
+        } else {
+          this.fail("Shrine blessing signal-only readback", `${target.spellEditorId} references ${target.expectedCureEffect}, but it is not present as an MGEF.`, PDV_ESP);
+        }
       } else {
         this.fail(
-          "Shrine blessing cure-only readback",
-          `${target.spellEditorId} effects=${effects.length}, cure=${cureEffects.length}, removed-still-present=${removedEffects.join(", ") || "none"}.`,
+          "Shrine blessing no-effect readback",
+          `${target.spellEditorId} effects=${effects.length}, prayer-signal=${prayerSignalEffects.length}, pdv-signal=${pdvSignalEffects.length}, removed-still-present=${removedEffects.join(", ") || "none"}.`,
           PDV_ESP,
         );
       }
@@ -4712,6 +4736,23 @@ class Verifier {
           PDV_ESP,
         );
       }
+    }
+
+    const altarRemoveMessage = manifest.altarRemoveMessage;
+    const expectedAltarRemoveText = manifest.expectedAltarRemoveText;
+    const altarRemoveRecord = [...this.recordsByFormid.values()]
+      .find((candidate) => formidsEqual(candidate.formid, altarRemoveMessage));
+    if (altarRemoveRecord && (altarRemoveRecord.type === "MESG" || altarRemoveRecord.type === "MESSAGE")) {
+      this.pass("Shrine altar-remove message override", `${altarRemoveMessage} is owned by the main ESP for vanilla disease/blessing-removal text suppression.`, PDV_ESP);
+      const altarRemoveDetail = this.recordDetailsByFormid.get(altarRemoveRecord.formid) || this.recordDetails.get(altarRemoveRecord.edid);
+      const actualAltarRemoveText = altarRemoveDetail?.fields?.Description || "";
+      if (actualAltarRemoveText === expectedAltarRemoveText) {
+        this.pass("Shrine altar-remove message text", "Shared vanilla disease/blessing-removal text is blanked.", PDV_ESP);
+      } else {
+        this.fail("Shrine altar-remove message text", `Shared altar-remove message text is "${actualAltarRemoveText}", expected blank suppression text.`, PDV_ESP);
+      }
+    } else {
+      this.fail("Shrine altar-remove message override", `Missing main-ESP MESG override ${altarRemoveMessage}.`, PDV_ESP);
     }
 
     const coveredActivators = Array.isArray(manifest.activatorTargets)

@@ -106,6 +106,34 @@ The bridge calls those functions through Prisma `InteropCall`.
 the view without focusing or pausing the panel path and sends the payload to the
 overlay receiver, which is currently used for transient devotion toasts.
 
+## Surface Ownership Contract
+
+The focused Devotion panel and Book of Days are player-owned surfaces. Gameplay
+events may record state and may send transient overlay toasts, but they must not
+open, focus, refresh, or resurrect either surface. This applies uniformly to all
+race routes, Aedric/ancestor/native deity events, and Daedric Prince paths.
+
+Required invariants:
+
+- `PDV_MCM` is the only Papyrus source allowed to open Book of Days or the
+  focused Devotion panel by player action.
+- `PDV__ManagerQuest.PushDevotionPanel(true)` is the only manager function that
+  may send focused `SendJson` panel data.
+- `AppendBookOfDaysEntry(...)` stores chronicle data only. It must not call the
+  journal payload builder, refresh the modal, or send overlay JSON.
+- Gameplay toast payloads use `mode: "toast"` through the overlay channel.
+  Overlay payloads must clear any stale `panel-visible` DOM state before
+  rendering.
+- Cold overlay sends defer until the Prisma DOM is ready. DOM-ready replay of
+  focused panel JSON only happens for a real pending panel open.
+- The demo dashboard is explicit preview tooling only. It must not auto-render
+  in game when a bridge payload is delayed.
+
+`node .\tools\pdv_prisma_ui_audit.mjs` is the gate for this contract. It
+enumerates the approved focused-panel and overlay sender functions, so new
+race/deity/Prince presentation work has to reuse the existing helpers or update
+the contract deliberately.
+
 ## Toast Fallback Policy
 
 Transient gameplay acknowledgements are Prisma-first. Papyrus should send them

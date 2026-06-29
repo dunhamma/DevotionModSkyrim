@@ -61,26 +61,42 @@ try
 
         var mod = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
         var sourceCache = new Dictionary<string, SkyrimMod>(StringComparer.OrdinalIgnoreCase);
-        var pdvCureKey = ResolvePdvCureEffectKey(mod, manifest!, check, report);
+        var pdvSignalKey = ResolvePdvSignalEffectKey(mod, manifest!, check, report);
+        var prayerSignalKeys = ResolvePrayerSignalEffectKeys(mod, manifest!, check, report);
         foreach (var target in manifest!.baselineSpellTargets!)
         {
-            var isPdvCure = target.pdvCureEffect == true;
-            var cureKey = isPdvCure ? pdvCureKey : ParseFormKey(target.expectedCureEffect!);
+            var isPdvSignal = target.pdvCureEffect == true;
+            var hasPrayerSignal = target.pdvPrayerEffect == true;
+            var signalKey = isPdvSignal ? pdvSignalKey : default;
+            var prayerSignalKey = hasPrayerSignal && prayerSignalKeys.TryGetValue(target.spellEditorId!, out var resolvedPrayerKey)
+                ? resolvedPrayerKey
+                : default;
             var spell = EnsureSpellOverride(mod, sourceCache, target, report, check);
             if (check)
             {
-                CheckCureOnly(spell, target, cureKey, report);
+                CheckNeutralizedSpell(spell, target, signalKey, isPdvSignal, prayerSignalKey, hasPrayerSignal, report);
                 var message = EnsureBlessingMessageOverride(mod, sourceCache, target, report, check);
                 CheckPrayerMessage(message, target, report);
             }
             else
             {
-                NormalizeSpell(spell, target, cureKey, isPdvCure, report);
-                CheckCureOnly(spell, target, cureKey, report);
+                NormalizeSpell(spell, target, signalKey, isPdvSignal, prayerSignalKey, hasPrayerSignal, report);
+                CheckNeutralizedSpell(spell, target, signalKey, isPdvSignal, prayerSignalKey, hasPrayerSignal, report);
                 var message = EnsureBlessingMessageOverride(mod, sourceCache, target, report, check);
                 NormalizePrayerMessage(message, target, report);
                 CheckPrayerMessage(message, target, report);
             }
+        }
+
+        var altarRemoveMessage = EnsureAltarRemoveMessageOverride(mod, sourceCache, manifest!, report, check);
+        if (check)
+        {
+            CheckAltarRemoveMessage(altarRemoveMessage, manifest!, report);
+        }
+        else
+        {
+            NormalizeAltarRemoveMessage(altarRemoveMessage, manifest!, report);
+            CheckAltarRemoveMessage(altarRemoveMessage, manifest!, report);
         }
 
         if (check)
@@ -120,12 +136,12 @@ static ShrineManifest LoadManifest(string manifestPath)
 
 static void ValidateManifest(ShrineManifest manifest)
 {
-    if (manifest.schema != "pdv.shrine-blessing-neutralization.v2")
+    if (manifest.schema != "pdv.shrine-blessing-neutralization.v4")
     {
         throw new InvalidOperationException($"Unexpected shrine manifest schema {manifest.schema ?? "(missing)"}.");
     }
 
-    if (manifest.policy != "cure-only")
+    if (manifest.policy != "no-vanilla-effect")
     {
         throw new InvalidOperationException($"Unsupported shrine normalization policy {manifest.policy ?? "(missing)"}.");
     }
@@ -140,6 +156,11 @@ static void ValidateManifest(ShrineManifest manifest)
         throw new InvalidOperationException($"Unsupported shrine presentation policy {manifest.presentationPolicy ?? "(missing)"}.");
     }
 
+    if (string.IsNullOrWhiteSpace(manifest.altarRemoveMessage) || manifest.expectedAltarRemoveText is null)
+    {
+        throw new InvalidOperationException("Shrine manifest must own the shared altar remove message and expected replacement text.");
+    }
+
     if (manifest.baselineSpellTargets is null || manifest.baselineSpellTargets.Count != 14)
     {
         throw new InvalidOperationException("Shrine manifest must contain exactly fourteen baseline spell targets.");
@@ -150,8 +171,7 @@ static void ValidateManifest(ShrineManifest manifest)
     {
         if (string.IsNullOrWhiteSpace(target.deity)
             || string.IsNullOrWhiteSpace(target.spellFormId)
-            || string.IsNullOrWhiteSpace(target.spellEditorId)
-            || string.IsNullOrWhiteSpace(target.expectedCureEffect))
+            || string.IsNullOrWhiteSpace(target.spellEditorId))
         {
             throw new InvalidOperationException("A shrine baseline spell target is incomplete.");
         }
@@ -170,6 +190,17 @@ static void ValidateManifest(ShrineManifest manifest)
         if (!".!?".Contains(target.expectedPrayerText![^1]))
         {
             throw new InvalidOperationException($"{target.spellEditorId}: expected prayer text must end with terminal punctuation.");
+        }
+
+        if (target.pdvPrayerEffect == true)
+        {
+            if (string.IsNullOrWhiteSpace(target.primaryPrayerDeity)
+                || string.IsNullOrWhiteSpace(target.oncePerDayKey)
+                || string.IsNullOrWhiteSpace(target.signalSourceId)
+                || string.IsNullOrWhiteSpace(target.prayerShrineLabel))
+            {
+                throw new InvalidOperationException($"{target.spellEditorId}: PDV prayer signal requires primaryPrayerDeity, prayerShrineLabel, oncePerDayKey, and signalSourceId.");
+            }
         }
 
         var key = ParseFormKey(target.spellFormId!);
@@ -452,6 +483,63 @@ static void CheckPrayerMessage(Message message, ShrineSpellTarget target, Shrine
     }
 }
 
+static Message EnsureAltarRemoveMessageOverride(
+    SkyrimMod mod,
+    Dictionary<string, SkyrimMod> sourceCache,
+    ShrineManifest manifest,
+    ShrineReport report,
+    bool checkOnly)
+{
+    var formKey = ParseFormKey(manifest.altarRemoveMessage!);
+    var existing = mod.Messages.Records.FirstOrDefault(message => message.FormKey.Equals(formKey));
+    if (existing is not null)
+    {
+        report.Actions.Add($"AltarRemoveMsg: using existing main-ESP override {manifest.altarRemoveMessage}.");
+        return existing;
+    }
+
+    if (checkOnly)
+    {
+        report.Errors.Add($"AltarRemoveMsg: missing main-ESP message override for {manifest.altarRemoveMessage}.");
+        return new Message(formKey, SkyrimRelease.SkyrimSE);
+    }
+
+    var sourceMod = LoadSourceMod(sourceCache, formKey.ModKey.FileName.String);
+    var source = sourceMod.Messages.Records.FirstOrDefault(message => message.FormKey.Equals(formKey))
+        ?? throw new InvalidOperationException($"AltarRemoveMsg: source message {manifest.altarRemoveMessage} not found in {formKey.ModKey.FileName}.");
+    var copy = new Message(formKey, SkyrimRelease.SkyrimSE);
+    CopyMessageSurface(source, copy);
+    mod.Messages.Add(copy);
+    report.Actions.Add($"AltarRemoveMsg: created main-ESP override from {formKey.ModKey.FileName}.");
+    return copy;
+}
+
+static void NormalizeAltarRemoveMessage(Message message, ShrineManifest manifest, ShrineReport report)
+{
+    if (message.FormKey.ModKey.IsNull)
+    {
+        return;
+    }
+
+    message.Description = Tx(manifest.expectedAltarRemoveText!);
+    message.DisplayTime = 0;
+    report.Actions.Add($"AltarRemoveMsg: blanked vanilla disease/blessing-removal text on {manifest.altarRemoveMessage}.");
+}
+
+static void CheckAltarRemoveMessage(Message message, ShrineManifest manifest, ShrineReport report)
+{
+    if (message.FormKey.ModKey.IsNull)
+    {
+        return;
+    }
+
+    var actualText = message.Description?.String ?? "";
+    if (!string.Equals(actualText, manifest.expectedAltarRemoveText, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"AltarRemoveMsg: text is \"{actualText}\", expected blank suppression text.");
+    }
+}
+
 static SkyrimMod LoadSourceMod(Dictionary<string, SkyrimMod> sourceCache, string pluginName)
 {
     if (sourceCache.TryGetValue(pluginName, out var cached))
@@ -470,15 +558,13 @@ static SkyrimMod LoadSourceMod(Dictionary<string, SkyrimMod> sourceCache, string
     return mod;
 }
 
-// PDV detection cure effect: a CureDisease MagicEffect that also carries the
-// PDV_DunmerShrinePrayerEffect ActiveMagicEffect script. The three DLC2 Good-Daedra altar
-// spells use this instead of vanilla 0FBFF5 so that activating the shrine (which casts the
-// neutralized cure spell) fires OnEffectStart and routes the Dunmer outdoor-shrine twilight
-// signal, while still curing disease.
-static FormKey ResolvePdvCureEffectKey(SkyrimMod mod, ShrineManifest manifest, bool checkOnly, ShrineReport report)
+// PDV detection signal: a hidden Script MagicEffect carrying PDV_DunmerShrinePrayerEffect.
+// The three DLC2 Good-Daedra altar spells keep this one hidden signal so the shrine click can
+// route the Dunmer outdoor-shrine twilight hook without curing disease or granting a blessing.
+static FormKey ResolvePdvSignalEffectKey(SkyrimMod mod, ShrineManifest manifest, bool checkOnly, ShrineReport report)
 {
-    var needsPdvCure = (manifest.baselineSpellTargets ?? []).Any(t => t.pdvCureEffect == true);
-    if (!needsPdvCure)
+    var needsPdvSignal = (manifest.baselineSpellTargets ?? []).Any(t => t.pdvCureEffect == true);
+    if (!needsPdvSignal)
     {
         return default;
     }
@@ -487,6 +573,16 @@ static FormKey ResolvePdvCureEffectKey(SkyrimMod mod, ShrineManifest manifest, b
     var existing = mod.MagicEffects.Records.FirstOrDefault(effect => string.Equals(effect.EditorID, editorId, StringComparison.OrdinalIgnoreCase));
     if (existing is not null)
     {
+        if (checkOnly)
+        {
+            CheckDunmerShrineSignalEffect(existing, report);
+        }
+        else
+        {
+            NormalizeDunmerShrineSignalEffect(existing, report);
+            CheckDunmerShrineSignalEffect(existing, report);
+        }
+
         return existing.FormKey;
     }
 
@@ -496,71 +592,242 @@ static FormKey ResolvePdvCureEffectKey(SkyrimMod mod, ShrineManifest manifest, b
         return default;
     }
 
-    return AuthorDunmerShrineCureEffect(mod, report);
+    return AuthorDunmerShrineSignalEffect(mod, report);
 }
 
-static FormKey AuthorDunmerShrineCureEffect(SkyrimMod mod, ShrineReport report)
+static FormKey AuthorDunmerShrineSignalEffect(SkyrimMod mod, ShrineReport report)
 {
     var effect = mod.MagicEffects.AddNew();
     effect.EditorID = "PDV_MGEF_DunmerShrineCure";
+    NormalizeDunmerShrineSignalEffect(effect, report);
+    report.Actions.Add($"PDV_MGEF_DunmerShrineCure: authored hidden PDV_DunmerShrinePrayerEffect signal {ToHousecarl(effect.FormKey)}.");
+    return effect.FormKey;
+}
+
+static void NormalizeDunmerShrineSignalEffect(MagicEffect effect, ShrineReport report)
+{
     effect.FormVersion = 44;
-    effect.Name = "Cure Disease";
-    effect.Flags = MagicEffect.Flag.NoArea | MagicEffect.Flag.NoDuration;
+    effect.Name = "Devotion Shrine Prayer Signal";
+    effect.Flags = MagicEffect.Flag.NoArea
+        | MagicEffect.Flag.NoDuration
+        | MagicEffect.Flag.HideInUI
+        | MagicEffect.Flag.NoHitEvent
+        | MagicEffect.Flag.NoHitEffect;
     effect.BaseCost = 0.0f;
     effect.MagicSkill = ActorValue.None;
     effect.ResistValue = ActorValue.None;
-    effect.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.CureDisease);
+    effect.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.Script);
     effect.CastType = CastType.FireAndForget;
     effect.TargetType = TargetType.Self;
-    effect.VirtualMachineAdapter = new VirtualMachineAdapter
+    effect.VirtualMachineAdapter ??= new VirtualMachineAdapter
     {
         Version = 5,
         ObjectFormat = 2
     };
+    effect.VirtualMachineAdapter.Version = 5;
+    effect.VirtualMachineAdapter.ObjectFormat = 2;
+    effect.VirtualMachineAdapter.Scripts.Clear();
     effect.VirtualMachineAdapter.Scripts.Add(new ScriptEntry
     {
         Name = "PDV_DunmerShrinePrayerEffect",
         Flags = ScriptEntry.Flag.Local
     });
-    report.Actions.Add($"PDV_MGEF_DunmerShrineCure: authored CureDisease + PDV_DunmerShrinePrayerEffect detection effect {ToHousecarl(effect.FormKey)}.");
+    report.Actions.Add("PDV_MGEF_DunmerShrineCure: normalized to hidden script-only shrine signal.");
+}
+
+static void CheckDunmerShrineSignalEffect(MagicEffect effect, ShrineReport report)
+{
+    if (effect.Archetype is not MagicEffectArchetype archetype || archetype.Type != MagicEffectArchetype.TypeEnum.Script)
+    {
+        report.Errors.Add("PDV_MGEF_DunmerShrineCure: expected Script archetype, not CureDisease or another gameplay archetype.");
+    }
+
+    if (!effect.Flags.HasFlag(MagicEffect.Flag.HideInUI))
+    {
+        report.Errors.Add("PDV_MGEF_DunmerShrineCure: expected HideInUI flag.");
+    }
+
+    var hasSignalScript = effect.VirtualMachineAdapter?.Scripts.Any(script => string.Equals(script.Name, "PDV_DunmerShrinePrayerEffect", StringComparison.OrdinalIgnoreCase)) == true;
+    if (!hasSignalScript)
+    {
+        report.Errors.Add("PDV_MGEF_DunmerShrineCure: expected PDV_DunmerShrinePrayerEffect script.");
+    }
+}
+
+static Dictionary<string, FormKey> ResolvePrayerSignalEffectKeys(SkyrimMod mod, ShrineManifest manifest, bool checkOnly, ShrineReport report)
+{
+    var result = new Dictionary<string, FormKey>(StringComparer.OrdinalIgnoreCase);
+    foreach (var target in manifest.baselineSpellTargets ?? [])
+    {
+        if (target.pdvPrayerEffect != true)
+        {
+            continue;
+        }
+
+        var editorId = GetPrayerSignalEditorId(target);
+        var existing = mod.MagicEffects.Records.FirstOrDefault(effect => string.Equals(effect.EditorID, editorId, StringComparison.OrdinalIgnoreCase));
+        if (existing is not null)
+        {
+            if (checkOnly)
+            {
+                CheckPrayerSignalEffect(existing, target, report);
+            }
+            else
+            {
+                NormalizePrayerSignalEffect(existing, target, report);
+                CheckPrayerSignalEffect(existing, target, report);
+            }
+            result[target.spellEditorId!] = existing.FormKey;
+            continue;
+        }
+
+        if (checkOnly)
+        {
+            report.Errors.Add($"{editorId}: missing from framework ESP (run --write first).");
+            continue;
+        }
+
+        var authored = AuthorPrayerSignalEffect(mod, target, report);
+        result[target.spellEditorId!] = authored;
+    }
+
+    return result;
+}
+
+static FormKey AuthorPrayerSignalEffect(SkyrimMod mod, ShrineSpellTarget target, ShrineReport report)
+{
+    var effect = mod.MagicEffects.AddNew();
+    effect.EditorID = GetPrayerSignalEditorId(target);
+    NormalizePrayerSignalEffect(effect, target, report);
+    report.Actions.Add($"{effect.EditorID}: authored hidden PDV_ShrinePrayerEffect signal {ToHousecarl(effect.FormKey)}.");
     return effect.FormKey;
 }
 
-static void NormalizeSpell(Spell spell, ShrineSpellTarget target, FormKey cureKey, bool isPdvCure, ShrineReport report)
+static void NormalizePrayerSignalEffect(MagicEffect effect, ShrineSpellTarget target, ShrineReport report)
 {
-    var cureEntries = spell.Effects.Where(effect => effect.BaseEffect.FormKey.Equals(cureKey)).ToList();
-    if (cureEntries.Count == 1)
+    effect.FormVersion = 44;
+    effect.Name = $"Devotion Shrine Prayer - {target.prayerShrineLabel}";
+    effect.Flags = MagicEffect.Flag.NoArea
+        | MagicEffect.Flag.NoDuration
+        | MagicEffect.Flag.HideInUI
+        | MagicEffect.Flag.NoHitEvent
+        | MagicEffect.Flag.NoHitEffect;
+    effect.BaseCost = 0.0f;
+    effect.MagicSkill = ActorValue.None;
+    effect.ResistValue = ActorValue.None;
+    effect.Archetype = new MagicEffectArchetype(MagicEffectArchetype.TypeEnum.Script);
+    effect.CastType = CastType.FireAndForget;
+    effect.TargetType = TargetType.Self;
+    effect.VirtualMachineAdapter ??= new VirtualMachineAdapter
     {
-        var keepCount = spell.Effects.Count;
-        var preservedCure = CopyEffect(cureEntries[0]);
-        spell.Effects.Clear();
-        spell.Effects.Add(preservedCure);
-        report.Actions.Add($"{target.spellEditorId}: normalized from {keepCount} effect(s) to cure-only.");
+        Version = 5,
+        ObjectFormat = 2
+    };
+    effect.VirtualMachineAdapter.Version = 5;
+    effect.VirtualMachineAdapter.ObjectFormat = 2;
+    effect.VirtualMachineAdapter.Scripts.Clear();
+    effect.VirtualMachineAdapter.Scripts.Add(new ScriptEntry
+    {
+        Name = "PDV_ShrinePrayerEffect",
+        Flags = ScriptEntry.Flag.Local,
+        Properties =
+        {
+            StringProp("PrimaryDeityName", target.primaryPrayerDeity ?? ""),
+            StringProp("SecondaryDeityName", target.secondaryPrayerDeity ?? ""),
+            StringProp("TertiaryDeityName", target.tertiaryPrayerDeity ?? ""),
+            StringProp("ShrineLabel", target.prayerShrineLabel ?? target.deity ?? ""),
+            StringProp("SourceId", target.signalSourceId ?? ""),
+            StringProp("OncePerDayKey", target.oncePerDayKey ?? "")
+        }
+    });
+    report.Actions.Add($"{effect.EditorID}: normalized to hidden once-per-day PDV shrine-prayer signal.");
+}
+
+static void CheckPrayerSignalEffect(MagicEffect effect, ShrineSpellTarget target, ShrineReport report)
+{
+    if (effect.Archetype is not MagicEffectArchetype archetype || archetype.Type != MagicEffectArchetype.TypeEnum.Script)
+    {
+        report.Errors.Add($"{GetPrayerSignalEditorId(target)}: expected Script archetype.");
+    }
+
+    if (!effect.Flags.HasFlag(MagicEffect.Flag.HideInUI))
+    {
+        report.Errors.Add($"{GetPrayerSignalEditorId(target)}: expected HideInUI flag.");
+    }
+
+    var script = effect.VirtualMachineAdapter?.Scripts.FirstOrDefault(candidate => string.Equals(candidate.Name, "PDV_ShrinePrayerEffect", StringComparison.OrdinalIgnoreCase));
+    if (script is null)
+    {
+        report.Errors.Add($"{GetPrayerSignalEditorId(target)}: expected PDV_ShrinePrayerEffect script.");
         return;
     }
 
-    if (isPdvCure && !cureKey.IsNull)
+    CheckStringProperty(script, "PrimaryDeityName", target.primaryPrayerDeity ?? "", GetPrayerSignalEditorId(target), report);
+    CheckStringProperty(script, "SecondaryDeityName", target.secondaryPrayerDeity ?? "", GetPrayerSignalEditorId(target), report);
+    CheckStringProperty(script, "TertiaryDeityName", target.tertiaryPrayerDeity ?? "", GetPrayerSignalEditorId(target), report);
+    CheckStringProperty(script, "ShrineLabel", target.prayerShrineLabel ?? target.deity ?? "", GetPrayerSignalEditorId(target), report);
+    CheckStringProperty(script, "SourceId", target.signalSourceId ?? "", GetPrayerSignalEditorId(target), report);
+    CheckStringProperty(script, "OncePerDayKey", target.oncePerDayKey ?? "", GetPrayerSignalEditorId(target), report);
+}
+
+static void CheckStringProperty(ScriptEntry script, string propertyName, string expected, string owner, ShrineReport report)
+{
+    var prop = script.Properties
+        .OfType<ScriptStringProperty>()
+        .FirstOrDefault(candidate => string.Equals(candidate.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+    if (prop is null || prop.Data != expected)
     {
-        var swapCount = spell.Effects.Count;
-        var template = spell.Effects.FirstOrDefault();
-        var swapped = new Effect
+        report.Errors.Add($"{owner}: property {propertyName} is {prop?.Data ?? "(missing)"}, expected {expected}.");
+    }
+}
+
+static string GetPrayerSignalEditorId(ShrineSpellTarget target)
+{
+    var suffix = new string((target.deity ?? target.spellEditorId ?? "Unknown")
+        .Where(char.IsLetterOrDigit)
+        .ToArray());
+    return $"PDV_MGEF_ShrinePrayer_{suffix}";
+}
+
+static void NormalizeSpell(Spell spell, ShrineSpellTarget target, FormKey signalKey, bool isPdvSignal, FormKey prayerSignalKey, bool hasPrayerSignal, ShrineReport report)
+{
+    var before = spell.Effects.Count;
+    spell.Effects.Clear();
+    if (hasPrayerSignal && !prayerSignalKey.IsNull)
+    {
+        spell.Effects.Add(new Effect
         {
-            BaseEffect = new FormLinkNullable<IMagicEffectGetter>(cureKey),
-            Data = template?.Data is null ? null : new EffectData
+            BaseEffect = new FormLinkNullable<IMagicEffectGetter>(prayerSignalKey),
+            Data = new EffectData
             {
-                Magnitude = template.Data.Magnitude,
-                Area = template.Data.Area,
-                Duration = template.Data.Duration
+                Magnitude = 0.0f,
+                Area = 0,
+                Duration = 0
             },
             Conditions = []
-        };
-        spell.Effects.Clear();
-        spell.Effects.Add(swapped);
-        report.Actions.Add($"{target.spellEditorId}: swapped from {swapCount} effect(s) to PDV cure effect {ToHousecarl(cureKey)}.");
+        });
+    }
+
+    if (isPdvSignal && !signalKey.IsNull)
+    {
+        spell.Effects.Add(new Effect
+        {
+            BaseEffect = new FormLinkNullable<IMagicEffectGetter>(signalKey),
+            Data = new EffectData
+            {
+                Magnitude = 0.0f,
+                Area = 0,
+                Duration = 0
+            },
+            Conditions = []
+        });
+        report.Actions.Add($"{target.spellEditorId}: normalized from {before} effect(s) to hidden PDV shrine signal set.");
         return;
     }
 
-    report.Errors.Add($"{target.spellEditorId}: expected exactly one cure effect {target.expectedCureEffect}, found {cureEntries.Count}.");
+    report.Actions.Add(hasPrayerSignal
+        ? $"{target.spellEditorId}: normalized from {before} effect(s) to hidden PDV shrine-prayer signal."
+        : $"{target.spellEditorId}: normalized from {before} effect(s) to zero gameplay effects.");
 }
 
 static Effect CopyEffect(Effect source)
@@ -578,7 +845,7 @@ static Effect CopyEffect(Effect source)
     };
 }
 
-static void CheckCureOnly(Spell spell, ShrineSpellTarget target, FormKey cureKey, ShrineReport report)
+static void CheckNeutralizedSpell(Spell spell, ShrineSpellTarget target, FormKey signalKey, bool isPdvSignal, FormKey prayerSignalKey, bool hasPrayerSignal, ShrineReport report)
 {
     if (spell.FormKey.ModKey.IsNull)
     {
@@ -590,16 +857,35 @@ static void CheckCureOnly(Spell spell, ShrineSpellTarget target, FormKey cureKey
         report.Errors.Add($"{target.spellEditorId}: override EditorID is {spell.EditorID ?? "(missing)"}.");
     }
 
-    if (spell.Effects.Count != 1)
+    var expectedCount = 0;
+    if (hasPrayerSignal)
     {
-        report.Errors.Add($"{target.spellEditorId}: expected one cure-only effect, found {spell.Effects.Count}.");
+        expectedCount += 1;
+    }
+    if (isPdvSignal)
+    {
+        expectedCount += 1;
+    }
+
+    if (spell.Effects.Count != expectedCount)
+    {
+        report.Errors.Add($"{target.spellEditorId}: expected {expectedCount} hidden PDV signal effect(s), found {spell.Effects.Count}.");
         return;
     }
 
-    var onlyEffect = spell.Effects[0];
-    if (!onlyEffect.BaseEffect.FormKey.Equals(cureKey))
+    if (hasPrayerSignal && !spell.Effects.Any(effect => effect.BaseEffect.FormKey.Equals(prayerSignalKey)))
     {
-        report.Errors.Add($"{target.spellEditorId}: remaining effect is {ToHousecarl(onlyEffect.BaseEffect.FormKey)}, expected {ToHousecarl(cureKey)}.");
+        report.Errors.Add($"{target.spellEditorId}: expected hidden shrine-prayer signal {ToHousecarl(prayerSignalKey)}.");
+    }
+
+    if (isPdvSignal)
+    {
+        if (!spell.Effects.Any(effect => effect.BaseEffect.FormKey.Equals(signalKey)))
+        {
+            report.Errors.Add($"{target.spellEditorId}: expected hidden Dunmer shrine signal {ToHousecarl(signalKey)}.");
+        }
+
+        return;
     }
 }
 
@@ -729,6 +1015,16 @@ static string ToHousecarl(FormKey key) => $"{key.IDString().ToUpperInvariant()}:
 
 static TranslatedString Tx(string value) => new(Language.English, value);
 
+static ScriptStringProperty StringProp(string name, string value)
+{
+    return new ScriptStringProperty
+    {
+        Name = name,
+        Flags = ScriptProperty.Flag.Edited,
+        Data = value
+    };
+}
+
 static string? GetArg(string[] args, string name)
 {
     var index = Array.IndexOf(args, name);
@@ -751,6 +1047,8 @@ sealed class ShrineManifest
     public string? sourcePlugin { get; set; }
     public List<string>? acceptedMasters { get; set; }
     public string? coreCureEffect { get; set; }
+    public string? altarRemoveMessage { get; set; }
+    public string? expectedAltarRemoveText { get; set; }
     public List<ShrineSpellTarget>? baselineSpellTargets { get; set; }
     public List<ShrineActivatorTarget>? activatorTargets { get; set; }
 }
@@ -768,6 +1066,13 @@ sealed class ShrineSpellTarget
     public string? expectedBlessingMessage { get; set; }
     public string? expectedPrayerText { get; set; }
     public bool? pdvCureEffect { get; set; }
+    public bool? pdvPrayerEffect { get; set; }
+    public string? primaryPrayerDeity { get; set; }
+    public string? secondaryPrayerDeity { get; set; }
+    public string? tertiaryPrayerDeity { get; set; }
+    public string? prayerShrineLabel { get; set; }
+    public string? oncePerDayKey { get; set; }
+    public string? signalSourceId { get; set; }
 }
 
 sealed class ShrineActivatorTarget

@@ -179,10 +179,14 @@ EndFunction
 
 Function RegisterJournalHotkey()
     Int savedKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
+    Int savedPanelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
+    if savedKey >= 0 && savedPanelKey == savedKey
+        StorageUtil.SetIntValue(None, "PDV.Panel.Hotkey", -1)
+        savedPanelKey = -1
+    endIf
     if savedKey >= 0
         RegisterForKey(savedKey)
     endIf
-    Int savedPanelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
     if savedPanelKey >= 0
         RegisterForKey(savedPanelKey)
     endIf
@@ -959,6 +963,14 @@ Function OnOptionKeyMapChange(Int a_option, Int a_keyCode, String a_conflictCont
         if oldKey >= 0
             UnregisterForKey(oldKey)
         endIf
+        Int panelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
+        if a_keyCode >= 0 && panelKey == a_keyCode
+            StorageUtil.SetIntValue(None, "PDV.Panel.Hotkey", -1)
+            UnregisterForKey(panelKey)
+            if _oidPanelHotkey >= 0
+                SetKeyMapOptionValue(_oidPanelHotkey, -1, False)
+            endIf
+        endIf
         StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Hotkey", a_keyCode)
         if a_keyCode >= 0
             RegisterForKey(a_keyCode)
@@ -969,6 +981,14 @@ Function OnOptionKeyMapChange(Int a_option, Int a_keyCode, String a_conflictCont
         if oldPanelKey >= 0
             UnregisterForKey(oldPanelKey)
         endIf
+        Int journalKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
+        if a_keyCode >= 0 && journalKey == a_keyCode
+            StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
+            UnregisterForKey(journalKey)
+            if _oidJournalHotkey >= 0
+                SetKeyMapOptionValue(_oidJournalHotkey, -1, False)
+            endIf
+        endIf
         StorageUtil.SetIntValue(None, "PDV.Panel.Hotkey", a_keyCode)
         if a_keyCode >= 0
             RegisterForKey(a_keyCode)
@@ -978,6 +998,36 @@ Function OnOptionKeyMapChange(Int a_option, Int a_keyCode, String a_conflictCont
 EndFunction
 
 Event OnKeyDown(Int a_keyCode)
+    Int journalKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
+    if journalKey >= 0 && a_keyCode == journalKey
+        if !EnsureManagerBinding("journal_hotkey")
+            return
+        endIf
+        ; Book of Days owns its hotkey absolutely. If a user accidentally maps the
+        ; full panel to the same key, the journal path wins and returns here.
+        Int journalState = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Open")
+        Bool journalVisible = PDV_PrismaBridge.IsJournalVisible()
+        if journalVisible
+            StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
+            Debug.Notification("The Book of Days closes.")
+            PDV_Manager.ClosePrismaJournal()
+            return
+        endIf
+
+        if journalState != 0
+            StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
+        endIf
+
+        if Utility.IsInMenuMode()
+            return
+        endIf
+
+        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
+        Debug.Notification("The Book of Days opens.")
+        PDV_Manager.SendPrismaJournalPayload(True)
+        return
+    endIf
+
     Int panelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
     if panelKey >= 0 && a_keyCode == panelKey
         ; Open the focused interactive dashboard panel. A focused panel can't receive the
@@ -997,40 +1047,6 @@ Event OnKeyDown(Int a_keyCode)
         PDV_PrismaBridge.OpenDevotionPanel()
         return
     endIf
-    Int journalKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
-    if a_keyCode != journalKey
-        return
-    endIf
-    if journalKey < 0
-        return
-    endIf
-    if !EnsureManagerBinding("journal_hotkey")
-        return
-    endIf
-    ; Player-pressed toggle: first press opens the rolling Chronicle, second press
-    ; closes it. Query the bridge-visible state as the source of truth, then reconcile
-    ; the StorageUtil mirror. This keeps the key reliable after either key-close or
-    ; X/ESC close from the Prisma view.
-    Int journalState = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Open")
-    Bool journalVisible = PDV_PrismaBridge.IsJournalVisible()
-    if journalVisible
-        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
-        Debug.Notification("The Book of Days closes.")
-        PDV_Manager.ClosePrismaJournal()
-        return
-    endIf
-
-    if journalState != 0
-        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
-    endIf
-
-    if Utility.IsInMenuMode()
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
-    Debug.Notification("The Book of Days opens.")
-    PDV_Manager.SendPrismaJournalPayload(True)
 EndEvent
 
 Function OpenBookOfDaysFromMcm()

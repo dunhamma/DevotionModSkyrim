@@ -73,6 +73,16 @@ Function RouteDunmerOutdoorGoodDaedraShrine(String sourceId)
     Trace(2, "RouteDunmerOutdoorGoodDaedraShrine complete: " + sourceId)
 EndFunction
 
+Function RouteShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String shrineLabel, String sourceId)
+    if !PDV_Manager
+        Trace(1, "RouteShrinePrayer skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    PDV_Manager.HandleShrinePrayer(primaryDeityName, secondaryDeityName, tertiaryDeityName, shrineLabel, "eventbus_" + sourceId)
+    Trace(2, "RouteShrinePrayer complete: " + primaryDeityName + " / " + secondaryDeityName + " / " + tertiaryDeityName)
+EndFunction
+
 Function RouteSleepStop(Actor playerRef, Bool wasInterrupted)
     if !PDV_Manager
         Trace(1, "RouteSleepStop skipped: PDV_Manager not assigned.")

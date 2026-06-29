@@ -156,7 +156,7 @@
     },
     "Orc": {
       "status": "pending",
-      "evidenceSummary": "Tester observations 2026-06-18: Malacath book route, life-mode no-flip gate (single signal does not flip off City; 2-of-7-days + 3-day lock), wrong-origin rejection, generic-source silence, Survey clarity (known editorial dev-language/enum gap -> task #10), reward/stack acceptable. 2026-06-19: life-mode organic sources + Four Holds are now BUILT (PlayerEvents/ActionRouter/EventBus/Manager hooks: stronghold-arrival presence, DA06 Blood-Kin instant major-gate, 9-hold Thane + HousePurchase City, CW02A + Imperial-guarded CWFinale Legion) and compile/verify clean, but RUNTIME PROOF IS PENDING (see orcLifeModeOrganicSources in PDV_Phase20_SourceFillApprovalLedger.json). Still deferred-by-design: Code Holds, Witnessed tranche, oath-break. Reward rebalance shared with task #9. Status held at pending until in-game runtime proof is recorded.",
+      "evidenceSummary": "Tester observations 2026-06-18: Malacath book route, life-mode no-flip gate (single signal does not flip off City; 2-of-7-days + 3-day lock), wrong-origin rejection, generic-source silence, Survey clarity (known editorial dev-language/enum gap -> task #10), reward/stack acceptable. 2026-06-19: life-mode organic sources + Four Holds BUILT (PlayerEvents/ActionRouter/EventBus/Manager hooks: stronghold-arrival presence, DA06 Blood-Kin instant major-gate, 9-hold Thane + HousePurchase City, CW02A + Imperial-guarded CWFinale Legion) and compile/verify clean. 2026-06-29 accepted organic-route promotion gate evidence recorded: stronghold arrival logged OrcLifeMode -> stronghold (location_stronghold), Orc Four Holds routed hold 1, and Orc Stronghold presence routed; CW02A stage 200 logged OrcLifeMode -> legionexile (eventbus_72_po3_queststage_orc_cw02a), Orc Legion or exile service routed, and RouteOrcLegionService complete. Tester confirmed Survey no-flip presentation, Prisma panel, Book of Days/Ledger, Active Effects stack, and close behavior all passed. Still deferred-by-design: Code Holds, Witnessed tranche, oath-break. Reward rebalance shared with task #9.",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
@@ -176,19 +176,19 @@
           "note": "2026-06-04: Tester could not read status because the Prisma startup panel overlapped the CK startup MessageBox; manager patched to suppress Prisma startup payloads during CK-backed startup selection. 2026-06-18: status readable in-game. KNOWN editorial gap -- Survey opens with dev-language/enum phrasing, tracked as task #10. Bucket: manual-acceptance (with named copy gap)."
         },
         "stackSnapshot": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Stronghold forge build and City/Legion exile edge build record mode, Malacath layer, craft/context caps, community recognition, and curse modifier.",
-          "note": "PENDING: the City/Legion exile edge build depends on the life-mode organic sources whose runtime proof is still pending (see immersiveHookProof). Stronghold-side reward/stack read acceptable in 2026-06-18 observations; full mode-stack snapshot deferred until life-mode runtime proof lands (see PDV_RunSheet_Orc_BetaFeel.md). Bucket blocked: manual-acceptance (depends on organic runtime)."
+          "note": "2026-06-29 evidence-recorded for the current Orc packet after organic stronghold + CW02A Legion evidence landed. Tester confirmed Active Effects were correct after the route pass: committed mode remained City after single soft signals, no Stronghold/LegionExile cross-mode bleed was observed, and Prisma/Book of Days surfaces agreed. Bucket: manual-acceptance."
         },
         "manualFeelNote": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "City and Legion/Exile dignity can compete with Stronghold craft/combat without becoming generic smithing.",
-          "note": "PENDING: 'City and Legion/Exile dignity can compete with Stronghold' cannot be proven until the life-mode organic-source runtime proof lands (City/Legion modes not yet runtime-reachable in proof). Bucket blocked: manual-acceptance (depends on organic runtime)."
+          "note": "2026-06-29 evidence-recorded for the current Orc packet: stronghold arrival and CW02A Legion service both read as social-circumstance pressure under the Code while the Survey correctly avoided an instant forced flip from City. Tester confirmed Book of Days and Prisma panel worked, Active Effects were correct, and the remaining feel pass was acceptable. Bucket: manual-acceptance."
         },
         "immersiveHookProof": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Prove Stronghold quality forge, City/self-made dignity, and Legion/Exile service hooks outside QASmoke without raw craft, combat, or faction membership loops.",
-          "note": "2026-06-04: Accepted P2 Malacath book-route log proof via strict manager checker (route/runtime, book lane only). 2026-06-19: life-mode ORGANIC sources + Four Holds BUILT (PlayerEvents/ActionRouter/EventBus/Manager: stronghold-arrival presence, DA06 Blood-Kin instant major-gate, 9-hold Thane + HousePurchase City, CW02A + Imperial-guarded CWFinale Legion) and compile/verify clean, but RUNTIME PROOF IS PENDING (orcLifeModeOrganicSources in PDV_Phase20_SourceFillApprovalLedger.json). PENDING until in-game runtime proof recorded -- see PDV_RunSheet_Orc_BetaFeel.md. Bucket blocked: organic runtime proof."
+          "note": "2026-06-04: Accepted P2 Malacath book-route log proof via strict manager checker (route/runtime, book lane only). 2026-06-19: life-mode ORGANIC sources + Four Holds BUILT (PlayerEvents/ActionRouter/EventBus/Manager: stronghold-arrival presence, DA06 Blood-Kin instant major-gate, 9-hold Thane + HousePurchase City, CW02A + Imperial-guarded CWFinale Legion) and compile/verify clean. 2026-06-29 organic runtime proof recorded outside QASmoke: Route A stronghold arrival logged OrcLifeMode -> stronghold (location_stronghold), Orc Four Holds routed hold 1 count 1, and Orc Stronghold presence routed with multiplier 1.0; Route B CW02A stage 200 logged OrcLifeMode -> legionexile (eventbus_72_po3_queststage_orc_cw02a), Orc Legion or exile service routed with multiplier 1.0, and RouteOrcLegionService complete: 72. Imperial civic service also correctly ignored non-Imperial origin on the same CW02A stage. Bucket: organic route/runtime."
         },
         "assetStatus": {
           "status": "evidence-recorded",
@@ -398,38 +398,44 @@
       }
     },
     "Nord": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
-          "status": "pending",
-          "expected": "Non-Nord origin cannot read Nord broad/focused worship state as native."
+          "status": "evidence-recorded",
+          "expected": "Non-Nord origin cannot read Nord broad/focused worship state as native.",
+          "note": "2026-06-29 manual negative evidence: tester confirmed the Nord P2 book source did not fire under wrong origin. Papyrus.0.log contains the earlier accepted Nord-origin book route markers at 01:42 and 01:46, then no fresh Nord Old Ways/Hircine-Arkay route marker after the wrong-origin check before VM freeze. Bucket: manual negative proof for wrong-origin rejection."
         },
         "genericHookRejection": {
-          "status": "pending",
-          "expected": "Generic travel, generic kills, generic sleep, generic crafting, and repeated shrine activity do not over-trigger Nord rewards."
+          "status": "evidence-recorded",
+          "expected": "Generic travel, generic kills, generic sleep, generic crafting, and repeated shrine activity do not over-trigger Nord rewards.",
+          "note": "2026-06-29 final Nord manual pass: tester confirmed the generic slice passed for travel/kills/sleep/crafting and then repeated shrine activation did not over-trigger Nord rewards or add unwanted Nord route state. A separate vanilla shrine-neutralization regression was found during this shrine check: vanilla shrine script presentation/effect suppression must be migrated from cure-only to no-vanilla-effect. That is tracked as a shrine-system fix, not a Nord route failure."
         },
         "surveyStatusClarity": {
-          "status": "pending",
-          "expected": "Survey/MCM explains broad/focused patron, Talos pressure, Kyne/Hircine interaction, neglect, scar, and contextual favor cap."
+          "status": "evidence-recorded",
+          "expected": "Survey/MCM explains broad/focused patron, Talos pressure, Kyne/Hircine interaction, neglect, scar, and contextual favor cap.",
+          "note": "2026-06-29 final Nord manual pass: revised Survey Devotion wording passed all requested parts after the Old Ways, Hircine/Arkay, Kyne/Talos, neglect, and Talos-focused checks. Tester confirmed the corrected Standing-first ordering and capitalization/readability expectations."
         },
         "stackSnapshot": {
-          "status": "pending",
-          "expected": "Expected Kyne/Talos control build and Hircine/vampire edge build record broad/focused layers, one active favor, neglect/scar, and suppressed dense-hook faucets."
+          "status": "evidence-recorded",
+          "expected": "Expected Kyne/Talos control build and Hircine/vampire edge build record broad/focused layers, one active favor, neglect/scar, and suppressed dense-hook faucets.",
+          "note": "2026-06-29 final Nord manual pass: tester confirmed the stack snapshot passed. Broad Old Ways Active Effects showed the expected ancestor/frost/hardiness stack after the T1 cleanup, focused Talos blessings displayed with the corrected descriptions after legacy spell removal/resync, and the focused/neglect/Talos betrayal checks did not produce duplicate or stale stack rows."
         },
         "manualFeelNote": {
-          "status": "pending",
-          "expected": "Nord remains the fully felt control without becoming noisy or best-supported by hook density alone."
+          "status": "evidence-recorded",
+          "expected": "Nord remains the fully felt control without becoming noisy or best-supported by hook density alone.",
+          "note": "2026-06-29 final Nord manual pass: tester confirmed the revised Survey, stack snapshot, and Talos-focused betrayal/commitment pass. Book of Days/Chronicle and Prisma surfaces were confirmed player-owned after the panel/opening fixes; Nord feels complete for the current beta-feel packet without dense generic hook noise. Separate shrine neutralization remains a system regression outside the Nord feel slot."
         },
         "immersiveHookProof": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Prove Nord broad/focused Old Ways, Kyne/Talos context, and Hircine/Arkay curse-edge immersive hooks outside QASmoke, with dense-hook and stack audit.",
-          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Old Ways and Hircine/Arkay via strict manager checker. First Old Ways attempt fired before origin settled and was correctly ignored; second settled-origin source routed. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Old Ways and Hircine/Arkay via strict manager checker. First Old Ways attempt fired before origin settled and was correctly ignored; second settled-origin source routed. 2026-06-29 refreshed accepted-route proof from Papyrus.0.log and strict manager checker: player.additem 000ED161 1 / Nords Arise! logged Nord Old Ways state routed (eventbus_150_po3_book_nord_old_ways_ancestor) and RouteNordOldWaysState complete: 150; player.additem 000F683F 1 / Totems of Hircine logged Nord Hircine/Arkay edge routed (eventbus_152_po3_book_nord_hircine_arkay_arkay) and RouteNordHircineArkayEdge complete: 152. Bucket: organic route/runtime for the P2 book sources; same-day manual slots for wrong-origin, generic-source silence, revised Survey/status, stack snapshot, and feel are recorded in their dedicated evidence slots."
         },
         "assetStatus": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+          ,"note": "2026-06-29 repo-side asset-status closeout: all three Nord immersive hook contracts in PDV_Phase20_NoInGameProof_Gates.json explicitly set newMeshRequired=false and missingAssetIfRequired=none for broad/focused Old Ways, Kyne/Talos context, and Hircine/Arkay curse-edge routes. No new custom mesh is required for the current Nord beta-feel packet."
         }
       }
     }

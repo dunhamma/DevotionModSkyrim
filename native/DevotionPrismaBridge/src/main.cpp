@@ -230,6 +230,12 @@ namespace
             return false;
         }
 
+        if (!g_domReady) {
+            g_pendingOverlayPayload = a_payload;
+            logs::info("Prisma overlay deferred until DOM ready");
+            return true;
+        }
+
         g_prisma->Show(g_view);
         g_prisma->InteropCall(g_view, kReceiveOverlayFunction.data(), a_payload.c_str());
         const bool isJournalPayload =
@@ -248,7 +254,7 @@ namespace
     {
         logs::info("Prisma DOM ready for view {}", a_view);
         g_domReady = true;
-        if (!g_lastPayload.empty()) {
+        if (g_panelFocusPending && !g_lastPayload.empty()) {
             SendLastPayload();
         }
         // Deferred cold-view panel open: data is now rendered and the ESC/X close is

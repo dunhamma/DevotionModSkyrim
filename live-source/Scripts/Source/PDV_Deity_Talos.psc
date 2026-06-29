@@ -69,7 +69,7 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
 EndFunction
 
 Function OnTierChange(Int oldTier, Int newTier)
-    Parent.OnTierChange(oldTier, newTier)
+    ClearLegacyTalosBoons()
 
     if newTier == TIER_SEEKER
         if GetDebugLevel() >= 1
@@ -87,15 +87,38 @@ Function OnTierChange(Int oldTier, Int newTier)
 EndFunction
 
 Function OnPatronStart()
-    Parent.OnPatronStart()
+    ClearLegacyTalosBoons()
     if GetDebugLevel() >= 1
+        Debug.Trace("[PDV] Talos patron start")
         Debug.Trace("[PDV] Player has chosen Talos as patron.")
     endIf
 EndFunction
 
 Function OnPatronEnd()
-    Parent.OnPatronEnd()
+    ClearLegacyTalosBoons()
     if GetDebugLevel() >= 1
+        Debug.Trace("[PDV] Talos patron end")
         Debug.Trace("[PDV] Player has ceased worshipping Talos.")
     endIf
+EndFunction
+
+Function ClearLegacyTalosBoons()
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+
+    if Boon_Seeker
+        playerRef.RemoveSpell(Boon_Seeker)
+    endIf
+    if Boon_Devoted
+        playerRef.RemoveSpell(Boon_Devoted)
+    endIf
+    if Boon_Champion
+        playerRef.RemoveSpell(Boon_Champion)
+    endIf
+EndFunction
+
+Bool Function ShouldSyncLegacyPatronBoons()
+    return False
 EndFunction

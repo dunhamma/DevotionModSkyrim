@@ -1010,6 +1010,26 @@
     !Array.isArray(payload.journal)
   );
 
+  const normalizeJournalSurveyText = (value) => {
+    const source = text(value, "");
+    const raceNames = new Map([
+      ["nord", "Nord"],
+      ["imperial", "Imperial"],
+      ["breton", "Breton"],
+      ["altmer", "Altmer"],
+      ["bosmer", "Bosmer"],
+      ["dunmer", "Dunmer"],
+      ["khajiit", "Khajiit"],
+      ["argonian", "Argonian"],
+      ["orc", "Orc"],
+      ["redguard", "Redguard"],
+    ]);
+    return source.replace(/^\s*([a-z]+)(?=\s*(?:\||$))/i, (match, race) => {
+      const label = raceNames.get(String(race).toLowerCase());
+      return label ? match.replace(race, label) : match;
+    });
+  };
+
   const startupModeLabel = (mode) => {
     const normalized = text(mode, "").toLowerCase();
     if (normalized === "explicit_choice") return "Explicit choice";
@@ -1299,7 +1319,7 @@
     if (nodes.journalSummary) nodes.journalSummary.textContent = text(journal.summary, "A record of devotional acts since the path began.");
     if (nodes.journalPath) {
       // Race/path info point. Standing lives in the meter below.
-      const survey = text(journal.survey, "").replace(/\s*\|\s*/g, "  \u00b7  ");
+      const survey = normalizeJournalSurveyText(journal.survey).replace(/\s*\|\s*/g, "  \u00b7  ");
       nodes.journalPath.textContent = survey;
       nodes.journalPath.hidden = !survey;
     }
@@ -2114,6 +2134,13 @@
   };
 
   const handleOverlayPayload = (payload) => {
+    // Overlay payloads are runtime surfaces: toasts, Book of Days, startup, or medallion.
+    // They must never reveal the focused dashboard shell. The native bridge has to
+    // Show() the shared Prisma view for toasts, so clear any stale panel-visible state
+    // before rendering the overlay.
+    document.body.classList.remove("panel-visible");
+    document.removeEventListener("keydown", onPanelEsc, true);
+
     if (payload.journalClose) {
       hideJournal();
       return;
@@ -2569,16 +2596,14 @@
     window.setTimeout(() => window.PDVDemo(), 60);
   };
 
-  // ?demo (any form the host preserves) shows the demo immediately. Otherwise, if the
-  // in-game bridge never calls ReceivePDVJson, we're in a browser preview, not the
-  // game -- fall back to the demo so the panel is never blank. In-game the bridge
-  // fires first and this guard short-circuits, leaving real data untouched.
+  // ?demo (any form the host preserves) shows the demo immediately. Do not auto-fall
+  // back to the dashboard when no bridge payload arrives: in-game overlay toasts can
+  // create a cold Prisma view before the first focused panel payload, and an automatic
+  // demo fallback would make a gameplay toast look like the panel opened itself.
   const demoRequested = window.location.search.toLowerCase().includes("demo")
     || window.location.hash.toLowerCase().includes("demo")
     || /[?&#]demo\b/i.test(window.location.href);
   if (demoRequested) {
     enableDemo();
-  } else {
-    window.setTimeout(() => { if (!bridgeReceived) enableDemo(); }, 700);
   }
 })();

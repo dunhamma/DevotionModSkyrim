@@ -351,6 +351,10 @@ EndFunction
 Function SyncPatronBoonsToTier(Int tierValue)
     ClearAllBoons()
 
+    if !ShouldSyncLegacyPatronBoons()
+        return
+    endIf
+
     if tierValue >= TIER_SEEKER && Boon_Seeker
         Game.GetPlayer().AddSpell(Boon_Seeker, False)
     endIf
@@ -372,6 +376,10 @@ Function ClearAllBoons()
     if Boon_Champion
         Game.GetPlayer().RemoveSpell(Boon_Champion)
     endIf
+EndFunction
+
+Bool Function ShouldSyncLegacyPatronBoons()
+    return True
 EndFunction
 
 Float Function ResolveTrackMultiplier(PDV_ReputationTrack track, Float[] configuredMultipliers, Bool isGain)

@@ -77,3 +77,7 @@ Function OnPatronEnd()
         Debug.Trace("[PDV] Player has ceased worshipping Auri-El.")
     endIf
 EndFunction
+
+Bool Function ShouldSyncLegacyPatronBoons()
+    return False
+EndFunction

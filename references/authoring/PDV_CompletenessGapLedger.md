@@ -6,7 +6,7 @@ GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, 
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
 Verdicts: PASS=361 | NEEDS-MANUAL=293 | GAP-REVIEW=53 | FUTURE=59 | WAIVED=2
-Layers: source=live; esp=1727 EditorIDs; runtime=read-only from gate ledger.
+Layers: source=live; esp=1728 EditorIDs; runtime=read-only from gate ledger.
 
 ## GAP-REVIEW (53)
 

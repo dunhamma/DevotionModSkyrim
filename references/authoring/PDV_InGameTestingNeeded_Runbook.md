@@ -1,8 +1,8 @@
 # PDV In-Game Testing Needed Runbook
 
 **Created:** 2026-06-10  
-**Status:** Active manual/runtime handoff after Nord startup/Requiem-tail readback closeout and Ash'abah cleared-site hook
-**Companions:** `PDV_RunSheet_*_BetaFeel.md`, `PDV_BetaTestPacket_*.md` (historical/source notes), `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_SessionHandoff_BosmerRuntimeFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
+**Status:** Active manual/runtime handoff after Breton, Orc, and Nord final-run closeout; strict audit now blocks on Imperial and Dunmer race evidence
+**Companions:** `PDV_RunSheet_*_BetaFeel.md`, `PDV_BetaTestPacket_*.md` (historical/source notes), `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_2026-06-29_PreBetaRaceCloseout.md`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_SessionHandoff_BosmerRuntimeFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
 
 ## Purpose
 
@@ -45,6 +45,18 @@ compile-clean. Use MCM Debug -> `Talos betrayal -2` / `Talos betrayal -3` on a
 focused Talos path to prove piety loss, surfacing, anti-repeat, and Imperial
 Concordat raw movement. Organic quest/dialogue detection for betrayal beats is
 not implemented yet and must stay a follow-on, not a smoke-test blocker.
+
+2026-06-29 handoff note: Breton Hidden Art, Orc organic life-mode, and Nord
+final-run packets are recorded for the current beta-feel scope. Nord received
+several runtime fixes during final testing: Book of Days/Prisma surfaces are
+player-owned only, broad Old Ways T1 syncs without a dawn delay, Talos/Kyne
+display casing is normalized, legacy overlapping boons are cleared/opted out
+for manager-owned race rewards, dashboard piety drivers are not active-patron
+gated, and vanilla shrine use is neutralized to no vanilla blessing/cure while
+feeding hidden once-per-day PDV shrine-prayer signals. Kynareth/Kyne/Khenarthi,
+Akatosh/Auri-El/Alkosh, Arkay/Tu'whacca, Zenithar/Z'en, and Auriel/Akatosh
+share backend shrine piety where configured; Book of Days writes only the
+player-origin-appropriate deity name for the line.
 
 ## Preflight Before Opening Skyrim
 
@@ -92,9 +104,9 @@ audit passes.
 
 ## Current Last-Pass Blocker Snapshot
 
-As of the 2026-06-10 sweep, the active beta-feel blockers are manual/runtime
-evidence only. Readback and verifier gates are necessary preflight, but they do
-not close these rows.
+As of the 2026-06-29 strict audit, the active race beta-feel blockers are
+manual/runtime evidence only for Imperial and Dunmer. Readback and verifier
+gates are necessary preflight, but they do not close these rows.
 
 Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 
@@ -102,14 +114,14 @@ Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 | --- | --- |
 | Altmer | none for current beta packet; final-world placement remains separate |
 | Khajiit | none for current beta packet; final-world placement remains separate |
-| Argonian | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Argonian | none for current beta packet; final-world placement remains separate |
 | Bosmer | none for current beta packet; final-world placement remains separate |
 | Breton | none for current Hidden Art packet; optional `ExposureRupture` edge once an MCM band setter exists; Knight's Road/Green Way remain deferred V1 arms |
 | Dunmer | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
 | Imperial | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
-| Nord | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
-| Orc | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
-| Redguard | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Nord | none for current beta packet; final-world placement remains separate |
+| Orc | none for current organic life-mode packet; Code Holds, Witnessed tranche, oath-break, and final-world placement remain separate |
+| Redguard | none for current beta packet; final-world placement remains separate |
 
 Daedric ledger blockers from `PDV_DaedricRuntimeEvidenceLedger.json`:
 

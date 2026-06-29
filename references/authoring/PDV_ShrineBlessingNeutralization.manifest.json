@@ -1,7 +1,7 @@
 {
-  "schema": "pdv.shrine-blessing-neutralization.v2",
-  "status": "records-authored-readback-pass-runtime-proven-20260619-stat-suppressed; presentation v2 replaces TempleBlessingScript/DLC2TempleShrineScript BlessingMessage text with PDV prayer language while keeping shrine spell effects cure-only",
-  "policy": "cure-only",
+  "schema": "pdv.shrine-blessing-neutralization.v4",
+  "status": "records-authored-readback-pass-runtime-proven-20260629-vanilla-effects-suppressed; presentation v4 replaces TempleBlessingScript/DLC2TempleShrineScript BlessingMessage text with PDV prayer language, blanks the shared vanilla altar-remove message, removes vanilla shrine spell gameplay effects, and adds hidden once-per-day PDV shrine-prayer piety signals for supported deity/aspect ledgers",
+  "policy": "no-vanilla-effect",
   "presentationPolicy": "override-temple-blessing-message",
   "presentationSurface": "TempleBlessingScript/DLC2TempleShrineScript BlessingMessage.Show()",
   "output": "main-esp",
@@ -12,6 +12,8 @@
     "Dragonborn.esm"
   ],
   "coreCureEffect": "0FBFF5:Skyrim.esm",
+  "altarRemoveMessage": "10E4F9:Skyrim.esm",
+  "expectedAltarRemoveText": "",
   "baselineSpellTargets": [
     {
       "deity": "Akatosh",
@@ -22,7 +24,14 @@
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
       "expectedRemovedEffects": ["0FB989:Skyrim.esm"],
       "expectedBlessingMessage": "10A287:Skyrim.esm",
-      "expectedPrayerText": "You pray at Akatosh's shrine."
+      "expectedPrayerText": "You pray at Akatosh's shrine.",
+      "pdvPrayerEffect": true,
+      "primaryPrayerDeity": "Akatosh",
+      "secondaryPrayerDeity": "Auri-El",
+      "tertiaryPrayerDeity": "Alkosh",
+      "prayerShrineLabel": "Akatosh",
+      "oncePerDayKey": "PDV.ShrinePrayer.Akatosh",
+      "signalSourceId": "vanilla_shrine_akatosh"
     },
     {
       "deity": "Arkay",
@@ -33,7 +42,13 @@
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
       "expectedRemovedEffects": ["0FB98D:Skyrim.esm"],
       "expectedBlessingMessage": "10A288:Skyrim.esm",
-      "expectedPrayerText": "You pray at Arkay's shrine."
+      "expectedPrayerText": "You pray at Arkay's shrine.",
+      "pdvPrayerEffect": true,
+      "primaryPrayerDeity": "Arkay",
+      "secondaryPrayerDeity": "Tu'whacca",
+      "prayerShrineLabel": "Arkay",
+      "oncePerDayKey": "PDV.ShrinePrayer.Arkay",
+      "signalSourceId": "vanilla_shrine_arkay"
     },
     {
       "deity": "Dibella",
@@ -44,7 +59,12 @@
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
       "expectedRemovedEffects": ["0FB98A:Skyrim.esm"],
       "expectedBlessingMessage": "10A289:Skyrim.esm",
-      "expectedPrayerText": "You pray at Dibella's shrine."
+      "expectedPrayerText": "You pray at Dibella's shrine.",
+      "pdvPrayerEffect": true,
+      "primaryPrayerDeity": "Dibella",
+      "prayerShrineLabel": "Dibella",
+      "oncePerDayKey": "PDV.ShrinePrayer.Dibella",
+      "signalSourceId": "vanilla_shrine_dibella"
     },
     {
       "deity": "Julianos",
@@ -55,7 +75,12 @@
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
       "expectedRemovedEffects": ["0FB98E:Skyrim.esm"],
       "expectedBlessingMessage": "10A28A:Skyrim.esm",
-      "expectedPrayerText": "You pray at Julianos' shrine."
+      "expectedPrayerText": "You pray at Julianos' shrine.",
+      "pdvPrayerEffect": true,
+      "primaryPrayerDeity": "Julianos",
+      "prayerShrineLabel": "Julianos",
+      "oncePerDayKey": "PDV.ShrinePrayer.Julianos",
+      "signalSourceId": "vanilla_shrine_julianos"
     },
     {
       "deity": "Kynareth",
@@ -66,7 +91,14 @@
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
       "expectedRemovedEffects": ["0FB98F:Skyrim.esm"],
       "expectedBlessingMessage": "10A28B:Skyrim.esm",
-      "expectedPrayerText": "You pray at Kynareth's shrine."
+      "expectedPrayerText": "You pray at Kynareth's shrine.",
+      "pdvPrayerEffect": true,
+      "primaryPrayerDeity": "Kynareth",
+      "secondaryPrayerDeity": "Kyne",
+      "tertiaryPrayerDeity": "Khenarthi",
+      "prayerShrineLabel": "Kynareth",
+      "oncePerDayKey": "PDV.ShrinePrayer.Kynareth",
+      "signalSourceId": "vanilla_shrine_kynareth"
     },
     {
       "deity": "Mara",
@@ -77,7 +109,12 @@
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
       "expectedRemovedEffects": ["0FB990:Skyrim.esm"],
       "expectedBlessingMessage": "10A28C:Skyrim.esm",
-      "expectedPrayerText": "You pray at Mara's shrine."
+      "expectedPrayerText": "You pray at Mara's shrine.",
+      "pdvPrayerEffect": true,
+      "primaryPrayerDeity": "Mara",
+      "prayerShrineLabel": "Mara",
+      "oncePerDayKey": "PDV.ShrinePrayer.Mara",
+      "signalSourceId": "vanilla_shrine_mara"
     },
     {
       "deity": "Nocturnal",
@@ -100,7 +137,12 @@
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
       "expectedRemovedEffects": ["0FB991:Skyrim.esm"],
       "expectedBlessingMessage": "10A28D:Skyrim.esm",
-      "expectedPrayerText": "You pray at Stendarr's shrine."
+      "expectedPrayerText": "You pray at Stendarr's shrine.",
+      "pdvPrayerEffect": true,
+      "primaryPrayerDeity": "Stendarr",
+      "prayerShrineLabel": "Stendarr",
+      "oncePerDayKey": "PDV.ShrinePrayer.Stendarr",
+      "signalSourceId": "vanilla_shrine_stendarr"
     },
     {
       "deity": "Talos",
@@ -111,7 +153,12 @@
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
       "expectedRemovedEffects": ["0FB992:Skyrim.esm"],
       "expectedBlessingMessage": "10A28E:Skyrim.esm",
-      "expectedPrayerText": "You pray at Talos' shrine."
+      "expectedPrayerText": "You pray at Talos' shrine.",
+      "pdvPrayerEffect": true,
+      "primaryPrayerDeity": "Talos",
+      "prayerShrineLabel": "Talos",
+      "oncePerDayKey": "PDV.ShrinePrayer.Talos",
+      "signalSourceId": "vanilla_shrine_talos"
     },
     {
       "deity": "Zenithar",
@@ -122,7 +169,13 @@
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
       "expectedRemovedEffects": ["0FB993:Skyrim.esm"],
       "expectedBlessingMessage": "10A28F:Skyrim.esm",
-      "expectedPrayerText": "You pray at Zenithar's shrine."
+      "expectedPrayerText": "You pray at Zenithar's shrine.",
+      "pdvPrayerEffect": true,
+      "primaryPrayerDeity": "Zenithar",
+      "secondaryPrayerDeity": "Z'en",
+      "prayerShrineLabel": "Zenithar",
+      "oncePerDayKey": "PDV.ShrinePrayer.Zenithar",
+      "signalSourceId": "vanilla_shrine_zenithar"
     },
     {
       "deity": "Auriel",
@@ -133,7 +186,13 @@
       "expectedCureEffect": "0FBFF5:Skyrim.esm",
       "expectedRemovedEffects": ["011362:Dawnguard.esm"],
       "expectedBlessingMessage": "01139D:Dawnguard.esm",
-      "expectedPrayerText": "You pray at Auriel's shrine."
+      "expectedPrayerText": "You pray at Auriel's shrine.",
+      "pdvPrayerEffect": true,
+      "primaryPrayerDeity": "Auri-El",
+      "secondaryPrayerDeity": "Akatosh",
+      "prayerShrineLabel": "Auri-El",
+      "oncePerDayKey": "PDV.ShrinePrayer.AuriEl",
+      "signalSourceId": "vanilla_shrine_auriel"
     },
     {
       "deity": "Azura",

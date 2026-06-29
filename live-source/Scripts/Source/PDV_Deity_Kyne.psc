@@ -100,3 +100,7 @@ Function OnPatronEnd()
         Debug.Trace("[PDV] Player has ceased worshipping Kyne.")
     endIf
 EndFunction
+
+Bool Function ShouldSyncLegacyPatronBoons()
+    return False
+EndFunction
