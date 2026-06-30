@@ -73,7 +73,18 @@ Try generic kindness, trade, theft, forest travel, hunting, plant harvesting, an
 - Prisma/top-left surfaces as toast/fallback only; no forced full panel.
 - Devotion panel opens manually, Ledger shows the accepted source row, ESC closes.
 
-### 6. Save/load
+### 6. Shared Daedric Inn-Sleep Proof
+
+This is cross-race backend smoke, not Bosmer-native DA05 proof. It may be recorded once per build and referenced from the other race sheets.
+
+1. MCM Debug -> `Debug: Daedric & Curse`; use `Selected Prince` to choose Sanguine or Namira.
+2. Select `Reset Prince path`, then `Force Seeker`.
+3. Sleep in a non-inn bed. Expected: no `PrinceV2: <Prince> event 314 deepen -0.25`, and `Show Prince summary` does not drop from sleep.
+4. Sleep in an inn. Expected: `PrinceV2: <Prince> event 315 deepen -0.25`, and the summary piety drops by the inn-sleep dislike.
+5. Positive control: choose Vaermina, Peryite, or Azura, `Reset Prince path`, `Force Seeker`, then sleep in a non-inn bed. Expected: `event 314` still gives the positive sleep credit.
+6. Record the Papyrus `PrinceV2` lines and before/after `Show Prince summary` piety.
+
+### 7. Save/load
 
 Save after the accepted branch and visible stack. Reload. Survey and Active Effects remain consistent.
 
@@ -92,6 +103,6 @@ Expected: eight QASmoke route markers only. This is not the DA05 proof.
 | Wrong-origin silence | | |
 | Generic-source silence | | |
 | Survey/Active Effects/neglect | | |
+| Shared Daedric inn-sleep proof | | |
 | Prisma toast/panel/Ledger | | |
 | Save/load | | |
-

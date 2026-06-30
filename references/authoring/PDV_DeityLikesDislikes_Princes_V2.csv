@@ -37,11 +37,11 @@ Daedric:Peryite,330,smith-item,+,small,0.25,3,0,PathOpen,,humble labor kept in i
 Daedric:Peryite,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,curing affliction undoes the order he imposes; bearing disease is the Peryite faucet
 Daedric:Sanguine,333,cook-meal,+,small,0.25,3,0,PathOpen,,the feast and the table he blesses
 Daedric:Sanguine,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Sanguine Rose in hand
-Daedric:Sanguine,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,sober rest cut the revel short; drinking is the Sanguine faucet
+Daedric:Sanguine,315,sleep-in-inn,-,small,-0.25,3,0,PathOpen,,sober rest cut the revel short; drinking is the Sanguine faucet
 Daedric:Sheogorath,345,discover-location,+,small,0.5,3,0,PathOpen,,novelty delights the Madgod
 Daedric:Sheogorath,343,learn-word-of-power,+,small,0.25,3,0,PathOpen,,a new shiny thing for the collection
 Daedric:Sheogorath,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Wabbajack waved
-Daedric:Sheogorath,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,the predictable bores him; rows kept deliberately eclectic
+Daedric:Sheogorath,315,sleep-in-inn,-,small,-0.25,3,0,PathOpen,,the predictable bores him; rows kept deliberately eclectic
 Daedric:Vaermina,314,sleep-in-bed,+,small,0.5,3,0,PathOpen,,she visits the sleeper and harvests the dream
 Daedric:Vaermina,342,read-lore-book,+,small,0.5,3,0,PathOpen,,dream-secrets and forbidden lore
 Daedric:Vaermina,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,the Skull of Corruption claimed
@@ -52,7 +52,7 @@ Daedric:Clavicus Vile,362,steal-item,-,small,-0.25,3,0,PathOpen,,a deal is struc
 Daedric:Mehrunes Dagon,364,assault-innocent,+,small,0.5,3,0,PathOpen,,terror serves the cleansing fire
 Daedric:Mehrunes Dagon,330,smith-item,-,small,-0.25,3,0,PathOpen,,what is built is one more thing to be unbuilt
 Daedric:Hircine,302,kill-dragon,+,small,0.5,3,0,PathOpen,,the greatest prey honors the Huntsman
-Daedric:Hircine,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,the hunter beds rough, not soft
+Daedric:Hircine,315,sleep-in-inn,-,small,-0.25,3,0,PathOpen,,the hunter beds rough, not soft
 Daedric:Meridia,364,assault-innocent,-,small,-0.5,3,0,PathOpen,,her light is no license for cruelty
 Daedric:Meridia,313,rest-under-open-sky,+,small,0.25,3,0,PathOpen,,rest beneath the open sun she rules
 Daedric:Molag Bal,362,steal-item,+,small,0.25,3,0,PathOpen,owned,the strong take what they will
@@ -101,7 +101,7 @@ Daedric:Malacath,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTy
 Daedric:Mehrunes Dagon,300,kill-undead,+,small,0.5,3,0,PathOpen,ActorTypeUndead,what clings past its ending is dragged into the ruin it earned
 Daedric:Mehrunes Dagon,344,increase-skill,+,small,0.25,3,0,PathOpen,,the Prince of ambition rewards the drive to seize ever greater power
 Daedric:Mehrunes Dagon,331,enchant-item,-,small,-0.25,3,0,PathOpen,,binding power to endure in a thing offends the principle of unmaking
-Daedric:Mehrunes Dagon,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,settled comfort in the hearth is the order he means to burn down
+Daedric:Mehrunes Dagon,315,sleep-in-inn,-,small,-0.25,3,0,PathOpen,,settled comfort in the hearth is the order he means to burn down
 Daedric:Meridia,304,murder-defenseless,-,medium,-0.75,2,0.5,PathOpen,,snuffing out innocent life is the deepest affront to the Lady of Light
 Daedric:Meridia,303,kill-animal-noncombat,-,small,-0.25,3,0,PathOpen,,needless slaughter of the living dims the light she champions
 Daedric:Nocturnal,331,enchant-item,+,small,0.5,3,0,PathOpen,,shadow and luck bound into a thing; the Nightingale's unseen craft
@@ -118,7 +118,7 @@ Daedric:Molag Bal,365,raise-undead,+,medium,0.75,2,0.5,PathOpen,ActorTypeUndead,
 Daedric:Molag Bal,2,kill-hostile-humanoid,+,small,0.5,3,0,PathOpen,,the strong crush the two-legged; domination proven by force
 Daedric:Molag Bal,360,pick-owned-lock,+,small,0.25,3,0,PathOpen,owned,no ward holds against the dominator; he forces what another would keep
 Daedric:Molag Bal,361,trespass,+,small,0.25,3,0,PathOpen,,no threshold bars the master; he enters where he wills
-Daedric:Molag Bal,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,soft rest is the slave's consolation; he scorns the comfort of the bed
+Daedric:Molag Bal,315,sleep-in-inn,-,small,-0.25,3,0,PathOpen,,soft rest is the slave's consolation; he scorns the comfort of the bed
 Daedric:Hermaeus Mora,331,enchant-item,+,small,0.5,3,0,PathOpen,,arcane secret bound into form -- hoarded knowledge made manifest
 Daedric:Hermaeus Mora,332,brew-potion,+,small,0.25,3,0,PathOpen,,the hidden properties of things distilled -- applied secret-lore
 Daedric:Hermaeus Mora,334,harvest-ingredient,+,small,0.25,3,0,PathOpen,,each gathered specimen is one more thing catalogued and known
@@ -126,7 +126,7 @@ Daedric:Namira,365,raise-undead,+,medium,1.0,1,0.5,PathOpen,ActorTypeUndead,unde
 Daedric:Namira,362,steal-item,+,small,0.5,3,0,PathOpen,owned,the cast-out take the leavings of the respectable; their kept things are hers
 Daedric:Namira,360,pick-owned-lock,+,small,0.25,3,0,PathOpen,owned,the shut-away places open to the outcast; no ward keeps the dark out
 Daedric:Namira,333,cook-meal,-,small,-0.25,3,0,PathOpen,,the clean hearth-table is the comfort of the respectable; not her hunger
-Daedric:Namira,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,she belongs in the dark beneath; not the soft kept bed of the cared-for
+Daedric:Namira,315,sleep-in-inn,-,small,-0.25,3,0,PathOpen,,she belongs in the dark beneath; not the soft kept bed of the cared-for
 Daedric:Sheogorath,331,enchant-item,+,small,0.5,3,0,PathOpen,,one thing made into another -- transformation is the Wabbajack's own joke
 Daedric:Sheogorath,302,kill-dragon,+,small,0.5,3,0,PathOpen,,the magnificently absurd -- nothing predictable about slaying a dragon
 Daedric:Sheogorath,350,heal-or-cure-npc,+,small,0.25,3,0,PathOpen,,mending on a whim -- the Wabbajack heals as gladly as it harms
@@ -157,5 +157,5 @@ Daedric:Malacath,302,kill-dragon,+,medium,1.0,2,0.5,PathOpen,,felling the mighti
 Daedric:Malacath,344,increase-skill,+,small,0.25,3,0,PathOpen,,the outcast hardens himself by his own toil; strength earned
 Daedric:Malacath,304,murder-defenseless,-,medium,-0.75,2,0.5,PathOpen,,killing the helpless is the coward's act; the strong meet the strong
 Daedric:Malacath,360,pick-owned-lock,-,small,-0.25,3,0,PathOpen,owned,the thief's furtive trick; the honest outcast scorns the sneak's way
-Daedric:Hermaeus Mora,314,sleep-in-bed,-,small,-0.25,3,0,PathOpen,,oblivious sleep surrenders memory; the keeper of memory gains nothing from lost hours
+Daedric:Hermaeus Mora,315,sleep-in-inn,-,small,-0.25,3,0,PathOpen,,oblivious sleep surrenders memory; the keeper of memory gains nothing from lost hours
 Daedric:Hermaeus Mora,351,clear-bounty-serve-time,-,small,-0.25,3,0,PathOpen,,to buy the record clean offends the keeper who lets nothing be unwritten

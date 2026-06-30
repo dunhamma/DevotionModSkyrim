@@ -265,6 +265,17 @@ only the public Talos book route is runtime-wired today.
 - PASS: faction rank, shrine attendance, generic mercy, generic lawfulness, generic
   Talos proximity, and generic trade do NOT score by themselves.
 
+### Shared Daedric Inn-Sleep Proof (ROUTE/RUNTIME + MANUAL)
+
+This is cross-race backend smoke, not Imperial-native proof. It may be recorded once per build and referenced from the other race sheets.
+
+1. MCM Debug -> `Debug: Daedric & Curse`; use `Selected Prince` to choose Sanguine or Namira.
+2. Select `Reset Prince path`, then `Force Seeker`.
+3. Sleep in a non-inn bed. Expected: no `PrinceV2: <Prince> event 314 deepen -0.25`, and `Show Prince summary` does not drop from sleep.
+4. Sleep in an inn. Expected: `PrinceV2: <Prince> event 315 deepen -0.25`, and the summary piety drops by the inn-sleep dislike.
+5. Positive control: choose Vaermina, Peryite, or Azura, `Reset Prince path`, `Force Seeker`, then sleep in a non-inn bed. Expected: `event 314` still gives the positive sleep credit.
+6. Record the Papyrus `PrinceV2` lines and before/after `Show Prince summary` piety.
+
 ### Slot 7 -- manualFeelNote (MANUAL-ACCEPTANCE)
 
 - Seed: none new -- this is the tester's synthesis after slots 1-6.
@@ -346,6 +357,7 @@ intake stays boundary-clean. Do NOT log FAIL on a PENDING route step.
 | 4 immersiveHookProof (4c signals 110/112/113) | Proof cells pending placement | PENDING | | |
 | 5 wrongOriginRejection | Non-Imperial origin: zero native movement | ROUTE-RUNTIME | | |
 | 6 genericHookRejection | Faction/attendance/bounty/lawfulness do not score | ROUTE-RUNTIME | | |
+| Shared Daedric inn-sleep proof | negative Prince inn-only sleep + positive 314 control | ROUTE-RUNTIME + MANUAL | | |
 | 7 manualFeelNote | Reads as concrete civic practice under law | MANUAL-ACCEPTANCE | | |
 | 8 Prisma surfaces | Toast/panel/Chronicle/Ledger agree with manager state | MANUAL-ACCEPTANCE | | |
 

@@ -58,6 +58,14 @@ Akatosh/Auri-El/Alkosh, Arkay/Tu'whacca, Zenithar/Z'en, and Auriel/Akatosh
 share backend shrine piety where configured; Book of Days writes only the
 player-origin-appropriate deity name for the line.
 
+2026-06-30 handoff note: the Requiem swallowed-regen penalty conversion is
+backend/readback clean but still needs in-game feltness proof. Argonian Hist
+Distant, Breton Tradition Distant, and Breton Excommunication now use negative
+Fortify Health (`Health -10`, `Health -10`, `Health -15`). Imperial civic
+neglect is intentionally preserved as `ResistDisease -5`. Do not mark this
+Requiem penalty slice gameplay-proven until Active Effects, `player.getav
+Health`, and HP-bar/manual feel evidence are recorded under a Requiem load.
+
 ## Preflight Before Opening Skyrim
 
 Run from `C:\Users\Admin\Documents\Devotion Mod Project`:
@@ -73,6 +81,7 @@ node .\tools\pdv_compile.mjs --script PDV_MCM
 node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
 node .\tools\pdv_verify.mjs --strict-neglect-decay --json
 node .\tools\pdv_phase2_reward_readback_audit.mjs --json
+node .\tools\pdv_requiem_penalty_audit.mjs
 node .\tools\pdv_integrity_harness.mjs
 node .\tools\pdv_refresh_seq.mjs --write --json
 node .\tools\pdv_beta_readiness_audit.mjs --strict --json
@@ -85,6 +94,8 @@ Expected before manual testing:
 - Strict Phase 20 verifier and Phase 2 reward readback audit: `PASS`; SEQ
   refresh has no stale/missing entry warning.
 - Integrity harness: `PASS`, including `eligibility_reward_coverage`.
+- Requiem penalty audit: `PASS`, including old regen-MGEF orphan checks and
+  Imperial preservation.
 - Neglect ESP author check and strict neglect verifier: `PASS`.
 - Manager and MCM compile: `PASS`, including the Talos betrayal debug buttons.
 - Beta readiness audit: still `NOT_BETA_READY` until manual/runtime slots are
@@ -139,6 +150,40 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
 - Prince V2 path-deepening sweep: prove deepen-not-initiate, open-path deepen
   markers, dual-face Azura behavior, anti-farm, and Hircine curse
   no-double-fire.
+- Requiem felt-penalty sweep: prove the new negative Health penalties are felt
+  in-game and Imperial remains disease-resistance based.
+
+### Requiem Penalty Feltness Add-On
+
+Run this after the normal race-sheet setup, on disposable saves, with Requiem
+active. This is manual/Active Effects proof; the backend audit only proves the
+records are wired.
+
+Before each row:
+
+```powershell
+node .\tools\pdv_requiem_penalty_audit.mjs
+```
+
+In game, record `player.getav Health` before and after the penalty applies,
+capture the Active Effects line, and write a short HP-bar/manual feel note.
+
+| Race / route | How to seed | Expected in-game proof | Evidence sink |
+| --- | --- | --- | --- |
+| Argonian Hist Distant | Argonian origin; force or naturally reach the Hist neglect/distant state | `PDV_MGEF_Neglect_ArgonianHist_Health` appears as Maximum Health; max Health drops by 10; HP bar reflects the lower ceiling | Argonian run-sheet stack snapshot/manual feel note plus `PDV_Phase20_ManualEvidenceLedger.json` note |
+| Breton Tradition Distant | Breton origin; force or naturally reach the tradition neglect/distant state | `PDV_MGEF_Neglect_Breton_Health` appears as Maximum Health; max Health drops by 10; text says Maximum Health -10 | Breton run-sheet stack snapshot/manual feel note plus ledger note |
+| Breton Excommunication | Breton origin; force creed-loss/excommunication once the route is reachable, or use the debug path if one is added | `PDV_SPEL_CreedLoss_Breton_Excommunication_MGEF_Health` appears as Maximum Health; max Health drops by 15; no old Health Regeneration penalty appears | Breton run-sheet edge-case note plus ledger note |
+| Imperial civic neglect preservation | Imperial origin; force or naturally reach civic neglect/distant state | Active Effect remains disease-resistance based (`ResistDisease -5`); no `PDV_MGEF_Neglect_Imperial_Health`; max Health does not drop from this effect | Imperial run-sheet stack snapshot/manual feel note plus ledger note |
+
+Stop/fail rules:
+
+- If any converted penalty still displays Health Regeneration, stop and keep the
+  row open.
+- If `player.getav Health` does not change for an Argonian/Breton converted
+  penalty, stop and keep the row open even if readback is green.
+- If Imperial gets a Health penalty, stop; that contradicts the 2026-06-30
+  owner ruling.
+- Do not use QASmoke/readback alone as feltness proof for these rows.
 
 ## Testing Order
 

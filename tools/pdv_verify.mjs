@@ -149,7 +149,7 @@ const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
 const DEITY_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv");
 const PRINCE_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes_Princes_V2.csv");
 const EXPECTED_LIKES_DISLIKES_VERSION = 12;
-const EXPECTED_PRINCE_LD_VERSION = 3;
+const EXPECTED_PRINCE_LD_VERSION = 4;
 const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
   PROJECT_ROOT,
   "references",
@@ -9318,6 +9318,12 @@ class Verifier {
       "paths",
     );
     this.checkLikesDislikesClearSuperset(sourceText, managerSource, deityGenerated.eventIds);
+    const princeClearEventIds = new Set(princeGenerated.eventIds);
+    princeClearEventIds.add(314);
+    princeClearEventIds.add(315);
+    this.checkPrinceLikesDislikesClearSuperset(sourceText, managerSource, princeClearEventIds);
+    this.checkPrinceSleepInnMigration(sourceText, managerSource);
+    this.checkPrinceSleepEndToEndWiring(sourceText, managerSource);
   }
 
   checkGeneratedFunction(checkName, sourceText, managerSource, generated, functionName, writerName, actorLabel) {
@@ -9363,6 +9369,169 @@ class Verifier {
         `GetLikesDislikesEventTypes is missing CSV event id(s): ${missing.join(", ")}.`,
         managerSource,
       );
+    }
+  }
+
+  checkPrinceLikesDislikesClearSuperset(sourceText, managerSource, eventIds) {
+    const clearFunction = extractPapyrusFunction(sourceText, "GetPrinceEventTypes");
+    if (!clearFunction) {
+      this.fail("Small-signal Prince clear superset", "GetPrinceEventTypes is missing from the deployed manager.", managerSource);
+      return;
+    }
+
+    const clearIds = new Set([...clearFunction.matchAll(/pldEvents\[\d+\]\s*=\s*(\d+)/g)].map((match) => Number(match[1])));
+    const missing = [...eventIds].filter((eventId) => !clearIds.has(eventId)).sort((a, b) => a - b);
+    if (missing.length === 0) {
+      this.pass("Small-signal Prince clear superset", `GetPrinceEventTypes covers all ${eventIds.size} current/retired CSV event id(s).`, managerSource);
+    } else {
+      this.fail(
+        "Small-signal Prince clear superset",
+        `GetPrinceEventTypes is missing current/retired CSV event id(s): ${missing.join(", ")}.`,
+        managerSource,
+      );
+    }
+  }
+
+  checkPrinceSleepInnMigration(sourceText, managerSource) {
+    const checkName = "Small-signal Prince inn sleep migration";
+    const rows = readCsvObjects(PRINCE_LIKES_DISLIKES_CSV);
+    const negativeTargets = new Set([
+      "Daedric:Sanguine",
+      "Daedric:Sheogorath",
+      "Daedric:Hircine",
+      "Daedric:Mehrunes Dagon",
+      "Daedric:Molag Bal",
+      "Daedric:Namira",
+      "Daedric:Hermaeus Mora",
+    ]);
+    const positiveControls = new Map([
+      ["Daedric:Vaermina", "0.5"],
+      ["Daedric:Peryite", "0.25"],
+      ["Daedric:Azura", "0.25"],
+    ]);
+
+    const staleNegative314 = rows.filter((row) => row.actor.startsWith("Daedric:") && row.eventId === "314" && row.sentiment === "-");
+    if (staleNegative314.length === 0) {
+      this.pass(checkName, "No negative Daedric sleep row remains on event 314.", PRINCE_LIKES_DISLIKES_CSV);
+    } else {
+      this.fail(checkName, `Negative Daedric event 314 row(s) remain: ${staleNegative314.map((row) => row.actor).join(", ")}.`, PRINCE_LIKES_DISLIKES_CSV);
+    }
+
+    const badTargets = [...negativeTargets].filter((actor) => {
+      return !rows.some((row) =>
+        row.actor === actor &&
+        row.eventId === "315" &&
+        row.eventName === "sleep-in-inn" &&
+        row.sentiment === "-" &&
+        row.baseDelta === "-0.25" &&
+        row.dailyCap === "3" &&
+        row.cooldownDays === "0" &&
+        row.stanceGate === "PathOpen"
+      );
+    });
+    if (badTargets.length === 0) {
+      this.pass(checkName, "All seven negative Prince sleep rows are inn-only event 315 rows.", PRINCE_LIKES_DISLIKES_CSV);
+    } else {
+      this.fail(checkName, `Missing or malformed event 315 row(s): ${badTargets.join(", ")}.`, PRINCE_LIKES_DISLIKES_CSV);
+    }
+
+    const badControls = [...positiveControls.entries()].filter(([actor, delta]) => {
+      return !rows.some((row) =>
+        row.actor === actor &&
+        row.eventId === "314" &&
+        row.eventName === "sleep-in-bed" &&
+        row.sentiment === "+" &&
+        row.baseDelta === delta &&
+        row.dailyCap === "3" &&
+        row.cooldownDays === "0" &&
+        row.stanceGate === "PathOpen"
+      );
+    });
+    if (badControls.length === 0) {
+      this.pass(checkName, "Vaermina, Peryite, and Azura positive sleep rows remain on event 314.", PRINCE_LIKES_DISLIKES_CSV);
+    } else {
+      this.fail(checkName, `Positive sleep control row(s) moved or malformed: ${badControls.map(([actor]) => actor).join(", ")}.`, PRINCE_LIKES_DISLIKES_CSV);
+    }
+
+    const loadFunction = extractPapyrusFunction(sourceText, "LoadPrinceLikesDislikesTable") || "";
+    const clearIndex = loadFunction.indexOf("ClearPrinceRowsForPath(pldPath)");
+    const loadIndex = loadFunction.indexOf("LoadPrinceRowsForPath(pldPath)");
+    if (clearIndex >= 0 && loadIndex > clearIndex) {
+      this.pass(checkName, "LoadPrinceLikesDislikesTable clears each path before reloading rows.", managerSource);
+    } else {
+      this.fail(checkName, "LoadPrinceLikesDislikesTable does not clear each path before LoadPrinceRowsForPath.", managerSource);
+    }
+
+    const clearFunction = extractPapyrusFunction(sourceText, "ClearPrinceRowsForPath") || "";
+    const clearSnippets = [
+      'StorageUtil.UnsetFloatValue(pldForm, pldPrefix + ".D")',
+      'StorageUtil.UnsetIntValue(pldForm, pldPrefix + ".C")',
+      'StorageUtil.UnsetFloatValue(pldForm, pldPrefix + ".O")',
+    ];
+    const missingClearSnippets = clearSnippets.filter((snippet) => !clearFunction.includes(snippet));
+    if (missingClearSnippets.length === 0) {
+      this.pass(checkName, "ClearPrinceRowsForPath unsets PDV.PLD delta, cap, and cooldown keys.", managerSource);
+    } else {
+      this.fail(checkName, `ClearPrinceRowsForPath is missing unset(s): ${missingClearSnippets.join("; ")}.`, managerSource);
+    }
+  }
+
+  checkPrinceSleepEndToEndWiring(sourceText, managerSource) {
+    const checkName = "Small-signal Prince sleep E2E wiring";
+    const playerEvents = readSourceIfExists("PDV_PlayerEvents");
+    const eventBus = readSourceIfExists("PDV_EventBus");
+    const actionRouter = readSourceIfExists("PDV_ActionRouter");
+    const pathBase = readSourceIfExists("PDV_DaedricPathBase");
+    const routeFunction = extractPapyrusFunction(sourceText, "RouteActionToOpenPaths") || "";
+    const scoreFunction = extractPapyrusFunction(pathBase.text, "ScorePrinceAction") || "";
+
+    const checks = [
+      [playerEvents, "PlayerEvents defines inn event 315", "Int Property EVT_SLEEP_IN_INN = 315 AutoReadOnly"],
+      [playerEvents, "PlayerEvents captures inn state at sleep start", "PDV_LastSleptInInn = IsPlayerInInn(playerActor)"],
+      [playerEvents, "PlayerEvents always routes normal bed sleep as event 314", "RouteGenericAction(EVT_SLEEP_IN_BED, GetActorRef() as Form, None)"],
+      [playerEvents, "PlayerEvents gates inn-only event 315 on the inn flag", "if PDV_LastSleptInInn"],
+      [playerEvents, "PlayerEvents routes inn sleep as event 315", "RouteGenericAction(EVT_SLEEP_IN_INN, GetActorRef() as Form, None)"],
+      [playerEvents, "PlayerEvents resolves vanilla LocTypeInn", 'Game.GetFormFromFile(0x0001CB87, "Skyrim.esm") as Keyword'],
+      [playerEvents, "PlayerEvents checks the current location keyword", "return currentLoc.HasKeyword(PDV_KW_LocTypeInn)"],
+      [eventBus, "EventBus fans generic events to Prince paths", "PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)"],
+      [actionRouter, "ActionRouter fallback fans generic events to Prince paths", "PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)"],
+    ];
+
+    for (const [source, label, snippet] of checks) {
+      if (!source.exists) {
+        this.fail(checkName, `${source.scriptName}.psc is missing for ${label}.`, source.path);
+      } else if (source.text.includes(snippet)) {
+        this.pass(checkName, label, source.path);
+      } else {
+        this.fail(checkName, `${source.scriptName}.psc is missing ${snippet}.`, source.path);
+      }
+    }
+
+    const routeSnippets = [
+      "ropPath.ScorePrinceAction(eventType)",
+      'ropPath.AdjustStoredPiety(ropDelta, "v2_" + eventType)',
+      '"[PDV] PrinceV2: " + ropPath.DeityName + " event " + eventType + " deepen " + ropDelta',
+    ];
+    const missingRouteSnippets = routeSnippets.filter((snippet) => !routeFunction.includes(snippet));
+    if (missingRouteSnippets.length === 0) {
+      this.pass(checkName, "Manager routes generic event ids into Prince V2 path scoring and trace output.", managerSource);
+    } else {
+      this.fail(checkName, `RouteActionToOpenPaths is missing snippet(s): ${missingRouteSnippets.join("; ")}.`, managerSource);
+    }
+
+    const scoreSnippets = [
+      "if !HasCommitmentSignalGateOpen()",
+      'String pldPrefix = "PDV.PLD." + eventType',
+      'StorageUtil.GetFloatValue(pldForm, pldPrefix + ".D")',
+      'StorageUtil.GetIntValue(pldForm, pldPrefix + ".C")',
+      'StorageUtil.GetFloatValue(pldForm, pldPrefix + ".O")',
+      "return ScoreRepeatableAction(eventType, pldDelta, pldCap, pldCooldown)",
+    ];
+    const missingScoreSnippets = scoreSnippets.filter((snippet) => !scoreFunction.includes(snippet));
+    if (missingScoreSnippets.length === 0) {
+      this.pass(checkName, "DaedricPathBase scores PDV.PLD rows only after the commitment gate.", pathBase.path);
+    } else {
+      this.fail(checkName, `ScorePrinceAction is missing snippet(s): ${missingScoreSnippets.join("; ")}.`, pathBase.path);
     }
   }
 
@@ -9790,6 +9959,29 @@ function findStraySkyuiOutputs() {
 
 function readLines(filePath) {
   return fs.readFileSync(filePath, "utf8").split(/\r?\n/);
+}
+
+function readCsvObjects(csvPath) {
+  const lines = fs.readFileSync(csvPath, "utf8").split(/\r?\n/).filter((line) => line.trim().length > 0);
+  const header = lines.shift().split(",").map((col) => col.trim());
+  return lines.map((line) => {
+    const cols = line.split(",");
+    const row = {};
+    header.forEach((col, index) => {
+      row[col] = String(cols[index] || "").trim();
+    });
+    return row;
+  });
+}
+
+function readSourceIfExists(scriptName) {
+  const sourcePath = path.join(DEVOTION_SOURCE, `${scriptName}.psc`);
+  return {
+    scriptName,
+    path: sourcePath,
+    exists: exists(sourcePath),
+    text: exists(sourcePath) ? fs.readFileSync(sourcePath, "utf8") : "",
+  };
 }
 
 function buildLikesDislikesFunction(csvPath, options) {

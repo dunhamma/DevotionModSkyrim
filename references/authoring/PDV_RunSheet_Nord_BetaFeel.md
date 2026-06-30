@@ -158,6 +158,17 @@ Expected: no dense-hook over-trigger and no universal Nord reward stack.
 - Ledger: Old Ways and edge source rows appear; generic-source silence does not add rows.
 - No input trap after combat, MCM, Survey, or save/load.
 
+### 9. Shared Daedric Inn-Sleep Proof
+
+This is cross-race backend smoke, not Nord-native proof. It may be recorded once per build and referenced from the other race sheets.
+
+1. MCM Debug -> `Debug: Daedric & Curse`; use `Selected Prince` to choose Sanguine or Namira.
+2. Select `Reset Prince path`, then `Force Seeker`.
+3. Sleep in a non-inn bed. Expected: no `PrinceV2: <Prince> event 314 deepen -0.25`, and `Show Prince summary` does not drop from sleep.
+4. Sleep in an inn. Expected: `PrinceV2: <Prince> event 315 deepen -0.25`, and the summary piety drops by the inn-sleep dislike.
+5. Positive control: choose Vaermina, Peryite, or Azura, `Reset Prince path`, `Force Seeker`, then sleep in a non-inn bed. Expected: `event 314` still gives the positive sleep credit.
+6. Record the Papyrus `PrinceV2` lines and before/after `Show Prince summary` piety.
+
 ## Closeout
 
 Before log rotation:
@@ -182,4 +193,5 @@ Capture Active Effects after:
 | Wrong-origin rejection | ROUTE/RUNTIME | | |
 | Generic-source silence | ROUTE/RUNTIME | | |
 | Prisma surfaces | MANUAL | | |
+| Shared Daedric inn-sleep proof | ROUTE/RUNTIME + MANUAL | | |
 | Save/load sanity | MANUAL | | |

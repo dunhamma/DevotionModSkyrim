@@ -134,13 +134,14 @@
     "biteCondition": "Gentle diegetic texture only at posture Distant; mechanical bite applies only at posture Silenced or Corrupted (vampire grief / domination), per PDV_Substrate_ArgonianHist.RefreshHistPosture and the ledger curse posture.",
     "effects": [
       {
-        "magicEffectEditorId": "PDV_MGEF_Neglect_ArgonianHist_HealRate",
-        "actorValue": "HealRateMult",
-        "magnitude": -5,
+        "magicEffectEditorId": "PDV_MGEF_Neglect_ArgonianHist_Health",
+        "actorValue": "Health",
+        "magnitude": -10,
+        "effectName": "Maximum Health",
         "appliesAtPosture": "Silenced or Corrupted"
       }
     ],
-    "playerFacingText": "The Hist has grown distant and cannot reach you. Your health regenerates 5% more slowly until the connection is restored.",
+    "playerFacingText": "The Hist has grown distant and cannot reach you. Maximum Health -10 until the connection is restored.",
     "decayRule": "Dawn Hist decay only after 3 days without valid maintenance (HistDawnGraceDays=3), then -1 per dawn (HistDawnDecay=1.0), non-curse floor 20 (HistNonCurseFloor=20.0); curse-active floor is MetricMin. This is the gentle diegetic Hist-distance texture, not a punishment faucet."
   },
   "emphasisRewards": [

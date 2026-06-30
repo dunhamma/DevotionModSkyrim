@@ -121,6 +121,17 @@ SLOT 1 PASS criterion (the promotion gate): at least one Stronghold beat (1A or 
 - Watch: no Orc life-mode evidence day, no committed-mode movement, no Survey movement, no life-mode route in the log.
 - PASS criterion: every rejected surface stays silent. (Note: byte-identical Malacath generic-combat kill rows ship live and are route/state-clean by precedent -- they belong to the Malacath piety layer, NOT the life-mode track.)
 
+### Shared Daedric Inn-Sleep Proof  [route/runtime + manual]
+
+This is cross-race backend smoke, not Orc life-mode proof. It may be recorded once per build and referenced from the other race sheets.
+
+1. MCM Debug -> `Debug: Daedric & Curse`; use `Selected Prince` to choose Sanguine or Namira.
+2. Select `Reset Prince path`, then `Force Seeker`.
+3. Sleep in a non-inn bed. Expected: no `PrinceV2: <Prince> event 314 deepen -0.25`, and `Show Prince summary` does not drop from sleep.
+4. Sleep in an inn. Expected: `PrinceV2: <Prince> event 315 deepen -0.25`, and the summary piety drops by the inn-sleep dislike.
+5. Positive control: choose Vaermina, Peryite, or Azura, `Reset Prince path`, `Force Seeker`, then sleep in a non-inn bed. Expected: `event 314` still gives the positive sleep credit.
+6. Record the Papyrus `PrinceV2` lines and before/after `Show Prince summary` piety.
+
 ### Slot 4 -- surveyStatusClarity  [manual-acceptance]  (already evidence-recorded; re-read after slot 1)
 
 - Action: after slot 1, open Survey / MCM status.
@@ -173,6 +184,7 @@ Tester fills STATUS only as: pending / evidence-recorded / not-applicable. There
 | 1 | immersiveHookProof -- promotion gate | route/runtime | >=1 Stronghold beat AND >=1 City or Legion/Exile beat, outside QASmoke | pending |
 | 2 | wrongOriginRejection | route/runtime | origin 7 -> origin-guard early-return; nothing moves; restore 8 | evidence-recorded (re-confirm on 2026-06-19 build) |
 | 3 | genericHookRejection | route/runtime | raw craft / combat / mining / vendor / brawl / city presence / CW01A / CW02B all silent | evidence-recorded (re-confirm on 2026-06-19 build) |
+| S | shared Daedric inn-sleep proof | route/runtime + manual | negative Prince inn-only sleep; Vaermina/Peryite/Azura 314 positive control | pending |
 | 4 | surveyStatusClarity | manual-acceptance | Survey reads mode + posture in race language; dev-language/enum gap noted (task #10) | evidence-recorded |
 | 5 | stackSnapshot | manual-acceptance | one life-mode reward family active; layers match committed mode (magnitudes = task #9) | pending |
 | 6 | assetStatus | manual-acceptance / readback | pure-Papyrus, no ESP write, existing surfaces, no new mesh | evidence-recorded |

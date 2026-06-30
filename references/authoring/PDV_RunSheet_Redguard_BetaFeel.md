@@ -158,6 +158,17 @@ Do not mix them when filling the ledger; do not mark a race-level `pass` from th
 - PASS: generic combat, non-listed dungeon clears, and faction/bounty do NOT move
   Redguard-native state or fire make-way.
 
+### Shared Daedric Inn-Sleep Proof ([R] + [M])
+
+This is cross-race backend smoke, not Redguard-native or Namira feed-heal proof. It may be recorded once per build and referenced from the other race sheets.
+
+1. MCM Debug -> `Debug: Daedric & Curse`; use `Selected Prince` to choose Sanguine or Namira.
+2. Select `Reset Prince path`, then `Force Seeker`.
+3. Sleep in a non-inn bed. Expected: no `PrinceV2: <Prince> event 314 deepen -0.25`, and `Show Prince summary` does not drop from sleep.
+4. Sleep in an inn. Expected: `PrinceV2: <Prince> event 315 deepen -0.25`, and the summary piety drops by the inn-sleep dislike.
+5. Positive control: choose Vaermina, Peryite, or Azura, `Reset Prince path`, `Force Seeker`, then sleep in a non-inn bed. Expected: `event 314` still gives the positive sleep credit.
+6. Record the Papyrus `PrinceV2` lines and before/after `Show Prince summary` piety.
+
 ### Slot 6b -- Ash'abah mid-game entry ([R] + [M])
 - Seed: a **Crown or Forebear** Redguard (origin 9; do NOT start as Ash'abah for this one).
   Confirm the Survey sect line reads Crown/Forebear.
@@ -267,6 +278,7 @@ Allowed: PASS / FAIL / PENDING / N-A. Label the proof class achieved.
 | 4d Namira feed-heal (Daedric packet) | HP pulse on feed; daily decay | [R]+[M] | | |
 | 5 wrongOriginRejection | Nord origin: zero Redguard movement | [R] | | |
 | 6 genericHookRejection | generic kills/non-listed clears/bounty do not score | [R] | | |
+| S shared Daedric inn-sleep proof | negative Prince inn-only sleep; Vaermina/Peryite/Azura 314 positive control | [R]+[M] | | |
 | 6b Ash'abah mid-game entry | named undead or unique hostile necromancer/warlock flips sect; routine undead do not | [R]+[M] | | |
 | 6c Ash'abah cleared-undead site | approved newly-cleared site pays once; non-listed stays silent | [R]+[M] | | |
 | 7 manualFeelNote | reads as earned; record tuning magnitudes | [M] | | |

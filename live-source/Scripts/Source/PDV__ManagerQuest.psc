@@ -527,7 +527,7 @@ Float Property BROAD_WORSHIP_DECAY_MULTIPLIER = 0.2 AutoReadOnly
 Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; Bump when PDV_DeityLikesDislikes.csv OR the stance matrix changes so existing saves reload.
 Int Property LIKES_DISLIKES_VERSION = 12 AutoReadOnly
-Int Property PRINCE_LD_VERSION = 3 AutoReadOnly
+Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
 ; Bump when the Daedric pact model changes so existing saves re-run the migration
 ; (v2: active-pact-only sync + milestone presentation refresh; v3: collapse a
 ; co-held patron+Prince, keep higher tier, tie -> Prince).
@@ -8311,6 +8311,7 @@ Function LoadPrinceLikesDislikesTable()
     while pldIndex < pldCount
         PDV_DaedricPathBase pldPath = PDV_FLST_DaedricPaths_All.GetAt(pldIndex) as PDV_DaedricPathBase
         if pldPath
+            ClearPrinceRowsForPath(pldPath)
             LoadPrinceRowsForPath(pldPath)
         endIf
         pldIndex += 1
@@ -8326,6 +8327,55 @@ Function WritePLD(PDV_DaedricPathBase path, Int eventType, Float delta, Int dail
     StorageUtil.SetFloatValue(pldForm, pldPrefix + ".D", delta)
     StorageUtil.SetIntValue(pldForm, pldPrefix + ".C", dailyCap)
     StorageUtil.SetFloatValue(pldForm, pldPrefix + ".O", cooldownDays)
+EndFunction
+
+Function ClearPrinceRowsForPath(PDV_DaedricPathBase path)
+    Form pldForm = path as Form
+    Int[] pldEvents = GetPrinceEventTypes()
+    Int pldIndex = 0
+    while pldIndex < pldEvents.Length
+        String pldPrefix = "PDV.PLD." + pldEvents[pldIndex]
+        StorageUtil.UnsetFloatValue(pldForm, pldPrefix + ".D")
+        StorageUtil.UnsetIntValue(pldForm, pldPrefix + ".C")
+        StorageUtil.UnsetFloatValue(pldForm, pldPrefix + ".O")
+        pldIndex += 1
+    endWhile
+EndFunction
+
+Int[] Function GetPrinceEventTypes()
+    Int[] pldEvents = new Int[31]
+    pldEvents[0] = 1
+    pldEvents[1] = 2
+    pldEvents[2] = 300
+    pldEvents[3] = 302
+    pldEvents[4] = 303
+    pldEvents[5] = 304
+    pldEvents[6] = 313
+    pldEvents[7] = 314
+    pldEvents[8] = 315
+    pldEvents[9] = 330
+    pldEvents[10] = 331
+    pldEvents[11] = 332
+    pldEvents[12] = 333
+    pldEvents[13] = 334
+    pldEvents[14] = 340
+    pldEvents[15] = 341
+    pldEvents[16] = 342
+    pldEvents[17] = 343
+    pldEvents[18] = 344
+    pldEvents[19] = 345
+    pldEvents[20] = 350
+    pldEvents[21] = 351
+    pldEvents[22] = 354
+    pldEvents[23] = 360
+    pldEvents[24] = 361
+    pldEvents[25] = 362
+    pldEvents[26] = 364
+    pldEvents[27] = 365
+    pldEvents[28] = 366
+    pldEvents[29] = 367
+    pldEvents[30] = 368
+    return pldEvents
 EndFunction
 
 ; Fan a scored act over the OPEN Daedric paths. An open (committed) path deepens its OWN piety
@@ -8366,7 +8416,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 300, 0.5, 3, 0.0)
         WritePLD(path, 344, 0.25, 3, 0.0)
         WritePLD(path, 331, -0.25, 3, 0.0)
-        WritePLD(path, 314, -0.25, 3, 0.0)
+        WritePLD(path, 315, -0.25, 3, 0.0)
     elseIf ldName == "Hircine"
         WritePLD(path, 1, 0.75, 2, 0.5)
         WritePLD(path, 2, 0.25, 3, 0.0)
@@ -8374,7 +8424,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 368, 1.0, 1, 1.0)
         WritePLD(path, 350, -0.25, 3, 0.0)
         WritePLD(path, 302, 0.5, 3, 0.0)
-        WritePLD(path, 314, -0.25, 3, 0.0)
+        WritePLD(path, 315, -0.25, 3, 0.0)
         WritePLD(path, 303, 0.75, 2, 0.5)
         WritePLD(path, 304, -0.5, 3, 0.0)
     elseIf ldName == "Meridia"
@@ -8398,7 +8448,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 2, 0.5, 3, 0.0)
         WritePLD(path, 360, 0.25, 3, 0.0)
         WritePLD(path, 361, 0.25, 3, 0.0)
-        WritePLD(path, 314, -0.25, 3, 0.0)
+        WritePLD(path, 315, -0.25, 3, 0.0)
     elseIf ldName == "Hermaeus Mora"
         WritePLD(path, 342, 1.0, 2, 0.5)
         WritePLD(path, 341, 0.5, 3, 0.0)
@@ -8410,7 +8460,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 331, 0.5, 3, 0.0)
         WritePLD(path, 332, 0.25, 3, 0.0)
         WritePLD(path, 334, 0.25, 3, 0.0)
-        WritePLD(path, 314, -0.25, 3, 0.0)
+        WritePLD(path, 315, -0.25, 3, 0.0)
         WritePLD(path, 351, -0.25, 3, 0.0)
     elseIf ldName == "Namira"
         WritePLD(path, 300, -0.5, 3, 0.0)
@@ -8423,7 +8473,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 362, 0.5, 3, 0.0)
         WritePLD(path, 360, 0.25, 3, 0.0)
         WritePLD(path, 333, -0.25, 3, 0.0)
-        WritePLD(path, 314, -0.25, 3, 0.0)
+        WritePLD(path, 315, -0.25, 3, 0.0)
     elseIf ldName == "Nocturnal"
         WritePLD(path, 360, 0.5, 3, 0.0)
         WritePLD(path, 362, 0.5, 3, 0.0)
@@ -8447,7 +8497,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
     elseIf ldName == "Sanguine"
         WritePLD(path, 333, 0.25, 3, 0.0)
         WritePLD(path, 368, 1.0, 1, 1.0)
-        WritePLD(path, 314, -0.25, 3, 0.0)
+        WritePLD(path, 315, -0.25, 3, 0.0)
         WritePLD(path, 332, 0.25, 3, 0.0)
         WritePLD(path, 304, -0.25, 3, 0.0)
         WritePLD(path, 330, -0.25, 3, 0.0)
@@ -8456,7 +8506,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 345, 0.5, 3, 0.0)
         WritePLD(path, 343, 0.25, 3, 0.0)
         WritePLD(path, 368, 1.0, 1, 1.0)
-        WritePLD(path, 314, -0.25, 3, 0.0)
+        WritePLD(path, 315, -0.25, 3, 0.0)
         WritePLD(path, 362, 0.25, 3, 0.0)
         WritePLD(path, 330, -0.25, 3, 0.0)
         WritePLD(path, 331, 0.5, 3, 0.0)

@@ -60,7 +60,15 @@ Repeat one lunar source from a clean save. Expected: no Khajiit focus/substrate 
    - Prisma shift toast appears for focus change where enabled; no forced full panel.
    - Devotion panel opens manually, Chronicle and Ledger are nonblank, ESC closes.
 
-7. Save/load:
+7. Shared Daedric inn-sleep proof:
+   - This is cross-race backend smoke, not Khajiit-native proof. It may be recorded once per build and referenced from the other race sheets.
+   - MCM Debug -> `Debug: Daedric & Curse`; use `Selected Prince` to choose Sanguine or Namira. Select `Reset Prince path`, then `Force Seeker`.
+   - Sleep in a non-inn bed. Expected: no `PrinceV2: <Prince> event 314 deepen -0.25`, and `Show Prince summary` does not drop from sleep.
+   - Sleep in an inn. Expected: `PrinceV2: <Prince> event 315 deepen -0.25`, and the summary piety drops by the inn-sleep dislike.
+   - Positive control: choose Vaermina, Peryite, or Azura, `Reset Prince path`, `Force Seeker`, then sleep in a non-inn bed. Expected: `event 314` still gives the positive sleep credit.
+   - Record the Papyrus `PrinceV2` lines and before/after `Show Prince summary` piety.
+
+8. Save/load:
    - Save after Champion presentation.
    - Reload.
    - Survey and Active Effects remain consistent.
@@ -81,6 +89,6 @@ The older `--race khajiit` QASmoke checker is not the organic/book-route gate.
 | Wrong-origin silence | | |
 | Generic-source silence | | |
 | Survey/Active Effects | | |
+| Shared Daedric inn-sleep proof | | |
 | Prisma toast/panel/Ledger | | |
 | Save/load | | |
-

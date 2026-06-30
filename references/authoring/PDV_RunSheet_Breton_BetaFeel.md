@@ -147,6 +147,17 @@ Run alongside the route steps:
 
 Prisma failure is a UI failure unless the route marker or manager state also fails.
 
+### 7. Shared Daedric Inn-Sleep Proof
+
+This is cross-race backend smoke, not Breton-native proof. It may be recorded once per build and referenced from the other race sheets.
+
+1. MCM Debug -> `Debug: Daedric & Curse`; use `Selected Prince` to choose Sanguine or Namira.
+2. Select `Reset Prince path`, then `Force Seeker`.
+3. Sleep in a non-inn bed. Expected: no `PrinceV2: <Prince> event 314 deepen -0.25`, and `Show Prince summary` does not drop from sleep.
+4. Sleep in an inn. Expected: `PrinceV2: <Prince> event 315 deepen -0.25`, and the summary piety drops by the inn-sleep dislike.
+5. Positive control: choose Vaermina, Peryite, or Azura, `Reset Prince path`, `Force Seeker`, then sleep in a non-inn bed. Expected: `event 314` still gives the positive sleep credit.
+6. Record the Papyrus `PrinceV2` lines and before/after `Show Prince summary` piety.
+
 ## Deferred Arms
 
 - Knight's Road breach hooks, Green Way degradation, and tradition-differentiated vampire behavior are deferred in V1 unless a later build exposes exact route controls.
@@ -171,4 +182,5 @@ Record ledger statuses only as `pending`, `evidence-recorded`, or `not-applicabl
 | Generic-source silence | ROUTE/RUNTIME | | |
 | Survey/status clarity | MANUAL | | |
 | Prisma toast/panel/Chronicle/Ledger | MANUAL | | |
+| Shared Daedric inn-sleep proof | ROUTE/RUNTIME + MANUAL | | |
 | Manual feel note | MANUAL | | |

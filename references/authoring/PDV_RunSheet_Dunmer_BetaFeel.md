@@ -150,6 +150,17 @@ layers.
 - **PASS:** native Dunmer layers move ONLY when the exact owning source fires
   (the urn read / MCM prayer / approved book), never from a generic act.
 
+### Shared Daedric Inn-Sleep Proof  [ROUTE/RUNTIME + MANUAL]
+
+This is cross-race backend smoke, not Dunmer-native proof or deviation-price proof. It may be recorded once per build and referenced from the other race sheets.
+
+1. MCM Debug -> `Debug: Daedric & Curse`; use `Selected Prince` to choose Sanguine or Namira.
+2. Select `Reset Prince path`, then `Force Seeker`.
+3. Sleep in a non-inn bed. Expected: no `PrinceV2: <Prince> event 314 deepen -0.25`, and `Show Prince summary` does not drop from sleep.
+4. Sleep in an inn. Expected: `PrinceV2: <Prince> event 315 deepen -0.25`, and the summary piety drops by the inn-sleep dislike.
+5. Positive control: choose Vaermina, Peryite, or Azura, `Reset Prince path`, `Force Seeker`, then sleep in a non-inn bed. Expected: `event 314` still gives the positive sleep credit.
+6. Record the Papyrus `PrinceV2` lines and before/after `Show Prince summary` piety.
+
 ---
 
 ### Slot 4 -- immersiveHookProof  [ROUTE/RUNTIME, plus PENDING arms]
@@ -408,6 +419,7 @@ yet landed) / DEFERRED (no runnable step) / N/A.
 | 1. assetStatus | manual-acceptance | no-new-mesh confirmed? | |
 | 2. wrongOriginRejection | route/runtime | non-Dunmer origin moved native layer? (expect NO) | |
 | 3. genericHookRejection | route/runtime | generic act moved native layer? (expect NO) | |
+| Shared Daedric inn-sleep proof | route/runtime + manual | negative Prince inn-only sleep + positive 314 control | |
 | 4a. immersiveHook -- Reclamation focus | route/runtime | focus 0 + focus 1 markers present? | |
 | 4b. immersiveHook -- ash-prayer / home rite | route/runtime | prayer + home bonus credit + Survey rise? | |
 | 4c. immersiveHook -- curse silence | route/runtime | vampire 0x silence + 4 posture labels? | |

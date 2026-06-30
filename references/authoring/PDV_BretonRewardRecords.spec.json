@@ -191,12 +191,13 @@
     "displayName": "The Tradition Grows Distant",
     "effects": [
       {
-        "magicEffectEditorId": "PDV_MGEF_Neglect_Breton_Restoration",
-        "actorValue": "HealRateMult",
-        "magnitude": -5
+        "magicEffectEditorId": "PDV_MGEF_Neglect_Breton_Health",
+        "actorValue": "Health",
+        "magnitude": -10,
+        "effectName": "Maximum Health"
       }
     ],
-    "playerFacingText": "You have let your chosen tradition lapse. Your health regenerates 5% more slowly until you return to it.",
+    "playerFacingText": "You have let your chosen tradition lapse. Maximum Health -10 until you return to it.",
     "designNote": "Gentle baseline only. The real BITE is reserved for rupture/excommunication/curse fork (WitchcraftExposure Ruptured, druidic-fork betrayal, vampire onset), not ordinary lapse. Neglect is not a creed-violation loss and does not corrode a specific patron."
   },
   "emphasisRewards": [
@@ -520,15 +521,17 @@
       "deity": "active tradition's patrons",
       "effects": [
         {
-          "actorValue": "HealRateMult",
-          "magnitude": -8
+          "magicEffectEditorId": "PDV_SPEL_CreedLoss_Breton_Excommunication_MGEF_Health",
+          "actorValue": "Health",
+          "magnitude": -15,
+          "effectName": "Maximum Health"
         }
       ],
       "hookSources": [
         "a story-caliber betrayal of the active tradition (denouncing the order, desecrating the covenant)"
       ],
       "antiRepeat": "authored excommunication beat only; recovery requires sustained counter-behavior and a story-caliber reset.",
-      "playerFacingText": "The tradition has cast you out. Its keeping is withdrawn until you earn your way back. Health Regeneration -8%."
+      "playerFacingText": "The tradition has cast you out. Its keeping is withdrawn until you earn your way back. Maximum Health -15."
     },
     {
       "id": "druidic-fork-betrayal",
