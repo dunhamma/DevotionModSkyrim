@@ -67,6 +67,7 @@
 | `tools/pdv_content_verify.mjs` | Read-only verifier for the race/Daedric content manifests plus Phase 20 roster coverage (ASCII, budgets, slot IDs, voice, full roster gate) |
 | `tools/pdv_formal_offer_check.mjs` | Read-only verifier for the formal-offer scale-out spec, live manager eligibility/source flow, no-offer race exclusions, quiet-emergence cues, and delegated ESP/property readback |
 | `tools/pdv_prisma_parity_unitd_check.mjs` | Read-only verifier for Prisma parity Unit D journal/toast wiring, carryover award funnel, director resolver preservation, and Daedric commitment-title readback |
+| `tools/pdv_prisma_to_oneoh_audit.mjs` | Read-only roll-up verifier for Prisma-to-1.0 wiring; checks current producer callsites, source/live parity, repo/live Prisma UI parity, and adversarial negative fixtures before runtime smoke |
 | `tools/pdv-daedric-offer-title-author` | Narrow direct-framework helper that updates/checks the 16 Daedric commitment MESG titles in `Devotion.esp` while preserving message bodies, with backups under `Backups\daedric-offer-titles\` |
 | `tools/pdv_generate_daedric_contract.mjs` | Generates the all-Prince Daedric record contract and non-Hircine path scripts from the Daedric content manifest plus race/Prince matrix |
 | `tools/pdv-daedric-author` | Direct-framework helper that creates/checks all-Prince Daedric CAT-6 records, base/concrete path VMAD wiring, stigma globals, arrays, `PDV_FLST_DaedricPaths_All` membership, manager FormList wiring, QASmoke proof sender ACTI/REFR records, and all sixteen exact organic Daedric quest-stage source FormLists |
@@ -393,6 +394,7 @@ node .\tools\pdv_content_verify.mjs
 node .\tools\pdv_content_verify.mjs --json
 node .\tools\pdv_content_verify.mjs --strict-phase20-roster
 node .\tools\pdv_prisma_ui_audit.mjs
+node .\tools\pdv_prisma_to_oneoh_audit.mjs
 node .\tools\pdv_author.mjs list-manifests
 node .\tools\pdv_author.mjs status phase4
 node .\tools\pdv_author.mjs plan phase4

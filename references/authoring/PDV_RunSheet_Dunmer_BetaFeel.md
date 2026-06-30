@@ -367,6 +367,9 @@ FAIL, in slots 5/6.
 - Manually open the Devotion panel after the Azura/Boethiah reads. It should be populated, focused, and close cleanly with ESC or the X.
 - Chronicle / Book of Days should show readable source or dawn-digest text if that UI path emits for the beat; no blank entries.
 - Ledger should show the Reclamation source row and any ancestor/substrate driver row created by the prayer test.
+- During the shared Prisma U6/U7 pass, include the active-patron neglect recovery beat. Set patron piety to 0,
+  run dawn, then award one patron signal, set piety to 15, and run dawn again. The recovery beat must be readable,
+  must not force-open the full panel, and must not repeat the old lapse as a fresh neglect event.
 - Under `Curse vampire`, Prisma may surface a posture/curse toast, but the manager state remains the proof source; do not count Prisma display as route proof.
 - Save/load after snapshot A, reopen the panel, and confirm Survey/Active Effects/Prisma agree on the same focus and posture.
 
@@ -428,7 +431,7 @@ yet landed) / DEFERRED (no runnable step) / N/A.
 | 5. surveyStatusClarity | manual-acceptance | all 5 facets legible + counter-free? | |
 | 6. stackSnapshot | manual-acceptance | snapshots A + B match, no generic leak? | |
 | 7. manualFeelNote | manual-acceptance | feel note recorded | |
-| 8. Prisma surfaces | manual-acceptance | toast/panel/Chronicle/Ledger safe and populated? | |
+| 8. Prisma surfaces | manual-acceptance | toast/panel/Chronicle/Ledger safe and populated, including recovery? | |
 
 Blocking notes:
 

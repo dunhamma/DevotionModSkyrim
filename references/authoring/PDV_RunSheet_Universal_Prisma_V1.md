@@ -67,7 +67,14 @@ zeroes regen buffs, so flat heals must show the bar move here).
 - **See:** a **"rites thinning / neglect"** toast + a Book of Days note, once, on the first lapse.
 - **Record:** ___
 
-### U7 -- how it reads  [Tester] [M]
+### U7 -- neglect recovery  [Tester] [R]+[M]
+- **Do:** after U6, MCM Debug -> award your active patron one curated signal, set patron piety to **15**,
+  then **Run Dawn**. Use 15 so this proves recovery without also proving a Seeker tier-up.
+- **See:** a recovery / renewal beat appears in the player-owned Prisma surfaces, with no forced full panel.
+  Book of Days / Chronicle text is readable and not blank. The old neglect line does not repeat as a fresh lapse.
+- **Record:** ___
+
+### U8 -- how it reads  [Tester] [M]
 - **Do/Write:** 1-2 sentences. Do the three spaces feel like **one record** (same beat, same symbol/voice across
   toast + Chronicle + Ledger)? Do toasts read over a busy background? **Any beat that double-fired, hit the wrong
   space, or showed a BLANK line?** (A blank Book of Days line is a bug -> FAIL it.)
@@ -84,6 +91,7 @@ zeroes regen buffs, so flat heals must show the bar move here).
 | U4 Ledger + substrate fix | driver rows incl. substrate; watching row | | |
 | U5 Book of Days + prune | legible; ordinary prune, milestones persist | | |
 | U6 neglect | toast + BoD once on first lapse | | |
-| U7 reads | one coherent record; no blank/double/wrong-space | | |
+| U7 neglect recovery | recovery beat surfaces; no repeat lapse or forced panel | | |
+| U8 reads | one coherent record; no blank/double/wrong-space | | |
 
 Owner: capture the Papyrus + `DevotionPrismaBridge` logs, record into `PDV_V1_BetaReadinessGate.md`.

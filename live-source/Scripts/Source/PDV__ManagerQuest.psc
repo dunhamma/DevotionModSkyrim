@@ -9359,9 +9359,12 @@ Function RunDawnApplySpellAndNeglectLayers()
     UpdateContextualFavorRuntime()
 
     Bool patronNeglected = IsNeglectFlagActive(_activeDeity)
-    if patronNeglected && StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState") == 0
+    Int priorPatronToastState = StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState")
+    if patronNeglected && priorPatronToastState == 0
         SendPrismaEventToast("neglect", _activeDeity, "", "", "")
         SurfaceTransition("neglect", _activeDeity.DeityName, "drop", _activeDeity.DeityIndex, "absence")
+    elseIf !patronNeglected && priorPatronToastState == 1
+        SurfaceTransition("neglect", _activeDeity.DeityName, "recover", _activeDeity.DeityIndex, "renewal")
     endIf
     StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", BoolToInt(patronNeglected))
     SyncFirstTierRaceRewardRuntime()

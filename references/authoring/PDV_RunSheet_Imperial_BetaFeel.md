@@ -333,6 +333,9 @@ Run these during slots 2-7:
 - Talos book and Concordat actions may emit a toast or top-left notice; they must not force-open the full Prisma panel.
 - Manually open the Devotion panel after the Talos book read and after a Concordat raw-value move. It should open populated and close with ESC or X.
 - Chronicle / Book of Days should not create blank entries for civic/Talos beats or dawn digest.
+- During the shared Prisma U6/U7 pass, prove both Imperial civic neglect preservation and the follow-up
+  recovery beat. Set patron piety to 0, run dawn, then award one patron signal, set piety to 15, and run dawn
+  again. The recovery beat must not force-open the full panel or repeat the old lapse as a fresh neglect event.
 - Ledger should show the Talos-pressure or civic driver row after an accepted route, and no row after wrong-origin or generic-source probes.
 - If the panel shows Concordat or Talos posture, it must agree with MCM Debug `Raw value`/Survey in meaning, even if the committed band label lags.
 - Save/load after the private-defiance stack snapshot, reopen the panel, and confirm no stale or doubled UI state.
@@ -359,7 +362,7 @@ intake stays boundary-clean. Do NOT log FAIL on a PENDING route step.
 | 6 genericHookRejection | Faction/attendance/bounty/lawfulness do not score | ROUTE-RUNTIME | | |
 | Shared Daedric inn-sleep proof | negative Prince inn-only sleep + positive 314 control | ROUTE-RUNTIME + MANUAL | | |
 | 7 manualFeelNote | Reads as concrete civic practice under law | MANUAL-ACCEPTANCE | | |
-| 8 Prisma surfaces | Toast/panel/Chronicle/Ledger agree with manager state | MANUAL-ACCEPTANCE | | |
+| 8 Prisma surfaces | Toast/panel/Chronicle/Ledger agree with manager state, including neglect recovery | MANUAL-ACCEPTANCE | | |
 
 Blocking notes:
 

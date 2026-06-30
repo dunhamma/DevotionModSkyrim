@@ -72,6 +72,13 @@ the current v1.0 gate. `node .\tools\pdv_daedric_beta_gate.mjs --json` reports
 regresses. Daedric final-world placement remains separate from this beta-display
 proof.
 
+2026-06-30 handoff note: the Prisma-to-1.0 wiring pass is static/readback clean
+and adds `tools\pdv_prisma_to_oneoh_audit.mjs` as the roll-up guard. The manager
+now emits the shared `neglect.recover` surface when the active patron leaves a
+neglected state. This is still not runtime/manual proof; fold the recovery beat
+into the universal Prisma sheet and into the next Imperial/Dunmer Prisma surface
+checks.
+
 ## Preflight Before Opening Skyrim
 
 Run from `C:\Users\Admin\Documents\Devotion Mod Project`:
@@ -89,6 +96,7 @@ node .\tools\pdv_verify.mjs --strict-neglect-decay --json
 node .\tools\pdv_phase2_reward_readback_audit.mjs --json
 node .\tools\pdv_requiem_penalty_audit.mjs
 node .\tools\pdv_integrity_harness.mjs
+node .\tools\pdv_prisma_to_oneoh_audit.mjs
 node .\tools\pdv_refresh_seq.mjs --write --json
 node .\tools\pdv_daedric_beta_gate.mjs --json
 node .\tools\pdv_beta_readiness_audit.mjs --strict --json
@@ -101,6 +109,8 @@ Expected before manual testing:
 - Strict Phase 20 verifier and Phase 2 reward readback audit: `PASS`; SEQ
   refresh has no stale/missing entry warning.
 - Integrity harness: `PASS`, including `eligibility_reward_coverage`.
+- Prisma-to-1.0 audit: `PASS`; this proves producer/UI wiring and live Prisma
+  asset parity, not in-game display.
 - Requiem penalty audit: `PASS`, including old regen-MGEF orphan checks and
   Imperial preservation.
 - Daedric beta-display gate: `PASS=16`.
@@ -158,6 +168,10 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
 - Prince V2 path-deepening sweep: prove deepen-not-initiate, open-path deepen
   markers, dual-face Azura behavior, anti-farm, and Hircine curse
   no-double-fire.
+- Prisma recovery sweep: run `PDV_RunSheet_Universal_Prisma_V1.md` U6/U7 once
+  on the current build, and make sure the drop and recovery beats appear as
+  player-owned toast/Book-of-Days/Chronicle surfaces without forcing the full
+  Prisma panel.
 - Requiem felt-penalty sweep: prove the new negative Health penalties are felt
   in-game and Imperial remains disease-resistance based.
 
