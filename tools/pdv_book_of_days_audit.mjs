@@ -12,6 +12,7 @@ const SOURCE = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source"
 const MANAGER = path.join(SOURCE, "PDV__ManagerQuest.psc");
 const DIRECTOR = path.join(SOURCE, "PDV_DiegeticDirector.psc");
 const MCM = path.join(SOURCE, "PDV_MCM.psc");
+const NATIVE_MAIN = path.join(ROOT, "native", "DevotionPrismaBridge", "src", "main.cpp");
 
 const results = [];
 const add = (level, message, source = "") => results.push({ level, message, source });
@@ -135,6 +136,11 @@ requireText(path.join(REPO_VIEW, "styles.css"), [
 ], "repo styles");
 
 requireText(path.join(REPO_VIEW, "app.js"), [
+  "overlayController",
+  "closeStartupFromView",
+  "onOverlayEsc",
+  'overlayController.open("journal")',
+  'overlayController.open("startup")',
   "journalMagnitude",
   "entry.magnitude",
   "entry.valence",
@@ -150,6 +156,8 @@ requireText(path.join(REPO_VIEW, "app.js"), [
   "journalRune",
   "bod-leaf__symbol",
   "replace(/\\b(true|false)\\b/gi",
+  "thresholdValue = thresholds[index] ? thresholds[index].value : 85",
+  "thresholdX = Math.round(74 + 190 * clamp01(thresholdValue / 85))",
 ], "repo app");
 
 forbidText(path.join(REPO_VIEW, "app.js"), [
@@ -168,6 +176,9 @@ requireText(MANAGER, [
   "PDV.Diegetic.Journal.Magnitudes",
   "PDV.Diegetic.Journal.Titles",
   "BuildJournalPayloadJson",
+  "BuildBookOfDaysPathInfo",
+  "ResolveBookOfDaysStandingDeity",
+  "BuildBookOfDaysInstrumentJson",
   "\\\"by\\\"",
   "\\\"foot\\\"",
   "\\\"instrument\\\"",
@@ -179,7 +190,41 @@ requireText(MANAGER, [
   "GetJournalMagnitudeForTone",
   "RefreshOpenBookOfDays",
   "PDV.Diegetic.Journal.Open",
+  "PDV.BookOfDays.LastTierDeity",
+  "BuildTierReachJournalLine",
+  "GetTierStandingLabel(newTier)",
+  "GetTierStandingLabel(TIER_CHAMPION)",
+  'PDV_DiegeticDirectorService && !(eventClass == "tier" && direction == "reach")',
 ], "manager source");
+
+if (mustExist(MANAGER)) {
+  const manager = read(MANAGER);
+  const journalBuilder = functionBlock(manager, "BuildJournalPayloadJson");
+  if (
+    !journalBuilder.includes("if page == 1") ||
+    !journalBuilder.includes('j = j + ",\\"entries\\":[]') ||
+    !journalBuilder.includes('j = j + ",\\"dashboard\\":" + GetDashboardJson()') ||
+    journalBuilder.includes("Both datasets ship every push")
+  ) {
+    add("FAIL", "Book of Days payload builder must keep Chronicle and Ledger data page-specific.", MANAGER);
+  } else {
+    add("PASS", "Book of Days payload builder keeps Chronicle and Ledger data page-specific.", MANAGER);
+  }
+
+  const staleChampionSurface = /SurfaceTransition\("tier",\s*deity\.DeityName\s*\+\s*" "\s*\+\s*GetPublicTierBand\(TIER_CHAMPION\)/.test(manager);
+  if (staleChampionSurface) {
+    add("FAIL", "Champion reward Book of Days surfaces must use internal tier labels, not public bands.", MANAGER);
+  } else {
+    add("PASS", "Champion reward Book of Days surfaces use internal tier labels.", MANAGER);
+  }
+}
+
+requireText(NATIVE_MAIN, [
+  "void HideJournalDom() noexcept",
+  'g_prisma->InteropCall(g_view, kReceiveOverlayFunction.data(), "{\\"journalClose\\":true}");',
+  "HideJournalDom();",
+  "CloseJournalSurface(std::string_view a_source",
+], "native bridge source");
 
 requireText(DIRECTOR, [
   "Function EmitJournal(Int deityIndex, String toneKey)",

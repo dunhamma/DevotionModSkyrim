@@ -38,9 +38,14 @@ zeroes regen buffs, so flat heals must show the bar move here).
 - **Record:** ___
 
 ### U2 -- tier-ups (Seeker / Devoted / Champion)  [Tester] [R]+[M]
-- **Do:** MCM Debug -> Force Piety on your patron to **25**, **Run Dawn**. Repeat at **50**, then **85**.
-- **See:** each step pops a **toast** and writes a **Book of Days** entry; at **Champion (85)** the Book of Days
-  entry is **pinned** (it won't get pruned later). No double entries on re-cross.
+- **Do:** MCM Debug -> Force Piety on your patron to **25**, **Run Dawn**. Do not open the Book yet. Close
+  only the toast, if needed, then open Book of Days yourself with the Book key/MCM and inspect it. Repeat at
+  **50**, then **85**. After each inspection, close the Book with ESC and confirm the next tier-up does not
+  re-open it by itself.
+- **See:** each step pops a **toast** and writes a **Book of Days** entry, but the **Book of Days never opens
+  by itself**. The Book entry names the level reached: **Seeker**, **Devoted**, then **Champion**. The left
+  instrument names the deity just advanced and fills to the relevant notch. At **Champion (85)** the Book of
+  Days entry is **pinned** (it won't get pruned later). No double entries on re-cross.
 - **Record:** ___
 
 ### U3 -- daily favor + the dawn digest  [Tester] [R]+[M]

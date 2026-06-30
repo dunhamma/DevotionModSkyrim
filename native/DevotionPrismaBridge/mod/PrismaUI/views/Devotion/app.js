@@ -492,8 +492,10 @@
     appendSvg(svg, "rect", { x: "74", y: "68", width: fillWidth, height: "14", rx: "7", class: fill });
     [1, 2, 3].forEach((tier, index) => {
       const instrumentTier = inst.tier !== undefined ? inst.tier : state.tier;
+      const thresholdValue = thresholds[index] ? thresholds[index].value : 85;
+      const thresholdX = Math.round(74 + 190 * clamp01(thresholdValue / 85));
       appendSvg(svg, "circle", {
-        cx: 100 + index * 54,
+        cx: thresholdX,
         cy: 105,
         r: "6",
         class: numberOrZero(instrumentTier) >= tier ? fill : "instrument-muted",
@@ -1043,26 +1045,46 @@
     document.body.classList.toggle("startup-visible", overlayVisible);
   };
 
-  const hideAllOverlays = () => {
-    if (nodes.startupModal) {
-      nodes.startupModal.hidden = true;
-    }
-    if (nodes.journalModal) {
-      nodes.journalModal.hidden = true;
-    }
-    syncOverlayVisibility();
-  };
+  const overlayController = (() => {
+    const overlayNode = (name) => {
+      if (name === "startup") return nodes.startupModal;
+      if (name === "journal") return nodes.journalModal;
+      return null;
+    };
+    const isOpen = (name) => {
+      const node = overlayNode(name);
+      return Boolean(node && !node.hidden);
+    };
+    const closeAll = () => {
+      [nodes.startupModal, nodes.journalModal].forEach((node) => {
+        if (node) node.hidden = true;
+      });
+      syncOverlayVisibility();
+    };
+    const close = (name) => {
+      const node = overlayNode(name);
+      if (node) {
+        node.hidden = true;
+      }
+      syncOverlayVisibility();
+    };
+    const open = (name) => {
+      closeAll();
+      const node = overlayNode(name);
+      if (node) {
+        node.hidden = false;
+      }
+      syncOverlayVisibility();
+    };
+    return { close, closeAll, isOpen, open };
+  })();
 
-  const hideStartup = () => {
-    if (!nodes.startupModal) return;
-    nodes.startupModal.hidden = true;
-    syncOverlayVisibility();
-  };
+  const hideAllOverlays = () => overlayController.closeAll();
+  const hideStartup = () => overlayController.close("startup");
+  const hideJournal = () => overlayController.close("journal");
 
-  const hideJournal = () => {
-    if (!nodes.journalModal) return;
-    nodes.journalModal.hidden = true;
-    syncOverlayVisibility();
+  const closeStartupFromView = () => {
+    hideStartup();
   };
 
   const closeJournalFromView = () => {
@@ -1080,12 +1102,19 @@
     event.which === 27
   );
 
-  const onJournalEsc = (event) => {
+  const onOverlayEsc = (event) => {
     if (!isEscapeKey(event)) return;
-    if (!nodes.journalModal || nodes.journalModal.hidden) return;
-    event.preventDefault();
-    event.stopPropagation();
-    closeJournalFromView();
+    if (overlayController.isOpen("journal")) {
+      event.preventDefault();
+      event.stopPropagation();
+      closeJournalFromView();
+      return;
+    }
+    if (overlayController.isOpen("startup")) {
+      event.preventDefault();
+      event.stopPropagation();
+      closeStartupFromView();
+    }
   };
 
   const JOURNAL_LABELS = { good: "Waxes", warning: "Wanes", neutral: "Holds" };
@@ -1360,8 +1389,7 @@
     if (feedbackEl) feedbackEl.hidden = page !== 1;
     if (page === 1) renderJournalLedger(journal.dashboard);
 
-    nodes.journalModal.hidden = false;
-    syncOverlayVisibility();
+    overlayController.open("journal");
     fitJournalBook();
   };
 
@@ -1427,8 +1455,7 @@
     });
 
     renderStartupDetails(selectedOption);
-    nodes.startupModal.hidden = false;
-    syncOverlayVisibility();
+    overlayController.open("startup");
   };
 
   const medallionOptionStatus = (option = {}) => {
@@ -1540,8 +1567,7 @@
     });
 
     renderMedallionDetails(medallion, selectedOption);
-    nodes.startupModal.hidden = false;
-    syncOverlayVisibility();
+    overlayController.open("startup");
   };
 
   const clear = (node) => {
@@ -2230,6 +2256,7 @@
   };
   function closeDevotionPanel() {
     document.removeEventListener("keydown", onPanelEsc, true);
+    overlayController.closeAll();
     document.body.classList.remove("panel-visible");
     if (typeof window.PDVPanelClose === "function") {
       window.PDVPanelClose("main|close");
@@ -2254,6 +2281,7 @@
       bridgeReceived = true;
       try {
         const payload = parsePayload(payloadText);
+        overlayController.closeAll();
         document.body.classList.add("panel-visible");
         bindPanelClose();
         handlePayload(payload);
@@ -2391,17 +2419,17 @@
   };
 
   if (nodes.startupClose) {
-    nodes.startupClose.addEventListener("click", () => hideStartup());
+    nodes.startupClose.addEventListener("click", () => closeStartupFromView());
   }
 
   if (nodes.journalClose) {
     nodes.journalClose.addEventListener("click", () => closeJournalFromView());
   }
 
-  window.addEventListener("keydown", onJournalEsc, true);
-  document.addEventListener("keydown", onJournalEsc, true);
-  window.addEventListener("keyup", onJournalEsc, true);
-  document.addEventListener("keyup", onJournalEsc, true);
+  window.addEventListener("keydown", onOverlayEsc, true);
+  document.addEventListener("keydown", onOverlayEsc, true);
+  window.addEventListener("keyup", onOverlayEsc, true);
+  document.addEventListener("keyup", onOverlayEsc, true);
 
   const demoToasts = {
     favor: { event: "favor", deity: "Kyne", symbol: "kyne", context: "The clean hunt" },

@@ -3,6 +3,7 @@
 #include <RE/Skyrim.h>
 #include <SKSE/SKSE.h>
 
+#include <deque>
 #include <filesystem>
 #include <memory>
 #include <optional>
@@ -17,4 +18,3 @@ namespace logs = SKSE::log;
 namespace stl = SKSE::stl;
 
 using namespace std::literals;
-

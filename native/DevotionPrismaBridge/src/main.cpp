@@ -17,11 +17,12 @@ namespace
     // window.PDVPanelClose("main|close") (ESC or the in-view X button); C++ releases
     // focus AND hides the view, so the player is never trapped or left a lingering panel.
     constexpr auto kPanelCloseListener = "PDVPanelClose"sv;
+    constexpr std::size_t kMaxPendingOverlayPayloads = 16;
 
     PRISMA_UI_API::IVPrismaUI2* g_prisma = nullptr;
     PrismaView g_view = 0;
     std::string g_lastPayload;
-    std::string g_pendingOverlayPayload;
+    std::deque<std::string> g_pendingOverlayPayloads;
 
     // Choice-panel return-channel state. Status codes match the Papyrus contract:
     //   -3 = no choice active, -2 = pending (focused, awaiting a pick),
@@ -138,11 +139,19 @@ namespace
         }
     }
 
+    void HideJournalDom() noexcept
+    {
+        if (g_prisma && g_view && g_prisma->IsValid(g_view) && g_domReady) {
+            g_prisma->InteropCall(g_view, kReceiveOverlayFunction.data(), "{\"journalClose\":true}");
+        }
+    }
+
     void CloseJournalSurface(std::string_view a_source, bool a_requireVisible = false) noexcept
     {
         if (a_requireVisible && !g_journalVisible) {
             return;
         }
+        HideJournalDom();
         g_journalVisible = false;
         logs::info("Prisma journal close requested by {}", a_source);
         HidePrismaView();
@@ -224,6 +233,16 @@ namespace
         return true;
     }
 
+    void QueueOverlayPayload(const std::string& a_payload)
+    {
+        if (g_pendingOverlayPayloads.size() >= kMaxPendingOverlayPayloads) {
+            g_pendingOverlayPayloads.pop_front();
+            logs::warn("Prisma overlay queue capped at {}; dropped oldest deferred overlay", kMaxPendingOverlayPayloads);
+        }
+        g_pendingOverlayPayloads.push_back(a_payload);
+        logs::info("Prisma overlay deferred until DOM ready (queued={})", g_pendingOverlayPayloads.size());
+    }
+
     bool SendOverlayPayload(const std::string& a_payload)
     {
         if (!g_prisma || !g_view || !g_prisma->IsValid(g_view)) {
@@ -231,8 +250,7 @@ namespace
         }
 
         if (!g_domReady) {
-            g_pendingOverlayPayload = a_payload;
-            logs::info("Prisma overlay deferred until DOM ready");
+            QueueOverlayPayload(a_payload);
             return true;
         }
 
@@ -265,9 +283,13 @@ namespace
             logs::info("Prisma deferred panel focus (cold-view open)");
             g_panelFocusPending = false;
         }
-        if (!g_pendingOverlayPayload.empty()) {
-            SendOverlayPayload(g_pendingOverlayPayload);
-            g_pendingOverlayPayload.clear();
+        while (!g_pendingOverlayPayloads.empty()) {
+            std::string pendingPayload = std::move(g_pendingOverlayPayloads.front());
+            g_pendingOverlayPayloads.pop_front();
+            if (!SendOverlayPayload(pendingPayload)) {
+                QueueOverlayPayload(pendingPayload);
+                break;
+            }
         }
         // Deferred choice: render the grid on the now-ready DOM, THEN focus.
         if (g_choiceFocusPending && g_prisma && g_view && g_prisma->IsValid(g_view)) {
@@ -415,16 +437,10 @@ namespace
         const auto overlayPayload = payload && payload[0] ? std::string(payload) : "{}";
 
         if (!EnsureView()) {
-            g_pendingOverlayPayload = overlayPayload;
             return false;
         }
 
-        if (!SendOverlayPayload(overlayPayload)) {
-            g_pendingOverlayPayload = overlayPayload;
-            return false;
-        }
-
-        return true;
+        return SendOverlayPayload(overlayPayload);
     }
 
     bool ShowChoiceImpl(const std::string& a_menuId, const std::string& a_payload, bool a_pauseGame)

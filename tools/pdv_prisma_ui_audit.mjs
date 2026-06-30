@@ -431,13 +431,24 @@ if (!fs.existsSync(NATIVE_BRIDGE_SOURCE)) {
   if (
     !overlayPayloadBlock ||
     !overlayPayloadBlock.includes("if (!g_domReady)") ||
-    !overlayPayloadBlock.includes("g_pendingOverlayPayload = a_payload") ||
+    !overlayPayloadBlock.includes("QueueOverlayPayload(a_payload)") ||
     !overlayPayloadBlock.includes("return true") ||
     overlayPayloadBlock.indexOf("if (!g_domReady)") > overlayPayloadBlock.indexOf("g_prisma->Show(g_view)")
   ) {
     fail("Native overlay sends must defer until DOM ready before showing the shared Prisma view.", NATIVE_BRIDGE_SOURCE);
   } else {
     pass("Native overlay sends defer until DOM ready before showing the shared Prisma view.", NATIVE_BRIDGE_SOURCE);
+  }
+
+  if (
+    !nativeBridge.includes("std::deque<std::string> g_pendingOverlayPayloads") ||
+    !nativeBridge.includes("kMaxPendingOverlayPayloads") ||
+    !nativeBridge.includes("QueueOverlayPayload") ||
+    nativeBridge.includes("std::string g_pendingOverlayPayload;")
+  ) {
+    fail("Native cold-DOM overlay deferral must use a capped FIFO queue, not a single overwritten payload slot.", NATIVE_BRIDGE_SOURCE);
+  } else {
+    pass("Native cold-DOM overlay deferral uses a capped FIFO queue.", NATIVE_BRIDGE_SOURCE);
   }
 }
 
@@ -463,21 +474,37 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     pass("Prisma UI maps normalized azura symbols to Azurah display text.", DEVOTION_PRISMA_VIEW);
   }
 
-  if (!app.includes("const isEscapeKey = (event)") || !app.includes("const onJournalEsc = (event)")) {
-    fail("Book of Days UI must use a dedicated robust ESC handler.", DEVOTION_PRISMA_VIEW);
+  if (
+    !app.includes("const overlayController = (() =>") ||
+    !app.includes("const isEscapeKey = (event)") ||
+    !app.includes("const onOverlayEsc = (event)") ||
+    !app.includes("const closeStartupFromView = () =>") ||
+    !app.includes("const closeJournalFromView = () =>")
+  ) {
+    fail("Prisma overlays must use the shared overlay controller and robust ESC close handler.", DEVOTION_PRISMA_VIEW);
   } else {
-    pass("Book of Days UI has a dedicated robust ESC handler.", DEVOTION_PRISMA_VIEW);
+    pass("Prisma overlays use the shared overlay controller and robust ESC close handler.", DEVOTION_PRISMA_VIEW);
   }
 
   if (
-    !app.includes('window.addEventListener("keydown", onJournalEsc, true)') ||
-    !app.includes('document.addEventListener("keydown", onJournalEsc, true)') ||
-    !app.includes('window.addEventListener("keyup", onJournalEsc, true)') ||
-    !app.includes('document.addEventListener("keyup", onJournalEsc, true)')
+    !app.includes('window.addEventListener("keydown", onOverlayEsc, true)') ||
+    !app.includes('document.addEventListener("keydown", onOverlayEsc, true)') ||
+    !app.includes('window.addEventListener("keyup", onOverlayEsc, true)') ||
+    !app.includes('document.addEventListener("keyup", onOverlayEsc, true)')
   ) {
-    fail("Book of Days ESC handler must bind at window/document capture on keydown and keyup.", DEVOTION_PRISMA_VIEW);
+    fail("Overlay ESC handler must bind at window/document capture on keydown and keyup.", DEVOTION_PRISMA_VIEW);
   } else {
-    pass("Book of Days ESC handler binds at window/document capture on keydown and keyup.", DEVOTION_PRISMA_VIEW);
+    pass("Overlay ESC handler binds at window/document capture on keydown and keyup.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (
+    !app.includes('overlayController.open("journal")') ||
+    !app.includes('overlayController.open("startup")') ||
+    !app.includes("overlayController.closeAll();\n        document.body.classList.add(\"panel-visible\")")
+  ) {
+    fail("Focused panel and modal opens must pass through the overlay controller.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Focused panel and modal opens pass through the overlay controller.", DEVOTION_PRISMA_VIEW);
   }
 
   if (

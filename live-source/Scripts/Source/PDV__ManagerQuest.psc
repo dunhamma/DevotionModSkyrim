@@ -1973,7 +1973,7 @@ EndFunction
 ; expanded by the race routing helpers (see RouteRaceSetupJournal).
 String Function ResolveTransitionJournalLine(String eventClass, String surfaceKey, String direction, Int deityIndex)
     String toneKey = eventClass + "." + direction
-    if PDV_DiegeticDirectorService
+    if PDV_DiegeticDirectorService && !(eventClass == "tier" && direction == "reach")
         String bespoke = PDV_DiegeticDirectorService.ResolveJournalLine(deityIndex, toneKey)
         if bespoke != ""
             return bespoke
@@ -1987,7 +1987,7 @@ String Function ResolveTransitionJournalLine(String eventClass, String surfaceKe
     elseIf eventClass == "reorientation" && direction == "shift"
         return BuildReorientationJournalLine(surfaceKey)
     elseIf eventClass == "tier" && direction == "reach"
-        return "Your devotion has deepened."
+        return BuildTierReachJournalLine(surfaceKey, deityIndex)
     elseIf eventClass == "curse" && direction == "onset"
         return "A curse changes the shape of devotion."
     elseIf eventClass == "curse" && direction == "cure"
@@ -1998,6 +1998,30 @@ String Function ResolveTransitionJournalLine(String eventClass, String surfaceKe
         return "You return to a rite you had let fall silent."
     elseIf eventClass == "creed" && direction == "drop"
         return "You crossed " + GetJournalDeityName(deityIndex) + "'s creed, and the path recoils."
+    endIf
+    return ""
+EndFunction
+
+String Function BuildTierReachJournalLine(String surfaceKey, Int deityIndex)
+    String deityName = GetJournalDeityName(deityIndex)
+    String tierLabel = ExtractTierLabelFromSurfaceKey(surfaceKey)
+    if tierLabel == ""
+        tierLabel = "a deeper standing"
+    endIf
+    return "Your devotion to " + deityName + " has reached " + tierLabel + "."
+EndFunction
+
+String Function ExtractTierLabelFromSurfaceKey(String surfaceKey)
+    if StringContainsToken(surfaceKey, "Champion")
+        return "Champion"
+    elseIf StringContainsToken(surfaceKey, "Devoted")
+        return "Devoted"
+    elseIf StringContainsToken(surfaceKey, "Seeker")
+        return "Seeker"
+    elseIf StringContainsToken(surfaceKey, "Faithful")
+        return "Faithful"
+    elseIf StringContainsToken(surfaceKey, "Observant")
+        return "Observant"
     endIf
     return ""
 EndFunction
@@ -2031,7 +2055,7 @@ EndFunction
 String Function BuildReorientationJournalLine(String surfaceKey)
     Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_ALTMER
-        return "Your soul records where you stand in the Thalmor question: " + surfaceKey + "."
+        return "Where you stand in the Thalmor question shifts: " + surfaceKey + "."
     elseIf originRace == ORIGIN_BRETON
         return BuildStartupRoadJournalLine(surfaceKey)
     endIf
@@ -7167,18 +7191,21 @@ Function MaybeShowRedguardChampionEntry(Int sectValue)
         if PDV_Tuwhacca && GetTier(PDV_Tuwhacca) >= TIER_DEVOTED
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_Crown, "The Crown way has become more than memory. It is a public shape of your devotion.", False)
             AppendBookOfDaysEntry("The Crown way is more than memory in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
+            SendPrismaShiftToast("The Crown way, made public.", "More than memory now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == REDGUARD_SECT_FOREBEAR
         if PDV_HoonDing && GetTier(PDV_HoonDing) >= TIER_DEVOTED
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_Forebear, "The Forebear way has become more than adaptation. It is a public shape of your devotion.", False)
             AppendBookOfDaysEntry("The Forebear way is more than adaptation in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
+            SendPrismaShiftToast("The Forebear way, made public.", "More than adaptation now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == REDGUARD_SECT_ASHABAH
         if PDV_Tuwhacca && GetTier(PDV_Tuwhacca) >= TIER_DEVOTED
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_AshAbah, "The Ash'abah duty has become more than necessity. It is a public shape of your devotion.", False)
             AppendBookOfDaysEntry("The Ash'abah duty is more than necessity in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
+            SendPrismaShiftToast("The Ash'abah duty, made public.", "More than necessity now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     endIf
@@ -8008,8 +8035,10 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
         ; per-(deity,tier) guard prevents duplicate notices; the band in surfaceKey scopes
         ; the journal guard so Seeker/Devoted/Champion each log once, Champion pinned.
         if surfaceTierUp && newTier > oldTier && NotifyTierUp(deity, newTier)
+            StorageUtil.SetFormValue(None, "PDV.BookOfDays.LastTierDeity", deityForm)
+            StorageUtil.SetIntValue(None, "PDV.BookOfDays.LastTierValue", newTier)
             SendPrismaEventToast("tier", deity, "", GetPublicTierBand(newTier), "")
-            SurfaceTransition("tier", deity.DeityName + " " + GetPublicTierBand(newTier), "reach", deity.DeityIndex, "", false, newTier >= TIER_CHAMPION)
+            SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(newTier), "reach", deity.DeityIndex, "", false, newTier >= TIER_CHAMPION)
         endIf
 
         RequestPanelRefresh()
@@ -11543,7 +11572,7 @@ Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFoc
 
     if isActive && activeTier >= TIER_CHAMPION && t3 && !hadChampionSpell && playerRef.HasSpell(t3) && deity && NotifyTierUp(deity, TIER_CHAMPION)
         SendPrismaEventToast("tier", deity, "", GetPublicTierBand(TIER_CHAMPION), "")
-        SurfaceTransition("tier", deity.DeityName + " " + GetPublicTierBand(TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
+        SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
         Trace(1, "Khajiit Champion reward presentation shown: " + deity.DeityName)
     endIf
 EndFunction
@@ -12155,7 +12184,7 @@ Function MaybeShowChampionRewardPresentation(Actor playerRef, Spell championSpel
 
     if NotifyTierUp(deity, TIER_CHAMPION)
         SendPrismaEventToast("tier", deity, "", GetPublicTierBand(TIER_CHAMPION), "")
-        SurfaceTransition("tier", deity.DeityName + " " + GetPublicTierBand(TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
+        SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
         if deity == PDV_Kyne
             ShowNordNotification(PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
         endIf
@@ -13091,7 +13120,8 @@ EndFunction
 Function DebugRenounceHircinePath()
     if PDV_HircinePath
         PDV_HircinePath.RenouncePath("mcm")
-        AppendBookOfDaysEntry("Hircine's mark fades from your blood, and the pack is no longer yours.", Utility.GetCurrentGameTime() as Int, "reorientation", "hircine", False, 3)
+        AppendBookOfDaysEntry("You set the hunt down. The pact with Hircine is renounced -- the beast's mark fades slowly, but the road back is yours to walk.", Utility.GetCurrentGameTime() as Int, "reorientation", "hircine", True, 3)
+        SendPrismaShiftToast("You renounce the hunt.", "Hircine's pact is set down.", "hircine")
         DrainHircineResiduePrismaToasts()
         SendPrismaDaedricToast("Hircine", "lapse", "", "hircine")
         RequestPanelRefresh()
@@ -13223,7 +13253,6 @@ Function ShowFormalCommitmentOffer(PDV_DeityBase deity)
     Int choice = offerMessage.Show()
     if choice == 0
         DebugAcceptPendingCommitment()
-        DispatchDiegeticCue("offer", deity.DeityName, "accept", deity, "reverent")
     elseIf choice == 1
         DebugDeclinePendingCommitment()
     elseIf choice == 2
@@ -13367,6 +13396,8 @@ Function DebugAcceptPendingCommitment()
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Offered", 0)
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 0)
     SetActiveDeity(pendingDeity)
+    DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")
+    SendPrismaShiftToast("You have given your devotion to " + GetPublicDeityDisplayName(pendingDeity) + ".", GetPublicDeityDisplayName(pendingDeity) + " takes you as their own.", GetPrismaSymbolForDeity(pendingDeity))
     if carryAmount > 0.0
         AwardPiety(pendingDeity, carryAmount, "commitment_carryover")
     endIf
@@ -13561,6 +13592,7 @@ Function DebugRefusePendingCommitment()
     endIf
 
     DispatchDiegeticCue("offer", pendingDeity.DeityName, "refuse", pendingDeity, "absence")
+    SendPrismaShiftToast("You turn " + GetPublicDeityDisplayName(pendingDeity) + " away.", GetPublicDeityDisplayName(pendingDeity) + " will not ask again.", GetPrismaSymbolForDeity(pendingDeity))
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 1)
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 1)
     ClearPendingCommitment()
@@ -15671,7 +15703,7 @@ Function AwardImperialAncestorSpinePulse(Float multiplier, String reason)
         tierBefore = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
         PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(multiplier, reason)
         Int tierAfter = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("imperial-civic", tierBefore, tierAfter, multiplier, "The old civic spine steadies.", "talos", GetImperialCivicLayerLabel())
+        SendPrismaSubstrateProgress("imperial-civic", tierBefore, tierAfter, multiplier, "Your public service steadies your devotion.", "talos", GetImperialCivicLayerLabel())
     endIf
 
     if PDV_Talos
@@ -15953,7 +15985,7 @@ EndFunction
 
 String Function GetStartupCanonicalSummary(Int originRace)
     if originRace == ORIGIN_NORD
-        return "You begin among the broad worship of the Nords. No single god claims you yet; a patron will reveal itself through how you live, hunt, and weather the storms."
+        return "You begin by choosing your pantheon baseline: the Old Ways of Kyne, Shor, Tsun, Stuhn, Mara, and Talos, or the Nine Divines as Skyrim now names them."
     elseIf originRace == ORIGIN_IMPERIAL
         return "You begin in the broad embrace of the Nine Divines, even as the White-Gold Concordat presses down on the open worship of Talos."
     elseIf originRace == ORIGIN_DUNMER
@@ -15972,15 +16004,29 @@ String Function GetStartupCanonicalSummary(Int originRace)
         return "You begin by choosing your sect: the orthodox Crown, the adaptive Forebear, or the burdened Ash'abah who tend the unquiet dead."
     elseIf originRace == ORIGIN_ORC
         return "You begin by choosing your life-mode: the full Stronghold code of Malacath, dignity kept in the City, or honor carried into Legion and exile."
-    elseIf originRace == ORIGIN_NORD
-        return "You begin by choosing your pantheon baseline: the Old Ways of Kyne, Shor, Tsun, Stuhn, Mara, and Talos, or the Nine Divines as Skyrim now names them."
     endIf
 
     return "Your starting devotion is set by the traditions of your people."
 EndFunction
 
 String Function GetStartupInfoOnlyText(Int originRace)
-    return GetStartupCanonicalSummary(originRace) + "\n\n" + STARTUP_ADVISORY_TEXT
+    return GetStartupCanonicalSummary(originRace) + "\n\n" + GetStartupInfoOnlyFollowup(originRace)
+EndFunction
+
+String Function GetStartupInfoOnlyFollowup(Int originRace)
+    if originRace == ORIGIN_IMPERIAL
+        return "Live under the Divines. Your choices will decide how Talos, law, and public duty weigh on you."
+    elseIf originRace == ORIGIN_DUNMER
+        return "Your choices will show whether ancestor, Tribunal memory, or Reclamation answers most clearly."
+    elseIf originRace == ORIGIN_ALTMER
+        return "Your choices will test that inheritance, and whether purity holds or bends."
+    elseIf originRace == ORIGIN_KHAJIIT
+        return "Your path will emerge through moon, road, rest, and the company you keep."
+    elseIf originRace == ORIGIN_ARGONIAN
+        return "Your choices will show whether Hist, people, borrowed gods, or Void draws nearest."
+    endIf
+
+    return "Your choices, rites, and conduct will shape which powers answer."
 EndFunction
 
 String Function GetStartupOptionId(Int originRace, Int optionValue)
@@ -16258,58 +16304,30 @@ String Function JournalDayToFictionDate(Int gameDay)
     return months[monthIndex] + " " + dayOfMonth
 EndFunction
 
-; Build the Book of Days journal JSON payload.
-; Entries are ordered oldest-first (index 0 = oldest, last index = newest).
-String Function BuildJournalPayloadJson(Int page = 0)
-    RepairBookOfDaysJournalText()
-    Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
-    Int titleCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
-    Int magnitudeCount = StorageUtil.IntListCount(None, "PDV.Diegetic.Journal.Magnitudes")
-    String entries = ""
-    Int i = 0
-    while i < count
-        String line = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", i))
-        Int gameDay = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Days", i)
-        String tone = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Tones", i))
-        String symbol = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Symbols", i))
-        String fictionDate = JsonSafeString(JournalDayToFictionDate(gameDay))
-        String entryTitle = ""
-        if i < titleCount
-            entryTitle = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Titles", i)
-        endIf
-        if entryTitle == ""
-            entryTitle = JournalToneToTitle(tone)
-        endIf
-        entryTitle = JsonSafeString(entryTitle)
-        Int magnitude = GetJournalMagnitudeForTone(tone)
-        if i < magnitudeCount
-            magnitude = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Magnitudes", i)
-        endIf
-        String valence = JournalToneToValence(tone)
-        String entry = "{\"date\":\"" + fictionDate + "\""
-        entry = entry + ",\"day\":" + gameDay
-        entry = entry + ",\"symbol\":\"" + symbol + "\""
-        entry = entry + ",\"tone\":\"" + tone + "\""
-        entry = entry + ",\"valence\":\"" + valence + "\""
-        entry = entry + ",\"magnitude\":" + magnitude
-        entry = entry + ",\"title\":\"" + entryTitle + "\""
-        entry = entry + ",\"text\":\"" + line + "\"}"
-        if i > 0
-            entries = entries + ","
-        endIf
-        entries = entries + entry
-        i += 1
-    endWhile
-    ; Path info point: race + path only (no standing -- the STANDING meter below
-    ; already shows standing). Same path source as Survey Devotion (GetPlayerMcmModeLine),
-    ; shown regardless of standing, with a startup-pending form.
-    String pathInfo = GetOriginRaceLabel(GetPlayerOriginRaceIndex())
+String Function BuildBookOfDaysPathInfo(Int originRace)
+    String pathInfo = GetOriginRaceLabel(originRace)
     if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") == 1
         pathInfo = pathInfo + " | " + GetPlayerMcmModeLine()
     else
         pathInfo = pathInfo + " | path not yet chosen"
     endIf
-    Int originRace = GetPlayerOriginRaceIndex()
+    return pathInfo
+EndFunction
+
+PDV_DeityBase Function ResolveBookOfDaysStandingDeity()
+    PDV_DaedricPathBase journalPact = GetActiveDaedricPactPath()
+    if journalPact
+        return journalPact
+    endIf
+
+    if _activeDeity
+        return _activeDeity
+    endIf
+
+    return StorageUtil.GetFormValue(None, "PDV.BookOfDays.LastTierDeity") as PDV_DeityBase
+EndFunction
+
+String Function BuildBookOfDaysInstrumentJson(Int originRace)
     Int tierValue = 0
     Float pietyValue = 0.0
     Float championThreshold = 85.0
@@ -16319,29 +16337,81 @@ String Function BuildJournalPayloadJson(Int page = 0)
     if PDV_GLO_ActivePiety
         pietyValue = PDV_GLO_ActivePiety.GetValue()
     endIf
-    PDV_DeityBase journalCommitment = _activeDeity
-    PDV_DaedricPathBase journalPact = GetActiveDaedricPactPath()
-    if journalPact
-        journalCommitment = journalPact
-    endIf
+
+    PDV_DeityBase journalCommitment = ResolveBookOfDaysStandingDeity()
     if journalCommitment
         championThreshold = journalCommitment.ThresholdChampion
         tierValue = GetTier(journalCommitment)
         pietyValue = GetPiety(journalCommitment)
     endIf
+
+    return GetPanelInstrumentJson(originRace, journalCommitment != None, tierValue, GetCurrentStandingLabel(), pietyValue, championThreshold)
+EndFunction
+
+; Build the Book of Days journal JSON payload.
+; Entries are ordered oldest-first (index 0 = oldest, last index = newest).
+String Function BuildJournalPayloadJson(Int page = 0)
+    RepairBookOfDaysJournalText()
+    Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
+    Int titleCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
+    Int magnitudeCount = StorageUtil.IntListCount(None, "PDV.Diegetic.Journal.Magnitudes")
+    String entries = ""
+    if page != 1
+        Int i = 0
+        while i < count
+            String line = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", i))
+            Int gameDay = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Days", i)
+            String tone = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Tones", i))
+            String symbol = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Symbols", i))
+            String fictionDate = JsonSafeString(JournalDayToFictionDate(gameDay))
+            String entryTitle = ""
+            if i < titleCount
+                entryTitle = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Titles", i)
+            endIf
+            if entryTitle == ""
+                entryTitle = JournalToneToTitle(tone)
+            endIf
+            entryTitle = JsonSafeString(entryTitle)
+            Int magnitude = GetJournalMagnitudeForTone(tone)
+            if i < magnitudeCount
+                magnitude = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Magnitudes", i)
+            endIf
+            String valence = JournalToneToValence(tone)
+            String entry = "{\"date\":\"" + fictionDate + "\""
+            entry = entry + ",\"day\":" + gameDay
+            entry = entry + ",\"symbol\":\"" + symbol + "\""
+            entry = entry + ",\"tone\":\"" + tone + "\""
+            entry = entry + ",\"valence\":\"" + valence + "\""
+            entry = entry + ",\"magnitude\":" + magnitude
+            entry = entry + ",\"title\":\"" + entryTitle + "\""
+            entry = entry + ",\"text\":\"" + line + "\"}"
+            if i > 0
+                entries = entries + ","
+            endIf
+            entries = entries + entry
+            i += 1
+        endWhile
+    endIf
+    Int originRace = GetPlayerOriginRaceIndex()
+    String pathInfo = BuildBookOfDaysPathInfo(originRace)
     String j = "{\"mode\":\"journal\",\"journal\":{"
     j = j + "\"title\":\"Book of Days\""
     j = j + ",\"by\":\"" + JsonSafeString(GetJournalByline()) + "\""
     j = j + ",\"summary\":\"A record of devotional acts since the path began.\""
     j = j + ",\"survey\":\"" + JsonSafeString(pathInfo) + "\""
     j = j + ",\"foot\":\"Press your Book of Days key again to close.\""
-    j = j + ",\"instrument\":" + GetPanelInstrumentJson(originRace, journalCommitment != None, tierValue, GetCurrentStandingLabel(), pietyValue, championThreshold)
+    j = j + ",\"instrument\":" + BuildBookOfDaysInstrumentJson(originRace)
     ; page 0 = Chronicle (entries), page 1 = Ledger (the read-only "what feeds your gods"
-    ; dashboard). Both datasets ship every push; the hotkey cycles the page and app.js
-    ; shows the active one (a non-focused overlay cannot take an in-view click).
+    ; dashboard). Keep each payload page-specific so player-owned Book opens do not
+    ; build dashboard JSON unless the ledger page is requested.
     j = j + ",\"page\":" + page
-    j = j + ",\"entries\":[" + entries + "]"
-    j = j + ",\"dashboard\":" + GetDashboardJson()
+    if page == 1
+        j = j + ",\"entries\":[]"
+        j = j + ",\"dashboard\":" + GetDashboardJson()
+    else
+        j = j + ",\"entries\":[" + entries + "]"
+        j = j + ",\"dashboard\":{}"
+    endIf
     j = j + "}}"
     return j
 EndFunction
@@ -18569,17 +18639,6 @@ String Function GetImperialSurveyText()
     endIf
     if PDV_ImperialAncestorSubstrate
         text = text + " Your civic inheritance is " + GetImperialCivicLayerLabel() + "."
-    endIf
-
-    if PDV_Talos
-        Float talosMultiplier = GetTalosEffectiveGainMultiplier()
-        if talosMultiplier > 1.0
-            text = text + " Your defiance has the old breath leaning your way; Talos answers the louder for the risk."
-        elseIf talosMultiplier < 1.0
-            text = text + " Your standing with the Concordat keeps Talos at arm's length; the old breath comes only faintly."
-        else
-            text = text + " On the Talos question you have not yet leaned either way, and the old breath waits."
-        endIf
     endIf
 
     if PDV_ConcordatStandingTrack && PDV_ConcordatStandingTrack.HasExtremeResetGate()
