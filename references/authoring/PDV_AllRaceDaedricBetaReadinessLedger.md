@@ -61,8 +61,8 @@ Manager FormList property: PDV__ManagerQuest.PDV_FLST_DaedricPaths_All wired by 
 QASmoke proof senders: 16 PDV_REFR_Daedric_<Prince>_LiveSender_QASmoke route-200 refs plus PDV_REFR_Daedric_GenericSilenceProbe_QASmoke route-201 ref, all read back to their ACTI bases
 Fast route sweep: MCM Debug `Route all Princes` routes all 16 EventBus sender cues plus the generic silence probe in one prompt
 QASmoke runtime checker: tools\pdv_daedric_runtime_check.mjs self-test PASS for all 16 plus generic; run --strict-manager --source qasmoke after physical QASmoke activation, --source mcm after MCM sweep activation, and --source organic after exact vanilla quest-stage activation
-Structured evidence intake: references\authoring\PDV_DaedricRuntimeEvidenceLedger.json exists with all 16 Princes pending; update with tools\pdv_daedric_evidence_intake.mjs only after in-game proof
-Daedric beta-display gate: tools\pdv_daedric_beta_gate.mjs currently fails closed at PENDING=16 until all runtime/display slots pass
+Structured evidence intake: references\authoring\PDV_DaedricRuntimeEvidenceLedger.json now carries current v1.0 beta-display evidence for all 16 Princes
+Daedric beta-display gate: tools\pdv_daedric_beta_gate.mjs --json reports PASS=16 as of 2026-06-30; rerun after any Daedric, Prisma, reward, or runtime-surfacing change
 Latest ESP backup: D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\Devotion.esp.20260607-191318.bak
 Status: MCM controls, EventBus live-sender scaffold, and physical QASmoke proof sender refs are ready for in-game smoke; not yet counted runtime proof
 
@@ -72,7 +72,7 @@ Compiled output: D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\PDV_PlayerEve
 Routes: Boethiah DA02 stage 100, Azura DA01 stage 100, Vaermina DA16 stage 190, Meridia DA09 stage 500, Molag Bal DA10 stage 200, Mephala DA08 stage 60, Malacath DA06 stage 200, Mehrunes Dagon DA07 stage 100, Sheogorath DA15 stage 200, Namira DA11 stage 100, Sanguine DA14 stage 200, Clavicus Vile DA03 stage 200, Hermaeus Mora DA04 stage 100, Nocturnal TG09 stage 200, Peryite DA13 stage 100, Hircine DA05 stage 100
 Readback: all 16 PDV_FLST_Daedric_<Prince>LiveSources FormLists exist, contain their exact Skyrim.esm quest FormKeys, and are wired on the PDV_PlayerEvents alias script
 Latest ESP backup: D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\daedric-princes\Devotion.esp.20260607-194539.bak
-Status: all exact organic quest-stage senders are placed/readback-clean and ready for in-game proof; none are counted runtime proof yet
+Status: all exact organic quest-stage senders are placed/readback-clean; current beta-display evidence is tracked in PDV_DaedricRuntimeEvidenceLedger.json and promoted by pdv_daedric_beta_gate.mjs
 ```
 
 ## Race Runtime And Manual Gap
@@ -133,21 +133,19 @@ The current Daedric state is:
   generic-source silence probe; see
   `PDV_DaedricControlledProof_Runbook.md`.
 - Exact organic vanilla quest-stage senders are wired/readback for all sixteen
-  Princes. The remaining Daedric beta-feel blocker is running
-  controlled/runtime display proof, proving those organic routes in game,
-  wrong/generic source silence, and stack/Survey legibility. Record those
-  results in `PDV_DaedricRuntimeEvidenceLedger.json` with
-  `tools/pdv_daedric_evidence_intake.mjs`; readback alone must leave rows
-  pending. `tools/pdv_daedric_beta_gate.mjs` is the fail-closed promotion gate
-  and currently remains `PENDING=16` by design.
+  Princes. Current beta-display evidence is recorded in
+  `PDV_DaedricRuntimeEvidenceLedger.json`; `tools/pdv_daedric_beta_gate.mjs
+  --json` reports `PASS=16`.
+- Daedric final-world placement and future organic-depth tuning remain separate
+  from this beta-display gate unless the release scope changes.
 
 | Batch | Princes | Current status | Beta-feel blocker |
 |---|---|---|---|
-| Pilot already drafted | Boethiah / Boethra | CAT-6 records authored/read back; MCM and QASmoke controlled senders ready; exact `DA02` stage 100 organic sender wired/readback; native Dunmer and Khajiit route through no-native-row behavior | Run controlled display proof, organic sender proof, and stack/Survey legibility |
-| Batch 0 template proof | Azura / Azurah, Vaermina, Meridia, Molag Bal | CAT-6 records authored/read back; MCM and QASmoke controlled senders ready; exact organic senders wired/readback: Azura `DA01` 100, Vaermina `DA16` 190, Meridia `DA09` 500, Molag Bal `DA10` 200; Molag Bal remains curse-access | Run controlled display proof, organic sender proof, and Molag Bal curse-state no-double-fire proof |
-| Batch 1 native variants | Mephala / Mafala, Malacath / Mauloch | CAT-6 records authored/read back; MCM and QASmoke controlled senders ready; exact organic senders wired/readback: Mephala `DA08` 60, Malacath `DA06` 200 | Run native-integration display proof, organic sender proof, and stack/Survey legibility |
-| Batch 2 standard external pacts | Mehrunes Dagon, Sheogorath, Namira / Namiira, Sanguine / Sangiin, Clavicus Vile, Hermaeus Mora, Nocturnal | CAT-6 records authored/read back; MCM and QASmoke controlled senders ready; exact organic senders wired/readback: Dagon `DA07` 100, Sheogorath `DA15` 200, Namira `DA11` 100, Sanguine `DA14` 200, Clavicus Vile `DA03` 200, Hermaeus Mora `DA04` 100, Nocturnal `TG09` 200 | Run standard-pact controlled display proof and organic sender proof; Nocturnal must still prove Thieves Guild/Nightingale oath surface |
-| Batch 3 tolerated/curse-access tail | Peryite, Hircine | CAT-6 records authored/read back; MCM and QASmoke controlled senders ready; exact organic senders wired/readback: Peryite `DA13` 100, Hircine `DA05` 100; Hircine retains earlier Nord/curse runtime pattern | Run Peryite tolerated-class display proof and Hircine content-surface proof without double-firing curse-state rows |
+| Pilot already drafted | Boethiah / Boethra | CAT-6 records authored/read back; MCM/QASmoke/organic surfaces covered by current Daedric beta-display ledger | Rerun gate after any Boethiah/native-row change |
+| Batch 0 template proof | Azura / Azurah, Vaermina, Meridia, Molag Bal | CAT-6 records authored/read back; current Daedric beta-display ledger covers the batch, including Molag Bal curse-access proof | Rerun gate after any curse or display-surface change |
+| Batch 1 native variants | Mephala / Mafala, Malacath / Mauloch | CAT-6 records authored/read back; current Daedric beta-display ledger covers native-integration display proof | Rerun gate after any native-integration change |
+| Batch 2 standard external pacts | Mehrunes Dagon, Sheogorath, Namira / Namiira, Sanguine / Sangiin, Clavicus Vile, Hermaeus Mora, Nocturnal | CAT-6 records authored/read back; current Daedric beta-display ledger covers standard-pact display proof | Rerun gate after any standard-pact or Nocturnal oath-surface change |
+| Batch 3 tolerated/curse-access tail | Peryite, Hircine | CAT-6 records authored/read back; current Daedric beta-display ledger covers Peryite and Hircine, including Hircine curse no-double-fire proof | Rerun gate after any Hircine curse or tolerated-class change |
 
 ## Per-Prince Acceptance Checklist
 
@@ -174,11 +172,7 @@ A Prince cannot be called beta-feel ready until all of these are true:
 1. Finish P2 book runtime proof for all filled families that currently fail.
 2. Fill the manual evidence ledger without upgrading any race to pass until
    all rubric slots are proved.
-3. Run `PDV_DaedricControlledProof_Runbook.md` for the all-Prince Daedric
-   packet, including both MCM and QASmoke sender routes plus the generic-silence
-   probe, then record the results in `PDV_DaedricRuntimeEvidenceLedger.json`
-   before claiming any Prince beta-display ready.
-4. Prove the sixteen exact organic live vanilla senders already wired; keep
-   generic behavior from becoming a devotion faucet.
-5. Re-run this ledger's command set after every source-fill, CAT-6, or Daedric
-   promotion tranche.
+3. Re-run `tools/pdv_daedric_beta_gate.mjs --json` after every source-fill,
+   CAT-6, Prisma, reward, or Daedric promotion tranche.
+4. Keep Daedric final-world placement and wider organic-depth tuning separate
+   from the current beta-display gate unless the release scope changes.

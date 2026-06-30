@@ -85,17 +85,23 @@ node .\tools\pdv_phase20_runtime_check.mjs --race all
 
 ## Current Last-Pass Scope
 
-The 2026-06-10 sweep leaves the automated/readback side green enough to proceed
-with manual runtime proof, but not green enough to claim beta-feel readiness.
-The fail-closed audit currently blocks on:
+The 2026-06-30 strict audit leaves the automated/readback side green enough to
+proceed with the final manual runtime proof, but not green enough to claim
+strict v1.0 beta readiness. The fail-closed audit currently blocks on:
 
-- Race manual evidence: Altmer has closed the current beta-packet manual slots;
-  Khajiit only needs `assetStatus`; Argonian, Bosmer, Breton, Dunmer, Imperial, Nord, Orc, and
-  Redguard each still need all seven race manual/runtime slots.
-- Daedric runtime/display evidence: all sixteen Princes remain pending; Molag
-  Bal and Hircine additionally need curse no-double-fire proof.
+- Race manual evidence: Imperial and Dunmer still need all seven required
+  manual/runtime slots.
+- Requiem feltness: the Argonian/Breton negative-Health penalty conversion is
+  backend/readback clean, but still needs Active Effects, `player.getav Health`,
+  HP-bar movement, and manual feel proof under a Requiem load.
+- Book of Days package sync: `pdv_book_of_days_audit.mjs` must pass before
+  rebuilding or sharing a tester package.
 - Claim boundaries: Race Beta-Feel and Full Devotion Beta-Feel claims stay
   blocked until the matching ledgers are updated from in-game evidence.
+
+The Daedric beta-display gate is currently closed for this claim surface:
+`node .\tools\pdv_daedric_beta_gate.mjs --json` reports `PASS=16`. Rerun it
+after any Daedric, Prisma, reward, or runtime-surfacing change.
 
 Use `PDV_InGameTestingNeeded_Runbook.md` as the ordered execution queue for the
 remaining race packets, Daedric proof, V1 faucet sweep, and Prince V2

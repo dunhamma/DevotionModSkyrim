@@ -66,6 +66,12 @@ neglect is intentionally preserved as `ResistDisease -5`. Do not mark this
 Requiem penalty slice gameplay-proven until Active Effects, `player.getav
 Health`, and HP-bar/manual feel evidence are recorded under a Requiem load.
 
+2026-06-30 handoff note: the Daedric beta-display ledger has since closed for
+the current v1.0 gate. `node .\tools\pdv_daedric_beta_gate.mjs --json` reports
+`PASS=16`; do not reuse older "all sixteen pending" language unless the gate
+regresses. Daedric final-world placement remains separate from this beta-display
+proof.
+
 ## Preflight Before Opening Skyrim
 
 Run from `C:\Users\Admin\Documents\Devotion Mod Project`:
@@ -84,6 +90,7 @@ node .\tools\pdv_phase2_reward_readback_audit.mjs --json
 node .\tools\pdv_requiem_penalty_audit.mjs
 node .\tools\pdv_integrity_harness.mjs
 node .\tools\pdv_refresh_seq.mjs --write --json
+node .\tools\pdv_daedric_beta_gate.mjs --json
 node .\tools\pdv_beta_readiness_audit.mjs --strict --json
 ```
 
@@ -96,6 +103,7 @@ Expected before manual testing:
 - Integrity harness: `PASS`, including `eligibility_reward_coverage`.
 - Requiem penalty audit: `PASS`, including old regen-MGEF orphan checks and
   Imperial preservation.
+- Daedric beta-display gate: `PASS=16`.
 - Neglect ESP author check and strict neglect verifier: `PASS`.
 - Manager and MCM compile: `PASS`, including the Talos betrayal debug buttons.
 - Beta readiness audit: still `NOT_BETA_READY` until manual/runtime slots are
@@ -134,13 +142,13 @@ Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 | Orc | none for current organic life-mode packet; Code Holds, Witnessed tranche, oath-break, and final-world placement remain separate |
 | Redguard | none for current beta packet; final-world placement remains separate |
 
-Daedric ledger blockers from `PDV_DaedricRuntimeEvidenceLedger.json`:
+Daedric ledger state from `PDV_DaedricRuntimeEvidenceLedger.json`:
 
-- All sixteen Princes remain `pending`.
-- Every Prince needs `mcmRoute`, `qasmokeRoute`, `organicRoute`,
-  `genericSilence`, `activeEffects`, `summaryMessage`, `prismaNotification`,
-  `saveLoad`, `stackLegibility`, and `manualFeel`.
-- Molag Bal and Hircine also need `curseNoDoubleFire`.
+- The current beta-display gate passes all sixteen Skyrim-present Princes.
+- `node .\tools\pdv_daedric_beta_gate.mjs --json` is the promotion check; rerun
+  it after any Daedric, Prisma, reward, or runtime-surfacing change.
+- Daedric final-world placement remains separate and is not a blocker for the
+  current race beta-feel packet unless the release scope changes.
 
 Additional last-pass runtime sweeps before any broad beta-feel claim:
 
@@ -324,11 +332,11 @@ Required per Prince:
 - stack legibility
 - manual feel note
 
-After controlled proof:
+After any Daedric regression proof or rerun:
 
 ```powershell
-node .\tools\pdv_daedric_runtime_check.mjs --strict
-node .\tools\pdv_daedric_beta_gate.mjs --strict
+node .\tools\pdv_daedric_runtime_check.mjs
+node .\tools\pdv_daedric_beta_gate.mjs --json
 ```
 
 ### 5. Run The Day-to-Day Likes/Dislikes Signal Sweep (V1)

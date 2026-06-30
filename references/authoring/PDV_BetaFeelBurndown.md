@@ -26,13 +26,13 @@ readiness evidence.
 
 ## Current Snapshot
 
-As of the 2026-06-27 AEST local recheck:
+As of the 2026-06-30 AEST local recheck:
 
 | Area | Current state | Evidence |
 | --- | --- | --- |
 | Daedric Princes | **Pass** for current beta-display gate | `node .\tools\pdv_daedric_beta_gate.mjs` -> `PASS=16` |
-| Race beta-feel packets | **8 pass, 2 still fail/deferred** | `PDV_PreBetaRaceGateLedger.md`: Altmer, Khajiit, Bosmer, Nord, Argonian, Orc, Breton, and Redguard Pass; Dunmer and Imperial remain Fail/deferred (count reconciled 2026-06-19) |
-| Default framework verifier | **Machine-clean with known warning** | `node .\tools\pdv_verify.mjs --strict-neglect-decay --json` -> `FAIL=0, WARN=1, PASS=3495, INFO=62`; warning is medallion glyph fallback only |
+| Race beta-feel packets | **8 pass, 2 still fail/deferred** | `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` -> `NOT_BETA_READY`, `FAIL=2`; Dunmer and Imperial each still have seven pending manual/runtime slots |
+| Default framework verifier | **Machine-clean with known warning** | `node .\tools\pdv_verify.mjs --json` -> `FAIL=0, WARN=1`; warning is medallion glyph fallback only |
 | Content verifier | **Clean** | `node .\tools\pdv_content_verify.mjs` -> `FAIL=0, WARN=0, PASS=1080, INFO=4` |
 | Khajiit focused P2 route | **Route-proof pass** | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race khajiit` -> PASS |
 | Live manager compile | **Clean** | `node .\tools\pdv_compile.mjs --script PDV__ManagerQuest` -> `1 succeeded, 0 failed`; bundled verifier stayed `FAIL=0, WARN=2, TODO=0, PASS=3038, INFO=43` |
@@ -41,6 +41,8 @@ As of the 2026-06-27 AEST local recheck:
 | Nord/Imperial felt-neglect ESP batch | **Machine/readback pass; runtime smoke pending** | `tools\pdv-neglect-esp-author --check` verifies Kyne/Imperial MGEF conversions, four Nord patron neglect spells, and manager VMAD properties; `pdv_verify --strict-neglect-decay` source-gates the lapse-aware runtime |
 | Imperial/Nord Talos creed runtime | **Compile pass; debug smoke pending** | Shared `PDV__ManagerQuest.HandleTalosBetrayal` applies focused-Talos `-2/-3` losses with MCM Debug buttons; Imperial also moves raw Concordat standing toward compliance. Organic betrayal detection remains follow-on |
 | Integrity harness | **Pass** | `node .\tools\pdv_integrity_harness.mjs` -> `signal_e2e_gate`, `deity_chain`, and `eligibility_reward_coverage` all PASS |
+| Requiem penalty conversion | **Backend/readback pass; feltness smoke pending** | `node .\tools\pdv_requiem_penalty_audit.mjs` -> `PASS=44`; Argonian/Breton Health penalties and Imperial preservation still need in-game Active Effects and HP-bar proof |
+| Book of Days package sync | **Closed for packaging preflight** | `pdv_book_of_days_audit.mjs` now passes with repo/live `index.html`, `styles.css`, `app.js`, and font hashes matched; `.gitattributes` keeps the two hash-sensitive text assets LF-normalized |
 
 The earlier recheck debt for Redguard curse-state message bodies and Imperial
 Concordat track naming is closed. This does not promote any runtime/manual race
@@ -81,8 +83,8 @@ These are small but high-priority because they keep the burndown honest.
 
 ### 1. Manual Race Evidence
 
-This is the long pole. The default machine gates are strong; the release claim is
-blocked by manual/runtime evidence for the seven non-passing races.
+This is the long pole. The default machine gates are strong; the strict release
+claim is blocked by manual/runtime evidence for Dunmer and Imperial.
 
 | Race | Current state | Remaining proof |
 | --- | --- | --- |
@@ -125,18 +127,20 @@ These should not be allowed to inflate the current beta-feel burn:
 
 ## Recommended Next Sequence
 
-1. Run the eight remaining race packets in the pre-beta ledger order, recording
-   manual/runtime evidence in `PDV_Phase20_ManualEvidenceLedger.json` and
-   `PDV_PreBetaRaceGateLedger.md`.
-2. Prove the expanded likes/dislikes rows on a new save, including the version
+1. Run Imperial, then Dunmer, recording manual/runtime evidence in
+   `PDV_Phase20_ManualEvidenceLedger.json` and `PDV_PreBetaRaceGateLedger.md`.
+2. Prove the Requiem penalty feltness add-on under a Requiem load: Active
+   Effects, `player.getav Health`, HP-bar/manual feel notes, and Imperial
+   disease-resistance preservation.
+3. Prove the expanded likes/dislikes rows on a new save, including the version
    bump reload behavior; keep pending event rows classified as inert unless
    their routers are implemented.
-3. Do the magnitude/anti-farm scaling pass only after rejected hooks and stack
+4. Do the magnitude/anti-farm scaling pass only after rejected hooks and stack
    snapshots are recorded for the race being tuned.
-4. Continue later ESP/source tranches from `PDV_NextBuildPass_RecordSpec.md`
+5. Continue later ESP/source tranches from `PDV_NextBuildPass_RecordSpec.md`
    only where they have exact source authority; keep quest-stage/source routing
    separate from manual acceptance proof.
-5. Keep D1 diegetic surfacing, final-world placement, V2 dialogue, and
+6. Keep D1 diegetic surfacing, final-world placement, V2 dialogue, and
    compatibility work off the beta-feel path unless the release scope changes.
 
 ## Current Gate Bundle
