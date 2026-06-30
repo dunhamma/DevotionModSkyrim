@@ -59,9 +59,9 @@ Likely PDV route:
 
 Phase 21 priority: P1.
 
-Posture: local prototype lane, not release evidence. The installed DoD profile
-is slightly outdated, so use it to exercise the matrix/conflict/smoke process,
-then refresh from current public or author-provided evidence before packaging.
+Posture: integration applied locally (2026-06-30) and machine-valid (load order
+clean); runtime in-game smoke and a current-evidence refresh are still required
+before release packaging. See "Integration applied" below.
 
 Known overlap families from the local pass:
 
@@ -77,6 +77,28 @@ Likely PDV route:
   concrete conflict appears.
 - Use curated authored hooks for Dibella/Mara/Talos content only where
   high-signal and stable.
+
+Integration applied (2026-06-30) -- machine-valid, runtime smoke pending:
+
+- Devotion (PreBeta .8) installed into the live DoD profile; all six SKSE deps
+  (PapyrusUtil, PO3, SkyUI, Address Library, KID, PrismaUI) confirmed present.
+- Wintersun removed: disabled `Wintersun - Faiths of Skyrim` + its 4 pure add-ons
+  (Hearthfires Wintersun Shrines, Tweaks and Enhancements, GotT Lite, Gallows Hall)
+  + 15 "X - Wintersun patch" compat patches (Sacrilege, DBM, LOTD_TCC, COTN Dawnstar,
+  JK's DB Sanctuary, TOCQE, TWDQE, FloatingSword TCIY, SDA, Mrissi, AX ValSerano,
+  Mannaz-Freyr, Lux, Lux Orbis, Northern Roads) -- 20 plugins total.
+- `DOD - Ohmes-Raht Fix.esp` forward-patched: its only Wintersun footprint was 1 DIAL
+  + 1 INFO override (dead dialogue); removed those 2 records + stripped the Wintersun
+  master (last master, no FormID renumber). Re-parse verified valid; original backed up.
+  Ohmes-Raht piety is handled by Devotion's `PDV_RaceMap.json` (HalfKhajiit -> Khajiit).
+- `JOJ - Player Devotion Patch.esp` (Lux/MusicMerged CELL cleanup) added.
+- Load order: **0 new missing masters**. The 3 flagged are PRE-EXISTING and unrelated
+  (HalfKhajiit -> RaceCompatibility.esm; ORomance -> OSA.esm/OStim.esp).
+- Owner follow-up: re-run **Synthesis + ParallaxGen** -- their outputs
+  (`Lord's Vision - Synthesis Gameplay.esp`, `PG_1.esp`) are disabled pending regen.
+- Backups under `profiles/Diaries of Dibella - Lord's Vision/pdv-dod-backup-20260630/`.
+- STILL OPEN: in-game runtime smoke (launch with no missing-master CTD; Ohmes-Raht
+  origin resolves to Khajiit; shrine-prayer behaviour). Not yet release evidence.
 
 ### JOJ, TOT, HOH, MOM, VOV
 
