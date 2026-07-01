@@ -84,9 +84,8 @@ is the same, the shrine object differs.
   **See:** the race-response message (toast) **and** a new **Book of Days** entry *"The beast-blood took you
   and stirred Hircine. The Hunt is in you now."* (this chronicle was added in Unit D -- confirm it's not blank).
 - **Do (b):** **renounce** the Hircine path (MCM Debug / RenouncePath).
-  **See:** the exit message, a Prisma toast *"You renounce the hunt."*, and a pinned **Book of Days** entry:
-  *"You set the hunt down. The pact with Hircine is renounced -- the beast's mark fades slowly, but the road
-  back is yours to walk."*
+  **See:** the exit/renunciation message and a pinned **Book of Days** entry:
+  *"Hircine's mark fades from your blood, and the pack is no longer yours."*
 - **Do (c):** cure the werewolf curse -> **residue** onset.
   **See:** a **residue** toast at onset (renderer was built; producer wired in this pass).
 - **Do (d):** during a hunt rite, push **stigma** past its thresholds.

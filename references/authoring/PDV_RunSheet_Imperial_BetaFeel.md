@@ -76,16 +76,11 @@ A slot can require both. Where it does, the run-sheet calls out which step is wh
   column: `Concordat defiance`, `Concordat compliance`, `Talos shrine defiance`,
   `Unlock Concordat gate`.
 
-- One-time prefix read (only needed for the PENDING signal-RefID steps in slot 4).
-  The `PDV_REFR_*Signal` proof objects are invisible, nameless activators. Read the
-  2-hex plugin prefix XX once off a NAMED blessing, then reuse it:
-
-  ```text
-  help "HoonDing" 0
-  ```
-
-  Take the first two hex digits of the returned `SPEL:` FormID as XX. Fire a signal
-  with `prid XX<refid>` then `activate player` (NOT bare `activate`). Never guess XX.
+- Current live route note: do not test Imperial as activator routes 110-113.
+  The live `PDV_EventSignalActivator.psc` route constants 110-113 are Khajiit
+  anti-creed routes. Imperial currently reaches gameplay through PO3 book /
+  quest-stage source receivers, Concordat mod events, and EventBus route events
+  140-142.
 
 ---
 
@@ -95,21 +90,16 @@ A slot can require both. Where it does, the run-sheet calls out which step is wh
 
 - Seed: none. This is a contract read, not an in-game action.
 - Action: confirm every Imperial immersive-hook contract has explicit asset status.
-  The current contract target is NO required new custom mesh. The four Imperial
-  trigger surfaces (routes 110-113) in
-  `PDV_Phase20ImperialImplementationCosting.manifest.json` are ACTI/REFR proof
-  objects, not authored art.
-- Watch: each of `PDV_REFR_ImperialCivicServiceSignal` (110),
-  `PDV_REFR_ImperialTalosPressureSignal` (111),
-  `PDV_REFR_ImperialFocusedPatronSignal` (112),
-  `PDV_REFR_ImperialCreedLossSignal` (113) carries
-  `placementStatus: proof-cell-pending`. The retired hidden-shrine receiver
+  The current contract target is NO required new custom mesh. Live Imperial proof
+  uses vanilla books, exact PO3 quest-stage receivers, MCM Concordat/debug
+  controls, and existing Prisma/MCM surfaces.
+- Watch: no Imperial test in this pass depends on a new model, placed shrine,
+  visible proof object, or custom art asset. The retired hidden-shrine receiver
   `PDV_REFR_TalosShrineDefianceSignal` (Phase 7) must NOT be reattached to the
   visible Windhelm shrine.
-- PASS: no Imperial hook requires a new custom mesh; the four proof-cell signals are
-  the only asset-bearing contracts and all are accounted for as pending placements,
-  not missing art. If any hook is found to need a new mesh, NAME the missing asset
-  in the results table instead of passing.
+- PASS: no Imperial hook requires a new custom mesh or placed proof object for the
+  current V1 packet. If any hook is found to need a new mesh, NAME the missing
+  asset in the results table instead of passing.
 
 ### Slot 2 -- surveyStatusClarity (MANUAL-ACCEPTANCE)
 
@@ -121,10 +111,9 @@ A slot can require both. Where it does, the run-sheet calls out which step is wh
   - Civic faith framed as concrete public practice under law (Nine Divines posture),
     e.g. patron-took-note copy: "Your patron has taken note of the civic good you
     have done in their name."
-  - Talos pressure tilt stated as one of three readable states (defiant /
-    constrained / not yet tilted): "Your defiance has the old breath leaning your
-    way..." vs "Your standing with the Concordat keeps Talos at arm's length..." vs
-    "On the Talos question you have not yet leaned either way...".
+  - Talos pressure is legible through the Concordat line and later accepted Talos
+    beats; the Survey should stay concise and should not append a second Talos
+    multiplier sentence.
   - Concordat / public state legible (Uncommitted by default; band shifts later).
   - Concrete act requirements -- the tester can tell WHAT to do, not just a number.
 - PASS: Survey reads as concrete civic practice; the four elements above are present
@@ -167,10 +156,12 @@ that no faction-only reward appears.
   appears in Active Effects. (Numeric move = ROUTE/RUNTIME; "no rogue buff" read =
   MANUAL-ACCEPTANCE.)
 
-### Slot 4 -- immersiveHookProof (mixed: one ROUTE/RUNTIME runnable now, three PENDING)
+### Slot 4 -- immersiveHookProof (live Imperial routes)
 
-This slot proves the immersive hooks fire OUTSIDE QASmoke. Honor the proof boundary:
-only the public Talos book route is runtime-wired today.
+This slot proves the immersive hooks fire OUTSIDE QASmoke. Honor the proof
+boundary: accepted source-fill routes are route/runtime evidence when the matching
+book or exact quest-stage source fires; manual feel still needs the Survey, stack,
+and Prisma reads below.
 
 - 4a. Public Talos pressure book route -- RUNNABLE NOW (ROUTE/RUNTIME):
   - Seed: origin 1 (preflight). Add and read the approved public Talos book from
@@ -208,21 +199,30 @@ only the public Talos book route is runtime-wired today.
   - PASS: each fires its expected raw-value delta in the trace (judge by raw value,
     not band label).
 
-- 4c. Civic service / focused-patron / creed-loss signal RefIDs -- PENDING (do NOT
-  FAIL):
-  - Routes 110 (`imperial_civic_service_proof`),
-    112 (`imperial_focused_patron_proof`), and
-    113 (`imperial_creed_loss_proof`), plus the dedicated Talos-pressure signal
-    (route 111), are `placementStatus: proof-cell-pending`. The
-    `PDV_REFR_Imperial*Signal` references are NOT placed in the world this pass, so
-    `prid XX<refid>` + `activate player` has no target to fire yet.
-  - When the build pass places these proof cells, fire each with the prefix recipe
-    from preflight (`prid XX<refid>` then `activate player`) and watch for the
-    matching once-per-day signal and the patron-took-note Survey line.
-  - PASS (deferred): mark PENDING until the build session confirms placement. Do not
-    record a FAIL.
+- 4c. Civic service / private Talos / focused patron exact-source routes --
+  RUNNABLE when you set or organically reach the exact source:
+  - Civic/public service: MQ103 stage 190 or CW02A stage 200 routes
+    `RouteImperialCivicService`.
+  - Mercy/lawful order: MS08 stage 200 routes the mercy civic family; MS08 stage
+    201 routes lawful order.
+  - Honest work: MS13 stage 100 or 110 routes honest work.
+  - Death duty: MS14 stage 200 routes death duty.
+  - Private Talos pressure: MQ201 stage 250 routes
+    `RouteImperialTalosPressure(true, ...)`.
+  - Focused patron civic favor: T02 stage 200 routes
+    `RouteImperialPatronCivicFavor`.
+  - PASS: matching Papyrus route marker appears, Survey/Ledger reflects the
+    accepted driver, and the rejected look-alikes named in the source manifest
+    stay silent.
 
-- 4d. Hidden Talos shrine in-world -- BLOCKED note:
+- 4d. Imperial proof-cell activators -- NOT A V1 TEST:
+  - Do not test Imperial by `prid`/`activate` on routes 110-113. In the live
+    activator script those route IDs belong to Khajiit anti-creed routes, not
+    Imperial.
+  - No live Imperial creed-loss activator route is available in this pass.
+  - PASS boundary: record this as not applicable for V1, not FAIL.
+
+- 4e. Hidden Talos shrine in-world -- BLOCKED note:
   - The Phase 7 in-world receiver `PDV_REFR_TalosShrineDefianceSignal` was RETIRED
     2026-06-16 (clipping geometry). The MCM `Talos shrine defiance` button still
     routes the signal (`hidden_talos_shrine`, -15) for proof, but there is no
@@ -313,10 +313,9 @@ This is cross-race backend smoke, not Imperial-native proof. It may be recorded 
   accrual halt ONLY while still vampire. Curse posture labels surface as `civic faith
   halted` (vampire) / `civic faith strained` (werewolf) / `civic faith scarred`
   (post-cure, one-way).
-- Signal RefIDs are nameless invisibles. Routes 110-113 are proof-cell-pending and
-  NOT placed this pass, so `prid XX<refid>` has no target yet. When they land, read
-  XX once from a NAMED blessing (`help "HoonDing" 0`) and use `prid XX<refid>` +
-  `activate player` (NOT bare `activate`).
+- Do not use Imperial routes 110-113. The live activator route constants 110-113
+  are Khajiit anti-creed routes. Imperial source proof is through book /
+  quest-stage receivers, Concordat mod events, and EventBus route events 140-142.
 - Hidden shrine in-world is retired. Do not reattach
   `PDV_REFR_TalosShrineDefianceSignal` to the visible Windhelm shrine. Use the MCM
   `Talos shrine defiance` button for the -15 route proof until a new audited receiver
@@ -352,12 +351,13 @@ intake stays boundary-clean. Do NOT log FAIL on a PENDING route step.
 
 | Slot | Surface | Proof class | Status | Note |
 |---|---|---|---|---|
-| 1 assetStatus | No required new mesh; 4 proof-cell signals accounted for | MANUAL-ACCEPTANCE | | |
+| 1 assetStatus | No required new mesh or placed proof object for current V1 packet | MANUAL-ACCEPTANCE | | |
 | 2 surveyStatusClarity | Civic Survey: civic faith + Talos tilt + Concordat + act reqs | MANUAL-ACCEPTANCE | | |
 | 3 stackSnapshot | Lawful vs private-defiance build; raw value differs; no rogue buff | ROUTE-RUNTIME + MANUAL | | |
 | 4 immersiveHookProof (4a book) | RouteImperialTalosPressure marker | ROUTE-RUNTIME | | |
 | 4 immersiveHookProof (4b Concordat) | Stormcloak -20 / Justiciar -10 traces | ROUTE-RUNTIME | | |
-| 4 immersiveHookProof (4c signals 110/112/113) | Proof cells pending placement | PENDING | | |
+| 4 immersiveHookProof (4c exact sources) | Civic/private-Talos/focused-patron exact source routes | ROUTE-RUNTIME | | |
+| 4 immersiveHookProof (4d proof-cell activators) | Imperial 110-113 activators are not live V1 tests | N-A | | |
 | 5 wrongOriginRejection | Non-Imperial origin: zero native movement | ROUTE-RUNTIME | | |
 | 6 genericHookRejection | Faction/attendance/bounty/lawfulness do not score | ROUTE-RUNTIME | | |
 | Shared Daedric inn-sleep proof | negative Prince inn-only sleep + positive 314 control | ROUTE-RUNTIME + MANUAL | | |

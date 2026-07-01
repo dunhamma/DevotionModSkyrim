@@ -43,12 +43,13 @@ regardless of load order). Only the preflight changes:
 ## Tests
 
 ### Slot 1 -- new records present  [Dev] [M]
-- **Do:** Confirm (desk check) that Imperial needs **NO new custom mesh**. The four Imperial trigger surfaces
-  (routes 110-113: `PDV_REFR_ImperialCivicServiceSignal`, `...TalosPressureSignal`, `...FocusedPatronSignal`,
-  `...CreedLossSignal`) are ACTI/REFR proof objects flagged `proof-cell-pending`, not authored art.
-- **See:** no Imperial hook needs new art; the four proof-cell signals are the only asset-bearing contracts
-  and all are accounted for as pending placements. The retired `PDV_REFR_TalosShrineDefianceSignal` must NOT
-  be reattached to the visible Windhelm shrine. If any hook is found to need a new mesh, **name it** instead of passing.
+- **Do:** Confirm (desk check) that Imperial needs **NO new custom mesh** for the current V1 packet. Live Imperial
+  proof uses vanilla books, exact PO3 quest-stage receivers, MCM Concordat/debug controls, and existing
+  Prisma/MCM surfaces.
+- **See:** no Imperial hook needs new art, a placed shrine, or a visible proof object for this pass. The retired
+  `PDV_REFR_TalosShrineDefianceSignal` must NOT be reattached to the visible Windhelm shrine. If any hook is
+  found to need a new mesh, **name it** instead of passing. Do not test Imperial as activator routes 110-113;
+  in the live activator script those route IDs belong to Khajiit anti-creed routes.
 - **Record:** ___
 
 ### Slot 2 -- Survey reads clean  [Tester] [M]
@@ -213,8 +214,9 @@ regardless of load order). Only the preflight changes:
   future location-anchored proof cell needs a load-door / fast-travel entry, never a `coc` straight in.
 - **Hidden Talos shrine in-world is retired.** Do not reattach `PDV_REFR_TalosShrineDefianceSignal` to the
   visible Windhelm shrine; use the MCM `Talos shrine defiance` button for the `-15` route proof.
-- **Routes 110-113 are proof-cell-pending.** The `PDV_REFR_Imperial*Signal` refs are NOT placed this pass, so
-  `prid XX<refid>` + `activate player` has no target yet -- mark those PENDING, do not FAIL.
+- **Do not use Imperial routes 110-113.** The live activator constants 110-113 are Khajiit anti-creed routes,
+  not Imperial. Imperial V1 proof is through book / quest-stage receivers, Concordat mod events, formal-offer
+  surfaces, and EventBus route events 140-142.
 - **MCM Debug page, not `cqf`.**
 
 ---
@@ -222,7 +224,7 @@ regardless of load order). Only the preflight changes:
 ## Record results here
 | Slot | What it proves | Status | Note |
 |---|---|---|---|
-| 1 new records | no new mesh; 4 proof-cell signals accounted for | | |
+| 1 new records | no new mesh or placed proof object required for current V1 packet | | |
 | 2 Survey | civic faith + Talos tilt + Concordat + act reqs legible | | |
 | 3 stack | patron blessings only, no rogue Concordat buff | | |
 | 4a offer accept/refuse | toast + pinned BoD, non-empty; decline silent | | |
@@ -239,4 +241,4 @@ regardless of load order). Only the preflight changes:
 
 Owner, after the run: capture the Papyrus + `DevotionPrismaBridge` logs and record into
 `PDV_V1_BetaReadinessGate.md`. Per ledger convention, do NOT mark Imperial `pass` until every row is filled
-and the pending proof cells (routes 110-113) are placed and proven.
+and the required V1 rows above are proven. Imperial activator routes 110-113 are not part of the current V1 gate.

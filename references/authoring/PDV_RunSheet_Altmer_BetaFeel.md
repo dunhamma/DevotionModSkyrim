@@ -64,7 +64,7 @@ Read `0001AD06`. Expected: no Altmer state movement. Reset to origin 3.
 5. Thalmor-alignment Prisma regression:
    - MCM Debug -> Developer Options -> run an Altmer alignment action until the committed alignment band changes.
    - Expected toast: `The Thalmor question turns in you: <band>.`
-   - Expected Book of Days line: `Where you stand in the Thalmor question shifts: <band>.`
+   - Expected Book of Days line: `Your soul records where you stand in the Thalmor question: <band>.`
    - The Book of Days line must be readable and non-blank; the beat must not force-open the full Devotion panel.
 
 6. Shared Daedric inn-sleep proof:

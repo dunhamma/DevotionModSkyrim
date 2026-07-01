@@ -55,16 +55,17 @@ Expected log marker:
 RouteImperialTalosPressure complete:
 ```
 
-This is the only Imperial route currently wired with a runtime marker; do not
-duplicate it with an organic civil-war proof until route 111 is placed.
+This proves the public Talos book route. Current live Imperial source proof also
+includes exact PO3 quest-stage receivers and Concordat mod-event paths; do not
+test Imperial as activator routes 110-113.
 
 ## Edge Build - Civic Service Or Private Talos
 
-> Deferred: Civil War oath rows and public/private Talos branch semantics
-> (routes 110-113) pending exact-stage metadata / approved source records;
-> proof cells are placementStatus=proof-cell-pending. Tracked in the GAP ledger.
-> Re-add as a runnable step once the civic/Talos/focused/creed proof cells are
-> placed.
+> Current live boundary: do not test Imperial as activator routes 110-113. Those
+> route IDs are Khajiit anti-creed routes in the live activator script. Imperial
+> civic/private-Talos/focused-patron proof uses exact PO3 quest-stage receivers,
+> Concordat mod events, and EventBus route events 140-142. No live Imperial
+> creed-loss activator route is part of this compact packet.
 
 ## Wrong-Origin And Generic Silence
 
@@ -106,8 +107,8 @@ Blocking notes:
 ## Trim log (2026-06-13)
 
 - Cut: "Edge Build - Civic Service Or Private Talos" expanded stub replaced with
-  a single deferred pointer line (routes 110-113 are proof-cell-pending /
-  blocked; unrunnable this pass). Lever tracked in GAP ledger, not lost.
+  a single deferred pointer line. 2026-06-30 live correction supersedes the old
+  route-110-113 wording; Imperial does not own those live activator routes.
 - Cut: collapsed the 7-trigger generic-source enumeration (faction rank, temple
   attendance, bounty payment, generic mercy, generic anti-Thalmor violence,
   trade, lawfulness) into one silence pass spot-checking 2-3 representative
@@ -123,6 +124,10 @@ Blocking notes:
   public Talos pressure proof, post-run RouteImperialTalosPressure marker check,
   Survey clarity, reward/stack snapshot.
 - Step count: 11 -> 7.
+- 2026-06-30 correction: older references to Imperial activator routes 110-113
+  are stale. Live activator routes 110-113 are Khajiit anti-creed routes; Imperial
+  current proof uses PO3 source receivers, Concordat mod events, and EventBus
+  route events 140-142.
 
 ## Current-Build Refresh (2026-06-14)
 

@@ -115,7 +115,48 @@ toward "you have been seen" to match the witness-based trigger.)
 
 ---
 
-## 4. Triage note
+## 4. Per-race bespoke curse-onset chronicle lines
+
+**Decision:** 2026-06-30, during the Prisma authoring-beats pass
+(`references/authoring/PDV_PrismaAuthoringBeats_Copy.md` beat #5). A bespoke Nord werewolf-onset
+Book of Days line was drafted, then deferred.
+
+**What it is:** Today, when a curse takes hold, the curse seam
+(`PDV__ManagerQuest.psc` `HandleCurseStateTransition` -> `SurfaceCurseTransitionDiegetic`) fires a
+toast and a pinned Book of Days entry. The chronicle line is resolved by
+`PDV_DiegeticDirector.ResolveJournalLine(deityIndex, "curse.onset")`. Khajiit / Dunmer / Imperial /
+Altmer have bespoke `curse.onset` arms; the other races fall to the generic
+`"A curse changes the shape of devotion."` This item authors race-specific curse-onset (and likely
+curse-cure) chronicle lines for the remaining races.
+
+**Why V2, not V1:** Owner ruling -- if we give one race (Nord) a bespoke werewolf-onset line, every
+race deserves the same, so it is all-or-nothing equity work, not a one-off. It also has a wiring
+prerequisite: `ResolveJournalLine` currently receives only `(deityIndex, toneKey)` and the curse
+seam passes `deityIndex = -1`, so the resolver knows the race and "curse.onset" but **not the curse
+type** (werewolf vs vampire). A race-specific `curse.onset` arm added today would fire identically
+for that race's werewolf and vampire onset. The generic line is coherent and ships fine for 1.0.
+
+**What exists today:**
+- The generic fallback line (acceptable for 1.0).
+- Bespoke curse arms already authored for Khajiit / Dunmer / Imperial / Altmer (the voice template).
+- Good race-aware *toast* context already exists for several races in `GetCurseContextForRace`
+  (e.g. Nord werewolf onset = "The hunt pulls against Sovngarde."), which is a strong starting point.
+- A drafted Nord werewolf-onset candidate line, retained in the beat-5 section of the authoring-copy
+  doc: "The beast-shape takes you. The hunt pulls against Sovngarde, and your devotion bends toward
+  Hircine's pull."
+
+**First V2 step:** thread the curse type (werewolf/vampire) into `ResolveJournalLine` (so onset
+lines can branch by beast vs blood), then author the per-race `curse.onset`/`curse.cure` line set,
+reusing the `GetCurseContextForRace` phrases as seeds.
+
+**Related (separate) item:** the curse *toast* title/message in `SendPrismaCurseToast`
+(`PDV__ManagerQuest.psc`) are still marked PLACEHOLDER (e.g. "Lycanthropy takes hold" /
+"Lycanthropy has taken root in your blood."). Finalizing those is a small standalone copy pass that
+can ride with this one.
+
+---
+
+## 5. Triage note
 
 After 1.0 ships, convert this stub into a real V2 roadmap: group the voiced
 dialogue work into a single CAT-style content lane (draft -> ratify -> voice ->

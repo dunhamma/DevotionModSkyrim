@@ -83,9 +83,12 @@ zeroes regen buffs, so flat heals must show the bar move here).
 - **Do:** use an offer-capable race save (Nord, Imperial, Dunmer, Altmer, or Redguard). In MCM -> Devotion ->
   Developer Options, choose a valid deity, then use **Seed commitment signals** and **Evaluate commitment**.
   On one disposable save choose **Accept commitment**; on another choose **Refuse commitment**.
-- **See:** **Accept** gives a Prisma toast like *"You have given your devotion to {patron}."* and a pinned
-  Book of Days line for the race's offer-accept wording. **Refuse** gives a Prisma toast like *"You turn
-  {patron} away."* and a pinned Book of Days line saying that patron will not ask again. Neither choice
+- **See:** **Accept** gives the locked race-specific Prisma toast (Nord/Imperial: *"{patron} has named you their
+  own."*; Dunmer: *"The ash-prayer has a name: {patron}."*; Altmer: *"You name {patron} your focus."*; Redguard:
+  *"You walk under {patron} now."*) and a pinned Book of Days line for the race's offer-accept wording. **Refuse**
+  gives the locked race-specific Prisma toast (Nord/Imperial: *"You turned {patron} away."*; Dunmer: *"You set
+  {patron} aside."*; Altmer: *"You keep to the foundation."*; Redguard: *"You keep to the sect."*) and a pinned
+  Book of Days line saying that patron will not ask again. Neither choice
   forces the full Devotion panel open. Book of Days lines are not blank, and the next Book key press still opens.
 - **Record:** ___
 

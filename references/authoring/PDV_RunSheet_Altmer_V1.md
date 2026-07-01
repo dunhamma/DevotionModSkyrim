@@ -83,7 +83,7 @@ regardless of load order). Only the preflight changes:
   to fall toward **Private / Open Heterodoxy**. MCM Debug can drive the alignment action. Cross a band, then let the
   **committed band lock in**.
 - **See:** on the **committed band change** a **toast** -- *"The Thalmor question turns in you: {band}."* -- and a
-  **Book of Days entry** -- *"Where you stand in the Thalmor question shifts: {band}."* Bands:
+  **Book of Days entry** -- *"Your soul records where you stand in the Thalmor question: {band}."* Bands:
   **Open Heterodoxy** (<= -76) / **Private Heterodoxy** / **Uncommitted** / **Public Orthodoxy** / **Thalmor-Devout** (>= +76).
 - **This is the headline regression: before Unit D the alignment axis was invisible to BOTH surfaces.** If you cross a
   committed band and get neither toast nor Book of Days line -> FAIL.

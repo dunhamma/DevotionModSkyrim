@@ -116,6 +116,7 @@ Function RenouncePath(String reason)
     SetStoredPiety(0.0, "renounce_" + reason)
     BeginNordResidueRecovery("renounce_" + reason)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.Renounced", 1)
+    StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.RenunciationJournalPending", 1)
     ShowIfPresent(Msg_Exit)
     Trace(1, "Hircine renunciation recorded.")
 EndFunction
@@ -133,6 +134,7 @@ Function ResetPilotForDebug()
     StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueUntil", 0.0)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueToastPending", 0)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueClearToastPending", 0)
+    StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.RenunciationJournalPending", 0)
     Trace(2, "ResetPilotForDebug")
 EndFunction
 

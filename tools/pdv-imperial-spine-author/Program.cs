@@ -656,11 +656,11 @@ static SpellSpec[] BuildSpellSpecs() =>
 [
     new(
         "PDV_Bless_Imperial_Spine_Always",
-        "Imperial Spine - Civic Steadiness",
+        "Civic Steadiness",
         "The old discipline steadies body and road. Maximum Health +5, Maximum Stamina +5.",
         [
-            new("PDV_MGEF_Imperial_Spine_Always_Health", "Imperial Civic Steadiness Health", "Health", 5.0f),
-            new("PDV_MGEF_Imperial_Spine_Always_Stamina", "Imperial Civic Steadiness Stamina", "Stamina", 5.0f),
+            new("PDV_MGEF_Imperial_Spine_Always_Health", "Civic Steadiness", "Health", 5.0f),
+            new("PDV_MGEF_Imperial_Spine_Always_Stamina", "Civic Steadiness", "Stamina", 5.0f),
         ]),
     new(
         "PDV_Bless_Imperial_Spine_Mid",

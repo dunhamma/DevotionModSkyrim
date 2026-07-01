@@ -742,6 +742,7 @@ Event OnUpdate()
     ProcessPendingDaedricActivation()
     ProcessPendingDaedricLapse()
     ProcessPendingDaedricPrePactNotices()
+    DrainHircineRenunciationJournal()
     ProcessQueuedPrismaToastRetry()
 
     if DebugCommand != 0
@@ -2039,6 +2040,19 @@ String Function BuildCommitmentOfferAcceptJournalLine(Int deityIndex)
     return "The broad faith narrows to one; " + patron + " has named you their own."
 EndFunction
 
+String Function BuildCommitmentOfferAcceptToastLine(PDV_DeityBase deity)
+    String patron = GetPublicDeityDisplayName(deity)
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_DUNMER
+        return "The ash-prayer has a name: " + patron + "."
+    elseIf originRace == ORIGIN_ALTMER
+        return "You name " + patron + " your focus."
+    elseIf originRace == ORIGIN_REDGUARD
+        return "You walk under " + patron + " now."
+    endIf
+    return patron + " has named you their own."
+EndFunction
+
 String Function BuildCommitmentOfferRefuseJournalLine(Int deityIndex)
     String patron = GetJournalDeityName(deityIndex)
     Int originRace = GetPlayerOriginRaceIndex()
@@ -2052,10 +2066,23 @@ String Function BuildCommitmentOfferRefuseJournalLine(Int deityIndex)
     return "The broad faith stays whole; you turned " + patron + " away, and " + patron + " will not ask again."
 EndFunction
 
+String Function BuildCommitmentOfferRefuseToastLine(PDV_DeityBase deity)
+    String patron = GetPublicDeityDisplayName(deity)
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_DUNMER
+        return "You set " + patron + " aside."
+    elseIf originRace == ORIGIN_ALTMER
+        return "You keep to the foundation."
+    elseIf originRace == ORIGIN_REDGUARD
+        return "You keep to the sect."
+    endIf
+    return "You turned " + patron + " away."
+EndFunction
+
 String Function BuildReorientationJournalLine(String surfaceKey)
     Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_ALTMER
-        return "Where you stand in the Thalmor question shifts: " + surfaceKey + "."
+        return "Your soul records where you stand in the Thalmor question: " + surfaceKey + "."
     elseIf originRace == ORIGIN_BRETON
         return BuildStartupRoadJournalLine(surfaceKey)
     endIf
@@ -13120,8 +13147,7 @@ EndFunction
 Function DebugRenounceHircinePath()
     if PDV_HircinePath
         PDV_HircinePath.RenouncePath("mcm")
-        AppendBookOfDaysEntry("You set the hunt down. The pact with Hircine is renounced -- the beast's mark fades slowly, but the road back is yours to walk.", Utility.GetCurrentGameTime() as Int, "reorientation", "hircine", True, 3)
-        SendPrismaShiftToast("You renounce the hunt.", "Hircine's pact is set down.", "hircine")
+        DrainHircineRenunciationJournal()
         DrainHircineResiduePrismaToasts()
         SendPrismaDaedricToast("Hircine", "lapse", "", "hircine")
         RequestPanelRefresh()
@@ -13397,7 +13423,7 @@ Function DebugAcceptPendingCommitment()
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 0)
     SetActiveDeity(pendingDeity)
     DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")
-    SendPrismaShiftToast("You have given your devotion to " + GetPublicDeityDisplayName(pendingDeity) + ".", GetPublicDeityDisplayName(pendingDeity) + " takes you as their own.", GetPrismaSymbolForDeity(pendingDeity))
+    SendPrismaShiftToast(BuildCommitmentOfferAcceptToastLine(pendingDeity), "", GetPrismaSymbolForDeity(pendingDeity))
     if carryAmount > 0.0
         AwardPiety(pendingDeity, carryAmount, "commitment_carryover")
     endIf
@@ -13592,7 +13618,7 @@ Function DebugRefusePendingCommitment()
     endIf
 
     DispatchDiegeticCue("offer", pendingDeity.DeityName, "refuse", pendingDeity, "absence")
-    SendPrismaShiftToast("You turn " + GetPublicDeityDisplayName(pendingDeity) + " away.", GetPublicDeityDisplayName(pendingDeity) + " will not ask again.", GetPrismaSymbolForDeity(pendingDeity))
+    SendPrismaShiftToast(BuildCommitmentOfferRefuseToastLine(pendingDeity), "", GetPrismaSymbolForDeity(pendingDeity))
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 1)
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 1)
     ClearPendingCommitment()
@@ -13991,6 +14017,20 @@ Function DrainHircineResiduePrismaToasts()
         StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueClearToastPending", 0)
         SendPrismaDaedricToast("Hircine", "residue", "The hunt's old mark fades.", "hircine")
     endIf
+EndFunction
+
+Function DrainHircineRenunciationJournal()
+    if !PDV_HircinePath
+        return
+    endIf
+
+    Form hircineForm = PDV_HircinePath.GetDeityForm()
+    if StorageUtil.GetIntValue(hircineForm, "PDV.Daedric.Hircine.RenunciationJournalPending") != 1
+        return
+    endIf
+
+    StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.RenunciationJournalPending", 0)
+    AppendBookOfDaysEntry("Hircine's mark fades from your blood, and the pack is no longer yours.", Utility.GetCurrentGameTime() as Int, "reorientation", "hircine", True, 3)
 EndFunction
 
 Function QueueDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier, Int newTier, String reason)
