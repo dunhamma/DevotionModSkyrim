@@ -61,7 +61,13 @@ Read `0001AD06`. Expected: no Altmer state movement. Reset to origin 3.
    - Prisma/top-left surfaces as toast/fallback only; no forced full panel.
    - Devotion panel opens manually, Ledger shows the book driver row, ESC closes.
 
-5. Shared Daedric inn-sleep proof:
+5. Thalmor-alignment Prisma regression:
+   - MCM Debug -> Developer Options -> run an Altmer alignment action until the committed alignment band changes.
+   - Expected toast: `The Thalmor question turns in you: <band>.`
+   - Expected Book of Days line: `Where you stand in the Thalmor question shifts: <band>.`
+   - The Book of Days line must be readable and non-blank; the beat must not force-open the full Devotion panel.
+
+6. Shared Daedric inn-sleep proof:
    - This is cross-race backend smoke, not Altmer-native proof. It may be recorded once per build and referenced from the other race sheets.
    - MCM Debug -> `Debug: Daedric & Curse`; use `Selected Prince` to choose Sanguine or Namira. Select `Reset Prince path`, then `Force Seeker`.
    - Sleep in a non-inn bed. Expected: no `PrinceV2: <Prince> event 314 deepen -0.25`, and `Show Prince summary` does not drop from sleep.
@@ -69,7 +75,7 @@ Read `0001AD06`. Expected: no Altmer state movement. Reset to origin 3.
    - Positive control: choose Vaermina, Peryite, or Azura, `Reset Prince path`, `Force Seeker`, then sleep in a non-inn bed. Expected: `event 314` still gives the positive sleep credit.
    - Record the Papyrus `PrinceV2` lines and before/after `Show Prince summary` piety.
 
-6. Save/load:
+7. Save/load:
    - Save after the accepted route.
    - Reload.
    - Survey and Active Effects remain consistent.
@@ -86,6 +92,7 @@ node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race altmer --stri
 | MQ104 edge or prior proof accepted | | |
 | Wrong-origin silence | | |
 | Survey/Active Effects | | |
+| Thalmor alignment Prisma | | |
 | Shared Daedric inn-sleep proof | | |
 | Prisma toast/panel/Ledger | | |
 | Save/load | | |

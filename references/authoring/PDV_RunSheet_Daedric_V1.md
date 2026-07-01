@@ -84,8 +84,9 @@ is the same, the shrine object differs.
   **See:** the race-response message (toast) **and** a new **Book of Days** entry *"The beast-blood took you
   and stirred Hircine. The Hunt is in you now."* (this chronicle was added in Unit D -- confirm it's not blank).
 - **Do (b):** **renounce** the Hircine path (MCM Debug / RenouncePath).
-  **See:** the exit message + a new **Book of Days** entry *"Hircine's mark fades from your blood, and the
-  pack is no longer yours."*
+  **See:** the exit message, a Prisma toast *"You renounce the hunt."*, and a pinned **Book of Days** entry:
+  *"You set the hunt down. The pact with Hircine is renounced -- the beast's mark fades slowly, but the road
+  back is yours to walk."*
 - **Do (c):** cure the werewolf curse -> **residue** onset.
   **See:** a **residue** toast at onset (renderer was built; producer wired in this pass).
 - **Do (d):** during a hunt rite, push **stigma** past its thresholds.
@@ -116,7 +117,7 @@ is the same, the shrine object differs.
 | Champion decline | N | N | Y (driver) | decline the offer |
 | lapse | Y | Y | (drop) | piety -> 0 + Run Dawn |
 | Hircine curse-entry | Y (msg) | **Y (new)** | N | become werewolf on Hircine path |
-| Hircine renunciation | Y (msg) | **Y (new)** | (drop) | renounce |
+| Hircine renunciation | Y (msg + toast) | **Y (pinned)** | (drop) | renounce |
 | Hircine residue | Y (new) | N | N | cure the curse |
 | Hircine stigma-price | Y | N (by R6) | N | hunt-rite stigma threshold |
 | Daedric boon | Y (new) | N | N | complete a rite |
@@ -147,7 +148,7 @@ is the same, the shrine object differs.
 | D5 commitment gate | 3rd signal opens the pact | | |
 | D6 accept/decline | accept seals (severs patron); decline reverts + Ledger | | |
 | D7 lapse | toast + BoD + Ledger drop | | |
-| D8 Hircine specials | curse-entry + renounce chronicles; residue + stigma toasts | | |
+| D8 Hircine specials | curse-entry + approved renounce chronicle/toast; residue + stigma toasts | | |
 | D9 boon | rite-answered toast | | |
 | D10 reads | in-voice, distinct, titles land, no blank/double | | |
 

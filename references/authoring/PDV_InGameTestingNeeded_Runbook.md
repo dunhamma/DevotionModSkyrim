@@ -79,6 +79,13 @@ neglected state. This is still not runtime/manual proof; fold the recovery beat
 into the universal Prisma sheet and into the next Imperial/Dunmer Prisma surface
 checks.
 
+2026-07-01 handoff note: the Prisma authoring-beats wiring is static/readback
+clean and compiled. Formal offer accept/refuse, Hircine renunciation, Redguard
+sect champion-entry, and Altmer Thalmor-alignment wording now have explicit
+run-sheet coverage. This remains manual/felt proof until the Universal Prisma,
+Daedric, Redguard, and Altmer sheets record the on-screen toast/Book-of-Days
+results.
+
 ## Preflight Before Opening Skyrim
 
 Run from `C:\Users\Admin\Documents\Devotion Mod Project`:
@@ -89,9 +96,8 @@ dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2Receiver
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates
 dotnet run --project .\tools\pdv-neglect-esp-author\PdvNeglectEspAuthor.csproj -- --check
 node .\tools\pdv_phase20_base_wiring_audit.mjs
-node .\tools\pdv_compile.mjs --script PDV__ManagerQuest
-node .\tools\pdv_compile.mjs --script PDV_MCM
-node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json
+node .\tools\pdv_compile.mjs --script PDV__ManagerQuest --script PDV_MCM --script PDV_PlayerEvents
+node .\tools\pdv_verify.mjs --json
 node .\tools\pdv_verify.mjs --strict-neglect-decay --json
 node .\tools\pdv_phase2_reward_readback_audit.mjs --json
 node .\tools\pdv_requiem_penalty_audit.mjs
@@ -104,10 +110,10 @@ node .\tools\pdv_beta_readiness_audit.mjs --strict --json
 
 Expected before manual testing:
 
-- Route entries: `PASS`, including all 24 manifest route entries.
+- Route entries: `PASS`, including all 46 manifest route entries.
 - Base wiring audit: `PASS`.
-- Strict Phase 20 verifier and Phase 2 reward readback audit: `PASS`; SEQ
-  refresh has no stale/missing entry warning.
+- `pdv_verify --json` and Phase 2 reward readback audit: `PASS`; SEQ refresh
+  has no stale/missing entry warning.
 - Integrity harness: `PASS`, including `eligibility_reward_coverage`.
 - Prisma-to-1.0 audit: `PASS`; this proves producer/UI wiring and live Prisma
   asset parity, not in-game display.
@@ -118,6 +124,14 @@ Expected before manual testing:
 - Manager and MCM compile: `PASS`, including the Talos betrayal debug buttons.
 - Beta readiness audit: still `NOT_BETA_READY` until manual/runtime slots are
   recorded.
+
+2026-06-30 launch note: do not use
+`node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json`
+as the blocking launch gate for this manual queue unless that strict mode is
+refreshed. On the current Prisma-to-1.0 build it still expects old Book of Days
+source spellings and Nord pending-evidence state even though `pdv_verify --json`,
+Book of Days audit, Prisma-to-1.0 audit, and the strict beta audit agree on the
+current evidence boundary.
 
 Current reward-readback expectation after the 2026-06-20 Requiem-tail closeout:
 `pdv_phase2_reward_readback_audit` should pass with `FAIL=0`. The old Khajiit
@@ -133,7 +147,7 @@ audit passes.
 
 ## Current Last-Pass Blocker Snapshot
 
-As of the 2026-06-29 strict audit, the active race beta-feel blockers are
+As of the 2026-06-30 strict audit rerun, the active race beta-feel blockers are
 manual/runtime evidence only for Imperial and Dunmer. Readback and verifier
 gates are necessary preflight, but they do not close these rows.
 
@@ -172,6 +186,10 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
   on the current build, and make sure the drop and recovery beats appear as
   player-owned toast/Book-of-Days/Chronicle surfaces without forcing the full
   Prisma panel.
+- Prisma authoring-beats sweep: run Universal U8 for formal offer accept/refuse,
+  Daedric D8 for Hircine renunciation, Redguard 6d for sect champion-entry, and
+  the Altmer Thalmor-alignment regression row. These prove manual display only;
+  keep them separate from the static Prisma-to-1.0 audit.
 - Requiem felt-penalty sweep: prove the new negative Health penalties are felt
   in-game and Imperial remains disease-resistance based.
 

@@ -202,6 +202,21 @@ This is cross-race backend smoke, not Redguard-native or Namira feed-heal proof.
 - PASS: one approved newly-cleared site pays once; repeated clears or already-consumed
   sites do not; a non-listed site stays silent.
 
+### Slot 6d -- sect champion-entry Prisma beat ([R] + [M])
+- Seed: run this on one Crown/Forebear/Ash'abah branch, or spot-check all three if time allows.
+  Confirm the Redguard sect is set, make the anchor deity Devoted or Champion, then trigger the
+  sect evaluation by applying target piety or running the relevant Redguard route.
+  - Crown and Ash'abah anchor on Tu'whacca.
+  - Forebear anchors on HoonDing.
+- See: the sect champion-entry message still appears, and the Prisma toast uses the sect-specific line:
+  - Crown: *"The Crown way, made public."*
+  - Forebear: *"The Forebear way, made public."*
+  - Ash'abah: *"The Ash'abah duty, made public."*
+- Book of Days: Chronicle gets the matching sect entry about the way/duty becoming a public shape of
+  devotion. It must not be blank, and it must not force-open the full Devotion panel.
+- PASS: the first eligible entry fires once, the sect-specific toast and Chronicle agree, and a repeat
+  evaluation does not duplicate the entry.
+
 ### Slot 7 -- manualFeelNote ([M])
 - Across the session, judge: does the Tu'whacca reward now FEEL real (HP visibly restored
   at the death-rite) where before it was an invisible regen %? Does the Ash'abah stigma
@@ -253,6 +268,7 @@ This is cross-race backend smoke, not Redguard-native or Namira feed-heal proof.
 Run these during the Redguard evidence pass:
 
 - Ancestor-spine book, Ash'abah duty, Far Shores token, HoonDing make-way, curse transitions, and neglect may emit toasts or top-left notices; none should force-open the full Prisma panel.
+- The sect champion-entry toast must appear for the tested Crown/Forebear/Ash'abah branch and must agree with its Book of Days entry.
 - Manually open the Devotion panel after one accepted Redguard route and after one curse transition. It should open populated and close with ESC or X.
 - Chronicle / Book of Days should not create blank entries for sect, duty, or dawn digest beats.
 - Ledger should show accepted Redguard driver rows and stay unchanged after wrong-origin or generic-source probes.
@@ -281,6 +297,7 @@ Allowed: PASS / FAIL / PENDING / N-A. Label the proof class achieved.
 | S shared Daedric inn-sleep proof | negative Prince inn-only sleep; Vaermina/Peryite/Azura 314 positive control | [R]+[M] | | |
 | 6b Ash'abah mid-game entry | named undead or unique hostile necromancer/warlock flips sect; routine undead do not | [R]+[M] | | |
 | 6c Ash'abah cleared-undead site | approved newly-cleared site pays once; non-listed stays silent | [R]+[M] | | |
+| 6d sect champion-entry Prisma | sect message + toast + Chronicle agree; one-shot | [R]+[M] | | |
 | 7 manualFeelNote | reads as earned; record tuning magnitudes | [M] | | |
 | 8 Prisma surfaces | toast/panel/Chronicle/Ledger agree with manager state | [M] | | |
 

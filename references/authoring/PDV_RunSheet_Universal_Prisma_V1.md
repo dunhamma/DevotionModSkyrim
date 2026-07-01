@@ -79,7 +79,17 @@ zeroes regen buffs, so flat heals must show the bar move here).
   Book of Days / Chronicle text is readable and not blank. The old neglect line does not repeat as a fresh lapse.
 - **Record:** ___
 
-### U8 -- how it reads  [Tester] [M]
+### U8 -- formal offer accept/refuse  [Tester] [R]+[M]
+- **Do:** use an offer-capable race save (Nord, Imperial, Dunmer, Altmer, or Redguard). In MCM -> Devotion ->
+  Developer Options, choose a valid deity, then use **Seed commitment signals** and **Evaluate commitment**.
+  On one disposable save choose **Accept commitment**; on another choose **Refuse commitment**.
+- **See:** **Accept** gives a Prisma toast like *"You have given your devotion to {patron}."* and a pinned
+  Book of Days line for the race's offer-accept wording. **Refuse** gives a Prisma toast like *"You turn
+  {patron} away."* and a pinned Book of Days line saying that patron will not ask again. Neither choice
+  forces the full Devotion panel open. Book of Days lines are not blank, and the next Book key press still opens.
+- **Record:** ___
+
+### U9 -- how it reads  [Tester] [M]
 - **Do/Write:** 1-2 sentences. Do the three spaces feel like **one record** (same beat, same symbol/voice across
   toast + Chronicle + Ledger)? Do toasts read over a busy background? **Any beat that double-fired, hit the wrong
   space, or showed a BLANK line?** (A blank Book of Days line is a bug -> FAIL it.)
@@ -97,6 +107,7 @@ zeroes regen buffs, so flat heals must show the bar move here).
 | U5 Book of Days + prune | legible; ordinary prune, milestones persist | | |
 | U6 neglect | toast + BoD once on first lapse | | |
 | U7 neglect recovery | recovery beat surfaces; no repeat lapse or forced panel | | |
-| U8 reads | one coherent record; no blank/double/wrong-space | | |
+| U8 offer accept/refuse | toast + pinned BoD; no forced panel; no blank lines | | |
+| U9 reads | one coherent record; no blank/double/wrong-space | | |
 
 Owner: capture the Papyrus + `DevotionPrismaBridge` logs, record into `PDV_V1_BetaReadinessGate.md`.
