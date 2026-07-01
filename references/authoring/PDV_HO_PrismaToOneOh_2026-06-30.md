@@ -26,12 +26,13 @@ Two things changed the picture:
    owner-ratified and line-cited in
    `references/authoring/PDV_PrismaParity_DecidedWorklist.md` (2026-06-25).
 
-**Is it coding / building / design?** Almost entirely **CODING** (mechanical
-Papyrus wire-ups in `PDV__ManagerQuest.psc`; the JS renderers already exist) plus
-**DESIGN/COPY-then-code** for 10 "authoring beats" (write player-facing copy, get
-owner approval, then wire). There is **no ESP-record building** here. The one
-design-heavy item (substrate-native always-on instruments) is explicitly **V2 /
-out of 1.0 scope**.
+**Is it coding / building / design?** Entirely **CODING** now. The 9 parity wires
+plus the 10 "authoring beats" are all mechanical Papyrus wire-ups in
+`PDV__ManagerQuest.psc` (the JS renderers already exist). The beats' player-facing
+copy is **APPROVED + LOCKED** in `PDV_PrismaParity_AuthoringDraft.md` (2026-06-25),
+so there is no remaining copy/redline gate -- Codex wires the locked strings.
+There is **no ESP-record building** here. The one design-heavy item
+(substrate-native always-on instruments) is explicitly **V2 / out of 1.0 scope**.
 
 ---
 
@@ -99,10 +100,11 @@ mismatch must be reconciled before its two callsites land.)
 
 ## OPEN -- group 2: AUTHORING beats (10) -- DESIGN/COPY then CODE
 
-Each needs **player-facing copy drafted + owner redline approval FIRST**, then a
-mechanical wire (toast and/or pinned chronicle) at the named site. This is the
-half that is "design," but it is design = copy, not architecture. All ASCII,
-placeholder-until-approved.
+Copy is **APPROVED + LOCKED 2026-06-25** in `PDV_PrismaParity_AuthoringDraft.md`
+(per-race toast + chronicle lines, tone keys, runtime name slots, and the wiring
+model). No redline gate remains -- each beat is now a mechanical wire: route the
+chronicle line through the new per-race `ResolveJournalLine` tone key and fire the
+toast at the named site. All ASCII.
 
 | # | Beat | Site (function) | Gap today |
 |---|------|-----------------|-----------|
@@ -153,13 +155,14 @@ From `PDV_PrismaUXEquityAudit.md` and `PDV_HO_PrismaHardening.md`:
 | Bucket | Count | Kind |
 |--------|-------|------|
 | Coding wires (manager Papyrus) | 9 + 1 retire | CODING |
-| Authoring beats | 10 | DESIGN(copy) -> then CODING |
+| Authoring beats (copy LOCKED) | 10 | CODING -- wire the locked lines |
 | In-game proof | 2 | TESTING (play-gated) |
 | V2 substrate instruments | 5 races | DESIGN (deferred, not 1.0) |
 | ESP / record building | 0 | -- none -- |
 
-So for 1.0: ~20 small manager edits (9 pure-code + 10 copy-then-code), one
-15-minute in-game focus-trap check, and zero record building. Hardening is done.
+So for 1.0: ~20 small manager edits, all now pure wiring (the beats' copy is
+locked), one 15-minute in-game focus-trap check, and zero record building.
+Hardening is done and there is no open copy/redline gate.
 
 ---
 
@@ -169,9 +172,10 @@ So for 1.0: ~20 small manager edits (9 pure-code + 10 copy-then-code), one
   whole Prisma-parity batch as ONE manager-owning lane (per
   `PDV_PrismaParity_SerializedHandoffs.md`); do not interleave with the Daedric
   surfacing / Requiem / other manager edits.
-- Group 1 (pure code) can dispatch to Codex immediately. Group 2 needs the copy
-  redline first -- draft copy with the owner, then hand the approved strings to
-  Codex with the same call-site list.
+- BOTH groups can dispatch to Codex immediately. Group 2's copy is APPROVED +
+  LOCKED in `PDV_PrismaParity_AuthoringDraft.md` (2026-06-25); Codex wires the
+  locked toast/chronicle lines via the per-race `ResolveJournalLine` tone keys
+  named there. No redline round-trip remains.
 - Reconcile item 3's `reach` vs `onset` direction mismatch before wiring its two
   callsites (it is the only cross-item blocker).
 - Keep all new copy PLACEHOLDER + ASCII; the `.psc` commit hook rejects non-ASCII.
