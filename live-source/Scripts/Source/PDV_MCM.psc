@@ -1127,8 +1127,8 @@ Function BuildPlayerPage()
     AddHeaderOption("Devotion", OPTION_FLAG_NONE)
 
     if EnsureManagerBinding("player_page")
-        AddTextOption("Summary", PDV_Manager.GetPlayerMcmSummaryLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Startup", PDV_Manager.GetStartupMcmLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Summary", GetPlayerPageSummaryLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Startup", GetPlayerPageStartupLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Mode", PDV_Manager.GetPlayerMcmModeLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Patron", PDV_Manager.GetPlayerMcmPatronLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Standing", PDV_Manager.GetPlayerMcmStandingLine(), OPTION_FLAG_DISABLED)
@@ -1168,6 +1168,30 @@ Function BuildPlayerPage()
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
 
+String Function GetPlayerPageSummaryLine()
+    if !PDV_Manager
+        return "Unavailable"
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
+        return "Startup pending"
+    endIf
+
+    return PDV_Manager.GetPlayerMcmPatronLine() + " | " + PDV_Manager.GetPlayerMcmStandingLine()
+EndFunction
+
+String Function GetPlayerPageStartupLine()
+    if !PDV_Manager
+        return "Unavailable"
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
+        return "Choose path"
+    endIf
+
+    return "Complete"
+EndFunction
+
 Function ResetBookOfDaysOptionIds()
     _oidOpenJournalNow = -1
     _oidJournalHotkey = -1
@@ -1184,8 +1208,8 @@ Function BuildDeveloperLockedPage(String pageName)
     SetCursorPosition(1)
     AddHeaderOption("Player", OPTION_FLAG_NONE)
     if PDV_Manager
-        AddTextOption("Summary", PDV_Manager.GetPlayerMcmSummaryLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Startup", PDV_Manager.GetStartupMcmLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Summary", GetPlayerPageSummaryLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Startup", GetPlayerPageStartupLine(), OPTION_FLAG_DISABLED)
         _oidSurveyDevotion = AddTextOption("Survey Devotion", "Open readout", OPTION_FLAG_NONE)
     else
         AddTextOption("Summary", "Devotion is still starting up.", OPTION_FLAG_DISABLED)
