@@ -1032,6 +1032,8 @@
     });
   };
 
+  const journalRaceText = (value) => normalizeJournalSurveyText(value).split("|")[0].trim();
+
   const startupModeLabel = (mode) => {
     const normalized = text(mode, "").toLowerCase();
     if (normalized === "explicit_choice") return "Explicit choice";
@@ -1347,8 +1349,8 @@
     if (nodes.journalBy) nodes.journalBy.textContent = text(journal.by, journalByline());
     if (nodes.journalSummary) nodes.journalSummary.textContent = text(journal.summary, "A record of devotional acts since the path began.");
     if (nodes.journalPath) {
-      // Race/path info point. Standing lives in the meter below.
-      const survey = normalizeJournalSurveyText(journal.survey).replace(/\s*\|\s*/g, "  \u00b7  ");
+      // Race info point. Standing and commitment live in the meter and entries below.
+      const survey = journalRaceText(journal.survey);
       nodes.journalPath.textContent = survey;
       nodes.journalPath.hidden = !survey;
     }
@@ -2073,6 +2075,9 @@
     }
   };
 
+  const MIN_TOAST_DURATION_MS = 1800;
+  const DEFAULT_TOAST_DURATION_MS = 5600;
+
   const showToast = (toastPayload = {}) => {
     const copy = resolveEventPayload(toastPayload);
     const toastKey = [
@@ -2094,7 +2099,7 @@
 
     const toast = document.createElement("section");
     const tone = text(copy.tone, "neutral");
-    const duration = Math.max(1800, numberOrZero(copy.duration) || 4200);
+    const duration = Math.max(MIN_TOAST_DURATION_MS, numberOrZero(copy.duration) || DEFAULT_TOAST_DURATION_MS);
 
     toast.className = `toast is-${tone}`;
     toast.style.setProperty("--toast-life", `${duration}ms`);

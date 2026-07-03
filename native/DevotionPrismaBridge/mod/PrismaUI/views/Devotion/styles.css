@@ -1329,7 +1329,7 @@ h1 {
   opacity: 0;
   transform: translateY(10px);
   animation: toast-in 220ms ease forwards, toast-out 360ms ease forwards;
-  animation-delay: 0ms, var(--toast-life, 4200ms);
+  animation-delay: 0ms, var(--toast-life, 5600ms);
 }
 
 .toast__mark {
@@ -1528,7 +1528,7 @@ h1 {
 
 /* Accessibility: honor a player's reduced-motion preference. Overrides animation
    and transition DURATIONS only (not delays), so the toast lifecycle is preserved
-   -- a toast still appears, holds for its full --toast-life (~4.2s), and clears,
+   -- a toast still appears, holds for its full --toast-life (~5.6s), and clears,
    just without the slide/fade motion. Additive: active only when the platform
    requests reduced motion; default rendering is untouched. */
 @media (prefers-reduced-motion: reduce) {

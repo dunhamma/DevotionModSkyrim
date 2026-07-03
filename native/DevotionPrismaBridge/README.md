@@ -205,6 +205,9 @@ below:
 
 Explicit `title`, `message`, `tone`, or `symbol` fields still override the
 event defaults when Papyrus needs authored wording for a special case.
+The Prisma view holds ordinary toasts for 5600 ms by default so sentence-length
+gameplay notices are readable; explicit `duration` payloads may still override
+that default.
 
 Stable common toast fields:
 

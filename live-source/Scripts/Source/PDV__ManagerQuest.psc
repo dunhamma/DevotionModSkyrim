@@ -13422,8 +13422,9 @@ Function DebugAcceptPendingCommitment()
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Offered", 0)
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 0)
     SetActiveDeity(pendingDeity)
+    SyncFirstTierRaceRewardRuntime()
     DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")
-    SendPrismaShiftToast(BuildCommitmentOfferAcceptToastLine(pendingDeity), "", GetPrismaSymbolForDeity(pendingDeity))
+    SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "good", BuildCommitmentOfferAcceptToastLine(pendingDeity), "")
     if carryAmount > 0.0
         AwardPiety(pendingDeity, carryAmount, "commitment_carryover")
     endIf
@@ -13618,7 +13619,7 @@ Function DebugRefusePendingCommitment()
     endIf
 
     DispatchDiegeticCue("offer", pendingDeity.DeityName, "refuse", pendingDeity, "absence")
-    SendPrismaShiftToast(BuildCommitmentOfferRefuseToastLine(pendingDeity), "", GetPrismaSymbolForDeity(pendingDeity))
+    SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 1)
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 1)
     ClearPendingCommitment()

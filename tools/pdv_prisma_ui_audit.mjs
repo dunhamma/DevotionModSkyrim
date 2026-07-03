@@ -487,6 +487,16 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   }
 
   if (
+    !app.includes("const MIN_TOAST_DURATION_MS = 1800;") ||
+    !app.includes("const DEFAULT_TOAST_DURATION_MS = 5600;") ||
+    !app.includes("Math.max(MIN_TOAST_DURATION_MS, numberOrZero(copy.duration) || DEFAULT_TOAST_DURATION_MS)")
+  ) {
+    fail("Prisma toast default lifetime must be explicit and long enough for sentence-length gameplay toasts.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Prisma toast default lifetime supports sentence-length gameplay toasts.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (
     !app.includes('window.addEventListener("keydown", onOverlayEsc, true)') ||
     !app.includes('document.addEventListener("keydown", onOverlayEsc, true)') ||
     !app.includes('window.addEventListener("keyup", onOverlayEsc, true)') ||
@@ -548,12 +558,13 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 
   if (
     !app.includes("const normalizeJournalSurveyText = (value) =>") ||
+    !app.includes("const journalRaceText = (value) => normalizeJournalSurveyText(value).split(\"|\")[0].trim();") ||
     !app.includes('["nord", "Nord"]') ||
-    !app.includes("normalizeJournalSurveyText(journal.survey)")
+    !app.includes("const survey = journalRaceText(journal.survey);")
   ) {
-    fail("Book of Days survey/path line must normalize public race labels before rendering.", DEVOTION_PRISMA_VIEW);
+    fail("Book of Days cover line must normalize public race labels and render only the race.", DEVOTION_PRISMA_VIEW);
   } else {
-    pass("Book of Days survey/path line normalizes public race labels before rendering.", DEVOTION_PRISMA_VIEW);
+    pass("Book of Days cover line normalizes public race labels and renders only the race.", DEVOTION_PRISMA_VIEW);
   }
 }
 

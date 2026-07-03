@@ -102,8 +102,8 @@ function verifyManager(text, filePath, pass, fail) {
     ["Offer refuse Redguard line", "The sect's broad worship holds as it was. You set ", "Redguard refuse chronicle is present."],
     ["Refuse cue dispatch", 'DispatchDiegeticCue("offer", pendingDeity.DeityName, "refuse", pendingDeity, "absence")', "Refuse path emits the Book of Days cue before terminal refusal state."],
     ["Accept cue dispatch", 'DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")', "Accept path emits the Book of Days cue from the shared handler."],
-    ["Accept Prisma toast helper", "BuildCommitmentOfferAcceptToastLine(pendingDeity)", "Accept path emits the locked per-race Prisma toast."],
-    ["Refuse Prisma toast helper", "BuildCommitmentOfferRefuseToastLine(pendingDeity)", "Refuse path emits the locked per-race Prisma toast."],
+    ["Accept direct Prisma toast", 'SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "good", BuildCommitmentOfferAcceptToastLine(pendingDeity), "")', "Accept path emits the locked per-race Prisma toast without the generic shift template."],
+    ["Refuse direct Prisma toast", 'SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")', "Refuse path emits the locked per-race Prisma toast without the generic shift template."],
     ["Carryover award funnel", 'AwardPiety(pendingDeity, carryAmount, "commitment_carryover")', "Commitment carryover uses the reason-bearing AwardPiety funnel."],
     ["Altmer alignment toast", "The Thalmor question turns in you: ", "Altmer committed-band toast is present."],
     ["Altmer alignment chronicle", "Your soul records where you stand in the Thalmor question: ", "Altmer committed-band chronicle is present."],
@@ -138,10 +138,25 @@ function verifyManager(text, filePath, pass, fail) {
     fail("Carryover accept function", "DebugAcceptPendingCommitment is missing.", filePath);
   } else if (!/SetActiveDeity\(pendingDeity\)[\s\S]*AwardPiety\(pendingDeity, carryAmount, "commitment_carryover"\)/.test(acceptFunction)) {
     fail("Carryover accept order", "Carryover AwardPiety must occur after SetActiveDeity so driver capture sees the active patron.", filePath);
+  } else if (!/SetActiveDeity\(pendingDeity\)[\s\S]*SyncFirstTierRaceRewardRuntime\(\)[\s\S]*DispatchDiegeticCue\("offer", pendingDeity\.DeityName, "accept"/.test(acceptFunction)) {
+    fail("Accept reward sync", "Accept must resync race rewards after setting the active patron and before surfacing the accept beat.", filePath);
   } else if (/DebugForceSetPietyByIndex/.test(acceptFunction)) {
     fail("Carryover legacy setter", "DebugAcceptPendingCommitment still calls DebugForceSetPietyByIndex.", filePath);
+  } else if (/SendPrismaShiftToast\(BuildCommitmentOffer/.test(acceptFunction)) {
+    fail("Commitment toast template", "Commitment accept still uses the generic shift-toast template.", filePath);
   } else {
     pass("Carryover accept order", "Carryover AwardPiety occurs after SetActiveDeity and legacy setter is absent.", filePath);
+    pass("Accept reward sync", "Accept resyncs race rewards after setting the active patron.", filePath);
+    pass("Commitment toast template", "Commitment accept uses a direct toast instead of the generic shift template.", filePath);
+  }
+
+  const refuseFunction = extractFunction(text, "DebugRefusePendingCommitment");
+  if (!refuseFunction) {
+    fail("Refuse function", "DebugRefusePendingCommitment is missing.", filePath);
+  } else if (/SendPrismaShiftToast\(BuildCommitmentOffer/.test(refuseFunction)) {
+    fail("Refuse toast template", "Commitment refuse still uses the generic shift-toast template.", filePath);
+  } else {
+    pass("Refuse toast template", "Commitment refuse uses a direct toast instead of the generic shift template.", filePath);
   }
 }
 

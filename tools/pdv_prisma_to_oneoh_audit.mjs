@@ -138,11 +138,14 @@ function verifyManager(text, filePath, pass, fail) {
     ["Redguard Ash'abah entry toast", "SendPrismaShiftToast(\"The Ash'abah duty, made public.\", \"More than necessity now -- a public shape of your devotion.\", \"sect\")", "Redguard Ash'abah Champion-entry emits the approved Prisma toast."],
     ["Offer accept surface", 'DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")', "Commitment accept dispatches a diegetic offer beat from the shared handler."],
     ["Offer accept toast helper", "String Function BuildCommitmentOfferAcceptToastLine(PDV_DeityBase deity)", "Commitment accept resolves the locked per-race Prisma toast."],
+    ["Offer accept direct toast", 'SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "good", BuildCommitmentOfferAcceptToastLine(pendingDeity), "")', "Commitment accept uses the direct toast shape, not the generic shift template."],
+    ["Offer accept reward sync", 'SetActiveDeity(pendingDeity)\n    SyncFirstTierRaceRewardRuntime()', "Commitment accept resyncs focused rewards immediately after patron assignment."],
     ["Offer accept Dunmer toast", "The ash-prayer has a name: ", "Dunmer accept toast uses locked copy."],
     ["Offer accept Altmer toast", "You name ", "Altmer accept toast uses locked copy."],
     ["Offer accept Redguard toast", "You walk under ", "Redguard accept toast uses locked copy."],
     ["Offer refuse surface", 'DispatchDiegeticCue("offer", pendingDeity.DeityName, "refuse", pendingDeity, "absence")', "Terminal refusal dispatches a diegetic offer beat."],
     ["Offer refuse toast helper", "String Function BuildCommitmentOfferRefuseToastLine(PDV_DeityBase deity)", "Commitment refuse resolves the locked per-race Prisma toast."],
+    ["Offer refuse direct toast", 'SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")', "Commitment refuse uses the direct toast shape, not the generic shift template."],
     ["Offer refuse Altmer toast", "You keep to the foundation.", "Altmer refuse toast uses locked copy."],
     ["Offer refuse Redguard toast", "You keep to the sect.", "Redguard refuse toast uses locked copy."],
     ["Commitment carryover driver", 'AwardPiety(pendingDeity, carryAmount, "commitment_carryover")', "Commitment carryover uses the reason-bearing AwardPiety funnel."],
@@ -158,6 +161,7 @@ function verifyManager(text, filePath, pass, fail) {
 
   forbidSnippet(text, 'eventClass == "drift"', "Retired drift producer branch", "No drift transition branch remains in the manager.", filePath, pass, fail);
   forbidSnippet(text, '"drift.warn"', "Retired drift tone", "No drift.warn tone entries remain in the manager.", filePath, pass, fail);
+  forbidSnippet(text, "SendPrismaShiftToast(BuildCommitmentOffer", "Commitment shift-toast fallback", "Commitment accept/refuse do not reuse the generic shift-toast template.", filePath, pass, fail);
 
   if (/SurfaceTransition\("emergence"[\s\S]{0,140}"reach"/.test(text)) {
     fail("Emergence direction", 'A SurfaceTransition("emergence", ..., "reach") call remains; expected "onset".', filePath);
